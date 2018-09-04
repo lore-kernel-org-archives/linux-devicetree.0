@@ -1,39 +1,76 @@
-From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-Subject: [PATCH v2 00/03] Add clock driver for Actions Semi S500 SoC
-Date: Tue, 4 Sep 2018 12:34:24 -0300
-Message-ID: <CADHB5bAFM=Qs6f0zf6iQuYfmT-ErSwG3-2mTsLnL-MCCUw1FhQ@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 06/27] clk: sunxi-ng: h6: Set video PLLs limits
+Date: Tue, 4 Sep 2018 23:49:09 +0800
+Message-ID: <20180904154909.GR17047@intel.com>
+References: <20180902072643.4917-7-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, =?UTF-8?Q?Guilherme_G=2E_Sim=C3=B5es?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, robh+dt@kernel.org, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa Costa - LSI-TEC <laisa.costa@lsitec.org.br>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180902072643.4917-7-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Cc: mark.rutland@arm.com, airlied@linux.ie, maxime.ripard@bootlin.com, mturquette@baylibre.com, linux-sunxi@googlegroups.com, jernej.skrabec@siol.net, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, wens@csie.org, robh+dt@kernel.org, kbuild-all@01.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds clock support for Actions Semi Owl series S500 SoC
-with relevant clock bindings and device tree info.
-Updates from v1 to v2:
-SoC supports were organized in alphabetical manner.
-"_DELAY" suffixes were removed.
-Patch generation format changed.
-Commits were rebased on top of Saravanan's patches.
-Changed patches ordering.
-
-Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-
----
- arch/arm/boot/dts/owl-s500-cubieboard6.dts     |   8 +-
- arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts |   8 +-
- arch/arm/boot/dts/owl-s500-sparky.dts          |   8 +-
- arch/arm/boot/dts/owl-s500.dtsi                |  24 ++
- drivers/clk/actions/Kconfig                    |   5 +
- drivers/clk/actions/Makefile                   |   1 +
- drivers/clk/actions/owl-pll.c                  |   2 +-
- drivers/clk/actions/owl-pll.h                  |  15 +-
- drivers/clk/actions/owl-s500.c                 | 524 +++++++++++++++++++++++++
- drivers/clk/actions/owl-s700.c                 |  18 +-
- drivers/clk/actions/owl-s900.c                 |  18 +-
- include/dt-bindings/clock/actions,s500-cmu.h   |  78 ++++
- 12 files changed, 664 insertions(+), 45 deletions(-)
- create mode 100644 drivers/clk/actions/owl-s500.c
- create mode 100644 include/dt-bindings/clock/actions,s500-cmu.
+SGkgSmVybmVqLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2ghIFBlcmhhcHMgc29tZXRoaW5nIHRv
+IGltcHJvdmU6CgpbYXV0byBidWlsZCB0ZXN0IFdBUk5JTkcgb24gc3VueGkvc3VueGkvZm9yLW5l
+eHRdClthbHNvIGJ1aWxkIHRlc3QgV0FSTklORyBvbiB2NC4xOS1yYzIgbmV4dC0yMDE4MDgzMV0K
+W2lmIHlvdXIgcGF0Y2ggaXMgYXBwbGllZCB0byB0aGUgd3JvbmcgZ2l0IHRyZWUsIHBsZWFzZSBk
+cm9wIHVzIGEgbm90ZSB0byBoZWxwIGltcHJvdmUgdGhlIHN5c3RlbV0KCnVybDogICAgaHR0cHM6
+Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0cy9KZXJuZWotU2tyYWJlYy9BbGx3aW5u
+ZXItSDYtREUzLWFuZC1IRE1JLXN1cHBvcnQvMjAxODA5MDMtMDgyNTQzCmJhc2U6ICAgaHR0cHM6
+Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvc3VueGkvbGludXguZ2l0
+IHN1bnhpL2Zvci1uZXh0CnJlcHJvZHVjZToKICAgICAgICAjIGFwdC1nZXQgaW5zdGFsbCBzcGFy
+c2UKICAgICAgICBtYWtlIEFSQ0g9eDg2XzY0IGFsbG1vZGNvbmZpZwogICAgICAgIG1ha2UgQz0x
+IENGPS1EX19DSEVDS19FTkRJQU5fXwo6Ojo6OjogYnJhbmNoIGRhdGU6IDYgaG91cnMgYWdvCjo6
+Ojo6OiBjb21taXQgZGF0ZTogNiBob3VycyBhZ28KCj4+IGRyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
+dS1zdW41MGktaDYuYzoxMjQ6Mjc6IHNwYXJzZTogY29uc3RhbnQgMjQwMDAwMDAwMCBpcyBzbyBi
+aWcgaXQgaXMgbG9uZwogICBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNTBpLWg2LmM6MTQy
+OjI3OiBzcGFyc2U6IGNvbnN0YW50IDI0MDAwMDAwMDAgaXMgc28gYmlnIGl0IGlzIGxvbmcKCiMg
+aHR0cHM6Ly9naXRodWIuY29tLzBkYXktY2kvbGludXgvY29tbWl0Lzc1MmE4ODUxMGYwYmNhZGE2
+OTc1M2ZjY2IzMWFkYjE4N2Y4MGYyOWEKZ2l0IHJlbW90ZSBhZGQgbGludXgtcmV2aWV3IGh0dHBz
+Oi8vZ2l0aHViLmNvbS8wZGF5LWNpL2xpbnV4CmdpdCByZW1vdGUgdXBkYXRlIGxpbnV4LXJldmll
+dwpnaXQgY2hlY2tvdXQgNzUyYTg4NTEwZjBiY2FkYTY5NzUzZmNjYjMxYWRiMTg3ZjgwZjI5YQp2
+aW0gKzEyNCBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNTBpLWg2LmMKCjUyNDM1M2VhNCBJ
+Y2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMTEgIAo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAg
+MjAxOC0wMy0xNiAgMTEyICAvKgo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0wMy0xNiAg
+MTEzICAgKiBGb3IgVmlkZW8gUExMcywgdGhlIG91dHB1dCBkaXZpZGVyIGlzIGRlc2NyaWJlZCBh
+cyAidXNlZCBmb3IgdGVzdGluZyIKNTI0MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYg
+IDExNCAgICogaW4gdGhlIHVzZXIgbWFudWFsLiBTbyBpdCdzIG5vdCBtb2RlbGxlZCBhbmQgZm9y
+Y2VkIHRvIDAuCjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMTUgICAqLwo1
+MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0wMy0xNiAgMTE2ICAjZGVmaW5lIFNVTjUwSV9I
+Nl9QTExfVklERU8wX1JFRwkweDA0MAo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0wMy0x
+NiAgMTE3ICBzdGF0aWMgc3RydWN0IGNjdV9ubSBwbGxfdmlkZW8wX2NsayA9IHsKNTI0MzUzZWE0
+IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYgIDExOCAgCS5lbmFibGUJCT0gQklUKDMxKSwKNTI0
+MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYgIDExOSAgCS5sb2NrCQk9IEJJVCgyOCks
+CjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMjAgIAkubgkJPSBfU1VOWElf
+Q0NVX01VTFRfTUlOKDgsIDgsIDEyKSwKNTI0MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMt
+MTYgIDEyMSAgCS5tCQk9IF9TVU5YSV9DQ1VfRElWKDEsIDEpLCAvKiBpbnB1dCBkaXZpZGVyICov
+CjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMjIgIAkuZml4ZWRfcG9zdF9k
+aXYJPSA0LAo3NTJhODg1MTAgSmVybmVqIFNrcmFiZWMgMjAxOC0wOS0wMiAgMTIzICAJLm1pbl9y
+YXRlCT0gMjg4MDAwMDAwLAo3NTJhODg1MTAgSmVybmVqIFNrcmFiZWMgMjAxOC0wOS0wMiBAMTI0
+ICAJLm1heF9yYXRlCT0gMjQwMDAwMDAwMCwKNTI0MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgt
+MDMtMTYgIDEyNSAgCS5jb21tb24JCT0gewo1MjQzNTNlYTQgSWNlbm93eSBaaGVuZyAgMjAxOC0w
+My0xNiAgMTI2ICAJCS5yZWcJCT0gMHgwNDAsCjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4
+LTAzLTE2ICAxMjcgIAkJLmZlYXR1cmVzCT0gQ0NVX0ZFQVRVUkVfRklYRURfUE9TVERJViwKNTI0
+MzUzZWE0IEljZW5vd3kgWmhlbmcgIDIwMTgtMDMtMTYgIDEyOCAgCQkuaHcuaW5pdAk9IENMS19I
+V19JTklUKCJwbGwtdmlkZW8wIiwgIm9zYzI0TSIsCjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAy
+MDE4LTAzLTE2ICAxMjkgIAkJCQkJICAgICAgJmNjdV9ubV9vcHMsCjUyNDM1M2VhNCBJY2Vub3d5
+IFpoZW5nICAyMDE4LTAzLTE2ICAxMzAgIAkJCQkJICAgICAgQ0xLX1NFVF9SQVRFX1VOR0FURSks
+CjUyNDM1M2VhNCBJY2Vub3d5IFpoZW5nICAyMDE4LTAzLTE2ICAxMzEgIAl9LAo1MjQzNTNlYTQg
+SWNlbm93eSBaaGVuZyAgMjAxOC0wMy0xNiAgMTMyICB9Owo1MjQzNTNlYTQgSWNlbm93eSBaaGVu
+ZyAgMjAxOC0wMy0xNiAgMTMzICAKCi0tLQowLURBWSBrZXJuZWwgdGVzdCBpbmZyYXN0cnVjdHVy
+ZSAgICAgICAgICAgICAgICBPcGVuIFNvdXJjZSBUZWNobm9sb2d5IENlbnRlcgpodHRwczovL2xp
+c3RzLjAxLm9yZy9waXBlcm1haWwva2J1aWxkLWFsbCAgICAgICAgICAgICAgICAgICBJbnRlbCBD
+b3Jwb3JhdGlvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
