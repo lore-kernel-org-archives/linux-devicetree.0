@@ -1,68 +1,39 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RESEND PATCHv2 1/2] ARM: dts: ti: add support for building Texas
- Instruments specific overlays
-Date: Tue, 4 Sep 2018 11:27:30 +0300
-Message-ID: <1536049651-10206-2-git-send-email-t-kristo@ti.com>
-References: <1535722107-13767-1-git-send-email-t-kristo@ti.com>
- <1536049651-10206-1-git-send-email-t-kristo@ti.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 01/27] dt-bindings: sunxi-sram: add binding for Allwinner
+ H6 SRAM C
+Date: Tue, 4 Sep 2018 16:39:05 +0800
+Message-ID: <CAGb2v66V=7ArH0hssVZbBhD1v9P86oOXSh+1pY3e9xrzCHXBeQ@mail.gmail.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net>
+ <20180902072643.4917-2-jernej.skrabec@siol.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1536049651-10206-1-git-send-email-t-kristo@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180902072643.4917-2-jernej.skrabec@siol.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Maxime Ripard <maxime.ripard@bootlin.com>, Mike Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Add support for TI specific DT subdir, along with support for building
-DT overlays. Right now, no DT files are specified in this directory,
-those are to be added later.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- arch/arm/boot/dts/Makefile    | 1 +
- arch/arm/boot/dts/ti/Makefile | 9 +++++++++
- 2 files changed, 10 insertions(+)
- create mode 100644 arch/arm/boot/dts/ti/Makefile
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b5bd3de..59a4b63 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -755,6 +755,7 @@ dtb-$(CONFIG_SOC_DRA7XX) += \
- 	dra72-evm-revc.dtb \
- 	dra71-evm.dtb \
- 	dra76-evm.dtb
-+subdir-$(CONFIG_SOC_DRA7XX) += ti
- dtb-$(CONFIG_ARCH_ORION5X) += \
- 	orion5x-kuroboxpro.dtb \
- 	orion5x-lacie-d2-network.dtb \
-diff --git a/arch/arm/boot/dts/ti/Makefile b/arch/arm/boot/dts/ti/Makefile
-new file mode 100644
-index 0000000..e0203ba
---- /dev/null
-+++ b/arch/arm/boot/dts/ti/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Make file to build device tree binaries for boards based on
-+# Texas Instruments Inc processors
-+#
-+# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
-+#
-+
-+DTC_FLAGS += -@
--- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gU3VuLCBTZXAgMiwgMjAxOCBhdCAzOjI3IFBNIEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2ty
+YWJlY0BzaW9sLm5ldD4gd3JvdGU6Cj4KPiBGcm9tOiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFv
+c2MuaW8+Cj4KPiBUaGUgQWxsd2lubmVyIEg2IFNvQydzIERFMyBuZWVkcyB0aGUgU1JBTSBDIHNl
+Y3Rpb24gYmVpbmcgY2xhaW1lZCBpbiB0aGUKPiBzeXN0ZW0gY29udHJvbGxlciB0byB3b3JrLCBs
+aWtlIEE2NCBERTIuCj4KPiBBcyBINiBhbmQgQTY0IHN5c3RlbSBjb250cm9sbGVyIGFyZSBxdWl0
+ZSBzaW1pbGFyLCBjb2RlIGlzIHJldXNlZCBub3csCj4gYW5kIHRoZSBBNjQgZmFsbGJhY2sgY29t
+cGF0aWJsZSBzdHJpbmcgaXMgYWRkZWQgYWZ0ZXIgdGhlIEg2IGNvbXBhdGlibGUKPiBzdHJpbmcu
+Cj4KPiBTaWduZWQtb2ZmLWJ5OiBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MuaW8+Cj4gW2Zp
+eGVkIHR5cG8gaW4gY29tcGF0aWJsZSBzdHJpbmddCj4gU2lnbmVkLW9mZi1ieTogSmVybmVqIFNr
+cmFiZWMgPGplcm5lai5za3JhYmVjQHNpb2wubmV0PgoKUmV2aWV3ZWQtYnk6IENoZW4tWXUgVHNh
+aSA8d2Vuc0Bjc2llLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
