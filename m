@@ -1,62 +1,84 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v9 0/8] Introduce on-chip interconnect API
-Date: Wed, 5 Sep 2018 09:36:20 +1000
-Message-ID: <20180905093620.6d9162ca@canb.auug.org.au>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
-        <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 10/11] arm64: dts: qcom: Add reg-names for all tsens nodes
+Date: Tue, 4 Sep 2018 16:42:31 -0700
+Message-ID: <CAD=FV=WoQnSLj0RvrKfjgJCKkDKrEnKG2F5XQxQjFaJbhH1gjQ@mail.gmail.com>
+References: <cover.1535462942.git.amit.kucheria@linaro.org>
+ <c49d9f13b3d6849604ae3eb00a92b80948ef1534.1535462942.git.amit.kucheria@linaro.org>
+ <20180903203405.GT3456@tuxbook-pro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/=t3Ckflr7nTyHhTekgg8jUB"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
+In-Reply-To: <20180903203405.GT3456@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, gregkh@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-a>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Siddartha Mohanadoss <smohanad@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/=t3Ckflr7nTyHhTekgg8jUB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi all,
-
-On Tue, 4 Sep 2018 15:54:27 +0530 Amit Kucheria <amit.kucheria@linaro.org> =
-wrote:
+On Mon, Sep 3, 2018 at 1:34 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> On Tue 28 Aug 06:38 PDT 2018, Amit Kucheria wrote:
 >
-> I'm currently reviewing this patchset (long overdue), but considering
-> that we haven't added any major new features to the framework for the
-> last couple of revisions, can you get this patchset merged into
-> linux-next to see how things shake out there? We've had this merged
-> branch merged into a CI build on kernelci for a while now w/o any
-> major incident so we should increase its exposure.
->=20
-> You could ask Stephen Rothwell if he'll accept the a branch directly
-> from you or he needs an upstream maintainer (GregKH?) to carry it.
+>> Instead of showing up as thermal-sensor@<addr>, the nodes will show up as
+>> tsens0_tm, tsen1_tm, tsens1_srot, etc. in /proc/iomem making it easier to
+>> read.
+>>
+>> IOW,
+>>
+>> 0c222000-0c2221fe : thermal-sensor@c263000
+>> 0c223000-0c2231fe : thermal-sensor@c265000
+>> 0c263000-0c2631fe : thermal-sensor@c263000
+>> 0c265000-0c2651fe : thermal-sensor@c265000
+>>
+>> becomes
+>>
+>> 0c222000-0c2221fe : tsens0_srot
+>> 0c223000-0c2231fe : tsens1_srot
+>> 0c263000-0c2631fe : tsens0_tm
+>> 0c265000-0c2651fe : tsens1_tm
+>>
+>> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> ---
+>>  arch/arm/boot/dts/qcom-msm8974.dtsi   | 1 +
+>>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
+>>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 ++
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi  | 2 ++
+>>  4 files changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> index 3c4b81c29798..64c9f81ddd90 100644
+>> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> @@ -431,6 +431,7 @@
+>>                       compatible = "qcom,msm8974-tsens";
+>>                       reg = <0xfc4a9000 0x1000>, /* TM */
+>>                             <0xfc4a8000 0x1000>; /* SROT */
+>> +                     reg-names = "tsens_tm", "tsens_srot";
+>
+> While the iomem output seems more convenient this way, these register
+> names are a contract between the DT binding and the particular tsens
+> instance.
+>
+> As such this is a good idea, but with the names should not include the
+> instance information. They should be "tm", "srot".
 
-Since it appears to have been well reviewed and tested, I can take it
-if you send me a git URL and the names of contacts in case of issues
-with the branch.  Once Greg has merged it, I will try to drop it again
-(unless you think there will be an ongoing reason to keep it in
-linux-next separately), but a prompting email would also be nice in
-case I forget.
---=20
-Cheers,
-Stephen Rothwell
+Rob Herring doesn't seem to think so.  As per
+<http://lkml.kernel.org/r/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com>
 
---Sig_/=t3Ckflr7nTyHhTekgg8jUB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+I said:
 
------BEGIN PGP SIGNATURE-----
+> From what you're saying the _only_ reason you'd ever want to use
+> reg-names is if there is an optional register range.  Is that right?
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAluPFvQACgkQAVBC80lX
-0Gxn4ggAgxqb5TVFn2+jl3s9fpEEFIlsoN7E8DJBp0ITdp2Eew7vGhicleD6YMg+
-dBefTyw3AzyxamsW04KDqI/7z28vPNySy27SHYLB+wjfrW2QHhCTByl86kBRmNhA
-K+Vc3T9qnaoAXN0tHLJpEm56HWI7/hR2r7UOJYlhsW/6ztXN6ul2ZGp4UQgFsKwv
-1TaiRH1civVVuL6Po153iPiuJcoixSjwgpdRk1rM9aW0so4sXO1LF044HSECKu1q
-ygklVH2mXEgH5nhSxFXnxLaxvdQaPFWJBy7nzxJi4qoEhKglohpYXEHjS0v66+Jq
-I3EJyAvfSR49Z9jB3DFEXyAW6ZCvaQ==
-=X8VW
------END PGP SIGNATURE-----
+Rob said:
 
---Sig_/=t3Ckflr7nTyHhTekgg8jUB--
+> IMO, yes.
+
+It sounds like Rob won't NAK a change that adds reg-names if there is
+more than one reg, but in general he's not a fan.  I'd vote to keep
+things consistent with Rob's worldview and just drop this change.
+
+
+-Doug
