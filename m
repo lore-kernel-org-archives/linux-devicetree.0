@@ -1,78 +1,146 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 0/9] of: fix compatible-child-node lookups
-Date: Tue, 4 Sep 2018 15:05:57 +0200
-Message-ID: <20180904130557.GT28861@localhost>
-References: <20180827082153.22537-1-johan@kernel.org>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: Re: [PATCH v6 3/5] clk: imx: add SCCG PLL type
+Date: Tue, 4 Sep 2018 13:13:43 +0000
+Message-ID: <20180904131341.ef7tvt6hvtkkpdhw@fsr-ub1664-175>
+References: <1534945703-4730-1-git-send-email-abel.vesa@nxp.com>
+ <1534945703-4730-4-git-send-email-abel.vesa@nxp.com>
+ <20180824074011.lufm653imkf6fyd3@pengutronix.de>
+ <20180828105821.gbd7tba7uvmeeqcx@fsr-ub1664-175>
+ <CAHQ1cqEsHoF0ZFY5+CpQFJ+b3sKd3yJPvmRZMAbaa9+Xzhe3=g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
+In-Reply-To: <CAHQ1cqEsHoF0ZFY5+CpQFJ+b3sKd3yJPvmRZMAbaa9+Xzhe3=g@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <FDA3AE5FEC9B5C4FAAE907407192DC0B@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, "A.s. Dong" <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-kernel <linux-kernel@vger.kernel.org>, "abelvesa@linux.com" <abelvesa@linux.com>, dl-linux-imx <linux-imx@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Tue, Aug 28, 2018 at 12:11:13PM -0700, Andrey Smirnov wrote:
+> On Tue, Aug 28, 2018 at 3:58 AM Abel Vesa <abel.vesa@nxp.com> wrote:
+> >
+> > On Fri, Aug 24, 2018 at 09:40:11AM +0200, Sascha Hauer wrote:
+> > > +Cc Andrey Smirnov who made me aware of this issue.
+> > >
+> > > On Wed, Aug 22, 2018 at 04:48:21PM +0300, Abel Vesa wrote:
+> > > > From: Lucas Stach <l.stach@pengutronix.de>
+> > > >
+> > > > The SCCG is a new PLL type introduced on i.MX8. Add support for thi=
+s.
+> > > > The driver currently misses the PLL lock check, as the preliminary
+> > > > documentation mentions lock configurations, but is quiet about wher=
+e
+> > > > to find the actual lock status signal.
+> > > >
+> > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > > > Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> > > > ---
+> > > > +static int clk_pll1_set_rate(struct clk_hw *hw, unsigned long rate=
+,
+> > > > +                       unsigned long parent_rate)
+> > > > +{
+> > > > +   struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
+> > > > +   u32 val;
+> > > > +   u32 divf;
+> > > > +
+> > > > +   divf =3D rate / (parent_rate * 2);
+> > > > +
+> > > > +   val =3D readl_relaxed(pll->base + PLL_CFG2);
+> > > > +   val &=3D ~(PLL_DIVF_MASK << PLL_DIVF1_SHIFT);
+> > > > +   val |=3D (divf - 1) << PLL_DIVF1_SHIFT;
+> > > > +   writel_relaxed(val, pll->base + PLL_CFG2);
+> > > > +
+> > > > +   /* FIXME: PLL lock check */
+> > >
+> > > Shouldn't be too hard to add, no?
+> >
+> > Added to the next version which I intend to send today.
+> >
+> > >
+> > > > +
+> > > > +   return 0;
+> > > > +}
+> > > > +
+> > > > +static int clk_pll1_prepare(struct clk_hw *hw)
+> > > > +{
+> > > > +   struct clk_sccg_pll *pll =3D to_clk_sccg_pll(hw);
+> > > > +   u32 val;
+> > > > +
+> > > > +   val =3D readl_relaxed(pll->base);
+> > > > +   val &=3D ~(1 << PLL_PD);
+> > > > +   writel_relaxed(val, pll->base);
+> > >
+> > > pll->base + PLL_CFG0 please.
+> >
+> > Same as above.
+> >
+> > >
+> > > > +static const struct clk_ops clk_sccg_pll1_ops =3D {
+> > > > +   .is_prepared    =3D clk_pll1_is_prepared,
+> > > > +   .recalc_rate    =3D clk_pll1_recalc_rate,
+> > > > +   .round_rate     =3D clk_pll1_round_rate,
+> > > > +   .set_rate       =3D clk_pll1_set_rate,
+> > > > +};
+> > > > +
+> > > > +static const struct clk_ops clk_sccg_pll2_ops =3D {
+> > > > +   .prepare        =3D clk_pll1_prepare,
+> > > > +   .unprepare      =3D clk_pll1_unprepare,
+> > > > +   .recalc_rate    =3D clk_pll2_recalc_rate,
+> > > > +   .round_rate     =3D clk_pll2_round_rate,
+> > > > +   .set_rate       =3D clk_pll2_set_rate,
+> > > > +};
+> > >
+> > > So these are two PLLs that share the same enable register. Doing the
+> > > prepare/unprepare for only one PLL can lead to all kinds of trouble.
+> > > Finding a good abstraction the properly handles this case with the
+> > > clock framework is probably also not easy.
+> > >
+> > > I could imagine we'll need to track the enable state on both PLLs and
+> > > only if both are disabled we disable it in hardware.
+> > >
+> > > With the current code we disable the PLLs when all consumers are
+> > > reparented to pll1, which probably has bad effects.
+> > >
+> >
+> > So it took me a while to understand exactly why this needs to stay like=
+ it is.
+> >
+>=20
+> IMHO this means that, if nothing else, all of the below should be
+> documented in code as a comment, otherwise simpletons like me are
+> going to continue stumbling over it and wondering what's going on.
 
-On Mon, Aug 27, 2018 at 10:21:44AM +0200, Johan Hovold wrote:
-> Several drivers currently use of_find_compatible_node() to lookup child
-> nodes while failing to notice that the of_find_ functions search the
-> entire tree depth-first (from a given start node) and therefore can
-> match unrelated nodes.
-> 
-> The fact that these functions also drop a reference to the node they
-> start searching from (e.g. the parent node) is typically also
-> overlooked, something which can lead to use-after-free bugs (e.g. after
-> probe deferrals).
-> 
-> This series adds a new helper, similar to of_get_child_by_name(), 
-> that can be used to lookup compatible child nodes, and uses the new
-> helper to fix child-node lookups throughout the tree.
-> 
-> This is related to the fixes I posted about a year ago, which addressed
-> a similar anti-pattern when looking up child nodes by name. Since it
-> took me more than a year to get all those fixes into Linus' tree (one
-> fix is still pending), and as these fixes depend on the new helper, I'm
-> suggesting that these all go in through Rob's or Greg's trees.
-> 
-> Alternatively, the helper could go into to -rc2, and I'll be pinging
-> submaintainers for the coming year as well. ;)
+Will try to add proper comment to explain what's happening.
 
-Rob has gotten the helper into -rc2 now:
+>=20
+> > The PLL1 is never used by any device, instead it is used as a source fo=
+r PLL2.
+> >
+> > But because the interlink between the two of them is too complicated,
+> > the PLLs 1 and 2 need to be separate clocks.
+> >
+>=20
+> Can you go a little bit more into detail as for why PLL1 needs to be
+> exposed in the first place and can't just be dealt with behind the
+> scenes as a part of PLL2 abstraction? Are there use-cases where the
+> rates of the two are going to be adjusted individually in Linux?
+>=20
 
-        36156f9241cb of: add helper to lookup compatible child node
+Here is the SCCG PLL Block Diagram:
 
-so feel free to pick these fixes up directly for 4.19-rc or -next,
-whichever you prefer. I've been able to trigger crashes after probe
-deferrals due to the use-after-free, but this seems unlikely to be
-exploitable.
+https://www.nxp.com/docs/en/reference-manual/IMX8MDQLQRM.pdf#page=3D834
 
-I think Rob will be picking up any patches that remain by the end of the
-release cycle for 4.20.
+Now lets take the System PLL 2 for example. If you follow the hierarchy,
+when you reach the sys2_pll1_out you can see that one of its selectors is
+actually sys1_pll1_ref_sel. Same thing applies to sys3_pll2_out with
+sys2_pll1_ref_sel. This means there is an input reference clock interlinkin=
+g
+between different System PLLs.
 
-Thanks,
-Johan
+> Thanks,
+> Andrey Smirnov
 
-> Johan Hovold (9):
->   of: add helper to lookup compatible child node
->   drm/mediatek: fix OF sibling-node lookup
->   drm/msm: fix OF child-node lookup
->   mmc: meson-mx-sdio: fix OF child-node lookup
->   mtd: nand: atmel: fix OF child-node lookup
->   net: bcmgenet: fix OF child-node lookup
->   net: stmmac: dwmac-sun8i: fix OF child-node lookup
->   NFC: nfcmrvl_uart: fix OF child-node lookup
->   power: supply: twl4030-charger: fix OF sibling-node lookup
-> 
->  drivers/gpu/drm/mediatek/mtk_hdmi.c           |  5 ++--
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  5 ++--
->  drivers/mmc/host/meson-mx-sdio.c              |  8 ++++--
->  drivers/mtd/nand/raw/atmel/nand-controller.c  | 11 +++++---
->  drivers/net/ethernet/broadcom/genet/bcmmii.c  |  2 +-
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 +++++++--
->  drivers/nfc/nfcmrvl/uart.c                    |  5 ++--
->  drivers/of/base.c                             | 25 +++++++++++++++++++
->  drivers/power/supply/twl4030_charger.c        |  5 ++--
->  include/linux/of.h                            |  8 ++++++
->  10 files changed, 68 insertions(+), 18 deletions(-)
+-- =
