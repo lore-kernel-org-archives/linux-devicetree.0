@@ -1,54 +1,31 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v2] arm64: dts: ti: k3-am65: Change #address-cells and
- #size-cells of interconnect to 2
-Date: Tue, 4 Sep 2018 20:52:40 +0530
-Message-ID: <921e9705-1ac4-29fa-61bb-e6f4261b125e@ti.com>
-References: <20180903095235.13853-1-kishon@ti.com>
- <20180904134142.npoxfimfsllmxdwb@akan>
+From: Alex Gonzalez <alex.gonzalez@digi.com>
+Subject: [PATCH v2] ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Pro
+Date: Tue, 4 Sep 2018 17:28:28 +0200
+Message-ID: <1536074909-8654-1-git-send-email-alex.gonzalez@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180904134142.npoxfimfsllmxdwb@akan>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Menon, Nishanth" <nm@ti.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Kristo, Tero" <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alex.gonzalez@digi.com
 List-Id: devicetree@vger.kernel.org
 
+This patch adds a device tree for the ConnectCore 6UL SBC Pro board, based
+on the ConnectCore 6UL SOM.
 
+Changes since v1 [1]:
 
-On Tuesday 04 September 2018 07:11 PM, Menon, Nishanth wrote:
-> On 15:22-20180903, Kishon Vijay Abraham I wrote:
-> 
->> AM65 has two PCIe controllers and each PCIe controller has '2' address
->> spaces one within the 4GB address space of the SoC and the other above
->> the 4GB address space of the SoC (cbass_main) in addition to the
->> register space. The size of the address space above the 4GB SoC address
->> space is 4GB. These address ranges will be used by CPU/DMA to access
->> the PCIe address space. In order to represent the address space above
->> the 4GB SoC address space and to represent the size of this address
->> space as 4GB, change address-cells and size-cells of interconnect to 2.
->>
->> Since OSPI has similar need in MCU Domain Memory Map, change
->> address-cells and size-cells of cbass_mcu interconnect also to 2.
->>
-> 
-> Please add Fixes
-> 
-> Vignesh, Sekhar, Tony,
-> 
-> Do we agree this is the right way to go forward? if yes, please
-> ack.
-> 
->
+* Removed unused pinctrl nodes
+* Replace undocumented vendor BSP node by using GPIO hogs
+* Formatting changes:
+        * Change node names to use dashes instead of underscores
 
-LGTM, thanks kishon!
+[1] https://lore.kernel.org/lkml/1534936719-13770-2-git-send-email-alex.gonzalez@digi.com/
 
-Acked-by: Vignesh R <vigneshr@ti.com>
+Alex Gonzalez (1):
+  ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Pro
 
-
-
--- 
-Regards
-Vignesh
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts | 394 ++++++++++++++++++++++++++++
+ 2 files changed, 395 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts
