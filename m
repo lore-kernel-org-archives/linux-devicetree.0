@@ -1,34 +1,55 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
-Date: Tue, 4 Sep 2018 09:59:08 -0400
-Message-ID: <20180904095908.13298b3d@gandalf.local.home>
-References: <1536012923-16275-1-git-send-email-henrik@austad.us>
- <20180904113030.GB25177@amd>
+From: Stefan Popa <stefan.popa@analog.com>
+Subject: [PATCH 3/3] dt-bindings: adxl372: Document the adxl372 I2C bindings
+Date: Tue, 4 Sep 2018 17:13:14 +0300
+Message-ID: <1536070394-5679-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180904113030.GB25177@amd>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Henrik Austad <henrik@austad.us>, Lai Jiangshan <jiangshanlai@gmail.com>, dri-devel@lists.freedesktop.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Jan Kandziora <jjj@gmx.de>, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, linux-s390@vger.kernel.org, Ian Kent <raven@themaw.net>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>, Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, "James E.J. Bottomley" <jejb@parisc-linux.or>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, robh+dt@kernel.org
+Cc: knaack.h@gmx.de, lars@metafoo.de, Michael.Hennerich@analog.com, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCA0IFNlcCAyMDE4IDEzOjMwOjMwICswMjAwClBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3
-LmN6PiB3cm90ZToKCj4gSSdkIHNheSB0aGlzIGlzIHN0aWxsIHF1aXRlIHZhbHVlYWJsZSwgYW5k
-IGl0IG1pZ2h0IGJlIHdvcnRoIGZpeGluZywKPiByYXRoZXIgdGhlbiByZW1vdmluZyBjb21wbGV0
-ZWx5LgoKSSBhZ3JlZS4gUGVyaGFwcyB3ZSBzaG91bGQgaGF2ZSBhIDAwLURFU0NSSVBUSU9OIGZp
-bGUgaW4gZWFjaApkaXJlY3RvcnksIGFuZCBlYWNoIGZpbGUgY291bGQgc3RhcnQgd2l0aCBhOgoK
-IERFU0NSSVBUSU9OOiA8b25lIGxpbmUgZGVzY3JpcHRpb24gaGVyZT4KCmFuZCB0aGVuIHRoZXNl
-IGZpbGVzIGNvdWxkIGJlIGdlbmVyYXRlZCBieSB0aG9zZSB0aGF0IGhhdmUgdGhlc2UgdGFncy4K
-Ci0tIFN0ZXZlCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+The adxl372 is designed to communicate in either SPI or I2C protocol.
+This patch adds the documentation of device tree bindings for adxl372
+I2C.
+
+Signed-off-by: Stefan Popa <stefan.popa@analog.com>
+---
+ Documentation/devicetree/bindings/iio/accel/adxl372.txt | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+index 9409984..a289964 100644
+--- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
++++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
+@@ -4,14 +4,25 @@ http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
+ 
+ Required properties:
+  - compatible : should be "adi,adxl372"
+- - reg: SPI chip select number for the device
++ - reg: the I2C address or SPI chip select number for the device
++
++Required properties for SPI bus usage:
+  - spi-max-frequency: Max SPI frequency to use
+ 
+ Optional properties:
+  - interrupts: interrupt mapping for IRQ as documented in
+    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+ 
+-Example:
++Example for a I2C device node:
++
++	accelerometer@53 {
++		compatible = "adi,adxl372";
++		reg = <0x53>;
++		interrupt-parent = <&gpio>;
++		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++	};
++
++Example for a SPI device node:
+ 
+ 	accelerometer@0 {
+ 		compatible = "adi,adxl372";
+-- 
+2.7.4
