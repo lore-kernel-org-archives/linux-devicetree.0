@@ -1,55 +1,29 @@
-From: Stefan Popa <stefan.popa@analog.com>
-Subject: [PATCH 3/3] dt-bindings: adxl372: Document the adxl372 I2C bindings
-Date: Tue, 4 Sep 2018 17:13:14 +0300
-Message-ID: <1536070394-5679-1-git-send-email-stefan.popa@analog.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 2/4] dt: bindings: Document ZynqMP DDRC in Synopsys
+ documentation
+Date: Tue, 4 Sep 2018 09:16:18 -0500
+Message-ID: <20180904141618.GA5516@bogus>
+References: <1535722070-10394-1-git-send-email-manish.narani@xilinx.com>
+ <1535722070-10394-3-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1535722070-10394-3-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, robh+dt@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, Michael.Hennerich@analog.com, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stefan.popa@analog.com
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, leoyang.li@nxp.com, amit.kucheria@linaro.org, olof@lixom.net, sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The adxl372 is designed to communicate in either SPI or I2C protocol.
-This patch adds the documentation of device tree bindings for adxl372
-I2C.
+On Fri, Aug 31, 2018 at 06:57:48PM +0530, Manish Narani wrote:
+> Add information of ZynqMP DDRC which reports the single bit errors that
+> are corrected and the double bit errors that are detected.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  .../bindings/memory-controllers/synopsys.txt       | 27 ++++++++++++++++++----
+>  1 file changed, 22 insertions(+), 5 deletions(-)
 
-Signed-off-by: Stefan Popa <stefan.popa@analog.com>
----
- Documentation/devicetree/bindings/iio/accel/adxl372.txt | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+Please add acks/reviewed-bys when posting new versions.
 
-diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-index 9409984..a289964 100644
---- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-+++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-@@ -4,14 +4,25 @@ http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
- 
- Required properties:
-  - compatible : should be "adi,adxl372"
-- - reg: SPI chip select number for the device
-+ - reg: the I2C address or SPI chip select number for the device
-+
-+Required properties for SPI bus usage:
-  - spi-max-frequency: Max SPI frequency to use
- 
- Optional properties:
-  - interrupts: interrupt mapping for IRQ as documented in
-    Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- 
--Example:
-+Example for a I2C device node:
-+
-+	accelerometer@53 {
-+		compatible = "adi,adxl372";
-+		reg = <0x53>;
-+		interrupt-parent = <&gpio>;
-+		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-+	};
-+
-+Example for a SPI device node:
- 
- 	accelerometer@0 {
- 		compatible = "adi,adxl372";
--- 
-2.7.4
+Rob
