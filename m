@@ -1,12 +1,11 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
-Date: Tue, 4 Sep 2018 13:30:30 +0200
-Message-ID: <20180904113030.GB25177@amd>
-References: <1536012923-16275-1-git-send-email-henrik@austad.us>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH 00/16] R-Car D3/E3 display support (with LVDS PLL)
+Date: Tue,  4 Sep 2018 15:10:11 +0300
+Message-ID: <20180904121027.24031-1-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1037788062=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1536012923-16275-1-git-send-email-henrik@austad.us>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -16,75 +15,98 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Henrik Austad <henrik@austad.us>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Jan Kandziora <jjj@gmx.de>, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, linux-s390@vger.kernel.org, Ian Kent <raven@themaw.net>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, "James E.J. Bottomley" <jejb@parisc-linux.org>, Ingo Molnar <mingo@redhat.com>P
+To: dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, Ulrich Hecht <uli@fpond.eu>, Jacopo Mondi <jacopo@jmondi.org>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1037788062==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Fba/0zbH8Xs+Fj9o"
-Content-Disposition: inline
-
-
---Fba/0zbH8Xs+Fj9o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> The 00-INDEX files are supposed to give a summary of all files present
-> in a directory, but these files are horribly out of date and their
-> usefulness is brought into question. Often a simple "ls" would reveal
-> the same information as the filenames are generally quite descriptive as
-> a short introduction to what the file covers (it should not surprise
-
-
-> -SAK.txt
-> -	- info on Secure Attention Keys.
-> -SM501.txt
-> -	- Silicon Motion SM501 multimedia companion chip
-> -btmrvl.txt
-> -	- info on Marvell Bluetooth driver usage.
-
-Well, I don't know what sm501 is, but description helps me. SAK is
-similar. .. as is btmrvl.
-
-I'd say this is still quite valueable, and it might be worth fixing,
-rather then removing completely.
-
-And yes, moving stuff to subdirectories and naming files reasonably
-would help, too. "btmrvl" is really bad name...
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---Fba/0zbH8Xs+Fj9o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAluObNYACgkQMOfwapXb+vIEUgCfflpJ++Ke7RojgYEKLcv9wdCK
-VcAAoJ44RGl6/ZbjcSM3g58FnjCGx/f+
-=c4sE
------END PGP SIGNATURE-----
-
---Fba/0zbH8Xs+Fj9o--
-
---===============1037788062==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1037788062==--
+SGVsbG8gZXZlcnlib2R5LAoKVGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBkaXNwbGF5IHN1cHBvcnQg
+Zm9yIHRoZSBEMyBhbmQgRTMgU29DcywgYW5kIGluCnBhcnRpY3VsYXIgdGhlIERyYWFrIGFuZCBF
+YmlzdSBib2FyZHMuCgpUaGUgY29kZSBpcyBiYXNlZCBvbiBVbHJpY2gncyAiW1BST1RPXVtQQVRD
+SCAwMC8xMF0gUi1DYXIgRDMgTFZEUy9IRE1JIHN1cHBvcnQKKHdpdGggUExMKSIgc2VyaWVzIHBy
+ZXZpb3VzbHkgcG9zdGVkIHRvIHRoZSBkcmktZGV2ZWwgYW5kIGxpbnV4LXJlbmVzYXMtc29jCm1h
+aWxpbmcgbGlzdHMuIEl0IGhhcyBiZWVuIGV4dGVuc2l2ZWx5IHJld29ya2VkIGFuZCBwYXJ0bHkg
+cmV3cml0dGVuLCBhbmQKc3VwcG9ydCBmb3IgRTMgYW5kIEViaXN1IGhhcyBiZWVuIGFkZGVkLgoK
+VGhlIERVIGluIHRoZSBEMyBhbmQgRTMgU29DcyBoYXMgbm8gaW50ZXJuYWwgUExMLiBJbiBvcmRl
+ciB0byBhY2hpZXZlIHByZWNpc2UKcGl4ZWwgY2xvY2sgcmF0ZXMgKHJlcXVpcmVkLCBhbW9uZyBv
+dGhlciB1c2UgY2FzZXMsIGZvciBIRE1JIG9wZXJhdGlvbiksIHRoZQpQTEwgZnJvbSB0aGUgaW50
+ZXJuYWwgTFZEUyBlbmNvZGVyIG11c3QgYmUgcHJvZ3JhbW1lZCBhbmQgaXRzIG91dHB1dCBjbG9j
+awpyb3V0ZWQgYmFjayB0byB0aGUgRFUuCgpUaGUgc2VyaWVzIHN0YXJ0cyB3aXRoIHVwZGF0ZSB0
+byB0aGUgRFUgYW5kIExWRFMgZW5jb2RlciBEVCBiaW5kaW5ncyB0byBhZGQgRTMKKFI4QTc3OTkw
+KSBzdXBwb3J0IChwYXRjaGVzIDAxLzE2IGFuZCAwMi8xNikgYW5kIG5ldyBjbG9jayBzb3VyY2Vz
+IGZvciB0aGUKTFZEUyBlbmNvZGVyIChwYXRjaCAwMy8xNikuCgpUaGUgbmV4dCBwYXRjaCAoMDQv
+MTYpIGFkZHMgYSAubW9kZV92YWxpZCgpIG9wZXJhdGlvbiB0byB0aGUgdGhjNjNsdmQxMDI0CmRy
+aXZlciwgdG8gcmVqZWN0IG1vZGVzIG91dHNpZGUgb2YgdGhlIExWRFMgZGVjb2RlcidzIHBpeGVs
+IGNsb2NrIG9wZXJhdGluZwpyYW5nZSAoOCBNSHogdG8gMTM1IE1IeikuIFRoZSBwYXRjaCBjYW4g
+YmUgbWVyZ2VkIG9uIGl0cyBvd24gc2VwYXJhdGVseSBmcm9tCnRoaXMgc2VyaWVzLgoKUGF0Y2gg
+KDA1LzE2KSBhZGRzIHN1cHBvcnQgZm9yIEQzIGFuZCBFMyB0byB0aGUgTFZEUyBlbmNvZGVyIGRy
+aXZlci4gQ29tcGFyZWQKdG8gdGhlIGFscmVhZHkgc3VwcG9ydGVkIFNvQ3MsIEQzIGFuZCBFMyB1
+c2UgYSBkaWZmZXJlbnQgaW5pdGlhbGl6YXRpb24Kc2VxdWVuY2UgYW5kIGhhdmUgYSBkaWZmZXJl
+bnQgUExMIGFyY2hpdGVjdHVyZSwgd2l0aCBtb3JlIG9wdGlvbnMgZm9yIHRoZQppbnB1dCBjbG9j
+ay4KClRoZSBuZXh0IGZpdmUgcGF0Y2hlcyAoMDYvMTYgdG8gMTAvMTYpIHBlcmZvcm0gc21hbGwg
+cmV3b3JrcyBvciBhZGQgc3VwcG9ydApmb3IgbWlzY2VsbGFuZW91cyBtaXNzaW5nIGZlYXR1cmVz
+IGFuZCBsaW1pdGF0aW9ucyBvZiB0aGUgRFUsIHRvIGJlIGZvbGxvd2VkCmJ5IHBhdGNoIDExLzE2
+IHRoYXQgYWRkcyBzdXBwb3J0IGZvciB0aGUgRDMgYW5kIEUzIHRvIHRoZSBEVSBkcml2ZXIuCgpG
+aW5hbGx5IHBhdGNoZXMgMTIvMTYgdG8gMTYvMTYgZW5hYmxlIGRpc3BsYXkgZm9yIHRoZSBEMyBh
+bmQgRTMgYm9hcmRzIGluIERULgpQYXRjaCAxMi8xNiBhZGRzIHN1cHBvcnQgZm9yIHRoZSBJMkMg
+Y29udHJvbGxlcnMgaW4gdGhlIEUzIERULCBhbmQgd2lsbCBsaWtlbHkKYmUgbWVyZ2VkIHNlcGFy
+YXRlbHkgZnJvbSB0aGlzIHNlcmllcy4gUGF0Y2ggMTMvMTYgYWRkcyBhbGwgdGhlIGRpc3BsYXkg
+SVAKY29yZXMgKEZDUCwgVlNQLCBEVSBhbmQgTFZEUyBlbmNvZGVycykgdG8gdGhlIEUzIERULCB3
+aGlsZSBwYXRjaCAxNC8xNiBhZGRzCihhbmQgd2lyZXMgdXApIHRoZSBtaXNzaW5nIExWRFMgZW5j
+b2RlcnMgdG8gdGhlIEQzIERULiBQYXRjaGVzIDE1LzE2IGFuZCAxNi8xNgp0aGVuIGVuYWJsZSBk
+aXNwbGF5IG91dHB1dCBmb3IgdGhlIEViaXN1IGFuZCBEcmFhayBib2FyZHMgcmVzcGVjdGl2ZWx5
+LgoKSSBiZWxpZXZlIHRoZSBwYXRjaCBzZXJpZXMgdG8gYmUgcmVhZHkgZm9yIHVwc3RyZWFtaW5n
+IChhZnRlciBmaXhpbmcgdGhlCmlzc3VlcyBmb3VuZCBkdXJpbmcgcmV2aWV3IG9mIGNvdXJzZSku
+IFRoZXJlIGlzIG5vIGJpZyBoYWNrIGluIHRoZSBjb2RlLCBhbmQgSQpoYXZlbid0IG5vdGljZWQg
+YW55IHJlZ3Jlc3Npb24uIEEgZmV3IGlzc3VlcyBhcmUgc3RpbGwgdW5zb2x2ZWQsIHN1Y2ggYXMg
+aG93CnRvIGRpc2FibGUgZGlzcGxheSBvdXRwdXRzIGluZGVwZW5kZW50bHkgb24gRDMgYW5kIEUz
+LCBhbmQgdXNhZ2Ugb2YgdGhlIExWRFMKUExMIGZvciB0aGUgUkdCIG91dHB1dCwgYnV0IHRob3Nl
+IGFyZSBub3QgcmVncmVzc2lvbnMgYW5kIHNob3VsZG4ndCBpbiBteQpvcGluaW9uIGJlIGNvbnNp
+ZGVyZWQgYXMgc2hvdyBzdG9wcGVycy4KClRoZSBwYXRjaGVzIGFyZSBhdmFpbGFibGUgZnJvbQoK
+CWdpdDovL2xpbnV4dHYub3JnL3BpbmNoYXJ0bC9tZWRpYS5naXQgZHJtL2R1L2x2ZHMtcGxsCgp3
+aXRoIGFuIGFkZGl0aW9uYWwgcGF0Y2ggZm9yIEUzIHBpbmN0cmwgdGhhdCBpcyByZXF1aXJlZCBm
+b3IgdGVzdGluZyBhbmQgaGFzCmJlZW4gcXVldWVkIGJ5IEdlZXJ0IGZvciB2NC4yMCBhbHJlYWR5
+LgoKSSBoYXZlIHN1Y2Nlc3NmdWxseSB0ZXN0ZWQgdGhlIHNlcmllcyB3aXRoIHRoZSBIRE1JIG91
+dHB1dCBvZiB0aGUgRWJpc3UgYm9hcmQuClVscmljaCwgSmFjb3BvLCBjb3VsZCB5b3UgdGVzdCBp
+dCBvbiBEMyBpZiB5b3UgaGF2ZSB0aW1lID8gWW91IG9ubHkgbmVlZCB0bwpydW4ga21zdGVzdCBv
+ciBtb2RldGVzdCB0byBkaXNwbGF5IGFuIGltYWdlIG9uIHRoZSBIRE1JIG91dHB1dC4KCktpZXJh
+biBCaW5naGFtICgxKToKICBhcm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk5NTogQWRkIExWRFMg
+c3VwcG9ydAoKTGF1cmVudCBQaW5jaGFydCAoMTIpOgogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBy
+ZW5lc2FzOiBkdTogRG9jdW1lbnQgcjhhNzc5OTAgYmluZGluZ3MKICBkdC1iaW5kaW5nczogZGlz
+cGxheTogcmVuZXNhczogbHZkczogRG9jdW1lbnQgcjhhNzc5OTAgYmluZGluZ3MKICBkdC1iaW5k
+aW5nczogZGlzcGxheTogcmVuZXNhczogbHZkczogQWRkIEVYVEFMIGFuZCBEVV9ET1RDTEtJTiBj
+bG9ja3MKICBkcm06IGJyaWRnZTogdGhjNjM6IFJlc3RyaWN0IG1vZGVzIGJhc2VkIG9uIGhhcmR3
+YXJlIG9wZXJhdGluZwogICAgZnJlcXVlbmN5CiAgZHJtOiByY2FyLWR1OiBsdmRzOiBEMy9FMyBz
+dXBwb3J0CiAgZHJtOiByY2FyLWR1OiBQZXJmb3JtIHRoZSBpbml0aWFsIENSVEMgc2V0dXAgZnJv
+bSByY2FyX2R1X2NydGNfZ2V0KCkKICBkcm06IHJjYXItZHU6IFVzZSBMVkRTIFBMTCBjbG9jayBh
+cyBkb3QgY2xvY2sgd2hlbiBwb3NzaWJsZQogIGRybTogcmNhci1kdTogRW5hYmxlIGNvbmZpZ3Vy
+YWJsZSBEUEFEMCByb3V0aW5nIG9uIEdlbjMKICBkcm06IHJjYXItZHU6IENhY2hlIERTWVNSIHZh
+bHVlIHRvIGVuc3VyZSBrbm93biBpbml0aWFsIHZhbHVlCiAgZHJtOiByY2FyLWR1OiBEb24ndCB1
+c2UgVFYgc3luYyBtb2RlIHdoZW4gbm90IHN1cHBvcnRlZCBieSB0aGUKICAgIGhhcmR3YXJlCiAg
+YXJtNjQ6IGR0czogcmVuZXNhczogcjhhNzc5OTA6IEFkZCBkaXNwbGF5IG91dHB1dCBzdXBwb3J0
+CiAgYXJtNjQ6IGR0czogcmVuZXNhczogcjhhNzc5OTA6IGViaXN1OiBFbmFibGUgVkdBIGFuZCBI
+RE1JIG91dHB1dHMKClRha2VzaGkgS2loYXJhICgxKToKICBhcm02NDogZHRzOiByZW5lc2FzOiBy
+OGE3Nzk5MDogQWRkIEkyQyBkZXZpY2Ugbm9kZXMKClVscmljaCBIZWNodCAoMik6CiAgZHJtOiBy
+Y2FyLWR1OiBBZGQgcjhhNzc5OTAgYW5kIHI4YTc3OTk1IGRldmljZSBzdXBwb3J0CiAgYXJtNjQ6
+IGR0czogcmVuZXNhczogcjhhNzc5OTU6IGRyYWFrOiBFbmFibGUgSERNSSBkaXNwbGF5IG91dHB1
+dAoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0ICAgICAgIHwg
+IDEzICstCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JlbmVzYXMsZHUudHh0ICAg
+ICB8ICAgMiArCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5OTAtZWJpc3UuZHRz
+ICAgICB8IDE2NiArKysrKysrKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc5
+OTAuZHRzaSAgICAgICAgICB8IDI5MCArKysrKysrKysrKysrKysrCiBhcmNoL2FybTY0L2Jvb3Qv
+ZHRzL3JlbmVzYXMvcjhhNzc5OTUtZHJhYWsuZHRzICAgICB8ICA5OCArKysrKy0KIGFyY2gvYXJt
+NjQvYm9vdC9kdHMvcmVuZXNhcy9yOGE3Nzk5NS5kdHNpICAgICAgICAgIHwgIDU2ICsrKysKIGRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2UvdGhjNjNsdmQxMDI0LmMgICAgICAgICAgICAgIHwgIDE4ICsK
+IGRyaXZlcnMvZ3B1L2RybS9yY2FyLWR1L3JjYXJfZHVfY3J0Yy5jICAgICAgICAgICAgIHwgMTM2
+ICsrKystLS0tCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2NydGMuaCAgICAgICAg
+ICAgICB8ICAgNSArCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5jICAgICAg
+ICAgICAgICB8ICA2MyArKystCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2Rydi5o
+ICAgICAgICAgICAgICB8ICAgMyArCiBkcml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2R1X2dy
+b3VwLmMgICAgICAgICAgICB8ICA4OCArKystLQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNh
+cl9kdV9rbXMuYyAgICAgICAgICAgICAgfCAgMTIgKwogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUv
+cmNhcl9sdmRzLmMgICAgICAgICAgICAgICAgfCAzNjUgKysrKysrKysrKysrKysrKysrLS0tCiBk
+cml2ZXJzL2dwdS9kcm0vcmNhci1kdS9yY2FyX2x2ZHNfcmVncy5oICAgICAgICAgICB8ICA0MyAr
+Ky0KIDE1IGZpbGVzIGNoYW5nZWQsIDEyMTAgaW5zZXJ0aW9ucygrKSwgMTQ4IGRlbGV0aW9ucygt
+KQoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
