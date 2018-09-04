@@ -1,107 +1,69 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 02/11] clk: sunxi-ng: a64: Add max. rate
- constraint to video PLLs
-Date: Tue,  4 Sep 2018 12:40:44 +0800
-Message-ID: <20180904044053.15425-3-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v4 03/11] dt-bindings: display: Add compatible for A64 DE2 display pipeline
+Date: Tue,  4 Sep 2018 12:40:45 +0800
+Message-ID: <20180904044053.15425-4-icenowy@aosc.io>
 References: <20180904044053.15425-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBCM2XDOAKGQEQSBD22A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180904044053.15425-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180904044053.15425-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Video PLLs on A64 can be set to higher rate that it is actually
-supported by HW.
+From: Jagan Teki <jagan@amarulasolutions.com>
 
-Limit maximum rate to 1008 MHz. This is the maximum allowed rate by BSP
-clock driver. Interestengly, user manual specifies maximum frequency to
-be 600 MHz. Historically, this data was wrong in some user manuals for
-other SoCs, so more faith is put in BSP clock driver.
+Allwinner A64 has a DE2 display pipeline. The TCONs are similar to the
+ones in A83T, but the mixers are new (similar to the later R40 SoC).
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+This patch adds dt-binding documentation for A64 DE2 display pipeline.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+[Icenowy: Refactor and also cover TCON1]
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
 ---
-New patch in v4.
+Changes for v4:
+- none
+Changes for v3.1:
+- added mixer0 and TCON0
+Changes for v3:
+- collect Rob r-w-b tag
+Changes for v2:
+- Add fallback compatible for tcon1
+- Add separate compatible for mixer1 
 
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 50 ++++++++++++++-------------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+ .../devicetree/bindings/display/sunxi/sun4i-drm.txt          | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index d0e30192f0cf..5f80eb018014 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -64,18 +64,19 @@ static SUNXI_CCU_NM_WITH_GATE_LOCK(pll_audio_base_clk, "pll-audio-base",
- 				   BIT(28),	/* lock */
- 				   CLK_SET_RATE_UNGATE);
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index f8773ecb7525..7b79c5e3dffc 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -151,6 +151,8 @@ Required properties:
+    * allwinner,sun8i-v3s-tcon
+    * allwinner,sun9i-a80-tcon-lcd
+    * allwinner,sun9i-a80-tcon-tv
++   * "allwinner,sun50i-a64-tcon-lcd", "allwinner,sun8i-a83t-tcon-lcd"
++   * "allwinner,sun50i-a64-tcon-tv", "allwinner,sun8i-a83t-tcon-tv"
+  - reg: base address and size of memory-mapped region
+  - interrupts: interrupt associated to this IP
+  - clocks: phandles to the clocks feeding the TCON.
+@@ -370,6 +372,8 @@ Required properties:
+     * allwinner,sun8i-a83t-de2-mixer-1
+     * allwinner,sun8i-h3-de2-mixer-0
+     * allwinner,sun8i-v3s-de2-mixer
++    * allwinner,sun50i-a64-de2-mixer-0
++    * allwinner,sun50i-a64-de2-mixer-1
+   - reg: base address and size of the memory-mapped region.
+   - clocks: phandles to the clocks feeding the mixer
+     * bus: the mixer interface clock
+@@ -403,6 +407,7 @@ Required properties:
+     * allwinner,sun8i-r40-display-engine
+     * allwinner,sun8i-v3s-display-engine
+     * allwinner,sun9i-a80-display-engine
++    * allwinner,sun50i-a64-display-engine
  
--static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN(pll_video0_clk, "pll-video0",
--					    "osc24M", 0x010,
--					    192000000,	/* Minimum rate */
--					    8, 7,		/* N */
--					    0, 4,		/* M */
--					    BIT(24),	/* frac enable */
--					    BIT(25),	/* frac select */
--					    270000000,	/* frac rate 0 */
--					    297000000,	/* frac rate 1 */
--					    BIT(31),	/* gate */
--					    BIT(28),	/* lock */
--					    CLK_SET_RATE_UNGATE);
-+static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX(pll_video0_clk, "pll-video0",
-+						"osc24M", 0x010,
-+						192000000,	/* Minimum rate */
-+						1008000000,	/* Maximum rate */
-+						8, 7,		/* N */
-+						0, 4,		/* M */
-+						BIT(24),	/* frac enable */
-+						BIT(25),	/* frac select */
-+						270000000,	/* frac rate 0 */
-+						297000000,	/* frac rate 1 */
-+						BIT(31),	/* gate */
-+						BIT(28),	/* lock */
-+						CLK_SET_RATE_UNGATE);
- 
- static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_ve_clk, "pll-ve",
- 					"osc24M", 0x018,
-@@ -126,18 +127,19 @@ static struct ccu_nk pll_periph1_clk = {
- 	},
- };
- 
--static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN(pll_video1_clk, "pll-video1",
--					    "osc24M", 0x030,
--					    192000000,	/* Minimum rate */
--					    8, 7,		/* N */
--					    0, 4,		/* M */
--					    BIT(24),	/* frac enable */
--					    BIT(25),	/* frac select */
--					    270000000,	/* frac rate 0 */
--					    297000000,	/* frac rate 1 */
--					    BIT(31),	/* gate */
--					    BIT(28),	/* lock */
--					    CLK_SET_RATE_UNGATE);
-+static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX(pll_video1_clk, "pll-video1",
-+						"osc24M", 0x030,
-+						192000000,	/* Minimum rate */
-+						1008000000,	/* Maximum rate */
-+						8, 7,		/* N */
-+						0, 4,		/* M */
-+						BIT(24),	/* frac enable */
-+						BIT(25),	/* frac select */
-+						270000000,	/* frac rate 0 */
-+						297000000,	/* frac rate 1 */
-+						BIT(31),	/* gate */
-+						BIT(28),	/* lock */
-+						CLK_SET_RATE_UNGATE);
- 
- static SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK(pll_gpu_clk, "pll-gpu",
- 					"osc24M", 0x038,
+   - allwinner,pipelines: list of phandle to the display engine
+     frontends (DE 1.0) or mixers (DE 2.0) available.
 -- 
 2.18.0
