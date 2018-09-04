@@ -1,117 +1,51 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH v2 net-next 4/7] dt-bindings: net: Add lantiq,xrx200-net
- DT bindings
-Date: Tue, 4 Sep 2018 23:54:10 +0200
-Message-ID: <eb19b532-8a22-4bfb-ae03-7b563ab951e1@hauke-m.de>
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120407.9912-1-hauke@hauke-m.de>
- <5866e89f-ac9a-8c6c-bf53-3b1206171e31@gmail.com>
+From: Jens Axboe <axboe@kernel.dk>
+Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
+Date: Tue, 4 Sep 2018 09:45:47 -0600
+Message-ID: <cab5289c-7c53-28a8-b9b2-0c55c9f8d968@kernel.dk>
+References: <1536012923-16275-1-git-send-email-henrik@austad.us>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="e9TLdY9O2j3pVJJBcjK8u3SqrPvLPQd8c"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5866e89f-ac9a-8c6c-bf53-3b1206171e31@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1536012923-16275-1-git-send-email-henrik@austad.us>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Henrik Austad <henrik@austad.us>, linux-doc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, Jan Kandziora <jjj@gmx.de>, kvm@vger.kernel.org, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, linux-s390@vger.kernel.org, Ian Kent <raven@themaw.net>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbet@lwn.net>, Helge Deller <deller@gmx.de>, x86@kernel.org, "James E.J. Bottomley" <jejb@parisc-linux.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---e9TLdY9O2j3pVJJBcjK8u3SqrPvLPQd8c
-Content-Type: multipart/mixed; boundary="3YXgcjdJQutfN8Y4EgutzzpNnpILg0SdY";
- protected-headers="v1"
-From: Hauke Mehrtens <hauke@hauke-m.de>
-To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch,
- vivien.didelot@savoirfairelinux.com, john@phrozen.org,
- linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com,
- devicetree@vger.kernel.org
-Message-ID: <eb19b532-8a22-4bfb-ae03-7b563ab951e1@hauke-m.de>
-Subject: Re: [PATCH v2 net-next 4/7] dt-bindings: net: Add lantiq,xrx200-net
- DT bindings
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120407.9912-1-hauke@hauke-m.de>
- <5866e89f-ac9a-8c6c-bf53-3b1206171e31@gmail.com>
-In-Reply-To: <5866e89f-ac9a-8c6c-bf53-3b1206171e31@gmail.com>
+On 9/3/18 4:15 PM, Henrik Austad wrote:
+> This is a respin with a wider audience (all that get_maintainer returned)
+> and I know this spams a *lot* of people. Not sure what would be the correct
+> way, so my apologies for ruining your inbox.
+> 
+> The 00-INDEX files are supposed to give a summary of all files present
+> in a directory, but these files are horribly out of date and their
+> usefulness is brought into question. Often a simple "ls" would reveal
+> the same information as the filenames are generally quite descriptive as
+> a short introduction to what the file covers (it should not surprise
+> anyone what Documentation/sched/sched-design-CFS.txt covers)
+> 
+> A few years back it was mentioned that these files were no longer really
+> needed, and they have since then grown further out of date, so perhaps
+> it is time to just throw them out.
+> 
+> A short status yields the following _outdated_ 00-INDEX files, first
+> counter is files listed in 00-INDEX but missing in the directory, last
+> is files present but not listed in 00-INDEX.
 
---3YXgcjdJQutfN8Y4EgutzzpNnpILg0SdY
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+For the block related bits:
 
-On 09/03/2018 09:46 PM, Florian Fainelli wrote:
->=20
->=20
-> On 9/1/2018 5:04 AM, Hauke Mehrtens wrote:
->> This adds the binding for the PMAC core between the CPU and the GSWIP
->> switch found on the xrx200 / VR9 Lantiq / Intel SoC.
->>
->> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
->> Cc: devicetree@vger.kernel.org
->> ---
->> =C2=A0 .../devicetree/bindings/net/lantiq,xrx200-net.txt=C2=A0=C2=A0 |=
- 21
->> +++++++++++++++++++++
->> =C2=A0 1 file changed, 21 insertions(+)
->> =C2=A0 create mode 100644
->> Documentation/devicetree/bindings/net/lantiq,xrx200-net.txt
->>
->> diff --git
->> a/Documentation/devicetree/bindings/net/lantiq,xrx200-net.txt
->> b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.txt
->> new file mode 100644
->> index 000000000000..8a2fe5200cdc
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/lantiq,xrx200-net.txt
->> @@ -0,0 +1,21 @@
->> +Lantiq xRX200 GSWIP PMAC Ethernet driver
->> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->> +
->> +Required properties:
->> +
->> +- compatible=C2=A0=C2=A0=C2=A0 : "lantiq,xrx200-net" for the PMAC of =
-the embedded
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : GSWIP in the xXR200
->> +- reg=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : memory range of the=
- PMAC core inside of the GSWIP core
->> +- interrupts=C2=A0=C2=A0=C2=A0 : TX and RX DMA interrupts. Use interr=
-upt-names "tx" for
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 : the TX interrupt and "rx=
-" for the RX interrupt.
->=20
-> You would likely want to document that the order should be strict, that=
+Reviewed-by: Jens Axboe <axboe@kernel.dk>
 
-> is TX interrupt first and RX interrupt second, but other than that:
->=20
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Currently this is fetched based on the name like this:
-platform_get_irq_byname(pdev, "rx");
-
-I do not care about the order, just interrupt-names must match.
-
-Hauke
-
-
---3YXgcjdJQutfN8Y4EgutzzpNnpILg0SdY--
-
---e9TLdY9O2j3pVJJBcjK8u3SqrPvLPQd8c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEyz0/uAcd+JwXmwtD8bdnhZyy68cFAluO/wIACgkQ8bdnhZyy
-68dmhwf+JA1mtQmFE8JwGaL12ZOrgdDekT4TuVKvO10fkvAdRw2c9//XQ+HlYW77
-DuznsLhCpHsgZJXnZmdyvRcaLSs/ZhBUpEtqDrOxgWgxCGOPIzTgykFBfxBREuwQ
-4VVPstVs10+pPDh/B7UCaIJizuz3XX5qBFdyau9xcDr1MMPx5V+nucT79Dr0nRqF
-aMUHA4raeJxTEpDC3gaQkmiY+d0rymGZhVZIH8tNkZU1ASY3suLC9sNGkU8ur7bh
-q2XBMEoaGQkH6T55GbJ1xvTCFnhnqTWDBwf/R2SeqfUCJWI2vkg3PM8Hqpi73zOA
-xMdlufWLRGoNYUt+DZXA8ICuzHmFQg==
-=6GfD
------END PGP SIGNATURE-----
-
---e9TLdY9O2j3pVJJBcjK8u3SqrPvLPQd8c--
+-- 
+Jens Axboe
