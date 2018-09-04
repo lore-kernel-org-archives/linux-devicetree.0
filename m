@@ -1,40 +1,48 @@
+Return-Path: <SRS0=pGiE=LS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p00-ob.smtp.rzone.de ([85.215.255.20]:18669 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726029AbeIDMFZ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 4 Sep 2018 08:05:25 -0400
+Date: Tue, 4 Sep 2018 09:29:24 +0200 (CEST)
+From: Ulrich Hecht <uli@fpond.eu>
+Message-ID: <1827947028.947358.1536046165147@webmail.strato.com>
+In-Reply-To: <20180904072017.GA996@kunai>
+References: <1535101951-11221-1-git-send-email-uli+renesas@fpond.eu>
+ <20180903092819.2d2sh6dvusmwwey3@ninjato>
+ <20180903110219.GB10302@sirena.org.uk> <20180904072017.GA996@kunai>
+Subject: Re: [RESEND PATCH] spi: sh-msiof: Document R-Car D3 support
 MIME-Version: 1.0
-Date: Tue, 4 Sep 2018 10:01:46 -0500
-References: <20180831173928.bbt6a5ttrtgzbabk@kili.mountain>
-In-Reply-To: <20180831173928.bbt6a5ttrtgzbabk@kili.mountain>
-Message-ID: <CAL_JsqJ2E_xe82Ez0wDCbgtsbP9sUw1=-qr9RCLL2zsQ_5t+LQ@mail.gmail.com>
-Subject: Re: [bug report] of/unittest: remove use of node name pointer in
- overlay high level test
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Mark Brown <broonie@kernel.org>
+Cc: Ulrich Hecht <uli+renesas@fpond.eu>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, geert@linux-m68k.org, linux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Aug 31, 2018 at 12:39 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> Hello Rob Herring,
->
-> The patch 4785d169abd5: "of/unittest: remove use of node name pointer
-> in overlay high level test" from Aug 27, 2018, leads to the following
-> static checker warning:
->
->         drivers/of/unittest.c:2356 of_unittest_overlay_high_level()
->         info: ignoring unreachable code.
->
-> drivers/of/unittest.c
->   2354          for_each_child_of_node(overlay_base_root, np) {
->   2355                  struct device_node *base_child;
->   2356                  for_each_child_of_node(of_root, base_child) {
->   2357                          if (!strcmp(np->full_name, base_child->full_name))
->   2358                                  unittest(0, "illegal node name in overlay_base %pOFn",
->   2359                                          np);
->   2360                          return;
->
-> You wanted to only return on error probably?  Smatch is complaining
-> that we don't iterate through the inside loop more than once.
 
-Indeed. Fixed.
+> On September 4, 2018 at 9:20 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+> 
+> 
+> On Mon, Sep 03, 2018 at 12:02:19PM +0100, Mark Brown wrote:
+> > On Mon, Sep 03, 2018 at 11:28:19AM +0200, Wolfram Sang wrote:
+> > > On Fri, Aug 24, 2018 at 11:12:31AM +0200, Ulrich Hecht wrote:
+> > 
+> > > > This patch fell by the wayside, probably because I forgot to cc devicetree.
+> > 
+> > > Yeah, this is good practice. Yet, I'd think this goes upstream via the
+> > > SPI tree? Ccing Mark, he prefers to be Cced explicitly.
+> > 
+> > Yes, if I don't get sent a copy of patches I'm not going to see them:
+> > 
+> > As documented in SubmittingPatches please send patches to the 
+> > maintainers for the code you would like to change.  The normal kernel
+> > workflow is that people apply patches from their inboxes, if they aren't
+> > copied they are likely to not see the patch at all and it is much more
+> > difficult to apply patches.
+> 
+> Uli, can you resend?
 
-Thanks,
-Rob
+Geert has already done so, together with the corresponding change for E3.
+
+CU
+Uli
