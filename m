@@ -1,40 +1,75 @@
-From: Afonso Bordado <afonsobordado@az8.co>
-Subject: [PATCH v3 4/4] MAINTAINERS: add entry for fxas21002c gyro driver
-Date: Tue,  4 Sep 2018 21:04:34 +0100
-Message-ID: <20180904200434.10442-4-afonsobordado@az8.co>
-References: <20180904200434.10442-1-afonsobordado@az8.co>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-wetek: add ttyAML1 uart for Bluetooth
+Date: Tue, 4 Sep 2018 21:05:42 +0200
+Message-ID: <CAFBinCAQFcYKRCr72vOtuB9x=Zdt4Ox=pY0E9oxZFCO2XKF7oQ@mail.gmail.com>
+References: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180904200434.10442-1-afonsobordado@az8.co>
+In-Reply-To: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: christianshewitt@gmail.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, khilman@baylibre.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add entry for fxas21002c gyroscope driver and add myself as
-maintainer of this driver.
+Hi Christian,
 
-Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Tue, Sep 4, 2018 at 4:47 PM chewitt <christianshewitt@gmail.com> wrote:
+>
+> This change adds the ttyAML1 uart used by the brmcfmac sdio module in
+> the WeTek Hub and WeTek Play 2 devices.
+do you know which Broadcom chip this is exactly?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2b7b24b145f0..faf5f41b1465 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5838,6 +5838,13 @@ L:	linuxppc-dev@lists.ozlabs.org
- S:	Maintained
- F:	drivers/usb/gadget/udc/fsl*
- 
-+FREESCALE FXAS21002C
-+M:	Afonso Bordado <afonsobordado@az8.co>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/gyro/fxas21002.c
-+F:	Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
-+
- FREEVXFS FILESYSTEM
- M:	Christoph Hellwig <hch@infradead.org>
- W:	ftp://ftp.openlinux.org/pub/people/hch/vxfs
--- 
-2.18.0
+I assume you want to use the "patchram" userspace program (or
+something similar) to initialize the HCI controller?
+it's been a while since a similar patch was rejected, but things have
+gotten better since then. more details below
+
+> Signed-off-by: chewitt <christianshewitt@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> index 70325b2..9476868 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> @@ -10,6 +10,7 @@
+>  / {
+>         aliases {
+>                 serial0 = &uart_AO;
+> +               serial1 = &uart_A;
+this can be dropped if you read on
+
+>                 ethernet0 = &ethmac;
+>         };
+>
+> @@ -239,6 +240,13 @@
+>         vqmmc-supply = <&vddio_boot>;
+>  };
+>
+> +/* This is connected to the Bluetooth module: */
+> +&uart_A {
+> +       status = "okay";
+> +       pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> +       pinctrl-names = "default";
+insert bluetooth child-node from [0] here (with the correct max-speed,
+*-gpios and clock* properties for this board)
+
+some background: with Rob's serdev framework some Bluetooth controller
+drivers recently gained the ability to get the controller into a
+working state without any userspace utility. if you add the bluetooth
+child-node here the kernel will:
+- not create a /dev/ttyAMLn
+- load the matching Bluetooth controller driver (the Broadcom one in your case)
+- do the "initialize this Bluetooth controller with all the vendor
+specific magic" dance (toggling GPIOs, loading firmware from userspace
+via standard request_firmware, etc.)
+- provide you with a ready-to-use hci0 interface
+
+
+Regards
+Martin
+
+
+[0] https://elixir.bootlin.com/linux/v4.18/source/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
