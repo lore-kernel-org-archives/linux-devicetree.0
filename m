@@ -1,56 +1,287 @@
-Return-Path: <SRS0=hMgQ=L2=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH v2 2/3] dt-bindings: timer: renesas: cmt: document R-Car gen3
- support
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <c94a4ad6-93ee-05e4-e2c1-e8d24d3bc75e@cogentembedded.com>
-Message-ID: <42923b22-9ce9-b9cc-c569-0e364b63b783@cogentembedded.com>
-Date: Wed, 12 Sep 2018 23:15:28 +0300
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b8e8a68.1c69fb81.6eb62.cefe@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] ARM: dts: am335x: add support for Moxa UC-2102 open
+ platform
+References: <20180830040929.23357-1-sz.lin@moxa.com>
+ <20180830040929.23357-4-sz.lin@moxa.com>
 MIME-Version: 1.0
-In-Reply-To: <c94a4ad6-93ee-05e4-e2c1-e8d24d3bc75e@cogentembedded.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180830040929.23357-4-sz.lin@moxa.com>
+Date: Mon, 3 Sep 2018 20:06:53 -0500
+To: SZ Lin =?utf-8?B?KOael+S4iuaZuik=?= <sz.lin@moxa.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Wes Huang <wes.huang@moxa.com>, Fero JD Zhou <FeroJD.Zhou@moxa.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document support for the R-Car gen3 CMT types 0/1 bindings -- they seem
-to be the same CMT types 0/1 as in the R-Car gen2 SoCs.
+On Thu, Aug 30, 2018 at 12:09:29PM +0800, SZ Lin (林上智) wrote:
+> Add support for Moxa UC-2102 open platform
+> 
+> The UC-2102 computing platform is designed for industrial embedded
+> data acquisition and processing applications.
+> 
+> The features of UC-2102 are:
+> * eMMC
+> * SPI flash
+> * 2x LAN
+> * EEPROM
+> * TPM 2.0
+> * Watchdog
+> * RTC
+> * User gpio-keys
+> * User LEDs
+> * User button
+> 
+> Signed-off-by: Wes Huang (黃淵河) <wes.huang@moxa.com>
+> Signed-off-by: Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
+> Signed-off-by: SZ Lin (林上智) <sz.lin@moxa.com>
+> ---
+>  .../devicetree/bindings/arm/omap/omap.txt     |   2 +-
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  arch/arm/boot/dts/am335x-moxa-uc-2102.dts     | 200 ++++++++++++++++++
+>  3 files changed, 202 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/am335x-moxa-uc-2102.dts
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> index c5ca3d6a8099..6876eb8263ed 100644
+> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
+> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
+> @@ -158,7 +158,7 @@ Boards:
+>    compatible = "phytec,am335x-pcm-953", "phytec,am335x-phycore-som", "ti,am33xx"
+>  
+>  - AM335X UC-2100: Wireless-enabled palm-sized industrial computing platform
+> -  compatible = "moxa,uc-2101", "ti,am33xx"
+> +  compatible = "moxa,uc-2101", "moxa,uc-2102", "ti,am33xx"
 
-Also document R8A779{7|8}0 bindings as these are the R-Car gen3 SoCs for
-which the initial support was done.
+The 2102 is a superset of the 2101? If so, the 2102 should come first. 
+If not, this should probably be 2 separate entries.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>  
+>  - AM335X UC-8100-ME-T: Communication-centric industrial computing platform
+>    compatible = "moxa,uc-8100-me-t", "ti,am33xx";
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 6167c068601c..15d52cabb1a0 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -707,6 +707,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
+>  	am335x-icev2.dtb \
+>  	am335x-lxm.dtb \
+>  	am335x-moxa-uc-2101.dtb \
+> +	am335x-moxa-uc-2102.dtb \
+>  	am335x-moxa-uc-8100-me-t.dtb \
+>  	am335x-nano.dtb \
+>  	am335x-pdu001.dtb \
+> diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2102.dts b/arch/arm/boot/dts/am335x-moxa-uc-2102.dts
+> new file mode 100644
+> index 000000000000..94a7ecc9eb9a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/am335x-moxa-uc-2102.dts
+> @@ -0,0 +1,200 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 MOXA Inc. - https://www.moxa.com/
+> + *
+> + * Authors: SZ Lin (林上智) <sz.lin@moxa.com>
+> + *          Wes Huang (黃淵河) <wes.huang@moxa.com>
+> + *          Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "am335x-moxa-uc-2100-common.dtsi"
+> +
+> +/ {
+> +	model = "Moxa UC-2102";
+> +	compatible = "moxa,uc-2102", "ti,am33xx";
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		led1 {
+> +			label = "UC2100:GREEN:USER1";
+> +			gpios = <&gpio3 16 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +
+> +		led2 {
+> +			label = "UC2100:GREEN:USER2";
+> +			gpios = <&gpio3 17 GPIO_ACTIVE_HIGH>;
+> +			default-state = "off";
+> +		};
+> +	};
+> +};
+> +
+> +&am33xx_pinmux {
+> +	pinctrl-names = "default";
+> +
+> +	cpsw_default: cpsw_default {
+> +		pinctrl-single,pins = <
+> +			/* Slave 1 */
+> +			AM33XX_IOPAD(0x90c, PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_crs.rmii1_crs_dv */
+> +			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxerr.rmii1_rxerr */
+> +			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txen.rmii1_txen */
+> +			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd1.rmii1_txd1 */
+> +			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd0.rmii1_txd0 */
+> +			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd1.rmii1_rxd1 */
+> +			AM33XX_IOPAD(0x940, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd0.rmii1_rxd0 */
+> +			AM33XX_IOPAD(0x944, PIN_INPUT_PULLDOWN | MUX_MODE0)	/* mii1_refclk.rmii1_refclk */
+> +
+> +			/* Slave 2 */
+> +			AM33XX_IOPAD(0x870, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* gpmc_wait0.rmii2_crs_dv */
+> +			AM33XX_IOPAD(0x874, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* gpmc_wpn.rmii2_rxer */
+> +			AM33XX_IOPAD(0x840, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* gpmc_a0.rmii2_txen */
+> +			AM33XX_IOPAD(0x854, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* gpmc_a5.rmii2_td0 */
+> +			AM33XX_IOPAD(0x850, PIN_OUTPUT_PULLDOWN | MUX_MODE3)	/* gpmc_a4.rmii2_td1 */
+> +			AM33XX_IOPAD(0x86c, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* gpmc_a11.rmii2_rd0 */
+> +			AM33XX_IOPAD(0x868, PIN_INPUT_PULLDOWN | MUX_MODE3)	/* gpmc_a10.rmii2_rd1 */
+> +			AM33XX_IOPAD(0x908, PIN_INPUT_PULLDOWN | MUX_MODE1)	/* gmii1_col.rmii2_refclk */
+> +		>;
+> +	};
+> +
+> +	mmc0_pins_default: pinmux_mmc0_pins {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x8f0, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat3.mmc0_dat3 */
+> +			AM33XX_IOPAD(0x8f4, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat2.mmc0_dat2 */
+> +			AM33XX_IOPAD(0x8f8, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat1.mmc0_dat1 */
+> +			AM33XX_IOPAD(0x8fc, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_dat0.mmc0_dat0 */
+> +			AM33XX_IOPAD(0x900, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_clk.mmc0_clk */
+> +			AM33XX_IOPAD(0x904, PIN_INPUT_PULLUP | MUX_MODE0)	/* mmc0_cmd.mmc0_cmd */
+> +			AM33XX_IOPAD(0x990, PIN_INPUT_PULLUP | MUX_MODE7)	/* mcasp0_aclkx.mmc0_sdcd */
+> +		>;
+> +	};
+> +
+> +	spi1_pins: pinmux_spi1 {
+> +		pinctrl-single,pins = <
+> +			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	/* ecap0_in_pwm0_out.spi1_sclk */
+> +			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE4)	/* uart1_ctsn.spi1_cs0 */
+> +			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	/* uart0_ctsn.spi1_d0 */
+> +			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	/* uart0_rtsn.spi1_d1 */
+> +		>;
+> +	};
+> +};
+> +
+> +&i2c0 {
+> +	tps: tps@2d {
+> +		compatible = "ti,tps65910";
+> +		reg = <0x2d>;
+> +	};
+> +};
+> +
+> +#include "tps65910.dtsi"
+> +
+> +&tps {
+> +	vcc1-supply = <&vbat>;
+> +	vcc2-supply = <&vbat>;
+> +	vcc3-supply = <&vbat>;
+> +	vcc4-supply = <&vbat>;
+> +	vcc5-supply = <&vbat>;
+> +	vcc6-supply = <&vbat>;
+> +	vcc7-supply = <&vbat>;
+> +	vccio-supply = <&vbat>;
+> +
+> +	regulators {
+> +		vrtc_reg: regulator@0 {
 
----
-Changes in version 2:
-- new patch, split from the next one.
+Without a reg property, you shouldn't have unit addresses.
 
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |    7 +++++++
- 1 file changed, 7 insertions(+)
 
-Index: tip/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-===================================================================
---- tip.orig/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ tip/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -34,6 +34,10 @@ Required Properties:
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-+    - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
-+    - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-+    - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
-+    - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
- 
-     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
- 		and RZ/G1.
-@@ -41,6 +45,9 @@ Required Properties:
- 		and RZ/G1.
- 		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
- 		listed above.
-+    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3.
-+    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3.
-+		These are fallbacks for R-Car Gen3 entries listed above.
- 
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
+> +			regulator-always-on;
+> +		};
+> +
+> +		vio_reg: regulator@1 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdd1_reg: regulator@2 {
+> +			/* VDD_MPU voltage limits 0.95V - 1.26V with +/-4% tolerance */
+> +			regulator-name = "vdd_mpu";
+> +			regulator-min-microvolt = <912500>;
+> +			regulator-max-microvolt = <1378000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdd2_reg: regulator@3 {
+> +			/* VDD_CORE voltage limits 0.95V - 1.1V with +/-4% tolerance */
+> +			regulator-name = "vdd_core";
+> +			regulator-min-microvolt = <912500>;
+> +			regulator-max-microvolt = <1150000>;
+> +			regulator-boot-on;
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdd3_reg: regulator@4 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdig1_reg: regulator@5 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdig2_reg: regulator@6 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vpll_reg: regulator@7 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vdac_reg: regulator@8 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vaux1_reg: regulator@9 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vaux2_reg: regulator@10 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vaux33_reg: regulator@11 {
+> +			regulator-always-on;
+> +		};
+> +
+> +		vmmc_reg: regulator@12 {
+> +			compatible = "regulator-fixed";
+> +			regulator-name = "vmmc_reg";
+> +			regulator-min-microvolt = <3300000>;
+> +			regulator-max-microvolt = <3300000>;
+> +			regulator-always-on;
+> +		};
+> +	};
+> +};
+> +
+> +&mac {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&cpsw_default>;
+> +	dual_emac = <1>;
+> +	status = "okay";
+> +};
+> +
+> +&cpsw_emac0 {
+> +	status = "okay";
+> +	phy_id = <&davinci_mdio>, <0x4>;
+> +	phy-mode = "rmii";
+> +	dual_emac_res_vlan = <1>;
+> +};
+> +
+> +&cpsw_emac1 {
+> +	status = "okay";
+> +	phy_id = <&davinci_mdio>, <0x5>;
+> +	phy-mode = "rmii";
+> +	dual_emac_res_vlan = <2>;
+> +};
+> +
+> +&mmc1 {
+> +	pinctrl-names = "default";
+> +	vmmc-supply = <&vmmcsd_fixed>;
+> +	bus-width = <4>;
+> +	pinctrl-0 = <&mmc0_pins_default>;
+> +	cd-gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
+> +	wp-gpios = <&gpio3 18 GPIO_ACTIVE_HIGH>;
+> +	status = "okay";
+> +};
+> -- 
+> 2.19.0.rc1
+> 
