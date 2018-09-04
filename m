@@ -1,71 +1,58 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 13/40] vfio: Add support for Shared Virtual Addressing
-Date: Tue, 4 Sep 2018 11:57:02 +0100
-Message-ID: <bc27f902-4d12-21b7-b9e9-18bcae170503@arm.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-14-jean-philippe.brucker@arm.com>
-	<5B83B11E.7010807@huawei.com>
-	<1d5b6529-4e5a-723c-3f1b-dd5a9adb490c@arm.com>
-	<5B89F818.7060300@huawei.com>
-	<3a961aff-e830-64bb-b6a9-14e08de1abf5@arm.com>
-	<5B8DEA15.7020404@huawei.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Tue, 4 Sep 2018 11:03:35 +0000
+Message-ID: <E73421F5-DC9B-4000-B282-FF71D7E45866@cadence.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
+ <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+ <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
+ <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
+ <9584757a-e7e2-5bfe-fc2c-e9bc14ad65a8@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5B8DEA15.7020404-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9584757a-e7e2-5bfe-fc2c-e9bc14ad65a8@synopsys.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Xu Zaibo <xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>
-Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org" <liguozhu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, fanghao11 <fanghao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, =?UTF-8?B?57Gz57Gz?= <kenneth-lee-2012-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>, "christian.koenig-5C7GfCeVMHo@public.gmane.org" <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Content-ID: <333A476A334B654787EAC7B600AFC919@namprd07.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vitor <Vitor.Soares@synopsys.com>, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@>
 List-Id: devicetree@vger.kernel.org
 
-On 04/09/2018 03:12, Xu Zaibo wrote:
-> On 2018/9/3 18:34, Jean-Philippe Brucker wrote:
->> On 01/09/18 03:23, Xu Zaibo wrote:
->>> As one application takes a whole function while using VFIO-PCI, why do
->>> the application and the
->>> function need to enable PASID capability? (Since just one I/O page table
->>> is enough for them.)
->> At the moment the series doesn't provide support for SVA without PASID
->> (on the I/O page fault path, 08/40). In addition the BIND ioctl could be
->> used by the owner application to bind other processes (slaves) and
->> perform sub-assignment. But that feature is incomplete because we don't
->> send stop_pasid notification to the owner when a slave dies.
->>
-> So, Could I understand like this?
-> 
->      1. While the series are finished well, VFIO-PCI device can be held 
-> by only one process
->          through binding IOCTL command without PASID (without PASID 
-> being exposed user space).
-
-It could, but isn't supported at the moment. In addition to adding
-support in the I/O page fault code, we'd also need to update the VFIO
-API. Currently a VFIO_TYPE1 domain always supports the MAP/UNMAP ioctl.
-The case you describe isn't compatible with MAP/UNMAP, since the process
-manages the shared address space with mmap or malloc. We'd probably need
-to introduce a new VFIO IOMMU type, in which case the bind could be
-performed implicitly when the process does VFIO_SET_IOMMU. Then the
-process wouldn't need to send an additional BIND IOCTL.
-
->      2. While using VFIO-PCI device to support multiple processes with 
-> SVA series, a primary
->          process with multiple secondary processes must be deployed just 
-> like DPDK(https://www.dpdk.org/).
->          And, the PASID still has to be exposed to user land.
-
-Right. A third case, also implemented by this patch (and complete), is
-the primary process simply doing a BIND for itself, and using the
-returned PASID to share its own address space with the device.
-
-Thanks,
-Jean
+SGkgVml0b3IsDQoNCu+7v09uIDkvMy8xOCwgMTE6MzMgQU0sICJ2aXRvciIgPFZpdG9yLlNvYXJl
+c0BzeW5vcHN5cy5jb20+IHdyb3RlOg0KDQogICAgRVhURVJOQUwgTUFJTA0KICAgIA0KICAgIA0K
+ICAgIEhpIFByemVtZWssDQogICAgDQogICAgDQogICAgT24gMzAtMDgtMjAxOCAyMDowMCwgUHJ6
+ZW15c2xhdyBHYWogd3JvdGU6DQogICAgPiAgICAgIFNvLCBwZXIgbXkgdW5kZXJzdGFuZGluZyBz
+aW5jZSB0aGUgTWFpbiBtYXN0ZXIgc3VwcG9ydCB0aGUgaGFuZC1vZmYgb2YNCiAgICA+ICAgICAg
+dGhlIGJ1cyB5b3UgYWNjZXB0IGFsbCBpbmNvbWluZyBNUiwgcmlnaHQ/IE9yIGRvIHlvdSBjaGVj
+ayBhbGwgZGV2aWNlcyBCQ1I/DQogICAgPg0KICAgID4gSSdtIG5vdCBzdXJlIHdoYXQgZG8geW91
+IG1lYW4gaGVyZS4gTWFzdGVyc2hpcCByZXF1ZXN0KE1SKSBpcyBmcm9tIHNlY29uZGFyeSBtYXN0
+ZXINCiAgICA+IHRvIGN1cnJlbnQgbWFzdGVyLiBDdXJyZW50IG1hc3RlciBjYW4gTkFDSyB0aGlz
+IHJlcXVlc3QgaWYgZm9yIGV4YW1wbGUgaXQgY29tZXMgZnJvbQ0KICAgID4gd3JvbmcgZGV2aWNl
+LiBJZiBpdCdzIG9rLCBjdXJyZW50IG1hc3RlciBzZW5kcyBHRVRBQ0NNU1QgY29tbWFuZCBhbmQg
+c2Vjb25kYXJ5IG1hc3Rlcg0KICAgID4gbWF5IEFDSyBvciBOQUNLIHRoaXMgY29tbWFuZC4gSXQg
+aXQncyBhY2tlZCwgc2Vjb25kYXJ5IG1hc3RlciBiZWNvbWVzIGN1cnJlbnQgbWFzdGVyLg0KICAg
+ID4gICAgICANCiAgICA+ICAgICAgQmVzdCByZWdhcmRzLA0KICAgID4gICAgICBWaXRvciBTb2Fy
+ZXMNCiAgICA+DQogICAgPiBQbGVhc2UgbGV0IG1lIGtub3cgaWYgc29tZXRoaW5nIGlzIHVuY2xl
+YXIuDQogICAgPg0KICAgID4gUmVnYXJkcywNCiAgICA+IFByemVtZWsNCiAgICA+ICAgICAgDQog
+ICAgDQogICAgU29ycnksIGl0IHMgbm90IGNsZWFyIHlldC4NCiAgICANCiAgICBGb3IgaW5zdGFu
+Y2VzIHRoZXJlIGlzIGEgYnVzIHdpdGggc2V2ZXJhbCBzZWNvbmRhcnkgbWFzdGVyLiBJZiBlYWNo
+IG9mIA0KICAgIHRoZW0gcmVxdWVzdCB0aGUgYnVzIG1hc3RlcnNoaXAgKG9uZSBhdCBhIHRpbWUp
+LCB3aWxsIHlvdSBhY2NlcHQgYWxsIGJ5IA0KICAgIGRlZmF1bHQ/IEJlY2F1c2UgeW91IGNhbiBv
+bmx5IGFjY2VwdCBvbmx5IHNvbWUgb2YgdGhlbS4NCg0KRmlyc3Qgb2YgYWxsLCBvbmx5IGRldmlj
+ZXMgd2hpY2ggaGF2ZSBNYXN0ZXJzaGlwIHJlcXVlc3QgZXZlbnQgZW5hYmxlZCAoRU5NUiBzbGF2
+ZSBldmVudCkNCmNhbiByZXF1ZXN0IG1hc3RlcnNoaXAuIFNlY29uZCB0aGluZyBpcyB0aGF0IHRo
+aXMgZGV2aWNlIG5lZWRzIHRvIGhhdmUgSUJJIGVuYWJsZWQgaW4gDQpjdXJyZW50IG1hc3Rlci4g
+SSBhY2NlcHQgYWxsIHN1Y2ggZGV2aWNlcy4gVGhlcmUgaXMgbm8gYWRkaXRpb25hbCBsb2dpYyBm
+b3Igbm93LCB3ZSBjYW4gYWRkIGl0DQppbiB0aGUgZnV0dXJlLg0KDQpJIHdhcyB2ZXJ5IGJ1c3kg
+cmVjZW50bHkuIEknbSBhbG1vc3QgcmVhZHkgdG8gcHVibGlzaCBteSBjaGFuZ2VzIHJlbGF0ZWQg
+dG8gbWFzdGVyc2hpcCByZXF1ZXN0Lg0KSSdtIHNvcnJ5IGZvciB0aGUgZGVsYXkuDQogICAgDQog
+ICAgUmVnYXJkcywNCiAgICBWaXRvciBTb2FyZXMNCiAgICANClJlZ2FyZHMsDQpQcnplbWVrDQoN
+Cg==
