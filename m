@@ -1,48 +1,78 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 6/9] net: bcmgenet: fix OF child-node lookup
-Date: Tue, 4 Sep 2018 14:56:24 +0200
-Message-ID: <20180904125624.GS28861@localhost>
+Subject: Re: [PATCH v2 0/9] of: fix compatible-child-node lookups
+Date: Tue, 4 Sep 2018 15:05:57 +0200
+Message-ID: <20180904130557.GT28861@localhost>
 References: <20180827082153.22537-1-johan@kernel.org>
- <20180827082153.22537-7-johan@kernel.org>
- <683bdf11-a662-d17e-8bc5-b3cfd238e463@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <stable-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <683bdf11-a662-d17e-8bc5-b3cfd238e463@gmail.com>
-Sender: stable-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>
+In-Reply-To: <20180827082153.22537-1-johan@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Ulf Hansson <ulf.hansson@linaro.org>, Josh Wu <rainyfeeling@outlook.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Doug Berger <opendmb@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S. Miller" <davem@davemloft.net>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Samuel Ortiz <sameo@linux.intel.com>, Sebastian Reichel <sre@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 05:47:33PM -0700, Florian Fainelli wrote:
-> On 08/27/2018 01:21 AM, Johan Hovold wrote:
-> > Use the new of_get_compatible_child() helper to lookup the mdio child
-> > node instead of using of_find_compatible_node(), which searches the
-> > entire tree from a given start node and thus can return an unrelated
-> > (i.e. non-child) node.
-> > 
-> > This also addresses a potential use-after-free (e.g. after probe
-> > deferral) as the tree-wide helper drops a reference to its first
-> > argument (i.e. the node of the device being probed).
-> > 
-> > Fixes: aa09677cba42 ("net: bcmgenet: add MDIO routines")
-> > Cc: stable <stable@vger.kernel.org>     # 3.15
-> > Cc: Florian Fainelli <f.fainelli@gmail.com>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Signed-off-by: Johan Hovold <johan@kernel.org>
+Hi all,
+
+On Mon, Aug 27, 2018 at 10:21:44AM +0200, Johan Hovold wrote:
+> Several drivers currently use of_find_compatible_node() to lookup child
+> nodes while failing to notice that the of_find_ functions search the
+> entire tree depth-first (from a given start node) and therefore can
+> match unrelated nodes.
 > 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> The fact that these functions also drop a reference to the node they
+> start searching from (e.g. the parent node) is typically also
+> overlooked, something which can lead to use-after-free bugs (e.g. after
+> probe deferrals).
+> 
+> This series adds a new helper, similar to of_get_child_by_name(), 
+> that can be used to lookup compatible child nodes, and uses the new
+> helper to fix child-node lookups throughout the tree.
+> 
+> This is related to the fixes I posted about a year ago, which addressed
+> a similar anti-pattern when looking up child nodes by name. Since it
+> took me more than a year to get all those fixes into Linus' tree (one
+> fix is still pending), and as these fixes depend on the new helper, I'm
+> suggesting that these all go in through Rob's or Greg's trees.
+> 
+> Alternatively, the helper could go into to -rc2, and I'll be pinging
+> submaintainers for the coming year as well. ;)
 
-Thanks for reviewing.
+Rob has gotten the helper into -rc2 now:
 
-Rob's gotten the helper into -rc2:
+        36156f9241cb of: add helper to lookup compatible child node
 
-	36156f9241cb of: add helper to lookup compatible child node
+so feel free to pick these fixes up directly for 4.19-rc or -next,
+whichever you prefer. I've been able to trigger crashes after probe
+deferrals due to the use-after-free, but this seems unlikely to be
+exploitable.
 
-so feel free to pick this one up directly to whichever net tree you
-prefer. I've been able to trigger crashes after probe deferrals due to
-the use-after-free, but this seems unlikely to be exploitable.
+I think Rob will be picking up any patches that remain by the end of the
+release cycle for 4.20.
 
 Thanks,
 Johan
+
+> Johan Hovold (9):
+>   of: add helper to lookup compatible child node
+>   drm/mediatek: fix OF sibling-node lookup
+>   drm/msm: fix OF child-node lookup
+>   mmc: meson-mx-sdio: fix OF child-node lookup
+>   mtd: nand: atmel: fix OF child-node lookup
+>   net: bcmgenet: fix OF child-node lookup
+>   net: stmmac: dwmac-sun8i: fix OF child-node lookup
+>   NFC: nfcmrvl_uart: fix OF child-node lookup
+>   power: supply: twl4030-charger: fix OF sibling-node lookup
+> 
+>  drivers/gpu/drm/mediatek/mtk_hdmi.c           |  5 ++--
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c       |  5 ++--
+>  drivers/mmc/host/meson-mx-sdio.c              |  8 ++++--
+>  drivers/mtd/nand/raw/atmel/nand-controller.c  | 11 +++++---
+>  drivers/net/ethernet/broadcom/genet/bcmmii.c  |  2 +-
+>  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 +++++++--
+>  drivers/nfc/nfcmrvl/uart.c                    |  5 ++--
+>  drivers/of/base.c                             | 25 +++++++++++++++++++
+>  drivers/power/supply/twl4030_charger.c        |  5 ++--
+>  include/linux/of.h                            |  8 ++++++
+>  10 files changed, 68 insertions(+), 18 deletions(-)
