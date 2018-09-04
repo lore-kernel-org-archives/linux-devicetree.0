@@ -1,101 +1,176 @@
 From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v3 0/5]  Wakeup GPIO support for SDM845
-Date: Tue,  4 Sep 2018 15:18:05 -0600
-Message-ID: <20180904211810.5506-1-ilina@codeaurora.org>
+Subject: [PATCH v3 3/5] drivers: pinctrl: msm: enable PDC interrupt only during suspend
+Date: Tue,  4 Sep 2018 15:18:08 -0600
+Message-ID: <20180904211810.5506-4-ilina@codeaurora.org>
+References: <20180904211810.5506-1-ilina@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180904211810.5506-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org
 Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org, Lina Iyer <ilina@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+During suspend the system may power down some of the system rails. As a
+result, the TLMM hw block may not be operational anymore and wakeup
+capable GPIOs will not be detected. The PDC however will be operational
+and the GPIOs that are routed to the PDC as IRQs can wake the system up.
 
+To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
+GPIO trips, use TLMM for active and switch to PDC for suspend. When
+entering suspend, disable the TLMM wakeup interrupt and instead enable
+the PDC IRQ and revert upon resume.
+
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
 Changes in v3:
-	- Release memory allocated for IRQ anme
-	- Minor fixes as suggested by Mathias, Bjorn, Evan
-
+	- Enable PDC-IRQ swap only for edge interrupts
 Changes in v2:
-        - Compile and test on 4.18 on SDM845
-        - Fix IRQ map in patch #3
-        - Address review comments
-        (I still need to find a way to free memory allocated for PDC IRQ.)
-        - Specify type for IRQ in DT
-        - This series needs V3 of the PDC DT bingings [4]
-        - gic-v3 settings are also needed [5]
+	- Fix PDC IRQ max port, 126 is the max supported in h/w
+	- Use PDC hwirq in bitmap, linux numbers could be large
+	- Setup DISABLE_UNLAZY for both TLMM and PDC IRQs
+---
+ drivers/pinctrl/qcom/pinctrl-msm.c | 73 +++++++++++++++++++++++++++++-
+ drivers/pinctrl/qcom/pinctrl-msm.h |  3 ++
+ 2 files changed, 75 insertions(+), 1 deletion(-)
 
-Changes in v1:
-        - Avoid GPIO-PDC map in .c file
-        - Trigger GPIO by writing to the hardware
-        - Hooked up to suspend/resume callbacks
-        - Dropped PDC DT bindings (see dependencies)
-
-This is an attempt at a solution to enable wake up from suspend and deep idle
-using GPIO as a wakeup source. The 845 uses a new interrupt controller (PDC)
-that lies in the always-on domain and can sense interrupts that are routed to
-it, when the GIC is powered off. It would then wakeup the GIC and replay the
-interrupt which would then be relayed to the AP. The PDC interrupt controller
-driver is merged upstream [1],[2]. The following set of patches extends the
-wakeup capability to GPIOs using the PDC. The TLMM pinctrl driver for the SoC
-available at [3].
-
-The complexity with the solution stems from the fact that only a selected few
-GPIO lines are routed to the PDC in addition the TLMMs. They are also from
-different banks on the pinctrl and the TLMM summary line is not routed to the
-PDC. Hence the PDC cannot be considered as parent of the TLMM irqchip (or can
-we ?). This is what it looks like -
-
-   [ PIN ] -----[ TLMM ]---------------> [ GIC ] ---> [ CPU ]
-      |                  <summary IRQ>       ^
-      |                                      |
-      ----------------------------------> [ PDC ]
-                <wakeup IRQs>
-
-I had a brief discussion with Linus on this and the idea implemented is based
-on his suggestion.
-
-When an IRQ (let's call this latent IRQ) for a GPIO is requested, the
-->irq_request_resources() is used by the TLMM driver to request a PDC pin. The
-PDC pin associated with the GPIO is read from a  static map available in the
-pinctrl-sdm845.c. (I think there should be a better location than a static map,
-more on that later). Knowing the PDC pin from the map, we could look up the DT
-bindings and request the PDC interrupt with the same trigger mask as the
-interrupt requested. The ->set_type and ->set_wake are also trapped to set the
-PDC IRQ's polarity and enable it when the latent IRQ is requested. When the PDC
-detects the interrupt at suspend, it wakes up the GIC and replays the wakeup
-IRQ. The GPIO handler function for the latent IRQ is invoked in turn.
-
-Please review these patches and your inputs would be greatly appreciated and
-(kindly) let me know if I have committed any blunders with this approach. There
-is definitely opportunity to improve the location of the static GPIO-PDC pin
-map. We could possibly put it as an data argument in the interrupts definition
-of the PDC or with interrupt names. Also, I am still sorting out some issues
-with the IRQ handling part of these patches. And I am unsure of how to set the
-polarity of the PDC pin without locking, since we are not in hierarchy with the
-PDC interrupt controller. Again, your inputs on these would be greatly helpful.
-
-Thanks,
-Lina
-
-[1]. drivers/irqchip/qcom-pdc.c
-[2]. Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
-[3]. drivers/pinctrl/qcom/pinctrl-msm.c
-[4]. https://lore.kernel.org/patchwork/patch/977589/
-[5]. https://lore.kernel.org/patchwork/patch/975425/
-
-Lina Iyer (5):
-  drivers: pinctrl: qcom: add wakeup capability to GPIO
-  dt-bindings: pinctrl: add wakeup capable GPIOs for SDM845
-  drivers: pinctrl: msm: enable PDC interrupt only during suspend
-  drivers: pinctrl: qcom: sdm845: support GPIO wakeup from suspend
-  arm64: dts: qcom: add wake up interrupts for GPIOs for SDM845
-
- .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 104 ++++++++++-
- arch/arm64/boot/dts/qcom/sdm845.dtsi          | 152 ++++++++++++++-
- drivers/pinctrl/qcom/pinctrl-msm.c            | 174 ++++++++++++++++++
- drivers/pinctrl/qcom/pinctrl-msm.h            |   5 +
- drivers/pinctrl/qcom/pinctrl-sdm845.c         |   1 +
- 5 files changed, 432 insertions(+), 4 deletions(-)
-
---
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 6527a0a9edd1..01a455f86fcd 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -37,6 +37,7 @@
+ #include "../pinctrl-utils.h"
+ 
+ #define MAX_NR_GPIO 300
++#define MAX_PDC_HWIRQ 126
+ #define PS_HOLD_OFFSET 0x820
+ 
+ /**
+@@ -51,6 +52,7 @@
+  * @enabled_irqs:   Bitmap of currently enabled irqs.
+  * @dual_edge_irqs: Bitmap of irqs that need sw emulated dual edge
+  *                  detection.
++ * @pdc_hwirqs:     Bitmap of wakeup capable irqs.
+  * @soc;            Reference to soc_data of platform specific data.
+  * @regs:           Base address for the TLMM register map.
+  */
+@@ -68,11 +70,15 @@ struct msm_pinctrl {
+ 
+ 	DECLARE_BITMAP(dual_edge_irqs, MAX_NR_GPIO);
+ 	DECLARE_BITMAP(enabled_irqs, MAX_NR_GPIO);
++	DECLARE_BITMAP(pdc_hwirqs, MAX_PDC_HWIRQ);
+ 
+ 	const struct msm_pinctrl_soc_data *soc;
+ 	void __iomem *regs;
++	struct irq_domain *pdc_irq_domain;
+ };
+ 
++static bool in_suspend;
++
+ static int msm_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+ 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+@@ -787,8 +793,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	if (pdc_irqd)
++	if (pdc_irqd && !in_suspend) {
+ 		irq_set_irq_wake(pdc_irqd->irq, on);
++		if (on)
++			set_bit(pdc_irqd->hwirq, pctrl->pdc_hwirqs);
++		else
++			clear_bit(pdc_irqd->hwirq, pctrl->pdc_hwirqs);
++	}
+ 
+ 	irq_set_irq_wake(pctrl->irq, on);
+ 
+@@ -919,7 +930,12 @@ static int msm_gpio_pdc_pin_request(struct irq_data *d)
+ 	}
+ 
+ 	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
++	irq_set_handler_data(irq, d);
++	irq_set_status_flags(irq, IRQ_DISABLE_UNLAZY);
++	irq_set_status_flags(d->irq, IRQ_DISABLE_UNLAZY);
+ 	disable_irq(irq);
++	if (!pctrl->pdc_irq_domain)
++		pctrl->pdc_irq_domain = irq_get_irq_data(irq)->domain;
+ 
+ 	return 0;
+ }
+@@ -1071,6 +1087,61 @@ static void msm_pinctrl_setup_pm_reset(struct msm_pinctrl *pctrl)
+ 		}
+ }
+ 
++int __maybe_unused msm_pinctrl_suspend_late(struct device *dev)
++{
++	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
++	struct irq_data *irqd;
++	unsigned int irq;
++	int i;
++
++	in_suspend = true;
++	for_each_set_bit(i, pctrl->pdc_hwirqs, MAX_PDC_HWIRQ) {
++		irq = irq_find_mapping(pctrl->pdc_irq_domain, i);
++		irqd = irq_get_handler_data(irq);
++		/*
++		 * We don't know if the TLMM will be functional
++		 * or not, during the suspend. If its functional,
++		 * we do not want duplicate interrupts from PDC.
++		 * Hence disable the GPIO IRQ and enable PDC IRQ
++		 * for edge interrupt only.
++		 */
++		if (irqd_is_wakeup_set(irqd) && !irqd_is_level_type(irqd)) {
++			disable_irq_wake(irqd->irq);
++			disable_irq(irqd->irq);
++			enable_irq(irq);
++		}
++	}
++
++	return 0;
++}
++
++int __maybe_unused msm_pinctrl_resume_late(struct device *dev)
++{
++	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
++	struct irq_data *irqd, *pdc_irqd;
++	unsigned int irq;
++	int i;
++
++	for_each_set_bit(i, pctrl->pdc_hwirqs, MAX_PDC_HWIRQ) {
++		irq = irq_find_mapping(pctrl->pdc_irq_domain, i);
++		irqd = irq_get_handler_data(irq);
++		pdc_irqd = irq_get_irq_data(irq);
++		/*
++		 * The TLMM will be operational now, so disable
++		 * the PDC IRQ for edge interrupts only.
++		 */
++		if (irqd_is_wakeup_set(pdc_irqd) &&
++		    !irqd_is_level_type(pdc_irqd)) {
++			disable_irq_nosync(irq);
++			enable_irq_wake(irqd->irq);
++			enable_irq(irqd->irq);
++		}
++	}
++	in_suspend = false;
++
++	return 0;
++}
++
+ int msm_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct msm_pinctrl_soc_data *soc_data)
+ {
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
+index 9b9feea540ff..21b56fb5dae9 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.h
++++ b/drivers/pinctrl/qcom/pinctrl-msm.h
+@@ -123,4 +123,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 		      const struct msm_pinctrl_soc_data *soc_data);
+ int msm_pinctrl_remove(struct platform_device *pdev);
+ 
++int msm_pinctrl_suspend_late(struct device *dev);
++int msm_pinctrl_resume_late(struct device *dev);
++
+ #endif
+-- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
