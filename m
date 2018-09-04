@@ -1,13 +1,15 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: [RESEND PATCHv2] kbuild: add support for building %.dtbo targets
-Date: Tue, 4 Sep 2018 10:47:24 +0300
-Message-ID: <1536047244-9804-1-git-send-email-t-kristo@ti.com>
-References: <1535719269-13492-1-git-send-email-t-kristo@ti.com>
+From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH] ARM: dts: imx6ull: update iomux header
+Date: Tue, 4 Sep 2018 10:01:18 +0200
+Message-ID: <eaa5e1cf-04e6-f11f-e7f8-0ff95b97ab5c@armadeus.com>
+References: <1535606405-8099-1-git-send-email-Anson.Huang@nxp.com>
+ <20180903022642.GE3850@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535719269-13492-1-git-send-email-t-kristo@ti.com>
+In-Reply-To: <20180903022642.GE3850@dragon>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,40 +19,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for building DT overlay targets, which can be applied
-either runtime or statically on top of base devicetree blobs. The
-only supported runtime application of overlays right now is during
-bootloader execution; if the bootloader in question supports this.
-
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2: no changes, just split up the series into parts
-RESEND: just added Frank back to delivery, whom I accidentally dropped
-
- scripts/Makefile.lib | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 61e5966..527aab9 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -292,6 +292,9 @@ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
- 	$(call if_changed_dep,dtc)
- 
-+$(obj)/%.dtbo: $(src)/%.dtso $(DTC) FORCE
-+	$(call if_changed_dep,dtc)
-+
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
- # Bzip2
--- 
-1.9.1
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gMDkvMDMvMjAxOCAwNDoyNiBBTSwgU2hhd24gR3VvIHdyb3RlOgo+IEFkZCBTw6liYXN0aWVu
+IGZvciBhIGNyb3NzIGNoZWNrLgo+IAo+IFNoYXduCj4gCj4gT24gVGh1LCBBdWcgMzAsIDIwMTgg
+YXQgMDE6MjA6MDVQTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6Cj4+IFVwZGF0ZSBpLk1YNlVM
+TCBpb211eCBoZWFkZXIgYWNjb3JkaW5nIHRvIGxhdGVzdCByZWZlcmVuY2UKPj4gbWFudWFsIFJl
+di4xLCAxMS8yMDE3Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBBbnNvbiBIdWFuZyA8QW5zb24uSHVh
+bmdAbnhwLmNvbT4KClJldmlld2VkLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVu
+LnN6eW1hbnNraUBhcm1hZGV1cy5jb20+CgotLSAKU8OpYmFzdGllbiBTenltYW5za2kKU29mdHdh
+cmUgZW5naW5lZXIsIEFybWFkZXVzIFN5c3RlbXMKVGVsOiArMzMgKDApOSA3MiAyOSA0MSA0NApG
+YXg6ICszMyAoMCk5IDcyIDI4IDc5IDI2CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
