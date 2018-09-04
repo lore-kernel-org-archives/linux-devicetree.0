@@ -1,14 +1,14 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/6] clk: imx: vf610: Add CRC clock
-Date: Tue, 04 Sep 2018 08:36:47 -0500
-Message-ID: <5b8e8a6f.1c69fb81.8fb5e.93c2@mx.google.com>
-References: <20180830171539.20008-1-krzk@kernel.org>
- <20180830171539.20008-3-krzk@kernel.org>
+Subject: Re: [PATCH 3/7] clk: imx6sx: add mmdc1 ipg clock
+Date: Tue, 04 Sep 2018 08:36:51 -0500
+Message-ID: <5b8e8a74.1c69fb81.f383.6bc1@mx.google.com>
+References: <1535701998-20443-1-git-send-email-Anson.Huang@nxp.com>
+ <1535701998-20443-4-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180830171539.20008-3-krzk@kernel.org>
+In-Reply-To: <1535701998-20443-4-git-send-email-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,16 +18,18 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: mark.rutland@arm.com, aisheng.dong@nxp.com, shengjiu.wang@nxp.com, ping.bai@nxp.com, devicetree@vger.kernel.org, sboyd@kernel.org, s.hauer@pengutronix.de, linux-clk@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, colin.didier@devialet.com, robh+dt@kernel.org, clement.peron@devialet.com, Linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, michael@amarulasolutions.com, shawnguo@kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, matteo.lisi@engicam.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Aug 2018 19:15:35 +0200, Krzysztof Kozlowski wrote:
-> Add the clock for CRC block allowing it to be enabled by HW CRC driver.
+On Fri, 31 Aug 2018 15:53:14 +0800, Anson Huang wrote:
+> i.MX6SX has MMDC1 ipg clock in CCM CCGR, add it into
+> clock tree for clock management.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  drivers/clk/imx/clk-vf610.c             | 1 +
->  include/dt-bindings/clock/vf610-clock.h | 3 ++-
+>  drivers/clk/imx/clk-imx6sx.c             | 1 +
+>  include/dt-bindings/clock/imx6sx-clock.h | 3 ++-
 >  2 files changed, 3 insertions(+), 1 deletion(-)
 > 
 
