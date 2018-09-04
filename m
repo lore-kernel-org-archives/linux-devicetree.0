@@ -1,98 +1,115 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI
- driver
-Date: Tue, 4 Sep 2018 05:37:30 +0000
-Message-ID: <VI1PR04MB10382327ECE8B1004B4E983E99030@VI1PR04MB1038.eurprd04.prod.outlook.com>
-References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
- <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [RFC PATCH v2 1/3] firmware: xilinx: Add fpga API's
+Date: Tue, 4 Sep 2018 07:23:28 +0000 (UTC)
+Message-ID: <20180905072448.12488-2-nava.manne@xilinx.com>
+References: <20180905072448.12488-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
-Content-Language: en-US
+Date: Wed, 5 Sep 2018 12:54:46 +0530
+In-Reply-To: <20180905072448.12488-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, atull@kernel.org, mdf@kernel.org, jollys@xilinx.com, sboyd@kernel.org, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, chinnikishore369@gmail.com
+Cc: Nava kishore Manne <nava.manne@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prabhakar,
+This Patch Adds fpga API's to support the Bitstream loading
+by using firmware interface.
 
-> -----Original Message-----
-> From: Prabhakar Kushwaha
-> Sent: Monday, September 3, 2018 3:24 PM
-> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>; linux-
-> mtd@lists.infradead.org; boris.brezillon@bootlin.com; marek.vasut@gmail.c=
-om;
-> linux-spi@vger.kernel.org; devicetree@vger.kernel.org
-> Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
-> arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
-> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh Narayan
-> Gaur <yogeshnarayan.gaur@nxp.com>
-> Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexS=
-PI driver
->=20
-> Dear Yogesh,
->=20
-> > -----Original Message-----
-> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
-> > owner@vger.kernel.org> On Behalf Of Yogesh Gaur
-> > Sent: Friday, August 31, 2018 4:00 PM
-> > To: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
-> > marek.vasut@gmail.com; linux-spi@vger.kernel.org;
-> > devicetree@vger.kernel.org
-> > Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
-> > arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
-> > frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh
-> > Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-> > Subject: [PATCH 4/7] dt-bindings: spi: add binding file for NXP
-> > FlexSPI driver
-> >
-> > Add binding file for NXP FlexSPI driver.
-> >
-> > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> > ---
-> >  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42
-> > ++++++++++++++++++++++
-> >  1 file changed, 42 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-
-> > fspi.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > new file mode 100644
-> > index 0000000..9f07116
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> > @@ -0,0 +1,42 @@
-> > +* NXP Flex Serial Peripheral Interface (FSPI)
-> > +
-> > +Required properties:
-> > +  - compatible : Should be "nxp,lx2160a-fspi"
-> > +  - reg :        First contains the register location and length,
-> > +                 Second contains the memory mapping address and
-> > +length
->=20
-> Why are we overriding reg property.  Is there any special requirement.
->=20
-> Can we use "reg" and "ranges" property in device tree.
-> Here "reg" represents controller registers and "ranges" represent the mem=
-ory
-> address of flash.
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+---
+Changes for v2:
+                -New Patch.
 
-'reg' property is being mentioned in the file './Documentation/devicetree/b=
-indings/spi/spi-bus.txt'
-No mention has been given for the 'ranges' property.
+ drivers/firmware/xilinx/zynqmp.c     | 46 ++++++++++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h |  4 +++
+ 2 files changed, 50 insertions(+)
 
-Shawn,
-Please suggest, did we add different property node 'reg' for the configurat=
-ion register address space and 'ranges' for memory mapped address space.
-
---
-Regards
-Yogesh Gaur
-
->=20
-> --pk
->=20
+diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+index 7ccedf083926..9b3a59512dd7 100644
+--- a/drivers/firmware/xilinx/zynqmp.c
++++ b/drivers/firmware/xilinx/zynqmp.c
+@@ -447,6 +447,50 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
+ 	return ret;
+ }
+ 
++/**
++ * zynqmp_pm_fpga_load - Perform the fpga load
++ * @address:	Address to write to
++ * @size:	pl bitstream size
++ * @flags:
++ *	BIT(0) - Bit-stream type.
++ *		 0 - Full Bit-stream.
++ *		 1 - Partial Bit-stream.
++ *
++ * This function provides access to pmufw. To transfer
++ * the required bitstream into PL.
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_fpga_load(const u64 address, const u32 size,
++			       const u32 flags)
++{
++	return zynqmp_pm_invoke_fn(PM_FPGA_LOAD, lower_32_bits(address),
++				   upper_32_bits(address), size, flags, NULL);
++}
++
++/**
++ * zynqmp_pm_fpga_get_status - Read value from PCAP status register
++ * @value: Value to read
++ *
++ * This function provides access to the xilfpga library to get
++ * the PCAP status
++ *
++ * Return: Returns status, either success or error+reason
++ */
++static int zynqmp_pm_fpga_get_status(u32 *value)
++{
++	u32 ret_payload[PAYLOAD_ARG_CNT];
++	int ret;
++
++	if (!value)
++		return -EINVAL;
++
++	ret = zynqmp_pm_invoke_fn(PM_FPGA_GET_STATUS, 0, 0, 0, 0, ret_payload);
++	*value = ret_payload[1];
++
++	return ret;
++}
++
+ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.get_api_version = zynqmp_pm_get_api_version,
+ 	.ioctl = zynqmp_pm_ioctl,
+@@ -460,6 +504,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
+ 	.clock_getrate = zynqmp_pm_clock_getrate,
+ 	.clock_setparent = zynqmp_pm_clock_setparent,
+ 	.clock_getparent = zynqmp_pm_clock_getparent,
++	.fpga_load = zynqmp_pm_fpga_load,
++	.fpga_get_status = zynqmp_pm_fpga_get_status,
+ };
+ 
+ /**
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 58a74781b51d..5a6bd5e58ea4 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -34,6 +34,8 @@
+ 
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
++	PM_FPGA_LOAD = 22,
++	PM_FPGA_GET_STATUS,
+ 	PM_IOCTL = 34,
+ 	PM_QUERY_DATA,
+ 	PM_CLOCK_ENABLE,
+@@ -90,6 +92,8 @@ struct zynqmp_pm_query_data {
+ 
+ struct zynqmp_eemi_ops {
+ 	int (*get_api_version)(u32 *version);
++	int (*fpga_load)(const u64 address, const u32 size, const u32 flags);
++	int (*fpga_get_status)(u32 *value);
+ 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
+ 	int (*query_data)(struct zynqmp_pm_query_data qdata, u32 *out);
+ 	int (*clock_enable)(u32 clock_id);
+-- 
+2.18.0
