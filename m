@@ -1,37 +1,98 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 00/11] mscc: ocelot: add support for SerDes muxing
- configuration
-Date: Mon, 03 Sep 2018 22:09:10 -0700 (PDT)
-Message-ID: <20180903.220910.899357653888940454.davem@davemloft.net>
-References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
-        <20180903133415.GF4445@lunn.ch>
-        <20180903134522.GC13888@piout.net>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI
+ driver
+Date: Tue, 4 Sep 2018 05:37:30 +0000
+Message-ID: <VI1PR04MB10382327ECE8B1004B4E983E99030@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180903134522.GC13888@piout.net>
+In-Reply-To: <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com
-Cc: andrew@lunn.ch, quentin.schulz@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
+To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Date: Mon, 3 Sep 2018 15:45:22 +0200
+Hi Prabhakar,
 
-> On 03/09/2018 15:34:15+0200, Andrew Lunn wrote:
->> > I suggest patches 1 and 8 go through MIPS tree, 2 to 5 and 11 go through
->> > net while the others (6, 7, 9 and 10) go through the generic PHY subsystem.
->> 
->> Hi Quentin
->> 
->> Are you expecting merge conflicts? If not, it might be simpler to gets
->> ACKs from each maintainer, and then merge it though one tree.
->> 
-> 
-> There are some other DT changes for this cycle so those should probably
-> go through MIPS.
+> -----Original Message-----
+> From: Prabhakar Kushwaha
+> Sent: Monday, September 3, 2018 3:24 PM
+> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>; linux-
+> mtd@lists.infradead.org; boris.brezillon@bootlin.com; marek.vasut@gmail.c=
+om;
+> linux-spi@vger.kernel.org; devicetree@vger.kernel.org
+> Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
+> arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
+> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh Narayan
+> Gaur <yogeshnarayan.gaur@nxp.com>
+> Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexS=
+PI driver
+>=20
+> Dear Yogesh,
+>=20
+> > -----Original Message-----
+> > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > owner@vger.kernel.org> On Behalf Of Yogesh Gaur
+> > Sent: Friday, August 31, 2018 4:00 PM
+> > To: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
+> > marek.vasut@gmail.com; linux-spi@vger.kernel.org;
+> > devicetree@vger.kernel.org
+> > Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org; linux-
+> > arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
+> > frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh
+> > Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > Subject: [PATCH 4/7] dt-bindings: spi: add binding file for NXP
+> > FlexSPI driver
+> >
+> > Add binding file for NXP FlexSPI driver.
+> >
+> > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> > ---
+> >  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42
+> > ++++++++++++++++++++++
+> >  1 file changed, 42 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-
+> > fspi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > new file mode 100644
+> > index 0000000..9f07116
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > @@ -0,0 +1,42 @@
+> > +* NXP Flex Serial Peripheral Interface (FSPI)
+> > +
+> > +Required properties:
+> > +  - compatible : Should be "nxp,lx2160a-fspi"
+> > +  - reg :        First contains the register location and length,
+> > +                 Second contains the memory mapping address and
+> > +length
+>=20
+> Why are we overriding reg property.  Is there any special requirement.
+>=20
+> Can we use "reg" and "ranges" property in device tree.
+> Here "reg" represents controller registers and "ranges" represent the mem=
+ory
+> address of flash.
 
-No objection for this going through the MIPS tree, and from me:
+'reg' property is being mentioned in the file './Documentation/devicetree/b=
+indings/spi/spi-bus.txt'
+No mention has been given for the 'ranges' property.
 
-Acked-by: David S. Miller <davem@davemloft.net>
+Shawn,
+Please suggest, did we add different property node 'reg' for the configurat=
+ion register address space and 'ranges' for memory mapped address space.
+
+--
+Regards
+Yogesh Gaur
+
+>=20
+> --pk
+>=20
