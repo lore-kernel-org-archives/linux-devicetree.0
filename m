@@ -1,164 +1,34 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 3/3] ASoC: qdsp6: q6asm-dai: Add support to compress
- offload
-Date: Tue, 4 Sep 2018 19:25:26 +0530
-Message-ID: <20180904135526.GK2322@vkoul-mobl>
-References: <20180903123455.9290-1-srinivas.kandagatla@linaro.org>
- <20180903123455.9290-4-srinivas.kandagatla@linaro.org>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
+Date: Tue, 4 Sep 2018 09:59:08 -0400
+Message-ID: <20180904095908.13298b3d@gandalf.local.home>
+References: <1536012923-16275-1-git-send-email-henrik@austad.us>
+ <20180904113030.GB25177@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180903123455.9290-4-srinivas.kandagatla@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, perex@perex.cz, devicetree@vger.kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180904113030.GB25177@amd>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Henrik Austad <henrik@austad.us>, Lai Jiangshan <jiangshanlai@gmail.com>, dri-devel@lists.freedesktop.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Jan Kandziora <jjj@gmx.de>, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, linux-s390@vger.kernel.org, Ian Kent <raven@themaw.net>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>, Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, "James E.J. Bottomley" <jejb@parisc-linux.or>
 List-Id: devicetree@vger.kernel.org
 
-On 03-09-18, 13:34, Srinivas Kandagatla wrote:
-
-> +static void compress_event_handler(uint32_t opcode, uint32_t token,
-> +				   uint32_t *payload, void *priv)
-> +{
-> +	struct q6asm_dai_rtd *prtd = priv;
-> +	struct snd_compr_stream *substream = prtd->cstream;
-> +	unsigned long flags;
-> +	uint64_t avail;
-> +
-> +	switch (opcode) {
-> +	case ASM_CLIENT_EVENT_CMD_RUN_DONE:
-> +		spin_lock_irqsave(&prtd->lock, flags);
-> +		avail = prtd->bytes_received - prtd->bytes_sent;
-> +		if (!prtd->bytes_sent) {
-> +			if (avail < substream->runtime->fragment_size) {
-> +				prtd->xrun = 1;
-
-so you are trying to detect xrun :) So in compress core we added support
-for .ack callback which tells driver how much data is valid in ring
-buffer and we can send this to DSP, so DSP "knows" valid data and should
-not overrun, ofcourse DSP needs support for it
-
-> +			} else {
-> +				q6asm_write_async(prtd->audio_client,
-> +						  prtd->pcm_count,
-> +						  0, 0, NO_TIMESTAMP);
-> +				prtd->bytes_sent += prtd->pcm_count;
-> +			}
-> +		}
-> +
-> +		spin_unlock_irqrestore(&prtd->lock, flags);
-> +		break;
-
-empty line after break helps readability
-
-> +	case ASM_CLIENT_EVENT_CMD_EOS_DONE:
-> +		prtd->state = Q6ASM_STREAM_STOPPED;
-> +		break;
-> +	case ASM_CLIENT_EVENT_DATA_WRITE_DONE:
-> +		spin_lock_irqsave(&prtd->lock, flags);
-> +		prtd->byte_offset += prtd->pcm_count;
-> +		prtd->copied_total += prtd->pcm_count;
-
-so should you need two counters, copied_total should give you byte_offset
-as well, we know the ring buffer size
-
-> +
-> +		if (prtd->byte_offset >= prtd->pcm_size)
-> +			prtd->byte_offset -= prtd->pcm_size;
-
-:)
-
-> +
-> +		snd_compr_fragment_elapsed(substream);
-
-so will ASM_CLIENT_EVENT_DATA_WRITE_DONE be invoked on fragment bytes
-consumed?
-
-> +static int q6asm_dai_compr_set_params(struct snd_compr_stream *stream,
-> +				      struct snd_compr_params *params)
-> +{
-> +
-
-redundant empty line
-
-> +static int q6asm_dai_compr_trigger(struct snd_compr_stream *stream, int cmd)
-> +{
-> +	struct snd_compr_runtime *runtime = stream->runtime;
-> +	struct q6asm_dai_rtd *prtd = runtime->private_data;
-> +	int ret = 0;
-> +
-> +	switch (cmd) {
-> +	case SNDRV_PCM_TRIGGER_START:
-> +	case SNDRV_PCM_TRIGGER_RESUME:
-> +	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-> +		ret = q6asm_run_nowait(prtd->audio_client, 0, 0, 0);
-
-the triggers are not in atomic context, do we have q6asm_run()
-
-> +static int q6asm_dai_compr_copy(struct snd_compr_stream *stream,
-> +				char __user *buf, size_t count)
-> +{
-> +	struct snd_compr_runtime *runtime = stream->runtime;
-> +	struct q6asm_dai_rtd *prtd = runtime->private_data;
-> +	uint64_t avail = 0;
-> +	unsigned long flags;
-> +	size_t copy;
-> +	void *dstn;
-> +
-> +	dstn = prtd->buffer + prtd->copy_pointer;
-> +	if (count < prtd->pcm_size - prtd->copy_pointer) {
-> +		if (copy_from_user(dstn, buf, count))
-> +			return -EFAULT;
-> +
-> +		prtd->copy_pointer += count;
-> +	} else {
-> +		copy = prtd->pcm_size - prtd->copy_pointer;
-> +		if (copy_from_user(dstn, buf, copy))
-> +			return -EFAULT;
-> +
-> +		if (copy_from_user(prtd->buffer, buf + copy, count - copy))
-> +			return -EFAULT;
-> +		prtd->copy_pointer = count - copy;
-> +	}
-> +
-> +	spin_lock_irqsave(&prtd->lock, flags);
-> +	prtd->bytes_received += count;
-
-why not use core copy method and...
-> +
-> +	if (prtd->state == Q6ASM_STREAM_RUNNING && prtd->xrun) {
-> +		avail = prtd->bytes_received - prtd->copied_total;
-> +		if (avail >= runtime->fragment_size) {
-> +			prtd->xrun = 0;
-> +			q6asm_write_async(prtd->audio_client,
-> +				   prtd->pcm_count, 0, 0, NO_TIMESTAMP);
-> +			prtd->bytes_sent += prtd->pcm_count;
-> +		}
-> +	}
-
-move this to .ack
-
-> +static int q6asm_dai_compr_get_codec_caps(struct snd_compr_stream *stream,
-> +					  struct snd_compr_codec_caps *codec)
-> +{
-> +	switch (codec->codec) {
-> +	case SND_AUDIOCODEC_MP3:
-> +		codec->num_descriptors = 2;
-> +		codec->descriptor[0].max_ch = 2;
-> +		memcpy(codec->descriptor[0].sample_rates,
-> +		       supported_sample_rates,
-> +		       sizeof(supported_sample_rates));
-> +		codec->descriptor[0].num_sample_rates =
-> +			sizeof(supported_sample_rates)/sizeof(unsigned int);
-> +		codec->descriptor[0].bit_rate[0] = 320; /* 320kbps */
-> +		codec->descriptor[0].bit_rate[1] = 128;
-> +		codec->descriptor[0].num_bitrates = 2;
-> +		codec->descriptor[0].profiles = 0;
-> +		codec->descriptor[0].modes = SND_AUDIOCHANMODE_MP3_STEREO;
-> +		codec->descriptor[0].formats = 0;
-
-since we are static here, how about using a table based approach and
-use that here
-
--- 
-~Vinod
+T24gVHVlLCA0IFNlcCAyMDE4IDEzOjMwOjMwICswMjAwClBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3
+LmN6PiB3cm90ZToKCj4gSSdkIHNheSB0aGlzIGlzIHN0aWxsIHF1aXRlIHZhbHVlYWJsZSwgYW5k
+IGl0IG1pZ2h0IGJlIHdvcnRoIGZpeGluZywKPiByYXRoZXIgdGhlbiByZW1vdmluZyBjb21wbGV0
+ZWx5LgoKSSBhZ3JlZS4gUGVyaGFwcyB3ZSBzaG91bGQgaGF2ZSBhIDAwLURFU0NSSVBUSU9OIGZp
+bGUgaW4gZWFjaApkaXJlY3RvcnksIGFuZCBlYWNoIGZpbGUgY291bGQgc3RhcnQgd2l0aCBhOgoK
+IERFU0NSSVBUSU9OOiA8b25lIGxpbmUgZGVzY3JpcHRpb24gaGVyZT4KCmFuZCB0aGVuIHRoZXNl
+IGZpbGVzIGNvdWxkIGJlIGdlbmVyYXRlZCBieSB0aG9zZSB0aGF0IGhhdmUgdGhlc2UgdGFncy4K
+Ci0tIFN0ZXZlCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
