@@ -1,21 +1,63 @@
-Return-Path: <SRS0=5mrQ=LY=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 0/2] Add support for RZ/A2 wdt
-Date: Mon, 10 Sep 2018 14:52:31 -0500
-Message-Id: <20180910195233.25296-1-chris.brandt@renesas.com>
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=Whtj=LS=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20180903215035.17265-1-linus.walleij@linaro.org> <20180903215035.17265-4-linus.walleij@linaro.org>
+In-Reply-To: <20180903215035.17265-4-linus.walleij@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 4 Sep 2018 09:39:19 +0200
+Message-ID: <CAMuHMdXz+viq1CAPZNa15KQL=kMnqaSVSE98B3hqZ-P6yjtQSg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] spi: Add a DT binding for high impedance turnaround
+Content-Type: text/plain; charset="UTF-8"
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, lorenzo.bianconi@redhat.com, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Slightly modify the rza_wdt.c driver and update the binding docs.
+Hi Linus,
 
-Chris Brandt (2):
-  watchdog: rza_wdt: Support longer timeouts
-  dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
+On Mon, Sep 3, 2018 at 11:51 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+> Some 3WIRE SPI devices require the host to insert a "high
+> impedance turnaround" essentially a clock pulse after
 
- .../devicetree/bindings/watchdog/renesas-wdt.txt   |  1 +
- drivers/watchdog/rza_wdt.c                         | 88 +++++++++++++++++-----
- 2 files changed, 71 insertions(+), 18 deletions(-)
+high-impedance
+
+(English allows both, but since you use "turn-around")
+
+> switching the one line from output to input.
+>
+> This is needed to support the TPO TPG110 panel to use
+> the 3WIRE SPI bindings.
+>
+> Cc: devicetree@vger.kernel.org
+> Cc: Andrzej Hajda <a.hajda@samsung.com>
+> Cc: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Thanks for your patch!
+
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -70,6 +70,10 @@ All slave nodes can contain the following optional properties:
+>  - spi-cs-high     - Empty property indicating device requires chip select
+>                     active high.
+>  - spi-3wire       - Empty property indicating device requires 3-wire mode.
+> +- spi-3wire-high-impedance-turnaround - Empty property indicating that a
+> +                   3wire host need to insert a high impedance turn-around
+
+needs
+high-impedance
+
+> +                   clock cycle after turning the one output line into an
+> +                   input line.
+>  - spi-lsb-first   - Empty property indicating device requires LSB first mode.
+>  - spi-tx-bus-width - The bus width (number of data wires) that is used for MOSI.
+>                     Defaults to 1 if not present.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.16.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
