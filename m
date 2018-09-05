@@ -1,72 +1,61 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] drm/sun4i: Enable DE2 Mixer for
- SUN8I and SUN50I
-Date: Wed, 5 Sep 2018 09:07:48 +0200
-Message-ID: <20180905070748.g43lfdqdhmoci6pk@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v4 4/4] drm/sun4i: Enable DesignWare HDMI for SUN50I
+Date: Wed, 5 Sep 2018 09:08:19 +0200
+Message-ID: <20180905070819.gisznpkvvuqire7c@flea>
 References: <20180904163609.10171-1-jagan@amarulasolutions.com>
- <20180904163609.10171-3-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+ <20180904163609.10171-4-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yadrlpym4unrl57x"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRUBX3OAKGQE7OX7EFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="dalurjfys7j4k4zw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180904163609.10171-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180904163609.10171-4-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---yadrlpym4unrl57x
-Content-Type: text/plain; charset="UTF-8"
+--dalurjfys7j4k4zw
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 04, 2018 at 10:06:08PM +0530, Jagan Teki wrote:
-> Allwinner SoC like SUN8I and SUN50I are now using DE2 Mixer
-> so enable them as default.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v4, v3:
-> - none
-> Changes for v2:
-> - Enable for SUN8I
-> 
->  drivers/gpu/drm/sun4i/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
-> index c2c042287c19..cfa8b96273fb 100644
-> --- a/drivers/gpu/drm/sun4i/Kconfig
-> +++ b/drivers/gpu/drm/sun4i/Kconfig
-> @@ -61,7 +61,7 @@ config DRM_SUN8I_DW_HDMI
->  
->  config DRM_SUN8I_MIXER
->  	tristate "Support for Allwinner Display Engine 2.0 Mixer"
-> -	default MACH_SUN8I
-> +	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+On Tue, Sep 04, 2018 at 10:06:09PM +0530, Jagan Teki wrote:
+> Allwinner SUN50I are now using DesignWare HDMI so enable
+> them as default. This can build DRM_SUN8I_DW_HDMI as module
+> since DRM in arm64 has module.
+>=20
+> Making this as defult to SUN8I, may cause an issue while
+> loading since arm32 DRM built as static.
 
-I'm not really sure we should put it as a default. We should just
-enable it in the defconfig.
+Uh? Why? We should fix this instead of working around it.
 
 Maxime
 
->  	help
->  	  Choose this option if you have an Allwinner SoC with the
->  	  Allwinner Display Engine 2.0, which has a mixer to do some
-> -- 
-> 2.18.0.321.gffc6fa0e3
-> 
-
--- 
+--=20
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---yadrlpym4unrl57x--
+
+--dalurjfys7j4k4zw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluPgOIACgkQ0rTAlCFN
+r3SxWg/+Psm2VdDssaS2hlPN8yqt6NwxWzfVgyg51qEsdyGMD4+d3TR+10iXfnM+
+rzH076iYp0ZBKFJ1ehkLhfW7/RLOPHY18H8MVPckjde6BhRlTtqOfc3lBtCwxkxt
+rYMidQMOij0+w4sFtv98gcdtozfbz8y9PorSpVreJj2lkA9DonTTbX44h0JTLJLQ
+DpvBdliDCkDxRDzrnGgcWhVqOsCuw5FtaLcGaA8Mh2Gx5AAUz4b8pPMmhV8zZWxO
+pdTW3da3YReUwbQs40BI4z3w6m5tQ3p3puDWQU/js34Ihi83mqzQO7Nb7rNFsnHB
+QCK9RtzdaTYm9XhC+0WqHmltn3LKlJJqTM6p5Nstx9rycAHqCzcWpYYzR6JES6rK
+tKz0u2+p15I3piA9lB95G+qgqJMXO5VhIAMVS+IuPa0sttLFPPS2DKy4cEKvSoto
+3PUpz8z9n2j8wlr6hT4dYOOLkA4nyVBwHZ4hXrakyy65/1gMB2VXNzzna7GWfY1B
++zH7EJ0W1WI4Qd0bk2dXERAkcGW1JhyStWD13udnTratz/51EEAx1pOVV4tAOPEL
+PyRyGdAVfe5ycUP2g8J+n3rdi+NKaztoqhfSJhIkNzdog8eO3VUuCCj8FbFtAIQX
+43zurL9W0rCt5MSU3raho3Dwo3Ju1FX8r40sa95QSHLA1KHo2sM=
+=SQ9C
+-----END PGP SIGNATURE-----
+
+--dalurjfys7j4k4zw--
