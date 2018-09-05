@@ -1,20 +1,20 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] drm/sun4i: Enable DE2 Mixer for
- SUN8I and SUN50I
-Date: Wed, 5 Sep 2018 16:48:52 +0200
-Message-ID: <20180905144852.db2galdquxx22kjh@flea>
+Subject: Re: [PATCH v4 4/4] drm/sun4i: Enable DesignWare HDMI
+ for SUN50I
+Date: Wed, 5 Sep 2018 16:49:29 +0200
+Message-ID: <20180905144929.67kmbuef2ae6fm23@flea>
 References: <20180904163609.10171-1-jagan@amarulasolutions.com>
- <20180904163609.10171-3-jagan@amarulasolutions.com>
- <20180905070748.g43lfdqdhmoci6pk@flea>
- <CAMty3ZBYjq8VBnwSqKhJgag1ARRvnPTVSpYT7SWu=A6pMwKEiA@mail.gmail.com>
+ <20180904163609.10171-4-jagan@amarulasolutions.com>
+ <20180905070819.gisznpkvvuqire7c@flea>
+ <CAMty3ZAzjSwq86BwB8O_7DrT0jrhn3ByzN34dY37pF3ZsAZ6uA@mail.gmail.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="en7fpj6tbqjjbcyr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2OZX7OAKGQEGEQRHXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="q6f2ab7olekwmy4f"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBG2X7OAKGQE4YO5XUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZBYjq8VBnwSqKhJgag1ARRvnPTVSpYT7SWu=A6pMwKEiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAMty3ZAzjSwq86BwB8O_7DrT0jrhn3ByzN34dY37pF3ZsAZ6uA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -26,47 +26,27 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G
 List-Id: devicetree@vger.kernel.org
 
 
---en7fpj6tbqjjbcyr
+--q6f2ab7olekwmy4f
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Wed, Sep 05, 2018 at 01:51:25PM +0530, Jagan Teki wrote:
-> On Wed, Sep 5, 2018 at 12:37 PM, Maxime Ripard
+On Wed, Sep 05, 2018 at 01:54:42PM +0530, Jagan Teki wrote:
+> On Wed, Sep 5, 2018 at 12:38 PM, Maxime Ripard
 > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Tue, Sep 04, 2018 at 10:06:08PM +0530, Jagan Teki wrote:
-> >> Allwinner SoC like SUN8I and SUN50I are now using DE2 Mixer
-> >> so enable them as default.
+> > On Tue, Sep 04, 2018 at 10:06:09PM +0530, Jagan Teki wrote:
+> >> Allwinner SUN50I are now using DesignWare HDMI so enable
+> >> them as default. This can build DRM_SUN8I_DW_HDMI as module
+> >> since DRM in arm64 has module.
 > >>
-> >> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> >> ---
-> >> Changes for v4, v3:
-> >> - none
-> >> Changes for v2:
-> >> - Enable for SUN8I
-> >>
-> >>  drivers/gpu/drm/sun4i/Kconfig | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
-> >> index c2c042287c19..cfa8b96273fb 100644
-> >> --- a/drivers/gpu/drm/sun4i/Kconfig
-> >> +++ b/drivers/gpu/drm/sun4i/Kconfig
-> >> @@ -61,7 +61,7 @@ config DRM_SUN8I_DW_HDMI
-> >>
-> >>  config DRM_SUN8I_MIXER
-> >>       tristate "Support for Allwinner Display Engine 2.0 Mixer"
-> >> -     default MACH_SUN8I
-> >> +     default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+> >> Making this as defult to SUN8I, may cause an issue while
+> >> loading since arm32 DRM built as static.
 > >
-> > I'm not really sure we should put it as a default. We should just
-> > enable it in the defconfig.
+> > Uh? Why? We should fix this instead of working around it.
 > 
-> What would be the difference in both cases it would be build as module
-> since DRM_SUN4I=m for ARM64
+> I didn't dig further on this. Since ARM64 has is fine with it both
+> (module and static) may be we can take this.
 
-We wouldn't force it down the throat to every user by default, even
-though they have no interest in that driver being compiled into their
-kernel.
+No, this build breakage needs to be (reported and) addressed first.
 
 Maxime
 
@@ -74,4 +54,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---en7fpj6tbqjjbcyr--
+--q6f2ab7olekwmy4f--
