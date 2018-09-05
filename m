@@ -1,35 +1,74 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v5 0/7] Add support for MSCC Ocelot i2c
-Date: Wed, 5 Sep 2018 16:09:19 -0700
-Message-ID: <20180905230919.ycqmkohubym5foz3@pburton-laptop>
-References: <20180831151114.25739-1-alexandre.belloni@bootlin.com>
- <20180901124353.GB1196@kunai>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 2/9] nios2: build .dtb files in dts directory
+Date: Wed,  5 Sep 2018 18:53:20 -0500
+Message-ID: <20180905235327.5996-3-robh@kernel.org>
+References: <20180905235327.5996-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180901124353.GB1196@kunai>
+In-Reply-To: <20180905235327.5996-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Hogan <jhogan@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Allan Nielsen <allan.nielsen@microchip.com>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre & Wolfram,
+Align nios2 with other architectures which build the dtb files in the
+same directory as the dts files. This is also in line with most other
+build targets which are located in the same directory as the source.
+This move will help enable the 'dtbs' target which builds all the dtbs
+regardless of kernel config.
 
-On Sat, Sep 01, 2018 at 02:43:53PM +0200, Wolfram Sang wrote:
-> > Because the designware IP was not able to handle the SDA hold time before
-> > version 1.11a, MSCC has its own implementation. Add support for it and then add
-> > i2c on ocelot boards.
-> > 
-> > I would expect patches 1 to 5 to go through the i2c tree.
-> 
-> Applied to for-next, thanks!
-> 
-> > Pathces 6-7 can go through the mips tree now that the bindings have been
-> > reviewed.
-> 
-> They have been reviewed by Rob and are applied now to my tree.
+This transition could break some scripts if they expect dtb files in
+the old location.
 
-Patches 6 & 7 applied to mips-next for 4.20 - thanks!
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: nios2-dev@lists.rocketboards.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Please ack so I can take the whole series via the DT tree.
 
-Paul
+ arch/nios2/Makefile          | 4 ++--
+ arch/nios2/boot/Makefile     | 4 ----
+ arch/nios2/boot/dts/Makefile | 1 +
+ 3 files changed, 3 insertions(+), 6 deletions(-)
+ create mode 100644 arch/nios2/boot/dts/Makefile
+
+diff --git a/arch/nios2/Makefile b/arch/nios2/Makefile
+index 8673a79dca9c..50eece1c6adb 100644
+--- a/arch/nios2/Makefile
++++ b/arch/nios2/Makefile
+@@ -59,10 +59,10 @@ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(nios2-boot)
+
+ %.dtb: | scripts
+-	$(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
++	$(Q)$(MAKE) $(build)=$(nios2-boot)/dts $(nios2-boot)/dts/$@
+
+ dtbs:
+-	$(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
++	$(Q)$(MAKE) $(build)=$(nios2-boot)/dts
+
+ $(BOOT_TARGETS): vmlinux
+ 	$(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
+diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
+index 2ba23a679732..007586094dde 100644
+--- a/arch/nios2/boot/Makefile
++++ b/arch/nios2/boot/Makefile
+@@ -47,10 +47,6 @@ obj-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += linked_dtb.o
+
+ targets += $(dtb-y)
+
+-# Rule to build device tree blobs with make command
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
+-
+ $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+
+ install:
+diff --git a/arch/nios2/boot/dts/Makefile b/arch/nios2/boot/dts/Makefile
+new file mode 100644
+index 000000000000..f66554cd5c45
+--- /dev/null
++++ b/arch/nios2/boot/dts/Makefile
+@@ -0,0 +1 @@
++# SPDX-License-Identifier: GPL-2.0
+--
+2.17.1
