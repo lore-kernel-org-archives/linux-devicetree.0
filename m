@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 07/11] dt-bindings: clock:
- sun50i-a64-ccu: Add PLL_VIDEO0 macro
-Date: Wed, 5 Sep 2018 09:21:51 +0200
-Message-ID: <20180905072151.3jqfpzuawyohov3f@flea>
+Subject: Re: [PATCH v4 09/11] dt-bindings: sun4i-drm: add HDMI
+ VCC supply property for sun8i-dw-hdmi
+Date: Wed, 5 Sep 2018 09:22:05 +0200
+Message-ID: <20180905072205.63qmmqr45323xllc@flea>
 References: <20180904044053.15425-1-icenowy@aosc.io>
- <20180904044053.15425-8-icenowy@aosc.io>
+ <20180904044053.15425-10-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="t3gzuf2gmgk6626l"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBEEIX3OAKGQE345NWNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rlpbalzc2vivwqzf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBH4IX3OAKGQEX6A2TCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180904044053.15425-8-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180904044053.15425-10-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,20 +24,16 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdg
 List-Id: devicetree@vger.kernel.org
 
 
---t3gzuf2gmgk6626l
+--rlpbalzc2vivwqzf
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Tue, Sep 04, 2018 at 12:40:49PM +0800, Icenowy Zheng wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Tue, Sep 04, 2018 at 12:40:51PM +0800, Icenowy Zheng wrote:
+> Allwiner SoCs with DesignWare HDMI controller all come with a "HVCC"
+> pin, which is the VCC of HDMI part.
 > 
-> Allwinner A64 HDMI PHY clock has PLL_VIDEO0 as a parent.
+> Add a supply property to specify HVCC's regulator in the device tree.
 > 
-> Include the macro on dt-bindings so-that the same can be used
-> while defining CCU clock phandles.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 
 Applied, thanks!
@@ -47,4 +43,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---t3gzuf2gmgk6626l--
+--rlpbalzc2vivwqzf--
