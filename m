@@ -1,102 +1,67 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Wed, 05 Sep 2018 10:44:53 +0300
-Message-ID: <1569297.pdEFdpi3HS@avalon>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <4035252.QuWadVx7pr@avalon>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH 1/3] dt-bindings: change the A64 HDMI PHY
+ binding to R40
+Date: Wed, 05 Sep 2018 15:46:41 +0800
+Message-ID: <3D28A45F-D67D-4388-9FB7-2A2763955398@aosc.io>
+References: <20180903133434.58188-1-icenowy@aosc.io> <20180903133434.58188-2-icenowy@aosc.io> <20180905071435.lgsogpzmh5nw6bcy@flea>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <4035252.QuWadVx7pr@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB3UTX3OAKGQEZU762EI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180905071435.lgsogpzmh5nw6bcy@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKT24gV2VkbmVzZGF5LCA1IFNlcHRlbWJlciAyMDE4IDEwOjA2OjI4IEVFU1Qg
-TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBPbiBXZWRuZXNkYXksIDUgU2VwdGVtYmVyIDIwMTgg
-MDg6MjE6MDggRUVTVCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4gPiBUaGUgRFJNIGJ1cyBmbGFncyBj
-b252ZXkgYWRkaXRpb25hbCBpbmZvcm1hdGlvbiBvbiBwaXhlbCBkYXRhIG9uCj4gPiB0aGUgYnVz
-LiBBbGwgY3VycmVudCBhdmFpbGFibGUgYnVzIGZsYWdzIG1pZ2h0IGJlIG9mIGludGVyZXN0IGZv
-cgo+ID4gYSBicmlkZ2UuIFJlbW92ZSB0aGUgc2FtcGxpbmdfZWRnZSBmaWVsZCBhbmQgdXNlIGJ1
-c19mbGFncy4KPiA+IAo+ID4gSW4gdGhlIGNhc2UgYXQgaGFuZCBhIGR1bWIgVkdBIGJyaWRnZSBu
-ZWVkcyBhIHNwZWNpZmljIGRhdGEgZW5hYmxlCj4gPiBwb2xhcml0eSAoRFJNX0JVU19GTEFHX0RF
-X0xPVykuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVy
-LmNoPgo+ID4gLS0tCj4gPiAKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRh
-Yy5jIHwgIDYgKysrLS0tCj4gPiAgaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oICAgICAgICAgICAg
-ICB8IDExICsrKysrLS0tLS0tCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyks
-IDkgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJp
-ZGdlL2R1bWItdmdhLWRhYy5jCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2Et
-ZGFjLmMgaW5kZXggOWI3MDY3ODlhMzQxLi43YTVjMjQ5NjcxMTUKPiA+IDEwMDY0NAo+ID4gLS0t
-IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+ID4gKysrIGIvZHJpdmVy
-cy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+ID4gQEAgLTIzNCw3ICsyMzQsNyBAQCBz
-dGF0aWMgaW50IGR1bWJfdmdhX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlCj4gPiAqcGRl
-dikgKi8KPiA+IAo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRl
-ZmF1bHRfZGFjX3RpbWluZ3MgPSB7Cj4gPiAgCj4gPiAgCS8qIFRpbWluZyBzcGVjaWZpY2F0aW9u
-cywgZGF0YXNoZWV0IHBhZ2UgNyAqLwo+ID4gCj4gPiAtCS5zYW1wbGluZ19lZGdlID0gRFJNX0JV
-U19GTEFHX1BJWERBVEFfUE9TRURHRSwKPiA+ICsJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19Q
-SVhEQVRBX1BPU0VER0UsCj4gPiAKPiA+ICAJLnNldHVwX3RpbWVfcHMgPSA1MDAsCj4gPiAgCS5o
-b2xkX3RpbWVfcHMgPSAxNTAwLAo+ID4gIAo+ID4gIH07Cj4gPiAKPiA+IEBAIC0yNDUsNyArMjQ1
-LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MKPiA+IGRlZmF1bHRf
-ZGFjX3RpbWluZ3MgPSB7ICovCj4gPiAKPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlk
-Z2VfdGltaW5ncyB0aV90aHM4MTM0X2RhY190aW1pbmdzID0gewo+ID4gIAo+ID4gIAkvKiBGcm9t
-IHRpbWluZyBkaWFncmFtLCBkYXRhc2hlZXQgcGFnZSA5ICovCj4gPiAKPiA+IC0JLnNhbXBsaW5n
-X2VkZ2UgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFLAo+ID4gKwkuYnVzX2ZsYWdzID0g
-RFJNX0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSwKPiA+IAo+ID4gIAkvKiBGcm9tIGRhdGFzaGVl
-dCwgcGFnZSAxMiAqLwo+ID4gIAkuc2V0dXBfdGltZV9wcyA9IDMwMDAsCj4gPiAgCS8qIEkgZ3Vl
-c3MgdGhpcyBtZWFucyBsYXRjaGVkIGlucHV0ICovCj4gPiAKPiA+IEBAIC0yNTgsNyArMjU4LDcg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MKPiA+IHRpX3RoczgxMzRf
-ZGFjX3RpbWluZ3MgPSB7ICovCj4gPiAKPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlk
-Z2VfdGltaW5ncyB0aV90aHM4MTM1X2RhY190aW1pbmdzID0gewo+ID4gIAo+ID4gIAkvKiBGcm9t
-IHRpbWluZyBkaWFncmFtLCBkYXRhc2hlZXQgcGFnZSAxNCAqLwo+ID4gCj4gPiAtCS5zYW1wbGlu
-Z19lZGdlID0gRFJNX0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSwKPiA+ICsJLmJ1c19mbGFncyA9
-IERSTV9CVVNfRkxBR19QSVhEQVRBX1BPU0VER0UsCj4gPiAKPiA+ICAJLyogRnJvbSBkYXRhc2hl
-ZXQsIHBhZ2UgMTYgKi8KPiA+ICAJLnNldHVwX3RpbWVfcHMgPSAyMDAwLAo+ID4gIAkuaG9sZF90
-aW1lX3BzID0gNTAwLAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJtX2JyaWRn
-ZS5oIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gPiBpbmRleCBiZDg1MDc0N2NlNTQuLjg1
-ZDRiNTFlYWUxOSAxMDA2NDQKPiA+IC0tLSBhL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+ID4g
-KysrIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gPiBAQCAtMjQ0LDE0ICsyNDQsMTMgQEAg
-c3RydWN0IGRybV9icmlkZ2VfZnVuY3Mgewo+ID4gCj4gPiAgICovCj4gPiAgCj4gPiAgc3RydWN0
-IGRybV9icmlkZ2VfdGltaW5ncyB7Cj4gPiAgCj4gPiAgCS8qKgo+ID4gCj4gPiAtCSAqIEBzYW1w
-bGluZ19lZGdlOgo+ID4gCj4gPiArCSAqIEBidXNfZmxhZ3M6Cj4gPiAgCSAqCj4gPiAKPiA+IC0J
-ICogVGVsbHMgd2hldGhlciB0aGUgYnJpZGdlIHNhbXBsZXMgdGhlIGRpZ2l0YWwgaW5wdXQgc2ln
-bmFsCj4gPiAtCSAqIGZyb20gdGhlIGRpc3BsYXkgZW5naW5lIG9uIHRoZSBwb3NpdGl2ZSBvciBu
-ZWdhdGl2ZSBlZGdlIG9mIHRoZQo+ID4gLQkgKiBjbG9jaywgdGhpcyBzaG91bGQgcmV1c2UgdGhl
-IERSTV9CVVNfRkxBR19QSVhEQVRBX1tQT1N8TkVHXUVER0UKPiA+IC0JICogYml0d2lzZSBmbGFn
-cyBmcm9tIHRoZSBEUk0gY29ubmVjdG9yIChiaXQgMiBhbmQgMyB2YWxpZCkuCj4gPiArCSAqIFRl
-bGxzIHdoYXQgYWRkaXRpb25hbCBzZXR0aW5ncyBmb3IgdGhlIHBpeGVsIGRhdGEgb24gdGhlIGJ1
-cwo+ID4gKwkgKiB0aGlzIGJyaWRnZSByZXF1aXJlcyAobGlrZSBwaXhlbCBzaWduYWwgcG9sYXJp
-dHkpLiBTZWUgYWxzbwo+ID4gKwkgKiAmZHJtX2Rpc3BsYXlfaW5mby0+YnVzX2ZsYWdzLgo+ID4g
-Cj4gPiAgCSAqLwo+ID4gCj4gPiAtCXUzMiBzYW1wbGluZ19lZGdlOwo+ID4gKwl1MzIgYnVzX2Zs
-YWdzOwo+IAo+IFdoaWxlIEknbSBub3Qgb3Bwb3NlZCB0byBleHRlbmRpbmcgdGhlIGJyaWRnZSBz
-dHJ1Y3R1cmUgdG8gYWxsb3cgc3BlY2lmeWluZwo+IG90aGVyIGZsYWdzLCBJIHRoaW5rIHdlJ3Jl
-IGxvc2luZyBpbmZvcm1hdGlvbiBoZXJlLiBUaGUgc2FtcGxpbmdfZWRnZSBmaWVsZAo+IG1ha2Vz
-IGl0IGNsZWFyIHRoYXQgdGhlIERSTV9CVVNfRkxBR19QSVhEQVRBXyhORUd8UE9TKUVER0UgZmxh
-Z3Mgc3BlY2lmaWVkCj4gb24gd2hpY2ggY2xvY2sgZWRnZSBzaWduYWxzIGFyZSBzYW1wbGVkLiBi
-dXNfZmxhZ3MgY291bGQgYmUgaW50ZXJwcmV0ZWQKPiBkaWZmZXJlbnRseSwgZm9yIGluc3RhbmNl
-IGFzIHNwZWNpZnlpbmcgb24gd2hpY2ggY2xvY2sgZWRnZSBzaWduYWxzIGFyZQo+IG91dHB1dCBv
-biB0aGUgb3RoZXIgc2lkZSBvZiB0aGUgYnJpZGdlLgo+IAo+IFdlIGNvdWxkIGVhc2lseSBmaXgg
-dGhpcyBieSBzcGVjaWZ5aW5nIHRoYXQgdGhlIGJ1c19mbGFncyBmaWVsZCByZWZlcnMgdG8KPiB0
-aGUgaW5wdXQgc2lkZSBvZiB0aGUgYnJpZGdlLiBXZSBjb3VsZCBhbHNvIHJlbmFtZSB0aGUgZmll
-bGQgdG8KPiBpbnB1dF9idXNfZmxhZ3MuIFRoZSByZW5hbWUgY291bGQgYmUgZGVsYXllZCB1bnRp
-bCBuZWVkZWQsIGJ1dCB0aGF0IHdvdWxkCj4gcmVzdWx0IGluIHlldCBhbm90aGVyIGNoYW5nZSB0
-byBhbGwgYnJpZGdlIGRyaXZlcnMsIHNvIHdlIG1heSB3YW50IHRvIGRvIGl0Cj4gbm93IGFzIHlv
-dXIgcGF0Y2ggdG91Y2hlcyBhbGwgdGhlIGRyaXZlcnMgYWxyZWFkeS4gT3RoZXIgb3B0aW9ucyBt
-aWdodCBhbHNvCj4gYmUgcG9zc2libGUuCgpBbmQgSSBzaG91bGQgb2YgY291cnNlIG1ha2Ugc3Vy
-ZSB0byB3YWtlIHVwIGJlZm9yZSByZXZpZXdpbmcgcGF0Y2hlcy4gCk9idmlvdXNseSBvbmx5IG9u
-ZSBkcml2ZXIgaXMgY3VycmVudGx5IGFmZmVjdGVkIGJ5IHRoZSByZW5hbWUuIE1vcmUgd2lsbCB1
-c2UgCnRoZSBmbGFncyBsYXRlciB0aG91Z2gsIHNvIHRoZSBhcmd1bWVudCBjb3VsZCBzdGlsbCBo
-b2xkLgoKPiA+ICAJLyoqCj4gPiAgCQo+ID4gIAkgKiBAc2V0dXBfdGltZV9wczoKPiA+ICAJICoK
-Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+
+=E4=BA=8E 2018=E5=B9=B49=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883:1=
+4:35, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Mon, Sep 03, 2018 at 09:34:32PM +0800, Icenowy Zheng wrote:
+>> By experiment, the A64 HDMi PHY doesn't support the PLL-VIDEO mux
+>> introduced in R40, although it has two PLL-VIDEOs.
+>>=20
+>> Change the A64 HDMI PHY binding to R40 one.
+>>=20
+>> This binding is introduced in v4.19, which is still in RC stage, so
+>we
+>> have change to fix it.
+>>=20
+>> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>
+>That doesn't make much sense. The A64 doesn't have any particular
+>reason to behave like the R40, and the R40 can definitely use a
+>different compatible if it has a different behaviour. But I don't see
+>*why* the A64 not behaving like the R40 is a justification to remove
+>the A64 compatible. Especially when the R40 was released later.
+>
+>Add a new compatible, and leave the A64 compatible alone.
+
+But the behavior of A64 compatible will change from double
+PLL to single PLL, because the A64 HDMI PHY is proven
+to have no double PLL.
+
+Should I then change the A64 compatible behavior and import R40 compatible =
+at the same time?
+
+In addition maybe I can just drop A64 compatible, and let A64
+use H3 one. Then I will add a R40 compatible to catch
+dual PLL behavior.
+
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
