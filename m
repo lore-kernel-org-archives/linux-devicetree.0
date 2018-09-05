@@ -1,57 +1,58 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [RESEND PATCHv2 4/4] arm64: dts: add support for per sub-dir
- makefiles for DT building
-Date: Wed, 5 Sep 2018 13:37:26 -0700
-Message-ID: <8ef6d1a9-f038-c83b-24f7-fe42a8fdad0e@gmail.com>
-References: <1535719666-13595-1-git-send-email-t-kristo@ti.com>
- <1536048344-9995-1-git-send-email-t-kristo@ti.com>
- <1536048344-9995-5-git-send-email-t-kristo@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 3/6] dt-bindings: display: add data-enable polarity
+ property
+Date: Wed, 05 Sep 2018 23:50:25 +0300
+Message-ID: <6830776.vZAoroGVFQ@avalon>
+References: <20180905052113.21262-1-stefan@agner.ch>
+ <139651706.L0sBFfZMDQ@avalon> <e708c5bac502e60a2eeb685fddf67042@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1536048344-9995-5-git-send-email-t-kristo@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>, catalin.marinas@arm.com, will.deacon@arm.com, linux@armlinux.org.uk, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <e708c5bac502e60a2eeb685fddf67042@agner.ch>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/04/18 01:05, Tero Kristo wrote:
-> Currently the makefile for arm64 builds all the DT files based on
-> rules in the arch/arm64/boot/dts/Makefile, as this is statically
-> passed via the $(build)= parameter. Change the $(build) parameter
-> to actually point to the subdir itself, so the makefile from
-> that subdir can be used to set-up build flags etc., for example
-> setting up DTC_FLAGS. The patsubst magic is used to strip the
-> trailing "/" from the path, as that confuses the kbuild system.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  arch/arm64/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-> index f04c814..2ac4358 100644
-> --- a/arch/arm64/Makefile
-> +++ b/arch/arm64/Makefile
-> @@ -128,7 +128,7 @@ zinstall install:
->  	$(Q)$(MAKE) $(build)=$(boot) $@
->  
->  %.dtb %.dtbo: scripts
-> -	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
-> +	$(Q)$(MAKE) $(build)=$(patsubst %/,%,$(boot)/dts/$(dir $@)) $(boot)/dts/$@
->  
->  PHONY += dtbs dtbs_install
->  
-> 
-
-same comment as for patch 2/4
+SGkgU3RlZmFuLAoKT24gV2VkbmVzZGF5LCA1IFNlcHRlbWJlciAyMDE4IDIxOjEwOjA4IEVFU1Qg
+U3RlZmFuIEFnbmVyIHdyb3RlOgo+IE9uIDA1LjA5LjIwMTggMDA6MDcsIExhdXJlbnQgUGluY2hh
+cnQgd3JvdGU6Cj4gPiBPbiBXZWRuZXNkYXksIDUgU2VwdGVtYmVyIDIwMTggMDg6MjE6MTAgRUVT
+VCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4gPj4gQWxsb3cgdG8gc3BlY2lmeSB0aGUgZGF0YS1lbmFi
+bGUgcG9sYXJpdHkgcmVxdWlyZWQgYnkgYSBkdW1iIFZHQQo+ID4+IERBQyBjb252ZXJ0aW5nIHBh
+cmFsbGVsIFJHQiB0byBWR0EuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVy
+IDxzdGVmYW5AYWduZXIuY2g+Cj4gPj4gLS0tCj4gPj4gCj4gPj4gIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQgICAgICAgICAgfCAxICsKPiA+
+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gPj4gCj4gPj4gZGlmZiAtLWdpdAo+
+ID4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1
+bWItdmdhLWRhYy50eHQKPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L2JyaWRnZS9kdW1iLXZnYS1kYWMudHh0IGluZGV4Cj4gPj4gMTY0Y2JiMTVmMDRjLi5h
+ZGJkMmNhMGFmMmYgMTAwNjQ0Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPiA+PiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EtZGFjLnR4
+dAo+ID4+IEBAIC0xOCw2ICsxOCw3IEBAIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbgo+ID4+
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gPj4gCj4gPj4g
+IE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4gIC0gdmRkLXN1cHBseTogUG93ZXIgc3VwcGx5IGZv
+ciBEQUMKPiA+PiAKPiA+PiArLSBkZS1hY3RpdmU6IGRhdGEtZW5hYmxlIHB1bHNlIGlzIGFjdGl2
+ZSBsb3cvaGlnaC9pZ25vcmVkCj4gPiAKPiA+IFdoaWNoIHZhbHVlIGNvcnJlc3BvbmRzIHRvIGxv
+dywgaGlnaCBhbmQgaWdub3JlZCA/Cj4gCj4gVGhlIHdvcmRpbmcgaXMgdGFrZW4gZnJvbQo+IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Rpc3BsYXktdGlt
+aW5nLnR4dC4gQnV0Cj4gSSBhZ3JlZSwgbm90IHZlcnkgdXNlZnVsLgo+IAo+IDAgaXMgbG93IGFj
+dGl2ZSwgMSBpcyBoaWdoIGFjdGl2ZSwgYW5kIG5vbmUgaXMgdXNpbmcgZHJpdmVyIGRlZmF1bHRz
+Lgo+IAo+IEhvdyBhYm91dDoKPiAtIGRlLWFjdGl2ZTogZGF0YS1lbmFibGUgcHVsc2UgaXMgMD1h
+Y3RpdmUgbG93LzE9YWN0aXZlIGhpZ2gKClRoZSBkYXRhIGVuYWJsZSBzaWduYWwgaXNuJ3QgcmVh
+bGx5IGEgcHVsc2UuIEkgd291bGQgd29yZCB0aGlzIGFzCgotIGRlLWFjdGl2ZTogUG9sYXJpdHkg
+b2YgdGhlIGRhdGEgZW5hYmxlIHNpZ25hbC4gMCBmb3IgYWN0aXZlIGxvdywgMSBmb3IgCmFjdGl2
+ZSBoaWdoLCB1bnNldCBmb3Igc3lzdGVtLXNwZWNpZmljIGRlZmF1bHRzLgoKPiA+PiAgRXhhbXBs
+ZQo+ID4+ICAtLS0tLS0tCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
+bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
