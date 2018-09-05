@@ -1,75 +1,101 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 00/21] DT cpu node iterator
-Date: Wed,  5 Sep 2018 14:37:17 -0500
-Message-ID: <20180905193738.19325-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Subject: [PATCH 05/21] ARM: shmobile: use for_each_of_cpu_node iterator
+Date: Wed,  5 Sep 2018 14:37:22 -0500
+Message-ID: <20180905193738.19325-6-robh@kernel.org>
+References: <20180905193738.19325-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org, Rich Felker <dalias@libc.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-sh@vger.kernel.org, Vitaly Bordug <vitb@kernel.crashing.org>, Palmer Dabbelt <palmer@sifive.com>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jonas Bonn <jonas@southpole.se>, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Michael Ellerman <mpe@ellerman.id.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-clk@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Salter <msalter@redhat.com>, Albert Ou <aou@eecs.berkeley.edu>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Aur
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYWRkcyBhbiBpdGVyYXRvciBmb3IgY3B1IG5vZGVzIGFuZCBjb252ZXJ0cyB1
-c2VycyBvdmVyIHRvIHVzZQppdCBvciBvZl9nZXRfY3B1X25vZGUgaW4gc29tZSBjYXNlcy4gVGhp
-cyBhbGxvd3MgdXMgdG8gcmVtb3ZlIHRoZQpkZXBlbmRlbmN5IG9uIGRldmljZV90eXBlIHByb3Bl
-cnR5IGZvciBjcHUgbm9kZXMgdGhvdWdoIHJlbW92aW5nIHRoYXQKZnJvbSBEVFMgZmlsZXMgd2ls
-bCBoYXZlIHRvIHdhaXQgZm9yIHNvbWUgdGltZS4gSW4gc29tZSBjYXNlcywgdGhpcyBtYWtlcwp0
-aGUgRFQgc2VhcmNoIG1vcmUgc3RyaWN0IGJ5IG9ubHkgbG9va2luZyBpbiAvY3B1cyBjaGlsZCBu
-b2RlcyByYXRoZXIKdGhhbiBhbnkgbm9kZSB3aXRoIHRoZSBkZXZpY2VfdHlwZSA9PSBjcHUuIFRo
-ZSBpdGVyYXRvciBhbHNvIGhvbm9ycyB0aGUKc3RhdHVzIHByb3BlcnR5IHdoaWNoIGlzIG9mdGVu
-IGZvcmdvdHRlbi4KCkkndmUgb25seSB0ZXN0ZWQgb24gQVJNIHVuZGVyIFFFTVUgYW5kIGNvbXBp
-bGVkIHBvd2VycGMuCgpSb2IKClJvYiBIZXJyaW5nICgyMSk6CiAgb2Y6IEFkZCBjcHUgbm9kZSBp
-dGVyYXRvciBmb3JfZWFjaF9vZl9jcHVfbm9kZSgpCiAgb2Y6IFN1cHBvcnQgbWF0Y2hpbmcgY3B1
-IG5vZGVzIHdpdGggbm8gJ3JlZycgcHJvcGVydHkKICBBUk06IHVzZSBmb3JfZWFjaF9vZl9jcHVf
-bm9kZSBpdGVyYXRvcgogIEFSTTogdG9wb2xvZ3k6IHJlbW92ZSB1bm5lZWRlZCBjaGVjayBmb3Ig
-L2NwdXMgbm9kZQogIEFSTTogc2htb2JpbGU6IHVzZSBmb3JfZWFjaF9vZl9jcHVfbm9kZSBpdGVy
-YXRvcgogIGFybTY0OiB1c2UgZm9yX2VhY2hfb2ZfY3B1X25vZGUgaXRlcmF0b3IKICBjNng6IHVz
-ZSBmb3JfZWFjaF9vZl9jcHVfbm9kZSBpdGVyYXRvcgogIG1pY3JvYmxhemU6IGdldCBjcHUgbm9k
-ZSB3aXRoIG9mX2dldF9jcHVfbm9kZQogIG5pb3MyOiBnZXQgY3B1IG5vZGUgd2l0aCBvZl9nZXRf
-Y3B1X25vZGUKICBvcGVucmlzYzogdXNlIGZvcl9lYWNoX29mX2NwdV9ub2RlIGl0ZXJhdG9yCiAg
-cG93ZXJwYzogdXNlIGZvcl9lYWNoX29mX2NwdV9ub2RlIGl0ZXJhdG9yCiAgcG93ZXJwYzogNHh4
-OiBnZXQgY3B1IG5vZGUgd2l0aCBvZl9nZXRfY3B1X25vZGUKICBwb3dlcnBjOiA4eHg6IGdldCBj
-cHUgbm9kZSB3aXRoIG9mX2dldF9jcHVfbm9kZQogIHJpc2N2OiB1c2UgZm9yX2VhY2hfb2ZfY3B1
-X25vZGUgaXRlcmF0b3IKICBTSDogdXNlIGZvcl9lYWNoX29mX2NwdV9ub2RlIGl0ZXJhdG9yCiAg
-eDg2OiBEVDogdXNlIGZvcl9lYWNoX29mX2NwdV9ub2RlIGl0ZXJhdG9yCiAgY2xrOiBtdmVidTog
-dXNlIGZvcl9lYWNoX29mX2NwdV9ub2RlIGl0ZXJhdG9yCiAgZWRhYzogY3BjOTI1OiB1c2UgZm9y
-X2VhY2hfb2ZfY3B1X25vZGUgaXRlcmF0b3IKICBpb21tdTogZnNsX3BhbXU6IHVzZSBmb3JfZWFj
-aF9vZl9jcHVfbm9kZSBpdGVyYXRvcgogIG9mOiB1c2UgZm9yX2VhY2hfb2ZfY3B1X25vZGUgaXRl
-cmF0b3IKICBmYmRldjogZnNsLWRpdTogZ2V0IGNwdSBub2RlIHdpdGggb2ZfZ2V0X2NwdV9ub2Rl
-CgogYXJjaC9hcm0va2VybmVsL2RldnRyZWUuYyAgICAgICAgICAgICAgICAgfCAgNSArLS0KIGFy
-Y2gvYXJtL2tlcm5lbC90b3BvbG9neS5jICAgICAgICAgICAgICAgIHwgIDYgLS0tCiBhcmNoL2Fy
-bS9tYWNoLXNobW9iaWxlL3BtLXJjYXItZ2VuMi5jICAgICB8ICA4ICstLS0KIGFyY2gvYXJtL21h
-Y2gtc2htb2JpbGUvcG0tcm1vYmlsZS5jICAgICAgIHwgIDIgKy0KIGFyY2gvYXJtL21hY2gtc2ht
-b2JpbGUvdGltZXIuYyAgICAgICAgICAgIHwgMTAgKy0tLS0KIGFyY2gvYXJtNjQva2VybmVsL3Nt
-cC5jICAgICAgICAgICAgICAgICAgIHwgIDIgKy0KIGFyY2gvYzZ4L2tlcm5lbC9zZXR1cC5jICAg
-ICAgICAgICAgICAgICAgIHwgMTEgKystLS0KIGFyY2gvbWljcm9ibGF6ZS9rZXJuZWwvY3B1L2Nw
-dWluZm8uYyAgICAgIHwgIDQgKy0KIGFyY2gvbmlvczIva2VybmVsL2NwdWluZm8uYyAgICAgICAg
-ICAgICAgIHwgIDQgKy0KIGFyY2gvb3BlbnJpc2Mva2VybmVsL3NldHVwLmMgICAgICAgICAgICAg
-IHwgIDMgKy0KIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvNHh4L3NvYy5jICAgICAgICAgIHwgIDIg
-Ky0KIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvOHh4L204eHhfc2V0dXAuYyAgIHwgIDUgKystCiBh
-cmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybWFjL2ZlYXR1cmUuYyB8IDUxICsrKysrKysrLS0t
-LS0tLS0tLS0tLS0tCiBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3Bvd2VybWFjL3NldHVwLmMgICB8
-IDE1ICsrKy0tLS0KIGFyY2gvcmlzY3Yva2VybmVsL3NtcGJvb3QuYyAgICAgICAgICAgICAgIHwg
-IDIgKy0KIGFyY2gvc2gvYm9hcmRzL29mLWdlbmVyaWMuYyAgICAgICAgICAgICAgIHwgIDIgKy0K
-IGFyY2gveDg2L2tlcm5lbC9kZXZpY2V0cmVlLmMgICAgICAgICAgICAgIHwgIDIgKy0KIGRyaXZl
-cnMvY2xrL212ZWJ1L2Nsay1jcHUuYyAgICAgICAgICAgICAgIHwgIDQgKy0KIGRyaXZlcnMvZWRh
-Yy9jcGM5MjVfZWRhYy5jICAgICAgICAgICAgICAgIHwgMjAgKy0tLS0tLS0tCiBkcml2ZXJzL2lv
-bW11L2ZzbF9wYW11LmMgICAgICAgICAgICAgICAgICB8ICAyICstCiBkcml2ZXJzL29mL2Jhc2Uu
-YyAgICAgICAgICAgICAgICAgICAgICAgICB8IDQzICsrKysrKysrKysrKysrKysrKy0KIGRyaXZl
-cnMvb2Yvb2ZfbnVtYS5jICAgICAgICAgICAgICAgICAgICAgIHwgMTUgKy0tLS0tLQogZHJpdmVy
-cy92aWRlby9mYmRldi9mc2wtZGl1LWZiLmMgICAgICAgICAgfCAgMiArLQogaW5jbHVkZS9saW51
-eC9vZi5oICAgICAgICAgICAgICAgICAgICAgICAgfCAxMSArKysrKwogMjQgZmlsZXMgY2hhbmdl
-ZCwgMTExIGluc2VydGlvbnMoKyksIDEyMCBkZWxldGlvbnMoLSkKCi0tCjIuMTcuMQpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
+has the side effect of defaulting to iterating using "cpu" node names in
+preference to the deprecated (for FDT) device_type == "cpu".
+
+Cc: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-renesas-soc@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Please ack and I will take via the DT tree. This is dependent on the
+first 2 patches.
+
+ arch/arm/mach-shmobile/pm-rcar-gen2.c |  8 ++------
+ arch/arm/mach-shmobile/pm-rmobile.c   |  2 +-
+ arch/arm/mach-shmobile/timer.c        | 10 ++--------
+ 3 files changed, 5 insertions(+), 15 deletions(-)
+
+diff --git a/arch/arm/mach-shmobile/pm-rcar-gen2.c b/arch/arm/mach-shmobile/pm-rcar-gen2.c
+index 345af3ebcc3a..7efe95bd584f 100644
+--- a/arch/arm/mach-shmobile/pm-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/pm-rcar-gen2.c
+@@ -50,7 +50,7 @@ void __init rcar_gen2_pm_init(void)
+ 	void __iomem *p;
+ 	u32 bar;
+ 	static int once;
+-	struct device_node *np, *cpus;
++	struct device_node *np;
+ 	bool has_a7 = false;
+ 	bool has_a15 = false;
+ 	struct resource res;
+@@ -59,11 +59,7 @@ void __init rcar_gen2_pm_init(void)
+ 	if (once++)
+ 		return;
+
+-	cpus = of_find_node_by_path("/cpus");
+-	if (!cpus)
+-		return;
+-
+-	for_each_child_of_node(cpus, np) {
++	for_each_of_cpu_node(np) {
+ 		if (of_device_is_compatible(np, "arm,cortex-a15"))
+ 			has_a15 = true;
+ 		else if (of_device_is_compatible(np, "arm,cortex-a7"))
+diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
+index e348bcfe389d..94fdeef11b81 100644
+--- a/arch/arm/mach-shmobile/pm-rmobile.c
++++ b/arch/arm/mach-shmobile/pm-rmobile.c
+@@ -202,7 +202,7 @@ static void __init get_special_pds(void)
+ 	const struct of_device_id *id;
+
+ 	/* PM domains containing CPUs */
+-	for_each_node_by_type(np, "cpu")
++	for_each_of_cpu_node(np)
+ 		add_special_pd(np, PD_CPU);
+
+ 	/* PM domain containing console */
+diff --git a/arch/arm/mach-shmobile/timer.c b/arch/arm/mach-shmobile/timer.c
+index 828e8aea037e..e48b0939693f 100644
+--- a/arch/arm/mach-shmobile/timer.c
++++ b/arch/arm/mach-shmobile/timer.c
+@@ -22,22 +22,16 @@
+
+ void __init shmobile_init_delay(void)
+ {
+-	struct device_node *np, *cpus;
++	struct device_node *np;
+ 	u32 max_freq = 0;
+
+-	cpus = of_find_node_by_path("/cpus");
+-	if (!cpus)
+-		return;
+-
+-	for_each_child_of_node(cpus, np) {
++	for_each_of_cpu_node(np) {
+ 		u32 freq;
+
+ 		if (!of_property_read_u32(np, "clock-frequency", &freq))
+ 			max_freq = max(max_freq, freq);
+ 	}
+
+-	of_node_put(cpus);
+-
+ 	if (!max_freq)
+ 		return;
+
+--
+2.17.1
