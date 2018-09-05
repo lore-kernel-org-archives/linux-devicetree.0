@@ -1,32 +1,37 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] drm/rockchip: vop: add rk3188 vop definitions
-Date: Wed, 05 Sep 2018 13:07:26 +0200
-Message-ID: <1970360.0KMkdXbmga@phil>
-References: <20180830110937.1739-1-heiko@sntech.de>
+From: Andi Shyti <andi@etezian.org>
+Subject: Re: [PATCH 1/2] input: egalax_ts: add system wakeup support
+Date: Wed, 5 Sep 2018 13:34:28 +0300
+Message-ID: <20180905103428.GA29158@jack.zhora.eu>
+References: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180830110937.1739-1-heiko@sntech.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: hjc@rock-chips.com
-Cc: mark.rutland@arm.com, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, marco.franchi@nxp.com, fabio.estevam@nxp.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgMzAuIEF1Z3VzdCAyMDE4LCAxMzowOTozNyBDRVNUIHNjaHJpZWIgSGVp
-a28gU3R1ZWJuZXI6Cj4gVGhlIHJrMzE4OCBoYXMgMiB2b3BzIG5vdCB1c2luZyBpb21tdXMgd2hp
-Y2ggb25seSBvdXRwdXQgZGlyZWN0bHkKPiB0byBhIHJnYiBpbnRlcmZhY2UgcGVyIHZvcC4gU28g
-YWxsIG90aGVyIG91dHB1dCBtb2RlcyBsaWtlIGhkbWkKPiBhcmUgcHJvdmlkZWQgYnkgZXh0ZXJu
-YWwgYnJpZ2UgY2hpcHMuCj4gCj4gU2lnbmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtv
-QHNudGVjaC5kZT4KCmFwcGxpZWQgdG8gZHJtLW1pc2MtbmV4dAoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Anson,
+
+On Wed, Sep 05, 2018 at 05:26:46PM +0800, Anson Huang wrote:
+> This patch adds wakeup function support for egalax touch
+> screen, if "wakeup-source" is added to device tree's egalax
+> touch screen node, the wakeup function will be enabled, and
+> egalax touch screen will be able to wakeup system from suspend.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+
+I think you messed up the order of the patches, this patch
+whould come after the PATCH 2/2.
+
+You first create the property and then use it. If someone checks
+out right here, he would find an inconsistency between the dts
+property and this code.
+
+You can either send a version 2 with the correct order or check
+if Dmitry and Rob are willing to sync for who takes first the
+patch first.
+
+Andi
