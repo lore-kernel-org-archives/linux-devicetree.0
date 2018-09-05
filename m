@@ -1,47 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 21/21] fbdev: fsl-diu: get cpu node with of_get_cpu_node
-Date: Wed,  5 Sep 2018 14:37:38 -0500
-Message-ID: <20180905193738.19325-22-robh@kernel.org>
+Subject: [PATCH 20/21] of: use for_each_of_cpu_node iterator
+Date: Wed,  5 Sep 2018 14:37:37 -0500
+Message-ID: <20180905193738.19325-21-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Timur Tabi <timur@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-ImRldmljZV90eXBlIiB1c2UgaXMgZGVwcmVjYXRlZCBmb3IgRkRUIHRob3VnaCBpdCBoYXMgY29u
-dGludWVkIHRvIGJlIHVzZWQKZm9yIG5vZGVzIGxpa2UgY3B1IG5vZGVzLiBVc2Ugb2ZfZ2V0X2Nw
-dV9ub2RlKCkgaW5zdGVhZCB3aGljaCB3b3JrcyB1c2luZwpub2RlIG5hbWVzIGJ5IGRlZmF1bHQu
-IFRoaXMgd2lsbCBhbGxvdyB0aGUgZXZlbnR1YWxseSByZW1vdmFsIG9mIGNwdQpkZXZpY2VfdHlw
-ZSBwcm9wZXJ0aWVzLgoKQ2M6IFRpbXVyIFRhYmkgPHRpbXVyQGtlcm5lbC5vcmc+CkNjOiBCYXJ0
-bG9taWVqIFpvbG5pZXJraWV3aWN6IDxiLnpvbG5pZXJraWVAc2Ftc3VuZy5jb20+CkNjOiBsaW51
-eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tClBsZWFz
-ZSBhY2sgYW5kIEkgd2lsbCB0YWtlIHZpYSB0aGUgRFQgdHJlZS4gVGhpcyBpcyBkZXBlbmRlbnQg
-b24gdGhlCmZpcnN0IDIgcGF0Y2hlcy4KCiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L2ZzbC1kaXUtZmIu
-YyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoK
-ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvZnNsLWRpdS1mYi5jIGIvZHJpdmVycy92
-aWRlby9mYmRldi9mc2wtZGl1LWZiLmMKaW5kZXggYmM5ZWI4YWZjMzEzLi4zMzJhNTZiNjgxMWYg
-MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvZnNsLWRpdS1mYi5jCisrKyBiL2RyaXZl
-cnMvdmlkZW8vZmJkZXYvZnNsLWRpdS1mYi5jCkBAIC0xOTI1LDcgKzE5MjUsNyBAQCBzdGF0aWMg
-aW50IF9faW5pdCBmc2xfZGl1X2luaXQodm9pZCkKIAlwcl9pbmZvKCJGcmVlc2NhbGUgRGlzcGxh
-eSBJbnRlcmZhY2UgVW5pdCAoRElVKSBmcmFtZWJ1ZmZlciBkcml2ZXJcbiIpOwoKICNpZmRlZiBD
-T05GSUdfTk9UX0NPSEVSRU5UX0NBQ0hFCi0JbnAgPSBvZl9maW5kX25vZGVfYnlfdHlwZShOVUxM
-LCAiY3B1Iik7CisJbnAgPSBvZl9nZXRfY3B1X25vZGUoMCwgTlVMTCk7CiAJaWYgKCFucCkgewog
-CQlwcl9lcnIoImZzbC1kaXUtZmI6IGNhbid0IGZpbmQgJ2NwdScgZGV2aWNlIG5vZGVcbiIpOwog
-CQlyZXR1cm4gLUVOT0RFVjsKLS0KMi4xNy4xCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
+has the side effect of defaulting to iterating using "cpu" node names in
+preference to the deprecated (for FDT) device_type == "cpu".
+
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Please ack and I will take via the DT tree. This is dependent on the
+first 2 patches.
+
+ drivers/of/base.c    |  2 +-
+ drivers/of/of_numa.c | 15 ++-------------
+ 2 files changed, 3 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 6389aeb2f48c..8285c07cab44 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -389,7 +389,7 @@ struct device_node *of_get_cpu_node(int cpu, unsigned int *thread)
+ {
+ 	struct device_node *cpun;
+
+-	for_each_node_by_type(cpun, "cpu") {
++	for_each_of_cpu_node(cpun) {
+ 		if (arch_find_n_match_cpu_physical_id(cpun, cpu, thread))
+ 			return cpun;
+ 	}
+diff --git a/drivers/of/of_numa.c b/drivers/of/of_numa.c
+index 27d9b4bba535..f165fe28f49d 100644
+--- a/drivers/of/of_numa.c
++++ b/drivers/of/of_numa.c
+@@ -24,18 +24,9 @@ static void __init of_numa_parse_cpu_nodes(void)
+ {
+ 	u32 nid;
+ 	int r;
+-	struct device_node *cpus;
+-	struct device_node *np = NULL;
+-
+-	cpus = of_find_node_by_path("/cpus");
+-	if (!cpus)
+-		return;
+-
+-	for_each_child_of_node(cpus, np) {
+-		/* Skip things that are not CPUs */
+-		if (of_node_cmp(np->type, "cpu") != 0)
+-			continue;
++	struct device_node *np;
+
++	for_each_of_cpu_node(np) {
+ 		r = of_property_read_u32(np, "numa-node-id", &nid);
+ 		if (r)
+ 			continue;
+@@ -46,8 +37,6 @@ static void __init of_numa_parse_cpu_nodes(void)
+ 		else
+ 			node_set(nid, numa_nodes_parsed);
+ 	}
+-
+-	of_node_put(cpus);
+ }
+
+ static int __init of_numa_parse_memory_nodes(void)
+--
+2.17.1
