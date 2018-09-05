@@ -1,115 +1,102 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v3 21/30] iio: adc: sun4i-gpadc-iio: add
- support for H3 thermal sensor
-Date: Wed, 5 Sep 2018 16:58:58 +0200
-Message-ID: <20180905145858.4ny5c7xojn7aiwlv@flea>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-22-embed3d@gmail.com>
- <20180831091137.wkbbipssyd6mqfbt@flea>
- <f01ec2f202c7e2e5a7e0c822b2f9a8f0c55a9ea4.camel@aosc.io>
- <20180903102022.fkxfkxadkt4vpbmb@flea>
- <AFDFF5AB-8BF6-4461-A5C2-D628A2F22E2E@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH v9 0/8] Introduce on-chip interconnect API
+Date: Thu, 6 Sep 2018 01:05:34 +1000
+Message-ID: <20180906010534.329d0fca@canb.auug.org.au>
+References: <20180831140151.13972-1-georgi.djakov@linaro.org>
+        <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
+        <20180905093620.6d9162ca@canb.auug.org.au>
+        <fe9f3e91-93f9-d7d5-1643-dc09543e2850@linaro.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7e64gxu5f4lvrtxz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPW6X7OAKGQE3L6DLMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <AFDFF5AB-8BF6-4461-A5C2-D628A2F22E2E-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+ boundary="Sig_/Ov_.S6vdszHnU9RnU1g=UU+"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fe9f3e91-93f9-d7d5-1643-dc09543e2850@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, gregkh@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-a>
 List-Id: devicetree@vger.kernel.org
 
-
---7e64gxu5f4lvrtxz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+--Sig_/Ov_.S6vdszHnU9RnU1g=UU+
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 03, 2018 at 07:01:47PM +0800, Icenowy Zheng wrote:
-> =E4=BA=8E 2018=E5=B9=B49=E6=9C=883=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=886=
-:20:22, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> =E5=86=99=E5=88=B0:
-> >On Fri, Aug 31, 2018 at 05:51:41PM +0800, Icenowy Zheng wrote:
-> >> Personally I suggest to leave out all SID or calibration related
-> >> patches here.
-> >>=20
-> >> Currently we seems to be wrongly converting SID to big endian,
-> >however,
-> >> the orgnization of the THS calibration data on H6 shows that it's
-> >> surely little endian:
-> >>=20
-> >> It consists a temperature value in 1/10 celsuis as unit, and some
-> >> thermal register readout values, which are the values read out at the
-> >> given temperature, and every value here (the temperature and the
-> >> readout) are all half word length.
-> >>=20
-> >> Let the temperature value be AABB, the two readout values be XXYY and
-> >> ZZWW, the oragnization is:
-> >> BB AA YY XX WW ZZ ** ** .
-> >>=20
-> >> When converting the SID to big endian, it becomes:
-> >> XX YY AA BB ** ** ZZ WW ,
-> >> which is non-sense, and not able to do sub-word cell addressing.
-> >>=20
-> >> Maxime, should I drop the LE2BE conversion in SID driver? (I doubt
-> >> whether it will break compatibility.)
-> >
-> >This is exposed to the userspace, so no.
+Hi Georgi,
+
+On Wed, 5 Sep 2018 17:50:28 +0300 Georgi Djakov <georgi.djakov@linaro.org> =
+wrote:
+>
+> On 09/05/2018 02:36 AM, Stephen Rothwell wrote:
+> >=20
+> > On Tue, 4 Sep 2018 15:54:27 +0530 Amit Kucheria <amit.kucheria@linaro.o=
+rg> wrote: =20
+> >>
+> >> I'm currently reviewing this patchset (long overdue), but considering
+> >> that we haven't added any major new features to the framework for the
+> >> last couple of revisions, can you get this patchset merged into
+> >> linux-next to see how things shake out there? We've had this merged
+> >> branch merged into a CI build on kernelci for a while now w/o any
+> >> major incident so we should increase its exposure.
+> >>
+> >> You could ask Stephen Rothwell if he'll accept the a branch directly
+> >> from you or he needs an upstream maintainer (GregKH?) to carry it. =20
+> >=20
+> > Since it appears to have been well reviewed and tested, I can take it
+> > if you send me a git URL and the names of contacts in case of issues
+> > with the branch.  Once Greg has merged it, I will try to drop it again
+> > (unless you think there will be an ongoing reason to keep it in
+> > linux-next separately), but a prompting email would also be nice in
+> > case I forget. =20
 >=20
-> Please note the LE2BE totally breaks the SID addressing.
-
-On which SoCs?
-
-> Without it dropped all cells must be referenced with 4 byte word as
-> unit, and half word addressing of SID is thus not possible. The
-> driver will also need then to split the half words if needed.
+> Thank you! Below is the git URL to pull from and you can use my e-mail
+> as contact for any issues.
 >=20
-> I think this is kind of hardware misbehavior, and not a simple
-> UAPI change, so the UAPI stability shouldn't affect this change.
+> git://git.linaro.org/people/georgi.djakov/linux.git#icc-next
+>=20
+> I expect this to be a continuing effort with some upcoming users of this
+> API, so i plan to maintain this branch and occasionally put some
+> reviewed/tested patches to get wider integration testing. But let's see
+> what happens now.
+>=20
+> In any case, if this increases your burden, feel free to drop it.
 
-How would you feel having your files on your filesystem suddenly not
-in the same endianness and having all the bytes reordered? This is
-definitely about the userspace ABI.
+Added from (later) today.
 
-Maxime
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
+
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
+
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
 
 --=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---7e64gxu5f4lvrtxz
-Content-Type: application/pgp-signature; name="signature.asc"
+--Sig_/Ov_.S6vdszHnU9RnU1g=UU+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluP7zEACgkQ0rTAlCFN
-r3R3rBAAgLt3ujbBaes4sdzA2oKzSgMlaAi03PkyocmXMXjUdf+H6gKfQsevsOnZ
-LGan/UQaWN2eie7+bR4+60QYUJMingr+x/rTXUciUGu++UIX9Y25Zj5pckNHk3EB
-bNmJtIwda1xzs3ShPC9KCnD6wTNHxHYmOBz5/9KhfnDdCa7MyMrpnKlUE5bb1i5q
-JumaFSCn9fj1Xk+3keAlNUUV6n5q7eONANYawI66elG/7pshzja1BZluBlPqNhqa
-w/R/BAUKunThRsmfYb0QpxIV8M1fO5yVqYGGy8Hd/bHZVwotmkjtSVBMVDq2+K+C
-hHnjnKrw//U//wCQ8FiRIwvuL8yZKLDUQNe/XW7RR167BPp92FxgRSKdIhAJD3Ro
-3Orii3LRnU7afKNc4X1zx+MxImc2DehSM3lgZWRRpgaRCFUBS/wZAxZoi8KyTreN
-5Dr5S/Y5+Fq2xRwIR56awt4Ej8oy0kcs9jElU7zs8m/yj7Q47qpa+GUC6R1tyZt7
-cufj2wBJ+XjA7Z5YxpT7IzWs+qO4NLSWwEXUg8kTT18+YEXlV+WSyQku9bxKOhRN
-H+CSMsAj6UNEidmSyHGtARlIZ1V8dynrPogwsxR4YImxPqtd1ia0an8Uty8Ed8Ua
-CvHNsf1mabKDrEoVK/zI3ZISIAEVV0nm0mMq96YZiPTpJ9uFmg0=
-=NYwv
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAluP8L4ACgkQAVBC80lX
+0GyFTQf+OsZLutdzyWpL9/ua0OrFaZjWQLoQeo/YknRXDu5SO0JlHhQtsukHUSe/
+cPCri2wHriSgRgrk48t17jA8p2MF9pkzblLrrmqJ4fYxdf3eSFsyZ6DKqGKSQzLs
+rtEdSUs/+RFLyNF6p3cuv+vIPwkDrqI+TiXPJ4EAOjvrQMut5nCGv9TanC64eK8i
+CnS7RJjcjM8fvwk+TeQGuFzmvJmyMvE3KUbPpachalE3bCFPDVrhHaHeFebp7yaa
+wkPwFvhqKzp8NPiBEG+MikqsZLWvk+jkg3TqhE2+IadgeMXRJaSmeY1Ef8chq1xs
+smB3W0PLpekjgxm8Tb33iIe22c351Q==
+=6HXW
 -----END PGP SIGNATURE-----
 
---7e64gxu5f4lvrtxz--
+--Sig_/Ov_.S6vdszHnU9RnU1g=UU+--
