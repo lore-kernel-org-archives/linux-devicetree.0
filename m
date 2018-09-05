@@ -1,128 +1,47 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH 3/5] arm: dts: mt7623: add iommu/smi device nodes
-Date: Wed, 5 Sep 2018 18:22:19 +0800
-Message-ID: <2d9d216adb779bac6f5515b39cfeaed8b4b61878.1536141302.git.ryder.lee@mediatek.com>
-References: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536141302.git.ryder.lee@mediatek.com>
+From: Sergey Suloev <ssuloev@orpaltech.com>
+Subject: Re: [PATCH v4 02/11] clk: sunxi-ng: a64: Add max. rate constraint to
+ video PLLs
+Date: Wed, 5 Sep 2018 13:22:31 +0300
+Message-ID: <5b78f888-c226-8b8d-1064-2e135c82f48e@orpaltech.com>
+References: <20180904044053.15425-1-icenowy@aosc.io>
+ <20180904044053.15425-3-icenowy@aosc.io>
+ <20180905071645.ibhcuq5coc6gl6k3@flea>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536141302.git.ryder.lee@mediatek.com>
+In-Reply-To: <20180905071645.ibhcuq5coc6gl6k3@flea>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add iommu/smi device nodes for MT7623.
+Hi,
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
----
- arch/arm/boot/dts/mt7623.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+On 09/05/2018 10:16 AM, Maxime Ripard wrote:
+> On Tue, Sep 04, 2018 at 12:40:44PM +0800, Icenowy Zheng wrote:
+>> Video PLLs on A64 can be set to higher rate that it is actually
+>> supported by HW.
+>>
+>> Limit maximum rate to 1008 MHz. This is the maximum allowed rate by BSP
+>> clock driver. Interestengly, user manual specifies maximum frequency to
+>> be 600 MHz. Historically, this data was wrong in some user manuals for
+>> other SoCs, so more faith is put in BSP clock driver.
+>>
+>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Applied, thanks!
+> Maxime
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+what source tree this patch is supposed to apply for ?
+I can't find  the SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX declaration 
+in 4.19
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index b7ccf8b..a46987b 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -13,6 +13,7 @@
- #include <dt-bindings/power/mt2701-power.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/phy/phy.h>
-+#include <dt-bindings/memory/mt2701-larb-port.h>
- #include <dt-bindings/reset/mt2701-resets.h>
- #include <dt-bindings/thermal/thermal.h>
- 
-@@ -286,6 +287,17 @@
- 		clock-names = "system-clk", "rtc-clk";
- 	};
- 
-+	smi_common: smi@1000c000 {
-+		compatible = "mediatek,mt7623-smi-common",
-+			     "mediatek,mt2701-smi-common";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_SMI>,
-+			 <&mmsys CLK_MM_SMI_COMMON>,
-+			 <&infracfg CLK_INFRA_SMI>;
-+		clock-names = "apb", "smi", "async";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
- 	pwrap: pwrap@1000d000 {
- 		compatible = "mediatek,mt7623-pwrap",
- 			     "mediatek,mt2701-pwrap";
-@@ -317,6 +329,17 @@
- 		reg = <0 0x10200100 0 0x1c>;
- 	};
- 
-+	iommu: mmsys_iommu@10205000 {
-+		compatible = "mediatek,mt7623-m4u",
-+			     "mediatek,mt2701-m4u";
-+		reg = <0 0x10205000 0 0x1000>;
-+		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_INFRA_M4U>;
-+		clock-names = "bclk";
-+		mediatek,larbs = <&larb0 &larb1 &larb2>;
-+		#iommu-cells = <1>;
-+	};
-+
- 	efuse: efuse@10206000 {
- 		compatible = "mediatek,mt7623-efuse",
- 			     "mediatek,mt8173-efuse";
-@@ -709,6 +732,18 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	larb0: larb@14010000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x14010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <0>;
-+		clocks = <&mmsys CLK_MM_SMI_LARB0>,
-+			 <&mmsys CLK_MM_SMI_LARB0>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-+	};
-+
- 	imgsys: syscon@15000000 {
- 		compatible = "mediatek,mt7623-imgsys",
- 			     "mediatek,mt2701-imgsys",
-@@ -717,6 +752,18 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	larb2: larb@15001000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x15001000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <2>;
-+		clocks = <&imgsys CLK_IMG_SMI_COMM>,
-+			 <&imgsys CLK_IMG_SMI_COMM>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
-+	};
-+
- 	vdecsys: syscon@16000000 {
- 		compatible = "mediatek,mt7623-vdecsys",
- 			     "mediatek,mt2701-vdecsys",
-@@ -725,6 +772,18 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	larb1: larb@16010000 {
-+		compatible = "mediatek,mt7623-smi-larb",
-+			     "mediatek,mt2701-smi-larb";
-+		reg = <0 0x16010000 0 0x1000>;
-+		mediatek,smi = <&smi_common>;
-+		mediatek,larb-id = <1>;
-+		clocks = <&vdecsys CLK_VDEC_CKGEN>,
-+			 <&vdecsys CLK_VDEC_LARB>;
-+		clock-names = "apb", "smi";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
-+	};
-+
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
- 			     "mediatek,mt2701-hifsys",
--- 
-1.9.1
+Thank you
+Sergey
