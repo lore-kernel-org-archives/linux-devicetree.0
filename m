@@ -1,32 +1,101 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] ARM: dts: bcm283x-rpi-lan7515: Enable Ethernet LEDs
-Date: Wed, 5 Sep 2018 21:59:23 +0200 (CEST)
-Message-ID: <1967640359.21557.1536177563791@email.1und1.de>
-References: <1535830181-17254-1-git-send-email-stefan.wahren@i2se.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] of/fdt: Scan the root node properties earlier
+Date: Wed, 5 Sep 2018 15:06:21 -0500
+Message-ID: <CAL_JsqKRsXN-MKdP1ts=QexwuwkXO5tbFkORf4xDyYt04FUuUA@mail.gmail.com>
+References: <20180830190523.31474-1-robh@kernel.org> <20180830190523.31474-2-robh@kernel.org>
+ <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com> <CAL_JsqJy0kDYCC35GR5TGLYyYU-UjOys_r2sFMQZuFto5HkExg@mail.gmail.com>
+ <5da7b4ab-acd3-977a-6ac2-275911d7c436@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1535830181-17254-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5da7b4ab-acd3-977a-6ac2-275911d7c436@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> Stefan Wahren <stefan.wahren@i2se.com> hat am 1. September 2018 um 21:29 geschrieben:
-> 
-> 
-> Since the LAN7515 on Raspberry Pi 3B+ doesn't have an EEPROM and the OTP
-> is empty, we need to enable the Ethernet LEDs via Device Tree.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+On Wed, Sep 5, 2018 at 1:19 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 09/05/18 04:51, Rob Herring wrote:
+> > On Tue, Sep 4, 2018 at 8:49 PM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> On 08/30/18 12:05, Rob Herring wrote:
+> >>> Scan the root node properties (#{size,address}-cells) earlier,
+> >>
+> >>                                                         ^^^^^^^
+> >>                              before mdesc->dt_fixup() is called
+> >>
+> >>> so that
+> >>> the dt_root_addr_cells and dt_root_size_cells variables are initialized
+> >>> and can be used.
+> >>                  by mdesc->dt_fixup()
+> >
+> > That's an ARM specific detail. Granted, ARM is the only caller.
+>
+> The dt_root_addr_cells and dt_root_size_cells variables are being
+> initialized earlier in this patch series so that of_fdt_limit_memory()
+> can use them.  The only caller of of_fdt_limit_memory() is
+> exynos_dt_fixup(), which is an mdesc->dt_fixup() function.
+>
+>
+> >
+> >>>
+> >>> Cc: Frank Rowand <frowand.list@gmail.com>
+> >>> Signed-off-by: Rob Herring <robh@kernel.org>
+> >>> ---
+> >>>  drivers/of/fdt.c | 7 ++++---
+> >>>  1 file changed, 4 insertions(+), 3 deletions(-)
+> >>>
+> >> Moving early_init_dt_scan_root() to inside early_init_dt_verify()
+> >> puts something that has nothing to do with verifying the fdt
+> >> into a function whose purpose is the verify.  It hides the side
+> >> effect of initializing the dt_root_addr_cells and dt_root_size_cells
+> >> variables.
+> >
+> > It already has the side effect of setting initial_boot_params which
+> > every subsequent function needs.
+>
+> And that side effect should probably also be moved.
 
-applied to bcm2835-dt-next
+So 2 functions? One to set the blob and one to verify it. Then we can
+just let arches decide if they want to do any verification or not.
+
+Perhaps it should be called fdt_init(blob) and then it is vague enough
+I can do whatever I want.
+
+> >> I suggest creating a new function early_init_dt_scan_init_pre_dt_fixup(),
+> >> move the chunk of code there instead of to early_init_dt_scan_nodes(),
+> >> and call the new function from setup_machine_fdt(), just before
+> >> calling  mdesc->dt_fixup().  This would be a little bit more code,
+> >> but more clearly showing the intent.
+> >
+> > I'm trying to reduce the number of functions arches call
+>
+> I like that goal.
+>
+>
+> > and renaming
+> > would need a bunch of arch changes. This change will also let me make
+> > early_init_dt_scan_root private as powerpc is the only user. I need to
+> > dust off a patch for that.
+> >
+> > I'd be more inclined to push exynos to remove this altogether. After
+>
+> Not a bad idea.
+>
+> > all, if they claim their bindings are unstable, they can't really
+> > claim their bootloader is stable/fixed.
+>
+> It seems that this series is showing us that maybe the three architecture
+> specific (arc, arm, arm64) versions of setup_machine_fdt() should be
+> consolidated so that we have consistent behavior for FDT.
+>
+> If we had a single setup_machine_fdt() then some of he hidden side
+> effects of functions called by setup_machine_fdt() could instead
+> be hoisted into setup_machine_fdt().
+
+Those functions are all quite a bit different. ARM matches the machine
+desc while arm64 doesn't have any such thing. How the DTB gets mapped
+into virtual space also varies.
+
+Rob
