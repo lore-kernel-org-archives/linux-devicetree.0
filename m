@@ -1,125 +1,102 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [PATCH] leds: leds-gpio: Add a condition check for active low
- leds.
-Date: Wed, 5 Sep 2018 09:44:04 +0200
-Message-ID: <13a8d001-a44a-51a0-146b-ba5aa3f6e621@ysoft.com>
-References: <20180905023436.11826-1-songqiang.1304521@gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Wed, 05 Sep 2018 10:44:53 +0300
+Message-ID: <1569297.pdEFdpi3HS@avalon>
+References: <20180905052113.21262-1-stefan@agner.ch>
+ <4035252.QuWadVx7pr@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905023436.11826-1-songqiang.1304521@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>, jacek.anaszewski@gmail.com
-Cc: pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang.1304521@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4035252.QuWadVx7pr@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Song,
-On 5.9.2018 04:34, Song Qiang wrote:
-> Some leds on our board are active low leds, which means these leds
-> are lighted when the corresponding gpio line is low, while the
-> original leds-gpio driver default all leds are active high leds.
-> This patch adds a devicetree node "light-state", whose value should
-> be "high" for active high leds and "low" for active low leds.
-> The default value is "high" for compatible for the original driver.
-> 
-> Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
-> ---
->   .../devicetree/bindings/leds/leds-gpio.txt    | 15 +++++++++++
->   drivers/leds/leds-gpio.c                      | 25 +++++++++++++++++--
->   2 files changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Documentation/devicetree/bindings/leds/leds-gpio.txt
-> index a48dda268f81..0a8fad75c704 100644
-> --- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
-> +++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
-> @@ -23,6 +23,9 @@ LED sub-node properties:
->     remains up.
->   - panic-indicator : (optional)
->     see Documentation/devicetree/bindings/leds/common.txt
-> +- light-state: (optional) Values should be "high" or "low", which indicates
-> +	the state of the GPIO pin when the led is on.
-> +  see Documentation/devicetree/bindings/leds/common.txt
->   
->   Examples:
->   
-> @@ -64,3 +67,15 @@ leds {
->   		retain-state-suspended;
->   	};
->   };
-> +
-> +leds {
-> +	compatible = "gpio-leds";
-> +
-> +	led0 {
-> +		label = "led0";
-> +		gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-
-With this patch you are introducing one more way to invert the logic.
-If your LED is active LOW, you should use GPIO_ACTIVE_LOW in your DT.
-All should work as expected then.
-
-Best regards,
-Michal
-
-> +		linux,default-trigger = "heartbeat";
-> +		default-state = "off";
-> +		light-state = "low";
-> +	};
-> +}
-> diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-> index 764c31301f90..463ded0c71ac 100644
-> --- a/drivers/leds/leds-gpio.c
-> +++ b/drivers/leds/leds-gpio.c
-> @@ -26,9 +26,13 @@ struct gpio_led_data {
->   	struct gpio_desc *gpiod;
->   	u8 can_sleep;
->   	u8 blinking;
-> +	u8 light_state;
->   	gpio_blink_set_t platform_gpio_blink_set;
->   };
->   
-> +#define LEDS_GPIO_LIGHTSTATE_HIGH	0
-> +#define LEDS_GPIO_LIGHTSTATE_LOW	1
-> +
->   static inline struct gpio_led_data *
->   			cdev_to_gpio_led_data(struct led_classdev *led_cdev)
->   {
-> @@ -42,9 +46,15 @@ static void gpio_led_set(struct led_classdev *led_cdev,
->   	int level;
->   
->   	if (value == LED_OFF)
-> -		level = 0;
-> +		if (led_dat->light_state == LEDS_GPIO_LIGHTSTATE_HIGH)
-> +			level = 0;
-> +		else
-> +			level = 1;
->   	else
-> -		level = 1;
-> +		if (led_dat->light_state == LEDS_GPIO_LIGHTSTATE_HIGH)
-> +			level = 1;
-> +		else
-> +			level = 0;
->   
->   	if (led_dat->blinking) {
->   		led_dat->platform_gpio_blink_set(led_dat->gpiod, level,
-> @@ -205,6 +215,17 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
->   				led.default_state = LEDS_GPIO_DEFSTATE_OFF;
->   		}
->   
-> +		if (!fwnode_property_read_string(child, "light-state",
-> +						 &state)) {
-> +			if (!strcmp(state, "low"))
-> +				led_dat->light_state =
-> +					LEDS_GPIO_LIGHTSTATE_LOW;
-> +			else{
-> +				led_dat->light_state =
-> +					LEDS_GPIO_LIGHTSTATE_HIGH;
-> +			}
-> +		}
-> +
->   		if (fwnode_property_present(child, "retain-state-suspended"))
->   			led.retain_state_suspended = 1;
->   		if (fwnode_property_present(child, "retain-state-shutdown"))
-> 
+SGkgU3RlZmFuLAoKT24gV2VkbmVzZGF5LCA1IFNlcHRlbWJlciAyMDE4IDEwOjA2OjI4IEVFU1Qg
+TGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBPbiBXZWRuZXNkYXksIDUgU2VwdGVtYmVyIDIwMTgg
+MDg6MjE6MDggRUVTVCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4gPiBUaGUgRFJNIGJ1cyBmbGFncyBj
+b252ZXkgYWRkaXRpb25hbCBpbmZvcm1hdGlvbiBvbiBwaXhlbCBkYXRhIG9uCj4gPiB0aGUgYnVz
+LiBBbGwgY3VycmVudCBhdmFpbGFibGUgYnVzIGZsYWdzIG1pZ2h0IGJlIG9mIGludGVyZXN0IGZv
+cgo+ID4gYSBicmlkZ2UuIFJlbW92ZSB0aGUgc2FtcGxpbmdfZWRnZSBmaWVsZCBhbmQgdXNlIGJ1
+c19mbGFncy4KPiA+IAo+ID4gSW4gdGhlIGNhc2UgYXQgaGFuZCBhIGR1bWIgVkdBIGJyaWRnZSBu
+ZWVkcyBhIHNwZWNpZmljIGRhdGEgZW5hYmxlCj4gPiBwb2xhcml0eSAoRFJNX0JVU19GTEFHX0RF
+X0xPVykuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVy
+LmNoPgo+ID4gLS0tCj4gPiAKPiA+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRh
+Yy5jIHwgIDYgKysrLS0tCj4gPiAgaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oICAgICAgICAgICAg
+ICB8IDExICsrKysrLS0tLS0tCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyks
+IDkgZGVsZXRpb25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJp
+ZGdlL2R1bWItdmdhLWRhYy5jCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2Et
+ZGFjLmMgaW5kZXggOWI3MDY3ODlhMzQxLi43YTVjMjQ5NjcxMTUKPiA+IDEwMDY0NAo+ID4gLS0t
+IGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+ID4gKysrIGIvZHJpdmVy
+cy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwo+ID4gQEAgLTIzNCw3ICsyMzQsNyBAQCBz
+dGF0aWMgaW50IGR1bWJfdmdhX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlCj4gPiAqcGRl
+dikgKi8KPiA+IAo+ID4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRl
+ZmF1bHRfZGFjX3RpbWluZ3MgPSB7Cj4gPiAgCj4gPiAgCS8qIFRpbWluZyBzcGVjaWZpY2F0aW9u
+cywgZGF0YXNoZWV0IHBhZ2UgNyAqLwo+ID4gCj4gPiAtCS5zYW1wbGluZ19lZGdlID0gRFJNX0JV
+U19GTEFHX1BJWERBVEFfUE9TRURHRSwKPiA+ICsJLmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19Q
+SVhEQVRBX1BPU0VER0UsCj4gPiAKPiA+ICAJLnNldHVwX3RpbWVfcHMgPSA1MDAsCj4gPiAgCS5o
+b2xkX3RpbWVfcHMgPSAxNTAwLAo+ID4gIAo+ID4gIH07Cj4gPiAKPiA+IEBAIC0yNDUsNyArMjQ1
+LDcgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MKPiA+IGRlZmF1bHRf
+ZGFjX3RpbWluZ3MgPSB7ICovCj4gPiAKPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlk
+Z2VfdGltaW5ncyB0aV90aHM4MTM0X2RhY190aW1pbmdzID0gewo+ID4gIAo+ID4gIAkvKiBGcm9t
+IHRpbWluZyBkaWFncmFtLCBkYXRhc2hlZXQgcGFnZSA5ICovCj4gPiAKPiA+IC0JLnNhbXBsaW5n
+X2VkZ2UgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFLAo+ID4gKwkuYnVzX2ZsYWdzID0g
+RFJNX0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSwKPiA+IAo+ID4gIAkvKiBGcm9tIGRhdGFzaGVl
+dCwgcGFnZSAxMiAqLwo+ID4gIAkuc2V0dXBfdGltZV9wcyA9IDMwMDAsCj4gPiAgCS8qIEkgZ3Vl
+c3MgdGhpcyBtZWFucyBsYXRjaGVkIGlucHV0ICovCj4gPiAKPiA+IEBAIC0yNTgsNyArMjU4LDcg
+QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MKPiA+IHRpX3RoczgxMzRf
+ZGFjX3RpbWluZ3MgPSB7ICovCj4gPiAKPiA+ICBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlk
+Z2VfdGltaW5ncyB0aV90aHM4MTM1X2RhY190aW1pbmdzID0gewo+ID4gIAo+ID4gIAkvKiBGcm9t
+IHRpbWluZyBkaWFncmFtLCBkYXRhc2hlZXQgcGFnZSAxNCAqLwo+ID4gCj4gPiAtCS5zYW1wbGlu
+Z19lZGdlID0gRFJNX0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSwKPiA+ICsJLmJ1c19mbGFncyA9
+IERSTV9CVVNfRkxBR19QSVhEQVRBX1BPU0VER0UsCj4gPiAKPiA+ICAJLyogRnJvbSBkYXRhc2hl
+ZXQsIHBhZ2UgMTYgKi8KPiA+ICAJLnNldHVwX3RpbWVfcHMgPSAyMDAwLAo+ID4gIAkuaG9sZF90
+aW1lX3BzID0gNTAwLAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJtX2JyaWRn
+ZS5oIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gPiBpbmRleCBiZDg1MDc0N2NlNTQuLjg1
+ZDRiNTFlYWUxOSAxMDA2NDQKPiA+IC0tLSBhL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAo+ID4g
+KysrIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gPiBAQCAtMjQ0LDE0ICsyNDQsMTMgQEAg
+c3RydWN0IGRybV9icmlkZ2VfZnVuY3Mgewo+ID4gCj4gPiAgICovCj4gPiAgCj4gPiAgc3RydWN0
+IGRybV9icmlkZ2VfdGltaW5ncyB7Cj4gPiAgCj4gPiAgCS8qKgo+ID4gCj4gPiAtCSAqIEBzYW1w
+bGluZ19lZGdlOgo+ID4gCj4gPiArCSAqIEBidXNfZmxhZ3M6Cj4gPiAgCSAqCj4gPiAKPiA+IC0J
+ICogVGVsbHMgd2hldGhlciB0aGUgYnJpZGdlIHNhbXBsZXMgdGhlIGRpZ2l0YWwgaW5wdXQgc2ln
+bmFsCj4gPiAtCSAqIGZyb20gdGhlIGRpc3BsYXkgZW5naW5lIG9uIHRoZSBwb3NpdGl2ZSBvciBu
+ZWdhdGl2ZSBlZGdlIG9mIHRoZQo+ID4gLQkgKiBjbG9jaywgdGhpcyBzaG91bGQgcmV1c2UgdGhl
+IERSTV9CVVNfRkxBR19QSVhEQVRBX1tQT1N8TkVHXUVER0UKPiA+IC0JICogYml0d2lzZSBmbGFn
+cyBmcm9tIHRoZSBEUk0gY29ubmVjdG9yIChiaXQgMiBhbmQgMyB2YWxpZCkuCj4gPiArCSAqIFRl
+bGxzIHdoYXQgYWRkaXRpb25hbCBzZXR0aW5ncyBmb3IgdGhlIHBpeGVsIGRhdGEgb24gdGhlIGJ1
+cwo+ID4gKwkgKiB0aGlzIGJyaWRnZSByZXF1aXJlcyAobGlrZSBwaXhlbCBzaWduYWwgcG9sYXJp
+dHkpLiBTZWUgYWxzbwo+ID4gKwkgKiAmZHJtX2Rpc3BsYXlfaW5mby0+YnVzX2ZsYWdzLgo+ID4g
+Cj4gPiAgCSAqLwo+ID4gCj4gPiAtCXUzMiBzYW1wbGluZ19lZGdlOwo+ID4gKwl1MzIgYnVzX2Zs
+YWdzOwo+IAo+IFdoaWxlIEknbSBub3Qgb3Bwb3NlZCB0byBleHRlbmRpbmcgdGhlIGJyaWRnZSBz
+dHJ1Y3R1cmUgdG8gYWxsb3cgc3BlY2lmeWluZwo+IG90aGVyIGZsYWdzLCBJIHRoaW5rIHdlJ3Jl
+IGxvc2luZyBpbmZvcm1hdGlvbiBoZXJlLiBUaGUgc2FtcGxpbmdfZWRnZSBmaWVsZAo+IG1ha2Vz
+IGl0IGNsZWFyIHRoYXQgdGhlIERSTV9CVVNfRkxBR19QSVhEQVRBXyhORUd8UE9TKUVER0UgZmxh
+Z3Mgc3BlY2lmaWVkCj4gb24gd2hpY2ggY2xvY2sgZWRnZSBzaWduYWxzIGFyZSBzYW1wbGVkLiBi
+dXNfZmxhZ3MgY291bGQgYmUgaW50ZXJwcmV0ZWQKPiBkaWZmZXJlbnRseSwgZm9yIGluc3RhbmNl
+IGFzIHNwZWNpZnlpbmcgb24gd2hpY2ggY2xvY2sgZWRnZSBzaWduYWxzIGFyZQo+IG91dHB1dCBv
+biB0aGUgb3RoZXIgc2lkZSBvZiB0aGUgYnJpZGdlLgo+IAo+IFdlIGNvdWxkIGVhc2lseSBmaXgg
+dGhpcyBieSBzcGVjaWZ5aW5nIHRoYXQgdGhlIGJ1c19mbGFncyBmaWVsZCByZWZlcnMgdG8KPiB0
+aGUgaW5wdXQgc2lkZSBvZiB0aGUgYnJpZGdlLiBXZSBjb3VsZCBhbHNvIHJlbmFtZSB0aGUgZmll
+bGQgdG8KPiBpbnB1dF9idXNfZmxhZ3MuIFRoZSByZW5hbWUgY291bGQgYmUgZGVsYXllZCB1bnRp
+bCBuZWVkZWQsIGJ1dCB0aGF0IHdvdWxkCj4gcmVzdWx0IGluIHlldCBhbm90aGVyIGNoYW5nZSB0
+byBhbGwgYnJpZGdlIGRyaXZlcnMsIHNvIHdlIG1heSB3YW50IHRvIGRvIGl0Cj4gbm93IGFzIHlv
+dXIgcGF0Y2ggdG91Y2hlcyBhbGwgdGhlIGRyaXZlcnMgYWxyZWFkeS4gT3RoZXIgb3B0aW9ucyBt
+aWdodCBhbHNvCj4gYmUgcG9zc2libGUuCgpBbmQgSSBzaG91bGQgb2YgY291cnNlIG1ha2Ugc3Vy
+ZSB0byB3YWtlIHVwIGJlZm9yZSByZXZpZXdpbmcgcGF0Y2hlcy4gCk9idmlvdXNseSBvbmx5IG9u
+ZSBkcml2ZXIgaXMgY3VycmVudGx5IGFmZmVjdGVkIGJ5IHRoZSByZW5hbWUuIE1vcmUgd2lsbCB1
+c2UgCnRoZSBmbGFncyBsYXRlciB0aG91Z2gsIHNvIHRoZSBhcmd1bWVudCBjb3VsZCBzdGlsbCBo
+b2xkLgoKPiA+ICAJLyoqCj4gPiAgCQo+ID4gIAkgKiBAc2V0dXBfdGltZV9wczoKPiA+ICAJICoK
+Ci0tIApSZWdhcmRzLAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
