@@ -1,81 +1,68 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RESEND PATCHv2 2/4] ARM: dts: add support for individual build
- flags for DT subdirs
-Date: Wed, 5 Sep 2018 16:38:10 -0500
-Message-ID: <CAL_JsqJY0iqodKoEW2HjO=O+_Jo1iDt-Jt+ShZYvPaDksVLTWg@mail.gmail.com>
-References: <1535719666-13595-1-git-send-email-t-kristo@ti.com>
- <1536048344-9995-1-git-send-email-t-kristo@ti.com>
- <1536048344-9995-3-git-send-email-t-kristo@ti.com>
- <45fada0c-af5c-ee94-9878-8ea78a34da26@gmail.com>
+From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v5 2/6] ARM: dts: rockchip: add VPU device node for RK3288
+Date: Wed,  5 Sep 2018 19:00:07 -0300
+Message-ID: <20180905220011.16612-3-ezequiel@collabora.com>
+References: <20180905220011.16612-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <45fada0c-af5c-ee94-9878-8ea78a34da26@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180905220011.16612-1-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2018 at 3:36 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 09/04/18 01:05, Tero Kristo wrote:
-> > Currently the makefile is setup in such manner that even if
-> > we build a DT file in a subdirectory under arch/arm/boot/dts,
-> > it gets built based on the base boot/dts/Makefile rules.
-> > This patch modifies the base makefile in such manner, that
-> > it detects which makefile to use based on build target path.
-> > This allows setting for example per-directory DTC_FLAGS and
-> > using those for the subdir build. The dtbdir local variable
-> > is setup to target to the build path.
-> >
-> > Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> > ---
-> >  arch/arm/Makefile | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> > index ab555a0..b7c21e8 100644
-> > --- a/arch/arm/Makefile
-> > +++ b/arch/arm/Makefile
-> > @@ -339,8 +339,10 @@ $(BOOT_TARGETS): vmlinux
-> >  $(INSTALL_TARGETS):
-> >       $(Q)$(MAKE) $(build)=$(boot) MACHINE=$(MACHINE) $@
-> >
-> > +%.dtb %.dtbo: dtbdir = $(patsubst %/,%,$(patsubst %./,%,$(boot)/dts/$(dir $@)))
-> > +
-> >  %.dtb %.dtbo: | scripts
-> > -     $(Q)$(MAKE) $(build)=$(boot)/dts MACHINE=$(MACHINE) $(boot)/dts/$@
-> > +     $(Q)$(MAKE) $(build)=$(dtbdir) MACHINE=$(MACHINE) $(boot)/dts/$@
-> >
-> >  PHONY += dtbs dtbs_install
-> >
-> >
->
-> The makefile magic to handle subdirectories below $(boot)/dts/ already
-> works properly to have Makefiles in $(boot)/dts/, using the following
-> rule in arch/arm64/Makefile:
->
-> %.dtb: scripts
->         $(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
->
-> I don't understand why that works for arm64, but it should work the
-> same way for arm.  Or if arch/arm is missing another piece from
-> arch/arm64 we should be consistent with however the make system
-> specifies it in arch/arm64
+Add the Video Processing Unit node for RK3288 SoC.
 
-It should just need a subdir-y for the sub-directory. The target is
-"subdir/some.dtb" though.
+Fix the VPU IOMMU node, which was disabled and lacking
+its power domain property.
 
-If we want to build specific directories, we should get the standard
-way of doing that to work: make arch/arm/boot/dts/subdir/
+Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288.dtsi | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-Rob
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 0840ffb3205c..40d203cdca09 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -1223,6 +1223,18 @@
+ 		};
+ 	};
+ 
++	vpu: video-codec@ff9a0000 {
++		compatible = "rockchip,rk3288-vpu";
++		reg = <0x0 0xff9a0000 0x0 0x800>;
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "vepu", "vdpu";
++		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
++		clock-names = "aclk", "hclk";
++		power-domains = <&power RK3288_PD_VIDEO>;
++		iommus = <&vpu_mmu>;
++	};
++
+ 	vpu_mmu: iommu@ff9a0800 {
+ 		compatible = "rockchip,iommu";
+ 		reg = <0x0 0xff9a0800 0x0 0x100>;
+@@ -1230,8 +1242,8 @@
+ 		interrupt-names = "vpu_mmu";
+ 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
+ 		clock-names = "aclk", "iface";
++		power-domains = <&power RK3288_PD_VIDEO>;
+ 		#iommu-cells = <0>;
+-		status = "disabled";
+ 	};
+ 
+ 	hevc_mmu: iommu@ff9c0440 {
+-- 
+2.18.0
