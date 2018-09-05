@@ -1,40 +1,37 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH v2 3/3] arm64: dts: msm8996: Drop model
-Date: Wed,  5 Sep 2018 20:35:17 +0200
-Message-ID: <20180905183517.9390-4-niklas.cassel@linaro.org>
-References: <20180905183517.9390-1-niklas.cassel@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 02/21] of: Support matching cpu nodes with no 'reg' property
+Date: Wed,  5 Sep 2018 14:37:19 -0500
+Message-ID: <20180905193738.19325-3-robh@kernel.org>
+References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905183517.9390-1-niklas.cassel@linaro.org>
+In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-DTS board files should always specify model and compatible.
+For some single core ARM systems, the DTs can have a single cpu node
+without a reg property and #address-cells == 0. This case is valid and
+should match on cpu #0.
 
-All DTS board files that includes msm8996.dtsi
-already specifies model and compatible, and will thus
-override the model and compatible in msm8996.dtsi.
-
-Drop model from msm8916.dtsi, since it is only a source of confusion.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/of/base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index cd3865e7a270..b4d635bb81ac 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -16,8 +16,6 @@
- #include <dt-bindings/clock/qcom,rpmcc.h>
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 70609d5a2506..6389aeb2f48c 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -327,6 +327,8 @@ static bool __of_find_n_match_cpu_property(struct device_node *cpun,
  
- / {
--	model = "Qualcomm Technologies, Inc. MSM8996";
--
- 	interrupt-parent = <&intc>;
- 
- 	#address-cells = <2>;
+ 	ac = of_n_addr_cells(cpun);
+ 	cell = of_get_property(cpun, prop_name, &prop_len);
++	if (!cell && !ac && arch_match_cpu_phys_id(cpu, 0))
++		return true;
+ 	if (!cell || !ac)
+ 		return false;
+ 	prop_len /= sizeof(*cell) * ac;
 -- 
 2.17.1
