@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 03/21] ARM: use for_each_of_cpu_node iterator
-Date: Wed,  5 Sep 2018 14:37:20 -0500
-Message-ID: <20180905193738.19325-4-robh@kernel.org>
+Subject: [PATCH 04/21] ARM: topology: remove unneeded check for /cpus node
+Date: Wed,  5 Sep 2018 14:37:21 -0500
+Message-ID: <20180905193738.19325-5-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
@@ -10,9 +10,9 @@ To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-has the side effect of defaulting to iterating using "cpu" node names in
-preference to the deprecated (for FDT) device_type == "cpu".
+Checking for "/cpus" node is not necessary as of_get_cpu_node() will fail
+later on anyways. The call to of_find_node_by_path() also leaks a
+reference. So just remove the check.
 
 Cc: Russell King <linux@armlinux.org.uk>
 Cc: linux-arm-kernel@lists.infradead.org
@@ -21,28 +21,25 @@ Signed-off-by: Rob Herring <robh@kernel.org>
 Please ack and I will take via the DT tree. This is dependent on the
 first 2 patches.
 
- arch/arm/kernel/devtree.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ arch/arm/kernel/topology.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index ecaa68dd1af5..13bcd3b867cb 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -87,14 +87,11 @@ void __init arm_dt_init_cpu_maps(void)
- 	if (!cpus)
- 		return;
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 24ac3cab411d..60e375ce1ab2 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -94,12 +94,6 @@ static void __init parse_dt_topology(void)
+ 	__cpu_capacity = kcalloc(nr_cpu_ids, sizeof(*__cpu_capacity),
+ 				 GFP_NOWAIT);
 
--	for_each_child_of_node(cpus, cpu) {
-+	for_each_of_cpu_node(cpu) {
- 		const __be32 *cell;
- 		int prop_bytes;
- 		u32 hwid;
-
--		if (of_node_cmp(cpu->type, "cpu"))
--			continue;
+-	cn = of_find_node_by_path("/cpus");
+-	if (!cn) {
+-		pr_err("No CPU information found in DT\n");
+-		return;
+-	}
 -
- 		pr_debug(" * %pOF...\n", cpu);
- 		/*
- 		 * A device tree containing CPU nodes with missing "reg"
+ 	for_each_possible_cpu(cpu) {
+ 		const u32 *rate;
+ 		int len;
 --
 2.17.1
