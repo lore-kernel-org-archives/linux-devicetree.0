@@ -1,58 +1,36 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 3/6] dt-bindings: display: add data-enable polarity
- property
-Date: Wed, 05 Sep 2018 23:50:25 +0300
-Message-ID: <6830776.vZAoroGVFQ@avalon>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <139651706.L0sBFfZMDQ@avalon> <e708c5bac502e60a2eeb685fddf67042@agner.ch>
+From: Yang Li <pku.leo@gmail.com>
+Subject: Re: [PATCH v6 3/4] arm64: dts: dwc3: description of incr burst type
+Date: Wed, 5 Sep 2018 15:52:33 -0500
+Message-ID: <CADRPPNQQE1ESJ5WkMxySstxpaQir-w5XOdiwDe3qTTQ_cim5Xw@mail.gmail.com>
+References: <1532341959-3478-1-git-send-email-pengbo.mu@nxp.com>
+ <1532341959-3478-3-git-send-email-pengbo.mu@nxp.com> <20180724232018.GA16709@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <e708c5bac502e60a2eeb685fddf67042@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180724232018.GA16709@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: pengbo.mu@nxp.com, Felipe Balbi <balbi@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKT24gV2VkbmVzZGF5LCA1IFNlcHRlbWJlciAyMDE4IDIxOjEwOjA4IEVFU1Qg
-U3RlZmFuIEFnbmVyIHdyb3RlOgo+IE9uIDA1LjA5LjIwMTggMDA6MDcsIExhdXJlbnQgUGluY2hh
-cnQgd3JvdGU6Cj4gPiBPbiBXZWRuZXNkYXksIDUgU2VwdGVtYmVyIDIwMTggMDg6MjE6MTAgRUVT
-VCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4gPj4gQWxsb3cgdG8gc3BlY2lmeSB0aGUgZGF0YS1lbmFi
-bGUgcG9sYXJpdHkgcmVxdWlyZWQgYnkgYSBkdW1iIFZHQQo+ID4+IERBQyBjb252ZXJ0aW5nIHBh
-cmFsbGVsIFJHQiB0byBWR0EuCj4gPj4gCj4gPj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVy
-IDxzdGVmYW5AYWduZXIuY2g+Cj4gPj4gLS0tCj4gPj4gCj4gPj4gIC4uLi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQgICAgICAgICAgfCAxICsKPiA+
-PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4gPj4gCj4gPj4gZGlmZiAtLWdpdAo+
-ID4+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1
-bWItdmdhLWRhYy50eHQKPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9kdW1iLXZnYS1kYWMudHh0IGluZGV4Cj4gPj4gMTY0Y2JiMTVmMDRjLi5h
-ZGJkMmNhMGFmMmYgMTAwNjQ0Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPiA+PiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHVtYi12Z2EtZGFjLnR4
-dAo+ID4+IEBAIC0xOCw2ICsxOCw3IEBAIGdyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbgo+ID4+
-IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gPj4gCj4gPj4g
-IE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4gPj4gIC0gdmRkLXN1cHBseTogUG93ZXIgc3VwcGx5IGZv
-ciBEQUMKPiA+PiAKPiA+PiArLSBkZS1hY3RpdmU6IGRhdGEtZW5hYmxlIHB1bHNlIGlzIGFjdGl2
-ZSBsb3cvaGlnaC9pZ25vcmVkCj4gPiAKPiA+IFdoaWNoIHZhbHVlIGNvcnJlc3BvbmRzIHRvIGxv
-dywgaGlnaCBhbmQgaWdub3JlZCA/Cj4gCj4gVGhlIHdvcmRpbmcgaXMgdGFrZW4gZnJvbQo+IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Rpc3BsYXktdGlt
-aW5nLnR4dC4gQnV0Cj4gSSBhZ3JlZSwgbm90IHZlcnkgdXNlZnVsLgo+IAo+IDAgaXMgbG93IGFj
-dGl2ZSwgMSBpcyBoaWdoIGFjdGl2ZSwgYW5kIG5vbmUgaXMgdXNpbmcgZHJpdmVyIGRlZmF1bHRz
-Lgo+IAo+IEhvdyBhYm91dDoKPiAtIGRlLWFjdGl2ZTogZGF0YS1lbmFibGUgcHVsc2UgaXMgMD1h
-Y3RpdmUgbG93LzE9YWN0aXZlIGhpZ2gKClRoZSBkYXRhIGVuYWJsZSBzaWduYWwgaXNuJ3QgcmVh
-bGx5IGEgcHVsc2UuIEkgd291bGQgd29yZCB0aGlzIGFzCgotIGRlLWFjdGl2ZTogUG9sYXJpdHkg
-b2YgdGhlIGRhdGEgZW5hYmxlIHNpZ25hbC4gMCBmb3IgYWN0aXZlIGxvdywgMSBmb3IgCmFjdGl2
-ZSBoaWdoLCB1bnNldCBmb3Igc3lzdGVtLXNwZWNpZmljIGRlZmF1bHRzLgoKPiA+PiAgRXhhbXBs
-ZQo+ID4+ICAtLS0tLS0tCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Jul 24, 2018 at 6:23 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Mon, Jul 23, 2018 at 06:32:38PM +0800, Pengbo Mu wrote:
+> > Add description of 'snps,incr-burst-type-adjustment' to binding
+> > so that configuring devicetree.
+> >
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/usb/dwc3.txt | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+
+Hi Felipe,
+
+What do you think about this patch?  The patch title prefix should be
+updated from "arm64: dts: dwc3" to "dt-bindings: usb: dwc3" though.
+
+Regards,
+Leo
