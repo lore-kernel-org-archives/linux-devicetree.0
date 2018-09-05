@@ -1,53 +1,49 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v5 4/4] arm64: zynqmp: Add DDRC node
-Date: Wed, 5 Sep 2018 12:20:53 +0200
-Message-ID: <20180905102053.GE2237@zn.tnic>
-References: <1535722070-10394-1-git-send-email-manish.narani@xilinx.com>
- <1535722070-10394-5-git-send-email-manish.narani@xilinx.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 4/5] arm: dts: mt7623: add jpeg decoder device node
+Date: Wed, 5 Sep 2018 18:22:20 +0800
+Message-ID: <2f810e9fc20d64d1e673b9ab9abd912d440d071a.1536141302.git.ryder.lee@mediatek.com>
+References: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536141302.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1535722070-10394-5-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536141302.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, leoyang.li@nxp.com, amit.kucheria@linaro.org, olof@lixom.net, sgoud@xilinx.com, anirudh@xilinx.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 06:57:50PM +0530, Manish Narani wrote:
-> Add ddrc memory controller node in dts. The size mentioned in dts is
-> 0x30000, because we need to access DDR_QOS INTR registers located at
-> 0xFD090208 from this driver.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> index 29ce234..a81d3b16 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-> @@ -355,6 +355,13 @@
->  			xlnx,bus-width = <64>;
->  		};
->  
-> +		mc: memory-controller@fd070000 {
-> +			compatible = "xlnx,zynqmp-ddrc-2.40a";
-> +			reg = <0x0 0xfd070000 0x0 0x30000>;
-> +			interrupt-parent = <&gic>;
-> +			interrupts = <0 112 4>;
-> +		};
-> +
->  		gem0: ethernet@ff0b0000 {
->  			compatible = "cdns,zynqmp-gem", "cdns,gem";
->  			status = "disabled";
-> -- 
+Add a jpeg decoder device node for MT7623.
 
-This still needs Rob's ACK.
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ arch/arm/boot/dts/mt7623.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index a46987b..d01bdee 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -764,6 +764,21 @@
+ 		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+ 	};
+ 
++	jpegdec: jpegdec@15004000 {
++		compatible = "mediatek,mt7623-jpgdec",
++			     "mediatek,mt2701-jpgdec";
++		reg = <0 0x15004000 0 0x1000>;
++		interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
++		clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
++			  <&imgsys CLK_IMG_JPGDEC>;
++		clock-names = "jpgdec-smi",
++			      "jpgdec";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
++		mediatek,larb = <&larb2>;
++		iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
++			 <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
++	};
++
+ 	vdecsys: syscon@16000000 {
+ 		compatible = "mediatek,mt7623-vdecsys",
+ 			     "mediatek,mt2701-vdecsys",
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+1.9.1
