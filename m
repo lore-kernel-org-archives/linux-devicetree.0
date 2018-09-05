@@ -1,37 +1,50 @@
-From: Andi Shyti <andi@etezian.org>
-Subject: Re: [PATCH 1/2] input: egalax_ts: add system wakeup support
-Date: Wed, 5 Sep 2018 13:34:28 +0300
-Message-ID: <20180905103428.GA29158@jack.zhora.eu>
-References: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/2] Embedded USB Debugger (EUD) driver
+Date: Wed, 5 Sep 2018 13:18:00 +0200
+Message-ID: <20180905111800.GA30003@kroah.com>
+References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
+ <1536096853-30473-3-git-send-email-pheragu@codeaurora.org>
+ <c68c466a-576f-43d9-a7dd-7ee8e0ebba3f@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <c68c466a-576f-43d9-a7dd-7ee8e0ebba3f@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, marco.franchi@nxp.com, fabio.estevam@nxp.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+To: Manu Gautam <mgautam@codeaurora.org>
+Cc: Prakruthi Deepak Heragu <pheragu@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, rnayak@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
-
-On Wed, Sep 05, 2018 at 05:26:46PM +0800, Anson Huang wrote:
-> This patch adds wakeup function support for egalax touch
-> screen, if "wakeup-source" is added to device tree's egalax
-> touch screen node, the wakeup function will be enabled, and
-> egalax touch screen will be able to wakeup system from suspend.
+On Wed, Sep 05, 2018 at 03:01:26PM +0530, Manu Gautam wrote:
+> Hi,
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> 
+> On 9/5/2018 3:04 AM, Prakruthi Deepak Heragu wrote:
+> > Add support for control peripheral of EUD (Embedded USB Debugger) to
+> > listen to events such as USB attach/detach, charger enable/disable, pet
+> > EUD to indicate software is functional.
+> >
+> > Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+> > Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+> > ---
+> >  drivers/soc/qcom/Kconfig  |  12 ++
+> >  drivers/soc/qcom/Makefile |   1 +
+> >  drivers/soc/qcom/eud.c    | 338 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 351 insertions(+)
+> >  create mode 100644 drivers/soc/qcom/eud.c
+> >
+> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> [snip]
+> > +
+> > +#define EUD_ENABLE_CMD 1
+> > +#define EUD_DISABLE_CMD 0
+> 
+> Why not use module param as boolean? I mean zero to disable and non-zero to enable?
 
-I think you messed up the order of the patches, this patch
-whould come after the PATCH 2/2.
+Never use module parameters on new code, as it's really hard to ever
+change them.  It also doesn't work for multiple devices of the same
+type.
 
-You first create the property and then use it. If someone checks
-out right here, he would find an inconsistency between the dts
-property and this code.
+thanks,
 
-You can either send a version 2 with the correct order or check
-if Dmitry and Rob are willing to sync for who takes first the
-patch first.
-
-Andi
+greg k-h
