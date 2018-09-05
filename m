@@ -1,81 +1,104 @@
 From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [RFC PATCH v3 1/3] firmware: xilinx: Add reset API's
-Date: Wed, 05 Sep 2018 12:29:49 +0200
-Message-ID: <1536143389.4084.4.camel@pengutronix.de>
+Subject: Re: [RFC PATCH v3 3/3] reset: reset-zynqmp: Adding support for
+ Xilinx zynqmp reset controller.
+Date: Wed, 05 Sep 2018 12:29:55 +0200
+Message-ID: <1536143395.4084.5.camel@pengutronix.de>
 References: <1536131342-28041-1-git-send-email-nava.manne@xilinx.com>
-         <1536131342-28041-2-git-send-email-nava.manne@xilinx.com>
+         <1536131342-28041-4-git-send-email-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536131342-28041-2-git-send-email-nava.manne@xilinx.com>
+In-Reply-To: <1536131342-28041-4-git-send-email-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Nava kishore Manne <nava.manne@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
+thank you for the patch. I have a few comments below:
+
 On Wed, 2018-09-05 at 12:39 +0530, Nava kishore Manne wrote:
-> This Patch Adds reset API's to support release, assert
-> and status functionalities by using firmware interface.
+> Add a reset controller driver for Xilinx Zynq UltraScale+ MPSoC.
+> The zynqmp reset-controller has the ability to reset lines
+> connected to different blocks and peripheral in the Soc.
 > 
 > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 > ---
 > Changes for v3:
 > 		-None.
 > Changes for v2:
-> 		-New Patch.
+> 		-Moved eemi_ops into a priv struct as suggested
+> 		 by philipp.
 > 
->  drivers/firmware/xilinx/zynqmp.c     |  40 +++++++++++
->  include/linux/firmware/xlnx-zynqmp.h | 136 +++++++++++++++++++++++++++++++++++
->  2 files changed, 176 insertions(+)
+>  drivers/reset/Makefile       |   1 +
+>  drivers/reset/reset-zynqmp.c | 115 +++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 116 insertions(+)
+>  create mode 100644 drivers/reset/reset-zynqmp.c
 > 
-> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-> index 7ccedf0..639c72f 100644
-> --- a/drivers/firmware/xilinx/zynqmp.c
-> +++ b/drivers/firmware/xilinx/zynqmp.c
-> @@ -447,6 +447,44 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
->  	return ret;
->  }
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index c1261dc..27e4a33 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -21,4 +21,5 @@ obj-$(CONFIG_RESET_TI_SCI) += reset-ti-sci.o
+>  obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
+>  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+>  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
+> +obj-$(CONFIG_ARCH_ZYNQMP) += reset-zynqmp.o
 >  
-> +/**
-> + * zynqmp_pm_reset_assert - Request setting of reset (1 - assert, 0 - release)
-> + * @reset:		Reset to be configured
-> + * @assert_flag:	Flag stating should reset be asserted (1) or
-> + *			released (0)
+> diff --git a/drivers/reset/reset-zynqmp.c b/drivers/reset/reset-zynqmp.c
+> new file mode 100644
+> index 0000000..f908492
+> --- /dev/null
+> +++ b/drivers/reset/reset-zynqmp.c
+> @@ -0,0 +1,115 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright (C) 2018 Xilinx, Inc.
 > + *
-> + * Return: Returns status, either success or error+reason
 > + */
-> +static int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
-> +				  const enum zynqmp_pm_reset_action assert_flag)
-> +{
-> +	return zynqmp_pm_invoke_fn(PM_RESET_ASSERT, reset, assert_flag,
-> +				   0, 0, NULL);
-> +}
 > +
-> +/**
-> + * zynqmp_pm_reset_get_status - Get status of the reset
-> + * @reset:      Reset whose status should be returned
-> + * @status:     Returned status
-> + *
-> + * Return: Returns status, either success or error+reason
-> + */
-> +static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
-> +				      u32 *status)
-> +{
-> +	u32 ret_payload[PAYLOAD_ARG_CNT];
-> +	int ret;
-> +
-> +	if (!status)
-> +		return -EINVAL;
-> +
-> +	ret = zynqmp_pm_invoke_fn(PM_RESET_GET_STATUS, reset, 0,
-> +				  0, 0, ret_payload);
-> +	*status = ret_payload[1];
+> +#include <linux/io.h>
 
-It doesn't really matter here, but in general I'd skip writing output
-arguments in case of error.
-For all I know, the result returned in ret_payload could be undefined.
+I think including io.h is not necessary.
+
+[...]
+> +static int zynqmp_reset_status(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
+> +	int val, err;
+> +
+> +	err = priv->eemi_ops->reset_get_status(ZYNQMP_RESET_ID + id, &val);
+> +	if (!err)
+> +		return -EINVAL;
+
+This looks like it should be
+
+	if (err)
+		return err;
+
+instead.
+
+[...]
+> +static struct reset_control_ops zynqmp_reset_ops = {
+
+static const struct reset_control_ops zynqmp_reset_ops = {
+
+> +	.reset = zynqmp_reset_reset,
+> +	.assert = zynqmp_reset_assert,
+> +	.deassert = zynqmp_reset_deassert,
+> +	.status = zynqmp_reset_status,
+> +};
+> +
+> +static int zynqmp_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct zynqmp_reset_data *priv;
+> +
+> +	priv = devm_kzalloc(&pdev->dev,
+> +			    sizeof(*priv), GFP_KERNEL);
+
+This should fit on one line.
 
 regards
 Philipp
