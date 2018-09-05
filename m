@@ -1,40 +1,56 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 0/3] of: root #{size,address}-cells clean-ups
-Date: Tue, 4 Sep 2018 18:56:18 -0700
-Message-ID: <0941c9f1-abd2-0d4f-489c-108c3eff4298@gmail.com>
-References: <20180830190523.31474-1-robh@kernel.org>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH 2/3] Documentation: dt: binding: fsl: update property
+ description for RCPM
+Date: Wed, 5 Sep 2018 02:22:55 +0000
+Message-ID: <AM5PR0402MB28659BF8C2B5B3B18DB6BAC9F1020@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20180831035219.31619-1-ran.wang_1@nxp.com>
+ <20180831035219.31619-2-ran.wang_1@nxp.com>
+ <5b8e8a71.1c69fb81.d966f.1ca1@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830190523.31474-1-robh@kernel.org>
+In-Reply-To: <5b8e8a71.1c69fb81.d966f.1ca1@mx.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>
+To: Rob Herring <robh@kernel.org>
+Cc: Leo Li <leoyang.li@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/18 12:05, Rob Herring wrote:
-> This is a small restructuring and clean-up of handling root node
-> #size-cells and #address-cells (or lack of). As only Sparc needs a 
-> different default value and only for #address-cells, we can handle that 
-> locally and remove one more dependency on asm/prom.h.
-> 
-> Rob
-> 
-> Rob Herring (3):
->   of/fdt: Scan the root node properties earlier
->   of/fdt: avoid re-parsing '#{address,size}-cells' in
->     of_fdt_limit_memory
->   of: make default address and size cells sizes private
-> 
->  arch/sparc/include/asm/prom.h |  3 ---
->  drivers/of/fdt.c              | 30 +++++-------------------------
->  drivers/of/of_private.h       |  8 ++++++++
->  include/linux/of.h            |  6 ------
->  4 files changed, 13 insertions(+), 34 deletions(-)
-> 
+Hi Rob
 
-Nice cleanup!
+> -----Original Message-----
+> From: Rob Herring <robh@kernel.org>
+> Sent: Tuesday, September 04, 2018 09:25
+> To: Ran Wang <ran.wang_1@nxp.com>
+> Cc: Leo Li <leoyang.li@nxp.com>; Mark Rutland <mark.rutland@arm.com>;
+> linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 2/3] Documentation: dt: binding: fsl: update property
+> description for RCPM
+>=20
+> On Fri, Aug 31, 2018 at 11:52:18AM +0800, Ran Wang wrote:
+> > Add property 'big-endian' and supportted IP's configuration info.
+> > Remove property 'fsl,#rcpm-wakeup-cell'.
+>=20
+> "dt-bindings: soc: ..." for the subject
+>=20
+> It is obvious reading the diff you are removing fsl,#rcpm-wakeup-cell.
+> What is not obvious is why? The commit msg should answer that.
 
--Frank
+Sure, I will add this in next version patch.
+
+> You also are mixing several things in this patch like adding ls1012 which=
+ you
+> don't mention. Please split.
+
+Got it, will split them and add more information in next version.
+=20
+Ran
+> >
+> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/soc/fsl/rcpm.txt |   42 ++++++------=
+-----
+> --
+> >  1 files changed, 13 insertions(+), 29 deletions(-)
