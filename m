@@ -1,101 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 05/21] ARM: shmobile: use for_each_of_cpu_node iterator
-Date: Wed,  5 Sep 2018 14:37:22 -0500
-Message-ID: <20180905193738.19325-6-robh@kernel.org>
+Subject: [PATCH 08/21] microblaze: get cpu node with of_get_cpu_node
+Date: Wed,  5 Sep 2018 14:37:25 -0500
+Message-ID: <20180905193738.19325-9-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+Cc: Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-has the side effect of defaulting to iterating using "cpu" node names in
-preference to the deprecated (for FDT) device_type == "cpu".
+"device_type" use is deprecated for FDT though it has continued to be used
+for nodes like cpu nodes. Use of_get_cpu_node() instead which works using
+node names by default. This will allow the eventually removal of cpu
+device_type properties.
 
-Cc: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-renesas-soc@vger.kernel.org
+Also, fix a leaked reference by adding a missing of_node_put.
+
+Cc: Michal Simek <monstr@monstr.eu>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Please ack and I will take via the DT tree. This is dependent on the
 first 2 patches.
 
- arch/arm/mach-shmobile/pm-rcar-gen2.c |  8 ++------
- arch/arm/mach-shmobile/pm-rmobile.c   |  2 +-
- arch/arm/mach-shmobile/timer.c        | 10 ++--------
- 3 files changed, 5 insertions(+), 15 deletions(-)
+ arch/microblaze/kernel/cpu/cpuinfo.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-shmobile/pm-rcar-gen2.c b/arch/arm/mach-shmobile/pm-rcar-gen2.c
-index 345af3ebcc3a..7efe95bd584f 100644
---- a/arch/arm/mach-shmobile/pm-rcar-gen2.c
-+++ b/arch/arm/mach-shmobile/pm-rcar-gen2.c
-@@ -50,7 +50,7 @@ void __init rcar_gen2_pm_init(void)
- 	void __iomem *p;
- 	u32 bar;
- 	static int once;
--	struct device_node *np, *cpus;
-+	struct device_node *np;
- 	bool has_a7 = false;
- 	bool has_a15 = false;
- 	struct resource res;
-@@ -59,11 +59,7 @@ void __init rcar_gen2_pm_init(void)
- 	if (once++)
- 		return;
+diff --git a/arch/microblaze/kernel/cpu/cpuinfo.c b/arch/microblaze/kernel/cpu/cpuinfo.c
+index 96b3f26d16be..0c52aca87478 100644
+--- a/arch/microblaze/kernel/cpu/cpuinfo.c
++++ b/arch/microblaze/kernel/cpu/cpuinfo.c
+@@ -89,7 +89,7 @@ static struct device_node *cpu;
 
--	cpus = of_find_node_by_path("/cpus");
--	if (!cpus)
--		return;
--
--	for_each_child_of_node(cpus, np) {
-+	for_each_of_cpu_node(np) {
- 		if (of_device_is_compatible(np, "arm,cortex-a15"))
- 			has_a15 = true;
- 		else if (of_device_is_compatible(np, "arm,cortex-a7"))
-diff --git a/arch/arm/mach-shmobile/pm-rmobile.c b/arch/arm/mach-shmobile/pm-rmobile.c
-index e348bcfe389d..94fdeef11b81 100644
---- a/arch/arm/mach-shmobile/pm-rmobile.c
-+++ b/arch/arm/mach-shmobile/pm-rmobile.c
-@@ -202,7 +202,7 @@ static void __init get_special_pds(void)
- 	const struct of_device_id *id;
-
- 	/* PM domains containing CPUs */
--	for_each_node_by_type(np, "cpu")
-+	for_each_of_cpu_node(np)
- 		add_special_pd(np, PD_CPU);
-
- 	/* PM domain containing console */
-diff --git a/arch/arm/mach-shmobile/timer.c b/arch/arm/mach-shmobile/timer.c
-index 828e8aea037e..e48b0939693f 100644
---- a/arch/arm/mach-shmobile/timer.c
-+++ b/arch/arm/mach-shmobile/timer.c
-@@ -22,22 +22,16 @@
-
- void __init shmobile_init_delay(void)
+ void __init setup_cpuinfo(void)
  {
--	struct device_node *np, *cpus;
-+	struct device_node *np;
- 	u32 max_freq = 0;
+-	cpu = (struct device_node *) of_find_node_by_type(NULL, "cpu");
++	cpu = of_get_cpu_node(0, NULL);
+ 	if (!cpu)
+ 		pr_err("You don't have cpu!!!\n");
 
--	cpus = of_find_node_by_path("/cpus");
--	if (!cpus)
--		return;
--
--	for_each_child_of_node(cpus, np) {
-+	for_each_of_cpu_node(np) {
- 		u32 freq;
+@@ -117,6 +117,8 @@ void __init setup_cpuinfo(void)
+ 	if (cpuinfo.mmu_privins)
+ 		pr_warn("%s: Stream instructions enabled"
+ 			" - USERSPACE CAN LOCK THIS KERNEL!\n", __func__);
++
++	of_node_put(cpu);
+ }
 
- 		if (!of_property_read_u32(np, "clock-frequency", &freq))
- 			max_freq = max(max_freq, freq);
- 	}
-
--	of_node_put(cpus);
--
- 	if (!max_freq)
- 		return;
-
+ void __init setup_cpuinfo_clk(void)
 --
 2.17.1
