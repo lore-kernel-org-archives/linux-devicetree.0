@@ -1,42 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 06/21] arm64: use for_each_of_cpu_node iterator
-Date: Wed,  5 Sep 2018 14:37:23 -0500
-Message-ID: <20180905193738.19325-7-robh@kernel.org>
+Subject: [PATCH 09/21] nios2: get cpu node with of_get_cpu_node
+Date: Wed,  5 Sep 2018 14:37:26 -0500
+Message-ID: <20180905193738.19325-10-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
+Cc: Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
 List-Id: devicetree@vger.kernel.org
 
-Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-has the side effect of defaulting to iterating using "cpu" node names in
-preference to the deprecated (for FDT) device_type == "cpu".
+"device_type" use is deprecated for FDT though it has continued to be used
+for nodes like cpu nodes. Use of_get_cpu_node() instead which works using
+node names by default. This will allow the eventually removal of cpu
+device_type properties.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Also, fix a leaked reference by adding a missing of_node_put.
+
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: nios2-dev@lists.rocketboards.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Please ack and I will take via the DT tree. This is dependent on the
 first 2 patches.
 
- arch/arm64/kernel/smp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/nios2/kernel/cpuinfo.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 25fcd22a4bb2..96b8f2f51ab2 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -602,7 +602,7 @@ static void __init of_parse_and_init_cpus(void)
- {
- 	struct device_node *dn;
+diff --git a/arch/nios2/kernel/cpuinfo.c b/arch/nios2/kernel/cpuinfo.c
+index 93207718bb22..ccc1d2a15a0a 100644
+--- a/arch/nios2/kernel/cpuinfo.c
++++ b/arch/nios2/kernel/cpuinfo.c
+@@ -47,7 +47,7 @@ void __init setup_cpuinfo(void)
+ 	const char *str;
+ 	int len;
 
--	for_each_node_by_type(dn, "cpu") {
-+	for_each_of_cpu_node(dn) {
- 		u64 hwid = of_get_cpu_mpidr(dn);
+-	cpu = of_find_node_by_type(NULL, "cpu");
++	cpu = of_get_cpu_node(0, NULL);
+ 	if (!cpu)
+ 		panic("%s: No CPU found in devicetree!\n", __func__);
 
- 		if (hwid == INVALID_HWID)
+@@ -120,6 +120,8 @@ void __init setup_cpuinfo(void)
+ 	cpuinfo.reset_addr = fcpu(cpu, "altr,reset-addr");
+ 	cpuinfo.exception_addr = fcpu(cpu, "altr,exception-addr");
+ 	cpuinfo.fast_tlb_miss_exc_addr = fcpu(cpu, "altr,fast-tlb-miss-addr");
++
++	of_node_put(cpu);
+ }
+
+ #ifdef CONFIG_PROC_FS
 --
 2.17.1
