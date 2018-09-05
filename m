@@ -1,84 +1,74 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 10/11] arm64: dts: qcom: Add reg-names for all tsens nodes
-Date: Tue, 4 Sep 2018 16:42:31 -0700
-Message-ID: <CAD=FV=WoQnSLj0RvrKfjgJCKkDKrEnKG2F5XQxQjFaJbhH1gjQ@mail.gmail.com>
-References: <cover.1535462942.git.amit.kucheria@linaro.org>
- <c49d9f13b3d6849604ae3eb00a92b80948ef1534.1535462942.git.amit.kucheria@linaro.org>
- <20180903203405.GT3456@tuxbook-pro>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 1/3] of/fdt: Scan the root node properties earlier
+Date: Tue, 4 Sep 2018 18:49:47 -0700
+Message-ID: <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com>
+References: <20180830190523.31474-1-robh@kernel.org>
+ <20180830190523.31474-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180903203405.GT3456@tuxbook-pro>
+In-Reply-To: <20180830190523.31474-2-robh@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Eduardo Valentin <edubezval@gmail.com>, Siddartha Mohanadoss <smohanad@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 08/30/18 12:05, Rob Herring wrote:
+> Scan the root node properties (#{size,address}-cells) earlier, 
 
-On Mon, Sep 3, 2018 at 1:34 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> On Tue 28 Aug 06:38 PDT 2018, Amit Kucheria wrote:
->
->> Instead of showing up as thermal-sensor@<addr>, the nodes will show up as
->> tsens0_tm, tsen1_tm, tsens1_srot, etc. in /proc/iomem making it easier to
->> read.
->>
->> IOW,
->>
->> 0c222000-0c2221fe : thermal-sensor@c263000
->> 0c223000-0c2231fe : thermal-sensor@c265000
->> 0c263000-0c2631fe : thermal-sensor@c263000
->> 0c265000-0c2651fe : thermal-sensor@c265000
->>
->> becomes
->>
->> 0c222000-0c2221fe : tsens0_srot
->> 0c223000-0c2231fe : tsens1_srot
->> 0c263000-0c2631fe : tsens0_tm
->> 0c265000-0c2651fe : tsens1_tm
->>
->> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
->> ---
->>  arch/arm/boot/dts/qcom-msm8974.dtsi   | 1 +
->>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
->>  arch/arm64/boot/dts/qcom/msm8996.dtsi | 2 ++
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi  | 2 ++
->>  4 files changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
->> index 3c4b81c29798..64c9f81ddd90 100644
->> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
->> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
->> @@ -431,6 +431,7 @@
->>                       compatible = "qcom,msm8974-tsens";
->>                       reg = <0xfc4a9000 0x1000>, /* TM */
->>                             <0xfc4a8000 0x1000>; /* SROT */
->> +                     reg-names = "tsens_tm", "tsens_srot";
->
-> While the iomem output seems more convenient this way, these register
-> names are a contract between the DT binding and the particular tsens
-> instance.
->
-> As such this is a good idea, but with the names should not include the
-> instance information. They should be "tm", "srot".
+                                                        ^^^^^^^
+                             before mdesc->dt_fixup() is called
 
-Rob Herring doesn't seem to think so.  As per
-<http://lkml.kernel.org/r/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com>
+> so that
+> the dt_root_addr_cells and dt_root_size_cells variables are initialized
+> and can be used.
+                 by mdesc->dt_fixup()
+> 
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/of/fdt.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+Moving early_init_dt_scan_root() to inside early_init_dt_verify()
+puts something that has nothing to do with verifying the fdt
+into a function whose purpose is the verify.  It hides the side
+effect of initializing the dt_root_addr_cells and dt_root_size_cells
+variables.
 
-I said:
+I suggest creating a new function early_init_dt_scan_init_pre_dt_fixup(),
+move the chunk of code there instead of to early_init_dt_scan_nodes(),
+and call the new function from setup_machine_fdt(), just before
+calling  mdesc->dt_fixup().  This would be a little bit more code,
+but more clearly showing the intent.
 
-> From what you're saying the _only_ reason you'd ever want to use
-> reg-names is if there is an optional register range.  Is that right?
+-Frank
 
-Rob said:
-
-> IMO, yes.
-
-It sounds like Rob won't NAK a change that adds reg-names if there is
-more than one reg, but in general he's not a fan.  I'd vote to keep
-things consistent with Rob's worldview and just drop this change.
-
-
--Doug
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 800ad252cf9c..49abe18f1bde 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -1215,6 +1215,10 @@ bool __init early_init_dt_verify(void *params)
+>  	initial_boot_params = params;
+>  	of_fdt_crc32 = crc32_be(~0, initial_boot_params,
+>  				fdt_totalsize(initial_boot_params));
+> +
+> +	/* Initialize {size,address}-cells info */
+> +	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+> +
+>  	return true;
+>  }
+>  
+> @@ -1224,9 +1228,6 @@ void __init early_init_dt_scan_nodes(void)
+>  	/* Retrieve various information from the /chosen node */
+>  	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+>  
+> -	/* Initialize {size,address}-cells info */
+> -	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+> -
+>  	/* Setup memory, calling early_init_dt_add_memory_arch */
+>  	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+>  }
+> 
