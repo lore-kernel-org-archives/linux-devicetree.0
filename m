@@ -1,37 +1,157 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] drm/sun4i: Enable DesignWare HDMI
- for SUN50I
-Date: Wed, 5 Sep 2018 13:54:42 +0530
-Message-ID: <CAMty3ZAzjSwq86BwB8O_7DrT0jrhn3ByzN34dY37pF3ZsAZ6uA@mail.gmail.com>
-References: <20180904163609.10171-1-jagan@amarulasolutions.com>
- <20180904163609.10171-4-jagan@amarulasolutions.com> <20180905070819.gisznpkvvuqire7c@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v2 2/2] phy: zynqmp: Add dt bindings for ZynqMP phy
+Date: Wed, 5 Sep 2018 14:29:09 +0530
+Message-ID: <2831a270-a4d1-ba51-e13f-85c029bbe8c0@codeaurora.org>
+References: <1535976844-12494-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1535976844-12494-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBS5FX3OAKGQETGNYDPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180905070819.gisznpkvvuqire7c@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535976844-12494-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, kishon@ti.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: v.anuragkumar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2018 at 12:38 PM, Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Tue, Sep 04, 2018 at 10:06:09PM +0530, Jagan Teki wrote:
->> Allwinner SUN50I are now using DesignWare HDMI so enable
->> them as default. This can build DRM_SUN8I_DW_HDMI as module
->> since DRM in arm64 has module.
->>
->> Making this as defult to SUN8I, may cause an issue while
->> loading since arm32 DRM built as static.
->
-> Uh? Why? We should fix this instead of working around it.
 
-I didn't dig further on this. Since ARM64 has is fine with it both
-(module and static) may be we can take this.
+
+On 9/3/2018 5:44 PM, Anurag Kumar Vulisha wrote:
+> This patch adds the document describing dt bindings for ZynqMP
+> phy. ZynqMP SOC has a High Speed Processing System Gigabit
+> Transceiver which provides PHY capabilties to USB, SATA,
+> PCIE, Display Port and Ehernet SGMII controllers.
+>
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> ---
+>   changes in v2:
+> 	1. None
+> ---
+>   .../devicetree/bindings/phy/phy-zynqmp.txt         | 104 +++++++++++++++++++++
+>   1 file changed, 104 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+> new file mode 100644
+> index 0000000..2eed553
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+> @@ -0,0 +1,104 @@
+> +Xilinx ZynqMP PHY binding
+> +
+> +This binding describes a ZynqMP PHY device that is used to control ZynqMP
+> +High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
+> +and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
+> +
+> +Phy provider node
+> +=================
+> +
+> +Required properties:
+> +- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
+> +		  "xlnx,zynqmp-psgtr-v1.1" has "xlnx,tx_termination_fix" removed
+This is not very clear. You can rather mention this statement for the 
+property.
+e.g. In "xlnx,tx_termination_fix" you can write - this is not required 
+for "xlnx,zynqmp-psgtr-v1.1.
+
+> +
+> +- reg           : Address and length of register sets for each device in
+> +                  "reg-names"
+> +
+> +- reg-names     : The names of the register addresses corresponding to the
+> +		  registers filled in "reg":
+> +			- serdes: SERDES block register set
+> +			- siou: SIOU block register set
+> +
+> +Optional properties:
+> +- xlnx,tx_termination_fix : Include this for fixing functional issue with the
+> +		  TX termination resistance in GT, which can be out of spec for
+> +		  the XCZU9EG silicon version.
+> +
+> +Required nodes	:  A sub-node is required for each lane the controller
+> +		   provides.
+> +
+> +Phy sub-nodes
+> +=============
+> +
+> +Required properties:
+> +lane0:
+> +- #phy-cells	: Should be 4
+> +
+> +lane1:
+> +- #phy-cells	: Should be 4
+> +
+> +lane2:
+> +- #phy-cells	: Should be 4
+> +
+> +lane3:
+> +- #phy-cells	: Should be 4
+> +
+> +Example:
+> +	serdes: zynqmp_phy@fd400000 {
+
+phy is not just the serdes. Also s/zynqmp_phy/phy
+
+This could be:
+                     zynqmp_phy: phy@fd400000
+
+regards
+Vivek
+> +		compatible = "xlnx,zynqmp-psgtr-v1.1";
+> +		status = "okay";
+> +		reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>;
+> +		reg-names = "serdes", "siou";
+> +
+> +		lane0: lane@0 {
+> +			#phy-cells = <4>;
+> +		};
+> +		lane1: lane@1 {
+> +			#phy-cells = <4>;
+> +		};
+> +		lane2: lane@2 {
+> +			#phy-cells = <4>;
+> +		};
+> +		lane3: lane@3 {
+> +			#phy-cells = <4>;
+> +		};
+> +	};
+> +
+> +Specifying phy control of devices
+> +=================================
+> +
+> +Device nodes should specify the configuration required in their "phys"
+> +property, containing a phandle to the phy port node and a device type.
+> +
+> +phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_NUM LANE_FREQ>;
+> +
+> +PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
+> +CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
+> +			  or PHY_TYPE_DP or PHY_TYPE_SGMII
+> +CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
+> +				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
+> +				PHY_TYPE_SATA : 0 or 1
+> +				PHY_TYPE_USB  : 0 or 1
+> +				PHY_TYPE_DP   : 0 or 1
+> +				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
+> +LANE_NUM                = Depends on which lane clock is used as ref clk, can be
+> +			  0 or 1 or 2 or 3
+> +LANE_FREQ               = Frequency that controller can operate, can be any of
+> +			  19.2Mhz,20Mhz,24Mhz,26Mhz,27Mhz,28.4Mhz,40Mhz,52Mhz,
+> +			  100Mhz,108Mhz,125Mhz,135Mhz,150Mhz
+> +
+> +Example:
+> +
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +	usb@fe200000 {
+> +		...
+> +		phys	  = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
+> +		...
+> +	};
+> +
+> +	ahci@fd0c0000 {
+> +		...
+> +		phys	  = <&lane3 PHY_TYPE_SATA 1 1 125000000>;
+> +		...
+> +	};
