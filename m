@@ -1,47 +1,41 @@
-From: Sergey Suloev <ssuloev@orpaltech.com>
-Subject: Re: [PATCH v4 02/11] clk: sunxi-ng: a64: Add max. rate constraint to
- video PLLs
-Date: Wed, 5 Sep 2018 13:22:31 +0300
-Message-ID: <5b78f888-c226-8b8d-1064-2e135c82f48e@orpaltech.com>
-References: <20180904044053.15425-1-icenowy@aosc.io>
- <20180904044053.15425-3-icenowy@aosc.io>
- <20180905071645.ibhcuq5coc6gl6k3@flea>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH 1/5] arm: dts: mt7623: add a performance counter unit device node
+Date: Wed, 5 Sep 2018 18:22:17 +0800
+Message-ID: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536141302.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905071645.ibhcuq5coc6gl6k3@flea>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree@vger.kernel.org, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Jagan Teki <jagan@amarulasolutions.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add ARM PMU device node to enable hardware perf events.
 
-On 09/05/2018 10:16 AM, Maxime Ripard wrote:
-> On Tue, Sep 04, 2018 at 12:40:44PM +0800, Icenowy Zheng wrote:
->> Video PLLs on A64 can be set to higher rate that it is actually
->> supported by HW.
->>
->> Limit maximum rate to 1008 MHz. This is the maximum allowed rate by BSP
->> clock driver. Interestengly, user manual specifies maximum frequency to
->> be 600 MHz. Historically, this data was wrong in some user manuals for
->> other SoCs, so more faith is put in BSP clock driver.
->>
->> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> Applied, thanks!
-> Maxime
->
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-what source tree this patch is supposed to apply for ?
-I can't find  the SUNXI_CCU_NM_WITH_FRAC_GATE_LOCK_MIN_MAX declaration 
-in 4.19
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+ arch/arm/boot/dts/mt7623.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-Thank you
-Sergey
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 1cdc346..8c43bd0 100644
+--- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -121,6 +121,15 @@
+ 		};
+ 	};
+ 
++	pmu {
++		compatible = "arm,cortex-a7-pmu";
++		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 5 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 6 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 7 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
+ 	system_clk: dummy13m {
+ 		compatible = "fixed-clock";
+ 		clock-frequency = <13000000>;
+-- 
+1.9.1
