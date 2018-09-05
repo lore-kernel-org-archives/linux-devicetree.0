@@ -1,101 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] of/fdt: Scan the root node properties earlier
-Date: Wed, 5 Sep 2018 15:06:21 -0500
-Message-ID: <CAL_JsqKRsXN-MKdP1ts=QexwuwkXO5tbFkORf4xDyYt04FUuUA@mail.gmail.com>
-References: <20180830190523.31474-1-robh@kernel.org> <20180830190523.31474-2-robh@kernel.org>
- <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com> <CAL_JsqJy0kDYCC35GR5TGLYyYU-UjOys_r2sFMQZuFto5HkExg@mail.gmail.com>
- <5da7b4ab-acd3-977a-6ac2-275911d7c436@gmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v1] arm64: dts: dwc3: Add description of 'configure-gfladj'
+Date: Wed, 5 Sep 2018 15:08:32 -0500
+Message-ID: <CADRPPNQLy4vor9ABCZn98eS9m4VtbkmSPd-UPvWMH+xpCaQL1w@mail.gmail.com>
+References: <20180829073324.36866-1-yinbo.zhu@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5da7b4ab-acd3-977a-6ac2-275911d7c436@gmail.com>
+In-Reply-To: <20180829073324.36866-1-yinbo.zhu@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2018 at 1:19 PM Frank Rowand <frowand.list@gmail.com> wrote:
+On Wed, Aug 29, 2018 at 2:38 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
 >
-> On 09/05/18 04:51, Rob Herring wrote:
-> > On Tue, Sep 4, 2018 at 8:49 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >>
-> >> On 08/30/18 12:05, Rob Herring wrote:
-> >>> Scan the root node properties (#{size,address}-cells) earlier,
-> >>
-> >>                                                         ^^^^^^^
-> >>                              before mdesc->dt_fixup() is called
-> >>
-> >>> so that
-> >>> the dt_root_addr_cells and dt_root_size_cells variables are initialized
-> >>> and can be used.
-> >>                  by mdesc->dt_fixup()
-> >
-> > That's an ARM specific detail. Granted, ARM is the only caller.
+> This patch is to add description of 'configure-gfladj' to binding
+> so that configuring devicetree
 >
-> The dt_root_addr_cells and dt_root_size_cells variables are being
-> initialized earlier in this patch series so that of_fdt_limit_memory()
-> can use them.  The only caller of of_fdt_limit_memory() is
-> exynos_dt_fixup(), which is an mdesc->dt_fixup() function.
->
->
-> >
-> >>>
-> >>> Cc: Frank Rowand <frowand.list@gmail.com>
-> >>> Signed-off-by: Rob Herring <robh@kernel.org>
-> >>> ---
-> >>>  drivers/of/fdt.c | 7 ++++---
-> >>>  1 file changed, 4 insertions(+), 3 deletions(-)
-> >>>
-> >> Moving early_init_dt_scan_root() to inside early_init_dt_verify()
-> >> puts something that has nothing to do with verifying the fdt
-> >> into a function whose purpose is the verify.  It hides the side
-> >> effect of initializing the dt_root_addr_cells and dt_root_size_cells
-> >> variables.
-> >
-> > It already has the side effect of setting initial_boot_params which
-> > every subsequent function needs.
->
-> And that side effect should probably also be moved.
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
 
-So 2 functions? One to set the blob and one to verify it. Then we can
-just let arches decide if they want to do any verification or not.
+This patch should be sent to the DWC3 driver maintainer to review and
+probably merged through usb tree.  You shouldn't use the arm64: dts:
+prefix for this patch either.
 
-Perhaps it should be called fdt_init(blob) and then it is vague enough
-I can do whatever I want.
-
-> >> I suggest creating a new function early_init_dt_scan_init_pre_dt_fixup(),
-> >> move the chunk of code there instead of to early_init_dt_scan_nodes(),
-> >> and call the new function from setup_machine_fdt(), just before
-> >> calling  mdesc->dt_fixup().  This would be a little bit more code,
-> >> but more clearly showing the intent.
-> >
-> > I'm trying to reduce the number of functions arches call
+> ---
+>  Documentation/devicetree/bindings/usb/dwc3.txt |    1 +
+>  1 files changed, 1 insertions(+), 0 deletions(-)
 >
-> I like that goal.
+> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> index 3e4c38b..40c6568 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> @@ -101,6 +101,7 @@ Optional properties:
+>                         When just one value, which means INCRX burst mode enabled. When
+>                         more than one value, which means undefined length INCR burst type
+>                         enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
+> + - configure-gfladj: determine whether frame length adjustment is required or not.
 >
+>   - in addition all properties from usb-xhci.txt from the current directory are
+>     supported as well
+> --
+> 1.7.1
 >
-> > and renaming
-> > would need a bunch of arch changes. This change will also let me make
-> > early_init_dt_scan_root private as powerpc is the only user. I need to
-> > dust off a patch for that.
-> >
-> > I'd be more inclined to push exynos to remove this altogether. After
->
-> Not a bad idea.
->
-> > all, if they claim their bindings are unstable, they can't really
-> > claim their bootloader is stable/fixed.
->
-> It seems that this series is showing us that maybe the three architecture
-> specific (arc, arm, arm64) versions of setup_machine_fdt() should be
-> consolidated so that we have consistent behavior for FDT.
->
-> If we had a single setup_machine_fdt() then some of he hidden side
-> effects of functions called by setup_machine_fdt() could instead
-> be hoisted into setup_machine_fdt().
-
-Those functions are all quite a bit different. ARM matches the machine
-desc while arm64 doesn't have any such thing. How the DTB gets mapped
-into virtual space also varies.
-
-Rob
