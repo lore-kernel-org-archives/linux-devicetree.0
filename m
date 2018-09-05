@@ -1,52 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 08/21] microblaze: get cpu node with of_get_cpu_node
-Date: Wed,  5 Sep 2018 14:37:25 -0500
-Message-ID: <20180905193738.19325-9-robh@kernel.org>
+Subject: [PATCH 06/21] arm64: use for_each_of_cpu_node iterator
+Date: Wed,  5 Sep 2018 14:37:23 -0500
+Message-ID: <20180905193738.19325-7-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-"device_type" use is deprecated for FDT though it has continued to be used
-for nodes like cpu nodes. Use of_get_cpu_node() instead which works using
-node names by default. This will allow the eventually removal of cpu
-device_type properties.
+Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
+has the side effect of defaulting to iterating using "cpu" node names in
+preference to the deprecated (for FDT) device_type == "cpu".
 
-Also, fix a leaked reference by adding a missing of_node_put.
-
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Please ack and I will take via the DT tree. This is dependent on the
 first 2 patches.
 
- arch/microblaze/kernel/cpu/cpuinfo.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/smp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/microblaze/kernel/cpu/cpuinfo.c b/arch/microblaze/kernel/cpu/cpuinfo.c
-index 96b3f26d16be..0c52aca87478 100644
---- a/arch/microblaze/kernel/cpu/cpuinfo.c
-+++ b/arch/microblaze/kernel/cpu/cpuinfo.c
-@@ -89,7 +89,7 @@ static struct device_node *cpu;
-
- void __init setup_cpuinfo(void)
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 25fcd22a4bb2..96b8f2f51ab2 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -602,7 +602,7 @@ static void __init of_parse_and_init_cpus(void)
  {
--	cpu = (struct device_node *) of_find_node_by_type(NULL, "cpu");
-+	cpu = of_get_cpu_node(0, NULL);
- 	if (!cpu)
- 		pr_err("You don't have cpu!!!\n");
+ 	struct device_node *dn;
 
-@@ -117,6 +117,8 @@ void __init setup_cpuinfo(void)
- 	if (cpuinfo.mmu_privins)
- 		pr_warn("%s: Stream instructions enabled"
- 			" - USERSPACE CAN LOCK THIS KERNEL!\n", __func__);
-+
-+	of_node_put(cpu);
- }
+-	for_each_node_by_type(dn, "cpu") {
++	for_each_of_cpu_node(dn) {
+ 		u64 hwid = of_get_cpu_mpidr(dn);
 
- void __init setup_cpuinfo_clk(void)
+ 		if (hwid == INVALID_HWID)
 --
 2.17.1
