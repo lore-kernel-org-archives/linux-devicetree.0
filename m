@@ -1,44 +1,25 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH v1] arm64: dts: dwc3: Add description of 'configure-gfladj'
-Date: Wed, 5 Sep 2018 15:08:32 -0500
-Message-ID: <CADRPPNQLy4vor9ABCZn98eS9m4VtbkmSPd-UPvWMH+xpCaQL1w@mail.gmail.com>
-References: <20180829073324.36866-1-yinbo.zhu@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/3] arm64: dts: ti: am654: Enable additional nodes
+Date: Wed, 5 Sep 2018 13:33:13 -0700
+Message-ID: <20180905203313.GE5662@atomide.com>
+References: <20180905162024.28243-1-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180829073324.36866-1-yinbo.zhu@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20180905162024.28243-1-nm@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Xiaobo Xie <xiaobo.xie@nxp.com>, Ran Wang <ran.wang_1@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>
+To: Nishanth Menon <nm@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 2:38 AM Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> This patch is to add description of 'configure-gfladj' to binding
-> so that configuring devicetree
->
-> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+* Nishanth Menon <nm@ti.com> [180905 16:24]:
+> Nishanth Menon (3):
+>   arm64: dts: ti: am654: Add uart nodes
+>   arm64: dts: ti: am654: Add secure proxy instance for main domain
+>   arm64: dts: ti: k3-am6: Add Device Management Security Controller
+>     support
 
-This patch should be sent to the DWC3 driver maintainer to review and
-probably merged through usb tree.  You shouldn't use the arm64: dts:
-prefix for this patch either.
+All look good to me:
 
-> ---
->  Documentation/devicetree/bindings/usb/dwc3.txt |    1 +
->  1 files changed, 1 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-> index 3e4c38b..40c6568 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> @@ -101,6 +101,7 @@ Optional properties:
->                         When just one value, which means INCRX burst mode enabled. When
->                         more than one value, which means undefined length INCR burst type
->                         enabled. The values can be 1, 4, 8, 16, 32, 64, 128 and 256.
-> + - configure-gfladj: determine whether frame length adjustment is required or not.
->
->   - in addition all properties from usb-xhci.txt from the current directory are
->     supported as well
-> --
-> 1.7.1
->
+Acked-by: Tony Lindgren <tony@atomide.com>
