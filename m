@@ -1,59 +1,48 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 6/6] ARM: dts: imx6qdl-apalis: add GPIO I2C node for DDC
-Date: Tue,  4 Sep 2018 22:21:13 -0700
-Message-ID: <20180905052113.21262-6-stefan@agner.ch>
-References: <20180905052113.21262-1-stefan@agner.ch>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 4/9] mmc: meson-mx-sdio: fix OF child-node lookup
+Date: Wed, 5 Sep 2018 08:30:29 +0200
+Message-ID: <CAPDyKFo1vwg43Nzaco4-vfmDp9RShdh4wcyM5UrdFzd89qaNcA@mail.gmail.com>
+References: <20180827082153.22537-1-johan@kernel.org> <20180827082153.22537-5-johan@kernel.org>
+ <CAPDyKFot-Nx=R83vxS=WQp2kSFmMiQ7wfOK4m6hbPt0MB3Z25A@mail.gmail.com> <20180904125402.GR28861@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180905052113.21262-1-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linus.walleij@linaro.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, sean@poorly.run, linux-arm-kernel@lists.infradead.org, Laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180904125402.GR28861@localhost>
+Sender: stable-owner@vger.kernel.org
+To: Johan Hovold <johan@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>, Carlo Caione <carlo@endlessm.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Q3VycmVudGx5LCB0aGUgRERDIHNpZ25hbHMgYXJlIGNvbnRyb2xsZWQgYnkgdGhlIERXQyBIRE1J
-IEkyQwptYXN0ZXIgdG8gYmUgdXNlZCBmb3IgSERNSSAoRFZJIG9uIHRoZSBBcGFsaXMgRXZhbHVh
-dGlvbiBCb2FyZCkuCkhvd2V2ZXIsIHRoZSBBcGFsaXMgRXZhbHVhdGlvbiBib2FyZCBhbHNvIGFs
-bG93cyB0byByb3V0ZSB0aGUgQXBhbGlzCkREQyBJMkMgdG8gdGhlIExWRFMgb3IgdGhlIFZHQSBj
-b25uZWN0b3IuIEJ5IGRlZmF1bHQsIHRoZSBzaWduYWwKaXMgcm91dGVkIHRvIERWSSAoSERNSSks
-IGFuZCB0aGVyZWZvciB0aGUgY3VycmVudCBkZWZhdWx0IHNldHRpbmdzCmFyZSBzZW5zaWJsZS4K
-ClRvIGVhc2UgY3VzdG9taXphdGlvbiBhbmQgdG8gcHJlcGFyZSBmb3IgY2FycmllciBib2FyZHMg
-d2l0aCBvdGhlcgpuZWVkcywgYWRkIGEgR1BJTyBJMkMgRERDIG5vZGUuCgpFLmcuIHRvIHJlcm91
-dGUgdGhlIEFwYWxpcyBEREMgdG8gdGhlIFZHQSBjb25uZWN0b3Igb24gdGhlIEFwYWxpcwpFdmFs
-dWF0aW9uIEJvYXJkLCB0aGUgZm9sbG93aW5nIGNoYW5nZXMgY2FuIGJlIHVzZWQ6Cgp2Z2EgewoJ
-Li4uCglkZGMtaTJjLWJ1cyA9IDwmaTJjZGRjPjsKfTsKCiZoZG1pIHsKCS9kZWxldGUtcHJvcGVy
-dHkvIHBpbmN0cmwtMDsKfTsKCiZpMmNkZGMgewoJc3RhdHVzID0gIm9rYXkiOwp9OwoKU2lnbmVk
-LW9mZi1ieTogU3RlZmFuIEFnbmVyIDxzdGVmYW5AYWduZXIuY2g+Ci0tLQogYXJjaC9hcm0vYm9v
-dC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaSB8IDIwICsrKysrKysrKysrKysrKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2lteDZxZGwtYXBhbGlzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxp
-cy5kdHNpCmluZGV4IGU4ZDA0MDdlM2UxOC4uODM0MDM5MTc5NmRmIDEwMDY0NAotLS0gYS9hcmNo
-L2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRz
-L2lteDZxZGwtYXBhbGlzLmR0c2kKQEAgLTYxLDYgKzYxLDE4IEBACiAJCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7CiAJfTsKIAorCS8qIEREQ19JMkM6IEkyQzJfU0RBL1NDTCBvbiBNWE0zIDIwNS8yMDcg
-Ki8KKwlpMmNkZGM6IGkyY0AwIHsKKwkJY29tcGF0aWJsZSA9ICJpMmMtZ3BpbyI7CisJCXBpbmN0
-cmwtbmFtZXMgPSAiZGVmYXVsdCI7CisJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9pMmNfZGRjPjsK
-KwkJZ3Bpb3MgPSA8JmdwaW8zIDE2IEdQSU9fQUNUSVZFX0hJR0ggLyogc2RhICovCisJCQkgJmdw
-aW8yIDMwIEdQSU9fQUNUSVZFX0hJR0ggLyogc2NsICovCisJCQk+OworCQlpMmMtZ3BpbyxkZWxh
-eS11cyA9IDwyPjsJLyogfjEwMCBrSHogKi8KKwkJc3RhdHVzID0gImRpc2FibGVkIjsKKwl9Owor
-CiAJcmVnX21vZHVsZV8zdjM6IHJlZ3VsYXRvci1tb2R1bGUtM3YzIHsKIAkJY29tcGF0aWJsZSA9
-ICJyZWd1bGF0b3ItZml4ZWQiOwogCQlyZWd1bGF0b3ItbmFtZSA9ICIrVjMuMyI7CkBAIC02ODgs
-NiArNzAwLDE0IEBACiAJCT47CiAJfTsKIAorCXBpbmN0cmxfaTJjX2RkYzogZ3Bpb2kyY2RkY2dy
-cCB7CisJCWZzbCxwaW5zID0gPAorCQkJLyogRERDIGJpdGJhbmcgKi8KKwkJCU1YNlFETF9QQURf
-RUlNX0VCMl9fR1BJTzJfSU8zMCAweDFiMGIwCisJCQlNWDZRRExfUEFEX0VJTV9EMTZfX0dQSU8z
-X0lPMTYgMHgxYjBiMAorCQk+OworCX07CisKIAlwaW5jdHJsX2kyYzE6IGkyYzFncnAgewogCQlm
-c2wscGlucyA9IDwKIAkJCU1YNlFETF9QQURfQ1NJMF9EQVQ4X19JMkMxX1NEQSAweDQwMDFiOGIx
-Ci0tIAoyLjE4LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+On 4 September 2018 at 14:54, Johan Hovold <johan@kernel.org> wrote:
+> On Mon, Aug 27, 2018 at 04:44:44PM +0200, Ulf Hansson wrote:
+>> On 27 August 2018 at 10:21, Johan Hovold <johan@kernel.org> wrote:
+>> > Use the new of_get_compatible_child() helper to lookup the slot child
+>> > node instead of using of_find_compatible_node(), which searches the
+>> > entire tree from a given start node and thus can return an unrelated
+>> > (i.e. non-child) node.
+>> >
+>> > This also addresses a potential use-after-free (e.g. after probe
+>> > deferral) as the tree-wide helper drops a reference to its first
+>> > argument (i.e. the node of the device being probed).
+>> >
+>> > While at it, also fix up the related slot-node reference leak.
+>> >
+>> > Fixes: ed80a13bb4c4 ("mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8 and Meson8b SoCs")
+>> > Cc: stable <stable@vger.kernel.org>     # 4.15
+>> > Cc: Carlo Caione <carlo@endlessm.com>
+>> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> > Cc: Ulf Hansson <ulf.hansson@linaro.org>
+>> > Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> > Signed-off-by: Johan Hovold <johan@kernel.org>
+>>
+>> Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+>
+> Thanks for the ack. Rob's gotten the helper into -rc2, so feel free to
+> pick this one up directly to whichever mmc branch you prefer. I've been
+> able to trigger crashes after probe deferrals due to the use-after-free,
+> but this seems unlikely to be exploitable.
+
+Applied for fixes, thanks!
+
+Kind regards
+Uffe
