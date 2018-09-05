@@ -1,41 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 9/9] microblaze: enable building all dtbs
-Date: Wed,  5 Sep 2018 18:53:27 -0500
-Message-ID: <20180905235327.5996-10-robh@kernel.org>
+Subject: [PATCH v2 7/9] powerpc: enable building all dtbs
+Date: Wed,  5 Sep 2018 18:53:25 -0500
+Message-ID: <20180905235327.5996-8-robh@kernel.org>
 References: <20180905235327.5996-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905235327.5996-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the 'dtbs' target for microblaze. As microblaze only has one dts
-file, always enable it.
+Enable the 'dtbs' target for powerpc. This allows building all the dts
+files in arch/powerpc/boot/dts/ when COMPILE_TEST and OF_ALL_DTBS are
+enabled.
 
-Cc: Michal Simek <monstr@monstr.eu>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Please ack so I can take the whole series via the DT tree.
 
-v2:
- - new patch
+ arch/powerpc/boot/dts/Makefile     | 5 +++++
+ arch/powerpc/boot/dts/fsl/Makefile | 4 ++++
+ 2 files changed, 9 insertions(+)
+ create mode 100644 arch/powerpc/boot/dts/fsl/Makefile
 
- arch/microblaze/boot/dts/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/microblaze/boot/dts/Makefile b/arch/microblaze/boot/dts/Makefile
-index fe9af267f598..c7324e74f9ef 100644
---- a/arch/microblaze/boot/dts/Makefile
-+++ b/arch/microblaze/boot/dts/Makefile
-@@ -1,6 +1,8 @@
+diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
+index f66554cd5c45..fb335d05aae8 100644
+--- a/arch/powerpc/boot/dts/Makefile
++++ b/arch/powerpc/boot/dts/Makefile
+@@ -1 +1,6 @@
  # SPDX-License-Identifier: GPL-2.0
- #
-
-+dtb-y := system.dtb
 +
- ifneq ($(DTB),)
- obj-y += linked_dtb.o
-
++subdir-y += fsl
++
++dtstree		:= $(srctree)/$(src)
++dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
+diff --git a/arch/powerpc/boot/dts/fsl/Makefile b/arch/powerpc/boot/dts/fsl/Makefile
+new file mode 100644
+index 000000000000..3bae982641e9
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/Makefile
+@@ -0,0 +1,4 @@
++# SPDX-License-Identifier: GPL-2.0
++
++dtstree		:= $(srctree)/$(src)
++dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
 --
 2.17.1
