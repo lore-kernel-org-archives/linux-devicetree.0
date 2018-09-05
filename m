@@ -1,53 +1,71 @@
-From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
-Subject: Re: [PATCH 3/3] of: make default address and size cells sizes private
-Date: Wed, 5 Sep 2018 05:37:32 +0100
-Message-ID: <9c873e57-84c8-75af-1d44-60e7cd41282d@ilande.co.uk>
-References: <20180830190523.31474-1-robh@kernel.org>
- <20180830190523.31474-4-robh@kernel.org>
- <35247ddc-303b-89d0-53b5-231c1a293721@gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Tue,  4 Sep 2018 22:21:08 -0700
+Message-ID: <20180905052113.21262-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <35247ddc-303b-89d0-53b5-231c1a293721@gmail.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linus.walleij@linaro.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de
+Cc: devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, sean@poorly.run, linux-arm-kernel@lists.infradead.org, Laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/18 02:55, Frank Rowand wrote:
-
-> On 08/30/18 12:05, Rob Herring wrote:
->> Only some old OpenFirmware implementations rely on default sizes. Any
->> FDT and modern implementation should have explicit properties. Make the
->> OF_ROOT_NODE_*_CELLS_DEFAULT defines private so we don't get any outside
->> users.
->>
->> This also gets us one step closer to removing the asm/prom.h dependency on
->> Sparc.
-
-Just for the record: you say "any FDT and modern implementation should
-have explicit properties", however the default values of these
-properties when missing are clearly defined in the IEEE-1275
-specification (Annex A):
-
-"#address-cells"
-Standard property name to define the package’s address format.
-...
-In a package with a "decode-unit" method, a missing "#address-cells"
-property signifies that the number of
-address cells is two.
-
-"#size-cells"
-Standard property name to define the package’s address size format.
-...
-A missing "#size-cells" property signifies the default value of one.
-
-I can't speak for FDT but it isn't completely unreasonable for a guest
-parsing a DT without these properties to assume these default values.
-
-
-ATB,
-
-Mark.
+VGhlIERSTSBidXMgZmxhZ3MgY29udmV5IGFkZGl0aW9uYWwgaW5mb3JtYXRpb24gb24gcGl4ZWwg
+ZGF0YSBvbgp0aGUgYnVzLiBBbGwgY3VycmVudCBhdmFpbGFibGUgYnVzIGZsYWdzIG1pZ2h0IGJl
+IG9mIGludGVyZXN0IGZvcgphIGJyaWRnZS4gUmVtb3ZlIHRoZSBzYW1wbGluZ19lZGdlIGZpZWxk
+IGFuZCB1c2UgYnVzX2ZsYWdzLgoKSW4gdGhlIGNhc2UgYXQgaGFuZCBhIGR1bWIgVkdBIGJyaWRn
+ZSBuZWVkcyBhIHNwZWNpZmljIGRhdGEgZW5hYmxlCnBvbGFyaXR5IChEUk1fQlVTX0ZMQUdfREVf
+TE9XKS4KClNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgotLS0K
+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMgfCAgNiArKystLS0KIGluY2x1
+ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAgICAgICAgICAgfCAxMSArKysrKy0tLS0tLQogMiBmaWxl
+cyBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYyBiL2RyaXZlcnMvZ3B1L2RybS9i
+cmlkZ2UvZHVtYi12Z2EtZGFjLmMKaW5kZXggOWI3MDY3ODlhMzQxLi43YTVjMjQ5NjcxMTUgMTAw
+NjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMKKysrIGIvZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwpAQCAtMjM0LDcgKzIzNCw3IEBAIHN0
+YXRpYyBpbnQgZHVtYl92Z2FfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiAg
+Ki8KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRlZmF1bHRfZGFjX3Rp
+bWluZ3MgPSB7CiAJLyogVGltaW5nIHNwZWNpZmljYXRpb25zLCBkYXRhc2hlZXQgcGFnZSA3ICov
+Ci0JLnNhbXBsaW5nX2VkZ2UgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFLAorCS5idXNf
+ZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFLAogCS5zZXR1cF90aW1lX3BzID0g
+NTAwLAogCS5ob2xkX3RpbWVfcHMgPSAxNTAwLAogfTsKQEAgLTI0NSw3ICsyNDUsNyBAQCBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyBkZWZhdWx0X2RhY190aW1pbmdzID0g
+ewogICovCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyB0aV90aHM4MTM0
+X2RhY190aW1pbmdzID0gewogCS8qIEZyb20gdGltaW5nIGRpYWdyYW0sIGRhdGFzaGVldCBwYWdl
+IDkgKi8KLQkuc2FtcGxpbmdfZWRnZSA9IERSTV9CVVNfRkxBR19QSVhEQVRBX1BPU0VER0UsCisJ
+LmJ1c19mbGFncyA9IERSTV9CVVNfRkxBR19QSVhEQVRBX1BPU0VER0UsCiAJLyogRnJvbSBkYXRh
+c2hlZXQsIHBhZ2UgMTIgKi8KIAkuc2V0dXBfdGltZV9wcyA9IDMwMDAsCiAJLyogSSBndWVzcyB0
+aGlzIG1lYW5zIGxhdGNoZWQgaW5wdXQgKi8KQEAgLTI1OCw3ICsyNTgsNyBAQCBzdGF0aWMgY29u
+c3Qgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyB0aV90aHM4MTM0X2RhY190aW1pbmdzID0gewog
+ICovCiBzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyB0aV90aHM4MTM1X2Rh
+Y190aW1pbmdzID0gewogCS8qIEZyb20gdGltaW5nIGRpYWdyYW0sIGRhdGFzaGVldCBwYWdlIDE0
+ICovCi0JLnNhbXBsaW5nX2VkZ2UgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFLAorCS5i
+dXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFLAogCS8qIEZyb20gZGF0YXNo
+ZWV0LCBwYWdlIDE2ICovCiAJLnNldHVwX3RpbWVfcHMgPSAyMDAwLAogCS5ob2xkX3RpbWVfcHMg
+PSA1MDAsCmRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1fYnJpZGdlLmggYi9pbmNsdWRlL2Ry
+bS9kcm1fYnJpZGdlLmgKaW5kZXggYmQ4NTA3NDdjZTU0Li44NWQ0YjUxZWFlMTkgMTAwNjQ0Ci0t
+LSBhL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAorKysgYi9pbmNsdWRlL2RybS9kcm1fYnJpZGdl
+LmgKQEAgLTI0NCwxNCArMjQ0LDEzIEBAIHN0cnVjdCBkcm1fYnJpZGdlX2Z1bmNzIHsKICAqLwog
+c3RydWN0IGRybV9icmlkZ2VfdGltaW5ncyB7CiAJLyoqCi0JICogQHNhbXBsaW5nX2VkZ2U6CisJ
+ICogQGJ1c19mbGFnczoKIAkgKgotCSAqIFRlbGxzIHdoZXRoZXIgdGhlIGJyaWRnZSBzYW1wbGVz
+IHRoZSBkaWdpdGFsIGlucHV0IHNpZ25hbAotCSAqIGZyb20gdGhlIGRpc3BsYXkgZW5naW5lIG9u
+IHRoZSBwb3NpdGl2ZSBvciBuZWdhdGl2ZSBlZGdlIG9mIHRoZQotCSAqIGNsb2NrLCB0aGlzIHNo
+b3VsZCByZXVzZSB0aGUgRFJNX0JVU19GTEFHX1BJWERBVEFfW1BPU3xORUddRURHRQotCSAqIGJp
+dHdpc2UgZmxhZ3MgZnJvbSB0aGUgRFJNIGNvbm5lY3RvciAoYml0IDIgYW5kIDMgdmFsaWQpLgor
+CSAqIFRlbGxzIHdoYXQgYWRkaXRpb25hbCBzZXR0aW5ncyBmb3IgdGhlIHBpeGVsIGRhdGEgb24g
+dGhlIGJ1cworCSAqIHRoaXMgYnJpZGdlIHJlcXVpcmVzIChsaWtlIHBpeGVsIHNpZ25hbCBwb2xh
+cml0eSkuIFNlZSBhbHNvCisJICogJmRybV9kaXNwbGF5X2luZm8tPmJ1c19mbGFncy4KIAkgKi8K
+LQl1MzIgc2FtcGxpbmdfZWRnZTsKKwl1MzIgYnVzX2ZsYWdzOwogCS8qKgogCSAqIEBzZXR1cF90
+aW1lX3BzOgogCSAqCi0tIAoyLjE4LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
+ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2RyaS1kZXZlbAo=
