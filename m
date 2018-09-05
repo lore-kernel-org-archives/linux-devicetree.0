@@ -1,58 +1,112 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 07/21] c6x: use for_each_of_cpu_node iterator
-Date: Wed,  5 Sep 2018 14:37:24 -0500
-Message-ID: <20180905193738.19325-8-robh@kernel.org>
+Subject: [PATCH 01/21] of: Add cpu node iterator for_each_of_cpu_node()
+Date: Wed,  5 Sep 2018 14:37:18 -0500
+Message-ID: <20180905193738.19325-2-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <jacquiot.aurelien@gmail.com>, linux-c6x-dev@linux-c6x.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-has the side effect of defaulting to iterating using "cpu" node names
-in preference to the deprecated (for FDT) device_type == "cpu".
+Iterating thru cpu nodes is a common pattern. Create a common iterator
+which can find child nodes either by node name or device_type == cpu.
+Using the former will allow for eventually dropping device_type
+properties which are deprecated for FDT.
 
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
-Cc: linux-c6x-dev@linux-c6x.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-Please ack and I will take via the DT tree. This is dependent on the
-first 2 patches.
+ drivers/of/base.c  | 39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/of.h | 11 +++++++++++
+ 2 files changed, 50 insertions(+)
 
- arch/c6x/kernel/setup.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a055cd1ef96d..4807db0a35b3 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -741,6 +741,45 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ }
+ EXPORT_SYMBOL(of_get_next_available_child);
 
-diff --git a/arch/c6x/kernel/setup.c b/arch/c6x/kernel/setup.c
-index 786e36e2f61d..2e97455ca0b7 100644
---- a/arch/c6x/kernel/setup.c
-+++ b/arch/c6x/kernel/setup.c
-@@ -96,7 +96,7 @@ static void __init get_cpuinfo(void)
- 	unsigned long core_khz;
- 	u64 tmp;
- 	struct cpuinfo_c6x *p;
--	struct device_node *node, *np;
++/**
++ *	of_get_next_cpu_node - Iterate on cpu nodes
++ *	@prev:	previous child of the /cpus node, or NULL to get first
++ *
++ *	Returns a cpu node pointer with refcount incremented, use of_node_put()
++ *	on it when done. Returns NULL when prev is the last child. Decrements
++ *	the refcount of prev.
++ */
++struct device_node *of_get_next_cpu_node(struct device_node *prev)
++{
++	struct device_node *next = NULL;
++	unsigned long flags;
 +	struct device_node *node;
++
++	if (!prev)
++		node = of_find_node_by_path("/cpus");
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++	if (prev)
++		next = prev->sibling;
++	else if (node) {
++		next = node->child;
++		of_node_put(node);
++	}
++	for (; next; next = next->sibling) {
++		if (!(of_node_name_eq(next, "cpu") ||
++		      (next->type && !of_node_cmp(next->type, "cpu"))))
++			continue;
++		if (!__of_device_is_available(next))
++			continue;
++		if (of_node_get(next))
++			break;
++	}
++	of_node_put(prev);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++	return next;
++}
++EXPORT_SYMBOL(of_get_next_cpu_node);
++
+ /**
+  * of_get_compatible_child - Find compatible child node
+  * @parent:	parent node
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 99b0ebf49632..1aca0dbd35df 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -353,6 +353,8 @@ extern const void *of_get_property(const struct device_node *node,
+ 				const char *name,
+ 				int *lenp);
+ extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
++extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
++
+ #define for_each_property_of_node(dn, pp) \
+ 	for (pp = dn->properties; pp != NULL; pp = pp->next)
 
- 	p = &per_cpu(cpu_data, smp_processor_id());
+@@ -754,6 +756,11 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+ 	return NULL;
+ }
 
-@@ -190,13 +190,8 @@ static void __init get_cpuinfo(void)
++static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
++{
++	return NULL;
++}
++
+ static inline int of_n_addr_cells(struct device_node *np)
+ {
+ 	return 0;
+@@ -1217,6 +1224,10 @@ static inline int of_property_read_s32(const struct device_node *np,
+ 	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
+ 	     child = of_get_next_available_child(parent, child))
 
- 	p->core_id = get_coreid();
-
--	node = of_find_node_by_name(NULL, "cpus");
--	if (node) {
--		for_each_child_of_node(node, np)
--			if (!strcmp("cpu", np->name))
--				++c6x_num_cores;
--		of_node_put(node);
--	}
-+	for_each_of_cpu_node(node)
-+		++c6x_num_cores;
-
- 	node = of_find_node_by_name(NULL, "soc");
- 	if (node) {
++#define for_each_of_cpu_node(cpu) \
++	for (cpu = of_get_next_cpu_node(NULL); cpu != NULL; \
++	     cpu = of_get_next_cpu_node(cpu))
++
+ #define for_each_node_with_property(dn, prop_name) \
+ 	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
+ 	     dn = of_find_node_with_property(dn, prop_name))
 --
 2.17.1
