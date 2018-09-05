@@ -1,68 +1,52 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT] ARM: dts: exynos: Remove double SD card detect pin inversion
-Date: Wed,  5 Sep 2018 19:40:24 +0200
-Message-ID: <20180905174024.28366-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Maciej Purski <m.purski@samsung.com>, Simon Shields <simon@lineageos.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 3/6] dt-bindings: display: add data-enable polarity
+ property
+Date: Wed, 05 Sep 2018 11:10:08 -0700
+Message-ID: <e708c5bac502e60a2eeb685fddf67042@agner.ch>
+References: <20180905052113.21262-1-stefan@agner.ch>
+ <20180905052113.21262-3-stefan@agner.ch> <139651706.L0sBFfZMDQ@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <139651706.L0sBFfZMDQ@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The SDHCI standard, MMC host controller bindings and MMC core defines
-card detect pin as active low.  Therefore there is no point to invert it
-twice.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-
----
-
-Tested only on Odroid U3. Tests on other platforms would be appreciated.
----
- arch/arm/boot/dts/exynos4210-universal_c210.dts | 3 +--
- arch/arm/boot/dts/exynos4412-midas.dtsi         | 3 +--
- arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 3 +--
- 3 files changed, 3 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-index 4e6ff97e1ec4..249bfbff1e20 100644
---- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-+++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-@@ -537,8 +537,7 @@
- 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4>;
- 	pinctrl-names = "default";
- 	vmmc-supply = <&ldo5_reg>;
--	cd-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
--	cd-inverted;
-+	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
-diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
-index c0476c290977..aed2f2e2b0d1 100644
---- a/arch/arm/boot/dts/exynos4412-midas.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
-@@ -1269,8 +1269,7 @@
- 
- &sdhci_2 {
- 	bus-width = <4>;
--	cd-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
--	cd-inverted;
-+	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
- 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sdhci2_cd>;
- 	pinctrl-names = "default";
- 	vmmc-supply = <&ldo21_reg>;
-diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-index a09e46c9dbc0..2caa3132f34e 100644
---- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-+++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
-@@ -539,8 +539,7 @@
- 	pinctrl-names = "default";
- 	vmmc-supply = <&ldo21_reg>;
- 	vqmmc-supply = <&ldo4_reg>;
--	cd-gpios = <&gpk2 2 GPIO_ACTIVE_HIGH>;
--	cd-inverted;
-+	cd-gpios = <&gpk2 2 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
- 
--- 
-2.14.1
+T24gMDUuMDkuMjAxOCAwMDowNywgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBTdGVmYW4s
+Cj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4gT24gV2VkbmVzZGF5LCA1IFNlcHRl
+bWJlciAyMDE4IDA4OjIxOjEwIEVFU1QgU3RlZmFuIEFnbmVyIHdyb3RlOgo+PiBBbGxvdyB0byBz
+cGVjaWZ5IHRoZSBkYXRhLWVuYWJsZSBwb2xhcml0eSByZXF1aXJlZCBieSBhIGR1bWIgVkdBCj4+
+IERBQyBjb252ZXJ0aW5nIHBhcmFsbGVsIFJHQiB0byBWR0EuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
+IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgo+PiAtLS0KPj4gIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQgICAgICAgICAgfCAxICsK
+Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pgo+PiBkaWZmIC0tZ2l0Cj4+IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdh
+LWRhYy50eHQKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
+cmlkZ2UvZHVtYi12Z2EtZGFjLnR4dCBpbmRleAo+PiAxNjRjYmIxNWYwNGMuLmFkYmQyY2EwYWYy
+ZiAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPj4gQEAgLTE4LDYg
+KzE4LDcgQEAgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCj4+IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+Cj4+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
+PiAgLSB2ZGQtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIERBQwo+PiArLSBkZS1hY3RpdmU6IGRh
+dGEtZW5hYmxlIHB1bHNlIGlzIGFjdGl2ZSBsb3cvaGlnaC9pZ25vcmVkCj4gCj4gV2hpY2ggdmFs
+dWUgY29ycmVzcG9uZHMgdG8gbG93LCBoaWdoIGFuZCBpZ25vcmVkID8KPiAKClRoZSB3b3JkaW5n
+IGlzIHRha2VuIGZyb20KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvZGlzcGxheS10aW1pbmcudHh0LiBCdXQKSSBhZ3JlZSwgbm90IHZlcnkgdXNlZnVsLgoK
+MCBpcyBsb3cgYWN0aXZlLCAxIGlzIGhpZ2ggYWN0aXZlLCBhbmQgbm9uZSBpcyB1c2luZyBkcml2
+ZXIgZGVmYXVsdHMuCgpIb3cgYWJvdXQ6Ci0gZGUtYWN0aXZlOiBkYXRhLWVuYWJsZSBwdWxzZSBp
+cyAwPWFjdGl2ZSBsb3cvMT1hY3RpdmUgaGlnaAoKLS0KU3RlZmFuCgo+PiAgRXhhbXBsZQo+PiAg
+LS0tLS0tLQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
