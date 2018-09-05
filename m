@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH v5 3/6] arm64: dts: rockchip: add VPU device node for RK3399
-Date: Wed,  5 Sep 2018 19:00:08 -0300
-Message-ID: <20180905220011.16612-4-ezequiel@collabora.com>
+Subject: [PATCH v5 1/6] dt-bindings: Document the Rockchip VPU bindings
+Date: Wed,  5 Sep 2018 19:00:06 -0300
+Message-ID: <20180905220011.16612-2-ezequiel@collabora.com>
 References: <20180905220011.16612-1-ezequiel@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,48 +21,51 @@ To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY7
 Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the Video Processing Unit node for the RK3399 SoC.
+Add devicetree binding documentation for Rockchip Video Processing
+Unit IP.
 
-Also, fix the VPU IOMMU node, which was disabled and lacking
-its power domain property.
-
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ .../bindings/media/rockchip-vpu.txt           | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/rockchip-vpu.txt
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index c88e603396f6..5efb124e5c3a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -1198,6 +1198,18 @@
- 		status = "disabled";
- 	};
- 
-+	vpu: video-codec@ff650000 {
-+		compatible = "rockchip,rk3399-vpu";
-+		reg = <0x0 0xff650000 0x0 0x800>;
-+		interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH 0>;
+diff --git a/Documentation/devicetree/bindings/media/rockchip-vpu.txt b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
+new file mode 100644
+index 000000000000..5e0d421301ca
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/rockchip-vpu.txt
+@@ -0,0 +1,30 @@
++device-tree bindings for rockchip VPU codec
++
++Rockchip (Video Processing Unit) present in various Rockchip platforms,
++such as RK3288 and RK3399.
++
++Required properties:
++- compatible: value should be one of the following
++		"rockchip,rk3288-vpu";
++		"rockchip,rk3399-vpu";
++- interrupts: encoding and decoding interrupt specifiers
++- interrupt-names: should be "vepu" and "vdpu"
++- clocks: phandle to VPU aclk, hclk clocks
++- clock-names: should be "aclk" and "hclk"
++- power-domains: phandle to power domain node
++- iommus: phandle to a iommu node
++
++Example:
++SoC-specific DT entry:
++	vpu: video-codec@ff9a0000 {
++		compatible = "rockchip,rk3288-vpu";
++		reg = <0x0 0xff9a0000 0x0 0x800>;
++		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
 +		interrupt-names = "vepu", "vdpu";
 +		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
 +		clock-names = "aclk", "hclk";
-+		power-domains = <&power RK3399_PD_VCODEC>;
++		power-domains = <&power RK3288_PD_VIDEO>;
 +		iommus = <&vpu_mmu>;
 +	};
 +
- 	vpu_mmu: iommu@ff650800 {
- 		compatible = "rockchip,iommu";
- 		reg = <0x0 0xff650800 0x0 0x40>;
-@@ -1205,8 +1217,8 @@
- 		interrupt-names = "vpu_mmu";
- 		clocks = <&cru ACLK_VCODEC>, <&cru HCLK_VCODEC>;
- 		clock-names = "aclk", "iface";
-+		power-domains = <&power RK3399_PD_VCODEC>;
- 		#iommu-cells = <0>;
--		status = "disabled";
- 	};
- 
- 	vdec_mmu: iommu@ff660480 {
 -- 
 2.18.0
