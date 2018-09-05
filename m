@@ -1,37 +1,34 @@
-Return-Path: <SRS0=8Gze=LR=linux-m68k.org=geert@kernel.org>
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/2] spi: sh-msiof: Document R-Car E3 support
-Date: Mon,  3 Sep 2018 19:25:12 +0200
-Message-Id: <20180903172512.6242-3-geert+renesas@glider.be>
-In-Reply-To: <20180903172512.6242-1-geert+renesas@glider.be>
-References: <20180903172512.6242-1-geert+renesas@glider.be>
-To: Mark Brown <broonie@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulrich Hecht <uli+renesas@fpond.eu>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <SRS0=QNtu=LT=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <20180711170313.80321-1-chris.brandt@renesas.com> <20180711170313.80321-3-chris.brandt@renesas.com>
+In-Reply-To: <20180711170313.80321-3-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Sep 2018 15:37:58 +0200
+Message-ID: <CAMuHMdUEjAkX8sm7w5MG9sW+s9VrHg_c42a8UkEQmdOZXN4swQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] clk: renesas: mstp: Document R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-Document support for the MSIOF module in the Renesas R-Car E3 (r8a77990)
-SoC.
+Hi Chris,
 
-No driver update is needed.
+On Wed, Jul 11, 2018 at 7:03 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+>
+> Renesas R7S9210 SoC also has the CPG MSTP clocks.
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-As per SPI subsystem policy, the "spi: sh-msiof:" prefix is used.
+FTR, I consider this superseded by "[PATCH v3] clk: renesas: cpg-mssr: Add
+R7S9210 support" (https://www.spinics.net/lists/linux-clk/msg29669.html).
 
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
- 1 file changed, 1 insertion(+)
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index fd157155f219bb17..ca5181afee5ef170 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -11,6 +11,7 @@ Required properties:
- 			 "renesas,msiof-r8a7795" (R-Car H3)
- 			 "renesas,msiof-r8a7796" (R-Car M3-W)
- 			 "renesas,msiof-r8a77965" (R-Car M3-N)
-+			 "renesas,msiof-r8a77990" (R-Car E3)
- 			 "renesas,msiof-r8a77995" (R-Car D3)
- 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
- 			 "renesas,sh-mobile-msiof" (generic SH-Mobile compatibile device)
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
