@@ -1,52 +1,44 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 3/6] dt-bindings: display: add data-enable polarity
- property
-Date: Wed, 05 Sep 2018 11:10:08 -0700
-Message-ID: <e708c5bac502e60a2eeb685fddf67042@agner.ch>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <20180905052113.21262-3-stefan@agner.ch> <139651706.L0sBFfZMDQ@avalon>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+Date: Wed, 5 Sep 2018 11:18:35 -0700
+Message-ID: <20180905111835.7f3ae40e@jacob-builder>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-4-jean-philippe.brucker@arm.com>
+	<d785ec89-6743-d0f1-1a7f-85599a033e5b@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <139651706.L0sBFfZMDQ@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <d785ec89-6743-d0f1-1a7f-85599a033e5b-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDUuMDkuMjAxOCAwMDowNywgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBTdGVmYW4s
-Cj4gCj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4gCj4gT24gV2VkbmVzZGF5LCA1IFNlcHRl
-bWJlciAyMDE4IDA4OjIxOjEwIEVFU1QgU3RlZmFuIEFnbmVyIHdyb3RlOgo+PiBBbGxvdyB0byBz
-cGVjaWZ5IHRoZSBkYXRhLWVuYWJsZSBwb2xhcml0eSByZXF1aXJlZCBieSBhIGR1bWIgVkdBCj4+
-IERBQyBjb252ZXJ0aW5nIHBhcmFsbGVsIFJHQiB0byBWR0EuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
-IFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPgo+PiAtLS0KPj4gIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQgICAgICAgICAgfCAxICsK
-Pj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKQo+Pgo+PiBkaWZmIC0tZ2l0Cj4+IGEv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdh
-LWRhYy50eHQKPj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvZHVtYi12Z2EtZGFjLnR4dCBpbmRleAo+PiAxNjRjYmIxNWYwNGMuLmFkYmQyY2EwYWYy
-ZiAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R1bWItdmdhLWRhYy50eHQKPj4gQEAgLTE4LDYg
-KzE4LDcgQEAgZ3JhcGggYmluZGluZ3Mgc3BlY2lmaWVkIGluCj4+IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4+Cj4+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+
-PiAgLSB2ZGQtc3VwcGx5OiBQb3dlciBzdXBwbHkgZm9yIERBQwo+PiArLSBkZS1hY3RpdmU6IGRh
-dGEtZW5hYmxlIHB1bHNlIGlzIGFjdGl2ZSBsb3cvaGlnaC9pZ25vcmVkCj4gCj4gV2hpY2ggdmFs
-dWUgY29ycmVzcG9uZHMgdG8gbG93LCBoaWdoIGFuZCBpZ25vcmVkID8KPiAKClRoZSB3b3JkaW5n
-IGlzIHRha2VuIGZyb20KRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvZGlzcGxheS10aW1pbmcudHh0LiBCdXQKSSBhZ3JlZSwgbm90IHZlcnkgdXNlZnVsLgoK
-MCBpcyBsb3cgYWN0aXZlLCAxIGlzIGhpZ2ggYWN0aXZlLCBhbmQgbm9uZSBpcyB1c2luZyBkcml2
-ZXIgZGVmYXVsdHMuCgpIb3cgYWJvdXQ6Ci0gZGUtYWN0aXZlOiBkYXRhLWVuYWJsZSBwdWxzZSBp
-cyAwPWFjdGl2ZSBsb3cvMT1hY3RpdmUgaGlnaAoKLS0KU3RlZmFuCgo+PiAgRXhhbXBsZQo+PiAg
-LS0tLS0tLQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, 5 Sep 2018 14:14:12 +0200
+Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+
+> > + *
+> > + * On Arm and AMD IOMMUs, entry 0 of the PASID table can be used
+> > to hold
+> > + * non-PASID translations. In this case PASID 0 is reserved and
+> > entry 0 points
+> > + * to the io_pgtable base. On Intel IOMMU, the io_pgtable base
+> > would be held in
+> > + * the device table and PASID 0 would be available to the
+> > allocator.
+> > + */  
+> very nice explanation
+With the new Vt-d 3.0 spec., 2nd level IO page table base is no longer
+held in the device context table. Instead it is held in the PASID table
+entry pointed by the RID_PASID field in the device context entry. If
+RID_PASID = 0, then it is the same as ARM and AMD IOMMUs.
+You can refer to ch3.4.3 of the VT-d spec.
