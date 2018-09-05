@@ -1,54 +1,55 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6qdl-sabreauto: add egalax touch screen support
-Date: Wed,  5 Sep 2018 16:10:29 +0800
-Message-ID: <1536135029-22389-1-git-send-email-Anson.Huang@nxp.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] drm/sun4i: Enable DE2 Mixer for
+ SUN8I and SUN50I
+Date: Wed, 5 Sep 2018 13:51:25 +0530
+Message-ID: <CAMty3ZBYjq8VBnwSqKhJgag1ARRvnPTVSpYT7SWu=A6pMwKEiA@mail.gmail.com>
+References: <20180904163609.10171-1-jagan@amarulasolutions.com>
+ <20180904163609.10171-3-jagan@amarulasolutions.com> <20180905070748.g43lfdqdhmoci6pk@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBBVEX3OAKGQESEL7Z2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180905070748.g43lfdqdhmoci6pk@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add egalax touch screen support on i2c2 bus.
+On Wed, Sep 5, 2018 at 12:37 PM, Maxime Ripard
+<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Tue, Sep 04, 2018 at 10:06:08PM +0530, Jagan Teki wrote:
+>> Allwinner SoC like SUN8I and SUN50I are now using DE2 Mixer
+>> so enable them as default.
+>>
+>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> ---
+>> Changes for v4, v3:
+>> - none
+>> Changes for v2:
+>> - Enable for SUN8I
+>>
+>>  drivers/gpu/drm/sun4i/Kconfig | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/sun4i/Kconfig b/drivers/gpu/drm/sun4i/Kconfig
+>> index c2c042287c19..cfa8b96273fb 100644
+>> --- a/drivers/gpu/drm/sun4i/Kconfig
+>> +++ b/drivers/gpu/drm/sun4i/Kconfig
+>> @@ -61,7 +61,7 @@ config DRM_SUN8I_DW_HDMI
+>>
+>>  config DRM_SUN8I_MIXER
+>>       tristate "Support for Allwinner Display Engine 2.0 Mixer"
+>> -     default MACH_SUN8I
+>> +     default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+>
+> I'm not really sure we should put it as a default. We should just
+> enable it in the defconfig.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-index 246af86..a6dc5c4 100644
---- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
-@@ -417,6 +417,15 @@
- 		VLC-supply = <&reg_audio>;
- 	};
- 
-+	touchscreen@4 {
-+		compatible = "eeti,egalax_ts";
-+		reg = <0x04>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_egalax_int>;
-+		interrupt-parent = <&gpio2>;
-+		interrupts = <28 IRQ_TYPE_EDGE_FALLING>;
-+		wakeup-gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>;
-+	};
- };
- 
- &i2c3 {
-@@ -452,6 +461,12 @@
- 			>;
- 		};
- 
-+		pinctrl_egalax_int: egalax-intgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_EB0__GPIO2_IO28		0xb0b1
-+			>;
-+		};
-+
- 		pinctrl_enet: enetgrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_KEY_COL1__ENET_MDIO		0x1b0b0
--- 
-2.7.4
+What would be the difference in both cases it would be build as module
+since DRM_SUN4I=m for ARM64
