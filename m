@@ -1,39 +1,84 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 2/2] pci: dwc: add UniPhier PCIe host controller support
-Date: Wed, 5 Sep 2018 12:25:29 -0500
-Message-ID: <20180905172529.GO107892@bhelgaas-glaptop.roam.corp.google.com>
-References: <1536114731-28630-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1536114731-28630-3-git-send-email-hayashi.kunihiko@socionext.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 1/2] input: egalax_ts: add system wakeup support
+Date: Wed, 5 Sep 2018 10:27:00 -0700
+Message-ID: <20180905172700.GA257188@dtor-ws>
+References: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1536114731-28630-3-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, marco.franchi@nxp.com, fabio.estevam@nxp.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Follow capitalization conventions for subject.
+Hi Anson,
 
-On Wed, Sep 05, 2018 at 11:32:11AM +0900, Kunihiko Hayashi wrote:
-> This introduces specific glue layer for UniPhier platform to support
-> PCIe host controller that is based on the Designware PCIe Core, and
-> this driver supports Root Complex (host) mode.
+On Wed, Sep 05, 2018 at 05:26:46PM +0800, Anson Huang wrote:
+> This patch adds wakeup function support for egalax touch
+> screen, if "wakeup-source" is added to device tree's egalax
+> touch screen node, the wakeup function will be enabled, and
+> egalax touch screen will be able to wakeup system from suspend.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  drivers/input/touchscreen/egalax_ts.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
+> index 80e69bb..74984ed 100644
+> --- a/drivers/input/touchscreen/egalax_ts.c
+> +++ b/drivers/input/touchscreen/egalax_ts.c
+> @@ -164,6 +164,7 @@ static int egalax_firmware_version(struct i2c_client *client)
+>  static int egalax_ts_probe(struct i2c_client *client,
+>  			   const struct i2c_device_id *id)
+>  {
+> +	struct device_node *np = client->dev.of_node;
+>  	struct egalax_ts *ts;
+>  	struct input_dev *input_dev;
+>  	int error;
+> @@ -224,6 +225,9 @@ static int egalax_ts_probe(struct i2c_client *client,
+>  	if (error)
+>  		return error;
+>  
+> +	if (of_property_read_bool(np, "wakeup-source"))
+> +		device_init_wakeup(&client->dev, true);
 
-s/Designware/DesignWare/
-s/Core/core/
+This is done in i2c core, there is no need to do it in the driver.
 
-> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> new file mode 100644
-> index 0000000..13ce02e
-> --- /dev/null
-> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> @@ -0,0 +1,464 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// PCI-express host controller driver for UniPhier SoCs
-> +// Copyright 2018 Socionext Inc.
-> +// Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> +
+>  	return 0;
+>  }
+>  
+> @@ -241,6 +245,9 @@ static int __maybe_unused egalax_ts_suspend(struct device *dev)
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  	int ret;
+>  
+> +	if (device_may_wakeup(dev))
+> +		return enable_irq_wake(client->irq);
+> +
+>  	ret = i2c_master_send(client, suspend_cmd, MAX_I2C_DATA_LEN);
+>  	return ret > 0 ? 0 : ret;
+>  }
+> @@ -249,6 +256,9 @@ static int __maybe_unused egalax_ts_resume(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+>  
+> +	if (device_may_wakeup(dev))
+> +		return 0;
 
-Use /* ... */ comments except for the SPDX line.
+This will end up with unbalanced enable_irq_wake() from suspend.
+
+> +
+>  	return egalax_wake_up_device(client);
+>  }
+>  
+> -- 
+> 2.7.4
+> 
+
+Thanks.
+
+-- 
+Dmitry
