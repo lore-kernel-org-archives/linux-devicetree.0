@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 01/11] clk: sunxi-ng: a64: Add minimal
- rate for video PLLs
-Date: Wed, 5 Sep 2018 09:16:31 +0200
-Message-ID: <20180905071631.pke35tfyyeahdi3i@flea>
+Subject: Re: [PATCH v4 02/11] clk: sunxi-ng: a64: Add max. rate
+ constraint to video PLLs
+Date: Wed, 5 Sep 2018 09:16:45 +0200
+Message-ID: <20180905071645.ibhcuq5coc6gl6k3@flea>
 References: <20180904044053.15425-1-icenowy@aosc.io>
- <20180904044053.15425-2-icenowy@aosc.io>
+ <20180904044053.15425-3-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7oe2u3mvnqtubzhr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBUEFX3OAKGQEYEBQGCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="dces3elbc3qktb53"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXUFX3OAKGQESK4EMXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180904044053.15425-2-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180904044053.15425-3-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,27 +24,26 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdg
 List-Id: devicetree@vger.kernel.org
 
 
---7oe2u3mvnqtubzhr
+--dces3elbc3qktb53
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Tue, Sep 04, 2018 at 12:40:43PM +0800, Icenowy Zheng wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Tue, Sep 04, 2018 at 12:40:44PM +0800, Icenowy Zheng wrote:
+> Video PLLs on A64 can be set to higher rate that it is actually
+> supported by HW.
 > 
-> According to documentation and experience with other similar SoCs, video
-> PLLs don't work stable if their output frequency is set below 192 MHz.
+> Limit maximum rate to 1008 MHz. This is the maximum allowed rate by BSP
+> clock driver. Interestengly, user manual specifies maximum frequency to
+> be 600 MHz. Historically, this data was wrong in some user manuals for
+> other SoCs, so more faith is put in BSP clock driver.
 > 
-> Because of that, set minimal rate to both A64 video PLLs to 192 MHz.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Reviewed-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
-Applied, thanks
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---7oe2u3mvnqtubzhr--
+--dces3elbc3qktb53--
