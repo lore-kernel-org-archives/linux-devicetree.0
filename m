@@ -1,42 +1,108 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] arm64: defconfig: Enable CONFIG_DRM_SUN4I
-Date: Wed, 5 Sep 2018 09:04:51 +0200
-Message-ID: <20180905070450.b5vgp7j65rxwipno@flea>
-References: <20180904163609.10171-1-jagan@amarulasolutions.com>
- <20180904163609.10171-2-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Wed, 05 Sep 2018 10:06:28 +0300
+Message-ID: <4035252.QuWadVx7pr@avalon>
+References: <20180905052113.21262-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hqpjwkk3omedglce"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFEAX3OAKGQENGAGDKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180904163609.10171-2-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180905052113.21262-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: linus.walleij@linaro.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Stefan,
 
---hqpjwkk3omedglce
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Thank you for the patch.
 
-On Tue, Sep 04, 2018 at 10:06:07PM +0530, Jagan Teki wrote:
-> Enable DRM Support for Allwinner Display Engine, built as a module.
+On Wednesday, 5 September 2018 08:21:08 EEST Stefan Agner wrote:
+> The DRM bus flags convey additional information on pixel data on
+> the bus. All current available bus flags might be of interest for
+> a bridge. Remove the sampling_edge field and use bus_flags.
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> In the case at hand a dumb VGA bridge needs a specific data enable
+> polarity (DRM_BUS_FLAG_DE_LOW).
+> 
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  drivers/gpu/drm/bridge/dumb-vga-dac.c |  6 +++---
+>  include/drm/drm_bridge.h              | 11 +++++------
+>  2 files changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> b/drivers/gpu/drm/bridge/dumb-vga-dac.c index 9b706789a341..7a5c24967115
+> 100644
+> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
+> @@ -234,7 +234,7 @@ static int dumb_vga_remove(struct platform_device *pdev)
+> */
+>  static const struct drm_bridge_timings default_dac_timings = {
+>  	/* Timing specifications, datasheet page 7 */
+> -	.sampling_edge = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> +	.bus_flags = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+>  	.setup_time_ps = 500,
+>  	.hold_time_ps = 1500,
+>  };
+> @@ -245,7 +245,7 @@ static const struct drm_bridge_timings
+> default_dac_timings = { */
+>  static const struct drm_bridge_timings ti_ths8134_dac_timings = {
+>  	/* From timing diagram, datasheet page 9 */
+> -	.sampling_edge = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> +	.bus_flags = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+>  	/* From datasheet, page 12 */
+>  	.setup_time_ps = 3000,
+>  	/* I guess this means latched input */
+> @@ -258,7 +258,7 @@ static const struct drm_bridge_timings
+> ti_ths8134_dac_timings = { */
+>  static const struct drm_bridge_timings ti_ths8135_dac_timings = {
+>  	/* From timing diagram, datasheet page 14 */
+> -	.sampling_edge = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+> +	.bus_flags = DRM_BUS_FLAG_PIXDATA_POSEDGE,
+>  	/* From datasheet, page 16 */
+>  	.setup_time_ps = 2000,
+>  	.hold_time_ps = 500,
+> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
+> index bd850747ce54..85d4b51eae19 100644
+> --- a/include/drm/drm_bridge.h
+> +++ b/include/drm/drm_bridge.h
+> @@ -244,14 +244,13 @@ struct drm_bridge_funcs {
+>   */
+>  struct drm_bridge_timings {
+>  	/**
+> -	 * @sampling_edge:
+> +	 * @bus_flags:
+>  	 *
+> -	 * Tells whether the bridge samples the digital input signal
+> -	 * from the display engine on the positive or negative edge of the
+> -	 * clock, this should reuse the DRM_BUS_FLAG_PIXDATA_[POS|NEG]EDGE
+> -	 * bitwise flags from the DRM connector (bit 2 and 3 valid).
+> +	 * Tells what additional settings for the pixel data on the bus
+> +	 * this bridge requires (like pixel signal polarity). See also
+> +	 * &drm_display_info->bus_flags.
+>  	 */
+> -	u32 sampling_edge;
+> +	u32 bus_flags;
 
-Applied, thanks!
-Maxime
+While I'm not opposed to extending the bridge structure to allow specifying 
+other flags, I think we're losing information here. The sampling_edge field 
+makes it clear that the DRM_BUS_FLAG_PIXDATA_(NEG|POS)EDGE flags specified on 
+which clock edge signals are sampled. bus_flags could be interpreted 
+differently, for instance as specifying on which clock edge signals are output 
+on the other side of the bridge.
+
+We could easily fix this by specifying that the bus_flags field refers to the 
+input side of the bridge. We could also rename the field to input_bus_flags. 
+The rename could be delayed until needed, but that would result in yet another 
+change to all bridge drivers, so we may want to do it now as your patch 
+touches all the drivers already. Other options might also be possible.
+
+>  	/**
+>  	 * @setup_time_ps:
+>  	 *
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---hqpjwkk3omedglce--
+Regards,
+
+Laurent Pinchart
