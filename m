@@ -1,62 +1,64 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] of/fdt: Scan the root node properties earlier
-Date: Wed, 5 Sep 2018 06:51:20 -0500
-Message-ID: <CAL_JsqJy0kDYCC35GR5TGLYyYU-UjOys_r2sFMQZuFto5HkExg@mail.gmail.com>
-References: <20180830190523.31474-1-robh@kernel.org> <20180830190523.31474-2-robh@kernel.org>
- <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com>
+Subject: Re: [PATCH 3/3] of: make default address and size cells sizes private
+Date: Wed, 5 Sep 2018 07:12:20 -0500
+Message-ID: <CAL_JsqJ5qZpdA2QugzEg8dJSyddZkK3ABfJO4RG0-bbM4kaWaw@mail.gmail.com>
+References: <20180830190523.31474-1-robh@kernel.org> <20180830190523.31474-4-robh@kernel.org>
+ <35247ddc-303b-89d0-53b5-231c1a293721@gmail.com> <9c873e57-84c8-75af-1d44-60e7cd41282d@ilande.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com>
+In-Reply-To: <9c873e57-84c8-75af-1d44-60e7cd41282d@ilande.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: mark.cave-ayland@ilande.co.uk
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Miller <davem@davemloft.net>, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 4, 2018 at 8:49 PM Frank Rowand <frowand.list@gmail.com> wrote:
+On Tue, Sep 4, 2018 at 11:59 PM Mark Cave-Ayland
+<mark.cave-ayland@ilande.co.uk> wrote:
 >
-> On 08/30/18 12:05, Rob Herring wrote:
-> > Scan the root node properties (#{size,address}-cells) earlier,
+> On 05/09/18 02:55, Frank Rowand wrote:
 >
->                                                         ^^^^^^^
->                              before mdesc->dt_fixup() is called
+> > On 08/30/18 12:05, Rob Herring wrote:
+> >> Only some old OpenFirmware implementations rely on default sizes. Any
+> >> FDT and modern implementation should have explicit properties. Make th=
+e
+> >> OF_ROOT_NODE_*_CELLS_DEFAULT defines private so we don't get any outsi=
+de
+> >> users.
+> >>
+> >> This also gets us one step closer to removing the asm/prom.h dependenc=
+y on
+> >> Sparc.
 >
-> > so that
-> > the dt_root_addr_cells and dt_root_size_cells variables are initialized
-> > and can be used.
->                  by mdesc->dt_fixup()
+> Just for the record: you say "any FDT and modern implementation should
+> have explicit properties", however the default values of these
+> properties when missing are clearly defined in the IEEE-1275
+> specification (Annex A):
 
-That's an ARM specific detail. Granted, ARM is the only caller.
+The spec may define defaults, but best practice is to be explicit. For
+FDT, dtc doesn't allow defaults (and never has). No arch added in the
+last 10 years has relied on the defaults.
 
-> >
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> >  drivers/of/fdt.c | 7 ++++---
-> >  1 file changed, 4 insertions(+), 3 deletions(-)
-> >
-> Moving early_init_dt_scan_root() to inside early_init_dt_verify()
-> puts something that has nothing to do with verifying the fdt
-> into a function whose purpose is the verify.  It hides the side
-> effect of initializing the dt_root_addr_cells and dt_root_size_cells
-> variables.
+> "#address-cells"
+> Standard property name to define the package=E2=80=99s address format.
+> ...
+> In a package with a "decode-unit" method, a missing "#address-cells"
+> property signifies that the number of
+> address cells is two.
 
-It already has the side effect of setting initial_boot_params which
-every subsequent function needs.
+So only Sparc is compliant as the default for everyone else is 1.
 
-> I suggest creating a new function early_init_dt_scan_init_pre_dt_fixup(),
-> move the chunk of code there instead of to early_init_dt_scan_nodes(),
-> and call the new function from setup_machine_fdt(), just before
-> calling  mdesc->dt_fixup().  This would be a little bit more code,
-> but more clearly showing the intent.
+> "#size-cells"
+> Standard property name to define the package=E2=80=99s address size forma=
+t.
+> ...
+> A missing "#size-cells" property signifies the default value of one.
+>
+> I can't speak for FDT but it isn't completely unreasonable for a guest
+> parsing a DT without these properties to assume these default values.
 
-I'm trying to reduce the number of functions arches call and renaming
-would need a bunch of arch changes. This change will also let me make
-early_init_dt_scan_root private as powerpc is the only user. I need to
-dust off a patch for that.
-
-I'd be more inclined to push exynos to remove this altogether. After
-all, if they claim their bindings are unstable, they can't really
-claim their bootloader is stable/fixed.
+I'm not removing the defaults. Just not allowing for code outside of
+drivers/of/ to use the defaults.
 
 Rob
