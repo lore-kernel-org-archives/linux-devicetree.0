@@ -1,88 +1,62 @@
-From: Paul Moore <paul@paul-moore.com>
-Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
-Date: Wed, 5 Sep 2018 07:42:04 -0400
-Message-ID: <CAHC9VhR7Zana3xTEj2jUGXb+hBzyh69g0rBg_p_4tkbjtCUdpw@mail.gmail.com>
-References: <1536012923-16275-1-git-send-email-henrik@austad.us>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] of/fdt: Scan the root node properties earlier
+Date: Wed, 5 Sep 2018 06:51:20 -0500
+Message-ID: <CAL_JsqJy0kDYCC35GR5TGLYyYU-UjOys_r2sFMQZuFto5HkExg@mail.gmail.com>
+References: <20180830190523.31474-1-robh@kernel.org> <20180830190523.31474-2-robh@kernel.org>
+ <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536012923-16275-1-git-send-email-henrik@austad.us>
+In-Reply-To: <b86ed9cf-d5fd-09fb-eb82-0143c759f5cf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: henrik@austad.us
-Cc: linux-doc@vger.kernel.org, corbet@lwn.net, bhelgaas@google.com, paulmck@linux.vnet.ibm.com, josh@joshtriplett.org, rostedt@goodmis.org, mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com, axboe@kernel.dk, robh+dt@kernel.org, mark.rutland@arm.com, b.zolnierkie@samsung.com, linus.walleij@linaro.org, davem@davemloft.net, isdn@linux-pingi.de, yamada.masahiro@socionext.com, michal.lkml@markovi.net, peterz@infradead.org, mingo@redhat.com, will.deacon@arm.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, jejb@parisc-linux.org, deller@gmx.de, rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz, benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com, gregkh@linuxfoundation.org, jslaby@suse.com, broonie@kernel.o
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 3, 2018 at 6:15 PM Henrik Austad <henrik@austad.us> wrote:
-> This is a respin with a wider audience (all that get_maintainer returned)
-> and I know this spams a *lot* of people. Not sure what would be the correct
-> way, so my apologies for ruining your inbox.
+On Tue, Sep 4, 2018 at 8:49 PM Frank Rowand <frowand.list@gmail.com> wrote:
 >
-> The 00-INDEX files are supposed to give a summary of all files present
-> in a directory, but these files are horribly out of date and their
-> usefulness is brought into question. Often a simple "ls" would reveal
-> the same information as the filenames are generally quite descriptive as
-> a short introduction to what the file covers (it should not surprise
-> anyone what Documentation/sched/sched-design-CFS.txt covers)
+> On 08/30/18 12:05, Rob Herring wrote:
+> > Scan the root node properties (#{size,address}-cells) earlier,
 >
-> A few years back it was mentioned that these files were no longer really
-> needed, and they have since then grown further out of date, so perhaps
-> it is time to just throw them out.
+>                                                         ^^^^^^^
+>                              before mdesc->dt_fixup() is called
 >
-> A short status yields the following _outdated_ 00-INDEX files, first
-> counter is files listed in 00-INDEX but missing in the directory, last
-> is files present but not listed in 00-INDEX.
->
-> List of outdated 00-INDEX:
-> Documentation: (4/10)
-> Documentation/sysctl: (0/1)
-> Documentation/timers: (1/0)
-> Documentation/blockdev: (3/1)
-> Documentation/w1/slaves: (0/1)
-> Documentation/locking: (0/1)
-> Documentation/devicetree: (0/5)
-> Documentation/power: (1/1)
-> Documentation/powerpc: (0/5)
-> Documentation/arm: (1/0)
-> Documentation/x86: (0/9)
-> Documentation/x86/x86_64: (1/1)
-> Documentation/scsi: (4/4)
-> Documentation/filesystems: (2/9)
-> Documentation/filesystems/nfs: (0/2)
-> Documentation/cgroup-v1: (0/2)
-> Documentation/kbuild: (0/4)
-> Documentation/spi: (1/0)
-> Documentation/virtual/kvm: (1/0)
-> Documentation/scheduler: (0/2)
-> Documentation/fb: (0/1)
-> Documentation/block: (0/1)
-> Documentation/networking: (6/37)
-> Documentation/vm: (1/3)
->
-> Then there are 364 subdirectories in Documentation/ with several files that
-> are missing 00-INDEX alltogether (and another 120 with a single file and no
-> 00-INDEX).
->
-> I don't really have an opinion to whether or not we /should/ have 00-INDEX,
-> but the above 00-INDEX should either be removed or be kept up to date. If
-> we should keep the files, I can try to keep them updated, but I rather not
-> if we just want to delete them anyway.
->
-> As a starting point, remove all index-files and references to 00-INDEX and
-> see where the discussion is going.
->
-> Again, sorry for the insanely wide distribution.
->
-> Signed-off-by: Henrik Austad <henrik@austad.us>
-...
-> Signed-off-by: Henrik Austad <haustad@cisco.com>
-> ---
->  Documentation/00-INDEX                  | 428 --------------------------------
-...
+> > so that
+> > the dt_root_addr_cells and dt_root_size_cells variables are initialized
+> > and can be used.
+>                  by mdesc->dt_fixup()
 
-Looks reasonable to me, you can add my ACK for the NetLabel bits.
+That's an ARM specific detail. Granted, ARM is the only caller.
 
-Acked-by: Paul Moore <paul@paul-moore.com>
+> >
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  drivers/of/fdt.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >
+> Moving early_init_dt_scan_root() to inside early_init_dt_verify()
+> puts something that has nothing to do with verifying the fdt
+> into a function whose purpose is the verify.  It hides the side
+> effect of initializing the dt_root_addr_cells and dt_root_size_cells
+> variables.
 
--- 
-paul moore
-www.paul-moore.com
+It already has the side effect of setting initial_boot_params which
+every subsequent function needs.
+
+> I suggest creating a new function early_init_dt_scan_init_pre_dt_fixup(),
+> move the chunk of code there instead of to early_init_dt_scan_nodes(),
+> and call the new function from setup_machine_fdt(), just before
+> calling  mdesc->dt_fixup().  This would be a little bit more code,
+> but more clearly showing the intent.
+
+I'm trying to reduce the number of functions arches call and renaming
+would need a bunch of arch changes. This change will also let me make
+early_init_dt_scan_root private as powerpc is the only user. I need to
+dust off a patch for that.
+
+I'd be more inclined to push exynos to remove this altogether. After
+all, if they claim their bindings are unstable, they can't really
+claim their bootloader is stable/fixed.
+
+Rob
