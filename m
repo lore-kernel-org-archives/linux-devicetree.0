@@ -1,117 +1,134 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 5/9] c6x: use common built-in dtb support
-Date: Wed,  5 Sep 2018 18:53:23 -0500
-Message-ID: <20180905235327.5996-6-robh@kernel.org>
+Subject: [PATCH v2 1/9] powerpc: build .dtb files in dts directory
+Date: Wed,  5 Sep 2018 18:53:19 -0500
+Message-ID: <20180905235327.5996-2-robh@kernel.org>
 References: <20180905235327.5996-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905235327.5996-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Mark Salter <msalter@redhat.com>, Aurelien Jacquiot <jacquiot.aurelien@gmail.com>, linux-c6x-dev@linux-c6x.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Using the common build support for built-in dtb files just requires
-adding a .dtb.o target to obj-y.
+Align powerpc with other architectures which build the dtb files in the
+same directory as the dts files. This is also in line with most other
+build targets which are located in the same directory as the source.
+This move will help enable the 'dtbs' target which builds all the dtbs
+regardless of kernel config.
 
-The dtb now needs to be copied when unflattened because an init section
-is used now.
+This transition could break some scripts if they expect dtb files in the
+old location.
 
-Cc: Mark Salter <msalter@redhat.com>
-Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
-Cc: linux-c6x-dev@linux-c6x.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Please ack so I can take the whole series via the DT tree.
 
- arch/c6x/boot/dts/Makefile      | 11 +----------
- arch/c6x/boot/dts/linked_dtb.S  |  2 --
- arch/c6x/include/asm/sections.h |  1 -
- arch/c6x/kernel/setup.c         |  4 ++--
- arch/c6x/kernel/vmlinux.lds.S   | 10 ----------
- 5 files changed, 3 insertions(+), 25 deletions(-)
- delete mode 100644 arch/c6x/boot/dts/linked_dtb.S
 
-diff --git a/arch/c6x/boot/dts/Makefile b/arch/c6x/boot/dts/Makefile
-index b212d278ebc4..fd937f781d16 100644
---- a/arch/c6x/boot/dts/Makefile
-+++ b/arch/c6x/boot/dts/Makefile
-@@ -6,14 +6,5 @@
- DTC_FLAGS ?= -p 1024
+ arch/powerpc/Makefile          |  2 +-
+ arch/powerpc/boot/Makefile     | 49 ++++++++++++++++------------------
+ arch/powerpc/boot/dts/Makefile |  1 +
+ 3 files changed, 25 insertions(+), 27 deletions(-)
+ create mode 100644 arch/powerpc/boot/dts/Makefile
 
- ifneq ($(DTB),)
--obj-y += linked_dtb.o
-+obj-y += $(DTB).dtb.o
- endif
+diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+index 11a1acba164a..53ea887eb34e 100644
+--- a/arch/powerpc/Makefile
++++ b/arch/powerpc/Makefile
+@@ -294,7 +294,7 @@ bootwrapper_install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
+
+ %.dtb: scripts
+-	$(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
++	$(Q)$(MAKE) $(build)=$(boot)/dts $(patsubst %,$(boot)/dts/%,$@)
+
+ # Used to create 'merged defconfigs'
+ # To use it $(call) it with the first argument as the base defconfig
+diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+index 0fb96c26136f..b201d93e1725 100644
+--- a/arch/powerpc/boot/Makefile
++++ b/arch/powerpc/boot/Makefile
+@@ -381,11 +381,11 @@ $(addprefix $(obj)/, $(sort $(filter zImage.%, $(image-y)))): vmlinux $(wrapperb
+ 	$(call if_changed,wrap,$(subst $(obj)/zImage.,,$@))
+
+ # dtbImage% - a dtbImage is a zImage with an embedded device tree blob
+-$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
+-	$(call if_changed,wrap,$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
++$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
++	$(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+
+-$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
+-	$(call if_changed,wrap,$*,,$(obj)/$*.dtb)
++$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
++	$(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb)
+
+ # This cannot be in the root of $(src) as the zImage rule always adds a $(obj)
+ # prefix
+@@ -395,36 +395,33 @@ $(obj)/vmlinux.strip: vmlinux
+ $(obj)/uImage: vmlinux $(wrapperbits) FORCE
+ 	$(call if_changed,wrap,uboot)
+
+-$(obj)/uImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
++$(obj)/uImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+
+-$(obj)/uImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb)
++$(obj)/uImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb)
+
+-$(obj)/cuImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
++$(obj)/cuImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+
+-$(obj)/cuImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb)
++$(obj)/cuImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb)
+
+-$(obj)/simpleImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
++$(obj)/simpleImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+
+-$(obj)/simpleImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb)
++$(obj)/simpleImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb)
+
+-$(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
++$(obj)/treeImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+
+-$(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+-	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
++$(obj)/treeImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
++	$(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb)
+
+-# Rule to build device tree blobs
+-$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+-	$(call if_changed_dep,dtc)
 -
--quiet_cmd_cp = CP      $< $@$2
--	cmd_cp = cat $< >$@$2 || (rm -f $@ && echo false)
--
--# Generate builtin.dtb from $(DTB).dtb
--$(obj)/builtin.dtb: $(obj)/$(DTB).dtb
--	$(call if_changed,cp)
--
--$(obj)/linked_dtb.o: $(obj)/builtin.dtb
-diff --git a/arch/c6x/boot/dts/linked_dtb.S b/arch/c6x/boot/dts/linked_dtb.S
-deleted file mode 100644
-index cf347f1d16ce..000000000000
---- a/arch/c6x/boot/dts/linked_dtb.S
-+++ /dev/null
-@@ -1,2 +0,0 @@
--.section __fdt_blob,"a"
--.incbin "arch/c6x/boot/dts/builtin.dtb"
-diff --git a/arch/c6x/include/asm/sections.h b/arch/c6x/include/asm/sections.h
-index d6c591ab5b7e..dc2f15eb3bde 100644
---- a/arch/c6x/include/asm/sections.h
-+++ b/arch/c6x/include/asm/sections.h
-@@ -8,6 +8,5 @@ extern char _vectors_start[];
- extern char _vectors_end[];
+-$(obj)/%.dtb: $(src)/dts/fsl/%.dts FORCE
+-	$(call if_changed_dep,dtc)
++# Needed for the above targets to work with dts/fsl/ files
++$(obj)/dts/%.dtb: $(obj)/dts/fsl/%.dtb
++	@cp $< $@
 
- extern char _data_lma[];
--extern char _fdt_start[], _fdt_end[];
-
- #endif /* _ASM_C6X_SECTIONS_H */
-diff --git a/arch/c6x/kernel/setup.c b/arch/c6x/kernel/setup.c
-index 786e36e2f61d..509c5f086496 100644
---- a/arch/c6x/kernel/setup.c
-+++ b/arch/c6x/kernel/setup.c
-@@ -270,7 +270,7 @@ int __init c6x_add_memory(phys_addr_t start, unsigned long size)
- notrace void __init machine_init(unsigned long dt_ptr)
- {
- 	void *dtb = __va(dt_ptr);
--	void *fdt = _fdt_start;
-+	void *fdt = __dtb_start;
-
- 	/* interrupts must be masked */
- 	set_creg(IER, 2);
-@@ -363,7 +363,7 @@ void __init setup_arch(char **cmdline_p)
- 					 memory_end >> PAGE_SHIFT);
- 	memblock_reserve(memory_start, bootmap_size);
-
--	unflatten_device_tree();
-+	unflatten_and_copy_device_tree();
-
- 	c6x_cache_init();
-
-diff --git a/arch/c6x/kernel/vmlinux.lds.S b/arch/c6x/kernel/vmlinux.lds.S
-index 1fba5b421eee..584bab2bace6 100644
---- a/arch/c6x/kernel/vmlinux.lds.S
-+++ b/arch/c6x/kernel/vmlinux.lds.S
-@@ -90,16 +90,6 @@ SECTIONS
- 		*(.switch)
- 	}
-
--	. = ALIGN (8) ;
--	__fdt_blob : AT(ADDR(__fdt_blob) - LOAD_OFFSET)
--	{
--		_fdt_start = . ;	/* place for fdt blob */
--		*(__fdt_blob) ;		/* Any link-placed DTB */
--		BYTE(0);		/* section always has contents */
--	        . = _fdt_start + 0x4000;	/* Pad up to 16kbyte */
--		_fdt_end = . ;
--	}
--
- 	_etext = .;
-
- 	/*
+ # If there isn't a platform selected then just strip the vmlinux.
+ ifeq (,$(image-y))
+diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
+new file mode 100644
+index 000000000000..f66554cd5c45
+--- /dev/null
++++ b/arch/powerpc/boot/dts/Makefile
+@@ -0,0 +1 @@
++# SPDX-License-Identifier: GPL-2.0
 --
 2.17.1
