@@ -1,77 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: dts: socfpga: use stdout-path for chosen node
-Date: Wed, 5 Sep 2018 09:54:18 +0200
-Message-ID: <CAMuHMdUMaggMHmPWRh081UD8AFgq58Rfsdz22xpt9fHUTyx92g@mail.gmail.com>
-References: <20180808090944.861-1-simon.k.r.goldschmidt@gmail.com>
- <f27a5e90-9783-761e-a87b-9b8a2d46d2a4@denx.de> <CAAh8qsyHxMjwBtBa5pYejkOxwFRbbFbt+myC4ynQQonK8MAo-w@mail.gmail.com>
- <ba66504e-c002-7dc6-daed-633fee896131@denx.de>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] clk: sunxi-ng: Enable DE2_CCU for
+ SUN8I and SUN50I
+Date: Wed, 5 Sep 2018 13:25:30 +0530
+Message-ID: <CAMty3ZDVnsjJ0eRx1LxFjX+ti85=jRy=1x_sZ5d3yCHsVCD3HA@mail.gmail.com>
+References: <20180904163609.10171-1-jagan@amarulasolutions.com> <20180905070335.dclhpxjld4vdkdu4@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba66504e-c002-7dc6-daed-633fee896131@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: simon.k.r.goldschmidt@gmail.com, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB44XX3OAKGQEB3QW2UI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180905070335.dclhpxjld4vdkdu4@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 8, 2018 at 2:11 PM Marek Vasut <marex@denx.de> wrote:
-> On 08/08/2018 02:02 PM, Simon Goldschmidt wrote:
-> > On Wed, Aug 8, 2018 at 1:32 PM Marek Vasut <marex@denx.de> wrote:
-> >> On 08/08/2018 11:09 AM, Simon Goldschmidt wrote:
-> >>> Use stdout-path dts property for kernel console.
-> >>>
-> >>> There were two socfpga boards left not using stdout-path:
-> >>> socrates and vining. Make sure they match the other boards.
-> >>>
-> >>> Signed-off-by: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
-> >>> ---
-> >>>  arch/arm/boot/dts/socfpga_cyclone5_socrates.dts    | 3 ++-
-> >>>  arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 3 ++-
-> >>>  2 files changed, 4 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
-> >>> index 53bf99eef66d..6f5255a7d192 100644
-> >>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
-> >>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socrates.dts
-> >>> @@ -22,7 +22,8 @@
-> >>>       compatible = "ebv,socrates", "altr,socfpga-cyclone5", "altr,socfpga";
-> >>>
-> >>>       chosen {
-> >>> -             bootargs = "console=ttyS0,115200";
-> >>> +             bootargs = "earlyprintk";
-> >>> +             stdout-path = "serial0:115200n8";
-> >>>       };
-> >>>
-> >>>       memory@0 {
-> >>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-> >>> index f50b19447de6..e61efe16e79c 100644
-> >>> --- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-> >>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
-> >>> @@ -54,7 +54,8 @@
-> >>>       compatible = "samtec,vining", "altr,socfpga-cyclone5", "altr,socfpga";
-> >>>
-> >>>       chosen {
-> >>> -             bootargs = "console=ttyS0,115200";
-> >>> +             bootargs = "earlyprintk";
-> >>
-> >> Why this earlyprintk ?
-> >
-> > The reason is Dinh added that to all socfpga boards in his commit [1]
-> > and I wanted the remaining two boards to be the same.
+On Wed, Sep 5, 2018 at 12:33 PM, Maxime Ripard
+<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Tue, Sep 04, 2018 at 10:06:06PM +0530, Jagan Teki wrote:
+>> Allwinner SoC like SUN8I and SUN50I has DE2 CCU so enable them
+>> as default.
+>>
+>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> ---
+>> Changes for v4, v3:
+>> - none
+>> Changes for v2:
+>> - Enable for MACH_SUN8I
+>>
+>>  drivers/clk/sunxi-ng/Kconfig | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kconfig
+>> index 826674d090fd..e20182aa9748 100644
+>> --- a/drivers/clk/sunxi-ng/Kconfig
+>> +++ b/drivers/clk/sunxi-ng/Kconfig
+>> @@ -63,6 +63,8 @@ config SUN8I_V3S_CCU
+>>
+>>  config SUN8I_DE2_CCU
+>>       bool "Support for the Allwinner SoCs DE2 CCU"
+>> +     default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+>> +     depends on DRM_SUN4I && (MACH_SUN8I || (ARM64 && ARCH_SUNXI))
 >
-> Isn't earlyprintk mostly a debugging aid ?
+> I don't see why there's a dependency on the DRM driver. I'm pretty
+> sure this would even break simplefb.
 
-Indeed.
-
-And the modern way is "earlycon", not "earlyprintk".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Ok, got it. I will drop the depends on just add default.
