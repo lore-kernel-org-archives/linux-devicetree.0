@@ -1,57 +1,56 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] drm/sun4i: Enable DesignWare HDMI
- for SUN50I
-Date: Wed, 5 Sep 2018 16:49:29 +0200
-Message-ID: <20180905144929.67kmbuef2ae6fm23@flea>
-References: <20180904163609.10171-1-jagan@amarulasolutions.com>
- <20180904163609.10171-4-jagan@amarulasolutions.com>
- <20180905070819.gisznpkvvuqire7c@flea>
- <CAMty3ZAzjSwq86BwB8O_7DrT0jrhn3ByzN34dY37pF3ZsAZ6uA@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v9 0/8] Introduce on-chip interconnect API
+Date: Wed, 5 Sep 2018 17:50:28 +0300
+Message-ID: <fe9f3e91-93f9-d7d5-1643-dc09543e2850@linaro.org>
+References: <20180831140151.13972-1-georgi.djakov@linaro.org>
+ <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
+ <20180905093620.6d9162ca@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="q6f2ab7olekwmy4f"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBG2X7OAKGQE4YO5XUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZAzjSwq86BwB8O_7DrT0jrhn3ByzN34dY37pF3ZsAZ6uA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180905093620.6d9162ca@canb.auug.org.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux PM list <linux-pm@vger.kernel.org>, gregkh@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-arm-kernel@lists.infradead.org>linux-arm-
 List-Id: devicetree@vger.kernel.org
 
+Hi Stephen,
 
---q6f2ab7olekwmy4f
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Sep 05, 2018 at 01:54:42PM +0530, Jagan Teki wrote:
-> On Wed, Sep 5, 2018 at 12:38 PM, Maxime Ripard
-> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Tue, Sep 04, 2018 at 10:06:09PM +0530, Jagan Teki wrote:
-> >> Allwinner SUN50I are now using DesignWare HDMI so enable
-> >> them as default. This can build DRM_SUN8I_DW_HDMI as module
-> >> since DRM in arm64 has module.
-> >>
-> >> Making this as defult to SUN8I, may cause an issue while
-> >> loading since arm32 DRM built as static.
-> >
-> > Uh? Why? We should fix this instead of working around it.
+On 09/05/2018 02:36 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> I didn't dig further on this. Since ARM64 has is fine with it both
-> (module and static) may be we can take this.
+> On Tue, 4 Sep 2018 15:54:27 +0530 Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>>
+>> I'm currently reviewing this patchset (long overdue), but considering
+>> that we haven't added any major new features to the framework for the
+>> last couple of revisions, can you get this patchset merged into
+>> linux-next to see how things shake out there? We've had this merged
+>> branch merged into a CI build on kernelci for a while now w/o any
+>> major incident so we should increase its exposure.
+>>
+>> You could ask Stephen Rothwell if he'll accept the a branch directly
+>> from you or he needs an upstream maintainer (GregKH?) to carry it.
+> 
+> Since it appears to have been well reviewed and tested, I can take it
+> if you send me a git URL and the names of contacts in case of issues
+> with the branch.  Once Greg has merged it, I will try to drop it again
+> (unless you think there will be an ongoing reason to keep it in
+> linux-next separately), but a prompting email would also be nice in
+> case I forget.
 
-No, this build breakage needs to be (reported and) addressed first.
+Thank you! Below is the git URL to pull from and you can use my e-mail
+as contact for any issues.
 
-Maxime
+git://git.linaro.org/people/georgi.djakov/linux.git#icc-next
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---q6f2ab7olekwmy4f--
+I expect this to be a continuing effort with some upcoming users of this
+API, so i plan to maintain this branch and occasionally put some
+reviewed/tested patches to get wider integration testing. But let's see
+what happens now.
+
+In any case, if this increases your burden, feel free to drop it.
+
+Thanks,
+Georgi
