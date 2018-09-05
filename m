@@ -1,39 +1,52 @@
-Return-Path: <SRS0=ONUo=LT=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
-Date: Wed, 5 Sep 2018 15:02:19 +0000
-Message-ID: 
- <TYXPR01MB1568DD90490B28E46E949D658A020@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-References: <20180829132841.64787-1-chris.brandt@renesas.com>
- <TY1PR01MB1562F79382CA2AA33AA661EB8A020@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdVZbaGxwuL6aJfv0Nsoxyrj_M7nL0X1Oo6_KoDYJTwi-w@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdVZbaGxwuL6aJfv0Nsoxyrj_M7nL0X1Oo6_KoDYJTwi-w@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=QNtu=LT=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+References: <20180829132841.64787-1-chris.brandt@renesas.com> <TY1PR01MB1562F79382CA2AA33AA661EB8A020@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562F79382CA2AA33AA661EB8A020@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Sep 2018 16:31:08 +0200
+Message-ID: <CAMuHMdVZbaGxwuL6aJfv0Nsoxyrj_M7nL0X1Oo6_KoDYJTwi-w@mail.gmail.com>
+Subject: Re: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgU2VwdGVtYmVyIDA1LCAyMDE4IDEsIEdlZXJ0IFV5
-dHRlcmhvZXZlbiB3cm90ZToNCj4gPiBTbywgSSB0aGluayBJIG5lZWQgdG8gcmV3b3JrIHRoaXMg
-ZHJpdmVyIHRvIGFkZCB0aGUgYWJpbGl0eSB0byBhZGQNCj4gPiBtdWx0aXBsZSBhZGRyZXNzIHJl
-Z2lvbnMuDQo+IA0KPiBZb3VyIG1haW4gZHJpdmVyIGZvciB0aGlzIGJsb2NrIChjbG9jaz8pIGNh
-biByZWdpc3RlciB0aGUgd2F0Y2hkb2cuDQo+IEVpdGhlciBkaXJlY3RseSB3aXRoIHRoZSB3YXRj
-aGRvZyBzdWJzeXN0ZW0sIG9yIGJ5IHJlZ2lzdGVyaW5nIGFuDQo+ICJyemFfd2R0IiBwbGF0Zm9y
-bSBkZXZpY2UuDQoNCkl0IHdvdWxkIHNlZW0gc3RyYW5nZSB0aGF0IHRoZSBjbG9jayBkcml2ZXIg
-d291bGQgcmVnaXN0ZXIgdGhlIHdhdGNoZG9nIA0KdGltZXIgZm9yIG5vIG90aGVyIHJlYXNvbiBv
-dGhlciB0aGFuIHdoZXJlIHRoZSBjaGlwIGRlc2lnbmVyIGhhcHBlbiB0byANCnB1dCB0aGUgcmVn
-aXN0ZXIgYWRkcmVzc2VzLg0KDQoNCk5vdyB0aGF0IEkgbG9vayBhdCBpdDoNCiBDUEcgaXMgYXQg
-RkNGRV8wMDEwIC0gRkNGRV8wMTA0DQpNU1RQIGlzIGF0IEZDRkVfMDQwMCAtIEZDRkVfMDQ2NA0K
-DQpOb3RoaW5nIHNpdHMgaW4gYmV0d2VlbiBDUEcgYW5kIE1TVFAuDQoNCkluIHRoZSBoYXJkd2Fy
-ZSBtYW51YWwsIHRoZXJlIGlzIG90aGVyICdyYW5kb20gb3RoZXIgc3R1ZmYnIHRoYXQgdGhleSAN
-CnB1dCBpbiB0aGF0IGNoYXB0ZXIgdGhhdCBpcyBsb2NhdGVkIGluIG11bHRpcGxlIGFkZHJlc3Mg
-cGxhY2VzLCBidXQgdGhhdCANCmRvZXNuJ3QgbWVhbiBJIGhhdmUgdG8gbWFwIHRoZW0gYWxsIGlu
-IHRoaXMgZHJpdmVyLg0KDQoNCkkgc2ltcGx5IGNoYW5nZWQgdGhlIERUUyB0byBqdXN0IG1hcCBD
-UEcgYW5kIE1TVFAgYW5kIG5vdyBldmVyeXRoaW5nIGlzIA0KZmluZS4gTXkgd2F0Y2hkb2cgZHJp
-dmVyIGlzIGhhcHB5IGFuZCB0aGlzIENQRy9NU1RQIGRyaXZlciB3b3JrcyB0aGUgDQpzYW1lLg0K
-DQpTby4uLi5JIGd1ZXNzIEkgZGlkbid0IHJlYWxseSBoYXZlIGFuIGlzc3VlIGFmdGVyIGFsbC4N
-Cg0KQ2hyaXMNCg0K
+Hi Chris,
+
+On Wed, Sep 5, 2018 at 4:12 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Wednesday, August 29, 2018, Chris Brandt wrote:
+> > Add support for the R7S9210 (RZ/A2) Clock Pulse Generator and Module
+> > Standby.
+>
+> I ran into an issue with this driver.
+>
+> The issue is that the registers needed for this driver are scattered
+> throughout the address space.
+>
+> I can't just reserve one big block of addresses that cover everything
+> because then I can't reserve any of the addresses that sit in the middle.
+
+Yeah, this address range is kind of a "syscon" block.
+
+> For example, my watchdog timer driver doesn't work with this driver
+> because it cannot allocate its register region.
+>
+> So, I think I need to rework this driver to add the ability to add
+> multiple address regions.
+
+Your main driver for this block (clock?) can register the watchdog.
+Either directly with the watchdog subsystem, or by registering an
+"rza_wdt" platform device.
+
+One more vote for a separate rza2-cpg-stb-wdt driver?...
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
