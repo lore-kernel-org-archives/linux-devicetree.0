@@ -1,102 +1,173 @@
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Subject: Re: [PATCH v9 0/8] Introduce on-chip interconnect API
-Date: Thu, 6 Sep 2018 01:05:34 +1000
-Message-ID: <20180906010534.329d0fca@canb.auug.org.au>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
-        <CAHLCerNd0hrLKgbni95_RSYOtsNufMCVtHbAKa4W+eo8H2cL2A@mail.gmail.com>
-        <20180905093620.6d9162ca@canb.auug.org.au>
-        <fe9f3e91-93f9-d7d5-1643-dc09543e2850@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Ov_.S6vdszHnU9RnU1g=UU+"; protocol="application/pgp-signature"
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH v7 00/10] Add the I3C subsystem
+Date: Wed,  5 Sep 2018 17:40:58 +0200
+Message-ID: <20180905154108.20770-1-boris.brezillon@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fe9f3e91-93f9-d7d5-1643-dc09543e2850@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Amit Kucheria <amit.kucheria@linaro.org>, Linux PM list <linux-pm@vger.kernel.org>, gregkh@linuxfoundation.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, khilman@baylibre.com, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, abailon@baylibre.com, maxime.ripard@bootlin.com, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, lakml <linux-a>
+To: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares@synopsys.co>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/Ov_.S6vdszHnU9RnU1g=UU+
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch series is adding a new subsystem to support I3C devices.
 
-Hi Georgi,
+This is just adding basic features of the protocol, and new features
+will be added afterwards.
 
-On Wed, 5 Sep 2018 17:50:28 +0300 Georgi Djakov <georgi.djakov@linaro.org> =
-wrote:
->
-> On 09/05/2018 02:36 AM, Stephen Rothwell wrote:
-> >=20
-> > On Tue, 4 Sep 2018 15:54:27 +0530 Amit Kucheria <amit.kucheria@linaro.o=
-rg> wrote: =20
-> >>
-> >> I'm currently reviewing this patchset (long overdue), but considering
-> >> that we haven't added any major new features to the framework for the
-> >> last couple of revisions, can you get this patchset merged into
-> >> linux-next to see how things shake out there? We've had this merged
-> >> branch merged into a CI build on kernelci for a while now w/o any
-> >> major incident so we should increase its exposure.
-> >>
-> >> You could ask Stephen Rothwell if he'll accept the a branch directly
-> >> from you or he needs an upstream maintainer (GregKH?) to carry it. =20
-> >=20
-> > Since it appears to have been well reviewed and tested, I can take it
-> > if you send me a git URL and the names of contacts in case of issues
-> > with the branch.  Once Greg has merged it, I will try to drop it again
-> > (unless you think there will be an ongoing reason to keep it in
-> > linux-next separately), but a prompting email would also be nice in
-> > case I forget. =20
->=20
-> Thank you! Below is the git URL to pull from and you can use my e-mail
-> as contact for any issues.
->=20
-> git://git.linaro.org/people/georgi.djakov/linux.git#icc-next
->=20
-> I expect this to be a continuing effort with some upcoming users of this
-> API, so i plan to maintain this branch and occasionally put some
-> reviewed/tested patches to get wider integration testing. But let's see
-> what happens now.
->=20
-> In any case, if this increases your burden, feel free to drop it.
+There are a few design choices that are worth mentioning because they
+impact the way I3C device drivers can interact with their devices:
 
-Added from (later) today.
+- all functions used to send I3C/I2C frames must be called in
+  non-atomic context. Mainly done this way to ease implementation, but
+  this is still open to discussion. Please let me know if you think it's
+  worth considering an asynchronous model here
+- the I3C bus and I3C master controller are now tightly coupled even
+  though they're still allocated separately. There's now a 1:1
+  relationship between these objects, and the I3C master is no longer
+  represented under the I3C bus object.
+  Arnd, let me know if you had something different in mind, and I'll
+  rework the implementation accordingly.
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
+- I2C backward compatibility has been designed to be transparent to I2C
+  drivers and the I2C subsystem. The I3C master just registers an I2C
+  adapter which creates a new I2C bus. I'd say that, from a
+  representation PoV it's not ideal because what should appear as a
+  single I3C bus exposing I3C and I2C devices here appears as 2
+  different busses connected to each other through the parenting (the
+  I3C master is the parent of the I2C and I3C busses).
+  On the other hand, I don't see a better solution if we want something
+  that is not invasive.
 
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
+Missing features (will be added in separate patch series after initial
+support has been accepted/merged):
+- support for HDR modes (has been removed because of lack of real users)
+- no support for multi-master and the associated concepts (mastership
+  handover, support for secondary masters, ...)
+- I2C devices can only be described using DT because this is the only
+  use case I have. However, the framework can easily be extended with
+  ACPI and board info support
+- I3C slave framework. This has been completely omitted, but shouldn't
+  have a huge impact on the I3C framework because I3C slaves don't see
+  the whole bus, it's only about handling master requests and generating
+  IBIs. Some of the struct, constant and enum definitions could be
+  shared, but most of the I3C slave framework logic will be different
 
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
+Note that this patchset is available on the linux-i3c repo[1].
 
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
+Main changes between v6 and v7:
+- I3C bus/master representations have been reworked to match what other
+  subsystems are doing (master implicitly represented by the bus
+  object)
+- I3C dev registration has been fixed
+- I3C bus mode selection has been fixed
+- Calls to readsl/writesl() in the Cadence I3C master driver have been
+  fixed
 
---Sig_/Ov_.S6vdszHnU9RnU1g=UU+
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Main changes between v5 and v6:
+- Introduce {i3c,i2c}_dev_desc structures to better match how I3C
+  master controllers (reservation of one HW slot for each device
+  attached to the bus). With this solution, the resource migration
+  that happens when a device lose its dynamic address and is
+  re-assigned a different address is simplified on the driver side,
+  because most of it is now handled in the core (reserve a new dev
+  slot, reserve IBI resources and free all resources attached to the
+  old slot)
+- Add I3C error codes (M0 to M2) so that the core and device drivers
+  can have fine grained information on what caused an EIO error.
 
------BEGIN PGP SIGNATURE-----
+Only minor things happened between v3 and v5 (you can go check the
+changelog in each patch for more details).
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAluP8L4ACgkQAVBC80lX
-0GyFTQf+OsZLutdzyWpL9/ua0OrFaZjWQLoQeo/YknRXDu5SO0JlHhQtsukHUSe/
-cPCri2wHriSgRgrk48t17jA8p2MF9pkzblLrrmqJ4fYxdf3eSFsyZ6DKqGKSQzLs
-rtEdSUs/+RFLyNF6p3cuv+vIPwkDrqI+TiXPJ4EAOjvrQMut5nCGv9TanC64eK8i
-CnS7RJjcjM8fvwk+TeQGuFzmvJmyMvE3KUbPpachalE3bCFPDVrhHaHeFebp7yaa
-wkPwFvhqKzp8NPiBEG+MikqsZLWvk+jkg3TqhE2+IadgeMXRJaSmeY1Ef8chq1xs
-smB3W0PLpekjgxm8Tb33iIe22c351Q==
-=6HXW
------END PGP SIGNATURE-----
+Main changes between v2 and v3 are:
+- Reworked the DT bindings as suggested by Rob
+- Reworked the bus initialization step as suggested by Vitor
+- Added a driver for an I3C GPIO expander
 
---Sig_/Ov_.S6vdszHnU9RnU1g=UU+--
+Main changes between the initial RFC and this v2 are:
+- Add a generic infrastructure to support IBIs. It's worth mentioning
+  that I tried exposing IBIs as a regular IRQs, but after several
+  attempts and a discussion with Mark Zyngier, it appeared that it was
+  not really fitting in the Linux IRQ model (the fact that you have
+  payload attached to IBIs, the fact that most of the time an IBI will
+  generate a transfer on the bus which has to be done in an atomic
+  context, ...)
+  The counterpart of this decision is the latency induced by the
+  workqueue approach, but since I don't have real use cases, I don't
+  know if this can be a problem or not. 
+- Add helpers to support Hot Join
+- Add support for IBIs and Hot Join in Cadence I3C master driver
+- Address several issues in how I was using the device model
+
+Thanks,
+
+Boris
+
+[1]https://git.kernel.org/pub/scm/linux/kernel/git/i3c/linux.git/log/?h=i3c/next
+
+Boris Brezillon (10):
+  i3c: Add core I3C infrastructure
+  docs: driver-api: Add I3C documentation
+  i3c: Add sysfs ABI spec
+  dt-bindings: i3c: Document core bindings
+  dt-bindings: i3c: Add macros to help fill I3C/I2C device's reg
+    property
+  MAINTAINERS: Add myself as the I3C subsystem maintainer
+  i3c: master: Add driver for Cadence IP
+  dt-bindings: i3c: Document Cadence I3C master bindings
+  gpio: Add a driver for Cadence I3C GPIO expander
+  dt-bindings: gpio: Add bindings for Cadence I3C gpio expander
+
+ Documentation/ABI/testing/sysfs-bus-i3c            |  146 ++
+ .../devicetree/bindings/gpio/gpio-cdns-i3c.txt     |   39 +
+ .../devicetree/bindings/i3c/cdns,i3c-master.txt    |   44 +
+ Documentation/devicetree/bindings/i3c/i3c.txt      |  140 ++
+ Documentation/driver-api/i3c/device-driver-api.rst |    9 +
+ Documentation/driver-api/i3c/index.rst             |   11 +
+ Documentation/driver-api/i3c/master-driver-api.rst |   10 +
+ Documentation/driver-api/i3c/protocol.rst          |  203 ++
+ Documentation/driver-api/index.rst                 |    1 +
+ MAINTAINERS                                        |   12 +
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    2 +-
+ drivers/gpio/Kconfig                               |   11 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-cdns-i3c.c                       |  411 ++++
+ drivers/i3c/Kconfig                                |   24 +
+ drivers/i3c/Makefile                               |    4 +
+ drivers/i3c/core.c                                 |  623 ++++++
+ drivers/i3c/device.c                               |  233 +++
+ drivers/i3c/internals.h                            |   36 +
+ drivers/i3c/master.c                               | 2074 ++++++++++++++++++++
+ drivers/i3c/master/Kconfig                         |    6 +
+ drivers/i3c/master/Makefile                        |    1 +
+ drivers/i3c/master/i3c-master-cdns.c               | 1668 ++++++++++++++++
+ include/dt-bindings/i3c/i3c.h                      |   28 +
+ include/linux/i3c/ccc.h                            |  385 ++++
+ include/linux/i3c/device.h                         |  331 ++++
+ include/linux/i3c/master.h                         |  653 ++++++
+ include/linux/mod_devicetable.h                    |   17 +
+ 29 files changed, 7124 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i3c
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-cdns-i3c.txt
+ create mode 100644 Documentation/devicetree/bindings/i3c/cdns,i3c-master.txt
+ create mode 100644 Documentation/devicetree/bindings/i3c/i3c.txt
+ create mode 100644 Documentation/driver-api/i3c/device-driver-api.rst
+ create mode 100644 Documentation/driver-api/i3c/index.rst
+ create mode 100644 Documentation/driver-api/i3c/master-driver-api.rst
+ create mode 100644 Documentation/driver-api/i3c/protocol.rst
+ create mode 100644 drivers/gpio/gpio-cdns-i3c.c
+ create mode 100644 drivers/i3c/Kconfig
+ create mode 100644 drivers/i3c/Makefile
+ create mode 100644 drivers/i3c/core.c
+ create mode 100644 drivers/i3c/device.c
+ create mode 100644 drivers/i3c/internals.h
+ create mode 100644 drivers/i3c/master.c
+ create mode 100644 drivers/i3c/master/Kconfig
+ create mode 100644 drivers/i3c/master/Makefile
+ create mode 100644 drivers/i3c/master/i3c-master-cdns.c
+ create mode 100644 include/dt-bindings/i3c/i3c.h
+ create mode 100644 include/linux/i3c/ccc.h
+ create mode 100644 include/linux/i3c/device.h
+ create mode 100644 include/linux/i3c/master.h
+
+-- 
+2.14.1
