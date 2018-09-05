@@ -1,36 +1,29 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 0/3] usb: renesas_usbhs: add reset_control and multiple clocks management
-Date: Thu,  6 Sep 2018 14:50:11 +0900
-Message-Id: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=dmff=LT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from 107-172-0-11-host.colocrossing.com ([107.172.0.11]:54439 "EHLO
+        denon.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727665AbeIETh6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 5 Sep 2018 15:37:58 -0400
+Subject: Path adding
+Message-ID: <02505773fd1b15fedcabf8e27e8458aa@floralsupply.com>
+Date: Wed, 05 Sep 2018 13:49:55 +0200
+From: "Jesse Kurtz" <zoepdeilarassazs@email.jp>
+Reply-To: hongloudo@sina.com
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on Felipe's usb.git / testing/next branch
-(the commit id is 5b394b2ddf0347bef56e50c69a58773c94343ff3) with
-the following patch:
-  https://patchwork.kernel.org/patch/10574875/
+Just want to check with you to see if you have any photos for editing?
 
-Changes from v2:
- - Use clk_bulk_enable_prepare() instead of two functions on patch 3/3.
+We are providing below services to you.
+Clipping path for the images.
+Cut out for the photos
+Masking for the images
+All kinds of retouching for the beauty and model.
 
-Changes from v1:
- - Fix error path on patch 3/3.
- - Use clk_bulk_disable_unprepare() instead of two functions on patch 3/3.
- - Use staic array of struct clk_bulk_data instead of a pointer on patch 3/3.
+We provide testing for your photos if you need.
 
-Yoshihiro Shimoda (3):
-  usb: renesas_usbhs: Add reset_control
-  dt-bindings: usb: renesas_usbhs: add clock-names property
-  usb: renesas_usbhs: Add multiple clocks management
-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |  2 ++
- drivers/usb/renesas_usbhs/common.c                 | 37 ++++++++++++++++++++++
- drivers/usb/renesas_usbhs/common.h                 |  5 +++
- 3 files changed, 44 insertions(+)
-
--- 
-1.9.1
+Thanks,
+Jesse
