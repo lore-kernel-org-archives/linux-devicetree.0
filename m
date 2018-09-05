@@ -1,109 +1,241 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: [PATCH] leds: leds-gpio: Add a condition check for active low leds.
-Date: Wed,  5 Sep 2018 10:34:36 +0800
-Message-ID: <20180905023436.11826-1-songqiang.1304521@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jacek.anaszewski@gmail.com
-Cc: pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang.1304521@gmail.com>
+From: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
+Subject: Re: [PATCH 3/3] soc: fsl: add RCPM driver
+Date: Wed, 5 Sep 2018 02:57:58 +0000
+Message-ID: <be39f5ea8c9046b0bf1f6bbfe935fae4@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <20180831035219.31619-1-ran.wang_1@nxp.com>
+ <20180831035219.31619-3-ran.wang_1@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ran Wang <ran.wang_1@nxp.com>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Some leds on our board are active low leds, which means these leds
-are lighted when the corresponding gpio line is low, while the
-original leds-gpio driver default all leds are active high leds.
-This patch adds a devicetree node "light-state", whose value should
-be "high" for active high leds and "low" for active low leds.
-The default value is "high" for compatible for the original driver.
+Please change your comments style.
 
-Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
----
- .../devicetree/bindings/leds/leds-gpio.txt    | 15 +++++++++++
- drivers/leds/leds-gpio.c                      | 25 +++++++++++++++++--
- 2 files changed, 38 insertions(+), 2 deletions(-)
+On 2018/8/31 11:56, Ran Wang wrote:
+> The NXP's QorIQ Processors based on ARM Core have RCPM module (Run
+> Control and Power Management), which performs all device-level
+> tasks associated with power management such as wakeup source control.
+>
+> This driver depends on FSL platform PM driver framework which help to
+> isolate user and PM service provider (such as RCPM driver).
+>
+> Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
+> Signed-off-by: Ying Zhang <ying.zhang22455@nxp.com>
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+>  drivers/soc/fsl/Kconfig   |    6 ++
+>  drivers/soc/fsl/Makefile  |    1 +
+>  drivers/soc/fsl/ls-rcpm.c |  153 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 160 insertions(+), 0 deletions(-)
+>  create mode 100644 drivers/soc/fsl/ls-rcpm.c
+>
+> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
+> index 6517412..882330d 100644
+> --- a/drivers/soc/fsl/Kconfig
+> +++ b/drivers/soc/fsl/Kconfig
+> @@ -30,3 +30,9 @@ config FSL_PLAT_PM
+>  	  have to know the implement details of wakeup function it require.
+>  	  Besides, it is also easy for service side to upgrade its logic when
+>  	  design changed and remain user side unchanged.
+> +
+> +config LS_RCPM
+> +	bool "Freescale RCPM support"
+> +	depends on (FSL_PLAT_PM)
+> +	help
+> +	  This feature is to enable specified wakeup source for system sleep.
+> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile
+> index 8f9db23..43ff71a 100644
+> --- a/drivers/soc/fsl/Makefile
+> +++ b/drivers/soc/fsl/Makefile
+> @@ -7,3 +7,4 @@ obj-$(CONFIG_QUICC_ENGINE)		+= qe/
+>  obj-$(CONFIG_CPM)			+= qe/
+>  obj-$(CONFIG_FSL_GUTS)			+= guts.o
+>  obj-$(CONFIG_FSL_PLAT_PM)	+= plat_pm.o
+> +obj-$(CONFIG_LS_RCPM)		+= ls-rcpm.o
+> diff --git a/drivers/soc/fsl/ls-rcpm.c b/drivers/soc/fsl/ls-rcpm.c
+> new file mode 100644
+> index 0000000..b0feb88
+> --- /dev/null
+> +++ b/drivers/soc/fsl/ls-rcpm.c
+> @@ -0,0 +1,153 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// plat_pm.c - Freescale Layerscape RCPM driver
+> +//
+> +// Copyright 2018 NXP
+> +//
+> +// Author: Ran Wang <ran.wang_1@nxp.com>,
+> +
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/slab.h>
+> +#include <soc/fsl/plat_pm.h>
+> +
+> +#define MAX_COMPATIBLE_NUM	10
+> +
+> +struct rcpm_t {
+> +	struct device *dev;
+> +	void __iomem *ippdexpcr_addr;
+> +	bool big_endian;	/* Big/Little endian of RCPM module */
+> +};
+> +
+> +// rcpm_handle - Configure RCPM reg according to wake up source request
+> +// @user_dev: pointer to user's device struct
+> +// @flag: to enable(true) or disable(false) wakeup source
+> +// @handle_priv: pointer to struct rcpm_t instance
+> +//
+> +// Return 0 on success other negative errno
+> +static int rcpm_handle(struct device *user_dev, bool flag, void *handle_priv)
+> +{
+> +	struct rcpm_t *rcpm;
+> +	bool big_endian;
+> +	const char  *dev_compatible_array[MAX_COMPATIBLE_NUM];
+> +	void __iomem *ippdexpcr_addr;
+> +	u32 ippdexpcr;
+> +	u32 set_bit;
+> +	int ret, num, i;
+> +
+> +	rcpm = handle_priv;
+> +	big_endian = rcpm->big_endian;
+> +	ippdexpcr_addr = rcpm->ippdexpcr_addr;
+> +
+> +	num = device_property_read_string_array(user_dev, "compatible",
+> +			dev_compatible_array, MAX_COMPATIBLE_NUM);
+> +	if (num < 0)
+> +		return num;
+> +
+> +	for (i = 0; i < num; i++) {
+> +		if (!device_property_present(rcpm->dev,
+> +					dev_compatible_array[i]))
+> +			continue;
+> +		else {
+Remove this else.
+> +			ret = device_property_read_u32(rcpm->dev,
+> +					dev_compatible_array[i], &set_bit);
+> +			if (ret)
+> +				return ret;
+> +
+> +			if (!device_property_present(rcpm->dev,
+> +						dev_compatible_array[i]))
+This has been checked. Continue ? or return ENODEV？
+> +				return -ENODEV;
+> +			else {
+Remove this else.
+> +				ret = device_property_read_u32(rcpm->dev,
+> +						dev_compatible_array[i], &set_bit);
+> +				if (ret)
+> +					return ret;
+> +
+> +				if (big_endian)
+> +					ippdexpcr = ioread32be(ippdexpcr_addr);
+> +				else
+> +					ippdexpcr = ioread32(ippdexpcr_addr);
+> +
+> +				if (flag)
+> +					ippdexpcr |= set_bit;
+> +				else
+> +					ippdexpcr &= ~set_bit;
+> +
+> +				if (big_endian) {
+> +					iowrite32be(ippdexpcr, ippdexpcr_addr);
+> +					ippdexpcr = ioread32be(ippdexpcr_addr);
+> +				} else
+if (x) {
+....
+....
+}  else {
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-gpio.txt b/Documentation/devicetree/bindings/leds/leds-gpio.txt
-index a48dda268f81..0a8fad75c704 100644
---- a/Documentation/devicetree/bindings/leds/leds-gpio.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-gpio.txt
-@@ -23,6 +23,9 @@ LED sub-node properties:
-   remains up.
- - panic-indicator : (optional)
-   see Documentation/devicetree/bindings/leds/common.txt
-+- light-state: (optional) Values should be "high" or "low", which indicates
-+	the state of the GPIO pin when the led is on.
-+  see Documentation/devicetree/bindings/leds/common.txt
- 
- Examples:
- 
-@@ -64,3 +67,15 @@ leds {
- 		retain-state-suspended;
- 	};
- };
-+
-+leds {
-+	compatible = "gpio-leds";
-+
-+	led0 {
-+		label = "led0";
-+		gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-+		linux,default-trigger = "heartbeat";
-+		default-state = "off";
-+		light-state = "low";
-+	};
-+}
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index 764c31301f90..463ded0c71ac 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -26,9 +26,13 @@ struct gpio_led_data {
- 	struct gpio_desc *gpiod;
- 	u8 can_sleep;
- 	u8 blinking;
-+	u8 light_state;
- 	gpio_blink_set_t platform_gpio_blink_set;
- };
- 
-+#define LEDS_GPIO_LIGHTSTATE_HIGH	0
-+#define LEDS_GPIO_LIGHTSTATE_LOW	1
-+
- static inline struct gpio_led_data *
- 			cdev_to_gpio_led_data(struct led_classdev *led_cdev)
- {
-@@ -42,9 +46,15 @@ static void gpio_led_set(struct led_classdev *led_cdev,
- 	int level;
- 
- 	if (value == LED_OFF)
--		level = 0;
-+		if (led_dat->light_state == LEDS_GPIO_LIGHTSTATE_HIGH)
-+			level = 0;
-+		else
-+			level = 1;
- 	else
--		level = 1;
-+		if (led_dat->light_state == LEDS_GPIO_LIGHTSTATE_HIGH)
-+			level = 1;
-+		else
-+			level = 0;
- 
- 	if (led_dat->blinking) {
- 		led_dat->platform_gpio_blink_set(led_dat->gpiod, level,
-@@ -205,6 +215,17 @@ static struct gpio_leds_priv *gpio_leds_create(struct platform_device *pdev)
- 				led.default_state = LEDS_GPIO_DEFSTATE_OFF;
- 		}
- 
-+		if (!fwnode_property_read_string(child, "light-state",
-+						 &state)) {
-+			if (!strcmp(state, "low"))
-+				led_dat->light_state =
-+					LEDS_GPIO_LIGHTSTATE_LOW;
-+			else{
-+				led_dat->light_state =
-+					LEDS_GPIO_LIGHTSTATE_HIGH;
-+			}
-+		}
-+
- 		if (fwnode_property_present(child, "retain-state-suspended"))
- 			led.retain_state_suspended = 1;
- 		if (fwnode_property_present(child, "retain-state-shutdown"))
--- 
-2.17.1
+}
+> +					iowrite32(ippdexpcr, ippdexpcr_addr);
+> +
+> +				return 0;
+> +			}
+> +		}
+> +	}
+> +
+> +	return -ENODEV;
+> +}
+> +
+> +static int ls_rcpm_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *r;
+> +	struct rcpm_t *rcpm;
+> +
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!r)
+> +		return -ENODEV;
+> +
+> +	rcpm = kmalloc(sizeof(*rcpm), GFP_KERNEL);
+kzalloc is better.
+> +	if (!rcpm)
+> +		return -ENOMEM;
+> +
+> +	rcpm->big_endian = device_property_read_bool(&pdev->dev, "big-endian");
+> +
+> +	rcpm->ippdexpcr_addr = devm_ioremap_resource(&pdev->dev, r);
+> +	if (IS_ERR(rcpm->ippdexpcr_addr))
+> +		return PTR_ERR(rcpm->ippdexpcr_addr);
+> +
+> +	rcpm->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, rcpm);
+> +
+> +	return register_fsl_platform_wakeup_source(rcpm_handle, rcpm);
+> +}
+> +
+> +static int ls_rcpm_remove(struct platform_device *pdev)
+> +{
+> +	struct rcpm_t	*rcpm;
+Not need a table.
+
+Cheers,
+-Dongsheng
+
+> +
+> +	rcpm = platform_get_drvdata(pdev);
+> +	deregister_fsl_platform_wakeup_source(rcpm);
+> +	kfree(rcpm);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id ls_rcpm_of_match[] = {
+> +	{ .compatible = "fsl,qoriq-rcpm-2.1", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, ls_rcpm_of_match);
+> +
+> +static struct platform_driver ls_rcpm_driver = {
+> +	.driver = {
+> +		.name = "ls-rcpm",
+> +		.of_match_table = ls_rcpm_of_match,
+> +	},
+> +	.probe = ls_rcpm_probe,
+> +	.remove = ls_rcpm_remove,
+> +};
+> +
+> +static int __init ls_rcpm_init(void)
+> +{
+> +	return platform_driver_register(&ls_rcpm_driver);
+> +}
+> +subsys_initcall(ls_rcpm_init);
+> +
+> +static void __exit ls_rcpm_exit(void)
+> +{
+> +	platform_driver_unregister(&ls_rcpm_driver);
+> +}
+> +module_exit(ls_rcpm_exit);
