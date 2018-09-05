@@ -1,149 +1,62 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] bus: Add DT bindings for 96Boards low speed connector
-Date: Wed, 5 Sep 2018 11:05:34 +0200
-Message-ID: <CACRpkdZ5jYTvNeHNDf3oJaGxgP8kie-uQu1=8FYyEDLeMquEnQ@mail.gmail.com>
-References: <20180823103332.32047-1-linus.walleij@linaro.org>
- <20180823103332.32047-4-linus.walleij@linaro.org>
- <CAL_JsqK2tdGHkeJ0OceLbBiki7VUqKrstDSiB7KRpZ-FExHtQw@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 00/11] mscc: ocelot: add support for SerDes muxing
+ configuration
+Date: Wed, 5 Sep 2018 11:07:50 +0200
+Message-ID: <20180905090750.GM13888@piout.net>
+References: <20180903093308.24366-1-quentin.schulz@bootlin.com>
+ <20180903133415.GF4445@lunn.ch>
+ <20180903134522.GC13888@piout.net>
+ <20180903.220910.899357653888940454.davem@davemloft.net>
+ <20180904151653.GI13888@piout.net>
+ <20180904161028.nh5ejrtj22r5az5e@pburton-laptop>
+ <20180904180006.d5th3jrbhr4vtahi@qschulz>
+ <20180904230351.vwlq2s7joulvqw2i@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqK2tdGHkeJ0OceLbBiki7VUqKrstDSiB7KRpZ-FExHtQw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Mika Westerberg <mika.westerberg@linux.intel.com>, Michal Simek <michal.simek@xilinx.com>, dev <dev@lists.96boards.org>, Mark Brown <broonie@kernel.org>, John Stultz <john.stultz@linaro.org>, Andy Shevchenko <andy@infradead.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180904230351.vwlq2s7joulvqw2i@pburton-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Burton <paul.burton@mips.com>
+Cc: Quentin Schulz <quentin.schulz@bootlin.com>, David Miller <davem@davemloft.net>, andrew@lunn.ch, ralf@linux-mips.org, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kishon@ti.com, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 23, 2018 at 3:46 PM Rob Herring <robh+dt@kernel.org> wrote:
-> On Thu, Aug 23, 2018 at 5:33 AM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > We need to be able to grab resources on a 96Boards low
-> > speed connector to populate and use a daughterboard, so
-> > define some very rudimentary properties simply passing
-> > phandles for the resources used on the low speed
-> > connector.
->
-> This only works for describing what's on the connector, but does
-> nothing for describing downstream devices on the connector. We already
-> have a way to do the former with label properties at least for uart,
-> i2c and spi. And gpio has it's own method of labeling lines.
+On 04/09/2018 16:03:51-0700, Paul Burton wrote:
+> Well, it sounded like David is OK with this all going through the MIPS
+> tree, though we'd need an ack for the PHY parts.
+> 
+> Alternatively I'd be happy for the DT changes to go through the net-next
+> tree, which may make more sense given that the .dts changes are pretty
+> trivial in comparison with the driver changes. If David wants to do that
+> then for patches 1 & 8:
+> 
+>     Acked-by: Paul Burton <paul.burton@mips.com>
+> 
+> Either way there may be conflicts for ocelot.dtsi when it comes to
+> merging to master, but they should be simple to resolve. It seems
+> Wolfram already took your DT changes for I2C so there's probably going
+> to be multiple trees updating that file this cycle already anyway.
+> 
 
-This is on purpose as the downstream daughterboards are
-described by C code rather than DT. The idea is to use the same
-for ACPI rather than DSDT.
+Actually, I think Wolfram meant that he took the bindings so you can
+take the DT patches for i2c.
 
-> > +lscon: connector {
-> > +       compatible = "96boards,low-speed-connector";
-> > +       i2c0 = <&i2csw_0>;
-> > +       i2c1 = <&i2csw_1>;
-> > +       spi = <&spi0>;
->
-> David G has suggested using aliases (in this node, not top-level) for
-> this purpose of mapping things like spi and i2c, and I think that's a
-> good use of aliases (versus spi and i2c aliases at the top level which
-> I don't). The hard part is still how to structure the child devices.
+> Ideally I'd say "don't break bisection" but that's sort of a separate
+> issue here since even if you restructure your series to do that it would
+> still need to go through one tree. For example you could adjust
+> mscc_ocelot_probe() to handle either the reg property or the syscon,
+> then adjust the DT to use the syscon, then remove the code dealing with
+> the reg property, and I'd consider that a good idea anyway but it would
+> still probably all need to go through one tree to make sure things get
+> merged in the right order & avoid breaking bisection.
+> 
 
-Sorry, I am just too ignorant about the semantic difference between
-a phandle and an alias. As long as I can follow it to get a handle on
-the device node I'm happy, aliases are fine I guess.
+I don't really think bisection is important at this stage but if you
+don't want to break it, then I guess it makes more sense to have the
+whole series through net.
 
-The specification says:
 
-"The phandle property specifies a numerical identifier for a node that
-is unique within the devicetree. The phandle property value is used by
-other nodes that need to refer to the node associated with the
-property."
-
-Numerical? Hm.
-
-The aliases are very vague and seem to not be really specified.
-Not in the DT spec at least. And that is not in line with how the
-Linux kernel DTs uses aliases anyway, it seems.
-
-Syntactically they look like so:
-
-aliases {
-        serial0 = &uart1;
-};
-
-phandles {
-        serial0 = <&uart1>;
-};
-
-Not a big difference.
-
-In your opinion, what constitues the semantic meaning of an alias
-vs a phandle?
-
-> > +       gpios = <&gpio 36 0>, /* GPIO-A */
->
-> We defined 'gpio-map' specifically for handling GPIOs thru connectors.
-> It's in the DT spec (though not a released version yet). Use it here.
-
-We have code for it (by Stephen Boyd) which works and I tested
-it even, it works fine!
-
-But it is not intended for what I do here. It shares the ambition to
-define all devices in the daughterboard using DT, so there must
-be a consuming node, on the daughterboard, using
-my-gpios = <&connector 0>; and we are back
-at overlays. There is no way for a connector driver to
-grab a GPIO from the GPIO map, the map is just a
-cross-reference, not resource provider.
-
-Maybe I could let the connector say that it's using
-GPIOs from itself? I can take a stab at that. It will look weird
-but it's allright I guess.
-
-> Sorry, but the only halfway solution
-> I'm going to accept is one which
-> can evolve into a full solution. Define the basic structure and add
-> each interface one by one.
->
-> Maybe that starts with just:
->
-> lscon: connector {
->        compatible = "96boards,low-speed-connector";
-> };
-
-I suspect "full solution" in the above paragraph means full
-DT overlays, and ACPI systems are none of your concern
-in this context?
-
-A halfway solution is what I am trying to do, because the
-walking all the way down the road means we run into the
-imperialistic ambitions of both DT and ACPI DSDT to describe
-the whole system using just DT or just ACPI DSDT.
-
-As mentioned, we have today the developer box that is
-using ACPI, and the other 96Boards using mostly DT.
-
-Which currently means similar support code twice
-for these (simple) mezzanines, then author and support
-overlays in both HW description languages.
-
-Like with the fwnode rework that is going on in parallel, in
-my view it is really necessary for both DT and ACPI to take
-a step back and stop being so imperialistic. It seems they
-are both living under the assumption that they do not really
-need to care about the other HW description language, and
-it is stifling development. Maybe this view is too harsh, I am
-sometimes also just thinking inside my little box :(
-
-My current plan is to develop the code in the patch set using
-fwnode where possible so that I have a proof of concept of
-the same mezzanine population code being used for DT and
-ACPI alike. It works for GPIOs, but phandles or aliases are
-going to be a challenge.
-
-Yours,
-Linus Walleij
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
