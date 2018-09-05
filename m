@@ -1,72 +1,47 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH 0/6] drm/sun4i: Support color dithering for LCD panels
-Date: Wed, 5 Sep 2018 18:54:29 +0530
-Message-ID: <CAMty3ZAPGuxLB99jod8Mq1fF+Mw6GLpLHiGuSHRNFKOT2uJSOQ@mail.gmail.com>
-References: <20180419093225.614-1-wens@csie.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v3] arm64: dts: ti: k3-am65: Change #address-cells and
+ #size-cells of interconnect to 2
+Date: Wed, 5 Sep 2018 08:40:37 -0500
+Message-ID: <20180905134037.szkh3wnugrtnrrfh@kahuna>
+References: <20180905111738.8280-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180419093225.614-1-wens@csie.org>
+Content-Disposition: inline
+In-Reply-To: <20180905111738.8280-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Jonathan Liu <net147@gmail.com>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, nsekhar@ti.com, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 19, 2018 at 3:02 PM, Chen-Yu Tsai <wens@csie.org> wrote:
-> Dithering is a method of approximating a color from a mixture of other
-> colors when the required color isn't available. It reduces color
-> banding artifacts that can be observed when displaying gradients
-> (e.g. grayscale gradients). This may occur when the image that needs
-> to be displayed is 24-bit but the LCD panel is a lower bit depth and
-> does not perform dithering on its own.
->
-> The TCON (LCD controller) found in Allwinner SoCs has hardware support
-> for dithering on channel 0, the channel used to feed LCD panels. This
-> series adds support for it.
->
-> Patch 1 reworks the mode set function for the CPU interface to pass
-> the encoder object, so it can be passed to other helper functions.
->
-> Patch 2 renames the dithering related register macros to reflect the
-> fact that dithering is only supported on channel 0.
->
-> Patch 3 adds support for dithering on all LCD panel output types.
->
-> Patch 4 adds support for Banana Pi's 7" DPI LCD panel.
->
-> Patch 5 adds a pinmux setting for RGB888 for the Allwinner A20 SoC.
-> This change has been sent by others before.
->
-> Patch 6 provides an example for enabling the Banana Pi 7" DPI LCD panel
-> on the Banana Pi M1+. This should not be merged. I will likely rework
-> this into an overlay in the future.
->
-> Note that I was only able to test dithering with DPI, as I do not have
-> other panel types. However the underlying concept and core code is the
-> same, as are the drm objects accessed. Nevertheless I'm hoping Jonathan
-> can test LVDS and Maxime can test MIPI DSI.
->
-> Also it seems pwm-backlight hardware is unusable at the moment. I'm not
-> sure whether the pwm-backlight or sun4i-pwm driver is to blame. I had to
-> manually poke the pwm registers so the LCD backlight wouldn't be
-> completely black.
->
->
-> Regards
-> ChenYu
->
-> Chen-Yu Tsai (5):
->   drm/sun4i: tcon: Pass drm_encoder * into sun4i_tcon0_mode_set_cpu
->   drm/sun4i: tcon: Rename Dithering related register macros
->   drm/panel: simple: Add support for Banana Pi 7" S070WV20-CT16 panel
->   ARM: dts: sun7i: add pinmux setting for RGB888 output for LCD0
->   [DO NOT MERGE] ARM: dts: sun7i: bananapi-m1-plus: Enable Bananapi 7"
->     800x480 RGB LCD panel
->
-> Jonathan Liu (1):
->   drm/sun4i: tcon: Add dithering support for RGB565/RGB666 LCD panels
+On 11:17-20180905, Kishon Vijay Abraham I wrote:
+> AM65 has two PCIe controllers and each PCIe controller has '2' address
+> spaces one within the 4GB address space of the SoC and the other above
+> the 4GB address space of the SoC (cbass_main) in addition to the
+> register space. The size of the address space above the 4GB SoC address
+> space is 4GB. These address ranges will be used by CPU/DMA to access
+> the PCIe address space. In order to represent the address space above
+> the 4GB SoC address space and to represent the size of this address
+> space as 4GB, change address-cells and size-cells of interconnect to 2.
+> 
+> Since OSPI has similar need in MCU Domain Memory Map, change
+> address-cells and size-cells of cbass_mcu interconnect also to 2.
+> 
+> Fixes: ea47eed33a3fe3d919 ("arm64: dts: ti: Add Support for AM654 SoC")
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> Acked-by: Vignesh R <vigneshr@ti.com>
+> ---
+> Changes from v2:
+> Added Fixes tag.
 
-Do you have any working branch to test this, I can't see drm probing
-on linux-next, I even enabled de on dts which is missing.
+Thanks.
+Acked-by: Nishanth Menon <nm@ti.com>
 
-Jagan.
+Tero: Could we take this for v4.20 ? While this is a bug fix, I think
+it might be better in v4.20 window since it will help provide a clean merge
+of follow on nodes.
+
+-- 
+Regards,
+Nishanth Menon
