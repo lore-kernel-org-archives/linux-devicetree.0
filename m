@@ -1,42 +1,42 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 14/21] riscv: use for_each_of_cpu_node iterator
-Date: Wed,  5 Sep 2018 14:37:31 -0500
-Message-ID: <20180905193738.19325-15-robh@kernel.org>
+Subject: [PATCH 15/21] SH: use for_each_of_cpu_node iterator
+Date: Wed,  5 Sep 2018 14:37:32 -0500
+Message-ID: <20180905193738.19325-16-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, linux-riscv@lists.infradead.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
 has the side effect of defaulting to iterating using "cpu" node names in
 preference to the deprecated (for FDT) device_type == "cpu".
 
-Cc: Palmer Dabbelt <palmer@sifive.com>
-Cc: Albert Ou <aou@eecs.berkeley.edu>
-Cc: linux-riscv@lists.infradead.org
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: linux-sh@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
 Please ack and I will take via the DT tree. This is dependent on the
 first 2 patches.
 
- arch/riscv/kernel/smpboot.c | 2 +-
+ arch/sh/boards/of-generic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/kernel/smpboot.c b/arch/riscv/kernel/smpboot.c
-index 56abab6a9812..3c59afe67951 100644
---- a/arch/riscv/kernel/smpboot.c
-+++ b/arch/riscv/kernel/smpboot.c
-@@ -52,7 +52,7 @@ void __init setup_smp(void)
- 	struct device_node *dn = NULL;
- 	int hart, im_okay_therefore_i_am = 0;
+diff --git a/arch/sh/boards/of-generic.c b/arch/sh/boards/of-generic.c
+index 26789ad28193..cde370cad4ae 100644
+--- a/arch/sh/boards/of-generic.c
++++ b/arch/sh/boards/of-generic.c
+@@ -64,7 +64,7 @@ static void sh_of_smp_probe(void)
 
--	while ((dn = of_find_node_by_type(dn, "cpu"))) {
-+	for_each_of_cpu_node(dn) {
- 		hart = riscv_of_processor_hart(dn);
- 		if (hart >= 0) {
- 			set_cpu_possible(hart, true);
+ 	init_cpu_possible(cpumask_of(0));
+
+-	for_each_node_by_type(np, "cpu") {
++	for_each_of_cpu_node(np) {
+ 		const __be32 *cell = of_get_property(np, "reg", NULL);
+ 		u64 id = -1;
+ 		if (cell) id = of_read_number(cell, of_n_addr_cells(np));
 --
 2.17.1
