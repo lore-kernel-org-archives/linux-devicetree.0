@@ -1,64 +1,53 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: Add device_type access helper functions
-Date: Tue, 4 Sep 2018 20:55:48 -0700
-Message-ID: <4253073f-5ddf-a01c-4d3e-5c6a13068903@gmail.com>
-References: <20180830185229.20393-1-robh@kernel.org>
+From: Mark Cave-Ayland <mark.cave-ayland@ilande.co.uk>
+Subject: Re: [PATCH 3/3] of: make default address and size cells sizes private
+Date: Wed, 5 Sep 2018 05:37:32 +0100
+Message-ID: <9c873e57-84c8-75af-1d44-60e7cd41282d@ilande.co.uk>
+References: <20180830190523.31474-1-robh@kernel.org>
+ <20180830190523.31474-4-robh@kernel.org>
+ <35247ddc-303b-89d0-53b5-231c1a293721@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830185229.20393-1-robh@kernel.org>
-Content-Language: en-US
+In-Reply-To: <35247ddc-303b-89d0-53b5-231c1a293721@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, sparclinux@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/30/18 11:52, Rob Herring wrote:
-> In preparation to remove direct access to device_node.type, add
-> of_node_is_type() and of_node_get_device_type() helpers to check and
-> retrieve the device type.
-> 
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  include/linux/of.h | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a40f63a36afa..506beca9588d 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -980,6 +980,18 @@ static inline struct device_node *of_find_matching_node(
->  	return of_find_matching_node_and_match(from, matches, NULL);
->  }
->  
-> +static inline const char *of_node_get_device_type(const struct device_node *np)
-> +{
-> +	return of_get_property(np, "type", NULL);
+On 05/09/18 02:55, Frank Rowand wrote:
 
-I'm a little confused.  The patch comment says "remove direct access to device_node.type.
-device_node.type is set to the value of the property "device_type" in populate_node(),
-but of_node_get_device_type() is looking for property "type".
+> On 08/30/18 12:05, Rob Herring wrote:
+>> Only some old OpenFirmware implementations rely on default sizes. Any
+>> FDT and modern implementation should have explicit properties. Make the
+>> OF_ROOT_NODE_*_CELLS_DEFAULT defines private so we don't get any outside
+>> users.
+>>
+>> This also gets us one step closer to removing the asm/prom.h dependency on
+>> Sparc.
+
+Just for the record: you say "any FDT and modern implementation should
+have explicit properties", however the default values of these
+properties when missing are clearly defined in the IEEE-1275
+specification (Annex A):
+
+"#address-cells"
+Standard property name to define the package’s address format.
+...
+In a package with a "decode-unit" method, a missing "#address-cells"
+property signifies that the number of
+address cells is two.
+
+"#size-cells"
+Standard property name to define the package’s address size format.
+...
+A missing "#size-cells" property signifies the default value of one.
+
+I can't speak for FDT but it isn't completely unreasonable for a guest
+parsing a DT without these properties to assume these default values.
 
 
-> +}> +
-> +static inline bool of_node_is_type(const struct device_node *np, const char *type)
-> +{
-> +	const char *match = of_node_get_device_type(np);
-> +
-> +	return np && match && type && !of_prop_cmp(match, type);
-> +}
-> +
->  /**
->   * of_property_count_u8_elems - Count the number of u8 elements in a property
->   *
-> 
+ATB,
 
-I'd like to see one or two examples of how you plan to use of_node_get_device_type()
-(outside of of_node_is_type()) and examples of planned use of of_node_is_type() so
-I can better understand anticipated usage.  Complete, clean patches not needed for
-the examples, just enough text for me to see the resulting code change where the
-helpers are used.
-
--Frank
+Mark.
