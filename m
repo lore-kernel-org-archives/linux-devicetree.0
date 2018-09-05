@@ -1,37 +1,23 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
-Date: Thu,  6 Sep 2018 14:50:13 +0900
-Message-Id: <1536213014-1325-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=hiZW=LT=cogentembedded.com=sergei.shtylyov@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add R-Car gen3 SoC support to the CMT driver
+Message-ID: <3ce24bfe-1edb-1a92-8847-ff998ac86d16@cogentembedded.com>
+Date: Wed, 5 Sep 2018 23:27:09 +0300
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car Gen3 needs to enable clocks of both host and peripheral.
-Otherwise, other side device cannot work correctly. So, this patch
-adds a property of clock-names for R-Car Gen3 as an optional.
+Hello!
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Here's the set of 2 patches against the 'tip.git' repo's 'timers/core' branch
+plus the driver fixup for the 64-bit machines posted recently. We're adding
+support for the CMT0 and CMT1 found in the R-Car gen3 SoCs.
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 087140a..a8fa3ec 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -37,6 +37,8 @@ Optional properties:
-   - dmas: Must contain a list of references to DMA specifiers.
-   - dma-names : named "ch%d", where %d is the channel number ranging from zero
-                 to the number of channels (DnFIFOs) minus one.
-+  - clock-names: For a "renesas,rcar-gen3-usbhs" compatible device,
-+		 "hsusb" and "ehci/ohci" can be set.
- 
- Example:
- 	usbhs: usb@e6590000 {
--- 
-1.9.1
+[1/2] clocksource: sh_cmt: properly line-wrap sh_cmt_of_table[] initializer
+[2/2] clocksource: sh_cmt: add R-Car gen3 support
+
+MBR, Sergei
