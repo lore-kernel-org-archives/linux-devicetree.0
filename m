@@ -1,44 +1,100 @@
-From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
-Date: Wed, 5 Sep 2018 11:18:35 -0700
-Message-ID: <20180905111835.7f3ae40e@jacob-builder>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-4-jean-philippe.brucker@arm.com>
-	<d785ec89-6743-d0f1-1a7f-85599a033e5b@redhat.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v5 2/2] leds: lm3697: Introduce the lm3697 driver
+Date: Wed, 5 Sep 2018 13:18:08 -0500
+Message-ID: <a0651696-2cea-a96f-d1f1-b02c39ae187c@ti.com>
+References: <20180817151528.21623-1-dmurphy@ti.com>
+ <20180817151528.21623-2-dmurphy@ti.com> <20180824100549.GC4045@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <d785ec89-6743-d0f1-1a7f-85599a033e5b-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xuzaibo-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, christian.koenig-5C7GfCeVMHo@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180824100549.GC4045@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Sep 2018 14:14:12 +0200
-Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+Pavel
 
-> > + *
-> > + * On Arm and AMD IOMMUs, entry 0 of the PASID table can be used
-> > to hold
-> > + * non-PASID translations. In this case PASID 0 is reserved and
-> > entry 0 points
-> > + * to the io_pgtable base. On Intel IOMMU, the io_pgtable base
-> > would be held in
-> > + * the device table and PASID 0 would be available to the
-> > allocator.
-> > + */  
-> very nice explanation
-With the new Vt-d 3.0 spec., 2nd level IO page table base is no longer
-held in the device context table. Instead it is held in the PASID table
-entry pointed by the RID_PASID field in the device context entry. If
-RID_PASID = 0, then it is the same as ARM and AMD IOMMUs.
-You can refer to ch3.4.3 of the VT-d spec.
+On 08/24/2018 05:05 AM, Pavel Machek wrote:
+> Hi!
+> 
+
+I am going to go ahead and update this code anyway and if we get the ti-lmu
+code in then we can adapt this code to use that framework
+
+>> +/**
+>> + * struct lm3697 -
+>> + * @enable_gpio - Hardware enable gpio
+>> + * @regulator - LED supply regulator pointer
+>> + * @client - Pointer to the I2C client
+>> + * @regmap - Devices register map
+>> + * @dev - Pointer to the devices device struct
+>> + * @lock - Lock for reading/writing the device
+>> + * @leds - Array of LED strings.
+>> + */
+> 
+> extra .
+
+ACK
+
+> 
+>> +	ret = regmap_write(led->priv->regmap, brt_msb_reg, brt_val);
+>> +	if (ret) {
+>> +		dev_err(&led->priv->client->dev, "Cannot write MSB\n");
+>> +		goto out;
+>> +	}
+>> +out:
+> 
+> I'd avoid this goto.
+
+Ack
+
+> 
+>> +static int lm3697_set_control_bank(struct lm3697 *priv)
+>> +{
+>> +	u8 control_bank_config = 0;
+>> +	struct lm3697_led *led;
+>> +	int ret, i;
+>> +
+>> +	led = &priv->leds[0];
+>> +	if (led->control_bank == LM3697_CONTROL_A)
+>> +		led = &priv->leds[1];
+> 
+> I'd expect CONTROL_A to correspond to leds[0]...?
+
+Not always there can be a situation where all HVLEDs can be configured
+for control bank B
+
+> 
+>> +	for (i = 0; i < LM3697_MAX_LED_STRINGS; i++) {
+>> +		if (led->hvled_strings[i] == LM3697_HVLED_ASSIGNMENT)
+>> +			control_bank_config |= 1 << i;
+>> +	}
+> 
+> Extra {}s.
+
+Ack
+
+> 
+>> +	priv->regulator = devm_regulator_get(&priv->client->dev, "vled");
+>> +	if (IS_ERR(priv->regulator))
+>> +		priv->regulator = NULL;
+> 
+> If vled regulator is specified in dt and _get fails, is it worth a
+> warning?
+
+Hmmm.  That would be annoying on boot to have a warning on an optional
+parameter.  But if we need it I can add it.
+
+Dan
+
+> 
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
