@@ -1,48 +1,69 @@
-Return-Path: <SRS0=ONUo=LT=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
-Date: Wed, 5 Sep 2018 15:31:56 +0000
-Message-ID: 
- <TYXPR01MB1568EA45A14A2E811546ED2A8A020@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=QNtu=LT=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
 References: <20180829132841.64787-1-chris.brandt@renesas.com>
  <TY1PR01MB1562F79382CA2AA33AA661EB8A020@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <CAMuHMdVZbaGxwuL6aJfv0Nsoxyrj_M7nL0X1Oo6_KoDYJTwi-w@mail.gmail.com>
- <TYXPR01MB1568DD90490B28E46E949D658A020@TYXPR01MB1568.jpnprd01.prod.outlook.com>
- <CAMuHMdUojvTWiGhULtp=tgTz56S2MAuYnT1p-JQWBn3PUag8jg@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdUojvTWiGhULtp=tgTz56S2MAuYnT1p-JQWBn3PUag8jg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+ <CAMuHMdVZbaGxwuL6aJfv0Nsoxyrj_M7nL0X1Oo6_KoDYJTwi-w@mail.gmail.com> <TYXPR01MB1568DD90490B28E46E949D658A020@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYXPR01MB1568DD90490B28E46E949D658A020@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 5 Sep 2018 17:07:06 +0200
+Message-ID: <CAMuHMdUojvTWiGhULtp=tgTz56S2MAuYnT1p-JQWBn3PUag8jg@mail.gmail.com>
+Subject: Re: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgU2VwdGVtYmVyIDA1LCAyMDE4IDEsIEdlZXJ0IFV5
-dHRlcmhvZXZlbiB3cm90ZToNCj4gPiBTby4uLi5JIGd1ZXNzIEkgZGlkbid0IHJlYWxseSBoYXZl
-IGFuIGlzc3VlIGFmdGVyIGFsbC4NCj4gDQo+IFlvdSBkbyB3YW50IHRvOg0KPiAgIDEuIERvY3Vt
-ZW50IHRoZSB0d28gcmVnaXN0ZXIgcmFuZ2VzIGluIHRoZSBEVCBiaW5kaW5ncywNCj4gICAyLiBV
-cGRhdGUgdGhlIGRyaXZlciB0byBtYXAgYm90aCByYW5nZXMgb24gUlovQTIuDQoNClRoZSBkcml2
-ZXIgZG9lcyBub3QgbmVlZCB0byBiZSB1cGRhdGVkLg0KDQpHaXZlbiB0aGlzIG1hcHBpbmc6DQoN
-CgljcGc6IGNsb2NrLWNvbnRyb2xsZXJAZmNmZTAwMjAgew0KCQljb21wYXRpYmxlID0gInJlbmVz
-YXMscjdzOTIxMC1jcGctbXNzciI7DQoJCXJlZyA9IDwweGZjZmUwMDEwIDB4NDU1PjsgIC8qIEZD
-RkUwMDEwIC0gRkNGRTA0NjUgKi8NCgkJY2xvY2tzID0gPCZleHRhbF9jbGs+Ow0KCQljbG9jay1u
-YW1lcyA9ICJleHRhbCI7DQoJCSNjbG9jay1jZWxscyA9IDwyPjsNCgkJI3Bvd2VyLWRvbWFpbi1j
-ZWxscyA9IDwwPjsNCgkJI3Jlc2V0LWNlbGxzID0gPDE+Ow0KCX07DQoNClRoaXMgY292ZXJzIGFs
-bCB0aGUgQ1BHLCBNU1RQLCBwb3dlciBkb3duIGFuZCByZXNldCByZWdpc3RlcnMuDQoNClNvIEkn
-bSBqdXN0IGdvaW5nIHRvIG1hcCB0aGVtIGFsbCBhdCBvbmNlLg0KDQpBbmQsIHlvdSBjYW4gc2Vl
-IHRoYXQgc29tZSBDUEcgYW5kIE1TVFAgcmVnaXN0ZXIgYXJlIG1peGVkIHRvZ2V0aGVyLg0KSGVy
-ZSBpcyB0aGUgbGlzdCBvZiByZWdpc3RlcnMgaW4gYWRkcmVzcyBvcmRlcjoNCg0KIEZSUUNSICAg
-RkNGRV8wMDEwICAoQ1BHKQ0KU1RCQ1IxICAgRkNGRV8wMDIwICAoTVNUUCkNClNUQkNSMiAgIEZD
-RkVfMDAyNCAgKE1TVFApDQpDS0lPU0VMICBGQ0ZFXzAxMDAgIChDUEcpDQpTQ0xLU0VMICBGQ0ZF
-XzAxMDQgIChDUEcpDQpTVEJDUjMgICBGQ0ZFXzA0MjAgIChNU1RQKQ0KU1RCQ1I0ICAgRkNGRV8w
-NDI0ICAoTVNUUCkNClNUQkNSNSAgIEZDRkVfMDQyOCAgKE1TVFApDQpTVEJDUjYgICBGQ0ZFXzA0
-MkMgIChNU1RQKQ0KU1RCQ1I3ICAgRkNGRV8wNDMwICAoTVNUUCkNClNUQkNSOCAgIEZDRkVfMDQz
-NCAgKE1TVFApDQpTVEJDUjkgICBGQ0ZFXzA0MzggIChNU1RQKQ0KU1RCQ1IxMCAgRkNGRV8wNDND
-ICAoTVNUUCkNClNXUlNUQ1IxIEZDRkVfMDQ2MCAgKFJFU0VUKQ0KU1dSU1RDUjIgRkNGRV8wNDY0
-ICAoUkVTRVQpDQogIGV0Yy4uLg0KDQpTbyB0aGlzIHNob3VsZCBiZSBhbGwgb25lIG1lbW9yeSBi
-bG9jayBpbiB0aGlzIGRyaXZlci4NCg0KV2hlbiB5b3UgZ2V0IHRvIEZDRkZfQzAwMCssIHRoYXQn
-cyB3aGVyZSB0aGUgJ3NwZWNpYWx0eScgcmVnaXN0ZXJzIGFyZS4gDQpJIHRoaW5rIEZDRkZfQzAw
-MCsgc2hvdWxkIGJlIGEgc2VwYXJhdGUgYmxvY2ssIG1heWJlIGluIGEgc2VwYXJhdGUgZHJpdmVy
-Lg0KDQoNCkNocmlzDQoNCg==
+Hi Chris,
+
+On Wed, Sep 5, 2018 at 5:02 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Wednesday, September 05, 2018 1, Geert Uytterhoeven wrote:
+> > > So, I think I need to rework this driver to add the ability to add
+> > > multiple address regions.
+> >
+> > Your main driver for this block (clock?) can register the watchdog.
+> > Either directly with the watchdog subsystem, or by registering an
+> > "rza_wdt" platform device.
+>
+> It would seem strange that the clock driver would register the watchdog
+> timer for no other reason other than where the chip designer happen to
+> put the register addresses.
+
+That not that uncommon for "syscon" drivers...
+
+> Now that I look at it:
+>  CPG is at FCFE_0010 - FCFE_0104
+> MSTP is at FCFE_0400 - FCFE_0464
+>
+> Nothing sits in between CPG and MSTP.
+
+OK.
+
+> In the hardware manual, there is other 'random other stuff' that they
+> put in that chapter that is located in multiple address places, but that
+> doesn't mean I have to map them all in this driver.
+
+OK.
+
+> I simply changed the DTS to just map CPG and MSTP and now everything is
+> fine. My watchdog driver is happy and this CPG/MSTP driver works the
+> same.
+
+Good, I will resume review of the patch in $subject ;-)
+
+> So....I guess I didn't really have an issue after all.
+
+You do want to:
+  1. Document the two register ranges in the DT bindings,
+  2. Update the driver to map both ranges on RZ/A2.
+Right now it works by luck, as ioremap()'s granularity is PAGE_SIZE.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
