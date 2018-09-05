@@ -1,192 +1,68 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v3 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Wed, 5 Sep 2018 11:34:54 -0600
-Message-ID: <20180905173454.GB28215@codeaurora.org>
-References: <20180904211810.5506-1-ilina@codeaurora.org>
- <20180904211810.5506-2-ilina@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT] ARM: dts: exynos: Remove double SD card detect pin inversion
+Date: Wed,  5 Sep 2018 19:40:24 +0200
+Message-ID: <20180905174024.28366-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180904211810.5506-2-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org
-Cc: rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Maciej Purski <m.purski@samsung.com>, Simon Shields <simon@lineageos.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04 2018 at 15:18 -0600, Lina Iyer wrote:
->QCOM SoC's that have Power Domain Controller (PDC) chip in the always-on
->domain can wakeup the SoC, when interrupts and GPIOs are routed to its
->interrupt controller. Only select GPIOs that are deemed wakeup capable
->are routed to specific PDC pins. During low power state, the pinmux
->interrupt controller may be non-functional but the PDC would be. The PDC
->can detect the wakeup GPIO is triggered and bring the TLMM to an
->operational state.
->
->Interrupts that are level triggered will be detected at the TLMM when
->the controller becomes operational. Edge interrupts however need to be
->replayed again.
->
->Request the corresponding PDC IRQ, when the GPIO is requested as an IRQ,
->but keep it disabled. During suspend, we can enable the PDC IRQ instead
->of the GPIO IRQ, which may or not be detected.
->
->Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->---
->Changes in v3:
->	- free action->name
->Changes in v2:
->	- Remove IRQF_NO_SUSPEND and IRQF_ONE_SHOT from PDC IRQ
->Changes in v1:
->	- Trigger GPIO in h/w from PDC IRQ handler
->	- Avoid big tables for GPIO-PDC map, pick from DT instead
->	- Use handler_data
->---
-> drivers/pinctrl/qcom/pinctrl-msm.c | 98 ++++++++++++++++++++++++++++++
-> 1 file changed, 98 insertions(+)
->
->diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
->index 0e22f52b2a19..6527a0a9edd1 100644
->--- a/drivers/pinctrl/qcom/pinctrl-msm.c
->+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
->@@ -687,11 +687,15 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
-> 	const struct msm_pingroup *g;
-> 	unsigned long flags;
-> 	u32 val;
->+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->
-> 	g = &pctrl->soc->groups[d->hwirq];
->
-> 	raw_spin_lock_irqsave(&pctrl->lock, flags);
->
->+	if (pdc_irqd)
->+		irq_set_irq_type(pdc_irqd->irq, type);
->+
-> 	/*
-> 	 * For hw without possibility of detecting both edges
-> 	 */
->@@ -779,9 +783,13 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
-> 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-> 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-> 	unsigned long flags;
->+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->
-> 	raw_spin_lock_irqsave(&pctrl->lock, flags);
->
->+	if (pdc_irqd)
->+		irq_set_irq_wake(pdc_irqd->irq, on);
->+
-> 	irq_set_irq_wake(pctrl->irq, on);
->
-> 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->@@ -863,6 +871,94 @@ static bool msm_gpio_needs_valid_mask(struct msm_pinctrl *pctrl)
-> 	return device_property_read_u16_array(pctrl->dev, "gpios", NULL, 0) > 0;
-> }
->
->+static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->+{
->+	struct irq_data *irqd = data;
->+	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
->+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->+	const struct msm_pingroup *g;
->+	unsigned long flags;
->+	u32 val;
->+
->+	if (!irqd_is_level_type(irqd)) {
->+		g = &pctrl->soc->groups[irqd->hwirq];
->+		raw_spin_lock_irqsave(&pctrl->lock, flags);
->+		val = BIT(g->intr_status_bit);
->+		writel(val, pctrl->regs + g->intr_status_reg);
->+		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->+	}
->+
->+	return IRQ_HANDLED;
->+}
->+
->+static int msm_gpio_pdc_pin_request(struct irq_data *d)
->+{
->+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->+	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->+	struct platform_device *pdev = to_platform_device(pctrl->dev);
->+	const char *pin_name;
->+	int irq;
->+	int ret;
->+
->+	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
->+	if (!pin_name)
->+		return -ENOMEM;
->+
->+	irq = platform_get_irq_byname(pdev, pin_name);
->+	if (irq < 0) {
->+		kfree(pin_name);
->+		return 0;
->+	}
->+
->+	ret = request_irq(irq, wake_irq_gpio_handler, irqd_get_trigger_type(d),
->+			  pin_name, d);
->+	if (ret) {
->+		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
-Need to end with '\n'.
+The SDHCI standard, MMC host controller bindings and MMC core defines
+card detect pin as active low.  Therefore there is no point to invert it
+twice.
 
->+		kfree(pin_name);
->+		return ret;
->+	}
->+
->+	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
->+	disable_irq(irq);
->+
->+	return 0;
->+}
->+
->+static int msm_gpio_pdc_pin_release(struct irq_data *d)
->+{
->+	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->+	const void *name;
->+
->+	if (pdc_irqd) {
->+		irq_set_handler_data(d->irq, NULL);
->+		name = free_irq(pdc_irqd->irq, d);
->+		kfree(name);
->+	}
->+
->+	return 0;
->+}
->+
->+static int msm_gpio_irq_reqres(struct irq_data *d)
->+{
->+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->+
->+	if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
->+		dev_err(gc->parent, "unable to lock HW IRQ %lu for IRQ\n",
->+			irqd_to_hwirq(d));
->+		return -EINVAL;
->+	}
->+
->+	return msm_gpio_pdc_pin_request(d);
->+}
->+
->+static void msm_gpio_irq_relres(struct irq_data *d)
->+{
->+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->+
->+	msm_gpio_pdc_pin_release(d);
->+	gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
->+}
->+
-> static int msm_gpio_init(struct msm_pinctrl *pctrl)
-> {
-> 	struct gpio_chip *chip;
->@@ -887,6 +983,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
-> 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
-> 	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
-> 	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
->+	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
->+	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->
-> 	ret = gpiochip_add_data(&pctrl->chip, pctrl);
-> 	if (ret) {
->--
->The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->a Linux Foundation Collaborative Project
->
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+---
+
+Tested only on Odroid U3. Tests on other platforms would be appreciated.
+---
+ arch/arm/boot/dts/exynos4210-universal_c210.dts | 3 +--
+ arch/arm/boot/dts/exynos4412-midas.dtsi         | 3 +--
+ arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 3 +--
+ 3 files changed, 3 insertions(+), 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index 4e6ff97e1ec4..249bfbff1e20 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -537,8 +537,7 @@
+ 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4>;
+ 	pinctrl-names = "default";
+ 	vmmc-supply = <&ldo5_reg>;
+-	cd-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
+index c0476c290977..aed2f2e2b0d1 100644
+--- a/arch/arm/boot/dts/exynos4412-midas.dtsi
++++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
+@@ -1269,8 +1269,7 @@
+ 
+ &sdhci_2 {
+ 	bus-width = <4>;
+-	cd-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
+ 	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sdhci2_cd>;
+ 	pinctrl-names = "default";
+ 	vmmc-supply = <&ldo21_reg>;
+diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+index a09e46c9dbc0..2caa3132f34e 100644
+--- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
++++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+@@ -539,8 +539,7 @@
+ 	pinctrl-names = "default";
+ 	vmmc-supply = <&ldo21_reg>;
+ 	vqmmc-supply = <&ldo4_reg>;
+-	cd-gpios = <&gpk2 2 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpk2 2 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
+ 
+-- 
+2.14.1
