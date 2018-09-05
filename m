@@ -1,51 +1,105 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 08/11] arm64: dts: allwinner: a64: Add
- display pipeline
-Date: Wed, 5 Sep 2018 09:50:56 +0200
-Message-ID: <20180905075056.tob7itg3judccooe@flea>
-References: <20180904044053.15425-1-icenowy@aosc.io>
- <20180904044053.15425-9-icenowy@aosc.io>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6qdl-sabreauto: add gpio keys support
+Date: Wed,  5 Sep 2018 15:46:12 +0800
+Message-ID: <1536133572-2138-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yi7cc75vsj32ybox"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3EVX3OAKGQED424WTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180904044053.15425-9-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
+Add i.MX6QDL SabreAuto board's gpio keys support, there
+are 5 gpio keys on base board:
 
---yi7cc75vsj32ybox
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+SW3: KEY_HOME;
+SW4: KEY_BACK;
+SW5: KEY_PROGRAM;
+SW6: KEY_VOLUMEUP;
+SW7: KEY_VOLUMEDOWN;
 
-On Tue, Sep 04, 2018 at 12:40:50PM +0800, Icenowy Zheng wrote:
-> +		hdmi_phy: hdmi-phy@1ef0000 {
-> +			compatible = "allwinner,sun8i-h3-hdmi-phy";
-> +			reg = <0x01ef0000 0x10000>;
-> +			clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
-> +				 <&ccu 7>;
-> +			clock-names = "bus", "mod", "pll-0";
-> +			resets = <&ccu RST_BUS_HDMI0>;
-> +			reset-names = "phy";
-> +			#phy-cells = <0>;
-> +		};
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 52 ++++++++++++++++++++++++++++++++
+ 1 file changed, 52 insertions(+)
 
-This needs to use the bindings we have for that phy.
-
-Maxime
-
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 9f11f1f..246af86 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -4,6 +4,7 @@
+ // Copyright 2011 Linaro Ltd.
+ 
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/input.h>
+ 
+ / {
+ 	chosen {
+@@ -25,6 +26,47 @@
+ 		};
+ 	};
+ 
++	gpio-keys {
++		compatible = "gpio-keys";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_keys>;
++
++		home {
++			label = "Home";
++			gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_HOME>;
++			wakeup-source;
++		};
++
++		back {
++			label = "Back";
++			gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_BACK>;
++			wakeup-source;
++		};
++
++		program {
++			label = "Program";
++			gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_PROGRAM>;
++			wakeup-source;
++		};
++
++		volume-up {
++			label = "Volume Up";
++			gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEUP>;
++			wakeup-source;
++		};
++
++		volume-down {
++			label = "Volume Down";
++			gpios = <&gpio5 14 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_VOLUMEDOWN>;
++			wakeup-source;
++		};
++	};
++
+ 	clocks {
+ 		codec_osc: anaclk2 {
+ 			compatible = "fixed-clock";
+@@ -446,6 +488,16 @@
+ 			>;
+ 		};
+ 
++		pinctrl_gpio_keys: gpiokeysgrp {
++			fsl,pins = <
++				MX6QDL_PAD_SD2_CMD__GPIO1_IO11		0x1b0b0
++				MX6QDL_PAD_SD2_DAT3__GPIO1_IO12		0x1b0b0
++				MX6QDL_PAD_SD4_DAT4__GPIO2_IO12		0x1b0b0
++				MX6QDL_PAD_SD4_DAT7__GPIO2_IO15		0x1b0b0
++				MX6QDL_PAD_DISP0_DAT20__GPIO5_IO14	0x1b0b0
++			>;
++		};
++
+ 		pinctrl_gpio_leds: gpioledsgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DISP0_DAT21__GPIO5_IO15	0x80000000
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---yi7cc75vsj32ybox--
+2.7.4
