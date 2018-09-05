@@ -1,52 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 19/21] iommu: fsl_pamu: use for_each_of_cpu_node iterator
-Date: Wed,  5 Sep 2018 14:37:36 -0500
-Message-ID: <20180905193738.19325-20-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 21/21] fbdev: fsl-diu: get cpu node with of_get_cpu_node
+Date: Wed,  5 Sep 2018 14:37:38 -0500
+Message-ID: <20180905193738.19325-22-robh@kernel.org>
 References: <20180905193738.19325-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180905193738.19325-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180905193738.19325-1-robh@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Timur Tabi <timur@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-has the side effect of defaulting to iterating using "cpu" node names in
-preference to the deprecated (for FDT) device_type == "cpu".
-
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Please ack and I will take via the DT tree. This is dependent on the
-first 2 patches.
-
- drivers/iommu/fsl_pamu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c
-index 8540625796a1..1b955aea44dd 100644
---- a/drivers/iommu/fsl_pamu.c
-+++ b/drivers/iommu/fsl_pamu.c
-@@ -543,7 +543,7 @@ u32 get_stash_id(u32 stash_dest_hint, u32 vcpu)
- 		return ~(u32)0;
- 	}
-
--	for_each_node_by_type(node, "cpu") {
-+	for_each_of_cpu_node(node) {
- 		prop = of_get_property(node, "reg", &len);
- 		for (i = 0; i < len / sizeof(u32); i++) {
- 			if (be32_to_cpup(&prop[i]) == vcpu) {
---
-2.17.1
+ImRldmljZV90eXBlIiB1c2UgaXMgZGVwcmVjYXRlZCBmb3IgRkRUIHRob3VnaCBpdCBoYXMgY29u
+dGludWVkIHRvIGJlIHVzZWQKZm9yIG5vZGVzIGxpa2UgY3B1IG5vZGVzLiBVc2Ugb2ZfZ2V0X2Nw
+dV9ub2RlKCkgaW5zdGVhZCB3aGljaCB3b3JrcyB1c2luZwpub2RlIG5hbWVzIGJ5IGRlZmF1bHQu
+IFRoaXMgd2lsbCBhbGxvdyB0aGUgZXZlbnR1YWxseSByZW1vdmFsIG9mIGNwdQpkZXZpY2VfdHlw
+ZSBwcm9wZXJ0aWVzLgoKQ2M6IFRpbXVyIFRhYmkgPHRpbXVyQGtlcm5lbC5vcmc+CkNjOiBCYXJ0
+bG9taWVqIFpvbG5pZXJraWV3aWN6IDxiLnpvbG5pZXJraWVAc2Ftc3VuZy5jb20+CkNjOiBsaW51
+eC1mYmRldkB2Z2VyLmtlcm5lbC5vcmcKQ2M6IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
+cmcKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KLS0tClBsZWFz
+ZSBhY2sgYW5kIEkgd2lsbCB0YWtlIHZpYSB0aGUgRFQgdHJlZS4gVGhpcyBpcyBkZXBlbmRlbnQg
+b24gdGhlCmZpcnN0IDIgcGF0Y2hlcy4KCiBkcml2ZXJzL3ZpZGVvL2ZiZGV2L2ZzbC1kaXUtZmIu
+YyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvZnNsLWRpdS1mYi5jIGIvZHJpdmVycy92
+aWRlby9mYmRldi9mc2wtZGl1LWZiLmMKaW5kZXggYmM5ZWI4YWZjMzEzLi4zMzJhNTZiNjgxMWYg
+MTAwNjQ0Ci0tLSBhL2RyaXZlcnMvdmlkZW8vZmJkZXYvZnNsLWRpdS1mYi5jCisrKyBiL2RyaXZl
+cnMvdmlkZW8vZmJkZXYvZnNsLWRpdS1mYi5jCkBAIC0xOTI1LDcgKzE5MjUsNyBAQCBzdGF0aWMg
+aW50IF9faW5pdCBmc2xfZGl1X2luaXQodm9pZCkKIAlwcl9pbmZvKCJGcmVlc2NhbGUgRGlzcGxh
+eSBJbnRlcmZhY2UgVW5pdCAoRElVKSBmcmFtZWJ1ZmZlciBkcml2ZXJcbiIpOwoKICNpZmRlZiBD
+T05GSUdfTk9UX0NPSEVSRU5UX0NBQ0hFCi0JbnAgPSBvZl9maW5kX25vZGVfYnlfdHlwZShOVUxM
+LCAiY3B1Iik7CisJbnAgPSBvZl9nZXRfY3B1X25vZGUoMCwgTlVMTCk7CiAJaWYgKCFucCkgewog
+CQlwcl9lcnIoImZzbC1kaXUtZmI6IGNhbid0IGZpbmQgJ2NwdScgZGV2aWNlIG5vZGVcbiIpOwog
+CQlyZXR1cm4gLUVOT0RFVjsKLS0KMi4xNy4xCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
