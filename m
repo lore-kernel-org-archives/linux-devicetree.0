@@ -1,85 +1,84 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v2 7/9] net: stmmac: dwmac-sun8i: fix OF child-node lookup
-Date: Thu, 6 Sep 2018 22:03:37 +0200
-Message-ID: <20180906200337.GA15390@Red>
-References: <20180827082153.22537-1-johan@kernel.org>
- <20180827082153.22537-8-johan@kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: pm8998 and pmi8998
+ regulators
+Date: Thu, 6 Sep 2018 13:12:06 -0700
+Message-ID: <20180906201206.GX2523@minitux>
+References: <20180901221953.21666-1-bjorn.andersson@linaro.org>
+ <CAD=FV=VE5gYyivgy=OrZV6g0UrtYfZZ+CGv7DV+v5be3teVSdw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180827082153.22537-8-johan@kernel.org>
+In-Reply-To: <CAD=FV=VE5gYyivgy=OrZV6g0UrtYfZZ+CGv7DV+v5be3teVSdw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, "David S . Miller" <davem@davemloft.net>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Aug 27, 2018 at 10:21:51AM +0200, Johan Hovold wrote:
-> Use the new of_get_compatible_child() helper to lookup the mdio-internal
-> child node instead of using of_find_compatible_node(), which searches
-> the entire tree from a given start node and thus can return an unrelated
-> (i.e. non-child) node.
+On Thu 06 Sep 10:52 PDT 2018, Doug Anderson wrote:
+
+> Bjorn,
 > 
-> This also addresses a potential use-after-free (e.g. after probe
-> deferral) as the tree-wide helper drops a reference to its first
-> argument (i.e. the mdio-mux node). Fortunately, this was inadvertently
-> balanced by a failure to drop the mdio-mux reference after lookup.
+> On Sat, Sep 1, 2018 at 3:19 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > Add regulator definitions for pm8998 and pmi8998 regulators on the MTP.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 216 ++++++++++++++++++++++++
+> >  1 file changed, 216 insertions(+)
 > 
-> While at it, also fix the related mdio-internal- and phy-node reference
-> leaks.
+> I'm curious why you chose to post this instead of reviewing and/or
+> building upon the patch I sent up at
+> <https://lkml.kernel.org/r/20180822173629.202885-3-dianders@chromium.org>.
+
+Sorry about that, my search skills failed me.
+
+> Compared to mine, yours:
 > 
-> Fixes: 634db83b8265 ("net: stmmac: dwmac-sun8i: Handle integrated/external MDIOs")
-> Cc: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Jose Abreu <joabreu@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
-> ---
->  drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> index f9a61f90cfbc..0f660af01a4b 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-sun8i.c
-> @@ -714,8 +714,9 @@ static int get_ephy_nodes(struct stmmac_priv *priv)
->  		return -ENODEV;
->  	}
->  
-> -	mdio_internal = of_find_compatible_node(mdio_mux, NULL,
-> +	mdio_internal = of_get_compatible_child(mdio_mux,
->  						"allwinner,sun8i-h3-mdio-internal");
-> +	of_node_put(mdio_mux);
->  	if (!mdio_internal) {
->  		dev_err(priv->device, "Cannot get internal_mdio node\n");
->  		return -ENODEV;
-> @@ -729,13 +730,20 @@ static int get_ephy_nodes(struct stmmac_priv *priv)
->  		gmac->rst_ephy = of_reset_control_get_exclusive(iphynode, NULL);
->  		if (IS_ERR(gmac->rst_ephy)) {
->  			ret = PTR_ERR(gmac->rst_ephy);
-> -			if (ret == -EPROBE_DEFER)
-> +			if (ret == -EPROBE_DEFER) {
-> +				of_node_put(iphynode);
-> +				of_node_put(mdio_internal);
->  				return ret;
-> +			}
->  			continue;
->  		}
->  		dev_info(priv->device, "Found internal PHY node\n");
-> +		of_node_put(iphynode);
-> +		of_node_put(mdio_internal);
->  		return 0;
->  	}
-> +
-> +	of_node_put(mdio_internal);
->  	return -ENODEV;
->  }
->  
-> -- 
-> 2.18.0
+> * Seems to have a few rails named differently LDO22 is named
+> "vreg_l22a_2p95" in your DTS but "vreg_l22a_2p85" in mine as one
+> example.  The schematics I have (from Dec 5, 2017) show it as 2p85.
 > 
 
-Sorry for the delay
-Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Looks like a typo on my part, yours matches the schematics I have as
+well.
+
+> * Is missing "regulator-initial-mode".  We can debate this if you want.
+> 
+
+Either we start by making them all HPM or we tune as we debug, I'm fine
+with your suggestion.
+
+> * Is lacking many alternate names for rails.  We can debate this also
+> if you want.
+> 
+
+Afaict names such as "vdda_pcie_1p2" is the name of the pin on the
+SDM845, while the thing that comes out of the regulator is named
+vreg_l26a_1p2.
+
+So I believe this name should be used in the pcie node as:
+
+  vdda_pcie_1p2-supply = <&vreg_l26a_1p2>;
+
+> * Have a few voltage values different.  If you have better info than
+> me we should update to yours.  Diffing against yours does make me
+> believe that perhaps LDO14 should be listed as 1.88 V in my patch.
+> 
+
+Downstream it's listed as min: 1.8V max: 1.88V init: 1.8V.
+
+> * Is lacking pm8005.
+> 
+
+I didn't need this, yet...
+
+> Anyway, let me know.  If you provide a review of my patch I'm happy to
+> spin it with your feedback.
+> 
+
+I will review your patches.
+
+Regards,
+Bjorn
