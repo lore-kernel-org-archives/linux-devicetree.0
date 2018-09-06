@@ -1,127 +1,109 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v16 4/5] dt-bindings: arm-smmu: Add bindings for qcom,
-	smmu-v2
-Date: Thu, 6 Sep 2018 09:22:16 +0530
-Message-ID: <CAFp+6iFstfn1LXh6m_XFZr8LfdUA7Yd3-bx+43-SM4TU3kPqXg@mail.gmail.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
-	<20180830144541.17740-5-vivek.gautam@codeaurora.org>
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v4 11/11] arm64: dts: allwinner: a64: Enable
+ HDMI output on A64 boards w/ HDMI
+Date: Wed, 5 Sep 2018 21:12:51 -0700
+Message-ID: <CA+E=qVd4siJReWxbEeQ1DjFrTnewSGW=UJitduLT=52YfB-rag@mail.gmail.com>
+References: <20180904044053.15425-1-icenowy@aosc.io> <20180904044053.15425-12-icenowy@aosc.io>
+ <CAMty3ZCvpUf0nJ3WuPccP8BizBP=Uc8ChzB8SeN8fkX2iS1E_Q@mail.gmail.com>
+ <20180905075136.chumwosx76o2n66l@flea> <CAMty3ZAVr_d+Rwry_DMWY221OC+YSWmReNm-TXzYWgpd1s68+w@mail.gmail.com>
+ <CA+E=qVdWXWztLj3989X+U+=4P5FpM4hs+6ByVmq8bf7mPeiWsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180830144541.17740-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
-	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+E=qVdWXWztLj3989X+U+=4P5FpM4hs+6ByVmq8bf7mPeiWsA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Sep 5, 2018 at 3:53 PM, Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> I can test it tonight.
 
-On Thu, Aug 30, 2018 at 8:16 PM Vivek Gautam
-<vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
-> Add bindings doc for Qcom's smmu-v2 implementation.
->
-> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Tested-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+It works fine for me on pine64-lts with HDMI monitor:
 
-I removed your reviewed-by for this particular patch.
-Can you please consider giving your review if you find the changes okay now.
-Thanks.
+[    1.969772] sun4i-drm display-engine: bound 1100000.mixer (ops
+sun8i_mixer_ops)
+[    1.979302] sun4i-drm display-engine: bound 1200000.mixer (ops
+sun8i_mixer_ops)
+[    1.979738] sun4i-drm display-engine: No panel or bridge found...
+RGB output disabled
+[    1.979755] sun4i-drm display-engine: bound 1c0c000.lcd-controller
+(ops sun4i_tcon_ops)
+[    1.979935] sun4i-drm display-engine: bound 1c0d000.lcd-controller
+(ops sun4i_tcon_ops)
+[    1.980017] sun4i-drm display-engine: failed to bind 1ee0000.hdmi
+(ops sun8i_dw_hdmi_ops): -517
+[    1.980306] sun4i-drm display-engine: Couldn't bind all pipelines components
+[    1.980446] sun4i-drm display-engine: master bind failed: -517
+[    4.230997] sun4i-drm display-engine: bound 1100000.mixer (ops
+sun8i_mixer_ops)
+[    4.247886] sun4i-drm display-engine: bound 1200000.mixer (ops
+sun8i_mixer_ops)
+[    4.255639] sun4i-drm display-engine: No panel or bridge found...
+RGB output disabled
+[    4.263482] sun4i-drm display-engine: bound 1c0c000.lcd-controller
+(ops sun4i_tcon_ops)
+[    4.283255] sun4i-drm display-engine: bound 1c0d000.lcd-controller
+(ops sun4i_tcon_ops)
+[    4.322055] sun4i-drm display-engine: bound 1ee0000.hdmi (ops
+sun8i_dw_hdmi_ops)
+[    4.342115] fb: switching to sun4i-drm-fb from simple
+[    5.001434] sun4i-drm display-engine: fb0: DRM emulated frame buffer device
+[    5.008933] [drm] Initialized sun4i-drm 1.0.0 20150629 for
+display-engine on minor 0
 
-Best regards
-Vivek
+I tested non-applied patches from this series on top of
+git://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git
+sunxi/for-next
 
->  .../devicetree/bindings/iommu/arm,smmu.txt         | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> index 8a6ffce12af5..a6504b37cc21 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
-> @@ -17,10 +17,16 @@ conditions.
->                          "arm,mmu-401"
->                          "arm,mmu-500"
->                          "cavium,smmu-v2"
-> +                        "qcom,smmu-v2"
->
->                    depending on the particular implementation and/or the
->                    version of the architecture implemented.
->
-> +                  Qcom SoCs must contain, as below, SoC-specific compatibles
-> +                  along with "qcom,smmu-v2":
-> +                  "qcom,msm8996-smmu-v2", "qcom,smmu-v2",
-> +                  "qcom,sdm845-smmu-v2", "qcom,smmu-v2".
-> +
->  - reg           : Base address and size of the SMMU.
->
->  - #global-interrupts : The number of global interrupts exposed by the
-> @@ -71,6 +77,22 @@ conditions.
->                    or using stream matching with #iommu-cells = <2>, and
->                    may be ignored if present in such cases.
->
-> +- clock-names:    List of the names of clocks input to the device. The
-> +                  required list depends on particular implementation and
-> +                  is as follows:
-> +                  - for "qcom,smmu-v2":
-> +                    - "bus": clock required for downstream bus access and
-> +                             for the smmu ptw,
-> +                    - "iface": clock required to access smmu's registers
-> +                               through the TCU's programming interface.
-> +                  - unspecified for other implementations.
-> +
-> +- clocks:         Specifiers for all clocks listed in the clock-names property,
-> +                  as per generic clock bindings.
-> +
-> +- power-domains:  Specifiers for power domains required to be powered on for
-> +                  the SMMU to operate, as per generic power domain bindings.
-> +
->  ** Deprecated properties:
->
->  - mmu-masters (deprecated in favour of the generic "iommus" binding) :
-> @@ -137,3 +159,20 @@ conditions.
->                  iommu-map = <0 &smmu3 0 0x400>;
->                  ...
->          };
-> +
-> +       /* Qcom's arm,smmu-v2 implementation */
-> +       smmu4: iommu@d00000 {
-> +               compatible = "qcom,msm8996-smmu-v2", "qcom,smmu-v2";
-> +               reg = <0xd00000 0x10000>;
-> +
-> +               #global-interrupts = <1>;
-> +               interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <GIC_SPI 320 IRQ_TYPE_LEVEL_HIGH>,
-> +                            <GIC_SPI 321 IRQ_TYPE_LEVEL_HIGH>;
-> +               #iommu-cells = <1>;
-> +               power-domains = <&mmcc MDSS_GDSC>;
-> +
-> +               clocks = <&mmcc SMMU_MDP_AXI_CLK>,
-> +                        <&mmcc SMMU_MDP_AHB_CLK>;
-> +               clock-names = "bus", "iface";
-> +       };
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
-> _______________________________________________
-> iommu mailing list
-> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+Tested-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+>
+> On Wed, Sep 5, 2018 at 12:57 AM, Jagan Teki <jagan@amarulasolutions.com> wrote:
+>> On Wed, Sep 5, 2018 at 1:21 PM, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>>> On Wed, Sep 05, 2018 at 12:56:03PM +0530, Jagan Teki wrote:
+>>>> On Tue, Sep 4, 2018 at 10:10 AM, Icenowy Zheng <icenowy@aosc.io> wrote:
+>>>> > From: Jagan Teki <jagan@amarulasolutions.com>
+>>>> >
+>>>> > Enable all necessary device tree nodes and add connector node to device
+>>>> > trees for all supported A64 boards with HDMI.
+>>>> >
+>>>> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>>>> > [Icenowy: squash all board patches altogether and change supply name]
+>>>> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>>>> > ---
+>>>> > Changes in v4:
+>>>> > - Rebase some device trees.
+>>>> > Changes in v3,1:
+>>>> > - Squash all enablement patches altogether.
+>>>> > - Change supply name to match DT binding & driver change.
+>>>> > Changes for v3:
+>>>> > - Enable all pipeline components
+>>>> > Changes for v2:
+>>>> > - none
+>>>> >
+>>>> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 34 +++++++++++++++++++
+>>>> >  .../dts/allwinner/sun50i-a64-nanopi-a64.dts   | 34 +++++++++++++++++++
+>>>> >  .../dts/allwinner/sun50i-a64-olinuxino.dts    | 34 +++++++++++++++++++
+>>>> >  .../dts/allwinner/sun50i-a64-orangepi-win.dts | 34 +++++++++++++++++++
+>>>> >  .../boot/dts/allwinner/sun50i-a64-pine64.dts  | 34 +++++++++++++++++++
+>>>> >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 34 +++++++++++++++++++
+>>>> >  6 files changed, 204 insertions(+)
+>>>>
+>>>> Tested-by: Jagan Teki <jagan@amarulasolutions.com> # BPI-M64, OPI-Win,
+>>>> A64-Olinuxino, NPI-A64
+>>>>
+>>>> Pine64 boards look unable by saying
+>>>> [drm] Cannot find any crtc or sizes
+>>>>
+>>>> May be someone can confirm, it.
+>>>
+>>> Then we should drop the pine64 additions until someone figures it out,
+>>> as it has been already discussed.
+>>
+>> That is fine, but If anyone have pine64 can confirm this.
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
