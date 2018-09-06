@@ -1,51 +1,87 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] mfd: lochnagar: Add support for the Cirrus Logic Lochnagar
-Date: Thu, 6 Sep 2018 15:46:12 +0200
-Message-ID: <CACRpkdakAAAFKfRFeB_8kUCyGts_7sojVwyexe4aL4QQo2CcGg@mail.gmail.com>
-References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 6 Sep 2018 13:47:29 +0000
+Message-ID: <5AD923AE-E86E-4414-A48F-CE7399E18431@cadence.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
+ <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+ <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
+ <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
+ <9584757a-e7e2-5bfe-fc2c-e9bc14ad65a8@synopsys.com>
+ <25862F03-9823-42B0-87AC-AE36D7E9C780@cadence.com>
+ <CAK8P3a3pkddD9VnogYryQKoL9Z_5qVRBXd6yr1z6CqGU692rXg@mail.gmail.com>
+ <20180906151437.4259d6fc@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
+In-Reply-To: <20180906151437.4259d6fc@bbrezillon>
+Content-Language: en-US
+Content-ID: <CA57048406789A41B36F37C802474033@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: Vitor Soares <Vitor.Soares@synopsys.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>Rob Herring <r>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2018 at 12:41 PM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
-
-> From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
->
-> Lochnagar is an evaluation and development board for Cirrus
-> Logic Smart CODEC and Amp devices. It allows the connection of
-> most Cirrus Logic devices on mini-cards, as well as allowing
-> connection of various application processor systems to provide a
-> full evaluation platform.  Audio system topology, clocking and
-> power can all be controlled through the Lochnagar, allowing the
-> device under test to be used in a variety of possible use cases.
->
-> As the Lochnagar is a fairly complex device this MFD driver
-> allows the drivers for the various features to be bound
-> in. Initially clocking, regulator and pinctrl will be added as
-> these are necessary to configure the system. But in time at least
-> audio and voltage/current monitoring will also be added.
->
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-
-It's a bit confusing, maybe you can clear it up:
-it appears to be an I2C device, so when you say this is a
-"development board" is there something like a board
-controller that is accessed over I2C and this is what the
-driver really probes to, not the board per se?
-
-I guess jamming this card into the I2C slot of any other
-system (would work fine with a 96Boards LS connector
-as it seems, actually)  also involves connecting some
-I2S or similar on the side for high-datarate traffic?
-
-This driver seems to only concern itself with the I2C
-board controller per se, not the board is that right?
-
-Yours,
-Linus Walleij
+DQoNCu+7v09uIDkvNi8xOCwgMzoxNCBQTSwgIkJvcmlzIEJyZXppbGxvbiIgPGJvcmlzLmJyZXpp
+bGxvbkBib290bGluLmNvbT4gd3JvdGU6DQoNCiAgICBFWFRFUk5BTCBNQUlMDQogICAgDQogICAg
+DQogICAgT24gVGh1LCA2IFNlcCAyMDE4IDE0OjU5OjQ2ICswMjAwDQogICAgQXJuZCBCZXJnbWFu
+biA8YXJuZEBhcm5kYi5kZT4gd3JvdGU6DQogICAgDQogICAgPiBPbiBUaHUsIFNlcCA2LCAyMDE4
+IGF0IDI6NDMgUE0gUHJ6ZW15c2xhdyBHYWogPHBnYWpAY2FkZW5jZS5jb20+IHdyb3RlOg0KICAg
+ID4gPg0KICAgID4gPiBIaSBCb3JpcywgVml0b3IsDQogICAgPiA+DQogICAgPiA+IFRoaXMgcmVw
+b3NpdG9yeSBkb2VzIG5vdCBjb250YWluIGZ1bGwga2VybmVsIHNvdXJjZXMsIGJ1dCBpdCBzaG91
+bGQgYmUgZW5vdWdoIHRvIGRpc2N1c3MgbWFzdGVyc2hpcCByZXF1ZXN0IGZlYXR1cmUuDQogICAg
+PiA+IGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/dT1odHRwcy0zQV9f
+Z2l0aHViLmNvbV9wcnplbWVrZ2FqX2kzYy0yRGxpbnV4X2NvbW1pdF9kNTRmZTY4YTlkM2U1NzNj
+MGM0NTRhMmM2ZjFhZmFmYzIwMTQyZWM1JmQ9RHdJQ0FnJmM9YVVxOTgzTDJwdWUyRnFLRm9QNlBH
+SE1KUXlvSjdrbDNzM0daLV9oYVhxWSZyPUNNbkFmTV9PZnBxY1daUmZpcWNSV3cmbT1PUFNhMjVF
+Tm5yRjBRdjcwREc0OVpuZ2ZkeWdKWnViam8zVE9nQkEzcEo0JnM9X0M2aTFLUHBsUUdjV3ZRWVBr
+ckd4N1YzVGpLREp2cXQzS0ctdmNkVTJLNCZlPQ0KICAgID4gPg0KICAgID4gPiBQbGVhc2Uga2Vl
+cCBpbiBtaW5kIHRoYXQgdGhpcyBpcyBpbml0aWFsIHZlcnNpb24sIGJ1dCBtYXN0ZXJzaGlwIHdv
+cmtzIGNvcnJlY3RseS4gSSBhZGRlZCBvbmUgcHJvcGVydHkgdG8gRFQgdG8gcmVmbGVjdCByZWxh
+dGlvbnNoaXAgYmV0d2VlbiBtYXN0ZXJzLg0KICAgID4gPiBJdCBpcyBwb3NzaWJsZSB0byByZXF1
+ZXN0IG1hc3RlcnNoaXAgb24gZGVtYW5kICh1c2luZyBzeXNmcy4gVXNlZnVsIGluIGNhc2Ugd2hl
+biBMaW51eCBtYWNoaW5lIGlzIGVxdWlwcGVkIG9ubHkgd2l0aCBzZWNvbmRhcnkgbWFzdGVyIGNv
+bnRyb2xsZXIpIG9yIGF1dG9tYXRpY2FsbHkgY2hhbmdlIG9wZXJhdGlvbiBtb2RlIHdoZW4gZGV2
+aWNlIGRyaXZlciB3YW50cyB0byByZWFkL3dyaXRlIHNvbWV0aGluZyBmcm9tL3RvIGRldmljZS4N
+CiAgICA+ID4NCiAgICA+ID4gSSdtIHN1cmUgSSB3aWxsIGhhdmUgdG8gcmV3b3JrIHNvbWV0aGlu
+ZyBiZWNhdXNlIHRoaXMgd2FzIGltcGxlbWVudGVkIG9uIHNvdXJjZXMgZnJvbSBQQVRDSCB2NC4g
+SSBzYXcgdGhhdCBCb3JpcyByZWxlYXNlZCB2NyB5ZXN0ZXJkYXkgOikgIA0KICAgID4gDQogICAg
+PiANCiAgICA+IENhbiB5b3UgZXhwbGFpbiB0aGUgcmVhc29uIGZvciBoYXZpbmcgYSB1c2VyIHNw
+YWNlIGludGVyZmFjZSBhbmQgRFQgcHJvcGVydHk/DQogICAgPiBJIHRob3VnaHQgd2UgaGFkIGNv
+bmNsdWRlZCBlYXJsaWVyIHRoYXQgd2Ugd291bGRuJ3QgbmVlZCB0aGF0LCBidXQgaXQncyBwb3Nz
+aWJsZQ0KICAgID4gdGhhdCBJIG1pc3NlZCBzb21ldGhpbmcgaW4gdGhlIGRpc2N1c3Npb24gc2lu
+Y2UgdGhlbi4NCiAgICANCiAgICBJIGRvbid0IHRoaW5rIHRoZSBzeXNmcyBrbm9iIGlzIG5lZWRl
+ZCwgdGhpcyBiZWluZyBzYWlkLCBhZnRlciB0aGlua2luZw0KICAgIGEgYml0IG1vcmUgYWJvdXQg
+bWFzdGVyc2hpcCBoYW5kb3ZlciBhbmQgdGhlIHNlY29uZGFyeSBtYXN0ZXIgY2FzZSwgSQ0KICAg
+IHRoaW5rIHdlIGhhdmUgc29tZXRoaW5nIGltcG9ydGFudCB0byBzb2x2ZS4NCiAgICANCiAgICBX
+aGVuIGEgbWFzdGVyIGlzIG5vdCBpbiBjb250cm9sIG9mIHRoZSBidXMsIGl0IGdldHMgaW5mb3Jt
+ZWQgb2YgZGV2aWNlcw0KICAgIHByZXNlbnQgb24gdGhlIGJ1cyBieSBtb25pdG9yaW5nIERBQSBv
+ciBERUZTTFZTIGJyb2FkY2FzdCBldmVudHMuIFRoYXQNCiAgICBtZWFucyB0aGUgc2Vjb25kYXJ5
+IG1hc3RlciBzaG91bGQgcG9wdWxhdGUgdGhlIGJ1cyB3aXRoIEkzQy9JMkMgZGV2aWNlcw0KICAg
+IG9uIHN1Y2ggZXZlbnRzLCBidXQgdGhhdCdzIG5vdCBlbm91Z2gsIGJlY2F1c2UgREVGU0xWUy9E
+QUEgZG8gbm90DQogICAgcHJvdmlkZSBhbGwgZGV2aWNlIGluZm8uIFNvbWUgb2YgdGhlbSAobGlr
+ZSByZWFkL3dyaXRlL2liaSBsaW1pdGF0aW9ucykNCiAgICByZXF1aXJlIGV4dHJhIENDQyBjb21t
+YW5kcywgYW5kLCB0byBzZW5kIHRob3NlIENDQyBjb21tYW5kcywgdGhlDQogICAgc2Vjb25kYXJ5
+IG1hc3RlciBtdXN0IGNsYWltIHRoZSBidXMuIFdlIGNvdWxkIGFkZCBhIGNhc2Ugd2hlcmUgd2UN
+CiAgICBkZWNsYXJlIGRldmljZXMgYXMgcGFydGlhbGx5IGRpc2NvdmVyZWQgdW50aWwgdGhlIG1h
+c3RlciBhY3F1aXJlcw0KICAgIG93bmVyc2hpcCBvZiB0aGUgYnVzLCBidXQgdGhhdCBtZWFucyBw
+YXJ0IG9mIHRoZSBkYXRhIHJldHVybmVkIGJ5DQogICAgaTNjX2RldmljZV9nZXRfaW5mbygpIHdp
+bGwgYmUgaW5hY2N1cmF0ZSwgd2hpY2ggbWlnaHQgaGF2ZSBhbiBpbXBhY3Qgb24NCiAgICBzb21l
+IGkzYyBkcml2ZXIgLT5wcm9iZSgpIGZ1bmN0aW9ucy4NCg0KSG93IGRvIHlvdSB3YW50IHRvIGhh
+bmRsZSBjYXNlcyB3aGVuIHNlY29uZGFyeSBtYXN0ZXIgam9pbnMgdGhlIGJ1cyBhZnRlciANCkRF
+RlNMVlM/IE9mIGNvdXJzZSB3ZSBjYW4gc2VuZCBERUZTTFZTIGFmdGVyIHNlY29uZGFyeSBtYXN0
+ZXIgam9pbnMgdGhlIGJ1cy4NCiAgICANCiAgICBXZSBjb3VsZCBhbHNvIHNheSB0aGF0IHBhcnRp
+YWxseSBkaXNjb3ZlcmVkIGRldmljZXMgc2hvdWxkIG5vdCBiZQ0KICAgIHJlZ2lzdGVyZWQgdG8g
+dGhlIGRldmljZSBtb2RlbCwgYnV0IHdlIHRoZW4gaGl0IHRoZSBwcm9ibGVtIG9mICJ3aG8gY2Fu
+DQogICAgZm9yY2UgdGhlIHNlY29uZGFyeSBtYXN0ZXIgdG8gY2xhaW0gdGhlIGJ1cyBpZiB0aGVy
+ZSdzIG5vIHVzZXJzPyIuDQoNCk5vdyBJIGZlZWwgbGlrZSBJIG1pc3NlZCBzb21ldGhpbmcuIERv
+IHlvdSB3YW50IHRvIHBvcHVsYXRlIHNlY29uZCBpbnN0YW5jZQ0Kb2YgdGhlIHNhbWUgcGh5c2lj
+YWwgYnVzPyBJZiB5ZXMsIHRoZW4gd2UgZG9uJ3QgbmVlZCB0byBoYXZlIHJlZmVyZW5jZSANCmJl
+dHdlZW4gbWFzdGVycyBpbiBEVC4NCiAgICANCg0K
