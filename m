@@ -1,42 +1,46 @@
-From: Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
-Date: Thu, 6 Sep 2018 09:58:04 -0600
-Message-ID: <20180906095804.5ab2716f@lwn.net>
-References: <1536012923-16275-1-git-send-email-henrik@austad.us>
- <20180904113030.GB25177@amd>
- <20180904095908.13298b3d@gandalf.local.home>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: qcom: Add AOSS reset driver node for SDM845
+Date: Thu, 6 Sep 2018 09:00:45 -0700
+Message-ID: <CAD=FV=UohTgZLG+Nymf6Rd0v7H9gssheYAxuH5m0QRN3TufJQA@mail.gmail.com>
+References: <20180901222355.21803-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180904095908.13298b3d@gandalf.local.home>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, x86@kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Henrik Austad <henrik@austad.us>, Will Deacon <will.deacon@arm.com>, dri-devel@lists.freedesktop.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Jan Kandziora <jjj@gmx.de>, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, linux-s390@vger.kernel.org, Ian Kent <raven@themaw.net>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Michael Ellerman <mpe@ellerman.id.au>, Helge Deller <deller@gmx.de>, Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, "James E.J. Bottomley" <jejb@parisc-linux.org>, Ingo
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180901222355.21803-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCA0IFNlcCAyMDE4IDA5OjU5OjA4IC0wNDAwClN0ZXZlbiBSb3N0ZWR0IDxyb3N0ZWR0
-QGdvb2RtaXMub3JnPiB3cm90ZToKCj4gT24gVHVlLCA0IFNlcCAyMDE4IDEzOjMwOjMwICswMjAw
-Cj4gUGF2ZWwgTWFjaGVrIDxwYXZlbEB1Y3cuY3o+IHdyb3RlOgo+IAo+ID4gSSdkIHNheSB0aGlz
-IGlzIHN0aWxsIHF1aXRlIHZhbHVlYWJsZSwgYW5kIGl0IG1pZ2h0IGJlIHdvcnRoIGZpeGluZywK
-PiA+IHJhdGhlciB0aGVuIHJlbW92aW5nIGNvbXBsZXRlbHkuICAKPiAKPiBJIGFncmVlLiBQZXJo
-YXBzIHdlIHNob3VsZCBoYXZlIGEgMDAtREVTQ1JJUFRJT04gZmlsZSBpbiBlYWNoCj4gZGlyZWN0
-b3J5LCBhbmQgZWFjaCBmaWxlIGNvdWxkIHN0YXJ0IHdpdGggYToKPiAKPiAgREVTQ1JJUFRJT046
-IDxvbmUgbGluZSBkZXNjcmlwdGlvbiBoZXJlPgo+IAo+IGFuZCB0aGVuIHRoZXNlIGZpbGVzIGNv
-dWxkIGJlIGdlbmVyYXRlZCBieSB0aG9zZSB0aGF0IGhhdmUgdGhlc2UgdGFncy4KCkkgcmVhbGx5
-IGRvbid0IHdhbnQgdG8gaGFjayB1cCB5ZXQgYW5vdGhlciBkb2N1bWVudGF0aW9uIHN5bnRheCBh
-bmQKcHJvY2Vzc2luZyBzY2hlbWUuICBXZSBhbHJlYWR5IGhhdmUgb25lIHRoYXQgZG9lcyBhbGwg
-b2YgdGhpcyBhbmQgbW9yZS4KVGhhdCBlbmVyZ3kgd291bGQgYmUgZmFyIGJldHRlciBzcGVudCBi
-cmluZ2luZyB0aGUgZG9jcyBpbnRvIHRoZSBSU1QKaGllcmFyY2h5LCBJTU8uCgpUaGFua3MsCgpq
-b24gICh3aG8gaXMgaW5jcmVhc2luZ2x5IGluY2xpbmVkIHRvIGFwcGx5IHRoaXMgcGF0Y2gpCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On Sat, Sep 1, 2018 at 3:23 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> From: Sibi Sankar <sibis@codeaurora.org>
+>
+> This patch adds the node to support AOSS reset driver on
+> SDM845
+>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> [bjorn: Updated addresses to match the binding that was merged]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 0c9a2aa6a1b5..077760792cf0 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -9,6 +9,7 @@
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/reset/qcom,sdm845-aoss.h>
+
+nit: please sort alphabetically.  "reset" comes before "soc"
+
+...other than that this looks sane to me.  Feel free to add my Reviewed-by tag.
+
+
+-Doug
