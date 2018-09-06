@@ -1,37 +1,52 @@
-From: Moritz Fischer <mdf@kernel.org>
+From: Alan Tull <atull@kernel.org>
 Subject: Re: [PATCH] dt-bindings: fpga: fix freeze controller compatible in
  region doc
-Date: Thu, 6 Sep 2018 11:23:59 -0700
-Message-ID: <20180906182359.GB20419@archbook>
-References: <20180906180152.3620-1-atull@kernel.org>
+Date: Thu, 6 Sep 2018 13:29:30 -0500
+Message-ID: <CANk1AXT_U_Sdkvgjwf_2+ryNF7zCjreKZUnFzXt3ZtRWcWz2+w@mail.gmail.com>
+References: <20180906180152.3620-1-atull@kernel.org> <20180906182359.GB20419@archbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180906180152.3620-1-atull@kernel.org>
+In-Reply-To: <20180906182359.GB20419@archbook>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Moritz Fischer <mdf@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+On Thu, Sep 6, 2018 at 1:24 PM Moritz Fischer <mdf@kernel.org> wrote:
+>
+> Hi Alan,
+>
+> looks like it's just the examples, right?
 
-looks like it's just the examples, right? So not sure someone
-would be affected by that, yet?
+Yes, it's in the examples of use, not the actual freeze bridge
+bindings doc that I'm correcting.
 
-On Thu, Sep 06, 2018 at 01:01:52PM -0500, Alan Tull wrote:
-> Documentation/devicetree/bindings/fpga/fpga-region.txt has an error
-> regarding the freeze controller bridge, secifically:
-> 
->  compatible = "altr,freeze-bridge";
-> 
-> The compatibility string should be "altr,freeze-bridge-controller"
-> as set forth in altera-freeze-bridge.txt.
-> 
-> Signed-off-by: Alan Tull <atull@kernel.org>
+> So not sure someone
+> would be affected by that, yet?
 
-Acked-by: Moritz Fischer <mdf@kernel.org>
+It's taken two years for anybody to notice and complain about it :) so
+the effect has not been very terrible.  But it's good to correct it
+since it's been noticed.
 
-Cheers,
+>
+> On Thu, Sep 06, 2018 at 01:01:52PM -0500, Alan Tull wrote:
+> > Documentation/devicetree/bindings/fpga/fpga-region.txt has an error
+> > regarding the freeze controller bridge, secifically:
+> >
+> >  compatible = "altr,freeze-bridge";
+> >
+> > The compatibility string should be "altr,freeze-bridge-controller"
+> > as set forth in altera-freeze-bridge.txt.
+> >
+> > Signed-off-by: Alan Tull <atull@kernel.org>
+>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
+>
+> Cheers,
+>
+> Moritz
 
-Moritz
+Thanks Moritz!
+
+Alan
