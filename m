@@ -1,89 +1,65 @@
-Return-Path: <SRS0=pRDT=LU=gmail.com=jim2101024@kernel.org>
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH v5 02/12] dt-bindings: pci: add DT docs for Brcmstb PCIe device
-Date: Thu,  6 Sep 2018 16:42:51 -0400
-Message-Id: <1536266581-7308-3-git-send-email-jim2101024@gmail.com>
-In-Reply-To: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
-References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jim Quinlan <jim2101024@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
+Return-Path: <SRS0=OJAt=LU=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1536213014-1325-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1536213014-1325-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Sep 2018 09:28:14 +0200
+Message-ID: <CAMuHMdWCKSBydcbFwKqGi9azVARFr-0YboC65Zgde24FJVeZZQ@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] usb: renesas_usbhs: Add multiple clocks management
+Content-Type: text/plain; charset="UTF-8"
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The DT bindings description of the Brcmstb PCIe device is described.
-This node can be used by almost all Broadcom settop box chips, using
-ARM, ARM64, or MIPS CPU architectures.
+Hi Shimoda-san,
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/pci/brcmstb-pcie.txt       | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
+On Thu, Sep 6, 2018 at 7:52 AM Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> R-Car Gen3 needs to enable clocks of both host and peripheral.
+> Since [eo]hci-platform disables the reset(s) when the drivers are
+> removed, renesas_usbhs driver doesn't work correctly. To fix this
+> issue, this patch adds multiple clocks management on this
+> renesas_usbhs driver.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-diff --git a/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
-new file mode 100644
-index 0000000..a1a9ad5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
-@@ -0,0 +1,59 @@
-+Brcmstb PCIe Host Controller Device Tree Bindings
-+
-+Required Properties:
-+- compatible
-+  "brcm,bcm7425-pcie" -- for 7425 family MIPS-based SOCs.
-+  "brcm,bcm7435-pcie" -- for 7435 family MIPS-based SOCs.
-+  "brcm,bcm7445-pcie" -- for 7445 and later ARM based SOCs (not including
-+      the 7278).
-+  "brcm,bcm7278-pcie"  -- for 7278 family ARM-based SOCs.
-+
-+- reg -- the register start address and length for the PCIe reg block.
-+- interrupts -- two interrupts are specified; the first interrupt is for
-+     the PCI host controller and the second is for MSI if the built-in
-+     MSI controller is to be used.
-+- interrupt-names -- names of the interrupts (above): "pcie" and "msi".
-+- #address-cells -- set to <3>.
-+- #size-cells -- set to <2>.
-+- #interrupt-cells: set to <1>.
-+- interrupt-map-mask and interrupt-map, standard PCI properties to define the
-+     mapping of the PCIe interface to interrupt numbers.
-+- ranges: ranges for the PCI memory and I/O regions.
-+- linux,pci-domain -- should be unique per host controller.
-+
-+Optional Properties:
-+- clocks -- phandle of pcie clock.
-+- clock-names -- set to "sw_pcie" if clocks is used.
-+- dma-ranges -- Specifies the inbound memory mapping regions when
-+     an "identity map" is not possible.
-+- msi-controller -- this property is typically specified to have the
-+     PCIe controller use its internal MSI controller.
-+- msi-parent -- set to use an external MSI interrupt controller.
-+- brcm,enable-ssc -- (boolean) indicates usage of spread-spectrum clocking.
-+- max-link-speed --  (integer) indicates desired generation of link:
-+     1 => 2.5 Gbps (gen1), 2 => 5.0 Gbps (gen2), 3 => 8.0 Gbps (gen3).
-+
-+Example Node:
-+
-+pcie0: pcie@f0460000 {
-+		reg = <0x0 0xf0460000 0x0 0x9310>;
-+		interrupts = <0x0 0x0 0x4>;
-+		compatible = "brcm,bcm7445-pcie";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000
-+			  0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &intc 0 47 3
-+				 0 0 0 2 &intc 0 48 3
-+				 0 0 0 3 &intc 0 49 3
-+				 0 0 0 4 &intc 0 50 3>;
-+		clocks = <&sw_pcie0>;
-+		clock-names = "sw_pcie";
-+		msi-parent = <&pcie0>;  /* use PCIe's internal MSI controller */
-+		msi-controller;         /* use PCIe's internal MSI controller */
-+		brcm,ssc;
-+		max-link-speed = <1>;
-+		linux,pci-domain = <0>;
-+	};
+> --- a/drivers/usb/renesas_usbhs/common.c
+> +++ b/drivers/usb/renesas_usbhs/common.c
+
+> @@ -667,6 +684,12 @@ static int usbhs_probe(struct platform_device *pdev)
+>         if (ret)
+>                 goto probe_fail_rst;
+>
+> +       if (priv->num_clks) {
+> +               ret = clk_bulk_get(&pdev->dev, priv->num_clks, priv->clks);
+
+(inspired by Morimoto-san) clk_bulk_get() is a no-op if num_clks is zero.
+
+
+> +               if (ret == -EPROBE_DEFER)
+
+Why this special handling for -EPROBE_DEFER only?
+Shouldn't all errors be considered fatal?
+
+Perhaps this is needed for backwards compatibility with old DT?
+In that case, you should do more thorough checking (first clock should
+exist, second should return -ENOENT).
+
+> +                       goto probe_fail_clks;
+> +       }
+> +
+>         /*
+>          * deviece reset here because
+>          * USB device might be used in boot loader.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.9.0.138.g2de3478
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
