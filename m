@@ -1,138 +1,192 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 6 Sep 2018 18:06:43 +0200
-Message-ID: <20180906180643.3b1420fc@bbrezillon>
-References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
-        <20180719152930.3715-2-boris.brezillon@bootlin.com>
-        <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
-        <20180824143934.6d6b6487@bbrezillon>
-        <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
-        <20180824201600.7d80bca9@bbrezillon>
-        <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
-        <20180828140209.29155d00@bbrezillon>
-        <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
-        <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
-        <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
-        <9584757a-e7e2-5bfe-fc2c-e9bc14ad65a8@synopsys.com>
-        <25862F03-9823-42B0-87AC-AE36D7E9C780@cadence.com>
-        <CAK8P3a3pkddD9VnogYryQKoL9Z_5qVRBXd6yr1z6CqGU692rXg@mail.gmail.com>
-        <20180906151437.4259d6fc@bbrezillon>
-        <20180906152055.5618d235@bbrezillon>
-        <a08a0f8b-395b-f956-47d1-e29e0de4aae9@synopsys.com>
-        <20180906161443.0f76b246@bbrezillon>
-        <5a2ed122-b56f-421b-34e0-74ef551b76b8@synopsys.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH v5 3/4] edac: synopsys: Add EDAC ECC support for ZynqMP
+ DDRC
+Date: Thu, 6 Sep 2018 16:14:52 +0000
+Message-ID: <DM6PR02MB52273E288A625F7BD59BB2FFC1010@DM6PR02MB5227.namprd02.prod.outlook.com>
+References: <1535722070-10394-1-git-send-email-manish.narani@xilinx.com>
+ <1535722070-10394-4-git-send-email-manish.narani@xilinx.com>
+ <20180905101935.GD2237@zn.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5a2ed122-b56f-421b-34e0-74ef551b76b8@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vitor <Vitor.Soares@synopsys.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Przemyslaw Gaj <pgaj@cadence.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180905101935.GD2237@zn.tnic>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Goud <sgoud@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "olof@lixom.net" <olof@lixom.net>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Sep 2018 16:17:58 +0100
-vitor <Vitor.Soares@synopsys.com> wrote:
+Hi Boris,
 
-> Hi Boris,
+Thanks for the review.
+
+> -----Original Message-----
+> From: Borislav Petkov [mailto:bp@alien8.de]
+> Sent: Wednesday, September 5, 2018 3:50 PM
+> To: Manish Narani <MNARANI@xilinx.com>
+> Cc: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
+> <michals@xilinx.com>; mchehab@kernel.org; leoyang.li@nxp.com;
+> amit.kucheria@linaro.org; olof@lixom.net; Srinivas Goud <sgoud@xilinx.com>;
+> Anirudha Sarangi <anirudh@xilinx.com>; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> edac@vger.kernel.org
+> Subject: Re: [PATCH v5 3/4] edac: synopsys: Add EDAC ECC support for ZynqMP
+> DDRC
 > 
-> 
-> On 06-09-2018 15:14, Boris Brezillon wrote:
-> > On Thu, 6 Sep 2018 14:50:03 +0100
-> > vitor <Vitor.Soares@synopsys.com> wrote:
-> >  
-> >> Hi,
-> >>
-> >>
-> >> On 06-09-2018 14:20, Boris Brezillon wrote:  
-> >>> On Thu, 6 Sep 2018 15:14:37 +0200
-> >>> Boris Brezillon <boris.brezillon@bootlin.com> wrote:
-> >>>     
-> >>>> On Thu, 6 Sep 2018 14:59:46 +0200
-> >>>> Arnd Bergmann <arnd@arndb.de> wrote:
-> >>>>     
-> >>>>> On Thu, Sep 6, 2018 at 2:43 PM Przemyslaw Gaj <pgaj@cadence.com> wrote:  
-> >>>>>> Hi Boris, Vitor,
-> >>>>>>
-> >>>>>> This repository does not contain full kernel sources, but it should be enough to discuss mastership request feature.
-> >>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_przemekgaj_i3c-2Dlinux_commit_d54fe68a9d3e573c0c454a2c6f1afafc20142ec5&d=DwICAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=qVuU64u9x77Y0Kd0PhDK_lpxFgg6PK9PateHwjb_DY0&m=Q9DWw3KGmshGw0f5QTiffbpbESyUlPx6KmASuDBtX9Y&s=HHE_y1kyMszJvP_tSP9JkDlPYxDywBeHwkMGgCR11uI&e=
-> >>>>>>
-> >>>>>> Please keep in mind that this is initial version, but mastership works correctly. I added one property to DT to reflect relationship between masters.
-> >>>>>> It is possible to request mastership on demand (using sysfs. Useful in case when Linux machine is equipped only with secondary master controller) or automatically change operation mode when device driver wants to read/write something from/to device.
-> >>>>>>
-> >>>>>> I'm sure I will have to rework something because this was implemented on sources from PATCH v4. I saw that Boris released v7 yesterday :)  
-> >>>>> Can you explain the reason for having a user space interface and DT property?
-> >>>>> I thought we had concluded earlier that we wouldn't need that, but it's possible
-> >>>>> that I missed something in the discussion since then.  
-> >>>> I don't think the sysfs knob is needed, this being said, after thinking
-> >>>> a bit more about mastership handover and the secondary master case, I
-> >>>> think we have something important to solve.
-> >>>>
-> >>>> When a master is not in control of the bus, it gets informed of devices
-> >>>> present on the bus by monitoring DAA or DEFSLVS broadcast events. That
-> >>>> means the secondary master should populate the bus with I3C/I2C devices
-> >>>> on such events, but that's not enough, because DEFSLVS/DAA do not
-> >>>> provide all device info.Some of them (like read/write/ibi limitations)
-> >>>> require extra CCC commands, and, to send those CCC commands, the
-> >>>> secondary master must claim the bus. We could add a case where we
-> >>>> declare devices as partially discovered until the master acquires
-> >>>> ownership of the bus, but that means part of the data returned by
-> >>>> i3c_device_get_info() will be inaccurate, which might have an impact on
-> >>>> some i3c driver ->probe() functions.  
-> >>> Hm, one possible solution would be to register partially discovered
-> >>> devices to the device model and let i3c_device_get_info() claim the bus
-> >>> and request missing data when needed. This way, if the driver needs to
-> >>> call i3c_device_get_info() in its probe path, it should work just fine.  
-> >> Why don't use the i3c_master_add_i3c_dev_locked that job? It create,
-> >> attach and retrieve the device info.  
-> > When will you call i3c_master_add_i3c_dev_locked()? After receiving a
-> > DEFSLVS interrupt/event? When that happens you're not in control of the
-> > bus, which means you'll have to force bus ownership handover. Is this
-> > really what we want?
+> On Fri, Aug 31, 2018 at 06:57:49PM +0530, Manish Narani wrote:
+> > Add EDAC ECC support for ZynqMP DDRC IP. Also add support for ECC
+> > Error Injection in ZynqMP. The corrected and uncorrected error
+> > interrupts support is added. The Row, Column, Bank, Bank Group and
+> > Rank bits positions are determined via Address Map registers of Synopsys
+> DDRC.
+> > Minor indentation changes are also done for better readability.
 > >
-> > These are not rhetorical questions, I'm really asking for your opinion
-> > here.  
-> What I understand from last discussion was that every time that device 
-> need to do something (private messages) on the bus and don't have the 
-> bus control it should force ownership handover.
-> If my understanding is correct this can be also applied to CCC commands.
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  drivers/edac/Kconfig         |    2 +-
+> >  drivers/edac/synopsys_edac.c | 1054
+> > +++++++++++++++++++++++++++++++++++++-----
+> >  2 files changed, 937 insertions(+), 119 deletions(-)
+> 
+> ...
+> 
+> > @@ -222,11 +408,77 @@ static int synps_edac_geterror_info(struct
+> > synps_edac_priv *priv)  }
+> >
+> >  /**
+> > + * zynqmp_geterror_info - Get the current ECC error info
+> > + * @priv:	DDR memory controller private instance data
+> > + *
+> > + * Get the ECC error information from the ECC registers and clear the
+> > +error
+> > + * status bits in the ECC registers.
+> > + *
+> > + * Return: 0 if there is no error, otherwise return 1  */ static int
+> > +zynqmp_geterror_info(struct synps_edac_priv *priv) {
+> > +	void __iomem *base;
+> > +	struct synps_ecc_status *p;
+> > +	u32 regval, clearval = 0;
+> > +
+> > +	if (!priv)
+> > +		return 1;
+> 
+> Same as for the previous patch: why are you testing this since you're
+> dereferencing it before calling this function?
 
-Sure, but the question is more, when do we want to do that?
+Okay.
 
 > 
-> >  
-> >> This can be triggered after the secondary master receive ENEC MR until
-> >> them is keep in the driver memory.  
-> > But that means no-one will actually trigger a mastership request,
-> > because devices won't be registered until all info are available. If we
-> > take this path, we should have a way to explicitly trigger a mastership
-> > request (sysfs knob or any other means).  
-> By the current flow that we have now, we enable the IBI events at the 
-> end of .do_daa. At this time the main master bus is initialized with all 
-> devices.
+> ...
 > 
->  From the point of view of secondary master, it first participate on DAA 
-> process, next it send its info (Main master do 
-> i3c_master_retrieve_dev_info()) and them receive DEFSLVS. In the stage 
-> it cannot request the bus mastership it need the MR enable.
+> > @@ -258,10 +536,46 @@ static void synps_edac_handle_error(struct
+> > mem_ctl_info *mci,  }
+> >
+> >  /**
+> > + * synps_edac_intr_handler - Interrupt Handler for ECC interrupts
+> > + * @irq:        irq number
+> > + * @dev_id:     device id pointer
+> > + *
+> > + * This is the ISR called by EDAC core interrupt thread.
+> 
+> There's an "EDAC core interrupt thread"?!? This is the first time I hear of it.
+> 
+> Try again.
 
-You mean the broadcast ENEC(MR) event, right? Then yes, this one is
-probably missing (or maybe I added it in the master controller driver,
-I don't remember).
+Okay. I will update this in v6.
 
 > 
-> So, what I would suggest is to keep DEFSLVS data in secondary master 
-> driver memory . When secondary master receive the MR enable, it can get 
-> the bus ownership and do i3c_master_add_i3c_dev_locked() and each device 
-> in DEFSLVS command. After this step delegate the bus ownership to the 
-> main master.
+> > + * This is used to check and post ECC errors.
+> > + *
+> > + * Return: IRQ_NONE, if interrupt not set or IRQ_HANDLED otherwise.
+> > + */
+> > +static irqreturn_t synps_edac_intr_handler(int irq, void *dev_id) {
+> > +	struct mem_ctl_info *mci = dev_id;
+> > +	struct synps_edac_priv *priv = mci->pvt_info;
+> > +	const struct synps_platform_data *p_data = priv->p_data;
+> > +	int status, regval;
+> > +
+> > +	regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
+> > +	regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
+> > +	if (!(regval & ECC_CE_UE_INTR_MASK))
+> > +		return IRQ_NONE;
+> > +
+> > +	status = p_data->geterror_info(priv);
+> > +	if (status)
+> > +		return IRQ_NONE;
+> > +
+> > +	priv->ce_cnt += priv->stat.ce_cnt;
+> > +	priv->ue_cnt += priv->stat.ue_cnt;
+> > +	synps_edac_handle_error(mci, &priv->stat);
+> > +
+> > +	edac_dbg(3, "Total error count ce %d ue %d\n",
+> 
+> "ce" and "ue" are also abbreviations and should be in caps.
 
-That's an option, indeed.
+Okay. Will be taken care in v6.
 
 > 
-> What do you think about this?
+> ...
+> 
+> > +static DEVICE_ATTR_RW(inject_data_error);
+> > +static DEVICE_ATTR_RW(inject_data_poison);
+> > +
+> > +static int synps_edac_create_sysfs_attributes(struct mem_ctl_info
+> > +*mci) {
+> > +	int rc;
+> > +
+> > +	rc = device_create_file(&mci->dev, &dev_attr_inject_data_error);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +	rc = device_create_file(&mci->dev, &dev_attr_inject_data_poison);
+> > +	if (rc < 0)
+> > +		return rc;
+> > +	return 0;
+> > +}
+> 
+> I think I'm having a deja-vu:
+> 
+> Last time I said:
+> 
+> "More importantly, you need to put all that injection functionality behind
+> CONFIG_EDAC_DEBUG - you don't want to expose the injection capabilities on
+> a production machine."
+> 
+> and you said:
+> 
+> "I agree. I will update the same by keeping the above mentioned macro."
+> 
+> But maybe you've misunderstood me.
 
-Sounds like a good start. If MR is rejected by the master, we will just
-keep all devices in an unregistered state. We can also add a sysfs
-entry to manually re-trigger this operation in case the initial one
-failed.
+I missed it in v5. Sorry for the inconvenience. Will update that in v6.
+
+> 
+> Grep the other EDAC drivers to find out how to hide the injection functionality
+> behind CONFIG_EDAC_DEBUG.
+> 
+> And maybe this patch is becoming huuge and too unwieldy to review properly
+> and for you to incorporate all the feedback.
+> 
+> Therefore, please split it in single patches, each of which is doing different
+> things:
+> 
+> 1. fixup/change comments
+> 2. add defines
+> 3. add functionality X
+> 4. add functionality Y
+> ...
+> 5. add injection
+> 6. tie it all together
+
+Will do the same in v6.
+
+Thanks,
+Manish Narani
