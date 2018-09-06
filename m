@@ -1,65 +1,88 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 1/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Thu, 6 Sep 2018 15:48:34 +0100
-Message-ID: <20180906144834.GD1653@imbe.wolfsonmicro.main>
-References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
- <CACRpkdakAAAFKfRFeB_8kUCyGts_7sojVwyexe4aL4QQo2CcGg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v7 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 6 Sep 2018 17:15:16 +0200
+Message-ID: <CAK8P3a1OV_w5br=fkQjY-xOUa_u3j+8P2=9MRLzpQqLfWpSaBA@mail.gmail.com>
+References: <20180905154108.20770-1-boris.brezillon@bootlin.com>
+ <20180905154108.20770-2-boris.brezillon@bootlin.com> <CAK8P3a3EkwAXin=s1bak7V7xM7zqip_Q6GMpxB-b1BD931G6cA@mail.gmail.com>
+ <20180906160048.2f585e2b@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdakAAAFKfRFeB_8kUCyGts_7sojVwyexe4aL4QQo2CcGg@mail.gmail.com>
+In-Reply-To: <20180906160048.2f585e2b@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 06, 2018 at 03:46:12PM +0200, Linus Walleij wrote:
-> On Wed, Sep 5, 2018 at 12:41 PM Charles Keepax
-> <ckeepax@opensource.cirrus.com> wrote:
-> 
-> > From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> >
-> > Lochnagar is an evaluation and development board for Cirrus
-> > Logic Smart CODEC and Amp devices. It allows the connection of
-> > most Cirrus Logic devices on mini-cards, as well as allowing
-> > connection of various application processor systems to provide a
-> > full evaluation platform.  Audio system topology, clocking and
-> > power can all be controlled through the Lochnagar, allowing the
-> > device under test to be used in a variety of possible use cases.
-> >
-> > As the Lochnagar is a fairly complex device this MFD driver
-> > allows the drivers for the various features to be bound
-> > in. Initially clocking, regulator and pinctrl will be added as
-> > these are necessary to configure the system. But in time at least
-> > audio and voltage/current monitoring will also be added.
-> >
-> > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> 
-> It's a bit confusing, maybe you can clear it up:
-> it appears to be an I2C device, so when you say this is a
-> "development board" is there something like a board
-> controller that is accessed over I2C and this is what the
-> driver really probes to, not the board per se?
-> 
-> I guess jamming this card into the I2C slot of any other
-> system (would work fine with a 96Boards LS connector
-> as it seems, actually)  also involves connecting some
-> I2S or similar on the side for high-datarate traffic?
-> 
-> This driver seems to only concern itself with the I2C
-> board controller per se, not the board is that right?
-> 
+On Thu, Sep 6, 2018 at 4:01 PM Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+> On Thu, 6 Sep 2018 15:38:49 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Wed, Sep 5, 2018 at 5:41 PM Boris Brezillon <boris.brezillon@bootlin.com> wrote:
 
-Yeah I have poorly phrased that, these patches are very much
-just dealing with the board controller chip.
+> >
+> > > +struct i3c_bus *i3c_bus_create(struct i3c_master_controller *master)
+> > > +{
+> > > +       struct i3c_bus *i3cbus;
+> > > +       int ret;
+> > > +
+> > > +       i3cbus = kzalloc(sizeof(*i3cbus), GFP_KERNEL);
+> > > +       if (!i3cbus)
+> > > +               return ERR_PTR(-ENOMEM);
+> >
+> > I find it a bit confusing to have separate i3c_master_controller
+> > and i3c_bus structures with this version. Why not merge the
+> > two structures into one now and move the bus management
+> > into master.c?
+>
+> Yes, I considered this approach. Not sure it would make the whole code a
+> lot simpler though, and it was definitely more work on my side, so I
+> decided to delay that and wait for someone to explicitly request this
+> change ;-).
+>
+> I also like the bus/master separation in that it allows one to clearly
+> identify the properties that are bus (speed, mode, ...) related and
+> those that are master controller oriented (PID, DCR, ...).
 
-You could connect just the I2C to something like the 96Boards LS
-connector, and control all the functionality accessed by this
-driver. Although if you want to send audio between your 96Boards
-device and the Lochnagar you would need to connect up some I2S as
-well.
+Maybe you could make the bus a member of the master rather
+than a pointer from it?
 
-Thanks,
-Charles
+That would still let us avoid the separate dynamic allocations,
+and not having to worry about separate lifetime rules for the
+two, but also group the bus properties together a bit more
+as you said. It can also have code deal with the the bus object
+without including the structure definition of the master (if that
+is desirable).
+
+> > Since it contains an i2c_adapter, maybe a good name for the
+> > combined i3c_master_controller+i3c_bus structure would
+> > be 'i3c_adapter'?
+>
+> Hm, I'd really like to keep the name master and not adapter, just
+> because that's how it's named in the spec.
+
+Fair enough.
+
+> We don't store i3c/i3c_device objects in those lists, but
+> i3c/i2c_dev_desc objects, so device_for_each_child() won't work.
+> Remember that i3c devs can be present but not registered yet, and we
+> need to have those representations somehow attached to the master/bus.
+
+Ah right, I remember you explained that before.
+
+> Regarding the possibility of merging those 2 lists together, we could
+> do it, but I find it simpler to have them separated.
+
+Agreed. It would only make sense if we had the combined list already.
+
+> > That might help with locking
+> > and keeping the two lists synchronized, which may or
+> > may not be a problem here.
+>
+> Regarding the locking aspects. Anything touching those lists is either
+> init code (which should be serialized) or DAA related, which requires
+> the bus lock to be held in write mode (exclusive access mode). Do you
+> see any other possible race?
+
+No, nothing specific, it was just a general feeling.
+
+        Arnd
