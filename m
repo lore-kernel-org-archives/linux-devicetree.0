@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 2/3] arm64: dts: qcom: pm8998: Add adc node
-Date: Thu,  6 Sep 2018 14:04:53 -0700
-Message-ID: <20180906210454.247219-3-mka@chromium.org>
+Subject: [PATCH v2 1/3] dt-bindings: iio: vadc: Fix documentation of 'reg'
+Date: Thu,  6 Sep 2018 14:04:52 -0700
+Message-ID: <20180906210454.247219-2-mka@chromium.org>
 References: <20180906210454.247219-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,47 +12,44 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Ro
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the adc node to pm8998 based on the examples in the
-bindings. It also fixes the order of the included headers.
+The documentation of Qualcomm's SPMI PMIC voltage ADC claims that the
+'reg' property consists of two values, the SPMI address and the length
+of the controller's registers. However the SPMI bus to which it is added
+specifies "#size-cells = <0>;". Remove the controller register length
+from the documentation of the field and the example.
 
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 --
 Changes in v2:
-- removed io-channel-ranges attribute
+- none
 ---
- arch/arm64/boot/dts/qcom/pm8998.dtsi | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-index 92bed1e7d4bb..41593ebbea2c 100644
---- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-@@ -1,8 +1,9 @@
- // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- /* Copyright 2018 Google LLC. */
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+index 0fb46137f936..d0c188e5c922 100644
+--- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+@@ -13,7 +13,7 @@ VADC node:
+ - reg:
+     Usage: required
+     Value type: <prop-encoded-array>
+-    Definition: VADC base address and length in the SPMI PMIC register map.
++    Definition: VADC base address in the SPMI PMIC register map.
  
--#include <dt-bindings/spmi/spmi.h>
-+#include <dt-bindings/iio/qcom,spmi-vadc.h>
- #include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/spmi/spmi.h>
- 
- &spmi_bus {
- 	pm8998_lsid0: pmic@0 {
-@@ -11,6 +12,15 @@
+ - #address-cells:
+     Usage: required
+@@ -104,7 +104,7 @@ Example:
+ 	/* VADC node */
+ 	pmic_vadc: vadc@3100 {
+ 		compatible = "qcom,spmi-vadc";
+-		reg = <0x3100 0x100>;
++		reg = <0x3100>;
+ 		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
  		#address-cells = <1>;
  		#size-cells = <0>;
- 
-+		pm8998_adc: adc@3100 {
-+			compatible = "qcom,spmi-adc-rev2";
-+			reg = <0x3100>;
-+			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			#io-channel-cells = <1>;
-+		};
-+
- 		pm8998_gpio: gpios@c000 {
- 			compatible = "qcom,pm8998-gpio", "qcom,spmi-gpio";
- 			reg = <0xc000>;
 -- 
 2.19.0.rc2.392.g5ba43deb5a-goog
