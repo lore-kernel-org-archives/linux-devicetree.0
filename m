@@ -1,114 +1,60 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Thu, 06 Sep 2018 10:27:36 -0700
-Message-ID: <c1507b33c4b2d8e657cd6cdf54e14136@agner.ch>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <10044412.4MiZRujKJI@avalon> <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
- <1611934.U20VZ57ca3@avalon>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH v2 03/40] iommu/sva: Manage process address spaces
+Date: Thu, 6 Sep 2018 18:40:49 +0100
+Message-ID: <574a1792-7ac5-e4db-6eae-16ef700cba02@arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+ <20180511190641.23008-4-jean-philippe.brucker@arm.com>
+ <d785ec89-6743-d0f1-1a7f-85599a033e5b@redhat.com>
+ <20180905111835.7f3ae40e@jacob-builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1611934.U20VZ57ca3@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Dave Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, sean@poorly.run, Marcel Ziswiler <marcel.ziswiler@toradex.com>, max.krummenacher@toradex.com, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180905111835.7f3ae40e@jacob-builder>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, Auger Eric <eric.auger@redhat.com>
+Cc: "xieyisheng1@huawei.com" <xieyisheng1@huawei.com>, "ilias.apalodimas@linaro.org" <ilias.apalodimas@linaro.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "xuzaibo@huawei.com" <xuzaibo@huawei.com>, "jonathan.cameron@huawei.com" <jonathan.cameron@huawei.com>, Will Deacon <Will.Deacon@arm.com>, "okaya@codeaurora.org" <okaya@codeaurora.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "yi.l.liu@intel.com" <yi.l.liu@intel.com>, "ashok.raj@intel.com" <ashok.raj@intel.com>, "tn@semihalf.com" <tn@semihalf.com>, "joro@8bytes.org" <joro@8bytes.org>, "robdclark@gmail.com" <robdclark@gmail.com>, "bharatku@xilinx.com" <bharatku@xilinx.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "liudongdong3@huawei.com" <liudongdong3@huawei.com>, "rfranz@cavium.com" <rfranz@cavium.com>"devicetree@vger.kernel.org" <d>
 List-Id: devicetree@vger.kernel.org
 
-On 06.09.2018 09:54, Laurent Pinchart wrote:
-> Hi Stefan,
+On 05/09/2018 19:18, Jacob Pan wrote:
+> On Wed, 5 Sep 2018 14:14:12 +0200
+> Auger Eric <eric.auger@redhat.com> wrote:
 > 
-> On Thursday, 6 September 2018 19:48:51 EEST Stefan Agner wrote:
->> On 06.09.2018 05:25, Laurent Pinchart wrote:
->> > On Thursday, 6 September 2018 14:07:41 EEST Linus Walleij wrote:
->> >> On Wed, Sep 5, 2018 at 8:32 PM Stefan Agner <stefan@agner.ch> wrote:
->> >> > On 05.09.2018 00:44, Laurent Pinchart wrote:
->> >> >
->> >> > Good point! I actually really don't like that we use the same flags
->> >> > here
->> >> > but from a different perspective. Especially since the flags defines
->> >> > document things differently:
->> >> >
->> >> > /* drive data on pos. edge */
->> >> > #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
->> >> > /* drive data on neg. edge */
->> >> > #define DRM_BUS_FLAG_PIXDATA_NEGEDGE    (1<<3)
->> >>
->> >> Maybe a stupid comment from my side, but can't we just change the
->> >> documentation to match the usecases?
->> >>
->> >> /* Trigger pixel data latch on positive edge */
->> >> #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
->> >
->> > The flags are used for the drm_connector bus_flags field, and really mean
->> > driving on the positive/negative edges. We this can't change their meaning
->> > like this.
->> >
->> >> > Using the opposite perspective would also need translation in crtc
->> >> > drivers... So far no driver uses sampling_edge.
->> >> >
->> >> > I would prefer if we always use the meaning as documented by the flags.
->> >> >
->> >> > I guess we would need to convert DRM_BUS_FLAG_PIXDATA_POSEDGE ->
->> >> > DRM_BUS_FLAG_PIXDATA_NEGEDGE.
->> >> >
->> >> > Linus Walleij, you added sampling edge, any thoughts?
->> >>
->> >> I just thought it was generally useful to have triggering edge encoded
->> >> into the bridge as it makes it clear that this edge is something
->> >> that is a delayed version of the driving edge which is subject to
->> >> clock skew caused by the speed of electrons in silicon and
->> >> copper and slew rate caused by parasitic capacitance.
->> >
->> > I agree that we need both the driving and sampling edge. In many case they
->> > will be opposite, and providing some kind of appropriate defaults in APIs
->> > is fine by me, but we need a way to specify both when needed.
->>
->> We do have pixel clock flags for displays, but also they are actually
->> controller oriented:
->>
->> https://elixir.bootlin.com/linux/latest/source/include/video/display_timing.
->> h#L15
->>
->> I guess having different flags to denote driving and sampling edge
->> independently would be ideal. But then, is there really a use case where
->> it wouldn't be the exact opposite?
-> 
-> Yes, for instance when the transmission delay for clock and data signals is 
-> different, you may want to sample on the same edge used by the transmitter to 
-> latch the output. Linus had that case, which prompted him to add the sampling 
-> edge field.
-> 
+>>> + *
+>>> + * On Arm and AMD IOMMUs, entry 0 of the PASID table can be used
+>>> to hold
+>>> + * non-PASID translations. In this case PASID 0 is reserved and
+>>> entry 0 points
+>>> + * to the io_pgtable base. On Intel IOMMU, the io_pgtable base
+>>> would be held in
+>>> + * the device table and PASID 0 would be available to the
+>>> allocator.
+>>> + */  
+>> very nice explanation
+> With the new Vt-d 3.0 spec., 2nd level IO page table base is no longer
+> held in the device context table. Instead it is held in the PASID table
+> entry pointed by the RID_PASID field in the device context entry. If
+> RID_PASID = 0, then it is the same as ARM and AMD IOMMUs.
+> You can refer to ch3.4.3 of the VT-d spec.
 
-Bu in that case the controller does not know what it actually should do
-with the sampling information alone either...
+I could simplify that paragraph by removing the specific implementations:
 
-Where is that code handling that today? sample_edge has been added, but
-I only see setup_time_ps being used in pl111_display.c.
+"In some IOMMUs, entry 0 of the PASID table can be used to hold
+non-PASID translations. In this case PASID 0 is reserved and entry 0
+points to the io_pgtable base. In other IOMMUs the io_pgtable base is
+held in the device table and PASID 0 is available to the allocator."
 
-I'm not a hardware guy, but according to my rough calculation a pixel
-clock signal at 100MHz would need to be 1.5m off compared to the data
-signals to skew by a half period! Length matching is usually only
-necessary at really high speed signals. Is that really what is going on
-here?
+I guess in Linux there isn't any reason to set RID_PASID to a non-zero
+value? Otherwise the iommu-sva allocator will need minor changes.
 
-Why not just work around by specifying "the wrong" edge...?
-
---
-Stefan
-
->> The other bus flags are actually fine as is. I suggest to just stick
->> with the bus flags as we have them now, at least for now.
->>
->> Alternatively, we could provide "consumer/bridge" oriented flags which
->> use the same bit and just are the opposite of the controller oriented
->> flags, e.g.:
->>
->> /* drive data on pos. edge */
->> #define DRM_BUS_FLAG_PIXDATA_POSEDGE	(1<<2)
->> /* drive data on neg. edge */
->> #define DRM_BUS_FLAG_PIXDATA_NEGEDGE	(1<<3)
->> /* sample data on neg. edge */
->> #define DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE	(1<<2)
->> /* sample data on pos. edge */
->> #define DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE	(1<<3)
+Thanks,
+Jean
