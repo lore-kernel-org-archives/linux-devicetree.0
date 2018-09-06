@@ -1,29 +1,37 @@
-Return-Path: <SRS0=dmff=LT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from 107-172-0-11-host.colocrossing.com ([107.172.0.11]:54439 "EHLO
-        denon.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727665AbeIETh6 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 5 Sep 2018 15:37:58 -0400
-Subject: Path adding
-Message-ID: <02505773fd1b15fedcabf8e27e8458aa@floralsupply.com>
-Date: Wed, 05 Sep 2018 13:49:55 +0200
-From: "Jesse Kurtz" <zoepdeilarassazs@email.jp>
-Reply-To: hongloudo@sina.com
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
+Date: Thu,  6 Sep 2018 14:50:13 +0900
+Message-Id: <1536213014-1325-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1536213014-1325-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Just want to check with you to see if you have any photos for editing?
+R-Car Gen3 needs to enable clocks of both host and peripheral.
+Otherwise, other side device cannot work correctly. So, this patch
+adds a property of clock-names for R-Car Gen3 as an optional.
 
-We are providing below services to you.
-Clipping path for the images.
-Cut out for the photos
-Masking for the images
-All kinds of retouching for the beauty and model.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-We provide testing for your photos if you need.
-
-Thanks,
-Jesse
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 087140a..a8fa3ec 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -37,6 +37,8 @@ Optional properties:
+   - dmas: Must contain a list of references to DMA specifiers.
+   - dma-names : named "ch%d", where %d is the channel number ranging from zero
+                 to the number of channels (DnFIFOs) minus one.
++  - clock-names: For a "renesas,rcar-gen3-usbhs" compatible device,
++		 "hsusb" and "ehci/ohci" can be set.
+ 
+ Example:
+ 	usbhs: usb@e6590000 {
+-- 
+1.9.1
