@@ -1,54 +1,88 @@
-From: Stafford Horne <shorne@gmail.com>
-Subject: Re: [PATCH 10/21] openrisc: use for_each_of_cpu_node iterator
-Date: Thu, 6 Sep 2018 18:12:09 +0900
-Message-ID: <20180906091209.GJ4594@lianli.shorne-pla.net>
-References: <20180905193738.19325-1-robh@kernel.org>
- <20180905193738.19325-11-robh@kernel.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFT] ARM: dts: exynos: Remove double SD card detect pin
+ inversion
+Date: Thu, 6 Sep 2018 11:21:51 +0200
+Message-ID: <20180906092151eucas1p1c7e7e187120468f0e99afce3dd2859b6~RxSVGQkCD1671916719eucas1p1C@eucas1p1.samsung.com>
+References: <CGME20180905174039epcas3p2091bb7ef6c51b2850ea774e6d76b7f5d@epcas3p2.samsung.com>
+        <20180905174024.28366-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180905193738.19325-11-robh@kernel.org>
+In-Reply-To: <20180905174024.28366-1-krzk@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jonas Bonn <jonas@southpole.se>, Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>, openrisc@lists.librecores.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Maciej Purski <m.purski@samsung.com>, Simon Shields <simon@lineageos.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2018 at 02:37:27PM -0500, Rob Herring wrote:
-> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-> has the side effect of defaulting to iterating using "cpu" node names in
-> preference to the deprecated (for FDT) device_type == "cpu".
-> 
-> This also fixes a leaked reference for cpus node.
-> 
-> Cc: Jonas Bonn <jonas@southpole.se>
-> Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
-> Cc: Stafford Horne <shorne@gmail.com>
-> Cc: openrisc@lists.librecores.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Hi Krzysztof,
+
+On 2018-09-05 19:40, Krzysztof Kozlowski wrote:
+> The SDHCI standard, MMC host controller bindings and MMC core defines
+> card detect pin as active low.  Therefore there is no point to invert it
+> twice.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>
 > ---
-> Please ack and I will take via the DT tree. This is dependent on the
-> first 2 patches.
-> 
->  arch/openrisc/kernel/setup.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-> index 9d28ab14d139..e17fcd83120f 100644
-> --- a/arch/openrisc/kernel/setup.c
-> +++ b/arch/openrisc/kernel/setup.c
-> @@ -158,9 +158,8 @@ static struct device_node *setup_find_cpu_node(int cpu)
->  {
->  	u32 hwid;
->  	struct device_node *cpun;
-> -	struct device_node *cpus = of_find_node_by_path("/cpus");
-> 
-> -	for_each_available_child_of_node(cpus, cpun) {
-> +	for_each_of_cpu_node(cpun) {
->  		if (of_property_read_u32(cpun, "reg", &hwid))
->  			continue;
->  		if (hwid == cpu)
+>
+> Tested only on Odroid U3. Tests on other platforms would be appreciated.
 
-This looks fine to me.  Thanks Rob
+SD card detection still works fine on UniversalC210, Trats2 and OdroidU3 
+with this patch.
 
-Acked-by: Stafford Horne <shorne@gmail.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+
+> ---
+>   arch/arm/boot/dts/exynos4210-universal_c210.dts | 3 +--
+>   arch/arm/boot/dts/exynos4412-midas.dtsi         | 3 +--
+>   arch/arm/boot/dts/exynos4412-odroid-common.dtsi | 3 +--
+>   3 files changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> index 4e6ff97e1ec4..249bfbff1e20 100644
+> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> @@ -537,8 +537,7 @@
+>   	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4>;
+>   	pinctrl-names = "default";
+>   	vmmc-supply = <&ldo5_reg>;
+> -	cd-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
+>   	status = "okay";
+>   };
+>   
+> diff --git a/arch/arm/boot/dts/exynos4412-midas.dtsi b/arch/arm/boot/dts/exynos4412-midas.dtsi
+> index c0476c290977..aed2f2e2b0d1 100644
+> --- a/arch/arm/boot/dts/exynos4412-midas.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-midas.dtsi
+> @@ -1269,8 +1269,7 @@
+>   
+>   &sdhci_2 {
+>   	bus-width = <4>;
+> -	cd-gpios = <&gpx3 4 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpx3 4 GPIO_ACTIVE_LOW>;
+>   	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sdhci2_cd>;
+>   	pinctrl-names = "default";
+>   	vmmc-supply = <&ldo21_reg>;
+> diff --git a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> index a09e46c9dbc0..2caa3132f34e 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412-odroid-common.dtsi
+> @@ -539,8 +539,7 @@
+>   	pinctrl-names = "default";
+>   	vmmc-supply = <&ldo21_reg>;
+>   	vqmmc-supply = <&ldo4_reg>;
+> -	cd-gpios = <&gpk2 2 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpk2 2 GPIO_ACTIVE_LOW>;
+>   	status = "okay";
+>   };
+>   
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
