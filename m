@@ -1,34 +1,55 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 3/8] arm64: dts: qcom: msm8998: Add tsens and
- thermal-zones
-Date: Thu, 6 Sep 2018 08:46:27 -0700
-Message-ID: <20180906154627.GA3286@tuxbook-pro>
-References: <20180904050123.26601-1-bjorn.andersson@linaro.org>
- <20180904050123.26601-4-bjorn.andersson@linaro.org>
- <CAHLCerM2por+ES+OhH2nUOOPF_tmYjk6zGdw-2dr=JRu5Jfrbg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] arm64: dts: msm8916: Drop model and compatible
+Date: Thu, 6 Sep 2018 08:55:58 -0700
+Message-ID: <20180906155558.GB3286@tuxbook-pro>
+References: <20180905183517.9390-1-niklas.cassel@linaro.org>
+ <20180905183517.9390-3-niklas.cassel@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHLCerM2por+ES+OhH2nUOOPF_tmYjk6zGdw-2dr=JRu5Jfrbg@mail.gmail.com>
+In-Reply-To: <20180905183517.9390-3-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@verdurent.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 06 Sep 06:53 PDT 2018, Amit Kucheria wrote:
-> On Tue, Sep 4, 2018 at 10:31 AM, Bjorn Andersson
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-[..]
-> > +               tsens0: thermal@10aa000 {
-> > +                       compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
-> > +                       reg = <0x10aa000 0x2000>;
-> > +
-> 
-> use the SROT and TM split for v2?
-> 
+On Wed 05 Sep 11:35 PDT 2018, Niklas Cassel wrote:
 
-You're right, lets use the new style from the beginning.
+> DTS board files should always specify model and compatible.
+> 
+> All DTS board files that includes msm8916.dtsi
+> already specifies model and compatible, and will thus
+> override the model and compatible in msm8916.dtsi.
+> 
+> Drop model and compatible from msm8916.dtsi,
+> since they are only a source of confusion.
+> 
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 
-Thanks,
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
 Bjorn
+
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 7b32b8990d62..726a45960742 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -18,9 +18,6 @@
+>  #include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+> -	model = "Qualcomm Technologies, Inc. MSM8916";
+> -	compatible = "qcom,msm8916";
+> -
+>  	interrupt-parent = <&intc>;
+>  
+>  	#address-cells = <2>;
+> -- 
+> 2.17.1
+> 
