@@ -1,81 +1,98 @@
-From: Stefan Agner <stefan@agner.ch>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Thu, 06 Sep 2018 09:48:51 -0700
-Message-ID: <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
- <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
- <10044412.4MiZRujKJI@avalon>
+Date: Thu, 06 Sep 2018 19:54:37 +0300
+Message-ID: <1611934.U20VZ57ca3@avalon>
+References: <20180905052113.21262-1-stefan@agner.ch> <10044412.4MiZRujKJI@avalon> <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <10044412.4MiZRujKJI@avalon>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Dave Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, sean@poorly.run, Marcel Ziswiler <marcel.ziswiler@toradex.com>, max.krummenacher@toradex.com, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYuMDkuMjAxOCAwNToyNSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBMaW51cywK
-PiAKPiBPbiBUaHVyc2RheSwgNiBTZXB0ZW1iZXIgMjAxOCAxNDowNzo0MSBFRVNUIExpbnVzIFdh
-bGxlaWogd3JvdGU6Cj4+IE9uIFdlZCwgU2VwIDUsIDIwMTggYXQgODozMiBQTSBTdGVmYW4gQWdu
-ZXIgPHN0ZWZhbkBhZ25lci5jaD4gd3JvdGU6Cj4+ID4gT24gMDUuMDkuMjAxOCAwMDo0NCwgTGF1
-cmVudCBQaW5jaGFydCB3cm90ZToKPj4gPgo+PiA+IEdvb2QgcG9pbnQhIEkgYWN0dWFsbHkgcmVh
-bGx5IGRvbid0IGxpa2UgdGhhdCB3ZSB1c2UgdGhlIHNhbWUgZmxhZ3MgaGVyZQo+PiA+IGJ1dCBm
-cm9tIGEgZGlmZmVyZW50IHBlcnNwZWN0aXZlLiBFc3BlY2lhbGx5IHNpbmNlIHRoZSBmbGFncyBk
-ZWZpbmVzCj4+ID4gZG9jdW1lbnQgdGhpbmdzIGRpZmZlcmVudGx5Ogo+PiA+Cj4+ID4gLyogZHJp
-dmUgZGF0YSBvbiBwb3MuIGVkZ2UgKi8KPj4gPiAjZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRB
-X1BPU0VER0UgICAgKDE8PDIpCj4+ID4gLyogZHJpdmUgZGF0YSBvbiBuZWcuIGVkZ2UgKi8KPj4g
-PiAjZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX05FR0VER0UgICAgKDE8PDMpCj4+Cj4+IE1h
-eWJlIGEgc3R1cGlkIGNvbW1lbnQgZnJvbSBteSBzaWRlLCBidXQgY2FuJ3Qgd2UganVzdCBjaGFu
-Z2UgdGhlCj4+IGRvY3VtZW50YXRpb24gdG8gbWF0Y2ggdGhlIHVzZWNhc2VzPwo+Pgo+PiAvKiBU
-cmlnZ2VyIHBpeGVsIGRhdGEgbGF0Y2ggb24gcG9zaXRpdmUgZWRnZSAqLwo+PiAjZGVmaW5lIERS
-TV9CVVNfRkxBR19QSVhEQVRBX1BPU0VER0UgICAgKDE8PDIpCj4gCj4gVGhlIGZsYWdzIGFyZSB1
-c2VkIGZvciB0aGUgZHJtX2Nvbm5lY3RvciBidXNfZmxhZ3MgZmllbGQsIGFuZCByZWFsbHkgbWVh
-biAKPiBkcml2aW5nIG9uIHRoZSBwb3NpdGl2ZS9uZWdhdGl2ZSBlZGdlcy4gV2UgdGhpcyBjYW4n
-dCBjaGFuZ2UgdGhlaXIgbWVhbmluZyAKPiBsaWtlIHRoaXMuCj4gCj4+ID4gVXNpbmcgdGhlIG9w
-cG9zaXRlIHBlcnNwZWN0aXZlIHdvdWxkIGFsc28gbmVlZCB0cmFuc2xhdGlvbiBpbiBjcnRjCj4+
-ID4gZHJpdmVycy4uLiBTbyBmYXIgbm8gZHJpdmVyIHVzZXMgc2FtcGxpbmdfZWRnZS4KPj4gPgo+
-PiA+IEkgd291bGQgcHJlZmVyIGlmIHdlIGFsd2F5cyB1c2UgdGhlIG1lYW5pbmcgYXMgZG9jdW1l
-bnRlZCBieSB0aGUgZmxhZ3MuCj4+ID4KPj4gPiBJIGd1ZXNzIHdlIHdvdWxkIG5lZWQgdG8gY29u
-dmVydCBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFIC0+Cj4+ID4gRFJNX0JVU19GTEFHX1BJ
-WERBVEFfTkVHRURHRS4KPj4gPgo+PiA+IExpbnVzIFdhbGxlaWosIHlvdSBhZGRlZCBzYW1wbGlu
-ZyBlZGdlLCBhbnkgdGhvdWdodHM/Cj4+Cj4+IEkganVzdCB0aG91Z2h0IGl0IHdhcyBnZW5lcmFs
-bHkgdXNlZnVsIHRvIGhhdmUgdHJpZ2dlcmluZyBlZGdlIGVuY29kZWQKPj4gaW50byB0aGUgYnJp
-ZGdlIGFzIGl0IG1ha2VzIGl0IGNsZWFyIHRoYXQgdGhpcyBlZGdlIGlzIHNvbWV0aGluZwo+PiB0
-aGF0IGlzIGEgZGVsYXllZCB2ZXJzaW9uIG9mIHRoZSBkcml2aW5nIGVkZ2Ugd2hpY2ggaXMgc3Vi
-amVjdCB0bwo+PiBjbG9jayBza2V3IGNhdXNlZCBieSB0aGUgc3BlZWQgb2YgZWxlY3Ryb25zIGlu
-IHNpbGljb24gYW5kCj4+IGNvcHBlciBhbmQgc2xldyByYXRlIGNhdXNlZCBieSBwYXJhc2l0aWMg
-Y2FwYWNpdGFuY2UuCj4gCj4gSSBhZ3JlZSB0aGF0IHdlIG5lZWQgYm90aCB0aGUgZHJpdmluZyBh
-bmQgc2FtcGxpbmcgZWRnZS4gSW4gbWFueSBjYXNlIHRoZXkgCj4gd2lsbCBiZSBvcHBvc2l0ZSwg
-YW5kIHByb3ZpZGluZyBzb21lIGtpbmQgb2YgYXBwcm9wcmlhdGUgZGVmYXVsdHMgaW4gQVBJcyBp
-cyAKPiBmaW5lIGJ5IG1lLCBidXQgd2UgbmVlZCBhIHdheSB0byBzcGVjaWZ5IGJvdGggd2hlbiBu
-ZWVkZWQuCgpXZSBkbyBoYXZlIHBpeGVsIGNsb2NrIGZsYWdzIGZvciBkaXNwbGF5cywgYnV0IGFs
-c28gdGhleSBhcmUgYWN0dWFsbHkKY29udHJvbGxlciBvcmllbnRlZDoKCmh0dHBzOi8vZWxpeGly
-LmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvaW5jbHVkZS92aWRlby9kaXNwbGF5X3Rp
-bWluZy5oI0wxNQoKSSBndWVzcyBoYXZpbmcgZGlmZmVyZW50IGZsYWdzIHRvIGRlbm90ZSBkcml2
-aW5nIGFuZCBzYW1wbGluZyBlZGdlCmluZGVwZW5kZW50bHkgd291bGQgYmUgaWRlYWwuIEJ1dCB0
-aGVuLCBpcyB0aGVyZSByZWFsbHkgYSB1c2UgY2FzZSB3aGVyZQppdCB3b3VsZG4ndCBiZSB0aGUg
-ZXhhY3Qgb3Bwb3NpdGU/CgpUaGUgb3RoZXIgYnVzIGZsYWdzIGFyZSBhY3R1YWxseSBmaW5lIGFz
-IGlzLiBJIHN1Z2dlc3QgdG8ganVzdCBzdGljawp3aXRoIHRoZSBidXMgZmxhZ3MgYXMgd2UgaGF2
-ZSB0aGVtIG5vdywgYXQgbGVhc3QgZm9yIG5vdy4KCkFsdGVybmF0aXZlbHksIHdlIGNvdWxkIHBy
-b3ZpZGUgImNvbnN1bWVyL2JyaWRnZSIgb3JpZW50ZWQgZmxhZ3Mgd2hpY2gKdXNlIHRoZSBzYW1l
-IGJpdCBhbmQganVzdCBhcmUgdGhlIG9wcG9zaXRlIG9mIHRoZSBjb250cm9sbGVyIG9yaWVudGVk
-CmZsYWdzLCBlLmcuOgoKLyogZHJpdmUgZGF0YSBvbiBwb3MuIGVkZ2UgKi8KI2RlZmluZSBEUk1f
-QlVTX0ZMQUdfUElYREFUQV9QT1NFREdFCSgxPDwyKQovKiBkcml2ZSBkYXRhIG9uIG5lZy4gZWRn
-ZSAqLwojZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX05FR0VER0UJKDE8PDMpCi8qIHNhbXBs
-ZSBkYXRhIG9uIG5lZy4gZWRnZSAqLwojZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX1NBTVBM
-RV9ORUdFREdFCSgxPDwyKQovKiBzYW1wbGUgZGF0YSBvbiBwb3MuIGVkZ2UgKi8KI2RlZmluZSBE
-Uk1fQlVTX0ZMQUdfUElYREFUQV9TQU1QTEVfUE9TRURHRQkoMTw8MykKCi0tClN0ZWZhbgoKCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Stefan,
+
+On Thursday, 6 September 2018 19:48:51 EEST Stefan Agner wrote:
+> On 06.09.2018 05:25, Laurent Pinchart wrote:
+> > On Thursday, 6 September 2018 14:07:41 EEST Linus Walleij wrote:
+> >> On Wed, Sep 5, 2018 at 8:32 PM Stefan Agner <stefan@agner.ch> wrote:
+> >> > On 05.09.2018 00:44, Laurent Pinchart wrote:
+> >> > 
+> >> > Good point! I actually really don't like that we use the same flags
+> >> > here
+> >> > but from a different perspective. Especially since the flags defines
+> >> > document things differently:
+> >> > 
+> >> > /* drive data on pos. edge */
+> >> > #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
+> >> > /* drive data on neg. edge */
+> >> > #define DRM_BUS_FLAG_PIXDATA_NEGEDGE    (1<<3)
+> >> 
+> >> Maybe a stupid comment from my side, but can't we just change the
+> >> documentation to match the usecases?
+> >> 
+> >> /* Trigger pixel data latch on positive edge */
+> >> #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
+> > 
+> > The flags are used for the drm_connector bus_flags field, and really mean
+> > driving on the positive/negative edges. We this can't change their meaning
+> > like this.
+> > 
+> >> > Using the opposite perspective would also need translation in crtc
+> >> > drivers... So far no driver uses sampling_edge.
+> >> > 
+> >> > I would prefer if we always use the meaning as documented by the flags.
+> >> > 
+> >> > I guess we would need to convert DRM_BUS_FLAG_PIXDATA_POSEDGE ->
+> >> > DRM_BUS_FLAG_PIXDATA_NEGEDGE.
+> >> > 
+> >> > Linus Walleij, you added sampling edge, any thoughts?
+> >> 
+> >> I just thought it was generally useful to have triggering edge encoded
+> >> into the bridge as it makes it clear that this edge is something
+> >> that is a delayed version of the driving edge which is subject to
+> >> clock skew caused by the speed of electrons in silicon and
+> >> copper and slew rate caused by parasitic capacitance.
+> > 
+> > I agree that we need both the driving and sampling edge. In many case they
+> > will be opposite, and providing some kind of appropriate defaults in APIs
+> > is fine by me, but we need a way to specify both when needed.
+> 
+> We do have pixel clock flags for displays, but also they are actually
+> controller oriented:
+> 
+> https://elixir.bootlin.com/linux/latest/source/include/video/display_timing.
+> h#L15
+> 
+> I guess having different flags to denote driving and sampling edge
+> independently would be ideal. But then, is there really a use case where
+> it wouldn't be the exact opposite?
+
+Yes, for instance when the transmission delay for clock and data signals is 
+different, you may want to sample on the same edge used by the transmitter to 
+latch the output. Linus had that case, which prompted him to add the sampling 
+edge field.
+
+> The other bus flags are actually fine as is. I suggest to just stick
+> with the bus flags as we have them now, at least for now.
+> 
+> Alternatively, we could provide "consumer/bridge" oriented flags which
+> use the same bit and just are the opposite of the controller oriented
+> flags, e.g.:
+> 
+> /* drive data on pos. edge */
+> #define DRM_BUS_FLAG_PIXDATA_POSEDGE	(1<<2)
+> /* drive data on neg. edge */
+> #define DRM_BUS_FLAG_PIXDATA_NEGEDGE	(1<<3)
+> /* sample data on neg. edge */
+> #define DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE	(1<<2)
+> /* sample data on pos. edge */
+> #define DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE	(1<<3)
+
+-- 
+Regards,
+
+Laurent Pinchart
