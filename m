@@ -1,53 +1,29 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 2/2] pci: dwc: add UniPhier PCIe host controller support
-Date: Thu, 06 Sep 2018 10:38:20 +0900
-Message-ID: <20180906103819.252A.4A936039@socionext.com>
-References: <1536114731-28630-3-git-send-email-hayashi.kunihiko@socionext.com> <20180905172529.GO107892@bhelgaas-glaptop.roam.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 17/21] clk: mvebu: use for_each_of_cpu_node iterator
+Date: Wed, 05 Sep 2018 18:47:23 -0700
+Message-ID: <153619844311.119890.16697437413784930827@swboyd.mtv.corp.google.com>
+References: <20180905193738.19325-1-robh@kernel.org>
+ <20180905193738.19325-18-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905172529.GO107892@bhelgaas-glaptop.roam.corp.google.com>
+In-Reply-To: <20180905193738.19325-18-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Quoting Rob Herring (2018-09-05 12:37:34)
+> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
+> has the side effect of defaulting to iterating using "cpu" node names in
+> preference to the deprecated (for FDT) device_type =3D=3D "cpu".
+> =
 
-On Wed, 5 Sep 2018 12:25:29 -0500 <helgaas@kernel.org> wrote:
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
 
-> Follow capitalization conventions for subject.
-> 
-> On Wed, Sep 05, 2018 at 11:32:11AM +0900, Kunihiko Hayashi wrote:
-> > This introduces specific glue layer for UniPhier platform to support
-> > PCIe host controller that is based on the Designware PCIe Core, and
-> > this driver supports Root Complex (host) mode.
-> 
-> s/Designware/DesignWare/
-> s/Core/core/
-
-I'll fix them like [1/2].
-
-> 
-> > diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > new file mode 100644
-> > index 0000000..13ce02e
-> > --- /dev/null
-> > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
-> > @@ -0,0 +1,464 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +//
-> > +// PCI-express host controller driver for UniPhier SoCs
-> > +// Copyright 2018 Socionext Inc.
-> > +// Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> 
-> Use /* ... */ comments except for the SPDX line.
-
-Okay, although I wondered which way to put, I'll replace the header next.
-
-Thank you,
-
----
-Best Regards,
-Kunihiko Hayashi
+Acked-by: Stephen Boyd <sboyd@kernel.org>
