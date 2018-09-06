@@ -1,98 +1,47 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Thu, 06 Sep 2018 19:54:37 +0300
-Message-ID: <1611934.U20VZ57ca3@avalon>
-References: <20180905052113.21262-1-stefan@agner.ch> <10044412.4MiZRujKJI@avalon> <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v2 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Thu, 6 Sep 2018 10:11:33 -0700
+Message-ID: <20180906171133.awny5cx533kkolrg@pburton-laptop>
+References: <20180905235327.5996-1-robh@kernel.org>
+ <20180905235327.5996-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
+Content-Disposition: inline
+In-Reply-To: <20180905235327.5996-7-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Agner <stefan@agner.ch>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Dave Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, sean@poorly.run, Marcel Ziswiler <marcel.ziswiler@toradex.com>, max.krummenacher@toradex.com, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+Hi Rob,
 
-On Thursday, 6 September 2018 19:48:51 EEST Stefan Agner wrote:
-> On 06.09.2018 05:25, Laurent Pinchart wrote:
-> > On Thursday, 6 September 2018 14:07:41 EEST Linus Walleij wrote:
-> >> On Wed, Sep 5, 2018 at 8:32 PM Stefan Agner <stefan@agner.ch> wrote:
-> >> > On 05.09.2018 00:44, Laurent Pinchart wrote:
-> >> > 
-> >> > Good point! I actually really don't like that we use the same flags
-> >> > here
-> >> > but from a different perspective. Especially since the flags defines
-> >> > document things differently:
-> >> > 
-> >> > /* drive data on pos. edge */
-> >> > #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
-> >> > /* drive data on neg. edge */
-> >> > #define DRM_BUS_FLAG_PIXDATA_NEGEDGE    (1<<3)
-> >> 
-> >> Maybe a stupid comment from my side, but can't we just change the
-> >> documentation to match the usecases?
-> >> 
-> >> /* Trigger pixel data latch on positive edge */
-> >> #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
-> > 
-> > The flags are used for the drm_connector bus_flags field, and really mean
-> > driving on the positive/negative edges. We this can't change their meaning
-> > like this.
-> > 
-> >> > Using the opposite perspective would also need translation in crtc
-> >> > drivers... So far no driver uses sampling_edge.
-> >> > 
-> >> > I would prefer if we always use the meaning as documented by the flags.
-> >> > 
-> >> > I guess we would need to convert DRM_BUS_FLAG_PIXDATA_POSEDGE ->
-> >> > DRM_BUS_FLAG_PIXDATA_NEGEDGE.
-> >> > 
-> >> > Linus Walleij, you added sampling edge, any thoughts?
-> >> 
-> >> I just thought it was generally useful to have triggering edge encoded
-> >> into the bridge as it makes it clear that this edge is something
-> >> that is a delayed version of the driving edge which is subject to
-> >> clock skew caused by the speed of electrons in silicon and
-> >> copper and slew rate caused by parasitic capacitance.
-> > 
-> > I agree that we need both the driving and sampling edge. In many case they
-> > will be opposite, and providing some kind of appropriate defaults in APIs
-> > is fine by me, but we need a way to specify both when needed.
+On Wed, Sep 05, 2018 at 06:53:24PM -0500, Rob Herring wrote:
+> There is nothing arch specific about building dtb files other than their
+> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+> The dependencies and supported targets are all slightly different.
+> Also, a cross-compiler for each arch is needed, but really the host
+> compiler preprocessor is perfectly fine for building dtbs. Move the
+> build rules to a common location and remove the arch specific ones. This
+> is done in a single step to avoid warnings about overriding rules.
 > 
-> We do have pixel clock flags for displays, but also they are actually
-> controller oriented:
+> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+> These pull in several dependencies some of which need a target compiler
+> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> All that is really needed is dtc, so adjust the dependencies to only be
+> dtc.
 > 
-> https://elixir.bootlin.com/linux/latest/source/include/video/display_timing.
-> h#L15
+> This change enables support 'dtbs_install' on some arches which were
+> missing the target.
 > 
-> I guess having different flags to denote driving and sampling edge
-> independently would be ideal. But then, is there really a use case where
-> it wouldn't be the exact opposite?
+>%
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack so I can take the whole series via the DT tree.
 
-Yes, for instance when the transmission delay for clock and data signals is 
-different, you may want to sample on the same edge used by the transmitter to 
-latch the output. Linus had that case, which prompted him to add the sampling 
-edge field.
+For MIPS:
 
-> The other bus flags are actually fine as is. I suggest to just stick
-> with the bus flags as we have them now, at least for now.
-> 
-> Alternatively, we could provide "consumer/bridge" oriented flags which
-> use the same bit and just are the opposite of the controller oriented
-> flags, e.g.:
-> 
-> /* drive data on pos. edge */
-> #define DRM_BUS_FLAG_PIXDATA_POSEDGE	(1<<2)
-> /* drive data on neg. edge */
-> #define DRM_BUS_FLAG_PIXDATA_NEGEDGE	(1<<3)
-> /* sample data on neg. edge */
-> #define DRM_BUS_FLAG_PIXDATA_SAMPLE_NEGEDGE	(1<<2)
-> /* sample data on pos. edge */
-> #define DRM_BUS_FLAG_PIXDATA_SAMPLE_POSEDGE	(1<<3)
+    Acked-by: Paul Burton <paul.burton@mips.com>
 
--- 
-Regards,
-
-Laurent Pinchart
+Thanks,
+    Paul
