@@ -1,95 +1,267 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 01/10] i3c: Add core I3C infrastructure
-Date: Thu, 6 Sep 2018 15:38:49 +0200
-Message-ID: <CAK8P3a3EkwAXin=s1bak7V7xM7zqip_Q6GMpxB-b1BD931G6cA@mail.gmail.com>
-References: <20180905154108.20770-1-boris.brezillon@bootlin.com> <20180905154108.20770-2-boris.brezillon@bootlin.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH 1/3] dt-bindings: iio: adc: Add Xilinx AMS binding
+ documentation
+Date: Thu, 6 Sep 2018 13:42:30 +0000
+Message-ID: <DM6PR02MB52274964865A3F7CE1A8889AC1010@DM6PR02MB5227.namprd02.prod.outlook.com>
+References: <1535624539-7839-1-git-send-email-manish.narani@xilinx.com>
+ <1535624539-7839-2-git-send-email-manish.narani@xilinx.com>
+ <5b8e8a6c.1c69fb81.21d7a.5b20@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905154108.20770-2-boris.brezillon@bootlin.com>
+In-Reply-To: <5b8e8a6c.1c69fb81.21d7a.5b20@mx.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+To: Rob Herring <robh@kernel.org>
+Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "arnaud.pouliquen@st.com" <arnaud.pouliquen@st.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "lukas@wunner.de" <lukas@wunner.de>, "freeman.liu@spreadtrum.com" <freeman.liu@spreadtrum.com>, "vilhelm.gray@gmail.com" <vilhelm.gray>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 5, 2018 at 5:41 PM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
+Hi Rob,
 
-> ---
-> Changes in v7:
-> - Stop representing the I3C master as a device under the I3C bus
-> - Enforce a 1:1 relationship between i3c_bus and i3c_master_controller
->   objects
+Thanks for the review. Please see my comments inline.
 
-Thanks for implementing those changes. What is your feeling so far
-about the difference? Has it gotten much simpler as I was hoping?
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, September 4, 2018 6:48 AM
+> To: Manish Narani <MNARANI@xilinx.com>
+>=20
+> On Thu, Aug 30, 2018 at 03:52:17PM +0530, Manish Narani wrote:
+> > Xilinx AMS have several ADC channels that can be used for measurement
+> > of different voltages and temperatures. Document the same in the bindin=
+gs.
+> >
+> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > ---
+> >  .../devicetree/bindings/iio/adc/xilinx-ams.txt     | 159
+> +++++++++++++++++++++
+> >  1 file changed, 159 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > new file mode 100644
+> > index 0000000..8cc96f0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > +AMS device tree subnode:
+> > +	- compatible: Should be "xlnx,zynqmp-ams-ps" or "xlnx,zynqmp-ams-pl"
+> > +	- reg:  Register space for PS or PL
+>=20
+> Please split each child node into its own section.
 
-I definitely like this version much better. I have found a couple of
-things that I point out below that could be improved (or me being
-proven wrong on them), but overall I think it looks great and I don't
-see major issues.
+Okay. I will update this in v2.
 
-Great work!
+>=20
+> > +
+> > +Optional properties:
+> > +
+> > +Following optional property only valid for PL.
+>=20
+> property or...
 
-> +struct i3c_bus *i3c_bus_create(struct i3c_master_controller *master)
-> +{
-> +       struct i3c_bus *i3cbus;
-> +       int ret;
-> +
-> +       i3cbus = kzalloc(sizeof(*i3cbus), GFP_KERNEL);
-> +       if (!i3cbus)
-> +               return ERR_PTR(-ENOMEM);
+It should be node.  I will update this in v2.
 
-I find it a bit confusing to have separate i3c_master_controller
-and i3c_bus structures with this version. Why not merge the
-two structures into one now and move the bus management
-into master.c?
+>=20
+> > +	- xlnx,ext-channels: List of external channels that are connected to =
+the
+> > +	                     AMS PL module.
+> > +
+> > +	  The child nodes of this node represent the external channels which
+> > +are
+>=20
+> node?
+>=20
+> > +	  connected to the AMS Module. If the property is not present
+> > +	  no external channels will be assumed to be connected.
+> > +
+> > +	  Each child node represents one channel and has the following
+> > +	  properties:
+> > +		Required properties:
+> > +			* reg: Pair of pins the channel is connected to.
+> > +				0: VP/VN
+> > +				1: VUSER0
+> > +				2: VUSER1
+> > +				3: VUSER3
+> > +				4: VUSER4
+> > +				5: VAUXP[0]/VAUXN[0]
+> > +				6: VAUXP[1]/VAUXN[1]
+> > +				...
+> > +				20: VAUXP[15]/VAUXN[15]
+> > +			  Note each channel number should only be used at
+> most
+> > +			  once.
+> > +		Optional properties:
+> > +			* xlnx,bipolar: If set the channel is used in bipolar
+> > +			  mode.
+> > +
+> > +
+> > +Example:
+> > +	xilinx_ams: ams@ffa50000 {
+> > +		compatible =3D "xlnx,zynqmp-ams";
+> > +		interrupt-parent =3D <&gic>;
+> > +		interrupts =3D <0 56 4>;
+> > +		interrupt-names =3D "ams-irq";
+> > +		clocks =3D <&clkc 70>;
+> > +		reg =3D <0x0 0xffa50000 0x0 0x800>;
+> > +		reg-names =3D "ams-base";
+> > +		#address-cells =3D <2>;
+> > +		#size-cells =3D <2>;
+> > +		ranges;
+>=20
+> There's no need for 64-bits of addresses and sizes here. Use ranges.
 
-> +static int i3c_master_attach_i3c_dev(struct i3c_master_controller *master,
-> +                                    struct i3c_dev_desc *dev)
-> +{
-> +       int ret;
-> +
-> +       /*
-> +        * We don't attach devices to the controller until they are
-> +        * addressable on the bus.
-> +
+Okay.
 
-Apparently the new gmail version decided to cut off the second half of your
-email after this line when I hit reply, which makes it much harder for me
-to continue a proper review. I fear I'll have to get a real email client
-again :(
+> > +
+> > +		ams_ps: ams_ps@ffa50800 {
+> > +			compatible =3D "xlnx,zynqmp-ams-ps";
+> > +			reg =3D <0x0 0xffa50800 0x0 0x400>;
+> > +		};
+> > +
+> > +		ams_pl: ams_pl@ffa50c00 {
+> > +			compatible =3D "xlnx,zynqmp-ams-pl";
+> > +			reg =3D <0x0 0xffa50c00 0x0 0x400>;
+> > +			xlnx,ext-channels {
+> > +				#address-cells =3D <1>;
+> > +				#size-cells =3D <0>;
+> > +				channel@0 {
+> > +					reg =3D <0>;
+> > +					xlnx,bipolar;
+> > +				};
+> > +				channel@1 {
+> > +					reg =3D <1>;
+> > +				};
+> > +				channel@8 {
+> > +					reg =3D <8>;
+> > +					xlnx,bipolar;
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +
+> > +AMS Channels Details:
+> > +
+> > +Sysmon Block	|Channel|			Details
+> 			|Measurement
+> > +		 Number
+> 			 Type
+> > +----------------------------------------------------------------------=
+-----------------------------
+> ------
+> > +AMS CTRL	|0	|System PLLs voltage measurement, VCC_PSPLL.
+> 		|Voltage
+> > +		|1	|Battery voltage measurement, VCC_PSBATT.
+> 		|Voltage
+> > +		|2	|PL Internal voltage measurement, VCCINT.
+> 		|Voltage
+> > +		|3	|Block RAM voltage measurement, VCCBRAM.
+> 		|Voltage
+> > +		|4	|PL Aux voltage measurement, VCCAUX.
+> 		|Voltage
+> > +		|5	|Voltage measurement for six DDR I/O PLLs,
+> VCC_PSDDR_PLL.	|Voltage
+> > +		|6	|VCC_PSINTFP_DDR voltage measurement.
+> 			|Voltage
+> > +----------------------------------------------------------------------=
+-----------------------------
+> ------
+> > +PS Sysmon	|7	|LPD temperature measurement.
+> 			|Temperature
+> > +		|8	|FPD Temperature Measurment (REMOTE).
+> 			|Temperature
+> > +		|9	|VCC PS LPD voltage measurement (supply1).
+> 		|Voltage
+> > +		|10	|VCC PS FPD voltage measurement (supply2).
+> 		|Voltage
+> > +		|11	|PS Aux voltage reference (supply3).
+> 		|Voltage
+> > +		|12	|DDR I/O VCC voltage measurement.
+> 		|Voltage
+> > +		|13	|PS IO Bank 503 voltage measurement (supply5).
+> 			|Voltage
+> > +		|14	|PS IO Bank 500 voltage measurement (supply6).
+> 			|Voltage
+> > +		|15	|VCCO_PSIO1 voltage measurement.
+> 		|Voltage
+> > +		|16	|VCCO_PSIO2 voltage measurement.
+> 		|Voltage
+> > +		|17	|VCC_PS_GTR voltage measurement
+> (VPS_MGTRAVCC).			|Voltage
+> > +		|18	|VTT_PS_GTR voltage measurement
+> (VPS_MGTRAVTT).			|Voltage
+> > +		|19	|VCC_PSADC voltage measurement.
+> 			|Voltage
+> > +----------------------------------------------------------------------=
+-----------------------------
+> ------
+> > +PL Sysmon	|20	|PL Temperature measurement.
+> 			|Temperature
+> > +		|21	|PL Internal Voltage Voltage measurement, VCCINT.
+> 		|Voltage
+> > +		|22	|PL Auxiliary Voltage measurement, VCCAUX.
+> 		|Voltage
+> > +		|23	|ADC Reference P+ Voltage measurement.
+> 			|Voltage
+> > +		|24	|ADC Reference N- Voltage measurement.
+> 			|Voltage
+> > +		|25	|PL Block RAM Voltage measurement, VCCBRAM.
+> 			|Voltage
+> > +		|26	|LPD Internal Voltage measurement, VCC_PSINTLP
+> (supply4).	|Voltage
+> > +		|27	|FPD Internal Voltage measurement, VCC_PSINTFP
+> (supply5).	|Voltage
+> > +		|28	|PS Auxiliary Voltage measurement (supply6).
+> 		|Voltage
+> > +		|29	|PL VCCADC Voltage measurement (vccams).
+> 		|Voltage
+> > +		|30	|Differencial analog input signal Voltage measurment.
+> 		|Voltage
+> > +		|31	|VUser0 Voltage measurement (supply7).
+> 			|Voltage
+> > +		|32	|VUser1 Voltage measurement (supply8).
+> 			|Voltage
+> > +		|33	|VUser2 Voltage measurement (supply9).
+> 			|Voltage
+> > +		|34	|VUser3 Voltage measurement (supply10).
+> 			|Voltage
+> > +		|35	|Auxiliary ch 0 Voltage measurement (VAux0).
+> 		|Voltage
+> > +		|36	|Auxiliary ch 1 Voltage measurement (VAux1).
+> 		|Voltage
+> > +		|37	|Auxiliary ch 2 Voltage measurement (VAux2).
+> 		|Voltage
+> > +		|38	|Auxiliary ch 3 Voltage measurement (VAux3).
+> 		|Voltage
+> > +		|39	|Auxiliary ch 4 Voltage measurement (VAux4).
+> 		|Voltage
+> > +		|40	|Auxiliary ch 5 Voltage measurement (VAux5).
+> 		|Voltage
+> > +		|41	|Auxiliary ch 6 Voltage measurement (VAux6).
+> 		|Voltage
+> > +		|42	|Auxiliary ch 7 Voltage measurement (VAux7).
+> 		|Voltage
+> > +		|43	|Auxiliary ch 8 Voltage measurement (VAux8).
+> 		|Voltage
+> > +		|44	|Auxiliary ch 9 Voltage measurement (VAux9).
+> 		|Voltage
+> > +		|45	|Auxiliary ch 10 Voltage measurement (VAux10).
+> 			|Voltage
+> > +		|46	|Auxiliary ch 11 Voltage measurement (VAux11).
+> 			|Voltage
+> > +		|47	|Auxiliary ch 12 Voltage measurement (VAux12).
+> 			|Voltage
+> > +		|48	|Auxiliary ch 13 Voltage measurement (VAux13).
+> 			|Voltage
+> > +		|49	|Auxiliary ch 14 Voltage measurement (VAux14).
+> 			|Voltage
+> > +		|50	|Auxiliary ch 15 Voltage measurement (VAux15).
+> 			|Voltage
+> > +---------------------------------------------------------------------
+> > +------------------------------------
+> > --
+> > 2.1.1
+> >
 
-> + * The I3C bus is represented with its own object and not implicitly described
-> + * by the I3C master to cope with the multi-master functionality, where one bus
-> + * can be shared amongst several masters, each of them requesting bus ownership
-> + * when they need to.
-
-This comment is now stale, even without merging the structures, right?
-
-> +struct i3c_master_controller {
-> +       struct device *parent;
-> +       struct i3c_dev_desc *this;
-> +       struct i2c_adapter i2c;
-
-I think the 'parent' pointer is better omitted, it should always be
-the same as master->dev->parent, right?
-
-Since it contains an i2c_adapter, maybe a good name for the
-combined i3c_master_controller+i3c_bus structure would
-be 'i3c_adapter'?
-
-+#define i3c_bus_for_each_i2cdev(bus, dev)                              \
-+       list_for_each_entry(dev, &(bus)->devs.i2c, common.node)
-+
-+#define i3c_bus_for_each_i3cdev(bus, dev)                              \
-+       list_for_each_entry(dev, &(bus)->devs.i3c, common.node)
-
-I wonder if it would simplify things to drop the i2c and i3c
-device lists and instead implement these for_each loops
-based on device_for_each_child() with a check of the
-bus_type==&i2c_bus/&i3c_bus. That might help with locking
-and keeping the two lists synchronized, which may or
-may not be a problem here.
-
-         Arnd
+Thanks,
+Manish Narani
