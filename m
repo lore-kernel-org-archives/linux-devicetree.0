@@ -1,98 +1,57 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 1/3] usb: renesas_usbhs: Add reset_control
-Date: Mon, 10 Sep 2018 18:52:18 +0900
-Message-Id: <1536573140-24123-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1536573140-24123-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1536573140-24123-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=pRDT=LU=gmail.com=jim2101024@kernel.org>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: [PATCH v5 11/12] ARM64: add dma remap for BrcmSTB PCIe
+Date: Thu,  6 Sep 2018 16:43:00 -0400
+Message-Id: <1536266581-7308-12-git-send-email-jim2101024@gmail.com>
+In-Reply-To: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jim Quinlan <jim2101024@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car Gen3 needs to deassert resets of both host and peripheral.
-Since [eo]hci-platform is possible to assert the reset(s) when
-the probing failed, renesas_usbhs driver doesn't work correctly
-regardless of finished probing. To fix this issue, this patch adds
-reset_control on this renesas_usbhs driver.
+The BrcmSTB PCIe controller needs to remap DMA accesses to it because
+of the requirements of its interface with the SOC memory controllers.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- drivers/usb/renesas_usbhs/common.c | 12 ++++++++++++
- drivers/usb/renesas_usbhs/common.h |  2 ++
- 2 files changed, 14 insertions(+)
+ drivers/pci/controller/Kconfig        |  1 +
+ drivers/pci/controller/pcie-brcmstb.c | 12 ++++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 4310df4..1d355d5 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include "common.h"
-@@ -574,6 +575,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 			return PTR_ERR(priv->edev);
- 	}
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 8daa621..4394430 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -284,6 +284,7 @@ config PCIE_BRCMSTB
+ 	depends on OF && PCI_MSI
+ 	depends on SOC_BRCMSTB
+ 	default ARCH_BRCMSTB || BMIPS_GENERIC
++	select ARCH_HAS_PHYS_TO_DMA if ARM64
+ 	help
+ 	  Say Y here to enable PCIe host controller support for
+ 	  Broadcom Settop Box SOCs.  A Broadcom SOC will may have
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index a805d87..ae9df8e 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -974,6 +974,18 @@ phys_addr_t brcm_dma_to_phys(struct device *dev, dma_addr_t dev_addr)
+ 	return (phys_addr_t)dev_addr;
+ }
  
-+	priv->rsts = devm_reset_control_array_get_optional_shared(&pdev->dev);
-+	if (IS_ERR(priv->rsts))
-+		return PTR_ERR(priv->rsts);
++#if defined(CONFIG_ARM64)
++dma_addr_t __phys_to_dma(struct device *dev, phys_addr_t paddr)
++{
++	return brcm_phys_to_dma(dev, paddr);
++}
 +
- 	/*
- 	 * care platform info
- 	 */
-@@ -658,6 +663,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 	/* dev_set_drvdata should be called after usbhs_mod_init */
- 	platform_set_drvdata(pdev, priv);
- 
-+	ret = reset_control_deassert(priv->rsts);
-+	if (ret)
-+		goto probe_fail_rst;
++phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
++{
++	return brcm_dma_to_phys(dev, dev_addr);
++}
++#endif
 +
- 	/*
- 	 * deviece reset here because
- 	 * USB device might be used in boot loader.
-@@ -711,6 +720,8 @@ static int usbhs_probe(struct platform_device *pdev)
- 	return ret;
- 
- probe_end_mod_exit:
-+	reset_control_assert(priv->rsts);
-+probe_fail_rst:
- 	usbhs_mod_remove(priv);
- probe_end_fifo_exit:
- 	usbhs_fifo_remove(priv);
-@@ -739,6 +750,7 @@ static int usbhs_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 
- 	usbhs_platform_call(priv, hardware_exit, pdev);
-+	reset_control_assert(priv->rsts);
- 	usbhs_mod_remove(priv);
- 	usbhs_fifo_remove(priv);
- 	usbhs_pipe_remove(priv);
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index 6137f79..bce7d35 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/extcon.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- #include <linux/usb/renesas_usbhs.h>
- 
- struct usbhs_priv;
-@@ -277,6 +278,7 @@ struct usbhs_priv {
- 	struct usbhs_fifo_info fifo_info;
- 
- 	struct phy *phy;
-+	struct reset_control *rsts;
- };
- 
- /*
+ static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
+ {
+ 	int i, ret = 0;
 -- 
-1.9.1
+1.9.0.138.g2de3478
