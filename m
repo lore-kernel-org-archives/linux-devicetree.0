@@ -1,172 +1,141 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v8 4/8] media: platform: Add Cedrus VPU
- decoder driver
-Date: Thu, 6 Sep 2018 09:01:01 +0200
-Message-ID: <461c6a0d-a346-b9da-b75e-4aab907054df@xs4all.nl>
-References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
- <20180828073424.30247-5-paul.kocialkowski@bootlin.com>
- <5faf5eed-eb2c-f804-93e3-5a42f6204d99@xs4all.nl>
- <b7b3cb2320978d45acb34475d15abd7bf03da367.camel@paulk.fr>
-Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
+From: Jagdish Gediya <jagdish.gediya@nxp.com>
+Subject: RE: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexSPI
+ driver
+Date: Thu, 6 Sep 2018 07:08:16 +0000
+Message-ID: <AM0PR04MB4052840603E71673747DFA7B90010@AM0PR04MB4052.eurprd04.prod.outlook.com>
+References: <1535711404-29528-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1535711404-29528-5-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <VI1PR0402MB385465BEDBFC9CB6A89BEFF4970C0@VI1PR0402MB3854.eurprd04.prod.outlook.com>
+ <20180904144627.1de264b6@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBC3MVVMX3ELBBNNBYPOAKGQESJUL7AY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <b7b3cb2320978d45acb34475d15abd7bf03da367.camel-W9ppeneeCTY@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180904144627.1de264b6@bbrezillon>
 Content-Language: en-US
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/05/2018 06:29 PM, Paul Kocialkowski wrote:
-> Hi and thanks for the review!
+Hi Boris,
+
+Currently FlexSPI controller is present in ARM SoC but NXP is coming with P=
+owerPC SoC with same FlexSPI controller.
+
+We are trying to use same binding as defined in this patch-set(tested on AR=
+M64 processors) for PowerPC.
+Unfortunately, It is showing issue when driver tries to parse 'fspi_mmap'.
+
+We did some investigation and figured out that for ARM device trees Periphe=
+rals nodes inside 'soc' node have absolute addresses. For in general NXP's =
+PowerPC device trees, Peripheral nodes have the relative addresses to the u=
+nit-address of the parent 'soc' node. =20
+
+This creates issue for PowerPC if we follow implementation in this patch-se=
+t.=20
+
+Example of device tree used for upcoming PowerPC SoC with FlexSPI controlle=
+r.
+
+soc@f8000000 {
+	ranges =3D <0x0 0x0 0xf8000000 0x4000000>;
+	.
+	fspi0: flexspi@20c0000 {
+		compatible =3D "nxp,XXX-fspi";
+		reg =3D <0x20c0000 0x10000>, <0xC0000000 0x10000000>;
+		reg-names =3D "fspi_base", "fspi_mmap";
+		.
+		.
+	}
+ }=20
+
+As we can see, Final address of 'fspi_base' (0xf8000000 + 0x20c0000) falls =
+into the parent 'soc' range(CCSR) but=20
+for 'fspi_mmap', It is outside of 'soc' range(CCSR). It creates issue when =
+driver tries to parse 'fspi_mmap'.
+
+As per definition of ranges, this field can't be used to solve this problem=
+.=20
+Please suggest how to implement the "fspi_mmap"(memory mapping address and =
+length) in case of PowerPC.
+
+Thanks,
+Jagdish
+
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> owner@vger.kernel.org> On Behalf Of Boris Brezillon
+> Sent: Tuesday, September 4, 2018 6:16 PM
+> To: Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com>
+> Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>; linux-
+> mtd@lists.infradead.org; marek.vasut@gmail.com; linux-
+> spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> kernel@lists.infradead.org; computersforpeace@gmail.com;
+> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 4/7] dt-bindings: spi: add binding file for NXP FlexS=
+PI
+> driver
 >=20
-> Le lundi 03 septembre 2018 =C3=A0 11:11 +0200, Hans Verkuil a =C3=A9crit =
-:
->> On 08/28/2018 09:34 AM, Paul Kocialkowski wrote:
->>> +static int cedrus_request_validate(struct media_request *req)
->>> +{
->>> +	struct media_request_object *obj, *obj_safe;
->>> +	struct v4l2_ctrl_handler *parent_hdl, *hdl;
->>> +	struct cedrus_ctx *ctx =3D NULL;
->>> +	struct v4l2_ctrl *ctrl_test;
->>> +	unsigned int i;
->>> +
->>> +	list_for_each_entry_safe(obj, obj_safe, &req->objects, list) {
->>
->> You don't need to use the _safe variant during validation.
+> On Mon, 3 Sep 2018 09:54:08 +0000
+> Prabhakar Kushwaha <prabhakar.kushwaha@nxp.com> wrote:
 >=20
-> Okay, I'll use the regular one then.
+> > Dear Yogesh,
+> >
+> > > -----Original Message-----
+> > > From: linux-kernel-owner@vger.kernel.org <linux-kernel-
+> > > owner@vger.kernel.org> On Behalf Of Yogesh Gaur
+> > > Sent: Friday, August 31, 2018 4:00 PM
+> > > To: linux-mtd@lists.infradead.org; boris.brezillon@bootlin.com;
+> > > marek.vasut@gmail.com; linux-spi@vger.kernel.org;
+> > > devicetree@vger.kernel.org
+> > > Cc: robh@kernel.org; mark.rutland@arm.com; shawnguo@kernel.org;
+> > > linux- arm-kernel@lists.infradead.org; computersforpeace@gmail.com;
+> > > frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org; Yogesh
+> > > Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > > Subject: [PATCH 4/7] dt-bindings: spi: add binding file for NXP
+> > > FlexSPI driver
+> > >
+> > > Add binding file for NXP FlexSPI driver.
+> > >
+> > > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42
+> > > ++++++++++++++++++++++
+> > >  1 file changed, 42 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-
+> > > fspi.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > > b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > > new file mode 100644
+> > > index 0000000..9f07116
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> > > @@ -0,0 +1,42 @@
+> > > +* NXP Flex Serial Peripheral Interface (FSPI)
+> > > +
+> > > +Required properties:
+> > > +  - compatible : Should be "nxp,lx2160a-fspi"
+> > > +  - reg :        First contains the register location and length,
+> > > +                 Second contains the memory mapping address and
+> > > +length
+> >
+> > Why are we overriding reg property.  Is there any special requirement.
+> >
+> > Can we use "reg" and "ranges" property in device tree.
+> > Here "reg" represents controller registers and "ranges" represent the
+> memory address of flash.
 >=20
->>> +		struct vb2_buffer *vb;
->>> +
->>> +		if (vb2_request_object_is_buffer(obj)) {
->>> +			vb =3D container_of(obj, struct vb2_buffer, req_obj);
->>> +			ctx =3D vb2_get_drv_priv(vb->vb2_queue);
->>> +
->>> +			break;
->>> +		}
->>> +	}
->>
->> Interesting question: what happens if more than one buffer is queued in =
-the
->> request? This is allowed by the request API and in that case the associa=
-ted
->> controls in the request apply to all queued buffers.
->>
->> Would this make sense at all for this driver? If not, then you need to
->> check here if there is more than one buffer in the request and document =
-in
->> the spec that this is not allowed.
+> No, ranges is not used for that. It's used when you need to convert from =
+one
+> address space to another, which is not what you're describing here. Check
+> section 2.38 of this document [1] for more details.
 >=20
-> Well, our driver was written with the (unformal) assumption that we
-> only deal with a pair of one output and one capture buffer. So I will
-> add a check for this at request validation time and document it in the
-> spec. Should that be part of the MPEG-2 PIXFMT documentation (and
-> duplicated for future formats we add support for)?
-
-Can you make a patch for vb2_request_has_buffers() in videobuf2-core.c
-renaming it to vb2_request_buffer_cnt() and returning the number of buffers
-in the request?
-
-Then you can call it here to check that you have only one buffer.
-
-And this has to be documented with the PIXFMT.
-
-Multiple buffers are certainly possible in non-codec scenarios (vim2m and
-vivid happily accept that), so this is an exception that should be
-documented and checked in the codec driver.
-
->=20
->> If it does make sense, then you need to test this.
->>
->> Again, this can be corrected in a follow-up patch, unless there will be =
-a
->> v9 anyway.
->=20
-> [...]
-
->>> +static int cedrus_queue_setup(struct vb2_queue *vq, unsigned int *nbuf=
-s,
->>> +			      unsigned int *nplanes, unsigned int sizes[],
->>> +			      struct device *alloc_devs[])
->>> +{
->>> +	struct cedrus_ctx *ctx =3D vb2_get_drv_priv(vq);
->>> +	struct cedrus_dev *dev =3D ctx->dev;
->>> +	struct v4l2_pix_format_mplane *mplane_fmt;
->>> +	struct cedrus_format *fmt;
->>> +	unsigned int i;
->>> +
->>> +	switch (vq->type) {
->>> +	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
->>> +		mplane_fmt =3D &ctx->src_fmt;
->>> +		fmt =3D cedrus_find_format(mplane_fmt->pixelformat,
->>> +					 CEDRUS_DECODE_SRC,
->>> +					 dev->capabilities);
->>> +		break;
->>> +
->>> +	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
->>> +		mplane_fmt =3D &ctx->dst_fmt;
->>> +		fmt =3D cedrus_find_format(mplane_fmt->pixelformat,
->>> +					 CEDRUS_DECODE_DST,
->>> +					 dev->capabilities);
->>> +		break;
->>> +
->>> +	default:
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	if (!fmt)
->>> +		return -EINVAL;
->>> +
->>> +	if (fmt->num_buffers =3D=3D 1) {
->>> +		sizes[0] =3D 0;
->>> +
->>> +		for (i =3D 0; i < fmt->num_planes; i++)
->>> +			sizes[0] +=3D mplane_fmt->plane_fmt[i].sizeimage;
->>> +	} else if (fmt->num_buffers =3D=3D fmt->num_planes) {
->>> +		for (i =3D 0; i < fmt->num_planes; i++)
->>> +			sizes[i] =3D mplane_fmt->plane_fmt[i].sizeimage;
->>> +	} else {
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	*nplanes =3D fmt->num_buffers;
->>
->> This code does not take VIDIOC_CREATE_BUFFERS into account.
->>
->> If it is called from that ioctl, then *nplanes is non-zero and you need
->> to check if *nplanes equals fmt->num_buffers and that sizes[n] is >=3D
->> the required size of the format. If so, then return 0, otherwise return
->> -EINVAL.
->=20
-> Thanks for spotting this, I'll fix it as you suggested in the next
-> revision.
->=20
->> Doesn't v4l2-compliance fail on that? Or is that test skipped because th=
-is
->> is a decoder for which streaming is not supported (yet)?
->=20
-> Apparently, v4l2-compliance doesn't fail since I'm getting:
-> test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
-
-It is tested, but only with the -s option. I'll see if I can improve the
-tests.
-
-Regards,
-
-	Hans
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> [1]https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fe
+> linux.org%2Fimages%2Fc%2Fcf%2FPower_ePAPR_APPROVED_v1.1.pdf&amp;
+> data=3D02%7C01%7Cjagdish.gediya%40nxp.com%7C5bdb57713bd4403a39e90
+> 8d6126472a0%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C63671
+> 6619958727753&amp;sdata=3DTB4mbWEm0opk58oPAVEOQFM0xeAFxCsqdzw
+> 37BPuE3A%3D&amp;reserved=3D0
