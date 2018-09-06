@@ -1,298 +1,41 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH v3 3/8] arm64: dts: qcom: msm8998: Add tsens and thermal-zones
-Date: Thu, 6 Sep 2018 19:23:00 +0530
-Message-ID: <CAHLCerM2por+ES+OhH2nUOOPF_tmYjk6zGdw-2dr=JRu5Jfrbg@mail.gmail.com>
-References: <20180904050123.26601-1-bjorn.andersson@linaro.org> <20180904050123.26601-4-bjorn.andersson@linaro.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 RESEND 2/2] phy: add Rockchip Innosilicon hdmi phy
+Date: Thu, 06 Sep 2018 15:52:12 +0200
+Message-ID: <3357705.vCjhXlgJ7n@phil>
+References: <20180710134949.25203-1-heiko@sntech.de>
+ <21954745.lUUHsRAzaY@diego> <b85eeaeb-b7e2-285b-0df0-1df641c7b983@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180904050123.26601-4-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b85eeaeb-b7e2-285b-0df0-1df641c7b983@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 4, 2018 at 10:31 AM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> Add the two tsens instances and the thermal zones for CPUs, GPUs,
-> battery and skin sensors.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->
-> Changes since v2:
-> - New patch
->
->  arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi |  38 +++++
->  arch/arm64/boot/dts/qcom/msm8998.dtsi     | 193 ++++++++++++++++++++++
->  2 files changed, 231 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> index 09b46c54e413..202aa1a5cf27 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-> @@ -12,6 +12,44 @@
->                 stdout-path = "serial0:115200n8";
->         };
->
-> +       thermal-zones {
-> +               battery-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 0>;
-> +
-> +                       trips {
-> +                               battery_crit: trip0 {
-> +                                       temperature = <60000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               skin-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens1 5>;
-> +
-> +                       trips {
-> +                               skin_alert: trip0 {
-> +                                       temperature = <44000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               skip_crit: trip1 {
-> +                                       temperature = <70000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +       };
-> +
->         vph_pwr: vph-pwr-regulator {
->                 compatible = "regulator-fixed";
->                 regulator-name = "vph_pwr";
-> diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> index 98b9edb89424..f92f04f9ed6d 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-> @@ -225,6 +225,183 @@
->                 };
->         };
->
-> +       thermal-zones {
-> +               cpu-thermal0 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 6>;
-> +
-> +                       trips {
-> +                               cpu_alert0: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit0: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal1 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 7>;
-> +
-> +                       trips {
-> +                               cpu_alert1: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit1: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal2 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 8>;
-> +
-> +                       trips {
-> +                               cpu_alert2: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit2: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal3 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 9>;
-> +
-> +                       trips {
-> +                               cpu_alert3: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit3: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal4 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 10>;
-> +
-> +                       trips {
-> +                               cpu_alert4: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit4: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal5 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens0 11>;
-> +
-> +                       trips {
-> +                               cpu_alert5: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit5: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal6 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens1 0>;
-> +
-> +                       trips {
-> +                               cpu_alert6: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit6: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               cpu-thermal7 {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens1 1>;
-> +
-> +                       trips {
-> +                               cpu_alert7: trip0 {
-> +                                       temperature = <75000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               cpu_crit7: trip1 {
-> +                                       temperature = <110000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-> +
-> +               gpu-thermal {
-> +                       polling-delay-passive = <250>;
-> +                       polling-delay = <1000>;
-> +
-> +                       thermal-sensors = <&tsens1 3>;
-> +               };
-> +       };
-> +
->         timer {
->                 compatible = "arm,armv8-timer";
->                 interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
-> @@ -281,6 +458,22 @@
->                         cell-index = <0>;
->                 };
->
-> +               tsens0: thermal@10aa000 {
-> +                       compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
-> +                       reg = <0x10aa000 0x2000>;
-> +
+Am Donnerstag, 6. September 2018, 11:38:35 CEST schrieb Kishon Vijay Abraha=
+m I:
+> On Friday 31 August 2018 02:56 PM, Heiko St=FCbner wrote:
+> > Am Dienstag, 14. August 2018, 14:52:00 CEST schrieb Heiko Stuebner:
+> >> Hi Kishon,
+> >>
+> >> thanks for your review.
+> >>
 
-use the SROT and TM split for v2?
+> All right! I'll merge once you send a patch fixing this.
 
-> +                       #qcom,sensors = <12>;
-> +                       #thermal-sensor-cells = <1>;
-> +               };
-> +
-> +               tsens1: thermal@10ad000 {
-> +                       compatible = "qcom,msm8998-tsens", "qcom,tsens-v2";
-> +                       reg = <0x10ad000 0x2000>;
-> +
+Thanks and v4 with the rest of the issues fixed should be in your
+inbox now :-)
 
-use the SROT and TM split for v2?
 
-> +                       #qcom,sensors = <8>;
-> +                       #thermal-sensor-cells = <1>;
-> +               };
-> +
->                 apcs_glb: mailbox@9820000 {
->                         compatible = "qcom,msm8998-apcs-hmss-global";
->                         reg = <0x17911000 0x1000>;
-> --
-> 2.18.0
->
+Thanks
+Heiko
