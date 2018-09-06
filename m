@@ -1,27 +1,22 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 16/21] x86: DT: use for_each_of_cpu_node iterator
-Date: Thu, 6 Sep 2018 10:15:08 +0200 (CEST)
-Message-ID: <alpine.DEB.2.21.1809061014430.1416@nanos.tec.linutronix.de>
-References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-17-robh@kernel.org>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v3 3/3] ARM64: dts: meson-gx: add dmcbus and canvas nodes.
+Date: Thu, 6 Sep 2018 10:21:26 +0200
+Message-ID: <CAMO6nayiONr5Z5P35jhSY7i52+7Sfn_GLU=syFVV-cS8Bhxeiw@mail.gmail.com>
+References: <20180823114954.30704-1-mjourdan@baylibre.com> <20180823114954.30704-4-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905193738.19325-17-robh@kernel.org>
+In-Reply-To: <20180823114954.30704-4-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 5 Sep 2018, Rob Herring wrote:
+Hi Kevin,
 
-> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-> has the side effect of defaulting to iterating using "cpu" node names in
-> preference to the deprecated (for FDT) device_type == "cpu".
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+If you don't mind, please change the title from "ARM64" to "arm64" if
+this gets merged.
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Thanks!
+
+Maxime
