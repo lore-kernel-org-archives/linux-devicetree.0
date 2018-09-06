@@ -1,68 +1,51 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Thu, 6 Sep 2018 11:05:47 +0100
-Message-ID: <20180906100546.GJ3592@arm.com>
-References: <20180905235327.5996-1-robh@kernel.org>
- <20180905235327.5996-7-robh@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Thu, 6 Sep 2018 11:15:17 +0100
+Message-ID: <20180906101516.GA5360@sirena.org.uk>
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
+ <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+ <20180802113552.GJ9117@sirena.org.uk>
+ <20180827014815.GD29208@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180905235327.5996-7-robh@kernel.org>
+In-Reply-To: <20180827014815.GD29208@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-ker
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2018 at 06:53:24PM -0500, Rob Herring wrote:
-> There is nothing arch specific about building dtb files other than their
-> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
-> The dependencies and supported targets are all slightly different.
-> Also, a cross-compiler for each arch is needed, but really the host
-> compiler preprocessor is perfectly fine for building dtbs. Move the
-> build rules to a common location and remove the arch specific ones. This
-> is done in a single step to avoid warnings about overriding rules.
-> 
-> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
-> These pull in several dependencies some of which need a target compiler
-> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
-> All that is really needed is dtc, so adjust the dependencies to only be
-> dtc.
-> 
-> This change enables support 'dtbs_install' on some arches which were
-> missing the target.
-> 
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Ley Foon Tan <lftan@altera.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: uclinux-h8-devel@lists.sourceforge.jp
-> Cc: linux-mips@linux-mips.org
-> Cc: nios2-dev@lists.rocketboards.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-xtensa@linux-xtensa.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please ack so I can take the whole series via the DT tree.
 
-For arm64:
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+On Mon, Aug 27, 2018 at 09:48:16AM +0800, Shawn Guo wrote:
 
-Will
+> Can you ACK on those two regulator patches, so that I can queue this
+> series up on IMX tree?
+
+I was expecting to get a pull request with the precursor patches in it -
+the regulator driver seems to get a moderate amount of development so
+there's a reasonable risk of conflicts.
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluQ/jQACgkQJNaLcl1U
+h9Dbpwf+MZa+AjERwuP4i++2zvh8VAZqhxPFy+ijMGRaJATDNumhfGA/bycWyDdN
+r1Lp0EhBmeGqiMtrhDoqw+4kjF5H03mhTvrjG0U4C8vOUainMOEWSSpBeq9ST42t
+wvScVpuLON1EZUt6n23wPMmc4fDlvKbhlY2QRTl3NP6eIAafaym7CzC49rS0PdnI
+Pi5qCQrlt9X8eChyKmUkD6oENeFAvUAZLlf8Elxz8Is3bB7lNIzaIrlImSoGRMUQ
+TZx37KNyvsEcCrzq47ALMySZe5auC1fc97ghqmIpxIcL2hmmGPYY8U86i6UOsXyq
+a0AnQkQOjdWb4Dm+IHQD3tT4vgsIoQ==
+=Ytj1
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
