@@ -1,52 +1,48 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: pm8998 and pmi8998 regulators
-Date: Thu, 6 Sep 2018 10:52:06 -0700
-Message-ID: <CAD=FV=VE5gYyivgy=OrZV6g0UrtYfZZ+CGv7DV+v5be3teVSdw@mail.gmail.com>
-References: <20180901221953.21666-1-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Alan Tull <atull@kernel.org>
+Subject: [PATCH] dt-bindings: fpga: fix freeze controller compatible in region doc
+Date: Thu,  6 Sep 2018 13:01:52 -0500
+Message-ID: <20180906180152.3620-1-atull@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180901221953.21666-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <mdf@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, Alan Tull <atull@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Bjorn,
+Documentation/devicetree/bindings/fpga/fpga-region.txt has an error
+regarding the freeze controller bridge, secifically:
 
-On Sat, Sep 1, 2018 at 3:19 PM, Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-> Add regulator definitions for pm8998 and pmi8998 regulators on the MTP.
->
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 216 ++++++++++++++++++++++++
->  1 file changed, 216 insertions(+)
+ compatible = "altr,freeze-bridge";
 
-I'm curious why you chose to post this instead of reviewing and/or
-building upon the patch I sent up at
-<https://lkml.kernel.org/r/20180822173629.202885-3-dianders@chromium.org>.
-Compared to mine, yours:
+The compatibility string should be "altr,freeze-bridge-controller"
+as set forth in altera-freeze-bridge.txt.
 
-* Seems to have a few rails named differently LDO22 is named
-"vreg_l22a_2p95" in your DTS but "vreg_l22a_2p85" in mine as one
-example.  The schematics I have (from Dec 5, 2017) show it as 2p85.
+Signed-off-by: Alan Tull <atull@kernel.org>
+Reported-by: Dalon Westergreen <dalon.westergreen@intel.com>
+---
+ Documentation/devicetree/bindings/fpga/fpga-region.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-* Is missing "regulator-initial-mode".  We can debate this if you want.
-
-* Is lacking many alternate names for rails.  We can debate this also
-if you want.
-
-* Have a few voltage values different.  If you have better info than
-me we should update to yours.  Diffing against yours does make me
-believe that perhaps LDO14 should be listed as 1.88 V in my patch.
-
-* Is lacking pm8005.
-
-Anyway, let me know.  If you provide a review of my patch I'm happy to
-spin it with your feedback.
-
-
-Thanks!
-
--Doug
+diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+index 6db8aed..90c4469 100644
+--- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
++++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
+@@ -415,7 +415,7 @@ DT Overlay contains:
+ 			firmware-name = "base.rbf";
+ 
+ 			fpga-bridge@4400 {
+-				compatible = "altr,freeze-bridge";
++				compatible = "altr,freeze-bridge-controller";
+ 				reg = <0x4400 0x10>;
+ 
+ 				fpga_region1: fpga-region1 {
+@@ -427,7 +427,7 @@ DT Overlay contains:
+ 			};
+ 
+ 			fpga-bridge@4420 {
+-				compatible = "altr,freeze-bridge";
++				compatible = "altr,freeze-bridge-controller";
+ 				reg = <0x4420 0x10>;
+ 
+ 				fpga_region2: fpga-region2 {
+-- 
+2.7.4
