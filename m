@@ -1,124 +1,391 @@
-Return-Path: <SRS0=wXcc=LU=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
-Date: Thu, 6 Sep 2018 14:31:34 +0000
-Message-ID: 
- <TY1PR01MB15620B77FCA81E17753508058A010@TY1PR01MB1562.jpnprd01.prod.outlook.com>
-References: <20180829132841.64787-1-chris.brandt@renesas.com>
- <CAMuHMdUSVTk0FPmQSYJ+M1e4ds__7882Viseo6ra1TUBvnSbPQ@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdUSVTk0FPmQSYJ+M1e4ds__7882Viseo6ra1TUBvnSbPQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=OJAt=LU=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+References: <20180829132841.64787-1-chris.brandt@renesas.com>
+In-Reply-To: <20180829132841.64787-1-chris.brandt@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 6 Sep 2018 13:55:48 +0200
+Message-ID: <CAMuHMdUSVTk0FPmQSYJ+M1e4ds__7882Viseo6ra1TUBvnSbPQ@mail.gmail.com>
+Subject: Re: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgeW91ciByZXZpZXcuDQoNCg0KT24gVGh1cnNkYXksIFNl
-cHRlbWJlciAwNiwgMjAxOCwgR2VlcnQgVXl0dGVyaG9ldmVuIHdyb3RlOg0KPiA+ICsjZGVmaW5l
-IENQR19GUlFDUiAgICAgIDB4MDANCj4gPiArI2RlZmluZSBDUEdfQ0tJT1NFTCAgICAweEYwDQo+
-ID4gKyNkZWZpbmUgQ1BHX1NDTEtTRUwgICAgMHhGNA0KPiANCj4gVGhlIGxhc3QgdHdvIGFyZSB1
-bnVzZWQ/DQoNCkluIHRoaXMgZHJpdmVyIHRoZXkgYXJlIG5vdC4gSSBjYW4gcmVtb3ZlIHRoZW0u
-DQoNCj4gPiArDQo+ID4gKyNkZWZpbmUgUE9SVExfUElEUiAgICAgMHhGQ0ZGRTA3NA0KPiANCj4g
-VW51c2VkPw0KDQpPb3BzLiBUaGF0IHdhcyBsZWZ0IG92ZXIgZnJvbSB3aGVuIEkgZmlyc3Qgd2Fz
-IHJlYWRpbmcgdGhlIHBvcnQgcGluIHRvIA0KZmluZCBvdXQgdGhlIG1vZGUuIEJ1dCB0aGVuIEkg
-cmVhbGl6ZSBJIGNvdWxkIGdldCB0aGUgaW5mbyBmcm9tIERULg0KDQo+IA0KPiA+ICtzdGF0aWMg
-dTggY3BnX21vZGU7DQo+ID4gKw0KPiA+ICsvKiBJbnRlcm5hbCBDbG9jayByYXRpbyB0YWJsZSAq
-Lw0KPiA+ICtzdGF0aWMgY29uc3QgdW5zaWduZWQgaW50IHJhdGlvX3RhYls1XVs1XSA9IHsNCj4g
-PiArICAgICAgICAgICAgICAgICAgICAgICAvKiBJLCAgRywgIEIsIFAxLCBQMCAqLw0KPiANCj4g
-VXNlIGEgc3RydWN0IGluc3RlYWQ/DQo+IA0KPiBzdHJ1Y3Qgew0KPiAgICAgICAgIHVuc2lnbmVk
-IGludCBpOw0KPiAgICAgICAgIHVuc2lnbmVkIGludCBnOw0KPiAgICAgICAgIHVuc2lnbmVkIGlu
-dCBpYg0KPiAgICAgICAgIHVuc2lnbmVkIGludCBwMTsNCj4gICAgICAgICB1bnNpZ25lZCBpbnQg
-cDA7DQo+IH0gcmF0aW9fdGFiWzVdID0geyAuLi4gfQ0KDQpUaGF0J3MgYSBnb29kIGlkZWEuIFRo
-YW5rcy4NCg0KDQo+IA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHsgIDIsICA0LCAgOCwg
-MTYsIDMyIH0sIC8qIEZSUUNSID0gMHgwMTIgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICB7ICA0LCAgNCwgIDgsIDE2LCAzMiB9LCAvKiBGUlFDUiA9IDB4MTEyICovDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgeyAgOCwgIDQsICA4LCAxNiwgMzIgfSwgLyogRlJRQ1IgPSAweDIx
-MiAqLw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHsgMTYsICA4LCAxNiwgMTYsIDMyIH0s
-IC8qIEZSUUNSID0gMHgzMjIgKi8NCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB7IDE2LCAx
-NiwgMzIsIDMyLCAzMiB9LCAvKiBGUlFDUiA9IDB4MzMzICovDQo+IA0KPiBUaGUgUDAgZGl2aWRl
-ciBpcyBmaXhlZCB0byAzMiwgc28geW91IGNhbiByZW1vdmUgaXQgZnJvbSB0aGUgdGFibGU/DQoN
-Ck9LLCBJIGNhbiBkbyB0aGF0LiBJIHdhcyBqdXN0IGRvaW5nIGl0IHRvIGJlIGNvbnNpc3RlbnQu
-DQoNCg0KPiA+ICsgICAgICAgLyogSW50ZXJuYWwgQ29yZSBDbG9ja3MgKi8NCj4gPiArICAgICAg
-IENMS19NQUlOLA0KPiA+ICsgICAgICAgQ0xLX1BMTCwNCj4gPiArICAgICAgIENMS19JLA0KPiA+
-ICsgICAgICAgQ0xLX0csDQo+ID4gKyAgICAgICBDTEtfQiwNCj4gPiArICAgICAgIENMS19QMSwN
-Cj4gPiArICAgICAgIENMS19QMUMsDQo+ID4gKyAgICAgICBDTEtfUDAsDQo+IA0KPiBUaGUgbGFz
-dCBzaXggYXJlIG5vdCB1c2VkIGFuZCBjYW4gYmUgcmVtb3ZlZA0KPiAodGhlIGRyaXZlciB1c2Vz
-IFI3UzkyMTBfQ0xLXyogaW5zdGVhZCkuDQoNCk9LLg0KDQoNCj4gPiArc3RhdGljIGNvbnN0IHN0
-cnVjdCBtc3NyX21vZF9jbGsgcjdzOTIxMF9tb2RfY2xrc1tdIF9faW5pdGNvbnN0ID0gew0KPiA+
-ICsgICAgICAgREVGX01PRF9TVEIoIm9zdG0wIiwgICAgIDM2LCAgICBSN1M5MjEwX0NMS19QMUMp
-LA0KPiA+ICsgICAgICAgREVGX01PRF9TVEIoIm9zdG0xIiwgICAgIDM1LCAgICBSN1M5MjEwX0NM
-S19QMUMpLA0KPiA+ICsgICAgICAgREVGX01PRF9TVEIoIm9zdG0yIiwgICAgIDM0LCAgICBSN1M5
-MjEwX0NMS19QMUMpLA0KPiANCj4gSSB0aGluayB0aGUgdGFibGUgaXMgZWFzaWVyIHRvIHJlYWQg
-aWYgeW91IHNvcnQgYnkgTVNUUCBudW1iZXIuDQoNCk9LLiBJIHdpbGwgc3dpdGNoIHRoZW0gYWxs
-IGFyb3VuZC4NCg0KPiA+ICsgICAgICAgLyogQWRqdXN0IHRoZSBkaXZpZGVycyBiYXNlZCBvbiB0
-aGUgY3VycmVudCBGUlFDUiBzZXR0aW5nICovDQo+ID4gKyAgICAgICBpZiAoY29yZS0+aWQgPT0g
-Q0xLX01BSU4pIHsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIC8qIElmIEVYVEFMIGlzIGFi
-b3ZlIDEyTUh6LCB0aGVuIHdlIGtub3cgaXQgaXMgTW9kZSAxICovDQo+ID4gKyAgICAgICAgICAg
-ICAgIGlmIChjbGtfZ2V0X3JhdGUoKHN0cnVjdCBjbGsgKilwYXJlbnQpID4gMTIwMDAwMDApDQo+
-IA0KPiBXaHkgdGhlIGNhc3Q/DQoNCkkgd2FzIGdldHRpbmcgY29tcGlsZXIgd2FybmluZyBiZWNh
-dXNlIHBhcmVudCB3YXMgY29uc3QuDQoNCgljb25zdCBzdHJ1Y3QgY2xrICpwYXJlbnQ7DQoNCg0K
-Li4vZHJpdmVycy9jbGsvcmVuZXNhcy9yN3M5MjEwLWNwZy1tc3NyLmM6MTQ0OjIwOiB3YXJuaW5n
-OiBwYXNzaW5nIGFyZ3VtZW50IDEgb2Yg4oCYY2xrX2dldF9yYXRl4oCZIGRpc2NhcmRzIOKAmGNv
-bnN04oCZIHF1YWxpZmllciBmcm9tIHBvaW50ZXIgdGFyZ2V0IHR5cGUgWy1XZGlzY2FyZGVkLXF1
-YWxpZmllcnNdDQogICBpZiAoY2xrX2dldF9yYXRlKHBhcmVudCkgPiAxMjAwMDAwMCkNCiAgICAg
-ICAgICAgICAgICAgICAgXg0KSW4gZmlsZSBpbmNsdWRlZCBmcm9tIC4uL2RyaXZlcnMvY2xrL3Jl
-bmVzYXMvcjdzOTIxMC1jcGctbXNzci5jOjEyOjA6DQouLi9pbmNsdWRlL2xpbnV4L2Nsay5oOjQ2
-MzoxNTogbm90ZTogZXhwZWN0ZWQg4oCYc3RydWN0IGNsayAq4oCZIGJ1dCBhcmd1bWVudCBpcyBv
-ZiB0eXBlIOKAmGNvbnN0IHN0cnVjdCBjbGsgKuKAmQ0KIHVuc2lnbmVkIGxvbmcgY2xrX2dldF9y
-YXRlKHN0cnVjdCBjbGsgKmNsayk7DQogICAgICAgICAgICAgICBeDQptYWtlWzFdOiBMZWF2aW5n
-IGRpcmVjdG9yeSAnL2hvbWUvcmVuZXNhcy90b29scy91cHN0cmVhbS9yZW5lc2FzLWRyaXZlcnMv
-Lm91dF9yemEybScNCg0KSSBjYW4gcmVtb3ZlIGNvbnN0LCB0aGVuIEkgZG9uJ3QgbmVlZCB0aGUg
-Y2FzdCBhbnltb3JlLg0KDQoNCj4gPiArICAgICAgIC8qIE1vZHVsZSBDbG9ja3MgKi8NCj4gPiAr
-ICAgICAgIC5tb2RfY2xrcyA9IHI3czkyMTBfbW9kX2Nsa3MsDQo+ID4gKyAgICAgICAubnVtX21v
-ZF9jbGtzID0gQVJSQVlfU0laRShyN3M5MjEwX21vZF9jbGtzKSwNCj4gPiArICAgICAgIC5udW1f
-aHdfbW9kX2Nsa3MgPSAxMSAqIDMyLCAvKiBpbmNsdWRlcyBTVEJDUjAvMS8yIHdoaWNoIGRvbid0
-DQo+IGV4aXN0ICovDQo+IA0KPiBBY2NvcmRpbmcgdG8gdGhlIEhXIG1hbnVhbCwgU1RCQ1IxLzIg
-ZG8gbm90IGV4aXN0Pw0KDQpUaGUgcHJvYmxlbSBpcyB0aGF0IHRoZXJlIGFyZSByZWdpc3RlcnMg
-bmFtZWQgIlNUQkNSMSIgYW5kICJTVEJDUjIiLCBidXQNCnRoZXkgYXJlIG5vdCBwdXJlIE1TVFAg
-cmVnaXN0ZXJzLCBhbmQgdGhleSBzaXQgYXQgYSBkaWZmZXJlbnQgYWRkcmVzcyANCmxvY2F0aW9u
-Lg0KDQpXb3VsZCBpdCBiZSBiZXR0ZXIgaWYgSSBzYXkgdGhlIE1TVFAgcmVnaXN0ZXJzIHN0YXJ0
-IGF0IFNUQkNSMywgYW5kIGp1c3QNCnN1YnRyYWN0ICIzMCIgZnJvbSB0aGUgbnVtYmVycyBpbiB0
-aGUgZGV2aWNlIHRyZWU/DQoNCj4gPiArc3RhdGljIGNvbnN0IHUxNiBzdGJjcltdID0gew0KPiA+
-ICsgICAgICAgMHgwMDAsIDB4MDAwLCAweDAxNCwgMHg0MTAsIDB4NDE0LCAweDQxOCwgMHg0MUMs
-IDB4NDIwLA0KPiANCj4gc3RiY3JbMV0gc2hvdWxkIGJlIDB4MDEwPw0KDQpUZWNobmljYWxseSwg
-c3RiY3JbMF0gPSAweDEwLCBzdGJjclsxXSA9IDB4MTQsDQpJIHdhcyBqdXN0IHRoaW5raW5nIHRo
-YXQgSSB3b3VsZCBuZXZlciBiZSBhY2Nlc3MgaXQgYW55d2F5IHNpbmNlIHRoZXkgDQphcmUgbm90
-IHJlYWxseSBNU1RQIHJlZ2lzdGVycy4NCg0KDQo+IA0KPiA+ICsgICAgICAgMHg0MjQsIDB4NDI4
-LCAweDQyQywgMHg0MzAsIDB4NDM0LCAweDQ2MCwNCj4gDQo+IFRoZSBsYXN0IDMgZG9uJ3QgZXhp
-c3Q/DQoNCk9wcHMsIHlvdSdyZSByaWdodCEgVGhleSBhcmUgbGVmdCBvdmVyIGZyb20gd2hlbiBJ
-IGNoYW5nZSB0aGUgdGFibGUgYXJvdW5kLg0KVGhhbmtzLg0KDQo+ID4gKyAgICAgICAgICAgICAg
-IH0gZWxzZSB7DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgaWR4ID0gTU9EX0NMS19QQUNL
-XzEwKGNsa2lkeCk7DQo+IA0KPiBNT0RfQ0xLX1BBQ0soKQ0KDQpHb29kIGZpbmQhIEkgd291bGQg
-aGF2ZSBicm9rZW4gZXhpc3RpbmcgZHJpdmVycyENCg0KDQo+ID4gKyNpZmRlZiBDT05GSUdfQ0xL
-X1I3UzkyMTANCj4gPiArICAgICAgIHsNCj4gPiArICAgICAgICAgICAgICAgLmNvbXBhdGlibGUg
-PSAicmVuZXNhcyxyN3M5MjEwLWNwZy1tc3NyIiwNCj4gPiArICAgICAgICAgICAgICAgLmRhdGEg
-PSAmcjdzOTIxMF9jcGdfbXNzcl9pbmZvLA0KPiA+ICsgICAgICAgfSwNCj4gDQo+IFBsZWFzZSBw
-cmVzZXJ2ZSBzb3J0IG9yZGVyLg0KDQo+ID4gIGV4dGVybiBjb25zdCBzdHJ1Y3QgY3BnX21zc3Jf
-aW5mbyByOGE3Nzk4MF9jcGdfbXNzcl9pbmZvOw0KPiA+ICBleHRlcm4gY29uc3Qgc3RydWN0IGNw
-Z19tc3NyX2luZm8gcjhhNzc5OTBfY3BnX21zc3JfaW5mbzsNCj4gPiAgZXh0ZXJuIGNvbnN0IHN0
-cnVjdCBjcGdfbXNzcl9pbmZvIHI4YTc3OTk1X2NwZ19tc3NyX2luZm87DQo+ID4gK2V4dGVybiBj
-b25zdCBzdHJ1Y3QgY3BnX21zc3JfaW5mbyByN3M5MjEwX2NwZ19tc3NyX2luZm87DQo+IA0KPiBQ
-bGVhc2UgcHJlc2VydmUgc29ydCBvcmRlci4NCg0KT0sNCg0KDQo+ID4gKy8qIFI3UzkyMTAgQ1BH
-IENvcmUgQ2xvY2tzICovDQo+ID4gKyNkZWZpbmUgUjdTOTIxMF9DTEtfUExMICAgICAgICAgICAg
-ICAgICAgICAgICAgMA0KPiANCj4gU2hvdWxkIHRoYXQgYmUgYW4gaW50ZXJuYWwgY2xvY2ssIG5v
-dCByZWZlcnJlZCB0byBmcm9tIERUPw0KPiBUaGVyZSdzIGFscmVhZHkgdGhlIGludGVybmFsIENM
-S19QTEwgY2xvY2suDQoNCk9LLCBJIHNlZSB3aGF0IHlvdSBtZWFuLiBJIHdpbGwgbGVhdmUgaXQg
-b3V0IG9mIHRoaXMgaGVhZGVyIGZpbGUuDQoNCg0KPiA+ICsjZGVmaW5lIFI3UzkyMTBfQ0xLX0kg
-ICAgICAgICAgICAgICAgICAxDQo+ID4gKyNkZWZpbmUgUjdTOTIxMF9DTEtfRyAgICAgICAgICAg
-ICAgICAgIDINCj4gPiArI2RlZmluZSBSN1M5MjEwX0NMS19CICAgICAgICAgICAgICAgICAgMw0K
-PiA+ICsjZGVmaW5lIFI3UzkyMTBfQ0xLX1AxICAgICAgICAgICAgICAgICA0DQo+ID4gKyNkZWZp
-bmUgUjdTOTIxMF9DTEtfUDFDICAgICAgICAgICAgICAgICAgICAgICAgNQ0KPiA+ICsjZGVmaW5l
-IFI3UzkyMTBfQ0xLX1AwICAgICAgICAgICAgICAgICA2DQo+IA0KPiBUaGUgY29tbWVudCBpbiBG
-aWd1cmUgNi4xIHN1Z2dlc3RzIHRoZXJlJ3MgYWxzbyBQMEMsIGJ1dCB0aGF0IG1heSBiZSBhDQo+
-IG1pc3Rha2UsIGFzIEkgY2FuIGZpbmQgbm8gb3RoZXIgcmVmZXJlbmNlcyB0byBpdD8NCg0KRnVu
-bnksIEkgZGlkbid0IHNlZSB0aGF0IGluIHRoZXJlIGJlZm9yZS4NCkxpa2UgeW91IHNhaWQsIGl0
-J3MgcHJvYmFibHkganVzdCBhIG1pc3Rha2UuDQpJJ2xsIHBvaW50IHRoYXQgb3V0IHRvIHRoZSBk
-ZXZpY2UgdGVhbS4NCg0KPiBXaGF0IGFib3V0IG90aGVyIGNsb2NrczogQlNDQ0xLLCBPQ1RDTEss
-IEhZUENMSywgYW5kIFNQSUNMSz8NCg0KQXQgdGhpcyB0aW1lLCBJJ20gY29uc2lkZXJpbmcgdGhl
-bSAnb3V0IG9mIHNjb3BlJyBmcm9tIHRoaXMgZHJpdmVyIGFzIA0KdGhleSByZWFsbHkgbmVlZCB0
-byBiZSBzZXQgdXAgZWFybHkgaW4gZGV2aWNlIGJvb3QgKGllLCB1LWJvb3QpLg0KVW5sZXNzIHlv
-dSB3ZXJlIGp1c3QgdGhpbmtpbmcgb2YgYWRkaW5nIHRoZW0gYXMgI2RlZmluZXMsIGJ1dCBuZXZl
-ciANCnJlYWxseSB1c2luZyB0aGVtLg0KDQpDaHJpcw0KDQo=
+Hi Chris,
+
+On Wed, Aug 29, 2018 at 3:29 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> Add support for the R7S9210 (RZ/A2) Clock Pulse Generator and Module
+> Standby.
+
+Thanks for your patch!
+
+> The Module Standby HW in the RZ/A series is very close to R-Car HW, except
+> for how the registers are laid out.
+> The MSTP registers are only 8-bits wide, there is no status registers
+> (MSTPST), and the register offsets are a little different. Since the RZ/A
+
+MSTPSR
+
+> hardware manuals refer to these registers as the Standby Control Registers,
+> we'll use that name to distinguish the RZ/A type for the R-Car type.
+
+from the R-Car type.
+
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+
+> --- /dev/null
+> +++ b/drivers/clk/renesas/r7s9210-cpg-mssr.c
+> @@ -0,0 +1,193 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * R7S9210 Clock Pulse Generator / Module Standby
+> + *
+> + * Based on r8a7795-cpg-mssr.c
+> + *
+> + * Copyright (C) 2018 Chris Brandt
+> + * Copyright (C) 2018 Renesas Electronics Corp.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <dt-bindings/clock/r7s9210-cpg-mssr.h>
+> +#include "renesas-cpg-mssr.h"
+> +
+> +#define CPG_FRQCR      0x00
+> +#define CPG_CKIOSEL    0xF0
+> +#define CPG_SCLKSEL    0xF4
+
+The last two are unused?
+
+> +
+> +#define PORTL_PIDR     0xFCFFE074
+
+Unused?
+
+> +static u8 cpg_mode;
+> +
+> +/* Internal Clock ratio table */
+> +static const unsigned int ratio_tab[5][5] = {
+> +                       /* I,  G,  B, P1, P0 */
+
+Use a struct instead?
+
+struct {
+        unsigned int i;
+        unsigned int g;
+        unsigned int ib
+        unsigned int p1;
+        unsigned int p0;
+} ratio_tab[5] = { ... }
+
+> +                       {  2,  4,  8, 16, 32 }, /* FRQCR = 0x012 */
+> +                       {  4,  4,  8, 16, 32 }, /* FRQCR = 0x112 */
+> +                       {  8,  4,  8, 16, 32 }, /* FRQCR = 0x212 */
+> +                       { 16,  8, 16, 16, 32 }, /* FRQCR = 0x322 */
+> +                       { 16, 16, 32, 32, 32 }, /* FRQCR = 0x333 */
+
+The P0 divider is fixed to 32, so you can remove it from the table?
+
+> +                       };
+> +
+> +enum rz_clk_types {
+> +       CLK_TYPE_RZA_MAIN = CLK_TYPE_CUSTOM,
+> +       CLK_TYPE_RZA_PLL,
+> +};
+> +
+> +enum clk_ids {
+> +       /* Core Clock Outputs exported to DT */
+> +       LAST_DT_CORE_CLK = R7S9210_CLK_P0,
+> +
+> +       /* External Input Clocks */
+> +       CLK_EXTAL,
+> +
+> +       /* Internal Core Clocks */
+> +       CLK_MAIN,
+> +       CLK_PLL,
+> +       CLK_I,
+> +       CLK_G,
+> +       CLK_B,
+> +       CLK_P1,
+> +       CLK_P1C,
+> +       CLK_P0,
+
+The last six are not used and can be removed
+(the driver uses R7S9210_CLK_* instead).
+
+> +
+> +       /* Module Clocks */
+> +       MOD_CLK_BASE
+> +};
+> +
+> +static struct cpg_core_clk r7s9210_core_clks[] = {
+> +       /* External Clock Inputs */
+> +       DEF_INPUT("extal",     CLK_EXTAL),
+> +
+> +       /* Internal Core Clocks */
+> +       DEF_BASE(".main",       CLK_MAIN, CLK_TYPE_RZA_MAIN, CLK_EXTAL),
+> +       DEF_BASE(".pll",       CLK_PLL, CLK_TYPE_RZA_PLL, CLK_MAIN),
+> +
+> +       /* Core Clock Outputs */
+> +       DEF_FIXED("i",      R7S9210_CLK_I,     CLK_PLL,          2, 1),
+> +       DEF_FIXED("g",      R7S9210_CLK_G,     CLK_PLL,          4, 1),
+> +       DEF_FIXED("b",      R7S9210_CLK_B,     CLK_PLL,          8, 1),
+> +       DEF_FIXED("p1",     R7S9210_CLK_P1,    CLK_PLL,         16, 1),
+> +       DEF_FIXED("p1c",    R7S9210_CLK_P1C,   CLK_PLL,         16, 1),
+> +       DEF_FIXED("p0",     R7S9210_CLK_P0,    CLK_PLL,         32, 1),
+> +};
+> +
+> +static const struct mssr_mod_clk r7s9210_mod_clks[] __initconst = {
+> +       DEF_MOD_STB("ostm0",     36,    R7S9210_CLK_P1C),
+> +       DEF_MOD_STB("ostm1",     35,    R7S9210_CLK_P1C),
+> +       DEF_MOD_STB("ostm2",     34,    R7S9210_CLK_P1C),
+
+I think the table is easier to read if you sort by MSTP number.
+
+> +
+> +       DEF_MOD_STB("scif0",     47,    R7S9210_CLK_P1C),
+> +       DEF_MOD_STB("scif1",     46,    R7S9210_CLK_P1C),
+> +       DEF_MOD_STB("scif2",     45,    R7S9210_CLK_P1C),
+> +       DEF_MOD_STB("scif3",     44,    R7S9210_CLK_P1C),
+> +       DEF_MOD_STB("scif4",     43,    R7S9210_CLK_P1C),
+> +
+> +       DEF_MOD_STB("ether0",    65,    R7S9210_CLK_B),
+> +       DEF_MOD_STB("ether1",    64,    R7S9210_CLK_B),
+> +
+> +       DEF_MOD_STB("i2c0",      87,    R7S9210_CLK_P1),
+> +       DEF_MOD_STB("i2c1",      86,    R7S9210_CLK_P1),
+> +       DEF_MOD_STB("i2c2",      85,    R7S9210_CLK_P1),
+> +       DEF_MOD_STB("i2c3",      84,    R7S9210_CLK_P1),
+> +
+> +};
+> +
+> +struct clk * __init rza2_cpg_clk_register(struct device *dev,
+> +       const struct cpg_core_clk *core, const struct cpg_mssr_info *info,
+> +       struct clk **clks, void __iomem *base,
+> +       struct raw_notifier_head *notifiers)
+> +{
+> +       const struct clk *parent;
+> +       unsigned int mult = 1;
+> +       unsigned int div = 1;
+> +       u16 frqcr;
+> +       u8 index;
+> +       int i;
+> +
+> +       parent = clks[core->parent];
+> +       if (IS_ERR(parent))
+> +               return ERR_CAST(parent);
+> +
+> +       switch (core->id) {
+> +       case CLK_MAIN:
+> +               break;
+> +
+> +       case CLK_PLL:
+> +               if (cpg_mode)
+> +                       mult = 44;      /* Divider 1 is 1/2 */
+> +               else
+> +                       mult = 88;      /* Divider 1 is 1 */
+> +               break;
+> +
+> +       default:
+> +               return ERR_PTR(-EINVAL);
+> +       }
+> +
+> +       /* Adjust the dividers based on the current FRQCR setting */
+> +       if (core->id == CLK_MAIN) {
+> +
+> +               /* If EXTAL is above 12MHz, then we know it is Mode 1 */
+> +               if (clk_get_rate((struct clk *)parent) > 12000000)
+
+Why the cast?
+
+> +                       cpg_mode = 1;
+> +
+> +               frqcr = clk_readl(base + CPG_FRQCR) & 0xFFF;
+> +               if (frqcr == 0x012)
+> +                       index = 0;
+> +               else if (frqcr == 0x112)
+> +                       index = 1;
+> +               else if (frqcr == 0x212)
+> +                       index = 2;
+> +               else if (frqcr == 0x322)
+> +                       index = 3;
+> +               else if (frqcr == 0x333)
+> +                       index = 4;
+> +               else
+> +                       BUG_ON(1);      /* Illegal FRQCR value */
+> +
+> +               for (i = 0; i < ARRAY_SIZE(r7s9210_core_clks); i++) {
+> +                       switch (r7s9210_core_clks[i].id) {
+> +                       case R7S9210_CLK_I:
+> +                               r7s9210_core_clks[i].div = ratio_tab[index][0];
+> +                               break;
+> +                       case R7S9210_CLK_G:
+> +                               r7s9210_core_clks[i].div = ratio_tab[index][1];
+> +                               break;
+> +                       case R7S9210_CLK_B:
+> +                               r7s9210_core_clks[i].div = ratio_tab[index][2];
+> +                               break;
+> +                       case R7S9210_CLK_P1:
+> +                       case R7S9210_CLK_P1C:
+> +                               r7s9210_core_clks[i].div = ratio_tab[index][3];
+> +                               break;
+> +                       case R7S9210_CLK_P0:
+> +                               r7s9210_core_clks[i].div = ratio_tab[index][4];
+> +                               break;
+> +                       }
+> +               }
+> +       }
+> +
+> +       return clk_register_fixed_factor(NULL, core->name,
+> +                                        __clk_get_name(parent), 0, mult, div);
+> +}
+> +
+> +const struct cpg_mssr_info r7s9210_cpg_mssr_info __initconst = {
+> +       /* Core Clocks */
+> +       .core_clks = r7s9210_core_clks,
+> +       .num_core_clks = ARRAY_SIZE(r7s9210_core_clks),
+> +       .last_dt_core_clk = LAST_DT_CORE_CLK,
+> +       .num_total_core_clks = MOD_CLK_BASE,
+> +
+> +       /* Module Clocks */
+> +       .mod_clks = r7s9210_mod_clks,
+> +       .num_mod_clks = ARRAY_SIZE(r7s9210_mod_clks),
+> +       .num_hw_mod_clks = 11 * 32, /* includes STBCR0/1/2 which don't exist */
+
+According to the HW manual, STBCR1/2 do not exist?
+
+> +
+> +       /* Callbacks */
+> +       .cpg_clk_register = rza2_cpg_clk_register,
+> +
+> +       /* RZ/A2 has Standby Control Registers */
+> +       .stbyctrl = true,
+> +};
+
+> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+> @@ -73,6 +73,17 @@ static const u16 smstpcr[] = {
+>
+>  #define        SMSTPCR(i)      smstpcr[i]
+>
+> +/*
+> + * Standby Control Register offsets (RZ/A)
+> + * Base address is FRQCR register
+> + */
+> +
+> +static const u16 stbcr[] = {
+> +       0x000, 0x000, 0x014, 0x410, 0x414, 0x418, 0x41C, 0x420,
+
+stbcr[1] should be 0x010?
+
+> +       0x424, 0x428, 0x42C, 0x430, 0x434, 0x460,
+
+The last 3 don't exist?
+
+> +};
+
+> @@ -240,8 +270,14 @@ struct clk *cpg_mssr_clk_src_twocell_get(struct of_phandle_args *clkspec,
+>
+>         case CPG_MOD:
+>                 type = "module";
+> -               idx = MOD_CLK_PACK(clkidx);
+> -               if (clkidx % 100 > 31 || idx >= priv->num_mod_clks) {
+> +               if (priv->stbyctrl) {
+> +                       idx = MOD_CLK_PACK_10(clkidx);
+> +                       range_check = 7 - (clkidx % 10);
+> +               } else {
+> +                       idx = MOD_CLK_PACK_10(clkidx);
+
+MOD_CLK_PACK()
+
+> +                       range_check = 31 - (clkidx % 100);
+> +               }
+> +               if (range_check < 0 || idx >= priv->num_mod_clks) {
+>                         dev_err(dev, "Invalid %s clock index %u\n", type,
+>                                 clkidx);
+>                         return ERR_PTR(-EINVAL);
+> @@ -740,6 +776,12 @@ static const struct of_device_id cpg_mssr_match[] = {
+>                 .compatible = "renesas,r8a77995-cpg-mssr",
+>                 .data = &r8a77995_cpg_mssr_info,
+>         },
+> +#endif
+> +#ifdef CONFIG_CLK_R7S9210
+> +       {
+> +               .compatible = "renesas,r7s9210-cpg-mssr",
+> +               .data = &r7s9210_cpg_mssr_info,
+> +       },
+
+Please preserve sort order.
+
+> --- a/drivers/clk/renesas/renesas-cpg-mssr.h
+> +++ b/drivers/clk/renesas/renesas-cpg-mssr.h
+> @@ -78,6 +78,13 @@ struct mssr_mod_clk {
+>  #define DEF_MOD(_name, _mod, _parent...)       \
+>         { .name = _name, .id = MOD_CLK_ID(_mod), .parent = _parent }
+>
+> +/* Convert from sparse base-10 to packed index space */
+> +#define MOD_CLK_PACK_10(x)     ((x / 10) * 32 + (x % 10))
+
+"PACK" is a bit of a misnomer, as it no longer packs, but expands from base-10
+to base-32  ;-)
+
+
+> @@ -111,6 +122,7 @@ struct cpg_mssr_info {
+>         unsigned int num_core_clks;
+>         unsigned int last_dt_core_clk;
+>         unsigned int num_total_core_clks;
+> +       bool stbyctrl;
+>
+>         /* Module Clocks */
+>         const struct mssr_mod_clk *mod_clks;
+> @@ -149,6 +161,7 @@ extern const struct cpg_mssr_info r8a77970_cpg_mssr_info;
+>  extern const struct cpg_mssr_info r8a77980_cpg_mssr_info;
+>  extern const struct cpg_mssr_info r8a77990_cpg_mssr_info;
+>  extern const struct cpg_mssr_info r8a77995_cpg_mssr_info;
+> +extern const struct cpg_mssr_info r7s9210_cpg_mssr_info;
+
+Please preserve sort order.
+
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/r7s9210-cpg-mssr.h
+> @@ -0,0 +1,21 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + *
+> + * Copyright (C) 2018 Renesas Electronics Corp.
+> + *
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_R7S9210_CPG_MSSR_H__
+> +#define __DT_BINDINGS_CLOCK_R7S9210_CPG_MSSR_H__
+> +
+> +#include <dt-bindings/clock/renesas-cpg-mssr.h>
+> +
+> +/* R7S9210 CPG Core Clocks */
+> +#define R7S9210_CLK_PLL                        0
+
+Should that be an internal clock, not referred to from DT?
+There's already the internal CLK_PLL clock.
+
+> +#define R7S9210_CLK_I                  1
+> +#define R7S9210_CLK_G                  2
+> +#define R7S9210_CLK_B                  3
+> +#define R7S9210_CLK_P1                 4
+> +#define R7S9210_CLK_P1C                        5
+> +#define R7S9210_CLK_P0                 6
+
+The comment in Figure 6.1 suggests there's also P0C, but that may be a
+mistake, as I can find no other references to it?
+
+What about other clocks: BSCCLK, OCTCLK, HYPCLK, and SPICLK?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
