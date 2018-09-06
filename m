@@ -1,7 +1,7 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v2 3/3] arm64: dts: qcom: pm8998: Add die temperature channel node to the ADC
-Date: Thu,  6 Sep 2018 14:04:54 -0700
-Message-ID: <20180906210454.247219-4-mka@chromium.org>
+Subject: [PATCH v2 2/3] arm64: dts: qcom: pm8998: Add adc node
+Date: Thu,  6 Sep 2018 14:04:53 -0700
+Message-ID: <20180906210454.247219-3-mka@chromium.org>
 References: <20180906210454.247219-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,33 +12,47 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Ro
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a channel node for the die temperature to the ADC.
+This adds the adc node to pm8998 based on the examples in the
+bindings. It also fixes the order of the included headers.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 --
 Changes in v2:
-- none
+- removed io-channel-ranges attribute
 ---
- arch/arm64/boot/dts/qcom/pm8998.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/qcom/pm8998.dtsi | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-index 41593ebbea2c..d18d4f260fbe 100644
+index 92bed1e7d4bb..41593ebbea2c 100644
 --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
 +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-@@ -19,6 +19,11 @@
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			#io-channel-cells = <1>;
-+
-+			die-temp {
-+				reg = <ADC5_DIE_TEMP>;
-+				label = "die_temp";
-+			};
- 		};
+@@ -1,8 +1,9 @@
+ // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ /* Copyright 2018 Google LLC. */
  
+-#include <dt-bindings/spmi/spmi.h>
++#include <dt-bindings/iio/qcom,spmi-vadc.h>
+ #include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/spmi/spmi.h>
+ 
+ &spmi_bus {
+ 	pm8998_lsid0: pmic@0 {
+@@ -11,6 +12,15 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
++		pm8998_adc: adc@3100 {
++			compatible = "qcom,spmi-adc-rev2";
++			reg = <0x3100>;
++			interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			#io-channel-cells = <1>;
++		};
++
  		pm8998_gpio: gpios@c000 {
+ 			compatible = "qcom,pm8998-gpio", "qcom,spmi-gpio";
+ 			reg = <0xc000>;
 -- 
 2.19.0.rc2.392.g5ba43deb5a-goog
