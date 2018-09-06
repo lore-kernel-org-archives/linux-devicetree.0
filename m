@@ -1,10 +1,10 @@
-Return-Path: <SRS0=SOkh=LV=renesas.com=chris.brandt@kernel.org>
+Return-Path: <SRS0=wXcc=LU=renesas.com=chris.brandt@kernel.org>
 From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 2/2] dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
-Date: Thu,  6 Sep 2018 20:22:43 -0500
-Message-Id: <20180907012243.86603-3-chris.brandt@renesas.com>
-In-Reply-To: <20180907012243.86603-1-chris.brandt@renesas.com>
-References: <20180907012243.86603-1-chris.brandt@renesas.com>
+Subject: [PATCH v2 2/2] dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
+Date: Thu,  6 Sep 2018 13:37:38 -0500
+Message-Id: <20180906183738.81238-3-chris.brandt@renesas.com>
+In-Reply-To: <20180906183738.81238-1-chris.brandt@renesas.com>
+References: <20180906183738.81238-1-chris.brandt@renesas.com>
 To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
