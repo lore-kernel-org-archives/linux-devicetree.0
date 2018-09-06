@@ -1,51 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Thu, 6 Sep 2018 11:15:17 +0100
-Message-ID: <20180906101516.GA5360@sirena.org.uk>
-References: <20180802103425.3053-1-o.rempel@pengutronix.de>
- <20180802103425.3053-4-o.rempel@pengutronix.de>
- <20180802104443.GH9117@sirena.org.uk>
- <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
- <20180802113552.GJ9117@sirena.org.uk>
- <20180827014815.GD29208@dragon>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Thu, 6 Sep 2018 13:07:41 +0200
+Message-ID: <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
+References: <20180905052113.21262-1-stefan@agner.ch> <4035252.QuWadVx7pr@avalon>
+ <1569297.pdEFdpi3HS@avalon> <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180827014815.GD29208@dragon>
+In-Reply-To: <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
+To: Stefan Agner <stefan@agner.ch>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Dave Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, sean@poorly.run, Marcel Ziswiler <marcel.ziswiler@toradex.com>, max.krummenacher@toradex.com, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, open list:OPEN FIRMWARE AND FLATTENED DEVICE TR
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Sep 5, 2018 at 8:32 PM Stefan Agner <stefan@agner.ch> wrote:
+> On 05.09.2018 00:44, Laurent Pinchart wrote:
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Good point! I actually really don't like that we use the same flags here
+> but from a different perspective. Especially since the flags defines
+> document things differently:
+>
+> /* drive data on pos. edge */
+> #define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
+> /* drive data on neg. edge */
+> #define DRM_BUS_FLAG_PIXDATA_NEGEDGE    (1<<3)
 
-On Mon, Aug 27, 2018 at 09:48:16AM +0800, Shawn Guo wrote:
+Maybe a stupid comment from my side, but can't we just change the
+documentation to match the usecases?
 
-> Can you ACK on those two regulator patches, so that I can queue this
-> series up on IMX tree?
+/* Trigger pixel data latch on positive edge */
+#define DRM_BUS_FLAG_PIXDATA_POSEDGE    (1<<2)
 
-I was expecting to get a pull request with the precursor patches in it -
-the regulator driver seems to get a moderate amount of development so
-there's a reasonable risk of conflicts.
+> Using the opposite perspective would also need translation in crtc
+> drivers... So far no driver uses sampling_edge.
+>
+> I would prefer if we always use the meaning as documented by the flags.
+>
+> I guess we would need to convert DRM_BUS_FLAG_PIXDATA_POSEDGE ->
+> DRM_BUS_FLAG_PIXDATA_NEGEDGE.
+>
+> Linus Walleij, you added sampling edge, any thoughts?
 
---X1bOJ3K7DJ5YkBrT
-Content-Type: application/pgp-signature; name="signature.asc"
+I just thought it was generally useful to have triggering edge encoded
+into the bridge as it makes it clear that this edge is something
+that is a delayed version of the driving edge which is subject to
+clock skew caused by the speed of electrons in silicon and
+copper and slew rate caused by parasitic capacitance.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluQ/jQACgkQJNaLcl1U
-h9Dbpwf+MZa+AjERwuP4i++2zvh8VAZqhxPFy+ijMGRaJATDNumhfGA/bycWyDdN
-r1Lp0EhBmeGqiMtrhDoqw+4kjF5H03mhTvrjG0U4C8vOUainMOEWSSpBeq9ST42t
-wvScVpuLON1EZUt6n23wPMmc4fDlvKbhlY2QRTl3NP6eIAafaym7CzC49rS0PdnI
-Pi5qCQrlt9X8eChyKmUkD6oENeFAvUAZLlf8Elxz8Is3bB7lNIzaIrlImSoGRMUQ
-TZx37KNyvsEcCrzq47ALMySZe5auC1fc97ghqmIpxIcL2hmmGPYY8U86i6UOsXyq
-a0AnQkQOjdWb4Dm+IHQD3tT4vgsIoQ==
-=Ytj1
------END PGP SIGNATURE-----
-
---X1bOJ3K7DJ5YkBrT--
+Yours,
+Linus Walleij
