@@ -1,67 +1,89 @@
-Return-Path: <SRS0=8xA8=LU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from asavdk3.altibox.net ([109.247.116.14]:56262 "EHLO
-        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728489AbeIGBzr (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 6 Sep 2018 21:55:47 -0400
-Date: Thu, 6 Sep 2018 23:18:24 +0200
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Addding a property that silently breaks linux kernel driver?
-Message-ID: <20180906211824.GA20607@ravnborg.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: san@skov.dk
+Return-Path: <SRS0=pRDT=LU=gmail.com=jim2101024@kernel.org>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: [PATCH v5 02/12] dt-bindings: pci: add DT docs for Brcmstb PCIe device
+Date: Thu,  6 Sep 2018 16:42:51 -0400
+Message-Id: <1536266581-7308-3-git-send-email-jim2101024@gmail.com>
+In-Reply-To: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jim Quinlan <jim2101024@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi all.
+The DT bindings description of the Brcmstb PCIe device is described.
+This node can be used by almost all Broadcom settop box chips, using
+ARM, ARM64, or MIPS CPU architectures.
 
-The NXP RTC support that two different capacitors are connected.
-The default (what the RTC is programmed to after reset) is 7 pF.
-But one may also connect 12.5 pF to save power.
-To use the 12.5 pF the RTC needs to be properly configured.
+Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/pci/brcmstb-pcie.txt       | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
 
-The RTC can only support either 7 pF or 12.5 pF.
-
-A wrongly configured RTC will loose several hours in a week.
-
-
-We came up with the following binding:
-==========================================
-* NXP PCF8523 Real Time Clock
-
-NXP PCF8523 Real Time Clock
-
-Required properties:
-- compatible: Should contain "nxp,pcf8523".
-- reg: I2C address for chip.
-
-Optional property:
-- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5pf,
-  which differ from the default value of 7pf
-
-Example:
-
-pcf8523: pcf8523@68 {
-       compatible = "nxp,pcf85063";
-       reg = <0x68>;
-       nxp,quartz_load_12.5pF;
-};
-=======================================
-
-The Q:
-The above scheme will SILENTLY break out-of-tree Linux users because
-we will change so if nothing is specified the RTC is configured to 7 pF.
-And you need to specify if 12.5 pF is used.
-
-But all users of the kernel driver will assume 12.5 pF, because this
-is the driver default. But not the default of the RTC.
-
-We will change all in-kernel device trees when we add this, but...
-
-Should we try do do this in a way so we respect the current
-kernel driver implmentation, or should we respect the reset default
-value of the RTC?
-
-	Sam
+diff --git a/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt b/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
+new file mode 100644
+index 0000000..a1a9ad5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/brcmstb-pcie.txt
+@@ -0,0 +1,59 @@
++Brcmstb PCIe Host Controller Device Tree Bindings
++
++Required Properties:
++- compatible
++  "brcm,bcm7425-pcie" -- for 7425 family MIPS-based SOCs.
++  "brcm,bcm7435-pcie" -- for 7435 family MIPS-based SOCs.
++  "brcm,bcm7445-pcie" -- for 7445 and later ARM based SOCs (not including
++      the 7278).
++  "brcm,bcm7278-pcie"  -- for 7278 family ARM-based SOCs.
++
++- reg -- the register start address and length for the PCIe reg block.
++- interrupts -- two interrupts are specified; the first interrupt is for
++     the PCI host controller and the second is for MSI if the built-in
++     MSI controller is to be used.
++- interrupt-names -- names of the interrupts (above): "pcie" and "msi".
++- #address-cells -- set to <3>.
++- #size-cells -- set to <2>.
++- #interrupt-cells: set to <1>.
++- interrupt-map-mask and interrupt-map, standard PCI properties to define the
++     mapping of the PCIe interface to interrupt numbers.
++- ranges: ranges for the PCI memory and I/O regions.
++- linux,pci-domain -- should be unique per host controller.
++
++Optional Properties:
++- clocks -- phandle of pcie clock.
++- clock-names -- set to "sw_pcie" if clocks is used.
++- dma-ranges -- Specifies the inbound memory mapping regions when
++     an "identity map" is not possible.
++- msi-controller -- this property is typically specified to have the
++     PCIe controller use its internal MSI controller.
++- msi-parent -- set to use an external MSI interrupt controller.
++- brcm,enable-ssc -- (boolean) indicates usage of spread-spectrum clocking.
++- max-link-speed --  (integer) indicates desired generation of link:
++     1 => 2.5 Gbps (gen1), 2 => 5.0 Gbps (gen2), 3 => 8.0 Gbps (gen3).
++
++Example Node:
++
++pcie0: pcie@f0460000 {
++		reg = <0x0 0xf0460000 0x0 0x9310>;
++		interrupts = <0x0 0x0 0x4>;
++		compatible = "brcm,bcm7445-pcie";
++		#address-cells = <3>;
++		#size-cells = <2>;
++		ranges = <0x02000000 0x00000000 0x00000000 0x00000000 0xc0000000 0x00000000 0x08000000
++			  0x02000000 0x00000000 0x08000000 0x00000000 0xc8000000 0x00000000 0x08000000>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 7>;
++		interrupt-map = <0 0 0 1 &intc 0 47 3
++				 0 0 0 2 &intc 0 48 3
++				 0 0 0 3 &intc 0 49 3
++				 0 0 0 4 &intc 0 50 3>;
++		clocks = <&sw_pcie0>;
++		clock-names = "sw_pcie";
++		msi-parent = <&pcie0>;  /* use PCIe's internal MSI controller */
++		msi-controller;         /* use PCIe's internal MSI controller */
++		brcm,ssc;
++		max-link-speed = <1>;
++		linux,pci-domain = <0>;
++	};
+-- 
+1.9.0.138.g2de3478
