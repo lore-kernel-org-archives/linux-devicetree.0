@@ -1,327 +1,52 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH 1/3] dt-bindings: iio: adc: Add Xilinx AMS binding
- documentation
-Date: Thu, 6 Sep 2018 13:27:34 +0000
-Message-ID: <DM6PR02MB522706FDCF22A0F62E1A70BEC1010@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1535624539-7839-1-git-send-email-manish.narani@xilinx.com>
- <1535624539-7839-2-git-send-email-manish.narani@xilinx.com>
- <20180902191459.5f597c94@archlinux>
+From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+Subject: [PATCH v2] ASoC: rsnd: Add device tree binding for
+	r8a77990
+Date: Thu,  6 Sep 2018 22:28:33 +0900
+Message-ID: <1536240513-22172-1-git-send-email-ykaneko0929@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180902191459.5f597c94@archlinux>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "freeman.liu@spreadtrum.com" <freeman.liu@spreadtrum.com>, "lars@metafoo.de" <lars@metafoo.de>, Michal Simek <michals@xilinx.com>, Srinivas Goud <sgoud@xilinx.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "baolin.wang@linaro.org" <baolin.wang@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, arnaud.
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
 
-Thanks for the review!
+This patch adds the device tree binding of the r8a77990 SoC.
 
-> -----Original Message-----
-> From: Jonathan Cameron [mailto:jic23@kernel.org]
-> Sent: Sunday, September 2, 2018 11:45 PM
-> To: Manish Narani <MNARANI@xilinx.com>
-> Cc: knaack.h@gmx.de; lars@metafoo.de; pmeerw@pmeerw.net;
-> robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
-> <michals@xilinx.com>; leoyang.li@nxp.com; sudeep.holla@arm.com;
-> amit.kucheria@linaro.org; broonie@kernel.org; arnaud.pouliquen@st.com;
-> geert@linux-m68k.org; eugen.hristev@microchip.com; rdunlap@infradead.org;
-> lukas@wunner.de; freeman.liu@spreadtrum.com; vilhelm.gray@gmail.com;
-> tglx@linutronix.de; baolin.wang@linaro.org; gregkh@linuxfoundation.org;
-> Srinivas Goud <sgoud@xilinx.com>; Anirudha Sarangi <anirudh@xilinx.com>;
-> linux-iio@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: Add Xilinx AMS binding
-> documentation
-> 
-> On Thu, 30 Aug 2018 15:52:17 +0530
-> Manish Narani <manish.narani@xilinx.com> wrote:
-> 
-> > Xilinx AMS have several ADC channels that can be used for measurement
-> > of different voltages and temperatures. Document the same in the bindings.
-> >
-> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > ---
-> >  .../devicetree/bindings/iio/adc/xilinx-ams.txt     | 159
-> +++++++++++++++++++++
-> >  1 file changed, 159 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> > b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> > new file mode 100644
-> > index 0000000..8cc96f0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> > @@ -0,0 +1,159 @@
-> > +Xilinx AMS controller
-> > +
-> > +The AMS includes an ADC as well as on-chip sensors that can be used
-> > +to sample external voltages and monitor on-die operating conditions,
-> > +such as temperature and supply voltage levels. The AMS has two SYSMON
-> blocks.
-> > +PL-SYSMON block is capable of monitoring off chip voltage and
-> temperature.
-> > +PL-SYSMON block has DRP, JTAG and I2C interface to enable monitoring
-> > +from external master. Out of this interface currently only DRP is supported.
-> > +Other block PS-SYSMON is memory mapped to PS. Both of block has
-> > +built-in alarm generation logic that is used to interrupt the
-> > +processor based on condition set.
-> 
-> I guess anyone reading this because they have the hardware would know what
-> PS and PL are, but it would still be nice to define those acronyms!
+Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
+Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
+---
 
-Okay, I will rectify this in v2.
+This patch is based on the devel branch of Simon Horman's renesas tree.
 
-> 
-> Google suggest, Programmable Logic (FPGA bit I guess) and Process Space
-> (Arm core bit?)  As I read this, from a driver point of view it doesn't really
-> matter - these are just blocks of channels that are there?
+v2 [Yoshihiro Kaneko]
+- Rebased
 
-Yes, these are just blocks of channels, which are enabled/disabled via devicetree child nodes "xlnx,zynqmp-ams-ps" and "xlnx,zynqmp-ams-pl".
+ Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> 
-> This binding is complex enough I definitely want some DT binding review.
-
-Sure!
-
-> 
-> 
-> 
-> > +
-> > +All designs should have AMS registers, but PS and PL are optional.
-> > +The AMS controller can work with only PS, only PL and both PS and PL
-> > +configurations. Please specify registers according to your design.
-> > +Devicetree should always have AMS module property. Providing PS & PL
-> module is optional.
-> > +
-> > +Required properties:
-> > +	- compatible: Should be "xlnx,zynqmp-ams"
-> > +	- reg:  Should specify AMS register space
-> > +	- interrupts: Interrupt number for the AMS control interface
-> > +	- interrupt-names: Interrupt name, must be "ams-irq"
-> > +	- clocks: Should contain a clock specifier for the device
-> > +	- ranges: keep the property empty to map child address space
-> > +	          (for PS and/or PL) nodes 1:1 onto the parent address
-> > +	          space
-> > +
-> > +AMS device tree subnode:
-> > +	- compatible: Should be "xlnx,zynqmp-ams-ps" or "xlnx,zynqmp-ams-pl"
-> > +	- reg:  Register space for PS or PL
-> > +
-> > +Optional properties:
-> > +
-> > +Following optional property only valid for PL.
-> > +	- xlnx,ext-channels: List of external channels that are connected to the
-> > +	                     AMS PL module.
-> > +
-> > +	  The child nodes of this node represent the external channels which
-> are
-> > +	  connected to the AMS Module. If the property is not present
-> > +	  no external channels will be assumed to be connected.
-> > +
-> > +	  Each child node represents one channel and has the following
-> > +	  properties:
-> > +		Required properties:
-> > +			* reg: Pair of pins the channel is connected to.
-> > +				0: VP/VN
-> Hmm. So we have this table here of the ones that may or may not be connected
-> with different numbering from the overall table.  Given these indexes are
-> arbitrary can we unify them?
-> 
-> I.e. use the index from below but state here which values can be used?
-
-Okay. I guess you are suggesting to use the channel index from the channel details table given in the end of this file and state here which number (for 'reg' value) should be used for given channel. Is this correct?
-
-> 
-> > +				1: VUSER0
-> > +				2: VUSER1
-> > +				3: VUSER3
-> > +				4: VUSER4
-> > +				5: VAUXP[0]/VAUXN[0]
-> > +				6: VAUXP[1]/VAUXN[1]
-> > +				...
-> > +				20: VAUXP[15]/VAUXN[15]
-> > +			  Note each channel number should only be used at
-> most
-> > +			  once.
-> > +		Optional properties:
-> > +			* xlnx,bipolar: If set the channel is used in bipolar
-> > +			  mode.
-> > +
-> > +
-> > +Example:
-> > +	xilinx_ams: ams@ffa50000 {
-> > +		compatible = "xlnx,zynqmp-ams";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 56 4>;
-> > +		interrupt-names = "ams-irq";
-> > +		clocks = <&clkc 70>;
-> > +		reg = <0x0 0xffa50000 0x0 0x800>;
-> > +		reg-names = "ams-base";
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +
-> > +		ams_ps: ams_ps@ffa50800 {
-> > +			compatible = "xlnx,zynqmp-ams-ps";
-> > +			reg = <0x0 0xffa50800 0x0 0x400>;
-> > +		};
-> > +
-> > +		ams_pl: ams_pl@ffa50c00 {
-> > +			compatible = "xlnx,zynqmp-ams-pl";
-> > +			reg = <0x0 0xffa50c00 0x0 0x400>;
-> > +			xlnx,ext-channels {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <0>;
-> > +				channel@0 {
-> > +					reg = <0>;
-> > +					xlnx,bipolar;
-> > +				};
-> > +				channel@1 {
-> > +					reg = <1>;
-> > +				};
-> > +				channel@8 {
-> > +					reg = <8>;
-> > +					xlnx,bipolar;
-> > +				};
-> > +			};
-> > +		};
-> > +	};
-> > +
-> > +AMS Channels Details:
-> > +
-> > +Sysmon Block	|Channel|			Details
-> 			|Measurement
-> > +		 Number
-> 			 Type
-> > +---------------------------------------------------------------------------------------------------
-> ------
-> > +AMS CTRL	|0	|System PLLs voltage measurement, VCC_PSPLL.
-> 		|Voltage
-> > +		|1	|Battery voltage measurement, VCC_PSBATT.
-> 		|Voltage
-> > +		|2	|PL Internal voltage measurement, VCCINT.
-> 		|Voltage
-> > +		|3	|Block RAM voltage measurement, VCCBRAM.
-> 		|Voltage
-> > +		|4	|PL Aux voltage measurement, VCCAUX.
-> 		|Voltage
-> > +		|5	|Voltage measurement for six DDR I/O PLLs,
-> VCC_PSDDR_PLL.	|Voltage
-> > +		|6	|VCC_PSINTFP_DDR voltage measurement.
-> 			|Voltage
-> > +---------------------------------------------------------------------------------------------------
-> ------
-> > +PS Sysmon	|7	|LPD temperature measurement.
-> 			|Temperature
-> > +		|8	|FPD Temperature Measurment (REMOTE).
-> 			|Temperature
-> > +		|9	|VCC PS LPD voltage measurement (supply1).
-> 		|Voltage
-> > +		|10	|VCC PS FPD voltage measurement (supply2).
-> 		|Voltage
-> > +		|11	|PS Aux voltage reference (supply3).
-> 		|Voltage
-> > +		|12	|DDR I/O VCC voltage measurement.
-> 		|Voltage
-> > +		|13	|PS IO Bank 503 voltage measurement (supply5).
-> 			|Voltage
-> > +		|14	|PS IO Bank 500 voltage measurement (supply6).
-> 			|Voltage
-> > +		|15	|VCCO_PSIO1 voltage measurement.
-> 		|Voltage
-> > +		|16	|VCCO_PSIO2 voltage measurement.
-> 		|Voltage
-> > +		|17	|VCC_PS_GTR voltage measurement
-> (VPS_MGTRAVCC).			|Voltage
-> > +		|18	|VTT_PS_GTR voltage measurement
-> (VPS_MGTRAVTT).			|Voltage
-> > +		|19	|VCC_PSADC voltage measurement.
-> 			|Voltage
-> > +---------------------------------------------------------------------------------------------------
-> ------
-> > +PL Sysmon	|20	|PL Temperature measurement.
-> 			|Temperature
-> > +		|21	|PL Internal Voltage Voltage measurement, VCCINT.
-> 		|Voltage
-> > +		|22	|PL Auxiliary Voltage measurement, VCCAUX.
-> 		|Voltage
-> > +		|23	|ADC Reference P+ Voltage measurement.
-> 			|Voltage
-> > +		|24	|ADC Reference N- Voltage measurement.
-> 			|Voltage
-> > +		|25	|PL Block RAM Voltage measurement, VCCBRAM.
-> 			|Voltage
-> > +		|26	|LPD Internal Voltage measurement, VCC_PSINTLP
-> (supply4).	|Voltage
-> > +		|27	|FPD Internal Voltage measurement, VCC_PSINTFP
-> (supply5).	|Voltage
-> > +		|28	|PS Auxiliary Voltage measurement (supply6).
-> 		|Voltage
-> > +		|29	|PL VCCADC Voltage measurement (vccams).
-> 		|Voltage
-> > +		|30	|Differencial analog input signal Voltage measurment.
-> 		|Voltage
-> > +		|31	|VUser0 Voltage measurement (supply7).
-> 			|Voltage
-> > +		|32	|VUser1 Voltage measurement (supply8).
-> 			|Voltage
-> > +		|33	|VUser2 Voltage measurement (supply9).
-> 			|Voltage
-> > +		|34	|VUser3 Voltage measurement (supply10).
-> 			|Voltage
-> > +		|35	|Auxiliary ch 0 Voltage measurement (VAux0).
-> 		|Voltage
-> > +		|36	|Auxiliary ch 1 Voltage measurement (VAux1).
-> 		|Voltage
-> > +		|37	|Auxiliary ch 2 Voltage measurement (VAux2).
-> 		|Voltage
-> > +		|38	|Auxiliary ch 3 Voltage measurement (VAux3).
-> 		|Voltage
-> > +		|39	|Auxiliary ch 4 Voltage measurement (VAux4).
-> 		|Voltage
-> > +		|40	|Auxiliary ch 5 Voltage measurement (VAux5).
-> 		|Voltage
-> > +		|41	|Auxiliary ch 6 Voltage measurement (VAux6).
-> 		|Voltage
-> > +		|42	|Auxiliary ch 7 Voltage measurement (VAux7).
-> 		|Voltage
-> > +		|43	|Auxiliary ch 8 Voltage measurement (VAux8).
-> 		|Voltage
-> > +		|44	|Auxiliary ch 9 Voltage measurement (VAux9).
-> 		|Voltage
-> > +		|45	|Auxiliary ch 10 Voltage measurement (VAux10).
-> 			|Voltage
-> > +		|46	|Auxiliary ch 11 Voltage measurement (VAux11).
-> 			|Voltage
-> > +		|47	|Auxiliary ch 12 Voltage measurement (VAux12).
-> 			|Voltage
-> > +		|48	|Auxiliary ch 13 Voltage measurement (VAux13).
-> 			|Voltage
-> > +		|49	|Auxiliary ch 14 Voltage measurement (VAux14).
-> 			|Voltage
-> > +		|50	|Auxiliary ch 15 Voltage measurement (VAux15).
-> 			|Voltage
-> > +---------------------------------------------------------------------
-> > +------------------------------------
-> 
-> Thanks,
-> 
-> Jonathan
-
-Thanks,
-Manish Narani
+diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+index 9e764270..58971a6 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
+@@ -353,6 +353,7 @@ Required properties:
+ 				    - "renesas,rcar_sound-r8a7795" (R-Car H3)
+ 				    - "renesas,rcar_sound-r8a7796" (R-Car M3-W)
+ 				    - "renesas,rcar_sound-r8a77965" (R-Car M3-N)
++				    - "renesas,rcar_sound-r8a77990" (R-Car E3)
+ - reg				: Should contain the register physical address.
+ 				  required register is
+ 				   SRU/ADG/SSI      if generation1
+-- 
+1.9.1
