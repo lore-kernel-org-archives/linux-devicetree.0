@@ -1,111 +1,32 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 RESEND 2/2] phy: add Rockchip Innosilicon hdmi phy
-Date: Thu, 6 Sep 2018 15:08:35 +0530
-Message-ID: <b85eeaeb-b7e2-285b-0df0-1df641c7b983@ti.com>
-References: <20180710134949.25203-1-heiko@sntech.de>
- <a0a84907-c51f-b484-33fa-592a23c756f9@ti.com> <4194245.uYZyAYm7Hd@phil>
- <21954745.lUUHsRAzaY@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <21954745.lUUHsRAzaY@diego>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 0/2] add new UniPhier PCIe host driver
+Date: Thu,  6 Sep 2018 18:40:30 +0900
+Message-ID: <1536226832-5089-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiBGcmlkYXkgMzEgQXVndXN0IDIwMTggMDI6NTYgUE0sIEhlaWtvIFN0w7xibmVyIHdyb3Rl
-Ogo+IEFtIERpZW5zdGFnLCAxNC4gQXVndXN0IDIwMTgsIDE0OjUyOjAwIENFU1Qgc2NocmllYiBI
-ZWlrbyBTdHVlYm5lcjoKPj4gSGkgS2lzaG9uLAo+Pgo+PiB0aGFua3MgZm9yIHlvdXIgcmV2aWV3
-Lgo+Pgo+PiBBbSBGcmVpdGFnLCAzLiBBdWd1c3QgMjAxOCwgMTE6MjQ6MDYgQ0VTVCBzY2hyaWVi
-IEtpc2hvbiBWaWpheSBBYnJhaGFtIEk6Cj4+PiBPbiBUdWVzZGF5IDEwIEp1bHkgMjAxOCAwNzox
-OSBQTSwgSGVpa28gU3R1ZWJuZXIgd3JvdGU6Cj4+Pj4gK2NvbmZpZyBQSFlfUk9DS0NISVBfSU5O
-T19IRE1JCj4+Pj4gKwl0cmlzdGF0ZSAiUm9ja2NoaXAgSU5OTyBIRE1JIFBIWSBEcml2ZXIiCj4+
-Pj4gKwlkZXBlbmRzIG9uIChBUkNIX1JPQ0tDSElQIHx8IENPTVBJTEVfVEVTVCkgJiYgT0YKPj4+
-Cj4+PiBkZXBlbmRzIG9uIENPTU1PTl9DTEsgc2luY2UgdGhlIHBoeSByZWdpc3RlcnMgYSBjbG9j
-ayBwcm92aWRlcj8KPj4KPj4gb2sKPj4KPj4+PiArc3RhdGljIGNvbnN0IHN0cnVjdCBwaHlfY29u
-ZmlnIHJrMzIyOF9waHlfY2ZnW10gPSB7Cj4+Pj4gKwl7CTE2NTAwMDAwMCwgewo+Pj4+ICsJCQkw
-eGFhLCAweDAwLCAweDQ0LCAweDQ0LCAweDAwLCAweDAwLCAweDAwLCAweDAwLCAweDAwLAo+Pj4+
-ICsJCQkweDAwLCAweDAwLCAweDAwLCAweDAwLCAweDAwLAo+Pj4KPj4+IElmIHRoZXNlIHJlZ2lz
-dGVyIGNvbmZpZ3VyYXRpb25zIGFyZSBub3QgYSB0dW5pbmcgdmFsdWUgb3IgZGl2aWRlcnMgKHdo
-aWNoCj4+PiBjYW4gaGF2ZSBhYnNvbHV0ZSB2YWx1ZXMpLCB0aGVuIHdlIHNob3VsZCBoYXZlIG1h
-Y3JvcyBmb3IgZWFjaCBvZiB0aGVzZQo+Pj4gY29uZmlndXJhdGlvbnMuCj4+IFRoYXQgbWlnaHQg
-Z2V0IGRpZmZpY3VsdC4KPj4KPj4gVGhhdCBwaHkgcmVnaXN0ZXIgc2V0IGlzIGNvbXBsZXRlbHkg
-dW5kb2N1bWVudGVkIGV2ZW4gaW4gdGhlIHZlbmRvciBUUk1zCj4+IG9mIHRoZSAyIHNvY3MuIEkg
-cGllY2VkIHRvZ2V0aGVyIG1vc3QgZXhpc3RpbmcgbWFjcm9zIGZyb20gY29kZSBjb21tZW50cwo+
-PiBhbmQgc3VjaCBmcm9tIHRoZSB2ZW5kb3Iga2VybmVsLiBBbmQgSW5ub3NpbGljb24gaXMgbm90
-IGtub3duIHRvIHdpbGxpbmdseQo+PiBzaGFyZSBtdWNoIG9mIHRoZWlyIHJlZ2lzdGVyIGRvY3Vt
-ZW50YXRpb24gaXQgc2VlbXMuCj4+Cj4+Pj4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIGlubm9faGRt
-aV9waHlfZ2V0X3RtZHNjbGsoc3RydWN0IGlubm9faGRtaV9waHkKPj4+PiAqaW5ubywKPj4+PiAr
-CQkJCQkgICAgICAgdW5zaWduZWQgbG9uZyByYXRlKQo+Pj4+ICt7Cj4+Pj4gKwlpbnQgYnVzX3dp
-ZHRoID0gcGh5X2dldF9idXNfd2lkdGgoaW5uby0+cGh5KTsKPj4+Cj4+PiBobW0sIHRoZSBidXNf
-d2lkdGggY291bGQgYmUgYSBtZW1iZXIgb2Ygc3RydWN0IGlubm9faGRtaV9waHkuIFBIWSBBUEkn
-cwo+Pj4gZG9uJ3QgaGF2ZSB0byBiZSB1c2VkIGZvciBnZXR0aW5nIGRhdGEgd2l0aGluIHRoZSBQ
-SFkgZHJpdmVyIGl0c2VsZi4KPj4+IExvb2tpbmcgYXQgdGhlIHBoeV9nZXRfYnVzX3dpZHRoKCkg
-aW1wbGVtZW50YXRpb24sIHdlIHNob3VsZCBoYXZlCj4+PiBwcm90ZWN0ZWQKPj4+IGJ1cy13aWR0
-aCBzZXQgYW5kIGdldCB3aXRoIG11dGV4LiBXaXRoIHRoYXQgdGhlcmUgbWlnaHQgYmUgYSBkZWFk
-bG9jawo+Pj4gaGVyZS4KPj4KPj4gb2ssIHNvIGp1c3QgcmVhZCBwaHktPmF0dHJzLmJ1c193aWR0
-aCBkaXJlY3RseSBoZXJlPwo+Pgo+PiBJIGRvbid0IHNlZSBob3cgdGhpcyBjYW4gYmUgcGFydCBv
-ZiBzdHJ1Y3QgaW5ub19oZG1pX3BoeSwgYXMgdGhlIGJ1cy13aWR0aAo+PiBkZXBlbmRzIG9uIHRo
-ZSBjb2xvci1kZXB0aCB1c2VkIG9uIHRoZSBoZG1pLWNvbnRyb2xsZXIgc2lkZSwgc28KPj4gZGVw
-ZW5kaW5nIG9uIHRoYXQgaXQgd2lsbCB3YW50IHRvIGFkYXB0IHRoZSBwaHkncyBidXNfd2lkdGgu
-Cj4+Cj4+IFJpZ2h0IG5vdyBvdXIgZHdfaGRtaSBpbiBtYWlubGluZSBvbmx5IHN1cHBvcnRzIG9u
-ZSBvdXRwdXQgZm9ybWF0Cj4+IHJlcXVpcmluZyBhIGJ1c193aWR0aCBvZiA4LCBidXQgdGhlIHZl
-bmRvciBrZXJuZWwgc2hvd3MgWzBdIGhvdyB0aGlzCj4+IHdhbnRzIHRvIGJlIHVzZWQgd2l0aCBt
-dWx0aXBsZSBvdXRwdXQgZm9ybWF0cy4KCklnbm9yZSBteSBjb21tZW50LiBZb3UgY2FuIHVzZSBw
-aHlfZ2V0X2J1c193aWR0aC4gSSdsbCBzZWUgaWYgdGhlcmUncyBhIGJldHRlcgp3YXkgdG8gaGFu
-ZGxlIHRoaXMuCj4+Cj4+IFswXQo+PiBodHRwczovL2dpdGh1Yi5jb20vcm9ja2NoaXAtbGludXgv
-a2VybmVsL2Jsb2IvcmVsZWFzZS00LjQvZHJpdmVycy9ncHUvZHJtL3IKPj4gb2NrY2hpcC9kd19o
-ZG1pLXJvY2tjaGlwLmMjTDgxNwo+Pj4+ICtzdGF0aWMgaXJxcmV0dXJuX3QgaW5ub19oZG1pX3Bo
-eV9yazMzMjhfaXJxKGludCBpcnEsIHZvaWQgKmRldl9pZCkKPj4+PiArewo+Pj4+ICsJc3RydWN0
-IGlubm9faGRtaV9waHkgKmlubm8gPSBkZXZfaWQ7Cj4+Pj4gKwo+Pj4+ICsJaW5ub191cGRhdGVf
-Yml0cyhpbm5vLCAweDAyLCBSSzMzMjhfUERBVEFfRU4sIDApOwo+Pj4+ICsJdXNsZWVwX3Jhbmdl
-KDksIDEwKTsKPj4+Cj4+PiBUaGlzIHJhbmdlIGxvb2tzIHZlcnkgbmFycm93LiAxMCB0byAyMCBz
-aG91bGQgYmUgb2theT8KPj4KPj4gb2sKPj4KPj4+PiArc3RhdGljIHZvaWQgaW5ub19oZG1pX3Bo
-eV9hY3Rpb24odm9pZCAqZGF0YSkKPj4+PiArewo+Pj4+ICsJc3RydWN0IGlubm9faGRtaV9waHkg
-Kmlubm8gPSBkYXRhOwo+Pj4+ICsKPj4+PiArCWNsa19kaXNhYmxlX3VucHJlcGFyZShpbm5vLT5y
-ZWZwY2xrKTsKPj4+PiArCWNsa19kaXNhYmxlX3VucHJlcGFyZShpbm5vLT5zeXNjbGspOwo+Pj4+
-ICt9Cj4+Pj4gKwo+Pj4+ICtzdGF0aWMgaW50IGlubm9faGRtaV9waHlfcHJvYmUoc3RydWN0IHBs
-YXRmb3JtX2RldmljZSAqcGRldikKPj4+PiArewo+Pj4+ICsJc3RydWN0IGlubm9faGRtaV9waHkg
-Kmlubm87Cj4+Pj4gKwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICptYXRjaDsKPj4+PiArCXN0
-cnVjdCBwaHlfcHJvdmlkZXIgKnBoeV9wcm92aWRlcjsKPj4+PiArCXN0cnVjdCByZXNvdXJjZSAq
-cmVzOwo+Pj4+ICsJdm9pZCBfX2lvbWVtICpyZWdzOwo+Pj4+ICsJaW50IHJldDsKPj4+PiArCj4+
-Cj4+IFsuLi5dCj4+Cj4+Pj4gKwkvKgo+Pj4+ICsJICogUmVmcGNsayBuZWVkcyB0byBiZSBvbiwg
-b24gYXQgbGVhc3QgdGhlIHJrMzMyOCBmb3Igc3RpbGwKPj4+PiArCSAqIHVua25vd24gcmVhc29u
-cy4KPj4+PiArCSAqLwo+Pj4+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGlubm8tPnJlZnBj
-bGspOwo+Pj4+ICsJaWYgKHJldCkgewo+Pj4+ICsJCWRldl9lcnIoaW5uby0+ZGV2LCAiZmFpbGVk
-IHRvIGVuYWJsZSByZWZwY2xrXG4iKTsKPj4+PiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoaW5u
-by0+c3lzY2xrKTsKPj4+PiArCQlyZXR1cm4gcmV0Owo+Pj4+ICsJfQo+Pj4+ICsKPj4+PiArCXJl
-dCA9IGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldChpbm5vLT5kZXYsIGlubm9faGRtaV9waHlfYWN0
-aW9uLAo+Pj4+ICsJCQkJICAgICAgIGlubm8pOwo+Pj4+ICsJaWYgKHJldCkgewo+Pj4+ICsJCWNs
-a19kaXNhYmxlX3VucHJlcGFyZShpbm5vLT5yZWZwY2xrKTsKPj4+PiArCQljbGtfZGlzYWJsZV91
-bnByZXBhcmUoaW5uby0+c3lzY2xrKTsKPj4+PiArCQlyZXR1cm4gcmV0Owo+Pj4+ICsJfQo+Pj4+
-ICsKPj4+PiArCWlubm8tPnJlZ21hcCA9IGRldm1fcmVnbWFwX2luaXRfbW1pbyhpbm5vLT5kZXYs
-IHJlZ3MsCj4+Pj4gKwkJCQkJICAgICAmaW5ub19oZG1pX3BoeV9yZWdtYXBfY29uZmlnKTsKPj4+
-PiArCWlmIChJU19FUlIoaW5uby0+cmVnbWFwKSkKPj4+Cj4+PiBoZXJlIHRvbyBjbGtfZGlzYWJs
-ZV91bnByZXBhcmUgYW5kIGFsbCBlcnJvciBoYW5kbGluZyBiZWxvdz8KPj4+IEl0J3MgYmV0dGVy
-IGlmIHdlIGp1c3QgaGFuZGxlIGVycm9yIGhhbmRsaW5nIGF0IHRoZSBib3R0b20gb2YgdGhlCj4+
-PiBmdW5jdGlvbi4KPj4KPj4gTm9wZSA7LSkgLi4uIEkuZS4gdGhlIGdvYWwgb2YgcmVnaXN0ZXJp
-bmcgdGhlIGRldm1fYWN0aW9uIGFib3ZlIGlzIHRvIGhhdmUKPj4gdGhlIGNsb2NrcyBnZXQgZGlz
-YWJsZWQgaW4gdGhlIGNvcnJlY3Qgb3JkZXIgd2hlbiBkZXZtIHVuZG9lcyB0aGUgb3RoZXIKPj4g
-dGhpbmdzIGluIHNlcXVlbmNlLgo+Pgo+PiBNYW51YWwgZXJyb3IgaGFuZGxpbmcgZm9yIHRoZSBj
-bG9ja3Mgd291bGQgYWxzbyBicmVhayBkZXZtLCBhcyB0aGVuCj4+IHRoZSBjbG9ja3Mgd291bGQg
-Z2V0IGRpc2FibGVkIGJlZm9yZSB0aGUgZGV2bSBjbGVhbnVwIGtpY2tzIGluLgo+IAo+IGJ1dCBJ
-IGp1c3QgcmVhbGl6ZWQsIHRoYXQgSSBkb24ndCBuZWVkIHRoZSBpbml0aWFsIGRpc2FibGVfdW5w
-cmVwYXJlIGNhbGxzCj4gYW55bW9yZSBhcyB3ZWxsLCBhcyBkZXZtX2FkZF9hY3Rpb25fb3JfcmVz
-ZXQgd2lsbCBjYWxsIHRoYXQgaXRzZWxmCj4gaW4gdGhlIGVycm9yIGNhc2UuCgpBbGwgcmlnaHQh
-IEknbGwgbWVyZ2Ugb25jZSB5b3Ugc2VuZCBhIHBhdGNoIGZpeGluZyB0aGlzLgoKVGhhbmtzCktp
-c2hvbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
-dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
-YXJtLWtlcm5lbAo=
+This series adds PCIe host controller driver for Socionext UniPhier SoCs.
+This controller is based on the DesignWare PCIe core. This driver
+supports LD20 and PXs3 SoCs.
+
+Changes since v1:
+- follow capitalization conventions in the descriptions
+- use C style comments except for the SPDX line
+
+Kunihiko Hayashi (2):
+  dt-bindings: PCI: add UniPhier PCIe host controller description
+  PCI: controller: dwc: add UniPhier PCIe host controller support
+
+ .../devicetree/bindings/pci/uniphier-pcie.txt      |  78 ++++
+ drivers/pci/controller/dwc/Kconfig                 |   9 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pcie-uniphier.c         | 465 +++++++++++++++++++++
+ 4 files changed, 553 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pcie-uniphier.c
+
+-- 
+2.7.4
