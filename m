@@ -1,48 +1,81 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH RESEND v1 2/5] drivers: pinctrl: msm: enable PDC
- interrupt only during suspend
-Date: Thu, 6 Sep 2018 10:36:47 -0600
-Message-ID: <20180906163647.GE28215@codeaurora.org>
-References: <20180817191026.32245-1-ilina@codeaurora.org>
- <20180817191026.32245-3-ilina@codeaurora.org>
- <153509896098.28926.3622217918056498792@swboyd.mtv.corp.google.com>
- <20180824171432.GM5081@codeaurora.org>
- <153540005334.129321.18196967002233663397@swboyd.mtv.corp.google.com>
- <20180904210934.GA23990@codeaurora.org>
- <153609843656.119890.7258329648640765778@swboyd.mtv.corp.google.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Thu, 06 Sep 2018 09:48:51 -0700
+Message-ID: <d07214d3005fb7229f17dd62d1b5b8ee@agner.ch>
+References: <20180905052113.21262-1-stefan@agner.ch>
+ <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
+ <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
+ <10044412.4MiZRujKJI@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153609843656.119890.7258329648640765778@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: bjorn.andersson@linaro.org, evgreen@chromium.org, linus.walleij@linaro.org, marc.zyngier@arm.com, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <10044412.4MiZRujKJI@avalon>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04 2018 at 16:00 -0600, Stephen Boyd wrote:
->Quoting Lina Iyer (2018-09-04 14:09:34)
->> On Mon, Aug 27 2018 at 14:01 -0600, Stephen Boyd wrote:
->> >
->> >Can't we just configure a different chained IRQ handler with
->> >irq_set_chained_handler_and_data() for each of the GPIO IRQs that are
->> >handled by PDC to be the interrupts provide by the PDC irq controller
->> >that match the GPIOs? And then set their parent irq with
->> >irq_set_parent() for completeness? And also move those GPIOs from the
->> >existing msm_gpio irqchip to a different PDC gpio irqchip that does
->> >nothing besides push irqchip calls up to the PDC irqchip? Then we don't
->> >even have to think about resending anything and we can rely on PDC to do
->> >all the interrupt sensing all the time but still provide the irqs from
->> >the GPIO controller.
->> >
->> Seems like the irqchips need to be in hierarchy for this to work, which
->> is not the case with TLMM and the PDC, currently.
->>
->
->Why? Does something mandate that the chained irq is also the
->hierarchical parent irqchip?
->
-All the _parent() functions like irq_set_wake_parent() etc need
-parent_data to be set, which is only set during hierarchy.
-
--- Lina
+T24gMDYuMDkuMjAxOCAwNToyNSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBMaW51cywK
+PiAKPiBPbiBUaHVyc2RheSwgNiBTZXB0ZW1iZXIgMjAxOCAxNDowNzo0MSBFRVNUIExpbnVzIFdh
+bGxlaWogd3JvdGU6Cj4+IE9uIFdlZCwgU2VwIDUsIDIwMTggYXQgODozMiBQTSBTdGVmYW4gQWdu
+ZXIgPHN0ZWZhbkBhZ25lci5jaD4gd3JvdGU6Cj4+ID4gT24gMDUuMDkuMjAxOCAwMDo0NCwgTGF1
+cmVudCBQaW5jaGFydCB3cm90ZToKPj4gPgo+PiA+IEdvb2QgcG9pbnQhIEkgYWN0dWFsbHkgcmVh
+bGx5IGRvbid0IGxpa2UgdGhhdCB3ZSB1c2UgdGhlIHNhbWUgZmxhZ3MgaGVyZQo+PiA+IGJ1dCBm
+cm9tIGEgZGlmZmVyZW50IHBlcnNwZWN0aXZlLiBFc3BlY2lhbGx5IHNpbmNlIHRoZSBmbGFncyBk
+ZWZpbmVzCj4+ID4gZG9jdW1lbnQgdGhpbmdzIGRpZmZlcmVudGx5Ogo+PiA+Cj4+ID4gLyogZHJp
+dmUgZGF0YSBvbiBwb3MuIGVkZ2UgKi8KPj4gPiAjZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRB
+X1BPU0VER0UgICAgKDE8PDIpCj4+ID4gLyogZHJpdmUgZGF0YSBvbiBuZWcuIGVkZ2UgKi8KPj4g
+PiAjZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX05FR0VER0UgICAgKDE8PDMpCj4+Cj4+IE1h
+eWJlIGEgc3R1cGlkIGNvbW1lbnQgZnJvbSBteSBzaWRlLCBidXQgY2FuJ3Qgd2UganVzdCBjaGFu
+Z2UgdGhlCj4+IGRvY3VtZW50YXRpb24gdG8gbWF0Y2ggdGhlIHVzZWNhc2VzPwo+Pgo+PiAvKiBU
+cmlnZ2VyIHBpeGVsIGRhdGEgbGF0Y2ggb24gcG9zaXRpdmUgZWRnZSAqLwo+PiAjZGVmaW5lIERS
+TV9CVVNfRkxBR19QSVhEQVRBX1BPU0VER0UgICAgKDE8PDIpCj4gCj4gVGhlIGZsYWdzIGFyZSB1
+c2VkIGZvciB0aGUgZHJtX2Nvbm5lY3RvciBidXNfZmxhZ3MgZmllbGQsIGFuZCByZWFsbHkgbWVh
+biAKPiBkcml2aW5nIG9uIHRoZSBwb3NpdGl2ZS9uZWdhdGl2ZSBlZGdlcy4gV2UgdGhpcyBjYW4n
+dCBjaGFuZ2UgdGhlaXIgbWVhbmluZyAKPiBsaWtlIHRoaXMuCj4gCj4+ID4gVXNpbmcgdGhlIG9w
+cG9zaXRlIHBlcnNwZWN0aXZlIHdvdWxkIGFsc28gbmVlZCB0cmFuc2xhdGlvbiBpbiBjcnRjCj4+
+ID4gZHJpdmVycy4uLiBTbyBmYXIgbm8gZHJpdmVyIHVzZXMgc2FtcGxpbmdfZWRnZS4KPj4gPgo+
+PiA+IEkgd291bGQgcHJlZmVyIGlmIHdlIGFsd2F5cyB1c2UgdGhlIG1lYW5pbmcgYXMgZG9jdW1l
+bnRlZCBieSB0aGUgZmxhZ3MuCj4+ID4KPj4gPiBJIGd1ZXNzIHdlIHdvdWxkIG5lZWQgdG8gY29u
+dmVydCBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFIC0+Cj4+ID4gRFJNX0JVU19GTEFHX1BJ
+WERBVEFfTkVHRURHRS4KPj4gPgo+PiA+IExpbnVzIFdhbGxlaWosIHlvdSBhZGRlZCBzYW1wbGlu
+ZyBlZGdlLCBhbnkgdGhvdWdodHM/Cj4+Cj4+IEkganVzdCB0aG91Z2h0IGl0IHdhcyBnZW5lcmFs
+bHkgdXNlZnVsIHRvIGhhdmUgdHJpZ2dlcmluZyBlZGdlIGVuY29kZWQKPj4gaW50byB0aGUgYnJp
+ZGdlIGFzIGl0IG1ha2VzIGl0IGNsZWFyIHRoYXQgdGhpcyBlZGdlIGlzIHNvbWV0aGluZwo+PiB0
+aGF0IGlzIGEgZGVsYXllZCB2ZXJzaW9uIG9mIHRoZSBkcml2aW5nIGVkZ2Ugd2hpY2ggaXMgc3Vi
+amVjdCB0bwo+PiBjbG9jayBza2V3IGNhdXNlZCBieSB0aGUgc3BlZWQgb2YgZWxlY3Ryb25zIGlu
+IHNpbGljb24gYW5kCj4+IGNvcHBlciBhbmQgc2xldyByYXRlIGNhdXNlZCBieSBwYXJhc2l0aWMg
+Y2FwYWNpdGFuY2UuCj4gCj4gSSBhZ3JlZSB0aGF0IHdlIG5lZWQgYm90aCB0aGUgZHJpdmluZyBh
+bmQgc2FtcGxpbmcgZWRnZS4gSW4gbWFueSBjYXNlIHRoZXkgCj4gd2lsbCBiZSBvcHBvc2l0ZSwg
+YW5kIHByb3ZpZGluZyBzb21lIGtpbmQgb2YgYXBwcm9wcmlhdGUgZGVmYXVsdHMgaW4gQVBJcyBp
+cyAKPiBmaW5lIGJ5IG1lLCBidXQgd2UgbmVlZCBhIHdheSB0byBzcGVjaWZ5IGJvdGggd2hlbiBu
+ZWVkZWQuCgpXZSBkbyBoYXZlIHBpeGVsIGNsb2NrIGZsYWdzIGZvciBkaXNwbGF5cywgYnV0IGFs
+c28gdGhleSBhcmUgYWN0dWFsbHkKY29udHJvbGxlciBvcmllbnRlZDoKCmh0dHBzOi8vZWxpeGly
+LmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvaW5jbHVkZS92aWRlby9kaXNwbGF5X3Rp
+bWluZy5oI0wxNQoKSSBndWVzcyBoYXZpbmcgZGlmZmVyZW50IGZsYWdzIHRvIGRlbm90ZSBkcml2
+aW5nIGFuZCBzYW1wbGluZyBlZGdlCmluZGVwZW5kZW50bHkgd291bGQgYmUgaWRlYWwuIEJ1dCB0
+aGVuLCBpcyB0aGVyZSByZWFsbHkgYSB1c2UgY2FzZSB3aGVyZQppdCB3b3VsZG4ndCBiZSB0aGUg
+ZXhhY3Qgb3Bwb3NpdGU/CgpUaGUgb3RoZXIgYnVzIGZsYWdzIGFyZSBhY3R1YWxseSBmaW5lIGFz
+IGlzLiBJIHN1Z2dlc3QgdG8ganVzdCBzdGljawp3aXRoIHRoZSBidXMgZmxhZ3MgYXMgd2UgaGF2
+ZSB0aGVtIG5vdywgYXQgbGVhc3QgZm9yIG5vdy4KCkFsdGVybmF0aXZlbHksIHdlIGNvdWxkIHBy
+b3ZpZGUgImNvbnN1bWVyL2JyaWRnZSIgb3JpZW50ZWQgZmxhZ3Mgd2hpY2gKdXNlIHRoZSBzYW1l
+IGJpdCBhbmQganVzdCBhcmUgdGhlIG9wcG9zaXRlIG9mIHRoZSBjb250cm9sbGVyIG9yaWVudGVk
+CmZsYWdzLCBlLmcuOgoKLyogZHJpdmUgZGF0YSBvbiBwb3MuIGVkZ2UgKi8KI2RlZmluZSBEUk1f
+QlVTX0ZMQUdfUElYREFUQV9QT1NFREdFCSgxPDwyKQovKiBkcml2ZSBkYXRhIG9uIG5lZy4gZWRn
+ZSAqLwojZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX05FR0VER0UJKDE8PDMpCi8qIHNhbXBs
+ZSBkYXRhIG9uIG5lZy4gZWRnZSAqLwojZGVmaW5lIERSTV9CVVNfRkxBR19QSVhEQVRBX1NBTVBM
+RV9ORUdFREdFCSgxPDwyKQovKiBzYW1wbGUgZGF0YSBvbiBwb3MuIGVkZ2UgKi8KI2RlZmluZSBE
+Uk1fQlVTX0ZMQUdfUElYREFUQV9TQU1QTEVfUE9TRURHRQkoMTw8MykKCi0tClN0ZWZhbgoKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
