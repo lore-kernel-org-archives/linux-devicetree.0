@@ -1,57 +1,36 @@
-From: Philipp Rossak <embed3d@gmail.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 27/30] ARM: dts: sun8i: h3: use
- calibration for ths
-Date: Thu, 6 Sep 2018 14:18:45 +0200
-Message-ID: <d8825c55-60e0-16da-e122-22855c294bc4@gmail.com>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-28-embed3d@gmail.com>
- <20180904184623.e4386b8e6b657b1b25e90c09@bidouilliste.com>
- <55579dd6-625d-e71b-1482-4592dccac665@gmail.com>
- <20180906115114.inc6dhqhy47obo25@flea>
- <BEA89263-1186-432A-B274-228FAC21A798@aosc.io>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 18/21] edac: cpc925: use for_each_of_cpu_node iterator
+Date: Thu, 6 Sep 2018 14:20:37 +0200
+Message-ID: <20180906122037.GE10768@zn.tnic>
+References: <20180905193738.19325-1-robh@kernel.org>
+ <20180905193738.19325-19-robh@kernel.org>
+ <20180906083506.GA10768@zn.tnic>
+ <CAL_JsqKNh+89dRef3RNx1YUfhD0yJ8BHsanUaGMfrF_EGPCHcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BEA89263-1186-432A-B274-228FAC21A798@aosc.io>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKNh+89dRef3RNx1YUfhD0yJ8BHsanUaGMfrF_EGPCHcA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: icenowy@aosc.io, maxime.ripard@bootlin.com
-Cc: Emmanuel Vadot <manu@bidouilliste.com>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, linux@armlinux.org.uk, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, eugen.hristev@microchip.com, rdunlap@infradead.org, vilhelm.gray@gmail.com, clabbe.montjoie@gmail.com, quentin.schulz@bootlin.com, geert+renesas@glider.be, lukas@wunner.de, arnd@arndb.de, broonie@kernel.org, arnaud.pouliquen@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 06, 2018 at 06:12:51AM -0500, Rob Herring wrote:
+> I should have noted this. It's not the kernel's job to validate the DT
+> and certainly not some driver's job to validate cpu nodes. It's bad
+> enough that some random driver is parsing cpu nodes. If they are
+> missing or are crap, you should get warnings or messages well before
+> this point.
 
+That is useful info for the commit message, I'd say.
 
-On 06.09.2018 14:04, Icenowy Zheng wrote:
-> 
-> 
-> 于 2018年9月6日 GMT+08:00 下午7:51:15, Maxime Ripard <maxime.ripard@bootlin.com> 写到:
->> On Thu, Sep 06, 2018 at 01:47:47PM +0200, Philipp Rossak wrote:
->>> On 04.09.2018 18:46, Emmanuel Vadot wrote:
->>>>> +			/* Data cells */
->>>>> +			thermal_calibration: calib@234 {
->>>>> +				reg = <0x234 0x8>;
->>>>> +			};
->>>>    You are declaring 8 bytes of calibration data but to my knowledge
->> it's
->>>> only 2 bytes per sensor, so 2 bytes for H3.
->>>>    Am I missing something ?
->>>>
->>>>    Thanks,
->>>
->>> Emmanuel you are right, it is 2 bytes per Sensor and should be 2
->> bytes for
->>> H3, but the thermal calibration data field is on all chips 64 bit
->> wide - so
->>> 8 bytes. So I'm reading here the complete calibration data field.
->>
->> Having one cell per channel would make more sense I guess.
-Ok I will change this.
-> 
-> I have mentioned that this is impossible because of wrong
-> addressing caused by LE2BE in SID driver.
->
-I know! But I would like to prepare patches for it, that they can be 
-merged when this is fixed.
+In any case:
 
-Philipp
+Acked-by: Borislav Petkov <bp@suse.de>
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
