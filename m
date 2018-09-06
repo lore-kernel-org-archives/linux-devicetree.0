@@ -1,133 +1,91 @@
-From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 30/30] ARM: sun8i: a83t: full range OPP
- tables and CPUfreq
-Date: Thu, 6 Sep 2018 09:24:29 +0200
-Message-ID: <20180906072429.7qjwbbqsjlbskk6v@qschulz>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-31-embed3d@gmail.com>
-Reply-To: quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH v8 4/8] media: platform: Add Cedrus VPU decoder driver
+Date: Thu, 6 Sep 2018 16:25:34 +0900
+Message-ID: <CAAFQd5Cmc7uFhprsoTU6Gq19n3z2eiUfZZ2ZjDW4QWVWMDN6tg@mail.gmail.com>
+References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
+ <20180828073424.30247-5-paul.kocialkowski@bootlin.com> <5faf5eed-eb2c-f804-93e3-5a42f6204d99@xs4all.nl>
+ <b7b3cb2320978d45acb34475d15abd7bf03da367.camel@paulk.fr> <461c6a0d-a346-b9da-b75e-4aab907054df@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="zzux7waj4fepvbk5"
-Return-path: <linux-sunxi+bncBCLZXSNY5IDBBONMYPOAKGQET6PM2BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180830154518.29507-31-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <461c6a0d-a346-b9da-b75e-4aab907054df@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: contact@paulk.fr, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>, devel@driverdev.osuosl.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg KH <gregkh@linuxfoundation.org>, thomas.petazzoni@bootlin.com, ayaka <ayaka@soulik.info>, Ezequiel Garcia <ezequiel@collabora.com>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.p>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 6, 2018 at 4:01 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>
+> On 09/05/2018 06:29 PM, Paul Kocialkowski wrote:
+> > Hi and thanks for the review!
+> >
+> > Le lundi 03 septembre 2018 =C3=A0 11:11 +0200, Hans Verkuil a =C3=A9cri=
+t :
+> >> On 08/28/2018 09:34 AM, Paul Kocialkowski wrote:
+> >>> +static int cedrus_request_validate(struct media_request *req)
+> >>> +{
+> >>> +   struct media_request_object *obj, *obj_safe;
+> >>> +   struct v4l2_ctrl_handler *parent_hdl, *hdl;
+> >>> +   struct cedrus_ctx *ctx =3D NULL;
+> >>> +   struct v4l2_ctrl *ctrl_test;
+> >>> +   unsigned int i;
+> >>> +
+> >>> +   list_for_each_entry_safe(obj, obj_safe, &req->objects, list) {
+> >>
+> >> You don't need to use the _safe variant during validation.
+> >
+> > Okay, I'll use the regular one then.
+> >
+> >>> +           struct vb2_buffer *vb;
+> >>> +
+> >>> +           if (vb2_request_object_is_buffer(obj)) {
+> >>> +                   vb =3D container_of(obj, struct vb2_buffer, req_o=
+bj);
+> >>> +                   ctx =3D vb2_get_drv_priv(vb->vb2_queue);
+> >>> +
+> >>> +                   break;
+> >>> +           }
+> >>> +   }
+> >>
+> >> Interesting question: what happens if more than one buffer is queued i=
+n the
+> >> request? This is allowed by the request API and in that case the assoc=
+iated
+> >> controls in the request apply to all queued buffers.
+> >>
+> >> Would this make sense at all for this driver? If not, then you need to
+> >> check here if there is more than one buffer in the request and documen=
+t in
+> >> the spec that this is not allowed.
+> >
+> > Well, our driver was written with the (unformal) assumption that we
+> > only deal with a pair of one output and one capture buffer. So I will
+> > add a check for this at request validation time and document it in the
+> > spec. Should that be part of the MPEG-2 PIXFMT documentation (and
+> > duplicated for future formats we add support for)?
+>
+> Can you make a patch for vb2_request_has_buffers() in videobuf2-core.c
+> renaming it to vb2_request_buffer_cnt() and returning the number of buffe=
+rs
+> in the request?
+>
+> Then you can call it here to check that you have only one buffer.
+>
+> And this has to be documented with the PIXFMT.
+>
+> Multiple buffers are certainly possible in non-codec scenarios (vim2m and
+> vivid happily accept that), so this is an exception that should be
+> documented and checked in the codec driver.
 
---zzux7waj4fepvbk5
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Hmm, isn't it still 1 buffer per 1 queue and just multiple queues
+included in the request?
 
-Hi Philipp,
+If we indeed allow multiple buffers for the same queue in a request,
+we shouldn't restrict this on a per-driver basis. It's definitely not
+a hardware limitation, since the driver could just do the same as if 2
+requests with the same controls were given.
 
-On Thu, Aug 30, 2018 at 05:45:18PM +0200, Philipp Rossak wrote:
-> Since we have now thermal trotteling enabeled we can now add the full
-> range of the OPP table.
-> 
-
-That's not the reason why they were not added.
-
-Please see commit 2db639d8c1663d7543c9ab5323383d94c8a76c63[1].
-
-Basically, you only want the OPPs which can work below or at the default
-voltage of the CPU supply, because the CPU supply is specific to each
-board.
-
-If you set your CPU to work at a given frequency and the voltage isn't
-updated (saying opp-microvolt = <x>; in DT isn't enough, you need
-cpu-supply to be provided and functional), the CPU might just crash.
-
-Without cpu-supply property, underclocking isn't effective in term of
-thermal cooling or power saving. Overclocking is very, very, very likely
-to make the CPU crash.
-
-It's not a very difficult thing to do to test if a given frequency work
-well but it needs a specific test environment and it's a lengthy test,
-you can have a look at those tools here[3] if you like. It's not because
-it works in a given test case that'll work on the long term under heavy
-load and constant frequency changes.
-
-For A83T, I already did it and the outcome is the patch in [1]. Same for
-A33.
-
-So, if you want to use these three higher OPPs, you need to define them
-in your board DTS and add the cpu-supply property. See what's done for
-the A33 and more specifically the Sinlinx SinA33[2] as an example.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2db639d8c1663d7543c9ab5323383d94c8a76c63
-[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
-[3] http://linux-sunxi.org/Hardware_Reliability_Tests#CPU
-
-Quentin
-
-> The operating points were found in Allwinner BSP and fex files.
-> 
-> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index 78aa448e869f..ddcf404f9c80 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -250,6 +250,22 @@
->  			opp-microvolt = <840000>;
->  			clock-latency-ns = <244144>; /* 8 32k periods */
->  		};
-> +
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <920000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-1800000000 { /* BOOT FREQ */
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <1000000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <1080000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
->  	};
->  
->  	cpu1_opp_table: opp_table1 {
-> @@ -303,6 +319,22 @@
->  			opp-microvolt = <840000>;
->  			clock-latency-ns = <244144>; /* 8 32k periods */
->  		};
-> +
-> +		opp-1608000000 {
-> +			opp-hz = /bits/ 64 <1608000000>;
-> +			opp-microvolt = <920000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-1800000000 { /* BOOT FREQ */
-> +			opp-hz = /bits/ 64 <1800000000>;
-> +			opp-microvolt = <1000000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
-> +		opp-2016000000 {
-> +			opp-hz = /bits/ 64 <2016000000>;
-> +			opp-microvolt = <1080000>;
-> +			clock-latency-ns = <244144>; /* 8 32k periods */
-> +		};
->  	};
->  
->  	soc {
-> -- 
-> 2.11.0
-> 
---zzux7waj4fepvbk5--
+Best regards,
+Tomasz
