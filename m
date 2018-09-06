@@ -1,29 +1,86 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 05/21] ARM: shmobile: use for_each_of_cpu_node iterator
-Date: Thu, 6 Sep 2018 10:56:37 +0200
-Message-ID: <20180906085637.h7ae46qqdjti5g7q@verge.net.au>
-References: <20180905193738.19325-1-robh@kernel.org>
- <20180905193738.19325-6-robh@kernel.org>
+From: <patrice.chotard@st.com>
+Subject: [PATCH] ARM: dts: stih410: change syntax of multiple DAI
+Date: Thu, 6 Sep 2018 11:03:31 +0200
+Message-ID: <1536224611-30979-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180905193738.19325-6-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: patrice.chotard@st.com, Christophe Priouzeau <christophe.priouzeau@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2018 at 02:37:22PM -0500, Rob Herring wrote:
-> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
-> has the side effect of defaulting to iterating using "cpu" node names in
-> preference to the deprecated (for FDT) device_type == "cpu".
-> 
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Magnus Damm <magnus.damm@gmail.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-renesas-soc@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+From: Christophe Priouzeau <christophe.priouzeau@st.com>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+With change of syntax for 'simple-audio-card,dai-link' containers,
+devicetrees of stih410 must be updated.
+
+This fixes the following error:
+
+[    3.839466] asoc-simple-card sound: asoc_simple_card_dai_link_of:
+Can't find simple-audio-card,cpu DT node
+[    3.849150] asoc-simple-card sound: parse error -22
+
+Signed-off-by: Christophe Priouzeau <christophe.priouzeau@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
+---
+ arch/arm/boot/dts/stih410-b2260.dts  |  5 ++++-
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 11 ++++++++---
+ 2 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
+index 155caa8..4ee6d51 100644
+--- a/arch/arm/boot/dts/stih410-b2260.dts
++++ b/arch/arm/boot/dts/stih410-b2260.dts
+@@ -61,8 +61,11 @@
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "STI-B2260";
+ 		status = "okay";
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 
+-		simple-audio-card,dai-link0 {
++		simple-audio-card,dai-link@0 {
++			reg = <0>;
+ 			/* DAC */
+ 			format = "i2s";
+ 			mclk-fs = <128>;
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 4dedfcb..97e05f5 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -27,8 +27,11 @@
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "STI-B2120";
+ 		status = "okay";
++		#address-cells = <1>;
++		#size-cells = <0>;
+ 
+-		simple-audio-card,dai-link0 {
++		simple-audio-card,dai-link@0 {
++			reg = <0>;
+ 			/* HDMI */
+ 			format = "i2s";
+ 			mclk-fs = <128>;
+@@ -41,7 +44,8 @@
+ 			};
+ 		};
+ 
+-		simple-audio-card,dai-link1 {
++		simple-audio-card,dai-link@1 {
++			reg = <1>;
+ 			/* DAC */
+ 			format = "i2s";
+ 			mclk-fs = <256>;
+@@ -55,7 +59,8 @@
+ 			};
+ 		};
+ 
+-		simple-audio-card,dai-link2 {
++		simple-audio-card,dai-link@2 {
++			reg = <2>;
+ 			/* SPDIF */
+ 			format = "left_j";
+ 			mclk-fs = <128>;
+-- 
+1.9.1
