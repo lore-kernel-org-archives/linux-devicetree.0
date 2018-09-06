@@ -1,13 +1,13 @@
 Return-Path: <SRS0=wXcc=LU=renesas.com=Chris.Brandt@kernel.org>
 From: Chris Brandt <Chris.Brandt@renesas.com>
 Subject: RE: [PATCH v2 1/2] watchdog: rza_wdt: Support longer timeouts
-Date: Thu, 6 Sep 2018 20:45:50 +0000
+Date: Thu, 6 Sep 2018 19:40:59 +0000
 Message-ID: 
- <TY1PR01MB15624B6461C2E00D08C54AFB8A010@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+ <TY1PR01MB15621632D4B8A445937C62518A010@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 References: <20180906183738.81238-1-chris.brandt@renesas.com>
  <20180906183738.81238-2-chris.brandt@renesas.com>
- <20180906185247.GA25433@roeck-us.net>
-In-Reply-To: <20180906185247.GA25433@roeck-us.net>
+ <20180906185247.GA25433@roeck-us.net> <20180906185643.GA25704@roeck-us.net>
+In-Reply-To: <20180906185643.GA25704@roeck-us.net>
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -17,49 +17,39 @@ Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>,
 List-ID: <devicetree@vger.kernel.org>
 
 On Thursday, September 06, 2018, Guenter Roeck wrote:
-> > +static void rza_wdt_calc_timeout(struct rza_wdt *priv, int timeout)
-> > +{
-> > +	int rate =3D clk_get_rate(priv->clk);
+> > > +		if (counter > 255)
+> > > +			counter =3D 0;
+> >
+> > This is difficult to understand.
+> >
+> > > +
+> > > +		priv->count =3D 256 - counter;
+> >
+> > It sets priv->count to 256, meaning that 0x5B00 instead of
+> > 0x5Axx will be written into the counter register. That really
+> > asks for some explanation.
+> >
 >=20
-> clk_get_rate() returns unsigned long.
+> No, wait, priv->count is an 8-bit variable, so this really sets
+> priv->counter to 0. I am getting more and more confused. Why
+> not just set "counter =3D 256" above to make it obvious if that
+> is what is supposed to happen ?
 
-OK, I'll change it.
+That's a good point.
 
-> > +	u16 counter;
-> > +
-> > +	if (priv->cks =3D=3D CKS_4BIT) {
-> > +		counter =3D DIV_ROUND_UP((timeout * rate),  4194304) + 1;
->=20
-> two spaces ?
+The math is supposed to be:
 
-Oh, did see that.
+  256 - [number of ticks you want] =3D [register value]
 
-> Also, I am not sure how this prevents overflows. Was't the concern
-> that timeout * rate might overflow an int ?
+Where [number of ticks you want] must be <=3D 256
 
-Actually, since 32 second is the max timeout for this WDT, I think at=20
-first I'll check to see if "timeout" is greater than 32. If it is, there=20
-is no reason to do any math. Then I won't have to worry about any=20
-overflows from math.
+Of course it's 8-bit variable so it will work...but that's not obvious=20
+at first.
 
-	if (timeout > 32)=20
-		counter =3D 256;
-	else
-		counter =3D DIV_ROUND_UP((timeout * rate), 4194304) + 1;
+I'll change it to:
 
-
-> Also, why still "+ 1" ? Wasn't DIV_ROUND_UP() supposed to take care
-> of that ?
-
-Ooops, I forgot to remove the "+ 1"
-
-> > +		if (counter > 255)
-> > +			counter =3D 0;
->=20
-> This is difficult to understand.
-
-As you suggested, I'll change this to:
 	if (counter > 256)
 		counter =3D 256;
+
 
 Chris
