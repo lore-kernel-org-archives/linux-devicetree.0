@@ -1,146 +1,37 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 net-next 7/7] net: dsa: Add Lantiq / Intel DSA driver
- for vrx200
-Date: Thu, 6 Sep 2018 14:36:56 -0700
-Message-ID: <d344e75f-92f8-cbf2-9f69-fb17007a01cf@gmail.com>
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120511.10112-1-hauke@hauke-m.de>
- <eb5c0815-e80c-7fd7-a14a-ccc3f28a7c93@gmail.com>
- <d0da3eb2-8adb-677a-0f88-b6fe7989ae45@hauke-m.de>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
+Date: Thu, 6 Sep 2018 23:39:42 +0200
+Message-ID: <CAKMK7uHoeB89-VVS8qVaoNiP_0waHHJ=dFCUgXkRDTnRkXz69g@mail.gmail.com>
+References: <1536012923-16275-1-git-send-email-henrik@austad.us>
+ <20180904113030.GB25177@amd> <20180904095908.13298b3d@gandalf.local.home>
+ <20180906095804.5ab2716f@lwn.net> <20180906120120.3dd1fc91@gandalf.local.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <d0da3eb2-8adb-677a-0f88-b6fe7989ae45@hauke-m.de>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180906120120.3dd1fc91@gandalf.local.home>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Jan Kandziora <jjj@gmx.de>, =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>, kvm@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Mark Brown <broonie@kernel.org>, Henrik Austad <henrik@austad.us>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, Ian Kent <raven@themaw.net>, linux-s390@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <cor>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2018 02:11 PM, Hauke Mehrtens wrote:
-> On 09/03/2018 09:54 PM, Florian Fainelli wrote:
->>
->>
->> On 9/1/2018 5:05 AM, Hauke Mehrtens wrote:
->>> This adds the DSA driver for the GSWIP Switch found in the VRX200 SoC.
->>> This switch is integrated in the DSL SoC, this SoC uses a GSWIP version
->>> 2.1, there are other SoCs using different versions of this IP block, but
->>> this driver was only tested with the version found in the VRX200.
->>> Currently only the basic features are implemented which will forward all
->>> packages to the CPU and let the CPU do the forwarding. The hardware also
->>> support Layer 2 offloading which is not yet implemented in this driver.
->>>
->>> The GPHY FW loaded is now done by this driver and not any more by the
->>> separate driver in drivers/soc/lantiq/gphy.c, I will remove this driver
->>> is a separate patch. to make use of the GPHY this switch driver is
->>> needed anyway. Other SoCs have more embedded GPHYs so this driver should
->>> support a variable number of GPHYs. After the firmware was loaded the
->>> GPHY can be probed on the MDIO bus and it behaves like an external GPHY,
->>> without the firmware it can not be probed on the MDIO bus.
->>>
->>> Currently this depends on SOC_TYPE_XWAY because the SoC revision
->>> detection function ltq_soc_type() is used to load the correct GPHY
->>> firmware on the VRX200 SoCs.
->>>
->>> The clock names in the sysctrl.c file have to be changed because the
->>> clocks are now used by a different driver. This should be cleaned up and
->>> a real common clock driver should provide the clocks instead.
->>>
->>> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
->>> ---
->>
->> Looks great, just a few suggestions below
->>
->> [snip]
->>
->>> +static void gswip_adjust_link(struct dsa_switch *ds, int port,
->>> +                  struct phy_device *phydev)
->>> +{
->>> +    struct gswip_priv *priv = ds->priv;
->>> +    u16 macconf = phydev->mdio.addr & GSWIP_MDIO_PHY_ADDR_MASK;
->>> +    u16 miirate = 0;
->>> +    u16 miimode;
->>> +    u16 lcl_adv = 0, rmt_adv = 0;
->>> +    u8 flowctrl;
->>> +
->>> +    /* do not run this for the CPU port */
->>> +    if (dsa_is_cpu_port(ds, port))
->>> +        return;
->>
->> Typically we expect the adjust_link callback to run for fixed link
->> ports, that is inter-switch links (between switches) or between the CPU
->> port and the Ethernet MAC attached to the switch. Here you are running
->> this for the user facing ports (IIRC), which should really not be
->> necessary, most Ethernet switches will be able to look at their built-in
->> PHY's state and configure the switch's port automatically. Maybe this is
->> not possible here because you had to disable polling?
-> 
-> I deactivated the PHY auto polling, I can activate it again. Some PHYs
-> could also be external on the same MDIO bus as the internal PHYs.
-> 
-> The CPU facing fixed link is a special MAC in the switch, at least in
-> this version of the switch IP which is embedded in the networking SoCs.
-> The MAC is more or less integrated in the switch and the driver can not
-> configure the link between the MAC and the switch.
-
-OK
-
-> 
->> Can you consider implementing PHYLINK operations which would make the
->> driver more future proof, should you consider newer generations of
->> switches that support 10G PHY, SGMII, SFP/SFF and so on?
-> 
-> I will have a look at this later. I just saw that you pushed some
-> branches adding SFP support to b53. ;-)
-
-I would really add PHYLINK callbacks now what you have is fairly simple
-to extract into separate functions doing the MAC configuration, and then
-setting link up/down, that's pretty much all you need. Once you start
-adding SFP/SFF support, things can get a bit more complicated
-configuration wise.
-
-> 
-> The next step will be adding layer 2 offload. This is planned for the
-> next patch series after this was merged. The switch uses internal VLANs
-> for the offloading, so you configure a VLAN in the hardware and then add
-> ports to it. I saw that multiple switches use this model, but converting
-> the not VLAN aware layer 2 offloading to it looks a little bit strange,
-> is there a good practice?
-> 
-
-Not VLAN aware layer 2 offload is actually quite common, the switch must
-accept all frames in that case (not checking VID). L2 offload is really
-about the following use case create a bridge, enslave ports of the
-switch into it, and you should now have the switch forward from/to/
-port0/port1 without this traffic going all the way to the CPU. If it
-does, then there is no point having a switch in the first place :)
-
->> [snip]
->>
->>> +    if (priv->ds->dst->cpu_dp->index != priv->hw_info->cpu_port) {
->>> +        dev_err(dev, "wrong CPU port defined, HW only supports port:
->>> %i",
->>> +            priv->hw_info->cpu_port);
->>> +        err = -EINVAL;
->>> +        goto mdio_bus;
->>> +    }
->>
->> There are a number of switches (b53, qca8k, mt7530) that have this
->> requirement, we should probably be moving this check down into the core
->> DSA layer and allow either to continue but disable switch tagging, if it
->> was requested. Andrew what do you think?
-> 
-> As the CPU port is a special port many registers are only available for
-> the normal front facing Ethernet ports and not for the CPU port so I
-> have to make sure the correct port was selected as CPU port, otherwise
-> the driver will write to the wrong register offsets.
-
-OK, my comment was mostly for Andrew, this is not the first switch that
-has specific requirements on which port of the switch is the
-"CPU/management" port. So we should probably add some core functionality
-within DSA to say "here are the ports that I can accept for management",
-if the port you connected your switch to any other than those, then you
-just lose tagging.
--- 
-Florian
+T24gVGh1LCBTZXAgNiwgMjAxOCBhdCA2OjAxIFBNLCBTdGV2ZW4gUm9zdGVkdCA8cm9zdGVkdEBn
+b29kbWlzLm9yZz4gd3JvdGU6Cj4gT24gVGh1LCA2IFNlcCAyMDE4IDA5OjU4OjA0IC0wNjAwCj4g
+Sm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4gd3JvdGU6Cj4KPj4gVGhhbmtzLAo+Pgo+
+PiBqb24gICh3aG8gaXMgaW5jcmVhc2luZ2x5IGluY2xpbmVkIHRvIGFwcGx5IHRoaXMgcGF0Y2gp
+Cj4KPiBBcyBDb2xpbiBLYWVwZXJuaWNrIG5vdyBzYXlzLi4uICJKdXN0IGRvIGl0ISIKPgo+IDst
+KQoKKzEKCkJ1dCBJJ20gYmlhc2VkLCBJJ20gcGFydCBvZiB0aGUgcGFydHkgdGhhdCBpcyByZXNw
+b25zaWJsZSBmb3IgdGhlIG5ldwpzaGlueSBkb2N1bWVudGF0aW9uIHN5c3RlbSAuLi4KLURhbmll
+bAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24K
+KzQxICgwKSA3OSAzNjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
