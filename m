@@ -1,53 +1,168 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v4 08/11] arm64: dts: allwinner: a64: Add
- display pipeline
-Date: Thu, 06 Sep 2018 14:19:17 +0800
-Message-ID: <73ADC796-D8CE-417C-82E3-0CDAF710A2F3@aosc.io>
-References: <20180904044053.15425-1-icenowy@aosc.io> <20180904044053.15425-9-icenowy@aosc.io> <CAMty3ZDn=uj3buvJx93R1J7Swr3CyfjJJ=MgQTGvRZ01izbAAA@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v8 4/8] media: platform: Add Cedrus VPU
+ decoder driver
+Date: Thu, 6 Sep 2018 09:01:01 +0200
+Message-ID: <461c6a0d-a346-b9da-b75e-4aab907054df@xs4all.nl>
+References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
+ <20180828073424.30247-5-paul.kocialkowski@bootlin.com>
+ <5faf5eed-eb2c-f804-93e3-5a42f6204d99@xs4all.nl>
+ <b7b3cb2320978d45acb34475d15abd7bf03da367.camel@paulk.fr>
+Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAUOYPOAKGQEADAAFPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBNNBYPOAKGQESJUL7AY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAMty3ZDn=uj3buvJx93R1J7Swr3CyfjJJ=MgQTGvRZ01izbAAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <b7b3cb2320978d45acb34475d15abd7bf03da367.camel-W9ppeneeCTY@public.gmane.org>
+Content-Language: en-US
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.orgJagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 09/05/2018 06:29 PM, Paul Kocialkowski wrote:
+> Hi and thanks for the review!
+>=20
+> Le lundi 03 septembre 2018 =C3=A0 11:11 +0200, Hans Verkuil a =C3=A9crit =
+:
+>> On 08/28/2018 09:34 AM, Paul Kocialkowski wrote:
+>>> +static int cedrus_request_validate(struct media_request *req)
+>>> +{
+>>> +	struct media_request_object *obj, *obj_safe;
+>>> +	struct v4l2_ctrl_handler *parent_hdl, *hdl;
+>>> +	struct cedrus_ctx *ctx =3D NULL;
+>>> +	struct v4l2_ctrl *ctrl_test;
+>>> +	unsigned int i;
+>>> +
+>>> +	list_for_each_entry_safe(obj, obj_safe, &req->objects, list) {
+>>
+>> You don't need to use the _safe variant during validation.
+>=20
+> Okay, I'll use the regular one then.
+>=20
+>>> +		struct vb2_buffer *vb;
+>>> +
+>>> +		if (vb2_request_object_is_buffer(obj)) {
+>>> +			vb =3D container_of(obj, struct vb2_buffer, req_obj);
+>>> +			ctx =3D vb2_get_drv_priv(vb->vb2_queue);
+>>> +
+>>> +			break;
+>>> +		}
+>>> +	}
+>>
+>> Interesting question: what happens if more than one buffer is queued in =
+the
+>> request? This is allowed by the request API and in that case the associa=
+ted
+>> controls in the request apply to all queued buffers.
+>>
+>> Would this make sense at all for this driver? If not, then you need to
+>> check here if there is more than one buffer in the request and document =
+in
+>> the spec that this is not allowed.
+>=20
+> Well, our driver was written with the (unformal) assumption that we
+> only deal with a pair of one output and one capture buffer. So I will
+> add a check for this at request validation time and document it in the
+> spec. Should that be part of the MPEG-2 PIXFMT documentation (and
+> duplicated for future formats we add support for)?
 
+Can you make a patch for vb2_request_has_buffers() in videobuf2-core.c
+renaming it to vb2_request_buffer_cnt() and returning the number of buffers
+in the request?
 
-=E4=BA=8E 2018=E5=B9=B49=E6=9C=886=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=882:1=
-8:13, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> =E5=86=99=E5=88=B0:
->On Tue, Sep 4, 2018 at 10:10 AM, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
->> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>
->> Allwinner A64 have a display pipeline with 2 mixers/TCONs, the first
->> TCON is connected to LCD and the second is to HDMI.
->>
->> The HDMI controller/PHY pair is similar to the one on H3/H5.
->>
->> Add all required device tree nodes of the display pipeline, including
->> the TCON0 LCD one and the TCON1 HDMI one.
->>
->> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> [Icenowy: refactor commit message and add 1st pipeline]
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->> Changes for v4:
->> - Misc fixes
->> - Dropped second PLL from HDMI PHY clock
->
->Why? it was there in previous versions.
+Then you can call it here to check that you have only one buffer.
 
-Based on my experiments, the bit has no effect on A64, and the parent
-is always PLL-VIDEO0.
+And this has to be documented with the PIXFMT.
+
+Multiple buffers are certainly possible in non-codec scenarios (vim2m and
+vivid happily accept that), so this is an exception that should be
+documented and checked in the codec driver.
+
+>=20
+>> If it does make sense, then you need to test this.
+>>
+>> Again, this can be corrected in a follow-up patch, unless there will be =
+a
+>> v9 anyway.
+>=20
+> [...]
+
+>>> +static int cedrus_queue_setup(struct vb2_queue *vq, unsigned int *nbuf=
+s,
+>>> +			      unsigned int *nplanes, unsigned int sizes[],
+>>> +			      struct device *alloc_devs[])
+>>> +{
+>>> +	struct cedrus_ctx *ctx =3D vb2_get_drv_priv(vq);
+>>> +	struct cedrus_dev *dev =3D ctx->dev;
+>>> +	struct v4l2_pix_format_mplane *mplane_fmt;
+>>> +	struct cedrus_format *fmt;
+>>> +	unsigned int i;
+>>> +
+>>> +	switch (vq->type) {
+>>> +	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
+>>> +		mplane_fmt =3D &ctx->src_fmt;
+>>> +		fmt =3D cedrus_find_format(mplane_fmt->pixelformat,
+>>> +					 CEDRUS_DECODE_SRC,
+>>> +					 dev->capabilities);
+>>> +		break;
+>>> +
+>>> +	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
+>>> +		mplane_fmt =3D &ctx->dst_fmt;
+>>> +		fmt =3D cedrus_find_format(mplane_fmt->pixelformat,
+>>> +					 CEDRUS_DECODE_DST,
+>>> +					 dev->capabilities);
+>>> +		break;
+>>> +
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	if (!fmt)
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (fmt->num_buffers =3D=3D 1) {
+>>> +		sizes[0] =3D 0;
+>>> +
+>>> +		for (i =3D 0; i < fmt->num_planes; i++)
+>>> +			sizes[0] +=3D mplane_fmt->plane_fmt[i].sizeimage;
+>>> +	} else if (fmt->num_buffers =3D=3D fmt->num_planes) {
+>>> +		for (i =3D 0; i < fmt->num_planes; i++)
+>>> +			sizes[i] =3D mplane_fmt->plane_fmt[i].sizeimage;
+>>> +	} else {
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	*nplanes =3D fmt->num_buffers;
+>>
+>> This code does not take VIDIOC_CREATE_BUFFERS into account.
+>>
+>> If it is called from that ioctl, then *nplanes is non-zero and you need
+>> to check if *nplanes equals fmt->num_buffers and that sizes[n] is >=3D
+>> the required size of the format. If so, then return 0, otherwise return
+>> -EINVAL.
+>=20
+> Thanks for spotting this, I'll fix it as you suggested in the next
+> revision.
+>=20
+>> Doesn't v4l2-compliance fail on that? Or is that test skipped because th=
+is
+>> is a decoder for which streaming is not supported (yet)?
+>=20
+> Apparently, v4l2-compliance doesn't fail since I'm getting:
+> test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+
+It is tested, but only with the -s option. I'll see if I can improve the
+tests.
+
+Regards,
+
+	Hans
 
 --=20
 You received this message because you are subscribed to the Google Groups "=
