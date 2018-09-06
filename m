@@ -1,105 +1,27 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v8 4/8] media: platform: Add Cedrus VPU decoder driver
-Date: Thu, 6 Sep 2018 09:39:30 +0200
-Message-ID: <7a2167a3-5b61-0937-7f06-8b36fa12e7a0@xs4all.nl>
-References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
- <20180828073424.30247-5-paul.kocialkowski@bootlin.com>
- <5faf5eed-eb2c-f804-93e3-5a42f6204d99@xs4all.nl>
- <b7b3cb2320978d45acb34475d15abd7bf03da367.camel@paulk.fr>
- <461c6a0d-a346-b9da-b75e-4aab907054df@xs4all.nl>
- <CAAFQd5Cmc7uFhprsoTU6Gq19n3z2eiUfZZ2ZjDW4QWVWMDN6tg@mail.gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 16/21] x86: DT: use for_each_of_cpu_node iterator
+Date: Thu, 6 Sep 2018 10:15:08 +0200 (CEST)
+Message-ID: <alpine.DEB.2.21.1809061014430.1416@nanos.tec.linutronix.de>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-17-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAFQd5Cmc7uFhprsoTU6Gq19n3z2eiUfZZ2ZjDW4QWVWMDN6tg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180905193738.19325-17-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tfiga@chromium.org>
-Cc: contact@paulk.fr, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS" <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg KH <gregkh@linuxfoundation.org>, thomas.petazzoni@bootlin.com, ayaka <ayaka@soulik.info>, Ezequiel Garcia <ezequiel@collabora.com>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent Pinchart <laurent.pin>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2018 09:25 AM, Tomasz Figa wrote:
-> On Thu, Sep 6, 2018 at 4:01 PM Hans Verkuil <hverkuil@xs4all.nl> wrote:
->>
->> On 09/05/2018 06:29 PM, Paul Kocialkowski wrote:
->>> Hi and thanks for the review!
->>>
->>> Le lundi 03 septembre 2018 à 11:11 +0200, Hans Verkuil a écrit :
->>>> On 08/28/2018 09:34 AM, Paul Kocialkowski wrote:
->>>>> +static int cedrus_request_validate(struct media_request *req)
->>>>> +{
->>>>> +   struct media_request_object *obj, *obj_safe;
->>>>> +   struct v4l2_ctrl_handler *parent_hdl, *hdl;
->>>>> +   struct cedrus_ctx *ctx = NULL;
->>>>> +   struct v4l2_ctrl *ctrl_test;
->>>>> +   unsigned int i;
->>>>> +
->>>>> +   list_for_each_entry_safe(obj, obj_safe, &req->objects, list) {
->>>>
->>>> You don't need to use the _safe variant during validation.
->>>
->>> Okay, I'll use the regular one then.
->>>
->>>>> +           struct vb2_buffer *vb;
->>>>> +
->>>>> +           if (vb2_request_object_is_buffer(obj)) {
->>>>> +                   vb = container_of(obj, struct vb2_buffer, req_obj);
->>>>> +                   ctx = vb2_get_drv_priv(vb->vb2_queue);
->>>>> +
->>>>> +                   break;
->>>>> +           }
->>>>> +   }
->>>>
->>>> Interesting question: what happens if more than one buffer is queued in the
->>>> request? This is allowed by the request API and in that case the associated
->>>> controls in the request apply to all queued buffers.
->>>>
->>>> Would this make sense at all for this driver? If not, then you need to
->>>> check here if there is more than one buffer in the request and document in
->>>> the spec that this is not allowed.
->>>
->>> Well, our driver was written with the (unformal) assumption that we
->>> only deal with a pair of one output and one capture buffer. So I will
->>> add a check for this at request validation time and document it in the
->>> spec. Should that be part of the MPEG-2 PIXFMT documentation (and
->>> duplicated for future formats we add support for)?
->>
->> Can you make a patch for vb2_request_has_buffers() in videobuf2-core.c
->> renaming it to vb2_request_buffer_cnt() and returning the number of buffers
->> in the request?
->>
->> Then you can call it here to check that you have only one buffer.
->>
->> And this has to be documented with the PIXFMT.
->>
->> Multiple buffers are certainly possible in non-codec scenarios (vim2m and
->> vivid happily accept that), so this is an exception that should be
->> documented and checked in the codec driver.
+On Wed, 5 Sep 2018, Rob Herring wrote:
+
+> Use the for_each_of_cpu_node iterator to iterate over cpu nodes. This
+> has the side effect of defaulting to iterating using "cpu" node names in
+> preference to the deprecated (for FDT) device_type == "cpu".
 > 
-> Hmm, isn't it still 1 buffer per 1 queue and just multiple queues
-> included in the request?
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: x86@kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-No. The request API allows multiple buffers for the same vb2_queue to be
-queued for the same request (obviously when the request is committed, the
-buffers are queued to the driver in the same order).
-
-> 
-> If we indeed allow multiple buffers for the same queue in a request,
-> we shouldn't restrict this on a per-driver basis. It's definitely not
-> a hardware limitation, since the driver could just do the same as if 2
-> requests with the same controls were given.
-
-That's how it operates: for all buffers in the request the same controls
-apply. But does this make sense for codecs? If the control(s) with the
-codec metadata always change for every buffer, then having more than one
-buffer in the request is senseless and the driver should check for this
-in the validation step.
-
-If it *does* make sense in some circumstances to have the same metadata
-for multiple buffers, then it should be checked if the cedrus driver
-handles this correctly.
-
-Regards,
-
-	Hans
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
