@@ -1,184 +1,295 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: Re: [PATCH v2 net-next 7/7] net: dsa: Add Lantiq / Intel DSA driver
- for vrx200
-Date: Thu, 6 Sep 2018 23:11:44 +0200
-Message-ID: <d0da3eb2-8adb-677a-0f88-b6fe7989ae45@hauke-m.de>
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120511.10112-1-hauke@hauke-m.de>
- <eb5c0815-e80c-7fd7-a14a-ccc3f28a7c93@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Thu, 6 Sep 2018 23:16:17 +0200
+Message-ID: <20180906211617.GB16899@amd>
+References: <20180906135005.6718-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="f8zxV6bgqOCHeUJRH1PDQ9Dq0YLtECOiw"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <eb5c0815-e80c-7fd7-a14a-ccc3f28a7c93@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180906135005.6718-1-dmurphy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---f8zxV6bgqOCHeUJRH1PDQ9Dq0YLtECOiw
-Content-Type: multipart/mixed; boundary="JxGgAqcZ6lc0NM66VWueg5G2cOJXSCE7d";
- protected-headers="v1"
-From: Hauke Mehrtens <hauke@hauke-m.de>
-To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, andrew@lunn.ch,
- vivien.didelot@savoirfairelinux.com, john@phrozen.org,
- linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com,
- devicetree@vger.kernel.org
-Message-ID: <d0da3eb2-8adb-677a-0f88-b6fe7989ae45@hauke-m.de>
-Subject: Re: [PATCH v2 net-next 7/7] net: dsa: Add Lantiq / Intel DSA driver
- for vrx200
-References: <20180901114535.9070-1-hauke@hauke-m.de>
- <20180901120511.10112-1-hauke@hauke-m.de>
- <eb5c0815-e80c-7fd7-a14a-ccc3f28a7c93@gmail.com>
-In-Reply-To: <eb5c0815-e80c-7fd7-a14a-ccc3f28a7c93@gmail.com>
 
---JxGgAqcZ6lc0NM66VWueg5G2cOJXSCE7d
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 09/03/2018 09:54 PM, Florian Fainelli wrote:
+Hi!
+
+> Add the device tree bindings for the lm3697
+> LED driver for backlighting and display.
 >=20
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
 >=20
-> On 9/1/2018 5:05 AM, Hauke Mehrtens wrote:
->> This adds the DSA driver for the GSWIP Switch found in the VRX200 SoC.=
-
->> This switch is integrated in the DSL SoC, this SoC uses a GSWIP versio=
-n
->> 2.1, there are other SoCs using different versions of this IP block, b=
-ut
->> this driver was only tested with the version found in the VRX200.
->> Currently only the basic features are implemented which will forward a=
-ll
->> packages to the CPU and let the CPU do the forwarding. The hardware al=
-so
->> support Layer 2 offloading which is not yet implemented in this driver=
-=2E
->>
->> The GPHY FW loaded is now done by this driver and not any more by the
->> separate driver in drivers/soc/lantiq/gphy.c, I will remove this drive=
-r
->> is a separate patch. to make use of the GPHY this switch driver is
->> needed anyway. Other SoCs have more embedded GPHYs so this driver shou=
-ld
->> support a variable number of GPHYs. After the firmware was loaded the
->> GPHY can be probed on the MDIO bus and it behaves like an external GPH=
-Y,
->> without the firmware it can not be probed on the MDIO bus.
->>
->> Currently this depends on SOC_TYPE_XWAY because the SoC revision
->> detection function ltq_soc_type() is used to load the correct GPHY
->> firmware on the VRX200 SoCs.
->>
->> The clock names in the sysctrl.c file have to be changed because the
->> clocks are now used by a different driver. This should be cleaned up a=
-nd
->> a real common clock driver should provide the clocks instead.
->>
->> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
->> ---
+> v6 - Fix minor issues - https://lore.kernel.org/patchwork/patch/975387/
 >=20
-> Looks great, just a few suggestions below
+> v5 - Fix the comment for the example - https://lore.kernel.org/patchwork/=
+patch/975060/
+> v4 - Removed HVLED definition in favor of HVLED place definition - https:=
+//lore.kernel.org/patchwork/patch/974812/
+> v3 - Updated subject with prefered title - https://lore.kernel.org/patchw=
+ork/patch/972337/
+> v2 - Fixed subject and patch commit message - https://lore.kernel.org/pat=
+chwork/patch/971326/
 >=20
-> [snip]
+>  .../devicetree/bindings/leds/leds-lm3697.txt  | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
 >=20
->> +static void gswip_adjust_link(struct dsa_switch *ds, int port,
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct phy_device *phydev)
->> +{
->> +=C2=A0=C2=A0=C2=A0 struct gswip_priv *priv =3D ds->priv;
->> +=C2=A0=C2=A0=C2=A0 u16 macconf =3D phydev->mdio.addr & GSWIP_MDIO_PHY=
-_ADDR_MASK;
->> +=C2=A0=C2=A0=C2=A0 u16 miirate =3D 0;
->> +=C2=A0=C2=A0=C2=A0 u16 miimode;
->> +=C2=A0=C2=A0=C2=A0 u16 lcl_adv =3D 0, rmt_adv =3D 0;
->> +=C2=A0=C2=A0=C2=A0 u8 flowctrl;
->> +
->> +=C2=A0=C2=A0=C2=A0 /* do not run this for the CPU port */
->> +=C2=A0=C2=A0=C2=A0 if (dsa_is_cpu_port(ds, port))
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return;
->=20
-> Typically we expect the adjust_link callback to run for fixed link
-> ports, that is inter-switch links (between switches) or between the CPU=
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lm3697.txt b/Doc=
+umentation/devicetree/bindings/leds/leds-lm3697.txt
+> new file mode 100644
+> index 000000000000..3256dec21075
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> @@ -0,0 +1,86 @@
+> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
+> +
+> +The LM3697 11-bit LED driver provides high-
+> +performance backlight dimming for 1, 2, or 3 series
+> +LED strings while delivering up to 90% efficiency.
 
-> port and the Ethernet MAC attached to the switch. Here you are running
-> this for the user facing ports (IIRC), which should really not be
-> necessary, most Ethernet switches will be able to look at their built-i=
-n
-> PHY's state and configure the switch's port automatically. Maybe this i=
-s
-> not possible here because you had to disable polling?
+Hmm. We already have second set of bindings for 3697:
 
-I deactivated the PHY auto polling, I can activate it again. Some PHYs
-could also be external on the same MDIO bus as the internal PHYs.
+=2E/devicetree/bindings/mfd/ti-lmu.txt
 
-The CPU facing fixed link is a special MAC in the switch, at least in
-this version of the switch IP which is embedded in the networking SoCs.
-The MAC is more or less integrated in the switch and the driver can not
-configure the link between the MAC and the switch.
+(Sorry for not noticing that earlier). Advantage is that those have
+had discussion with device tree people and have acks:
 
-> Can you consider implementing PHYLINK operations which would make the
-> driver more future proof, should you consider newer generations of
-> switches that support 10G PHY, SGMII, SFP/SFF and so on?
+What to do there?
 
-I will have a look at this later. I just saw that you pushed some
-branches adding SFP support to b53. ;-)
+								Pavel
+commit 287cce719d85311f61d1b6b7f7b0d93f7907cd46
+Author: Milo Kim <milo.kim@ti.com>
+Date:   Tue Feb 28 15:45:14 2017 +0900
 
-The next step will be adding layer 2 offload. This is planned for the
-next patch series after this was merged. The switch uses internal VLANs
-for the offloading, so you configure a VLAN in the hardware and then add
-ports to it. I saw that multiple switches use this model, but converting
-the not VLAN aware layer 2 offloading to it looks a little bit strange,
-is there a good practice?
+    dt-bindings: mfd: Add TI LMU device binding information
 
-> [snip]
->=20
->> +=C2=A0=C2=A0=C2=A0 if (priv->ds->dst->cpu_dp->index !=3D priv->hw_inf=
-o->cpu_port) {
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(dev, "wrong CPU po=
-rt defined, HW only supports port:
->> %i",
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pr=
-iv->hw_info->cpu_port);
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 err =3D -EINVAL;
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto mdio_bus;
->> +=C2=A0=C2=A0=C2=A0 }
->=20
-> There are a number of switches (b53, qca8k, mt7530) that have this
-> requirement, we should probably be moving this check down into the core=
+    This patch describes overall binding for TI LMU MFD devices.
 
-> DSA layer and allow either to continue but disable switch tagging, if i=
-t
-> was requested. Andrew what do you think?
+    Signed-off-by: Milo Kim <milo.kim@ti.com>
+        Acked-by: Rob Herring <robh+dt@kernel.org>
+	    Acked-by: Tony Lindgren <tony@atomide.com>
+	        Signed-off-by: Lee Jones <lee.jones@linaro.org>
+	=09
 
-As the CPU port is a special port many registers are only available for
-the normal front facing Ethernet ports and not for the CPU port so I
-have to make sure the correct port was selected as CPU port, otherwise
-the driver will write to the wrong register offsets.
+commit d774c7e447ac911e73a1b3c775e6d89f0422218c
+Author: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Date:   Mon Aug 27 09:15:08 2018 -0700
 
-Hauke
+    dt-bindings: mfd: ti-lmu: update for backlight
+   =20
+    Update binding to integrate the backlight feature directly into
+    the main node, as suggested by Rob Herring.
+   =20
+    Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
+diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documentati=
+on/devicetree/bindings/mfd/ti-lmu.txt
+index c885cf8..b3433e9 100644
+--- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
++++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+@@ -28,10 +28,9 @@ Required properties:
+=20
+ Optional property:
+   - enable-gpios: A GPIO specifier for hardware enable pin.
+-
+-Required node:
+-  - backlight: All LMU devices have backlight child nodes.
+-               For the properties, please refer to [1].
++  - pwm-names: Should be either "lmu-backlight" or unset
++  - pwm: This should be a PWM specifier following ../pwm/pwm.txt and must
++         only be specified, if the backlight should be used in PWM mode.
+=20
+ Optional nodes:
+   - fault-monitor: Hardware fault monitoring driver for LM3633 and LM3697.
+@@ -42,8 +41,31 @@ Optional nodes:
+   - leds: LED properties for LM3633. Please refer to [2].
+   - regulators: Regulator properties for LM3631 and LM3632.
+                 Please refer to [3].
++  - bank0, bank1, bank2: This contains the backlight configuration
++                         for each backlight control bank.
++
++Required properties in the bank subnodes:
++  - label: A string describing the backlight. Should contain "keyboard"
++           for a keyboard backlight and "lcd" for LCD panel backlights.
++  - ti,led-sources: A list of channels, that should be driven. Each channel
++                    should only be driven by one bank.
++
++Optional properties in the bank subnodes:
++  - default-brightness-level: Backlight initial brightness value.
++                              Type is <u32>. It is set as soon as backlight
++			      device is created.
++			      0 ~ 2047 =3D LM3631, LM3632, LM3633, LM3695 and
++					 LM3697
++			      0 ~ 255  =3D LM3532
++  - ti,ramp-up-ms, ti,ramp-down-ms: Light dimming effect properties.
++				    Type is <u32>. Unit is millisecond.
++					0 ~ 65 ms    =3D LM3532
++					0 ~ 4000 ms  =3D LM3631
++					0 ~ 16000 ms =3D LM3633 and LM3697
++  - pwm-period: PWM period. Only valid in PWM brightness mode.
++                Type is <u32>. If this property is missing, then control
++		mode is set to I2C by default.
+=20
+-[1] ../leds/backlight/ti-lmu-backlight.txt
+ [2] ../leds/leds-lm3633.txt
+ [3] ../regulator/lm363x-regulator.txt
+=20
+@@ -53,14 +75,11 @@ lm3532@38 {
+=20
+ 	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+=20
+-	backlight {
+-		compatible =3D "ti,lm3532-backlight";
+-
+-		lcd {
+-			led-sources =3D <0 1 2>;
+-			ramp-up-msec =3D <30>;
+-			ramp-down-msec =3D <0>;
+-		};
++	bank0 {
++		label =3D "lcd";
++		led-sources =3D <0 1 2>;
++		ramp-up-msec =3D <30>;
++		ramp-down-msec =3D <0>;
+ 	};
+ };
+=20
+@@ -105,13 +124,10 @@ lm3631@29 {
+ 		};
+ 	};
+=20
+-	backlight {
+-		compatible =3D "ti,lm3631-backlight";
+-
+-		lcd_bl {
+-			led-sources =3D <0 1>;
+-			ramp-up-msec =3D <300>;
+-		};
++	bank0 {
++		label =3D "lcd_bl";
++		led-sources =3D <0 1>;
++		ramp-up-msec =3D <300>;
+ 	};
+ };
+=20
+@@ -147,16 +163,13 @@ lm3632@11 {
+ 		};
+ 	};
+=20
+-	backlight {
+-		compatible =3D "ti,lm3632-backlight";
+-
+-		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
+-		pwm-names =3D "lmu-backlight";
++	pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
++	pwm-names =3D "lmu-backlight";
+=20
+-		lcd {
+-			led-sources =3D <0 1>;
+-			pwm-period =3D <10000>;
+-		};
++	bank0 {
++		label =3D "lcd";
++		led-sources =3D <0 1>;
++		pwm-period =3D <10000>;
+ 	};
+ };
+=20
+@@ -166,22 +179,18 @@ lm3633@36 {
+=20
+ 	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+=20
+-	backlight {
+-		compatible =3D "ti,lm3633-backlight";
+-
+-		main {
+-			label =3D "main_lcd";
+-			led-sources =3D <1 2>;
+-			ramp-up-msec =3D <500>;
+-			ramp-down-msec =3D <500>;
+-		};
++	bank0 {
++		label =3D "main_lcd";
++		led-sources =3D <1 2>;
++		ramp-up-msec =3D <500>;
++		ramp-down-msec =3D <500>;
++	};
+=20
+-		front {
+-			label =3D "front_lcd";
+-			led-sources =3D <0>;
+-			ramp-up-msec =3D <1000>;
+-			ramp-down-msec =3D <0>;
+-		};
++	bank1 {
++		label =3D "front_lcd";
++		led-sources =3D <0>;
++		ramp-up-msec =3D <1000>;
++		ramp-down-msec =3D <0>;
+ 	};
+=20
+ 	leds {
+@@ -211,13 +220,9 @@ lm3695@63 {
+=20
+ 	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+=20
+-	backlight {
+-		compatible =3D "ti,lm3695-backlight";
+-
+-		lcd {
+-			label =3D "bl";
+-			led-sources =3D <0 1>;
+-		};
++	bank0 {
++		label =3D "lcd_bl";
++		led-sources =3D <0 1>;
+ 	};
+ };
+=20
+@@ -227,14 +232,10 @@ lm3697@36 {
+=20
+ 	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+=20
+-	backlight {
+-		compatible =3D "ti,lm3697-backlight";
+-
+-		lcd {
+-			led-sources =3D <0 1 2>;
+-			ramp-up-msec =3D <200>;
+-			ramp-down-msec =3D <200>;
+-		};
++	bank0 {
++		led-sources =3D <0 1 2>;
++		ramp-up-msec =3D <200>;
++		ramp-down-msec =3D <200>;
+ 	};
+=20
+ 	fault-monitor {
 
---JxGgAqcZ6lc0NM66VWueg5G2cOJXSCE7d--
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---f8zxV6bgqOCHeUJRH1PDQ9Dq0YLtECOiw
+--oLBj+sq0vYjzfsbl
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQEzBAEBCAAdFiEEyz0/uAcd+JwXmwtD8bdnhZyy68cFAluRmBMACgkQ8bdnhZyy
-68d5OQf/V/uZJ04P/wNYovxsP0LUDgSZqS2ESHD6JWn/TI23gSWik9Y1S4ZrtRui
-7gJk0vgfWUvYZHpvmI7YYohVhqbcasbK9Mh7kZUQMXnzw64L9ePeu59P++1xGR/8
-p4Au1+J7wFc/CstnysBfOVLDmuWObCa6tL9lRT/7ugE0UmbJD2nsrJszQAPaep/g
-xGv2CMkyRaLlAXCS7T6p2gb02+cbeDs8TLNKK0dbU0HYb5tq7DYY0BOAOhYMgIbj
-zTYgw1R/B4Iov1+YRUF5qVJx73+T9fBmSrdLO741lS9yTUCdaD7fOi+fSREaML8F
-yDR5UUv9tUxHkDwk5CxKbbgkMqc5eg==
-=oRXS
+iEYEARECAAYFAluRmSEACgkQMOfwapXb+vJvYQCcDGC+DkNW4KrswdxW+W8NkNyM
+n18An3gqyPdKTPwSc/oMcDs/26fx2ZKv
+=/9XA
 -----END PGP SIGNATURE-----
 
---f8zxV6bgqOCHeUJRH1PDQ9Dq0YLtECOiw--
+--oLBj+sq0vYjzfsbl--
