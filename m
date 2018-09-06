@@ -1,116 +1,133 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v8 4/8] media: platform: Add Cedrus VPU
- decoder driver
-Date: Thu, 6 Sep 2018 09:22:28 +0200
-Message-ID: <890469f8-434f-4ca1-ec95-20542610fd78@xs4all.nl>
-References: <20180828073424.30247-1-paul.kocialkowski@bootlin.com>
- <20180828073424.30247-5-paul.kocialkowski@bootlin.com>
- <5faf5eed-eb2c-f804-93e3-5a42f6204d99@xs4all.nl>
- <b7b3cb2320978d45acb34475d15abd7bf03da367.camel@paulk.fr>
- <461c6a0d-a346-b9da-b75e-4aab907054df@xs4all.nl>
-Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
+From: Quentin Schulz <quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 30/30] ARM: sun8i: a83t: full range OPP
+ tables and CPUfreq
+Date: Thu, 6 Sep 2018 09:24:29 +0200
+Message-ID: <20180906072429.7qjwbbqsjlbskk6v@qschulz>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-31-embed3d@gmail.com>
+Reply-To: quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBC3MVVMX3ELBBONLYPOAKGQEW77CMSI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zzux7waj4fepvbk5"
+Return-path: <linux-sunxi+bncBCLZXSNY5IDBBONMYPOAKGQET6PM2BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <461c6a0d-a346-b9da-b75e-4aab907054df-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180830154518.29507-31-embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2018 09:01 AM, Hans Verkuil wrote:
-> On 09/05/2018 06:29 PM, Paul Kocialkowski wrote:
->> Hi and thanks for the review!
->>
->> Le lundi 03 septembre 2018 =C3=A0 11:11 +0200, Hans Verkuil a =C3=A9crit=
- :
->>> On 08/28/2018 09:34 AM, Paul Kocialkowski wrote:
->>>> +static int cedrus_queue_setup(struct vb2_queue *vq, unsigned int *nbu=
-fs,
->>>> +			      unsigned int *nplanes, unsigned int sizes[],
->>>> +			      struct device *alloc_devs[])
->>>> +{
->>>> +	struct cedrus_ctx *ctx =3D vb2_get_drv_priv(vq);
->>>> +	struct cedrus_dev *dev =3D ctx->dev;
->>>> +	struct v4l2_pix_format_mplane *mplane_fmt;
->>>> +	struct cedrus_format *fmt;
->>>> +	unsigned int i;
->>>> +
->>>> +	switch (vq->type) {
->>>> +	case V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE:
->>>> +		mplane_fmt =3D &ctx->src_fmt;
->>>> +		fmt =3D cedrus_find_format(mplane_fmt->pixelformat,
->>>> +					 CEDRUS_DECODE_SRC,
->>>> +					 dev->capabilities);
->>>> +		break;
->>>> +
->>>> +	case V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE:
->>>> +		mplane_fmt =3D &ctx->dst_fmt;
->>>> +		fmt =3D cedrus_find_format(mplane_fmt->pixelformat,
->>>> +					 CEDRUS_DECODE_DST,
->>>> +					 dev->capabilities);
->>>> +		break;
->>>> +
->>>> +	default:
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	if (!fmt)
->>>> +		return -EINVAL;
->>>> +
->>>> +	if (fmt->num_buffers =3D=3D 1) {
->>>> +		sizes[0] =3D 0;
->>>> +
->>>> +		for (i =3D 0; i < fmt->num_planes; i++)
->>>> +			sizes[0] +=3D mplane_fmt->plane_fmt[i].sizeimage;
->>>> +	} else if (fmt->num_buffers =3D=3D fmt->num_planes) {
->>>> +		for (i =3D 0; i < fmt->num_planes; i++)
->>>> +			sizes[i] =3D mplane_fmt->plane_fmt[i].sizeimage;
->>>> +	} else {
->>>> +		return -EINVAL;
->>>> +	}
->>>> +
->>>> +	*nplanes =3D fmt->num_buffers;
->>>
->>> This code does not take VIDIOC_CREATE_BUFFERS into account.
->>>
->>> If it is called from that ioctl, then *nplanes is non-zero and you need
->>> to check if *nplanes equals fmt->num_buffers and that sizes[n] is >=3D
->>> the required size of the format. If so, then return 0, otherwise return
->>> -EINVAL.
->>
->> Thanks for spotting this, I'll fix it as you suggested in the next
->> revision.
->>
->>> Doesn't v4l2-compliance fail on that? Or is that test skipped because t=
-his
->>> is a decoder for which streaming is not supported (yet)?
->>
->> Apparently, v4l2-compliance doesn't fail since I'm getting:
->> test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->=20
-> It is tested, but only with the -s option. I'll see if I can improve the
-> tests.
 
-I've improved the tests. v4l2-compliance should now fail when run (without =
-the
--s option) against this driver. Can you check that that is indeed the case?
+--zzux7waj4fepvbk5
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Thanks!
+Hi Philipp,
 
-	Hans
+On Thu, Aug 30, 2018 at 05:45:18PM +0200, Philipp Rossak wrote:
+> Since we have now thermal trotteling enabeled we can now add the full
+> range of the OPP table.
+> 
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+That's not the reason why they were not added.
+
+Please see commit 2db639d8c1663d7543c9ab5323383d94c8a76c63[1].
+
+Basically, you only want the OPPs which can work below or at the default
+voltage of the CPU supply, because the CPU supply is specific to each
+board.
+
+If you set your CPU to work at a given frequency and the voltage isn't
+updated (saying opp-microvolt = <x>; in DT isn't enough, you need
+cpu-supply to be provided and functional), the CPU might just crash.
+
+Without cpu-supply property, underclocking isn't effective in term of
+thermal cooling or power saving. Overclocking is very, very, very likely
+to make the CPU crash.
+
+It's not a very difficult thing to do to test if a given frequency work
+well but it needs a specific test environment and it's a lengthy test,
+you can have a look at those tools here[3] if you like. It's not because
+it works in a given test case that'll work on the long term under heavy
+load and constant frequency changes.
+
+For A83T, I already did it and the outcome is the patch in [1]. Same for
+A33.
+
+So, if you want to use these three higher OPPs, you need to define them
+in your board DTS and add the cpu-supply property. See what's done for
+the A33 and more specifically the Sinlinx SinA33[2] as an example.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2db639d8c1663d7543c9ab5323383d94c8a76c63
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts
+[3] http://linux-sunxi.org/Hardware_Reliability_Tests#CPU
+
+Quentin
+
+> The operating points were found in Allwinner BSP and fex files.
+> 
+> Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 78aa448e869f..ddcf404f9c80 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -250,6 +250,22 @@
+>  			opp-microvolt = <840000>;
+>  			clock-latency-ns = <244144>; /* 8 32k periods */
+>  		};
+> +
+> +		opp-1608000000 {
+> +			opp-hz = /bits/ 64 <1608000000>;
+> +			opp-microvolt = <920000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +		opp-1800000000 { /* BOOT FREQ */
+> +			opp-hz = /bits/ 64 <1800000000>;
+> +			opp-microvolt = <1000000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +		opp-2016000000 {
+> +			opp-hz = /bits/ 64 <2016000000>;
+> +			opp-microvolt = <1080000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+>  	};
+>  
+>  	cpu1_opp_table: opp_table1 {
+> @@ -303,6 +319,22 @@
+>  			opp-microvolt = <840000>;
+>  			clock-latency-ns = <244144>; /* 8 32k periods */
+>  		};
+> +
+> +		opp-1608000000 {
+> +			opp-hz = /bits/ 64 <1608000000>;
+> +			opp-microvolt = <920000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +		opp-1800000000 { /* BOOT FREQ */
+> +			opp-hz = /bits/ 64 <1800000000>;
+> +			opp-microvolt = <1000000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+> +		opp-2016000000 {
+> +			opp-hz = /bits/ 64 <2016000000>;
+> +			opp-microvolt = <1080000>;
+> +			clock-latency-ns = <244144>; /* 8 32k periods */
+> +		};
+>  	};
+>  
+>  	soc {
+> -- 
+> 2.11.0
+> 
+--zzux7waj4fepvbk5--
