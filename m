@@ -1,279 +1,573 @@
-Return-Path: <SRS0=pRDT=LU=gmail.com=jim2101024@kernel.org>
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH v5 04/12] PCI: brcmstb: add dma-range mapping for inbound traffic
-Date: Thu,  6 Sep 2018 16:42:53 -0400
-Message-Id: <1536266581-7308-5-git-send-email-jim2101024@gmail.com>
-In-Reply-To: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+Return-Path: <SRS0=xdAD=LU=gmail.com=f.fainelli@kernel.org>
+Subject: Re: [PATCH v5 12/12] ARM: add dma remap for BrcmSTB PCIe
 References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jim Quinlan <jim2101024@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
+ <1536266581-7308-13-git-send-email-jim2101024@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <c33a5065-1bf3-e6aa-2183-826c945bfe8e@gmail.com>
+Date: Thu, 6 Sep 2018 14:25:58 -0700
+MIME-Version: 1.0
+In-Reply-To: <1536266581-7308-13-git-send-email-jim2101024@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Jim Quinlan <jim2101024@gmail.com>, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
 List-ID: <devicetree@vger.kernel.org>
 
-The Broadcom STB PCIe host controller is intimately related to the
-memory subsystem.  This close relationship adds complexity to how cpu
-system memory is mapped to PCIe memory.  Ideally, this mapping is an
-identity mapping, or an identity mapping off by a constant.  Not so in
-this case.
+On 09/06/2018 01:43 PM, Jim Quinlan wrote:
+> The BrcmSTB PCIe controller needs to remap DMA accesses to it because
+> of the requirements of its interface with the SOC memory controllers.
+> In the ARM64 and MIPs architectures, this is accomplished by
+> CONFIG_ARCH_HAS_PHYS_TO_DMA=y and then defining the functions
+> __dma_to_phys() and __phys_to_dma() accordingly.
+> 
+> Doing so for the ARM architecture is not as easy as ARM64 and MIPS;
+> the two functions are already defined as static inline functions.
+> Howevery, the behavior of these functions may be changed by redefining
+> the sub-functions that these two functions invoke.
 
-Consider the Broadcom reference board BCM97445LCC_4X8 which has 6 GB
-of system memory.  Here is how the PCIe controller maps the
-system memory to PCIe memory:
+So we talked extensively about this before privately but I think we need
+to have a better way rather than depart from MULTI_V7 because that will
+really prevent us from getting any build coverage if anything, and,
+there could conceptually be another ARMv7 platform that has the same
+requirements.
 
-  memc0-a@[        0....3fffffff] <=> pci@[        0....3fffffff]
-  memc0-b@[100000000...13fffffff] <=> pci@[ 40000000....7fffffff]
-  memc1-a@[ 40000000....7fffffff] <=> pci@[ 80000000....bfffffff]
-  memc1-b@[300000000...33fffffff] <=> pci@[ c0000000....ffffffff]
-  memc2-a@[ 80000000....bfffffff] <=> pci@[100000000...13fffffff]
-  memc2-b@[c00000000...c3fffffff] <=> pci@[140000000...17fffffff]
+Your prior submissions were calling set_dma_ops() for the children
+devices created by the PCIe root complex driver during enumeration which
+had the nice advantage of scaling well across platforms, also came with
+no cost to the other devices (e.g: non-PCIe), and was a nice
+"subscriber/provider" model in that, if, and only if you had a PCIe root
+complex, would you be overriding a given device's dma_ops. AFAIR
+Christoph did not like that, so here we are now.
 
-Although there are some "gaps" that can be added between the
-individual mappings by software, the permutation of memory regions for
-the most part is fixed by HW.  The solution of having something close
-to an identity mapping is not possible.
+So maybe a solution somewhere in between is to allow the ARM machine to
+provide custom pfn_to_dma(), dma_to_pfn() and whatnot, and those, can
+potentially be resolved via the PCIe root complex driver through
+explicit call? I am thinking about something like this, not that I think
+this is any better than overriding a given devices' dma_ops, but maybe
+that will fly...:
 
-The idea behind this HW design is that the same PCIe module can
-act as an RC or EP, and if it acts as an EP it concatenates all
-of system memory into a BAR so anything can be accessed.  Unfortunately,
-when the PCIe block is in the role of an RC it also presents this
-"BAR" to downstream PCIe devices, rather than offering an identity map
-between its system memory and PCIe space.
-
-Suppose that an endpoint driver allocs some DMA memory.  Suppose this
-memory is located at 0x6000_0000, which is in the middle of memc1-a.
-The driver wants a dma_addr_t value that it can pass on to the EP to
-use.  Without doing any custom mapping, the EP will use this value for
-DMA: the driver will get a dma_addr_t equal to 0x6000_0000.  But this
-won't work; the device needs a dma_addr_t that reflects the PCIe space
-address, namely 0xa000_0000.
-
-So, essentially the solution to this problem must modify the
-dma_addr_t returned by the DMA routines routines.  The method to do
-this is to redefine the __dma_to_phys() and __phys_to_dma() functions
-of the ARM, ARM64, and MIPS architectures.  This commit sets up the
-infrastructure in the Brcm PCIe controller to prepare for this, while
-there is three other subsequent commits to implement/redefine these
-two functions for the three target architectures.
-
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
----
- drivers/pci/controller/pcie-brcmstb.c | 130 ++++++++++++++++++++++++++++++----
- include/soc/brcmstb/common.h          |  16 +++++
- 2 files changed, 133 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 9c87d10..abfa429 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -21,6 +21,7 @@
- #include <linux/printk.h>
- #include <linux/sizes.h>
- #include <linux/slab.h>
-+#include <soc/brcmstb/common.h>
- #include <soc/brcmstb/memory_api.h>
- #include <linux/string.h>
- #include <linux/types.h>
-@@ -321,6 +322,7 @@ static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
- 	(((val) & ~reg##_##field##_MASK) | \
- 	 (reg##_##field##_MASK & (field_val << reg##_##field##_SHIFT)))
- 
-+static struct of_pci_range *brcm_dma_ranges;
- static phys_addr_t scb_size[BRCM_MAX_SCB];
- static int num_memc;
- static int num_pcie;
-@@ -599,6 +601,79 @@ static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie,
- 		WR_FLD_RB(pcie->base, PCIE_MISC_PCIE_CTRL, PCIE_PERSTB, !val);
- }
- 
-+static int brcm_pcie_parse_map_dma_ranges(struct brcm_pcie *pcie)
-+{
-+	int i;
-+	struct of_pci_range_parser parser;
-+	struct device_node *dn = pcie->dn;
+diff --git a/arch/arm/include/asm/dma-mapping.h
+b/arch/arm/include/asm/dma-mapping.h
+index 8436f6ade57d..507d3060c899 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -31,8 +31,15 @@ static inline const struct dma_map_ops
+*get_arch_dma_ops(struct bus_type *bus)
+  * addresses. They must not be used by drivers.
+  */
+ #ifndef __arch_pfn_to_dma
++dma_addr_t (*mach_pfn_to_dma)(struct device *dev, unsigned long pfn);
++unsigned long (*mach_dma_to_pfn)(struct device *dev, dma_addr_t addr);
++void *(*mach_dma_to_virt)(struct device *dev, dma_addr_t addr);
++dma_addr_t *(*mach_virt_to_dma)(struct device *dev, void *addr);
 +
-+	/*
-+	 * Parse dma-ranges property if present.  If there are multiple
-+	 * PCIe controllers, we only have to parse from one of them since
-+	 * the others will have an identical mapping.
-+	 */
-+	if (!of_pci_dma_range_parser_init(&parser, dn)) {
-+		struct of_pci_range *p;
-+		unsigned int max_ranges = (parser.end - parser.range)
-+			/ parser.np;
-+
-+		/* Add a null entry to indicate the end of the array */
-+		brcm_dma_ranges = kcalloc(max_ranges + 1,
-+					  sizeof(struct of_pci_range),
-+					  GFP_KERNEL);
-+		if (!brcm_dma_ranges)
-+			return -ENOMEM;
-+
-+		p = brcm_dma_ranges;
-+		while (of_pci_range_parser_one(&parser, p))
-+			p++;
-+	}
-+
-+	for (i = 0, num_memc = 0; i < BRCM_MAX_SCB; i++) {
-+		u64 size = brcmstb_memory_memc_size(i);
-+
-+		if (size == (u64)-1) {
-+			dev_err(pcie->dev, "cannot get memc%d size", i);
-+			return -EINVAL;
-+		} else if (size) {
-+			scb_size[i] = roundup_pow_of_two_64(size);
-+			num_memc++;
-+		} else {
-+			break;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+dma_addr_t brcm_phys_to_dma(struct device *dev, phys_addr_t paddr)
-+{
-+	struct of_pci_range *p;
-+
-+	if (!dev || !dev_is_pci(dev))
-+		return (dma_addr_t)paddr;
-+	for (p = brcm_dma_ranges; p && p->size; p++)
-+		if (paddr >= p->cpu_addr && paddr < (p->cpu_addr + p->size))
-+			return (dma_addr_t)(paddr - p->cpu_addr + p->pci_addr);
-+
-+	return (dma_addr_t)paddr;
-+}
-+
-+phys_addr_t brcm_dma_to_phys(struct device *dev, dma_addr_t dev_addr)
-+{
-+	struct of_pci_range *p;
-+
-+	if (!dev || !dev_is_pci(dev))
-+		return (phys_addr_t)dev_addr;
-+	for (p = brcm_dma_ranges; p && p->size; p++)
-+		if (dev_addr >= p->pci_addr
-+		    && dev_addr < (p->pci_addr + p->size))
-+			return (phys_addr_t)
-+				(dev_addr - p->pci_addr + p->cpu_addr);
-+
-+	return (phys_addr_t)dev_addr;
-+}
-+
- static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
+ static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
  {
- 	int i, ret = 0;
-@@ -610,6 +685,10 @@ static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
- 		goto done;
- 	}
- 
-+	ret = brcm_pcie_parse_map_dma_ranges(pcie);
-+	if (ret)
-+		goto done;
-+
- 	/* Determine num_memc and their sizes */
- 	for (i = 0, num_memc = 0; i < BRCM_MAX_SCB; i++) {
- 		u64 size = brcmstb_memory_memc_size(i);
-@@ -639,8 +718,13 @@ static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
- static void brcm_pcie_remove_controller(struct brcm_pcie *pcie)
++       if (mach_pfn_to_dma)
++               return (dma_addr_t)mach_pfn_to_dma(dev, pfn);
+        if (dev)
+                pfn -= dev->dma_pfn_offset;
+        return (dma_addr_t)__pfn_to_bus(pfn);
+@@ -42,6 +49,8 @@ static inline unsigned long dma_to_pfn(struct device
+*dev, dma_addr_t addr)
  {
- 	mutex_lock(&brcm_pcie_lock);
--	if (--num_pcie == 0)
--		num_memc = 0;
-+	if (--num_pcie > 0)
-+		goto out;
+        unsigned long pfn = __bus_to_pfn(addr);
+
++       if (mach_dma_to_pfn)
++               return mach_dma_to_pfn(dev, addr);
+        if (dev)
+                pfn += dev->dma_pfn_offset;
+
+@@ -50,6 +59,9 @@ static inline unsigned long dma_to_pfn(struct device
+*dev, dma_addr_t addr)
+
+ static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+ {
++       if (mach_dma_to_virt)
++               return mach_dma_to_virt(dev, addr);
 +
-+	kfree(brcm_dma_ranges);
-+	brcm_dma_ranges = NULL;
-+	num_memc = 0;
-+out:
- 	mutex_unlock(&brcm_pcie_lock);
+        if (dev) {
+                unsigned long pfn = dma_to_pfn(dev, addr);
+
+@@ -61,6 +73,8 @@ static inline void *dma_to_virt(struct device *dev,
+dma_addr_t addr)
+
+ static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+ {
++       if (mach_virt_to_dma)
++               mach_virt_to_dma(dev, addr);
+        if (dev)
+                return pfn_to_dma(dev, virt_to_pfn(addr));
+
+diff --git a/arch/arm/mach-bcm/brcmstb.c b/arch/arm/mach-bcm/brcmstb.c
+index 5f127d5f1045..d78a892604c0 100644
+--- a/arch/arm/mach-bcm/brcmstb.c
++++ b/arch/arm/mach-bcm/brcmstb.c
+@@ -14,6 +14,7 @@
+ #include <linux/init.h>
+ #include <linux/irqchip.h>
+ #include <linux/of_platform.h>
++#include <linux/dma-mapping.h>
+
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+@@ -39,6 +40,16 @@ static void __init brcmstb_init_irq(void)
+        irqchip_init();
  }
- 
-@@ -747,11 +831,37 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
- 	 */
- 	rc_bar2_size = roundup_pow_of_two_64(total_mem_size);
- 
--	/*
--	 * Set simple configuration based on memory sizes
--	 * only.  We always start the viewport at address 0.
--	 */
--	rc_bar2_offset = 0;
-+	if (brcm_dma_ranges) {
-+		/*
-+		 * The best-case scenario is to place the inbound
-+		 * region in the first 4GB of pcie-space, as some
-+		 * legacy devices can only address 32bits.
-+		 * We would also like to put the MSI under 4GB
-+		 * as well, since some devices require a 32bit
-+		 * MSI target address.
-+		 */
-+		if (total_mem_size <= 0xc0000000ULL &&
-+		    rc_bar2_size <= 0x100000000ULL) {
-+			rc_bar2_offset = 0;
-+		} else {
-+			/*
-+			 * The system memory is 4GB or larger so we
-+			 * cannot start the inbound region at location
-+			 * 0 (since we have to allow some space for
-+			 * outbound memory @ 3GB).  So instead we
-+			 * start it at the 1x multiple of its size
-+			 */
-+			rc_bar2_offset = rc_bar2_size;
-+		}
-+
-+	} else {
-+		/*
-+		 * Set simple configuration based on memory sizes
-+		 * only.  We always start the viewport at address 0,
-+		 * and set the MSI target address accordingly.
-+		 */
-+		rc_bar2_offset = 0;
-+	}
- 
- 	tmp = lower_32_bits(rc_bar2_offset);
- 	tmp = INSERT_FIELD(tmp, PCIE_MISC_RC_BAR2_CONFIG_LO, SIZE,
-@@ -969,7 +1079,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 	struct brcm_pcie *pcie;
- 	struct resource *res;
- 	void __iomem *base;
--	u32 tmp;
- 	struct pci_host_bridge *bridge;
- 	struct pci_bus *child;
- 
-@@ -986,11 +1095,6 @@ static int brcm_pcie_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
--	if (of_property_read_u32(dn, "dma-ranges", &tmp) == 0) {
--		dev_err(&pdev->dev, "cannot yet handle dma-ranges\n");
--		return -EINVAL;
--	}
--
- 	data = of_id->data;
- 	pcie->reg_offsets = data->offsets;
- 	pcie->reg_field_info = data->reg_field_info;
-diff --git a/include/soc/brcmstb/common.h b/include/soc/brcmstb/common.h
-index cfb5335..a7f19e0 100644
---- a/include/soc/brcmstb/common.h
-+++ b/include/soc/brcmstb/common.h
-@@ -12,4 +12,20 @@
- 
- bool soc_is_brcmstb(void);
- 
-+#if defined(CONFIG_PCIE_BRCMSTB)
-+dma_addr_t brcm_phys_to_dma(struct device *dev, phys_addr_t paddr);
-+phys_addr_t brcm_dma_to_phys(struct device *dev, dma_addr_t dev_addr);
-+#else
-+static inline dma_addr_t brcm_phys_to_dma(struct device *dev, phys_addr_t paddr)
+
++static void __init brcmstb_init_late(void)
 +{
-+	return (dma_addr_t)paddr;
-+}
-+
-+static inline phys_addr_t brcm_dma_to_phys(struct device *dev,
-+					   dma_addr_t dev_addr)
-+{
-+	return (phys_addr_t)dev_addr;
-+}
++#if IS_ENABLED(CONFIG_PCIE_BRCMSTB)
++       mach_pfn_to_dma = brcm_phys_to_dma;
++       mach_dma_to_pfn = brcm_dma_to_phys;
++       mach_dma_to_virt = brcm_dma_to_virt;
++       mach_virt_to_dma = brcm_virt_to_dma;
 +#endif
++}
 +
- #endif /* __SOC_BRCMSTB_COMMON_H__ */
+ static const char *const brcmstb_match[] __initconst = {
+        "brcm,bcm7445",
+        "brcm,brcmstb",
+@@ -48,4 +59,5 @@ static const char *const brcmstb_match[] __initconst = {
+ DT_MACHINE_START(BRCMSTB, "Broadcom STB (Flattened Device Tree)")
+        .dt_compat      = brcmstb_match,
+        .init_irq       = brcmstb_init_irq,
++       .init_late      = brcmstb_init_late,
+ MACHINE_END
+
+
+
+
+> 	__arch_pfn_to_dma()
+> 	__arch_dma_to_pfn()
+> 	__arch_dma_to_virt()
+> 	__arch_virt_to_dma()
+> 
+> as these are the functions invoked by __dma_to_phys() and
+> __phys_to_dma().  Unfortunately, the only apparent approach to do this
+> is to declare and define the four sub-functions in
+> arch/arm/mach-bcm/include/mach/memory.h, and in doing so we must move
+> out of ARCH_MULTIPLATFORM and create brcmstb_defconfig, as we were
+> previously using multi_v7_defconfig.
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> ---
+>  arch/arm/Kconfig                            |  33 +++++
+>  arch/arm/configs/brcmstb_defconfig          | 204 ++++++++++++++++++++++++++++
+>  arch/arm/configs/multi_v7_defconfig         |   3 -
+>  arch/arm/mach-bcm/Kconfig                   |  21 +--
+>  arch/arm/mach-bcm/Makefile.boot             |   0
+>  arch/arm/mach-bcm/include/mach/irqs.h       |   3 +
+>  arch/arm/mach-bcm/include/mach/memory.h     |  47 +++++++
+>  arch/arm/mach-bcm/include/mach/uncompress.h |   8 ++
+>  8 files changed, 296 insertions(+), 23 deletions(-)
+>  create mode 100644 arch/arm/configs/brcmstb_defconfig
+>  create mode 100644 arch/arm/mach-bcm/Makefile.boot
+>  create mode 100644 arch/arm/mach-bcm/include/mach/irqs.h
+>  create mode 100644 arch/arm/mach-bcm/include/mach/memory.h
+>  create mode 100644 arch/arm/mach-bcm/include/mach/uncompress.h
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index e8cd55a..913765b 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -637,6 +637,39 @@ config ARCH_OMAP1
+>  	help
+>  	  Support for older TI OMAP1 (omap7xx, omap15xx or omap16xx)
+>  
+> +config ARCH_BRCMSTB
+> +	bool "Broadcom BCM7XXX based boards"
+> +	select ARM_HAS_SG_CHAIN
+> +	select ARM_PATCH_PHYS_VIRT
+> +	select TIMER_OF
+> +	select COMMON_CLK
+> +	select GENERIC_CLOCKEVENTS
+> +	select MULTI_IRQ_HANDLER
+> +	select MIGHT_HAVE_PCI
+> +	select PCI_DOMAINS if PCI
+> +	select USE_OF
+> +
+> +	select CPU_V7
+> +	select ARCH_BCM
+> +	select HAVE_SMP
+> +	select AUTO_ZRELADDR
+> +	select ARM_GIC
+> +	select ARM_GIC_V3
+> +	select HAVE_ARM_ARCH_TIMER
+> +	select SPARSE_IRQ
+> +	select BRCMSTB_L2_IRQ
+> +	select BCM7120_L2_IRQ
+> +	select ARCH_HAS_HOLES_MEMORYMODEL
+> +	select ARCH_DMA_ADDR_T_64BIT if ARM_LPAE
+> +	select ZONE_DMA if ARM_LPAE
+> +	select NEED_MACH_MEMORY_H
+> +	help
+> +	  Say Y if you intend to run the kernel on a Broadcom ARM-based STB
+> +	  chipset.
+> +
+> +	  This enables support for Broadcom ARM-based set-top box chipsets,
+> +	  including the 7445 family of chips.
+> +
+>  endchoice
+>  
+>  menu "Multiple platform selection"
+> diff --git a/arch/arm/configs/brcmstb_defconfig b/arch/arm/configs/brcmstb_defconfig
+> new file mode 100644
+> index 0000000..572fcf32
+> --- /dev/null
+> +++ b/arch/arm/configs/brcmstb_defconfig
+> @@ -0,0 +1,204 @@
+> +CONFIG_POSIX_MQUEUE=y
+> +CONFIG_NO_HZ=y
+> +CONFIG_HIGH_RES_TIMERS=y
+> +CONFIG_IRQ_TIME_ACCOUNTING=y
+> +CONFIG_LOG_BUF_SHIFT=16
+> +CONFIG_CGROUPS=y
+> +CONFIG_RELAY=y
+> +CONFIG_BLK_DEV_INITRD=y
+> +CONFIG_INITRAMFS_SOURCE="romfs"
+> +CONFIG_EMBEDDED=y
+> +CONFIG_PERF_EVENTS=y
+> +CONFIG_MODULES=y
+> +CONFIG_MODULE_FORCE_LOAD=y
+> +CONFIG_MODULE_UNLOAD=y
+> +CONFIG_MODVERSIONS=y
+> +CONFIG_PARTITION_ADVANCED=y
+> +CONFIG_ARCH_BRCMSTB=y
+> +CONFIG_ARM_LPAE=y
+> +CONFIG_ARM_THUMBEE=y
+> +CONFIG_ARM_ERRATA_430973=y
+> +CONFIG_ARM_ERRATA_720789=y
+> +CONFIG_ARM_ERRATA_754322=y
+> +CONFIG_ARM_ERRATA_754327=y
+> +CONFIG_ARM_ERRATA_764369=y
+> +CONFIG_ARM_ERRATA_775420=y
+> +CONFIG_ARM_ERRATA_798181=y
+> +CONFIG_PCI=y
+> +CONFIG_PCIEPORTBUS=y
+> +CONFIG_PCI_MSI=y
+> +CONFIG_SMP=y
+> +CONFIG_MCPM=y
+> +CONFIG_NR_CPUS=16
+> +CONFIG_ARM_PSCI=y
+> +CONFIG_HZ_1000=y
+> +CONFIG_HIGHMEM=y
+> +CONFIG_CMA=y
+> +CONFIG_ARM_APPENDED_DTB=y
+> +CONFIG_ARM_ATAG_DTB_COMPAT=y
+> +CONFIG_EFI=y
+> +CONFIG_CPU_FREQ=y
+> +CONFIG_CPU_FREQ_DEFAULT_GOV_ONDEMAND=y
+> +CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+> +CONFIG_CPU_FREQ_GOV_USERSPACE=y
+> +CONFIG_CPU_FREQ_GOV_CONSERVATIVE=y
+> +CONFIG_CPU_FREQ_GOV_SCHEDUTIL=y
+> +CONFIG_CPU_IDLE=y
+> +CONFIG_VFP=y
+> +CONFIG_PM_DEBUG=y
+> +CONFIG_NET=y
+> +CONFIG_PACKET=y
+> +CONFIG_UNIX=y
+> +CONFIG_INET=y
+> +CONFIG_IP_MULTICAST=y
+> +CONFIG_IP_PNP=y
+> +CONFIG_IP_PNP_DHCP=y
+> +CONFIG_IP_PNP_BOOTP=y
+> +CONFIG_IP_PNP_RARP=y
+> +CONFIG_IP_MROUTE=y
+> +CONFIG_IP_PIMSM_V1=y
+> +CONFIG_IP_PIMSM_V2=y
+> +# CONFIG_INET_XFRM_MODE_TRANSPORT is not set
+> +# CONFIG_INET_XFRM_MODE_TUNNEL is not set
+> +# CONFIG_INET_XFRM_MODE_BEET is not set
+> +CONFIG_INET_UDP_DIAG=y
+> +CONFIG_TCP_CONG_ADVANCED=y
+> +CONFIG_TCP_CONG_BIC=y
+> +# CONFIG_TCP_CONG_WESTWOOD is not set
+> +# CONFIG_TCP_CONG_HTCP is not set
+> +# CONFIG_IPV6 is not set
+> +CONFIG_BRIDGE=y
+> +CONFIG_NET_DSA=y
+> +CONFIG_CFG80211=y
+> +CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
+> +CONFIG_DEVTMPFS=y
+> +CONFIG_DEVTMPFS_MOUNT=y
+> +CONFIG_DMA_CMA=y
+> +CONFIG_CMA_ALIGNMENT=9
+> +CONFIG_MTD=y
+> +CONFIG_MTD_CMDLINE_PARTS=y
+> +CONFIG_MTD_BLOCK=y
+> +CONFIG_MTD_CFI=y
+> +CONFIG_MTD_JEDECPROBE=y
+> +CONFIG_MTD_CFI_INTELEXT=y
+> +CONFIG_MTD_CFI_AMDSTD=y
+> +CONFIG_MTD_CFI_STAA=y
+> +CONFIG_MTD_ROM=y
+> +CONFIG_MTD_ABSENT=y
+> +CONFIG_MTD_PHYSMAP_OF=y
+> +CONFIG_MTD_M25P80=y
+> +CONFIG_MTD_NAND=y
+> +CONFIG_MTD_NAND_BRCMNAND=y
+> +CONFIG_MTD_SPI_NOR=y
+> +# CONFIG_MTD_SPI_NOR_USE_4K_SECTORS is not set
+> +CONFIG_MTD_UBI=y
+> +CONFIG_MTD_UBI_GLUEBI=y
+> +CONFIG_BLK_DEV_LOOP=y
+> +CONFIG_BLK_DEV_RAM=y
+> +CONFIG_BLK_DEV_RAM_SIZE=8192
+> +CONFIG_EEPROM_93CX6=y
+> +CONFIG_BLK_DEV_SD=y
+> +CONFIG_BLK_DEV_SR=y
+> +CONFIG_CHR_DEV_SG=y
+> +CONFIG_ATA=y
+> +CONFIG_SATA_AHCI_PLATFORM=y
+> +CONFIG_AHCI_BRCM=y
+> +CONFIG_NETDEVICES=y
+> +CONFIG_NET_DSA_BCM_SF2=y
+> +# CONFIG_NET_VENDOR_ARC is not set
+> +# CONFIG_NET_CADENCE is not set
+> +CONFIG_BCMGENET=y
+> +CONFIG_SYSTEMPORT=y
+> +# CONFIG_NET_VENDOR_MARVELL is not set
+> +# CONFIG_NET_VENDOR_MELLANOX is not set
+> +# CONFIG_NET_VENDOR_MICREL is not set
+> +# CONFIG_NET_VENDOR_MICROCHIP is not set
+> +# CONFIG_NET_VENDOR_NATSEMI is not set
+> +# CONFIG_NET_VENDOR_SEEQ is not set
+> +# CONFIG_NET_VENDOR_SMSC is not set
+> +# CONFIG_NET_VENDOR_STMICRO is not set
+> +# CONFIG_NET_VENDOR_VIA is not set
+> +# CONFIG_NET_VENDOR_WIZNET is not set
+> +CONFIG_USB_PEGASUS=y
+> +CONFIG_USB_USBNET=y
+> +# CONFIG_USB_NET_NET1080 is not set
+> +# CONFIG_USB_NET_CDC_SUBSET is not set
+> +# CONFIG_USB_NET_ZAURUS is not set
+> +CONFIG_INPUT_EVDEV=y
+> +CONFIG_MOUSE_PS2_ELANTECH=y
+> +CONFIG_INPUT_MISC=y
+> +CONFIG_INPUT_UINPUT=y
+> +# CONFIG_SERIO_SERPORT is not set
+> +CONFIG_VT_HW_CONSOLE_BINDING=y
+> +CONFIG_SERIAL_8250=y
+> +CONFIG_SERIAL_8250_CONSOLE=y
+> +CONFIG_SERIAL_8250_DW=y
+> +CONFIG_SERIAL_OF_PLATFORM=y
+> +CONFIG_HW_RANDOM=y
+> +CONFIG_I2C_CHARDEV=y
+> +CONFIG_SPI=y
+> +CONFIG_SPI_BITBANG=y
+> +CONFIG_GPIOLIB=y
+> +CONFIG_GPIO_SYSFS=y
+> +CONFIG_POWER_RESET=y
+> +# CONFIG_HWMON is not set
+> +CONFIG_MFD_SYSCON=y
+> +CONFIG_REGULATOR=y
+> +CONFIG_REGULATOR_FIXED_VOLTAGE=y
+> +CONFIG_MEDIA_SUPPORT=y
+> +CONFIG_MEDIA_CAMERA_SUPPORT=y
+> +CONFIG_MEDIA_USB_SUPPORT=y
+> +CONFIG_USB_GSPCA=y
+> +CONFIG_DRM=y
+> +CONFIG_SOUND=m
+> +CONFIG_SND=m
+> +CONFIG_SND_SOC=m
+> +CONFIG_USB=y
+> +CONFIG_USB_MON=y
+> +CONFIG_USB_XHCI_HCD=y
+> +CONFIG_USB_EHCI_HCD=y
+> +CONFIG_USB_OHCI_HCD=y
+> +CONFIG_USB_STORAGE=y
+> +CONFIG_USB_GADGET=y
+> +CONFIG_USB_MASS_STORAGE=y
+> +CONFIG_MMC=y
+> +CONFIG_MMC_BLOCK_MINORS=16
+> +CONFIG_MMC_SDHCI=y
+> +CONFIG_MMC_SDHCI_PLTFM=y
+> +CONFIG_RTC_CLASS=y
+> +# CONFIG_IOMMU_SUPPORT is not set
+> +CONFIG_IIO=y
+> +CONFIG_INA2XX_ADC=y
+> +CONFIG_RESET_CONTROLLER=y
+> +CONFIG_PHY_BRCM_SATA=y
+> +CONFIG_EXT4_FS=y
+> +CONFIG_JBD2_DEBUG=y
+> +CONFIG_FUSE_FS=y
+> +CONFIG_CUSE=y
+> +CONFIG_ISO9660_FS=y
+> +CONFIG_JOLIET=y
+> +CONFIG_ZISOFS=y
+> +CONFIG_UDF_FS=y
+> +CONFIG_MSDOS_FS=y
+> +CONFIG_VFAT_FS=y
+> +CONFIG_TMPFS=y
+> +CONFIG_JFFS2_FS=y
+> +CONFIG_UBIFS_FS=y
+> +CONFIG_CRAMFS=y
+> +CONFIG_SQUASHFS=y
+> +CONFIG_SQUASHFS_LZO=y
+> +CONFIG_SQUASHFS_XZ=y
+> +CONFIG_NFS_FS=y
+> +CONFIG_NFS_V3_ACL=y
+> +CONFIG_NFS_V4=y
+> +CONFIG_NFS_V4_1=y
+> +CONFIG_NFS_V4_2=y
+> +CONFIG_ROOT_NFS=y
+> +CONFIG_NLS_CODEPAGE_437=y
+> +CONFIG_NLS_ISO8859_1=y
+> +CONFIG_PRINTK_TIME=y
+> +CONFIG_DEBUG_INFO=y
+> +CONFIG_DEBUG_INFO_REDUCED=y
+> +CONFIG_MAGIC_SYSRQ=y
+> +# CONFIG_CRYPTO_HW is not set
+> +CONFIG_CRC_CCITT=y
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index fc33444..33c91f8 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -17,7 +17,6 @@ CONFIG_ARCH_AT91=y
+>  CONFIG_SOC_SAMA5D2=y
+>  CONFIG_SOC_SAMA5D3=y
+>  CONFIG_SOC_SAMA5D4=y
+> -CONFIG_ARCH_BCM=y
+>  CONFIG_ARCH_BCM_CYGNUS=y
+>  CONFIG_ARCH_BCM_HR2=y
+>  CONFIG_ARCH_BCM_NSP=y
+> @@ -26,7 +25,6 @@ CONFIG_ARCH_BCM_281XX=y
+>  CONFIG_ARCH_BCM_21664=y
+>  CONFIG_ARCH_BCM2835=y
+>  CONFIG_ARCH_BCM_63XX=y
+> -CONFIG_ARCH_BRCMSTB=y
+>  CONFIG_ARCH_BERLIN=y
+>  CONFIG_MACH_BERLIN_BG2=y
+>  CONFIG_MACH_BERLIN_BG2CD=y
+> @@ -229,7 +227,6 @@ CONFIG_B53_MMAP_DRIVER=m
+>  CONFIG_B53_SRAB_DRIVER=m
+>  CONFIG_NET_DSA_BCM_SF2=m
+>  CONFIG_SUN4I_EMAC=y
+> -CONFIG_BCMGENET=m
+>  CONFIG_BGMAC_BCMA=y
+>  CONFIG_SYSTEMPORT=m
+>  CONFIG_MACB=y
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index 25aac6e..2c3ad42 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  menuconfig ARCH_BCM
+>  	bool "Broadcom SoC Support"
+> -	depends on ARCH_MULTI_V6_V7
+> +	depends on ARCH_BRCMSTB
+>  	help
+>  	  This enables support for Broadcom ARM based SoC chips
+>  
+> @@ -203,23 +203,4 @@ config ARCH_BCM_63XX
+>  	  It currently supports the 'BCM63XX' ARM-based family, which includes
+>  	  the BCM63138 variant.
+>  
+> -config ARCH_BRCMSTB
+> -	bool "Broadcom BCM7XXX based boards"
+> -	depends on ARCH_MULTI_V7
+> -	select ARM_GIC
+> -	select ARM_ERRATA_798181 if SMP
+> -	select HAVE_ARM_ARCH_TIMER
+> -	select BRCMSTB_L2_IRQ
+> -	select BCM7120_L2_IRQ
+> -	select ARCH_HAS_HOLES_MEMORYMODEL
+> -	select ZONE_DMA if ARM_LPAE
+> -	select SOC_BRCMSTB
+> -	select SOC_BUS
+> -	help
+> -	  Say Y if you intend to run the kernel on a Broadcom ARM-based STB
+> -	  chipset.
+> -
+> -	  This enables support for Broadcom ARM-based set-top box chipsets,
+> -	  including the 7445 family of chips.
+> -
+>  endif
+> diff --git a/arch/arm/mach-bcm/Makefile.boot b/arch/arm/mach-bcm/Makefile.boot
+> new file mode 100644
+> index 0000000..e69de29
+> diff --git a/arch/arm/mach-bcm/include/mach/irqs.h b/arch/arm/mach-bcm/include/mach/irqs.h
+> new file mode 100644
+> index 0000000..f1f3f22
+> --- /dev/null
+> +++ b/arch/arm/mach-bcm/include/mach/irqs.h
+> @@ -0,0 +1,3 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#define NR_IRQS NR_IRQS_LEGACY
+> diff --git a/arch/arm/mach-bcm/include/mach/memory.h b/arch/arm/mach-bcm/include/mach/memory.h
+> new file mode 100644
+> index 0000000..a90a216
+> --- /dev/null
+> +++ b/arch/arm/mach-bcm/include/mach/memory.h
+> @@ -0,0 +1,47 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +
+> +#ifndef __ASM_ARCH_MEMORY_H__
+> +#define __ASM_ARCH_MEMORY_H__
+> +#ifndef __ASSEMBLY__
+> +
+> +struct device;
+> +
+> +#include <soc/brcmstb/common.h>
+> +
+> +#ifdef CONFIG_PCIE_BRCMSTB
+> +#define __arch_pfn_to_dma(dev, pfn)					\
+> +	({								\
+> +		if (dev)						\
+> +			pfn -= dev->dma_pfn_offset;			\
+> +		(dma_addr_t)brcm_phys_to_dma(dev, __pfn_to_phys(pfn));	\
+> +	})
+> +
+> +#define  __arch_dma_to_pfn(dev, addr)					\
+> +	({								\
+> +		unsigned long pfn = __phys_to_pfn(brcm_dma_to_phys(dev, addr));\
+> +		if (dev)						\
+> +			pfn += dev->dma_pfn_offset;			\
+> +		pfn;							\
+> +	})
+> +
+> +#define __arch_dma_to_virt(dev, addr)					\
+> +	({								\
+> +		void *v;						\
+> +		if (dev) {						\
+> +			unsigned long pfn = dma_to_pfn(dev, addr);	\
+> +			v = phys_to_virt(__pfn_to_phys(pfn));		\
+> +		} else {						\
+> +			v = (void *)__bus_to_virt((unsigned long)addr);	\
+> +		}							\
+> +		v;							\
+> +	})
+> +
+> +#define __arch_virt_to_dma(dev, addr)					\
+> +	({								\
+> +		(dev) ? pfn_to_dma(dev, virt_to_pfn(addr))		\
+> +		      : (dma_addr_t)__virt_to_bus((unsigned long)(addr));\
+> +	})
+> +
+> +#endif /* CONFIG_PCIE_BRCMSTB */
+> +#endif /* __ASSEMBLY__ */
+> +#endif /* __ASM_ARCH_MEMORY_H__ */
+> diff --git a/arch/arm/mach-bcm/include/mach/uncompress.h b/arch/arm/mach-bcm/include/mach/uncompress.h
+> new file mode 100644
+> index 0000000..b297333
+> --- /dev/null
+> +++ b/arch/arm/mach-bcm/include/mach/uncompress.h
+> @@ -0,0 +1,8 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifdef CONFIG_DEBUG_UNCOMPRESS
+> +void putc(int c);
+> +#else
+> +static inline void putc(int c) {}
+> +#endif
+> +static inline void flush(void) {}
+> +static inline void arch_decomp_setup(void) {}
+> 
+
+
 -- 
-1.9.0.138.g2de3478
+Florian
