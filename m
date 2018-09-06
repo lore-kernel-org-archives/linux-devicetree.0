@@ -1,89 +1,87 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Thu, 06 Sep 2018 13:25:56 -0700
-Message-ID: <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <4035252.QuWadVx7pr@avalon> <1569297.pdEFdpi3HS@avalon>
- <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
- <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: pm8998: Add adc node
+Date: Thu, 6 Sep 2018 13:36:15 -0700
+Message-ID: <20180906203615.GD22824@google.com>
+References: <20180808191339.16875-1-mka@chromium.org>
+ <20180808191339.16875-3-mka@chromium.org>
+ <CAD=FV=Ug3oiHOLxYRXtr0LbBUyXjBB=92fAYfpfhEQ8Xih6PNA@mail.gmail.com>
+ <20180827171003.GU160295@google.com>
+ <CAD=FV=Vvhjcs9UwLkyHJ+nxwRCk70SBC3eVxBXwK7DFcPeu8wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Vvhjcs9UwLkyHJ+nxwRCk70SBC3eVxBXwK7DFcPeu8wQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Siddartha Mohanadoss <smohanad@codeaurora.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYuMDkuMjAxOCAwNDowNywgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBXZWQsIFNlcCA1
-LCAyMDE4IGF0IDg6MzIgUE0gU3RlZmFuIEFnbmVyIDxzdGVmYW5AYWduZXIuY2g+IHdyb3RlOgo+
-PiBPbiAwNS4wOS4yMDE4IDAwOjQ0LCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+IAo+PiBHb29k
-IHBvaW50ISBJIGFjdHVhbGx5IHJlYWxseSBkb24ndCBsaWtlIHRoYXQgd2UgdXNlIHRoZSBzYW1l
-IGZsYWdzIGhlcmUKPj4gYnV0IGZyb20gYSBkaWZmZXJlbnQgcGVyc3BlY3RpdmUuIEVzcGVjaWFs
-bHkgc2luY2UgdGhlIGZsYWdzIGRlZmluZXMKPj4gZG9jdW1lbnQgdGhpbmdzIGRpZmZlcmVudGx5
-Ogo+Pgo+PiAvKiBkcml2ZSBkYXRhIG9uIHBvcy4gZWRnZSAqLwo+PiAjZGVmaW5lIERSTV9CVVNf
-RkxBR19QSVhEQVRBX1BPU0VER0UgICAgKDE8PDIpCj4+IC8qIGRyaXZlIGRhdGEgb24gbmVnLiBl
-ZGdlICovCj4+ICNkZWZpbmUgRFJNX0JVU19GTEFHX1BJWERBVEFfTkVHRURHRSAgICAoMTw8MykK
-PiAKPiBNYXliZSBhIHN0dXBpZCBjb21tZW50IGZyb20gbXkgc2lkZSwgYnV0IGNhbid0IHdlIGp1
-c3QgY2hhbmdlIHRoZQo+IGRvY3VtZW50YXRpb24gdG8gbWF0Y2ggdGhlIHVzZWNhc2VzPwo+IAo+
-IC8qIFRyaWdnZXIgcGl4ZWwgZGF0YSBsYXRjaCBvbiBwb3NpdGl2ZSBlZGdlICovCj4gI2RlZmlu
-ZSBEUk1fQlVTX0ZMQUdfUElYREFUQV9QT1NFREdFICAgICgxPDwyKQo+IAo+PiBVc2luZyB0aGUg
-b3Bwb3NpdGUgcGVyc3BlY3RpdmUgd291bGQgYWxzbyBuZWVkIHRyYW5zbGF0aW9uIGluIGNydGMK
-Pj4gZHJpdmVycy4uLiBTbyBmYXIgbm8gZHJpdmVyIHVzZXMgc2FtcGxpbmdfZWRnZS4KPj4KPj4g
-SSB3b3VsZCBwcmVmZXIgaWYgd2UgYWx3YXlzIHVzZSB0aGUgbWVhbmluZyBhcyBkb2N1bWVudGVk
-IGJ5IHRoZSBmbGFncy4KPj4KPj4gSSBndWVzcyB3ZSB3b3VsZCBuZWVkIHRvIGNvbnZlcnQgRFJN
-X0JVU19GTEFHX1BJWERBVEFfUE9TRURHRSAtPgo+PiBEUk1fQlVTX0ZMQUdfUElYREFUQV9ORUdF
-REdFLgo+Pgo+PiBMaW51cyBXYWxsZWlqLCB5b3UgYWRkZWQgc2FtcGxpbmcgZWRnZSwgYW55IHRo
-b3VnaHRzPwo+IAo+IEkganVzdCB0aG91Z2h0IGl0IHdhcyBnZW5lcmFsbHkgdXNlZnVsIHRvIGhh
-dmUgdHJpZ2dlcmluZyBlZGdlIGVuY29kZWQKPiBpbnRvIHRoZSBicmlkZ2UgYXMgaXQgbWFrZXMg
-aXQgY2xlYXIgdGhhdCB0aGlzIGVkZ2UgaXMgc29tZXRoaW5nCj4gdGhhdCBpcyBhIGRlbGF5ZWQg
-dmVyc2lvbiBvZiB0aGUgZHJpdmluZyBlZGdlIHdoaWNoIGlzIHN1YmplY3QgdG8KPiBjbG9jayBz
-a2V3IGNhdXNlZCBieSB0aGUgc3BlZWQgb2YgZWxlY3Ryb25zIGluIHNpbGljb24gYW5kCj4gY29w
-cGVyIGFuZCBzbGV3IHJhdGUgY2F1c2VkIGJ5IHBhcmFzaXRpYyBjYXBhY2l0YW5jZS4KCk9rLCBJ
-IHJlYWQgYSBiaXQgdXAgb24gdGhlIGhpc3Rvcnkgb2YgYnJpZGdlIHRpbWluZywgZXNwZWNpYWxs
-eToKaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzE1NTYxOC5odG1s
-CgpJTUhPLCB0aGlzIGdvdCBvdmVyZW5naW5lZXJlZC4gRm9yIGRpc3BsYXlzIHdlIGRvIG5vdCBu
-ZWVkIGFsbCB0aGF0CnNldHVwL3NhbXBsZSBkZWxheSB0aW1pbmcgaW5mb3JtYXRpb24sIGFuZCBt
-dWNoIGxvbmdlciBjYWJsZXMgYXJlIGluCnVzZS4gU28gd2h5IGlzIGFsbCB0aGF0IG5lZWRlZCBm
-b3IgYnJpZGdlcz8KCkZvciBMaW51cyBjYXNlLCB0aGUgVEhTODEzNChBL0IpIGRhdGEgc2hlZXQg
-SSBmb3VuZCAocmV2aXNlZCBNYXJjaCAyMDEwKQpjbGVhcmx5IHN0YXRlczoKQ2xvY2sgaW5wdXQu
-IEEgcmlzaW5nIGVkZ2Ugb24gQ0xLIGxhdGNoZXMgUlByMC03LCBHWTAtNywgQlBiMC03LgoKU28g
-d2UgbmVlZCB0byBkcml2ZSBvbiBuZWdhdGl2ZSBlZGdlLCBoZW5jZSBEUk1fQlVTX0ZMQUdfUElY
-REFUQV9ORUdFREdFCnNob3VsZCBiZSB1c2VkLCB3aGljaCBtYWtlcyB0aGUgcGwxMTEgZHJpdmVy
-IHNldHRpbmcgVElNMl9JUEM6IApodHRwOi8vaW5mb2NlbnRlci5hcm0uY29tL2hlbHAvaW5kZXgu
-anNwP3RvcGljPS9jb20uYXJtLmRvYy5kZGkwMTIxZC9pbmRleC5odG1sCgo+IERSTV9CVVNfRkxB
-R19QSVhEQVRBX1BPU0VER0UgaXMgdGhlIHJpZ2h0IHZhbHVlIGZvciBteSB1c2UgY2FzZXMsIGJ1
-dCBpdCAKPiBkb2Vzbid0IG1hdGNoIGhvdyB0aGUgQURWNzEyMyBvcGVyYXRlcy4gVXNpbmcgRFJN
-X0JVU19GTEFHX1BJWERBVEFfTkVHRURHRSAKPiB3b3VsZCBtYXRjaCB0aGUgaGFyZHdhcmUsIGJ1
-dCB3b3VsZCBicmVhayBkaXNwbGF5IGZvciBzb21lIG1vZGVzLCBkZXBlbmRpbmcgb24gCj4gdGhl
-IGRpc3BsYXkgY2xvY2sgZnJlcXVlbmN5IGFzIHRoZSBpbnRlcm5hbCA4LjVucyBvdXRwdXQgZGVs
-YXkgYXBwbGllZCB0byBhIAo+IGZhbGxpbmcgY2xvY2sgZWRnZSB3b3VsZCBmYWxsIHJpZ2h0IGlu
-dG8gdGhlIDEuN25zIHNldHVwICsgaG9sZCB0aW1lIHdpbmRvdyBvZiAKPiB0aGUgQURWNzEyMyBh
-cm91bmQgdGhlIHJpc2luZyBlZGdlLiBJIGNhbid0IHRlc3QgdGhpcyByaWdodCBub3cgYXMgSSBk
-b24ndCAKPiBoYXZlIGxvY2FsIGFjY2VzcyB0byBib2FyZHMgdXNpbmcgdGhlIEFEVjcxMjMsIGJ1
-dCBmcm9tIGEgcXVpY2sgY2FsY3VsYXRpb24gCj4gdGhhdCBpZ25vcmVzIHRoZSBQQ0IgdHJhbnNt
-aXNzaW9uIGRlbGF5IG1vZGVzIHdpdGggZnJlcXVlbmNpZXMgYmV0d2VlbiA1N01IeiAKPiBhbmQg
-NzFNSHogY291bGQgYnJlYWsgaWYgdGhlIGRhdGEgd2FzIG91dHB1dCBvbiB0aGUgZmFsbGluZyBl
-ZGdlIG9mIHRoZSBjbG9jay4KCklmIGNsb2NrcyB2cy4gZGF0YSBzaWduYWwgYXJlIHJlYWxseSB0
-aGF0IG11Y2ggb2ZmIG9uIFItQ2FyIERVLCB0aGVuCnBhcmFsbGVsIGRpc3BsYXlzIG11c3QgaGF2
-ZSB0aGUgdmVyeSBzYW1lIGlzc3VlLi4uCgpBcmUgeW91IHN1cmUgdGhhdCBvbmx5IHRoZSBjbG9j
-ayBzaWduYWwgaGFzIGFuIG91dHB1dCBkZWxheT8gQW5kIHRoYXQKdGhpcyBvdXRwdXQgZGVsYXkg
-aXMgYSBmaXhlZCB2YWx1ZSwgY2xvY2sgaW5kZXBlbmRlbnQ/CgpUeXBpY2FsbHksIGRlbGF5cyBh
-cHBseSB0byBhbGwgc2lnbmFscyBlcXVhbGx5LCBhbmQgb2Z0ZW4gYXJlIGNsb2NrCmZyZXF1ZW5j
-eSBkZXBlbmRlbnQuLi4KCldpdGhvdXQgcmVhbGx5IGxvb2tpbmcgYXQgdGhlIHNpZ25hbHMsIEkg
-d291bGQgbm90IGp1bXAgdG8gY29uY2x1c2lvbnMKaGVyZSEgSSBhbSBwcmV0dHkgc3VyZSB0aGF0
-IGRyaXZpbmcgb24gbmVnYXRpdmUgZWRnZSB3b3JrcyBqdXN0IGFzIHdlbGwuCgotLQpTdGVmYW4K
-Cj4gCj4gWW91cnMsCj4gTGludXMgV2FsbGVpagpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Sep 06, 2018 at 11:34:32AM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Aug 27, 2018 at 10:10 AM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> > On Fri, Aug 10, 2018 at 05:09:17PM -0700, Doug Anderson wrote:
+> >> Hi,
+> >>
+> >> On Wed, Aug 8, 2018 at 12:13 PM, Matthias Kaehlcke <mka@chromium.org> wrote:
+> >> > This adds the adc node to pm8998 based on the examples in the
+> >> > bindings. It also fixes the order of the included headers.
+> >> >
+> >> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> >> > ---
+> >> >  arch/arm64/boot/dts/qcom/pm8998.dtsi | 13 ++++++++++++-
+> >> >  1 file changed, 12 insertions(+), 1 deletion(-)
+> >> >
+> >> > diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> >> > index 92bed1e7d4bb..f70f6101bceb 100644
+> >> > --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> >> > +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> >> > @@ -1,8 +1,9 @@
+> >> >  // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> >> >  /* Copyright 2018 Google LLC. */
+> >> >
+> >> > -#include <dt-bindings/spmi/spmi.h>
+> >> > +#include <dt-bindings/iio/qcom,spmi-vadc.h>
+> >> >  #include <dt-bindings/interrupt-controller/irq.h>
+> >> > +#include <dt-bindings/spmi/spmi.h>
+> >> >
+> >> >  &spmi_bus {
+> >> >         pm8998_lsid0: pmic@0 {
+> >> > @@ -11,6 +12,16 @@
+> >> >                 #address-cells = <1>;
+> >> >                 #size-cells = <0>;
+> >> >
+> >> > +               pm8998_adc: adc@3100 {
+> >> > +                       compatible = "qcom,spmi-adc-rev2";
+> >> > +                       reg = <0x3100>;
+> >> > +                       interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
+> >> > +                       #address-cells = <1>;
+> >> > +                       #size-cells = <0>;
+> >> > +                       #io-channel-cells = <1>;
+> >> > +                       io-channel-ranges;
+> >> > +               };
+> >>
+> >> I'm a little confused about what the "io-channel-ranges" does here.
+> >> The documentation isn't clear at all to me for it.  If I'm reading it
+> >> right it's also supposed to be for iio-consumers, but you're using it
+> >> in a provider.  I see you copied this from the example.  Maybe the
+> >> example is wrong?  ...or I'm just confused...
+> >
+> > Yes, I copied it from the example, its use here is also not clear to
+> > me, other ADC providers like adc@126c0000 in exynos3250.dtsi or
+> > adc@180a6000 in bcm-cygnus.dtsi also specify it ...
+> >
+> > Siddartha/Jonathan, could you help to clarify if "io-channel-ranges"
+> > should really be specified here as the DT example suggests?
+> 
+> Does everything work if you just remove the "io-channel-ranges"?
+
+Yes, the ADC channels are still available within the kernel and
+through sysfs and provide reasonable values.
+
+> We could remove it and always add it back in later if someone could
+> explain what it's for or if we find a reason why it was needed?  ...or
+> we have any other ideas for how to get this resolved?  :(
+
+Sounds good, I'll respin with 'io-channel-ranges' removed.
