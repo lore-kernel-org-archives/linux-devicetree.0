@@ -1,192 +1,147 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v5 3/4] edac: synopsys: Add EDAC ECC support for ZynqMP
- DDRC
-Date: Thu, 6 Sep 2018 16:14:52 +0000
-Message-ID: <DM6PR02MB52273E288A625F7BD59BB2FFC1010@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1535722070-10394-1-git-send-email-manish.narani@xilinx.com>
- <1535722070-10394-4-git-send-email-manish.narani@xilinx.com>
- <20180905101935.GD2237@zn.tnic>
+From: Przemyslaw Gaj <pgaj@cadence.com>
+Subject: Re: [PATCH v6 01/10] i3c: Add core I3C infrastructure
+Date: Thu, 6 Sep 2018 16:17:41 +0000
+Message-ID: <B6FB5A1F-EBE3-4A30-A27F-1051969F0E25@cadence.com>
+References: <20180719152930.3715-1-boris.brezillon@bootlin.com>
+ <20180719152930.3715-2-boris.brezillon@bootlin.com>
+ <d2f40cc2-b344-69d1-4314-83524ad7b178@synopsys.com>
+ <20180824143934.6d6b6487@bbrezillon>
+ <bdb2924f-ecfa-1da3-41db-9ac77d4d933b@synopsys.com>
+ <20180824201600.7d80bca9@bbrezillon>
+ <fe839027-c4d7-4d6f-412b-5b315cbc7a39@synopsys.com>
+ <20180828140209.29155d00@bbrezillon>
+ <4DBE768F-3CDC-41BE-9CC8-E294E7277CB1@cadence.com>
+ <8abfb007-d755-36a4-5960-fddd61d04aa2@synopsys.com>
+ <3D2681D9-1ACC-42FF-9FAB-D86B3C689003@cadence.com>
+ <9584757a-e7e2-5bfe-fc2c-e9bc14ad65a8@synopsys.com>
+ <25862F03-9823-42B0-87AC-AE36D7E9C780@cadence.com>
+ <CAK8P3a3pkddD9VnogYryQKoL9Z_5qVRBXd6yr1z6CqGU692rXg@mail.gmail.com>
+ <20180906151437.4259d6fc@bbrezillon> <20180906152055.5618d235@bbrezillon>
+ <a08a0f8b-395b-f956-47d1-e29e0de4aae9@synopsys.com>
+ <20180906161443.0f76b246@bbrezillon>
+ <5a2ed122-b56f-421b-34e0-74ef551b76b8@synopsys.com>
+ <20180906180643.3b1420fc@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180905101935.GD2237@zn.tnic>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180906180643.3b1420fc@bbrezillon>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Goud <sgoud@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, Anirudha Sarangi <anirudh@xilinx.com>, "olof@lixom.net" <olof@lixom.net>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+Content-ID: <A558AE448C23FB49888F6D3909166BCB@namprd07.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, vitor <Vitor.Soares@synopsys.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kern>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
-
-Thanks for the review.
-
-> -----Original Message-----
-> From: Borislav Petkov [mailto:bp@alien8.de]
-> Sent: Wednesday, September 5, 2018 3:50 PM
-> To: Manish Narani <MNARANI@xilinx.com>
-> Cc: robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
-> <michals@xilinx.com>; mchehab@kernel.org; leoyang.li@nxp.com;
-> amit.kucheria@linaro.org; olof@lixom.net; Srinivas Goud <sgoud@xilinx.com>;
-> Anirudha Sarangi <anirudh@xilinx.com>; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> edac@vger.kernel.org
-> Subject: Re: [PATCH v5 3/4] edac: synopsys: Add EDAC ECC support for ZynqMP
-> DDRC
-> 
-> On Fri, Aug 31, 2018 at 06:57:49PM +0530, Manish Narani wrote:
-> > Add EDAC ECC support for ZynqMP DDRC IP. Also add support for ECC
-> > Error Injection in ZynqMP. The corrected and uncorrected error
-> > interrupts support is added. The Row, Column, Bank, Bank Group and
-> > Rank bits positions are determined via Address Map registers of Synopsys
-> DDRC.
-> > Minor indentation changes are also done for better readability.
-> >
-> > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> > ---
-> >  drivers/edac/Kconfig         |    2 +-
-> >  drivers/edac/synopsys_edac.c | 1054
-> > +++++++++++++++++++++++++++++++++++++-----
-> >  2 files changed, 937 insertions(+), 119 deletions(-)
-> 
-> ...
-> 
-> > @@ -222,11 +408,77 @@ static int synps_edac_geterror_info(struct
-> > synps_edac_priv *priv)  }
-> >
-> >  /**
-> > + * zynqmp_geterror_info - Get the current ECC error info
-> > + * @priv:	DDR memory controller private instance data
-> > + *
-> > + * Get the ECC error information from the ECC registers and clear the
-> > +error
-> > + * status bits in the ECC registers.
-> > + *
-> > + * Return: 0 if there is no error, otherwise return 1  */ static int
-> > +zynqmp_geterror_info(struct synps_edac_priv *priv) {
-> > +	void __iomem *base;
-> > +	struct synps_ecc_status *p;
-> > +	u32 regval, clearval = 0;
-> > +
-> > +	if (!priv)
-> > +		return 1;
-> 
-> Same as for the previous patch: why are you testing this since you're
-> dereferencing it before calling this function?
-
-Okay.
-
-> 
-> ...
-> 
-> > @@ -258,10 +536,46 @@ static void synps_edac_handle_error(struct
-> > mem_ctl_info *mci,  }
-> >
-> >  /**
-> > + * synps_edac_intr_handler - Interrupt Handler for ECC interrupts
-> > + * @irq:        irq number
-> > + * @dev_id:     device id pointer
-> > + *
-> > + * This is the ISR called by EDAC core interrupt thread.
-> 
-> There's an "EDAC core interrupt thread"?!? This is the first time I hear of it.
-> 
-> Try again.
-
-Okay. I will update this in v6.
-
-> 
-> > + * This is used to check and post ECC errors.
-> > + *
-> > + * Return: IRQ_NONE, if interrupt not set or IRQ_HANDLED otherwise.
-> > + */
-> > +static irqreturn_t synps_edac_intr_handler(int irq, void *dev_id) {
-> > +	struct mem_ctl_info *mci = dev_id;
-> > +	struct synps_edac_priv *priv = mci->pvt_info;
-> > +	const struct synps_platform_data *p_data = priv->p_data;
-> > +	int status, regval;
-> > +
-> > +	regval = readl(priv->baseaddr + DDR_QOS_IRQ_STAT_OFST);
-> > +	regval &= (DDR_QOSCE_MASK | DDR_QOSUE_MASK);
-> > +	if (!(regval & ECC_CE_UE_INTR_MASK))
-> > +		return IRQ_NONE;
-> > +
-> > +	status = p_data->geterror_info(priv);
-> > +	if (status)
-> > +		return IRQ_NONE;
-> > +
-> > +	priv->ce_cnt += priv->stat.ce_cnt;
-> > +	priv->ue_cnt += priv->stat.ue_cnt;
-> > +	synps_edac_handle_error(mci, &priv->stat);
-> > +
-> > +	edac_dbg(3, "Total error count ce %d ue %d\n",
-> 
-> "ce" and "ue" are also abbreviations and should be in caps.
-
-Okay. Will be taken care in v6.
-
-> 
-> ...
-> 
-> > +static DEVICE_ATTR_RW(inject_data_error);
-> > +static DEVICE_ATTR_RW(inject_data_poison);
-> > +
-> > +static int synps_edac_create_sysfs_attributes(struct mem_ctl_info
-> > +*mci) {
-> > +	int rc;
-> > +
-> > +	rc = device_create_file(&mci->dev, &dev_attr_inject_data_error);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +	rc = device_create_file(&mci->dev, &dev_attr_inject_data_poison);
-> > +	if (rc < 0)
-> > +		return rc;
-> > +	return 0;
-> > +}
-> 
-> I think I'm having a deja-vu:
-> 
-> Last time I said:
-> 
-> "More importantly, you need to put all that injection functionality behind
-> CONFIG_EDAC_DEBUG - you don't want to expose the injection capabilities on
-> a production machine."
-> 
-> and you said:
-> 
-> "I agree. I will update the same by keeping the above mentioned macro."
-> 
-> But maybe you've misunderstood me.
-
-I missed it in v5. Sorry for the inconvenience. Will update that in v6.
-
-> 
-> Grep the other EDAC drivers to find out how to hide the injection functionality
-> behind CONFIG_EDAC_DEBUG.
-> 
-> And maybe this patch is becoming huuge and too unwieldy to review properly
-> and for you to incorporate all the feedback.
-> 
-> Therefore, please split it in single patches, each of which is doing different
-> things:
-> 
-> 1. fixup/change comments
-> 2. add defines
-> 3. add functionality X
-> 4. add functionality Y
-> ...
-> 5. add injection
-> 6. tie it all together
-
-Will do the same in v6.
-
-Thanks,
-Manish Narani
+DQoNCu+7v09uIDkvNi8xOCwgNjowNyBQTSwgIkJvcmlzIEJyZXppbGxvbiIgPGJvcmlzLmJyZXpp
+bGxvbkBib290bGluLmNvbT4gd3JvdGU6DQoNCiAgICBFWFRFUk5BTCBNQUlMDQogICAgDQogICAg
+DQogICAgT24gVGh1LCA2IFNlcCAyMDE4IDE2OjE3OjU4ICswMTAwDQogICAgdml0b3IgPFZpdG9y
+LlNvYXJlc0BzeW5vcHN5cy5jb20+IHdyb3RlOg0KICAgIA0KICAgID4gSGkgQm9yaXMsDQogICAg
+PiANCiAgICA+IA0KICAgID4gT24gMDYtMDktMjAxOCAxNToxNCwgQm9yaXMgQnJlemlsbG9uIHdy
+b3RlOg0KICAgID4gPiBPbiBUaHUsIDYgU2VwIDIwMTggMTQ6NTA6MDMgKzAxMDANCiAgICA+ID4g
+dml0b3IgPFZpdG9yLlNvYXJlc0BzeW5vcHN5cy5jb20+IHdyb3RlOg0KICAgID4gPiAgDQogICAg
+PiA+PiBIaSwNCiAgICA+ID4+DQogICAgPiA+Pg0KICAgID4gPj4gT24gMDYtMDktMjAxOCAxNDoy
+MCwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOiAgDQogICAgPiA+Pj4gT24gVGh1LCA2IFNlcCAyMDE4
+IDE1OjE0OjM3ICswMjAwDQogICAgPiA+Pj4gQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6aWxs
+b25AYm9vdGxpbi5jb20+IHdyb3RlOg0KICAgID4gPj4+ICAgICANCiAgICA+ID4+Pj4gT24gVGh1
+LCA2IFNlcCAyMDE4IDE0OjU5OjQ2ICswMjAwDQogICAgPiA+Pj4+IEFybmQgQmVyZ21hbm4gPGFy
+bmRAYXJuZGIuZGU+IHdyb3RlOg0KICAgID4gPj4+PiAgICAgDQogICAgPiA+Pj4+PiBPbiBUaHUs
+IFNlcCA2LCAyMDE4IGF0IDI6NDMgUE0gUHJ6ZW15c2xhdyBHYWogPHBnYWpAY2FkZW5jZS5jb20+
+IHdyb3RlOiAgDQogICAgPiA+Pj4+Pj4gSGkgQm9yaXMsIFZpdG9yLA0KICAgID4gPj4+Pj4+DQog
+ICAgPiA+Pj4+Pj4gVGhpcyByZXBvc2l0b3J5IGRvZXMgbm90IGNvbnRhaW4gZnVsbCBrZXJuZWwg
+c291cmNlcywgYnV0IGl0IHNob3VsZCBiZSBlbm91Z2ggdG8gZGlzY3VzcyBtYXN0ZXJzaGlwIHJl
+cXVlc3QgZmVhdHVyZS4NCiAgICA+ID4+Pj4+PiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2lu
+dC5jb20vdjIvdXJsP3U9aHR0cHMtM0FfX2dpdGh1Yi5jb21fcHJ6ZW1la2dhal9pM2MtMkRsaW51
+eF9jb21taXRfZDU0ZmU2OGE5ZDNlNTczYzBjNDU0YTJjNmYxYWZhZmMyMDE0MmVjNSZkPUR3SUNB
+ZyZjPURQTDZfWF82SmtYRng3QVhXcUIwdGcmcj1xVnVVNjR1OXg3N1kwS2QwUGhES19scHhGZ2c2
+UEs5UGF0ZUh3amJfRFkwJm09UTlEV3czS0dtc2hHdzBmNVFUaWZmYnBiRVN5VWxQeDZLbUFTdURC
+dFg5WSZzPUhIRV95MWt5TXN6SnZQX3RTUDlKa0RsUFl4RHl3QmVId2tNR2dDUjExdUkmZT0NCiAg
+ICA+ID4+Pj4+Pg0KICAgID4gPj4+Pj4+IFBsZWFzZSBrZWVwIGluIG1pbmQgdGhhdCB0aGlzIGlz
+IGluaXRpYWwgdmVyc2lvbiwgYnV0IG1hc3RlcnNoaXAgd29ya3MgY29ycmVjdGx5LiBJIGFkZGVk
+IG9uZSBwcm9wZXJ0eSB0byBEVCB0byByZWZsZWN0IHJlbGF0aW9uc2hpcCBiZXR3ZWVuIG1hc3Rl
+cnMuDQogICAgPiA+Pj4+Pj4gSXQgaXMgcG9zc2libGUgdG8gcmVxdWVzdCBtYXN0ZXJzaGlwIG9u
+IGRlbWFuZCAodXNpbmcgc3lzZnMuIFVzZWZ1bCBpbiBjYXNlIHdoZW4gTGludXggbWFjaGluZSBp
+cyBlcXVpcHBlZCBvbmx5IHdpdGggc2Vjb25kYXJ5IG1hc3RlciBjb250cm9sbGVyKSBvciBhdXRv
+bWF0aWNhbGx5IGNoYW5nZSBvcGVyYXRpb24gbW9kZSB3aGVuIGRldmljZSBkcml2ZXIgd2FudHMg
+dG8gcmVhZC93cml0ZSBzb21ldGhpbmcgZnJvbS90byBkZXZpY2UuDQogICAgPiA+Pj4+Pj4NCiAg
+ICA+ID4+Pj4+PiBJJ20gc3VyZSBJIHdpbGwgaGF2ZSB0byByZXdvcmsgc29tZXRoaW5nIGJlY2F1
+c2UgdGhpcyB3YXMgaW1wbGVtZW50ZWQgb24gc291cmNlcyBmcm9tIFBBVENIIHY0LiBJIHNhdyB0
+aGF0IEJvcmlzIHJlbGVhc2VkIHY3IHllc3RlcmRheSA6KSAgDQogICAgPiA+Pj4+PiBDYW4geW91
+IGV4cGxhaW4gdGhlIHJlYXNvbiBmb3IgaGF2aW5nIGEgdXNlciBzcGFjZSBpbnRlcmZhY2UgYW5k
+IERUIHByb3BlcnR5Pw0KICAgID4gPj4+Pj4gSSB0aG91Z2h0IHdlIGhhZCBjb25jbHVkZWQgZWFy
+bGllciB0aGF0IHdlIHdvdWxkbid0IG5lZWQgdGhhdCwgYnV0IGl0J3MgcG9zc2libGUNCiAgICA+
+ID4+Pj4+IHRoYXQgSSBtaXNzZWQgc29tZXRoaW5nIGluIHRoZSBkaXNjdXNzaW9uIHNpbmNlIHRo
+ZW4uICANCiAgICA+ID4+Pj4gSSBkb24ndCB0aGluayB0aGUgc3lzZnMga25vYiBpcyBuZWVkZWQs
+IHRoaXMgYmVpbmcgc2FpZCwgYWZ0ZXIgdGhpbmtpbmcNCiAgICA+ID4+Pj4gYSBiaXQgbW9yZSBh
+Ym91dCBtYXN0ZXJzaGlwIGhhbmRvdmVyIGFuZCB0aGUgc2Vjb25kYXJ5IG1hc3RlciBjYXNlLCBJ
+DQogICAgPiA+Pj4+IHRoaW5rIHdlIGhhdmUgc29tZXRoaW5nIGltcG9ydGFudCB0byBzb2x2ZS4N
+CiAgICA+ID4+Pj4NCiAgICA+ID4+Pj4gV2hlbiBhIG1hc3RlciBpcyBub3QgaW4gY29udHJvbCBv
+ZiB0aGUgYnVzLCBpdCBnZXRzIGluZm9ybWVkIG9mIGRldmljZXMNCiAgICA+ID4+Pj4gcHJlc2Vu
+dCBvbiB0aGUgYnVzIGJ5IG1vbml0b3JpbmcgREFBIG9yIERFRlNMVlMgYnJvYWRjYXN0IGV2ZW50
+cy4gVGhhdA0KICAgID4gPj4+PiBtZWFucyB0aGUgc2Vjb25kYXJ5IG1hc3RlciBzaG91bGQgcG9w
+dWxhdGUgdGhlIGJ1cyB3aXRoIEkzQy9JMkMgZGV2aWNlcw0KICAgID4gPj4+PiBvbiBzdWNoIGV2
+ZW50cywgYnV0IHRoYXQncyBub3QgZW5vdWdoLCBiZWNhdXNlIERFRlNMVlMvREFBIGRvIG5vdA0K
+ICAgID4gPj4+PiBwcm92aWRlIGFsbCBkZXZpY2UgaW5mby5Tb21lIG9mIHRoZW0gKGxpa2UgcmVh
+ZC93cml0ZS9pYmkgbGltaXRhdGlvbnMpDQogICAgPiA+Pj4+IHJlcXVpcmUgZXh0cmEgQ0NDIGNv
+bW1hbmRzLCBhbmQsIHRvIHNlbmQgdGhvc2UgQ0NDIGNvbW1hbmRzLCB0aGUNCiAgICA+ID4+Pj4g
+c2Vjb25kYXJ5IG1hc3RlciBtdXN0IGNsYWltIHRoZSBidXMuIFdlIGNvdWxkIGFkZCBhIGNhc2Ug
+d2hlcmUgd2UNCiAgICA+ID4+Pj4gZGVjbGFyZSBkZXZpY2VzIGFzIHBhcnRpYWxseSBkaXNjb3Zl
+cmVkIHVudGlsIHRoZSBtYXN0ZXIgYWNxdWlyZXMNCiAgICA+ID4+Pj4gb3duZXJzaGlwIG9mIHRo
+ZSBidXMsIGJ1dCB0aGF0IG1lYW5zIHBhcnQgb2YgdGhlIGRhdGEgcmV0dXJuZWQgYnkNCiAgICA+
+ID4+Pj4gaTNjX2RldmljZV9nZXRfaW5mbygpIHdpbGwgYmUgaW5hY2N1cmF0ZSwgd2hpY2ggbWln
+aHQgaGF2ZSBhbiBpbXBhY3Qgb24NCiAgICA+ID4+Pj4gc29tZSBpM2MgZHJpdmVyIC0+cHJvYmUo
+KSBmdW5jdGlvbnMuICANCiAgICA+ID4+PiBIbSwgb25lIHBvc3NpYmxlIHNvbHV0aW9uIHdvdWxk
+IGJlIHRvIHJlZ2lzdGVyIHBhcnRpYWxseSBkaXNjb3ZlcmVkDQogICAgPiA+Pj4gZGV2aWNlcyB0
+byB0aGUgZGV2aWNlIG1vZGVsIGFuZCBsZXQgaTNjX2RldmljZV9nZXRfaW5mbygpIGNsYWltIHRo
+ZSBidXMNCiAgICA+ID4+PiBhbmQgcmVxdWVzdCBtaXNzaW5nIGRhdGEgd2hlbiBuZWVkZWQuIFRo
+aXMgd2F5LCBpZiB0aGUgZHJpdmVyIG5lZWRzIHRvDQogICAgPiA+Pj4gY2FsbCBpM2NfZGV2aWNl
+X2dldF9pbmZvKCkgaW4gaXRzIHByb2JlIHBhdGgsIGl0IHNob3VsZCB3b3JrIGp1c3QgZmluZS4g
+IA0KICAgID4gPj4gV2h5IGRvbid0IHVzZSB0aGUgaTNjX21hc3Rlcl9hZGRfaTNjX2Rldl9sb2Nr
+ZWQgdGhhdCBqb2I/IEl0IGNyZWF0ZSwNCiAgICA+ID4+IGF0dGFjaCBhbmQgcmV0cmlldmUgdGhl
+IGRldmljZSBpbmZvLiAgDQogICAgPiA+IFdoZW4gd2lsbCB5b3UgY2FsbCBpM2NfbWFzdGVyX2Fk
+ZF9pM2NfZGV2X2xvY2tlZCgpPyBBZnRlciByZWNlaXZpbmcgYQ0KICAgID4gPiBERUZTTFZTIGlu
+dGVycnVwdC9ldmVudD8gV2hlbiB0aGF0IGhhcHBlbnMgeW91J3JlIG5vdCBpbiBjb250cm9sIG9m
+IHRoZQ0KICAgID4gPiBidXMsIHdoaWNoIG1lYW5zIHlvdSdsbCBoYXZlIHRvIGZvcmNlIGJ1cyBv
+d25lcnNoaXAgaGFuZG92ZXIuIElzIHRoaXMNCiAgICA+ID4gcmVhbGx5IHdoYXQgd2Ugd2FudD8N
+CiAgICA+ID4NCiAgICA+ID4gVGhlc2UgYXJlIG5vdCByaGV0b3JpY2FsIHF1ZXN0aW9ucywgSSdt
+IHJlYWxseSBhc2tpbmcgZm9yIHlvdXIgb3Bpbmlvbg0KICAgID4gPiBoZXJlLiAgDQogICAgPiBX
+aGF0IEkgdW5kZXJzdGFuZCBmcm9tIGxhc3QgZGlzY3Vzc2lvbiB3YXMgdGhhdCBldmVyeSB0aW1l
+IHRoYXQgZGV2aWNlIA0KICAgID4gbmVlZCB0byBkbyBzb21ldGhpbmcgKHByaXZhdGUgbWVzc2Fn
+ZXMpIG9uIHRoZSBidXMgYW5kIGRvbid0IGhhdmUgdGhlIA0KICAgID4gYnVzIGNvbnRyb2wgaXQg
+c2hvdWxkIGZvcmNlIG93bmVyc2hpcCBoYW5kb3Zlci4NCiAgICA+IElmIG15IHVuZGVyc3RhbmRp
+bmcgaXMgY29ycmVjdCB0aGlzIGNhbiBiZSBhbHNvIGFwcGxpZWQgdG8gQ0NDIGNvbW1hbmRzLg0K
+ICAgIA0KICAgIFN1cmUsIGJ1dCB0aGUgcXVlc3Rpb24gaXMgbW9yZSwgd2hlbiBkbyB3ZSB3YW50
+IHRvIGRvIHRoYXQ/DQogICAgDQogICAgPiANCiAgICA+ID4gIA0KICAgID4gPj4gVGhpcyBjYW4g
+YmUgdHJpZ2dlcmVkIGFmdGVyIHRoZSBzZWNvbmRhcnkgbWFzdGVyIHJlY2VpdmUgRU5FQyBNUiB1
+bnRpbA0KICAgID4gPj4gdGhlbSBpcyBrZWVwIGluIHRoZSBkcml2ZXIgbWVtb3J5LiAgDQogICAg
+PiA+IEJ1dCB0aGF0IG1lYW5zIG5vLW9uZSB3aWxsIGFjdHVhbGx5IHRyaWdnZXIgYSBtYXN0ZXJz
+aGlwIHJlcXVlc3QsDQogICAgPiA+IGJlY2F1c2UgZGV2aWNlcyB3b24ndCBiZSByZWdpc3RlcmVk
+IHVudGlsIGFsbCBpbmZvIGFyZSBhdmFpbGFibGUuIElmIHdlDQogICAgPiA+IHRha2UgdGhpcyBw
+YXRoLCB3ZSBzaG91bGQgaGF2ZSBhIHdheSB0byBleHBsaWNpdGx5IHRyaWdnZXIgYSBtYXN0ZXJz
+aGlwDQogICAgPiA+IHJlcXVlc3QgKHN5c2ZzIGtub2Igb3IgYW55IG90aGVyIG1lYW5zKS4gIA0K
+ICAgID4gQnkgdGhlIGN1cnJlbnQgZmxvdyB0aGF0IHdlIGhhdmUgbm93LCB3ZSBlbmFibGUgdGhl
+IElCSSBldmVudHMgYXQgdGhlIA0KICAgID4gZW5kIG9mIC5kb19kYWEuIEF0IHRoaXMgdGltZSB0
+aGUgbWFpbiBtYXN0ZXIgYnVzIGlzIGluaXRpYWxpemVkIHdpdGggYWxsIA0KICAgID4gZGV2aWNl
+cy4NCiAgICA+IA0KICAgID4gIEZyb20gdGhlIHBvaW50IG9mIHZpZXcgb2Ygc2Vjb25kYXJ5IG1h
+c3RlciwgaXQgZmlyc3QgcGFydGljaXBhdGUgb24gREFBIA0KICAgID4gcHJvY2VzcywgbmV4dCBp
+dCBzZW5kIGl0cyBpbmZvIChNYWluIG1hc3RlciBkbyANCiAgICA+IGkzY19tYXN0ZXJfcmV0cmll
+dmVfZGV2X2luZm8oKSkgYW5kIHRoZW0gcmVjZWl2ZSBERUZTTFZTLiBJbiB0aGUgc3RhZ2UgDQog
+ICAgPiBpdCBjYW5ub3QgcmVxdWVzdCB0aGUgYnVzIG1hc3RlcnNoaXAgaXQgbmVlZCB0aGUgTVIg
+ZW5hYmxlLg0KICAgIA0KICAgIFlvdSBtZWFuIHRoZSBicm9hZGNhc3QgRU5FQyhNUikgZXZlbnQs
+IHJpZ2h0PyBUaGVuIHllcywgdGhpcyBvbmUgaXMNCiAgICBwcm9iYWJseSBtaXNzaW5nIChvciBt
+YXliZSBJIGFkZGVkIGl0IGluIHRoZSBtYXN0ZXIgY29udHJvbGxlciBkcml2ZXIsDQogICAgSSBk
+b24ndCByZW1lbWJlcikuDQogICAgDQogICAgPiANCiAgICA+IFNvLCB3aGF0IEkgd291bGQgc3Vn
+Z2VzdCBpcyB0byBrZWVwIERFRlNMVlMgZGF0YSBpbiBzZWNvbmRhcnkgbWFzdGVyIA0KICAgID4g
+ZHJpdmVyIG1lbW9yeSAuIFdoZW4gc2Vjb25kYXJ5IG1hc3RlciByZWNlaXZlIHRoZSBNUiBlbmFi
+bGUsIGl0IGNhbiBnZXQgDQogICAgPiB0aGUgYnVzIG93bmVyc2hpcCBhbmQgZG8gaTNjX21hc3Rl
+cl9hZGRfaTNjX2Rldl9sb2NrZWQoKSBhbmQgZWFjaCBkZXZpY2UgDQogICAgPiBpbiBERUZTTFZT
+IGNvbW1hbmQuIEFmdGVyIHRoaXMgc3RlcCBkZWxlZ2F0ZSB0aGUgYnVzIG93bmVyc2hpcCB0byB0
+aGUgDQogICAgPiBtYWluIG1hc3Rlci4NCiAgICANCiAgICBUaGF0J3MgYW4gb3B0aW9uLCBpbmRl
+ZWQuDQogICAgDQogICAgPiANCiAgICA+IFdoYXQgZG8geW91IHRoaW5rIGFib3V0IHRoaXM/DQog
+ICAgDQogICAgU291bmRzIGxpa2UgYSBnb29kIHN0YXJ0LiBJZiBNUiBpcyByZWplY3RlZCBieSB0
+aGUgbWFzdGVyLCB3ZSB3aWxsIGp1c3QNCiAgICBrZWVwIGFsbCBkZXZpY2VzIGluIGFuIHVucmVn
+aXN0ZXJlZCBzdGF0ZS4gV2UgY2FuIGFsc28gYWRkIGEgc3lzZnMNCiAgICBlbnRyeSB0byBtYW51
+YWxseSByZS10cmlnZ2VyIHRoaXMgb3BlcmF0aW9uIGluIGNhc2UgdGhlIGluaXRpYWwgb25lDQog
+ICAgZmFpbGVkLg0KICAgIA0KVGhpcyBldmVyeXRoaW5nIHNvdW5kcyBsaWtlIG15IHByZXZpb3Vz
+IHZlcnNpb24uIEVuZWMgZXZlbnQgd2FzIG1pc3NpbmcsIA0KZXZlcnl0aGluZyB3YXMgdHJpZ2dl
+cmVkIG1hbnVhbGx5IGZyb20gc3lzZnMuDQoNCg==
