@@ -1,85 +1,109 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 5/9] media: platform: Add Cedrus VPU
- decoder driver
-Date: Fri, 7 Sep 2018 15:26:20 +0200
-Message-ID: <20180907132620.lmsvlwpa3rzioj2h@flea>
-References: <20180906222442.14825-1-contact@paulk.fr>
- <20180906222442.14825-6-contact@paulk.fr>
- <4b30c0bf-e525-1868-f625-569d4a104aa0@xs4all.nl>
+Subject: Re: Re: [PATCH v4 1/4] clk: sunxi-ng: Enable DE2_CCU
+ for SUN8I and SUN50I
+Date: Fri, 7 Sep 2018 15:31:26 +0200
+Message-ID: <20180907133125.ghks5cgk5u6vrhd6@flea>
+References: <20180904163609.10171-1-jagan@amarulasolutions.com>
+ <20180905070335.dclhpxjld4vdkdu4@flea>
+ <2955967.qdhifWMYUT@jernej-laptop>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hu5t7oybgv7p55pp"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBB7ZZHOAKGQEDCRE5BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="4nzkw2nv5o3dfnhg"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOP3ZHOAKGQENSHJTBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <4b30c0bf-e525-1868-f625-569d4a104aa0-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <2955967.qdhifWMYUT@jernej-laptop>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---hu5t7oybgv7p55pp
+--4nzkw2nv5o3dfnhg
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hans,
+On Thu, Sep 06, 2018 at 07:10:06AM +0200, Jernej =C5=A0krabec wrote:
+> Dne sreda, 05. september 2018 ob 09:03:35 CEST je Maxime Ripard napisal(a=
+):
+> > On Tue, Sep 04, 2018 at 10:06:06PM +0530, Jagan Teki wrote:
+> > > Allwinner SoC like SUN8I and SUN50I has DE2 CCU so enable them
+> > > as default.
+> > >=20
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > > Changes for v4, v3:
+> > > - none
+> > > Changes for v2:
+> > > - Enable for MACH_SUN8I
+> > >=20
+> > >  drivers/clk/sunxi-ng/Kconfig | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >=20
+> > > diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kcon=
+fig
+> > > index 826674d090fd..e20182aa9748 100644
+> > > --- a/drivers/clk/sunxi-ng/Kconfig
+> > > +++ b/drivers/clk/sunxi-ng/Kconfig
+> > > @@ -63,6 +63,8 @@ config SUN8I_V3S_CCU
+> > >=20
+> > >  config SUN8I_DE2_CCU
+> > > =20
+> > >  	bool "Support for the Allwinner SoCs DE2 CCU"
+> > >=20
+> > > +	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
+> > > +	depends on DRM_SUN4I && (MACH_SUN8I || (ARM64 && ARCH_SUNXI))
+> >=20
+> > I don't see why there's a dependency on the DRM driver. I'm pretty
+> > sure this would even break simplefb.
+>=20
+> I think best approach would be that SUN8I_MIXER selects (or depends on?) =
+this=20
+> symbol, since it can't work if there is no DE2 CCU clock present.
 
-On Fri, Sep 07, 2018 at 03:13:19PM +0200, Hans Verkuil wrote:
-> On 09/07/2018 12:24 AM, Paul Kocialkowski wrote:
-> > From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > This introduces the Cedrus VPU driver that supports the VPU found in
-> > Allwinner SoCs, also known as Video Engine. It is implemented through
-> > a V4L2 M2M decoder device and a media device (used for media requests).
-> > So far, it only supports MPEG-2 decoding.
-> > 
-> > Since this VPU is stateless, synchronization with media requests is
-> > required in order to ensure consistency between frame headers that
-> > contain metadata about the frame to process and the raw slice data that
-> > is used to generate the frame.
-> > 
-> > This driver was made possible thanks to the long-standing effort
-> > carried out by the linux-sunxi community in the interest of reverse
-> > engineering, documenting and implementing support for the Allwinner VPU.
-> > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> 
-> One high-level comment:
-> 
-> Can you add a TODO file for this staging driver? This can be done in
-> a follow-up patch.
-> 
-> It should contain what needs to be done to get this out of staging:
-> 
-> - Request API needs to stabilize
-> - Userspace support for stateless codecs must be created
-
-On that particular note, as part of the effort to develop the driver,
-we've also developped two userspace components:
-
-  - v4l2-request-test, that has a bunch of sample frames for various
-    codecs and will rely solely on the kernel request api (and DRM for
-    the display part) to test and bringup a particular driver
-    https://github.com/bootlin/v4l2-request-test
-
-  - libva-v4l2-request, that is a libva implementation using the
-    request API
-    https://github.com/bootlin/libva-v4l2-request
-
-Did you have something else in mind?
+This is a runtime dependency, not a build time one. We're not doing it
+for any other similar driver, so there's no reason to do it in this
+particular case.
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---hu5t7oybgv7p55pp--
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--4nzkw2nv5o3dfnhg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluSfa0ACgkQ0rTAlCFN
+r3SkZBAAmUPFSM0fZN7/iHasr4dZei6lHt0x+qegvqVbl8dm9QCIEeBHIqgheV/k
+7uiiY67CaeHNXOUDVGnlxa/G2FxDSAN0SoDWqd/ERJjux6hD8G+RtYhpn+cpreph
+yIGDBLjsbZdDdx4J+BRD7gAXFDW+gm922MRzPPN8yRY/qlD8XxsBznHC9v5KzJsJ
+Uqhy5MWFDtMrt06F94OFnMmcmQvR6UA0wNkDcjEMhMEKsV2NRbOOYsdvIzfSaCYL
+wBeYpuuvK6pG5B83n6NRBm4x17Ky17VqR7s1qhe+rWqfX/qdySDY9HYXwp00Qcjv
+Ew2IBnYtkawtQC/dX85gnWJLRpWerD4tu0lpcn5Z8oI3ZvLBH0wC/pTjY4RAk5jD
+oyHQIAdSjcOHciN+BDqp2TYS2q5auKUMIGTCYYh3LwLvw/NSw3Y7fXfydnPob57E
+GtZinGViN0ANegiR451TkS6Dzj7zc9h241NgRmGvYlG2U/JBgPrH4iph1dvVsfEG
+H98ziz13+pdvjdAsnZ/6FBiTqnTl/6z5Lb36eYpQPG9riiklFA6F/ESgi/RbEdoB
+YW0a1qQrk0qnRBlc9kZwAz380e7JNZGN2NnFdbGFnFdE9wI+29p+IJH1Nb6RzNcI
+656FO7rLhkstUmdJmyYiRVclPJBL+0Dd+upCsjI5W+YMgOdoUKU=
+=Nbx1
+-----END PGP SIGNATURE-----
+
+--4nzkw2nv5o3dfnhg--
