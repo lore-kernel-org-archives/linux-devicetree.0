@@ -1,89 +1,71 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [RESEND PATCH] usb: mtu3: disable vbus rise/fall interrupts of ltssm
-Date: Fri, 7 Sep 2018 14:00:39 +0800
-Message-ID: <6e7bed46598dfb65f43c2490802a51a8b50cd257.1536299914.git.chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Andrea Merello <andrea.merello@gmail.com>
+Subject: [PATCH v5 1/7] dmaengine: xilinx_dma: commonize DMA copy size calculation
+Date: Fri,  7 Sep 2018 08:24:56 +0200
+Message-ID: <20180907062502.8241-1-andrea.merello@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: vkoul@kernel.org, dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com, Andrea Merello <andrea.merello@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The vbus rise & fall interrupts are used to enable and disable
-U3 function of device automatically, this cause some issues when
-class driver is initialized as deactivated, and will skip over
-software-controlled connect by pullup(), but UDC wants to keep
-disconnect until usb_gadget_activate() is called which calls
-pullup() if needed. So we disable vbus rise & fall interrupts
-and just use pullup() to enable & disable U3 function, and reset
-mtu3 state when disconnect instead when vbus fall.
+This patch removes a bit of duplicated code by introducing a new
+function that implements calculations for DMA copy size.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Suggested-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
 ---
- drivers/usb/mtu3/mtu3_core.c   |  4 ++--
- drivers/usb/mtu3/mtu3_gadget.c | 22 ++++++++++++++--------
- 2 files changed, 16 insertions(+), 10 deletions(-)
+Changes in v4:
+	- introduce this patch in the patch series
+Changes in v5:
+	None
+---
+ drivers/dma/xilinx/xilinx_dma.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_core.c b/drivers/usb/mtu3/mtu3_core.c
-index d045d84..ae70b9b 100644
---- a/drivers/usb/mtu3/mtu3_core.c
-+++ b/drivers/usb/mtu3/mtu3_core.c
-@@ -185,8 +185,8 @@ static void mtu3_intr_enable(struct mtu3 *mtu)
+diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+index 27b523530c4a..a3aaa0e34cc7 100644
+--- a/drivers/dma/xilinx/xilinx_dma.c
++++ b/drivers/dma/xilinx/xilinx_dma.c
+@@ -952,6 +952,19 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
+ 	return 0;
+ }
  
- 	if (mtu->is_u3_ip) {
- 		/* Enable U3 LTSSM interrupts */
--		value = HOT_RST_INTR | WARM_RST_INTR | VBUS_RISE_INTR |
--		    VBUS_FALL_INTR | ENTER_U3_INTR | EXIT_U3_INTR;
-+		value = HOT_RST_INTR | WARM_RST_INTR |
-+			ENTER_U3_INTR | EXIT_U3_INTR;
- 		mtu3_writel(mbase, U3D_LTSSM_INTR_ENABLE, value);
- 	}
- 
-diff --git a/drivers/usb/mtu3/mtu3_gadget.c b/drivers/usb/mtu3/mtu3_gadget.c
-index 5c60a8c..bbcd333 100644
---- a/drivers/usb/mtu3/mtu3_gadget.c
-+++ b/drivers/usb/mtu3/mtu3_gadget.c
-@@ -585,6 +585,17 @@ static int mtu3_gadget_stop(struct usb_gadget *g)
- 	.udc_stop = mtu3_gadget_stop,
- };
- 
-+static void mtu3_state_reset(struct mtu3 *mtu)
++/**
++ * xilinx_dma_calc_copysize - Calculate the amount of data to copy
++ * @size: Total data that needs to be copied
++ * @done: Amount of data that has been already copied
++ *
++ * Return: Amount of data that has to be copied
++ */
++static int xilinx_dma_calc_copysize(int size, int done)
 +{
-+	mtu->address = 0;
-+	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
-+	mtu->may_wakeup = 0;
-+	mtu->u1_enable = 0;
-+	mtu->u2_enable = 0;
-+	mtu->delayed_status = false;
-+	mtu->test_mode = false;
++	return min_t(size_t, size - done,
++		     XILINX_DMA_MAX_TRANS_LEN);
 +}
 +
- static void init_hw_ep(struct mtu3 *mtu, struct mtu3_ep *mep,
- 		u32 epnum, u32 is_in)
- {
-@@ -702,6 +713,7 @@ void mtu3_gadget_disconnect(struct mtu3 *mtu)
- 		spin_lock(&mtu->lock);
- 	}
+ /**
+  * xilinx_dma_tx_status - Get DMA transaction status
+  * @dchan: DMA channel
+@@ -1791,8 +1804,8 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
+ 			 * Calculate the maximum number of bytes to transfer,
+ 			 * making sure it is less than the hw limit
+ 			 */
+-			copy = min_t(size_t, sg_dma_len(sg) - sg_used,
+-				     XILINX_DMA_MAX_TRANS_LEN);
++			copy = xilinx_dma_calc_copysize(sg_dma_len(sg),
++							sg_used);
+ 			hw = &segment->hw;
  
-+	mtu3_state_reset(mtu);
- 	usb_gadget_set_state(&mtu->g, USB_STATE_NOTATTACHED);
- }
- 
-@@ -712,12 +724,6 @@ void mtu3_gadget_reset(struct mtu3 *mtu)
- 	/* report disconnect, if we didn't flush EP state */
- 	if (mtu->g.speed != USB_SPEED_UNKNOWN)
- 		mtu3_gadget_disconnect(mtu);
--
--	mtu->address = 0;
--	mtu->ep0_state = MU3D_EP0_STATE_SETUP;
--	mtu->may_wakeup = 0;
--	mtu->u1_enable = 0;
--	mtu->u2_enable = 0;
--	mtu->delayed_status = false;
--	mtu->test_mode = false;
-+	else
-+		mtu3_state_reset(mtu);
- }
+ 			/* Fill in the descriptor */
+@@ -1896,8 +1909,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_dma_cyclic(
+ 			 * Calculate the maximum number of bytes to transfer,
+ 			 * making sure it is less than the hw limit
+ 			 */
+-			copy = min_t(size_t, period_len - sg_used,
+-				     XILINX_DMA_MAX_TRANS_LEN);
++			copy = xilinx_dma_calc_copysize(period_len, sg_used);
+ 			hw = &segment->hw;
+ 			xilinx_axidma_buf(chan, hw, buf_addr, sg_used,
+ 					  period_len * i);
 -- 
-1.9.1
+2.17.1
