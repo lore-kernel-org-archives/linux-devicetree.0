@@ -1,60 +1,76 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 2/2] ARM: dts: mvebu: add "marvell,prestera" to PP nodes
-Date: Fri,  7 Sep 2018 12:59:26 +1200
-Message-ID: <20180907005926.27134-3-chris.packham@alliedtelesis.co.nz>
-References: <20180907005926.27134-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180907005926.27134-1-chris.packham@alliedtelesis.co.nz>
-Sender: netdev-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregory.clement@bootlin.com
-Cc: jason@lakedaemon.net, davem@davemloft.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Mark Rutland <mark.rutland@arm.com>
+From: Ley Foon Tan <ley.foon.tan@intel.com>
+Subject: Re: [PATCH v2 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Fri, 07 Sep 2018 10:08:19 +0800
+Message-ID: <1536286099.6128.1.camel@intel.com>
+References: <20180905235327.5996-1-robh@kernel.org>
+         <20180905235327.5996-7-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180905235327.5996-7-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jplinux-mi
 List-Id: devicetree@vger.kernel.org
 
-The compatible string "marvell,prestera" allows drivers to have code
-common to any prestera variant.
+On Wed, 2018-09-05 at 18:53 -0500, Rob Herring wrote:
+> There is nothing arch specific about building dtb files other than
+> their
+> location under /arch/*/boot/dts/. Keeping each arch aligned is a
+> pain.
+> The dependencies and supported targets are all slightly different.
+> Also, a cross-compiler for each arch is needed, but really the host
+> compiler preprocessor is perfectly fine for building dtbs. Move the
+> build rules to a common location and remove the arch specific ones.
+> This
+> is done in a single step to avoid warnings about overriding rules.
+> 
+> The build dependencies had been a mixture of 'scripts' and/or
+> 'prepare'.
+> These pull in several dependencies some of which need a target
+> compiler
+> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> All that is really needed is dtc, so adjust the dependencies to only
+> be
+> dtc.
+> 
+> This change enables support 'dtbs_install' on some arches which were
+> missing the target.
+> 
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Michal Simek <monstr@monstr.eu>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Ley Foon Tan <lftan@altera.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: uclinux-h8-devel@lists.sourceforge.jp
+> Cc: linux-mips@linux-mips.org
+> Cc: nios2-dev@lists.rocketboards.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-xtensa@linux-xtensa.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please ack so I can take the whole series via the DT tree.
+> 
+For nios2:
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 2 +-
- arch/arm/boot/dts/armada-xp-98dx3336.dtsi | 2 +-
- arch/arm/boot/dts/armada-xp-98dx4251.dtsi | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+Acked-by: Ley Foon Tan <ley.foon.tan@intel.com>
 
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index 8d708cc22495..2185ea58abfe 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -243,7 +243,7 @@
- 			ranges = <0 MBUS_ID(0x03, 0x00) 0 0x100000>;
- 
- 			pp0: packet-processor@0 {
--				compatible = "marvell,prestera-98dx3236";
-+				compatible = "marvell,prestera-98dx3236", "marvell,prestera";
- 				reg = <0 0x4000000>;
- 				interrupts = <33>, <34>, <35>;
- 				dfx = <&dfx>;
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3336.dtsi b/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
-index 2f5fc67dd6dc..1d9d8a8ea60c 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
-@@ -35,5 +35,5 @@
- };
- 
- &pp0 {
--	compatible = "marvell,prestera-98dx3336";
-+	compatible = "marvell,prestera-98dx3336", "marvell,prestera";
- };
-diff --git a/arch/arm/boot/dts/armada-xp-98dx4251.dtsi b/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
-index 7a9e8839880b..48ffdc72bfc7 100644
---- a/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
-@@ -49,6 +49,6 @@
- };
- 
- &pp0 {
--	compatible = "marvell,prestera-98dx4251";
-+	compatible = "marvell,prestera-98dx4251", "marvell,prestera";
- 	interrupts = <33>, <34>, <35>, <36>;
- };
--- 
-2.18.0
+
+Regards
+Ley Foon
