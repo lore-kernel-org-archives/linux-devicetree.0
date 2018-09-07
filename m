@@ -1,90 +1,59 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 5/5] rtc: pcf85063: external capacitor configuration
-Date: Fri,  7 Sep 2018 21:35:08 +0200
-Message-ID: <20180907193508.24974-6-sam@ravnborg.org>
-References: <20180822183555.GA24084@ravnborg.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: Split up name & type in modalias generation
+Date: Fri, 7 Sep 2018 12:56:09 -0700
+Message-ID: <32ff0b7e-a710-2c23-75ad-8c527d3453c7@gmail.com>
+References: <20180907142247.2931-1-thierry.reding@gmail.com>
+ <CAL_JsqJ0VZftZ+Qve+=91tbvgYof68NW+dBf4bPv+b8uQ0y1hg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180822183555.GA24084@ravnborg.org>
+In-Reply-To: <CAL_JsqJ0VZftZ+Qve+=91tbvgYof68NW+dBf4bPv+b8uQ0y1hg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>, =?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+To: Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Søren Andersen <san@skov.dk>
+On 09/07/18 11:49, Rob Herring wrote:
+> On Fri, Sep 7, 2018 at 9:22 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>>
+>> From: Thierry Reding <treding@nvidia.com>
+>>
+>> The kernel's vsnprintf() implementation discards all alpha-numeric
+>> characters following a %p conversion specifier. This is done in order to
+>> generically skip any of the various modifiers that the kernel supports.
+>> Unfortunately, the OF modalias is generated with a format string that
+>> violates the assumption made by vsnprintf():
+>>
+>>         of:N%pOFnT%s
+>>
+>> While processing the above format string, vsnprintf() will eat the 'T'
+>> character, assuming that it belongs to the preceeding %p specifier. This
+>> results in a modalias with an incompatible format, which in turn causes
+>> the automatic loading of drivers based on modalias to no longer work.
+>>
+>> To fix this, split up the generation of the name & type fields into two
+>> separate snprintf() calls to avoid confusing the parser.
+>>
+>> Fixes: 73813f8483b1 ("of: Convert to using %pOFn instead of device_node.name")
+>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> Note that a more elegant fix would be to make the %p format specifier
+>> parser report back the exact number of characters consumed. I briefly
+>> tried to implement it, but quickly ran into numerous special cases
+>> that make this solution rather involved.
+>>
+>> I can spend some more time to improve this in general if that's what we
+>> ultimately want, but I think this patch is a better short-term fix to
+>> workaround the issue.
+> 
+> See my reply on the original patch. I've updated the patch in my
+> dt/next branch with the fix to use %c.
+> 
+> Rob
+> 
 
-Add support for specifying the quartz load in the DT node.
-The pcf85063 may use either a 7 pF or an 12.5 pF xtal.
-If the rtc has the wrong configuration the time will
-drift several hours/week.
+Agreed, your updated patch is more compact and looks cleaner.
 
-If nothing is specified in DT then the factory default of 7 pF is used.
-
-Signed-off-by: Søren Andersen <san@skov.dk>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- drivers/rtc/rtc-pcf85063.c | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-index 283c2335b01b..38163446664f 100644
---- a/drivers/rtc/rtc-pcf85063.c
-+++ b/drivers/rtc/rtc-pcf85063.c
-@@ -27,6 +27,7 @@
- */
- 
- #define PCF85063_REG_CTRL1		0x00 /* status */
-+#define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
- #define PCF85063_REG_CTRL1_STOP		BIT(5)
- #define PCF85063_REG_CTRL2		0x01
- 
-@@ -180,6 +181,31 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
- 	.set_time	= pcf85063_rtc_set_time
- };
- 
-+static int pcf85063_select_capacitance(struct i2c_client *client)
-+{
-+	int rc;
-+	u8 reg;
-+
-+	rc = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
-+	if (rc < 0) {
-+		dev_err(&client->dev, "Failing to read Control1 reg\n");
-+		return -EIO;
-+	}
-+
-+	if (device_property_present(&client->dev, "nxp,quartz_load_12.5pf"))
-+		reg = rc |= PCF85063_REG_CTRL1_CAP_SEL;
-+	else
-+		reg = rc &= ~PCF85063_REG_CTRL1_CAP_SEL;
-+
-+	rc = i2c_smbus_write_byte_data(client, PCF85063_REG_CTRL1, reg);
-+	if (rc < 0) {
-+		dev_err(&client->dev, "Failing to configure device\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
- static int pcf85063_probe(struct i2c_client *client,
- 				const struct i2c_device_id *id)
- {
-@@ -197,6 +223,11 @@ static int pcf85063_probe(struct i2c_client *client,
- 		return err;
- 	}
- 
-+	err = pcf85063_select_capacitance(client);
-+	if (err < 0)
-+		dev_warn(&client->dev,
-+			 "Capacitance  setup failed. Trying to continue\n");
-+
- 	rtc = devm_rtc_device_register(&client->dev,
- 				       pcf85063_driver.driver.name,
- 				       &pcf85063_rtc_ops, THIS_MODULE);
--- 
-2.12.0
+-Frank
