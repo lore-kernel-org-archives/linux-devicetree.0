@@ -1,54 +1,151 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v3 0/4] pci-dra7xx: Enable errata i870 workaround for RC
- mode
-Date: Fri, 7 Sep 2018 10:00:09 -0700
-Message-ID: <20180907170009.GJ5662@atomide.com>
-References: <20180724173150.2701-1-vigneshr@ti.com>
- <20180808165700.GB486@e107981-ln.cambridge.arm.com>
- <ba428a15-77bf-e09c-3bd7-b5a0eae7ee13@ti.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 6/8] kbuild: consolidate Devicetree dtb build rules
+Date: Sat, 8 Sep 2018 02:07:09 +0900
+Message-ID: <CAK7LNAR1-G+eg-dAmiDvEo3JJHoXefm2eu+Aorgjv9BP48+qvw@mail.gmail.com>
+References: <20180821215524.23040-1-robh@kernel.org> <20180821215524.23040-7-robh@kernel.org>
+ <CAK7LNATcYSvwh0BEEdyUuDa_Y9X-AqQAzA5MrbNhOSMmSzqhTg@mail.gmail.com> <CAL_JsqJJ6DCT8AjVYqkbFuJ+fO0VmVch24B=XRp4pJPkUQYAww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ba428a15-77bf-e09c-3bd7-b5a0eae7ee13@ti.com>
+In-Reply-To: <CAL_JsqJJ6DCT8AjVYqkbFuJ+fO0VmVch24B=XRp4pJPkUQYAww@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux
 List-Id: devicetree@vger.kernel.org
 
-* Vignesh R <vigneshr@ti.com> [180810 10:10]:
-> 
-> 
-> On Wednesday 08 August 2018 10:27 PM, Lorenzo Pieralisi wrote:
-> > On Tue, Jul 24, 2018 at 11:01:46PM +0530, Vignesh R wrote:
-> >> Make workaround for errata i870 applicable in Host mode as
-> >> well(previously it was enabled only for EP mode) as per errata
-> >> documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
-> >>
-> >> Tested on DRA72 EVM
-> >>
-> >> Tony,
-> >>
-> >> If you are okay with the series, could you pick this via omap tree?
-> >> All ACKs are in place and Lorenzo is okay with PCIe bits to go along with
-> >> rest of DTS changes.
-> > 
-> > I think we have missed the v4.19 merge window by now - 
-> 
-> Right. I didn't get any response from Tony.
+2018-08-27 8:56 GMT+09:00 Rob Herring <robh@kernel.org>:
+> On Sat, Aug 25, 2018 at 9:06 PM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>>
+>> Hi Rob,
+>>
+>>
+>> 2018-08-22 6:55 GMT+09:00 Rob Herring <robh@kernel.org>:
+>> > There is nothing arch specific about building dtb files other than their
+>> > location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+>> > The dependencies and supported targets are all slightly different.
+>> > Also, a cross-compiler for each arch is needed, but really the host
+>> > compiler preprocessor is perfectly fine for building dtbs. Move the
+>> > build rules to a common location and remove the arch specific ones. This
+>> > is done in a single step to avoid warnings about overriding rules.
+>> >
+>> > The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+>> > These pull in several dependencies some of which need a target compiler
+>> > (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+>> > All that is really needed is dtc, so adjust the dependencies to only be
+>> > dtc.
+>> >
+>> > This change enables support 'dtbs_install' on some arches which were
+>> > missing the target.
+>> >
+>> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+>> > Cc: Michal Marek <michal.lkml@markovi.net>
+>> > Cc: Vineet Gupta <vgupta@synopsys.com>
+>> > Cc: Russell King <linux@armlinux.org.uk>
+>> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> > Cc: Will Deacon <will.deacon@arm.com>
+>> > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+>> > Cc: Michal Simek <monstr@monstr.eu>
+>> > Cc: Ralf Baechle <ralf@linux-mips.org>
+>> > Cc: Paul Burton <paul.burton@mips.com>
+>> > Cc: James Hogan <jhogan@kernel.org>
+>> > Cc: Ley Foon Tan <lftan@altera.com>
+>> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> > Cc: Paul Mackerras <paulus@samba.org>
+>> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> > Cc: Chris Zankel <chris@zankel.net>
+>> > Cc: Max Filippov <jcmvbkbc@gmail.com>
+>> > Cc: linux-kbuild@vger.kernel.org
+>> > Cc: linux-snps-arc@lists.infradead.org
+>> > Cc: linux-arm-kernel@lists.infradead.org
+>> > Cc: uclinux-h8-devel@lists.sourceforge.jp
+>> > Cc: linux-mips@linux-mips.org
+>> > Cc: nios2-dev@lists.rocketboards.org
+>> > Cc: linuxppc-dev@lists.ozlabs.org
+>> > Cc: linux-xtensa@linux-xtensa.org
+>> > Signed-off-by: Rob Herring <robh@kernel.org>
+>> > ---
+>> >  Makefile                 | 30 ++++++++++++++++++++++++++++++
+>> >  arch/arc/Makefile        |  6 ------
+>> >  arch/arm/Makefile        | 20 +-------------------
+>> >  arch/arm64/Makefile      | 17 +----------------
+>> >  arch/c6x/Makefile        |  2 --
+>> >  arch/h8300/Makefile      | 11 +----------
+>> >  arch/microblaze/Makefile |  4 +---
+>> >  arch/mips/Makefile       | 15 +--------------
+>> >  arch/nds32/Makefile      |  2 +-
+>> >  arch/nios2/Makefile      |  7 -------
+>> >  arch/nios2/boot/Makefile |  4 ----
+>> >  arch/powerpc/Makefile    |  3 ---
+>> >  arch/xtensa/Makefile     | 12 +-----------
+>> >  scripts/Makefile         |  1 -
+>> >  scripts/Makefile.lib     |  2 +-
+>> >  15 files changed, 38 insertions(+), 98 deletions(-)
+>> >
+>> > diff --git a/Makefile b/Makefile
+>> > index c13f8b85ba60..6d89e673f192 100644
+>> > --- a/Makefile
+>> > +++ b/Makefile
+>> > @@ -1212,6 +1212,30 @@ kselftest-merge:
+>> >                 $(srctree)/tools/testing/selftests/*/config
+>> >         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+>> >
+>> > +# ---------------------------------------------------------------------------
+>> > +# Devicetree files
+>> > +
+>> > +dtstree := $(wildcard arch/$(SRCARCH)/boot/dts)
+>
+> BTW, there's an error here too. It doesn't work right with
+> KBUILD_OUTPUT set and should be:
+>
+> ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+> dtstree := arch/$(SRCARCH)/boot/dts
+> endif
+>
+>> > +
+>> > +ifdef CONFIG_OF_EARLY_FLATTREE
+>> > +
+>> > +%.dtb %.dtb.S %.dtb.o: | dtc
+>>
+>> I think the pipe operator is unnecessary
+>> because Kbuild will descend to $(dtstree) anyway.
+>
+> The pipe means 'order-only', right?
 
-Sorry catching up with pending mails.. I try hard to not touch
-anything except fixes around -rc6 time.
+Yes.
 
-> > please let me know if I can drop this series from the PCI patch queue.
-> > 
-> 
-> Ok, I will resend the patch after 4.19-rc. Thanks!
+> So it is just a weaker dependency
+> for things which are not input files as dtc is not. The 'dtc' here is
+> just the dtc rule below, not the actual executable. Or am I missing
+> something?
 
-FYI, I'm untagging this thread too. Please post the dts
-changes separately once the dependencies (if any) have
-cleared.
 
-Regards,
+The pipe is used when
 
-Tony
+  - we want to make sure the weaker prerequisite exists
+
+  - but, we do not want to execute the recipe
+    even if the weaker prerequisite is updated
+
+
+In this case, we want to execute the recipe _all_the_time_.
+
+We compare the timestamp between %.dtb and %.dts in the sub-directory.
+
+We never know the real depenency until the following recipe is run
+     $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+
+
+
+PHONY += dtbs
+dtbs: | dtc
+      $(Q)$(MAKE) $(build)=$(dtstree)
+
+Here 'dtbs' is a PHONY target.
+We always want to run the recipe.
+The pipe operator is not sensible.
+
+
+-- 
+Best Regards
+Masahiro Yamada
