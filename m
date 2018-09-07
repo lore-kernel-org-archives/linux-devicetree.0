@@ -1,108 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/9] nios2: build .dtb files in dts directory
-Date: Fri, 7 Sep 2018 13:09:34 -0500
-Message-ID: <CAL_Jsq+ocQEUsm-JBEeMfnkKRSRO3-UrvA7no+c3Cmp44c0OGg@mail.gmail.com>
-References: <20180905235327.5996-1-robh@kernel.org> <20180905235327.5996-3-robh@kernel.org>
- <1536286895.6128.4.camel@intel.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Fri, 07 Sep 2018 11:25:40 -0700
+Message-ID: <3c048938d12a070c03f0cbdbc89c86e8@agner.ch>
+References: <20180905052113.21262-1-stefan@agner.ch>
+ <4035252.QuWadVx7pr@avalon> <1569297.pdEFdpi3HS@avalon>
+ <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
+ <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
+ <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
+ <CACRpkdaUuWUHZgT0b64hMNZm3oy=7rece3H0p5VVe4d8jpFRaw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536286895.6128.4.camel@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ley.foon.tan@intel.com
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, nios2-dev@lists.rocketboards.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CACRpkdaUuWUHZgT0b64hMNZm3oy=7rece3H0p5VVe4d8jpFRaw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open
+ list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 6, 2018 at 9:21 PM Ley Foon Tan <ley.foon.tan@intel.com> wrote:
->
-> On Wed, 2018-09-05 at 18:53 -0500, Rob Herring wrote:
-> > Align nios2 with other architectures which build the dtb files in the
-> > same directory as the dts files. This is also in line with most other
-> > build targets which are located in the same directory as the source.
-> > This move will help enable the 'dtbs' target which builds all the
-> > dtbs
-> > regardless of kernel config.
-> >
-> > This transition could break some scripts if they expect dtb files in
-> > the old location.
-> >
-> > Cc: Ley Foon Tan <lftan@altera.com>
-> > Cc: nios2-dev@lists.rocketboards.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Please ack so I can take the whole series via the DT tree.
-> >
-> >  arch/nios2/Makefile          | 4 ++--
-> >  arch/nios2/boot/Makefile     | 4 ----
-> >  arch/nios2/boot/dts/Makefile | 1 +
-> >  3 files changed, 3 insertions(+), 6 deletions(-)
-> >  create mode 100644 arch/nios2/boot/dts/Makefile
-> >
-> > diff --git a/arch/nios2/Makefile b/arch/nios2/Makefile
-> > index 8673a79dca9c..50eece1c6adb 100644
-> > --- a/arch/nios2/Makefile
-> > +++ b/arch/nios2/Makefile
-> > @@ -59,10 +59,10 @@ archclean:
-> >         $(Q)$(MAKE) $(clean)=$(nios2-boot)
-> >
-> >  %.dtb: | scripts
-> > -       $(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
-> > +       $(Q)$(MAKE) $(build)=$(nios2-boot)/dts $(nios2-boot)/dts/$@
-> >
-> >  dtbs:
-> > -       $(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
-> > +       $(Q)$(MAKE) $(build)=$(nios2-boot)/dts
-> >
-> >  $(BOOT_TARGETS): vmlinux
-> >         $(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
-> > diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
-> > index 2ba23a679732..007586094dde 100644
-> > --- a/arch/nios2/boot/Makefile
-> > +++ b/arch/nios2/boot/Makefile
-> > @@ -47,10 +47,6 @@ obj-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) +=
-> > linked_dtb.o
-> >
-> >  targets += $(dtb-y)
-> >
-> > -# Rule to build device tree blobs with make command
-> > -$(obj)/%.dtb: $(src)/dts/%.dts FORCE
-> > -       $(call if_changed_dep,dtc)
-> > -
-> >  $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
-> >
-> >  install:
-> > diff --git a/arch/nios2/boot/dts/Makefile
-> > b/arch/nios2/boot/dts/Makefile
-> > new file mode 100644
-> > index 000000000000..f66554cd5c45
-> > --- /dev/null
-> > +++ b/arch/nios2/boot/dts/Makefile
-> > @@ -0,0 +1 @@
-> > +# SPDX-License-Identifier: GPL-2.0
-> > --
-> > 2.17.1
-> >
-> Hi Rob
->
-> I have synced your all-dtbs branch from here: https://git.kernel.org/pu
-> b/scm/linux/kernel/git/robh/linux.git/log/?h=all-dtbs
->
-> It shows error when compile kernel image and also when "make
-> dtbs_install".
-
-Can you fetch the branch again and try it. I fixed a few dependency issues.
-
-> make dtbs_install
-> make[1]: *** No rule to make target
-> 'arch/nios2/boot/dts/arch/nios2/boot/dts/10m50_devboard.dtb', needed by
-> 'arch/nios2/boot/dts/arch/nios2/boot/dts/10m50_devboard.dtb.S'.  Stop.
-
-What is the value of CONFIG_NIOS2_DTB_SOURCE? As patch 3 notes, it now
-should not have any path.
-
-If that's a problem, I could take the basename to strip the path, but
-then sub directories wouldn't work either.
-
-BTW, next up, I want to consolidate the config variables for built-in dtbs.
-
-Rob
+T24gMDcuMDkuMjAxOCAwMDoxMCwgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBUaHUsIFNlcCA2
+LCAyMDE4IGF0IDEwOjI1IFBNIFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPiB3cm90ZToK
+PiAKPj4gT2ssIEkgcmVhZCBhIGJpdCB1cCBvbiB0aGUgaGlzdG9yeSBvZiBicmlkZ2UgdGltaW5n
+LCBlc3BlY2lhbGx5Ogo+PiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9kcmktZGV2ZWwv
+bXNnMTU1NjE4Lmh0bWwKPj4KPj4gSU1ITywgdGhpcyBnb3Qgb3ZlcmVuZ2luZWVyZWQuIEZvciBk
+aXNwbGF5cyB3ZSBkbyBub3QgbmVlZCBhbGwgdGhhdAo+PiBzZXR1cC9zYW1wbGUgZGVsYXkgdGlt
+aW5nIGluZm9ybWF0aW9uLCBhbmQgbXVjaCBsb25nZXIgY2FibGVzIGFyZSBpbgo+PiB1c2UuIFNv
+IHdoeSBpcyBhbGwgdGhhdCBuZWVkZWQgZm9yIGJyaWRnZXM/Cj4gCj4gSSBhbHNvIGF2b2lkZWQg
+dGhlIG92ZXJoZWFkIG9mIGNyZWF0aW5nIHRoaXMgYWJzdHJhY3Rpb24gaW5pdGlhbGx5Lgo+IAo+
+IEJ1dCBhZnRlciBkb2luZyBpdCBJIGhhdmUgdGhpcyBTdG9ja2hvbG0gc3luZHJvbWUgdGhhdCBJ
+IHN0YXJ0Cj4gbGlraW5nIHdoYXQgTGF1cmVudCB0b2xkIG1lIHRvIGRvLgo+IAo+PiBGb3IgTGlu
+dXMgY2FzZSwgdGhlIFRIUzgxMzQoQS9CKSBkYXRhIHNoZWV0IEkgZm91bmQgKHJldmlzZWQgTWFy
+Y2ggMjAxMCkKPj4gY2xlYXJseSBzdGF0ZXM6Cj4+IENsb2NrIGlucHV0LiBBIHJpc2luZyBlZGdl
+IG9uIENMSyBsYXRjaGVzIFJQcjAtNywgR1kwLTcsIEJQYjAtNy4KPj4KPj4gU28gd2UgbmVlZCB0
+byBkcml2ZSBvbiBuZWdhdGl2ZSBlZGdlLCBoZW5jZSBEUk1fQlVTX0ZMQUdfUElYREFUQV9ORUdF
+REdFCj4+IHNob3VsZCBiZSB1c2VkLCB3aGljaCBtYWtlcyB0aGUgcGwxMTEgZHJpdmVyIHNldHRp
+bmcgVElNMl9JUEM6Cj4+IGh0dHA6Ly9pbmZvY2VudGVyLmFybS5jb20vaGVscC9pbmRleC5qc3A/
+dG9waWM9L2NvbS5hcm0uZG9jLmRkaTAxMjFkL2luZGV4Lmh0bWwKPiAKPiBUaGF0IGlzIGVhc3kg
+dG8gc2F5LCBidXQgaWYgSSBqdXN0IHNldCB0aGF0IHVwIGluIGNvZGUsIGV2ZW4gd2l0aCBhIGdv
+b2QKPiBjb21tZW50IGl0IGlzIGhhcmQgZm9yIHRoZSBuZXh0IHJlYWRlciB0byB1bmRlcnN0YW5k
+IHdoYXQgaXMgZ29pbmcKPiBvbi4gVGhlIGNlbnRyYWwgcXVlc3Rpb24gd2lsbCBiZSwgd2h5IGRv
+ZXMgUEwxMTEgbmVlZCB0byBkbyB0aGlzCj4gYnV0IG5vdCBSLUNhciB0aG91Z2ggdGhleSBhcmUg
+dXNpbmcgdGhlIHNhbWUgYnJpZGdlPwoKVGhhdCBpcyBzb21ldGhpbmcgSSBoYXZlIGV4cGVyaWVu
+Y2VkIGJlZm9yZS4gRGVwZW5kaW5nIG9uIGRyaXZlCnN0cmVuZ3RoLCBhbmQgSSBndWVzcyBzYW1w
+bGluZyBkZWxheSBldGMsIGl0IG1pZ2h0IHNhbXBsZSBqdXN0IGxhdGUKZW5vdWdoIHRoYXQgc2ln
+bmFscyBhcmUgc3RhYmxlIGFuZCBubyBpc3N1ZXMgYXJlIHJlYWxseSB2aXNpYmxlIG9uIHRoZQpz
+Y3JlZW4uIEluIHRob3NlIGNhc2VzIGRpZmZlcmVudCBjYWJsaW5nLCBjaGFuZ2VzIGluIGRyaXZl
+IHN0cmVuZ3RoLCBvcgpldmVuIHByb2R1Y3Rpb24gdmFyaWF0aW9ucyBtaWdodCBzdWRkZW5seSBz
+aG93IGFydGVmYWN0cyB0aG91Z2guLi4gTXkKcG9pbnQgYmVpbmcsIGp1c3QgYmVjYXVzZSBpdCBz
+dXBwb3NlZGx5IHdvcmtzLCBkb2VzIG5vdCBtZWFuIHRoYXQgaXQgaXMKcmlnaHQuCgpJIGRpZCBp
+bnRyb2R1Y2UgdGhlIGJ1cyBmbGFncyBhIHdoaWxlIGFnbzoKaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC84MjU0ODAxLwpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
+LzgyNTQ4MjEvCgpBbmQgdGhlbiBoYWQgdG8gZGVidWcgcXVpdGUgc29tZSBjb250cm9sbGVyIGFu
+ZCBkaXNwbGF5IGlzc3VlcyBhcm91bmQKcGl4ZWwgY2xvY2sgcG9sYXJpdHk6Cmh0dHBzOi8vcGF0
+Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvODExNzE4MS8KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC85NDY1NDg1LwoKRS5nLiBpbiB0aGF0IGxhc3QgY2FzZSwgdGhlIHBpeGVsIGNs
+b2NrIHBvbGFyaXR5IGZsYWdzIHdlcmUgaW50ZXJwcmV0ZWQKd3Jvbmcgb24gYm90aCBjb250cm9s
+bGVyIGFuZCBkaXNwbGF5IHNpZGUuIEhlbmNlIHRoaXMgd29ya2VkIGZpbmUgZm9yCnRoZSBjYXNl
+IGFscmVhZHkgdXBzdHJlYW0sIGJ1dCBpdCBkaWQgbm90IHdvcmsgaW4gbXkgY2FzZS4uLgoKSW4g
+dGhlIGVuZCwgYmVzdCB0aGluZyBpcyB0byBsb29rIG9uIHRoZSBidXMuIFBhcmFsbGVsIGRpc3Bs
+YXkgc2lnbmFscwphcmUgc3RpbGwgcmF0aGVyIHNsb3csIGFuZCB1c3VhbGx5IHJhdGhlciBlYXN5
+IHRvIHNjb3BlLgoKUEwxMTEgbmVlZHMgdG8gZG8gdGhpcyBiZWNhdXNlIGl0cyBzdGFuZGFyZCBz
+ZXR0aW5nIGlzIGRyaXZpbmcgb24gcmlzaW5nCmVkZ2UuIEhvd2V2ZXIsIG1vc3QgZGlzcGxheXMg
+YXMgd2VsbCBhcyB0aGF0IGJyaWRnZSBzYW1wbGUgZGF0YSBvbgpyaXNpbmcgZWRnZS4KCkkgZ3Vl
+c3MgUi1DYXIgRFUgZHJpdmVzIG9uIG5lZ2F0aXZlIGVkZ2UgYnkgZGVmYXVsdCwgYnV0IGNhbid0
+IHNheSBmb3IKc3VyZSB3aXRob3V0IGhhcmR3YXJlL2RhdGEgc2hlZXQuCgpBcyBmYXIgYXMgSSBj
+YW4gdGVsbCB0aGUgUi1DYXIgRFUgZHJpdmVyIGFsc28gZG9lcyBub3QgdXNlIHRoZQpEUk1fQlVT
+X0ZMQUdfUElYREFUQV8qRURHRSBmbGFncyBjdXJyZW50bHkuCgoKCj4gCj4gU28gdGhpcyBlbGFi
+b3JhdGUgbW9kZWwgZ2l2ZXMgYSBiZXR0ZXIgdHJhbnNmZXIgb2YgYWJzdHJhY3QgY29uY2VwdHMK
+PiB0byB3aG9ldmVyIG5lZWRzIHRvIHRvdWNoIHRoYXQgY29kZSBuZXh0LiBUaGUgY29kZSBpcyBu
+b3QganVzdAo+IGxvZ2ljLCBidXQgYWxzbyBvdXIgbWFwIG9mIHRoZSB3b3JsZCBhbmQgdGhlIGRv
+Y3VtZW50YXRpb24gb2Ygb3VyCj4gcHJvYmxlbSBzcGFjZS4KPiAKPiBEb25hbGQgS251dGggaGFz
+IHRoaXMgaWRlYSBhYm91dCBsaXRlcmF0ZSBwcm9ncmFtbWluZyB3aGljaCBldmVuCj4gdHVybnMg
+dGhlIGRvY3VtZW50YXRpb24vaW1wbGVtZW50YXRpb24gcHJvY2VzcyBhcm91bmQuIFdlIGFyZQo+
+IG5vdCB0aGVyZSwgbm90IGV2ZW4gcmVtb3RlbHksIGJ1dCBJTU8gdGhlIG1vcmUgY29tcGxleCB0
+aGUgcHJvYmxlbS4KPiB0aGUgbW9yZSB3ZSBuZWVkIHRvIGNvbnZleSBvdXIgdGhpbmtpbmcsIG5v
+dCBqdXN0IG91ciBzb2x1dGlvbi4KCkZ1bGx5IGFncmVlLgoKTXkgYXJndW1lbnQgaGVyZSBpcywg
+dGhhdCB0aGUgbWFwIG9mIHRoZSB3b3JsZCAoY29kZSkgYW5kIHRoZSBwcm9ibGVtCmFyZSBub3Qg
+YWxpZ25lZC4KCi0tClN0ZWZhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
