@@ -1,7 +1,7 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 2/5] dt-binding: rtc-pcf85063: add quartz load property
-Date: Fri,  7 Sep 2018 21:35:05 +0200
-Message-ID: <20180907193508.24974-3-sam@ravnborg.org>
+Subject: [PATCH v1 4/5] rtc: pcf8523: external capacitor configuration
+Date: Fri,  7 Sep 2018 21:35:07 +0200
+Message-ID: <20180907193508.24974-5-sam@ravnborg.org>
 References: <20180822183555.GA24084@ravnborg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,64 +15,54 @@ List-Id: devicetree@vger.kernel.org
 
 From: Søren Andersen <san@skov.dk>
 
-The NXP pcf85063 support two different quartz loads.
-- 7 pF (default)
-- 12.5 pF (minimum power consumption)
+Add support for specifying the quartz load in the DT node.
+The pcf8523 may use either a 7 pF or an 12.5 pF xtal.
+If the rtc has the wrong configuration the time will
+drift several hours/week.
 
-The pcf85063 needs to know the size of the external capacitor,
-otherwise the RTC will have a bad precision (hours/week).
+If nothing is specified in DT then the factory default of 7 pF is used.
+This is a change compared to before where the driver assumed 12.5 pF.
 
-The power-on default is 7 pF
-Add a property that tells if the external capacitor is 12.5 pF
+Note: all kernel dts trees are updated with the new property.
 
 Signed-off-by: Søren Andersen <san@skov.dk>
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Cc: Alessandro Zummo <a.zummo@towertech.it>
 Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 ---
- .../devicetree/bindings/rtc/nxp,pcf85063.txt          | 19 +++++++++++++++++++
- Documentation/devicetree/bindings/trivial-devices.txt |  1 -
- 2 files changed, 19 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+ drivers/rtc/rtc-pcf8523.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-new file mode 100644
-index 000000000000..22ebb2ce52c1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-@@ -0,0 +1,19 @@
-+* NXP PCF85063 Real Time Clock
-+
-+NXP PCF85063 Real Time Clock
-+
-+Required properties:
-+- compatible: Should contain "nxp,pcf85063".
-+- reg: I2C address for chip.
-+
-+Optional property:
-+- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
-+  which differ from the default value of 7 pF
-+
-+Example:
-+
-+pcf85063: pcf85063@51 {
-+	compatible = "nxp,pcf85063";
-+	reg = <0x51>;
-+	nxp,quartz_load_12.5pF;
-+};
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index 297dc82b67ad..440632682e31 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -170,7 +170,6 @@ nxp,pca9557		8-bit I2C-bus and SMBus I/O port with reset
- nxp,pcf2127		Real-time clock
- nxp,pcf2129		Real-time clock
- nxp,pcf8563		Real-time clock/calendar
--nxp,pcf85063		Tiny Real-Time Clock
- oki,ml86v7667		OKI ML86V7667 video decoder
- ovti,ov5642		OV5642: Color CMOS QSXGA (5-megapixel) Image Sensor with OmniBSI and Embedded TrueFocus
- pericom,pt7c4338	Real-time Clock Module
+diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
+index 453615f8ac9a..3c19b4d21a2d 100644
+--- a/drivers/rtc/rtc-pcf8523.c
++++ b/drivers/rtc/rtc-pcf8523.c
+@@ -85,7 +85,7 @@ static int pcf8523_write(struct i2c_client *client, u8 reg, u8 value)
+ 	return 0;
+ }
+ 
+-static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
++static int pcf8523_select_capacitance(struct i2c_client *client)
+ {
+ 	u8 value;
+ 	int err;
+@@ -94,7 +94,7 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+ 	if (err < 0)
+ 		return err;
+ 
+-	if (!high)
++	if (!device_property_present(&client->dev, "nxp,quartz_load_12.5pf"))
+ 		value &= ~REG_CONTROL1_CAP_SEL;
+ 	else
+ 		value |= REG_CONTROL1_CAP_SEL;
+@@ -331,7 +331,7 @@ static int pcf8523_probe(struct i2c_client *client,
+ 	if (!pcf)
+ 		return -ENOMEM;
+ 
+-	err = pcf8523_select_capacitance(client, true);
++	err = pcf8523_select_capacitance(client);
+ 	if (err < 0)
+ 		return err;
+ 
 -- 
 2.12.0
