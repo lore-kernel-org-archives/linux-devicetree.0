@@ -1,327 +1,231 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Fri, 7 Sep 2018 15:32:29 +0200
-Message-ID: <20180907133228.GA16297@amd>
-References: <20180906135005.6718-1-dmurphy@ti.com>
- <20180906211617.GB16899@amd>
- <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH V2 8/8] watchdog: stpmic1: add stpmic1 watchdog driver
+Date: Fri, 7 Sep 2018 06:48:02 -0700
+Message-ID: <c1594be0-5210-bfe0-59b8-d8b163195da5@roeck-us.net>
+References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
+ <1536325173-16617-9-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+In-Reply-To: <1536325173-16617-9-git-send-email-p.paillet@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Pascal PAILLET-LME <p.paillet@st.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 09/07/2018 05:59 AM, Pascal PAILLET-LME wrote:
+> From: pascal paillet <p.paillet@st.com>
+> 
+> The stpmic1 PMIC embeds a watchdog which is disabled by default. As soon
+> as the watchdog is started, it must be refreshed periodically otherwise
+> the PMIC goes off.
+> 
+> Signed-off-by: pascal paillet <p.paillet@st.com>
+> ---
+> changes in v2:
+> * the hardware component has been renamed from stpmu1 to stpmic1 !
+> * change headers
+> * handle remarks from Guenter
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hmm ... as if I would remember what those were.
 
-Hi!
+> * fix set timeout
+> 
+>   drivers/watchdog/Kconfig       |  12 ++++
+>   drivers/watchdog/Makefile      |   1 +
+>   drivers/watchdog/stpmic1_wdt.c | 130 +++++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 143 insertions(+)
+>   create mode 100644 drivers/watchdog/stpmic1_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 9af07fd..11c5937 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -796,6 +796,18 @@ config STM32_WATCHDOG
+>   	  To compile this driver as a module, choose M here: the
+>   	  module will be called stm32_iwdg.
+>   
+> +config STPMIC1_WATCHDOG
+> +	tristate "STPMIC1 PMIC watchdog support"
+> +	depends on MFD_STPMIC1
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include watchdog support embedded into STPMIC1 PMIC.
+> +	  If the watchdog timer expires, stpmic1 shut-down all its power
+> +	  supplies.
+> +
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called spmic1_wdt.
+> +
+>   config UNIPHIER_WATCHDOG
+>   	tristate "UniPhier watchdog support"
+>   	depends on ARCH_UNIPHIER || COMPILE_TEST
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 1d3c6b0..a898d8f 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -216,3 +216,4 @@ obj-$(CONFIG_ZIIRAVE_WATCHDOG) += ziirave_wdt.o
+>   obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
+>   obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
+>   obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
+> +obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
+> diff --git a/drivers/watchdog/stpmic1_wdt.c b/drivers/watchdog/stpmic1_wdt.c
+> new file mode 100644
+> index 0000000..391e544
+> --- /dev/null
+> +++ b/drivers/watchdog/stpmic1_wdt.c
+> @@ -0,0 +1,130 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) STMicroelectronics 2018
+> +// Author: Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
+> + > +#include <linux/kernel.h>
+> +#include <linux/mfd/stpmic1.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reboot.h>
+> +#include <linux/slab.h>
+> +#include <linux/watchdog.h>
+> +
+> +/* WATCHDOG CONTROL REGISTER bit */
+> +#define WDT_START		BIT(0)
+> +#define WDT_PING		BIT(1)
+> +#define WDT_START_MASK		BIT(0)
+> +#define WDT_PING_MASK		BIT(1)
+> +
+> +#define PMIC_WDT_MIN_TIMEOUT 1
+> +#define PMIC_WDT_MAX_TIMEOUT 256
+> +
+> +struct stpmic1_wdt {
+> +	struct stpmic1_dev *pmic;
+> +	struct watchdog_device wdtdev;
+> +};
+> +
+> +static int pmic_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_update_bits(wdt->pmic->regmap,
+> +				  WCHDG_CR, WDT_START_MASK, WDT_START);
+> +}
+> +
+> +static int pmic_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_update_bits(wdt->pmic->regmap,
+> +				  WCHDG_CR, WDT_START_MASK, ~WDT_START);
+> +}
+> +
+> +static int pmic_wdt_ping(struct watchdog_device *wdd)
+> +{
+> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_update_bits(wdt->pmic->regmap,
+> +				  WCHDG_CR, WDT_PING_MASK, WDT_PING);
+> +}
+> +
+> +static int pmic_wdt_set_timeout(struct watchdog_device *wdd,
+> +				unsigned int timeout)
+> +{
+> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	return regmap_write(wdt->pmic->regmap, WCHDG_TIMER_CR, timeout - 1);
 
-> >> index 000000000000..3256dec21075
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
-> >> @@ -0,0 +1,86 @@
-> >> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
-> >> +
-> >> +The LM3697 11-bit LED driver provides high-
-> >> +performance backlight dimming for 1, 2, or 3 series
-> >> +LED strings while delivering up to 90% efficiency.
-> >=20
-> > Hmm. We already have second set of bindings for 3697:
-> >=20
-> > ./devicetree/bindings/mfd/ti-lmu.txt
-> >=20
-> > (Sorry for not noticing that earlier). Advantage is that those have
-> > had discussion with device tree people and have acks:
-> >=20
-> > What to do there?
->=20
-> UGH!  IMO this should have not been accepted without the support code.
-> I think this MFD driver is complete over kill to try to commonize features
-> into a MFD device.  The LM3631 and LM3632 seem to be the only true MFD de=
-vices
-> here since they provide regulator support.
+What happens if the configured timeout is 1 ? Does that translate to a 1-second
+timeout ?
 
-They are not yet in mainline; but they have Rob's acknowledges.
+This function also has to set wdd->timeout.
 
-=2E..but I see there are improvements possible.
+> +}
+> +
+> +static const struct watchdog_info pmic_watchdog_info = {
+> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
 
-> The LM3697 fault monitoring is only for test purposes according to the da=
-ta
-> sheet.  Not sure the customer can trust this or they should be warned at =
-boot
-> that the Fault monitoring is for test purposes only.
+No WDIOF_MAGICCLOSE ?
 
-Ok, but that's topic for the driver, not for binding, right?
+> +	.identity = "STPMIC1 PMIC Watchdog",
+> +};
+> +
+> +static const struct watchdog_ops pmic_watchdog_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = pmic_wdt_start,
+> +	.stop = pmic_wdt_stop,
+> +	.ping = pmic_wdt_ping,
+> +	.set_timeout = pmic_wdt_set_timeout,
+> +};
+> +
+> +static int pmic_wdt_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct stpmic1_dev *pmic;
+> +	struct stpmic1_wdt *wdt;
+> +
+> +	if (!pdev->dev.parent)
+> +		return -EINVAL;
+> +
+> +	pmic = dev_get_drvdata(pdev->dev.parent);
+> +	if (!pmic)
+> +		return -EINVAL;
+> +
+> +	wdt = devm_kzalloc(&pdev->dev, sizeof(struct stpmic1_wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	wdt->pmic = pmic;
+> +
+> +	wdt->wdtdev.info = &pmic_watchdog_info;
+> +	wdt->wdtdev.ops = &pmic_watchdog_ops;
+> +	wdt->wdtdev.min_timeout = PMIC_WDT_MIN_TIMEOUT;
+> +	wdt->wdtdev.max_timeout = PMIC_WDT_MAX_TIMEOUT;
+> +	wdt->wdtdev.timeout = PMIC_WDT_MIN_TIMEOUT;
 
-> And I think Jacek pointed out that the bindings references in this bindin=
-gs
-> don't even exist.
->=20
-> I am thinking we need to deprecate this MFD driver and consolidate these =
-drivers
-> in the LED directory as we indicated before.  I did not find any ti-lmu s=
-upport
-> code.
->=20
-> ti-lmu common core code and then the LED children appending the feature d=
-ifferentiation.
+Are you sure about that ? A timeout of 1 second may be a cause for unexpected
+reboots if user space is busy. Personally I find it better to set a larger
+default and let userspace configure a tighter value if so desired.
 
-> Need some maintainer weigh in here.
+Also,
+	watchdog_init_timeout(&wdt->wdtdev, 0, &pdev->dev);
+might be desirable if you want to be able to specify the timeout in the
+devicetree file.
 
-Hehe. I'm maintnainer. Fun.
 
-Is there something obviously wrong with
-287cce719d85311f61d1b6b7f7b0d93f7907cd46 +
-d774c7e447ac911e73a1b3c775e6d89f0422218c ?
+> +
+> +	wdt->wdtdev.status = WATCHDOG_NOWAYOUT_INIT_STATUS;
+> +
+> +	watchdog_set_drvdata(&wdt->wdtdev, wdt);
+> +	dev_set_drvdata(&pdev->dev, wdt);
 
-If not, as it already had discussion/Acks so I'd prefer that one. We
-may move it to LEDs directory if neccessary, or something like that...
+Unless I am missing something this should not be needed.
 
-Best regards,
-
-								Pavel
-
-> > commit 287cce719d85311f61d1b6b7f7b0d93f7907cd46
-> > Author: Milo Kim <milo.kim@ti.com>
-> > Date:   Tue Feb 28 15:45:14 2017 +0900
-> >=20
-> >     dt-bindings: mfd: Add TI LMU device binding information
-> >=20
-> >     This patch describes overall binding for TI LMU MFD devices.
-> >=20
-> >     Signed-off-by: Milo Kim <milo.kim@ti.com>
-> >         Acked-by: Rob Herring <robh+dt@kernel.org>
-> > 	    Acked-by: Tony Lindgren <tony@atomide.com>
-> > 	        Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > 	=09
-> >=20
-> > commit d774c7e447ac911e73a1b3c775e6d89f0422218c
-> > Author: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> > Date:   Mon Aug 27 09:15:08 2018 -0700
-> >=20
-> >     dt-bindings: mfd: ti-lmu: update for backlight
-> >    =20
-> >     Update binding to integrate the backlight feature directly into
-> >     the main node, as suggested by Rob Herring.
-> >    =20
-> >     Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documen=
-tation/devicetree/bindings/mfd/ti-lmu.txt
-> > index c885cf8..b3433e9 100644
-> > --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> > +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> > @@ -28,10 +28,9 @@ Required properties:
-> > =20
-> >  Optional property:
-> >    - enable-gpios: A GPIO specifier for hardware enable pin.
-> > -
-> > -Required node:
-> > -  - backlight: All LMU devices have backlight child nodes.
-> > -               For the properties, please refer to [1].
-> > +  - pwm-names: Should be either "lmu-backlight" or unset
-> > +  - pwm: This should be a PWM specifier following ../pwm/pwm.txt and m=
-ust
-> > +         only be specified, if the backlight should be used in PWM mod=
-e.
-> > =20
-> >  Optional nodes:
-> >    - fault-monitor: Hardware fault monitoring driver for LM3633 and LM3=
-697.
-> > @@ -42,8 +41,31 @@ Optional nodes:
-> >    - leds: LED properties for LM3633. Please refer to [2].
-> >    - regulators: Regulator properties for LM3631 and LM3632.
-> >                  Please refer to [3].
-> > +  - bank0, bank1, bank2: This contains the backlight configuration
-> > +                         for each backlight control bank.
-> > +
-> > +Required properties in the bank subnodes:
-> > +  - label: A string describing the backlight. Should contain "keyboard"
-> > +           for a keyboard backlight and "lcd" for LCD panel backlights.
-> > +  - ti,led-sources: A list of channels, that should be driven. Each ch=
-annel
-> > +                    should only be driven by one bank.
-> > +
-> > +Optional properties in the bank subnodes:
-> > +  - default-brightness-level: Backlight initial brightness value.
-> > +                              Type is <u32>. It is set as soon as back=
-light
-> > +			      device is created.
-> > +			      0 ~ 2047 =3D LM3631, LM3632, LM3633, LM3695 and
-> > +					 LM3697
-> > +			      0 ~ 255  =3D LM3532
-> > +  - ti,ramp-up-ms, ti,ramp-down-ms: Light dimming effect properties.
-> > +				    Type is <u32>. Unit is millisecond.
-> > +					0 ~ 65 ms    =3D LM3532
-> > +					0 ~ 4000 ms  =3D LM3631
-> > +					0 ~ 16000 ms =3D LM3633 and LM3697
-> > +  - pwm-period: PWM period. Only valid in PWM brightness mode.
-> > +                Type is <u32>. If this property is missing, then contr=
-ol
-> > +		mode is set to I2C by default.
-> > =20
-> > -[1] ../leds/backlight/ti-lmu-backlight.txt
-> >  [2] ../leds/leds-lm3633.txt
-> >  [3] ../regulator/lm363x-regulator.txt
-> > =20
-> > @@ -53,14 +75,11 @@ lm3532@38 {
-> > =20
-> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> > =20
-> > -	backlight {
-> > -		compatible =3D "ti,lm3532-backlight";
-> > -
-> > -		lcd {
-> > -			led-sources =3D <0 1 2>;
-> > -			ramp-up-msec =3D <30>;
-> > -			ramp-down-msec =3D <0>;
-> > -		};
-> > +	bank0 {
-> > +		label =3D "lcd";
-> > +		led-sources =3D <0 1 2>;
-> > +		ramp-up-msec =3D <30>;
-> > +		ramp-down-msec =3D <0>;
-> >  	};
-> >  };
-> > =20
-> > @@ -105,13 +124,10 @@ lm3631@29 {
-> >  		};
-> >  	};
-> > =20
-> > -	backlight {
-> > -		compatible =3D "ti,lm3631-backlight";
-> > -
-> > -		lcd_bl {
-> > -			led-sources =3D <0 1>;
-> > -			ramp-up-msec =3D <300>;
-> > -		};
-> > +	bank0 {
-> > +		label =3D "lcd_bl";
-> > +		led-sources =3D <0 1>;
-> > +		ramp-up-msec =3D <300>;
-> >  	};
-> >  };
-> > =20
-> > @@ -147,16 +163,13 @@ lm3632@11 {
-> >  		};
-> >  	};
-> > =20
-> > -	backlight {
-> > -		compatible =3D "ti,lm3632-backlight";
-> > -
-> > -		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-> > -		pwm-names =3D "lmu-backlight";
-> > +	pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
-> > +	pwm-names =3D "lmu-backlight";
-> > =20
-> > -		lcd {
-> > -			led-sources =3D <0 1>;
-> > -			pwm-period =3D <10000>;
-> > -		};
-> > +	bank0 {
-> > +		label =3D "lcd";
-> > +		led-sources =3D <0 1>;
-> > +		pwm-period =3D <10000>;
-> >  	};
-> >  };
-> > =20
-> > @@ -166,22 +179,18 @@ lm3633@36 {
-> > =20
-> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> > =20
-> > -	backlight {
-> > -		compatible =3D "ti,lm3633-backlight";
-> > -
-> > -		main {
-> > -			label =3D "main_lcd";
-> > -			led-sources =3D <1 2>;
-> > -			ramp-up-msec =3D <500>;
-> > -			ramp-down-msec =3D <500>;
-> > -		};
-> > +	bank0 {
-> > +		label =3D "main_lcd";
-> > +		led-sources =3D <1 2>;
-> > +		ramp-up-msec =3D <500>;
-> > +		ramp-down-msec =3D <500>;
-> > +	};
-> > =20
-> > -		front {
-> > -			label =3D "front_lcd";
-> > -			led-sources =3D <0>;
-> > -			ramp-up-msec =3D <1000>;
-> > -			ramp-down-msec =3D <0>;
-> > -		};
-> > +	bank1 {
-> > +		label =3D "front_lcd";
-> > +		led-sources =3D <0>;
-> > +		ramp-up-msec =3D <1000>;
-> > +		ramp-down-msec =3D <0>;
-> >  	};
-> > =20
-> >  	leds {
-> > @@ -211,13 +220,9 @@ lm3695@63 {
-> > =20
-> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> > =20
-> > -	backlight {
-> > -		compatible =3D "ti,lm3695-backlight";
-> > -
-> > -		lcd {
-> > -			label =3D "bl";
-> > -			led-sources =3D <0 1>;
-> > -		};
-> > +	bank0 {
-> > +		label =3D "lcd_bl";
-> > +		led-sources =3D <0 1>;
-> >  	};
-> >  };
-> > =20
-> > @@ -227,14 +232,10 @@ lm3697@36 {
-> > =20
-> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> > =20
-> > -	backlight {
-> > -		compatible =3D "ti,lm3697-backlight";
-> > -
-> > -		lcd {
-> > -			led-sources =3D <0 1 2>;
-> > -			ramp-up-msec =3D <200>;
-> > -			ramp-down-msec =3D <200>;
-> > -		};
-> > +	bank0 {
-> > +		led-sources =3D <0 1 2>;
-> > +		ramp-up-msec =3D <200>;
-> > +		ramp-down-msec =3D <200>;
-> >  	};
-> > =20
-> >  	fault-monitor {
-> >=20
->=20
->=20
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAluSfewACgkQMOfwapXb+vJTSgCeLTbGsfluYTFXL9RCS5ieN3B8
-9iYAninoZcHC2Bgzy5InTyR0h+IWe87F
-=E6Ks
------END PGP SIGNATURE-----
-
---qDbXVdCdHGoSgWSk--
+> +
+> +	ret = devm_watchdog_register_device(&pdev->dev, &wdt->wdtdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(wdt->pmic->dev, "PMIC Watchdog driver probed\n");
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_pmic_wdt_match[] = {
+> +	{ .compatible = "st,stpmic1-wdt" },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, of_pmic_wdt_match);
+> +
+> +static struct platform_driver stpmic1_wdt_driver = {
+> +	.probe = pmic_wdt_probe,
+> +	.driver = {
+> +		.name = "stpmic1-wdt",
+> +		.of_match_table = of_pmic_wdt_match,
+> +	},
+> +};
+> +module_platform_driver(stpmic1_wdt_driver);
+> +
+> +MODULE_DESCRIPTION("Watchdog driver for STPMIC1 device");
+> +MODULE_AUTHOR("Pascal Paillet");
+> +MODULE_LICENSE("GPL v2");
+> 
