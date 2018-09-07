@@ -1,58 +1,53 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v3 0/2] arm64: dts: meson-g12a: Introduce new DT files for
- Meson-G12A SoC
-Date: Fri, 7 Sep 2018 20:09:04 +0800
-Message-ID: <aebe4a85-94b0-90f9-d3c2-ed0764398a55@amlogic.com>
-References: <1534243121-33589-1-git-send-email-jianxin.pan@amlogic.com>
- <170648ffb748c7b3890f5d7293920873efd16e30.camel@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Christian Hewitt <christianshewitt@gmail.com>
+Subject: [PATCH v2] ARM64: dts: meson-gxbb-wetek: add ttyAML1 uart for Bluetooth
+Date: Fri,  7 Sep 2018 16:15:36 +0400
+Message-ID: <1536322536-53109-1-git-send-email-christianshewitt@gmail.com>
+References: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <170648ffb748c7b3890f5d7293920873efd16e30.camel@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: narmstrong@baylibre.com, christianshewitt@gmail.com, martin.blumenstingl@googlemail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 8/14/2018 7:58 PM, Jerome Brunet wrote:
-> On Tue, 2018-08-14 at 18:38 +0800, Jianxin Pan wrote:
->> This attempt will try to add new DT files to support Meson-G12A SoC.
->>
->> 1) first, Please notice that, in this patch series, the DT node about 16M reserved
->> memory for hwrom is removed, since it's not needed by G12A SoC.
->> 2) second, the pclk for uart_AO need to be fixed once G12A clock_ao driver is
->> merged. In this version, it rely on bootloader to enable the pclk gate which 
->> belong to AO clock domain. Please add clk_ignore_unused to bootargs.
->>
->> Changes since v2 [1]:
->>  - reorder subnodes
->>  - collect Rob's Reviewed-by
->>
->> Changes since v1 [0]:
->>  - fix signoff typo
->>  - order subnodes by addresses when there is one and alphabetically when there is none
->>
->> [0] https://lore.kernel.org/lkml/1533802951-49919-2-git-send-email-jianxin.pan@amlogic.com/
->>
->> Jianxin Pan (2):
->>   dt-bindings: arm: amlogic: Add Meson G12A binding
->>   arm64: dts: meson-g12a: add initial g12a s905d2 SoC DT support
->>
->>  Documentation/devicetree/bindings/arm/amlogic.txt |   6 +
->>  arch/arm64/boot/dts/amlogic/Makefile              |   1 +
->>  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts   |  22 +++
->>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi       | 172 ++++++++++++++++++++++
->>  4 files changed, 201 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
->>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
->>
-> 
-> Series looks good as far as I can tell
-> 
-> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
-> 
-> .
-> 
-Hi Kevin, this series are tested on latest v4.20/integ.
+This change adds the uart_A used by the brmcfmac sdio module in the
+WeTek Hub and WeTek Play 2 devices. meson_uart_probe seems to mandate
+an alias (without it, BT is not working) so this is also included.
+
+Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+index 70325b2..e75ace7 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+@@ -10,6 +10,7 @@
+ / {
+ 	aliases {
+ 		serial0 = &uart_AO;
++		serial1 = &uart_A;
+ 		ethernet0 = &ethmac;
+ 	};
+ 
+@@ -239,6 +240,18 @@
+ 	vqmmc-supply = <&vddio_boot>;
+ };
+ 
++/* This is connected to the Bluetooth module: */
++&uart_A {
++	status = "okay";
++	pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
++	pinctrl-names = "default";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		shutdown-gpios = <&gpio GPIOX_20 GPIO_ACTIVE_HIGH>;
++	};
++};
++
+ /* This UART is brought out to the DB9 connector */
+ &uart_AO {
+ 	status = "okay";
+-- 
+2.7.4
