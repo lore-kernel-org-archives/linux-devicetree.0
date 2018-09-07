@@ -1,150 +1,113 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [RFC PATCH v3 1/2] dt-bindings: nand: meson: add Amlogic NAND
- controller driver
-Date: Fri, 7 Sep 2018 14:19:44 +0200
-Message-ID: <20180907141944.4dd4406b@bbrezillon>
-References: <1536317831-58056-1-git-send-email-jianxin.pan@amlogic.com>
-        <1536317831-58056-2-git-send-email-jianxin.pan@amlogic.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 3/4] of: Convert to using %pOFn instead of
+ device_node.name
+Date: Fri, 7 Sep 2018 14:29:28 +0200
+Message-ID: <20180907122928.GA5821@ulmo>
+References: <20180828155254.10709-1-robh@kernel.org>
+ <20180828155254.10709-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536317831-58056-2-git-send-email-jianxin.pan@amlogic.com>
+Content-Disposition: inline
+In-Reply-To: <20180828155254.10709-4-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: linux-mtd@lists.infradead.org, Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Sep 2018 18:57:10 +0800
-Jianxin Pan <jianxin.pan@amlogic.com> wrote:
 
-> From: Liang Yang <liang.yang@amlogic.com>
-> 
-> Add Amlogic NAND controller dt-bindings for Meson SoC,
-> Current this driver support GXBB/GXL/AXG platform.
-> 
-> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+--tKW2IUtsqtDRztdT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Aug 28, 2018 at 10:52:53AM -0500, Rob Herring wrote:
+> In preparation to remove the node name pointer from struct device_node,
+> convert printf users to use the %pOFn format specifier.
+>=20
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 91 ++++++++++++++++++++++
->  1 file changed, 91 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> new file mode 100644
-> index 0000000..655a778
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> @@ -0,0 +1,91 @@
-> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-> +
-> +This file documents the properties in addition to those available in
-> +the MTD NAND bindings.
-> +
-> +Required properties:
-> +- compatible : contains one of:
-> +  - "amlogic,meson-gxl-nfc"
-> +  - "amlogic,meson-axg-nfc"
-> +- clocks     :
-> +	A list of phandle + clock-specifier pairs for the clocks listed
-> +	in clock-names.
-> +
-> +- clock-names: Should contain the following:
-> +	"core" - NFC module gate clock
-> +	"device" - device clock from eMMC sub clock controller
-> +
-> +- pins     : Select pins which NFC need.
-> +- nand_pins: Detail NAND pins information.
+>  drivers/of/device.c   |  4 ++--
+>  drivers/of/of_mdio.c  | 12 ++++++------
+>  drivers/of/of_numa.c  |  4 ++--
+>  drivers/of/overlay.c  |  4 ++--
+>  drivers/of/platform.c |  8 ++++----
+>  drivers/of/unittest.c | 12 ++++++------
+>  6 files changed, 22 insertions(+), 22 deletions(-)
+>=20
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 5957cd4fa262..daa075d87317 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -219,7 +219,7 @@ static ssize_t of_device_get_modalias(struct device *=
+dev, char *str, ssize_t len
+>  		return -ENODEV;
+> =20
+>  	/* Name & Type */
+> -	csize =3D snprintf(str, len, "of:N%sT%s", dev->of_node->name,
+> +	csize =3D snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
+>  			 dev->of_node->type);
+>  	tsize =3D csize;
+>  	len -=3D csize;
 
-You mean pinctrl-names and pinctrl-0, right? Not sure it's necessary to
-document that, but if you do, please use the correct DT prop names.
+This seems to cause the modalias to be improperly constructed. As a
+consequence, automatic module loading at boot time is now broken. I
+think the reason why this fails is because vsnprintf() will skip all
+alpha-numeric characters after a call to pointer(). Presumably this
+is meant to be a generic way of skipping whatever specifiers we throw
+at it.
 
-> +- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-> +				controller port C
-> +
-> +Optional children nodes:
-> +Children nodes represent the available nand chips.
-> +
-> +
-> +
+Unfortunately for the case of OF modaliases, this means that the 'T'
+character gets eaten, so we end up with something like this:
 
-One too many blank lines here.
+	# udevadm info /sys/bus/platform/devices/54200000.dc
+	[...]
+	E: MODALIAS=3Dof:Ndc<NULL>Cnvidia,tegra124-dc
+	[...]
 
-> +Other properties:
-> +see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-> +
-> +Example demonstrate on AXG SoC:
-> +
-> +	sd_emmc_c_clkc: mmc@7000 {
-> +		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
-> +		reg = <0x0 0x7000 0x0 0x800>;
-> +		status = "okay";
-> +	};
-> +
-> +	nand: nfc@7800 {
-> +		compatible = "amlogic,meson-axg-nfc";
-> +		reg = <0x0 0x7800 0x0 0x100>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-> +		status = "disabled";
-> +
-> +		clocks = <&clkc CLKID_SD_EMMC_C>,
-> +			<&sd_emmc_c_clkc CLKID_MMC_DIV>;
-> +		clock-names = "core", "device";
-> +		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
-> +
-> +		status = "okay";
-> +
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&nand_pins>;
-> +
-> +		nand@0 {
-> +			reg = <0>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			nand-on-flash-bbt;
-> +			nand-ecc-mode = "hw";
-> +			nand-ecc-strength = <8>;
-> +			nand-ecc-step-size = <1024>;
+instead of this:
 
-Drop nand-ecc- props. I guess you have a sensible default value and I
-prefer when ECC requirements are directly extracted during chip
-detection. Defining that in the DT is a bad habit. The only one that
-could make sense (assuming you support it) is nand-ecc-maximize.
+	# udevadm info /sys/bus/platform/devices/54200000.dc
+	[...]
+	E: MODALIAS=3Dof:NdcT<NULL>Cnvidia,tegra124-dc
+	[...]
 
-> +
-> +			amlogic,nand-enable-scrambler;
+Everything is back to normal if I revert this patch. However, since
+that's obviously not what we want, I think perhaps what we need is a
+way for pointer() (and its implementations) to report back how many
+characters in the format string it consumed so that we can support
+these kinds of back-to-back strings.
 
-Please drop this property (it's not longer documented).
+If nobody else has the time I can look into coding up a fix, but in the
+meantime it might be best to back this one out until we can handle the
+OF modalias format string.
 
-> +
-> +			partition@0 {
-> +				label = "boot";
-> +				reg = <0x00000000 0x00200000>;
-> +				read-only;
-> +			};
-> +			partition@200000 {
-> +				label = "env";
-> +				reg = <0x00200000 0x00400000>;
-> +			};
-> +			partition@600000 {
-> +				label = "system";
-> +				reg = <0x00600000 0x00a00000>;
-> +			};
-> +			partition@1000000 {
-> +				label = "rootfs";
-> +				reg = <0x01000000 0x03000000>;
-> +			};
-> +			partition@4000000 {
-> +				label = "media";
-> +				reg = <0x04000000 0x8000000>;
-> +			};
+Thierry
 
-No need to define the partitions in your example, especially since they
-should be placed in a partitions subnode with a "fixed-partitions"
-compat.
+--tKW2IUtsqtDRztdT
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +		};
-> +	};
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluSbyUACgkQ3SOs138+
+s6ELBBAAi8cbuJZHQabJPhB7Y0fsJZet4soXDZWmrJsfMNd+AuT3LXjV5HtR2rC7
+M5ltpxZhbFx0+JhtQI0dK6l/2NvJQhE/X0tN1V6k2VT+hni6FcyWHxEQQJpUpLLl
+VAEt3Mcp7vLBC0fqgu7ASFW05lO0FMXLiSChrw6lbvvVNh5ITd8Q2YKxP6LmmQ9S
+6YF1hN5QOnR7wkypqf2KvFuemMtuKv3YYXPIdVesOBayOnUMTneIlWt3SZv8U+m/
+qy3LR6m43n76RB6lAMcaMTZfBTP8kiM0r5/jZsDlHqu3svgp174Ft8TtRBHcstN+
+rOoFz1Bddd4PtXlJtum9YZyN0n+SBs6lTe7NZlJC0VmQz29yloz8MDaOJwjoanxo
+Tyr5D84eHTfMh1lpNbyMZqnqcQD3t6EboZZCrZ/Q1Gd2zfUohiWV1In9UolmeQvJ
+Ij1eE0u7DeLizIzYtUpKMfRxcL1NlaAWw7VmtDJnZ5TPN0ASNCO2vvz+ev45i3fq
+2enBq2DlNDzlnGdFdZNqx3RlHH6APsGUjTXYlafF/dQG/jVTteQ0M7jj4nvOUZiN
+q51Rk9l30a6hUDt4LZliOt0Vt7TnK1FLyKAXgPxhHmEEZRUFJuan2afefPendC+K
+VYHwXZAJCfHdeFxDbmyoegiqiLoXo8PS0Kb5L+7KtqnFMTm8Iic=
+=E/Bc
+-----END PGP SIGNATURE-----
+
+--tKW2IUtsqtDRztdT--
