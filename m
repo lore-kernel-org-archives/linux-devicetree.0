@@ -1,17 +1,19 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Fri, 7 Sep 2018 09:10:27 +0200
-Message-ID: <CACRpkdaUuWUHZgT0b64hMNZm3oy=7rece3H0p5VVe4d8jpFRaw@mail.gmail.com>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <4035252.QuWadVx7pr@avalon>
- <1569297.pdEFdpi3HS@avalon> <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
- <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
- <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
+Date: Fri, 7 Sep 2018 09:21:43 +0200
+Message-ID: <20180907072143.GC1334@kroah.com>
+References: <1536012923-16275-1-git-send-email-henrik@austad.us>
+ <20180904113030.GB25177@amd>
+ <20180904095908.13298b3d@gandalf.local.home>
+ <20180906095804.5ab2716f@lwn.net>
+ <20180906120120.3dd1fc91@gandalf.local.home>
+ <CAKMK7uHoeB89-VVS8qVaoNiP_0waHHJ=dFCUgXkRDTnRkXz69g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uHoeB89-VVS8qVaoNiP_0waHHJ=dFCUgXkRDTnRkXz69g@mail.gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,40 +23,22 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Jan Kandziora <jjj@gmx.de>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, kvm@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Mark Brown <broonie@kernel.org>, Henrik Austad <henrik@austad.us>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, Ian Kent <raven@themaw.net>, linux-s390@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbe>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgNiwgMjAxOCBhdCAxMDoyNSBQTSBTdGVmYW4gQWduZXIgPHN0ZWZhbkBhZ25l
-ci5jaD4gd3JvdGU6Cgo+IE9rLCBJIHJlYWQgYSBiaXQgdXAgb24gdGhlIGhpc3Rvcnkgb2YgYnJp
-ZGdlIHRpbWluZywgZXNwZWNpYWxseToKPiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9k
-cmktZGV2ZWwvbXNnMTU1NjE4Lmh0bWwKPgo+IElNSE8sIHRoaXMgZ290IG92ZXJlbmdpbmVlcmVk
-LiBGb3IgZGlzcGxheXMgd2UgZG8gbm90IG5lZWQgYWxsIHRoYXQKPiBzZXR1cC9zYW1wbGUgZGVs
-YXkgdGltaW5nIGluZm9ybWF0aW9uLCBhbmQgbXVjaCBsb25nZXIgY2FibGVzIGFyZSBpbgo+IHVz
-ZS4gU28gd2h5IGlzIGFsbCB0aGF0IG5lZWRlZCBmb3IgYnJpZGdlcz8KCkkgYWxzbyBhdm9pZGVk
-IHRoZSBvdmVyaGVhZCBvZiBjcmVhdGluZyB0aGlzIGFic3RyYWN0aW9uIGluaXRpYWxseS4KCkJ1
-dCBhZnRlciBkb2luZyBpdCBJIGhhdmUgdGhpcyBTdG9ja2hvbG0gc3luZHJvbWUgdGhhdCBJIHN0
-YXJ0Cmxpa2luZyB3aGF0IExhdXJlbnQgdG9sZCBtZSB0byBkby4KCj4gRm9yIExpbnVzIGNhc2Us
-IHRoZSBUSFM4MTM0KEEvQikgZGF0YSBzaGVldCBJIGZvdW5kIChyZXZpc2VkIE1hcmNoIDIwMTAp
-Cj4gY2xlYXJseSBzdGF0ZXM6Cj4gQ2xvY2sgaW5wdXQuIEEgcmlzaW5nIGVkZ2Ugb24gQ0xLIGxh
-dGNoZXMgUlByMC03LCBHWTAtNywgQlBiMC03Lgo+Cj4gU28gd2UgbmVlZCB0byBkcml2ZSBvbiBu
-ZWdhdGl2ZSBlZGdlLCBoZW5jZSBEUk1fQlVTX0ZMQUdfUElYREFUQV9ORUdFREdFCj4gc2hvdWxk
-IGJlIHVzZWQsIHdoaWNoIG1ha2VzIHRoZSBwbDExMSBkcml2ZXIgc2V0dGluZyBUSU0yX0lQQzoK
-PiBodHRwOi8vaW5mb2NlbnRlci5hcm0uY29tL2hlbHAvaW5kZXguanNwP3RvcGljPS9jb20uYXJt
-LmRvYy5kZGkwMTIxZC9pbmRleC5odG1sCgpUaGF0IGlzIGVhc3kgdG8gc2F5LCBidXQgaWYgSSBq
-dXN0IHNldCB0aGF0IHVwIGluIGNvZGUsIGV2ZW4gd2l0aCBhIGdvb2QKY29tbWVudCBpdCBpcyBo
-YXJkIGZvciB0aGUgbmV4dCByZWFkZXIgdG8gdW5kZXJzdGFuZCB3aGF0IGlzIGdvaW5nCm9uLiBU
-aGUgY2VudHJhbCBxdWVzdGlvbiB3aWxsIGJlLCB3aHkgZG9lcyBQTDExMSBuZWVkIHRvIGRvIHRo
-aXMKYnV0IG5vdCBSLUNhciB0aG91Z2ggdGhleSBhcmUgdXNpbmcgdGhlIHNhbWUgYnJpZGdlPwoK
-U28gdGhpcyBlbGFib3JhdGUgbW9kZWwgZ2l2ZXMgYSBiZXR0ZXIgdHJhbnNmZXIgb2YgYWJzdHJh
-Y3QgY29uY2VwdHMKdG8gd2hvZXZlciBuZWVkcyB0byB0b3VjaCB0aGF0IGNvZGUgbmV4dC4gVGhl
-IGNvZGUgaXMgbm90IGp1c3QKbG9naWMsIGJ1dCBhbHNvIG91ciBtYXAgb2YgdGhlIHdvcmxkIGFu
-ZCB0aGUgZG9jdW1lbnRhdGlvbiBvZiBvdXIKcHJvYmxlbSBzcGFjZS4KCkRvbmFsZCBLbnV0aCBo
-YXMgdGhpcyBpZGVhIGFib3V0IGxpdGVyYXRlIHByb2dyYW1taW5nIHdoaWNoIGV2ZW4KdHVybnMg
-dGhlIGRvY3VtZW50YXRpb24vaW1wbGVtZW50YXRpb24gcHJvY2VzcyBhcm91bmQuIFdlIGFyZQpu
-b3QgdGhlcmUsIG5vdCBldmVuIHJlbW90ZWx5LCBidXQgSU1PIHRoZSBtb3JlIGNvbXBsZXggdGhl
-IHByb2JsZW0uCnRoZSBtb3JlIHdlIG5lZWQgdG8gY29udmV5IG91ciB0aGlua2luZywgbm90IGp1
-c3Qgb3VyIHNvbHV0aW9uLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
-ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+T24gVGh1LCBTZXAgMDYsIDIwMTggYXQgMTE6Mzk6NDJQTSArMDIwMCwgRGFuaWVsIFZldHRlciB3
+cm90ZToKPiBPbiBUaHUsIFNlcCA2LCAyMDE4IGF0IDY6MDEgUE0sIFN0ZXZlbiBSb3N0ZWR0IDxy
+b3N0ZWR0QGdvb2RtaXMub3JnPiB3cm90ZToKPiA+IE9uIFRodSwgNiBTZXAgMjAxOCAwOTo1ODow
+NCAtMDYwMAo+ID4gSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4gd3JvdGU6Cj4gPgo+
+ID4+IFRoYW5rcywKPiA+Pgo+ID4+IGpvbiAgKHdobyBpcyBpbmNyZWFzaW5nbHkgaW5jbGluZWQg
+dG8gYXBwbHkgdGhpcyBwYXRjaCkKPiA+Cj4gPiBBcyBDb2xpbiBLYWVwZXJuaWNrIG5vdyBzYXlz
+Li4uICJKdXN0IGRvIGl0ISIKPiA+Cj4gPiA7LSkKPiAKPiArMQo+IAo+IEJ1dCBJJ20gYmlhc2Vk
+LCBJJ20gcGFydCBvZiB0aGUgcGFydHkgdGhhdCBpcyByZXNwb25zaWJsZSBmb3IgdGhlIG5ldwo+
+IHNoaW55IGRvY3VtZW50YXRpb24gc3lzdGVtIC4uLgoKSSBhbSBub3QgcmVzcG9uc2libGUgZm9y
+IGFueSBvZiB0aGUgbmV3IHNoaW55IGRvY3VtZW50YXRpb24gc3lzdGVtLCBhbmQKSSB0aGluayB0
+aGlzIGlzIGEgZ29vZCBpZGVhOgoKQWNrZWQtYnk6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2to
+QGxpbnV4Zm91bmRhdGlvbi5vcmc+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
