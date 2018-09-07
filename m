@@ -1,102 +1,57 @@
-From: Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: Re: [PATCH v2 2/9] nios2: build .dtb files in dts directory
-Date: Fri, 07 Sep 2018 10:21:35 +0800
-Message-ID: <1536286895.6128.4.camel@intel.com>
-References: <20180905235327.5996-1-robh@kernel.org>
-         <20180905235327.5996-3-robh@kernel.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 2/2] pci: dwc: add UniPhier PCIe host controller support
+Date: Fri, 07 Sep 2018 13:11:27 +0900
+Message-ID: <20180907131126.FACD.4A936039@socionext.com>
+References: <20180906103819.252A.4A936039@socionext.com>
+ <20180906140926.GB214747@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905235327.5996-3-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: nios2-dev@lists.rocketboards.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180906140926.GB214747@bhelgaas-glaptop.roam.corp.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-09-05 at 18:53 -0500, Rob Herring wrote:
-> Align nios2 with other architectures which build the dtb files in the
-> same directory as the dts files. This is also in line with most other
-> build targets which are located in the same directory as the source.
-> This move will help enable the 'dtbs' target which builds all the
-> dtbs
-> regardless of kernel config.
-> 
-> This transition could break some scripts if they expect dtb files in
-> the old location.
-> 
-> Cc: Ley Foon Tan <lftan@altera.com>
-> Cc: nios2-dev@lists.rocketboards.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please ack so I can take the whole series via the DT tree.
-> 
->  arch/nios2/Makefile          | 4 ++--
->  arch/nios2/boot/Makefile     | 4 ----
->  arch/nios2/boot/dts/Makefile | 1 +
->  3 files changed, 3 insertions(+), 6 deletions(-)
->  create mode 100644 arch/nios2/boot/dts/Makefile
-> 
-> diff --git a/arch/nios2/Makefile b/arch/nios2/Makefile
-> index 8673a79dca9c..50eece1c6adb 100644
-> --- a/arch/nios2/Makefile
-> +++ b/arch/nios2/Makefile
-> @@ -59,10 +59,10 @@ archclean:
->         $(Q)$(MAKE) $(clean)=$(nios2-boot)
-> 
->  %.dtb: | scripts
-> -       $(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
-> +       $(Q)$(MAKE) $(build)=$(nios2-boot)/dts $(nios2-boot)/dts/$@
-> 
->  dtbs:
-> -       $(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
-> +       $(Q)$(MAKE) $(build)=$(nios2-boot)/dts
-> 
->  $(BOOT_TARGETS): vmlinux
->         $(Q)$(MAKE) $(build)=$(nios2-boot) $(nios2-boot)/$@
-> diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
-> index 2ba23a679732..007586094dde 100644
-> --- a/arch/nios2/boot/Makefile
-> +++ b/arch/nios2/boot/Makefile
-> @@ -47,10 +47,6 @@ obj-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) +=
-> linked_dtb.o
-> 
->  targets += $(dtb-y)
-> 
-> -# Rule to build device tree blobs with make command
-> -$(obj)/%.dtb: $(src)/dts/%.dts FORCE
-> -       $(call if_changed_dep,dtc)
-> -
->  $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
-> 
->  install:
-> diff --git a/arch/nios2/boot/dts/Makefile
-> b/arch/nios2/boot/dts/Makefile
-> new file mode 100644
-> index 000000000000..f66554cd5c45
-> --- /dev/null
-> +++ b/arch/nios2/boot/dts/Makefile
-> @@ -0,0 +1 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> --
-> 2.17.1
-> 
-Hi Rob
+Hi Bjorn,
 
-I have synced your all-dtbs branch from here: https://git.kernel.org/pu
-b/scm/linux/kernel/git/robh/linux.git/log/?h=all-dtbs
+On Thu, 6 Sep 2018 09:09:27 -0500 <helgaas@kernel.org> wrote:
 
-It shows error when compile kernel image and also when "make
-dtbs_install".
+> On Thu, Sep 06, 2018 at 10:38:20AM +0900, Kunihiko Hayashi wrote:
+> > > > +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+> > > > @@ -0,0 +1,464 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +//
+> > > > +// PCI-express host controller driver for UniPhier SoCs
+> > > > +// Copyright 2018 Socionext Inc.
+> > > > +// Author: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > > 
+> > > Use /* ... */ comments except for the SPDX line.
+> > 
+> > Okay, although I wondered which way to put, I'll replace the header next.
+> 
+> The easiest thing is to look at similar files already in the tree and
+> follow their style.  The details are here:
+> 
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/coding-style.rst#n540
+> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/license-rules.rst#n74
 
+Thanks for your advice.
+Although I've found both styles in some sub-systems, these are helpful for me.
 
+I replaced it in posted v2.
 
-make dtbs_install
-make[1]: *** No rule to make target
-'arch/nios2/boot/dts/arch/nios2/boot/dts/10m50_devboard.dtb', needed by
-'arch/nios2/boot/dts/arch/nios2/boot/dts/10m50_devboard.dtb.S'.  Stop.
-Makefile:1229: recipe for target 'dtbs' failed
-make: *** [dtbs] Error 2
+Thank you,
 
-Regards
-Ley Foon
+---
+Best Regards,
+Kunihiko Hayashi
