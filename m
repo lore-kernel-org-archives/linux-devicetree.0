@@ -1,81 +1,60 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [SPAM][PATCH] usb: xhci: fix interrupt transfer error happened
- on MTK platforms
-Date: Fri, 7 Sep 2018 14:31:36 +0800
-Message-ID: <1536301896.6414.48.camel@mtkswgap22>
-References: <afafa68eb3a74a414848c116382e95811f924905.1536298766.git.chunfeng.yun@mediatek.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
+Date: Fri, 7 Sep 2018 09:10:27 +0200
+Message-ID: <CACRpkdaUuWUHZgT0b64hMNZm3oy=7rece3H0p5VVe4d8jpFRaw@mail.gmail.com>
+References: <20180905052113.21262-1-stefan@agner.ch>
+ <4035252.QuWadVx7pr@avalon>
+ <1569297.pdEFdpi3HS@avalon> <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
+ <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
+ <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <afafa68eb3a74a414848c116382e95811f924905.1536298766.git.chunfeng.yun@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stefan Agner <stefan@agner.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Should add Fixes: tag and Cc: <stable@vger.kernel.org> also to apply the patch to the stable tree. Otherwise, the problem still is kept in the stable kernel.
-
-The patch really can solve the problem by testing with the ASIX AX88179 u3 Ethernet can't work since v4.17.x.
-
-So, Tested-by: Sean Wang <sean.wang@mediatek.com>
- 
-and attach the log testing with AX88179
-
-[  126.369574] usb 2-1: new SuperSpeed Gen 1 USB device number 2 using xhci-mtk
-[  126.730806] ax88179_178a 2-1:1.0 eth2: register 'ax88179_178a' at usb-1a0c0000.usb-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 00:11:6b:68:4c:9e
-[  126.759932] ax88179_178a 2-1:1.0 enx00116b684c9e: renamed from eth2
-
-~# ifconfig enx00116b684c9e 10.10.10.1
-~# ping 10[  147.613266] ax88179_178a 2-1:1.0 enx00116b684c9e: ax88179 - Link status is: 1
-.10.10.3
-PING 10.10.10.3 (10.10.10.3) 56(84) bytes of data.
-64 bytes from 10.10.10.3: icmp_seq=1 ttl=64 time=0.414 ms
-64 bytes from 10.10.10.3: icmp_seq=2 ttl=64 time=0.422 ms
-64 bytes from 10.10.10.3: icmp_seq=3 ttl=64 time=0.376 ms
-64 bytes from 10.10.10.3: icmp_seq=4 ttl=64 time=0.309 ms
-64 bytes from 10.10.10.3: icmp_seq=5 ttl=64 time=0.392 ms
-64 bytes from 10.10.10.3: icmp_seq=6 ttl=64 time=0.355 ms
-64 bytes from 10.10.10.3: icmp_seq=7 ttl=64 time=0.407 ms
-64 bytes from 10.10.10.3: icmp_seq=8 ttl=64 time=0.325 ms
-
-On Fri, 2018-09-07 at 13:51 +0800, Chunfeng Yun wrote:
-> The MTK xHCI controller use some reserved bytes in endpoint context for
-> bandwidth scheduling, so need keep them in xhci_endpoint_copy();
-> 
-> The issue is introduced by:
-> commit f5249461b504 ("xhci: Clear the host side toggle manually when
-> endpoint is soft reset")
-> It resets endpoints and will drop bandwidth scheduling parameters used
-> by interrupt or isochronous endpoints on MTK xHCI controller.
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  drivers/usb/host/xhci-mem.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-> index ef350c3..b1f27aa 100644
-> --- a/drivers/usb/host/xhci-mem.c
-> +++ b/drivers/usb/host/xhci-mem.c
-> @@ -1613,6 +1613,10 @@ void xhci_endpoint_copy(struct xhci_hcd *xhci,
->  	in_ep_ctx->ep_info2 = out_ep_ctx->ep_info2;
->  	in_ep_ctx->deq = out_ep_ctx->deq;
->  	in_ep_ctx->tx_info = out_ep_ctx->tx_info;
-> +	if (xhci->quirks & XHCI_MTK_HOST) {
-> +		in_ep_ctx->reserved[0] = out_ep_ctx->reserved[0];
-> +		in_ep_ctx->reserved[1] = out_ep_ctx->reserved[1];
-> +	}
->  }
->  
->  /* Copy output xhci_slot_ctx to the input xhci_slot_ctx.
+T24gVGh1LCBTZXAgNiwgMjAxOCBhdCAxMDoyNSBQTSBTdGVmYW4gQWduZXIgPHN0ZWZhbkBhZ25l
+ci5jaD4gd3JvdGU6Cgo+IE9rLCBJIHJlYWQgYSBiaXQgdXAgb24gdGhlIGhpc3Rvcnkgb2YgYnJp
+ZGdlIHRpbWluZywgZXNwZWNpYWxseToKPiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9k
+cmktZGV2ZWwvbXNnMTU1NjE4Lmh0bWwKPgo+IElNSE8sIHRoaXMgZ290IG92ZXJlbmdpbmVlcmVk
+LiBGb3IgZGlzcGxheXMgd2UgZG8gbm90IG5lZWQgYWxsIHRoYXQKPiBzZXR1cC9zYW1wbGUgZGVs
+YXkgdGltaW5nIGluZm9ybWF0aW9uLCBhbmQgbXVjaCBsb25nZXIgY2FibGVzIGFyZSBpbgo+IHVz
+ZS4gU28gd2h5IGlzIGFsbCB0aGF0IG5lZWRlZCBmb3IgYnJpZGdlcz8KCkkgYWxzbyBhdm9pZGVk
+IHRoZSBvdmVyaGVhZCBvZiBjcmVhdGluZyB0aGlzIGFic3RyYWN0aW9uIGluaXRpYWxseS4KCkJ1
+dCBhZnRlciBkb2luZyBpdCBJIGhhdmUgdGhpcyBTdG9ja2hvbG0gc3luZHJvbWUgdGhhdCBJIHN0
+YXJ0Cmxpa2luZyB3aGF0IExhdXJlbnQgdG9sZCBtZSB0byBkby4KCj4gRm9yIExpbnVzIGNhc2Us
+IHRoZSBUSFM4MTM0KEEvQikgZGF0YSBzaGVldCBJIGZvdW5kIChyZXZpc2VkIE1hcmNoIDIwMTAp
+Cj4gY2xlYXJseSBzdGF0ZXM6Cj4gQ2xvY2sgaW5wdXQuIEEgcmlzaW5nIGVkZ2Ugb24gQ0xLIGxh
+dGNoZXMgUlByMC03LCBHWTAtNywgQlBiMC03Lgo+Cj4gU28gd2UgbmVlZCB0byBkcml2ZSBvbiBu
+ZWdhdGl2ZSBlZGdlLCBoZW5jZSBEUk1fQlVTX0ZMQUdfUElYREFUQV9ORUdFREdFCj4gc2hvdWxk
+IGJlIHVzZWQsIHdoaWNoIG1ha2VzIHRoZSBwbDExMSBkcml2ZXIgc2V0dGluZyBUSU0yX0lQQzoK
+PiBodHRwOi8vaW5mb2NlbnRlci5hcm0uY29tL2hlbHAvaW5kZXguanNwP3RvcGljPS9jb20uYXJt
+LmRvYy5kZGkwMTIxZC9pbmRleC5odG1sCgpUaGF0IGlzIGVhc3kgdG8gc2F5LCBidXQgaWYgSSBq
+dXN0IHNldCB0aGF0IHVwIGluIGNvZGUsIGV2ZW4gd2l0aCBhIGdvb2QKY29tbWVudCBpdCBpcyBo
+YXJkIGZvciB0aGUgbmV4dCByZWFkZXIgdG8gdW5kZXJzdGFuZCB3aGF0IGlzIGdvaW5nCm9uLiBU
+aGUgY2VudHJhbCBxdWVzdGlvbiB3aWxsIGJlLCB3aHkgZG9lcyBQTDExMSBuZWVkIHRvIGRvIHRo
+aXMKYnV0IG5vdCBSLUNhciB0aG91Z2ggdGhleSBhcmUgdXNpbmcgdGhlIHNhbWUgYnJpZGdlPwoK
+U28gdGhpcyBlbGFib3JhdGUgbW9kZWwgZ2l2ZXMgYSBiZXR0ZXIgdHJhbnNmZXIgb2YgYWJzdHJh
+Y3QgY29uY2VwdHMKdG8gd2hvZXZlciBuZWVkcyB0byB0b3VjaCB0aGF0IGNvZGUgbmV4dC4gVGhl
+IGNvZGUgaXMgbm90IGp1c3QKbG9naWMsIGJ1dCBhbHNvIG91ciBtYXAgb2YgdGhlIHdvcmxkIGFu
+ZCB0aGUgZG9jdW1lbnRhdGlvbiBvZiBvdXIKcHJvYmxlbSBzcGFjZS4KCkRvbmFsZCBLbnV0aCBo
+YXMgdGhpcyBpZGVhIGFib3V0IGxpdGVyYXRlIHByb2dyYW1taW5nIHdoaWNoIGV2ZW4KdHVybnMg
+dGhlIGRvY3VtZW50YXRpb24vaW1wbGVtZW50YXRpb24gcHJvY2VzcyBhcm91bmQuIFdlIGFyZQpu
+b3QgdGhlcmUsIG5vdCBldmVuIHJlbW90ZWx5LCBidXQgSU1PIHRoZSBtb3JlIGNvbXBsZXggdGhl
+IHByb2JsZW0uCnRoZSBtb3JlIHdlIG5lZWQgdG8gY29udmV5IG91ciB0aGlua2luZywgbm90IGp1
+c3Qgb3VyIHNvbHV0aW9uLgoKWW91cnMsCkxpbnVzIFdhbGxlaWoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
