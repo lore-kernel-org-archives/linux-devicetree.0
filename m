@@ -1,29 +1,70 @@
-Return-Path: <SRS0=HlV8=LZ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 0/2] Add RZ/G1N PFC driver.
-Date: Tue, 11 Sep 2018 11:30:03 +0100
-Message-Id: <1536661805-36464-1-git-send-email-biju.das@bp.renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=n0HG=LV=gmail.com=pku.leo@kernel.org>
+MIME-Version: 1.0
+References: <20180725112919.31340-1-wen.he_1@nxp.com> <20180725112919.31340-3-wen.he_1@nxp.com>
+ <AM6PR0402MB338230FB60522E900AFF2423E23F0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+ <20180816043900.GA3687@vkoul-mobl> <AM6PR0402MB3382183FB4BF9107E5C7D07BE23E0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+In-Reply-To: <AM6PR0402MB3382183FB4BF9107E5C7D07BE23E0@AM6PR0402MB3382.eurprd04.prod.outlook.com>
+From: Li Yang <leoyang.li@nxp.com>
+Date: Fri, 7 Sep 2018 14:28:18 -0500
+Message-ID: <CADRPPNS4xnjE3_1wp_HQaq5OVNDjO-ONa=yhFS3=uv=w2sGteg@mail.gmail.com>
+Subject: Re: [v7 3/7] dmaengine: fsl-qdma: Add qDMA controller driver for
+ Layerscape SoCs
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Wen He <wen.he_1@nxp.com>
+Cc: Vinod <vkoul@kernel.org>, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jiafei Pan <jiafei.pan@nxp.com>, peng.ma@nxp.com
 List-ID: <devicetree@vger.kernel.org>
 
-This patch series aims to add support for RZ/G1N (R8A7744) PFC driver.
+On Thu, Aug 16, 2018 at 10:13 AM Wen He <wen.he_1@nxp.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: dmaengine-owner@vger.kernel.org
+> > [mailto:dmaengine-owner@vger.kernel.org] On Behalf Of Vinod
+> > Sent: 2018=E5=B9=B48=E6=9C=8816=E6=97=A5 12:39
+> > To: Wen He <wen.he_1@nxp.com>
+> > Cc: dmaengine@vger.kernel.org; robh+dt@kernel.org;
+> > devicetree@vger.kernel.org; Leo Li <leoyang.li@nxp.com>; Jiafei Pan
+> > <jiafei.pan@nxp.com>; Peng Ma <peng.ma@nxp.com>
+> > Subject: Re: [v7 3/7] dmaengine: fsl-qdma: Add qDMA controller driver f=
+or
+> > Layerscape SoCs
+> >
+> > On 15-08-18, 06:46, Wen He wrote:
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Wen He [mailto:wen.he_1@nxp.com]
+> > > > Sent: 2018=E5=B9=B47=E6=9C=8825=E6=97=A5 19:29
+> > > > To: vkoul@kernel.org; dmaengine@vger.kernel.org
+> > > > Cc: robh+dt@kernel.org; devicetree@vger.kernel.org; Leo Li
+> > > > <leoyang.li@nxp.com>; Jiafei Pan <jiafei.pan@nxp.com>; Jiaheng Fan
+> > > > <jiaheng.fan@nxp.com>; Wen He <wen.he_1@nxp.com>
+> > > > Subject: [v7 3/7] dmaengine: fsl-qdma: Add qDMA controller driver
+> > > > for Layerscape SoCs
+> > > >
+> > > > NXP Queue DMA controller(qDMA) on Layerscape SoCs supports channel
+> > > > virtuallization by allowing DMA jobs to be enqueued into different
+> > > > command queues.
+> > > >
+> > >
+> > > Hi Vinod,
+> > >
+> > > Do you have any other comments for this patch?
+> > > If not, can we merge it to upstream now?
+> >
+> > I don't have this in my queue, so can you please resend this after merg=
+e
+> > window closes.
+> >
+> > Thanks
+>
+> OK, so I need resend all of patch, right?
 
-RZ/G1N SoC is similar to RZ/G1M and R-Car Gen2 M2-W/M2-N SoC.
+Hi Wen He,
 
-This patchset is based on renesas-devel-20180906-v4.19-rc2.
+The merge window has already been closed.  Can you resend the patches?
 
-Biju Das (2):
-  dt-bindings: pinctrl: sh-pfc: Document r8a7744 PFC support
-  pinctrl: sh-pfc: r8a7791: Add r8a7744 support
-
- .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |  1 +
- drivers/pinctrl/sh-pfc/Kconfig                     |  5 +++++
- drivers/pinctrl/sh-pfc/Makefile                    |  1 +
- drivers/pinctrl/sh-pfc/core.c                      |  6 ++++++
- drivers/pinctrl/sh-pfc/pfc-r8a7791.c               | 22 ++++++++++++++++++++++
- drivers/pinctrl/sh-pfc/sh_pfc.h                    |  1 +
- 6 files changed, 36 insertions(+)
-
--- 
-2.7.4
+Regards,
+Leo
