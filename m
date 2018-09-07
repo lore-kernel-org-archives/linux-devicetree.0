@@ -1,134 +1,48 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify skipped
- bytes in OOB
-Date: Sat, 8 Sep 2018 01:10:25 +0900
-Message-ID: <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
-References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
- <20180907160822.319047c8@bbrezillon> <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
- <20180907165348.3e0027ee@bbrezillon>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
+ based QUP
+Date: Fri, 7 Sep 2018 09:19:03 -0700
+Message-ID: <CAD=FV=U8rzZcZUixo=zD1C9y0VBBfFfM6jAB9+9uerkfTMrRiQ@mail.gmail.com>
+References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
+ <CAD=FV=XigmU1LXnNbj9NYkjJmj18chBFjbctrBeOKoS=34PLXw@mail.gmail.com> <2493fc3fa3f6e5d2bcdde27cee1c33df@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180907165348.3e0027ee@bbrezillon>
+In-Reply-To: <2493fc3fa3f6e5d2bcdde27cee1c33df@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Dilip Kota <dkota@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi,
 
-2018-09-07 23:53 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
-> On Fri, 7 Sep 2018 23:42:53 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+On Fri, Sep 7, 2018 at 3:00 AM,  <dkota@codeaurora.org> wrote:
+>> In v2, I said:
+>>
+>>> I'm not sure where to comment about this, so adding it to the end:
+>>>
+>>> Between v1 and v2 you totally removed all the locking.  Presumably
+>>> this is because you didn't want to hold the lock in
+>>> handle_fifo_timeout() while waiting for the completion.  IMO taking
+>>> the lock out was the wrong thing to do.  You should keep it, but just
+>>> drop the lock before wait_for_completion_timeout() and add it back
+>>> afterwards.  Specifically you _don't_ want the IRQ and timeout code
+>>> stomping on each other.
+>>
+>>
+>> ...but still no spinlock?
 >
->> Hi Boris,
->>
->> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
->> > Hi Masahiro,
->> >
->> > On Fri,  7 Sep 2018 19:56:23 +0900
->> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->> >
->> >> NAND devices need additional data area (OOB) for error correction,
->> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
->> >> first byte in OOB is used for BBM, but the location actually depends
->> >> on chip vendors.  The NAND controller should preserve the precious
->> >> BBM to keep track of bad blocks.
->> >>
->> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
->> >> the number of bytes to skip from the start of OOB.  The ECC engine
->> >> will automatically skip the specified number of bytes when it gets
->> >> access to OOB area.
->> >>
->> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
->> >> firmware and the operating system if you intend to use the NAND
->> >> device across the control hand-off.
->> >>
->> >> In fact, the current denali.c code expects firmware to have already
->> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
->> >>
->> >> If no firmware (or bootloader) has initialized the controller, the
->> >> register value is zero, which is the default after power-on-reset.
->> >>
->> >> In other words, the Linux driver cannot initialize the controller
->> >> by itself.  You cannot support the reset control either because
->> >> resetting the controller will get register values lost.
->> >>
->> >> This commit adds a way to specify it via DT.  If the property
->> >> "denali,oob-skip-bytes" exists, the value will be set to the register.
->> >
->> > Hm, do we really need to make this config customizable? I mean, either
->> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
->> > must be reserved for the BBM or you have a small-page NAND and the BBM
->> > is at position 4 and 5. Are you sure people configure that differently?
->> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?
->>
->>
->> As I said in the patch description,
->> I need to use the same SPARE_AREA_SKIP_BYTES value
->> across firmware, boot-loader, Linux, and whatever.
->>
->> I want to set the value to 8 for my platform
->> because the on-chip boot ROM expects 8.
->> I cannot change it since the boot ROM is hard-wired.
->>
->>
->> The boot ROM skips 8 bytes in OOB
->> when it loads images from the on-board NAND device.
->>
->> So, when I update the image from U-Boot or Linux,
->> I need to make sure to set the register to 8.
->>
->> If I update the image with a different value,
->> the Boot ROM fails to boot.
+> I see there is no need of taking the spinlock as timeout will be handled
+> after the calculated time as per data size and speed.
+> There is 99.9% less chances of interrupt during the timeout handler.
 >>
 >>
 >>
->> When the system has booted from NAND,
->> the register is already set to 8.  It works.
->>
->> However, when the system has booted from eMMC,
->> the register is not initialized by anyone.
->> I am searching for a way to set the register to 8
->> in this case.
->>
->>
->> The boot ROM in SOCFPGA might expect a different value,
->> I am not sure.
->
-> Okay, then why not having a per-compatible value if it's related to the
-> BootROM? Unless the BootROM is part of the FPGA and can be
-> reprogrammed.
+>> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201081
 
-FPGA is unrelated here.
+The thing is, we want it to be 100% reliable, not 99.9% reliable.  Is
+it somehow wrong to add the spinlock?  ...or are you noticing
+performance problems with the spinlock there?  It's just nice not to
+have to think about it.
 
-Neither the boot ROM nor the Denali core is re-programmable.
-
-
-
-I hesitate to associate the number of skipped bytes
-with the compatible string because it is not a parameter
-of the Denali IP.
-
-
-Rather, it is the matter of "how we use the OOB",
-so I want to leave room for customization like nand-ecc-strength etc.
-even if the boot ROM happens to expect a particular value.
-
-
-If you prefer a per-compatible value, I can do that,
-but I believe the NAND core and the boot ROM are orthogonal.
-
-
-
-> I'd really prefer not having a generic property that
-> allows you to put anything you want.
-
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+-Doug
