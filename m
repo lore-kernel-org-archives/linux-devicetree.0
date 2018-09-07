@@ -1,221 +1,682 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH V12 00/14] Krait clocks + Krait CPUfreq
-Date: Fri, 7 Sep 2018 15:27:34 +0530
-Message-ID: <d682580d-5070-0271-197f-29d988172937@codeaurora.org>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org>
- <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org>
+From: dkota@codeaurora.org
+Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
+ based QUP
+Date: Fri, 07 Sep 2018 15:30:44 +0530
+Message-ID: <2493fc3fa3f6e5d2bcdde27cee1c33df@codeaurora.org>
+References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
+ <CAD=FV=XigmU1LXnNbj9NYkjJmj18chBFjbctrBeOKoS=34PLXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <CAD=FV=XigmU1LXnNbj9NYkjJmj18chBFjbctrBeOKoS=34PLXw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, ctatlor97@gmail.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Craig,
+On 2018-09-02 10:36, Doug Anderson wrote:
+> Hi,
+> 
+> On Fri, Aug 24, 2018 at 3:42 AM, Dilip Kota <dkota@codeaurora.org> 
+> wrote:
+>> From: Girish Mahadevan <girishm@codeaurora.org>
+>> 
+>> This driver supports GENI based SPI Controller in the Qualcomm SOCs. 
+>> The
+>> Qualcomm Generic Interface (GENI) is a programmable module supporting 
+>> a
+>> wide range of serial interfaces including SPI. This driver supports 
+>> SPI
+>> operations using FIFO mode of transfer.
+>> 
+>> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+>> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+>> ---
+>> Addressing all the reviewer commets given in Patchset1.
+>> Summerizing all the comments below:
+>> 
+>>         MAKEFILE: Arrange SPI-GENI driver in alphabetical order
+>>         Kconfig: Mark SPI_GENI driver dependent on QCOM_GENI_SE
+>>         Enable SPI core auto runtime pm, and remove runtime pm calls.
+>>         Remove spi_geni_unprepare_message(), 
+>> spi_geni_unprepare_transfer_hardware()
+>>         Remove likely/unlikely keywords.
+>>         Remove get_spi_master() and use dev_get_drvdata()
+>>         Move request_irq to probe()
+>>         Mark bus number assignment to -1 as SPI core framework will 
+>> assign dynamically
+>>         Use devm_spi_register_master()
+>>         Include platform_device.h instead of of_platform.h
+>>         Removing macros which are used only once:
+>>                 #define SPI_NUM_CHIPSELECT     4
+>>                 #define SPI_XFER_TIMEOUT_MS    250
+>>         Place Register field definitions next to respective Register 
+>> definitions.
+>>         Replace int and u32 declerations to unsigned int.
+>>         Remove Hex numbers in debug prints.
+>>         Declare mode as u16 in spi_setup_word_len()
+>>         Remove the labels: setup_fifo_params_exit: 
+>> exit_prepare_transfer_hardware:
+>>         Declaring struct spi_master as spi everywhere in the file.
+>>         Calling spi_finalize_current_transfer() for end of transfer.
+>>         Hard code the SPI controller max frequency instead of reading 
+>> from DTSI node.
+>>         Spinlock not required, removed it.
+>>         Removed unrequired error prints.
+>>         Fix KASAN error in geni_spi_isr().
+>>         Remove spi-geni-qcom.h
+>>         Remove inter words delay and CS to Clock toggle delay logic in 
+>> the driver, as of now no clients are using it.
+>>         Will submit this logic in the next patchset.
+>>         Use major, minor and step macros to read from hardware version 
+>> register.
+>> 
+>>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |   2 -
+>>  drivers/spi/Kconfig                                |  12 +
+>>  drivers/spi/Makefile                               |   1 +
+>>  drivers/spi/spi-geni-qcom.c                        | 678 
+>> +++++++++++++++++++++
+>>  4 files changed, 691 insertions(+), 2 deletions(-)
+> 
+> See below for comments.  In general I've tried to post patches to
+> address my own comments.  See the series ending at
+> <https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201142/1>.
+> From there you can download patch files by using the "DOWNLOAD" link
+> at the bottom.  Yell if you have problems.  Hopefully that's useful.
+> I expect that you can squash many of these into your patch to give you
+> a leg up on v3.
+> 
+> NOTE: I won't promise that I made no mistakes on my fixup patches nor
+> that I caught everything or did everything right.  I'll plan to take a
+> fresh look at the whole patch when I see your v3.
+> 
+> 
+>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+>> @@ -60,7 +60,6 @@ Required properties:
+>>  - interrupts:          Must contain SPI controller interrupts.
+>>  - clock-names:         Must contain "se".
+>>  - clocks:              Serial engine core clock needed by the device.
+>> -- spi-max-frequency:   Specifies maximum SPI clock frequency, units - 
+>> Hz.
+> 
+> As per Rob's feedback, please split the device tree change into a
+> separate patch and justify it.  Perhaps the commit message could be
+> something like:
+> 
+> ---
+Ok, will submit as separate patch.
+> 
+> dt-bindings: spi: Remove spi-max-frequency from qcom,geni-se controller
+> 
+> No other SPI controllers have a "spi-max-frequency" at the controller
+> level.  The normal "spi-max-frequency" property is something that is
+> used when defining the nodes for SPI slaves.  While it is possible
+> that someone might want to define a controller-level max frequency it
+> should be done in other ways (perhaps by keying off a compatible
+> string?)
+> 
+> ---
+> 
+> I think in the past Mark Brown has also requested that the bindings
+> actually live under "Documentation/devicetree/bindings/spi/", so
+> perhaps you should also add a patch to your series that moves this
+> documentation there and changes the "soc/qcom/qcom,geni-se.txt" to
+> reference that.
+> 
+> 
+>> +static irqreturn_t geni_spi_isr(int irq, void *data);
+>> +
+>> +struct spi_geni_master {
+>> +       struct geni_se se;
+>> +       unsigned int irq;
+> 
+> In v1 Stephen requested that many things in this struct become
+> "unsigned int", but he didn't mean the "irq".  Please change this back
+> to an int.  As you have things right now the code "if (spi_geni->irq <
+> 0)" you have below is a no-op.  :(
+> 
+> ...oh, and as Stephen pointed out to me offline you don't even need to
+> store irq.
+> 
+Ok
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201065
+> 
+> 
+>> +       struct device *dev;
+>> +       unsigned int rx_fifo_depth;
+>> +       unsigned int tx_fifo_depth;
+>> +       unsigned int tx_fifo_width;
+>> +       unsigned int tx_wm;
+> 
+> Anything that is effectively the contents of a hardware register
+> should be of type 'u32'.
+Ok, will update it
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201066
+> 
+> 
+>> +static int get_spi_clk_cfg(unsigned int speed_hz,
+>> +                       struct spi_geni_master *mas,
+>> +                       unsigned int *clk_idx,
+>> +                       unsigned int *clk_div)
+>> +{
+>> +       unsigned long sclk_freq;
+>> +       struct geni_se *se = &mas->se;
+>> +       int ret;
+>> +
+>> +       ret = geni_se_clk_freq_match(&mas->se,
+>> +                               (speed_hz * mas->oversampling), 
+>> clk_idx,
+>> +                               &sclk_freq, true);
+> 
+> Pass "false" as the last parameter after picking my geni patch to make
+> this work right.  For my geni patch see
+> <https://lkml.kernel.org/r/20180830183612.169572-2-dianders@chromium.org>.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201064
+> Agree. Will mark it to False.
+> 
+>> +       if (ret) {
+>> +               dev_err(mas->dev, "%s: Failed(%d) to find src clk for 
+>> %dHz\n",
+>> +                                               __func__, ret, 
+>> speed_hz);
+> 
+> As I said in previous reviews: printing __func__ is generally
+> discouraged for dev_xx printouts.  They've already got the device name
+> and that together with the string should be enough.  Remove it here
+> and elsewhere in this file.
+> 
+Ok, will traverse the driver and remove __func__
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201067
+> 
+> 
+>> +               return ret;
+>> +       }
+>> +
+>> +       *clk_div = ((sclk_freq / mas->oversampling) / speed_hz);
+> 
+> After changing exact to false, you'll want:
+> 
+>   *clk_div = DIV_ROUND_UP(sclk_freq, mas->oversampling * speed_hz);
+>   actual_hz = sclk_freq / (mas->oversampling * *clk_div);
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201064
+> 
+Ok. I see actual_hz variable for debug prints itself.
+> 
+>> +       if (!(*clk_div)) {
+>> +               dev_err(mas->dev, "%s:Err:sclk:%lu oversampling:%d 
+>> speed:%u\n",
+>> +                       __func__, sclk_freq, mas->oversampling, 
+>> speed_hz);
+>> +               return -EINVAL;
+>> +       }
+> 
+> After change above to use DIV_ROUND_UP() you no longer need to check
+> for a zero clk_div.
+Ok
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201064
+> 
+> 
+>> +static void spi_setup_word_len(struct spi_geni_master *mas, u16 mode,
+>> +                                       unsigned int bits_per_word)
+>> +{
+>> +       unsigned int word_len, pack_words;
+>> +       bool msb_first = (mode & SPI_LSB_FIRST) ? false : true;
+>> +       struct geni_se *se = &mas->se;
+>> +
+>> +       word_len = readl_relaxed(se->base + SE_SPI_WORD_LEN);
+> 
+> Gratuitously using the __relaxed versions of readl() and writel() is
+> discouraged in Linux because it gives very little performance gain in
+> 99.9% of the cases and it makes the code significantly harder to
+> reason about it.  Remove it in spi-geni-qcom.  If it is shown that a
+> particular read or write is in a performance critical section then
+> that one instance can be added back in after carefully analysis and
+> documentation.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201068
+Ok
+> 
+> 
+>> +static int setup_fifo_params(struct spi_device *spi_slv,
+>> +                                       struct spi_master *spi)
+>> +{
+>> +       struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>> +       struct geni_se *se = &mas->se;
+>> +       unsigned int mode = spi_slv->mode;
+>> +       unsigned int loopback_cfg = readl_relaxed(se->base + 
+>> SE_SPI_LOOPBACK);
+>> +       unsigned int cpol = readl_relaxed(se->base + SE_SPI_CPOL);
+>> +       unsigned int cpha = readl_relaxed(se->base + SE_SPI_CPHA);
+>> +       unsigned int demux_sel, clk_sel, m_clk_cfg, idx, div;
+>> +       int ret = 0;
+> 
+> In v1 Stephen said:
+> 
+>> Don't initialize variables and then overwrite them.
+> 
+> This is in lots of places in your code.  I've found and fixed them for 
+> you:
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201070
+Ok
+> 
+> 
+>> +       unsigned int demux_output_inv = 0;
+>> +
+>> +       loopback_cfg &= ~LOOPBACK_MSK;
+>> +       cpol &= ~CPOL;
+>> +       cpha &= ~CPHA;
+>> +
+>> +       if (mode & SPI_LOOP)
+>> +               loopback_cfg |= LOOPBACK_ENABLE;
+>> +
+>> +       if (mode & SPI_CPOL)
+>> +               cpol |= CPOL;
+>> +
+>> +       if (mode & SPI_CPHA)
+>> +               cpha |= CPHA;
+>> +
+>> +       if (spi_slv->mode & SPI_CS_HIGH)
+>> +               demux_output_inv = BIT(spi_slv->chip_select);
+>> +
+>> +       demux_sel = spi_slv->chip_select;
+>> +       mas->cur_speed_hz = spi_slv->max_speed_hz;
+>> +       mas->cur_word_len = spi_slv->bits_per_word;
+>> +
+>> +       ret = get_spi_clk_cfg(mas->cur_speed_hz, mas, &idx, &div);
+>> +       if (ret) {
+>> +               dev_err(mas->dev, "Err setting clks ret(%d) for %d\n",
+>> +                                                       ret, 
+>> mas->cur_speed_hz);
+>> +               return ret;
+>> +       }
+>> +
+>> +       clk_sel = (idx & CLK_SEL_MSK);
+>> +       m_clk_cfg = ((div << CLK_DIV_SHFT) | SER_CLK_EN);
+> 
+> Please avoid useless parenthesis everywhere in this file.  Stephen
+> pointed out many of these in v1 but the correct thing to do would have
+> been to search for all instances and fix them, not just fix the ones
+> that Stephen pointed out.  I've now done it for you:
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201071
+> 
+> 
+Ok
+>> +static int spi_geni_prepare_transfer_hardware(struct spi_master *spi)
+>> +{
+>> +       struct spi_geni_master *mas = spi_master_get_devdata(spi);
+>> +       struct geni_se *se = &mas->se;
+>> +
+>> +       if (!mas->setup) {
+>> +               unsigned int proto = geni_se_read_proto(se);
+>> +               unsigned int major, minor, step, ver;
+>> +
+>> +               if (proto != GENI_SE_SPI) {
+>> +                       dev_err(mas->dev, "Invalid proto %d\n", 
+>> proto);
+>> +                       return -ENXIO;
+>> +               }
+>> +               mas->tx_fifo_depth = geni_se_get_tx_fifo_depth(se);
+>> +               mas->rx_fifo_depth = geni_se_get_rx_fifo_depth(se);
+>> +               mas->tx_fifo_width = geni_se_get_tx_fifo_width(se);
+>> +
+>> +               /*
+>> +                * Hardware programming guide suggests to configure
+>> +                * RX FIFO RFR level to fifo_depth-2.
+>> +                */
+>> +               geni_se_init(se, 0x0, mas->tx_fifo_depth - 2);
+>> +               mas->oversampling = 1;
+>> +               /* Transmit an entire FIFO worth of data per IRQ */
+>> +               mas->tx_wm = 1;
+>> +               ver = geni_se_get_qup_hw_version(se);
+>> +               major = GENI_SE_VERSION_MAJOR(ver);
+>> +               minor = GENI_SE_VERSION_MINOR(ver);
+>> +               step = GENI_SE_VERSION_STEP(ver);
+> 
+> You don't use "step".  Kill it.
+> 
+Ok
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201069
+> 
+> 
+>> +       /*
+>> +        * If CS change flag is set, then toggle the CS line in 
+>> between
+>> +        * transfers and keep CS asserted after the last transfer.
+>> +        * Else if keep CS flag asserted in between transfers and 
+>> de-assert
+>> +        * CS after the last message.
+>> +        */
+>> +       if (xfer->cs_change) {
+>> +               if (list_is_last(&xfer->transfer_list,
+>> +                               &spi->cur_msg->transfers))
+>> +                       m_param |= FRAGMENTATION;
+>> +       } else {
+>> +               if (!list_is_last(&xfer->transfer_list,
+>> +                               &spi->cur_msg->transfers))
+> 
+> In v1 Stephen said:
+> 
+>> Combine else and if here into an else if.
+> 
+> ...but really I think you could just do:
+> 
+> /*
+>  * Keep the CS asserted in either of the two cases:
+>  * - It's not the last transfer (and cs_change is not set)
+>  * - It is the last transfer (and cs_change is set)
+>  *
+>  * ...AKA keep it asserted whenever the "last transfer" and cs_change
+>  * booleans agree.
+>  */
+> if (!!xfer->cs_change ==
+>     !!list_is_last(&xfer->transfer_list, &spi->cur_msg->transfers))
+>         m_param |= FRAGMENTATION;
+> 
+This complete logic will be removed with set_cs() change, because 
+m_param |= FRAGMENTATION; should set in all the cases.
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201072
+> 
+> 
+>> +       if (m_cmd & SPI_TX_ONLY) {
+>> +               mas->tx_rem_bytes = xfer->len;
+>> +               writel_relaxed(trans_len, se->base + 
+>> SE_SPI_TX_TRANS_LEN);
+>> +       }
+>> +
+>> +       if (m_cmd & SPI_RX_ONLY) {
+>> +               writel_relaxed(trans_len, se->base + 
+>> SE_SPI_RX_TRANS_LEN);
+>> +               mas->rx_rem_bytes = xfer->len;
+>> +       }
+>> +       writel_relaxed(spi_tx_cfg, se->base + SE_SPI_TRANS_CFG);
+>> +       geni_se_setup_m_cmd(se, m_cmd, m_param);
+>> +       if (m_cmd & SPI_TX_ONLY)
+>> +               writel_relaxed(mas->tx_wm, se->base + 
+>> SE_GENI_TX_WATERMARK_REG);
+> 
+> In v1 Stephen said:
+> 
+>> This can't be combined with above m_cmd & SPI_TX_ONLY statement?
+> 
+> In v2 I said:
+> 
+>> Girish said it can't.  ...but IMO if it really can't then please add a
+>> comment in the code so someone doesn't later go back and try to
+>> combine.
+> 
+> I don't see a comment.  An example of an appropriate comment (assuming
+> that the geni hardware really does need the services of a dark wizard)
+> would be:
+> 
+I will add the detailed comments.
+> /*
+>  * NOTE: we have to write the SE_GENI_TX_WATERMARK_REG _after_ the
+>  * write to SE_SPI_TRANS_CFG and the call to geni_se_setup_m_cmd()
+>  * because these two things perform a special incantation to summon a
+>  * dark wizard and we're not allowed to set the watermark until the
+>  * dark wizard arrives.
+>  */
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201073
+> 
+> Presumably writing to the watermark kicks off the interrupt happening
+> so it has to be last.  That would be something to say instead of
+> talking about magic.
+> 
+> 
+>> +static irqreturn_t geni_spi_handle_tx(struct spi_geni_master *mas)
+>> +{
+>> +       unsigned int i = 0;
+>> +       unsigned int tx_fifo_width = mas->tx_fifo_width / 
+>> BITS_PER_BYTE;
+> 
+> This is super confusing.  You have two things with the same name
+> "tx_fifo_width" one that's in terms of bits and one that's in terms of
+> bytes.  ...in general it's really hard to figure out the units of all
+> your variables here.  For things that it's not clear you should rename
+> variables.
+> 
+Ok, will rename it.
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201075
+> 
+> 
+>> +       unsigned int max_bytes;
+>> +       const u8 *tx_buf;
+>> +       struct geni_se *se = &mas->se;
+>> +
+>> +       if (!mas->cur_xfer)
+>> +               return IRQ_NONE;
+>> +
+>> +       /*
+>> +        * For non-byte aligned bits-per-word values(e.g 9).
+>> +        * The FIFO packing is set to 1 SPI word per FIFO word.
+> 
+> In v1 Stephen said:
+> 
+>> Decapitalize "The"
+> 
+> You added a "." at the end of the first line so I guess it's not quite
+> as wrong as it was but it's still better grammar to just have one
+> sentence.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201074
+> 
+> 
+Ok
+>> +        * Assumption is that each SPI word will be accomodated in
+>> +        * ceil (bits_per_word / bits_per_byte)
+>> +        * and the next SPI word starts at the next byte.
+>> +        * In such cases, we can fit 1 SPI word per FIFO word so 
+>> adjust the
+>> +        * max byte that can be sent per IRQ accordingly.
+>> +        */
+>> +       max_bytes = (mas->tx_fifo_depth - mas->tx_wm);
+>> +       if (mas->tx_fifo_width % mas->cur_word_len)
+>> +               max_bytes *= ((mas->cur_word_len / BITS_PER_BYTE) + 
+>> 1);
+> 
+> Even though the math should be the same (since you should you'll never
+> divide cur_word_len evenly), the above is clearer as:
+> 
+>   max_bytes *= DIV_ROUND_UP(mas->cur_word_len, BITS_PER_BYTE);
+> 
+> ...oh, but even that is wrong.  SPI framework documents that we need
+> the nearest power of 2, so a 20-bit transfer will not take up 3 bytes
+> but will actually take up 4.
+> 
+> ...and of course this same assumption is replicated twice in both the
+> tx and rx functions.  I'm just going to rewrite these two functions.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201076
+> 
+> 
+>> +       while (i < max_bytes) {
+>> +               unsigned int j;
+>> +               unsigned int fifo_word = 0;
+>> +               u8 *fifo_byte;
+>> +               unsigned int bytes_per_fifo = tx_fifo_width;
+>> +               unsigned int bytes_to_write = 0;
+>> +
+>> +               if (mas->tx_fifo_width % mas->cur_word_len)
+>> +                       bytes_per_fifo =
+>> +                               (mas->cur_word_len / BITS_PER_BYTE) + 
+>> 1;
+>> +
+>> +               if (bytes_per_fifo < (max_bytes - i))
+>> +                       bytes_to_write = bytes_per_fifo;
+>> +               else
+>> +                       bytes_to_write = max_bytes - i;
+>> +
+>> +               fifo_byte = (u8 *)&fifo_word;
+>> +               for (j = 0; j < bytes_to_write; j++)
+>> +                       fifo_byte[j] = tx_buf[i++];
+> 
+> In previous reviews Stephen pointed out that he's not super keen on
+> this manual copy of bytes, but IMO it's not a huge deal and we can
+> find a better way to do it later.  ...but if someone wants to propose
+> a patch that makes it nicer then I won't object.
+> 
+> 
+>> +static irqreturn_t geni_spi_handle_rx(struct spi_geni_master *mas)
+>> +{
+>> +       unsigned int i = 0;
+>> +       struct geni_se *se = &mas->se;
+>> +       unsigned int fifo_width = mas->tx_fifo_width / BITS_PER_BYTE;
+> 
+> You're assuming TX and RX FIFO widths are the same.  Let's make that 
+> explicit.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201075
+> 
+Agree
+> 
+>> +static int spi_geni_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret;
+>> +       struct spi_master *spi;
+>> +       struct spi_geni_master *spi_geni;
+>> +       struct resource *res;
+>> +       struct geni_se *se;
+>> +
+>> +       spi = spi_alloc_master(&pdev->dev, sizeof(struct 
+>> spi_geni_master));
+>> +       if (!spi) {
+>> +               ret = -ENOMEM;
+>> +               goto spi_geni_probe_err;
+> 
+> When spi_alloc_master() fails you don't want spi_master_put().
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201078
+> 
+> 
+>> +       spi->prepare_transfer_hardware = 
+>> spi_geni_prepare_transfer_hardware;
+> 
+> IMO this is wrong.  You're using prepare_transfer_hardware() to do
+> one-time init.  Just do it at probe.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201079
+> 
+Agree, will move it to probe.
+> 
+>> +       init_completion(&spi_geni->xfer_done);
+>> +       pm_runtime_enable(&pdev->dev);
+>> +       ret = devm_spi_register_master(&pdev->dev, spi);
+>> +       if (ret)
+>> +               goto spi_geni_probe_unmap;
+> 
+> In this error case I believe you need pm_runtime_disable().
+> 
+Yes, I will update it.
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201078
+> 
+> 
+>> +       return ret;
+>> +spi_geni_probe_unmap:
+>> +       devm_iounmap(&pdev->dev, se->base);
+> 
+> The whole point of devm is that you don't need this kind of the error 
+> handling.
+> 
+Agree
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201078
+> 
+
+> 
+> 
+>> +static int spi_geni_remove(struct platform_device *pdev)
+>> +{
+>> +       struct spi_master *spi = platform_get_drvdata(pdev);
+>> +       struct spi_geni_master *spi_geni = 
+>> spi_master_get_devdata(spi);
+>> +
+>> +       geni_se_resources_off(&spi_geni->se);
+> 
+> In v2 I said:
+> 
+>> Why would you need to call geni_se_resources_off()?  Isn't it handled
+>> by pm_runtime?
+IMO, runtime_pm may not be called during unbind operation. Anyhow I will 
+run the test and check it.
+> 
+> 
+>> +       pm_runtime_put_noidle(&pdev->dev);
+> 
+> In v2 I said:
+> 
+>> I'm curious: why would you have a "put" here?  Won't that result in an
+>> imbalance since you don't exit probe with "get"?  ...or did pm_runtime
+>> throw me for a loop again?
+> 
+>> +       pm_runtime_disable(&pdev->dev);
+>> +       return 0;
+> 
+> So testing:
+> 
+>       cd /sys/bus/platform/drivers/geni_spi/
+>       echo 880000.spi > unbind
+>       sleep 2
+>       echo 880000.spi > bind
+> 
+> ...in fact it yells a lot.  To me this means that you didn't test
+> spi_geni_remove() at all.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201077
+> 
+I will test and update it.
+> 
+>> +static int __maybe_unused spi_geni_suspend(struct device *dev)
+>> +{
+>> +       if (!pm_runtime_status_suspended(dev))
+>> +               return -EBUSY;
+> 
+> I didn't have time to dig into Stephen Boyd's feedback, but please
+> make sure you address it here.  I agree that something seems fishy
+> here.
+> 
+I will check it.
+> ---
+> 
+> In v2, I said:
+> 
+>> I'm not sure where to comment about this, so adding it to the end:
+>> 
+>> Between v1 and v2 you totally removed all the locking.  Presumably
+>> this is because you didn't want to hold the lock in
+>> handle_fifo_timeout() while waiting for the completion.  IMO taking
+>> the lock out was the wrong thing to do.  You should keep it, but just
+>> drop the lock before wait_for_completion_timeout() and add it back
+>> afterwards.  Specifically you _don't_ want the IRQ and timeout code
+>> stomping on each other.
+> 
+> ...but still no spinlock?
+I see there is no need of taking the spinlock as timeout will be handled 
+after the calculated time as per data size and speed.
+There is 99.9% less chances of interrupt during the timeout handler.
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201081
+> 
+> ---
+> 
+> As we've discussed offline, your current driver doesn't deal with chip
+> select in a correct enough way to make cros_ec_spi work.  I've applied
+> and fixed up your WIP patch to fix this.
+You are correct, runtime_pm wont be called by spi framework during the 
+setup call. And, in ISR flag is required to differentiate between set_cs 
+and actual transfer.
 
 
->> [v12]
->>   * Added my signed-off that was missing in some patches.
->>   * Added Bjorn's acked that i missed earlier.
->>
 > 
->   Can you give this a try on your 8974 device and check if the
->   pvs version reporting, scaling for higher frequencies are fine ?
->   Sorry, i could not get hold of a 8974 device. So in-case if you still
->   have the issues with higher frequencies, can you give a quick debug
->   and report. That would be of great help.
-> 
-   Ping on this ..
-
-Regards,
- Sricharan
-
-> Regards,
->  Sricharan
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1201142
 > 
 > 
->> [v11]
->>   * Dropped patch 13 and 14 from v10 and
->>     merged the qcom-cpufreq-krait driver to the existing qcom-cpufreq-kryo.c
->>   * Rebased on top of clk-next
->>   * Fixed a bug while populating the pvs version for krait.
->>
->> [v10]
->>   * Addressed Stephen's comments to add clocks bindings properties
->>     to the newly introduced nodes.
->>   * Added a change to include opp-supported-hw to qcom-cpufreq.c
->>   * Rebased on top of clk-next
->>   * Although there were minor changes to bindings and the driver
->>     retained the acked-by tags from Rob and Viresh respectively.    
->>
->> [v9]
->>   * Fixed a rebase issue in Makefile and added Tag from Robh.
->>
->> [v8]
->>   * Fixed a bug in path#14 pointed out by Viresh and also added tags.
->>     No change in any other patch.
->>
->> [v7]
->>   * Fixed comments from Viresh for cleaning up the error handling
->>     in qcom-cpufreq.c. Also changed the init function to lateinit
->>     call. This is required because nvmem which gets initialised with
->>     module_init needs to go first.
->>   * Fixed Rob's comments for bindings documentation
->>   * Fixed kbuild build issue in clk-lpc32xx.c
->>   * Rebased on top of clk-next
->>
->> [v6]
->>   * Adrressed comments from Viresh for patch #14 in v5 [5]
->>   * Introduced a new binding operating-points-v2-krait-cpu
->>     as per discussion with Rob
->>   * Added Review tags
->>
->> [v5]
->>   * Addressed comments from Rob for bindings
->>   * Addressed comments from Viresh to use dev_pm_opp_set_prop_name, accordingly
->>     dropped patch #12 and corrected patch #11 from previous patch set in [4]
->>   * Converted to use #spdx tags for newly introduced files
->>
->> Mostly a resend of the v3 posted by Stephen quite some time back [1]
->> except for few changes.
->>   Based on reading some feedback from list,
->>   * Dropped the patch "clk: Add safe switch hook" from v3 [2].
->>     Now this is taken care by patch#10 in this series only for Krait.
->>   * Dropped the path "clk: Avoid sending high rates to downstream
->> 		      clocks during set_rate" from v3 [3].
->>   * Rebased on top of clk-next.
->>   * Dropped the DT update from the series. Will send separately
->>   * Now with cpufreq-dt+opp supporting voltage scaling, registering the
->>     krait cpu supplies in DT should be sufficient. But one issue is,
->>     the qcom-cpufreq drivers reads the efuse and based on that registers
->>     the opp data and then registers the cpufreq-dt device. So when
->>     cpufreq-dt driver probes and registers the regulator to the OPP framework,
->>     it expects that the opp data for the device should not be registered before
->>     the regulator. Will send a RFC patch removing that check, to find out the
->>     right way of doing it.
->>
->> These patches provide cpufreq scaling on devices with Krait CPUs.
->> In Krait CPU designs there's one PLL and two muxes per CPU, allowing
->> us to switch CPU frequencies independently.
->>
->> 				 secondary
->> 	 +-----+                    +
->> 	 | QSB |-------+------------|\
->> 	 +-----+       |            | |-+
->> 		       |    +-------|/  |
->> 		       |    |       +   |
->> 	 +-----+       |    |           |
->> 	 | PLL |----+-------+           |   primary
->> 	 +-----+    |  |                |     +
->> 		    |  |                +-----|\       +------+
->> 	 +-------+  |  |                      | \      |      |
->> 	 | HFPLL |----------+-----------------|  |-----| CPU0 |
->> 	 +-------+  |  |    |                 |  |     |      |
->> 		    |  |    | +-----+         | /      +------+
->> 		    |  |    +-| / 2 |---------|/
->> 		    |  |      +-----+         +
->> 		    |  |         secondary
->> 		    |  |            +
->> 		    |  +------------|\
->> 		    |               | |-+
->> 		    +---------------|/  |   primary
->> 				    +   |     +
->> 					+-----|\       +------+
->> 	 +-------+                            | \      |      |
->> 	 | HFPLL |----------------------------|  |-----| CPU1 |
->> 	 +-------+          |                 |  |     |      |
->> 			    | +-----+         | /      +------+
->> 			    +-| / 2 |---------|/
->> 			      +-----+         +
->>
->> To support this in the common clock framework we model the muxes,
->> dividers, and PLLs as different clocks. CPUfreq only interacts
->> with the primary mux (farthest right in the diagram). When CPUfreq
->> sets a rate, the mux code finds the best parent that can provide the rate.
->> Due to the design, QSB and the top PLL are always a fixed rate and thus
->> only support one frequency each. These sources provide the lowest
->> frequencies for the CPUs. The HFPLLs are where we can make the CPU go
->> faster (GHz range). Sometimes we need to run the HFPLL twice as
->> fast and divide it by two to get a particular frequency.
->>
->> When switching rates we can't leave the CPU clocked by the HFPLL because
->> we need to turn off the output of the PLL when changing its frequency.
->> This means we have to switch over to the secondary mux and use one of the
->> fixed sources. This is why we need something like the safe parent patch.
->>
->> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/332607.html
->> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/332615.html
->> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2015-March/332608.html
->> [4] https://lwn.net/Articles/740994/ 
->> [5] https://lkml.org/lkml/2017/12/19/537
->>
->>
->> Sricharan R (3):
->>   clk: qcom: Add safe switch hook for krait mux clocks
->>   cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
->>     based qcom socs
->>   cpufreq: qcom: Add support for krait based socs
->>
->> Stephen Boyd (11):
->>   ARM: Add Krait L2 register accessor functions
->>   clk: qcom: Add support for High-Frequency PLLs (HFPLLs)
->>   clk: qcom: Add HFPLL driver
->>   dt-bindings: clock: Document qcom,hfpll
->>   clk: qcom: Add MSM8960/APQ8064's HFPLLs
->>   clk: qcom: Add IPQ806X's HFPLLs
->>   clk: qcom: Add support for Krait clocks
->>   clk: qcom: Add KPSS ACC/GCC driver
->>   dt-bindings: arm: Document qcom,kpss-gcc
->>   clk: qcom: Add Krait clock controller driver
->>   dt-bindings: clock: Document qcom,krait-cc
->>
->>  .../devicetree/bindings/arm/msm/qcom,kpss-acc.txt  |  19 +
->>  .../devicetree/bindings/arm/msm/qcom,kpss-gcc.txt  |  44 +++
->>  .../devicetree/bindings/clock/qcom,hfpll.txt       |  60 ++++
->>  .../devicetree/bindings/clock/qcom,krait-cc.txt    |  34 ++
->>  .../{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt}   |   7 +-
->>  arch/arm/common/Kconfig                            |   3 +
->>  arch/arm/common/Makefile                           |   1 +
->>  arch/arm/common/krait-l2-accessors.c               |  48 +++
->>  arch/arm/include/asm/krait-l2-accessors.h          |   9 +
->>  drivers/clk/qcom/Kconfig                           |  28 ++
->>  drivers/clk/qcom/Makefile                          |   5 +
->>  drivers/clk/qcom/clk-hfpll.c                       | 244 +++++++++++++
->>  drivers/clk/qcom/clk-hfpll.h                       |  44 +++
->>  drivers/clk/qcom/clk-krait.c                       | 126 +++++++
->>  drivers/clk/qcom/clk-krait.h                       |  40 +++
->>  drivers/clk/qcom/gcc-ipq806x.c                     |  82 +++++
->>  drivers/clk/qcom/gcc-msm8960.c                     | 172 +++++++++
->>  drivers/clk/qcom/hfpll.c                           |  96 +++++
->>  drivers/clk/qcom/kpss-xcc.c                        |  87 +++++
->>  drivers/clk/qcom/krait-cc.c                        | 397 +++++++++++++++++++++
->>  drivers/cpufreq/Kconfig.arm                        |   6 +-
->>  drivers/cpufreq/Makefile                           |   2 +-
->>  drivers/cpufreq/cpufreq-dt-platdev.c               |   5 +
->>  drivers/cpufreq/qcom-cpufreq-kryo.c                | 232 ------------
->>  drivers/cpufreq/qcom-cpufreq-nvmem.c               | 387 ++++++++++++++++++++
->>  include/dt-bindings/clock/qcom,gcc-msm8960.h       |   2 +
->>  26 files changed, 1941 insertions(+), 239 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc.txt
->>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,hfpll.txt
->>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,krait-cc.txt
->>  rename Documentation/devicetree/bindings/opp/{kryo-cpufreq.txt => qcom-nvmem-cpufreq.txt} (98%)
->>  create mode 100644 arch/arm/common/krait-l2-accessors.c
->>  create mode 100644 arch/arm/include/asm/krait-l2-accessors.h
->>  create mode 100644 drivers/clk/qcom/clk-hfpll.c
->>  create mode 100644 drivers/clk/qcom/clk-hfpll.h
->>  create mode 100644 drivers/clk/qcom/clk-krait.c
->>  create mode 100644 drivers/clk/qcom/clk-krait.h
->>  create mode 100644 drivers/clk/qcom/hfpll.c
->>  create mode 100644 drivers/clk/qcom/kpss-xcc.c
->>  create mode 100644 drivers/clk/qcom/krait-cc.c
->>  delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo.c
->>  create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem.c
->>
-> 
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> -Doug
