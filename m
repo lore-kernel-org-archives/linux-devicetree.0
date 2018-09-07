@@ -1,354 +1,138 @@
-From: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH V2 6/8] input: stpmic1: add stpmic1 onkey driver
-Date: Fri, 7 Sep 2018 10:38:31 -0700
-Message-ID: <20180907173831.GB261528@dtor-ws>
-References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
- <1536325173-16617-7-git-send-email-p.paillet@st.com>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Fri, 7 Sep 2018 20:02:54 +0200
+Message-ID: <5bbc0332-b94b-75cc-ca42-a9b196811daf@amd.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
+	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
+	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
+	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
+	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
+	<65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536325173-16617-7-git-send-email-p.paillet@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <65e7accd-4446-19f5-c667-c6407e89cfa6-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>
+Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pascal,
-
-On Fri, Sep 07, 2018 at 12:59:45PM +0000, Pascal PAILLET-LME wrote:
-> From: pascal paillet <p.paillet@st.com>
-> 
-> The stpmic1 pmic is able to manage an onkey button. This driver exposes
-> the stpmic1 onkey as an input device. It can also be configured to
-> shut-down the power supplies on a long key-press with an adjustable
-> duration.
-> 
-> Signed-off-by: pascal paillet <p.paillet@st.com>
-> ---
-> changes in v2:
-> * the hardware component has been renamed from stpmu1 to stpmic1 !
-> * change headers
-> * handle remarks from Dmitry
-> * the irq is threaded because is is nested in a thread; I have added a comment.
-> Dmitry, I'm sorry, but I did not catch your comment regarding usage of 
-> "generic device property API.". could you tell more ? 
-
-You basically do
-
-s/of_property_/device_property_/
-
-and that's it.
-
-> 
->  drivers/input/misc/Kconfig         |  11 ++
->  drivers/input/misc/Makefile        |   2 +
->  drivers/input/misc/stpmic1_onkey.c | 257 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 270 insertions(+)
->  create mode 100644 drivers/input/misc/stpmic1_onkey.c
-> 
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index c25606e..cc82dad 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -841,4 +841,15 @@ config INPUT_RAVE_SP_PWRBUTTON
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called rave-sp-pwrbutton.
->  
-> +config INPUT_STPMIC1_ONKEY
-> +	tristate "STPMIC1 PMIC Onkey support"
-> +	depends on MFD_STPMIC1
-> +	help
-> +	  Say Y to enable support of onkey embedded into STPMIC1 PMIC. onkey
-> +	  can be used to wakeup from low power modes and force a shut-down on
-> +	  long press.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called stpmic1_onkey.
-> +
->  endif
-> diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-> index 72cde28..f0e11b0 100644
-> --- a/drivers/input/misc/Makefile
-> +++ b/drivers/input/misc/Makefile
-> @@ -70,6 +70,7 @@ obj-$(CONFIG_INPUT_SGI_BTNS)		+= sgi_btns.o
->  obj-$(CONFIG_INPUT_SIRFSOC_ONKEY)	+= sirfsoc-onkey.o
->  obj-$(CONFIG_INPUT_SOC_BUTTON_ARRAY)	+= soc_button_array.o
->  obj-$(CONFIG_INPUT_SPARCSPKR)		+= sparcspkr.o
-> +obj-$(CONFIG_INPUT_STPMIC1_ONKEY)  	+= stpmic1_onkey.o
->  obj-$(CONFIG_INPUT_TPS65218_PWRBUTTON)	+= tps65218-pwrbutton.o
->  obj-$(CONFIG_INPUT_TWL4030_PWRBUTTON)	+= twl4030-pwrbutton.o
->  obj-$(CONFIG_INPUT_TWL4030_VIBRA)	+= twl4030-vibra.o
-> @@ -80,3 +81,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)		+= wm831x-on.o
->  obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)	+= xen-kbdfront.o
->  obj-$(CONFIG_INPUT_YEALINK)		+= yealink.o
->  obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)	+= ideapad_slidebar.o
-> +
-> diff --git a/drivers/input/misc/stpmic1_onkey.c b/drivers/input/misc/stpmic1_onkey.c
-> new file mode 100644
-> index 0000000..170d879
-> --- /dev/null
-> +++ b/drivers/input/misc/stpmic1_onkey.c
-> @@ -0,0 +1,257 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) STMicroelectronics 2018
-> +// Author: Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
-> +
-> +#include <linux/input.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mfd/stpmic1.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +
-> +/**
-> + * struct stpmic1_onkey - OnKey data
-> + * @pmic:		pointer to STPMIC1 PMIC device
-> + * @input_dev:		pointer to input device
-> + * @irq_falling:	irq that we are hooked on to
-> + * @irq_rising:		irq that we are hooked on to
-> + */
-> +struct stpmic1_onkey {
-> +	struct stpmic1_dev *pmic;
-> +	struct input_dev *input_dev;
-> +	int irq_falling;
-> +	int irq_rising;
-> +};
-> +
-> +/**
-> + * struct pmic_onkey_config - configuration of pmic PONKEYn
-> + * @turnoff_enabled:		value to enable turnoff condition
-> + * @cc_flag_clear:		value to clear CC flag in case of PowerOff
-> + * trigger by longkey press
-> + * @onkey_pullup_val:		value of PONKEY PullUp (active or inactive)
-> + * @long_press_time_val:	value for long press h/w shutdown event
-> + */
-> +struct pmic_onkey_config {
-> +	bool turnoff_enabled;
-> +	bool cc_flag_clear;
-> +	u8 onkey_pullup_val;
-> +	u8 long_press_time_val;
-> +};
-> +
-> +static irqreturn_t onkey_falling_irq(int irq, void *ponkey)
-> +{
-> +	struct stpmic1_onkey *onkey = ponkey;
-> +	struct input_dev *input_dev = onkey->input_dev;
-> +
-> +	input_report_key(input_dev, KEY_POWER, 1);
-> +	pm_wakeup_event(input_dev->dev.parent, 0);
-> +	input_sync(input_dev);
-> +
-> +	dev_dbg(&input_dev->dev, "Pwr Onkey Falling Interrupt received\n");
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t onkey_rising_irq(int irq, void *ponkey)
-> +{
-> +	struct stpmic1_onkey *onkey = ponkey;
-> +	struct input_dev *input_dev = onkey->input_dev;
-> +
-> +	input_report_key(input_dev, KEY_POWER, 0);
-> +	pm_wakeup_event(input_dev->dev.parent, 0);
-> +	input_sync(input_dev);
-> +
-> +	dev_dbg(&input_dev->dev, "Pwr Onkey Rising Interrupt received\n");
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int stpmic1_onkey_dt_params(struct platform_device *pdev,
-> +				   struct stpmic1_onkey *onkey,
-> +				   struct pmic_onkey_config *config)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np;
-> +	u32 val;
-> +
-> +	np = dev->of_node;
-> +
-> +	onkey->irq_falling = platform_get_irq_byname(pdev, "onkey-falling");
-> +	if (onkey->irq_falling < 0) {
-> +		dev_err(dev, "failed: request IRQ onkey-falling %d\n",
-> +			onkey->irq_falling);
-> +		return onkey->irq_falling;
-> +	}
-> +
-> +	onkey->irq_rising = platform_get_irq_byname(pdev, "onkey-rising");
-> +	if (onkey->irq_rising < 0) {
-> +		dev_err(dev, "failed: request IRQ onkey-rising %d\n",
-> +			onkey->irq_rising);
-> +		return onkey->irq_rising;
-> +	}
-> +
-> +	if (!of_property_read_u32(np, "st,onkey-long-press-seconds", &val)) {
-> +		if (val >= 1 && val <= 16) {
-> +			config->long_press_time_val = (16 - val);
-> +		} else {
-> +			dev_warn(dev,
-> +				 "Invalid range of long key pressed timer %d (<16)\n",
-> +				 val);
-> +		}
-> +	}
-> +	if (of_get_property(np, "st,onkey-pwroff-enabled", NULL))
-> +		config->turnoff_enabled = true;
-> +
-> +	if (of_get_property(np, "st,onkey-clear-cc-flag", NULL))
-> +		config->cc_flag_clear = true;
-> +
-> +	if (of_get_property(np, "st,onkey-pu-inactive", NULL))
-> +		config->onkey_pullup_val = PONKEY_PU_ACTIVE;
-> +
-> +	dev_dbg(dev, "onkey-switch-off duration=%d seconds\n",
-> +		config->long_press_time_val);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stpmic1_onkey_probe(struct platform_device *pdev)
-> +{
-> +	struct stpmic1_dev *pmic = dev_get_drvdata(pdev->dev.parent);
-> +	struct device *dev = &pdev->dev;
-> +	struct input_dev *input_dev;
-> +	struct stpmic1_onkey *onkey;
-> +	struct pmic_onkey_config config;
-> +	unsigned int val = 0;
-> +	int error;
-> +
-> +	onkey = devm_kzalloc(dev, sizeof(*onkey), GFP_KERNEL);
-> +	if (!onkey)
-> +		return -ENOMEM;
-> +
-> +	memset(&config, 0, sizeof(struct pmic_onkey_config));
-> +	error = stpmic1_onkey_dt_params(pdev, onkey, &config);
-> +	if (error)
-> +		return error;
-> +
-> +	input_dev = devm_input_allocate_device(dev);
-> +	if (!input_dev) {
-> +		dev_err(dev, "Can't allocate Pwr Onkey Input Device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	input_dev->name = "pmic_onkey";
-> +	input_dev->phys = "pmic_onkey/input0";
-> +
-> +	input_set_capability(input_dev, EV_KEY, KEY_POWER);
-> +
-> +	/* Setup Power Onkey Hardware parameters (long key press)*/
-> +	val = (config.long_press_time_val & PONKEY_TURNOFF_TIMER_MASK);
-> +	if (config.turnoff_enabled)
-> +		val |= PONKEY_PWR_OFF;
-> +	if (config.cc_flag_clear)
-> +		val |= PONKEY_CC_FLAG_CLEAR;
-> +	error = regmap_update_bits(pmic->regmap, PKEY_TURNOFF_CR,
-> +				   PONKEY_TURNOFF_MASK, val);
-> +	if (error) {
-> +		dev_err(dev, "LONG_PRESS_KEY_UPDATE failed: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	error = regmap_update_bits(pmic->regmap, PADS_PULL_CR,
-> +				   PONKEY_PU_ACTIVE,
-> +				   config.onkey_pullup_val);
-> +	if (error) {
-> +		dev_err(dev, "ONKEY Pads configuration failed: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	onkey->pmic = pmic;
-> +	onkey->input_dev = input_dev;
-> +
-> +	/* interrupt is nested in a thread */
-> +	error = devm_request_threaded_irq(dev, onkey->irq_falling, NULL,
-> +					  onkey_falling_irq, IRQF_ONESHOT,
-> +					  dev_name(dev), onkey);
-> +	if (error) {
-> +		dev_err(dev, "Can't get IRQ Onkey Falling: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	error = devm_request_threaded_irq(dev, onkey->irq_rising, NULL,
-> +					  onkey_rising_irq, IRQF_ONESHOT,
-> +					  dev_name(dev), onkey);
-> +	if (error) {
-> +		dev_err(dev, "Can't get IRQ Onkey Rising: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	error = input_register_device(input_dev);
-> +	if (error) {
-> +		dev_err(dev, "Can't register power button: %d\n", error);
-> +		return error;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, onkey);
-> +	device_init_wakeup(dev, true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int stpmic1_onkey_remove(struct platform_device *pdev)
-> +{
-> +	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
-> +
-> +	input_unregister_device(onkey->input_dev);
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stpmic1_onkey_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
-> +
-> +	if (device_may_wakeup(dev)) {
-> +		enable_irq_wake(onkey->irq_falling);
-> +		enable_irq_wake(onkey->irq_rising);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused stpmic1_onkey_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct stpmic1_onkey *onkey = platform_get_drvdata(pdev);
-> +
-> +	if (device_may_wakeup(dev)) {
-> +		disable_irq_wake(onkey->irq_falling);
-> +		disable_irq_wake(onkey->irq_rising);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(stpmic1_onkey_pm,
-> +			 stpmic1_onkey_suspend,
-> +			 stpmic1_onkey_resume);
-> +
-> +static const struct of_device_id of_stpmic1_onkey_match[] = {
-> +	{ .compatible = "st,stpmic1-onkey" },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_stpmic1_onkey_match);
-> +
-> +static struct platform_driver stpmic1_onkey_driver = {
-> +	.probe	= stpmic1_onkey_probe,
-> +	.remove	= stpmic1_onkey_remove,
-> +	.driver	= {
-> +		.name	= "stpmic1_onkey",
-> +		.of_match_table = of_match_ptr(of_stpmic1_onkey_match),
-> +		.pm	= &stpmic1_onkey_pm,
-> +	},
-> +};
-> +module_platform_driver(stpmic1_onkey_driver);
-> +
-> +MODULE_DESCRIPTION("Onkey driver for STPMIC1");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Pascal Paillet");
-> -- 
-> 1.9.1
-
--- 
-Dmitry
+QW0gMDcuMDkuMjAxOCB1bSAxNzo0NSBzY2hyaWViIEplYW4tUGhpbGlwcGUgQnJ1Y2tlcjoKPiBP
+biAwNy8wOS8yMDE4IDA5OjU1LCBDaHJpc3RpYW4gS8O2bmlnIHdyb3RlOgo+PiBJIHdpbGwgdGFr
+ZSB0aGlzIGFzIGFuIG9wcG9ydHVuaXR5IHRvIHN1bW1hcml6ZSBzb21lIG9mIHRoZSByZXF1aXJl
+bWVudHMKPj4gd2UgaGF2ZSBmb3IgUEFTSUQgbWFuYWdlbWVudCBmcm9tIHRoZSBhbWRncHUgZHJp
+dmVyIHBvaW50IG9mIHZpZXc6Cj4gVGhhdCdzIGluY3JlZGlibHkgdXNlZnVsLCB0aGFua3MgOikK
+Pgo+PiAxLiBXZSBuZWVkIHRvIGJlIGFibGUgdG8gYWxsb2NhdGUgUEFTSUQgYmV0d2VlbiAxIGFu
+ZCBzb21lIG1heGltdW0uIFplcm8KPj4gaXMgcmVzZXJ2ZWQgYXMgZmFyIGFzIEkga25vdywgYnV0
+IHdlIGRvbid0IG5lY2Vzc2FyeSBuZWVkIGEgbWluaW11bS4KPiBTaG91bGQgYmUgZmluZS4gVGhl
+IFBBU0lEIHJhbmdlIGlzIHJlc3RyaWN0ZWQgYnkgdGhlIFBDSSBQQVNJRAo+IGNhcGFiaWxpdHks
+IGZpcm13YXJlIGRlc2NyaXB0aW9uIChmb3Igbm9uLVBDSSBkZXZpY2VzKSwgdGhlIElPTU1VCj4g
+Y2FwYWNpdHksIGFuZCB3aGF0IHRoZSBkZXZpY2UgZHJpdmVyIHBhc3NlcyB0byBpb21tdV9zdmFf
+ZGV2aWNlX2luaXQuCj4gTm90IGFsbCBJT01NVXMgcmVzZXJ2ZSBQQVNJRCAwIChBTUQgSU9NTVUg
+d2l0aG91dCBHSW9TdXAgZG9lc24ndCwgaWYgSSdtCj4gbm90IG1pc3Rha2VuKSwgc28gdGhlIEtG
+RCBkcml2ZXIgd2lsbCBuZWVkIHRvIHBhc3MgbWluX3Bhc2lkPTEgdG8gbWFrZQo+IHN1cmUgdGhh
+dCAwIGlzbid0IGFsbG9jYXRlZC4KPgo+PiAyLiBXZSBuZWVkIHRvIGJlIGFibGUgdG8gYWxsb2Nh
+dGUgUEFTSURzIHdpdGhvdXQgYSBwcm9jZXNzIGFkZHJlc3Mgc3BhY2UKPj4gYmFja2luZyBpdC4g
+RS5nLiBvdXIgaGFyZHdhcmUgdXNlcyBQQVNJRHMgZXZlbiB3aXRob3V0IFNoYXJlZCBWaXJ0dWFs
+Cj4+IEFkZHJlc3NpbmcgZW5hYmxlZCB0byBkaXN0aW5jdCBjbGllbnRzIGZyb20gZWFjaCBvdGhl
+ci4KPj4gICDCoMKgwqAgwqDCoMKgIFdvdWxkIGJlIGEgcGl0eSBpZiB3ZSBuZWVkIHRvIHN0aWxs
+IGhhdmUgYSBzZXBhcmF0ZSBQQVNJRAo+PiBoYW5kbGluZyBiZWNhdXNlIHRoZSBzeXN0ZW0gd2lk
+ZSBpcyBvbmx5IGF2YWlsYWJsZSB3aGVuIElPTU1VIGlzIHR1cm5lZCBvbi4KPiBJJ20gc3RpbGwg
+bm90IHN1cmUgYWJvdXQgdGhpcyBvbmUuIEZyb20gbXkgcG9pbnQgb2YgdmlldyB3ZSBzaG91bGRu
+J3QKPiBhZGQgdG8gdGhlIElPTU1VIHN1YnN5c3RlbSBoZWxwZXJzIGZvciBkZXZpY2VzIHdpdGhv
+dXQgYW4gSU9NTVUuCgpJIGFncmVlIG9uIHRoYXQuCgo+IGlvbW11LXN2YSBleHBlY3RzIGV2ZXJ5
+d2hlcmUgdGhhdCB0aGUgZGV2aWNlIGhhcyBhbiBpb21tdV9kb21haW4sIGl0J3MKPiB0aGUgZmly
+c3QgdGhpbmcgd2UgY2hlY2sgb24gZW50cnkuIEJ5cGFzc2luZyBhbGwgb2YgdGhpcyB3b3VsZCBj
+YWxsCj4gaWRyX2FsbG9jKCkgZGlyZWN0bHksIGFuZCB3b3VsZG4ndCBoYXZlIGFueSBjb2RlIGlu
+IGNvbW1vbiB3aXRoIHRoZQo+IGN1cnJlbnQgaW9tbXUtc3ZhLiBTbyBpdCBzZWVtcyBsaWtlIHlv
+dSBuZWVkIGEgbGF5ZXIgb24gdG9wIG9mIGlvbW11LXN2YQo+IGNhbGxpbmcgaWRyX2FsbG9jKCkg
+d2hlbiBhbiBJT01NVSBpc24ndCBwcmVzZW50LCBidXQgSSBkb24ndCB0aGluayBpdAo+IHNob3Vs
+ZCBiZSBpbiBkcml2ZXJzL2lvbW11LwoKSW4gdGhpcyBjYXNlIEkgcXVlc3Rpb24gaWYgdGhlIFBB
+U0lEIGhhbmRsaW5nIHNob3VsZCBiZSB1bmRlciAKZHJpdmVycy9pb21tdSBhdCBhbGwuCgpTZWUg
+SSBjYW4gaGF2ZSBhIG1peCBvZiBWTSBjb250ZXh0IHdoaWNoIGFyZSBib3VuZCB0byBwcm9jZXNz
+ZXMgKHNvbWUgCmZldykgYW5kIFZNIGNvbnRleHRzIHdoaWNoIGFyZSBzdGFuZGFsb25lIGFuZCBk
+b2Vzbid0IGNhcmUgZm9yIGEgcHJvY2VzcyAKYWRkcmVzcyBzcGFjZS4gQnV0IGZvciBlYWNoIFZN
+IGNvbnRleHQgSSBuZWVkIGEgZGlzdGluY3QgUEFTSUQgZm9yIHRoZSAKaGFyZHdhcmUgdG8gd29y
+ay4KCkkgY2FuIGxpdmUgaWYgd2Ugc2F5IGlmIElPTU1VIGlzIGNvbXBsZXRlbHkgZGlzYWJsZWQg
+d2UgdXNlIGEgc2ltcGxlIGlkYSAKdG8gYWxsb2NhdGUgdGhlbSwgYnV0IHdoZW4gSU9NTVUgaXMg
+ZW5hYmxlZCBJIGNlcnRhaW5seSBuZWVkIGEgd2F5IHRvIApyZXNlcnZlIGEgUEFTSUQgd2l0aG91
+dCBhbiBhc3NvY2lhdGVkIHByb2Nlc3MuCgo+PiAzLiBFdmVuIGFmdGVyIGRlc3RydWN0aW9uIG9m
+IGEgcHJvY2VzcyBhZGRyZXNzIHNwYWNlIHdlIG5lZWQgc29tZSBncmFjZQo+PiBwZXJpb2QgYmVm
+b3JlIGEgUEFTSUQgaXMgcmV1c2VkIGJlY2F1c2UgaXQgY2FuIGJlIHRoYXQgdGhlIHNwZWNpZmlj
+Cj4+IFBBU0lEIGlzIHN0aWxsIGluIHNvbWUgaGFyZHdhcmUgcXVldWVzIGV0Yy4uLgo+PiAgIMKg
+wqDCoCDCoMKgwqAgQXQgYmFyZSBtaW5pbXVtIGFsbCBkZXZpY2UgZHJpdmVycyB1c2luZyBwcm9j
+ZXNzIGJpbmRpbmcgbmVlZAo+PiB0byBleHBsaWNpdGx5IG5vdGUgdG8gdGhlIGNvcmUgd2hlbiB0
+aGV5IGFyZSBkb25lIHdpdGggYSBQQVNJRC4KPiBSaWdodCwgbXVjaCBvZiB0aGUgaG9ycmlibGVu
+ZXNzIGluIGlvbW11LXN2YSBkZWFscyB3aXRoIHRoaXM6Cj4KPiBUaGUgcHJvY2VzcyBkaWVzLCBp
+b21tdS1zdmEgaXMgbm90aWZpZWQgYW5kIGNhbGxzIHRoZSBtbV9leGl0KCkgZnVuY3Rpb24KPiBw
+YXNzZWQgYnkgdGhlIGRldmljZSBkcml2ZXIgdG8gaW9tbXVfc3ZhX2RldmljZV9pbml0KCkuIElu
+IG1tX2V4aXQoKSB0aGUKPiBkZXZpY2UgZHJpdmVyIG5lZWRzIHRvIGNsZWFyIGFueSByZWZlcmVu
+Y2UgdG8gdGhlIFBBU0lEIGluIGhhcmR3YXJlIGFuZAo+IGluIGl0cyBvd24gc3RydWN0dXJlcy4g
+V2hlbiB0aGUgZGV2aWNlIGRyaXZlciByZXR1cm5zIGZyb20gbW1fZXhpdCgpLCBpdAo+IGVmZmVj
+dGl2ZWx5IHRlbGxzIHRoZSBjb3JlIHRoYXQgaXQgaGFzIGZpbmlzaGVkIHVzaW5nIHRoZSBQQVNJ
+RCwgYW5kCj4gaW9tbXUtc3ZhIGNhbiByZXVzZSB0aGUgUEFTSUQgZm9yIGFub3RoZXIgcHJvY2Vz
+cy4gbW1fZXhpdCgpIGlzIGFsbG93ZWQKPiB0byBibG9jaywgc28gdGhlIGRldmljZSBkcml2ZXIg
+aGFzIHRpbWUgdG8gY2xlYW4gdXAgYW5kIGZsdXNoIHRoZSBxdWV1ZXMuCj4KPiBJZiB0aGUgZGV2
+aWNlIGRyaXZlciBmaW5pc2hlcyB1c2luZyB0aGUgUEFTSUQgYmVmb3JlIHRoZSBwcm9jZXNzIGV4
+aXRzLAo+IGl0IGp1c3QgY2FsbHMgdW5iaW5kKCkuCgpFeGFjdGx5IHRoYXQncyB3aGF0IE1pY2hh
+bCBIb2NrbyBpcyBwcm9iYWJseSBnb2luZyB0byBub3QgbGlrZSBhdCBhbGwuCgpDYW4gd2UgaGF2
+ZSBhIGRpZmZlcmVudCBhcHByb2FjaCB3aGVyZSBlYWNoIGRyaXZlciBpcyBpbmZvcm1lZCBieSB0
+aGUgCm1tX2V4aXQoKSwgYnV0IG5lZWRzIHRvIGV4cGxpY2l0bHkgY2FsbCB1bmJpbmQoKSBiZWZv
+cmUgYSBQQVNJRCBpcyByZXVzZWQ/CgpEdXJpbmcgdGhhdCB0ZWFyZG93biB0cmFuc2l0aW9uIGl0
+IHdvdWxkIGJlIGlkZWFsIGlmIHRoYXQgUEFTSUQgb25seSAKcG9pbnRzIHRvIGEgZHVtbXkgcm9v
+dCBwYWdlIGRpcmVjdG9yeSB3aXRoIG9ubHkgaW52YWxpZCBlbnRyaWVzLgoKPgo+PiA0LiBJdCB3
+b3VsZCBiZSBuaWNlIHRvIGhhdmUgdG8gYmUgYWJsZSB0byBzZXQgYSAidm9pZCAqIiBmb3IgZWFj
+aAo+PiBQQVNJRC9kZXZpY2UgY29tYmluYXRpb24gd2hpbGUgYmluZGluZyB0byBhIHByb2Nlc3Mg
+d2hpY2ggdGhlbiBjYW4gYmUKPj4gcXVlcmllZCBsYXRlciBvbiBiYXNlZCBvbiB0aGUgUEFTSUQu
+Cj4+ICAgwqDCoMKgIMKgwqDCoCBFLmcuIHdoZW4geW91IGhhdmUgYSBwZXIgUEFTSUQvZGV2aWNl
+IHN0cnVjdHVyZSBhcm91bmQgYW55d2F5LAo+PiBqdXN0IGFkZCBhbiBleHRyYSBmaWVsZC4KPiBp
+b21tdV9zdmFfYmluZF9kZXZpY2UoKSB0YWtlcyBhICJkcnZkYXRhIiBwb2ludGVyIHRoYXQgaXMg
+c3RvcmVkCj4gaW50ZXJuYWxseSBmb3IgdGhlIFBBU0lEL2RldmljZSBjb21iaW5hdGlvbiAoaW9t
+bXVfYm9uZCkuIEl0IGlzIHBhc3NlZAo+IHRvIG1tX2V4aXQoKSwgYnV0IEkgaGF2ZW4ndCBhZGRl
+ZCBhbnl0aGluZyBmb3IgdGhlIGRldmljZSBkcml2ZXIgdG8KPiBxdWVyeSBpdCBiYWNrLgoKTmlj
+ZSEgTG9va3MgbGlrZSBhbGwgd2UgbmVlZCBhZGRpdGlvbmFsbHkgaXMgYSBmdW5jdGlvbiB0byBy
+ZXRyaWV2ZSB0aGF0IApiYXNlZCBvbiB0aGUgUEFTSUQuCgo+PiA1LiBJdCB3b3VsZCBiZSBuaWNl
+IHRvIGhhdmUgdG8gYWxsb2NhdGUgbXVsdGlwbGUgUEFTSURzIGZvciB0aGUgc2FtZQo+PiBwcm9j
+ZXNzIGFkZHJlc3Mgc3BhY2UuCj4+ICAgwqDCoMKgIMKgwqDCoCBFLmcuIHNvbWUgdGVhbXMgYXQg
+QU1EIHdhbnQgdG8gdXNlIGEgc2VwYXJhdGUgR1BVIGFkZHJlc3Mgc3BhY2UKPj4gZm9yIHRoZWly
+IHVzZXJzcGFjZSBjbGllbnQgbGlicmFyeS4gSSdtIHN0aWxsIHRyeWluZyB0byBhdm9pZCB0aGF0
+LCBidXQKPj4gaXQgaXMgcGVyZmVjdGx5IHBvc3NpYmxlIHRoYXQgd2UgYXJlIGdvaW5nIHRvIG5l
+ZWQgdGhhdC4KPiBUd28gUEFTSURzIHBvaW50aW5nIHRvIHRoZSBzYW1lIHByb2Nlc3MgcGdkPyBB
+dCBmaXJzdCBnbGFuY2UgaXQgc2VlbXMKPiBmZWFzaWJsZSwgbWF5YmUgd2l0aCBhIGZsYWcgcGFz
+c2VkIHRvIGJpbmQoKSBhbmQgYSBmZXcgY2hhbmdlcyB0bwo+IGludGVybmFsIHN0cnVjdHVyZXMu
+IEl0IHdpbGwgZHVwbGljYXRlIEFUQyBpbnZhbGlkYXRpb24gY29tbWFuZHMgZm9yCj4gZWFjaCBw
+cm9jZXNzIGFkZHJlc3Mgc3BhY2UgY2hhbmdlIChtdW5tYXAgZXRjKSBzbyB5b3UgbWlnaHQgdGFr
+ZSBhCj4gcGVyZm9ybWFuY2UgaGl0Lgo+Cj4gSW50ZWwncyBTVk0gY29kZSBoYXMgdGhlIFNWTV9G
+TEFHX1BSSVZBVEVfUEFTSUQgd2hpY2ggc2VlbXMgc2ltaWxhciB0bwo+IHdoYXQgeW91IGRlc2Ny
+aWJlLCBidXQgSSBkb24ndCBwbGFuIHRvIHN1cHBvcnQgaXQgaW4gdGhpcyBzZXJpZXMgKHRoZQo+
+IGlvX21tIG1vZGVsIGlzIGFscmVhZHkgcHJldHR5IGNvbXBsaWNhdGVkKS4gSSB0aGluayBpdCBj
+YW4gYmUgYWRkZWQKPiB3aXRob3V0IHRvbyBtdWNoIGVmZm9ydCBpbiBhIGZ1dHVyZSBzZXJpZXMs
+IHRob3VnaCB3aXRoIGEgZGlmZmVyZW50IGZsYWcKPiBuYW1lIHNpbmNlIHdlJ2QgbGlrZSB0byB1
+c2UgInByaXZhdGUgUEFTSUQiIGZvciBzb21ldGhpbmcgZWxzZQo+IChodHRwczovL3d3dy5zcGlu
+aWNzLm5ldC9saXN0cy9kcmktZGV2ZWwvbXNnMTc3MDA3Lmh0bWwpLgoKVG8gYmUgaG9uZXN0IEkg
+aG9wZWQgdGhhdCB5b3Ugd291bGQgc2F5OiBObyBuZXZlciEgU28gdGhhdCBJIGhhdmUgYSBnb29k
+IAphcmd1bWVudCB0byBwdXNoYmFjayBvbiBzdWNoIHJlcXVpcmVtZW50cyA6KQoKQnV0IGlmIGl0
+J3MgZG9hYmxlIGl0IHdvdWxkIGJlIGF0IGxlYXN0IG5pY2UgdG8gaGF2ZSBmb3IgZGVidWdnaW5n
+LgoKVGhhbmtzIGEgbG90IGZvciB3b3JraW5nIG9uIHRoYXQsCkNocmlzdGlhbi4KCj4KPiBUaGFu
+a3MsCj4gSmVhbgo+Cj4+ICAgwqDCoMKgIMKgwqDCoCBBZGRpdGlvbmFsIHRvIHRoYXQgaXQgaXMg
+c29tZXRpbWVzIHF1aXRlIHVzZWZ1bCBmb3IgZGVidWdnaW5nCj4+IHRvIGlzb2xhdGUgd2hlcmUg
+ZXhhY3RseSBhbiBpbmNvcnJlY3QgYWNjZXNzIChzZWdmYXVsdCkgaXMgY29taW5nIGZyb20uCj4+
+Cj4+IExldCBtZSBrbm93IGlmIHRoZXJlIGFyZSBzb21lIHByb2JsZW1zIHdpdGggdGhhdCwgZXNw
+ZWNpYWxseSBJIHdhbnQgdG8KPj4ga25vdyBpZiB0aGVyZSBpcyBwdXNoYmFjayBvbiAjNSBzbyB0
+aGF0IEkgY2FuIGZvcndhcmQgdGhhdCA6KQo+Pgo+PiBUaGFua3MsCj4+IENocmlzdGlhbi4KPj4K
+Pj4+IFRoYW5rcywKPj4+IEplYW4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1mb3VuZGF0
+aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9saXN0aW5m
+by9pb21tdQ==
