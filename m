@@ -1,7 +1,7 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v1 3/5] dts: add nxp,quartz_load_12.5pf to all pcf8523 nodes
-Date: Fri,  7 Sep 2018 21:35:06 +0200
-Message-ID: <20180907193508.24974-4-sam@ravnborg.org>
+Subject: [PATCH v1 5/5] rtc: pcf85063: external capacitor configuration
+Date: Fri,  7 Sep 2018 21:35:08 +0200
+Message-ID: <20180907193508.24974-6-sam@ravnborg.org>
 References: <20180822183555.GA24084@ravnborg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -15,119 +15,76 @@ List-Id: devicetree@vger.kernel.org
 
 From: Søren Andersen <san@skov.dk>
 
-Add "nxp,quartz_load_12.5pf" to all pcf8523 nodes.
+Add support for specifying the quartz load in the DT node.
+The pcf85063 may use either a 7 pF or an 12.5 pF xtal.
+If the rtc has the wrong configuration the time will
+drift several hours/week.
 
-The device tree binding for the pcf8523 now includes
-a property "nxp,quartz_load_12.5pf" to specify
-that the connected x-tal has an internal capacitance
-of 12.5 pF.
-Add this to all pcf8523 nodes, because this was implicit before,
-at least in the Linux kernel where the driver was hardcoded
-to set the rtc to use 12.5 pF.
+If nothing is specified in DT then the factory default of 7 pF is used.
 
 Signed-off-by: Søren Andersen <san@skov.dk>
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Joel Stanley <joel@jms.id.au>
-Cc: Andrew Jeffery <andrew@aj.id.au>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Russell King <linux@armlinux.org.uk>
+Cc: Alessandro Zummo <a.zummo@towertech.it>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts | 1 +
- arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts   | 1 +
- arch/arm/boot/dts/imx6q-h100.dts             | 1 +
- arch/arm/boot/dts/imx6q-novena.dts           | 1 +
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi       | 1 +
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi  | 1 +
- arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 1 +
- 7 files changed, 7 insertions(+)
+ drivers/rtc/rtc-pcf85063.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-index d598b6391362..d1a0e3521e2b 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-@@ -200,6 +200,7 @@
- 	rtc@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
+diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+index 283c2335b01b..38163446664f 100644
+--- a/drivers/rtc/rtc-pcf85063.c
++++ b/drivers/rtc/rtc-pcf85063.c
+@@ -27,6 +27,7 @@
+ */
  
- 	tmp75@48 {
-diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-index 2c5aa90a546d..b5088414e610 100644
---- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-@@ -201,6 +201,7 @@
- 	rtc@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
+ #define PCF85063_REG_CTRL1		0x00 /* status */
++#define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
+ #define PCF85063_REG_CTRL1_STOP		BIT(5)
+ #define PCF85063_REG_CTRL2		0x01
  
- 	ucd90160@64 {
-diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
-index 714e09e04dcb..3b6116069b11 100644
---- a/arch/arm/boot/dts/imx6q-h100.dts
-+++ b/arch/arm/boot/dts/imx6q-h100.dts
-@@ -173,6 +173,7 @@
- 	rtc: pcf8523@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
- 
- 	sgtl5000: sgtl5000@a {
-diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
-index fcd824dc485b..6a2eaaa6e220 100644
---- a/arch/arm/boot/dts/imx6q-novena.dts
-+++ b/arch/arm/boot/dts/imx6q-novena.dts
-@@ -257,6 +257,7 @@
- 	rtc: pcf8523@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
- 
- 	sbs_battery: bq20z75@b {
-diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index 9332a31e6c8b..e0f601bce3d3 100644
---- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -143,6 +143,7 @@
- 	rtc@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
+@@ -180,6 +181,31 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
+ 	.set_time	= pcf85063_rtc_set_time
  };
  
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index 0e64016e765f..7848b818078e 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -189,6 +189,7 @@
- 	rtc@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
++static int pcf85063_select_capacitance(struct i2c_client *client)
++{
++	int rc;
++	u8 reg;
++
++	rc = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
++	if (rc < 0) {
++		dev_err(&client->dev, "Failing to read Control1 reg\n");
++		return -EIO;
++	}
++
++	if (device_property_present(&client->dev, "nxp,quartz_load_12.5pf"))
++		reg = rc |= PCF85063_REG_CTRL1_CAP_SEL;
++	else
++		reg = rc &= ~PCF85063_REG_CTRL1_CAP_SEL;
++
++	rc = i2c_smbus_write_byte_data(client, PCF85063_REG_CTRL1, reg);
++	if (rc < 0) {
++		dev_err(&client->dev, "Failing to configure device\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
+ static int pcf85063_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+@@ -197,6 +223,11 @@ static int pcf85063_probe(struct i2c_client *client,
+ 		return err;
+ 	}
  
- 	/* Pro baseboard model */
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-index c413f9c3540f..7bc264234085 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-@@ -222,6 +222,7 @@
- 	pcf8523: rtc@68 {
- 		compatible = "nxp,pcf8523";
- 		reg = <0x68>;
-+		nxp,quartz_load_12.5pf;
- 	};
- 
- 	sgtl5000: codec@a {
++	err = pcf85063_select_capacitance(client);
++	if (err < 0)
++		dev_warn(&client->dev,
++			 "Capacitance  setup failed. Trying to continue\n");
++
+ 	rtc = devm_rtc_device_register(&client->dev,
+ 				       pcf85063_driver.driver.name,
+ 				       &pcf85063_rtc_ops, THIS_MODULE);
 -- 
 2.12.0
