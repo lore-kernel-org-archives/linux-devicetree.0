@@ -1,39 +1,115 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v1 1/5] dt-binding: rtci-pcf8523: add quartz_load property
-Date: Fri, 7 Sep 2018 23:43:15 +0200
-Message-ID: <20180907214315.GA23873@ravnborg.org>
-References: <20180822183555.GA24084@ravnborg.org>
- <20180907193508.24974-2-sam@ravnborg.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] of/fdt: Allow architectures to override
+ CONFIG_CMDLINE logic
+Date: Fri, 7 Sep 2018 17:07:30 -0500
+Message-ID: <CAL_JsqKZYiDpH8900Mw+ADiUx--GbqF7j1MYoqbcJYCmbjvY4g@mail.gmail.com>
+References: <20180907185414.2630-1-paul.burton@mips.com> <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
+ <20180907210124.rrqbexp423igxbsr@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180907193508.24974-2-sam@ravnborg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180907210124.rrqbexp423igxbsr@pburton-laptop>
+Sender: stable-owner@vger.kernel.org
+To: Paul Burton <paul.burton@mips.com>
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Jaedon Shin <jaedon.shin@gmail.com>, Mathieu Malaterre <malat@debian.org>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all.
+On Fri, Sep 7, 2018 at 4:01 PM Paul Burton <paul.burton@mips.com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, Sep 07, 2018 at 03:29:03PM -0500, Rob Herring wrote:
+> > On Fri, Sep 7, 2018 at 1:55 PM Paul Burton <paul.burton@mips.com> wrote:
+> > > The CONFIG_CMDLINE-related logic in early_init_dt_scan_chosen() falls
+> > > back to copying CONFIG_CMDLINE into boot_command_line/data if the DT has
+> > > a /chosen node but that node has no bootargs property or a bootargs
+> > > property of length zero.
+> >
+> > The Risc-V guys found a similar issue if chosen is missing[1]. I
+> > started a patch[2] to address that, but then looking at the different
+> > arches wasn't sure if I'd break something. I don't recall for sure,
+> > but it may have been MIPS that worried me.
+> >
+> > > This is problematic for the MIPS architecture because we support
+> > > concatenating arguments from either the DT or the bootloader with those
+> > > from CONFIG_CMDLINE, but the behaviour of early_init_dt_scan_chosen()
+> > > gives us no way of knowing whether boot_command_line contains arguments
+> > > from DT or already contains CONFIG_CMDLINE. This can lead to us
+> > > concatenating CONFIG_CMDLINE with itself, duplicating command line
+> > > arguments which can be problematic (eg. for earlycon which will attempt
+> > > to register the same console twice & warn about it).
+> >
+> > If CONFIG_CMDLINE_EXTEND is set, you know it contains CONFIG_CMDLINE.
+> > But I guess part of the problem is MIPS using its own kconfig options.
+>
+> Yes, that's part of the problem but there's more:
+>
+>   - We can also take arguments from the bootloader/prom, so it's not
+>     just DT or CONFIG_CMDLINE as taken into account by
+>     early_init_dt_scan_chosen(). MIPS has options to concatenate various
+>     combinations of DT, bootloader & CONFIG_CMDLINE arguments & there's
+>     no mapping to move all of them to just CONFIG_CMDLINE_EXTEND &
+>     CONFIG_CMDLINE_OVERRIDE.
+>
+>   - Some MIPS systems don't use DT, so don't run
+>     early_init_dt_scan_chosen() at all. Thus the architecture code still
+>     needs to deal with the bootloader/prom & CONFIG_CMDLINE cases
+>     anyway. In a perfect world we'd migrate all systems to use DT but in
+>     this world I don't see that happening until we kill off support for
+>     some of the older systems, which always seems contentious. Even then
+>     there'd be a lot of work for some of the remaining systems. I guess
+>     we could enable DT for these systems & only use it for the command
+>     line, it just feels like overkill.
 
-> +Optional property:
-> +- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
-> +  which differ from the default value of 7 pF
-> +
-> +Example:
-> +
-> +pcf8523: pcf8523@68 {
-> +	compatible = "nxp,pcf85063";
-> +	reg = <0x68>;
-> +	nxp,quartz_load_12.5pF;
-> +};
+We have the same thing with old systems on ARM. I think the big
+difference is the code paths are well separated. We have support for
+old bootloaders which populates old boot parameters (atags) into DT
+(and can replace or extend DT bootargs). That's all in the zImage
+decompressor wrapper. Then in the kernel, there are 2 separate paths
+depending whether you have atags or DT (setup_machine_tags and
+setup_machine_fdt). I think the difference is we've imposed rules such
+as the bootloader can only pass parameters one of 2 ways and if DT is
+used then the bootargs must come from DT.
 
-The property described in the bindings uses capital F.
-But the intent was to use a lower-case f, so the property
-is all lower-case.
+> > > Move the CONFIG_CMDLINE-related logic to a weak function that
+> > > architectures can provide their own version of, such that we continue to
+> > > use the existing logic for architectures where it's suitable but also
+> > > allow MIPS to override this behaviour such that the architecture code
+> > > knows when CONFIG_CMDLINE is used.
+> >
+> > More arch specific functions is not what I want. Really, all the
+> > cmdline manipulating logic doesn't belong in DT code, but it shouldn't
+> > be in the arch specific code either IMO. Really it should be some
+> > common kernel function which calls into the DT code to retrieve the DT
+> > bootargs and that's it. Then you can skip calling that kernel function
+> > if you really need non-standard handling.
+>
+> That would make sense.
+>
+> > Perhaps you should consider filling DT bootargs with the cmdline from
+> > bootloader. IOW, make the legacy case look like the non-legacy case
+> > early, and then the kernel doesn't have to deal with both cases later
+> > on.
+>
+> That could work, but would force us to use DT universally & is a larger
+> change than this, which I was hoping to get in 4.19 to fix the
+> regression described in patch 2 that happened back in 4.16. But if
+> you're unhappy with this perhaps we just have to live with it a little
+> longer...
 
-Will fix in v2.
-This goes for both this binding file and the nxp,pcf85063.txt.
-The dts files and the implmentation uses lower-case f already.
+You should probably at least do just the revert as that was what
+worked for some platforms. But I guess you enabled some platforms and
+just reverting would break them after working for a couple of cycles.
 
-	Sam
+> An alternative workaround to this that would contain the regression fix
+> within arch/mips/ would be to initialize boot_command_line to a single
+> space character prior to early_init_dt_scan_chosen(), which would
+> prevent early_init_dt_scan_chosen() from copying CONFIG_CMDLINE there.
+> That smells much more like a hack to me than this patch though, so I'd
+> rather not.
+
+That doesn't seem that bad to me. If you want to put an "if
+(IS_ENABLED(CONFIG_MIPS)) return;" in the chosen scan as a short term
+fix, I'd be fine with that.
+
+Rob
