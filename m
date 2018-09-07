@@ -1,54 +1,87 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH 1/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Fri, 7 Sep 2018 09:44:13 +0100
-Message-ID: <20180907084413.GG1653@imbe.wolfsonmicro.main>
-References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
- <201809070844.CGeY6FIt%fengguang.wu@intel.com>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Fri, 7 Sep 2018 10:55:31 +0200
+Message-ID: <2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
+	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
+	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
+	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201809070844.CGeY6FIt%fengguang.wu@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <f0b317d5-e2e9-5478-952c-05e8b97bd68b-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org
+Cc: xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2018 at 08:06:52AM +0800, kbuild test robot wrote:
-> Hi Charles,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on ljones-mfd/for-mfd-next]
-> [also build test ERROR on v4.19-rc2 next-20180906]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Charles-Keepax/mfd-lochnagar-Add-support-for-the-Cirrus-Logic-Lochnagar/20180907-010308
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git for-mfd-next
-> config: alpha-allmodconfig (attached as .config)
-> compiler: alpha-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.2.0 make.cross ARCH=alpha 
-> 
-> All errors (new ones prefixed by >>):
-> 
->    drivers/mfd/lochnagar-i2c.o: In function `lochnagar_i2c_probe':
-> >> (.text+0x4ec): undefined reference to `__devm_regmap_init_i2c'
->    (.text+0x500): undefined reference to `__devm_regmap_init_i2c'
-
-Sorry seems I am missing a select REGMAP_I2C in the Kconfig will
-fix up for v2 after any other comments.
-
->    drivers/mfd/lochnagar-i2c.o: In function `lochnagar_i2c_init':
-> >> (.init.text+0x10): undefined reference to `i2c_register_driver'
->    (.init.text+0x24): undefined reference to `i2c_register_driver'
-
-Not sure what is causing this one there is a depends on I2C in
-there will have a look and see if I can figure that out.
-
-Thanks,
-Charles
+QW0gMDYuMDkuMjAxOCB1bSAxNDo0NSBzY2hyaWViIEplYW4tUGhpbGlwcGUgQnJ1Y2tlcjoKPiBP
+biAwNi8wOS8yMDE4IDEyOjEyLCBDaHJpc3RpYW4gS8O2bmlnIHdyb3RlOgo+PiBBbSAwNi4wOS4y
+MDE4IHVtIDEzOjA5IHNjaHJpZWIgSmVhbi1QaGlsaXBwZSBCcnVja2VyOgo+Pj4gSGkgRXJpYywK
+Pj4+Cj4+PiBUaGFua3MgZm9yIHJldmlld2luZwo+Pj4KPj4+IE9uIDA1LzA5LzIwMTggMTI6Mjks
+IEF1Z2VyIEVyaWMgd3JvdGU6Cj4+Pj4+ICtpbnQgaW9tbXVfc3ZhX2RldmljZV9pbml0KHN0cnVj
+dCBkZXZpY2UgKmRldiwgdW5zaWduZWQgbG9uZyBmZWF0dXJlcywKPj4+Pj4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHVuc2lnbmVkIGludCBtYXhfcGFzaWQpCj4+Pj4gd2hhdCBhYm91dCBt
+aW5fcGFzaWQ/Cj4+PiBObyBvbmUgYXNrZWQgZm9yIGl0Li4uIFRoZSBtYXhfcGFzaWQgcGFyYW1l
+dGVyIGlzIGhlcmUgZm9yIGRyaXZlcnMgdGhhdAo+Pj4gaGF2ZSB2ZW5kb3Itc3BlY2lmaWMgUEFT
+SUQgc2l6ZSBsaW1pdHMsIHN1Y2ggYXMgQU1EIEtGRCAoc2VlCj4+PiBrZmRfaW9tbXVfZGV2aWNl
+X2luaXQgYW5kCj4+PiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk5ODkzMDcv
+IzIxMzg5NTcxKS4gQnV0IGluIG1vc3QgY2FzZXMKPj4+IHRoZSBQQVNJRCBzaXplIHdpbGwgb25s
+eSBkZXBlbmQgb24gdGhlIFBDSSBQQVNJRCBjYXBhYmlsaXR5IGFuZCB0aGUKPj4+IElPTU1VIGxp
+bWl0cywgYm90aCBrbm93biBieSB0aGUgSU9NTVUgZHJpdmVyLCBzbyBkZXZpY2UgZHJpdmVycyB3
+b24ndAo+Pj4gaGF2ZSB0byBzZXQgbWF4X3Bhc2lkLgo+Pj4KPj4+IElPTU1VIGRyaXZlcnMgbmVl
+ZCB0byBzZXQgbWluX3Bhc2lkIGluIHRoZSBzdmFfZGV2aWNlX2luaXQgY2FsbGJhY2sKPj4+IGJl
+Y2F1c2UgaXQgbWF5IGJlIGVpdGhlciAxIChlLmcuIEFybSB3aGVyZSBQQVNJRCAjMCBpcyByZXNl
+cnZlZCkgb3IgMAo+Pj4gKEludGVsIFZ0LWQgcmV2MiksIGJ1dCBhdCB0aGUgbW9tZW50IEkgY2Fu
+J3Qgc2VlIGEgcmVhc29uIGZvciBkZXZpY2UKPj4+IGRyaXZlcnMgdG8gb3ZlcnJpZGUgbWluX3Bh
+c2lkCj4+IFNvcnJ5IHRvIHJ1aW4geW91ciBkYXksIGJ1dCBpZiBJJ20gbm90IGNvbXBsZXRlbHkg
+bWlzdGFrZW4gUEFTSUQgemVybyBpcwo+PiByZXNlcnZlZCBpbiB0aGUgQU1EIEtGRCBhcyB3ZWxs
+Lgo+IEhlaCwgZmFpciBlbm91Z2guIEknbGwgYWRkIHRoZSBtaW5fcGFzaWQgcGFyYW1ldGVyCgpJ
+IHdpbGwgdGFrZSB0aGlzIGFzIGFuIG9wcG9ydHVuaXR5IHRvIHN1bW1hcml6ZSBzb21lIG9mIHRo
+ZSByZXF1aXJlbWVudHMgCndlIGhhdmUgZm9yIFBBU0lEIG1hbmFnZW1lbnQgZnJvbSB0aGUgYW1k
+Z3B1IGRyaXZlciBwb2ludCBvZiB2aWV3OgoKMS4gV2UgbmVlZCB0byBiZSBhYmxlIHRvIGFsbG9j
+YXRlIFBBU0lEIGJldHdlZW4gMSBhbmQgc29tZSBtYXhpbXVtLiBaZXJvIAppcyByZXNlcnZlZCBh
+cyBmYXIgYXMgSSBrbm93LCBidXQgd2UgZG9uJ3QgbmVjZXNzYXJ5IG5lZWQgYSBtaW5pbXVtLgoK
+Mi4gV2UgbmVlZCB0byBiZSBhYmxlIHRvIGFsbG9jYXRlIFBBU0lEcyB3aXRob3V0IGEgcHJvY2Vz
+cyBhZGRyZXNzIHNwYWNlIApiYWNraW5nIGl0LiBFLmcuIG91ciBoYXJkd2FyZSB1c2VzIFBBU0lE
+cyBldmVuIHdpdGhvdXQgU2hhcmVkIFZpcnR1YWwgCkFkZHJlc3NpbmcgZW5hYmxlZCB0byBkaXN0
+aW5jdCBjbGllbnRzIGZyb20gZWFjaCBvdGhlci4KIMKgwqDCoCDCoMKgwqAgV291bGQgYmUgYSBw
+aXR5IGlmIHdlIG5lZWQgdG8gc3RpbGwgaGF2ZSBhIHNlcGFyYXRlIFBBU0lEIApoYW5kbGluZyBi
+ZWNhdXNlIHRoZSBzeXN0ZW0gd2lkZSBpcyBvbmx5IGF2YWlsYWJsZSB3aGVuIElPTU1VIGlzIHR1
+cm5lZCBvbi4KCjMuIEV2ZW4gYWZ0ZXIgZGVzdHJ1Y3Rpb24gb2YgYSBwcm9jZXNzIGFkZHJlc3Mg
+c3BhY2Ugd2UgbmVlZCBzb21lIGdyYWNlIApwZXJpb2QgYmVmb3JlIGEgUEFTSUQgaXMgcmV1c2Vk
+IGJlY2F1c2UgaXQgY2FuIGJlIHRoYXQgdGhlIHNwZWNpZmljIApQQVNJRCBpcyBzdGlsbCBpbiBz
+b21lIGhhcmR3YXJlIHF1ZXVlcyBldGMuLi4KIMKgwqDCoCDCoMKgwqAgQXQgYmFyZSBtaW5pbXVt
+IGFsbCBkZXZpY2UgZHJpdmVycyB1c2luZyBwcm9jZXNzIGJpbmRpbmcgbmVlZCAKdG8gZXhwbGlj
+aXRseSBub3RlIHRvIHRoZSBjb3JlIHdoZW4gdGhleSBhcmUgZG9uZSB3aXRoIGEgUEFTSUQuCgo0
+LiBJdCB3b3VsZCBiZSBuaWNlIHRvIGhhdmUgdG8gYmUgYWJsZSB0byBzZXQgYSAidm9pZCAqIiBm
+b3IgZWFjaCAKUEFTSUQvZGV2aWNlIGNvbWJpbmF0aW9uIHdoaWxlIGJpbmRpbmcgdG8gYSBwcm9j
+ZXNzIHdoaWNoIHRoZW4gY2FuIGJlIApxdWVyaWVkIGxhdGVyIG9uIGJhc2VkIG9uIHRoZSBQQVNJ
+RC4KIMKgwqDCoCDCoMKgwqAgRS5nLiB3aGVuIHlvdSBoYXZlIGEgcGVyIFBBU0lEL2RldmljZSBz
+dHJ1Y3R1cmUgYXJvdW5kIGFueXdheSwgCmp1c3QgYWRkIGFuIGV4dHJhIGZpZWxkLgoKNS4gSXQg
+d291bGQgYmUgbmljZSB0byBoYXZlIHRvIGFsbG9jYXRlIG11bHRpcGxlIFBBU0lEcyBmb3IgdGhl
+IHNhbWUgCnByb2Nlc3MgYWRkcmVzcyBzcGFjZS4KIMKgwqDCoCDCoMKgwqAgRS5nLiBzb21lIHRl
+YW1zIGF0IEFNRCB3YW50IHRvIHVzZSBhIHNlcGFyYXRlIEdQVSBhZGRyZXNzIHNwYWNlIApmb3Ig
+dGhlaXIgdXNlcnNwYWNlIGNsaWVudCBsaWJyYXJ5LiBJJ20gc3RpbGwgdHJ5aW5nIHRvIGF2b2lk
+IHRoYXQsIGJ1dCAKaXQgaXMgcGVyZmVjdGx5IHBvc3NpYmxlIHRoYXQgd2UgYXJlIGdvaW5nIHRv
+IG5lZWQgdGhhdC4KIMKgwqDCoCDCoMKgwqAgQWRkaXRpb25hbCB0byB0aGF0IGl0IGlzIHNvbWV0
+aW1lcyBxdWl0ZSB1c2VmdWwgZm9yIGRlYnVnZ2luZyAKdG8gaXNvbGF0ZSB3aGVyZSBleGFjdGx5
+IGFuIGluY29ycmVjdCBhY2Nlc3MgKHNlZ2ZhdWx0KSBpcyBjb21pbmcgZnJvbS4KCkxldCBtZSBr
+bm93IGlmIHRoZXJlIGFyZSBzb21lIHByb2JsZW1zIHdpdGggdGhhdCwgZXNwZWNpYWxseSBJIHdh
+bnQgdG8gCmtub3cgaWYgdGhlcmUgaXMgcHVzaGJhY2sgb24gIzUgc28gdGhhdCBJIGNhbiBmb3J3
+YXJkIHRoYXQgOikKClRoYW5rcywKQ2hyaXN0aWFuLgoKPgo+IFRoYW5rcywKPiBKZWFuCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwppb21tdSBtYWlsaW5n
+IGxpc3QKaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9saXN0cy5saW51
+eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
