@@ -1,79 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rsnd: Add device tree binding for
-	r8a77990" to the asoc tree
-Date: Fri,  7 Sep 2018 12:03:29 +0100 (BST)
-Message-ID: <20180907110329.173DA1122A6D@debutante.sirena.org.uk>
-References: <1536240513-22172-1-git-send-email-ykaneko0929@gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] drm/sun4i: Support color dithering
+ for LCD panels
+Date: Fri, 7 Sep 2018 13:23:31 +0200
+Message-ID: <20180907112331.wjml25rfkyabvwwt@flea>
+References: <20180907041948.19913-1-wens@csie.org>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1536240513-22172-1-git-send-email-ykaneko0929@gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Yoshihiro Kaneko <ykaneko0929@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3ovgveniivb2j72j"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNF7ZHOAKGQEGLDHTOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180907041948.19913-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   ASoC: rsnd: Add device tree binding for r8a77990
+--3ovgveniivb2j72j
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-has been applied to the asoc tree at
+On Fri, Sep 07, 2018 at 12:19:42PM +0800, Chen-Yu Tsai wrote:
+> 
+> Hi,
+> 
+> This is v2 of my sun4i-drm LCD color dithering series. v1 was from back
+> in April [1]. Most of the driver code is unchanged.
+> 
+> Changes since v1:
+> 
+>   - Explicitly list properties from the simple-panel binding that apply
+>     to the Bananapi 7" panel
+> 
+>   - Moved an incorrectly squashed change from patch 3 to patch 1, where
+>     it belongs
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+Applied the first three patches, thanks!
+Maxime
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From e058a4033240d30192124d6bf32b78e9a1f8975c Mon Sep 17 00:00:00 2001
-From: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Date: Thu, 6 Sep 2018 22:28:33 +0900
-Subject: [PATCH] ASoC: rsnd: Add device tree binding for r8a77990
-
-This patch adds the device tree binding of the r8a77990 SoC.
-
-Signed-off-by: Hiroyuki Yokoyama <hiroyuki.yokoyama.vx@renesas.com>
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index 8083f0d8f263..f4688c508be6 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -354,6 +354,7 @@ Required properties:
- 				    - "renesas,rcar_sound-r8a7795" (R-Car H3)
- 				    - "renesas,rcar_sound-r8a7796" (R-Car M3-W)
- 				    - "renesas,rcar_sound-r8a77965" (R-Car M3-N)
-+				    - "renesas,rcar_sound-r8a77990" (R-Car E3)
- - reg				: Should contain the register physical address.
- 				  required register is
- 				   SRU/ADG/SSI      if generation1
 -- 
-2.19.0.rc1
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--3ovgveniivb2j72j--
