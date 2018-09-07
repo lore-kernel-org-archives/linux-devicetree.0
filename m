@@ -1,69 +1,47 @@
-Return-Path: <SRS0=QNtu=LT=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=gCiJ=LV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:55588 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbeIGWRi (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 7 Sep 2018 18:17:38 -0400
+Date: Fri, 7 Sep 2018 10:35:36 -0700
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Fix omap l4per idling with wlcore   edge
+ sensitive interrupt
+Message-ID: <20180907173536.GR5662@atomide.com>
+References: <8665E2433BC68541A24DFFCA87B70F5B3646AF81@DFRE01.ent.ti.com>
+ <20171015162230.GU4394@atomide.com>
+ <20171015221536.ybe7x52tenocel6c@lenoch>
+ <20171016140147.GV4394@atomide.com>
 MIME-Version: 1.0
-References: <1535711579-15169-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1535711579-15169-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1535711579-15169-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 5 Sep 2018 15:59:54 +0200
-Message-ID: <CAMuHMdWroi7SDj+hrLYqwctHMZEzA8bC=VgykvPtUwy5Eqfx+A@mail.gmail.com>
-Subject: Re: [PATCH v2 3/3] usb: renesas_usbhs: Add multiple clocks management
-Content-Type: text/plain; charset="UTF-8"
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, USB list <linux-usb@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20171016140147.GV4394@atomide.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Ladislav Michl <ladis@linux-mips.org>
+Cc: "Reizer, Eyal" <eyalr@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Gerlach, Dave" <d-gerlach@ti.com>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, Kalle Valo <kvalo@codeaurora.org>, "Menon, Nishanth" <nm@ti.com>, "Kristo, Tero" <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Shimoda-san,
+* Tony Lindgren <tony@atomide.com> [171016 14:03]:
+> * Ladislav Michl <ladis@linux-mips.org> [171015 15:16]:
+> > On Sun, Oct 15, 2017 at 09:22:31AM -0700, Tony Lindgren wrote:
+> > > * Reizer, Eyal <eyalr@ti.com> [171014 23:55]:
+> > > > > From: Tony Lindgren [mailto:tony@atomide.com]
+> > > > > 
+> > > > > On omaps, if the wlcore interrupt is configured as level instead of edge,
+> > > > > L4PER will stop doing hardware based idling after ifconfig wlan0 down is
+> > > > > done and the WL_EN line is pulled down.
+> > > > > 
+> > > > Do we understand why omap is doing this? Is it a bug or a normal behavior?
 
-On Fri, Aug 31, 2018 at 12:36 PM Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> R-Car Gen3 needs to enable clocks of both host and peripheral.
-> Since [eo]hci-platform disables the reset(s) when the drivers are
-> removed, renesas_usbhs driver doesn't work correctly. To fix this
-> issue, this patch adds multiple clocks management on this
-> renesas_usbhs driver.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Just to document this, it looks like the gpio wake events
+behave in a different way on omap4 and later. We must only
+keep waken register configured during idle on omap4 and have
+edge and level registers cleared to prevent the gpio from
+keeping clocks on and blocking idle.
 
-Thanks for your patch!
+I'll be posting a proper fix for this at some point after
+some more testing and cleaning up my patch.
 
-> --- a/drivers/usb/renesas_usbhs/common.c
-> +++ b/drivers/usb/renesas_usbhs/common.c
+Regards,
 
-> @@ -336,11 +337,26 @@ static void usbhsc_power_ctrl(struct usbhs_priv *priv, int enable)
->  {
->         struct platform_device *pdev = usbhs_priv_to_pdev(priv);
->         struct device *dev = usbhs_priv_to_dev(priv);
-> +       int ret;
->
->         if (enable) {
->                 /* enable PM */
->                 pm_runtime_get_sync(dev);
->
-> +               /* enable clks if exist */
-> +               if (priv->num_clks) {
-> +                       ret = clk_bulk_prepare(priv->num_clks, priv->clks);
-> +                       if (!ret) {
-> +                               ret = clk_bulk_enable(priv->num_clks,
-> +                                                     priv->clks);
-> +                               if (ret) {
-> +                                       clk_bulk_unprepare(priv->num_clks,
-> +                                                          priv->clks);
-> +                                       return;
-> +                               }
-> +                       }
-
-I think you misunderstood my comment: you can replace the calls to
-clk_bulk_prepare() and clk_bulk_enable() by a single call to
-clk_bulk_prepare_enable().
-
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Tony
