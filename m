@@ -1,97 +1,145 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 1/2] of/fdt: Allow architectures to override
- CONFIG_CMDLINE logic
-Date: Fri, 7 Sep 2018 14:01:24 -0700
-Message-ID: <20180907210124.rrqbexp423igxbsr@pburton-laptop>
-References: <20180907185414.2630-1-paul.burton@mips.com>
- <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
+From: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Fri, 7 Sep 2018 14:25:04 -0700
+Message-ID: <20180907142504.5034351e@jacob-builder>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
+	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
+	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
+	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
+	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
+	<65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
+	<5bbc0332-b94b-75cc-ca42-a9b196811daf@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Jaedon Shin <jaedon.shin@gmail.com>, Mathieu Malaterre <malat@debian.org>, stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <5bbc0332-b94b-75cc-ca42-a9b196811daf-5C7GfCeVMHo@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Christian =?UTF-8?B?S8O2bmln?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95@hua>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Fri, Sep 07, 2018 at 03:29:03PM -0500, Rob Herring wrote:
-> On Fri, Sep 7, 2018 at 1:55 PM Paul Burton <paul.burton@mips.com> wrote:
-> > The CONFIG_CMDLINE-related logic in early_init_dt_scan_chosen() falls
-> > back to copying CONFIG_CMDLINE into boot_command_line/data if the DT has
-> > a /chosen node but that node has no bootargs property or a bootargs
-> > property of length zero.
-> 
-> The Risc-V guys found a similar issue if chosen is missing[1]. I
-> started a patch[2] to address that, but then looking at the different
-> arches wasn't sure if I'd break something. I don't recall for sure,
-> but it may have been MIPS that worried me.
-> 
-> > This is problematic for the MIPS architecture because we support
-> > concatenating arguments from either the DT or the bootloader with those
-> > from CONFIG_CMDLINE, but the behaviour of early_init_dt_scan_chosen()
-> > gives us no way of knowing whether boot_command_line contains arguments
-> > from DT or already contains CONFIG_CMDLINE. This can lead to us
-> > concatenating CONFIG_CMDLINE with itself, duplicating command line
-> > arguments which can be problematic (eg. for earlycon which will attempt
-> > to register the same console twice & warn about it).
-> 
-> If CONFIG_CMDLINE_EXTEND is set, you know it contains CONFIG_CMDLINE.
-> But I guess part of the problem is MIPS using its own kconfig options.
-
-Yes, that's part of the problem but there's more:
-
-  - We can also take arguments from the bootloader/prom, so it's not
-    just DT or CONFIG_CMDLINE as taken into account by
-    early_init_dt_scan_chosen(). MIPS has options to concatenate various
-    combinations of DT, bootloader & CONFIG_CMDLINE arguments & there's
-    no mapping to move all of them to just CONFIG_CMDLINE_EXTEND &
-    CONFIG_CMDLINE_OVERRIDE.
-
-  - Some MIPS systems don't use DT, so don't run
-    early_init_dt_scan_chosen() at all. Thus the architecture code still
-    needs to deal with the bootloader/prom & CONFIG_CMDLINE cases
-    anyway. In a perfect world we'd migrate all systems to use DT but in
-    this world I don't see that happening until we kill off support for
-    some of the older systems, which always seems contentious. Even then
-    there'd be a lot of work for some of the remaining systems. I guess
-    we could enable DT for these systems & only use it for the command
-    line, it just feels like overkill.
-
-> > Move the CONFIG_CMDLINE-related logic to a weak function that
-> > architectures can provide their own version of, such that we continue to
-> > use the existing logic for architectures where it's suitable but also
-> > allow MIPS to override this behaviour such that the architecture code
-> > knows when CONFIG_CMDLINE is used.
-> 
-> More arch specific functions is not what I want. Really, all the
-> cmdline manipulating logic doesn't belong in DT code, but it shouldn't
-> be in the arch specific code either IMO. Really it should be some
-> common kernel function which calls into the DT code to retrieve the DT
-> bootargs and that's it. Then you can skip calling that kernel function
-> if you really need non-standard handling.
-
-That would make sense.
-
-> Perhaps you should consider filling DT bootargs with the cmdline from
-> bootloader. IOW, make the legacy case look like the non-legacy case
-> early, and then the kernel doesn't have to deal with both cases later
-> on.
-
-That could work, but would force us to use DT universally & is a larger
-change than this, which I was hoping to get in 4.19 to fix the
-regression described in patch 2 that happened back in 4.16. But if
-you're unhappy with this perhaps we just have to live with it a little
-longer...
-
-An alternative workaround to this that would contain the regression fix
-within arch/mips/ would be to initialize boot_command_line to a single
-space character prior to early_init_dt_scan_chosen(), which would
-prevent early_init_dt_scan_chosen() from copying CONFIG_CMDLINE there.
-That smells much more like a hack to me than this patch though, so I'd
-rather not.
-
-Thanks,
-    Paul
+T24gRnJpLCA3IFNlcCAyMDE4IDIwOjAyOjU0ICswMjAwCkNocmlzdGlhbiBLw7ZuaWcgPGNocmlz
+dGlhbi5rb2VuaWdAYW1kLmNvbT4gd3JvdGU6Cgo+IEFtIDA3LjA5LjIwMTggdW0gMTc6NDUgc2No
+cmllYiBKZWFuLVBoaWxpcHBlIEJydWNrZXI6Cj4gPiBPbiAwNy8wOS8yMDE4IDA5OjU1LCBDaHJp
+c3RpYW4gS8O2bmlnIHdyb3RlOiAgCj4gPj4gSSB3aWxsIHRha2UgdGhpcyBhcyBhbiBvcHBvcnR1
+bml0eSB0byBzdW1tYXJpemUgc29tZSBvZiB0aGUKPiA+PiByZXF1aXJlbWVudHMgd2UgaGF2ZSBm
+b3IgUEFTSUQgbWFuYWdlbWVudCBmcm9tIHRoZSBhbWRncHUgZHJpdmVyCj4gPj4gcG9pbnQgb2Yg
+dmlldzogIAo+ID4gVGhhdCdzIGluY3JlZGlibHkgdXNlZnVsLCB0aGFua3MgOikKPiA+ICAKPiA+
+PiAxLiBXZSBuZWVkIHRvIGJlIGFibGUgdG8gYWxsb2NhdGUgUEFTSUQgYmV0d2VlbiAxIGFuZCBz
+b21lCj4gPj4gbWF4aW11bS4gWmVybyBpcyByZXNlcnZlZCBhcyBmYXIgYXMgSSBrbm93LCBidXQg
+d2UgZG9uJ3QgbmVjZXNzYXJ5Cj4gPj4gbmVlZCBhIG1pbmltdW0uICAKPiAgWy4uLl0gIAo+ID4+
+IDIuIFdlIG5lZWQgdG8gYmUgYWJsZSB0byBhbGxvY2F0ZSBQQVNJRHMgd2l0aG91dCBhIHByb2Nl
+c3MgYWRkcmVzcwo+ID4+IHNwYWNlIGJhY2tpbmcgaXQuIEUuZy4gb3VyIGhhcmR3YXJlIHVzZXMg
+UEFTSURzIGV2ZW4gd2l0aG91dAo+ID4+IFNoYXJlZCBWaXJ0dWFsIEFkZHJlc3NpbmcgZW5hYmxl
+ZCB0byBkaXN0aW5jdCBjbGllbnRzIGZyb20gZWFjaAo+ID4+IG90aGVyLiBXb3VsZCBiZSBhIHBp
+dHkgaWYgd2UgbmVlZCB0byBzdGlsbCBoYXZlIGEgc2VwYXJhdGUgUEFTSUQKPiA+PiBoYW5kbGlu
+ZyBiZWNhdXNlIHRoZSBzeXN0ZW0gd2lkZSBpcyBvbmx5IGF2YWlsYWJsZSB3aGVuIElPTU1VIGlz
+Cj4gPj4gdHVybmVkIG9uLiAgCj4gIFsuLi5dICAKPiAKPiBJIGFncmVlIG9uIHRoYXQuCj4gCj4g
+PiBpb21tdS1zdmEgZXhwZWN0cyBldmVyeXdoZXJlIHRoYXQgdGhlIGRldmljZSBoYXMgYW4gaW9t
+bXVfZG9tYWluLAo+ID4gaXQncyB0aGUgZmlyc3QgdGhpbmcgd2UgY2hlY2sgb24gZW50cnkuIEJ5
+cGFzc2luZyBhbGwgb2YgdGhpcyB3b3VsZAo+ID4gY2FsbCBpZHJfYWxsb2MoKSBkaXJlY3RseSwg
+YW5kIHdvdWxkbid0IGhhdmUgYW55IGNvZGUgaW4gY29tbW9uCj4gPiB3aXRoIHRoZSBjdXJyZW50
+IGlvbW11LXN2YS4gU28gaXQgc2VlbXMgbGlrZSB5b3UgbmVlZCBhIGxheWVyIG9uCj4gPiB0b3Ag
+b2YgaW9tbXUtc3ZhIGNhbGxpbmcgaWRyX2FsbG9jKCkgd2hlbiBhbiBJT01NVSBpc24ndCBwcmVz
+ZW50LAo+ID4gYnV0IEkgZG9uJ3QgdGhpbmsgaXQgc2hvdWxkIGJlIGluIGRyaXZlcnMvaW9tbXUv
+ICAKPiAKPiBJbiB0aGlzIGNhc2UgSSBxdWVzdGlvbiBpZiB0aGUgUEFTSUQgaGFuZGxpbmcgc2hv
+dWxkIGJlIHVuZGVyIAo+IGRyaXZlcnMvaW9tbXUgYXQgYWxsLgo+IAo+IFNlZSBJIGNhbiBoYXZl
+IGEgbWl4IG9mIFZNIGNvbnRleHQgd2hpY2ggYXJlIGJvdW5kIHRvIHByb2Nlc3NlcyAoc29tZSAK
+PiBmZXcpIGFuZCBWTSBjb250ZXh0cyB3aGljaCBhcmUgc3RhbmRhbG9uZSBhbmQgZG9lc24ndCBj
+YXJlIGZvciBhCj4gcHJvY2VzcyBhZGRyZXNzIHNwYWNlLiBCdXQgZm9yIGVhY2ggVk0gY29udGV4
+dCBJIG5lZWQgYSBkaXN0aW5jdAo+IFBBU0lEIGZvciB0aGUgaGFyZHdhcmUgdG8gd29yay4KPiAK
+PiBJIGNhbiBsaXZlIGlmIHdlIHNheSBpZiBJT01NVSBpcyBjb21wbGV0ZWx5IGRpc2FibGVkIHdl
+IHVzZSBhIHNpbXBsZQo+IGlkYSB0byBhbGxvY2F0ZSB0aGVtLCBidXQgd2hlbiBJT01NVSBpcyBl
+bmFibGVkIEkgY2VydGFpbmx5IG5lZWQgYQo+IHdheSB0byByZXNlcnZlIGEgUEFTSUQgd2l0aG91
+dCBhbiBhc3NvY2lhdGVkIHByb2Nlc3MuCj4gClZULWQgd291bGQgYWxzbyBoYXZlIHN1Y2ggcmVx
+dWlyZW1lbnQuIFRoZXJlIGlzIGEgdmlydHVhbCBjb21tYW5kCnJlZ2lzdGVyIGZvciBhbGxvY2F0
+ZSBhbmQgZnJlZSBQQVNJRCBmb3IgVk0gdXNlLiBXaGVuIHRoYXQgUEFTSUQKYWxsb2NhdGlvbiBy
+ZXF1ZXN0IGdldHMgcHJvcGFnYXRlZCB0byB0aGUgaG9zdCBJT01NVSBkcml2ZXIsIHdlIG5lZWQg
+dG8KYWxsb2NhdGUgUEFTSUQgdy9vIG1tLgoKSWYgdGhlIFBBU0lEIGFsbG9jYXRpb24gaXMgZG9u
+ZSB2aWEgVkZJTywgY2FuIHdlIGhhdmUgRkQgdG8gdHJhY2sgUEFTSUQKbGlmZSBjeWNsZSBpbnN0
+ZWFkIG9mIG1tX2V4aXQoKT8gaS5lLiBhbGwgRkRzIGdldCBjbG9zZWQgYmVmb3JlCm1tX2V4aXQs
+IEkgYXNzdW1lPwoKPiA+PiAzLiBFdmVuIGFmdGVyIGRlc3RydWN0aW9uIG9mIGEgcHJvY2VzcyBh
+ZGRyZXNzIHNwYWNlIHdlIG5lZWQgc29tZQo+ID4+IGdyYWNlIHBlcmlvZCBiZWZvcmUgYSBQQVNJ
+RCBpcyByZXVzZWQgYmVjYXVzZSBpdCBjYW4gYmUgdGhhdCB0aGUKPiA+PiBzcGVjaWZpYyBQQVNJ
+RCBpcyBzdGlsbCBpbiBzb21lIGhhcmR3YXJlIHF1ZXVlcyBldGMuLi4KPiA+PiAgIMKgwqDCoCDC
+oMKgwqAgQXQgYmFyZSBtaW5pbXVtIGFsbCBkZXZpY2UgZHJpdmVycyB1c2luZyBwcm9jZXNzIGJp
+bmRpbmcKPiA+PiBuZWVkIHRvIGV4cGxpY2l0bHkgbm90ZSB0byB0aGUgY29yZSB3aGVuIHRoZXkg
+YXJlIGRvbmUgd2l0aCBhCj4gPj4gUEFTSUQuICAKPiA+IFJpZ2h0LCBtdWNoIG9mIHRoZSBob3Jy
+aWJsZW5lc3MgaW4gaW9tbXUtc3ZhIGRlYWxzIHdpdGggdGhpczoKPiA+Cj4gPiBUaGUgcHJvY2Vz
+cyBkaWVzLCBpb21tdS1zdmEgaXMgbm90aWZpZWQgYW5kIGNhbGxzIHRoZSBtbV9leGl0KCkKPiA+
+IGZ1bmN0aW9uIHBhc3NlZCBieSB0aGUgZGV2aWNlIGRyaXZlciB0byBpb21tdV9zdmFfZGV2aWNl
+X2luaXQoKS4gSW4KPiA+IG1tX2V4aXQoKSB0aGUgZGV2aWNlIGRyaXZlciBuZWVkcyB0byBjbGVh
+ciBhbnkgcmVmZXJlbmNlIHRvIHRoZQo+ID4gUEFTSUQgaW4gaGFyZHdhcmUgYW5kIGluIGl0cyBv
+d24gc3RydWN0dXJlcy4gV2hlbiB0aGUgZGV2aWNlIGRyaXZlcgo+ID4gcmV0dXJucyBmcm9tIG1t
+X2V4aXQoKSwgaXQgZWZmZWN0aXZlbHkgdGVsbHMgdGhlIGNvcmUgdGhhdCBpdCBoYXMKPiA+IGZp
+bmlzaGVkIHVzaW5nIHRoZSBQQVNJRCwgYW5kIGlvbW11LXN2YSBjYW4gcmV1c2UgdGhlIFBBU0lE
+IGZvcgo+ID4gYW5vdGhlciBwcm9jZXNzLiBtbV9leGl0KCkgaXMgYWxsb3dlZCB0byBibG9jaywg
+c28gdGhlIGRldmljZQo+ID4gZHJpdmVyIGhhcyB0aW1lIHRvIGNsZWFuIHVwIGFuZCBmbHVzaCB0
+aGUgcXVldWVzLgo+ID4KPiA+IElmIHRoZSBkZXZpY2UgZHJpdmVyIGZpbmlzaGVzIHVzaW5nIHRo
+ZSBQQVNJRCBiZWZvcmUgdGhlIHByb2Nlc3MKPiA+IGV4aXRzLCBpdCBqdXN0IGNhbGxzIHVuYmlu
+ZCgpLiAgCj4gCj4gRXhhY3RseSB0aGF0J3Mgd2hhdCBNaWNoYWwgSG9ja28gaXMgcHJvYmFibHkg
+Z29pbmcgdG8gbm90IGxpa2UgYXQgYWxsLgo+IAo+IENhbiB3ZSBoYXZlIGEgZGlmZmVyZW50IGFw
+cHJvYWNoIHdoZXJlIGVhY2ggZHJpdmVyIGlzIGluZm9ybWVkIGJ5IHRoZSAKPiBtbV9leGl0KCks
+IGJ1dCBuZWVkcyB0byBleHBsaWNpdGx5IGNhbGwgdW5iaW5kKCkgYmVmb3JlIGEgUEFTSUQgaXMK
+PiByZXVzZWQ/Cj4gCj4gRHVyaW5nIHRoYXQgdGVhcmRvd24gdHJhbnNpdGlvbiBpdCB3b3VsZCBi
+ZSBpZGVhbCBpZiB0aGF0IFBBU0lEIG9ubHkgCj4gcG9pbnRzIHRvIGEgZHVtbXkgcm9vdCBwYWdl
+IGRpcmVjdG9yeSB3aXRoIG9ubHkgaW52YWxpZCBlbnRyaWVzLgo+IApJIGd1ZXNzIHRoaXMgY2Fu
+IGJlIHZlbmRvciBzcGVjaWZpYywgSW4gVlQtZCBJIHBsYW4gdG8gbWFyayBQQVNJRAplbnRyeSBu
+b3QgcHJlc2VudCBhbmQgZGlzYWJsZSBmYXVsdCByZXBvcnRpbmcgd2hpbGUgZHJhaW5pbmcgcmVt
+YWluaW5nCmFjdGl2aXRpZXMuCgo+ID4gIAo+ID4+IDQuIEl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2
+ZSB0byBiZSBhYmxlIHRvIHNldCBhICJ2b2lkICoiIGZvciBlYWNoCj4gPj4gUEFTSUQvZGV2aWNl
+IGNvbWJpbmF0aW9uIHdoaWxlIGJpbmRpbmcgdG8gYSBwcm9jZXNzIHdoaWNoIHRoZW4gY2FuCj4g
+Pj4gYmUgcXVlcmllZCBsYXRlciBvbiBiYXNlZCBvbiB0aGUgUEFTSUQuCj4gPj4gICDCoMKgwqAg
+wqDCoMKgIEUuZy4gd2hlbiB5b3UgaGF2ZSBhIHBlciBQQVNJRC9kZXZpY2Ugc3RydWN0dXJlIGFy
+b3VuZAo+ID4+IGFueXdheSwganVzdCBhZGQgYW4gZXh0cmEgZmllbGQuICAKPiA+IGlvbW11X3N2
+YV9iaW5kX2RldmljZSgpIHRha2VzIGEgImRydmRhdGEiIHBvaW50ZXIgdGhhdCBpcyBzdG9yZWQK
+PiA+IGludGVybmFsbHkgZm9yIHRoZSBQQVNJRC9kZXZpY2UgY29tYmluYXRpb24gKGlvbW11X2Jv
+bmQpLiBJdCBpcwo+ID4gcGFzc2VkIHRvIG1tX2V4aXQoKSwgYnV0IEkgaGF2ZW4ndCBhZGRlZCBh
+bnl0aGluZyBmb3IgdGhlIGRldmljZQo+ID4gZHJpdmVyIHRvIHF1ZXJ5IGl0IGJhY2suICAKPiAK
+PiBOaWNlISBMb29rcyBsaWtlIGFsbCB3ZSBuZWVkIGFkZGl0aW9uYWxseSBpcyBhIGZ1bmN0aW9u
+IHRvIHJldHJpZXZlCj4gdGhhdCBiYXNlZCBvbiB0aGUgUEFTSUQuCj4gCj4gPj4gNS4gSXQgd291
+bGQgYmUgbmljZSB0byBoYXZlIHRvIGFsbG9jYXRlIG11bHRpcGxlIFBBU0lEcyBmb3IgdGhlCj4g
+Pj4gc2FtZSBwcm9jZXNzIGFkZHJlc3Mgc3BhY2UuCj4gPj4gICDCoMKgwqAgwqDCoMKgIEUuZy4g
+c29tZSB0ZWFtcyBhdCBBTUQgd2FudCB0byB1c2UgYSBzZXBhcmF0ZSBHUFUKPiA+PiBhZGRyZXNz
+IHNwYWNlIGZvciB0aGVpciB1c2Vyc3BhY2UgY2xpZW50IGxpYnJhcnkuIEknbSBzdGlsbCB0cnlp
+bmcKPiA+PiB0byBhdm9pZCB0aGF0LCBidXQgaXQgaXMgcGVyZmVjdGx5IHBvc3NpYmxlIHRoYXQg
+d2UgYXJlIGdvaW5nIHRvCj4gPj4gbmVlZCB0aGF0LiAgCj4gPiBUd28gUEFTSURzIHBvaW50aW5n
+IHRvIHRoZSBzYW1lIHByb2Nlc3MgcGdkPyBBdCBmaXJzdCBnbGFuY2UgaXQKPiA+IHNlZW1zIGZl
+YXNpYmxlLCBtYXliZSB3aXRoIGEgZmxhZyBwYXNzZWQgdG8gYmluZCgpIGFuZCBhIGZldwo+ID4g
+Y2hhbmdlcyB0byBpbnRlcm5hbCBzdHJ1Y3R1cmVzLiBJdCB3aWxsIGR1cGxpY2F0ZSBBVEMgaW52
+YWxpZGF0aW9uCj4gPiBjb21tYW5kcyBmb3IgZWFjaCBwcm9jZXNzIGFkZHJlc3Mgc3BhY2UgY2hh
+bmdlIChtdW5tYXAgZXRjKSBzbyB5b3UKPiA+IG1pZ2h0IHRha2UgYSBwZXJmb3JtYW5jZSBoaXQu
+Cj4gPgo+ID4gSW50ZWwncyBTVk0gY29kZSBoYXMgdGhlIFNWTV9GTEFHX1BSSVZBVEVfUEFTSUQg
+d2hpY2ggc2VlbXMgc2ltaWxhcgo+ID4gdG8gd2hhdCB5b3UgZGVzY3JpYmUsIGJ1dCBJIGRvbid0
+IHBsYW4gdG8gc3VwcG9ydCBpdCBpbiB0aGlzIHNlcmllcwo+ID4gKHRoZSBpb19tbSBtb2RlbCBp
+cyBhbHJlYWR5IHByZXR0eSBjb21wbGljYXRlZCkuIEkgdGhpbmsgaXQgY2FuIGJlCj4gPiBhZGRl
+ZCB3aXRob3V0IHRvbyBtdWNoIGVmZm9ydCBpbiBhIGZ1dHVyZSBzZXJpZXMsIHRob3VnaCB3aXRo
+IGEKPiA+IGRpZmZlcmVudCBmbGFnIG5hbWUgc2luY2Ugd2UnZCBsaWtlIHRvIHVzZSAicHJpdmF0
+ZSBQQVNJRCIgZm9yCj4gPiBzb21ldGhpbmcgZWxzZQo+ID4gKGh0dHBzOi8vd3d3LnNwaW5pY3Mu
+bmV0L2xpc3RzL2RyaS1kZXZlbC9tc2cxNzcwMDcuaHRtbCkuICAKPiAKPiBUbyBiZSBob25lc3Qg
+SSBob3BlZCB0aGF0IHlvdSB3b3VsZCBzYXk6IE5vIG5ldmVyISBTbyB0aGF0IEkgaGF2ZSBhCj4g
+Z29vZCBhcmd1bWVudCB0byBwdXNoYmFjayBvbiBzdWNoIHJlcXVpcmVtZW50cyA6KQo+IAo+IEJ1
+dCBpZiBpdCdzIGRvYWJsZSBpdCB3b3VsZCBiZSBhdCBsZWFzdCBuaWNlIHRvIGhhdmUgZm9yIGRl
+YnVnZ2luZy4KPiAKPiBUaGFua3MgYSBsb3QgZm9yIHdvcmtpbmcgb24gdGhhdCwKPiBDaHJpc3Rp
+YW4uCj4gCj4gPgo+ID4gVGhhbmtzLAo+ID4gSmVhbgo+ID4gIAo+ID4+ICAgwqDCoMKgIMKgwqDC
+oCBBZGRpdGlvbmFsIHRvIHRoYXQgaXQgaXMgc29tZXRpbWVzIHF1aXRlIHVzZWZ1bCBmb3IKPiA+
+PiBkZWJ1Z2dpbmcgdG8gaXNvbGF0ZSB3aGVyZSBleGFjdGx5IGFuIGluY29ycmVjdCBhY2Nlc3Mg
+KHNlZ2ZhdWx0KQo+ID4+IGlzIGNvbWluZyBmcm9tLgo+ID4+Cj4gPj4gTGV0IG1lIGtub3cgaWYg
+dGhlcmUgYXJlIHNvbWUgcHJvYmxlbXMgd2l0aCB0aGF0LCBlc3BlY2lhbGx5IEkKPiA+PiB3YW50
+IHRvIGtub3cgaWYgdGhlcmUgaXMgcHVzaGJhY2sgb24gIzUgc28gdGhhdCBJIGNhbiBmb3J3YXJk
+Cj4gPj4gdGhhdCA6KQo+ID4+Cj4gPj4gVGhhbmtzLAo+ID4+IENocmlzdGlhbi4KPiA+PiAgCj4g
+Pj4+IFRoYW5rcywKPiA+Pj4gSmVhbiAgCj4gCgpbSmFjb2IgUGFuXQpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwppb21tdSBtYWlsaW5nIGxpc3QKaW9tbXVA
+bGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcKaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24u
+b3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
