@@ -1,41 +1,38 @@
-Return-Path: <SRS0=slpH=LY=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=NUHq=LV=cogentembedded.com=sergei.shtylyov@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] dt-bindings: timer: renesas: tmu: document R8A779{7|8}0
+ bindings
+Message-ID: <72db4d8d-7b3d-7368-02a4-f652a7bc810d@cogentembedded.com>
+Date: Fri, 7 Sep 2018 23:02:53 +0300
 MIME-Version: 1.0
-References: <72db4d8d-7b3d-7368-02a4-f652a7bc810d@cogentembedded.com>
-In-Reply-To: <72db4d8d-7b3d-7368-02a4-f652a7bc810d@cogentembedded.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 10 Sep 2018 16:24:03 +0200
-Message-ID: <CAMuHMdW3nfPNOPQR9mWN+tdtLRz8LwR797gzORG7RRiiiHYeHQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: timer: renesas: tmu: document R8A779{7|8}0 bindings
-Content-Type: text/plain; charset="UTF-8"
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sergei,
+Document the R-Car V3{M|H} (R8A779{7|8}0) SoC in the Renesas TMU bindings;
+the TMU hardware in those is the Renesas standard 3-channel timer unit.
 
-On Fri, Sep 7, 2018 at 10:03 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> Document the R-Car V3{M|H} (R8A779{7|8}0) SoC in the Renesas TMU bindings;
-> the TMU hardware in those is the Renesas standard 3-channel timer unit.
->
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks for your patch!
+---
+The patch is against the 'tip.git' repo's 'timers/core' branch.
 
-Not all channels seem to be identical, but the driver just matches against
-the "renesas,tmu" fallback?
-In addition, the V3H TMU seems to differ from the TMU in other R-Car Gen3
-variants?
+ Documentation/devicetree/bindings/timer/renesas,tmu.txt |    2 ++
+ 1 file changed, 2 insertions(+)
 
-How is this handled?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Index: tip/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+===================================================================
+--- tip.orig/Documentation/devicetree/bindings/timer/renesas,tmu.txt
++++ tip/Documentation/devicetree/bindings/timer/renesas,tmu.txt
+@@ -12,6 +12,8 @@ Required Properties:
+     - "renesas,tmu-r8a7740" for the r8a7740 TMU
+     - "renesas,tmu-r8a7778" for the r8a7778 TMU
+     - "renesas,tmu-r8a7779" for the r8a7779 TMU
++    - "renesas,tmu-r8a77970" for the r8a77970 TMU
++    - "renesas,tmu-r8a77980" for the r8a77980 TMU
+     - "renesas,tmu" for any TMU.
+       This is a fallback for the above renesas,tmu-* entries
+ 
