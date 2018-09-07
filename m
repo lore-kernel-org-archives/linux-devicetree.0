@@ -1,234 +1,112 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH v9 5/9] media: platform: Add Cedrus VPU
- decoder driver
-Date: Fri, 07 Sep 2018 17:24:40 +0200
-Message-ID: <84cd11cd7efd2301ee70e92a71bd915d2f38c41e.camel@paulk.fr>
-References: <20180906222442.14825-1-contact@paulk.fr>
-	 <20180906222442.14825-6-contact@paulk.fr>
-	 <4b30c0bf-e525-1868-f625-569d4a104aa0@xs4all.nl>
-Reply-To: contact-W9ppeneeCTY@public.gmane.org
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Fri, 7 Sep 2018 16:45:02 +0100
+Message-ID: <65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
+	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
+	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
+	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
+	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-pfNOvWR/bi0bWWWe83Jr"
-Return-path: <linux-sunxi+bncBC75HK6WUAEBBWFQZLOAKGQEIDAZ24I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <4b30c0bf-e525-1868-f625-569d4a104aa0-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
-Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <2fd4a0a1-1a35-bf82-df84-b995cce011d9-5C7GfCeVMHo@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>
+Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---=-pfNOvWR/bi0bWWWe83Jr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-Le vendredi 07 septembre 2018 =C3=A0 15:13 +0200, Hans Verkuil a =C3=A9crit=
- :
-> On 09/07/2018 12:24 AM, Paul Kocialkowski wrote:
-> > From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> >=20
-> > This introduces the Cedrus VPU driver that supports the VPU found in
-> > Allwinner SoCs, also known as Video Engine. It is implemented through
-> > a V4L2 M2M decoder device and a media device (used for media requests).
-> > So far, it only supports MPEG-2 decoding.
-> >=20
-> > Since this VPU is stateless, synchronization with media requests is
-> > required in order to ensure consistency between frame headers that
-> > contain metadata about the frame to process and the raw slice data that
-> > is used to generate the frame.
-> >=20
-> > This driver was made possible thanks to the long-standing effort
-> > carried out by the linux-sunxi community in the interest of reverse
-> > engineering, documenting and implementing support for the Allwinner VPU=
-.
-> >=20
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
->=20
-> One high-level comment:
->=20
-> Can you add a TODO file for this staging driver? This can be done in
-> a follow-up patch.
-
-Definitely, I'll do that soon!
-
-> It should contain what needs to be done to get this out of staging:
->=20
-> - Request API needs to stabilize
-> - Userspace support for stateless codecs must be created
-> - Ideally one other stateless decoder driver and at least one
->   stateless encoder driver should be implemented to ensure that nothing
->   was forgotten in the Request API.
-> - Anything else?
-
-I still fell rather unsure about the codec metadata controls, so it
-would be good to wait for more feedback on that specific point too.
-They definitely fit our driver's needs and I also checked them against
-the spec to spot missing elements, but I'm still worried I might have
-missed something relevant there. Are there use cases currently not
-covered by their current verison?
-
-> And a few last code comments:
->=20
-> > ---
-> >  MAINTAINERS                                   |   7 +
-> >  drivers/staging/media/Kconfig                 |   2 +
-> >  drivers/staging/media/Makefile                |   1 +
-> >  drivers/staging/media/sunxi/Kconfig           |  15 +
-> >  drivers/staging/media/sunxi/Makefile          |   1 +
-> >  drivers/staging/media/sunxi/cedrus/Kconfig    |  14 +
-> >  drivers/staging/media/sunxi/cedrus/Makefile   |   3 +
-> >  drivers/staging/media/sunxi/cedrus/cedrus.c   | 422 ++++++++++++++
-> >  drivers/staging/media/sunxi/cedrus/cedrus.h   | 165 ++++++
-> >  .../staging/media/sunxi/cedrus/cedrus_dec.c   |  70 +++
-> >  .../staging/media/sunxi/cedrus/cedrus_dec.h   |  27 +
-> >  .../staging/media/sunxi/cedrus/cedrus_hw.c    | 322 +++++++++++
-> >  .../staging/media/sunxi/cedrus/cedrus_hw.h    |  30 +
-> >  .../staging/media/sunxi/cedrus/cedrus_mpeg2.c | 237 ++++++++
-> >  .../staging/media/sunxi/cedrus/cedrus_regs.h  | 233 ++++++++
-> >  .../staging/media/sunxi/cedrus/cedrus_video.c | 544 ++++++++++++++++++
-> >  .../staging/media/sunxi/cedrus/cedrus_video.h |  30 +
-> >  17 files changed, 2123 insertions(+)
-> >  create mode 100644 drivers/staging/media/sunxi/Kconfig
-> >  create mode 100644 drivers/staging/media/sunxi/Makefile
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/Kconfig
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/Makefile
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus.c
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus.h
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_dec.c
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_dec.h
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_video.c
-> >  create mode 100644 drivers/staging/media/sunxi/cedrus/cedrus_video.h
-> >=20
->=20
-> <snip>
->=20
-> > +static int cedrus_request_validate(struct media_request *req)
-> > +{
-> > +	struct media_request_object *obj;
-> > +	struct v4l2_ctrl_handler *parent_hdl, *hdl;
-> > +	struct cedrus_ctx *ctx =3D NULL;
-> > +	struct v4l2_ctrl *ctrl_test;
-> > +	unsigned int i;
-> > +
-> > +	if (vb2_request_buffer_cnt(req) !=3D 1)
-> > +		return -ENOENT;
->=20
-> I would return ENOENT if there are no buffers, and EINVAL if there are to=
-o
-> many. Returning ENOENT in the latter case would be very confusing.
->=20
-> I also highly recommend that you add v4l2_info lines for these errors.
-
-Yes that seems much clearer. I'll send that as a follow-up patch.
-
-> > +
-> > +	list_for_each_entry(obj, &req->objects, list) {
-> > +		struct vb2_buffer *vb;
-> > +
-> > +		if (vb2_request_object_is_buffer(obj)) {
-> > +			vb =3D container_of(obj, struct vb2_buffer, req_obj);
-> > +			ctx =3D vb2_get_drv_priv(vb->vb2_queue);
-> > +
-> > +			break;
-> > +		}
-> > +	}
-> > +
-> > +	if (!ctx)
-> > +		return -ENOENT;
-> > +
-> > +	parent_hdl =3D &ctx->hdl;
-> > +
-> > +	hdl =3D v4l2_ctrl_request_hdl_find(req, parent_hdl);
-> > +	if (!hdl) {
-> > +		v4l2_err(&ctx->dev->v4l2_dev, "Missing codec control(s)\n");
->=20
-> Should be v4l2_info: it is not a driver error, it is just an info message=
-.
-
-Oh, my mistake.
-
-> > +		return -ENOENT;
-> > +	}
-> > +
-> > +	for (i =3D 0; i < CEDRUS_CONTROLS_COUNT; i++) {
-> > +		if (cedrus_controls[i].codec !=3D ctx->current_codec ||
-> > +		    !cedrus_controls[i].required)
-> > +			continue;
-> > +
-> > +		ctrl_test =3D v4l2_ctrl_request_hdl_ctrl_find(hdl,
-> > +			cedrus_controls[i].id);
-> > +		if (!ctrl_test) {
-> > +			v4l2_err(&ctx->dev->v4l2_dev,
-> > +				 "Missing required codec control\n");
->=20
-> Ditto.
->
-> > +			return -ENOENT;
-> > +		}
-> > +	}
-> > +
-> > +	v4l2_ctrl_request_hdl_put(hdl);
-> > +
-> > +	return vb2_request_validate(req);
-> > +}
->=20
-> Not worth making a v10, but you can do this in a follow-up patch.
->=20
-> Once I have the two follow-up patches I'll make a pull request.
-
-Excellent! I'm really glad we're approaching the end of it.
-
-Cheers,
-
-Paul
-
---=20
-Developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---=-pfNOvWR/bi0bWWWe83Jr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAluSmDgACgkQhP3B6o/u
-lQxJmxAAjRHm8+yIxMz5a6A5PQOC+rhKe0d3MbpBroMOj1NoOlG2T9EMlFozb1z2
-sxRfXyL09WE3DxDFGWew4AL0aKTLGw9mTlzfBJojIMB2gOf7vc6teZ6NL6fOfA+w
-suyBFdtM6MLglOlOwJUCI+MoqZg7+l3R6KFb4aX4dJ4mlC0UrH3k82DCJLUpZdXN
-YhtUz2JqV4+s7FQ42KM7p+6cZd40E5QyLBBLNWFjP3X72r/kfGybXKTxLY4iqJYE
-yiU2uIXv6N8ll5+l1LhlDY/KAtLBo4Zkw9XFvBLae7l6+E0BCxcflBFfsdqdV/s3
-T/s9KUcGA3A/6tNveeTBhUkn6veMTt4RhgHQw6eyUao/1INumc9Q/yTKUroQo7AP
-WhYeC6SAdltZ3bclv/Pk94QWo7tgm0EL8Ad3M0HT9zjjb7dk5oCP2BJqv4zBXJNs
-VCmgM0D9CB7gYvjomNNy+nfj3V4R7OYxn9783Foya0n8j4G7LRdmWyqzJ3y8bn5r
-/Un92sN7ANcDgandFhnLCmMvgbyw9Jo/aC1nVUJk8w7idXdu7kgi9mdp8gWc10MV
-aE8YnqiJhEZqvhaWD8ZoEo+7JM247Am77kg1vE51GJTSa7Wt5sV11X7QSqQLe4ch
-V1GN0saRIG2cJyZdAUsujghbsnJwoTFaCPVwdieEml+QY+L6Shs=
-=kob7
------END PGP SIGNATURE-----
-
---=-pfNOvWR/bi0bWWWe83Jr--
+T24gMDcvMDkvMjAxOCAwOTo1NSwgQ2hyaXN0aWFuIEvDtm5pZyB3cm90ZToKPiBJIHdpbGwgdGFr
+ZSB0aGlzIGFzIGFuIG9wcG9ydHVuaXR5IHRvIHN1bW1hcml6ZSBzb21lIG9mIHRoZSByZXF1aXJl
+bWVudHMgCj4gd2UgaGF2ZSBmb3IgUEFTSUQgbWFuYWdlbWVudCBmcm9tIHRoZSBhbWRncHUgZHJp
+dmVyIHBvaW50IG9mIHZpZXc6CgpUaGF0J3MgaW5jcmVkaWJseSB1c2VmdWwsIHRoYW5rcyA6KQoK
+PiAxLiBXZSBuZWVkIHRvIGJlIGFibGUgdG8gYWxsb2NhdGUgUEFTSUQgYmV0d2VlbiAxIGFuZCBz
+b21lIG1heGltdW0uIFplcm8gCj4gaXMgcmVzZXJ2ZWQgYXMgZmFyIGFzIEkga25vdywgYnV0IHdl
+IGRvbid0IG5lY2Vzc2FyeSBuZWVkIGEgbWluaW11bS4KClNob3VsZCBiZSBmaW5lLiBUaGUgUEFT
+SUQgcmFuZ2UgaXMgcmVzdHJpY3RlZCBieSB0aGUgUENJIFBBU0lECmNhcGFiaWxpdHksIGZpcm13
+YXJlIGRlc2NyaXB0aW9uIChmb3Igbm9uLVBDSSBkZXZpY2VzKSwgdGhlIElPTU1VCmNhcGFjaXR5
+LCBhbmQgd2hhdCB0aGUgZGV2aWNlIGRyaXZlciBwYXNzZXMgdG8gaW9tbXVfc3ZhX2RldmljZV9p
+bml0LgpOb3QgYWxsIElPTU1VcyByZXNlcnZlIFBBU0lEIDAgKEFNRCBJT01NVSB3aXRob3V0IEdJ
+b1N1cCBkb2Vzbid0LCBpZiBJJ20Kbm90IG1pc3Rha2VuKSwgc28gdGhlIEtGRCBkcml2ZXIgd2ls
+bCBuZWVkIHRvIHBhc3MgbWluX3Bhc2lkPTEgdG8gbWFrZQpzdXJlIHRoYXQgMCBpc24ndCBhbGxv
+Y2F0ZWQuCgo+IDIuIFdlIG5lZWQgdG8gYmUgYWJsZSB0byBhbGxvY2F0ZSBQQVNJRHMgd2l0aG91
+dCBhIHByb2Nlc3MgYWRkcmVzcyBzcGFjZSAKPiBiYWNraW5nIGl0LiBFLmcuIG91ciBoYXJkd2Fy
+ZSB1c2VzIFBBU0lEcyBldmVuIHdpdGhvdXQgU2hhcmVkIFZpcnR1YWwgCj4gQWRkcmVzc2luZyBl
+bmFibGVkIHRvIGRpc3RpbmN0IGNsaWVudHMgZnJvbSBlYWNoIG90aGVyLgo+ICDCoMKgwqAgwqDC
+oMKgIFdvdWxkIGJlIGEgcGl0eSBpZiB3ZSBuZWVkIHRvIHN0aWxsIGhhdmUgYSBzZXBhcmF0ZSBQ
+QVNJRCAKPiBoYW5kbGluZyBiZWNhdXNlIHRoZSBzeXN0ZW0gd2lkZSBpcyBvbmx5IGF2YWlsYWJs
+ZSB3aGVuIElPTU1VIGlzIHR1cm5lZCBvbi4KCkknbSBzdGlsbCBub3Qgc3VyZSBhYm91dCB0aGlz
+IG9uZS4gRnJvbSBteSBwb2ludCBvZiB2aWV3IHdlIHNob3VsZG4ndAphZGQgdG8gdGhlIElPTU1V
+IHN1YnN5c3RlbSBoZWxwZXJzIGZvciBkZXZpY2VzIHdpdGhvdXQgYW4gSU9NTVUuCmlvbW11LXN2
+YSBleHBlY3RzIGV2ZXJ5d2hlcmUgdGhhdCB0aGUgZGV2aWNlIGhhcyBhbiBpb21tdV9kb21haW4s
+IGl0J3MKdGhlIGZpcnN0IHRoaW5nIHdlIGNoZWNrIG9uIGVudHJ5LiBCeXBhc3NpbmcgYWxsIG9m
+IHRoaXMgd291bGQgY2FsbAppZHJfYWxsb2MoKSBkaXJlY3RseSwgYW5kIHdvdWxkbid0IGhhdmUg
+YW55IGNvZGUgaW4gY29tbW9uIHdpdGggdGhlCmN1cnJlbnQgaW9tbXUtc3ZhLiBTbyBpdCBzZWVt
+cyBsaWtlIHlvdSBuZWVkIGEgbGF5ZXIgb24gdG9wIG9mIGlvbW11LXN2YQpjYWxsaW5nIGlkcl9h
+bGxvYygpIHdoZW4gYW4gSU9NTVUgaXNuJ3QgcHJlc2VudCwgYnV0IEkgZG9uJ3QgdGhpbmsgaXQK
+c2hvdWxkIGJlIGluIGRyaXZlcnMvaW9tbXUvCgo+IDMuIEV2ZW4gYWZ0ZXIgZGVzdHJ1Y3Rpb24g
+b2YgYSBwcm9jZXNzIGFkZHJlc3Mgc3BhY2Ugd2UgbmVlZCBzb21lIGdyYWNlIAo+IHBlcmlvZCBi
+ZWZvcmUgYSBQQVNJRCBpcyByZXVzZWQgYmVjYXVzZSBpdCBjYW4gYmUgdGhhdCB0aGUgc3BlY2lm
+aWMgCj4gUEFTSUQgaXMgc3RpbGwgaW4gc29tZSBoYXJkd2FyZSBxdWV1ZXMgZXRjLi4uCj4gIMKg
+wqDCoCDCoMKgwqAgQXQgYmFyZSBtaW5pbXVtIGFsbCBkZXZpY2UgZHJpdmVycyB1c2luZyBwcm9j
+ZXNzIGJpbmRpbmcgbmVlZCAKPiB0byBleHBsaWNpdGx5IG5vdGUgdG8gdGhlIGNvcmUgd2hlbiB0
+aGV5IGFyZSBkb25lIHdpdGggYSBQQVNJRC4KClJpZ2h0LCBtdWNoIG9mIHRoZSBob3JyaWJsZW5l
+c3MgaW4gaW9tbXUtc3ZhIGRlYWxzIHdpdGggdGhpczoKClRoZSBwcm9jZXNzIGRpZXMsIGlvbW11
+LXN2YSBpcyBub3RpZmllZCBhbmQgY2FsbHMgdGhlIG1tX2V4aXQoKSBmdW5jdGlvbgpwYXNzZWQg
+YnkgdGhlIGRldmljZSBkcml2ZXIgdG8gaW9tbXVfc3ZhX2RldmljZV9pbml0KCkuIEluIG1tX2V4
+aXQoKSB0aGUKZGV2aWNlIGRyaXZlciBuZWVkcyB0byBjbGVhciBhbnkgcmVmZXJlbmNlIHRvIHRo
+ZSBQQVNJRCBpbiBoYXJkd2FyZSBhbmQKaW4gaXRzIG93biBzdHJ1Y3R1cmVzLiBXaGVuIHRoZSBk
+ZXZpY2UgZHJpdmVyIHJldHVybnMgZnJvbSBtbV9leGl0KCksIGl0CmVmZmVjdGl2ZWx5IHRlbGxz
+IHRoZSBjb3JlIHRoYXQgaXQgaGFzIGZpbmlzaGVkIHVzaW5nIHRoZSBQQVNJRCwgYW5kCmlvbW11
+LXN2YSBjYW4gcmV1c2UgdGhlIFBBU0lEIGZvciBhbm90aGVyIHByb2Nlc3MuIG1tX2V4aXQoKSBp
+cyBhbGxvd2VkCnRvIGJsb2NrLCBzbyB0aGUgZGV2aWNlIGRyaXZlciBoYXMgdGltZSB0byBjbGVh
+biB1cCBhbmQgZmx1c2ggdGhlIHF1ZXVlcy4KCklmIHRoZSBkZXZpY2UgZHJpdmVyIGZpbmlzaGVz
+IHVzaW5nIHRoZSBQQVNJRCBiZWZvcmUgdGhlIHByb2Nlc3MgZXhpdHMsCml0IGp1c3QgY2FsbHMg
+dW5iaW5kKCkuCgo+IDQuIEl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSB0byBiZSBhYmxlIHRvIHNl
+dCBhICJ2b2lkICoiIGZvciBlYWNoIAo+IFBBU0lEL2RldmljZSBjb21iaW5hdGlvbiB3aGlsZSBi
+aW5kaW5nIHRvIGEgcHJvY2VzcyB3aGljaCB0aGVuIGNhbiBiZSAKPiBxdWVyaWVkIGxhdGVyIG9u
+IGJhc2VkIG9uIHRoZSBQQVNJRC4KPiAgwqDCoMKgIMKgwqDCoCBFLmcuIHdoZW4geW91IGhhdmUg
+YSBwZXIgUEFTSUQvZGV2aWNlIHN0cnVjdHVyZSBhcm91bmQgYW55d2F5LCAKPiBqdXN0IGFkZCBh
+biBleHRyYSBmaWVsZC4KCmlvbW11X3N2YV9iaW5kX2RldmljZSgpIHRha2VzIGEgImRydmRhdGEi
+IHBvaW50ZXIgdGhhdCBpcyBzdG9yZWQKaW50ZXJuYWxseSBmb3IgdGhlIFBBU0lEL2RldmljZSBj
+b21iaW5hdGlvbiAoaW9tbXVfYm9uZCkuIEl0IGlzIHBhc3NlZAp0byBtbV9leGl0KCksIGJ1dCBJ
+IGhhdmVuJ3QgYWRkZWQgYW55dGhpbmcgZm9yIHRoZSBkZXZpY2UgZHJpdmVyIHRvCnF1ZXJ5IGl0
+IGJhY2suCgo+IDUuIEl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSB0byBhbGxvY2F0ZSBtdWx0aXBs
+ZSBQQVNJRHMgZm9yIHRoZSBzYW1lIAo+IHByb2Nlc3MgYWRkcmVzcyBzcGFjZS4KPiAgwqDCoMKg
+IMKgwqDCoCBFLmcuIHNvbWUgdGVhbXMgYXQgQU1EIHdhbnQgdG8gdXNlIGEgc2VwYXJhdGUgR1BV
+IGFkZHJlc3Mgc3BhY2UgCj4gZm9yIHRoZWlyIHVzZXJzcGFjZSBjbGllbnQgbGlicmFyeS4gSSdt
+IHN0aWxsIHRyeWluZyB0byBhdm9pZCB0aGF0LCBidXQgCj4gaXQgaXMgcGVyZmVjdGx5IHBvc3Np
+YmxlIHRoYXQgd2UgYXJlIGdvaW5nIHRvIG5lZWQgdGhhdC4KClR3byBQQVNJRHMgcG9pbnRpbmcg
+dG8gdGhlIHNhbWUgcHJvY2VzcyBwZ2Q/IEF0IGZpcnN0IGdsYW5jZSBpdCBzZWVtcwpmZWFzaWJs
+ZSwgbWF5YmUgd2l0aCBhIGZsYWcgcGFzc2VkIHRvIGJpbmQoKSBhbmQgYSBmZXcgY2hhbmdlcyB0
+bwppbnRlcm5hbCBzdHJ1Y3R1cmVzLiBJdCB3aWxsIGR1cGxpY2F0ZSBBVEMgaW52YWxpZGF0aW9u
+IGNvbW1hbmRzIGZvcgplYWNoIHByb2Nlc3MgYWRkcmVzcyBzcGFjZSBjaGFuZ2UgKG11bm1hcCBl
+dGMpIHNvIHlvdSBtaWdodCB0YWtlIGEKcGVyZm9ybWFuY2UgaGl0LgoKSW50ZWwncyBTVk0gY29k
+ZSBoYXMgdGhlIFNWTV9GTEFHX1BSSVZBVEVfUEFTSUQgd2hpY2ggc2VlbXMgc2ltaWxhciB0bwp3
+aGF0IHlvdSBkZXNjcmliZSwgYnV0IEkgZG9uJ3QgcGxhbiB0byBzdXBwb3J0IGl0IGluIHRoaXMg
+c2VyaWVzICh0aGUKaW9fbW0gbW9kZWwgaXMgYWxyZWFkeSBwcmV0dHkgY29tcGxpY2F0ZWQpLiBJ
+IHRoaW5rIGl0IGNhbiBiZSBhZGRlZAp3aXRob3V0IHRvbyBtdWNoIGVmZm9ydCBpbiBhIGZ1dHVy
+ZSBzZXJpZXMsIHRob3VnaCB3aXRoIGEgZGlmZmVyZW50IGZsYWcKbmFtZSBzaW5jZSB3ZSdkIGxp
+a2UgdG8gdXNlICJwcml2YXRlIFBBU0lEIiBmb3Igc29tZXRoaW5nIGVsc2UKKGh0dHBzOi8vd3d3
+LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2cxNzcwMDcuaHRtbCkuCgpUaGFua3MsCkpl
+YW4KCj4gIMKgwqDCoCDCoMKgwqAgQWRkaXRpb25hbCB0byB0aGF0IGl0IGlzIHNvbWV0aW1lcyBx
+dWl0ZSB1c2VmdWwgZm9yIGRlYnVnZ2luZyAKPiB0byBpc29sYXRlIHdoZXJlIGV4YWN0bHkgYW4g
+aW5jb3JyZWN0IGFjY2VzcyAoc2VnZmF1bHQpIGlzIGNvbWluZyBmcm9tLgo+IAo+IExldCBtZSBr
+bm93IGlmIHRoZXJlIGFyZSBzb21lIHByb2JsZW1zIHdpdGggdGhhdCwgZXNwZWNpYWxseSBJIHdh
+bnQgdG8gCj4ga25vdyBpZiB0aGVyZSBpcyBwdXNoYmFjayBvbiAjNSBzbyB0aGF0IEkgY2FuIGZv
+cndhcmQgdGhhdCA6KQo+IAo+IFRoYW5rcywKPiBDaHJpc3RpYW4uCj4gCj4+Cj4+IFRoYW5rcywK
+Pj4gSmVhbgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0
+dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
