@@ -1,263 +1,86 @@
-From: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
-Subject: Re: [PATCH 1/3] soc: fsl: add Platform PM driver QorIQ platforms
-Date: Fri, 7 Sep 2018 10:15:43 +0000
-Message-ID: <35f171989af34850bd192c2b4de9b43b@HXTBJIDCEMVIW02.hxtcorp.net>
-References: <20180831035219.31619-1-ran.wang_1@nxp.com>
- <366f03eab44e489b9fef82fb8e8f3c3b@HXTBJIDCEMVIW02.hxtcorp.net>
- <AM5PR0402MB2865774C03981F9808AB3A13F1000@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v16 2/5] iommu/arm-smmu: Invoke pm_runtime
+ during probe, add/remove device
+Date: Fri, 7 Sep 2018 15:52:06 +0530
+Message-ID: <CAFp+6iE3+qn6-gpXEzxfoP5yPMARmUcJNn0AZk-kA2AreTLnng@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-3-vivek.gautam@codeaurora.org>
+ <CAAFQd5B7YR03Jm1upOg2nsaKOb1iDD7-WGo-qx7S8m-nounCvA@mail.gmail.com>
+ <3ccc3690-dc9d-56e7-e2d1-62e73a189bff@codeaurora.org>
+ <CAAFQd5DMDWEeBU=fg6arye3pXnrCqOA4tDtMSGutXk7vSz-EtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAAFQd5DMDWEeBU=fg6arye3pXnrCqOA4tDtMSGutXk7vSz-EtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018/9/7 16:49, Ran Wang wrote:
-> Hi Dongsheng
->
->> On 2018/9/5 11:05, Dongsheng Wang wrote:
->>
->> Please change your comments style.
->>
->> On 2018/8/31 11:57, Ran Wang wrote:
->>> This driver is to provide a independent framework for PM service
->>> provider and consumer to configure system level wake up feature. For
->>> example, RCPM driver could register a callback function on this
->>> platform first, and Flex timer driver who want to enable timer wake up
->>> feature, will call generic API provided by this platform driver, and
->>> then it will trigger RCPM driver to do it. The benefit is to isolate
->>> the user and service, such as flex timer driver will not have to know
->>> the implement details of wakeup function it require. Besides, it is
->>> also easy for service side to upgrade its logic when design is changed
->>> and remain user side unchanged.
->>>
->>> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
->>> ---
->>>  drivers/soc/fsl/Kconfig   |   14 +++++
->>>  drivers/soc/fsl/Makefile  |    1 +
->>>  drivers/soc/fsl/plat_pm.c |  144
->> +++++++++++++++++++++++++++++++++++++++++++++
->>>  include/soc/fsl/plat_pm.h |   22 +++++++
->>>  4 files changed, 181 insertions(+), 0 deletions(-)  create mode
->>> 100644 drivers/soc/fsl/plat_pm.c  create mode 100644
->>> include/soc/fsl/plat_pm.h
->>>
->>> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig index
->>> 7a9fb9b..6517412 100644
->>> --- a/drivers/soc/fsl/Kconfig
->>> +++ b/drivers/soc/fsl/Kconfig
->>> @@ -16,3 +16,17 @@ config FSL_GUTS
->>>  	  Initially only reading SVR and registering soc device are supported.
->>>  	  Other guts accesses, such as reading RCW, should eventually be
->> moved
->>>  	  into this driver as well.
->>> +
->>> +config FSL_PLAT_PM
->>> +	bool "Freescale platform PM framework"
->>> +	help
->>> +	  This driver is to provide a independent framework for PM service
->>> +	  provider and consumer to configure system level wake up feature.
->> For
->>> +	  example, RCPM driver could register a callback function on this
->>> +	  platform first, and Flex timer driver who want to enable timer wake
->>> +	  up feature, will call generic API provided by this platform driver,
->>> +	  and then it will trigger RCPM driver to do it. The benefit is to
->>> +	  isolate the user and service, such as  flex timer driver will not
->>> +	  have to know the implement details of wakeup function it require.
->>> +	  Besides, it is also easy for service side to upgrade its logic when
->>> +	  design changed and remain user side unchanged.
->>> diff --git a/drivers/soc/fsl/Makefile b/drivers/soc/fsl/Makefile index
->>> 44b3beb..8f9db23 100644
->>> --- a/drivers/soc/fsl/Makefile
->>> +++ b/drivers/soc/fsl/Makefile
->>> @@ -6,3 +6,4 @@ obj-$(CONFIG_FSL_DPAA)                 += qbman/
->>>  obj-$(CONFIG_QUICC_ENGINE)		+= qe/
->>>  obj-$(CONFIG_CPM)			+= qe/
->>>  obj-$(CONFIG_FSL_GUTS)			+= guts.o
->>> +obj-$(CONFIG_FSL_PLAT_PM)	+= plat_pm.o
->>> diff --git a/drivers/soc/fsl/plat_pm.c b/drivers/soc/fsl/plat_pm.c new
->>> file mode 100644 index 0000000..19ea14e
->>> --- /dev/null
->>> +++ b/drivers/soc/fsl/plat_pm.c
->>> @@ -0,0 +1,144 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +//
->>> +// plat_pm.c - Freescale platform PM framework // // Copyright 2018
->>> +NXP // // Author: Ran Wang <ran.wang_1@nxp.com>,
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/device.h>
->>> +#include <linux/list.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/err.h>
->>> +#include <soc/fsl/plat_pm.h>
->>> +
->>> +
->>> +struct plat_pm_t {
->>> +	struct list_head node;
->>> +	fsl_plat_pm_handle handle;
->>> +	void *handle_priv;
->>> +	spinlock_t	lock;
->>> +};
->>> +
->>> +static struct plat_pm_t plat_pm;
->>> +
->>> +// register_fsl_platform_wakeup_source - Register callback function
->>> +to plat_pm // @handle: Pointer to handle PM feature requirement //
->>> +@handle_priv: Handler specific data struct // // Return 0 on success
->>> +other negative errno int
->>> +register_fsl_platform_wakeup_source(fsl_plat_pm_handle handle,
->>> +		void *handle_priv)
->>> +{
->>> +	struct plat_pm_t *p;
->>> +	unsigned long	flags;
->>> +
->>> +	if (!handle) {
->>> +		pr_err("FSL plat_pm: Handler invalid, reject\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	p = kmalloc(sizeof(*p), GFP_KERNEL);
->>> +	if (!p)
->>> +		return -ENOMEM;
->>> +
->>> +	p->handle = handle;
->>> +	p->handle_priv = handle_priv;
->>> +
->>> +	spin_lock_irqsave(&plat_pm.lock, flags);
->>> +	list_add_tail(&p->node, &plat_pm.node);
->>> +	spin_unlock_irqrestore(&plat_pm.lock, flags);
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(register_fsl_platform_wakeup_source);
->>> +
->>> +// Deregister_fsl_platform_wakeup_source - deregister callback
->>> +function // @handle_priv: Handler specific data struct // // Return 0
->>> +on success other negative errno int
->>> +deregister_fsl_platform_wakeup_source(void *handle_priv) {
->>> +	struct plat_pm_t *p, *tmp;
->>> +	unsigned long	flags;
->>> +
->>> +	spin_lock_irqsave(&plat_pm.lock, flags);
->>> +	list_for_each_entry_safe(p, tmp, &plat_pm.node, node) {
->>> +		if (p->handle_priv == handle_priv) {
->>> +			list_del(&p->node);
->>> +			kfree(p);
->>> +		}
->>> +	}
->>> +	spin_unlock_irqrestore(&plat_pm.lock, flags);
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(deregister_fsl_platform_wakeup_source);
->>> +
->>> +// fsl_platform_wakeup_config - Configure wakeup source by calling
->>> +handlers // @dev: pointer to user's device struct // @flag: to tell
->>> +enable or disable wakeup source // // Return 0 on success other
->>> +negative errno int fsl_platform_wakeup_config(struct device *dev,
->>> +bool flag) {
->>> +	struct plat_pm_t *p;
->>> +	int ret;
->>> +	bool success_handled;
->>> +	unsigned long	flags;
->>> +
->>> +	success_handled = false;
->>> +
->>> +	// Will consider success if at least one callback return 0.
->>> +	// Also, rest handles still get oppertunity to be executed
->>> +	spin_lock_irqsave(&plat_pm.lock, flags);
->>> +	list_for_each_entry(p, &plat_pm.node, node) {
->>> +		if (p->handle) {
->>> +			ret = p->handle(dev, flag, p->handle_priv);
->>> +			if (!ret)
->>> +				success_handled = true;
->> Miss a break?
-> Actually my idea is to allow more than one registered handler to handle this
-> request, so I define a flag rather than return to indicated if there is at least one handler successfully
-> do it. This design might give more flexibility to framework when running.
-There is only one flag(success_handled) here, how did know which handler
-failed?
-
-BTW, I don't think we need this flag. We can only use the return value.
-
-Cheers,
-Dongsheng
-
->>> +			else if (ret != -ENODEV) {
->>> +				pr_err("FSL plat_pm: Failed to config wakeup
->> source:%d\n", ret);
->> Please unlock before return.
-> Yes, will fix it in next version, thanks for pointing out!
->
->>> +				return ret;
->>> +			}
->>> +		} else
->>> +			pr_warn("FSL plat_pm: Invalid handler detected,
->> skip\n");
->>> +	}
->>> +	spin_unlock_irqrestore(&plat_pm.lock, flags);
->>> +
->>> +	if (success_handled == false) {
->>> +		pr_err("FSL plat_pm: Cannot find the matchhed handler for
->> wakeup source config\n");
->>> +		return -ENODEV;
->>> +	}
->> Add this into the loop.
-> My design is that if the 1st handler return -ENODEV to indicated this device it doesn't support, 
-> then the framework will continue try 2nd handler...
->
-> So I think it is needed to place this checking out of loop, what do you say?
->
-> Regards,
-> Ran
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +// fsl_platform_wakeup_enable - Enable wakeup source // @dev: pointer
->>> +to user's device struct // // Return 0 on success other negative
->>> +errno int fsl_platform_wakeup_enable(struct device *dev) {
->>> +	return fsl_platform_wakeup_config(dev, true); }
->>> +EXPORT_SYMBOL_GPL(fsl_platform_wakeup_enable);
->>> +
->>> +// fsl_platform_wakeup_disable - Disable wakeup source // @dev:
->>> +pointer to user's device struct // // Return 0 on success other
->>> +negative errno int fsl_platform_wakeup_disable(struct device *dev) {
->>> +	return fsl_platform_wakeup_config(dev, false); }
->>> +EXPORT_SYMBOL_GPL(fsl_platform_wakeup_disable);
->>> +
->>> +static int __init fsl_plat_pm_init(void) {
->>> +	spin_lock_init(&plat_pm.lock);
->>> +	INIT_LIST_HEAD(&plat_pm.node);
->>> +	return 0;
->>> +}
->>> +
->>> +core_initcall(fsl_plat_pm_init);
->>> diff --git a/include/soc/fsl/plat_pm.h b/include/soc/fsl/plat_pm.h new
->>> file mode 100644 index 0000000..bbe151e
->>> --- /dev/null
->>> +++ b/include/soc/fsl/plat_pm.h
->>> @@ -0,0 +1,22 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +//
->>> +// plat_pm.h - Freescale platform PM Header // // Copyright 2018 NXP
->>> +// // Author: Ran Wang <ran.wang_1@nxp.com>,
->>> +
->>> +#ifndef __FSL_PLAT_PM_H
->>> +#define __FSL_PLAT_PM_H
->>> +
->>> +typedef int (*fsl_plat_pm_handle)(struct device *dev, bool flag,
->>> +		void *handle_priv);
->>> +
->>> +int register_fsl_platform_wakeup_source(fsl_plat_pm_handle handle,
->>> +		void *handle_priv);
->>> +int deregister_fsl_platform_wakeup_source(void *handle_priv); int
->>> +fsl_platform_wakeup_config(struct device *dev, bool flag); int
->>> +fsl_platform_wakeup_enable(struct device *dev); int
->>> +fsl_platform_wakeup_disable(struct device *dev);
->>> +
->>> +#endif	// __FSL_PLAT_PM_H
->
+T24gRnJpLCBTZXAgNywgMjAxOCBhdCAzOjIyIFBNIFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1
+bS5vcmc+IHdyb3RlOgo+Cj4gT24gRnJpLCBTZXAgNywgMjAxOCBhdCA2OjM4IFBNIFZpdmVrIEdh
+dXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+Cj4gPiBIaSBUb21h
+c3osCj4gPgo+ID4KPiA+IE9uIDkvNy8yMDE4IDI6NDYgUE0sIFRvbWFzeiBGaWdhIHdyb3RlOgo+
+ID4gPiBIaSBWaXZlaywKPiA+ID4KPiA+ID4gT24gVGh1LCBBdWcgMzAsIDIwMTggYXQgMTE6NDYg
+UE0gVml2ZWsgR2F1dGFtCj4gPiA+IDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3Rl
+Ogo+ID4gPj4gRnJvbTogU3JpY2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiA+
+ID4+Cj4gPiA+PiBUaGUgc21tdSBkZXZpY2UgcHJvYmUvcmVtb3ZlIGFuZCBhZGQvcmVtb3ZlIG1h
+c3RlciBkZXZpY2UgY2FsbGJhY2tzCj4gPiA+PiBnZXRzIGNhbGxlZCB3aGVuIHRoZSBzbW11IGlz
+IG5vdCBsaW5rZWQgdG8gaXRzIG1hc3RlciwgdGhhdCBpcyB3aXRob3V0Cj4gPiA+PiB0aGUgY29u
+dGV4dCBvZiB0aGUgbWFzdGVyIGRldmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhv
+c2UgcGxhY2VzCj4gPiA+PiBzZXBhcmF0ZWx5Lgo+ID4gPj4gR2xvYmFsIGxvY2tzIGFyZSBhbHNv
+IGluaXRpYWxpemVkIGJlZm9yZSBlbmFibGluZyBydW50aW1lIHBtIGFzIHRoZQo+ID4gPj4gcnVu
+dGltZV9yZXN1bWUoKSBjYWxscyBkZXZpY2VfcmVzZXQoKSB3aGljaCBkb2VzIHRsYl9zeW5jX2ds
+b2JhbCgpCj4gPiA+PiB0aGF0IHVsdGltYXRlbHkgcmVxdWlyZXMgbG9ja3MgdG8gYmUgaW5pdGlh
+bGl6ZWQuCj4gPiA+Pgo+ID4gPj4gU2lnbmVkLW9mZi1ieTogU3JpY2hhcmFuIFIgPHNyaWNoYXJh
+bkBjb2RlYXVyb3JhLm9yZz4KPiA+ID4+IFt2aXZlazogQ2xlYW51cCBwbSBydW50aW1lIGNhbGxz
+XQo+ID4gPj4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1
+cm9yYS5vcmc+Cj4gPiA+PiBSZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVt
+Lm9yZz4KPiA+ID4+IFRlc3RlZC1ieTogU3Jpbml2YXMgS2FuZGFnYXRsYSA8c3Jpbml2YXMua2Fu
+ZGFnYXRsYUBsaW5hcm8ub3JnPgo+ID4gPj4gLS0tCj4gPiA+PiAgIGRyaXZlcnMvaW9tbXUvYXJt
+LXNtbXUuYyB8IDg5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKyst
+LS0tLQo+ID4gPj4gICAxIGZpbGUgY2hhbmdlZCwgODEgaW5zZXJ0aW9ucygrKSwgOCBkZWxldGlv
+bnMoLSkKPiA+ID4gW3NuaXBdCj4gPiA+PiBAQCAtMjIxNSwxMCArMjI4MSwxNyBAQCBzdGF0aWMg
+aW50IGFybV9zbW11X2RldmljZV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikK
+PiA+ID4+ICAgICAgICAgIGlmICghYml0bWFwX2VtcHR5KHNtbXUtPmNvbnRleHRfbWFwLCBBUk1f
+U01NVV9NQVhfQ0JTKSkKPiA+ID4+ICAgICAgICAgICAgICAgICAgZGV2X2VycigmcGRldi0+ZGV2
+LCAicmVtb3ZpbmcgZGV2aWNlIHdpdGggYWN0aXZlIGRvbWFpbnMhXG4iKTsKPiA+ID4+Cj4gPiA+
+PiArICAgICAgIGFybV9zbW11X3JwbV9nZXQoc21tdSk7Cj4gPiA+PiAgICAgICAgICAvKiBUdXJu
+IHRoZSB0aGluZyBvZmYgKi8KPiA+ID4+ICAgICAgICAgIHdyaXRlbChzQ1IwX0NMSUVOVFBELCBB
+Uk1fU01NVV9HUjBfTlMoc21tdSkgKyBBUk1fU01NVV9HUjBfc0NSMCk7Cj4gPiA+PiArICAgICAg
+IGFybV9zbW11X3JwbV9wdXQoc21tdSk7Cj4gPiA+PiArCj4gPiA+PiArICAgICAgIGlmIChwbV9y
+dW50aW1lX2VuYWJsZWQoc21tdS0+ZGV2KSkKPiA+ID4+ICsgICAgICAgICAgICAgICBwbV9ydW50
+aW1lX2ZvcmNlX3N1c3BlbmQoc21tdS0+ZGV2KTsKPiA+ID4+ICsgICAgICAgZWxzZQo+ID4gPj4g
+KyAgICAgICAgICAgICAgIGNsa19idWxrX2Rpc2FibGUoc21tdS0+bnVtX2Nsa3MsIHNtbXUtPmNs
+a3MpOwo+ID4gPj4KPiA+ID4+IC0gICAgICAgY2xrX2J1bGtfZGlzYWJsZV91bnByZXBhcmUoc21t
+dS0+bnVtX2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4gPj4gKyAgICAgICBjbGtfYnVsa191bnByZXBh
+cmUoc21tdS0+bnVtX2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4gPiBBcmVuJ3Qgd2UgbWlzc2luZyBw
+bV9ydW50aW1lX2Rpc2FibGUoKSBoZXJlPyBXZSdsbCBoYXZlIHRoZSBlbmFibGUKPiA+ID4gY291
+bnQgdW5iYWxhbmNlZCBpZiB0aGUgZHJpdmVyIGlzIHJlbW92ZWQgYW5kIHByb2JlZCBhZ2Fpbi4K
+PiA+Cj4gPiBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKSBkb2VzIGEgcG1fcnVudGltZV9kaXNh
+YmxlKCkgYWxzbyBpZiBpIGFtIG5vdAo+ID4gd3JvbmcuCj4gPiBBbmQsIGFzIG1lbnRpb25lZCBp
+biBhIHByZXZpb3VzIHRocmVhZCBbMV0sIHdlIHdlcmUgc2VlaW5nIGEgd2FybmluZwo+ID4gd2hp
+Y2ggd2UgYXZvaWRlZAo+ID4gYnkga2VlcGluZyBmb3JjZV9zdXNwZW5kKCkuCj4gPgo+ID4gWzFd
+IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE4LzcvOC8xMjQKPgo+IEkgc2VlLCB0aGFua3MuIEkg
+ZGlkbid0IHJlYWxpemUgdGhhdCBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKQo+IGFscmVhZHkg
+ZGlzYWJsZXMgcnVudGltZSBQTSBpbmRlZWQuIFNvcnJ5IGZvciB0aGUgbm9pc2UuCgpIaSBUb21h
+c3osCk5vIHByb2JsZW0uIFRoYW5rcyBmb3IgbG9va2luZyBiYWNrIGF0IGl0LgoKSGkgUm9iaW4s
+CklmIHlvdSBhcmUgZmluZSB3aXRoIHRoaXMgc2VyaWVzLCB0aGVuIGNhbiB5b3UgcGxlYXNlIGNv
+bnNpZGVyIGdpdmluZwpSZXZpZXdlZC1ieSwgc28gdGhhdCB3ZSBhcmUgY2VydGFpbiB0aGF0IHRo
+aXMgc2VyaWVzIHdpbGwgZ28gaW4gdGhlIG5leHQgbWVyZ2UKd2luZG93LgpUaGFua3MKCkJlc3Qg
+cmVnYXJkcwpWaXZlawoKCgoKLS0gClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNv
+bW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKb2YgQ29kZSBBdXJvcmEgRm9y
+dW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
+b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
