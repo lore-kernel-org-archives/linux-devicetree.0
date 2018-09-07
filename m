@@ -1,62 +1,69 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 2/2] phy: add Rockchip Innosilicon hdmi phy
-Date: Fri, 07 Sep 2018 12:38:21 +0200
-Message-ID: <7862264.msy1cYF2Tk@phil>
-References: <20180906135047.30788-1-heiko@sntech.de>
- <20180906135047.30788-2-heiko@sntech.de>
- <81c527fc-5837-658f-5c57-60acd909ed2e@arm.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [RFC PATCH v3 0/2] mtd: rawnand: meson: add Amlogic NAND driver support
+Date: Fri, 7 Sep 2018 18:57:09 +0800
+Message-ID: <1536317831-58056-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <81c527fc-5837-658f-5c57-60acd909ed2e@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, zhengyang@rock-chips.com, linux-arm-kernel@lists.infradead.org, kishon@ti.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Jianxin Pan <jianxin.pan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 7. September 2018, 10:58:04 CEST schrieb Robin Murphy:
-> On 2018-09-06 2:50 PM, Heiko Stuebner wrote:
-> > From: Zheng Yang <zhengyang@rock-chips.com>
-> > 
-> > Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
-> > and rk3328 socs from Rockchip.
-> > 
-> > Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> > Tested-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> That reminds me, I really must dig out that box again and finish 
-> figuring out the GPIOs and regulators... :)
->
-> [...]
-> > +static int inno_hdmi_phy_probe(struct platform_device *pdev)
-> > +{
-> > +	struct inno_hdmi_phy *inno;
-> > +	const struct of_device_id *match;
-> > +	struct phy_provider *phy_provider;
-> > +	struct resource *res;
-> > +	void __iomem *regs;
-> > +	int ret;
-> > +
-> > +	inno = devm_kzalloc(&pdev->dev, sizeof(*inno), GFP_KERNEL);
-> > +	if (!inno)
-> > +		return -ENOMEM;
-> > +
-> > +	inno->dev = &pdev->dev;
-> > +
-> > +	match = of_match_device(inno->dev->driver->of_match_table, inno->dev);
-> > +	inno->plat_data = (struct inno_hdmi_phy_drv_data *)match->data;
-> 
-> Nit: if there's cause to do another respin anyway, you could simplify 
-> this part with of_device_get_match_data().
+  These two patches try to add initial NAND driver support for Amlogic Meson
+SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
 
-done in v6  ... I found your mail directly after sending v5 ;-) .
+Changes since v2 at [3]:
+ - remove some hardcode time value, like twb
+ - use dev wait R/B instead of nand_soft_waitrdy
+ - implement nfc ecc init by ecc helper
+ - rework nfc buffer init to register the maximun buffer when several chips
+ - free nfc buffer when error and cleanup
+ - add variable to teack all the already assigned CS lines
+ - fix mtd->name use the first cs line only
+ - remove dt "nand-enable-scrambler" and use NAND_NEED_SCRAMBLING instead.
+ - move setuping ECC fileds after the identification phase
+ - use nand_scan() and attach_chip()
+ - check one event to return IRQ_NONE
+ - delete cast when of_device_get_match_data
+ - use nand_controller_init() helper
+ - remove nfc driver complains when calling devm_ioremap_resource
+ - clear irqs before setting up irq handler
+
+Changes since v1 at [1]:
+  - adopt property amlogic,nand-enable-scrambler - thanks Martin
+  - drop nand pins in DT
+  - convert clk access to emmc clkc model 
+  - fix regiser field definition alignment
+  - drop nand-user-mode 
+  - parse cs id from DT
+  - rework n2m, m2n function
+  - explain why insert two "IDLE" command
+  - implement exec_op()
+  - drop meson_nfc_get_nand_chip_dts()
+  - release resource once error occur in meson_nfc_nand_chips_init(), 
+  - call nand_cleanup(nand) once mtd_device_register fail
+
+Items not addressed ( or confirmed ) in this version:
+  - convert to ECC conf helper() 
+  - convert to dma coherent API
+  - how to construct mtd->name
+
+[1] https://lkml.kernel.org/r/20180613161314.14894-1-yixun.lan@amlogic.com
+[2] https://lkml.kernel.org/r/20180712211244.11428-1-yixun.lan@amlogic.com
+[3] https://lkml.kernel.org/r//20180719094612.5833-1-yixun.lan@amlogic.com
+
+Liang Yang (2):
+  dt-bindings: nand: meson: add Amlogic NAND controller driver
+  mtd: rawnand: meson: add support for Amlogic NAND flash controller
+
+ .../devicetree/bindings/mtd/amlogic,meson-nand.txt |   91 ++
+ drivers/mtd/nand/raw/Kconfig                       |   10 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/meson_nand.c                  | 1372 ++++++++++++++++++++
+ 4 files changed, 1474 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/meson_nand.c
+
+-- 
+1.9.1
