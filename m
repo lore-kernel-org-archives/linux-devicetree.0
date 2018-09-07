@@ -1,67 +1,37 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] ARM: dts: at91: sama5d2_ptc_ek: fix nand pinctrl
-Date: Fri, 7 Sep 2018 10:56:10 +0200
-Message-ID: <8ff626a5-8f8a-1e75-ec3d-2a6004289747@microchip.com>
-References: <20180907081851.15911-1-ludovic.desroches@microchip.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] usb: xhci: fix interrupt transfer error happened on
+ MTK platforms
+Date: Fri, 7 Sep 2018 10:56:45 +0200
+Message-ID: <20180907085645.GA17270@kroah.com>
+References: <e8698cc5710a9d1f25e33e2201e2177bfbfec75c.1536305256.git.chunfeng.yun@mediatek.com>
+ <20180907074251.GA2079@kroah.com>
+ <1536309826.32173.45.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180907081851.15911-1-ludovic.desroches@microchip.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@microchip.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536309826.32173.45.camel@mhfsdcap03>
+Sender: stable-owner@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2018 at 10:18, Ludovic Desroches wrote:
-> The drive strength has to be set to medium otherwise some data
-> corruption may happen.
-> 
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-
-> ---
-> 
+On Fri, Sep 07, 2018 at 04:43:46PM +0800, Chunfeng Yun wrote:
 > Hi,
 > 
-> This fix depends on the support of the drive-strength for the atmel pio4
-> pinctroller. It has been added in v4.19 but I omitted to send it at the
-> same time.
+> On Fri, 2018-09-07 at 09:42 +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Sep 07, 2018 at 03:29:12PM +0800, Chunfeng Yun wrote:
+> > > The MTK xHCI controller use some reserved bytes in endpoint context for
+> > > bandwidth scheduling, so need keep them in xhci_endpoint_copy();
+> > 
+> > If they are "reserved" shouldn't they be properly named?  And by using
+> > reserved bytes, isn't that a spec violation?
+> It indeed violates the spec, "they shall be treated by system software
+> as Reserved and Opaque", and it's a quirk of the MTK xHCI controller.
 
-Could be good to be queued for "4.19-fixes".
+So as the "system software" here, we should just ignore them otherwise
+we violate the spec?  :)
 
-Best regards,
-   Nicolas
+Anyway, that's fine, no objection from me for the patch, thanks.
 
-> Ludovic
-> 
->   arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-> index b10dccd0958f..3b1baa8605a7 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d2_ptc_ek.dts
-> @@ -11,6 +11,7 @@
->   #include "sama5d2-pinfunc.h"
->   #include <dt-bindings/mfd/atmel-flexcom.h>
->   #include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/pinctrl/at91.h>
->   
->   / {
->   	model = "Atmel SAMA5D2 PTC EK";
-> @@ -299,6 +300,7 @@
->   							 <PIN_PA30__NWE_NANDWE>,
->   							 <PIN_PB2__NRD_NANDOE>;
->   						bias-pull-up;
-> +						atmel,drive-strength = <ATMEL_PIO_DRVSTR_ME>;
->   					};
->   
->   					ale_cle_rdy_cs {
-> 
-
-
--- 
-Nicolas Ferre
+greg k-h
