@@ -1,39 +1,43 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] drivers: edac: Add EDAC driver support for QCOM
- SoCs
-Date: Fri, 7 Sep 2018 10:32:01 +0530
-Message-ID: <b35f111c-0464-dcee-c970-4821f741694b@codeaurora.org>
-References: <1536103345-1919-1-git-send-email-vnkgutta@codeaurora.org>
- <1536103345-1919-4-git-send-email-vnkgutta@codeaurora.org>
- <105f8339-61bc-072e-0498-ed44470a5fb8@codeaurora.org>
- <5d8f92b480e1b53e7e04da965d44f7ea@codeaurora.org>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH] usb: xhci: fix interrupt transfer error happened on MTK platforms
+Date: Fri, 7 Sep 2018 13:51:48 +0800
+Message-ID: <afafa68eb3a74a414848c116382e95811f924905.1536298766.git.chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d8f92b480e1b53e7e04da965d44f7ea@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: vnkgutta@codeaurora.org
-Cc: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org
+To: Mathias Nyman <mathias.nyman@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/7/2018 4:01 AM, vnkgutta@codeaurora.org wrote:
-> On 2018-09-06 05:38, Sai Prakash Ranjan wrote:
->> On 9/5/2018 4:52 AM, Venkata Narendra Kumar Gutta wrote:
->>> +static const struct of_device_id qcom_llcc_edac_match_table[] = {
->>> +    { .compatible = "qcom,llcc-edac" },
->>> +    { },
->>> +};
->>> +
->>>
->> Hi Venkata,
->>
->> Devicetree binding for llcc is updated, but what about this compatible?
-> 
-> Does it need documentation too? I was not sure if I should add 
-> documentation for this or not!
-> 
+The MTK xHCI controller use some reserved bytes in endpoint context for
+bandwidth scheduling, so need keep them in xhci_endpoint_copy();
 
-It does not require a separate binding, what I meant was to add this 
-compatible in the llcc binding itself, maybe as a subnode if it is correct.
+The issue is introduced by:
+commit f5249461b504 ("xhci: Clear the host side toggle manually when
+endpoint is soft reset")
+It resets endpoints and will drop bandwidth scheduling parameters used
+by interrupt or isochronous endpoints on MTK xHCI controller.
+
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/usb/host/xhci-mem.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+index ef350c3..b1f27aa 100644
+--- a/drivers/usb/host/xhci-mem.c
++++ b/drivers/usb/host/xhci-mem.c
+@@ -1613,6 +1613,10 @@ void xhci_endpoint_copy(struct xhci_hcd *xhci,
+ 	in_ep_ctx->ep_info2 = out_ep_ctx->ep_info2;
+ 	in_ep_ctx->deq = out_ep_ctx->deq;
+ 	in_ep_ctx->tx_info = out_ep_ctx->tx_info;
++	if (xhci->quirks & XHCI_MTK_HOST) {
++		in_ep_ctx->reserved[0] = out_ep_ctx->reserved[0];
++		in_ep_ctx->reserved[1] = out_ep_ctx->reserved[1];
++	}
+ }
+ 
+ /* Copy output xhci_slot_ctx to the input xhci_slot_ctx.
+-- 
+1.9.1
