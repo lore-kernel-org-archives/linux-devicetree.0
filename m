@@ -1,59 +1,42 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 08/11] arm64: dts: allwinner: a64: Add
- display pipeline
-Date: Fri, 7 Sep 2018 10:21:22 +0200
-Message-ID: <20180907082122.bcylf2jpf6eq6dgq@flea>
-References: <20180904044053.15425-1-icenowy@aosc.io>
- <20180904044053.15425-9-icenowy@aosc.io>
- <20180905075056.tob7itg3judccooe@flea>
- <CAMty3ZBo+X5o22i1=HR9d1VjkEWQ7=DHHPL9RLtbzbyzCZLyFw@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 2/2] phy: add Rockchip Innosilicon hdmi phy
+Date: Fri, 7 Sep 2018 13:48:54 +0530
+Message-ID: <86a8225e-ed07-d4f1-10c6-a5f3158e44f1@ti.com>
+References: <20180906135047.30788-1-heiko@sntech.de>
+ <20180906135047.30788-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="oztiuxukmzniiijw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBA7KZDOAKGQEHQHWVTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZBo+X5o22i1=HR9d1VjkEWQ7=DHHPL9RLtbzbyzCZLyFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180906135047.30788-2-heiko@sntech.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Heiko,
 
---oztiuxukmzniiijw
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, Sep 07, 2018 at 09:43:29AM +0530, Jagan Teki wrote:
-> On Wed, Sep 5, 2018 at 1:20 PM, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Tue, Sep 04, 2018 at 12:40:50PM +0800, Icenowy Zheng wrote:
-> >> +             hdmi_phy: hdmi-phy@1ef0000 {
-> >> +                     compatible = "allwinner,sun8i-h3-hdmi-phy";
-> >> +                     reg = <0x01ef0000 0x10000>;
-> >> +                     clocks = <&ccu CLK_BUS_HDMI>, <&ccu CLK_HDMI_DDC>,
-> >> +                              <&ccu 7>;
-> >> +                     clock-names = "bus", "mod", "pll-0";
-> >> +                     resets = <&ccu RST_BUS_HDMI0>;
-> >> +                     reset-names = "phy";
-> >> +                     #phy-cells = <0>;
-> >> +             };
-> >
-> > This needs to use the bindings we have for that phy.
+On Thursday 06 September 2018 07:20 PM, Heiko Stuebner wrote:
+> From: Zheng Yang <zhengyang@rock-chips.com>
 > 
-> You mean allwinner,sun50i-a64-hdmi-phy ?
+> Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
+> and rk3328 socs from Rockchip.
+> 
+> Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> Tested-by: Robin Murphy <robin.murphy@arm.com>
 
-Yes
+I got a bunch of checkpatch "check" warnings
+"Alignment should match open parenthesis". Can you fix resend after fixing those?
 
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---oztiuxukmzniiijw--
+Thanks
+Kishon
