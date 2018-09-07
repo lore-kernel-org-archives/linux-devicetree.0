@@ -1,63 +1,97 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH 1/3] soc: fsl: add Platform PM driver QorIQ platforms
-Date: Fri, 07 Sep 2018 15:35:08 -0500
-Message-ID: <cad8c585fb415959e7ade8b500278c2c5e070873.camel@buserror.net>
-References: <20180831035219.31619-1-ran.wang_1@nxp.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 1/2] of/fdt: Allow architectures to override
+ CONFIG_CMDLINE logic
+Date: Fri, 7 Sep 2018 14:01:24 -0700
+Message-ID: <20180907210124.rrqbexp423igxbsr@pburton-laptop>
+References: <20180907185414.2630-1-paul.burton@mips.com>
+ <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831035219.31619-1-ran.wang_1@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Linux-MIPS <linux-mips@linux-mips.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Jaedon Shin <jaedon.shin@gmail.com>, Mathieu Malaterre <malat@debian.org>, stable <stable@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-08-31 at 11:52 +0800, Ran Wang wrote:
-> This driver is to provide a independent framework for PM service
-> provider and consumer to configure system level wake up feature. For
-> example, RCPM driver could register a callback function on this
-> platform first, and Flex timer driver who want to enable timer wake
-> up feature, will call generic API provided by this platform driver,
-> and then it will trigger RCPM driver to do it. The benefit is to
-> isolate the user and service, such as flex timer driver will not have
-> to know the implement details of wakeup function it require. Besides,
-> it is also easy for service side to upgrade its logic when design is
-> changed and remain user side unchanged.
+Hi Rob,
+
+On Fri, Sep 07, 2018 at 03:29:03PM -0500, Rob Herring wrote:
+> On Fri, Sep 7, 2018 at 1:55 PM Paul Burton <paul.burton@mips.com> wrote:
+> > The CONFIG_CMDLINE-related logic in early_init_dt_scan_chosen() falls
+> > back to copying CONFIG_CMDLINE into boot_command_line/data if the DT has
+> > a /chosen node but that node has no bootargs property or a bootargs
+> > property of length zero.
 > 
-> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> ---
->  drivers/soc/fsl/Kconfig   |   14 +++++
->  drivers/soc/fsl/Makefile  |    1 +
->  drivers/soc/fsl/plat_pm.c |  144
-> +++++++++++++++++++++++++++++++++++++++++++++
->  include/soc/fsl/plat_pm.h |   22 +++++++
->  4 files changed, 181 insertions(+), 0 deletions(-)
->  create mode 100644 drivers/soc/fsl/plat_pm.c
->  create mode 100644 include/soc/fsl/plat_pm.h
+> The Risc-V guys found a similar issue if chosen is missing[1]. I
+> started a patch[2] to address that, but then looking at the different
+> arches wasn't sure if I'd break something. I don't recall for sure,
+> but it may have been MIPS that worried me.
 > 
-> diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig
-> index 7a9fb9b..6517412 100644
-> --- a/drivers/soc/fsl/Kconfig
-> +++ b/drivers/soc/fsl/Kconfig
-> @@ -16,3 +16,17 @@ config FSL_GUTS
->  	  Initially only reading SVR and registering soc device are
-> supported.
->  	  Other guts accesses, such as reading RCW, should eventually be
-> moved
->  	  into this driver as well.
-+
-> +config FSL_PLAT_PM
-> +	bool "Freescale platform PM framework"
+> > This is problematic for the MIPS architecture because we support
+> > concatenating arguments from either the DT or the bootloader with those
+> > from CONFIG_CMDLINE, but the behaviour of early_init_dt_scan_chosen()
+> > gives us no way of knowing whether boot_command_line contains arguments
+> > from DT or already contains CONFIG_CMDLINE. This can lead to us
+> > concatenating CONFIG_CMDLINE with itself, duplicating command line
+> > arguments which can be problematic (eg. for earlycon which will attempt
+> > to register the same console twice & warn about it).
+> 
+> If CONFIG_CMDLINE_EXTEND is set, you know it contains CONFIG_CMDLINE.
+> But I guess part of the problem is MIPS using its own kconfig options.
 
-This name seems to be simultaneously too generic (for something that is likely
-intended only for use with certain Freescale/NXP chip families) and too
-specific (for something that seems to be general infrastructure with no real
-hardware dependencies).
+Yes, that's part of the problem but there's more:
 
-What specific problems with Linux's generic wakeup infrastructure is this
-trying to solve, and why would those problems not be better solved there?
+  - We can also take arguments from the bootloader/prom, so it's not
+    just DT or CONFIG_CMDLINE as taken into account by
+    early_init_dt_scan_chosen(). MIPS has options to concatenate various
+    combinations of DT, bootloader & CONFIG_CMDLINE arguments & there's
+    no mapping to move all of them to just CONFIG_CMDLINE_EXTEND &
+    CONFIG_CMDLINE_OVERRIDE.
 
-Also, you should CC linux-pm on these patches.
+  - Some MIPS systems don't use DT, so don't run
+    early_init_dt_scan_chosen() at all. Thus the architecture code still
+    needs to deal with the bootloader/prom & CONFIG_CMDLINE cases
+    anyway. In a perfect world we'd migrate all systems to use DT but in
+    this world I don't see that happening until we kill off support for
+    some of the older systems, which always seems contentious. Even then
+    there'd be a lot of work for some of the remaining systems. I guess
+    we could enable DT for these systems & only use it for the command
+    line, it just feels like overkill.
 
--Scott
+> > Move the CONFIG_CMDLINE-related logic to a weak function that
+> > architectures can provide their own version of, such that we continue to
+> > use the existing logic for architectures where it's suitable but also
+> > allow MIPS to override this behaviour such that the architecture code
+> > knows when CONFIG_CMDLINE is used.
+> 
+> More arch specific functions is not what I want. Really, all the
+> cmdline manipulating logic doesn't belong in DT code, but it shouldn't
+> be in the arch specific code either IMO. Really it should be some
+> common kernel function which calls into the DT code to retrieve the DT
+> bootargs and that's it. Then you can skip calling that kernel function
+> if you really need non-standard handling.
+
+That would make sense.
+
+> Perhaps you should consider filling DT bootargs with the cmdline from
+> bootloader. IOW, make the legacy case look like the non-legacy case
+> early, and then the kernel doesn't have to deal with both cases later
+> on.
+
+That could work, but would force us to use DT universally & is a larger
+change than this, which I was hoping to get in 4.19 to fix the
+regression described in patch 2 that happened back in 4.16. But if
+you're unhappy with this perhaps we just have to live with it a little
+longer...
+
+An alternative workaround to this that would contain the regression fix
+within arch/mips/ would be to initialize boot_command_line to a single
+space character prior to early_init_dt_scan_chosen(), which would
+prevent early_init_dt_scan_chosen() from copying CONFIG_CMDLINE there.
+That smells much more like a hack to me than this patch though, so I'd
+rather not.
+
+Thanks,
+    Paul
