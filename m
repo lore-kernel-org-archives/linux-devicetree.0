@@ -1,91 +1,81 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 1/6] drm/bridge: use bus flags in bridge timings
-Date: Fri, 07 Sep 2018 11:25:40 -0700
-Message-ID: <3c048938d12a070c03f0cbdbc89c86e8@agner.ch>
-References: <20180905052113.21262-1-stefan@agner.ch>
- <4035252.QuWadVx7pr@avalon> <1569297.pdEFdpi3HS@avalon>
- <a00c1650b69ba85bed7ae39b81a0c40f@agner.ch>
- <CACRpkdbw0VjkHYcUpox+DorRG0oRdPARL4ShgPfV2eFaUF_w0g@mail.gmail.com>
- <b1cb586397a4cd444c33dd83d72fa544@agner.ch>
- <CACRpkdaUuWUHZgT0b64hMNZm3oy=7rece3H0p5VVe4d8jpFRaw@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: Split up name & type in modalias generation
+Date: Fri, 7 Sep 2018 11:35:14 -0700
+Message-ID: <4dcc060e-2780-d187-9c8b-1507fec7e3ef@gmail.com>
+References: <20180907142247.2931-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdaUuWUHZgT0b64hMNZm3oy=7rece3H0p5VVe4d8jpFRaw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open
- list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Dave Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180907142247.2931-1-thierry.reding@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcuMDkuMjAxOCAwMDoxMCwgTGludXMgV2FsbGVpaiB3cm90ZToKPiBPbiBUaHUsIFNlcCA2
-LCAyMDE4IGF0IDEwOjI1IFBNIFN0ZWZhbiBBZ25lciA8c3RlZmFuQGFnbmVyLmNoPiB3cm90ZToK
-PiAKPj4gT2ssIEkgcmVhZCBhIGJpdCB1cCBvbiB0aGUgaGlzdG9yeSBvZiBicmlkZ2UgdGltaW5n
-LCBlc3BlY2lhbGx5Ogo+PiBodHRwczovL3d3dy5zcGluaWNzLm5ldC9saXN0cy9kcmktZGV2ZWwv
-bXNnMTU1NjE4Lmh0bWwKPj4KPj4gSU1ITywgdGhpcyBnb3Qgb3ZlcmVuZ2luZWVyZWQuIEZvciBk
-aXNwbGF5cyB3ZSBkbyBub3QgbmVlZCBhbGwgdGhhdAo+PiBzZXR1cC9zYW1wbGUgZGVsYXkgdGlt
-aW5nIGluZm9ybWF0aW9uLCBhbmQgbXVjaCBsb25nZXIgY2FibGVzIGFyZSBpbgo+PiB1c2UuIFNv
-IHdoeSBpcyBhbGwgdGhhdCBuZWVkZWQgZm9yIGJyaWRnZXM/Cj4gCj4gSSBhbHNvIGF2b2lkZWQg
-dGhlIG92ZXJoZWFkIG9mIGNyZWF0aW5nIHRoaXMgYWJzdHJhY3Rpb24gaW5pdGlhbGx5Lgo+IAo+
-IEJ1dCBhZnRlciBkb2luZyBpdCBJIGhhdmUgdGhpcyBTdG9ja2hvbG0gc3luZHJvbWUgdGhhdCBJ
-IHN0YXJ0Cj4gbGlraW5nIHdoYXQgTGF1cmVudCB0b2xkIG1lIHRvIGRvLgo+IAo+PiBGb3IgTGlu
-dXMgY2FzZSwgdGhlIFRIUzgxMzQoQS9CKSBkYXRhIHNoZWV0IEkgZm91bmQgKHJldmlzZWQgTWFy
-Y2ggMjAxMCkKPj4gY2xlYXJseSBzdGF0ZXM6Cj4+IENsb2NrIGlucHV0LiBBIHJpc2luZyBlZGdl
-IG9uIENMSyBsYXRjaGVzIFJQcjAtNywgR1kwLTcsIEJQYjAtNy4KPj4KPj4gU28gd2UgbmVlZCB0
-byBkcml2ZSBvbiBuZWdhdGl2ZSBlZGdlLCBoZW5jZSBEUk1fQlVTX0ZMQUdfUElYREFUQV9ORUdF
-REdFCj4+IHNob3VsZCBiZSB1c2VkLCB3aGljaCBtYWtlcyB0aGUgcGwxMTEgZHJpdmVyIHNldHRp
-bmcgVElNMl9JUEM6Cj4+IGh0dHA6Ly9pbmZvY2VudGVyLmFybS5jb20vaGVscC9pbmRleC5qc3A/
-dG9waWM9L2NvbS5hcm0uZG9jLmRkaTAxMjFkL2luZGV4Lmh0bWwKPiAKPiBUaGF0IGlzIGVhc3kg
-dG8gc2F5LCBidXQgaWYgSSBqdXN0IHNldCB0aGF0IHVwIGluIGNvZGUsIGV2ZW4gd2l0aCBhIGdv
-b2QKPiBjb21tZW50IGl0IGlzIGhhcmQgZm9yIHRoZSBuZXh0IHJlYWRlciB0byB1bmRlcnN0YW5k
-IHdoYXQgaXMgZ29pbmcKPiBvbi4gVGhlIGNlbnRyYWwgcXVlc3Rpb24gd2lsbCBiZSwgd2h5IGRv
-ZXMgUEwxMTEgbmVlZCB0byBkbyB0aGlzCj4gYnV0IG5vdCBSLUNhciB0aG91Z2ggdGhleSBhcmUg
-dXNpbmcgdGhlIHNhbWUgYnJpZGdlPwoKVGhhdCBpcyBzb21ldGhpbmcgSSBoYXZlIGV4cGVyaWVu
-Y2VkIGJlZm9yZS4gRGVwZW5kaW5nIG9uIGRyaXZlCnN0cmVuZ3RoLCBhbmQgSSBndWVzcyBzYW1w
-bGluZyBkZWxheSBldGMsIGl0IG1pZ2h0IHNhbXBsZSBqdXN0IGxhdGUKZW5vdWdoIHRoYXQgc2ln
-bmFscyBhcmUgc3RhYmxlIGFuZCBubyBpc3N1ZXMgYXJlIHJlYWxseSB2aXNpYmxlIG9uIHRoZQpz
-Y3JlZW4uIEluIHRob3NlIGNhc2VzIGRpZmZlcmVudCBjYWJsaW5nLCBjaGFuZ2VzIGluIGRyaXZl
-IHN0cmVuZ3RoLCBvcgpldmVuIHByb2R1Y3Rpb24gdmFyaWF0aW9ucyBtaWdodCBzdWRkZW5seSBz
-aG93IGFydGVmYWN0cyB0aG91Z2guLi4gTXkKcG9pbnQgYmVpbmcsIGp1c3QgYmVjYXVzZSBpdCBz
-dXBwb3NlZGx5IHdvcmtzLCBkb2VzIG5vdCBtZWFuIHRoYXQgaXQgaXMKcmlnaHQuCgpJIGRpZCBp
-bnRyb2R1Y2UgdGhlIGJ1cyBmbGFncyBhIHdoaWxlIGFnbzoKaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9wYXRjaC84MjU0ODAxLwpodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNo
-LzgyNTQ4MjEvCgpBbmQgdGhlbiBoYWQgdG8gZGVidWcgcXVpdGUgc29tZSBjb250cm9sbGVyIGFu
-ZCBkaXNwbGF5IGlzc3VlcyBhcm91bmQKcGl4ZWwgY2xvY2sgcG9sYXJpdHk6Cmh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvODExNzE4MS8KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
-Lm9yZy9wYXRjaC85NDY1NDg1LwoKRS5nLiBpbiB0aGF0IGxhc3QgY2FzZSwgdGhlIHBpeGVsIGNs
-b2NrIHBvbGFyaXR5IGZsYWdzIHdlcmUgaW50ZXJwcmV0ZWQKd3Jvbmcgb24gYm90aCBjb250cm9s
-bGVyIGFuZCBkaXNwbGF5IHNpZGUuIEhlbmNlIHRoaXMgd29ya2VkIGZpbmUgZm9yCnRoZSBjYXNl
-IGFscmVhZHkgdXBzdHJlYW0sIGJ1dCBpdCBkaWQgbm90IHdvcmsgaW4gbXkgY2FzZS4uLgoKSW4g
-dGhlIGVuZCwgYmVzdCB0aGluZyBpcyB0byBsb29rIG9uIHRoZSBidXMuIFBhcmFsbGVsIGRpc3Bs
-YXkgc2lnbmFscwphcmUgc3RpbGwgcmF0aGVyIHNsb3csIGFuZCB1c3VhbGx5IHJhdGhlciBlYXN5
-IHRvIHNjb3BlLgoKUEwxMTEgbmVlZHMgdG8gZG8gdGhpcyBiZWNhdXNlIGl0cyBzdGFuZGFyZCBz
-ZXR0aW5nIGlzIGRyaXZpbmcgb24gcmlzaW5nCmVkZ2UuIEhvd2V2ZXIsIG1vc3QgZGlzcGxheXMg
-YXMgd2VsbCBhcyB0aGF0IGJyaWRnZSBzYW1wbGUgZGF0YSBvbgpyaXNpbmcgZWRnZS4KCkkgZ3Vl
-c3MgUi1DYXIgRFUgZHJpdmVzIG9uIG5lZ2F0aXZlIGVkZ2UgYnkgZGVmYXVsdCwgYnV0IGNhbid0
-IHNheSBmb3IKc3VyZSB3aXRob3V0IGhhcmR3YXJlL2RhdGEgc2hlZXQuCgpBcyBmYXIgYXMgSSBj
-YW4gdGVsbCB0aGUgUi1DYXIgRFUgZHJpdmVyIGFsc28gZG9lcyBub3QgdXNlIHRoZQpEUk1fQlVT
-X0ZMQUdfUElYREFUQV8qRURHRSBmbGFncyBjdXJyZW50bHkuCgoKCj4gCj4gU28gdGhpcyBlbGFi
-b3JhdGUgbW9kZWwgZ2l2ZXMgYSBiZXR0ZXIgdHJhbnNmZXIgb2YgYWJzdHJhY3QgY29uY2VwdHMK
-PiB0byB3aG9ldmVyIG5lZWRzIHRvIHRvdWNoIHRoYXQgY29kZSBuZXh0LiBUaGUgY29kZSBpcyBu
-b3QganVzdAo+IGxvZ2ljLCBidXQgYWxzbyBvdXIgbWFwIG9mIHRoZSB3b3JsZCBhbmQgdGhlIGRv
-Y3VtZW50YXRpb24gb2Ygb3VyCj4gcHJvYmxlbSBzcGFjZS4KPiAKPiBEb25hbGQgS251dGggaGFz
-IHRoaXMgaWRlYSBhYm91dCBsaXRlcmF0ZSBwcm9ncmFtbWluZyB3aGljaCBldmVuCj4gdHVybnMg
-dGhlIGRvY3VtZW50YXRpb24vaW1wbGVtZW50YXRpb24gcHJvY2VzcyBhcm91bmQuIFdlIGFyZQo+
-IG5vdCB0aGVyZSwgbm90IGV2ZW4gcmVtb3RlbHksIGJ1dCBJTU8gdGhlIG1vcmUgY29tcGxleCB0
-aGUgcHJvYmxlbS4KPiB0aGUgbW9yZSB3ZSBuZWVkIHRvIGNvbnZleSBvdXIgdGhpbmtpbmcsIG5v
-dCBqdXN0IG91ciBzb2x1dGlvbi4KCkZ1bGx5IGFncmVlLgoKTXkgYXJndW1lbnQgaGVyZSBpcywg
-dGhhdCB0aGUgbWFwIG9mIHRoZSB3b3JsZCAoY29kZSkgYW5kIHRoZSBwcm9ibGVtCmFyZSBub3Qg
-YWxpZ25lZC4KCi0tClN0ZWZhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On 09/07/18 07:22, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The kernel's vsnprintf() implementation discards all alpha-numeric
+> characters following a %p conversion specifier. This is done in order to
+> generically skip any of the various modifiers that the kernel supports.
+> Unfortunately, the OF modalias is generated with a format string that
+> violates the assumption made by vsnprintf():
+> 
+> 	of:N%pOFnT%s
+> 
+> While processing the above format string, vsnprintf() will eat the 'T'
+> character, assuming that it belongs to the preceeding %p specifier. This
+> results in a modalias with an incompatible format, which in turn causes
+> the automatic loading of drivers based on modalias to no longer work.
+> 
+> To fix this, split up the generation of the name & type fields into two
+> separate snprintf() calls to avoid confusing the parser.
+> 
+> Fixes: 73813f8483b1 ("of: Convert to using %pOFn instead of device_node.name")
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Note that a more elegant fix would be to make the %p format specifier
+> parser report back the exact number of characters consumed. I briefly
+> tried to implement it, but quickly ran into numerous special cases
+> that make this solution rather involved.
+> 
+> I can spend some more time to improve this in general if that's what we
+> ultimately want, but I think this patch is a better short-term fix to
+> workaround the issue.
+> ---
+>  drivers/of/device.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index daa075d87317..dabef9fc8538 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -218,14 +218,20 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
+>  	if ((!dev) || (!dev->of_node))
+>  		return -ENODEV;
+>  
+> -	/* Name & Type */
+> -	csize = snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
+> -			 dev->of_node->type);
+> +	/* Name */
+> +	csize = snprintf(str, len, "of:N%pOFn", dev->of_node);
+>  	tsize = csize;
+>  	len -= csize;
+>  	if (str)
+>  		str += csize;
+>  
+> +	/* Type */
+> +	csize = snprintf(str, len, "T%s", dev->of_node->type);
+> +	tsize += csize;
+> +	len -= csize;
+> +	if (str)
+> +		str += csize;
+> +
+>  	of_property_for_each_string(dev->of_node, "compatible", p, compat) {
+>  		csize = strlen(compat) + 1;
+>  		tsize += csize;
+> 
+
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
