@@ -1,83 +1,96 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 00/21] DT cpu node iterator
-Date: Fri, 7 Sep 2018 14:54:20 +0200
-Message-ID: <CAHTX3d+BFKM-jFo8Ww_dXwAzsDVoWqE==erfwVTeijHfh8kkOw@mail.gmail.com>
-References: <20180905193738.19325-1-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/4] of: Convert to using %pOFn instead of device_node.name
+Date: Fri, 7 Sep 2018 09:58:01 -0500
+Message-ID: <CAL_JsqKg+Y=BNWEXZY=TR5S8Vi9rpmN8LFpGjLt=qWG3WtUwrg@mail.gmail.com>
+References: <20180828155254.10709-1-robh@kernel.org> <20180828155254.10709-4-robh@kernel.org>
+ <20180907122928.GA5821@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0971646821141865186=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180905193738.19325-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vitaly Bordug <vitb-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, linux-riscv-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgAlbert Ou <a>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180907122928.GA5821@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev <netdev@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============0971646821141865186==
-Content-Type: multipart/alternative; boundary="0000000000009fa1d105754781ee"
-
---0000000000009fa1d105754781ee
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Rob,
-
-2018-09-05 21:37 GMT+02:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-
-> This series adds an iterator for cpu nodes and converts users over to use
-> it or of_get_cpu_node in some cases. This allows us to remove the
-> dependency on device_type property for cpu nodes though removing that
-> from DTS files will have to wait for some time. In some cases, this makes
-> the DT search more strict by only looking in /cpus child nodes rather
-> than any node with the device_type == cpu. The iterator also honors the
-> status property which is often forgotten.
+On Fri, Sep 7, 2018 at 7:29 AM Thierry Reding <thierry.reding@gmail.com> wrote:
 >
-> I've only tested on ARM under QEMU and compiled powerpc.
+> On Tue, Aug 28, 2018 at 10:52:53AM -0500, Rob Herring wrote:
+> > In preparation to remove the node name pointer from struct device_node,
+> > convert printf users to use the %pOFn format specifier.
+> >
+> > Cc: Frank Rowand <frowand.list@gmail.com>
+> > Cc: Andrew Lunn <andrew@lunn.ch>
+> > Cc: Florian Fainelli <f.fainelli@gmail.com>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  drivers/of/device.c   |  4 ++--
+> >  drivers/of/of_mdio.c  | 12 ++++++------
+> >  drivers/of/of_numa.c  |  4 ++--
+> >  drivers/of/overlay.c  |  4 ++--
+> >  drivers/of/platform.c |  8 ++++----
+> >  drivers/of/unittest.c | 12 ++++++------
+> >  6 files changed, 22 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > index 5957cd4fa262..daa075d87317 100644
+> > --- a/drivers/of/device.c
+> > +++ b/drivers/of/device.c
+> > @@ -219,7 +219,7 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
+> >               return -ENODEV;
+> >
+> >       /* Name & Type */
+> > -     csize = snprintf(str, len, "of:N%sT%s", dev->of_node->name,
+> > +     csize = snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
+> >                        dev->of_node->type);
+> >       tsize = csize;
+> >       len -= csize;
 >
+> This seems to cause the modalias to be improperly constructed. As a
+> consequence, automatic module loading at boot time is now broken. I
+> think the reason why this fails is because vsnprintf() will skip all
+> alpha-numeric characters after a call to pointer(). Presumably this
+> is meant to be a generic way of skipping whatever specifiers we throw
+> at it.
+>
+> Unfortunately for the case of OF modaliases, this means that the 'T'
+> character gets eaten, so we end up with something like this:
+>
+>         # udevadm info /sys/bus/platform/devices/54200000.dc
+>         [...]
+>         E: MODALIAS=of:Ndc<NULL>Cnvidia,tegra124-dc
+>         [...]
+>
+> instead of this:
+>
+>         # udevadm info /sys/bus/platform/devices/54200000.dc
+>         [...]
+>         E: MODALIAS=of:NdcT<NULL>Cnvidia,tegra124-dc
+>         [...]
 
+Oops. Thanks for finding this.
 
-Do you have this somewhere in your tree not to apply 21 patches by hand?
+> Everything is back to normal if I revert this patch. However, since
+> that's obviously not what we want, I think perhaps what we need is a
+> way for pointer() (and its implementations) to report back how many
+> characters in the format string it consumed so that we can support
+> these kinds of back-to-back strings.
 
-Thanks,
-Michal
+I don't think we can change it because if I have something like
+%pOFMoreWords and then later on want to add 'M' as a new modifier we'd
+break any existing cases with 'M'. Of course, I could search the tree
+for that case and find unused characters, but that seems fragile
+(though silently throwing away the characters does too).
 
---0000000000009fa1d105754781ee
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> If nobody else has the time I can look into coding up a fix, but in the
+> meantime it might be best to back this one out until we can handle the
+> OF modalias format string.
 
-<div dir=3D"ltr">Hi Rob,<br><div><div class=3D"gmail_extra"><br><div class=
-=3D"gmail_quote">2018-09-05 21:37 GMT+02:00 Rob Herring <span dir=3D"ltr">&=
-lt;<a href=3D"mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" target=3D"_blank">robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org</a>=
-&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8e=
-x;border-left:1px #ccc solid;padding-left:1ex">This series adds an iterator=
- for cpu nodes and converts users over to use<br>
-it or of_get_cpu_node in some cases. This allows us to remove the<br>
-dependency on device_type property for cpu nodes though removing that<br>
-from DTS files will have to wait for some time. In some cases, this makes<b=
-r>
-the DT search more strict by only looking in /cpus child nodes rather<br>
-than any node with the device_type =3D=3D cpu. The iterator also honors the=
-<br>
-status property which is often forgotten.<br>
-<br>
-I&#39;ve only tested on ARM under QEMU and compiled powerpc.<br></blockquot=
-e><div><br></div><div><br></div><div>Do you have this somewhere in your tre=
-e not to apply 21 patches by hand?</div><div><br></div><div>Thanks,</div><d=
-iv>Michal<br></div><div>=C2=A0</div></div><br></div></div></div>
+There's an easy fix though. Just replace the 'T' with a '%c'.
 
---0000000000009fa1d105754781ee--
+I found one other case in the clock code and one in soundbus (which I
+haven't posted yet).
 
---===============0971646821141865186==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0971646821141865186==--
+Rob
