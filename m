@@ -1,58 +1,73 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify
- skipped bytes in OOB
-Date: Fri, 7 Sep 2018 16:08:22 +0200
-Message-ID: <20180907160822.319047c8@bbrezillon>
-References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] of: Split up name & type in modalias generation
+Date: Fri,  7 Sep 2018 16:22:47 +0200
+Message-ID: <20180907142247.2931-1-thierry.reding@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-mtd@lists.infradead.org, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, David Woodhouse <dwmw2@infradead.org>, Mark Rutland <mark.rutland@arm.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+From: Thierry Reding <treding@nvidia.com>
 
-On Fri,  7 Sep 2018 19:56:23 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+The kernel's vsnprintf() implementation discards all alpha-numeric
+characters following a %p conversion specifier. This is done in order to
+generically skip any of the various modifiers that the kernel supports.
+Unfortunately, the OF modalias is generated with a format string that
+violates the assumption made by vsnprintf():
 
-> NAND devices need additional data area (OOB) for error correction,
-> but it is also used for Bad Block Marker (BBM).  In many cases, the
-> first byte in OOB is used for BBM, but the location actually depends
-> on chip vendors.  The NAND controller should preserve the precious
-> BBM to keep track of bad blocks.
-> 
-> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
-> the number of bytes to skip from the start of OOB.  The ECC engine
-> will automatically skip the specified number of bytes when it gets
-> access to OOB area.
-> 
-> The same value for SPARE_AREA_SKIP_BYTES should be used between
-> firmware and the operating system if you intend to use the NAND
-> device across the control hand-off.
-> 
-> In fact, the current denali.c code expects firmware to have already
-> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
-> 
-> If no firmware (or bootloader) has initialized the controller, the
-> register value is zero, which is the default after power-on-reset.
-> 
-> In other words, the Linux driver cannot initialize the controller
-> by itself.  You cannot support the reset control either because
-> resetting the controller will get register values lost.
-> 
-> This commit adds a way to specify it via DT.  If the property
-> "denali,oob-skip-bytes" exists, the value will be set to the register.
+	of:N%pOFnT%s
 
-Hm, do we really need to make this config customizable? I mean, either
-you have a large-page NAND (page > 512 bytes) and the 2 first bytes
-must be reserved for the BBM or you have a small-page NAND and the BBM
-is at position 4 and 5. Are you sure people configure that differently?
-Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?
+While processing the above format string, vsnprintf() will eat the 'T'
+character, assuming that it belongs to the preceeding %p specifier. This
+results in a modalias with an incompatible format, which in turn causes
+the automatic loading of drivers based on modalias to no longer work.
 
-Regards,
+To fix this, split up the generation of the name & type fields into two
+separate snprintf() calls to avoid confusing the parser.
 
-Boris
+Fixes: 73813f8483b1 ("of: Convert to using %pOFn instead of device_node.name")
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Note that a more elegant fix would be to make the %p format specifier
+parser report back the exact number of characters consumed. I briefly
+tried to implement it, but quickly ran into numerous special cases
+that make this solution rather involved.
+
+I can spend some more time to improve this in general if that's what we
+ultimately want, but I think this patch is a better short-term fix to
+workaround the issue.
+---
+ drivers/of/device.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index daa075d87317..dabef9fc8538 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -218,14 +218,20 @@ static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len
+ 	if ((!dev) || (!dev->of_node))
+ 		return -ENODEV;
+ 
+-	/* Name & Type */
+-	csize = snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
+-			 dev->of_node->type);
++	/* Name */
++	csize = snprintf(str, len, "of:N%pOFn", dev->of_node);
+ 	tsize = csize;
+ 	len -= csize;
+ 	if (str)
+ 		str += csize;
+ 
++	/* Type */
++	csize = snprintf(str, len, "T%s", dev->of_node->type);
++	tsize += csize;
++	len -= csize;
++	if (str)
++		str += csize;
++
+ 	of_property_for_each_string(dev->of_node, "compatible", p, compat) {
+ 		csize = strlen(compat) + 1;
+ 		tsize += csize;
+-- 
+2.18.0
