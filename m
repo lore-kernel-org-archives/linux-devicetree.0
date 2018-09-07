@@ -1,44 +1,89 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] [RFC v2] Drop all 00-INDEX files from Documentation/
-Date: Fri, 7 Sep 2018 09:21:43 +0200
-Message-ID: <20180907072143.GC1334@kroah.com>
-References: <1536012923-16275-1-git-send-email-henrik@austad.us>
- <20180904113030.GB25177@amd>
- <20180904095908.13298b3d@gandalf.local.home>
- <20180906095804.5ab2716f@lwn.net>
- <20180906120120.3dd1fc91@gandalf.local.home>
- <CAKMK7uHoeB89-VVS8qVaoNiP_0waHHJ=dFCUgXkRDTnRkXz69g@mail.gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [SPAM][PATCH] usb: xhci: fix interrupt transfer error happened
+ on MTK platforms
+Date: Fri, 7 Sep 2018 15:21:36 +0800
+Message-ID: <1536304896.32173.37.camel@mhfsdcap03>
+References: <afafa68eb3a74a414848c116382e95811f924905.1536298766.git.chunfeng.yun@mediatek.com>
+ <1536301896.6414.48.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uHoeB89-VVS8qVaoNiP_0waHHJ=dFCUgXkRDTnRkXz69g@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linux MIPS Mailing List <linux-mips@linux-mips.org>, Linux Fbdev development list <linux-fbdev@vger.kernel.org>, Jan Kandziora <jjj@gmx.de>, Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>, kvm@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, James Hogan <jhogan@kernel.org>, Mark Brown <broonie@kernel.org>, Henrik Austad <henrik@austad.us>, Will Deacon <will.deacon@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Henrik Austad <haustad@cisco.com>, Pavel Machek <pavel@ucw.cz>, "H. Peter Anvin" <hpa@zytor.com>, Evgeniy Polyakov <zbr@ioremap.net>, Ian Kent <raven@themaw.net>, linux-s390@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Jonathan Corbet <corbe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536301896.6414.48.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBTZXAgMDYsIDIwMTggYXQgMTE6Mzk6NDJQTSArMDIwMCwgRGFuaWVsIFZldHRlciB3
-cm90ZToKPiBPbiBUaHUsIFNlcCA2LCAyMDE4IGF0IDY6MDEgUE0sIFN0ZXZlbiBSb3N0ZWR0IDxy
-b3N0ZWR0QGdvb2RtaXMub3JnPiB3cm90ZToKPiA+IE9uIFRodSwgNiBTZXAgMjAxOCAwOTo1ODow
-NCAtMDYwMAo+ID4gSm9uYXRoYW4gQ29yYmV0IDxjb3JiZXRAbHduLm5ldD4gd3JvdGU6Cj4gPgo+
-ID4+IFRoYW5rcywKPiA+Pgo+ID4+IGpvbiAgKHdobyBpcyBpbmNyZWFzaW5nbHkgaW5jbGluZWQg
-dG8gYXBwbHkgdGhpcyBwYXRjaCkKPiA+Cj4gPiBBcyBDb2xpbiBLYWVwZXJuaWNrIG5vdyBzYXlz
-Li4uICJKdXN0IGRvIGl0ISIKPiA+Cj4gPiA7LSkKPiAKPiArMQo+IAo+IEJ1dCBJJ20gYmlhc2Vk
-LCBJJ20gcGFydCBvZiB0aGUgcGFydHkgdGhhdCBpcyByZXNwb25zaWJsZSBmb3IgdGhlIG5ldwo+
-IHNoaW55IGRvY3VtZW50YXRpb24gc3lzdGVtIC4uLgoKSSBhbSBub3QgcmVzcG9uc2libGUgZm9y
-IGFueSBvZiB0aGUgbmV3IHNoaW55IGRvY3VtZW50YXRpb24gc3lzdGVtLCBhbmQKSSB0aGluayB0
-aGlzIGlzIGEgZ29vZCBpZGVhOgoKQWNrZWQtYnk6IEdyZWcgS3JvYWgtSGFydG1hbiA8Z3JlZ2to
-QGxpbnV4Zm91bmRhdGlvbi5vcmc+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+Hi Sean,
+
+I'll send a new version, thanks
+
+On Fri, 2018-09-07 at 14:31 +0800, Sean Wang wrote:
+> Hi,
+> 
+> Should add Fixes: tag and Cc: <stable@vger.kernel.org> also to apply the patch to the stable tree. Otherwise, the problem still is kept in the stable kernel.
+> 
+> The patch really can solve the problem by testing with the ASIX AX88179 u3 Ethernet can't work since v4.17.x.
+> 
+> So, Tested-by: Sean Wang <sean.wang@mediatek.com>
+>  
+> and attach the log testing with AX88179
+> 
+> [  126.369574] usb 2-1: new SuperSpeed Gen 1 USB device number 2 using xhci-mtk
+> [  126.730806] ax88179_178a 2-1:1.0 eth2: register 'ax88179_178a' at usb-1a0c0000.usb-1, ASIX AX88179 USB 3.0 Gigabit Ethernet, 00:11:6b:68:4c:9e
+> [  126.759932] ax88179_178a 2-1:1.0 enx00116b684c9e: renamed from eth2
+> 
+> ~# ifconfig enx00116b684c9e 10.10.10.1
+> ~# ping 10[  147.613266] ax88179_178a 2-1:1.0 enx00116b684c9e: ax88179 - Link status is: 1
+> .10.10.3
+> PING 10.10.10.3 (10.10.10.3) 56(84) bytes of data.
+> 64 bytes from 10.10.10.3: icmp_seq=1 ttl=64 time=0.414 ms
+> 64 bytes from 10.10.10.3: icmp_seq=2 ttl=64 time=0.422 ms
+> 64 bytes from 10.10.10.3: icmp_seq=3 ttl=64 time=0.376 ms
+> 64 bytes from 10.10.10.3: icmp_seq=4 ttl=64 time=0.309 ms
+> 64 bytes from 10.10.10.3: icmp_seq=5 ttl=64 time=0.392 ms
+> 64 bytes from 10.10.10.3: icmp_seq=6 ttl=64 time=0.355 ms
+> 64 bytes from 10.10.10.3: icmp_seq=7 ttl=64 time=0.407 ms
+> 64 bytes from 10.10.10.3: icmp_seq=8 ttl=64 time=0.325 ms
+> 
+> On Fri, 2018-09-07 at 13:51 +0800, Chunfeng Yun wrote:
+> > The MTK xHCI controller use some reserved bytes in endpoint context for
+> > bandwidth scheduling, so need keep them in xhci_endpoint_copy();
+> > 
+> > The issue is introduced by:
+> > commit f5249461b504 ("xhci: Clear the host side toggle manually when
+> > endpoint is soft reset")
+> > It resets endpoints and will drop bandwidth scheduling parameters used
+> > by interrupt or isochronous endpoints on MTK xHCI controller.
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  drivers/usb/host/xhci-mem.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
+> > index ef350c3..b1f27aa 100644
+> > --- a/drivers/usb/host/xhci-mem.c
+> > +++ b/drivers/usb/host/xhci-mem.c
+> > @@ -1613,6 +1613,10 @@ void xhci_endpoint_copy(struct xhci_hcd *xhci,
+> >  	in_ep_ctx->ep_info2 = out_ep_ctx->ep_info2;
+> >  	in_ep_ctx->deq = out_ep_ctx->deq;
+> >  	in_ep_ctx->tx_info = out_ep_ctx->tx_info;
+> > +	if (xhci->quirks & XHCI_MTK_HOST) {
+> > +		in_ep_ctx->reserved[0] = out_ep_ctx->reserved[0];
+> > +		in_ep_ctx->reserved[1] = out_ep_ctx->reserved[1];
+> > +	}
+> >  }
+> >  
+> >  /* Copy output xhci_slot_ctx to the input xhci_slot_ctx.
+> 
+> 
