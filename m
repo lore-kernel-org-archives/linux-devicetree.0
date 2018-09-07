@@ -1,7 +1,7 @@
 From: Heiko Stuebner <heiko@sntech.de>
 Subject: Re: [PATCH v4 2/2] phy: add Rockchip Innosilicon hdmi phy
-Date: Fri, 07 Sep 2018 12:35:24 +0200
-Message-ID: <2035629.dANnXaNfxq@phil>
+Date: Fri, 07 Sep 2018 12:38:21 +0200
+Message-ID: <7862264.msy1cYF2Tk@phil>
 References: <20180906135047.30788-1-heiko@sntech.de>
  <20180906135047.30788-2-heiko@sntech.de>
  <81c527fc-5837-658f-5c57-60acd909ed2e@arm.com>
