@@ -1,113 +1,242 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 3/4] of: Convert to using %pOFn instead of
- device_node.name
-Date: Fri, 7 Sep 2018 14:29:28 +0200
-Message-ID: <20180907122928.GA5821@ulmo>
-References: <20180828155254.10709-1-robh@kernel.org>
- <20180828155254.10709-4-robh@kernel.org>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH V2 1/8] dt-bindings: mfd: document stpmic1
+Date: Fri, 7 Sep 2018 12:59:43 +0000
+Message-ID: <1536325173-16617-2-git-send-email-p.paillet@st.com>
+References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180828155254.10709-4-robh@kernel.org>
+In-Reply-To: <1536325173-16617-1-git-send-email-p.paillet@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>
 List-Id: devicetree@vger.kernel.org
 
+From: pascal paillet <p.paillet@st.com>
 
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+stpmic1 is a pmic from STMicroelectronics. The stpmic1 integrates 10
+regulators and 3 switches with various capabilities.
 
-On Tue, Aug 28, 2018 at 10:52:53AM -0500, Rob Herring wrote:
-> In preparation to remove the node name pointer from struct device_node,
-> convert printf users to use the %pOFn format specifier.
->=20
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  drivers/of/device.c   |  4 ++--
->  drivers/of/of_mdio.c  | 12 ++++++------
->  drivers/of/of_numa.c  |  4 ++--
->  drivers/of/overlay.c  |  4 ++--
->  drivers/of/platform.c |  8 ++++----
->  drivers/of/unittest.c | 12 ++++++------
->  6 files changed, 22 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 5957cd4fa262..daa075d87317 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -219,7 +219,7 @@ static ssize_t of_device_get_modalias(struct device *=
-dev, char *str, ssize_t len
->  		return -ENODEV;
-> =20
->  	/* Name & Type */
-> -	csize =3D snprintf(str, len, "of:N%sT%s", dev->of_node->name,
-> +	csize =3D snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
->  			 dev->of_node->type);
->  	tsize =3D csize;
->  	len -=3D csize;
+Signed-off-by: pascal paillet <p.paillet@st.com>
+---
+changes in v2:
+* the hardware component has been renamed from stpmu1 to stpmic1 !
+* replace _ with - in properties name
+* fix node names in example
+* remove regulator compatibles in example
+* add st,stpmic1.h to the patch
 
-This seems to cause the modalias to be improperly constructed. As a
-consequence, automatic module loading at boot time is now broken. I
-think the reason why this fails is because vsnprintf() will skip all
-alpha-numeric characters after a call to pointer(). Presumably this
-is meant to be a generic way of skipping whatever specifiers we throw
-at it.
+Rob, I did not change the usage of the properties because it would lead to a lot
+of st properties; for example st,main-control-register would be replaced by:
+  st,power_cycling_on_turn_off
+  st,pwrctrl_enabled
+  st,pwrctrl_active_high
+should I go this way ?
 
-Unfortunately for the case of OF modaliases, this means that the 'T'
-character gets eaten, so we end up with something like this:
+Rob, I did not found the standard property for st,onkey-press-seconds = <10>;
 
-	# udevadm info /sys/bus/platform/devices/54200000.dc
-	[...]
-	E: MODALIAS=3Dof:Ndc<NULL>Cnvidia,tegra124-dc
-	[...]
+ .../devicetree/bindings/mfd/st,stpmic1.txt         | 137 +++++++++++++++++++++
+ include/dt-bindings/mfd/st,stpmic1.h               |  46 +++++++
+ 2 files changed, 183 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
 
-instead of this:
-
-	# udevadm info /sys/bus/platform/devices/54200000.dc
-	[...]
-	E: MODALIAS=3Dof:NdcT<NULL>Cnvidia,tegra124-dc
-	[...]
-
-Everything is back to normal if I revert this patch. However, since
-that's obviously not what we want, I think perhaps what we need is a
-way for pointer() (and its implementations) to report back how many
-characters in the format string it consumed so that we can support
-these kinds of back-to-back strings.
-
-If nobody else has the time I can look into coding up a fix, but in the
-meantime it might be best to back this one out until we can handle the
-OF modalias format string.
-
-Thierry
-
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluSbyUACgkQ3SOs138+
-s6ELBBAAi8cbuJZHQabJPhB7Y0fsJZet4soXDZWmrJsfMNd+AuT3LXjV5HtR2rC7
-M5ltpxZhbFx0+JhtQI0dK6l/2NvJQhE/X0tN1V6k2VT+hni6FcyWHxEQQJpUpLLl
-VAEt3Mcp7vLBC0fqgu7ASFW05lO0FMXLiSChrw6lbvvVNh5ITd8Q2YKxP6LmmQ9S
-6YF1hN5QOnR7wkypqf2KvFuemMtuKv3YYXPIdVesOBayOnUMTneIlWt3SZv8U+m/
-qy3LR6m43n76RB6lAMcaMTZfBTP8kiM0r5/jZsDlHqu3svgp174Ft8TtRBHcstN+
-rOoFz1Bddd4PtXlJtum9YZyN0n+SBs6lTe7NZlJC0VmQz29yloz8MDaOJwjoanxo
-Tyr5D84eHTfMh1lpNbyMZqnqcQD3t6EboZZCrZ/Q1Gd2zfUohiWV1In9UolmeQvJ
-Ij1eE0u7DeLizIzYtUpKMfRxcL1NlaAWw7VmtDJnZ5TPN0ASNCO2vvz+ev45i3fq
-2enBq2DlNDzlnGdFdZNqx3RlHH6APsGUjTXYlafF/dQG/jVTteQ0M7jj4nvOUZiN
-q51Rk9l30a6hUDt4LZliOt0Vt7TnK1FLyKAXgPxhHmEEZRUFJuan2afefPendC+K
-VYHwXZAJCfHdeFxDbmyoegiqiLoXo8PS0Kb5L+7KtqnFMTm8Iic=
-=E/Bc
------END PGP SIGNATURE-----
-
---tKW2IUtsqtDRztdT--
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+new file mode 100644
+index 0000000..9f2c516
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+@@ -0,0 +1,137 @@
++* STMicroelectronics STPMIC1 Power Management IC
++
++Required parent device properties:
++- compatible: "st,stpmic1"
++- reg: the I2C slave address for the stpmic1 chip
++- interrupts-extended: interrupt lines to use: second irq is for wakeup.
++- #interrupt-cells: should be 2.
++- interrupt-controller: describes the STPMIC1 as an interrupt
++  controller (has its own domain). interrupt number are the following:
++	/* Interrupt Register 1 (0x50 for latch) */
++	IT_SWOUT_R=0
++	IT_SWOUT_F=1
++	IT_VBUS_OTG_R=2
++	IT_VBUS_OTG_F=3
++	IT_WAKEUP_R=4
++	IT_WAKEUP_F=5
++	IT_PONKEY_R=6
++	IT_PONKEY_F=7
++	/* Interrupt Register 2 (0x51 for latch) */
++	IT_OVP_BOOST=8
++	IT_OCP_BOOST=9
++	IT_OCP_SWOUT=10
++	IT_OCP_OTG=11
++	IT_CURLIM_BUCK4=12
++	IT_CURLIM_BUCK3=13
++	IT_CURLIM_BUCK2=14
++	IT_CURLIM_BUCK1=15
++	/* Interrupt Register 3 (0x52 for latch) */
++	IT_SHORT_SWOUT=16
++	IT_SHORT_SWOTG=17
++	IT_CURLIM_LDO6=18
++	IT_CURLIM_LDO5=19
++	IT_CURLIM_LDO4=20
++	IT_CURLIM_LDO3=21
++	IT_CURLIM_LDO2=22
++	IT_CURLIM_LDO1=23
++	/* Interrupt Register 3 (0x52 for latch) */
++	IT_SWIN_R=24
++	IT_SWIN_F=25
++	IT_RESERVED_1=26
++	IT_RESERVED_2=27
++	IT_VINLOW_R=28
++	IT_VINLOW_F=29
++	IT_TWARN_R=30
++	IT_TWARN_F=31
++
++Optional parent device properties:
++- st,main-control-register:
++	-bit 1: Power cycling will be performed on turn OFF condition
++	-bit 2: PWRCTRL is functional
++	-bit 3: PWRCTRL active high
++- st,pads-pull-register:
++	-bit 1: WAKEUP pull down is not active
++	-bit 2: PWRCTRL pull up is active
++	-bit 3: PWRCTRL pull down is active
++	-bit 4: WAKEUP detector is disabled
++- st,vin-control-register:
++	-bit 0: VINLOW monitoring is enabled
++	-bit [1...3]: VINLOW rising threshold
++		000 VINOK_f + 50mV
++		001 VINOK_f + 100mV
++		010 VINOK_f + 150mV
++		011 VINOK_f + 200mV
++		100 VINOK_f + 250mV
++		101 VINOK_f + 300mV
++		110 VINOK_f + 350mV
++		111 VINOK_f + 400mV
++	-bit [4...5]: VINLOW hyst
++		00 100mV
++		01 200mV
++		10 300mV
++		11 400mV
++	-bit 6: SW_OUT detector is disabled
++	-bit 7: SW_IN detector is enabled.
++- st,usb-control-register:
++	-bit 3: SW_OUT current limit
++		0: 600mA
++		1: 1.1A
++	-bit 4: VBUS_OTG discharge is enabled
++	-bit 5: SW_OUT discharge is enabled
++	-bit 6: VBUS_OTG detection is enabled
++	-bit 7: BOOST_OVP is disabled
++
++
++stpmic1 consists is a varied group of sub-devices:
++
++Device			 Description
++------			------------
++st,stpmic1-onkey		: On key
++st,stpmic1-regulators	: Regulators
++st,stpmic1-wdt		: Watchdog
++
++each sub-device bindings is be described in associated driver
++documentation section.
++
++Example:
++
++pmic: stpmic1@33 {
++	compatible = "st,stpmic1";
++	reg = <0x33>;
++	interrupts = <0 2>;
++	interrupts-extended = <&intc GIC_SPI 149 IRQ_TYPE_NONE>,
++			      <&exti 55 1>;
++	st,version_status = <0x10>;
++	st,main-control-register=<0x0c>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	onkey {
++		compatible = "st,stpmic1-onkey";
++		interrupt-parent = <&pmic>;
++		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
++		interrupt-names = "onkey-falling", "onkey-rising";
++		st,onkey-pwroff-enabled;
++		st,onkey-long-press-seconds = <10>;
++	};
++
++	watchdog {
++		compatible = "st,stpmic1-wdt";
++	};
++
++	regulators {
++		compatible = "st,stpmic1-regulators";
++
++		vdd_core: buck1 {
++			regulator-name = "vdd_core";
++			regulator-boot-on;
++			regulator-min-microvolt = <700000>;
++			regulator-max-microvolt = <1200000>;
++		};
++		vdd: buck3 {
++			regulator-name = "vdd";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-boot-on;
++			regulator-pull-down;
++		};
++	};
+diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
+new file mode 100644
+index 0000000..e32ac8f
+--- /dev/null
++++ b/include/dt-bindings/mfd/st,stpmic1.h
+@@ -0,0 +1,46 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
++ * Author: Philippe Peurichard <philippe.peurichard@st.com>,
++ * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
++ */
++
++#ifndef __DT_BINDINGS_STPMIC1_H__
++#define __DT_BINDINGS_STPMIC1_H__
++
++/* IRQ definitions */
++#define IT_PONKEY_F 0
++#define IT_PONKEY_R 1
++#define IT_WAKEUP_F 2
++#define IT_WAKEUP_R 3
++#define IT_VBUS_OTG_F 4
++#define IT_VBUS_OTG_R 5
++#define IT_SWOUT_F 6
++#define IT_SWOUT_R 7
++
++#define IT_CURLIM_BUCK1 8
++#define IT_CURLIM_BUCK2 9
++#define IT_CURLIM_BUCK3 10
++#define IT_CURLIM_BUCK4 11
++#define IT_OCP_OTG 12
++#define IT_OCP_SWOUT 13
++#define IT_OCP_BOOST 14
++#define IT_OVP_BOOST 15
++
++#define IT_CURLIM_LDO1 16
++#define IT_CURLIM_LDO2 17
++#define IT_CURLIM_LDO3 18
++#define IT_CURLIM_LDO4 19
++#define IT_CURLIM_LDO5 20
++#define IT_CURLIM_LDO6 21
++#define IT_SHORT_SWOTG 22
++#define IT_SHORT_SWOUT 23
++
++#define IT_TWARN_F 24
++#define IT_TWARN_R 25
++#define IT_VINLOW_F 26
++#define IT_VINLOW_R 27
++#define IT_SWIN_F 30
++#define IT_SWIN_R 31
++
++#endif /* __DT_BINDINGS_STPMIC1_H__ */
+-- 
+1.9.1
