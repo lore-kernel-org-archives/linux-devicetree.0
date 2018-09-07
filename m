@@ -1,231 +1,83 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH V2 8/8] watchdog: stpmic1: add stpmic1 watchdog driver
-Date: Fri, 7 Sep 2018 06:48:02 -0700
-Message-ID: <c1594be0-5210-bfe0-59b8-d8b163195da5@roeck-us.net>
-References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
- <1536325173-16617-9-git-send-email-p.paillet@st.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v9 5/9] media: platform: Add Cedrus VPU
+ decoder driver
+Date: Fri, 7 Sep 2018 15:52:00 +0200
+Message-ID: <2c9689b2-c5a6-58b7-b467-fc53208ecd2d@xs4all.nl>
+References: <20180906222442.14825-1-contact@paulk.fr>
+ <20180906222442.14825-6-contact@paulk.fr>
+ <4b30c0bf-e525-1868-f625-569d4a104aa0@xs4all.nl>
+ <20180907132620.lmsvlwpa3rzioj2h@flea>
+Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536325173-16617-9-git-send-email-p.paillet@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBBEFZLOAKGQEUZ23MXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180907132620.lmsvlwpa3rzioj2h@flea>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/07/2018 05:59 AM, Pascal PAILLET-LME wrote:
-> From: pascal paillet <p.paillet@st.com>
+On 09/07/2018 03:26 PM, Maxime Ripard wrote:
+> Hi Hans,
 > 
-> The stpmic1 PMIC embeds a watchdog which is disabled by default. As soon
-> as the watchdog is started, it must be refreshed periodically otherwise
-> the PMIC goes off.
+> On Fri, Sep 07, 2018 at 03:13:19PM +0200, Hans Verkuil wrote:
+>> On 09/07/2018 12:24 AM, Paul Kocialkowski wrote:
+>>> From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+>>>
+>>> This introduces the Cedrus VPU driver that supports the VPU found in
+>>> Allwinner SoCs, also known as Video Engine. It is implemented through
+>>> a V4L2 M2M decoder device and a media device (used for media requests).
+>>> So far, it only supports MPEG-2 decoding.
+>>>
+>>> Since this VPU is stateless, synchronization with media requests is
+>>> required in order to ensure consistency between frame headers that
+>>> contain metadata about the frame to process and the raw slice data that
+>>> is used to generate the frame.
+>>>
+>>> This driver was made possible thanks to the long-standing effort
+>>> carried out by the linux-sunxi community in the interest of reverse
+>>> engineering, documenting and implementing support for the Allwinner VPU.
+>>>
+>>> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+>>> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+>>
+>> One high-level comment:
+>>
+>> Can you add a TODO file for this staging driver? This can be done in
+>> a follow-up patch.
+>>
+>> It should contain what needs to be done to get this out of staging:
+>>
+>> - Request API needs to stabilize
+>> - Userspace support for stateless codecs must be created
 > 
-> Signed-off-by: pascal paillet <p.paillet@st.com>
-> ---
-> changes in v2:
-> * the hardware component has been renamed from stpmu1 to stpmic1 !
-> * change headers
-> * handle remarks from Guenter
-
-Hmm ... as if I would remember what those were.
-
-> * fix set timeout
+> On that particular note, as part of the effort to develop the driver,
+> we've also developped two userspace components:
 > 
->   drivers/watchdog/Kconfig       |  12 ++++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/stpmic1_wdt.c | 130 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 143 insertions(+)
->   create mode 100644 drivers/watchdog/stpmic1_wdt.c
+>   - v4l2-request-test, that has a bunch of sample frames for various
+>     codecs and will rely solely on the kernel request api (and DRM for
+>     the display part) to test and bringup a particular driver
+>     https://github.com/bootlin/v4l2-request-test
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 9af07fd..11c5937 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -796,6 +796,18 @@ config STM32_WATCHDOG
->   	  To compile this driver as a module, choose M here: the
->   	  module will be called stm32_iwdg.
->   
-> +config STPMIC1_WATCHDOG
-> +	tristate "STPMIC1 PMIC watchdog support"
-> +	depends on MFD_STPMIC1
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Say Y here to include watchdog support embedded into STPMIC1 PMIC.
-> +	  If the watchdog timer expires, stpmic1 shut-down all its power
-> +	  supplies.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called spmic1_wdt.
-> +
->   config UNIPHIER_WATCHDOG
->   	tristate "UniPhier watchdog support"
->   	depends on ARCH_UNIPHIER || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 1d3c6b0..a898d8f 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -216,3 +216,4 @@ obj-$(CONFIG_ZIIRAVE_WATCHDOG) += ziirave_wdt.o
->   obj-$(CONFIG_SOFT_WATCHDOG) += softdog.o
->   obj-$(CONFIG_MENF21BMC_WATCHDOG) += menf21bmc_wdt.o
->   obj-$(CONFIG_RAVE_SP_WATCHDOG) += rave-sp-wdt.o
-> +obj-$(CONFIG_STPMIC1_WATCHDOG) += stpmic1_wdt.o
-> diff --git a/drivers/watchdog/stpmic1_wdt.c b/drivers/watchdog/stpmic1_wdt.c
-> new file mode 100644
-> index 0000000..391e544
-> --- /dev/null
-> +++ b/drivers/watchdog/stpmic1_wdt.c
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) STMicroelectronics 2018
-> +// Author: Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
-> + > +#include <linux/kernel.h>
-> +#include <linux/mfd/stpmic1.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reboot.h>
-> +#include <linux/slab.h>
-> +#include <linux/watchdog.h>
-> +
-> +/* WATCHDOG CONTROL REGISTER bit */
-> +#define WDT_START		BIT(0)
-> +#define WDT_PING		BIT(1)
-> +#define WDT_START_MASK		BIT(0)
-> +#define WDT_PING_MASK		BIT(1)
-> +
-> +#define PMIC_WDT_MIN_TIMEOUT 1
-> +#define PMIC_WDT_MAX_TIMEOUT 256
-> +
-> +struct stpmic1_wdt {
-> +	struct stpmic1_dev *pmic;
-> +	struct watchdog_device wdtdev;
-> +};
-> +
-> +static int pmic_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->pmic->regmap,
-> +				  WCHDG_CR, WDT_START_MASK, WDT_START);
-> +}
-> +
-> +static int pmic_wdt_stop(struct watchdog_device *wdd)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->pmic->regmap,
-> +				  WCHDG_CR, WDT_START_MASK, ~WDT_START);
-> +}
-> +
-> +static int pmic_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_update_bits(wdt->pmic->regmap,
-> +				  WCHDG_CR, WDT_PING_MASK, WDT_PING);
-> +}
-> +
-> +static int pmic_wdt_set_timeout(struct watchdog_device *wdd,
-> +				unsigned int timeout)
-> +{
-> +	struct stpmic1_wdt *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	return regmap_write(wdt->pmic->regmap, WCHDG_TIMER_CR, timeout - 1);
-
-What happens if the configured timeout is 1 ? Does that translate to a 1-second
-timeout ?
-
-This function also has to set wdd->timeout.
-
-> +}
-> +
-> +static const struct watchdog_info pmic_watchdog_info = {
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING,
-
-No WDIOF_MAGICCLOSE ?
-
-> +	.identity = "STPMIC1 PMIC Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops pmic_watchdog_ops = {
-> +	.owner = THIS_MODULE,
-> +	.start = pmic_wdt_start,
-> +	.stop = pmic_wdt_stop,
-> +	.ping = pmic_wdt_ping,
-> +	.set_timeout = pmic_wdt_set_timeout,
-> +};
-> +
-> +static int pmic_wdt_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct stpmic1_dev *pmic;
-> +	struct stpmic1_wdt *wdt;
-> +
-> +	if (!pdev->dev.parent)
-> +		return -EINVAL;
-> +
-> +	pmic = dev_get_drvdata(pdev->dev.parent);
-> +	if (!pmic)
-> +		return -EINVAL;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(struct stpmic1_wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	wdt->pmic = pmic;
-> +
-> +	wdt->wdtdev.info = &pmic_watchdog_info;
-> +	wdt->wdtdev.ops = &pmic_watchdog_ops;
-> +	wdt->wdtdev.min_timeout = PMIC_WDT_MIN_TIMEOUT;
-> +	wdt->wdtdev.max_timeout = PMIC_WDT_MAX_TIMEOUT;
-> +	wdt->wdtdev.timeout = PMIC_WDT_MIN_TIMEOUT;
-
-Are you sure about that ? A timeout of 1 second may be a cause for unexpected
-reboots if user space is busy. Personally I find it better to set a larger
-default and let userspace configure a tighter value if so desired.
-
-Also,
-	watchdog_init_timeout(&wdt->wdtdev, 0, &pdev->dev);
-might be desirable if you want to be able to specify the timeout in the
-devicetree file.
-
-
-> +
-> +	wdt->wdtdev.status = WATCHDOG_NOWAYOUT_INIT_STATUS;
-> +
-> +	watchdog_set_drvdata(&wdt->wdtdev, wdt);
-> +	dev_set_drvdata(&pdev->dev, wdt);
-
-Unless I am missing something this should not be needed.
-
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, &wdt->wdtdev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_dbg(wdt->pmic->dev, "PMIC Watchdog driver probed\n");
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_pmic_wdt_match[] = {
-> +	{ .compatible = "st,stpmic1-wdt" },
-> +	{ },
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_pmic_wdt_match);
-> +
-> +static struct platform_driver stpmic1_wdt_driver = {
-> +	.probe = pmic_wdt_probe,
-> +	.driver = {
-> +		.name = "stpmic1-wdt",
-> +		.of_match_table = of_pmic_wdt_match,
-> +	},
-> +};
-> +module_platform_driver(stpmic1_wdt_driver);
-> +
-> +MODULE_DESCRIPTION("Watchdog driver for STPMIC1 device");
-> +MODULE_AUTHOR("Pascal Paillet");
-> +MODULE_LICENSE("GPL v2");
+>   - libva-v4l2-request, that is a libva implementation using the
+>     request API
+>     https://github.com/bootlin/libva-v4l2-request
 > 
+> Did you have something else in mind?
+
+Reviewing this will be the next step. I haven't looked at the userspace components
+at all yet, so I don't know yet whether it is what we expect/want/need.
+
+I think this might be a very good topic for the media summit in October if we
+can get all the stakeholders together.
+
+Regards,
+
+	Hans
