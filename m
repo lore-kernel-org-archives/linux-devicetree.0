@@ -1,51 +1,134 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2 4/8] regulator: stpmic1: add stpmic1 regulator driver
-Date: Fri, 7 Sep 2018 16:56:26 +0100
-Message-ID: <20180907155626.GI17459@sirena.org.uk>
-References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
- <1536325173-16617-5-git-send-email-p.paillet@st.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify skipped
+ bytes in OOB
+Date: Sat, 8 Sep 2018 01:10:25 +0900
+Message-ID: <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
+References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
+ <20180907160822.319047c8@bbrezillon> <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
+ <20180907165348.3e0027ee@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Op27XXJsWz80g3oF"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536325173-16617-5-git-send-email-p.paillet@st.com>
+In-Reply-To: <20180907165348.3e0027ee@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
---Op27XXJsWz80g3oF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2018-09-07 23:53 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> On Fri, 7 Sep 2018 23:42:53 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>
+>> Hi Boris,
+>>
+>> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+>> > Hi Masahiro,
+>> >
+>> > On Fri,  7 Sep 2018 19:56:23 +0900
+>> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>> >
+>> >> NAND devices need additional data area (OOB) for error correction,
+>> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
+>> >> first byte in OOB is used for BBM, but the location actually depends
+>> >> on chip vendors.  The NAND controller should preserve the precious
+>> >> BBM to keep track of bad blocks.
+>> >>
+>> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
+>> >> the number of bytes to skip from the start of OOB.  The ECC engine
+>> >> will automatically skip the specified number of bytes when it gets
+>> >> access to OOB area.
+>> >>
+>> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
+>> >> firmware and the operating system if you intend to use the NAND
+>> >> device across the control hand-off.
+>> >>
+>> >> In fact, the current denali.c code expects firmware to have already
+>> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
+>> >>
+>> >> If no firmware (or bootloader) has initialized the controller, the
+>> >> register value is zero, which is the default after power-on-reset.
+>> >>
+>> >> In other words, the Linux driver cannot initialize the controller
+>> >> by itself.  You cannot support the reset control either because
+>> >> resetting the controller will get register values lost.
+>> >>
+>> >> This commit adds a way to specify it via DT.  If the property
+>> >> "denali,oob-skip-bytes" exists, the value will be set to the register.
+>> >
+>> > Hm, do we really need to make this config customizable? I mean, either
+>> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
+>> > must be reserved for the BBM or you have a small-page NAND and the BBM
+>> > is at position 4 and 5. Are you sure people configure that differently?
+>> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?
+>>
+>>
+>> As I said in the patch description,
+>> I need to use the same SPARE_AREA_SKIP_BYTES value
+>> across firmware, boot-loader, Linux, and whatever.
+>>
+>> I want to set the value to 8 for my platform
+>> because the on-chip boot ROM expects 8.
+>> I cannot change it since the boot ROM is hard-wired.
+>>
+>>
+>> The boot ROM skips 8 bytes in OOB
+>> when it loads images from the on-board NAND device.
+>>
+>> So, when I update the image from U-Boot or Linux,
+>> I need to make sure to set the register to 8.
+>>
+>> If I update the image with a different value,
+>> the Boot ROM fails to boot.
+>>
+>>
+>>
+>> When the system has booted from NAND,
+>> the register is already set to 8.  It works.
+>>
+>> However, when the system has booted from eMMC,
+>> the register is not initialized by anyone.
+>> I am searching for a way to set the register to 8
+>> in this case.
+>>
+>>
+>> The boot ROM in SOCFPGA might expect a different value,
+>> I am not sure.
+>
+> Okay, then why not having a per-compatible value if it's related to the
+> BootROM? Unless the BootROM is part of the FPGA and can be
+> reprogrammed.
 
-On Fri, Sep 07, 2018 at 12:59:44PM +0000, Pascal PAILLET-LME wrote:
+FPGA is unrelated here.
 
-> @@ -804,6 +804,18 @@ config REGULATOR_TI_ABB
->  	  on TI SoCs may be unstable without enabling this as it provides
->  	  device specific optimized bias to allow/optimize functionality.
-> =20
-> +config REGULATOR_STPMIC1
+Neither the boot ROM nor the Denali core is re-programmable.
 
-This looks good to me except the Kconfig isn't alphabetically sorted and
-has a conflict.  If the series doesn't otherwise need a resend I should
-be able to fix by hand, let me know.
 
---Op27XXJsWz80g3oF
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+I hesitate to associate the number of skipped bytes
+with the compatible string because it is not a parameter
+of the Denali IP.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluSn6kACgkQJNaLcl1U
-h9D0Hwf+Mz7oDPoli2YWJfuvAyjir33WC91k9f7g81u4O/QJ6AJJ+Tl2yc8D9VAd
-sfPk5SF3UMl3eMbsQ8/al6P7j4H0gMvkvgVt/0baJGkHd+v4X+vTWGWiO1Rlk7Wk
-2PeLVMwJJ4W/ma+jNo++WQngv/SHsRddiH7zDaHgrlCCiGEnsqPX1MBg/T/lwCkF
-de/8sT5o3PWmbl9Uvfow7mX9FLRLPDZFKULPRQqJNTyW/pa/VPbdwC9vHf8aYGdg
-y91SSOy/u4BoiegzZNMuLnuG9jekHultXFFsmlbZdBlAM3u1vyjqLuzwTEh3EpnU
-MFMZNboU65z5qOhlMMCHIOJ/6nVEkw==
-=M5Mz
------END PGP SIGNATURE-----
 
---Op27XXJsWz80g3oF--
+Rather, it is the matter of "how we use the OOB",
+so I want to leave room for customization like nand-ecc-strength etc.
+even if the boot ROM happens to expect a particular value.
+
+
+If you prefer a per-compatible value, I can do that,
+but I believe the NAND core and the boot ROM are orthogonal.
+
+
+
+> I'd really prefer not having a generic property that
+> allows you to put anything you want.
+
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
