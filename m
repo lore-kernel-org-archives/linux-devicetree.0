@@ -1,1375 +1,204 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v5 2/2] phy: add Rockchip Innosilicon hdmi phy
-Date: Fri,  7 Sep 2018 11:46:05 +0200
-Message-ID: <20180907094605.25206-2-heiko@sntech.de>
-References: <20180907094605.25206-1-heiko@sntech.de>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH 3/3] soc: fsl: add RCPM driver
+Date: Fri, 7 Sep 2018 09:48:41 +0000
+Message-ID: <AM5PR0402MB2865E57EDC0DE8B0047282A2F1000@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20180831035219.31619-1-ran.wang_1@nxp.com>
+ <20180831035219.31619-3-ran.wang_1@nxp.com>
+ <be39f5ea8c9046b0bf1f6bbfe935fae4@HXTBJIDCEMVIW02.hxtcorp.net>
+ <CADRPPNQN=27+pOSckxvwSuBJoFaz7pT+Z6h07Wu3Liz5ao5kkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180907094605.25206-1-heiko@sntech.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kishon@ti.com
-Cc: devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, zhengyang@rock-chips.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNQN=27+pOSckxvwSuBJoFaz7pT+Z6h07Wu3Liz5ao5kkA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leo Li <leoyang.li@nxp.com>
+Cc: "dongsheng.wang@hxt-semitech.com" <dongsheng.wang@hxt-semitech.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zheng Yang <zhengyang@rock-chips.com>
-
-Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
-and rk3328 socs from Rockchip.
-
-Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Tested-by: Robin Murphy <robin.murphy@arm.com>
----
-changes in v5:
-- fix checkpatch check + warnings
-changes in v4:
-- address Kishon's review comments
-  - common_clk dependency
-  - describe the undocumented nature of phy tuning values
-  - increase sleep range
-  - return PTR_ERR_OR_ZERO in probe
-- drop error handling already done by devm_add_action_or_reset
-changes in v3:
-- included real recalc_rate for rk3228
-- claim both refclks and keep the refpclk on
-  to make rk3328 happy for now
-changes in v2:
-- prevent overflow in tmdsclk calculation
-  as reported by Martin Cerveny
-- use unsigned long for all tmdsclk rate uses
-- simplify tmds rate calculation
-
- drivers/phy/rockchip/Kconfig                  |    8 +
- drivers/phy/rockchip/Makefile                 |    1 +
- drivers/phy/rockchip/phy-rockchip-inno-hdmi.c | 1279 +++++++++++++++++
- 3 files changed, 1288 insertions(+)
- create mode 100644 drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-
-diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
-index 0e15119ddfc6..990204a46eb6 100644
---- a/drivers/phy/rockchip/Kconfig
-+++ b/drivers/phy/rockchip/Kconfig
-@@ -15,6 +15,14 @@ config PHY_ROCKCHIP_EMMC
- 	help
- 	  Enable this to support the Rockchip EMMC PHY.
- 
-+config PHY_ROCKCHIP_INNO_HDMI
-+	tristate "Rockchip INNO HDMI PHY Driver"
-+	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-+	depends on COMMON_CLK
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Rockchip Innosilicon HDMI PHY.
-+
- config PHY_ROCKCHIP_INNO_USB2
- 	tristate "Rockchip INNO USB2PHY Driver"
- 	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
-diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
-index 7f149d989046..fd21cbaf40dd 100644
---- a/drivers/phy/rockchip/Makefile
-+++ b/drivers/phy/rockchip/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
- obj-$(CONFIG_PHY_ROCKCHIP_EMMC)		+= phy-rockchip-emmc.o
-+obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
- obj-$(CONFIG_PHY_ROCKCHIP_INNO_USB2)	+= phy-rockchip-inno-usb2.o
- obj-$(CONFIG_PHY_ROCKCHIP_PCIE)		+= phy-rockchip-pcie.o
- obj-$(CONFIG_PHY_ROCKCHIP_TYPEC)	+= phy-rockchip-typec.o
-diff --git a/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-new file mode 100644
-index 000000000000..6f89a262feb5
---- /dev/null
-+++ b/drivers/phy/rockchip/phy-rockchip-inno-hdmi.c
-@@ -0,0 +1,1279 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (c) 2017 Rockchip Electronics Co. Ltd.
-+ *
-+ * Author: Zheng Yang <zhengyang@rock-chips.com>
-+ *         Heiko Stuebner <heiko@sntech.de>
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-consumer.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/phy/phy.h>
-+#include <linux/slab.h>
-+
-+#define UPDATE(x, h, l)		(((x) << (l)) & GENMASK((h), (l)))
-+
-+/* REG: 0x00 */
-+#define RK3228_PRE_PLL_REFCLK_SEL_PCLK			BIT(0)
-+/* REG: 0x01 */
-+#define RK3228_BYPASS_RXSENSE_EN			BIT(2)
-+#define RK3228_BYPASS_PWRON_EN				BIT(1)
-+#define RK3228_BYPASS_PLLPD_EN				BIT(0)
-+/* REG: 0x02 */
-+#define RK3228_BYPASS_PDATA_EN				BIT(4)
-+#define RK3228_PDATAEN_DISABLE				BIT(0)
-+/* REG: 0x03 */
-+#define RK3228_BYPASS_AUTO_TERM_RES_CAL			BIT(7)
-+#define RK3228_AUTO_TERM_RES_CAL_SPEED_14_8(x)		UPDATE(x, 6, 0)
-+/* REG: 0x04 */
-+#define RK3228_AUTO_TERM_RES_CAL_SPEED_7_0(x)		UPDATE(x, 7, 0)
-+/* REG: 0xaa */
-+#define RK3228_POST_PLL_CTRL_MANUAL			BIT(0)
-+/* REG: 0xe0 */
-+#define RK3228_POST_PLL_POWER_DOWN			BIT(5)
-+#define RK3228_PRE_PLL_POWER_DOWN			BIT(4)
-+#define RK3228_RXSENSE_CLK_CH_ENABLE			BIT(3)
-+#define RK3228_RXSENSE_DATA_CH2_ENABLE			BIT(2)
-+#define RK3228_RXSENSE_DATA_CH1_ENABLE			BIT(1)
-+#define RK3228_RXSENSE_DATA_CH0_ENABLE			BIT(0)
-+/* REG: 0xe1 */
-+#define RK3228_BANDGAP_ENABLE				BIT(4)
-+#define RK3228_TMDS_DRIVER_ENABLE			GENMASK(3, 0)
-+/* REG: 0xe2 */
-+#define RK3228_PRE_PLL_FB_DIV_8_MASK			BIT(7)
-+#define RK3228_PRE_PLL_FB_DIV_8(x)			UPDATE((x) >> 8, 7, 7)
-+#define RK3228_PCLK_VCO_DIV_5_MASK			BIT(5)
-+#define RK3228_PCLK_VCO_DIV_5(x)			UPDATE(x, 5, 5)
-+#define RK3228_PRE_PLL_PRE_DIV_MASK			GENMASK(4, 0)
-+#define RK3228_PRE_PLL_PRE_DIV(x)			UPDATE(x, 4, 0)
-+/* REG: 0xe3 */
-+#define RK3228_PRE_PLL_FB_DIV_7_0(x)			UPDATE(x, 7, 0)
-+/* REG: 0xe4 */
-+#define RK3228_PRE_PLL_PCLK_DIV_B_MASK			GENMASK(6, 5)
-+#define RK3228_PRE_PLL_PCLK_DIV_B_SHIFT			5
-+#define RK3228_PRE_PLL_PCLK_DIV_B(x)			UPDATE(x, 6, 5)
-+#define RK3228_PRE_PLL_PCLK_DIV_A_MASK			GENMASK(4, 0)
-+#define RK3228_PRE_PLL_PCLK_DIV_A(x)			UPDATE(x, 4, 0)
-+/* REG: 0xe5 */
-+#define RK3228_PRE_PLL_PCLK_DIV_C_MASK			GENMASK(6, 5)
-+#define RK3228_PRE_PLL_PCLK_DIV_C(x)			UPDATE(x, 6, 5)
-+#define RK3228_PRE_PLL_PCLK_DIV_D_MASK			GENMASK(4, 0)
-+#define RK3228_PRE_PLL_PCLK_DIV_D(x)			UPDATE(x, 4, 0)
-+/* REG: 0xe6 */
-+#define RK3228_PRE_PLL_TMDSCLK_DIV_C_MASK		GENMASK(5, 4)
-+#define RK3228_PRE_PLL_TMDSCLK_DIV_C(x)			UPDATE(x, 5, 4)
-+#define RK3228_PRE_PLL_TMDSCLK_DIV_A_MASK		GENMASK(3, 2)
-+#define RK3228_PRE_PLL_TMDSCLK_DIV_A(x)			UPDATE(x, 3, 2)
-+#define RK3228_PRE_PLL_TMDSCLK_DIV_B_MASK		GENMASK(1, 0)
-+#define RK3228_PRE_PLL_TMDSCLK_DIV_B(x)			UPDATE(x, 1, 0)
-+/* REG: 0xe8 */
-+#define RK3228_PRE_PLL_LOCK_STATUS			BIT(0)
-+/* REG: 0xe9 */
-+#define RK3228_POST_PLL_POST_DIV_ENABLE			UPDATE(3, 7, 6)
-+#define RK3228_POST_PLL_PRE_DIV_MASK			GENMASK(4, 0)
-+#define RK3228_POST_PLL_PRE_DIV(x)			UPDATE(x, 4, 0)
-+/* REG: 0xea */
-+#define RK3228_POST_PLL_FB_DIV_7_0(x)			UPDATE(x, 7, 0)
-+/* REG: 0xeb */
-+#define RK3228_POST_PLL_FB_DIV_8_MASK			BIT(7)
-+#define RK3228_POST_PLL_FB_DIV_8(x)			UPDATE((x) >> 8, 7, 7)
-+#define RK3228_POST_PLL_POST_DIV_MASK			GENMASK(5, 4)
-+#define RK3228_POST_PLL_POST_DIV(x)			UPDATE(x, 5, 4)
-+#define RK3228_POST_PLL_LOCK_STATUS			BIT(0)
-+/* REG: 0xee */
-+#define RK3228_TMDS_CH_TA_ENABLE			GENMASK(7, 4)
-+/* REG: 0xef */
-+#define RK3228_TMDS_CLK_CH_TA(x)			UPDATE(x, 7, 6)
-+#define RK3228_TMDS_DATA_CH2_TA(x)			UPDATE(x, 5, 4)
-+#define RK3228_TMDS_DATA_CH1_TA(x)			UPDATE(x, 3, 2)
-+#define RK3228_TMDS_DATA_CH0_TA(x)			UPDATE(x, 1, 0)
-+/* REG: 0xf0 */
-+#define RK3228_TMDS_DATA_CH2_PRE_EMPHASIS_MASK		GENMASK(5, 4)
-+#define RK3228_TMDS_DATA_CH2_PRE_EMPHASIS(x)		UPDATE(x, 5, 4)
-+#define RK3228_TMDS_DATA_CH1_PRE_EMPHASIS_MASK		GENMASK(3, 2)
-+#define RK3228_TMDS_DATA_CH1_PRE_EMPHASIS(x)		UPDATE(x, 3, 2)
-+#define RK3228_TMDS_DATA_CH0_PRE_EMPHASIS_MASK		GENMASK(1, 0)
-+#define RK3228_TMDS_DATA_CH0_PRE_EMPHASIS(x)		UPDATE(x, 1, 0)
-+/* REG: 0xf1 */
-+#define RK3228_TMDS_CLK_CH_OUTPUT_SWING(x)		UPDATE(x, 7, 4)
-+#define RK3228_TMDS_DATA_CH2_OUTPUT_SWING(x)		UPDATE(x, 3, 0)
-+/* REG: 0xf2 */
-+#define RK3228_TMDS_DATA_CH1_OUTPUT_SWING(x)		UPDATE(x, 7, 4)
-+#define RK3228_TMDS_DATA_CH0_OUTPUT_SWING(x)		UPDATE(x, 3, 0)
-+
-+/* REG: 0x01 */
-+#define RK3328_BYPASS_RXSENSE_EN			BIT(2)
-+#define RK3328_BYPASS_POWERON_EN			BIT(1)
-+#define RK3328_BYPASS_PLLPD_EN				BIT(0)
-+/* REG: 0x02 */
-+#define RK3328_INT_POL_HIGH				BIT(7)
-+#define RK3328_BYPASS_PDATA_EN				BIT(4)
-+#define RK3328_PDATA_EN					BIT(0)
-+/* REG:0x05 */
-+#define RK3328_INT_TMDS_CLK(x)				UPDATE(x, 7, 4)
-+#define RK3328_INT_TMDS_D2(x)				UPDATE(x, 3, 0)
-+/* REG:0x07 */
-+#define RK3328_INT_TMDS_D1(x)				UPDATE(x, 7, 4)
-+#define RK3328_INT_TMDS_D0(x)				UPDATE(x, 3, 0)
-+/* for all RK3328_INT_TMDS_*, ESD_DET as defined in 0xc8-0xcb */
-+#define RK3328_INT_AGND_LOW_PULSE_LOCKED		BIT(3)
-+#define RK3328_INT_RXSENSE_LOW_PULSE_LOCKED		BIT(2)
-+#define RK3328_INT_VSS_AGND_ESD_DET			BIT(1)
-+#define RK3328_INT_AGND_VSS_ESD_DET			BIT(0)
-+/* REG: 0xa0 */
-+#define RK3328_PCLK_VCO_DIV_5_MASK			BIT(1)
-+#define RK3328_PCLK_VCO_DIV_5(x)			UPDATE(x, 1, 1)
-+#define RK3328_PRE_PLL_POWER_DOWN			BIT(0)
-+/* REG: 0xa1 */
-+#define RK3328_PRE_PLL_PRE_DIV_MASK			GENMASK(5, 0)
-+#define RK3328_PRE_PLL_PRE_DIV(x)			UPDATE(x, 5, 0)
-+/* REG: 0xa2 */
-+/* unset means center spread */
-+#define RK3328_SPREAD_SPECTRUM_MOD_DOWN			BIT(7)
-+#define RK3328_SPREAD_SPECTRUM_MOD_DISABLE		BIT(6)
-+#define RK3328_PRE_PLL_FRAC_DIV_DISABLE			UPDATE(3, 5, 4)
-+#define RK3328_PRE_PLL_FB_DIV_11_8_MASK			GENMASK(3, 0)
-+#define RK3328_PRE_PLL_FB_DIV_11_8(x)			UPDATE((x) >> 8, 3, 0)
-+/* REG: 0xa3 */
-+#define RK3328_PRE_PLL_FB_DIV_7_0(x)			UPDATE(x, 7, 0)
-+/* REG: 0xa4*/
-+#define RK3328_PRE_PLL_TMDSCLK_DIV_C_MASK		GENMASK(1, 0)
-+#define RK3328_PRE_PLL_TMDSCLK_DIV_C(x)			UPDATE(x, 1, 0)
-+#define RK3328_PRE_PLL_TMDSCLK_DIV_B_MASK		GENMASK(3, 2)
-+#define RK3328_PRE_PLL_TMDSCLK_DIV_B(x)			UPDATE(x, 3, 2)
-+#define RK3328_PRE_PLL_TMDSCLK_DIV_A_MASK		GENMASK(5, 4)
-+#define RK3328_PRE_PLL_TMDSCLK_DIV_A(x)			UPDATE(x, 5, 4)
-+/* REG: 0xa5 */
-+#define RK3328_PRE_PLL_PCLK_DIV_B_SHIFT			5
-+#define RK3328_PRE_PLL_PCLK_DIV_B_MASK			GENMASK(6, 5)
-+#define RK3328_PRE_PLL_PCLK_DIV_B(x)			UPDATE(x, 6, 5)
-+#define RK3328_PRE_PLL_PCLK_DIV_A_MASK			GENMASK(4, 0)
-+#define RK3328_PRE_PLL_PCLK_DIV_A(x)			UPDATE(x, 4, 0)
-+/* REG: 0xa6 */
-+#define RK3328_PRE_PLL_PCLK_DIV_C_SHIFT			5
-+#define RK3328_PRE_PLL_PCLK_DIV_C_MASK			GENMASK(6, 5)
-+#define RK3328_PRE_PLL_PCLK_DIV_C(x)			UPDATE(x, 6, 5)
-+#define RK3328_PRE_PLL_PCLK_DIV_D_MASK			GENMASK(4, 0)
-+#define RK3328_PRE_PLL_PCLK_DIV_D(x)			UPDATE(x, 4, 0)
-+/* REG: 0xa9 */
-+#define RK3328_PRE_PLL_LOCK_STATUS			BIT(0)
-+/* REG: 0xaa */
-+#define RK3328_POST_PLL_POST_DIV_ENABLE			GENMASK(3, 2)
-+#define RK3328_POST_PLL_REFCLK_SEL_TMDS			BIT(1)
-+#define RK3328_POST_PLL_POWER_DOWN			BIT(0)
-+/* REG:0xab */
-+#define RK3328_POST_PLL_FB_DIV_8(x)			UPDATE((x) >> 8, 7, 7)
-+#define RK3328_POST_PLL_PRE_DIV(x)			UPDATE(x, 4, 0)
-+/* REG: 0xac */
-+#define RK3328_POST_PLL_FB_DIV_7_0(x)			UPDATE(x, 7, 0)
-+/* REG: 0xad */
-+#define RK3328_POST_PLL_POST_DIV_MASK			GENMASK(1, 0)
-+#define RK3328_POST_PLL_POST_DIV_2			0x0
-+#define RK3328_POST_PLL_POST_DIV_4			0x1
-+#define RK3328_POST_PLL_POST_DIV_8			0x3
-+/* REG: 0xaf */
-+#define RK3328_POST_PLL_LOCK_STATUS			BIT(0)
-+/* REG: 0xb0 */
-+#define RK3328_BANDGAP_ENABLE				BIT(2)
-+/* REG: 0xb2 */
-+#define RK3328_TMDS_CLK_DRIVER_EN			BIT(3)
-+#define RK3328_TMDS_D2_DRIVER_EN			BIT(2)
-+#define RK3328_TMDS_D1_DRIVER_EN			BIT(1)
-+#define RK3328_TMDS_D0_DRIVER_EN			BIT(0)
-+#define RK3328_TMDS_DRIVER_ENABLE		(RK3328_TMDS_CLK_DRIVER_EN | \
-+						RK3328_TMDS_D2_DRIVER_EN | \
-+						RK3328_TMDS_D1_DRIVER_EN | \
-+						RK3328_TMDS_D0_DRIVER_EN)
-+/* REG:0xc5 */
-+#define RK3328_BYPASS_TERM_RESISTOR_CALIB		BIT(7)
-+#define RK3328_TERM_RESISTOR_CALIB_SPEED_14_8(x)	UPDATE((x) >> 8, 6, 0)
-+/* REG:0xc6 */
-+#define RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(x)		UPDATE(x, 7, 9)
-+/* REG:0xc7 */
-+#define RK3328_TERM_RESISTOR_50				UPDATE(0, 2, 1)
-+#define RK3328_TERM_RESISTOR_62_5			UPDATE(1, 2, 1)
-+#define RK3328_TERM_RESISTOR_75				UPDATE(2, 2, 1)
-+#define RK3328_TERM_RESISTOR_100			UPDATE(3, 2, 1)
-+/* REG 0xc8 - 0xcb */
-+#define RK3328_ESD_DETECT_MASK				GENMASK(7, 6)
-+#define RK3328_ESD_DETECT_340MV				(0x0 << 6)
-+#define RK3328_ESD_DETECT_280MV				(0x1 << 6)
-+#define RK3328_ESD_DETECT_260MV				(0x2 << 6)
-+#define RK3328_ESD_DETECT_240MV				(0x3 << 6)
-+/* resistors can be used in parallel */
-+#define RK3328_TMDS_TERM_RESIST_MASK			GENMASK(5, 0)
-+#define RK3328_TMDS_TERM_RESIST_75			BIT(5)
-+#define RK3328_TMDS_TERM_RESIST_150			BIT(4)
-+#define RK3328_TMDS_TERM_RESIST_300			BIT(3)
-+#define RK3328_TMDS_TERM_RESIST_600			BIT(2)
-+#define RK3328_TMDS_TERM_RESIST_1000			BIT(1)
-+#define RK3328_TMDS_TERM_RESIST_2000			BIT(0)
-+/* REG: 0xd1 */
-+#define RK3328_PRE_PLL_FRAC_DIV_23_16(x)		UPDATE((x) >> 16, 7, 0)
-+/* REG: 0xd2 */
-+#define RK3328_PRE_PLL_FRAC_DIV_15_8(x)			UPDATE((x) >> 8, 7, 0)
-+/* REG: 0xd3 */
-+#define RK3328_PRE_PLL_FRAC_DIV_7_0(x)			UPDATE(x, 7, 0)
-+
-+struct inno_hdmi_phy_drv_data;
-+
-+struct inno_hdmi_phy {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	int irq;
-+
-+	struct phy *phy;
-+	struct clk *sysclk;
-+	struct clk *refoclk;
-+	struct clk *refpclk;
-+
-+	/* platform data */
-+	struct inno_hdmi_phy_drv_data *plat_data;
-+	int chip_version;
-+
-+	/* clk provider */
-+	struct clk_hw hw;
-+	struct clk *phyclk;
-+	unsigned long pixclock;
-+};
-+
-+struct pre_pll_config {
-+	unsigned long pixclock;
-+	unsigned long tmdsclock;
-+	u8 prediv;
-+	u16 fbdiv;
-+	u8 tmds_div_a;
-+	u8 tmds_div_b;
-+	u8 tmds_div_c;
-+	u8 pclk_div_a;
-+	u8 pclk_div_b;
-+	u8 pclk_div_c;
-+	u8 pclk_div_d;
-+	u8 vco_div_5_en;
-+	u32 fracdiv;
-+};
-+
-+struct post_pll_config {
-+	unsigned long tmdsclock;
-+	u8 prediv;
-+	u16 fbdiv;
-+	u8 postdiv;
-+	u8 version;
-+};
-+
-+struct phy_config {
-+	unsigned long	tmdsclock;
-+	u8		regs[14];
-+};
-+
-+struct inno_hdmi_phy_ops {
-+	int (*init)(struct inno_hdmi_phy *inno);
-+	int (*power_on)(struct inno_hdmi_phy *inno,
-+			const struct post_pll_config *cfg,
-+			const struct phy_config *phy_cfg);
-+	void (*power_off)(struct inno_hdmi_phy *inno);
-+};
-+
-+struct inno_hdmi_phy_drv_data {
-+	const struct inno_hdmi_phy_ops	*ops;
-+	const struct clk_ops		*clk_ops;
-+	const struct phy_config		*phy_cfg_table;
-+};
-+
-+static const struct pre_pll_config pre_pll_cfg_table[] = {
-+	{ 27000000,  27000000, 1,  90, 3, 2, 2, 10, 3, 3, 4, 0, 0},
-+	{ 27000000,  33750000, 1,  90, 1, 3, 3, 10, 3, 3, 4, 0, 0},
-+	{ 40000000,  40000000, 1,  80, 2, 2, 2, 12, 2, 2, 2, 0, 0},
-+	{ 59341000,  59341000, 1,  98, 3, 1, 2,  1, 3, 3, 4, 0, 0xE6AE6B},
-+	{ 59400000,  59400000, 1,  99, 3, 1, 1,  1, 3, 3, 4, 0, 0},
-+	{ 59341000,  74176250, 1,  98, 0, 3, 3,  1, 3, 3, 4, 0, 0xE6AE6B},
-+	{ 59400000,  74250000, 1,  99, 1, 2, 2,  1, 3, 3, 4, 0, 0},
-+	{ 74176000,  74176000, 1,  98, 1, 2, 2,  1, 2, 3, 4, 0, 0xE6AE6B},
-+	{ 74250000,  74250000, 1,  99, 1, 2, 2,  1, 2, 3, 4, 0, 0},
-+	{ 74176000,  92720000, 4, 494, 1, 2, 2,  1, 3, 3, 4, 0, 0x816817},
-+	{ 74250000,  92812500, 4, 495, 1, 2, 2,  1, 3, 3, 4, 0, 0},
-+	{148352000, 148352000, 1,  98, 1, 1, 1,  1, 2, 2, 2, 0, 0xE6AE6B},
-+	{148500000, 148500000, 1,  99, 1, 1, 1,  1, 2, 2, 2, 0, 0},
-+	{148352000, 185440000, 4, 494, 0, 2, 2,  1, 3, 2, 2, 0, 0x816817},
-+	{148500000, 185625000, 4, 495, 0, 2, 2,  1, 3, 2, 2, 0, 0},
-+	{296703000, 296703000, 1,  98, 0, 1, 1,  1, 0, 2, 2, 0, 0xE6AE6B},
-+	{297000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 2, 0, 0},
-+	{296703000, 370878750, 4, 494, 1, 2, 0,  1, 3, 1, 1, 0, 0x816817},
-+	{297000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 0, 0},
-+	{593407000, 296703500, 1,  98, 0, 1, 1,  1, 0, 2, 1, 0, 0xE6AE6B},
-+	{594000000, 297000000, 1,  99, 0, 1, 1,  1, 0, 2, 1, 0, 0},
-+	{593407000, 370879375, 4, 494, 1, 2, 0,  1, 3, 1, 1, 1, 0x816817},
-+	{594000000, 371250000, 4, 495, 1, 2, 0,  1, 3, 1, 1, 1, 0},
-+	{593407000, 593407000, 1,  98, 0, 2, 0,  1, 0, 1, 1, 0, 0xE6AE6B},
-+	{594000000, 594000000, 1,  99, 0, 2, 0,  1, 0, 1, 1, 0, 0},
-+	{ /* sentinel */ }
-+};
-+
-+static const struct post_pll_config post_pll_cfg_table[] = {
-+	{33750000,  1, 40, 8, 1},
-+	{33750000,  1, 80, 8, 2},
-+	{74250000,  1, 40, 8, 1},
-+	{74250000, 18, 80, 8, 2},
-+	{148500000, 2, 40, 4, 3},
-+	{297000000, 4, 40, 2, 3},
-+	{594000000, 8, 40, 1, 3},
-+	{ /* sentinel */ }
-+};
-+
-+/* phy tuning values for an undocumented set of registers */
-+static const struct phy_config rk3228_phy_cfg[] = {
-+	{	165000000, {
-+			0xaa, 0x00, 0x44, 0x44, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0x00, 0x00, 0x00, 0x00, 0x00,
-+		},
-+	}, {
-+		340000000, {
-+			0xaa, 0x15, 0x6a, 0xaa, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0x00, 0x00, 0x00, 0x00, 0x00,
-+		},
-+	}, {
-+		594000000, {
-+			0xaa, 0x15, 0x7a, 0xaa, 0x00, 0x00, 0x00, 0x00, 0x00,
-+			0x00, 0x00, 0x00, 0x00, 0x00,
-+		},
-+	}, { /* sentinel */ },
-+};
-+
-+/* phy tuning values for an undocumented set of registers */
-+static const struct phy_config rk3328_phy_cfg[] = {
-+	{	165000000, {
-+			0x07, 0x0a, 0x0a, 0x0a, 0x00, 0x00, 0x08, 0x08, 0x08,
-+			0x00, 0xac, 0xcc, 0xcc, 0xcc,
-+		},
-+	}, {
-+		340000000, {
-+			0x0b, 0x0d, 0x0d, 0x0d, 0x07, 0x15, 0x08, 0x08, 0x08,
-+			0x3f, 0xac, 0xcc, 0xcd, 0xdd,
-+		},
-+	}, {
-+		594000000, {
-+			0x10, 0x1a, 0x1a, 0x1a, 0x07, 0x15, 0x08, 0x08, 0x08,
-+			0x00, 0xac, 0xcc, 0xcc, 0xcc,
-+		},
-+	}, { /* sentinel */ },
-+};
-+
-+static inline struct inno_hdmi_phy *to_inno_hdmi_phy(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct inno_hdmi_phy, hw);
-+}
-+
-+/*
-+ * The register description of the IP block does not use any distinct names
-+ * but instead the databook simply numbers the registers in one-increments.
-+ * As the registers are obviously 32bit sized, the inno_* functions
-+ * translate the databook register names to the actual registers addresses.
-+ */
-+static inline void inno_write(struct inno_hdmi_phy *inno, u32 reg, u8 val)
-+{
-+	regmap_write(inno->regmap, reg * 4, val);
-+}
-+
-+static inline u8 inno_read(struct inno_hdmi_phy *inno, u32 reg)
-+{
-+	u32 val;
-+
-+	regmap_read(inno->regmap, reg * 4, &val);
-+
-+	return val;
-+}
-+
-+static inline void inno_update_bits(struct inno_hdmi_phy *inno, u8 reg,
-+				    u8 mask, u8 val)
-+{
-+	regmap_update_bits(inno->regmap, reg * 4, mask, val);
-+}
-+
-+#define inno_poll(inno, reg, val, cond, sleep_us, timeout_us) \
-+	regmap_read_poll_timeout((inno)->regmap, (reg) * 4, val, cond, \
-+				 sleep_us, timeout_us)
-+
-+static unsigned long inno_hdmi_phy_get_tmdsclk(struct inno_hdmi_phy *inno,
-+					       unsigned long rate)
-+{
-+	int bus_width = phy_get_bus_width(inno->phy);
-+
-+	switch (bus_width) {
-+	case 4:
-+	case 5:
-+	case 6:
-+	case 10:
-+	case 12:
-+	case 16:
-+		return (u64)rate * bus_width / 8;
-+	default:
-+		return rate;
-+	}
-+}
-+
-+static irqreturn_t inno_hdmi_phy_rk3328_hardirq(int irq, void *dev_id)
-+{
-+	struct inno_hdmi_phy *inno = dev_id;
-+	int intr_stat1, intr_stat2, intr_stat3;
-+
-+	intr_stat1 = inno_read(inno, 0x04);
-+	intr_stat2 = inno_read(inno, 0x06);
-+	intr_stat3 = inno_read(inno, 0x08);
-+
-+	if (intr_stat1)
-+		inno_write(inno, 0x04, intr_stat1);
-+	if (intr_stat2)
-+		inno_write(inno, 0x06, intr_stat2);
-+	if (intr_stat3)
-+		inno_write(inno, 0x08, intr_stat3);
-+
-+	if (intr_stat1 || intr_stat2 || intr_stat3)
-+		return IRQ_WAKE_THREAD;
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t inno_hdmi_phy_rk3328_irq(int irq, void *dev_id)
-+{
-+	struct inno_hdmi_phy *inno = dev_id;
-+
-+	inno_update_bits(inno, 0x02, RK3328_PDATA_EN, 0);
-+	usleep_range(10, 20);
-+	inno_update_bits(inno, 0x02, RK3328_PDATA_EN, RK3328_PDATA_EN);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int inno_hdmi_phy_power_on(struct phy *phy)
-+{
-+	struct inno_hdmi_phy *inno = phy_get_drvdata(phy);
-+	const struct post_pll_config *cfg = post_pll_cfg_table;
-+	const struct phy_config *phy_cfg = inno->plat_data->phy_cfg_table;
-+	unsigned long tmdsclock = inno_hdmi_phy_get_tmdsclk(inno,
-+							    inno->pixclock);
-+	int ret;
-+
-+	if (!tmdsclock) {
-+		dev_err(inno->dev, "TMDS clock is zero!\n");
-+		return -EINVAL;
-+	}
-+
-+	if (!inno->plat_data->ops->power_on)
-+		return -EINVAL;
-+
-+	for (; cfg->tmdsclock != 0; cfg++)
-+		if (tmdsclock <= cfg->tmdsclock &&
-+		    cfg->version & inno->chip_version)
-+			break;
-+
-+	for (; phy_cfg->tmdsclock != 0; phy_cfg++)
-+		if (tmdsclock <= phy_cfg->tmdsclock)
-+			break;
-+
-+	if (cfg->tmdsclock == 0 || phy_cfg->tmdsclock == 0)
-+		return -EINVAL;
-+
-+	dev_dbg(inno->dev, "Inno HDMI PHY Power On\n");
-+
-+	ret = clk_prepare_enable(inno->phyclk);
-+	if (ret)
-+		return ret;
-+
-+	ret = inno->plat_data->ops->power_on(inno, cfg, phy_cfg);
-+	if (ret) {
-+		clk_disable_unprepare(inno->phyclk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int inno_hdmi_phy_power_off(struct phy *phy)
-+{
-+	struct inno_hdmi_phy *inno = phy_get_drvdata(phy);
-+
-+	if (!inno->plat_data->ops->power_off)
-+		return -EINVAL;
-+
-+	inno->plat_data->ops->power_off(inno);
-+
-+	clk_disable_unprepare(inno->phyclk);
-+
-+	dev_dbg(inno->dev, "Inno HDMI PHY Power Off\n");
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops inno_hdmi_phy_ops = {
-+	.owner = THIS_MODULE,
-+	.power_on = inno_hdmi_phy_power_on,
-+	.power_off = inno_hdmi_phy_power_off,
-+};
-+
-+static const
-+struct pre_pll_config *inno_hdmi_phy_get_pre_pll_cfg(struct inno_hdmi_phy *inno,
-+						     unsigned long rate)
-+{
-+	const struct pre_pll_config *cfg = pre_pll_cfg_table;
-+	unsigned long tmdsclock = inno_hdmi_phy_get_tmdsclk(inno, rate);
-+
-+	for (; cfg->pixclock != 0; cfg++)
-+		if (cfg->pixclock == rate && cfg->tmdsclock == tmdsclock)
-+			break;
-+
-+	if (cfg->pixclock == 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	return cfg;
-+}
-+
-+static int inno_hdmi_phy_rk3228_clk_is_prepared(struct clk_hw *hw)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+	u8 status;
-+
-+	status = inno_read(inno, 0xe0) & RK3228_PRE_PLL_POWER_DOWN;
-+	return status ? 0 : 1;
-+}
-+
-+static int inno_hdmi_phy_rk3228_clk_prepare(struct clk_hw *hw)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+
-+	inno_update_bits(inno, 0xe0, RK3228_PRE_PLL_POWER_DOWN, 0);
-+	return 0;
-+}
-+
-+static void inno_hdmi_phy_rk3228_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+
-+	inno_update_bits(inno, 0xe0, RK3228_PRE_PLL_POWER_DOWN,
-+			 RK3228_PRE_PLL_POWER_DOWN);
-+}
-+
-+static
-+unsigned long inno_hdmi_phy_rk3228_clk_recalc_rate(struct clk_hw *hw,
-+						   unsigned long parent_rate)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+	u8 nd, no_a, no_b, no_d;
-+	u64 vco;
-+	u16 nf;
-+
-+	nd = inno_read(inno, 0xe2) & RK3228_PRE_PLL_PRE_DIV_MASK;
-+	nf = (inno_read(inno, 0xe2) & RK3228_PRE_PLL_FB_DIV_8_MASK) << 1;
-+	nf |= inno_read(inno, 0xe3);
-+	vco = parent_rate * nf;
-+
-+	if (inno_read(inno, 0xe2) & RK3228_PCLK_VCO_DIV_5_MASK) {
-+		do_div(vco, nd * 5);
-+	} else {
-+		no_a = inno_read(inno, 0xe4) & RK3228_PRE_PLL_PCLK_DIV_A_MASK;
-+		if (!no_a)
-+			no_a = 1;
-+		no_b = inno_read(inno, 0xe4) & RK3228_PRE_PLL_PCLK_DIV_B_MASK;
-+		no_b >>= RK3228_PRE_PLL_PCLK_DIV_B_SHIFT;
-+		no_b += 2;
-+		no_d = inno_read(inno, 0xe5) & RK3228_PRE_PLL_PCLK_DIV_D_MASK;
-+
-+		do_div(vco, (nd * (no_a == 1 ? no_b : no_a) * no_d * 2));
-+	}
-+
-+	inno->pixclock = vco;
-+
-+	dev_dbg(inno->dev, "%s rate %lu\n", __func__, inno->pixclock);
-+
-+	return vco;
-+}
-+
-+static long inno_hdmi_phy_rk3228_clk_round_rate(struct clk_hw *hw,
-+						unsigned long rate,
-+						unsigned long *parent_rate)
-+{
-+	const struct pre_pll_config *cfg = pre_pll_cfg_table;
-+
-+	for (; cfg->pixclock != 0; cfg++)
-+		if (cfg->pixclock == rate && !cfg->fracdiv)
-+			break;
-+
-+	if (cfg->pixclock == 0)
-+		return -EINVAL;
-+
-+	return cfg->pixclock;
-+}
-+
-+static int inno_hdmi_phy_rk3228_clk_set_rate(struct clk_hw *hw,
-+					     unsigned long rate,
-+					     unsigned long parent_rate)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+	const struct pre_pll_config *cfg = pre_pll_cfg_table;
-+	unsigned long tmdsclock = inno_hdmi_phy_get_tmdsclk(inno, rate);
-+	u32 v;
-+	int ret;
-+
-+	dev_dbg(inno->dev, "%s rate %lu tmdsclk %lu\n",
-+		__func__, rate, tmdsclock);
-+
-+	cfg = inno_hdmi_phy_get_pre_pll_cfg(inno, rate);
-+	if (IS_ERR(cfg))
-+		return PTR_ERR(cfg);
-+
-+	/* Power down PRE-PLL */
-+	inno_update_bits(inno, 0xe0, RK3228_PRE_PLL_POWER_DOWN,
-+			 RK3228_PRE_PLL_POWER_DOWN);
-+
-+	inno_update_bits(inno, 0xe2, RK3228_PRE_PLL_FB_DIV_8_MASK |
-+			 RK3228_PCLK_VCO_DIV_5_MASK |
-+			 RK3228_PRE_PLL_PRE_DIV_MASK,
-+			 RK3228_PRE_PLL_FB_DIV_8(cfg->fbdiv) |
-+			 RK3228_PCLK_VCO_DIV_5(cfg->vco_div_5_en) |
-+			 RK3228_PRE_PLL_PRE_DIV(cfg->prediv));
-+	inno_write(inno, 0xe3, RK3228_PRE_PLL_FB_DIV_7_0(cfg->fbdiv));
-+	inno_update_bits(inno, 0xe4, RK3228_PRE_PLL_PCLK_DIV_B_MASK |
-+			 RK3228_PRE_PLL_PCLK_DIV_A_MASK,
-+			 RK3228_PRE_PLL_PCLK_DIV_B(cfg->pclk_div_b) |
-+			 RK3228_PRE_PLL_PCLK_DIV_A(cfg->pclk_div_a));
-+	inno_update_bits(inno, 0xe5, RK3228_PRE_PLL_PCLK_DIV_C_MASK |
-+			 RK3228_PRE_PLL_PCLK_DIV_D_MASK,
-+			 RK3228_PRE_PLL_PCLK_DIV_C(cfg->pclk_div_c) |
-+			 RK3228_PRE_PLL_PCLK_DIV_D(cfg->pclk_div_d));
-+	inno_update_bits(inno, 0xe6, RK3228_PRE_PLL_TMDSCLK_DIV_C_MASK |
-+			 RK3228_PRE_PLL_TMDSCLK_DIV_A_MASK |
-+			 RK3228_PRE_PLL_TMDSCLK_DIV_B_MASK,
-+			 RK3228_PRE_PLL_TMDSCLK_DIV_C(cfg->tmds_div_c) |
-+			 RK3228_PRE_PLL_TMDSCLK_DIV_A(cfg->tmds_div_a) |
-+			 RK3228_PRE_PLL_TMDSCLK_DIV_B(cfg->tmds_div_b));
-+
-+	/* Power up PRE-PLL */
-+	inno_update_bits(inno, 0xe0, RK3228_PRE_PLL_POWER_DOWN, 0);
-+
-+	/* Wait for Pre-PLL lock */
-+	ret = inno_poll(inno, 0xe8, v, v & RK3228_PRE_PLL_LOCK_STATUS,
-+			100, 100000);
-+	if (ret) {
-+		dev_err(inno->dev, "Pre-PLL locking failed\n");
-+		return ret;
-+	}
-+
-+	inno->pixclock = rate;
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops inno_hdmi_phy_rk3228_clk_ops = {
-+	.prepare = inno_hdmi_phy_rk3228_clk_prepare,
-+	.unprepare = inno_hdmi_phy_rk3228_clk_unprepare,
-+	.is_prepared = inno_hdmi_phy_rk3228_clk_is_prepared,
-+	.recalc_rate = inno_hdmi_phy_rk3228_clk_recalc_rate,
-+	.round_rate = inno_hdmi_phy_rk3228_clk_round_rate,
-+	.set_rate = inno_hdmi_phy_rk3228_clk_set_rate,
-+};
-+
-+static int inno_hdmi_phy_rk3328_clk_is_prepared(struct clk_hw *hw)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+	u8 status;
-+
-+	status = inno_read(inno, 0xa0) & RK3328_PRE_PLL_POWER_DOWN;
-+	return status ? 0 : 1;
-+}
-+
-+static int inno_hdmi_phy_rk3328_clk_prepare(struct clk_hw *hw)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+
-+	inno_update_bits(inno, 0xa0, RK3328_PRE_PLL_POWER_DOWN, 0);
-+	return 0;
-+}
-+
-+static void inno_hdmi_phy_rk3328_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+
-+	inno_update_bits(inno, 0xa0, RK3328_PRE_PLL_POWER_DOWN,
-+			 RK3328_PRE_PLL_POWER_DOWN);
-+}
-+
-+static
-+unsigned long inno_hdmi_phy_rk3328_clk_recalc_rate(struct clk_hw *hw,
-+						   unsigned long parent_rate)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+	unsigned long frac;
-+	u8 nd, no_a, no_b, no_c, no_d;
-+	u64 vco;
-+	u16 nf;
-+
-+	nd = inno_read(inno, 0xa1) & RK3328_PRE_PLL_PRE_DIV_MASK;
-+	nf = ((inno_read(inno, 0xa2) & RK3328_PRE_PLL_FB_DIV_11_8_MASK) << 8);
-+	nf |= inno_read(inno, 0xa3);
-+	vco = parent_rate * nf;
-+
-+	if (!(inno_read(inno, 0xa2) & RK3328_PRE_PLL_FRAC_DIV_DISABLE)) {
-+		frac = inno_read(inno, 0xd3) |
-+		       (inno_read(inno, 0xd2) << 8) |
-+		       (inno_read(inno, 0xd1) << 16);
-+		vco += DIV_ROUND_CLOSEST(parent_rate * frac, (1 << 24));
-+	}
-+
-+	if (inno_read(inno, 0xa0) & RK3328_PCLK_VCO_DIV_5_MASK) {
-+		do_div(vco, nd * 5);
-+	} else {
-+		no_a = inno_read(inno, 0xa5) & RK3328_PRE_PLL_PCLK_DIV_A_MASK;
-+		no_b = inno_read(inno, 0xa5) & RK3328_PRE_PLL_PCLK_DIV_B_MASK;
-+		no_b >>= RK3328_PRE_PLL_PCLK_DIV_B_SHIFT;
-+		no_b += 2;
-+		no_c = inno_read(inno, 0xa6) & RK3328_PRE_PLL_PCLK_DIV_C_MASK;
-+		no_c >>= RK3328_PRE_PLL_PCLK_DIV_C_SHIFT;
-+		no_c = 1 << no_c;
-+		no_d = inno_read(inno, 0xa6) & RK3328_PRE_PLL_PCLK_DIV_D_MASK;
-+
-+		do_div(vco, (nd * (no_a == 1 ? no_b : no_a) * no_d * 2));
-+	}
-+
-+	inno->pixclock = vco;
-+	dev_dbg(inno->dev, "%s rate %lu\n", __func__, inno->pixclock);
-+
-+	return vco;
-+}
-+
-+static long inno_hdmi_phy_rk3328_clk_round_rate(struct clk_hw *hw,
-+						unsigned long rate,
-+						unsigned long *parent_rate)
-+{
-+	const struct pre_pll_config *cfg = pre_pll_cfg_table;
-+
-+	for (; cfg->pixclock != 0; cfg++)
-+		if (cfg->pixclock == rate)
-+			break;
-+
-+	if (cfg->pixclock == 0)
-+		return -EINVAL;
-+
-+	return cfg->pixclock;
-+}
-+
-+static int inno_hdmi_phy_rk3328_clk_set_rate(struct clk_hw *hw,
-+					     unsigned long rate,
-+					     unsigned long parent_rate)
-+{
-+	struct inno_hdmi_phy *inno = to_inno_hdmi_phy(hw);
-+	const struct pre_pll_config *cfg = pre_pll_cfg_table;
-+	unsigned long tmdsclock = inno_hdmi_phy_get_tmdsclk(inno, rate);
-+	u32 val;
-+	int ret;
-+
-+	dev_dbg(inno->dev, "%s rate %lu tmdsclk %lu\n",
-+		__func__, rate, tmdsclock);
-+
-+	cfg = inno_hdmi_phy_get_pre_pll_cfg(inno, rate);
-+	if (IS_ERR(cfg))
-+		return PTR_ERR(cfg);
-+
-+	inno_update_bits(inno, 0xa0, RK3328_PRE_PLL_POWER_DOWN,
-+			 RK3328_PRE_PLL_POWER_DOWN);
-+
-+	/* Configure pre-pll */
-+	inno_update_bits(inno, 0xa0, RK3228_PCLK_VCO_DIV_5_MASK,
-+			 RK3228_PCLK_VCO_DIV_5(cfg->vco_div_5_en));
-+	inno_write(inno, 0xa1, RK3328_PRE_PLL_PRE_DIV(cfg->prediv));
-+
-+	val = RK3328_SPREAD_SPECTRUM_MOD_DISABLE;
-+	if (!cfg->fracdiv)
-+		val |= RK3328_PRE_PLL_FRAC_DIV_DISABLE;
-+	inno_write(inno, 0xa2, RK3328_PRE_PLL_FB_DIV_11_8(cfg->fbdiv) | val);
-+	inno_write(inno, 0xa3, RK3328_PRE_PLL_FB_DIV_7_0(cfg->fbdiv));
-+	inno_write(inno, 0xa5, RK3328_PRE_PLL_PCLK_DIV_A(cfg->pclk_div_a) |
-+		   RK3328_PRE_PLL_PCLK_DIV_B(cfg->pclk_div_b));
-+	inno_write(inno, 0xa6, RK3328_PRE_PLL_PCLK_DIV_C(cfg->pclk_div_c) |
-+		   RK3328_PRE_PLL_PCLK_DIV_D(cfg->pclk_div_d));
-+	inno_write(inno, 0xa4, RK3328_PRE_PLL_TMDSCLK_DIV_C(cfg->tmds_div_c) |
-+		   RK3328_PRE_PLL_TMDSCLK_DIV_A(cfg->tmds_div_a) |
-+		   RK3328_PRE_PLL_TMDSCLK_DIV_B(cfg->tmds_div_b));
-+	inno_write(inno, 0xd3, RK3328_PRE_PLL_FRAC_DIV_7_0(cfg->fracdiv));
-+	inno_write(inno, 0xd2, RK3328_PRE_PLL_FRAC_DIV_15_8(cfg->fracdiv));
-+	inno_write(inno, 0xd1, RK3328_PRE_PLL_FRAC_DIV_23_16(cfg->fracdiv));
-+
-+	inno_update_bits(inno, 0xa0, RK3328_PRE_PLL_POWER_DOWN, 0);
-+
-+	/* Wait for Pre-PLL lock */
-+	ret = inno_poll(inno, 0xa9, val, val & RK3328_PRE_PLL_LOCK_STATUS,
-+			1000, 10000);
-+	if (ret) {
-+		dev_err(inno->dev, "Pre-PLL locking failed\n");
-+		return ret;
-+	}
-+
-+	inno->pixclock = rate;
-+
-+	return 0;
-+}
-+
-+static const struct clk_ops inno_hdmi_phy_rk3328_clk_ops = {
-+	.prepare = inno_hdmi_phy_rk3328_clk_prepare,
-+	.unprepare = inno_hdmi_phy_rk3328_clk_unprepare,
-+	.is_prepared = inno_hdmi_phy_rk3328_clk_is_prepared,
-+	.recalc_rate = inno_hdmi_phy_rk3328_clk_recalc_rate,
-+	.round_rate = inno_hdmi_phy_rk3328_clk_round_rate,
-+	.set_rate = inno_hdmi_phy_rk3328_clk_set_rate,
-+};
-+
-+static int inno_hdmi_phy_clk_register(struct inno_hdmi_phy *inno)
-+{
-+	struct device *dev = inno->dev;
-+	struct device_node *np = dev->of_node;
-+	struct clk_init_data init;
-+	const char *parent_name;
-+	int ret;
-+
-+	parent_name = __clk_get_name(inno->refoclk);
-+
-+	init.parent_names = &parent_name;
-+	init.num_parents = 1;
-+	init.flags = 0;
-+	init.name = "pin_hd20_pclk";
-+	init.ops = inno->plat_data->clk_ops;
-+
-+	/* optional override of the clock name */
-+	of_property_read_string(np, "clock-output-names", &init.name);
-+
-+	inno->hw.init = &init;
-+
-+	inno->phyclk = devm_clk_register(dev, &inno->hw);
-+	if (IS_ERR(inno->phyclk)) {
-+		ret = PTR_ERR(inno->phyclk);
-+		dev_err(dev, "failed to register clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = of_clk_add_provider(np, of_clk_src_simple_get, inno->phyclk);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock provider: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int inno_hdmi_phy_rk3228_init(struct inno_hdmi_phy *inno)
-+{
-+	/*
-+	 * Use phy internal register control
-+	 * rxsense/poweron/pllpd/pdataen signal.
-+	 */
-+	inno_write(inno, 0x01, RK3228_BYPASS_RXSENSE_EN |
-+		   RK3228_BYPASS_PWRON_EN |
-+		   RK3228_BYPASS_PLLPD_EN);
-+	inno_update_bits(inno, 0x02, RK3228_BYPASS_PDATA_EN,
-+			 RK3228_BYPASS_PDATA_EN);
-+
-+	/* manual power down post-PLL */
-+	inno_update_bits(inno, 0xaa, RK3228_POST_PLL_CTRL_MANUAL,
-+			 RK3228_POST_PLL_CTRL_MANUAL);
-+
-+	inno->chip_version = 1;
-+
-+	return 0;
-+}
-+
-+static int
-+inno_hdmi_phy_rk3228_power_on(struct inno_hdmi_phy *inno,
-+			      const struct post_pll_config *cfg,
-+			      const struct phy_config *phy_cfg)
-+{
-+	int ret;
-+	u32 v;
-+
-+	inno_update_bits(inno, 0x02, RK3228_PDATAEN_DISABLE,
-+			 RK3228_PDATAEN_DISABLE);
-+	inno_update_bits(inno, 0xe0, RK3228_PRE_PLL_POWER_DOWN |
-+			 RK3228_POST_PLL_POWER_DOWN,
-+			 RK3228_PRE_PLL_POWER_DOWN |
-+			 RK3228_POST_PLL_POWER_DOWN);
-+
-+	/* Post-PLL update */
-+	inno_update_bits(inno, 0xe9, RK3228_POST_PLL_PRE_DIV_MASK,
-+			 RK3228_POST_PLL_PRE_DIV(cfg->prediv));
-+	inno_update_bits(inno, 0xeb, RK3228_POST_PLL_FB_DIV_8_MASK,
-+			 RK3228_POST_PLL_FB_DIV_8(cfg->fbdiv));
-+	inno_write(inno, 0xea, RK3228_POST_PLL_FB_DIV_7_0(cfg->fbdiv));
-+
-+	if (cfg->postdiv == 1) {
-+		inno_update_bits(inno, 0xe9, RK3228_POST_PLL_POST_DIV_ENABLE,
-+				 0);
-+	} else {
-+		int div = cfg->postdiv / 2 - 1;
-+
-+		inno_update_bits(inno, 0xe9, RK3228_POST_PLL_POST_DIV_ENABLE,
-+				 RK3228_POST_PLL_POST_DIV_ENABLE);
-+		inno_update_bits(inno, 0xeb, RK3228_POST_PLL_POST_DIV_MASK,
-+				 RK3228_POST_PLL_POST_DIV(div));
-+	}
-+
-+	for (v = 0; v < 4; v++)
-+		inno_write(inno, 0xef + v, phy_cfg->regs[v]);
-+
-+	inno_update_bits(inno, 0xe0, RK3228_PRE_PLL_POWER_DOWN |
-+			 RK3228_POST_PLL_POWER_DOWN, 0);
-+	inno_update_bits(inno, 0xe1, RK3228_BANDGAP_ENABLE,
-+			 RK3228_BANDGAP_ENABLE);
-+	inno_update_bits(inno, 0xe1, RK3228_TMDS_DRIVER_ENABLE,
-+			 RK3228_TMDS_DRIVER_ENABLE);
-+
-+	/* Wait for post PLL lock */
-+	ret = inno_poll(inno, 0xeb, v, v & RK3228_POST_PLL_LOCK_STATUS,
-+			100, 100000);
-+	if (ret) {
-+		dev_err(inno->dev, "Post-PLL locking failed\n");
-+		return ret;
-+	}
-+
-+	if (cfg->tmdsclock > 340000000)
-+		msleep(100);
-+
-+	inno_update_bits(inno, 0x02, RK3228_PDATAEN_DISABLE, 0);
-+	return 0;
-+}
-+
-+static void inno_hdmi_phy_rk3228_power_off(struct inno_hdmi_phy *inno)
-+{
-+	inno_update_bits(inno, 0xe1, RK3228_TMDS_DRIVER_ENABLE, 0);
-+	inno_update_bits(inno, 0xe1, RK3228_BANDGAP_ENABLE, 0);
-+	inno_update_bits(inno, 0xe0, RK3228_POST_PLL_POWER_DOWN,
-+			 RK3228_POST_PLL_POWER_DOWN);
-+}
-+
-+static const struct inno_hdmi_phy_ops rk3228_hdmi_phy_ops = {
-+	.init = inno_hdmi_phy_rk3228_init,
-+	.power_on = inno_hdmi_phy_rk3228_power_on,
-+	.power_off = inno_hdmi_phy_rk3228_power_off,
-+};
-+
-+static int inno_hdmi_phy_rk3328_init(struct inno_hdmi_phy *inno)
-+{
-+	struct nvmem_cell *cell;
-+	unsigned char *efuse_buf;
-+	size_t len;
-+
-+	/*
-+	 * Use phy internal register control
-+	 * rxsense/poweron/pllpd/pdataen signal.
-+	 */
-+	inno_write(inno, 0x01, RK3328_BYPASS_RXSENSE_EN |
-+		   RK3328_BYPASS_POWERON_EN |
-+		   RK3328_BYPASS_PLLPD_EN);
-+	inno_write(inno, 0x02, RK3328_INT_POL_HIGH | RK3328_BYPASS_PDATA_EN |
-+		   RK3328_PDATA_EN);
-+
-+	/* Disable phy irq */
-+	inno_write(inno, 0x05, 0);
-+	inno_write(inno, 0x07, 0);
-+
-+	/* try to read the chip-version */
-+	inno->chip_version = 1;
-+	cell = nvmem_cell_get(inno->dev, "cpu-version");
-+	if (IS_ERR(cell)) {
-+		if (PTR_ERR(cell) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		return 0;
-+	}
-+
-+	efuse_buf = nvmem_cell_read(cell, &len);
-+	nvmem_cell_put(cell);
-+
-+	if (IS_ERR(efuse_buf))
-+		return 0;
-+	if (len == 1)
-+		inno->chip_version = efuse_buf[0] + 1;
-+	kfree(efuse_buf);
-+
-+	return 0;
-+}
-+
-+static int
-+inno_hdmi_phy_rk3328_power_on(struct inno_hdmi_phy *inno,
-+			      const struct post_pll_config *cfg,
-+			      const struct phy_config *phy_cfg)
-+{
-+	int ret;
-+	u32 v;
-+
-+	inno_update_bits(inno, 0x02, RK3328_PDATA_EN, 0);
-+	inno_update_bits(inno, 0xaa, RK3328_POST_PLL_POWER_DOWN,
-+			 RK3328_POST_PLL_POWER_DOWN);
-+
-+	inno_write(inno, 0xac, RK3328_POST_PLL_FB_DIV_7_0(cfg->fbdiv));
-+	if (cfg->postdiv == 1) {
-+		inno_write(inno, 0xaa, RK3328_POST_PLL_REFCLK_SEL_TMDS);
-+		inno_write(inno, 0xab, RK3328_POST_PLL_FB_DIV_8(cfg->fbdiv) |
-+			   RK3328_POST_PLL_PRE_DIV(cfg->prediv));
-+	} else {
-+		v = (cfg->postdiv / 2) - 1;
-+		v &= RK3328_POST_PLL_POST_DIV_MASK;
-+		inno_write(inno, 0xad, v);
-+		inno_write(inno, 0xab, RK3328_POST_PLL_FB_DIV_8(cfg->fbdiv) |
-+			   RK3328_POST_PLL_PRE_DIV(cfg->prediv));
-+		inno_write(inno, 0xaa, RK3328_POST_PLL_POST_DIV_ENABLE |
-+			   RK3328_POST_PLL_REFCLK_SEL_TMDS);
-+	}
-+
-+	for (v = 0; v < 14; v++)
-+		inno_write(inno, 0xb5 + v, phy_cfg->regs[v]);
-+
-+	/* set ESD detection threshold for TMDS CLK, D2, D1 and D0 */
-+	for (v = 0; v < 4; v++)
-+		inno_update_bits(inno, 0xc8 + v, RK3328_ESD_DETECT_MASK,
-+				 RK3328_ESD_DETECT_340MV);
-+
-+	if (phy_cfg->tmdsclock > 340000000) {
-+		/* Set termination resistor to 100ohm */
-+		v = clk_get_rate(inno->sysclk) / 100000;
-+		inno_write(inno, 0xc5, RK3328_TERM_RESISTOR_CALIB_SPEED_14_8(v)
-+			   | RK3328_BYPASS_TERM_RESISTOR_CALIB);
-+		inno_write(inno, 0xc6, RK3328_TERM_RESISTOR_CALIB_SPEED_7_0(v));
-+		inno_write(inno, 0xc7, RK3328_TERM_RESISTOR_100);
-+		inno_update_bits(inno, 0xc5,
-+				 RK3328_BYPASS_TERM_RESISTOR_CALIB, 0);
-+	} else {
-+		inno_write(inno, 0xc5, RK3328_BYPASS_TERM_RESISTOR_CALIB);
-+
-+		/* clk termination resistor is 50ohm (parallel resistors) */
-+		if (phy_cfg->tmdsclock > 165000000)
-+			inno_update_bits(inno, 0xc8,
-+					 RK3328_TMDS_TERM_RESIST_MASK,
-+					 RK3328_TMDS_TERM_RESIST_75 |
-+					 RK3328_TMDS_TERM_RESIST_150);
-+
-+		/* data termination resistor for D2, D1 and D0 is 150ohm */
-+		for (v = 0; v < 3; v++)
-+			inno_update_bits(inno, 0xc9 + v,
-+					 RK3328_TMDS_TERM_RESIST_MASK,
-+					 RK3328_TMDS_TERM_RESIST_150);
-+	}
-+
-+	inno_update_bits(inno, 0xaa, RK3328_POST_PLL_POWER_DOWN, 0);
-+	inno_update_bits(inno, 0xb0, RK3328_BANDGAP_ENABLE,
-+			 RK3328_BANDGAP_ENABLE);
-+	inno_update_bits(inno, 0xb2, RK3328_TMDS_DRIVER_ENABLE,
-+			 RK3328_TMDS_DRIVER_ENABLE);
-+
-+	/* Wait for post PLL lock */
-+	ret = inno_poll(inno, 0xaf, v, v & RK3328_POST_PLL_LOCK_STATUS,
-+			1000, 10000);
-+	if (ret) {
-+		dev_err(inno->dev, "Post-PLL locking failed\n");
-+		return ret;
-+	}
-+
-+	if (phy_cfg->tmdsclock > 340000000)
-+		msleep(100);
-+
-+	inno_update_bits(inno, 0x02, RK3328_PDATA_EN, RK3328_PDATA_EN);
-+
-+	/* Enable PHY IRQ */
-+	inno_write(inno, 0x05, RK3328_INT_TMDS_CLK(RK3328_INT_VSS_AGND_ESD_DET)
-+		   | RK3328_INT_TMDS_D2(RK3328_INT_VSS_AGND_ESD_DET));
-+	inno_write(inno, 0x07, RK3328_INT_TMDS_D1(RK3328_INT_VSS_AGND_ESD_DET)
-+		   | RK3328_INT_TMDS_D0(RK3328_INT_VSS_AGND_ESD_DET));
-+	return 0;
-+}
-+
-+static void inno_hdmi_phy_rk3328_power_off(struct inno_hdmi_phy *inno)
-+{
-+	inno_update_bits(inno, 0xb2, RK3328_TMDS_DRIVER_ENABLE, 0);
-+	inno_update_bits(inno, 0xb0, RK3328_BANDGAP_ENABLE, 0);
-+	inno_update_bits(inno, 0xaa, RK3328_POST_PLL_POWER_DOWN,
-+			 RK3328_POST_PLL_POWER_DOWN);
-+
-+	/* Disable PHY IRQ */
-+	inno_write(inno, 0x05, 0);
-+	inno_write(inno, 0x07, 0);
-+}
-+
-+static const struct inno_hdmi_phy_ops rk3328_hdmi_phy_ops = {
-+	.init = inno_hdmi_phy_rk3328_init,
-+	.power_on = inno_hdmi_phy_rk3328_power_on,
-+	.power_off = inno_hdmi_phy_rk3328_power_off,
-+};
-+
-+static const struct inno_hdmi_phy_drv_data rk3228_hdmi_phy_drv_data = {
-+	.ops = &rk3228_hdmi_phy_ops,
-+	.clk_ops = &inno_hdmi_phy_rk3228_clk_ops,
-+	.phy_cfg_table = rk3228_phy_cfg,
-+};
-+
-+static const struct inno_hdmi_phy_drv_data rk3328_hdmi_phy_drv_data = {
-+	.ops = &rk3328_hdmi_phy_ops,
-+	.clk_ops = &inno_hdmi_phy_rk3328_clk_ops,
-+	.phy_cfg_table = rk3328_phy_cfg,
-+};
-+
-+static const struct regmap_config inno_hdmi_phy_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+	.max_register = 0x400,
-+};
-+
-+static void inno_hdmi_phy_action(void *data)
-+{
-+	struct inno_hdmi_phy *inno = data;
-+
-+	clk_disable_unprepare(inno->refpclk);
-+	clk_disable_unprepare(inno->sysclk);
-+}
-+
-+static int inno_hdmi_phy_probe(struct platform_device *pdev)
-+{
-+	struct inno_hdmi_phy *inno;
-+	const struct of_device_id *match;
-+	struct phy_provider *phy_provider;
-+	struct resource *res;
-+	void __iomem *regs;
-+	int ret;
-+
-+	inno = devm_kzalloc(&pdev->dev, sizeof(*inno), GFP_KERNEL);
-+	if (!inno)
-+		return -ENOMEM;
-+
-+	inno->dev = &pdev->dev;
-+
-+	match = of_match_device(inno->dev->driver->of_match_table, inno->dev);
-+	inno->plat_data = (struct inno_hdmi_phy_drv_data *)match->data;
-+	if (!inno->plat_data || !inno->plat_data->ops)
-+		return -EINVAL;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	regs = devm_ioremap_resource(inno->dev, res);
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	inno->sysclk = devm_clk_get(inno->dev, "sysclk");
-+	if (IS_ERR(inno->sysclk)) {
-+		ret = PTR_ERR(inno->sysclk);
-+		dev_err(inno->dev, "failed to get sysclk: %d\n", ret);
-+		return ret;
-+	}
-+
-+	inno->refpclk = devm_clk_get(inno->dev, "refpclk");
-+	if (IS_ERR(inno->refpclk)) {
-+		ret = PTR_ERR(inno->refpclk);
-+		dev_err(inno->dev, "failed to get ref clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	inno->refoclk = devm_clk_get(inno->dev, "refoclk");
-+	if (IS_ERR(inno->refoclk)) {
-+		ret = PTR_ERR(inno->refoclk);
-+		dev_err(inno->dev, "failed to get oscillator-ref clock: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(inno->sysclk);
-+	if (ret) {
-+		dev_err(inno->dev, "Cannot enable inno phy sysclk: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Refpclk needs to be on, on at least the rk3328 for still
-+	 * unknown reasons.
-+	 */
-+	ret = clk_prepare_enable(inno->refpclk);
-+	if (ret) {
-+		dev_err(inno->dev, "failed to enable refpclk\n");
-+		clk_disable_unprepare(inno->sysclk);
-+		return ret;
-+	}
-+
-+	ret = devm_add_action_or_reset(inno->dev, inno_hdmi_phy_action,
-+				       inno);
-+	if (ret)
-+		return ret;
-+
-+	inno->regmap = devm_regmap_init_mmio(inno->dev, regs,
-+					     &inno_hdmi_phy_regmap_config);
-+	if (IS_ERR(inno->regmap))
-+		return PTR_ERR(inno->regmap);
-+
-+	/* only the newer rk3328 hdmiphy has an interrupt */
-+	inno->irq = platform_get_irq(pdev, 0);
-+	if (inno->irq > 0) {
-+		ret = devm_request_threaded_irq(inno->dev, inno->irq,
-+						inno_hdmi_phy_rk3328_hardirq,
-+						inno_hdmi_phy_rk3328_irq,
-+						IRQF_SHARED,
-+						dev_name(inno->dev), inno);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	inno->phy = devm_phy_create(inno->dev, NULL, &inno_hdmi_phy_ops);
-+	if (IS_ERR(inno->phy)) {
-+		dev_err(inno->dev, "failed to create HDMI PHY\n");
-+		return PTR_ERR(inno->phy);
-+	}
-+
-+	phy_set_drvdata(inno->phy, inno);
-+	phy_set_bus_width(inno->phy, 8);
-+
-+	if (inno->plat_data->ops->init) {
-+		ret = inno->plat_data->ops->init(inno);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = inno_hdmi_phy_clk_register(inno);
-+	if (ret)
-+		return ret;
-+
-+	phy_provider = devm_of_phy_provider_register(inno->dev,
-+						     of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static int inno_hdmi_phy_remove(struct platform_device *pdev)
-+{
-+	of_clk_del_provider(pdev->dev.of_node);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id inno_hdmi_phy_of_match[] = {
-+	{
-+		.compatible = "rockchip,rk3228-hdmi-phy",
-+		.data = &rk3228_hdmi_phy_drv_data
-+	}, {
-+		.compatible = "rockchip,rk3328-hdmi-phy",
-+		.data = &rk3328_hdmi_phy_drv_data
-+	}, { /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, inno_hdmi_phy_of_match);
-+
-+static struct platform_driver inno_hdmi_phy_driver = {
-+	.probe  = inno_hdmi_phy_probe,
-+	.remove = inno_hdmi_phy_remove,
-+	.driver = {
-+		.name = "inno-hdmi-phy",
-+		.of_match_table = inno_hdmi_phy_of_match,
-+	},
-+};
-+module_platform_driver(inno_hdmi_phy_driver);
-+
-+MODULE_AUTHOR("Zheng Yang <zhengyang@rock-chips.com>");
-+MODULE_DESCRIPTION("Innosilion HDMI 2.0 Transmitter PHY Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.0
+SGkgTGVvLA0KDQpPbiBTZXB0ZW1iZXIgMDUsIDIwMTggYXQgMTE6MjIgWWFuZyBMaSB3cm90ZToN
+Cj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGkgWWFuZyA8bGVveWFuZy5s
+aUBueHAuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciAwNSwgMjAxOCAxMToyMg0K
+PiBUbzogZG9uZ3NoZW5nLndhbmdAaHh0LXNlbWl0ZWNoLmNvbQ0KPiBDYzogUmFuIFdhbmcgPHJh
+bi53YW5nXzFAbnhwLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5vcmc+Ow0KPiBN
+YXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdB
+UkUgQU5EDQo+IEZMQVRURU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc+OyBsaW51eHBwYy0NCj4gZGV2IDxsaW51eHBwYy1kZXZAbGlzdHMub3psYWJz
+Lm9yZz47IGxrbWwgPGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBtb2RlcmF0ZWQg
+bGlzdDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0t
+DQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDMv
+M10gc29jOiBmc2w6IGFkZCBSQ1BNIGRyaXZlcg0KPiANCj4gT24gVHVlLCBTZXAgNCwgMjAxOCBh
+dCA5OjU4IFBNIFdhbmcsIERvbmdzaGVuZyA8ZG9uZ3NoZW5nLndhbmdAaHh0LQ0KPiBzZW1pdGVj
+aC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gUGxlYXNlIGNoYW5nZSB5b3VyIGNvbW1lbnRzIHN0eWxl
+Lg0KPiANCj4gQWx0aG91Z2ggdGhpcyBkb2Vzbid0IGdldCBpbnRvIHRoZSBMaW51eCBrZXJuZWwg
+Y29kaW5nIHN0eWxlIGRvY3VtZW50YXRpb24NCj4geWV0LCBMaW51cyBzZWVtcyBjaGFuZ2VkIGhp
+cyBtaW5kIHRvIHByZWZlciAvLyB0aGFuIC8qDQo+ICovIGNvbW1lbnQgc3R5bGUgbm93Lg0KPiBo
+dHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBz
+JTNBJTJGJTJGbGttbA0KPiAub3JnJTJGbGttbCUyRjIwMTclMkYxMSUyRjI1JTJGMTMzJmFtcDtk
+YXRhPTAyJTdDMDElN0NyYW4ud2FuZ18NCj4gMSU0MG54cC5jb20lN0NjMGQ4OGU2NjkwMzg0ZTAy
+Yjk1MTA4ZDYxMmRlYzIzNSU3QzY4NmVhMWQzYmMyYjRjDQo+IDZmYTkyY2Q5OWM1YzMwMTYzNSU3
+QzAlN0MwJTdDNjM2NzE3MTQ1Mjg1MTI2MjAwJmFtcDtzZGF0YT1KSW9DWnANCj4gV2hSeVc3NkVx
+Z1NmbGZUREExZjBnTVFHS2ElMkZjYnZTYzVDTyUyRnclM0QmYW1wO3Jlc2VydmVkPTANCj4gU28g
+dGhlDQo+IC8vIHN0eWxlIHNob3VsZCBiZSBhY2NlcHRhYmxlIGZvciBub3cuDQo+IA0KPiA+DQo+
+ID4gT24gMjAxOC84LzMxIDExOjU2LCBSYW4gV2FuZyB3cm90ZToNCj4gPiA+IFRoZSBOWFAncyBR
+b3JJUSBQcm9jZXNzb3JzIGJhc2VkIG9uIEFSTSBDb3JlIGhhdmUgUkNQTSBtb2R1bGUgKFJ1bg0K
+PiA+ID4gQ29udHJvbCBhbmQgUG93ZXIgTWFuYWdlbWVudCksIHdoaWNoIHBlcmZvcm1zIGFsbCBk
+ZXZpY2UtbGV2ZWwgdGFza3MNCj4gPiA+IGFzc29jaWF0ZWQgd2l0aCBwb3dlciBtYW5hZ2VtZW50
+IHN1Y2ggYXMgd2FrZXVwIHNvdXJjZSBjb250cm9sLg0KPiA+ID4NCj4gPiA+IFRoaXMgZHJpdmVy
+IGRlcGVuZHMgb24gRlNMIHBsYXRmb3JtIFBNIGRyaXZlciBmcmFtZXdvcmsgd2hpY2ggaGVscA0K
+PiA+ID4gdG8gaXNvbGF0ZSB1c2VyIGFuZCBQTSBzZXJ2aWNlIHByb3ZpZGVyIChzdWNoIGFzIFJD
+UE0gZHJpdmVyKS4NCj4gPiA+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBDaGVuaHVpIFpoYW8gPGNo
+ZW5odWkuemhhb0BueHAuY29tPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogWWluZyBaaGFuZyA8eWlu
+Zy56aGFuZzIyNDU1QG54cC5jb20+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8cmFu
+LndhbmdfMUBueHAuY29tPg0KPiA+ID4gLS0tDQo+ID4gPiAgZHJpdmVycy9zb2MvZnNsL0tjb25m
+aWcgICB8ICAgIDYgKysNCj4gPiA+ICBkcml2ZXJzL3NvYy9mc2wvTWFrZWZpbGUgIHwgICAgMSAr
+DQo+ID4gPiAgZHJpdmVycy9zb2MvZnNsL2xzLXJjcG0uYyB8ICAxNTMNCj4gPiA+ICsrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+ID4gIDMgZmlsZXMgY2hh
+bmdlZCwgMTYwIGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZQ0KPiA+
+ID4gMTAwNjQ0IGRyaXZlcnMvc29jL2ZzbC9scy1yY3BtLmMNCj4gPiA+DQo+ID4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9zb2MvZnNsL0tjb25maWcgYi9kcml2ZXJzL3NvYy9mc2wvS2NvbmZpZyBp
+bmRleA0KPiA+ID4gNjUxNzQxMi4uODgyMzMwZCAxMDA2NDQNCj4gPiA+IC0tLSBhL2RyaXZlcnMv
+c29jL2ZzbC9LY29uZmlnDQo+ID4gPiArKysgYi9kcml2ZXJzL3NvYy9mc2wvS2NvbmZpZw0KPiA+
+ID4gQEAgLTMwLDMgKzMwLDkgQEAgY29uZmlnIEZTTF9QTEFUX1BNDQo+ID4gPiAgICAgICAgIGhh
+dmUgdG8ga25vdyB0aGUgaW1wbGVtZW50IGRldGFpbHMgb2Ygd2FrZXVwIGZ1bmN0aW9uIGl0IHJl
+cXVpcmUuDQo+ID4gPiAgICAgICAgIEJlc2lkZXMsIGl0IGlzIGFsc28gZWFzeSBmb3Igc2Vydmlj
+ZSBzaWRlIHRvIHVwZ3JhZGUgaXRzIGxvZ2ljIHdoZW4NCj4gPiA+ICAgICAgICAgZGVzaWduIGNo
+YW5nZWQgYW5kIHJlbWFpbiB1c2VyIHNpZGUgdW5jaGFuZ2VkLg0KPiA+ID4gKw0KPiA+ID4gK2Nv
+bmZpZyBMU19SQ1BNDQo+ID4gPiArICAgICBib29sICJGcmVlc2NhbGUgUkNQTSBzdXBwb3J0Ig0K
+PiA+ID4gKyAgICAgZGVwZW5kcyBvbiAoRlNMX1BMQVRfUE0pDQo+ID4gPiArICAgICBoZWxwDQo+
+ID4gPiArICAgICAgIFRoaXMgZmVhdHVyZSBpcyB0byBlbmFibGUgc3BlY2lmaWVkIHdha2V1cCBz
+b3VyY2UgZm9yIHN5c3RlbSBzbGVlcC4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9m
+c2wvTWFrZWZpbGUgYi9kcml2ZXJzL3NvYy9mc2wvTWFrZWZpbGUNCj4gPiA+IGluZGV4IDhmOWRi
+MjMuLjQzZmY3MWEgMTAwNjQ0DQo+ID4gPiAtLS0gYS9kcml2ZXJzL3NvYy9mc2wvTWFrZWZpbGUN
+Cj4gPiA+ICsrKyBiL2RyaXZlcnMvc29jL2ZzbC9NYWtlZmlsZQ0KPiA+ID4gQEAgLTcsMyArNyw0
+IEBAIG9iai0kKENPTkZJR19RVUlDQ19FTkdJTkUpICAgICAgICAgICAgKz0gcWUvDQo+ID4gPiAg
+b2JqLSQoQ09ORklHX0NQTSkgICAgICAgICAgICAgICAgICAgICs9IHFlLw0KPiA+ID4gIG9iai0k
+KENPTkZJR19GU0xfR1VUUykgICAgICAgICAgICAgICAgICAgICAgICs9IGd1dHMubw0KPiA+ID4g
+IG9iai0kKENPTkZJR19GU0xfUExBVF9QTSkgICAgKz0gcGxhdF9wbS5vDQo+ID4gPiArb2JqLSQo
+Q09ORklHX0xTX1JDUE0pICAgICAgICAgICAgICAgICs9IGxzLXJjcG0ubw0KPiANCj4gUHJvYmFi
+bHkgdXNlICJfIiBpbnN0ZWFkIG9mICItIiBmb3IgYWxpZ25tZW50Lg0KDQpPSywgd2lsbCB1cGRh
+dGUgaW4gbmV4dCB2ZXJzaW9uDQoNCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wv
+bHMtcmNwbS5jIGIvZHJpdmVycy9zb2MvZnNsL2xzLXJjcG0uYw0KPiA+ID4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQgaW5kZXggMDAwMDAwMC4uYjBmZWI4OA0KPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+
+ID4gKysrIGIvZHJpdmVycy9zb2MvZnNsL2xzLXJjcG0uYw0KPiA+ID4gQEAgLTAsMCArMSwxNTMg
+QEANCj4gPiA+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAvLyAvLyBwbGF0
+X3BtLmMgLSBGcmVlc2NhbGUNCj4gPiA+ICtMYXllcnNjYXBlIFJDUE0gZHJpdmVyDQo+IA0KPiBU
+aGUgZmlsZSBuYW1lIGhlcmUgaXMgbm90IHRoZSBzYW1lIGFzIHRoZSByZWFsIGZpbGUgbmFtZS4N
+Cg0KR290IGl0LCB3aWxsIGNvcnJlY3QgaXQuDQoNCj4gPiA+ICsvLw0KPiA+ID4gKy8vIENvcHly
+aWdodCAyMDE4IE5YUA0KPiA+ID4gKy8vDQo+ID4gPiArLy8gQXV0aG9yOiBSYW4gV2FuZyA8cmFu
+LndhbmdfMUBueHAuY29tPiwNCj4gDQo+IFdoZXJlIGRvIHlvdSBuZWVkIHRoZSBjb21tYSBpbiB0
+aGUgZW5kPw0KDQpNeSBiYWQsIHdpbGwgcmVtb3ZlIGNvbW1hIGluIG5leHQgdmVyc2lvbi4NCg0K
+PiA+ID4gKw0KPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9pbml0Lmg+DQo+ID4gPiArI2luY2x1ZGUg
+PGxpbnV4L21vZHVsZS5oPg0KPiA+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2Uu
+aD4NCj4gPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfYWRkcmVzcy5oPg0KPiA+ID4gKyNpbmNsdWRl
+IDxsaW51eC9zbGFiLmg+DQo+ID4gPiArI2luY2x1ZGUgPHNvYy9mc2wvcGxhdF9wbS5oPg0KPiA+
+ID4gKw0KPiA+ID4gKyNkZWZpbmUgTUFYX0NPTVBBVElCTEVfTlVNICAgMTANCj4gPiA+ICsNCj4g
+PiA+ICtzdHJ1Y3QgcmNwbV90IHsNCj4gPiA+ICsgICAgIHN0cnVjdCBkZXZpY2UgKmRldjsNCj4g
+PiA+ICsgICAgIHZvaWQgX19pb21lbSAqaXBwZGV4cGNyX2FkZHI7DQo+ID4gPiArICAgICBib29s
+IGJpZ19lbmRpYW47ICAgICAgICAvKiBCaWcvTGl0dGxlIGVuZGlhbiBvZiBSQ1BNIG1vZHVsZSAq
+Lw0KPiA+ID4gK307DQo+ID4gPiArDQo+ID4gPiArLy8gcmNwbV9oYW5kbGUgLSBDb25maWd1cmUg
+UkNQTSByZWcgYWNjb3JkaW5nIHRvIHdha2UgdXAgc291cmNlDQo+ID4gPiArcmVxdWVzdCAvLyBA
+dXNlcl9kZXY6IHBvaW50ZXIgdG8gdXNlcidzIGRldmljZSBzdHJ1Y3QgLy8gQGZsYWc6IHRvDQo+
+ID4gPiArZW5hYmxlKHRydWUpIG9yIGRpc2FibGUoZmFsc2UpIHdha2V1cCBzb3VyY2UgLy8gQGhh
+bmRsZV9wcml2Og0KPiA+ID4gK3BvaW50ZXIgdG8gc3RydWN0IHJjcG1fdCBpbnN0YW5jZSAvLyAv
+LyBSZXR1cm4gMCBvbiBzdWNjZXNzIG90aGVyDQo+ID4gPiArbmVnYXRpdmUgZXJybm8NCj4gDQo+
+IEFsdGhvdWdoIExpbnVzIHByZWZlcnJlZCB0aGlzIC8vIGNvbW1lbnQgc3R5bGUuICBJJ20gbm90
+IHN1cmUgaWYgdGhpcyB3aWxsIGJlDQo+IGhhbmRsZWQgY29ycmVjdGx5IGJ5IHRoZSBrZXJuZWwt
+ZG9jIGNvbXBpbGVyLg0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlvbi5vdXRs
+b29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGd3cNCj4gdy5rZXJuZWwub3JnJTJGZG9jJTJGaHRt
+bCUyRnY0LjE4JTJGZG9jLWd1aWRlJTJGa2VybmVsLQ0KPiBkb2MuaHRtbCZhbXA7ZGF0YT0wMiU3
+QzAxJTdDcmFuLndhbmdfMSU0MG54cC5jb20lN0NjMGQ4OGU2NjkwMzgNCj4gNGUwMmI5NTEwOGQ2
+MTJkZWMyMzUlN0M2ODZlYTFkM2JjMmI0YzZmYTkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwDQo+ICU3
+QzYzNjcxNzE0NTI4NTEyNjIwMCZhbXA7c2RhdGE9SDdHa1VOT0xWRyUyRkNjWkVTemh0SEJlSENi
+TzkNCj4gJTJGSzRrOUVkSDMwQ3hxMiUyQk0lM0QmYW1wO3Jlc2VydmVkPTANCg0KU28sIGRvIHlv
+dSB0aGluayBJIG5lZWQgdG8gY2hhbmdlIGFsbCBjb21tZW50IHN0eWxlIGJhY2sgdG8gJy8qIC4u
+LiAqLycgPw0KQWN0dWFsbHkgSSBmZWVsIGEgbGl0dGxlIGJpdCBjb25mdXNlZCBoZXJlLg0KDQpS
+ZWdhcmRzLA0KUmFuDQoNCj4gPiA+ICtzdGF0aWMgaW50IHJjcG1faGFuZGxlKHN0cnVjdCBkZXZp
+Y2UgKnVzZXJfZGV2LCBib29sIGZsYWcsIHZvaWQNCj4gPiA+ICsqaGFuZGxlX3ByaXYpIHsNCj4g
+PiA+ICsgICAgIHN0cnVjdCByY3BtX3QgKnJjcG07DQo+ID4gPiArICAgICBib29sIGJpZ19lbmRp
+YW47DQo+ID4gPiArICAgICBjb25zdCBjaGFyICAqZGV2X2NvbXBhdGlibGVfYXJyYXlbTUFYX0NP
+TVBBVElCTEVfTlVNXTsNCj4gPiA+ICsgICAgIHZvaWQgX19pb21lbSAqaXBwZGV4cGNyX2FkZHI7
+DQo+ID4gPiArICAgICB1MzIgaXBwZGV4cGNyOw0KPiA+ID4gKyAgICAgdTMyIHNldF9iaXQ7DQo+
+ID4gPiArICAgICBpbnQgcmV0LCBudW0sIGk7DQo+ID4gPiArDQo+ID4gPiArICAgICByY3BtID0g
+aGFuZGxlX3ByaXY7DQo+ID4gPiArICAgICBiaWdfZW5kaWFuID0gcmNwbS0+YmlnX2VuZGlhbjsN
+Cj4gPiA+ICsgICAgIGlwcGRleHBjcl9hZGRyID0gcmNwbS0+aXBwZGV4cGNyX2FkZHI7DQo+ID4g
+PiArDQo+ID4gPiArICAgICBudW0gPSBkZXZpY2VfcHJvcGVydHlfcmVhZF9zdHJpbmdfYXJyYXko
+dXNlcl9kZXYsICJjb21wYXRpYmxlIiwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBkZXZf
+Y29tcGF0aWJsZV9hcnJheSwgTUFYX0NPTVBBVElCTEVfTlVNKTsNCj4gPiA+ICsgICAgIGlmIChu
+dW0gPCAwKQ0KPiA+ID4gKyAgICAgICAgICAgICByZXR1cm4gbnVtOw0KPiA+ID4gKw0KPiA+ID4g
+KyAgICAgZm9yIChpID0gMDsgaSA8IG51bTsgaSsrKSB7DQo+ID4gPiArICAgICAgICAgICAgIGlm
+ICghZGV2aWNlX3Byb3BlcnR5X3ByZXNlbnQocmNwbS0+ZGV2LA0KPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfY29tcGF0aWJsZV9hcnJheVtpXSkpDQo+ID4g
+PiArICAgICAgICAgICAgICAgICAgICAgY29udGludWU7DQo+ID4gPiArICAgICAgICAgICAgIGVs
+c2Ugew0KPiA+IFJlbW92ZSB0aGlzIGVsc2UuDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+cmV0ID0gZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMyKHJjcG0tPmRldiwNCj4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZGV2X2NvbXBhdGlibGVfYXJyYXlbaV0sICZz
+ZXRfYml0KTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBpZiAocmV0KQ0KPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiA+ICsNCj4gPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICBpZiAoIWRldmljZV9wcm9wZXJ0eV9wcmVzZW50KHJjcG0tPmRl
+diwNCj4gPiA+ICsNCj4gPiA+ICsgZGV2X2NvbXBhdGlibGVfYXJyYXlbaV0pKQ0KPiA+IFRoaXMg
+aGFzIGJlZW4gY2hlY2tlZC4gQ29udGludWUgPyBvciByZXR1cm4gRU5PREVW77yfDQo+ID4gPiAr
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT0RFVjsNCj4gPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICBlbHNlIHsNCj4gPiBSZW1vdmUgdGhpcyBlbHNlLg0KPiA+ID4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0ID0gZGV2aWNlX3Byb3BlcnR5X3JlYWRfdTMy
+KHJjcG0tPmRldiwNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBkZXZfY29tcGF0aWJsZV9hcnJheVtpXSwgJnNldF9iaXQpOw0KPiA+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgaWYgKHJldCkNCj4gPiA+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJldDsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIGlmIChiaWdfZW5kaWFuKQ0KPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBpcHBkZXhwY3IgPSBpb3JlYWQzMmJlKGlwcGRleHBj
+cl9hZGRyKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGVsc2UNCj4gPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaXBwZGV4cGNyID0NCj4gPiA+
+ICsgaW9yZWFkMzIoaXBwZGV4cGNyX2FkZHIpOw0KPiA+ID4gKw0KPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgaWYgKGZsYWcpDQo+ID4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIGlwcGRleHBjciB8PSBzZXRfYml0Ow0KPiA+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgZWxzZQ0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBpcHBkZXhwY3IgJj0gfnNldF9iaXQ7DQo+ID4gPiArDQo+ID4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBpZiAoYmlnX2VuZGlhbikgew0KPiA+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpb3dyaXRlMzJiZShpcHBkZXhwY3IsIGlwcGRl
+eHBjcl9hZGRyKTsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+aXBwZGV4cGNyID0gaW9yZWFkMzJiZShpcHBkZXhwY3JfYWRkcik7DQo+ID4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB9IGVsc2UNCj4gPiBpZiAoeCkgew0KPiA+IC4uLi4NCj4gPiAu
+Li4uDQo+ID4gfSAgZWxzZSB7DQo+ID4NCj4gPiB9DQo+ID4gPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIGlvd3JpdGUzMihpcHBkZXhwY3IsDQo+ID4gPiArIGlwcGRleHBj
+cl9hZGRyKTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
+dHVybiAwOw0KPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIH0NCj4gPiA+ICsgICAgICAgICAg
+ICAgfQ0KPiA+ID4gKyAgICAgfQ0KPiA+ID4gKw0KPiA+ID4gKyAgICAgcmV0dXJuIC1FTk9ERVY7
+DQo+ID4gPiArfQ0KPiA+ID4gKw0KPiA+ID4gK3N0YXRpYyBpbnQgbHNfcmNwbV9wcm9iZShzdHJ1
+Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ID4gPiArICAgICBzdHJ1Y3QgcmVzb3VyY2Ug
+KnI7DQo+ID4gPiArICAgICBzdHJ1Y3QgcmNwbV90ICpyY3BtOw0KPiA+ID4gKw0KPiA+ID4gKyAg
+ICAgciA9IHBsYXRmb3JtX2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7DQo+
+ID4gPiArICAgICBpZiAoIXIpDQo+ID4gPiArICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOw0K
+PiA+ID4gKw0KPiA+ID4gKyAgICAgcmNwbSA9IGttYWxsb2Moc2l6ZW9mKCpyY3BtKSwgR0ZQX0tF
+Uk5FTCk7DQo+ID4ga3phbGxvYyBpcyBiZXR0ZXIuDQo+ID4gPiArICAgICBpZiAoIXJjcG0pDQo+
+ID4gPiArICAgICAgICAgICAgIHJldHVybiAtRU5PTUVNOw0KPiA+ID4gKw0KPiA+ID4gKyAgICAg
+cmNwbS0+YmlnX2VuZGlhbiA9IGRldmljZV9wcm9wZXJ0eV9yZWFkX2Jvb2woJnBkZXYtPmRldiwN
+Cj4gPiA+ICsgImJpZy1lbmRpYW4iKTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIHJjcG0tPmlwcGRl
+eHBjcl9hZGRyID0gZGV2bV9pb3JlbWFwX3Jlc291cmNlKCZwZGV2LT5kZXYsIHIpOw0KPiA+ID4g
+KyAgICAgaWYgKElTX0VSUihyY3BtLT5pcHBkZXhwY3JfYWRkcikpDQo+ID4gPiArICAgICAgICAg
+ICAgIHJldHVybiBQVFJfRVJSKHJjcG0tPmlwcGRleHBjcl9hZGRyKTsNCj4gPiA+ICsNCj4gPiA+
+ICsgICAgIHJjcG0tPmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gPiArICAgICBwbGF0Zm9ybV9zZXRf
+ZHJ2ZGF0YShwZGV2LCByY3BtKTsNCj4gPiA+ICsNCj4gPiA+ICsgICAgIHJldHVybiByZWdpc3Rl
+cl9mc2xfcGxhdGZvcm1fd2FrZXVwX3NvdXJjZShyY3BtX2hhbmRsZSwgcmNwbSk7DQo+ID4gPiAr
+fQ0KPiA+ID4gKw0KPiA+ID4gK3N0YXRpYyBpbnQgbHNfcmNwbV9yZW1vdmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikgew0KPiA+ID4gKyAgICAgc3RydWN0IHJjcG1fdCAgICpyY3BtOw0K
+PiA+IE5vdCBuZWVkIGEgdGFibGUuDQo+ID4NCj4gPiBDaGVlcnMsDQo+ID4gLURvbmdzaGVuZw0K
+PiA+DQo+ID4gPiArDQo+ID4gPiArICAgICByY3BtID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRl
+dik7DQo+ID4gPiArICAgICBkZXJlZ2lzdGVyX2ZzbF9wbGF0Zm9ybV93YWtldXBfc291cmNlKHJj
+cG0pOw0KPiA+ID4gKyAgICAga2ZyZWUocmNwbSk7DQo+ID4gPiArDQo+ID4gPiArICAgICByZXR1
+cm4gMDsNCj4gPiA+ICt9DQo+ID4gPiArDQo+ID4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9k
+ZXZpY2VfaWQgbHNfcmNwbV9vZl9tYXRjaFtdID0gew0KPiA+ID4gKyAgICAgeyAuY29tcGF0aWJs
+ZSA9ICJmc2wscW9yaXEtcmNwbS0yLjEiLCB9LA0KPiA+ID4gKyAgICAge30NCj4gPiA+ICt9Ow0K
+PiA+ID4gK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGxzX3JjcG1fb2ZfbWF0Y2gpOw0KPiA+ID4g
+Kw0KPiA+ID4gK3N0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGxzX3JjcG1fZHJpdmVyID0g
+ew0KPiA+ID4gKyAgICAgLmRyaXZlciA9IHsNCj4gPiA+ICsgICAgICAgICAgICAgLm5hbWUgPSAi
+bHMtcmNwbSIsDQo+ID4gPiArICAgICAgICAgICAgIC5vZl9tYXRjaF90YWJsZSA9IGxzX3JjcG1f
+b2ZfbWF0Y2gsDQo+ID4gPiArICAgICB9LA0KPiA+ID4gKyAgICAgLnByb2JlID0gbHNfcmNwbV9w
+cm9iZSwNCj4gPiA+ICsgICAgIC5yZW1vdmUgPSBsc19yY3BtX3JlbW92ZSwNCj4gPiA+ICt9Ow0K
+PiA+ID4gKw0KPiA+ID4gK3N0YXRpYyBpbnQgX19pbml0IGxzX3JjcG1faW5pdCh2b2lkKSB7DQo+
+ID4gPiArICAgICByZXR1cm4gcGxhdGZvcm1fZHJpdmVyX3JlZ2lzdGVyKCZsc19yY3BtX2RyaXZl
+cik7DQo+ID4gPiArfQ0KPiA+ID4gK3N1YnN5c19pbml0Y2FsbChsc19yY3BtX2luaXQpOw0KPiA+
+ID4gKw0KPiA+ID4gK3N0YXRpYyB2b2lkIF9fZXhpdCBsc19yY3BtX2V4aXQodm9pZCkgew0KPiA+
+ID4gKyAgICAgcGxhdGZvcm1fZHJpdmVyX3VucmVnaXN0ZXIoJmxzX3JjcG1fZHJpdmVyKTsNCj4g
+PiA+ICt9DQo+ID4gPiArbW9kdWxlX2V4aXQobHNfcmNwbV9leGl0KTsNCj4gPg0KPiA+DQo=
