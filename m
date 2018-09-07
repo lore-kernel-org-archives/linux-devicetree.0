@@ -1,109 +1,327 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH v4 1/4] clk: sunxi-ng: Enable DE2_CCU
- for SUN8I and SUN50I
-Date: Fri, 7 Sep 2018 15:31:26 +0200
-Message-ID: <20180907133125.ghks5cgk5u6vrhd6@flea>
-References: <20180904163609.10171-1-jagan@amarulasolutions.com>
- <20180905070335.dclhpxjld4vdkdu4@flea>
- <2955967.qdhifWMYUT@jernej-laptop>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Fri, 7 Sep 2018 15:32:29 +0200
+Message-ID: <20180907133228.GA16297@amd>
+References: <20180906135005.6718-1-dmurphy@ti.com>
+ <20180906211617.GB16899@amd>
+ <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4nzkw2nv5o3dfnhg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOP3ZHOAKGQENSHJTBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2955967.qdhifWMYUT@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---4nzkw2nv5o3dfnhg
-Content-Type: text/plain; charset="UTF-8"
+--qDbXVdCdHGoSgWSk
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 06, 2018 at 07:10:06AM +0200, Jernej =C5=A0krabec wrote:
-> Dne sreda, 05. september 2018 ob 09:03:35 CEST je Maxime Ripard napisal(a=
-):
-> > On Tue, Sep 04, 2018 at 10:06:06PM +0530, Jagan Teki wrote:
-> > > Allwinner SoC like SUN8I and SUN50I has DE2 CCU so enable them
-> > > as default.
-> > >=20
-> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > ---
-> > > Changes for v4, v3:
-> > > - none
-> > > Changes for v2:
-> > > - Enable for MACH_SUN8I
-> > >=20
-> > >  drivers/clk/sunxi-ng/Kconfig | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >=20
-> > > diff --git a/drivers/clk/sunxi-ng/Kconfig b/drivers/clk/sunxi-ng/Kcon=
-fig
-> > > index 826674d090fd..e20182aa9748 100644
-> > > --- a/drivers/clk/sunxi-ng/Kconfig
-> > > +++ b/drivers/clk/sunxi-ng/Kconfig
-> > > @@ -63,6 +63,8 @@ config SUN8I_V3S_CCU
-> > >=20
-> > >  config SUN8I_DE2_CCU
-> > > =20
-> > >  	bool "Support for the Allwinner SoCs DE2 CCU"
-> > >=20
-> > > +	default MACH_SUN8I || (ARM64 && ARCH_SUNXI)
-> > > +	depends on DRM_SUN4I && (MACH_SUN8I || (ARM64 && ARCH_SUNXI))
+Hi!
+
+> >> index 000000000000..3256dec21075
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/leds/leds-lm3697.txt
+> >> @@ -0,0 +1,86 @@
+> >> +* Texas Instruments - LM3697 Highly Efficient White LED Driver
+> >> +
+> >> +The LM3697 11-bit LED driver provides high-
+> >> +performance backlight dimming for 1, 2, or 3 series
+> >> +LED strings while delivering up to 90% efficiency.
 > >=20
-> > I don't see why there's a dependency on the DRM driver. I'm pretty
-> > sure this would even break simplefb.
+> > Hmm. We already have second set of bindings for 3697:
+> >=20
+> > ./devicetree/bindings/mfd/ti-lmu.txt
+> >=20
+> > (Sorry for not noticing that earlier). Advantage is that those have
+> > had discussion with device tree people and have acks:
+> >=20
+> > What to do there?
 >=20
-> I think best approach would be that SUN8I_MIXER selects (or depends on?) =
-this=20
-> symbol, since it can't work if there is no DE2 CCU clock present.
+> UGH!  IMO this should have not been accepted without the support code.
+> I think this MFD driver is complete over kill to try to commonize features
+> into a MFD device.  The LM3631 and LM3632 seem to be the only true MFD de=
+vices
+> here since they provide regulator support.
 
-This is a runtime dependency, not a build time one. We're not doing it
-for any other similar driver, so there's no reason to do it in this
-particular case.
+They are not yet in mainline; but they have Rob's acknowledges.
 
-Maxime
+=2E..but I see there are improvements possible.
+
+> The LM3697 fault monitoring is only for test purposes according to the da=
+ta
+> sheet.  Not sure the customer can trust this or they should be warned at =
+boot
+> that the Fault monitoring is for test purposes only.
+
+Ok, but that's topic for the driver, not for binding, right?
+
+> And I think Jacek pointed out that the bindings references in this bindin=
+gs
+> don't even exist.
+>=20
+> I am thinking we need to deprecate this MFD driver and consolidate these =
+drivers
+> in the LED directory as we indicated before.  I did not find any ti-lmu s=
+upport
+> code.
+>=20
+> ti-lmu common core code and then the LED children appending the feature d=
+ifferentiation.
+
+> Need some maintainer weigh in here.
+
+Hehe. I'm maintnainer. Fun.
+
+Is there something obviously wrong with
+287cce719d85311f61d1b6b7f7b0d93f7907cd46 +
+d774c7e447ac911e73a1b3c775e6d89f0422218c ?
+
+If not, as it already had discussion/Acks so I'd prefer that one. We
+may move it to LEDs directory if neccessary, or something like that...
+
+Best regards,
+
+								Pavel
+
+> > commit 287cce719d85311f61d1b6b7f7b0d93f7907cd46
+> > Author: Milo Kim <milo.kim@ti.com>
+> > Date:   Tue Feb 28 15:45:14 2017 +0900
+> >=20
+> >     dt-bindings: mfd: Add TI LMU device binding information
+> >=20
+> >     This patch describes overall binding for TI LMU MFD devices.
+> >=20
+> >     Signed-off-by: Milo Kim <milo.kim@ti.com>
+> >         Acked-by: Rob Herring <robh+dt@kernel.org>
+> > 	    Acked-by: Tony Lindgren <tony@atomide.com>
+> > 	        Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > 	=09
+> >=20
+> > commit d774c7e447ac911e73a1b3c775e6d89f0422218c
+> > Author: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> > Date:   Mon Aug 27 09:15:08 2018 -0700
+> >=20
+> >     dt-bindings: mfd: ti-lmu: update for backlight
+> >    =20
+> >     Update binding to integrate the backlight feature directly into
+> >     the main node, as suggested by Rob Herring.
+> >    =20
+> >     Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documen=
+tation/devicetree/bindings/mfd/ti-lmu.txt
+> > index c885cf8..b3433e9 100644
+> > --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> > @@ -28,10 +28,9 @@ Required properties:
+> > =20
+> >  Optional property:
+> >    - enable-gpios: A GPIO specifier for hardware enable pin.
+> > -
+> > -Required node:
+> > -  - backlight: All LMU devices have backlight child nodes.
+> > -               For the properties, please refer to [1].
+> > +  - pwm-names: Should be either "lmu-backlight" or unset
+> > +  - pwm: This should be a PWM specifier following ../pwm/pwm.txt and m=
+ust
+> > +         only be specified, if the backlight should be used in PWM mod=
+e.
+> > =20
+> >  Optional nodes:
+> >    - fault-monitor: Hardware fault monitoring driver for LM3633 and LM3=
+697.
+> > @@ -42,8 +41,31 @@ Optional nodes:
+> >    - leds: LED properties for LM3633. Please refer to [2].
+> >    - regulators: Regulator properties for LM3631 and LM3632.
+> >                  Please refer to [3].
+> > +  - bank0, bank1, bank2: This contains the backlight configuration
+> > +                         for each backlight control bank.
+> > +
+> > +Required properties in the bank subnodes:
+> > +  - label: A string describing the backlight. Should contain "keyboard"
+> > +           for a keyboard backlight and "lcd" for LCD panel backlights.
+> > +  - ti,led-sources: A list of channels, that should be driven. Each ch=
+annel
+> > +                    should only be driven by one bank.
+> > +
+> > +Optional properties in the bank subnodes:
+> > +  - default-brightness-level: Backlight initial brightness value.
+> > +                              Type is <u32>. It is set as soon as back=
+light
+> > +			      device is created.
+> > +			      0 ~ 2047 =3D LM3631, LM3632, LM3633, LM3695 and
+> > +					 LM3697
+> > +			      0 ~ 255  =3D LM3532
+> > +  - ti,ramp-up-ms, ti,ramp-down-ms: Light dimming effect properties.
+> > +				    Type is <u32>. Unit is millisecond.
+> > +					0 ~ 65 ms    =3D LM3532
+> > +					0 ~ 4000 ms  =3D LM3631
+> > +					0 ~ 16000 ms =3D LM3633 and LM3697
+> > +  - pwm-period: PWM period. Only valid in PWM brightness mode.
+> > +                Type is <u32>. If this property is missing, then contr=
+ol
+> > +		mode is set to I2C by default.
+> > =20
+> > -[1] ../leds/backlight/ti-lmu-backlight.txt
+> >  [2] ../leds/leds-lm3633.txt
+> >  [3] ../regulator/lm363x-regulator.txt
+> > =20
+> > @@ -53,14 +75,11 @@ lm3532@38 {
+> > =20
+> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> > =20
+> > -	backlight {
+> > -		compatible =3D "ti,lm3532-backlight";
+> > -
+> > -		lcd {
+> > -			led-sources =3D <0 1 2>;
+> > -			ramp-up-msec =3D <30>;
+> > -			ramp-down-msec =3D <0>;
+> > -		};
+> > +	bank0 {
+> > +		label =3D "lcd";
+> > +		led-sources =3D <0 1 2>;
+> > +		ramp-up-msec =3D <30>;
+> > +		ramp-down-msec =3D <0>;
+> >  	};
+> >  };
+> > =20
+> > @@ -105,13 +124,10 @@ lm3631@29 {
+> >  		};
+> >  	};
+> > =20
+> > -	backlight {
+> > -		compatible =3D "ti,lm3631-backlight";
+> > -
+> > -		lcd_bl {
+> > -			led-sources =3D <0 1>;
+> > -			ramp-up-msec =3D <300>;
+> > -		};
+> > +	bank0 {
+> > +		label =3D "lcd_bl";
+> > +		led-sources =3D <0 1>;
+> > +		ramp-up-msec =3D <300>;
+> >  	};
+> >  };
+> > =20
+> > @@ -147,16 +163,13 @@ lm3632@11 {
+> >  		};
+> >  	};
+> > =20
+> > -	backlight {
+> > -		compatible =3D "ti,lm3632-backlight";
+> > -
+> > -		pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
+> > -		pwm-names =3D "lmu-backlight";
+> > +	pwms =3D <&pwm0 0 10000 0>; /* pwm number, period, polarity */
+> > +	pwm-names =3D "lmu-backlight";
+> > =20
+> > -		lcd {
+> > -			led-sources =3D <0 1>;
+> > -			pwm-period =3D <10000>;
+> > -		};
+> > +	bank0 {
+> > +		label =3D "lcd";
+> > +		led-sources =3D <0 1>;
+> > +		pwm-period =3D <10000>;
+> >  	};
+> >  };
+> > =20
+> > @@ -166,22 +179,18 @@ lm3633@36 {
+> > =20
+> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> > =20
+> > -	backlight {
+> > -		compatible =3D "ti,lm3633-backlight";
+> > -
+> > -		main {
+> > -			label =3D "main_lcd";
+> > -			led-sources =3D <1 2>;
+> > -			ramp-up-msec =3D <500>;
+> > -			ramp-down-msec =3D <500>;
+> > -		};
+> > +	bank0 {
+> > +		label =3D "main_lcd";
+> > +		led-sources =3D <1 2>;
+> > +		ramp-up-msec =3D <500>;
+> > +		ramp-down-msec =3D <500>;
+> > +	};
+> > =20
+> > -		front {
+> > -			label =3D "front_lcd";
+> > -			led-sources =3D <0>;
+> > -			ramp-up-msec =3D <1000>;
+> > -			ramp-down-msec =3D <0>;
+> > -		};
+> > +	bank1 {
+> > +		label =3D "front_lcd";
+> > +		led-sources =3D <0>;
+> > +		ramp-up-msec =3D <1000>;
+> > +		ramp-down-msec =3D <0>;
+> >  	};
+> > =20
+> >  	leds {
+> > @@ -211,13 +220,9 @@ lm3695@63 {
+> > =20
+> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> > =20
+> > -	backlight {
+> > -		compatible =3D "ti,lm3695-backlight";
+> > -
+> > -		lcd {
+> > -			label =3D "bl";
+> > -			led-sources =3D <0 1>;
+> > -		};
+> > +	bank0 {
+> > +		label =3D "lcd_bl";
+> > +		led-sources =3D <0 1>;
+> >  	};
+> >  };
+> > =20
+> > @@ -227,14 +232,10 @@ lm3697@36 {
+> > =20
+> >  	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
+> > =20
+> > -	backlight {
+> > -		compatible =3D "ti,lm3697-backlight";
+> > -
+> > -		lcd {
+> > -			led-sources =3D <0 1 2>;
+> > -			ramp-up-msec =3D <200>;
+> > -			ramp-down-msec =3D <200>;
+> > -		};
+> > +	bank0 {
+> > +		led-sources =3D <0 1 2>;
+> > +		ramp-up-msec =3D <200>;
+> > +		ramp-down-msec =3D <200>;
+> >  	};
+> > =20
+> >  	fault-monitor {
+> >=20
+>=20
+>=20
 
 --=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---4nzkw2nv5o3dfnhg
+--qDbXVdCdHGoSgWSk
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluSfa0ACgkQ0rTAlCFN
-r3SkZBAAmUPFSM0fZN7/iHasr4dZei6lHt0x+qegvqVbl8dm9QCIEeBHIqgheV/k
-7uiiY67CaeHNXOUDVGnlxa/G2FxDSAN0SoDWqd/ERJjux6hD8G+RtYhpn+cpreph
-yIGDBLjsbZdDdx4J+BRD7gAXFDW+gm922MRzPPN8yRY/qlD8XxsBznHC9v5KzJsJ
-Uqhy5MWFDtMrt06F94OFnMmcmQvR6UA0wNkDcjEMhMEKsV2NRbOOYsdvIzfSaCYL
-wBeYpuuvK6pG5B83n6NRBm4x17Ky17VqR7s1qhe+rWqfX/qdySDY9HYXwp00Qcjv
-Ew2IBnYtkawtQC/dX85gnWJLRpWerD4tu0lpcn5Z8oI3ZvLBH0wC/pTjY4RAk5jD
-oyHQIAdSjcOHciN+BDqp2TYS2q5auKUMIGTCYYh3LwLvw/NSw3Y7fXfydnPob57E
-GtZinGViN0ANegiR451TkS6Dzj7zc9h241NgRmGvYlG2U/JBgPrH4iph1dvVsfEG
-H98ziz13+pdvjdAsnZ/6FBiTqnTl/6z5Lb36eYpQPG9riiklFA6F/ESgi/RbEdoB
-YW0a1qQrk0qnRBlc9kZwAz380e7JNZGN2NnFdbGFnFdE9wI+29p+IJH1Nb6RzNcI
-656FO7rLhkstUmdJmyYiRVclPJBL+0Dd+upCsjI5W+YMgOdoUKU=
-=Nbx1
+iEYEARECAAYFAluSfewACgkQMOfwapXb+vJTSgCeLTbGsfluYTFXL9RCS5ieN3B8
+9iYAninoZcHC2Bgzy5InTyR0h+IWe87F
+=E6Ks
 -----END PGP SIGNATURE-----
 
---4nzkw2nv5o3dfnhg--
+--qDbXVdCdHGoSgWSk--
