@@ -1,78 +1,85 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v10 0/2] Initial Allwinner V3s CSI Support
-Date: Fri, 7 Sep 2018 15:23:11 +0200
-Message-ID: <20180907132311.g7q3zzziiagqecae@flea>
-References: <20180517090224.u3ygdzjr77im2mmp@flea>
- <20180529095757.qkz7jyuxza7movbc@flea.home>
- <20180530091934.tbd6xbyr5s3ipn3v@paasikivi.fi.intel.com>
- <CAGb2v67RP8bjObBJu_1JsREUo64hnEzptG_n-aYMn4Dcd_Zo-g@mail.gmail.com>
+Subject: Re: [PATCH v9 5/9] media: platform: Add Cedrus VPU
+ decoder driver
+Date: Fri, 7 Sep 2018 15:26:20 +0200
+Message-ID: <20180907132620.lmsvlwpa3rzioj2h@flea>
+References: <20180906222442.14825-1-contact@paulk.fr>
+ <20180906222442.14825-6-contact@paulk.fr>
+ <4b30c0bf-e525-1868-f625-569d4a104aa0@xs4all.nl>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="76ixmv7qtsguwevu"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBS7XZHOAKGQEBT36PTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="hu5t7oybgv7p55pp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBB7ZZHOAKGQEDCRE5BY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAGb2v67RP8bjObBJu_1JsREUo64hnEzptG_n-aYMn4Dcd_Zo-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <4b30c0bf-e525-1868-f625-569d4a104aa0-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media@vge>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---76ixmv7qtsguwevu
+--hu5t7oybgv7p55pp
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-Hi Yong,
+Hi Hans,
 
-On Wed, Jun 20, 2018 at 12:45:03PM +0800, Chen-Yu Tsai wrote:
-> On Wed, May 30, 2018 at 5:19 PM, Sakari Ailus
-> <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
-> > On Tue, May 29, 2018 at 11:57:57AM +0200, Maxime Ripard wrote:
-> >> On Thu, May 17, 2018 at 11:02:24AM +0200, Maxime Ripard wrote:
-> >> > On Fri, May 04, 2018 at 02:44:08PM +0800, Yong Deng wrote:
-> >> > > This patchset add initial support for Allwinner V3s CSI.
-> >> > >
-> >> > > Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> >> > > interface and CSI1 is used for parallel interface. This is not
-> >> > > documented in datasheet but by test and guess.
-> >> > >
-> >> > > This patchset implement a v4l2 framework driver and add a binding
-> >> > > documentation for it.
-> >> > >
-> >> > > Currently, the driver only support the parallel interface. And has been
-> >> > > tested with a BT1120 signal which generating from FPGA. The following
-> >> > > fetures are not support with this patchset:
-> >> > >   - ISP
-> >> > >   - MIPI-CSI2
-> >> > >   - Master clock for camera sensor
-> >> > >   - Power regulator for the front end IC
-> >> >
-> >> > I tested it on my H3 with a parallel camera, and it still works. Thanks!
-> >> >
-> >> > Hans, Sakari, any chance this might land in 4.18?
-> >>
-> >> Ping?
-> >
-> > I'll try to look into this soonish but it seems to be too late for 4.18.
-> > Sorry about that.
+On Fri, Sep 07, 2018 at 03:13:19PM +0200, Hans Verkuil wrote:
+> On 09/07/2018 12:24 AM, Paul Kocialkowski wrote:
+> > From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > This introduces the Cedrus VPU driver that supports the VPU found in
+> > Allwinner SoCs, also known as Video Engine. It is implemented through
+> > a V4L2 M2M decoder device and a media device (used for media requests).
+> > So far, it only supports MPEG-2 decoding.
+> > 
+> > Since this VPU is stateless, synchronization with media requests is
+> > required in order to ensure consistency between frame headers that
+> > contain metadata about the frame to process and the raw slice data that
+> > is used to generate the frame.
+> > 
+> > This driver was made possible thanks to the long-standing effort
+> > carried out by the linux-sunxi community in the interest of reverse
+> > engineering, documenting and implementing support for the Allwinner VPU.
+> > 
+> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 > 
-> Can we get this into 4.19?
+> One high-level comment:
+> 
+> Can you add a TODO file for this staging driver? This can be done in
+> a follow-up patch.
+> 
+> It should contain what needs to be done to get this out of staging:
+> 
+> - Request API needs to stabilize
+> - Userspace support for stateless codecs must be created
 
-Did you have some time to make the changes Sakari asked for? That
-would be great to have it in 4.20.
+On that particular note, as part of the effort to develop the driver,
+we've also developped two userspace components:
 
-Thanks!
+  - v4l2-request-test, that has a bunch of sample frames for various
+    codecs and will rely solely on the kernel request api (and DRM for
+    the display part) to test and bringup a particular driver
+    https://github.com/bootlin/v4l2-request-test
+
+  - libva-v4l2-request, that is a libva implementation using the
+    request API
+    https://github.com/bootlin/libva-v4l2-request
+
+Did you have something else in mind?
+
 Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---76ixmv7qtsguwevu--
+--hu5t7oybgv7p55pp--
