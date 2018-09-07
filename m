@@ -1,40 +1,46 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH 0/5] Fix A64 HDMI PHY device tree binding
-Date: Fri,  7 Sep 2018 15:22:29 +0800
-Message-ID: <20180907072234.48282-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH 1/5] dt-bindings: sun4i-drm: drop second PLL
+ from A64 HDMI PHY binding
+Date: Fri,  7 Sep 2018 15:22:30 +0800
+Message-ID: <20180907072234.48282-2-icenowy@aosc.io>
+References: <20180907072234.48282-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBVWOZDOAKGQEMTTYOMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180907072234.48282-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When adding support for A64 HDMI PHY in 4.19, we assumed that the two
-PLL-VIDEOs can both feed the HDMI PHY clock. However experiments show
-that the mux bit discovered in R40 blob is not applicable on A64. This
-is not discovered, as normally with a single display pipeline only
-PLL-VIDEO0 will be used.
+By experiments it seems that the A64 HDMI PHY is not able to use the
+second video PLL as the clock parent.
 
-In this patchset the second PLL is dropped, and a binding specially for
-R40 HDMI PHY is added (which seems to have the mux).
+Drop pll-1 from the device tree binding of A64 HDMI PHY.
 
-PATCH 1 and 2 are dropping second PLL for A64 HDMI PHY, and PATCH 3 to 5
-are adding R40 HDMI PHY binding.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 -
+ 1 file changed, 1 deletion(-)
 
-This patchset targets v4.19 fixes tree, because the binding is
-introduced in v4.19, and if we don't fix it there a wrong binding will
-be left in a stable version released.
-
-Icenowy Zheng (5):
-  dt-bindings: sun4i-drm: drop second PLL from A64 HDMI PHY binding
-  drm: sun4i: drop second PLL from A64 HDMI PHY
-  dt-bindings: sun4i-drm: add compatible for R40 HDMI PHY
-  drm/sun4i: add support for R40 HDMI PHY
-  ARM: sun8i: dts: drop A64 HDMI PHY fallback compatible from R40 DT
-
- .../devicetree/bindings/display/sunxi/sun4i-drm.txt |  5 +++--
- arch/arm/boot/dts/sun8i-r40.dtsi                    |  3 +--
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c              | 13 ++++++++++++-
- 3 files changed, 16 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index f8773ecb7525..62034039cee1 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -114,7 +114,6 @@ Required properties:
+ 
+ H3 and A64 HDMI PHY require additional clocks:
+   - pll-0: parent of phy clock
+-  - pll-1: second possible phy clock parent (A64 only)
+ 
+ TV Encoder
+ ----------
 -- 
 2.18.0
