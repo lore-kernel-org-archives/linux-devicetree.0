@@ -1,262 +1,109 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: Re: [PATCH V12 00/14] Krait clocks + Krait CPUfreq
-Date: Fri, 07 Sep 2018 15:28:53 +0100
-Message-ID: <D8FC68C0-2572-4A86-81D9-D0099D314A45@gmail.com>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org> <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org> <d682580d-5070-0271-197f-29d988172937@codeaurora.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify skipped
+ bytes in OOB
+Date: Fri, 7 Sep 2018 23:42:53 +0900
+Message-ID: <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
+References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com> <20180907160822.319047c8@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d682580d-5070-0271-197f-29d988172937@codeaurora.org>
+In-Reply-To: <20180907160822.319047c8@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>, mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
-
-On 7 September 2018 10:57:34 BST, Sricharan R <sricharan@codeaurora=2Eorg>=
- wrote:
->Hi Craig,
+2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
+> Hi Masahiro,
 >
+> On Fri,  7 Sep 2018 19:56:23 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
 >
->>> [v12]
->>>   * Added my signed-off that was missing in some patches=2E
->>>   * Added Bjorn's acked that i missed earlier=2E
->>>
->>=20
->>   Can you give this a try on your 8974 device and check if the
->>   pvs version reporting, scaling for higher frequencies are fine ?
->>   Sorry, i could not get hold of a 8974 device=2E So in-case if you
->still
->>   have the issues with higher frequencies, can you give a quick debug
->>   and report=2E That would be of great help=2E
->>=20
->   Ping on this =2E=2E
-
-Hi, didn't see your last message,
-
-Will have a try on mine in the weekend and report back=2E
+>> NAND devices need additional data area (OOB) for error correction,
+>> but it is also used for Bad Block Marker (BBM).  In many cases, the
+>> first byte in OOB is used for BBM, but the location actually depends
+>> on chip vendors.  The NAND controller should preserve the precious
+>> BBM to keep track of bad blocks.
+>>
+>> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
+>> the number of bytes to skip from the start of OOB.  The ECC engine
+>> will automatically skip the specified number of bytes when it gets
+>> access to OOB area.
+>>
+>> The same value for SPARE_AREA_SKIP_BYTES should be used between
+>> firmware and the operating system if you intend to use the NAND
+>> device across the control hand-off.
+>>
+>> In fact, the current denali.c code expects firmware to have already
+>> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
+>>
+>> If no firmware (or bootloader) has initialized the controller, the
+>> register value is zero, which is the default after power-on-reset.
+>>
+>> In other words, the Linux driver cannot initialize the controller
+>> by itself.  You cannot support the reset control either because
+>> resetting the controller will get register values lost.
+>>
+>> This commit adds a way to specify it via DT.  If the property
+>> "denali,oob-skip-bytes" exists, the value will be set to the register.
 >
->Regards,
-> Sricharan
->
->> Regards,
->>  Sricharan
->>=20
->>=20
->>> [v11]
->>>   * Dropped patch 13 and 14 from v10 and
->>>     merged the qcom-cpufreq-krait driver to the existing
->qcom-cpufreq-kryo=2Ec
->>>   * Rebased on top of clk-next
->>>   * Fixed a bug while populating the pvs version for krait=2E
->>>
->>> [v10]
->>>   * Addressed Stephen's comments to add clocks bindings properties
->>>     to the newly introduced nodes=2E
->>>   * Added a change to include opp-supported-hw to qcom-cpufreq=2Ec
->>>   * Rebased on top of clk-next
->>>   * Although there were minor changes to bindings and the driver
->>>     retained the acked-by tags from Rob and Viresh respectively=2E   =
-=20
->>>
->>> [v9]
->>>   * Fixed a rebase issue in Makefile and added Tag from Robh=2E
->>>
->>> [v8]
->>>   * Fixed a bug in path#14 pointed out by Viresh and also added
->tags=2E
->>>     No change in any other patch=2E
->>>
->>> [v7]
->>>   * Fixed comments from Viresh for cleaning up the error handling
->>>     in qcom-cpufreq=2Ec=2E Also changed the init function to lateinit
->>>     call=2E This is required because nvmem which gets initialised with
->>>     module_init needs to go first=2E
->>>   * Fixed Rob's comments for bindings documentation
->>>   * Fixed kbuild build issue in clk-lpc32xx=2Ec
->>>   * Rebased on top of clk-next
->>>
->>> [v6]
->>>   * Adrressed comments from Viresh for patch #14 in v5 [5]
->>>   * Introduced a new binding operating-points-v2-krait-cpu
->>>     as per discussion with Rob
->>>   * Added Review tags
->>>
->>> [v5]
->>>   * Addressed comments from Rob for bindings
->>>   * Addressed comments from Viresh to use dev_pm_opp_set_prop_name,
->accordingly
->>>     dropped patch #12 and corrected patch #11 from previous patch
->set in [4]
->>>   * Converted to use #spdx tags for newly introduced files
->>>
->>> Mostly a resend of the v3 posted by Stephen quite some time back [1]
->>> except for few changes=2E
->>>   Based on reading some feedback from list,
->>>   * Dropped the patch "clk: Add safe switch hook" from v3 [2]=2E
->>>     Now this is taken care by patch#10 in this series only for
->Krait=2E
->>>   * Dropped the path "clk: Avoid sending high rates to downstream
->>> 		      clocks during set_rate" from v3 [3]=2E
->>>   * Rebased on top of clk-next=2E
->>>   * Dropped the DT update from the series=2E Will send separately
->>>   * Now with cpufreq-dt+opp supporting voltage scaling, registering
->the
->>>     krait cpu supplies in DT should be sufficient=2E But one issue is,
->>>     the qcom-cpufreq drivers reads the efuse and based on that
->registers
->>>     the opp data and then registers the cpufreq-dt device=2E So when
->>>     cpufreq-dt driver probes and registers the regulator to the OPP
->framework,
->>>     it expects that the opp data for the device should not be
->registered before
->>>     the regulator=2E Will send a RFC patch removing that check, to
->find out the
->>>     right way of doing it=2E
->>>
->>> These patches provide cpufreq scaling on devices with Krait CPUs=2E
->>> In Krait CPU designs there's one PLL and two muxes per CPU, allowing
->>> us to switch CPU frequencies independently=2E
->>>
->>> 				 secondary
->>> 	 +-----+                    +
->>> 	 | QSB |-------+------------|\
->>> 	 +-----+       |            | |-+
->>> 		       |    +-------|/  |
->>> 		       |    |       +   |
->>> 	 +-----+       |    |           |
->>> 	 | PLL |----+-------+           |   primary
->>> 	 +-----+    |  |                |     +
->>> 		    |  |                +-----|\       +------+
->>> 	 +-------+  |  |                      | \      |      |
->>> 	 | HFPLL |----------+-----------------|  |-----| CPU0 |
->>> 	 +-------+  |  |    |                 |  |     |      |
->>> 		    |  |    | +-----+         | /      +------+
->>> 		    |  |    +-| / 2 |---------|/
->>> 		    |  |      +-----+         +
->>> 		    |  |         secondary
->>> 		    |  |            +
->>> 		    |  +------------|\
->>> 		    |               | |-+
->>> 		    +---------------|/  |   primary
->>> 				    +   |     +
->>> 					+-----|\       +------+
->>> 	 +-------+                            | \      |      |
->>> 	 | HFPLL |----------------------------|  |-----| CPU1 |
->>> 	 +-------+          |                 |  |     |      |
->>> 			    | +-----+         | /      +------+
->>> 			    +-| / 2 |---------|/
->>> 			      +-----+         +
->>>
->>> To support this in the common clock framework we model the muxes,
->>> dividers, and PLLs as different clocks=2E CPUfreq only interacts
->>> with the primary mux (farthest right in the diagram)=2E When CPUfreq
->>> sets a rate, the mux code finds the best parent that can provide the
->rate=2E
->>> Due to the design, QSB and the top PLL are always a fixed rate and
->thus
->>> only support one frequency each=2E These sources provide the lowest
->>> frequencies for the CPUs=2E The HFPLLs are where we can make the CPU
->go
->>> faster (GHz range)=2E Sometimes we need to run the HFPLL twice as
->>> fast and divide it by two to get a particular frequency=2E
->>>
->>> When switching rates we can't leave the CPU clocked by the HFPLL
->because
->>> we need to turn off the output of the PLL when changing its
->frequency=2E
->>> This means we have to switch over to the secondary mux and use one
->of the
->>> fixed sources=2E This is why we need something like the safe parent
->patch=2E
->>>
->>> [1]
->http://lists=2Einfradead=2Eorg/pipermail/linux-arm-kernel/2015-March/3326=
-07=2Ehtml
->>> [2]
->http://lists=2Einfradead=2Eorg/pipermail/linux-arm-kernel/2015-March/3326=
-15=2Ehtml
->>> [3]
->http://lists=2Einfradead=2Eorg/pipermail/linux-arm-kernel/2015-March/3326=
-08=2Ehtml
->>> [4] https://lwn=2Enet/Articles/740994/=20
->>> [5] https://lkml=2Eorg/lkml/2017/12/19/537
->>>
->>>
->>> Sricharan R (3):
->>>   clk: qcom: Add safe switch hook for krait mux clocks
->>>   cpufreq: qcom: Re-organise kryo cpufreq to use it for other nvmem
->>>     based qcom socs
->>>   cpufreq: qcom: Add support for krait based socs
->>>
->>> Stephen Boyd (11):
->>>   ARM: Add Krait L2 register accessor functions
->>>   clk: qcom: Add support for High-Frequency PLLs (HFPLLs)
->>>   clk: qcom: Add HFPLL driver
->>>   dt-bindings: clock: Document qcom,hfpll
->>>   clk: qcom: Add MSM8960/APQ8064's HFPLLs
->>>   clk: qcom: Add IPQ806X's HFPLLs
->>>   clk: qcom: Add support for Krait clocks
->>>   clk: qcom: Add KPSS ACC/GCC driver
->>>   dt-bindings: arm: Document qcom,kpss-gcc
->>>   clk: qcom: Add Krait clock controller driver
->>>   dt-bindings: clock: Document qcom,krait-cc
->>>
->>>  =2E=2E=2E/devicetree/bindings/arm/msm/qcom,kpss-acc=2Etxt  |  19 +
->>>  =2E=2E=2E/devicetree/bindings/arm/msm/qcom,kpss-gcc=2Etxt  |  44 +++
->>>  =2E=2E=2E/devicetree/bindings/clock/qcom,hfpll=2Etxt       |  60 ++++
->>>  =2E=2E=2E/devicetree/bindings/clock/qcom,krait-cc=2Etxt    |  34 ++
->>>  =2E=2E=2E/{kryo-cpufreq=2Etxt =3D> qcom-nvmem-cpufreq=2Etxt}   |   7 =
-+-
->>>  arch/arm/common/Kconfig                            |   3 +
->>>  arch/arm/common/Makefile                           |   1 +
->>>  arch/arm/common/krait-l2-accessors=2Ec               |  48 +++
->>>  arch/arm/include/asm/krait-l2-accessors=2Eh          |   9 +
->>>  drivers/clk/qcom/Kconfig                           |  28 ++
->>>  drivers/clk/qcom/Makefile                          |   5 +
->>>  drivers/clk/qcom/clk-hfpll=2Ec                       | 244
->+++++++++++++
->>>  drivers/clk/qcom/clk-hfpll=2Eh                       |  44 +++
->>>  drivers/clk/qcom/clk-krait=2Ec                       | 126 +++++++
->>>  drivers/clk/qcom/clk-krait=2Eh                       |  40 +++
->>>  drivers/clk/qcom/gcc-ipq806x=2Ec                     |  82 +++++
->>>  drivers/clk/qcom/gcc-msm8960=2Ec                     | 172 +++++++++
->>>  drivers/clk/qcom/hfpll=2Ec                           |  96 +++++
->>>  drivers/clk/qcom/kpss-xcc=2Ec                        |  87 +++++
->>>  drivers/clk/qcom/krait-cc=2Ec                        | 397
->+++++++++++++++++++++
->>>  drivers/cpufreq/Kconfig=2Earm                        |   6 +-
->>>  drivers/cpufreq/Makefile                           |   2 +-
->>>  drivers/cpufreq/cpufreq-dt-platdev=2Ec               |   5 +
->>>  drivers/cpufreq/qcom-cpufreq-kryo=2Ec                | 232
->------------
->>>  drivers/cpufreq/qcom-cpufreq-nvmem=2Ec               | 387
->++++++++++++++++++++
->>>  include/dt-bindings/clock/qcom,gcc-msm8960=2Eh       |   2 +
->>>  26 files changed, 1941 insertions(+), 239 deletions(-)
->>>  create mode 100644
->Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc=2Etxt
->>>  create mode 100644
->Documentation/devicetree/bindings/clock/qcom,hfpll=2Etxt
->>>  create mode 100644
->Documentation/devicetree/bindings/clock/qcom,krait-cc=2Etxt
->>>  rename Documentation/devicetree/bindings/opp/{kryo-cpufreq=2Etxt =3D>
->qcom-nvmem-cpufreq=2Etxt} (98%)
->>>  create mode 100644 arch/arm/common/krait-l2-accessors=2Ec
->>>  create mode 100644 arch/arm/include/asm/krait-l2-accessors=2Eh
->>>  create mode 100644 drivers/clk/qcom/clk-hfpll=2Ec
->>>  create mode 100644 drivers/clk/qcom/clk-hfpll=2Eh
->>>  create mode 100644 drivers/clk/qcom/clk-krait=2Ec
->>>  create mode 100644 drivers/clk/qcom/clk-krait=2Eh
->>>  create mode 100644 drivers/clk/qcom/hfpll=2Ec
->>>  create mode 100644 drivers/clk/qcom/kpss-xcc=2Ec
->>>  create mode 100644 drivers/clk/qcom/krait-cc=2Ec
->>>  delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo=2Ec
->>>  create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem=2Ec
->>>
->>=20
+> Hm, do we really need to make this config customizable? I mean, either
+> you have a large-page NAND (page > 512 bytes) and the 2 first bytes
+> must be reserved for the BBM or you have a small-page NAND and the BBM
+> is at position 4 and 5. Are you sure people configure that differently?
+> Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+
+As I said in the patch description,
+I need to use the same SPARE_AREA_SKIP_BYTES value
+across firmware, boot-loader, Linux, and whatever.
+
+I want to set the value to 8 for my platform
+because the on-chip boot ROM expects 8.
+I cannot change it since the boot ROM is hard-wired.
+
+
+The boot ROM skips 8 bytes in OOB
+when it loads images from the on-board NAND device.
+
+So, when I update the image from U-Boot or Linux,
+I need to make sure to set the register to 8.
+
+If I update the image with a different value,
+the Boot ROM fails to boot.
+
+
+
+When the system has booted from NAND,
+the register is already set to 8.  It works.
+
+However, when the system has booted from eMMC,
+the register is not initialized by anyone.
+I am searching for a way to set the register to 8
+in this case.
+
+
+The boot ROM in SOCFPGA might expect a different value,
+I am not sure.
+
+
+
+Thanks.
+
+
+
+> Regards,
+>
+> Boris
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
