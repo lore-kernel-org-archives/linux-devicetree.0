@@ -1,57 +1,22 @@
-Return-Path: <SRS0=SOkh=LV=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 1/2] clocksource/drivers/ostm: Delay driver registration
-Date: Fri, 7 Sep 2018 15:16:18 +0000
-Message-ID: 
- <TYXPR01MB1568B71126AB4A2BDB78BF1F8A000@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-References: <20180829132954.64862-1-chris.brandt@renesas.com>
- <20180829132954.64862-2-chris.brandt@renesas.com>
- <1ff04fa1-ee3b-6095-bcd8-f16dbb99b57a@linaro.org>
- <TY1PR01MB156202DC354E70F1C8C5B18A8A090@TY1PR01MB1562.jpnprd01.prod.outlook.com>
- <c16b82c0-e675-8f86-19e6-75cb5995813b@linaro.org>
- <CAMuHMdX9nXYan-m14k6h7OU1UCGW_irDLvMMi==dnM0cdUR_nA@mail.gmail.com>
- <c4bd550f-5319-9d92-a30a-1d12fc9bbcab@linaro.org>
- <CAMuHMdUs-YNQk1wmbqQvz_n9xq04=gkyL1uBJdg9ExA9Lmg5uw@mail.gmail.com>
- <a160b76b-8dca-81e8-e958-d8b92bdc8928@linaro.org>
- <CAMuHMdV3Ai+CLHBJ_GH9d=JN0cmiaQT3eSfNGRgiiMffgK7stg@mail.gmail.com>
- <ba334f02-ac37-0908-ec0c-da8a6459fab4@linaro.org>
-In-Reply-To: <ba334f02-ac37-0908-ec0c-da8a6459fab4@linaro.org>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Arnd Bergmann <arnd.bergmann@linaro.org>, Mark Brown <broonie@linaro.org>
+Return-Path: <SRS0=SOkh=LV=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 0/2] Add support for RZ/A2 wdt
+Date: Thu,  6 Sep 2018 20:22:41 -0500
+Message-Id: <20180907012243.86603-1-chris.brandt@renesas.com>
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gVGh1cnNkYXksIEF1Z3VzdCAzMCwgMjAxOCwgRGFuaWVsIExlemNhbm8gd3JvdGU6DQo+ID4g
-QUZBSUsgbm8gYXR0ZW1wdCB3YXMgZG9uZSB0byBzdXBwb3J0IEVQUk9CRV9ERUZFUiB3aXRoICpf
-T0ZfREVDTEFSRS4NCj4gPiBJTUhPIGl0IHdvdWxkIGJlIHBvaW50bGVzcywgYXMgaXQgd291bGQg
-YmUgbXVjaCBlYXNpZXIgdG8ganVzdCBzd2l0Y2ggdG8NCj4gcmVhbA0KPiA+IHBsYXRmb3JtIGRy
-aXZlcnMuDQo+IA0KPiBNYXkgYmUsIG1heSBiZSBub3QuDQo+IA0KPiBGcm9tIHlvdXIgcG9pbnQg
-b2YgdmlldywgdGhlIGNoYW5nZSBpcyBzaW1wbGUgYmVjYXVzZSBpdCB0b3VjaGVzIG9ubHkgYQ0K
-PiBzaW5nbGUgZHJpdmVyLg0KPiANCj4gRnJvbSBteSBwb2ludCBvZiB2aWV3LCB0aGUgY2hhbmdl
-IGltcGxpZXMgYSBzcGxpdCBpbiB0aGUgYXBwcm9hY2ggd2hpbGUNCj4gSSdtIHRyeWluZyB0byB1
-bmlmeSB0aGUgZHJpdmVycyBsaXR0bGUgYnkgbGl0dGxlIGFuZCB0aGVyZSBhcmUgaHVuZHJlZA0K
-PiBvZiB0aGVtLg0KPiANCj4gSXQgaXMgbm90IHRoZSBmaXJzdCB0aW1lIHdlIGZhY2UgdGhpcyBz
-aXR1YXRpb24gYW5kIEJhcnRvc3ogR29sYXN6ZXdza2kNCj4gaGFzIGEgc2ltaWxhciBwcm9ibGVt
-IFsxXS4NCj4gDQo+IFdlIGhhdmUgYWxsIHRoZSBmcmFtZXdvcmtzIHdlIG5lZWQgdG8gc29sdmUg
-dGhpcyBwcm9wZXJseSBidXQgSSB3b3VsZA0KPiBsaWtlIHNvbWV0aGluZyB3ZSBjYW4gcHJvcGFn
-YXRlIHRvIGFsbCBkcml2ZXJzIChPRiBhbmQgIU9GKSBzbyB3ZSBlbmQgdXANCj4gd2l0aCB1bmlm
-aWVkIGNvZGUuDQo+IA0KPiBJdCBpcyB0aW1lIHdlIGNsZWFybHkgc3RhdGUgdGhlIGRlcGVuZGVu
-Y3kgaXNzdWVzIGFuZCB3ZSBmaW5kIGEgcHJvcGVyDQo+IHdheSB0byBzb2x2ZSBpdC4NCg0KDQpP
-biBUaHVyc2RheSwgQXVndXN0IDMwLCAyMDE4LCBCYXJ0b3N6IEdvbGFzemV3c2tpIHdyb3RlOg0K
-PiBUaGlzIHdhcyBteSBsYXRlc3QgcHJvcG9zYWwgZm9yIGVhcmx5IHBsYXRmb3JtIGRyaXZlcnM6
-DQo+IA0KPiAgICAgaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTgvNS8xMS80ODgNCj4gDQo+IEkg
-c3RpbGwgaW50ZW5kIG9uIGNvbnRpbnVpbmcgdGhpcyB3b3JrLCBJIGp1c3QgZG9uJ3QgaGF2ZSB0
-aGUgdGltZSByaWdodA0KPiBub3cuDQoNCkRhbmllbCwNCg0KU28gd2hhdCBpcyB5b3VyIGZpbmFs
-IHRob3VnaHQgb24gdGhpcz8NCg0KVGhlIGN1cnJlbnQgT1NUTSBkcml2ZXIgdXNlcyBUSU1FUl9P
-Rl9ERUNMQVJFIGFuZCB0aGF0IGJhc2ljYWxseSBtZWFucyANCml0IHdpbGwgbmV2ZXIgd29yayB3
-aXRoIG15IG5ldyBTb0MuDQoNCkZvciBub3csIGNhbiBJIGNoYW5nZSB0aGUgZHJpdmVyIHRvIHJl
-Z2lzdGVyIGEgc3RhbmRhcmQgcGxhdGZvcm0gZHJpdmVyIA0KaW4gc3Vic3lzX2luaXRjYWxsIGxp
-a2UgdGhlIG90aGVyIFJlbmVzYXMgdGltZXIgZHJpdmVycz8NCg0KT3IgZG8gSSBoYXZlIHRvIGxp
-dmUgd2l0aG91dCBhIHRpbWVyIGluIG15IHN5c3RlbSBmb3IgdGhlIHVuc2VlYWJsZSANCmZ1dHVy
-ZT8NCg0KSWYgdGhlcmUgZXZlcnkgYmVjb21lcyBhIGZpeCBmb3IgdGhpcyByZXNvdXJjZSBkZXBl
-bmRlbmNlLCBJJ2xsIGJlIGhhcHB5DQp0byBtb2RpZnkgdGhlIE9TVE0gZHJpdmVyIHRvIGNvbXBs
-eS4gQnV0IGF0IHRoZSBtb21lbnQsIEknbSBzdHVjayB3aXRoIA0Kbm90aGluZy4NCg0KVGhhbmtz
-LA0KQ2hyaXMNCg0K
+Slightly modify the rza_wdt.c driver and update the binding docs.
+
+
+Chris Brandt (2):
+  watchdog: rza_wdt: Support longer timeouts
+  dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
+
+ .../devicetree/bindings/watchdog/renesas-wdt.txt   |  1 +
+ drivers/watchdog/rza_wdt.c                         | 81 +++++++++++++++++-----
+ 2 files changed, 64 insertions(+), 18 deletions(-)
+
+-- 
+2.16.1
