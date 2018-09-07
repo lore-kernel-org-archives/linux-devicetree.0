@@ -1,112 +1,144 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Sat, 8 Sep 2018 01:47:24 +0900
-Message-ID: <CAK7LNATqTh4oxG5uz2Z4gk0J=kXP62UX2r3cP9Kd2aCSTXzTuA@mail.gmail.com>
-References: <20180905235327.5996-1-robh@kernel.org> <20180905235327.5996-7-robh@kernel.org>
- <CAK7LNARD+_kV=XtJ66mZBU-CPMQgWF+oQtv4bGKaGGARNwzXiQ@mail.gmail.com> <CAL_JsqJeTqxFPxZfuusPxuOTsVbVk_Uhue6NXwpotkwZWHrCDw@mail.gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 0/5] CPUFREQ OPP's and Tegra30 support by
+ tegra20-cpufreq driver
+Date: Fri, 7 Sep 2018 19:59:09 +0300
+Message-ID: <6c5b6eb4-f809-1a31-acbc-ea27e5cb891b@gmail.com>
+References: <20180830194356.14059-1-digetx@gmail.com>
+ <1536237301.25080.22.camel@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJeTqxFPxZfuusPxuOTsVbVk_Uhue6NXwpotkwZWHrCDw@mail.gmail.com>
+In-Reply-To: <1536237301.25080.22.camel@toradex.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.o>
+To: Marcel Ziswiler <marcel.ziswiler@toradex.com>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "pdeschrijver@nvidia.com" <pdeschrijver@nvidia.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-2018-09-07 21:17 GMT+09:00 Rob Herring <robh@kernel.org>:
-> On Fri, Sep 7, 2018 at 5:33 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
+On 9/6/18 3:35 PM, Marcel Ziswiler wrote:
+> On Thu, 2018-08-30 at 22:43 +0300, Dmitry Osipenko wrote:
+>> Hello,
 >>
->> 2018-09-06 8:53 GMT+09:00 Rob Herring <robh@kernel.org>:
->> > There is nothing arch specific about building dtb files other than their
->> > location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
->> > The dependencies and supported targets are all slightly different.
->> > Also, a cross-compiler for each arch is needed, but really the host
->> > compiler preprocessor is perfectly fine for building dtbs. Move the
->> > build rules to a common location and remove the arch specific ones. This
->> > is done in a single step to avoid warnings about overriding rules.
->> >
->> > The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
->> > These pull in several dependencies some of which need a target compiler
->> > (specifically devicetable-offsets.h) and aren't needed to build dtbs.
->> > All that is really needed is dtc, so adjust the dependencies to only be
->> > dtc.
->> >
->> > This change enables support 'dtbs_install' on some arches which were
->> > missing the target.
->> >
->> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
->> > Cc: Michal Marek <michal.lkml@markovi.net>
->> > Cc: Vineet Gupta <vgupta@synopsys.com>
->> > Cc: Russell King <linux@armlinux.org.uk>
->> > Cc: Catalin Marinas <catalin.marinas@arm.com>
->> > Cc: Will Deacon <will.deacon@arm.com>
->> > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->> > Cc: Michal Simek <monstr@monstr.eu>
->> > Cc: Ralf Baechle <ralf@linux-mips.org>
->> > Cc: Paul Burton <paul.burton@mips.com>
->> > Cc: James Hogan <jhogan@kernel.org>
->> > Cc: Ley Foon Tan <lftan@altera.com>
->> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
->> > Cc: Paul Mackerras <paulus@samba.org>
->> > Cc: Michael Ellerman <mpe@ellerman.id.au>
->> > Cc: Chris Zankel <chris@zankel.net>
->> > Cc: Max Filippov <jcmvbkbc@gmail.com>
->> > Cc: linux-kbuild@vger.kernel.org
->> > Cc: linux-snps-arc@lists.infradead.org
->> > Cc: linux-arm-kernel@lists.infradead.org
->> > Cc: uclinux-h8-devel@lists.sourceforge.jp
->> > Cc: linux-mips@linux-mips.org
->> > Cc: nios2-dev@lists.rocketboards.org
->> > Cc: linuxppc-dev@lists.ozlabs.org
->> > Cc: linux-xtensa@linux-xtensa.org
->> > Signed-off-by: Rob Herring <robh@kernel.org>
->> > ---
->> > Please ack so I can take the whole series via the DT tree.
->> >
->> > v2:
->> >  - Fix $arch/boot/dts path check for out of tree builds
->> >  - Fix dtc dependency for building built-in dtbs
->> >  - Fix microblaze built-in dtb building
+>> This series adds support for CPU frequency scaling on Tegra30 and
+>> device
+>> tree support that allows to implement thermal throttling and
+>> customize
+>> available CPU frequencies per-board. The tegra20-cpufreq driver has
+>> been
+>> re-worked to support that all.
 >>
->>
->> This breaks parallel building
->> because two threads could descend into scripts/dtc
->> at the same time.
->>
->> 'all' depends on both 'scripts' and 'dtc'.
->>
->> * 'scripts' target -- descends into scripts/, then scripts/dtc
->> * 'dtc' target     -- descents into scripts/dtc directly
->
-> Any suggestions for how to fix given the problem with depending on
-> scripts? I suppose I could make scripts depend on dtc instead, but I'd
-> be back to needing to fix cleaning.
+>> Note that Tegra30 support not strictly depends on the clock patches
+>> that
+>> are under review now, CPUFREQ driver will fail to probe until CCLKG
+>> clock
+>> will get exposed by the clock driver. Hence this series can be
+>> applied
+>> independently of the clock patches, CPUFREQ will start to work on
+>> Tegra30
+>> once both patchsets will be applied.
+> 
+> In general this seems to work fine both on Colibri T20 as well as
+> Apalis/Colibri T30. However I did notice a few things plus have some
+> additional questions:
+> 
+> - Both T20 as well as T30 currently limit the max frequency to 1 GHz
+> while there are clearly T30 SKUs which may allow higher frequencies
+> (e.g. our regular T30 aka Embedded SKU 1.3 GHz max resp. 1.4 GHz single
+> core only, commercial T30 aka AP33 or T33 or whatever it is called up
+> to 1.6 GHz max resp. 1.7 GHz single core only). Would I have to allow
+> this via custom OPPs in my device tree?
 
-How about making 'prepare' depend on 'dtc'?
+Yes.
 
-Then, remove
-subdir-$(CONFIG_DTC)         += dtc
-from scripts/Makefile
+> - However, certain OPPs may also require adjusting core/cpu voltages
+> which is not yet taken care of as far as I can tell, correct?
 
-but, add dtc to subdir-
+Yes, DVFS isn't implemented yet. That could be supported later.
+
+> - I believe in downstream certain OPPs also take silicon parameters aka
+> speedo whatever into account. Any comments/plans concerning this?
+
+Good point. There is 'opp-supported-hw' device-tree property which seems is intended
+for that purpose. I'll take a look at making use of the property in the next revision,
+alternatively that could be implemented later in a distinct patch.
+
+> - With "cpufreq-info -f" I could only observe like the top 3-4 OPPs
+> while it does not to go further down even when idling. Why could that
+> be resp. what could cause this?
+
+What cpufreq governor are you using?
+
+Here is my 'cpufreq-info --stats' output from Tegra30 after a several minutes of idling after boot:
+
+408000:245884, 456000:445, 608000:251, 760000:151, 816000:82, 912000:75, 1000000:163  (561)
+
+And full cpufreq-info:
+
+cpufrequtils 008: cpufreq-info (C) Dominik Brodowski 2004-2009
+Report errors and bugs to cpufreq@vger.kernel.org, please.
+analyzing CPU 0:
+   driver: tegra
+   CPUs which run at the same hardware frequency: 0 1 2 3
+   CPUs which need to have their frequency coordinated by software: 0 1 2 3
+   maximum transition latency: 50.0 us.
+   hardware limits: 408 MHz - 1000 MHz
+   available frequency steps: 408 MHz, 456 MHz, 608 MHz, 760 MHz, 816 MHz, 912 MHz, 1000 MHz
+   available cpufreq governors: conservative, userspace, powersave, ondemand, performance, schedutil
+   current policy: frequency should be within 408 MHz and 1000 MHz.
+                   The governor "ondemand" may decide which speed to use
+                   within this range.
+   current CPU frequency is 608 MHz (asserted by call to hardware).
+   cpufreq stats: 408 MHz:99.53%, 456 MHz:0.18%, 608 MHz:0.10%, 760 MHz:0.06%, 816 MHz:0.03%, 912 MHz:0.03%, 1000 MHz:0.07%  (563)
+analyzing CPU 1:
+   driver: tegra
+   CPUs which run at the same hardware frequency: 0 1 2 3
+   CPUs which need to have their frequency coordinated by software: 0 1 2 3
+   maximum transition latency: 50.0 us.
+   hardware limits: 408 MHz - 1000 MHz
+   available frequency steps: 408 MHz, 456 MHz, 608 MHz, 760 MHz, 816 MHz, 912 MHz, 1000 MHz
+   available cpufreq governors: conservative, userspace, powersave, ondemand, performance, schedutil
+   current policy: frequency should be within 408 MHz and 1000 MHz.
+                   The governor "ondemand" may decide which speed to use
+                   within this range.
+   current CPU frequency is 608 MHz (asserted by call to hardware).
+   cpufreq stats: 408 MHz:99.53%, 456 MHz:0.18%, 608 MHz:0.10%, 760 MHz:0.06%, 816 MHz:0.03%, 912 MHz:0.03%, 1000 MHz:0.07%  (563)
+analyzing CPU 2:
+   driver: tegra
+   CPUs which run at the same hardware frequency: 0 1 2 3
+   CPUs which need to have their frequency coordinated by software: 0 1 2 3
+   maximum transition latency: 50.0 us.
+   hardware limits: 408 MHz - 1000 MHz
+   available frequency steps: 408 MHz, 456 MHz, 608 MHz, 760 MHz, 816 MHz, 912 MHz, 1000 MHz
+   available cpufreq governors: conservative, userspace, powersave, ondemand, performance, schedutil
+   current policy: frequency should be within 408 MHz and 1000 MHz.
+                   The governor "ondemand" may decide which speed to use
+                   within this range.
+   current CPU frequency is 608 MHz (asserted by call to hardware).
+   cpufreq stats: 408 MHz:99.53%, 456 MHz:0.18%, 608 MHz:0.10%, 760 MHz:0.06%, 816 MHz:0.03%, 912 MHz:0.03%, 1000 MHz:0.07%  (563)
+analyzing CPU 3:
+   driver: tegra
+   CPUs which run at the same hardware frequency: 0 1 2 3
+   CPUs which need to have their frequency coordinated by software: 0 1 2 3
+   maximum transition latency: 50.0 us.
+   hardware limits: 408 MHz - 1000 MHz
+   available frequency steps: 408 MHz, 456 MHz, 608 MHz, 760 MHz, 816 MHz, 912 MHz, 1000 MHz
+   available cpufreq governors: conservative, userspace, powersave, ondemand, performance, schedutil
+   current policy: frequency should be within 408 MHz and 1000 MHz.
+                   The governor "ondemand" may decide which speed to use
+                   within this range.
+   current CPU frequency is 608 MHz (asserted by call to hardware).
+   cpufreq stats: 408 MHz:99.53%, 456 MHz:0.18%, 608 MHz:0.10%, 760 MHz:0.06%, 816 MHz:0.03%, 912 MHz:0.03%, 1000 MHz:0.07%  (563)
 
 
-> Or I could just skip removing the
-> cross compiler dependency for now.
+> - Unfortunately "cpufreq-info --stats" currently does not seem to
+> output anything. Would that require something special to be
+> implemented?
 
-I want to build scripts/
-without target compiler.
+Make sure that CONFIG_CPU_FREQ_STAT is enabled in the kernels config.
 
-modpost is a special host-program
-that depends on $(CC).
+> Other than that you may add the following to the whole series:
+> 
+> Tested-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-I will take a look at it
-when I find some time.
-
-
--- 
-Best Regards
-Masahiro Yamada
+Thank you very much!
