@@ -1,112 +1,51 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
-Date: Fri, 7 Sep 2018 16:45:02 +0100
-Message-ID: <65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
-	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
-	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
-	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
-	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
-	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 4/8] regulator: stpmic1: add stpmic1 regulator driver
+Date: Fri, 7 Sep 2018 16:56:26 +0100
+Message-ID: <20180907155626.GI17459@sirena.org.uk>
+References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
+ <1536325173-16617-5-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <2fd4a0a1-1a35-bf82-df84-b995cce011d9-5C7GfCeVMHo@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Auger Eric <eric.auger-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>
-Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Op27XXJsWz80g3oF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536325173-16617-5-git-send-email-p.paillet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDcvMDkvMjAxOCAwOTo1NSwgQ2hyaXN0aWFuIEvDtm5pZyB3cm90ZToKPiBJIHdpbGwgdGFr
-ZSB0aGlzIGFzIGFuIG9wcG9ydHVuaXR5IHRvIHN1bW1hcml6ZSBzb21lIG9mIHRoZSByZXF1aXJl
-bWVudHMgCj4gd2UgaGF2ZSBmb3IgUEFTSUQgbWFuYWdlbWVudCBmcm9tIHRoZSBhbWRncHUgZHJp
-dmVyIHBvaW50IG9mIHZpZXc6CgpUaGF0J3MgaW5jcmVkaWJseSB1c2VmdWwsIHRoYW5rcyA6KQoK
-PiAxLiBXZSBuZWVkIHRvIGJlIGFibGUgdG8gYWxsb2NhdGUgUEFTSUQgYmV0d2VlbiAxIGFuZCBz
-b21lIG1heGltdW0uIFplcm8gCj4gaXMgcmVzZXJ2ZWQgYXMgZmFyIGFzIEkga25vdywgYnV0IHdl
-IGRvbid0IG5lY2Vzc2FyeSBuZWVkIGEgbWluaW11bS4KClNob3VsZCBiZSBmaW5lLiBUaGUgUEFT
-SUQgcmFuZ2UgaXMgcmVzdHJpY3RlZCBieSB0aGUgUENJIFBBU0lECmNhcGFiaWxpdHksIGZpcm13
-YXJlIGRlc2NyaXB0aW9uIChmb3Igbm9uLVBDSSBkZXZpY2VzKSwgdGhlIElPTU1VCmNhcGFjaXR5
-LCBhbmQgd2hhdCB0aGUgZGV2aWNlIGRyaXZlciBwYXNzZXMgdG8gaW9tbXVfc3ZhX2RldmljZV9p
-bml0LgpOb3QgYWxsIElPTU1VcyByZXNlcnZlIFBBU0lEIDAgKEFNRCBJT01NVSB3aXRob3V0IEdJ
-b1N1cCBkb2Vzbid0LCBpZiBJJ20Kbm90IG1pc3Rha2VuKSwgc28gdGhlIEtGRCBkcml2ZXIgd2ls
-bCBuZWVkIHRvIHBhc3MgbWluX3Bhc2lkPTEgdG8gbWFrZQpzdXJlIHRoYXQgMCBpc24ndCBhbGxv
-Y2F0ZWQuCgo+IDIuIFdlIG5lZWQgdG8gYmUgYWJsZSB0byBhbGxvY2F0ZSBQQVNJRHMgd2l0aG91
-dCBhIHByb2Nlc3MgYWRkcmVzcyBzcGFjZSAKPiBiYWNraW5nIGl0LiBFLmcuIG91ciBoYXJkd2Fy
-ZSB1c2VzIFBBU0lEcyBldmVuIHdpdGhvdXQgU2hhcmVkIFZpcnR1YWwgCj4gQWRkcmVzc2luZyBl
-bmFibGVkIHRvIGRpc3RpbmN0IGNsaWVudHMgZnJvbSBlYWNoIG90aGVyLgo+ICDCoMKgwqAgwqDC
-oMKgIFdvdWxkIGJlIGEgcGl0eSBpZiB3ZSBuZWVkIHRvIHN0aWxsIGhhdmUgYSBzZXBhcmF0ZSBQ
-QVNJRCAKPiBoYW5kbGluZyBiZWNhdXNlIHRoZSBzeXN0ZW0gd2lkZSBpcyBvbmx5IGF2YWlsYWJs
-ZSB3aGVuIElPTU1VIGlzIHR1cm5lZCBvbi4KCkknbSBzdGlsbCBub3Qgc3VyZSBhYm91dCB0aGlz
-IG9uZS4gRnJvbSBteSBwb2ludCBvZiB2aWV3IHdlIHNob3VsZG4ndAphZGQgdG8gdGhlIElPTU1V
-IHN1YnN5c3RlbSBoZWxwZXJzIGZvciBkZXZpY2VzIHdpdGhvdXQgYW4gSU9NTVUuCmlvbW11LXN2
-YSBleHBlY3RzIGV2ZXJ5d2hlcmUgdGhhdCB0aGUgZGV2aWNlIGhhcyBhbiBpb21tdV9kb21haW4s
-IGl0J3MKdGhlIGZpcnN0IHRoaW5nIHdlIGNoZWNrIG9uIGVudHJ5LiBCeXBhc3NpbmcgYWxsIG9m
-IHRoaXMgd291bGQgY2FsbAppZHJfYWxsb2MoKSBkaXJlY3RseSwgYW5kIHdvdWxkbid0IGhhdmUg
-YW55IGNvZGUgaW4gY29tbW9uIHdpdGggdGhlCmN1cnJlbnQgaW9tbXUtc3ZhLiBTbyBpdCBzZWVt
-cyBsaWtlIHlvdSBuZWVkIGEgbGF5ZXIgb24gdG9wIG9mIGlvbW11LXN2YQpjYWxsaW5nIGlkcl9h
-bGxvYygpIHdoZW4gYW4gSU9NTVUgaXNuJ3QgcHJlc2VudCwgYnV0IEkgZG9uJ3QgdGhpbmsgaXQK
-c2hvdWxkIGJlIGluIGRyaXZlcnMvaW9tbXUvCgo+IDMuIEV2ZW4gYWZ0ZXIgZGVzdHJ1Y3Rpb24g
-b2YgYSBwcm9jZXNzIGFkZHJlc3Mgc3BhY2Ugd2UgbmVlZCBzb21lIGdyYWNlIAo+IHBlcmlvZCBi
-ZWZvcmUgYSBQQVNJRCBpcyByZXVzZWQgYmVjYXVzZSBpdCBjYW4gYmUgdGhhdCB0aGUgc3BlY2lm
-aWMgCj4gUEFTSUQgaXMgc3RpbGwgaW4gc29tZSBoYXJkd2FyZSBxdWV1ZXMgZXRjLi4uCj4gIMKg
-wqDCoCDCoMKgwqAgQXQgYmFyZSBtaW5pbXVtIGFsbCBkZXZpY2UgZHJpdmVycyB1c2luZyBwcm9j
-ZXNzIGJpbmRpbmcgbmVlZCAKPiB0byBleHBsaWNpdGx5IG5vdGUgdG8gdGhlIGNvcmUgd2hlbiB0
-aGV5IGFyZSBkb25lIHdpdGggYSBQQVNJRC4KClJpZ2h0LCBtdWNoIG9mIHRoZSBob3JyaWJsZW5l
-c3MgaW4gaW9tbXUtc3ZhIGRlYWxzIHdpdGggdGhpczoKClRoZSBwcm9jZXNzIGRpZXMsIGlvbW11
-LXN2YSBpcyBub3RpZmllZCBhbmQgY2FsbHMgdGhlIG1tX2V4aXQoKSBmdW5jdGlvbgpwYXNzZWQg
-YnkgdGhlIGRldmljZSBkcml2ZXIgdG8gaW9tbXVfc3ZhX2RldmljZV9pbml0KCkuIEluIG1tX2V4
-aXQoKSB0aGUKZGV2aWNlIGRyaXZlciBuZWVkcyB0byBjbGVhciBhbnkgcmVmZXJlbmNlIHRvIHRo
-ZSBQQVNJRCBpbiBoYXJkd2FyZSBhbmQKaW4gaXRzIG93biBzdHJ1Y3R1cmVzLiBXaGVuIHRoZSBk
-ZXZpY2UgZHJpdmVyIHJldHVybnMgZnJvbSBtbV9leGl0KCksIGl0CmVmZmVjdGl2ZWx5IHRlbGxz
-IHRoZSBjb3JlIHRoYXQgaXQgaGFzIGZpbmlzaGVkIHVzaW5nIHRoZSBQQVNJRCwgYW5kCmlvbW11
-LXN2YSBjYW4gcmV1c2UgdGhlIFBBU0lEIGZvciBhbm90aGVyIHByb2Nlc3MuIG1tX2V4aXQoKSBp
-cyBhbGxvd2VkCnRvIGJsb2NrLCBzbyB0aGUgZGV2aWNlIGRyaXZlciBoYXMgdGltZSB0byBjbGVh
-biB1cCBhbmQgZmx1c2ggdGhlIHF1ZXVlcy4KCklmIHRoZSBkZXZpY2UgZHJpdmVyIGZpbmlzaGVz
-IHVzaW5nIHRoZSBQQVNJRCBiZWZvcmUgdGhlIHByb2Nlc3MgZXhpdHMsCml0IGp1c3QgY2FsbHMg
-dW5iaW5kKCkuCgo+IDQuIEl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSB0byBiZSBhYmxlIHRvIHNl
-dCBhICJ2b2lkICoiIGZvciBlYWNoIAo+IFBBU0lEL2RldmljZSBjb21iaW5hdGlvbiB3aGlsZSBi
-aW5kaW5nIHRvIGEgcHJvY2VzcyB3aGljaCB0aGVuIGNhbiBiZSAKPiBxdWVyaWVkIGxhdGVyIG9u
-IGJhc2VkIG9uIHRoZSBQQVNJRC4KPiAgwqDCoMKgIMKgwqDCoCBFLmcuIHdoZW4geW91IGhhdmUg
-YSBwZXIgUEFTSUQvZGV2aWNlIHN0cnVjdHVyZSBhcm91bmQgYW55d2F5LCAKPiBqdXN0IGFkZCBh
-biBleHRyYSBmaWVsZC4KCmlvbW11X3N2YV9iaW5kX2RldmljZSgpIHRha2VzIGEgImRydmRhdGEi
-IHBvaW50ZXIgdGhhdCBpcyBzdG9yZWQKaW50ZXJuYWxseSBmb3IgdGhlIFBBU0lEL2RldmljZSBj
-b21iaW5hdGlvbiAoaW9tbXVfYm9uZCkuIEl0IGlzIHBhc3NlZAp0byBtbV9leGl0KCksIGJ1dCBJ
-IGhhdmVuJ3QgYWRkZWQgYW55dGhpbmcgZm9yIHRoZSBkZXZpY2UgZHJpdmVyIHRvCnF1ZXJ5IGl0
-IGJhY2suCgo+IDUuIEl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSB0byBhbGxvY2F0ZSBtdWx0aXBs
-ZSBQQVNJRHMgZm9yIHRoZSBzYW1lIAo+IHByb2Nlc3MgYWRkcmVzcyBzcGFjZS4KPiAgwqDCoMKg
-IMKgwqDCoCBFLmcuIHNvbWUgdGVhbXMgYXQgQU1EIHdhbnQgdG8gdXNlIGEgc2VwYXJhdGUgR1BV
-IGFkZHJlc3Mgc3BhY2UgCj4gZm9yIHRoZWlyIHVzZXJzcGFjZSBjbGllbnQgbGlicmFyeS4gSSdt
-IHN0aWxsIHRyeWluZyB0byBhdm9pZCB0aGF0LCBidXQgCj4gaXQgaXMgcGVyZmVjdGx5IHBvc3Np
-YmxlIHRoYXQgd2UgYXJlIGdvaW5nIHRvIG5lZWQgdGhhdC4KClR3byBQQVNJRHMgcG9pbnRpbmcg
-dG8gdGhlIHNhbWUgcHJvY2VzcyBwZ2Q/IEF0IGZpcnN0IGdsYW5jZSBpdCBzZWVtcwpmZWFzaWJs
-ZSwgbWF5YmUgd2l0aCBhIGZsYWcgcGFzc2VkIHRvIGJpbmQoKSBhbmQgYSBmZXcgY2hhbmdlcyB0
-bwppbnRlcm5hbCBzdHJ1Y3R1cmVzLiBJdCB3aWxsIGR1cGxpY2F0ZSBBVEMgaW52YWxpZGF0aW9u
-IGNvbW1hbmRzIGZvcgplYWNoIHByb2Nlc3MgYWRkcmVzcyBzcGFjZSBjaGFuZ2UgKG11bm1hcCBl
-dGMpIHNvIHlvdSBtaWdodCB0YWtlIGEKcGVyZm9ybWFuY2UgaGl0LgoKSW50ZWwncyBTVk0gY29k
-ZSBoYXMgdGhlIFNWTV9GTEFHX1BSSVZBVEVfUEFTSUQgd2hpY2ggc2VlbXMgc2ltaWxhciB0bwp3
-aGF0IHlvdSBkZXNjcmliZSwgYnV0IEkgZG9uJ3QgcGxhbiB0byBzdXBwb3J0IGl0IGluIHRoaXMg
-c2VyaWVzICh0aGUKaW9fbW0gbW9kZWwgaXMgYWxyZWFkeSBwcmV0dHkgY29tcGxpY2F0ZWQpLiBJ
-IHRoaW5rIGl0IGNhbiBiZSBhZGRlZAp3aXRob3V0IHRvbyBtdWNoIGVmZm9ydCBpbiBhIGZ1dHVy
-ZSBzZXJpZXMsIHRob3VnaCB3aXRoIGEgZGlmZmVyZW50IGZsYWcKbmFtZSBzaW5jZSB3ZSdkIGxp
-a2UgdG8gdXNlICJwcml2YXRlIFBBU0lEIiBmb3Igc29tZXRoaW5nIGVsc2UKKGh0dHBzOi8vd3d3
-LnNwaW5pY3MubmV0L2xpc3RzL2RyaS1kZXZlbC9tc2cxNzcwMDcuaHRtbCkuCgpUaGFua3MsCkpl
-YW4KCj4gIMKgwqDCoCDCoMKgwqAgQWRkaXRpb25hbCB0byB0aGF0IGl0IGlzIHNvbWV0aW1lcyBx
-dWl0ZSB1c2VmdWwgZm9yIGRlYnVnZ2luZyAKPiB0byBpc29sYXRlIHdoZXJlIGV4YWN0bHkgYW4g
-aW5jb3JyZWN0IGFjY2VzcyAoc2VnZmF1bHQpIGlzIGNvbWluZyBmcm9tLgo+IAo+IExldCBtZSBr
-bm93IGlmIHRoZXJlIGFyZSBzb21lIHByb2JsZW1zIHdpdGggdGhhdCwgZXNwZWNpYWxseSBJIHdh
-bnQgdG8gCj4ga25vdyBpZiB0aGVyZSBpcyBwdXNoYmFjayBvbiAjNSBzbyB0aGF0IEkgY2FuIGZv
-cndhcmQgdGhhdCA6KQo+IAo+IFRoYW5rcywKPiBDaHJpc3RpYW4uCj4gCj4+Cj4+IFRoYW5rcywK
-Pj4gSmVhbgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KaW9tbXUgbWFpbGluZyBsaXN0CmlvbW11QGxpc3RzLmxpbnV4LWZvdW5kYXRpb24ub3JnCmh0
-dHBzOi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2lvbW11
+
+--Op27XXJsWz80g3oF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Sep 07, 2018 at 12:59:44PM +0000, Pascal PAILLET-LME wrote:
+
+> @@ -804,6 +804,18 @@ config REGULATOR_TI_ABB
+>  	  on TI SoCs may be unstable without enabling this as it provides
+>  	  device specific optimized bias to allow/optimize functionality.
+> =20
+> +config REGULATOR_STPMIC1
+
+This looks good to me except the Kconfig isn't alphabetically sorted and
+has a conflict.  If the series doesn't otherwise need a resend I should
+be able to fix by hand, let me know.
+
+--Op27XXJsWz80g3oF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluSn6kACgkQJNaLcl1U
+h9D0Hwf+Mz7oDPoli2YWJfuvAyjir33WC91k9f7g81u4O/QJ6AJJ+Tl2yc8D9VAd
+sfPk5SF3UMl3eMbsQ8/al6P7j4H0gMvkvgVt/0baJGkHd+v4X+vTWGWiO1Rlk7Wk
+2PeLVMwJJ4W/ma+jNo++WQngv/SHsRddiH7zDaHgrlCCiGEnsqPX1MBg/T/lwCkF
+de/8sT5o3PWmbl9Uvfow7mX9FLRLPDZFKULPRQqJNTyW/pa/VPbdwC9vHf8aYGdg
+y91SSOy/u4BoiegzZNMuLnuG9jekHultXFFsmlbZdBlAM3u1vyjqLuzwTEh3EpnU
+MFMZNboU65z5qOhlMMCHIOJ/6nVEkw==
+=M5Mz
+-----END PGP SIGNATURE-----
+
+--Op27XXJsWz80g3oF--
