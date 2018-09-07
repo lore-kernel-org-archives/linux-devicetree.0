@@ -1,100 +1,108 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v16 2/5] iommu/arm-smmu: Invoke pm_runtime during probe,
-	add/remove device
-Date: Fri, 7 Sep 2018 15:08:02 +0530
-Message-ID: <3ccc3690-dc9d-56e7-e2d1-62e73a189bff@codeaurora.org>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
-	<20180830144541.17740-3-vivek.gautam@codeaurora.org>
-	<CAAFQd5B7YR03Jm1upOg2nsaKOb1iDD7-WGo-qx7S8m-nounCvA@mail.gmail.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v3 3/4] PCI: mediatek: Add system pm support for MT2712
+ and MT7622
+Date: Fri, 7 Sep 2018 17:43:30 +0800
+Message-ID: <1536313410.31406.30.camel@mhfsdcap03>
+References: <1530518264-6125-1-git-send-email-honghui.zhang@mediatek.com>
+         <1530518264-6125-4-git-send-email-honghui.zhang@mediatek.com>
+         <20180717171543.GA20991@red-moon> <1531893761.31406.15.camel@mhfsdcap03>
+         <20180718094924.GA21463@red-moon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAAFQd5B7YR03Jm1upOg2nsaKOb1iDD7-WGo-qx7S8m-nounCvA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180718094924.GA21463@red-moon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: weiyi.lu@mediatek.com, chen.zhong@mediatek.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Wed, 2018-07-18 at 10:49 +0100, Lorenzo Pieralisi wrote:
+> On Wed, Jul 18, 2018 at 02:02:41PM +0800, Honghui Zhang wrote:
+> 
+> <snip>
+> 
+> > > > +static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
+> > > > +{
+> > > > +	struct mtk_pcie *pcie = dev_get_drvdata(dev);
+> > > > +	const struct mtk_pcie_soc *soc = pcie->soc;
+> > > > +	struct mtk_pcie_port *port, *tmp;
+> > > > +
+> > > > +	if (!soc->pm_support)
+> > > > +		return 0;
+> > > > +
+> > > > +	if (list_empty(&pcie->ports))
+> > > > +		return 0;
+> > > > +
+> > > > +	if (dev->pm_domain) {
+> > > > +		pm_runtime_enable(dev);
+> > > > +		pm_runtime_get_sync(dev);
+> > > > +	}
+> > > 
+> > > Are these runtime PM calls needed/abused here ?
+> > > 
+> > > Mind explaining the logic ?
+> > > 
+> > > There is certainly an asymmetry with the suspend callback which made me
+> > > suspicious, I am pretty certain Rafael/Kevin/Ulf can help me clarify so
+> > > that we can make progress with this patch.
+> > > 
+> > > Lorenzo
+> > > 
+> > Hi Lorenzo, thanks for your comments.
+> > Sorry I don't get you.
+> > I believe that in suspend callbacks the pm_runtime_put_sync and
+> > pm_runtime_disable should be called to gated the CMOS for this module,
+> > while the pm_rumtime_enable and pm_rumtime_get_sync should be called
+> > in resume callback.
 
+> That's why I CC'ed Rafael, Kevin and Ulf, to answer this question
+> thoroughly, I am not sure it is needed and that's the right way
+> of doing it in system suspend callbacks.
+> 
 
-On 9/7/2018 2:46 PM, Tomasz Figa wrote:
-> Hi Vivek,
->
-> On Thu, Aug 30, 2018 at 11:46 PM Vivek Gautam
-> <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>
->> The smmu device probe/remove and add/remove master device callbacks
->> gets called when the smmu is not linked to its master, that is without
->> the context of the master device. So calling runtime apis in those places
->> separately.
->> Global locks are also initialized before enabling runtime pm as the
->> runtime_resume() calls device_reset() which does tlb_sync_global()
->> that ultimately requires locks to be initialized.
->>
->> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> [vivek: Cleanup pm runtime calls]
->> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Tested-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>   drivers/iommu/arm-smmu.c | 89 +++++++++++++++++++++++++++++++++++++++++++-----
->>   1 file changed, 81 insertions(+), 8 deletions(-)
-> [snip]
->> @@ -2215,10 +2281,17 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
->>          if (!bitmap_empty(smmu->context_map, ARM_SMMU_MAX_CBS))
->>                  dev_err(&pdev->dev, "removing device with active domains!\n");
->>
->> +       arm_smmu_rpm_get(smmu);
->>          /* Turn the thing off */
->>          writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
->> +       arm_smmu_rpm_put(smmu);
->> +
->> +       if (pm_runtime_enabled(smmu->dev))
->> +               pm_runtime_force_suspend(smmu->dev);
->> +       else
->> +               clk_bulk_disable(smmu->num_clks, smmu->clks);
->>
->> -       clk_bulk_disable_unprepare(smmu->num_clks, smmu->clks);
->> +       clk_bulk_unprepare(smmu->num_clks, smmu->clks);
-> Aren't we missing pm_runtime_disable() here? We'll have the enable
-> count unbalanced if the driver is removed and probed again.
+hi, Rafael, Kevin and Ulf,
 
-pm_runtime_force_suspend() does a pm_runtime_disable() also if i am not 
-wrong.
-And, as mentioned in a previous thread [1], we were seeing a warning 
-which we avoided
-by keeping force_suspend().
+after reading of the power related documents in Documents/power/, I'm
+still confused whether the runtime_pm callbacks should be called in
+system suspend callbacks.
 
-[1] https://lkml.org/lkml/2018/7/8/124
+I believe that system suspend does not care about the device's CMOS
+status. And the device's CMOS status is controlled by runtime pm.
+That why I gated the CMOS through runtime pm in the system suspend
+callbacks.
 
-Thanks
-Vivek
->
-> Also, if we add pm_runtime_disable(), we can reorder things a bit and
-> simplify into:
->
->         arm_smmu_rpm_get(smmu);
->
->         /* Turn the thing off */
->         writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
->
->         if (pm_runtime_enabled())
->                 pm_runtime_disable();
->          arm_smmu_rpm_put(smmu);
->
->          clk_bulk_disable_unprepare(smmu->num_clks, smmu->clks);
->
-> Best regards,
-> Tomasz
+But I checked all existing system suspend callbacks and found there's no
+runtime pm was executed in system suspend callbacks. Does that means
+when system suspend, the system suspend framework does not care about
+the power consume? Or does it gated each device's CMOS in somewhere
+else?
+
+Or should I just remove the runtime pm callbacks in the system suspend
+flow?
+
+Could someone kindly give me some comments?
+
+Thanks in advance.
+
+> > That's exactly this patch doing.
+> > But the pm_rumtime_put_sync and pm_runtime_disable functions was wrapped
+> > in the mtk_pcie_subsys_powerdown.
+> 
+> Ah, sorry, I missed that.
+> 
+> > I did not call mtk_pcie_subsys_powerup since it does not just wrapped
+> > pm_rumtime related functions but also do the platform_resource_get,
+> > devm_ioremap, and free_ck clock get which I do not needed in resume
+> > callback.
+> > 
+> > Do you think it will be much clear if I abstract the
+> > platform_resource_get, devm_ioremap functions from
+> > mtk_pcie_subsys_powerup and put it to a new functions like
+> > mtk_pcie_subsys_resource_get, and then we may call the
+> > mtk_pcie_subsys_powerup in the resume function?
+> 
+> I think so but let's wait first for feedback on whether those
+> runtime PM calls are needed in the first place.
+> 
+> Lorenzo
