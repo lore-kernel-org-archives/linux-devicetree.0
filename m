@@ -1,83 +1,62 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Fri, 7 Sep 2018 19:32:06 +0900
-Message-ID: <CAK7LNARD+_kV=XtJ66mZBU-CPMQgWF+oQtv4bGKaGGARNwzXiQ@mail.gmail.com>
-References: <20180905235327.5996-1-robh@kernel.org> <20180905235327.5996-7-robh@kernel.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 2/2] phy: add Rockchip Innosilicon hdmi phy
+Date: Fri, 07 Sep 2018 12:35:24 +0200
+Message-ID: <2035629.dANnXaNfxq@phil>
+References: <20180906135047.30788-1-heiko@sntech.de>
+ <20180906135047.30788-2-heiko@sntech.de>
+ <81c527fc-5837-658f-5c57-60acd909ed2e@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905235327.5996-7-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <81c527fc-5837-658f-5c57-60acd909ed2e@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, zhengyang@rock-chips.com, linux-arm-kernel@lists.infradead.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-2018-09-06 8:53 GMT+09:00 Rob Herring <robh@kernel.org>:
-> There is nothing arch specific about building dtb files other than their
-> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
-> The dependencies and supported targets are all slightly different.
-> Also, a cross-compiler for each arch is needed, but really the host
-> compiler preprocessor is perfectly fine for building dtbs. Move the
-> build rules to a common location and remove the arch specific ones. This
-> is done in a single step to avoid warnings about overriding rules.
+Am Freitag, 7. September 2018, 10:58:04 CEST schrieb Robin Murphy:
+> On 2018-09-06 2:50 PM, Heiko Stuebner wrote:
+> > From: Zheng Yang <zhengyang@rock-chips.com>
+> > 
+> > Add a driver for the Innosilicon hdmi phy used on rk3228/rk3229
+> > and rk3328 socs from Rockchip.
+> > 
+> > Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > Tested-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> That reminds me, I really must dig out that box again and finish 
+> figuring out the GPIOs and regulators... :)
 >
-> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
-> These pull in several dependencies some of which need a target compiler
-> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
-> All that is really needed is dtc, so adjust the dependencies to only be
-> dtc.
->
-> This change enables support 'dtbs_install' on some arches which were
-> missing the target.
->
-> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> Cc: Michal Marek <michal.lkml@markovi.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Ley Foon Tan <lftan@altera.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Max Filippov <jcmvbkbc@gmail.com>
-> Cc: linux-kbuild@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: uclinux-h8-devel@lists.sourceforge.jp
-> Cc: linux-mips@linux-mips.org
-> Cc: nios2-dev@lists.rocketboards.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-xtensa@linux-xtensa.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please ack so I can take the whole series via the DT tree.
->
-> v2:
->  - Fix $arch/boot/dts path check for out of tree builds
->  - Fix dtc dependency for building built-in dtbs
->  - Fix microblaze built-in dtb building
+> [...]
+> > +static int inno_hdmi_phy_probe(struct platform_device *pdev)
+> > +{
+> > +	struct inno_hdmi_phy *inno;
+> > +	const struct of_device_id *match;
+> > +	struct phy_provider *phy_provider;
+> > +	struct resource *res;
+> > +	void __iomem *regs;
+> > +	int ret;
+> > +
+> > +	inno = devm_kzalloc(&pdev->dev, sizeof(*inno), GFP_KERNEL);
+> > +	if (!inno)
+> > +		return -ENOMEM;
+> > +
+> > +	inno->dev = &pdev->dev;
+> > +
+> > +	match = of_match_device(inno->dev->driver->of_match_table, inno->dev);
+> > +	inno->plat_data = (struct inno_hdmi_phy_drv_data *)match->data;
+> 
+> Nit: if there's cause to do another respin anyway, you could simplify 
+> this part with of_device_get_match_data().
 
-
-This breaks parallel building
-because two threads could descend into scripts/dtc
-at the same time.
-
-'all' depends on both 'scripts' and 'dtc'.
-
-* 'scripts' target -- descends into scripts/, then scripts/dtc
-* 'dtc' target     -- descents into scripts/dtc directly
-
-
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+done in v6  ... I found your mail directly after sending v5 ;-) .
