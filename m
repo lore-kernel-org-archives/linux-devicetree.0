@@ -1,100 +1,83 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify
- skipped bytes in OOB
-Date: Fri, 7 Sep 2018 16:53:48 +0200
-Message-ID: <20180907165348.3e0027ee@bbrezillon>
-References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
-        <20180907160822.319047c8@bbrezillon>
-        <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
+From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Subject: Re: [PATCH 00/21] DT cpu node iterator
+Date: Fri, 7 Sep 2018 14:54:20 +0200
+Message-ID: <CAHTX3d+BFKM-jFo8Ww_dXwAzsDVoWqE==erfwVTeijHfh8kkOw@mail.gmail.com>
+References: <20180905193738.19325-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/mixed; boundary="===============0971646821141865186=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180905193738.19325-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rich Felker <dalias-8zAoT0mYgF4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vitaly Bordug <vitb-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Palmer Dabbelt <palmer-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Stefan Kristiansson <stefan.kristiansson-MbMCFXIvDHJFcC0YU169RA@public.gmane.org>, "H. Peter Anvin" <hpa-YMNOUZJC4hwAvxtiuMwx3w@public.gmane.org>, linux-riscv-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jonas Bonn <jonas-A9uVI2HLR7kOP4wsBPIw7w@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org, Yoshinori Sato <ysato-Rn4VEauK+AKRv+LV9MX5uooqe+aC9MnS@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgAlbert Ou <a>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Sep 2018 23:42:53 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+--===============0971646821141865186==
+Content-Type: multipart/alternative; boundary="0000000000009fa1d105754781ee"
 
-> Hi Boris,
-> 
-> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
-> > Hi Masahiro,
-> >
-> > On Fri,  7 Sep 2018 19:56:23 +0900
-> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> >  
-> >> NAND devices need additional data area (OOB) for error correction,
-> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
-> >> first byte in OOB is used for BBM, but the location actually depends
-> >> on chip vendors.  The NAND controller should preserve the precious
-> >> BBM to keep track of bad blocks.
-> >>
-> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
-> >> the number of bytes to skip from the start of OOB.  The ECC engine
-> >> will automatically skip the specified number of bytes when it gets
-> >> access to OOB area.
-> >>
-> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
-> >> firmware and the operating system if you intend to use the NAND
-> >> device across the control hand-off.
-> >>
-> >> In fact, the current denali.c code expects firmware to have already
-> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
-> >>
-> >> If no firmware (or bootloader) has initialized the controller, the
-> >> register value is zero, which is the default after power-on-reset.
-> >>
-> >> In other words, the Linux driver cannot initialize the controller
-> >> by itself.  You cannot support the reset control either because
-> >> resetting the controller will get register values lost.
-> >>
-> >> This commit adds a way to specify it via DT.  If the property
-> >> "denali,oob-skip-bytes" exists, the value will be set to the register.  
-> >
-> > Hm, do we really need to make this config customizable? I mean, either
-> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
-> > must be reserved for the BBM or you have a small-page NAND and the BBM
-> > is at position 4 and 5. Are you sure people configure that differently?
-> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?  
-> 
-> 
-> As I said in the patch description,
-> I need to use the same SPARE_AREA_SKIP_BYTES value
-> across firmware, boot-loader, Linux, and whatever.
-> 
-> I want to set the value to 8 for my platform
-> because the on-chip boot ROM expects 8.
-> I cannot change it since the boot ROM is hard-wired.
-> 
-> 
-> The boot ROM skips 8 bytes in OOB
-> when it loads images from the on-board NAND device.
-> 
-> So, when I update the image from U-Boot or Linux,
-> I need to make sure to set the register to 8.
-> 
-> If I update the image with a different value,
-> the Boot ROM fails to boot.
-> 
-> 
-> 
-> When the system has booted from NAND,
-> the register is already set to 8.  It works.
-> 
-> However, when the system has booted from eMMC,
-> the register is not initialized by anyone.
-> I am searching for a way to set the register to 8
-> in this case.
-> 
-> 
-> The boot ROM in SOCFPGA might expect a different value,
-> I am not sure.
+--0000000000009fa1d105754781ee
+Content-Type: text/plain; charset="UTF-8"
 
-Okay, then why not having a per-compatible value if it's related to the
-BootROM? Unless the BootROM is part of the FPGA and can be
-reprogrammed. I'd really prefer not having a generic property that
-allows you to put anything you want.
+Hi Rob,
+
+2018-09-05 21:37 GMT+02:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+
+> This series adds an iterator for cpu nodes and converts users over to use
+> it or of_get_cpu_node in some cases. This allows us to remove the
+> dependency on device_type property for cpu nodes though removing that
+> from DTS files will have to wait for some time. In some cases, this makes
+> the DT search more strict by only looking in /cpus child nodes rather
+> than any node with the device_type == cpu. The iterator also honors the
+> status property which is often forgotten.
+>
+> I've only tested on ARM under QEMU and compiled powerpc.
+>
+
+
+Do you have this somewhere in your tree not to apply 21 patches by hand?
+
+Thanks,
+Michal
+
+--0000000000009fa1d105754781ee
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr">Hi Rob,<br><div><div class=3D"gmail_extra"><br><div class=
+=3D"gmail_quote">2018-09-05 21:37 GMT+02:00 Rob Herring <span dir=3D"ltr">&=
+lt;<a href=3D"mailto:robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" target=3D"_blank">robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org</a>=
+&gt;</span>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8e=
+x;border-left:1px #ccc solid;padding-left:1ex">This series adds an iterator=
+ for cpu nodes and converts users over to use<br>
+it or of_get_cpu_node in some cases. This allows us to remove the<br>
+dependency on device_type property for cpu nodes though removing that<br>
+from DTS files will have to wait for some time. In some cases, this makes<b=
+r>
+the DT search more strict by only looking in /cpus child nodes rather<br>
+than any node with the device_type =3D=3D cpu. The iterator also honors the=
+<br>
+status property which is often forgotten.<br>
+<br>
+I&#39;ve only tested on ARM under QEMU and compiled powerpc.<br></blockquot=
+e><div><br></div><div><br></div><div>Do you have this somewhere in your tre=
+e not to apply 21 patches by hand?</div><div><br></div><div>Thanks,</div><d=
+iv>Michal<br></div><div>=C2=A0</div></div><br></div></div></div>
+
+--0000000000009fa1d105754781ee--
+
+--===============0971646821141865186==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0971646821141865186==--
