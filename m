@@ -1,7 +1,7 @@
 From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 3/6] tracing: Add tp_pstore cmdline to have tracepoints go to pstore
-Date: Sun,  9 Sep 2018 01:57:04 +0530
-Message-ID: <f65e9fa6e047b9b14d4f64362f9fe1f89b306050.1536430404.git.saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 4/6] arm64/io: Add tracepoint for register accesses
+Date: Sun,  9 Sep 2018 01:57:05 +0530
+Message-ID: <84677d700f0e894142bf3460292c695bb1a946e4.1536430404.git.saiprakash.ranjan@codeaurora.org>
 References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
@@ -10,248 +10,138 @@ To: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura 
 Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Prasad Sodagudi <psodagud@codeaurora.org>, tsoni@codeaurora.org, Bryan Huntsman <bryanh@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the kernel command line tp_pstore option that will have
-tracepoints go to persistent ram buffer as well as to the
-trace buffer for further debugging. This is similar to tp_printk
-cmdline option of ftrace.
+Generic IO read/write i.e., __raw_{read,write}{b,l,w,q} are
+typically used to read/write from/to memory mapped registers,
+which can cause hangs or some undefined behaviour if access
+unclocked. Tracing these register accesses can be very helpful
+to debug such issues during initial development stages.
+This can be used later for tracing arm IO register accesses.
 
-Pstore support for event tracing is already added and we enable
-logging to pstore only if cmdline is specified.
+Sample output format of register access trace is below:
 
-Passing "tp_pstore" will activate logging to pstore. To turn it
-off, the sysctl /proc/sys/kernel/tracepoint_pstore can have '0'
-echoed into it. Note, this only works if the cmdline option is
-used. Echoing 1 into the sysctl file without the cmdline option
-will have no affect.
+  io_write: type=writel cpu=3 ts:1424714326 data=0xffff00000d1065a4 caller=qcom_smsm_probe+0x52c/0x678
+  io_write: type=writel cpu=3 ts:1424962659 data=0xffff00000d106608 caller=qcom_smsm_probe+0x52c/0x678
 
 Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- .../admin-guide/kernel-parameters.txt         | 21 ++++++++
- include/linux/ftrace.h                        |  6 ++-
- kernel/sysctl.c                               |  7 +++
- kernel/trace/Kconfig                          | 22 +++++++-
- kernel/trace/trace.c                          | 51 +++++++++++++++++++
- kernel/trace/trace.h                          |  7 +++
- 6 files changed, 112 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/io.c         | 22 +++++++++++
+ include/asm-generic/io-trace.h | 70 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 92 insertions(+)
+ create mode 100644 include/asm-generic/io-trace.h
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 9871e649ffef..622cf64d4e5b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4519,6 +4519,27 @@
- 			frequency tracepoints such as irq or sched, can cause
- 			the system to live lock.
+diff --git a/arch/arm64/kernel/io.c b/arch/arm64/kernel/io.c
+index 79b17384effa..a9db07f66477 100644
+--- a/arch/arm64/kernel/io.c
++++ b/arch/arm64/kernel/io.c
+@@ -19,6 +19,10 @@
+ #include <linux/export.h>
+ #include <linux/types.h>
+ #include <linux/io.h>
++#include <linux/sched/clock.h>
++
++#define CREATE_TRACE_POINTS
++#include <asm-generic/io-trace.h>
  
-+	tp_pstore[FTRACE]
-+			Have the tracepoints sent to persistent ram buffer for
-+			debugging. This is useful for debugging early boot up
-+			and other kernel issues where the system hangs or
-+			reboots due to some unclocked access or some buggy
-+			driver. Instead of spamming the console with unwanted
-+			logs, we can send the logs to pstore buffer for further
-+			debugging.
-+
-+			Last occurred events in the pstore log will be helpful
-+			in identifying the reset cause.
-+
-+			For example, to trace sched event, add to the command
-+			line:
-+				trace_event=sched tp_pstore
-+
-+			To turn off having tracepoints sent to pstore,
-+				echo 0 > /proc/sys/kernel/tracepoint_pstore
-+			Note, echoing 1 into this file without the
-+			tracepoint_pstore kernel cmdline option has no effect.
-+
- 	traceoff_on_warning
- 			[FTRACE] enable this option to disable tracing when a
- 			warning is hit. This turns off "tracing_on". Tracing can
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index a397907e8d72..7c3074e7ec6b 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -900,6 +900,7 @@ enum ftrace_dump_mode;
- 
- extern enum ftrace_dump_mode ftrace_dump_on_oops;
- extern int tracepoint_printk;
-+extern int tracepoint_pstore;
- 
- extern void disable_trace_on_warning(void);
- extern int __disable_trace_on_warning;
-@@ -907,9 +908,12 @@ extern int __disable_trace_on_warning;
- int tracepoint_printk_sysctl(struct ctl_table *table, int write,
- 			     void __user *buffer, size_t *lenp,
- 			     loff_t *ppos);
-+int tracepoint_pstore_sysctl(struct ctl_table *table, int write,
-+			     void __user *buffer, size_t *lenp,
-+			     loff_t *ppos);
- 
- #else /* CONFIG_TRACING */
--static inline void  disable_trace_on_warning(void) { }
-+static inline void disable_trace_on_warning(void) { }
- #endif /* CONFIG_TRACING */
- 
- #ifdef CONFIG_FTRACE_SYSCALLS
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index cc02050fd0c4..3cc1223b8955 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -653,6 +653,13 @@ static struct ctl_table kern_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= tracepoint_printk_sysctl,
- 	},
-+	{
-+		.procname	= "tracepoint_pstore",
-+		.data		= &tracepoint_pstore,
-+		.maxlen		= sizeof(tracepoint_pstore),
-+		.mode		= 0644,
-+		.proc_handler	= tracepoint_pstore_sysctl,
-+	},
- #endif
- #ifdef CONFIG_KEXEC_CORE
- 	{
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 5e3de28c7677..d0eed268ee85 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -774,6 +774,27 @@ config TRACING_EVENTS_GPIO
- 	help
- 	  Enable tracing events for gpio subsystem
- 
-+config TRACING_EVENTS_IO
-+	bool "Trace IO read/write events"
-+	help
-+	  Enable tracing events for IO read/write operations.
-+	  This is useful for debugging random hangs or resets
-+	  caused due to unclocked access or some buggy driver.
-+
-+	  Output of this trace event can be overwhelming and hence
-+	  dynamic filtering option based on dynamic debug library
-+	  is provided to narrow down the issues.
-+
-+	  Eg: Trace all register read/write of mmc subsystem with
-+	  below command line:
-+
-+	    dyndbg="file drivers/mmc/* +p" trace_event=io
-+
-+	  See Documentation/admin-guide/dynamic-debug-howto.rst for
-+	  more info on using dynamic debug.
-+
-+	  If unsure, say N.
-+
- config GCOV_PROFILE_FTRACE
- 	bool "Enable GCOV profiling on ftrace subsystem"
- 	depends on GCOV_KERNEL
-@@ -789,4 +810,3 @@ config GCOV_PROFILE_FTRACE
- endif # FTRACE
- 
- endif # TRACING_SUPPORT
--
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index bf6f1d70484d..018cbbefb769 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -73,6 +73,11 @@ struct trace_iterator *tracepoint_print_iter;
- int tracepoint_printk;
- static DEFINE_STATIC_KEY_FALSE(tracepoint_printk_key);
- 
-+/* Pipe tracepoints to pstore */
-+struct trace_iterator *tracepoint_pstore_iter;
-+int tracepoint_pstore;
-+static DEFINE_STATIC_KEY_FALSE(tracepoint_pstore_key);
-+
- /* For tracers that don't implement custom flags */
- static struct tracer_opt dummy_tracer_opt[] = {
- 	{ }
-@@ -238,6 +243,14 @@ static int __init set_tracepoint_printk(char *str)
- }
- __setup("tp_printk", set_tracepoint_printk);
- 
-+static int __init set_tracepoint_pstore(char *str)
-+{
-+	if ((strcmp(str, "=0") != 0 && strcmp(str, "=off") != 0))
-+		tracepoint_pstore = 1;
-+	return 1;
-+}
-+__setup("tp_pstore", set_tracepoint_pstore);
-+
- unsigned long long ns2usecs(u64 nsec)
- {
- 	nsec += 500;
-@@ -2376,11 +2389,45 @@ int tracepoint_printk_sysctl(struct ctl_table *table, int write,
- 	return ret;
- }
- 
-+static DEFINE_MUTEX(tracepoint_pstore_mutex);
-+
-+int tracepoint_pstore_sysctl(struct ctl_table *table, int write,
-+			     void __user *buffer, size_t *lenp,
-+			     loff_t *ppos)
-+{
-+	int save_tracepoint_pstore;
-+	int ret;
-+
-+	mutex_lock(&tracepoint_pstore_mutex);
-+	save_tracepoint_pstore = tracepoint_pstore;
-+
-+	ret = proc_dointvec(table, write, buffer, lenp, ppos);
-+
-+	if (!tracepoint_pstore_iter)
-+		tracepoint_pstore = 0;
-+
-+	if (save_tracepoint_pstore == tracepoint_pstore)
-+		goto out;
-+
-+	if (tracepoint_pstore)
-+		static_key_enable(&tracepoint_pstore_key.key);
-+	else
-+		static_key_disable(&tracepoint_pstore_key.key);
-+
-+ out:
-+	mutex_unlock(&tracepoint_pstore_mutex);
-+
-+	return ret;
-+}
-+
- void trace_event_buffer_commit(struct trace_event_buffer *fbuffer)
- {
- 	if (static_key_false(&tracepoint_printk_key.key))
- 		output_printk(fbuffer);
- 
-+	if (static_key_false(&tracepoint_pstore_key.key))
-+		pstore_event_call(fbuffer);
-+
- 	event_trigger_unlock_commit(fbuffer->trace_file, fbuffer->buffer,
- 				    fbuffer->event, fbuffer->entry,
- 				    fbuffer->flags, fbuffer->pc);
-@@ -8596,6 +8643,10 @@ void __init early_trace_init(void)
- 		else
- 			static_key_enable(&tracepoint_printk_key.key);
+ /*
+  * Copy data from IO memory space to "real" memory space.
+@@ -106,3 +110,21 @@ void __memset_io(volatile void __iomem *dst, int c, size_t count)
  	}
-+
-+	if (tracepoint_pstore)
-+		static_key_enable(&tracepoint_pstore_key.key);
-+
- 	tracer_alloc_buffers();
  }
- 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 3b8c0e24ab30..edc28d0c27eb 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1843,5 +1843,12 @@ static inline void tracer_hardirqs_off(unsigned long a0, unsigned long a1) { }
- #endif
- 
- extern struct trace_iterator *tracepoint_print_iter;
-+extern struct trace_iterator *tracepoint_pstore_iter;
+ EXPORT_SYMBOL(__memset_io);
 +
-+#ifdef CONFIG_PSTORE_FTRACE
-+extern void pstore_event_call(struct trace_event_buffer *fbuffer);
-+#else
-+static inline void pstore_event_call(struct trace_event_buffer *fbuffer) { }
++#if defined(CONFIG_TRACING_EVENTS_IO)
++void do_trace_io_write(const char *type, void *addr)
++{
++	trace_io_write(type, raw_smp_processor_id(), sched_clock(), addr,
++		       _RET_IP_);
++}
++EXPORT_SYMBOL(do_trace_io_write);
++EXPORT_TRACEPOINT_SYMBOL(io_write);
++
++void do_trace_io_read(const char *type, void *addr)
++{
++	trace_io_read(type, raw_smp_processor_id(), sched_clock(), addr,
++		      _RET_IP_);
++}
++EXPORT_SYMBOL(do_trace_io_read);
++EXPORT_TRACEPOINT_SYMBOL(io_read);
 +#endif
- 
- #endif /* _LINUX_KERNEL_TRACE_H */
+diff --git a/include/asm-generic/io-trace.h b/include/asm-generic/io-trace.h
+new file mode 100644
+index 000000000000..e57b52d8976a
+--- /dev/null
++++ b/include/asm-generic/io-trace.h
+@@ -0,0 +1,70 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM io
++
++#if !defined(CONFIG_TRACING_EVENTS_IO)
++#define NOTRACE
++#endif
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE io-trace
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH asm-generic
++
++#if !defined(_TRACE_IO_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_IO_H
++
++#include <linux/tracepoint.h>
++
++/*
++ * Tracepoint for generic IO read/write, i.e., __raw_{read,write}{b,l,w,q}()
++ */
++DECLARE_EVENT_CLASS(io_trace_class,
++
++	TP_PROTO(const char *type, int cpu, u64 ts, void *addr,
++		 unsigned long ret_ip),
++
++	TP_ARGS(type, cpu, ts, addr, ret_ip),
++
++	TP_STRUCT__entry(
++		__string(	type,		type	)
++		__field(	int,		cpu	)
++		__field(	u64,		ts	)
++		__field(	void *,		addr	)
++		__field(	unsigned long,	ret_ip	)
++	),
++
++	TP_fast_assign(
++		__assign_str(type, type);
++		__entry->cpu	= cpu;
++		__entry->ts	= ts;
++		__entry->addr	= addr;
++		__entry->ret_ip	= ret_ip;
++	),
++
++	TP_printk("type=%s cpu=%d ts:%llu data=0x%lx caller=%pS",
++		  __get_str(type), __entry->cpu, __entry->ts,
++		  (unsigned long)__entry->addr, (void *)__entry->ret_ip)
++);
++
++DEFINE_EVENT(io_trace_class, io_read,
++
++	TP_PROTO(const char *type, int cpu, u64 ts, void *addr,
++		 unsigned long ret_ip),
++
++	TP_ARGS(type, cpu, ts, addr, ret_ip)
++);
++
++DEFINE_EVENT(io_trace_class, io_write,
++
++	TP_PROTO(const char *type, int cpu, u64 ts, void *addr,
++		 unsigned long ret_ip),
++
++	TP_ARGS(type, cpu, ts, addr, ret_ip)
++);
++
++#endif /* _TRACE_IO_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
