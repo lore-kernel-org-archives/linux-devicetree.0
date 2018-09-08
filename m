@@ -1,99 +1,25 @@
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
-Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
-Date: Sat, 8 Sep 2018 09:29:13 +0200
-Message-ID: <3e3a6797-a233-911b-3a7d-d9b549160960@amd.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
-	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
-	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
-	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
-	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
-	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
-	<65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
-	<5bbc0332-b94b-75cc-ca42-a9b196811daf@amd.com>
-	<20180907142504.5034351e@jacob-builder>
+From: Antonio Borneo <borneo.antonio@gmail.com>
+Subject: Re: [PATCH V2 4/8] regulator: stpmic1: add stpmic1 regulator driver
+Date: Sat, 8 Sep 2018 11:37:29 +0200
+Message-ID: <CAAj6DX2tnT5wjmy9nfRx7ut62_6rsQ00RNjaXX3WxMsB+mSHYw@mail.gmail.com>
+References: <1536325173-16617-1-git-send-email-p.paillet@st.com> <1536325173-16617-5-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180907142504.5034351e@jacob-builder>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95@hua>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1536325173-16617-5-git-send-email-p.paillet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: p.paillet@st.com
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, lee.jones@linaro.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, wim@linux-watchdog.org, linux@roeck-us.net, linux-input <linux-input@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, benjamin.gaignard@linaro.org, eballetbo@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-QW0gMDcuMDkuMjAxOCB1bSAyMzoyNSBzY2hyaWViIEphY29iIFBhbjoKPiBPbiBGcmksIDcgU2Vw
-IDIwMTggMjA6MDI6NTQgKzAyMDAKPiBDaHJpc3RpYW4gS8O2bmlnIDxjaHJpc3RpYW4ua29lbmln
-QGFtZC5jb20+IHdyb3RlOgo+PiBbU05JUF0KPj4+IGlvbW11LXN2YSBleHBlY3RzIGV2ZXJ5d2hl
-cmUgdGhhdCB0aGUgZGV2aWNlIGhhcyBhbiBpb21tdV9kb21haW4sCj4+PiBpdCdzIHRoZSBmaXJz
-dCB0aGluZyB3ZSBjaGVjayBvbiBlbnRyeS4gQnlwYXNzaW5nIGFsbCBvZiB0aGlzIHdvdWxkCj4+
-PiBjYWxsIGlkcl9hbGxvYygpIGRpcmVjdGx5LCBhbmQgd291bGRuJ3QgaGF2ZSBhbnkgY29kZSBp
-biBjb21tb24KPj4+IHdpdGggdGhlIGN1cnJlbnQgaW9tbXUtc3ZhLiBTbyBpdCBzZWVtcyBsaWtl
-IHlvdSBuZWVkIGEgbGF5ZXIgb24KPj4+IHRvcCBvZiBpb21tdS1zdmEgY2FsbGluZyBpZHJfYWxs
-b2MoKSB3aGVuIGFuIElPTU1VIGlzbid0IHByZXNlbnQsCj4+PiBidXQgSSBkb24ndCB0aGluayBp
-dCBzaG91bGQgYmUgaW4gZHJpdmVycy9pb21tdS8KPj4gSW4gdGhpcyBjYXNlIEkgcXVlc3Rpb24g
-aWYgdGhlIFBBU0lEIGhhbmRsaW5nIHNob3VsZCBiZSB1bmRlcgo+PiBkcml2ZXJzL2lvbW11IGF0
-IGFsbC4KPj4KPj4gU2VlIEkgY2FuIGhhdmUgYSBtaXggb2YgVk0gY29udGV4dCB3aGljaCBhcmUg
-Ym91bmQgdG8gcHJvY2Vzc2VzIChzb21lCj4+IGZldykgYW5kIFZNIGNvbnRleHRzIHdoaWNoIGFy
-ZSBzdGFuZGFsb25lIGFuZCBkb2Vzbid0IGNhcmUgZm9yIGEKPj4gcHJvY2VzcyBhZGRyZXNzIHNw
-YWNlLiBCdXQgZm9yIGVhY2ggVk0gY29udGV4dCBJIG5lZWQgYSBkaXN0aW5jdAo+PiBQQVNJRCBm
-b3IgdGhlIGhhcmR3YXJlIHRvIHdvcmsuCj4+Cj4+IEkgY2FuIGxpdmUgaWYgd2Ugc2F5IGlmIElP
-TU1VIGlzIGNvbXBsZXRlbHkgZGlzYWJsZWQgd2UgdXNlIGEgc2ltcGxlCj4+IGlkYSB0byBhbGxv
-Y2F0ZSB0aGVtLCBidXQgd2hlbiBJT01NVSBpcyBlbmFibGVkIEkgY2VydGFpbmx5IG5lZWQgYQo+
-PiB3YXkgdG8gcmVzZXJ2ZSBhIFBBU0lEIHdpdGhvdXQgYW4gYXNzb2NpYXRlZCBwcm9jZXNzLgo+
-Pgo+IFZULWQgd291bGQgYWxzbyBoYXZlIHN1Y2ggcmVxdWlyZW1lbnQuIFRoZXJlIGlzIGEgdmly
-dHVhbCBjb21tYW5kCj4gcmVnaXN0ZXIgZm9yIGFsbG9jYXRlIGFuZCBmcmVlIFBBU0lEIGZvciBW
-TSB1c2UuIFdoZW4gdGhhdCBQQVNJRAo+IGFsbG9jYXRpb24gcmVxdWVzdCBnZXRzIHByb3BhZ2F0
-ZWQgdG8gdGhlIGhvc3QgSU9NTVUgZHJpdmVyLCB3ZSBuZWVkIHRvCj4gYWxsb2NhdGUgUEFTSUQg
-dy9vIG1tLgo+Cj4gSWYgdGhlIFBBU0lEIGFsbG9jYXRpb24gaXMgZG9uZSB2aWEgVkZJTywgY2Fu
-IHdlIGhhdmUgRkQgdG8gdHJhY2sgUEFTSUQKPiBsaWZlIGN5Y2xlIGluc3RlYWQgb2YgbW1fZXhp
-dCgpPyBpLmUuIGFsbCBGRHMgZ2V0IGNsb3NlZCBiZWZvcmUKPiBtbV9leGl0LCBJIGFzc3VtZT8K
-ClllcywgZXhhY3RseS4gSSBqdXN0IG5lZWQgYSBQQVNJRCB3aGljaCBpcyBuZXZlciB1c2VkIGJ5
-IHRoZSBPUyBmb3IgYSAKcHJvY2VzcyBhbmQgd2UgY2FuIGVhc2lseSBnaXZlIHRoYXQgYmFjayB3
-aGVuIHRoZSBsYXN0IEZEIHJlZmVyZW5jZSBpcyAKY2xvc2VkLgoKPj4+PiAzLiBFdmVuIGFmdGVy
-IGRlc3RydWN0aW9uIG9mIGEgcHJvY2VzcyBhZGRyZXNzIHNwYWNlIHdlIG5lZWQgc29tZQo+Pj4+
-IGdyYWNlIHBlcmlvZCBiZWZvcmUgYSBQQVNJRCBpcyByZXVzZWQgYmVjYXVzZSBpdCBjYW4gYmUg
-dGhhdCB0aGUKPj4+PiBzcGVjaWZpYyBQQVNJRCBpcyBzdGlsbCBpbiBzb21lIGhhcmR3YXJlIHF1
-ZXVlcyBldGMuLi4KPj4+PiAgICDCoMKgwqAgwqDCoMKgIEF0IGJhcmUgbWluaW11bSBhbGwgZGV2
-aWNlIGRyaXZlcnMgdXNpbmcgcHJvY2VzcyBiaW5kaW5nCj4+Pj4gbmVlZCB0byBleHBsaWNpdGx5
-IG5vdGUgdG8gdGhlIGNvcmUgd2hlbiB0aGV5IGFyZSBkb25lIHdpdGggYQo+Pj4+IFBBU0lELgo+
-Pj4gUmlnaHQsIG11Y2ggb2YgdGhlIGhvcnJpYmxlbmVzcyBpbiBpb21tdS1zdmEgZGVhbHMgd2l0
-aCB0aGlzOgo+Pj4KPj4+IFRoZSBwcm9jZXNzIGRpZXMsIGlvbW11LXN2YSBpcyBub3RpZmllZCBh
-bmQgY2FsbHMgdGhlIG1tX2V4aXQoKQo+Pj4gZnVuY3Rpb24gcGFzc2VkIGJ5IHRoZSBkZXZpY2Ug
-ZHJpdmVyIHRvIGlvbW11X3N2YV9kZXZpY2VfaW5pdCgpLiBJbgo+Pj4gbW1fZXhpdCgpIHRoZSBk
-ZXZpY2UgZHJpdmVyIG5lZWRzIHRvIGNsZWFyIGFueSByZWZlcmVuY2UgdG8gdGhlCj4+PiBQQVNJ
-RCBpbiBoYXJkd2FyZSBhbmQgaW4gaXRzIG93biBzdHJ1Y3R1cmVzLiBXaGVuIHRoZSBkZXZpY2Ug
-ZHJpdmVyCj4+PiByZXR1cm5zIGZyb20gbW1fZXhpdCgpLCBpdCBlZmZlY3RpdmVseSB0ZWxscyB0
-aGUgY29yZSB0aGF0IGl0IGhhcwo+Pj4gZmluaXNoZWQgdXNpbmcgdGhlIFBBU0lELCBhbmQgaW9t
-bXUtc3ZhIGNhbiByZXVzZSB0aGUgUEFTSUQgZm9yCj4+PiBhbm90aGVyIHByb2Nlc3MuIG1tX2V4
-aXQoKSBpcyBhbGxvd2VkIHRvIGJsb2NrLCBzbyB0aGUgZGV2aWNlCj4+PiBkcml2ZXIgaGFzIHRp
-bWUgdG8gY2xlYW4gdXAgYW5kIGZsdXNoIHRoZSBxdWV1ZXMuCj4+Pgo+Pj4gSWYgdGhlIGRldmlj
-ZSBkcml2ZXIgZmluaXNoZXMgdXNpbmcgdGhlIFBBU0lEIGJlZm9yZSB0aGUgcHJvY2Vzcwo+Pj4g
-ZXhpdHMsIGl0IGp1c3QgY2FsbHMgdW5iaW5kKCkuCj4+IEV4YWN0bHkgdGhhdCdzIHdoYXQgTWlj
-aGFsIEhvY2tvIGlzIHByb2JhYmx5IGdvaW5nIHRvIG5vdCBsaWtlIGF0IGFsbC4KPj4KPj4gQ2Fu
-IHdlIGhhdmUgYSBkaWZmZXJlbnQgYXBwcm9hY2ggd2hlcmUgZWFjaCBkcml2ZXIgaXMgaW5mb3Jt
-ZWQgYnkgdGhlCj4+IG1tX2V4aXQoKSwgYnV0IG5lZWRzIHRvIGV4cGxpY2l0bHkgY2FsbCB1bmJp
-bmQoKSBiZWZvcmUgYSBQQVNJRCBpcwo+PiByZXVzZWQ/Cj4+Cj4+IER1cmluZyB0aGF0IHRlYXJk
-b3duIHRyYW5zaXRpb24gaXQgd291bGQgYmUgaWRlYWwgaWYgdGhhdCBQQVNJRCBvbmx5Cj4+IHBv
-aW50cyB0byBhIGR1bW15IHJvb3QgcGFnZSBkaXJlY3Rvcnkgd2l0aCBvbmx5IGludmFsaWQgZW50
-cmllcy4KPj4KPiBJIGd1ZXNzIHRoaXMgY2FuIGJlIHZlbmRvciBzcGVjaWZpYywgSW4gVlQtZCBJ
-IHBsYW4gdG8gbWFyayBQQVNJRAo+IGVudHJ5IG5vdCBwcmVzZW50IGFuZCBkaXNhYmxlIGZhdWx0
-IHJlcG9ydGluZyB3aGlsZSBkcmFpbmluZyByZW1haW5pbmcKPiBhY3Rpdml0aWVzLgoKU291bmRz
-IGdvb2QgdG8gbWUuCgpQb2ludCBpcyBhdCBsZWFzdCBpbiB0aGUgY2FzZSB3aGVyZSB0aGUgcHJv
-Y2VzcyB3YXMga2lsbGVkIGJ5IHRoZSBPT00gCmtpbGxlciB3ZSBzaG91bGQgbm90IGJsb2NrIGlu
-IG1tX2V4aXQoKS4KCkluc3RlYWQgb3BlcmF0aW9ucyBpc3N1ZWQgYnkgdGhlIHByb2Nlc3MgdG8g
-YSBkZXZpY2UgZHJpdmVyIHdoaWNoIHVzZXMgClNWQSBuZWVkcyB0byBiZSB0ZXJtaW5hdGVkIGFz
-IHNvb24gYXMgcG9zc2libGUgdG8gbWFrZSBzdXJlIHRoYXQgdGhlIE9PTSAKa2lsbGVyIGNhbiBh
-ZHZhbmNlLgoKVGhhbmtzLApDaHJpc3RpYW4uCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmlvbW11IG1haWxpbmcgbGlzdAppb21tdUBsaXN0cy5saW51eC1m
-b3VuZGF0aW9uLm9yZwpodHRwczovL2xpc3RzLmxpbnV4Zm91bmRhdGlvbi5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9pb21tdQ==
+On Fri, Sep 7, 2018 at 3:15 PM Pascal PAILLET-LME <p.paillet@st.com> wrote:
+>
+> From: pascal paillet <p.paillet@st.com>
+>
+> The stpmic1 PMIC embeds several regulators and witches with
+> different capabilities.
+
+While fixing Kconfig, as Mark suggest, would you mind to fix also the
+typo s/witches/switches/ in the commit message?
+
+Antonio
