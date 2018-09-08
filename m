@@ -1,65 +1,59 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: iio: vadc: Fix documentation of
- 'reg'
-Date: Sat, 8 Sep 2018 15:11:42 +0100
-Message-ID: <20180908151142.465a1b7b@archlinux>
+Subject: Re: [PATCH v2 3/3] arm64: dts: qcom: pm8998: Add die temperature
+ channel node to the ADC
+Date: Sat, 8 Sep 2018 15:15:18 +0100
+Message-ID: <20180908151518.1a235bff@archlinux>
 References: <20180906210454.247219-1-mka@chromium.org>
-        <20180906210454.247219-2-mka@chromium.org>
+        <20180906210454.247219-4-mka@chromium.org>
+        <CAD=FV=WLcgKQWAp8HnBFZhZ4+32keMANcYJ+nGquePqsOnjJ7A@mail.gmail.com>
+        <20180906212206.GE22824@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180906210454.247219-2-mka@chromium.org>
+In-Reply-To: <20180906212206.GE22824@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+Cc: Doug Anderson <dianders@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-iio <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  6 Sep 2018 14:04:52 -0700
+On Thu, 6 Sep 2018 14:22:06 -0700
 Matthias Kaehlcke <mka@chromium.org> wrote:
 
-> The documentation of Qualcomm's SPMI PMIC voltage ADC claims that the
-> 'reg' property consists of two values, the SPMI address and the length
-> of the controller's registers. However the SPMI bus to which it is added
-> specifies "#size-cells = <0>;". Remove the controller register length
-> from the documentation of the field and the example.
+> On Thu, Sep 06, 2018 at 02:10:43PM -0700, Doug Anderson wrote:
+> > Hi,
+> > 
+> > On Thu, Sep 6, 2018 at 2:04 PM, Matthias Kaehlcke <mka@chromium.org> wrote:  
+> > > Add a channel node for the die temperature to the ADC.
+> > >
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>  
+> > 
+> > Double-SoB?  
 > 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Applied to the togreg branch of iio.git.
+> I must have run 'amend' with '-s' out of habit, which wasn't the right
+> thing to do in this case :/
+> 
+> > ...presumably Andy can remove that when he lands and doesn't need a re-post...  
+> 
+> Andy, in case you need me to repost let me know.
+Slightly worse than that (as was patch 1).  You accidentally used
+-- rather than --- to separate the change log.  So I ended up with
 
-Thanks,
+Signed-off-by: M..
+Reviewed-by: ..
+Signed-off-by: M..
+--
+Changelog
+
+Signed-off-by: J....
+
+Good think the double signed off was raised as chances are I wouldn't
+have notice it.
 
 Jonathan
-
-> --
-> Changes in v2:
-> - none
-> ---
->  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> index 0fb46137f936..d0c188e5c922 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> @@ -13,7 +13,7 @@ VADC node:
->  - reg:
->      Usage: required
->      Value type: <prop-encoded-array>
-> -    Definition: VADC base address and length in the SPMI PMIC register map.
-> +    Definition: VADC base address in the SPMI PMIC register map.
->  
->  - #address-cells:
->      Usage: required
-> @@ -104,7 +104,7 @@ Example:
->  	/* VADC node */
->  	pmic_vadc: vadc@3100 {
->  		compatible = "qcom,spmi-vadc";
-> -		reg = <0x3100 0x100>;
-> +		reg = <0x3100>;
->  		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
->  		#address-cells = <1>;
->  		#size-cells = <0>;
+> Thanks
+> 
+> Matthias
