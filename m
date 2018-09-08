@@ -1,66 +1,46 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 3/3] dt-bindings: adxl372: Document the adxl372 I2C
- bindings
-Date: Sat, 8 Sep 2018 15:30:55 +0100
-Message-ID: <20180908153055.401efbec@archlinux>
-References: <1536070394-5679-1-git-send-email-stefan.popa@analog.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Sat, 8 Sep 2018 21:53:00 +0200
+Message-ID: <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+References: <20180906135005.6718-1-dmurphy@ti.com>
+ <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+ <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536070394-5679-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, Michael.Hennerich@analog.com, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 4 Sep 2018 17:13:14 +0300
-Stefan Popa <stefan.popa@analog.com> wrote:
+Dan,
 
-> The adxl372 is designed to communicate in either SPI or I2C protocol.
-> This patch adds the documentation of device tree bindings for adxl372
-> I2C.
+On 09/07/2018 03:52 PM, Dan Murphy wrote:
+[...]
+>>
+>>> And I think Jacek pointed out that the bindings references in this bindings
+>>> don't even exist.
+>>>
+>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
+>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
+>>> code.
+>>>
+>>> ti-lmu common core code and then the LED children appending the feature differentiation.
+>>
+>>> Need some maintainer weigh in here.
+>>
+>> Hehe. I'm maintnainer. Fun.
 > 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-Applied.
-
-Thanks,
-
-Jonathan
-
-> ---
->  Documentation/devicetree/bindings/iio/accel/adxl372.txt | 15 +++++++++++++--
->  1 file changed, 13 insertions(+), 2 deletions(-)
+> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/accel/adxl372.txt b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> index 9409984..a289964 100644
-> --- a/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> +++ b/Documentation/devicetree/bindings/iio/accel/adxl372.txt
-> @@ -4,14 +4,25 @@ http://www.analog.com/media/en/technical-documentation/data-sheets/adxl372.pdf
->  
->  Required properties:
->   - compatible : should be "adi,adxl372"
-> - - reg: SPI chip select number for the device
-> + - reg: the I2C address or SPI chip select number for the device
-> +
-> +Required properties for SPI bus usage:
->   - spi-max-frequency: Max SPI frequency to use
->  
->  Optional properties:
->   - interrupts: interrupt mapping for IRQ as documented in
->     Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->  
-> -Example:
-> +Example for a I2C device node:
-> +
-> +	accelerometer@53 {
-> +		compatible = "adi,adxl372";
-> +		reg = <0x53>;
-> +		interrupt-parent = <&gpio>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
-> +	};
-> +
-> +Example for a SPI device node:
->  
->  	accelerometer@0 {
->  		compatible = "adi,adxl372";
+[...]
+
+I have a question - is this lm3697 LED controller a cell of some MFD
+device? Or is it a self-contained chip?
+
+-- 
+Best regards,
+Jacek Anaszewski
