@@ -1,107 +1,215 @@
-Return-Path: <SRS0=5mrQ=LY=renesas.com=Chris.Brandt@kernel.org>
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3 1/2] watchdog: rza_wdt: Support longer timeouts
-Date: Mon, 10 Sep 2018 13:53:28 +0000
-Message-ID: 
- <TY1PR01MB156229CF6EA73FD0B083B0A18A050@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=G6/k=LW=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Subject: Re: [PATCH v3 1/2] watchdog: rza_wdt: Support longer timeouts
 References: <20180907012243.86603-1-chris.brandt@renesas.com>
  <20180907012243.86603-2-chris.brandt@renesas.com>
- <314e2981-8fbd-43ed-2f2d-c080a2961055@roeck-us.net>
-In-Reply-To: <314e2981-8fbd-43ed-2f2d-c080a2961055@roeck-us.net>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Guenter Roeck <linux@roeck-us.net>
+Message-ID: <314e2981-8fbd-43ed-2f2d-c080a2961055@roeck-us.net>
+Date: Sat, 8 Sep 2018 09:10:19 -0700
 MIME-Version: 1.0
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
+In-Reply-To: <20180907012243.86603-2-chris.brandt@renesas.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Chris Brandt <chris.brandt@renesas.com>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-T24gU2F0dXJkYXksIFNlcHRlbWJlciAwOCwgMjAxOCAxLCBHdWVudGVyIFJvZWNrIHdyb3RlOg0K
-PiA+ICsjZGVmaW5lIENLU18zQklUCQkweDcNCj4gPiArI2RlZmluZSBDS1NfNEJJVAkJMHhGDQo+
-DQo+IEFueSBzcGVjaWFsIHJlYXNvbiBmb3IgdGhlIHZhbHVlIG9mIHRob3NlIGRlZmluZXMgPyBU
-aGV5IGFyZSBqdXN0IHVzZWQgYXMNCj4gZmxhZ3MsDQo+IG9yIGFtIEkgbWlzc2luZyBzb21ldGhp
-bmcgPyBXaHkgbm90IGp1c3QgdXNlIDAgLyAxIG9yIGFuIGVudW0gPw0KDQpHZWVydCdzIHN1Z2dl
-c3Rpb24gd2FzOg0KDQogID4+IEkgc3VnZ2VzdCBzdG9yaW5nIGNrcyBpbiByemFfd2R0X29mX21h
-dGNoW10uZGF0YSwgYW5kDQogID4+IHJldHJpZXZpbmcgaXQgd2l0aCBvZl9kZXZpY2VfZ2V0X21h
-dGNoX2RhdGEoKSBpbiB5b3VyDQogID4+IHByb2JlIGZ1bmN0aW9uLi4uDQoNClNvIG5vdyBJIGp1
-c3QgbGl0ZXJhbGx5IHJlYWQgaW4gdGhlIHZhbHVlIEkgd2FudCB0byB3cml0ZSBpbnRvIENLUyAN
-CnJlZ2lzdGVyIGluIHRoZSBwcm9iZSBmdW5jdGlvbi4NCg0KICAgIHByaXYtPmNrcyA9ICh1bnNp
-Z25lZCBpbnQpb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZwZGV2LT5kZXYpOw0KDQpBbmQgc2lu
-Y2UgSSB3YW50IHRvIHNsb3dlc3QgY2xvY2sgc291cmNlIChDS1MpIHBvc3NpYmxlLCB0aGF0J3Mg
-JzB4NycgaWYNCkNLUyBpcyBvbmx5IDMgYml0cywgYW5kICcweEYnIGlmIENLUyBpcyA0IGJpdHMu
-DQpJIGNhbiBhZGQgYSBjb21tZW50IGFib3ZlIHRoZSAjZGVmaW5lIHRvIGV4cGxhaW4gbXkgcmVh
-c29uaW5nLg0KDQoNCj4gPiAgIHN0cnVjdCByemFfd2R0IHsNCj4gPiAgIAlzdHJ1Y3Qgd2F0Y2hk
-b2dfZGV2aWNlIHdkZXY7DQo+ID4gICAJdm9pZCBfX2lvbWVtICpiYXNlOw0KPiA+ICAgCXN0cnVj
-dCBjbGsgKmNsazsNCj4gPiArCXU4IGNvdW50Ow0KPiA+ICsJdTggY2tzOw0KPiA+ICsJdTggdGlt
-ZW91dDsNCj4gDQo+IEhtbSAuLi4gdGhpcyBsaW1pdHMgdGhlIGVmZmVjdGl2ZSB0aW1lb3V0IHRv
-IDI1NSBzZWNvbmRzLiBUaGF0IHNlZW1zIG9kZC4NCj4gTWF5YmUgaXQgaXMgdHJ1ZSBpbiBwcmFj
-dGljZSwgaWYgdGhlIGNsb2NrIGlzIGFsd2F5cyBndWFyYW50ZWVkIHRvIGJlDQo+IGFib3ZlIDQx
-OTQzMDQgSHosIGJ1dCBpdCBpcyBhbiBvZGQgYXNzdW1wdGlvbiB0aGF0IGlzbid0IHJlYWxseSBy
-ZWZsZWN0ZWQNCj4gaW4gdGhlIGNvZGUuDQoNCkkgY2FuIGNoYW5nZSB0aGF0IHRvIHNvbWV0aGlu
-ZyBlbHNlIGxpa2UgdTE2Lg0KDQpJbiByZWFsaXR5LCB0aGVyZSBhcmUgMiB2YXJpYXRpb25zIG9m
-IEhXOg0KDQojMS4gSWYgdGhlIENLUyBpcyBvbmx5IDMtYml0cywgdGhlIG1heCBIVyB0aW1lb3V0
-IGlzIDIwMG1zLCBzbyBJJ20gDQpzZXR0aW5nICdtYXhfaHdfaGVhcnRiZWF0X21zJyBhbmQgdGhl
-biB0aGUgdXNlIGNhbiBzZXQgYSB0aW1lb3V0IGFzIGxvbmcgYXMgDQp0aGV5IHdhbnQgKGJ1dCBp
-dCdzIG5vdCByZWFsbHkgYSB0cnVlIEhXIHdhdGNoZG9nKS4NCg0KIzIuIElmIHRoZSBDS1MgaXMg
-b25seSA0LWJpdHMsIHRoZSBtYXggSFcgdGltZW91dCBpcyAzMiBzZWNvbmRzLiAoc28gDQondGlt
-ZW91dCcgY2FuIG5ldmVyIGJlIG1vcmUgdGhhdCBhIHU4KS4NCg0KDQo+ID4gKwlpZiAocHJpdi0+
-Y2tzID09IENLU180QklUKSB7DQo+ID4gKwkJdGlja3MgPSBESVZfUk9VTkRfVVAoKHRpbWVvdXQg
-KiByYXRlKSwgNDE5NDMwNCk7DQo+IA0KPiBUaGUgKCApIGFyb3VuZCB0aW1lb3V0ICogcmF0ZSBp
-cyB1bm5lY2Vzc2FyeS4NCg0KWWVzLCB5b3UncmUgcmlnaHQuDQoNCg0KPiBBbHNvLCBpdCB3b3Vs
-ZCBiZSBuaWNlDQo+IHRvIGhhdmUgYSBkZWZpbmUgYW5kIGV4cGxhbmF0aW9uIGZvciA0MTk0MzA0
-IChhbmQgMHg0MDAwMDAgd291bGQgcHJvYmFibHkNCj4gYmUgYSBiZXR0ZXIgdmFsdWUgdG8gdXNl
-KS4NCg0KVGhlIG51bWJlciAiNDE5NDMwNCIgaXMgZXhhY3RseSBob3cgaXQgaXMgZG9jdW1lbnRl
-ZCBpbiB0aGUgaGFyZHdhcmUgDQptYW51YWwsIHRoYXQgaXMgd2h5IEknbSB1c2luZyBpdCB0aGF0
-IHdheS4gWWVzLCAweDQwMDAwMCBtYWtlcyBtb3JlIA0Kc2Vuc2UsIGJ1dCBJIGxpa2UgbWF0Y2hp
-bmcgdGhlIGRldmljZSBkb2N1bWVudGluZyBhcyBtdWNoIGFzIHBvc3NpYmxlIHRvIA0KaGVscCB0
-aGUgbmV4dCBwZXJzb24gdGhhdCBjb21lcyBhbG9uZyBhbmQgaGFzIHRvIGRlYnVnIHRoaXMgY29k
-ZS4NCg0KDQo+ID4gKwkJaWYgKHRpY2tzID4gMjU2KQ0KPiA+ICsJCQl0aWNrcyA9IDI1NjsNCj4g
-DQo+IElmIHlvdSBrZWVwIHRoaXMsIHlvdSBzaG91bGQgYXMgd2VsbCByZWNhbGN1bGF0ZSB0aW1l
-b3V0IHNpbmNlIGl0IHdvbid0DQo+IG1hdGNoIHRoZSBleHBlY3RlZCB2YWx1ZS4NCj4gDQo+IAkJ
-aWYgKHRpY2tzID4gMjU2KSB7DQo+IAkJCXRpY2tzID0gMjU2Ow0KPiAJCQl0aW1lb3V0ID0gdGlj
-a3MgKiA0MTk0MzA0IC8gcmF0ZTsNCj4gCQl9DQoNClRoYXQncyBhIGdvb2QgcG9pbnQhDQoNCg0K
-PiBOb3QgdGhhdCBpdCBjYW4gZXZlciBoYXBwZW4sIHNpbmNlIG1heF90aW1lb3V0IGxpbWl0cyB0
-aGUgdmFsdWUuDQo+IFBlcnNvbmFsbHkgSSB3b3VsZCByYXRoZXIgc2VlIHRoaXMgZHJvcHBlZCB3
-aXRoIGEgY29tbWVudCBzdGF0aW5nIHRoYXQNCj4gdGlja3MgPD0gMjU2IGlzIGd1YXJhbnRlZWQg
-YnkgbWF4X3RpbWVvdXQ7IEkgYW0gbm90IGEgZnJpZW5kIG9mIGRlYWQgY29kZQ0KPiBpbiB0aGUg
-a2VybmVsLg0KDQpJIGFncmVlLiBJIHdpbGwgZHJvcCB0aGlzIGNvZGUgYW5kIHB1dCBhIGNvbW1l
-bnQuDQoNCg0KPiA+IEBAIC03NSw3ICsxMDMsMTIgQEAgc3RhdGljIGludCByemFfd2R0X3Bpbmco
-c3RydWN0IHdhdGNoZG9nX2RldmljZQ0KPiAqd2RldikNCj4gPiAgIHsNCj4gPiAgIAlzdHJ1Y3Qg
-cnphX3dkdCAqcHJpdiA9IHdhdGNoZG9nX2dldF9kcnZkYXRhKHdkZXYpOw0KPiA+DQo+ID4gLQl3
-cml0ZXcoV1RDTlRfTUFHSUMgfCAwLCBwcml2LT5iYXNlICsgV1RDTlQpOw0KPiA+ICsJaWYgKHBy
-aXYtPnRpbWVvdXQgIT0gd2Rldi0+dGltZW91dCkNCj4gPiArCQlyemFfd2R0X2NhbGNfdGltZW91
-dChwcml2LCB3ZGV2LT50aW1lb3V0KTsNCj4gPiArDQo+IEZXSVcsIG9kZCB3YXkgb2YgdXBkYXRp
-bmcgdGhlIHRpbWVvdXQuIFdoeSBub3QgZG8gaXQgaW4gdGhlIHNldF90aW1lb3V0KCkNCj4gZnVu
-Y3Rpb24gd2hlcmUgaXQgYmVsb25ncy4gV2hpY2ggbWFrZXMgbWUgd29uZGVyIHdoeSBwcml2LT50
-aW1lb3V0IGlzDQo+IG5lZWRlZA0KPiBpbiB0aGUgZmlyc3QgcGxhY2UgKGFuZCB3aHkgaXQgaXMg
-dTggLSBhcyBtZW50aW9uZWQgYWJvdmUpLg0KDQpCZWNhdXNlIHdoZW4gSSB3YXMgZG9pbmcgYWxs
-IG15IHRlc3RpbmcsIEkgZm91bmQgY2FzZXMgd2hlcmUgJy5waW5nJyB3YXMNCmNhbGxlZCBmcm9t
-IHRoZSB1cHBlciBsYXllciB3aXRob3V0ICcuc3RhcnQnIGJlaW5nIGNhbGxlZCBmaXJzdC4gU28s
-IEkgDQpjaGFuZ2VkIHRoZSBjb2RlIGFzIHlvdSBzZWUgaXQgbm93LiBUaGlzIGd1YXJhbnRlZWQg
-SSB3b3VsZCBhbHNvIGdldCB0aGUNCnRpbWVvdXQgdGhlIHVzZXIgd2FzIHJlcXVlc3RpbmcuDQoN
-Cg0KPiA+ICsJd3JpdGV3KFdUQ05UX01BR0lDIHwgcHJpdi0+Y291bnQsIHByaXYtPmJhc2UgKyBX
-VENOVCk7DQo+ID4gKw0KPiA+ICsJcHJfZGVidWcoIiVzOiB0aW1lb3V0ID0gJXVcbiIsIF9fZnVu
-Y19fLCB3ZGV2LT50aW1lb3V0KTsNCj4gPg0KPiANCj4gRG8geW91IHJlYWxseSB3YW50IHRoaXMg
-ZGlzcGxheWVkIHdpdGggZWFjaCBwaW5nLCBldmVuIGFzIGRlYnVnIG1lc3NhZ2UgPw0KPiBKdXN0
-IHdvbmRlcmluZy4NCg0KVGhpcyBpcyBob3cgeW91IGNhbiBzZWUgdGhhdCBzb21ldGltZXMgJy5w
-aW5nJyBpcyBjYWxsZWQgd2l0aG91dCAnLnN0YXJ0Jw0KYmVpbmcgY2FsbGVkIGZpcnN0Lg0KDQoN
-Cg0KPiA+ICsJaWYgKHByaXYtPmNrcyA9PSBDS1NfNEJJVCkgew0KPiA+ICsJCS8qIEFzc3VtZSBz
-bG93ZXN0IGNsb2NrIHJhdGUgcG9zc2libGUgKENLUz0weEYpICovDQo+ID4gKwkJcHJpdi0+d2Rl
-di5tYXhfdGltZW91dCA9ICg0MTk0MzA0ICogVThfTUFYKSAvIHJhdGU7DQo+ID4gKw0KPiA+ICsJ
-fSBlbHNlIGlmIChwcml2LT5ja3MgPT0gQ0tTXzNCSVQpIHsNCj4gPiArCQkvKiBBc3N1bWUgc2xv
-d2VzdCBjbG9jayByYXRlIHBvc3NpYmxlIChDS1M9NykgKi8NCj4gPiArCQlyYXRlIC89IDE2Mzg0
-Ow0KPiA+ICsNCj4gPiArCQkvKg0KPiA+ICsJCSAqIFNpbmNlIHRoZSBtYXggcG9zc2libGUgdGlt
-ZW91dCBvZiBvdXIgOC1iaXQgY291bnQNCj4gPiArCQkgKiByZWdpc3RlciBpcyBsZXNzIHRoYW4g
-YSBzZWNvbmQsIHdlIG11c3QgdXNlDQo+ID4gKwkJICogbWF4X2h3X2hlYXJ0YmVhdF9tcy4NCj4g
-PiArCQkgKi8NCj4gPiArCQlwcml2LT53ZGV2Lm1heF9od19oZWFydGJlYXRfbXMgPSAoMTAwMCAq
-IFU4X01BWCkgLyByYXRlOw0KPiA+ICsJCWRldl9kYmcoJnBkZXYtPmRldiwgIm1heCBodyB0aW1l
-b3V0IG9mICVkbXNcbiIsDQo+ID4gKwkJCSBwcml2LT53ZGV2Lm1heF9od19oZWFydGJlYXRfbXMp
-Ow0KPiA+ICsJfSBlbHNlIHsNCj4gPiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJpbnZhbGlkIENL
-UyB2YWx1ZSAoJXUpXG4iLCBwcml2LT5ja3MpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+
-ICsJfQ0KPiANCj4gSSBkb24ndCByZWFsbHkgc2VlIHRoZSBwb2ludCBvZiB0aGlzIGVsc2Ugc3Rh
-dGVtZW50LiBJdCBpcyBwcmV0dHkgbXVjaA0KPiBkZWFkIGNvZGUsDQo+IGFuZCB0aGUgbWVzc2Fn
-ZSBpcyBxdWl0ZSB1c2VsZXNzIGZvciB0aGUgdXNlci4NCg0KR29vZCBwb2ludC4gVGhlIG9ubHkg
-dGltZSB5b3Ugd291bGQgaGl0IHRoaXMgaXMgaWYgeW91IHdlcmUgbW9kaWZ5aW5nIA0KdGhlIGRy
-aXZlci4gQW5kIGluIHRoYXQgY2FzZSwgeW91IGFyZSBub3QgYSAidXNlciIuDQpJIHdpbGwgZGVs
-ZXRlIHRoZSBlbHNlLg0KDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXZpZXcuDQoNCg0KQ2hyaXMN
-Cg==
+On 09/06/2018 06:22 PM, Chris Brandt wrote:
+> The RZ/A2 watchdog timer extends the clock source options in order to
+> allow for longer timeouts.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v3:
+>   * Removed + 1 from DIV_ROUND_UP line
+>   * resetting to 0 if time to big did not make as much sense are resetting
+>     to 256
+> v2:
+> * use DIV_ROUND_UP
+> * use %u for pr_debug
+> * use of_match data to determine the size of CKS register
+> ---
+>   drivers/watchdog/rza_wdt.c | 81 +++++++++++++++++++++++++++++++++++-----------
+>   1 file changed, 63 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
+> index e618218d2374..64a733492b96 100644
+> --- a/drivers/watchdog/rza_wdt.c
+> +++ b/drivers/watchdog/rza_wdt.c
+> @@ -14,6 +14,7 @@
+>   #include <linux/delay.h>
+>   #include <linux/module.h>
+>   #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/watchdog.h>
+>   
+> @@ -34,12 +35,40 @@
+>   #define WRCSR_RSTE		BIT(6)
+>   #define WRCSR_CLEAR_WOVF	0xA500	/* special value */
+>   
+> +#define CKS_3BIT		0x7
+> +#define CKS_4BIT		0xF
+> +
+
+Any special reason for the value of those defines ? They are just used as flags,
+or am I missing something ? Why not just use 0 / 1 or an enum ?
+
+>   struct rza_wdt {
+>   	struct watchdog_device wdev;
+>   	void __iomem *base;
+>   	struct clk *clk;
+> +	u8 count;
+> +	u8 cks;
+> +	u8 timeout;
+
+Hmm ... this limits the effective timeout to 255 seconds. That seems odd.
+Maybe it is true in practice, if the clock is always guaranteed to be
+above 4194304 Hz, but it is an odd assumption that isn't really reflected
+in the code.
+
+>   };
+>   
+> +static void rza_wdt_calc_timeout(struct rza_wdt *priv, int timeout)
+> +{
+> +	unsigned long rate = clk_get_rate(priv->clk);
+> +	unsigned int ticks;
+> +
+> +	if (priv->cks == CKS_4BIT) {
+> +		ticks = DIV_ROUND_UP((timeout * rate), 4194304);
+
+The ( ) around timeout * rate is unnecessary. Also, it would be nice
+to have a define and explanation for 4194304 (and 0x400000 would probably
+be a better value to use).
+
+> +		if (ticks > 256)
+> +			ticks = 256;
+
+If you keep this, you should as well recalculate timeout since it won't
+match the expected value.
+
+		if (ticks > 256) {
+			ticks = 256;
+			timeout = ticks * 4194304 / rate;
+		}
+
+Not that it can ever happen, since max_timeout limits the value.
+Personally I would rather see this dropped with a comment stating that
+ticks <= 256 is guaranteed by max_timeout; I am not a friend of dead code
+in the kernel.
+
+> +
+> +		priv->count = 256 - ticks;
+> +	} else {
+> +		/* Start timer with longest timeout */
+> +		priv->count = 0;
+> +	}
+> +
+> +	priv->timeout = timeout;
+> +
+> +	pr_debug("%s: timeout set to %u (WTCNT=%d)\n", __func__,
+> +		 timeout, priv->count);
+> +}
+> +
+>   static int rza_wdt_start(struct watchdog_device *wdev)
+>   {
+>   	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
+> @@ -51,13 +80,12 @@ static int rza_wdt_start(struct watchdog_device *wdev)
+>   	readb(priv->base + WRCSR);
+>   	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
+>   
+> -	/*
+> -	 * Start timer with slowest clock source and reset option enabled.
+> -	 */
+> +	rza_wdt_calc_timeout(priv, wdev->timeout);
+> +
+>   	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
+> -	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
+> -	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME | WTSCR_CKS(7),
+> -	       priv->base + WTCSR);
+> +	writew(WTCNT_MAGIC | priv->count, priv->base + WTCNT);
+> +	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME |
+> +	       WTSCR_CKS(priv->cks), priv->base + WTCSR);
+>   
+>   	return 0;
+>   }
+> @@ -75,7 +103,12 @@ static int rza_wdt_ping(struct watchdog_device *wdev)
+>   {
+>   	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
+>   
+> -	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
+> +	if (priv->timeout != wdev->timeout)
+> +		rza_wdt_calc_timeout(priv, wdev->timeout);
+> +
+FWIW, odd way of updating the timeout. Why not do it in the set_timeout()
+function where it belongs. Which makes me wonder why priv->timeout is needed
+in the first place (and why it is u8 - as mentioned above).
+
+> +	writew(WTCNT_MAGIC | priv->count, priv->base + WTCNT);
+> +
+> +	pr_debug("%s: timeout = %u\n", __func__, wdev->timeout);
+>   
+
+Do you really want this displayed with each ping, even as debug message ?
+Just wondering.
+
+>   	return 0;
+>   }
+> @@ -150,20 +183,31 @@ static int rza_wdt_probe(struct platform_device *pdev)
+>   		return -ENOENT;
+>   	}
+>   
+> -	/* Assume slowest clock rate possible (CKS=7) */
+> -	rate /= 16384;
+> -
+>   	priv->wdev.info = &rza_wdt_ident,
+>   	priv->wdev.ops = &rza_wdt_ops,
+>   	priv->wdev.parent = &pdev->dev;
+>   
+> -	/*
+> -	 * Since the max possible timeout of our 8-bit count register is less
+> -	 * than a second, we must use max_hw_heartbeat_ms.
+> -	 */
+> -	priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
+> -	dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
+> -		 priv->wdev.max_hw_heartbeat_ms);
+> +	priv->cks = (unsigned int)of_device_get_match_data(&pdev->dev);
+> +	if (priv->cks == CKS_4BIT) {
+> +		/* Assume slowest clock rate possible (CKS=0xF) */
+> +		priv->wdev.max_timeout = (4194304 * U8_MAX) / rate;
+> +
+> +	} else if (priv->cks == CKS_3BIT) {
+> +		/* Assume slowest clock rate possible (CKS=7) */
+> +		rate /= 16384;
+> +
+> +		/*
+> +		 * Since the max possible timeout of our 8-bit count
+> +		 * register is less than a second, we must use
+> +		 * max_hw_heartbeat_ms.
+> +		 */
+> +		priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
+> +		dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
+> +			 priv->wdev.max_hw_heartbeat_ms);
+> +	} else {
+> +		dev_err(&pdev->dev, "invalid CKS value (%u)\n", priv->cks);
+> +		return -EINVAL;
+> +	}
+
+I don't really see the point of this else statement. It is pretty much dead code,
+and the message is quite useless for the user.
+
+>   
+>   	priv->wdev.min_timeout = 1;
+>   	priv->wdev.timeout = DEFAULT_TIMEOUT;
+> @@ -179,7 +223,8 @@ static int rza_wdt_probe(struct platform_device *pdev)
+>   }
+>   
+>   static const struct of_device_id rza_wdt_of_match[] = {
+> -	{ .compatible = "renesas,rza-wdt", },
+> +	{ .compatible = "renesas,r7s9210-wdt",	.data = (void *)CKS_4BIT, },
+> +	{ .compatible = "renesas,rza-wdt",	.data = (void *)CKS_3BIT, },
+>   	{ /* sentinel */ }
+>   };
+>   MODULE_DEVICE_TABLE(of, rza_wdt_of_match);
+> 
