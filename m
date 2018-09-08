@@ -1,254 +1,350 @@
-From: Bernhard Frauendienst <kernel@nospam.obeliks.de>
-Subject: [PATCH v3 3/3] mtd: mtdconcat: add dt driver for concat devices
-Date: Sat,  8 Sep 2018 15:13:45 +0200
-Message-ID: <20180908131345.8145-4-kernel@nospam.obeliks.de>
-References: <20180908131345.8145-1-kernel@nospam.obeliks.de>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: Add Xilinx AMS binding
+ documentation
+Date: Sat, 8 Sep 2018 14:42:47 +0100
+Message-ID: <20180908144247.3e1f86da@archlinux>
+References: <1535624539-7839-1-git-send-email-manish.narani@xilinx.com>
+        <1535624539-7839-2-git-send-email-manish.narani@xilinx.com>
+        <20180902191459.5f597c94@archlinux>
+        <DM6PR02MB522706FDCF22A0F62E1A70BEC1010@DM6PR02MB5227.namprd02.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20180908131345.8145-1-kernel@nospam.obeliks.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Bernhard Frauendienst <kernel@nospam.obeliks.de>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DM6PR02MB522706FDCF22A0F62E1A70BEC1010@DM6PR02MB5227.namprd02.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manish Narani <MNARANI@xilinx.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "broonie@kernel.org" <broonie@kernel.org>, "arnaud.pouliquen@st.com" <arnaud.pouliquen@st.com>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "lukas@wunner.de" <lukas@wunner.de>, "freeman.liu@spreadtrum.com" <freeman.liu@spreadtrum.com>, "vilhelm.gray@gmail.com" <vilhelm.>
 List-Id: devicetree@vger.kernel.org
 
-Some mtd drivers like physmap variants have support for concatenating
-multiple mtd devices, but there is no generic way to define such a
-concat device from within the device tree.
+On Thu, 6 Sep 2018 13:27:34 +0000
+Manish Narani <MNARANI@xilinx.com> wrote:
 
-This is useful for some SoC boards that use multiple flash chips as
-memory banks of a single mtd device, with partitions spanning chip
-borders.
+> Hi Jonathan,
+> 
+> Thanks for the review!
+> 
+> > -----Original Message-----
+> > From: Jonathan Cameron [mailto:jic23@kernel.org]
+> > Sent: Sunday, September 2, 2018 11:45 PM
+> > To: Manish Narani <MNARANI@xilinx.com>
+> > Cc: knaack.h@gmx.de; lars@metafoo.de; pmeerw@pmeerw.net;
+> > robh+dt@kernel.org; mark.rutland@arm.com; Michal Simek
+> > <michals@xilinx.com>; leoyang.li@nxp.com; sudeep.holla@arm.com;
+> > amit.kucheria@linaro.org; broonie@kernel.org; arnaud.pouliquen@st.com;
+> > geert@linux-m68k.org; eugen.hristev@microchip.com; rdunlap@infradead.org;
+> > lukas@wunner.de; freeman.liu@spreadtrum.com; vilhelm.gray@gmail.com;
+> > tglx@linutronix.de; baolin.wang@linaro.org; gregkh@linuxfoundation.org;
+> > Srinivas Goud <sgoud@xilinx.com>; Anirudha Sarangi <anirudh@xilinx.com>;
+> > linux-iio@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 1/3] dt-bindings: iio: adc: Add Xilinx AMS binding
+> > documentation
+> > 
+> > On Thu, 30 Aug 2018 15:52:17 +0530
+> > Manish Narani <manish.narani@xilinx.com> wrote:
+> >   
+> > > Xilinx AMS have several ADC channels that can be used for measurement
+> > > of different voltages and temperatures. Document the same in the bindings.
+> > >
+> > > Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> > > ---
+> > >  .../devicetree/bindings/iio/adc/xilinx-ams.txt     | 159  
+> > +++++++++++++++++++++  
+> > >  1 file changed, 159 insertions(+)
+> > >  create mode 100644
+> > > Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > > b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > > new file mode 100644
+> > > index 0000000..8cc96f0
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> > > @@ -0,0 +1,159 @@
+> > > +Xilinx AMS controller
+> > > +
+> > > +The AMS includes an ADC as well as on-chip sensors that can be used
+> > > +to sample external voltages and monitor on-die operating conditions,
+> > > +such as temperature and supply voltage levels. The AMS has two SYSMON  
+> > blocks.  
+> > > +PL-SYSMON block is capable of monitoring off chip voltage and  
+> > temperature.  
+> > > +PL-SYSMON block has DRP, JTAG and I2C interface to enable monitoring
+> > > +from external master. Out of this interface currently only DRP is supported.
+> > > +Other block PS-SYSMON is memory mapped to PS. Both of block has
+> > > +built-in alarm generation logic that is used to interrupt the
+> > > +processor based on condition set.  
+> > 
+> > I guess anyone reading this because they have the hardware would know what
+> > PS and PL are, but it would still be nice to define those acronyms!  
+> 
+> Okay, I will rectify this in v2.
+> 
+> > 
+> > Google suggest, Programmable Logic (FPGA bit I guess) and Process Space
+> > (Arm core bit?)  As I read this, from a driver point of view it doesn't really
+> > matter - these are just blocks of channels that are there?  
+> 
 
-This commit adds a driver for creating virtual mtd-concat devices. They
-must have a compatible = "mtd-concat" line, and define a list of devices
-to concat in the 'devices' property, for example:
+> Yes, these are just blocks of channels, which are enabled/disabled
+> via devicetree child nodes "xlnx,zynqmp-ams-ps" and
+> "xlnx,zynqmp-ams-pl".
 
-flash {
-  compatible = "mtd-concat";
+Great, put please expand in here on the naming.  This may not
+matter for people using this particular driver, but having clear
+human readable descriptions is useful when we are looking for
+similarities between this an future drivers etc.
 
-  devices = <&flash0 &flash1>;
+> 
+> > 
+> > This binding is complex enough I definitely want some DT binding
+> > review.  
+> 
+> Sure!
+> 
+> > 
+> > 
+> >   
+> > > +
+> > > +All designs should have AMS registers, but PS and PL are
+> > > optional. +The AMS controller can work with only PS, only PL and
+> > > both PS and PL +configurations. Please specify registers
+> > > according to your design. +Devicetree should always have AMS
+> > > module property. Providing PS & PL  
+> > module is optional.  
+> > > +
+> > > +Required properties:
+> > > +	- compatible: Should be "xlnx,zynqmp-ams"
+> > > +	- reg:  Should specify AMS register space
+> > > +	- interrupts: Interrupt number for the AMS control
+> > > interface
+> > > +	- interrupt-names: Interrupt name, must be "ams-irq"
+> > > +	- clocks: Should contain a clock specifier for the device
+> > > +	- ranges: keep the property empty to map child address
+> > > space
+> > > +	          (for PS and/or PL) nodes 1:1 onto the parent
+> > > address
+> > > +	          space
+> > > +
+> > > +AMS device tree subnode:
+> > > +	- compatible: Should be "xlnx,zynqmp-ams-ps" or
+> > > "xlnx,zynqmp-ams-pl"
+> > > +	- reg:  Register space for PS or PL
+> > > +
+> > > +Optional properties:
+> > > +
+> > > +Following optional property only valid for PL.
+> > > +	- xlnx,ext-channels: List of external channels that are
+> > > connected to the
+> > > +	                     AMS PL module.
+> > > +
+> > > +	  The child nodes of this node represent the external
+> > > channels which  
+> > are  
+> > > +	  connected to the AMS Module. If the property is not
+> > > present
+> > > +	  no external channels will be assumed to be connected.
+> > > +
+> > > +	  Each child node represents one channel and has the
+> > > following
+> > > +	  properties:
+> > > +		Required properties:
+> > > +			* reg: Pair of pins the channel is
+> > > connected to.
+> > > +				0: VP/VN  
+> > Hmm. So we have this table here of the ones that may or may not be
+> > connected with different numbering from the overall table.  Given
+> > these indexes are arbitrary can we unify them?
+> > 
+> > I.e. use the index from below but state here which values can be
+> > used?  
+> 
 
-  partitions {
-    ...
-  };
-};
+> Okay. I guess you are suggesting to use the channel index from the
+> channel details table given in the end of this file and state here
+> which number (for 'reg' value) should be used for given channel. Is
+> this correct?
 
-The driver is added to the very end of the mtd Makefile to increase the
-likelyhood of all child devices already being loaded at the time of
-probing, preventing unnecessary deferred probes.
+Exactly right.
 
-Signed-off-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
----
- drivers/mtd/Kconfig                 |   2 +
- drivers/mtd/Makefile                |   3 +
- drivers/mtd/composite/Kconfig       |  12 +++
- drivers/mtd/composite/Makefile      |   7 ++
- drivers/mtd/composite/virt_concat.c | 128 ++++++++++++++++++++++++++++
- 5 files changed, 152 insertions(+)
- create mode 100644 drivers/mtd/composite/Kconfig
- create mode 100644 drivers/mtd/composite/Makefile
- create mode 100644 drivers/mtd/composite/virt_concat.c
-
-diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
-index c77f537323ec..6345d886d458 100644
---- a/drivers/mtd/Kconfig
-+++ b/drivers/mtd/Kconfig
-@@ -339,4 +339,6 @@ source "drivers/mtd/spi-nor/Kconfig"
- 
- source "drivers/mtd/ubi/Kconfig"
- 
-+source "drivers/mtd/composite/Kconfig"
-+
- endif # MTD
-diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
-index 93473d215a38..57af7190b063 100644
---- a/drivers/mtd/Makefile
-+++ b/drivers/mtd/Makefile
-@@ -36,3 +36,6 @@ obj-y		+= chips/ lpddr/ maps/ devices/ nand/ tests/
- 
- obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor/
- obj-$(CONFIG_MTD_UBI)		+= ubi/
-+
-+# Composite drivers must be loaded last
-+obj-y		+= composite/
-diff --git a/drivers/mtd/composite/Kconfig b/drivers/mtd/composite/Kconfig
-new file mode 100644
-index 000000000000..0490fc0284bb
---- /dev/null
-+++ b/drivers/mtd/composite/Kconfig
-@@ -0,0 +1,12 @@
-+menu "Composite MTD device drivers"
-+	depends on MTD!=n
-+
-+config MTD_VIRT_CONCAT
-+	tristate "Virtual concat MTD device"
-+	help
-+	  This driver allows creation of a virtual MTD concat device, which
-+	  concatenates multiple underlying MTD devices to a single device.
-+	  This is required by some SoC boards where multiple memory banks are
-+	  used as one device with partitions spanning across device boundaries.
-+
-+endmenu
-diff --git a/drivers/mtd/composite/Makefile b/drivers/mtd/composite/Makefile
-new file mode 100644
-index 000000000000..8421a0a30606
---- /dev/null
-+++ b/drivers/mtd/composite/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# linux/drivers/mtd/composite/Makefile
-+#
-+
-+obj-$(CONFIG_MTD_VIRT_CONCAT)   += virt_concat.o
-diff --git a/drivers/mtd/composite/virt_concat.c b/drivers/mtd/composite/virt_concat.c
-new file mode 100644
-index 000000000000..76918d4ef07f
---- /dev/null
-+++ b/drivers/mtd/composite/virt_concat.c
-@@ -0,0 +1,128 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Virtual concat MTD device driver
-+ *
-+ * Copyright (C) 2018 Bernhard Frauendienst
-+ * Author: Bernhard Frauendienst, kernel@nospam.obeliks.de
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/mtd/concat.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/partitions.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/slab.h>
-+
-+/*
-+ * struct of_virt_concat - platform device driver data.
-+ * @cmtd the final mtd_concat device
-+ * @num_devices the number of devices in @devices
-+ * @devices points to an array of devices already loaded
-+ */
-+struct of_virt_concat {
-+	struct mtd_info	*cmtd;
-+	int num_devices;
-+	struct mtd_info	**devices;
-+};
-+
-+static int virt_concat_remove(struct platform_device *pdev)
-+{
-+	struct of_virt_concat *info;
-+	int i;
-+
-+	info = platform_get_drvdata(pdev);
-+	if (!info)
-+		return 0;
-+
-+	// unset data for when this is called after a probe error
-+	platform_set_drvdata(pdev, NULL);
-+
-+	if (info->cmtd) {
-+		mtd_device_unregister(info->cmtd);
-+		mtd_concat_destroy(info->cmtd);
-+	}
-+
-+	if (info->devices) {
-+		for (i = 0; i < info->num_devices; i++)
-+			put_mtd_device(info->devices[i]);
-+	}
-+
-+	return 0;
-+}
-+
-+static int virt_concat_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node = pdev->dev.of_node;
-+	struct of_phandle_iterator it;
-+	struct of_virt_concat *info;
-+	struct mtd_info *mtd;
-+	int err = 0, count;
-+
-+	count = of_count_phandle_with_args(node, "devices", NULL);
-+	if (count <= 0)
-+		return -EINVAL;
-+
-+	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+	info->devices = devm_kcalloc(&pdev->dev, count,
-+				     sizeof(*(info->devices)), GFP_KERNEL);
-+	if (!info->devices) {
-+		err = -ENOMEM;
-+		goto err_remove;
-+	}
-+
-+	platform_set_drvdata(pdev, info);
-+
-+	of_for_each_phandle(&it, err, node, "devices", NULL, 0) {
-+		mtd = get_mtd_device_by_node(it.node);
-+		if (IS_ERR(mtd)) {
-+			of_node_put(it.node);
-+			err = -EPROBE_DEFER;
-+			goto err_remove;
-+		}
-+
-+		info->devices[info->num_devices++] = mtd;
-+	}
-+
-+	info->cmtd = mtd_concat_create(info->devices, info->num_devices,
-+				       dev_name(&pdev->dev));
-+	if (!info->cmtd) {
-+		err = -ENXIO;
-+		goto err_remove;
-+	}
-+
-+	info->cmtd->dev.parent = &pdev->dev;
-+	mtd_set_of_node(info->cmtd, node);
-+	mtd_device_register(info->cmtd, NULL, 0);
-+
-+	return 0;
-+
-+err_remove:
-+	virt_concat_remove(pdev);
-+
-+	return err;
-+}
-+
-+static const struct of_device_id virt_concat_of_match[] = {
-+	{ .compatible = "mtd-concat", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, virt_concat_of_match);
-+
-+static struct platform_driver virt_concat_driver = {
-+	.probe = virt_concat_probe,
-+	.remove = virt_concat_remove,
-+	.driver	 = {
-+		.name   = "virt-mtdconcat",
-+		.of_match_table = virt_concat_of_match,
-+	},
-+};
-+
-+module_platform_driver(virt_concat_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Bernhard Frauendienst <kernel@nospam.obeliks.de>");
-+MODULE_DESCRIPTION("Virtual concat MTD device driver");
--- 
-2.18.0
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> 
+> >   
+> > > +				1: VUSER0
+> > > +				2: VUSER1
+> > > +				3: VUSER3
+> > > +				4: VUSER4
+> > > +				5: VAUXP[0]/VAUXN[0]
+> > > +				6: VAUXP[1]/VAUXN[1]
+> > > +				...
+> > > +				20: VAUXP[15]/VAUXN[15]
+> > > +			  Note each channel number should only be used at  
+> > most  
+> > > +			  once.
+> > > +		Optional properties:
+> > > +			* xlnx,bipolar: If set the channel is used in bipolar
+> > > +			  mode.
+> > > +
+> > > +
+> > > +Example:
+> > > +	xilinx_ams: ams@ffa50000 {
+> > > +		compatible = "xlnx,zynqmp-ams";
+> > > +		interrupt-parent = <&gic>;
+> > > +		interrupts = <0 56 4>;
+> > > +		interrupt-names = "ams-irq";
+> > > +		clocks = <&clkc 70>;
+> > > +		reg = <0x0 0xffa50000 0x0 0x800>;
+> > > +		reg-names = "ams-base";
+> > > +		#address-cells = <2>;
+> > > +		#size-cells = <2>;
+> > > +		ranges;
+> > > +
+> > > +		ams_ps: ams_ps@ffa50800 {
+> > > +			compatible = "xlnx,zynqmp-ams-ps";
+> > > +			reg = <0x0 0xffa50800 0x0 0x400>;
+> > > +		};
+> > > +
+> > > +		ams_pl: ams_pl@ffa50c00 {
+> > > +			compatible = "xlnx,zynqmp-ams-pl";
+> > > +			reg = <0x0 0xffa50c00 0x0 0x400>;
+> > > +			xlnx,ext-channels {
+> > > +				#address-cells = <1>;
+> > > +				#size-cells = <0>;
+> > > +				channel@0 {
+> > > +					reg = <0>;
+> > > +					xlnx,bipolar;
+> > > +				};
+> > > +				channel@1 {
+> > > +					reg = <1>;
+> > > +				};
+> > > +				channel@8 {
+> > > +					reg = <8>;
+> > > +					xlnx,bipolar;
+> > > +				};
+> > > +			};
+> > > +		};
+> > > +	};
+> > > +
+> > > +AMS Channels Details:
+> > > +
+> > > +Sysmon Block	|Channel|			Details  
+> > 			|Measurement  
+> > > +		 Number  
+> > 			 Type  
+> > > +---------------------------------------------------------------------------------------------------  
+> > ------  
+> > > +AMS CTRL	|0	|System PLLs voltage measurement, VCC_PSPLL.  
+> > 		|Voltage  
+> > > +		|1	|Battery voltage measurement, VCC_PSBATT.  
+> > 		|Voltage  
+> > > +		|2	|PL Internal voltage measurement, VCCINT.  
+> > 		|Voltage  
+> > > +		|3	|Block RAM voltage measurement, VCCBRAM.  
+> > 		|Voltage  
+> > > +		|4	|PL Aux voltage measurement, VCCAUX.  
+> > 		|Voltage  
+> > > +		|5	|Voltage measurement for six DDR I/O PLLs,  
+> > VCC_PSDDR_PLL.	|Voltage  
+> > > +		|6	|VCC_PSINTFP_DDR voltage measurement.  
+> > 			|Voltage  
+> > > +---------------------------------------------------------------------------------------------------  
+> > ------  
+> > > +PS Sysmon	|7	|LPD temperature measurement.  
+> > 			|Temperature  
+> > > +		|8	|FPD Temperature Measurment (REMOTE).  
+> > 			|Temperature  
+> > > +		|9	|VCC PS LPD voltage measurement (supply1).  
+> > 		|Voltage  
+> > > +		|10	|VCC PS FPD voltage measurement (supply2).  
+> > 		|Voltage  
+> > > +		|11	|PS Aux voltage reference (supply3).  
+> > 		|Voltage  
+> > > +		|12	|DDR I/O VCC voltage measurement.  
+> > 		|Voltage  
+> > > +		|13	|PS IO Bank 503 voltage measurement (supply5).  
+> > 			|Voltage  
+> > > +		|14	|PS IO Bank 500 voltage measurement (supply6).  
+> > 			|Voltage  
+> > > +		|15	|VCCO_PSIO1 voltage measurement.  
+> > 		|Voltage  
+> > > +		|16	|VCCO_PSIO2 voltage measurement.  
+> > 		|Voltage  
+> > > +		|17	|VCC_PS_GTR voltage measurement  
+> > (VPS_MGTRAVCC).			|Voltage  
+> > > +		|18	|VTT_PS_GTR voltage measurement  
+> > (VPS_MGTRAVTT).			|Voltage  
+> > > +		|19	|VCC_PSADC voltage measurement.  
+> > 			|Voltage  
+> > > +---------------------------------------------------------------------------------------------------  
+> > ------  
+> > > +PL Sysmon	|20	|PL Temperature measurement.  
+> > 			|Temperature  
+> > > +		|21	|PL Internal Voltage Voltage measurement, VCCINT.  
+> > 		|Voltage  
+> > > +		|22	|PL Auxiliary Voltage measurement, VCCAUX.  
+> > 		|Voltage  
+> > > +		|23	|ADC Reference P+ Voltage measurement.  
+> > 			|Voltage  
+> > > +		|24	|ADC Reference N- Voltage measurement.  
+> > 			|Voltage  
+> > > +		|25	|PL Block RAM Voltage measurement, VCCBRAM.  
+> > 			|Voltage  
+> > > +		|26	|LPD Internal Voltage measurement, VCC_PSINTLP  
+> > (supply4).	|Voltage  
+> > > +		|27	|FPD Internal Voltage measurement, VCC_PSINTFP  
+> > (supply5).	|Voltage  
+> > > +		|28	|PS Auxiliary Voltage measurement (supply6).  
+> > 		|Voltage  
+> > > +		|29	|PL VCCADC Voltage measurement (vccams).  
+> > 		|Voltage  
+> > > +		|30	|Differencial analog input signal Voltage measurment.  
+> > 		|Voltage  
+> > > +		|31	|VUser0 Voltage measurement (supply7).  
+> > 			|Voltage  
+> > > +		|32	|VUser1 Voltage measurement (supply8).  
+> > 			|Voltage  
+> > > +		|33	|VUser2 Voltage measurement (supply9).  
+> > 			|Voltage  
+> > > +		|34	|VUser3 Voltage measurement (supply10).  
+> > 			|Voltage  
+> > > +		|35	|Auxiliary ch 0 Voltage measurement (VAux0).  
+> > 		|Voltage  
+> > > +		|36	|Auxiliary ch 1 Voltage measurement (VAux1).  
+> > 		|Voltage  
+> > > +		|37	|Auxiliary ch 2 Voltage measurement (VAux2).  
+> > 		|Voltage  
+> > > +		|38	|Auxiliary ch 3 Voltage measurement (VAux3).  
+> > 		|Voltage  
+> > > +		|39	|Auxiliary ch 4 Voltage measurement (VAux4).  
+> > 		|Voltage  
+> > > +		|40	|Auxiliary ch 5 Voltage measurement (VAux5).  
+> > 		|Voltage  
+> > > +		|41	|Auxiliary ch 6 Voltage measurement (VAux6).  
+> > 		|Voltage  
+> > > +		|42	|Auxiliary ch 7 Voltage measurement (VAux7).  
+> > 		|Voltage  
+> > > +		|43	|Auxiliary ch 8 Voltage measurement (VAux8).  
+> > 		|Voltage  
+> > > +		|44	|Auxiliary ch 9 Voltage measurement (VAux9).  
+> > 		|Voltage  
+> > > +		|45	|Auxiliary ch 10 Voltage measurement (VAux10).  
+> > 			|Voltage  
+> > > +		|46	|Auxiliary ch 11 Voltage measurement (VAux11).  
+> > 			|Voltage  
+> > > +		|47	|Auxiliary ch 12 Voltage measurement (VAux12).  
+> > 			|Voltage  
+> > > +		|48	|Auxiliary ch 13 Voltage measurement (VAux13).  
+> > 			|Voltage  
+> > > +		|49	|Auxiliary ch 14 Voltage measurement (VAux14).  
+> > 			|Voltage  
+> > > +		|50	|Auxiliary ch 15 Voltage measurement (VAux15).  
+> > 			|Voltage  
+> > > +---------------------------------------------------------------------
+> > > +------------------------------------  
+> > 
+> > Thanks,
+> > 
+> > Jonathan  
+> 
+> Thanks,
+> Manish Narani
