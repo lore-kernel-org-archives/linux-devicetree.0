@@ -1,439 +1,435 @@
-From: Simon Shields <simon@lineageos.org>
-Subject: [PATCH v5 2/2] leds: add Panasonic AN30259A support
-Date: Sun,  9 Sep 2018 20:38:25 +1000
-Message-ID: <20180909103826.17793-3-simon@lineageos.org>
-References: <20180909103826.17793-1-simon@lineageos.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+Date: Sun, 9 Sep 2018 20:04:16 +0530
+Message-ID: <CAHLCerOAXeiYPKxvLVWrjUtHU8vTqGCESkAZXRixh-492MBCUg@mail.gmail.com>
+References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org> <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180909103826.17793-1-simon@lineageos.org>
+In-Reply-To: <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-leds@vger.kernel.org
-Cc: Simon Shields <simon@lineageos.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Saravana Kannan <skannan@codeaurora.org>, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-AN30259A is a 3-channel LED driver which uses I2C. It supports timed
-operation via an internal PWM clock, and variable brightness. This
-driver offers support for basic hardware-based blinking and brightness
-control.
+Hi Taniya,
 
-The datasheet is freely available:
-https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
+How much have you stressed this driver?
 
-Signed-off-by: Simon Shields <simon@lineageos.org>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- drivers/leds/Kconfig         |  10 +
- drivers/leds/Makefile        |   1 +
- drivers/leds/leds-an30259a.c | 368 +++++++++++++++++++++++++++++++++++
- 3 files changed, 379 insertions(+)
- create mode 100644 drivers/leds/leds-an30259a.c
+I tried it on top of an integration branch based on 4.19-rc2 that we
+maintain[1] and was able to get the board to reboot fairly easily with
+just a few "yes > /dev/null &" instances running in the background.
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 44097a3e0fcc..a72f97fca57b 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -58,6 +58,16 @@ config LEDS_AAT1290
- 	help
- 	 This option enables support for the LEDs on the AAT1290.
- 
-+config LEDS_AN30259A
-+	tristate "LED support for Panasonic AN30259A"
-+	depends on LEDS_CLASS && I2C && OF
-+	help
-+	  This option enables support for the AN30259A 3-channel
-+	  LED driver.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called leds-an30259a.
-+
- config LEDS_APU
- 	tristate "Front panel LED support for PC Engines APU/APU2/APU3 boards"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 420b5d2cfa62..4c1b0054f379 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_LEDS_88PM860X)		+= leds-88pm860x.o
- obj-$(CONFIG_LEDS_AAT1290)		+= leds-aat1290.o
- obj-$(CONFIG_LEDS_APU)			+= leds-apu.o
- obj-$(CONFIG_LEDS_AS3645A)		+= leds-as3645a.o
-+obj-$(CONFIG_LEDS_AN30259A)		+= leds-an30259a.o
- obj-$(CONFIG_LEDS_BCM6328)		+= leds-bcm6328.o
- obj-$(CONFIG_LEDS_BCM6358)		+= leds-bcm6358.o
- obj-$(CONFIG_LEDS_BD2802)		+= leds-bd2802.o
-diff --git a/drivers/leds/leds-an30259a.c b/drivers/leds/leds-an30259a.c
-new file mode 100644
-index 000000000000..1c1f0c8c56f4
---- /dev/null
-+++ b/drivers/leds/leds-an30259a.c
-@@ -0,0 +1,368 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Driver for Panasonic AN30259A 3-channel LED driver
-+//
-+// Copyright (c) 2018 Simon Shields <simon@lineageos.org>
-+//
-+// Datasheet:
-+// https://www.alliedelec.com/m/d/a9d2b3ee87c2d1a535a41dd747b1c247.pdf
-+
-+#include <linux/i2c.h>
-+#include <linux/leds.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <uapi/linux/uleds.h>
-+
-+#define AN30259A_MAX_LEDS 3
-+
-+#define AN30259A_REG_SRESET 0x00
-+#define AN30259A_LED_SRESET BIT(0)
-+
-+/* LED power registers */
-+#define AN30259A_REG_LED_ON 0x01
-+#define AN30259A_LED_EN(x) BIT((x) - 1)
-+#define AN30259A_LED_SLOPE(x) BIT(((x) - 1) + 4)
-+
-+#define AN30259A_REG_LEDCC(x) (0x03 + ((x) - 1))
-+
-+/* slope control registers */
-+#define AN30259A_REG_SLOPE(x) (0x06 + ((x) - 1))
-+#define AN30259A_LED_SLOPETIME1(x) (x)
-+#define AN30259A_LED_SLOPETIME2(x) ((x) << 4)
-+
-+#define AN30259A_REG_LEDCNT1(x) (0x09 + (4 * ((x) - 1)))
-+#define AN30259A_LED_DUTYMAX(x) ((x) << 4)
-+#define AN30259A_LED_DUTYMID(x) (x)
-+
-+#define AN30259A_REG_LEDCNT2(x) (0x0A + (4 * ((x) - 1)))
-+#define AN30259A_LED_DELAY(x) ((x) << 4)
-+#define AN30259A_LED_DUTYMIN(x) (x)
-+
-+/* detention time control (length of each slope step) */
-+#define AN30259A_REG_LEDCNT3(x) (0x0B + (4 * ((x) - 1)))
-+#define AN30259A_LED_DT1(x) (x)
-+#define AN30259A_LED_DT2(x) ((x) << 4)
-+
-+#define AN30259A_REG_LEDCNT4(x) (0x0C + (4 * ((x) - 1)))
-+#define AN30259A_LED_DT3(x) (x)
-+#define AN30259A_LED_DT4(x) ((x) << 4)
-+
-+#define AN30259A_REG_MAX 0x14
-+
-+#define AN30259A_BLINK_MAX_TIME 7500 /* ms */
-+#define AN30259A_SLOPE_RESOLUTION 500 /* ms */
-+
-+#define STATE_OFF 0
-+#define STATE_KEEP 1
-+#define STATE_ON 2
-+
-+struct an30259a;
-+
-+struct an30259a_led {
-+	struct an30259a *chip;
-+	struct led_classdev cdev;
-+	u32 num;
-+	u32 default_state;
-+	bool sloping;
-+	char label[LED_MAX_NAME_SIZE];
-+};
-+
-+struct an30259a {
-+	struct mutex mutex; /* held when writing to registers */
-+	struct i2c_client *client;
-+	struct an30259a_led leds[AN30259A_MAX_LEDS];
-+	struct regmap *regmap;
-+	int num_leds;
-+};
-+
-+static int an30259a_brightness_set(struct led_classdev *cdev,
-+				   enum led_brightness brightness)
-+{
-+	struct an30259a_led *led;
-+	int ret;
-+	unsigned int led_on;
-+
-+	led = container_of(cdev, struct an30259a_led, cdev);
-+	mutex_lock(&led->chip->mutex);
-+
-+	ret = regmap_read(led->chip->regmap, AN30259A_REG_LED_ON, &led_on);
-+	if (ret)
-+		goto error;
-+
-+	switch (brightness) {
-+	case LED_OFF:
-+		led_on &= ~AN30259A_LED_EN(led->num);
-+		led_on &= ~AN30259A_LED_SLOPE(led->num);
-+		led->sloping = false;
-+		break;
-+	default:
-+		led_on |= AN30259A_LED_EN(led->num);
-+		if (led->sloping)
-+			led_on |= AN30259A_LED_SLOPE(led->num);
-+		ret = regmap_write(led->chip->regmap,
-+				   AN30259A_REG_LEDCNT1(led->num),
-+				   AN30259A_LED_DUTYMAX(0xf) |
-+				   AN30259A_LED_DUTYMID(0xf));
-+		if (ret)
-+			goto error;
-+		break;
-+	}
-+
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_LED_ON, led_on);
-+	if (ret)
-+		goto error;
-+
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_LEDCC(led->num),
-+			   brightness);
-+
-+error:
-+	mutex_unlock(&led->chip->mutex);
-+
-+	return ret;
-+}
-+
-+static int an30259a_blink_set(struct led_classdev *cdev,
-+			      unsigned long *delay_off, unsigned long *delay_on)
-+{
-+	struct an30259a_led *led;
-+	int ret, num;
-+	unsigned int led_on;
-+	unsigned long off = *delay_off, on = *delay_on;
-+
-+	led = container_of(cdev, struct an30259a_led, cdev);
-+
-+	mutex_lock(&led->chip->mutex);
-+	num = led->num;
-+
-+	/* slope time can only be a multiple of 500ms. */
-+	if (off % AN30259A_SLOPE_RESOLUTION || on % AN30259A_SLOPE_RESOLUTION) {
-+		ret = -EINVAL;
-+		goto error;
-+	}
-+
-+	/* up to a maximum of 7500ms. */
-+	if (off > AN30259A_BLINK_MAX_TIME || on > AN30259A_BLINK_MAX_TIME) {
-+		ret = -EINVAL;
-+		goto error;
-+	}
-+
-+	/* if no blink specified, default to 1 Hz. */
-+	if (!off && !on) {
-+		*delay_off = off = 500;
-+		*delay_on = on = 500;
-+	}
-+
-+	/* convert into values the HW will understand. */
-+	off /= AN30259A_SLOPE_RESOLUTION;
-+	on /= AN30259A_SLOPE_RESOLUTION;
-+
-+	/* duty min should be zero (=off), delay should be zero. */
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_LEDCNT2(num),
-+			   AN30259A_LED_DELAY(0) | AN30259A_LED_DUTYMIN(0));
-+	if (ret)
-+		goto error;
-+
-+	/* reset detention time (no "breathing" effect). */
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_LEDCNT3(num),
-+			   AN30259A_LED_DT1(0) | AN30259A_LED_DT2(0));
-+	if (ret)
-+		goto error;
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_LEDCNT4(num),
-+			   AN30259A_LED_DT3(0) | AN30259A_LED_DT4(0));
-+	if (ret)
-+		goto error;
-+
-+	/* slope time controls on/off cycle length. */
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_SLOPE(num),
-+			   AN30259A_LED_SLOPETIME1(off) |
-+			   AN30259A_LED_SLOPETIME2(on));
-+	if (ret)
-+		goto error;
-+
-+	/* Finally, enable slope mode. */
-+	ret = regmap_read(led->chip->regmap, AN30259A_REG_LED_ON, &led_on);
-+	if (ret)
-+		goto error;
-+
-+	led_on |= AN30259A_LED_SLOPE(num) | AN30259A_LED_EN(led->num);
-+
-+	ret = regmap_write(led->chip->regmap, AN30259A_REG_LED_ON, led_on);
-+
-+	if (!ret)
-+		led->sloping = true;
-+error:
-+	mutex_unlock(&led->chip->mutex);
-+
-+	return ret;
-+}
-+
-+static int an30259a_dt_init(struct i2c_client *client,
-+			    struct an30259a *chip)
-+{
-+	struct device_node *np = client->dev.of_node, *child;
-+	int count, ret;
-+	int i = 0;
-+	const char *str;
-+	struct an30259a_led *led;
-+
-+	count = of_get_child_count(np);
-+	if (!count || count > AN30259A_MAX_LEDS)
-+		return -EINVAL;
-+
-+	for_each_available_child_of_node(np, child) {
-+		u32 source;
-+
-+		ret = of_property_read_u32(child, "reg", &source);
-+		if (ret != 0 || !source || source > AN30259A_MAX_LEDS) {
-+			dev_err(&client->dev, "Couldn't read LED address: %d\n",
-+				ret);
-+			count--;
-+			continue;
-+		}
-+
-+		led = &chip->leds[i];
-+
-+		led->num = source;
-+		led->chip = chip;
-+
-+		if (of_property_read_string(child, "label", &str))
-+			snprintf(led->label, sizeof(led->label), "an30259a::");
-+		else
-+			snprintf(led->label, sizeof(led->label), "an30259a:%s",
-+				 str);
-+
-+		led->cdev.name = led->label;
-+
-+		if (!of_property_read_string(child, "default-state", &str)) {
-+			if (!strcmp(str, "on"))
-+				led->default_state = STATE_ON;
-+			else if (!strcmp(str, "keep"))
-+				led->default_state = STATE_KEEP;
-+			else
-+				led->default_state = STATE_OFF;
-+		}
-+
-+		of_property_read_string(child, "linux,default-trigger",
-+					&led->cdev.default_trigger);
-+
-+		i++;
-+	}
-+
-+	if (!count)
-+		return -EINVAL;
-+
-+	chip->num_leds = i;
-+
-+	return 0;
-+}
-+
-+static const struct regmap_config an30259a_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = AN30259A_REG_MAX,
-+};
-+
-+static void an30259a_init_default_state(struct an30259a_led *led)
-+{
-+	struct an30259a *chip = led->chip;
-+	int led_on, err;
-+
-+	switch (led->default_state) {
-+	case STATE_ON:
-+		led->cdev.brightness = LED_FULL;
-+		break;
-+	case STATE_KEEP:
-+		err = regmap_read(chip->regmap, AN30259A_REG_LED_ON, &led_on);
-+		if (err)
-+			break;
-+
-+		if (!(led_on & AN30259A_LED_EN(led->num))) {
-+			led->cdev.brightness = LED_OFF;
-+			break;
-+		}
-+		regmap_read(chip->regmap, AN30259A_REG_LEDCC(led->num),
-+			    &led->cdev.brightness);
-+		break;
-+	default:
-+		led->cdev.brightness = LED_OFF;
-+	}
-+
-+	an30259a_brightness_set(&led->cdev, led->cdev.brightness);
-+}
-+
-+static int an30259a_probe(struct i2c_client *client)
-+{
-+	struct an30259a *chip;
-+	int i, err;
-+
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	err = an30259a_dt_init(client, chip);
-+	if (err < 0)
-+		return err;
-+
-+	mutex_init(&chip->mutex);
-+	chip->client = client;
-+	i2c_set_clientdata(client, chip);
-+
-+	chip->regmap = devm_regmap_init_i2c(client, &an30259a_regmap_config);
-+
-+	for (i = 0; i < chip->num_leds; i++) {
-+		an30259a_init_default_state(&chip->leds[i]);
-+		chip->leds[i].cdev.brightness_set_blocking =
-+			an30259a_brightness_set;
-+		chip->leds[i].cdev.blink_set = an30259a_blink_set;
-+
-+		err = devm_led_classdev_register(&client->dev,
-+						 &chip->leds[i].cdev);
-+		if (err < 0)
-+			goto exit;
-+	}
-+	return 0;
-+
-+exit:
-+	mutex_destroy(&chip->mutex);
-+	return err;
-+}
-+
-+static int an30259a_remove(struct i2c_client *client)
-+{
-+	struct an30259a *chip = i2c_get_clientdata(client);
-+
-+	mutex_destroy(&chip->mutex);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id an30259a_match_table[] = {
-+	{ .compatible = "panasonic,an30259a", },
-+	{ /* sentinel */ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, an30259a_match_table);
-+
-+static const struct i2c_device_id an30259a_id[] = {
-+	{ "an30259a", 0 },
-+	{ /* sentinel */ },
-+};
-+MODULE_DEVICE_TABLE(i2c, an30259a_id);
-+
-+static struct i2c_driver an30259a_driver = {
-+	.driver = {
-+		.name = "leds-an32059a",
-+		.of_match_table = of_match_ptr(an30259a_match_table),
-+	},
-+	.probe_new = an30259a_probe,
-+	.remove = an30259a_remove,
-+	.id_table = an30259a_id,
-+};
-+
-+module_i2c_driver(an30259a_driver);
-+
-+MODULE_AUTHOR("Simon Shields <simon@lineageos.org>");
-+MODULE_DESCRIPTION("AN32059A LED driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.18.0
+I even tried with interconnect framework disabled to be sure, and it
+still reboots.
+
+I'll continue trying to pinpoint the source of the problem, but it
+would be nice to know what tree you're testing against.
+
+Regards,
+Amit
+[1] https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=integration/qcomlt-automerge-result
+
+On Tue, Jul 24, 2018 at 4:12 PM, Taniya Das <tdas@codeaurora.org> wrote:
+> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+> for changing the frequency of CPUs. The driver implements the cpufreq
+> driver interface for this hardware engine.
+>
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  drivers/cpufreq/Kconfig.arm       |  11 ++
+>  drivers/cpufreq/Makefile          |   1 +
+>  drivers/cpufreq/qcom-cpufreq-hw.c | 348 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 360 insertions(+)
+>  create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+>
+> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+> index 0cd8eb7..93a9d72 100644
+> --- a/drivers/cpufreq/Kconfig.arm
+> +++ b/drivers/cpufreq/Kconfig.arm
+> @@ -298,3 +298,14 @@ config ARM_PXA2xx_CPUFREQ
+>           This add the CPUFreq driver support for Intel PXA2xx SOCs.
+>
+>           If in doubt, say N.
+> +
+> +config ARM_QCOM_CPUFREQ_HW
+> +       bool "QCOM CPUFreq HW driver"
+> +       depends on ARCH_QCOM
+> +       help
+> +        Support for the CPUFreq HW driver.
+> +        Some QCOM chipsets have a HW engine to offload the steps
+> +        necessary for changing the frequency of the CPUs. Firmware loaded
+> +        in this engine exposes a programming interface to the OS.
+> +        The driver implements the cpufreq interface for this HW engine.
+> +        Say Y if you want to support CPUFreq HW.
+> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+> index c1ffeab..ca48a1d 100644
+> --- a/drivers/cpufreq/Makefile
+> +++ b/drivers/cpufreq/Makefile
+> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)    += tegra124-cpufreq.o
+>  obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)     += tegra186-cpufreq.o
+>  obj-$(CONFIG_ARM_TI_CPUFREQ)           += ti-cpufreq.o
+>  obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ) += vexpress-spc-cpufreq.o
+> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)      += qcom-cpufreq-hw.o
+>
+>
+>  ##################################################################################
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+> new file mode 100644
+> index 0000000..ea8f7d1
+> --- /dev/null
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -0,0 +1,348 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/cpufreq.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +
+> +#define INIT_RATE                      300000000UL
+> +#define LUT_MAX_ENTRIES                        40U
+> +#define CORE_COUNT_VAL(val)            (((val) & (GENMASK(18, 16))) >> 16)
+> +#define LUT_ROW_SIZE                   32
+> +
+> +enum {
+> +       REG_ENABLE,
+> +       REG_LUT_TABLE,
+> +       REG_PERF_STATE,
+> +
+> +       REG_ARRAY_SIZE,
+> +};
+> +
+> +struct cpufreq_qcom {
+> +       struct cpufreq_frequency_table *table;
+> +       struct device *dev;
+> +       void __iomem *reg_bases[REG_ARRAY_SIZE];
+> +       cpumask_t related_cpus;
+> +       unsigned int max_cores;
+> +       unsigned long xo_rate;
+> +};
+> +
+> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
+> +       [REG_ENABLE]            = 0x0,
+> +       [REG_LUT_TABLE]         = 0x110,
+> +       [REG_PERF_STATE]        = 0x920,
+> +};
+> +
+> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
+> +
+> +static int
+> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
+> +                            unsigned int index)
+> +{
+> +       struct cpufreq_qcom *c = policy->driver_data;
+> +
+> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
+> +
+> +       return 0;
+> +}
+> +
+> +static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> +{
+> +       struct cpufreq_qcom *c;
+> +       struct cpufreq_policy *policy;
+> +       unsigned int index;
+> +
+> +       policy = cpufreq_cpu_get_raw(cpu);
+> +       if (!policy)
+> +               return 0;
+> +
+> +       c = policy->driver_data;
+> +
+> +       index = readl_relaxed(c->reg_bases[REG_PERF_STATE]);
+> +       index = min(index, LUT_MAX_ENTRIES - 1);
+> +
+> +       return policy->freq_table[index].frequency;
+> +}
+> +
+> +static unsigned int
+> +qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
+> +                           unsigned int target_freq)
+> +{
+> +       struct cpufreq_qcom *c = policy->driver_data;
+> +       int index;
+> +
+> +       index = policy->cached_resolved_idx;
+> +       if (index < 0)
+> +               return 0;
+> +
+> +       writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
+> +
+> +       return policy->freq_table[index].frequency;
+> +}
+> +
+> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+> +{
+> +       struct cpufreq_qcom *c;
+> +
+> +       c = qcom_freq_domain_map[policy->cpu];
+> +       if (!c) {
+> +               pr_err("No scaling support for CPU%d\n", policy->cpu);
+> +               return -ENODEV;
+> +       }
+> +
+> +       cpumask_copy(policy->cpus, &c->related_cpus);
+> +
+> +       policy->fast_switch_possible = true;
+> +       policy->freq_table = c->table;
+> +       policy->driver_data = c;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct freq_attr *qcom_cpufreq_hw_attr[] = {
+> +       &cpufreq_freq_attr_scaling_available_freqs,
+> +       &cpufreq_freq_attr_scaling_boost_freqs,
+> +       NULL
+> +};
+> +
+> +static struct cpufreq_driver cpufreq_qcom_hw_driver = {
+> +       .flags          = CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
+> +                         CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
+> +       .verify         = cpufreq_generic_frequency_table_verify,
+> +       .target_index   = qcom_cpufreq_hw_target_index,
+> +       .get            = qcom_cpufreq_hw_get,
+> +       .init           = qcom_cpufreq_hw_cpu_init,
+> +       .fast_switch    = qcom_cpufreq_hw_fast_switch,
+> +       .name           = "qcom-cpufreq-hw",
+> +       .attr           = qcom_cpufreq_hw_attr,
+> +       .boost_enabled  = true,
+> +};
+> +
+> +static int qcom_cpufreq_hw_read_lut(struct platform_device *pdev,
+> +                                   struct cpufreq_qcom *c)
+> +{
+> +       struct device *dev = &pdev->dev;
+> +       void __iomem *base;
+> +       u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+> +
+> +       c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
+> +                               sizeof(*c->table), GFP_KERNEL);
+> +       if (!c->table)
+> +               return -ENOMEM;
+> +
+> +       base = c->reg_bases[REG_LUT_TABLE];
+> +
+> +       for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+> +               data = readl_relaxed(base + i * LUT_ROW_SIZE);
+> +               src = (data & GENMASK(31, 30)) >> 30;
+> +               lval = data & GENMASK(7, 0);
+> +               core_count = CORE_COUNT_VAL(data);
+> +
+> +               if (src)
+> +                       c->table[i].frequency = c->xo_rate * lval / 1000;
+> +               else
+> +                       c->table[i].frequency = INIT_RATE / 1000;
+> +
+> +               cur_freq = c->table[i].frequency;
+> +
+> +               dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
+> +                       i, c->table[i].frequency, core_count);
+> +
+> +               if (core_count != c->max_cores)
+> +                       cur_freq = CPUFREQ_ENTRY_INVALID;
+> +
+> +               /*
+> +                * Two of the same frequencies with the same core counts means
+> +                * end of table.
+> +                */
+> +               if (i > 0 && c->table[i - 1].frequency ==
+> +                  c->table[i].frequency && prev_cc == core_count) {
+> +                       struct cpufreq_frequency_table *prev = &c->table[i - 1];
+> +
+> +                       if (prev_freq == CPUFREQ_ENTRY_INVALID)
+> +                               prev->flags = CPUFREQ_BOOST_FREQ;
+> +                       break;
+> +               }
+> +               prev_cc = core_count;
+> +               prev_freq = cur_freq;
+> +       }
+> +
+> +       c->table[i].frequency = CPUFREQ_TABLE_END;
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_get_related_cpus(struct device_node *np, struct cpumask *m)
+> +{
+> +       struct device_node *cpu_np, *freq_np;
+> +       int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               cpu_np = of_cpu_device_node_get(cpu);
+> +               if (!cpu_np)
+> +                       continue;
+> +               freq_np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
+> +               of_node_put(cpu_np);
+> +               if (!freq_np)
+> +                       continue;
+> +
+> +               if (freq_np == np)
+> +                       cpumask_set_cpu(cpu, m);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+> +                                  struct device_node *np, unsigned int cpu,
+> +                                  unsigned long xo_rate)
+> +{
+> +       struct cpufreq_qcom *c;
+> +       struct resource res;
+> +       struct device *dev = &pdev->dev;
+> +       const u16 *offsets;
+> +       int ret, i, cpu_first, cpu_r;
+> +       void __iomem *base;
+> +
+> +       if (qcom_freq_domain_map[cpu])
+> +               return 0;
+> +
+> +       c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+> +       if (!c)
+> +               return -ENOMEM;
+> +
+> +       offsets = of_device_get_match_data(&pdev->dev);
+> +       if (!offsets)
+> +               return -EINVAL;
+> +
+> +       if (of_address_to_resource(np, 0, &res))
+> +               return -ENOMEM;
+> +
+> +       base = devm_ioremap_resource(dev, &res);
+> +       if (!base)
+> +               return -ENOMEM;
+> +
+> +       for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
+> +               c->reg_bases[i] = base + offsets[i];
+> +
+> +       /* HW should be in enabled state to proceed */
+> +       if (!(readl_relaxed(c->reg_bases[REG_ENABLE]) & 0x1)) {
+> +               dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
+> +               return -ENODEV;
+> +       }
+> +
+> +       ret = qcom_get_related_cpus(np, &c->related_cpus);
+> +       if (ret) {
+> +               dev_err(dev, "%s failed to get related CPUs\n", np->name);
+> +               return ret;
+> +       }
+> +
+> +       c->max_cores = cpumask_weight(&c->related_cpus);
+> +       if (!c->max_cores)
+> +               return -ENOENT;
+> +
+> +       c->xo_rate = xo_rate;
+> +
+> +       ret = qcom_cpufreq_hw_read_lut(pdev, c);
+> +       if (ret) {
+> +               dev_err(dev, "%s failed to read LUT\n", np->name);
+> +               return ret;
+> +       }
+> +
+> +       qcom_freq_domain_map[cpu] = c;
+> +
+> +       /* Related CPUs */
+> +       cpu_first = cpumask_first(&c->related_cpus);
+> +
+> +       for_each_cpu(cpu_r, &c->related_cpus) {
+> +               if (cpu_r != cpu_first)
+> +                       qcom_freq_domain_map[cpu_r] =
+> +                               qcom_freq_domain_map[cpu_first];
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_resources_init(struct platform_device *pdev)
+> +{
+> +       struct device_node *np, *cpu_np;
+> +       struct clk *clk;
+> +       unsigned int cpu;
+> +       int ret;
+> +
+> +       clk = devm_clk_get(&pdev->dev, "xo");
+> +       if (IS_ERR(clk))
+> +               return PTR_ERR(clk);
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               cpu_np = of_cpu_device_node_get(cpu);
+> +               if (!cpu_np) {
+> +                       dev_dbg(&pdev->dev, "Failed to get cpu %d device\n",
+> +                               cpu);
+> +                       continue;
+> +               }
+> +
+> +               np = of_parse_phandle(cpu_np, "qcom,freq-domain", 0);
+> +               of_node_put(cpu_np);
+> +               if (!np) {
+> +                       dev_err(&pdev->dev, "Failed to get freq-domain device\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               ret = qcom_cpu_resources_init(pdev, np, cpu, clk_get_rate(clk));
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       devm_clk_put(&pdev->dev, clk);
+> +
+> +       return 0;
+> +}
+> +
+> +static int qcom_cpufreq_hw_driver_probe(struct platform_device *pdev)
+> +{
+> +       int rc;
+> +
+> +       /* Get the bases of cpufreq for domains */
+> +       rc = qcom_resources_init(pdev);
+> +       if (rc) {
+> +               dev_err(&pdev->dev, "CPUFreq resource init failed\n");
+> +               return rc;
+> +       }
+> +
+> +       rc = cpufreq_register_driver(&cpufreq_qcom_hw_driver);
+> +       if (rc) {
+> +               dev_err(&pdev->dev, "CPUFreq HW driver failed to register\n");
+> +               return rc;
+> +       }
+> +
+> +       dev_dbg(&pdev->dev, "QCOM CPUFreq HW driver initialized\n");
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_cpufreq_hw_match[] = {
+> +       { .compatible = "qcom,cpufreq-hw", .data = &cpufreq_qcom_std_offsets },
+> +       {}
+> +};
+> +
+> +static struct platform_driver qcom_cpufreq_hw_driver = {
+> +       .probe = qcom_cpufreq_hw_driver_probe,
+> +       .driver = {
+> +               .name = "qcom-cpufreq-hw",
+> +               .of_match_table = qcom_cpufreq_hw_match,
+> +       },
+> +};
+> +
+> +static int __init qcom_cpufreq_hw_init(void)
+> +{
+> +       return platform_driver_register(&qcom_cpufreq_hw_driver);
+> +}
+> +subsys_initcall(qcom_cpufreq_hw_init);
+> +
+> +MODULE_DESCRIPTION("QCOM firmware-based CPU Frequency driver");
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+>
