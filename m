@@ -1,130 +1,86 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 6/6] dynamic_debug: Add flag for dynamic event tracing
-Date: Sun,  9 Sep 2018 01:57:07 +0530
-Message-ID: <3f0166ff19ae44dbf92cbb239ebf25fa8a4f243c.1536430404.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v11 08/11] firmware: xilinx: Add debugfs for query data API
+Date: Sat, 8 Sep 2018 18:15:11 -0700
+Message-ID: <CAOesGMjMcznFAQj0L-=J5+gJ5ENsdejqP2SdYomu=C9bJqG+YQ@mail.gmail.com>
+References: <1533318808-10781-1-git-send-email-jollys@xilinx.com> <1533318808-10781-9-git-send-email-jollys@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <1533318808-10781-9-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Prasad Sodagudi <psodagud@codeaurora.org>, tsoni@codeaurora.org, Bryan Huntsman <bryanh@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To: Jolly Shah <jolly.shah@xilinx.com>
+Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, matt@codeblueprint.co.uk, Sudeep Holla <sudeep.holla@arm.com>, hkallweit1@gmail.com, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, rajanv@xilinx.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Debugging a specific driver or subsystem can be a lot easier
-if we can trace events specific to that driver or subsystem.
-This type of filtering can be achieved using existing
-dynamic debug library which provides a way to filter based
-on files, functions and modules.
+Hi,
 
-Using this, provide an additional flag 'e' to filter event
-tracing to specified input.
+I noticed the below when I was reviewing the code for merge into
+arm-soc. Would you mind following up with an incremental patch? I
+don't think we need to ask Michal to respin for this:
 
-For example, tracing all IO read/write can be overwhelming
-and of no use when debugging a specific driver or a subsystem.
-So switch to dynamic event tracing for register accesses.
+On Fri, Aug 3, 2018 at 10:53 AM, Jolly Shah <jolly.shah@xilinx.com> wrote:
+> From: Rajan Vaja <rajanv@xilinx.com>
+>
+> Add debugfs file to query platform specific data from firmware
+> using debugfs interface.
+>
+> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> ---
+>  drivers/firmware/xilinx/zynqmp-debug.c | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/drivers/firmware/xilinx/zynqmp-debug.c b/drivers/firmware/xilinx/zynqmp-debug.c
+> index fc11db9..4532bd0 100644
+> --- a/drivers/firmware/xilinx/zynqmp-debug.c
+> +++ b/drivers/firmware/xilinx/zynqmp-debug.c
+> @@ -33,6 +33,7 @@ static char debugfs_buf[PAGE_SIZE];
+>  static struct pm_api_info pm_api_list[] = {
+>         PM_API(PM_GET_API_VERSION),
+>         PM_API(PM_IOCTL),
+> +       PM_API(PM_QUERY_DATA),
+>  };
+>
+>  /**
+> @@ -105,6 +106,32 @@ static int process_api_request(u32 pm_id, u64 *pm_api_arg, u32 *pm_api_ret)
+>                         sprintf(debugfs_buf, "IOCTL return value: %u\n",
+>                                 pm_api_ret[1]);
+>                 break;
+> +       case PM_QUERY_DATA:
+> +       {
+> +               struct zynqmp_pm_query_data qdata = {0};
+> +
+> +               qdata.qid = pm_api_arg[0];
+> +               qdata.arg1 = pm_api_arg[1];
+> +               qdata.arg2 = pm_api_arg[2];
+> +               qdata.arg3 = pm_api_arg[3];
 
-Example for tracing register accesses in drivers/soc/qcom/*
-and the pstore output is given below:
+This is usually a pattern we try to avoid (having full code blocks in
+a switch statement, and local variables).
 
-  # dyndbg="file drivers/soc/qcom/* +e" trace_event=io tp_pstore
-  # reboot -f
-  # mount -t pstore pstore /sys/fs/pstore
-  # cat /sys/fs/pstore/event-ramoops-0
-    io_write: type=writel cpu=1 ts:1423596253 data=0xffff00000d2065a4 caller=qcom_smsm_probe+0x524/0x670
-    io_write: type=writel cpu=1 ts:1423945889 data=0xffff00000d206608 caller=qcom_smsm_probe+0x524/0x670
+Please move the declaration of qdata to the top of the function so you
+can drop the braces.
 
-Note: Tracing is activated only when flag is enabled either
-through command line or through dynamic debug control file.
+> +
+> +               ret = eemi_ops->query_data(qdata, pm_api_ret);
+> +               if (ret)
+> +                       break;
+> +
+> +               if (qdata.qid == PM_QID_CLOCK_GET_NAME)
+> +                       sprintf(debugfs_buf, "Clock name = %s\n",
+> +                               (char *)pm_api_ret);
+> +               else if (qdata.qid == PM_QID_CLOCK_GET_FIXEDFACTOR_PARAMS)
+> +                       sprintf(debugfs_buf, "Multiplier = %d, Divider = %d\n",
+> +                               pm_api_ret[1], pm_api_ret[2]);
+> +               else
+> +                       sprintf(debugfs_buf,
+> +                               "data[0] = 0x%08x\ndata[1] = 0x%08x\n data[2] = 0x%08x\ndata[3] = 0x%08x\n",
+> +                               pm_api_ret[0], pm_api_ret[1],
+> +                               pm_api_ret[2], pm_api_ret[3]);
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- include/asm-generic/io-instrumented.h | 28 +++++++++++++++++++++++++--
- include/linux/dynamic_debug.h         |  1 +
- lib/dynamic_debug.c                   |  1 +
- 3 files changed, 28 insertions(+), 2 deletions(-)
+If you anticipate more qids here later, a switch could be nicer than a
+sequence of if/else.
 
-diff --git a/include/asm-generic/io-instrumented.h b/include/asm-generic/io-instrumented.h
-index 7b050e2487ed..023f28571ea3 100644
---- a/include/asm-generic/io-instrumented.h
-+++ b/include/asm-generic/io-instrumented.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_GENERIC_IO_INSTRUMENTED_H
- #define _ASM_GENERIC_IO_INSTRUMENTED_H
- 
-+#include <linux/dynamic_debug.h>
-+
- #if defined(CONFIG_TRACING_EVENTS_IO)
- #include <linux/tracepoint-defs.h>
- 
-@@ -19,7 +21,7 @@ static inline void do_trace_io_read(const char *type, void *addr) {}
- #define __raw_write(v, a, _l)	({						\
- 	volatile void __iomem *_a = (a);					\
- 	if (io_tracepoint_active(__tracepoint_io_write))			\
--		do_trace_io_write(__stringify(write##_l), (void __force *)(_a));\
-+		dynamic_io_write(__stringify(write##_l), (void __force *)(_a));	\
- 	arch_raw_write##_l((v), _a);						\
- 	})
- 
-@@ -32,7 +34,7 @@ static inline void do_trace_io_read(const char *type, void *addr) {}
- 	_t __a;									\
- 	const volatile void __iomem *_a = (a);					\
- 	if (io_tracepoint_active(__tracepoint_io_read))				\
--		do_trace_io_read(__stringify(read##_l), (void __force *)(_a));	\
-+		dynamic_io_read(__stringify(read##_l), (void __force *)(_a));	\
- 	__a = arch_raw_read##_l(_a);						\
- 	__a;									\
- 	})
-@@ -42,4 +44,26 @@ static inline void do_trace_io_read(const char *type, void *addr) {}
- #define __raw_readl(a)	__raw_read((a), l, u32)
- #define __raw_readq(a)	__raw_read((a), q, u64)
- 
-+#if defined(CONFIG_DYNAMIC_DEBUG) && defined(CONFIG_TRACING_EVENTS_IO)
-+#define dynamic_io_write(type, addr)					\
-+do {									\
-+	DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, type);		\
-+	if (unlikely(descriptor.flags & _DPRINTK_FLAGS_EVENT))		\
-+		do_trace_io_write(type, addr);				\
-+} while (0)
-+
-+#define dynamic_io_read(type, addr)					\
-+do {									\
-+	DEFINE_DYNAMIC_DEBUG_METADATA(descriptor, type);		\
-+	if (unlikely(descriptor.flags & _DPRINTK_FLAGS_EVENT))		\
-+		do_trace_io_read(type, addr);				\
-+} while (0)
-+#elif defined(CONFIG_TRACING_EVENTS_IO)
-+#define dynamic_io_write(type, addr)	do_trace_io_write(type, addr)
-+#define dynamic_io_read(type, addr)	do_trace_io_read(type, addr)
-+#else
-+#define dynamic_io_write(type, addr)
-+#define dynamic_io_read(type, addr)
-+#endif /* CONFIG_DYNAMIC_DEBUG && CONFIG_TRACING_EVENTS_IO */
-+
- #endif /* _ASM_GENERIC_IO_INSTRUMENTED_H */
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 2fd8006153c3..14e595c51002 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -32,6 +32,7 @@ struct _ddebug {
- #define _DPRINTK_FLAGS_INCL_FUNCNAME	(1<<2)
- #define _DPRINTK_FLAGS_INCL_LINENO	(1<<3)
- #define _DPRINTK_FLAGS_INCL_TID		(1<<4)
-+#define _DPRINTK_FLAGS_EVENT		(1<<5)
- #if defined DEBUG
- #define _DPRINTK_FLAGS_DEFAULT _DPRINTK_FLAGS_PRINT
- #else
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index c7c96bc7654a..694957a8ae54 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -78,6 +78,7 @@ static inline const char *trim_prefix(const char *path)
- 
- static struct { unsigned flag:8; char opt_char; } opt_array[] = {
- 	{ _DPRINTK_FLAGS_PRINT, 'p' },
-+	{ _DPRINTK_FLAGS_EVENT, 'e' },
- 	{ _DPRINTK_FLAGS_INCL_MODNAME, 'm' },
- 	{ _DPRINTK_FLAGS_INCL_FUNCNAME, 'f' },
- 	{ _DPRINTK_FLAGS_INCL_LINENO, 'l' },
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+
+
+-Olof
