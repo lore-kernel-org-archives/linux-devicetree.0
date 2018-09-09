@@ -1,35 +1,28 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] dt-bindings: Add compatible string for LS1028A-QDS
-Date: Sun, 9 Sep 2018 10:11:43 +0800
-Message-ID: <20180909021141.GC18838@dragon>
-References: <1535555846-7817-1-git-send-email-sudhanshu.gupta@nxp.com>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [PATCH v23 4/4] soc: mediatek: Add Mediatek CMDQ helper
+Date: Sun, 9 Sep 2018 14:54:41 +0800
+Message-ID: <1536476081.29633.7.camel@mhfsdcap03>
+References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
+         <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
+         <1534297570.21668.3.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1535555846-7817-1-git-send-email-sudhanshu.gupta@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
-Cc: devicetree@vger.kernel.org, Rai Harninder <harninder.rai@nxp.com>, Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>, stuart.yoder@nxp.com, leoyang.li@nxp.com, oss@buserror.net, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534297570.21668.3.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 08:47:26PM +0530, Sudhanshu Gupta wrote:
-> From: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
-> 
-> Signed-off-by: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
-> Signed-off-by: Rai Harninder <harninder.rai@nxp.com>
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
+On Wed, 2018-08-15 at 09:46 +0800, houlong wei wrote:
+> On Wed, 2018-07-25 at 09:26 +0800, Houlong Wei wrote:
+> > Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
+> >[...]
 
-Please make a patch series consisting of this one and 'arm64: dts: Add
-support for NXP LS1028A SoC', with Rob's ACK collected.
+Hello Matthias,
+   Sorry to disturb you. Could you please review this patch and give
+your comment? Thanks a lot.
 
-Shawn
+Regards
+Houlong
