@@ -1,48 +1,48 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: v4.17 regression: PowerMac G3 won't boot, was Re: [PATCH v5
- 1/3] of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
-Date: Sun, 09 Sep 2018 19:04:25 +0200
-Message-ID: <7427daf6570d519e6793eb96d2fbaa52714b0cd7.camel@kernel.crashing.org>
-References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com>
-         <1520208889-3908-2-git-send-email-frowand.list@gmail.com>
-         <alpine.LNX.2.21.1808301025480.73@nippy.intranet>
-         <0ad5dbfd-08f3-b97d-34b9-70fc9a729921@gmail.com>
-         <d9e53e48794c2eade19309b73febd492e3c5eeeb.camel@kernel.crashing.org>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v11 03/11] firmware: xilinx: Add zynqmp IOCTL API for
+ device control
+Date: Sun, 9 Sep 2018 12:20:09 -0700
+Message-ID: <CAAtXAHfwpKagBUQSFLJ1bBsxvbvyg=+nCuQv11eD+nhuxD=1_A@mail.gmail.com>
+References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+ <1533318808-10781-4-git-send-email-jollys@xilinx.com> <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9e53e48794c2eade19309b73febd492e3c5eeeb.camel@kernel.crashing.org>
+In-Reply-To: <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Finn Thain <fthain@telegraphics.com.au>
-Cc: Stan Johnson <userm57@yahoo.com>, Rob Herring <robh+dt@kernel.org>, Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Jolly Shah <jolly.shah@xilinx.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, matt@codeblueprint.co.uk, Sudeep Holla <sudeep.holla@arm.com>, hkallweit1@gmail.com, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, rajanv@xilinx.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-08-31 at 14:58 +1000, Benjamin Herrenschmidt wrote:
-> 
-> > A long shot, but something to consider, is that I failed to cover the
-> > cases of dynamic devicetree updates (removing nodes that contain a
-> > phandle) in ways other than overlays.  Michael Ellerman has reported
-> > such a problem for powerpc/mobility with of_detach_node().  A patch to
-> > fix that is one of the tasks I need to complete.
-> 
-> The only thing I can think of is booting via the BootX bootloader on
-> those ancient macs results in a DT with no phandles. I didn't see an
-> obvious reason why that would cause that patch to break though.
+Hi Olof,
 
-Guys, we still don't have a fix for this one on its way upstream...
+On Sat, Sep 8, 2018 at 6:18 PM, Olof Johansson <olof@lixom.net> wrote:
+> Hi,
+>
+> On Fri, Aug 3, 2018 at 10:53 AM, Jolly Shah <jolly.shah@xilinx.com> wrote:
+>> From: Rajan Vaja <rajanv@xilinx.com>
+>>
+>> Add ZynqMP firmware IOCTL API to control and configure
+>> devices like PLLs, SD, Gem, etc.
+>>
+>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+>> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+>
+> This patch worries me somewhat. It's a transparent pass-through ioctl
+> driver. Is there a spec available for what the implemented IOCTLs are?
+>
+> Should some of them be proper drivers instead of an opaque
+> pass-through like this? Could some of them have stability impact on
+> the platform such that there are security concerns and the list of
+> arguments should somehow be sanitized?
 
-My test patch just creates phandle properties for all nodes, that was
-not intended as a fix, more a way to check if the problem was related
-to the lack of phandles.
+I tend to agree with this, good catch.
 
-I don't actually know why the new code causes things to fail when
-phandles are absent. This needs to be looked at.
+> What's the intended usecase anyway? Just a debug tool during
+> development, or something that you expect heavy use of by some
+> userspace middleware?
 
-I'm travelling at the moment and generally caught up with other things,
-I haven't had a chance to dig, so just a heads up. I don't intend to
-submit my patch since it's just a band aid. We need to figure out what
-the actual problem is.
+I suspect it is another attempt to make userspace clocks/plls work? Scary.
 
 Cheers,
-Ben.
+Moritz
