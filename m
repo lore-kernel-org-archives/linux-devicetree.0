@@ -1,48 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 7/9] powerpc: enable building all dtbs
-Date: Mon, 10 Sep 2018 10:04:01 -0500
-Message-ID: <20180910150403.19476-8-robh@kernel.org>
+Subject: [PATCH v3 4/9] nios2: fix building all dtbs
+Date: Mon, 10 Sep 2018 10:03:58 -0500
+Message-ID: <20180910150403.19476-5-robh@kernel.org>
 References: <20180910150403.19476-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180910150403.19476-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the 'dtbs' target for powerpc. This allows building all the dts
-files in arch/powerpc/boot/dts/ when COMPILE_TEST and OF_ALL_DTBS are
-enabled.
+nios2 has a 'dtbs' target, but nothing is added to 'dtb-*' targets and
+no dtbs were getting built. This enables building all the dts files in
+arch/nios2/boot/dts/ when COMPILE_TEST and OF_ALL_DTBS are enabled.
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: nios2-dev@lists.rocketboards.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/powerpc/boot/dts/Makefile     | 5 +++++
- arch/powerpc/boot/dts/fsl/Makefile | 4 ++++
- 2 files changed, 9 insertions(+)
- create mode 100644 arch/powerpc/boot/dts/fsl/Makefile
+ arch/nios2/boot/dts/Makefile | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
-index f66554cd5c45..fb335d05aae8 100644
---- a/arch/powerpc/boot/dts/Makefile
-+++ b/arch/powerpc/boot/dts/Makefile
-@@ -1 +1,6 @@
+diff --git a/arch/nios2/boot/dts/Makefile b/arch/nios2/boot/dts/Makefile
+index f6358e395b25..a91a0b09be63 100644
+--- a/arch/nios2/boot/dts/Makefile
++++ b/arch/nios2/boot/dts/Makefile
+@@ -1,3 +1,6 @@
  # SPDX-License-Identifier: GPL-2.0
-+
-+subdir-y += fsl
-+
-+dtstree		:= $(srctree)/$(src)
-+dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
-diff --git a/arch/powerpc/boot/dts/fsl/Makefile b/arch/powerpc/boot/dts/fsl/Makefile
-new file mode 100644
-index 000000000000..3bae982641e9
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
+ 
+ obj-y := $(patsubst "%.dts",%.dtb.o,$(CONFIG_NIOS2_DTB_SOURCE))
 +
 +dtstree		:= $(srctree)/$(src)
 +dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
