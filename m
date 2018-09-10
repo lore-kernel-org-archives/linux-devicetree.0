@@ -1,65 +1,74 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2] ARM64: dts: meson-gxbb-wetek: add ttyAML1 uart for Bluetooth
-Date: Mon, 10 Sep 2018 20:30:20 +0200
-Message-ID: <CAFBinCA=sDT4mVD=ZA90SF+d84bg5HCWuv6O5uz4+dKVSxNgiw@mail.gmail.com>
-References: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com> <1536322536-53109-1-git-send-email-christianshewitt@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 2/2] remoteproc: qcom: Introduce Non-PAS ADSP PIL
+ driver
+Date: Mon, 10 Sep 2018 11:31:47 -0700
+Message-ID: <20180910183147.GE2523@minitux>
+References: <1535975560-8200-1-git-send-email-rohitkr@codeaurora.org>
+ <1535975560-8200-3-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536322536-53109-1-git-send-email-christianshewitt@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1535975560-8200-3-git-send-email-rohitkr@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: christianshewitt@gmail.com, Neil Armstrong <narmstrong@baylibre.com>, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon 03 Sep 04:52 PDT 2018, Rohit kumar wrote:
 
-On Fri, Sep 7, 2018 at 2:16 PM Christian Hewitt
-<christianshewitt@gmail.com> wrote:
->
-> This change adds the uart_A used by the brmcfmac sdio module in the
-> WeTek Hub and WeTek Play 2 devices. meson_uart_probe seems to mandate
-> an alias (without it, BT is not working) so this is also included.
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> This adds Non PAS ADSP PIL driver for Qualcomm
+> Technologies Inc SoCs.
+> Added initial support for SDM845 with ADSP bootup and
+> shutdown operation handled from Application Processor
+> SubSystem(APSS).
+> 
+> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+
+Thanks for the changes Rohit, this looks good.
+
+Once we hear from DT maintainers that patch 1 can be applied I will
+update the name of the file and driver as I apply it to match the naming
+scheme I'm aiming for - no need for you to resend because of this.
+
 > ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> index 70325b2..e75ace7 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> @@ -10,6 +10,7 @@
->  / {
->         aliases {
->                 serial0 = &uart_AO;
-> +               serial1 = &uart_A;
->                 ethernet0 = &ethmac;
->         };
->
-> @@ -239,6 +240,18 @@
->         vqmmc-supply = <&vddio_boot>;
->  };
->
-> +/* This is connected to the Bluetooth module: */
-> +&uart_A {
-> +       status = "okay";
-> +       pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> +       pinctrl-names = "default";
-> +
-> +       bluetooth {
-> +               compatible = "brcm,bcm43438-bt";
-I have a question regarding the Broadcom Bluetooth compatible strings:
-Christian mentioned earlier that the Bluetooth controller identifies
-itself as BCM4335C0 (BCM4335 rev. C0)
+>  drivers/remoteproc/Kconfig         |  14 ++
+>  drivers/remoteproc/Makefile        |   1 +
+>  drivers/remoteproc/qcom_adsp_pil.c | 500 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 515 insertions(+)
+>  create mode 100644 drivers/remoteproc/qcom_adsp_pil.c
+> 
+> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+> index c98c0b2..445de2d 100644
+> --- a/drivers/remoteproc/Kconfig
+> +++ b/drivers/remoteproc/Kconfig
+> @@ -139,6 +139,20 @@ config QCOM_Q6V5_WCSS
+>  	  Say y here to support the Qualcomm Peripheral Image Loader for the
+>  	  Hexagon V5 based WCSS remote processors.
+>  
+> +config QCOM_ADSP_PIL
 
-do we need to add a new compatible string (to
-Documentation/devicetree/bindings/net/broadcom-bluetooth.txt)?
-if yes: should we also add a new of_device_id to hci_bcm.c or should
-board.dts simply use compatible = "brcm,bcm4335c0-bt",
-"brcm,bcm43438-bt"?
+I will make this QCOM_Q6V5_ADSP
 
+[..]
+> diff --git a/drivers/remoteproc/qcom_adsp_pil.c b/drivers/remoteproc/qcom_adsp_pil.c
 
-Regards
-Martin
+Make this qcom_q6v5_adsp.c
+
+[..]
+> +static struct platform_driver adsp_pil_driver = {
+> +	.probe = adsp_probe,
+> +	.remove = adsp_remove,
+> +	.driver = {
+> +		.name = "qcom_adsp_pil",
+
+and this qcom_q6v5_adsp".
+
+> +		.of_match_table = adsp_of_match,
+> +	},
+> +};
+
+Please let me know if you have any objections to this.
+
+Regards,
+Bjorn
