@@ -1,39 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: pinctrl: add wakeup capable GPIOs
- for SDM845
-Date: Mon, 10 Sep 2018 11:28:22 -0500
-Message-ID: <20180910162822.GA5636@bogus>
-References: <20180904211810.5506-1-ilina@codeaurora.org>
- <20180904211810.5506-3-ilina@codeaurora.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [1/3] Device Tree for ASUS Tinker Board S
+Date: Mon, 10 Sep 2018 18:47:15 +0200
+Message-ID: <3597397.qpyucnFYAP@phil>
+References: <90338fb8-412d-5658-1142-75dff51e0739@davidjohnsummers.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180904211810.5506-3-ilina@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: marc.zyngier@arm.com, bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <90338fb8-412d-5658-1142-75dff51e0739-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04, 2018 at 03:18:07PM -0600, Lina Iyer wrote:
-> Update the documentation to use interrupts-extended format for
-> specifying the TLMM summary IRQ line that is requested from GIC and the
-> PDC interrupts corresponding to the wakeup capable GPIOs.
-> 
-> Update the example to show PDC interrupts for the wakeup capable GPIOs
-> for SDM845.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
-> Changes in v2:
-> 	- Fix PDC IRQ number in example
-> 	- Describe IRQ trigger type in example
-> ---
->  .../bindings/pinctrl/qcom,sdm845-pinctrl.txt  | 104 +++++++++++++++++-
->  1 file changed, 101 insertions(+), 3 deletions(-)
+Hi David,
 
-As I also mentioned in v2. Please add acks/reviewed-bys when posting new 
-versions.
+thanks for working on including the tinker-s.
+Some comments below.
 
-Rob
+Am Sonntag, 2. September 2018, 12:04:48 CEST schrieb beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org:
+> Hi,
+> 
+> The ASUS Tinker Board S : 
+> https://www.asus.com/uk/Single-Board-Computer/Tinker-Board-S/
+> 
+> Is a variant on the original ASUS Tinker Board, the main difference 
+> being that the "S" has eMMC.
+> 
+> This patchset sets up the device tree for the "S". It is based on the 
+> patches used with the debian distribution which ships with the device : 
+> https://github.com/TinkerBoard/debian_kernel/blob/develop/arch/arm/boot/dts/rk3288-miniarm.dts
+> 
+> So this is really just mainlining the support.
+> 
+> I've split the changed into three parts:
+
+These general comments apply to all 3 of your patches:
+
+(1) Please follow the general guildelines for sending patches, like
+described in Documentation/process/5.Posting.rst in your kernel tree like:
+- send output of "git format-patch"
+- signed-off-by line
+- full name as "from"
+- ideally use "git send-email"
+- no html mails
+- no mangled content (your mail client replaced all tabs with spaces)
+
+(2) Please keep things to lower cases. So name your board for
+example rk3288-tinker-s.dts
+
+(3) When adding a board, please also add a corresponding entry to
+Documentation/devicetree/bindings/arm/rockchip.txt
+
+(4) When adding a board variant - please don't simply copy devicetrees.
+Instead ideally create a shared dtsi, that both the tinker.dts
+and tinker-s can include.
+
+For reference you can look at the Rock960 CE+EE patchset posted today:
+https://patchwork.kernel.org/cover/10594427/
+
+(5) Please add lists and maintainers. I'm missing
+- linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+- Devicetree binding maintainers:
+  - robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+  - mark.rutland-5wv7dgnIgG8@public.gmane.org
+
+
+Thanks
+Heiko
