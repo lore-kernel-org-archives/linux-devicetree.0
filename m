@@ -1,54 +1,51 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 01/10] dt-bindings: fsi: Add P9 OCC device
- documentation
-Date: Mon, 10 Sep 2018 13:16:10 -0500
-Message-ID: <20180910181610.GA5907@bogus>
-References: <1535664761-86018-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1535664761-86018-2-git-send-email-eajames@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 5/9] dt-bindings: ata: ahci-platform:
+ document phy-supply
+Date: Mon, 10 Sep 2018 13:18:00 -0500
+Message-ID: <20180910181800.GA9759@bogus>
+References: <20180903100201.23131-1-clabbe.montjoie@gmail.com>
+ <20180903100201.23131-6-clabbe.montjoie@gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBWXK3LOAKGQE4MX3MWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1535664761-86018-2-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux@roeck-us.net, joel@jms.id.au, benh@kernel.crashing.org
+In-Reply-To: <20180903100201.23131-6-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: axboe-tSWWG44O7X1aa/9Udqfwiw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 04:32:32PM -0500, Eddie James wrote:
-> Document the bindings for the FSI-attached POWER9 On-Chip Controller.
+On Mon, Sep 03, 2018 at 12:01:57PM +0200, Corentin Labbe wrote:
+> This patch document the new optional phy-supply.
 > 
-> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+>  Documentation/devicetree/bindings/ata/ahci-platform.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> new file mode 100644
-> index 0000000..46372f6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
-> @@ -0,0 +1,15 @@
-> +Device-tree bindings for FSI-attached POWER9 On-Chip Controller (OCC)
-> +---------------------------------------------------------------------
-> +
-> +This is the binding for the P9 On-Chip Controller accessed over FSI from a
-> +service processor. See fsi.txt for details on bindings for FSI slave and CFAM
-> +nodes.
-> +
-> +Required properties:
-> + - compatible = "ibm,p9-occ"
-> +
-> +Examples:
-> +
-> +    occ {
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index f495774c8af9..45b451961612 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -31,6 +31,7 @@ Optional properties:
+>  - clocks            : a list of phandle + clock specifier pairs
+>  - resets            : a list of phandle + reset specifier pairs
+>  - target-supply     : regulator for SATA target power
+> +- phy-supply        : regulator for PHY power
 
-FSI slave devices are supposed to have an address according to the 
-binding doc.
+This should be mutually exclusive with the phys property. If you have a 
+phy node, then its supply belongs there.
 
-> +        compatible = "ibm,p9-occ";
-> +    };
+>  - phys              : reference to the SATA PHY node
+>  - phy-names         : must be "sata-phy"
+>  - ahci-supply       : regulator for AHCI controller
 > -- 
-> 1.8.3.1
+> 2.16.4
 > 
