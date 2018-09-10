@@ -1,36 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v3 4/9] nios2: fix building all dtbs
-Date: Mon, 10 Sep 2018 10:03:58 -0500
-Message-ID: <20180910150403.19476-5-robh@kernel.org>
+Subject: [PATCH v3 9/9] microblaze: enable building all dtbs
+Date: Mon, 10 Sep 2018 10:04:03 -0500
+Message-ID: <20180910150403.19476-10-robh@kernel.org>
 References: <20180910150403.19476-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180910150403.19476-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
+Cc: Frank Rowand <frowand.list@gmail.com>, Michal Simek <monstr@monstr.eu>
 List-Id: devicetree@vger.kernel.org
 
-nios2 has a 'dtbs' target, but nothing is added to 'dtb-*' targets and
-no dtbs were getting built. This enables building all the dts files in
-arch/nios2/boot/dts/ when COMPILE_TEST and OF_ALL_DTBS are enabled.
+Enable the 'dtbs' target for microblaze. As microblaze only has one dts
+file, always enable it.
 
-Cc: Ley Foon Tan <lftan@altera.com>
-Cc: nios2-dev@lists.rocketboards.org
+Cc: Michal Simek <monstr@monstr.eu>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/nios2/boot/dts/Makefile | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/microblaze/boot/dts/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/nios2/boot/dts/Makefile b/arch/nios2/boot/dts/Makefile
-index f6358e395b25..a91a0b09be63 100644
---- a/arch/nios2/boot/dts/Makefile
-+++ b/arch/nios2/boot/dts/Makefile
-@@ -1,3 +1,6 @@
+diff --git a/arch/microblaze/boot/dts/Makefile b/arch/microblaze/boot/dts/Makefile
+index fe9af267f598..c7324e74f9ef 100644
+--- a/arch/microblaze/boot/dts/Makefile
++++ b/arch/microblaze/boot/dts/Makefile
+@@ -1,6 +1,8 @@
  # SPDX-License-Identifier: GPL-2.0
+ #
  
- obj-y := $(patsubst "%.dts",%.dtb.o,$(CONFIG_NIOS2_DTB_SOURCE))
++dtb-y := system.dtb
 +
-+dtstree		:= $(srctree)/$(src)
-+dtb-$(CONFIG_OF_ALL_DTBS) := $(patsubst $(dtstree)/%.dts,%.dtb, $(wildcard $(dtstree)/*.dts))
+ ifneq ($(DTB),)
+ obj-y += linked_dtb.o
+ 
 -- 
 2.17.1
