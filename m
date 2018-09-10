@@ -1,80 +1,68 @@
-Return-Path: <SRS0=oGub=MD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:36238 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727857AbeIUTCv (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Sep 2018 15:02:51 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20180921131401euoutp0222533d9ee4b2d07a90a0bc9ec89ec9d3~WbIUBsusJ1539415394euoutp02M
-        for <devicetree@vger.kernel.org>; Fri, 21 Sep 2018 13:14:01 +0000 (GMT)
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH v3] arm64: dts: exynos: add OF graph between USB-PHY and
- MUIC
-Date: Fri, 21 Sep 2018 15:13:55 +0200
-Message-Id: <20180921131359eucas1p2fd46913e0a9845bbb6e8260aa9f5c20f~WbISmyGpy1936319363eucas1p2i@eucas1p2.samsung.com>
-Content-Type: text/plain; charset="utf-8"
-References: <CGME20180921131359eucas1p2fd46913e0a9845bbb6e8260aa9f5c20f@eucas1p2.samsung.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list : DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, "open list : OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 10 Sep 2018 16:21:51 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: watchdog: Document armada-37xx-wdt
+ binding
+Message-ID: <20180910212151.GA19545@bogus>
+References: <20180907130553.14271-1-marek.behun@nic.cz>
+ <20180907130553.14271-3-marek.behun@nic.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180907130553.14271-3-marek.behun@nic.cz>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc: linux-watchdog@vger.kernel.org, wim@linux-watchdog.org, Guenter Roeck <linux@roeck-us.net>, Miquel Raynal <miquel.raynal@bootlin.com>, Gregory CLEMENT <gregory.clement@bootlin.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-OF graph describes USB data lanes between USB-PHY and respective MUIC.
-Since graph is present and DWC driver can use it to get extcon, obsolete
-extcon property can be removed.
+On Fri, Sep 07, 2018 at 03:05:51PM +0200, Marek Beh�n wrote:
+> This adds device tree binding documentation for the CPU watchdog found
+> on Armada 37xx SOCs (EspressoBin, Turris Mox).
+> 
+> Signed-off-by: Marek Beh�n <marek.behun@nic.cz>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../bindings/watchdog/armada-37xx-wdt.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt b/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+> new file mode 100644
+> index 000000000000..4ba9e40ad386
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+> @@ -0,0 +1,23 @@
+> +* Armada 37xx CPU Watchdog Timer Controller
+> +
+> +Required properties:
+> +- compatible : must be "marvell,armada-3700-wdt"
+> +- reg : base physical address of the controller and length of memory mapped
+> +	region.
+> +- clocks : the clock feeding the watchdog timer. See clock-bindings.txt
+> +- marvell,system-controller : reference to syscon node for the CPU Miscellaneous
+> +	Registers
+> +
+> +Example:
+> +
+> +	cpu_misc: system-controller@d000 {
+> +		compatible = "syscon", "simple-mfd";
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
----
-v3:
- - removed #address-cells/#size-cells from ports node.
+syscon alone without an SoC specific compatible is not valid and 
+simple-mfd is pointless without child nodes.
 
-Hi Krzysztof,
+> +		reg = <0xd000 0x1000>;
+> +	};
+> +
+> +	wdt: watchdog-timer@8300 {
 
-This is next version of the patch I forgot. I have addressed your comments,
-I hope correctly :)
+watchdog@...
 
-Regards
-Andrzej
----
- .../boot/dts/exynos/exynos5433-tm2-common.dtsi    | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index a1e3194b7483..95cbf5f0921d 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -868,6 +868,14 @@
- 					};
- 				};
- 			};
-+
-+			ports {
-+				port {
-+					muic_to_usb: endpoint {
-+						remote-endpoint = <&usb_to_muic>;
-+					};
-+				};
-+			};
- 		};
- 
- 		regulators {
-@@ -1283,12 +1291,17 @@
- 
- &usbdrd_dwc3 {
- 	dr_mode = "otg";
--	extcon = <&muic>;
- };
- 
- &usbdrd30_phy {
- 	vbus-supply = <&safeout1_reg>;
- 	status = "okay";
-+
-+	port {
-+		usb_to_muic: endpoint {
-+			remote-endpoint = <&muic_to_usb>;
-+		};
-+	};
- };
- 
- &xxti {
--- 
-2.18.0
+> +		compatible = "marvell,armada-3700-wdt";
+> +		reg = <0x8300 0x40>;
+> +		marvell,system-controller = <&cpu_misc>;
+> +		clocks = <&xtalclk>;
+> +	};
+> -- 
+> 2.16.4
+> 
