@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] dt-bindings: sun4i-drm: drop second PLL
- from A64 HDMI PHY binding
-Date: Mon, 10 Sep 2018 16:22:50 +0200
-Message-ID: <20180910142250.he54s4pm436qyshs@flea>
+Subject: Re: [PATCH 5/5] ARM: sun8i: dts: drop A64 HDMI PHY
+ fallback compatible from R40 DT
+Date: Mon, 10 Sep 2018 16:23:54 +0200
+Message-ID: <20180910142354.5ldexkvnan6ohz4x@flea>
 References: <20180907072234.48282-1-icenowy@aosc.io>
- <20180907072234.48282-2-icenowy@aosc.io>
+ <20180907072234.48282-6-icenowy@aosc.io>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ats4uxpwvt5bttal"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRP43HOAKGQER634MZI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="25znzmfo6omd7fkm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBX53HOAKGQEDFJ5OOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180907072234.48282-2-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20180907072234.48282-6-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,34 +24,34 @@ Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT
 List-Id: devicetree@vger.kernel.org
 
 
---ats4uxpwvt5bttal
+--25znzmfo6omd7fkm
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Fri, Sep 07, 2018 at 03:22:30PM +0800, Icenowy Zheng wrote:
-> By experiments it seems that the A64 HDMI PHY is not able to use the
-> second video PLL as the clock parent.
+On Fri, Sep 07, 2018 at 03:22:34PM +0800, Icenowy Zheng wrote:
+> The R40 HDMI PHY seems to be different to the A64 one, the A64 one
+> has no input mux, but the R40 one has.
 > 
-> Drop pll-1 from the device tree binding of A64 HDMI PHY.
+> Drop the A64 fallback compatible from the HDMI PHY node in R40 DT.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 1 -
->  1 file changed, 1 deletion(-)
+>  arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> index f8773ecb7525..62034039cee1 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> @@ -114,7 +114,6 @@ Required properties:
+> diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+> index ffd9f00f74a4..5f547c161baf 100644
+> --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> @@ -800,8 +800,7 @@
+>  		};
 >  
->  H3 and A64 HDMI PHY require additional clocks:
->    - pll-0: parent of phy clock
-> -  - pll-1: second possible phy clock parent (A64 only)
+>  		hdmi_phy: hdmi-phy@1ef0000 {
+> -			compatible = "allwinner,sun8i-r40-hdmi-phy",
+> -				     "allwinner,sun50i-a64-hdmi-phy";
+> +			compatible = "allwinner,sun8i-r40-hdmi-phy";
 
-You shouldn't need to do this. The DT is about the hardware. The fact
-that we haven't figured out how to use it is quite irrelevant, and can
-change in the future, unlike this binding.
+If you could use the A64 phy before, you can still use it now.
 
 Maxime
 
@@ -59,4 +59,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---ats4uxpwvt5bttal--
+--25znzmfo6omd7fkm--
