@@ -1,55 +1,61 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v11 03/11] firmware: xilinx: Add zynqmp IOCTL API for
- device control
-Date: Mon, 10 Sep 2018 14:35:04 +0200
-Message-ID: <0bc8f69a-2d44-7ee2-133b-29f6dd4c0929@xilinx.com>
-References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
- <1533318808-10781-4-git-send-email-jollys@xilinx.com>
- <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
- <CAAtXAHfwpKagBUQSFLJ1bBsxvbvyg=+nCuQv11eD+nhuxD=1_A@mail.gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 1/3] dt-bindings: usb: dwc2: add description for px30
+Date: Mon, 10 Sep 2018 14:36:48 +0200
+Message-ID: <10844921.P8CMEBK8dG@phil>
+References: <20180802130133.4898-1-heiko@sntech.de>
+ <20180802130133.4898-2-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAtXAHfwpKagBUQSFLJ1bBsxvbvyg=+nCuQv11eD+nhuxD=1_A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>, Olof Johansson <olof@lixom.net>
-Cc: Jolly Shah <jolly.shah@xilinx.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, matt@codeblueprint.co.uk, Sudeep Holla <sudeep.holla@arm.com>, hkallweit1@gmail.com, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, rajanv@xilinx.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Jolly Shah <jollys@xilin>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180802130133.4898-2-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-usb@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, cl@rock-chips.com, hminas@synopsys.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 9.9.2018 21:20, Moritz Fischer wrote:
-> Hi Olof,
-> 
-> On Sat, Sep 8, 2018 at 6:18 PM, Olof Johansson <olof@lixom.net> wrote:
->> Hi,
->>
->> On Fri, Aug 3, 2018 at 10:53 AM, Jolly Shah <jolly.shah@xilinx.com> wrote:
->>> From: Rajan Vaja <rajanv@xilinx.com>
->>>
->>> Add ZynqMP firmware IOCTL API to control and configure
->>> devices like PLLs, SD, Gem, etc.
->>>
->>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
->>> Signed-off-by: Jolly Shah <jollys@xilinx.com>
->>
->> This patch worries me somewhat. It's a transparent pass-through ioctl
->> driver. Is there a spec available for what the implemented IOCTLs are?
->>
->> Should some of them be proper drivers instead of an opaque
->> pass-through like this? Could some of them have stability impact on
->> the platform such that there are security concerns and the list of
->> arguments should somehow be sanitized?
-> 
-> I tend to agree with this, good catch.
-> 
->> What's the intended usecase anyway? Just a debug tool during
->> development, or something that you expect heavy use of by some
->> userspace middleware?
-> 
-> I suspect it is another attempt to make userspace clocks/plls work? Scary.
+Hi Greg, Felipe,
 
-none is trying to do that as far as I know.
+Am Donnerstag, 2. August 2018, 15:01:31 CEST schrieb Heiko Stuebner:
+> From: Liang Chen <cl@rock-chips.com>
+> 
+> This patch adds the compatible of dwc2 for PX30 SoCs.
+> 
+> Signed-off-by: Liang Chen <cl@rock-chips.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-Thanks,
-Michal
+Do you want to pick that patch through one of the usb trees, or should
+I just apply it with the arm64 devicetree-patches?
+
+
+Thanks
+Heiko
+
+
+> unchanged from it being part of the general px30 series
+> 
+>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index 46da5f184460..6dc3c4a34483 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>    - brcm,bcm2835-usb: The DWC2 USB controller instance in the BCM2835 SoC.
+>    - hisilicon,hi6220-usb: The DWC2 USB controller instance in the hi6220 SoC.
+>    - rockchip,rk3066-usb: The DWC2 USB controller instance in the rk3066 Soc;
+> +  - "rockchip,px30-usb", "rockchip,rk3066-usb", "snps,dwc2": for px30 Soc;
+>    - "rockchip,rk3188-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3188 Soc;
+>    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
+>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
+> 
