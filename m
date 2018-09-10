@@ -1,127 +1,95 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 3/4] of: Convert to using %pOFn instead of
- device_node.name
-Date: Mon, 10 Sep 2018 11:06:25 +0200
-Message-ID: <20180910090625.GA702@ulmo>
-References: <20180828155254.10709-1-robh@kernel.org>
- <20180828155254.10709-4-robh@kernel.org>
- <20180907122928.GA5821@ulmo>
- <0999919005219fa94ccc69ff57659d47911d3abd.camel@perches.com>
+Subject: Re: [PATCH] of: Split up name & type in modalias generation
+Date: Mon, 10 Sep 2018 11:08:20 +0200
+Message-ID: <20180910090820.GB702@ulmo>
+References: <20180907142247.2931-1-thierry.reding@gmail.com>
+ <CAL_JsqJ0VZftZ+Qve+=91tbvgYof68NW+dBf4bPv+b8uQ0y1hg@mail.gmail.com>
+ <32ff0b7e-a710-2c23-75ad-8c527d3453c7@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <0999919005219fa94ccc69ff57659d47911d3abd.camel@perches.com>
+In-Reply-To: <32ff0b7e-a710-2c23-75ad-8c527d3453c7@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---pf9I7BMVVzbSWLtt
+--+g7M9IMkV8truYOl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 07, 2018 at 05:30:23PM -0700, Joe Perches wrote:
-> On Fri, 2018-09-07 at 14:29 +0200, Thierry Reding wrote:
-> > On Tue, Aug 28, 2018 at 10:52:53AM -0500, Rob Herring wrote:
-> > > In preparation to remove the node name pointer from struct device_nod=
-e,
-> > > convert printf users to use the %pOFn format specifier.
-> > >=20
-> > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > Cc: Andrew Lunn <andrew@lunn.ch>
-> > > Cc: Florian Fainelli <f.fainelli@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: netdev@vger.kernel.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  drivers/of/device.c   |  4 ++--
-> > >  drivers/of/of_mdio.c  | 12 ++++++------
-> > >  drivers/of/of_numa.c  |  4 ++--
-> > >  drivers/of/overlay.c  |  4 ++--
-> > >  drivers/of/platform.c |  8 ++++----
-> > >  drivers/of/unittest.c | 12 ++++++------
-> > >  6 files changed, 22 insertions(+), 22 deletions(-)
-> > >=20
-> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
-> > > index 5957cd4fa262..daa075d87317 100644
-> > > --- a/drivers/of/device.c
-> > > +++ b/drivers/of/device.c
-> > > @@ -219,7 +219,7 @@ static ssize_t of_device_get_modalias(struct devi=
-ce *dev, char *str, ssize_t len
-> > >  		return -ENODEV;
-> > > =20
-> > >  	/* Name & Type */
-> > > -	csize =3D snprintf(str, len, "of:N%sT%s", dev->of_node->name,
-> > > +	csize =3D snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
-> > >  			 dev->of_node->type);
-> > >  	tsize =3D csize;
-> > >  	len -=3D csize;
+On Fri, Sep 07, 2018 at 12:56:09PM -0700, Frank Rowand wrote:
+> On 09/07/18 11:49, Rob Herring wrote:
+> > On Fri, Sep 7, 2018 at 9:22 AM Thierry Reding <thierry.reding@gmail.com=
+> wrote:
+> >>
+> >> From: Thierry Reding <treding@nvidia.com>
+> >>
+> >> The kernel's vsnprintf() implementation discards all alpha-numeric
+> >> characters following a %p conversion specifier. This is done in order =
+to
+> >> generically skip any of the various modifiers that the kernel supports.
+> >> Unfortunately, the OF modalias is generated with a format string that
+> >> violates the assumption made by vsnprintf():
+> >>
+> >>         of:N%pOFnT%s
+> >>
+> >> While processing the above format string, vsnprintf() will eat the 'T'
+> >> character, assuming that it belongs to the preceeding %p specifier. Th=
+is
+> >> results in a modalias with an incompatible format, which in turn causes
+> >> the automatic loading of drivers based on modalias to no longer work.
+> >>
+> >> To fix this, split up the generation of the name & type fields into two
+> >> separate snprintf() calls to avoid confusing the parser.
+> >>
+> >> Fixes: 73813f8483b1 ("of: Convert to using %pOFn instead of device_nod=
+e.name")
+> >> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> >> ---
+> >> Note that a more elegant fix would be to make the %p format specifier
+> >> parser report back the exact number of characters consumed. I briefly
+> >> tried to implement it, but quickly ran into numerous special cases
+> >> that make this solution rather involved.
+> >>
+> >> I can spend some more time to improve this in general if that's what we
+> >> ultimately want, but I think this patch is a better short-term fix to
+> >> workaround the issue.
 > >=20
-> > This seems to cause the modalias to be improperly constructed. As a
-> > consequence, automatic module loading at boot time is now broken. I
-> > think the reason why this fails is because vsnprintf() will skip all
-> > alpha-numeric characters after a call to pointer(). Presumably this
-> > is meant to be a generic way of skipping whatever specifiers we throw
-> > at it.
+> > See my reply on the original patch. I've updated the patch in my
+> > dt/next branch with the fix to use %c.
 > >=20
-> > Unfortunately for the case of OF modaliases, this means that the 'T'
-> > character gets eaten, so we end up with something like this:
+> > Rob
 > >=20
-> > 	# udevadm info /sys/bus/platform/devices/54200000.dc
-> > 	[...]
-> > 	E: MODALIAS=3Dof:Ndc<NULL>Cnvidia,tegra124-dc
-> > 	[...]
-> >=20
-> > instead of this:
-> >=20
-> > 	# udevadm info /sys/bus/platform/devices/54200000.dc
-> > 	[...]
-> > 	E: MODALIAS=3Dof:NdcT<NULL>Cnvidia,tegra124-dc
-> > 	[...]
-> >=20
-> > Everything is back to normal if I revert this patch. However, since
-> > that's obviously not what we want, I think perhaps what we need is a
-> > way for pointer() (and its implementations) to report back how many
-> > characters in the format string it consumed so that we can support
-> > these kinds of back-to-back strings.
-> >=20
-> > If nobody else has the time I can look into coding up a fix, but in the
-> > meantime it might be best to back this one out until we can handle the
-> > OF modalias format string.
 >=20
-> Or just use 2 consecutive snprintf calls
->=20
-> 	csize =3D snprintf(str, len, "of:N%pOFn", dev->of_node);
-> 	csize +=3D snprintf(str + csize, len - csize, "T%s",
-> 			  dev->of_node->type);
+> Agreed, your updated patch is more compact and looks cleaner.
 
-Yeah, that's what I ended up doing. Rob came up with another alternative
-which is to output the 'T' via %c, which also works around the issue.
+Not sure about "cleaner", but yeah, that works as well.
 
 Thierry
 
---pf9I7BMVVzbSWLtt
+--+g7M9IMkV8truYOl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluWNAwACgkQ3SOs138+
-s6Gokg/+K3EawlUajE6ZpjcPOUOT9YUvcNEj3Z0/11JF7nBbZ52sBrBs7PEOdLWW
-Rgw3+5UX70U5o/oB2+d0m9mCS6zk5zsqAhDacU/3xEHod64qdjexPuU4VH1skk2Q
-2m/Tx3Z/aivJAKjovI5IRjk8lD3RUVkTk1x3Jw2BrNxtahYygKNNeh3aqrjHqonm
-DFaZBn6gBGMeDSGFVL0n2X+5rE0NJFLIhbBs0isfQppTZeerqawm25i0r+vT/IJd
-lGYar4hPqFb9VGtBwe0rZ6hg0j7f1BI+JUe4tV/XmGmKLJJc5IWBhAwlsNCwjFpt
-UN3NtJBv5oWOAazcvV/YrCxk/C5dzdNRgp6ccbcc2GUHlqHnvs86dcNlvhv3DcBG
-B+umZbQC+b30qyZs4xcZUAg7qygf22BbyAF+OMDxn9YR6GIivqNgSJTtTErAExLB
-HtSS1awvtCETNlgNY5vy/Nh0Jnzm5XzUAauuO467e/OzqWgN0IQCteNlWpD9ZNOe
-RNEUWEdb49qN2coDLi/pi4Mc+nkHhFcQ+rfQDN5OKwcomx9dE5XHNzPTJmsLbbAr
-2Z/7P+g2IePJOUpVWUvz+wcESGCExsd+rgXHYUC+HYekCSJal2MtfkP1zMoFfefH
-hlistUPBmCXmJpHokHsq0QLPK04lpp2P8hMBic9YXcOyKw1ShDI=
-=TA2P
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluWNIQACgkQ3SOs138+
+s6FxtA/8CkU+Oilip3vkyQ8zmTV9Xx9m9Vu3e9+JcvWaGt2cY/xNd6ALpt7KsTm4
+K10jW+Jam9u4KPN6IeIHQD6bFgOxU9BJewEFA4WmKE2cO2ttlsNIApgqBFuSrwOX
+xR/mUXUGrIX9vtw7Bg2vjiCzX6eSjJt7XsFMVOD/P7aMSeMyv5p8/Qwcmh7/t4rj
+iZ64lB194AdtcR/7gdBXiOtpu9R5NFWZSjcwIiln0cHpsW7vzzIhLfqMKwEJ0E0F
+Iolfc3FqnxWO+Iv43Fqhh9rtqjuYrJfECGN38fNkxa/8SblEUMrVi2+tWhBiie6J
+NGope74WcAulWExj4j2dDAFVxCEcMnqdg9rrUYZiNr5JhQhrxzM1Lbn0UQfaACli
+fn9VnlRaF1PvXxgUb/3J29GKsdI3OzS2YFuPRdFjFyXff+k2iJsjapOCUvC+p/M8
+IDrs/ms1ouaZCRxPWSpazM3+28Eh20nUB9f8KuerdqMIwOsaKPgPVd7aiZURFvBV
+trRB1CDBeGA+s6cZxQzyHDeRkDjGLersietcfjBShEhhS4Wthahr2tYGwxdB81+y
+/rxQdxHTZnQy3AqDoEMRZSxnazpk6W7hxuEuUX/DKDOHW0nodvPlIJNnsdiEyIyp
+Fc2bLClevU0Ha5cS6HPfw5H2+IgnVkWGgQcreIQ/VLkBS8uMNOs=
+=03b9
 -----END PGP SIGNATURE-----
 
---pf9I7BMVVzbSWLtt--
+--+g7M9IMkV8truYOl--
