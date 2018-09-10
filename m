@@ -1,81 +1,63 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Mon, 10 Sep 2018 17:41:49 +0200
-Message-ID: <20180910154149.GA6845@amd>
-References: <20180906135005.6718-1-dmurphy@ti.com>
- <20180906211617.GB16899@amd>
- <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
- <20180907133228.GA16297@amd>
- <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
- <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v3 0/9] coresight: Update device tree bindings
+Date: Mon, 10 Sep 2018 09:49:07 -0600
+Message-ID: <CANLsYkwpFZcxaNdvcnag_-ywhWyE1yV6BT1sUx8-4i2dMdD8MA@mail.gmail.com>
+References: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com>
+ <20180730200232.GA31755@xps15> <CANLsYkzBfCydwDO-KyDub4X=GTy_dtv-478RyMReBEH6VybSAg@mail.gmail.com>
+ <9e935bd9-1cd1-0fda-3d73-fe2487759a1c@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FL5UXtIhxfXey3p5"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+In-Reply-To: <9e935bd9-1cd1-0fda-3d73-fe2487759a1c@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, coresight@lists.linaro.org, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, John Horley <john.horley@arm.com>, Al Grant <al.grant@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
---FL5UXtIhxfXey3p5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat 2018-09-08 21:53:00, Jacek Anaszewski wrote:
-> Dan,
->=20
-> On 09/07/2018 03:52 PM, Dan Murphy wrote:
-> [...]
-> >>
-> >>> And I think Jacek pointed out that the bindings references in this bi=
-ndings
-> >>> don't even exist.
+On Mon, 10 Sep 2018 at 09:35, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>
+> Hi Mathieu,
+>
+> On 31/07/18 16:06, Mathieu Poirier wrote:
+> > [...]
+> >
 > >>>
-> >>> I am thinking we need to deprecate this MFD driver and consolidate th=
-ese drivers
-> >>> in the LED directory as we indicated before.  I did not find any ti-l=
-mu support
-> >>> code.
+> >>> Suzuki K Poulose (9):
+> >>>   coresight: Document error handling in coresight_register
+> >>>   coresight: platform: Refactor graph endpoint parsing
+> >>>   coresight: platform: Fix refcounting for graph nodes
+> >>>   coresight: platform: Fix leaking device reference
+> >>>   coresight: Fix remote endpoint parsing
+> >>>   coresight: Add helper to check if the endpoint is input
+> >>>   coresight: platform: Cleanup coresight connection handling
+> >>>   coresight: Cleanup coresight DT bindings
+> >>>   dts: juno: Update coresight bindings
 > >>>
-> >>> ti-lmu common core code and then the LED children appending the featu=
-re differentiation.
+> >>>  .../devicetree/bindings/arm/coresight.txt          |  95 +++++---
+> >>>  arch/arm64/boot/dts/arm/juno-base.dtsi             | 161 ++++++------
+> >>>  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi          |  52 ++--
+> >>>  arch/arm64/boot/dts/arm/juno.dts                   |  13 +-
+> >>>  drivers/hwtracing/coresight/coresight.c            |  35 +--
+> >>>  drivers/hwtracing/coresight/of_coresight.c         | 269 ++++++++++++++-------
+> >>>  include/linux/coresight.h                          |   9 +-
+> >>>  7 files changed, 359 insertions(+), 275 deletions(-)
+> >>>
 > >>
-> >>> Need some maintainer weigh in here.
+> >> Good day,
 > >>
-> >> Hehe. I'm maintnainer. Fun.
-> >=20
-> > I know.  I want to see if there was any other opinion.  Especially for =
-the LED driver.
-> >=20
-> [...]
->=20
-> I have a question - is this lm3697 LED controller a cell of some MFD
-> device? Or is it a self-contained chip?
+> >> I have applied patches 1 to 7.  I will wait for Rob's ACK before doing the same
+> >> with 8 and 9.
+> >
+> > I just applied patch 8 and 9.
+> >
+> Sorry for the delay, but ARM SoC expects all the DTS changes to go via
+> their tree. Please drop patch 9, I will route via ARM-SoC.
 
-lm3697 is number for stand-alone device, but same hardware seems to be
-embedded into multi-functional chips, with other numbers in lm36xx
-series.
+Done - it's all yours now.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Mathieu
 
---FL5UXtIhxfXey3p5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEUEARECAAYFAluWkL0ACgkQMOfwapXb+vImQQCffHlXQV24ag2AVempZPEtociN
-qZAAl3PXs6dabqtCszyhHbns7S+wrNk=
-=Aeim
------END PGP SIGNATURE-----
-
---FL5UXtIhxfXey3p5--
+>
+> --
+> Regards,
+> Sudeep
