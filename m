@@ -1,193 +1,55 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] media: Add controls for JPEG quantization tables
-Date: Mon, 10 Sep 2018 14:42:03 +0200
-Message-ID: <718d8a73-008a-a610-d090-91cc54a992ad@xs4all.nl>
-References: <20180905220011.16612-1-ezequiel@collabora.com>
- <20180905220011.16612-6-ezequiel@collabora.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH] ARM: dts: imx53-qsb: disable 1.2GHz OPP
+Date: Mon, 10 Sep 2018 14:50:56 +0200
+Message-ID: <20180910125056.30813-1-s.hauer@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180905220011.16612-6-ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/2018 12:00 AM, Ezequiel Garcia wrote:
-> From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> 
-> Add V4L2_CID_JPEG_QUANTIZATION compound control to allow userspace
-> configure the JPEG quantization tables.
-> 
-> Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->  .../media/uapi/v4l/extended-controls.rst      | 31 +++++++++++++++++++
->  .../media/videodev2.h.rst.exceptions          |  1 +
->  drivers/media/v4l2-core/v4l2-ctrls.c          | 10 ++++++
->  include/uapi/linux/v4l2-controls.h            | 12 +++++++
->  include/uapi/linux/videodev2.h                |  1 +
->  5 files changed, 55 insertions(+)
-> 
-> diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
-> index 9f7312bf3365..1335d27d30f3 100644
-> --- a/Documentation/media/uapi/v4l/extended-controls.rst
-> +++ b/Documentation/media/uapi/v4l/extended-controls.rst
-> @@ -3354,7 +3354,38 @@ JPEG Control IDs
->      Specify which JPEG markers are included in compressed stream. This
->      control is valid only for encoders.
->  
-> +.. _jpeg-quant-tables-control:
->  
-> +``V4L2_CID_JPEG_QUANTIZATION (struct)``
-> +    Specifies the luma and chroma quantization matrices for encoding
-> +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. The :ref:`itu-t81`
-> +    specification allows 8-bit quantization coefficients for
-> +    baseline profile images, and 8-bit or 16-bit for extended profile
-> +    images. Supporting or not 16-bit precision coefficients is driver-specific.
-> +    Coefficients must be set in JPEG zigzag scan order.
-> +
-> +
-> +.. c:type:: struct v4l2_ctrl_jpeg_quantization
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table:: struct v4l2_ctrl_jpeg_quantization
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - __u8
-> +      - ``precision``
-> +      - Specifies the coefficient precision. User shall set 0
-> +        for 8-bit, and 1 for 16-bit.
+The maximum CPU frequency for the i.MX53 QSB is 1GHz, so disable the
+1.2GHz OPP. This makes the board work with cpufreq again.
 
-So does specifying 1 here switch the HW encoder to use extended profile?
-What if the HW only supports baseline? The rockchip driver doesn't appear
-to check the precision field at all...
+Fixes: 791f416608 ("ARM: dts: imx53: add cpufreq-dt support")
 
-I think this needs a bit more thought.
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ arch/arm/boot/dts/imx53-qsb-common.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-I am not at all sure that this is the right place for the precision field.
-This is really about JPEG profiles, so I would kind of expect a JPEG PROFILE
-control (just like other codec profiles), or possibly a new pixelformat for
-extended profiles.
-
-And based on that the driver would interpret these matrix values as 8 or
-16 bits.
-
-Regards,
-
-	Hans
-
-> +
-> +    * - __u16
-> +      - ``luma_quantization_matrix[64]``
-> +      - Sets the luma quantization table.
-> +
-> +    * - __u16
-> +      - ``chroma_quantization_matrix[64]``
-> +      - Sets the chroma quantization table.
->  
->  .. flat-table::
->      :header-rows:  0
-> diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-> index ca9f0edc579e..a0a38e92bf38 100644
-> --- a/Documentation/media/videodev2.h.rst.exceptions
-> +++ b/Documentation/media/videodev2.h.rst.exceptions
-> @@ -129,6 +129,7 @@ replace symbol V4L2_CTRL_TYPE_STRING :c:type:`v4l2_ctrl_type`
->  replace symbol V4L2_CTRL_TYPE_U16 :c:type:`v4l2_ctrl_type`
->  replace symbol V4L2_CTRL_TYPE_U32 :c:type:`v4l2_ctrl_type`
->  replace symbol V4L2_CTRL_TYPE_U8 :c:type:`v4l2_ctrl_type`
-> +replace symbol V4L2_CTRL_TYPE_JPEG_QUANTIZATION :c:type:`v4l2_ctrl_type`
->  
->  # V4L2 capability defines
->  replace define V4L2_CAP_VIDEO_CAPTURE device-capabilities
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> index 599c1cbff3b9..305bd7a9b7f1 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -999,6 +999,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_JPEG_RESTART_INTERVAL:	return "Restart Interval";
->  	case V4L2_CID_JPEG_COMPRESSION_QUALITY:	return "Compression Quality";
->  	case V4L2_CID_JPEG_ACTIVE_MARKER:	return "Active Markers";
-> +	case V4L2_CID_JPEG_QUANTIZATION:	return "JPEG Quantization Tables";
->  
->  	/* Image source controls */
->  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> @@ -1286,6 +1287,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
->  	case V4L2_CID_DETECT_MD_REGION_GRID:
->  		*type = V4L2_CTRL_TYPE_U8;
->  		break;
-> +	case V4L2_CID_JPEG_QUANTIZATION:
-> +		*type = V4L2_CTRL_TYPE_JPEG_QUANTIZATION;
-> +		break;
->  	case V4L2_CID_DETECT_MD_THRESHOLD_GRID:
->  		*type = V4L2_CTRL_TYPE_U16;
->  		break;
-> @@ -1612,6 +1616,9 @@ static int std_validate(const struct v4l2_ctrl *ctrl, u32 idx,
->  			return -ERANGE;
->  		return 0;
->  
-> +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
-> +		return 0;
-> +
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -2133,6 +2140,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
->  	case V4L2_CTRL_TYPE_U32:
->  		elem_size = sizeof(u32);
->  		break;
-> +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
-> +		elem_size = sizeof(struct v4l2_ctrl_jpeg_quantization);
-> +		break;
->  	default:
->  		if (type < V4L2_CTRL_COMPOUND_TYPES)
->  			elem_size = sizeof(s32);
-> diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> index e4ee10ee917d..856b3325052f 100644
-> --- a/include/uapi/linux/v4l2-controls.h
-> +++ b/include/uapi/linux/v4l2-controls.h
-> @@ -987,6 +987,18 @@ enum v4l2_jpeg_chroma_subsampling {
->  #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
->  #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
->  
-> +#define V4L2_CID_JPEG_QUANTIZATION		(V4L2_CID_JPEG_CLASS_BASE + 5)
-> +struct v4l2_ctrl_jpeg_quantization {
-> +	/* ITU-T.81 specifies two quantization coefficient precisions:
-> +	 * 8-bit for baseline profile,
-> +	 * 8-bit or 16-bit for extended profile.
-> +	 *
-> +	 * User shall set "precision" to 0 for 8-bit and 1 for 16-bit.
-> +	 */
-> +	__u8	precision;
-> +	__u16	luma_quantization_matrix[64];
-> +	__u16	chroma_quantization_matrix[64];
-> +};
->  
->  /* Image source controls */
->  #define V4L2_CID_IMAGE_SOURCE_CLASS_BASE	(V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
-> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> index f9f3ae5b489e..8ace47cb1003 100644
-> --- a/include/uapi/linux/videodev2.h
-> +++ b/include/uapi/linux/videodev2.h
-> @@ -1637,6 +1637,7 @@ enum v4l2_ctrl_type {
->  	V4L2_CTRL_TYPE_U8	     = 0x0100,
->  	V4L2_CTRL_TYPE_U16	     = 0x0101,
->  	V4L2_CTRL_TYPE_U32	     = 0x0102,
-> +	V4L2_CTRL_TYPE_JPEG_QUANTIZATION = 0x0103,
->  };
->  
->  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
-> 
+diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+index 7423d462d1e4..50dde84b72ed 100644
+--- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
++++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+@@ -123,6 +123,17 @@
+ 	};
+ };
+ 
++&cpu0 {
++	/* CPU rated to 1GHz, not 1.2GHz as per the default settings */
++	operating-points = <
++		/* kHz   uV */
++		166666  850000
++		400000  900000
++		800000  1050000
++		1000000 1200000
++	>;
++};
++
+ &esdhc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_esdhc1>;
+-- 
+2.18.0
