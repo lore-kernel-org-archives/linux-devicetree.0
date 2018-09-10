@@ -1,8 +1,8 @@
 From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: [PATCH 1/3] dt-bindings: connector: Add support for USB-PD PPS APDOs
- to bindings
-Date: Mon, 10 Sep 2018 13:19:23 +0100
-Message-ID: <b98c58ca3681d18f44359431a1ccec2fa34023d1.1536580772.git.Adam.Thomson.Opensource@diasemi.com>
+Subject: [PATCH 3/3] usb: typec: fusb302: Populate tcpc fwnode for TCPM
+ property handling
+Date: Mon, 10 Sep 2018 13:19:25 +0100
+Message-ID: <3005ce7723546a48dfad529ce396033a973664b3.1536580772.git.Adam.Thomson.Opensource@diasemi.com>
 References: <cover.1536580772.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -13,74 +13,30 @@ To: Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roec
 Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, support.opensource@diasemi.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for PPS APDOs to connector bindings so a port controller
-can specify support for PPS, as per existing FIXED/BATT/VAR PDOs.
+This update populates the tcpc handle's fwnode pointer with the
+child usb-connector node, if it exists, so that TCPM can perform
+generic property handling to define the ports capabilities.
 
 Signed-off-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 ---
- .../bindings/connector/usb-connector.txt           |  8 +++----
- include/dt-bindings/usb/pd.h                       | 26 ++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 4 deletions(-)
+ drivers/usb/typec/fusb302/fusb302.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-index 8855bfc..d90e17e 100644
---- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-+++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
-@@ -29,15 +29,15 @@ Required properties for usb-c-connector with power delivery support:
-   in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
-   Source_Capabilities Message, the order of each entry(PDO) should follow
-   the PD spec chapter 6.4.1. Required for power source and power dual role.
--  User can specify the source PDO array via PDO_FIXED/BATT/VAR() defined in
--  dt-bindings/usb/pd.h.
-+  User can specify the source PDO array via PDO_FIXED/BATT/VAR/PPS_APDO()
-+  defined in dt-bindings/usb/pd.h.
- - sink-pdos: An array of u32 with each entry providing supported power
-   sink data object(PDO), the detailed bit definitions of PDO can be found
-   in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
-   Sink Capabilities Message, the order of each entry(PDO) should follow
-   the PD spec chapter 6.4.1. Required for power sink and power dual role.
--  User can specify the sink PDO array via PDO_FIXED/BATT/VAR() defined in
--  dt-bindings/usb/pd.h.
-+  User can specify the sink PDO array via PDO_FIXED/BATT/VAR/PPS_APDO() defined
-+  in dt-bindings/usb/pd.h.
- - op-sink-microwatt: Sink required operating power in microwatt, if source
-   can't offer the power, Capability Mismatch is set. Required for power
-   sink and power dual role.
-diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
-index 7b7a92f..985f2bb 100644
---- a/include/dt-bindings/usb/pd.h
-+++ b/include/dt-bindings/usb/pd.h
-@@ -59,4 +59,30 @@
- 	(PDO_TYPE(PDO_TYPE_VAR) | PDO_VAR_MIN_VOLT(min_mv) |	\
- 	 PDO_VAR_MAX_VOLT(max_mv) | PDO_VAR_MAX_CURR(max_ma))
+diff --git a/drivers/usb/typec/fusb302/fusb302.c b/drivers/usb/typec/fusb302/fusb302.c
+index 82bed98..1b464c9 100644
+--- a/drivers/usb/typec/fusb302/fusb302.c
++++ b/drivers/usb/typec/fusb302/fusb302.c
+@@ -1736,6 +1736,9 @@ static int fusb302_probe(struct i2c_client *client,
+ 	chip->tcpc_dev.config = &chip->tcpc_config;
+ 	mutex_init(&chip->lock);
  
-+#define APDO_TYPE_PPS		0
++	chip->tcpc_dev.fwnode =
++		device_get_named_child_node(dev, "connector");
 +
-+#define PDO_APDO_TYPE_SHIFT	28	/* Only valid value currently is 0x0 - PPS */
-+#define PDO_APDO_TYPE_MASK	0x3
-+
-+#define PDO_APDO_TYPE(t)	((t) << PDO_APDO_TYPE_SHIFT)
-+
-+#define PDO_PPS_APDO_MAX_VOLT_SHIFT	17	/* 100mV units */
-+#define PDO_PPS_APDO_MIN_VOLT_SHIFT	8	/* 100mV units */
-+#define PDO_PPS_APDO_MAX_CURR_SHIFT	0	/* 50mA units */
-+
-+#define PDO_PPS_APDO_VOLT_MASK	0xff
-+#define PDO_PPS_APDO_CURR_MASK	0x7f
-+
-+#define PDO_PPS_APDO_MIN_VOLT(mv)	\
-+	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MIN_VOLT_SHIFT)
-+#define PDO_PPS_APDO_MAX_VOLT(mv)	\
-+	((((mv) / 100) & PDO_PPS_APDO_VOLT_MASK) << PDO_PPS_APDO_MAX_VOLT_SHIFT)
-+#define PDO_PPS_APDO_MAX_CURR(ma)	\
-+	((((ma) / 50) & PDO_PPS_APDO_CURR_MASK) << PDO_PPS_APDO_MAX_CURR_SHIFT)
-+
-+#define PDO_PPS_APDO(min_mv, max_mv, max_ma)					\
-+	(PDO_TYPE(PDO_TYPE_APDO) | PDO_APDO_TYPE(APDO_TYPE_PPS) |		\
-+	 PDO_PPS_APDO_MIN_VOLT(min_mv) | PDO_PPS_APDO_MAX_VOLT(max_mv) |	\
-+	 PDO_PPS_APDO_MAX_CURR(max_ma))
-+
-  #endif /* __DT_POWER_DELIVERY_H */
+ 	if (!device_property_read_u32(dev, "fcs,operating-sink-microwatt", &v))
+ 		chip->tcpc_config.operating_snk_mw = v / 1000;
+ 
 -- 
 1.9.1
