@@ -1,60 +1,64 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 10 Sep 2018 13:24:23 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] clk: renesas: cpg-mssr: Add R7S9210 support
-Message-ID: <20180910182423.GA18862@bogus>
-References: <20180907165849.106182-1-chris.brandt@renesas.com>
+Return-Path: <SRS0=auRG=LY=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ua1-f67.google.com ([209.85.222.67]:42889 "EHLO
+        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728127AbeIJTZU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 10 Sep 2018 15:25:20 -0400
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180907165849.106182-1-chris.brandt@renesas.com>
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>
+References: <20180907165849.106182-1-chris.brandt@renesas.com>
+ <CAMuHMdXSmq_niZx6HWO-SYgXyzcUzx6VA+EsgvWNcFciR57CKw@mail.gmail.com> <TY1PR01MB1562E64853EEB282E7D6227B8A050@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1562E64853EEB282E7D6227B8A050@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Sep 2018 16:30:45 +0200
+Message-ID: <CAMuHMdXgDu2SeTqbx0ZVzSZ_QASery--2O23LXJoMgsn3StU7w@mail.gmail.com>
+Subject: Re: [PATCH v4] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Sep 07, 2018 at 11:58:49AM -0500, Chris Brandt wrote:
-> Add support for the R7S9210 (RZ/A2) Clock Pulse Generator and Module
-> Standby.
-> 
-> The Module Standby HW in the RZ/A series is very close to R-Car HW, except
-> for how the registers are laid out.
-> The MSTP registers are only 8-bits wide, there is no status registers
-> (MSTPSR), and the register offsets are a little different. Since the RZ/A
-> hardware manuals refer to these registers as the Standby Control Registers,
-> we'll use that name to distinguish the RZ/A type from the R-Car type.
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
-> v4:
->  * Preserved sort order of SoC listings
->  * Removed R7S9210_CLK_PLL from dt-binding since it's an internal clock
->  * ratio_tab is now a struct making it look a little nicer
->  * Removed CLK_I,...CLK_P0 because they are already defined in dt-bindings
->  * Sorted mod_clks by ascending MSTP number
->  * Removed cast from clk_get_rate(parent)
->  * Corrected register index of stbcr[1]
->  * Don't use MOD_CLK_PACK_10 for non priv->stbyctrl devices (bug fix)
-> v3:
->  * Use actual register bit names and numbers from manual for both DT and
->    tables ("36" instead of "306")
->  * Do not register reset controller for stbyctrl (RZ/A) SoCs
->  * Changed SPDX from "GPL-2.0+" to "GPL-2.0"
-> v2:
->  * num_hw_mod_clks was wrong
->  * added ethernet clocks
-> ---
->  .../devicetree/bindings/clock/renesas,cpg-mssr.txt |   5 +-
->  drivers/clk/renesas/Kconfig                        |   5 +
->  drivers/clk/renesas/Makefile                       |   1 +
->  drivers/clk/renesas/r7s9210-cpg-mssr.c             | 189 +++++++++++++++++++++
->  drivers/clk/renesas/renesas-cpg-mssr.c             |  81 +++++++--
->  drivers/clk/renesas/renesas-cpg-mssr.h             |  13 ++
->  include/dt-bindings/clock/r7s9210-cpg-mssr.h       |  20 +++
+Hi Chris,
 
-For DT bits,
+On Mon, Sep 10, 2018 at 4:16 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Monday, September 10, 2018 1, Geert Uytterhoeven wrote:
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > i.e. will queue in clk-renesas-for-v4.20.
+>
+> Thank you!
+>
+> Now that I have a clock, I can go ahead and submit a Device Tree.
+> However, I still don't have a solution for my OSTM timer driver when
+> using this new clock driver architecture.
+>
+> Should I remove the ostm entries in r7s9210_mod_clks[] before you queue
+> it up?????
 
-Acked-by: Rob Herring <robh@kernel.org>
+I see no issue with converting the OSTM driver to a platform driver (assumed
+it works for you ;-)
 
->  7 files changed, 300 insertions(+), 14 deletions(-)
->  create mode 100644 drivers/clk/renesas/r7s9210-cpg-mssr.c
->  create mode 100644 include/dt-bindings/clock/r7s9210-cpg-mssr.h
+> > One possible area for improvement is removing the unused entries in the
+> > module clocks part of the priv->clks[] array:
+> >
+> > +       .num_hw_mod_clks = 11 * 32, /* includes STBCR0 which doesn't exist
+> > */
+> >
+> > Due to having 8-bit instead of 32-bit registers, 11 * 24 entries are not
+> > used.
+> > Fixing that means adding more checks in several functions, though, so I
+> > don't know if you want to go that far...
+>
+> That's basically why I didn't touch it. I didn't see any big benefit
+> from a system resource point of view.
+
+OK, so you are aware of it.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
