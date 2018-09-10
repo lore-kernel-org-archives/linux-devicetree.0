@@ -1,134 +1,129 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v4 3/4] PCI: mediatek: Add system pm support for MT2712 and MT7622
-Date: Mon, 10 Sep 2018 17:50:22 +0800
-Message-ID: <1536573023-6720-4-git-send-email-honghui.zhang@mediatek.com>
-References: <1536573023-6720-1-git-send-email-honghui.zhang@mediatek.com>
+From: Andre Kalb <Andre.Kalb@sma.de>
+Subject: AW: [PATCH v2] of: __of_update_property_sysfs only call
+ __of_sysfs_remove_bin_file if of_node_is_attached
+Date: Mon, 10 Sep 2018 09:47:56 +0000
+Message-ID: <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
+References: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
+ <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536573023-6720-1-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com
-Cc: ulf.hansson@linaro.org, honghui.zhang@mediatek.com, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
+To: Frank Rowand <frowand.list@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
-
-The MTCMOS of PCIe Host for MT2712 and MT7622 will be off when system
-suspend, and all the internal control register will be reset after system
-resume. The PCIe link should be re-established and the related control
-register values should be re-set after system resume.
-
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 62 ++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
-
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 5aba43a..bcc77bc 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -134,12 +134,14 @@ struct mtk_pcie_port;
- /**
-  * struct mtk_pcie_soc - differentiate between host generations
-  * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-+ * @pm_support: whether the host's MTCMOS will be off when suspend
-  * @ops: pointer to configuration access functions
-  * @startup: pointer to controller setting functions
-  * @setup_irq: pointer to initialize IRQ functions
-  */
- struct mtk_pcie_soc {
- 	bool need_fix_class_id;
-+	bool pm_support;
- 	struct pci_ops *ops;
- 	int (*startup)(struct mtk_pcie_port *port);
- 	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-@@ -1197,12 +1199,70 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
-+
-+	clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	const struct mtk_pcie_soc *soc = pcie->soc;
-+	struct mtk_pcie_port *port, *tmp;
-+
-+	if (!soc->pm_support)
-+		return 0;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	/* In case of EP was removed while system suspend. */
-+	if (list_empty(&pcie->ports))
-+		clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
- };
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1210,6 +1270,7 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt2712 = {
- 
- static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
- 	.need_fix_class_id = true,
-+	.pm_support = true,
- 	.ops = &mtk_pcie_ops_v2,
- 	.startup = mtk_pcie_startup_port_v2,
- 	.setup_irq = mtk_pcie_setup_irq,
-@@ -1229,6 +1290,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
--- 
-2.6.4
+SGkgRnJhbmssDQoNCj4gLS0tLS1VcnNwcsO8bmdsaWNoZSBOYWNocmljaHQtLS0tLQ0KPiBWb246
+IEZyYW5rIFJvd2FuZCBbbWFpbHRvOmZyb3dhbmQubGlzdEBnbWFpbC5jb21dDQo+IEdlc2VuZGV0
+OiBGcmVpdGFnLCA3LiBTZXB0ZW1iZXIgMjAxOCAyMjowMQ0KPiBBbjogQW5kcmUgS2FsYjsgcm9i
+aCtkdEBrZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtl
+cm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gQmV0cmVmZjogUmU6IFtQQVRDSCB2Ml0gb2Y6IF9fb2Zf
+dXBkYXRlX3Byb3BlcnR5X3N5c2ZzIG9ubHkgY2FsbA0KPiBfX29mX3N5c2ZzX3JlbW92ZV9iaW5f
+ZmlsZSBpZiBvZl9ub2RlX2lzX2F0dGFjaGVkDQo+IA0KPiBIaSBBbmRyZWQsDQo+IA0KPiBPbiAw
+OS8wNC8xOCAwODo1MSwgQW5kcmUgS2FsYiB3cm90ZToNCj4gPiBUbyBwcmV2ZW50IHdhcm5pbmcg
+Imtlcm5mczogY2FuIG5vdCByZW1vdmUgJyhudWxsKScsIG5vIGRpcmVjdG9yeSIgaWYgYW4gb3Zl
+cmxheQ0KPiBpc24ndCBhcHBsaWVkIHRvIHRoZSBhY3RpdmUgZGV2aWNldHJlZS4NCj4gPg0KPiA+
+IFVzaW5nIG9mX3JlbW92ZV9wcm9wZXJ0eSBhbmQgdGhlbiBvZl9hZGRfcHJvcGVydHkgZG9lc24n
+dCBzaG93IHRoZQ0KPiB3YXJuaW5nLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5kcmUgS2Fs
+YiA8QW5kcmUuS2FsYkBzbWEuZGU+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiB2MjoNCj4gPiAg
+IC0gRml4IHR5cG8NCj4gPg0KPiA+ICBkcml2ZXJzL29mL2tvYmouYyB8IDIgKy0NCj4gPiAgMSBm
+aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9vZi9rb2JqLmMgYi9kcml2ZXJzL29mL2tvYmouYyBpbmRleA0KPiA+
+IDdhMGExODk4MGI5OC4uOTYyYjY2MGU4YWQxIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvb2Yv
+a29iai5jDQo+ID4gKysrIGIvZHJpdmVycy9vZi9rb2JqLmMNCj4gPiBAQCAtMTA0LDcgKzEwNCw3
+IEBAIHZvaWQgX19vZl91cGRhdGVfcHJvcGVydHlfc3lzZnMoc3RydWN0IGRldmljZV9ub2RlDQo+
+ICpucCwgc3RydWN0IHByb3BlcnR5ICpuZXdwcm9wDQo+ID4gICAgICAgICAgICAgICAgIHN0cnVj
+dCBwcm9wZXJ0eSAqb2xkcHJvcCkgIHsNCj4gPiAgICAgICAgIC8qIEF0IGVhcmx5IGJvb3QsIGJh
+aWwgb3V0IGFuZCBkZWZlciBzZXR1cCB0byBvZl9pbml0KCkgKi8NCj4gPiAtICAgICAgIGlmICgh
+b2Zfa3NldCkNCj4gPiArICAgICAgIGlmICghb2Zfa3NldCB8fCAhb2Zfbm9kZV9pc19hdHRhY2hl
+ZChucCkpDQo+ID4gICAgICAgICAgICAgICAgIHJldHVybjsNCj4gPg0KPiA+ICAgICAgICAgaWYg
+KG9sZHByb3ApDQo+ID4gLS0NCj4gPiAyLjE3LjENCj4gPg0KPiA+DQo+ID4gX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo+ID4NCj4gPiBTTUEgU29s
+YXIgVGVjaG5vbG9neSBBRw0KPiA+IEF1ZnNpY2h0c3JhdDogRHIuIEVyaWsgRWhyZW50cmF1dCAo
+Vm9yc2l0emVuZGVyKQ0KPiA+IFZvcnN0YW5kOiBVbHJpY2ggSGFkZGluZywgRHIuLUluZy4gSnVl
+cmdlbiBSZWluZXJ0LCBQaWVycmUtUGFzY2FsDQo+ID4gVXJib24NCj4gPiBIYW5kZWxzcmVnaXN0
+ZXI6IEFtdHNnZXJpY2h0IEthc3NlbCBIUkIgMzk3MiBTaXR6IGRlciBHZXNlbGxzY2hhZnQ6DQo+
+ID4gMzQyNjYgTmllc3RldGFsIFVTdC1JRC1Oci4gREUgMTEzIDA4IDU5IDU0IFdFRUUtUmVnLi1O
+ci4gREUgOTU4ODExNTANCj4gPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18NCj4gPg0KPiANCj4gV2hhdCBpcyB0aGUgY2FsbGluZyBwYXRoIHRoYXQg
+cmVzdWx0cyBpbiB0aGUgd2FybmluZz8NCj4gDQo+IC1GcmFuaw0KDQpUaGVyZSBpcyB0aGUgY2Fs
+bHN0YWNrIG9mIHRoZSB3YXJuaW5nLg0KDQpbICAgMTAuNzgyODMwXSAtLS0tLS0tLS0tLS1bIGN1
+dCBoZXJlIF0tLS0tLS0tLS0tLS0NClsgICAxMC44MzAzNTddIFdBUk5JTkc6IENQVTogMCBQSUQ6
+IDE3MCBhdCAvbGludXgtNC54L2ZzL2tlcm5mcy9kaXIuYzoxMjc2IGtlcm5mc19yZW1vdmVfYnlf
+bmFtZV9ucysweDMwLzB4ODAoKQ0KWyAgIDEwLjkyODk5N10ga2VybmZzOiBjYW4gbm90IHJlbW92
+ZSAnKG51bGwpJywgbm8gZGlyZWN0b3J5DQpbICAgMTAuOTkzMTA3XSBNb2R1bGVzIGxpbmtlZCBp
+bjogbW9kdWxlX2NhcGVtZ3IoKykNClsgICAxMS4wNDU3NTBdIENQVTogMCBQSUQ6IDE3MCBDb21t
+OiBzeXN0ZW1kLXVkZXZkIE5vdCB0YWludGVkIDQuNC4xNDMtMDAxNTgtZzhlNWNhNjVlYzdlZS1k
+aXJ0eSAjMTE0DQpbICAgMTEuMTU5NzY0XSBIYXJkd2FyZSBuYW1lOiBHZW5lcmljIEFNMzNYWCAo
+RmxhdHRlbmVkIERldmljZSBUcmVlKQ0KWyAgIDExLjI2MDk4OV0gQmFja3RyYWNlOg0KWyAgIDEx
+LjI3NjYxOF0gWzxjMDEwYjUxYz5dIChkdW1wX2JhY2t0cmFjZSkgZnJvbSBbPGMwMTBiNzAwPl0g
+KHNob3dfc3RhY2srMHgxOC8weDFjKQ0KWyAgIDExLjM0MDA5OV0gIHI2OmMwNzFiMjExIHI1OjAw
+MDAwMDA5IHI0OjAwMDAwMDAwIHIzOmQwYzQ4OTZjDQpbICAgMTEuMzk0MDU4XSBbPGMwMTBiNmU4
+Pl0gKHNob3dfc3RhY2spIGZyb20gWzxjMDMzZjIyMD5dIChkdW1wX3N0YWNrKzB4MjAvMHgyOCkN
+ClsgICAxMS40MDE3MDRdIFs8YzAzM2YyMDA+XSAoZHVtcF9zdGFjaykgZnJvbSBbPGMwMTI2ODRj
+Pl0gKHdhcm5fc2xvd3BhdGhfY29tbW9uKzB4OTAvMHhiOCkNClsgICAxMS40NzE3NjVdIFs8YzAx
+MjY3YmM+XSAod2Fybl9zbG93cGF0aF9jb21tb24pIGZyb20gWzxjMDEyNjhhYz5dICh3YXJuX3Ns
+b3dwYXRoX2ZtdCsweDM4LzB4NDApDQpbICAgMTEuNTA5MjQ0XSAgcjg6YmYwMDBkMzAgcjc6NjAw
+ZjAxMTMgcjY6MDAwMDAwMDAgcjU6MDAwMDAwMDAgcjQ6MDAwMDAwMDANClsgICAxMS41NzE0ODNd
+IFs8YzAxMjY4Nzg+XSAod2Fybl9zbG93cGF0aF9mbXQpIGZyb20gWzxjMDI0Y2IyOD5dIChrZXJu
+ZnNfcmVtb3ZlX2J5X25hbWVfbnMrMHgzMC8weDgwKQ0KWyAgIDExLjU4NjYyMF0gIHIzOjAwMDAw
+MDAwIHIyOmMwNzFiMmU3DQpbICAgMTEuNjAzMjkzXSBbPGMwMjRjYWY4Pl0gKGtlcm5mc19yZW1v
+dmVfYnlfbmFtZV9ucykgZnJvbSBbPGMwMjRlMmU4Pl0gKHN5c2ZzX3JlbW92ZV9iaW5fZmlsZSsw
+eDFjLzB4MjApDQpbICAgMTEuNjY1MzU3XSAgcjY6Y2Y2ZDI2NjQgcjU6Y2Y2ZDI2NjQgcjQ6Y2Y2
+ZDI3ZTQgcjM6Y2YwOTk1ODANClsgICAxMS43MDMzNDddIFs8YzAyNGUyY2M+XSAoc3lzZnNfcmVt
+b3ZlX2Jpbl9maWxlKSBmcm9tIFs8YzA0OGQ0ZDQ+XSAoX19vZl9zeXNmc19yZW1vdmVfYmluX2Zp
+bGUrMHgxYy8weDI4KQ0KWyAgIDExLjc1MDU4N10gWzxjMDQ4ZDRiOD5dIChfX29mX3N5c2ZzX3Jl
+bW92ZV9iaW5fZmlsZSkgZnJvbSBbPGMwNDhkNjc0Pl0gKF9fb2ZfdXBkYXRlX3Byb3BlcnR5X3N5
+c2ZzKzB4MzQvMHg0OCkNClsgICAxMS44MDU5NTRdICByNDpjZjUzYjU5MCByMzpjZjA5OTU4MA0K
+WyAgIDExLjgyNTE4NF0gWzxjMDQ4ZDY0MD5dIChfX29mX3VwZGF0ZV9wcm9wZXJ0eV9zeXNmcykg
+ZnJvbSBbPGMwNDhkNzI0Pl0gKG9mX3VwZGF0ZV9wcm9wZXJ0eSsweDljLzB4ZGMpDQpbICAgMTEu
+ODkxMjQzXSAgcjU6Y2Y1M2I1OTAgcjQ6MDAwMDAwMDANClsgICAxMS45MDQxODZdIFs8YzA0OGQ2
+ODg+XSAob2ZfdXBkYXRlX3Byb3BlcnR5KSBmcm9tIFs8YmYwMDA2NzQ+XSAobW9kdWxlX2NhcGVt
+Z3Jfc2xvdF9zY2FuKzB4NTkwLzB4NjljIFttb2R1bGVfY2FwZW1ncl0pDQpbICAgMTIuMDA1Mjc3
+XSAgcjc6MDAwMDAwMDEgcjY6MDAwMDAwMDAgcjU6Y2YxOTE2MTAgcjQ6Y2Y1M2I1OTANClsgICAx
+Mi4wMTEzNzNdIFs8YmYwMDAwZTQ+XSAobW9kdWxlX2NhcGVtZ3Jfc2xvdF9zY2FuIFttb2R1bGVf
+Y2FwZW1ncl0pIGZyb20gWzxiZjAwMDdiYz5dIChtb2R1bGVfY2FwZW1ncl9wcm9iZSsweDNjLzB4
+NTggW21vZHVsZV9jYXBlbWdyXSkNClsgICAxMi4xMTUzMTBdICByMTA6YmYwMDBlNGMgcjk6MDAw
+MDAwMDQgcjg6YzA5NjgxNjAgcjc6MDAwMDAwMDAgcjY6YmYwMDBjZTQgcjU6YmYwMDA3ODANClsg
+ICAxMi4xMjgxNDNdICByNDpjZjE5MTYwMA0KWyAgIDEyLjE1NTAyM10gWzxiZjAwMDc4MD5dICht
+b2R1bGVfY2FwZW1ncl9wcm9iZSBbbW9kdWxlX2NhcGVtZ3JdKSBmcm9tIFs8YzAzYjU0NjQ+XSAo
+cGxhdGZvcm1fZHJ2X3Byb2JlKzB4NTgvMHhhNCkNClsgICAxMi4xODQ4NjFdICByNDpjZjE5MTYx
+MCByMzpmZmZmZmRmYg0KWyAgIDEyLjIwNDk0OV0gWzxjMDNiNTQwYz5dIChwbGF0Zm9ybV9kcnZf
+cHJvYmUpIGZyb20gWzxjMDNiM2E0Yz5dIChkcml2ZXJfcHJvYmVfZGV2aWNlKzB4MTk0LzB4NDE0
+KQ0KWyAgIDEyLjI1NDIyOF0gIHI2OmMwOTk1MzhjIHI1OmJmMDAwY2U0IHI0OmNmMTkxNjEwIHIz
+OmMwM2I1NDBjDQpbICAgMTIuMjYwMzA1XSBbPGMwM2IzOGI4Pl0gKGRyaXZlcl9wcm9iZV9kZXZp
+Y2UpIGZyb20gWzxjMDNiM2QzYz5dIChfX2RyaXZlcl9hdHRhY2grMHg3MC8weDk0KQ0KWyAgIDEy
+LjI5NDgzMl0gIHI5OmMwOTAyMDRjIHI4OmMwOTY4MDg4IHI3OjAwMDAwMDAwIHI2OmJmMDAwY2U0
+IHI1OmNmMTkxNjQ0IHI0OmNmMTkxNjEwDQpbICAgMTIuMzA5NjgwXSBbPGMwM2IzY2NjPl0gKF9f
+ZHJpdmVyX2F0dGFjaCkgZnJvbSBbPGMwM2IxY2U0Pl0gKGJ1c19mb3JfZWFjaF9kZXYrMHg3Yy8w
+eDkwKQ0KWyAgIDEyLjM3NDQ4MF0gIHI2OmMwM2IzY2NjIHI1OmJmMDAwY2U0IHI0OjAwMDAwMDAw
+IHIzOmMwM2IzY2NjDQpbICAgMTIuMzkwNjM4XSBbPGMwM2IxYzY4Pl0gKGJ1c19mb3JfZWFjaF9k
+ZXYpIGZyb20gWzxjMDNiMzQ1OD5dIChkcml2ZXJfYXR0YWNoKzB4MjAvMHgyOCkNClsgICAxMi40
+MjQ3MTldICByNjpjMDkzYzAwMCByNTpjZjVhYTE4MCByNDpiZjAwMGNlNA0KWyAgIDEyLjQ0NDAy
+OV0gWzxjMDNiMzQzOD5dIChkcml2ZXJfYXR0YWNoKSBmcm9tIFs8YzAzYjJmYTQ+XSAoYnVzX2Fk
+ZF9kcml2ZXIrMHgxMWMvMHgyNDgpDQpbICAgMTIuNDg2NzEzXSBbPGMwM2IyZTg4Pl0gKGJ1c19h
+ZGRfZHJpdmVyKSBmcm9tIFs8YzAzYjQzZjg+XSAoZHJpdmVyX3JlZ2lzdGVyKzB4YTQvMHhlOCkN
+ClsgICAxMi41NDg4OTZdICByODowMDAwMDAwMCByNzpjMDkwNGQ2MCByNjpiZjAwMzAwMCByNTpj
+MDkwNGQ2MCByNDpiZjAwMGNlNA0KWyAgIDEyLjU3ODk0N10gWzxjMDNiNDM1ND5dIChkcml2ZXJf
+cmVnaXN0ZXIpIGZyb20gWzxjMDNiNTM3Yz5dIChfX3BsYXRmb3JtX2RyaXZlcl9yZWdpc3Rlcisw
+eDM4LzB4NGMpDQpbICAgMTIuNjI5ODU3XSAgcjU6YzA5MDRkNjAgcjQ6Y2Y2NmY3MDANClsgICAx
+Mi42MzY5NTVdIFs8YzAzYjUzNDQ+XSAoX19wbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIpIGZyb20g
+WzxiZjAwMzAxOD5dIChtb2R1bGVfY2FwZW1ncl9kcml2ZXJfaW5pdCsweDE4LzB4MjQgW21vZHVs
+ZV9jYXBlbWdyXSkNClsgICAxMi43MTA1MTJdIFs8YmYwMDMwMDA+XSAobW9kdWxlX2NhcGVtZ3Jf
+ZHJpdmVyX2luaXQgW21vZHVsZV9jYXBlbWdyXSkgZnJvbSBbPGMwMTAxNzk0Pl0gKGRvX29uZV9p
+bml0Y2FsbCsweDFiNC8weDFmOCkNClsgICAxMi43NDM3ODhdIFs8YzAxMDE1ZTA+XSAoZG9fb25l
+X2luaXRjYWxsKSBmcm9tIFs8YzAxYTc0ZWM+XSAoZG9faW5pdF9tb2R1bGUrMHg2NC8weDFjMCkN
+ClsgICAxMi43NTIzNTBdICByOTowMDAwMDAwMCByODpjZjY2ZGVjMCByNzowMDAwMDAxOCByNjpj
+ZjY2Zjc0MCByNTpiZjAwMGU0MCByNDpiZjAwMGU0MA0KWyAgIDEyLjc4OTY3M10gWzxjMDFhNzQ4
+OD5dIChkb19pbml0X21vZHVsZSkgZnJvbSBbPGMwMTgwYzg0Pl0gKGxvYWRfbW9kdWxlKzB4MThm
+NC8weDE5OTgpDQpbICAgMTIuODE5MzI4XSAgcjY6MDAwMDAwMDAgcjU6YmYwMDBlNDAgcjQ6Y2Y2
+NmRmNDQNClsgICAxMi44NDMzNjhdIFs8YzAxN2YzOTA+XSAobG9hZF9tb2R1bGUpIGZyb20gWzxj
+MDE4MGYzMD5dIChTeVNfZmluaXRfbW9kdWxlKzB4OTAvMHhhOCkNClsgICAxMi44NzgzODddICBy
+MTA6MDAwMDAwODAgcjk6Y2Y2NmMwMDAgcjg6YzAxMDdhNDQgcjc6MDAwMDAxN2IgcjY6MDAwMDAw
+MDcgcjU6MDBhZTM2ODgNClsgICAxMi45MDc2MjddICByNDowMDAwMDAwMA0KWyAgIDEyLjkxMDM4
+Nl0gWzxjMDE4MGVhMD5dIChTeVNfZmluaXRfbW9kdWxlKSBmcm9tIFs8YzAxMDdhMjA+XSAoX19z
+eXNfdHJhY2VfcmV0dXJuKzB4MC8weDEwKQ0KWyAgIDEyLjk0MDY0M10gIHI2OjAwMDAwMDAwIHI1
+OjAwMDAwMDAwIHI0OjAwYWUzZDgwDQpbICAgMTIuOTY2MTUzXSAtLS1bIGVuZCB0cmFjZSA1Mzkw
+ZGVjNTRmMTJlZDExIF0tLS0NCg0KQmVzdCByZWdhcmRzLA0KQW5kcmUgS2FsYg0K
