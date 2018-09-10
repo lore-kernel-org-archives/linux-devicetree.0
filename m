@@ -1,14 +1,14 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Subject: Re: [PATCH v9 2/9] media: v4l: Add definitions for
  MPEG-2 slice format and metadata
-Date: Mon, 10 Sep 2018 11:41:18 +0200
-Message-ID: <9a7fd34d-50e3-4db6-4752-9e62bb160655@xs4all.nl>
+Date: Mon, 10 Sep 2018 11:45:22 +0200
+Message-ID: <3133cebf-2980-8f3d-4900-f410d4a704fc@xs4all.nl>
 References: <20180906222442.14825-1-contact@paulk.fr>
  <20180906222442.14825-3-contact@paulk.fr>
 Reply-To: hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBC3MVVMX3ELBBQ7Y3DOAKGQEFFK4VDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBC3MVVMX3ELBBN723DOAKGQETJOFL2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180906222442.14825-3-contact-W9ppeneeCTY@public.gmane.org>
 Content-Language: en-US
@@ -98,7 +98,9 @@ On 09/07/2018 12:24 AM, Paul Kocialkowski wrote:
 > +      - Index for the V4L2 buffer to use as forward reference, used with
 > +	P-coded frames.
 
-Should this be "B-coded frames"?
+Do these indices refer to the output or capture buffers? I think these should
+refer to the output buffers, since this control is used in a request for the
+output side.
 
 Regards,
 
