@@ -1,138 +1,127 @@
-From: Jonas Gorski <jonas.gorski@gmail.com>
-Subject: Re: [PATCH 4/5] dt-bindings: mtd: describe BCM963XX ImageTag format
- and usage
-Date: Mon, 10 Sep 2018 11:02:40 +0200
-Message-ID: <CAOiHx=koYJR_m1RdxxSjxQH-8MuWBw18YfNDun3OWnca=CoT_g@mail.gmail.com>
-References: <20180828111944.5956-1-jonas.gorski@gmail.com>
- <20180828111944.5956-5-jonas.gorski@gmail.com>
- <5b8e8a58.1c69fb81.12eaa.f292@mx.google.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 3/4] of: Convert to using %pOFn instead of
+ device_node.name
+Date: Mon, 10 Sep 2018 11:06:25 +0200
+Message-ID: <20180910090625.GA702@ulmo>
+References: <20180828155254.10709-1-robh@kernel.org>
+ <20180828155254.10709-4-robh@kernel.org>
+ <20180907122928.GA5821@ulmo>
+ <0999919005219fa94ccc69ff57659d47911d3abd.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <5b8e8a58.1c69fb81.12eaa.f292@mx.google.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0999919005219fa94ccc69ff57659d47911d3abd.camel@perches.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 4 September 2018 at 02:30, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Aug 28, 2018 at 01:19:43PM +0200, Jonas Gorski wrote:
->> Describe how to use the BCM963XX ImageTag format in a mixed flash layout
->> environment.
->>
->> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
->> ---
->>  .../mtd/partitions/brcm,bcm963xx-imagetag.txt      | 78 ++++++++++++++++++++++
->>  1 file changed, 78 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
->> new file mode 100644
->> index 000000000000..f4a444d69d9a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
->> @@ -0,0 +1,78 @@
->> +Broadcom BCM963XX ImageTag Partition Container
->> +==============================================
->> +
->> +Some Broadcom BCM63XX SoC based devices contain additional, non discoverable
->> +partitions or non standard bootloader partition sizes. For these a mixed layout
->> +needs to be used with an explicit firmware partition.
->> +
->> +The BCM963XX ImageTag is a simple firmware header describing the offsets and
->> +sizes of the rootfs and kernel parts contained in the firmware.
->> +
->> +Required properties:
->> +- compatible : must be "brcm,bcm963xx-imagetag"
->> +
->> +Examples:
->> +
->> +flash@1e000000 {
->> +     compatible = "cfi-flash";
->> +     reg = <0x1e000000 0x2000000>;
->> +     bank-width = <2>;
->> +
->> +     partitions {
->> +             compatible = "fixed-partitions";
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +
->> +             cfe@0 {
->> +                     reg = <0x0 0x10000>;
->> +                     read-only;
->> +             };
->> +
->> +             firmware@10000 {
->> +                     reg = <0x10000 0x7d0000>;
->> +                     compatible = "brcm,bcm963xx-imagetag";
->> +             };
->> +
->> +             caldata@7e0000 {
->> +                     reg = <0x7e0000 0x10000>;
->> +                     read-only;
->> +             };
->> +
->> +             nvram@7f0000 {
->> +                     reg = <0x7f0000 0x10000>;
->> +             };
->> +     };
->> +};
->> +
->> +
->> +flash@1e000000 {
->> +     compatible = "cfi-flash";
->> +     reg = <0x1e000000 0x2000000>;
->> +     bank-width = <2>;
->> +
->> +     partitions {
->> +             compatible = "fixed-partitions";
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +
->> +             /*
->> +              * Some devices use a flash chip with 64k erase blocks, some
->> +              * use one with 128k erase blocks, so the vendor decided to
->> +              * always use 128k as the firmware offset.
->> +              */
->
-> That's a interesting piece of info, but not really a reason to have a
-> second example.
 
-Generally, I'd rather have one example too many than one too few, but
-I can drop it if you think it's unnecessary. If I do that, can I add
-your Ack then here as well for the v2?
+--pf9I7BMVVzbSWLtt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->
->> +
->> +             cfe@0 {
->> +                     reg = <0x0 0x20000>;
->> +                     read-only;
->> +             };
->> +
->> +             firmware@20000 {
->> +                     reg = <0x20000 0x7c0000>;
->> +                     compatible = "brcm,bcm963xx-imagetag";
->> +             };
->> +
->> +             nvram@7e0000 {
->> +                     reg = <0x7e0000 0x20000>;
->> +             };
->> +     };
->> +};
->> --
->> 2.13.2
->>
->
+On Fri, Sep 07, 2018 at 05:30:23PM -0700, Joe Perches wrote:
+> On Fri, 2018-09-07 at 14:29 +0200, Thierry Reding wrote:
+> > On Tue, Aug 28, 2018 at 10:52:53AM -0500, Rob Herring wrote:
+> > > In preparation to remove the node name pointer from struct device_nod=
+e,
+> > > convert printf users to use the %pOFn format specifier.
+> > >=20
+> > > Cc: Frank Rowand <frowand.list@gmail.com>
+> > > Cc: Andrew Lunn <andrew@lunn.ch>
+> > > Cc: Florian Fainelli <f.fainelli@gmail.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: netdev@vger.kernel.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > >  drivers/of/device.c   |  4 ++--
+> > >  drivers/of/of_mdio.c  | 12 ++++++------
+> > >  drivers/of/of_numa.c  |  4 ++--
+> > >  drivers/of/overlay.c  |  4 ++--
+> > >  drivers/of/platform.c |  8 ++++----
+> > >  drivers/of/unittest.c | 12 ++++++------
+> > >  6 files changed, 22 insertions(+), 22 deletions(-)
+> > >=20
+> > > diff --git a/drivers/of/device.c b/drivers/of/device.c
+> > > index 5957cd4fa262..daa075d87317 100644
+> > > --- a/drivers/of/device.c
+> > > +++ b/drivers/of/device.c
+> > > @@ -219,7 +219,7 @@ static ssize_t of_device_get_modalias(struct devi=
+ce *dev, char *str, ssize_t len
+> > >  		return -ENODEV;
+> > > =20
+> > >  	/* Name & Type */
+> > > -	csize =3D snprintf(str, len, "of:N%sT%s", dev->of_node->name,
+> > > +	csize =3D snprintf(str, len, "of:N%pOFnT%s", dev->of_node,
+> > >  			 dev->of_node->type);
+> > >  	tsize =3D csize;
+> > >  	len -=3D csize;
+> >=20
+> > This seems to cause the modalias to be improperly constructed. As a
+> > consequence, automatic module loading at boot time is now broken. I
+> > think the reason why this fails is because vsnprintf() will skip all
+> > alpha-numeric characters after a call to pointer(). Presumably this
+> > is meant to be a generic way of skipping whatever specifiers we throw
+> > at it.
+> >=20
+> > Unfortunately for the case of OF modaliases, this means that the 'T'
+> > character gets eaten, so we end up with something like this:
+> >=20
+> > 	# udevadm info /sys/bus/platform/devices/54200000.dc
+> > 	[...]
+> > 	E: MODALIAS=3Dof:Ndc<NULL>Cnvidia,tegra124-dc
+> > 	[...]
+> >=20
+> > instead of this:
+> >=20
+> > 	# udevadm info /sys/bus/platform/devices/54200000.dc
+> > 	[...]
+> > 	E: MODALIAS=3Dof:NdcT<NULL>Cnvidia,tegra124-dc
+> > 	[...]
+> >=20
+> > Everything is back to normal if I revert this patch. However, since
+> > that's obviously not what we want, I think perhaps what we need is a
+> > way for pointer() (and its implementations) to report back how many
+> > characters in the format string it consumed so that we can support
+> > these kinds of back-to-back strings.
+> >=20
+> > If nobody else has the time I can look into coding up a fix, but in the
+> > meantime it might be best to back this one out until we can handle the
+> > OF modalias format string.
+>=20
+> Or just use 2 consecutive snprintf calls
+>=20
+> 	csize =3D snprintf(str, len, "of:N%pOFn", dev->of_node);
+> 	csize +=3D snprintf(str + csize, len - csize, "T%s",
+> 			  dev->of_node->type);
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Yeah, that's what I ended up doing. Rob came up with another alternative
+which is to output the 'T' via %c, which also works around the issue.
+
+Thierry
+
+--pf9I7BMVVzbSWLtt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluWNAwACgkQ3SOs138+
+s6Gokg/+K3EawlUajE6ZpjcPOUOT9YUvcNEj3Z0/11JF7nBbZ52sBrBs7PEOdLWW
+Rgw3+5UX70U5o/oB2+d0m9mCS6zk5zsqAhDacU/3xEHod64qdjexPuU4VH1skk2Q
+2m/Tx3Z/aivJAKjovI5IRjk8lD3RUVkTk1x3Jw2BrNxtahYygKNNeh3aqrjHqonm
+DFaZBn6gBGMeDSGFVL0n2X+5rE0NJFLIhbBs0isfQppTZeerqawm25i0r+vT/IJd
+lGYar4hPqFb9VGtBwe0rZ6hg0j7f1BI+JUe4tV/XmGmKLJJc5IWBhAwlsNCwjFpt
+UN3NtJBv5oWOAazcvV/YrCxk/C5dzdNRgp6ccbcc2GUHlqHnvs86dcNlvhv3DcBG
+B+umZbQC+b30qyZs4xcZUAg7qygf22BbyAF+OMDxn9YR6GIivqNgSJTtTErAExLB
+HtSS1awvtCETNlgNY5vy/Nh0Jnzm5XzUAauuO467e/OzqWgN0IQCteNlWpD9ZNOe
+RNEUWEdb49qN2coDLi/pi4Mc+nkHhFcQ+rfQDN5OKwcomx9dE5XHNzPTJmsLbbAr
+2Z/7P+g2IePJOUpVWUvz+wcESGCExsd+rgXHYUC+HYekCSJal2MtfkP1zMoFfefH
+hlistUPBmCXmJpHokHsq0QLPK04lpp2P8hMBic9YXcOyKw1ShDI=
+=TA2P
+-----END PGP SIGNATURE-----
+
+--pf9I7BMVVzbSWLtt--
