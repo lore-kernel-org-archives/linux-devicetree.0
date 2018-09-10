@@ -1,40 +1,31 @@
-Return-Path: <SRS0=ucpJ=LP=gmail.com=semtax33@kernel.org>
-From: sim manseop <semtax33@gmail.com>
-Subject: [PATCH v3 2/2] dt-bindings: i2c: Fix SMBus typo
-Date: Sat,  1 Sep 2018 09:49:12 +0000
-Message-Id: <20180901094912.2403-1-semtax33@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: robh@kernel.org, sim manseop <semtax33@gmail.com>
+Return-Path: <SRS0=Yqoh=LY=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH 0/5] Add VIN support to RZ/G2M
+Date: Mon, 10 Sep 2018 15:31:13 +0100
+Message-Id: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo 'SMbus' to 'SMBus'
+This patch series aims to add VIN support for RZ/G2M SoC.
+RZ/G2M SoC is similar to R-Car Gen3 M3-W SoC.
 
-Signed-off-by: manseop sim <semtax33@gmail.com>
+This patchset is based on media_tree git and 
+renesas-devel-20180906-v4.19-rc2.
 
----
-Changes in v3:
-- modifing subject
+Biju Das (5):
+  media: dt-bindings: media: rcar-csi2: Add r8a774a1 support
+  media: rcar-csi2: Enable support for r8a774a1
+  media: dt-bindings: media: rcar_vin: Add r8a774a1 support
+  media: rcar-vin: Enable support for r8a774a1
+  arm64: dts: renesas: r8a774a1: Add VIN and CSI-2 nodes
 
----
-Changes in v2:
-- modifing subject
-- changed commit message
----
- Documentation/devicetree/bindings/i2c/i2c.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/media/rcar_vin.txt         |   5 +-
+ .../bindings/media/renesas,rcar-csi2.txt           |   5 +-
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi          | 367 +++++++++++++++++++++
+ drivers/media/platform/rcar-vin/rcar-core.c        |   4 +
+ drivers/media/platform/rcar-vin/rcar-csi2.c        |   4 +
+ 5 files changed, 381 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 11263982470e..44efafdfd7f5 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -84,7 +84,7 @@ Binding may contain optional "interrupts" property, describing interrupts
- used by the device. I2C core will assign "irq" interrupt (or the very first
- interrupt if not using interrupt names) as primary interrupt for the slave.
- 
--Alternatively, devices supporting SMbus Host Notify, and connected to
-+Alternatively, devices supporting SMBus Host Notify, and connected to
- adapters that support this feature, may use "host-notify" property. I2C
- core will create a virtual interrupt for Host Notify and assign it as
- primary interrupt for the slave.
 -- 
-2.17.1
+2.7.4
