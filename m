@@ -1,95 +1,123 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] of: Split up name & type in modalias generation
-Date: Mon, 10 Sep 2018 11:08:20 +0200
-Message-ID: <20180910090820.GB702@ulmo>
-References: <20180907142247.2931-1-thierry.reding@gmail.com>
- <CAL_JsqJ0VZftZ+Qve+=91tbvgYof68NW+dBf4bPv+b8uQ0y1hg@mail.gmail.com>
- <32ff0b7e-a710-2c23-75ad-8c527d3453c7@gmail.com>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: mtd: describe BCM963XX ImageTag format
+ and usage
+Date: Mon, 10 Sep 2018 11:09:09 +0200
+Message-ID: <CAOiHx=n+m7je_syF0-606N9foPBibjTUMvpaDstywit5GUO5cA@mail.gmail.com>
+References: <20180828111944.5956-1-jonas.gorski@gmail.com>
+ <20180828111944.5956-5-jonas.gorski@gmail.com>
+ <5b8e8a58.1c69fb81.12eaa.f292@mx.google.com>
+ <CAOiHx=koYJR_m1RdxxSjxQH-8MuWBw18YfNDun3OWnca=CoT_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <32ff0b7e-a710-2c23-75ad-8c527d3453c7@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAOiHx=koYJR_m1RdxxSjxQH-8MuWBw18YfNDun3OWnca=CoT_g@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 10 September 2018 at 11:02, Jonas Gorski <jonas.gorski@gmail.com> wrote:
+> On 4 September 2018 at 02:30, Rob Herring <robh@kernel.org> wrote:
+>> On Tue, Aug 28, 2018 at 01:19:43PM +0200, Jonas Gorski wrote:
+>>> Describe how to use the BCM963XX ImageTag format in a mixed flash layout
+>>> environment.
+>>>
+>>> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+>>> ---
+>>>  .../mtd/partitions/brcm,bcm963xx-imagetag.txt      | 78 ++++++++++++++++++++++
+>>>  1 file changed, 78 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+>>> new file mode 100644
+>>> index 000000000000..f4a444d69d9a
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+>>> @@ -0,0 +1,78 @@
+>>> +Broadcom BCM963XX ImageTag Partition Container
+>>> +==============================================
+>>> +
+>>> +Some Broadcom BCM63XX SoC based devices contain additional, non discoverable
+>>> +partitions or non standard bootloader partition sizes. For these a mixed layout
+>>> +needs to be used with an explicit firmware partition.
+>>> +
+>>> +The BCM963XX ImageTag is a simple firmware header describing the offsets and
+>>> +sizes of the rootfs and kernel parts contained in the firmware.
+>>> +
+>>> +Required properties:
+>>> +- compatible : must be "brcm,bcm963xx-imagetag"
+>>> +
+>>> +Examples:
+>>> +
+>>> +flash@1e000000 {
+>>> +     compatible = "cfi-flash";
+>>> +     reg = <0x1e000000 0x2000000>;
+>>> +     bank-width = <2>;
+>>> +
+>>> +     partitions {
+>>> +             compatible = "fixed-partitions";
+>>> +             #address-cells = <1>;
+>>> +             #size-cells = <1>;
+>>> +
+>>> +             cfe@0 {
+>>> +                     reg = <0x0 0x10000>;
+>>> +                     read-only;
+>>> +             };
+>>> +
+>>> +             firmware@10000 {
+>>> +                     reg = <0x10000 0x7d0000>;
+>>> +                     compatible = "brcm,bcm963xx-imagetag";
+>>> +             };
+>>> +
+>>> +             caldata@7e0000 {
+>>> +                     reg = <0x7e0000 0x10000>;
+>>> +                     read-only;
+>>> +             };
+>>> +
+>>> +             nvram@7f0000 {
+>>> +                     reg = <0x7f0000 0x10000>;
+>>> +             };
+>>> +     };
+>>> +};
+>>> +
+>>> +
+>>> +flash@1e000000 {
+>>> +     compatible = "cfi-flash";
+>>> +     reg = <0x1e000000 0x2000000>;
+>>> +     bank-width = <2>;
+>>> +
+>>> +     partitions {
+>>> +             compatible = "fixed-partitions";
+>>> +             #address-cells = <1>;
+>>> +             #size-cells = <1>;
+>>> +
+>>> +             /*
+>>> +              * Some devices use a flash chip with 64k erase blocks, some
+>>> +              * use one with 128k erase blocks, so the vendor decided to
+>>> +              * always use 128k as the firmware offset.
+>>> +              */
+>>
+>> That's a interesting piece of info, but not really a reason to have a
+>> second example.
+>
+> Generally, I'd rather have one example too many than one too few, but
+> I can drop it if you think it's unnecessary. If I do that, can I add
+> your Ack then here as well for the v2?
 
---+g7M9IMkV8truYOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Of course a reviewed-by, not an Ack.
 
-On Fri, Sep 07, 2018 at 12:56:09PM -0700, Frank Rowand wrote:
-> On 09/07/18 11:49, Rob Herring wrote:
-> > On Fri, Sep 7, 2018 at 9:22 AM Thierry Reding <thierry.reding@gmail.com=
-> wrote:
-> >>
-> >> From: Thierry Reding <treding@nvidia.com>
-> >>
-> >> The kernel's vsnprintf() implementation discards all alpha-numeric
-> >> characters following a %p conversion specifier. This is done in order =
-to
-> >> generically skip any of the various modifiers that the kernel supports.
-> >> Unfortunately, the OF modalias is generated with a format string that
-> >> violates the assumption made by vsnprintf():
-> >>
-> >>         of:N%pOFnT%s
-> >>
-> >> While processing the above format string, vsnprintf() will eat the 'T'
-> >> character, assuming that it belongs to the preceeding %p specifier. Th=
-is
-> >> results in a modalias with an incompatible format, which in turn causes
-> >> the automatic loading of drivers based on modalias to no longer work.
-> >>
-> >> To fix this, split up the generation of the name & type fields into two
-> >> separate snprintf() calls to avoid confusing the parser.
-> >>
-> >> Fixes: 73813f8483b1 ("of: Convert to using %pOFn instead of device_nod=
-e.name")
-> >> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> >> ---
-> >> Note that a more elegant fix would be to make the %p format specifier
-> >> parser report back the exact number of characters consumed. I briefly
-> >> tried to implement it, but quickly ran into numerous special cases
-> >> that make this solution rather involved.
-> >>
-> >> I can spend some more time to improve this in general if that's what we
-> >> ultimately want, but I think this patch is a better short-term fix to
-> >> workaround the issue.
-> >=20
-> > See my reply on the original patch. I've updated the patch in my
-> > dt/next branch with the fix to use %c.
-> >=20
-> > Rob
-> >=20
->=20
-> Agreed, your updated patch is more compact and looks cleaner.
 
-Not sure about "cleaner", but yeah, that works as well.
+Jonas
 
-Thierry
-
---+g7M9IMkV8truYOl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluWNIQACgkQ3SOs138+
-s6FxtA/8CkU+Oilip3vkyQ8zmTV9Xx9m9Vu3e9+JcvWaGt2cY/xNd6ALpt7KsTm4
-K10jW+Jam9u4KPN6IeIHQD6bFgOxU9BJewEFA4WmKE2cO2ttlsNIApgqBFuSrwOX
-xR/mUXUGrIX9vtw7Bg2vjiCzX6eSjJt7XsFMVOD/P7aMSeMyv5p8/Qwcmh7/t4rj
-iZ64lB194AdtcR/7gdBXiOtpu9R5NFWZSjcwIiln0cHpsW7vzzIhLfqMKwEJ0E0F
-Iolfc3FqnxWO+Iv43Fqhh9rtqjuYrJfECGN38fNkxa/8SblEUMrVi2+tWhBiie6J
-NGope74WcAulWExj4j2dDAFVxCEcMnqdg9rrUYZiNr5JhQhrxzM1Lbn0UQfaACli
-fn9VnlRaF1PvXxgUb/3J29GKsdI3OzS2YFuPRdFjFyXff+k2iJsjapOCUvC+p/M8
-IDrs/ms1ouaZCRxPWSpazM3+28Eh20nUB9f8KuerdqMIwOsaKPgPVd7aiZURFvBV
-trRB1CDBeGA+s6cZxQzyHDeRkDjGLersietcfjBShEhhS4Wthahr2tYGwxdB81+y
-/rxQdxHTZnQy3AqDoEMRZSxnazpk6W7hxuEuUX/DKDOHW0nodvPlIJNnsdiEyIyp
-Fc2bLClevU0Ha5cS6HPfw5H2+IgnVkWGgQcreIQ/VLkBS8uMNOs=
-=03b9
------END PGP SIGNATURE-----
-
---+g7M9IMkV8truYOl--
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
