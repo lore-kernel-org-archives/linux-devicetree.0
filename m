@@ -1,65 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
- v4.20 merge window
-Date: Mon, 10 Sep 2018 16:18:03 +0100
-Message-ID: <20180910151803.GX28860@dell>
-References: <20180713164736.26028-1-radu.pirea@microchip.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Mon, 10 Sep 2018 16:19:26 +0100
+Message-ID: <20180910151926.GA10889@sirena.org.uk>
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
+ <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+ <20180802113552.GJ9117@sirena.org.uk>
+ <20180827014815.GD29208@dragon>
+ <20180906101516.GA5360@sirena.org.uk>
+ <20180909020021.GA18838@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180713164736.26028-1-radu.pirea@microchip.com>
+In-Reply-To: <20180909020021.GA18838@dragon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu.pirea@microchip.com>
-Cc: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
 
-The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
+On Sun, Sep 09, 2018 at 10:00:23AM +0800, Shawn Guo wrote:
+> On Thu, Sep 06, 2018 at 11:15:17AM +0100, Mark Brown wrote:
 
-are available in the Git repository at:
+> > I was expecting to get a pull request with the precursor patches in it -
+> > the regulator driver seems to get a moderate amount of development so
+> > there's a reasonable risk of conflicts.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
+> What about you create a stable topic branch for regulator patches and I
+> pull it into IMX tree?
 
-for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
+Sure, I can send a pull request back but the first two patches in the
+series are ARM ones - are you OK with me just applying them and sending
+them in the pull request or do you want to apply them first?
 
-  tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
 
-----------------------------------------------------------------
-Immutable branch between MFD, SPI and TTY due for the v4.20 merge window
+-----BEGIN PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Radu Pirea (6):
-      MAINTAINERS: Add AT91 USART MFD entry
-      dt-bindings: Add binding for atmel-usart in SPI mode
-      mfd: at91-usart: Add MFD driver for USART
-      MAINTAINERS: Add AT91 USART SPI entry
-      spi: at91-usart: Add driver for at91-usart as SPI
-      tty/serial: atmel: Change the driver to work under at91-usart MFD
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluWi30ACgkQJNaLcl1U
+h9DfjQf+Mzg14+HDipidgPh6Bdg+IJD1Nj7k+nkPf1Swd7eZoS05uU8JnDGs2EPD
+xNvyzY4s12YQUOt5PwoTsQqa78Qi4VlkyQ64alwucoTZAqr49ohIThUfst/igMXP
+7GydiWcdwcGyxgecT45qT9AU/sULkb0ygCdTgUL4Jnhcy5D2YZGeWOc7PFQ2kI4j
+GDyXyQGJTGq4kSmKLtZPyyshFYcfjc/ICzU9gt8e0SerwSD5HcK/ZAleF/9HRK22
+QqSg/Z4BPi1Q1dWXJcwD4QdHC+0FRLQPCOIQx20GPgOuW0hNavALc55scwkdmMgg
+9t9K8G+F9Y9TjZvYapu910gdzOriJA==
+=y7uB
+-----END PGP SIGNATURE-----
 
- .../bindings/{serial => mfd}/atmel-usart.txt       |  25 +-
- MAINTAINERS                                        |  16 +
- drivers/mfd/Kconfig                                |   9 +
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/at91-usart.c                           |  71 ++++
- drivers/spi/Kconfig                                |   8 +
- drivers/spi/Makefile                               |   1 +
- drivers/spi/spi-at91-usart.c                       | 432 +++++++++++++++++++++
- drivers/tty/serial/Kconfig                         |   1 +
- drivers/tty/serial/atmel_serial.c                  |  42 +-
- include/dt-bindings/mfd/at91-usart.h               |  17 +
- 11 files changed, 606 insertions(+), 17 deletions(-)
- rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
- create mode 100644 drivers/mfd/at91-usart.c
- create mode 100644 drivers/spi/spi-at91-usart.c
- create mode 100644 include/dt-bindings/mfd/at91-usart.h
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--G4iJoqBmSsgzjUCe--
