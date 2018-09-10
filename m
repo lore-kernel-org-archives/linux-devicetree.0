@@ -1,78 +1,65 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [RFC PATCH v3 3/3] reset: reset-zynqmp: Adding support for Xilinx
- zynqmp reset controller.
-Date: Mon, 10 Sep 2018 04:49:50 +0000
-Message-ID: <BYAPR02MB47101009A8B5F7E1BB20C7A2C2050@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <1536131342-28041-1-git-send-email-nava.manne@xilinx.com>
-         <1536131342-28041-4-git-send-email-nava.manne@xilinx.com>
- <1536143395.4084.5.camel@pengutronix.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 0/5] Fix A64 HDMI PHY device tree binding
+Date: Mon, 10 Sep 2018 13:03:32 +0800
+Message-ID: <CAGb2v65G-rVK67C2EfKB+xcKY2OP_K-eXXpyC_BtskXyANe2UA@mail.gmail.com>
+References: <20180907072234.48282-1-icenowy@aosc.io>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536143395.4084.5.camel@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBN7W27OAKGQE6LV43JY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180907072234.48282-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcA0KDQpUaGFua3MgZm9yIHRoZSBxdWljayByZXNwb25zZS4uLg0KUGxlYXNlIGZp
-bmQgbXkgcmVzcG9uc2UgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
-IEZyb206IFBoaWxpcHAgWmFiZWwgW21haWx0bzpwLnphYmVsQHBlbmd1dHJvbml4LmRlXQ0KPiBT
-ZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciA1LCAyMDE4IDQ6MDAgUE0NCj4gVG86IE5hdmEga2lz
-aG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFy
-ay5ydXRsYW5kQGFybS5jb207IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgUmFq
-YW4gVmFqYQ0KPiA8UkFKQU5WQHhpbGlueC5jb20+OyBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54
-LmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1
-YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYzIDMvM10gcmVzZXQ6IHJlc2V0LXp5bnFtcDogQWRkaW5n
-IHN1cHBvcnQgZm9yIFhpbGlueA0KPiB6eW5xbXAgcmVzZXQgY29udHJvbGxlci4NCj4gDQo+IEhp
-LA0KPiANCj4gdGhhbmsgeW91IGZvciB0aGUgcGF0Y2guIEkgaGF2ZSBhIGZldyBjb21tZW50cyBi
-ZWxvdzoNCj4gDQo+IE9uIFdlZCwgMjAxOC0wOS0wNSBhdCAxMjozOSArMDUzMCwgTmF2YSBraXNo
-b3JlIE1hbm5lIHdyb3RlOg0KPiA+IEFkZCBhIHJlc2V0IGNvbnRyb2xsZXIgZHJpdmVyIGZvciBY
-aWxpbnggWnlucSBVbHRyYVNjYWxlKyBNUFNvQy4NCj4gPiBUaGUgenlucW1wIHJlc2V0LWNvbnRy
-b2xsZXIgaGFzIHRoZSBhYmlsaXR5IHRvIHJlc2V0IGxpbmVzIGNvbm5lY3RlZA0KPiA+IHRvIGRp
-ZmZlcmVudCBibG9ja3MgYW5kIHBlcmlwaGVyYWwgaW4gdGhlIFNvYy4NCj4gPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YS5tYW5uZUB4aWxpbnguY29tPg0KPiA+
-IC0tLQ0KPiA+IENoYW5nZXMgZm9yIHYzOg0KPiA+IAkJLU5vbmUuDQo+ID4gQ2hhbmdlcyBmb3Ig
-djI6DQo+ID4gCQktTW92ZWQgZWVtaV9vcHMgaW50byBhIHByaXYgc3RydWN0IGFzIHN1Z2dlc3Rl
-ZA0KPiA+IAkJIGJ5IHBoaWxpcHAuDQo+ID4NCj4gPiAgZHJpdmVycy9yZXNldC9NYWtlZmlsZSAg
-ICAgICB8ICAgMSArDQo+ID4gIGRyaXZlcnMvcmVzZXQvcmVzZXQtenlucW1wLmMgfCAxMTUNCj4g
-PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmls
-ZXMgY2hhbmdlZCwgMTE2IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvcmVzZXQvcmVzZXQtenlucW1wLmMNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L3Jlc2V0L01ha2VmaWxlIGIvZHJpdmVycy9yZXNldC9NYWtlZmlsZSBpbmRleA0KPiA+IGMxMjYx
-ZGMuLjI3ZTRhMzMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9yZXNldC9NYWtlZmlsZQ0KPiA+
-ICsrKyBiL2RyaXZlcnMvcmVzZXQvTWFrZWZpbGUNCj4gPiBAQCAtMjEsNCArMjEsNSBAQCBvYmot
-JChDT05GSUdfUkVTRVRfVElfU0NJKSArPSByZXNldC10aS1zY2kubw0KPiA+ICBvYmotJChDT05G
-SUdfUkVTRVRfVElfU1lTQ09OKSArPSByZXNldC10aS1zeXNjb24ubw0KPiA+ICBvYmotJChDT05G
-SUdfUkVTRVRfVU5JUEhJRVIpICs9IHJlc2V0LXVuaXBoaWVyLm8NCj4gPiAgb2JqLSQoQ09ORklH
-X1JFU0VUX1pZTlEpICs9IHJlc2V0LXp5bnEubw0KPiA+ICtvYmotJChDT05GSUdfQVJDSF9aWU5R
-TVApICs9IHJlc2V0LXp5bnFtcC5vDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZXNl
-dC9yZXNldC16eW5xbXAuYw0KPiA+IGIvZHJpdmVycy9yZXNldC9yZXNldC16eW5xbXAuYyBuZXcg
-ZmlsZSBtb2RlIDEwMDY0NCBpbmRleA0KPiA+IDAwMDAwMDAuLmY5MDg0OTINCj4gPiAtLS0gL2Rl
-di9udWxsDQo+ID4gKysrIGIvZHJpdmVycy9yZXNldC9yZXNldC16eW5xbXAuYw0KPiA+IEBAIC0w
-LDAgKzEsMTE1IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wKw0K
-PiA+ICsvKg0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggWGlsaW54LCBJbmMuDQo+ID4gKyAq
-DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+IA0KPiBJIHRo
-aW5rIGluY2x1ZGluZyBpby5oIGlzIG5vdCBuZWNlc3NhcnkuDQo+IA0KPiBbLi4uXQ0KDQpXaWxs
-IGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQo+ID4gK3N0YXRpYyBpbnQgenlucW1wX3Jlc2V0
-X3N0YXR1cyhzdHJ1Y3QgcmVzZXRfY29udHJvbGxlcl9kZXYgKnJjZGV2LA0KPiA+ICsJCQkgICAg
-ICAgdW5zaWduZWQgbG9uZyBpZCkNCj4gPiArew0KPiA+ICsJc3RydWN0IHp5bnFtcF9yZXNldF9k
-YXRhICpwcml2ID0gdG9fenlucW1wX3Jlc2V0X2RhdGEocmNkZXYpOw0KPiA+ICsJaW50IHZhbCwg
-ZXJyOw0KPiA+ICsNCj4gPiArCWVyciA9IHByaXYtPmVlbWlfb3BzLT5yZXNldF9nZXRfc3RhdHVz
-KFpZTlFNUF9SRVNFVF9JRCArIGlkLCAmdmFsKTsNCj4gPiArCWlmICghZXJyKQ0KPiA+ICsJCXJl
-dHVybiAtRUlOVkFMOw0KPiANCj4gVGhpcyBsb29rcyBsaWtlIGl0IHNob3VsZCBiZQ0KPiANCj4g
-CWlmIChlcnIpDQo+IAkJcmV0dXJuIGVycjsNCj4gDQo+IGluc3RlYWQuDQo+IA0KPiBbLi4uXQ0K
-V2lsbCBmaXggaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KPiA+ICtzdGF0aWMgc3RydWN0IHJlc2V0
-X2NvbnRyb2xfb3BzIHp5bnFtcF9yZXNldF9vcHMgPSB7DQo+IA0KPiBzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHJlc2V0X2NvbnRyb2xfb3BzIHp5bnFtcF9yZXNldF9vcHMgPSB7DQo+IA0KV2lsbCBmaXgg
-aW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KPiA+ICsJLnJlc2V0ID0genlucW1wX3Jlc2V0X3Jlc2V0
-LA0KPiA+ICsJLmFzc2VydCA9IHp5bnFtcF9yZXNldF9hc3NlcnQsDQo+ID4gKwkuZGVhc3NlcnQg
-PSB6eW5xbXBfcmVzZXRfZGVhc3NlcnQsDQo+ID4gKwkuc3RhdHVzID0genlucW1wX3Jlc2V0X3N0
-YXR1cywNCj4gPiArfTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgenlucW1wX3Jlc2V0X3Byb2Jl
-KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gPiArCXN0cnVjdCB6eW5xbXBfcmVz
-ZXRfZGF0YSAqcHJpdjsNCj4gPiArDQo+ID4gKwlwcml2ID0gZGV2bV9remFsbG9jKCZwZGV2LT5k
-ZXYsDQo+ID4gKwkJCSAgICBzaXplb2YoKnByaXYpLCBHRlBfS0VSTkVMKTsNCj4gDQo+IFRoaXMg
-c2hvdWxkIGZpdCBvbiBvbmUgbGluZS4NCj4gDQpXaWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9u
-Lg0KDQpSZWdhcmRzLA0KTmF2YWtpc2hvcmUuDQo=
+On Fri, Sep 7, 2018 at 3:22 PM Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org> wrote:
+>
+> When adding support for A64 HDMI PHY in 4.19, we assumed that the two
+> PLL-VIDEOs can both feed the HDMI PHY clock. However experiments show
+> that the mux bit discovered in R40 blob is not applicable on A64. This
+> is not discovered, as normally with a single display pipeline only
+> PLL-VIDEO0 will be used.
+>
+> In this patchset the second PLL is dropped, and a binding specially for
+> R40 HDMI PHY is added (which seems to have the mux).
+>
+> PATCH 1 and 2 are dropping second PLL for A64 HDMI PHY, and PATCH 3 to 5
+> are adding R40 HDMI PHY binding.
+>
+> This patchset targets v4.19 fixes tree, because the binding is
+> introduced in v4.19, and if we don't fix it there a wrong binding will
+> be left in a stable version released.
+
+Please add fixes tags.
+
+The patches look good, though I'm not sure about patches 3 and 4 going in fixes.
+
+ChenYu
+
+
+> Icenowy Zheng (5):
+>   dt-bindings: sun4i-drm: drop second PLL from A64 HDMI PHY binding
+>   drm: sun4i: drop second PLL from A64 HDMI PHY
+>   dt-bindings: sun4i-drm: add compatible for R40 HDMI PHY
+>   drm/sun4i: add support for R40 HDMI PHY
+>   ARM: sun8i: dts: drop A64 HDMI PHY fallback compatible from R40 DT
+>
+>  .../devicetree/bindings/display/sunxi/sun4i-drm.txt |  5 +++--
+>  arch/arm/boot/dts/sun8i-r40.dtsi                    |  3 +--
+>  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c              | 13 ++++++++++++-
+>  3 files changed, 16 insertions(+), 5 deletions(-)
+>
+> --
+> 2.18.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
