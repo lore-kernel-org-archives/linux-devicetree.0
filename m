@@ -1,79 +1,138 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH 2/3] Documentation: dt: binding: fsl: update property
- description for RCPM
-Date: Mon, 10 Sep 2018 08:44:55 +0000
-Message-ID: <AM5PR0402MB28655442E42632DDAF22B769F1050@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20180831035219.31619-1-ran.wang_1@nxp.com>
-         <20180831035219.31619-2-ran.wang_1@nxp.com>
- <c19f11e200258297dbe5a61392a4bbc1e937d7c3.camel@buserror.net>
+From: Jonas Gorski <jonas.gorski@gmail.com>
+Subject: Re: [PATCH 4/5] dt-bindings: mtd: describe BCM963XX ImageTag format
+ and usage
+Date: Mon, 10 Sep 2018 11:02:40 +0200
+Message-ID: <CAOiHx=koYJR_m1RdxxSjxQH-8MuWBw18YfNDun3OWnca=CoT_g@mail.gmail.com>
+References: <20180828111944.5956-1-jonas.gorski@gmail.com>
+ <20180828111944.5956-5-jonas.gorski@gmail.com>
+ <5b8e8a58.1c69fb81.12eaa.f292@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c19f11e200258297dbe5a61392a4bbc1e937d7c3.camel@buserror.net>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@lists.linux-foundation.org" <linux-pm@lists.linux-foundation.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <5b8e8a58.1c69fb81.12eaa.f292@mx.google.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, MTD Maling List <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQsDQoNCk9uIDIwMTgvOS84IDQ6MjMsIFNjb3R0IFdvb2Qgd3JvdGU6DQo+IA0KPiBP
-biBGcmksIDIwMTgtMDgtMzEgYXQgMTE6NTIgKzA4MDAsIFJhbiBXYW5nIHdyb3RlOg0KPiA+ICtP
-cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICsgLSBiaWctZW5kaWFuIDogSW5kaWNhdGUgUkNQTSBy
-ZWdpc3RlcnMgaXMgYmlnLWVuZGlhbi4gQSBSQ1BNIG5vZGUNCj4gPiArICAgdGhhdCBkb2Vzbid0
-IGhhdmUgdGhpcyBwcm9wZXJ0eSB3aWxsIGJlIHJlZ2FyZGVkIGFzIGxpdHRsZS1lbmRpYW4uDQo+
-IA0KPiBZb3UndmUganVzdCBicm9rZW4gYWxsIHRoZSBleGlzdGluZyBwb3dlcnBjIGRldmljZSB0
-cmVlcyB0aGF0IGFyZSBiaWctZW5kaWFuDQo+IGFuZCBoYXZlIG5vIGJpZy1lbmRpYW4gcHJvcGVy
-dHkuDQoNClllcywgcG93ZXJwYyBSQ1BNIGRyaXZlciAoYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xf
-cmNwbS5jKSB3aWxsIG5vdCByZWZlcg0KdG8gYmlnLWVuZGlhbi4gSG93ZXZlciwgSSB0aGluayBp
-ZiBMYXllcnNjYXBlIFJDUE0gZHJpdmVyIHVzZSBkaWZmZXJlbnQgY29tcGF0aWJsZQ0KaWQgKHN1
-Y2ggYXMgJyBmc2wscW9yaXEtcmNwbS0yLjInKSwgaXQgbWlnaHQgYmUgc2FmZS4gSXMgdGhhdCBP
-Sz8NCg0KPiA+ICsgLSA8cHJvcGVydHkgJ2NvbXBhdGlibGUnIHN0cmluZyBvZiBjb25zdW1lciBk
-ZXZpY2U+IDogVGhpcyBzdHJpbmcNCj4gPiArICAgaXMgcmVmZXJyZWQgYnkgUkNQTSBkcml2ZXIg
-dG8ganVkZ2UgaWYgdGhlIGNvbnN1bWVyIChzdWNoIGFzIGZsZXggdGltZXIpDQo+ID4gKyAgIGlz
-IGFibGUgdG8gYmUgcmVnYXJkcyBhcyB3YWtldXAgc291cmNlIG9yIG5vdCwgc3VjaCBhcw0KPiA+
-ICsgJ2ZzbCxsczEwMTJhLQ0KPiA+IGZ0bScuDQo+ID4gKyAgIEZ1cnRoZXIsIHRoaXMgcHJvcGVy
-dHkgd2lsbCBjYXJyeSB0aGUgYml0IG1hc2sgaW5mbyB0byBjb250cm9sDQo+ID4gKyAgIGNvcmVz
-cG9uZGluZyB3YWtlIHVwIHNvdXJjZS4NCj4gDQo+IFdoYXQgd2lsbCB5b3UgZG8gaWYgdGhlcmUg
-YXJlIG11bHRpcGxlIGluc3RhbmNlcyBvZiBhIGRldmljZSB3aXRoIHRoZSBzYW1lDQo+IGNvbXBh
-dGlibGUsIGFuZCBkaWZmZXJlbnQgd2FrZXVwIGJpdHM/ICANCg0KWW91IGdvdCBtZSEgVGhpcyBp
-cyBhIHByb2JsZW0gaW4gY3VycmVudCB2ZXJzaW9uLiBXZWxsLCB3ZSBoYXZlIHRvIGRlY291cGxl
-IHdha2UgdXANCnNvdXJjZSBJUCBhbmQgUkNQTSBkcml2ZXIuIFRoYXQncyB3aHkgSSBhZGQgYSBw
-bGF0X3BtIGRyaXZlciB0byBwcmV2ZW50IHdha2UgdXAgSVANCmtub3dpbmcgYW55IGluZm9ybWF0
-aW9uIG9mIFJDUE0uIFNvIGluIGN1cnJlbnQgY29udGV4dCwgb25lIGlkZWEgY29tZSB0byBtZSBp
-cyB0bw0KcmVkZXNpZ24gcHJvcGVydHkgJyBmc2wsbHMxMDEyYS1mdG0gPSA8MHgyMDAwMD47Jywg
-Y2hhbmdlIHRvICdmc2wsbHMxMDEyYS1mdG0gPSA8JmZ0bTAgMHgyMDAwMD47Jw0KV2hhdCBkbyB5
-b3Ugc2F5PyBBbmQgY291bGQgeW91IHRlbGwgbWUgd2hpY2ggQVBJIEkgY2FuIHVzZSB0byBjaGVj
-ayBpZiB0aGF0IGRldmljZSdzDQpuYW1lIGlzIGZ0bTAgKGZvciBleGFtcGxlIHdlIHdhbnQgdG8g
-ZmluZCBhIG5vZGUgZnRtMDogZnRtQDI5ZDAwMCk/DQoNCj5QbHVzLCBpdCdzIGFuIGF3a3dhcmQg
-ZGVzaWduIGluDQo+IGdlbmVyYWwsIGFuZCB5b3UgZG9uJ3QgZGVzY3JpYmUgd2hhdCB0aGUgdmFs
-dWUgYWN0dWFsbHkgbWVhbnMgKGJpdHMgaW4gd2hpY2gNCj4gcmVnaXN0ZXI/KS4gDQoNClllcywg
-SSBhZG1pdCBteSBkZXNpZ24gbG9va3MgdWdseSBhbmQgbm90IGZsZXhpYmxlIGFuZCBleHRlbnNp
-YmxlIGVub3VnaC4gSG93ZXZlciwgZm9yIGFib3ZlIHJlYXNvbiwgDQpkbyB5b3UgaGF2ZSBhbnkg
-Z29vZCBpZGVhLCBwbGVhc2U/IDopDQoNCkFzIHRvIHRoZSByZWdpc3RlciBpbmZvcm1hdGlvbiwg
-SSBjYW4gZXhwbGFpbiBoZXJlIGluIGRldGFpbHMgKHdpbGwgYWRkIHRvIGNvbW1pdA0KbWVzc2Fn
-ZSBvZiBuZXh0IHZlcnNpb24pOiBUaGVyZSBpcyBhIFJDUE0gSFcgYmxvY2sgd2hpY2ggaGFzIHJl
-Z2lzdGVyIG5hbWVkIElQUERFWFBDUi4NCkl0IGNvbnRyb2xzIHdoZXRoZXIgcHJldmVudCBjZXJ0
-YWluIElQIChzdWNoIGFzIHRpbWVyLCB1c2IsIGV0YykgZnJvbSBlbnRlcmluZyBsb3cNCnBvd2Vy
-IG1vZGUgd2hlbiBzeXN0ZW0gc3VzcGVuZGVkLiBTbyBpdCdzIG5lY2Vzc2FyeSB0byBwcm9ncmFt
-IGl0IGlmIHdlIHdhbnQgb25lDQpvZiB0aG9zZSBJUCB3b3JrIGFzIGEgd2FrZXVwIHNvdXJjZS4g
-SG93ZXZlciwgZGlmZmVyZW50IExheWVyc2NhcGUgU29DcyBoYXZlIGRpZmZlcmVudCBiaXQgdnMu
-DQpJUCBtYXBwaW5nICBsYXlvdXQuIFNvIEkgaGF2ZSB0byByZWNvcmQgdGhpcyBpbmZvcm1hdGlv
-biBpbiBkZXZpY2UgdHJlZSBhbmQgZmV0Y2hlZCBieSBSQ1BNIGRyaXZlcg0KZGlyZWN0bHkuDQoN
-CkRvIEkgbmVlZCB0byBsaXN0IGFsbCBTb0MncyBtYXBwaW5nIGluZm9ybWF0aW9uIGluIHRoaXMg
-YmluZGluZyBkb2MgZm9yIHJlZmVyZW5jZT8NCg0KPldoYXQgd2FzIHdyb25nIHdpdGggdGhlIGV4
-aXN0aW5nIGJpbmRpbmc/ICANCg0KVGhlcmUgd2FzIG9uZSB2ZXJzaW9uIG9mIFJDUE0gcGF0Y2gg
-d2hpY2ggcmVxdWlyaW5nIHByb3BlcnR5ICdmc2wsI3JjcG0td2FrZXVwLWNlbGxzJyBidXQgd2Fz
-IG5vdA0KYWNjZXB0ZWQgYnkgdXBzdHJlYW0gZmluYWxseS4gTm93IHdlIHdpbGwgbm8gbmVlZCBp
-dCBhbnkgbG9uZ2VyIGR1ZSB0byBuZXcgZGVzaWduIGFsbG93IGNhc2Ugb2YgbXVsdGlwbGUNClJD
-UE0gZGV2aWNlcyBleGlzdGluZyBjYXNlLg0KDQo+QWx0ZXJuYXRpdmVseSwgdXNlIHRoZSBjbG9j
-ayBiaW5kaW5ncy4NCg0KU29ycnkgSSBkaWRuJ3QgZ2V0IHlvdXIgcG9pbnQuDQoNCj4gPiAtDQo+
-ID4gLUV4YW1wbGU6DQo+ID4gLQlscHVhcnQwOiBzZXJpYWxAMjk1MDAwMCB7DQo+ID4gLQkJY29t
-cGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1scHVhcnQiOw0KPiA+IC0JCXJlZyA9IDwweDAgMHgyOTUw
-MDAwIDB4MCAweDEwMDA+Ow0KPiA+IC0JCWludGVycnVwdHMgPSA8R0lDX1NQSSA4MCBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsNCj4gPiAtCQljbG9ja3MgPSA8JnN5c2Nsaz47DQo+ID4gLQkJY2xvY2st
-bmFtZXMgPSAiaXBnIjsNCj4gPiAtCQlmc2wscmNwbS13YWtldXAgPSA8JnJjcG0gMHgwIDB4NDAw
-MDAwMDA+Ow0KPiA+ICsJCWJpZy1lbmRpYW47DQo+ID4gKwkJZnNsLGxzMTAxMmEtZnRtID0gPDB4
-MjAwMDA+Ow0KPiA+ICsJCWZzbCxwZmUgPSA8MHhmMDAwMDAyMD47DQo+IA0KPiBmc2wscGZlIGlz
-IG5vdCBkb2N1bWVudGVkLg0KDQpwZmUgcGF0Y2ggaXMgbm90IHVwc3RyZWFtIHlldCwgd2lsbCBy
-ZW1vdmUgaXQuDQoNClJlZ2FyZHMsDQpSYW4NCg0KPiAtU2NvdHQNCg0K
+On 4 September 2018 at 02:30, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Aug 28, 2018 at 01:19:43PM +0200, Jonas Gorski wrote:
+>> Describe how to use the BCM963XX ImageTag format in a mixed flash layout
+>> environment.
+>>
+>> Signed-off-by: Jonas Gorski <jonas.gorski@gmail.com>
+>> ---
+>>  .../mtd/partitions/brcm,bcm963xx-imagetag.txt      | 78 ++++++++++++++++++++++
+>>  1 file changed, 78 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+>> new file mode 100644
+>> index 000000000000..f4a444d69d9a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/partitions/brcm,bcm963xx-imagetag.txt
+>> @@ -0,0 +1,78 @@
+>> +Broadcom BCM963XX ImageTag Partition Container
+>> +==============================================
+>> +
+>> +Some Broadcom BCM63XX SoC based devices contain additional, non discoverable
+>> +partitions or non standard bootloader partition sizes. For these a mixed layout
+>> +needs to be used with an explicit firmware partition.
+>> +
+>> +The BCM963XX ImageTag is a simple firmware header describing the offsets and
+>> +sizes of the rootfs and kernel parts contained in the firmware.
+>> +
+>> +Required properties:
+>> +- compatible : must be "brcm,bcm963xx-imagetag"
+>> +
+>> +Examples:
+>> +
+>> +flash@1e000000 {
+>> +     compatible = "cfi-flash";
+>> +     reg = <0x1e000000 0x2000000>;
+>> +     bank-width = <2>;
+>> +
+>> +     partitions {
+>> +             compatible = "fixed-partitions";
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +
+>> +             cfe@0 {
+>> +                     reg = <0x0 0x10000>;
+>> +                     read-only;
+>> +             };
+>> +
+>> +             firmware@10000 {
+>> +                     reg = <0x10000 0x7d0000>;
+>> +                     compatible = "brcm,bcm963xx-imagetag";
+>> +             };
+>> +
+>> +             caldata@7e0000 {
+>> +                     reg = <0x7e0000 0x10000>;
+>> +                     read-only;
+>> +             };
+>> +
+>> +             nvram@7f0000 {
+>> +                     reg = <0x7f0000 0x10000>;
+>> +             };
+>> +     };
+>> +};
+>> +
+>> +
+>> +flash@1e000000 {
+>> +     compatible = "cfi-flash";
+>> +     reg = <0x1e000000 0x2000000>;
+>> +     bank-width = <2>;
+>> +
+>> +     partitions {
+>> +             compatible = "fixed-partitions";
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +
+>> +             /*
+>> +              * Some devices use a flash chip with 64k erase blocks, some
+>> +              * use one with 128k erase blocks, so the vendor decided to
+>> +              * always use 128k as the firmware offset.
+>> +              */
+>
+> That's a interesting piece of info, but not really a reason to have a
+> second example.
+
+Generally, I'd rather have one example too many than one too few, but
+I can drop it if you think it's unnecessary. If I do that, can I add
+your Ack then here as well for the v2?
+
+>
+>> +
+>> +             cfe@0 {
+>> +                     reg = <0x0 0x20000>;
+>> +                     read-only;
+>> +             };
+>> +
+>> +             firmware@20000 {
+>> +                     reg = <0x20000 0x7c0000>;
+>> +                     compatible = "brcm,bcm963xx-imagetag";
+>> +             };
+>> +
+>> +             nvram@7e0000 {
+>> +                     reg = <0x7e0000 0x20000>;
+>> +             };
+>> +     };
+>> +};
+>> --
+>> 2.13.2
+>>
+>
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
