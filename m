@@ -1,96 +1,87 @@
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 3/3] dt-bindings: can: rcar_can: Add r8a774a1 support
-Date: Mon, 10 Sep 2018 09:54:27 +0000
-Message-ID: <TY1PR01MB1770FB578F15731898CD6770C0050@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1535029653-7418-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1535029653-7418-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdWPuqfXOgh_-qp8q6wATU3Lj_WpX0bAOxPBX76SKvyXCQ@mail.gmail.com>
+Subject: RE: [PATCH] arm64: dts: renesas: r8a774a1: Add CAN nodes
+Date: Mon, 10 Sep 2018 09:56:18 +0000
+Message-ID: <TY1PR01MB17706300DDF78B3067DC779DC0050@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1535034166-24798-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdUL0Ck=6er8rvx_kCSi7KR9kjBqjNRiLOL41nxeJXQG-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWPuqfXOgh_-qp8q6wATU3Lj_WpX0bAOxPBX76SKvyXCQ@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdUL0Ck=6er8rvx_kCSi7KR9kjBqjNRiLOL41nxeJXQG-w@mail.gmail.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "David S. Miller" <davem@davemloft.net>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "open list:OPEN FIRMWARE AND FLATTENED
+ DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjay4NCg0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIDMvM10gZHQtYmluZGluZ3M6IGNhbjogcmNhcl9jYW46IEFkZCByOGE3NzRh
-MSBzdXBwb3J0DQo+DQo+IEhpIEZhYnJpemlvLA0KPg0KPiBPbiBUaHUsIEF1ZyAyMywgMjAxOCBh
-dCAzOjA4IFBNIEZhYnJpemlvIENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
-Y29tPiB3cm90ZTo+DQo+ID4gRG9jdW1lbnQgUlovRzJNIChyOGE3NzRhMSkgU29DIHNwZWNpZmlj
-IGJpbmRpbmdzIGFuZCBSWi9HMg0KPiA+IGdlbmVyaWMgYmluZGluZ3MuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNv
-bT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJl
-bmVzYXMuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNh
-cy5jb20+DQo+DQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4NCj4gPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Nhbi9yY2FyX2Nhbi50eHQNCj4gPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Nhbi9yY2FyX2Nhbi50eHQN
-Cj4gPiBAQCAtNCw2ICs0LDcgQEAgUmVuZXNhcyBSLUNhciBDQU4gY29udHJvbGxlciBEZXZpY2Ug
-VHJlZSBCaW5kaW5ncw0KPiA+ICBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICAtIGNvbXBhdGli
-bGU6ICJyZW5lc2FzLGNhbi1yOGE3NzQzIiBpZiBDQU4gY29udHJvbGxlciBpcyBhIHBhcnQgb2Yg
-UjhBNzc0MyBTb0MuDQo+ID4gICAgICAgICAgICAgICAicmVuZXNhcyxjYW4tcjhhNzc0NSIgaWYg
-Q0FOIGNvbnRyb2xsZXIgaXMgYSBwYXJ0IG9mIFI4QTc3NDUgU29DLg0KPiA+ICsgICAgICAgICAg
-ICAgInJlbmVzYXMsY2FuLXI4YTc3NGExIiBpZiBDQU4gY29udHJvbGxlciBpcyBhIHBhcnQgb2Yg
-UjhBNzc0QTEgU29DLg0KPg0KPiBMb29rcyBnb29kIHRvIG1lLg0KPg0KPiA+ICAgICAgICAgICAg
-ICAgInJlbmVzYXMsY2FuLXI4YTc3NzgiIGlmIENBTiBjb250cm9sbGVyIGlzIGEgcGFydCBvZiBS
-OEE3Nzc4IFNvQy4NCj4gPiAgICAgICAgICAgICAgICJyZW5lc2FzLGNhbi1yOGE3Nzc5IiBpZiBD
-QU4gY29udHJvbGxlciBpcyBhIHBhcnQgb2YgUjhBNzc3OSBTb0MuDQo+ID4gICAgICAgICAgICAg
-ICAicmVuZXNhcyxjYW4tcjhhNzc5MCIgaWYgQ0FOIGNvbnRyb2xsZXIgaXMgYSBwYXJ0IG9mIFI4
-QTc3OTAgU29DLg0KPiA+IEBAIC0xNyw2ICsxOCw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+
-ID4gICAgICAgICAgICAgICAicmVuZXNhcyxyY2FyLWdlbjItY2FuIiBmb3IgYSBnZW5lcmljIFIt
-Q2FyIEdlbjIgb3IgUlovRzENCj4gPiAgICAgICAgICAgICAgIGNvbXBhdGlibGUgZGV2aWNlLg0K
-PiA+ICAgICAgICAgICAgICAgInJlbmVzYXMscmNhci1nZW4zLWNhbiIgZm9yIGEgZ2VuZXJpYyBS
-LUNhciBHZW4zIGNvbXBhdGlibGUgZGV2aWNlLg0KPiA+ICsgICAgICAgICAgICAgInJlbmVzYXMs
-cnpnLWdlbjItY2FuIiBmb3IgYSBnZW5lcmljIFJaL0cyIGNvbXBhdGlibGUgZGV2aWNlLg0KPg0K
-PiBBRkFJSywgdGhlIGFjdHVhbCBDQU4gbW9kdWxlIGluIFJaL0cyTSBpcyBmdWxseSBjb21wYXRp
-YmxlIHdpdGggdGhlIENBTg0KPiBtb2R1bGUgaW4gUi1DYXIgR2VuMyBTb0NzLiBUaGUgbGFjayBv
-ZiBjbGtwMiBpcyBtZXJlbHkgYW4gaW50ZWdyYXRpb24NCj4gZGlmZmVyZW5jZTogYXMgUlovRzIg
-U29DcyBkbyBub3QgaGF2ZSB0aGUgQ0FORkQgbW9kdWxlLCBhbmQgdGhlaXIgQ1BHIGJsb2NrDQo+
-IGRvZXNuJ3QgcHJvdmlkZSB0aGUgQ0FORkQgY2xvY2sgKHNvIHRoZSBDQU4gZGV2aWNlIG5vZGUg
-aW4gRFQgY2Fubm90IHJlZmVyDQo+IHRvIHRoYXQgY2xvY2sgYW55d2F5KS4NCj4NCj4gSGVuY2Ug
-SSBkb24ndCB0aGluayB0aGVyZSdzIGEgbmVlZCB0byBpbnRyb2R1Y2UgYSAicmVuZXNhcyxyemct
-Z2VuMi1jYW4iDQo+IGNvbXBhdGlibGUgdmFsdWUuDQoNCkFncmVlZCwgd2lsbCBkcm9wIFJaL0cy
-IHNwZWNpZmljIGNvbXBhdGlibGUgc3RyaW5nLg0KDQo+DQo+ID4gICAgICAgICAgICAgICBXaGVu
-IGNvbXBhdGlibGUgd2l0aCB0aGUgZ2VuZXJpYyB2ZXJzaW9uLCBub2RlcyBtdXN0IGxpc3QgdGhl
-DQo+ID4gICAgICAgICAgICAgICBTb0Mtc3BlY2lmaWMgdmVyc2lvbiBjb3JyZXNwb25kaW5nIHRv
-IHRoZSBwbGF0Zm9ybSBmaXJzdA0KPiA+ICAgICAgICAgICAgICAgZm9sbG93ZWQgYnkgdGhlIGdl
-bmVyaWMgdmVyc2lvbi4NCj4gPiBAQCAtMjQsNyArMjYsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
-Og0KPiA+ICAtIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBzaXplIG9mIHRoZSBSLUNh
-ciBDQU4gcmVnaXN0ZXIgbWFwLg0KPiA+ICAtIGludGVycnVwdHM6IGludGVycnVwdCBzcGVjaWZp
-ZXIgZm9yIHRoZSBzb2xlIGludGVycnVwdC4NCj4gPiAgLSBjbG9ja3M6IHBoYW5kbGVzIGFuZCBj
-bG9jayBzcGVjaWZpZXJzIGZvciAzIENBTiBjbG9jayBpbnB1dHMuDQo+DQo+IFlvdSBzdGlsbCBo
-YXZlICIzIiBoZXJlLiBQZXJoYXBzDQo+ICJNdXN0IGNvbnRhaW4gYSBwaGFuZGxlIGFuZCBjbG9j
-ay1zcGVjaWZpZXIgcGFpciBmb3IgZWFjaCBlbnRyeSBpbg0KPiBjbG9jay1uYW1lcy4iPw0KDQpH
-b29kIHNwb3QsIHdlIG92ZXJsb29rZWQgaXQuDQoNCj4NCj4gPiAtLSBjbG9jay1uYW1lczogMyBj
-bG9jayBpbnB1dCBuYW1lIHN0cmluZ3M6ICJjbGtwMSIsICJjbGtwMiIsICJjYW5fY2xrIi4NCj4g
-PiArLSBjbG9jay1uYW1lczogMiBjbG9jayBpbnB1dCBuYW1lIHN0cmluZ3MgZm9yIFJaL0cyOiAi
-Y2xrcDEiLCAiY2FuX2NsayIuDQo+ID4gKyAgICAgICAgICAgICAgMyBjbG9jayBpbnB1dCBuYW1l
-IHN0cmluZ3MgZm9yIGV2ZXJ5IG90aGVyIFNvQzogImNsa3AxIiwgImNsa3AyIiwNCj4gPiArICAg
-ICAgICAgICAgICAiY2FuX2NsayIuDQo+DQo+IE9LLg0KPg0KPiA+IEBAIC00MSw4ICs0NSw5IEBA
-IHVzaW5nIHRoZSBiZWxvdyBwcm9wZXJ0aWVzOg0KPiA+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOg0K
-PiA+ICAtIHJlbmVzYXMsY2FuLWNsb2NrLXNlbGVjdDogUi1DYXIgQ0FOIENsb2NrIFNvdXJjZSBT
-ZWxlY3QuIFZhbGlkIHZhbHVlcyBhcmU6DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IDwweDA+IChkZWZhdWx0KSA6IFBlcmlwaGVyYWwgY2xvY2sgKGNsa3AxKQ0KPiA+IC0gICAgICAg
-ICAgICAgICAgICAgICAgICAgICA8MHgxPiA6IFBlcmlwaGVyYWwgY2xvY2sgKGNsa3AyKQ0KPiA+
-IC0gICAgICAgICAgICAgICAgICAgICAgICAgICA8MHgzPiA6IEV4dGVybmFsbHkgaW5wdXQgY2xv
-Y2sNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgPDB4MT4gOiBQZXJpcGhlcmFsIGNs
-b2NrIChjbGtwMikgKG5vdCBzdXBwb3J0ZWQgYnkNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBSWi9HMiBkZXZpY2VzKQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
-ICAgICA8MHgzPiA6IEV4dGVybmFsIGlucHV0IGNsb2NrDQo+DQo+IEkgYWxyZWFkeSBleHByZXNz
-ZWQgbXkgZmVlbGluZ3MgYWJvdXQgdGhpcyBwcm9wZXJ0eSBpbiBteSByZXBseSB0byB0aGUgZmly
-c3QNCj4gcGF0Y2ggOy0pDQoNCkkga25vdywgSSBhbSBub3Qgc3VwZXIgaGFwcHkgYWJvdXQgaXQg
-ZWl0aGVyLCBtYXliZSB3ZSB3aWxsIGdldCBhIHByb3BlciBzb2x1dGlvbiBmb3IgdGhpcyBhdCBz
-b21lIHBvaW50IGluIHRoZSBmdXR1cmUuDQoNClRoYW5rcywNCkZhYg0KDQo+DQo+IEdye29ldGpl
-LGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0K
-PiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMy
-IC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMg
-d2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hl
-biBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBz
-b21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0t
-IExpbnVzIFRvcnZhbGRzDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1
-a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwg
-U0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVy
-ZWQgTm8uIDA0NTg2NzA5Lg0K
+Hello Geert,
+
+Thank you for your feedback.
+
+> Subject: Re: [PATCH] arm64: dts: renesas: r8a774a1: Add CAN nodes
+>
+> Hi Fabrizio,
+>
+> On Thu, Aug 23, 2018 at 4:22 PM Fabrizio Castro
+> <fabrizio.castro@bp.renesas.com> wrote:
+> > From: Chris Paterson <chris.paterson2@renesas.com>
+> >
+> > Add the device nodes for both RZ/G2M CAN channels.
+> >
+> > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > ---
+> >
+> > This patch depends on:
+> > https://lkml.org/lkml/2018/8/23/1049
+> > https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg30550.html
+> >
+> >
+> >  arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > index 5d0109a..cd204f5 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+> > @@ -816,6 +816,30 @@
+> >                         status = "disabled";
+> >                 };
+> >
+> > +               can0: can@e6c30000 {
+> > +                       compatible = "renesas,can-r8a774a1",
+> > +                                    "renesas,rzg-gen2-can";
+>
+> Please don't introduce "renesas,rzg-gen2-can", cfr. my comments in
+> https://lore.kernel.org/lkml/CAMuHMdWPuqfXOgh_-qp8q6wATU3Lj_WpX0bAOxPBX76SKvyXCQ@mail.gmail.com/
+
+Agreed, will send a v2.
+
+Thanks,
+Fab
+
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
+
+
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered No. 04586709.
