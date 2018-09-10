@@ -1,53 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: mrvl,mmp-timer: add clock
-Date: Mon, 10 Sep 2018 10:21:50 -0500
-Message-ID: <CAL_JsqKgJFZnpuv7rW6ovxMKi4Q2AngWxKa=CMR_Y+xD5Oh3GA@mail.gmail.com>
-References: <20180910113031.42634-1-lkundrak@v3.sk> <20180910113031.42634-2-lkundrak@v3.sk>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 0/9] coresight: Update device tree bindings
+Date: Mon, 10 Sep 2018 16:35:19 +0100
+Message-ID: <9e935bd9-1cd1-0fda-3d73-fe2487759a1c@arm.com>
+References: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com>
+ <20180730200232.GA31755@xps15>
+ <CANLsYkzBfCydwDO-KyDub4X=GTy_dtv-478RyMReBEH6VybSAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910113031.42634-2-lkundrak@v3.sk>
+In-Reply-To: <CANLsYkzBfCydwDO-KyDub4X=GTy_dtv-478RyMReBEH6VybSAg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: lkundrak@v3.sk
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@armlinux.org.uk>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>, "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, coresight@lists.linaro.org, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, John Horley <john.horley@arm.com>, Al Grant <al.grant@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 6:30 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> The timer needs the timer clock to be enabled, otherwise it stops
-> ticking.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
-> index 9a6e251462e7..a2ede0bd12ca 100644
-> --- a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
-> @@ -4,10 +4,12 @@ Required properties:
->  - compatible : Should be "mrvl,mmp-timer".
->  - reg : Address and length of the register set of timer controller.
->  - interrupts : Should be the interrupt number.
-> +- clocks : Should contain a single entry describing the clock input.
+Hi Mathieu,
 
-So now pxa910 and pxa168 dts files have errors because they are
-missing a required clock. Plus somehow other MMP2 platforms either
-worked without a clock or have been broken.
+On 31/07/18 16:06, Mathieu Poirier wrote:
+> [...]
+> 
+>>>
+>>> Suzuki K Poulose (9):
+>>>   coresight: Document error handling in coresight_register
+>>>   coresight: platform: Refactor graph endpoint parsing
+>>>   coresight: platform: Fix refcounting for graph nodes
+>>>   coresight: platform: Fix leaking device reference
+>>>   coresight: Fix remote endpoint parsing
+>>>   coresight: Add helper to check if the endpoint is input
+>>>   coresight: platform: Cleanup coresight connection handling
+>>>   coresight: Cleanup coresight DT bindings
+>>>   dts: juno: Update coresight bindings
+>>>
+>>>  .../devicetree/bindings/arm/coresight.txt          |  95 +++++---
+>>>  arch/arm64/boot/dts/arm/juno-base.dtsi             | 161 ++++++------
+>>>  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi          |  52 ++--
+>>>  arch/arm64/boot/dts/arm/juno.dts                   |  13 +-
+>>>  drivers/hwtracing/coresight/coresight.c            |  35 +--
+>>>  drivers/hwtracing/coresight/of_coresight.c         | 269 ++++++++++++++-------
+>>>  include/linux/coresight.h                          |   9 +-
+>>>  7 files changed, 359 insertions(+), 275 deletions(-)
+>>>
+>>
+>> Good day,
+>>
+>> I have applied patches 1 to 7.  I will wait for Rob's ACK before doing the same
+>> with 8 and 9.
+> 
+> I just applied patch 8 and 9.
+> 
+Sorry for the delay, but ARM SoC expects all the DTS changes to go via
+their tree. Please drop patch 9, I will route via ARM-SoC.
 
-You can't add new required properties to a binding. That breaks
-backward compatibility.
-
-Rob
->
->  Example:
->         timer0: timer@d4014000 {
->                 compatible = "mrvl,mmp-timer";
->                 reg = <0xd4014000 0x100>;
->                 interrupts = <13>;
-> +               clocks = <&coreclk 2>;
->         };
-> --
-> 2.17.1
->
+-- 
+Regards,
+Sudeep
