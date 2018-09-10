@@ -1,55 +1,86 @@
-From: vnkgutta@codeaurora.org
-Subject: Re: [PATCH v4 3/4] drivers: edac: Add EDAC driver support for QCOM
- SoCs
-Date: Mon, 10 Sep 2018 15:45:58 -0700
-Message-ID: <b5d9a1dc741e09db6d4044f4d82f83d9@codeaurora.org>
-References: <1536103345-1919-1-git-send-email-vnkgutta@codeaurora.org>
- <1536103345-1919-4-git-send-email-vnkgutta@codeaurora.org>
- <105f8339-61bc-072e-0498-ed44470a5fb8@codeaurora.org>
- <5d8f92b480e1b53e7e04da965d44f7ea@codeaurora.org>
- <b35f111c-0464-dcee-c970-4821f741694b@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: [PATCH v5 0/4] Add EDAC driver for QCOM SoCs
+Date: Mon, 10 Sep 2018 16:46:51 -0700
+Message-ID: <1536623215-20018-1-git-send-email-vnkgutta@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b35f111c-0464-dcee-c970-4821f741694b@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org
+To: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018-09-06 22:02, Sai Prakash Ranjan wrote:
-> On 9/7/2018 4:01 AM, vnkgutta@codeaurora.org wrote:
->> On 2018-09-06 05:38, Sai Prakash Ranjan wrote:
->>> On 9/5/2018 4:52 AM, Venkata Narendra Kumar Gutta wrote:
->>>> +static const struct of_device_id qcom_llcc_edac_match_table[] = {
->>>> +    { .compatible = "qcom,llcc-edac" },
->>>> +    { },
->>>> +};
->>>> +
->>>> 
->>> Hi Venkata,
->>> 
->>> Devicetree binding for llcc is updated, but what about this 
->>> compatible?
->> 
->> Does it need documentation too? I was not sure if I should add 
->> documentation for this or not!
->> 
-> 
-> It does not require a separate binding, what I meant was to add this
-> compatible in the llcc binding itself, maybe as a subnode if it is
-> correct.
+This series implements EDAC driver for QCOM SoCs. As of now, this driver
+supports EDAC for Last Level Cache Controller (LLCC). LLCC EDAC driver is
+to detect and report single and double bit errors on Last Level Cache
+Controller (LLCC) cache. Interrupts are triggered when the errors happen
+in the cache, the driver handles those interrupts and dumps the syndrome
+registers.
 
-Hi,
+The driver functionality is implemented in:
+qcom_edac.c : This platform driver registers to edac framework and
+handles the single and double bit errors in cache by registering
+interrupt handlers.
 
-We aren't really using this of_device_id structure, as this driver is 
-being registered from LLCC through
-platform_register_device_data(...). This structure initialization is 
-just dead code as this driver won't be probed based on the DT entries.
+llcc-slice.c: It invokes the llcc edac driver and passes platform
+data to it.
 
-Hence removing this compatible property and the corresponding struct in 
-the next patchset.
+This patchset depends on the LLCC driver, which is part of 4.19 release.
+Link: https://patchwork.kernel.org/patch/10422531/
+Link: http://lists-archives.com/linux-kernel/29157082-dt-bindings-documentation-for-qcom-llcc.html
 
-So, this doesn't need an extra binding/documentation.
+Patch wise description given below:
+
+Patch 1 adds the broadcast base regmap for broadcast writes in llcc.
+
+Patch 2 adds the required changes to register edac driver from llcc driver.
+
+Patch 3 adds the EDAC driver support for QCOM SoCS.
+
+Patch 4 updates the dt bindings of llcc.
+
+Changes since v4:
+  * Removed of_device_id struct entry from edac driver
+  * Modified reg-names in the documentation
+
+Changes since v3:
+  * Updated the Kconfig and addressed minor comments in the driver
+
+Changes since v2:
+  * Modified the edac driver and Kconfig
+    -  removed unnecessary header files, typecasting and redundant comments.
+    -  Changed the initialization of reg_data datastructure to static,
+       Also updated the llcc_edac_reg_data member names and datatypes.
+    -  Removed "EDAC_QCOM_LLCC_PANIC_ON_UE" Kconfig variable
+
+Changes since v1:
+  * Modified the edac driver
+    - Removed duplicate functions that are used to dump the syndrome registers,
+      replaced that with a common function and a reg_data datastructure.
+    - Removed structure containing function pointers.
+    - Addressed comments on error handling to clear the interrupt status.
+  * Updated Kconfig
+
+Changes since v0:
+  * Added EDAC_QCOM config and updated the driver
+  * Addressed comments related to indentation and other minor ones
+
+Channagoud Kadabi (1):
+  drivers: edac: Add EDAC driver support for QCOM SoCs
+
+Venkata Narendra Kumar Gutta (3):
+  drivers: soc: Add broadcast base for Last Level Cache Controller
+    (LLCC)
+  drivers: soc: Add support to register LLCC EDAC driver
+  dt-bindings: msm: Update documentation of qcom,llcc
+
+ .../devicetree/bindings/arm/msm/qcom,llcc.txt      |  19 +-
+ MAINTAINERS                                        |   8 +
+ drivers/edac/Kconfig                               |  14 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/qcom_edac.c                           | 414 +++++++++++++++++++++
+ drivers/soc/qcom/llcc-slice.c                      |  73 ++--
+ include/linux/soc/qcom/llcc-qcom.h                 |  30 +-
+ 7 files changed, 531 insertions(+), 28 deletions(-)
+ create mode 100644 drivers/edac/qcom_edac.c
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
