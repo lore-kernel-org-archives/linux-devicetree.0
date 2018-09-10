@@ -1,32 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Mon, 10 Sep 2018 14:38:36 -0500
-Message-ID: <20180910193836.GA21297@bogus>
-References: <1535616829-167936-1-git-send-email-hanjie.lin@amlogic.com>
- <1535616829-167936-2-git-send-email-hanjie.lin@amlogic.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 14/30] dt-bindings: update the Allwinner
+ GPADC device tree binding for H3 & A83T
+Date: Mon, 10 Sep 2018 14:44:24 -0500
+Message-ID: <20180910194424.GA21461@bogus>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-15-embed3d@gmail.com>
+ <20180831084854.q2uh63pw5vprqlzt@flea>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBG4T3POAKGQEXHQIX7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1535616829-167936-2-git-send-email-hanjie.lin@amlogic.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Yue Wang <yue.wang@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180831084854.q2uh63pw5vprqlzt@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Aug 2018 16:13:48 +0800, Hanjie Lin wrote:
-> From: Yue Wang <yue.wang@amlogic.com>
+On Fri, Aug 31, 2018 at 10:48:54AM +0200, Maxime Ripard wrote:
+> On Thu, Aug 30, 2018 at 05:45:02PM +0200, Philipp Rossak wrote:
+> > Allwinner H3 features a thermal sensor like the one in A33, but has its
+> > register re-arranged, the clock divider moved to CCU (originally the
+> > clock divider is in ADC) and added a pair of bus clock and reset.
+> > 
+> > Allwinner A83T features a thermal sensor similar to the H3, the ths clock,
+> > the bus clock and the reset was removed from the CCU. The THS in A83T
+> > has a clock that is directly connected and runs with 24 MHz.
+> > 
+> > Update the binding document to cover H3 and A83T.
+> > 
+> > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-> PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-> controller.
-> 
-> Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-> Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-> ---
->  .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-> 
+> You probably want to have a look at:
+> https://www.spinics.net/lists/arm-kernel/msg670167.html
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Well, which is it? An ADC or thermal sensor?
+
+Rob
