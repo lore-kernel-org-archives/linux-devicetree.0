@@ -1,138 +1,64 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 2/2] PM / devfreq: Add devfreq driver for interconnect
- bandwidth voting
-Date: Tue, 11 Sep 2018 00:25:32 +0530
-Message-ID: <904fb7d5f96a0c02bd57f21c50549192@codeaurora.org>
-References: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
- <4fcac639-cba9-1a71-9b78-326ebb9242da@linaro.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Mon, 10 Sep 2018 21:07:55 +0200
+Message-ID: <59561e0f-e3b9-7898-a300-90b198ad14e6@gmail.com>
+References: <20180906135005.6718-1-dmurphy@ti.com>
+ <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+ <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
+ <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+ <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4fcac639-cba9-1a71-9b78-326ebb9242da@linaro.org>
+In-Reply-To: <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: Saravana Kannan <skannan@codeaurora.org>, MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Georgi,
+Dan, Pavel,
 
-This driver uses of_icc_get which is very likely to fail if it probes
-before the interconnect provider. Would it be possible for icc_get to
-return/differentiate both -EPROBE_DEFER and other errors to prevent the
-driver to continually probe defer if the path doesn't actually exist
-or just error out if it probes before the interconnect provider.
+On 09/10/2018 04:37 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 09/08/2018 02:53 PM, Jacek Anaszewski wrote:
+>> Dan,
+>>
+>> On 09/07/2018 03:52 PM, Dan Murphy wrote:
+>> [...]
+>>>>
+>>>>> And I think Jacek pointed out that the bindings references in this bindings
+>>>>> don't even exist.
+>>>>>
+>>>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
+>>>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
+>>>>> code.
+>>>>>
+>>>>> ti-lmu common core code and then the LED children appending the feature differentiation.
+>>>>
+>>>>> Need some maintainer weigh in here.
+>>>>
+>>>> Hehe. I'm maintnainer. Fun.
+>>>
+>>> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
+>>>
+>> [...]
+>>
+>> I have a question - is this lm3697 LED controller a cell of some MFD
+>> device? Or is it a self-contained chip?
+>>
+> 
+> This is a self contained chip.  And the LM3697 only function is a LED driver.
+> It does not have any other special functions like the LM363X drivers for GPIO and Regulator support.
 
-On 2018-08-23 18:30, Georgi Djakov wrote:
-> Hi Saravana,
-> 
-> On 08/02/2018 03:57 AM, Saravana Kannan wrote:
->> This driver registers itself as a devfreq device that allows devfreq
->> governors to make bandwidth votes for an interconnect path. This 
->> allows
->> applying various policies for different interconnect paths using 
->> devfreq
->> governors.
->> 
->> Example uses:
->> * Use the devfreq performance governor to set the CPU to DDR 
->> interconnect
->>   path for maximum performance.
->> * Use the devfreq performance governor to set the GPU to DDR 
->> interconnect
->>   path for maximum performance.
->> * Use the CPU frequency to device frequency mapping governor to scale 
->> the
->>   DDR frequency based on the needs of the CPUs' current frequency.
-> 
-> Usually CPUs and GPUs have dedicated cpufreq/devfreq drivers and i was
-> wondering if the interconnect support could be put into these drivers
-> directly?
-> 
->> 
->> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/devfreq/icbw.txt |  21 ++++
->>  drivers/devfreq/Kconfig                            |  13 +++
->>  drivers/devfreq/Makefile                           |   1 +
->>  drivers/devfreq/devfreq_icbw.c                     | 116 
->> +++++++++++++++++++++
->>  4 files changed, 151 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/devfreq/icbw.txt
->>  create mode 100644 drivers/devfreq/devfreq_icbw.c
->> 
->> diff --git a/Documentation/devicetree/bindings/devfreq/icbw.txt 
->> b/Documentation/devicetree/bindings/devfreq/icbw.txt
->> new file mode 100644
->> index 0000000..36cf045
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/devfreq/icbw.txt
->> @@ -0,0 +1,21 @@
->> +Interconnect bandwidth device
->> +
->> +icbw is a device that represents an interconnect path that connects 
->> two
->> +devices. This device is typically used to vote for BW requirements 
->> between
->> +two devices. Eg: CPU to DDR, GPU to DDR, etc
->> +
->> +Required properties:
->> +- compatible:		Must be "devfreq-icbw"
->> +- interconnects:	Pairs of phandles and interconnect provider 
->> specifier
->> +			to denote the edge source and destination ports of
->> +			the interconnect path. See also:
->> +		Documentation/devicetree/bindings/interconnect/interconnect.txt
->> +- interconnect-names:	Must have one entry with the name "path".
->> +
->> +Example:
->> +
->> +	qcom,cpubw {
->> +		compatible = "devfreq-icbw";
->> +		interconnects = <&snoc MASTER_APSS_1 &bimc SLAVE_EBI_CH0>;
->> +		interconnect-names = "path";
-> 
-> interconnect-names is optional when there is only a single path.
-> 
->> +	};
->> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
->> index 3d9ae68..590370e 100644
->> --- a/drivers/devfreq/Kconfig
->> +++ b/drivers/devfreq/Kconfig
->> @@ -121,6 +121,19 @@ config ARM_RK3399_DMC_DEVFREQ
->>            It sets the frequency for the memory controller and reads 
->> the usage counts
->>            from hardware.
->> 
->> +config DEVFREQ_ICBW
->> +	bool "DEVFREQ device for making bandwidth votes on interconnect 
->> paths"
-> 
-> Can this be a module?
-> 
->> +	select DEVFREQ_GOV_PERFORMANCE
->> +	select DEVFREQ_GOV_POWERSAVE
->> +	select DEVFREQ_GOV_USERSPACE
->> +	default n
-> 
-> There's no need to specify this default. It is 'n' by default anyway.
-> Also maybe you want to add something like:
-> 	depends on INTERCONNECT=y
-> 
-> Thanks,
-> Georgi
-> 
->> +	help
->> +	  Different devfreq governors use this devfreq device to make
->> +	  bandwidth votes for interconnect paths between different devices
->> +	  (Eg: CPU to DDR, GPU to DDR, etc). This driver provides a generic
->> +	  interface so that the devfreq governors can be shared across SoCs
->> +	  and architectures.
->> +
->>  source "drivers/devfreq/event/Kconfig"
+This is an argument for merging it as a standalone LED class driver
+then. It is even more justifiable, taking into account uncertainties
+related to the proper way of adding the support for it to the existing
+MFD driver, whereas the code reuse would be the only advantage of having
+thus support in MFD subsystem.
 
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Best regards,
+Jacek Anaszewski
