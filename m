@@ -1,54 +1,124 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 2/3] arm64: dts: qcom: sdm845-mtp: Add RPMh VRM/XOB
- regulators
-Date: Mon, 10 Sep 2018 10:46:38 -0700
-Message-ID: <20180910174638.GB2523@minitux>
+Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: sdm845-mtp: Add nodes for USB
+Date: Mon, 10 Sep 2018 10:47:29 -0700
+Message-ID: <20180910174729.GC2523@minitux>
 References: <20180822173629.202885-1-dianders@chromium.org>
- <20180822173629.202885-3-dianders@chromium.org>
+ <20180822173629.202885-4-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180822173629.202885-3-dianders@chromium.org>
+In-Reply-To: <20180822173629.202885-4-dianders@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Douglas Anderson <dianders@chromium.org>
 Cc: Andy Gross <andy.gross@linaro.org>, swboyd@chromium.org, tfiga@chromium.org, Manu Gautam <mgautam@codeaurora.org>, David Collins <collinsd@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Wed 22 Aug 10:36 PDT 2018, Douglas Anderson wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-[..]
-> +
-> +		vdd_qusb_hs0:
-> +		vdda_hp_pcie_core:
-> +		vdda_mipi_csi0_0p9:
-> +		vdda_mipi_csi1_0p9:
-> +		vdda_mipi_csi2_0p9:
-> +		vdda_mipi_dsi0_pll:
-> +		vdda_mipi_dsi1_pll:
-> +		vdda_qlink_lv:
-> +		vdda_qlink_lv_ck:
-> +		vdda_qrefs_0p875:
-> +		vdda_pcie_core:
-> +		vdda_pll_cc_ebi01:
-> +		vdda_pll_cc_ebi23:
-> +		vdda_sp_sensor:
-> +		vdda_ufs1_core:
-> +		vdda_ufs2_core:
-> +		vdda_usb1_ss_core:
-> +		vdda_usb2_ss_core:
 
-While I agree with Doug that it would be connect to use the input pin
-name to describe the supplies of the various block I don't like the
-level of indirection it results in when reading the dts.
-
-So I would prefer that any of these just reference vreg_l1a_0p875
-directly.
-
-
-That said, the patch looks good.
+> Set the various nodes to "okay" and hook up the regulators.
+> 
+> NOTE: For now the main USB port (the one that goes out the Type C
+> connector) is forced to host.  Eventually someone will need to get the
+> Type C detection hooked up and get this all integrated with the
+> PMI8998 PMIC.  The reason for forcing to "host" in the meantime is
+> that this will leave us with one "host" and one "peripheral" port.
+> 
+> In order for host mode this to work, we assume that the bootloader
+> left things configured enough for us.  Apparently the magic for that
+> is is to do these writes on pmi8998:
+> - pm_comm_write_byte(2, 0x1153, 0x2C, 0);
+> - pm_comm_write_byte(2, 0x1152, 0x07, 0);
+> - pm_comm_write_byte(2, 0x1140, 0x00, 0);
+> - pm_comm_write_byte(2, 0x1140, 0x01, 0);
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 Regards,
 Bjorn
+
+> ---
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 61 +++++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index ef53c4ae60b0..eedfaf8922e2 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -356,6 +356,67 @@
+>  	status = "okay";
+>  };
+>  
+> +&usb_1 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_1_dwc3 {
+> +	/* Until we have Type C hooked up we'll force this as host. */
+> +	dr_mode = "host";
+> +};
+> +
+> +&usb_1_hsphy {
+> +	status = "okay";
+> +
+> +	vdd-supply = <&vdda_usb1_ss_core>;
+> +	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
+> +	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
+> +
+> +	qcom,imp-res-offset-value = <8>;
+> +	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
+> +	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
+> +	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
+> +};
+> +
+> +&usb_1_qmpphy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vdda_usb1_ss_1p2>;
+> +	vdda-pll-supply = <&vdda_usb1_ss_core>;
+> +};
+> +
+> +&usb_2 {
+> +	status = "okay";
+> +};
+> +
+> +&usb_2_dwc3 {
+> +	/*
+> +	 * Though the USB block on SDM845 can support host, there's no vbus
+> +	 * signal for this port on MTP.  Thus (unless you have a non-compliant
+> +	 * hub that works without vbus) the only sensible thing is to force
+> +	 * peripheral mode.
+> +	 */
+> +	dr_mode = "peripheral";
+> +};
+> +
+> +&usb_2_hsphy {
+> +	status = "okay";
+> +
+> +	vdd-supply = <&vdda_usb2_ss_core>;
+> +	vdda-pll-supply = <&vdda_qusb_hs0_1p8>;
+> +	vdda-phy-dpdm-supply = <&vdda_qusb_hs0_3p1>;
+> +
+> +	qcom,imp-res-offset-value = <8>;
+> +	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_22_8_MA>;
+> +};
+> +
+> +&usb_2_qmpphy {
+> +	status = "okay";
+> +
+> +	vdda-phy-supply = <&vdda_usb2_ss_1p2>;
+> +	vdda-pll-supply = <&vdda_usb2_ss_core>;
+> +};
+> +
+>  /* PINCTRL - additions to nodes defined in sdm845.dtsi */
+>  
+>  &qup_i2c10_default {
+> -- 
+> 2.18.0.1017.ga543ac7ca45-goog
+> 
