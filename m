@@ -1,28 +1,65 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/6] dt-bindings: remoteproc: qcom: Remove additional
- definition tag
-Date: Mon, 10 Sep 2018 13:28:09 -0500
-Message-ID: <20180910182809.GA25894@bogus>
-References: <20180829191215.10071-1-sibis@codeaurora.org>
- <20180829191215.10071-4-sibis@codeaurora.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2] ARM64: dts: meson-gxbb-wetek: add ttyAML1 uart for Bluetooth
+Date: Mon, 10 Sep 2018 20:30:20 +0200
+Message-ID: <CAFBinCA=sDT4mVD=ZA90SF+d84bg5HCWuv6O5uz4+dKVSxNgiw@mail.gmail.com>
+References: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com> <1536322536-53109-1-git-send-email-christianshewitt@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180829191215.10071-4-sibis@codeaurora.org>
+In-Reply-To: <1536322536-53109-1-git-send-email-christianshewitt@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: bjorn.andersson@linaro.org, p.zabel@pengutronix.de, mka@chromium.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+To: robh+dt@kernel.org
+Cc: christianshewitt@gmail.com, Neil Armstrong <narmstrong@baylibre.com>, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Aug 2018 00:42:12 +0530, Sibi Sankar wrote:
-> Remove the additional definition tag declared for WCSS sub-system
-> under reset-names.
-> 
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+Hi Rob,
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+On Fri, Sep 7, 2018 at 2:16 PM Christian Hewitt
+<christianshewitt@gmail.com> wrote:
+>
+> This change adds the uart_A used by the brmcfmac sdio module in the
+> WeTek Hub and WeTek Play 2 devices. meson_uart_probe seems to mandate
+> an alias (without it, BT is not working) so this is also included.
+>
+> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> index 70325b2..e75ace7 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> @@ -10,6 +10,7 @@
+>  / {
+>         aliases {
+>                 serial0 = &uart_AO;
+> +               serial1 = &uart_A;
+>                 ethernet0 = &ethmac;
+>         };
+>
+> @@ -239,6 +240,18 @@
+>         vqmmc-supply = <&vddio_boot>;
+>  };
+>
+> +/* This is connected to the Bluetooth module: */
+> +&uart_A {
+> +       status = "okay";
+> +       pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
+> +       pinctrl-names = "default";
+> +
+> +       bluetooth {
+> +               compatible = "brcm,bcm43438-bt";
+I have a question regarding the Broadcom Bluetooth compatible strings:
+Christian mentioned earlier that the Bluetooth controller identifies
+itself as BCM4335C0 (BCM4335 rev. C0)
+
+do we need to add a new compatible string (to
+Documentation/devicetree/bindings/net/broadcom-bluetooth.txt)?
+if yes: should we also add a new of_device_id to hci_bcm.c or should
+board.dts simply use compatible = "brcm,bcm4335c0-bt",
+"brcm,bcm43438-bt"?
+
+
+Regards
+Martin
