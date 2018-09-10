@@ -1,68 +1,38 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH 1/3] soc: fsl: add Platform PM driver QorIQ platforms
-Date: Mon, 10 Sep 2018 09:26:58 +0000
-Message-ID: <AM5PR0402MB2865520968A3656EC904ECB8F1050@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20180831035219.31619-1-ran.wang_1@nxp.com>
- <cad8c585fb415959e7ade8b500278c2c5e070873.camel@buserror.net>
+From: Alex Gonzalez <alex.gonzalez@digi.com>
+Subject: [PATCH v3] ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Pro
+Date: Mon, 10 Sep 2018 11:37:51 +0200
+Message-ID: <1536572272-18590-1-git-send-email-alex.gonzalez@digi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cad8c585fb415959e7ade8b500278c2c5e070873.camel@buserror.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@lists.linux-foundation.org" <linux-pm@lists.linux-foundation.org>
+To: shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alex.gonzalez@digi.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQsDQoNCk9uIDIwMTgvOS84IDQ6MzUsIFNjb3R0IFdvb2Qgd3JvdGU6DQo+IA0KPiBP
-biBGcmksIDIwMTgtMDgtMzEgYXQgMTE6NTIgKzA4MDAsIFJhbiBXYW5nIHdyb3RlOg0KPiA+IFRo
-aXMgZHJpdmVyIGlzIHRvIHByb3ZpZGUgYSBpbmRlcGVuZGVudCBmcmFtZXdvcmsgZm9yIFBNIHNl
-cnZpY2UNCj4gPiBwcm92aWRlciBhbmQgY29uc3VtZXIgdG8gY29uZmlndXJlIHN5c3RlbSBsZXZl
-bCB3YWtlIHVwIGZlYXR1cmUuIEZvcg0KPiA+IGV4YW1wbGUsIFJDUE0gZHJpdmVyIGNvdWxkIHJl
-Z2lzdGVyIGEgY2FsbGJhY2sgZnVuY3Rpb24gb24gdGhpcw0KPiA+IHBsYXRmb3JtIGZpcnN0LCBh
-bmQgRmxleCB0aW1lciBkcml2ZXIgd2hvIHdhbnQgdG8gZW5hYmxlIHRpbWVyIHdha2UgdXANCj4g
-PiBmZWF0dXJlLCB3aWxsIGNhbGwgZ2VuZXJpYyBBUEkgcHJvdmlkZWQgYnkgdGhpcyBwbGF0Zm9y
-bSBkcml2ZXIsIGFuZA0KPiA+IHRoZW4gaXQgd2lsbCB0cmlnZ2VyIFJDUE0gZHJpdmVyIHRvIGRv
-IGl0LiBUaGUgYmVuZWZpdCBpcyB0byBpc29sYXRlDQo+ID4gdGhlIHVzZXIgYW5kIHNlcnZpY2Us
-IHN1Y2ggYXMgZmxleCB0aW1lciBkcml2ZXIgd2lsbCBub3QgaGF2ZSB0byBrbm93DQo+ID4gdGhl
-IGltcGxlbWVudCBkZXRhaWxzIG9mIHdha2V1cCBmdW5jdGlvbiBpdCByZXF1aXJlLiBCZXNpZGVz
-LCBpdCBpcw0KPiA+IGFsc28gZWFzeSBmb3Igc2VydmljZSBzaWRlIHRvIHVwZ3JhZGUgaXRzIGxv
-Z2ljIHdoZW4gZGVzaWduIGlzIGNoYW5nZWQNCj4gPiBhbmQgcmVtYWluIHVzZXIgc2lkZSB1bmNo
-YW5nZWQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8cmFuLndhbmdfMUBueHAu
-Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9mc2wvS2NvbmZpZyAgIHwgICAxNCArKysr
-Kw0KPiA+ICBkcml2ZXJzL3NvYy9mc2wvTWFrZWZpbGUgIHwgICAgMSArDQo+ID4gIGRyaXZlcnMv
-c29jL2ZzbC9wbGF0X3BtLmMgfCAgMTQ0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvc29jL2ZzbC9wbGF0X3BtLmggfCAgIDIy
-ICsrKysrKysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxODEgaW5zZXJ0aW9ucygrKSwgMCBkZWxl
-dGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gMTAwNjQ0IGRyaXZlcnMvc29jL2ZzbC9wbGF0X3Bt
-LmMgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IGluY2x1ZGUvc29jL2ZzbC9wbGF0X3BtLmgNCj4g
-Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wvS2NvbmZpZyBiL2RyaXZlcnMvc29j
-L2ZzbC9LY29uZmlnIGluZGV4DQo+ID4gN2E5ZmI5Yi4uNjUxNzQxMiAxMDA2NDQNCj4gPiAtLS0g
-YS9kcml2ZXJzL3NvYy9mc2wvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL2ZzbC9LY29u
-ZmlnDQo+ID4gQEAgLTE2LDMgKzE2LDE3IEBAIGNvbmZpZyBGU0xfR1VUUw0KPiA+ICAJICBJbml0
-aWFsbHkgb25seSByZWFkaW5nIFNWUiBhbmQgcmVnaXN0ZXJpbmcgc29jIGRldmljZSBhcmUNCj4g
-PiBzdXBwb3J0ZWQuDQo+ID4gIAkgIE90aGVyIGd1dHMgYWNjZXNzZXMsIHN1Y2ggYXMgcmVhZGlu
-ZyBSQ1csIHNob3VsZCBldmVudHVhbGx5IGJlDQo+ID4gbW92ZWQNCj4gPiAgCSAgaW50byB0aGlz
-IGRyaXZlciBhcyB3ZWxsLg0KPiArDQo+ID4gK2NvbmZpZyBGU0xfUExBVF9QTQ0KPiA+ICsJYm9v
-bCAiRnJlZXNjYWxlIHBsYXRmb3JtIFBNIGZyYW1ld29yayINCj4gDQo+IFRoaXMgbmFtZSBzZWVt
-cyB0byBiZSBzaW11bHRhbmVvdXNseSB0b28gZ2VuZXJpYyAoZm9yIHNvbWV0aGluZyB0aGF0IGlz
-DQo+IGxpa2VseSBpbnRlbmRlZCBvbmx5IGZvciB1c2Ugd2l0aCBjZXJ0YWluIEZyZWVzY2FsZS9O
-WFAgY2hpcCBmYW1pbGllcykgYW5kIHRvbw0KPiBzcGVjaWZpYyAoZm9yIHNvbWV0aGluZyB0aGF0
-IHNlZW1zIHRvIGJlIGdlbmVyYWwgaW5mcmFzdHJ1Y3R1cmUgd2l0aCBubyByZWFsDQo+IGhhcmR3
-YXJlIGRlcGVuZGVuY2llcykuDQoNClllcywgdGhpcyBkcml2ZXIgaGFzIG5vIHJlYWwgSFcgZGVw
-ZW5kZW5jaWVzIGF0IGFsbC4gQnV0IHdlJ2QgbGlrZSB0byBpbnRyb2R1Y2UgaXQNCnRvIGhlbHAg
-cHJvdmlkaW5nIG1vcmUgZmxleGliaWxpdHkgJiBnZW5lcmljIG9uIEZTTCBQTSBmZWF0dXJlIGNv
-bmZpZ3VyZSAoc28gZmFyIA0Kd2UgaGF2ZSBSQ1BNIG9uIHN5c3RlbSB3YWtldXAgc291cmNlIGNv
-bnRyb2wpLiBJIHRoaW5rIGl0J3MgZ29vZA0KZm9yIGRyaXZlci9JUCBwb3J0aW5nIGFtb25nIGRp
-ZmZlcmVudCBTb0MgaW4gdGhlIGZ1dHVyZS4gQXMgdG8gdGhlIG5hbWUsIGRvIHlvdQ0KaGF2ZSBi
-ZXR0ZXIgc3VnZ2VzdGlvbj8NCg0KPiBXaGF0IHNwZWNpZmljIHByb2JsZW1zIHdpdGggTGludXgn
-cyBnZW5lcmljIHdha2V1cCBpbmZyYXN0cnVjdHVyZSBpcyB0aGlzDQo+IHRyeWluZyB0byBzb2x2
-ZSwgYW5kIHdoeSB3b3VsZCB0aG9zZSBwcm9ibGVtcyBub3QgYmUgYmV0dGVyIHNvbHZlZCB0aGVy
-ZT8NCg0KQWN0dWFsbHksIEkgYW0gbm90IHN1cmUgaWYgZ2VuZXJpYyB3YWtldXAgaW5mcmFzdHJ1
-Y3R1cmUgaGF2ZSB0aGlzIGtpbmQgb2YgUE0gZmVhdHVyZQ0KKGtlZXAgc3BlY2lmaWMgSVAgYWxp
-dmUgZHVyaW5nIHN5c3RlbSBzdXNwZW5kLCBjb3VsZCB5b3UgcGxlYXNlIHNob3cgbWU/KS4NCkFu
-ZCBJIHRoaW5rIGl0IGlzIG5vdCBjb21tb24gcmVxdWlyZW1lbnQsIHNvIEkgZGVjaWRlIHRvIHB1
-dCBpdCBpbiBGU0wgZm9sZGVyLiANCg0KPiBBbHNvLCB5b3Ugc2hvdWxkIENDIGxpbnV4LXBtIG9u
-IHRoZXNlIHBhdGNoZXMuDQoNClllcywgdGhhbmtzIGZvciBzdWdnZXN0aW9uDQoNClJlZ2FyZHMs
-DQpSYW4NCg0KPiAtU2NvdHQNCg0K
+This patch adds a device tree for the ConnectCore 6UL SBC Pro board, based on
+the ConnectCore 6UL SOM.
+
+Changes since v2 [2]:
+
+* Removed redundant clocks from pwm nodes
+* Use real iomux pad values
+* Spelling change in regulator-usb-otg1 node name
+
+Changes since v1 [1]:
+
+* Removed unused pinctrl nodes
+* Replace undocumented vendor BSP node by using GPIO hogs
+* Formatting changes:
+        * Change node names to use dashes instead of underscores
+
+[1] https://lore.kernel.org/lkml/1534936719-13770-2-git-send-email-alex.gonzalez@digi.com/
+[2] https://lore.kernel.org/lkml/1536074909-8654-1-git-send-email-alex.gonzalez@digi.com/
+
+Alex Gonzalez (1):
+  ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Pro
+
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts | 390 ++++++++++++++++++++++++++++
+ 2 files changed, 391 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-ccimx6ulsbcpro.dts
