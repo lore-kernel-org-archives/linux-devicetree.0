@@ -1,39 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 11/14] dt-bindings/interrupt-controller: add
- documentation for Marvell SEI controller
-Date: Mon, 10 Sep 2018 13:13:17 -0500
-Message-ID: <20180910181317.GA5738@bogus>
-References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
- <20180830073535.10710-12-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 01/10] dt-bindings: fsi: Add P9 OCC device
+ documentation
+Date: Mon, 10 Sep 2018 13:16:10 -0500
+Message-ID: <20180910181610.GA5907@bogus>
+References: <1535664761-86018-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1535664761-86018-2-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180830073535.10710-12-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+In-Reply-To: <1535664761-86018-2-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, gregkh@linuxfoundation.org, mark.rutland@arm.com, linux@roeck-us.net, joel@jms.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 30 Aug 2018 09:35:32 +0200, Miquel Raynal wrote:
-> Describe the System Error Interrupt (SEI) controller. It aggregates two
-> types of interrupts, wired and MSIs from respectively the AP and the
-> CPs, into a single SPI interrupt.
+On Thu, Aug 30, 2018 at 04:32:32PM -0500, Eddie James wrote:
+> Document the bindings for the FSI-attached POWER9 On-Chip Controller.
 > 
-> Suggested-by: Haim Boot <hayim@marvell.com>
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
 > ---
->  .../interrupt-controller/marvell,sei.txt      | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,sei.txt
+>  Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+> new file mode 100644
+> index 0000000..46372f6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ.txt
+> @@ -0,0 +1,15 @@
+> +Device-tree bindings for FSI-attached POWER9 On-Chip Controller (OCC)
+> +---------------------------------------------------------------------
+> +
+> +This is the binding for the P9 On-Chip Controller accessed over FSI from a
+> +service processor. See fsi.txt for details on bindings for FSI slave and CFAM
+> +nodes.
+> +
+> +Required properties:
+> + - compatible = "ibm,p9-occ"
+> +
+> +Examples:
+> +
+> +    occ {
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+FSI slave devices are supposed to have an address according to the 
+binding doc.
+
+> +        compatible = "ibm,p9-occ";
+> +    };
+> -- 
+> 1.8.3.1
+> 
