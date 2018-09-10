@@ -1,174 +1,68 @@
-From: Liang Yang <liang.yang@amlogic.com>
-Subject: Re: [RFC PATCH v3 1/2] dt-bindings: nand: meson: add Amlogic NAND
- controller driver
-Date: Mon, 10 Sep 2018 12:46:44 +0800
-Message-ID: <824dd234-30d6-d47d-8abd-352578b232f6@amlogic.com>
-References: <1536317831-58056-1-git-send-email-jianxin.pan@amlogic.com>
- <1536317831-58056-2-git-send-email-jianxin.pan@amlogic.com>
- <20180907141944.4dd4406b@bbrezillon>
+From: Nava kishore Manne <navam@xilinx.com>
+Subject: RE: [RFC PATCH v3 1/3] firmware: xilinx: Add reset API's
+Date: Mon, 10 Sep 2018 04:47:05 +0000
+Message-ID: <BYAPR02MB4710E2CACAA82D43B7FA0A81C2050@BYAPR02MB4710.namprd02.prod.outlook.com>
+References: <1536131342-28041-1-git-send-email-nava.manne@xilinx.com>
+         <1536131342-28041-2-git-send-email-nava.manne@xilinx.com>
+ <1536143389.4084.4.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180907141944.4dd4406b@bbrezillon>
+In-Reply-To: <1536143389.4084.4.camel@pengutronix.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: linux-mtd@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi boric,
-
-Thanks for your quick reply.
-
-On 9/7/2018 8:19 PM, Boris Brezillon wrote:
-> On Fri, 7 Sep 2018 18:57:10 +0800
-> Jianxin Pan <jianxin.pan@amlogic.com> wrote:
-> 
->> From: Liang Yang <liang.yang@amlogic.com>
->>
->> Add Amlogic NAND controller dt-bindings for Meson SoC,
->> Current this driver support GXBB/GXL/AXG platform.
->>
->> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>   .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 91 ++++++++++++++++++++++
->>   1 file changed, 91 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> new file mode 100644
->> index 0000000..655a778
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> @@ -0,0 +1,91 @@
->> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
->> +
->> +This file documents the properties in addition to those available in
->> +the MTD NAND bindings.
->> +
->> +Required properties:
->> +- compatible : contains one of:
->> +  - "amlogic,meson-gxl-nfc"
->> +  - "amlogic,meson-axg-nfc"
->> +- clocks     :
->> +	A list of phandle + clock-specifier pairs for the clocks listed
->> +	in clock-names.
->> +
->> +- clock-names: Should contain the following:
->> +	"core" - NFC module gate clock
->> +	"device" - device clock from eMMC sub clock controller
->> +
->> +- pins     : Select pins which NFC need.
->> +- nand_pins: Detail NAND pins information.
-> 
-> You mean pinctrl-names and pinctrl-0, right? Not sure it's necessary to
-> document that, but if you do, please use the correct DT prop names.
-> 
-
-I find no documentation for that in other xx_nand.txt; I will consider 
-to remove it.
-
->> +- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
->> +				controller port C
->> +
->> +Optional children nodes:
->> +Children nodes represent the available nand chips.
->> +
->> +
->> +
-> 
-> One too many blank lines here.
-> 
-ok, i will remove it.
-
->> +Other properties:
->> +see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
->> +
->> +Example demonstrate on AXG SoC:
->> +
->> +	sd_emmc_c_clkc: mmc@7000 {
->> +		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
->> +		reg = <0x0 0x7000 0x0 0x800>;
->> +		status = "okay";
->> +	};
->> +
->> +	nand: nfc@7800 {
->> +		compatible = "amlogic,meson-axg-nfc";
->> +		reg = <0x0 0x7800 0x0 0x100>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
->> +		status = "disabled";
->> +
->> +		clocks = <&clkc CLKID_SD_EMMC_C>,
->> +			<&sd_emmc_c_clkc CLKID_MMC_DIV>;
->> +		clock-names = "core", "device";
->> +		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
->> +
->> +		status = "okay";
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&nand_pins>;
->> +
->> +		nand@0 {
->> +			reg = <0>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +
->> +			nand-on-flash-bbt;
->> +			nand-ecc-mode = "hw";
->> +			nand-ecc-strength = <8>;
->> +			nand-ecc-step-size = <1024>;
-> 
-> Drop nand-ecc- props. I guess you have a sensible default value and I
-> prefer when ECC requirements are directly extracted during chip
-> detection. Defining that in the DT is a bad habit. The only one that
-> could make sense (assuming you support it) is nand-ecc-maximize.
-> 
-ok, i will drop them.
-we adopt auto detection during init stage, it works too.
-
->> +
->> +			amlogic,nand-enable-scrambler;
-> 
-> Please drop this property (it's not longer documented).
-> 
-em, we should have removed it when nfc driver never use it.
-
->> +
->> +			partition@0 {
->> +				label = "boot";
->> +				reg = <0x00000000 0x00200000>;
->> +				read-only;
->> +			};
->> +			partition@200000 {
->> +				label = "env";
->> +				reg = <0x00200000 0x00400000>;
->> +			};
->> +			partition@600000 {
->> +				label = "system";
->> +				reg = <0x00600000 0x00a00000>;
->> +			};
->> +			partition@1000000 {
->> +				label = "rootfs";
->> +				reg = <0x01000000 0x03000000>;
->> +			};
->> +			partition@4000000 {
->> +				label = "media";
->> +				reg = <0x04000000 0x8000000>;
->> +			};
-> 
-> No need to define the partitions in your example, especially since they
-> should be placed in a partitions subnode with a "fixed-partitions"
-> compat.
->
-
-ok, i will remove it.
-
->> +		};
->> +	};
-> 
-> .
-> 
+SGkgUGhpbGlwcA0KDQpUaGFua3MgZm9yIHRoZSBxdWljayByZXNwb25zZS4uLg0KUGxlYXNlIGZp
+bmQgbXkgcmVzcG9uc2UgaW5saW5lLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+IEZyb206IFBoaWxpcHAgWmFiZWwgW21haWx0bzpwLnphYmVsQHBlbmd1dHJvbml4LmRlXQ0KPiBT
+ZW50OiBXZWRuZXNkYXksIFNlcHRlbWJlciA1LCAyMDE4IDQ6MDAgUE0NCj4gVG86IE5hdmEga2lz
+aG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFy
+ay5ydXRsYW5kQGFybS5jb207IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgUmFq
+YW4gVmFqYQ0KPiA8UkFKQU5WQHhpbGlueC5jb20+OyBKb2xseSBTaGFoIDxKT0xMWVNAeGlsaW54
+LmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxp
+c3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1
+YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYzIDEvM10gZmlybXdhcmU6IHhpbGlueDogQWRkIHJlc2V0
+IEFQSSdzDQo+IA0KPiBIaSwNCj4gDQo+IE9uIFdlZCwgMjAxOC0wOS0wNSBhdCAxMjozOSArMDUz
+MCwgTmF2YSBraXNob3JlIE1hbm5lIHdyb3RlOg0KPiA+IFRoaXMgUGF0Y2ggQWRkcyByZXNldCBB
+UEkncyB0byBzdXBwb3J0IHJlbGVhc2UsIGFzc2VydCBhbmQgc3RhdHVzDQo+ID4gZnVuY3Rpb25h
+bGl0aWVzIGJ5IHVzaW5nIGZpcm13YXJlIGludGVyZmFjZS4NCj4gPg0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YS5tYW5uZUB4aWxpbnguY29tPg0KPiA+IC0tLQ0K
+PiA+IENoYW5nZXMgZm9yIHYzOg0KPiA+IAkJLU5vbmUuDQo+ID4gQ2hhbmdlcyBmb3IgdjI6DQo+
+ID4gCQktTmV3IFBhdGNoLg0KPiA+DQo+ID4gIGRyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFt
+cC5jICAgICB8ICA0MCArKysrKysrKysrKw0KPiA+ICBpbmNsdWRlL2xpbnV4L2Zpcm13YXJlL3hs
+bngtenlucW1wLmggfCAxMzYNCj4gPiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Kw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDE3NiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9maXJtd2FyZS94aWxpbngvenlucW1wLmMNCj4gPiBiL2RyaXZlcnMv
+ZmlybXdhcmUveGlsaW54L3p5bnFtcC5jDQo+ID4gaW5kZXggN2NjZWRmMC4uNjM5YzcyZiAxMDA2
+NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2Zpcm13YXJlL3hpbGlueC96eW5xbXAuYw0KPiA+ICsrKyBi
+L2RyaXZlcnMvZmlybXdhcmUveGlsaW54L3p5bnFtcC5jDQo+ID4gQEAgLTQ0Nyw2ICs0NDcsNDQg
+QEAgc3RhdGljIGludCB6eW5xbXBfcG1fY2xvY2tfZ2V0cGFyZW50KHUzMg0KPiBjbG9ja19pZCwg
+dTMyICpwYXJlbnRfaWQpDQo+ID4gIAlyZXR1cm4gcmV0Ow0KPiA+ICB9DQo+ID4NCj4gPiArLyoq
+DQo+ID4gKyAqIHp5bnFtcF9wbV9yZXNldF9hc3NlcnQgLSBSZXF1ZXN0IHNldHRpbmcgb2YgcmVz
+ZXQgKDEgLSBhc3NlcnQsIDAgLSByZWxlYXNlKQ0KPiA+ICsgKiBAcmVzZXQ6CQlSZXNldCB0byBi
+ZSBjb25maWd1cmVkDQo+ID4gKyAqIEBhc3NlcnRfZmxhZzoJRmxhZyBzdGF0aW5nIHNob3VsZCBy
+ZXNldCBiZSBhc3NlcnRlZCAoMSkgb3INCj4gPiArICoJCQlyZWxlYXNlZCAoMCkNCj4gPiArICoN
+Cj4gPiArICogUmV0dXJuOiBSZXR1cm5zIHN0YXR1cywgZWl0aGVyIHN1Y2Nlc3Mgb3IgZXJyb3Ir
+cmVhc29uICAqLyBzdGF0aWMNCj4gPiAraW50IHp5bnFtcF9wbV9yZXNldF9hc3NlcnQoY29uc3Qg
+ZW51bSB6eW5xbXBfcG1fcmVzZXQgcmVzZXQsDQo+ID4gKwkJCQkgIGNvbnN0IGVudW0genlucW1w
+X3BtX3Jlc2V0X2FjdGlvbg0KPiBhc3NlcnRfZmxhZykgew0KPiA+ICsJcmV0dXJuIHp5bnFtcF9w
+bV9pbnZva2VfZm4oUE1fUkVTRVRfQVNTRVJULCByZXNldCwgYXNzZXJ0X2ZsYWcsDQo+ID4gKwkJ
+CQkgICAwLCAwLCBOVUxMKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiArLyoqDQo+ID4gKyAqIHp5bnFt
+cF9wbV9yZXNldF9nZXRfc3RhdHVzIC0gR2V0IHN0YXR1cyBvZiB0aGUgcmVzZXQNCj4gPiArICog
+QHJlc2V0OiAgICAgIFJlc2V0IHdob3NlIHN0YXR1cyBzaG91bGQgYmUgcmV0dXJuZWQNCj4gPiAr
+ICogQHN0YXR1czogICAgIFJldHVybmVkIHN0YXR1cw0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46
+IFJldHVybnMgc3RhdHVzLCBlaXRoZXIgc3VjY2VzcyBvciBlcnJvcityZWFzb24gICovIHN0YXRp
+Yw0KPiA+ICtpbnQgenlucW1wX3BtX3Jlc2V0X2dldF9zdGF0dXMoY29uc3QgZW51bSB6eW5xbXBf
+cG1fcmVzZXQgcmVzZXQsDQo+ID4gKwkJCQkgICAgICB1MzIgKnN0YXR1cykNCj4gPiArew0KPiA+
+ICsJdTMyIHJldF9wYXlsb2FkW1BBWUxPQURfQVJHX0NOVF07DQo+ID4gKwlpbnQgcmV0Ow0KPiA+
+ICsNCj4gPiArCWlmICghc3RhdHVzKQ0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsNCj4g
+PiArCXJldCA9IHp5bnFtcF9wbV9pbnZva2VfZm4oUE1fUkVTRVRfR0VUX1NUQVRVUywgcmVzZXQs
+IDAsDQo+ID4gKwkJCQkgIDAsIDAsIHJldF9wYXlsb2FkKTsNCj4gPiArCSpzdGF0dXMgPSByZXRf
+cGF5bG9hZFsxXTsNCj4gDQo+IEl0IGRvZXNuJ3QgcmVhbGx5IG1hdHRlciBoZXJlLCBidXQgaW4g
+Z2VuZXJhbCBJJ2Qgc2tpcCB3cml0aW5nIG91dHB1dCBhcmd1bWVudHMgaW4NCj4gY2FzZSBvZiBl
+cnJvci4NCj4gRm9yIGFsbCBJIGtub3csIHRoZSByZXN1bHQgcmV0dXJuZWQgaW4gcmV0X3BheWxv
+YWQgY291bGQgYmUgdW5kZWZpbmVkLg0KPiANCg0KV2lsbCBmaXggaW4gdGhlIG5leHQgdmVyc2lv
+bi4NCg0KUmVnYXJkcywNCk5hdmFraXNob3JlLg0K
