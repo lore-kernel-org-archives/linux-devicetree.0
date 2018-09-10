@@ -1,133 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Mon, 10 Sep 2018 09:35:29 -0500
-Message-ID: <CAL_JsqKS+h0B5AuUh=vk0m1_7KSj4h2zZUo22rdt1w7oee=QwA@mail.gmail.com>
-References: <20180905235327.5996-1-robh@kernel.org> <20180905235327.5996-7-robh@kernel.org>
- <CAK7LNAS5uEUMDpL8oCJmFWKu1YF8tof5d=2h8jzt-MLHGAEAhg@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Mon, 10 Sep 2018 09:37:15 -0500
+Message-ID: <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
+References: <20180906135005.6718-1-dmurphy@ti.com>
+ <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+ <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
+ <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAS5uEUMDpL8oCJmFWKu1YF8tof5d=2h8jzt-MLHGAEAhg@mail.gmail.com>
+In-Reply-To: <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ley Foon Tan <lftan@altera.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 9, 2018 at 6:28 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> 2018-09-06 8:53 GMT+09:00 Rob Herring <robh@kernel.org>:
-> > There is nothing arch specific about building dtb files other than their
-> > location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
-> > The dependencies and supported targets are all slightly different.
-> > Also, a cross-compiler for each arch is needed, but really the host
-> > compiler preprocessor is perfectly fine for building dtbs. Move the
-> > build rules to a common location and remove the arch specific ones. This
-> > is done in a single step to avoid warnings about overriding rules.
-> >
-> > The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
-> > These pull in several dependencies some of which need a target compiler
-> > (specifically devicetable-offsets.h) and aren't needed to build dtbs.
-> > All that is really needed is dtc, so adjust the dependencies to only be
-> > dtc.
-> >
-> > This change enables support 'dtbs_install' on some arches which were
-> > missing the target.
-> >
-> > Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Cc: Michal Marek <michal.lkml@markovi.net>
-> > Cc: Vineet Gupta <vgupta@synopsys.com>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> > Cc: Michal Simek <monstr@monstr.eu>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Paul Burton <paul.burton@mips.com>
-> > Cc: James Hogan <jhogan@kernel.org>
-> > Cc: Ley Foon Tan <lftan@altera.com>
-> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Cc: Paul Mackerras <paulus@samba.org>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Chris Zankel <chris@zankel.net>
-> > Cc: Max Filippov <jcmvbkbc@gmail.com>
-> > Cc: linux-kbuild@vger.kernel.org
-> > Cc: linux-snps-arc@lists.infradead.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: uclinux-h8-devel@lists.sourceforge.jp
-> > Cc: linux-mips@linux-mips.org
-> > Cc: nios2-dev@lists.rocketboards.org
-> > Cc: linuxppc-dev@lists.ozlabs.org
-> > Cc: linux-xtensa@linux-xtensa.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Please ack so I can take the whole series via the DT tree.
-> >
-> > v2:
-> >  - Fix $arch/boot/dts path check for out of tree builds
-> >  - Fix dtc dependency for building built-in dtbs
-> >  - Fix microblaze built-in dtb building
-> >
-> >  Makefile                          | 32 +++++++++++++++++++++++++++++++
-> >  arch/arc/Makefile                 |  6 ------
-> >  arch/arm/Makefile                 | 20 +------------------
-> >  arch/arm64/Makefile               | 17 +---------------
-> >  arch/c6x/Makefile                 |  2 --
-> >  arch/h8300/Makefile               | 11 +----------
-> >  arch/microblaze/Makefile          |  4 +---
-> >  arch/microblaze/boot/dts/Makefile |  2 ++
-> >  arch/mips/Makefile                | 15 +--------------
-> >  arch/nds32/Makefile               |  2 +-
-> >  arch/nios2/Makefile               |  7 -------
-> >  arch/nios2/boot/Makefile          |  4 ----
-> >  arch/powerpc/Makefile             |  3 ---
-> >  arch/xtensa/Makefile              | 12 +-----------
-> >  scripts/Makefile.lib              |  2 +-
-> >  15 files changed, 42 insertions(+), 97 deletions(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 2b458801ba74..bc18dbbc16c5 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1212,6 +1212,32 @@ kselftest-merge:
-> >                 $(srctree)/tools/testing/selftests/*/config
-> >         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
-> >
-> > +# ---------------------------------------------------------------------------
-> > +# Devicetree files
-> > +
-> > +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
-> > +dtstree := arch/$(SRCARCH)/boot/dts
-> > +endif
-> > +
-> > +ifdef CONFIG_OF_EARLY_FLATTREE
-> > +
-> > +%.dtb %.dtb.S %.dtb.o: | dtc
-> > +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
->
->
-> Hmm, I was worried about '%.dtb.o: | dtc'
-> but seems working.
->
-> Compiling %.S -> %.o requires objtool for x86,
-> but x86 does not support DT.
+Jacek
 
-Well, x86 does support DT to some extent. There's 2 platforms and the
-DT unittests build and run on x86.
+On 09/08/2018 02:53 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 09/07/2018 03:52 PM, Dan Murphy wrote:
+> [...]
+>>>
+>>>> And I think Jacek pointed out that the bindings references in this bindings
+>>>> don't even exist.
+>>>>
+>>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
+>>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
+>>>> code.
+>>>>
+>>>> ti-lmu common core code and then the LED children appending the feature differentiation.
+>>>
+>>>> Need some maintainer weigh in here.
+>>>
+>>> Hehe. I'm maintnainer. Fun.
+>>
+>> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
+>>
+> [...]
+> 
+> I have a question - is this lm3697 LED controller a cell of some MFD
+> device? Or is it a self-contained chip?
+> 
 
-Actually, we can remove "%.dtb.S %.dtb.o" because we don't need those
-as top-level build targets. Must have been a copy-n-paste relic from
-before having common rules.
+This is a self contained chip.  And the LM3697 only function is a LED driver.
+It does not have any other special functions like the LM363X drivers for GPIO and Regulator support.
 
->
-> If CONFIG_MODVERSIONS=y, scripts/genksyms/genksyms is required,
-> %.dtb.S does not contain EXPORT_SYMBOL.
 
-Okay, but that shouldn't affect any of this. We only build *.dtb.S
-when doing built-in dtbs.
+Dan
 
-> BTW, 'dtc' should be a PHONY target.
-
-Right, I found that too.
-
-Rob
+-- 
+------------------
+Dan Murphy
