@@ -1,57 +1,48 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Mon, 10 Sep 2018 09:37:15 -0500
-Message-ID: <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
-References: <20180906135005.6718-1-dmurphy@ti.com>
- <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
- <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
- <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+From: Jim Quinlan <jim2101024@gmail.com>
+Subject: Re: [PATCH v5 08/12] MIPS: BMIPS: add PCI bindings for 7425, 7435
+Date: Mon, 10 Sep 2018 10:37:19 -0400
+Message-ID: <CANCKTBumoy6mw2n+V7hN_T1SYxhq3JQMxgQUUSmOLuMX-Kv=zw@mail.gmail.com>
+References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+ <1536266581-7308-9-git-send-email-jim2101024@gmail.com> <20180906214955.2yzyj6tkmflnnvdx@pburton-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180906214955.2yzyj6tkmflnnvdx@pburton-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: paul.burton@mips.com
+Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, linux@armlinux.org.uk, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, jhogan@kernel.org, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, yamada.masahiro@socionext.com, Arnd Bergmann <arnd@arndb.de>, nicolas.pitre@linaro.org, keescook@chromium.org, jinb.park7@gm
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+On Thu, Sep 6, 2018 at 5:50 PM Paul Burton <paul.burton@mips.com> wrote:
+>
+> Hi Jim,
+>
+> On Thu, Sep 06, 2018 at 04:42:57PM -0400, Jim Quinlan wrote:
+> > Adds the PCIe nodes for the Broadcom STB PCIe root complex.
+> >
+> > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> > ---
+> >  arch/mips/boot/dts/brcm/bcm7425.dtsi     | 28 ++++++++++++++++++++++++++++
+> >  arch/mips/boot/dts/brcm/bcm7435.dtsi     | 28 ++++++++++++++++++++++++++++
+> >  arch/mips/boot/dts/brcm/bcm97425svmb.dts |  4 ++++
+> >  arch/mips/boot/dts/brcm/bcm97435svmb.dts |  4 ++++
+> >  4 files changed, 64 insertions(+)
+>
+> Do you have a preference for how this gets merged? If it goes via the
+> PCI tree then for patches 8 & 9:
+>
+>     Acked-by: Paul Burton <paul.burton@mips.com>
+>
+Hi Paul,
 
-On 09/08/2018 02:53 PM, Jacek Anaszewski wrote:
-> Dan,
-> 
-> On 09/07/2018 03:52 PM, Dan Murphy wrote:
-> [...]
->>>
->>>> And I think Jacek pointed out that the bindings references in this bindings
->>>> don't even exist.
->>>>
->>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
->>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
->>>> code.
->>>>
->>>> ti-lmu common core code and then the LED children appending the feature differentiation.
->>>
->>>> Need some maintainer weigh in here.
->>>
->>> Hehe. I'm maintnainer. Fun.
->>
->> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
->>
-> [...]
-> 
-> I have a question - is this lm3697 LED controller a cell of some MFD
-> device? Or is it a self-contained chip?
-> 
+I hope that the 12 commits  go together and will go through the PCI
+tree.  I'm inclined to think I will have to do a V6, and in the cover
+leter I will mention this request.
 
-This is a self contained chip.  And the LM3697 only function is a LED driver.
-It does not have any other special functions like the LM363X drivers for GPIO and Regulator support.
+Thanks!
+Jim
 
-
-Dan
-
--- 
-------------------
-Dan Murphy
+> Still looking at patch 6.
+>
+> Thanks,
+>     Paul
