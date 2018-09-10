@@ -1,45 +1,81 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 14/30] dt-bindings: update the Allwinner
- GPADC device tree binding for H3 & A83T
-Date: Mon, 10 Sep 2018 14:44:24 -0500
-Message-ID: <20180910194424.GA21461@bogus>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-15-embed3d@gmail.com>
- <20180831084854.q2uh63pw5vprqlzt@flea>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Mon, 10 Sep 2018 14:51:06 -0500
+Message-ID: <20d9ea9e-bbb8-2240-97cc-615e3fbcef8c@ti.com>
+References: <20180906135005.6718-1-dmurphy@ti.com>
+ <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
+ <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
+ <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
+ <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
+ <59561e0f-e3b9-7898-a300-90b198ad14e6@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBG4T3POAKGQEXHQIX7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180831084854.q2uh63pw5vprqlzt@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <59561e0f-e3b9-7898-a300-90b198ad14e6@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 10:48:54AM +0200, Maxime Ripard wrote:
-> On Thu, Aug 30, 2018 at 05:45:02PM +0200, Philipp Rossak wrote:
-> > Allwinner H3 features a thermal sensor like the one in A33, but has its
-> > register re-arranged, the clock divider moved to CCU (originally the
-> > clock divider is in ADC) and added a pair of bus clock and reset.
-> > 
-> > Allwinner A83T features a thermal sensor similar to the H3, the ths clock,
-> > the bus clock and the reset was removed from the CCU. The THS in A83T
-> > has a clock that is directly connected and runs with 24 MHz.
-> > 
-> > Update the binding document to cover H3 and A83T.
-> > 
-> > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Jacek
+
+On 09/10/2018 02:07 PM, Jacek Anaszewski wrote:
+> Dan, Pavel,
 > 
-> You probably want to have a look at:
-> https://www.spinics.net/lists/arm-kernel/msg670167.html
+> On 09/10/2018 04:37 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 09/08/2018 02:53 PM, Jacek Anaszewski wrote:
+>>> Dan,
+>>>
+>>> On 09/07/2018 03:52 PM, Dan Murphy wrote:
+>>> [...]
+>>>>>
+>>>>>> And I think Jacek pointed out that the bindings references in this bindings
+>>>>>> don't even exist.
+>>>>>>
+>>>>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
+>>>>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
+>>>>>> code.
+>>>>>>
+>>>>>> ti-lmu common core code and then the LED children appending the feature differentiation.
+>>>>>
+>>>>>> Need some maintainer weigh in here.
+>>>>>
+>>>>> Hehe. I'm maintnainer. Fun.
+>>>>
+>>>> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
+>>>>
+>>> [...]
+>>>
+>>> I have a question - is this lm3697 LED controller a cell of some MFD
+>>> device? Or is it a self-contained chip?
+>>>
+>>
+>> This is a self contained chip.  And the LM3697 only function is a LED driver.
+>> It does not have any other special functions like the LM363X drivers for GPIO and Regulator support.
+> 
+> This is an argument for merging it as a standalone LED class driver
+> then. It is even more justifiable, taking into account uncertainties
+> related to the proper way of adding the support for it to the existing
+> MFD driver, whereas the code reuse would be the only advantage of having
+> thus support in MFD subsystem.
+> 
 
-Well, which is it? An ADC or thermal sensor?
+Does the argument carry over to the other devices?
 
-Rob
+Like the LM3632 (part of the ti-lmu) has flash and torch and no other special functions
+so it would look like the lm3601x family with different register mappings.
+
+The LM3631 seems to also be just a LED driver with no extra functionality
+
+I could go buy an EVM and put together a driver for that device as well using the lm3601x as
+reference.
+
+Dan
+
+-- 
+------------------
+Dan Murphy
