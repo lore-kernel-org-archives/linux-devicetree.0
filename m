@@ -1,242 +1,188 @@
-Return-Path: <SRS0=pRDT=LU=gmail.com=jim2101024@kernel.org>
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH v5 01/12] soc: bcm: brcmstb: add memory API
-Date: Thu,  6 Sep 2018 16:42:50 -0400
-Message-Id: <1536266581-7308-2-git-send-email-jim2101024@gmail.com>
-In-Reply-To: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
-References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v4 3/3] usb: renesas_usbhs: Add multiple clocks management
+Date: Mon, 10 Sep 2018 18:52:20 +0900
+Message-Id: <1536573140-24123-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1536573140-24123-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1536573140-24123-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: linux-kernel@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jim Quinlan <jim2101024@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+R-Car Gen3 needs to enable clocks of both host and peripheral.
+Since [eo]hci-platform disables the reset(s) when the drivers are
+removed, renesas_usbhs driver doesn't work correctly. To fix this
+issue, this patch adds multiple clocks management on this
+renesas_usbhs driver.
 
-This commit adds a memory API suitable for ascertaining the sizes of
-each of the N memory controllers in a Broadcom STB chip.  Its first
-user will be the Broadcom STB PCIe root complex driver, which needs
-to know these sizes to properly set up DMA mappings for inbound
-regions.
-
-We cannot use memblock here or anything like what Linux provides
-because it collapses adjacent regions within a larger block, and here
-we actually need per-memory controller addresses and sizes, which is
-why we resort to manual DT parsing.
-
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/soc/bcm/brcmstb/Makefile |   2 +-
- drivers/soc/bcm/brcmstb/memory.c | 158 +++++++++++++++++++++++++++++++++++++++
- include/soc/brcmstb/memory_api.h |  26 +++++++
- 3 files changed, 185 insertions(+), 1 deletion(-)
- create mode 100644 drivers/soc/bcm/brcmstb/memory.c
- create mode 100644 include/soc/brcmstb/memory_api.h
+ drivers/usb/renesas_usbhs/common.c | 88 ++++++++++++++++++++++++++++++++++++++
+ drivers/usb/renesas_usbhs/common.h |  2 +
+ 2 files changed, 90 insertions(+)
 
-diff --git a/drivers/soc/bcm/brcmstb/Makefile b/drivers/soc/bcm/brcmstb/Makefile
-index 01687c2..e4ccd3a 100644
---- a/drivers/soc/bcm/brcmstb/Makefile
-+++ b/drivers/soc/bcm/brcmstb/Makefile
-@@ -1,2 +1,2 @@
--obj-y				+= common.o biuctrl.o
-+obj-y				+= common.o biuctrl.o memory.o
- obj-$(CONFIG_BRCMSTB_PM)	+= pm/
-diff --git a/drivers/soc/bcm/brcmstb/memory.c b/drivers/soc/bcm/brcmstb/memory.c
-new file mode 100644
-index 0000000..254783d
---- /dev/null
-+++ b/drivers/soc/bcm/brcmstb/memory.c
-@@ -0,0 +1,158 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright © 2015-2017 Broadcom */
-+
-+#include <linux/device.h>
-+#include <linux/io.h>
-+#include <linux/libfdt.h>
-+#include <linux/of_address.h>
-+#include <linux/of_fdt.h>
-+#include <linux/sizes.h>
-+#include <soc/brcmstb/memory_api.h>
-+
-+/* Macro to help extract property data */
-+#define DT_PROP_DATA_TO_U32(b, offs) (fdt32_to_cpu(*(u32 *)(b + offs)))
-+
-+/* Constants used when retrieving memc info */
-+#define NUM_BUS_RANGES 10
-+#define BUS_RANGE_ULIMIT_SHIFT 4
-+#define BUS_RANGE_LLIMIT_SHIFT 4
-+#define BUS_RANGE_PA_SHIFT 12
-+
-+enum {
-+	BUSNUM_MCP0 = 0x4,
-+	BUSNUM_MCP1 = 0x5,
-+	BUSNUM_MCP2 = 0x6,
-+};
-+
-+/*
-+ * If the DT nodes are handy, determine which MEMC holds the specified
-+ * physical address.
-+ */
-+#ifdef CONFIG_ARCH_BRCMSTB
-+int __brcmstb_memory_phys_addr_to_memc(phys_addr_t pa, void __iomem *base)
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index 1d355d5..d6c39ba 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -5,6 +5,7 @@
+  * Copyright (C) 2011 Renesas Solutions Corp.
+  * Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+  */
++#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/gpio.h>
+ #include <linux/io.h>
+@@ -291,6 +292,79 @@ static void usbhsc_set_buswait(struct usbhs_priv *priv)
+ 		usbhs_bset(priv, BUSWAIT, 0x000F, wait);
+ }
+ 
++static bool usbhsc_is_multi_clks(struct usbhs_priv *priv)
 +{
-+	int memc = -1;
-+	int i;
++	if (priv->dparam.type == USBHS_TYPE_RCAR_GEN3 ||
++	    priv->dparam.type == USBHS_TYPE_RCAR_GEN3_WITH_PLL)
++		return true;
 +
-+	for (i = 0; i < NUM_BUS_RANGES; i++, base += 8) {
-+		const u64 ulimit_raw = readl(base);
-+		const u64 llimit_raw = readl(base + 4);
-+		const u64 ulimit =
-+			((ulimit_raw >> BUS_RANGE_ULIMIT_SHIFT)
-+			 << BUS_RANGE_PA_SHIFT) | 0xfff;
-+		const u64 llimit = (llimit_raw >> BUS_RANGE_LLIMIT_SHIFT)
-+				   << BUS_RANGE_PA_SHIFT;
-+		const u32 busnum = (u32)(ulimit_raw & 0xf);
-+
-+		if (pa >= llimit && pa <= ulimit) {
-+			if (busnum >= BUSNUM_MCP0 && busnum <= BUSNUM_MCP2) {
-+				memc = busnum - BUSNUM_MCP0;
-+				break;
-+			}
-+		}
-+	}
-+
-+	return memc;
++	return false;
 +}
 +
-+int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
++static int usbhsc_clk_get(struct device *dev, struct usbhs_priv *priv)
 +{
-+	int memc = -1;
-+	struct device_node *np;
-+	void __iomem *cpubiuctrl;
-+
-+	np = of_find_compatible_node(NULL, NULL, "brcm,brcmstb-cpu-biu-ctrl");
-+	if (!np)
-+		return memc;
-+
-+	cpubiuctrl = of_iomap(np, 0);
-+	if (!cpubiuctrl)
-+		goto cleanup;
-+
-+	memc = __brcmstb_memory_phys_addr_to_memc(pa, cpubiuctrl);
-+	iounmap(cpubiuctrl);
-+
-+cleanup:
-+	of_node_put(np);
-+
-+	return memc;
-+}
-+
-+#elif defined(CONFIG_MIPS)
-+int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
-+{
-+	/* The logic here is fairly simple and hardcoded: if pa <= 0x5000_0000,
-+	 * then this is MEMC0, else MEMC1.
-+	 *
-+	 * For systems with 2GB on MEMC0, MEMC1 starts at 9000_0000, with 1GB
-+	 * on MEMC0, MEMC1 starts at 6000_0000.
-+	 */
-+	if (pa >= 0x50000000ULL)
-+		return 1;
-+	else
++	if (!usbhsc_is_multi_clks(priv))
 +		return 0;
-+}
-+#endif
 +
-+u64 brcmstb_memory_memc_size(int memc)
++	/* The first clock should exist */
++	priv->clks[0] = of_clk_get(dev->of_node, 0);
++	if (IS_ERR(priv->clks[0]))
++		return PTR_ERR(priv->clks[0]);
++
++	/*
++	 * To backward compatibility with old DT, this driver checks the return
++	 * value if it's -ENOENT or not.
++	 */
++	priv->clks[1] = of_clk_get(dev->of_node, 1);
++	if (PTR_ERR(priv->clks[1]) == -ENOENT)
++		priv->clks[1] = NULL;
++	else if (IS_ERR(priv->clks[1]))
++		return PTR_ERR(priv->clks[1]);
++
++	return 0;
++}
++
++static void usbhsc_clk_put(struct usbhs_priv *priv)
 +{
-+	const void *fdt = initial_boot_params;
-+	const int mem_offset = fdt_path_offset(fdt, "/memory");
-+	int addr_cells = 1, size_cells = 1;
-+	const struct fdt_property *prop;
-+	int proplen, cellslen;
-+	u64 memc_size = 0;
 +	int i;
 +
-+	/* Get root size and address cells if specified */
-+	prop = fdt_get_property(fdt, 0, "#size-cells", &proplen);
-+	if (prop)
-+		size_cells = DT_PROP_DATA_TO_U32(prop->data, 0);
++	if (!usbhsc_is_multi_clks(priv))
++		return;
 +
-+	prop = fdt_get_property(fdt, 0, "#address-cells", &proplen);
-+	if (prop)
-+		addr_cells = DT_PROP_DATA_TO_U32(prop->data, 0);
++	for (i = 0; i < ARRAY_SIZE(priv->clks); i++)
++		clk_put(priv->clks[i]);
++}
 +
-+	if (mem_offset < 0)
-+		return -1;
++static int usbhsc_clk_prepare_enable(struct usbhs_priv *priv)
++{
++	int i, ret;
 +
-+	prop = fdt_get_property(fdt, mem_offset, "reg", &proplen);
-+	cellslen = (int)sizeof(u32) * (addr_cells + size_cells);
-+	if ((proplen % cellslen) != 0)
-+		return -1;
++	if (!usbhsc_is_multi_clks(priv))
++		return 0;
 +
-+	for (i = 0; i < proplen / cellslen; ++i) {
-+		u64 addr = 0;
-+		u64 size = 0;
-+		int memc_idx;
-+		int j;
-+
-+		for (j = 0; j < addr_cells; ++j) {
-+			int offset = (cellslen * i) + (sizeof(u32) * j);
-+
-+			addr |= (u64)DT_PROP_DATA_TO_U32(prop->data, offset) <<
-+				((addr_cells - j - 1) * 32);
++	for (i = 0; i < ARRAY_SIZE(priv->clks); i++) {
++		ret = clk_prepare_enable(priv->clks[i]);
++		if (ret) {
++			while (--i >= 0)
++				clk_disable_unprepare(priv->clks[i]);
++			return ret;
 +		}
-+		for (j = 0; j < size_cells; ++j) {
-+			int offset = (cellslen * i) +
-+				(sizeof(u32) * (j + addr_cells));
-+
-+			size |= (u64)DT_PROP_DATA_TO_U32(prop->data, offset) <<
-+				((size_cells - j - 1) * 32);
-+		}
-+
-+		if ((phys_addr_t)addr != addr) {
-+			pr_err("phys_addr_t is smaller than provided address 0x%llx!\n",
-+			       addr);
-+			return -1;
-+		}
-+
-+		memc_idx = brcmstb_memory_phys_addr_to_memc((phys_addr_t)addr);
-+		if (memc_idx == memc)
-+			memc_size += size;
 +	}
 +
-+	return memc_size;
++	return ret;
 +}
-+EXPORT_SYMBOL_GPL(brcmstb_memory_memc_size);
 +
-diff --git a/include/soc/brcmstb/memory_api.h b/include/soc/brcmstb/memory_api.h
-new file mode 100644
-index 0000000..6546845
---- /dev/null
-+++ b/include/soc/brcmstb/memory_api.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __MEMORY_API_H
-+#define __MEMORY_API_H
-+
-+/*
-+ * Bus Interface Unit control register setup, must happen early during boot,
-+ * before SMP is brought up, called by machine entry point.
-+ */
-+void brcmstb_biuctrl_init(void);
-+
-+#ifdef CONFIG_SOC_BRCMSTB
-+int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa);
-+u64 brcmstb_memory_memc_size(int memc);
-+#else
-+static inline int brcmstb_memory_phys_addr_to_memc(phys_addr_t pa)
++static void usbhsc_clk_disable_unprepare(struct usbhs_priv *priv)
 +{
-+	return -EINVAL;
++	int i;
++
++	if (!usbhsc_is_multi_clks(priv))
++		return;
++
++	for (i = 0; i < ARRAY_SIZE(priv->clks); i++)
++		clk_disable_unprepare(priv->clks[i]);
 +}
 +
-+static inline u64 brcmstb_memory_memc_size(int memc)
-+{
-+	return -1;
-+}
-+#endif
+ /*
+  *		platform default param
+  */
+@@ -341,6 +415,10 @@ static void usbhsc_power_ctrl(struct usbhs_priv *priv, int enable)
+ 		/* enable PM */
+ 		pm_runtime_get_sync(dev);
+ 
++		/* enable clks */
++		if (usbhsc_clk_prepare_enable(priv))
++			return;
 +
-+#endif /* __MEMORY_API_H */
+ 		/* enable platform power */
+ 		usbhs_platform_call(priv, power_ctrl, pdev, priv->base, enable);
+ 
+@@ -353,6 +431,9 @@ static void usbhsc_power_ctrl(struct usbhs_priv *priv, int enable)
+ 		/* disable platform power */
+ 		usbhs_platform_call(priv, power_ctrl, pdev, priv->base, enable);
+ 
++		/* disable clks */
++		usbhsc_clk_disable_unprepare(priv);
++
+ 		/* disable PM */
+ 		pm_runtime_put_sync(dev);
+ 	}
+@@ -667,6 +748,10 @@ static int usbhs_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto probe_fail_rst;
+ 
++	ret = usbhsc_clk_get(&pdev->dev, priv);
++	if (ret)
++		goto probe_fail_clks;
++
+ 	/*
+ 	 * deviece reset here because
+ 	 * USB device might be used in boot loader.
+@@ -720,6 +805,8 @@ static int usbhs_probe(struct platform_device *pdev)
+ 	return ret;
+ 
+ probe_end_mod_exit:
++	usbhsc_clk_put(priv);
++probe_fail_clks:
+ 	reset_control_assert(priv->rsts);
+ probe_fail_rst:
+ 	usbhs_mod_remove(priv);
+@@ -750,6 +837,7 @@ static int usbhs_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
+ 
+ 	usbhs_platform_call(priv, hardware_exit, pdev);
++	usbhsc_clk_put(priv);
+ 	reset_control_assert(priv->rsts);
+ 	usbhs_mod_remove(priv);
+ 	usbhs_fifo_remove(priv);
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index bce7d35..555b3e7 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -8,6 +8,7 @@
+ #ifndef RENESAS_USB_DRIVER_H
+ #define RENESAS_USB_DRIVER_H
+ 
++#include <linux/clk.h>
+ #include <linux/extcon.h>
+ #include <linux/platform_device.h>
+ #include <linux/reset.h>
+@@ -279,6 +280,7 @@ struct usbhs_priv {
+ 
+ 	struct phy *phy;
+ 	struct reset_control *rsts;
++	struct clk *clks[2];
+ };
+ 
+ /*
 -- 
-1.9.0.138.g2de3478
+1.9.1
