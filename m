@@ -1,164 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] phy: zynqmp: Add dt bindings for ZynqMP phy
-Date: Mon, 10 Sep 2018 15:30:59 -0500
-Message-ID: <20180910203059.GA7055@bogus>
-References: <1536165747-6405-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1536165747-6405-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Subject: Re: [PATCH 08/21] microblaze: get cpu node with of_get_cpu_node
+Date: Mon, 10 Sep 2018 15:49:01 -0500
+Message-ID: <CAL_JsqKWy8dmfF2zCAsEVkDdFM14niKtapqnR_K45Kr3-mZhqQ@mail.gmail.com>
+References: <20180905193738.19325-1-robh@kernel.org> <20180905193738.19325-9-robh@kernel.org>
+ <8b227f8c-f351-18da-b55d-e8979281f510@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536165747-6405-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+In-Reply-To: <8b227f8c-f351-18da-b55d-e8979281f510@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Cc: kishon@ti.com, michal.simek@xilinx.com, mark.rutland@arm.com, vivek.gautam@codeaurora.org, v.anuragkumar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2018 at 10:12:27PM +0530, Anurag Kumar Vulisha wrote:
-> This patch adds the document describing dt bindings for ZynqMP
-> phy. ZynqMP SOC has a High Speed Processing System Gigabit
-> Transceiver which provides PHY capabilties to USB, SATA,
-> PCIE, Display Port and Ehernet SGMII controllers.
-> 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> ---
->  Changes in v3:
-> 	1. Corrected the Documentation as suggested by Vivek Gautam
-> 
->  Changes in v2:
-> 	1. None
->  .../devicetree/bindings/phy/phy-zynqmp.txt         | 104 +++++++++++++++++++++
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> new file mode 100644
-> index 0000000..65007c4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
-> @@ -0,0 +1,104 @@
-> +Xilinx ZynqMP PHY binding
-> +
-> +This binding describes a ZynqMP PHY device that is used to control ZynqMP
-> +High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
-> +and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
-> +
-> +Phy provider node
-> +=================
-> +
-> +Required properties:
-> +- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
-> +
-> +- reg           : Address and length of register sets for each device in
-> +                  "reg-names"
-> +
-> +- reg-names     : The names of the register addresses corresponding to the
-> +		  registers filled in "reg":
-> +			- serdes: SERDES block register set
-> +			- siou: SIOU block register set
-> +
-> +Optional properties:
-> +- xlnx,tx_termination_fix : Include this for fixing functional issue with the
+On Mon, Sep 10, 2018 at 9:56 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> On 5.9.2018 21:37, Rob Herring wrote:
+> > "device_type" use is deprecated for FDT though it has continued to be used
+> > for nodes like cpu nodes. Use of_get_cpu_node() instead which works using
+> > node names by default. This will allow the eventually removal of cpu
+> > device_type properties.
+> >
+> > Also, fix a leaked reference by adding a missing of_node_put.
+> >
+> > Cc: Michal Simek <monstr@monstr.eu>
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> > Please ack and I will take via the DT tree. This is dependent on the
+> > first 2 patches.
+>
+> I have tested it and it is align with the spec and all dtses generated
+> before 2015 will work without any issue.
+> In 2015 new device tree generator was introduced and it is not adding
+> reg property to cpu node which is required by this change.
+> This will be fixed but that means that all generated dtses from 2015 are
+> affected.
 
-s/_/-/
+Patch 2 was supposed to handle that case. However, it does expect that
+there should be an #address-cells equal to 0 in that case. Is that not
+a valid assumption?
 
-> +		  TX termination resistance in GT, which can be out of spec for
-> +		  the XCZU9EG silicon version. This property is not required for
-> +		  "xlnx,zynqmp-psgtr-v1.1"
-> +
-> +Required nodes	:  A sub-node is required for each lane the controller
-> +		   provides.
-> +
-> +Phy sub-nodes
-> +=============
-> +
-> +Required properties:
-> +lane0:
+> That's why will be great if you can also change that pr_err message to
+> mentioned to also check reg property to give users a chance to fix it
+> properly. Error log below.
 
-lane0 or lane@0? If you need or care about numbering then add a reg 
-property.
+I don't think breaking users is good.
 
-> +- #phy-cells	: Should be 4
-> +
-> +lane1:
-> +- #phy-cells	: Should be 4
-> +
-> +lane2:
-> +- #phy-cells	: Should be 4
-> +
-> +lane3:
-> +- #phy-cells	: Should be 4
-> +
-> +Example:
-> +	zynqmp_phy: phy@fd400000 {
-> +		compatible = "xlnx,zynqmp-psgtr-v1.1";
-> +		status = "okay";
-> +		reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>;
-> +		reg-names = "serdes", "siou";
-> +
-> +		lane0: lane@0 {
-> +			#phy-cells = <4>;
-> +		};
-> +		lane1: lane@1 {
-> +			#phy-cells = <4>;
-> +		};
-> +		lane2: lane@2 {
-> +			#phy-cells = <4>;
-> +		};
-> +		lane3: lane@3 {
-> +			#phy-cells = <4>;
-> +		};
-> +	};
-> +
-> +Specifying phy control of devices
-> +=================================
-> +
-> +Device nodes should specify the configuration required in their "phys"
-> +property, containing a phandle to the phy port node and a device type.
-> +
-> +phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_NUM LANE_FREQ>;
-> +
-> +PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
-> +CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
-> +			  or PHY_TYPE_DP or PHY_TYPE_SGMII
-> +CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
-> +				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
-> +				PHY_TYPE_SATA : 0 or 1
-> +				PHY_TYPE_USB  : 0 or 1
-> +				PHY_TYPE_DP   : 0 or 1
-> +				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
-> +LANE_NUM                = Depends on which lane clock is used as ref clk, can be
-> +			  0 or 1 or 2 or 3
+I could make this a find by path (/cpus/cpu) instead or just drop it
+for microblaze. It doesn't really affect my plans for removing
+device_node.type ptr.
 
-I'm not really clear about what this is.
+Rob
 
-> +LANE_FREQ               = Frequency that controller can operate, can be any of
-> +			  19.2Mhz,20Mhz,24Mhz,26Mhz,27Mhz,28.4Mhz,40Mhz,52Mhz,
-> +			  100Mhz,108Mhz,125Mhz,135Mhz,150Mhz
 
-This can't be implied by the mode/type? I wouldn't expect any frequency 
-can be used for each mode.
-
-> +
-> +Example:
-> +
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +	usb@fe200000 {
-> +		...
-> +		phys	  = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
-> +		...
-> +	};
-> +
-> +	ahci@fd0c0000 {
-> +		...
-> +		phys	  = <&lane3 PHY_TYPE_SATA 1 1 125000000>;
-> +		...
-> +	};
-
-What if you are doing multiple lanes for 1 device? That would be more 
-useful 2nd example if that's supported.
-
-> -- 
-> 2.1.1
-> 
+> Anyway here is my
+> Tested-by: Michal Simek <michal.simek@xilinx.com>
+>
+> Thanks,
+> Michal
