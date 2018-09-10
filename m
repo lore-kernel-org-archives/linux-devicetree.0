@@ -1,86 +1,68 @@
 From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH 3/3] soc: fsl: add RCPM driver
-Date: Mon, 10 Sep 2018 09:09:59 +0000
-Message-ID: <AM5PR0402MB28652A2D74A891BC35B1B680F1050@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH 1/3] soc: fsl: add Platform PM driver QorIQ platforms
+Date: Mon, 10 Sep 2018 09:26:58 +0000
+Message-ID: <AM5PR0402MB2865520968A3656EC904ECB8F1050@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 References: <20180831035219.31619-1-ran.wang_1@nxp.com>
- <20180831035219.31619-3-ran.wang_1@nxp.com>
- <86101ce0f4201d05510e57d74cafe8c665b8e5d4.camel@buserror.net>
+ <cad8c585fb415959e7ade8b500278c2c5e070873.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <86101ce0f4201d05510e57d74cafe8c665b8e5d4.camel@buserror.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cad8c585fb415959e7ade8b500278c2c5e070873.camel@buserror.net>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Scott Wood <oss@buserror.net>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@lists.linux-foundation.org" <linux-pm@lists.linux-foundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@lists.linux-foundation.org" <linux-pm@lists.linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Scott,
-
-On 2018/9/8 18:16, Scott Wood wrote:
-> 
-> On Fri, 2018-08-31 at 11:52 +0800, Ran Wang wrote:
-> > The NXP's QorIQ Processors based on ARM Core have RCPM module (Run
-> > Control and Power Management), which performs all device-level tasks
-> > associated with power management such as wakeup source control.
-> >
-> > This driver depends on FSL platform PM driver framework which help to
-> > isolate user and PM service provider (such as RCPM driver).
-> >
-> > Signed-off-by: Chenhui Zhao <chenhui.zhao@nxp.com>
-> > Signed-off-by: Ying Zhang <ying.zhang22455@nxp.com>
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> >  drivers/soc/fsl/Kconfig   |    6 ++
-> >  drivers/soc/fsl/Makefile  |    1 +
-> >  drivers/soc/fsl/ls-rcpm.c |  153
-> > +++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 160 insertions(+), 0 deletions(-)  create mode
-> > 100644 drivers/soc/fsl/ls-rcpm.c
-> 
-> Is there a reason why this is LS-specific, or could it be used with PPC RCPM
-> blocks?
-
-They have different SW arch design on low power operation: PPC RCPM
-driver has taken care of most things of suspend enter & exit. And LS RCPM driver
-will only handle wakeup source configure and left rest work to system firmware
-to do. So you might be aware that LS RCPM will only get call whenever plat_pm
-driver API is called rather than system suspend begin where.
-
-> 
-> > diff --git a/drivers/soc/fsl/Kconfig b/drivers/soc/fsl/Kconfig index
-> > 6517412..882330d 100644
-> > --- a/drivers/soc/fsl/Kconfig
-> > +++ b/drivers/soc/fsl/Kconfig
-> > @@ -30,3 +30,9 @@ config FSL_PLAT_PM
-> >  	  have to know the implement details of wakeup function it require.
-> >  	  Besides, it is also easy for service side to upgrade its logic
-> > when
-> >  	  design changed and remain user side unchanged.
-> > +
-> > +config LS_RCPM
-> > +	bool "Freescale RCPM support"
-> > +	depends on (FSL_PLAT_PM)
-> 
-> Why is this parenthesized?
-
-Because we'd like to decouple RCPM driver and its user.
-Benefit is that will allow user doesn't have to know who will serve it for some PM
-features (such as wake up source control), and provide some kind of flexibility when
-either RCMP or user driver evolve in the future. So I add a plat_pm driver to prevent
-wake up IP knowing any information of RCPM.
-
-Regards,
-Ran
-
-> 
-> -Scott
+SGkgU2NvdHQsDQoNCk9uIDIwMTgvOS84IDQ6MzUsIFNjb3R0IFdvb2Qgd3JvdGU6DQo+IA0KPiBP
+biBGcmksIDIwMTgtMDgtMzEgYXQgMTE6NTIgKzA4MDAsIFJhbiBXYW5nIHdyb3RlOg0KPiA+IFRo
+aXMgZHJpdmVyIGlzIHRvIHByb3ZpZGUgYSBpbmRlcGVuZGVudCBmcmFtZXdvcmsgZm9yIFBNIHNl
+cnZpY2UNCj4gPiBwcm92aWRlciBhbmQgY29uc3VtZXIgdG8gY29uZmlndXJlIHN5c3RlbSBsZXZl
+bCB3YWtlIHVwIGZlYXR1cmUuIEZvcg0KPiA+IGV4YW1wbGUsIFJDUE0gZHJpdmVyIGNvdWxkIHJl
+Z2lzdGVyIGEgY2FsbGJhY2sgZnVuY3Rpb24gb24gdGhpcw0KPiA+IHBsYXRmb3JtIGZpcnN0LCBh
+bmQgRmxleCB0aW1lciBkcml2ZXIgd2hvIHdhbnQgdG8gZW5hYmxlIHRpbWVyIHdha2UgdXANCj4g
+PiBmZWF0dXJlLCB3aWxsIGNhbGwgZ2VuZXJpYyBBUEkgcHJvdmlkZWQgYnkgdGhpcyBwbGF0Zm9y
+bSBkcml2ZXIsIGFuZA0KPiA+IHRoZW4gaXQgd2lsbCB0cmlnZ2VyIFJDUE0gZHJpdmVyIHRvIGRv
+IGl0LiBUaGUgYmVuZWZpdCBpcyB0byBpc29sYXRlDQo+ID4gdGhlIHVzZXIgYW5kIHNlcnZpY2Us
+IHN1Y2ggYXMgZmxleCB0aW1lciBkcml2ZXIgd2lsbCBub3QgaGF2ZSB0byBrbm93DQo+ID4gdGhl
+IGltcGxlbWVudCBkZXRhaWxzIG9mIHdha2V1cCBmdW5jdGlvbiBpdCByZXF1aXJlLiBCZXNpZGVz
+LCBpdCBpcw0KPiA+IGFsc28gZWFzeSBmb3Igc2VydmljZSBzaWRlIHRvIHVwZ3JhZGUgaXRzIGxv
+Z2ljIHdoZW4gZGVzaWduIGlzIGNoYW5nZWQNCj4gPiBhbmQgcmVtYWluIHVzZXIgc2lkZSB1bmNo
+YW5nZWQuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBSYW4gV2FuZyA8cmFuLndhbmdfMUBueHAu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3NvYy9mc2wvS2NvbmZpZyAgIHwgICAxNCArKysr
+Kw0KPiA+ICBkcml2ZXJzL3NvYy9mc2wvTWFrZWZpbGUgIHwgICAgMSArDQo+ID4gIGRyaXZlcnMv
+c29jL2ZzbC9wbGF0X3BtLmMgfCAgMTQ0DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIGluY2x1ZGUvc29jL2ZzbC9wbGF0X3BtLmggfCAgIDIy
+ICsrKysrKysNCj4gPiAgNCBmaWxlcyBjaGFuZ2VkLCAxODEgaW5zZXJ0aW9ucygrKSwgMCBkZWxl
+dGlvbnMoLSkgIGNyZWF0ZSBtb2RlDQo+ID4gMTAwNjQ0IGRyaXZlcnMvc29jL2ZzbC9wbGF0X3Bt
+LmMgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IGluY2x1ZGUvc29jL2ZzbC9wbGF0X3BtLmgNCj4g
+Pg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3NvYy9mc2wvS2NvbmZpZyBiL2RyaXZlcnMvc29j
+L2ZzbC9LY29uZmlnIGluZGV4DQo+ID4gN2E5ZmI5Yi4uNjUxNzQxMiAxMDA2NDQNCj4gPiAtLS0g
+YS9kcml2ZXJzL3NvYy9mc2wvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvc29jL2ZzbC9LY29u
+ZmlnDQo+ID4gQEAgLTE2LDMgKzE2LDE3IEBAIGNvbmZpZyBGU0xfR1VUUw0KPiA+ICAJICBJbml0
+aWFsbHkgb25seSByZWFkaW5nIFNWUiBhbmQgcmVnaXN0ZXJpbmcgc29jIGRldmljZSBhcmUNCj4g
+PiBzdXBwb3J0ZWQuDQo+ID4gIAkgIE90aGVyIGd1dHMgYWNjZXNzZXMsIHN1Y2ggYXMgcmVhZGlu
+ZyBSQ1csIHNob3VsZCBldmVudHVhbGx5IGJlDQo+ID4gbW92ZWQNCj4gPiAgCSAgaW50byB0aGlz
+IGRyaXZlciBhcyB3ZWxsLg0KPiArDQo+ID4gK2NvbmZpZyBGU0xfUExBVF9QTQ0KPiA+ICsJYm9v
+bCAiRnJlZXNjYWxlIHBsYXRmb3JtIFBNIGZyYW1ld29yayINCj4gDQo+IFRoaXMgbmFtZSBzZWVt
+cyB0byBiZSBzaW11bHRhbmVvdXNseSB0b28gZ2VuZXJpYyAoZm9yIHNvbWV0aGluZyB0aGF0IGlz
+DQo+IGxpa2VseSBpbnRlbmRlZCBvbmx5IGZvciB1c2Ugd2l0aCBjZXJ0YWluIEZyZWVzY2FsZS9O
+WFAgY2hpcCBmYW1pbGllcykgYW5kIHRvbw0KPiBzcGVjaWZpYyAoZm9yIHNvbWV0aGluZyB0aGF0
+IHNlZW1zIHRvIGJlIGdlbmVyYWwgaW5mcmFzdHJ1Y3R1cmUgd2l0aCBubyByZWFsDQo+IGhhcmR3
+YXJlIGRlcGVuZGVuY2llcykuDQoNClllcywgdGhpcyBkcml2ZXIgaGFzIG5vIHJlYWwgSFcgZGVw
+ZW5kZW5jaWVzIGF0IGFsbC4gQnV0IHdlJ2QgbGlrZSB0byBpbnRyb2R1Y2UgaXQNCnRvIGhlbHAg
+cHJvdmlkaW5nIG1vcmUgZmxleGliaWxpdHkgJiBnZW5lcmljIG9uIEZTTCBQTSBmZWF0dXJlIGNv
+bmZpZ3VyZSAoc28gZmFyIA0Kd2UgaGF2ZSBSQ1BNIG9uIHN5c3RlbSB3YWtldXAgc291cmNlIGNv
+bnRyb2wpLiBJIHRoaW5rIGl0J3MgZ29vZA0KZm9yIGRyaXZlci9JUCBwb3J0aW5nIGFtb25nIGRp
+ZmZlcmVudCBTb0MgaW4gdGhlIGZ1dHVyZS4gQXMgdG8gdGhlIG5hbWUsIGRvIHlvdQ0KaGF2ZSBi
+ZXR0ZXIgc3VnZ2VzdGlvbj8NCg0KPiBXaGF0IHNwZWNpZmljIHByb2JsZW1zIHdpdGggTGludXgn
+cyBnZW5lcmljIHdha2V1cCBpbmZyYXN0cnVjdHVyZSBpcyB0aGlzDQo+IHRyeWluZyB0byBzb2x2
+ZSwgYW5kIHdoeSB3b3VsZCB0aG9zZSBwcm9ibGVtcyBub3QgYmUgYmV0dGVyIHNvbHZlZCB0aGVy
+ZT8NCg0KQWN0dWFsbHksIEkgYW0gbm90IHN1cmUgaWYgZ2VuZXJpYyB3YWtldXAgaW5mcmFzdHJ1
+Y3R1cmUgaGF2ZSB0aGlzIGtpbmQgb2YgUE0gZmVhdHVyZQ0KKGtlZXAgc3BlY2lmaWMgSVAgYWxp
+dmUgZHVyaW5nIHN5c3RlbSBzdXNwZW5kLCBjb3VsZCB5b3UgcGxlYXNlIHNob3cgbWU/KS4NCkFu
+ZCBJIHRoaW5rIGl0IGlzIG5vdCBjb21tb24gcmVxdWlyZW1lbnQsIHNvIEkgZGVjaWRlIHRvIHB1
+dCBpdCBpbiBGU0wgZm9sZGVyLiANCg0KPiBBbHNvLCB5b3Ugc2hvdWxkIENDIGxpbnV4LXBtIG9u
+IHRoZXNlIHBhdGNoZXMuDQoNClllcywgdGhhbmtzIGZvciBzdWdnZXN0aW9uDQoNClJlZ2FyZHMs
+DQpSYW4NCg0KPiAtU2NvdHQNCg0K
