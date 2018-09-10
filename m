@@ -1,54 +1,79 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v11 03/11] firmware: xilinx: Add zynqmp IOCTL API for
- device control
-Date: Mon, 10 Sep 2018 09:43:27 +0100
-Message-ID: <64fbd7ca-48a8-7cb0-af3a-131ee61aef5a@arm.com>
-References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
- <1533318808-10781-4-git-send-email-jollys@xilinx.com>
- <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: RE: [PATCH 2/3] Documentation: dt: binding: fsl: update property
+ description for RCPM
+Date: Mon, 10 Sep 2018 08:44:55 +0000
+Message-ID: <AM5PR0402MB28655442E42632DDAF22B769F1050@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+References: <20180831035219.31619-1-ran.wang_1@nxp.com>
+         <20180831035219.31619-2-ran.wang_1@nxp.com>
+ <c19f11e200258297dbe5a61392a4bbc1e937d7c3.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
+In-Reply-To: <c19f11e200258297dbe5a61392a4bbc1e937d7c3.camel@buserror.net>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Jolly Shah <jolly.shah@xilinx.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, matt@codeblueprint.co.uk, hkallweit1@gmail.com, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, rajanv@xilinx.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Jolly Shah <jollys@xilinx.com>
+To: Scott Wood <oss@buserror.net>, Leo Li <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@lists.linux-foundation.org" <linux-pm@lists.linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/09/18 02:18, Olof Johansson wrote:
-> Hi,
-> 
-> On Fri, Aug 3, 2018 at 10:53 AM, Jolly Shah <jolly.shah@xilinx.com> wrote:
->> From: Rajan Vaja <rajanv@xilinx.com>
->>
->> Add ZynqMP firmware IOCTL API to control and configure
->> devices like PLLs, SD, Gem, etc.
->>
->> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
->> Signed-off-by: Jolly Shah <jollys@xilinx.com>
-> 
-> This patch worries me somewhat. It's a transparent pass-through ioctl
-> driver. Is there a spec available for what the implemented IOCTLs are?
-> 
-> Should some of them be proper drivers instead of an opaque
-> pass-through like this? Could some of them have stability impact on
-> the platform such that there are security concerns and the list of
-> arguments should somehow be sanitized?
-> 
-> What's the intended usecase anyway? Just a debug tool during
-> development, or something that you expect heavy use of by some
-> userspace middleware?
-> 
-
-Thanks for pointing this out. My earlier attempts were ignored[1]
-and I gave up.
-
--- 
-Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2018/5/10/298
+SGkgU2NvdHQsDQoNCk9uIDIwMTgvOS84IDQ6MjMsIFNjb3R0IFdvb2Qgd3JvdGU6DQo+IA0KPiBP
+biBGcmksIDIwMTgtMDgtMzEgYXQgMTE6NTIgKzA4MDAsIFJhbiBXYW5nIHdyb3RlOg0KPiA+ICtP
+cHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICsgLSBiaWctZW5kaWFuIDogSW5kaWNhdGUgUkNQTSBy
+ZWdpc3RlcnMgaXMgYmlnLWVuZGlhbi4gQSBSQ1BNIG5vZGUNCj4gPiArICAgdGhhdCBkb2Vzbid0
+IGhhdmUgdGhpcyBwcm9wZXJ0eSB3aWxsIGJlIHJlZ2FyZGVkIGFzIGxpdHRsZS1lbmRpYW4uDQo+
+IA0KPiBZb3UndmUganVzdCBicm9rZW4gYWxsIHRoZSBleGlzdGluZyBwb3dlcnBjIGRldmljZSB0
+cmVlcyB0aGF0IGFyZSBiaWctZW5kaWFuDQo+IGFuZCBoYXZlIG5vIGJpZy1lbmRpYW4gcHJvcGVy
+dHkuDQoNClllcywgcG93ZXJwYyBSQ1BNIGRyaXZlciAoYXJjaC9wb3dlcnBjL3N5c2Rldi9mc2xf
+cmNwbS5jKSB3aWxsIG5vdCByZWZlcg0KdG8gYmlnLWVuZGlhbi4gSG93ZXZlciwgSSB0aGluayBp
+ZiBMYXllcnNjYXBlIFJDUE0gZHJpdmVyIHVzZSBkaWZmZXJlbnQgY29tcGF0aWJsZQ0KaWQgKHN1
+Y2ggYXMgJyBmc2wscW9yaXEtcmNwbS0yLjInKSwgaXQgbWlnaHQgYmUgc2FmZS4gSXMgdGhhdCBP
+Sz8NCg0KPiA+ICsgLSA8cHJvcGVydHkgJ2NvbXBhdGlibGUnIHN0cmluZyBvZiBjb25zdW1lciBk
+ZXZpY2U+IDogVGhpcyBzdHJpbmcNCj4gPiArICAgaXMgcmVmZXJyZWQgYnkgUkNQTSBkcml2ZXIg
+dG8ganVkZ2UgaWYgdGhlIGNvbnN1bWVyIChzdWNoIGFzIGZsZXggdGltZXIpDQo+ID4gKyAgIGlz
+IGFibGUgdG8gYmUgcmVnYXJkcyBhcyB3YWtldXAgc291cmNlIG9yIG5vdCwgc3VjaCBhcw0KPiA+
+ICsgJ2ZzbCxsczEwMTJhLQ0KPiA+IGZ0bScuDQo+ID4gKyAgIEZ1cnRoZXIsIHRoaXMgcHJvcGVy
+dHkgd2lsbCBjYXJyeSB0aGUgYml0IG1hc2sgaW5mbyB0byBjb250cm9sDQo+ID4gKyAgIGNvcmVz
+cG9uZGluZyB3YWtlIHVwIHNvdXJjZS4NCj4gDQo+IFdoYXQgd2lsbCB5b3UgZG8gaWYgdGhlcmUg
+YXJlIG11bHRpcGxlIGluc3RhbmNlcyBvZiBhIGRldmljZSB3aXRoIHRoZSBzYW1lDQo+IGNvbXBh
+dGlibGUsIGFuZCBkaWZmZXJlbnQgd2FrZXVwIGJpdHM/ICANCg0KWW91IGdvdCBtZSEgVGhpcyBp
+cyBhIHByb2JsZW0gaW4gY3VycmVudCB2ZXJzaW9uLiBXZWxsLCB3ZSBoYXZlIHRvIGRlY291cGxl
+IHdha2UgdXANCnNvdXJjZSBJUCBhbmQgUkNQTSBkcml2ZXIuIFRoYXQncyB3aHkgSSBhZGQgYSBw
+bGF0X3BtIGRyaXZlciB0byBwcmV2ZW50IHdha2UgdXAgSVANCmtub3dpbmcgYW55IGluZm9ybWF0
+aW9uIG9mIFJDUE0uIFNvIGluIGN1cnJlbnQgY29udGV4dCwgb25lIGlkZWEgY29tZSB0byBtZSBp
+cyB0bw0KcmVkZXNpZ24gcHJvcGVydHkgJyBmc2wsbHMxMDEyYS1mdG0gPSA8MHgyMDAwMD47Jywg
+Y2hhbmdlIHRvICdmc2wsbHMxMDEyYS1mdG0gPSA8JmZ0bTAgMHgyMDAwMD47Jw0KV2hhdCBkbyB5
+b3Ugc2F5PyBBbmQgY291bGQgeW91IHRlbGwgbWUgd2hpY2ggQVBJIEkgY2FuIHVzZSB0byBjaGVj
+ayBpZiB0aGF0IGRldmljZSdzDQpuYW1lIGlzIGZ0bTAgKGZvciBleGFtcGxlIHdlIHdhbnQgdG8g
+ZmluZCBhIG5vZGUgZnRtMDogZnRtQDI5ZDAwMCk/DQoNCj5QbHVzLCBpdCdzIGFuIGF3a3dhcmQg
+ZGVzaWduIGluDQo+IGdlbmVyYWwsIGFuZCB5b3UgZG9uJ3QgZGVzY3JpYmUgd2hhdCB0aGUgdmFs
+dWUgYWN0dWFsbHkgbWVhbnMgKGJpdHMgaW4gd2hpY2gNCj4gcmVnaXN0ZXI/KS4gDQoNClllcywg
+SSBhZG1pdCBteSBkZXNpZ24gbG9va3MgdWdseSBhbmQgbm90IGZsZXhpYmxlIGFuZCBleHRlbnNp
+YmxlIGVub3VnaC4gSG93ZXZlciwgZm9yIGFib3ZlIHJlYXNvbiwgDQpkbyB5b3UgaGF2ZSBhbnkg
+Z29vZCBpZGVhLCBwbGVhc2U/IDopDQoNCkFzIHRvIHRoZSByZWdpc3RlciBpbmZvcm1hdGlvbiwg
+SSBjYW4gZXhwbGFpbiBoZXJlIGluIGRldGFpbHMgKHdpbGwgYWRkIHRvIGNvbW1pdA0KbWVzc2Fn
+ZSBvZiBuZXh0IHZlcnNpb24pOiBUaGVyZSBpcyBhIFJDUE0gSFcgYmxvY2sgd2hpY2ggaGFzIHJl
+Z2lzdGVyIG5hbWVkIElQUERFWFBDUi4NCkl0IGNvbnRyb2xzIHdoZXRoZXIgcHJldmVudCBjZXJ0
+YWluIElQIChzdWNoIGFzIHRpbWVyLCB1c2IsIGV0YykgZnJvbSBlbnRlcmluZyBsb3cNCnBvd2Vy
+IG1vZGUgd2hlbiBzeXN0ZW0gc3VzcGVuZGVkLiBTbyBpdCdzIG5lY2Vzc2FyeSB0byBwcm9ncmFt
+IGl0IGlmIHdlIHdhbnQgb25lDQpvZiB0aG9zZSBJUCB3b3JrIGFzIGEgd2FrZXVwIHNvdXJjZS4g
+SG93ZXZlciwgZGlmZmVyZW50IExheWVyc2NhcGUgU29DcyBoYXZlIGRpZmZlcmVudCBiaXQgdnMu
+DQpJUCBtYXBwaW5nICBsYXlvdXQuIFNvIEkgaGF2ZSB0byByZWNvcmQgdGhpcyBpbmZvcm1hdGlv
+biBpbiBkZXZpY2UgdHJlZSBhbmQgZmV0Y2hlZCBieSBSQ1BNIGRyaXZlcg0KZGlyZWN0bHkuDQoN
+CkRvIEkgbmVlZCB0byBsaXN0IGFsbCBTb0MncyBtYXBwaW5nIGluZm9ybWF0aW9uIGluIHRoaXMg
+YmluZGluZyBkb2MgZm9yIHJlZmVyZW5jZT8NCg0KPldoYXQgd2FzIHdyb25nIHdpdGggdGhlIGV4
+aXN0aW5nIGJpbmRpbmc/ICANCg0KVGhlcmUgd2FzIG9uZSB2ZXJzaW9uIG9mIFJDUE0gcGF0Y2gg
+d2hpY2ggcmVxdWlyaW5nIHByb3BlcnR5ICdmc2wsI3JjcG0td2FrZXVwLWNlbGxzJyBidXQgd2Fz
+IG5vdA0KYWNjZXB0ZWQgYnkgdXBzdHJlYW0gZmluYWxseS4gTm93IHdlIHdpbGwgbm8gbmVlZCBp
+dCBhbnkgbG9uZ2VyIGR1ZSB0byBuZXcgZGVzaWduIGFsbG93IGNhc2Ugb2YgbXVsdGlwbGUNClJD
+UE0gZGV2aWNlcyBleGlzdGluZyBjYXNlLg0KDQo+QWx0ZXJuYXRpdmVseSwgdXNlIHRoZSBjbG9j
+ayBiaW5kaW5ncy4NCg0KU29ycnkgSSBkaWRuJ3QgZ2V0IHlvdXIgcG9pbnQuDQoNCj4gPiAtDQo+
+ID4gLUV4YW1wbGU6DQo+ID4gLQlscHVhcnQwOiBzZXJpYWxAMjk1MDAwMCB7DQo+ID4gLQkJY29t
+cGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1scHVhcnQiOw0KPiA+IC0JCXJlZyA9IDwweDAgMHgyOTUw
+MDAwIDB4MCAweDEwMDA+Ow0KPiA+IC0JCWludGVycnVwdHMgPSA8R0lDX1NQSSA4MCBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPjsNCj4gPiAtCQljbG9ja3MgPSA8JnN5c2Nsaz47DQo+ID4gLQkJY2xvY2st
+bmFtZXMgPSAiaXBnIjsNCj4gPiAtCQlmc2wscmNwbS13YWtldXAgPSA8JnJjcG0gMHgwIDB4NDAw
+MDAwMDA+Ow0KPiA+ICsJCWJpZy1lbmRpYW47DQo+ID4gKwkJZnNsLGxzMTAxMmEtZnRtID0gPDB4
+MjAwMDA+Ow0KPiA+ICsJCWZzbCxwZmUgPSA8MHhmMDAwMDAyMD47DQo+IA0KPiBmc2wscGZlIGlz
+IG5vdCBkb2N1bWVudGVkLg0KDQpwZmUgcGF0Y2ggaXMgbm90IHVwc3RyZWFtIHlldCwgd2lsbCBy
+ZW1vdmUgaXQuDQoNClJlZ2FyZHMsDQpSYW4NCg0KPiAtU2NvdHQNCg0K
