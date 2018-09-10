@@ -1,63 +1,36 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v3 0/9] coresight: Update device tree bindings
-Date: Mon, 10 Sep 2018 09:49:07 -0600
-Message-ID: <CANLsYkwpFZcxaNdvcnag_-ywhWyE1yV6BT1sUx8-4i2dMdD8MA@mail.gmail.com>
-References: <1532686537-12380-1-git-send-email-suzuki.poulose@arm.com>
- <20180730200232.GA31755@xps15> <CANLsYkzBfCydwDO-KyDub4X=GTy_dtv-478RyMReBEH6VybSAg@mail.gmail.com>
- <9e935bd9-1cd1-0fda-3d73-fe2487759a1c@arm.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
+ v4.20 merge window
+Date: Mon, 10 Sep 2018 17:59:17 +0200
+Message-ID: <20180910155917.GB17956@kroah.com>
+References: <20180713164736.26028-1-radu.pirea@microchip.com>
+ <20180910151803.GX28860@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9e935bd9-1cd1-0fda-3d73-fe2487759a1c@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20180910151803.GX28860@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mike Leach <mike.leach@linaro.org>, Robert Walker <robert.walker@arm.com>, coresight@lists.linaro.org, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Matt Sealey <matt.sealey@arm.com>, Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, John Horley <john.horley@arm.com>, Al Grant <al.grant@arm.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Sep 2018 at 09:35, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> Hi Mathieu,
->
-> On 31/07/18 16:06, Mathieu Poirier wrote:
-> > [...]
-> >
-> >>>
-> >>> Suzuki K Poulose (9):
-> >>>   coresight: Document error handling in coresight_register
-> >>>   coresight: platform: Refactor graph endpoint parsing
-> >>>   coresight: platform: Fix refcounting for graph nodes
-> >>>   coresight: platform: Fix leaking device reference
-> >>>   coresight: Fix remote endpoint parsing
-> >>>   coresight: Add helper to check if the endpoint is input
-> >>>   coresight: platform: Cleanup coresight connection handling
-> >>>   coresight: Cleanup coresight DT bindings
-> >>>   dts: juno: Update coresight bindings
-> >>>
-> >>>  .../devicetree/bindings/arm/coresight.txt          |  95 +++++---
-> >>>  arch/arm64/boot/dts/arm/juno-base.dtsi             | 161 ++++++------
-> >>>  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi          |  52 ++--
-> >>>  arch/arm64/boot/dts/arm/juno.dts                   |  13 +-
-> >>>  drivers/hwtracing/coresight/coresight.c            |  35 +--
-> >>>  drivers/hwtracing/coresight/of_coresight.c         | 269 ++++++++++++++-------
-> >>>  include/linux/coresight.h                          |   9 +-
-> >>>  7 files changed, 359 insertions(+), 275 deletions(-)
-> >>>
-> >>
-> >> Good day,
-> >>
-> >> I have applied patches 1 to 7.  I will wait for Rob's ACK before doing the same
-> >> with 8 and 9.
-> >
-> > I just applied patch 8 and 9.
-> >
-> Sorry for the delay, but ARM SoC expects all the DTS changes to go via
-> their tree. Please drop patch 9, I will route via ARM-SoC.
+On Mon, Sep 10, 2018 at 04:18:03PM +0100, Lee Jones wrote:
+> Enjoy!
+> 
+> The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
+> 
+>   Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
+> 
+> for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
+> 
+>   tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
 
-Done - it's all yours now.
+thanks for this.  I'll suck it into my tty-next branch to make it easier
+for any future at91 serial driver changes to be simpler to merge.
 
-Mathieu
-
->
-> --
-> Regards,
-> Sudeep
+greg k-h
