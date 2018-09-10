@@ -1,55 +1,72 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH] ARM: dts: imx53-qsb: disable 1.2GHz OPP
-Date: Mon, 10 Sep 2018 14:50:56 +0200
-Message-ID: <20180910125056.30813-1-s.hauer@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: v4.17 regression: PowerMac G3 won't boot, was Re: [PATCH v5 1/3]
+ of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+Date: Mon, 10 Sep 2018 07:53:20 -0500
+Message-ID: <20180910125320.GA17028@bogus>
+References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com>
+ <1520208889-3908-2-git-send-email-frowand.list@gmail.com>
+ <alpine.LNX.2.21.1808301025480.73@nippy.intranet>
+ <0ad5dbfd-08f3-b97d-34b9-70fc9a729921@gmail.com>
+ <d9e53e48794c2eade19309b73febd492e3c5eeeb.camel@kernel.crashing.org>
+ <7427daf6570d519e6793eb96d2fbaa52714b0cd7.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7427daf6570d519e6793eb96d2fbaa52714b0cd7.camel@kernel.crashing.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Finn Thain <fthain@telegraphics.com.au>, Stan Johnson <userm57@yahoo.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-The maximum CPU frequency for the i.MX53 QSB is 1GHz, so disable the
-1.2GHz OPP. This makes the board work with cpufreq again.
+On Sun, Sep 09, 2018 at 07:04:25PM +0200, Benjamin Herrenschmidt wrote:
+> On Fri, 2018-08-31 at 14:58 +1000, Benjamin Herrenschmidt wrote:
+> > 
+> > > A long shot, but something to consider, is that I failed to cover the
+> > > cases of dynamic devicetree updates (removing nodes that contain a
+> > > phandle) in ways other than overlays.  Michael Ellerman has reported
+> > > such a problem for powerpc/mobility with of_detach_node().  A patch to
+> > > fix that is one of the tasks I need to complete.
+> > 
+> > The only thing I can think of is booting via the BootX bootloader on
+> > those ancient macs results in a DT with no phandles. I didn't see an
+> > obvious reason why that would cause that patch to break though.
+> 
+> Guys, we still don't have a fix for this one on its way upstream...
+> 
+> My test patch just creates phandle properties for all nodes, that was
+> not intended as a fix, more a way to check if the problem was related
+> to the lack of phandles.
+> 
+> I don't actually know why the new code causes things to fail when
+> phandles are absent. This needs to be looked at.
+> 
+> I'm travelling at the moment and generally caught up with other things,
+> I haven't had a chance to dig, so just a heads up. I don't intend to
+> submit my patch since it's just a band aid. We need to figure out what
+> the actual problem is.
 
-Fixes: 791f416608 ("ARM: dts: imx53: add cpufreq-dt support")
+Can you try this patch (w/o Ben's patch). I think the problem is if 
+there are no phandles, then roundup_pow_of_two is passed 0 which is 
+documented as undefined result.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- arch/arm/boot/dts/imx53-qsb-common.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Though, if a DT has no properties with phandles, then why are we doing a 
+lookup in the first place?
 
-diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-index 7423d462d1e4..50dde84b72ed 100644
---- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
-+++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-@@ -123,6 +123,17 @@
- 	};
- };
+
+8<----------------------------------------------------------------------
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 9095b8290150..74eaedd5b860 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -140,6 +140,9 @@ void of_populate_phandle_cache(void)
+ 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+ 			phandles++;
  
-+&cpu0 {
-+	/* CPU rated to 1GHz, not 1.2GHz as per the default settings */
-+	operating-points = <
-+		/* kHz   uV */
-+		166666  850000
-+		400000  900000
-+		800000  1050000
-+		1000000 1200000
-+	>;
-+};
++	if (!phandles)
++		goto out;
 +
- &esdhc1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_esdhc1>;
--- 
-2.18.0
+ 	cache_entries = roundup_pow_of_two(phandles);
+ 	phandle_cache_mask = cache_entries - 1;
+ 
