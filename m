@@ -1,66 +1,83 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] of: __of_update_property_sysfs only call
- __of_sysfs_remove_bin_file if of_node_is_attached
-Date: Mon, 10 Sep 2018 08:46:48 -0500
-Message-ID: <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
-References: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
- <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com> <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
+From: Nipun Gupta <nipun.gupta-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 0/7 v7] Support for fsl-mc bus and its devices in SMMU
+Date: Mon, 10 Sep 2018 19:19:14 +0530
+Message-ID: <1536587361-11047-1-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andre.Kalb@sma.de
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, laurentiu.tudor-3arQi8VN3Tc@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, hch-jcswGhMUV9g@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stuyoder-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, leoyang.li-3arQi8VN3Tc@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 4:51 AM Andre Kalb <Andre.Kalb@sma.de> wrote:
->
-> Hi Frank,
->
-> > -----Urspr=C3=BCngliche Nachricht-----
-> > Von: Frank Rowand [mailto:frowand.list@gmail.com]
-> > Gesendet: Freitag, 7. September 2018 22:01
-> > An: Andre Kalb; robh+dt@kernel.org; devicetree@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Betreff: Re: [PATCH v2] of: __of_update_property_sysfs only call
-> > __of_sysfs_remove_bin_file if of_node_is_attached
-> >
-> > Hi Andred,
-> >
-> > On 09/04/18 08:51, Andre Kalb wrote:
-> > > To prevent warning "kernfs: can not remove '(null)', no directory" if=
- an overlay
-> > isn't applied to the active devicetree.
-> > >
-> > > Using of_remove_property and then of_add_property doesn't show the
-> > warning.
+This patchset defines IOMMU DT binding for fsl-mc bus and adds
+support in SMMU for fsl-mc bus.
 
-[...]
+These patches
+  - Define property 'iommu-map' for fsl-mc bus (patch 1)
+  - Integrates the fsl-mc bus with the SMMU using this
+    IOMMU binding (patch 2,3,4)
+  - Adds the dma configuration support for fsl-mc bus (patch 5, 6)
+  - Updates the fsl-mc device node with iommu/dma related changes (patch 7)
 
-> > What is the calling path that results in the warning?
-> >
-> > -Frank
->
-> There is the callstack of the warning.
->
-> [   10.782830] ------------[ cut here ]------------
-> [   10.830357] WARNING: CPU: 0 PID: 170 at /linux-4.x/fs/kernfs/dir.c:127=
-6 kernfs_remove_by_name_ns+0x30/0x80()
-> [   10.928997] kernfs: can not remove '(null)', no directory
-> [   10.993107] Modules linked in: module_capemgr(+)
-> [   11.045750] CPU: 0 PID: 170 Comm: systemd-udevd Not tainted 4.4.143-00=
-158-g8e5ca65ec7ee-dirty #114
+Changes in v2:
+  - use iommu-map property for fsl-mc bus
+  - rebase over patchset https://patchwork.kernel.org/patch/10317337/
+    and make corresponding changes for dma configuration of devices on
+    fsl-mc bus
 
-158 patches on top of an almost 3 year old kernel...
+Changes in v3:
+  - move of_map_rid in drivers/of/address.c
 
-> [   12.011373] [<bf0000e4>] (module_capemgr_slot_scan [module_capemgr]) f=
-rom [<bf0007bc>] (module_capemgr_probe+0x3c/0x58 [module_capemgr])
+Changes in v4:
+  - move of_map_rid in drivers/of/base.c
 
-And a driver that's not upstream.
+Changes in v5:
+  - break patch 5 in two separate patches (now patch 5/7 and patch 6/7)
+  - add changelog text in patch 3/7 and patch 5/7
+  - typo fix
 
-Not saying the fix isn't valid, but please reproduce on recent
-mainline. Add a unittest if you have to.
+Changes in v6:
+  - Updated fsl_mc_device_group() API to be more rational
+  - Added dma-coherent property in the LS2 smmu device node
+  - Minor fixes in the device-tree documentation
 
-Rob
+Changes in v7:
+  - Rebased over linux 4.19
+
+Nipun Gupta (7):
+  Documentation: fsl-mc: add iommu-map device-tree binding for fsl-mc
+    bus
+  iommu/of: make of_pci_map_rid() available for other devices too
+  iommu/of: support iommu configuration for fsl-mc devices
+  iommu/arm-smmu: Add support for the fsl-mc bus
+  bus: fsl-mc: support dma configure for devices on fsl-mc bus
+  bus: fsl-mc: set coherent dma mask for devices on fsl-mc bus
+  arm64: dts: ls208xa: comply with the iommu map binding for fsl_mc
+
+ .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |  39 ++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   7 +-
+ drivers/bus/fsl-mc/fsl-mc-bus.c                    |  16 +++-
+ drivers/iommu/arm-smmu.c                           |   7 ++
+ drivers/iommu/iommu.c                              |  13 +++
+ drivers/iommu/of_iommu.c                           |  25 ++++-
+ drivers/of/base.c                                  | 102 +++++++++++++++++++++
+ drivers/of/irq.c                                   |   5 +-
+ drivers/pci/of.c                                   | 101 --------------------
+ include/linux/fsl/mc.h                             |   8 ++
+ include/linux/iommu.h                              |   2 +
+ include/linux/of.h                                 |  11 +++
+ include/linux/of_pci.h                             |  10 --
+ 13 files changed, 224 insertions(+), 122 deletions(-)
+
+-- 
+1.9.1
