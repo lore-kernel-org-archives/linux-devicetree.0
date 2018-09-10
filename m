@@ -1,98 +1,37 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 1/3] usb: renesas_usbhs: Add reset_control
-Date: Tue, 11 Sep 2018 17:47:03 +0900
-Message-Id: <1536655625-10550-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1536655625-10550-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1536655625-10550-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=slpH=LY=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+References: <20180829132841.64787-1-chris.brandt@renesas.com>
+ <CAMuHMdUSVTk0FPmQSYJ+M1e4ds__7882Viseo6ra1TUBvnSbPQ@mail.gmail.com> <TY1PR01MB15620B77FCA81E17753508058A010@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB15620B77FCA81E17753508058A010@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 10 Sep 2018 15:18:01 +0200
+Message-ID: <CAMuHMdUO7RXkYHhGfgaMrXh_D9oCpLxnGWNUKDUmHhtsAHLNQw@mail.gmail.com>
+Subject: Re: [PATCH v3] clk: renesas: cpg-mssr: Add R7S9210 support
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car Gen3 needs to deassert resets of both host and peripheral.
-Since [eo]hci-platform is possible to assert the reset(s) when
-the probing failed, renesas_usbhs driver doesn't work correctly
-regardless of finished probing. To fix this issue, this patch adds
-reset_control on this renesas_usbhs driver.
+Hi Chris,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/renesas_usbhs/common.c | 12 ++++++++++++
- drivers/usb/renesas_usbhs/common.h |  2 ++
- 2 files changed, 14 insertions(+)
+On Thu, Sep 6, 2018 at 4:31 PM Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> > What about other clocks: BSCCLK, OCTCLK, HYPCLK, and SPICLK?
+>
+> At this time, I'm considering them 'out of scope' from this driver as
+> they really need to be set up early in device boot (ie, u-boot).
+> Unless you were just thinking of adding them as #defines, but never
+> really using them.
 
-diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
-index 4310df4..1d355d5 100644
---- a/drivers/usb/renesas_usbhs/common.c
-+++ b/drivers/usb/renesas_usbhs/common.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
-+#include <linux/reset.h>
- #include <linux/slab.h>
- #include <linux/sysfs.h>
- #include "common.h"
-@@ -574,6 +575,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 			return PTR_ERR(priv->edev);
- 	}
- 
-+	priv->rsts = devm_reset_control_array_get_optional_shared(&pdev->dev);
-+	if (IS_ERR(priv->rsts))
-+		return PTR_ERR(priv->rsts);
-+
- 	/*
- 	 * care platform info
- 	 */
-@@ -658,6 +663,10 @@ static int usbhs_probe(struct platform_device *pdev)
- 	/* dev_set_drvdata should be called after usbhs_mod_init */
- 	platform_set_drvdata(pdev, priv);
- 
-+	ret = reset_control_deassert(priv->rsts);
-+	if (ret)
-+		goto probe_fail_rst;
-+
- 	/*
- 	 * deviece reset here because
- 	 * USB device might be used in boot loader.
-@@ -711,6 +720,8 @@ static int usbhs_probe(struct platform_device *pdev)
- 	return ret;
- 
- probe_end_mod_exit:
-+	reset_control_assert(priv->rsts);
-+probe_fail_rst:
- 	usbhs_mod_remove(priv);
- probe_end_fifo_exit:
- 	usbhs_fifo_remove(priv);
-@@ -739,6 +750,7 @@ static int usbhs_remove(struct platform_device *pdev)
- 	pm_runtime_disable(&pdev->dev);
- 
- 	usbhs_platform_call(priv, hardware_exit, pdev);
-+	reset_control_assert(priv->rsts);
- 	usbhs_mod_remove(priv);
- 	usbhs_fifo_remove(priv);
- 	usbhs_pipe_remove(priv);
-diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
-index 6137f79..bce7d35 100644
---- a/drivers/usb/renesas_usbhs/common.h
-+++ b/drivers/usb/renesas_usbhs/common.h
-@@ -10,6 +10,7 @@
- 
- #include <linux/extcon.h>
- #include <linux/platform_device.h>
-+#include <linux/reset.h>
- #include <linux/usb/renesas_usbhs.h>
- 
- struct usbhs_priv;
-@@ -277,6 +278,7 @@ struct usbhs_priv {
- 	struct usbhs_fifo_info fifo_info;
- 
- 	struct phy *phy;
-+	struct reset_control *rsts;
- };
- 
- /*
+OK, you can always add them later, when the need arises.
+include/dt-bindings/clock/*.h is append-only.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-1.9.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
