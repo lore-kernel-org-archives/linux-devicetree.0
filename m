@@ -1,71 +1,72 @@
-Return-Path: <SRS0=hiZW=LT=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH 2/2] clocksource: sh_cmt: add R-Car gen3 support
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <3ce24bfe-1edb-1a92-8847-ff998ac86d16@cogentembedded.com>
-Message-ID: <dc0446c7-e63b-17f1-45ed-e544b5602b9e@cogentembedded.com>
-Date: Wed, 5 Sep 2018 23:32:07 +0300
+Return-Path: <SRS0=r4Mj=LY=bitwise.fi=anssi.hannula@kernel.org>
+Subject: Re: [PATCH 3/3] can: xilinx_can: add support for Xilinx CAN FD core
+References: <20180706141817.19729-1-anssi.hannula@bitwise.fi>
+ <20180706141817.19729-4-anssi.hannula@bitwise.fi>
+ <CAKfKVtE2Q0k9LLL-tja1Z8SL2i83sQrBo6BbxoM1tgCRZ3004Q@mail.gmail.com>
+From: Anssi Hannula <anssi.hannula@bitwise.fi>
+Message-ID: <cabc9821-3bb3-7709-d6ac-97bb12ba68e1@bitwise.fi>
+Date: Mon, 10 Sep 2018 15:45:51 +0300
 MIME-Version: 1.0
-In-Reply-To: <3ce24bfe-1edb-1a92-8847-ff998ac86d16@cogentembedded.com>
+In-Reply-To: <CAKfKVtE2Q0k9LLL-tja1Z8SL2i83sQrBo6BbxoM1tgCRZ3004Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Language: en-US
+To: Shubhrajyoti Datta <shubhrajyoti.datta@gmail.com>
+Cc: wg@grandegger.com, mkl@pengutronix.de, Michal Simek <michal.simek@xilinx.com>, linux-can@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for the R-Car gen3 CMT0 and CMT1 bindings -- they seem to be
-the same CMT0 and CMT1 as in R-Car gen2 SoCs. Also document R8A779{7|8}
-bindings as these are the R-Car gen3 SoCs for which the initial support
-was done.
+Hi,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On 10.9.2018 15:14, Shubhrajyoti Datta wrote:
+> On Fri, Jul 6, 2018 at 7:50 PM Anssi Hannula <anssi.hannula@bitwise.fi> wrote:
+>> Add support for Xilinx CAN FD core.
+>>
+>> The major difference from the previously supported cores is that there
+>> are TX mailboxes instead of a TX FIFO and the RX FIFO access method is
+>> different.
+>>
+>> We only transmit one frame at a time to prevent the HW from reordering
+>> frames (it uses CAN ID priority order).
+>>
+>> Support for CAN FD protocol is not added yet.
+>>
+>> v2: Removed unnecessary "rx-mode" DT property and wrapped some long
+>>     lines.
+>>
+>> Signed-off-by: Anssi Hannula <anssi.hannula@bitwise.fi>
+>> Cc: Michal Simek <michal.simek@xilinx.com>
+>> ---
+>>  drivers/net/can/xilinx_can.c | 303 ++++++++++++++++++++++++++++++++++++-------
+>>  1 file changed, 259 insertions(+), 44 deletions(-)
+[...]
+>>
+>> +static const struct can_bittiming_const xcan_bittiming_const_canfd = {
+>> +       .name = DRIVER_NAME,
+>> +       .tseg1_min = 1,
+>> +       .tseg1_max = 64,
+>> +       .tseg2_min = 1,
+>> +       .tseg2_max = 16,
+>> +       .sjw_max = 16,
+>> +       .brp_min = 1,
+>> +       .brp_max = 256,
+>> +       .brp_inc = 1,
+>> +};
+> Where is this used?
+[...]
+>
+>> +
+>> +static const struct xcan_devtype_data xcan_canfd_data = {
+>> +       .flags = XCAN_FLAG_EXT_FILTERS |
+>> +                XCAN_FLAG_RXMNF |
+>> +                XCAN_FLAG_TX_MAILBOXES |
+>> +                XCAN_FLAG_RX_FIFO_MULTI,
+>> +       .bittiming_const = &xcan_bittiming_const,
+> Did you intend to use xcan_bittiming_const_canfd here ?
+>
 
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt |    7 +++++++
- drivers/clocksource/sh_cmt.c                            |    8 ++++++++
- 2 files changed, 15 insertions(+)
+Yes, good catch. I'll test on HW and then post a patch, or you can do so
+if you have one ready already.
 
-Index: renesas/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-===================================================================
---- renesas.orig/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ renesas/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -34,6 +34,10 @@ Required Properties:
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-+    - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
-+    - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-+    - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
-+    - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
- 
-     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
- 		and RZ/G1.
-@@ -41,6 +45,9 @@ Required Properties:
- 		and RZ/G1.
- 		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
- 		listed above.
-+    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3.
-+    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3.
-+		These are fallbacks for R-Car Gen3 entries listed above.
- 
-   - reg: base address and length of the registers block for the timer module.
-   - interrupts: interrupt-specifier for the timer, one per channel.
-Index: renesas/drivers/clocksource/sh_cmt.c
-===================================================================
---- renesas.orig/drivers/clocksource/sh_cmt.c
-+++ renesas/drivers/clocksource/sh_cmt.c
-@@ -945,6 +945,14 @@ static const struct of_device_id sh_cmt_
- 		.compatible = "renesas,rcar-gen2-cmt1",
- 		.data = &sh_cmt_info[SH_CMT1_RCAR_GEN2]
- 	},
-+	{
-+		.compatible = "renesas,rcar-gen3-cmt0",
-+		.data = &sh_cmt_info[SH_CMT0_RCAR_GEN2]
-+	},
-+	{
-+		.compatible = "renesas,rcar-gen3-cmt1",
-+		.data = &sh_cmt_info[SH_CMT1_RCAR_GEN2]
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, sh_cmt_of_table);
+-- 
+Anssi Hannula / Bitwise Oy
++358 503803997
