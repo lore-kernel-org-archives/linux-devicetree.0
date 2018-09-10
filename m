@@ -1,51 +1,66 @@
-From: dkota@codeaurora.org
-Subject: Re: [PATCH V3] spi: spi-geni-qcom: Add SPI driver support for GENI
- based QUP
-Date: Mon, 10 Sep 2018 19:54:27 +0530
-Message-ID: <2c2260787f4c02702b02b8a85cd63187@codeaurora.org>
-References: <1535107336-2214-1-git-send-email-dkota@codeaurora.org>
- <CAD=FV=XigmU1LXnNbj9NYkjJmj18chBFjbctrBeOKoS=34PLXw@mail.gmail.com>
- <2493fc3fa3f6e5d2bcdde27cee1c33df@codeaurora.org>
- <CAD=FV=VzYYyive--RzN=_OCQnFT-wgHwbUy1Vao2-8GADxHDLw@mail.gmail.com>
- <c4982ce3fde57c86387cc906332f6d48@codeaurora.org>
- <20180910112633.GC5856@sirena.org.uk>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: sun8i: dts: drop A64 HDMI PHY
+ fallback compatible from R40 DT
+Date: Mon, 10 Sep 2018 16:32:30 +0200
+Message-ID: <1926288.mXGsSvSKgU@jernej-laptop>
+References: <20180907072234.48282-1-icenowy@aosc.io> <20180907072234.48282-6-icenowy@aosc.io> <20180910142354.5ldexkvnan6ohz4x@flea>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910112633.GC5856@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Doug Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBA4B3LOAKGQEPP46LVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180910142354.5ldexkvnan6ohz4x@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-09-10 16:56, Mark Brown wrote:
-> On Mon, Sep 10, 2018 at 09:27:09AM +0530, dkota@codeaurora.org wrote:
+Dne ponedeljek, 10. september 2018 ob 16:23:54 CEST je Maxime Ripard 
+napisal(a):
+> On Fri, Sep 07, 2018 at 03:22:34PM +0800, Icenowy Zheng wrote:
+> > The R40 HDMI PHY seems to be different to the A64 one, the A64 one
+> > has no input mux, but the R40 one has.
+> > 
+> > Drop the A64 fallback compatible from the HDMI PHY node in R40 DT.
+> > 
+> > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > ---
+> > 
+> >  arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > b/arch/arm/boot/dts/sun8i-r40.dtsi index ffd9f00f74a4..5f547c161baf
+> > 100644
+> > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > @@ -800,8 +800,7 @@
+> > 
+> >  		};
+> >  		
+> >  		hdmi_phy: hdmi-phy@1ef0000 {
+> > 
+> > -			compatible = "allwinner,sun8i-r40-hdmi-phy",
+> > -				     "allwinner,sun50i-a64-hdmi-phy";
+> > +			compatible = "allwinner,sun8i-r40-hdmi-phy";
 > 
->> > The thing is, we want it to be 100% reliable, not 99.9% reliable.  Is
->> > it somehow wrong to add the spinlock?  ...or are you noticing
->> > performance problems with the spinlock there?  It's just nice not to
->> > have to think about it.
-> 
->> As I said, timeout will be handled after the calculated time as per 
->> data
->> size and speed. Enough time is given for interrupt, there is no chance 
->> of
->> interrupt occurrence during the handle_fifo_timeout(). So there is no 
->> need
->> of spinlock.
-> 
-> Assuming nothing goes wrong - the system isn't under unusually heavy
-> load for example, there's some oversight in the code, there's no impact
-> from power management causing things to run more slowly than you were
-> expecting, someone uses the driver on a new bit of hardware where there
-> are extra considerations or whatever else might go wrong.  Like Doug
-> says unless we're in some performance critical situation where it's
-> worth thinking *really* hard about how things really are actually safe
-> even though they might not look it it's both easier and more
-> maintainable to just write software that's obviously safe to 
-> inspection.
+> If you could use the A64 phy before, you can still use it now.
 
-Agree with this perspective. There wont be any performance impact with 
-spinlock. I will include the spinlock in the code.
+Not exactly. Given that we don't know how to switch between HDMI PHY clock 
+parents on A64 (if it is actually connected at all, there is no information 
+about that in manual and AW didn't answered our questions, despite asking them 
+through different channels), A64 compatible will be associated with quirk, 
+which will tell that only one clock parent is usable.
+
+However, R40 HDMI PHY has definetly two clock parents, as it was tested by me 
+and Icenowy and we know how to switch between them without issues. 
+Technically, we could have A64 compatible there, but that would mean only 
+single PHY parent is considered instead of two.
+
+Best regards,
+Jernej
