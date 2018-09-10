@@ -1,116 +1,199 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] iio: gyro: add device tree support for fxas21002c
-Date: Mon, 10 Sep 2018 15:09:55 -0500
-Message-ID: <20180910200955.GA27927@bogus>
-References: <20180904200434.10442-1-afonsobordado@az8.co>
- <20180904200434.10442-2-afonsobordado@az8.co>
+Subject: Re: [RFC PATCH v3 2/3] dt-bindings: reset: Add bindings for ZynqMP
+ reset driver
+Date: Mon, 10 Sep 2018 15:12:24 -0500
+Message-ID: <20180910201224.GA31501@bogus>
+References: <1536131342-28041-1-git-send-email-nava.manne@xilinx.com>
+ <1536131342-28041-3-git-send-email-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180904200434.10442-2-afonsobordado@az8.co>
+In-Reply-To: <1536131342-28041-3-git-send-email-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Afonso Bordado <afonsobordado@az8.co>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: mark.rutland@arm.com, michal.simek@xilinx.com, p.zabel@pengutronix.de, rajanv@xilinx.com, jollys@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04, 2018 at 09:04:32PM +0100, Afonso Bordado wrote:
-> This patch adds device tree support for the fxas21002c driver, including
+On Wed, Sep 05, 2018 at 12:39:01PM +0530, Nava kishore Manne wrote:
+> Add documentation to describe Xilinx ZynqMP reset driver
 > bindings.
 > 
-> Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 > ---
->  .../bindings/iio/gyroscope/fsl,fxas21002c.txt | 35 +++++++++++++++++++
+> Changes for v3:
+> 		-Corrected Commit Msg. 
+> Changes for v2:
+> 		-Moved reset node as a child to firwmare
+> 		 node.
 
-Please split bindings to separate patch.
+Why? There's no reason for that. The parent can be multiple providers. 
+You only need child nodes if the sub functions have their own DT 
+resources.
 
->  drivers/iio/gyro/fxas21002c.c                 | 10 +++++-
->  2 files changed, 44 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
-> new file mode 100644
-> index 000000000000..5f02cfa5ac82
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
-> @@ -0,0 +1,35 @@
-> +* Freescale FXAS21002C Digital Angular Rate Gyroscope
-> +
-> +Required properties:
-> +
-> +  - compatible: must be "fsl,fxas21002c"
-> +  - reg : the I2C address of the sensor
-> +
-> +Optional properties:
-> +
-> +  - interrupt-parent	: phandle to the parent interrupt controller.
-> +			  see interrupt-controller/interrupts.txt
-
-This is implied, so drop it.
-
-> +  - interrupts		: The first interrupt listed must be the one
-> +			  connected to the INT1 pin, the second interrupt
-> +			  listed must be the one connected to the INT2 pin.
-> +			  The interrupts can be triggered on rising or falling
-> +			  edges alike.
-> +			  see interrupt-controller/interrupts.txt
-> +  - vdd-supply 		: The main voltage regulator
-> +  - iovdd-supply 	: The IO voltage regulator
-
-Some space before tab on these 2 lines.
-
-> +			  see regulator/regulator.txt
-> +  - reset-gpios		: GPIO used to reset the device.
-> +			  see gpio/gpio.txt.
-> +  - mount-matrix	: see iio/mount-matrix.txt
-> +
-> +Example:
-> +gyroscope@20 {
-> +	compatible = "fsl,fxas21002c";
-> +	reg = <0x20>;
-> +	reset-gpios = <&gpio0 2 0>;
-> +	vdd-supply = <&vref>;
-> +	iovdd-supply = <&vref2>;
-> +	interrupt-parent = <&foo>;
-> +	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
-> +		     <1 (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING)>;
-> +};
-> diff --git a/drivers/iio/gyro/fxas21002c.c b/drivers/iio/gyro/fxas21002c.c
-> index 1668e6f3fe11..18b1f500dd3e 100644
-> --- a/drivers/iio/gyro/fxas21002c.c
-> +++ b/drivers/iio/gyro/fxas21002c.c
-> @@ -8,7 +8,6 @@
->   * Datasheet: https://www.nxp.com/docs/en/data-sheet/FXAS21002.pdf
->   * TODO:
->   *        ODR / Scale Support
-> - *        Devicetree
->   *        Power management
->   *        GPIO Reset
->   *        Power supplies
-> @@ -350,6 +349,14 @@ static int fxas21002c_probe(struct i2c_client *client,
->  	return ret;
->  }
+>  .../firmware/xilinx/xlnx,zynqmp-firmware.txt       | 142 +++++++++++++++++++++
+>  1 file changed, 142 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> index 1b431d9..351b1bb 100644
+> --- a/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> +++ b/Documentation/devicetree/bindings/firmware/xilinx/xlnx,zynqmp-firmware.txt
+> @@ -17,6 +17,144 @@ Required properties:
+>  		  - "smc" : SMC #0, following the SMCCC
+>  		  - "hvc" : HVC #0, following the SMCCC
 >  
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id fxas21002c_of_ids[] = {
-> +	{.compatible = "fsl,fxas21002c"},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, fxas21002c_of_ids);
-> +#endif
+> +--------------------------------------------------------------------------
+> + =  Zynq UltraScale+ MPSoC reset driver binding =
+> +--------------------------------------------------------------------------
+> +The Zynq UltraScale+ MPSoC has several different resets.
 > +
->  static const struct i2c_device_id fxas21002c_id[] = {
->  	{"fxas21002c", ID_FXAS21002C},
->  	{}
-> @@ -360,6 +367,7 @@ MODULE_DEVICE_TABLE(i2c, fxas21002c_id);
->  static struct i2c_driver fxas21002c_driver = {
->  	.driver = {
->  		.name = FXAS21002C_DRV_NAME,
-> +		.of_match_table = of_match_ptr(fxas21002c_of_ids),
->  	},
->  	.probe		= fxas21002c_probe,
->  	.id_table	= fxas21002c_id,
+> +See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
+> +about zynqmp resets.
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required Properties:
+> +- compatible:	"xlnx,zynqmp-reset"
+> +- #reset-cells:	Specifies the number of cells needed to encode reset
+> +		line, should be 1
+> +
+> +Reset outputs:
+> +	0   :PCIE config reset.
+> +	1   :PCIE bridge block level reset (AXI interface).
+> +	2   :PCIE control block level,reset.
+> +	3   :Display Port block level reset (includes DPDMA).
+> +	4   :FPD WDT reset.
+> +	5   :AF_FM5 block level reset.
+> +	6   :AF_FM4 block level reset.
+> +	7   :AF_FM3 block level reset.
+> +	8   :AF_FM2 block level reset.
+> +	9   :AF_FM1 block level reset.
+> +	10  :AF_FM0 block level reset.
+> +	11  :GDMA block level reset.
+> +	12  :Pixel Processor (GPU_PP1) block level reset.
+> +	13  :Pixel Processor (GPU_PP0) block level reset.
+> +	14  :GPU block level reset.
+> +	15  :GT block level reset.
+> +	16  :Sata block level reset.
+> +	17  :ACPU3 power on reset.
+> +	18  :ACPU2 power on reset.
+> +	19  :ACPU1 power on reset.
+> +	20  :ACPU0 power on reset.
+> +	21  :APU L2 reset.
+> +	22  :ACPU3 reset.
+> +	23  :ACPU2 reset.
+> +	24  :ACPU1 reset.
+> +	25  :ACPU0 reset.
+> +	26  :DDR block level reset inside of the DDR Sub System.
+> +	27  :APM block level reset inside of the DDR Sub System.
+> +	28  :soft reset.
+> +	29  :GEM 0 reset.
+> +	30  :GEM 1 reset.
+> +	31  :GEM 2 reset.
+> +	32  :GEM 3 reset.
+> +	33  :qspi reset.
+> +	34  :uart0 reset.
+> +	35  :uart1 reset.
+> +	36  :spi0 reset.
+> +	37  :spi1 reset.
+> +	38  :sdio0 reset.
+> +	39  :sdio1 reset.
+> +	40  :can0 reset.
+> +	41  :can1 reset.
+> +	42  :i2c0 reset.
+> +	43  :i2c1 reset.
+> +	44  :ttc0 reset.
+> +	45  :ttc1 reset.
+> +	46  :ttc2 reset.
+> +	47  :ttc3 reset.
+> +	48  :swdt reset.
+> +	49  :nand reset.
+> +	50  :adma reset.
+> +	51  :gpio reset.
+> +	52  :iou_cc reset.
+> +	53  :timestamp reset.
+> +	54  :rpu_r50 reset.
+> +	55  :rpu r51 reset.
+> +	56  :rpu_amba reset.
+> +	57  :ocm reset.
+> +	58  :rpu_pge reset.
+> +	59  :usb0_core reset.
+> +	60  :usb1_core reset.
+> +	61  :usb0_hiber reset.
+> +	62  :usb1_hiber reset.
+> +	63  :usb0_apb reset.
+> +	64  :usb1_apb reset.
+> +	65  :ipi reset.
+> +	66  :apm reset.
+> +	67  :rtc reset.
+> +	68  :sysmon reset.
+> +	69  :afi_fm6 reset.
+> +	70  :lpd_swdt reset.
+> +	71  :fpd_reset.
+> +	72  :rpu_dbg1 reset.
+> +	73  :rpu_dbg0 reset.
+> +	74  :dbg_lpd reset.
+> +	75  :dbg_fpd reset.
+> +	76  :apll reset.
+> +	77  :dpll reset.
+> +	78  :vpll reset.
+> +	79  :iopll reset.
+> +	80  :rpll reset.
+> +	81  :gpio_pl_0 reset.
+> +	82  :gpio_pl_1 reset.
+> +	83  :gpio_pl_2 reset.
+> +	84  :gpio_pl_3 reset.
+> +	85  :gpio_pl_4 reset.
+> +	86  :gpio_pl_5 reset.
+> +	87  :gpio_pl_6 reset.
+> +	88  :gpio_pl_7 reset.
+> +	89  :gpio_pl_8 reset.
+> +	90  :gpio_pl_9 reset.
+> +	91  :gpio_pl_10 reset.
+> +	92  :gpio_pl_11 reset.
+> +	93  :gpio_pl_12 reset.
+> +	94  :gpio_pl_13 reset.
+> +	95  :gpio_pl_14 reset.
+> +	96  :gpio_pl_15 reset.
+> +	97  :gpio_pl_16 reset.
+> +	98  :gpio_pl_17 reset.
+> +	99  :gpio_pl_18 reset.
+> +	100 :gpio_pl_19 reset.
+> +	101 :gpio_pl_20 reset.
+> +	102 :gpio_pl_21 reset.
+> +	103 :gpio_pl_22 reset.
+> +	104 :gpio_pl_23 reset.
+> +	105 :gpio_pl_24 reset.
+> +	106 :gpio_pl_25 reset.
+> +	107 :gpio_pl_26 reset.
+> +	108 :gpio_pl_27 reset.
+> +	109 :gpio_pl_28 reset.
+> +	110 :gpio_pl_29 reset.
+> +	111 :gpio_pl_30 reset.
+> +	112 :gpio_pl_31 reset.
+> +	113 :rpu_ls reset.
+> +	114 :ps_only reset.
+> +	115 :pl reset.
+> +	116 :ps_pl0 reset
+> +	117 :ps_pl1 reset
+> +	118 :ps_pl2 reset
+> +	119 :ps_pl3 reset
+> +
+>  -------
+>  Example
+>  -------
+> @@ -25,5 +163,9 @@ firmware {
+>  	zynqmp_firmware: zynqmp-firmware {
+>  		compatible = "xlnx,zynqmp-firmware";
+>  		method = "smc";
+> +		reset-controller:reset-controller@0 {
+> +			compatible = "xlnx,zynqmp-reset";
+> +			#reset-cells = <1>;
+> +		};
+>  	};
+>  };
 > -- 
-> 2.18.0
-> 
+> 2.7.4
 > 
