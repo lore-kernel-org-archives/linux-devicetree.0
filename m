@@ -1,44 +1,57 @@
-From: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 0/3] *** SUBJECT HERE ***
-Date: Mon, 10 Sep 2018 12:21:14 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337019831680C@SW-EX-MBX01.diasemi.com>
-References: <cover.1536580772.git.Adam.Thomson.Opensource@diasemi.com>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v11 03/11] firmware: xilinx: Add zynqmp IOCTL API for
+ device control
+Date: Mon, 10 Sep 2018 14:34:35 +0200
+Message-ID: <89a81241-e2c3-9fdf-7436-3d50025cec4d@xilinx.com>
+References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+ <1533318808-10781-4-git-send-email-jollys@xilinx.com>
+ <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1536580772.git.Adam.Thomson.Opensource@diasemi.com>
+In-Reply-To: <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Guenter Roeck <linux@roeck-us.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans de Goede <hdegoede@redhat.com>, Li Jun <jun.li@nxp.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+To: Olof Johansson <olof@lixom.net>, Jolly Shah <jolly.shah@xilinx.com>
+Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, matt@codeblueprint.co.uk, Sudeep Holla <sudeep.holla@arm.com>, hkallweit1@gmail.com, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, rajanv@xilinx.com, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10 September 2018 13:19, Adam Thomson wrote:
+On 9.9.2018 03:18, Olof Johansson wrote:
+> Hi,
+> 
+> On Fri, Aug 3, 2018 at 10:53 AM, Jolly Shah <jolly.shah@xilinx.com> wrote:
+>> From: Rajan Vaja <rajanv@xilinx.com>
+>>
+>> Add ZynqMP firmware IOCTL API to control and configure
+>> devices like PLLs, SD, Gem, etc.
+>>
+>> Signed-off-by: Rajan Vaja <rajanv@xilinx.com>
+>> Signed-off-by: Jolly Shah <jollys@xilinx.com>
+> 
+> This patch worries me somewhat. It's a transparent pass-through ioctl
+> driver. Is there a spec available for what the implemented IOCTLs are?
 
-> This patch set adds DT bindings support for PPS APDOs, and updates the FUSB302
-> to use the generic connector bindings allowing for PPS support in this Type-C
-> port controller. Existing FUSB302 device specific bindings still work, but
-> are now deprecated in favour of the generic connector approach.
-
-Please ignore as suffering finger trouble. Will resend with patches corrected.
+https://www.xilinx.com/support/documentation/user_guides/ug1200-eemi-api.pdf
 
 > 
-> Changes in v2:
-> 	- Added Reviewed-by tags to patches
-> 	- Rebase code against latest usb-next branch (v4.19-rc2)
-> 
-> Adam Thomson (3):
->   dt-bindings: connector: Add support for USB-PD PPS APDOs to bindings
->   dt-bindings: usb: fusb302: Use usb-connector bindings for
->     configuration
->   usb: typec: fusb302: Populate tcpc fwnode for TCPM property handling
-> 
->  .../bindings/connector/usb-connector.txt           |  8 +++---
->  .../devicetree/bindings/usb/fcs,fusb302.txt        | 32 +++++++++++++++++-----
->  drivers/usb/typec/fusb302/fusb302.c                |  3 ++
->  include/dt-bindings/usb/pd.h                       | 26 ++++++++++++++++++
->  4 files changed, 58 insertions(+), 11 deletions(-)
-> 
-> --
-> 1.9.1
+> Should some of them be proper drivers instead of an opaque
+> pass-through like this? Could some of them have stability impact on
+> the platform such that there are security concerns and the list of
+> arguments should somehow be sanitized?
+
+You can look at for example reset driver which is using this eemi interface.
+https://lkml.org/lkml/2018/9/5/144
+
+> What's the intended usecase anyway? Just a debug tool during
+> development, or something that you expect heavy use of by some
+> userspace middleware?
+
+I am not an author of this interface but there is no intention to enable
+this interface for userspace as far as I see. All functions should be
+used by kernel drivers only.
+
+Jolly: Please answer all others concern in connection to this patchset.
+
+Thanks,
+Michal
