@@ -1,64 +1,63 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Mon, 10 Sep 2018 21:07:55 +0200
-Message-ID: <59561e0f-e3b9-7898-a300-90b198ad14e6@gmail.com>
-References: <20180906135005.6718-1-dmurphy@ti.com>
- <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
- <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
- <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
- <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v11 03/11] firmware: xilinx: Add zynqmp IOCTL API for
+ device control
+Date: Mon, 10 Sep 2018 19:17:45 +0000
+Message-ID: <CY1PR02MB2138BF2252E1CE2C1747A78AB8050@CY1PR02MB2138.namprd02.prod.outlook.com>
+References: <1533318808-10781-1-git-send-email-jollys@xilinx.com>
+ <1533318808-10781-4-git-send-email-jollys@xilinx.com>
+ <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
+In-Reply-To: <CAOesGMi7Q9L4oZkUubKtV-m8XD67MQ05ZFhPA_0Hwky_qVUxfg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>, Ingo Molnar <mingo@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "matt@codeblueprint.co.uk" <matt@codeblueprint.co.uk>, Sudeep Holla <sudeep.holla@arm.com>, "hkallweit1@gmail.com" <hkallweit1@gmail.com>, Kees Cook <keescook@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Michal Simek <michals@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, Rajan Vaja <RAJANV@xilinx.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.k>
 List-Id: devicetree@vger.kernel.org
 
-Dan, Pavel,
-
-On 09/10/2018 04:37 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 09/08/2018 02:53 PM, Jacek Anaszewski wrote:
->> Dan,
->>
->> On 09/07/2018 03:52 PM, Dan Murphy wrote:
->> [...]
->>>>
->>>>> And I think Jacek pointed out that the bindings references in this bindings
->>>>> don't even exist.
->>>>>
->>>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
->>>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
->>>>> code.
->>>>>
->>>>> ti-lmu common core code and then the LED children appending the feature differentiation.
->>>>
->>>>> Need some maintainer weigh in here.
->>>>
->>>> Hehe. I'm maintnainer. Fun.
->>>
->>> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
->>>
->> [...]
->>
->> I have a question - is this lm3697 LED controller a cell of some MFD
->> device? Or is it a self-contained chip?
->>
-> 
-> This is a self contained chip.  And the LM3697 only function is a LED driver.
-> It does not have any other special functions like the LM363X drivers for GPIO and Regulator support.
-
-This is an argument for merging it as a standalone LED class driver
-then. It is even more justifiable, taking into account uncertainties
-related to the proper way of adding the support for it to the existing
-MFD driver, whereas the code reuse would be the only advantage of having
-thus support in MFD subsystem.
-
--- 
-Best regards,
-Jacek Anaszewski
+SGkgQWxsLA0KDQpBZGRpbmcgbW9yZSBjbGFyaWZpY2F0aW9uIG9uIHRvcCBvZiB3aGF0IE1pY2hh
+bCBzYWlkOg0KSGVyZSBpb2N0bCBpcyBub3QgYSBzeXN0ZW0gaW9jdGwgYW5kIGp1c3QgYSBlZW1p
+IEFQSSBsaWtlIG90aGVyIGludGVyZmFjZSBBUElzLiBJdCBjYW5ub3QgYmUgY2FsbGVkIGZyb20g
+dXNlcnNwYWNlLiBPbmx5IExpbnV4IGRyaXZlcnMgY2FuIHVzZSB0aGlzIEFQSSBmb3IgZGVmaW5l
+ZCBpb2N0bCBvcGVyYXRpb25zLiBUaGlzIEFQSSBpcyBtZWFudCBmb3IgYW55IHBsYXRmb3JtIHNw
+ZWNpZmljIG9wZXJhdGlvbnMgd2hpY2ggbmVlZHMgdG8gYmUgbWFuYWdlZCBieSBmaXJtd2FyZS4g
+RmlybXdhcmUgd2lsbCBhbHdheXMgdmFsaWRhdGUgdGhlIHJlcXVlc3QgZm9yIGFjdGlvbiBiZWlu
+ZyBwZXJmb3JtZWQuDQpEZWJ1Z2ZzIGludGVyZmFjZSBpcyBqdXN0IGZvciBkZWJ1Z2dpbmcgZHVy
+aW5nIGRldmVsb3BtZW50LiBXZSBjYW4gcmVtb3ZlIGRlYnVnZnMgc3VwcG9ydCBmb3IgaW9jdGwg
+QVBJIGlmIHlvdSBzdWdnZXN0Lg0KDQpUaGFua3MsDQpKb2xseSBTaGFoDQoNCg0KPiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBPbG9mIEpvaGFuc3NvbiBbbWFpbHRvOm9sb2ZA
+bGl4b20ubmV0XQ0KPiBTZW50OiBTYXR1cmRheSwgU2VwdGVtYmVyIDA4LCAyMDE4IDY6MTkgUE0N
+Cj4gVG86IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPg0KPiBDYzogYXJkLmJpZXNoZXV2
+ZWxAbGluYXJvLm9yZzsgSW5nbyBNb2xuYXIgPG1pbmdvQGtlcm5lbC5vcmc+OyBHcmVnIEtyb2Fo
+LQ0KPiBIYXJ0bWFuIDxncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZz47IG1hdHRAY29kZWJsdWVw
+cmludC5jby51azsgU3VkZWVwDQo+IEhvbGxhIDxzdWRlZXAuaG9sbGFAYXJtLmNvbT47IGhrYWxs
+d2VpdDFAZ21haWwuY29tOyBLZWVzIENvb2sNCj4gPGtlZXNjb29rQGNocm9taXVtLm9yZz47IERt
+aXRyeSBUb3Jva2hvdiA8ZG1pdHJ5LnRvcm9raG92QGdtYWlsLmNvbT47DQo+IE1pY2hhZWwgVHVy
+cXVldHRlIDxtdHVycXVldHRlQGJheWxpYnJlLmNvbT47IFN0ZXBoZW4gQm95ZA0KPiA8c2JveWRA
+Y29kZWF1cm9yYS5vcmc+OyBNaWNoYWwgU2ltZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IFJvYiBI
+ZXJyaW5nDQo+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFu
+ZEBhcm0uY29tPjsgbGludXgtY2xrDQo+IDxsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnPjsgUmFq
+YW4gVmFqYSA8UkFKQU5WQHhpbGlueC5jb20+OyBMaW51eCBBUk0NCj4gTWFpbGluZyBMaXN0IDxs
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc+OyBMaW51eCBLZXJuZWwgTWFpbGlu
+ZyBMaXN0DQo+IDxsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnPjsgRFRNTCA8ZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc+OyBKb2xseQ0KPiBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT4NCj4g
+U3ViamVjdDogUmU6IFtQQVRDSCB2MTEgMDMvMTFdIGZpcm13YXJlOiB4aWxpbng6IEFkZCB6eW5x
+bXAgSU9DVEwgQVBJIGZvcg0KPiBkZXZpY2UgY29udHJvbA0KPiANCj4gSGksDQo+IA0KPiBPbiBG
+cmksIEF1ZyAzLCAyMDE4IGF0IDEwOjUzIEFNLCBKb2xseSBTaGFoIDxqb2xseS5zaGFoQHhpbGlu
+eC5jb20+IHdyb3RlOg0KPiA+IEZyb206IFJhamFuIFZhamEgPHJhamFudkB4aWxpbnguY29tPg0K
+PiA+DQo+ID4gQWRkIFp5bnFNUCBmaXJtd2FyZSBJT0NUTCBBUEkgdG8gY29udHJvbCBhbmQgY29u
+ZmlndXJlIGRldmljZXMgbGlrZQ0KPiA+IFBMTHMsIFNELCBHZW0sIGV0Yy4NCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IFJhamFuIFZhamEgPHJhamFudkB4aWxpbnguY29tPg0KPiA+IFNpZ25lZC1v
+ZmYtYnk6IEpvbGx5IFNoYWggPGpvbGx5c0B4aWxpbnguY29tPg0KPiANCj4gVGhpcyBwYXRjaCB3
+b3JyaWVzIG1lIHNvbWV3aGF0LiBJdCdzIGEgdHJhbnNwYXJlbnQgcGFzcy10aHJvdWdoIGlvY3Rs
+IGRyaXZlci4gSXMNCj4gdGhlcmUgYSBzcGVjIGF2YWlsYWJsZSBmb3Igd2hhdCB0aGUgaW1wbGVt
+ZW50ZWQgSU9DVExzIGFyZT8NCj4gDQo+IFNob3VsZCBzb21lIG9mIHRoZW0gYmUgcHJvcGVyIGRy
+aXZlcnMgaW5zdGVhZCBvZiBhbiBvcGFxdWUgcGFzcy10aHJvdWdoIGxpa2UNCj4gdGhpcz8gQ291
+bGQgc29tZSBvZiB0aGVtIGhhdmUgc3RhYmlsaXR5IGltcGFjdCBvbiB0aGUgcGxhdGZvcm0gc3Vj
+aCB0aGF0IHRoZXJlDQo+IGFyZSBzZWN1cml0eSBjb25jZXJucyBhbmQgdGhlIGxpc3Qgb2YgYXJn
+dW1lbnRzIHNob3VsZCBzb21laG93IGJlIHNhbml0aXplZD8NCj4gDQo+IFdoYXQncyB0aGUgaW50
+ZW5kZWQgdXNlY2FzZSBhbnl3YXk/IEp1c3QgYSBkZWJ1ZyB0b29sIGR1cmluZyBkZXZlbG9wbWVu
+dCwgb3INCj4gc29tZXRoaW5nIHRoYXQgeW91IGV4cGVjdCBoZWF2eSB1c2Ugb2YgYnkgc29tZSB1
+c2Vyc3BhY2UgbWlkZGxld2FyZT8NCj4gDQo+IA0KPiAtT2xvZg0K
