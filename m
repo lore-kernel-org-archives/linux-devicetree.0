@@ -1,57 +1,38 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 2/4] dt-bindings: arm: rockchip: Add binding for Rock960 board
-Date: Mon, 10 Sep 2018 19:53:41 +0200
-Message-ID: <2934145.U5auXtDNYt@phil>
-References: <20180910151356.25946-1-manivannan.sadhasivam@linaro.org> <1606406.b630GQBvc1@phil> <20180910172655.GA4191@Mani-XPS-13-9360>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v16 4/5] dt-bindings: arm-smmu: Add bindings for
+	qcom,smmu-v2
+Date: Mon, 10 Sep 2018 13:02:24 -0500
+Message-ID: <20180910180224.GA22566@bogus>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+	<20180830144541.17740-5-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910172655.GA4191@Mani-XPS-13-9360>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: robh+dt@kernel.org, vicencb@gmail.com, shawn.lin@rock-chips.com, ezequiel@collabora.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180830144541.17740-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 10. September 2018, 19:26:55 CEST schrieb Manivannan Sadhasivam:
-> Hi Heiko,
+On Thu, 30 Aug 2018 20:15:40 +0530, Vivek Gautam wrote:
+> Add bindings doc for Qcom's smmu-v2 implementation.
 > 
-> On Mon, Sep 10, 2018 at 07:22:26PM +0200, Heiko Stuebner wrote:
-> > Am Montag, 10. September 2018, 17:13:54 CEST schrieb Manivannan Sadhasivam:
-> > > Add devicetree binding for Rock960 board from Vamrs Limited.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/rockchip.txt | 4 ++++
-> > >  1 file changed, 4 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-> > > index acfd3c773dd0..aaad9e2ff9a3 100644
-> > > --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> > > @@ -5,6 +5,10 @@ Rockchip platforms device tree bindings
-> > >      Required root node properties:
-> > >        - compatible = "vamrs,ficus", "rockchip,rk3399";
-> > >  
-> > > +- 96boards RK3399 Rock960 (ROCK960 Consumer Edition)
-> > > +    Required root node properties:
-> > > +      - compatible = "vamrs,rk3399-rock960", "rockchip,rk3399";
-> > 
-> > hmm, are there more boards labeled rock960 from Vamrs?
-> > Because I'm trying to determine what makes "vamrs,rock960" unsuitable.
-> > 
+> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Tested-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iommu/arm,smmu.txt         | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 > 
-> Not that I'm aware of but the intention was to follow other RK3399 based
-> boards. Anyhow, I have no issues with "vamrs,rock960" if you prefer it!
 
-yep, I think I would prefer it :-)
-
-Looking at the bindings we have, it seems we really have some sort of mix,
-but I guess most boards with a real name, just use this one, like all
-the google boards or also the ficus itself.
-
-Most of the others are eval boards and fireflys, where the board is actually
-unnamed and just uses company name + soc :-)
-
-
-Heiko
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
