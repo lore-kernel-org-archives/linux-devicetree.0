@@ -1,58 +1,53 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Mon, 10 Sep 2018 16:19:26 +0100
-Message-ID: <20180910151926.GA10889@sirena.org.uk>
-References: <20180802103425.3053-1-o.rempel@pengutronix.de>
- <20180802103425.3053-4-o.rempel@pengutronix.de>
- <20180802104443.GH9117@sirena.org.uk>
- <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
- <20180802113552.GJ9117@sirena.org.uk>
- <20180827014815.GD29208@dragon>
- <20180906101516.GA5360@sirena.org.uk>
- <20180909020021.GA18838@dragon>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: mrvl,mmp-timer: add clock
+Date: Mon, 10 Sep 2018 10:21:50 -0500
+Message-ID: <CAL_JsqKgJFZnpuv7rW6ovxMKi4Q2AngWxKa=CMR_Y+xD5Oh3GA@mail.gmail.com>
+References: <20180910113031.42634-1-lkundrak@v3.sk> <20180910113031.42634-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180909020021.GA18838@dragon>
+In-Reply-To: <20180910113031.42634-2-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
+To: lkundrak@v3.sk
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Sep 10, 2018 at 6:30 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> The timer needs the timer clock to be enabled, otherwise it stops
+> ticking.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+> index 9a6e251462e7..a2ede0bd12ca 100644
+> --- a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+> +++ b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+> @@ -4,10 +4,12 @@ Required properties:
+>  - compatible : Should be "mrvl,mmp-timer".
+>  - reg : Address and length of the register set of timer controller.
+>  - interrupts : Should be the interrupt number.
+> +- clocks : Should contain a single entry describing the clock input.
 
---G4iJoqBmSsgzjUCe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+So now pxa910 and pxa168 dts files have errors because they are
+missing a required clock. Plus somehow other MMP2 platforms either
+worked without a clock or have been broken.
 
-On Sun, Sep 09, 2018 at 10:00:23AM +0800, Shawn Guo wrote:
-> On Thu, Sep 06, 2018 at 11:15:17AM +0100, Mark Brown wrote:
+You can't add new required properties to a binding. That breaks
+backward compatibility.
 
-> > I was expecting to get a pull request with the precursor patches in it -
-> > the regulator driver seems to get a moderate amount of development so
-> > there's a reasonable risk of conflicts.
-
-> What about you create a stable topic branch for regulator patches and I
-> pull it into IMX tree?
-
-Sure, I can send a pull request back but the first two patches in the
-series are ARM ones - are you OK with me just applying them and sending
-them in the pull request or do you want to apply them first?
-
---G4iJoqBmSsgzjUCe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluWi30ACgkQJNaLcl1U
-h9DfjQf+Mzg14+HDipidgPh6Bdg+IJD1Nj7k+nkPf1Swd7eZoS05uU8JnDGs2EPD
-xNvyzY4s12YQUOt5PwoTsQqa78Qi4VlkyQ64alwucoTZAqr49ohIThUfst/igMXP
-7GydiWcdwcGyxgecT45qT9AU/sULkb0ygCdTgUL4Jnhcy5D2YZGeWOc7PFQ2kI4j
-GDyXyQGJTGq4kSmKLtZPyyshFYcfjc/ICzU9gt8e0SerwSD5HcK/ZAleF/9HRK22
-QqSg/Z4BPi1Q1dWXJcwD4QdHC+0FRLQPCOIQx20GPgOuW0hNavALc55scwkdmMgg
-9t9K8G+F9Y9TjZvYapu910gdzOriJA==
-=y7uB
------END PGP SIGNATURE-----
-
---G4iJoqBmSsgzjUCe--
+Rob
+>
+>  Example:
+>         timer0: timer@d4014000 {
+>                 compatible = "mrvl,mmp-timer";
+>                 reg = <0xd4014000 0x100>;
+>                 interrupts = <13>;
+> +               clocks = <&coreclk 2>;
+>         };
+> --
+> 2.17.1
+>
