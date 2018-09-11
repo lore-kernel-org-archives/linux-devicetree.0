@@ -1,71 +1,44 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 7/8] regulator: bd718XX use pickable ranges
-Date: Tue, 11 Sep 2018 14:55:49 +0100
-Message-ID: <20180911135549.GS4185@dell>
-References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
- <6fa8728de34a18623736d3b01537930eda2dd54e.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [GIT PULL v2] Immutable branch between MFD, SPI and TTY due for
+ the v4.20 merge window
+Date: Tue, 11 Sep 2018 16:04:00 +0200
+Message-ID: <20180911140400.GB18410@kroah.com>
+References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
+ <20180911111850.GJ4185@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6fa8728de34a18623736d3b01537930eda2dd54e.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180911111850.GJ4185@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Radu Pirea <radu_nicolae.pirea@upb.ro>, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, broonie@kernel.org, jslaby@suse.com, richard.genoud@gmail.com, davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Aug 2018, Matti Vaittinen wrote:
-
-> Few regulators in BD71837 and BD71847 can output voltages from
-> different voltage ranges. Register interface is arranged so that
-> used range is selected by toggling bits which are not next to actual
-> voltage selection bits. Then the voltage inside selected range is
-> determined by voltage selection bits (as usual). Support BD71837
-> and BD71847 selectible range voltages using new pickable ranges
-> helpers.
+On Tue, Sep 11, 2018 at 12:18:50PM +0100, Lee Jones wrote:
+> [In case you missed it]
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/regulator/bd71837-regulator.c | 155 +++++++++++++++++++++++++++-------
->  include/linux/mfd/rohm-bd718x7.h      |  38 +++++----
->  2 files changed, 147 insertions(+), 46 deletions(-)
+> This new pull-request contains the following changes since v1:
+> 
+>  - Uplift the submission version from v11 to v12
+>  - Include fix for build breakage due to missing Device Tree include file
+> 
+> Since it is based on the original pull-request, it can be pulled
+> in either directly on top of it or as a pull in its own right.
+> 
+> The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
+> 
+>   Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20-1
 
-[...]
+Ok, let's try this again, I've dropped that other patch and taken this
+branch into my tree.
 
-> diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
-> index d1730b97ba52..4cc617047d5f 100644
-> --- a/include/linux/mfd/rohm-bd718x7.h
-> +++ b/include/linux/mfd/rohm-bd718x7.h
-> @@ -7,13 +7,13 @@
->  #include <linux/regmap.h>
->  
->  enum {
-> -	BD718XX_TYPE_BD71837,
-> +	BD718XX_TYPE_BD71837 = 0,
->  	BD718XX_TYPE_BD71847,
->  	BD718XX_TYPE_AMNT // Keep this as last item
->  };
->  
->  enum {
-> -	BD718XX_BUCK1	=	0,
-> +	BD718XX_BUCK1 = 0,
->  	BD718XX_BUCK2,
->  	BD718XX_BUCK3,
->  	BD718XX_BUCK4,
-> @@ -31,31 +31,27 @@ enum {
->  	BD718XX_REGULATOR_MAX,
->  };
+Hopefully this all works well :)
 
-Even though I don't care enough to NACK the patch, the above are
-unrelated changes and should normally be contained in a separate
-patch.
+thanks,
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+greg k-h
