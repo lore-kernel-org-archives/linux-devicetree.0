@@ -1,73 +1,60 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
-Date: Tue, 11 Sep 2018 11:39:17 +0200
-Message-ID: <20180911093917.GL2494@piout.net>
-References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
- <20180911093356.GE4185@dell>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH v4 3/4] drivers: edac: Add EDAC driver support for QCOM
+ SoCs
+Date: Tue, 11 Sep 2018 15:11:30 +0530
+Message-ID: <a8fff11e-5821-f191-ed2e-ec99fadcb5e6@codeaurora.org>
+References: <1536103345-1919-1-git-send-email-vnkgutta@codeaurora.org>
+ <1536103345-1919-4-git-send-email-vnkgutta@codeaurora.org>
+ <105f8339-61bc-072e-0498-ed44470a5fb8@codeaurora.org>
+ <5d8f92b480e1b53e7e04da965d44f7ea@codeaurora.org>
+ <b35f111c-0464-dcee-c970-4821f741694b@codeaurora.org>
+ <b5d9a1dc741e09db6d4044f4d82f83d9@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180911093356.GE4185@dell>
+In-Reply-To: <b5d9a1dc741e09db6d4044f4d82f83d9@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Radu Pirea <radu_nicolae.pirea@upb.ro>, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, gregkh@linuxfoundation.org, broonie@kernel.org, jslaby@suse.com, richard.genoud@gmail.com, davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
+To: vnkgutta@codeaurora.org
+Cc: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2018 10:33:56+0100, Lee Jones wrote:
-> On Tue, 04 Sep 2018, Radu Pirea wrote:
-> > Radu Pirea (6):
-> >   MAINTAINERS: add at91 usart mfd driver
-> >   dt-bindings: add binding for atmel-usart in SPI mode
-> >   mfd: at91-usart: added mfd driver for usart
-> >   MAINTAINERS: add at91 usart spi driver
-> >   spi: at91-usart: add driver for at91-usart as spi
-> >   tty/serial: atmel: change the driver to work under at91-usart mfd
-> > 
-> >  .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
-> >  MAINTAINERS                                   |  16 +
-> >  drivers/mfd/Kconfig                           |   9 +
-> >  drivers/mfd/Makefile                          |   1 +
-> >  drivers/mfd/at91-usart.c                      |  71 +++
-> >  drivers/spi/Kconfig                           |   8 +
-> >  drivers/spi/Makefile                          |   1 +
-> >  drivers/spi/spi-at91-usart.c                  | 432 ++++++++++++++++++
-> >  drivers/tty/serial/Kconfig                    |   1 +
-> >  drivers/tty/serial/atmel_serial.c             |  42 +-
-> >  include/dt-bindings/mfd/at91-usart.h          |  17 +
-> >  11 files changed, 606 insertions(+), 17 deletions(-)
-> >  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
-> >  create mode 100644 drivers/mfd/at91-usart.c
-> >  create mode 100644 drivers/spi/spi-at91-usart.c
-> >  create mode 100644 include/dt-bindings/mfd/at91-usart.h
+On 9/11/2018 4:15 AM, vnkgutta@codeaurora.org wrote:
+> On 2018-09-06 22:02, Sai Prakash Ranjan wrote:
+>> On 9/7/2018 4:01 AM, vnkgutta@codeaurora.org wrote:
+>>> On 2018-09-06 05:38, Sai Prakash Ranjan wrote:
+>>>> On 9/5/2018 4:52 AM, Venkata Narendra Kumar Gutta wrote:
+>>>>> +static const struct of_device_id qcom_llcc_edac_match_table[] = {
+>>>>> +    { .compatible = "qcom,llcc-edac" },
+>>>>> +    { },
+>>>>> +};
+>>>>> +
+>>>>>
+>>>> Hi Venkata,
+>>>>
+>>>> Devicetree binding for llcc is updated, but what about this compatible?
+>>>
+>>> Does it need documentation too? I was not sure if I should add 
+>>> documentation for this or not!
+>>>
+>>
+>> It does not require a separate binding, what I meant was to add this
+>> compatible in the llcc binding itself, maybe as a subnode if it is
+>> correct.
 > 
-> Seeing as this patch-set has caused some issues this morning, I took
-> the liberty to peruse back into its history to figure out where things
-> started to go wrong.  I also re-reviewed the MFD driver - and I'm glad
-> I did!
+> Hi,
 > 
-> My Acked-by has been attached to the MFD portion since v5, which is
-> why the code hasn't caught my eye before today.  I reviewed the
-> relocation of the *binding document* (serial => mfd with no changes)
-> in v4 and nothing else.  It appears as though you mistakenly added it
-> to the *MFD driver* instead.  This explains my confusion in v10 when I
-> told you I'd already reviewed the binding document.
+> We aren't really using this of_device_id structure, as this driver is 
+> being registered from LLCC through
+> platform_register_device_data(...). This structure initialization is 
+> just dead code as this driver won't be probed based on the DT entries.
 > 
-> As I said, I have re-reviewed the MFD driver and I'm afraid to say
-> that I do not like what I see.  Besides the missing header file and
-> the whitespace tabbing errors, I do not agree with the implementation.
-> Using MFD as a shim to hack around driver selection is not a valid
-> use-case.
+> Hence removing this compatible property and the corresponding struct in 
+> the next patchset.
 > 
-> What's stopping you from just using the compatible string directly to
-> select which driver you need to probe?
-> 
+> So, this doesn't need an extra binding/documentation.
 
-Then you'd have multiple compatible strings for the same IP which is a
-big no-no.
+Ok. Now that you have removed the compatible, it should be fine.
 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Thanks
