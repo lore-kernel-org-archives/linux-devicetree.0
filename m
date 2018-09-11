@@ -1,101 +1,67 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
-Date: Tue, 11 Sep 2018 17:36:21 +0200
-Message-ID: <20180911153621.GP2494@piout.net>
-References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
- <20180911093356.GE4185@dell>
- <20180911093917.GL2494@piout.net>
- <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Tue, 11 Sep 2018 10:40:07 -0500
+Message-ID: <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
+References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
+In-Reply-To: <20180910150403.19476-7-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Lee Jones <lee.jones@linaro.org>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-spi <linux-spi@>
+To: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>moderated list
 List-Id: devicetree@vger.kernel.org
 
-On 11/09/2018 16:59:09+0200, Geert Uytterhoeven wrote:
-> Hi Alexandre,
-> 
-> On Tue, Sep 11, 2018 at 11:40 AM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
-> > On 11/09/2018 10:33:56+0100, Lee Jones wrote:
-> > > On Tue, 04 Sep 2018, Radu Pirea wrote:
-> > > > Radu Pirea (6):
-> > > >   MAINTAINERS: add at91 usart mfd driver
-> > > >   dt-bindings: add binding for atmel-usart in SPI mode
-> > > >   mfd: at91-usart: added mfd driver for usart
-> > > >   MAINTAINERS: add at91 usart spi driver
-> > > >   spi: at91-usart: add driver for at91-usart as spi
-> > > >   tty/serial: atmel: change the driver to work under at91-usart mfd
-> > > >
-> > > >  .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
-> > > >  MAINTAINERS                                   |  16 +
-> > > >  drivers/mfd/Kconfig                           |   9 +
-> > > >  drivers/mfd/Makefile                          |   1 +
-> > > >  drivers/mfd/at91-usart.c                      |  71 +++
-> > > >  drivers/spi/Kconfig                           |   8 +
-> > > >  drivers/spi/Makefile                          |   1 +
-> > > >  drivers/spi/spi-at91-usart.c                  | 432 ++++++++++++++++++
-> > > >  drivers/tty/serial/Kconfig                    |   1 +
-> > > >  drivers/tty/serial/atmel_serial.c             |  42 +-
-> > > >  include/dt-bindings/mfd/at91-usart.h          |  17 +
-> > > >  11 files changed, 606 insertions(+), 17 deletions(-)
-> > > >  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
-> > > >  create mode 100644 drivers/mfd/at91-usart.c
-> > > >  create mode 100644 drivers/spi/spi-at91-usart.c
-> > > >  create mode 100644 include/dt-bindings/mfd/at91-usart.h
-> > >
-> > > Seeing as this patch-set has caused some issues this morning, I took
-> > > the liberty to peruse back into its history to figure out where things
-> > > started to go wrong.  I also re-reviewed the MFD driver - and I'm glad
-> > > I did!
-> > >
-> > > My Acked-by has been attached to the MFD portion since v5, which is
-> > > why the code hasn't caught my eye before today.  I reviewed the
-> > > relocation of the *binding document* (serial => mfd with no changes)
-> > > in v4 and nothing else.  It appears as though you mistakenly added it
-> > > to the *MFD driver* instead.  This explains my confusion in v10 when I
-> > > told you I'd already reviewed the binding document.
-> > >
-> > > As I said, I have re-reviewed the MFD driver and I'm afraid to say
-> > > that I do not like what I see.  Besides the missing header file and
-> > > the whitespace tabbing errors, I do not agree with the implementation.
-> > > Using MFD as a shim to hack around driver selection is not a valid
-> > > use-case.
-> > >
-> > > What's stopping you from just using the compatible string directly to
-> > > select which driver you need to probe?
-> > >
-> >
-> > Then you'd have multiple compatible strings for the same IP which is a
-> > big no-no.
-> 
-> It's still the same hardware device, isn't?
-> What if the SPI or UART slave is not on-board, but on an expansion board?
-> Then the SoC-specific .dtsi has no idea what mode should be used.
-> 
-> Hence shouldn't the software derive the hardware mode from the full
-> hardware description in DT? If that's impossible (I didn't look into detail
-> whether an SPI bus can easily be distinguished from a UART bus), perhaps
-> a mode property should be added?
-> 
+On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+>
+> There is nothing arch specific about building dtb files other than their
+> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+> The dependencies and supported targets are all slightly different.
+> Also, a cross-compiler for each arch is needed, but really the host
+> compiler preprocessor is perfectly fine for building dtbs. Move the
+> build rules to a common location and remove the arch specific ones. This
+> is done in a single step to avoid warnings about overriding rules.
+>
+> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+> These pull in several dependencies some of which need a target compiler
+> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> All that is really needed is dtc, so adjust the dependencies to only be
+> dtc.
+>
+> This change enables support 'dtbs_install' on some arches which were
+> missing the target.
 
-Yes, this is exactly what is done:
+[...]
 
-https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/tree/drivers/mfd/at91-usart.c?h=ib-mfd-spi-tty-4.20-1#n33
+> @@ -1215,6 +1215,33 @@ kselftest-merge:
+>                 $(srctree)/tools/testing/selftests/*/config
+>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+>
+> +# ---------------------------------------------------------------------------
+> +# Devicetree files
+> +
+> +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+> +dtstree := arch/$(SRCARCH)/boot/dts
+> +endif
+> +
+> +ifdef CONFIG_OF_EARLY_FLATTREE
 
-Only one compatbile for the IP and a property to know what is the mode.
-That property should indeed be set in the board dts and not the SoC
-dtsi.
+This can be true when dtstree is unset. So this line should be this
+instead to fix the 0-day reported error:
 
-the other, less robust alternative was to look for child nodes and
-decide that if some where present it would indicate an SPI bus. But I
-think at some point we may have child nodes under a UART node.
+ifneq ($(dtstree),)
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +
+> +%.dtb : scripts_dtc
+> +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+> +
+> +PHONY += dtbs dtbs_install
+> +dtbs: scripts_dtc
+> +       $(Q)$(MAKE) $(build)=$(dtstree)
+> +
+> +dtbs_install: dtbs
+> +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+> +
+> +all: dtbs
+> +
+> +endif
