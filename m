@@ -1,42 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/8] regulator: bd71837: Disable voltage monitoring for
- LDO3/4
-Date: Tue, 11 Sep 2018 13:40:29 +0100
-Message-ID: <20180911124029.GO4185@dell>
-References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
- <cad2e7baeb7af2d6efbc6afba831b0513087d832.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+From: Roy Im <roy.im.opensource@diasemi.com>
+Subject: [PATCH V6 0/3]  da7280: haptic driver submission
+Date: Tue, 11 Sep 2018 21:18:06 +0900
+Message-ID: <cover.1536668286.git.Roy.Im@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cad2e7baeb7af2d6efbc6afba831b0513087d832.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Support Opensource <support.opensource@diasemi.com>, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Aug 2018, Matti Vaittinen wrote:
+This patch adds support for the Dialog DA7280 Haptic driver IC.
 
-> There is a HW quirk in BD71837. The shutdown sequence timings for
-> bucks/LDOs which are enabled via register interface are changed.
-> At PMIC poweroff the voltage for BUCK6/7 is cut immediately at the
-> beginning of shut-down sequence. This causes LDO5/6 voltage
-> monitoring to detect under voltage and force PMIC to emergency
-> state instead of poweroff. Disable voltage monitoring for LDO5 and
-> LDO6 at probe to avoid this.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/regulator/bd71837-regulator.c | 19 +++++++++++++++++++
+In this patch set the following is provided:
 
->  include/linux/mfd/rohm-bd718x7.h      | 33 ++++++++++++++++++++++++++++++---
+[PATCH V2 1/3] MAINTAINERS file update for DA7280
+[PATCH V2 2/3] DA7280 DT Binding
+[PATCH V2 3/3] DA7280 Driver
 
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+This patch applies against linux-next and v4.19-rc3
+
+Thank you,
+Roy Im, Dialog Semiconductor Ltd.
+
+Roy Im (3):
+  MAINTAINERS: da7280 updates to the Dialog Semiconductor search terms
+  dt-bindings: input: Add document bindings for DA7280
+  Input: new da7280 haptic driver
+
+ .../devicetree/bindings/input/dlg,da7280.txt       |  105 ++
+ MAINTAINERS                                        |    2 +
+ drivers/input/misc/Kconfig                         |   13 +
+ drivers/input/misc/Makefile                        |    1 +
+ drivers/input/misc/da7280.c                        | 1438 ++++++++++++++++++++
+ drivers/input/misc/da7280.h                        |  412 ++++++
+ 6 files changed, 1971 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/dlg,da7280.txt
+ create mode 100644 drivers/input/misc/da7280.c
+ create mode 100644 drivers/input/misc/da7280.h
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+end-of-patch for PATCH V6
