@@ -1,99 +1,113 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Tue, 11 Sep 2018 13:37:08 -0500
-Message-ID: <ff86540b-c362-ad06-225f-29daab1defdf@ti.com>
-References: <20180906135005.6718-1-dmurphy@ti.com>
- <20180906211617.GB16899@amd> <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
- <20180907133228.GA16297@amd> <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
- <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
- <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
- <59561e0f-e3b9-7898-a300-90b198ad14e6@gmail.com>
- <20d9ea9e-bbb8-2240-97cc-615e3fbcef8c@ti.com>
- <5127d46f-2d43-41e8-dde0-5ee42a9d47bb@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Tue, 11 Sep 2018 19:39:30 +0100
+Message-ID: <20180911181838.GI4185@dell>
+References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
+ <20180911093356.GE4185@dell>
+ <20180911093917.GL2494@piout.net>
+ <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
+ <20180911153621.GP2494@piout.net>
+ <CAMuHMdV+=EgAYogwNHbY=RExkGox_+YSeHV6pJtQb6g6PzD-CQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5127d46f-2d43-41e8-dde0-5ee42a9d47bb@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV+=EgAYogwNHbY=RExkGox_+YSeHV6pJtQb6g6PzD-CQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>linu
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+On Tue, 11 Sep 2018, Geert Uytterhoeven wrote:
 
-On 09/11/2018 01:27 PM, Jacek Anaszewski wrote:
-> Dan,
+> On Tue, Sep 11, 2018 at 5:36 PM Alexandre Belloni
+> <alexandre.belloni@bootlin.com> wrote:
+> > On 11/09/2018 16:59:09+0200, Geert Uytterhoeven wrote:
+> > > On Tue, Sep 11, 2018 at 11:40 AM Alexandre Belloni
+> > > <alexandre.belloni@bootlin.com> wrote:
+> > > > On 11/09/2018 10:33:56+0100, Lee Jones wrote:
+> > > > > On Tue, 04 Sep 2018, Radu Pirea wrote:
+> > > > > > Radu Pirea (6):
+> > > > > >   MAINTAINERS: add at91 usart mfd driver
+> > > > > >   dt-bindings: add binding for atmel-usart in SPI mode
+> > > > > >   mfd: at91-usart: added mfd driver for usart
+> > > > > >   MAINTAINERS: add at91 usart spi driver
+> > > > > >   spi: at91-usart: add driver for at91-usart as spi
+> > > > > >   tty/serial: atmel: change the driver to work under at91-usart mfd
+> > > > > >
+> > > > > >  .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+> > > > > >  MAINTAINERS                                   |  16 +
+> > > > > >  drivers/mfd/Kconfig                           |   9 +
+> > > > > >  drivers/mfd/Makefile                          |   1 +
+> > > > > >  drivers/mfd/at91-usart.c                      |  71 +++
+> > > > > >  drivers/spi/Kconfig                           |   8 +
+> > > > > >  drivers/spi/Makefile                          |   1 +
+> > > > > >  drivers/spi/spi-at91-usart.c                  | 432 ++++++++++++++++++
+> > > > > >  drivers/tty/serial/Kconfig                    |   1 +
+> > > > > >  drivers/tty/serial/atmel_serial.c             |  42 +-
+> > > > > >  include/dt-bindings/mfd/at91-usart.h          |  17 +
+> > > > > >  11 files changed, 606 insertions(+), 17 deletions(-)
+> > > > > >  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+> > > > > >  create mode 100644 drivers/mfd/at91-usart.c
+> > > > > >  create mode 100644 drivers/spi/spi-at91-usart.c
+> > > > > >  create mode 100644 include/dt-bindings/mfd/at91-usart.h
+> > > > >
+> > > > > Seeing as this patch-set has caused some issues this morning, I took
+> > > > > the liberty to peruse back into its history to figure out where things
+> > > > > started to go wrong.  I also re-reviewed the MFD driver - and I'm glad
+> > > > > I did!
+> > > > >
+> > > > > My Acked-by has been attached to the MFD portion since v5, which is
+> > > > > why the code hasn't caught my eye before today.  I reviewed the
+> > > > > relocation of the *binding document* (serial => mfd with no changes)
+> > > > > in v4 and nothing else.  It appears as though you mistakenly added it
+> > > > > to the *MFD driver* instead.  This explains my confusion in v10 when I
+> > > > > told you I'd already reviewed the binding document.
+> > > > >
+> > > > > As I said, I have re-reviewed the MFD driver and I'm afraid to say
+> > > > > that I do not like what I see.  Besides the missing header file and
+> > > > > the whitespace tabbing errors, I do not agree with the implementation.
+> > > > > Using MFD as a shim to hack around driver selection is not a valid
+> > > > > use-case.
+> > > > >
+> > > > > What's stopping you from just using the compatible string directly to
+> > > > > select which driver you need to probe?
+> > > > >
+> > > >
+> > > > Then you'd have multiple compatible strings for the same IP which is a
+> > > > big no-no.
+> > >
+> > > It's still the same hardware device, isn't?
+> > > What if the SPI or UART slave is not on-board, but on an expansion board?
+> > > Then the SoC-specific .dtsi has no idea what mode should be used.
+> > >
+> > > Hence shouldn't the software derive the hardware mode from the full
+> > > hardware description in DT? If that's impossible (I didn't look into detail
+> > > whether an SPI bus can easily be distinguished from a UART bus), perhaps
+> > > a mode property should be added?
+> >
+> > Yes, this is exactly what is done:
+> >
+> > https://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git/tree/drivers/mfd/at91-usart.c?h=ib-mfd-spi-tty-4.20-1#n33
 > 
-> On 09/10/2018 09:51 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 09/10/2018 02:07 PM, Jacek Anaszewski wrote:
->>> Dan, Pavel,
->>>
->>> On 09/10/2018 04:37 PM, Dan Murphy wrote:
->>>> Jacek
->>>>
->>>> On 09/08/2018 02:53 PM, Jacek Anaszewski wrote:
->>>>> Dan,
->>>>>
->>>>> On 09/07/2018 03:52 PM, Dan Murphy wrote:
->>>>> [...]
->>>>>>>
->>>>>>>> And I think Jacek pointed out that the bindings references in this bindings
->>>>>>>> don't even exist.
->>>>>>>>
->>>>>>>> I am thinking we need to deprecate this MFD driver and consolidate these drivers
->>>>>>>> in the LED directory as we indicated before.  I did not find any ti-lmu support
->>>>>>>> code.
->>>>>>>>
->>>>>>>> ti-lmu common core code and then the LED children appending the feature differentiation.
->>>>>>>
->>>>>>>> Need some maintainer weigh in here.
->>>>>>>
->>>>>>> Hehe. I'm maintnainer. Fun.
->>>>>>
->>>>>> I know.  I want to see if there was any other opinion.  Especially for the LED driver.
->>>>>>
->>>>> [...]
->>>>>
->>>>> I have a question - is this lm3697 LED controller a cell of some MFD
->>>>> device? Or is it a self-contained chip?
->>>>>
->>>>
->>>> This is a self contained chip.  And the LM3697 only function is a LED driver.
->>>> It does not have any other special functions like the LM363X drivers for GPIO and Regulator support.
->>>
->>> This is an argument for merging it as a standalone LED class driver
->>> then. It is even more justifiable, taking into account uncertainties
->>> related to the proper way of adding the support for it to the existing
->>> MFD driver, whereas the code reuse would be the only advantage of having
->>> thus support in MFD subsystem.
->>>
->>
->> Does the argument carry over to the other devices?
+> OK.
 > 
-> If we want to be consequent - yes.
+> I guess the main "hackish" part is that the mfd_cell uses of_compatible,
+> which thus requires having additional compatible values?
 > 
->> Like the LM3632 (part of the ti-lmu) has flash and torch and no other special functions
->> so it would look like the lm3601x family with different register mappings.
-> 
-> Yes, this is obvious candidate for LED class flash driver.
-> 
->> The LM3631 seems to also be just a LED driver with no extra functionality
->>
->> I could go buy an EVM and put together a driver for that device as well using the lm3601x as
->> reference.
-> 
-> I'm not going to encourage you to make this expense, but to put it
-> politically - I'd happily welcome those drivers in the LED subsystem ;-)
-> 
+> I think those can just be removed. AFAICS, the SPI and serial drivers already
+> match against the "at91_usart_spi" resp. "atmel_usart_serial" platform device
+> names?
 
-Understood.  I am waiting on hardware to test.
+The hackish part of this driver is that it's using MFD for something
+which is clearly not an MFD.  It's a USART device.  Nothing more,
+nothing less.
 
-Dan
+Does anyone have the datasheet to hand?
 
 -- 
-------------------
-Dan Murphy
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
