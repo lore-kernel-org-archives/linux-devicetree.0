@@ -1,39 +1,23 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v4 2/3] dt-bindings: usb: renesas_usbhs: add clock-names property
-Date: Mon, 10 Sep 2018 18:52:19 +0900
-Message-Id: <1536573140-24123-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1536573140-24123-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1536573140-24123-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=P4hA=LZ=verge.net.au=horms@kernel.org>
+Date: Tue, 11 Sep 2018 15:34:11 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] dt-bindings: usb: ohci: Add clocks description for
+ R-Car Gen3
+Message-ID: <20180911133410.hdpjbxzquxmkbgju@verge.net.au>
+References: <1536578148-27656-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1536578148-27656-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1536578148-27656-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-R-Car Gen3 needs to enable clocks of both host and peripheral.
-Otherwise, other side device cannot work correctly. So, this patch
-adds a property of clock-names for R-Car Gen3 as an optional.
+On Mon, Sep 10, 2018 at 08:15:48PM +0900, Yoshihiro Shimoda wrote:
+> This patch adds detailed information of an optional property "clocks"
+> description for R-Car Gen3.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 087140a..dbdb92c 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -26,7 +26,9 @@ Required properties:
- 
-   - reg: Base address and length of the register for the USBHS
-   - interrupts: Interrupt specifier for the USBHS
--  - clocks: A list of phandle + clock specifier pairs
-+  - clocks: A list of phandle + clock specifier pairs. In case of
-+	    "renesas,rcar-gen3-usbhs" compatible device, first clock should be
-+	    peripheral and second one should be host.
- 
- Optional properties:
-   - renesas,buswait: Integer to use BUSWAIT register
--- 
-1.9.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
