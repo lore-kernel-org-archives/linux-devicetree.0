@@ -1,60 +1,65 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] drivers: edac: Add EDAC driver support for QCOM
- SoCs
-Date: Tue, 11 Sep 2018 15:11:30 +0530
-Message-ID: <a8fff11e-5821-f191-ed2e-ec99fadcb5e6@codeaurora.org>
-References: <1536103345-1919-1-git-send-email-vnkgutta@codeaurora.org>
- <1536103345-1919-4-git-send-email-vnkgutta@codeaurora.org>
- <105f8339-61bc-072e-0498-ed44470a5fb8@codeaurora.org>
- <5d8f92b480e1b53e7e04da965d44f7ea@codeaurora.org>
- <b35f111c-0464-dcee-c970-4821f741694b@codeaurora.org>
- <b5d9a1dc741e09db6d4044f4d82f83d9@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
+ v4.20 merge window
+Date: Tue, 11 Sep 2018 10:44:30 +0100
+Message-ID: <20180911094430.GG4185@dell>
+References: <20180713164736.26028-1-radu.pirea@microchip.com>
+ <20180910151803.GX28860@dell>
+ <20180911084548.GC4185@dell>
+ <20180911090132.GB25161@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b5d9a1dc741e09db6d4044f4d82f83d9@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180911090132.GB25161@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vnkgutta@codeaurora.org
-Cc: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/11/2018 4:15 AM, vnkgutta@codeaurora.org wrote:
-> On 2018-09-06 22:02, Sai Prakash Ranjan wrote:
->> On 9/7/2018 4:01 AM, vnkgutta@codeaurora.org wrote:
->>> On 2018-09-06 05:38, Sai Prakash Ranjan wrote:
->>>> On 9/5/2018 4:52 AM, Venkata Narendra Kumar Gutta wrote:
->>>>> +static const struct of_device_id qcom_llcc_edac_match_table[] = {
->>>>> +    { .compatible = "qcom,llcc-edac" },
->>>>> +    { },
->>>>> +};
->>>>> +
->>>>>
->>>> Hi Venkata,
->>>>
->>>> Devicetree binding for llcc is updated, but what about this compatible?
->>>
->>> Does it need documentation too? I was not sure if I should add 
->>> documentation for this or not!
->>>
->>
->> It does not require a separate binding, what I meant was to add this
->> compatible in the llcc binding itself, maybe as a subnode if it is
->> correct.
-> 
-> Hi,
-> 
-> We aren't really using this of_device_id structure, as this driver is 
-> being registered from LLCC through
-> platform_register_device_data(...). This structure initialization is 
-> just dead code as this driver won't be probed based on the DT entries.
-> 
-> Hence removing this compatible property and the corresponding struct in 
-> the next patchset.
-> 
-> So, this doesn't need an extra binding/documentation.
+On Tue, 11 Sep 2018, Greg KH wrote:
 
-Ok. Now that you have removed the compatible, it should be fine.
+> On Tue, Sep 11, 2018 at 09:45:48AM +0100, Lee Jones wrote:
+> > On Mon, 10 Sep 2018, Lee Jones wrote:
+> > 
+> > > Enjoy!
+> > > 
+> > > The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
+> > > 
+> > >   Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
+> > > 
+> > > are available in the Git repository at:
+> > > 
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
+> > > 
+> > > for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
+> > > 
+> > >   tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
+> > > 
+> > > ----------------------------------------------------------------
+> > > Immutable branch between MFD, SPI and TTY due for the v4.20 merge window
+> > 
+> > Due to a comedy of errors, I'm voiding this pull-request.
+> 
+> Um, I can't do that as my tree can not be rebased :(
 
-Thanks
+Oh dear. :(
+
+> I can take follow-on patches, so I will go apply the patch posted so
+> that my tree builds again.  I recommend you just apply it as well.
+
+What a pickle.  As per my last email, it looks as though this set was
+applied under false pretences.  The MFD patch which was carrying my
+Ack was doing so incorrectly.  The author mistakenly applied it to the
+wrong patch.  After re-review (actually initial review) I wish to NACK
+the implementation.
+
+My suggestion would be to sit tight, rather than do anything rash and
+see how this plays out.  After which we can fix your tree.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
