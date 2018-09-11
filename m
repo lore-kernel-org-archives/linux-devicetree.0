@@ -1,89 +1,52 @@
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Subject: [PATCH v5 2/4] drivers: soc: Add support to register LLCC EDAC driver
-Date: Mon, 10 Sep 2018 16:46:53 -0700
-Message-ID: <1536623215-20018-3-git-send-email-vnkgutta@codeaurora.org>
-References: <1536623215-20018-1-git-send-email-vnkgutta@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Tue, 11 Sep 2018 09:53:21 +0800
+Message-ID: <20180911015320.GA25790@dragon>
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
+ <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+ <20180802113552.GJ9117@sirena.org.uk>
+ <20180827014815.GD29208@dragon>
+ <20180906101516.GA5360@sirena.org.uk>
+ <20180909020021.GA18838@dragon>
+ <20180910151926.GA10889@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536623215-20018-1-git-send-email-vnkgutta@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20180910151926.GA10889@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Cache error reporting controller detects and reports single and
-double bit errors on Last Level Cache Controller (LLCC) cache.
-Add required support to register LLCC EDAC driver as platform driver,
-from LLCC driver.
+On Mon, Sep 10, 2018 at 04:19:26PM +0100, Mark Brown wrote:
+> On Sun, Sep 09, 2018 at 10:00:23AM +0800, Shawn Guo wrote:
+> > On Thu, Sep 06, 2018 at 11:15:17AM +0100, Mark Brown wrote:
+> 
+> > > I was expecting to get a pull request with the precursor patches in it -
+> > > the regulator driver seems to get a moderate amount of development so
+> > > there's a reasonable risk of conflicts.
+> 
+> > What about you create a stable topic branch for regulator patches and I
+> > pull it into IMX tree?
+> 
+> Sure, I can send a pull request back but the first two patches in the
+> series are ARM ones - are you OK with me just applying them and sending
+> them in the pull request or do you want to apply them first?
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
----
- drivers/soc/qcom/llcc-slice.c      | 18 ++++++++++++++++--
- include/linux/soc/qcom/llcc-qcom.h |  2 ++
- 2 files changed, 18 insertions(+), 2 deletions(-)
+I just took another look at the series.  It seems that there is no
+build-time dependency between regulator and platform patches.  So I
+think we can handle the series like:
 
-diff --git a/drivers/soc/qcom/llcc-slice.c b/drivers/soc/qcom/llcc-slice.c
-index a63640d..09c8bb0 100644
---- a/drivers/soc/qcom/llcc-slice.c
-+++ b/drivers/soc/qcom/llcc-slice.c
-@@ -224,7 +224,7 @@ static int qcom_llcc_cfg_program(struct platform_device *pdev)
- 	u32 attr0_val;
- 	u32 max_cap_cacheline;
- 	u32 sz;
--	int ret;
-+	int ret = 0;
- 	const struct llcc_slice_config *llcc_table;
- 	struct llcc_slice_desc desc;
- 
-@@ -282,6 +282,7 @@ int qcom_llcc_probe(struct platform_device *pdev,
- 	struct resource *llcc_banks_res, *llcc_bcast_res;
- 	void __iomem *llcc_banks_base, *llcc_bcast_base;
- 	int ret, i;
-+	struct platform_device *llcc_edac;
- 
- 	drv_data = devm_kzalloc(dev, sizeof(*drv_data), GFP_KERNEL);
- 	if (!drv_data)
-@@ -341,6 +342,19 @@ int qcom_llcc_probe(struct platform_device *pdev,
- 	mutex_init(&drv_data->lock);
- 	platform_set_drvdata(pdev, drv_data);
- 
--	return qcom_llcc_cfg_program(pdev);
-+	ret = qcom_llcc_cfg_program(pdev);
-+	if (ret)
-+		return ret;
-+
-+	drv_data->ecc_irq = platform_get_irq(pdev, 0);
-+	if (drv_data->ecc_irq >= 0) {
-+		llcc_edac = platform_device_register_data(&pdev->dev,
-+						"qcom_llcc_edac", -1, drv_data,
-+						sizeof(*drv_data));
-+		if (IS_ERR(llcc_edac))
-+			dev_err(dev, "Failed to register llcc edac driver\n");
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL_GPL(qcom_llcc_probe);
-diff --git a/include/linux/soc/qcom/llcc-qcom.h b/include/linux/soc/qcom/llcc-qcom.h
-index c681e79..2e4b34d 100644
---- a/include/linux/soc/qcom/llcc-qcom.h
-+++ b/include/linux/soc/qcom/llcc-qcom.h
-@@ -78,6 +78,7 @@ struct llcc_slice_config {
-  * @num_banks: Number of llcc banks
-  * @bitmap: Bit map to track the active slice ids
-  * @offsets: Pointer to the bank offsets array
-+ * @ecc_irq: interrupt for llcc cache error detection and reporting
-  */
- struct llcc_drv_data {
- 	struct regmap *regmap;
-@@ -89,6 +90,7 @@ struct llcc_drv_data {
- 	u32 num_banks;
- 	unsigned long *bitmap;
- 	u32 *offsets;
-+	int ecc_irq;
- };
- 
- #if IS_ENABLED(CONFIG_QCOM_LLCC)
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+ - You apply patch #3, #4 and #5 on regulator tree;
+ - I apply the reset on IMX tree.
+
+There shouldn't be any build or run time regression on either tree, and
+the feature that the series adds will be available when both trees get
+merged together on -next or Linus tree.
+
+@Oleksij Is my understanding above correct?
+
+Shawn
