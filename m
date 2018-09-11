@@ -1,84 +1,62 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
- v4.20 merge window
-Date: Tue, 11 Sep 2018 12:03:36 +0200
-Message-ID: <20180911100336.GA3822@kroah.com>
-References: <20180713164736.26028-1-radu.pirea@microchip.com>
- <20180910151803.GX28860@dell>
- <20180911084548.GC4185@dell>
- <20180911090132.GB25161@kroah.com>
- <20180911094430.GG4185@dell>
- <743b5545-e942-b6f4-4ce6-8e10950a05fc@microchip.com>
+From: vitor <Vitor.Soares@synopsys.com>
+Subject: Re: [PATCH v7 01/10] i3c: Add core I3C infrastructure
+Date: Tue, 11 Sep 2018 11:04:07 +0100
+Message-ID: <aa29faa0-237c-3875-64da-b93a1e87ccff@synopsys.com>
+References: <20180905154108.20770-1-boris.brezillon@bootlin.com>
+ <20180905154108.20770-2-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <743b5545-e942-b6f4-4ce6-8e10950a05fc@microchip.com>
+In-Reply-To: <20180905154108.20770-2-boris.brezillon@bootlin.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vitor Soares <Vitor.Soares>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 11, 2018 at 11:56:49AM +0200, Nicolas Ferre wrote:
-> On 11/09/2018 at 11:44, Lee Jones wrote:
-> > On Tue, 11 Sep 2018, Greg KH wrote:
-> > 
-> > > On Tue, Sep 11, 2018 at 09:45:48AM +0100, Lee Jones wrote:
-> > > > On Mon, 10 Sep 2018, Lee Jones wrote:
-> > > > 
-> > > > > Enjoy!
-> > > > > 
-> > > > > The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
-> > > > > 
-> > > > >    Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
-> > > > > 
-> > > > > are available in the Git repository at:
-> > > > > 
-> > > > >    git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
-> > > > > 
-> > > > > for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
-> > > > > 
-> > > > >    tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
-> > > > > 
-> > > > > ----------------------------------------------------------------
-> > > > > Immutable branch between MFD, SPI and TTY due for the v4.20 merge window
-> > > > 
-> > > > Due to a comedy of errors, I'm voiding this pull-request.
-> > > 
-> > > Um, I can't do that as my tree can not be rebased :(
-> > 
-> > Oh dear. :(
-> > 
-> > > I can take follow-on patches, so I will go apply the patch posted so
-> > > that my tree builds again.  I recommend you just apply it as well.
-> > 
-> > What a pickle.  As per my last email, it looks as though this set was
-> > applied under false pretences.  The MFD patch which was carrying my
-> > Ack was doing so incorrectly.  The author mistakenly applied it to the
-> > wrong patch.  After re-review (actually initial review) I wish to NACK
-> > the implementation.
-> 
-> What? We discussed this to the bone!
-> 
-> Radu followed all the recommendations, collected all the feedback from major
-> subsystems SPI and USART, resent the series again.
-> 
-> It was then forgotten. Wrong series was finally applied (which could trigger
-> 0-day reports, I warn you)... and now we are discussing about the
-> implementation of *v2* (we're at v12)!
-> 
-> > My suggestion would be to sit tight, rather than do anything rash and
-> > see how this plays out.  After which we can fix your tree.
-> 
-> Come on, Greg's tree is fixed now. We can catch-up with v11..v12 changes
-> with patches and cleanup the mess together.
-> 
-> Just one misalignment with one patch merged for v4.19-rc1, fixed the same
-> day, cannot generate such a reaction after months of development.
 
-I agree, my tree is now fixed, no harm done.  Just apply the same patch
-to whomever also pulled it into their trees and all is good.
+Hi Boris,
 
-thanks,
+On 05-09-2018 16:40, Boris Brezillon wrote:
+> +i3c_master_register_new_i3c_devs(struct i3c_master_controller *master)
+> +{
+> +	struct i3c_dev_desc *desc;
+> +	int ret;
+> +
+> +	if (!master->init_done)
+> +		return;
+> +
+If you have a hot-join and call i3c_master_do_daa this function will 
+return without create the i3c_device.
 
-greg k-h
+> +	i3c_bus_for_each_i3cdev(master->bus, desc) {
+> +		if (desc->dev || !desc->info.dyn_addr || desc == master->this)
+> +			continue;
+> +
+> +		desc->dev = kzalloc(sizeof(*desc->dev), GFP_KERNEL);
+> +		if (!desc->dev)
+> +			continue;
+> +
+> +		desc->dev->bus = master->bus;
+> +		desc->dev->desc = desc;
+> +		desc->dev->dev.parent = &master->bus->dev;
+> +		desc->dev->dev.type = &i3c_device_type;
+> +		desc->dev->dev.bus = &i3c_bus_type;
+> +		desc->dev->dev.release = i3c_device_release;
+> +		dev_set_name(&desc->dev->dev, "%d-%llx", master->bus->id,
+> +			     desc->info.pid);
+> +
+> +		if (desc->boardinfo)
+> +			desc->dev->dev.of_node = desc->boardinfo->of_node;
+> +
+> +		ret = device_register(&desc->dev->dev);
+> +		if (ret)
+> +			dev_err(master->parent,
+> +				"Failed to add I3C device (err = %d)\n", ret);
+> +	}
+> +}
+>
+
+Best regards,
+Vitor Soares
