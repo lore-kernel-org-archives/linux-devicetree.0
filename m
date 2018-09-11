@@ -1,42 +1,32 @@
-Return-Path: <SRS0=aBeZ=LQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:34064 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbeICAtb (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Sep 2018 20:49:31 -0400
-Date: Sun, 2 Sep 2018 21:32:29 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 5/5] dt-bindings: iio: imu: st_lsm6dsx: add LSM6DSO
- device bindings
-Message-ID: <20180902213229.0a199f3e@archlinux>
-In-Reply-To: <20180830205259.7029-6-lorenzo.bianconi@redhat.com>
-References: <20180830205259.7029-6-lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=Px8Z=LZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from apexinds.com ([74.63.245.249]:55286 "EHLO curiox.com"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726622AbeIKUvz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 11 Sep 2018 16:51:55 -0400
+Subject: Editing 2
+Message-ID: <3eb3d1dfc36912f52b681d2151a8c40d@jennair.com>
+Date: Tue, 11 Sep 2018 08:59:03 +0200
+From: "Aaron" <lufinteqerpaqnlop@aol.jp>
+Reply-To: lexiatonst@yandex.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; format=flowed; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, 30 Aug 2018 22:52:59 +0200
-Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+Hi,
 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+If you have photos for editing, please send email to: hansrekan@outlook.com
 
-Applied.  Thanks.
-> ---
->  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> index ef8a8566c63f..858a2898908a 100644
-> --- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> +++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
-> @@ -7,6 +7,7 @@ Required properties:
->    "st,lsm6dsl"
->    "st,lsm6dsm"
->    "st,ism330dlc"
-> +  "st,lsm6dso"
->  - reg: i2c address of the sensor / spi cs line
->  
->  Optional properties:
+We have 12 in house image editors and we can help you for cutting out your
+photos, or path the photos.
+Includes retouching if needed.
+
+Used for products photos or portrait photos, catalog photos.
+
+You may drop us one photo, we can send you the testing work.
+
+Thanks,
+Aaron Williams
+Email: hansrekan@outlook.com
