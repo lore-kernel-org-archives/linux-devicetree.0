@@ -1,157 +1,140 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v4] dt-binding: remoteproc: Add QTI ADSP PIL bindings
-Date: Tue, 11 Sep 2018 09:24:01 +0530
-Message-ID: <1536638041-11033-1-git-send-email-rohitkr@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+Date: Tue, 11 Sep 2018 06:36:35 +0200
+Message-ID: <134a7f76-6e0b-1a9f-26da-f01adaac44e6@pengutronix.de>
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
+ <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+ <20180802113552.GJ9117@sirena.org.uk> <20180827014815.GD29208@dragon>
+ <20180906101516.GA5360@sirena.org.uk> <20180909020021.GA18838@dragon>
+ <20180910151926.GA10889@sirena.org.uk> <20180911015320.GA25790@dragon>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============8618829631486169131=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180911015320.GA25790@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>, linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings documentation file for Qualcomm
-Technolgies Inc ADSP Peripheral Image Loader.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============8618829631486169131==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="GH2qLEd1bdYflvrsNcftbP536dqJJG2Gz"
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
-Changes since v3:
-Addressed comments given by Rob
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GH2qLEd1bdYflvrsNcftbP536dqJJG2Gz
+Content-Type: multipart/mixed; boundary="IQQAtMcNgGktm5ZFih1gXwZeXumOAOaYC";
+ protected-headers="v1"
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
+ yibin.gong@nxp.com, Michael Turquette <mturquette@baylibre.com>,
+ "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org,
+ Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+ linux-imx@nxp.com, kernel@pengutronix.de, "A.s. Dong"
+ <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Leonard Crestez <leonard.crestez@nxp.com>, linux-clk@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+Message-ID: <134a7f76-6e0b-1a9f-26da-f01adaac44e6@pengutronix.de>
+Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
+References: <20180802103425.3053-1-o.rempel@pengutronix.de>
+ <20180802103425.3053-4-o.rempel@pengutronix.de>
+ <20180802104443.GH9117@sirena.org.uk>
+ <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
+ <20180802113552.GJ9117@sirena.org.uk> <20180827014815.GD29208@dragon>
+ <20180906101516.GA5360@sirena.org.uk> <20180909020021.GA18838@dragon>
+ <20180910151926.GA10889@sirena.org.uk> <20180911015320.GA25790@dragon>
+In-Reply-To: <20180911015320.GA25790@dragon>
 
- .../bindings/remoteproc/qcom,adsp-pil.txt          | 126 +++++++++++++++++++++
- 1 file changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
+--IQQAtMcNgGktm5ZFih1gXwZeXumOAOaYC
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
-new file mode 100644
-index 0000000..06558de
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
-@@ -0,0 +1,126 @@
-+Qualcomm Technology Inc. ADSP Peripheral Image Loader
-+
-+This document defines the binding for a component that loads and boots firmware
-+on the Qualcomm Technology Inc. ADSP Hexagon core.
-+
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be one of:
-+		    "qcom,sdm845-adsp-pil"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must specify the base address and size of the qdsp6ss register
-+
-+- interrupts-extended:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: must list the watchdog, fatal IRQs ready, handover and
-+		    stop-ack IRQs
-+
-+- interrupt-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
-+
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition:  List of 8 phandle and clock specifier pairs for the adsp.
-+
-+- clock-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: List of clock input name strings sorted in the same
-+		    order as the clocks property. Definition must have
-+		    "xo", "sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr",
-+		    "lpass_ahbm_aon_cbcr", "qdsp6ss_xo", "qdsp6ss_sleep"
-+		    and "qdsp6ss_core".
-+
-+- power-domains:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to cx power domain node.
-+
-+- resets:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the list of 2 reset-controller for the adsp.
-+
-+- reset-names:
-+        Usage: required
-+        Value type: <stringlist>
-+        Definition: must be "pdc_sync" and "cc_lpass"
-+
-+- qcom,halt-regs:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: a phandle reference to a syscon representing TCSR followed
-+			by the offset within syscon for lpass halt register.
-+
-+- memory-region:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the reserved-memory for the ADSP
-+
-+- qcom,smem-states:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the smem state for requesting the ADSP to
-+		    shut down
-+
-+- qcom,smem-state-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: must be "stop"
-+
-+
-+= SUBNODES
-+The adsp node may have an subnode named "glink-edge" that describes the
-+communication edge, channels and devices related to the ADSP.
-+See ../soc/qcom/qcom,glink.txt for details on how to describe these.
-+
-+= EXAMPLE
-+The following example describes the resources needed to boot control the
-+ADSP, as it is found on SDM845 boards.
-+	adsp-pil {
-+		compatible = "qcom,sdm845-adsp-pil";
-+
-+		reg = <0x17300000 0x40c>;
-+
-+		interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
-+			<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+			<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+			<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+			<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-names = "wdog", "fatal", "ready",
-+			"handover", "stop-ack";
-+
-+		clocks = <&rpmhcc RPMH_CXO_CLK>,
-+			<&gcc GCC_LPASS_SWAY_CLK>,
-+			<&lpasscc LPASS_AUDIO_WRAPPER_AON_CLK>,
-+			<&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
-+			<&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
-+			<&lpasscc LPASS_QDSP6SS_XO_CLK>,
-+			<&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
-+			<&lpasscc LPASS_QDSP6SS_CORE_CLK>;
-+		clock-names = "xo", "sway_cbcr", "lpass_aon",
-+			"lpass_ahbs_aon_cbcr",
-+			"lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
-+			"qdsp6ss_sleep", "qdsp6ss_core";
-+
-+		power-domains = <&rpmhpd SDM845_CX>;
-+
-+		resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
-+			 <&aoss_reset AOSS_CC_LPASS_RESTART>;
-+		reset-names = "pdc_sync", "cc_lpass";
-+
-+		qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
-+
-+		memory-region = <&pil_adsp_mem>;
-+
-+		qcom,smem-states = <&adsp_smp2p_out 0>;
-+		qcom,smem-state-names = "stop";
-+	};
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Hi Shawn,
+
+On 11.09.2018 03:53, Shawn Guo wrote:
+> On Mon, Sep 10, 2018 at 04:19:26PM +0100, Mark Brown wrote:
+>> On Sun, Sep 09, 2018 at 10:00:23AM +0800, Shawn Guo wrote:
+>>> On Thu, Sep 06, 2018 at 11:15:17AM +0100, Mark Brown wrote:
+>>
+>>>> I was expecting to get a pull request with the precursor patches in =
+it -
+>>>> the regulator driver seems to get a moderate amount of development s=
+o
+>>>> there's a reasonable risk of conflicts.
+>>
+>>> What about you create a stable topic branch for regulator patches and=
+ I
+>>> pull it into IMX tree?
+>>
+>> Sure, I can send a pull request back but the first two patches in the
+>> series are ARM ones - are you OK with me just applying them and sendin=
+g
+>> them in the pull request or do you want to apply them first?
+>=20
+> I just took another look at the series.  It seems that there is no
+> build-time dependency between regulator and platform patches.  So I
+> think we can handle the series like:
+>=20
+>  - You apply patch #3, #4 and #5 on regulator tree;
+>  - I apply the reset on IMX tree.
+>=20
+> There shouldn't be any build or run time regression on either tree, and=
+
+> the feature that the series adds will be available when both trees get
+> merged together on -next or Linus tree.
+>=20
+> @Oleksij Is my understanding above correct?
+
+Yes.
+
+
+--IQQAtMcNgGktm5ZFih1gXwZeXumOAOaYC--
+
+--GH2qLEd1bdYflvrsNcftbP536dqJJG2Gz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEpENFL0P3hvQ7p0DDdQOiSHVI77QFAluXRlMACgkQdQOiSHVI
+77Sxowf8CjP6jDa4tEdi8nba/CtB4vRe2TXeKy4l+9nZNtPn8Bl4PrUC8sOZN0Pa
+GlXjWmDPrDBjJ/qV8AMwa0HhK4xvIHIDsM8NMRL7CRIYc9bmBw9AnJty9xgS3UAQ
+aYJfQbFx93cz/N3cXCR/ATt50YRPESprtwf8RQBcfNhMX6Fldco3oDfJsmoQBY4l
+LZZ5dezGMr1tQGIr/1FfoOUIUUVWrMHU8BfTiJXC+BtENiUITcDwjnUUAb/CcmFU
+kiulVUndoahTflqBnO1abaElmbePbKVXd+CHC++3uHDTl8ZY8zSpV6DazAjepmua
+57gabHI6prwAB6hDLmRmi0Mr4DMfmQ==
+=6PNd
+-----END PGP SIGNATURE-----
+
+--GH2qLEd1bdYflvrsNcftbP536dqJJG2Gz--
+
+
+--===============8618829631486169131==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============8618829631486169131==--
