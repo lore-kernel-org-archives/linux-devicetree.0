@@ -1,49 +1,90 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] of: fix phandle cache creation for DTs with no phandles
-Date: Tue, 11 Sep 2018 09:56:07 -0500
-Message-ID: <20180911145607.6009-1-robh@kernel.org>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Finn Thain <fthain@telegraphics.com.au>, Stan Johnson <userm57@yahoo.com>, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, stable@vger.kernel.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Tue, 11 Sep 2018 16:59:09 +0200
+Message-ID: <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
+References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
+ <20180911093356.GE4185@dell> <20180911093917.GL2494@piout.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180911093917.GL2494@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Lee Jones <lee.jones@linaro.org>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-spi <linux-spi@>
 List-Id: devicetree@vger.kernel.org
 
-With commit 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of
-of_find_node_by_phandle()"), a G3 PowerMac fails to boot. The root cause
-is the DT for this system has no phandle properties when booted with
-BootX. of_populate_phandle_cache() does not handle the case of no
-phandles correctly. The problem is roundup_pow_of_two() for 0 is
-undefined. The implementation subtracts 1 underflowing and then things
-are in the weeds.
+Hi Alexandre,
 
-Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
-Cc: stable@vger.kernel.org # 4.17+
-Reported-by: Finn Thain <fthain@telegraphics.com.au>
-Tested-by: Stan Johnson <userm57@yahoo.com>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-Here's a formal patch of what Stan tested. Will send to Linus this week.
+On Tue, Sep 11, 2018 at 11:40 AM Alexandre Belloni
+<alexandre.belloni@bootlin.com> wrote:
+> On 11/09/2018 10:33:56+0100, Lee Jones wrote:
+> > On Tue, 04 Sep 2018, Radu Pirea wrote:
+> > > Radu Pirea (6):
+> > >   MAINTAINERS: add at91 usart mfd driver
+> > >   dt-bindings: add binding for atmel-usart in SPI mode
+> > >   mfd: at91-usart: added mfd driver for usart
+> > >   MAINTAINERS: add at91 usart spi driver
+> > >   spi: at91-usart: add driver for at91-usart as spi
+> > >   tty/serial: atmel: change the driver to work under at91-usart mfd
+> > >
+> > >  .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+> > >  MAINTAINERS                                   |  16 +
+> > >  drivers/mfd/Kconfig                           |   9 +
+> > >  drivers/mfd/Makefile                          |   1 +
+> > >  drivers/mfd/at91-usart.c                      |  71 +++
+> > >  drivers/spi/Kconfig                           |   8 +
+> > >  drivers/spi/Makefile                          |   1 +
+> > >  drivers/spi/spi-at91-usart.c                  | 432 ++++++++++++++++++
+> > >  drivers/tty/serial/Kconfig                    |   1 +
+> > >  drivers/tty/serial/atmel_serial.c             |  42 +-
+> > >  include/dt-bindings/mfd/at91-usart.h          |  17 +
+> > >  11 files changed, 606 insertions(+), 17 deletions(-)
+> > >  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+> > >  create mode 100644 drivers/mfd/at91-usart.c
+> > >  create mode 100644 drivers/spi/spi-at91-usart.c
+> > >  create mode 100644 include/dt-bindings/mfd/at91-usart.h
+> >
+> > Seeing as this patch-set has caused some issues this morning, I took
+> > the liberty to peruse back into its history to figure out where things
+> > started to go wrong.  I also re-reviewed the MFD driver - and I'm glad
+> > I did!
+> >
+> > My Acked-by has been attached to the MFD portion since v5, which is
+> > why the code hasn't caught my eye before today.  I reviewed the
+> > relocation of the *binding document* (serial => mfd with no changes)
+> > in v4 and nothing else.  It appears as though you mistakenly added it
+> > to the *MFD driver* instead.  This explains my confusion in v10 when I
+> > told you I'd already reviewed the binding document.
+> >
+> > As I said, I have re-reviewed the MFD driver and I'm afraid to say
+> > that I do not like what I see.  Besides the missing header file and
+> > the whitespace tabbing errors, I do not agree with the implementation.
+> > Using MFD as a shim to hack around driver selection is not a valid
+> > use-case.
+> >
+> > What's stopping you from just using the compatible string directly to
+> > select which driver you need to probe?
+> >
+>
+> Then you'd have multiple compatible strings for the same IP which is a
+> big no-no.
 
-Rob
+It's still the same hardware device, isn't?
+What if the SPI or UART slave is not on-board, but on an expansion board?
+Then the SoC-specific .dtsi has no idea what mode should be used.
 
- drivers/of/base.c | 3 +++
- 1 file changed, 3 insertions(+)
+Hence shouldn't the software derive the hardware mode from the full
+hardware description in DT? If that's impossible (I didn't look into detail
+whether an SPI bus can easily be distinguished from a UART bus), perhaps
+a mode property should be added?
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index a055cd1ef96d..17ae594b7014 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -140,6 +140,9 @@ void of_populate_phandle_cache(void)
- 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
- 			phandles++;
- 
-+	if (!phandles)
-+		goto out;
-+
- 	cache_entries = roundup_pow_of_two(phandles);
- 	phandle_cache_mask = cache_entries - 1;
- 
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.17.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
