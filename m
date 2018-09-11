@@ -1,64 +1,68 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 14/30] dt-bindings: update the Allwinner
- GPADC device tree binding for H3 & A83T
-Date: Tue, 11 Sep 2018 11:12:32 +0200
-Message-ID: <20180911091232.2ozypemfam5kayef@flea>
-References: <20180830154518.29507-1-embed3d@gmail.com>
- <20180830154518.29507-15-embed3d@gmail.com>
- <20180831084854.q2uh63pw5vprqlzt@flea>
- <20180910194424.GA21461@bogus>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Tue, 11 Sep 2018 10:33:56 +0100
+Message-ID: <20180911093356.GE4185@dell>
+References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ttcwp2nzxxraldfm"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDEO33OAKGQE44S74GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180910194424.GA21461@bogus>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Radu Pirea <radu_nicolae.pirea@upb.ro>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, gregkh@linuxfoundation.org, broonie@kernel.org, jslaby@suse.com, richard.genoud@gmail.com, davem@davemloft.net, mchehab+samsung@kernel.org, akpm@linux-foundation.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---ttcwp2nzxxraldfm
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Sep 10, 2018 at 02:44:24PM -0500, Rob Herring wrote:
-> On Fri, Aug 31, 2018 at 10:48:54AM +0200, Maxime Ripard wrote:
-> > On Thu, Aug 30, 2018 at 05:45:02PM +0200, Philipp Rossak wrote:
-> > > Allwinner H3 features a thermal sensor like the one in A33, but has its
-> > > register re-arranged, the clock divider moved to CCU (originally the
-> > > clock divider is in ADC) and added a pair of bus clock and reset.
-> > > 
-> > > Allwinner A83T features a thermal sensor similar to the H3, the ths clock,
-> > > the bus clock and the reset was removed from the CCU. The THS in A83T
-> > > has a clock that is directly connected and runs with 24 MHz.
-> > > 
-> > > Update the binding document to cover H3 and A83T.
-> > > 
-> > > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > You probably want to have a look at:
-> > https://www.spinics.net/lists/arm-kernel/msg670167.html
+On Tue, 04 Sep 2018, Radu Pirea wrote:
+> Radu Pirea (6):
+>   MAINTAINERS: add at91 usart mfd driver
+>   dt-bindings: add binding for atmel-usart in SPI mode
+>   mfd: at91-usart: added mfd driver for usart
+>   MAINTAINERS: add at91 usart spi driver
+>   spi: at91-usart: add driver for at91-usart as spi
+>   tty/serial: atmel: change the driver to work under at91-usart mfd
 > 
-> Well, which is it? An ADC or thermal sensor?
+>  .../bindings/{serial => mfd}/atmel-usart.txt  |  25 +-
+>  MAINTAINERS                                   |  16 +
+>  drivers/mfd/Kconfig                           |   9 +
+>  drivers/mfd/Makefile                          |   1 +
+>  drivers/mfd/at91-usart.c                      |  71 +++
+>  drivers/spi/Kconfig                           |   8 +
+>  drivers/spi/Makefile                          |   1 +
+>  drivers/spi/spi-at91-usart.c                  | 432 ++++++++++++++++++
+>  drivers/tty/serial/Kconfig                    |   1 +
+>  drivers/tty/serial/atmel_serial.c             |  42 +-
+>  include/dt-bindings/mfd/at91-usart.h          |  17 +
+>  11 files changed, 606 insertions(+), 17 deletions(-)
+>  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
+>  create mode 100644 drivers/mfd/at91-usart.c
+>  create mode 100644 drivers/spi/spi-at91-usart.c
+>  create mode 100644 include/dt-bindings/mfd/at91-usart.h
 
-It's both actually. This IP used to be called GPADC, and had a thermal
-sensor + some ADC channels. The design evolved across several
-generations of SoCs to drop the ADC channels and be used only to have
-thermal sensors.
+Seeing as this patch-set has caused some issues this morning, I took
+the liberty to peruse back into its history to figure out where things
+started to go wrong.  I also re-reviewed the MFD driver - and I'm glad
+I did!
 
-Maxime
+My Acked-by has been attached to the MFD portion since v5, which is
+why the code hasn't caught my eye before today.  I reviewed the
+relocation of the *binding document* (serial => mfd with no changes)
+in v4 and nothing else.  It appears as though you mistakenly added it
+to the *MFD driver* instead.  This explains my confusion in v10 when I
+told you I'd already reviewed the binding document.
+
+As I said, I have re-reviewed the MFD driver and I'm afraid to say
+that I do not like what I see.  Besides the missing header file and
+the whitespace tabbing errors, I do not agree with the implementation.
+Using MFD as a shim to hack around driver selection is not a valid
+use-case.
+
+What's stopping you from just using the compatible string directly to
+select which driver you need to probe?
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---ttcwp2nzxxraldfm--
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
