@@ -1,99 +1,87 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
- v4.20 merge window
-Date: Tue, 11 Sep 2018 11:13:19 +0100
-Message-ID: <20180911101319.GH4185@dell>
-References: <20180713164736.26028-1-radu.pirea@microchip.com>
- <20180910151803.GX28860@dell>
- <20180911084548.GC4185@dell>
- <20180911090132.GB25161@kroah.com>
- <20180911094430.GG4185@dell>
- <743b5545-e942-b6f4-4ce6-8e10950a05fc@microchip.com>
- <20180911100336.GA3822@kroah.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH 00/11] dts: Update coresight device tree bindings
+Date: Tue, 11 Sep 2018 11:17:01 +0100
+Message-ID: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180911100336.GA3822@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andy Gross <andy.gross@linaro.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, David Brown <david.brown@linaro.org>, Fabio Estevam <fabio.estevam@nxp.com>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-omap@vger.kernel.org, lipengcheng8@huawei.com, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, orsonzhai@gmail.com, Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Sep 2018, Greg KH wrote:
+Coresight DT bindings have been updated to obey the DTS rules
+for label/address matching for graph nodes. The changes are in
+coresight/next tree scheduled for v4.20. This series updates the
+in kernel dts to match the new bindings along with updating a couple
+of new examples (e.,g CATU) in the Documentation (which were missed
+as they were still in flight when we created the series).
 
-> On Tue, Sep 11, 2018 at 11:56:49AM +0200, Nicolas Ferre wrote:
-> > On 11/09/2018 at 11:44, Lee Jones wrote:
-> > > On Tue, 11 Sep 2018, Greg KH wrote:
-> > > 
-> > > > On Tue, Sep 11, 2018 at 09:45:48AM +0100, Lee Jones wrote:
-> > > > > On Mon, 10 Sep 2018, Lee Jones wrote:
-> > > > > 
-> > > > > > Enjoy!
-> > > > > > 
-> > > > > > The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
-> > > > > > 
-> > > > > >    Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
-> > > > > > 
-> > > > > > are available in the Git repository at:
-> > > > > > 
-> > > > > >    git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
-> > > > > > 
-> > > > > > for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
-> > > > > > 
-> > > > > >    tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
-> > > > > > 
-> > > > > > ----------------------------------------------------------------
-> > > > > > Immutable branch between MFD, SPI and TTY due for the v4.20 merge window
-> > > > > 
-> > > > > Due to a comedy of errors, I'm voiding this pull-request.
-> > > > 
-> > > > Um, I can't do that as my tree can not be rebased :(
-> > > 
-> > > Oh dear. :(
-> > > 
-> > > > I can take follow-on patches, so I will go apply the patch posted so
-> > > > that my tree builds again.  I recommend you just apply it as well.
-> > > 
-> > > What a pickle.  As per my last email, it looks as though this set was
-> > > applied under false pretences.  The MFD patch which was carrying my
-> > > Ack was doing so incorrectly.  The author mistakenly applied it to the
-> > > wrong patch.  After re-review (actually initial review) I wish to NACK
-> > > the implementation.
-> > 
-> > What? We discussed this to the bone!
-> > 
-> > Radu followed all the recommendations, collected all the feedback from major
-> > subsystems SPI and USART, resent the series again.
-> > 
-> > It was then forgotten. Wrong series was finally applied (which could trigger
-> > 0-day reports, I warn you)... and now we are discussing about the
-> > implementation of *v2* (we're at v12)!
+Please note that this should not be pulled for v4.19, which I assume
+is a safe assumption. But please do pull it for v4.20.
+The dt updates for the Juno boards were sent earlier with the original
+DT update series and has been queued for v4.20.
 
-This situation is frustrating.  The reason I was not part of the
-discussion can be attributed to an erroneous application of my Ack
-earlier in the review process.
+Applies on coresight/next (which is based on v4.19) and should apply
+cleanly on v4.19-rc3.
 
-Anyway ... since Greg has applied the pull-request I do agree that the
-path of least friction would be just to apply the set. :(
 
-> > > My suggestion would be to sit tight, rather than do anything rash and
-> > > see how this plays out.  After which we can fix your tree.
-> > 
-> > Come on, Greg's tree is fixed now. We can catch-up with v11..v12 changes
-> > with patches and cleanup the mess together.
-> > 
-> > Just one misalignment with one patch merged for v4.19-rc1, fixed the same
-> > day, cannot generate such a reaction after months of development.
-> 
-> I agree, my tree is now fixed, no harm done.  Just apply the same patch
-> to whomever also pulled it into their trees and all is good.
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: Benoît Cousson <bcousson@baylibre.com>
+Cc: David Brown <david.brown@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-omap@vger.kernel.org
+Cc: lipengcheng8@huawei.com
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+Cc: orsonzhai@gmail.com
+Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: xuwei5@hisilicon.com
+Cc: zhang.lyra@gmail.com
+Cc: arm@kernel.org
 
-Have you applied Nicolas' patch already?  Without discussion? :((
+Suzuki K Poulose (11):
+  Documentation: dts: Update coresight binding examples
+  dts: hisilicon: Update coresight bindings for hardware ports
+  dts: spreadtrum: Update coresight bindings for hardware ports
+  dts: qcom: Update coresight bindings for hardware ports
+  dts: arm: hisilicon: Update coresight bindings for hardware ports
+  dts: arm: imx7{d,s}: Update coresight binding for hardware ports
+  dts: arm: omap: Update coresight bindings for hardware ports
+  dts: arm: qcom: Update coresight bindings for hardware ports
+  dts: sama5d2: Update coresight bindings for hardware ports
+  dts: ste-dbx5x0: Update coresight bindings for hardware port
+  dts: tc2: Update coresight bindings for hardware ports
+
+ .../devicetree/bindings/arm/coresight.txt          |  20 +-
+ arch/arm/boot/dts/hip04.dtsi                       | 322 ++++++++++++---------
+ arch/arm/boot/dts/imx7d.dtsi                       |  11 +-
+ arch/arm/boot/dts/imx7s.dtsi                       |  78 +++--
+ arch/arm/boot/dts/omap3-beagle-xm.dts              |  17 +-
+ arch/arm/boot/dts/omap3-beagle.dts                 |  17 +-
+ arch/arm/boot/dts/qcom-apq8064.dtsi                |  75 +++--
+ arch/arm/boot/dts/qcom-msm8974.dtsi                | 108 ++++---
+ arch/arm/boot/dts/sama5d2.dtsi                     |  17 +-
+ arch/arm/boot/dts/ste-dbx5x0.dtsi                  |  61 ++--
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts         |  90 +++---
+ .../arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 147 ++++++----
+ arch/arm64/boot/dts/qcom/msm8916.dtsi              |  98 ++++---
+ arch/arm64/boot/dts/sprd/sc9836.dtsi               |  74 +++--
+ arch/arm64/boot/dts/sprd/sc9860.dtsi               | 183 +++++++-----
+ 15 files changed, 780 insertions(+), 538 deletions(-)
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
