@@ -1,48 +1,64 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
- v4.20 merge window
-Date: Tue, 11 Sep 2018 11:01:32 +0200
-Message-ID: <20180911090132.GB25161@kroah.com>
-References: <20180713164736.26028-1-radu.pirea@microchip.com>
- <20180910151803.GX28860@dell>
- <20180911084548.GC4185@dell>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 14/30] dt-bindings: update the Allwinner
+ GPADC device tree binding for H3 & A83T
+Date: Tue, 11 Sep 2018 11:12:32 +0200
+Message-ID: <20180911091232.2ozypemfam5kayef@flea>
+References: <20180830154518.29507-1-embed3d@gmail.com>
+ <20180830154518.29507-15-embed3d@gmail.com>
+ <20180831084854.q2uh63pw5vprqlzt@flea>
+ <20180910194424.GA21461@bogus>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ttcwp2nzxxraldfm"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDEO33OAKGQE44S74GY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180911084548.GC4185@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Radu Pirea <radu.pirea@microchip.com>, broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+In-Reply-To: <20180910194424.GA21461@bogus>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, quentin.schulz-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, lukas-JFq808J9C/izQB+pC5nmwQ@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 11, 2018 at 09:45:48AM +0100, Lee Jones wrote:
-> On Mon, 10 Sep 2018, Lee Jones wrote:
+
+--ttcwp2nzxxraldfm
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Sep 10, 2018 at 02:44:24PM -0500, Rob Herring wrote:
+> On Fri, Aug 31, 2018 at 10:48:54AM +0200, Maxime Ripard wrote:
+> > On Thu, Aug 30, 2018 at 05:45:02PM +0200, Philipp Rossak wrote:
+> > > Allwinner H3 features a thermal sensor like the one in A33, but has its
+> > > register re-arranged, the clock divider moved to CCU (originally the
+> > > clock divider is in ADC) and added a pair of bus clock and reset.
+> > > 
+> > > Allwinner A83T features a thermal sensor similar to the H3, the ths clock,
+> > > the bus clock and the reset was removed from the CCU. The THS in A83T
+> > > has a clock that is directly connected and runs with 24 MHz.
+> > > 
+> > > Update the binding document to cover H3 and A83T.
+> > > 
+> > > Signed-off-by: Philipp Rossak <embed3d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > 
+> > You probably want to have a look at:
+> > https://www.spinics.net/lists/arm-kernel/msg670167.html
 > 
-> > Enjoy!
-> > 
-> > The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
-> > 
-> >   Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
-> > 
-> > are available in the Git repository at:
-> > 
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
-> > 
-> > for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
-> > 
-> >   tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
-> > 
-> > ----------------------------------------------------------------
-> > Immutable branch between MFD, SPI and TTY due for the v4.20 merge window
-> 
-> Due to a comedy of errors, I'm voiding this pull-request.
+> Well, which is it? An ADC or thermal sensor?
 
-Um, I can't do that as my tree can not be rebased :(
+It's both actually. This IP used to be called GPADC, and had a thermal
+sensor + some ADC channels. The design evolved across several
+generations of SoCs to drop the ADC channels and be used only to have
+thermal sensors.
 
-I can take follow-on patches, so I will go apply the patch posted so
-that my tree builds again.  I recommend you just apply it as well.
+Maxime
 
-thanks,
-
-greg k-h
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--ttcwp2nzxxraldfm--
