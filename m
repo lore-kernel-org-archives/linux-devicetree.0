@@ -1,96 +1,82 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 07/11] dts: arm: omap: Update coresight bindings for hardware ports
-Date: Tue, 11 Sep 2018 11:17:08 +0100
-Message-ID: <1536661032-30481-8-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 01/11] Documentation: dts: Update coresight binding examples
+Date: Tue, 11 Sep 2018 11:17:02 +0100
+Message-ID: <1536661032-30481-2-git-send-email-suzuki.poulose@arm.com>
 References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-omap@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org, arm@kernel.org, sudeep.holla@arm.com, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Switch to the new coresight bindings for hardware ports
+While we updated the coresight DT bindings, some of the
+new examples were not updated due to the order in which they
+were merged. Let us update all the missed out ones to the
+new bindings to avoid confusion.
 
-Cc: linux-omap@vger.kernel.org
-Cc: "Benoît Cousson" <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm/boot/dts/omap3-beagle-xm.dts | 17 ++++++++++-------
- arch/arm/boot/dts/omap3-beagle.dts    | 17 ++++++++++-------
- 2 files changed, 20 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/arm/coresight.txt | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index d80587d..9985ee2 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -160,10 +160,11 @@
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index f39d2c6..3b689e0 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -147,7 +147,7 @@ Example:
  
- 		clocks = <&emu_src_ck>;
+ 		clocks = <&oscclk6a>;
  		clock-names = "apb_pclk";
+-		ports {
++		in-ports {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+@@ -159,10 +159,15 @@ Example:
+ 					remote-endpoint = <&replicator2_out_port0>;
+ 				};
+ 			};
++		};
++
++		out-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
+ 
+ 			/* CATU link represented by output port */
+-			port@1 {
+-				reg = <1>;
++			port@0 {
++				reg = <0>;
+ 				etr_out_port: endpoint {
+ 					remote-endpoint = <&catu_in_port>;
+ 				};
+@@ -310,10 +315,11 @@ Example:
+ 		clock-names = "apb_pclk";
+ 
+ 		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
 -		port {
--			etb_in: endpoint {
+-			catu_in_port: endpoint {
 -				slave-mode;
--				remote-endpoint = <&etm_out>;
+-				remote-endpoint = <&etr_out_port>;
 +		in-ports {
 +			port {
-+				etb_in: endpoint {
-+					remote-endpoint = <&etm_out>;
-+				};
- 			};
- 		};
- 	};
-@@ -174,9 +175,11 @@
- 
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etm_out: endpoint {
--				remote-endpoint = <&etb_in>;
-+		out-ports {
-+			port {
-+				etm_out: endpoint {
-+					remote-endpoint = <&etb_in>;
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index 3ca8991..91bb50a 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -147,10 +147,11 @@
- 
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etb_in: endpoint {
--				slave-mode;
--				remote-endpoint = <&etm_out>;
-+		in-ports {
-+			port {
-+				etb_in: endpoint {
-+					remote-endpoint = <&etm_out>;
-+				};
- 			};
- 		};
- 	};
-@@ -161,9 +162,11 @@
- 
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etm_out: endpoint {
--				remote-endpoint = <&etb_in>;
-+		out-ports {
-+			port {
-+				etm_out: endpoint {
-+					remote-endpoint = <&etb_in>;
++				catu_in_port: endpoint {
++					remote-endpoint = <&etr_out_port>;
 +				};
  			};
  		};
