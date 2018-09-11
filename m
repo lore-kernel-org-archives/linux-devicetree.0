@@ -1,52 +1,58 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v9 3/6] kernel/reboot.c: export pm_power_off_prepare
-Date: Tue, 11 Sep 2018 09:53:21 +0800
-Message-ID: <20180911015320.GA25790@dragon>
-References: <20180802103425.3053-1-o.rempel@pengutronix.de>
- <20180802103425.3053-4-o.rempel@pengutronix.de>
- <20180802104443.GH9117@sirena.org.uk>
- <94d48ecb-7302-c7ed-e815-730be0426a04@pengutronix.de>
- <20180802113552.GJ9117@sirena.org.uk>
- <20180827014815.GD29208@dragon>
- <20180906101516.GA5360@sirena.org.uk>
- <20180909020021.GA18838@dragon>
- <20180910151926.GA10889@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180910151926.GA10889@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-imx@nxp.com, yibin.gong@nxp.com, "A.s. Dong" <aisheng.dong@nxp.com>
+From: andy.tang@nxp.com
+Subject: [PATCH] powerpc/mpc85xx: fix issues in clock node
+Date: Tue, 11 Sep 2018 10:12:24 +0800
+Message-ID: <20180911021224.30558-1-andy.tang@nxp.com>
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: oss@buserror.net
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, robh+dt@kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 04:19:26PM +0100, Mark Brown wrote:
-> On Sun, Sep 09, 2018 at 10:00:23AM +0800, Shawn Guo wrote:
-> > On Thu, Sep 06, 2018 at 11:15:17AM +0100, Mark Brown wrote:
-> 
-> > > I was expecting to get a pull request with the precursor patches in it -
-> > > the regulator driver seems to get a moderate amount of development so
-> > > there's a reasonable risk of conflicts.
-> 
-> > What about you create a stable topic branch for regulator patches and I
-> > pull it into IMX tree?
-> 
-> Sure, I can send a pull request back but the first two patches in the
-> series are ARM ones - are you OK with me just applying them and sending
-> them in the pull request or do you want to apply them first?
+From: Yuantian Tang <andy.tang@nxp.com>
 
-I just took another look at the series.  It seems that there is no
-build-time dependency between regulator and platform patches.  So I
-think we can handle the series like:
+The compatible string is not correct in the clock node.
+The clocks property refers to the wrong node too.
+This patch is to fix them.
 
- - You apply patch #3, #4 and #5 on regulator tree;
- - I apply the reset on IMX tree.
+Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+---
+ arch/powerpc/boot/dts/fsl/t1023si-post.dtsi |    8 ++++----
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
-There shouldn't be any build or run time regression on either tree, and
-the feature that the series adds will be available when both trees get
-merged together on -next or Linus tree.
-
-@Oleksij Is my understanding above correct?
-
-Shawn
+diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+index 4908af5..763caf4 100644
+--- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+@@ -348,7 +348,7 @@
+ 		mux0: mux0@0 {
+ 			#clock-cells = <0>;
+ 			reg = <0x0 4>;
+-			compatible = "fsl,core-mux-clock";
++			compatible = "fsl,qoriq-core-mux-2.0";
+ 			clocks = <&pll0 0>, <&pll0 1>;
+ 			clock-names = "pll0_0", "pll0_1";
+ 			clock-output-names = "cmux0";
+@@ -356,9 +356,9 @@
+ 		mux1: mux1@20 {
+ 			#clock-cells = <0>;
+ 			reg = <0x20 4>;
+-			compatible = "fsl,core-mux-clock";
+-			clocks = <&pll0 0>, <&pll0 1>;
+-			clock-names = "pll0_0", "pll0_1";
++			compatible = "fsl,qoriq-core-mux-2.0";
++			clocks = <&pll1 0>, <&pll1 1>;
++			clock-names = "pll1_0", "pll1_1";
+ 			clock-output-names = "cmux1";
+ 		};
+ 	};
+-- 
+1.7.1
