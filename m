@@ -1,58 +1,57 @@
-From: andy.tang@nxp.com
-Subject: [PATCH] powerpc/mpc85xx: fix issues in clock node
-Date: Tue, 11 Sep 2018 10:12:24 +0800
-Message-ID: <20180911021224.30558-1-andy.tang@nxp.com>
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: oss@buserror.net
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>, robh+dt@kernel.org, linuxppc-dev@lists.ozlabs.org
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/4] Add 96Boards Rock960 CE board support
+Date: Tue, 11 Sep 2018 08:00:27 +0530
+Message-ID: <20180911023031.4892-1-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, robh+dt@kernel.org
+Cc: vicencb@gmail.com, shawn.lin@rock-chips.com, ezequiel@collabora.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+This patchset adds 96Boards Rock960 CE board support. Rock960 CE
+(Consumer Edition) board is one of the member of 96Boards Consumer
+Edition and AI platform and is manufactured by Vamrs Limited. Most of
+the board configuration is shared with the Ficus board manufactured by
+vamrs, which is an Enterprise 96Board.
 
-The compatible string is not correct in the clock node.
-The clocks property refers to the wrong node too.
-This patch is to fix them.
+For the sake of avoiding code duplication, a common rock960.dtsi file
+with common DT nodes for both boards and separate board specific DTS
+files has been added.
 
-Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
----
- arch/powerpc/boot/dts/fsl/t1023si-post.dtsi |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
+To be specific, below are some of the key differences between both
+boards:
 
-diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-index 4908af5..763caf4 100644
---- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-@@ -348,7 +348,7 @@
- 		mux0: mux0@0 {
- 			#clock-cells = <0>;
- 			reg = <0x0 4>;
--			compatible = "fsl,core-mux-clock";
-+			compatible = "fsl,qoriq-core-mux-2.0";
- 			clocks = <&pll0 0>, <&pll0 1>;
- 			clock-names = "pll0_0", "pll0_1";
- 			clock-output-names = "cmux0";
-@@ -356,9 +356,9 @@
- 		mux1: mux1@20 {
- 			#clock-cells = <0>;
- 			reg = <0x20 4>;
--			compatible = "fsl,core-mux-clock";
--			clocks = <&pll0 0>, <&pll0 1>;
--			clock-names = "pll0_0", "pll0_1";
-+			compatible = "fsl,qoriq-core-mux-2.0";
-+			clocks = <&pll1 0>, <&pll1 1>;
-+			clock-names = "pll1_0", "pll1_1";
- 			clock-output-names = "cmux1";
- 		};
- 	};
+1. Different host enable GPIO for USB
+2. Different power and reset GPIO for PCI-E
+3. No Ethernet port on Rock960
+
+While adding the board support, SD card Chip detection support is also
+added to the common dtsi file, shared by both boards.
+
+This series has been tested on Rock960 CE v1.2 board and expecting the
+Ficus board maintainer to test the relevant Ficus part.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Changed the board compatible to "vamrs,rock960"
+
+Manivannan Sadhasivam (4):
+  arm64: dts: rockchip: Split out common nodes for Rock960 based boards
+  dt-bindings: arm: rockchip: Add binding for Rock960 board
+  arm64: boot: dts: rockchip: Add support for Rock960 board
+  arm64: dts: rockchip: Enable SD card detection for Rock960 boards
+
+ .../devicetree/bindings/arm/rockchip.txt      |   4 +
+ arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 429 +----------------
+ .../boot/dts/rockchip/rk3399-rock960.dts      | 139 ++++++
+ .../boot/dts/rockchip/rk3399-rock960.dtsi     | 440 ++++++++++++++++++
+ 5 files changed, 585 insertions(+), 428 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+
 -- 
-1.7.1
+2.17.1
