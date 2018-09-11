@@ -1,37 +1,49 @@
-From: Colin King <colin.king@canonical.com>
-Subject: [PATCH] fpga: region: fix spelling mistake "partion" -> "partition"
-Date: Tue, 11 Sep 2018 13:37:32 +0100
-Message-ID: <20180911123732.32579-1-colin.king@canonical.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/5] mfd: rk808: Add RK817 and RK809 support
+Date: Tue, 11 Sep 2018 13:39:07 +0100
+Message-ID: <20180911123907.GN4185@dell>
+References: <1535968829-19418-1-git-send-email-tony.xie@rock-chips.com>
+ <1535968829-19418-2-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1535968829-19418-2-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, 03 Sep 2018, Tony Xie wrote:
 
-Trivial fix to spelling mistake in the documentation
+>     The rk809 and rk817 are a Power Management IC (PMIC) for multimedia
+>     and handheld devices. It contains the following components:
+> 
+>         - Regulators
+>         - RTC
+>         - Clocking
+> 
+>     Both RK809 and RK817 chips are using a similar register map,
+>     so we can reuse the RTC and Clocking and regulators functionality.
+> 
+> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+> ---
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- Documentation/devicetree/bindings/fpga/fpga-region.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It's often helpful to place a Changelog in this space.
 
-diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-index 6db8aeda461a..71beb85b56f1 100644
---- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
-+++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-@@ -484,7 +484,7 @@ It is beyond the scope of this document to fully describe all the FPGA design
- constraints required to make partial reconfiguration work[1] [2] [3], but a few
- deserve quick mention.
- 
--A persona must have boundary connections that line up with those of the partion
-+A persona must have boundary connections that line up with those of the partition
- or region it is designed to go into.
- 
- During programming, transactions through those connections must be stopped and
+>  drivers/mfd/Kconfig       |   6 +-
+>  drivers/mfd/rk808.c       | 218 +++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mfd/rk808.h | 172 ++++++++++++++++++++++++++++++++++++
+>  kernel/reboot.c           |   1 +
+>  4 files changed, 391 insertions(+), 6 deletions(-)
+
+I just reviewed v4.
+
+It looks like the review comments are still relevant.
+
 -- 
-2.17.1
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
