@@ -1,33 +1,76 @@
-Return-Path: <SRS0=dseP=L2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from kirsty.vergenet.net ([202.4.237.240]:42434 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726221AbeILOim (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Sep 2018 10:38:42 -0400
-Date: Wed, 12 Sep 2018 11:34:56 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: renesas: Remove unneeded status from thermal
- nodes
-Message-ID: <20180912093454.3mlevy6b4252wpsz@verge.net.au>
-References: <20180911143730.9230-1-geert+renesas@glider.be>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180911143730.9230-1-geert+renesas@glider.be>
+Return-Path: <SRS0=Px8Z=LZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from laurent.telenet-ops.be ([195.130.137.89]:59236 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726761AbeIKThJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Sep 2018 15:37:09 -0400
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] arm64: dts: renesas: Remove unneeded status from thermal nodes
+Date: Tue, 11 Sep 2018 16:37:30 +0200
+Message-Id: <20180911143730.9230-1-geert+renesas@glider.be>
 Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Sep 11, 2018 at 04:37:30PM +0200, Geert Uytterhoeven wrote:
-> The thermal device is supposed to be always enabled.  As the default
-> value of the status property is "okay", there is no need to make this
-> explicit in SoC-specific .dtsi files where no override is involved.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+The thermal device is supposed to be always enabled.  As the default
+value of the status property is "okay", there is no need to make this
+explicit in SoC-specific .dtsi files where no override is involved.
 
-Thanks,
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 1 -
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi  | 1 -
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi  | 1 -
+ arch/arm64/boot/dts/renesas/r8a77965.dtsi | 1 -
+ 4 files changed, 4 deletions(-)
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+index 046fc937da1441dc..012cbb64246ec144 100644
+--- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
+@@ -358,7 +358,6 @@
+ 			power-domains = <&sysc 32>;
+ 			resets = <&cpg 522>;
+ 			#thermal-sensor-cells = <1>;
+-			status = "okay";
+ 		};
+ 
+ 		intc_ex: interrupt-controller@e61c0000 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795.dtsi b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+index 0c6d8859cae397c9..c74ef669a354d68e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7795.dtsi
+@@ -455,7 +455,6 @@
+ 			power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
+ 			resets = <&cpg 522>;
+ 			#thermal-sensor-cells = <1>;
+-			status = "okay";
+ 		};
+ 
+ 		intc_ex: interrupt-controller@e61c0000 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+index 93a76109882c9fe7..303504f3a5be4158 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+@@ -434,7 +434,6 @@
+ 			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+ 			resets = <&cpg 522>;
+ 			#thermal-sensor-cells = <1>;
+-			status = "okay";
+ 		};
+ 
+ 		intc_ex: interrupt-controller@e61c0000 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a77965.dtsi b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+index 77fb909cc83985c5..22dca901182e577c 100644
+--- a/arch/arm64/boot/dts/renesas/r8a77965.dtsi
++++ b/arch/arm64/boot/dts/renesas/r8a77965.dtsi
+@@ -350,7 +350,6 @@
+ 			power-domains = <&sysc R8A77965_PD_ALWAYS_ON>;
+ 			resets = <&cpg 522>;
+ 			#thermal-sensor-cells = <1>;
+-			status = "okay";
+ 		};
+ 
+ 		intc_ex: interrupt-controller@e61c0000 {
+-- 
+2.17.1
