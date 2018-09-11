@@ -1,85 +1,451 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 01/11] Documentation: dts: Update coresight binding examples
-Date: Tue, 11 Sep 2018 11:17:02 +0100
-Message-ID: <1536661032-30481-2-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 08/11] dts: arm: qcom: Update coresight bindings for hardware ports
+Date: Tue, 11 Sep 2018 11:17:09 +0100
+Message-ID: <1536661032-30481-9-git-send-email-suzuki.poulose@arm.com>
 References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: robh@kernel.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-kernel@vger.kernel.org, arm@kernel.org, sudeep.holla@arm.com, frowand.list@gmail.com
+Cc: linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-While we updated the coresight DT bindings, some of the
-new examples were not updated due to the order in which they
-were merged. Let us update all the missed out ones to the
-new bindings to avoid confusion.
+Switch to the new hardware port bindings for coresight
 
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: David Brown <david.brown@linaro.org>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- Documentation/devicetree/bindings/arm/coresight.txt | 20 +++++++++++++-------
- 1 file changed, 13 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/qcom-apq8064.dtsi |  75 +++++++++++++++----------
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 108 +++++++++++++++++++++++-------------
+ 2 files changed, 116 insertions(+), 67 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-index f39d2c6..3b689e0 100644
---- a/Documentation/devicetree/bindings/arm/coresight.txt
-+++ b/Documentation/devicetree/bindings/arm/coresight.txt
-@@ -147,7 +147,7 @@ Example:
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+index 4a99c92..0a1c598 100644
+--- a/arch/arm/boot/dts/qcom-apq8064.dtsi
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -1611,10 +1611,11 @@
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
  
- 		clocks = <&oscclk6a>;
- 		clock-names = "apb_pclk";
--		ports {
-+		in-ports {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 
-@@ -159,10 +159,15 @@ Example:
- 					remote-endpoint = <&replicator2_out_port0>;
+-			port {
+-				etb_in: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&replicator_out0>;
++			in-ports {
++				port {
++					etb_in: endpoint {
++						remote-endpoint = <&replicator_out0>;
++					};
  				};
- 			};
-+		};
-+
-+		out-ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 
- 			/* CATU link represented by output port */
--			port@1 {
--				reg = <1>;
-+			port@0 {
-+				reg = <0>;
- 				etr_out_port: endpoint {
- 					remote-endpoint = <&catu_in_port>;
- 				};
-@@ -310,10 +315,11 @@ Example:
- 		clock-names = "apb_pclk";
- 
- 		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
--		port {
--			catu_in_port: endpoint {
--				slave-mode;
--				remote-endpoint = <&etr_out_port>;
-+		in-ports {
-+			port {
-+				catu_in_port: endpoint {
-+					remote-endpoint = <&etr_out_port>;
-+				};
  			};
  		};
- 	};
+@@ -1626,10 +1627,11 @@
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 
+-			port {
+-				tpiu_in: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&replicator_out1>;
++			in-ports {
++				port {
++					tpiu_in: endpoint {
++						remote-endpoint = <&replicator_out1>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -1640,7 +1642,7 @@
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 
+-			ports {
++			out-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+@@ -1656,10 +1658,15 @@
+ 						remote-endpoint = <&tpiu_in>;
+ 					};
+ 				};
+-				port@2 {
++			};
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					replicator_in: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&funnel_out>;
+ 					};
+ 				};
+@@ -1673,7 +1680,7 @@
+ 			clocks = <&rpmcc RPM_QDSS_CLK>;
+ 			clock-names = "apb_pclk";
+ 
+-			ports {
++			in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+@@ -1687,32 +1694,34 @@
+ 				port@0 {
+ 					reg = <0>;
+ 					funnel_in0: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm0_out>;
+ 					};
+ 				};
+ 				port@1 {
+ 					reg = <1>;
+ 					funnel_in1: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm1_out>;
+ 					};
+ 				};
+ 				port@4 {
+ 					reg = <4>;
+ 					funnel_in4: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm2_out>;
+ 					};
+ 				};
+ 				port@5 {
+ 					reg = <5>;
+ 					funnel_in5: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm3_out>;
+ 					};
+ 				};
+-				port@8 {
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					funnel_out: endpoint {
+ 						remote-endpoint = <&replicator_in>;
+@@ -1730,9 +1739,11 @@
+ 
+ 			cpu = <&CPU0>;
+ 
+-			port {
+-				etm0_out: endpoint {
+-					remote-endpoint = <&funnel_in0>;
++			out-ports {
++				port {
++					etm0_out: endpoint {
++						remote-endpoint = <&funnel_in0>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -1746,9 +1757,11 @@
+ 
+ 			cpu = <&CPU1>;
+ 
+-			port {
+-				etm1_out: endpoint {
+-					remote-endpoint = <&funnel_in1>;
++			out-ports {
++				port {
++					etm1_out: endpoint {
++						remote-endpoint = <&funnel_in1>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -1762,9 +1775,11 @@
+ 
+ 			cpu = <&CPU2>;
+ 
+-			port {
+-				etm2_out: endpoint {
+-					remote-endpoint = <&funnel_in4>;
++			out-ports {
++				port {
++					etm2_out: endpoint {
++						remote-endpoint = <&funnel_in4>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -1778,9 +1793,11 @@
+ 
+ 			cpu = <&CPU3>;
+ 
+-			port {
+-				etm3_out: endpoint {
+-					remote-endpoint = <&funnel_in5>;
++			out-ports {
++				port {
++					etm3_out: endpoint {
++						remote-endpoint = <&funnel_in5>;
++					};
+ 				};
+ 			};
+ 		};
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index d9019a4..37aac0b 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -770,10 +770,11 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			port {
+-				etr_in: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&replicator_out0>;
++			in-ports {
++				port {
++					etr_in: endpoint {
++						remote-endpoint = <&replicator_out0>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -785,10 +786,11 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			port {
+-				tpiu_in: endpoint {
+-					 slave-mode;
+-					 remote-endpoint = <&replicator_out1>;
++			in-ports {
++				port {
++					tpiu_in: endpoint {
++						remote-endpoint = <&replicator_out1>;
++					};
+ 				 };
+ 			};
+ 		};
+@@ -800,7 +802,7 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			ports {
++			out-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+@@ -816,10 +818,15 @@
+ 						remote-endpoint = <&tpiu_in>;
+ 					};
+ 				};
+-				port@2 {
++			};
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					replicator_in: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etf_out>;
+ 					};
+ 				};
+@@ -833,7 +840,7 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			ports {
++			out-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+@@ -843,10 +850,15 @@
+ 						remote-endpoint = <&replicator_in>;
+ 					};
+ 				};
+-				port@1 {
++			};
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					etf_in: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&merger_out>;
+ 					};
+ 				};
+@@ -860,7 +872,7 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			ports {
++			in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+@@ -873,11 +885,16 @@
+ 				port@1 {
+ 					reg = <1>;
+ 					merger_in1: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&funnel1_out>;
+ 					};
+ 				};
+-				port@8 {
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					merger_out: endpoint {
+ 						remote-endpoint = <&etf_in>;
+@@ -893,7 +910,7 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			ports {
++			in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+@@ -910,11 +927,16 @@
+ 				port@5 {
+ 					reg = <5>;
+ 					funnel1_in5: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&kpss_out>;
+ 					};
+ 				};
+-				port@8 {
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					funnel1_out: endpoint {
+ 						remote-endpoint = <&merger_in1>;
+@@ -930,39 +952,41 @@
+ 			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 
+-			ports {
++			in-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+ 				port@0 {
+ 					reg = <0>;
+ 					kpss_in0: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm0_out>;
+ 					};
+ 				};
+ 				port@1 {
+ 					reg = <1>;
+ 					kpss_in1: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm1_out>;
+ 					};
+ 				};
+ 				port@2 {
+ 					reg = <2>;
+ 					kpss_in2: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm2_out>;
+ 					};
+ 				};
+ 				port@3 {
+ 					reg = <3>;
+ 					kpss_in3: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&etm3_out>;
+ 					};
+ 				};
+-				port@8 {
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					kpss_out: endpoint {
+ 						remote-endpoint = <&funnel1_in5>;
+@@ -980,9 +1004,11 @@
+ 
+ 			cpu = <&CPU0>;
+ 
+-			port {
+-				etm0_out: endpoint {
+-					remote-endpoint = <&kpss_in0>;
++			out-ports {
++				port {
++					etm0_out: endpoint {
++						remote-endpoint = <&kpss_in0>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -996,9 +1022,11 @@
+ 
+ 			cpu = <&CPU1>;
+ 
+-			port {
+-				etm1_out: endpoint {
+-					remote-endpoint = <&kpss_in1>;
++			out-ports {
++				port {
++					etm1_out: endpoint {
++						remote-endpoint = <&kpss_in1>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -1012,9 +1040,11 @@
+ 
+ 			cpu = <&CPU2>;
+ 
+-			port {
+-				etm2_out: endpoint {
+-					remote-endpoint = <&kpss_in2>;
++			out-ports {
++				port {
++					etm2_out: endpoint {
++						remote-endpoint = <&kpss_in2>;
++					};
+ 				};
+ 			};
+ 		};
+@@ -1028,9 +1058,11 @@
+ 
+ 			cpu = <&CPU3>;
+ 
+-			port {
+-				etm3_out: endpoint {
+-					remote-endpoint = <&kpss_in3>;
++			out-ports {
++				port {
++					etm3_out: endpoint {
++						remote-endpoint = <&kpss_in3>;
++					};
+ 				};
+ 			};
+ 		};
 -- 
 2.7.4
