@@ -1,140 +1,63 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
-Date: Tue, 11 Sep 2018 22:05:30 +0200
-Message-ID: <20180911200530.GA28290@amd>
-References: <20180911170825.17789-1-dmurphy@ti.com>
- <20180911170825.17789-2-dmurphy@ti.com>
+From: pheragu@codeaurora.org
+Subject: Re: [PATCH v2 2/2] Embedded USB Debugger (EUD) driver
+Date: Tue, 11 Sep 2018 13:40:19 -0700
+Message-ID: <aade97184ee5027ac6e32fd742cfbc5a@codeaurora.org>
+References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
+ <1536096853-30473-3-git-send-email-pheragu@codeaurora.org>
+ <c68c466a-576f-43d9-a7dd-7ee8e0ebba3f@codeaurora.org>
+ <20180905111800.GA30003@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180911170825.17789-2-dmurphy@ti.com>
+In-Reply-To: <20180905111800.GA30003@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Manu Gautam <mgautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, rnayak@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-09-05 04:18, Greg KH wrote:
+> On Wed, Sep 05, 2018 at 03:01:26PM +0530, Manu Gautam wrote:
+>> Hi,
+>> 
+>> 
+>> On 9/5/2018 3:04 AM, Prakruthi Deepak Heragu wrote:
+>> > Add support for control peripheral of EUD (Embedded USB Debugger) to
+>> > listen to events such as USB attach/detach, charger enable/disable, pet
+>> > EUD to indicate software is functional.
+>> >
+>> > Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+>> > Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+>> > ---
+>> >  drivers/soc/qcom/Kconfig  |  12 ++
+>> >  drivers/soc/qcom/Makefile |   1 +
+>> >  drivers/soc/qcom/eud.c    | 338 ++++++++++++++++++++++++++++++++++++++++++++++
+>> >  3 files changed, 351 insertions(+)
+>> >  create mode 100644 drivers/soc/qcom/eud.c
+>> >
+>> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+>> [snip]
+>> > +
+>> > +#define EUD_ENABLE_CMD 1
+>> > +#define EUD_DISABLE_CMD 0
+>> 
+>> Why not use module param as boolean? I mean zero to disable and 
+>> non-zero to enable?
+> 
+> Never use module parameters on new code, as it's really hard to ever
+> change them.  It also doesn't work for multiple devices of the same
+> type.
+> 
+If not for module_param, do you suggest we use sysfs? module_param also 
+provides a
+facility to control these parameters through command line too. If we 
+can't use
+module_param, do you expect us to use __setup(..) API?
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> thanks,
+> 
+> greg k-h
 
-On Tue 2018-09-11 12:08:20, Dan Murphy wrote:
-> Remove support for the LM3697 LED device
-> from the ti-lmu.  The LM3697 will be supported
-> via a stand alone LED driver.
->=20
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-
-I'd really like to see better explanation here.
-
-We have existing binding, for lm3697 and similar devices. With this
-series, different binding is introduced, without documented reason.
-
-That's bad.
-
-Now, maybe you are right and the hardware should be handled by
-drivers/leds, not drivers/mfd. But we should have solution for all the
-similar chips, and that still does not mean we have to modify the
-binding. (But maybe we want to move it to different
-directory). Bindings are supposed to describe hardware, not mirror
-structure of our drivers.
-
-Unless there's something fatally wrong with the binding... but in such
-case we'd like to know what is wrong.
-
-[And yes, I recognize current situation is ... not ideal and I'm
-willing to help. But I'm not sure this is step in right direction.]
-
-Thanks,
-								Pavel
-
-
-> ---
->=20
-> v7 - New change for the series based on the comments in https://lore.kern=
-el.org/patchwork/patch/982550/
->=20
->  .../devicetree/bindings/mfd/ti-lmu.txt        | 26 +------------------
->  1 file changed, 1 insertion(+), 25 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/ti-lmu.txt b/Documenta=
-tion/devicetree/bindings/mfd/ti-lmu.txt
-> index c885cf89b8ce..920f910be4e9 100644
-> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
-> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
->    LM3632       Backlight and regulator
->    LM3633       Backlight, LED and fault monitor
->    LM3695       Backlight
-> -  LM3697       Backlight and fault monitor
-> =20
->  Required properties:
->    - compatible: Should be one of:
-> @@ -18,11 +17,10 @@ Required properties:
->                  "ti,lm3632"
->                  "ti,lm3633"
->                  "ti,lm3695"
-> -                "ti,lm3697"
->    - reg: I2C slave address.
->           0x11 for LM3632
->           0x29 for LM3631
-> -         0x36 for LM3633, LM3697
-> +         0x36 for LM3633
->           0x38 for LM3532
->           0x63 for LM3695
-> =20
-> @@ -38,7 +36,6 @@ Optional nodes:
->      Required properties:
->        - compatible: Should be one of:
->                      "ti,lm3633-fault-monitor"
-> -                    "ti,lm3697-fault-monitor"
->    - leds: LED properties for LM3633. Please refer to [2].
->    - regulators: Regulator properties for LM3631 and LM3632.
->                  Please refer to [3].
-> @@ -220,24 +217,3 @@ lm3695@63 {
->  		};
->  	};
->  };
-> -
-> -lm3697@36 {
-> -	compatible =3D "ti,lm3697";
-> -	reg =3D <0x36>;
-> -
-> -	enable-gpios =3D <&pioC 2 GPIO_ACTIVE_HIGH>;
-> -
-> -	backlight {
-> -		compatible =3D "ti,lm3697-backlight";
-> -
-> -		lcd {
-> -			led-sources =3D <0 1 2>;
-> -			ramp-up-msec =3D <200>;
-> -			ramp-down-msec =3D <200>;
-> -		};
-> -	};
-> -
-> -	fault-monitor {
-> -		compatible =3D "ti,lm3697-fault-monitor";
-> -	};
-> -};
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAluYIAkACgkQMOfwapXb+vI/kwCgklNdw75sHM8TzsqLH+gB/QiO
-vy0An0jMgCsNY1QirPhPpG7kVE2eUIdO
-=d2K0
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
+Regards,
+Prakruthi Deepak Heragu
