@@ -1,74 +1,153 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 08/21] microblaze: get cpu node with of_get_cpu_node
-Date: Tue, 11 Sep 2018 14:15:41 +0200
-Message-ID: <57c78c6e-995d-29cb-fde5-8621610ea9a8@xilinx.com>
-References: <20180905193738.19325-1-robh@kernel.org>
- <20180905193738.19325-9-robh@kernel.org>
- <8b227f8c-f351-18da-b55d-e8979281f510@xilinx.com>
- <CAL_JsqKWy8dmfF2zCAsEVkDdFM14niKtapqnR_K45Kr3-mZhqQ@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 3/5] dt-bindings: mfd: rk808: Add binding information
+ for RK809 and RK817.
+Date: Tue, 11 Sep 2018 13:37:19 +0100
+Message-ID: <20180911123719.GM4185@dell>
+References: <1535081441-20718-1-git-send-email-tony.xie@rock-chips.com>
+ <1535081441-20718-4-git-send-email-tony.xie@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKWy8dmfF2zCAsEVkDdFM14niKtapqnR_K45Kr3-mZhqQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1535081441-20718-4-git-send-email-tony.xie@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Tony Xie <tony.xie@rock-chips.com>
+Cc: heiko@sntech.de, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 10.9.2018 22:49, Rob Herring wrote:
-> On Mon, Sep 10, 2018 at 9:56 AM Michal Simek <michal.simek@xilinx.com> wrote:
->>
->> On 5.9.2018 21:37, Rob Herring wrote:
->>> "device_type" use is deprecated for FDT though it has continued to be used
->>> for nodes like cpu nodes. Use of_get_cpu_node() instead which works using
->>> node names by default. This will allow the eventually removal of cpu
->>> device_type properties.
->>>
->>> Also, fix a leaked reference by adding a missing of_node_put.
->>>
->>> Cc: Michal Simek <monstr@monstr.eu>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>> Please ack and I will take via the DT tree. This is dependent on the
->>> first 2 patches.
->>
->> I have tested it and it is align with the spec and all dtses generated
->> before 2015 will work without any issue.
->> In 2015 new device tree generator was introduced and it is not adding
->> reg property to cpu node which is required by this change.
->> This will be fixed but that means that all generated dtses from 2015 are
->> affected.
+On Fri, 24 Aug 2018, Tony Xie wrote:
+
+> Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
 > 
-> Patch 2 was supposed to handle that case. However, it does expect that
-> there should be an #address-cells equal to 0 in that case. Is that not
-> a valid assumption?
-
-as you can expect we have
-
-#address-cells = <0x1>;
-#cpus = <0x1>;
-#size-cells = <0x0>;
-cpu@0 {
-	/* no reg property */
-};
-
-That missing reg property was even reported by dtc but none has fixed
-that. This will be fixed for xilinx releases.
-
-
->> That's why will be great if you can also change that pr_err message to
->> mentioned to also check reg property to give users a chance to fix it
->> properly. Error log below.
+> Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/rk808.txt | 56 +++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
 > 
-> I don't think breaking users is good.
-> 
-> I could make this a find by path (/cpus/cpu) instead or just drop it
-> for microblaze. It doesn't really affect my plans for removing
-> device_node.type ptr.
+> diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
+> index 91b6522..c025a99 100644
+> --- a/Documentation/devicetree/bindings/mfd/rk808.txt
+> +++ b/Documentation/devicetree/bindings/mfd/rk808.txt
+> @@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
+>  The rk8xx family current members:
+>  rk805
+>  rk808
+> +rk809
+> +rk817
+>  rk818
+>  
+>  Required properties:
+>  - compatible: "rockchip,rk805"
+>  - compatible: "rockchip,rk808"
+> +- compatible: "rockchip,rk809"
+> +- compatible: "rockchip,rk817"
+>  - compatible: "rockchip,rk818"
+>  - reg: I2C slave address
+>  - interrupt-parent: The parent interrupt controller.
+> @@ -46,6 +50,28 @@ Optional RK808 properties:
+>    the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
+>    very quickly with no slow ramp time.
+>  
+> +Optional RK809 properties:
+> +- vcc1-supply:  The input supply for DCDC_REG1
+> +- vcc2-supply:  The input supply for DCDC_REG2
+> +- vcc3-supply:  The input supply for DCDC_REG3
+> +- vcc4-supply:  The input supply for DCDC_REG4
+> +- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
+> +- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
+> +- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
+> +- vcc8-supply:  The input supply for SWITCH_REG1
+> +- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
+> +
+> +Optional RK817 properties:
+> +- vcc1-supply:  The input supply for DCDC_REG1
+> +- vcc2-supply:  The input supply for DCDC_REG2
+> +- vcc3-supply:  The input supply for DCDC_REG3
+> +- vcc4-supply:  The input supply for DCDC_REG4
+> +- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
+> +- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
+> +- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
+> +- vcc8-supply:  The input supply for BOOST
+> +- vcc9-supply:  The input supply for OTG_SWITCH
 
-If this is fine for you that will be the best solution.
+I think I'd like to see these squashed down a bit.
 
-Thanks,
-Michal
+Something like:
+
+> +Optional shared RK809 and RK817 properties:
+> +- vcc1-supply:  The input supply for DCDC_REG1
+> +- vcc2-supply:  The input supply for DCDC_REG2
+> +- vcc3-supply:  The input supply for DCDC_REG3
+> +- vcc4-supply:  The input supply for DCDC_REG4
+> +- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
+> +- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
+> +- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
+> +
+> +Optional RK809 properties:
+> +- vcc8-supply:  The input supply for SWITCH_REG1
+> +- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
+> +
+> +Optional RK817 properties:
+> +- vcc8-supply:  The input supply for BOOST
+> +- vcc9-supply:  The input supply for OTG_SWITCH
+
+That's if 1-7 are as identical as they look at first glance.
+
+>  Optional RK818 properties:
+>  - vcc1-supply:  The input supply for DCDC_REG1
+>  - vcc2-supply:  The input supply for DCDC_REG2
+> @@ -87,6 +113,28 @@ number as described in RK808 datasheet.
+>  	- SWITCH_REGn
+>  		- valid values for n are 1 to 2
+>  
+> +Following regulators of the RK809 PMIC block are supported. Note that
+> +the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+> +number as described in RK808 datasheet.
+> +
+> +	- DCDC_REGn
+> +		- valid values for n are 1 to 5.
+> +	- LDO_REGn
+> +		- valid values for n are 1 to 9.
+> +	- SWITCH_REGn
+> +		- valid values for n are 1 to 2.
+> +
+> +Following regulators of the RK817 PMIC block are supported. Note that
+> +the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+> +number as described in RK818 datasheet.
+
+Is there any need to keep saying the same thing over and over?
+
+Especially for something fairly obvious.
+
+> +	- DCDC_REGn
+> +		- valid values for n are 1 to 4.
+> +	- LDO_REGn
+> +		- valid values for n are 1 to 9.
+> +	- BOOST
+> +	- OTG_SWITCH
+> +
+>  Following regulators of the RK818 PMIC block are supported. Note that
+>  the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
+>  number as described in RK818 datasheet.
+> @@ -99,6 +147,14 @@ number as described in RK818 datasheet.
+>  	- HDMI_SWITCH
+>  	- OTG_SWITCH
+>  
+> +There are three pins needed to config for each of RK809 and RK817,
+> +named "gpio_ts" "gpio_gt" "gpio_slp".
+> +	The gpio_gt and gpio_ts pins support the gpio function.
+> +	The gpio_slp pin is for controlling the pmic states, as below:
+> +		- reset
+> +		- power down
+> +		- sleep
+> +
+>  Standard regulator bindings are used inside regulator subnodes. Check
+>    Documentation/devicetree/bindings/regulator/regulator.txt
+>  for more details
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
