@@ -1,36 +1,49 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH] dts: juno: Enable coresight tmc scatter gather in ETR
-Date: Tue, 11 Sep 2018 08:47:27 -0600
-Message-ID: <CANLsYkzaHsi=V+GZaJ+hdzDODT-BRHU42fPJ1Vu-aX726E=grA@mail.gmail.com>
-References: <1536655641-26192-1-git-send-email-suzuki.poulose@arm.com> <20180911103509.GA770@e107155-lin>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911103509.GA770@e107155-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "Suzuki K. Poulose" <suzuki.poulose@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, coresight@lists.linaro.org, Robert Walker <robert.walker@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Mike Leach <mike.leach@linaro.org>, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] of: fix phandle cache creation for DTs with no phandles
+Date: Tue, 11 Sep 2018 09:56:07 -0500
+Message-ID: <20180911145607.6009-1-robh@kernel.org>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Finn Thain <fthain@telegraphics.com.au>, Stan Johnson <userm57@yahoo.com>, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Sep 2018 at 04:35, Sudeep Holla <sudeep.holla@arm.com> wrote:
->
-> On 11/09/18 09:47, Suzuki K Poulose wrote:
-> > We do not enable scatter-gather mode in the TMC-ETR by default
-> > to prevent malfunctioning of systems where the ETR may not be
-> > properly connected to the memory subsystem to allow for simultaneous
-> > READ/WRITE transactions when used in SG mode. Instead we whitelist
-> > the platforms where we know that it is safe to use the mode.
-> >
-> > All revisions of Juno have a proper ETR connection and hence
-> > white list them.
-> >
->
-> Applied conditionally, this conflicts with the patch Mathieu has in his
-> branch. He needs to drop that so that I can take both of them via ARM SoC.
+With commit 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of
+of_find_node_by_phandle()"), a G3 PowerMac fails to boot. The root cause
+is the DT for this system has no phandle properties when booted with
+BootX. of_populate_phandle_cache() does not handle the case of no
+phandles correctly. The problem is roundup_pow_of_two() for 0 is
+undefined. The implementation subtracts 1 underflowing and then things
+are in the weeds.
 
-As I communicated yesterday, I've already dropped that patch from my tree.
+Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
+Cc: stable@vger.kernel.org # 4.17+
+Reported-by: Finn Thain <fthain@telegraphics.com.au>
+Tested-by: Stan Johnson <userm57@yahoo.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Here's a formal patch of what Stan tested. Will send to Linus this week.
 
->
-> --
-> Regards,
-> Sudeep
+Rob
+
+ drivers/of/base.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index a055cd1ef96d..17ae594b7014 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -140,6 +140,9 @@ void of_populate_phandle_cache(void)
+ 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+ 			phandles++;
+ 
++	if (!phandles)
++		goto out;
++
+ 	cache_entries = roundup_pow_of_two(phandles);
+ 	phandle_cache_mask = cache_entries - 1;
+ 
+-- 
+2.17.1
