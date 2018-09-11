@@ -1,56 +1,231 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH 09/11] dts: sama5d2: Update coresight bindings for hardware ports
-Date: Tue, 11 Sep 2018 11:17:10 +0100
-Message-ID: <1536661032-30481-10-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH 11/11] dts: tc2: Update coresight bindings for hardware ports
+Date: Tue, 11 Sep 2018 11:17:12 +0100
+Message-ID: <1536661032-30481-12-git-send-email-suzuki.poulose@arm.com>
 References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Suzuki K Poulose <suzuki.poulose@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Switch to the new coresight bindings for hardware ports
+Switch to the new coresight bindings
 
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm/boot/dts/sama5d2.dtsi | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts | 90 +++++++++++++++++-------------
+ 1 file changed, 51 insertions(+), 39 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index 61f68e5..f0fd2b1 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -84,10 +84,11 @@
- 		clocks = <&mck>;
- 		clock-names = "apb_pclk";
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+index ac6b90e..3a50906 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
+@@ -393,10 +393,11 @@
  
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
 -		port {
--			etb_in: endpoint {
+-			etb_in_port: endpoint {
 -				slave-mode;
--				remote-endpoint = <&etm_out>;
+-				remote-endpoint = <&replicator_out_port0>;
 +		in-ports {
 +			port {
-+				etb_in: endpoint {
-+					remote-endpoint = <&etm_out>;
++				etb_in_port: endpoint {
++					remote-endpoint = <&replicator_out_port0>;
 +				};
  			};
  		};
  	};
-@@ -99,9 +100,11 @@
- 		clocks = <&mck>;
- 		clock-names = "apb_pclk";
+@@ -407,10 +408,11 @@
  
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
 -		port {
--			etm_out: endpoint {
--				remote-endpoint = <&etb_in>;
+-			tpiu_in_port: endpoint {
+-				slave-mode;
+-				remote-endpoint = <&replicator_out_port1>;
++		in-ports {
++			port {
++				tpiu_in_port: endpoint {
++					remote-endpoint = <&replicator_out_port1>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -421,11 +423,10 @@
+ 		 */
+ 		compatible = "arm,coresight-replicator";
+ 
+-		ports {
++		out-ports {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			/* replicator output ports */
+ 			port@0 {
+ 				reg = <0>;
+ 				replicator_out_port0: endpoint {
+@@ -439,12 +440,15 @@
+ 					remote-endpoint = <&tpiu_in_port>;
+ 				};
+ 			};
++		};
+ 
+-			/* replicator input port */
+-			port@2 {
++		in-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
+ 				reg = <0>;
+ 				replicator_in_port0: endpoint {
+-					slave-mode;
+ 					remote-endpoint = <&funnel_out_port0>;
+ 				};
+ 			};
+@@ -457,11 +461,10 @@
+ 
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
+-		ports {
++		out-ports {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+-			/* funnel output port */
+ 			port@0 {
+ 				reg = <0>;
+ 				funnel_out_port0: endpoint {
+@@ -469,28 +472,29 @@
+ 						<&replicator_in_port0>;
+ 				};
+ 			};
++		};
+ 
+-			/* funnel input ports */
+-			port@1 {
++		in-ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
+ 				reg = <0>;
+ 				funnel_in_port0: endpoint {
+-					slave-mode;
+ 					remote-endpoint = <&ptm0_out_port>;
+ 				};
+ 			};
+ 
+-			port@2 {
++			port@1 {
+ 				reg = <1>;
+ 				funnel_in_port1: endpoint {
+-					slave-mode;
+ 					remote-endpoint = <&ptm1_out_port>;
+ 				};
+ 			};
+ 
+-			port@3 {
++			port@2 {
+ 				reg = <2>;
+ 				funnel_in_port2: endpoint {
+-					slave-mode;
+ 					remote-endpoint = <&etm0_out_port>;
+ 				};
+ 			};
+@@ -500,7 +504,6 @@
+ 			port@4 {
+ 				reg = <4>;
+ 				funnel_in_port4: endpoint {
+-					slave-mode;
+ 					remote-endpoint = <&etm1_out_port>;
+ 				};
+ 			};
+@@ -508,7 +511,6 @@
+ 			port@5 {
+ 				reg = <5>;
+ 				funnel_in_port5: endpoint {
+-					slave-mode;
+ 					remote-endpoint = <&etm2_out_port>;
+ 				};
+ 			};
+@@ -522,9 +524,11 @@
+ 		cpu = <&cpu0>;
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
+-		port {
+-			ptm0_out_port: endpoint {
+-				remote-endpoint = <&funnel_in_port0>;
 +		out-ports {
 +			port {
-+				etm_out: endpoint {
-+					remote-endpoint = <&etb_in>;
++				ptm0_out_port: endpoint {
++					remote-endpoint = <&funnel_in_port0>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -536,9 +540,11 @@
+ 		cpu = <&cpu1>;
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
+-		port {
+-			ptm1_out_port: endpoint {
+-				remote-endpoint = <&funnel_in_port1>;
++		out-ports {
++			port {
++				ptm1_out_port: endpoint {
++					remote-endpoint = <&funnel_in_port1>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -550,9 +556,11 @@
+ 		cpu = <&cpu2>;
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
+-		port {
+-			etm0_out_port: endpoint {
+-				remote-endpoint = <&funnel_in_port2>;
++		out-ports {
++			port {
++				etm0_out_port: endpoint {
++					remote-endpoint = <&funnel_in_port2>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -564,9 +572,11 @@
+ 		cpu = <&cpu3>;
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
+-		port {
+-			etm1_out_port: endpoint {
+-				remote-endpoint = <&funnel_in_port4>;
++		out-ports {
++			port {
++				etm1_out_port: endpoint {
++					remote-endpoint = <&funnel_in_port4>;
++				};
+ 			};
+ 		};
+ 	};
+@@ -578,9 +588,11 @@
+ 		cpu = <&cpu4>;
+ 		clocks = <&oscclk6a>;
+ 		clock-names = "apb_pclk";
+-		port {
+-			etm2_out_port: endpoint {
+-				remote-endpoint = <&funnel_in_port5>;
++		out-ports {
++			port {
++				etm2_out_port: endpoint {
++					remote-endpoint = <&funnel_in_port5>;
 +				};
  			};
  		};
