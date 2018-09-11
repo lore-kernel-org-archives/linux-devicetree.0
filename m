@@ -1,46 +1,92 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 net-next 5/6] dt-bindings: net: dsa: Add
- lantiq,xrx200-gswip DT bindings
-Date: Tue, 11 Sep 2018 08:06:39 -0500
-Message-ID: <CAL_Jsq+uvEK+rUXY9g+PUGtLGZVpAH0ws5QFHJSKghkeKrTqrA@mail.gmail.com>
-References: <20180909201647.32727-1-hauke@hauke-m.d> <20180909202027.411-1-hauke@hauke-m.de>
- <20180910220119.GA32582@bogus> <20180910220516.GA16024@lunn.ch>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 1/4] dt-bindings: mrvl,mmp-timer: add clock
+Date: Tue, 11 Sep 2018 15:19:30 +0200
+Message-ID: <3ab50e5f4c647229b575bc5de5e80f9ed80ac938.camel@v3.sk>
+References: <20180910113031.42634-1-lkundrak@v3.sk>
+         <20180910113031.42634-2-lkundrak@v3.sk>
+         <CAL_JsqKgJFZnpuv7rW6ovxMKi4Q2AngWxKa=CMR_Y+xD5Oh3GA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180910220516.GA16024@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Hauke Mehrtens <hauke@hauke-m.de>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, John Crispin <john@phrozen.org>, Linux-MIPS <linux-mips@linux-mips.org>, dev@kresin.me, "hauke.mehrtens" <hauke.mehrtens@intel.com>, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKgJFZnpuv7rW6ovxMKi4Q2AngWxKa=CMR_Y+xD5Oh3GA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 5:05 PM Andrew Lunn <andrew@lunn.ch> wrote:
->
-> > > +See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of
-> > > +additional required and optional properties.
-> > > +
-> > > +
->
-> snip
->
-> > > +   #address-cells = <1>;
-> > > +   #size-cells = <0>;
-> > > +   compatible = "lantiq,xrx200-gswip";
-> > > +   reg = < 0xE108000 0x3000 /* switch */
-> > > +           0xE10B100 0x70 /* mdio */
-> > > +           0xE10B1D8 0x30 /* mii */
-> > > +           >;
-> > > +   dsa,member = <0 0>;
-> >
-> > Not documented.
->
-> Hi Rob
->
-> It is documented in Documentation/devicetree/bindings/net/dsa/dsa.txt
-> referenced above.
+On Mon, 2018-09-10 at 10:21 -0500, Rob Herring wrote:
+> On Mon, Sep 10, 2018 at 6:30 AM Lubomir Rintel <lkundrak@v3.sk>
+> wrote:
+> > 
+> > The timer needs the timer clock to be enabled, otherwise it stops
+> > ticking.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > ---
+> >  Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/timer/mrvl,mmp-
+> > timer.txt b/Documentation/devicetree/bindings/timer/mrvl,mmp-
+> > timer.txt
+> > index 9a6e251462e7..a2ede0bd12ca 100644
+> > --- a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+> > +++ b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt
+> > @@ -4,10 +4,12 @@ Required properties:
+> >  - compatible : Should be "mrvl,mmp-timer".
+> >  - reg : Address and length of the register set of timer
+> > controller.
+> >  - interrupts : Should be the interrupt number.
+> > +- clocks : Should contain a single entry describing the clock
+> > input.
+> 
+> So now pxa910 and pxa168 dts files have errors because they are
+> missing a required clock.
 
-Hum, okay. Not something I recall reviewing. Not that I tend to
-remember, but 'dsa' is not a vendor and the property should be
-'dsa-member'.
+Ah, right. Sorry. Will make it optional then.
 
-Rob
+A brief look at 16x datasheet suggests that the "fast clock" source
+circuitry needs to be enabled in the PMU, whereas the internal "32.768"
+might not be. Perhaps the timer clk is always enabled in PMU, or the
+slow clock is used on those platforms? No idea.
+
+> Plus somehow other MMP2 platforms either
+> worked without a clock or have been broken.
+
+I don't have a MMP2 datasheet, but if things work the same as on a 16x,
+then mach-mmp/time.c indeed chooses the fast timer.
+
+The DT MMP2 platform certainly is certainly broken*. Not sure about the
+BSP-based platforms.
+
+* in other ways too: even when the missing clock is worked around with
+  "clk_ignore_unused" the wrong rate gets chosen and the timer runs too
+  slow. (Fix posted recently.)
+
+> You can't add new required properties to a binding. That breaks
+> backward compatibility.
+
+Should I make an effort to make the driver look up and enable the clock
+on MMP2 even if it doesn't find the clock property in DT?
+
+It won't work otherwise, which is why I thought I can't break it
+further (I didn't notice that the same binding and driver are used on
+PXA168 and PXA910).
+
+> Rob
+
+Thank you,
+Lubo
+
+> > 
+> >  Example:
+> >         timer0: timer@d4014000 {
+> >                 compatible = "mrvl,mmp-timer";
+> >                 reg = <0xd4014000 0x100>;
+> >                 interrupts = <13>;
+> > +               clocks = <&coreclk 2>;
+> >         };
+> > --
+> > 2.17.1
+> > 
