@@ -1,73 +1,28 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2] ARM64: dts: meson-gxbb-wetek: add ttyAML1 uart for Bluetooth
-Date: Tue, 11 Sep 2018 08:27:48 -0500
-Message-ID: <CAL_JsqLLF0_4V2VOAC093qfdg=D66foBS93=bDB4Dx4Xqxt5xA@mail.gmail.com>
-References: <1536072290-28015-1-git-send-email-christianshewitt@gmail.com>
- <1536322536-53109-1-git-send-email-christianshewitt@gmail.com> <CAFBinCA=sDT4mVD=ZA90SF+d84bg5HCWuv6O5uz4+dKVSxNgiw@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/3] dt-bindings: can: rcar_can: Add r8a774a1 support
+Date: Tue, 11 Sep 2018 15:31:31 +0200
+Message-ID: <20180911133130.4uofs7xskc2canjr@verge.net.au>
+References: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1536576195-11520-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCA=sDT4mVD=ZA90SF+d84bg5HCWuv6O5uz4+dKVSxNgiw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Christian Hewitt <christianshewitt@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536576195-11520-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 1:30 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Rob,
->
-> On Fri, Sep 7, 2018 at 2:16 PM Christian Hewitt
-> <christianshewitt@gmail.com> wrote:
-> >
-> > This change adds the uart_A used by the brmcfmac sdio module in the
-> > WeTek Hub and WeTek Play 2 devices. meson_uart_probe seems to mandate
-> > an alias (without it, BT is not working) so this is also included.
-> >
-> > Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi | 13 +++++++++++++
-> >  1 file changed, 13 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> > index 70325b2..e75ace7 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> > @@ -10,6 +10,7 @@
-> >  / {
-> >         aliases {
-> >                 serial0 = &uart_AO;
-> > +               serial1 = &uart_A;
-> >                 ethernet0 = &ethmac;
-> >         };
-> >
-> > @@ -239,6 +240,18 @@
-> >         vqmmc-supply = <&vddio_boot>;
-> >  };
-> >
-> > +/* This is connected to the Bluetooth module: */
-> > +&uart_A {
-> > +       status = "okay";
-> > +       pinctrl-0 = <&uart_a_pins>, <&uart_a_cts_rts_pins>;
-> > +       pinctrl-names = "default";
-> > +
-> > +       bluetooth {
-> > +               compatible = "brcm,bcm43438-bt";
-> I have a question regarding the Broadcom Bluetooth compatible strings:
-> Christian mentioned earlier that the Bluetooth controller identifies
-> itself as BCM4335C0 (BCM4335 rev. C0)
->
-> do we need to add a new compatible string (to
-> Documentation/devicetree/bindings/net/broadcom-bluetooth.txt)?
+On Mon, Sep 10, 2018 at 11:43:14AM +0100, Fabrizio Castro wrote:
+> Document RZ/G2M (r8a774a1) SoC specific bindings.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Signed-off-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> v1->v2:
+> * dropped "renesas,rzg-gen2-can" and fixed "clocks" property description
+>   as per Geert's comments.
 
-Probably so. Without, how do you determine firmware filenames for example?
-
-> if yes: should we also add a new of_device_id to hci_bcm.c or should
-> board.dts simply use compatible = "brcm,bcm4335c0-bt",
-> "brcm,bcm43438-bt"?
-
-A fallback is fine. I'd probably drop the 'c0' part. Is that readable
-from a register?
-
-Rob
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
