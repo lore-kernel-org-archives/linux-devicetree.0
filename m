@@ -1,99 +1,47 @@
-Return-Path: <SRS0=kIcW=LY=linutronix.de=bigeasy@kernel.org>
-Date: Mon, 10 Sep 2018 17:42:27 +0200
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Subject: [RFC PATCH] of: allocate / free phandle cache outside of the
- devtree_lock
-Message-ID: <20180910154227.xsbbqvw3cayro4gg@linutronix.de>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 0/3] usb: renesas_usbhs: add reset_control and multiple clocks management
+Date: Tue, 11 Sep 2018 17:47:02 +0900
+Message-Id: <1536655625-10550-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, tglx@linutronix.de
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The phandle cache code allocates memory while holding devtree_lock which
-is a raw_spinlock_t. Memory allocation (and free()) is not possible on
-RT while a raw_spinlock_t is held.
-Invoke the kfree() and kcalloc() while the lock is dropped.
+This patch set is based on Felipe's usb.git / testing/next branch
+(the commit id is 5b394b2ddf0347bef56e50c69a58773c94343ff3) with
+the following patch:
+  https://patchwork.kernel.org/patch/10574875/
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
+Changes from v4:
+ - Revise the dt-bindings to add how many clocks are required and expect
+   for "renesas,rcar-gen3-usbhs".
 
-The devtree_lock lock is raw_spin_lock_t and as of today there are a few
-users which invoke a DT call via a smp_function_call and need it that
-way.
-If this is not acceptable, is there a reason not to use RCU lookups?
-Since every lookup requires to hold devtree_lock it makes parallel
-lookups not possible (not sure if it needed / happens, maybe only during
-boot).
-While looking through the code when the lock is held, I noticed that
-of_find_last_cache_level() is using a node after dropping a reference to
-it. With RCU, some modifications of the node would require making a copy
-of the node and then replacing the node.
+Changes from v3:
+ - Change the dt-bindings not to use clock-names in patch 2.
+ - To achieve backward compatibility with old DT, the driver should get
+   the first clock and the second clock is an optional.
+ - Add "clk_put" calling in the remove function.
 
- drivers/of/base.c |   22 ++++++++++++++--------
- 1 file changed, 14 insertions(+), 8 deletions(-)
+Changes from v2:
+ - Use clk_bulk_enable_prepare() instead of two functions on patch 3/3.
 
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -108,43 +108,49 @@ void of_populate_phandle_cache(void)
- 	u32 cache_entries;
- 	struct device_node *np;
- 	u32 phandles = 0;
-+	struct device_node **shadow;
+Changes from v1:
+ - Fix error path on patch 3/3.
+ - Use clk_bulk_disable_unprepare() instead of two functions on patch 3/3.
+ - Use staic array of struct clk_bulk_data instead of a pointer on patch 3/3.
  
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
--
--	kfree(phandle_cache);
-+	shadow = phandle_cache;
- 	phandle_cache = NULL;
- 
- 	for_each_of_allnodes(np)
- 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
- 			phandles++;
- 
-+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+
- 	cache_entries = roundup_pow_of_two(phandles);
- 	phandle_cache_mask = cache_entries - 1;
- 
--	phandle_cache = kcalloc(cache_entries, sizeof(*phandle_cache),
--				GFP_ATOMIC);
--	if (!phandle_cache)
--		goto out;
-+	kfree(shadow);
-+	shadow = kcalloc(cache_entries, sizeof(*phandle_cache), GFP_KERNEL);
-+
-+	if (!shadow)
-+		return;
-+	raw_spin_lock_irqsave(&devtree_lock, flags);
-+	phandle_cache = shadow;
- 
- 	for_each_of_allnodes(np)
- 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
- 			phandle_cache[np->phandle & phandle_cache_mask] = np;
- 
--out:
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- }
- 
- int of_free_phandle_cache(void)
- {
- 	unsigned long flags;
-+	struct device_node **shadow;
- 
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 
--	kfree(phandle_cache);
-+	shadow = phandle_cache;
- 	phandle_cache = NULL;
- 
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
-+	kfree(shadow);
- 	return 0;
- }
- #if !defined(CONFIG_MODULES)
+
+Yoshihiro Shimoda (3):
+  usb: renesas_usbhs: Add reset_control
+  dt-bindings: usb: renesas_usbhs: add clock-names property
+  usb: renesas_usbhs: Add multiple clocks management
+
+ .../devicetree/bindings/usb/renesas_usbhs.txt      |   6 +-
+ drivers/usb/renesas_usbhs/common.c                 | 100 +++++++++++++++++++++
+ drivers/usb/renesas_usbhs/common.h                 |   4 +
+ 3 files changed, 109 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
