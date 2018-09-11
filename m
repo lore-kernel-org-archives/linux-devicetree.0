@@ -1,34 +1,35 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: Enable SD card detection for Rock960 boards
-Date: Tue, 11 Sep 2018 08:00:31 +0530
-Message-ID: <20180911023031.4892-5-manivannan.sadhasivam@linaro.org>
-References: <20180911023031.4892-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911023031.4892-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org
-Cc: vicencb@gmail.com, shawn.lin@rock-chips.com, ezequiel@collabora.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Timur Tabi <timur@kernel.org>
+Subject: Re: [PATCH 21/21] fbdev: fsl-diu: get cpu node with of_get_cpu_node
+Date: Mon, 10 Sep 2018 22:34:10 -0500
+Message-ID: <bc758dcc-c881-ab7e-129f-8a1a1c628daa@kernel.org>
+References: <20180905193738.19325-1-robh@kernel.org>
+ <20180905193738.19325-22-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180905193738.19325-22-robh@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-For proper working of SD cards, let's add the Card Detect GPIO property
-to the common devicetree for Rock960 family boards.
-
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index 5a5d8e28ef55..f68254831ad9 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -403,6 +403,7 @@
- 	cap-sd-highspeed;
- 	clock-frequency = <100000000>;
- 	clock-freq-min-max = <100000 100000000>;
-+	cd-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	sd-uhs-sdr104;
- 	vqmmc-supply = <&vcc_sd>;
--- 
-2.17.1
+T24gOS81LzE4IDI6MzcgUE0sIFJvYiBIZXJyaW5nIHdyb3RlOgo+ICAgI2lmZGVmIENPTkZJR19O
+T1RfQ09IRVJFTlRfQ0FDSEUKPiAtCW5wID0gb2ZfZmluZF9ub2RlX2J5X3R5cGUoTlVMTCwgImNw
+dSIpOwo+ICsJbnAgPSBvZl9nZXRfY3B1X25vZGUoMCwgTlVMTCk7CgpUaGlzICNpZmRlZiBtZWFu
+cyB0aGF0IGl0J3Mgb25seSBjb21waWxlZCBvbiBhbiBNUEM1MTIxLCB3aGljaCBpcyBhIHZlcnkg
+CmRlYWQgcGxhdGZvcm0uICBvZl9nZXRfY3B1X25vZGUoKSBsb29rcyBva2F5IHRvIG1lLCBidXQg
+SSdtIGdvaW5nIHRvIApoYXZlIHRvIGFzc3VtZSB0aGF0IHlvdSBrbm93IHdoYXQgeW91J3JlIGRv
+aW5nLgoKQWNrZWQtYnk6IFRpbXVyIFRhYmkgPHRpbXVyQGtlcm5lbC5vcmc+Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
