@@ -1,75 +1,103 @@
-From: Radu Nicolae Pirea <pirea.radu@gmail.com>
-Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for
- the v4.20 merge window
-Date: Tue, 11 Sep 2018 11:14:33 +0300
-Message-ID: <bd9104b702feec556ed01311e9efcb96790131d0.camel@upb.ro>
-References: <20180713164736.26028-1-radu.pirea@microchip.com>
-         <20180910151803.GX28860@dell>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v1 0/5] CPUFREQ OPP's and Tegra30 support by
+ tegra20-cpufreq driver
+Date: Tue, 11 Sep 2018 08:27:52 +0000
+Message-ID: <1536654470.32292.31.camel@toradex.com>
+References: <20180830194356.14059-1-digetx@gmail.com>
+         <1536237301.25080.22.camel@toradex.com>
+         <6c5b6eb4-f809-1a31-acbc-ea27e5cb891b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910151803.GX28860@dell>
+In-Reply-To: <6c5b6eb4-f809-1a31-acbc-ea27e5cb891b@gmail.com>
+Content-Language: en-US
+Content-ID: <8AB1C01505CF3F47BFCC056EF1230F0C@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Radu Pirea <radu.pirea@microchip.com>
-Cc: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "pdeschrijver@nvidia.com" <pdeschrijver@nvidia.com>, "digetx@gmail.com" <digetx@gmail.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-
-Thank you for taking the patch series, but you didn't take the latest
-version(v12) :)
-
-
-On Mon, 2018-09-10 at 16:18 +0100, Lee Jones wrote:
-> Enjoy!
-> 
-> The following changes since commit
-> 5b394b2ddf0347bef56e50c69a58773c94343ff3:
-> 
->   Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-
-> mfd-spi-tty-v4.20
-> 
-> for you to fetch changes up to
-> c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
-> 
->   tty/serial: atmel: Change the driver to work under at91-usart MFD
-> (2018-09-10 16:12:43 +0100)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD, SPI and TTY due for the v4.20 merge
-> window
-> 
-> ----------------------------------------------------------------
-> Radu Pirea (6):
->       MAINTAINERS: Add AT91 USART MFD entry
->       dt-bindings: Add binding for atmel-usart in SPI mode
->       mfd: at91-usart: Add MFD driver for USART
->       MAINTAINERS: Add AT91 USART SPI entry
->       spi: at91-usart: Add driver for at91-usart as SPI
->       tty/serial: atmel: Change the driver to work under at91-usart
-> MFD
-> 
->  .../bindings/{serial => mfd}/atmel-usart.txt       |  25 +-
->  MAINTAINERS                                        |  16 +
->  drivers/mfd/Kconfig                                |   9 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/at91-usart.c                           |  71 ++++
->  drivers/spi/Kconfig                                |   8 +
->  drivers/spi/Makefile                               |   1 +
->  drivers/spi/spi-at91-usart.c                       | 432
-> +++++++++++++++++++++
->  drivers/tty/serial/Kconfig                         |   1 +
->  drivers/tty/serial/atmel_serial.c                  |  42 +-
->  include/dt-bindings/mfd/at91-usart.h               |  17 +
->  11 files changed, 606 insertions(+), 17 deletions(-)
->  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-
-> usart.txt (76%)
->  create mode 100644 drivers/mfd/at91-usart.c
->  create mode 100644 drivers/spi/spi-at91-usart.c
->  create mode 100644 include/dt-bindings/mfd/at91-usart.h
-> 
+T24gRnJpLCAyMDE4LTA5LTA3IGF0IDE5OjU5ICswMzAwLCBEbWl0cnkgT3NpcGVua28gd3JvdGU6
+DQoNCi0gc25pcCAtDQoNCj4gPiAtIFdpdGggImNwdWZyZXEtaW5mbyAtZiIgSSBjb3VsZCBvbmx5
+IG9ic2VydmUgbGlrZSB0aGUgdG9wIDMtNCBPUFBzDQo+ID4gd2hpbGUgaXQgZG9lcyBub3QgdG8g
+Z28gZnVydGhlciBkb3duIGV2ZW4gd2hlbiBpZGxpbmcuIFdoeSBjb3VsZA0KPiA+IHRoYXQNCj4g
+PiBiZSByZXNwLiB3aGF0IGNvdWxkIGNhdXNlIHRoaXM/DQo+IA0KPiBXaGF0IGNwdWZyZXEgZ292
+ZXJub3IgYXJlIHlvdSB1c2luZz8NCg0Kb25kZW1hbmQNCg0KPiBIZXJlIGlzIG15ICdjcHVmcmVx
+LWluZm8gLS1zdGF0cycgb3V0cHV0IGZyb20gVGVncmEzMCBhZnRlciBhIHNldmVyYWwNCj4gbWlu
+dXRlcyBvZiBpZGxpbmcgYWZ0ZXIgYm9vdDoNCj4gDQo+IDQwODAwMDoyNDU4ODQsIDQ1NjAwMDo0
+NDUsIDYwODAwMDoyNTEsIDc2MDAwMDoxNTEsIDgxNjAwMDo4MiwNCj4gOTEyMDAwOjc1LCAxMDAw
+MDAwOjE2MyAgKDU2MSkNCj4gDQo+IEFuZCBmdWxsIGNwdWZyZXEtaW5mbzoNCj4gDQo+IGNwdWZy
+ZXF1dGlscyAwMDg6IGNwdWZyZXEtaW5mbyAoQykgRG9taW5payBCcm9kb3dza2kgMjAwNC0yMDA5
+DQo+IFJlcG9ydCBlcnJvcnMgYW5kIGJ1Z3MgdG8gY3B1ZnJlcUB2Z2VyLmtlcm5lbC5vcmcsIHBs
+ZWFzZS4NCj4gYW5hbHl6aW5nIENQVSAwOg0KPiAgICBkcml2ZXI6IHRlZ3JhDQo+ICAgIENQVXMg
+d2hpY2ggcnVuIGF0IHRoZSBzYW1lIGhhcmR3YXJlIGZyZXF1ZW5jeTogMCAxIDIgMw0KPiAgICBD
+UFVzIHdoaWNoIG5lZWQgdG8gaGF2ZSB0aGVpciBmcmVxdWVuY3kgY29vcmRpbmF0ZWQgYnkgc29m
+dHdhcmU6IDANCj4gMSAyIDMNCj4gICAgbWF4aW11bSB0cmFuc2l0aW9uIGxhdGVuY3k6IDUwLjAg
+dXMuDQo+ICAgIGhhcmR3YXJlIGxpbWl0czogNDA4IE1IeiAtIDEwMDAgTUh6DQo+ICAgIGF2YWls
+YWJsZSBmcmVxdWVuY3kgc3RlcHM6IDQwOCBNSHosIDQ1NiBNSHosIDYwOCBNSHosIDc2MCBNSHos
+IDgxNg0KPiBNSHosIDkxMiBNSHosIDEwMDAgTUh6DQo+ICAgIGF2YWlsYWJsZSBjcHVmcmVxIGdv
+dmVybm9yczogY29uc2VydmF0aXZlLCB1c2Vyc3BhY2UsIHBvd2Vyc2F2ZSwNCj4gb25kZW1hbmQs
+IHBlcmZvcm1hbmNlLCBzY2hlZHV0aWwNCj4gICAgY3VycmVudCBwb2xpY3k6IGZyZXF1ZW5jeSBz
+aG91bGQgYmUgd2l0aGluIDQwOCBNSHogYW5kIDEwMDAgTUh6Lg0KPiAgICAgICAgICAgICAgICAg
+ICAgVGhlIGdvdmVybm9yICJvbmRlbWFuZCIgbWF5IGRlY2lkZSB3aGljaCBzcGVlZCB0bw0KPiB1
+c2UNCj4gICAgICAgICAgICAgICAgICAgIHdpdGhpbiB0aGlzIHJhbmdlLg0KPiAgICBjdXJyZW50
+IENQVSBmcmVxdWVuY3kgaXMgNjA4IE1IeiAoYXNzZXJ0ZWQgYnkgY2FsbCB0byBoYXJkd2FyZSku
+DQo+ICAgIGNwdWZyZXEgc3RhdHM6IDQwOCBNSHo6OTkuNTMlLCA0NTYgTUh6OjAuMTglLCA2MDgg
+TUh6OjAuMTAlLCA3NjANCj4gTUh6OjAuMDYlLCA4MTYgTUh6OjAuMDMlLCA5MTIgTUh6OjAuMDMl
+LCAxMDAwIE1IejowLjA3JSAgKDU2MykNCj4gYW5hbHl6aW5nIENQVSAxOg0KPiAgICBkcml2ZXI6
+IHRlZ3JhDQo+ICAgIENQVXMgd2hpY2ggcnVuIGF0IHRoZSBzYW1lIGhhcmR3YXJlIGZyZXF1ZW5j
+eTogMCAxIDIgMw0KPiAgICBDUFVzIHdoaWNoIG5lZWQgdG8gaGF2ZSB0aGVpciBmcmVxdWVuY3kg
+Y29vcmRpbmF0ZWQgYnkgc29mdHdhcmU6IDANCj4gMSAyIDMNCj4gICAgbWF4aW11bSB0cmFuc2l0
+aW9uIGxhdGVuY3k6IDUwLjAgdXMuDQo+ICAgIGhhcmR3YXJlIGxpbWl0czogNDA4IE1IeiAtIDEw
+MDAgTUh6DQo+ICAgIGF2YWlsYWJsZSBmcmVxdWVuY3kgc3RlcHM6IDQwOCBNSHosIDQ1NiBNSHos
+IDYwOCBNSHosIDc2MCBNSHosIDgxNg0KPiBNSHosIDkxMiBNSHosIDEwMDAgTUh6DQo+ICAgIGF2
+YWlsYWJsZSBjcHVmcmVxIGdvdmVybm9yczogY29uc2VydmF0aXZlLCB1c2Vyc3BhY2UsIHBvd2Vy
+c2F2ZSwNCj4gb25kZW1hbmQsIHBlcmZvcm1hbmNlLCBzY2hlZHV0aWwNCj4gICAgY3VycmVudCBw
+b2xpY3k6IGZyZXF1ZW5jeSBzaG91bGQgYmUgd2l0aGluIDQwOCBNSHogYW5kIDEwMDAgTUh6Lg0K
+PiAgICAgICAgICAgICAgICAgICAgVGhlIGdvdmVybm9yICJvbmRlbWFuZCIgbWF5IGRlY2lkZSB3
+aGljaCBzcGVlZCB0bw0KPiB1c2UNCj4gICAgICAgICAgICAgICAgICAgIHdpdGhpbiB0aGlzIHJh
+bmdlLg0KPiAgICBjdXJyZW50IENQVSBmcmVxdWVuY3kgaXMgNjA4IE1IeiAoYXNzZXJ0ZWQgYnkg
+Y2FsbCB0byBoYXJkd2FyZSkuDQo+ICAgIGNwdWZyZXEgc3RhdHM6IDQwOCBNSHo6OTkuNTMlLCA0
+NTYgTUh6OjAuMTglLCA2MDggTUh6OjAuMTAlLCA3NjANCj4gTUh6OjAuMDYlLCA4MTYgTUh6OjAu
+MDMlLCA5MTIgTUh6OjAuMDMlLCAxMDAwIE1IejowLjA3JSAgKDU2MykNCj4gYW5hbHl6aW5nIENQ
+VSAyOg0KPiAgICBkcml2ZXI6IHRlZ3JhDQo+ICAgIENQVXMgd2hpY2ggcnVuIGF0IHRoZSBzYW1l
+IGhhcmR3YXJlIGZyZXF1ZW5jeTogMCAxIDIgMw0KPiAgICBDUFVzIHdoaWNoIG5lZWQgdG8gaGF2
+ZSB0aGVpciBmcmVxdWVuY3kgY29vcmRpbmF0ZWQgYnkgc29mdHdhcmU6IDANCj4gMSAyIDMNCj4g
+ICAgbWF4aW11bSB0cmFuc2l0aW9uIGxhdGVuY3k6IDUwLjAgdXMuDQo+ICAgIGhhcmR3YXJlIGxp
+bWl0czogNDA4IE1IeiAtIDEwMDAgTUh6DQo+ICAgIGF2YWlsYWJsZSBmcmVxdWVuY3kgc3RlcHM6
+IDQwOCBNSHosIDQ1NiBNSHosIDYwOCBNSHosIDc2MCBNSHosIDgxNg0KPiBNSHosIDkxMiBNSHos
+IDEwMDAgTUh6DQo+ICAgIGF2YWlsYWJsZSBjcHVmcmVxIGdvdmVybm9yczogY29uc2VydmF0aXZl
+LCB1c2Vyc3BhY2UsIHBvd2Vyc2F2ZSwNCj4gb25kZW1hbmQsIHBlcmZvcm1hbmNlLCBzY2hlZHV0
+aWwNCj4gICAgY3VycmVudCBwb2xpY3k6IGZyZXF1ZW5jeSBzaG91bGQgYmUgd2l0aGluIDQwOCBN
+SHogYW5kIDEwMDAgTUh6Lg0KPiAgICAgICAgICAgICAgICAgICAgVGhlIGdvdmVybm9yICJvbmRl
+bWFuZCIgbWF5IGRlY2lkZSB3aGljaCBzcGVlZCB0bw0KPiB1c2UNCj4gICAgICAgICAgICAgICAg
+ICAgIHdpdGhpbiB0aGlzIHJhbmdlLg0KPiAgICBjdXJyZW50IENQVSBmcmVxdWVuY3kgaXMgNjA4
+IE1IeiAoYXNzZXJ0ZWQgYnkgY2FsbCB0byBoYXJkd2FyZSkuDQo+ICAgIGNwdWZyZXEgc3RhdHM6
+IDQwOCBNSHo6OTkuNTMlLCA0NTYgTUh6OjAuMTglLCA2MDggTUh6OjAuMTAlLCA3NjANCj4gTUh6
+OjAuMDYlLCA4MTYgTUh6OjAuMDMlLCA5MTIgTUh6OjAuMDMlLCAxMDAwIE1IejowLjA3JSAgKDU2
+MykNCj4gYW5hbHl6aW5nIENQVSAzOg0KPiAgICBkcml2ZXI6IHRlZ3JhDQo+ICAgIENQVXMgd2hp
+Y2ggcnVuIGF0IHRoZSBzYW1lIGhhcmR3YXJlIGZyZXF1ZW5jeTogMCAxIDIgMw0KPiAgICBDUFVz
+IHdoaWNoIG5lZWQgdG8gaGF2ZSB0aGVpciBmcmVxdWVuY3kgY29vcmRpbmF0ZWQgYnkgc29mdHdh
+cmU6IDANCj4gMSAyIDMNCj4gICAgbWF4aW11bSB0cmFuc2l0aW9uIGxhdGVuY3k6IDUwLjAgdXMu
+DQo+ICAgIGhhcmR3YXJlIGxpbWl0czogNDA4IE1IeiAtIDEwMDAgTUh6DQo+ICAgIGF2YWlsYWJs
+ZSBmcmVxdWVuY3kgc3RlcHM6IDQwOCBNSHosIDQ1NiBNSHosIDYwOCBNSHosIDc2MCBNSHosIDgx
+Ng0KPiBNSHosIDkxMiBNSHosIDEwMDAgTUh6DQo+ICAgIGF2YWlsYWJsZSBjcHVmcmVxIGdvdmVy
+bm9yczogY29uc2VydmF0aXZlLCB1c2Vyc3BhY2UsIHBvd2Vyc2F2ZSwNCj4gb25kZW1hbmQsIHBl
+cmZvcm1hbmNlLCBzY2hlZHV0aWwNCj4gICAgY3VycmVudCBwb2xpY3k6IGZyZXF1ZW5jeSBzaG91
+bGQgYmUgd2l0aGluIDQwOCBNSHogYW5kIDEwMDAgTUh6Lg0KPiAgICAgICAgICAgICAgICAgICAg
+VGhlIGdvdmVybm9yICJvbmRlbWFuZCIgbWF5IGRlY2lkZSB3aGljaCBzcGVlZCB0bw0KPiB1c2UN
+Cj4gICAgICAgICAgICAgICAgICAgIHdpdGhpbiB0aGlzIHJhbmdlLg0KPiAgICBjdXJyZW50IENQ
+VSBmcmVxdWVuY3kgaXMgNjA4IE1IeiAoYXNzZXJ0ZWQgYnkgY2FsbCB0byBoYXJkd2FyZSkuDQo+
+ICAgIGNwdWZyZXEgc3RhdHM6IDQwOCBNSHo6OTkuNTMlLCA0NTYgTUh6OjAuMTglLCA2MDggTUh6
+OjAuMTAlLCA3NjANCj4gTUh6OjAuMDYlLCA4MTYgTUh6OjAuMDMlLCA5MTIgTUh6OjAuMDMlLCAx
+MDAwIE1IejowLjA3JSAgKDU2MykNCj4gDQo+IA0KPiA+IC0gVW5mb3J0dW5hdGVseSAiY3B1ZnJl
+cS1pbmZvIC0tc3RhdHMiIGN1cnJlbnRseSBkb2VzIG5vdCBzZWVtIHRvDQo+ID4gb3V0cHV0IGFu
+eXRoaW5nLiBXb3VsZCB0aGF0IHJlcXVpcmUgc29tZXRoaW5nIHNwZWNpYWwgdG8gYmUNCj4gPiBp
+bXBsZW1lbnRlZD8NCj4gDQo+IE1ha2Ugc3VyZSB0aGF0IENPTkZJR19DUFVfRlJFUV9TVEFUIGlz
+IGVuYWJsZWQgaW4gdGhlIGtlcm5lbHMgY29uZmlnLg0KDQpZZXMsIHNvcnJ5LiBUaGF0IHdhcyBp
+dCwgb2YgY291cnNlLiBKdXN0IHdvbmRlcmluZyB3aHkgdGhhdCBvbmUgaXNuJ3QNCmVuYWJsZWQg
+aW4gdGVncmFfZGVmY29uZmlnLi4uDQoNCj4gPiBPdGhlciB0aGFuIHRoYXQgeW91IG1heSBhZGQg
+dGhlIGZvbGxvd2luZyB0byB0aGUgd2hvbGUgc2VyaWVzOg0KPiA+IA0KPiA+IFRlc3RlZC1ieTog
+TWFyY2VsIFppc3dpbGVyIDxtYXJjZWwuemlzd2lsZXJAdG9yYWRleC5jb20+DQo+IA0KPiBUaGFu
+ayB5b3UgdmVyeSBtdWNoIQ0KDQpZb3UgYXJlIHZlcnkgd2VsY29tZS4gVGhhbmsgeW91IQ==
