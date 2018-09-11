@@ -1,58 +1,37 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: fix phandle cache creation for DTs with no phandles
-Date: Tue, 11 Sep 2018 09:02:43 -0700
-Message-ID: <0ecd44b5-3faa-6b30-d47f-dd06efbcadd6@gmail.com>
-References: <20180911145607.6009-1-robh@kernel.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 0/6] Tracing register accesses with pstore and dynamic
+ debug
+Date: Tue, 11 Sep 2018 21:41:55 +0530
+Message-ID: <2714af83-d2f7-473e-c234-428d2b8a84f0@codeaurora.org>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <20180911151148.GI2651@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20180911145607.6009-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180911151148.GI2651@arm.com>
 Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Finn Thain <fthain@telegraphics.com.au>, Stan Johnson <userm57@yahoo.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, stable@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.orglinux
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/18 07:56, Rob Herring wrote:
-> With commit 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of
-> of_find_node_by_phandle()"), a G3 PowerMac fails to boot. The root cause
-> is the DT for this system has no phandle properties when booted with
-> BootX. of_populate_phandle_cache() does not handle the case of no
-> phandles correctly. The problem is roundup_pow_of_two() for 0 is
-> undefined. The implementation subtracts 1 underflowing and then things
-> are in the weeds.
+On 9/11/2018 8:41 PM, Will Deacon wrote:
+> Hello,
 > 
-> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
-> Cc: stable@vger.kernel.org # 4.17+
-> Reported-by: Finn Thain <fthain@telegraphics.com.au>
-> Tested-by: Stan Johnson <userm57@yahoo.com>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Here's a formal patch of what Stan tested. Will send to Linus this week.
+> On Sun, Sep 09, 2018 at 01:57:01AM +0530, Sai Prakash Ranjan wrote:
+>> This patch series adds Event tracing support to pstore and is continuation
+>> to the RFC patch introduced to add a new tracing facility for register
+>> accesses called Register Trace Buffer(RTB). Since we decided to not introduce
+>> a separate framework to trace register accesses and use existing framework
+>> like tracepoints, I have moved from RFC. Details of the RFC in link below:
+>>
+>> Link: https://lore.kernel.org/lkml/cover.1535119710.git.saiprakash.ranjan@codeaurora.org/
 > 
-> Rob
+> The arm64 backend bits look fine to be, but they're mixed up with core
+> changes that I haven't looked at closely.
 > 
->  drivers/of/base.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index a055cd1ef96d..17ae594b7014 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -140,6 +140,9 @@ void of_populate_phandle_cache(void)
->  		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
->  			phandles++;
->  
-> +	if (!phandles)
-> +		goto out;
-> +
->  	cache_entries = roundup_pow_of_two(phandles);
->  	phandle_cache_mask = cache_entries - 1;
->  
-> 
+Hi Will,
 
-
-Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+Thanks for the review. Let me know if you have any suggestions or points 
+regarding this patch, I will be happy to incorporate it.
