@@ -1,106 +1,286 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v6 1/2] dt-bindings: leds: Add bindings for lm3697 driver
-Date: Tue, 11 Sep 2018 22:55:05 +0200
-Message-ID: <20180911205504.GA31219@amd>
-References: <20180906135005.6718-1-dmurphy@ti.com>
- <20180906211617.GB16899@amd>
- <b8ac9d52-f16d-5fc4-0e9a-9246b9f984c5@ti.com>
- <20180907133228.GA16297@amd>
- <70f7506c-6a3d-3830-59a4-a246dc6163f7@ti.com>
- <226b8770-7041-39a4-5a06-6002a7c1225f@gmail.com>
- <20a814ce-a4c5-0649-6677-6b85a5fd2321@ti.com>
- <59561e0f-e3b9-7898-a300-90b198ad14e6@gmail.com>
- <20d9ea9e-bbb8-2240-97cc-615e3fbcef8c@ti.com>
+From: Hauke Mehrtens <hauke@hauke-m.de>
+Subject: Re: [PATCH v3 net-next 5/6] dt-bindings: net: dsa: Add
+ lantiq,xrx200-gswip DT bindings
+Date: Tue, 11 Sep 2018 23:01:11 +0200
+Message-ID: <6ba09412-e801-0a5c-03ee-20813a9d7b27@hauke-m.de>
+References: <20180909201647.32727-1-hauke@hauke-m.d>
+ <20180909202027.411-1-hauke@hauke-m.de> <20180910220119.GA32582@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20d9ea9e-bbb8-2240-97cc-615e3fbcef8c@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="4WnIr7sTAoGLvsWN03G8tmxZUdXteV065"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180910220119.GA32582@bogus>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org, linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--4WnIr7sTAoGLvsWN03G8tmxZUdXteV065
+Content-Type: multipart/mixed; boundary="aIWsEDcI2rzvSBmmZaYMdcKNF2YFAI5pF";
+ protected-headers="v1"
+From: Hauke Mehrtens <hauke@hauke-m.de>
+To: Rob Herring <robh@kernel.org>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, andrew@lunn.ch,
+ vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, john@phrozen.org,
+ linux-mips@linux-mips.org, dev@kresin.me, hauke.mehrtens@intel.com,
+ devicetree@vger.kernel.org
+Message-ID: <6ba09412-e801-0a5c-03ee-20813a9d7b27@hauke-m.de>
+Subject: Re: [PATCH v3 net-next 5/6] dt-bindings: net: dsa: Add
+ lantiq,xrx200-gswip DT bindings
+References: <20180909201647.32727-1-hauke@hauke-m.d>
+ <20180909202027.411-1-hauke@hauke-m.de> <20180910220119.GA32582@bogus>
+In-Reply-To: <20180910220119.GA32582@bogus>
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--aIWsEDcI2rzvSBmmZaYMdcKNF2YFAI5pF
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On 09/11/2018 12:01 AM, Rob Herring wrote:
+> On Sun, Sep 09, 2018 at 10:20:27PM +0200, Hauke Mehrtens wrote:
+>> This adds the binding for the GSWIP (Gigabit switch) core found in the=
 
-> >>>>>> And I think Jacek pointed out that the bindings references in this=
- bindings
-> >>>>>> don't even exist.
-> >>>>>>
-> >>>>>> I am thinking we need to deprecate this MFD driver and consolidate=
- these drivers
-> >>>>>> in the LED directory as we indicated before.  I did not find any t=
-i-lmu support
-> >>>>>> code.
-> >>>>>>
-> >>>>>> ti-lmu common core code and then the LED children appending the fe=
-ature differentiation.
-> >>>>>
-> >>>>>> Need some maintainer weigh in here.
-> >>>>>
-> >>>>> Hehe. I'm maintnainer. Fun.
-> >>>>
-> >>>> I know.  I want to see if there was any other opinion.  Especially f=
-or the LED driver.
-> >>>>
-> >>> [...]
-> >>>
-> >>> I have a question - is this lm3697 LED controller a cell of some MFD
-> >>> device? Or is it a self-contained chip?
-> >>>
-> >>
-> >> This is a self contained chip.  And the LM3697 only function is a LED =
-driver.
-> >> It does not have any other special functions like the LM363X drivers f=
-or GPIO and Regulator support.
-> >=20
-> > This is an argument for merging it as a standalone LED class driver
-> > then. It is even more justifiable, taking into account uncertainties
-> > related to the proper way of adding the support for it to the existing
-> > MFD driver, whereas the code reuse would be the only advantage of having
-> > thus support in MFD subsystem.
+>> xrx200 / VR9 Lantiq / Intel SoC.
+>>
+>> This part takes care of the switch, MDIO bus, and loading the FW into
+>> the embedded GPHYs.
+>>
+>> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  .../devicetree/bindings/net/dsa/lantiq-gswip.txt   | 141 ++++++++++++=
++++++++++
+>>  1 file changed, 141 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/dsa/lantiq-g=
+swip.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/dsa/lantiq-gswip.tx=
+t b/Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
+>> new file mode 100644
+>> index 000000000000..a089f5856778
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/dsa/lantiq-gswip.txt
+>> @@ -0,0 +1,141 @@
+>> +Lantiq GSWIP Ethernet switches
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> +
+>> +Required properties for GSWIP core:
+>> +
+>> +- compatible	: "lantiq,xrx200-gswip" for the embedded GSWIP in the
+>> +		  xRX200 SoC
+>> +- reg		: memory range of the GSWIP core registers
+>> +		: memory range of the GSWIP MDIO registers
+>> +		: memory range of the GSWIP MII registers
+>> +
+>> +See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of
+>> +additional required and optional properties.
+>> +
+>> +
+>> +Required properties for MDIO bus:
+>> +- compatible	: "lantiq,xrx200-mdio" for the MDIO bus inside the GSWIP=
+
+>> +		  core of the xRX200 SoC and the PHYs connected to it.
+>> +
+>> +See Documentation/devicetree/bindings/net/mdio.txt for a list of addi=
+tional
+>> +required and optional properties.
+>> +
+>> +
+>> +Required properties for GPHY firmware loading:
+>> +- compatible	: "lantiq,gphy-fw" and "lantiq,xrx200-gphy-fw",
+>> +		  "lantiq,xrx200a1x-gphy-fw", "lantiq,xrx200a2x-gphy-fw",
+>> +		  "lantiq,xrx300-gphy-fw", or "lantiq,xrx330-gphy-fw"
+>> +		  for the loading of the firmware into the embedded
+>> +		  GPHY core of the SoC.
 >=20
-> Does the argument carry over to the other devices?
+> One valid combination of compatibles per line please.
 
-We really need something reasonable, that works for stand-alone LEDs,
-and also works for LEDs that are part of MFD when the hardware is similar.
+Ok, I will update this.
 
-> Like the LM3632 (part of the ti-lmu) has flash and torch and no other spe=
-cial functions
-> so it would look like the lm3601x family with different register mappings.
 >=20
-> The LM3631 seems to also be just a LED driver with no extra functionality
+>> +- lantiq,rcu	: reference to the rcu syscon
+>> +
+>> +The GPHY firmware loader has a list of GPHY entries, one for each
+>> +embedded GPHY
+>> +
+>> +- reg		: Offset of the GPHY firmware register in the RCU
+>> +		  register range
 >=20
-> I could go buy an EVM and put together a driver for that device as well u=
-sing the lm3601x as
-> reference.
+> This use of reg is strange. This node should probably be a child of=20
+> the RCU.
 
-I do have hardware with lm3532. I can test patches, and I guess I can
-port driver easily if it is obvious how to do that.
+The SoC Designers put all registers for which they didn't want to create
+a new register block into the RCU (Reset controller unit) range. The
+switch itself is on the main crossbar, and has his own memory range, but
+the registers to load the GPHY FW are in the RCU register. We have to
+load the GPHY firmware before we can assess the GPHY, after the FW is
+loaded we control the GPHY through the MDIO bus of the switch.
 
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+The GPHY is now part of the switch driver, so we moved the GPHY node
+also as a sub node to the switch, when it would be under the RCU we
+somehow have to make sure it gets loaded before the switch gets loaded,
+which is more complicated. The GPHY itself is also part of the switch IP
+block and not the reset controller unit.
 
---J/dobhs11T7y2rNN
+>> +- resets	: list of resets of the embedded GPHY
+>> +- reset-names	: list of names of the resets
+>> +
+>> +Example:
+>> +
+>> +Ethernet switch on the VRX200 SoC:
+>> +
+>> +gswip: gswip@E108000 {
+>=20
+> switch@... or ethernet-switch@...
+>=20
+> We need a standard name here and add it to the DT spec.
+
+Ok, I will change this.
+
+>=20
+>> +	#address-cells =3D <1>;
+>> +	#size-cells =3D <0>;
+>> +	compatible =3D "lantiq,xrx200-gswip";
+>> +	reg =3D <	0xE108000 0x3000 /* switch */
+>> +		0xE10B100 0x70 /* mdio */
+>> +		0xE10B1D8 0x30 /* mii */
+>> +		>;
+>> +	dsa,member =3D <0 0>;
+>=20
+> Not documented.
+
+This is part of the general dsa binding.
+
+>=20
+>> +
+>> +	ports {
+>> +		#address-cells =3D <1>;
+>> +		#size-cells =3D <0>;
+>> +
+>> +		port@0 {
+>> +			reg =3D <0>;
+>> +			label =3D "lan3";
+>> +			phy-mode =3D "rgmii";
+>> +			phy-handle =3D <&phy0>;
+>> +		};
+>> +
+>> +		port@1 {
+>> +			reg =3D <1>;
+>> +			label =3D "lan4";
+>> +			phy-mode =3D "rgmii";
+>> +			phy-handle =3D <&phy1>;
+>> +		};
+>> +
+>> +		port@2 {
+>> +			reg =3D <2>;
+>> +			label =3D "lan2";
+>> +			phy-mode =3D "internal";
+>> +			phy-handle =3D <&phy11>;
+>> +		};
+>> +
+>> +		port@4 {
+>> +			reg =3D <4>;
+>> +			label =3D "lan1";
+>> +			phy-mode =3D "internal";
+>> +			phy-handle =3D <&phy13>;
+>> +		};
+>> +
+>> +		port@5 {
+>> +			reg =3D <5>;
+>> +			label =3D "wan";
+>> +			phy-mode =3D "rgmii";
+>> +			phy-handle =3D <&phy5>;
+>> +		};
+>> +
+>> +		port@6 {
+>> +			reg =3D <0x6>;
+>> +			label =3D "cpu";
+>> +			ethernet =3D <&eth0>;
+>> +		};
+>> +	};
+>> +
+>> +	mdio@0 {
+>=20
+> What's the address 0 here?
+
+I will remove this, there is only one MDIO bus under the switch.
+
+>=20
+>> +		#address-cells =3D <1>;
+>> +		#size-cells =3D <0>;
+>> +		compatible =3D "lantiq,xrx200-mdio";
+>> +		reg =3D <0>;
+>> +
+>> +		phy0: ethernet-phy@0 {
+>> +			reg =3D <0x0>;
+>> +		};
+>> +		phy1: ethernet-phy@1 {
+>> +			reg =3D <0x1>;
+>> +		};
+>> +		phy5: ethernet-phy@5 {
+>> +			reg =3D <0x5>;
+>> +		};
+>> +		phy11: ethernet-phy@11 {
+>> +			reg =3D <0x11>;
+>> +		};
+>> +		phy13: ethernet-phy@13 {
+>> +			reg =3D <0x13>;
+>> +		};
+>> +	};
+>> +
+>> +	gphy-fw {
+>> +		compatible =3D "lantiq,xrx200-gphy-fw", "lantiq,gphy-fw";
+>> +		lantiq,rcu =3D <&rcu0>;
+>=20
+> Missing #size-cells and #address-cells, but this should change as I sai=
+d=20
+> above.
+
+Ok, I will change this.
+
+>=20
+>> +
+>> +		gphy@20 {
+>> +			reg =3D <0x20>;
+>> +
+>> +			resets =3D <&reset0 31 30>;
+>> +			reset-names =3D "gphy";
+>> +		};
+>> +
+>> +		gphy@68 {
+>> +			reg =3D <0x68>;
+>> +
+>> +			resets =3D <&reset0 29 28>;
+>> +			reset-names =3D "gphy";
+>> +		};
+>> +	};
+>> +};
+>> --=20
+>> 2.11.0
+>>
+
+
+
+--aIWsEDcI2rzvSBmmZaYMdcKNF2YFAI5pF--
+
+--4WnIr7sTAoGLvsWN03G8tmxZUdXteV065
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAluYK6gACgkQMOfwapXb+vJeLQCfWQ7anjcBVUXTC+aWZLaKUAsg
-hEQAnjWTxChz1TwWcNQSsImAE80flgsJ
-=El4Z
+iQEzBAEBCAAdFiEEyz0/uAcd+JwXmwtD8bdnhZyy68cFAluYLRoACgkQ8bdnhZyy
+68czXAgAmZYkeIoir2eLM38adoasy6ROv+j9NNWfnKbmP6InFS5J3qVOchv+mIYm
+LCdQFSLzZmquyy6I3MqWDR2H7w9/2kOfDwbpOYlneHdnxTw19Zdd/WsZYPzy3A1V
+BIGley+czvrkodUCdlEHHTPm7qN7KOFVLJ6iH4HU88HIHBKJPYfd+rSlj6j/xyQR
+k6aVOH5Niz/30vUfALcTdN7EczCnPce3auJA1A5w0emEgsO8Ti3O0HWHNDLMtsBF
+a9XN8759GilBc0zKgy+Qy/QTx6LewCXiHVmBOYNgyuHI7kffiVsLlktm9BJm1MT1
+NhEcgJR8vfu0oy4qzBMVz2ZDovA3/w==
+=Vjf7
 -----END PGP SIGNATURE-----
 
---J/dobhs11T7y2rNN--
+--4WnIr7sTAoGLvsWN03G8tmxZUdXteV065--
