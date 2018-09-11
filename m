@@ -1,53 +1,46 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH] DT: marvell,mmp2: add MMC controllers
-Date: Tue, 11 Sep 2018 14:55:27 +0200
-Message-ID: <4892b137e9ba100fea7d9d9c7d401d81f33271a7.camel@v3.sk>
-References: <20180910120243.163979-1-lkundrak@v3.sk>
-         <CAL_JsqJ=9M9LxKjWQ7f3ARUkp_54BxCuRdJ-=JVNBefVswroew@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 net-next 5/6] dt-bindings: net: dsa: Add
+ lantiq,xrx200-gswip DT bindings
+Date: Tue, 11 Sep 2018 08:06:39 -0500
+Message-ID: <CAL_Jsq+uvEK+rUXY9g+PUGtLGZVpAH0ws5QFHJSKghkeKrTqrA@mail.gmail.com>
+References: <20180909201647.32727-1-hauke@hauke-m.d> <20180909202027.411-1-hauke@hauke-m.de>
+ <20180910220119.GA32582@bogus> <20180910220516.GA16024@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ=9M9LxKjWQ7f3ARUkp_54BxCuRdJ-=JVNBefVswroew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180910220516.GA16024@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, John Crispin <john@phrozen.org>, Linux-MIPS <linux-mips@linux-mips.org>, dev@kresin.me, "hauke.mehrtens" <hauke.mehrtens@intel.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-09-10 at 10:14 -0500, Rob Herring wrote:
-> On Mon, Sep 10, 2018 at 7:02 AM Lubomir Rintel <lkundrak@v3.sk>
-> wrote:
-> > 
-> > There's apparently four of them on a MMP2.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > ---
-> >  arch/arm/boot/dts/mmp2.dtsi | 40
-> > +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/mmp2.dtsi
-> > b/arch/arm/boot/dts/mmp2.dtsi
-> > index 766bbb8495b6..51d4a2d70db9 100644
-> > --- a/arch/arm/boot/dts/mmp2.dtsi
-> > +++ b/arch/arm/boot/dts/mmp2.dtsi
-> > @@ -18,6 +18,10 @@
-> >                 serial3 = &uart4;
-> >                 i2c0 = &twsi1;
-> >                 i2c1 = &twsi2;
-> > +               sdhci0 = &mmc1;
-> > +               sdhci1 = &mmc2;
-> > +               sdhci2 = &mmc3;
-> > +               sdhci3 = &mmc4;
-> 
-> Please drop this. MMC nodes don't need an alias and if they did,
-> "sdhci" wouldn't be the name.
+On Mon, Sep 10, 2018 at 5:05 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> > > +See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of
+> > > +additional required and optional properties.
+> > > +
+> > > +
+>
+> snip
+>
+> > > +   #address-cells = <1>;
+> > > +   #size-cells = <0>;
+> > > +   compatible = "lantiq,xrx200-gswip";
+> > > +   reg = < 0xE108000 0x3000 /* switch */
+> > > +           0xE10B100 0x70 /* mdio */
+> > > +           0xE10B1D8 0x30 /* mii */
+> > > +           >;
+> > > +   dsa,member = <0 0>;
+> >
+> > Not documented.
+>
+> Hi Rob
+>
+> It is documented in Documentation/devicetree/bindings/net/dsa/dsa.txt
+> referenced above.
 
-Will do. I essentially just cargo-culted this, because I had no idea
-which devices need aliases. How do I decide whether an alias is needed?
+Hum, okay. Not something I recall reviewing. Not that I tend to
+remember, but 'dsa' is not a vendor and the property should be
+'dsa-member'.
 
-> 
-> Rob
-
-Thank you,
-Lubo
+Rob
