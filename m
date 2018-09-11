@@ -1,58 +1,98 @@
-Return-Path: <SRS0=dmff=LT=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from xavier.telenet-ops.be ([195.130.132.52]:50556 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbeIERy1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 5 Sep 2018 13:54:27 -0400
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] media: dt-bindings: adv748x: Fix decimal unit addresses
-Date: Wed,  5 Sep 2018 15:24:09 +0200
-Message-Id: <20180905132409.14456-1-geert+renesas@glider.be>
-Sender: devicetree-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v5 1/3] usb: renesas_usbhs: Add reset_control
+Date: Tue, 11 Sep 2018 17:47:03 +0900
+Message-Id: <1536655625-10550-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1536655625-10550-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1536655625-10550-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-With recent dtc and W=1:
+R-Car Gen3 needs to deassert resets of both host and peripheral.
+Since [eo]hci-platform is possible to assert the reset(s) when
+the probing failed, renesas_usbhs driver doesn't work correctly
+regardless of finished probing. To fix this issue, this patch adds
+reset_control on this renesas_usbhs driver.
 
-    Warning (graph_port): video-receiver@70/port@10: graph node unit address error, expected "a"
-    Warning (graph_port): video-receiver@70/port@11: graph node unit address error, expected "b"
-
-Unit addresses are always hexadecimal (without prefix), while the bases
-of reg property values depend on their prefixes.
-
-Fixes: e69595170b1cad85 ("media: adv748x: Add adv7481, adv7482 bindings")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
-v2:
-  - Add Reviewed-by,
-  - Drop RFC state.
----
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/renesas_usbhs/common.c | 12 ++++++++++++
+ drivers/usb/renesas_usbhs/common.h |  2 ++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 21ffb5ed818302ff..54d1d3bc186949fa 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -73,7 +73,7 @@ Example:
- 			};
- 		};
+diff --git a/drivers/usb/renesas_usbhs/common.c b/drivers/usb/renesas_usbhs/common.c
+index 4310df4..1d355d5 100644
+--- a/drivers/usb/renesas_usbhs/common.c
++++ b/drivers/usb/renesas_usbhs/common.c
+@@ -12,6 +12,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
++#include <linux/reset.h>
+ #include <linux/slab.h>
+ #include <linux/sysfs.h>
+ #include "common.h"
+@@ -574,6 +575,10 @@ static int usbhs_probe(struct platform_device *pdev)
+ 			return PTR_ERR(priv->edev);
+ 	}
  
--		port@10 {
-+		port@a {
- 			reg = <10>;
++	priv->rsts = devm_reset_control_array_get_optional_shared(&pdev->dev);
++	if (IS_ERR(priv->rsts))
++		return PTR_ERR(priv->rsts);
++
+ 	/*
+ 	 * care platform info
+ 	 */
+@@ -658,6 +663,10 @@ static int usbhs_probe(struct platform_device *pdev)
+ 	/* dev_set_drvdata should be called after usbhs_mod_init */
+ 	platform_set_drvdata(pdev, priv);
  
- 			adv7482_txa: endpoint {
-@@ -83,7 +83,7 @@ Example:
- 			};
- 		};
++	ret = reset_control_deassert(priv->rsts);
++	if (ret)
++		goto probe_fail_rst;
++
+ 	/*
+ 	 * deviece reset here because
+ 	 * USB device might be used in boot loader.
+@@ -711,6 +720,8 @@ static int usbhs_probe(struct platform_device *pdev)
+ 	return ret;
  
--		port@11 {
-+		port@b {
- 			reg = <11>;
+ probe_end_mod_exit:
++	reset_control_assert(priv->rsts);
++probe_fail_rst:
+ 	usbhs_mod_remove(priv);
+ probe_end_fifo_exit:
+ 	usbhs_fifo_remove(priv);
+@@ -739,6 +750,7 @@ static int usbhs_remove(struct platform_device *pdev)
+ 	pm_runtime_disable(&pdev->dev);
  
- 			adv7482_txb: endpoint {
+ 	usbhs_platform_call(priv, hardware_exit, pdev);
++	reset_control_assert(priv->rsts);
+ 	usbhs_mod_remove(priv);
+ 	usbhs_fifo_remove(priv);
+ 	usbhs_pipe_remove(priv);
+diff --git a/drivers/usb/renesas_usbhs/common.h b/drivers/usb/renesas_usbhs/common.h
+index 6137f79..bce7d35 100644
+--- a/drivers/usb/renesas_usbhs/common.h
++++ b/drivers/usb/renesas_usbhs/common.h
+@@ -10,6 +10,7 @@
+ 
+ #include <linux/extcon.h>
+ #include <linux/platform_device.h>
++#include <linux/reset.h>
+ #include <linux/usb/renesas_usbhs.h>
+ 
+ struct usbhs_priv;
+@@ -277,6 +278,7 @@ struct usbhs_priv {
+ 	struct usbhs_fifo_info fifo_info;
+ 
+ 	struct phy *phy;
++	struct reset_control *rsts;
+ };
+ 
+ /*
 -- 
-2.17.1
+1.9.1
