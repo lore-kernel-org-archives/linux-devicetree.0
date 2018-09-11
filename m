@@ -1,163 +1,81 @@
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: Re: [PATCH v9 5/9] media: platform: Add Cedrus VPU decoder driver
-Date: Tue, 11 Sep 2018 12:46:25 -0300
-Message-ID: <20180911124625.6759e429@coco.lan>
-References: <20180906222442.14825-1-contact@paulk.fr>
-        <20180906222442.14825-6-contact@paulk.fr>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: v4.17 regression: PowerMac G3 won't boot, was Re: [PATCH v5 1/3]
+ of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
+Date: Tue, 11 Sep 2018 08:53:30 -0700
+Message-ID: <5af64ee6-c7c4-29db-9aa4-c40e35e241fc@gmail.com>
+References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com>
+ <1520208889-3908-2-git-send-email-frowand.list@gmail.com>
+ <alpine.LNX.2.21.1808301025480.73@nippy.intranet>
+ <0ad5dbfd-08f3-b97d-34b9-70fc9a729921@gmail.com>
+ <d9e53e48794c2eade19309b73febd492e3c5eeeb.camel@kernel.crashing.org>
+ <7427daf6570d519e6793eb96d2fbaa52714b0cd7.camel@kernel.crashing.org>
+ <20180910125320.GA17028@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180906222442.14825-6-contact@paulk.fr>
+In-Reply-To: <20180910125320.GA17028@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Kocialkowski <contact@paulk.fr>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devel@driverdev.osuosl.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Paul Kocialkowski <paul.kocialkowski@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-sunxi@googlegroups.com, Randy Li <ayaka@soulik.info>, Hans Verkuil <hverkuil@xs4all.nl>, Ezequiel Garcia <ezequiel@collabora.com>, Tomasz Figa <tfiga@chromium.org>, Alexandre Courbot <acourbot@chromium.org>, Philipp Zabel <p.zabel@pengutronix.de>, Laurent
+To: Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Finn Thain <fthain@telegraphics.com.au>, Stan Johnson <userm57@yahoo.com>
+Cc: Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Em Fri,  7 Sep 2018 00:24:38 +0200
-Paul Kocialkowski <contact@paulk.fr> escreveu:
-
-> From: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+On 09/10/18 05:53, Rob Herring wrote:
+> On Sun, Sep 09, 2018 at 07:04:25PM +0200, Benjamin Herrenschmidt wrote:
+>> On Fri, 2018-08-31 at 14:58 +1000, Benjamin Herrenschmidt wrote:
+>>>
+>>>> A long shot, but something to consider, is that I failed to cover the
+>>>> cases of dynamic devicetree updates (removing nodes that contain a
+>>>> phandle) in ways other than overlays.  Michael Ellerman has reported
+>>>> such a problem for powerpc/mobility with of_detach_node().  A patch to
+>>>> fix that is one of the tasks I need to complete.
+>>>
+>>> The only thing I can think of is booting via the BootX bootloader on
+>>> those ancient macs results in a DT with no phandles. I didn't see an
+>>> obvious reason why that would cause that patch to break though.
+>>
+>> Guys, we still don't have a fix for this one on its way upstream...
+>>
+>> My test patch just creates phandle properties for all nodes, that was
+>> not intended as a fix, more a way to check if the problem was related
+>> to the lack of phandles.
+>>
+>> I don't actually know why the new code causes things to fail when
+>> phandles are absent. This needs to be looked at.
+>>
+>> I'm travelling at the moment and generally caught up with other things,
+>> I haven't had a chance to dig, so just a heads up. I don't intend to
+>> submit my patch since it's just a band aid. We need to figure out what
+>> the actual problem is.
 > 
-> This introduces the Cedrus VPU driver that supports the VPU found in
-> Allwinner SoCs, also known as Video Engine. It is implemented through
-> a V4L2 M2M decoder device and a media device (used for media requests).
-> So far, it only supports MPEG-2 decoding.
+> Can you try this patch (w/o Ben's patch). I think the problem is if 
+> there are no phandles, then roundup_pow_of_two is passed 0 which is 
+> documented as undefined result.
 > 
-> Since this VPU is stateless, synchronization with media requests is
-> required in order to ensure consistency between frame headers that
-> contain metadata about the frame to process and the raw slice data that
-> is used to generate the frame.
+> Though, if a DT has no properties with phandles, then why are we doing a 
+> lookup in the first place?
 > 
-> This driver was made possible thanks to the long-standing effort
-> carried out by the linux-sunxi community in the interest of reverse
-> engineering, documenting and implementing support for the Allwinner VPU.
 > 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> 8<----------------------------------------------------------------------
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 9095b8290150..74eaedd5b860 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -140,6 +140,9 @@ void of_populate_phandle_cache(void)
+>  		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+>  			phandles++;
+>  
+> +	if (!phandles)
+> +		goto out;
+> +
+>  	cache_entries = roundup_pow_of_two(phandles);
+>  	phandle_cache_mask = cache_entries - 1;
+>  
+> 
 
-There are several checkpatch issues here. Ok, some can be
-ignored, but there are at least some of them that sounda relevant.
+Thanks Rob!  That fix makes sense, and the test results look
+promising.
 
-Please address them.
-
-
-CHECK: Comparison to NULL could be written "ctx->ctrls[i]"
-#214: FILE: drivers/staging/media/sunxi/cedrus/cedrus.c:51:
-+	for (i = 0; ctx->ctrls[i] != NULL; i++)
-
-CHECK: Alignment should match open parenthesis
-#304: FILE: drivers/staging/media/sunxi/cedrus/cedrus.c:141:
-+		ctrl_test = v4l2_ctrl_request_hdl_ctrl_find(hdl,
-+			cedrus_controls[i].id);
-
-CHECK: Alignment should match open parenthesis
-#468: FILE: drivers/staging/media/sunxi/cedrus/cedrus.c:305:
-+	ret = v4l2_m2m_register_media_controller(dev->m2m_dev,
-+			vfd, MEDIA_ENT_F_PROC_VIDEO_DECODER);
-
-CHECK: Avoid using bool structure members because of possible alignment issues - see: https://lkml.org/lkml/2017/11/21/384
-#638: FILE: drivers/staging/media/sunxi/cedrus/cedrus.h:47:
-+	bool			required;
-
-WARNING: line over 80 characters
-#744: FILE: drivers/staging/media/sunxi/cedrus/cedrus.h:153:
-+static inline struct cedrus_buffer *vb2_v4l2_to_cedrus_buffer(const struct vb2_v4l2_buffer *p)
-
-WARNING: line over 80 characters
-#749: FILE: drivers/staging/media/sunxi/cedrus/cedrus.h:158:
-+static inline struct cedrus_buffer *vb2_to_cedrus_buffer(const struct vb2_buffer *p)
-
-CHECK: Alignment should match open parenthesis
-#809: FILE: drivers/staging/media/sunxi/cedrus/cedrus_dec.c:47:
-+		run.mpeg2.slice_params = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS);
-
-CHECK: Alignment should match open parenthesis
-#811: FILE: drivers/staging/media/sunxi/cedrus/cedrus_dec.c:49:
-+		run.mpeg2.quantization = cedrus_find_control_data(ctx,
-+			V4L2_CID_MPEG_VIDEO_MPEG2_QUANTIZATION);
-
-WARNING: line over 80 characters
-#1368: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:133:
-+	reg |= VE_DEC_MPEG_MP12HDR_INTRA_DC_PRECISION(picture->intra_dc_precision);
-
-WARNING: line over 80 characters
-#1369: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:134:
-+	reg |= VE_DEC_MPEG_MP12HDR_INTRA_PICTURE_STRUCTURE(picture->picture_structure);
-
-WARNING: line over 80 characters
-#1371: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:136:
-+	reg |= VE_DEC_MPEG_MP12HDR_FRAME_PRED_FRAME_DCT(picture->frame_pred_frame_dct);
-
-WARNING: line over 80 characters
-#1372: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:137:
-+	reg |= VE_DEC_MPEG_MP12HDR_CONCEALMENT_MOTION_VECTORS(picture->concealment_motion_vectors);
-
-WARNING: line over 80 characters
-#1395: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:160:
-+	fwd_luma_addr = cedrus_dst_buf_addr(ctx, slice_params->forward_ref_index, 0);
-
-WARNING: line over 80 characters
-#1396: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:161:
-+	fwd_chroma_addr = cedrus_dst_buf_addr(ctx, slice_params->forward_ref_index, 1);
-
-WARNING: line over 80 characters
-#1401: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:166:
-+	bwd_luma_addr = cedrus_dst_buf_addr(ctx, slice_params->backward_ref_index, 0);
-
-WARNING: line over 80 characters
-#1402: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:167:
-+	bwd_chroma_addr = cedrus_dst_buf_addr(ctx, slice_params->backward_ref_index, 1);
-
-WARNING: line over 80 characters
-#1417: FILE: drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c:182:
-+	cedrus_write(dev, VE_DEC_MPEG_VLD_OFFSET, slice_params->data_bit_offset);
-
-CHECK: Macro argument reuse 'x' - possible side-effects?
-#1552: FILE: drivers/staging/media/sunxi/cedrus/cedrus_regs.h:74:
-+#define VE_DEC_MPEG_MP12HDR_F_CODE_MASK(x, y) \
-+	GENMASK(VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y) + 3, \
-+		VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y))
-
-CHECK: Macro argument reuse 'y' - possible side-effects?
-#1552: FILE: drivers/staging/media/sunxi/cedrus/cedrus_regs.h:74:
-+#define VE_DEC_MPEG_MP12HDR_F_CODE_MASK(x, y) \
-+	GENMASK(VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y) + 3, \
-+		VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y))
-
-CHECK: Macro argument reuse 'x' - possible side-effects?
-#1555: FILE: drivers/staging/media/sunxi/cedrus/cedrus_regs.h:77:
-+#define VE_DEC_MPEG_MP12HDR_F_CODE(x, y, v) \
-+	(((v) << VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y)) & \
-+	 VE_DEC_MPEG_MP12HDR_F_CODE_MASK(x, y))
-
-CHECK: Macro argument reuse 'y' - possible side-effects?
-#1555: FILE: drivers/staging/media/sunxi/cedrus/cedrus_regs.h:77:
-+#define VE_DEC_MPEG_MP12HDR_F_CODE(x, y, v) \
-+	(((v) << VE_DEC_MPEG_MP12HDR_F_CODE_SHIFT(x, y)) & \
-+	 VE_DEC_MPEG_MP12HDR_F_CODE_MASK(x, y))
-
-CHECK: Macro argument reuse 'a' - possible side-effects?
-#1685: FILE: drivers/staging/media/sunxi/cedrus/cedrus_regs.h:207:
-+#define VE_DEC_MPEG_VLD_ADDR_BASE(a) \
-+	(((a) & GENMASK(27, 4)) | (((a) >> 28) & GENMASK(3, 0)))
-
-CHECK: Comparison to NULL could be written "fmt"
-#1805: FILE: drivers/staging/media/sunxi/cedrus/cedrus_video.c:88:
-+	return fmt != NULL;
-
-CHECK: Please use a blank line after function/struct/union/enum declarations
-#2214: FILE: drivers/staging/media/sunxi/cedrus/cedrus_video.c:497:
-+}
-+static struct vb2_ops cedrus_qops = {
-
-total: 0 errors, 11 warnings, 13 checks, 2139 lines checked
-
-
-
-
-
-
-Thanks,
-Mauro
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
