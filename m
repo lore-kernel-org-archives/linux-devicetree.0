@@ -1,51 +1,185 @@
 From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH v3 1/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy
- core
-Date: Tue, 11 Sep 2018 08:04:41 +0000
-Message-ID: <BN3PR0201MB09937FA5CE658BFD974146CBA7040@BN3PR0201MB0993.namprd02.prod.outlook.com>
+Subject: RE: [PATCH v3 2/2] phy: zynqmp: Add dt bindings for ZynqMP phy
+Date: Tue, 11 Sep 2018 08:07:09 +0000
+Message-ID: <BN3PR0201MB09934721CEEE6E9F3316644CA7040@BN3PR0201MB0993.namprd02.prod.outlook.com>
 References: <1536165747-6405-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1536165747-6405-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <20180910201523.GA4024@bogus>
+ <1536165747-6405-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <20180910203059.GA7055@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910201523.GA4024@bogus>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180910203059.GA7055@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: "kishon@ti.com" <kishon@ti.com>, Michal Simek <michals@xilinx.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kishon@ti.com" <kishon@ti.com>, Michal Simek <michals@xilinx.com>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
-
 
 Hi Rob,
 
-Thanks a lot for spending your time in reviewing this patch series,=20
+Thanks a lot for reviewing this code, please find my comments inline
 
->> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->> ---
->> Changes in v3:
->> 	1. Corrected the Documentation as suggested by Vivek Gautam
->>
->> Changes in v2:
->> 	1. Fixed the compilation error when compiled phy-zynqmp.c as a module
->> 	2. Added CONFIG_PM macro in phy-zynqmp.c driver
->> ---
->>  drivers/phy/Kconfig            |    8 +
->>  drivers/phy/Makefile           |    1 +
->>  drivers/phy/phy-zynqmp.c       | 1581
->++++++++++++++++++++++++++++++++++++++++
->>  include/dt-bindings/phy/phy.h  |    2 +
+>> +This binding describes a ZynqMP PHY device that is used to control
+>> +ZynqMP High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides
+>> +four lanes and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI
+>controllers.
+>> +
+>> +Phy provider node
+>> +=================
+>> +
+>> +Required properties:
+>> +- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
+>> +
+>> +- reg           : Address and length of register sets for each device in
+>> +                  "reg-names"
+>> +
+>> +- reg-names     : The names of the register addresses corresponding to the
+>> +		  registers filled in "reg":
+>> +			- serdes: SERDES block register set
+>> +			- siou: SIOU block register set
+>> +
+>> +Optional properties:
+>> +- xlnx,tx_termination_fix : Include this for fixing functional issue
+>> +with the
 >
->This goes in patch 2. And patch 2 should come first.
+>s/_/-/
 >
 
-Will fix this in the next series of the patch
+Will fix this in next series of the patch
+
+>> +		  TX termination resistance in GT, which can be out of spec for
+>> +		  the XCZU9EG silicon version. This property is not required for
+>> +		  "xlnx,zynqmp-psgtr-v1.1"
+>> +
+>> +Required nodes	:  A sub-node is required for each lane the controller
+>> +		   provides.
+>> +
+>> +Phy sub-nodes
+>> +=============
+>> +
+>> +Required properties:
+>> +lane0:
+>
+>lane0 or lane@0? If you need or care about numbering then add a reg property.
+>
+
+Thanks for correcting,  Will change this to lane@0 and resend the patches
+
+>> +- #phy-cells	: Should be 4
+>> +
+>> +lane1:
+>> +- #phy-cells	: Should be 4
+>> +
+>> +lane2:
+>> +- #phy-cells	: Should be 4
+>> +
+>> +lane3:
+>> +- #phy-cells	: Should be 4
+>> +
+>> +Example:
+>> +	zynqmp_phy: phy@fd400000 {
+>> +		compatible = "xlnx,zynqmp-psgtr-v1.1";
+>> +		status = "okay";
+>> +		reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>;
+>> +		reg-names = "serdes", "siou";
+>> +
+>> +		lane0: lane@0 {
+>> +			#phy-cells = <4>;
+>> +		};
+>> +		lane1: lane@1 {
+>> +			#phy-cells = <4>;
+>> +		};
+>> +		lane2: lane@2 {
+>> +			#phy-cells = <4>;
+>> +		};
+>> +		lane3: lane@3 {
+>> +			#phy-cells = <4>;
+>> +		};
+>> +	};
+>> +
+>> +Specifying phy control of devices
+>> +=================================
+>> +
+>> +Device nodes should specify the configuration required in their "phys"
+>> +property, containing a phandle to the phy port node and a device type.
+>> +
+>> +phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_NUM
+>> +LANE_FREQ>;
+>> +
+>> +PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
+>> +CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
+>> +			  or PHY_TYPE_DP or PHY_TYPE_SGMII
+>> +CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
+>> +				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
+>> +				PHY_TYPE_SATA : 0 or 1
+>> +				PHY_TYPE_USB  : 0 or 1
+>> +				PHY_TYPE_DP   : 0 or 1
+>> +				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
+>> +LANE_NUM                = Depends on which lane clock is used as ref clk, can be
+>> +			  0 or 1 or 2 or 3
+>
+>I'm not really clear about what this is.
+>
+
+ZynqMP phy has a feature that each individual lane (among the 4 lanes) can have its own PLL
+reference  clock or share the clock generated from other lanes. For example 
+
+Lane 0 can use its own ref clock for PLL: in this case LANE_NUM = 0
+Lane0 can use Lane 3's ref clock for PLL: in this case  LANE_NUM = 3
+
+Maybe I should change the name LANE_NUM to LANE_REF_CLK to give more readability. Please
+correct me if wrong.  
+
+>> +LANE_FREQ               = Frequency that controller can operate, can be any of
+>> +
+>19.2Mhz,20Mhz,24Mhz,26Mhz,27Mhz,28.4Mhz,40Mhz,52Mhz,
+>> +			  100Mhz,108Mhz,125Mhz,135Mhz,150Mhz
+>
+>This can't be implied by the mode/type? I wouldn't expect any frequency can be used
+>for each mode.
+>
+
+Yes you are correct, not all frequencies are supported by all protocols, but each protocol supports
+a limited set of multiple reference clock frequencies. For example USB3.0 protocol can operate with
+26, 52 & 100 MHZ. Providing any other frequency would make the phy fail to lock the PLL and error
+would be generated by the driver. As you suggested, I will add more details regarding the frequencies
+supported by different protocols in the next series of the patch. 
+  
+>> +
+>> +Example:
+>> +
+>> +#include <dt-bindings/phy/phy.h>
+>> +
+>> +	usb@fe200000 {
+>> +		...
+>> +		phys	  = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
+>> +		...
+>> +	};
+>> +
+>> +	ahci@fd0c0000 {
+>> +		...
+>> +		phys	  = <&lane3 PHY_TYPE_SATA 1 1 125000000>;
+>> +		...
+>> +	};
+>
+>What if you are doing multiple lanes for 1 device? That would be more useful 2nd
+>example if that's supported.
+>
+
+Will add the multi lane example in the next series of the patch.
 
 Thanks,
 Anurag Kumar Vulisha
 
->>  include/linux/phy/phy-zynqmp.h |   52 ++
->>  5 files changed, 1644 insertions(+)
->>  create mode 100644 drivers/phy/phy-zynqmp.c  create mode 100644
->> include/linux/phy/phy-zynqmp.h
+>> --
+>> 2.1.1
+>>
