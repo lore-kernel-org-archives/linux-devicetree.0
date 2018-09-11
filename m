@@ -1,39 +1,33 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 6/8] regulator/mfd: bd718xx: rename bd71837/bd71847
- common instances
-Date: Tue, 11 Sep 2018 14:51:21 +0100
-Message-ID: <20180911135121.GR4185@dell>
-References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
- <1f979c0abdea658dbd4b3760fd7c50d1c6bc6da1.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 5/5] arm64: dts: renesas: r8a774a1: Add VIN and CSI-2 nodes
+Date: Tue, 11 Sep 2018 15:53:42 +0200
+Message-ID: <20180911135341.j5nj4crbg5bjeibw@verge.net.au>
+References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
+ <1536589878-26218-6-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1f979c0abdea658dbd4b3760fd7c50d1c6bc6da1.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+In-Reply-To: <1536589878-26218-6-git-send-email-biju.das@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 29 Aug 2018, Matti Vaittinen wrote:
-
-> Rename parts of code that support both BD71837 and BD71847 to BD718XX.
+On Mon, Sep 10, 2018 at 03:31:18PM +0100, Biju Das wrote:
+> Add VIN and CSI-2 nodes to RZ/G2M SoC dtsi.
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/mfd/rohm-bd718x7.c            | 112 +++++++++++++++++-----------------
->  drivers/regulator/bd71837-regulator.c |  24 ++++----
->  include/linux/mfd/rohm-bd718x7.h      |  62 +++++++++----------
->  3 files changed, 99 insertions(+), 99 deletions(-)
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-The premise of XXing things out seems fine.
-
-For my own reference:
-  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks, I would value a review of this entire series before I apply this
+patch.
