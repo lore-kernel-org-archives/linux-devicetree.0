@@ -1,301 +1,209 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Subject: [PATCH v3 1/2] GPIO: add single-register GPIO via CREG driver
-Date: Tue, 11 Sep 2018 18:09:24 +0300
-Message-ID: <20180911150925.19460-2-Eugeniy.Paltsev@synopsys.com>
-References: <20180911150925.19460-1-Eugeniy.Paltsev@synopsys.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: [PATCH v2 0/3] Add Amlogic video decoder driver
+Date: Tue, 11 Sep 2018 17:09:35 +0200
+Message-ID: <20180911150938.3844-1-mjourdan@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911150925.19460-1-Eugeniy.Paltsev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-snps-arc@lists.infradead.org, linux-gpio@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add single-register MMIO GPIO driver for complex cases where
-only several fields in register belong to GPIO lines and each GPIO
-line owns a field with different length and on/off value.
+Hi everyone,
 
-Such CREG GPIOs are used in Synopsys AXS10x and HSDK boards.
+This patch series adds support for the Amlogic video decoder,
+as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
-Changes v2->v3:
- * Move parameters into a lookup table instead of device tree.
- * Use the ngpios attribute for instead of snps,ngpios.
+It features decoding for the following formats:
+- MPEG 1
+- MPEG 2
 
- MAINTAINERS                   |   6 ++
- drivers/gpio/Kconfig          |  10 ++
- drivers/gpio/Makefile         |   1 +
- drivers/gpio/gpio-creg-snps.c | 212 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 229 insertions(+)
- create mode 100644 drivers/gpio/gpio-creg-snps.c
+The following formats will be added in future patches:
+- MJPEG
+- MPEG 4 (incl. Xvid, H.263)
+- H.264
+- HEVC (incl. 10-bit)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 544cac829cf4..e731f2f9648a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13734,6 +13734,12 @@ S:	Supported
- F:	drivers/reset/reset-axs10x.c
- F:	Documentation/devicetree/bindings/reset/snps,axs10x-reset.txt
- 
-+SYNOPSYS CREG GPIO DRIVER
-+M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+S:	Maintained
-+F:	drivers/gpio/gpio-creg-snps.c
-+F:	Documentation/devicetree/bindings/gpio/snps,creg-gpio.txt
-+
- SYNOPSYS DESIGNWARE 8250 UART DRIVER
- R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
- S:	Maintained
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 71c0ab46f216..78155ac22b0c 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -430,6 +430,16 @@ config GPIO_REG
- 	  A 32-bit single register GPIO fixed in/out implementation.  This
- 	  can be used to represent any register as a set of GPIO signals.
- 
-+config GPIO_SNPS_CREG
-+	bool "Synopsys GPIO via CREG (Control REGisters) driver"
-+	depends on ARC || COMPILE_TEST
-+	select OF_GPIO
-+	help
-+	  This driver supports GPIOs via CREG on various Synopsys SoCs.
-+	  This is a single-register MMIO GPIO driver for complex cases
-+	  where only several fields in register belong to GPIO lines and
-+	  each GPIO line owns a field with different length and on/off value.
-+
- config GPIO_SPEAR_SPICS
- 	bool "ST SPEAr13xx SPI Chip Select as GPIO support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 1324c8f966a7..993f8ad54a19 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -109,6 +109,7 @@ obj-$(CONFIG_GPIO_REG)		+= gpio-reg.o
- obj-$(CONFIG_ARCH_SA1100)	+= gpio-sa1100.o
- obj-$(CONFIG_GPIO_SCH)		+= gpio-sch.o
- obj-$(CONFIG_GPIO_SCH311X)	+= gpio-sch311x.o
-+obj-$(CONFIG_GPIO_SNPS_CREG)	+= gpio-creg-snps.o
- obj-$(CONFIG_GPIO_SODAVILLE)	+= gpio-sodaville.o
- obj-$(CONFIG_GPIO_SPEAR_SPICS)	+= gpio-spear-spics.o
- obj-$(CONFIG_GPIO_SPRD)		+= gpio-sprd.o
-diff --git a/drivers/gpio/gpio-creg-snps.c b/drivers/gpio/gpio-creg-snps.c
-new file mode 100644
-index 000000000000..2400dec529b2
---- /dev/null
-+++ b/drivers/gpio/gpio-creg-snps.c
-@@ -0,0 +1,212 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Synopsys CREG (Control REGisters) GPIO driver
-+//
-+// Copyright (C) 2018 Synopsys
-+// Author: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-+
-+#include <linux/of.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/of_gpio.h>
-+#include <linux/io.h>
-+#include <linux/of_platform.h>
-+#include <linux/module.h>
-+
-+#include "gpiolib.h"
-+
-+#define MAX_GPIO	32
-+
-+struct creg_layout {
-+	u8 ngpio;
-+	u8 shift[MAX_GPIO];
-+	u8 on[MAX_GPIO];
-+	u8 off[MAX_GPIO];
-+	u8 bit_per_gpio[MAX_GPIO];
-+};
-+
-+struct creg_gpio {
-+	struct of_mm_gpio_chip mmchip;
-+	spinlock_t lock;
-+	const struct creg_layout *layout;
-+};
-+
-+static void creg_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
-+{
-+	struct creg_gpio *hcg = gpiochip_get_data(gc);
-+	const struct creg_layout *layout = hcg->layout;
-+	u32 reg, reg_shift, value;
-+	unsigned long flags;
-+	int i;
-+
-+	value = val ? hcg->layout->on[gpio] : hcg->layout->off[gpio];
-+
-+	reg_shift = layout->shift[gpio];
-+	for (i = 0; i < gpio; i++)
-+		reg_shift += layout->bit_per_gpio[i] + layout->shift[i];
-+
-+	spin_lock_irqsave(&hcg->lock, flags);
-+	reg = readl(hcg->mmchip.regs);
-+	reg &= ~(GENMASK(layout->bit_per_gpio[i] - 1, 0) << reg_shift);
-+	reg |=  (value << reg_shift);
-+	writel(reg, hcg->mmchip.regs);
-+	spin_unlock_irqrestore(&hcg->lock, flags);
-+}
-+
-+static int creg_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
-+{
-+	creg_gpio_set(gc, gpio, val);
-+
-+	return 0;
-+}
-+
-+static int creg_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
-+{
-+	return 0; /* output */
-+}
-+
-+static int creg_gpio_xlate(struct gpio_chip *gc,
-+			   const struct of_phandle_args *gpiospec, u32 *flags)
-+{
-+	if (gpiospec->args_count != 1) {
-+		dev_err(&gc->gpiodev->dev, "invalid args_count: %d\n",
-+			gpiospec->args_count);
-+		return -EINVAL;
-+	}
-+
-+	if (gpiospec->args[0] >= gc->ngpio) {
-+		dev_err(&gc->gpiodev->dev, "gpio number is too big: %d\n",
-+			gpiospec->args[0]);
-+		return -EINVAL;
-+	}
-+
-+	return gpiospec->args[0];
-+}
-+
-+static int creg_gpio_validate_pg(struct device *dev, struct creg_gpio *hcg,
-+				 int i)
-+{
-+	const struct creg_layout *layout = hcg->layout;
-+
-+	if (layout->bit_per_gpio[i] < 1 || layout->bit_per_gpio[i] > 8)
-+		return -EINVAL;
-+
-+	/* Check that on valiue suits it's placeholder */
-+	if (GENMASK(31, layout->bit_per_gpio[i]) & layout->on[i])
-+		return -EINVAL;
-+
-+	/* Check that off valiue suits it's placeholder */
-+	if (GENMASK(31, layout->bit_per_gpio[i]) & layout->off[i])
-+		return -EINVAL;
-+
-+	if (layout->on[i] == layout->off[i])
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int creg_gpio_validate(struct device *dev, struct creg_gpio *hcg,
-+			      u32 ngpios)
-+{
-+	u32 reg_len = 0;
-+	int i;
-+
-+	if (hcg->layout->ngpio < 1 || hcg->layout->ngpio > MAX_GPIO)
-+		return -EINVAL;
-+
-+	if (ngpios < 1 || ngpios > hcg->layout->ngpio) {
-+		dev_err(dev, "ngpios must be in [1:%u]\n", hcg->layout->ngpio);
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < hcg->layout->ngpio; i++) {
-+		if (creg_gpio_validate_pg(dev, hcg, i))
-+			return -EINVAL;
-+
-+		reg_len += hcg->layout->shift[i] + hcg->layout->bit_per_gpio[i];
-+	}
-+
-+	/* Check that we suit in 32 bit register */
-+	if (reg_len > 32)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct creg_layout hsdk_cs_ctl = {
-+	.ngpio		= 10,
-+	.shift		= { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-+	.off		= { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
-+	.on		= { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 },
-+	.bit_per_gpio	= { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 }
-+};
-+
-+static const struct creg_layout axs10x_flsh_cs_ctl = {
-+	.ngpio		= 1,
-+	.shift		= { 0 },
-+	.off		= { 1 },
-+	.on		= { 3 },
-+	.bit_per_gpio	= { 2 }
-+};
-+
-+static const struct of_device_id creg_gpio_ids[] = {
-+	{
-+		.compatible = "snps,creg-gpio-axs10x",
-+		.data = &axs10x_flsh_cs_ctl
-+	}, {
-+		.compatible = "snps,creg-gpio-hsdk",
-+		.data = &hsdk_cs_ctl
-+	}, { /* sentinel */ }
-+};
-+
-+static int creg_gpio_probe(struct platform_device *pdev)
-+{
-+	const struct of_device_id *match;
-+	struct device *dev = &pdev->dev;
-+	struct creg_gpio *hcg;
-+	u32 ngpios;
-+	int ret;
-+
-+	hcg = devm_kzalloc(dev, sizeof(struct creg_gpio), GFP_KERNEL);
-+	if (!hcg)
-+		return -ENOMEM;
-+
-+	match = of_match_node(creg_gpio_ids, pdev->dev.of_node);
-+	hcg->layout = match->data;
-+	if (!hcg->layout)
-+		return -EINVAL;
-+
-+	ret = of_property_read_u32(dev->of_node, "ngpios", &ngpios);
-+	if (ret)
-+		return ret;
-+
-+	ret = creg_gpio_validate(dev, hcg, ngpios);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock_init(&hcg->lock);
-+
-+	hcg->mmchip.gc.ngpio = ngpios;
-+	hcg->mmchip.gc.set = creg_gpio_set;
-+	hcg->mmchip.gc.get_direction = creg_gpio_get_direction;
-+	hcg->mmchip.gc.direction_output = creg_gpio_dir_out;
-+	hcg->mmchip.gc.of_xlate = creg_gpio_xlate;
-+	hcg->mmchip.gc.of_gpio_n_cells = 1;
-+
-+	ret = of_mm_gpiochip_add_data(pdev->dev.of_node, &hcg->mmchip, hcg);
-+	if (ret)
-+		return ret;
-+
-+	dev_info(dev, "GPIO controller with %d gpios probed\n", ngpios);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver creg_gpio_snps_driver = {
-+	.driver = {
-+		.name = "snps-creg-gpio",
-+		.of_match_table = creg_gpio_ids,
-+	},
-+	.probe  = creg_gpio_probe,
-+};
-+builtin_platform_driver(creg_gpio_snps_driver);
+The following formats' development has still not started, but they are
+supported by the hardware:
+- VC1
+- VP9
+
+The code was made in such a way to allow easy inclusion of those formats
+in the future.
+
+The decoder is single instance.
+
+Files:
+ - vdec.c handles the V4L2 M2M logic
+ - esparser.c manages the hardware bitstream parser
+ - vdec_helpers.c provides helpers to DONE the dst buffers as well as
+ various common code used by the codecs
+ - vdec_1.c manages the VDEC_1 block of the vdec IP
+ - codec_mpeg12.c enables decoding for MPEG 1/2.
+ - vdec_platform.c links codec units with vdec units
+ (e.g vdec_1 with codec_mpeg12) and lists all the available
+ src/dst formats and requirements (max width/height, etc.),
+ per compatible chip.
+
+Firmwares are necessary to run the vdec. They can currently be found at:
+https://github.com/chewitt/meson-firmware
+
+It was tested primarily with ffmpeg's v4l2-m2m implementation. For instance:
+$ ffmpeg -c:v mpeg2_v4l2m2m -i sample_mpeg2.mkv -f null -
+
+Note: This patch series depends on
+"[PATCH v3 0/3] soc: amlogic: add meson-canvas"
+https://patchwork.kernel.org/cover/10573763/
+
+The v4l2-compliance results are available below the patch diff.
+
+Changes since v1 [0]:
+ - use named interrupts in the bindings
+ - rewrite description in the bindings doc
+ - don't include the dts changes in the patch series
+ - fill the vb2 queues locks
+ - fill the video_device lock
+ - use helpers for wait_prepare and wait_finish vb2_ops
+ - remove unnecessary usleep in between esparser writes.
+ Extensive testing of every codec on GXBB/GXL didn't reveal
+ any fails without it, so just remove it.
+ - compile v4l2_compliance inside the git repo
+ - Check for plane number/plane size to pass the latest v4l2-compliance test
+ - Moved the single instance check (returning -EBUSY) to start/stop streaming
+ The check was previously in queue_setup but there was no great location to
+ clear it except for .close().
+ - Slight rework of the way CAPTURE frames are timestamped for better accuracy
+ - Implement PAR reporting via VIDIOC_CROPCAP
+
+[0] https://patchwork.kernel.org/cover/10583391/
+
+Maxime Jourdan (3):
+  dt-bindings: media: add Amlogic Video Decoder Bindings
+  media: meson: add v4l2 m2m video decoder driver
+  MAINTAINERS: Add meson video decoder
+
+ .../bindings/media/amlogic,vdec.txt           |   71 ++
+ MAINTAINERS                                   |    8 +
+ drivers/media/platform/Kconfig                |   10 +
+ drivers/media/platform/meson/Makefile         |    1 +
+ drivers/media/platform/meson/vdec/Makefile    |    8 +
+ .../media/platform/meson/vdec/codec_mpeg12.c  |  200 ++++
+ .../media/platform/meson/vdec/codec_mpeg12.h  |   14 +
+ drivers/media/platform/meson/vdec/dos_regs.h  |   98 ++
+ drivers/media/platform/meson/vdec/esparser.c  |  366 ++++++
+ drivers/media/platform/meson/vdec/esparser.h  |   32 +
+ drivers/media/platform/meson/vdec/vdec.c      | 1013 +++++++++++++++++
+ drivers/media/platform/meson/vdec/vdec.h      |  247 ++++
+ drivers/media/platform/meson/vdec/vdec_1.c    |  235 ++++
+ drivers/media/platform/meson/vdec/vdec_1.h    |   14 +
+ .../media/platform/meson/vdec/vdec_helpers.c  |  437 +++++++
+ .../media/platform/meson/vdec/vdec_helpers.h  |   48 +
+ .../media/platform/meson/vdec/vdec_platform.c |  101 ++
+ .../media/platform/meson/vdec/vdec_platform.h |   30 +
+ 18 files changed, 2933 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/amlogic,vdec.txt
+ create mode 100644 drivers/media/platform/meson/vdec/Makefile
+ create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.c
+ create mode 100644 drivers/media/platform/meson/vdec/codec_mpeg12.h
+ create mode 100644 drivers/media/platform/meson/vdec/dos_regs.h
+ create mode 100644 drivers/media/platform/meson/vdec/esparser.c
+ create mode 100644 drivers/media/platform/meson/vdec/esparser.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_1.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_1.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_helpers.h
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.c
+ create mode 100644 drivers/media/platform/meson/vdec/vdec_platform.h
+
+root@libretech-cc:~# v4l2-compliance -d /dev/video0 
+v4l2-compliance SHA: d26e4941419b05fcb2b6708ee32aef367c2ec4af, 64 bits
+
+Compliance test for device /dev/video0:
+
+Driver Info:
+	Driver name      : meson-vdec
+	Card type        : Amlogic Video Decoder
+	Bus info         : platform:meson-vdec
+	Driver version   : 4.19.0
+	Capabilities     : 0x84204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps      : 0x04204000
+		Video Memory-to-Memory Multiplanar
+		Streaming
+		Extended Pix Format
+
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+	test second /dev/video0 open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
+
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
+
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 0 Audio Inputs: 0 Tuners: 0
+
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+	test VIDIOC_G/S_EDID: OK (Not Supported)
+
+Control ioctls:
+	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+	test VIDIOC_QUERYCTRL: OK (Not Supported)
+	test VIDIOC_G/S_CTRL: OK (Not Supported)
+	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+	Standard Controls: 0 Private Controls: 0
+
+Format ioctls:
+	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+	test VIDIOC_G/S_PARM: OK (Not Supported)
+	test VIDIOC_G_FBUF: OK (Not Supported)
+	test VIDIOC_G_FMT: OK
+	test VIDIOC_TRY_FMT: OK
+	test VIDIOC_S_FMT: OK
+	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+	test Cropping: OK (Not Supported)
+	test Composing: OK (Not Supported)
+	test Scaling: OK
+
+Codec ioctls:
+	test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+	test VIDIOC_(TRY_)DECODER_CMD: OK
+
+Buffer ioctls:
+	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+	test VIDIOC_EXPBUF: OK
+
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+
 -- 
-2.14.4
+2.18.0
