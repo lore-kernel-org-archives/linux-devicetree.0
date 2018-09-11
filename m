@@ -1,72 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, SPI and TTY due for the
- v4.20 merge window
-Date: Tue, 11 Sep 2018 09:45:48 +0100
-Message-ID: <20180911084548.GC4185@dell>
-References: <20180713164736.26028-1-radu.pirea@microchip.com>
- <20180910151803.GX28860@dell>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: [PATCH] dts: juno: Enable coresight tmc scatter gather in ETR
+Date: Tue, 11 Sep 2018 09:47:21 +0100
+Message-ID: <1536655641-26192-1-git-send-email-suzuki.poulose@arm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180910151803.GX28860@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Radu Pirea <radu.pirea@microchip.com>
-Cc: broonie@kernel.org, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, richard.genoud@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, mathieu.poirier@linaro.org, coresight@lists.linaro.org, robert.walker@arm.com, devicetree@vger.kernel.org, robh@kernel.org, Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Lorenzo Pierlisi <lorenzo.pieralisi@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Sep 2018, Lee Jones wrote:
+We do not enable scatter-gather mode in the TMC-ETR by default
+to prevent malfunctioning of systems where the ETR may not be
+properly connected to the memory subsystem to allow for simultaneous
+READ/WRITE transactions when used in SG mode. Instead we whitelist
+the platforms where we know that it is safe to use the mode.
 
-> Enjoy!
-> 
-> The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
-> 
->   Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/ib-mfd-spi-tty-v4.20
-> 
-> for you to fetch changes up to c24d25317a7c6bb3053d4c193b3cf57d1e9a3e4b:
-> 
->   tty/serial: atmel: Change the driver to work under at91-usart MFD (2018-09-10 16:12:43 +0100)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD, SPI and TTY due for the v4.20 merge window
+All revisions of Juno have a proper ETR connection and hence
+white list them.
 
-Due to a comedy of errors, I'm voiding this pull-request.
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mike Leach <mike.leach@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Liviu Dudau <liviu.dudau@arm.com>
+Cc: Lorenzo Pierlisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ arch/arm64/boot/dts/arm/juno-base.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Please stand-by for a follow-up.
-
-> Radu Pirea (6):
->       MAINTAINERS: Add AT91 USART MFD entry
->       dt-bindings: Add binding for atmel-usart in SPI mode
->       mfd: at91-usart: Add MFD driver for USART
->       MAINTAINERS: Add AT91 USART SPI entry
->       spi: at91-usart: Add driver for at91-usart as SPI
->       tty/serial: atmel: Change the driver to work under at91-usart MFD
-> 
->  .../bindings/{serial => mfd}/atmel-usart.txt       |  25 +-
->  MAINTAINERS                                        |  16 +
->  drivers/mfd/Kconfig                                |   9 +
->  drivers/mfd/Makefile                               |   1 +
->  drivers/mfd/at91-usart.c                           |  71 ++++
->  drivers/spi/Kconfig                                |   8 +
->  drivers/spi/Makefile                               |   1 +
->  drivers/spi/spi-at91-usart.c                       | 432 +++++++++++++++++++++
->  drivers/tty/serial/Kconfig                         |   1 +
->  drivers/tty/serial/atmel_serial.c                  |  42 +-
->  include/dt-bindings/mfd/at91-usart.h               |  17 +
->  11 files changed, 606 insertions(+), 17 deletions(-)
->  rename Documentation/devicetree/bindings/{serial => mfd}/atmel-usart.txt (76%)
->  create mode 100644 drivers/mfd/at91-usart.c
->  create mode 100644 drivers/spi/spi-at91-usart.c
->  create mode 100644 include/dt-bindings/mfd/at91-usart.h
-> 
-
+diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+index ce56a4a..3596e5d 100644
+--- a/arch/arm64/boot/dts/arm/juno-base.dtsi
++++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+@@ -199,6 +199,7 @@
+ 		clocks = <&soc_smc50mhz>;
+ 		clock-names = "apb_pclk";
+ 		power-domains = <&scpi_devpd 0>;
++		arm,scatter-gather;
+ 		port {
+ 			etr_in_port: endpoint {
+ 				slave-mode;
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
