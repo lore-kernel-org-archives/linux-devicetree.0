@@ -1,53 +1,80 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 0/8] drm/bridge: add bus flag support
-Date: Wed, 12 Sep 2018 11:32:14 -0700
-Message-ID: <20180912183222.25414-1-stefan@agner.ch>
+Subject: [PATCH v2 1/8] drm/bridge: use bus flags in bridge timings
+Date: Wed, 12 Sep 2018 11:32:15 -0700
+Message-ID: <20180912183222.25414-2-stefan@agner.ch>
+References: <20180912183222.25414-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180912183222.25414-1-stefan@agner.ch>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: linus.walleij@linaro.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+Cc: devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, sean@poorly.run, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This v2 shifted a bit more to rework bridge timing support. While
-my use case mainly cares about complete bus flag support, it seems
-to me that bus timings have ended up to be more complex than
-necessary. Patch 2/3 are an attempt to simplify bus timings. This
-also aligns bridge timings with how display timings are specified
-today.
-
-@Linus Walleij, Laurent Pinchart: Since you have been involved in
-the initial bus timings discussion, I would like to have your Ack
-on at least patch 2/3... If we want to keep the setup/hold timings,
-the patchset should also work without those two patches.
-
---
-Stefan
-
-Changes in v2:
-- Rename bus_flags to simple_bus_flags
-- Reword dt-bindings for de-active
-- Add patch 2/3 which attempts to simplify bridge timings
-
-Stefan Agner (8):
-  drm/bridge: use bus flags in bridge timings
-  drm/pl111: simplify bridge timing support
-  drm/bridge: simplify bridge timing info
-  drm/bridge: allow to specify data-enable polarity
-  dt-bindings: display: add data-enable polarity property
-  drm/imx: support handling bridge timings bus flags
-  ARM: dts: imx6qdl-apalis: add VGA support
-  ARM: dts: imx6qdl-apalis: add GPIO I2C node for DDC
-
- .../bindings/display/bridge/dumb-vga-dac.txt  |  2 +
- arch/arm/boot/dts/imx6q-apalis-eval.dts       | 28 ++++++++
- arch/arm/boot/dts/imx6qdl-apalis.dtsi         | 72 +++++++++++++++++++
- drivers/gpu/drm/bridge/dumb-vga-dac.c         | 45 +++++++-----
- drivers/gpu/drm/imx/parallel-display.c        |  3 +
- drivers/gpu/drm/pl111/pl111_display.c         | 22 ++----
- include/drm/drm_bridge.h                      | 25 ++-----
- 7 files changed, 142 insertions(+), 55 deletions(-)
-
--- 
-2.18.0
+VGhlIERSTSBidXMgZmxhZ3MgY29udmV5cyBhZGRpdGlvbmFsIGluZm9ybWF0aW9uIG9uIHBpeGVs
+IGRhdGEgb24KdGhlIGJ1cy4gQWxsIGN1cnJlbnRseSBhdmFpbGFibGUgYnVzIGZsYWdzIG1pZ2h0
+IGJlIG9mIGludGVyZXN0IGZvcgphIGJyaWRnZS4gSW4gdGhlIGNhc2UgYXQgaGFuZCBhIGR1bWIg
+VkdBIGJyaWRnZSBuZWVkcyBhIHNwZWNpZmljCmRhdGEgZW5hYmxlIHBvbGFyaXR5IChEUk1fQlVT
+X0ZMQUdfREVfTE9XKS4KClJlcGxhY2UgdGhlIHNhbXBsaW5nX2VkZ2UgZmllbGQgd2l0aCBpbnB1
+dF9idXNfZmxhZ3MgYW5kIGFsbG93IGFsbApjdXJyZW50bHkgZG9jdW1lbnRlZCBidXMgZmxhZ3Mu
+CgpUaGlzIGNoYW5nZXMgdGhlIHBlcnNwZWN0aXZlIGZyb20gc2FtcGxpbmcgc2lkZSB0byB0aGUg
+ZHJpdmluZwpzaWRlIGZvciB0aGUgY3VycmVudGx5IHN1cHBvcnRlZCBmbGFncy4gV2UgYXNzdW1l
+IHRoYXQgdGhlIHNhbXBsaW5nCmVkZ2UgaXMgYWx3YXlzIHRoZSBvcHBvc2l0ZSBvZiB0aGUgZHJp
+dmluZyBlZGdlIChoZW5jZSB3ZSBuZWVkIHRvCmludmVydCB0aGUgRFJNX0JVU19GTEFHX1BJWERB
+VEFfW1BPU3xORUddRURHRSBmbGFncykuIFRoaXMgaXMgYW4KYXNzdW1wdGlvbiB3ZSBhbHJlYWR5
+IG1ha2UgZm9yIGRpc3BsYXlzLiBGb3IgYWxsIHdlIGtub3cgaXQgaXMgYQpzYWZlIGFzc3VtcHRp
+b24gZm9yIGJyaWRnZXMgdG9vLgoKU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVyIDxzdGVmYW5A
+YWduZXIuY2g+Ci0tLQogZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYyB8ICA2
+ICsrKy0tLQogaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oICAgICAgICAgICAgICB8IDExICsrKysr
+LS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDggaW5zZXJ0aW9ucygrKSwgOSBkZWxldGlvbnMoLSkK
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRhYy5jIGIvZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYwppbmRleCA5YjcwNjc4OWEzNDEuLmQ1
+YWEwZjkzMWVmMiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1k
+YWMuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2R1bWItdmdhLWRhYy5jCkBAIC0yMzQs
+NyArMjM0LDcgQEAgc3RhdGljIGludCBkdW1iX3ZnYV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKICAqLwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3Mg
+ZGVmYXVsdF9kYWNfdGltaW5ncyA9IHsKIAkvKiBUaW1pbmcgc3BlY2lmaWNhdGlvbnMsIGRhdGFz
+aGVldCBwYWdlIDcgKi8KLQkuc2FtcGxpbmdfZWRnZSA9IERSTV9CVVNfRkxBR19QSVhEQVRBX1BP
+U0VER0UsCisJLmlucHV0X2J1c19mbGFncyA9IERSTV9CVVNfRkxBR19QSVhEQVRBX05FR0VER0Us
+CiAJLnNldHVwX3RpbWVfcHMgPSA1MDAsCiAJLmhvbGRfdGltZV9wcyA9IDE1MDAsCiB9OwpAQCAt
+MjQ1LDcgKzI0NSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIGRl
+ZmF1bHRfZGFjX3RpbWluZ3MgPSB7CiAgKi8KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRn
+ZV90aW1pbmdzIHRpX3RoczgxMzRfZGFjX3RpbWluZ3MgPSB7CiAJLyogRnJvbSB0aW1pbmcgZGlh
+Z3JhbSwgZGF0YXNoZWV0IHBhZ2UgOSAqLwotCS5zYW1wbGluZ19lZGdlID0gRFJNX0JVU19GTEFH
+X1BJWERBVEFfUE9TRURHRSwKKwkuaW5wdXRfYnVzX2ZsYWdzID0gRFJNX0JVU19GTEFHX1BJWERB
+VEFfTkVHRURHRSwKIAkvKiBGcm9tIGRhdGFzaGVldCwgcGFnZSAxMiAqLwogCS5zZXR1cF90aW1l
+X3BzID0gMzAwMCwKIAkvKiBJIGd1ZXNzIHRoaXMgbWVhbnMgbGF0Y2hlZCBpbnB1dCAqLwpAQCAt
+MjU4LDcgKzI1OCw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdzIHRp
+X3RoczgxMzRfZGFjX3RpbWluZ3MgPSB7CiAgKi8KIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Jy
+aWRnZV90aW1pbmdzIHRpX3RoczgxMzVfZGFjX3RpbWluZ3MgPSB7CiAJLyogRnJvbSB0aW1pbmcg
+ZGlhZ3JhbSwgZGF0YXNoZWV0IHBhZ2UgMTQgKi8KLQkuc2FtcGxpbmdfZWRnZSA9IERSTV9CVVNf
+RkxBR19QSVhEQVRBX1BPU0VER0UsCisJLmlucHV0X2J1c19mbGFncyA9IERSTV9CVVNfRkxBR19Q
+SVhEQVRBX05FR0VER0UsCiAJLyogRnJvbSBkYXRhc2hlZXQsIHBhZ2UgMTYgKi8KIAkuc2V0dXBf
+dGltZV9wcyA9IDIwMDAsCiAJLmhvbGRfdGltZV9wcyA9IDUwMCwKZGlmZiAtLWdpdCBhL2luY2x1
+ZGUvZHJtL2RybV9icmlkZ2UuaCBiL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaAppbmRleCBiZDg1
+MDc0N2NlNTQuLjQ1ZTkwZjRiNDZjMyAxMDA2NDQKLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2JyaWRn
+ZS5oCisrKyBiL2luY2x1ZGUvZHJtL2RybV9icmlkZ2UuaApAQCAtMjQ0LDE0ICsyNDQsMTMgQEAg
+c3RydWN0IGRybV9icmlkZ2VfZnVuY3MgewogICovCiBzdHJ1Y3QgZHJtX2JyaWRnZV90aW1pbmdz
+IHsKIAkvKioKLQkgKiBAc2FtcGxpbmdfZWRnZToKKwkgKiBAaW5wdXRfYnVzX2ZsYWdzOgogCSAq
+Ci0JICogVGVsbHMgd2hldGhlciB0aGUgYnJpZGdlIHNhbXBsZXMgdGhlIGRpZ2l0YWwgaW5wdXQg
+c2lnbmFsCi0JICogZnJvbSB0aGUgZGlzcGxheSBlbmdpbmUgb24gdGhlIHBvc2l0aXZlIG9yIG5l
+Z2F0aXZlIGVkZ2Ugb2YgdGhlCi0JICogY2xvY2ssIHRoaXMgc2hvdWxkIHJldXNlIHRoZSBEUk1f
+QlVTX0ZMQUdfUElYREFUQV9bUE9TfE5FR11FREdFCi0JICogYml0d2lzZSBmbGFncyBmcm9tIHRo
+ZSBEUk0gY29ubmVjdG9yIChiaXQgMiBhbmQgMyB2YWxpZCkuCisJICogQWRkaXRpb25hbCBzZXR0
+aW5ncyB0aGlzIGJyaWRnZSByZXF1aXJlcyBmb3IgdGhlIHBpeGVsIGRhdGEgb24KKwkgKiB0aGUg
+aW5wdXQgYnVzIChlLmcuIHBpeGVsIHNpZ25hbCBwb2xhcml0eSkuIFNlZSBhbHNvCisJICogJmRy
+bV9kaXNwbGF5X2luZm8tPmJ1c19mbGFncy4KIAkgKi8KLQl1MzIgc2FtcGxpbmdfZWRnZTsKKwl1
+MzIgaW5wdXRfYnVzX2ZsYWdzOwogCS8qKgogCSAqIEBzZXR1cF90aW1lX3BzOgogCSAqCi0tIAoy
+LjE4LjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
