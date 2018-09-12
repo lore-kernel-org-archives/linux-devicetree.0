@@ -1,55 +1,69 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH] dt-bindings: power: Introduce suspend states supported properties
-Date: Wed, 12 Sep 2018 09:39:32 +0530
-Message-ID: <1536725372-29174-1-git-send-email-j-keerthy@ti.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 2/2] dmaengine: uniphier-mdmac: add UniPhier MIO DMAC
+ driver
+Date: Wed, 12 Sep 2018 10:05:30 +0530
+Message-ID: <20180912043530.GE2766@vkoul-mobl>
+References: <1535074873-15617-1-git-send-email-yamada.masahiro@socionext.com>
+ <1535074873-15617-3-git-send-email-yamada.masahiro@socionext.com>
+ <20180911070003.GI2634@vkoul-mobl>
+ <CAK7LNASMhKfQT-Hqv48=HqOPRx3OVMtdNBEe=c7dE-B_5_Nuyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAK7LNASMhKfQT-Hqv48=HqOPRx3OVMtdNBEe=c7dE-B_5_Nuyw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, j-keerthy@ti.com, t-kristo@ti.com, tony@atomide.com
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Introuduce linux generic suspend states supported properties.
-It is convenient for the generic suspend path to have
-the knowledge of the suspend states supported based on the
-device tree properties based on which it can either be suspended
-or safely bailed out of suspend if none of the suspend states
-are supported.
+On 12-09-18, 12:01, Masahiro Yamada wrote:
+> Hi Vinod,
+> 
+> 
+> 2018-09-11 16:00 GMT+09:00 Vinod <vkoul@kernel.org>:
+> > On 24-08-18, 10:41, Masahiro Yamada wrote:
+> >
+> >> +/* mc->vc.lock must be held by caller */
+> >> +static u32 __uniphier_mdmac_get_residue(struct uniphier_mdmac_desc *md)
+> >> +{
+> >> +     u32 residue = 0;
+> >> +     int i;
+> >> +
+> >> +     for (i = md->sg_cur; i < md->sg_len; i++)
+> >> +             residue += sg_dma_len(&md->sgl[i]);
+> >
+> > so if the descriptor is submitted to hardware, we return the descriptor
+> > length, which is not correct.
+> >
+> > Two cases are required to be handled:
+> > 1. Descriptor is in queue (IMO above logic is fine for that, but it can
+> > be calculated at descriptor submit and looked up here)
+> 
+> Where do you want it to be calculated?
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
- .../devicetree/bindings/power/power-states.txt     | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/power-states.txt
+where is it calculated now?
 
-diff --git a/Documentation/devicetree/bindings/power/power-states.txt b/Documentation/devicetree/bindings/power/power-states.txt
-new file mode 100644
-index 0000000..bb80b36
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/power-states.txt
-@@ -0,0 +1,22 @@
-+* Generic system suspend states support
-+
-+Most platforms support multiple suspend states. Define system
-+suspend states so that one can target appropriate low power
-+states based on the SoC capabilities.
-+
-+linux,suspend-to-memory-supported
-+
-+Upon suspend to memory the system context is saved to primary memory.
-+All the clocks for all the peripherals including CPU are gated.
-+
-+linux,suspend-power-off-supported
-+
-+In this case in additon to the clocks all the voltage resources are
-+turned off except the ones needed to keep the primary memory
-+and a wake up source that can trigger a wakeup event.
-+
-+linux,suspend-to-disk-supported
-+
-+Upon suspend to disk that system context is saved to secondary memory.
-+All the clocks for all the peripherals including CPU are gated. Even
-+the primary memory is turned off.
+> This hardware provides only simple registers (address and size)
+> for one-shot transfer instead of descriptors.
+> 
+> So, I used sgl as-is because I did not see a good reason
+> to transform sgl to another data structure.
+
+
+> > this seems missing stuff. Where do you do register calculation for the
+> > descriptor and where is slave_config here, how do you know where to
+> > send/receive data form/to (peripheral)
+> 
+> 
+> This dmac is really simple, and un-flexible.
+> 
+> The peripheral address to send/receive data from/to is hard-weird.
+> cfg->{src_addr,dst_addr} is not configurable.
+> 
+> Look at __uniphier_mdmac_handle().
+> 'dest_addr' and 'src_addr' must be set to 0 for the peripheral.
+
+Fair enough, what about other values like addr_width and maxburst?
 -- 
-1.9.1
+~Vinod
