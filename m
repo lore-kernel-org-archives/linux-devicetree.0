@@ -1,117 +1,42 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: uniphier-mdmac: add UniPhier MIO DMAC driver
-Date: Wed, 12 Sep 2018 16:31:15 +0900
-Message-ID: <CAK7LNATSNQBbxQHkbo2zG1G44=urpC_cutu_D126QfDpMg5TNA@mail.gmail.com>
-References: <1535074873-15617-1-git-send-email-yamada.masahiro@socionext.com>
- <1535074873-15617-3-git-send-email-yamada.masahiro@socionext.com>
- <20180911070003.GI2634@vkoul-mobl> <CAK7LNASMhKfQT-Hqv48=HqOPRx3OVMtdNBEe=c7dE-B_5_Nuyw@mail.gmail.com>
- <20180912043530.GE2766@vkoul-mobl> <CAK7LNASFyxMTE_kVzja=bUvbDbT6Moz-nZn3=yBKdTWXEQdjXA@mail.gmail.com>
- <20180912072657.GF2766@vkoul-mobl>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Wed, 12 Sep 2018 09:33:55 +0200
+Message-ID: <20180912073355.GB2557@piout.net>
+References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
+ <20180911093356.GE4185@dell>
+ <20180911093917.GL2494@piout.net>
+ <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
+ <20180911153621.GP2494@piout.net>
+ <CAMuHMdV+=EgAYogwNHbY=RExkGox_+YSeHV6pJtQb6g6PzD-CQ@mail.gmail.com>
+ <20180911181838.GI4185@dell>
+ <20180911185839.GA25212@piout.net>
+ <20180911224418.GK4185@dell>
+ <20180911225440.GL4185@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912072657.GF2766@vkoul-mobl>
+Content-Disposition: inline
+In-Reply-To: <20180911225440.GL4185@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>linux-spi <l>
 List-Id: devicetree@vger.kernel.org
 
-2018-09-12 16:26 GMT+09:00 Vinod <vkoul@kernel.org>:
-> On 12-09-18, 14:25, Masahiro Yamada wrote:
->> 2018-09-12 13:35 GMT+09:00 Vinod <vkoul@kernel.org>:
->> > On 12-09-18, 12:01, Masahiro Yamada wrote:
->> >> Hi Vinod,
->> >>
->> >>
->> >> 2018-09-11 16:00 GMT+09:00 Vinod <vkoul@kernel.org>:
->> >> > On 24-08-18, 10:41, Masahiro Yamada wrote:
->> >> >
->> >> >> +/* mc->vc.lock must be held by caller */
->> >> >> +static u32 __uniphier_mdmac_get_residue(struct uniphier_mdmac_desc *md)
->> >> >> +{
->> >> >> +     u32 residue = 0;
->> >> >> +     int i;
->> >> >> +
->> >> >> +     for (i = md->sg_cur; i < md->sg_len; i++)
->> >> >> +             residue += sg_dma_len(&md->sgl[i]);
->> >> >
->> >> > so if the descriptor is submitted to hardware, we return the descriptor
->> >> > length, which is not correct.
->> >> >
->> >> > Two cases are required to be handled:
->> >> > 1. Descriptor is in queue (IMO above logic is fine for that, but it can
->> >> > be calculated at descriptor submit and looked up here)
->> >>
->> >> Where do you want it to be calculated?
->> >
->> > where is it calculated now?
->>
->>
->> Please see __uniphier_mdmac_handle().
->>
->>
->> It gets the address and size by sg_dma_address(), sg_dma_len()
->> just before setting them to the hardware registers.
->>
->>
->>        sg = &md->sgl[md->sg_cur];
->>
->>        if (md->dir == DMA_MEM_TO_DEV) {
->>                src_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_INC;
->>                src_addr = sg_dma_address(sg);
->>                dest_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_FIXED;
->>                dest_addr = 0;
->>        } else {
->>                src_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_FIXED;
->>                src_addr = 0;
->>                dest_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_INC;
->>                dest_addr = sg_dma_address(sg);
->>        }
->>
->>
->>
->>
->>
->>
->>
->> >> This hardware provides only simple registers (address and size)
->> >> for one-shot transfer instead of descriptors.
->> >>
->> >> So, I used sgl as-is because I did not see a good reason
->> >> to transform sgl to another data structure.
->> >
->> >
->> >> > this seems missing stuff. Where do you do register calculation for the
->> >> > descriptor and where is slave_config here, how do you know where to
->> >> > send/receive data form/to (peripheral)
->> >>
->> >>
->> >> This dmac is really simple, and un-flexible.
->> >>
->> >> The peripheral address to send/receive data from/to is hard-weird.
->> >> cfg->{src_addr,dst_addr} is not configurable.
->> >>
->> >> Look at __uniphier_mdmac_handle().
->> >> 'dest_addr' and 'src_addr' must be set to 0 for the peripheral.
->> >
->> > Fair enough, what about other values like addr_width and maxburst?
->>
->>
->> None of them is configurable.
->
-> what is configurable here :-)
+On 11/09/2018 23:54:40+0100, Lee Jones wrote:
+> > > http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6438-32-bit-ARM926-Embedded-Microprocessor-SAM9G45_Datasheet.pdf
+> > > 
+> > > USART doc starting p572, registers p621.
+> 
+> After looking at the datasheet, I don't see any reason why one of the
+> two drivers can't be selected using different compatible strings.
 
-The physical address of the memory, transfer size, direction
-are configurable, of course.
-But, they are out of scope of device_config hook.
+Because there is only one IP and we don't use the device tree to selecet
+linux specific drivers.
 
-
-> Who are the users of this DMA?
-
-SD/eMMC controllers.
-
-
+If you are not happy having that in MFD, I guess we can move it out
+somewhere else.
 
 -- 
-Best Regards
-Masahiro Yamada
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
