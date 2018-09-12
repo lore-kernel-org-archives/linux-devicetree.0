@@ -1,64 +1,93 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] dt-bindings: power: Introduce suspend states supported
- properties
-Date: Wed, 12 Sep 2018 07:01:02 -0700
-Message-ID: <20180912140102.GJ5662@atomide.com>
-References: <1536725372-29174-1-git-send-email-j-keerthy@ti.com>
- <781b2eb2-1568-b4e5-46f2-c4612862d728@arm.com>
- <5c49cb0c-a436-c957-e6b3-5f3aa7af92f9@ti.com>
- <2c08c85f-a3e0-c1ce-3f87-0866868bd7e4@arm.com>
- <20180912133228.GI5662@atomide.com>
- <19ae9d20-46aa-25d7-87aa-ea4270f0162b@arm.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: Split out common nodes for Rock960 based boards
+Date: Wed, 12 Sep 2018 16:05:28 +0200
+Message-ID: <2062942.2GzzSlpOsc@phil>
+References: <20180911023031.4892-1-manivannan.sadhasivam@linaro.org> <11137562.zz0kzkSHxt@diego> <20180912082244.GA16509@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <19ae9d20-46aa-25d7-87aa-ea4270f0162b@arm.com>
+In-Reply-To: <20180912082244.GA16509@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Keerthy <j-keerthy@ti.com>, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ezequiel Garcia <ezequiel@collabora.com>, robh+dt@kernel.org, vicencb@gmail.com, shawn.lin@rock-chips.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sudeep Holla <sudeep.holla@arm.com> [180912 13:47]:
-> 
-> 
-> On 12/09/18 14:32, Tony Lindgren wrote:
-> > * Sudeep Holla <sudeep.holla@arm.com> [180912 11:41]:
-> >> On 12/09/18 12:19, Keerthy wrote:
-> >>> suspend to mem and suspend to disk are pretty generic states and i agree
-> >>> implementation is platform dependent so why not have properties that
-> >>> convey if they are supported?
-> >>>
-> >>
-> >> We already have power domains and idle states for that. If you need to
-> >> restrict few states on some platform for whatever reasons, just disable
-> >> those states. I don't see the need to add any more bindings for the same.
+Am Mittwoch, 12. September 2018, 10:22:44 CEST schrieb Manivannan Sadhasivam:
+> On Wed, Sep 12, 2018 at 09:26:12AM +0200, Heiko Stübner wrote:
+> > Am Mittwoch, 12. September 2018, 05:12:48 CEST schrieb Manivannan Sadhasivam:
+> > > Hi Ezequiel,
+> > > 
+> > > On Tue, Sep 11, 2018 at 04:40:29PM -0300, Ezequiel Garcia wrote:
+> > > > On Tue, 2018-09-11 at 08:00 +0530, Manivannan Sadhasivam wrote:
+> > > > > Since the same family members of Rock960 boards (Rock960 and Ficus)
+> > > > > share the same configuration, split out the common nodes into a common
+> > > > > dtsi file for reducing code duplication. The board specific nodes for
+> > > > > Ficus boards are then placed in corresponding board DTS file.
+> > > > 
+> > > > I think it should be possible to move the common USB nodes to the dtsi
+> > > > file, and keep the board-specific (phy-supply property) in the dts files:
+> > > > 
+> > > > &u2phy0_host {
+> > > > 
+> > > >         phy-supply = <&vcc5v0_host>;
+> > > > 
+> > > > };
+> > > > 
+> > > > &u2phy1_host {
+> > > > 
+> > > >         phy-supply = <&vcc5v0_host>;
+> > > > 
+> > > > };
+> > > 
+> > > We can do that but my intention was to entirely partition the nodes
+> > > which are not common. So that it would be less confusing when someone
+> > > looks at it (please correct me if I'm wrong).
 > > 
-> > Oh do you mean the "domain-idle-states" property as mentioned in the
-> > Documentation/devicetree/bindings/power/power_domain.txt?
+> > The supply is actually named the same on both boards, so you could move
+> > all the usb-nodes to the main dtsi, including the reference to vcc5v0_host
+> > which would then get defined itself in the two board dts.
 > > 
-> 
-> Yes, exactly that.
-
-OK
-
-> > Yeah that should do and the DOMAIN_PWR_DN and DOMAIN_RET can be SoC
-> > specific and then the board can select which ones to use depending on
-> > how things are wired for GPIOs, memory, PMIC and so on.
+> > Then again, seeing that the vcc5v0_host also only differs in the actually
+> > used gpio another option would be to move the whole regulator node
+> > to the dtsi and just define the gpio properties in the board dts files.
 > >
 > 
-> All the idle-states are platform specific. DOMAIN_RET and DOMAIN_PWR_DN
-> are just examples used in the bindings.
+> Hmm, if that's the preferred option then I guess this applies to pcie
+> nodes also. At the end, usb and pcie nodes will be shrinked to below in
+> board dts:
 > 
-> > Hmm I don't see any users for this binding though?
-> > 
+> &pinctrl {
+>         pcie {
+>                 pcie_drv: pcie-drv {
+>                         rockchip,pins =
+>                                 <2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
+>                         };
+>         };
 > 
-> It was added specifically to deal with such SoC idles states or
-> hierarchical CPU power domains states, no users in upstream yet. But IMO
-> it fits what $subject is trying to address.
+>         usb2 {
+>                 host_vbus_drv: host-vbus-drv {
+>                         rockchip,pins =
+>                                 <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
+>                 };
+>         };
+> };
+> 
+> &pcie0 {
+>         ep-gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
+>         status = "okay";
+> };
+> 
+> &vcc3v3_pcie {
+>         gpio = <&gpio2 5 GPIO_ACTIVE_HIGH>;
+> };
+> 
+> &vcc5v0_host {
+>         gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
+> };
 
-OK great thanks for confirming that.
+yep, ideally we could go that way. It's way easier to determine the
+actual differences between boards that way as well.
 
-Regards,
 
-Tony
+Heiko
