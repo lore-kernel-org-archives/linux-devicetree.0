@@ -1,80 +1,53 @@
-From: Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH v4 4/5] iio: fxas21002c: add ODR/Scale support
-Date: Wed, 12 Sep 2018 23:53:50 +0530
-Message-ID: <20180912182350.GA13032@himanshu-Vostro-3559>
-References: <20180911150011.31964-4-afonsobordado@az8.co>
- <201809121715.5Babt1QC%fengguang.wu@intel.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v2 0/8] drm/bridge: add bus flag support
+Date: Wed, 12 Sep 2018 11:32:14 -0700
+Message-ID: <20180912183222.25414-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201809121715.5Babt1QC%fengguang.wu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Afonso Bordado <afonsobordado@az8.co>
-Cc: kbuild-all@01.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linus.walleij@linaro.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Hello Afonso,
+This v2 shifted a bit more to rework bridge timing support. While
+my use case mainly cares about complete bus flag support, it seems
+to me that bus timings have ended up to be more complex than
+necessary. Patch 2/3 are an attempt to simplify bus timings. This
+also aligns bridge timings with how display timings are specified
+today.
 
-On Wed, Sep 12, 2018 at 05:26:01PM +0800, kbuild test robot wrote:
-> Hi Afonso,
-> 
-> Thank you for the patch! Yet something to improve:
-> 
-> [auto build test ERROR on iio/togreg]
-> [also build test ERROR on v4.19-rc3 next-20180912]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Afonso-Bordado/iio-gyro-add-support-for-fxas21002c/20180912-084443
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-> config: i386-allmodconfig (attached as .config)
-> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
-> reproduce:
->         # save the attached .config to linux build tree
->         make ARCH=i386 
-> 
-> All errors (new ones prefixed by >>):
-> 
-> >> ERROR: "__divdi3" [drivers/iio/gyro/fxas21002c.ko] undefined!
-> >> ERROR: "__udivdi3" [drivers/iio/gyro/fxas21002c.ko] undefined!
+@Linus Walleij, Laurent Pinchart: Since you have been involved in
+the initial bus timings discussion, I would like to have your Ack
+on at least patch 2/3... If we want to keep the setup/hold timings,
+the patchset should also work without those two patches.
 
-Hmm. This is nasty error that had hit me back and occurs when you
-do 64 bit arithmetic in your code and assume it will also build for
-32 bit environment(i386).
+--
+Stefan
 
-https://lists.01.org/pipermail/kbuild-all/2018-July/050481.html
+Changes in v2:
+- Rename bus_flags to simple_bus_flags
+- Reword dt-bindings for de-active
+- Add patch 2/3 which attempts to simplify bridge timings
 
-But looking at the code seems like there is no such 64 bit division
-which is why 0-day didn't inform you the exact line of error unlike
-my case in above link.
+Stefan Agner (8):
+  drm/bridge: use bus flags in bridge timings
+  drm/pl111: simplify bridge timing support
+  drm/bridge: simplify bridge timing info
+  drm/bridge: allow to specify data-enable polarity
+  dt-bindings: display: add data-enable polarity property
+  drm/imx: support handling bridge timings bus flags
+  ARM: dts: imx6qdl-apalis: add VGA support
+  ARM: dts: imx6qdl-apalis: add GPIO I2C node for DDC
 
-And I suspect it may be originating from your code snippet:
+ .../bindings/display/bridge/dumb-vga-dac.txt  |  2 +
+ arch/arm/boot/dts/imx6q-apalis-eval.dts       | 28 ++++++++
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi         | 72 +++++++++++++++++++
+ drivers/gpu/drm/bridge/dumb-vga-dac.c         | 45 +++++++-----
+ drivers/gpu/drm/imx/parallel-display.c        |  3 +
+ drivers/gpu/drm/pl111/pl111_display.c         | 22 ++----
+ include/drm/drm_bridge.h                      | 25 ++-----
+ 7 files changed, 142 insertions(+), 55 deletions(-)
 
-#define FXAS21002C_SCALE(scale) (IIO_DEGREE_TO_RAD(62500U >> (scale)))
-
-and looking at the implementation:
-
-include/linux/iio/iio.h
-/**
- * IIO_DEGREE_TO_RAD() - Convert degree to rad
- * @deg: A value in degree
- *
- * Returns the given value converted from degree to rad
- */
-#define IIO_DEGREE_TO_RAD(deg) (((deg) * 314159ULL + 9000000ULL) / 18000000ULL)
-
-This '/' operator might be the culprit!
-
-Just for checking that the error, remove the macro declaration `FXAS21002C_SCALE`
-plus its usage and re-cross compile using `make ARCH=i386`.
-
-In my case I used the `div64_s64` function handles builds for both 32/64
-arch accordingly.
-
-
-Thanks
 -- 
-Himanshu Jha
-Undergraduate Student
-Department of Electronics & Communication
-Guru Tegh Bahadur Institute of Technology
+2.18.0
