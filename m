@@ -1,93 +1,50 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: Split out common nodes for Rock960 based boards
-Date: Wed, 12 Sep 2018 16:05:28 +0200
-Message-ID: <2062942.2GzzSlpOsc@phil>
-References: <20180911023031.4892-1-manivannan.sadhasivam@linaro.org> <11137562.zz0kzkSHxt@diego> <20180912082244.GA16509@Mani-XPS-13-9360>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 17/27] csky: Misc headers
+Date: Wed, 12 Sep 2018 16:22:10 +0200
+Message-ID: <CAK8P3a13wWsFX2DR4LD0L4rZV0k3zszSyOX1_kPquJKaTt7StQ@mail.gmail.com>
+References: <cover.1536757532.git.ren_guo@c-sky.com> <abb46d366b513b814f7af234d560306a818b7324.1536757532.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912082244.GA16509@Mani-XPS-13-9360>
+In-Reply-To: <abb46d366b513b814f7af234d560306a818b7324.1536757532.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Ezequiel Garcia <ezequiel@collabora.com>, robh+dt@kernel.org, vicencb@gmail.com, shawn.lin@rock-chips.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 12. September 2018, 10:22:44 CEST schrieb Manivannan Sadhasivam:
-> On Wed, Sep 12, 2018 at 09:26:12AM +0200, Heiko Stübner wrote:
-> > Am Mittwoch, 12. September 2018, 05:12:48 CEST schrieb Manivannan Sadhasivam:
-> > > Hi Ezequiel,
-> > > 
-> > > On Tue, Sep 11, 2018 at 04:40:29PM -0300, Ezequiel Garcia wrote:
-> > > > On Tue, 2018-09-11 at 08:00 +0530, Manivannan Sadhasivam wrote:
-> > > > > Since the same family members of Rock960 boards (Rock960 and Ficus)
-> > > > > share the same configuration, split out the common nodes into a common
-> > > > > dtsi file for reducing code duplication. The board specific nodes for
-> > > > > Ficus boards are then placed in corresponding board DTS file.
-> > > > 
-> > > > I think it should be possible to move the common USB nodes to the dtsi
-> > > > file, and keep the board-specific (phy-supply property) in the dts files:
-> > > > 
-> > > > &u2phy0_host {
-> > > > 
-> > > >         phy-supply = <&vcc5v0_host>;
-> > > > 
-> > > > };
-> > > > 
-> > > > &u2phy1_host {
-> > > > 
-> > > >         phy-supply = <&vcc5v0_host>;
-> > > > 
-> > > > };
-> > > 
-> > > We can do that but my intention was to entirely partition the nodes
-> > > which are not common. So that it would be less confusing when someone
-> > > looks at it (please correct me if I'm wrong).
-> > 
-> > The supply is actually named the same on both boards, so you could move
-> > all the usb-nodes to the main dtsi, including the reference to vcc5v0_host
-> > which would then get defined itself in the two board dts.
-> > 
-> > Then again, seeing that the vcc5v0_host also only differs in the actually
-> > used gpio another option would be to move the whole regulator node
-> > to the dtsi and just define the gpio properties in the board dts files.
-> >
-> 
-> Hmm, if that's the preferred option then I guess this applies to pcie
-> nodes also. At the end, usb and pcie nodes will be shrinked to below in
-> board dts:
-> 
-> &pinctrl {
->         pcie {
->                 pcie_drv: pcie-drv {
->                         rockchip,pins =
->                                 <2 RK_PA5 RK_FUNC_GPIO &pcfg_pull_none>;
->                         };
->         };
-> 
->         usb2 {
->                 host_vbus_drv: host-vbus-drv {
->                         rockchip,pins =
->                                 <4 RK_PD1 RK_FUNC_GPIO &pcfg_pull_none>;
->                 };
->         };
-> };
-> 
-> &pcie0 {
->         ep-gpios = <&gpio2 RK_PA2 GPIO_ACTIVE_HIGH>;
->         status = "okay";
-> };
-> 
-> &vcc3v3_pcie {
->         gpio = <&gpio2 5 GPIO_ACTIVE_HIGH>;
-> };
-> 
-> &vcc5v0_host {
->         gpio = <&gpio4 25 GPIO_ACTIVE_HIGH>;
-> };
+On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
+>
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> diff --git a/arch/csky/boot/dts/qemu.dts b/arch/csky/boot/dts/qemu.dts
+> new file mode 100644
+> index 0000000..c6643b1
+> --- /dev/null
+> +++ b/arch/csky/boot/dts/qemu.dts
+> @@ -0,0 +1,77 @@
 
-yep, ideally we could go that way. It's way easier to determine the
-actual differences between boards that way as well.
+Did you consider renaming the file as I suggested? I think that would help
+in the long run when you get new qemu versions that have a different set
+of devices and that may provide their own dtbs.
 
+> diff --git a/arch/csky/include/asm/compat.h b/arch/csky/include/asm/compat.h
+> new file mode 100644
+> index 0000000..59f9297
+> --- /dev/null
+> +++ b/arch/csky/include/asm/compat.h
+> @@ -0,0 +1,11 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> +
+> +#ifndef __ASM_CSKY_COMPAT_H
+> +#define __ASM_CSKY_COMPAT_H
+> +
+> +#ifdef CONFIG_COMPAT
+> +#define COMPAT_UTS_MACHINE "csky\0\0"
+> +#endif
+> +
+> +#endif /* __ASM_CSKY_COMPAT_H */
 
-Heiko
+Just noticed this one. I assume there won't be a csky64 architecture,
+so you can probably just delete this header.
+
+         Arnd
