@@ -1,91 +1,85 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
-Date: Wed, 12 Sep 2018 13:40:43 +0100
-Message-ID: <9445a0be-fb5b-d195-4fdf-7ad6cb36ef4f@arm.com>
-References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
-	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
-	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
-	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
-	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
-	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
-	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
-	<65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
-	<5bbc0332-b94b-75cc-ca42-a9b196811daf@amd.com>
-	<20180907142504.5034351e@jacob-builder>
-	<3e3a6797-a233-911b-3a7d-d9b549160960@amd.com>
+From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
+Subject: Re: [PATCH 02/11] dts: hisilicon: Update coresight bindings for
+ hardware ports
+Date: Wed, 12 Sep 2018 13:42:09 +0100
+Message-ID: <22fd3ec6-bde0-87c6-673b-f95a15190bda@arm.com>
+References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
+ <1536661032-30481-3-git-send-email-suzuki.poulose@arm.com>
+ <20180912104735.GC3353@leoy-ThinkPad-X240s>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <3e3a6797-a233-911b-3a7d-d9b549160960-5C7GfCeVMHo@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180912104735.GC3353@leoy-ThinkPad-X240s>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson>
+Sender: linux-kernel-owner@vger.kernel.org
+To: leo.yan@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, xuwei5@hisilicon.com, lipengcheng8@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMDkvMjAxOCAwODoyOSwgQ2hyaXN0aWFuIEvDtm5pZyB3cm90ZToKPiBZZXMsIGV4YWN0
-bHkuIEkganVzdCBuZWVkIGEgUEFTSUQgd2hpY2ggaXMgbmV2ZXIgdXNlZCBieSB0aGUgT1MgZm9y
-IGEgCj4gcHJvY2VzcyBhbmQgd2UgY2FuIGVhc2lseSBnaXZlIHRoYXQgYmFjayB3aGVuIHRoZSBs
-YXN0IEZEIHJlZmVyZW5jZSBpcyAKPiBjbG9zZWQuCgpBbHJpZ2h0LCBpb21tdS1zdmEgY2FuIGdl
-dCBpdHMgUEFTSUQgZnJvbSB0aGlzIGV4dGVybmFsIGFsbG9jYXRvciBhcwp3ZWxsLCBhcyBsb25n
-IGFzIGl0IGhhcyBhbiBpbnRlcmZhY2Ugc2ltaWxhciB0byBpZHIuIFdoZXJlIHdvdWxkIGl0IGdv
-LApkcml2ZXJzL2Jhc2UvLCBtbS8sIGtlcm5lbC8uLi4/Cgo+Pj4+IFRoZSBwcm9jZXNzIGRpZXMs
-IGlvbW11LXN2YSBpcyBub3RpZmllZCBhbmQgY2FsbHMgdGhlIG1tX2V4aXQoKQo+Pj4+IGZ1bmN0
-aW9uIHBhc3NlZCBieSB0aGUgZGV2aWNlIGRyaXZlciB0byBpb21tdV9zdmFfZGV2aWNlX2luaXQo
-KS4gSW4KPj4+PiBtbV9leGl0KCkgdGhlIGRldmljZSBkcml2ZXIgbmVlZHMgdG8gY2xlYXIgYW55
-IHJlZmVyZW5jZSB0byB0aGUKPj4+PiBQQVNJRCBpbiBoYXJkd2FyZSBhbmQgaW4gaXRzIG93biBz
-dHJ1Y3R1cmVzLiBXaGVuIHRoZSBkZXZpY2UgZHJpdmVyCj4+Pj4gcmV0dXJucyBmcm9tIG1tX2V4
-aXQoKSwgaXQgZWZmZWN0aXZlbHkgdGVsbHMgdGhlIGNvcmUgdGhhdCBpdCBoYXMKPj4+PiBmaW5p
-c2hlZCB1c2luZyB0aGUgUEFTSUQsIGFuZCBpb21tdS1zdmEgY2FuIHJldXNlIHRoZSBQQVNJRCBm
-b3IKPj4+PiBhbm90aGVyIHByb2Nlc3MuIG1tX2V4aXQoKSBpcyBhbGxvd2VkIHRvIGJsb2NrLCBz
-byB0aGUgZGV2aWNlCj4+Pj4gZHJpdmVyIGhhcyB0aW1lIHRvIGNsZWFuIHVwIGFuZCBmbHVzaCB0
-aGUgcXVldWVzLgo+Pj4+Cj4+Pj4gSWYgdGhlIGRldmljZSBkcml2ZXIgZmluaXNoZXMgdXNpbmcg
-dGhlIFBBU0lEIGJlZm9yZSB0aGUgcHJvY2Vzcwo+Pj4+IGV4aXRzLCBpdCBqdXN0IGNhbGxzIHVu
-YmluZCgpLgo+Pj4gRXhhY3RseSB0aGF0J3Mgd2hhdCBNaWNoYWwgSG9ja28gaXMgcHJvYmFibHkg
-Z29pbmcgdG8gbm90IGxpa2UgYXQgYWxsLgo+Pj4KPj4+IENhbiB3ZSBoYXZlIGEgZGlmZmVyZW50
-IGFwcHJvYWNoIHdoZXJlIGVhY2ggZHJpdmVyIGlzIGluZm9ybWVkIGJ5IHRoZQo+Pj4gbW1fZXhp
-dCgpLCBidXQgbmVlZHMgdG8gZXhwbGljaXRseSBjYWxsIHVuYmluZCgpIGJlZm9yZSBhIFBBU0lE
-IGlzCj4+PiByZXVzZWQ/CgpJdCdzIGF3ZnVsIGZyb20gdGhlIElPTU1VIGRyaXZlciBwZXJzcGVj
-dGl2ZS4gSW4gYWRkaXRpb24gdG8gImVuYWJsZWQiCmFuZCAiZGlzYWJsZWQiIFBBU0lEIHN0YXRl
-cywgeW91IGFkZCAiZGlzYWJsZWQgYnV0IERNQSBzdGlsbCBydW5uaW5nCm5vcm1hbGx5Ii4gQmV0
-d2VlbiB0aGF0IG5ldyBzdGF0ZSBhbmQgImRpc2FibGVkIiwgdGhlIElPTU1VIHdpbGwgYmUKZmxv
-b2RlZCBieSB0cmFuc2xhdGlvbiBmYXVsdHMgKG5vbi1yZWNvdmVyYWJsZSBvbmVzKSwgd2hpY2gg
-aXQgbmVlZHMgdG8KaWdub3JlIGluc3RlYWQgb2YgcmVwb3J0aW5nIHRvIHRoZSBrZXJuZWwuIE5v
-dCBhbGwgSU9NTVVzIGNhbiBkZWFsIHdpdGgKdGhpcyBpbiBoYXJkd2FyZSAoU01NVSBhbmQgVlQt
-ZCBjYW4gcXVpZXNjZSB0cmFuc2xhdGlvbiBmYXVsdHMKcGVyLVBBU0lELCBidXQgSSBkb24ndCB0
-aGluayBBTUQgSU9NTVUgY2FuLikgU29tZSBkcml2ZXJzIHdpbGwgaGF2ZSB0bwpmaWx0ZXIgZmF1
-bHQgZXZlbnRzIHRoZW1zZWx2ZXMsIGRlcGVuZGluZyBvbiB0aGUgUEFTSUQgc3RhdGUuCgo+Pj4g
-RHVyaW5nIHRoYXQgdGVhcmRvd24gdHJhbnNpdGlvbiBpdCB3b3VsZCBiZSBpZGVhbCBpZiB0aGF0
-IFBBU0lEIG9ubHkKPj4+IHBvaW50cyB0byBhIGR1bW15IHJvb3QgcGFnZSBkaXJlY3Rvcnkgd2l0
-aCBvbmx5IGludmFsaWQgZW50cmllcy4KPj4+Cj4+IEkgZ3Vlc3MgdGhpcyBjYW4gYmUgdmVuZG9y
-IHNwZWNpZmljLCBJbiBWVC1kIEkgcGxhbiB0byBtYXJrIFBBU0lECj4+IGVudHJ5IG5vdCBwcmVz
-ZW50IGFuZCBkaXNhYmxlIGZhdWx0IHJlcG9ydGluZyB3aGlsZSBkcmFpbmluZyByZW1haW5pbmcK
-Pj4gYWN0aXZpdGllcy4KPgo+IFNvdW5kcyBnb29kIHRvIG1lLgo+IAo+IFBvaW50IGlzIGF0IGxl
-YXN0IGluIHRoZSBjYXNlIHdoZXJlIHRoZSBwcm9jZXNzIHdhcyBraWxsZWQgYnkgdGhlIE9PTSAK
-PiBraWxsZXIgd2Ugc2hvdWxkIG5vdCBibG9jayBpbiBtbV9leGl0KCkuCj4KPiBJbnN0ZWFkIG9w
-ZXJhdGlvbnMgaXNzdWVkIGJ5IHRoZSBwcm9jZXNzIHRvIGEgZGV2aWNlIGRyaXZlciB3aGljaCB1
-c2VzIAo+IFNWQSBuZWVkcyB0byBiZSB0ZXJtaW5hdGVkIGFzIHNvb24gYXMgcG9zc2libGUgdG8g
-bWFrZSBzdXJlIHRoYXQgdGhlIE9PTSAKPiBraWxsZXIgY2FuIGFkdmFuY2UuCgpJIGRvbid0IHNl
-ZSBob3cgd2UncmUgcHJldmVudGluZyB0aGUgT09NIGtpbGxlciBmcm9tIGFkdmFuY2luZywgc28g
-SSdtCmxvb2tpbmcgZm9yIGEgc3Ryb25nZXIgYXJndW1lbnQgdGhhdCBqdXN0aWZpZXMgYWRkaW5n
-IHRoaXMgY29tcGxleGl0eSB0bwpJT01NVSBkcml2ZXJzLiBUaW1lIGxpbWl0IG9mIHRoZSByZWxl
-YXNlIE1NVSBub3RpZmllciwgbG9ja2luZwpyZXF1aXJlbWVudCwgYSBjb25jcmV0ZSBleGFtcGxl
-IHdoZXJlIHRoaW5ncyBicmVhaywgZXZlbiBhIGNvbW1lbnQKc29tZXdoZXJlIGluIG1tLyB3b3Vs
-ZCBkby4uLgoKSW4gbXkgdGVzdHMgSSBjYW4ndCBtYW5hZ2UgdG8gZGlzdHVyYiB0aGUgT09NIGtp
-bGxlciwgYnV0IEkgY291bGQgYmUKbWlzc2luZyBzb21lIHNwZWNpYWwgY2FzZS4gRXZlbiBpZiB0
-aGUgbW1fZXhpdCgpIGNhbGxiYWNrCih1bnJlYWxpc3RpY2FsbHkpIHNsZWVwcyBmb3IgNjAgc2Vj
-b25kcywgdGhlIE9PTSBraWxsZXIgaXNuJ3QgYWZmZWN0ZWQKYmVjYXVzZSBvb21fcmVhcF90YXNr
-X21tKCkgd2lwZXMgdGhlIHZpY3RpbSdzIGFkZHJlc3Mgc3BhY2UgaW4gYW5vdGhlcgp0aHJlYWQs
-IGVpdGhlciBiZWZvcmUgb3Igd2hpbGUgdGhlIHJlbGVhc2Ugbm90aWZpZXIgaXMgcnVubmluZy4K
-ClRoYW5rcywKSmVhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwppb21tdSBtYWlsaW5nIGxpc3QKaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcK
-aHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
+Hi Leo,
+
+On 12/09/18 11:47, leo.yan@linaro.org wrote:
+> On Tue, Sep 11, 2018 at 11:17:03AM +0100, Suzuki K Poulose wrote:
+>> Switch to updated coresight bindings for hw ports.
+> 
+> As Shawn suggested, please change subject as "arm64: dts: hi6220:
+> ...."
+> 
+
+Sure, will do.
+
+>> Cc: xuwei5@hisilicon.com
+>> Cc: lipengcheng8@huawei.com
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>> ---
+>>   .../arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 147 ++++++++++++---------
+>>   1 file changed, 85 insertions(+), 62 deletions(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+>> index 7afee5d..2202816 100644
+>> --- a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
+> 
+> [...]
+> 
+>> @@ -302,10 +315,12 @@
+>>   
+>>   			cpu = <&cpu3>;
+>>   
+>> -			port {
+>> -				etm3_out: endpoint {
+>> -					remote-endpoint =
+>> -						<&acpu_funnel_in3>;
+>> +			out-ports {
+>> +				port {
+>> +					etm3_out: endpoint {
+>> +						remote-endpoint =
+>> +							<&acpu_funnel_in3>;
+>> +					};
+>>   				};
+>>   			};
+>>   		};
+>> @@ -319,10 +334,12 @@
+>>   
+>>   			cpu = <&cpu4>;
+>>   
+>> -			port {
+>> +			out-ports {
+>> +				port {
+>>   				etm4_out: endpoint {
+> 
+> Indent?
+
+Yes, I have fixed this locally for v2.
+
+> 
+> After applied this patch and tested on Hikey board; FWIW:
+> 
+> Tested-by: Leo Yan <leo.yan@linaro.org>
+
+Thanks for the testing !
+
+Cheers
+Suzuki
