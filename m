@@ -1,89 +1,89 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
-Date: Wed, 12 Sep 2018 14:12:48 +0100
-Message-ID: <20180912131248.GA21544@dell>
-References: <20180911185839.GA25212@piout.net>
- <20180911224418.GK4185@dell>
- <20180911225440.GL4185@dell>
- <20180912073355.GB2557@piout.net>
- <20180912084143.GN4185@dell>
- <CAMuHMdWefU0pw=c9TKOa+wGHchpg8JRfE0OnC4+wKDt-qrbH1A@mail.gmail.com>
- <20180912105407.GR4185@dell>
- <20180912111757.GC2760@piout.net>
- <20180912114352.GT4185@dell>
- <20180912121420.GE2760@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V3 02/27] csky: defconfig
+Date: Wed, 12 Sep 2018 21:24:36 +0800
+Message-ID: <3389ac85166cc951379d46d822beb725a9426a9d.1536757532.git.ren_guo@c-sky.com>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180912121420.GE2760@piout.net>
+In-Reply-To: <cover.1536757532.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1536757532.git.ren_guo@c-sky.com>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>linux-spi <l>
+To: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org, jason@lakedaemon.net, arnd@arndb.de, devicetree@vger.kernel.org, andrea.parri@amarulasolutions.com, peterz@infradead.org
+Cc: c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, thomas.petazzoni@bootlin.com, wbx@uclibc-ng.org, ren_guo@c-sky.com, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Sep 2018, Alexandre Belloni wrote:
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ arch/csky/configs/defconfig | 61 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 arch/csky/configs/defconfig
 
-> On 12/09/2018 12:43:52+0100, Lee Jones wrote:
-> > > > But ... we can't have it both ways.  *Either* it's a true MFD, in
-> > > > which case it can/should have 2 separate compatible strings which can
-> > > > be specified directly from the DT.  *Or* it's not an MFD.  In the
-> > > > latter case, which I think we're all agreeing on (else we'd have 2
-> > > > compatible strings), MFD is not the place to handle this (my original
-> > > > point).
-> > > > 
-> > > 
-> > > If that is what bothers you, then let's move it out of mfd.
-> > 
-> > As I've already mentioned.  I don't just want it moved out of MFD and
-> > shoved somewhere else.  My aim is to fix this properly.
-> > 
-> 
-> If it is out of MFD, then I'm not sure why you would care too much about
-> it as you won't be maintaining that code. And I still this what was done
-> was correct but I'm open to test what you suggest.
-
-I care for the kernel in general, not just the areas I'm responsible
-for.  I guess I'm just that kinda guy! ;)
-
-> > > > So ... this is a USART device which can do SPI, right?
-> > > > 
-> > > > My current thinking is that; as this is a USART device first &
-> > > > foremost, the USART should be probed in the first instance regardless,
-> > > > then if SPI mode is specified it (the USART driver) registers the SPI
-> > > > platform driver (as MFD does currently) and exits gracefully, allowing
-> > > > the SPI driver to take over.
-> > > > 
-> > > > Spanner in the works: is it physically possible to change the mode at
-> > > > run-time?  :s
-> > > 
-> > > Yes it is possible but on Linux that will not happen without probing
-> > > the drivers again.
-> > 
-> > Not sure I understand what you mean.
-> 
-> I was just commenting on changing the mode at runtime.
-
-Oh I see.  My question was relating to whether the H/W is physically
-capable of changing modes on-the-fly, rather than how Linux would
-handle that.  If this is something we'd wish to support, then it would
-have to be a single driver, which is why I was asking.  By separating
-the drivers this way, we are blocking that as a possibility.  Although
-I guess the OP has already thought about that and made the decision
-not to support it.
-
-> > I'm suggesting that you use the same platform_* interfaces MFD uses to
-> > register the SPI driver if SPI mode has been selected.  Only do so
-> > from the appropriate driver i.e. USART.
-> 
-> Yeah, I understood that but I didn't comment because I'm not sure this
-> will work yet.
-
-Other drivers already do this.
-
+diff --git a/arch/csky/configs/defconfig b/arch/csky/configs/defconfig
+new file mode 100644
+index 0000000..7ef4289
+--- /dev/null
++++ b/arch/csky/configs/defconfig
+@@ -0,0 +1,61 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_DEFAULT_HOSTNAME="csky"
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_AUDIT=y
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_DEFAULT_DEADLINE=y
++CONFIG_CPU_CK807=y
++CONFIG_CPU_HAS_FPU=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_SIZE=65536
++CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_SERIAL_NONSTANDARD=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_TTY_PRINTK=y
++# CONFIG_VGA_CONSOLE is not set
++CONFIG_CSKY_MPTIMER=y
++CONFIG_GX6605S_TIMER=y
++CONFIG_PM_DEVFREQ=y
++CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
++CONFIG_DEVFREQ_GOV_PERFORMANCE=y
++CONFIG_DEVFREQ_GOV_POWERSAVE=y
++CONFIG_DEVFREQ_GOV_USERSPACE=y
++CONFIG_GENERIC_PHY=y
++CONFIG_EXT4_FS=y
++CONFIG_FANOTIFY=y
++CONFIG_QUOTA=y
++CONFIG_FSCACHE=m
++CONFIG_FSCACHE_STATS=y
++CONFIG_CACHEFILES=m
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_FAT_DEFAULT_UTF8=y
++CONFIG_NTFS_FS=y
++CONFIG_PROC_KCORE=y
++CONFIG_PROC_CHILDREN=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_CONFIGFS_FS=y
++CONFIG_CRAMFS=y
++CONFIG_ROMFS_FS=y
++CONFIG_NFS_FS=y
++CONFIG_PRINTK_TIME=y
++CONFIG_DEBUG_INFO=y
++CONFIG_DEBUG_FS=y
++CONFIG_MAGIC_SYSRQ=y
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
