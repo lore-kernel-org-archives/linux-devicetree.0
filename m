@@ -1,78 +1,125 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
-Date: Wed, 12 Sep 2018 11:54:07 +0100
-Message-ID: <20180912105407.GR4185@dell>
-References: <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
- <20180911153621.GP2494@piout.net>
- <CAMuHMdV+=EgAYogwNHbY=RExkGox_+YSeHV6pJtQb6g6PzD-CQ@mail.gmail.com>
- <20180911181838.GI4185@dell>
- <20180911185839.GA25212@piout.net>
- <20180911224418.GK4185@dell>
- <20180911225440.GL4185@dell>
- <20180912073355.GB2557@piout.net>
- <20180912084143.GN4185@dell>
- <CAMuHMdWefU0pw=c9TKOa+wGHchpg8JRfE0OnC4+wKDt-qrbH1A@mail.gmail.com>
+Subject: Re: [PATCH v3 02/13] mfd: wcd9335: add support to wcd9335 core
+Date: Wed, 12 Sep 2018 11:59:41 +0100
+Message-ID: <20180912105941.GS4185@dell>
+References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
+ <20180904102500.30318-3-srinivas.kandagatla@linaro.org>
+ <20180911153340.GY4185@dell>
+ <94c68436-b618-40fc-46d6-165799312289@linaro.org>
+ <20180912085848.GP4185@dell>
+ <b4ddfd10-360c-a844-8542-1f81a1cc9c6b@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdWefU0pw=c9TKOa+wGHchpg8JRfE0OnC4+wKDt-qrbH1A@mail.gmail.com>
+In-Reply-To: <b4ddfd10-360c-a844-8542-1f81a1cc9c6b@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>linu
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Sep 2018, Geert Uytterhoeven wrote:
-> On Wed, Sep 12, 2018 at 10:41 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > On Wed, 12 Sep 2018, Alexandre Belloni wrote:
-> > > On 11/09/2018 23:54:40+0100, Lee Jones wrote:
-> > > > > > http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-6438-32-bit-ARM926-Embedded-Microprocessor-SAM9G45_Datasheet.pdf
-> > > > > >
-> > > > > > USART doc starting p572, registers p621.
-> > > >
-> > > > After looking at the datasheet, I don't see any reason why one of the
-> > > > two drivers can't be selected using different compatible strings.
-> > >
-> > > Because there is only one IP and we don't use the device tree to selecet
-> > > linux specific drivers.
-> >
-> > We do it all the time.  There are loads of MFDs (def: same IP, with
-> > different functions) which have separate compatibles for their various
-> > functions.  If you wish this IP to operate as an SPI controller, it
-> > should have an SPI compatible, if you wish it to operate as a U(S)ART,
-> > then it should have a UART compatible.  It's what we do for most of
-> > the other MFDs in the kernel.
+On Wed, 12 Sep 2018, Srinivas Kandagatla wrote:
+
 > 
-> There is a big difference: MFD functions are(more or less) independent
-> functions, which can be used at the same time. It makes perfect sense for a
-> single IP block that has both SPI and UART interfaces, that can be used at
-> the same time.
 > 
-> In this case, there is a single piece of hardware that can perform
-> different functions, but not at the same time. Performing a different
-> function means configuring the hardware for that function, hence using a
-> different driver (from a different subsystem).
+> On 12/09/18 09:58, Lee Jones wrote:
+> > > > > +static const struct mfd_cell wcd9335_devices[] = {
+> > > > > +	{ .name = "wcd9335-codec", },
+> > > > > +};
+> > > > Are there more devices to come?
+> > > > 
+> > > Yes, that is the plan, we are kind of limited in hardware setup to test few
+> > > things like soundwire controller. We are exploring other ways to test these.
+> > I normally don't accept MFDs with just one device enabled.  Since it's
+> > not really an MFD (M == Multi) until it has more than one function.
+> > 
+> 
+> WCD9335 Codec hw itself has multiple hw blocks.
+> 
+> If the issue is about adding more entries to mfd cells then we should be
+> able to add below entry:
+> 
+> 	{ .name = "wcd9335-soundwire-controller", },
+> 
+> Actual driver for soundwire controller is not something We can test with
+> regular dragon boards, it needs special hw for smart speakers. Once we have
+> that we can test and post the drivers for that.
+> 
+> Otherwise
+> 
+> Are you suggesting that I move everything to  sound/soc/codecs and then back
+> to mfd once soundwire controller driver is added?
 
-Yes, I can see that PoV.
+My preference would be for you to add at least one other (tested)
+device.  However, in your case I know where you live, so I can throw
+tomatoes at your house if you don't upstream more device support
+promptly! ;)
 
-But ... we can't have it both ways.  *Either* it's a true MFD, in
-which case it can/should have 2 separate compatible strings which can
-be specified directly from the DT.  *Or* it's not an MFD.  In the
-latter case, which I think we're all agreeing on (else we'd have 2
-compatible strings), MFD is not the place to handle this (my original
-point).
+When will you be enabling more devices?  If the answer is 'never',
+then creating an MFD is a waste of time.
 
-So ... this is a USART device which can do SPI, right?
+> > [...]
+> > 
+> > > > > +	struct device_node *ifc_dev_np;
+> > > > ifc isn't very forthcoming.  Any way you can improve the name?
+> > > ifc was suggested in dt bindings by Rob,  I can proably rename to
+> > > interface_node.
+> > ifc is a horrible variable name - just sayin'.
+> > 
+> > [...]
+> > 
+> > > > > +	ret = wcd9335_bring_up(wcd);
+> > > > So the device_status call-back brings up the hardware?
+> > > > 
+> > > device status reports the device status at runtime. We can not communicate
+> > > with the device until it is up, enumerated by slimbus and a logical address
+> > > is assigned to it. So the best place to initialize it is in status callback
+> > > where all the above are expected to be done.
+> > Right, I understand what's happening.  I just think the semantics are
+> > wrong.  The Subsystem (I'm assuming it's a Subsystem) requests for
+> > status and it ends up initiating a start-up sequence.  Just from a
+> > purist's point of view (I understand that it "works"), it's not good
+> > practice.
+> > 
+> > > Probe is expected to setup the external configurations like regulators/pins
+> > > and so on which gets the device out of reset and ready to be enumerated by
+> > > the slimbus controller.
+> > I suggest fully starting the device in probe() is a better approach.
+> > 
+> Its catch-22 situation, without device being powered up and reset correctly
+> there is no way to enumerate it.
 
-My current thinking is that; as this is a USART device first &
-foremost, the USART should be probed in the first instance regardless,
-then if SPI mode is specified it (the USART driver) registers the SPI
-platform driver (as MFD does currently) and exits gracefully, allowing
-the SPI driver to take over.
+Isn't power-up and reset also done in probe()?
 
-Spanner in the works: is it physically possible to change the mode at
-run-time?  :s
+What am I missing?
+
+> > [...]
+> > 
+> > > > > +struct wcd9335 {
+> > > > > +	int version;
+> > > > > +	int intr1;
+> > > > What's this?  If I have to ask, it's probably not a good name.
+> > > > 
+> > > This is a hardware pin name for interrupt line 1.
+> > I don't see how this is used, so it's difficult for me to advise
+> > fully, but I find this confusing.  Pin name/number?  Shouldn't this be
+> > handed by Pinctrl?
+> > 
+> This is represented as proper irq line in dt via  pintrl irq controller.
+
+So why can't it just be 'irq' like most of the time?
+
+What is the 1 in reference to?  Will there be a 2?
+
+> > intr1 could be quite ambiguous.  Especually as the '1' could easily be
+> > read as an 'l'.  Suggest that 'irq1' or 'irq_1' or 'irq_one'.
+> 
+> I can change this to something more readable in next version or may be I can
+> even remove it may be just use a local variable.
+
+If it's possible for it to be a local variable, then it should not be
+placed in device data.
 
 -- 
 Lee Jones [李琼斯]
