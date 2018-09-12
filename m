@@ -1,85 +1,53 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 8/8] ARM: dts: imx6qdl-apalis: add GPIO I2C node for DDC
-Date: Wed, 12 Sep 2018 11:32:22 -0700
-Message-ID: <20180912183222.25414-9-stefan@agner.ch>
-References: <20180912183222.25414-1-stefan@agner.ch>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
+Date: Wed, 12 Sep 2018 20:35:44 +0200
+Message-ID: <7bb0462c-e641-0c58-1f68-bd02d38edab2@gmail.com>
+References: <20180911170825.17789-1-dmurphy@ti.com>
+ <20180911170825.17789-2-dmurphy@ti.com> <20180911200530.GA28290@amd>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912183222.25414-1-stefan@agner.ch>
+In-Reply-To: <20180911200530.GA28290@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de
-Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+To: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, the DDC signals are controlled by the DWC HDMI I2C
-master to be used for HDMI (DVI on the Apalis Evaluation Board).
-However, the Apalis Evaluation board also allows to route the Apalis
-DDC I2C to the LVDS or the VGA connector. By default, the signal
-is routed to DVI (HDMI), and therefor the current default settings
-are sensible.
+On 09/11/2018 10:05 PM, Pavel Machek wrote:
+> On Tue 2018-09-11 12:08:20, Dan Murphy wrote:
+>> Remove support for the LM3697 LED device
+>> from the ti-lmu.  The LM3697 will be supported
+>> via a stand alone LED driver.
+>>
+>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> 
+> I'd really like to see better explanation here.
+> 
+> We have existing binding, for lm3697 and similar devices. With this
+> series, different binding is introduced, without documented reason.
+> 
+> That's bad.
+> 
+> Now, maybe you are right and the hardware should be handled by
+> drivers/leds, not drivers/mfd. But we should have solution for all the
+> similar chips, and that still does not mean we have to modify the
+> binding. (But maybe we want to move it to different
+> directory). Bindings are supposed to describe hardware, not mirror
+> structure of our drivers.
+> 
+> Unless there's something fatally wrong with the binding... but in such
+> case we'd like to know what is wrong.
 
-To ease customization and to prepare for carrier boards with other
-needs, add a GPIO I2C DDC node.
+Dangling references ?
 
-E.g. to reroute the Apalis DDC to the VGA connector on the Apalis
-Evaluation Board, the following changes can be used:
+> [And yes, I recognize current situation is ... not ideal and I'm
+> willing to help. But I'm not sure this is step in right direction.]
+> 
+> Thanks,
 
-vga {
-	...
-	ddc-i2c-bus = <&i2cddc>;
-};
 
-&hdmi {
-	/delete-property/ pinctrl-0;
-};
-
-&i2cddc {
-	status = "okay";
-};
-
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/imx6qdl-apalis.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-index e8d0407e3e18..8340391796df 100644
---- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-@@ -61,6 +61,18 @@
- 		status = "disabled";
- 	};
- 
-+	/* DDC_I2C: I2C2_SDA/SCL on MXM3 205/207 */
-+	i2cddc: i2c@0 {
-+		compatible = "i2c-gpio";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_i2c_ddc>;
-+		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
-+			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
-+			>;
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+		status = "disabled";
-+	};
-+
- 	reg_module_3v3: regulator-module-3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "+V3.3";
-@@ -688,6 +700,14 @@
- 		>;
- 	};
- 
-+	pinctrl_i2c_ddc: gpioi2cddcgrp {
-+		fsl,pins = <
-+			/* DDC bitbang */
-+			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x1b0b0
-+			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_i2c1: i2c1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA 0x4001b8b1
 -- 
-2.18.0
+Best regards,
+Jacek Anaszewski
