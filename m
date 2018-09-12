@@ -1,70 +1,85 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v2 7/8] ARM: dts: imx6qdl-apalis: add VGA support
-Date: Wed, 12 Sep 2018 11:32:21 -0700
-Message-ID: <20180912183222.25414-8-stefan@agner.ch>
+Subject: [PATCH v2 8/8] ARM: dts: imx6qdl-apalis: add GPIO I2C node for DDC
+Date: Wed, 12 Sep 2018 11:32:22 -0700
+Message-ID: <20180912183222.25414-9-stefan@agner.ch>
 References: <20180912183222.25414-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180912183222.25414-1-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de
-Cc: devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, sean@poorly.run, linux-arm-kernel@lists.infradead.org
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIEFwYWxpcyBpTVg2IG1vZHVsZXMgdXNlIGEgc2ltcGxlIERBQyB1c2luZyByZXNpc3RvciBs
-YWRkZXJzCnRvIGNvbnZlcnQgcGFyYWxsZWwgUkdCIHRvIFZHQS4gQWRkIHN1cHBvcnQgZm9yIHRo
-aXMgb3V0cHV0IHVzaW5nCnRoZSBkdW1iIFZHQSBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5OiBTdGVm
-YW4gQWduZXIgPHN0ZWZhbkBhZ25lci5jaD4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9pbXg2cS1h
-cGFsaXMtZXZhbC5kdHMgfCAyOCArKysrKysrKysrKysrCiBhcmNoL2FybS9ib290L2R0cy9pbXg2
-cWRsLWFwYWxpcy5kdHNpICAgfCA1MiArKysrKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVz
-IGNoYW5nZWQsIDgwIGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9pbXg2cS1hcGFsaXMtZXZhbC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cS1hcGFsaXMt
-ZXZhbC5kdHMKaW5kZXggNzA3YWM5YTQ2MTE1Li5hZTA3YjNhMTA1ZWYgMTAwNjQ0Ci0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2lteDZxLWFwYWxpcy1ldmFsLmR0cworKysgYi9hcmNoL2FybS9ib290
-L2R0cy9pbXg2cS1hcGFsaXMtZXZhbC5kdHMKQEAgLTE0MCw2ICsxNDAsMTYgQEAKIAkJcmVndWxh
-dG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47CiAJCXJlZ3VsYXRvci1hbHdheXMtb247CiAJ
-fTsKKworCXZnYSB7CisJCWNvbXBhdGlibGUgPSAidmdhLWNvbm5lY3RvciI7CisKKwkJcG9ydCB7
-CisJCQl2Z2FfY29uX2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2Z2Ff
-YnJpZGdlX291dD47CisJCQl9OworCQl9OworCX07CiB9OwogCiAmYmFja2xpZ2h0IHsKQEAgLTI4
-MSw2ICsyOTEsMjQgQEAKIAlzdGF0dXMgPSAib2theSI7CiB9OwogCismdmdhYnJpZGdlIHsKKwlz
-dGF0dXMgPSAib2theSI7CisKKwlwb3J0cyB7CisJCXBvcnRAMSB7CisJCQlyZWcgPSA8MT47CisK
-KwkJCXZnYV9icmlkZ2Vfb3V0OiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ2
-Z2FfY29uX2luPjsKKwkJCX07CisJCX07CisJfTsKK307CisKKyZ2Z2FkaXNwbGF5IHsKKwlzdGF0
-dXMgPSAib2theSI7Cit9OworCiAmaW9tdXhjIHsKIAkvKgogCSAqIE11eCB0aGUgQXBhbGlzIEdQ
-SU9zCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpIGIv
-YXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFsaXMuZHRzaQppbmRleCAwNWYwN2VhM2U4Yzgu
-LmU4ZDA0MDdlM2UxOCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvaW14NnFkbC1hcGFs
-aXMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2cWRsLWFwYWxpcy5kdHNpCkBAIC0x
-MzgsNiArMTM4LDU0IEBACiAJCXNwZGlmLW91dDsKIAkJc3RhdHVzID0gImRpc2FibGVkIjsKIAl9
-OworCisJdmdhYnJpZGdlOiBicmlkZ2UgeworCQljb21wYXRpYmxlID0gImR1bWItdmdhLWRhYyI7
-CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKwkJZGUtYWN0
-aXZlID0gPDA+OworCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCisJCXBvcnRzIHsKKwkJCSNhZGRy
-ZXNzLWNlbGxzID0gPDE+OworCQkJI3NpemUtY2VsbHMgPSA8MD47CisKKwkJCXBvcnRAMCB7CisJ
-CQkJcmVnID0gPDA+OworCisJCQkJdmdhX2JyaWRnZV9pbjogZW5kcG9pbnQgeworCQkJCQlyZW1v
-dGUtZW5kcG9pbnQgPSA8JnZnYV9kaXNwbGF5X291dD47CisJCQkJfTsKKwkJCX07CisJCX07CisJ
-fTsKKworCXZnYWRpc3BsYXk6IGRpc3BsYXlAZGkwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsaW14
-LXBhcmFsbGVsLWRpc3BsYXkiOworCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKKwkJI3NpemUtY2Vs
-bHMgPSA8MD47CisJCWludGVyZmFjZS1waXgtZm10ID0gInJnYjU2NSI7CisJCXBpbmN0cmwtbmFt
-ZXMgPSAiZGVmYXVsdCI7CisJCXBpbmN0cmwtMCA9IDwmcGluY3RybF9pcHUyX3ZkYWM+OworCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOworCisJCXBvcnRAMCB7CisJCQlyZWcgPSA8MD47CisKKwkJCXZn
-YV9kaXNwbGF5X2luOiBlbmRwb2ludCB7CisJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZpcHUyX2Rp
-MF9kaXNwMD47CisJCQl9OworCQl9OworCisJCXBvcnRAMSB7CisJCQlyZWcgPSA8MT47CisKKwkJ
-CXZnYV9kaXNwbGF5X291dDogZW5kcG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmdmdh
-X2JyaWRnZV9pbj47CisJCQl9OworCQl9OworCX07CisKIH07CiAKICZhdWRtdXggewpAQCAtMzcz
-LDYgKzQyMSwxMCBAQAogCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiB9OwogCismaXB1Ml9kaTBfZGlz
-cDAgeworCXJlbW90ZS1lbmRwb2ludCA9IDwmdmdhX2Rpc3BsYXlfaW4+OworfTsKKwogJnB3bTEg
-ewogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7CiAJcGluY3RybC0wID0gPCZwaW5jdHJsX3B3
-bTE+OwotLSAKMi4xOC4wCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Currently, the DDC signals are controlled by the DWC HDMI I2C
+master to be used for HDMI (DVI on the Apalis Evaluation Board).
+However, the Apalis Evaluation board also allows to route the Apalis
+DDC I2C to the LVDS or the VGA connector. By default, the signal
+is routed to DVI (HDMI), and therefor the current default settings
+are sensible.
+
+To ease customization and to prepare for carrier boards with other
+needs, add a GPIO I2C DDC node.
+
+E.g. to reroute the Apalis DDC to the VGA connector on the Apalis
+Evaluation Board, the following changes can be used:
+
+vga {
+	...
+	ddc-i2c-bus = <&i2cddc>;
+};
+
+&hdmi {
+	/delete-property/ pinctrl-0;
+};
+
+&i2cddc {
+	status = "okay";
+};
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+index e8d0407e3e18..8340391796df 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -61,6 +61,18 @@
+ 		status = "disabled";
+ 	};
+ 
++	/* DDC_I2C: I2C2_SDA/SCL on MXM3 205/207 */
++	i2cddc: i2c@0 {
++		compatible = "i2c-gpio";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_i2c_ddc>;
++		gpios = <&gpio3 16 GPIO_ACTIVE_HIGH /* sda */
++			 &gpio2 30 GPIO_ACTIVE_HIGH /* scl */
++			>;
++		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
++		status = "disabled";
++	};
++
+ 	reg_module_3v3: regulator-module-3v3 {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "+V3.3";
+@@ -688,6 +700,14 @@
+ 		>;
+ 	};
+ 
++	pinctrl_i2c_ddc: gpioi2cddcgrp {
++		fsl,pins = <
++			/* DDC bitbang */
++			MX6QDL_PAD_EIM_EB2__GPIO2_IO30 0x1b0b0
++			MX6QDL_PAD_EIM_D16__GPIO3_IO16 0x1b0b0
++		>;
++	};
++
+ 	pinctrl_i2c1: i2c1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_CSI0_DAT8__I2C1_SDA 0x4001b8b1
+-- 
+2.18.0
