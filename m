@@ -1,159 +1,59 @@
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH 2/2] arm64: dts: hisilicon hip07: drop commas from @address
- node names
-Date: Wed, 12 Sep 2018 17:07:18 +0100
-Message-ID: <20180912160718.3324-3-Jonathan.Cameron@huawei.com>
-References: <20180912160718.3324-2-Jonathan.Cameron@huawei.com>
+From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH v4 0/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy core
+Date: Wed, 12 Sep 2018 21:52:44 +0530
+Message-ID: <1536769366-31398-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180912160718.3324-2-Jonathan.Cameron@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-crypto@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, xuwei <xuwei5@huawei.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, vivek.gautam@codeaurora.org, kishon@ti.com
+Cc: v.anuragkumar@gmail.com, APANDEY@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Reported-by: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Fixes: e4a1f7858ab8 ("arm64: dts: hisi: add SEC crypto accelerator nodes for hip07 SoC")
----
- arch/arm64/boot/dts/hisilicon/hip07.dtsi | 28 ++++++++++++------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ZynqMP serial input output unit (SIOU) is a high-speed serial interface block
+that acts as a phy interface for the PCIe, USB 3.0, DisplayPort, SATA, and
+Ethernet controllers. These controllers use any one among the available four
+multigigabit transceivers for high-speed communication with their link partners
+outside the SOC
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hip07.dtsi b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-index c33adefc3061..bc0113445655 100644
---- a/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hip07.dtsi
-@@ -949,35 +949,35 @@
- 			reg = <0x0 0xc6000000 0x0 0x40000>;
- 		};
- 
--		p0_its_dsa_b: interrupt-controller@8,c6000000 {
-+		p0_its_dsa_b: interrupt-controller@8c6000000 {
- 			compatible = "arm,gic-v3-its";
- 			msi-controller;
- 			#msi-cells = <1>;
- 			reg = <0x8 0xc6000000 0x0 0x40000>;
- 		};
- 
--		p1_its_peri_a: interrupt-controller@400,4c000000 {
-+		p1_its_peri_a: interrupt-controller@4004c000000 {
- 			compatible = "arm,gic-v3-its";
- 			msi-controller;
- 			#msi-cells = <1>;
- 			reg = <0x400 0x4c000000 0x0 0x40000>;
- 		};
- 
--		p1_its_peri_b: interrupt-controller@400,6c000000 {
-+		p1_its_peri_b: interrupt-controller@4006c000000 {
- 			compatible = "arm,gic-v3-its";
- 			msi-controller;
- 			#msi-cells = <1>;
- 			reg = <0x400 0x6c000000 0x0 0x40000>;
- 		};
- 
--		p1_its_dsa_a: interrupt-controller@400,c6000000 {
-+		p1_its_dsa_a: interrupt-controller@400c6000000 {
- 			compatible = "arm,gic-v3-its";
- 			msi-controller;
- 			#msi-cells = <1>;
- 			reg = <0x400 0xc6000000 0x0 0x40000>;
- 		};
- 
--		p1_its_dsa_b: interrupt-controller@408,c6000000 {
-+		p1_its_dsa_b: interrupt-controller@408c6000000 {
- 			compatible = "arm,gic-v3-its";
- 			msi-controller;
- 			#msi-cells = <1>;
-@@ -1066,7 +1066,7 @@
- 			num-pins = <3>;
- 		};
- 	};
--	p0_mbigen_alg_b:interrupt-controller@8,d0080000 {
-+	p0_mbigen_alg_b:interrupt-controller@8d0080000 {
- 		compatible = "hisilicon,mbigen-v2";
- 		reg = <0x8 0xd0080000 0x0 0x10000>;
- 
-@@ -1083,7 +1083,7 @@
- 			num-pins = <3>;
- 		};
- 	};
--	p1_mbigen_alg_a:interrupt-controller@400,d0080000 {
-+	p1_mbigen_alg_a:interrupt-controller@400d0080000 {
- 		compatible = "hisilicon,mbigen-v2";
- 		reg = <0x400 0xd0080000 0x0 0x10000>;
- 
-@@ -1100,7 +1100,7 @@
- 			num-pins = <3>;
- 		};
- 	};
--	p1_mbigen_alg_b:interrupt-controller@408,d0080000 {
-+	p1_mbigen_alg_b:interrupt-controller@408d0080000 {
- 		compatible = "hisilicon,mbigen-v2";
- 		reg = <0x408 0xd0080000 0x0 0x10000>;
- 
-@@ -1187,7 +1187,7 @@
- 		hisilicon,broken-prefetch-cmd;
- 		/* smmu-cb-memtype = <0x0 0x1>;*/
- 	};
--	p0_smmu_alg_b: smmu_alg@8,d0040000 {
-+	p0_smmu_alg_b: smmu_alg@8d0040000 {
- 		compatible = "arm,smmu-v3";
- 		reg = <0x8 0xd0040000 0x0 0x20000>;
- 		interrupt-parent = <&p0_mbigen_smmu_alg_b>;
-@@ -1200,7 +1200,7 @@
- 		hisilicon,broken-prefetch-cmd;
- 		/* smmu-cb-memtype = <0x0 0x1>;*/
- 	};
--	p1_smmu_alg_a: smmu_alg@400,d0040000 {
-+	p1_smmu_alg_a: smmu_alg@400d0040000 {
- 		compatible = "arm,smmu-v3";
- 		reg = <0x400 0xd0040000 0x0 0x20000>;
- 		interrupt-parent = <&p1_mbigen_smmu_alg_a>;
-@@ -1213,7 +1213,7 @@
- 		hisilicon,broken-prefetch-cmd;
- 		/* smmu-cb-memtype = <0x0 0x1>;*/
- 	};
--	p1_smmu_alg_b: smmu_alg@408,d0040000 {
-+	p1_smmu_alg_b: smmu_alg@408d0040000 {
- 		compatible = "arm,smmu-v3";
- 		reg = <0x408 0xd0040000 0x0 0x20000>;
- 		interrupt-parent = <&p1_mbigen_smmu_alg_b>;
-@@ -1763,7 +1763,7 @@
- 				     <605 1>, <606 4>,
- 				     <607 1>, <608 4>;
- 		};
--		p0_sec_b: crypto@8,d2000000 {
-+		p0_sec_b: crypto@8d2000000 {
- 			compatible = "hisilicon,hip07-sec";
- 			reg = <0x8 0xd0000000 0x0 0x10000
- 			       0x8 0xd2000000 0x0 0x10000
-@@ -1804,7 +1804,7 @@
- 				     <605 1>, <606 4>,
- 				     <607 1>, <608 4>;
- 		};
--		p1_sec_a: crypto@400,d2000000 {
-+		p1_sec_a: crypto@400d2000000 {
- 			compatible = "hisilicon,hip07-sec";
- 			reg = <0x400 0xd0000000 0x0 0x10000
- 			       0x400 0xd2000000 0x0 0x10000
-@@ -1845,7 +1845,7 @@
- 				     <605 1>, <606 4>,
- 				     <607 1>, <608 4>;
- 		};
--		p1_sec_b: crypto@408,d2000000 {
-+		p1_sec_b: crypto@408d2000000 {
- 			compatible = "hisilicon,hip07-sec";
- 			reg = <0x408 0xd0000000 0x0 0x10000
- 			       0x408 0xd2000000 0x0 0x10000
+ZynqMP SIOU supports multiple protocols working at different reference clock
+frequencies to operate simultaneously. Each of the four lanes will be having
+a dedicated PLL associated which generates the desired frequency required by
+the protocol configured based on the reference clock input given. Using this
+driver, user can select the desired reference clock frequency for each of
+lane 0, lane 1, lane 2, and lane 3 respectively. Each lane can be programmed
+to have its own reference clock or can share reference clock from its
+neighboring lane, this is called as "Clock Sharing". This driver supports
+clock sharing aswell.
+
+These set of patches add support SIOU support by adding zynqmp-phy driver to
+linux.
+
+Changes in v4:
+	1. Fixed the changes in phy-zynqmp.txt as suggested by "Rob Herring"
+	2. Moved the dt-bindings patch from 2nd to 1st
+
+Changes in v3:
+	1. Corrected the Documentation as suggested by "Vivek Gautam"
+
+Changes in v2:
+	1. Fixed the compilation error when compiled phy-zynqmp.c as a module
+	2. Added CONFIG_PM macro in phy-zynqmp.c driver
+
+Anurag Kumar Vulisha (2):
+  phy: zynqmp: Add dt bindings for ZynqMP phy
+  phy: zynqmp: Add phy driver for xilinx zynqmp phy core
+
+ .../devicetree/bindings/phy/phy-zynqmp.txt         |  109 ++
+ drivers/phy/Kconfig                                |    8 +
+ drivers/phy/Makefile                               |    1 +
+ drivers/phy/phy-zynqmp.c                           | 1581 ++++++++++++++++++++
+ include/dt-bindings/phy/phy.h                      |    2 +
+ include/linux/phy/phy-zynqmp.h                     |   52 +
+ 6 files changed, 1753 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+ create mode 100644 drivers/phy/phy-zynqmp.c
+ create mode 100644 include/linux/phy/phy-zynqmp.h
+
 -- 
-2.18.0
+2.1.1
