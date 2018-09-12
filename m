@@ -1,109 +1,82 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v2 2/2] dmaengine: uniphier-mdmac: add UniPhier MIO DMAC
- driver
-Date: Wed, 12 Sep 2018 12:56:57 +0530
-Message-ID: <20180912072657.GF2766@vkoul-mobl>
-References: <1535074873-15617-1-git-send-email-yamada.masahiro@socionext.com>
- <1535074873-15617-3-git-send-email-yamada.masahiro@socionext.com>
- <20180911070003.GI2634@vkoul-mobl>
- <CAK7LNASMhKfQT-Hqv48=HqOPRx3OVMtdNBEe=c7dE-B_5_Nuyw@mail.gmail.com>
- <20180912043530.GE2766@vkoul-mobl>
- <CAK7LNASFyxMTE_kVzja=bUvbDbT6Moz-nZn3=yBKdTWXEQdjXA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC27XX fuel gauge unit documentation
+Date: Wed, 12 Sep 2018 15:29:38 +0800
+Message-ID: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK7LNASFyxMTE_kVzja=bUvbDbT6Moz-nZn3=yBKdTWXEQdjXA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12-09-18, 14:25, Masahiro Yamada wrote:
-> 2018-09-12 13:35 GMT+09:00 Vinod <vkoul@kernel.org>:
-> > On 12-09-18, 12:01, Masahiro Yamada wrote:
-> >> Hi Vinod,
-> >>
-> >>
-> >> 2018-09-11 16:00 GMT+09:00 Vinod <vkoul@kernel.org>:
-> >> > On 24-08-18, 10:41, Masahiro Yamada wrote:
-> >> >
-> >> >> +/* mc->vc.lock must be held by caller */
-> >> >> +static u32 __uniphier_mdmac_get_residue(struct uniphier_mdmac_desc *md)
-> >> >> +{
-> >> >> +     u32 residue = 0;
-> >> >> +     int i;
-> >> >> +
-> >> >> +     for (i = md->sg_cur; i < md->sg_len; i++)
-> >> >> +             residue += sg_dma_len(&md->sgl[i]);
-> >> >
-> >> > so if the descriptor is submitted to hardware, we return the descriptor
-> >> > length, which is not correct.
-> >> >
-> >> > Two cases are required to be handled:
-> >> > 1. Descriptor is in queue (IMO above logic is fine for that, but it can
-> >> > be calculated at descriptor submit and looked up here)
-> >>
-> >> Where do you want it to be calculated?
-> >
-> > where is it calculated now?
-> 
-> 
-> Please see __uniphier_mdmac_handle().
-> 
-> 
-> It gets the address and size by sg_dma_address(), sg_dma_len()
-> just before setting them to the hardware registers.
-> 
-> 
->        sg = &md->sgl[md->sg_cur];
-> 
->        if (md->dir == DMA_MEM_TO_DEV) {
->                src_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_INC;
->                src_addr = sg_dma_address(sg);
->                dest_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_FIXED;
->                dest_addr = 0;
->        } else {
->                src_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_FIXED;
->                src_addr = 0;
->                dest_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_INC;
->                dest_addr = sg_dma_address(sg);
->        }
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> >> This hardware provides only simple registers (address and size)
-> >> for one-shot transfer instead of descriptors.
-> >>
-> >> So, I used sgl as-is because I did not see a good reason
-> >> to transform sgl to another data structure.
-> >
-> >
-> >> > this seems missing stuff. Where do you do register calculation for the
-> >> > descriptor and where is slave_config here, how do you know where to
-> >> > send/receive data form/to (peripheral)
-> >>
-> >>
-> >> This dmac is really simple, and un-flexible.
-> >>
-> >> The peripheral address to send/receive data from/to is hard-weird.
-> >> cfg->{src_addr,dst_addr} is not configurable.
-> >>
-> >> Look at __uniphier_mdmac_handle().
-> >> 'dest_addr' and 'src_addr' must be set to 0 for the peripheral.
-> >
-> > Fair enough, what about other values like addr_width and maxburst?
-> 
-> 
-> None of them is configurable.
+This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
+fuel gauge unit device, which is used to calculate the battery capacity.
 
-what is configurable here :-)
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../devicetree/bindings/power/supply/sc27xx-fg.txt |   55 ++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
 
-Who are the users of this DMA?
-
+diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+new file mode 100644
+index 0000000..7447bae
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+@@ -0,0 +1,55 @@
++Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
++
++Required properties:
++- compatible: Should be one of the following:
++  "sprd,sc2720-fgu",
++  "sprd,sc2721-fgu",
++  "sprd,sc2723-fgu",
++  "sprd,sc2730-fgu",
++  "sprd,sc2731-fgu".
++- reg: The address offset of fuel gauge unit.
++- bat-detect-gpio: GPIO for battery detection.
++- io-channels: Specify the IIO ADC channel to get temperature.
++- io-channel-names: Should be "bat-temp".
++- sprd,inner-resist: Specify the the battery inner resistance (mOhm).
++- sprd,ocv-cap-table: Provide the battery capacity percent with corresponding
++  open circuit voltage (ocv) of the battery, which is used to look up current
++  battery capacity according to current baterry ocv values.
++- monitored-battery: Phandle of battery characteristics devicetree node.
++  The fuel gauge uses the following battery properties:
++- charge-full-design-microamp-hours: battery design capacity.
++- constant-charge-voltage-max-microvolt: maximum constant input voltage.
++  See Documentation/devicetree/bindings/power/supply/battery.txt
++
++Example:
++
++	bat: battery {
++		compatible = "simple-battery";
++		charge-full-design-microamp-hours = <1900000>;
++		constant-charge-voltage-max-microvolt = <4350000>;
++		......
++	};
++
++	sc2731_pmic: pmic@0 {
++		compatible = "sprd,sc2731";
++		reg = <0>;
++		spi-max-frequency = <26000000>;
++		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		fgu@a00 {
++			compatible = "sprd,sc2731-fgu";
++			reg = <0xa00>;
++			bat-detect-gpio = <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
++			io-channels = <&pmic_adc 5>;
++			io-channel-names = "bat-temp";
++			sprd,inner-resist = <250>;
++			sprd,ocv-cap-table = <4185 100>, <4113 95>, <4066 90>, <4022 85>, <3983 80>, <3949 75>, <3917 70>,
++				<3889 65>, <3864 60>, <3835 55>, <3805 50>, <3787 45>, <3777 40>, <3773 35>, <3770 30>,
++				<3765 25>, <3752 20>, <3724 15>, <3680 10>, <3605 5>, <3400 0>;
++			monitored-battery = <&bat>;
++		};
++	};
 -- 
-~Vinod
+1.7.9.5
