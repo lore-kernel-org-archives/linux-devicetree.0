@@ -1,91 +1,91 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 19/27] drm/sun4i: Add support for H6 DW HDMI controller
-Date: Wed, 12 Sep 2018 20:29:45 +0800
-Message-ID: <CAGb2v67XJoJGQjF6bELkiRGnkG=ZumvScDb8_3j_yUi7nhuQtQ@mail.gmail.com>
-References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-20-jernej.skrabec@siol.net>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Wed, 12 Sep 2018 13:40:43 +0100
+Message-ID: <9445a0be-fb5b-d195-4fdf-7ad6cb36ef4f@arm.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
+	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
+	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
+	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
+	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
+	<65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
+	<5bbc0332-b94b-75cc-ca42-a9b196811daf@amd.com>
+	<20180907142504.5034351e@jacob-builder>
+	<3e3a6797-a233-911b-3a7d-d9b549160960@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBS4N4TOAKGQEARQ567Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180902072643.4917-20-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <3e3a6797-a233-911b-3a7d-d9b549160960-5C7GfCeVMHo@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
->
-> H6 has DW HDMI 2.0 controller v2.12a.
->
-> It supports 4K at 60 Hz and HDCP 2.2.
->
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> index 16a0c7a88ea8..44143c9f20d0 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> @@ -43,6 +43,16 @@ sun8i_dw_hdmi_mode_valid_a83t(struct drm_connector *connector,
->         return MODE_OK;
->  }
->
-> +static enum drm_mode_status
-> +sun8i_dw_hdmi_mode_valid_h6(struct drm_connector *connector,
-> +                           const struct drm_display_mode *mode)
-> +{
-> +       if (mode->clock > 600000)
-
-600 MHz seems slightly arbitrary. AFAIK the dot clock for 4K 60Hz is 594 MHz?
-A comment on this limit would be nice.
-
-> +               return MODE_CLOCK_HIGH;
-> +
-> +       return MODE_OK;
-> +}
-> +
->  static bool sun8i_dw_hdmi_node_is_tcon_top(struct device_node *node)
->  {
->         return IS_ENABLED(CONFIG_DRM_SUN8I_TCON_TOP) &&
-> @@ -220,12 +230,20 @@ static int sun8i_dw_hdmi_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +static const struct sun8i_dw_hdmi_quirks sun50i_h6_quirks = {
-> +       .mode_valid = sun8i_dw_hdmi_mode_valid_h6,
-> +};
-> +
-
-Please "version" sort the SoC families and models.
-
->  static const struct sun8i_dw_hdmi_quirks sun8i_a83t_quirks = {
->         .mode_valid = sun8i_dw_hdmi_mode_valid_a83t,
->         .set_rate = true,
->  };
->
->  static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
-> +       {
-> +               .compatible = "allwinner,sun50i-h6-dw-hdmi",
-> +               .data = &sun50i_h6_quirks,
-> +       },
-
-Here also.
-
-Once fixed,
-
-Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
->         {
->                 .compatible = "allwinner,sun8i-a83t-dw-hdmi",
->                 .data = &sun8i_a83t_quirks,
-> --
-> 2.18.0
->
+T24gMDgvMDkvMjAxOCAwODoyOSwgQ2hyaXN0aWFuIEvDtm5pZyB3cm90ZToKPiBZZXMsIGV4YWN0
+bHkuIEkganVzdCBuZWVkIGEgUEFTSUQgd2hpY2ggaXMgbmV2ZXIgdXNlZCBieSB0aGUgT1MgZm9y
+IGEgCj4gcHJvY2VzcyBhbmQgd2UgY2FuIGVhc2lseSBnaXZlIHRoYXQgYmFjayB3aGVuIHRoZSBs
+YXN0IEZEIHJlZmVyZW5jZSBpcyAKPiBjbG9zZWQuCgpBbHJpZ2h0LCBpb21tdS1zdmEgY2FuIGdl
+dCBpdHMgUEFTSUQgZnJvbSB0aGlzIGV4dGVybmFsIGFsbG9jYXRvciBhcwp3ZWxsLCBhcyBsb25n
+IGFzIGl0IGhhcyBhbiBpbnRlcmZhY2Ugc2ltaWxhciB0byBpZHIuIFdoZXJlIHdvdWxkIGl0IGdv
+LApkcml2ZXJzL2Jhc2UvLCBtbS8sIGtlcm5lbC8uLi4/Cgo+Pj4+IFRoZSBwcm9jZXNzIGRpZXMs
+IGlvbW11LXN2YSBpcyBub3RpZmllZCBhbmQgY2FsbHMgdGhlIG1tX2V4aXQoKQo+Pj4+IGZ1bmN0
+aW9uIHBhc3NlZCBieSB0aGUgZGV2aWNlIGRyaXZlciB0byBpb21tdV9zdmFfZGV2aWNlX2luaXQo
+KS4gSW4KPj4+PiBtbV9leGl0KCkgdGhlIGRldmljZSBkcml2ZXIgbmVlZHMgdG8gY2xlYXIgYW55
+IHJlZmVyZW5jZSB0byB0aGUKPj4+PiBQQVNJRCBpbiBoYXJkd2FyZSBhbmQgaW4gaXRzIG93biBz
+dHJ1Y3R1cmVzLiBXaGVuIHRoZSBkZXZpY2UgZHJpdmVyCj4+Pj4gcmV0dXJucyBmcm9tIG1tX2V4
+aXQoKSwgaXQgZWZmZWN0aXZlbHkgdGVsbHMgdGhlIGNvcmUgdGhhdCBpdCBoYXMKPj4+PiBmaW5p
+c2hlZCB1c2luZyB0aGUgUEFTSUQsIGFuZCBpb21tdS1zdmEgY2FuIHJldXNlIHRoZSBQQVNJRCBm
+b3IKPj4+PiBhbm90aGVyIHByb2Nlc3MuIG1tX2V4aXQoKSBpcyBhbGxvd2VkIHRvIGJsb2NrLCBz
+byB0aGUgZGV2aWNlCj4+Pj4gZHJpdmVyIGhhcyB0aW1lIHRvIGNsZWFuIHVwIGFuZCBmbHVzaCB0
+aGUgcXVldWVzLgo+Pj4+Cj4+Pj4gSWYgdGhlIGRldmljZSBkcml2ZXIgZmluaXNoZXMgdXNpbmcg
+dGhlIFBBU0lEIGJlZm9yZSB0aGUgcHJvY2Vzcwo+Pj4+IGV4aXRzLCBpdCBqdXN0IGNhbGxzIHVu
+YmluZCgpLgo+Pj4gRXhhY3RseSB0aGF0J3Mgd2hhdCBNaWNoYWwgSG9ja28gaXMgcHJvYmFibHkg
+Z29pbmcgdG8gbm90IGxpa2UgYXQgYWxsLgo+Pj4KPj4+IENhbiB3ZSBoYXZlIGEgZGlmZmVyZW50
+IGFwcHJvYWNoIHdoZXJlIGVhY2ggZHJpdmVyIGlzIGluZm9ybWVkIGJ5IHRoZQo+Pj4gbW1fZXhp
+dCgpLCBidXQgbmVlZHMgdG8gZXhwbGljaXRseSBjYWxsIHVuYmluZCgpIGJlZm9yZSBhIFBBU0lE
+IGlzCj4+PiByZXVzZWQ/CgpJdCdzIGF3ZnVsIGZyb20gdGhlIElPTU1VIGRyaXZlciBwZXJzcGVj
+dGl2ZS4gSW4gYWRkaXRpb24gdG8gImVuYWJsZWQiCmFuZCAiZGlzYWJsZWQiIFBBU0lEIHN0YXRl
+cywgeW91IGFkZCAiZGlzYWJsZWQgYnV0IERNQSBzdGlsbCBydW5uaW5nCm5vcm1hbGx5Ii4gQmV0
+d2VlbiB0aGF0IG5ldyBzdGF0ZSBhbmQgImRpc2FibGVkIiwgdGhlIElPTU1VIHdpbGwgYmUKZmxv
+b2RlZCBieSB0cmFuc2xhdGlvbiBmYXVsdHMgKG5vbi1yZWNvdmVyYWJsZSBvbmVzKSwgd2hpY2gg
+aXQgbmVlZHMgdG8KaWdub3JlIGluc3RlYWQgb2YgcmVwb3J0aW5nIHRvIHRoZSBrZXJuZWwuIE5v
+dCBhbGwgSU9NTVVzIGNhbiBkZWFsIHdpdGgKdGhpcyBpbiBoYXJkd2FyZSAoU01NVSBhbmQgVlQt
+ZCBjYW4gcXVpZXNjZSB0cmFuc2xhdGlvbiBmYXVsdHMKcGVyLVBBU0lELCBidXQgSSBkb24ndCB0
+aGluayBBTUQgSU9NTVUgY2FuLikgU29tZSBkcml2ZXJzIHdpbGwgaGF2ZSB0bwpmaWx0ZXIgZmF1
+bHQgZXZlbnRzIHRoZW1zZWx2ZXMsIGRlcGVuZGluZyBvbiB0aGUgUEFTSUQgc3RhdGUuCgo+Pj4g
+RHVyaW5nIHRoYXQgdGVhcmRvd24gdHJhbnNpdGlvbiBpdCB3b3VsZCBiZSBpZGVhbCBpZiB0aGF0
+IFBBU0lEIG9ubHkKPj4+IHBvaW50cyB0byBhIGR1bW15IHJvb3QgcGFnZSBkaXJlY3Rvcnkgd2l0
+aCBvbmx5IGludmFsaWQgZW50cmllcy4KPj4+Cj4+IEkgZ3Vlc3MgdGhpcyBjYW4gYmUgdmVuZG9y
+IHNwZWNpZmljLCBJbiBWVC1kIEkgcGxhbiB0byBtYXJrIFBBU0lECj4+IGVudHJ5IG5vdCBwcmVz
+ZW50IGFuZCBkaXNhYmxlIGZhdWx0IHJlcG9ydGluZyB3aGlsZSBkcmFpbmluZyByZW1haW5pbmcK
+Pj4gYWN0aXZpdGllcy4KPgo+IFNvdW5kcyBnb29kIHRvIG1lLgo+IAo+IFBvaW50IGlzIGF0IGxl
+YXN0IGluIHRoZSBjYXNlIHdoZXJlIHRoZSBwcm9jZXNzIHdhcyBraWxsZWQgYnkgdGhlIE9PTSAK
+PiBraWxsZXIgd2Ugc2hvdWxkIG5vdCBibG9jayBpbiBtbV9leGl0KCkuCj4KPiBJbnN0ZWFkIG9w
+ZXJhdGlvbnMgaXNzdWVkIGJ5IHRoZSBwcm9jZXNzIHRvIGEgZGV2aWNlIGRyaXZlciB3aGljaCB1
+c2VzIAo+IFNWQSBuZWVkcyB0byBiZSB0ZXJtaW5hdGVkIGFzIHNvb24gYXMgcG9zc2libGUgdG8g
+bWFrZSBzdXJlIHRoYXQgdGhlIE9PTSAKPiBraWxsZXIgY2FuIGFkdmFuY2UuCgpJIGRvbid0IHNl
+ZSBob3cgd2UncmUgcHJldmVudGluZyB0aGUgT09NIGtpbGxlciBmcm9tIGFkdmFuY2luZywgc28g
+SSdtCmxvb2tpbmcgZm9yIGEgc3Ryb25nZXIgYXJndW1lbnQgdGhhdCBqdXN0aWZpZXMgYWRkaW5n
+IHRoaXMgY29tcGxleGl0eSB0bwpJT01NVSBkcml2ZXJzLiBUaW1lIGxpbWl0IG9mIHRoZSByZWxl
+YXNlIE1NVSBub3RpZmllciwgbG9ja2luZwpyZXF1aXJlbWVudCwgYSBjb25jcmV0ZSBleGFtcGxl
+IHdoZXJlIHRoaW5ncyBicmVhaywgZXZlbiBhIGNvbW1lbnQKc29tZXdoZXJlIGluIG1tLyB3b3Vs
+ZCBkby4uLgoKSW4gbXkgdGVzdHMgSSBjYW4ndCBtYW5hZ2UgdG8gZGlzdHVyYiB0aGUgT09NIGtp
+bGxlciwgYnV0IEkgY291bGQgYmUKbWlzc2luZyBzb21lIHNwZWNpYWwgY2FzZS4gRXZlbiBpZiB0
+aGUgbW1fZXhpdCgpIGNhbGxiYWNrCih1bnJlYWxpc3RpY2FsbHkpIHNsZWVwcyBmb3IgNjAgc2Vj
+b25kcywgdGhlIE9PTSBraWxsZXIgaXNuJ3QgYWZmZWN0ZWQKYmVjYXVzZSBvb21fcmVhcF90YXNr
+X21tKCkgd2lwZXMgdGhlIHZpY3RpbSdzIGFkZHJlc3Mgc3BhY2UgaW4gYW5vdGhlcgp0aHJlYWQs
+IGVpdGhlciBiZWZvcmUgb3Igd2hpbGUgdGhlIHJlbGVhc2Ugbm90aWZpZXIgaXMgcnVubmluZy4K
+ClRoYW5rcywKSmVhbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwppb21tdSBtYWlsaW5nIGxpc3QKaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5vcmcK
+aHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9tbXU=
