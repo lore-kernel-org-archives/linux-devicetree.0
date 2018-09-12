@@ -1,58 +1,74 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v2 7/7] regulator: bd718xx: rename bd71837 to 718xx
-Date: Wed, 12 Sep 2018 14:54:20 +0300
-Message-ID: <7265df162f1d48b6aa76a47971619a1a09bdabbe.1536750863.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1536750863.git.matti.vaittinen@fi.rohmeurope.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Wed, 12 Sep 2018 14:14:20 +0200
+Message-ID: <20180912121420.GE2760@piout.net>
+References: <20180911181838.GI4185@dell>
+ <20180911185839.GA25212@piout.net>
+ <20180911224418.GK4185@dell>
+ <20180911225440.GL4185@dell>
+ <20180912073355.GB2557@piout.net>
+ <20180912084143.GN4185@dell>
+ <CAMuHMdWefU0pw=c9TKOa+wGHchpg8JRfE0OnC4+wKDt-qrbH1A@mail.gmail.com>
+ <20180912105407.GR4185@dell>
+ <20180912111757.GC2760@piout.net>
+ <20180912114352.GT4185@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1536750863.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180912114352.GT4185@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, sboyd@kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>linux-spi <l>
 List-Id: devicetree@vger.kernel.org
 
-rename bd71837-regulator.c to bd718x7-regulator.c to reflect the
-fact that also BD71847 is now supported by the driver.
+On 12/09/2018 12:43:52+0100, Lee Jones wrote:
+> > > But ... we can't have it both ways.  *Either* it's a true MFD, in
+> > > which case it can/should have 2 separate compatible strings which can
+> > > be specified directly from the DT.  *Or* it's not an MFD.  In the
+> > > latter case, which I think we're all agreeing on (else we'd have 2
+> > > compatible strings), MFD is not the place to handle this (my original
+> > > point).
+> > > 
+> > 
+> > If that is what bothers you, then let's move it out of mfd.
+> 
+> As I've already mentioned.  I don't just want it moved out of MFD and
+> shoved somewhere else.  My aim is to fix this properly.
+> 
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/regulator/Kconfig                                      | 2 +-
- drivers/regulator/Makefile                                     | 2 +-
- drivers/regulator/{bd71837-regulator.c => bd718x7-regulator.c} | 0
- 3 files changed, 2 insertions(+), 2 deletions(-)
- rename drivers/regulator/{bd71837-regulator.c => bd718x7-regulator.c} (100%)
+If it is out of MFD, then I'm not sure why you would care too much about
+it as you won't be maintaining that code. And I still this what was done
+was correct but I'm open to test what you suggest.
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index 329cdd33ed62..6e96ef1bd74a 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -189,7 +189,7 @@ config REGULATOR_BD718XX
- 	  and LDO regulators.
- 
- 	  This driver can also be built as a module. If so, the module
--	  will be called bd71837-regulator.
-+	  will be called bd718x7-regulator.
- 
- config REGULATOR_BD9571MWV
- 	tristate "ROHM BD9571MWV Regulators"
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 801d9a34a203..eac4d794f3b8 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -27,7 +27,7 @@ obj-$(CONFIG_REGULATOR_AS3711) += as3711-regulator.o
- obj-$(CONFIG_REGULATOR_AS3722) += as3722-regulator.o
- obj-$(CONFIG_REGULATOR_AXP20X) += axp20x-regulator.o
- obj-$(CONFIG_REGULATOR_BCM590XX) += bcm590xx-regulator.o
--obj-$(CONFIG_REGULATOR_BD718XX) += bd71837-regulator.o
-+obj-$(CONFIG_REGULATOR_BD718XX) += bd718x7-regulator.o
- obj-$(CONFIG_REGULATOR_BD9571MWV) += bd9571mwv-regulator.o
- obj-$(CONFIG_REGULATOR_DA903X)	+= da903x.o
- obj-$(CONFIG_REGULATOR_DA9052)	+= da9052-regulator.o
-diff --git a/drivers/regulator/bd71837-regulator.c b/drivers/regulator/bd718x7-regulator.c
-similarity index 100%
-rename from drivers/regulator/bd71837-regulator.c
-rename to drivers/regulator/bd718x7-regulator.c
+> > > So ... this is a USART device which can do SPI, right?
+> > > 
+> > > My current thinking is that; as this is a USART device first &
+> > > foremost, the USART should be probed in the first instance regardless,
+> > > then if SPI mode is specified it (the USART driver) registers the SPI
+> > > platform driver (as MFD does currently) and exits gracefully, allowing
+> > > the SPI driver to take over.
+> > > 
+> > > Spanner in the works: is it physically possible to change the mode at
+> > > run-time?  :s
+> > 
+> > Yes it is possible but on Linux that will not happen without probing
+> > the drivers again.
+> 
+> Not sure I understand what you mean.
+> 
+
+I was just commenting on changing the mode at runtime.
+
+> I'm suggesting that you use the same platform_* interfaces MFD uses to
+> register the SPI driver if SPI mode has been selected.  Only do so
+> from the appropriate driver i.e. USART.
+> 
+
+Yeah, I understood that but I didn't comment because I'm not sure this
+will work yet.
+
 -- 
-2.14.3
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
