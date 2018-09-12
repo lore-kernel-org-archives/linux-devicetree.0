@@ -1,46 +1,47 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2 6/8] drm/imx: support handling bridge timings bus flags
-Date: Thu, 13 Sep 2018 10:38:50 +0200
-Message-ID: <1536827930.3452.4.camel@pengutronix.de>
-References: <20180912183222.25414-1-stefan@agner.ch>
- <20180912183222.25414-7-stefan@agner.ch>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 02/13] mfd: wcd9335: add support to wcd9335 core
+Date: Wed, 12 Sep 2018 13:43:42 +0100
+Message-ID: <ffcf1b3a-b66c-6e0e-3e7a-da092e9d1894@linaro.org>
+References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
+ <20180904102500.30318-3-srinivas.kandagatla@linaro.org>
+ <20180911153340.GY4185@dell>
+ <94c68436-b618-40fc-46d6-165799312289@linaro.org>
+ <20180912085848.GP4185@dell>
+ <b4ddfd10-360c-a844-8542-1f81a1cc9c6b@linaro.org>
+ <20180912105941.GS4185@dell>
+ <11f213e5-8c93-f75f-1b74-517f00cd9a96@linaro.org>
+ <20180912114633.GU4185@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180912183222.25414-7-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>, linus.walleij@linaro.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc: devicetree@vger.kernel.org, max.krummenacher@toradex.com, marcel.ziswiler@toradex.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, sean@poorly.run, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180912114633.GU4185@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE4LTA5LTEyIGF0IDExOjMyIC0wNzAwLCBTdGVmYW4gQWduZXIgd3JvdGU6Cj4g
-QSBicmlkZ2UgbWlnaHQgcmVxdWlyZSBzcGVjaWZpYyBzZXR0aW5ncyBmb3IgdGhlIHBpeGVsIGRh
-dGEgb24KPiB0aGUgYnVzLgoKT24gd2hpY2ggYnVzPyBUaGUgYnJpZGdlIGhhcyBpbnB1dCBhbmQg
-b3V0cHV0LgoKPiBDb3B5IHRoZSBidXMgZmxhZ3MgZnJvbSB0aGUgYnJpZGdlIHRpbWluZ3MgaWYg
-YSBicmlkZ2UKPiBpcyBpbiB1c2UuCj4gCj4gU2lnbmVkLW9mZi1ieTogU3RlZmFuIEFnbmVyIDxz
-dGVmYW5AYWduZXIuY2g+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9pbXgvcGFyYWxsZWwtZGlz
-cGxheS5jIHwgMyArKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+IAo+IGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vaW14L3BhcmFsbGVsLWRpc3BsYXkuYyBiL2RyaXZl
-cnMvZ3B1L2RybS9pbXgvcGFyYWxsZWwtZGlzcGxheS5jCj4gaW5kZXggYWVmZDA0ZTE4ZjkzLi43
-Nzk4YTA2MjFkZjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2lteC9wYXJhbGxlbC1k
-aXNwbGF5LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaW14L3BhcmFsbGVsLWRpc3BsYXkuYwo+
-IEBAIC0yMzksNiArMjM5LDkgQEAgc3RhdGljIGludCBpbXhfcGRfYmluZChzdHJ1Y3QgZGV2aWNl
-ICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKPiAgCWlmIChyZXQgJiYg
-cmV0ICE9IC1FTk9ERVYpCj4gIAkJcmV0dXJuIHJldDsKPiAgCj4gKwlpZiAoaW14cGQtPmJyaWRn
-ZSAmJiBpbXhwZC0+YnJpZGdlLT50aW1pbmdzKQo+ICsJCWlteHBkLT5idXNfZmxhZ3MgPSBpbXhw
-ZC0+YnJpZGdlLT50aW1pbmdzLT5pbnB1dF9idXNfZmxhZ3M7CgpPaCwgb2suIEknZCBhbHNvIHNw
-ZWNpZnkgaW5wdXQgYnVzIGluIHRoZSBjb21taXQgbWVzc2FnZS4KCj4gKwo+ICAJaW14cGQtPmRl
-diA9IGRldjsKPiAgCj4gIAlyZXQgPSBpbXhfcGRfcmVnaXN0ZXIoZHJtLCBpbXhwZCk7CgpyZWdh
-cmRzClBoaWxpcHAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
-Cg==
+
+>>
+>> There are two parts for device to be ready to talk at bus level:
+>> 1> power up and reset,
+>> 2> enumerate and assign a logical address by the slimbus controller.
+>>
+>> First part as you said is already done in probe.
+>> When second part happens when status callback is invoked, that is when the
+>> slimdevice is ready for any kind of communication at bus level.
+> 
+> I see.  I still think it's hacky to conduct start-up procedures when
+> all the SS requested was status.  Perhaps it needs a new API call
+> init()?
+
+When we added these callbacks the purpose of this was to allow drivers 
+to do specific setup/teardown.
+
+AFIAU, even-though if we add init(), SLIMbus would still call it just 
+before or after status which to me is redundant ATM.
+Its up to slim driver what it exactly whats to do with status, in some 
+cases this can involve setting up the device.
+
+> 
