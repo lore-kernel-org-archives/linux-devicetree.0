@@ -1,112 +1,150 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 02/13] mfd: wcd9335: add support to wcd9335 core
-Date: Wed, 12 Sep 2018 09:58:48 +0100
-Message-ID: <20180912085848.GP4185@dell>
-References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
- <20180904102500.30318-3-srinivas.kandagatla@linaro.org>
- <20180911153340.GY4185@dell>
- <94c68436-b618-40fc-46d6-165799312289@linaro.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: dts: r9a06g032: Correct UART and add all other
+ UARTs
+Date: Wed, 12 Sep 2018 11:20:39 +0200
+Message-ID: <20180912092035.lhzlebd6rh72yjgj@verge.net.au>
+References: <20180910160254.3882-1-phil.edworthy@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <94c68436-b618-40fc-46d6-165799312289@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <20180910160254.3882-1-phil.edworthy@renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Sep 2018, Srinivas Kandagatla wrote:
-> On 11/09/18 16:33, Lee Jones wrote:
-> > On Tue, 04 Sep 2018, Srinivas Kandagatla wrote:
-> > 
-> > > Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC,
-> > > It has mulitple blocks like Soundwire controller, codec,
-> > > Codec processing engine, ClassH controller, interrupt mux.
-> > > It supports both I2S/I2C and SLIMbus audio interfaces.
-> > > 
-> > > This patch adds support to SLIMbus audio interface.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >   drivers/mfd/Kconfig                   |  14 +
-> > >   drivers/mfd/Makefile                  |   4 +
-> > >   drivers/mfd/wcd9335-core.c            | 291 ++++++++++++
-> > >   include/linux/mfd/wcd9335/registers.h | 627 ++++++++++++++++++++++++++
-> > >   include/linux/mfd/wcd9335/wcd9335.h   |  32 ++
-> > >   5 files changed, 968 insertions(+)
-> > >   create mode 100644 drivers/mfd/wcd9335-core.c
-> > >   create mode 100644 include/linux/mfd/wcd9335/registers.h
-> > >   create mode 100644 include/linux/mfd/wcd9335/wcd9335.h
-[...]
+On Mon, Sep 10, 2018 at 05:02:54PM +0100, Phil Edworthy wrote:
+> - UART0 was missing the bus clock ("apb_pclk").
+> - Now that the relevant rzn1 bindings have been added, replace the Synopsys
+>   compat string with the rzn1 strings.
 
-> > > +static const struct mfd_cell wcd9335_devices[] = {
-> > > +	{ .name = "wcd9335-codec", },
-> > > +};
-> > 
-> > Are there more devices to come?
-> > 
-> Yes, that is the plan, we are kind of limited in hardware setup to test few
-> things like soundwire controller. We are exploring other ways to test these.
+Perhaps: Use recently accepted r9a06g032 and rzn1 compat strings.
 
-I normally don't accept MFDs with just one device enabled.  Since it's
-not really an MFD (M == Multi) until it has more than one function.
-
-[...]
-
-> > > +	struct device_node *ifc_dev_np;
-> > 
-> > ifc isn't very forthcoming.  Any way you can improve the name?
-> ifc was suggested in dt bindings by Rob,  I can proably rename to
-> interface_node.
-
-ifc is a horrible variable name - just sayin'.
-
-[...]
-
-> > > +	ret = wcd9335_bring_up(wcd);
-> > 
-> > So the device_status call-back brings up the hardware?
-> > 
+> - Add all the other UARTs.
 > 
-> device status reports the device status at runtime. We can not communicate
-> with the device until it is up, enumerated by slimbus and a logical address
-> is assigned to it. So the best place to initialize it is in status callback
-> where all the above are expected to be done.
+> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
 
-Right, I understand what's happening.  I just think the semantics are
-wrong.  The Subsystem (I'm assuming it's a Subsystem) requests for
-status and it ends up initiating a start-up sequence.  Just from a
-purist's point of view (I understand that it "works"), it's not good
-practice.
+The above notwithstanding this looks good to me but I will wait to see if
+there are other reviews before applying.
 
-> Probe is expected to setup the external configurations like regulators/pins
-> and so on which gets the device out of reset and ready to be enumerated by
-> the slimbus controller.
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-I suggest fully starting the device in probe() is a better approach.
-
-[...]
-
-> > > +struct wcd9335 {
-> > > +	int version;
-> > > +	int intr1;
-> > 
-> > What's this?  If I have to ask, it's probably not a good name.
-> > 
-> This is a hardware pin name for interrupt line 1.
-
-I don't see how this is used, so it's difficult for me to advise
-fully, but I find this confusing.  Pin name/number?  Shouldn't this be
-handed by Pinctrl?
-
-intr1 could be quite ambiguous.  Especually as the '1' could easily be
-read as an 'l'.  Suggest that 'irq1' or 'irq_1' or 'irq_one'.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> ---
+> v2:
+>  - Keep the "snps,dw-apb-uart" fallback for uarts 0..2 as these are unmodified
+>    peripherals.
+> ---
+>  arch/arm/boot/dts/r9a06g032.dtsi | 83 ++++++++++++++++++++++++++++++--
+>  1 file changed, 80 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r9a06g032.dtsi b/arch/arm/boot/dts/r9a06g032.dtsi
+> index 3e45375b79aa..eaf94976ed6d 100644
+> --- a/arch/arm/boot/dts/r9a06g032.dtsi
+> +++ b/arch/arm/boot/dts/r9a06g032.dtsi
+> @@ -78,13 +78,90 @@
+>  		};
+>  
+>  		uart0: serial@40060000 {
+> -			compatible = "snps,dw-apb-uart";
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart", "snps,dw-apb-uart";
+>  			reg = <0x40060000 0x400>;
+>  			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
+>  			reg-shift = <2>;
+>  			reg-io-width = <4>;
+> -			clocks = <&sysctrl R9A06G032_CLK_UART0>;
+> -			clock-names = "baudclk";
+> +			clocks = <&sysctrl R9A06G032_CLK_UART0>, <&sysctrl R9A06G032_HCLK_UART0>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart1: serial@40061000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart", "snps,dw-apb-uart";
+> +			reg = <0x40061000 0x400>;
+> +			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART1>, <&sysctrl R9A06G032_HCLK_UART1>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart2: serial@40062000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart", "snps,dw-apb-uart";
+> +			reg = <0x40062000 0x400>;
+> +			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART2>, <&sysctrl R9A06G032_HCLK_UART2>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart3: serial@50000000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart";
+> +			reg = <0x50000000 0x400>;
+> +			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART3>, <&sysctrl R9A06G032_HCLK_UART3>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart4: serial@50001000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart";
+> +			reg = <0x50001000 0x400>;
+> +			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART4>, <&sysctrl R9A06G032_HCLK_UART4>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart5: serial@50002000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart";
+> +			reg = <0x50002000 0x400>;
+> +			interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART5>, <&sysctrl R9A06G032_HCLK_UART5>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart6: serial@50003000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart";
+> +			reg = <0x50003000 0x400>;
+> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART6>, <&sysctrl R9A06G032_HCLK_UART6>;
+> +			clock-names = "baudclk", "apb_pclk";
+> +			status = "disabled";
+> +		};
+> +
+> +		uart7: serial@50004000 {
+> +			compatible = "renesas,r9a06g032-uart", "renesas,rzn1-uart";
+> +			reg = <0x50004000 0x400>;
+> +			interrupts = <GIC_SPI 90 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			clocks = <&sysctrl R9A06G032_CLK_UART7>, <&sysctrl R9A06G032_HCLK_UART7>;
+> +			clock-names = "baudclk", "apb_pclk";
+>  			status = "disabled";
+>  		};
+>  
+> -- 
+> 2.17.1
+> 
