@@ -1,103 +1,63 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v2 2/2] dmaengine: uniphier-mdmac: add UniPhier MIO DMAC driver
-Date: Wed, 12 Sep 2018 14:25:38 +0900
-Message-ID: <CAK7LNASFyxMTE_kVzja=bUvbDbT6Moz-nZn3=yBKdTWXEQdjXA@mail.gmail.com>
-References: <1535074873-15617-1-git-send-email-yamada.masahiro@socionext.com>
- <1535074873-15617-3-git-send-email-yamada.masahiro@socionext.com>
- <20180911070003.GI2634@vkoul-mobl> <CAK7LNASMhKfQT-Hqv48=HqOPRx3OVMtdNBEe=c7dE-B_5_Nuyw@mail.gmail.com>
- <20180912043530.GE2766@vkoul-mobl>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH v2] ARM: dts: imx53-qsb: disable 1.2GHz OPP
+Date: Wed, 12 Sep 2018 08:23:01 +0200
+Message-ID: <20180912062301.3972-1-s.hauer@pengutronix.de>
+References: <20180910125056.30813-1-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912043530.GE2766@vkoul-mobl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Jassi Brar <jaswinder.singh@linaro.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180910125056.30813-1-s.hauer@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2018-09-12 13:35 GMT+09:00 Vinod <vkoul@kernel.org>:
-> On 12-09-18, 12:01, Masahiro Yamada wrote:
->> Hi Vinod,
->>
->>
->> 2018-09-11 16:00 GMT+09:00 Vinod <vkoul@kernel.org>:
->> > On 24-08-18, 10:41, Masahiro Yamada wrote:
->> >
->> >> +/* mc->vc.lock must be held by caller */
->> >> +static u32 __uniphier_mdmac_get_residue(struct uniphier_mdmac_desc *md)
->> >> +{
->> >> +     u32 residue = 0;
->> >> +     int i;
->> >> +
->> >> +     for (i = md->sg_cur; i < md->sg_len; i++)
->> >> +             residue += sg_dma_len(&md->sgl[i]);
->> >
->> > so if the descriptor is submitted to hardware, we return the descriptor
->> > length, which is not correct.
->> >
->> > Two cases are required to be handled:
->> > 1. Descriptor is in queue (IMO above logic is fine for that, but it can
->> > be calculated at descriptor submit and looked up here)
->>
->> Where do you want it to be calculated?
->
-> where is it calculated now?
+The maximum CPU frequency for the i.MX53 QSB is 1GHz, so disable the
+1.2GHz OPP. This makes the board work again with configs that have
+cpufreq enabled like imx_v6_v7_defconfig on which the board stopped
+working with the addition of cpufreq-dt support.
 
+Fixes: 791f416608 ("ARM: dts: imx53: add cpufreq-dt support")
 
-Please see __uniphier_mdmac_handle().
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
 
+Changes since v1:
+- rephrase commit message
 
-It gets the address and size by sg_dma_address(), sg_dma_len()
-just before setting them to the hardware registers.
+arch/arm/boot/dts/imx53-qsb-common.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-
-       sg = &md->sgl[md->sg_cur];
-
-       if (md->dir == DMA_MEM_TO_DEV) {
-               src_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_INC;
-               src_addr = sg_dma_address(sg);
-               dest_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_FIXED;
-               dest_addr = 0;
-       } else {
-               src_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_FIXED;
-               src_addr = 0;
-               dest_mode = UNIPHIER_MDMAC_CH_MODE__ADDR_INC;
-               dest_addr = sg_dma_address(sg);
-       }
-
-
-
-
-
-
-
->> This hardware provides only simple registers (address and size)
->> for one-shot transfer instead of descriptors.
->>
->> So, I used sgl as-is because I did not see a good reason
->> to transform sgl to another data structure.
->
->
->> > this seems missing stuff. Where do you do register calculation for the
->> > descriptor and where is slave_config here, how do you know where to
->> > send/receive data form/to (peripheral)
->>
->>
->> This dmac is really simple, and un-flexible.
->>
->> The peripheral address to send/receive data from/to is hard-weird.
->> cfg->{src_addr,dst_addr} is not configurable.
->>
->> Look at __uniphier_mdmac_handle().
->> 'dest_addr' and 'src_addr' must be set to 0 for the peripheral.
->
-> Fair enough, what about other values like addr_width and maxburst?
-
-
-None of them is configurable.
-
-
-
+diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+index 7423d462d1e4..50dde84b72ed 100644
+--- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
++++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+@@ -123,6 +123,17 @@
+ 	};
+ };
+ 
++&cpu0 {
++	/* CPU rated to 1GHz, not 1.2GHz as per the default settings */
++	operating-points = <
++		/* kHz   uV */
++		166666  850000
++		400000  900000
++		800000  1050000
++		1000000 1200000
++	>;
++};
++
+ &esdhc1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_esdhc1>;
 -- 
-Best Regards
-Masahiro Yamada
+2.18.0
