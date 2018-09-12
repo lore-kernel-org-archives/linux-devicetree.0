@@ -1,58 +1,95 @@
-From: Finn Thain <fthain@telegraphics.com.au>
-Subject: Re: v4.17 regression: PowerMac G3 won't boot, was Re: [PATCH v5 1/3]
- of: cache phandle nodes to reduce cost of of_find_node_by_phandle()
-Date: Wed, 12 Sep 2018 10:15:23 +1000 (AEST)
-Message-ID: <alpine.LNX.2.21.1809121015070.137@nippy.intranet>
-References: <1520208889-3908-1-git-send-email-frowand.list@gmail.com> <1520208889-3908-2-git-send-email-frowand.list@gmail.com> <alpine.LNX.2.21.1808301025480.73@nippy.intranet> <0ad5dbfd-08f3-b97d-34b9-70fc9a729921@gmail.com>
- <d9e53e48794c2eade19309b73febd492e3c5eeeb.camel@kernel.crashing.org> <7427daf6570d519e6793eb96d2fbaa52714b0cd7.camel@kernel.crashing.org> <20180910125320.GA17028@bogus> <abb0dec2-da3a-2c04-0e9f-28851b22cf75@yahoo.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Wed, 12 Sep 2018 10:00:49 +0900
+Message-ID: <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
+References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
+ <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <abb0dec2-da3a-2c04-0e9f-28851b22cf75@yahoo.com>
+In-Reply-To: <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Frank Rowand <frank.rowand@sony.com>, Stan Johnson <userm57@yahoo.com>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Chintan Pandya <cpandya@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, moderated list:
 List-Id: devicetree@vger.kernel.org
 
-[The Cc list got pruned so I'm forwarding Stan's reply for the benefit of 
-the list archives and any other interested parties.]
+2018-09-12 0:40 GMT+09:00 Rob Herring <robh@kernel.org>:
+> On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+>>
+>> There is nothing arch specific about building dtb files other than their
+>> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+>> The dependencies and supported targets are all slightly different.
+>> Also, a cross-compiler for each arch is needed, but really the host
+>> compiler preprocessor is perfectly fine for building dtbs. Move the
+>> build rules to a common location and remove the arch specific ones. This
+>> is done in a single step to avoid warnings about overriding rules.
+>>
+>> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+>> These pull in several dependencies some of which need a target compiler
+>> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+>> All that is really needed is dtc, so adjust the dependencies to only be
+>> dtc.
+>>
+>> This change enables support 'dtbs_install' on some arches which were
+>> missing the target.
+>
+> [...]
+>
+>> @@ -1215,6 +1215,33 @@ kselftest-merge:
+>>                 $(srctree)/tools/testing/selftests/*/config
+>>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+>>
+>> +# ---------------------------------------------------------------------------
+>> +# Devicetree files
+>> +
+>> +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+>> +dtstree := arch/$(SRCARCH)/boot/dts
+>> +endif
+>> +
+>> +ifdef CONFIG_OF_EARLY_FLATTREE
+>
+> This can be true when dtstree is unset. So this line should be this
+> instead to fix the 0-day reported error:
+>
+> ifneq ($(dtstree),)
+>
+>> +
+>> +%.dtb : scripts_dtc
+>> +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+>> +
+>> +PHONY += dtbs dtbs_install
+>> +dtbs: scripts_dtc
+>> +       $(Q)$(MAKE) $(build)=$(dtstree)
+>> +
+>> +dtbs_install: dtbs
+>> +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+>> +
+>> +all: dtbs
+>> +
+>> +endif
 
-On Mon, 10 Sep 2018, Stan Johnson wrote:
 
-> On 9/10/18 6:53 AM, Rob Herring wrote:
-> 
-> > ...
-> > Can you try this patch (w/o Ben's patch). I think the problem is if 
-> > there are no phandles, then roundup_pow_of_two is passed 0 which is 
-> > documented as undefined result.
-> >
-> > Though, if a DT has no properties with phandles, then why are we doing a 
-> > lookup in the first place?
-> >
-> >
-> > 8<----------------------------------------------------------------------
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 9095b8290150..74eaedd5b860 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -140,6 +140,9 @@ void of_populate_phandle_cache(void)
-> >  		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
-> >  			phandles++;
-> >  
-> > +	if (!phandles)
-> > +		goto out;
-> > +
-> >  	cache_entries = roundup_pow_of_two(phandles);
-> >  	phandle_cache_mask = cache_entries - 1;
-> >  
-> 
-> Using the attached .config file, I first compiled the stock 4.18
-> kernel from kernel.org; it hung at the Mac OS background screen
-> on my Beige G3 Desktop using the BootX extension and the BootX.app
-> from within MacOS.  I then applied the above patch, and it booted
-> without any problems from both the BootX extension and using the
-> BootX.app from within MacOS.
-> 
-> -Stan
-> 
-> 
+Ah, right.
+Even x86 can enable OF and OF_UNITTEST.
+
+
+
+Another solution might be,
+guard it by 'depends on ARCH_SUPPORTS_OF'.
+
+
+
+This is actually what ACPI does.
+
+menuconfig ACPI
+        bool "ACPI (Advanced Configuration and Power Interface) Support"
+        depends on ARCH_SUPPORTS_ACPI
+         ...
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
