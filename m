@@ -1,37 +1,79 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6ull: update vdd_soc voltage for 900MHz
- operating point
-Date: Wed, 12 Sep 2018 08:30:04 +0000
-Message-ID: <DB3PR0402MB3916249305E241849A32DC05F51B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1536740009-32735-1-git-send-email-Anson.Huang@nxp.com>
- <d989e700-0cf1-607a-b333-bdead49ae813@i2se.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Wed, 12 Sep 2018 09:36:40 +0100
+Message-ID: <20180912083640.GM4185@dell>
+References: <20180904111310.4049-1-radu_nicolae.pirea@upb.ro>
+ <20180911093356.GE4185@dell>
+ <20180911093917.GL2494@piout.net>
+ <CAMuHMdXH8gNjKGOHGFc+K03U2zsVCSN7G_Q4wtepQr859nRQKg@mail.gmail.com>
+ <20180911153621.GP2494@piout.net>
+ <CAMuHMdV+=EgAYogwNHbY=RExkGox_+YSeHV6pJtQb6g6PzD-CQ@mail.gmail.com>
+ <20180911181838.GI4185@dell>
+ <CAMuHMdUMt=HJGCDZvJF99=45mecn5AjnTr-tA_LioxWrNKM2ag@mail.gmail.com>
+ <20180911224302.GJ4185@dell>
+ <20180912073056.GA2557@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d989e700-0cf1-607a-b333-bdead49ae813@i2se.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180912073056.GA2557@piout.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, radu_nicolae.pirea@upb.ro, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>linux-spi <l>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0ZWZhbg0KDQpBbnNvbiBIdWFuZw0KQmVzdCBSZWdhcmRzIQ0KDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBp
-MnNlLmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBTZXB0ZW1iZXIgMTIsIDIwMTggNDoyOCBQTQ0K
-PiBUbzogQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+OyBzaGF3bmd1b0BrZXJuZWwu
-b3JnOw0KPiBzLmhhdWVyQHBlbmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IEZh
-YmlvIEVzdGV2YW0NCj4gPGZhYmlvLmVzdGV2YW1AbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9y
-ZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmcNCj4gQ2M6IGRsLWxpbnV4LWlteCA8bGludXgtaW14QG54cC5jb20+DQo+IFN1
-YmplY3Q6IFJlOiBbUEFUQ0hdIEFSTTogZHRzOiBpbXg2dWxsOiB1cGRhdGUgdmRkX3NvYyB2b2x0
-YWdlIGZvciA5MDBNSHoNCj4gb3BlcmF0aW5nIHBvaW50DQo+IA0KPiBIaSBBbnNvbiwNCj4gDQo+
-IEFtIDEyLjA5LjIwMTggdW0gMTA6MTMgc2NocmllYiBBbnNvbiBIdWFuZzoNCj4gPiBVcGRhdGUg
-VkREX1NPQyB2b2x0YWdlIHRvIDEuMjVWIGZvciA5MDBNSHogb3BlcmF0aW5nIHBvaW50IGFjY29y
-ZGluZw0KPiA+IHRvIGRhdGFzaGVldCBSZXYuIDEuMywgMDgvMjAxOCwgMjVtViBpcyBhZGRlZCB0
-byB0aGUgbWluaW11bSBhbGxvd2VkDQo+ID4gdmFsdWVzIHRvIGNvdmVyIHBvd2VyIHN1cHBseSBy
-aXBwbGUuDQo+IA0KPiBpcyB0aGVyZSBhIHJlYXNvbiB3aHkgdGhlIG5ldyBkYXRhc2hlZXQgaXNu
-J3QgcHVibGlzaGVkIHlldD8NCiANCldlIGp1c3QgZ290IHRoaXMgbmV3IGRhdGFzaGVldCByZWNl
-bnRseSwgaXQgd2lsbCBiZSBwdWJsaXNoZWQgc29vbi4NCg0KQW5zb24uDQoNCj4gDQo+IFJlZ2Fy
-ZHMNCj4gU3RlZmFuDQoNCg==
+On Wed, 12 Sep 2018, Alexandre Belloni wrote:
+
+> On 11/09/2018 23:43:02+0100, Lee Jones wrote:
+> > > I haven't read it, but I believe it's not unlike Renesas SCIF, which is
+> > > served by both drivers/tty/serial/sh-sci.c and drivers/spi/spi-sh-sci.c.
+> > > But the latter is not used from DT, so we haven't experienced (and solved)
+> > > the similar issue yet.
+> > > 
+> > > Would it work if the UART driver and SPI driver would match against the
+> > > same compatible value, but the UART driver would do in its probe()
+> > > function:
+> > > 
+> > >     device_property_read_u32(&pdev->dev, "atmel,usart-mode", &opmode);
+> > >     if (opmode != AT91_USART_MODE_SERIAL)
+> > >         return ENODEV;
+> > > 
+> > > while the SPI driver would do:
+> > > 
+> > >     device_property_read_u32(&pdev->dev, "atmel,usart-mode", &opmode);
+> > >     if (opmode != AT91_USART_MODE_SPI)
+> > >         return ENODEV;
+> > > 
+> > > ? No MFD driver involved.
+> > 
+> > I haven't looked at the code in a while, but if memory serves I
+> > believe platform code gives up once it has found its first match, so
+> > by doing this, one of the drivers will never be matched/probed.
+> > 
+> > It's midnight here, so cracking out the datasheet isn't going to
+> > happen just now, but it's my current belief that if the IP serves 2
+> > very different modes of operation, even if the registers are in a
+> > shared space, they could have their own compatible strings in DT.
+> > 
+> > That is what the MFD driver provides after all.  Why would it be okay
+> > to allocate different compatible strings from the MFD, but not in the
+> > Device Tree?
+> > 
+> > It would be the easiest solution.
+> > 
+> > Has Rob commented on this yet?
+> 
+> V4 of the bindings were acked by Rob and you:
+> https://patchwork.kernel.org/patch/10428087/
+
+We didn't Ack the bindings.  We Acked the location change.
+
+I mean, has Rob specifically spoken out about using a compatible
+string for each function.
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
