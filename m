@@ -1,85 +1,65 @@
-From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Subject: [PATCH 1/2] staging/vc04_services: Derive g_cache_line_size
-Date: Wed, 12 Sep 2018 16:06:48 +0100
-Message-ID: <1536764809-132672-2-git-send-email-phil@raspberrypi.org>
-References: <1536764809-132672-1-git-send-email-phil@raspberrypi.org>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [linux-sunxi] Re: [PATCH 02/27] arm64: allwinner: h6: add system controller device tree node
+Date: Wed, 12 Sep 2018 23:37:24 +0800
+Message-ID: <B9D0F336-B0C0-453C-AD56-325DAA9883A0@aosc.io>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-3-jernej.skrabec@siol.net> <CAGb2v65y1W=52SAFFqyCOnHd80nx+oPHUDeysHWBy7o8_g=eeQ@mail.gmail.com> <9915D9F1-1C60-4AEF-9074-CE040FCD7BF0@aosc.io> <CAGb2v64t40yTbrnkg33N2=jBdnvV45H1XSCF8U230LGAyuVySw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1536764809-132672-1-git-send-email-phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v64t40yTbrnkg33N2=jBdnvV45H1XSCF8U230LGAyuVySw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Jernej Skrabec <jernej.skrabec@siol.net>, Andrzej Hajda <a.hajda@samsung.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Mike Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, Archit Taneja <architt@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-kernel <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The ARM coprocessor registers include dcache line size, but there is no
-function to expose this value. Rather than create a new one, use the
-read_cpuid_id function to derive the correct value, which is 32 for
-BCM2835 and 64 for BCM2836/7.
 
-Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
----
- .../interface/vchiq_arm/vchiq_2835_arm.c           | 24 +++++++++++++++++-----
- 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-index e767209..3537f60 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -42,6 +42,7 @@
- #include <linux/uaccess.h>
- #include <linux/mm.h>
- #include <linux/of.h>
-+#include <asm/cputype.h>
- #include <soc/bcm2835/raspberrypi-firmware.h>
- 
- #define TOTAL_SLOTS (VCHIQ_SLOT_ZERO_SLOTS + 2 * 32)
-@@ -81,13 +82,15 @@ static void __iomem *g_regs;
-  * VPU firmware, which determines the required alignment of the
-  * offsets/sizes in pagelists.
-  *
-- * Modern VPU firmware looks for a DT "cache-line-size" property in
-- * the VCHIQ node and will overwrite it with the actual L2 cache size,
-+ * Previous VPU firmware looked for a DT "cache-line-size" property in
-+ * the VCHIQ node and would overwrite it with the actual L2 cache size,
-  * which the kernel must then respect.  That property was rejected
-- * upstream, so we have to use the VPU firmware's compatibility value
-- * of 32.
-+ * upstream, so we now rely on both sides to "do the right thing" independently
-+ * of the other. To improve backwards compatibility, this new behaviour is
-+ * signalled to the firmware by the use of a corrected "reg" property on the
-+ * relevant Device Tree node.
-  */
--static unsigned int g_cache_line_size = 32;
-+static unsigned int g_cache_line_size;
- static unsigned int g_fragments_size;
- static char *g_fragments_base;
- static char *g_free_fragments;
-@@ -127,6 +130,17 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
- 	if (err < 0)
- 		return err;
- 
-+	/*
-+	 * The tempting L1_CACHE_BYTES macro doesn't work in the case of
-+	 * a kernel built with bcm2835_defconfig running on a BCM2836/7
-+	 * processor, hence the need for a runtime check. The dcache line size
-+	 * is encoded in one of the coprocessor registers, but there is no
-+	 * convenient way to access it short of embedded assembler, hence
-+	 * the use of read_cpuid_id(). The following test evaluates to true
-+	 * on a BCM2835 showing that it is ARMv6-ish, whereas
-+	 * cpu_architecture() will indicate that it is an ARMv7.
-+	 */
-+	g_cache_line_size = ((read_cpuid_id() & 0x7f000) == 0x7b000) ? 32 : 64;
- 	g_fragments_size = 2 * g_cache_line_size;
- 
- 	/* Allocate space for the channels in coherent memory */
--- 
-2.7.4
+于 2018年9月12日 GMT+08:00 下午10:49:12, Chen-Yu Tsai <wens@csie.org> 写到:
+>On Tue, Sep 4, 2018 at 4:44 PM Icenowy Zheng <icenowy@aosc.io> wrote:
+>>
+>>
+>>
+>> 于 2018年9月4日 GMT+08:00 下午4:40:56, Chen-Yu Tsai <wens@csie.org> 写到:
+>> >On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec
+><jernej.skrabec@siol.net>
+>> >wrote:
+>> >>
+>> >> From: Icenowy Zheng <icenowy@aosc.io>
+>> >>
+>> >> As we have already binding for the H6 system controller, add its
+>node
+>> >> to the device tree.
+>> >>
+>> >> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+>> >> [fixed compatible string]
+>> >> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+>> >
+>> >Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+>>
+>> By the way can these patches be applied first? (patches
+>> related to syscon).
+>>
+>> They're also needed for EMAC.
+>
+>Applied.
+>
+>BTW, the H6 system control EMAC register also has the internal PHY
+>related controls seen on H3/H5. IIRC you previously mentioned that
+>they have no effect?
+
+Yes, because the "internal PHY" on H6 is on AC200.
+
+The internal/external mux bit has effect (although it will mux
+to a non-existent PHY when switching to "internal", render
+EMAC not usable), but it also has effect on A64 (same effect
+with H6), on which it's not documented.
+
+>
+>ChenYu
+>
+>_______________________________________________
+>linux-arm-kernel mailing list
+>linux-arm-kernel@lists.infradead.org
+>http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
