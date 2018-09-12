@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v3 13/16] dt-bindings: thermal: Fix a typo in documentation
-Date: Wed, 12 Sep 2018 15:22:58 +0530
-Message-ID: <b55d8da64011d35ca16956feb17f89262b6a33b9.1536744310.git.amit.kucheria@linaro.org>
+Subject: [PATCH v3 14/16] arm64: dts: msm8916: Add gpu thermal zone
+Date: Wed, 12 Sep 2018 15:22:59 +0530
+Message-ID: <ffefc578b5cb9298e33f0ea480b3d521f34afd54.1536744310.git.amit.kucheria@linaro.org>
 References: <cover.1536744310.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1536744310.git.amit.kucheria@linaro.org>
@@ -9,31 +9,46 @@ In-Reply-To: <cover.1536744310.git.amit.kucheria@linaro.org>
 References: <cover.1536744310.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, Zhang Rui <rui.zhang@intel.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, andy.gross@linaro.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-c(1) + x(1) was actually meant to be c(1) * x(1).
+Initialise the gpu thermal zone to export temperature to userspace.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- Documentation/devicetree/bindings/thermal/thermal.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Documentation/devicetree/bindings/thermal/thermal.txt
-index eb7ee91556a5..ca14ba959e0d 100644
---- a/Documentation/devicetree/bindings/thermal/thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-@@ -152,7 +152,7 @@ Optional property:
-   Elem size: one cell	the sensors listed in the thermal-sensors property.
-   Elem type: signed	Coefficients defaults to 1, in case this property
- 			is not specified. A simple linear polynomial is used:
--			Z = c0 * x0 + c1 + x1 + ... + c(n-1) * x(n-1) + cn.
-+			Z = c0 * x0 + c1 * x1 + ... + c(n-1) * x(n-1) + cn.
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index be27d8dc9e6b..62f079ae9ba3 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -237,6 +237,26 @@
+ 			};
+ 		};
  
- 			The coefficients are ordered and they match with sensors
- 			by means of sensor ID. Additional coefficients are
++		gpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++
++			thermal-sensors = <&tsens 2>;
++
++			trips {
++				gpu_alert: trip0 {
++					temperature = <75000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++				gpu_crit: trip1 {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
+ 	};
+ 
+ 	cpu_opp_table: cpu_opp_table {
 -- 
 2.17.1
