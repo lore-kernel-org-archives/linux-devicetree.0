@@ -1,86 +1,54 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH 0/7 v7] Support for fsl-mc bus and its devices in SMMU
-Date: Wed, 12 Sep 2018 17:58:45 +0100
-Message-ID: <20180912165845.GD16071@arm.com>
-References: <1536587361-11047-1-git-send-email-nipun.gupta@nxp.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 2/5] PCI: provide pci_match_id() with CONFIG_PCI=n
+Date: Wed, 12 Sep 2018 12:17:07 -0500
+Message-ID: <20180912171707.GI118330@bhelgaas-glaptop.roam.corp.google.com>
+References: <20180910115935.163121-1-lkundrak@v3.sk>
+ <20180910115935.163121-3-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1536587361-11047-1-git-send-email-nipun.gupta@nxp.com>
+In-Reply-To: <20180910115935.163121-3-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nipun Gupta <nipun.gupta@nxp.com>
-Cc: joro@8bytes.org, robin.murphy@arm.com, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, laurentiu.tudor@nxp.com, bhelgaas@google.com, hch@lst.de, m.szyprowski@samsung.com, shawnguo@kernel.org, frowand.list@gmail.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, bharat.bhushan@nxp.com, stuyoder@gmail.com, leoyang.li@nxp.com
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nipun,
+Please capitalize the subject as:
 
-On Mon, Sep 10, 2018 at 07:19:14PM +0530, Nipun Gupta wrote:
-> This patchset defines IOMMU DT binding for fsl-mc bus and adds
-> support in SMMU for fsl-mc bus.
-> 
-> These patches
->   - Define property 'iommu-map' for fsl-mc bus (patch 1)
->   - Integrates the fsl-mc bus with the SMMU using this
->     IOMMU binding (patch 2,3,4)
->   - Adds the dma configuration support for fsl-mc bus (patch 5, 6)
->   - Updates the fsl-mc device node with iommu/dma related changes (patch 7)
+  PCI: Provide pci_match_id() with CONFIG_PCI=n
 
-It looks like you have all the Acks in place for this series now, so I
-assume it's going to go via Joerg directly. Is that right?
+On Mon, Sep 10, 2018 at 01:59:32PM +0200, Lubomir Rintel wrote:
+> This spares drivers from #ifdef-ing on CONFIG_PCI if the driver can be
+> optionally built on machines without PCI bus.
+> 
+> Consistent with acpi_driver_match_device() and similar.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Will
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-> Changes in v2:
->   - use iommu-map property for fsl-mc bus
->   - rebase over patchset https://patchwork.kernel.org/patch/10317337/
->     and make corresponding changes for dma configuration of devices on
->     fsl-mc bus
+Thanks!
+
+> ---
+>  include/linux/pci.h | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Changes in v3:
->   - move of_map_rid in drivers/of/address.c
-> 
-> Changes in v4:
->   - move of_map_rid in drivers/of/base.c
-> 
-> Changes in v5:
->   - break patch 5 in two separate patches (now patch 5/7 and patch 6/7)
->   - add changelog text in patch 3/7 and patch 5/7
->   - typo fix
-> 
-> Changes in v6:
->   - Updated fsl_mc_device_group() API to be more rational
->   - Added dma-coherent property in the LS2 smmu device node
->   - Minor fixes in the device-tree documentation
-> 
-> Changes in v7:
->   - Rebased over linux 4.19
-> 
-> Nipun Gupta (7):
->   Documentation: fsl-mc: add iommu-map device-tree binding for fsl-mc
->     bus
->   iommu/of: make of_pci_map_rid() available for other devices too
->   iommu/of: support iommu configuration for fsl-mc devices
->   iommu/arm-smmu: Add support for the fsl-mc bus
->   bus: fsl-mc: support dma configure for devices on fsl-mc bus
->   bus: fsl-mc: set coherent dma mask for devices on fsl-mc bus
->   arm64: dts: ls208xa: comply with the iommu map binding for fsl_mc
-> 
->  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |  39 ++++++++
->  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   7 +-
->  drivers/bus/fsl-mc/fsl-mc-bus.c                    |  16 +++-
->  drivers/iommu/arm-smmu.c                           |   7 ++
->  drivers/iommu/iommu.c                              |  13 +++
->  drivers/iommu/of_iommu.c                           |  25 ++++-
->  drivers/of/base.c                                  | 102 +++++++++++++++++++++
->  drivers/of/irq.c                                   |   5 +-
->  drivers/pci/of.c                                   | 101 --------------------
->  include/linux/fsl/mc.h                             |   8 ++
->  include/linux/iommu.h                              |   2 +
->  include/linux/of.h                                 |  11 +++
->  include/linux/of_pci.h                             |  10 --
->  13 files changed, 224 insertions(+), 122 deletions(-)
-> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index e72ca8dd6241..d2f14eb23ea4 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1702,6 +1702,10 @@ static inline int pci_irqd_intx_xlate(struct irq_domain *d,
+>  				      unsigned long *out_hwirq,
+>  				      unsigned int *out_type)
+>  { return -EINVAL; }
+> +
+> +static inline const struct pci_device_id *pci_match_id(const struct pci_device_id *ids,
+> +							 struct pci_dev *dev)
+> +{ return NULL; }
+>  #endif /* CONFIG_PCI */
+>  
+>  /* Include architecture-dependent settings and functions */
 > -- 
-> 1.9.1
+> 2.17.1
 > 
