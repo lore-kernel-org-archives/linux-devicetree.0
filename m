@@ -1,91 +1,43 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 10/13] ASoC: dt-bindings: Add WCD9335 MBHC specific
- properties
-Date: Wed, 12 Sep 2018 08:44:01 +0100
-Message-ID: <7de84d92-bc35-d0ea-217c-403ff2f28ee7@linaro.org>
-References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
- <20180904102500.30318-11-srinivas.kandagatla@linaro.org>
- <20180910200652.GA20896@bogus>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH 1/8] regulator: bd71837: Disable voltage monitoring for
+ LDO3/4
+Date: Wed, 12 Sep 2018 10:47:45 +0300
+Message-ID: <20180912074745.GD2381@localhost.localdomain>
+References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+ <cad2e7baeb7af2d6efbc6afba831b0513087d832.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180911124029.GO4185@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910200652.GA20896@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180911124029.GO4185@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: lee.jones@linaro.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Thanks for your review,
+On Tue, Sep 11, 2018 at 01:40:29PM +0100, Lee Jones wrote:
+> On Wed, 29 Aug 2018, Matti Vaittinen wrote:
+> 
+> > There is a HW quirk in BD71837. The shutdown sequence timings for
+> > bucks/LDOs which are enabled via register interface are changed.
+> > At PMIC poweroff the voltage for BUCK6/7 is cut immediately at the
+> > beginning of shut-down sequence. This causes LDO5/6 voltage
+> > monitoring to detect under voltage and force PMIC to emergency
+> > state instead of poweroff. Disable voltage monitoring for LDO5 and
+> > LDO6 at probe to avoid this.
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> >  drivers/regulator/bd71837-regulator.c | 19 +++++++++++++++++++
+> 
+> >  include/linux/mfd/rohm-bd718x7.h      | 33 ++++++++++++++++++++++++++++++---
+> 
+> For my own reference:
+>   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-On 10/09/18 21:06, Rob Herring wrote:
-> On Tue, Sep 04, 2018 at 11:24:57AM +0100, Srinivas Kandagatla wrote:
->> This patch add new bindings required to support MBHC
->> (Multi Button Headset Control) block in the codec.
->> This block is used for jack insert/removal detection,
->> headset type detection and 8 button press/release events.
->>
->> All these properties are very much specific to board.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../bindings/sound/qcom,wcd9335.txt           | 20 +++++++++++++++++++
->>   1 file changed, 20 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt b/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt
->> index 5d6ea66a863f..4d56c3ca9fa8 100644
->> --- a/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt
->> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt
->> @@ -55,6 +55,26 @@ Required properties with SLIMbus Interface:
->>   	Value type: <string>
->>   	Definition: Must contain "mclk", "mclk2" and "slimbus" strings.
->>   
->> +- o qcom,mbhc-vthreshold:
-> 
-> Needs unit suffix.
+I m not sure if it is relevant but I think this was already applied to
+Mark's regulator tree.
 
-Make sense, I will modify it
-
-qcom,mbhc-vthreshold-millivolt
-
- >
-> 
->> +	Usage: Optional, only required if headset button support required.
->> +	Value type: <u32 array>
->> +	Definition: Must contain an array of 8 threshold voltages in mV for
->> +		 8 buttons detection on headset.
->> +
->> +- qcom,hphl-jack-type-normally-open:
->> +	Usage: Optional, only required if headset button support required.
-> 
-> It's not required if the pin is NC, right?
-
-
-> 
->> +	Value type: <boolean>
->> +	Definition: present if hphl pin on jack is a NO (Normally Open).
->> +		If not specified, then its assumed that hphl pin on jack
->> +		is NC (Normally Closed).
-> 
-> Is the not specified case the more common case? If not, it should be.
-Yes, that is correct. In normal uscases we do not need these properties.
-> 
->> +
->> +- qcom,gnd-jack-type-normally-open:
->> +	Usage: Optional, only required if headset button support required.
-> 
-> Same here.
-
-> 
->> +	Value type: <boolean>
->> +	Definition: present if gnd pin on jack is NO (Normally Open).
->> +		 If not specified, then its assumed that gnd pin on
->> +		 jack is NC  (Normally Closed).
->> +
->>   - vdd-buck-supply:
->>   	Usage: required
->>   	Value type: <phandle>
->> -- 
->> 2.18.0
->>
+Br,
+	Matti Vaittinen
