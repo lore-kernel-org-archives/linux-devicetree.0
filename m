@@ -1,121 +1,58 @@
-From: Radu Pirea <radu_nicolae.pirea@upb.ro>
-Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
-Date: Wed, 12 Sep 2018 22:36:40 +0300
-Message-ID: <a143edd3c0de2ba98b64e642b4384edf4323be2b.camel@upb.ro>
-References: <20180911185839.GA25212@piout.net> <20180911224418.GK4185@dell>
-         <20180911225440.GL4185@dell> <20180912073355.GB2557@piout.net>
-         <20180912084143.GN4185@dell>
-         <CAMuHMdWefU0pw=c9TKOa+wGHchpg8JRfE0OnC4+wKDt-qrbH1A@mail.gmail.com>
-         <20180912105407.GR4185@dell> <20180912111757.GC2760@piout.net>
-         <20180912114352.GT4185@dell> <20180912121420.GE2760@piout.net>
-         <20180912131248.GA21544@dell>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v3 04/23] dt-bindings: media: Specify bus type for MIPI D-PHY,
+ others, explicitly
+Date: Thu, 13 Sep 2018 00:29:23 +0300
+Message-ID: <20180912212942.19641-5-sakari.ailus@linux.intel.com>
+References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912131248.GA21544@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, jacopo@jmondi.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-09-12 at 14:12 +0100, Lee Jones wrote:
-> On Wed, 12 Sep 2018, Alexandre Belloni wrote:
-> 
-> > On 12/09/2018 12:43:52+0100, Lee Jones wrote:
-> > > > > But ... we can't have it both ways.  *Either* it's a true
-> > > > > MFD, in
-> > > > > which case it can/should have 2 separate compatible strings
-> > > > > which can
-> > > > > be specified directly from the DT.  *Or* it's not an MFD.  In
-> > > > > the
-> > > > > latter case, which I think we're all agreeing on (else we'd
-> > > > > have 2
-> > > > > compatible strings), MFD is not the place to handle this (my
-> > > > > original
-> > > > > point).
-> > > > > 
-> > > > 
-> > > > If that is what bothers you, then let's move it out of mfd.
-> > > 
-> > > As I've already mentioned.  I don't just want it moved out of MFD
-> > > and
-> > > shoved somewhere else.  My aim is to fix this properly.
-> > > 
-> > 
-> > If it is out of MFD, then I'm not sure why you would care too much
-> > about
-> > it as you won't be maintaining that code. And I still this what was
-> > done
-> > was correct but I'm open to test what you suggest.
-> 
-> I care for the kernel in general, not just the areas I'm responsible
-> for.  I guess I'm just that kinda guy! ;)
-
-Well, Lee, like you, I think this driver should not be a MFD driver,
-but Alex has a good point of view. 
-
-> 
-> > > > > So ... this is a USART device which can do SPI, right?
-> > > > > 
-> > > > > My current thinking is that; as this is a USART device first
-> > > > > &
-> > > > > foremost, the USART should be probed in the first instance
-> > > > > regardless,
-> > > > > then if SPI mode is specified it (the USART driver) registers
-> > > > > the SPI
-> > > > > platform driver (as MFD does currently) and exits gracefully,
-> > > > > allowing
-> > > > > the SPI driver to take over.
-> > > > > 
-> > > > > Spanner in the works: is it physically possible to change the
-> > > > > mode at
-> > > > > run-time?  :s
-> > > > 
-> > > > Yes it is possible but on Linux that will not happen without
-> > > > probing
-> > > > the drivers again.
-> > > 
-> > > Not sure I understand what you mean.
-> > 
-> > I was just commenting on changing the mode at runtime.
-> 
-> Oh I see.  My question was relating to whether the H/W is physically
-> capable of changing modes on-the-fly, rather than how Linux would
-> handle that.  If this is something we'd wish to support, then it
-> would
-> have to be a single driver, which is why I was asking.  By separating
-> the drivers this way, we are blocking that as a
-> possibility.  Although
-> I guess the OP has already thought about that and made the decision
-> not to support it.
-
-Is possible to change modes on-the-fly, but you have no reason to do
-that. On the PCB you will have a SPI slave or a serial console :)
-Anyway, the current form of the driver, and through this I want to say
-"this ugly hack", allows the user to switch from serial to SPI mode by
-adding only one property to the device tree node of USART. If the
-driver were in his first form, a simple SPI driver, how you will make a
-dtsi file for an IP like this? You will add two nodes for the same IP
-in dtsi and will take care to enable correct node in dts?
-I think this driver is only a tradeoff between having an ugly hack in
-kernel or having an messy device tree.
-
-> 
-> > > I'm suggesting that you use the same platform_* interfaces MFD
-> > > uses to
-> > > register the SPI driver if SPI mode has been selected.  Only do
-> > > so
-> > > from the appropriate driver i.e. USART.
-> > 
-> > Yeah, I understood that but I didn't comment because I'm not sure
-> > this
-> > will work yet.
-> 
-> Other drivers already do this.
-
-Can you give me an example please?
-I am open to suggestions.
-
-Sorry for that acked-by. There was a lot of "reviewed-by", "acked-by",
-etc in a single version and I messed up :).
+QWxsb3cgc3BlY2lmeWluZyB0aGUgYnVzIHR5cGUgZXhwbGljaXRseSBmb3IgTUlQSSBELVBIWSwg
+cGFyYWxsZWwgYW5kCkJ0LjY1NiBidXNzZXMuIFRoaXMgaXMgdXNlZnVsIGZvciBkZXZpY2VzIHRo
+YXQgY2FuIG1ha2UgdXNlIG9mIGRpZmZlcmVudApidXMgdHlwZXMuIFRoZXJlIGFyZSBDU0ktMiB0
+cmFuc21pdHRlcnMgYW5kIHJlY2VpdmVycyBidXQgdGhlIFBIWQpzZWxlY3Rpb24gbmVlZHMgdG8g
+YmUgbWFkZSBiZXR3ZWVuIEMtUEhZIGFuZCBELVBIWTsgbWFueSBkZXZpY2VzIGFsc28Kc3VwcG9y
+dCBwYXJhbGxlbCBhbmQgQnQuNjU2IGludGVyZmFjZXMgYnV0IHRoZSBtZWFucyB0byBwYXNzIHRo
+YXQKaW5mb3JtYXRpb24gdG8gc29mdHdhcmUgd2Fzbid0IHRoZXJlLgoKQXV0b2RldGVjdGlvbiAo
+dmFsdWUgMCkgaXMgcmVtb3ZlZCBhcyBhbiBvcHRpb24gYXMgdGhlIHByb3BlcnR5IGNvdWxkIGJl
+CnNpbXBseSBvbWl0dGVkIGluIHRoYXQgY2FzZS4KClNpZ25lZC1vZmYtYnk6IFNha2FyaSBBaWx1
+cyA8c2FrYXJpLmFpbHVzQGxpbnV4LmludGVsLmNvbT4KUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0IHwgNCArKystCiAxIGZpbGUgY2hhbmdlZCwgMyBp
+bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0IGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CmluZGV4
+IGJhZjlkOTc1NmIzYy4uZjg4NGFkYTBiZmZjIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQKKysrIGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CkBA
+IC0xMDAsMTAgKzEwMCwxMiBAQCBPcHRpb25hbCBlbmRwb2ludCBwcm9wZXJ0aWVzCiAgIHNsYXZl
+IGRldmljZSAoZGF0YSBzb3VyY2UpIGJ5IHRoZSBtYXN0ZXIgZGV2aWNlIChkYXRhIHNpbmspLiBJ
+biB0aGUgbWFzdGVyCiAgIG1vZGUgdGhlIGRhdGEgc291cmNlIGRldmljZSBpcyBhbHNvIHRoZSBz
+b3VyY2Ugb2YgdGhlIHN5bmNocm9uaXphdGlvbiBzaWduYWxzLgogLSBidXMtdHlwZTogZGF0YSBi
+dXMgdHlwZS4gUG9zc2libGUgdmFsdWVzIGFyZToKLSAgMCAtIGF1dG9kZXRlY3QgYmFzZWQgb24g
+b3RoZXIgcHJvcGVydGllcyAoTUlQSSBDU0ktMiBELVBIWSwgcGFyYWxsZWwgb3IgQnQ2NTYpCiAg
+IDEgLSBNSVBJIENTSS0yIEMtUEhZCiAgIDIgLSBNSVBJIENTSTEKICAgMyAtIENDUDIKKyAgNCAt
+IE1JUEkgQ1NJLTIgRC1QSFkKKyAgNSAtIFBhcmFsbGVsCisgIDYgLSBCdC42NTYKIC0gYnVzLXdp
+ZHRoOiBudW1iZXIgb2YgZGF0YSBsaW5lcyBhY3RpdmVseSB1c2VkLCB2YWxpZCBmb3IgdGhlIHBh
+cmFsbGVsIGJ1c3Nlcy4KIC0gZGF0YS1zaGlmdDogb24gdGhlIHBhcmFsbGVsIGRhdGEgYnVzc2Vz
+LCBpZiBidXMtd2lkdGggaXMgdXNlZCB0byBzcGVjaWZ5IHRoZQogICBudW1iZXIgb2YgZGF0YSBs
+aW5lcywgZGF0YS1zaGlmdCBjYW4gYmUgdXNlZCB0byBzcGVjaWZ5IHdoaWNoIGRhdGEgbGluZXMg
+YXJlCi0tIAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
