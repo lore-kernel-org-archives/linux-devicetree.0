@@ -1,99 +1,162 @@
 From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 08/11] arm: dts: omap: Update coresight bindings for hardware ports
-Date: Wed, 12 Sep 2018 14:53:49 +0100
-Message-ID: <20180912135352.19722-9-suzuki.poulose@arm.com>
+Subject: [PATCH v2 11/11] arm: dts: ste-dbx5x0: Update coresight bindings for hardware port
+Date: Wed, 12 Sep 2018 14:53:52 +0100
+Message-ID: <20180912135352.19722-12-suzuki.poulose@arm.com>
 References: <20180912135352.19722-1-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180912135352.19722-1-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, coresight@lists.linaro.org, leo.yan@linaro.org, suzuki.poulose@arm.com, linux-omap@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, coresight@lists.linaro.org, leo.yan@linaro.org, suzuki.poulose@arm.com, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Switch to the new coresight bindings for hardware ports
+Switch to the new coresight bindings
 
-Cc: linux-omap@vger.kernel.org
-Cc: "Benoît Cousson" <bcousson@baylibre.com>
-Cc: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- arch/arm/boot/dts/omap3-beagle-xm.dts | 17 ++++++++++-------
- arch/arm/boot/dts/omap3-beagle.dts    | 17 ++++++++++-------
- 2 files changed, 20 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 65 ++++++++++++++++---------------
+ 1 file changed, 33 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index d80587de0bbf..9985ee2aae0c 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -160,10 +160,11 @@
- 
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etb_in: endpoint {
--				slave-mode;
--				remote-endpoint = <&etm_out>;
-+		in-ports {
-+			port {
-+				etb_in: endpoint {
-+					remote-endpoint = <&etm_out>;
-+				};
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index 2310a4e97768..7f94b5a53205 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -67,9 +67,11 @@
+ 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 			cpu = <&CPU0>;
+-			port {
+-				ptm0_out_port: endpoint {
+-					remote-endpoint = <&funnel_in_port0>;
++			out-ports {
++				port {
++					ptm0_out_port: endpoint {
++						remote-endpoint = <&funnel_in_port0>;
++					};
+ 				};
  			};
  		};
- 	};
-@@ -174,9 +175,11 @@
- 
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etm_out: endpoint {
--				remote-endpoint = <&etb_in>;
-+		out-ports {
-+			port {
-+				etm_out: endpoint {
-+					remote-endpoint = <&etb_in>;
-+				};
+@@ -81,9 +83,11 @@
+ 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
+ 			clock-names = "apb_pclk", "atclk";
+ 			cpu = <&CPU1>;
+-			port {
+-				ptm1_out_port: endpoint {
+-					remote-endpoint = <&funnel_in_port1>;
++			out-ports {
++				port {
++					ptm1_out_port: endpoint {
++						remote-endpoint = <&funnel_in_port1>;
++					};
+ 				};
  			};
  		};
- 	};
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index 3ca8991a6c3e..91bb50ad9a4f 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -147,10 +147,11 @@
+@@ -94,32 +98,29 @@
  
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etb_in: endpoint {
--				slave-mode;
--				remote-endpoint = <&etm_out>;
-+		in-ports {
-+			port {
-+				etb_in: endpoint {
-+					remote-endpoint = <&etm_out>;
-+				};
+ 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
+ 			clock-names = "apb_pclk", "atclk";
+-			ports {
+-				#address-cells = <1>;
+-				#size-cells = <0>;
+-
+-				/* funnel output ports */
+-				port@0 {
+-					reg = <0>;
++			out-ports {
++				port {
+ 					funnel_out_port: endpoint {
+ 						remote-endpoint =
+ 							<&replicator_in_port0>;
+ 					};
+ 				};
++			};
+ 
+-				/* funnel input ports */
+-				port@1 {
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
+ 					reg = <0>;
+ 					funnel_in_port0: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&ptm0_out_port>;
+ 					};
+ 				};
+ 
+-				port@2 {
++				port@1 {
+ 					reg = <1>;
+ 					funnel_in_port1: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&ptm1_out_port>;
+ 					};
+ 				};
+@@ -131,11 +132,10 @@
+ 			clocks = <&prcmu_clk PRCMU_APEATCLK>;
+ 			clock-names = "atclk";
+ 
+-			ports {
++			out-ports {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 
+-				/* replicator output ports */
+ 				port@0 {
+ 					reg = <0>;
+ 					replicator_out_port0: endpoint {
+@@ -148,12 +148,11 @@
+ 						remote-endpoint = <&etb_in_port>;
+ 					};
+ 				};
++			};
+ 
+-				/* replicator input port */
+-				port@2 {
+-					reg = <0>;
++			in-ports {
++				port {
+ 					replicator_in_port0: endpoint {
+-						slave-mode;
+ 						remote-endpoint = <&funnel_out_port>;
+ 					};
+ 				};
+@@ -166,10 +165,11 @@
+ 
+ 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
+ 			clock-names = "apb_pclk", "atclk";
+-			port {
+-				tpiu_in_port: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&replicator_out_port0>;
++			in-ports {
++				port {
++					tpiu_in_port: endpoint {
++						remote-endpoint = <&replicator_out_port0>;
++					};
+ 				};
  			};
  		};
- 	};
-@@ -161,9 +162,11 @@
+@@ -180,10 +180,11 @@
  
- 		clocks = <&emu_src_ck>;
- 		clock-names = "apb_pclk";
--		port {
--			etm_out: endpoint {
--				remote-endpoint = <&etb_in>;
-+		out-ports {
-+			port {
-+				etm_out: endpoint {
-+					remote-endpoint = <&etb_in>;
-+				};
+ 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
+ 			clock-names = "apb_pclk", "atclk";
+-			port {
+-				etb_in_port: endpoint {
+-					slave-mode;
+-					remote-endpoint = <&replicator_out_port1>;
++			in-ports {
++				port {
++					etb_in_port: endpoint {
++						remote-endpoint = <&replicator_out_port1>;
++					};
+ 				};
  			};
  		};
- 	};
 -- 
 2.19.0
