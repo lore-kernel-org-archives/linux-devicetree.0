@@ -1,57 +1,85 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH] dt-bindings: power: Introduce suspend states supported
- properties
-Date: Wed, 12 Sep 2018 12:37:13 +0100
-Message-ID: <2c08c85f-a3e0-c1ce-3f87-0866868bd7e4@arm.com>
-References: <1536725372-29174-1-git-send-email-j-keerthy@ti.com>
- <781b2eb2-1568-b4e5-46f2-c4612862d728@arm.com>
- <5c49cb0c-a436-c957-e6b3-5f3aa7af92f9@ti.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v2 0/7] regulator/mfd/dt_bindings: bd718x7: Support ROHM
+ bd71847
+Date: Wed, 12 Sep 2018 14:43:59 +0300
+Message-ID: <cover.1536750863.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5c49cb0c-a436-c957-e6b3-5f3aa7af92f9@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com, tony@atomide.com
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, sboyd@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Patch series adding support for ROHM BD71847 PMIC.
 
+ROHM BD71847 is modified version of ROHM BD71837 Power Management IC.
+BD71847 integrates 6 buck regulators and 6  LDO’s.
 
-On 12/09/18 12:19, Keerthy wrote:
-> 
-> 
-> On Wednesday 12 September 2018 04:32 PM, Sudeep Holla wrote:
->>
->>
->> On 12/09/18 05:09, Keerthy wrote:
->>> Introuduce linux generic suspend states supported properties.
->>> It is convenient for the generic suspend path to have
->>> the knowledge of the suspend states supported based on the
->>> device tree properties based on which it can either be suspended
->>> or safely bailed out of suspend if none of the suspend states
->>> are supported.
->>>
->>
->> NACK for any bindings that are linux specific. The suspend feature is so
->> platform dependent that I see no need for generic Linux bindings for the
->> same.
-> 
-> suspend to mem and suspend to disk are pretty generic states and i agree
-> implementation is platform dependent so why not have properties that
-> convey if they are supported?
-> 
+The patch series adds support for BD71847 in BD71837 driver. It also
+extends BD71837 to support all BUCK/LDO output voltages.
 
-We already have power domains and idle states for that. If you need to
-restrict few states on some platform for whatever reasons, just disable
-those states. I don't see the need to add any more bindings for the same.
+Support for "pickable voltage ranges" is introduced in order to fully
+support BD71837/BD71847 voltage selection registers. Some of the voltage
+regulators provide different multiple voltage ranges and output voltage
+is determined by range selection bit(s) and voltage selection bits
+instead of plain voltage selection bits.
 
-> Is the disagreement over making the properties being linux specific?
-> 
+Changelog v2
+- Dropped first patch (voltage monitoring fix) and "rebased" on top of
+  next-20180912 because first patch was already applied.
+- Fixed two commit message typos.
+Fixes based on comments from Lee Jones
+- removed PMIC revision check.
+- stored chip type directly to data pointer
+- minor readability improvement to DT binding
+- unified naming for last enum members
+- moved unrelated changes from pickable ranges patch
+- removed C++ style comment
 
-Yes.
+Patch 2:
+	limited BD71847 support (without range selection)
+Patch 3:
+	BD71847 device-tree bindings for regulators
+Patch 4:
+	BD71847 device-tree bindings for mfd
+Patch 5:
+	Voltage range selection support to regulator helpers
+Patch 6:
+	Simple renaming plenty of BD71837 occurrences to BD718XX
+Patch 7:
+	BD71837/BD71847 Full voltage range support using helpers from
+	patch 5
+Patch 8:
+	Renaming bd71837 regulator driver to bd718x7
+
+this patch series is based on linux-next tag next-20180912.
+
+Matti Vaittinen (7):
+  regulator: Support ROHM BD71847 power management IC
+  regulator: dt bindings: add BD71847 device-tree binding documentation
+  mfd: dt bindings: add BD71847 device-tree binding documentation
+  regulator: Support regulators where voltage ranges are selectable
+  regulator/mfd: bd718xx: rename bd71837/bd71847 common instances
+  regulator: bd718XX use pickable ranges
+  regulator: bd718xx: rename bd71837 to 718xx
+
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |   17 +-
+ .../bindings/regulator/rohm,bd71837-regulator.txt  |   12 +-
+ drivers/mfd/rohm-bd718x7.c                         |  160 ++-
+ drivers/regulator/Kconfig                          |    2 +-
+ drivers/regulator/Makefile                         |    2 +-
+ drivers/regulator/bd71837-regulator.c              |  644 -----------
+ drivers/regulator/bd718x7-regulator.c              | 1138 ++++++++++++++++++++
+ drivers/regulator/core.c                           |    5 +
+ drivers/regulator/helpers.c                        |  232 ++++
+ include/linux/mfd/rohm-bd718x7.h                   |  333 +++---
+ include/linux/regulator/driver.h                   |   20 +-
+ 11 files changed, 1644 insertions(+), 921 deletions(-)
+ delete mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 drivers/regulator/bd718x7-regulator.c
 
 -- 
-Regards,
-Sudeep
+2.14.3
