@@ -1,299 +1,261 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: [PATCH v3] iio: proximity: Add driver support for ST's VL53L0X ToF ranging sensor.
-Date: Wed, 12 Sep 2018 10:20:34 +0800
-Message-ID: <20180912022034.25972-1-songqiang.1304521@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 06/11] dts: arm: imx7{d,s}: Update coresight binding for
+ hardware ports
+Date: Wed, 12 Sep 2018 10:21:57 +0800
+Message-ID: <20180912022152.GG28469@dragon>
+References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
+ <1536661032-30481-7-git-send-email-suzuki.poulose@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536661032-30481-7-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, ak@it-klinger.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Song Qiang <songqiang.1304521@gmail.com>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This driver was originally written by ST in 2016 as a misc input device
-driver, and hasn't been maintained for a long time. I grabbed some code
-from it's API and reformed it into a iio proximity device driver.
-This version of driver uses i2c bus to talk to the sensor and
-polling for measuring completes, so no irq line is needed.
-This version of driver supports only one-shot mode, and it can be
-tested with reading from
-/sys/bus/iio/devices/iio:deviceX/in_distance_raw
+On Tue, Sep 11, 2018 at 11:17:07AM +0100, Suzuki K Poulose wrote:
+> Switch to the updated coresight bindings.
+> 
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
----
-Changes in v2:
-	- Clean up the register table.
-	- Sort header files declarations.
-	- Replace some bit definations with GENMASK() and BIT().
-	- Clean up some code and comments that's useless for now.
-	- Change the order of some the definations of some variables to reversed
-	  xmas tree order.
-	- Using do...while() rather while and check.
-	- Replace pr_err() with dev_err().
-	- Remove device id declaration since we recommend to use DT.
-	- Remove .owner = THIS_MODULE.
-	- Replace probe() with probe_new() hook.
-	- Remove IIO_BUFFER and IIO_TRIGGERED_BUFFER dependences.
-	- Change the driver module name to vl53l0x-i2c.
-	- Align all the parameters if they are in the same function with open
-	  parentheses.
-	- Replace iio_device_register() with devm_iio_device_register
-	  for better resource management.
-	- Remove the vl53l0x_remove() since it's not needed.
-	- Remove dev_set_drvdata() since it's already setted above.
+As per the convention we use for subject prefix, I suggest you use
 
-Changes in v3:
-	- Recover ST's copyright.
-	- Clean up indio_dev member in vl53l0x_data struct since it's
-	  useless now.
-	- Replace __le16_to_cpu() with le16_to_cpu().
-	- Remove the iio_device_{claim|release}_direct_mode() since it's
-	  only needed when we use buffered mode.
-	- Clean up some coding style problems.
+  'ARM: dts: imx7: ...'
 
- .../bindings/iio/proximity/vl53l0x.txt        |  12 ++
- drivers/iio/proximity/Kconfig                 |  11 ++
- drivers/iio/proximity/Makefile                |   2 +
- drivers/iio/proximity/vl53l0x-i2c.c           | 184 ++++++++++++++++++
- 4 files changed, 209 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
- create mode 100644 drivers/iio/proximity/vl53l0x-i2c.c
+Shawn
 
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-new file mode 100644
-index 000000000000..64b69442f08e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-@@ -0,0 +1,12 @@
-+ST's VL53L0X ToF ranging sensor
-+
-+Required properties:
-+	- compatible: must be "st,vl53l0x-i2c"
-+	- reg: i2c address where to find the device
-+
-+Example:
-+
-+vl53l0x@29 {
-+	compatible = "st,vl53l0x-i2c";
-+	reg = <0x29>;
-+};
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index f726f9427602..5f421cbd37f3 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -79,4 +79,15 @@ config SRF08
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf08.
- 
-+config VL53L0X_I2C
-+	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
-+	depends on I2C
-+	help
-+	  Say Y here to build a driver for STMicroelectronics VL53L0X
-+	  ToF ranger sensors with i2c interface.
-+	  This driver can be used to measure the distance of objects.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vl53l0x-i2c.
-+
- endmenu
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 4f4ed45e87ef..dedfb5bf3475 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -10,3 +10,5 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-+obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
-+
-diff --git a/drivers/iio/proximity/vl53l0x-i2c.c b/drivers/iio/proximity/vl53l0x-i2c.c
-new file mode 100644
-index 000000000000..0f7f124a38ed
---- /dev/null
-+++ b/drivers/iio/proximity/vl53l0x-i2c.c
-@@ -0,0 +1,184 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ *  Support for ST's VL53L0X FlightSense ToF Ranger Sensor on a i2c bus.
-+ *
-+ *  Copyright (C) 2016 STMicroelectronics Imaging Division.
-+ *  Copyright (C) 2018 Song Qiang <songqiang.1304521@gmail.com>
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/i2c.h>
-+#include <linux/iio/iio.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/slab.h>
-+
-+#define VL53L0X_DRV_NAME				"vl53l0x-i2c"
-+
-+#define VL_REG_SYSRANGE_MODE_MASK			GENMASK(3, 0)
-+#define VL_REG_SYSRANGE_START				0x00
-+#define VL_REG_SYSRANGE_MODE_SINGLESHOT			0x00
-+#define VL_REG_SYSRANGE_MODE_START_STOP			BIT(0)
-+#define VL_REG_SYSRANGE_MODE_BACKTOBACK			BIT(1)
-+#define VL_REG_SYSRANGE_MODE_TIMED			BIT(2)
-+#define VL_REG_SYSRANGE_MODE_HISTOGRAM			BIT(3)
-+
-+#define VL_REG_SYS_SEQUENCE_CFG				BIT(0)
-+#define VL_REG_SYS_INTERMEASUREMENT_PERIOD		BIT(2)
-+#define VL_REG_SYS_RANGE_CFG				0x09
-+
-+#define VL_REG_SYS_INT_GPIO_DISABLED			0x00
-+#define VL_REG_SYS_INT_GPIO_LEVEL_LOW			BIT(0)
-+#define VL_REG_SYS_INT_GPIO_LEVEL_HIGH			BIT(1)
-+#define VL_REG_SYS_INT_GPIO_OUT_OF_WINDOW		0x03
-+#define VL_REG_SYS_INT_GPIO_NEW_SAMPLE_READY		BIT(2)
-+#define VL_REG_SYS_INT_CFG_GPIO				0x0A
-+#define VL_REG_SYS_INT_CLEAR				0x0B
-+#define VL_REG_GPIO_HV_MUX_ACTIVE_HIGH			0x84
-+
-+#define VL_REG_RESULT_INT_STATUS			0x13
-+#define VL_REG_RESULT_RANGE_STATUS			0x14
-+#define VL_REG_RESULT_RANGE_SATTUS_COMPLETE		BIT(0)
-+
-+#define VL_REG_I2C_SLAVE_DEVICE_ADDRESS			0x8a
-+
-+#define VL_REG_IDENTIFICATION_MODEL_ID			0xc0
-+#define VL_REG_IDENTIFICATION_REVISION_ID		0xc2
-+
-+struct vl53l0x_data {
-+	struct i2c_client *client;
-+};
-+
-+static int vl53l0x_read_proximity(struct vl53l0x_data *data,
-+				  const struct iio_chan_spec *chan,
-+				  int *val)
-+{
-+	u8 write_command = VL_REG_RESULT_RANGE_STATUS;
-+	struct i2c_client *client = data->client;
-+	unsigned int tries = 20;
-+	struct i2c_msg msg[2];
-+	u8 buffer[12];
-+	int ret;
-+
-+	ret = i2c_smbus_write_byte_data(data->client,
-+					VL_REG_SYSRANGE_START, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	do {
-+		ret = i2c_smbus_read_byte_data(data->client,
-+					       VL_REG_RESULT_RANGE_STATUS);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ret & VL_REG_RESULT_RANGE_SATTUS_COMPLETE)
-+			break;
-+
-+		usleep_range(1000, 5000);
-+	} while (tries--);
-+	if (!tries)
-+		return -ETIMEDOUT;
-+
-+	msg[0].addr = client->addr;
-+	msg[0].buf = &write_command;
-+	msg[0].len = 1;
-+	msg[0].flags = client->flags | I2C_M_STOP;
-+
-+	msg[1].addr = client->addr;
-+	msg[1].buf = buffer;
-+	msg[1].len = 12;
-+	msg[1].flags = client->flags | I2C_M_RD;
-+
-+	ret = i2c_transfer(client->adapter, msg, 2);
-+	if (ret < 0)
-+		return ret;
-+	else if (ret != 2)
-+		dev_err(&data->client->dev, "vl53l0x: consecutively read error. ");
-+
-+	*val = le16_to_cpu((buffer[10] << 8) + buffer[11]);
-+
-+	return 0;
-+}
-+
-+static const struct iio_chan_spec vl53l0x_channels[] = {
-+	{
-+		.type = IIO_DISTANCE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-+	},
-+	IIO_CHAN_SOFT_TIMESTAMP(1),
-+};
-+
-+static int vl53l0x_read_raw(struct iio_dev *indio_dev,
-+			    const struct iio_chan_spec *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct vl53l0x_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (chan->type != IIO_DISTANCE) {
-+		dev_err(&data->client->dev, "vl53l0x: iio type error");
-+		return -EINVAL;
-+	}
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = vl53l0x_read_proximity(data, chan, val);
-+		if (ret < 0)
-+			dev_err(&data->client->dev,
-+				"vl53l0x: raw value read error with %d", ret);
-+
-+		return IIO_VAL_INT;
-+	default:
-+		dev_err(&data->client->dev, "vl53l0x: IIO_CHAN_* not recognzed.");
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vl53l0x_info = {
-+	.read_raw = vl53l0x_read_raw,
-+};
-+
-+static int vl53l0x_probe(struct i2c_client *client)
-+{
-+	struct vl53l0x_data *data;
-+	struct iio_dev *indio_dev;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	data->client = client;
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	if (!i2c_check_functionality(client->adapter,
-+				     I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_I2C))
-+		return -EOPNOTSUPP;
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->name = VL53L0X_DRV_NAME;
-+	indio_dev->info = &vl53l0x_info;
-+	indio_dev->channels = vl53l0x_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vl53l0x_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static const struct of_device_id st_vl53l0x_dt_match[] = {
-+	{ .compatible = "st,vl53l0x-i2c", },
-+	{ }
-+};
-+
-+static struct i2c_driver vl53l0x_driver = {
-+	.driver = {
-+		.name = VL53L0X_DRV_NAME,
-+		.of_match_table = st_vl53l0x_dt_match,
-+	},
-+	.probe_new = vl53l0x_probe,
-+};
-+module_i2c_driver(vl53l0x_driver);
-+
-+MODULE_AUTHOR("Song Qiang <songqiang.1304521@gmail.com>");
-+MODULE_DESCRIPTION("ST vl53l0x ToF ranging sensor");
-+MODULE_LICENSE("GPL");
--- 
-2.17.1
+> ---
+>  arch/arm/boot/dts/imx7d.dtsi | 11 ++++---
+>  arch/arm/boot/dts/imx7s.dtsi | 78 ++++++++++++++++++++++++++------------------
+>  2 files changed, 53 insertions(+), 36 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d.dtsi b/arch/arm/boot/dts/imx7d.dtsi
+> index 7cbc2ff..4ced17c 100644
+> --- a/arch/arm/boot/dts/imx7d.dtsi
+> +++ b/arch/arm/boot/dts/imx7d.dtsi
+> @@ -63,9 +63,11 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			port {
+> -				etm1_out_port: endpoint {
+> -					remote-endpoint = <&ca_funnel_in_port1>;
+> +			out-ports {
+> +				port {
+> +					etm1_out_port: endpoint {
+> +						remote-endpoint = <&ca_funnel_in_port1>;
+> +					};
+>  				};
+>  			};
+>  		};
+> @@ -148,11 +150,10 @@
+>  	};
+>  };
+>  
+> -&ca_funnel_ports {
+> +&ca_funnel_in_ports {
+>  	port@1 {
+>  		reg = <1>;
+>  		ca_funnel_in_port1: endpoint {
+> -			slave-mode;
+>  			remote-endpoint = <&etm1_out_port>;
+>  		};
+>  	};
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index a052198..9176885 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -106,7 +106,7 @@
+>  		 */
+>  		compatible = "arm,coresight-replicator";
+>  
+> -		ports {
+> +		out-ports {
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  				/* replicator output ports */
+> @@ -123,12 +123,15 @@
+>  					remote-endpoint = <&etr_in_port>;
+>  				};
+>  			};
+> +		};
+>  
+> -			/* replicator input port */
+> -			port@2 {
+> +		in-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+>  				reg = <0>;
+>  				replicator_in_port0: endpoint {
+> -					slave-mode;
+>  					remote-endpoint = <&etf_out_port>;
+>  				};
+>  			};
+> @@ -168,28 +171,31 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			ca_funnel_ports: ports {
+> +			ca_funnel_in_ports: in-ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+> -				/* funnel input ports */
+>  				port@0 {
+>  					reg = <0>;
+>  					ca_funnel_in_port0: endpoint {
+> -						slave-mode;
+>  						remote-endpoint = <&etm0_out_port>;
+>  					};
+>  				};
+>  
+> -				/* funnel output port */
+> -				port@2 {
+> +				/* the other input ports are not connect to anything */
+> +			};
+> +
+> +			out-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+>  					reg = <0>;
+>  					ca_funnel_out_port0: endpoint {
+>  						remote-endpoint = <&hugo_funnel_in_port0>;
+>  					};
+>  				};
+>  
+> -				/* the other input ports are not connect to anything */
+>  			};
+>  		};
+>  
+> @@ -200,9 +206,11 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			port {
+> -				etm0_out_port: endpoint {
+> -					remote-endpoint = <&ca_funnel_in_port0>;
+> +			out-ports {
+> +				port {
+> +					etm0_out_port: endpoint {
+> +						remote-endpoint = <&ca_funnel_in_port0>;
+> +					};
+>  				};
+>  			};
+>  		};
+> @@ -213,15 +221,13 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			ports {
+> +			in-ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+> -				/* funnel input ports */
+>  				port@0 {
+>  					reg = <0>;
+>  					hugo_funnel_in_port0: endpoint {
+> -						slave-mode;
+>  						remote-endpoint = <&ca_funnel_out_port0>;
+>  					};
+>  				};
+> @@ -229,18 +235,22 @@
+>  				port@1 {
+>  					reg = <1>;
+>  					hugo_funnel_in_port1: endpoint {
+> -						slave-mode; /* M4 input */
+> +						/* M4 input */
+>  					};
+>  				};
+> +				/* the other input ports are not connect to anything */
+> +			};
+>  
+> -				port@2 {
+> +			out-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+>  					reg = <0>;
+>  					hugo_funnel_out_port0: endpoint {
+>  						remote-endpoint = <&etf_in_port>;
+>  					};
+>  				};
+> -
+> -				/* the other input ports are not connect to anything */
+>  			};
+>  		};
+>  
+> @@ -250,19 +260,23 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			ports {
+> +			in-ports {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+>  
+>  				port@0 {
+>  					reg = <0>;
+>  					etf_in_port: endpoint {
+> -						slave-mode;
+>  						remote-endpoint = <&hugo_funnel_out_port0>;
+>  					};
+>  				};
+> +			};
+>  
+> -				port@1 {
+> +			out-ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				port@0 {
+>  					reg = <0>;
+>  					etf_out_port: endpoint {
+>  						remote-endpoint = <&replicator_in_port0>;
+> @@ -277,10 +291,11 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			port {
+> -				etr_in_port: endpoint {
+> -					slave-mode;
+> -					remote-endpoint = <&replicator_out_port1>;
+> +			in-ports {
+> +				port {
+> +					etr_in_port: endpoint {
+> +						remote-endpoint = <&replicator_out_port1>;
+> +					};
+>  				};
+>  			};
+>  		};
+> @@ -291,10 +306,11 @@
+>  			clocks = <&clks IMX7D_MAIN_AXI_ROOT_CLK>;
+>  			clock-names = "apb_pclk";
+>  
+> -			port {
+> -				tpiu_in_port: endpoint {
+> -					slave-mode;
+> -					remote-endpoint = <&replicator_out_port0>;
+> +			in-ports {
+> +				port {
+> +					tpiu_in_port: endpoint {
+> +						remote-endpoint = <&replicator_out_port0>;
+> +					};
+>  				};
+>  			};
+>  		};
+> -- 
+> 2.7.4
+> 
