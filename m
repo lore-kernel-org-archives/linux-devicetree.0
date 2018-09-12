@@ -1,58 +1,80 @@
-From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Subject: [PATCH v6 4/4] dt-bindings: msm: Update documentation of qcom,llcc
-Date: Wed, 12 Sep 2018 11:06:35 -0700
-Message-ID: <1536775595-11192-5-git-send-email-vnkgutta@codeaurora.org>
-References: <1536775595-11192-1-git-send-email-vnkgutta@codeaurora.org>
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH v4 4/5] iio: fxas21002c: add ODR/Scale support
+Date: Wed, 12 Sep 2018 23:53:50 +0530
+Message-ID: <20180912182350.GA13032@himanshu-Vostro-3559>
+References: <20180911150011.31964-4-afonsobordado@az8.co>
+ <201809121715.5Babt1QC%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536775595-11192-1-git-send-email-vnkgutta@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <201809121715.5Babt1QC%fengguang.wu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>, evgreen@chromium.org, robh@kernel.org, mchehab@kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, tsoni@codeaurora.org, ckadabi@codeaurora.org, rishabhb@codeaurora.org, swboyd@chromium.org, bjorn.andersson@linaro.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+To: Afonso Bordado <afonsobordado@az8.co>
+Cc: kbuild-all@01.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add reg-names and interrupts for LLCC documentation and the usage
-examples. llcc broadcast base is added in addition to llcc base,
-which is used for llcc broadcast writes.
+Hello Afonso,
 
-Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/arm/msm/qcom,llcc.txt         | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+On Wed, Sep 12, 2018 at 05:26:01PM +0800, kbuild test robot wrote:
+> Hi Afonso,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on iio/togreg]
+> [also build test ERROR on v4.19-rc3 next-20180912]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Afonso-Bordado/iio-gyro-add-support-for-fxas21002c/20180912-084443
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+> config: i386-allmodconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386 
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> ERROR: "__divdi3" [drivers/iio/gyro/fxas21002c.ko] undefined!
+> >> ERROR: "__udivdi3" [drivers/iio/gyro/fxas21002c.ko] undefined!
 
-diff --git a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-index 5e85749..eaee06b 100644
---- a/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-+++ b/Documentation/devicetree/bindings/arm/msm/qcom,llcc.txt
-@@ -16,11 +16,26 @@ Properties:
- - reg:
- 	Usage: required
- 	Value Type: <prop-encoded-array>
--	Definition: Start address and the the size of the register region.
-+	Definition: The first element specifies the llcc base start address and
-+		    the size of the register region. The second element specifies
-+		    the llcc broadcast base address and size of the register region.
-+
-+- reg-names:
-+        Usage: required
-+        Value Type: <stringlist>
-+        Definition: Register region names. Must be "llcc_base", "llcc_broadcast_base".
-+
-+- interrupts:
-+	Usage: required
-+	Definition: The interrupt is associated with the llcc edac device.
-+			It's used for llcc cache single and double bit error detection
-+			and reporting.
- 
- Example:
- 
- 	cache-controller@1100000 {
- 		compatible = "qcom,sdm845-llcc";
--		reg = <0x1100000 0x250000>;
-+		reg = <0x1100000 0x200000>, <0x1300000 0x50000> ;
-+		reg-names = "llcc_base", "llcc_broadcast_base";
-+		interrupts = <GIC_SPI 582 IRQ_TYPE_LEVEL_HIGH>;
- 	};
+Hmm. This is nasty error that had hit me back and occurs when you
+do 64 bit arithmetic in your code and assume it will also build for
+32 bit environment(i386).
+
+https://lists.01.org/pipermail/kbuild-all/2018-July/050481.html
+
+But looking at the code seems like there is no such 64 bit division
+which is why 0-day didn't inform you the exact line of error unlike
+my case in above link.
+
+And I suspect it may be originating from your code snippet:
+
+#define FXAS21002C_SCALE(scale) (IIO_DEGREE_TO_RAD(62500U >> (scale)))
+
+and looking at the implementation:
+
+include/linux/iio/iio.h
+/**
+ * IIO_DEGREE_TO_RAD() - Convert degree to rad
+ * @deg: A value in degree
+ *
+ * Returns the given value converted from degree to rad
+ */
+#define IIO_DEGREE_TO_RAD(deg) (((deg) * 314159ULL + 9000000ULL) / 18000000ULL)
+
+This '/' operator might be the culprit!
+
+Just for checking that the error, remove the macro declaration `FXAS21002C_SCALE`
+plus its usage and re-cross compile using `make ARCH=i386`.
+
+In my case I used the `div64_s64` function handles builds for both 32/64
+arch accordingly.
+
+
+Thanks
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
