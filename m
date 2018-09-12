@@ -1,162 +1,64 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 11/11] arm: dts: ste-dbx5x0: Update coresight bindings for hardware port
-Date: Wed, 12 Sep 2018 14:53:52 +0100
-Message-ID: <20180912135352.19722-12-suzuki.poulose@arm.com>
-References: <20180912135352.19722-1-suzuki.poulose@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] dt-bindings: power: Introduce suspend states supported
+ properties
+Date: Wed, 12 Sep 2018 07:01:02 -0700
+Message-ID: <20180912140102.GJ5662@atomide.com>
+References: <1536725372-29174-1-git-send-email-j-keerthy@ti.com>
+ <781b2eb2-1568-b4e5-46f2-c4612862d728@arm.com>
+ <5c49cb0c-a436-c957-e6b3-5f3aa7af92f9@ti.com>
+ <2c08c85f-a3e0-c1ce-3f87-0866868bd7e4@arm.com>
+ <20180912133228.GI5662@atomide.com>
+ <19ae9d20-46aa-25d7-87aa-ea4270f0162b@arm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912135352.19722-1-suzuki.poulose@arm.com>
+Content-Disposition: inline
+In-Reply-To: <19ae9d20-46aa-25d7-87aa-ea4270f0162b@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, coresight@lists.linaro.org, leo.yan@linaro.org, suzuki.poulose@arm.com, Linus Walleij <linus.walleij@linaro.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Keerthy <j-keerthy@ti.com>, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Switch to the new coresight bindings
+* Sudeep Holla <sudeep.holla@arm.com> [180912 13:47]:
+> 
+> 
+> On 12/09/18 14:32, Tony Lindgren wrote:
+> > * Sudeep Holla <sudeep.holla@arm.com> [180912 11:41]:
+> >> On 12/09/18 12:19, Keerthy wrote:
+> >>> suspend to mem and suspend to disk are pretty generic states and i agree
+> >>> implementation is platform dependent so why not have properties that
+> >>> convey if they are supported?
+> >>>
+> >>
+> >> We already have power domains and idle states for that. If you need to
+> >> restrict few states on some platform for whatever reasons, just disable
+> >> those states. I don't see the need to add any more bindings for the same.
+> > 
+> > Oh do you mean the "domain-idle-states" property as mentioned in the
+> > Documentation/devicetree/bindings/power/power_domain.txt?
+> > 
+> 
+> Yes, exactly that.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- arch/arm/boot/dts/ste-dbx5x0.dtsi | 65 ++++++++++++++++---------------
- 1 file changed, 33 insertions(+), 32 deletions(-)
+OK
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 2310a4e97768..7f94b5a53205 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -67,9 +67,11 @@
- 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
- 			clock-names = "apb_pclk", "atclk";
- 			cpu = <&CPU0>;
--			port {
--				ptm0_out_port: endpoint {
--					remote-endpoint = <&funnel_in_port0>;
-+			out-ports {
-+				port {
-+					ptm0_out_port: endpoint {
-+						remote-endpoint = <&funnel_in_port0>;
-+					};
- 				};
- 			};
- 		};
-@@ -81,9 +83,11 @@
- 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
- 			clock-names = "apb_pclk", "atclk";
- 			cpu = <&CPU1>;
--			port {
--				ptm1_out_port: endpoint {
--					remote-endpoint = <&funnel_in_port1>;
-+			out-ports {
-+				port {
-+					ptm1_out_port: endpoint {
-+						remote-endpoint = <&funnel_in_port1>;
-+					};
- 				};
- 			};
- 		};
-@@ -94,32 +98,29 @@
- 
- 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
- 			clock-names = "apb_pclk", "atclk";
--			ports {
--				#address-cells = <1>;
--				#size-cells = <0>;
--
--				/* funnel output ports */
--				port@0 {
--					reg = <0>;
-+			out-ports {
-+				port {
- 					funnel_out_port: endpoint {
- 						remote-endpoint =
- 							<&replicator_in_port0>;
- 					};
- 				};
-+			};
- 
--				/* funnel input ports */
--				port@1 {
-+			in-ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
- 					reg = <0>;
- 					funnel_in_port0: endpoint {
--						slave-mode;
- 						remote-endpoint = <&ptm0_out_port>;
- 					};
- 				};
- 
--				port@2 {
-+				port@1 {
- 					reg = <1>;
- 					funnel_in_port1: endpoint {
--						slave-mode;
- 						remote-endpoint = <&ptm1_out_port>;
- 					};
- 				};
-@@ -131,11 +132,10 @@
- 			clocks = <&prcmu_clk PRCMU_APEATCLK>;
- 			clock-names = "atclk";
- 
--			ports {
-+			out-ports {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 
--				/* replicator output ports */
- 				port@0 {
- 					reg = <0>;
- 					replicator_out_port0: endpoint {
-@@ -148,12 +148,11 @@
- 						remote-endpoint = <&etb_in_port>;
- 					};
- 				};
-+			};
- 
--				/* replicator input port */
--				port@2 {
--					reg = <0>;
-+			in-ports {
-+				port {
- 					replicator_in_port0: endpoint {
--						slave-mode;
- 						remote-endpoint = <&funnel_out_port>;
- 					};
- 				};
-@@ -166,10 +165,11 @@
- 
- 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
- 			clock-names = "apb_pclk", "atclk";
--			port {
--				tpiu_in_port: endpoint {
--					slave-mode;
--					remote-endpoint = <&replicator_out_port0>;
-+			in-ports {
-+				port {
-+					tpiu_in_port: endpoint {
-+						remote-endpoint = <&replicator_out_port0>;
-+					};
- 				};
- 			};
- 		};
-@@ -180,10 +180,11 @@
- 
- 			clocks = <&prcmu_clk PRCMU_APETRACECLK>, <&prcmu_clk PRCMU_APEATCLK>;
- 			clock-names = "apb_pclk", "atclk";
--			port {
--				etb_in_port: endpoint {
--					slave-mode;
--					remote-endpoint = <&replicator_out_port1>;
-+			in-ports {
-+				port {
-+					etb_in_port: endpoint {
-+						remote-endpoint = <&replicator_out_port1>;
-+					};
- 				};
- 			};
- 		};
--- 
-2.19.0
+> > Yeah that should do and the DOMAIN_PWR_DN and DOMAIN_RET can be SoC
+> > specific and then the board can select which ones to use depending on
+> > how things are wired for GPIOs, memory, PMIC and so on.
+> >
+> 
+> All the idle-states are platform specific. DOMAIN_RET and DOMAIN_PWR_DN
+> are just examples used in the bindings.
+> 
+> > Hmm I don't see any users for this binding though?
+> > 
+> 
+> It was added specifically to deal with such SoC idles states or
+> hierarchical CPU power domains states, no users in upstream yet. But IMO
+> it fits what $subject is trying to address.
+
+OK great thanks for confirming that.
+
+Regards,
+
+Tony
