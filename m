@@ -1,32 +1,28 @@
-Return-Path: <SRS0=gMbw=L4=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1536660771-32278-1-git-send-email-biju.das@bp.renesas.com> <1536660771-32278-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1536660771-32278-5-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 14 Sep 2018 14:32:33 +0200
-Message-ID: <CAMuHMdWyrsfQodVSTfSLTKS15thTzUGDdUPLReVJ9GgbJ9rB1Q@mail.gmail.com>
+Return-Path: <SRS0=3//v=L2=verge.net.au=horms@kernel.org>
+Date: Wed, 12 Sep 2018 12:05:19 +0200
+From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 04/10] dt-bindings: reset: rcar-rst: Document r8a7744
  reset module
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <20180912100518.lth3p5cpl5f4lai4@verge.net.au>
+References: <1536660771-32278-1-git-send-email-biju.das@bp.renesas.com>
+ <1536660771-32278-5-git-send-email-biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1536660771-32278-5-git-send-email-biju.das@bp.renesas.com>
 To: Biju Das <biju.das@bp.renesas.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Sep 11, 2018 at 12:19 PM Biju Das <biju.das@bp.renesas.com> wrote:
+On Tue, Sep 11, 2018 at 11:12:45AM +0100, Biju Das wrote:
 > Document bindings for the RZ/G1N (R8A7744) reset module.
->
+> 
 > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Thanks,
 
-Gr{oetje,eeting}s,
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
