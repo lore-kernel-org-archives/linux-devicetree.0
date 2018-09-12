@@ -1,47 +1,413 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx53-qsb: disable 1.2GHz OPP
-Date: Wed, 12 Sep 2018 14:46:52 +0800
-Message-ID: <20180912064649.GC28239@dragon>
-References: <20180910125056.30813-1-s.hauer@pengutronix.de>
- <20180912012252.GE28469@dragon>
- <20180912062335.GB7949@pengutronix.de>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 02/13] mfd: wcd9335: add support to wcd9335 core
+Date: Wed, 12 Sep 2018 08:23:08 +0100
+Message-ID: <94c68436-b618-40fc-46d6-165799312289@linaro.org>
+References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
+ <20180904102500.30318-3-srinivas.kandagatla@linaro.org>
+ <20180911153340.GY4185@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180912062335.GB7949@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180911153340.GY4185@dell>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2018 at 08:23:35AM +0200, Sascha Hauer wrote:
-> Hi Shawn,
-> 
-> On Wed, Sep 12, 2018 at 09:22:54AM +0800, Shawn Guo wrote:
-> > On Mon, Sep 10, 2018 at 02:50:56PM +0200, Sascha Hauer wrote:
-> > > The maximum CPU frequency for the i.MX53 QSB is 1GHz, so disable the
-> > > 1.2GHz OPP. This makes the board work with cpufreq again.
-> > 
-> > I feel that the word 'again' and the Fixes tag below are a little
-> > confusing.  It makes impression that cpufreq worked fine on the board
-> > before and commit 791f416608 broke it.  However, this is not the case,
-> > right?
-> 
-> You're right, the "again" shouldn't be there. I meant that the board
-> works "again" after the addition of cpufreq support broke it.
-> 
-> Just resent the patch with a rephrased commit message.
+Thanks for the review
 
-Thanks, Sascha.
+On 11/09/18 16:33, Lee Jones wrote:
+> On Tue, 04 Sep 2018, Srinivas Kandagatla wrote:
+> 
+>> Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC,
+>> It has mulitple blocks like Soundwire controller, codec,
+>> Codec processing engine, ClassH controller, interrupt mux.
+>> It supports both I2S/I2C and SLIMbus audio interfaces.
+>>
+>> This patch adds support to SLIMbus audio interface.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+>> ---
+>>   drivers/mfd/Kconfig                   |  14 +
+>>   drivers/mfd/Makefile                  |   4 +
+>>   drivers/mfd/wcd9335-core.c            | 291 ++++++++++++
+>>   include/linux/mfd/wcd9335/registers.h | 627 ++++++++++++++++++++++++++
+>>   include/linux/mfd/wcd9335/wcd9335.h   |  32 ++
+>>   5 files changed, 968 insertions(+)
+>>   create mode 100644 drivers/mfd/wcd9335-core.c
+>>   create mode 100644 include/linux/mfd/wcd9335/registers.h
+>>   create mode 100644 include/linux/mfd/wcd9335/wcd9335.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 11841f4b7b2b..f0b3eeb61d63 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1807,6 +1807,20 @@ config MFD_WM97xx
+>>   	  support for the WM97xx, in order to use the actual functionaltiy of
+>>   	  the device other drivers must be enabled.
+>>   
+>> +config MFD_WCD9335_SLIM
+>> +	tristate "Qualcomm WCD9335 with SLIMbus"
+>> +	select MFD_CORE
+>> +	select REGMAP_IRQ
+>> +	select REGMAP_SLIMBUS
+>> +	depends on SLIMBUS
+>> +	help
+>> +	  The WCD9335 is a standalone Hi-Fi audio CODEC IC, supports
+>> +	  Qualcomm Technologies, Inc. (QTI) multimedia solutions,
+>> +	  including the MSM8996, MSM8976, and MSM8956 chipsets.
+>> +	  It has in-build Soundwire controller, interrupt mux.
+>> +	  It supports both I2S/I2C and SLIMbus audio interfaces.
+>> +	  This option selects SLIMbus audio interface.
+> 
+> Odd line breaks here.  1 sentence per line?
+> 
+>>   config MFD_STW481X
+>>   	tristate "Support for ST Microelectronics STw481x"
+>>   	depends on I2C && (ARCH_NOMADIK || COMPILE_TEST)
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index 5856a9489cbd..9d0b98d0cb2c 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -56,6 +56,10 @@ endif
+>>   ifeq ($(CONFIG_MFD_CS47L24),y)
+>>   obj-$(CONFIG_MFD_ARIZONA)	+= cs47l24-tables.o
+>>   endif
+>> +
+>> +obj-$(CONFIG_MFD_WCD9335_SLIM)	+= wcd9335.o
+>> +wcd9335-objs			:= wcd9335-core.o
+>> +
+>>   obj-$(CONFIG_MFD_WM8400)	+= wm8400-core.o
+>>   wm831x-objs			:= wm831x-core.o wm831x-irq.o wm831x-otp.o
+>>   wm831x-objs			+= wm831x-auxadc.o
+>> diff --git a/drivers/mfd/wcd9335-core.c b/drivers/mfd/wcd9335-core.c
+>> new file mode 100644
+>> index 000000000000..dbfae50c28b2
+>> --- /dev/null
+>> +++ b/drivers/mfd/wcd9335-core.c
+>> @@ -0,0 +1,291 @@
+...
+>> +
+>> +static int wcd9335_parse_dt(struct wcd9335 *wcd)
+> 
+> This strategy is normally used to segregate OF specific calls.  A
+> driver can then choose to call them depending on whether Device Tree
+> is in use or not.  Seeing as most of these calls aren't actually OF
+> specific and that you call wcd9335_parse_dt() regardless, I suggest
+> you move it all into probe().
+> 
+I will move them to probe in next version.
 
-Shawn
+>> +{
+>> +	struct device *dev = wcd->dev;
+>> +	struct device_node *np = dev->of_node;
+>> +	int ret;
+>> +
+>> +	wcd->reset_gpio = of_get_named_gpio(np,	"reset-gpios", 0);
+>> +	if (wcd->reset_gpio < 0) {
+>> +		dev_err(dev, "Reset GPIO missing from DT\n");
+>> +		return wcd->reset_gpio;
+>> +	}
+>> +
+>> +	wcd->mclk = devm_clk_get(dev, "mclk");
+>> +	if (IS_ERR(wcd->mclk)) {
+>> +		dev_err(dev, "mclk not found\n");
+>> +		return PTR_ERR(wcd->mclk);
+>> +	}
+>> +
+>> +	wcd->native_clk = devm_clk_get(dev, "slimbus");
+>> +	if (IS_ERR(wcd->native_clk)) {
+>> +		dev_err(dev, "slimbus clock not found\n");
+>> +		return PTR_ERR(wcd->native_clk);
+>> +	}
+>> +
+>> +	wcd->supplies[0].supply = "vdd-buck";
+>> +	wcd->supplies[1].supply = "vdd-buck-sido";
+>> +	wcd->supplies[2].supply = "vdd-tx";
+>> +	wcd->supplies[3].supply = "vdd-rx";
+>> +	wcd->supplies[4].supply = "vdd-io";
+>> +
+>> +	ret = regulator_bulk_get(dev, WCD9335_MAX_SUPPLY, wcd->supplies);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to get supplies: err = %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wcd9335_power_on_reset(struct wcd9335 *wcd)
+>> +{
+>> +	struct device *dev = wcd->dev;
+>> +	int ret;
+>> +
+>> +	ret = regulator_bulk_enable(WCD9335_MAX_SUPPLY, wcd->supplies);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to get supplies: err = %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * For WCD9335, it takes about 600us for the Vout_A and
+>> +	 * Vout_D to be ready after BUCK_SIDO is powered up.
+>> +	 * SYS_RST_N shouldn't be pulled high during this time
+>> +	 * Toggle the reset line to make sure the reset pulse is
+>> +	 * correctly applied
+>> +	 */
+>> +	usleep_range(600, 650);
+>> +
+>> +	gpio_direction_output(wcd->reset_gpio, 0);
+>> +	msleep(20);
+>> +	gpio_set_value(wcd->reset_gpio, 1);
+>> +	msleep(20);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wcd9335_bring_up(struct wcd9335 *wcd)
+>> +{
+>> +	struct regmap *rm = wcd->regmap;
+>> +	int val, byte0;
+>> +
+>> +	regmap_read(rm, WCD9335_CHIP_TIER_CTRL_EFUSE_VAL_OUT0, &val);
+>> +	regmap_read(rm, WCD9335_CHIP_TIER_CTRL_CHIP_ID_BYTE0, &byte0);
+>> +
+>> +	if ((val < 0) || (byte0 < 0)) {
+>> +		dev_err(wcd->dev, "WCD9335 CODEC version detection fail!\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	if (byte0 == 0x1) {
+> 
+> What is 0x1?  I suggest you define it.
+> 
+I agree, I will fix any such hard codes with a define in next version.
+
+>> +		dev_info(wcd->dev, "WCD9335 CODEC version is v2.0\n");
+>> +		wcd->version = WCD9335_VERSION_2_0;
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_RST_CTL, 0x01);
+>> +		regmap_write(rm, WCD9335_SIDO_SIDO_TEST_2, 0x00);
+>> +		regmap_write(rm, WCD9335_SIDO_SIDO_CCL_8, 0x6F);
+>> +		regmap_write(rm, WCD9335_BIAS_VBG_FINE_ADJ, 0x65);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x5);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x7);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_PWR_CDC_DIG_HM_CTL, 0x3);
+>> +		regmap_write(rm, WCD9335_CODEC_RPM_RST_CTL, 0x3);
+> 
+> You really need to define all of these settings.
+> 
+> As a human I have no idea what just happened!
+> 
+>> +	} else {
+>> +		dev_err(wcd->dev, "WCD9335 CODEC version not supported\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int wcd9335_slim_probe(struct slim_device *slim)
+>> +{
+>> +	struct device *dev = &slim->dev;
+>> +	struct wcd9335 *wcd;
+> 
+> Would you consider calling this ddata?
+
+Okay will do that.
+
+
+> 
+>> +	int ret;
+>> +
+>> +	/* Interface device */
+>> +	if (slim->e_addr.dev_index == WCD9335_SLIM_INTERFACE_DEVICE_INDEX)
+>> +		return 0;
+>> +
+>> +	wcd = devm_kzalloc(dev, sizeof(*wcd), GFP_KERNEL);
+>> +	if (!wcd)
+>> +		return	-ENOMEM;
+>> +
+>> +	wcd->dev = dev;
+>> +
+>> +	ret = wcd9335_parse_dt(wcd);
+>> +	if (ret) {
+>> +		dev_err(dev, "Error parsing DT: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = wcd9335_power_on_reset(wcd);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	wcd->slim = slim;
+>> +	wcd->intf_type = WCD9335_INTERFACE_TYPE_SLIMBUS;
+>> +
+>> +	dev_set_drvdata(dev, wcd);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct mfd_cell wcd9335_devices[] = {
+>> +	{ .name = "wcd9335-codec", },
+>> +};
+> 
+> Are there more devices to come?
+> 
+Yes, that is the plan, we are kind of limited in hardware setup to test 
+few things like soundwire controller. We are exploring other ways to 
+test these.
+
+> MFD cells are usually placed at the very top of the driver.  This
+> makes it easy to see which devices are supported by the MFD.
+> 
+I agree I will move that in next version.
+
+>> +static int wcd9335_slim_status(struct slim_device *sdev,
+>> +			       enum slim_device_status status)
+> 
+> We usually only place PM related functions below probe().
+> 
+Will reorganize this.
+
+>> +{
+>> +	struct device_node *ifc_dev_np;
+> 
+> ifc isn't very forthcoming.  Any way you can improve the name?
+ifc was suggested in dt bindings by Rob,  I can proably rename to 
+interface_node.
+
+> 
+>> +	struct wcd9335 *wcd;
+>> +	int ret;
+>> +
+>> +	if (sdev->e_addr.dev_index == WCD9335_SLIM_INTERFACE_DEVICE_INDEX)
+>> +		return 0;
+>> +
+>> +	wcd = dev_get_drvdata(&sdev->dev);
+>> +
+>> +	ifc_dev_np = of_parse_phandle(wcd->dev->of_node, "slim-ifc-dev", 0);
+>> +	if (!ifc_dev_np) {
+>> +		dev_err(wcd->dev, "No Interface device found\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	wcd->slim_ifc_dev = of_slim_get_device(sdev->ctrl, ifc_dev_np);
+>> +	if (!wcd->slim_ifc_dev) {
+>> +		dev_err(wcd->dev, "Unable to get SLIM Interface device\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	wcd->regmap = regmap_init_slimbus(sdev, &wcd9335_regmap_config);
+>> +	if (IS_ERR(wcd->regmap)) {
+>> +		dev_err(wcd->dev, "Failed to allocate slim register map\n");
+> 
+> s/slim/SLIM/ ?
+sure will fix it.
+> 
+>> +		return PTR_ERR(wcd->regmap);
+>> +	}
+>> +
+>> +	wcd->ifc_dev_regmap = regmap_init_slimbus(wcd->slim_ifc_dev,
+>> +						  &wcd9335_ifc_regmap_config);
+>> +	if (IS_ERR(wcd->ifc_dev_regmap)) {
+>> +		dev_err(wcd->dev, "Failed to allocate ifc register map\n");
+> 
+> ifc in a human readable context is not good.
+> 
+>> +		return PTR_ERR(wcd->ifc_dev_regmap);
+>> +	}
+>> +
+>> +	ret = wcd9335_bring_up(wcd);
+> 
+> So the device_status call-back brings up the hardware?
+> 
+
+device status reports the device status at runtime. We can not 
+communicate with the device until it is up, enumerated by slimbus and a 
+logical address is assigned to it. So the best place to initialize it is 
+in status callback where all the above are expected to be done.
+
+Probe is expected to setup the external configurations like 
+regulators/pins and so on which gets the device out of reset and ready 
+to be enumerated by the slimbus controller.
+
+> That sounds odd to me?
+> 
+>> +	if (ret) {
+>> +		dev_err(wcd->dev, "Failed to bringup WCD9335\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = devm_mfd_add_devices(wcd->dev, 0, wcd9335_devices,
+>> +			       ARRAY_SIZE(wcd9335_devices), NULL, 0, NULL);
+>> +	if (ret < 0)
+> 
+> if (ret) ?
+> 
+>> +		dev_err(wcd->dev, "Failed to add mtd devices: %d\n", ret);
+> 
+> a) This is not an MTD device - typo?
+> b) Please use a message that end users are going to care about
+>     Who, in the real world knows what an MFD is?
+> 
+I agree I will fix such instances before sending next version.
+
+>> +	return ret;
+>> +}
+>> +
+
+>> +MODULE_LICENSE("GPL v2");
+>> diff --git a/include/linux/mfd/wcd9335/registers.h b/include/linux/mfd/wcd9335/registers.h
+>> new file mode 100644
+>> index 000000000000..f9fa35fb536b
+>> --- /dev/null
+>> +++ b/include/linux/mfd/wcd9335/registers.h
+>> @@ -0,0 +1,627 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+> 
+> No copyright?
+> 
+I will change this to include copyright in next version.
+
+>> +#ifndef _WCD9335_REGISTERS_H
+>> +#define _WCD9335_REGISTERS_H
+>> +
+>> +/*
+>> + * WCD9335 register base can change according to the mode it works in
+>> + * in slimbus mode the reg base starts from 0x800
+> 
+> s/slimbus/SLIMBUS/ ?
+>
+Sure will change this.
+
+>> +struct wcd9335 {
+>> +	int version;
+>> +	int intr1;
+>
+This is a hardware pin name for interrupt line 1.
+
+
+> What's this?  If I have to ask, it's probably not a good name.
+> 
+>> +	int reset_gpio;
+>> +	enum wcd_interface_type intf_type;
+>> +	struct device *dev;
+>> +	struct clk *mclk;
+>> +	struct clk *native_clk;
+>> +	struct slim_device *slim;
+>> +	struct slim_device *slim_ifc_dev;
+>> +	struct regmap *regmap;
+>> +	struct regmap *ifc_dev_regmap;
+>> +	struct regulator_bulk_data supplies[WCD9335_MAX_SUPPLY];
+>> +};
+> 
+> Also, please consider using Kerneldoc format header.
+>
+Will give that a try in next version.
+
+>> +#endif /* __WCD9335_H__ */
+> 
+--srini
