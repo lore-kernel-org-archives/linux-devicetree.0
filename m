@@ -1,39 +1,69 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3] ARM: dts: imx6ul: Add DTS for ConnectCore 6UL SBC Pro
-Date: Wed, 12 Sep 2018 09:13:37 +0800
-Message-ID: <20180912011336.GD28469@dragon>
-References: <1536572272-18590-1-git-send-email-alex.gonzalez@digi.com>
- <1536572272-18590-2-git-send-email-alex.gonzalez@digi.com>
+Subject: Re: [PATCH] ARM: dts: imx53-qsb: disable 1.2GHz OPP
+Date: Wed, 12 Sep 2018 09:22:54 +0800
+Message-ID: <20180912012252.GE28469@dragon>
+References: <20180910125056.30813-1-s.hauer@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1536572272-18590-2-git-send-email-alex.gonzalez@digi.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Gonzalez <alex.gonzalez@digi.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180910125056.30813-1-s.hauer@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 11:37:52AM +0200, Alex Gonzalez wrote:
-> The ConnectCore 6UL Single Board Computer (SBC) Pro contains the
-> ConnectCore 6UL System-On-Module.
-> 
-> Its hardware specifications are:
-> 
-> * 256MB DDR3 memory
-> * On module 256MB NAND flash
-> * Dual 10/100 Ethernet
-> * USB Host and USB OTG
-> * Parallel RGB display header
-> * LVDS display header
-> * CSI camera
-> * GPIO header
-> * I2C, SPI, CAN headers
-> * PCIe mini card and micro SIM slot
-> * MicroSD external storage
-> * On board 4GB eMMC flash
-> * Audio headphone, line in/out, microphone lines
-> 
-> Signed-off-by: Alex Gonzalez <alex.gonzalez@digi.com>
+On Mon, Sep 10, 2018 at 02:50:56PM +0200, Sascha Hauer wrote:
+> The maximum CPU frequency for the i.MX53 QSB is 1GHz, so disable the
+> 1.2GHz OPP. This makes the board work with cpufreq again.
 
-Applied, thanks.
+I feel that the word 'again' and the Fixes tag below are a little
+confusing.  It makes impression that cpufreq worked fine on the board
+before and commit 791f416608 broke it.  However, this is not the case,
+right?
+
+> 
+> Fixes: 791f416608 ("ARM: dts: imx53: add cpufreq-dt support")
+
+Shawn
+
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> ---
+>  arch/arm/boot/dts/imx53-qsb-common.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+> index 7423d462d1e4..50dde84b72ed 100644
+> --- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
+> +++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+> @@ -123,6 +123,17 @@
+>  	};
+>  };
+>  
+> +&cpu0 {
+> +	/* CPU rated to 1GHz, not 1.2GHz as per the default settings */
+> +	operating-points = <
+> +		/* kHz   uV */
+> +		166666  850000
+> +		400000  900000
+> +		800000  1050000
+> +		1000000 1200000
+> +	>;
+> +};
+> +
+>  &esdhc1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_esdhc1>;
+> -- 
+> 2.18.0
+> 
