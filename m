@@ -1,49 +1,72 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] ARM: dts: imx53-qsb: disable 1.2GHz OPP
-Date: Wed, 12 Sep 2018 08:23:35 +0200
-Message-ID: <20180912062335.GB7949@pengutronix.de>
-References: <20180910125056.30813-1-s.hauer@pengutronix.de>
- <20180912012252.GE28469@dragon>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/2] Embedded USB Debugger (EUD) driver
+Date: Wed, 12 Sep 2018 08:29:05 +0200
+Message-ID: <20180912062905.GD10268@kroah.com>
+References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
+ <1536096853-30473-3-git-send-email-pheragu@codeaurora.org>
+ <c68c466a-576f-43d9-a7dd-7ee8e0ebba3f@codeaurora.org>
+ <20180905111800.GA30003@kroah.com>
+ <aade97184ee5027ac6e32fd742cfbc5a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180912012252.GE28469@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>
+In-Reply-To: <aade97184ee5027ac6e32fd742cfbc5a@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: pheragu@codeaurora.org
+Cc: Manu Gautam <mgautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, rnayak@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+On Tue, Sep 11, 2018 at 01:40:19PM -0700, pheragu@codeaurora.org wrote:
+> On 2018-09-05 04:18, Greg KH wrote:
+> > On Wed, Sep 05, 2018 at 03:01:26PM +0530, Manu Gautam wrote:
+> > > Hi,
+> > > 
+> > > 
+> > > On 9/5/2018 3:04 AM, Prakruthi Deepak Heragu wrote:
+> > > > Add support for control peripheral of EUD (Embedded USB Debugger) to
+> > > > listen to events such as USB attach/detach, charger enable/disable, pet
+> > > > EUD to indicate software is functional.
+> > > >
+> > > > Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+> > > > Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+> > > > ---
+> > > >  drivers/soc/qcom/Kconfig  |  12 ++
+> > > >  drivers/soc/qcom/Makefile |   1 +
+> > > >  drivers/soc/qcom/eud.c    | 338 ++++++++++++++++++++++++++++++++++++++++++++++
+> > > >  3 files changed, 351 insertions(+)
+> > > >  create mode 100644 drivers/soc/qcom/eud.c
+> > > >
+> > > > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> > > [snip]
+> > > > +
+> > > > +#define EUD_ENABLE_CMD 1
+> > > > +#define EUD_DISABLE_CMD 0
+> > > 
+> > > Why not use module param as boolean? I mean zero to disable and
+> > > non-zero to enable?
+> > 
+> > Never use module parameters on new code, as it's really hard to ever
+> > change them.  It also doesn't work for multiple devices of the same
+> > type.
+> > 
+> If not for module_param, do you suggest we use sysfs?
 
-On Wed, Sep 12, 2018 at 09:22:54AM +0800, Shawn Guo wrote:
-> On Mon, Sep 10, 2018 at 02:50:56PM +0200, Sascha Hauer wrote:
-> > The maximum CPU frequency for the i.MX53 QSB is 1GHz, so disable the
-> > 1.2GHz OPP. This makes the board work with cpufreq again.
-> 
-> I feel that the word 'again' and the Fixes tag below are a little
-> confusing.  It makes impression that cpufreq worked fine on the board
-> before and commit 791f416608 broke it.  However, this is not the case,
-> right?
+It depends on what you want to control.
 
-You're right, the "again" shouldn't be there. I meant that the board
-works "again" after the addition of cpufreq support broke it.
+> module_param also provides a facility to control these parameters
+> through command line too. If we can't use module_param, do you expect
+> us to use __setup(..) API?
 
-Just resent the patch with a rephrased commit message.
+Again, it depends on what you are wanting to handle here.  module
+parameters and setup variables are all "global" in that they affect all
+devices of the same type.  sysfs can be "per device" which is almost
+always what you want to have happen.
 
-Sascha
+But don't use any of those for things that should be "automatic" in that
+the driver should figure out what needs to be done here and not need any
+external configuration.  That's the best way of all to handle this.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+thanks,
+
+greg k-h
