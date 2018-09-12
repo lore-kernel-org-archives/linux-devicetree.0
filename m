@@ -1,190 +1,42 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V3 09/27] csky: VDSO and rt_sigreturn
-Date: Wed, 12 Sep 2018 21:24:43 +0800
-Message-ID: <84b9dbc12dbd64c424d81356bce15bdde4c54eb8.1536757532.git.ren_guo@c-sky.com>
-References: <cover.1536757532.git.ren_guo@c-sky.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] dt-bindings: power: Introduce suspend states supported
+ properties
+Date: Wed, 12 Sep 2018 06:32:28 -0700
+Message-ID: <20180912133228.GI5662@atomide.com>
+References: <1536725372-29174-1-git-send-email-j-keerthy@ti.com>
+ <781b2eb2-1568-b4e5-46f2-c4612862d728@arm.com>
+ <5c49cb0c-a436-c957-e6b3-5f3aa7af92f9@ti.com>
+ <2c08c85f-a3e0-c1ce-3f87-0866868bd7e4@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1536757532.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1536757532.git.ren_guo@c-sky.com>
-References: <cover.1536757532.git.ren_guo@c-sky.com>
+Content-Disposition: inline
+In-Reply-To: <2c08c85f-a3e0-c1ce-3f87-0866868bd7e4@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org, jason@lakedaemon.net, arnd@arndb.de, devicetree@vger.kernel.org, andrea.parri@amarulasolutions.com, peterz@infradead.org
-Cc: c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, thomas.petazzoni@bootlin.com, wbx@uclibc-ng.org, ren_guo@c-sky.com, green.hu@gmail.com
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Keerthy <j-keerthy@ti.com>, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
----
- arch/csky/abiv1/inc/abi/vdso.h | 17 +++++++++
- arch/csky/abiv2/inc/abi/vdso.h | 24 ++++++++++++
- arch/csky/include/asm/vdso.h   | 12 ++++++
- arch/csky/kernel/vdso.c        | 85 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 138 insertions(+)
- create mode 100644 arch/csky/abiv1/inc/abi/vdso.h
- create mode 100644 arch/csky/abiv2/inc/abi/vdso.h
- create mode 100644 arch/csky/include/asm/vdso.h
- create mode 100644 arch/csky/kernel/vdso.c
+* Sudeep Holla <sudeep.holla@arm.com> [180912 11:41]:
+> On 12/09/18 12:19, Keerthy wrote:
+> > suspend to mem and suspend to disk are pretty generic states and i agree
+> > implementation is platform dependent so why not have properties that
+> > convey if they are supported?
+> > 
+> 
+> We already have power domains and idle states for that. If you need to
+> restrict few states on some platform for whatever reasons, just disable
+> those states. I don't see the need to add any more bindings for the same.
 
-diff --git a/arch/csky/abiv1/inc/abi/vdso.h b/arch/csky/abiv1/inc/abi/vdso.h
-new file mode 100644
-index 0000000..a99f0e4
---- /dev/null
-+++ b/arch/csky/abiv1/inc/abi/vdso.h
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+#include <linux/uaccess.h>
-+
-+static inline int setup_vdso_page(unsigned short *ptr)
-+{
-+	int err = 0;
-+
-+	/* movi r1, 127 */
-+	err |= __put_user(0x67f1, ptr + 0);
-+	/* addi r1, (139 - 127) */
-+	err |= __put_user(0x20b1, ptr + 1);
-+	/* trap 0 */
-+	err |= __put_user(0x0008, ptr + 2);
-+
-+	return err;
-+}
-diff --git a/arch/csky/abiv2/inc/abi/vdso.h b/arch/csky/abiv2/inc/abi/vdso.h
-new file mode 100644
-index 0000000..2b5f43b
---- /dev/null
-+++ b/arch/csky/abiv2/inc/abi/vdso.h
-@@ -0,0 +1,24 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+
-+#ifndef __ABI_CSKY_VDSO_H
-+#define __ABI_CSKY_VDSO_H
-+
-+#include <linux/uaccess.h>
-+
-+static inline int setup_vdso_page(unsigned short *ptr)
-+{
-+	int err = 0;
-+
-+	/* movi r7, 173 */
-+	err |= __put_user(0xea07, ptr);
-+	err |= __put_user(0x008b,      ptr+1);
-+
-+	/* trap 0 */
-+	err |= __put_user(0xc000,   ptr+2);
-+	err |= __put_user(0x2020,   ptr+3);
-+
-+	return err;
-+}
-+
-+#endif /* __ABI_CSKY_STRING_H */
-diff --git a/arch/csky/include/asm/vdso.h b/arch/csky/include/asm/vdso.h
-new file mode 100644
-index 0000000..b275440
---- /dev/null
-+++ b/arch/csky/include/asm/vdso.h
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+#ifndef __ASM_CSKY_VDSO_H
-+#define __ASM_CSKY_VDSO_H
-+
-+#include <abi/vdso.h>
-+
-+struct csky_vdso {
-+	unsigned short rt_signal_retcode[4];
-+};
-+
-+#endif /* __ASM_CSKY_VDSO_H */
-diff --git a/arch/csky/kernel/vdso.c b/arch/csky/kernel/vdso.c
-new file mode 100644
-index 0000000..55ed68b
---- /dev/null
-+++ b/arch/csky/kernel/vdso.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+
-+#include <linux/kernel.h>
-+#include <linux/err.h>
-+#include <linux/sched.h>
-+#include <linux/mm.h>
-+#include <linux/init.h>
-+#include <linux/binfmts.h>
-+#include <linux/elf.h>
-+#include <linux/vmalloc.h>
-+#include <linux/unistd.h>
-+#include <linux/uaccess.h>
-+
-+#include <asm/vdso.h>
-+#include <asm/cacheflush.h>
-+
-+static struct page *vdso_page;
-+
-+static int __init init_vdso(void)
-+{
-+	struct csky_vdso *vdso;
-+	int err = 0;
-+
-+	vdso_page = alloc_page(GFP_KERNEL);
-+	if (!vdso_page)
-+		panic("Cannot allocate vdso");
-+
-+	vdso = vmap(&vdso_page, 1, 0, PAGE_KERNEL);
-+	if (!vdso)
-+		panic("Cannot map vdso");
-+
-+	clear_page(vdso);
-+
-+	err = setup_vdso_page(vdso->rt_signal_retcode);
-+	if (err) panic("Cannot set signal return code, err: %x.", err);
-+
-+	dcache_wb_range((unsigned long)vdso, (unsigned long)vdso + 16);
-+
-+	vunmap(vdso);
-+
-+	return 0;
-+}
-+subsys_initcall(init_vdso);
-+
-+int arch_setup_additional_pages(struct linux_binprm *bprm, int uses_interp)
-+{
-+	int ret;
-+	unsigned long addr;
-+	struct mm_struct *mm = current->mm;
-+
-+	down_write(&mm->mmap_sem);
-+
-+	addr = get_unmapped_area(NULL, STACK_TOP, PAGE_SIZE, 0, 0);
-+	if (IS_ERR_VALUE(addr)) {
-+		ret = addr;
-+		goto up_fail;
-+	}
-+
-+	ret = install_special_mapping(
-+			mm,
-+			addr,
-+			PAGE_SIZE,
-+			VM_READ|VM_EXEC|VM_MAYREAD|VM_MAYWRITE|VM_MAYEXEC,
-+			&vdso_page);
-+	if (ret)
-+		goto up_fail;
-+
-+	mm->context.vdso = (void *)addr;
-+
-+up_fail:
-+	up_write(&mm->mmap_sem);
-+	return ret;
-+}
-+
-+const char *arch_vma_name(struct vm_area_struct *vma)
-+{
-+	if (vma->vm_mm == NULL)
-+		return NULL;
-+
-+	if (vma->vm_start == (long)vma->vm_mm->context.vdso)
-+		return "[vdso]";
-+	else
-+		return NULL;
-+}
--- 
-2.7.4
+Oh do you mean the "domain-idle-states" property as mentioned in the
+Documentation/devicetree/bindings/power/power_domain.txt?
+
+Yeah that should do and the DOMAIN_PWR_DN and DOMAIN_RET can be SoC
+specific and then the board can select which ones to use depending on
+how things are wired for GPIOs, memory, PMIC and so on.
+
+Hmm I don't see any users for this binding though?
+
+Regards,
+
+Tony
