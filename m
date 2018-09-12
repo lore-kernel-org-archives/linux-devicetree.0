@@ -1,250 +1,121 @@
-From: Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH v3] iio: proximity: Add driver support for ST's VL53L0X
- ToF ranging sensor.
-Date: Thu, 13 Sep 2018 00:05:51 +0530
-Message-ID: <20180912183551.GA13425@himanshu-Vostro-3559>
-References: <20180912022034.25972-1-songqiang.1304521@gmail.com>
+From: Radu Pirea <radu_nicolae.pirea@upb.ro>
+Subject: Re: [PATCH v12 0/6] Driver for at91 usart in spi mode
+Date: Wed, 12 Sep 2018 22:36:40 +0300
+Message-ID: <a143edd3c0de2ba98b64e642b4384edf4323be2b.camel@upb.ro>
+References: <20180911185839.GA25212@piout.net> <20180911224418.GK4185@dell>
+         <20180911225440.GL4185@dell> <20180912073355.GB2557@piout.net>
+         <20180912084143.GN4185@dell>
+         <CAMuHMdWefU0pw=c9TKOa+wGHchpg8JRfE0OnC4+wKDt-qrbH1A@mail.gmail.com>
+         <20180912105407.GR4185@dell> <20180912111757.GC2760@piout.net>
+         <20180912114352.GT4185@dell> <20180912121420.GE2760@piout.net>
+         <20180912131248.GA21544@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180912022034.25972-1-songqiang.1304521@gmail.com>
+In-Reply-To: <20180912131248.GA21544@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, ak@it-klinger.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Song Qiang <songqiang.1304521@gmail.com>
+To: Lee Jones <lee.jones@linaro.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nicolas Ferre <nicolas.ferre@microchip.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Jiri Slaby <jslaby@suse.com>, Richard Genoud <richard.genoud@gmail.com>, "David S. Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2018 at 10:20:34AM +0800, Song Qiang wrote:
-> This driver was originally written by ST in 2016 as a misc input device
-> driver, and hasn't been maintained for a long time. I grabbed some code
-> from it's API and reformed it into a iio proximity device driver.
-> This version of driver uses i2c bus to talk to the sensor and
-> polling for measuring completes, so no irq line is needed.
-> This version of driver supports only one-shot mode, and it can be
-> tested with reading from
-> /sys/bus/iio/devices/iio:deviceX/in_distance_raw
+On Wed, 2018-09-12 at 14:12 +0100, Lee Jones wrote:
+> On Wed, 12 Sep 2018, Alexandre Belloni wrote:
 > 
-> Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
-
-Very minor comments below that I missed in previous revisions.
-
-Major reviews will come from Jonathan later...
-
-> ---
-> Changes in v2:
-> 	- Clean up the register table.
-> 	- Sort header files declarations.
-> 	- Replace some bit definations with GENMASK() and BIT().
-> 	- Clean up some code and comments that's useless for now.
-> 	- Change the order of some the definations of some variables to reversed
-> 	  xmas tree order.
-> 	- Using do...while() rather while and check.
-> 	- Replace pr_err() with dev_err().
-> 	- Remove device id declaration since we recommend to use DT.
-> 	- Remove .owner = THIS_MODULE.
-> 	- Replace probe() with probe_new() hook.
-> 	- Remove IIO_BUFFER and IIO_TRIGGERED_BUFFER dependences.
-> 	- Change the driver module name to vl53l0x-i2c.
-> 	- Align all the parameters if they are in the same function with open
-> 	  parentheses.
-> 	- Replace iio_device_register() with devm_iio_device_register
-> 	  for better resource management.
-> 	- Remove the vl53l0x_remove() since it's not needed.
-> 	- Remove dev_set_drvdata() since it's already setted above.
+> > On 12/09/2018 12:43:52+0100, Lee Jones wrote:
+> > > > > But ... we can't have it both ways.  *Either* it's a true
+> > > > > MFD, in
+> > > > > which case it can/should have 2 separate compatible strings
+> > > > > which can
+> > > > > be specified directly from the DT.  *Or* it's not an MFD.  In
+> > > > > the
+> > > > > latter case, which I think we're all agreeing on (else we'd
+> > > > > have 2
+> > > > > compatible strings), MFD is not the place to handle this (my
+> > > > > original
+> > > > > point).
+> > > > > 
+> > > > 
+> > > > If that is what bothers you, then let's move it out of mfd.
+> > > 
+> > > As I've already mentioned.  I don't just want it moved out of MFD
+> > > and
+> > > shoved somewhere else.  My aim is to fix this properly.
+> > > 
+> > 
+> > If it is out of MFD, then I'm not sure why you would care too much
+> > about
+> > it as you won't be maintaining that code. And I still this what was
+> > done
+> > was correct but I'm open to test what you suggest.
 > 
-> Changes in v3:
-> 	- Recover ST's copyright.
-> 	- Clean up indio_dev member in vl53l0x_data struct since it's
-> 	  useless now.
-> 	- Replace __le16_to_cpu() with le16_to_cpu().
-> 	- Remove the iio_device_{claim|release}_direct_mode() since it's
-> 	  only needed when we use buffered mode.
-> 	- Clean up some coding style problems.
+> I care for the kernel in general, not just the areas I'm responsible
+> for.  I guess I'm just that kinda guy! ;)
+
+Well, Lee, like you, I think this driver should not be a MFD driver,
+but Alex has a good point of view. 
+
 > 
->  .../bindings/iio/proximity/vl53l0x.txt        |  12 ++
->  drivers/iio/proximity/Kconfig                 |  11 ++
->  drivers/iio/proximity/Makefile                |   2 +
->  drivers/iio/proximity/vl53l0x-i2c.c           | 184 ++++++++++++++++++
->  4 files changed, 209 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
->  create mode 100644 drivers/iio/proximity/vl53l0x-i2c.c
+> > > > > So ... this is a USART device which can do SPI, right?
+> > > > > 
+> > > > > My current thinking is that; as this is a USART device first
+> > > > > &
+> > > > > foremost, the USART should be probed in the first instance
+> > > > > regardless,
+> > > > > then if SPI mode is specified it (the USART driver) registers
+> > > > > the SPI
+> > > > > platform driver (as MFD does currently) and exits gracefully,
+> > > > > allowing
+> > > > > the SPI driver to take over.
+> > > > > 
+> > > > > Spanner in the works: is it physically possible to change the
+> > > > > mode at
+> > > > > run-time?  :s
+> > > > 
+> > > > Yes it is possible but on Linux that will not happen without
+> > > > probing
+> > > > the drivers again.
+> > > 
+> > > Not sure I understand what you mean.
+> > 
+> > I was just commenting on changing the mode at runtime.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> new file mode 100644
-> index 000000000000..64b69442f08e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> @@ -0,0 +1,12 @@
-> +ST's VL53L0X ToF ranging sensor
-> +
-> +Required properties:
-> +	- compatible: must be "st,vl53l0x-i2c"
-> +	- reg: i2c address where to find the device
-> +
-> +Example:
-> +
-> +vl53l0x@29 {
-> +	compatible = "st,vl53l0x-i2c";
-> +	reg = <0x29>;
-> +};
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index f726f9427602..5f421cbd37f3 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -79,4 +79,15 @@ config SRF08
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called srf08.
->  
-> +config VL53L0X_I2C
-> +	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
-> +	depends on I2C
-> +	help
-> +	  Say Y here to build a driver for STMicroelectronics VL53L0X
-> +	  ToF ranger sensors with i2c interface.
-> +	  This driver can be used to measure the distance of objects.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called vl53l0x-i2c.
-> +
->  endmenu
-> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> index 4f4ed45e87ef..dedfb5bf3475 100644
-> --- a/drivers/iio/proximity/Makefile
-> +++ b/drivers/iio/proximity/Makefile
-> @@ -10,3 +10,5 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
->  obj-$(CONFIG_SRF04)		+= srf04.o
->  obj-$(CONFIG_SRF08)		+= srf08.o
->  obj-$(CONFIG_SX9500)		+= sx9500.o
-> +obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
-> +
-> diff --git a/drivers/iio/proximity/vl53l0x-i2c.c b/drivers/iio/proximity/vl53l0x-i2c.c
-> new file mode 100644
-> index 000000000000..0f7f124a38ed
-> --- /dev/null
-> +++ b/drivers/iio/proximity/vl53l0x-i2c.c
-> @@ -0,0 +1,184 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + *  Support for ST's VL53L0X FlightSense ToF Ranger Sensor on a i2c bus.
-> + *
-> + *  Copyright (C) 2016 STMicroelectronics Imaging Division.
-> + *  Copyright (C) 2018 Song Qiang <songqiang.1304521@gmail.com>
+> Oh I see.  My question was relating to whether the H/W is physically
+> capable of changing modes on-the-fly, rather than how Linux would
+> handle that.  If this is something we'd wish to support, then it
+> would
+> have to be a single driver, which is why I was asking.  By separating
+> the drivers this way, we are blocking that as a
+> possibility.  Although
+> I guess the OP has already thought about that and made the decision
+> not to support it.
 
-Datasheet link + i2c slave address can be put here.
-Look at other iio drivers.
+Is possible to change modes on-the-fly, but you have no reason to do
+that. On the PCB you will have a SPI slave or a serial console :)
+Anyway, the current form of the driver, and through this I want to say
+"this ugly hack", allows the user to switch from serial to SPI mode by
+adding only one property to the device tree node of USART. If the
+driver were in his first form, a simple SPI driver, how you will make a
+dtsi file for an IP like this? You will add two nodes for the same IP
+in dtsi and will take care to enable correct node in dts?
+I think this driver is only a tradeoff between having an ugly hack in
+kernel or having an messy device tree.
 
-> + */
-> +
-> +#include <linux/delay.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/slab.h>
-> +
-> +#define VL53L0X_DRV_NAME				"vl53l0x-i2c"
-> +
-> +#define VL_REG_SYSRANGE_MODE_MASK			GENMASK(3, 0)
-> +#define VL_REG_SYSRANGE_START				0x00
-> +#define VL_REG_SYSRANGE_MODE_SINGLESHOT			0x00
-> +#define VL_REG_SYSRANGE_MODE_START_STOP			BIT(0)
-> +#define VL_REG_SYSRANGE_MODE_BACKTOBACK			BIT(1)
-> +#define VL_REG_SYSRANGE_MODE_TIMED			BIT(2)
-> +#define VL_REG_SYSRANGE_MODE_HISTOGRAM			BIT(3)
-> +
-> +#define VL_REG_SYS_SEQUENCE_CFG				BIT(0)
-> +#define VL_REG_SYS_INTERMEASUREMENT_PERIOD		BIT(2)
-> +#define VL_REG_SYS_RANGE_CFG				0x09
-> +
-> +#define VL_REG_SYS_INT_GPIO_DISABLED			0x00
-> +#define VL_REG_SYS_INT_GPIO_LEVEL_LOW			BIT(0)
-> +#define VL_REG_SYS_INT_GPIO_LEVEL_HIGH			BIT(1)
-> +#define VL_REG_SYS_INT_GPIO_OUT_OF_WINDOW		0x03
-> +#define VL_REG_SYS_INT_GPIO_NEW_SAMPLE_READY		BIT(2)
-> +#define VL_REG_SYS_INT_CFG_GPIO				0x0A
-> +#define VL_REG_SYS_INT_CLEAR				0x0B
-> +#define VL_REG_GPIO_HV_MUX_ACTIVE_HIGH			0x84
-> +
-> +#define VL_REG_RESULT_INT_STATUS			0x13
-> +#define VL_REG_RESULT_RANGE_STATUS			0x14
-> +#define VL_REG_RESULT_RANGE_SATTUS_COMPLETE		BIT(0)
-> +
-> +#define VL_REG_I2C_SLAVE_DEVICE_ADDRESS			0x8a
-> +
-> +#define VL_REG_IDENTIFICATION_MODEL_ID			0xc0
-> +#define VL_REG_IDENTIFICATION_REVISION_ID		0xc2
+> 
+> > > I'm suggesting that you use the same platform_* interfaces MFD
+> > > uses to
+> > > register the SPI driver if SPI mode has been selected.  Only do
+> > > so
+> > > from the appropriate driver i.e. USART.
+> > 
+> > Yeah, I understood that but I didn't comment because I'm not sure
+> > this
+> > will work yet.
+> 
+> Other drivers already do this.
 
-Make all capitals: 0xC2, 0xC0, 0x8A ...
+Can you give me an example please?
+I am open to suggestions.
 
-> +struct vl53l0x_data {
-> +	struct i2c_client *client;
-> +};
-> +
-> +static int vl53l0x_read_proximity(struct vl53l0x_data *data,
-> +				  const struct iio_chan_spec *chan,
-> +				  int *val)
-> +{
-> +	u8 write_command = VL_REG_RESULT_RANGE_STATUS;
-> +	struct i2c_client *client = data->client;
-> +	unsigned int tries = 20;
-> +	struct i2c_msg msg[2];
-> +	u8 buffer[12];
-> +	int ret;
-> +
-> +	ret = i2c_smbus_write_byte_data(data->client,
-> +					VL_REG_SYSRANGE_START, 1);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	do {
-> +		ret = i2c_smbus_read_byte_data(data->client,
-> +					       VL_REG_RESULT_RANGE_STATUS);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (ret & VL_REG_RESULT_RANGE_SATTUS_COMPLETE)
-> +			break;
-> +
-> +		usleep_range(1000, 5000);
-> +	} while (tries--);
-> +	if (!tries)
-> +		return -ETIMEDOUT;
-> +
-> +	msg[0].addr = client->addr;
-> +	msg[0].buf = &write_command;
-> +	msg[0].len = 1;
-> +	msg[0].flags = client->flags | I2C_M_STOP;
-> +
-> +	msg[1].addr = client->addr;
-> +	msg[1].buf = buffer;
-> +	msg[1].len = 12;
-> +	msg[1].flags = client->flags | I2C_M_RD;
-> +
-> +	ret = i2c_transfer(client->adapter, msg, 2);
-> +	if (ret < 0)
-> +		return ret;
-> +	else if (ret != 2)
-> +		dev_err(&data->client->dev, "vl53l0x: consecutively read error. ");
-> +
-> +	*val = le16_to_cpu((buffer[10] << 8) + buffer[11]);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct iio_chan_spec vl53l0x_channels[] = {
-> +	{
-> +		.type = IIO_DISTANCE,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW)
-> +	},
-> +	IIO_CHAN_SOFT_TIMESTAMP(1),
-
-Not required since no buffer/trigger support!
-
-
-
-Thanks
--- 
-Himanshu Jha
-Undergraduate Student
-Department of Electronics & Communication
-Guru Tegh Bahadur Institute of Technology
+Sorry for that acked-by. There was a lot of "reviewed-by", "acked-by",
+etc in a single version and I messed up :).
