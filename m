@@ -1,137 +1,179 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v3 18/23] v4l: fwnode: Use media bus type for bus parser
- selection
-Date: Thu, 13 Sep 2018 00:29:37 +0300
-Message-ID: <20180912212942.19641-19-sakari.ailus@linux.intel.com>
-References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
+Date: Wed, 12 Sep 2018 23:49:38 +0200
+Message-ID: <20180912214938.GA30654@amd>
+References: <20180911170825.17789-1-dmurphy@ti.com>
+ <20180911170825.17789-2-dmurphy@ti.com>
+ <20180911200530.GA28290@amd>
+ <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, jacopo@jmondi.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ikeVEW9yuYc//A+q"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VXNlIHRoZSBtZWRpYSBidXMgdHlwZXMgaW5zdGVhZCBvZiB0aGUgZndub2RlIGJ1cyB0eXBlcyBp
-bnRlcm5hbGx5LiBUaGlzCmlzIHRoZSBpbnRlcmZhY2UgdG8gdGhlIGRyaXZlcnMgYXMgd2VsbCwg
-bWFraW5nIHRoZSB1c2Ugb2YgdGhlIGZ3bm9kZSBidXMKdHlwZXMgbW9yZSBsb2NhbGlzZWQgdG8g
-dGhlIFY0TDIgZndub2RlIGZyYW1ld29yay4KClNpZ25lZC1vZmYtYnk6IFNha2FyaSBBaWx1cyA8
-c2FrYXJpLmFpbHVzQGxpbnV4LmludGVsLmNvbT4KVGVzdGVkLWJ5OiBTdGV2ZSBMb25nZXJiZWFt
-IDxzdGV2ZV9sb25nZXJiZWFtQG1lbnRvci5jb20+Ci0tLQogZHJpdmVycy9tZWRpYS92NGwyLWNv
-cmUvdjRsMi1md25vZGUuYyB8IDEwMCArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-CiAxIGZpbGUgY2hhbmdlZCwgODAgaW5zZXJ0aW9ucygrKSwgMjAgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9tZWRpYS92NGwyLWNvcmUvdjRsMi1md25vZGUuYyBiL2RyaXZlcnMv
-bWVkaWEvdjRsMi1jb3JlL3Y0bDItZndub2RlLmMKaW5kZXggODI0NGE3Yjg0MTRlLi40YjU4ODQx
-ODA3NGEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbWVkaWEvdjRsMi1jb3JlL3Y0bDItZndub2RlLmMK
-KysrIGIvZHJpdmVycy9tZWRpYS92NGwyLWNvcmUvdjRsMi1md25vZGUuYwpAQCAtNDIsOSArNDIs
-NjYgQEAgZW51bSB2NGwyX2Z3bm9kZV9idXNfdHlwZSB7CiAJTlJfT0ZfVjRMMl9GV05PREVfQlVT
-X1RZUEUsCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IHY0bDJfZndub2RlX2J1c19jb252IHsK
-KwllbnVtIHY0bDJfZndub2RlX2J1c190eXBlIGZ3bm9kZV9idXNfdHlwZTsKKwllbnVtIHY0bDJf
-bWJ1c190eXBlIG1idXNfdHlwZTsKKwljb25zdCBjaGFyICpuYW1lOworfSBidXNzZXNbXSA9IHsK
-Kwl7CisJCVY0TDJfRldOT0RFX0JVU19UWVBFX0dVRVNTLAorCQlWNEwyX01CVVNfVU5LTk9XTiwK
-KwkJIm5vdCBzcGVjaWZpZWQiLAorCX0sIHsKKwkJVjRMMl9GV05PREVfQlVTX1RZUEVfQ1NJMl9D
-UEhZLAorCQlWNEwyX01CVVNfQ1NJMl9DUEhZLAorCQkiTUlQSSBDU0ktMiBDLVBIWSIsCisJfSwg
-eworCQlWNEwyX0ZXTk9ERV9CVVNfVFlQRV9DU0kxLAorCQlWNEwyX01CVVNfQ1NJMSwKKwkJIk1J
-UEkgQ1NJLTEiLAorCX0sIHsKKwkJVjRMMl9GV05PREVfQlVTX1RZUEVfQ0NQMiwKKwkJVjRMMl9N
-QlVTX0NDUDIsCisJCSJjb21wYWN0IGNhbWVyYSBwb3J0IDIiLAorCX0sIHsKKwkJVjRMMl9GV05P
-REVfQlVTX1RZUEVfQ1NJMl9EUEhZLAorCQlWNEwyX01CVVNfQ1NJMl9EUEhZLAorCQkiTUlQSSBD
-U0ktMiBELVBIWSIsCisJfSwgeworCQlWNEwyX0ZXTk9ERV9CVVNfVFlQRV9QQVJBTExFTCwKKwkJ
-VjRMMl9NQlVTX1BBUkFMTEVMLAorCQkicGFyYWxsZWwiLAorCX0sIHsKKwkJVjRMMl9GV05PREVf
-QlVTX1RZUEVfQlQ2NTYsCisJCVY0TDJfTUJVU19CVDY1NiwKKwkJIkJ0LjY1NiIsCisJfQorfTsK
-Kworc3RhdGljIGNvbnN0IHN0cnVjdCB2NGwyX2Z3bm9kZV9idXNfY29udiAqCitnZXRfdjRsMl9m
-d25vZGVfYnVzX2NvbnZfYnlfZndub2RlX2J1cyhlbnVtIHY0bDJfZndub2RlX2J1c190eXBlIHR5
-cGUpCit7CisJdW5zaWduZWQgaW50IGk7CisKKwlmb3IgKGkgPSAwOyBpIDwgQVJSQVlfU0laRShi
-dXNzZXMpOyBpKyspCisJCWlmIChidXNzZXNbaV0uZndub2RlX2J1c190eXBlID09IHR5cGUpCisJ
-CQlyZXR1cm4gJmJ1c3Nlc1tpXTsKKworCXJldHVybiBOVUxMOworfQorCitzdGF0aWMgZW51bSB2
-NGwyX21idXNfdHlwZQordjRsMl9md25vZGVfYnVzX3R5cGVfdG9fbWJ1cyhlbnVtIHY0bDJfZndu
-b2RlX2J1c190eXBlIHR5cGUpCit7CisJY29uc3Qgc3RydWN0IHY0bDJfZndub2RlX2J1c19jb252
-ICpjb252ID0KKwkJZ2V0X3Y0bDJfZndub2RlX2J1c19jb252X2J5X2Z3bm9kZV9idXModHlwZSk7
-CisKKwlyZXR1cm4gY29udiA/IGNvbnYtPm1idXNfdHlwZSA6IFY0TDJfTUJVU19VTktOT1dOOwor
-fQorCiBzdGF0aWMgaW50IHY0bDJfZndub2RlX2VuZHBvaW50X3BhcnNlX2NzaTJfYnVzKHN0cnVj
-dCBmd25vZGVfaGFuZGxlICpmd25vZGUsCiAJCQkJCSAgICAgICBzdHJ1Y3QgdjRsMl9md25vZGVf
-ZW5kcG9pbnQgKnZlcCwKLQkJCQkJICAgICAgIGVudW0gdjRsMl9md25vZGVfYnVzX3R5cGUgYnVz
-X3R5cGUpCisJCQkJCSAgICAgICBlbnVtIHY0bDJfbWJ1c190eXBlIGJ1c190eXBlKQogewogCXN0
-cnVjdCB2NGwyX2Z3bm9kZV9idXNfbWlwaV9jc2kyICpidXMgPSAmdmVwLT5idXMubWlwaV9jc2ky
-OwogCWJvb2wgaGF2ZV9jbGtfbGFuZSA9IGZhbHNlLCBoYXZlX2RhdGFfbGFuZXMgPSBmYWxzZSwK
-QEAgLTU4LDcgKzExNSw3IEBAIHN0YXRpYyBpbnQgdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2Vf
-Y3NpMl9idXMoc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwKIAl1MzIgdjsKIAlpbnQgcnZh
-bDsKIAotCWlmIChidXNfdHlwZSA9PSBWNEwyX0ZXTk9ERV9CVVNfVFlQRV9DU0kyX0RQSFkpIHsK
-KwlpZiAoYnVzX3R5cGUgPT0gVjRMMl9NQlVTX0NTSTJfRFBIWSkgewogCQl1c2VfZGVmYXVsdF9s
-YW5lX21hcHBpbmcgPSB0cnVlOwogCiAJCW51bV9kYXRhX2xhbmVzID0gbWluX3QodTMyLCBidXMt
-Pm51bV9kYXRhX2xhbmVzLApAQCAtMTM0LDcgKzE5MSw3IEBAIHN0YXRpYyBpbnQgdjRsMl9md25v
-ZGVfZW5kcG9pbnRfcGFyc2VfY3NpMl9idXMoc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwK
-IAkJZmxhZ3MgfD0gVjRMMl9NQlVTX0NTSTJfQ09OVElOVU9VU19DTE9DSzsKIAl9CiAKLQlpZiAo
-YnVzX3R5cGUgPT0gVjRMMl9GV05PREVfQlVTX1RZUEVfQ1NJMl9EUEhZIHx8IGxhbmVzX3VzZWQg
-fHwKKwlpZiAoYnVzX3R5cGUgPT0gVjRMMl9NQlVTX0NTSTJfRFBIWSB8fCBsYW5lc191c2VkIHx8
-CiAJICAgIGhhdmVfY2xrX2xhbmUgfHwgKGZsYWdzICYgflY0TDJfTUJVU19DU0kyX0NPTlRJTlVP
-VVNfQ0xPQ0spKSB7CiAJCWJ1cy0+ZmxhZ3MgPSBmbGFnczsKIAkJdmVwLT5idXNfdHlwZSA9IFY0
-TDJfTUJVU19DU0kyX0RQSFk7CkBAIC0xNzcsNyArMjM0LDcgQEAgc3RhdGljIGludCB2NGwyX2Z3
-bm9kZV9lbmRwb2ludF9wYXJzZV9jc2kyX2J1cyhzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZndub2Rl
-LAogCiBzdGF0aWMgdm9pZCB2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9wYXJhbGxlbF9idXMo
-CiAJc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwgc3RydWN0IHY0bDJfZndub2RlX2VuZHBv
-aW50ICp2ZXAsCi0JZW51bSB2NGwyX2Z3bm9kZV9idXNfdHlwZSBidXNfdHlwZSkKKwllbnVtIHY0
-bDJfbWJ1c190eXBlIGJ1c190eXBlKQogewogCXN0cnVjdCB2NGwyX2Z3bm9kZV9idXNfcGFyYWxs
-ZWwgKmJ1cyA9ICZ2ZXAtPmJ1cy5wYXJhbGxlbDsKIAl1bnNpZ25lZCBpbnQgZmxhZ3MgPSAwOwpA
-QCAtMjc0LDExICszMzEsMTEgQEAgc3RhdGljIHZvaWQgdjRsMl9md25vZGVfZW5kcG9pbnRfcGFy
-c2VfcGFyYWxsZWxfYnVzKAogCQllbHNlCiAJCQl2ZXAtPmJ1c190eXBlID0gVjRMMl9NQlVTX0JU
-NjU2OwogCQlicmVhazsKLQljYXNlIFY0TDJfRldOT0RFX0JVU19UWVBFX1BBUkFMTEVMOgorCWNh
-c2UgVjRMMl9NQlVTX1BBUkFMTEVMOgogCQl2ZXAtPmJ1c190eXBlID0gVjRMMl9NQlVTX1BBUkFM
-TEVMOwogCQlidXMtPmZsYWdzID0gZmxhZ3M7CiAJCWJyZWFrOwotCWNhc2UgVjRMMl9GV05PREVf
-QlVTX1RZUEVfQlQ2NTY6CisJY2FzZSBWNEwyX01CVVNfQlQ2NTY6CiAJCXZlcC0+YnVzX3R5cGUg
-PSBWNEwyX01CVVNfQlQ2NTY7CiAJCWJ1cy0+ZmxhZ3MgPSBmbGFncyAmIH5QQVJBTExFTF9NQlVT
-X0ZMQUdTOwogCQlicmVhazsKQEAgLTI4OCw3ICszNDUsNyBAQCBzdGF0aWMgdm9pZCB2NGwyX2Z3
-bm9kZV9lbmRwb2ludF9wYXJzZV9wYXJhbGxlbF9idXMoCiBzdGF0aWMgdm9pZAogdjRsMl9md25v
-ZGVfZW5kcG9pbnRfcGFyc2VfY3NpMV9idXMoc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwK
-IAkJCQkgICAgc3RydWN0IHY0bDJfZndub2RlX2VuZHBvaW50ICp2ZXAsCi0JCQkJICAgIGVudW0g
-djRsMl9md25vZGVfYnVzX3R5cGUgYnVzX3R5cGUpCisJCQkJICAgIGVudW0gdjRsMl9tYnVzX3R5
-cGUgYnVzX3R5cGUpCiB7CiAJc3RydWN0IHY0bDJfZndub2RlX2J1c19taXBpX2NzaTEgKmJ1cyA9
-ICZ2ZXAtPmJ1cy5taXBpX2NzaTE7CiAJdTMyIHY7CkBAIC0zMTMsNyArMzcwLDcgQEAgdjRsMl9m
-d25vZGVfZW5kcG9pbnRfcGFyc2VfY3NpMV9idXMoc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9k
-ZSwKIAkJcHJfZGVidWcoImNsb2NrLWxhbmVzICV1XG4iLCB2KTsKIAl9CiAKLQlpZiAoYnVzX3R5
-cGUgPT0gVjRMMl9GV05PREVfQlVTX1RZUEVfQ0NQMikKKwlpZiAoYnVzX3R5cGUgPT0gVjRMMl9N
-QlVTX0NDUDIpCiAJCXZlcC0+YnVzX3R5cGUgPSBWNEwyX01CVVNfQ0NQMjsKIAllbHNlCiAJCXZl
-cC0+YnVzX3R5cGUgPSBWNEwyX01CVVNfQ1NJMTsKQEAgLTMyMyw2ICszODAsNyBAQCBzdGF0aWMg
-aW50IF9fdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2Uoc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3
-bm9kZSwKIAkJCQkJc3RydWN0IHY0bDJfZndub2RlX2VuZHBvaW50ICp2ZXApCiB7CiAJdTMyIGJ1
-c190eXBlID0gMDsKKwllbnVtIHY0bDJfbWJ1c190eXBlIG1idXNfdHlwZTsKIAlpbnQgcnZhbDsK
-IAogCWlmICh2ZXAtPmJ1c190eXBlID09IFY0TDJfTUJVU19VTktOT1dOKSB7CkBAIC0zNDEsMTAg
-KzM5OSwxMiBAQCBzdGF0aWMgaW50IF9fdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2Uoc3RydWN0
-IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwKIAogCWZ3bm9kZV9wcm9wZXJ0eV9yZWFkX3UzMihmd25v
-ZGUsICJidXMtdHlwZSIsICZidXNfdHlwZSk7CiAKLQlzd2l0Y2ggKGJ1c190eXBlKSB7Ci0JY2Fz
-ZSBWNEwyX0ZXTk9ERV9CVVNfVFlQRV9HVUVTUzoKKwltYnVzX3R5cGUgPSB2NGwyX2Z3bm9kZV9i
-dXNfdHlwZV90b19tYnVzKGJ1c190eXBlKTsKKworCXN3aXRjaCAobWJ1c190eXBlKSB7CisJY2Fz
-ZSBWNEwyX01CVVNfVU5LTk9XTjoKIAkJcnZhbCA9IHY0bDJfZndub2RlX2VuZHBvaW50X3BhcnNl
-X2NzaTJfYnVzKGZ3bm9kZSwgdmVwLAotCQkJCQkJCSAgIGJ1c190eXBlKTsKKwkJCQkJCQkgICBt
-YnVzX3R5cGUpOwogCQlpZiAocnZhbCkKIAkJCXJldHVybiBydmFsOwogCkBAIC0zNTMsMjYgKzQx
-MywyNiBAQCBzdGF0aWMgaW50IF9fdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2Uoc3RydWN0IGZ3
-bm9kZV9oYW5kbGUgKmZ3bm9kZSwKIAkJCQlmd25vZGUsIHZlcCwgVjRMMl9NQlVTX1VOS05PV04p
-OwogCiAJCWJyZWFrOwotCWNhc2UgVjRMMl9GV05PREVfQlVTX1RZUEVfQ0NQMjoKLQljYXNlIFY0
-TDJfRldOT0RFX0JVU19UWVBFX0NTSTE6Ci0JCXY0bDJfZndub2RlX2VuZHBvaW50X3BhcnNlX2Nz
-aTFfYnVzKGZ3bm9kZSwgdmVwLCBidXNfdHlwZSk7CisJY2FzZSBWNEwyX01CVVNfQ0NQMjoKKwlj
-YXNlIFY0TDJfTUJVU19DU0kxOgorCQl2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9jc2kxX2J1
-cyhmd25vZGUsIHZlcCwgbWJ1c190eXBlKTsKIAogCQlicmVhazsKLQljYXNlIFY0TDJfRldOT0RF
-X0JVU19UWVBFX0NTSTJfRFBIWToKKwljYXNlIFY0TDJfTUJVU19DU0kyX0RQSFk6CiAJCXZlcC0+
-YnVzX3R5cGUgPSBWNEwyX01CVVNfQ1NJMl9EUEhZOwogCQlydmFsID0gdjRsMl9md25vZGVfZW5k
-cG9pbnRfcGFyc2VfY3NpMl9idXMoZndub2RlLCB2ZXAsCi0JCQkJCQkJICAgYnVzX3R5cGUpOwor
-CQkJCQkJCSAgIG1idXNfdHlwZSk7CiAJCWlmIChydmFsKQogCQkJcmV0dXJuIHJ2YWw7CiAKIAkJ
-YnJlYWs7Ci0JY2FzZSBWNEwyX0ZXTk9ERV9CVVNfVFlQRV9QQVJBTExFTDoKLQljYXNlIFY0TDJf
-RldOT0RFX0JVU19UWVBFX0JUNjU2OgotCQl2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9wYXJh
-bGxlbF9idXMoZndub2RlLCB2ZXAsIGJ1c190eXBlKTsKKwljYXNlIFY0TDJfTUJVU19QQVJBTExF
-TDoKKwljYXNlIFY0TDJfTUJVU19CVDY1NjoKKwkJdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2Vf
-cGFyYWxsZWxfYnVzKGZ3bm9kZSwgdmVwLCBtYnVzX3R5cGUpOwogCiAJCWJyZWFrOwogCWRlZmF1
-bHQ6Ci0JCXByX3dhcm4oInVuc3VwcG9ydGVkIGJ1cyB0eXBlICV1XG4iLCBidXNfdHlwZSk7CisJ
-CXByX3dhcm4oInVuc3VwcG9ydGVkIGJ1cyB0eXBlICV1XG4iLCBtYnVzX3R5cGUpOwogCQlyZXR1
-cm4gLUVJTlZBTDsKIAl9CiAKLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+
+--ikeVEW9yuYc//A+q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi!
+
+> On 09/11/2018 03:05 PM, Pavel Machek wrote:
+> > On Tue 2018-09-11 12:08:20, Dan Murphy wrote:
+> >> Remove support for the LM3697 LED device
+> >> from the ti-lmu.  The LM3697 will be supported
+> >> via a stand alone LED driver.
+> >>
+> >> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >=20
+> > I'd really like to see better explanation here.
+> >=20
+>=20
+> I will update the commit message but....
+>=20
+> How do I politely explain that the original implementation was wrong for =
+certain devices?
+
+Implementation? Device tree is hardware description.
+
+> How do I politely explain that this binding has information that
+>  does not exist?
+
+I don't understand this sentence.
+
+> Isn't code and documentation supposed to be pushed in stages
+> together?
+
+Device tree is _not_ documentation. And yes, it is normally pushed
+together. But that did not happen here, and bindings are already in.
+
+Bindings are an ABI between bootloader and kernel. They should not be
+changed lightly.=20
+
+Here I believe they should be fixed; not deleted.
+
+> Unfortunately Milo left TI before he had a chance to finish upstreaming.
+
+Well -- I wanted to finish upstreaming. I still have those patches,
+and they still look reasonably well. Better than=20
+
+> Some issues with the current binding:
+> 1) The documentation referenced in the ti-lmu.txt does not exist but the =
+binding was accepted.
+> [1] ../leds/backlight/ti-lmu-backlight.txt
+> [2] ../leds/leds-lm3633.txt
+> [3] ../regulator/lm363x-regulator.txt
+>=20
+> 2) ramp-up-msec and ramp-down-msec are not explained or defined in this c=
+urrent binding.
+> Looks to be defined in the staged code though.
+>=20
+> 3) The ramp-up-msec and ramp-down-msec are not the right node parameters
+> the code shows ti,ramp-down-ms and ti,ramp-up-ms.  Looking at the clean u=
+p of the binding
+> in the staged commits the binding still does not match the code.
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/com=
+mit/?h=3Ddroid4-pending-v4.19&id=3Dd774c7e447ac911e73a1b3c775e6d89f0422218c
+>
+
+Bindings are authoritative. Of course, they can be fixed if really
+neccessary, but normally code should be adapted to the bindings, not
+the other way around.
+
+If slow ramping up/down is something that would be expected in other
+chips, too, ti, prefix is not good idea.
+
+> 4) The ramp rates ranges are incorrect for the LM3697 it should be from 0=
+ -> 117400 ms
+>=20
+> 5) The children compatibles are not defined in this binding but appear to=
+ be removed in the staged code.
+>=20
+> 6) address-cells and size-cells are missing from the binding
+
+Yep, ok, so these should be fixed. Still the bindings should be fixed,
+not removed and started over.
+
+> I am attempting to clean this up for all the dedicated LED drivers.
+> There is a lot of bloat with this driver to support a single LED driver t=
+hat is a single function device.
+>
+
+What about the multi function devices? They should have same binding.
+
+> This ti-lmu driver may be a great thing for the Droid 4 but from a custom=
+ers
+> stand point that just wants to use just 1 of the dedicated LED drivers th=
+is driver is
+> overly complex and possibly hard to add code for differentiation.
+
+The ti-lmu driver sounds like a way to go. We really want single
+driver, even if more complex, than 6 separate ones.
+
+> > We have existing binding, for lm3697 and similar devices. With this
+> > series, different binding is introduced, without documented reason.
+> >=20
+>=20
+> I can update the commit message to indicate that this device is not a MFD
+> device and only is a SFD that needs to be supported by a dedicated
+> driver.
+
+Device bindings are operating systems independend. This is not an argument.
+
+> > Now, maybe you are right and the hardware should be handled by
+> > drivers/leds, not drivers/mfd. But we should have solution for all the
+> > similar chips, and that still does not mean we have to modify the
+> > binding. (But maybe we want to move it to different
+> > directory). Bindings are supposed to describe hardware, not mirror
+> > structure of our drivers.
+>=20
+> But this is not clean to have this device in the MFD bindings directory
+> when the support is in the LEDs directory.
+
+Perhaps location of the binding is wrong. Still not reason to drop it
+and introduce new one.
+
+> >> index c885cf89b8ce..920f910be4e9 100644
+> >> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> >> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
+> >> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
+> >>    LM3632       Backlight and regulator
+> >>    LM3633       Backlight, LED and fault monitor
+> >>    LM3695       Backlight
+> >> -  LM3697       Backlight and fault monitor
+> >> =20
+> >>  Required properties:
+> >>    - compatible: Should be one of:
+
+You see? Even if your "new" binding has no flaws, "flawed" binding
+still remains in tree, and we still have problems for lm3632, 3633,
+3695. That's why it needs to be fixed, not replaced.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ikeVEW9yuYc//A+q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAluZifIACgkQMOfwapXb+vLjqgCgkY672WQ5AXqFcoyUHSAY4VxN
+8nAAni+wU410wF8iIReHojXX9IZcmPoP
+=JyMt
+-----END PGP SIGNATURE-----
+
+--ikeVEW9yuYc//A+q--
