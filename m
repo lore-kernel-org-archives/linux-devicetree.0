@@ -1,67 +1,54 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v9 5/9] media: platform: Add Cedrus VPU
- decoder driver
-Date: Wed, 12 Sep 2018 09:23:47 +0200
-Message-ID: <20180912072347.nqw4uu23fykjtz72@flea>
-References: <20180906222442.14825-1-contact@paulk.fr>
- <20180906222442.14825-6-contact@paulk.fr>
- <20180911124625.6759e429@coco.lan>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: Split out common nodes for Rock960 based boards
+Date: Wed, 12 Sep 2018 09:26:12 +0200
+Message-ID: <11137562.zz0kzkSHxt@diego>
+References: <20180911023031.4892-1-manivannan.sadhasivam@linaro.org> <9e1868684ed851dfa19300ac2e648cfea7bf3eb9.camel@collabora.com> <20180912031248.GA4880@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4iwt5yvaz3vewot5"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBH64LOAKGQENGKRU7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20180911124625.6759e429-qA1ZUp+OV9c@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180912031248.GA4880@Mani-XPS-13-9360>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ezequiel Garcia <ezequiel@collabora.com>, robh+dt@kernel.org, vicencb@gmail.com, shawn.lin@rock-chips.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---4iwt5yvaz3vewot5
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Sep 11, 2018 at 12:46:25PM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri,  7 Sep 2018 00:24:38 +0200
-> Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org> escreveu:
+Am Mittwoch, 12. September 2018, 05:12:48 CEST schrieb Manivannan Sadhasivam:
+> Hi Ezequiel,
 > 
-> > From: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> On Tue, Sep 11, 2018 at 04:40:29PM -0300, Ezequiel Garcia wrote:
+> > On Tue, 2018-09-11 at 08:00 +0530, Manivannan Sadhasivam wrote:
+> > > Since the same family members of Rock960 boards (Rock960 and Ficus)
+> > > share the same configuration, split out the common nodes into a common
+> > > dtsi file for reducing code duplication. The board specific nodes for
+> > > Ficus boards are then placed in corresponding board DTS file.
 > > 
-> > This introduces the Cedrus VPU driver that supports the VPU found in
-> > Allwinner SoCs, also known as Video Engine. It is implemented through
-> > a V4L2 M2M decoder device and a media device (used for media requests).
-> > So far, it only supports MPEG-2 decoding.
+> > I think it should be possible to move the common USB nodes to the dtsi
+> > file, and keep the board-specific (phy-supply property) in the dts files:
 > > 
-> > Since this VPU is stateless, synchronization with media requests is
-> > required in order to ensure consistency between frame headers that
-> > contain metadata about the frame to process and the raw slice data that
-> > is used to generate the frame.
+> > &u2phy0_host {
 > > 
-> > This driver was made possible thanks to the long-standing effort
-> > carried out by the linux-sunxi community in the interest of reverse
-> > engineering, documenting and implementing support for the Allwinner VPU.
+> >         phy-supply = <&vcc5v0_host>;
 > > 
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> > };
+> > 
+> > &u2phy1_host {
+> > 
+> >         phy-supply = <&vcc5v0_host>;
+> > 
+> > };
 > 
-> There are several checkpatch issues here. Ok, some can be
-> ignored, but there are at least some of them that sounda relevant.
+> We can do that but my intention was to entirely partition the nodes
+> which are not common. So that it would be less confusing when someone
+> looks at it (please correct me if I'm wrong).
 
-Sorry for that. Given that it's intended to be in staging, do you want
-us to send subsequent patches or the whole serie?
+The supply is actually named the same on both boards, so you could move
+all the usb-nodes to the main dtsi, including the reference to vcc5v0_host
+which would then get defined itself in the two board dts.
 
-Maxime
+Then again, seeing that the vcc5v0_host also only differs in the actually
+used gpio another option would be to move the whole regulator node
+to the dtsi and just define the gpio properties in the board dts files.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---4iwt5yvaz3vewot5--
+
+Heiko
