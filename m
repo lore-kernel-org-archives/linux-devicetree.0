@@ -1,271 +1,176 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH V3 11/27] csky: Atomic operations
-Date: Wed, 12 Sep 2018 17:55:14 +0200
-Message-ID: <20180912155514.GV24082@hirez.programming.kicks-ass.net>
-References: <cover.1536757532.git.ren_guo@c-sky.com>
- <93e8b592e429c156ad4d4ca5d85ef48fd0ab8b70.1536757532.git.ren_guo@c-sky.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 08/27] clk: sunxi-ng: Add support for H6
+ DE3 clocks
+Date: Thu, 13 Sep 2018 00:16:32 +0800
+Message-ID: <CAGb2v652fPojGYE1nkAeEzFBcWjebi1zSnPGwm7zjPbE7ojD0Q@mail.gmail.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net>
+ <1677668.BePkXd9qNa@jernej-laptop> <CAGb2v66kojjjM4f_tO9NwzkCzD3LMM2eiq+PJ6Bk=1Rra=UnYg@mail.gmail.com>
+ <1702684.jtWEXlagAO@jernej-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <93e8b592e429c156ad4d4ca5d85ef48fd0ab8b70.1536757532.git.ren_guo@c-sky.com>
+In-Reply-To: <1702684.jtWEXlagAO@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org, jason@lakedaemon.net, arnd@arndb.de, devicetree@vger.kernel.org, andrea.parri@amarulasolutions.com, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, thomas.petazzoni@bootlin.com, wbx@uclibc-ng.org, green.hu@gmail.com
+To: Jernej Skrabec <jernej.skrabec@siol.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, David Airlie <airlied@linux.ie>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2018 at 09:24:45PM +0800, Guo Ren wrote:
+On Wed, Sep 12, 2018 at 10:55 PM Jernej Škrabec <jernej.skrabec@siol.net> wrote:
+>
+> Dne sreda, 12. september 2018 ob 14:20:08 CEST je Chen-Yu Tsai napisal(a):
+> > On Wed, Sep 5, 2018 at 1:46 AM Jernej Škrabec <jernej.skrabec@siol.net>
+> wrote:
+> > > Dne torek, 04. september 2018 ob 11:04:21 CEST je Chen-Yu Tsai napisal(a):
+> > > > On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec@siol.net>
+> > >
+> > > wrote:
+> > > > > Support for mixer0, mixer1, writeback and rotation units is added.
+> > > > >
+> > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> > > > > ---
+> > > > >
+> > > > >  drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 65
+> > > > >  ++++++++++++++++++++++++++++
+> > > > >  drivers/clk/sunxi-ng/ccu-sun8i-de2.h |  1 +
+> > > > >  2 files changed, 66 insertions(+)
+> > > > >
+> > > > > diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+> > > > > b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c index
+> > > > > bae5ee67a797..4535c1c27d27
+> > > > > 100644
+> > > > > --- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+> > > > > +++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
+> > > > > @@ -31,6 +31,8 @@ static SUNXI_CCU_GATE(bus_mixer1_clk, "bus-mixer1",
+> > > > > "bus-de",>
+> > > > >
+> > > > >                       0x04, BIT(1), 0);
+> > > > >
+> > > > >  static SUNXI_CCU_GATE(bus_wb_clk,      "bus-wb",       "bus-de",
+> > > > >
+> > > > >                       0x04, BIT(2), 0);
+> > > > >
+> > > > > +static SUNXI_CCU_GATE(bus_rot_clk,     "bus-rot",      "bus-de",
+> > > > > +                     0x04, BIT(3), 0);
+> > > > >
+> > > > >  static SUNXI_CCU_GATE(mixer0_clk,      "mixer0",       "mixer0-div",
+> > > > >
+> > > > >                       0x00, BIT(0), CLK_SET_RATE_PARENT);
+> > > > >
+> > > > > @@ -38,6 +40,8 @@ static SUNXI_CCU_GATE(mixer1_clk,     "mixer1",
+> > > > > "mixer1-div",>
+> > > > >
+> > > > >                       0x00, BIT(1), CLK_SET_RATE_PARENT);
+> > > > >
+> > > > >  static SUNXI_CCU_GATE(wb_clk,          "wb",           "wb-div",
+> > > > >
+> > > > >                       0x00, BIT(2), CLK_SET_RATE_PARENT);
+> > > > >
+> > > > > +static SUNXI_CCU_GATE(rot_clk,         "rot",          "rot-div",
+> > > > > +                     0x00, BIT(3), CLK_SET_RATE_PARENT);
+> > > > >
+> > > > >  static SUNXI_CCU_M(mixer0_div_clk, "mixer0-div", "de", 0x0c, 0, 4,
+> > > > >
+> > > > >                    CLK_SET_RATE_PARENT);
+> > > > >
+> > > > > @@ -45,6 +49,8 @@ static SUNXI_CCU_M(mixer1_div_clk, "mixer1-div",
+> > > > > "de",
+> > > > > 0x0c, 4, 4,>
+> > > > >
+> > > > >                    CLK_SET_RATE_PARENT);
+> > > > >
+> > > > >  static SUNXI_CCU_M(wb_div_clk, "wb-div", "de", 0x0c, 8, 4,
+> > > > >
+> > > > >                    CLK_SET_RATE_PARENT);
+> > > > >
+> > > > > +static SUNXI_CCU_M(rot_div_clk, "rot-div", "de", 0x0c, 0x0c, 4,
+> > > > > +                  CLK_SET_RATE_PARENT);
+> > > > >
+> > > > >  static SUNXI_CCU_M(mixer0_div_a83_clk, "mixer0-div", "pll-de", 0x0c,
+> > > > >  0,
+> > > > >  4,
+> > > > >
+> > > > >                    CLK_SET_RATE_PARENT);
+> > > > >
+> > > > > @@ -53,6 +59,24 @@ static SUNXI_CCU_M(mixer1_div_a83_clk,
+> > > > > "mixer1-div",
+> > > > > "pll-de", 0x0c, 4, 4,>
+> > > > >
+> > > > >  static SUNXI_CCU_M(wb_div_a83_clk, "wb-div", "pll-de", 0x0c, 8, 4,
+> > > > >
+> > > > >                    CLK_SET_RATE_PARENT);
+> > > > >
+> > > > > +static struct ccu_common *sun50i_h6_de3_clks[] = {
+> > > > > +       &mixer0_clk.common,
+> > > > > +       &mixer1_clk.common,
+> > > > > +       &wb_clk.common,
+> > > > > +
+> > > > > +       &bus_mixer0_clk.common,
+> > > > > +       &bus_mixer1_clk.common,
+> > > > > +       &bus_wb_clk.common,
+> > > > > +
+> > > > > +       &mixer0_div_clk.common,
+> > > > > +       &mixer1_div_clk.common,
+> > > > > +       &wb_div_clk.common,
+> > > > > +
+> > > > > +       &bus_rot_clk.common,
+> > > > > +       &rot_clk.common,
+> > > > > +       &rot_div_clk.common,
+> > > > > +};
+> > > > > +
+> > > > >
+> > > > >  static struct ccu_common *sun8i_a83t_de2_clks[] = {
+> > > > >
+> > > > >         &mixer0_clk.common,
+> > > > >         &mixer1_clk.common,
+> > > > >
+> > > > > @@ -92,6 +116,26 @@ static struct ccu_common *sun8i_v3s_de2_clks[] = {
+> > > > >
+> > > > >         &wb_div_clk.common,
+> > > > >
+> > > > >  };
+> > > > >
+> > > > > +static struct clk_hw_onecell_data sun50i_h6_de3_hw_clks = {
+> > > > > +       .hws    = {
+> > > > > +               [CLK_MIXER0]            = &mixer0_clk.common.hw,
+> > > > > +               [CLK_MIXER1]            = &mixer1_clk.common.hw,
+> > > > > +               [CLK_WB]                = &wb_clk.common.hw,
+> > > > > +               [CLK_ROT]               = &rot_clk.common.hw,
+> > > > > +
+> > > > > +               [CLK_BUS_MIXER0]        = &bus_mixer0_clk.common.hw,
+> > > > > +               [CLK_BUS_MIXER1]        = &bus_mixer1_clk.common.hw,
+> > > > > +               [CLK_BUS_WB]            = &bus_wb_clk.common.hw,
+> > > > > +               [CLK_BUS_ROT]           = &bus_rot_clk.common.hw,
+> > > > > +
+> > > > > +               [CLK_MIXER0_DIV]        = &mixer0_div_clk.common.hw,
+> > > > > +               [CLK_MIXER1_DIV]        = &mixer1_div_clk.common.hw,
+> > > > > +               [CLK_WB_DIV]            = &wb_div_clk.common.hw,
+> > > > > +               [CLK_ROT_DIV]           = &rot_div_clk.common.hw,
+> > > > > +       },
+> > > > > +       .num    = 12,
+> > > >
+> > > > It's best not to openly code these. It is error prone, like having
+> > > > an index beyond .num, which then never gets registered.
+> > > >
+> > > > Instead, please update CLK_NUMBERS and use that instead.
+> > > > sunxi_ccu_probe()
+> > > > can handle holes in .hws.
+> > >
+> > > I'm not sure this will work. All newly introduced indices are at the end,
+> > > so other arrays will still have same length (hole at the end). You will
+> > > just claim that arrays are larger than they really are, which means bad
+> > > things.
+> > >
+> > > But I take any other suggestion. I really can't think of better solution.
+> >
+> > Then maybe have macros for both cases instead?
+> > CLK_NUMBER_WITH_ROT / CLK_NUMBER_WITHOUT_ROT?
+>
+> That sounds reasonable. Do you want separate patch which renames original
+> macro CLK_NUMBER to CLK_NUMBER_WITHOUT_ROT?
 
-> +#define ATOMIC_OP(op, c_op)						\
-> +static inline void atomic_##op(int i, atomic_t *v)			\
-> +{									\
-> +	unsigned long tmp;						\
-> +									\
-> +	smp_mb();							\
-> +	asm volatile (							\
-> +	"1:	ldex.w		%0, (%2) \n"				\
-> +	"	" #op "		%0, %1   \n"				\
-> +	"	stex.w		%0, (%2) \n"				\
-> +	"	bez		%0, 1b   \n"				\
-> +		: "=&r" (tmp)						\
-> +		: "r" (i), "r"(&v->counter)				\
-> +		: "memory");						\
-> +	smp_mb();							\
-> +}
+I don't think that's necessary. Just mention the name change in the changelog,
+and justifying it by the addition of the ROT clocks.
 
-ATOMIC_OP doesn't need to imply any smp_mb()'s what so ever.
-
-> +#define ATOMIC_OP_RETURN(op, c_op)					\
-> +static inline int atomic_##op##_return(int i, atomic_t *v)		\
-> +{									\
-> +	unsigned long tmp, ret;						\
-> +									\
-> +	smp_mb();							\
-> +	asm volatile (							\
-> +	"1:	ldex.w		%0, (%3) \n"				\
-> +	"	" #op "		%0, %2   \n"				\
-> +	"	mov		%1, %0   \n"				\
-> +	"	stex.w		%0, (%3) \n"				\
-> +	"	bez		%0, 1b   \n"				\
-> +		: "=&r" (tmp), "=&r" (ret)				\
-> +		: "r" (i), "r"(&v->counter)				\
-> +		: "memory");						\
-> +	smp_mb();							\
-> +									\
-> +	return ret;							\
-> +}
-> +
-> +#define ATOMIC_FETCH_OP(op, c_op)					\
-> +static inline int atomic_fetch_##op(int i, atomic_t *v)			\
-> +{									\
-> +	unsigned long tmp, ret;						\
-> +									\
-> +	smp_mb();							\
-> +	asm volatile (							\
-> +	"1:	ldex.w		%0, (%3) \n"				\
-> +	"	mov		%1, %0   \n"				\
-> +	"	" #op "		%0, %2   \n"				\
-> +	"	stex.w		%0, (%3) \n"				\
-> +	"	bez		%0, 1b   \n"				\
-> +		: "=&r" (tmp), "=&r" (ret)				\
-> +		: "r" (i), "r"(&v->counter)				\
-> +		: "memory");						\
-> +	smp_mb();							\
-> +									\
-> +	return ret;							\
-> +}
-
-For these you could generate _relaxed variants and not provide smp_mb()
-inside them.
-
-> +#else /* CONFIG_CPU_HAS_LDSTEX */
-> +
-> +#include <linux/irqflags.h>
-> +
-
-> +#define ATOMIC_OP(op, c_op)						\
-> +static inline void atomic_##op(int i, atomic_t *v)			\
-> +{									\
-> +	unsigned long tmp, flags;					\
-> +									\
-> +	raw_local_irq_save(flags);					\
-> +									\
-> +	asm volatile (							\
-> +	"	ldw		%0, (%2) \n"				\
-> +	"	" #op "		%0, %1   \n"				\
-> +	"	stw		%0, (%2) \n"				\
-> +		: "=&r" (tmp)						\
-> +		: "r" (i), "r"(&v->counter)				\
-> +		: "memory");						\
-> +									\
-> +	raw_local_irq_restore(flags);					\
-> +}
-
-Is this really 'better' than the generic UP fallback implementation?
-
-
-
-
-
-> diff --git a/arch/csky/include/asm/spinlock.h b/arch/csky/include/asm/spinlock.h
-> new file mode 100644
-> index 0000000..f1081bb
-> --- /dev/null
-> +++ b/arch/csky/include/asm/spinlock.h
-> @@ -0,0 +1,286 @@
-> +#ifndef __ASM_CSKY_SPINLOCK_H
-> +#define __ASM_CSKY_SPINLOCK_H
-> +
-> +#include <linux/spinlock_types.h>
-> +#include <asm/barrier.h>
-> +
-> +#ifdef CONFIG_QUEUED_RWLOCKS
-> +
-> +/*
-> + * Ticket-based spin-locking.
-> + */
-> +static inline void arch_spin_lock(arch_spinlock_t *lock)
-> +{
-> +	arch_spinlock_t lockval;
-> +	u32 ticket_next = 1 << TICKET_NEXT;
-> +	u32 *p = &lock->lock;
-> +	u32 tmp;
-> +
-> +	smp_mb();
-
-spin_lock() doesn't need smp_mb() before.
-
-> +	asm volatile (
-> +		"1:	ldex.w		%0, (%2) \n"
-> +		"	mov		%1, %0	 \n"
-> +		"	add		%0, %3	 \n"
-> +		"	stex.w		%0, (%2) \n"
-> +		"	bez		%0, 1b   \n"
-> +		: "=&r" (tmp), "=&r" (lockval)
-> +		: "r"(p), "r"(ticket_next)
-> +		: "cc");
-> +
-> +	while (lockval.tickets.next != lockval.tickets.owner) {
-> +		lockval.tickets.owner = READ_ONCE(lock->tickets.owner);
-> +	}
-> +
-> +	smp_mb();
-> +}
-> +
-> +static inline int arch_spin_trylock(arch_spinlock_t *lock)
-> +{
-> +	u32 tmp, contended, res;
-> +	u32 ticket_next = 1 << TICKET_NEXT;
-> +	u32 *p = &lock->lock;
-> +
-> +	smp_mb();
-
-idem.
-
-> +	do {
-> +		asm volatile (
-> +		"	ldex.w		%0, (%3)   \n"
-> +		"	movi		%2, 1	   \n"
-> +		"	rotli		%1, %0, 16 \n"
-> +		"	cmpne		%1, %0     \n"
-> +		"	bt		1f         \n"
-> +		"	movi		%2, 0	   \n"
-> +		"	add		%0, %0, %4 \n"
-> +		"	stex.w		%0, (%3)   \n"
-> +		"1:				   \n"
-> +		: "=&r" (res), "=&r" (tmp), "=&r" (contended)
-> +		: "r"(p), "r"(ticket_next)
-> +		: "cc");
-> +	} while (!res);
-> +
-> +	if (!contended)
-> +		smp_mb();
-> +
-> +	return !contended;
-> +}
-> +
-> +static inline void arch_spin_unlock(arch_spinlock_t *lock)
-> +{
-> +	smp_mb();
-> +	lock->tickets.owner++;
-> +	smp_mb();
-
-spin_unlock() doesn't need smp_mb() after.
-
-> +}
-> +
-> +static inline int arch_spin_value_unlocked(arch_spinlock_t lock)
-> +{
-> +	return lock.tickets.owner == lock.tickets.next;
-> +}
-> +
-> +static inline int arch_spin_is_locked(arch_spinlock_t *lock)
-> +{
-> +	return !arch_spin_value_unlocked(READ_ONCE(*lock));
-> +}
-> +
-> +static inline int arch_spin_is_contended(arch_spinlock_t *lock)
-> +{
-> +	struct __raw_tickets tickets = READ_ONCE(lock->tickets);
-> +	return (tickets.next - tickets.owner) > 1;
-> +}
-> +#define arch_spin_is_contended	arch_spin_is_contended
-> +
-> +#include <asm/qrwlock.h>
-> +
-> +/* See include/linux/spinlock.h */
-> +#define smp_mb__after_spinlock()	smp_mb()
-> +
-> +#else /* CONFIG_QUEUED_RWLOCKS */
-> +
-> +/*
-> + * Test-and-set spin-locking.
-> + */
-
-Why retain that?
-
-same comments; it has far too many smp_mb()s in.
-
-> +#endif /* CONFIG_QUEUED_RWLOCKS */
-> +#endif /* __ASM_CSKY_SPINLOCK_H */
-> diff --git a/arch/csky/include/asm/spinlock_types.h b/arch/csky/include/asm/spinlock_types.h
-> new file mode 100644
-> index 0000000..7e825c2
-> --- /dev/null
-> +++ b/arch/csky/include/asm/spinlock_types.h
-> @@ -0,0 +1,35 @@
-> +#ifndef __ASM_CSKY_SPINLOCK_TYPES_H
-> +#define __ASM_CSKY_SPINLOCK_TYPES_H
-> +
-> +#ifndef __LINUX_SPINLOCK_TYPES_H
-> +# error "please don't include this file directly"
-> +#endif
-> +
-> +#define TICKET_NEXT	16
-> +
-> +typedef struct {
-> +	union {
-> +		u32 lock;
-> +		struct __raw_tickets {
-> +			/* little endian */
-> +			u16 owner;
-> +			u16 next;
-> +		} tickets;
-> +	};
-> +} arch_spinlock_t;
-> +
-> +#define __ARCH_SPIN_LOCK_UNLOCKED	{ { 0 } }
-> +
-> +#ifdef CONFIG_QUEUED_RWLOCKS
-> +#include <asm-generic/qrwlock_types.h>
-> +
-> +#else /* CONFIG_NR_CPUS > 2 */
-> +
-> +typedef struct {
-> +	u32 lock;
-> +} arch_rwlock_t;
-> +
-> +#define __ARCH_RW_LOCK_UNLOCKED		{ 0 }
-> +
-> +#endif /* CONFIG_QUEUED_RWLOCKS */
-> +#endif /* __ASM_CSKY_SPINLOCK_TYPES_H */
+Thanks
