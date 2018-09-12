@@ -1,57 +1,37 @@
-Return-Path: <SRS0=aBeZ=LQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.nic.cz ([217.31.204.67]:45943 "EHLO mail.nic.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbeICATD (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Sep 2018 20:19:03 -0400
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH] dt-bindings: watchdog: Document armada-37xx-wdt binding
-Date: Sun,  2 Sep 2018 21:59:52 +0200
-Message-Id: <20180902195952.627-1-marek.behun@nic.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Return-Path: <SRS0=dseP=L2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relmlor3.renesas.com ([210.160.252.173]:24282 "EHLO
+        relmlie2.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726795AbeILSfn (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 12 Sep 2018 14:35:43 -0400
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/2] Add R8A774C0 PFC support
+Date: Wed, 12 Sep 2018 14:31:00 +0100
+Message-Id: <1536759062-11970-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Guenter Roeck <linux@roeck-us.net>, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This adds device tree binding documentation for the CPU watchdog found
-on Armada 37xx SOCs (EspressoBin, Turris Mox).
+Dear All,
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
----
- .../bindings/watchdog/armada-37xx-wdt.txt          | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+this patch series adds PFC support to the RZ/G2E (a.k.a. r8a774c0),
+and it applies on top of renesas-drivers-2018-09-11-v4.19-rc3.
 
-diff --git a/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt b/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
-new file mode 100644
-index 000000000000..4ba9e40ad386
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
-@@ -0,0 +1,23 @@
-+* Armada 37xx CPU Watchdog Timer Controller
-+
-+Required properties:
-+- compatible : must be "marvell,armada-3700-wdt"
-+- reg : base physical address of the controller and length of memory mapped
-+	region.
-+- clocks : the clock feeding the watchdog timer. See clock-bindings.txt
-+- marvell,system-controller : reference to syscon node for the CPU Miscellaneous
-+	Registers
-+
-+Example:
-+
-+	cpu_misc: system-controller@d000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0xd000 0x1000>;
-+	};
-+
-+	wdt: watchdog-timer@8300 {
-+		compatible = "marvell,armada-3700-wdt";
-+		reg = <0x8300 0x40>;
-+		marvell,system-controller = <&cpu_misc>;
-+		clocks = <&xtalclk>;
-+	};
+Thanks,
+Fab
+
+Fabrizio Castro (2):
+  dt-bindings: pinctrl: sh-pfc: Document r8a774c0 PFC support
+  pinctrl: sh-pfc: r8a77990: Add R8A774C0 PFC support
+
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   1 +
+ drivers/pinctrl/sh-pfc/Kconfig                     |   5 +
+ drivers/pinctrl/sh-pfc/Makefile                    |   1 +
+ drivers/pinctrl/sh-pfc/core.c                      |   6 +
+ drivers/pinctrl/sh-pfc/pfc-r8a77990.c              | 339 ++++++++++++---------
+ drivers/pinctrl/sh-pfc/sh_pfc.h                    |   1 +
+ 6 files changed, 202 insertions(+), 151 deletions(-)
+
 -- 
-2.16.4
+2.7.4
