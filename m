@@ -1,59 +1,57 @@
-From: leo.yan@linaro.org
-Subject: Re: [PATCH 04/11] dts: qcom: Update coresight bindings for hardware
- ports
-Date: Wed, 12 Sep 2018 18:17:53 +0800
-Message-ID: <20180912101753.GB3353@leoy-ThinkPad-X240s>
-References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
- <1536661032-30481-5-git-send-email-suzuki.poulose@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/8] regulator: bd71837: Disable voltage monitoring for
+ LDO3/4
+Date: Wed, 12 Sep 2018 11:23:16 +0100
+Message-ID: <20180912102316.GC6062@sirena.org.uk>
+References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+ <cad2e7baeb7af2d6efbc6afba831b0513087d832.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180911124029.GO4185@dell>
+ <20180912074745.GD2381@localhost.localdomain>
+ <20180912084251.GO4185@dell>
+ <20180912085315.GE2381@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yLVHuoLXiP9kZBkt"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1536661032-30481-5-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <20180912085315.GE2381@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, mazziesaccount@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
 
-On Tue, Sep 11, 2018 at 11:17:05AM +0100, Suzuki K Poulose wrote:
-> Switch to updated coresight bindings for hw ports
-> 
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: David Brown <david.brown@linaro.org>
-> Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 98 ++++++++++++++++++++++-------------
->  1 file changed, 63 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index 7b32b89..5bed52b 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -1099,10 +1099,11 @@
->  			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
->  			clock-names = "apb_pclk", "atclk";
->  
-> -			port {
-> -				tpiu_in: endpoint {
-> -					slave-mode;
-> -					remote-endpoint = <&replicator_out1>;
-> +			out-ports {
+--yLVHuoLXiP9kZBkt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Here should be in-ports for tpiu node?
+On Wed, Sep 12, 2018 at 11:53:15AM +0300, Matti Vaittinen wrote:
+> On Wed, Sep 12, 2018 at 09:42:51AM +0100, Lee Jones wrote:
+> > On Wed, 12 Sep 2018, Matti Vaittinen wrote:
 
-BTW, if upper comment is valid, this means the DT binding doc also
-gives wrong example for tpiu node [1].
+> > > I m not sure if it is relevant but I think this was already applied to
+> > > Mark's regulator tree.
 
-I tested this patch with upper changing to 'in-ports', etm with perf
-mode can work well on DB410c board.
+> > Where is Mark's acceptance email?
 
-[...]
+> https://lkml.org/lkml/2018/8/29/644
 
-Thanks,
-Leo Yan
+Yeah, sorry about not saying something explict there - IIRC when I
+applied it I knew you were on vacation and it's a stable fix.
 
-[1] https://git.linaro.org/kernel/coresight.git/tree/Documentation/devicetree/bindings/arm/coresight.txt?h=next#n135
+--yLVHuoLXiP9kZBkt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluY6RMACgkQJNaLcl1U
+h9DVRQf+NAh/8JhCtcvZmbaYOoX1uJ8x6pdnBv8MBoExgtoPP/Bp4aeZV8DPhA6z
+eEaiuQuFafUTEBdCnoKusdXQxy4aanr/rJW5qG4lEPD/OEtQypeaZoPLw8An7ptE
+42jKcjnpmxf3cKsPKP6DWbNnJBXMwD4pmyFYCx8Ss2HByRLUgH/hmcgx9ag9igrz
+R9yWMmpNouLzOQ2i6xMXWphbRSvo4JNp1FDJnKjtdmIioSECen/8sB8aGNv34M9D
+G1/1fqg0qWbgcIVkJwRTCAJzIAksEIKDZJErgToyGGbWaHDdyOlf1tuItcwKSm2L
+d19/aGJ3sYuokqjZJin4kRBwIlBphg==
+=U4xK
+-----END PGP SIGNATURE-----
+
+--yLVHuoLXiP9kZBkt--
