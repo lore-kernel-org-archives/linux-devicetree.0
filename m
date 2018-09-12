@@ -1,45 +1,86 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH 2/2] ARM: dts: bcm283x: Correct mailbox register sizes
-Date: Wed, 12 Sep 2018 17:42:34 +0100
-Message-ID: <1536770554-107314-3-git-send-email-phil@raspberrypi.org>
-References: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 0/7 v7] Support for fsl-mc bus and its devices in SMMU
+Date: Wed, 12 Sep 2018 17:58:45 +0100
+Message-ID: <20180912165845.GD16071@arm.com>
+References: <1536587361-11047-1-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536587361-11047-1-git-send-email-nipun.gupta@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nipun Gupta <nipun.gupta@nxp.com>
+Cc: joro@8bytes.org, robin.murphy@arm.com, robh+dt@kernel.org, robh@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, gregkh@linuxfoundation.org, laurentiu.tudor@nxp.com, bhelgaas@google.com, hch@lst.de, m.szyprowski@samsung.com, shawnguo@kernel.org, frowand.list@gmail.com, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, bharat.bhushan@nxp.com, stuyoder@gmail.com, leoyang.li@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-The size field in a Device Tree "reg" property is encoded in bytes, not
-words.
+Hi Nipun,
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
----
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Mon, Sep 10, 2018 at 07:19:14PM +0530, Nipun Gupta wrote:
+> This patchset defines IOMMU DT binding for fsl-mc bus and adds
+> support in SMMU for fsl-mc bus.
+> 
+> These patches
+>   - Define property 'iommu-map' for fsl-mc bus (patch 1)
+>   - Integrates the fsl-mc bus with the SMMU using this
+>     IOMMU binding (patch 2,3,4)
+>   - Adds the dma configuration support for fsl-mc bus (patch 5, 6)
+>   - Updates the fsl-mc device node with iommu/dma related changes (patch 7)
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index cb2d6d7..c481eab 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -32,7 +32,7 @@
- 
- 		mailbox@7e00b840 {
- 			compatible = "brcm,bcm2835-vchiq";
--			reg = <0x7e00b840 0xf>;
-+			reg = <0x7e00b840 0x3c>;
- 			interrupts = <0 2>;
- 		};
- 	};
--- 
-2.7.4
+It looks like you have all the Acks in place for this series now, so I
+assume it's going to go via Joerg directly. Is that right?
+
+Will
+
+> Changes in v2:
+>   - use iommu-map property for fsl-mc bus
+>   - rebase over patchset https://patchwork.kernel.org/patch/10317337/
+>     and make corresponding changes for dma configuration of devices on
+>     fsl-mc bus
+> 
+> Changes in v3:
+>   - move of_map_rid in drivers/of/address.c
+> 
+> Changes in v4:
+>   - move of_map_rid in drivers/of/base.c
+> 
+> Changes in v5:
+>   - break patch 5 in two separate patches (now patch 5/7 and patch 6/7)
+>   - add changelog text in patch 3/7 and patch 5/7
+>   - typo fix
+> 
+> Changes in v6:
+>   - Updated fsl_mc_device_group() API to be more rational
+>   - Added dma-coherent property in the LS2 smmu device node
+>   - Minor fixes in the device-tree documentation
+> 
+> Changes in v7:
+>   - Rebased over linux 4.19
+> 
+> Nipun Gupta (7):
+>   Documentation: fsl-mc: add iommu-map device-tree binding for fsl-mc
+>     bus
+>   iommu/of: make of_pci_map_rid() available for other devices too
+>   iommu/of: support iommu configuration for fsl-mc devices
+>   iommu/arm-smmu: Add support for the fsl-mc bus
+>   bus: fsl-mc: support dma configure for devices on fsl-mc bus
+>   bus: fsl-mc: set coherent dma mask for devices on fsl-mc bus
+>   arm64: dts: ls208xa: comply with the iommu map binding for fsl_mc
+> 
+>  .../devicetree/bindings/misc/fsl,qoriq-mc.txt      |  39 ++++++++
+>  arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   7 +-
+>  drivers/bus/fsl-mc/fsl-mc-bus.c                    |  16 +++-
+>  drivers/iommu/arm-smmu.c                           |   7 ++
+>  drivers/iommu/iommu.c                              |  13 +++
+>  drivers/iommu/of_iommu.c                           |  25 ++++-
+>  drivers/of/base.c                                  | 102 +++++++++++++++++++++
+>  drivers/of/irq.c                                   |   5 +-
+>  drivers/pci/of.c                                   | 101 --------------------
+>  include/linux/fsl/mc.h                             |   8 ++
+>  include/linux/iommu.h                              |   2 +
+>  include/linux/of.h                                 |  11 +++
+>  include/linux/of_pci.h                             |  10 --
+>  13 files changed, 224 insertions(+), 122 deletions(-)
+> 
+> -- 
+> 1.9.1
+> 
