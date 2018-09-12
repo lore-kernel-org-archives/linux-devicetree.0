@@ -1,50 +1,55 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 17/27] csky: Misc headers
-Date: Wed, 12 Sep 2018 16:22:10 +0200
-Message-ID: <CAK8P3a13wWsFX2DR4LD0L4rZV0k3zszSyOX1_kPquJKaTt7StQ@mail.gmail.com>
-References: <cover.1536757532.git.ren_guo@c-sky.com> <abb46d366b513b814f7af234d560306a818b7324.1536757532.git.ren_guo@c-sky.com>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Wed, 12 Sep 2018 16:30:36 +0200
+Message-ID: <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <abb46d366b513b814f7af234d560306a818b7324.1536757532.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1536757532.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Guo Ren <ren_guo@c-sky.com>
-Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
 On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
 >
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> diff --git a/arch/csky/boot/dts/qemu.dts b/arch/csky/boot/dts/qemu.dts
-> new file mode 100644
-> index 0000000..c6643b1
-> --- /dev/null
-> +++ b/arch/csky/boot/dts/qemu.dts
-> @@ -0,0 +1,77 @@
+> This is the 3th version patchset to add the Linux kernel port for C-SKY(csky).
+> Thanks to everyone who provided feedback on the previous version.
+>
+> This patchset adds architecture support to Linux for C-SKY's 32-bit embedded
+> CPU cores and the patches are based on linux-4.18.4
+>
+> There are two ABI versions with several CPU cores in this patchset:
+>   ABIv1: ck610 (16-bit instruction, 32-bit data path, VIPT Cache ...)
+>   ABIv2: ck807 ck810 ck860 (16/32-bit variable length instruction, PIPT Cache,
+>          SMP ...)
+>
+> More information: http://en.c-sky.com
 
-Did you consider renaming the file as I suggested? I think that would help
-in the long run when you get new qemu versions that have a different set
-of devices and that may provide their own dtbs.
+This looks good to me overall. I think a good next step would be to get the port
+included in linux-next, by preparing a git tree with all the patches and asking
+Stephen Rothwell to include it there. Further comments on the architecture
+port itself can be done on top of the existing patches. I would suggest you
+base the git tree on an -rc release (either 4.19-rc1 or 4.19-rc3) and then never
+rebase again.
 
-> diff --git a/arch/csky/include/asm/compat.h b/arch/csky/include/asm/compat.h
-> new file mode 100644
-> index 0000000..59f9297
-> --- /dev/null
-> +++ b/arch/csky/include/asm/compat.h
-> @@ -0,0 +1,11 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#ifndef __ASM_CSKY_COMPAT_H
-> +#define __ASM_CSKY_COMPAT_H
-> +
-> +#ifdef CONFIG_COMPAT
-> +#define COMPAT_UTS_MACHINE "csky\0\0"
-> +#endif
-> +
-> +#endif /* __ASM_CSKY_COMPAT_H */
+You have included a couple of drivers in the submission: two timer and
+two irqchip drivers. Please leave those out for the moment, and either have
+them merged through the respective subsystem  trees, or get an Ack
+from the maintainers to merge them through your tree.
 
-Just noticed this one. I assume there won't be a csky64 architecture,
-so you can probably just delete this header.
+I notice that a lot of the patches have no changeset comments on them.
+You should fix that and make a habit of describing every single patch
+with a few sentences, even if it seems obvious to you. Have a look at
+the changeset descriptions for the nds32 and riscv architectures when
+they got merged.
 
-         Arnd
+One big question for me is what to do about time_t. Deepa and I are
+in the process of finalizing the system call ABI for 32-bit architectures
+with 64-bit time_t, but we are not done yet and it won't be complete
+for 4.20. If you target 4.21, that could be a chance to make csky the
+first architecture to only need the 64-bit time_t interface, with the
+corresponding user space changes.
+
+        Arnd
