@@ -1,7 +1,7 @@
 From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v3 11/16] arm: dts: msm8974: thermal: Add "qcom,sensors" property
-Date: Wed, 12 Sep 2018 15:22:56 +0530
-Message-ID: <98b41f976cbedd0e93d7988f0b3cd3ae8b911414.1536744310.git.amit.kucheria@linaro.org>
+Subject: [PATCH v3 12/16] arm64: dts: msm8916: thermal: Add "qcom,sensors" property
+Date: Wed, 12 Sep 2018 15:22:57 +0530
+Message-ID: <b471798c8e6de8c23de7ed4e2363049e2aad5486.1536744310.git.amit.kucheria@linaro.org>
 References: <cover.1536744310.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1536744310.git.amit.kucheria@linaro.org>
@@ -16,21 +16,20 @@ This new property allows the number of sensors to be configured from DT
 instead of being hardcoded in platform data. Use it.
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm/boot/dts/qcom-msm8974.dtsi | 1 +
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 56dbbf788d15..3c4b81c29798 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -433,6 +433,7 @@
- 			      <0xfc4a8000 0x1000>; /* SROT */
- 			nvmem-cells = <&tsens_calib>, <&tsens_backup>;
- 			nvmem-cell-names = "calib", "calib_backup";
-+			#qcom,sensors = <11>;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index 6a277fce3333..be27d8dc9e6b 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -767,6 +767,7 @@
+ 			      <0x4a8000 0x1000>; /* SROT */
+ 			nvmem-cells = <&tsens_caldata>, <&tsens_calsel>;
+ 			nvmem-cell-names = "calib", "calib_sel";
++			#qcom,sensors = <5>;
  			#thermal-sensor-cells = <1>;
  		};
  
