@@ -1,85 +1,108 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH 02/11] dts: hisilicon: Update coresight bindings for
- hardware ports
-Date: Wed, 12 Sep 2018 13:42:09 +0100
-Message-ID: <22fd3ec6-bde0-87c6-673b-f95a15190bda@arm.com>
-References: <1536661032-30481-1-git-send-email-suzuki.poulose@arm.com>
- <1536661032-30481-3-git-send-email-suzuki.poulose@arm.com>
- <20180912104735.GC3353@leoy-ThinkPad-X240s>
+From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig-5C7GfCeVMHo@public.gmane.org>
+Subject: Re: [PATCH v2 01/40] iommu: Introduce Shared Virtual Addressing API
+Date: Wed, 12 Sep 2018 14:56:00 +0200
+Message-ID: <4d68da96-0ad5-b412-5987-2f7a6aa796c3@amd.com>
+References: <20180511190641.23008-1-jean-philippe.brucker@arm.com>
+	<20180511190641.23008-2-jean-philippe.brucker@arm.com>
+	<bf42affd-e9d0-e4fc-6d28-f3c3f7795348@redhat.com>
+	<03d31ba5-1eda-ea86-8c0c-91d14c86fe83@arm.com>
+	<ed39159c-087e-7e56-7d29-d1de9fa1677f@amd.com>
+	<f0b317d5-e2e9-5478-952c-05e8b97bd68b@arm.com>
+	<2fd4a0a1-1a35-bf82-df84-b995cce011d9@amd.com>
+	<65e7accd-4446-19f5-c667-c6407e89cfa6@arm.com>
+	<5bbc0332-b94b-75cc-ca42-a9b196811daf@amd.com>
+	<20180907142504.5034351e@jacob-builder>
+	<3e3a6797-a233-911b-3a7d-d9b549160960@amd.com>
+	<9445a0be-fb5b-d195-4fdf-7ad6cb36ef4f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912104735.GC3353@leoy-ThinkPad-X240s>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <9445a0be-fb5b-d195-4fdf-7ad6cb36ef4f-5wv7dgnIgG8@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: leo.yan@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, mathieu.poirier@linaro.org, arm@kernel.org, sudeep.holla@arm.com, xuwei5@hisilicon.com, lipengcheng8@huawei.com
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>, Jacob Pan <jacob.jun.pan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <xieyisheng1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <ilias.apalodimas-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <kvm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Michal Hocko <mhocko-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org" <linux-mm-Bw31MaZKKs3YtjvyW6yDsg@public.gmane.org>, "ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <ashok.raj-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org" <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <rgummal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org" <liubo95-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <alex.williamson>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
-
-On 12/09/18 11:47, leo.yan@linaro.org wrote:
-> On Tue, Sep 11, 2018 at 11:17:03AM +0100, Suzuki K Poulose wrote:
->> Switch to updated coresight bindings for hw ports.
-> 
-> As Shawn suggested, please change subject as "arm64: dts: hi6220:
-> ...."
-> 
-
-Sure, will do.
-
->> Cc: xuwei5@hisilicon.com
->> Cc: lipengcheng8@huawei.com
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->> ---
->>   .../arm64/boot/dts/hisilicon/hi6220-coresight.dtsi | 147 ++++++++++++---------
->>   1 file changed, 85 insertions(+), 62 deletions(-)
->>
->> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
->> index 7afee5d..2202816 100644
->> --- a/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
->> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-coresight.dtsi
-> 
-> [...]
-> 
->> @@ -302,10 +315,12 @@
->>   
->>   			cpu = <&cpu3>;
->>   
->> -			port {
->> -				etm3_out: endpoint {
->> -					remote-endpoint =
->> -						<&acpu_funnel_in3>;
->> +			out-ports {
->> +				port {
->> +					etm3_out: endpoint {
->> +						remote-endpoint =
->> +							<&acpu_funnel_in3>;
->> +					};
->>   				};
->>   			};
->>   		};
->> @@ -319,10 +334,12 @@
->>   
->>   			cpu = <&cpu4>;
->>   
->> -			port {
->> +			out-ports {
->> +				port {
->>   				etm4_out: endpoint {
-> 
-> Indent?
-
-Yes, I have fixed this locally for v2.
-
-> 
-> After applied this patch and tested on Hikey board; FWIW:
-> 
-> Tested-by: Leo Yan <leo.yan@linaro.org>
-
-Thanks for the testing !
-
-Cheers
-Suzuki
+QW0gMTIuMDkuMjAxOCB1bSAxNDo0MCBzY2hyaWViIEplYW4tUGhpbGlwcGUgQnJ1Y2tlcjoKPiBP
+biAwOC8wOS8yMDE4IDA4OjI5LCBDaHJpc3RpYW4gS8O2bmlnIHdyb3RlOgo+PiBZZXMsIGV4YWN0
+bHkuIEkganVzdCBuZWVkIGEgUEFTSUQgd2hpY2ggaXMgbmV2ZXIgdXNlZCBieSB0aGUgT1MgZm9y
+IGEKPj4gcHJvY2VzcyBhbmQgd2UgY2FuIGVhc2lseSBnaXZlIHRoYXQgYmFjayB3aGVuIHRoZSBs
+YXN0IEZEIHJlZmVyZW5jZSBpcwo+PiBjbG9zZWQuCj4gQWxyaWdodCwgaW9tbXUtc3ZhIGNhbiBn
+ZXQgaXRzIFBBU0lEIGZyb20gdGhpcyBleHRlcm5hbCBhbGxvY2F0b3IgYXMKPiB3ZWxsLCBhcyBs
+b25nIGFzIGl0IGhhcyBhbiBpbnRlcmZhY2Ugc2ltaWxhciB0byBpZHIuIFdoZXJlIHdvdWxkIGl0
+IGdvLAo+IGRyaXZlcnMvYmFzZS8sIG1tLywga2VybmVsLy4uLj8KCkdvb2QgcXVlc3Rpb24sIG15
+IGluaXRpYWwgaW5zdGluY3Qgd2FzIHRvIHB1dCBpdCB1bmRlciBkcml2ZXJzL3BjaS4KCkJ1dCBB
+RkFJS1Mgbm93IHlvdSBhcmUgc3VwcG9ydGluZyBTVkEgaW1wbGVtZW50YXRpb25zIHdoaWNoIGFy
+ZSBub3QgCmJhc2VkIG9uIFBDSS4KClNvIGRyaXZlcnMvYmFzZSBzb3VuZHMgbGlrZSBhIGdvb2Qg
+cGxhY2UgdG8gbWUuCgo+Cj4+Pj4+IFRoZSBwcm9jZXNzIGRpZXMsIGlvbW11LXN2YSBpcyBub3Rp
+ZmllZCBhbmQgY2FsbHMgdGhlIG1tX2V4aXQoKQo+Pj4+PiBmdW5jdGlvbiBwYXNzZWQgYnkgdGhl
+IGRldmljZSBkcml2ZXIgdG8gaW9tbXVfc3ZhX2RldmljZV9pbml0KCkuIEluCj4+Pj4+IG1tX2V4
+aXQoKSB0aGUgZGV2aWNlIGRyaXZlciBuZWVkcyB0byBjbGVhciBhbnkgcmVmZXJlbmNlIHRvIHRo
+ZQo+Pj4+PiBQQVNJRCBpbiBoYXJkd2FyZSBhbmQgaW4gaXRzIG93biBzdHJ1Y3R1cmVzLiBXaGVu
+IHRoZSBkZXZpY2UgZHJpdmVyCj4+Pj4+IHJldHVybnMgZnJvbSBtbV9leGl0KCksIGl0IGVmZmVj
+dGl2ZWx5IHRlbGxzIHRoZSBjb3JlIHRoYXQgaXQgaGFzCj4+Pj4+IGZpbmlzaGVkIHVzaW5nIHRo
+ZSBQQVNJRCwgYW5kIGlvbW11LXN2YSBjYW4gcmV1c2UgdGhlIFBBU0lEIGZvcgo+Pj4+PiBhbm90
+aGVyIHByb2Nlc3MuIG1tX2V4aXQoKSBpcyBhbGxvd2VkIHRvIGJsb2NrLCBzbyB0aGUgZGV2aWNl
+Cj4+Pj4+IGRyaXZlciBoYXMgdGltZSB0byBjbGVhbiB1cCBhbmQgZmx1c2ggdGhlIHF1ZXVlcy4K
+Pj4+Pj4KPj4+Pj4gSWYgdGhlIGRldmljZSBkcml2ZXIgZmluaXNoZXMgdXNpbmcgdGhlIFBBU0lE
+IGJlZm9yZSB0aGUgcHJvY2Vzcwo+Pj4+PiBleGl0cywgaXQganVzdCBjYWxscyB1bmJpbmQoKS4K
+Pj4+PiBFeGFjdGx5IHRoYXQncyB3aGF0IE1pY2hhbCBIb2NrbyBpcyBwcm9iYWJseSBnb2luZyB0
+byBub3QgbGlrZSBhdCBhbGwuCj4+Pj4KPj4+PiBDYW4gd2UgaGF2ZSBhIGRpZmZlcmVudCBhcHBy
+b2FjaCB3aGVyZSBlYWNoIGRyaXZlciBpcyBpbmZvcm1lZCBieSB0aGUKPj4+PiBtbV9leGl0KCks
+IGJ1dCBuZWVkcyB0byBleHBsaWNpdGx5IGNhbGwgdW5iaW5kKCkgYmVmb3JlIGEgUEFTSUQgaXMK
+Pj4+PiByZXVzZWQ/Cj4gSXQncyBhd2Z1bCBmcm9tIHRoZSBJT01NVSBkcml2ZXIgcGVyc3BlY3Rp
+dmUuIEluIGFkZGl0aW9uIHRvICJlbmFibGVkIgo+IGFuZCAiZGlzYWJsZWQiIFBBU0lEIHN0YXRl
+cywgeW91IGFkZCAiZGlzYWJsZWQgYnV0IERNQSBzdGlsbCBydW5uaW5nCj4gbm9ybWFsbHkiLiBC
+ZXR3ZWVuIHRoYXQgbmV3IHN0YXRlIGFuZCAiZGlzYWJsZWQiLCB0aGUgSU9NTVUgd2lsbCBiZQo+
+IGZsb29kZWQgYnkgdHJhbnNsYXRpb24gZmF1bHRzIChub24tcmVjb3ZlcmFibGUgb25lcyksIHdo
+aWNoIGl0IG5lZWRzIHRvCj4gaWdub3JlIGluc3RlYWQgb2YgcmVwb3J0aW5nIHRvIHRoZSBrZXJu
+ZWwuIE5vdCBhbGwgSU9NTVVzIGNhbiBkZWFsIHdpdGgKPiB0aGlzIGluIGhhcmR3YXJlIChTTU1V
+IGFuZCBWVC1kIGNhbiBxdWllc2NlIHRyYW5zbGF0aW9uIGZhdWx0cwo+IHBlci1QQVNJRCwgYnV0
+IEkgZG9uJ3QgdGhpbmsgQU1EIElPTU1VIGNhbi4pIFNvbWUgZHJpdmVycyB3aWxsIGhhdmUgdG8K
+PiBmaWx0ZXIgZmF1bHQgZXZlbnRzIHRoZW1zZWx2ZXMsIGRlcGVuZGluZyBvbiB0aGUgUEFTSUQg
+c3RhdGUuCgpQdWgsIHllYWggdGhhdCBpcyBwcm9iYWJseSB0cnVlLgoKT2sgbGV0IHVzIHNraXAg
+dGhhdCBmb3IgYSBtb21lbnQsIHdlIGp1c3QgbmVlZCB0byBpbnZlc3QgbW9yZSB3b3JrIGluIApr
+aWxsaW5nIERNQSBvcGVyYXRpb25zIHF1aWNrbHkgd2hlbiB0aGUgcHJvY2VzcyBhZGRyZXNzIHNw
+YWNlIGlzIHRlYXJlZCAKZG93bi4KCj4+Pj4gRHVyaW5nIHRoYXQgdGVhcmRvd24gdHJhbnNpdGlv
+biBpdCB3b3VsZCBiZSBpZGVhbCBpZiB0aGF0IFBBU0lEIG9ubHkKPj4+PiBwb2ludHMgdG8gYSBk
+dW1teSByb290IHBhZ2UgZGlyZWN0b3J5IHdpdGggb25seSBpbnZhbGlkIGVudHJpZXMuCj4+Pj4K
+Pj4+IEkgZ3Vlc3MgdGhpcyBjYW4gYmUgdmVuZG9yIHNwZWNpZmljLCBJbiBWVC1kIEkgcGxhbiB0
+byBtYXJrIFBBU0lECj4+PiBlbnRyeSBub3QgcHJlc2VudCBhbmQgZGlzYWJsZSBmYXVsdCByZXBv
+cnRpbmcgd2hpbGUgZHJhaW5pbmcgcmVtYWluaW5nCj4+PiBhY3Rpdml0aWVzLgo+PiBTb3VuZHMg
+Z29vZCB0byBtZS4KPj4KPj4gUG9pbnQgaXMgYXQgbGVhc3QgaW4gdGhlIGNhc2Ugd2hlcmUgdGhl
+IHByb2Nlc3Mgd2FzIGtpbGxlZCBieSB0aGUgT09NCj4+IGtpbGxlciB3ZSBzaG91bGQgbm90IGJs
+b2NrIGluIG1tX2V4aXQoKS4KPj4KPj4gSW5zdGVhZCBvcGVyYXRpb25zIGlzc3VlZCBieSB0aGUg
+cHJvY2VzcyB0byBhIGRldmljZSBkcml2ZXIgd2hpY2ggdXNlcwo+PiBTVkEgbmVlZHMgdG8gYmUg
+dGVybWluYXRlZCBhcyBzb29uIGFzIHBvc3NpYmxlIHRvIG1ha2Ugc3VyZSB0aGF0IHRoZSBPT00K
+Pj4ga2lsbGVyIGNhbiBhZHZhbmNlLgo+IEkgZG9uJ3Qgc2VlIGhvdyB3ZSdyZSBwcmV2ZW50aW5n
+IHRoZSBPT00ga2lsbGVyIGZyb20gYWR2YW5jaW5nLCBzbyBJJ20KPiBsb29raW5nIGZvciBhIHN0
+cm9uZ2VyIGFyZ3VtZW50IHRoYXQganVzdGlmaWVzIGFkZGluZyB0aGlzIGNvbXBsZXhpdHkgdG8K
+PiBJT01NVSBkcml2ZXJzLiBUaW1lIGxpbWl0IG9mIHRoZSByZWxlYXNlIE1NVSBub3RpZmllciwg
+bG9ja2luZwo+IHJlcXVpcmVtZW50LCBhIGNvbmNyZXRlIGV4YW1wbGUgd2hlcmUgdGhpbmdzIGJy
+ZWFrLCBldmVuIGEgY29tbWVudAo+IHNvbWV3aGVyZSBpbiBtbS8gd291bGQgZG8uLi4KPgo+IElu
+IG15IHRlc3RzIEkgY2FuJ3QgbWFuYWdlIHRvIGRpc3R1cmIgdGhlIE9PTSBraWxsZXIsIGJ1dCBJ
+IGNvdWxkIGJlCj4gbWlzc2luZyBzb21lIHNwZWNpYWwgY2FzZS4gRXZlbiBpZiB0aGUgbW1fZXhp
+dCgpIGNhbGxiYWNrCj4gKHVucmVhbGlzdGljYWxseSkgc2xlZXBzIGZvciA2MCBzZWNvbmRzLAoK
+V2VsbCB5b3UgYXJlICpDT01QTEVURUxZKiB1bmRlciBlc3RpbWF0aW5nIHRoaXMuIEEgY29tcHV0
+ZSB0YXNrIHdpdGggYSAKaHVnZSB3YXZlIGxhdW5jaCBjYW4gdGFrZSBtdWx0aXBsZSBtaW51dGVz
+IHRvIHRlYXIgZG93bi4KClRoYXQncyB3aHkgSSdtIHNvIGNvbmNlcm5lZCBhYm91dCB0aGF0LCBi
+dXQgdG8gYmUgaG9uZXN0IEkgdGhpbmsgdGhhdCAKanVzdCB0aGUgaGFyZHdhcmUgbmVlZHMgdG8g
+YmVjb21lIGJldHRlciBhbmQgd2UgbmVlZCB0byBiZSBhYmxlIHRvIGJsb2NrIApkZWFkIHRhc2tz
+IGZyb20gc3Bhd25pbmcgdGhyZWFkcyBhZ2Fpbi4KClJlZ2FyZHMsCkNocmlzdGlhbi4KCj4gICB0
+aGUgT09NIGtpbGxlciBpc24ndCBhZmZlY3RlZAo+IGJlY2F1c2Ugb29tX3JlYXBfdGFza19tbSgp
+IHdpcGVzIHRoZSB2aWN0aW0ncyBhZGRyZXNzIHNwYWNlIGluIGFub3RoZXIKPiB0aHJlYWQsIGVp
+dGhlciBiZWZvcmUgb3Igd2hpbGUgdGhlIHJlbGVhc2Ugbm90aWZpZXIgaXMgcnVubmluZy4KPgo+
+IFRoYW5rcywKPiBKZWFuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwppb21tdSBtYWlsaW5nIGxpc3QKaW9tbXVAbGlzdHMubGludXgtZm91bmRhdGlvbi5v
+cmcKaHR0cHM6Ly9saXN0cy5saW51eGZvdW5kYXRpb24ub3JnL21haWxtYW4vbGlzdGluZm8vaW9t
+bXU=
