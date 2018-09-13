@@ -1,64 +1,45 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: Multi-parent IRQ domains
-Date: Thu, 13 Sep 2018 14:50:21 -0700
-Message-ID: <ea9261a9-2c4d-7ca4-6dca-73f385aa46d5@gmail.com>
-References: <20180913155945.GA19903@ulmo>
+Subject: Re: [PATCH] arm64: dts: broadcom: Fix I2C and SPI bus warnings
+Date: Thu, 13 Sep 2018 15:06:28 -0700
+Message-ID: <e86d75f7-d4b8-079b-9b95-b30501665078@gmail.com>
+References: <20180913181245.25484-18-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180913155945.GA19903@ulmo>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-18-robh@kernel.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Scott Branden <sbranden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 09/13/18 08:59, Thierry Reding wrote:
-> Hi everyone,
+On 09/13/18 11:12, Rob Herring wrote:
+> dtc has new checks for I2C and SPI buses. Fix the warnings in node names
+> and unit-addresses.
 > 
-> I've been trying to implement a feature on recent Tegra chips that's
-> called "wake events". These wake events are implemented as part of the
-> power management controller (PMC) and they control which events can be
-> used to wake the system from suspend. Events include things like an
-> alarm interrupt from an RTC, or the GPIO interrupt hooked up to a
-> power button for example.
+> arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb: Warning (i2c_bus_reg): /hsls/i2c@e0000/pcf8574@20: I2C bus unit address format error, expected "27"
+> arch/arm64/boot/dts/broadcom/stingray/bcm958742t.dtb: Warning (i2c_bus_reg): /hsls/i2c@e0000/pcf8574@20: I2C bus unit address format error, expected "27"
+> arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb: Warning (spi_bus_bridge): /hsls/ssp@180000: node name for SPI buses should be 'spi'
+> arch/arm64/boot/dts/broadcom/stingray/bcm958742k.dtb: Warning (spi_bus_bridge): /hsls/ssp@190000: node name for SPI buses should be 'spi'
 > 
-> We already have a driver for a couple of other things that the PMC does,
-> so I thought it'd be natural to implement this functionality as an IRQ
-> chip in the PMC driver. The way that this would work is that for all the
-> devices that are wakeup sources, we'd end up specifying the PMC as the
-> interrupt parent and the PMC would then itself have the main GIC as its
-> parent. That way, the hierarchical IRQ domain infrastructure would take
-> care of pretty much everything.
-> 
-> Unfortunately I've run into some issues here. One problem that I'm
-> facing is that PMC could have more than one parent. For example, the RTC
-> alarm interrupt goes straight to the GIC, but the power button GPIO goes
-> through the GPIO controller first and then to the GIC. This doesn't seem
-> to be something that's currently possible.
-> 
-> The way I imagine this to work from a DT perspective is as follows:
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Jon Mason <jonmason@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-There is an interrupts-extended property which as a first cell takes a
-phandle to the parent interrupt controller, e.g:
+Applied to devicetree-arm64/next, thanks Rob!
 
-interrupts-extended = <&gic 73 GIPC_SPI IRQ_TYPE_LEVEL_HIGH>,
-			<&pmc 10>;
-
-(provided that I understood your problem and example correctly). We have
-a similar use case on our STB chips where we have "main" interrupts
-wired to the ARM GIC and wake-up interrupts wired to a specific wake-up
-interrupt controller in an always-on domain. The two controllers have a
-different #interrupt-cells specifier.
-
-The interrupt infrastructure in Linux already knows how to deal with
-that and whether you use of_get_irq() or platform_get_irq() you should
-obtain the correct virtual interrupt numbers that you expected, parented
-to the appropriate interrupt controller.
-
-Hope this helps.
 -- 
 Florian
