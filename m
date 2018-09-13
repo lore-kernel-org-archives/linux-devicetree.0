@@ -1,43 +1,45 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/5] usb: renesas_usbhs: use otg mode and add support for R-Car E3
-Date: Fri, 21 Sep 2018 21:26:27 +0900
-Message-Id: <1537532792-20376-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=n8Sf=L3=jmondi.org=jacopo+renesas@kernel.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH 1/3] dt-bindings: media: renesas-ceu: Refer to video-interfaces.txt
+Date: Thu, 13 Sep 2018 15:59:49 +0200
+Message-Id: <1536847191-17175-2-git-send-email-jacopo+renesas@jmondi.org>
+In-Reply-To: <1536847191-17175-1-git-send-email-jacopo+renesas@jmondi.org>
+References: <1536847191-17175-1-git-send-email-jacopo+renesas@jmondi.org>
+To: sakari.ailus@linux.intel.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, slongerbeam@gmail.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on the latest Greg's usb.git / usb-testing branch
-(the commit id is ae8a2ca8a2215c7e31e6d874f7303801bb15fbbc)
+Refer to video-interfaces.txt when describing standard properties.
 
-The previous code set the mode as peripheral mode by the UGCTRL2 register
-for R-Car D3. But, this SoC can select OTG mode in fact. So, at first,
-I'd like to revert related patches I submitted in patch 1 and 2.
-Then, in patch 3, it sets the mode as "OTG" and in patch 4 and 5, it
-supports for R-Car E3.
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ Documentation/devicetree/bindings/media/renesas,ceu.txt | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-To use this controller for R-Car D3 and E3, we need the following
-patch set. Otherwize, the mode will not be changed to peripheral mode
-by the phy's COMMCTRL register:
- https://patchwork.kernel.org/project/linux-renesas-soc/list/?series=21629
-
-
-Yoshihiro Shimoda (5):
-  Revert "usb: renesas_usbhs: add extcon notifier to set mode for
-    non-otg channel"
-  Revert "usb: renesas_usbhs: set the mode by using extcon state for
-    non-otg channel"
-  usb: renesas_usbhs: rcar3: Use OTG mode for R-Car D3
-  dt-bindings: usb: renesas_usbhs: add bindings for r8a77990
-  usb: renesas_usbhs: add support for R-Car E3
-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |  1 +
- drivers/usb/renesas_usbhs/common.c                 | 13 ++++-------
- drivers/usb/renesas_usbhs/common.h                 |  1 -
- drivers/usb/renesas_usbhs/rcar3.c                  | 27 ++--------------------
- 4 files changed, 7 insertions(+), 35 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/media/renesas,ceu.txt b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+index 8a7a616..23e91106 100644
+--- a/Documentation/devicetree/bindings/media/renesas,ceu.txt
++++ b/Documentation/devicetree/bindings/media/renesas,ceu.txt
+@@ -17,15 +17,15 @@ Required properties:
+ The CEU supports a single parallel input and should contain a single 'port'
+ subnode with a single 'endpoint'. Connection to input devices are modeled
+ according to the video interfaces OF bindings specified in:
+-Documentation/devicetree/bindings/media/video-interfaces.txt
++[1] Documentation/devicetree/bindings/media/video-interfaces.txt
+ 
+ Optional endpoint properties applicable to parallel input bus described in
+ the above mentioned "video-interfaces.txt" file are supported.
+ 
+-- hsync-active: Active state of the HSYNC signal, 0/1 for LOW/HIGH respectively.
+-  If property is not present, default is active high.
+-- vsync-active: Active state of the VSYNC signal, 0/1 for LOW/HIGH respectively.
+-  If property is not present, default is active high.
++- hsync-active: See [1] for description. If property is not present,
++  default is active high.
++- vsync-active: See [1] for description. If property is not present,
++  default is active high.
+ 
+ Example:
+ 
 -- 
-1.9.1
+2.7.4
