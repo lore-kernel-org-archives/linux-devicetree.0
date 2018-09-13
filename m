@@ -1,84 +1,66 @@
-Return-Path: <SRS0=AnC+=L4=nvidia.com=pdeschrijver@kernel.org>
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: [RFC 05/14] memory: tegra: mc: Introduce helpers
-Date: Fri, 14 Sep 2018 23:03:00 +0300
-Message-ID: <1536955389-30442-6-git-send-email-pdeschrijver@nvidia.com>
-In-Reply-To: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
-References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: vkuruturi@nvidia.com, linux-tegra=linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc: daniel@octaforge.org, a.heider@gmail.com, swtcr0@gmail.com, Peter De Schrijver <pdeschrijver@nvidia.com>
+Return-Path: <SRS0=r4+v=L3=linaro.org=linus.walleij@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH] gpio: OF: Remove bad practice examples
+Date: Thu, 13 Sep 2018 09:47:32 +0200
+Message-Id: <20180913074732.5911-1-linus.walleij@linaro.org>
+To: linux-gpio@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Introduce a few helper functions to lookup a timing for a given rate and
-modify MC register field. These will be useful when adding support for
-updating the latency allowance (LA) registers when scaling the EMC clock.
+We remove the references to anything but two-cell GPIO specifiers
+and just mention that controllers need to specify their bindings
+and that we strongly recommend two-cell bindings.
 
-Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/memory/tegra/mc.c | 30 +++++++++++++++++++++++-------
- 1 file changed, 23 insertions(+), 7 deletions(-)
+ .../devicetree/bindings/gpio/gpio.txt         | 24 +++++++------------
+ 1 file changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index a4803ac..af4bf29 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -73,6 +73,17 @@
- };
- MODULE_DEVICE_TABLE(of, tegra_mc_of_match);
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 3afaa396adf7..f0ba154b5723 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -27,30 +27,24 @@ and bit-banged data signals:
+ 		gpio-controller;
+ 		#gpio-cells = <2>;
+ 	};
+-	gpio2: gpio2 {
+-		gpio-controller;
+-		#gpio-cells = <1>;
+-	};
+ 	[...]
  
-+static void mc_modifyl(struct tegra_mc *mc, u32 reg, u32 value, u8 shift,
-+		       u8 mask)
-+{
-+	u32 val;
-+
-+	val = readl(mc->regs + reg);
-+	val &= ~(mask << shift);
-+	val |= (value & mask) << shift;
-+	writel(val, mc->regs + reg);
-+}
-+
- static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
- {
- 	unsigned long long tick;
-@@ -91,18 +102,14 @@ static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
- 	/* write latency allowance defaults */
- 	for (i = 0; i < mc->soc->num_clients; i++) {
- 		const struct tegra_mc_la *la = &mc->soc->clients[i].la;
--		u32 value;
+-	enable-gpios = <&gpio2 2>;
+ 	data-gpios = <&gpio1 12 0>,
+ 		     <&gpio1 13 0>,
+ 		     <&gpio1 14 0>,
+ 		     <&gpio1 15 0>;
+ 
+-Note that gpio-specifier length is controller dependent.  In the
+-above example, &gpio1 uses 2 cells to specify a gpio, while &gpio2
+-only uses one.
 -
--		value = readl(mc->regs + la->reg);
--		value &= ~(la->mask << la->shift);
--		value |= (la->def & la->mask) << la->shift;
--		writel(value, mc->regs + la->reg);
-+		mc_modifyl(mc, la->reg, la->def, la->shift, la->mask);
- 	}
+-gpio-specifier may encode: bank, pin position inside the bank,
+-whether pin is open-drain and whether pin is logically inverted.
++In the above example, &gpio1 uses 2 cells to specify a gpio. The first cell is
++a local offset to the GPIO line and the second cell represent consumer flags,
++such as if the consumer desire the line to be active low (inverted) or open
++drain. This is the recommended practice.
  
- 	return 0;
- }
+-Exact meaning of each specifier cell is controller specific, and must
+-be documented in the device tree binding for the device.
++The exact meaning of each specifier cell is controller specific, and must be
++documented in the device tree binding for the device, but it is strongly
++recommended to use the two-cell approach.
  
--void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
-+static struct tegra_mc_timing *find_mc_timing(struct tegra_mc *mc,
-+					      unsigned long rate)
- {
- 	unsigned int i;
- 	struct tegra_mc_timing *timing = NULL;
-@@ -114,6 +121,15 @@ void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
- 		}
- 	}
+-Most controllers are however specifying a generic flag bitfield
+-in the last cell, so for these, use the macros defined in
++Most controllers are specifying a generic flag bitfield in the last cell, so
++for these, use the macros defined in
+ include/dt-bindings/gpio/gpio.h whenever possible:
  
-+	return timing;
-+}
-+
-+void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
-+{
-+	unsigned int i;
-+	struct tegra_mc_timing *timing = NULL;
-+
-+	timing = find_mc_timing(mc, rate);
- 	if (!timing) {
- 		dev_err(mc->dev, "no memory timing registered for rate %lu\n",
- 			rate);
+ Example of a node using GPIOs:
 -- 
-1.9.1
+2.17.1
