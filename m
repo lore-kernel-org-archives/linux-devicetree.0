@@ -1,13 +1,17 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 0/5] drm: add support for Cadence MHDP DPI/DP bridge.
-Date: Thu, 13 Sep 2018 14:31:45 +0200
-Message-ID: <11916444.D1tlAhbW8U@phil>
-References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v3 16/23] v4l: fwnode: Initialise the V4L2 fwnode
+ endpoints to zero
+Date: Thu, 13 Sep 2018 15:19:30 +0200
+Message-ID: <20180913131929.GE11509@w540>
+References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
+ <20180912212942.19641-17-sakari.ailus@linux.intel.com>
+ <20180913094614.GS20333@w540>
+ <20180913095533.nu6yjf6swga7fa6x@paasikivi.fi.intel.com>
+ <20180913101912.ee4qfkphw3zsypbi@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============0997223904=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1535451894-2518-1-git-send-email-dkos@cadence.com>
+In-Reply-To: <20180913101912.ee4qfkphw3zsypbi@paasikivi.fi.intel.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -17,46 +21,100 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@bootlin.com>, jartur@cadence.com, linux-rockchip@lists.infradead.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Rob Herring <robh+dt@kernel.org>, stelford@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, ltyrala@cadence.com, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, piotrs@cadence.com
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIDI4LiBBdWd1c3QgMjAxOCwgMTI6MjQ6NDMgQ0VTVCBzY2hyaWViIERhbWlh
-biBLb3M6Cj4gSGVsbG8hCj4gCj4gVGhpcyBpcyB0aGUgc2VyaWVzIG9mIHBhdGNoZXMgdGhhdCB3
-aWxsIGFkZCBzdXBwb3J0IGZvciB0aGUgQ2FkZW5jZSdzIERQSS9EUAo+IGJyaWRnZS4gUGxlYXNl
-IG5vdGUgdGhhdCB0aGlzIGlzIGEgcHJlbGltaW5hcnkgdmVyc2lvbiBvZiB0aGUgZHJpdmVyIGFu
-ZCB0aGVyZQo+IHdpbGwgYmUgbW9yZSBwYXRjaGVzIGluIHRoZSBmdXR1cmUgd2l0aCB1cGRhdGVz
-LCBmaXhlcyBhbmQgaW1wcm92ZW1lbnRzLgo+IFBsZWFzZSBrZWVwIHRoYXQgaW4gbWluZCB3aGVu
-IGxvb2tpbmcgYXQgRklYTUUvVE9ETy9YWFggY29tbWVudHMuCj4gCj4gSW5pdGlhbGx5LCBNSERQ
-IGRyaXZlciB3YXMgZGV2ZWxvcGVkIGFzIGEgRFJNIGJyaWRnZSBkcml2ZXIgYW5kIHdhcyBwbGFu
-ZWQgdG8KPiBiZSBwbGFjZWQgaW4gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9taGRwLmMuICBIb3dl
-dmVyLCB0aGVyZSB3YXMgYWxyZWFkeQo+IGEgZHJpdmVyIGZvciBDYWRlbmNlJ3MgRFAgY29udHJv
-bGxlciBkZXZlbG9wZWQgYnkgUm9ja0NoaXAsIGJ1dCB0aGF0IGRyaXZlcgo+IHVzZXMgdGhlIGRp
-ZmZlcmVudCBEUk0gZnJhbWV3b3JrIGFuZCBsb29rcyBsaWtlIGEgcGFydCBvZiBhIGJpZ2dlciBz
-eXN0ZW0uCj4gQm90aCBjb250cm9sbGVycyAoaW5jbHVkaW5nIGZpcm13YXJlKSBhcmUgcXVpdGUg
-ZGlmZmVyZW50IGludGVybmFsbHkKPiAoTVNUL0ZFQy9EU0Mgc3VwcG9ydCwgbGluayB0cmFpbmlu
-ZyBkb25lIGJ5IGRyaXZlciwgYWRkaXRpb25hbCBjb21tYW5kcywgSVJRJ3MKPiBldGMuKSBidXQg
-dGhleSBoYXZlIHNpbWlsYXIgcmVnaXN0ZXIgbWFwLCBleGNlcHQgZm9yIEZyYW1lci9TdHJlYW1l
-ciAod2hpY2ggaXMKPiBub3RpY2VhYmx5IGRpZmZlcmVudCksIHNvIHRoZXkgYXBwZWFyIHNpbWls
-YXIuCj4gCj4gVGhlIGZvbGxvd2luZyBwYXRjaGVzIGNvbnRhaW46Cj4gLSBNb3ZpbmcgY29tbW9u
-IGNvZGUgdG8gZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAtY29tbW9uLiogYW5kCj4g
-ICBtb2RpZnlpbmcgaXQgYSBiaXQgKG1vc3RseSBuZXcgcHJlZml4ZXMgZm9yIGZ1bmN0aW9ucyBh
-bmQgZGF0YSB0eXBlcykgc28gaXQKPiAgIGNhbiBiZSB1c2VkIGJ5IHR3bywgaGlnaGVyIGxldmVs
-LCBkcml2ZXJzLgo+IC0gTW9kaWZ5aW5nIGV4aXN0aW5nIFJvY2tDaGlwJ3MgRFAgZHJpdmVyIHRv
-IHVzZSB0aGUgY29tbW9uIGNvZGUgYWZ0ZXIgY2hhbmdlcwo+ICAgbWFkZSB0byBpdCAodXNlIHRo
-ZSBuZXcgY2Ruc19taGRwX2RldmljZSBzdHJ1Y3R1cmUgYW5kIG5ldyBmdW5jdGlvbiBuYW1lcyku
-Cj4gLSBNb2RpZnlpbmcgRFJNIGhlbHBlcnMgYSBiaXQuIFNvbWUgYXJlIHJlcXVpcmVkIGZvciBu
-ZXcgZHJpdmVyLCBzb21lIGFyZQo+ICAgdXBkYXRlcyBmcm9tIERQIDEuMiB0byAxLjMgb3IgMS40
-Lgo+IC0gQWRkaW5nIGRvY3VtZW50YXRpb24gZm9yIGRldmljZSB0cmVlIGJpbmRpbmdzLgo+IC0g
-QWRkaW5nIHByZWxpbWluYXJ5IENhZGVuY2UgRFBJL0RQIGJyaWRnZSBkcml2ZXIuCj4gCj4gU29t
-ZSBvZiB0aGUgdGhpbmdzIHRoYXQgd2lsbCBiZSBhZGRlZCBsYXRlciBvbiBpbmNsdWRlIChidXQg
-YXJlIG5vdCBsaW1pdGVkCj4gdG8pOgo+IC0gU3VwcG9ydCBmb3IgQ2FkZW5jZSBTRDA4MDEgUEhZ
-IChQSFkncyBkcml2ZXIgc2hvdWxkIGJlIG9uIHRoZSB3YXkgYnkgbm93KQo+IC0gTVNUIHN1cHBv
-cnQKPiAtIERTQyBzdXBwb3J0Cj4gLSBGRUMgc3VwcG9ydAo+IC0gSERDUCBzdXBwb3J0Cgp3aXRo
-IHRlIEtjb25maWcgaXNzdWUgaW4gcGF0Y2g1IGZpeGVkLCB0aGlzIHNlcmllcyB0ZXN0ZWQgb24K
-cmszMjg4IChhbmFsb2dpeC1kcCkgYW5kIHJrMzM5OSAoYW5hbG9naXgtZHAgKyBjYWRlbmNlLWRw
-KQpFdmVyeXRoaW5nIHNlZW1zIHRvIHdvcmsgdGhhdCB3b3JrZWQgYmVmb3JlLgoKVGVzdGVkLWJ5
-OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--===============0997223904==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0QFb0wBpEddLcDHQ"
+Content-Disposition: inline
+
+
+--0QFb0wBpEddLcDHQ
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+
+Hi Sakari,
+
+On Thu, Sep 13, 2018 at 01:19:12PM +0300, Sakari Ailus wrote:
+> On Thu, Sep 13, 2018 at 12:55:33PM +0300, Sakari Ailus wrote:
+> > Hi Jacopo,
+> >
+> > On Thu, Sep 13, 2018 at 11:46:14AM +0200, jacopo mondi wrote:
+> > > Hi Sakari,
+> > >
+> > > On Thu, Sep 13, 2018 at 12:29:35AM +0300, Sakari Ailus wrote:
+> > > > Initialise the V4L2 fwnode endpoints to zero in all drivers using
+> > > > v4l2_fwnode_endpoint_parse(). This prepares for setting default endpoint
+> > > > flags as well as the bus type. Setting bus type to zero will continue to
+> > > > guess the bus among the guessable set (parallel, Bt.656 and CSI-2 D-PHY).
+> > > >
+> > >
+> > > I've played around with this patch, trying to use defaults in the
+> > > renesas-ceu driver.
+> > >
+> > > This is the resulting patch, if you want I can send it as follow-up or
+> > > send it so that you can include it in your series if it's correct):
+> > > https://paste.debian.net/hidden/a7795d3e/
+> >
+> > Looks nice; could you send it out to the list for review?
+> >
+> > The bus width default isn't specified in DT bindings; could you write a
+> > patch that defines it?
+>
+> Same for "pclk-sample". DT bindings do not document that; it should go to
+> the same patch.
+
+Actually it is 'wrong' to specify it in the default configuration in
+first place, as the interface does not support configuring the pixel
+clock edge on which to sample data.
+Same for data-shift, as the interface supports 8 or 16 bits only
+capture modes.
+
+I'll document bus_width restricting the accepted values to 8 and 16
+and field-even-active as even if they're not actually implemented in the
+driver, they are configurable for the interface.
+
+Thanks
+  j
+>
+> --
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+--0QFb0wBpEddLcDHQ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbmmPhAAoJEHI0Bo8WoVY8MmQP+wVYzn7rA+QCZlv/na60KCKu
+9qWSE41nOchMHiLKb+oA1uO4aLf53fOpCceWJKWGAtEKMGzi1i7xft8CFAV8z+U+
+q+POGF6nHnRfk2mtqLqO/X2pb4U85uB/DrUjjRN5GrRNfTmFAVjKgqfaKLHHqG7v
+RLmr8MVn3M+iTrZbkbPgiThBLfKL3g9xJAjw0wtAXT5XLhJbZN/eX4liRoL6kq4i
+yCIVgLsSedfNTM4avrHzmYqCW7c/0MPU7sTtJpDhffLSR8lDhlRPGvBUD+ew3133
+atW8IZu3Sf4+OZ6YfnjWV12ZCwuyfFOd3FIT8WtWe+HVHlc/TQJU3rb31x+ut4XE
+Auy/NI/+PJzTQIKGgf9PUURSDeqpYCF9J34vV5dLwlwFRwPM5PhwPjOC8UMmke4a
+PBwF5u80xqLTyay3Pz7RFyklCsa6PLC+VDPb8qyW2c1gNqDY9N9mhWOZvjJs8bur
+wavPiuWINEYw1XpFZXYzRbcwF0q644tR1aapx+yl+S6+6j6WG5LoRyy8Atct4SNc
+n6xixhoLRZjtr8jxE/cLJZDg4wVtd8PDgE84CdUPS1O684a4TFJu8yYdiR7k+1+R
+dz9yRYXY6Qgdyxk+3ba8Yto0hyOFz7CzQBiIazMrS11klRvbyvmG/k3AV/I0Sss5
++QaKhtsodzqSAXGU6Rrb
+=7Uad
+-----END PGP SIGNATURE-----
+
+--0QFb0wBpEddLcDHQ--
+
+--===============0997223904==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0997223904==--
