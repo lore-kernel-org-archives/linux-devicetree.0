@@ -1,118 +1,106 @@
-From: Andre Kalb <Andre.Kalb@sma.de>
-Subject: AW: [PATCH v2] of: __of_update_property_sysfs only call
- __of_sysfs_remove_bin_file if of_node_is_attached
-Date: Thu, 13 Sep 2018 15:21:27 +0000
-Message-ID: <DB7PR04MB52433D93A8536DC7F71E169AFC1A0@DB7PR04MB5243.eurprd04.prod.outlook.com>
-References: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
- <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com>
- <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
- <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Thu, 13 Sep 2018 17:51:55 +0200
+Message-ID: <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
+References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
+ <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com> <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
-Content-Language: de-DE
+In-Reply-To: <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild <linux-kbuild@vger.ker>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpJIGhhdmUgdXNlZCBhbiBvdGhlciBoYXJkd2FyZSB0byBjaGVjayB0aGUgcGF0
-Y2guIEkgaG9wZSBpdCBkb2VzbuKAmXQgbWF0dGVyLiBJIGFkZGVkIGZldyBsaW5lcyBhdCB0aGUg
-dW50aXRlc3QuYy4gQWxsIGV4aXN0aW5nIHVuaXR0ZXN0IHVzZSBhbiBhdHRhY2hlZCBzeXNmcywg
-dGhlcmVmb3JlIHRoZSBidWcgaXNuJ3QgZGV0ZWN0YWJsZS4NCg0KQmVzdCByZWdhcmRzDQpBbmRy
-ZSBLYWxiDQoNCkZyb20gMWU4NmUzNTFlZmExYTdjZWEzMWQxNTdiYWZiMGFlNDBiODU2Y2RjYyBN
-b24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZyb206IEFuZHJlIEthbGIgPEFuZHJlLkthbGJAc21h
-LmRlPg0KRGF0ZTogVGh1LCAxMyBTZXAgMjAxOCAxNjo0Mjo0OCArMDIwMA0KU3ViamVjdDogW1BB
-VENIXSBBZGRlZCBuZXcgdW5pdHRlc3QNCg0KLS0tDQogZHJpdmVycy9vZi91bml0dGVzdC5jIHwg
-MTggKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykN
-Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvdW5pdHRlc3QuYyBiL2RyaXZlcnMvb2YvdW5pdHRl
-c3QuYw0KaW5kZXggMmE1NDdjYTNkNDQzLi4xN2Y2Y2FjYjRmYWUgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL29mL3VuaXR0ZXN0LmMNCisrKyBiL2RyaXZlcnMvb2YvdW5pdHRlc3QuYw0KQEAgLTkyMyw2
-ICs5MjMsMjQgQEAgc3RhdGljIGludCBfX2luaXQgdW5pdHRlc3RfZGF0YV9hZGQodm9pZCkNCiAg
-ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCiAgICAgICAgfQ0KDQorICAgICAgIHsNCisg
-ICAgICAgICAgICAgICBzdHJ1Y3QgcHJvcGVydHkgKnByb3A7DQorDQorICAgICAgICAgICAgICAg
-cHJvcCA9IGt6YWxsb2Moc2l6ZW9mKCpwcm9wKSwgR0ZQX0tFUk5FTCk7DQorICAgICAgICAgICAg
-ICAgaWYgKCFwcm9wKSB7DQorICAgICAgICAgICAgICAgICAgICAgICB1bml0dGVzdCgwLCAia3ph
-bGxvYygpIGZhaWxlZFxuIik7DQorICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01F
-TTsNCisgICAgICAgICAgICAgICB9DQorDQorICAgICAgICAgICAgICAgbnAgPSBvZl9maW5kX25v
-ZGVfd2l0aF9wcm9wZXJ0eSh1bml0dGVzdF9kYXRhX25vZGUsICJwcm9wLXVwZGF0ZSIpOw0KKyAg
-ICAgICAgICAgICAgIHVuaXR0ZXN0KG5wLCAiZmluZCBwcm9wLXVwZGF0ZSIpOw0KKw0KKyAgICAg
-ICAgICAgICAgIHByb3AtPm5hbWUgPSAicHJvcC11cGRhdGUiOw0KKyAgICAgICAgICAgICAgIHBy
-b3AtPnZhbHVlID0gIm5ldy1wcm9wZXJ0eS1kYXRhIjsNCisgICAgICAgICAgICAgICBwcm9wLT5s
-ZW5ndGggPSBzdHJsZW4ocHJvcC0+dmFsdWUpICsgMTsNCisgICAgICAgICAgICAgICB1bml0dGVz
-dChvZl91cGRhdGVfcHJvcGVydHkobnAsIHByb3ApID09IDAsICJVcGRhdGUgYSBleGlzdGluZyBw
-cm9wZXJ0eSBmYWlsZWRcbiIpOw0KKyAgICAgICB9DQorDQogICAgICAgIGlmICghb2Zfcm9vdCkg
-ew0KICAgICAgICAgICAgICAgIG9mX3Jvb3QgPSB1bml0dGVzdF9kYXRhX25vZGU7DQogICAgICAg
-ICAgICAgICAgZm9yX2VhY2hfb2ZfYWxsbm9kZXMobnApDQotLQ0KMi4xNi40DQoNCg0KLS0tLS0t
-LS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tDQpXQVJOSU5HOiBDUFU6IDAgUElEOiAxIGF0
-IGZzL2tlcm5mcy9kaXIuYzoxNDgxIGtlcm5mc19yZW1vdmVfYnlfbmFtZV9ucysweDljLzB4YTQN
-Cmtlcm5mczogY2FuIG5vdCByZW1vdmUgJyhudWxsKScsIG5vIGRpcmVjdG9yeQ0KTW9kdWxlcyBs
-aW5rZWQgaW46DQpDUFU6IDAgUElEOiAxIENvbW06IHN3YXBwZXIgTm90IHRhaW50ZWQgNC4xOC43
-ICMzDQpIYXJkd2FyZSBuYW1lOiBGcmVlc2NhbGUgaS5NWDYgVWx0cmFsaXRlIChEZXZpY2UgVHJl
-ZSkNCls8YzAxMGYzMzg+XSAodW53aW5kX2JhY2t0cmFjZSkgZnJvbSBbPGMwMTBjZWZjPl0gKHNo
-b3dfc3RhY2srMHgxMC8weDE0KQ0KWzxjMDEwY2VmYz5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzAx
-MjIwMDQ+XSAoX193YXJuKzB4ZTAvMHhmOCkNCls8YzAxMjIwMDQ+XSAoX193YXJuKSBmcm9tIFs8
-YzAxMjIwNjA+XSAod2Fybl9zbG93cGF0aF9mbXQrMHg0NC8weDY4KQ0KWzxjMDEyMjA2MD5dICh3
-YXJuX3Nsb3dwYXRoX2ZtdCkgZnJvbSBbPGMwMmM2NTQwPl0gKGtlcm5mc19yZW1vdmVfYnlfbmFt
-ZV9ucysweDljLzB4YTQpDQpbPGMwMmM2NTQwPl0gKGtlcm5mc19yZW1vdmVfYnlfbmFtZV9ucykg
-ZnJvbSBbPGMwNTVhNzA0Pl0gKF9fb2ZfdXBkYXRlX3Byb3BlcnR5X3N5c2ZzKzB4MzgvMHg1MCkN
-Cls8YzA1NWE3MDQ+XSAoX19vZl91cGRhdGVfcHJvcGVydHlfc3lzZnMpIGZyb20gWzxjMDU1N2I5
-ND5dIChvZl91cGRhdGVfcHJvcGVydHkrMHhjMC8weDEwNCkNCls8YzA1NTdiOTQ+XSAob2ZfdXBk
-YXRlX3Byb3BlcnR5KSBmcm9tIFs8YzA5NTIxYmM+XSAob2ZfdW5pdHRlc3QrMHgxYjgvMHgyOGQ0
-KQ0KWzxjMDk1MjFiYz5dIChvZl91bml0dGVzdCkgZnJvbSBbPGMwMTAyZDg4Pl0gKGRvX29uZV9p
-bml0Y2FsbCsweDQwLzB4MjE4KQ0KWzxjMDEwMmQ4OD5dIChkb19vbmVfaW5pdGNhbGwpIGZyb20g
-WzxjMDkwMTAxYz5dIChrZXJuZWxfaW5pdF9mcmVlYWJsZSsweDI0Yy8weDJlNCkNCls8YzA5MDEw
-MWM+XSAoa2VybmVsX2luaXRfZnJlZWFibGUpIGZyb20gWzxjMDZhMWY2Yz5dIChrZXJuZWxfaW5p
-dCsweDgvMHgxMTApDQpbPGMwNmExZjZjPl0gKGtlcm5lbF9pbml0KSBmcm9tIFs8YzAxMDEwZTg+
-XSAocmV0X2Zyb21fZm9yaysweDE0LzB4MmMpDQpFeGNlcHRpb24gc3RhY2soMHhjYzA5OWZiMCB0
-byAweGNjMDk5ZmY4KQ0KOWZhMDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDANCjlmYzA6IDAwMDAwMDAwIDAwMDAw
-MDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAw
-DQo5ZmUwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAxMyAwMDAw
-MDAwMA0KLS0tWyBlbmQgdHJhY2UgNDUyMmY2OWUwNzYwZTRkNSBdLS0tDQoNCg0KDQo+IC0tLS0t
-VXJzcHLDvG5nbGljaGUgTmFjaHJpY2h0LS0tLS0NCj4gVm9uOiBSb2IgSGVycmluZyBbbWFpbHRv
-OnJvYmgrZHRAa2VybmVsLm9yZ10NCj4gR2VzZW5kZXQ6IE1vbnRhZywgMTAuIFNlcHRlbWJlciAy
-MDE4IDE1OjQ3DQo+IEFuOiBBbmRyZSBLYWxiDQo+IENjOiBGcmFuayBSb3dhbmQ7IGRldmljZXRy
-ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IEJldHJl
-ZmY6IFJlOiBbUEFUQ0ggdjJdIG9mOiBfX29mX3VwZGF0ZV9wcm9wZXJ0eV9zeXNmcyBvbmx5IGNh
-bGwNCj4gX19vZl9zeXNmc19yZW1vdmVfYmluX2ZpbGUgaWYgb2Zfbm9kZV9pc19hdHRhY2hlZA0K
-Pg0KPiBPbiBNb24sIFNlcCAxMCwgMjAxOCBhdCA0OjUxIEFNIEFuZHJlIEthbGIgPEFuZHJlLkth
-bGJAc21hLmRlPiB3cm90ZToNCj4gPg0KPiA+IEhpIEZyYW5rLA0KPiA+DQo+ID4gPiAtLS0tLVVy
-c3Byw7xuZ2xpY2hlIE5hY2hyaWNodC0tLS0tDQo+ID4gPiBWb246IEZyYW5rIFJvd2FuZCBbbWFp
-bHRvOmZyb3dhbmQubGlzdEBnbWFpbC5jb21dDQo+ID4gPiBHZXNlbmRldDogRnJlaXRhZywgNy4g
-U2VwdGVtYmVyIDIwMTggMjI6MDENCj4gPiA+IEFuOiBBbmRyZSBLYWxiOyByb2JoK2R0QGtlcm5l
-bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtIGtlcm5lbEB2
-Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IEJldHJlZmY6IFJlOiBbUEFUQ0ggdjJdIG9mOiBfX29mX3Vw
-ZGF0ZV9wcm9wZXJ0eV9zeXNmcyBvbmx5IGNhbGwNCj4gPiA+IF9fb2Zfc3lzZnNfcmVtb3ZlX2Jp
-bl9maWxlIGlmIG9mX25vZGVfaXNfYXR0YWNoZWQNCj4gPiA+DQo+ID4gPiBIaSBBbmRyZWQsDQo+
-ID4gPg0KPiA+ID4gT24gMDkvMDQvMTggMDg6NTEsIEFuZHJlIEthbGIgd3JvdGU6DQo+ID4gPiA+
-IFRvIHByZXZlbnQgd2FybmluZyAia2VybmZzOiBjYW4gbm90IHJlbW92ZSAnKG51bGwpJywgbm8g
-ZGlyZWN0b3J5Ig0KPiA+ID4gPiBpZiBhbiBvdmVybGF5DQo+ID4gPiBpc24ndCBhcHBsaWVkIHRv
-IHRoZSBhY3RpdmUgZGV2aWNldHJlZS4NCj4gPiA+ID4NCj4gPiA+ID4gVXNpbmcgb2ZfcmVtb3Zl
-X3Byb3BlcnR5IGFuZCB0aGVuIG9mX2FkZF9wcm9wZXJ0eSBkb2Vzbid0IHNob3cgdGhlDQo+ID4g
-PiB3YXJuaW5nLg0KPg0KPiBbLi4uXQ0KPg0KPiA+ID4gV2hhdCBpcyB0aGUgY2FsbGluZyBwYXRo
-IHRoYXQgcmVzdWx0cyBpbiB0aGUgd2FybmluZz8NCj4gPiA+DQo+ID4gPiAtRnJhbmsNCj4gPg0K
-PiA+IFRoZXJlIGlzIHRoZSBjYWxsc3RhY2sgb2YgdGhlIHdhcm5pbmcuDQo+ID4NCj4gPiBbICAg
-MTAuNzgyODMwXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCj4gPiBbICAg
-MTAuODMwMzU3XSBXQVJOSU5HOiBDUFU6IDAgUElEOiAxNzAgYXQgL2xpbnV4LTQueC9mcy9rZXJu
-ZnMvZGlyLmM6MTI3Ng0KPiBrZXJuZnNfcmVtb3ZlX2J5X25hbWVfbnMrMHgzMC8weDgwKCkNCj4g
-PiBbICAgMTAuOTI4OTk3XSBrZXJuZnM6IGNhbiBub3QgcmVtb3ZlICcobnVsbCknLCBubyBkaXJl
-Y3RvcnkNCj4gPiBbICAgMTAuOTkzMTA3XSBNb2R1bGVzIGxpbmtlZCBpbjogbW9kdWxlX2NhcGVt
-Z3IoKykNCj4gPiBbICAgMTEuMDQ1NzUwXSBDUFU6IDAgUElEOiAxNzAgQ29tbTogc3lzdGVtZC11
-ZGV2ZCBOb3QgdGFpbnRlZCA0LjQuMTQzLQ0KPiAwMDE1OC1nOGU1Y2E2NWVjN2VlLWRpcnR5ICMx
-MTQNCj4NCj4gMTU4IHBhdGNoZXMgb24gdG9wIG9mIGFuIGFsbW9zdCAzIHllYXIgb2xkIGtlcm5l
-bC4uLg0KPg0KPiA+IFsgICAxMi4wMTEzNzNdIFs8YmYwMDAwZTQ+XSAobW9kdWxlX2NhcGVtZ3Jf
-c2xvdF9zY2FuIFttb2R1bGVfY2FwZW1ncl0pDQo+IGZyb20gWzxiZjAwMDdiYz5dIChtb2R1bGVf
-Y2FwZW1ncl9wcm9iZSsweDNjLzB4NTggW21vZHVsZV9jYXBlbWdyXSkNCj4NCj4gQW5kIGEgZHJp
-dmVyIHRoYXQncyBub3QgdXBzdHJlYW0uDQo+DQo+IE5vdCBzYXlpbmcgdGhlIGZpeCBpc24ndCB2
-YWxpZCwgYnV0IHBsZWFzZSByZXByb2R1Y2Ugb24gcmVjZW50IG1haW5saW5lLiBBZGQgYQ0KPiB1
-bml0dGVzdCBpZiB5b3UgaGF2ZSB0by4NCj4NCj4gUm9iDQoNCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpTTUEgU29sYXIgVGVjaG5vbG9neSBB
-Rw0KQXVmc2ljaHRzcmF0OiBEci4gRXJpayBFaHJlbnRyYXV0IChWb3JzaXR6ZW5kZXIpDQpWb3Jz
-dGFuZDogVWxyaWNoIEhhZGRpbmcsIERyLi1JbmcuIEp1ZXJnZW4gUmVpbmVydCwgUGllcnJlLVBh
-c2NhbCBVcmJvbg0KSGFuZGVsc3JlZ2lzdGVyOiBBbXRzZ2VyaWNodCBLYXNzZWwgSFJCIDM5NzIN
-ClNpdHogZGVyIEdlc2VsbHNjaGFmdDogMzQyNjYgTmllc3RldGFsDQpVU3QtSUQtTnIuIERFIDEx
-MyAwOCA1OSA1NA0KV0VFRS1SZWcuLU5yLiBERSA5NTg4MTE1MA0KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo=
+Hi Yamada-san,
+
+On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+> 2018-09-12 0:40 GMT+09:00 Rob Herring <robh@kernel.org>:
+> > On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+> >> There is nothing arch specific about building dtb files other than their
+> >> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+> >> The dependencies and supported targets are all slightly different.
+> >> Also, a cross-compiler for each arch is needed, but really the host
+> >> compiler preprocessor is perfectly fine for building dtbs. Move the
+> >> build rules to a common location and remove the arch specific ones. This
+> >> is done in a single step to avoid warnings about overriding rules.
+> >>
+> >> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+> >> These pull in several dependencies some of which need a target compiler
+> >> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> >> All that is really needed is dtc, so adjust the dependencies to only be
+> >> dtc.
+> >>
+> >> This change enables support 'dtbs_install' on some arches which were
+> >> missing the target.
+> >
+> > [...]
+> >
+> >> @@ -1215,6 +1215,33 @@ kselftest-merge:
+> >>                 $(srctree)/tools/testing/selftests/*/config
+> >>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+> >>
+> >> +# ---------------------------------------------------------------------------
+> >> +# Devicetree files
+> >> +
+> >> +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+> >> +dtstree := arch/$(SRCARCH)/boot/dts
+> >> +endif
+> >> +
+> >> +ifdef CONFIG_OF_EARLY_FLATTREE
+> >
+> > This can be true when dtstree is unset. So this line should be this
+> > instead to fix the 0-day reported error:
+> >
+> > ifneq ($(dtstree),)
+> >
+> >> +
+> >> +%.dtb : scripts_dtc
+> >> +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+> >> +
+> >> +PHONY += dtbs dtbs_install
+> >> +dtbs: scripts_dtc
+> >> +       $(Q)$(MAKE) $(build)=$(dtstree)
+> >> +
+> >> +dtbs_install: dtbs
+> >> +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+> >> +
+> >> +all: dtbs
+> >> +
+> >> +endif
+>
+>
+> Ah, right.
+> Even x86 can enable OF and OF_UNITTEST.
+>
+>
+>
+> Another solution might be,
+> guard it by 'depends on ARCH_SUPPORTS_OF'.
+>
+>
+>
+> This is actually what ACPI does.
+>
+> menuconfig ACPI
+>         bool "ACPI (Advanced Configuration and Power Interface) Support"
+>         depends on ARCH_SUPPORTS_ACPI
+>          ...
+
+ACPI is a real platform feature, as it depends on firmware.
+
+CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
+even if it has ACPI ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
