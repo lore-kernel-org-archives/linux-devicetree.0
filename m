@@ -1,56 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] ARM: dts: lpc32xx: Fix SPI controller node names
-Date: Thu, 13 Sep 2018 13:12:33 -0500
-Message-ID: <20180913181245.25484-9-robh@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v1 4/5] rtc: pcf8523: external capacitor configuration
+Date: Thu, 13 Sep 2018 21:27:13 +0200
+Message-ID: <20180913192713.GJ14988@piout.net>
+References: <20180822183555.GA24084@ravnborg.org>
+ <20180907193508.24974-5-sam@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180907193508.24974-5-sam@ravnborg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
-SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-name enables dtc SPI bus checks.
+On 07/09/2018 21:35:07+0200, Sam Ravnborg wrote:
+> From: Søren Andersen <san@skov.dk>
+> 
+> Add support for specifying the quartz load in the DT node.
+> The pcf8523 may use either a 7 pF or an 12.5 pF xtal.
+> If the rtc has the wrong configuration the time will
+> drift several hours/week.
+> 
+> If nothing is specified in DT then the factory default of 7 pF is used.
+> This is a change compared to before where the driver assumed 12.5 pF.
+> 
+> Note: all kernel dts trees are updated with the new property.
+> 
+> Signed-off-by: Søren Andersen <san@skov.dk>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-pcf8523.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
+> index 453615f8ac9a..3c19b4d21a2d 100644
+> --- a/drivers/rtc/rtc-pcf8523.c
+> +++ b/drivers/rtc/rtc-pcf8523.c
+> @@ -85,7 +85,7 @@ static int pcf8523_write(struct i2c_client *client, u8 reg, u8 value)
+>  	return 0;
+>  }
+>  
+> -static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+> +static int pcf8523_select_capacitance(struct i2c_client *client)
+>  {
+>  	u8 value;
+>  	int err;
+> @@ -94,7 +94,7 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+>  	if (err < 0)
+>  		return err;
+>  
+> -	if (!high)
+> +	if (!device_property_present(&client->dev, "nxp,quartz_load_12.5pf"))
 
-Cc: Vladimir Zapolskiy <vz@mleia.com>
-Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Signed-off-by: Rob Herring <robh@kernel.org>
----
+OK, this is super annoying we unfortunately can't change what was done
+previously without breaking the DT ABI. Honestly, I suspect the 12.5pF
+value is wrong for most boards anyway.
 
- arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+What I would do is use the value from DT (so either 7000fF or 12500fF)
+and set it if present.
+If not present, set 12.5pF and print a warning that this differs from
+the RTC default.
 
-diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
-index abff7ef7c9cd..b7303a4e4236 100644
---- a/arch/arm/boot/dts/lpc32xx.dtsi
-+++ b/arch/arm/boot/dts/lpc32xx.dtsi
-@@ -179,7 +179,7 @@
- 			 * ssp0 and spi1 are shared pins;
- 			 * enable one in your board dts, as needed.
- 			 */
--			ssp0: ssp@20084000 {
-+			ssp0: spi@20084000 {
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x20084000 0x1000>;
- 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
-@@ -199,7 +199,7 @@
- 			 * ssp1 and spi2 are shared pins;
- 			 * enable one in your board dts, as needed.
- 			 */
--			ssp1: ssp@2008c000 {
-+			ssp1: spi@2008c000 {
- 				compatible = "arm,pl022", "arm,primecell";
- 				reg = <0x2008c000 0x1000>;
- 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
+Hopefully, at some point, we could leave it as it is as the value should
+persist across reboot.
+
 -- 
-2.17.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
