@@ -1,147 +1,56 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v1 3/5] dts: add nxp,quartz_load_12.5pf to all pcf8523
- nodes
-Date: Thu, 13 Sep 2018 21:14:50 +0200
-Message-ID: <20180913191450.GI14988@piout.net>
-References: <20180822183555.GA24084@ravnborg.org>
- <20180907193508.24974-4-sam@ravnborg.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] ARM: dts: lpc32xx: Fix SPI controller node names
+Date: Thu, 13 Sep 2018 13:12:33 -0500
+Message-ID: <20180913181245.25484-9-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180907193508.24974-4-sam@ravnborg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2018 21:35:06+0200, Sam Ravnborg wrote:
-> From: Søren Andersen <san@skov.dk>
-> 
-> Add "nxp,quartz_load_12.5pf" to all pcf8523 nodes.
-> 
-> The device tree binding for the pcf8523 now includes
-> a property "nxp,quartz_load_12.5pf" to specify
-> that the connected x-tal has an internal capacitance
-> of 12.5 pF.
-> Add this to all pcf8523 nodes, because this was implicit before,
-> at least in the Linux kernel where the driver was hardcoded
-> to set the rtc to use 12.5 pF.
-> 
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Well, this patch is not needed as we should not break the DT ABI. See
-comment on the next patch...
+Cc: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Sylvain Lemieux <slemieux.tyco@gmail.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
 
-> Signed-off-by: Søren Andersen <san@skov.dk>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Joel Stanley <joel@jms.id.au>
-> Cc: Andrew Jeffery <andrew@aj.id.au>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> ---
->  arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts | 1 +
->  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts   | 1 +
->  arch/arm/boot/dts/imx6q-h100.dts             | 1 +
->  arch/arm/boot/dts/imx6q-novena.dts           | 1 +
->  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi       | 1 +
->  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi  | 1 +
->  arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 1 +
->  7 files changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-> index d598b6391362..d1a0e3521e2b 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
-> @@ -200,6 +200,7 @@
->  	rtc@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  
->  	tmp75@48 {
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> index 2c5aa90a546d..b5088414e610 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-> @@ -201,6 +201,7 @@
->  	rtc@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  
->  	ucd90160@64 {
-> diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
-> index 714e09e04dcb..3b6116069b11 100644
-> --- a/arch/arm/boot/dts/imx6q-h100.dts
-> +++ b/arch/arm/boot/dts/imx6q-h100.dts
-> @@ -173,6 +173,7 @@
->  	rtc: pcf8523@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  
->  	sgtl5000: sgtl5000@a {
-> diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
-> index fcd824dc485b..6a2eaaa6e220 100644
-> --- a/arch/arm/boot/dts/imx6q-novena.dts
-> +++ b/arch/arm/boot/dts/imx6q-novena.dts
-> @@ -257,6 +257,7 @@
->  	rtc: pcf8523@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  
->  	sbs_battery: bq20z75@b {
-> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> index 9332a31e6c8b..e0f601bce3d3 100644
-> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-> @@ -143,6 +143,7 @@
->  	rtc@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  };
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> index 0e64016e765f..7848b818078e 100644
-> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-> @@ -189,6 +189,7 @@
->  	rtc@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  
->  	/* Pro baseboard model */
-> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-> index c413f9c3540f..7bc264234085 100644
-> --- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
-> @@ -222,6 +222,7 @@
->  	pcf8523: rtc@68 {
->  		compatible = "nxp,pcf8523";
->  		reg = <0x68>;
-> +		nxp,quartz_load_12.5pf;
->  	};
->  
->  	sgtl5000: codec@a {
-> -- 
-> 2.12.0
-> 
+ arch/arm/boot/dts/lpc32xx.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/arch/arm/boot/dts/lpc32xx.dtsi b/arch/arm/boot/dts/lpc32xx.dtsi
+index abff7ef7c9cd..b7303a4e4236 100644
+--- a/arch/arm/boot/dts/lpc32xx.dtsi
++++ b/arch/arm/boot/dts/lpc32xx.dtsi
+@@ -179,7 +179,7 @@
+ 			 * ssp0 and spi1 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp0: ssp@20084000 {
++			ssp0: spi@20084000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x20084000 0x1000>;
+ 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH>;
+@@ -199,7 +199,7 @@
+ 			 * ssp1 and spi2 are shared pins;
+ 			 * enable one in your board dts, as needed.
+ 			 */
+-			ssp1: ssp@2008c000 {
++			ssp1: spi@2008c000 {
+ 				compatible = "arm,pl022", "arm,primecell";
+ 				reg = <0x2008c000 0x1000>;
+ 				interrupts = <21 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
