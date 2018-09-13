@@ -1,68 +1,69 @@
-Return-Path: <SRS0=6+VU=MB=linux.intel.com=thor.thayer@kernel.org>
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 6/6] arm64: dts: stratix10: Add peripheral EDAC nodes
-Date: Wed, 19 Sep 2018 14:39:01 -0500
-Message-Id: <1537385941-11582-7-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1537385941-11582-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1537385941-11582-1-git-send-email-thor.thayer@linux.intel.com>
-To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+Return-Path: <SRS0=9KvZ=L3=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:44832 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726741AbeIMP0I (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Thu, 13 Sep 2018 11:26:08 -0400
+Date: Thu, 13 Sep 2018 13:17:18 +0300
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 1/2] dt-bindings: dw9714, dw9807-vcm: Add files to
+ MAINTAINERS, rename files
+Message-ID: <20180913101718.b5qwae6j7gf5qa7t@valkosipuli.retiisi.org.uk>
+References: <20180723105039.20110-1-sakari.ailus@linux.intel.com>
+ <20180723105039.20110-2-sakari.ailus@linux.intel.com>
+ <20180830105531.53o3afx5k3cank5z@valkosipuli.retiisi.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180830105531.53o3afx5k3cank5z@valkosipuli.retiisi.org.uk>
+Sender: devicetree-owner@vger.kernel.org
+To: robh@kernel.org
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, alanx.chiang@intel.com, andy.yeh@intel.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Thu, Aug 30, 2018 at 01:55:32PM +0300, Sakari Ailus wrote:
+> Ping?
 
-Add the usb and ethernet peripheral ECC nodes using the
-Arria10 format.
+I will assume this patch is fine. :-)
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 27 ++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> On Mon, Jul 23, 2018 at 01:50:38PM +0300, Sakari Ailus wrote:
+> > Add the DT binding documentation for dw9714 and dw9807-vcm to the
+> > MAINTAINERS file. The dw9807-vcm binding documentation file is renamed to
+> > match the dw9807's VCM bit's compatible string.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> > ---
+> >  .../bindings/media/i2c/{dongwoon,dw9807.txt => dongwoon,dw9807-vcm.txt} | 0
+> >  MAINTAINERS                                                             | 2 ++
+> >  2 files changed, 2 insertions(+)
+> >  rename Documentation/devicetree/bindings/media/i2c/{dongwoon,dw9807.txt => dongwoon,dw9807-vcm.txt} (100%)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt b/Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
+> > similarity index 100%
+> > rename from Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807.txt
+> > rename to Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index bbd9b9b3d74f..44e917de2c8c 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -4410,6 +4410,7 @@ L:	linux-media@vger.kernel.org
+> >  T:	git git://linuxtv.org/media_tree.git
+> >  S:	Maintained
+> >  F:	drivers/media/i2c/dw9714.c
+> > +F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9714.txt
+> >  
+> >  DONGWOON DW9807 LENS VOICE COIL DRIVER
+> >  M:	Sakari Ailus <sakari.ailus@linux.intel.com>
+> > @@ -4417,6 +4418,7 @@ L:	linux-media@vger.kernel.org
+> >  T:	git git://linuxtv.org/media_tree.git
+> >  S:	Maintained
+> >  F:	drivers/media/i2c/dw9807.c
+> > +F:	Documentation/devicetree/bindings/media/i2c/dongwoon,dw9807-vcm.txt
+> >  
+> >  DOUBLETALK DRIVER
+> >  M:	"James R. Van Zandt" <jrv@vanzandt.mv.com>
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index ee1d4b8ba631..f9cdbb82deeb 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -473,7 +473,7 @@
- 		};
- 
- 		eccmgr {
--			compatible = "altr,socfpga-s10-ecc-manager";
-+			compatible = "altr,socfpga-a10-ecc-manager";
- 			altr,sysmgr-syscon = <&sysmgr>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -487,6 +487,31 @@
- 				altr,sdr-syscon = <&sdr>;
- 				interrupts = <16 4>, <48 4>;
- 			};
-+
-+			usb0-ecc@ff8c4000 {
-+				compatible = "altr,socfpga-usb-ecc";
-+				reg = <0xff8c4000 0x100>;
-+				altr,ecc-parent = <&usb0>;
-+				interrupts = <2 4>,
-+					     <34 4>;
-+			};
-+
-+			emac0-rx-ecc@ff8c0000 {
-+				compatible = "altr,socfpga-eth-mac-ecc";
-+				reg = <0xff8c0000 0x100>;
-+				altr,ecc-parent = <&gmac0>;
-+				interrupts = <4 4>,
-+					     <36 4>;
-+			};
-+
-+			emac0-tx-ecc@ff8c0400 {
-+				compatible = "altr,socfpga-eth-mac-ecc";
-+				reg = <0xff8c0400 0x100>;
-+				altr,ecc-parent = <&gmac0>;
-+				interrupts = <5 4>,
-+					     <37 4>;
-+			};
-+
- 		};
- 
- 		qspi: spi@ff8d2000 {
 -- 
-2.7.4
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
