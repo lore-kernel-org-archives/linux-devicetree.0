@@ -1,16 +1,16 @@
 From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v3 2/5] drm/dp: fix link probing for devices supporting
- DP 1.4+
-Date: Thu, 13 Sep 2018 13:08:27 +0200
-Message-ID: <20180913110829eucas1p2de1f7f14c8dcf186d4b829c22920365e~T8Qbh1iEV3205832058eucas1p2W@eucas1p2.samsung.com>
+Subject: Re: [PATCH v3 3/5] drm/dp: make dp_link_status and
+ dp_get_lane_status usable from outside of the core
+Date: Thu, 13 Sep 2018 13:20:30 +0200
+Message-ID: <20180913112032eucas1p1f2b270b3bdcc8a434130bf52d18d45fe~T8a8z3f662504225042eucas1p1P@eucas1p1.samsung.com>
 References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
-        <CGME20180828102609epcas4p4946d20a22c2ccc6b6157dd9ca954db70@epcas4p4.samsung.com>
-        <1535451894-2518-3-git-send-email-dkos@cadence.com>
+        <CGME20180828102610epcas4p37c400fbe4836e18dfd1862c3d12e8998@epcas4p3.samsung.com>
+        <1535451894-2518-4-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535451894-2518-3-git-send-email-dkos@cadence.com>
+In-Reply-To: <1535451894-2518-4-git-send-email-dkos@cadence.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Damian Kos <dkos@cadence.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
@@ -20,28 +20,113 @@ List-Id: devicetree@vger.kernel.org
 On 28.08.2018 12:24, Damian Kos wrote:
 > From: Quentin Schulz <quentin.schulz@bootlin.com>
 >
-> DP 1.4 introduced a DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit in
-> DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from DP_DPCD_REV
-> to DP_ADAPTER_CAP should be retrieved starting from DP_DPCD_REV_EXTENDED.
-> All registers are copied except DP_DPCD_REV, DP_MAX_LINK_RATE and
-> DP_DOWNSTREAMPORT_PRESENT which represent the "true capabilities" of DPRX
-> device.
+> dp_link_status and dp_get_lane_status are pretty generic and can be used for
+> other means, so let's make it "public".
 >
-> Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT might
-> falsely return lower capabilities to "avoid interoperability issues with some
-> of the existing DP Source devices that malfunction when they discover the
-> higher capabilities within those three registers.".
->
-> Before DP 1.4, DP_EXTENDED_RCVR_CAPA_FIELD_PRESENT bit was reserved and read 0
-> so it's safe to check against it even if DP revision is <1.4
+> This adds drm_dp_link_status and drm_dp_get_lane_status to the header file and
+> add the appropriate EXPORT_SYMBOL for it so that it can be used by other
+> drivers, be they compiled built-in or as modules.
+
+If you want to export them please document functions and their arguments.
+Moreover, these functions are so tiny, so they can be defined as inline.
+
+
 >
 > Signed-off-by: Damian Kos <dkos@cadence.com>
+No author sign-off.
 
-Here and in next patches signed-off-by of the author is missing.
-
-With that fixed:
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
 Regards
 Andrzej
+
+
+> ---
+>  drivers/gpu/drm/drm_dp_helper.c | 20 +++++++++++---------
+>  include/drm/drm_dp_helper.h     |  3 +++
+>  2 files changed, 14 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+> index 4b5bf6ee7fa7..ee9ec2ccf878 100644
+> --- a/drivers/gpu/drm/drm_dp_helper.c
+> +++ b/drivers/gpu/drm/drm_dp_helper.c
+> @@ -43,19 +43,21 @@
+>   */
+>  
+>  /* Helpers for DP link training */
+> -static u8 dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
+> +u8 drm_dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
+>  {
+>  	return link_status[r - DP_LANE0_1_STATUS];
+>  }
+> +EXPORT_SYMBOL(drm_dp_link_status);
+>  
+> -static u8 dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
+> +u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
+>  			     int lane)
+>  {
+>  	int i = DP_LANE0_1_STATUS + (lane >> 1);
+>  	int s = (lane & 1) * 4;
+> -	u8 l = dp_link_status(link_status, i);
+> +	u8 l = drm_dp_link_status(link_status, i);
+>  	return (l >> s) & 0xf;
+>  }
+> +EXPORT_SYMBOL(drm_dp_get_lane_status);
+>  
+>  bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+>  			  int lane_count)
+> @@ -64,12 +66,12 @@ bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+>  	u8 lane_status;
+>  	int lane;
+>  
+> -	lane_align = dp_link_status(link_status,
+> -				    DP_LANE_ALIGN_STATUS_UPDATED);
+> +	lane_align = drm_dp_link_status(link_status,
+> +					DP_LANE_ALIGN_STATUS_UPDATED);
+>  	if ((lane_align & DP_INTERLANE_ALIGN_DONE) == 0)
+>  		return false;
+>  	for (lane = 0; lane < lane_count; lane++) {
+> -		lane_status = dp_get_lane_status(link_status, lane);
+> +		lane_status = drm_dp_get_lane_status(link_status, lane);
+>  		if ((lane_status & DP_CHANNEL_EQ_BITS) != DP_CHANNEL_EQ_BITS)
+>  			return false;
+>  	}
+> @@ -84,7 +86,7 @@ bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+>  	u8 lane_status;
+>  
+>  	for (lane = 0; lane < lane_count; lane++) {
+> -		lane_status = dp_get_lane_status(link_status, lane);
+> +		lane_status = drm_dp_get_lane_status(link_status, lane);
+>  		if ((lane_status & DP_LANE_CR_DONE) == 0)
+>  			return false;
+>  	}
+> @@ -99,7 +101,7 @@ u8 drm_dp_get_adjust_request_voltage(const u8 link_status[DP_LINK_STATUS_SIZE],
+>  	int s = ((lane & 1) ?
+>  		 DP_ADJUST_VOLTAGE_SWING_LANE1_SHIFT :
+>  		 DP_ADJUST_VOLTAGE_SWING_LANE0_SHIFT);
+> -	u8 l = dp_link_status(link_status, i);
+> +	u8 l = drm_dp_link_status(link_status, i);
+>  
+>  	return ((l >> s) & 0x3) << DP_TRAIN_VOLTAGE_SWING_SHIFT;
+>  }
+> @@ -112,7 +114,7 @@ u8 drm_dp_get_adjust_request_pre_emphasis(const u8 link_status[DP_LINK_STATUS_SI
+>  	int s = ((lane & 1) ?
+>  		 DP_ADJUST_PRE_EMPHASIS_LANE1_SHIFT :
+>  		 DP_ADJUST_PRE_EMPHASIS_LANE0_SHIFT);
+> -	u8 l = dp_link_status(link_status, i);
+> +	u8 l = drm_dp_link_status(link_status, i);
+>  
+>  	return ((l >> s) & 0x3) << DP_TRAIN_PRE_EMPHASIS_SHIFT;
+>  }
+> diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
+> index 06a478679781..9930b2b269f2 100644
+> --- a/include/drm/drm_dp_helper.h
+> +++ b/include/drm/drm_dp_helper.h
+> @@ -952,6 +952,9 @@
+>  #define DP_MST_LOGICAL_PORT_0 8
+>  
+>  #define DP_LINK_STATUS_SIZE	   6
+> +
+> +u8 drm_dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r);
+> +u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE], int lane);
+>  bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
+>  			  int lane_count);
+>  bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
