@@ -1,57 +1,36 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/3] Stingray thermal driver support
-Date: Thu, 13 Sep 2018 15:25:45 -0700
-Message-ID: <9dee54fd-eaef-5454-0c96-d105ba2e221d@gmail.com>
-References: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH] ARM: dts: aspeed: Fix I2C bus warnings
+Date: Fri, 14 Sep 2018 08:19:34 +0930
+Message-ID: <CACPK8XcqwW93OU88UvovuzXG1h=u9y1708axdABhX+WruKnrOw@mail.gmail.com>
+References: <20180913181245.25484-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-3-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 14 Sep 2018 at 03:42, Rob Herring <robh@kernel.org> wrote:
+>
+> dtc has new checks for I2C buses. The ASpeed dts files have a node named
+> 'i2c' which causes a false positive warning. As the node is a 'simple-bus',
+> correct the node name to be 'bus' to fix the warnings.
 
+> ---
+> Please apply to the sub-arch tree. The dtc changes haven't landed, but
+> will for 4.20.
 
-On 08/09/18 05:54, Srinath Mannam wrote:
-> These patches adds the stingray thermal driver and its
-> corresponding DT nodes with documentation.
-> 
-> Changes from v2:
->   - All stingray TMON DT nodes are combine together into single.
->     Temperature registers are combined into one mem resource.
->     brcm,tmon-mask parameter has available TMONs mask value.
->   - All available TMONs are initialized together in single
->     instance of driver probe call.
-> 
-> Changes from v1:
->   - Fixed auto build sparce warning.
+Applied to aspeed's dt-for-v4.20.
 
-Thermal maintainers, can you please review patch #3? The binding and DTS
-changes can go through arm-soc if you would like, or you can take
-patches 1 and 3 and I take patch 2, either way is fine.
-
-Thank you
-
-> 
-> Pramod Kumar (3):
->   dt-bindings: thermal: Add binding document for SR thermal
->   arm64: dts: stingray: Add Stingray Thermal DT support.
->   thermal: broadcom: Add Stingray thermal driver
-> 
->  .../bindings/thermal/brcm,sr-thermal.txt           |  23 +++
->  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  13 ++
->  drivers/thermal/Kconfig                            |   3 +-
->  drivers/thermal/broadcom/Kconfig                   |   9 +
->  drivers/thermal/broadcom/Makefile                  |   1 +
->  drivers/thermal/broadcom/sr-thermal.c              | 216 +++++++++++++++++++++
->  6 files changed, 264 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
-> 
-
--- 
-Florian
+Thanks Rob.
