@@ -1,120 +1,95 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 16/23] v4l: fwnode: Initialise the V4L2 fwnode
- endpoints to zero
-Date: Thu, 13 Sep 2018 15:19:30 +0200
-Message-ID: <20180913131929.GE11509@w540>
-References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
- <20180912212942.19641-17-sakari.ailus@linux.intel.com>
- <20180913094614.GS20333@w540>
- <20180913095533.nu6yjf6swga7fa6x@paasikivi.fi.intel.com>
- <20180913101912.ee4qfkphw3zsypbi@paasikivi.fi.intel.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH v3 3/3] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Thu, 13 Sep 2018 16:55:48 +0200
+Message-ID: <24790346.rcfynqLzho@acerlaptop>
+References: <1531843509-3533-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <1531843509-3533-4-git-send-email-pawel.mikolaj.chmiel@gmail.com> <20180807175741.GA30886@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0997223904=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180913101912.ee4qfkphw3zsypbi@paasikivi.fi.intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180807175741.GA30886@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============0997223904==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0QFb0wBpEddLcDHQ"
-Content-Disposition: inline
-
-
---0QFb0wBpEddLcDHQ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Sakari,
-
-On Thu, Sep 13, 2018 at 01:19:12PM +0300, Sakari Ailus wrote:
-> On Thu, Sep 13, 2018 at 12:55:33PM +0300, Sakari Ailus wrote:
-> > Hi Jacopo,
-> >
-> > On Thu, Sep 13, 2018 at 11:46:14AM +0200, jacopo mondi wrote:
-> > > Hi Sakari,
-> > >
-> > > On Thu, Sep 13, 2018 at 12:29:35AM +0300, Sakari Ailus wrote:
-> > > > Initialise the V4L2 fwnode endpoints to zero in all drivers using
-> > > > v4l2_fwnode_endpoint_parse(). This prepares for setting default endpoint
-> > > > flags as well as the bus type. Setting bus type to zero will continue to
-> > > > guess the bus among the guessable set (parallel, Bt.656 and CSI-2 D-PHY).
-> > > >
-> > >
-> > > I've played around with this patch, trying to use defaults in the
-> > > renesas-ceu driver.
-> > >
-> > > This is the resulting patch, if you want I can send it as follow-up or
-> > > send it so that you can include it in your series if it's correct):
-> > > https://paste.debian.net/hidden/a7795d3e/
-> >
-> > Looks nice; could you send it out to the list for review?
-> >
-> > The bus width default isn't specified in DT bindings; could you write a
-> > patch that defines it?
->
-> Same for "pclk-sample". DT bindings do not document that; it should go to
-> the same patch.
-
-Actually it is 'wrong' to specify it in the default configuration in
-first place, as the interface does not support configuring the pixel
-clock edge on which to sample data.
-Same for data-shift, as the interface supports 8 or 16 bits only
-capture modes.
-
-I'll document bus_width restricting the accepted values to 8 and 16
-and field-even-active as even if they're not actually implemented in the
-driver, they are configurable for the interface.
+On Tuesday, August 7, 2018 11:57:42 AM CEST Rob Herring wrote:
+> On Tue, Jul 17, 2018 at 06:05:09PM +0200, Pawe=C5=82 Chmiel wrote:
+> > This patch adds devicetree bindings documentation for
+> > battery charging controller as the subnode of MAX8998 PMIC.
+> >=20
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> > Changes from v2:
+> >   - Make charge-restart-level-microvolt optional.
+> >   - Make charge-timeout-hours optional.
+> >=20
+> > Changes from v1:
+> >   - Removed unneeded Fixes tag
+> >   - Correct description of all charger values
+> >   - Added missing property unit
+> > ---
+> >  Documentation/devicetree/bindings/mfd/max8998.txt | 25 +++++++++++++++=
+++++++++
+> >  1 file changed, 25 insertions(+)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docume=
+ntation/devicetree/bindings/mfd/max8998.txt
+> > index 23a3650ff2a2..264040f4ad15 100644
+> > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> > @@ -50,6 +50,24 @@ Additional properties required if max8998,pmic-buck2=
+=2Ddvs-gpio is defined:
+> >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in micr=
+ovolts
+> >    for buck2 regulator that can be selected using dvs gpio.
+> > =20
+> > +Charger: Configuration for battery charging controller should be added
+> > +inside a child node named 'charger'.
+> > +  Required properties:
+> > +  - max8998,charge-eoc-percent: Setup End of Charge Level.
+>=20
+> This should have a vendor prefix and max8998 is not a vendor. Don't=20
+> continue that pattern even if we already have some properties like that.
+>=20
+> These seem like perhaps they should be common charger properties.
+Where i could find such properties (or any other driver which is using thos=
+e as an example) ?
+Looking at few existing drivers, most of them have custom properties (that'=
+s why i've followed the same pattern for max8998).
 
 Thanks
-  j
->
-> --
-> Sakari Ailus
-> sakari.ailus@linux.intel.com
-
---0QFb0wBpEddLcDHQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbmmPhAAoJEHI0Bo8WoVY8MmQP+wVYzn7rA+QCZlv/na60KCKu
-9qWSE41nOchMHiLKb+oA1uO4aLf53fOpCceWJKWGAtEKMGzi1i7xft8CFAV8z+U+
-q+POGF6nHnRfk2mtqLqO/X2pb4U85uB/DrUjjRN5GrRNfTmFAVjKgqfaKLHHqG7v
-RLmr8MVn3M+iTrZbkbPgiThBLfKL3g9xJAjw0wtAXT5XLhJbZN/eX4liRoL6kq4i
-yCIVgLsSedfNTM4avrHzmYqCW7c/0MPU7sTtJpDhffLSR8lDhlRPGvBUD+ew3133
-atW8IZu3Sf4+OZ6YfnjWV12ZCwuyfFOd3FIT8WtWe+HVHlc/TQJU3rb31x+ut4XE
-Auy/NI/+PJzTQIKGgf9PUURSDeqpYCF9J34vV5dLwlwFRwPM5PhwPjOC8UMmke4a
-PBwF5u80xqLTyay3Pz7RFyklCsa6PLC+VDPb8qyW2c1gNqDY9N9mhWOZvjJs8bur
-wavPiuWINEYw1XpFZXYzRbcwF0q644tR1aapx+yl+S6+6j6WG5LoRyy8Atct4SNc
-n6xixhoLRZjtr8jxE/cLJZDg4wVtd8PDgE84CdUPS1O684a4TFJu8yYdiR7k+1+R
-dz9yRYXY6Qgdyxk+3ba8Yto0hyOFz7CzQBiIazMrS11klRvbyvmG/k3AV/I0Sss5
-+QaKhtsodzqSAXGU6Rrb
-=7Uad
------END PGP SIGNATURE-----
-
---0QFb0wBpEddLcDHQ--
-
---===============0997223904==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0997223904==--
+>=20
+> > +    If value equals 0, leave it unchanged.
+> > +    Otherwise it should be value from 10 to 45 by 5 step.
+> > +
+> > +  Optional properties:
+> > +  - max8998,charge-restart-level-microvolt: Setup Charge Restart Level.
+> > +    If property is not present, this will be disabled.
+> > +    If value equals 0, leave it unchanged.
+> > +    Otherwise it should be one of following values: 100, 150, 200.
+> > +
+> > +  - max8998,charge-timeout-hours: Setup Charge Full Timeout.
+> > +    If property is not present, this will be disabled.
+> > +    If value equals 0, leave it unchanged.
+> > +    Otherwise it should be one of following values: 5, 6, 7.
+> > +
+> >  Regulators: All the regulators of MAX8998 to be instantiated shall be
+> >  listed in a child node named 'regulators'. Each regulator is represent=
+ed
+> >  by a child node of the 'regulators' node.
+> > @@ -99,6 +117,13 @@ Example:
+> >  		max8998,pmic-buck2-dvs-gpio =3D <&gpx0 0 3 0 0>; /* SET3 */
+> >  		max8998,pmic-buck2-dvs-voltage =3D <1350000>, <1300000>;
+> > =20
+> > +		/* Charger configuration */
+> > +		charger {
+> > +			max8998,charge-eoc-percent =3D <0>;
+> > +			max8998,charge-restart-level-microvolt =3D <100>;
+> > +			max8998,charge-timeout-hours =3D <7>;
+> > +		};
+> > +
+> >  		/* Regulators to instantiate */
+> >  		regulators {
+> >  			ldo2_reg: LDO2 {
+>=20
