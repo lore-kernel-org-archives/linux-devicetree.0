@@ -1,49 +1,57 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] ARM: dts: brcm: Fix SPI bus warnings
-Date: Thu, 13 Sep 2018 15:20:20 -0700
-Message-ID: <78e6100f-1932-108a-b3ec-7bb37765583b@gmail.com>
-References: <20180913181245.25484-6-robh@kernel.org>
+Subject: Re: [PATCH v3 0/3] Stingray thermal driver support
+Date: Thu, 13 Sep 2018 15:25:45 -0700
+Message-ID: <9dee54fd-eaef-5454-0c96-d105ba2e221d@gmail.com>
+References: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180913181245.25484-6-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, Scott Branden <sbranden@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinath Mannam <srinath.mannam@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 09/13/18 11:12, Rob Herring wrote:
-> dtc has new checks for SPI buses. Fix the warnings in node names.
+On 08/09/18 05:54, Srinath Mannam wrote:
+> These patches adds the stingray thermal driver and its
+> corresponding DT nodes with documentation.
 > 
-> arch/arm/boot/dts/bcm53340-ubnt-unifi-switch8.dtb: Warning (spi_bus_bridge): /axi@18000000/qspi@27200: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/bcm958525er.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/bcm958525xmc.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/bcm958622hr.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/bcm958625hr.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/bcm988312hr.dtb: Warning (spi_bus_bridge): /axi/qspi@27200: node name for SPI buses should be 'spi'
+> Changes from v2:
+>   - All stingray TMON DT nodes are combine together into single.
+>     Temperature registers are combined into one mem resource.
+>     brcm,tmon-mask parameter has available TMONs mask value.
+>   - All available TMONs are initialized together in single
+>     instance of driver probe call.
 > 
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: Jon Mason <jonmason@broadcom.com>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
+> Changes from v1:
+>   - Fixed auto build sparce warning.
 
-Applied to devicetree/next, thanks Rob!
+Thermal maintainers, can you please review patch #3? The binding and DTS
+changes can go through arm-soc if you would like, or you can take
+patches 1 and 3 and I take patch 2, either way is fine.
 
-NB: s/brcm/bcm/ to be somewhat consistent with file names and past
-submissions.
+Thank you
+
+> 
+> Pramod Kumar (3):
+>   dt-bindings: thermal: Add binding document for SR thermal
+>   arm64: dts: stingray: Add Stingray Thermal DT support.
+>   thermal: broadcom: Add Stingray thermal driver
+> 
+>  .../bindings/thermal/brcm,sr-thermal.txt           |  23 +++
+>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  13 ++
+>  drivers/thermal/Kconfig                            |   3 +-
+>  drivers/thermal/broadcom/Kconfig                   |   9 +
+>  drivers/thermal/broadcom/Makefile                  |   1 +
+>  drivers/thermal/broadcom/sr-thermal.c              | 216 +++++++++++++++++++++
+>  6 files changed, 264 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+> 
+
 -- 
 Florian
