@@ -1,13 +1,11 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: fsl: Fix SPI bus warnings
-Date: Thu, 13 Sep 2018 15:33:31 -0300
-Message-ID: <CAOMZO5Dk+t4G8zENUEeuEDvqoHL8U9zqkgDoWz4ovT0sSawZTA@mail.gmail.com>
-References: <20180913181245.25484-5-robh@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH] arm64: dts: lg: Fix SPI controller node names
+Date: Thu, 13 Sep 2018 13:12:44 -0500
+Message-ID: <20180913181245.25484-20-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180913181245.25484-5-robh@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,27 +15,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Li Yang <leoyang.li@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Chanho Min <chanho.min@lge.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2018 at 3:12 PM, Rob Herring <robh@kernel.org> wrote:
-> dtc has new checks for SPI buses. Fix the warnings in node names and
-> unit-addresses.
->
-> There's over 100 warnings for FSL boards, a few examples:
->
-> arch/arm/boot/dts/imx28-duckbill-2-spi.dtb: Warning (spi_bus_bridge): /apb@80000000/apbh@80000000/ssp@80014000: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/imx53-ppd.dtb: Warning (spi_bus_bridge): /soc/aips@50000000/spba@50000000/ecspi@50010000: node name for SPI buses should be 'spi'
-> arch/arm/boot/dts/imx6dl-colibri-eval-v3.dtb: Warning (spi_bus_reg): /soc/aips-bus@2000000/spba-bus@2000000/spi@2014000/mcp251x@1: SPI bus unit address format error, expected "0"
->
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: NXP Linux Team <linux-imx@nxp.com>
-> Cc: Li Yang <leoyang.li@nxp.com>
-> Cc: Stefan Agner <stefan@agner.ch>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+name enables dtc SPI bus checks.
 
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Chanho Min <chanho.min@lge.com>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Please apply to the sub-arch tree. The dtc changes haven't landed, but 
+will for 4.20.
+
+ arch/arm64/boot/dts/lg/lg1312.dtsi | 4 ++--
+ arch/arm64/boot/dts/lg/lg1313.dtsi | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/lg/lg1312.dtsi b/arch/arm64/boot/dts/lg/lg1312.dtsi
+index 860c8fb10795..4bde7b6f2b11 100644
+--- a/arch/arm64/boot/dts/lg/lg1312.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1312.dtsi
+@@ -168,14 +168,14 @@
+ 			clock-names = "apb_pclk";
+ 			status="disabled";
+ 		};
+-		spi0: ssp@fe800000 {
++		spi0: spi@fe800000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe800000 0x1000>;
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_bus>;
+ 			clock-names = "apb_pclk";
+ 		};
+-		spi1: ssp@fe900000 {
++		spi1: spi@fe900000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe900000 0x1000>;
+ 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
+index 1887af654a7d..16ced1ff1ad3 100644
+--- a/arch/arm64/boot/dts/lg/lg1313.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
+@@ -168,14 +168,14 @@
+ 			clock-names = "apb_pclk";
+ 			status="disabled";
+ 		};
+-		spi0: ssp@fe800000 {
++		spi0: spi@fe800000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe800000 0x1000>;
+ 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_bus>;
+ 			clock-names = "apb_pclk";
+ 		};
+-		spi1: ssp@fe900000 {
++		spi1: spi@fe900000 {
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0x0 0xfe900000 0x1000>;
+ 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
+-- 
+2.17.1
