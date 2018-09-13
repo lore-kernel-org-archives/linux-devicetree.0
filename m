@@ -1,45 +1,72 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v3 1/5] drm/rockchip: prepare common code for cdns and
- rk dpi/dp driver
-Date: Thu, 13 Sep 2018 12:00:57 +0200
-Message-ID: <20180913100100eucas1p23e7e33035b6cba51d6219a58b34eea92~T7VgDpN8L3204732047eucas1p2_@eucas1p2.samsung.com>
-References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
-        <CGME20180828102612epcas2p376fa6f21ce57f4753a8d0f80f5359842@epcas2p3.samsung.com>
-        <1535451894-2518-2-git-send-email-dkos@cadence.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 00/23] V4L2 fwnode rework; support for default
+ configuration
+Date: Thu, 13 Sep 2018 13:00:43 +0300
+Message-ID: <20180913100043.gibskvsvy7zrw4an@valkosipuli.retiisi.org.uk>
+References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
+ <20180913095450.GA28160@w540>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535451894-2518-2-git-send-email-dkos@cadence.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Damian Kos <dkos@cadence.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com, jartur@cadence.com, piotrs@cadence.com
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20180913095450.GA28160@w540>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: devicetree@vger.kernel.org, Sakari Ailus <sakari.ailus@linux.intel.com>, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Damian,
-
-Quite late but.
-
-On 28.08.2018 12:24, Damian Kos wrote:
-> - Extracted common fields from cdn_dp_device to a new cdns_mhdp_device
->   structure which will be used by two separate drivers later on.
-> - Moved some datatypes (audio_format, audio_info, vic_pxl_encoding_format,
->   video_info) from cdn-dp-core.c to cdn-dp-reg.h.
-> - Changed prefixes from cdn_dp to cdns_mhdp
->     cdn -> cdns to match the other Cadence's drivers
->     dp -> mhdp to distinguish it from a "just a DP" as the IP underneath
->       this registers map can be a HDMI (which is internally different,
->       but the interface for commands, events is pretty much the same).
-> - Modified cdn-dp-core.c to use the new driver structure and new function
->   names.
->
-> Signed-off-by: Damian Kos <dkos@cadence.com>
-
-Many changes, hard to review. Anyway:
-
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
+T24gVGh1LCBTZXAgMTMsIDIwMTggYXQgMTE6NTQ6NTBBTSArMDIwMCwgamFjb3BvIG1vbmRpIHdy
+b3RlOgo+IEhpIFNha2FyaSwKPiAKPiBPbiBUaHUsIFNlcCAxMywgMjAxOCBhdCAxMjoyOToxOUFN
+ICswMzAwLCBTYWthcmkgQWlsdXMgd3JvdGU6Cj4gPiBIZWxsbyBldmVyeW9uZSwKPiA+Cj4gPiBJ
+J3ZlIGxvbmcgdGhvdWdodCB0aGUgVjRMMiBmd25vZGUgZnJhbWV3b3JrIHJlcXVpcmVzIHNvbWUg
+d29yayAoaXQncyBidWdneQo+ID4gYW5kIGl0IGRvZXMgbm90IGFkZXF1YXRlbHkgc2VydmUgY29t
+bW9uIG5lZWRzKS4gVGhpcyBzZXQgc2hvdWxkIGFkZHJlc3MgaW4KPiA+IHBhcnRpY3VsYXIgdGhl
+c2UgbWF0dGVyczoKPiA+Cj4gPiAtIE1vc3QgZGV2aWNlcyBzdXBwb3J0IGEgcGFydGljdWxhciBt
+ZWRpYSBidXMgdHlwZSBidXQgdGhlIFY0TDIgZndub2RlCj4gPiAgIGZyYW1ld29yayB3YXMgbm90
+IGFibGUgdG8gdXNlIHN1Y2ggaW5mb3JtYXRpb24sIGJ1dCBpbnN0ZWFkIHRyaWVkIHRvCj4gPiAg
+IGd1ZXNzIHRoZSBidXMgdHlwZSB3aXRoIHZhcnlpbmcgbGV2ZWxzIG9mIHN1Y2Nlc3Mgd2hpbGUg
+ZHJpdmVycwo+ID4gICBnZW5lcmFsbHkgaWdub3JlZCB0aGUgcmVzdWx0cy4gVGhpcyBwYXRjaHNl
+dCBtYWtlcyB0aGF0IHBvc3NpYmxlIC0tLQo+ID4gICBzZXR0aW5nIGEgYnVzIHR5cGUgZW5hYmxl
+cyBwYXJzaW5nIGNvbmZpZ3VyYXRpb24gZm9yIG9ubHkgdGhhdCBidXMuCj4gPiAgIEZhaWxpbmcg
+dGhhdCBjaGVjayByZXN1bHRzIGluIHJldHVybmluZyAtRU5YSU8gdG8gYmUgcmV0dXJuZWQuCj4g
+Pgo+ID4gLSBTdXBwb3J0IHNwZWNpZnlpbmcgZGVmYXVsdCBjb25maWd1cmF0aW9uLiBJZiB0aGUg
+ZW5kcG9pbnQgaGFzIG5vCj4gPiAgIGNvbmZpZ3VyYXRpb24sIHRoZSBkZWZhdWx0cyBzZXQgYnkg
+dGhlIGRyaXZlciAoYXMgZG9jdW1lbnRlZCBpbiBEVAo+ID4gICBiaW5kaW5ncykgd2lsbCBwcmV2
+YWlsLiBBbnkgYXZhaWxhYmxlIGNvbmZpZ3VyYXRpb24gd2lsbCBzdGlsbCBiZSByZWFkCj4gPiAg
+IGZyb20gdGhlIGVuZHBvaW50IGFzIG9uZSBjb3VsZCBleHBlY3QuIEEgY29tbW9uIHVzZSBjYXNl
+IGZvciB0aGlzIGlzCj4gPiAgIGUuZy4gdGhlIG51bWJlciBvZiBDU0ktMiBsYW5lcy4gRmV3IGRl
+dmljZXMgc3VwcG9ydCBsYW5lIG1hcHBpbmcsIGFuZAo+ID4gICBkZWZhdWx0IDE6MSBtYXBwaW5n
+IGlzIHByb3ZpZGVkIGluIGFic2VuY2Ugb2YgYSB2YWxpZCBkZWZhdWx0IG9yCj4gPiAgIGNvbmZp
+Z3VyYXRpb24gcmVhZCBPRi4KPiA+Cj4gPiAtIERlYnVnZ2luZyBpbmZvcm1hdGlvbiBpcyBncmVh
+dGx5IGltcHJvdmVkLgo+ID4KPiA+IC0gUmVjb2duaXRpb24gb2YgdGhlIGRpZmZlcmVuY2VzIGJl
+dHdlZW4gQ1NJLTIgRC1QSFkgYW5kIEMtUEhZLiBBbGwKPiA+ICAgY3VycmVudGx5IHN1cHBvcnRl
+ZCBoYXJkd2FyZSAob3IgYXQgbGVhc3QgZHJpdmVycykgaXMgRC1QSFkgb25seSwgc28KPiA+ICAg
+dGhpcyBjaGFuZ2UgaXMgc3RpbGwgZWFzeS4KPiA+Cj4gPiBUaGUgc21pYXBwIGRyaXZlciBpcyBj
+b252ZXJ0ZWQgdG8gdXNlIHRoZSBuZXcgZnVuY3Rpb25hbGl0eS4gVGhpcyBwYXRjaHNldAo+ID4g
+ZG9lcyBub3QgYWRkcmVzcyByZW1haW5pbmcgaXNzdWVzIHN1Y2ggYXMgc3VwcG9ydGluZyBzZXR0
+aW5nIGRlZmF1bHRzIGZvcgo+ID4gZS5nLiBicmlkZ2UgZHJpdmVycyB3aXRoIG11bHRpcGxlIHBv
+cnRzLCBidXQgd2l0aCBTdGV2ZSBMb25nZXJiZWFtJ3MKPiA+IHBhdGNoc2V0IHdlJ3JlIG11Y2gg
+Y2xvc2VyIHRvIHRoYXQgZ29hbC4gSSd2ZSByZWJhc2VkIHRoaXMgc2V0IG9uIHRvcCBvZgo+ID4g
+U3RldmUncy4gQWxiZWl0IHRoZSB0d28gZGVhbCB3aXRoIHRoZSBzYW1lIGZpbGVzLCB0aGVyZSB3
+ZXJlIG9ubHkgYSBmZXcKPiA+IHRyaXZpYWwgY29uZmxpY3RzLgo+ID4KPiA+IE5vdGUgdGhhdCBJ
+J3ZlIG9ubHkgdGVzdGVkIHBhcnNpbmcgZW5kcG9pbnRzIGZvciB0aGUgQ1NJLTIgYnVzIChubwo+
+ID4gcGFyYWxsZWwgSUYgaGFyZHdhcmUpLiBKYWNvcG8gaGFzIHRlc3RlZCBhbiBlYXJsaWVyIHZl
+cnNpb24gb2YgdGhlIHNldAo+ID4gd2l0aCBhIGZldyBjaGFuZ2VzIHRvIHRoZSBwYXJhbGxlbCBi
+dXMgaGFuZGxpbmcgY29tcGFyZWQgdG8gdGhpcyBvbmUuCj4gCj4gSSd2ZSB0ZXN0ZWQgb24gcGFy
+YWxsZWwgYnVzIHdpdGggQ0VVIGFuZCBNVDlWMTExLgo+IAo+IFlvdSBjYW4gYWRkIG15Ogo+IFRl
+c3RlZC1ieTogSmFjb3BvIE1vbmRpIDxqYWNvcG8rcmVuZXNhc0BqbW9uZGkub3JnPgo+IHRvIHRo
+aXMgdmVyc2lvbiB0b28uCgpUaGFua3MhCgpJJ2xsIHB1dCB5b3VyIGFjayBvbiB0aGUgRFQgYmlu
+ZGluZyBkb2N1bWVudGF0aW9uIHBhdGNoIGFzIFRlc3RlZC1ieTogaXNuJ3QKcmVhbGx5IG1lYW5p
+bmdmdWwgaW4gdGhhdCBjYXNlLgoKLS0gClNha2FyaSBBaWx1cwplLW1haWw6IHNha2FyaS5haWx1
+c0Bpa2kuZmkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
