@@ -1,79 +1,127 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v1 2/5] dt-binding: rtc-pcf85063: add quartz load property
-Date: Thu, 13 Sep 2018 21:11:50 +0200
-Message-ID: <20180913191150.GH14988@piout.net>
-References: <20180822183555.GA24084@ravnborg.org>
- <20180907193508.24974-3-sam@ravnborg.org>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
+Date: Thu, 13 Sep 2018 14:11:49 -0500
+Message-ID: <64db5bad-d774-f5a5-3003-b361941355a2@linux.vnet.ibm.com>
+References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <364c2565-fdb0-dd31-5852-6358066810a5@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180907193508.24974-3-sam@ravnborg.org>
+In-Reply-To: <364c2565-fdb0-dd31-5852-6358066810a5@xs4all.nl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mchehab@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-You can remove 'rtc-' from the part name in the subject.
-
-On 07/09/2018 21:35:05+0200, Sam Ravnborg wrote:
-> From: Søren Andersen <san@skov.dk>
-> 
-> The NXP pcf85063 support two different quartz loads.
-> - 7 pF (default)
-> - 12.5 pF (minimum power consumption)
-> 
-> The pcf85063 needs to know the size of the external capacitor,
-> otherwise the RTC will have a bad precision (hours/week).
-> 
-> The power-on default is 7 pF
-> Add a property that tells if the external capacitor is 12.5 pF
-> 
-> Signed-off-by: Søren Andersen <san@skov.dk>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  .../devicetree/bindings/rtc/nxp,pcf85063.txt          | 19 +++++++++++++++++++
->  Documentation/devicetree/bindings/trivial-devices.txt |  1 -
->  2 files changed, 19 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-> new file mode 100644
-> index 000000000000..22ebb2ce52c1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-> @@ -0,0 +1,19 @@
-> +* NXP PCF85063 Real Time Clock
-> +
-> +NXP PCF85063 Real Time Clock
-> +
-> +Required properties:
-> +- compatible: Should contain "nxp,pcf85063".
-> +- reg: I2C address for chip.
-> +
-> +Optional property:
-> +- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
-> +  which differ from the default value of 7 pF
-> +
-> +Example:
-> +
-> +pcf85063: pcf85063@51 {
-> +	compatible = "nxp,pcf85063";
-> +	reg = <0x51>;
-> +	nxp,quartz_load_12.5pF;
-
-Same comment as the previous patch, a value in fF is more useful. It
-could also probably be made a generic rtc property.
 
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On 09/03/2018 06:57 AM, Hans Verkuil wrote:
+> Hi Eddie,
+>
+> Thank you for your work on this. Interesting to see support for this SoC :-)
+>
+> On 08/29/2018 11:09 PM, Eddie James wrote:
+>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>> can capture and compress video data from digital or analog sources. With
+>> the Aspeed chip acting as a service processor, the Video Engine can
+>> capture the host processor graphics output.
+>>
+>> This series adds a V4L2 driver for the VE, providing a read() interface
+>> only. The driver triggers the hardware to capture the host graphics output
+>> and compress it to JPEG format.
+>>
+>> Testing on an AST2500 determined that the videobuf/streaming/mmap interface
+>> was significantly slower than the simple read() interface, so I have not
+>> included the streaming part.
+> Do you know why? It should be equal or faster, not slower.
+
+Yes, it seems to be an issue with the timing of the video engine 
+interrupts compared with how a normal v4l2 application queues buffers. 
+With the simple read() application, the driver can swap between DMA 
+buffers freely and get a frame ahead. With the streaming buffers, I 
+found the driver ran through the queue quite quickly, but then, once 
+userspace queues again, we had to wait for the next frame, as I couldn't 
+get a frame ahead since no buffers were available during that time 
+period. This could possibly be solved with more buffers but this gets to 
+require a lot of memory, since each buffer is allocated for the full 
+frame size even though we only fill a fraction of it with JPEG data...
+
+>
+> I reviewed about half of the driver, but then I stopped since there were too
+> many things missing.
+>
+> First of all, you need to test your driver with v4l2-compliance (available here:
+> https://git.linuxtv.org/v4l-utils.git/). Always compile from the git repo since
+> the versions from distros tend to be too old.
+>
+> Just run 'v4l2-compliance -d /dev/videoX' and fix all issues. Then run
+> 'v4l2-compliance -s -d /dev/videoX' to test streaming.
+>
+> This utility checks if the driver follows the V4L2 API correctly, implements
+> all ioctls that it should and fills in all the fields that it should.
+>
+> Please add the output of 'v4l2-compliance -s' to future versions of this patch
+> series: I don't accept V4L2 drivers without a clean report of this utility.
+
+Sure thing. Thanks for the guidance.
+
+>
+> If you have any questions, then mail me or (usually quicker) ask on the #v4l
+> freenode irc channel (I'm in the CET timezone).
+>
+> One thing that needs more explanation: from what I could tell from the driver
+> the VIDIOC_G_FMT ioctl returns the detected format instead of the current
+> format. This is wrong. Instead you should implement the VIDIOC_*_DV_TIMINGS
+> ioctls and the V4L2_EVENT_SOURCE_CHANGE event.
+>
+> The normal sequence is that userspace queries the current timings with
+> VIDIOC_QUERY_DV_TIMINGS, if it finds valid timings, then it sets these
+> timings with _S_DV_TIMINGS. Now it can call G/S_FMT. If the timings
+> change, then the driver should detect that and send a V4L2_EVENT_SOURCE_CHANGE
+> event.
+
+OK I see. I ended up simplifying this part anyway since it's not 
+possible to change the video size from the driver. I don't think there 
+is a need for VIDIOC_QUERY_DV_TIMINGS now, but feel free to review.
+
+Thanks again,
+Eddie
+
+>
+> When the application receives this event it can take action, such as
+> increasing the size of the buffer for the jpeg data that it reads into.
+>
+> The reason for this sequence of events is that you can't just change the
+> format/resolution mid-stream without giving userspace the chance to
+> reconfigure.
+>
+> Regards,
+>
+> 	Hans
+>
+>> It's also possible to use an automatic mode for the VE such that
+>> re-triggering the HW every frame isn't necessary. However this wasn't
+>> reliable on the AST2400, and probably used more CPU anyway due to excessive
+>> interrupts. It was approximately 15% faster.
+>>
+>> The series also adds the necessary parent clock definitions to the Aspeed
+>> clock driver, with both a mux and clock divider.
+>>
+>> Eddie James (4):
+>>    clock: aspeed: Add VIDEO reset index definition
+>>    clock: aspeed: Setup video engine clocking
+>>    dt-bindings: media: Add Aspeed Video Engine binding documentation
+>>    media: platform: Add Aspeed Video Engine driver
+>>
+>>   .../devicetree/bindings/media/aspeed-video.txt     |   23 +
+>>   drivers/clk/clk-aspeed.c                           |   41 +-
+>>   drivers/media/platform/Kconfig                     |    8 +
+>>   drivers/media/platform/Makefile                    |    1 +
+>>   drivers/media/platform/aspeed-video.c              | 1307 ++++++++++++++++++++
+>>   include/dt-bindings/clock/aspeed-clock.h           |    1 +
+>>   6 files changed, 1379 insertions(+), 2 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+>>   create mode 100644 drivers/media/platform/aspeed-video.c
+>>
