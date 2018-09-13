@@ -1,21 +1,40 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5b8e8a5d.1c69fb81.220f3.462d@mx.google.com>
-Date: Tue, 04 Sep 2018 08:36:29 -0500
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/8] mfd: dt bindings: add BD71847 device-tree binding  documentation
-References: <cover.1535545377.git.matti.vaittinen@fi.rohmeurope.com> <09eceb20f4f05ac48c6767d5f3359743e5b98985.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <09eceb20f4f05ac48c6767d5f3359743e5b98985.1535545377.git.matti.vaittinen@fi.rohmeurope.com>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Return-Path: <SRS0=/zWI=L3=hxt-semitech.com=dongsheng.wang@kernel.org>
+From: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
+Subject: Re: [PATCH 1/2] dt-bindings: net: qcom: Add binding for shared mdio
+ bus
+Date: Thu, 13 Sep 2018 15:19:37 +0000
+Message-ID: <ac26ee89cb294ac6b656c47a45e52024@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <1536829493-10088-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <1536829493-10088-2-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <8b593839-2e81-e4d1-6574-5c4f66cf7b9c@kernel.org>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: Timur Tabi <timur@kernel.org>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 29 Aug 2018 15:37:55 +0300, Matti Vaittinen wrote:
-> Add ROHM BD71847 Power Management IC MFD binding information to
-> device-tree binding documents.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt       | 17 +++++++++--------
->  1 file changed, 9 insertions(+), 8 deletions(-)
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+On 9/13/2018 11:02 PM, Timur Tabi wrote:=0A=
+> On 9/13/18 4:04 AM, Wang Dongsheng wrote:=0A=
+>> This property copy from "ibm,emac.txt" to describe a shared MIDO bus.=0A=
+>> Since QDF2400 emac include MDIO, so If the motherboard has more than one=
+=0A=
+>> PHY connected to an MDIO bus, this property will point to the MAC device=
+=0A=
+>> that has the MDIO bus.=0A=
+>>=0A=
+>> Signed-off-by: Wang Dongsheng<dongsheng.wang@hxt-semitech.com>=0A=
+> The QDF2400 does not support device trees, so please don't talk about DT =
+=0A=
+> support in the context of the QDF2400.=0A=
+>=0A=
+Ok, remove QDF2400.=0A=
+=0A=
+s/QDF2400 emac/emac/=0A=
+=0A=
+=0A=
+Cheers,=0A=
+=0A=
+-Dongsheng=0A=
+=0A=
