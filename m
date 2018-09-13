@@ -1,241 +1,118 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
-Date: Thu, 13 Sep 2018 10:15:45 -0500
-Message-ID: <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com>
-References: <20180911170825.17789-1-dmurphy@ti.com>
- <20180911170825.17789-2-dmurphy@ti.com> <20180911200530.GA28290@amd>
- <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com> <20180912214938.GA30654@amd>
+From: Andre Kalb <Andre.Kalb@sma.de>
+Subject: AW: [PATCH v2] of: __of_update_property_sysfs only call
+ __of_sysfs_remove_bin_file if of_node_is_attached
+Date: Thu, 13 Sep 2018 15:21:27 +0000
+Message-ID: <DB7PR04MB52433D93A8536DC7F71E169AFC1A0@DB7PR04MB5243.eurprd04.prod.outlook.com>
+References: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
+ <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com>
+ <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
+ <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912214938.GA30654@amd>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
+Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Pavel
-
-On 09/12/2018 04:49 PM, Pavel Machek wrote:
-> Hi!
-> 
->> On 09/11/2018 03:05 PM, Pavel Machek wrote:
->>> On Tue 2018-09-11 12:08:20, Dan Murphy wrote:
->>>> Remove support for the LM3697 LED device
->>>> from the ti-lmu.  The LM3697 will be supported
->>>> via a stand alone LED driver.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>
->>> I'd really like to see better explanation here.
->>>
->>
->> I will update the commit message but....
->>
->> How do I politely explain that the original implementation was wrong for certain devices?
-> 
-> Implementation? Device tree is hardware description.
-
-Yes this hardware description is incorrect.  The hardware description is
-describing a MFD but this LED driver (and a couple others) only perform
-1 function and that is to drive a LED string.
-
-> 
->> How do I politely explain that this binding has information that
->>  does not exist?
-> 
-> I don't understand this sentence.
-
-That was explained later on the issues with the binding.
-
-> 
->> Isn't code and documentation supposed to be pushed in stages
->> together?
-> 
-> Device tree is _not_ documentation. And yes, it is normally pushed
-> together. But that did not happen here, and bindings are already in.
-> 
-
-Hmm..  Its not documentation but it is in the Documentation folder.
-And just because the bindings are in does not mean they cannot be changed.
-
-So someone hurried up and pushed the bindings that were not accurate and
-they were taken and now we are stuck with this implementation?
-
-That does not seem like progress.
-
-> Bindings are an ABI between bootloader and kernel. They should not be
-> changed lightly. 
-> 
-> Here I believe they should be fixed; not deleted.
-> 
-
-I am fixing them.  Removing devices that should not have been there to begin with.
-
-Also if they are not to be changed lightly then why is there so much churn in the
-staged patches.  Looks like the compatible is changing with this patch and appears that it
-was not documented appropriately.
-According to the above statement this patch should be rejected because it is changing the ABI.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/commit/?h=droid4-pending-v4.19&id=d774c7e447ac911e73a1b3c775e6d89f0422218c
-
->> Unfortunately Milo left TI before he had a chance to finish upstreaming.
-> 
-> Well -- I wanted to finish upstreaming. I still have those patches,
-> and they still look reasonably well. Better than 
-> 
-
-than?
-
->> Some issues with the current binding:
->> 1) The documentation referenced in the ti-lmu.txt does not exist but the binding was accepted.
->> [1] ../leds/backlight/ti-lmu-backlight.txt
->> [2] ../leds/leds-lm3633.txt
->> [3] ../regulator/lm363x-regulator.txt
->>
->> 2) ramp-up-msec and ramp-down-msec are not explained or defined in this current binding.
->> Looks to be defined in the staged code though.
->>
->> 3) The ramp-up-msec and ramp-down-msec are not the right node parameters
->> the code shows ti,ramp-down-ms and ti,ramp-up-ms.  Looking at the clean up of the binding
->> in the staged commits the binding still does not match the code.
->>
->> https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/commit/?h=droid4-pending-v4.19&id=d774c7e447ac911e73a1b3c775e6d89f0422218c
->>
-> 
-> Bindings are authoritative. Of course, they can be fixed if really
-> neccessary, but normally code should be adapted to the bindings, not
-> the other way around.
-
-They should only be authoritative when they are correct.
-
-> 
-> If slow ramping up/down is something that would be expected in other
-> chips, too, ti, prefix is not good idea.
-> 
-
-Well if this is something expected for other chips shouldn't the LED framework be
-updated as opposed to creating a stub layer to do this?
-
->> 4) The ramp rates ranges are incorrect for the LM3697 it should be from 0 -> 117400 ms
->>
->> 5) The children compatibles are not defined in this binding but appear to be removed in the staged code.
->>
->> 6) address-cells and size-cells are missing from the binding
-> 
-> Yep, ok, so these should be fixed. Still the bindings should be fixed,
-> not removed and started over.
-> 
-
-So once something is in the binding it can never be removed?
-
->> I am attempting to clean this up for all the dedicated LED drivers.
->> There is a lot of bloat with this driver to support a single LED driver that is a single function device.
->>
-> 
-> What about the multi function devices? They should have same binding.
-
-The MFD devices defined are not in contention here only the SFD.
-The only comment there is data section bloat that occurs in attempting to support
-only one device out of the supported devices.  But that can be done via #ifconfig
-
-> 
->> This ti-lmu driver may be a great thing for the Droid 4 but from a customers
->> stand point that just wants to use just 1 of the dedicated LED drivers this driver is
->> overly complex and possibly hard to add code for differentiation.
-> 
-> The ti-lmu driver sounds like a way to go. We really want single
-> driver, even if more complex, than 6 separate ones.
-
-Not really in agreement here.  The ti-lmu driver only makes sense for MFD devices where
-the device itself supports more then just one function.  Otherwise we could just lump every
-single LED device into this driver.
-
-Again not sure why we gloss over the fact that this driver with all of the device data is
-the correct way to go for every single device.  If a target product only has the LM3697 why does the MFD need
-to be used?  Why do we need to bring in all the support for all the additional devices?
-
-This may be great for Droid 4 but not for any other device.  Including IoT devices that need smaller kernel
-foot prints.
-
-All be it the analog side of these devices may be the same but the digital side for each chip is different.
-The register maps are not the same, the number of supported LED strings are not
-the same, there are features not supported by this driver and will be a pain to add.
-Adding features will be a complete night mare especially for the LM3632 which also support Torch and Flash.
-
-
-Here are where a single driver will start getting messy and support difficult
-LM3533 has ALS and an ADC for an ALS analog sensor
-LM3631 has no ALS functionality
-LM3632 has strobe/torch functionality and no ramp support
-LM3633 has lvled support coupled with the hvled support
-LM3695 does not even appear to be available publicly
-LM3697 is the only device that that this driver could be used for as is.
-
-Jacek has already agreed that having a dedicated LED driver for SFD devices is preferred method.
-
-> 
->>> We have existing binding, for lm3697 and similar devices. With this
->>> series, different binding is introduced, without documented reason.
->>>
->>
->> I can update the commit message to indicate that this device is not a MFD
->> device and only is a SFD that needs to be supported by a dedicated
->> driver.
-> 
-> Device bindings are operating systems independend. This is not an argument.
-> 
-
-I have no idea what this statement means.
-
->>> Now, maybe you are right and the hardware should be handled by
->>> drivers/leds, not drivers/mfd. But we should have solution for all the
->>> similar chips, and that still does not mean we have to modify the
->>> binding. (But maybe we want to move it to different
->>> directory). Bindings are supposed to describe hardware, not mirror
->>> structure of our drivers.
->>
->> But this is not clean to have this device in the MFD bindings directory
->> when the support is in the LEDs directory.
-> 
-> Perhaps location of the binding is wrong. Still not reason to drop it
-> and introduce new one.
-> 
-
-Location and implementation is wrong for certain devices.
-
->>>> index c885cf89b8ce..920f910be4e9 100644
->>>> --- a/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->>>> +++ b/Documentation/devicetree/bindings/mfd/ti-lmu.txt
->>>> @@ -9,7 +9,6 @@ TI LMU driver supports lighting devices below.
->>>>    LM3632       Backlight and regulator
->>>>    LM3633       Backlight, LED and fault monitor
->>>>    LM3695       Backlight
->>>> -  LM3697       Backlight and fault monitor
->>>>  
->>>>  Required properties:
->>>>    - compatible: Should be one of:
-> 
-> You see? Even if your "new" binding has no flaws, "flawed" binding
-> still remains in tree, and we still have problems for lm3632, 3633,
-> 3695. That's why it needs to be fixed, not replaced.
-
-I am working on those as well.  LM3632 is a MFD device and can be supported via
-the MFD framework.
-
-This work for the other LED drivers needs to be done before we bring in any other
-code.
-
-Dan
-
-> 
-> Best regards,
-> 									Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+SGkgUm9iLA0KDQpJIGhhdmUgdXNlZCBhbiBvdGhlciBoYXJkd2FyZSB0byBjaGVjayB0aGUgcGF0
+Y2guIEkgaG9wZSBpdCBkb2VzbuKAmXQgbWF0dGVyLiBJIGFkZGVkIGZldyBsaW5lcyBhdCB0aGUg
+dW50aXRlc3QuYy4gQWxsIGV4aXN0aW5nIHVuaXR0ZXN0IHVzZSBhbiBhdHRhY2hlZCBzeXNmcywg
+dGhlcmVmb3JlIHRoZSBidWcgaXNuJ3QgZGV0ZWN0YWJsZS4NCg0KQmVzdCByZWdhcmRzDQpBbmRy
+ZSBLYWxiDQoNCkZyb20gMWU4NmUzNTFlZmExYTdjZWEzMWQxNTdiYWZiMGFlNDBiODU2Y2RjYyBN
+b24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCkZyb206IEFuZHJlIEthbGIgPEFuZHJlLkthbGJAc21h
+LmRlPg0KRGF0ZTogVGh1LCAxMyBTZXAgMjAxOCAxNjo0Mjo0OCArMDIwMA0KU3ViamVjdDogW1BB
+VENIXSBBZGRlZCBuZXcgdW5pdHRlc3QNCg0KLS0tDQogZHJpdmVycy9vZi91bml0dGVzdC5jIHwg
+MTggKysrKysrKysrKysrKysrKysrDQogMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykN
+Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvb2YvdW5pdHRlc3QuYyBiL2RyaXZlcnMvb2YvdW5pdHRl
+c3QuYw0KaW5kZXggMmE1NDdjYTNkNDQzLi4xN2Y2Y2FjYjRmYWUgMTAwNjQ0DQotLS0gYS9kcml2
+ZXJzL29mL3VuaXR0ZXN0LmMNCisrKyBiL2RyaXZlcnMvb2YvdW5pdHRlc3QuYw0KQEAgLTkyMyw2
+ICs5MjMsMjQgQEAgc3RhdGljIGludCBfX2luaXQgdW5pdHRlc3RfZGF0YV9hZGQodm9pZCkNCiAg
+ICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsNCiAgICAgICAgfQ0KDQorICAgICAgIHsNCisg
+ICAgICAgICAgICAgICBzdHJ1Y3QgcHJvcGVydHkgKnByb3A7DQorDQorICAgICAgICAgICAgICAg
+cHJvcCA9IGt6YWxsb2Moc2l6ZW9mKCpwcm9wKSwgR0ZQX0tFUk5FTCk7DQorICAgICAgICAgICAg
+ICAgaWYgKCFwcm9wKSB7DQorICAgICAgICAgICAgICAgICAgICAgICB1bml0dGVzdCgwLCAia3ph
+bGxvYygpIGZhaWxlZFxuIik7DQorICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gLUVOT01F
+TTsNCisgICAgICAgICAgICAgICB9DQorDQorICAgICAgICAgICAgICAgbnAgPSBvZl9maW5kX25v
+ZGVfd2l0aF9wcm9wZXJ0eSh1bml0dGVzdF9kYXRhX25vZGUsICJwcm9wLXVwZGF0ZSIpOw0KKyAg
+ICAgICAgICAgICAgIHVuaXR0ZXN0KG5wLCAiZmluZCBwcm9wLXVwZGF0ZSIpOw0KKw0KKyAgICAg
+ICAgICAgICAgIHByb3AtPm5hbWUgPSAicHJvcC11cGRhdGUiOw0KKyAgICAgICAgICAgICAgIHBy
+b3AtPnZhbHVlID0gIm5ldy1wcm9wZXJ0eS1kYXRhIjsNCisgICAgICAgICAgICAgICBwcm9wLT5s
+ZW5ndGggPSBzdHJsZW4ocHJvcC0+dmFsdWUpICsgMTsNCisgICAgICAgICAgICAgICB1bml0dGVz
+dChvZl91cGRhdGVfcHJvcGVydHkobnAsIHByb3ApID09IDAsICJVcGRhdGUgYSBleGlzdGluZyBw
+cm9wZXJ0eSBmYWlsZWRcbiIpOw0KKyAgICAgICB9DQorDQogICAgICAgIGlmICghb2Zfcm9vdCkg
+ew0KICAgICAgICAgICAgICAgIG9mX3Jvb3QgPSB1bml0dGVzdF9kYXRhX25vZGU7DQogICAgICAg
+ICAgICAgICAgZm9yX2VhY2hfb2ZfYWxsbm9kZXMobnApDQotLQ0KMi4xNi40DQoNCg0KLS0tLS0t
+LS0tLS0tWyBjdXQgaGVyZSBdLS0tLS0tLS0tLS0tDQpXQVJOSU5HOiBDUFU6IDAgUElEOiAxIGF0
+IGZzL2tlcm5mcy9kaXIuYzoxNDgxIGtlcm5mc19yZW1vdmVfYnlfbmFtZV9ucysweDljLzB4YTQN
+Cmtlcm5mczogY2FuIG5vdCByZW1vdmUgJyhudWxsKScsIG5vIGRpcmVjdG9yeQ0KTW9kdWxlcyBs
+aW5rZWQgaW46DQpDUFU6IDAgUElEOiAxIENvbW06IHN3YXBwZXIgTm90IHRhaW50ZWQgNC4xOC43
+ICMzDQpIYXJkd2FyZSBuYW1lOiBGcmVlc2NhbGUgaS5NWDYgVWx0cmFsaXRlIChEZXZpY2UgVHJl
+ZSkNCls8YzAxMGYzMzg+XSAodW53aW5kX2JhY2t0cmFjZSkgZnJvbSBbPGMwMTBjZWZjPl0gKHNo
+b3dfc3RhY2srMHgxMC8weDE0KQ0KWzxjMDEwY2VmYz5dIChzaG93X3N0YWNrKSBmcm9tIFs8YzAx
+MjIwMDQ+XSAoX193YXJuKzB4ZTAvMHhmOCkNCls8YzAxMjIwMDQ+XSAoX193YXJuKSBmcm9tIFs8
+YzAxMjIwNjA+XSAod2Fybl9zbG93cGF0aF9mbXQrMHg0NC8weDY4KQ0KWzxjMDEyMjA2MD5dICh3
+YXJuX3Nsb3dwYXRoX2ZtdCkgZnJvbSBbPGMwMmM2NTQwPl0gKGtlcm5mc19yZW1vdmVfYnlfbmFt
+ZV9ucysweDljLzB4YTQpDQpbPGMwMmM2NTQwPl0gKGtlcm5mc19yZW1vdmVfYnlfbmFtZV9ucykg
+ZnJvbSBbPGMwNTVhNzA0Pl0gKF9fb2ZfdXBkYXRlX3Byb3BlcnR5X3N5c2ZzKzB4MzgvMHg1MCkN
+Cls8YzA1NWE3MDQ+XSAoX19vZl91cGRhdGVfcHJvcGVydHlfc3lzZnMpIGZyb20gWzxjMDU1N2I5
+ND5dIChvZl91cGRhdGVfcHJvcGVydHkrMHhjMC8weDEwNCkNCls8YzA1NTdiOTQ+XSAob2ZfdXBk
+YXRlX3Byb3BlcnR5KSBmcm9tIFs8YzA5NTIxYmM+XSAob2ZfdW5pdHRlc3QrMHgxYjgvMHgyOGQ0
+KQ0KWzxjMDk1MjFiYz5dIChvZl91bml0dGVzdCkgZnJvbSBbPGMwMTAyZDg4Pl0gKGRvX29uZV9p
+bml0Y2FsbCsweDQwLzB4MjE4KQ0KWzxjMDEwMmQ4OD5dIChkb19vbmVfaW5pdGNhbGwpIGZyb20g
+WzxjMDkwMTAxYz5dIChrZXJuZWxfaW5pdF9mcmVlYWJsZSsweDI0Yy8weDJlNCkNCls8YzA5MDEw
+MWM+XSAoa2VybmVsX2luaXRfZnJlZWFibGUpIGZyb20gWzxjMDZhMWY2Yz5dIChrZXJuZWxfaW5p
+dCsweDgvMHgxMTApDQpbPGMwNmExZjZjPl0gKGtlcm5lbF9pbml0KSBmcm9tIFs8YzAxMDEwZTg+
+XSAocmV0X2Zyb21fZm9yaysweDE0LzB4MmMpDQpFeGNlcHRpb24gc3RhY2soMHhjYzA5OWZiMCB0
+byAweGNjMDk5ZmY4KQ0KOWZhMDogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+MDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDAgMDAwMDAwMDANCjlmYzA6IDAwMDAwMDAwIDAwMDAw
+MDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAwIDAwMDAwMDAw
+DQo5ZmUwOiAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAwMCAwMDAwMDAxMyAwMDAw
+MDAwMA0KLS0tWyBlbmQgdHJhY2UgNDUyMmY2OWUwNzYwZTRkNSBdLS0tDQoNCg0KDQo+IC0tLS0t
+VXJzcHLDvG5nbGljaGUgTmFjaHJpY2h0LS0tLS0NCj4gVm9uOiBSb2IgSGVycmluZyBbbWFpbHRv
+OnJvYmgrZHRAa2VybmVsLm9yZ10NCj4gR2VzZW5kZXQ6IE1vbnRhZywgMTAuIFNlcHRlbWJlciAy
+MDE4IDE1OjQ3DQo+IEFuOiBBbmRyZSBLYWxiDQo+IENjOiBGcmFuayBSb3dhbmQ7IGRldmljZXRy
+ZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IEJldHJl
+ZmY6IFJlOiBbUEFUQ0ggdjJdIG9mOiBfX29mX3VwZGF0ZV9wcm9wZXJ0eV9zeXNmcyBvbmx5IGNh
+bGwNCj4gX19vZl9zeXNmc19yZW1vdmVfYmluX2ZpbGUgaWYgb2Zfbm9kZV9pc19hdHRhY2hlZA0K
+Pg0KPiBPbiBNb24sIFNlcCAxMCwgMjAxOCBhdCA0OjUxIEFNIEFuZHJlIEthbGIgPEFuZHJlLkth
+bGJAc21hLmRlPiB3cm90ZToNCj4gPg0KPiA+IEhpIEZyYW5rLA0KPiA+DQo+ID4gPiAtLS0tLVVy
+c3Byw7xuZ2xpY2hlIE5hY2hyaWNodC0tLS0tDQo+ID4gPiBWb246IEZyYW5rIFJvd2FuZCBbbWFp
+bHRvOmZyb3dhbmQubGlzdEBnbWFpbC5jb21dDQo+ID4gPiBHZXNlbmRldDogRnJlaXRhZywgNy4g
+U2VwdGVtYmVyIDIwMTggMjI6MDENCj4gPiA+IEFuOiBBbmRyZSBLYWxiOyByb2JoK2R0QGtlcm5l
+bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+ID4gbGludXgtIGtlcm5lbEB2
+Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IEJldHJlZmY6IFJlOiBbUEFUQ0ggdjJdIG9mOiBfX29mX3Vw
+ZGF0ZV9wcm9wZXJ0eV9zeXNmcyBvbmx5IGNhbGwNCj4gPiA+IF9fb2Zfc3lzZnNfcmVtb3ZlX2Jp
+bl9maWxlIGlmIG9mX25vZGVfaXNfYXR0YWNoZWQNCj4gPiA+DQo+ID4gPiBIaSBBbmRyZWQsDQo+
+ID4gPg0KPiA+ID4gT24gMDkvMDQvMTggMDg6NTEsIEFuZHJlIEthbGIgd3JvdGU6DQo+ID4gPiA+
+IFRvIHByZXZlbnQgd2FybmluZyAia2VybmZzOiBjYW4gbm90IHJlbW92ZSAnKG51bGwpJywgbm8g
+ZGlyZWN0b3J5Ig0KPiA+ID4gPiBpZiBhbiBvdmVybGF5DQo+ID4gPiBpc24ndCBhcHBsaWVkIHRv
+IHRoZSBhY3RpdmUgZGV2aWNldHJlZS4NCj4gPiA+ID4NCj4gPiA+ID4gVXNpbmcgb2ZfcmVtb3Zl
+X3Byb3BlcnR5IGFuZCB0aGVuIG9mX2FkZF9wcm9wZXJ0eSBkb2Vzbid0IHNob3cgdGhlDQo+ID4g
+PiB3YXJuaW5nLg0KPg0KPiBbLi4uXQ0KPg0KPiA+ID4gV2hhdCBpcyB0aGUgY2FsbGluZyBwYXRo
+IHRoYXQgcmVzdWx0cyBpbiB0aGUgd2FybmluZz8NCj4gPiA+DQo+ID4gPiAtRnJhbmsNCj4gPg0K
+PiA+IFRoZXJlIGlzIHRoZSBjYWxsc3RhY2sgb2YgdGhlIHdhcm5pbmcuDQo+ID4NCj4gPiBbICAg
+MTAuNzgyODMwXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCj4gPiBbICAg
+MTAuODMwMzU3XSBXQVJOSU5HOiBDUFU6IDAgUElEOiAxNzAgYXQgL2xpbnV4LTQueC9mcy9rZXJu
+ZnMvZGlyLmM6MTI3Ng0KPiBrZXJuZnNfcmVtb3ZlX2J5X25hbWVfbnMrMHgzMC8weDgwKCkNCj4g
+PiBbICAgMTAuOTI4OTk3XSBrZXJuZnM6IGNhbiBub3QgcmVtb3ZlICcobnVsbCknLCBubyBkaXJl
+Y3RvcnkNCj4gPiBbICAgMTAuOTkzMTA3XSBNb2R1bGVzIGxpbmtlZCBpbjogbW9kdWxlX2NhcGVt
+Z3IoKykNCj4gPiBbICAgMTEuMDQ1NzUwXSBDUFU6IDAgUElEOiAxNzAgQ29tbTogc3lzdGVtZC11
+ZGV2ZCBOb3QgdGFpbnRlZCA0LjQuMTQzLQ0KPiAwMDE1OC1nOGU1Y2E2NWVjN2VlLWRpcnR5ICMx
+MTQNCj4NCj4gMTU4IHBhdGNoZXMgb24gdG9wIG9mIGFuIGFsbW9zdCAzIHllYXIgb2xkIGtlcm5l
+bC4uLg0KPg0KPiA+IFsgICAxMi4wMTEzNzNdIFs8YmYwMDAwZTQ+XSAobW9kdWxlX2NhcGVtZ3Jf
+c2xvdF9zY2FuIFttb2R1bGVfY2FwZW1ncl0pDQo+IGZyb20gWzxiZjAwMDdiYz5dIChtb2R1bGVf
+Y2FwZW1ncl9wcm9iZSsweDNjLzB4NTggW21vZHVsZV9jYXBlbWdyXSkNCj4NCj4gQW5kIGEgZHJp
+dmVyIHRoYXQncyBub3QgdXBzdHJlYW0uDQo+DQo+IE5vdCBzYXlpbmcgdGhlIGZpeCBpc24ndCB2
+YWxpZCwgYnV0IHBsZWFzZSByZXByb2R1Y2Ugb24gcmVjZW50IG1haW5saW5lLiBBZGQgYQ0KPiB1
+bml0dGVzdCBpZiB5b3UgaGF2ZSB0by4NCj4NCj4gUm9iDQoNCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KDQpTTUEgU29sYXIgVGVjaG5vbG9neSBB
+Rw0KQXVmc2ljaHRzcmF0OiBEci4gRXJpayBFaHJlbnRyYXV0IChWb3JzaXR6ZW5kZXIpDQpWb3Jz
+dGFuZDogVWxyaWNoIEhhZGRpbmcsIERyLi1JbmcuIEp1ZXJnZW4gUmVpbmVydCwgUGllcnJlLVBh
+c2NhbCBVcmJvbg0KSGFuZGVsc3JlZ2lzdGVyOiBBbXRzZ2VyaWNodCBLYXNzZWwgSFJCIDM5NzIN
+ClNpdHogZGVyIEdlc2VsbHNjaGFmdDogMzQyNjYgTmllc3RldGFsDQpVU3QtSUQtTnIuIERFIDEx
+MyAwOCA1OSA1NA0KV0VFRS1SZWcuLU5yLiBERSA5NTg4MTE1MA0KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fDQo=
