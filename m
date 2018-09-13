@@ -1,166 +1,178 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v3 15/23] v4l: fwnode: Use default parallel flags
-Date: Thu, 13 Sep 2018 11:17:20 +0200
-Message-ID: <20180913091720.GR20333@w540>
-References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
- <20180912212942.19641-16-sakari.ailus@linux.intel.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH 1/2] of: base: Introduce of_alias_check_id() to check
+ alias IDs
+Date: Thu, 13 Sep 2018 11:30:48 +0200
+Message-ID: <f67030b9-0afa-15f1-6e9f-284b51724bff@monstr.eu>
+References: <0ee4683a7d3927c2ef20b1e106720e6154811cd7.1535980468.git.michal.simek@xilinx.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1934301206=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180912212942.19641-16-sakari.ailus@linux.intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="TT1AdXVD1OFBCCdRtQfJGpOSK7KsctXr7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0ee4683a7d3927c2ef20b1e106720e6154811cd7.1535980468.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--TT1AdXVD1OFBCCdRtQfJGpOSK7KsctXr7
+Content-Type: multipart/mixed; boundary="q9kHpJ06SzFgzaYECd2uaXV2cQKth14PE";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+ Frank Rowand <frowand.list@gmail.com>
+Message-ID: <f67030b9-0afa-15f1-6e9f-284b51724bff@monstr.eu>
+Subject: Re: [PATCH 1/2] of: base: Introduce of_alias_check_id() to check
+ alias IDs
+References: <0ee4683a7d3927c2ef20b1e106720e6154811cd7.1535980468.git.michal.simek@xilinx.com>
+In-Reply-To: <0ee4683a7d3927c2ef20b1e106720e6154811cd7.1535980468.git.michal.simek@xilinx.com>
 
---===============1934301206==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EmW68jKGQIhj8inv"
-Content-Disposition: inline
-
-
---EmW68jKGQIhj8inv
+--q9kHpJ06SzFgzaYECd2uaXV2cQKth14PE
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Hi Sakari,
+Hi Rob,
 
-On Thu, Sep 13, 2018 at 12:29:34AM +0300, Sakari Ailus wrote:
-> The caller may provide default flags for the endpoint. Change the
-> configuration based on what is available through the fwnode property API.
->
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Tested-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-  j
+On 3.9.2018 15:14, Michal Simek wrote:
+> The function travers the lookup table to check if the request alias
+> id is compatible with the device driver match structure.
+> This function will be used by serial drivers to check if requested alia=
+s
+> is allocated or free to use.
+>=20
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->  drivers/media/v4l2-core/v4l2-fwnode.c | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
->
-> diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-> index bdb0a355b66b..de4a43765ac2 100644
-> --- a/drivers/media/v4l2-core/v4l2-fwnode.c
-> +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-> @@ -183,31 +183,44 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
->  	unsigned int flags = 0;
->  	u32 v;
->
-> +	if (bus_type == V4L2_MBUS_PARALLEL || bus_type == V4L2_MBUS_BT656)
-> +		flags = bus->flags;
+>=20
+> Based on discussion with Rob
+> https://lkml.org/lkml/2018/4/27/397
+> nbits is passed to the function not to limit only to 32/64bit fields.
+>=20
+> ---
+>  drivers/of/base.c  | 48 ++++++++++++++++++++++++++++++++++++++++++++++=
+++
+>  include/linux/of.h |  3 +++
+>  2 files changed, 51 insertions(+)
+>=20
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 466e3c8582f0..236a85d69957 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -16,6 +16,7 @@
+> =20
+>  #define pr_fmt(fmt)	"OF: " fmt
+> =20
+> +#include <linux/bitmap.h>
+>  #include <linux/console.h>
+>  #include <linux/ctype.h>
+>  #include <linux/cpu.h>
+> @@ -1893,6 +1894,53 @@ int of_alias_get_id(struct device_node *np, cons=
+t char *stem)
+>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+> =20
+>  /**
+> + * of_alias_get_alias_list - Get alias list for the given device drive=
+r
+> + * @matches:	Array of OF device match structures to search in
+> + * @stem:	Alias stem of the given device_node
+> + * @bitmap:	Bitmap field pointer
+> + * @nbits:	Maximum number of alias ID which can be recorded it bitmap
+> + *
+> + * The function travels the lookup table to record alias ids for the g=
+iven
+> + * device match structures and alias stem.
+> + */
+> +void of_alias_get_alias_list(const struct of_device_id *matches,
+> +			     const char *stem, unsigned long *bitmap,
+> +			     unsigned int nbits)
+> +{
+> +	struct alias_prop *app;
 > +
->  	if (!fwnode_property_read_u32(fwnode, "hsync-active", &v)) {
-> +		flags &= ~(V4L2_MBUS_HSYNC_ACTIVE_HIGH |
-> +			   V4L2_MBUS_HSYNC_ACTIVE_LOW);
->  		flags |= v ? V4L2_MBUS_HSYNC_ACTIVE_HIGH :
->  			V4L2_MBUS_HSYNC_ACTIVE_LOW;
->  		pr_debug("hsync-active %s\n", v ? "high" : "low");
->  	}
->
->  	if (!fwnode_property_read_u32(fwnode, "vsync-active", &v)) {
-> +		flags &= ~(V4L2_MBUS_VSYNC_ACTIVE_HIGH |
-> +			   V4L2_MBUS_VSYNC_ACTIVE_LOW);
->  		flags |= v ? V4L2_MBUS_VSYNC_ACTIVE_HIGH :
->  			V4L2_MBUS_VSYNC_ACTIVE_LOW;
->  		pr_debug("vsync-active %s\n", v ? "high" : "low");
->  	}
->
->  	if (!fwnode_property_read_u32(fwnode, "field-even-active", &v)) {
-> +		flags &= ~(V4L2_MBUS_FIELD_EVEN_HIGH |
-> +			   V4L2_MBUS_FIELD_EVEN_LOW);
->  		flags |= v ? V4L2_MBUS_FIELD_EVEN_HIGH :
->  			V4L2_MBUS_FIELD_EVEN_LOW;
->  		pr_debug("field-even-active %s\n", v ? "high" : "low");
->  	}
->
->  	if (!fwnode_property_read_u32(fwnode, "pclk-sample", &v)) {
-> +		flags &= ~(V4L2_MBUS_PCLK_SAMPLE_RISING |
-> +			   V4L2_MBUS_PCLK_SAMPLE_FALLING);
->  		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
->  			V4L2_MBUS_PCLK_SAMPLE_FALLING;
->  		pr_debug("pclk-sample %s\n", v ? "high" : "low");
->  	}
->
->  	if (!fwnode_property_read_u32(fwnode, "data-active", &v)) {
-> +		flags &= ~(V4L2_MBUS_PCLK_SAMPLE_RISING |
-> +			   V4L2_MBUS_PCLK_SAMPLE_FALLING);
->  		flags |= v ? V4L2_MBUS_DATA_ACTIVE_HIGH :
->  			V4L2_MBUS_DATA_ACTIVE_LOW;
->  		pr_debug("data-active %s\n", v ? "high" : "low");
-> @@ -215,8 +228,10 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
->
->  	if (fwnode_property_present(fwnode, "slave-mode")) {
->  		pr_debug("slave mode\n");
-> +		flags &= ~V4L2_MBUS_MASTER;
->  		flags |= V4L2_MBUS_SLAVE;
->  	} else {
-> +		flags &= ~V4L2_MBUS_SLAVE;
->  		flags |= V4L2_MBUS_MASTER;
->  	}
->
-> @@ -231,12 +246,16 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
->  	}
->
->  	if (!fwnode_property_read_u32(fwnode, "sync-on-green-active", &v)) {
-> +		flags &= ~(V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH |
-> +			   V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW);
->  		flags |= v ? V4L2_MBUS_VIDEO_SOG_ACTIVE_HIGH :
->  			V4L2_MBUS_VIDEO_SOG_ACTIVE_LOW;
->  		pr_debug("sync-on-green-active %s\n", v ? "high" : "low");
->  	}
->
->  	if (!fwnode_property_read_u32(fwnode, "data-enable-active", &v)) {
-> +		flags &= ~(V4L2_MBUS_DATA_ENABLE_HIGH |
-> +			   V4L2_MBUS_DATA_ENABLE_LOW);
->  		flags |= v ? V4L2_MBUS_DATA_ENABLE_HIGH :
->  			V4L2_MBUS_DATA_ENABLE_LOW;
->  		pr_debug("data-enable-active %s\n", v ? "high" : "low");
-> --
-> 2.11.0
->
+> +	/* Zero bitmap field to make sure that all the time it is clean */
+> +	bitmap_zero(bitmap, nbits);
+> +
+> +	mutex_lock(&of_mutex);
+> +	pr_debug("%s: Looking for stem: %s\n", __func__, stem);
+> +	list_for_each_entry(app, &aliases_lookup, link) {
+> +		pr_debug("%s: stem: %s, id: %d\n",
+> +			 __func__, app->stem, app->id);
+> +
+> +		if (strcmp(app->stem, stem) !=3D 0) {
+> +			pr_debug("%s: stem comparison doesn't passed %s\n",
+> +				 __func__, app->stem);
+> +			continue;
+> +		}
+> +
+> +		if (app->id >=3D nbits) {
+> +			pr_debug("%s: ID %d greater then bitmap field %d\n",
+> +				__func__, app->id, nbits);
+> +			continue;
+> +		}
+> +
+> +		if (of_match_node(matches, app->np)) {
+> +			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
+> +			set_bit(app->id, bitmap);
+> +		}
+> +		/* Alias exist but it not compatible with matches */
+> +	}
+> +	mutex_unlock(&of_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(of_alias_get_alias_list);
+> +
+> +/**
+>   * of_alias_get_highest_id - Get highest alias id for the given stem
+>   * @stem:	Alias stem to be examined
+>   *
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 4d25e4f952d9..e474710e3930 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -387,6 +387,9 @@ extern int of_phandle_iterator_args(struct of_phand=
+le_iterator *it,
+>  extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
+>  extern int of_alias_get_id(struct device_node *np, const char *stem);
+>  extern int of_alias_get_highest_id(const char *stem);
+> +extern void of_alias_get_alias_list(const struct of_device_id *matches=
+,
+> +				    const char *stem, unsigned long *bitmap,
+> +				    unsigned int nbits);
+> =20
+>  extern int of_machine_is_compatible(const char *compat);
+> =20
+>=20
 
---EmW68jKGQIhj8inv
+Can you please take a look at this patch?
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP SoCs
+
+
+
+
+--q9kHpJ06SzFgzaYECd2uaXV2cQKth14PE--
+
+--TT1AdXVD1OFBCCdRtQfJGpOSK7KsctXr7
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJbmisgAAoJEHI0Bo8WoVY8+HEQAJcr9EJVT7gzYLBGjgtBGSxh
-Js0Y+fuW3kRMDFfQEVJY5s6JhAu8Qr7iQicpkBZKm+2KQ9dt5rYvdv3tmi8oajR6
-0l3y7SiBAYYk+rXu234PfbXc1PXcvqBkW+OPQSiVxrUfLy/VYJtLWYHhTPpfrVvg
-k4kw2s0X3PtjByAQhvlUxEx12Wt8XhrMW4SzrLIOIt5OJ07IgoZpCqe6UOXxr+DE
-rVz88jUD1aurM6LUPZGv8rTL6Ohe0onpeRFM3gUyIE4eohsH9nV44NdP4M6nt/jy
-NTL+KN3y973xyEDG9cy1AqLKgOh1gZL6BsSjJnrel6ezzgXBfb37kWv8uQhmuz1k
-7tHSuynpVrfJLR/jl60GHujKfRXk6VaOXwGomGdW6qxqYs7lgHjbC0yrA+ERqhOw
-w8//ZsinIaV6mSbun+Yw2oAgFcSaEviCXD+JgWWPqPqvtxWFYL3V9Y55UbnkQuc+
-Y4Nmjo0nDMoxMbkeiqNaI6YQwpcu0cuFDJBNDIIFbjrIju9PUIgrVIn6zsUBMhH3
-Kwx+XCChs1xreXBn1Jc0UWMNbecQ0Xe3V1gK5yAT+buHPp19KkSE6Ws8AZE7RRUh
-qHLmh/RaUrzZRgTGv2J4svQX/i98Ia6I6K6qxvGOF3azpgAJlrLqCilDTJo7Mel8
-oAVW6u5U6P18Zg7ts+ox
-=eJCE
+iEYEARECAAYFAluaLkgACgkQykllyylKDCHSqwCgkF/nachzgOYUWT3mGLLHxeX5
+FpkAn0xmdsUDwNbQJXhohhWlFhpzu3v0
+=z7p3
 -----END PGP SIGNATURE-----
 
---EmW68jKGQIhj8inv--
-
---===============1934301206==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1934301206==--
+--TT1AdXVD1OFBCCdRtQfJGpOSK7KsctXr7--
