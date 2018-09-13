@@ -1,32 +1,91 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 0/2] net: qcom/emac: add shared mdio bus support
-Date: Thu, 13 Sep 2018 14:24:17 +0200
-Message-ID: <20180913122417.GC11702@lunn.ch>
-References: <1536829493-10088-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3 5/5] drm/bridge: add preliminary driver for cadence
+ dpi/dp bridge
+Date: Thu, 13 Sep 2018 14:30:17 +0200
+Message-ID: <1794131.JE1BxD2NGT@phil>
+References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
+ <1535451894-2518-6-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536829493-10088-1-git-send-email-dongsheng.wang@hxt-semitech.com>
-Sender: netdev-owner@vger.kernel.org
-To: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
-Cc: timur@kernel.org, davem@davemloft.net, yu.zheng@hxt-semitech.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1535451894-2518-6-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Quentin Schulz <quentin.schulz@bootlin.com>, jartur@cadence.com, linux-rockchip@lists.infradead.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Rob Herring <robh+dt@kernel.org>, stelford@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, ltyrala@cadence.com, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, piotrs@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2018 at 05:04:51PM +0800, Wang Dongsheng wrote:
-> Share the mii_bus for others MAC device because QDF2400 emac
-> include MDIO, and the motherboard has more than one PHY connected
-> to an MDIO bus.
-> 
-> Tested: QDF2400 (ACPI), buildin/insmod/rmmod
-> 
-> Wang Dongsheng (2):
->   dt-bindings: net: qcom: Add binding for shared mdio bus
-
-Hi Wang
-
-Patch #1 did not seem to make it to netdev.
-
-I probably have some comments on the binding...
-
-  Andrew
+QW0gRGllbnN0YWcsIDI4LiBBdWd1c3QgMjAxOCwgMTI6MjQ6NDggQ0VTVCBzY2hyaWViIERhbWlh
+biBLb3M6Cj4gRnJvbTogUXVlbnRpbiBTY2h1bHogPHF1ZW50aW4uc2NodWx6QGJvb3RsaW4uY29t
+Pgo+IAo+IFRoaXMgcGF0Y2ggZmluYWxseSBhZGRzIHRoZSBwcmVsaW1pbmFyeSBkcml2ZXIgZm9y
+IENhZGVuY2UgTUhEUCBEUEkvRFAgYnJpZGdlLgo+IAo+IENoYW5nZXMgbWFkZSBpbiB0aGUgbG93
+IGxldmVsIGRyaXZlciAoY2RuLWRwLXJlZy4qKToKPiAtIG1vdmVkIGl0IHRvIGZyb20gZHJpdmVy
+cy9ncHUvZHJtL3JvY2tjaGlwIHRvCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NkbnMtbWhk
+cC1jb21tb24uKgo+IC0gZnVuY3Rpb25zIGZvciBzZW5kaW5nL3JlY2VpdmluZyBjb21tYW5kcyBh
+cmUgbm93IHB1YmxpYwo+IC0gYWRkZWQgZnVuY3Rpb25zIGZvciByZWFkaW5nIHJlZ2lzdGVycyBh
+bmQgbGluayB0cmFpbmluZwo+ICAgYWRqdXN0bWVudAo+IAo+IENoYW5nZXMgbWFkZSBpbiBSSydz
+IGRyaXZlciAoY2RuLWRwLWNvcmUuKik6Cj4gLSBNb3ZlZCBhdWRpb19pbmZvIGFuZCBhdWRpb19w
+ZGV2IGZpZWxkcyBmcm9tIGNkbl9kcF9kZXZpY2UgdG8KPiAgIGNkbnNfbWhkcF9kZXZpY2Ugc3Ry
+dWN0dXJlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IERhbWlhbiBLb3MgPGRrb3NAY2FkZW5jZS5jb20+
+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZyAgICAgICAgICAgICAgICB8
+ICAgIDkgKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL01ha2VmaWxlICAgICAgICAgICAgICAg
+fCAgICAzICsKPiAgLi4uL2NkbnMtbWhkcC1jb21tb24uY30gICAgICAgICAgICAgICAgICAgICAg
+IHwgIDEzNyArLQo+ICAuLi4vY2Rucy1taGRwLWNvbW1vbi5ofSAgICAgICAgICAgICAgICAgICAg
+ICAgfCAgIDIxICstCj4gIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1taGRwLmMgICAgICAg
+ICAgICB8IDEzMDggKysrKysrKysrKysrKysrKysKPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlw
+L0tjb25maWcgICAgICAgICAgICAgIHwgICAgMSArCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
+cC9NYWtlZmlsZSAgICAgICAgICAgICB8ICAgIDQgKy0KPiAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwL2Nkbi1kcC1jb3JlLmMgICAgICAgIHwgICAxNiArLQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvY2RuLWRwLWNvcmUuaCAgICAgICAgfCAgICA0ICstCj4gIDkgZmlsZXMgY2hhbmdlZCwg
+MTQ4NCBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKPiAgcmVuYW1lIGRyaXZlcnMvZ3B1
+L2RybS97cm9ja2NoaXAvY2RuLWRwLXJlZy5jID0+IGJyaWRnZS9jZG5zLW1oZHAtY29tbW9uLmN9
+ICg4NyUpCj4gIHJlbmFtZSBkcml2ZXJzL2dwdS9kcm0ve3JvY2tjaGlwL2Nkbi1kcC1yZWcuaCA9
+PiBicmlkZ2UvY2Rucy1taGRwLWNvbW1vbi5ofSAoOTUlKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAuYwo+IAo+IGRpZmYgLS1naXQgYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25m
+aWcKPiBpbmRleCA5ZWViOGVmMGIxNzQuLjkwYTQ4MTBhOGM5NiAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L0tjb25maWcKPiBAQCAtMzUsNiArMzUsMTUgQEAgY29uZmlnIERSTV9DRE5TX0RTSQo+ICAJICBT
+dXBwb3J0IENhZGVuY2UgRFBJIHRvIERTSSBicmlkZ2UuIFRoaXMgaXMgYW4gaW50ZXJuYWwKPiAg
+CSAgYnJpZGdlIGFuZCBpcyBtZWFudCB0byBiZSBkaXJlY3RseSBlbWJlZGRlZCBpbiBhIFNvQy4K
+PiAgCj4gK2NvbmZpZyBEUk1fQ0ROU19NSERQCj4gKwl0cmlzdGF0ZSAiQ2FkZW5jZSBEUEkvRFAg
+YnJpZGdlIgo+ICsJc2VsZWN0IERSTV9LTVNfSEVMUEVSCj4gKwlzZWxlY3QgRFJNX1BBTkVMX0JS
+SURHRQo+ICsJZGVwZW5kcyBvbiBPRgo+ICsJaGVscAo+ICsJICBTdXBwb3J0IENhZGVuY2UgRFBJ
+IHRvIERQIGJyaWRnZS4gVGhpcyBpcyBhbiBpbnRlcm5hbAo+ICsJICBicmlkZ2UgYW5kIGlzIG1l
+YW50IHRvIGJlIGRpcmVjdGx5IGVtYmVkZGVkIGluIGEgU29DLgo+ICsKClRoaXMgZW5kcyB1cCB3
+aXRoIGEgS2NvbmZpZyBlcnJvciBvbiBteSBrZXJuZWwsIHdpdGg6CgpzY3JpcHRzL2tjb25maWcv
+Y29uZiAgLS1vbGRjb25maWcgS2NvbmZpZwpkcml2ZXJzL2kyYy9LY29uZmlnOjc6ZXJyb3I6IHJl
+Y3Vyc2l2ZSBkZXBlbmRlbmN5IGRldGVjdGVkIQpkcml2ZXJzL2kyYy9LY29uZmlnOjc6ICBzeW1i
+b2wgSTJDIGlzIHNlbGVjdGVkIGJ5IEZCX0REQwpkcml2ZXJzL3ZpZGVvL2ZiZGV2L0tjb25maWc6
+NjM6IHN5bWJvbCBGQl9EREMgZGVwZW5kcyBvbiBGQgpkcml2ZXJzL3ZpZGVvL2ZiZGV2L0tjb25m
+aWc6NTogIHN5bWJvbCBGQiBpcyBzZWxlY3RlZCBieSBEUk1fS01TX0ZCX0hFTFBFUgpkcml2ZXJz
+L2dwdS9kcm0vS2NvbmZpZzo3NDogICAgIHN5bWJvbCBEUk1fS01TX0ZCX0hFTFBFUiBkZXBlbmRz
+IG9uIERSTV9LTVNfSEVMUEVSCmRyaXZlcnMvZ3B1L2RybS9LY29uZmlnOjY4OiAgICAgc3ltYm9s
+IERSTV9LTVNfSEVMUEVSIGlzIHNlbGVjdGVkIGJ5IERSTV9DRE5TX01IRFAKZHJpdmVycy9ncHUv
+ZHJtL2JyaWRnZS9LY29uZmlnOjM4OiAgICAgIHN5bWJvbCBEUk1fQ0ROU19NSERQIGlzIHNlbGVj
+dGVkIGJ5IFJPQ0tDSElQX0NETl9EUApkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZzoy
+OTogICAgc3ltYm9sIFJPQ0tDSElQX0NETl9EUCBkZXBlbmRzIG9uIEVYVENPTgpkcml2ZXJzL2V4
+dGNvbi9LY29uZmlnOjE6ICAgICAgIHN5bWJvbCBFWFRDT04gaXMgc2VsZWN0ZWQgYnkgQ0hBUkdF
+Ul9NQU5BR0VSCmRyaXZlcnMvcG93ZXIvc3VwcGx5L0tjb25maWc6NDY3OiAgICAgICBzeW1ib2wg
+Q0hBUkdFUl9NQU5BR0VSIGRlcGVuZHMgb24gUE9XRVJfU1VQUExZCmRyaXZlcnMvcG93ZXIvc3Vw
+cGx5L0tjb25maWc6MTogc3ltYm9sIFBPV0VSX1NVUFBMWSBpcyBzZWxlY3RlZCBieSBISURfQkFU
+VEVSWV9TVFJFTkdUSApkcml2ZXJzL2hpZC9LY29uZmlnOjI4OiBzeW1ib2wgSElEX0JBVFRFUllf
+U1RSRU5HVEggZGVwZW5kcyBvbiBISUQKZHJpdmVycy9oaWQvS2NvbmZpZzo3OiAgc3ltYm9sIEhJ
+RCBpcyBzZWxlY3RlZCBieSBJMkNfSElECmRyaXZlcnMvaGlkL2kyYy1oaWQvS2NvbmZpZzo0OiAg
+c3ltYm9sIEkyQ19ISUQgZGVwZW5kcyBvbiBJMkMKRm9yIGEgcmVzb2x1dGlvbiByZWZlciB0byBE
+b2N1bWVudGF0aW9uL2tidWlsZC9rY29uZmlnLWxhbmd1YWdlLnR4dApzdWJzZWN0aW9uICJLY29u
+ZmlnIHJlY3Vyc2l2ZSBkZXBlbmRlbmN5IGxpbWl0YXRpb25zIgoKClRoZSBjdWxwcml0IGJlaW5n
+IHRoZSBkZXBlbmRlbmN5IG9uIEVYVENPTiBpbiB0aGUgUm9ja2NoaXAgY2RuLWRwIGRyaXZlci4K
+TW92aW5nIHRvICJzZWxlY3QgRVhUQ09OIiBzZWVtcyB0byBmaXggdGhlIGlzc3VlLCBidXQgSSdt
+IG5vdCBzdXJlIHlldCBpZiB0aGF0CmlzIHRoZSBjb3JyZWN0IHNvbHV0aW9uLgoKCkhlaWtvCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
