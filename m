@@ -1,156 +1,145 @@
-Return-Path: <SRS0=6RZ7=L4=linux.intel.com=sakari.ailus@kernel.org>
-Date: Fri, 14 Sep 2018 16:25:38 +0300
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v2 4/7] [media] v4l2-subdev: fix v4l2_subdev_get_try_*
- dependency
-Message-ID: <20180914132538.5anptpaqt6cgkxow@paasikivi.fi.intel.com>
-References: <20180813092508.1334-1-m.felsch@pengutronix.de>
- <20180813092508.1334-5-m.felsch@pengutronix.de>
+Return-Path: <SRS0=s7Q8=L3=jmondi.org=jacopo@kernel.org>
+Date: Thu, 13 Sep 2018 16:28:19 +0200
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH 3/3] media: renesas-ceu: Use default mbus settings
+Message-ID: <20180913142819.GG11509@w540>
+References: <1536847191-17175-1-git-send-email-jacopo+renesas@jmondi.org>
+ <1536847191-17175-4-git-send-email-jacopo+renesas@jmondi.org>
+ <20180913142236.4g2eo3exn7rjwlpk@kekkonen.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3xoW37o/FfUZJwQG"
 Content-Disposition: inline
-In-Reply-To: <20180813092508.1334-5-m.felsch@pengutronix.de>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+In-Reply-To: <20180913142236.4g2eo3exn7rjwlpk@kekkonen.localdomain>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, slongerbeam@gmail.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Marco,
 
-On Mon, Aug 13, 2018 at 11:25:05AM +0200, Marco Felsch wrote:
-> These helpers make us of the media-controller entity which is only
-> available if the CONFIG_MEDIA_CONTROLLER is enabled.
-> 
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> ---
->  include/media/v4l2-subdev.h | 100 ++++++++++++++++++------------------
->  1 file changed, 50 insertions(+), 50 deletions(-)
-> 
-> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> index ce48f1fcf295..79c066934ad2 100644
-> --- a/include/media/v4l2-subdev.h
-> +++ b/include/media/v4l2-subdev.h
-> @@ -912,6 +912,56 @@ struct v4l2_subdev_fh {
->  #define to_v4l2_subdev_fh(fh)	\
->  	container_of(fh, struct v4l2_subdev_fh, vfh)
->  
-> +extern const struct v4l2_file_operations v4l2_subdev_fops;
-> +
-> +/**
-> + * v4l2_set_subdevdata - Sets V4L2 dev private device data
-> + *
-> + * @sd: pointer to &struct v4l2_subdev
-> + * @p: pointer to the private device data to be stored.
-> + */
-> +static inline void v4l2_set_subdevdata(struct v4l2_subdev *sd, void *p)
-> +{
-> +	sd->dev_priv = p;
-> +}
-> +
-> +/**
-> + * v4l2_get_subdevdata - Gets V4L2 dev private device data
-> + *
-> + * @sd: pointer to &struct v4l2_subdev
-> + *
-> + * Returns the pointer to the private device data to be stored.
-> + */
-> +static inline void *v4l2_get_subdevdata(const struct v4l2_subdev *sd)
-> +{
-> +	return sd->dev_priv;
-> +}
-> +
-> +/**
-> + * v4l2_set_subdev_hostdata - Sets V4L2 dev private host data
-> + *
-> + * @sd: pointer to &struct v4l2_subdev
-> + * @p: pointer to the private data to be stored.
-> + */
-> +static inline void v4l2_set_subdev_hostdata(struct v4l2_subdev *sd, void *p)
-> +{
-> +	sd->host_priv = p;
-> +}
-> +
-> +/**
-> + * v4l2_get_subdev_hostdata - Gets V4L2 dev private data
-> + *
-> + * @sd: pointer to &struct v4l2_subdev
-> + *
-> + * Returns the pointer to the private host data to be stored.
-> + */
-> +static inline void *v4l2_get_subdev_hostdata(const struct v4l2_subdev *sd)
-> +{
-> +	return sd->host_priv;
-> +}
+--3xoW37o/FfUZJwQG
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-Could you leave the functions dealing with host_priv where they are? I'd
-like to avoid expanding their use; rather reduce it. The field is
-problematic in some cases and generally not really needed either.
+Hi Sakari,
 
-> +
-> +#ifdef CONFIG_MEDIA_CONTROLLER
-> +
->  /**
->   * v4l2_subdev_get_try_format - ancillary routine to call
->   *	&struct v4l2_subdev_pad_config->try_fmt
-> @@ -978,56 +1028,6 @@ static inline struct v4l2_rect
->  #endif
->  }
->  
-> -extern const struct v4l2_file_operations v4l2_subdev_fops;
-> -
-> -/**
-> - * v4l2_set_subdevdata - Sets V4L2 dev private device data
-> - *
-> - * @sd: pointer to &struct v4l2_subdev
-> - * @p: pointer to the private device data to be stored.
-> - */
-> -static inline void v4l2_set_subdevdata(struct v4l2_subdev *sd, void *p)
-> -{
-> -	sd->dev_priv = p;
-> -}
-> -
-> -/**
-> - * v4l2_get_subdevdata - Gets V4L2 dev private device data
-> - *
-> - * @sd: pointer to &struct v4l2_subdev
-> - *
-> - * Returns the pointer to the private device data to be stored.
-> - */
-> -static inline void *v4l2_get_subdevdata(const struct v4l2_subdev *sd)
-> -{
-> -	return sd->dev_priv;
-> -}
-> -
-> -/**
-> - * v4l2_set_subdev_hostdata - Sets V4L2 dev private host data
-> - *
-> - * @sd: pointer to &struct v4l2_subdev
-> - * @p: pointer to the private data to be stored.
-> - */
-> -static inline void v4l2_set_subdev_hostdata(struct v4l2_subdev *sd, void *p)
-> -{
-> -	sd->host_priv = p;
-> -}
-> -
-> -/**
-> - * v4l2_get_subdev_hostdata - Gets V4L2 dev private data
-> - *
-> - * @sd: pointer to &struct v4l2_subdev
-> - *
-> - * Returns the pointer to the private host data to be stored.
-> - */
-> -static inline void *v4l2_get_subdev_hostdata(const struct v4l2_subdev *sd)
-> -{
-> -	return sd->host_priv;
-> -}
-> -
-> -#ifdef CONFIG_MEDIA_CONTROLLER
-> -
->  /**
->   * v4l2_subdev_link_validate_default - validates a media link
->   *
+On Thu, Sep 13, 2018 at 05:22:36PM +0300, Sakari Ailus wrote:
+> Hi Jacopo,
+>
+> On Thu, Sep 13, 2018 at 03:59:51PM +0200, Jacopo Mondi wrote:
+> > As the v4l2-fwnode now allows drivers to set defaults, and eventually
+> > override them by specifying properties in DTS, use defaults for the CEU
+> > driver.
+> >
+> > Also remove endpoint properties from the gr-peach-audiocamerashield as
+> > they match the defaults now specified in the driver code.
+> >
+> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > ---
+> >  arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi |  4 ----
+> >  drivers/media/platform/renesas-ceu.c              | 20 +++++++++++---------
+> >  2 files changed, 11 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi b/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi
+> > index e31a9e3..8d77579 100644
+> > --- a/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi
+> > +++ b/arch/arm/boot/dts/gr-peach-audiocamerashield.dtsi
+> > @@ -69,10 +69,6 @@
+> >
+> >  	port {
+> >  		ceu_in: endpoint {
+> > -			hsync-active = <1>;
+> > -			vsync-active = <1>;
+> > -			bus-width = <8>;
+> > -			pclk-sample = <1>;
+>
+> Do I understand correctly that pclk-sample was never relevant for the
+> hardware, and is removed because of that? You could mention that in the
+> commit message. That's perhaps a minor detail.
 
--- 
-Kind regards,
+Correct, it's not relevant for the CEU, as it cannot be configured.
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+>
+> The set seems good to me.
+
+I can add that to commit message and re-send, or if it's easier for
+you, you can change the last paragraph when applying to:
+
+Also remove endpoint properties from the gr-peach-audiocamerashield as
+they match the defaults now specified in the driver code
+(h/vsync-active and bus-width) or are not relevant to the interface
+as they cannot be configured (pclk-sample).
+
+Thanks
+  j
+
+>
+> >  			remote-endpoint = <&mt9v111_out>;
+> >  		};
+> >  	};
+> > diff --git a/drivers/media/platform/renesas-ceu.c b/drivers/media/platform/renesas-ceu.c
+> > index 035f1d3..150196f 100644
+> > --- a/drivers/media/platform/renesas-ceu.c
+> > +++ b/drivers/media/platform/renesas-ceu.c
+> > @@ -1551,7 +1551,16 @@ static int ceu_parse_dt(struct ceu_device *ceudev)
+> >  		return ret;
+> >
+> >  	for (i = 0; i < num_ep; i++) {
+> > -		struct v4l2_fwnode_endpoint fw_ep = { .bus_type = 0 };
+> > +		struct v4l2_fwnode_endpoint fw_ep = {
+> > +			.bus_type = V4L2_MBUS_PARALLEL,
+> > +			.bus = {
+> > +				.parallel = {
+> > +					.flags = V4L2_MBUS_HSYNC_ACTIVE_HIGH |
+> > +						 V4L2_MBUS_VSYNC_ACTIVE_HIGH,
+> > +					.bus_width = 8,
+> > +				},
+> > +			},
+> > +		};
+> >
+> >  		ep = of_graph_get_endpoint_by_regs(of, 0, i);
+> >  		if (!ep) {
+> > @@ -1564,14 +1573,7 @@ static int ceu_parse_dt(struct ceu_device *ceudev)
+> >  		ret = v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep), &fw_ep);
+> >  		if (ret) {
+> >  			dev_err(ceudev->dev,
+> > -				"Unable to parse endpoint #%u.\n", i);
+> > -			goto error_cleanup;
+> > -		}
+> > -
+> > -		if (fw_ep.bus_type != V4L2_MBUS_PARALLEL) {
+> > -			dev_err(ceudev->dev,
+> > -				"Only parallel input supported.\n");
+> > -			ret = -EINVAL;
+> > +				"Unable to parse endpoint #%u: %d.\n", i, ret);
+> >  			goto error_cleanup;
+> >  		}
+> >
+>
+> --
+> Kind regards,
+>
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+
+--3xoW37o/FfUZJwQG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbmnQDAAoJEHI0Bo8WoVY8QRUQAJtkajCIs+YaM1jpwb5RrUvg
+RjJaI7CDcPfpgcIhlHPgOqiCxRKGZ9fa3c3jRBqZSdCcErRBW3lcf1oA592e+7te
+cnErf9yrUXgiKwMB4rCg2CUZQR/pkKRaAmpSDUVw/uM0RNOU2ft/YO0SFMeGCi7L
+5heipnNz8eqxqiNUY+LJ1xqlslh9obgHMInehlO1lsPGb5xm2qdIgtlab6MYcdy8
+LSQVw4xdustc10rwx9WD/NvjRizh1d6s7GCVUEEcYCvmBnMty+IbXMhgJK2VDub/
+06OWPFt6rKpaXdfAFajvQP7OIEz596g0Itx195OOi28BhY96I1r8d65pl/0c1F/4
+JOZOoLiqcsOjmn90kF6oj110BjUARRkSF5sPYL+9cIGD7wPFxUohyoWZ8pKMcsjI
+0oFw/7MAf3wYM2ms2Y3V4EtyNrDrowfAQA+186A1FBVM2EP4zQR/8a40rUhF68OE
+fCp5Td4WtdhpdZk5o01KQcoAno0p1wNgGf9PUXVQqdiFmZA7aPdrMAFzKi6R0KBs
+79Uzgrs5suGHZUPS/M2ZWX0+O1y3ZVWjbO1L9UrwwcVID+lnyTqTYalbcl07GQt/
+mFX9DRZYVLY1Pk0XNZA2lNOBPWusJyb0meMqz7AJA4M19KJNInv35s4Qu/h4QpuK
+f92q7ckhxVVXluuqzypr
+=bYA3
+-----END PGP SIGNATURE-----
+
+--3xoW37o/FfUZJwQG--
