@@ -1,75 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v1 5/5] rtc: pcf85063: external capacitor configuration
-Date: Thu, 13 Sep 2018 21:29:24 +0200
-Message-ID: <20180913192924.GK14988@piout.net>
-References: <20180822183555.GA24084@ravnborg.org>
- <20180907193508.24974-6-sam@ravnborg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: [PATCH v2 1/2] dt-bindings: media: Add Aspeed Video Engine binding documentation
+Date: Thu, 13 Sep 2018 14:29:23 -0500
+Message-ID: <1536866964-71593-2-git-send-email-eajames@linux.vnet.ibm.com>
+References: <1536866964-71593-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180907193508.24974-6-sam@ravnborg.org>
+In-Reply-To: <1536866964-71593-1-git-send-email-eajames@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, Eddie James <eajames@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/09/2018 21:35:08+0200, Sam Ravnborg wrote:
-> From: Søren Andersen <san@skov.dk>
-> 
-> Add support for specifying the quartz load in the DT node.
-> The pcf85063 may use either a 7 pF or an 12.5 pF xtal.
-> If the rtc has the wrong configuration the time will
-> drift several hours/week.
-> 
-> If nothing is specified in DT then the factory default of 7 pF is used.
-> 
-> Signed-off-by: Søren Andersen <san@skov.dk>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/rtc/rtc-pcf85063.c | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-> index 283c2335b01b..38163446664f 100644
-> --- a/drivers/rtc/rtc-pcf85063.c
-> +++ b/drivers/rtc/rtc-pcf85063.c
-> @@ -27,6 +27,7 @@
->  */
->  
->  #define PCF85063_REG_CTRL1		0x00 /* status */
-> +#define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
->  #define PCF85063_REG_CTRL1_STOP		BIT(5)
->  #define PCF85063_REG_CTRL2		0x01
->  
-> @@ -180,6 +181,31 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
->  	.set_time	= pcf85063_rtc_set_time
->  };
->  
-> +static int pcf85063_select_capacitance(struct i2c_client *client)
-> +{
-> +	int rc;
-> +	u8 reg;
-> +
-> +	rc = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
-> +	if (rc < 0) {
-> +		dev_err(&client->dev, "Failing to read Control1 reg\n");
-> +		return -EIO;
-> +	}
-> +
-> +	if (device_property_present(&client->dev, "nxp,quartz_load_12.5pf"))
-> +		reg = rc |= PCF85063_REG_CTRL1_CAP_SEL;
-> +	else
-> +		reg = rc &= ~PCF85063_REG_CTRL1_CAP_SEL;
+Document the bindings.
 
-That one is more straight forward, set it to the value from DT or leave
-it alone.
+Signed-off-by: Eddie James <eajames@linux.vnet.ibm.com>
+---
+ .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
 
-
+diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+new file mode 100644
+index 0000000..f1af528
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
+@@ -0,0 +1,26 @@
++* Device tree bindings for Aspeed Video Engine
++
++The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs can
++capture and compress video data from digital or analog sources.
++
++Required properties:
++ - compatible:		"aspeed,ast2400-video-engine" or
++			"aspeed,ast2500-video-engine"
++ - reg:			contains the offset and length of the VE memory region
++ - clocks:		clock specifiers for the syscon clocks associated with
++			the VE (ordering must match the clock-names property)
++ - clock-names:		"vclk" and "eclk"
++ - resets:		reset specifier for the syscon reset associaated with
++			the VE
++ - interrupts:		the interrupt associated with the VE on this platform
++
++Example:
++
++video-engine@1e700000 {
++    compatible = "aspeed,ast2500-video-engine";
++    reg = <0x1e700000 0x20000>;
++    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
++    clock-names = "vclk", "eclk";
++    resets = <&syscon ASPEED_RESET_VIDEO>;
++    interrupts = <7>;
++};
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+1.8.3.1
