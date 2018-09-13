@@ -1,127 +1,147 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
-Date: Thu, 13 Sep 2018 14:11:49 -0500
-Message-ID: <64db5bad-d774-f5a5-3003-b361941355a2@linux.vnet.ibm.com>
-References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
- <364c2565-fdb0-dd31-5852-6358066810a5@xs4all.nl>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v1 3/5] dts: add nxp,quartz_load_12.5pf to all pcf8523
+ nodes
+Date: Thu, 13 Sep 2018 21:14:50 +0200
+Message-ID: <20180913191450.GI14988@piout.net>
+References: <20180822183555.GA24084@ravnborg.org>
+ <20180907193508.24974-4-sam@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <364c2565-fdb0-dd31-5852-6358066810a5@xs4all.nl>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180907193508.24974-4-sam@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, sboyd@kernel.org, mturquette@baylibre.com, robh+dt@kernel.org, mchehab@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
+On 07/09/2018 21:35:06+0200, Sam Ravnborg wrote:
+> From: Søren Andersen <san@skov.dk>
+> 
+> Add "nxp,quartz_load_12.5pf" to all pcf8523 nodes.
+> 
+> The device tree binding for the pcf8523 now includes
+> a property "nxp,quartz_load_12.5pf" to specify
+> that the connected x-tal has an internal capacitance
+> of 12.5 pF.
+> Add this to all pcf8523 nodes, because this was implicit before,
+> at least in the Linux kernel where the driver was hardcoded
+> to set the rtc to use 12.5 pF.
+> 
 
+Well, this patch is not needed as we should not break the DT ABI. See
+comment on the next patch...
 
-On 09/03/2018 06:57 AM, Hans Verkuil wrote:
-> Hi Eddie,
->
-> Thank you for your work on this. Interesting to see support for this SoC :-)
->
-> On 08/29/2018 11:09 PM, Eddie James wrote:
->> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
->> can capture and compress video data from digital or analog sources. With
->> the Aspeed chip acting as a service processor, the Video Engine can
->> capture the host processor graphics output.
->>
->> This series adds a V4L2 driver for the VE, providing a read() interface
->> only. The driver triggers the hardware to capture the host graphics output
->> and compress it to JPEG format.
->>
->> Testing on an AST2500 determined that the videobuf/streaming/mmap interface
->> was significantly slower than the simple read() interface, so I have not
->> included the streaming part.
-> Do you know why? It should be equal or faster, not slower.
+> Signed-off-by: Søren Andersen <san@skov.dk>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <s.hauer@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> ---
+>  arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts | 1 +
+>  arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts   | 1 +
+>  arch/arm/boot/dts/imx6q-h100.dts             | 1 +
+>  arch/arm/boot/dts/imx6q-novena.dts           | 1 +
+>  arch/arm/boot/dts/imx6qdl-cubox-i.dtsi       | 1 +
+>  arch/arm/boot/dts/imx6qdl-hummingboard.dtsi  | 1 +
+>  arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 1 +
+>  7 files changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+> index d598b6391362..d1a0e3521e2b 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-lanyang.dts
+> @@ -200,6 +200,7 @@
+>  	rtc@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  
+>  	tmp75@48 {
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> index 2c5aa90a546d..b5088414e610 100644
+> --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
+> @@ -201,6 +201,7 @@
+>  	rtc@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  
+>  	ucd90160@64 {
+> diff --git a/arch/arm/boot/dts/imx6q-h100.dts b/arch/arm/boot/dts/imx6q-h100.dts
+> index 714e09e04dcb..3b6116069b11 100644
+> --- a/arch/arm/boot/dts/imx6q-h100.dts
+> +++ b/arch/arm/boot/dts/imx6q-h100.dts
+> @@ -173,6 +173,7 @@
+>  	rtc: pcf8523@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  
+>  	sgtl5000: sgtl5000@a {
+> diff --git a/arch/arm/boot/dts/imx6q-novena.dts b/arch/arm/boot/dts/imx6q-novena.dts
+> index fcd824dc485b..6a2eaaa6e220 100644
+> --- a/arch/arm/boot/dts/imx6q-novena.dts
+> +++ b/arch/arm/boot/dts/imx6q-novena.dts
+> @@ -257,6 +257,7 @@
+>  	rtc: pcf8523@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  
+>  	sbs_battery: bq20z75@b {
+> diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> index 9332a31e6c8b..e0f601bce3d3 100644
+> --- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+> @@ -143,6 +143,7 @@
+>  	rtc@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> index 0e64016e765f..7848b818078e 100644
+> --- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+> @@ -189,6 +189,7 @@
+>  	rtc@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  
+>  	/* Pro baseboard model */
+> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+> index c413f9c3540f..7bc264234085 100644
+> --- a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+> @@ -222,6 +222,7 @@
+>  	pcf8523: rtc@68 {
+>  		compatible = "nxp,pcf8523";
+>  		reg = <0x68>;
+> +		nxp,quartz_load_12.5pf;
+>  	};
+>  
+>  	sgtl5000: codec@a {
+> -- 
+> 2.12.0
+> 
 
-Yes, it seems to be an issue with the timing of the video engine 
-interrupts compared with how a normal v4l2 application queues buffers. 
-With the simple read() application, the driver can swap between DMA 
-buffers freely and get a frame ahead. With the streaming buffers, I 
-found the driver ran through the queue quite quickly, but then, once 
-userspace queues again, we had to wait for the next frame, as I couldn't 
-get a frame ahead since no buffers were available during that time 
-period. This could possibly be solved with more buffers but this gets to 
-require a lot of memory, since each buffer is allocated for the full 
-frame size even though we only fill a fraction of it with JPEG data...
-
->
-> I reviewed about half of the driver, but then I stopped since there were too
-> many things missing.
->
-> First of all, you need to test your driver with v4l2-compliance (available here:
-> https://git.linuxtv.org/v4l-utils.git/). Always compile from the git repo since
-> the versions from distros tend to be too old.
->
-> Just run 'v4l2-compliance -d /dev/videoX' and fix all issues. Then run
-> 'v4l2-compliance -s -d /dev/videoX' to test streaming.
->
-> This utility checks if the driver follows the V4L2 API correctly, implements
-> all ioctls that it should and fills in all the fields that it should.
->
-> Please add the output of 'v4l2-compliance -s' to future versions of this patch
-> series: I don't accept V4L2 drivers without a clean report of this utility.
-
-Sure thing. Thanks for the guidance.
-
->
-> If you have any questions, then mail me or (usually quicker) ask on the #v4l
-> freenode irc channel (I'm in the CET timezone).
->
-> One thing that needs more explanation: from what I could tell from the driver
-> the VIDIOC_G_FMT ioctl returns the detected format instead of the current
-> format. This is wrong. Instead you should implement the VIDIOC_*_DV_TIMINGS
-> ioctls and the V4L2_EVENT_SOURCE_CHANGE event.
->
-> The normal sequence is that userspace queries the current timings with
-> VIDIOC_QUERY_DV_TIMINGS, if it finds valid timings, then it sets these
-> timings with _S_DV_TIMINGS. Now it can call G/S_FMT. If the timings
-> change, then the driver should detect that and send a V4L2_EVENT_SOURCE_CHANGE
-> event.
-
-OK I see. I ended up simplifying this part anyway since it's not 
-possible to change the video size from the driver. I don't think there 
-is a need for VIDIOC_QUERY_DV_TIMINGS now, but feel free to review.
-
-Thanks again,
-Eddie
-
->
-> When the application receives this event it can take action, such as
-> increasing the size of the buffer for the jpeg data that it reads into.
->
-> The reason for this sequence of events is that you can't just change the
-> format/resolution mid-stream without giving userspace the chance to
-> reconfigure.
->
-> Regards,
->
-> 	Hans
->
->> It's also possible to use an automatic mode for the VE such that
->> re-triggering the HW every frame isn't necessary. However this wasn't
->> reliable on the AST2400, and probably used more CPU anyway due to excessive
->> interrupts. It was approximately 15% faster.
->>
->> The series also adds the necessary parent clock definitions to the Aspeed
->> clock driver, with both a mux and clock divider.
->>
->> Eddie James (4):
->>    clock: aspeed: Add VIDEO reset index definition
->>    clock: aspeed: Setup video engine clocking
->>    dt-bindings: media: Add Aspeed Video Engine binding documentation
->>    media: platform: Add Aspeed Video Engine driver
->>
->>   .../devicetree/bindings/media/aspeed-video.txt     |   23 +
->>   drivers/clk/clk-aspeed.c                           |   41 +-
->>   drivers/media/platform/Kconfig                     |    8 +
->>   drivers/media/platform/Makefile                    |    1 +
->>   drivers/media/platform/aspeed-video.c              | 1307 ++++++++++++++++++++
->>   include/dt-bindings/clock/aspeed-clock.h           |    1 +
->>   6 files changed, 1379 insertions(+), 2 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
->>   create mode 100644 drivers/media/platform/aspeed-video.c
->>
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
