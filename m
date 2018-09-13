@@ -1,47 +1,45 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v3 16/23] v4l: fwnode: Initialise the V4L2 fwnode
- endpoints to zero
-Date: Thu, 13 Sep 2018 12:55:33 +0300
-Message-ID: <20180913095533.nu6yjf6swga7fa6x@paasikivi.fi.intel.com>
-References: <20180912212942.19641-1-sakari.ailus@linux.intel.com>
- <20180912212942.19641-17-sakari.ailus@linux.intel.com>
- <20180913094614.GS20333@w540>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v3 1/5] drm/rockchip: prepare common code for cdns and
+ rk dpi/dp driver
+Date: Thu, 13 Sep 2018 12:00:57 +0200
+Message-ID: <20180913100100eucas1p23e7e33035b6cba51d6219a58b34eea92~T7VgDpN8L3204732047eucas1p2_@eucas1p2.samsung.com>
+References: <1535451894-2518-1-git-send-email-dkos@cadence.com>
+        <CGME20180828102612epcas2p376fa6f21ce57f4753a8d0f80f5359842@epcas2p3.samsung.com>
+        <1535451894-2518-2-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180913094614.GS20333@w540>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se, linux-media@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1535451894-2518-2-git-send-email-dkos@cadence.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Damian Kos <dkos@cadence.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>, Quentin Schulz <quentin.schulz@bootlin.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Cc: pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com, jartur@cadence.com, piotrs@cadence.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLAoKT24gVGh1LCBTZXAgMTMsIDIwMTggYXQgMTE6NDY6MTRBTSArMDIwMCwgamFj
-b3BvIG1vbmRpIHdyb3RlOgo+IEhpIFNha2FyaSwKPiAKPiBPbiBUaHUsIFNlcCAxMywgMjAxOCBh
-dCAxMjoyOTozNUFNICswMzAwLCBTYWthcmkgQWlsdXMgd3JvdGU6Cj4gPiBJbml0aWFsaXNlIHRo
-ZSBWNEwyIGZ3bm9kZSBlbmRwb2ludHMgdG8gemVybyBpbiBhbGwgZHJpdmVycyB1c2luZwo+ID4g
-djRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2UoKS4gVGhpcyBwcmVwYXJlcyBmb3Igc2V0dGluZyBk
-ZWZhdWx0IGVuZHBvaW50Cj4gPiBmbGFncyBhcyB3ZWxsIGFzIHRoZSBidXMgdHlwZS4gU2V0dGlu
-ZyBidXMgdHlwZSB0byB6ZXJvIHdpbGwgY29udGludWUgdG8KPiA+IGd1ZXNzIHRoZSBidXMgYW1v
-bmcgdGhlIGd1ZXNzYWJsZSBzZXQgKHBhcmFsbGVsLCBCdC42NTYgYW5kIENTSS0yIEQtUEhZKS4K
-PiA+Cj4gCj4gSSd2ZSBwbGF5ZWQgYXJvdW5kIHdpdGggdGhpcyBwYXRjaCwgdHJ5aW5nIHRvIHVz
-ZSBkZWZhdWx0cyBpbiB0aGUKPiByZW5lc2FzLWNldSBkcml2ZXIuCj4gCj4gVGhpcyBpcyB0aGUg
-cmVzdWx0aW5nIHBhdGNoLCBpZiB5b3Ugd2FudCBJIGNhbiBzZW5kIGl0IGFzIGZvbGxvdy11cCBv
-cgo+IHNlbmQgaXQgc28gdGhhdCB5b3UgY2FuIGluY2x1ZGUgaXQgaW4geW91ciBzZXJpZXMgaWYg
-aXQncyBjb3JyZWN0KToKPiBodHRwczovL3Bhc3RlLmRlYmlhbi5uZXQvaGlkZGVuL2E3Nzk1ZDNl
-LwoKTG9va3MgbmljZTsgY291bGQgeW91IHNlbmQgaXQgb3V0IHRvIHRoZSBsaXN0IGZvciByZXZp
-ZXc/CgpUaGUgYnVzIHdpZHRoIGRlZmF1bHQgaXNuJ3Qgc3BlY2lmaWVkIGluIERUIGJpbmRpbmdz
-OyBjb3VsZCB5b3Ugd3JpdGUgYQpwYXRjaCB0aGF0IGRlZmluZXMgaXQ/CgpUaGFua3MuCgotLSAK
-U2FrYXJpIEFpbHVzCnNha2FyaS5haWx1c0BsaW51eC5pbnRlbC5jb20KX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Damian,
+
+Quite late but.
+
+On 28.08.2018 12:24, Damian Kos wrote:
+> - Extracted common fields from cdn_dp_device to a new cdns_mhdp_device
+>   structure which will be used by two separate drivers later on.
+> - Moved some datatypes (audio_format, audio_info, vic_pxl_encoding_format,
+>   video_info) from cdn-dp-core.c to cdn-dp-reg.h.
+> - Changed prefixes from cdn_dp to cdns_mhdp
+>     cdn -> cdns to match the other Cadence's drivers
+>     dp -> mhdp to distinguish it from a "just a DP" as the IP underneath
+>       this registers map can be a HDMI (which is internally different,
+>       but the interface for commands, events is pretty much the same).
+> - Modified cdn-dp-core.c to use the new driver structure and new function
+>   names.
+>
+> Signed-off-by: Damian Kos <dkos@cadence.com>
+
+Many changes, hard to review. Anyway:
+
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
+Regards
+Andrzej
