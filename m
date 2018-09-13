@@ -1,44 +1,81 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] thermal: qoriq: add i.mx8mq support
-Date: Thu, 13 Sep 2018 09:43:39 +0000
-Message-ID: <DB3PR0402MB3916E21AC0E72E5F1EA0DF4EF51A0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1535595286-18371-1-git-send-email-Anson.Huang@nxp.com>
- <5b8e8a6d.1c69fb81.cdb61.0b30@mx.google.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v3.1 09/23] v4l: fwnode: Make use of newly specified bus types
+Date: Thu, 13 Sep 2018 12:43:48 +0300
+Message-ID: <20180913094348.10967-1-sakari.ailus@linux.intel.com>
+References: <20180913091452.GQ20333@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5b8e8a6d.1c69fb81.cdb61.0b30@mx.google.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180913091452.GQ20333@w540>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, jacopo@jmondi.org, dri-devel@lists.freedesktop.org, slongerbeam@gmail.com, niklas.soderlund@ragnatech.se
 List-Id: devicetree@vger.kernel.org
 
-Gentle ping...
-
-Anson Huang
-Best Regards!
-
-
-> -----Original Message-----
-> From: Rob Herring <robh@kernel.org>
-> Sent: Tuesday, September 4, 2018 9:18 AM
-> To: Anson Huang <anson.huang@nxp.com>
-> Cc: rui.zhang@intel.com; edubezval@gmail.com; robh+dt@kernel.org;
-> mark.rutland@arm.com; linux-pm@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; dl-linux-imx
-> <linux-imx@nxp.com>
-> Subject: Re: [PATCH] thermal: qoriq: add i.mx8mq support
->=20
-> On Thu, 30 Aug 2018 10:14:46 +0800, Anson Huang wrote:
-> > Add i.mx8mq specific compatible string.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/thermal/qoriq-thermal.txt | 6 +++---
-> >  drivers/thermal/qoriq_thermal.c                             | 1 +
-> >  2 files changed, 4 insertions(+), 3 deletions(-)
-> >
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
+QWRkIHN1cHBvcnQgZm9yIHBhcnNpbmcgQ1NJLTIgRC1QSFksIHBhcmFsbGVsIG9yIEJ0LjY1NiBi
+dXMgZXhwbGljaXRseS4KClNpZ25lZC1vZmYtYnk6IFNha2FyaSBBaWx1cyA8c2FrYXJpLmFpbHVz
+QGxpbnV4LmludGVsLmNvbT4KVGVzdGVkLWJ5OiBTdGV2ZSBMb25nZXJiZWFtIDxzdGV2ZV9sb25n
+ZXJiZWFtQG1lbnRvci5jb20+ClJldmlld2VkLWJ5OiBKYWNvcG8gTW9uZGkgPGphY29wbytyZW5l
+c2FzQGptb25kaS5vcmc+Ci0tLQpzaW5jZSB2MzoKCi0gVXNlIFBBUkFMTEVMX01CVVNfRkxBR1Mg
+d2hlcmUgYXBwcm9wcmlhdGUgLS0tIHRoYW5rcywgSmFjb3BvIQoKIGRyaXZlcnMvbWVkaWEvdjRs
+Mi1jb3JlL3Y0bDItZndub2RlLmMgfCA0OCArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0t
+LS0tLQogMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMoKyksIDEwIGRlbGV0aW9ucygtKQoK
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvdjRsMi1jb3JlL3Y0bDItZndub2RlLmMgYi9kcml2
+ZXJzL21lZGlhL3Y0bDItY29yZS92NGwyLWZ3bm9kZS5jCmluZGV4IGFhM2QyOGM0YTUwYi4uMmQw
+ZDJmYWNmMjBmIDEwMDY0NAotLS0gYS9kcml2ZXJzL21lZGlhL3Y0bDItY29yZS92NGwyLWZ3bm9k
+ZS5jCisrKyBiL2RyaXZlcnMvbWVkaWEvdjRsMi1jb3JlL3Y0bDItZndub2RlLmMKQEAgLTEyMyw4
+ICsxMjMsMTYgQEAgc3RhdGljIGludCB2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9jc2kyX2J1
+cyhzdHJ1Y3QgZndub2RlX2hhbmRsZSAqZndub2RlLAogCXJldHVybiAwOwogfQogCisjZGVmaW5l
+IFBBUkFMTEVMX01CVVNfRkxBR1MgKFY0TDJfTUJVU19IU1lOQ19BQ1RJVkVfSElHSCB8CVwKKwkJ
+CSAgICAgVjRMMl9NQlVTX0hTWU5DX0FDVElWRV9MT1cgfAlcCisJCQkgICAgIFY0TDJfTUJVU19W
+U1lOQ19BQ1RJVkVfSElHSCB8CVwKKwkJCSAgICAgVjRMMl9NQlVTX1ZTWU5DX0FDVElWRV9MT1cg
+fAlcCisJCQkgICAgIFY0TDJfTUJVU19GSUVMRF9FVkVOX0hJR0ggfAlcCisJCQkgICAgIFY0TDJf
+TUJVU19GSUVMRF9FVkVOX0xPVykKKwogc3RhdGljIHZvaWQgdjRsMl9md25vZGVfZW5kcG9pbnRf
+cGFyc2VfcGFyYWxsZWxfYnVzKAotCXN0cnVjdCBmd25vZGVfaGFuZGxlICpmd25vZGUsIHN0cnVj
+dCB2NGwyX2Z3bm9kZV9lbmRwb2ludCAqdmVwKQorCXN0cnVjdCBmd25vZGVfaGFuZGxlICpmd25v
+ZGUsIHN0cnVjdCB2NGwyX2Z3bm9kZV9lbmRwb2ludCAqdmVwLAorCWVudW0gdjRsMl9md25vZGVf
+YnVzX3R5cGUgYnVzX3R5cGUpCiB7CiAJc3RydWN0IHY0bDJfZndub2RlX2J1c19wYXJhbGxlbCAq
+YnVzID0gJnZlcC0+YnVzLnBhcmFsbGVsOwogCXVuc2lnbmVkIGludCBmbGFncyA9IDA7CkBAIC0x
+ODksMTYgKzE5NywyMyBAQCBzdGF0aWMgdm9pZCB2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9w
+YXJhbGxlbF9idXMoCiAJCXByX2RlYnVnKCJkYXRhLWVuYWJsZS1hY3RpdmUgJXNcbiIsIHYgPyAi
+aGlnaCIgOiAibG93Iik7CiAJfQogCi0JYnVzLT5mbGFncyA9IGZsYWdzOwotCWlmIChmbGFncyAm
+IChWNEwyX01CVVNfSFNZTkNfQUNUSVZFX0hJR0ggfAotCQkgICAgIFY0TDJfTUJVU19IU1lOQ19B
+Q1RJVkVfTE9XIHwKLQkJICAgICBWNEwyX01CVVNfVlNZTkNfQUNUSVZFX0hJR0ggfAotCQkgICAg
+IFY0TDJfTUJVU19WU1lOQ19BQ1RJVkVfTE9XIHwKLQkJICAgICBWNEwyX01CVVNfRklFTERfRVZF
+Tl9ISUdIIHwKLQkJICAgICBWNEwyX01CVVNfRklFTERfRVZFTl9MT1cpKQorCXN3aXRjaCAoYnVz
+X3R5cGUpIHsKKwlkZWZhdWx0OgorCQlidXMtPmZsYWdzID0gZmxhZ3M7CisJCWlmIChmbGFncyAm
+IFBBUkFMTEVMX01CVVNfRkxBR1MpCisJCQl2ZXAtPmJ1c190eXBlID0gVjRMMl9NQlVTX1BBUkFM
+TEVMOworCQllbHNlCisJCQl2ZXAtPmJ1c190eXBlID0gVjRMMl9NQlVTX0JUNjU2OworCQlicmVh
+azsKKwljYXNlIFY0TDJfRldOT0RFX0JVU19UWVBFX1BBUkFMTEVMOgogCQl2ZXAtPmJ1c190eXBl
+ID0gVjRMMl9NQlVTX1BBUkFMTEVMOwotCWVsc2UKKwkJYnVzLT5mbGFncyA9IGZsYWdzOworCQli
+cmVhazsKKwljYXNlIFY0TDJfRldOT0RFX0JVU19UWVBFX0JUNjU2OgogCQl2ZXAtPmJ1c190eXBl
+ID0gVjRMMl9NQlVTX0JUNjU2OworCQlidXMtPmZsYWdzID0gZmxhZ3MgJiB+UEFSQUxMRUxfTUJV
+U19GTEFHUzsKKwkJYnJlYWs7CisJfQogfQogCiBzdGF0aWMgdm9pZApAQCAtMjU4LDcgKzI3Myw4
+IEBAIHN0YXRpYyBpbnQgX192NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZShzdHJ1Y3QgZndub2Rl
+X2hhbmRsZSAqZndub2RlLAogCQkJcmV0dXJuIHJ2YWw7CiAKIAkJaWYgKHZlcC0+YnVzX3R5cGUg
+PT0gVjRMMl9NQlVTX1VOS05PV04pCi0JCQl2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9wYXJh
+bGxlbF9idXMoZndub2RlLCB2ZXApOworCQkJdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2VfcGFy
+YWxsZWxfYnVzKAorCQkJCWZ3bm9kZSwgdmVwLCBWNEwyX01CVVNfVU5LTk9XTik7CiAKIAkJYnJl
+YWs7CiAJY2FzZSBWNEwyX0ZXTk9ERV9CVVNfVFlQRV9DQ1AyOgpAQCAtMjY2LDYgKzI4MiwxOCBA
+QCBzdGF0aWMgaW50IF9fdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2Uoc3RydWN0IGZ3bm9kZV9o
+YW5kbGUgKmZ3bm9kZSwKIAkJdjRsMl9md25vZGVfZW5kcG9pbnRfcGFyc2VfY3NpMV9idXMoZndu
+b2RlLCB2ZXAsIGJ1c190eXBlKTsKIAogCQlicmVhazsKKwljYXNlIFY0TDJfRldOT0RFX0JVU19U
+WVBFX0NTSTJfRFBIWToKKwkJdmVwLT5idXNfdHlwZSA9IFY0TDJfTUJVU19DU0kyX0RQSFk7CisJ
+CXJ2YWwgPSB2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9jc2kyX2J1cyhmd25vZGUsIHZlcCk7
+CisJCWlmIChydmFsKQorCQkJcmV0dXJuIHJ2YWw7CisKKwkJYnJlYWs7CisJY2FzZSBWNEwyX0ZX
+Tk9ERV9CVVNfVFlQRV9QQVJBTExFTDoKKwljYXNlIFY0TDJfRldOT0RFX0JVU19UWVBFX0JUNjU2
+OgorCQl2NGwyX2Z3bm9kZV9lbmRwb2ludF9wYXJzZV9wYXJhbGxlbF9idXMoZndub2RlLCB2ZXAs
+IGJ1c190eXBlKTsKKworCQlicmVhazsKIAlkZWZhdWx0OgogCQlwcl93YXJuKCJ1bnN1cHBvcnRl
+ZCBidXMgdHlwZSAldVxuIiwgYnVzX3R5cGUpOwogCQlyZXR1cm4gLUVJTlZBTDsKLS0gCjIuMTEu
+MAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
