@@ -1,44 +1,64 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v1 1/5] dt-binding: rtci-pcf8523: add quartz_load property
-Date: Thu, 13 Sep 2018 22:51:36 +0200
-Message-ID: <20180913205136.GL14988@piout.net>
-References: <20180822183555.GA24084@ravnborg.org>
- <20180907193508.24974-2-sam@ravnborg.org>
- <20180913190516.GG14988@piout.net>
- <20180913204412.GA30987@ravnborg.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: Multi-parent IRQ domains
+Date: Thu, 13 Sep 2018 14:50:21 -0700
+Message-ID: <ea9261a9-2c4d-7ca4-6dca-73f385aa46d5@gmail.com>
+References: <20180913155945.GA19903@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180913204412.GA30987@ravnborg.org>
+In-Reply-To: <20180913155945.GA19903@ulmo>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+To: Thierry Reding <thierry.reding@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/09/2018 22:44:12+0200, Sam Ravnborg wrote:
-> > The boolean properties usually don't work well for RTCs because people
-> > usually want to keep any previous configuration that may have been done
-> > at the factory or in the bootloader so I would use:
-> > 
-> > nxp,quartz_load_fF and this would be either 7000 or 12500.
-> We had is implmented like this (using pF) in the beginning but
-> then went for the simpler property.
-> Will add a fF property as you suggest and avoid breaking the existing drivers.
-> We will check a few of the boards to see if the current configuration
-> of the pcf8523 driver looks wrong, and if so we will print
-> the warnings as suggested.
-> 
-> I think the above covers feedback on all patches.
-> And thanks for the feedback!
-> 
 
-Hint: look at the cubox-i and the hummingboard schematics. I'm
-definitely not an analog expert but the two capacitors on the cubox-i
-are making me think that the setting should be different from the
-hummingboard.
 
+On 09/13/18 08:59, Thierry Reding wrote:
+> Hi everyone,
+> 
+> I've been trying to implement a feature on recent Tegra chips that's
+> called "wake events". These wake events are implemented as part of the
+> power management controller (PMC) and they control which events can be
+> used to wake the system from suspend. Events include things like an
+> alarm interrupt from an RTC, or the GPIO interrupt hooked up to a
+> power button for example.
+> 
+> We already have a driver for a couple of other things that the PMC does,
+> so I thought it'd be natural to implement this functionality as an IRQ
+> chip in the PMC driver. The way that this would work is that for all the
+> devices that are wakeup sources, we'd end up specifying the PMC as the
+> interrupt parent and the PMC would then itself have the main GIC as its
+> parent. That way, the hierarchical IRQ domain infrastructure would take
+> care of pretty much everything.
+> 
+> Unfortunately I've run into some issues here. One problem that I'm
+> facing is that PMC could have more than one parent. For example, the RTC
+> alarm interrupt goes straight to the GIC, but the power button GPIO goes
+> through the GPIO controller first and then to the GIC. This doesn't seem
+> to be something that's currently possible.
+> 
+> The way I imagine this to work from a DT perspective is as follows:
+
+There is an interrupts-extended property which as a first cell takes a
+phandle to the parent interrupt controller, e.g:
+
+interrupts-extended = <&gic 73 GIPC_SPI IRQ_TYPE_LEVEL_HIGH>,
+			<&pmc 10>;
+
+(provided that I understood your problem and example correctly). We have
+a similar use case on our STB chips where we have "main" interrupts
+wired to the ARM GIC and wake-up interrupts wired to a specific wake-up
+interrupt controller in an always-on domain. The two controllers have a
+different #interrupt-cells specifier.
+
+The interrupt infrastructure in Linux already knows how to deal with
+that and whether you use of_get_irq() or platform_get_irq() you should
+obtain the correct virtual interrupt numbers that you expected, parented
+to the appropriate interrupt controller.
+
+Hope this helps.
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Florian
