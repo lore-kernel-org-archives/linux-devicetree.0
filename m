@@ -1,85 +1,67 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 3/5] ARM: dts: meson8b: add the I2C_A, PWM_C and UART_B pins
-Date: Thu, 13 Sep 2018 22:22:01 +0200
-Message-ID: <20180913202203.19636-4-martin.blumenstingl@googlemail.com>
-References: <20180913202203.19636-1-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180913202203.19636-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-arm-kernel@lists.infradead.org
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 1/3] libfdt: Ensure INT_MAX is defined in libfdt_env.h
+Date: Thu, 13 Sep 2018 15:28:26 -0500
+Message-ID: <20180913202828.15372-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Frank Rowand <frowand.list@gmail.com>, Russell King <linux@armlinux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-These are used for example on the Endless Mini (EC-100):
-- I2C_A is connected to the Realtek RT5640 audio codec
-- PWM_C (GPIODV_9) is connected to a PWM regulator which is used for
-  VCCK (CPU voltage supply)
-- UART_B is connected to the Bluetooth module (of the RTL8723BS SDIO
-  wifi and Bluetooth combo chip)
+The next update of libfdt has a new dependency on INT_MAX. Update the
+instances of libfdt_env.h in the kernel to either include the necessary
+header with the definition or define it locally.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/meson8b.dtsi | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ arch/arm/boot/compressed/libfdt_env.h | 2 ++
+ arch/powerpc/boot/libfdt_env.h        | 2 ++
+ include/linux/libfdt_env.h            | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index f77e419c1c65..4bbbbc6bea83 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -223,6 +223,13 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+index 07437816e098..b36c0289a308 100644
+--- a/arch/arm/boot/compressed/libfdt_env.h
++++ b/arch/arm/boot/compressed/libfdt_env.h
+@@ -6,6 +6,8 @@
+ #include <linux/string.h>
+ #include <asm/byteorder.h>
  
-+		i2c_a_pins: i2c-a {
-+			mux {
-+				groups = "i2c_sda_a", "i2c_sck_a";
-+				function = "i2c_a";
-+			};
-+		};
++#define INT_MAX			((int)(~0U>>1))
 +
- 		sd_b_pins: sd-b {
- 			mux {
- 				groups = "sd_d0_b", "sd_d1_b", "sd_d2_b",
-@@ -230,6 +237,29 @@
- 				function = "sd_b";
- 			};
- 		};
-+
-+		pwm_c1_pins: pwm-c1 {
-+			mux {
-+				groups = "pwm_c1";
-+				function = "pwm_c";
-+			};
-+		};
-+
-+		uart_b0_pins: uart-b0 {
-+			mux {
-+				groups = "uart_tx_b0",
-+				       "uart_rx_b0";
-+				function = "uart_b";
-+			};
-+		};
-+
-+		uart_b0_cts_rts_pins: uart-b0-cts-rts {
-+			mux {
-+				groups = "uart_cts_b0",
-+				       "uart_rts_b0";
-+				function = "uart_b";
-+			};
-+		};
- 	};
- };
+ typedef __be16 fdt16_t;
+ typedef __be32 fdt32_t;
+ typedef __be64 fdt64_t;
+diff --git a/arch/powerpc/boot/libfdt_env.h b/arch/powerpc/boot/libfdt_env.h
+index 2a0c8b1bf147..2abc8e83b95e 100644
+--- a/arch/powerpc/boot/libfdt_env.h
++++ b/arch/powerpc/boot/libfdt_env.h
+@@ -5,6 +5,8 @@
+ #include <types.h>
+ #include <string.h>
  
++#define INT_MAX			((int)(~0U>>1))
++
+ #include "of.h"
+ 
+ typedef unsigned long uintptr_t;
+diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+index c6ac1fe7ec68..edb0f0c30904 100644
+--- a/include/linux/libfdt_env.h
++++ b/include/linux/libfdt_env.h
+@@ -2,6 +2,7 @@
+ #ifndef LIBFDT_ENV_H
+ #define LIBFDT_ENV_H
+ 
++#include <linux/kernel.h>	/* For INT_MAX */
+ #include <linux/string.h>
+ 
+ #include <asm/byteorder.h>
 -- 
-2.19.0
+2.17.1
