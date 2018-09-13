@@ -1,143 +1,75 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH v2 0/2] media: platform: Add Aspeed Video Engine Driver
-Date: Thu, 13 Sep 2018 14:29:22 -0500
-Message-ID: <1536866964-71593-1-git-send-email-eajames@linux.vnet.ibm.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v1 5/5] rtc: pcf85063: external capacitor configuration
+Date: Thu, 13 Sep 2018 21:29:24 +0200
+Message-ID: <20180913192924.GK14988@piout.net>
+References: <20180822183555.GA24084@ravnborg.org>
+ <20180907193508.24974-6-sam@ravnborg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180907193508.24974-6-sam@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org, andrew@aj.id.au, joel@jms.id.au, Eddie James <eajames@linux.vnet.ibm.com>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
-The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
-can capture and compress video data from digital or analog sources. With
-the Aspeed chip acting as a service processor, the Video Engine can
-capture the host processor graphics output.
+On 07/09/2018 21:35:08+0200, Sam Ravnborg wrote:
+> From: Søren Andersen <san@skov.dk>
+> 
+> Add support for specifying the quartz load in the DT node.
+> The pcf85063 may use either a 7 pF or an 12.5 pF xtal.
+> If the rtc has the wrong configuration the time will
+> drift several hours/week.
+> 
+> If nothing is specified in DT then the factory default of 7 pF is used.
+> 
+> Signed-off-by: Søren Andersen <san@skov.dk>
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-pcf85063.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+> 
+> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+> index 283c2335b01b..38163446664f 100644
+> --- a/drivers/rtc/rtc-pcf85063.c
+> +++ b/drivers/rtc/rtc-pcf85063.c
+> @@ -27,6 +27,7 @@
+>  */
+>  
+>  #define PCF85063_REG_CTRL1		0x00 /* status */
+> +#define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
+>  #define PCF85063_REG_CTRL1_STOP		BIT(5)
+>  #define PCF85063_REG_CTRL2		0x01
+>  
+> @@ -180,6 +181,31 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
+>  	.set_time	= pcf85063_rtc_set_time
+>  };
+>  
+> +static int pcf85063_select_capacitance(struct i2c_client *client)
+> +{
+> +	int rc;
+> +	u8 reg;
+> +
+> +	rc = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
+> +	if (rc < 0) {
+> +		dev_err(&client->dev, "Failing to read Control1 reg\n");
+> +		return -EIO;
+> +	}
+> +
+> +	if (device_property_present(&client->dev, "nxp,quartz_load_12.5pf"))
+> +		reg = rc |= PCF85063_REG_CTRL1_CAP_SEL;
+> +	else
+> +		reg = rc &= ~PCF85063_REG_CTRL1_CAP_SEL;
 
-This series adds a V4L2 driver for the VE, providing a read() interface
-only. The driver triggers the hardware to capture the host graphics output
-and compress it to JPEG format.
+That one is more straight forward, set it to the value from DT or leave
+it alone.
 
-
-v4l2-compliance output:
-
-v4l2-compliance SHA   : not available
-
-Driver Info:
-	Driver name   : aspeed-video
-	Card type     : Aspeed Video Engine
-	Bus info      : platform:aspeed-video
-	Driver version: 4.18.7
-	Capabilities  : 0x81200001
-		Video Capture
-		Read/Write
-		Extended Pix Format
-		Device Capabilities
-	Device Caps   : 0x01200001
-		Video Capture
-		Read/Write
-		Extended Pix Format
-
-Compliance test for device /dev/video0 (not using libv4l2):
-
-Required ioctls:
-	test VIDIOC_QUERYCAP: OK
-
-Allow for multiple opens:
-	test second video open: OK
-	test VIDIOC_QUERYCAP: OK
-	test VIDIOC_G/S_PRIORITY: OK
-	test for unlimited opens: OK
-
-Debug ioctls:
-	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
-	test VIDIOC_LOG_STATUS: OK (Not Supported)
-
-Input ioctls:
-	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
-	test VIDIOC_ENUMAUDIO: OK (Not Supported)
-	test VIDIOC_G/S/ENUMINPUT: OK
-	test VIDIOC_G/S_AUDIO: OK (Not Supported)
-	Inputs: 1 Audio Inputs: 0 Tuners: 0
-
-Output ioctls:
-	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
-	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
-	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
-	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
-	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
-	Outputs: 0 Audio Outputs: 0 Modulators: 0
-
-Input/Output configuration ioctls:
-	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
-	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
-	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
-	test VIDIOC_G/S_EDID: OK (Not Supported)
-
-Test input 0:
-
-	Control ioctls:
-		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
-		test VIDIOC_QUERYCTRL: OK
-		test VIDIOC_G/S_CTRL: OK
-		test VIDIOC_G/S/TRY_EXT_CTRLS: OK
-		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
-		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
-		Standard Controls: 3 Private Controls: 0
-
-	Format ioctls:
-		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
-		test VIDIOC_G/S_PARM: OK
-		test VIDIOC_G_FBUF: OK (Not Supported)
-		test VIDIOC_G_FMT: OK
-		test VIDIOC_TRY_FMT: OK
-		test VIDIOC_S_FMT: OK
-		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
-		test Cropping: OK (Not Supported)
-		test Composing: OK (Not Supported)
-		test Scaling: OK (Not Supported)
-
-	Codec ioctls:
-		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
-		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
-		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
-
-	Buffer ioctls:
-		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK (Not Supported)
-		test VIDIOC_EXPBUF: OK (Not Supported)
-
-Test input 0:
-
-Streaming ioctls:
-	test read/write: OK
-	test MMAP: OK (Not Supported)
-	test USERPTR: OK (Not Supported)
-	test DMABUF: OK (Not Supported)
-
-
-Total: 47, Succeeded: 47, Failed: 0, Warnings: 0
-
-
-Changes since v1:
- - Removed le32_to_cpu calls for JPEG header data
- - Reworked v4l2 ioctls to be compliant.
- - Added JPEG controls
- - Updated devicetree docs according to Rob's suggestions.
- - Added myself to MAINTAINERS
-
-Eddie James (2):
-  dt-bindings: media: Add Aspeed Video Engine binding documentation
-  media: platform: Add Aspeed Video Engine driver
-
- .../devicetree/bindings/media/aspeed-video.txt     |   26 +
- MAINTAINERS                                        |    8 +
- drivers/media/platform/Kconfig                     |    8 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/aspeed-video.c              | 1469 ++++++++++++++++++++
- 5 files changed, 1512 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
- create mode 100644 drivers/media/platform/aspeed-video.c
 
 -- 
-1.8.3.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
