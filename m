@@ -1,2191 +1,882 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 3/3] scripts/dtc: Update to upstream version v1.4.7-14-gc86da84d30e4
-Date: Thu, 13 Sep 2018 15:28:28 -0500
-Message-ID: <20180913202828.15372-3-robh@kernel.org>
-References: <20180913202828.15372-1-robh@kernel.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 5/7] regulator/mfd: bd718xx: rename bd71837/bd71847
+ common instances
+Date: Fri, 14 Sep 2018 04:39:28 +0800
+Message-ID: <201809140420.mcXVA0yk%fengguang.wu@intel.com>
+References: <74dc36388bc48a59191cc212094c85b157fd5197.1536750863.git.matti.vaittinen@fi.rohmeurope.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="uAKRQypu60I7Lcqm"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180913202828.15372-1-robh@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <74dc36388bc48a59191cc212094c85b157fd5197.1536750863.git.matti.vaittinen@fi.rohmeurope.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Frank Rowand <frowand.list@gmail.com>
+Cc: kbuild-all@01.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, sboyd@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Major changes are I2C and SPI bus checks, YAML output format (for
-future validation), some new libfdt functions, and more libfdt
-validation of dtbs.
 
-The YAML addition adds an optional dependency on libyaml. pkg-config is
-used to test for it and pkg-config became a kconfig dependency in 4.18.
+--uAKRQypu60I7Lcqm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This adds the following commits from upstream:
+Hi Matti,
 
-c86da84d30e4 Add support for YAML encoded output
-361b5e7d8067 Make type_marker_length helper public
-bfbfab047e45 pylibfdt: Add a means to add and delete notes
-9005f4108e7c pylibfdt: Allow delprop() to return errors
-b94c056b137e Make valgrind optional
-fd06c54d4711 tests: Better testing of dtc -I fs mode
-c3f50c9a86d9 tests: Allow dtbs_equal_unordered to ignore mem reserves
-0ac9fdee37c7 dtc: trivial '-I fs -O dts' test
-0fd1c8c783f3 pylibfdt: fdt_get_mem_rsv returns 2 uint64_t values
-04853cad18f4 pylibfdt: Don't incorrectly / unnecessarily override uint64_t typemap
-9619c8619c37 Kill bogus TYPE_BLOB marker type
-ac68ff92ae20 parser: add TYPE_STRING marker to path references
-90a190eb04d9 checks: add SPI bus checks
-53a1bd546905 checks: add I2C bus checks
-88f18909db73 dtc: Bump version to v1.4.7
-85bce8b2f06d tests: Correction to vg_prepare_blob()
-57f7f9e7bc7c tests: Don't call memcmp() with NULL arguments
-c12b2b0c20eb libfdt: fdt_address_cells() and fdt_size_cells()
-3fe0eeda0b7f livetree: Set phandle properties type to uint32
-853649acceba pylibfdt: Support the sequential-write interface
-9b0e4fe26093 tests: Improve fdt_resize() tests
-1087504bb3e8 libfdt: Add necessary header padding in fdt_create()
-c72fa777e613 libfdt: Copy the struct region in fdt_resize()
-32b9c6130762 Preserve datatype markers when emitting dts format
-6dcb8ba408ec libfdt: Add helpers for accessing unaligned words
-42607f21d43e tests: Fix incorrect check name 'prop_name_chars'
-9d78c33bf8a1 tests: fix grep for checks error messages
-b770f3d1c13f pylibfdt: Support setting the name of a node
-2f0d07e678e0 pylibfdt: Add functions to set and get properties as strings
-354d3dc55939 pylibfdt: Update the bytearray size with pack()
-3c374d46acce pylibfdt: Allow reading integer values from properties
-49d32ce40bb4 pylibfdt: Use an unsigned type for fdt32_t
-481246a0c13a pylibfdt: Avoid accessing the internal _fdt member in tests
-9aafa33d99ed pylibfdt: Add functions to update properties
-5a598671fdbf pylibfdt: Support device-tree creation/expansion
-483e170625e1 pylibfdt: Add support for reading the memory reserve map
-29bb05aa4200 pylibfdt: Add support for the rest of the header functions
-582a7159a5d0 pylibfdt: Add support for fdt_next_node()
-f0f8c9169819 pylibfdt: Reorder functions to match libfdt.h
-64a69d123935 pylibfdt: Return string instead of bytearray from getprop()
-4d09a83420df fdtput: Add documentation
-e617cbe1bd67 fdtget: Add documentation
-180a93924014 Use <inttypes.h> format specifiers in a bunch of places we should
-b9af3b396576 scripts/dtc: Fixed format mismatch in fprintf
-4b8fcc3d015c libfdt: Add fdt_check_full() function
-c14223fb2292 tests: Use valgrind client requests for better checking
-5b67d2b955a3 tests: Better handling of valgrind errors saving blobs
-e2556aaeb506 tests: Remove unused #define
-fb9c6abddaa8 Use size_t for blob lengths in utilfdt_read*
-0112fda03bf6 libfdt: Add fdt_header_size()
-6473a21d8bfe Consolidate utilfdt_read_len() variants
-d5db5382c5e5 libfdt: Safer access to memory reservations
-719d582e98ec libfdt: Propagate name errors in fdt_getprop_by_offset()
-70166d62a27f libfdt: Safer access to strings section
-eb890c0f77dc libfdt: Make fdt_check_header() more thorough
-899d6fad93f3 libfdt: Improve sequential write state checking
-04b5b4062ccd libfdt: Clean up header checking functions
-44d3efedc816 Preserve datatype information when parsing dts
-f0be81bd8de0 Make Property a subclass of bytearray
-24b1f3f064d4 pylibfdt: Add a method to access the device tree directly
+Thank you for the patch! Yet something to improve:
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+[auto build test ERROR on regulator/for-next]
+[also build test ERROR on next-20180913]
+[cannot apply to v4.19-rc3]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+url:    https://github.com/0day-ci/linux/commits/Matti-Vaittinen/regulator-mfd-dt_bindings-bd718x7-Support-ROHM-bd71847/20180914-000129
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+config: i386-randconfig-s0-201836 (attached as .config)
+compiler: gcc-6 (Debian 6.4.0-9) 6.4.0 20171026
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=i386 
+
+Note: the linux-review/Matti-Vaittinen/regulator-mfd-dt_bindings-bd718x7-Support-ROHM-bd71847/20180914-000129 HEAD 0df8e57cacf59e85ad40a25fbb1bd7e842608be8 builds fine.
+      It only hurts bisectibility.
+
+All errors (new ones prefixed by >>):
+
+>> drivers/regulator/bd71837-regulator.c:407:18: error: 'BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM' undeclared here (not in a function)
+       .n_voltages = BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM,
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/regulator/bd71837-regulator.c:735:18: error: initializer element is not constant
+       .n_voltages = BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM,
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/regulator/bd71837-regulator.c:735:18: note: (near initialization for 'bd71837_regulators[7].desc.n_voltages')
+
+vim +/BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM +407 drivers/regulator/bd71837-regulator.c
+
+   280	
+   281	static const struct bd718xx_regulator_data bd71847_regulators[] = {
+   282		{
+   283			.desc = {
+   284				.name = "buck1",
+   285				.of_match = of_match_ptr("BUCK1"),
+   286				.regulators_node = of_match_ptr("regulators"),
+   287				.id = BD718XX_BUCK1,
+   288				.ops = &bd718xx_dvs_buck_regulator_ops,
+   289				.type = REGULATOR_VOLTAGE,
+   290				.n_voltages = BD718XX_DVS_BUCK_VOLTAGE_NUM,
+   291				.linear_ranges = bd718xx_dvs_buck_volts,
+   292				.n_linear_ranges =
+   293					ARRAY_SIZE(bd718xx_dvs_buck_volts),
+   294				.vsel_reg = BD718XX_REG_BUCK1_VOLT_RUN,
+   295				.vsel_mask = DVS_BUCK_RUN_MASK,
+   296				.enable_reg = BD718XX_REG_BUCK1_CTRL,
+   297				.enable_mask = BD718XX_BUCK_EN,
+   298				.owner = THIS_MODULE,
+   299			},
+   300			.init = {
+   301				.reg = BD718XX_REG_BUCK1_CTRL,
+   302				.mask = BD718XX_BUCK_SEL,
+   303				.val = BD718XX_BUCK_SEL,
+   304			},
+   305		},
+   306		{
+   307			.desc = {
+   308				.name = "buck2",
+   309				.of_match = of_match_ptr("BUCK2"),
+   310				.regulators_node = of_match_ptr("regulators"),
+   311				.id = BD718XX_BUCK2,
+   312				.ops = &bd718xx_dvs_buck_regulator_ops,
+   313				.type = REGULATOR_VOLTAGE,
+   314				.n_voltages = BD718XX_DVS_BUCK_VOLTAGE_NUM,
+   315				.linear_ranges = bd718xx_dvs_buck_volts,
+   316				.n_linear_ranges = ARRAY_SIZE(bd718xx_dvs_buck_volts),
+   317				.vsel_reg = BD718XX_REG_BUCK2_VOLT_RUN,
+   318				.vsel_mask = DVS_BUCK_RUN_MASK,
+   319				.enable_reg = BD718XX_REG_BUCK2_CTRL,
+   320				.enable_mask = BD718XX_BUCK_EN,
+   321				.owner = THIS_MODULE,
+   322			},
+   323			.init = {
+   324				.reg = BD718XX_REG_BUCK2_CTRL,
+   325				.mask = BD718XX_BUCK_SEL,
+   326				.val = BD718XX_BUCK_SEL,
+   327			},
+   328		},
+   329		{
+   330			.desc = {
+   331				.name = "buck3",
+   332				.of_match = of_match_ptr("BUCK3"),
+   333				.regulators_node = of_match_ptr("regulators"),
+   334				.id = BD718XX_BUCK3,
+   335				.ops = &bd718xx_buck_regulator_ops,
+   336				.type = REGULATOR_VOLTAGE,
+   337				.n_voltages = BD718XX_1ST_NODVS_BUCK_VOLTAGE_NUM,
+   338				.linear_ranges = bd718xx_1st_nodvs_buck_volts,
+   339				.n_linear_ranges =
+   340					ARRAY_SIZE(bd718xx_1st_nodvs_buck_volts),
+   341				.vsel_reg = BD718XX_REG_1ST_NODVS_BUCK_VOLT,
+   342				.vsel_mask = BD718XX_1ST_NODVS_BUCK_MASK,
+   343				.enable_reg = BD718XX_REG_1ST_NODVS_BUCK_CTRL,
+   344				.enable_mask = BD718XX_BUCK_EN,
+   345				.owner = THIS_MODULE,
+   346			},
+   347			.init = {
+   348				.reg = BD718XX_REG_1ST_NODVS_BUCK_CTRL,
+   349				.mask = BD718XX_BUCK_SEL,
+   350				.val = BD718XX_BUCK_SEL,
+   351			},
+   352		},
+   353		{
+   354			.desc = {
+   355				.name = "buck4",
+   356				.of_match = of_match_ptr("BUCK4"),
+   357				.regulators_node = of_match_ptr("regulators"),
+   358				.id = BD718XX_BUCK4,
+   359				.ops = &bd718xx_buck_regulator_ops,
+   360				.type = REGULATOR_VOLTAGE,
+   361				.n_voltages = BD71847_BUCK4_VOLTAGE_NUM,
+   362				.linear_ranges = bd71847_buck4_voltage_ranges,
+   363				.n_linear_ranges =
+   364					ARRAY_SIZE(bd71847_buck4_voltage_ranges),
+   365				.enable_reg = BD718XX_REG_2ND_NODVS_BUCK_CTRL,
+   366				.vsel_reg = BD718XX_REG_2ND_NODVS_BUCK_VOLT,
+   367				.vsel_mask = BD71847_BUCK4_MASK,
+   368				.enable_mask = BD718XX_BUCK_EN,
+   369				.owner = THIS_MODULE,
+   370			},
+   371			.init = {
+   372				.reg = BD718XX_REG_2ND_NODVS_BUCK_CTRL,
+   373				.mask = BD718XX_BUCK_SEL,
+   374				.val = BD718XX_BUCK_SEL,
+   375			},
+   376		},
+   377		{
+   378			.desc = {
+   379				.name = "buck5",
+   380				.of_match = of_match_ptr("BUCK5"),
+   381					.regulators_node = of_match_ptr("regulators"),
+   382				.id = BD718XX_BUCK5,
+   383				.ops = &bd718xx_buck_regulator_nolinear_ops,
+   384				.type = REGULATOR_VOLTAGE,
+   385				.volt_table = &bd718xx_3rd_nodvs_buck_volts[0],
+   386				.n_voltages = ARRAY_SIZE(bd718xx_3rd_nodvs_buck_volts),
+   387				.vsel_reg = BD718XX_REG_3RD_NODVS_BUCK_VOLT,
+   388				.vsel_mask = BD718XX_3RD_NODVS_BUCK_MASK,
+   389				.enable_reg = BD718XX_REG_3RD_NODVS_BUCK_CTRL,
+   390				.enable_mask = BD718XX_BUCK_EN,
+   391				.owner = THIS_MODULE,
+   392			},
+   393			.init = {
+   394				.reg = BD718XX_REG_3RD_NODVS_BUCK_CTRL,
+   395				.mask = BD718XX_BUCK_SEL,
+   396				.val = BD718XX_BUCK_SEL,
+   397			},
+   398		},
+   399		{
+   400			.desc = {
+   401				.name = "buck6",
+   402				.of_match = of_match_ptr("BUCK6"),
+   403				.regulators_node = of_match_ptr("regulators"),
+   404				.id = BD718XX_BUCK6,
+   405				.ops = &bd718xx_buck_regulator_ops,
+   406				.type = REGULATOR_VOLTAGE,
+ > 407				.n_voltages = BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM,
+   408				.linear_ranges = bd718xx_4th_nodvs_buck_volts,
+   409				.n_linear_ranges =
+   410					ARRAY_SIZE(bd718xx_4th_nodvs_buck_volts),
+   411				.vsel_reg = BD718XX_REG_4TH_NODVS_BUCK_VOLT,
+   412				.vsel_mask = BD718XX_4TH_NODVS_BUCK_MASK,
+   413				.enable_reg = BD718XX_REG_4TH_NODVS_BUCK_CTRL,
+   414				.enable_mask = BD718XX_BUCK_EN,
+   415				.owner = THIS_MODULE,
+   416			},
+   417			.init = {
+   418				.reg = BD718XX_REG_4TH_NODVS_BUCK_CTRL,
+   419				.mask = BD718XX_BUCK_SEL,
+   420				.val = BD718XX_BUCK_SEL,
+   421			},
+   422		},
+   423		{
+   424			.desc = {
+   425				.name = "ldo1",
+   426				.of_match = of_match_ptr("LDO1"),
+   427				.regulators_node = of_match_ptr("regulators"),
+   428				.id = BD718XX_LDO1,
+   429				.ops = &bd718xx_ldo_regulator_ops,
+   430				.type = REGULATOR_VOLTAGE,
+   431				.n_voltages = BD718XX_LDO1_VOLTAGE_NUM,
+   432				.linear_ranges = bd718xx_ldo1_volts,
+   433				.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo1_volts),
+   434				.vsel_reg = BD718XX_REG_LDO1_VOLT,
+   435				.vsel_mask = BD718XX_LDO1_MASK,
+   436				.enable_reg = BD718XX_REG_LDO1_VOLT,
+   437				.enable_mask = BD718XX_LDO_EN,
+   438				.owner = THIS_MODULE,
+   439			},
+   440			.init = {
+   441				.reg = BD718XX_REG_LDO1_VOLT,
+   442				.mask = BD718XX_LDO_SEL,
+   443				.val = BD718XX_LDO_SEL,
+   444			},
+   445		},
+   446		{
+   447			.desc = {
+   448				.name = "ldo2",
+   449				.of_match = of_match_ptr("LDO2"),
+   450				.regulators_node = of_match_ptr("regulators"),
+   451				.id = BD718XX_LDO2,
+   452				.ops = &bd718xx_ldo_regulator_nolinear_ops,
+   453				.type = REGULATOR_VOLTAGE,
+   454				.volt_table = &ldo_2_volts[0],
+   455				.vsel_reg = BD718XX_REG_LDO2_VOLT,
+   456				.vsel_mask = BD718XX_LDO2_MASK,
+   457				.n_voltages = ARRAY_SIZE(ldo_2_volts),
+   458				.enable_reg = BD718XX_REG_LDO2_VOLT,
+   459				.enable_mask = BD718XX_LDO_EN,
+   460				.owner = THIS_MODULE,
+   461			},
+   462			.init = {
+   463				.reg = BD718XX_REG_LDO2_VOLT,
+   464				.mask = BD718XX_LDO_SEL,
+   465				.val = BD718XX_LDO_SEL,
+   466			},
+   467		},
+   468		{
+   469			.desc = {
+   470				.name = "ldo3",
+   471				.of_match = of_match_ptr("LDO3"),
+   472				.regulators_node = of_match_ptr("regulators"),
+   473				.id = BD718XX_LDO3,
+   474				.ops = &bd718xx_ldo_regulator_ops,
+   475				.type = REGULATOR_VOLTAGE,
+   476				.n_voltages = BD718XX_LDO3_VOLTAGE_NUM,
+   477				.linear_ranges = bd718xx_ldo3_volts,
+   478				.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo3_volts),
+   479				.vsel_reg = BD718XX_REG_LDO3_VOLT,
+   480				.vsel_mask = BD718XX_LDO3_MASK,
+   481				.enable_reg = BD718XX_REG_LDO3_VOLT,
+   482				.enable_mask = BD718XX_LDO_EN,
+   483				.owner = THIS_MODULE,
+   484			},
+   485			.init = {
+   486				.reg = BD718XX_REG_LDO3_VOLT,
+   487				.mask = BD718XX_LDO_SEL,
+   488				.val = BD718XX_LDO_SEL,
+   489			},
+   490		},
+   491		{
+   492			.desc = {
+   493				.name = "ldo4",
+   494				.of_match = of_match_ptr("LDO4"),
+   495				.regulators_node = of_match_ptr("regulators"),
+   496				.id = BD718XX_LDO4,
+   497				.ops = &bd718xx_ldo_regulator_ops,
+   498				.type = REGULATOR_VOLTAGE,
+   499				.n_voltages = BD718XX_LDO4_VOLTAGE_NUM,
+   500				.linear_ranges = bd718xx_ldo4_volts,
+   501				.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo4_volts),
+   502				.vsel_reg = BD718XX_REG_LDO4_VOLT,
+   503				.vsel_mask = BD718XX_LDO4_MASK,
+   504				.enable_reg = BD718XX_REG_LDO4_VOLT,
+   505				.enable_mask = BD718XX_LDO_EN,
+   506				.owner = THIS_MODULE,
+   507			},
+   508			.init = {
+   509				.reg = BD718XX_REG_LDO4_VOLT,
+   510				.mask = BD718XX_LDO_SEL,
+   511				.val = BD718XX_LDO_SEL,
+   512			},
+   513		},
+   514		{
+   515			.desc = {
+   516				.name = "ldo5",
+   517				.of_match = of_match_ptr("LDO5"),
+   518				.regulators_node = of_match_ptr("regulators"),
+   519				.id = BD718XX_LDO5,
+   520				.ops = &bd718xx_ldo_regulator_ops,
+   521				.type = REGULATOR_VOLTAGE,
+   522				.n_voltages = BD718XX_LDO5_VOLTAGE_NUM,
+   523				.linear_ranges = bd718xx_ldo5_volts,
+   524				.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo5_volts),
+   525				.vsel_reg = BD718XX_REG_LDO5_VOLT,
+   526				.vsel_mask = BD71847_LDO5_MASK,
+   527				.enable_reg = BD718XX_REG_LDO5_VOLT,
+   528				.enable_mask = BD718XX_LDO_EN,
+   529				.owner = THIS_MODULE,
+   530			},
+   531			.init = {
+   532				.reg = BD718XX_REG_LDO5_VOLT,
+   533				.mask = BD718XX_LDO_SEL,
+   534				.val = BD718XX_LDO_SEL,
+   535			},
+   536		},
+   537		{
+   538			.desc = {
+   539				.name = "ldo6",
+   540				.of_match = of_match_ptr("LDO6"),
+   541				.regulators_node = of_match_ptr("regulators"),
+   542				.id = BD718XX_LDO6,
+   543				.ops = &bd718xx_ldo_regulator_ops,
+   544				.type = REGULATOR_VOLTAGE,
+   545				.n_voltages = BD718XX_LDO6_VOLTAGE_NUM,
+   546				.linear_ranges = bd718xx_ldo6_volts,
+   547				.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo6_volts),
+   548				/* LDO6 is supplied by buck5 */
+   549				.supply_name = "buck5",
+   550				.vsel_reg = BD718XX_REG_LDO6_VOLT,
+   551				.vsel_mask = BD718XX_LDO6_MASK,
+   552				.enable_reg = BD718XX_REG_LDO6_VOLT,
+   553				.enable_mask = BD718XX_LDO_EN,
+   554				.owner = THIS_MODULE,
+   555			},
+   556			.init = {
+   557				.reg = BD718XX_REG_LDO6_VOLT,
+   558				.mask = BD718XX_LDO_SEL,
+   559				.val = BD718XX_LDO_SEL,
+   560			},
+   561		},
+   562	};
+   563	
+
 ---
-As usual, this generated from a script copying from upstream dtc. The 
-only part here that's not is dtc/Makefile.
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
+--uAKRQypu60I7Lcqm
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
- scripts/dtc/Makefile                 |   7 +
- scripts/dtc/Makefile.dtc             |   4 +
- scripts/dtc/checks.c                 | 143 ++++++++++++++++
- scripts/dtc/data.c                   |   4 +-
- scripts/dtc/dtc-parser.y             |  16 +-
- scripts/dtc/dtc.c                    |  11 ++
- scripts/dtc/dtc.h                    |  13 ++
- scripts/dtc/flattree.c               |   2 +-
- scripts/dtc/libfdt/fdt.c             |  81 ++++++++-
- scripts/dtc/libfdt/fdt_addresses.c   |  35 ++--
- scripts/dtc/libfdt/fdt_overlay.c     |   6 +-
- scripts/dtc/libfdt/fdt_ro.c          | 199 ++++++++++++++++++---
- scripts/dtc/libfdt/fdt_rw.c          |  28 +--
- scripts/dtc/libfdt/fdt_sw.c          | 109 +++++++++---
- scripts/dtc/libfdt/libfdt.h          |  76 ++++++++-
- scripts/dtc/libfdt/libfdt_env.h      |   1 +
- scripts/dtc/libfdt/libfdt_internal.h |   5 +-
- scripts/dtc/livetree.c               |  12 +-
- scripts/dtc/treesource.c             | 225 ++++++++++++++----------
- scripts/dtc/util.c                   |  23 +--
- scripts/dtc/util.h                   |  20 +--
- scripts/dtc/version_gen.h            |   2 +-
- scripts/dtc/yamltree.c               | 247 +++++++++++++++++++++++++++
- 23 files changed, 1033 insertions(+), 236 deletions(-)
- create mode 100644 scripts/dtc/yamltree.c
+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
+Q8ABAA==
 
-diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-index 1c943e03eaf2..1937ac3187ee 100644
---- a/scripts/dtc/Makefile
-+++ b/scripts/dtc/Makefile
-@@ -11,6 +11,13 @@ dtc-objs	+= dtc-lexer.lex.o dtc-parser.tab.o
- # Source files need to get at the userspace version of libfdt_env.h to compile
- HOST_EXTRACFLAGS := -I$(src)/libfdt
- 
-+ifeq ($(shell pkg-config --exists yaml-0.1; echo $$?),1)
-+HOST_EXTRACFLAGS += -DNO_YAML
-+else
-+dtc-objs	+= yamltree.o
-+HOSTLDLIBS_dtc	:= $(shell pkg-config --libs yaml-0.1)
-+endif
-+
- # Generated files need one more search path to include headers in source tree
- HOSTCFLAGS_dtc-lexer.lex.o := -I$(src)
- HOSTCFLAGS_dtc-parser.tab.o := -I$(src)
-diff --git a/scripts/dtc/Makefile.dtc b/scripts/dtc/Makefile.dtc
-index bece49b35535..d4375630a7f7 100644
---- a/scripts/dtc/Makefile.dtc
-+++ b/scripts/dtc/Makefile.dtc
-@@ -14,5 +14,9 @@ DTC_SRCS = \
- 	treesource.c \
- 	util.c
- 
-+ifneq ($(NO_YAML),1)
-+DTC_SRCS += yamltree.c
-+endif
-+
- DTC_GEN_SRCS = dtc-lexer.lex.c dtc-parser.tab.c
- DTC_OBJS = $(DTC_SRCS:%.c=%.o) $(DTC_GEN_SRCS:%.c=%.o)
-diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
-index a2cc1036c915..9c9b0c328af6 100644
---- a/scripts/dtc/checks.c
-+++ b/scripts/dtc/checks.c
-@@ -962,6 +962,143 @@ static void check_simple_bus_reg(struct check *c, struct dt_info *dti, struct no
- }
- WARNING(simple_bus_reg, check_simple_bus_reg, NULL, &reg_format, &simple_bus_bridge);
- 
-+static const struct bus_type i2c_bus = {
-+	.name = "i2c-bus",
-+};
-+
-+static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct node *node)
-+{
-+	if (strprefixeq(node->name, node->basenamelen, "i2c-bus") ||
-+	    strprefixeq(node->name, node->basenamelen, "i2c-arb")) {
-+		node->bus = &i2c_bus;
-+	} else if (strprefixeq(node->name, node->basenamelen, "i2c")) {
-+		struct node *child;
-+		for_each_child(node, child) {
-+			if (strprefixeq(child->name, node->basenamelen, "i2c-bus"))
-+				return;
-+		}
-+		node->bus = &i2c_bus;
-+	} else
-+		return;
-+
-+	if (!node->children)
-+		return;
-+
-+	if (node_addr_cells(node) != 1)
-+		FAIL(c, dti, node, "incorrect #address-cells for I2C bus");
-+	if (node_size_cells(node) != 0)
-+		FAIL(c, dti, node, "incorrect #size-cells for I2C bus");
-+
-+}
-+WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
-+
-+static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
-+{
-+	struct property *prop;
-+	const char *unitname = get_unitname(node);
-+	char unit_addr[17];
-+	uint32_t reg = 0;
-+	int len;
-+	cell_t *cells = NULL;
-+
-+	if (!node->parent || (node->parent->bus != &i2c_bus))
-+		return;
-+
-+	prop = get_property(node, "reg");
-+	if (prop)
-+		cells = (cell_t *)prop->val.val;
-+
-+	if (!cells) {
-+		FAIL(c, dti, node, "missing or empty reg property");
-+		return;
-+	}
-+
-+	reg = fdt32_to_cpu(*cells);
-+	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
-+	if (!streq(unitname, unit_addr))
-+		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
-+		     unit_addr);
-+
-+	for (len = prop->val.len; len > 0; len -= 4) {
-+		reg = fdt32_to_cpu(*(cells++));
-+		if (reg > 0x3ff)
-+			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
-+				  reg);
-+
-+	}
-+}
-+WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
-+
-+static const struct bus_type spi_bus = {
-+	.name = "spi-bus",
-+};
-+
-+static void check_spi_bus_bridge(struct check *c, struct dt_info *dti, struct node *node)
-+{
-+
-+	if (strprefixeq(node->name, node->basenamelen, "spi")) {
-+		node->bus = &spi_bus;
-+	} else {
-+		/* Try to detect SPI buses which don't have proper node name */
-+		struct node *child;
-+
-+		if (node_addr_cells(node) != 1 || node_size_cells(node) != 0)
-+			return;
-+
-+		for_each_child(node, child) {
-+			struct property *prop;
-+			for_each_property(child, prop) {
-+				if (strprefixeq(prop->name, 4, "spi-")) {
-+					node->bus = &spi_bus;
-+					break;
-+				}
-+			}
-+			if (node->bus == &spi_bus)
-+				break;
-+		}
-+
-+		if (node->bus == &spi_bus && get_property(node, "reg"))
-+			FAIL(c, dti, node, "node name for SPI buses should be 'spi'");
-+	}
-+	if (node->bus != &spi_bus || !node->children)
-+		return;
-+
-+	if (node_addr_cells(node) != 1)
-+		FAIL(c, dti, node, "incorrect #address-cells for SPI bus");
-+	if (node_size_cells(node) != 0)
-+		FAIL(c, dti, node, "incorrect #size-cells for SPI bus");
-+
-+}
-+WARNING(spi_bus_bridge, check_spi_bus_bridge, NULL, &addr_size_cells);
-+
-+static void check_spi_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
-+{
-+	struct property *prop;
-+	const char *unitname = get_unitname(node);
-+	char unit_addr[9];
-+	uint32_t reg = 0;
-+	cell_t *cells = NULL;
-+
-+	if (!node->parent || (node->parent->bus != &spi_bus))
-+		return;
-+
-+	prop = get_property(node, "reg");
-+	if (prop)
-+		cells = (cell_t *)prop->val.val;
-+
-+	if (!cells) {
-+		FAIL(c, dti, node, "missing or empty reg property");
-+		return;
-+	}
-+
-+	reg = fdt32_to_cpu(*cells);
-+	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
-+	if (!streq(unitname, unit_addr))
-+		FAIL(c, dti, node, "SPI bus unit address format error, expected \"%s\"",
-+		     unit_addr);
-+}
-+WARNING(spi_bus_reg, check_spi_bus_reg, NULL, &reg_format, &spi_bus_bridge);
-+
- static void check_unit_address_format(struct check *c, struct dt_info *dti,
- 				      struct node *node)
- {
-@@ -1582,6 +1719,12 @@ static struct check *check_table[] = {
- 	&simple_bus_bridge,
- 	&simple_bus_reg,
- 
-+	&i2c_bus_bridge,
-+	&i2c_bus_reg,
-+
-+	&spi_bus_bridge,
-+	&spi_bus_reg,
-+
- 	&avoid_default_addr_size,
- 	&avoid_unnecessary_addr_size,
- 	&unique_unit_address,
-diff --git a/scripts/dtc/data.c b/scripts/dtc/data.c
-index aa37a16c8891..4a204145cc7b 100644
---- a/scripts/dtc/data.c
-+++ b/scripts/dtc/data.c
-@@ -74,7 +74,8 @@ struct data data_copy_escape_string(const char *s, int len)
- 	struct data d;
- 	char *q;
- 
--	d = data_grow_for(empty_data, len + 1);
-+	d = data_add_marker(empty_data, TYPE_STRING, NULL);
-+	d = data_grow_for(d, len + 1);
- 
- 	q = d.val;
- 	while (i < len) {
-@@ -94,6 +95,7 @@ struct data data_copy_file(FILE *f, size_t maxlen)
- {
- 	struct data d = empty_data;
- 
-+	d = data_add_marker(d, TYPE_NONE, NULL);
- 	while (!feof(f) && (d.len < maxlen)) {
- 		size_t chunksize, ret;
- 
-diff --git a/scripts/dtc/dtc-parser.y b/scripts/dtc/dtc-parser.y
-index 011a5b25539a..dd70ebf386f4 100644
---- a/scripts/dtc/dtc-parser.y
-+++ b/scripts/dtc/dtc-parser.y
-@@ -287,6 +287,7 @@ propdata:
- 		}
- 	| propdataprefix DT_REF
- 		{
-+			$1 = data_add_marker($1, TYPE_STRING, $2);
- 			$$ = data_add_marker($1, REF_PATH, $2);
- 		}
- 	| propdataprefix DT_INCBIN '(' DT_STRING ',' integer_prim ',' integer_prim ')'
-@@ -340,22 +341,27 @@ arrayprefix:
- 	DT_BITS DT_LITERAL '<'
- 		{
- 			unsigned long long bits;
-+			enum markertype type = TYPE_UINT32;
- 
- 			bits = $2;
- 
--			if ((bits !=  8) && (bits != 16) &&
--			    (bits != 32) && (bits != 64)) {
-+			switch (bits) {
-+			case 8: type = TYPE_UINT8; break;
-+			case 16: type = TYPE_UINT16; break;
-+			case 32: type = TYPE_UINT32; break;
-+			case 64: type = TYPE_UINT64; break;
-+			default:
- 				ERROR(&@2, "Array elements must be"
- 				      " 8, 16, 32 or 64-bits");
- 				bits = 32;
- 			}
- 
--			$$.data = empty_data;
-+			$$.data = data_add_marker(empty_data, type, NULL);
- 			$$.bits = bits;
- 		}
- 	| '<'
- 		{
--			$$.data = empty_data;
-+			$$.data = data_add_marker(empty_data, TYPE_UINT32, NULL);
- 			$$.bits = 32;
- 		}
- 	| arrayprefix integer_prim
-@@ -499,7 +505,7 @@ integer_unary:
- bytestring:
- 	  /* empty */
- 		{
--			$$ = empty_data;
-+			$$ = data_add_marker(empty_data, TYPE_UINT8, NULL);
- 		}
- 	| bytestring DT_BYTE
- 		{
-diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
-index c36994e6eac5..64134aadb997 100644
---- a/scripts/dtc/dtc.c
-+++ b/scripts/dtc/dtc.c
-@@ -95,6 +95,9 @@ static const char * const usage_opts_help[] = {
- 	"\n\tOutput formats are:\n"
- 	 "\t\tdts - device tree source text\n"
- 	 "\t\tdtb - device tree blob\n"
-+#ifndef NO_YAML
-+	 "\t\tyaml - device tree encoded as YAML\n"
-+#endif
- 	 "\t\tasm - assembler source",
- 	"\n\tBlob version to produce, defaults to "stringify(DEFAULT_FDT_VERSION)" (for dtb and asm output)",
- 	"\n\tOutput dependency file",
-@@ -128,6 +131,8 @@ static const char *guess_type_by_name(const char *fname, const char *fallback)
- 		return fallback;
- 	if (!strcasecmp(s, ".dts"))
- 		return "dts";
-+	if (!strcasecmp(s, ".yaml"))
-+		return "yaml";
- 	if (!strcasecmp(s, ".dtb"))
- 		return "dtb";
- 	return fallback;
-@@ -350,6 +355,12 @@ int main(int argc, char *argv[])
- 
- 	if (streq(outform, "dts")) {
- 		dt_to_source(outf, dti);
-+#ifndef NO_YAML
-+	} else if (streq(outform, "yaml")) {
-+		if (!streq(inform, "dts"))
-+			die("YAML output format requires dts input format\n");
-+		dt_to_yaml(outf, dti);
-+#endif
- 	} else if (streq(outform, "dtb")) {
- 		dt_to_blob(outf, dti, outversion);
- 	} else if (streq(outform, "asm")) {
-diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
-index 6d667701ab6a..cbe541525c2c 100644
---- a/scripts/dtc/dtc.h
-+++ b/scripts/dtc/dtc.h
-@@ -74,10 +74,17 @@ typedef uint32_t cell_t;
- 
- /* Data blobs */
- enum markertype {
-+	TYPE_NONE,
- 	REF_PHANDLE,
- 	REF_PATH,
- 	LABEL,
-+	TYPE_UINT8,
-+	TYPE_UINT16,
-+	TYPE_UINT32,
-+	TYPE_UINT64,
-+	TYPE_STRING,
- };
-+extern const char *markername(enum markertype markertype);
- 
- struct  marker {
- 	enum markertype type;
-@@ -101,6 +108,8 @@ struct data {
- 	for_each_marker(m) \
- 		if ((m)->type == (t))
- 
-+size_t type_marker_length(struct marker *m);
-+
- void data_free(struct data d);
- 
- struct data data_grow_for(struct data d, int xlen);
-@@ -290,6 +299,10 @@ struct dt_info *dt_from_blob(const char *fname);
- void dt_to_source(FILE *f, struct dt_info *dti);
- struct dt_info *dt_from_source(const char *f);
- 
-+/* YAML source */
-+
-+void dt_to_yaml(FILE *f, struct dt_info *dti);
-+
- /* FS trees */
- 
- struct dt_info *dt_from_fs(const char *dirname);
-diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
-index 8d268fb785db..851ea87dbc0f 100644
---- a/scripts/dtc/flattree.c
-+++ b/scripts/dtc/flattree.c
-@@ -393,7 +393,7 @@ void dt_to_blob(FILE *f, struct dt_info *dti, int version)
- 			padlen = 0;
- 			if (quiet < 1)
- 				fprintf(stderr,
--					"Warning: blob size %d >= minimum size %d\n",
-+					"Warning: blob size %"PRIu32" >= minimum size %d\n",
- 					fdt32_to_cpu(fdt.totalsize), minsize);
- 		}
- 	}
-diff --git a/scripts/dtc/libfdt/fdt.c b/scripts/dtc/libfdt/fdt.c
-index 7855a1787763..ae03b1112961 100644
---- a/scripts/dtc/libfdt/fdt.c
-+++ b/scripts/dtc/libfdt/fdt.c
-@@ -55,7 +55,12 @@
- 
- #include "libfdt_internal.h"
- 
--int fdt_check_header(const void *fdt)
-+/*
-+ * Minimal sanity check for a read-only tree. fdt_ro_probe_() checks
-+ * that the given buffer contains what appears to be a flattened
-+ * device tree with sane information in its header.
-+ */
-+int fdt_ro_probe_(const void *fdt)
- {
- 	if (fdt_magic(fdt) == FDT_MAGIC) {
- 		/* Complete tree */
-@@ -74,6 +79,78 @@ int fdt_check_header(const void *fdt)
- 	return 0;
- }
- 
-+static int check_off_(uint32_t hdrsize, uint32_t totalsize, uint32_t off)
-+{
-+	return (off >= hdrsize) && (off <= totalsize);
-+}
-+
-+static int check_block_(uint32_t hdrsize, uint32_t totalsize,
-+			uint32_t base, uint32_t size)
-+{
-+	if (!check_off_(hdrsize, totalsize, base))
-+		return 0; /* block start out of bounds */
-+	if ((base + size) < base)
-+		return 0; /* overflow */
-+	if (!check_off_(hdrsize, totalsize, base + size))
-+		return 0; /* block end out of bounds */
-+	return 1;
-+}
-+
-+size_t fdt_header_size_(uint32_t version)
-+{
-+	if (version <= 1)
-+		return FDT_V1_SIZE;
-+	else if (version <= 2)
-+		return FDT_V2_SIZE;
-+	else if (version <= 3)
-+		return FDT_V3_SIZE;
-+	else if (version <= 16)
-+		return FDT_V16_SIZE;
-+	else
-+		return FDT_V17_SIZE;
-+}
-+
-+int fdt_check_header(const void *fdt)
-+{
-+	size_t hdrsize;
-+
-+	if (fdt_magic(fdt) != FDT_MAGIC)
-+		return -FDT_ERR_BADMAGIC;
-+	hdrsize = fdt_header_size(fdt);
-+	if ((fdt_version(fdt) < FDT_FIRST_SUPPORTED_VERSION)
-+	    || (fdt_last_comp_version(fdt) > FDT_LAST_SUPPORTED_VERSION))
-+		return -FDT_ERR_BADVERSION;
-+	if (fdt_version(fdt) < fdt_last_comp_version(fdt))
-+		return -FDT_ERR_BADVERSION;
-+
-+	if ((fdt_totalsize(fdt) < hdrsize)
-+	    || (fdt_totalsize(fdt) > INT_MAX))
-+		return -FDT_ERR_TRUNCATED;
-+
-+	/* Bounds check memrsv block */
-+	if (!check_off_(hdrsize, fdt_totalsize(fdt), fdt_off_mem_rsvmap(fdt)))
-+		return -FDT_ERR_TRUNCATED;
-+
-+	/* Bounds check structure block */
-+	if (fdt_version(fdt) < 17) {
-+		if (!check_off_(hdrsize, fdt_totalsize(fdt),
-+				fdt_off_dt_struct(fdt)))
-+			return -FDT_ERR_TRUNCATED;
-+	} else {
-+		if (!check_block_(hdrsize, fdt_totalsize(fdt),
-+				  fdt_off_dt_struct(fdt),
-+				  fdt_size_dt_struct(fdt)))
-+			return -FDT_ERR_TRUNCATED;
-+	}
-+
-+	/* Bounds check strings block */
-+	if (!check_block_(hdrsize, fdt_totalsize(fdt),
-+			  fdt_off_dt_strings(fdt), fdt_size_dt_strings(fdt)))
-+		return -FDT_ERR_TRUNCATED;
-+
-+	return 0;
-+}
-+
- const void *fdt_offset_ptr(const void *fdt, int offset, unsigned int len)
- {
- 	unsigned absoffset = offset + fdt_off_dt_struct(fdt);
-@@ -244,7 +321,7 @@ const char *fdt_find_string_(const char *strtab, int tabsize, const char *s)
- 
- int fdt_move(const void *fdt, void *buf, int bufsize)
- {
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	if (fdt_totalsize(fdt) > bufsize)
- 		return -FDT_ERR_NOSPACE;
-diff --git a/scripts/dtc/libfdt/fdt_addresses.c b/scripts/dtc/libfdt/fdt_addresses.c
-index eff4dbcc729d..49537b578d03 100644
---- a/scripts/dtc/libfdt/fdt_addresses.c
-+++ b/scripts/dtc/libfdt/fdt_addresses.c
-@@ -1,6 +1,7 @@
- /*
-  * libfdt - Flat Device Tree manipulation
-  * Copyright (C) 2014 David Gibson <david@gibson.dropbear.id.au>
-+ * Copyright (C) 2018 embedded brains GmbH
-  *
-  * libfdt is dual licensed: you can use it either under the terms of
-  * the GPL, or the BSD license, at your option.
-@@ -55,42 +56,32 @@
- 
- #include "libfdt_internal.h"
- 
--int fdt_address_cells(const void *fdt, int nodeoffset)
-+static int fdt_cells(const void *fdt, int nodeoffset, const char *name)
- {
--	const fdt32_t *ac;
-+	const fdt32_t *c;
- 	int val;
- 	int len;
- 
--	ac = fdt_getprop(fdt, nodeoffset, "#address-cells", &len);
--	if (!ac)
-+	c = fdt_getprop(fdt, nodeoffset, name, &len);
-+	if (!c)
- 		return 2;
- 
--	if (len != sizeof(*ac))
-+	if (len != sizeof(*c))
- 		return -FDT_ERR_BADNCELLS;
- 
--	val = fdt32_to_cpu(*ac);
-+	val = fdt32_to_cpu(*c);
- 	if ((val <= 0) || (val > FDT_MAX_NCELLS))
- 		return -FDT_ERR_BADNCELLS;
- 
- 	return val;
- }
- 
--int fdt_size_cells(const void *fdt, int nodeoffset)
-+int fdt_address_cells(const void *fdt, int nodeoffset)
- {
--	const fdt32_t *sc;
--	int val;
--	int len;
--
--	sc = fdt_getprop(fdt, nodeoffset, "#size-cells", &len);
--	if (!sc)
--		return 2;
--
--	if (len != sizeof(*sc))
--		return -FDT_ERR_BADNCELLS;
--
--	val = fdt32_to_cpu(*sc);
--	if ((val < 0) || (val > FDT_MAX_NCELLS))
--		return -FDT_ERR_BADNCELLS;
-+	return fdt_cells(fdt, nodeoffset, "#address-cells");
-+}
- 
--	return val;
-+int fdt_size_cells(const void *fdt, int nodeoffset)
-+{
-+	return fdt_cells(fdt, nodeoffset, "#size-cells");
- }
-diff --git a/scripts/dtc/libfdt/fdt_overlay.c b/scripts/dtc/libfdt/fdt_overlay.c
-index bf75388ec9a2..5fdab6c6371d 100644
---- a/scripts/dtc/libfdt/fdt_overlay.c
-+++ b/scripts/dtc/libfdt/fdt_overlay.c
-@@ -697,7 +697,7 @@ static int get_path_len(const void *fdt, int nodeoffset)
- 	int len = 0, namelen;
- 	const char *name;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	for (;;) {
- 		name = fdt_get_name(fdt, nodeoffset, &namelen);
-@@ -866,8 +866,8 @@ int fdt_overlay_apply(void *fdt, void *fdto)
- 	uint32_t delta = fdt_get_max_phandle(fdt);
- 	int ret;
- 
--	FDT_CHECK_HEADER(fdt);
--	FDT_CHECK_HEADER(fdto);
-+	FDT_RO_PROBE(fdt);
-+	FDT_RO_PROBE(fdto);
- 
- 	ret = overlay_adjust_local_phandles(fdto, delta);
- 	if (ret)
-diff --git a/scripts/dtc/libfdt/fdt_ro.c b/scripts/dtc/libfdt/fdt_ro.c
-index dfb3236da388..eafc14282892 100644
---- a/scripts/dtc/libfdt/fdt_ro.c
-+++ b/scripts/dtc/libfdt/fdt_ro.c
-@@ -76,17 +76,72 @@ static int fdt_nodename_eq_(const void *fdt, int offset,
- 		return 0;
- }
- 
-+const char *fdt_get_string(const void *fdt, int stroffset, int *lenp)
-+{
-+	uint32_t absoffset = stroffset + fdt_off_dt_strings(fdt);
-+	size_t len;
-+	int err;
-+	const char *s, *n;
-+
-+	err = fdt_ro_probe_(fdt);
-+	if (err != 0)
-+		goto fail;
-+
-+	err = -FDT_ERR_BADOFFSET;
-+	if (absoffset >= fdt_totalsize(fdt))
-+		goto fail;
-+	len = fdt_totalsize(fdt) - absoffset;
-+
-+	if (fdt_magic(fdt) == FDT_MAGIC) {
-+		if (stroffset < 0)
-+			goto fail;
-+		if (fdt_version(fdt) >= 17) {
-+			if (stroffset >= fdt_size_dt_strings(fdt))
-+				goto fail;
-+			if ((fdt_size_dt_strings(fdt) - stroffset) < len)
-+				len = fdt_size_dt_strings(fdt) - stroffset;
-+		}
-+	} else if (fdt_magic(fdt) == FDT_SW_MAGIC) {
-+		if ((stroffset >= 0)
-+		    || (stroffset < -fdt_size_dt_strings(fdt)))
-+			goto fail;
-+		if ((-stroffset) < len)
-+			len = -stroffset;
-+	} else {
-+		err = -FDT_ERR_INTERNAL;
-+		goto fail;
-+	}
-+
-+	s = (const char *)fdt + absoffset;
-+	n = memchr(s, '\0', len);
-+	if (!n) {
-+		/* missing terminating NULL */
-+		err = -FDT_ERR_TRUNCATED;
-+		goto fail;
-+	}
-+
-+	if (lenp)
-+		*lenp = n - s;
-+	return s;
-+
-+fail:
-+	if (lenp)
-+		*lenp = err;
-+	return NULL;
-+}
-+
- const char *fdt_string(const void *fdt, int stroffset)
- {
--	return (const char *)fdt + fdt_off_dt_strings(fdt) + stroffset;
-+	return fdt_get_string(fdt, stroffset, NULL);
- }
- 
- static int fdt_string_eq_(const void *fdt, int stroffset,
- 			  const char *s, int len)
- {
--	const char *p = fdt_string(fdt, stroffset);
-+	int slen;
-+	const char *p = fdt_get_string(fdt, stroffset, &slen);
- 
--	return (strlen(p) == len) && (memcmp(p, s, len) == 0);
-+	return p && (slen == len) && (memcmp(p, s, len) == 0);
- }
- 
- uint32_t fdt_get_max_phandle(const void *fdt)
-@@ -115,21 +170,42 @@ uint32_t fdt_get_max_phandle(const void *fdt)
- 	return 0;
- }
- 
-+static const struct fdt_reserve_entry *fdt_mem_rsv(const void *fdt, int n)
-+{
-+	int offset = n * sizeof(struct fdt_reserve_entry);
-+	int absoffset = fdt_off_mem_rsvmap(fdt) + offset;
-+
-+	if (absoffset < fdt_off_mem_rsvmap(fdt))
-+		return NULL;
-+	if (absoffset > fdt_totalsize(fdt) - sizeof(struct fdt_reserve_entry))
-+		return NULL;
-+	return fdt_mem_rsv_(fdt, n);
-+}
-+
- int fdt_get_mem_rsv(const void *fdt, int n, uint64_t *address, uint64_t *size)
- {
--	FDT_CHECK_HEADER(fdt);
--	*address = fdt64_to_cpu(fdt_mem_rsv_(fdt, n)->address);
--	*size = fdt64_to_cpu(fdt_mem_rsv_(fdt, n)->size);
-+	const struct fdt_reserve_entry *re;
-+
-+	FDT_RO_PROBE(fdt);
-+	re = fdt_mem_rsv(fdt, n);
-+	if (!re)
-+		return -FDT_ERR_BADOFFSET;
-+
-+	*address = fdt64_ld(&re->address);
-+	*size = fdt64_ld(&re->size);
- 	return 0;
- }
- 
- int fdt_num_mem_rsv(const void *fdt)
- {
--	int i = 0;
-+	int i;
-+	const struct fdt_reserve_entry *re;
- 
--	while (fdt64_to_cpu(fdt_mem_rsv_(fdt, i)->size) != 0)
--		i++;
--	return i;
-+	for (i = 0; (re = fdt_mem_rsv(fdt, i)) != NULL; i++) {
-+		if (fdt64_ld(&re->size) == 0)
-+			return i;
-+	}
-+	return -FDT_ERR_TRUNCATED;
- }
- 
- static int nextprop_(const void *fdt, int offset)
-@@ -161,7 +237,7 @@ int fdt_subnode_offset_namelen(const void *fdt, int offset,
- {
- 	int depth;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	for (depth = 0;
- 	     (offset >= 0) && (depth >= 0);
-@@ -187,7 +263,7 @@ int fdt_path_offset_namelen(const void *fdt, const char *path, int namelen)
- 	const char *p = path;
- 	int offset = 0;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	/* see if we have an alias */
- 	if (*path != '/') {
-@@ -237,7 +313,7 @@ const char *fdt_get_name(const void *fdt, int nodeoffset, int *len)
- 	const char *nameptr;
- 	int err;
- 
--	if (((err = fdt_check_header(fdt)) != 0)
-+	if (((err = fdt_ro_probe_(fdt)) != 0)
- 	    || ((err = fdt_check_node_offset_(fdt, nodeoffset)) < 0))
- 			goto fail;
- 
-@@ -303,7 +379,7 @@ static const struct fdt_property *fdt_get_property_by_offset_(const void *fdt,
- 	prop = fdt_offset_ptr_(fdt, offset);
- 
- 	if (lenp)
--		*lenp = fdt32_to_cpu(prop->len);
-+		*lenp = fdt32_ld(&prop->len);
- 
- 	return prop;
- }
-@@ -340,7 +416,7 @@ static const struct fdt_property *fdt_get_property_namelen_(const void *fdt,
- 			offset = -FDT_ERR_INTERNAL;
- 			break;
- 		}
--		if (fdt_string_eq_(fdt, fdt32_to_cpu(prop->nameoff),
-+		if (fdt_string_eq_(fdt, fdt32_ld(&prop->nameoff),
- 				   name, namelen)) {
- 			if (poffset)
- 				*poffset = offset;
-@@ -393,7 +469,7 @@ const void *fdt_getprop_namelen(const void *fdt, int nodeoffset,
- 
- 	/* Handle realignment */
- 	if (fdt_version(fdt) < 0x10 && (poffset + sizeof(*prop)) % 8 &&
--	    fdt32_to_cpu(prop->len) >= 8)
-+	    fdt32_ld(&prop->len) >= 8)
- 		return prop->data + 4;
- 	return prop->data;
- }
-@@ -406,12 +482,22 @@ const void *fdt_getprop_by_offset(const void *fdt, int offset,
- 	prop = fdt_get_property_by_offset_(fdt, offset, lenp);
- 	if (!prop)
- 		return NULL;
--	if (namep)
--		*namep = fdt_string(fdt, fdt32_to_cpu(prop->nameoff));
-+	if (namep) {
-+		const char *name;
-+		int namelen;
-+		name = fdt_get_string(fdt, fdt32_ld(&prop->nameoff),
-+				      &namelen);
-+		if (!name) {
-+			if (lenp)
-+				*lenp = namelen;
-+			return NULL;
-+		}
-+		*namep = name;
-+	}
- 
- 	/* Handle realignment */
- 	if (fdt_version(fdt) < 0x10 && (offset + sizeof(*prop)) % 8 &&
--	    fdt32_to_cpu(prop->len) >= 8)
-+	    fdt32_ld(&prop->len) >= 8)
- 		return prop->data + 4;
- 	return prop->data;
- }
-@@ -436,7 +522,7 @@ uint32_t fdt_get_phandle(const void *fdt, int nodeoffset)
- 			return 0;
- 	}
- 
--	return fdt32_to_cpu(*php);
-+	return fdt32_ld(php);
- }
- 
- const char *fdt_get_alias_namelen(const void *fdt,
-@@ -462,7 +548,7 @@ int fdt_get_path(const void *fdt, int nodeoffset, char *buf, int buflen)
- 	int offset, depth, namelen;
- 	const char *name;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	if (buflen < 2)
- 		return -FDT_ERR_NOSPACE;
-@@ -514,7 +600,7 @@ int fdt_supernode_atdepth_offset(const void *fdt, int nodeoffset,
- 	int offset, depth;
- 	int supernodeoffset = -FDT_ERR_INTERNAL;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	if (supernodedepth < 0)
- 		return -FDT_ERR_NOTFOUND;
-@@ -573,7 +659,7 @@ int fdt_node_offset_by_prop_value(const void *fdt, int startoffset,
- 	const void *val;
- 	int len;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	/* FIXME: The algorithm here is pretty horrible: we scan each
- 	 * property of a node in fdt_getprop(), then if that didn't
-@@ -599,7 +685,7 @@ int fdt_node_offset_by_phandle(const void *fdt, uint32_t phandle)
- 	if ((phandle == 0) || (phandle == -1))
- 		return -FDT_ERR_BADPHANDLE;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	/* FIXME: The algorithm here is pretty horrible: we
- 	 * potentially scan each property of a node in
-@@ -752,7 +838,7 @@ int fdt_node_offset_by_compatible(const void *fdt, int startoffset,
- {
- 	int offset, err;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	/* FIXME: The algorithm here is pretty horrible: we scan each
- 	 * property of a node in fdt_node_check_compatible(), then if
-@@ -771,3 +857,66 @@ int fdt_node_offset_by_compatible(const void *fdt, int startoffset,
- 
- 	return offset; /* error from fdt_next_node() */
- }
-+
-+int fdt_check_full(const void *fdt, size_t bufsize)
-+{
-+	int err;
-+	int num_memrsv;
-+	int offset, nextoffset = 0;
-+	uint32_t tag;
-+	unsigned depth = 0;
-+	const void *prop;
-+	const char *propname;
-+
-+	if (bufsize < FDT_V1_SIZE)
-+		return -FDT_ERR_TRUNCATED;
-+	err = fdt_check_header(fdt);
-+	if (err != 0)
-+		return err;
-+	if (bufsize < fdt_totalsize(fdt))
-+		return -FDT_ERR_TRUNCATED;
-+
-+	num_memrsv = fdt_num_mem_rsv(fdt);
-+	if (num_memrsv < 0)
-+		return num_memrsv;
-+
-+	while (1) {
-+		offset = nextoffset;
-+		tag = fdt_next_tag(fdt, offset, &nextoffset);
-+
-+		if (nextoffset < 0)
-+			return nextoffset;
-+
-+		switch (tag) {
-+		case FDT_NOP:
-+			break;
-+
-+		case FDT_END:
-+			if (depth != 0)
-+				return -FDT_ERR_BADSTRUCTURE;
-+			return 0;
-+
-+		case FDT_BEGIN_NODE:
-+			depth++;
-+			if (depth > INT_MAX)
-+				return -FDT_ERR_BADSTRUCTURE;
-+			break;
-+
-+		case FDT_END_NODE:
-+			if (depth == 0)
-+				return -FDT_ERR_BADSTRUCTURE;
-+			depth--;
-+			break;
-+
-+		case FDT_PROP:
-+			prop = fdt_getprop_by_offset(fdt, offset, &propname,
-+						     &err);
-+			if (!prop)
-+				return err;
-+			break;
-+
-+		default:
-+			return -FDT_ERR_INTERNAL;
-+		}
-+	}
-+}
-diff --git a/scripts/dtc/libfdt/fdt_rw.c b/scripts/dtc/libfdt/fdt_rw.c
-index 9b829051e444..2e49855d7cf8 100644
---- a/scripts/dtc/libfdt/fdt_rw.c
-+++ b/scripts/dtc/libfdt/fdt_rw.c
-@@ -67,9 +67,9 @@ static int fdt_blocks_misordered_(const void *fdt,
- 		    (fdt_off_dt_strings(fdt) + fdt_size_dt_strings(fdt)));
- }
- 
--static int fdt_rw_check_header_(void *fdt)
-+static int fdt_rw_probe_(void *fdt)
- {
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	if (fdt_version(fdt) < 17)
- 		return -FDT_ERR_BADVERSION;
-@@ -82,10 +82,10 @@ static int fdt_rw_check_header_(void *fdt)
- 	return 0;
- }
- 
--#define FDT_RW_CHECK_HEADER(fdt) \
-+#define FDT_RW_PROBE(fdt) \
- 	{ \
- 		int err_; \
--		if ((err_ = fdt_rw_check_header_(fdt)) != 0) \
-+		if ((err_ = fdt_rw_probe_(fdt)) != 0) \
- 			return err_; \
- 	}
- 
-@@ -176,7 +176,7 @@ int fdt_add_mem_rsv(void *fdt, uint64_t address, uint64_t size)
- 	struct fdt_reserve_entry *re;
- 	int err;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	re = fdt_mem_rsv_w_(fdt, fdt_num_mem_rsv(fdt));
- 	err = fdt_splice_mem_rsv_(fdt, re, 0, 1);
-@@ -192,7 +192,7 @@ int fdt_del_mem_rsv(void *fdt, int n)
- {
- 	struct fdt_reserve_entry *re = fdt_mem_rsv_w_(fdt, n);
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	if (n >= fdt_num_mem_rsv(fdt))
- 		return -FDT_ERR_NOTFOUND;
-@@ -252,7 +252,7 @@ int fdt_set_name(void *fdt, int nodeoffset, const char *name)
- 	int oldlen, newlen;
- 	int err;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	namep = (char *)(uintptr_t)fdt_get_name(fdt, nodeoffset, &oldlen);
- 	if (!namep)
-@@ -275,7 +275,7 @@ int fdt_setprop_placeholder(void *fdt, int nodeoffset, const char *name,
- 	struct fdt_property *prop;
- 	int err;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	err = fdt_resize_property_(fdt, nodeoffset, name, len, &prop);
- 	if (err == -FDT_ERR_NOTFOUND)
-@@ -308,7 +308,7 @@ int fdt_appendprop(void *fdt, int nodeoffset, const char *name,
- 	struct fdt_property *prop;
- 	int err, oldlen, newlen;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	prop = fdt_get_property_w(fdt, nodeoffset, name, &oldlen);
- 	if (prop) {
-@@ -334,7 +334,7 @@ int fdt_delprop(void *fdt, int nodeoffset, const char *name)
- 	struct fdt_property *prop;
- 	int len, proplen;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	prop = fdt_get_property_w(fdt, nodeoffset, name, &len);
- 	if (!prop)
-@@ -354,7 +354,7 @@ int fdt_add_subnode_namelen(void *fdt, int parentoffset,
- 	uint32_t tag;
- 	fdt32_t *endtag;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	offset = fdt_subnode_offset_namelen(fdt, parentoffset, name, namelen);
- 	if (offset >= 0)
-@@ -394,7 +394,7 @@ int fdt_del_node(void *fdt, int nodeoffset)
- {
- 	int endoffset;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	endoffset = fdt_node_end_offset_(fdt, nodeoffset);
- 	if (endoffset < 0)
-@@ -435,7 +435,7 @@ int fdt_open_into(const void *fdt, void *buf, int bufsize)
- 	const char *fdtend = fdtstart + fdt_totalsize(fdt);
- 	char *tmp;
- 
--	FDT_CHECK_HEADER(fdt);
-+	FDT_RO_PROBE(fdt);
- 
- 	mem_rsv_size = (fdt_num_mem_rsv(fdt)+1)
- 		* sizeof(struct fdt_reserve_entry);
-@@ -494,7 +494,7 @@ int fdt_pack(void *fdt)
- {
- 	int mem_rsv_size;
- 
--	FDT_RW_CHECK_HEADER(fdt);
-+	FDT_RW_PROBE(fdt);
- 
- 	mem_rsv_size = (fdt_num_mem_rsv(fdt)+1)
- 		* sizeof(struct fdt_reserve_entry);
-diff --git a/scripts/dtc/libfdt/fdt_sw.c b/scripts/dtc/libfdt/fdt_sw.c
-index 6d33cc29d022..9fa4a94d83c3 100644
---- a/scripts/dtc/libfdt/fdt_sw.c
-+++ b/scripts/dtc/libfdt/fdt_sw.c
-@@ -55,21 +55,77 @@
- 
- #include "libfdt_internal.h"
- 
--static int fdt_sw_check_header_(void *fdt)
-+static int fdt_sw_probe_(void *fdt)
- {
--	if (fdt_magic(fdt) != FDT_SW_MAGIC)
-+	if (fdt_magic(fdt) == FDT_MAGIC)
-+		return -FDT_ERR_BADSTATE;
-+	else if (fdt_magic(fdt) != FDT_SW_MAGIC)
- 		return -FDT_ERR_BADMAGIC;
--	/* FIXME: should check more details about the header state */
- 	return 0;
- }
- 
--#define FDT_SW_CHECK_HEADER(fdt) \
-+#define FDT_SW_PROBE(fdt) \
-+	{ \
-+		int err; \
-+		if ((err = fdt_sw_probe_(fdt)) != 0) \
-+			return err; \
-+	}
-+
-+/* 'memrsv' state:	Initial state after fdt_create()
-+ *
-+ * Allowed functions:
-+ *	fdt_add_reservmap_entry()
-+ *	fdt_finish_reservemap()		[moves to 'struct' state]
-+ */
-+static int fdt_sw_probe_memrsv_(void *fdt)
-+{
-+	int err = fdt_sw_probe_(fdt);
-+	if (err)
-+		return err;
-+
-+	if (fdt_off_dt_strings(fdt) != 0)
-+		return -FDT_ERR_BADSTATE;
-+	return 0;
-+}
-+
-+#define FDT_SW_PROBE_MEMRSV(fdt) \
-+	{ \
-+		int err; \
-+		if ((err = fdt_sw_probe_memrsv_(fdt)) != 0) \
-+			return err; \
-+	}
-+
-+/* 'struct' state:	Enter this state after fdt_finish_reservemap()
-+ *
-+ * Allowed functions:
-+ *	fdt_begin_node()
-+ *	fdt_end_node()
-+ *	fdt_property*()
-+ *	fdt_finish()			[moves to 'complete' state]
-+ */
-+static int fdt_sw_probe_struct_(void *fdt)
-+{
-+	int err = fdt_sw_probe_(fdt);
-+	if (err)
-+		return err;
-+
-+	if (fdt_off_dt_strings(fdt) != fdt_totalsize(fdt))
-+		return -FDT_ERR_BADSTATE;
-+	return 0;
-+}
-+
-+#define FDT_SW_PROBE_STRUCT(fdt) \
- 	{ \
- 		int err; \
--		if ((err = fdt_sw_check_header_(fdt)) != 0) \
-+		if ((err = fdt_sw_probe_struct_(fdt)) != 0) \
- 			return err; \
- 	}
- 
-+/* 'complete' state:	Enter this state after fdt_finish()
-+ *
-+ * Allowed functions: none
-+ */
-+
- static void *fdt_grab_space_(void *fdt, size_t len)
- {
- 	int offset = fdt_size_dt_struct(fdt);
-@@ -87,9 +143,11 @@ static void *fdt_grab_space_(void *fdt, size_t len)
- 
- int fdt_create(void *buf, int bufsize)
- {
-+	const size_t hdrsize = FDT_ALIGN(sizeof(struct fdt_header),
-+					 sizeof(struct fdt_reserve_entry));
- 	void *fdt = buf;
- 
--	if (bufsize < sizeof(struct fdt_header))
-+	if (bufsize < hdrsize)
- 		return -FDT_ERR_NOSPACE;
- 
- 	memset(buf, 0, bufsize);
-@@ -99,10 +157,9 @@ int fdt_create(void *buf, int bufsize)
- 	fdt_set_last_comp_version(fdt, FDT_FIRST_SUPPORTED_VERSION);
- 	fdt_set_totalsize(fdt,  bufsize);
- 
--	fdt_set_off_mem_rsvmap(fdt, FDT_ALIGN(sizeof(struct fdt_header),
--					      sizeof(struct fdt_reserve_entry)));
-+	fdt_set_off_mem_rsvmap(fdt, hdrsize);
- 	fdt_set_off_dt_struct(fdt, fdt_off_mem_rsvmap(fdt));
--	fdt_set_off_dt_strings(fdt, bufsize);
-+	fdt_set_off_dt_strings(fdt, 0);
- 
- 	return 0;
- }
-@@ -112,11 +169,14 @@ int fdt_resize(void *fdt, void *buf, int bufsize)
- 	size_t headsize, tailsize;
- 	char *oldtail, *newtail;
- 
--	FDT_SW_CHECK_HEADER(fdt);
-+	FDT_SW_PROBE(fdt);
- 
--	headsize = fdt_off_dt_struct(fdt);
-+	headsize = fdt_off_dt_struct(fdt) + fdt_size_dt_struct(fdt);
- 	tailsize = fdt_size_dt_strings(fdt);
- 
-+	if ((headsize + tailsize) > fdt_totalsize(fdt))
-+		return -FDT_ERR_INTERNAL;
-+
- 	if ((headsize + tailsize) > bufsize)
- 		return -FDT_ERR_NOSPACE;
- 
-@@ -133,8 +193,9 @@ int fdt_resize(void *fdt, void *buf, int bufsize)
- 		memmove(buf, fdt, headsize);
- 	}
- 
--	fdt_set_off_dt_strings(buf, bufsize);
- 	fdt_set_totalsize(buf, bufsize);
-+	if (fdt_off_dt_strings(buf))
-+		fdt_set_off_dt_strings(buf, bufsize);
- 
- 	return 0;
- }
-@@ -144,10 +205,7 @@ int fdt_add_reservemap_entry(void *fdt, uint64_t addr, uint64_t size)
- 	struct fdt_reserve_entry *re;
- 	int offset;
- 
--	FDT_SW_CHECK_HEADER(fdt);
--
--	if (fdt_size_dt_struct(fdt))
--		return -FDT_ERR_BADSTATE;
-+	FDT_SW_PROBE_MEMRSV(fdt);
- 
- 	offset = fdt_off_dt_struct(fdt);
- 	if ((offset + sizeof(*re)) > fdt_totalsize(fdt))
-@@ -164,16 +222,23 @@ int fdt_add_reservemap_entry(void *fdt, uint64_t addr, uint64_t size)
- 
- int fdt_finish_reservemap(void *fdt)
- {
--	return fdt_add_reservemap_entry(fdt, 0, 0);
-+	int err = fdt_add_reservemap_entry(fdt, 0, 0);
-+
-+	if (err)
-+		return err;
-+
-+	fdt_set_off_dt_strings(fdt, fdt_totalsize(fdt));
-+	return 0;
- }
- 
- int fdt_begin_node(void *fdt, const char *name)
- {
- 	struct fdt_node_header *nh;
--	int namelen = strlen(name) + 1;
-+	int namelen;
- 
--	FDT_SW_CHECK_HEADER(fdt);
-+	FDT_SW_PROBE_STRUCT(fdt);
- 
-+	namelen = strlen(name) + 1;
- 	nh = fdt_grab_space_(fdt, sizeof(*nh) + FDT_TAGALIGN(namelen));
- 	if (! nh)
- 		return -FDT_ERR_NOSPACE;
-@@ -187,7 +252,7 @@ int fdt_end_node(void *fdt)
- {
- 	fdt32_t *en;
- 
--	FDT_SW_CHECK_HEADER(fdt);
-+	FDT_SW_PROBE_STRUCT(fdt);
- 
- 	en = fdt_grab_space_(fdt, FDT_TAGSIZE);
- 	if (! en)
-@@ -225,7 +290,7 @@ int fdt_property_placeholder(void *fdt, const char *name, int len, void **valp)
- 	struct fdt_property *prop;
- 	int nameoff;
- 
--	FDT_SW_CHECK_HEADER(fdt);
-+	FDT_SW_PROBE_STRUCT(fdt);
- 
- 	nameoff = fdt_find_add_string_(fdt, name);
- 	if (nameoff == 0)
-@@ -262,7 +327,7 @@ int fdt_finish(void *fdt)
- 	uint32_t tag;
- 	int offset, nextoffset;
- 
--	FDT_SW_CHECK_HEADER(fdt);
-+	FDT_SW_PROBE_STRUCT(fdt);
- 
- 	/* Add terminator */
- 	end = fdt_grab_space_(fdt, sizeof(*end));
-diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
-index 1e27780e1185..2bd151dd355f 100644
---- a/scripts/dtc/libfdt/libfdt.h
-+++ b/scripts/dtc/libfdt/libfdt.h
-@@ -90,8 +90,9 @@
- 
- /* Error codes: codes for bad device tree blobs */
- #define FDT_ERR_TRUNCATED	8
--	/* FDT_ERR_TRUNCATED: Structure block of the given device tree
--	 * ends without an FDT_END tag. */
-+	/* FDT_ERR_TRUNCATED: FDT or a sub-block is improperly
-+	 * terminated (overflows, goes outside allowed bounds, or
-+	 * isn't properly terminated).  */
- #define FDT_ERR_BADMAGIC	9
- 	/* FDT_ERR_BADMAGIC: Given "device tree" appears not to be a
- 	 * device tree at all - it is missing the flattened device
-@@ -153,6 +154,29 @@ static inline void *fdt_offset_ptr_w(void *fdt, int offset, int checklen)
- 
- uint32_t fdt_next_tag(const void *fdt, int offset, int *nextoffset);
- 
-+/*
-+ * Alignment helpers:
-+ *     These helpers access words from a device tree blob.  They're
-+ *     built to work even with unaligned pointers on platforms (ike
-+ *     ARM) that don't like unaligned loads and stores
-+ */
-+
-+static inline uint32_t fdt32_ld(const fdt32_t *p)
-+{
-+	fdt32_t v;
-+
-+	memcpy(&v, p, sizeof(v));
-+	return fdt32_to_cpu(v);
-+}
-+
-+static inline uint64_t fdt64_ld(const fdt64_t *p)
-+{
-+	fdt64_t v;
-+
-+	memcpy(&v, p, sizeof(v));
-+	return fdt64_to_cpu(v);
-+}
-+
- /**********************************************************************/
- /* Traversal functions                                                */
- /**********************************************************************/
-@@ -213,7 +237,7 @@ int fdt_next_subnode(const void *fdt, int offset);
- /* General functions                                                  */
- /**********************************************************************/
- #define fdt_get_header(fdt, field) \
--	(fdt32_to_cpu(((const struct fdt_header *)(fdt))->field))
-+	(fdt32_ld(&((const struct fdt_header *)(fdt))->field))
- #define fdt_magic(fdt)			(fdt_get_header(fdt, magic))
- #define fdt_totalsize(fdt)		(fdt_get_header(fdt, totalsize))
- #define fdt_off_dt_struct(fdt)		(fdt_get_header(fdt, off_dt_struct))
-@@ -244,18 +268,31 @@ fdt_set_hdr_(size_dt_struct);
- #undef fdt_set_hdr_
- 
- /**
-- * fdt_check_header - sanity check a device tree or possible device tree
-+ * fdt_header_size - return the size of the tree's header
-+ * @fdt: pointer to a flattened device tree
-+ */
-+size_t fdt_header_size_(uint32_t version);
-+static inline size_t fdt_header_size(const void *fdt)
-+{
-+	return fdt_header_size_(fdt_version(fdt));
-+}
-+
-+/**
-+ * fdt_check_header - sanity check a device tree header
-+
-  * @fdt: pointer to data which might be a flattened device tree
-  *
-  * fdt_check_header() checks that the given buffer contains what
-- * appears to be a flattened device tree with sane information in its
-- * header.
-+ * appears to be a flattened device tree, and that the header contains
-+ * valid information (to the extent that can be determined from the
-+ * header alone).
-  *
-  * returns:
-  *     0, if the buffer appears to contain a valid device tree
-  *     -FDT_ERR_BADMAGIC,
-  *     -FDT_ERR_BADVERSION,
-- *     -FDT_ERR_BADSTATE, standard meanings, as above
-+ *     -FDT_ERR_BADSTATE,
-+ *     -FDT_ERR_TRUNCATED, standard meanings, as above
-  */
- int fdt_check_header(const void *fdt);
- 
-@@ -284,6 +321,24 @@ int fdt_move(const void *fdt, void *buf, int bufsize);
- /* Read-only functions                                                */
- /**********************************************************************/
- 
-+int fdt_check_full(const void *fdt, size_t bufsize);
-+
-+/**
-+ * fdt_get_string - retrieve a string from the strings block of a device tree
-+ * @fdt: pointer to the device tree blob
-+ * @stroffset: offset of the string within the strings block (native endian)
-+ * @lenp: optional pointer to return the string's length
-+ *
-+ * fdt_get_string() retrieves a pointer to a single string from the
-+ * strings block of the device tree blob at fdt, and optionally also
-+ * returns the string's length in *lenp.
-+ *
-+ * returns:
-+ *     a pointer to the string, on success
-+ *     NULL, if stroffset is out of bounds, or doesn't point to a valid string
-+ */
-+const char *fdt_get_string(const void *fdt, int stroffset, int *lenp);
-+
- /**
-  * fdt_string - retrieve a string from the strings block of a device tree
-  * @fdt: pointer to the device tree blob
-@@ -294,7 +349,7 @@ int fdt_move(const void *fdt, void *buf, int bufsize);
-  *
-  * returns:
-  *     a pointer to the string, on success
-- *     NULL, if stroffset is out of bounds
-+ *     NULL, if stroffset is out of bounds, or doesn't point to a valid string
-  */
- const char *fdt_string(const void *fdt, int stroffset);
- 
-@@ -1090,7 +1145,7 @@ int fdt_address_cells(const void *fdt, int nodeoffset);
-  *
-  * returns:
-  *	0 <= n < FDT_MAX_NCELLS, on success
-- *      2, if the node has no #address-cells property
-+ *      2, if the node has no #size-cells property
-  *      -FDT_ERR_BADNCELLS, if the node has a badly formatted or invalid
-  *		#size-cells property
-  *	-FDT_ERR_BADMAGIC,
-@@ -1313,10 +1368,13 @@ static inline int fdt_property_u64(void *fdt, const char *name, uint64_t val)
- 	fdt64_t tmp = cpu_to_fdt64(val);
- 	return fdt_property(fdt, name, &tmp, sizeof(tmp));
- }
-+
-+#ifndef SWIG /* Not available in Python */
- static inline int fdt_property_cell(void *fdt, const char *name, uint32_t val)
- {
- 	return fdt_property_u32(fdt, name, val);
- }
-+#endif
- 
- /**
-  * fdt_property_placeholder - add a new property and return a ptr to its value
-diff --git a/scripts/dtc/libfdt/libfdt_env.h b/scripts/dtc/libfdt/libfdt_env.h
-index bd2474628775..eb2053845c9c 100644
---- a/scripts/dtc/libfdt/libfdt_env.h
-+++ b/scripts/dtc/libfdt/libfdt_env.h
-@@ -56,6 +56,7 @@
- #include <stdint.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <limits.h>
- 
- #ifdef __CHECKER__
- #define FDT_FORCE __attribute__((force))
-diff --git a/scripts/dtc/libfdt/libfdt_internal.h b/scripts/dtc/libfdt/libfdt_internal.h
-index 7681e192295b..4109f890ae60 100644
---- a/scripts/dtc/libfdt/libfdt_internal.h
-+++ b/scripts/dtc/libfdt/libfdt_internal.h
-@@ -55,10 +55,11 @@
- #define FDT_ALIGN(x, a)		(((x) + (a) - 1) & ~((a) - 1))
- #define FDT_TAGALIGN(x)		(FDT_ALIGN((x), FDT_TAGSIZE))
- 
--#define FDT_CHECK_HEADER(fdt) \
-+int fdt_ro_probe_(const void *fdt);
-+#define FDT_RO_PROBE(fdt)			\
- 	{ \
- 		int err_; \
--		if ((err_ = fdt_check_header(fdt)) != 0) \
-+		if ((err_ = fdt_ro_probe_(fdt)) != 0)	\
- 			return err_; \
- 	}
- 
-diff --git a/scripts/dtc/livetree.c b/scripts/dtc/livetree.c
-index 6e4c367f54b3..4ff0679e0062 100644
---- a/scripts/dtc/livetree.c
-+++ b/scripts/dtc/livetree.c
-@@ -594,6 +594,7 @@ struct node *get_node_by_ref(struct node *tree, const char *ref)
- cell_t get_node_phandle(struct node *root, struct node *node)
- {
- 	static cell_t phandle = 1; /* FIXME: ick, static local */
-+	struct data d = empty_data;
- 
- 	if ((node->phandle != 0) && (node->phandle != -1))
- 		return node->phandle;
-@@ -603,17 +604,16 @@ cell_t get_node_phandle(struct node *root, struct node *node)
- 
- 	node->phandle = phandle;
- 
-+	d = data_add_marker(d, TYPE_UINT32, NULL);
-+	d = data_append_cell(d, phandle);
-+
- 	if (!get_property(node, "linux,phandle")
- 	    && (phandle_format & PHANDLE_LEGACY))
--		add_property(node,
--			     build_property("linux,phandle",
--					    data_append_cell(empty_data, phandle)));
-+		add_property(node, build_property("linux,phandle", d));
- 
- 	if (!get_property(node, "phandle")
- 	    && (phandle_format & PHANDLE_EPAPR))
--		add_property(node,
--			     build_property("phandle",
--					    data_append_cell(empty_data, phandle)));
-+		add_property(node, build_property("phandle", d));
- 
- 	/* If the node *does* have a phandle property, we must
- 	 * be dealing with a self-referencing phandle, which will be
-diff --git a/scripts/dtc/treesource.c b/scripts/dtc/treesource.c
-index 2461a3d068a0..f2874f1d1465 100644
---- a/scripts/dtc/treesource.c
-+++ b/scripts/dtc/treesource.c
-@@ -61,24 +61,14 @@ static bool isstring(char c)
- 		|| strchr("\a\b\t\n\v\f\r", c));
- }
- 
--static void write_propval_string(FILE *f, struct data val)
-+static void write_propval_string(FILE *f, const char *s, size_t len)
- {
--	const char *str = val.val;
--	int i;
--	struct marker *m = val.markers;
--
--	assert(str[val.len-1] == '\0');
-+	const char *end = s + len - 1;
-+	assert(*end == '\0');
- 
--	while (m && (m->offset == 0)) {
--		if (m->type == LABEL)
--			fprintf(f, "%s: ", m->ref);
--		m = m->next;
--	}
- 	fprintf(f, "\"");
--
--	for (i = 0; i < (val.len-1); i++) {
--		char c = str[i];
--
-+	while (s < end) {
-+		char c = *s++;
- 		switch (c) {
- 		case '\a':
- 			fprintf(f, "\\a");
-@@ -108,91 +98,78 @@ static void write_propval_string(FILE *f, struct data val)
- 			fprintf(f, "\\\"");
- 			break;
- 		case '\0':
--			fprintf(f, "\", ");
--			while (m && (m->offset <= (i + 1))) {
--				if (m->type == LABEL) {
--					assert(m->offset == (i+1));
--					fprintf(f, "%s: ", m->ref);
--				}
--				m = m->next;
--			}
--			fprintf(f, "\"");
-+			fprintf(f, "\\0");
- 			break;
- 		default:
- 			if (isprint((unsigned char)c))
- 				fprintf(f, "%c", c);
- 			else
--				fprintf(f, "\\x%02hhx", c);
-+				fprintf(f, "\\x%02"PRIx8, c);
- 		}
- 	}
- 	fprintf(f, "\"");
--
--	/* Wrap up any labels at the end of the value */
--	for_each_marker_of_type(m, LABEL) {
--		assert (m->offset == val.len);
--		fprintf(f, " %s:", m->ref);
--	}
- }
- 
--static void write_propval_cells(FILE *f, struct data val)
-+static void write_propval_int(FILE *f, const char *p, size_t len, size_t width)
- {
--	void *propend = val.val + val.len;
--	fdt32_t *cp = (fdt32_t *)val.val;
--	struct marker *m = val.markers;
--
--	fprintf(f, "<");
--	for (;;) {
--		while (m && (m->offset <= ((char *)cp - val.val))) {
--			if (m->type == LABEL) {
--				assert(m->offset == ((char *)cp - val.val));
--				fprintf(f, "%s: ", m->ref);
--			}
--			m = m->next;
--		}
-+	const char *end = p + len;
-+	assert(len % width == 0);
- 
--		fprintf(f, "0x%x", fdt32_to_cpu(*cp++));
--		if ((void *)cp >= propend)
-+	for (; p < end; p += width) {
-+		switch (width) {
-+		case 1:
-+			fprintf(f, " %02"PRIx8, *(const uint8_t*)p);
-+			break;
-+		case 2:
-+			fprintf(f, " 0x%02"PRIx16, fdt16_to_cpu(*(const fdt16_t*)p));
-+			break;
-+		case 4:
-+			fprintf(f, " 0x%02"PRIx32, fdt32_to_cpu(*(const fdt32_t*)p));
-+			break;
-+		case 8:
-+			fprintf(f, " 0x%02"PRIx64, fdt64_to_cpu(*(const fdt64_t*)p));
- 			break;
--		fprintf(f, " ");
-+		}
- 	}
-+}
- 
--	/* Wrap up any labels at the end of the value */
--	for_each_marker_of_type(m, LABEL) {
--		assert (m->offset == val.len);
--		fprintf(f, " %s:", m->ref);
--	}
--	fprintf(f, ">");
-+static bool has_data_type_information(struct marker *m)
-+{
-+	return m->type >= TYPE_UINT8;
- }
- 
--static void write_propval_bytes(FILE *f, struct data val)
-+static struct marker *next_type_marker(struct marker *m)
- {
--	void *propend = val.val + val.len;
--	const char *bp = val.val;
--	struct marker *m = val.markers;
--
--	fprintf(f, "[");
--	for (;;) {
--		while (m && (m->offset == (bp-val.val))) {
--			if (m->type == LABEL)
--				fprintf(f, "%s: ", m->ref);
--			m = m->next;
--		}
-+	while (m && !has_data_type_information(m))
-+		m = m->next;
-+	return m;
-+}
- 
--		fprintf(f, "%02hhx", (unsigned char)(*bp++));
--		if ((const void *)bp >= propend)
--			break;
--		fprintf(f, " ");
--	}
-+size_t type_marker_length(struct marker *m)
-+{
-+	struct marker *next = next_type_marker(m->next);
- 
--	/* Wrap up any labels at the end of the value */
--	for_each_marker_of_type(m, LABEL) {
--		assert (m->offset == val.len);
--		fprintf(f, " %s:", m->ref);
--	}
--	fprintf(f, "]");
-+	if (next)
-+		return next->offset - m->offset;
-+	return 0;
- }
- 
--static void write_propval(FILE *f, struct property *prop)
-+static const char *delim_start[] = {
-+	[TYPE_UINT8] = "[",
-+	[TYPE_UINT16] = "/bits/ 16 <",
-+	[TYPE_UINT32] = "<",
-+	[TYPE_UINT64] = "/bits/ 64 <",
-+	[TYPE_STRING] = "",
-+};
-+static const char *delim_end[] = {
-+	[TYPE_UINT8] = " ]",
-+	[TYPE_UINT16] = " >",
-+	[TYPE_UINT32] = " >",
-+	[TYPE_UINT64] = " >",
-+	[TYPE_STRING] = "",
-+};
-+
-+static enum markertype guess_value_type(struct property *prop)
- {
- 	int len = prop->val.len;
- 	const char *p = prop->val.val;
-@@ -201,11 +178,6 @@ static void write_propval(FILE *f, struct property *prop)
- 	int nnotstringlbl = 0, nnotcelllbl = 0;
- 	int i;
- 
--	if (len == 0) {
--		fprintf(f, ";\n");
--		return;
--	}
--
- 	for (i = 0; i < len; i++) {
- 		if (! isstring(p[i]))
- 			nnotstring++;
-@@ -220,17 +192,91 @@ static void write_propval(FILE *f, struct property *prop)
- 			nnotcelllbl++;
- 	}
- 
--	fprintf(f, " = ");
- 	if ((p[len-1] == '\0') && (nnotstring == 0) && (nnul < (len-nnul))
- 	    && (nnotstringlbl == 0)) {
--		write_propval_string(f, prop->val);
-+		return TYPE_STRING;
- 	} else if (((len % sizeof(cell_t)) == 0) && (nnotcelllbl == 0)) {
--		write_propval_cells(f, prop->val);
--	} else {
--		write_propval_bytes(f, prop->val);
-+		return TYPE_UINT32;
- 	}
- 
--	fprintf(f, ";\n");
-+	return TYPE_UINT8;
-+}
-+
-+static void write_propval(FILE *f, struct property *prop)
-+{
-+	size_t len = prop->val.len;
-+	struct marker *m = prop->val.markers;
-+	struct marker dummy_marker;
-+	enum markertype emit_type = TYPE_NONE;
-+
-+	if (len == 0) {
-+		fprintf(f, ";\n");
-+		return;
-+	}
-+
-+	fprintf(f, " = ");
-+
-+	if (!next_type_marker(m)) {
-+		/* data type information missing, need to guess */
-+		dummy_marker.type = guess_value_type(prop);
-+		dummy_marker.next = prop->val.markers;
-+		dummy_marker.offset = 0;
-+		dummy_marker.ref = NULL;
-+		m = &dummy_marker;
-+	}
-+
-+	struct marker *m_label = prop->val.markers;
-+	for_each_marker(m) {
-+		size_t chunk_len;
-+		const char *p = &prop->val.val[m->offset];
-+
-+		if (!has_data_type_information(m))
-+			continue;
-+
-+		chunk_len = type_marker_length(m);
-+		if (!chunk_len)
-+			chunk_len = len - m->offset;
-+
-+		if (emit_type != TYPE_NONE)
-+			fprintf(f, "%s, ", delim_end[emit_type]);
-+		emit_type = m->type;
-+
-+		for_each_marker_of_type(m_label, LABEL) {
-+			if (m_label->offset > m->offset)
-+				break;
-+			fprintf(f, "%s: ", m_label->ref);
-+		}
-+
-+		fprintf(f, "%s", delim_start[emit_type]);
-+
-+		if (chunk_len <= 0)
-+			continue;
-+
-+		switch(emit_type) {
-+		case TYPE_UINT16:
-+			write_propval_int(f, p, chunk_len, 2);
-+			break;
-+		case TYPE_UINT32:
-+			write_propval_int(f, p, chunk_len, 4);
-+			break;
-+		case TYPE_UINT64:
-+			write_propval_int(f, p, chunk_len, 8);
-+			break;
-+		case TYPE_STRING:
-+			write_propval_string(f, p, chunk_len);
-+			break;
-+		default:
-+			write_propval_int(f, p, chunk_len, 1);
-+		}
-+	}
-+
-+	/* Wrap up any labels at the end of the value */
-+	for_each_marker_of_type(m_label, LABEL) {
-+		assert (m_label->offset == len);
-+		fprintf(f, " %s:", m_label->ref);
-+	}
-+
-+	fprintf(f, "%s;\n", delim_end[emit_type] ? : "");
- }
- 
- static void write_tree_source_node(FILE *f, struct node *tree, int level)
-@@ -281,4 +327,3 @@ void dt_to_source(FILE *f, struct dt_info *dti)
- 
- 	write_tree_source_node(f, dti->dt, 0);
- }
--
-diff --git a/scripts/dtc/util.c b/scripts/dtc/util.c
-index 9953c32a0244..a69b7a13463d 100644
---- a/scripts/dtc/util.c
-+++ b/scripts/dtc/util.c
-@@ -227,11 +227,11 @@ char get_escape_char(const char *s, int *i)
- 	return val;
- }
- 
--int utilfdt_read_err_len(const char *filename, char **buffp, off_t *len)
-+int utilfdt_read_err(const char *filename, char **buffp, size_t *len)
- {
- 	int fd = 0;	/* assume stdin */
- 	char *buf = NULL;
--	off_t bufsize = 1024, offset = 0;
-+	size_t bufsize = 1024, offset = 0;
- 	int ret = 0;
- 
- 	*buffp = NULL;
-@@ -264,20 +264,15 @@ int utilfdt_read_err_len(const char *filename, char **buffp, off_t *len)
- 		free(buf);
- 	else
- 		*buffp = buf;
--	*len = bufsize;
-+	if (len)
-+		*len = bufsize;
- 	return ret;
- }
- 
--int utilfdt_read_err(const char *filename, char **buffp)
--{
--	off_t len;
--	return utilfdt_read_err_len(filename, buffp, &len);
--}
--
--char *utilfdt_read_len(const char *filename, off_t *len)
-+char *utilfdt_read(const char *filename, size_t *len)
- {
- 	char *buff;
--	int ret = utilfdt_read_err_len(filename, &buff, len);
-+	int ret = utilfdt_read_err(filename, &buff, len);
- 
- 	if (ret) {
- 		fprintf(stderr, "Couldn't open blob from '%s': %s\n", filename,
-@@ -288,12 +283,6 @@ char *utilfdt_read_len(const char *filename, off_t *len)
- 	return buff;
- }
- 
--char *utilfdt_read(const char *filename)
--{
--	off_t len;
--	return utilfdt_read_len(filename, &len);
--}
--
- int utilfdt_write_err(const char *filename, const void *blob)
- {
- 	int fd = 1;	/* assume stdout */
-diff --git a/scripts/dtc/util.h b/scripts/dtc/util.h
-index 66fba8ea709b..f6cea8274174 100644
---- a/scripts/dtc/util.h
-+++ b/scripts/dtc/util.h
-@@ -98,16 +98,10 @@ char get_escape_char(const char *s, int *i);
-  * stderr.
-  *
-  * @param filename	The filename to read, or - for stdin
-- * @return Pointer to allocated buffer containing fdt, or NULL on error
-- */
--char *utilfdt_read(const char *filename);
--
--/**
-- * Like utilfdt_read(), but also passes back the size of the file read.
-- *
-  * @param len		If non-NULL, the amount of data we managed to read
-+ * @return Pointer to allocated buffer containing fdt, or NULL on error
-  */
--char *utilfdt_read_len(const char *filename, off_t *len);
-+char *utilfdt_read(const char *filename, size_t *len);
- 
- /**
-  * Read a device tree file into a buffer. Does not report errors, but only
-@@ -116,16 +110,10 @@ char *utilfdt_read_len(const char *filename, off_t *len);
-  *
-  * @param filename	The filename to read, or - for stdin
-  * @param buffp		Returns pointer to buffer containing fdt
-- * @return 0 if ok, else an errno value representing the error
-- */
--int utilfdt_read_err(const char *filename, char **buffp);
--
--/**
-- * Like utilfdt_read_err(), but also passes back the size of the file read.
-- *
-  * @param len		If non-NULL, the amount of data we managed to read
-+ * @return 0 if ok, else an errno value representing the error
-  */
--int utilfdt_read_err_len(const char *filename, char **buffp, off_t *len);
-+int utilfdt_read_err(const char *filename, char **buffp, size_t *len);
- 
- /**
-  * Write a device tree buffer to a file. This will report any errors on
-diff --git a/scripts/dtc/version_gen.h b/scripts/dtc/version_gen.h
-index b00f14ff7a17..6d23fd095f16 100644
---- a/scripts/dtc/version_gen.h
-+++ b/scripts/dtc/version_gen.h
-@@ -1 +1 @@
--#define DTC_VERSION "DTC 1.4.6-g84e414b0"
-+#define DTC_VERSION "DTC 1.4.7-gc86da84d"
-diff --git a/scripts/dtc/yamltree.c b/scripts/dtc/yamltree.c
-new file mode 100644
-index 000000000000..a00285a5a9ec
---- /dev/null
-+++ b/scripts/dtc/yamltree.c
-@@ -0,0 +1,247 @@
-+/*
-+ * (C) Copyright Linaro, Ltd. 2018
-+ * (C) Copyright Arm Holdings.  2017
-+ * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2005.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of the
-+ * License, or (at your option) any later version.
-+ *
-+ *  This program is distributed in the hope that it will be useful,
-+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ *  General Public License for more details.
-+ *
-+ *  You should have received a copy of the GNU General Public License
-+ *  along with this program; if not, write to the Free Software
-+ *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307
-+ *                                                                   USA
-+ */
-+
-+#include <stdlib.h>
-+#include <yaml.h>
-+#include "dtc.h"
-+#include "srcpos.h"
-+
-+char *yaml_error_name[] = {
-+	[YAML_NO_ERROR] = "no error",
-+	[YAML_MEMORY_ERROR] = "memory error",
-+	[YAML_READER_ERROR] = "reader error",
-+	[YAML_SCANNER_ERROR] = "scanner error",
-+	[YAML_PARSER_ERROR] = "parser error",
-+	[YAML_COMPOSER_ERROR] = "composer error",
-+	[YAML_WRITER_ERROR] = "writer error",
-+	[YAML_EMITTER_ERROR] = "emitter error",
-+};
-+
-+#define yaml_emitter_emit_or_die(emitter, event) (			\
-+{									\
-+	if (!yaml_emitter_emit(emitter, event))				\
-+		die("yaml '%s': %s in %s, line %i\n",			\
-+		    yaml_error_name[(emitter)->error], 			\
-+		    (emitter)->problem, __func__, __LINE__);		\
-+})
-+
-+static void yaml_propval_int(yaml_emitter_t *emitter, struct marker *markers, char *data, int len, int width)
-+{
-+	yaml_event_t event;
-+	void *tag;
-+	int off, start_offset = markers->offset;
-+
-+	switch(width) {
-+		case 1: tag = "!u8"; break;
-+		case 2: tag = "!u16"; break;
-+		case 4: tag = "!u32"; break;
-+		case 8: tag = "!u64"; break;
-+		default:
-+			die("Invalid width %i", width);
-+	}
-+	assert(len % width == 0);
-+
-+	yaml_sequence_start_event_initialize(&event, NULL,
-+		(yaml_char_t *)tag, width == 4, YAML_FLOW_SEQUENCE_STYLE);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+
-+	for (off = 0; off < len; off += width) {
-+		char buf[32];
-+		struct marker *m;
-+		bool is_phandle = false;
-+
-+		switch(width) {
-+		case 1:
-+			sprintf(buf, "0x%"PRIx8, *(uint8_t*)(data + off));
-+			break;
-+		case 2:
-+			sprintf(buf, "0x%"PRIx16, fdt16_to_cpu(*(fdt16_t*)(data + off)));
-+			break;
-+		case 4:
-+			sprintf(buf, "0x%"PRIx32, fdt32_to_cpu(*(fdt32_t*)(data + off)));
-+			m = markers;
-+			is_phandle = false;
-+			for_each_marker_of_type(m, REF_PHANDLE) {
-+				if (m->offset == (start_offset + off)) {
-+					is_phandle = true;
-+					break;
-+				}
-+			}
-+			break;
-+		case 8:
-+			sprintf(buf, "0x%"PRIx64, fdt64_to_cpu(*(fdt64_t*)(data + off)));
-+			break;
-+		}
-+
-+		if (is_phandle)
-+			yaml_scalar_event_initialize(&event, NULL,
-+				(yaml_char_t*)"!phandle", (yaml_char_t *)buf,
-+				strlen(buf), 0, 0, YAML_PLAIN_SCALAR_STYLE);
-+		else
-+			yaml_scalar_event_initialize(&event, NULL,
-+				(yaml_char_t*)YAML_INT_TAG, (yaml_char_t *)buf,
-+				strlen(buf), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-+		yaml_emitter_emit_or_die(emitter, &event);
-+	}
-+
-+	yaml_sequence_end_event_initialize(&event);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+}
-+
-+static void yaml_propval_string(yaml_emitter_t *emitter, char *str, int len)
-+{
-+	yaml_event_t event;
-+	int i;
-+
-+	assert(str[len-1] == '\0');
-+
-+	/* Make sure the entire string is in the lower 7-bit ascii range */
-+	for (i = 0; i < len; i++)
-+		assert(isascii(str[i]));
-+
-+	yaml_scalar_event_initialize(&event, NULL,
-+		(yaml_char_t *)YAML_STR_TAG, (yaml_char_t*)str,
-+		len-1, 0, 1, YAML_DOUBLE_QUOTED_SCALAR_STYLE);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+}
-+
-+static void yaml_propval(yaml_emitter_t *emitter, struct property *prop)
-+{
-+	yaml_event_t event;
-+	int len = prop->val.len;
-+	struct marker *m = prop->val.markers;
-+
-+	/* Emit the property name */
-+	yaml_scalar_event_initialize(&event, NULL,
-+		(yaml_char_t *)YAML_STR_TAG, (yaml_char_t*)prop->name,
-+		strlen(prop->name), 1, 1, YAML_PLAIN_SCALAR_STYLE);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+
-+	/* Boolean properties are easiest to deal with. Length is zero, so just emit 'true' */
-+	if (len == 0) {
-+		yaml_scalar_event_initialize(&event, NULL,
-+			(yaml_char_t *)YAML_BOOL_TAG,
-+			(yaml_char_t*)"true",
-+			strlen("true"), 1, 0, YAML_PLAIN_SCALAR_STYLE);
-+		yaml_emitter_emit_or_die(emitter, &event);
-+		return;
-+	}
-+
-+	if (!m)
-+		die("No markers present in property '%s' value\n", prop->name);
-+
-+	yaml_sequence_start_event_initialize(&event, NULL,
-+		(yaml_char_t *)YAML_SEQ_TAG, 1, YAML_FLOW_SEQUENCE_STYLE);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+
-+	for_each_marker(m) {
-+		int chunk_len;
-+		char *data = &prop->val.val[m->offset];
-+
-+		if (m->type < TYPE_UINT8)
-+			continue;
-+
-+		chunk_len = type_marker_length(m) ? : len;
-+		assert(chunk_len > 0);
-+		len -= chunk_len;
-+
-+		switch(m->type) {
-+		case TYPE_UINT16:
-+			yaml_propval_int(emitter, m, data, chunk_len, 2);
-+			break;
-+		case TYPE_UINT32:
-+			yaml_propval_int(emitter, m, data, chunk_len, 4);
-+			break;
-+		case TYPE_UINT64:
-+			yaml_propval_int(emitter, m, data, chunk_len, 8);
-+			break;
-+		case TYPE_STRING:
-+			yaml_propval_string(emitter, data, chunk_len);
-+			break;
-+		default:
-+			yaml_propval_int(emitter, m, data, chunk_len, 1);
-+			break;
-+		}
-+	}
-+
-+	yaml_sequence_end_event_initialize(&event);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+}
-+
-+
-+static void yaml_tree(struct node *tree, yaml_emitter_t *emitter)
-+{
-+	struct property *prop;
-+	struct node *child;
-+	yaml_event_t event;
-+
-+	if (tree->deleted)
-+		return;
-+
-+	yaml_mapping_start_event_initialize(&event, NULL,
-+		(yaml_char_t *)YAML_MAP_TAG, 1, YAML_ANY_MAPPING_STYLE);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+
-+	for_each_property(tree, prop)
-+		yaml_propval(emitter, prop);
-+
-+	/* Loop over all the children, emitting them into the map */
-+	for_each_child(tree, child) {
-+		yaml_scalar_event_initialize(&event, NULL,
-+			(yaml_char_t *)YAML_STR_TAG, (yaml_char_t*)child->name,
-+			strlen(child->name), 1, 0, YAML_PLAIN_SCALAR_STYLE);
-+		yaml_emitter_emit_or_die(emitter, &event);
-+		yaml_tree(child, emitter);
-+	}
-+
-+	yaml_mapping_end_event_initialize(&event);
-+	yaml_emitter_emit_or_die(emitter, &event);
-+}
-+
-+void dt_to_yaml(FILE *f, struct dt_info *dti)
-+{
-+	yaml_emitter_t emitter;
-+	yaml_event_t event;
-+
-+	yaml_emitter_initialize(&emitter);
-+	yaml_emitter_set_output_file(&emitter, f);
-+	yaml_stream_start_event_initialize(&event, YAML_UTF8_ENCODING);
-+	yaml_emitter_emit_or_die(&emitter, &event);
-+
-+	yaml_document_start_event_initialize(&event, NULL, NULL, NULL, 0);
-+	yaml_emitter_emit_or_die(&emitter, &event);
-+
-+	yaml_sequence_start_event_initialize(&event, NULL, (yaml_char_t *)YAML_SEQ_TAG, 1, YAML_ANY_SEQUENCE_STYLE);
-+	yaml_emitter_emit_or_die(&emitter, &event);
-+
-+	yaml_tree(dti->dt, &emitter);
-+
-+	yaml_sequence_end_event_initialize(&event);
-+	yaml_emitter_emit_or_die(&emitter, &event);
-+
-+	yaml_document_end_event_initialize(&event, 0);
-+	yaml_emitter_emit_or_die(&emitter, &event);
-+
-+	yaml_stream_end_event_initialize(&event);
-+	yaml_emitter_emit_or_die(&emitter, &event);
-+
-+	yaml_emitter_delete(&emitter);
-+}
--- 
-2.17.1
+--uAKRQypu60I7Lcqm--
