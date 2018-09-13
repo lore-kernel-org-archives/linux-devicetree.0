@@ -1,34 +1,31 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 4/4] arm64: dts: rockchip: Enable SD card detection for Rock960 boards
-Date: Thu, 13 Sep 2018 23:35:45 +0530
-Message-ID: <20180913180545.29756-5-manivannan.sadhasivam@linaro.org>
-References: <20180913180545.29756-1-manivannan.sadhasivam@linaro.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 0/3] ARM: NSP updates to support switch interrupts/SFP
+Date: Thu, 13 Sep 2018 11:10:20 -0700
+Message-ID: <5751f9e2-6056-37cc-4749-cb8509b56916@gmail.com>
+References: <20180831192039.11842-1-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180913180545.29756-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20180831192039.11842-1-f.fainelli@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, robh+dt@kernel.org
-Cc: vicencb@gmail.com, shawn.lin@rock-chips.com, ezequiel@collabora.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, "maintainer:BROADCOM IPROC ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, andrew@lunn.ch, rmk+kernel@armlinux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-For proper working of SD cards, let's add the Card Detect GPIO property
-to the common devicetree for Rock960 family boards.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-index cc9c373f3a37..6c8c4ab044aa 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-@@ -439,6 +439,7 @@
- 	cap-sd-highspeed;
- 	clock-frequency = <100000000>;
- 	clock-freq-min-max = <100000 100000000>;
-+	cd-gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
- 	disable-wp;
- 	sd-uhs-sdr104;
- 	vqmmc-supply = <&vcc_sd>;
+On 08/31/18 12:20, Florian Fainelli wrote:
+> Hi all,
+> 
+> This patch series updates the ARM NSP DTS and BCM958625HR in order to
+> support the SFP connected to port 5 on these reference boards.
+> 
+> I will be submitting the functional changes to drivers/net/dsa/b53 once
+> net-next opens back up, but this is largely independent from getting
+> these 3 patches out.
+
+Series applied to devicetree/next.
 -- 
-2.17.1
+Florian
