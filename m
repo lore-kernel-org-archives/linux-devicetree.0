@@ -1,51 +1,44 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH] fpga: region: fix spelling mistake "partion" -> "partition"
-Date: Thu, 13 Sep 2018 15:21:30 -0500
-Message-ID: <CANk1AXTxBtMEJo0NTW9g0GeMX8-RTcD_PJ2eyqkYyCtw-u_9Mw@mail.gmail.com>
-References: <20180911123732.32579-1-colin.king@canonical.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 1/5] dt-bindings: add vendor prefix for "Endless Mobile, Inc."
+Date: Thu, 13 Sep 2018 22:21:59 +0200
+Message-ID: <20180913202203.19636-2-martin.blumenstingl@googlemail.com>
+References: <20180913202203.19636-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911123732.32579-1-colin.king@canonical.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Colin King <colin.king@canonical.com>
-Cc: Moritz Fischer <mdf@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-fpga@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, kernel-janitors@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913202203.19636-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, khilman@baylibre.com, carlo@caione.org, robh+dt@kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 11, 2018 at 7:37 AM Colin King <colin.king@canonical.com> wrote:
+Endless Mobile, Inc. started selling (small) computers in 2015.
 
-Hi Colin,
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> From: Colin Ian King <colin.king@canonical.com>
->
-> Trivial fix to spelling mistake in the documentation
-
-I took a look, there's other misspellings in this doc.  I'd like to
-get them all in one patch if possible.  If I have time I'll add them
-to this patch or if you have time, you can.
-
-Alan
-
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  Documentation/devicetree/bindings/fpga/fpga-region.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/fpga/fpga-region.txt b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-> index 6db8aeda461a..71beb85b56f1 100644
-> --- a/Documentation/devicetree/bindings/fpga/fpga-region.txt
-> +++ b/Documentation/devicetree/bindings/fpga/fpga-region.txt
-> @@ -484,7 +484,7 @@ It is beyond the scope of this document to fully describe all the FPGA design
->  constraints required to make partial reconfiguration work[1] [2] [3], but a few
->  deserve quick mention.
->
-> -A persona must have boundary connections that line up with those of the partion
-> +A persona must have boundary connections that line up with those of the partition
->  or region it is designed to go into.
->
->  During programming, transactions through those connections must be stopped and
-> --
-> 2.17.1
->
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c3fc512e746..1c63d2c2d48f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -114,6 +114,7 @@ elan	Elan Microelectronic Corp.
+ embest	Shenzhen Embest Technology Co., Ltd.
+ emmicro	EM Microelectronic
+ emtrion	emtrion GmbH
++endless	Endless Mobile, Inc.
+ energymicro	Silicon Laboratories (formerly Energy Micro AS)
+ engicam	Engicam S.r.l.
+ epcos	EPCOS AG
+-- 
+2.19.0
