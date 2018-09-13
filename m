@@ -1,47 +1,29 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 02/13] mfd: wcd9335: add support to wcd9335 core
-Date: Wed, 12 Sep 2018 13:43:42 +0100
-Message-ID: <ffcf1b3a-b66c-6e0e-3e7a-da092e9d1894@linaro.org>
-References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
- <20180904102500.30318-3-srinivas.kandagatla@linaro.org>
- <20180911153340.GY4185@dell>
- <94c68436-b618-40fc-46d6-165799312289@linaro.org>
- <20180912085848.GP4185@dell>
- <b4ddfd10-360c-a844-8542-1f81a1cc9c6b@linaro.org>
- <20180912105941.GS4185@dell>
- <11f213e5-8c93-f75f-1b74-517f00cd9a96@linaro.org>
- <20180912114633.GU4185@dell>
+From: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
+Subject: [PATCH 0/2] net: qcom/emac: add shared mdio bus support
+Date: Thu, 13 Sep 2018 17:04:51 +0800
+Message-ID: <1536829493-10088-1-git-send-email-dongsheng.wang@hxt-semitech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912114633.GU4185@dell>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: timur@kernel.org
+Cc: davem@davemloft.net, yu.zheng@hxt-semitech.com, Wang Dongsheng <dongsheng.wang@hxt-semitech.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Share the mii_bus for others MAC device because QDF2400 emac
+include MDIO, and the motherboard has more than one PHY connected
+to an MDIO bus.
 
->>
->> There are two parts for device to be ready to talk at bus level:
->> 1> power up and reset,
->> 2> enumerate and assign a logical address by the slimbus controller.
->>
->> First part as you said is already done in probe.
->> When second part happens when status callback is invoked, that is when the
->> slimdevice is ready for any kind of communication at bus level.
-> 
-> I see.  I still think it's hacky to conduct start-up procedures when
-> all the SS requested was status.  Perhaps it needs a new API call
-> init()?
+Tested: QDF2400 (ACPI), buildin/insmod/rmmod
 
-When we added these callbacks the purpose of this was to allow drivers 
-to do specific setup/teardown.
+Wang Dongsheng (2):
+  dt-bindings: net: qcom: Add binding for shared mdio bus
+  net: qcom/emac: add shared mdio bus support
 
-AFIAU, even-though if we add init(), SLIMbus would still call it just 
-before or after status which to me is redundant ATM.
-Its up to slim driver what it exactly whats to do with status, in some 
-cases this can involve setting up the device.
+ .../devicetree/bindings/net/qcom-emac.txt     |   4 +
+ drivers/net/ethernet/qualcomm/emac/emac-phy.c | 211 ++++++++++++++----
+ drivers/net/ethernet/qualcomm/emac/emac.c     |   7 +-
+ 3 files changed, 178 insertions(+), 44 deletions(-)
 
-> 
+-- 
+2.18.0
