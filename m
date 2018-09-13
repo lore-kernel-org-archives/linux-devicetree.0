@@ -1,228 +1,220 @@
-From: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Subject: Re: [PATCH v5 5/6] media: Add controls for JPEG quantization tables
-Date: Thu, 13 Sep 2018 21:40:45 +0200
-Message-ID: <d31f23e13d5e9da56148c89f07a1c4a3eca87957.camel@paulk.fr>
-References: <20180905220011.16612-1-ezequiel@collabora.com>
- <20180905220011.16612-6-ezequiel@collabora.com>
- <e7126e89d8984eb93216ec75c83ce1fc5afc437d.camel@paulk.fr>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: [PATCH] ARM: dts: aspeed: Adding Facebook TioagaPass BMC
+Date: Thu, 13 Sep 2018 12:57:51 -0700
+Message-ID: <20180913195751.1833227-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <e7126e89d8984eb93216ec75c83ce1fc5afc437d.camel-W9ppeneeCTY@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, afaerber@suse.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, openbmc@lists.ozlabs.org
+Cc: Vijay Khemka <vijaykhemka@fb.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Initial introduction of Facebook TioagaPass family equipped with
+Aspeed 2500 BMC SoC. Neptune is a x86 server development kit
+with a ASPEED ast2500 BMC manufactured by Facebook.
+Specifically, This adds the tiogapass platform device tree file
+including the flash layout used by the tiogapass BMC machines.
 
-On Thu, 2018-09-13 at 14:14 +0200, Paul Kocialkowski wrote:
-> Hi,
-> 
-> On Wed, 2018-09-05 at 19:00 -0300, Ezequiel Garcia wrote:
-> > From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > Add V4L2_CID_JPEG_QUANTIZATION compound control to allow userspace
-> > configure the JPEG quantization tables.
-> > 
-> > Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> > ---
-> >  .../media/uapi/v4l/extended-controls.rst      | 31 +++++++++++++++++++
-> >  .../media/videodev2.h.rst.exceptions          |  1 +
-> >  drivers/media/v4l2-core/v4l2-ctrls.c          | 10 ++++++
-> >  include/uapi/linux/v4l2-controls.h            | 12 +++++++
-> >  include/uapi/linux/videodev2.h                |  1 +
-> >  5 files changed, 55 insertions(+)
-> > 
-> > diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
-> > index 9f7312bf3365..1335d27d30f3 100644
-> > --- a/Documentation/media/uapi/v4l/extended-controls.rst
-> > +++ b/Documentation/media/uapi/v4l/extended-controls.rst
-> > @@ -3354,7 +3354,38 @@ JPEG Control IDs
-> >      Specify which JPEG markers are included in compressed stream. This
-> >      control is valid only for encoders.
-> >  
-> > +.. _jpeg-quant-tables-control:
-> 
-> I just had a look at how the Allwinner VPU handles JPEG decoding and it
-> seems to require the following information (in addition to
-> quantization):
-> 
-> * Horizontal and vertical sampling factors for each Y/U/V component:
-> 
-> The number of components and sampling factors are coded separately in
-> the bitstream, but it's probably easier to use the already-existing
-> V4L2_CID_JPEG_CHROMA_SUBSAMPLING control for specifying that.
-> 
-> However, this is potentially very much related to the destination
-> format. If we decide that this format should match the format resulting
-> from decompression, we don't need to specify it through an external
-> control. On the other hand, it's possible that the VPU has format
-> conversion block integrated in its pipeline so it would also make sense
-> to consider the destination format as independent.
-> 
-> * Custom Huffman tables (DC and AC), both for luma and chroma
-> 
-> It seems that there is a default table when no Huffman table is provided
-> in the bitstream (I'm not too sure how standard that is, just started
-> learning about JPEG). We probably need a specific control for that.
-> 
-> * Reset interval
-> 
-> That's extracted from the bitstream as well and there's a
-> V4L2_CID_JPEG_RESTART_INTERVAL control already.
-> 
-> In addition to these points, I see that among all the JPEG profiles,
-> some have to do with arithmetic coding which will probably require a
-> specific control on its own (not sure how it should look at this point
-> though).
-> 
-> What do you think?
+This also adds an entry of tiogapass device tree file in Makefile
+as well an entry of Facebook in Documentation for vendor prefix
 
-For clarification: these are required for decoding, not for encoding.
+Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+---
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../dts/aspeed-bmc-facebook-tiogapass.dts     | 152 ++++++++++++++++++
+ 3 files changed, 154 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
 
-For encoding, it seems that the Allwinner hardware only requires
-quantization tables.
-
-Cheers,
-
-Paul
-
-> > +``V4L2_CID_JPEG_QUANTIZATION (struct)``
-> > +    Specifies the luma and chroma quantization matrices for encoding
-> > +    or decoding a V4L2_PIX_FMT_JPEG_RAW format buffer. The :ref:`itu-t81`
-> > +    specification allows 8-bit quantization coefficients for
-> > +    baseline profile images, and 8-bit or 16-bit for extended profile
-> > +    images. Supporting or not 16-bit precision coefficients is driver-specific.
-> > +    Coefficients must be set in JPEG zigzag scan order.
-> > +
-> > +
-> > +.. c:type:: struct v4l2_ctrl_jpeg_quantization
-> > +
-> > +.. cssclass:: longtable
-> > +
-> > +.. flat-table:: struct v4l2_ctrl_jpeg_quantization
-> > +    :header-rows:  0
-> > +    :stub-columns: 0
-> > +    :widths:       1 1 2
-> > +
-> > +    * - __u8
-> > +      - ``precision``
-> > +      - Specifies the coefficient precision. User shall set 0
-> > +        for 8-bit, and 1 for 16-bit.
-> > +
-> > +    * - __u16
-> > +      - ``luma_quantization_matrix[64]``
-> > +      - Sets the luma quantization table.
-> > +
-> > +    * - __u16
-> > +      - ``chroma_quantization_matrix[64]``
-> > +      - Sets the chroma quantization table.
-> >  
-> >  .. flat-table::
-> >      :header-rows:  0
-> > diff --git a/Documentation/media/videodev2.h.rst.exceptions b/Documentation/media/videodev2.h.rst.exceptions
-> > index ca9f0edc579e..a0a38e92bf38 100644
-> > --- a/Documentation/media/videodev2.h.rst.exceptions
-> > +++ b/Documentation/media/videodev2.h.rst.exceptions
-> > @@ -129,6 +129,7 @@ replace symbol V4L2_CTRL_TYPE_STRING :c:type:`v4l2_ctrl_type`
-> >  replace symbol V4L2_CTRL_TYPE_U16 :c:type:`v4l2_ctrl_type`
-> >  replace symbol V4L2_CTRL_TYPE_U32 :c:type:`v4l2_ctrl_type`
-> >  replace symbol V4L2_CTRL_TYPE_U8 :c:type:`v4l2_ctrl_type`
-> > +replace symbol V4L2_CTRL_TYPE_JPEG_QUANTIZATION :c:type:`v4l2_ctrl_type`
-> >  
-> >  # V4L2 capability defines
-> >  replace define V4L2_CAP_VIDEO_CAPTURE device-capabilities
-> > diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > index 599c1cbff3b9..305bd7a9b7f1 100644
-> > --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> > +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> > @@ -999,6 +999,7 @@ const char *v4l2_ctrl_get_name(u32 id)
-> >  	case V4L2_CID_JPEG_RESTART_INTERVAL:	return "Restart Interval";
-> >  	case V4L2_CID_JPEG_COMPRESSION_QUALITY:	return "Compression Quality";
-> >  	case V4L2_CID_JPEG_ACTIVE_MARKER:	return "Active Markers";
-> > +	case V4L2_CID_JPEG_QUANTIZATION:	return "JPEG Quantization Tables";
-> >  
-> >  	/* Image source controls */
-> >  	/* Keep the order of the 'case's the same as in v4l2-controls.h! */
-> > @@ -1286,6 +1287,9 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum v4l2_ctrl_type *type,
-> >  	case V4L2_CID_DETECT_MD_REGION_GRID:
-> >  		*type = V4L2_CTRL_TYPE_U8;
-> >  		break;
-> > +	case V4L2_CID_JPEG_QUANTIZATION:
-> > +		*type = V4L2_CTRL_TYPE_JPEG_QUANTIZATION;
-> > +		break;
-> >  	case V4L2_CID_DETECT_MD_THRESHOLD_GRID:
-> >  		*type = V4L2_CTRL_TYPE_U16;
-> >  		break;
-> > @@ -1612,6 +1616,9 @@ static int std_validate(const struct v4l2_ctrl *ctrl, u32 idx,
-> >  			return -ERANGE;
-> >  		return 0;
-> >  
-> > +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
-> > +		return 0;
-> > +
-> >  	default:
-> >  		return -EINVAL;
-> >  	}
-> > @@ -2133,6 +2140,9 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
-> >  	case V4L2_CTRL_TYPE_U32:
-> >  		elem_size = sizeof(u32);
-> >  		break;
-> > +	case V4L2_CTRL_TYPE_JPEG_QUANTIZATION:
-> > +		elem_size = sizeof(struct v4l2_ctrl_jpeg_quantization);
-> > +		break;
-> >  	default:
-> >  		if (type < V4L2_CTRL_COMPOUND_TYPES)
-> >  			elem_size = sizeof(s32);
-> > diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-> > index e4ee10ee917d..856b3325052f 100644
-> > --- a/include/uapi/linux/v4l2-controls.h
-> > +++ b/include/uapi/linux/v4l2-controls.h
-> > @@ -987,6 +987,18 @@ enum v4l2_jpeg_chroma_subsampling {
-> >  #define	V4L2_JPEG_ACTIVE_MARKER_DQT		(1 << 17)
-> >  #define	V4L2_JPEG_ACTIVE_MARKER_DHT		(1 << 18)
-> >  
-> > +#define V4L2_CID_JPEG_QUANTIZATION		(V4L2_CID_JPEG_CLASS_BASE + 5)
-> > +struct v4l2_ctrl_jpeg_quantization {
-> > +	/* ITU-T.81 specifies two quantization coefficient precisions:
-> > +	 * 8-bit for baseline profile,
-> > +	 * 8-bit or 16-bit for extended profile.
-> > +	 *
-> > +	 * User shall set "precision" to 0 for 8-bit and 1 for 16-bit.
-> > +	 */
-> > +	__u8	precision;
-> > +	__u16	luma_quantization_matrix[64];
-> > +	__u16	chroma_quantization_matrix[64];
-> > +};
-> >  
-> >  /* Image source controls */
-> >  #define V4L2_CID_IMAGE_SOURCE_CLASS_BASE	(V4L2_CTRL_CLASS_IMAGE_SOURCE | 0x900)
-> > diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-> > index f9f3ae5b489e..8ace47cb1003 100644
-> > --- a/include/uapi/linux/videodev2.h
-> > +++ b/include/uapi/linux/videodev2.h
-> > @@ -1637,6 +1637,7 @@ enum v4l2_ctrl_type {
-> >  	V4L2_CTRL_TYPE_U8	     = 0x0100,
-> >  	V4L2_CTRL_TYPE_U16	     = 0x0101,
-> >  	V4L2_CTRL_TYPE_U32	     = 0x0102,
-> > +	V4L2_CTRL_TYPE_JPEG_QUANTIZATION = 0x0103,
-> >  };
-> >  
-> >  /*  Used in the VIDIOC_QUERYCTRL ioctl for querying controls */
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c3fc512e746..733b2d523642 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -127,6 +127,7 @@ everspin	Everspin Technologies, Inc.
+ exar	Exar Corporation
+ excito	Excito
+ ezchip	EZchip Semiconductor
++facebook  Facebook
+ fairphone	Fairphone B.V.
+ faraday	Faraday Technology Corporation
+ fastrax	Fastrax Oy
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5bd3de87c33..9c82c1681c38 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -1206,4 +1206,5 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+ 	aspeed-bmc-opp-witherspoon.dtb \
+ 	aspeed-bmc-opp-zaius.dtb \
+ 	aspeed-bmc-portwell-neptune.dtb \
++	aspeed-bmc-facebook-tiogapass.dtb \
+ 	aspeed-bmc-quanta-q71l.dtb
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+new file mode 100644
+index 000000000000..859a00581e34
+--- /dev/null
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -0,0 +1,152 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (c) 2017 Facebook Inc.
++/dts-v1/;
++
++#include "aspeed-g5.dtsi"
++#include <dt-bindings/gpio/aspeed-gpio.h>
++
++/ {
++	model = "Facebook TiogaPass BMC";
++	compatible = "facebook,tiogapass-bmc", "aspeed,ast2500";
++	aliases {
++		serial0 = &uart1;
++		serial4 = &uart5;
++	};
++	chosen {
++		stdout-path = &uart5;
++		bootargs = "console=ttyS4,115200 earlyprintk";
++	};
++
++	memory {
++		reg = <0x80000000 0x20000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		postcode0 {
++			label="BMC_UP";
++			gpios = <&gpio ASPEED_GPIO(H, 0) GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++		};
++		postcode1 {
++			label="BMC_HB";
++			gpios = <&gpio ASPEED_GPIO(H, 1) GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++		postcode2 {
++			label="FAULT";
++			gpios = <&gpio ASPEED_GPIO(H, 2) GPIO_ACTIVE_HIGH>;
++		};
++		// postcode3-7 are GPIOH3-H7
++	};
++};
++
++&fmc {
++	status = "okay";
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++#include "openbmc-flash-layout.dtsi"
++	};
++};
++
++&spi1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_spi1_default>;
++	flash@0 {
++		status = "okay";
++		m25p,fast-read;
++		label = "pnor";
++	};
++};
++
++&uart1 {
++	// Host Console
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_txd1_default
++		     &pinctrl_rxd1_default>;
++};
++
++&uart5 {
++	// BMC Console
++	status = "okay";
++};
++
++&mac0 {
++	status = "okay";
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_rmii1_default>;
++	use-ncsi;
++};
++
++&i2c1 {
++	status = "okay";
++	// To PCIe slot SMBUS
++};
++
++&i2c2 {
++	status = "okay";
++	// To LAN I210
++};
++
++&i2c3 {
++	status = "okay";
++	// SMBus to COMe AB
++};
++
++&i2c4 {
++	status = "okay";
++	// I2C to COMe AB
++};
++
++&i2c5 {
++	status = "okay";
++  //USB Debug card
++	pca9555@27 {
++		compatible = "nxp,pca9555";
++		reg = <0x27>;
++	};
++};
++
++&i2c6 {
++	status = "okay";
++	tpm@20 {
++		compatible = "infineon,slb9645tt";
++		reg = <0x20>;
++	};
++	tmp421@4e {
++		compatible = "ti,tmp421";
++		reg = <0x4e>;
++	};
++	tmp421@4f {
++		compatible = "ti,tmp421";
++		reg = <0x4f>;
++	};
++};
++
++&i2c8 {
++	status = "okay";
++	eeprom@51 {
++		compatible = "atmel,24c128";
++		reg = <0x51>;
++		pagesize = <32>;
++	};
++};
++
++&pwm_tacho {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
++	fan@0 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
++	};
++
++	fan@1 {
++		reg = <0x00>;
++		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
++	};
++};
 -- 
-Developer of free digital technology and hardware support.
-
-Website: https://www.paulk.fr/
-Coding blog: https://code.paulk.fr/
-Git repositories: https://git.paulk.fr/ https://git.code.paulk.fr/
+2.17.1
