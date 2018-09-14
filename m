@@ -1,16 +1,13 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] ARM: dts: r9a06g032: Correct UART and add all other
- UARTs
-Date: Fri, 14 Sep 2018 15:36:01 +0200
-Message-ID: <20180914133600.nhbgbmxiafc65abw@verge.net.au>
-References: <20180910160254.3882-1-phil.edworthy@renesas.com>
- <20180912092035.lhzlebd6rh72yjgj@verge.net.au>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: [PATCH v2 4/4] ARM: dts: bcm283x: Correct mailbox register sizes
+Date: Fri, 14 Sep 2018 14:22:55 +0100
+Message-ID: <1536931375-48769-5-git-send-email-phil@raspberrypi.org>
+References: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180912092035.lhzlebd6rh72yjgj@verge.net.au>
+In-Reply-To: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,26 +17,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2018 at 11:20:39AM +0200, Simon Horman wrote:
-> On Mon, Sep 10, 2018 at 05:02:54PM +0100, Phil Edworthy wrote:
-> > - UART0 was missing the bus clock ("apb_pclk").
-> > - Now that the relevant rzn1 bindings have been added, replace the Synopsys
-> >   compat string with the rzn1 strings.
-> 
-> Perhaps: Use recently accepted r9a06g032 and rzn1 compat strings.
-> 
-> > - Add all the other UARTs.
-> > 
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> 
-> The above notwithstanding this looks good to me but I will wait to see if
-> there are other reviews before applying.
-> 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+The size field in a Device Tree "reg" property is encoded in bytes, not
+words.
 
-Thanks again, I have applied this for v4.20 with the changelog
-update above.
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 215d8cc..29f970f 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -32,7 +32,7 @@
+ 
+ 		vchiq: mailbox@7e00b840 {
+ 			compatible = "brcm,bcm2835-vchiq";
+-			reg = <0x7e00b840 0xf>;
++			reg = <0x7e00b840 0x3c>;
+ 			interrupts = <0 2>;
+ 		};
+ 	};
+-- 
+2.7.4
