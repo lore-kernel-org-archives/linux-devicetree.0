@@ -1,56 +1,88 @@
-Return-Path: <SRS0=yXvz=MJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57530 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbeI1D0Q (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Sep 2018 23:26:16 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 0/4] Update dra7 dts to probe with ti-sysc
-Date: Thu, 27 Sep 2018 14:05:38 -0700
-Message-Id: <20180927210542.69703-1-tony@atomide.com>
+Return-Path: <mchehab+samsung@kernel.org>
+Date: Fri, 14 Sep 2018 06:37:41 -0300
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: Re: [PATCH v2 0/7] TVP5150 fixes and new features
+Message-ID: <20180914063741.407b517b@coco.lan>
+In-Reply-To: <20180914084303.pvqm35cbe6vznoci@pengutronix.de>
+References: <20180813092508.1334-1-m.felsch@pengutronix.de>
+	<20180914084303.pvqm35cbe6vznoci@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi all,
+Em Fri, 14 Sep 2018 10:43:03 +0200
+Marco Felsch <m.felsch@pengutronix.de> escreveu:
 
-Here are four patches to make dra7 l4 devices to probe with ti-sysc
-driver similar to what we've already done for omap4. The related
-legacy hwmod platform data will be removed few merge cycles later.
+> Hi,
+> 
+> since I sent this series I only got feedback from Rob.
 
-I've only lightly tested these so far, but then again with this being
-SoC #4 to get converted things should be quite trivial now.
+I'm doing some tests on it. If everything gets ok, I'll likely merge
+it today.
 
-These are based on v4.19-rc5 merged with my omap-for-v4.20/dt branch
-plus the following additional series of patches:
+> 
+> Regards,
+> Marco
+> 
+> On 18-08-13 11:25, Marco Felsch wrote:
+> > Hi,
+> > 
+> > this is my v2 with the integrated reviews from my v1 [1]. Since Mauro
+> > applied the most patches from my v1 to his experimental/tvp5150-3
+> > branch [2], this series only contains those which aren't applied.
+> > 
+> > Patches I changed contain a changelog, so I will omit these here.
+> > 
+> > Patch ('[media] tvp5150: add FORMAT_TRY support for get/set selection
+> > handlers') throws a compile error. Therefore I added two v4l2-subdev.h
+> > patches which should fix the error in a common way.
+> > 
+> > Patch ('[media] tvp5150: add s_power callback') is new too. I forget
+> > them in my v1. This patch address the interrupt enable/disable handling.
+> > Now it is possible to pause streaming and keep the interrupts on.
+> > 
+> > The changes I made in the ('[media] tvp5150: add input source selection
+> > of_graph support') patch are based on the the RFC [3] and discussion [4].
+> > I dropped patch ('[media] tvp5150: Change default input source selection
+> > behaviour') since the default input source selectopn is setup during the
+> > .registered() callback now.
+> > 
+> > I've tested this series on a customer dt-based board. Unfortunately I
+> > haven't a device which use the em28xx driver. So other tester a welcome :)
+> > 
+> > [1] https://www.spinics.net/lists/devicetree/msg236650.html
+> > [2] https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150-3
+> > [3] https://www.spinics.net/lists/devicetree/msg243181.html
+> > [4] https://www.spinics.net/lists/devicetree/msg243840.html
+> > 
+> > Regards,
+> > Marco
+> > 
+> > Marco Felsch (6):
+> >   [media] tvp5150: add input source selection of_graph support
+> >   [media] dt-bindings: tvp5150: Add input port connectors DT bindings
+> >   [media] v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+> >   [media] v4l2-subdev: fix v4l2_subdev_get_try_* dependency
+> >   [media] tvp5150: add FORMAT_TRY support for get/set selection handlers
+> >   [media] tvp5150: add s_power callback
+> > 
+> > Michael Tretter (1):
+> >   [media] tvp5150: initialize subdev before parsing device tree
+> > 
+> >  .../devicetree/bindings/media/i2c/tvp5150.txt | 191 +++++-
+> >  drivers/media/i2c/tvp5150.c                   | 611 +++++++++++++++---
+> >  include/media/v4l2-subdev.h                   | 111 ++--
+> >  3 files changed, 776 insertions(+), 137 deletions(-)
+> > 
+> > -- 
+> > 2.18.0
+> > 
+> >   
 
-[PATCH 00/11] clk: ti: clkctrl data split based on clkdm boundaries
-[PATCH 0/3] ARM: dts: am3/am4/dra7 clkctrl data conversion
-[PATCH 0/4] TI sysc driver updates for am335x and am437x
-[PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
-[PATCH] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
 
-At least v4.19-rc3 is needed for commit 18eb8aea7fb2 ("net: ethernet:
-cpsw-phy-sel: prefer phandle for phy sel") and omap-for-v4.20/dt
-is needed to avoid conflicts with clean-up.
 
-I've also pushed out a new temporary branch for people to test as
-as omap-for-v4.20/dt-ti-sysc-tmp-testing-v2 [0][1].
-
-Regards,
-
-Tony
-
-[0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v4.20/dt-ti-sysc-tmp-testing-v2
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v4.20/dt-ti-sysc-tmp-testing-v2
-
-Tony Lindgren (4):
-  bus: ti-sysc: Detect timer and gpio on dra7
-  bus: ti-sysc: Detect devices for debug on dra7
-  ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data
-  ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc
-
--- 
-2.19.0
+Thanks,
+Mauro
