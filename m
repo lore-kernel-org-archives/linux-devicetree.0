@@ -1,134 +1,22 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH 7/7] MIPS: mscc: add PCB120 to the ocelot fitImage
-Date: Fri, 14 Sep 2018 11:44:28 +0200
-Message-ID: <87ab2f80e3942dfca4eab896ba087e7b69bb7b12.1536916714.git-series.quentin.schulz@bootlin.com>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v2 0/3] Add Amlogic video decoder driver
+Date: Fri, 14 Sep 2018 11:48:08 +0200
+Message-ID: <CAMO6naz46zu5qiN=9LCixMKOHbXLW6qYGqarHf9ciNUsMRQ6sQ@mail.gmail.com>
+References: <20180911150938.3844-1-mjourdan@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
-In-Reply-To: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <20180911150938.3844-1-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PCB120 and PCB123 are both development boards based on Microsemi Ocelot
-so let's use the same fitImage for both.
+Please note: the canvas patches required for this series (and causing
+the kbuild fail) were merged by Kevin Hilman with a tag.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- arch/mips/generic/Kconfig                   |  6 +--
- arch/mips/generic/Platform                  |  2 +-
- arch/mips/generic/board-ocelot.its.S        | 40 ++++++++++++++++++++++-
- arch/mips/generic/board-ocelot_pcb123.its.S | 23 +-------------
- 4 files changed, 44 insertions(+), 27 deletions(-)
- create mode 100644 arch/mips/generic/board-ocelot.its.S
- delete mode 100644 arch/mips/generic/board-ocelot_pcb123.its.S
+Repo: https://git.kernel.org/pub/scm/linux/kernel/git/khilman/linux-amlogic.git
+Tag: amlogic-drivers-canvas
 
-diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-index 08e33c6..fd60198 100644
---- a/arch/mips/generic/Kconfig
-+++ b/arch/mips/generic/Kconfig
-@@ -65,11 +65,11 @@ config FIT_IMAGE_FDT_XILFPGA
- 	  Enable this to include the FDT for the MIPSfpga platform
- 	  from Imagination Technologies in the FIT kernel image.
- 
--config FIT_IMAGE_FDT_OCELOT_PCB123
--	bool "Include FDT for Microsemi Ocelot PCB123"
-+config FIT_IMAGE_FDT_OCELOT
-+	bool "Include FDT for Microsemi Ocelot development platforms"
- 	select MSCC_OCELOT
- 	help
--	  Enable this to include the FDT for the Ocelot PCB123 platform
-+	  Enable this to include the FDT for the Ocelot development platforms
- 	  from Microsemi in the FIT kernel image.
- 	  This requires u-boot on the platform.
- 
-diff --git a/arch/mips/generic/Platform b/arch/mips/generic/Platform
-index 879cb80..eaa19d1 100644
---- a/arch/mips/generic/Platform
-+++ b/arch/mips/generic/Platform
-@@ -16,5 +16,5 @@ all-$(CONFIG_MIPS_GENERIC)	:= vmlinux.gz.itb
- its-y					:= vmlinux.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= board-boston.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= board-ni169445.its.S
--its-$(CONFIG_FIT_IMAGE_FDT_OCELOT_PCB123) += board-ocelot_pcb123.its.S
-+its-$(CONFIG_FIT_IMAGE_FDT_OCELOT)	+= board-ocelot.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= board-xilfpga.its.S
-diff --git a/arch/mips/generic/board-ocelot.its.S b/arch/mips/generic/board-ocelot.its.S
-new file mode 100644
-index 0000000..3da2398
---- /dev/null
-+++ b/arch/mips/generic/board-ocelot.its.S
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/ {
-+	images {
-+		fdt@ocelot_pcb123 {
-+			description = "MSCC Ocelot PCB123 Device Tree";
-+			data = /incbin/("boot/dts/mscc/ocelot_pcb123.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
-+
-+		fdt@ocelot_pcb120 {
-+			description = "MSCC Ocelot PCB120 Device Tree";
-+			data = /incbin/("boot/dts/mscc/ocelot_pcb120.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
-+	};
-+
-+	configurations {
-+		conf@ocelot_pcb123 {
-+			description = "Ocelot Linux kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@ocelot_pcb123";
-+		};
-+
-+		conf@ocelot_pcb120 {
-+			description = "Ocelot Linux kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@ocelot_pcb120";
-+		};
-+	};
-+};
-diff --git a/arch/mips/generic/board-ocelot_pcb123.its.S b/arch/mips/generic/board-ocelot_pcb123.its.S
-deleted file mode 100644
-index 5a7d5e1..0000000
---- a/arch/mips/generic/board-ocelot_pcb123.its.S
-+++ /dev/null
-@@ -1,23 +0,0 @@
--/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
--/ {
--	images {
--		fdt@ocelot_pcb123 {
--			description = "MSCC Ocelot PCB123 Device Tree";
--			data = /incbin/("boot/dts/mscc/ocelot_pcb123.dtb");
--			type = "flat_dt";
--			arch = "mips";
--			compression = "none";
--			hash@0 {
--				algo = "sha1";
--			};
--		};
--	};
--
--	configurations {
--		conf@ocelot_pcb123 {
--			description = "Ocelot Linux kernel";
--			kernel = "kernel@0";
--			fdt = "fdt@ocelot_pcb123";
--		};
--	};
--};
--- 
-git-series 0.9.1
+Regards,
+Maxime
