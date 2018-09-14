@@ -1,49 +1,53 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 1/4] staging/vc04_services: Use correct cache line size
-Date: Fri, 14 Sep 2018 10:03:53 -0700
-Message-ID: <c4807226-6738-d9da-6f08-4b0a782b9cae@gmail.com>
-References: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
- <1536931375-48769-2-git-send-email-phil@raspberrypi.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v2 0/2] media: platform: Add Aspeed Video Engine Driver
+Date: Fri, 14 Sep 2018 19:14:58 +0200
+Message-ID: <eff9f795-d28f-d9cd-ff04-752757856f94@xs4all.nl>
+References: <1536866964-71593-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <3fe3a367-5e63-446b-faba-fa6ac7a007cd@xs4all.nl>
+ <1436d8d6-25ab-4bb8-5558-3e02fbe95e58@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1536931375-48769-2-git-send-email-phil@raspberrypi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1436d8d6-25ab-4bb8-5558-3e02fbe95e58@linux.vnet.ibm.com>
 Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2018 06:22 AM, Phil Elwell wrote:
-> Use the compatible string in the DTB to select the correct cache line
-> size for the SoC - 32 for BCM2835, and 64 for BCM2836 and BCM2837.
+On 09/14/2018 05:08 PM, Eddie James wrote:
 > 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> ---
+> 
+> On 09/14/2018 01:59 AM, Hans Verkuil wrote:
+>> On 09/13/2018 09:29 PM, Eddie James wrote:
+>>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>>> can capture and compress video data from digital or analog sources. With
+>>> the Aspeed chip acting as a service processor, the Video Engine can
+>>> capture the host processor graphics output.
+>>>
+>>> This series adds a V4L2 driver for the VE, providing a read() interface
+>>> only. The driver triggers the hardware to capture the host graphics output
+>>> and compress it to JPEG format.
+>>>
+>>>
+>>> v4l2-compliance output:
+>>>
+>>> v4l2-compliance SHA   : not available
+>> There should be a SHA here. "not available" indicates that you didn't compile
+>> from the git repository directly, and now I do not know how old this compliance
+>> test is. Always compile from the latest git repo, never use a version from e.g.
+>> a distro as they tend to be old and missing tests.
+>>
+>> It would be great if you can do this and reply with the new compliance output.
+> 
+> Hmm, I did compile from the latest git repo (maybe a week old now), but 
+> maybe our cross complication setup is preventing that hash from being 
+> generated. Will try and get it.
 
-[snip]
+You can also just report the git commit hash if you can't get it to work.
+As long as I know from which source version it was built.
 
-> @@ -170,6 +170,14 @@ static struct device *vchiq_dev;
->  static DEFINE_SPINLOCK(msg_queue_spinlock);
->  static struct platform_device *bcm2835_camera;
->  
-> +static struct vchiq_drvdata bcm2835_drvdata = {
-> +	.cache_line_size = 32,
-> +};
-> +
-> +static struct vchiq_drvdata bcm2836_drvdata = {
-> +	.cache_line_size = 64,
-> +};
+Regards,
 
-Those two structures could probably be marked const. Other than that,
-the approach definitively looks good to me.
--- 
-Florian
+	Hans
