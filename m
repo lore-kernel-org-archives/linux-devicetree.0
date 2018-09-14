@@ -1,344 +1,68 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH v3 3/3] thermal: broadcom: Add Stingray thermal driver
-Date: Fri, 14 Sep 2018 16:20:57 +0200
-Message-ID: <190f80d4-624b-a46a-c3a0-578a2dbb38b8@linaro.org>
-References: <1533819299-3401-1-git-send-email-srinath.mannam@broadcom.com>
- <1533819299-3401-4-git-send-email-srinath.mannam@broadcom.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Fri, 14 Sep 2018 22:37:20 +0800
+Message-ID: <20180914143719.GA27689@guoren-Inspiron-7460>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
+ <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1533819299-3401-4-git-send-email-srinath.mannam@broadcom.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On 09/08/2018 14:54, Srinath Mannam wrote:
-> From: Pramod Kumar <pramod.kumar@broadcom.com>
+On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
+> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> >
+> > This is the 3th version patchset to add the Linux kernel port for C-SKY(csky).
+> > Thanks to everyone who provided feedback on the previous version.
+> >
+> > This patchset adds architecture support to Linux for C-SKY's 32-bit embedded
+> > CPU cores and the patches are based on linux-4.18.4
+> >
+> > There are two ABI versions with several CPU cores in this patchset:
+> >   ABIv1: ck610 (16-bit instruction, 32-bit data path, VIPT Cache ...)
+> >   ABIv2: ck807 ck810 ck860 (16/32-bit variable length instruction, PIPT Cache,
+> >          SMP ...)
+> >
+> > More information: http://en.c-sky.com
 > 
-> Adds stingray thermal driver to monitor six
-> thermal zones temperature and trips at critical temperature.
+> This looks good to me overall. I think a good next step would be to get the port
+> included in linux-next, by preparing a git tree with all the patches and asking
+> Stephen Rothwell to include it there. Further comments on the architecture
+> port itself can be done on top of the existing patches. I would suggest you
+> base the git tree on an -rc release (either 4.19-rc1 or 4.19-rc3) and then never
+> rebase again.
+Nice :) I'll follow the rules.
 
-Hi Pramod,
-
-could you elaborate a bit more the description? As you are introducing a
-new driver it would be nice to give the sensor details.
-
-> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
-> ---
->  drivers/thermal/Kconfig               |   3 +-
->  drivers/thermal/broadcom/Kconfig      |   9 ++
->  drivers/thermal/broadcom/Makefile     |   1 +
->  drivers/thermal/broadcom/sr-thermal.c | 216 ++++++++++++++++++++++++++++++++++
->  4 files changed, 228 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
 > 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 8297988..26d39d4 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -416,7 +416,8 @@ config MTK_THERMAL
->  	  controller present in Mediatek SoCs
->  
->  menu "Broadcom thermal drivers"
-> -depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
-> +depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM_IPROC || \
-> +		COMPILE_TEST
->  source "drivers/thermal/broadcom/Kconfig"
->  endmenu
->  
-> diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-> index c106a15..dc9a9bd 100644
-> --- a/drivers/thermal/broadcom/Kconfig
-> +++ b/drivers/thermal/broadcom/Kconfig
-> @@ -22,3 +22,12 @@ config BCM_NS_THERMAL
->  	  BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
->  	  Management Unit) block with a thermal sensor that allows checking CPU
->  	  temperature.
-> +
-> +config BCM_SR_THERMAL
-> +	tristate "Stingray thermal driver"
-> +	depends on ARCH_BCM_IPROC || COMPILE_TEST
-> +	default ARCH_BCM_IPROC
-> +	help
-> +	  Support for the Stingray family of SoCs. Its different blocks like
-> +	  iHost, CRMU and NITRO has thermal sensor that allows checking its
-> +	  temperature.
-> diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
-> index fae10ec..79df69e 100644
-> --- a/drivers/thermal/broadcom/Makefile
-> +++ b/drivers/thermal/broadcom/Makefile
-> @@ -1,3 +1,4 @@
->  obj-$(CONFIG_BCM2835_THERMAL)		+= bcm2835_thermal.o
->  obj-$(CONFIG_BRCMSTB_THERMAL)		+= brcmstb_thermal.o
->  obj-$(CONFIG_BCM_NS_THERMAL)		+= ns-thermal.o
-> +obj-$(CONFIG_BCM_SR_THERMAL)		+= sr-thermal.o
-> diff --git a/drivers/thermal/broadcom/sr-thermal.c b/drivers/thermal/broadcom/sr-thermal.c
-> new file mode 100644
-> index 0000000..909f80c
-> --- /dev/null
-> +++ b/drivers/thermal/broadcom/sr-thermal.c
-> @@ -0,0 +1,216 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Broadcom
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/thermal.h>
-> +
-> +#define TMON_CRIT_TEMP          105000 /* temp in millidegree C */
+> You have included a couple of drivers in the submission: two timer and
+> two irqchip drivers. Please leave those out for the moment, and either have
+> them merged through the respective subsystem  trees, or get an Ack
+> from the maintainers to merge them through your tree.
+Ok. 
 
-I suggest to move this in the DT?
-
-> +#define SR_TMON_MAX_LIST        6
-> +
-> +/*
-> + * In stingray thermal IO memory,
-> + * Total Number of available TMONs MASK is at offset 0
-> + * temperature registers BASE is at 4 byte offset.
-> + * Each TMON temperature register size is 4.
-> + */
-> +#define SR_TMON_TEMP_BASE(id)   ((id) * 0x4)
-> +
-> +static const char * const sr_tmon_names[SR_TMON_MAX_LIST] = {
-
-It will be more elegant to replace the macro SR_TMON_MAX_LIST by
-ARRAY_SIZE(sr_tmon_names) and declare this array as:
-
-static const char *const sr_tmon_name[] = {
-	...
-};
-
-> +	"sr_tmon_ihost0",
-> +	"sr_tmon_ihost1",
-> +	"sr_tmon_ihost2",
-> +	"sr_tmon_ihost3",
-> +	"sr_tmon_crmu",
-> +	"sr_tmon_nitro",
-> +};
-> +
-> +struct sr_tmon {
-> +	struct thermal_zone_device *tz;
-> +	unsigned int crit_temp;
-> +	unsigned int tmon_id;
-> +	struct sr_thermal *priv;
-> +};
-> +
-> +struct sr_thermal {
-> +	struct device *dev;
-
-This field is used for dev_dbg, may be it could be removed along with
-the dev_dbg message?
-
-> +	void __iomem *regs;
-> +	struct sr_tmon tmon[SR_TMON_MAX_LIST];
-> +};
-> +
-> +static int sr_get_temp(struct thermal_zone_device *tz, int *temp)
-> +{
-> +	struct sr_tmon *tmon = tz->devdata;
-> +	struct sr_thermal *sr_thermal = tmon->priv;
-> +
-> +	*temp = readl(sr_thermal->regs + SR_TMON_TEMP_BASE(tmon->tmon_id));
-> +
-> +	return 0;
-> +}
-> +
-> +static int sr_get_trip_type(struct thermal_zone_device *tz, int trip,
-> +					enum thermal_trip_type *type)
-> +{
-> +	struct sr_tmon *tmon = tz->devdata;
-> +	struct sr_thermal *sr_thermal = tmon->priv;
-> +
-> +	switch (trip) {
-> +	case 0:
-> +		*type = THERMAL_TRIP_CRITICAL;
-> +		break;
-> +	default:
-> +		dev_dbg(sr_thermal->dev,
-> +			"Driver does not support more than 1 trip point\n");
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int sr_get_trip_temp(struct thermal_zone_device *tz, int trip, int *temp)
-> +{
-> +	struct sr_tmon *tmon = tz->devdata;
-> +	struct sr_thermal *sr_thermal = tmon->priv;
-> +
-> +	switch (trip) {
-> +	case 0:
-> +		*temp = tmon->crit_temp;
-> +		break;
-> +	default:
-> +		dev_dbg(sr_thermal->dev,
-> +			"Driver does not support more than 1 trip point\n");
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int sr_set_trip_temp(struct thermal_zone_device *tz, int trip, int temp)
-> +{
-> +	struct sr_tmon *tmon = tz->devdata;
-> +
-> +	switch (trip) {
-> +	case 0:
-> +		/*
-> +		 * Allow the user to change critical temperature
-> +		 * as per their requirement, could be for debug
-> +		 * purpose, even if it's more than the recommended
-> +		 * critical temperature.
-> +		 */
-
-Couldn't the user harm the hardware with a too high value?
-
-Why not define this value in the DT?
-
-> +		tmon->crit_temp = temp;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-
-Is it possible to factor out these 3 functions above and remove the
-'switch' in all of them ?
-
-> +static struct thermal_zone_device_ops sr_thermal_ops = {
-> +	.get_temp = sr_get_temp,
-> +	.get_trip_type = sr_get_trip_type,
-> +	.get_trip_temp = sr_get_trip_temp,
-> +	.set_trip_temp = sr_set_trip_temp,
-> +};
-> +
-> +static int sr_thermal_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct sr_thermal *sr_thermal;
-> +	struct sr_tmon *tmon;
-> +	struct resource *res;
-> +	uint32_t sr_tmon_list = 0;
-> +	unsigned int i;
-> +	int ret;
-> +
-> +	sr_thermal = devm_kzalloc(dev, sizeof(*sr_thermal), GFP_KERNEL);
-> +	if (!sr_thermal)
-> +		return -ENOMEM;
-> +
-> +	sr_thermal->dev = dev;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	sr_thermal->regs = (void __iomem *)devm_memremap(&pdev->dev, res->start,
-> +					 resource_size(res), MEMREMAP_WB);
-> +	if (IS_ERR(sr_thermal->regs)) {
-> +		dev_err(dev, "failed to get io address\n");
-> +		return PTR_ERR(sr_thermal->regs);
-> +	}
-> +
-> +	ret = device_property_read_u32(dev, "brcm,tmon-mask", &sr_tmon_list);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < SR_TMON_MAX_LIST; i++) {
-> +
-> +		if (!(sr_tmon_list & BIT(i)))
-> +			continue;
-> +
-> +		/* Flush temperature registers */
-> +		writel(0, sr_thermal->regs + SR_TMON_TEMP_BASE(i));
-> +		tmon = &sr_thermal->tmon[i];
-
-It is possible to initialize tmon to:
-
-		tmon = &sr_thermal->tmon;
-
-and then use the pointer increment:
-		tmon++;
-
-
-> +		tmon->crit_temp = TMON_CRIT_TEMP;
-> +		tmon->tmon_id = i;
-> +		tmon->priv = sr_thermal;
-> +		tmon->tz = thermal_zone_device_register(sr_tmon_names[i],
-> +				1, 1,
-> +				tmon,
-> +				&sr_thermal_ops,
-> +				NULL, 1000, 1000);
-> +		if (IS_ERR(tmon->tz))
-> +			goto err_exit;
-> +
-> +		dev_info(dev, "%s: registered\n", sr_tmon_names[i]);
-> +	}
-> +	platform_set_drvdata(pdev, sr_thermal);
-> +
-> +	return 0;
-> +
-> +err_exit:
-> +	while (--i >= 0) {
-> +		if (sr_thermal->tmon[i].tz)
-> +			thermal_zone_device_unregister(sr_thermal->tmon[i].tz);
-> +	}
-> +
-> +	return PTR_ERR(tmon->tz);
-> +}
-> +
-> +static int sr_thermal_remove(struct platform_device *pdev)
-> +{
-> +	struct sr_thermal *sr_thermal = platform_get_drvdata(pdev);
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < SR_TMON_MAX_LIST; i++)
-> +		if (sr_thermal->tmon[i].tz)
-> +			thermal_zone_device_unregister(sr_thermal->tmon[i].tz);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sr_thermal_of_match[] = {
-> +	{ .compatible = "brcm,sr-thermal", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, sr_thermal_of_match);
-> +
-> +static const struct acpi_device_id sr_thermal_acpi_ids[] = {
-> +	{ .id = "BRCM0500" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, sr_thermal_acpi_ids);
-> +
-> +static struct platform_driver sr_thermal_driver = {
-> +	.probe		= sr_thermal_probe,
-> +	.remove		= sr_thermal_remove,
-> +	.driver = {
-> +		.name = "sr-thermal",
-> +		.of_match_table = sr_thermal_of_match,
-> +		.acpi_match_table = ACPI_PTR(sr_thermal_acpi_ids),
-> +	},
-> +};
-> +module_platform_driver(sr_thermal_driver);
-> +
-> +MODULE_AUTHOR("Pramod Kumar <pramod.kumar@broadcom.com>");
-> +MODULE_DESCRIPTION("Stingray thermal driver");
-> +MODULE_LICENSE("GPL v2");
 > 
+> I notice that a lot of the patches have no changeset comments on them.
+> You should fix that and make a habit of describing every single patch
+> with a few sentences, even if it seems obvious to you. Have a look at
+> the changeset descriptions for the nds32 and riscv architectures when
+> they got merged.
+Ok, I'll fixup them.
 
+> 
+> One big question for me is what to do about time_t. Deepa and I are
+> in the process of finalizing the system call ABI for 32-bit architectures
+> with 64-bit time_t, but we are not done yet and it won't be complete
+> for 4.20. If you target 4.21, that could be a chance to make csky the
+> first architecture to only need the 64-bit time_t interface, with the
+> corresponding user space changes.
+y2038 is very important and csky32 has the issue. But 4.21 is too late for
+us, we really want to get into kernel.org as soon as possible.
+We could remove 32-bit time_t in future.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Best Regards
+ Guo Ren
