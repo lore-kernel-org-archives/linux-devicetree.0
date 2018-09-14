@@ -1,3278 +1,1467 @@
-Return-Path: <SRS0=yXvz=MJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57546 "EHLO muru.com"
+Return-Path: <SRS0=H4Pq=L4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from ns.pmeerw.net ([84.19.176.117]:50810 "EHLO ns.pmeerw.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbeI1D0g (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Sep 2018 23:26:36 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 3/4] ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data
-Date: Thu, 27 Sep 2018 14:05:41 -0700
-Message-Id: <20180927210542.69703-4-tony@atomide.com>
-In-Reply-To: <20180927210542.69703-1-tony@atomide.com>
-References: <20180927210542.69703-1-tony@atomide.com>
+        id S1726618AbeINOGD (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 14 Sep 2018 10:06:03 -0400
+Date: Fri, 14 Sep 2018 10:52:31 +0200 (CEST)
+From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2 3/4] iio: adc: Add Xilinx AMS driver
+In-Reply-To: <1536909510-7166-4-git-send-email-manish.narani@xilinx.com>
+Message-ID: <alpine.DEB.2.21.1809141036360.9866@vps.pmeerw.net>
+References: <1536909510-7166-1-git-send-email-manish.narani@xilinx.com> <1536909510-7166-4-git-send-email-manish.narani@xilinx.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: jic23@kernel.org, michal.simek@xilinx.com, sgoud@xilinx.com, anirudh@xilinx.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Similar to commit 8f42cb7f64c7 ("ARM: dts: omap4: Add l4 interconnect
-hierarchy and ti-sysc data"), let's add proper interconnect hierarchy
-for l4 interconnect instances with the related ti-sysc interconnect
-module data as in Documentation/devicetree/bindings/bus/ti-sysc.txt.
+On Fri, 14 Sep 2018, Manish Narani wrote:
 
-Using ti-sysc driver binding allows us to start dropping legacy platform
-data in arch/arm/mach-omap2/omap*hwmod*data.c files later on in favor of
-ti-sysc dts data.
+comments below
 
-This data is generated based on platform data from a booted system
-and the interconnect acces protection registers for ranges. To avoid
-regressions, we initially validate the device tree provided data
-against the existing platform data on boot.
+> The AMS includes an ADC as well as on-chip sensors that can be used to
+> sample external voltages and monitor on-die operating conditions, such
+> as temperature and supply voltage levels. The AMS has two SYSMON blocks.
+> PL-SYSMON block is capable of monitoring off chip voltage and
+> temperature.
+> PL-SYSMON block has DRP, JTAG and I2C interface to enable monitoring
+> from external master. Out of these interface currently only DRP is
+> supported.
+> Other block PS-SYSMON is memory mapped to PS.
+> The AMS can use internal channels to monitor voltage and temperature as
+> well as one primary and up to 16 auxiliary channels for measuring
+> external voltages.
+> The voltage and temperature monitoring channels also have event
+> capability which allows to generate an interrupt when their value falls
+> below or raises above a set threshold.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  drivers/iio/adc/Kconfig      |   10 +
+>  drivers/iio/adc/Makefile     |    1 +
+>  drivers/iio/adc/xilinx-ams.c | 1337 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1348 insertions(+)
+>  create mode 100644 drivers/iio/adc/xilinx-ams.c
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 4a75492..405ea00 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -941,4 +941,14 @@ config XILINX_XADC
+>  	  The driver can also be build as a module. If so, the module will be called
+>  	  xilinx-xadc.
+>  
+> +config XILINX_AMS
+> +	tristate "Xilinx AMS driver"
+> +	depends on ARCH_ZYNQMP || COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	help
+> +	  Say yes here to have support for the Xilinx AMS.
+> +
+> +	  The driver can also be build as a module. If so, the module will be called
 
-Note that we cannot yet include this file from the SoC dtsi file until
-the child devices are moved to their proper locations in the
-interconnect hierarchy in the following patch. Otherwise we would have
-the each module probed twice.
+built
 
-Cc: Dave Gerlach <d-gerlach@ti.com>
-Cc: Keerthy <j-keerthy@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/dra7-l4.dtsi | 3225 ++++++++++++++++++++++++++++++++
- 1 file changed, 3225 insertions(+)
- create mode 100644 arch/arm/boot/dts/dra7-l4.dtsi
+> +	  xilinx-ams.
+> +
+>  endmenu
+> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> index 03db7b5..fbfcc45 100644
+> --- a/drivers/iio/adc/Makefile
+> +++ b/drivers/iio/adc/Makefile
+> @@ -85,4 +85,5 @@ obj-$(CONFIG_VF610_ADC) += vf610_adc.o
+>  obj-$(CONFIG_VIPERBOARD_ADC) += viperboard_adc.o
+>  xilinx-xadc-y := xilinx-xadc-core.o xilinx-xadc-events.o
+>  obj-$(CONFIG_XILINX_XADC) += xilinx-xadc.o
+> +obj-$(CONFIG_XILINX_AMS) += xilinx-ams.o
+>  obj-$(CONFIG_SD_ADC_MODULATOR) += sd_adc_modulator.o
+> diff --git a/drivers/iio/adc/xilinx-ams.c b/drivers/iio/adc/xilinx-ams.c
+> new file mode 100644
+> index 0000000..c239a02
+> --- /dev/null
+> +++ b/drivers/iio/adc/xilinx-ams.c
+> @@ -0,0 +1,1337 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Xilinx AMS driver
+> + *
+> + *  Copyright (C) 2017-2018 Xilinx, Inc.
+> + *
+> + *  Manish Narani <mnarani@xilinx.com>
+> + *  Rajnikant Bhojani <rajnikant.bhojani@xilinx.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+> +static const unsigned int AMS_UNMASK_TIMEOUT_MS = 500;
+> +
+> +/* AMS registers definitions */
+> +#define AMS_ISR_0			0x010
+> +#define AMS_ISR_1			0x014
+> +#define AMS_IER_0			0x020
+> +#define AMS_IER_1			0x024
+> +#define AMS_IDR_0			0x028
+> +#define AMS_IDR_1			0x02c
+> +#define AMS_PS_CSTS			0x040
+> +#define AMS_PL_CSTS			0x044
+> +
+> +#define AMS_VCC_PSPLL0			0x060
+> +#define AMS_VCC_PSPLL3			0x06C
+> +#define AMS_VCCINT			0x078
+> +#define AMS_VCCBRAM			0x07C
+> +#define AMS_VCCAUX			0x080
+> +#define AMS_PSDDRPLL			0x084
+> +#define AMS_PSINTFPDDR			0x09C
+> +
+> +#define AMS_VCC_PSPLL0_CH		48
+> +#define AMS_VCC_PSPLL3_CH		51
+> +#define AMS_VCCINT_CH			54
+> +#define AMS_VCCBRAM_CH			55
+> +#define AMS_VCCAUX_CH			56
+> +#define AMS_PSDDRPLL_CH			57
+> +#define AMS_PSINTFPDDR_CH		63
+> +
+> +#define AMS_REG_CONFIG0			0x100
+> +#define AMS_REG_CONFIG1			0x104
+> +#define AMS_REG_CONFIG3			0x10C
+> +#define AMS_REG_SEQ_CH0			0x120
+> +#define AMS_REG_SEQ_CH1			0x124
+> +#define AMS_REG_SEQ_CH2			0x118
+> +
+> +#define AMS_TEMP			0x000
+> +#define AMS_SUPPLY1			0x004
+> +#define AMS_SUPPLY2			0x008
+> +#define AMS_VP_VN			0x00c
+> +#define AMS_VREFP			0x010
+> +#define AMS_VREFN			0x014
+> +#define AMS_SUPPLY3			0x018
+> +#define AMS_SUPPLY4			0x034
+> +#define AMS_SUPPLY5			0x038
+> +#define AMS_SUPPLY6			0x03c
+> +#define AMS_SUPPLY7			0x200
+> +#define AMS_SUPPLY8			0x204
+> +#define AMS_SUPPLY9			0x208
+> +#define AMS_SUPPLY10			0x20c
+> +#define AMS_VCCAMS			0x210
+> +#define AMS_TEMP_REMOTE			0x214
+> +
+> +#define AMS_REG_VAUX(x)			(0x40 + (4*(x)))
 
-diff --git a/arch/arm/boot/dts/dra7-l4.dtsi b/arch/arm/boot/dts/dra7-l4.dtsi
-new file mode 100644
---- /dev/null
-+++ b/arch/arm/boot/dts/dra7-l4.dtsi
-@@ -0,0 +1,3225 @@
-+&l4_cfg {						/* 0x4a000000 */
-+	compatible = "ti,dra7-l4-cfg", "simple-bus";
-+	reg = <0x4a000000 0x800>,
-+	      <0x4a000800 0x800>,
-+	      <0x4a001000 0x1000>;
-+	reg-names = "ap", "la", "ia0";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x00000000 0x4a000000 0x100000>,	/* segment 0 */
-+		 <0x00100000 0x4a100000 0x100000>,	/* segment 1 */
-+		 <0x00200000 0x4a200000 0x100000>;	/* segment 2 */
-+
-+	segment@0 {					/* 0x4a000000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x000800>,	/* ap 0 */
-+			 <0x00000800 0x00000800 0x000800>,	/* ap 1 */
-+			 <0x00001000 0x00001000 0x001000>,	/* ap 2 */
-+			 <0x00002000 0x00002000 0x002000>,	/* ap 3 */
-+			 <0x00004000 0x00004000 0x001000>,	/* ap 4 */
-+			 <0x00005000 0x00005000 0x001000>,	/* ap 5 */
-+			 <0x00006000 0x00006000 0x001000>,	/* ap 6 */
-+			 <0x00008000 0x00008000 0x002000>,	/* ap 7 */
-+			 <0x0000a000 0x0000a000 0x001000>,	/* ap 8 */
-+			 <0x00056000 0x00056000 0x001000>,	/* ap 9 */
-+			 <0x00057000 0x00057000 0x001000>,	/* ap 10 */
-+			 <0x0005e000 0x0005e000 0x002000>,	/* ap 11 */
-+			 <0x00060000 0x00060000 0x001000>,	/* ap 12 */
-+			 <0x00080000 0x00080000 0x008000>,	/* ap 13 */
-+			 <0x00088000 0x00088000 0x001000>,	/* ap 14 */
-+			 <0x000a0000 0x000a0000 0x008000>,	/* ap 15 */
-+			 <0x000a8000 0x000a8000 0x001000>,	/* ap 16 */
-+			 <0x000d9000 0x000d9000 0x001000>,	/* ap 17 */
-+			 <0x000da000 0x000da000 0x001000>,	/* ap 18 */
-+			 <0x000dd000 0x000dd000 0x001000>,	/* ap 19 */
-+			 <0x000de000 0x000de000 0x001000>,	/* ap 20 */
-+			 <0x000e0000 0x000e0000 0x001000>,	/* ap 21 */
-+			 <0x000e1000 0x000e1000 0x001000>,	/* ap 22 */
-+			 <0x000f4000 0x000f4000 0x001000>,	/* ap 23 */
-+			 <0x000f5000 0x000f5000 0x001000>,	/* ap 24 */
-+			 <0x000f6000 0x000f6000 0x001000>,	/* ap 25 */
-+			 <0x000f7000 0x000f7000 0x001000>,	/* ap 26 */
-+			 <0x00090000 0x00090000 0x008000>,	/* ap 59 */
-+			 <0x00098000 0x00098000 0x001000>;	/* ap 60 */
-+
-+		target-module@2000 {			/* 0x4a002000, ap 3 08.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2000 0x2000>;
-+		};
-+
-+		target-module@5000 {			/* 0x4a005000, ap 5 10.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5000 0x1000>;
-+		};
-+
-+		target-module@8000 {			/* 0x4a008000, ap 7 0e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x8000 0x2000>;
-+		};
-+
-+		target-module@56000 {			/* 0x4a056000, ap 9 02.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "dma_system";
-+			reg = <0x56000 0x4>,
-+			      <0x5602c 0x4>,
-+			      <0x56028 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_EMUFREE |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): core_pwrdm, dma_clkdm */
-+			clocks = <&dma_clkctrl DRA7_DMA_DMA_SYSTEM_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x56000 0x1000>;
-+		};
-+
-+		target-module@5e000 {			/* 0x4a05e000, ap 11 1a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5e000 0x2000>;
-+		};
-+
-+		target-module@80000 {			/* 0x4a080000, ap 13 20.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "ocp2scp1";
-+			reg = <0x80000 0x4>,
-+			      <0x80010 0x4>,
-+			      <0x80014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_OCP2SCP1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x80000 0x8000>;
-+		};
-+
-+		target-module@90000 {			/* 0x4a090000, ap 59 42.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "ocp2scp3";
-+			reg = <0x90000 0x4>,
-+			      <0x90010 0x4>,
-+			      <0x90014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_OCP2SCP3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x90000 0x8000>;
-+		};
-+
-+		target-module@a0000 {			/* 0x4a0a0000, ap 15 40.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xa0000 0x8000>;
-+		};
-+
-+		target-module@d9000 {			/* 0x4a0d9000, ap 17 72.0 */
-+			compatible = "ti,sysc-omap3630-sr", "ti,sysc";
-+			ti,hwmods = "smartreflex_mpu";
-+			reg = <0xd9038 0x4>;
-+			reg-names = "sysc";
-+			ti,sysc-mask = <SYSC_OMAP3_SR_ENAWAKEUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): coreaon_pwrdm, coreaon_clkdm */
-+			clocks = <&coreaon_clkctrl DRA7_COREAON_SMARTREFLEX_MPU_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xd9000 0x1000>;
-+		};
-+
-+		target-module@dd000 {			/* 0x4a0dd000, ap 19 18.0 */
-+			compatible = "ti,sysc-omap3630-sr", "ti,sysc";
-+			ti,hwmods = "smartreflex_core";
-+			reg = <0xdd038 0x4>;
-+			reg-names = "sysc";
-+			ti,sysc-mask = <SYSC_OMAP3_SR_ENAWAKEUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): coreaon_pwrdm, coreaon_clkdm */
-+			clocks = <&coreaon_clkctrl DRA7_COREAON_SMARTREFLEX_CORE_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xdd000 0x1000>;
-+		};
-+
-+		target-module@e0000 {			/* 0x4a0e0000, ap 21 28.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xe0000 0x1000>;
-+		};
-+
-+		target-module@f4000 {			/* 0x4a0f4000, ap 23 04.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox1";
-+			reg = <0xf4000 0x4>,
-+			      <0xf4010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xf4000 0x1000>;
-+		};
-+
-+		target-module@f6000 {			/* 0x4a0f6000, ap 25 78.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "spinlock";
-+			reg = <0xf6000 0x4>,
-+			      <0xf6010 0x4>,
-+			      <0xf6014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_SPINLOCK_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xf6000 0x1000>;
-+		};
-+	};
-+
-+	segment@100000 {					/* 0x4a100000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00002000 0x00102000 0x001000>,	/* ap 27 */
-+			 <0x00003000 0x00103000 0x001000>,	/* ap 28 */
-+			 <0x00008000 0x00108000 0x001000>,	/* ap 29 */
-+			 <0x00009000 0x00109000 0x001000>,	/* ap 30 */
-+			 <0x00040000 0x00140000 0x010000>,	/* ap 31 */
-+			 <0x00050000 0x00150000 0x001000>,	/* ap 32 */
-+			 <0x00051000 0x00151000 0x001000>,	/* ap 33 */
-+			 <0x00052000 0x00152000 0x001000>,	/* ap 34 */
-+			 <0x00053000 0x00153000 0x001000>,	/* ap 35 */
-+			 <0x00054000 0x00154000 0x001000>,	/* ap 36 */
-+			 <0x00055000 0x00155000 0x001000>,	/* ap 37 */
-+			 <0x00056000 0x00156000 0x001000>,	/* ap 38 */
-+			 <0x00057000 0x00157000 0x001000>,	/* ap 39 */
-+			 <0x00058000 0x00158000 0x001000>,	/* ap 40 */
-+			 <0x0005b000 0x0015b000 0x001000>,	/* ap 41 */
-+			 <0x0005c000 0x0015c000 0x001000>,	/* ap 42 */
-+			 <0x0005d000 0x0015d000 0x001000>,	/* ap 45 */
-+			 <0x0005e000 0x0015e000 0x001000>,	/* ap 46 */
-+			 <0x0005f000 0x0015f000 0x001000>,	/* ap 47 */
-+			 <0x00060000 0x00160000 0x001000>,	/* ap 48 */
-+			 <0x00061000 0x00161000 0x001000>,	/* ap 49 */
-+			 <0x00062000 0x00162000 0x001000>,	/* ap 50 */
-+			 <0x00063000 0x00163000 0x001000>,	/* ap 51 */
-+			 <0x00064000 0x00164000 0x001000>,	/* ap 52 */
-+			 <0x00065000 0x00165000 0x001000>,	/* ap 53 */
-+			 <0x00066000 0x00166000 0x001000>,	/* ap 54 */
-+			 <0x00067000 0x00167000 0x001000>,	/* ap 55 */
-+			 <0x00068000 0x00168000 0x001000>,	/* ap 56 */
-+			 <0x0006d000 0x0016d000 0x001000>,	/* ap 57 */
-+			 <0x0006e000 0x0016e000 0x001000>,	/* ap 58 */
-+			 <0x00071000 0x00171000 0x001000>,	/* ap 61 */
-+			 <0x00072000 0x00172000 0x001000>,	/* ap 62 */
-+			 <0x00073000 0x00173000 0x001000>,	/* ap 63 */
-+			 <0x00074000 0x00174000 0x001000>,	/* ap 64 */
-+			 <0x00075000 0x00175000 0x001000>,	/* ap 65 */
-+			 <0x00076000 0x00176000 0x001000>,	/* ap 66 */
-+			 <0x00077000 0x00177000 0x001000>,	/* ap 67 */
-+			 <0x00078000 0x00178000 0x001000>,	/* ap 68 */
-+			 <0x00081000 0x00181000 0x001000>,	/* ap 69 */
-+			 <0x00082000 0x00182000 0x001000>,	/* ap 70 */
-+			 <0x00083000 0x00183000 0x001000>,	/* ap 71 */
-+			 <0x00084000 0x00184000 0x001000>,	/* ap 72 */
-+			 <0x00085000 0x00185000 0x001000>,	/* ap 73 */
-+			 <0x00086000 0x00186000 0x001000>,	/* ap 74 */
-+			 <0x00087000 0x00187000 0x001000>,	/* ap 75 */
-+			 <0x00088000 0x00188000 0x001000>,	/* ap 76 */
-+			 <0x00069000 0x00169000 0x001000>,	/* ap 103 */
-+			 <0x0006a000 0x0016a000 0x001000>,	/* ap 104 */
-+			 <0x00079000 0x00179000 0x001000>,	/* ap 105 */
-+			 <0x0007a000 0x0017a000 0x001000>,	/* ap 106 */
-+			 <0x0006b000 0x0016b000 0x001000>,	/* ap 107 */
-+			 <0x0006c000 0x0016c000 0x001000>,	/* ap 108 */
-+			 <0x0007b000 0x0017b000 0x001000>,	/* ap 121 */
-+			 <0x0007c000 0x0017c000 0x001000>,	/* ap 122 */
-+			 <0x0007d000 0x0017d000 0x001000>,	/* ap 123 */
-+			 <0x0007e000 0x0017e000 0x001000>,	/* ap 124 */
-+			 <0x00059000 0x00159000 0x001000>,	/* ap 125 */
-+			 <0x0005a000 0x0015a000 0x001000>;	/* ap 126 */
-+
-+		target-module@2000 {			/* 0x4a102000, ap 27 3c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2000 0x1000>;
-+		};
-+
-+		target-module@8000 {			/* 0x4a108000, ap 29 1e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x8000 0x1000>;
-+		};
-+
-+		target-module@40000 {			/* 0x4a140000, ap 31 06.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x40000 0x10000>;
-+		};
-+
-+		target-module@51000 {			/* 0x4a151000, ap 33 50.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x51000 0x1000>;
-+		};
-+
-+		target-module@53000 {			/* 0x4a153000, ap 35 54.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x53000 0x1000>;
-+		};
-+
-+		target-module@55000 {			/* 0x4a155000, ap 37 46.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x55000 0x1000>;
-+		};
-+
-+		target-module@57000 {			/* 0x4a157000, ap 39 58.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x57000 0x1000>;
-+		};
-+
-+		target-module@59000 {			/* 0x4a159000, ap 125 6a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x59000 0x1000>;
-+		};
-+
-+		target-module@5b000 {			/* 0x4a15b000, ap 41 60.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5b000 0x1000>;
-+		};
-+
-+		target-module@5d000 {			/* 0x4a15d000, ap 45 3a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5d000 0x1000>;
-+		};
-+
-+		target-module@5f000 {			/* 0x4a15f000, ap 47 56.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5f000 0x1000>;
-+		};
-+
-+		target-module@61000 {			/* 0x4a161000, ap 49 32.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x61000 0x1000>;
-+		};
-+
-+		target-module@63000 {			/* 0x4a163000, ap 51 5c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x63000 0x1000>;
-+		};
-+
-+		target-module@65000 {			/* 0x4a165000, ap 53 4e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x65000 0x1000>;
-+		};
-+
-+		target-module@67000 {			/* 0x4a167000, ap 55 5e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x67000 0x1000>;
-+		};
-+
-+		target-module@69000 {			/* 0x4a169000, ap 103 4a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x69000 0x1000>;
-+		};
-+
-+		target-module@6b000 {			/* 0x4a16b000, ap 107 52.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6b000 0x1000>;
-+		};
-+
-+		target-module@6d000 {			/* 0x4a16d000, ap 57 68.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6d000 0x1000>;
-+		};
-+
-+		target-module@71000 {			/* 0x4a171000, ap 61 48.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x71000 0x1000>;
-+		};
-+
-+		target-module@73000 {			/* 0x4a173000, ap 63 2a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x73000 0x1000>;
-+		};
-+
-+		target-module@75000 {			/* 0x4a175000, ap 65 64.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x75000 0x1000>;
-+		};
-+
-+		target-module@77000 {			/* 0x4a177000, ap 67 66.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x77000 0x1000>;
-+		};
-+
-+		target-module@79000 {			/* 0x4a179000, ap 105 34.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x79000 0x1000>;
-+		};
-+
-+		target-module@7b000 {			/* 0x4a17b000, ap 121 7c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x7b000 0x1000>;
-+		};
-+
-+		target-module@7d000 {			/* 0x4a17d000, ap 123 7e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x7d000 0x1000>;
-+		};
-+
-+		target-module@81000 {			/* 0x4a181000, ap 69 26.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x81000 0x1000>;
-+		};
-+
-+		target-module@83000 {			/* 0x4a183000, ap 71 2e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x83000 0x1000>;
-+		};
-+
-+		target-module@85000 {			/* 0x4a185000, ap 73 36.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x85000 0x1000>;
-+		};
-+
-+		target-module@87000 {			/* 0x4a187000, ap 75 74.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x87000 0x1000>;
-+		};
-+	};
-+
-+	segment@200000 {					/* 0x4a200000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00018000 0x00218000 0x001000>,	/* ap 43 */
-+			 <0x00019000 0x00219000 0x001000>,	/* ap 44 */
-+			 <0x00000000 0x00200000 0x001000>,	/* ap 77 */
-+			 <0x00001000 0x00201000 0x001000>,	/* ap 78 */
-+			 <0x0000a000 0x0020a000 0x001000>,	/* ap 79 */
-+			 <0x0000b000 0x0020b000 0x001000>,	/* ap 80 */
-+			 <0x0000c000 0x0020c000 0x001000>,	/* ap 81 */
-+			 <0x0000d000 0x0020d000 0x001000>,	/* ap 82 */
-+			 <0x0000e000 0x0020e000 0x001000>,	/* ap 83 */
-+			 <0x0000f000 0x0020f000 0x001000>,	/* ap 84 */
-+			 <0x00010000 0x00210000 0x001000>,	/* ap 85 */
-+			 <0x00011000 0x00211000 0x001000>,	/* ap 86 */
-+			 <0x00012000 0x00212000 0x001000>,	/* ap 87 */
-+			 <0x00013000 0x00213000 0x001000>,	/* ap 88 */
-+			 <0x00014000 0x00214000 0x001000>,	/* ap 89 */
-+			 <0x00015000 0x00215000 0x001000>,	/* ap 90 */
-+			 <0x0002a000 0x0022a000 0x001000>,	/* ap 91 */
-+			 <0x0002b000 0x0022b000 0x001000>,	/* ap 92 */
-+			 <0x0001c000 0x0021c000 0x001000>,	/* ap 93 */
-+			 <0x0001d000 0x0021d000 0x001000>,	/* ap 94 */
-+			 <0x0001e000 0x0021e000 0x001000>,	/* ap 95 */
-+			 <0x0001f000 0x0021f000 0x001000>,	/* ap 96 */
-+			 <0x00020000 0x00220000 0x001000>,	/* ap 97 */
-+			 <0x00021000 0x00221000 0x001000>,	/* ap 98 */
-+			 <0x00024000 0x00224000 0x001000>,	/* ap 99 */
-+			 <0x00025000 0x00225000 0x001000>,	/* ap 100 */
-+			 <0x00026000 0x00226000 0x001000>,	/* ap 101 */
-+			 <0x00027000 0x00227000 0x001000>,	/* ap 102 */
-+			 <0x0002c000 0x0022c000 0x001000>,	/* ap 109 */
-+			 <0x0002d000 0x0022d000 0x001000>,	/* ap 110 */
-+			 <0x0002e000 0x0022e000 0x001000>,	/* ap 111 */
-+			 <0x0002f000 0x0022f000 0x001000>,	/* ap 112 */
-+			 <0x00030000 0x00230000 0x001000>,	/* ap 113 */
-+			 <0x00031000 0x00231000 0x001000>,	/* ap 114 */
-+			 <0x00032000 0x00232000 0x001000>,	/* ap 115 */
-+			 <0x00033000 0x00233000 0x001000>,	/* ap 116 */
-+			 <0x00034000 0x00234000 0x001000>,	/* ap 117 */
-+			 <0x00035000 0x00235000 0x001000>,	/* ap 118 */
-+			 <0x00036000 0x00236000 0x001000>,	/* ap 119 */
-+			 <0x00037000 0x00237000 0x001000>,	/* ap 120 */
-+			 <0x0001a000 0x0021a000 0x001000>,	/* ap 127 */
-+			 <0x0001b000 0x0021b000 0x001000>;	/* ap 128 */
-+
-+		target-module@0 {			/* 0x4a200000, ap 77 3e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x1000>;
-+		};
-+
-+		target-module@a000 {			/* 0x4a20a000, ap 79 30.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xa000 0x1000>;
-+		};
-+
-+		target-module@c000 {			/* 0x4a20c000, ap 81 0c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xc000 0x1000>;
-+		};
-+
-+		target-module@e000 {			/* 0x4a20e000, ap 83 22.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xe000 0x1000>;
-+		};
-+
-+		target-module@10000 {			/* 0x4a210000, ap 85 14.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x10000 0x1000>;
-+		};
-+
-+		target-module@12000 {			/* 0x4a212000, ap 87 16.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x12000 0x1000>;
-+		};
-+
-+		target-module@14000 {			/* 0x4a214000, ap 89 1c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x14000 0x1000>;
-+		};
-+
-+		target-module@18000 {			/* 0x4a218000, ap 43 12.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x18000 0x1000>;
-+		};
-+
-+		target-module@1a000 {			/* 0x4a21a000, ap 127 7a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1a000 0x1000>;
-+		};
-+
-+		target-module@1c000 {			/* 0x4a21c000, ap 93 38.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1c000 0x1000>;
-+		};
-+
-+		target-module@1e000 {			/* 0x4a21e000, ap 95 0a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1e000 0x1000>;
-+		};
-+
-+		target-module@20000 {			/* 0x4a220000, ap 97 24.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x20000 0x1000>;
-+		};
-+
-+		target-module@24000 {			/* 0x4a224000, ap 99 44.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x24000 0x1000>;
-+		};
-+
-+		target-module@26000 {			/* 0x4a226000, ap 101 2c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x26000 0x1000>;
-+		};
-+
-+		target-module@2a000 {			/* 0x4a22a000, ap 91 4c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2a000 0x1000>;
-+		};
-+
-+		target-module@2c000 {			/* 0x4a22c000, ap 109 6c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2c000 0x1000>;
-+		};
-+
-+		target-module@2e000 {			/* 0x4a22e000, ap 111 6e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2e000 0x1000>;
-+		};
-+
-+		target-module@30000 {			/* 0x4a230000, ap 113 70.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x30000 0x1000>;
-+		};
-+
-+		target-module@32000 {			/* 0x4a232000, ap 115 5a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x32000 0x1000>;
-+		};
-+
-+		target-module@34000 {			/* 0x4a234000, ap 117 76.1 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x34000 0x1000>;
-+		};
-+
-+		target-module@36000 {			/* 0x4a236000, ap 119 62.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x36000 0x1000>;
-+		};
-+	};
-+};
-+
-+&l4_per1 {						/* 0x48000000 */
-+	compatible = "ti,dra7-l4-per1", "simple-bus";
-+	reg = <0x48000000 0x800>,
-+	      <0x48000800 0x800>,
-+	      <0x48001000 0x400>,
-+	      <0x48001400 0x400>,
-+	      <0x48001800 0x400>,
-+	      <0x48001c00 0x400>;
-+	reg-names = "ap", "la", "ia0", "ia1", "ia2", "ia3";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x00000000 0x48000000 0x200000>,	/* segment 0 */
-+		 <0x00200000 0x48200000 0x200000>;	/* segment 1 */
-+
-+	segment@0 {					/* 0x48000000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x000800>,	/* ap 0 */
-+			 <0x00001000 0x00001000 0x000400>,	/* ap 1 */
-+			 <0x00000800 0x00000800 0x000800>,	/* ap 2 */
-+			 <0x00020000 0x00020000 0x001000>,	/* ap 3 */
-+			 <0x00021000 0x00021000 0x001000>,	/* ap 4 */
-+			 <0x00032000 0x00032000 0x001000>,	/* ap 5 */
-+			 <0x00033000 0x00033000 0x001000>,	/* ap 6 */
-+			 <0x00034000 0x00034000 0x001000>,	/* ap 7 */
-+			 <0x00035000 0x00035000 0x001000>,	/* ap 8 */
-+			 <0x00036000 0x00036000 0x001000>,	/* ap 9 */
-+			 <0x00037000 0x00037000 0x001000>,	/* ap 10 */
-+			 <0x0003e000 0x0003e000 0x001000>,	/* ap 11 */
-+			 <0x0003f000 0x0003f000 0x001000>,	/* ap 12 */
-+			 <0x00055000 0x00055000 0x001000>,	/* ap 13 */
-+			 <0x00056000 0x00056000 0x001000>,	/* ap 14 */
-+			 <0x00057000 0x00057000 0x001000>,	/* ap 15 */
-+			 <0x00058000 0x00058000 0x001000>,	/* ap 16 */
-+			 <0x00059000 0x00059000 0x001000>,	/* ap 17 */
-+			 <0x0005a000 0x0005a000 0x001000>,	/* ap 18 */
-+			 <0x0005b000 0x0005b000 0x001000>,	/* ap 19 */
-+			 <0x0005c000 0x0005c000 0x001000>,	/* ap 20 */
-+			 <0x0005d000 0x0005d000 0x001000>,	/* ap 21 */
-+			 <0x0005e000 0x0005e000 0x001000>,	/* ap 22 */
-+			 <0x00060000 0x00060000 0x001000>,	/* ap 23 */
-+			 <0x0006a000 0x0006a000 0x001000>,	/* ap 24 */
-+			 <0x0006b000 0x0006b000 0x001000>,	/* ap 25 */
-+			 <0x0006c000 0x0006c000 0x001000>,	/* ap 26 */
-+			 <0x0006d000 0x0006d000 0x001000>,	/* ap 27 */
-+			 <0x0006e000 0x0006e000 0x001000>,	/* ap 28 */
-+			 <0x0006f000 0x0006f000 0x001000>,	/* ap 29 */
-+			 <0x00070000 0x00070000 0x001000>,	/* ap 30 */
-+			 <0x00071000 0x00071000 0x001000>,	/* ap 31 */
-+			 <0x00072000 0x00072000 0x001000>,	/* ap 32 */
-+			 <0x00073000 0x00073000 0x001000>,	/* ap 33 */
-+			 <0x00061000 0x00061000 0x001000>,	/* ap 34 */
-+			 <0x00053000 0x00053000 0x001000>,	/* ap 35 */
-+			 <0x00054000 0x00054000 0x001000>,	/* ap 36 */
-+			 <0x000b2000 0x000b2000 0x001000>,	/* ap 37 */
-+			 <0x000b3000 0x000b3000 0x001000>,	/* ap 38 */
-+			 <0x00078000 0x00078000 0x001000>,	/* ap 39 */
-+			 <0x00079000 0x00079000 0x001000>,	/* ap 40 */
-+			 <0x00086000 0x00086000 0x001000>,	/* ap 41 */
-+			 <0x00087000 0x00087000 0x001000>,	/* ap 42 */
-+			 <0x00088000 0x00088000 0x001000>,	/* ap 43 */
-+			 <0x00089000 0x00089000 0x001000>,	/* ap 44 */
-+			 <0x00051000 0x00051000 0x001000>,	/* ap 45 */
-+			 <0x00052000 0x00052000 0x001000>,	/* ap 46 */
-+			 <0x00098000 0x00098000 0x001000>,	/* ap 47 */
-+			 <0x00099000 0x00099000 0x001000>,	/* ap 48 */
-+			 <0x0009a000 0x0009a000 0x001000>,	/* ap 49 */
-+			 <0x0009b000 0x0009b000 0x001000>,	/* ap 50 */
-+			 <0x0009c000 0x0009c000 0x001000>,	/* ap 51 */
-+			 <0x0009d000 0x0009d000 0x001000>,	/* ap 52 */
-+			 <0x00068000 0x00068000 0x001000>,	/* ap 53 */
-+			 <0x00069000 0x00069000 0x001000>,	/* ap 54 */
-+			 <0x00090000 0x00090000 0x002000>,	/* ap 55 */
-+			 <0x00092000 0x00092000 0x001000>,	/* ap 56 */
-+			 <0x000a4000 0x000a4000 0x001000>,	/* ap 57 */
-+			 <0x000a6000 0x000a6000 0x001000>,	/* ap 58 */
-+			 <0x000a8000 0x000a8000 0x004000>,	/* ap 59 */
-+			 <0x000ac000 0x000ac000 0x001000>,	/* ap 60 */
-+			 <0x000ad000 0x000ad000 0x001000>,	/* ap 61 */
-+			 <0x000ae000 0x000ae000 0x001000>,	/* ap 62 */
-+			 <0x00066000 0x00066000 0x001000>,	/* ap 63 */
-+			 <0x00067000 0x00067000 0x001000>,	/* ap 64 */
-+			 <0x000b4000 0x000b4000 0x001000>,	/* ap 65 */
-+			 <0x000b5000 0x000b5000 0x001000>,	/* ap 66 */
-+			 <0x000b8000 0x000b8000 0x001000>,	/* ap 67 */
-+			 <0x000b9000 0x000b9000 0x001000>,	/* ap 68 */
-+			 <0x000ba000 0x000ba000 0x001000>,	/* ap 69 */
-+			 <0x000bb000 0x000bb000 0x001000>,	/* ap 70 */
-+			 <0x000d1000 0x000d1000 0x001000>,	/* ap 71 */
-+			 <0x000d2000 0x000d2000 0x001000>,	/* ap 72 */
-+			 <0x000d5000 0x000d5000 0x001000>,	/* ap 73 */
-+			 <0x000d6000 0x000d6000 0x001000>,	/* ap 74 */
-+			 <0x000a2000 0x000a2000 0x001000>,	/* ap 75 */
-+			 <0x000a3000 0x000a3000 0x001000>,	/* ap 76 */
-+			 <0x00001400 0x00001400 0x000400>,	/* ap 77 */
-+			 <0x00001800 0x00001800 0x000400>,	/* ap 78 */
-+			 <0x00001c00 0x00001c00 0x000400>,	/* ap 79 */
-+			 <0x000a5000 0x000a5000 0x001000>,	/* ap 80 */
-+			 <0x0007a000 0x0007a000 0x001000>,	/* ap 81 */
-+			 <0x0007b000 0x0007b000 0x001000>,	/* ap 82 */
-+			 <0x0007c000 0x0007c000 0x001000>,	/* ap 83 */
-+			 <0x0007d000 0x0007d000 0x001000>;	/* ap 84 */
-+
-+		target-module@20000 {			/* 0x48020000, ap 3 04.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart3";
-+			reg = <0x20050 0x4>,
-+			      <0x20054 0x4>,
-+			      <0x20058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			ti,no-reset-on-init;
-+			ti,no-idle-on-init;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_UART3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x20000 0x1000>;
-+		};
-+
-+		target-module@32000 {			/* 0x48032000, ap 5 3e.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer2";
-+			reg = <0x32000 0x4>,
-+			      <0x32010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_TIMER2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x32000 0x1000>;
-+		};
-+
-+		target-module@34000 {			/* 0x48034000, ap 7 46.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer3";
-+			reg = <0x34000 0x4>,
-+			      <0x34010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_TIMER3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x34000 0x1000>;
-+		};
-+
-+		target-module@36000 {			/* 0x48036000, ap 9 4e.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer4";
-+			reg = <0x36000 0x4>,
-+			      <0x36010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_TIMER4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x36000 0x1000>;
-+		};
-+
-+		target-module@3e000 {			/* 0x4803e000, ap 11 56.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer9";
-+			reg = <0x3e000 0x4>,
-+			      <0x3e010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_TIMER9_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3e000 0x1000>;
-+		};
-+
-+		target-module@51000 {			/* 0x48051000, ap 45 2e.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio7";
-+			reg = <0x51000 0x4>,
-+			      <0x51010 0x4>,
-+			      <0x51114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			ti,no-reset-on-init;
-+			ti,no-idle-on-init;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO7_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO7_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x51000 0x1000>;
-+		};
-+
-+		target-module@53000 {			/* 0x48053000, ap 35 36.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio8";
-+			reg = <0x53000 0x4>,
-+			      <0x53010 0x4>,
-+			      <0x53114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO8_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO8_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x53000 0x1000>;
-+		};
-+
-+		target-module@55000 {			/* 0x48055000, ap 13 0e.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio2";
-+			reg = <0x55000 0x4>,
-+			      <0x55010 0x4>,
-+			      <0x55114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO2_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO2_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x55000 0x1000>;
-+		};
-+
-+		target-module@57000 {			/* 0x48057000, ap 15 06.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio3";
-+			reg = <0x57000 0x4>,
-+			      <0x57010 0x4>,
-+			      <0x57114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO3_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO3_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x57000 0x1000>;
-+		};
-+
-+		target-module@59000 {			/* 0x48059000, ap 17 16.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio4";
-+			reg = <0x59000 0x4>,
-+			      <0x59010 0x4>,
-+			      <0x59114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO4_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO4_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x59000 0x1000>;
-+		};
-+
-+		target-module@5b000 {			/* 0x4805b000, ap 19 1e.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio5";
-+			reg = <0x5b000 0x4>,
-+			      <0x5b010 0x4>,
-+			      <0x5b114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO5_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO5_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5b000 0x1000>;
-+		};
-+
-+		target-module@5d000 {			/* 0x4805d000, ap 21 26.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio6";
-+			reg = <0x5d000 0x4>,
-+			      <0x5d010 0x4>,
-+			      <0x5d114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_GPIO6_CLKCTRL 0>,
-+				 <&l4per_clkctrl DRA7_L4PER_GPIO6_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5d000 0x1000>;
-+		};
-+
-+		target-module@60000 {			/* 0x48060000, ap 23 32.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "i2c3";
-+			reg = <0x60000 0x8>,
-+			      <0x60010 0x8>,
-+			      <0x60090 0x8>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_I2C3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x60000 0x1000>;
-+		};
-+
-+		target-module@66000 {			/* 0x48066000, ap 63 14.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart5";
-+			reg = <0x66050 0x4>,
-+			      <0x66054 0x4>,
-+			      <0x66058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_UART5_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x66000 0x1000>;
-+		};
-+
-+		target-module@68000 {			/* 0x48068000, ap 53 1c.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart6";
-+			reg = <0x68050 0x4>,
-+			      <0x68054 0x4>,
-+			      <0x68058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_UART6_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x68000 0x1000>;
-+		};
-+
-+		target-module@6a000 {			/* 0x4806a000, ap 24 24.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart1";
-+			reg = <0x6a050 0x4>,
-+			      <0x6a054 0x4>,
-+			      <0x6a058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_UART1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6a000 0x1000>;
-+		};
-+
-+		target-module@6c000 {			/* 0x4806c000, ap 26 2c.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart2";
-+			reg = <0x6c050 0x4>,
-+			      <0x6c054 0x4>,
-+			      <0x6c058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_UART2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6c000 0x1000>;
-+		};
-+
-+		target-module@6e000 {			/* 0x4806e000, ap 28 0c.1 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart4";
-+			reg = <0x6e050 0x4>,
-+			      <0x6e054 0x4>,
-+			      <0x6e058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_UART4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6e000 0x1000>;
-+		};
-+
-+		target-module@70000 {			/* 0x48070000, ap 30 22.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "i2c1";
-+			reg = <0x70000 0x8>,
-+			      <0x70010 0x8>,
-+			      <0x70090 0x8>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_I2C1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x70000 0x1000>;
-+		};
-+
-+		target-module@72000 {			/* 0x48072000, ap 32 2a.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "i2c2";
-+			reg = <0x72000 0x8>,
-+			      <0x72010 0x8>,
-+			      <0x72090 0x8>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_I2C2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x72000 0x1000>;
-+		};
-+
-+		target-module@78000 {			/* 0x48078000, ap 39 0a.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "elm";
-+			reg = <0x78000 0x4>,
-+			      <0x78010 0x4>,
-+			      <0x78014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_ELM_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x78000 0x1000>;
-+		};
-+
-+		target-module@7a000 {			/* 0x4807a000, ap 81 3a.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "i2c4";
-+			reg = <0x7a000 0x8>,
-+			      <0x7a010 0x8>,
-+			      <0x7a090 0x8>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_I2C4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x7a000 0x1000>;
-+		};
-+
-+		target-module@7c000 {			/* 0x4807c000, ap 83 4a.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "i2c5";
-+			reg = <0x7c000 0x8>,
-+			      <0x7c010 0x8>,
-+			      <0x7c090 0x8>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_CLOCKACTIVITY |
-+					 SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_I2C5_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x7c000 0x1000>;
-+		};
-+
-+		target-module@86000 {			/* 0x48086000, ap 41 5e.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer10";
-+			reg = <0x86000 0x4>,
-+			      <0x86010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_TIMER10_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x86000 0x1000>;
-+		};
-+
-+		target-module@88000 {			/* 0x48088000, ap 43 66.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer11";
-+			reg = <0x88000 0x4>,
-+			      <0x88010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_TIMER11_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x88000 0x1000>;
-+		};
-+
-+		target-module@90000 {			/* 0x48090000, ap 55 12.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "rng";
-+			reg = <0x91fe0 0x4>,
-+			      <0x91fe4 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP2_AUTOIDLE>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>;
-+			/* Domains (P, C): l4per_pwrdm, l4sec_clkdm */
-+			clocks = <&l4sec_clkctrl DRA7_L4SEC_RNG_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x90000 0x2000>;
-+		};
-+
-+		target-module@98000 {			/* 0x48098000, ap 47 08.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mcspi1";
-+			reg = <0x98000 0x4>,
-+			      <0x98010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_MCSPI1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x98000 0x1000>;
-+		};
-+
-+		target-module@9a000 {			/* 0x4809a000, ap 49 10.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mcspi2";
-+			reg = <0x9a000 0x4>,
-+			      <0x9a010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_MCSPI2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x9a000 0x1000>;
-+		};
-+
-+		target-module@9c000 {			/* 0x4809c000, ap 51 38.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mmc1";
-+			reg = <0x9c000 0x4>,
-+			      <0x9c010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_MMC1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x9c000 0x1000>;
-+		};
-+
-+		target-module@a2000 {			/* 0x480a2000, ap 75 02.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xa2000 0x1000>;
-+		};
-+
-+		target-module@a4000 {			/* 0x480a4000, ap 57 42.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x00000000 0x000a4000 0x00001000>,
-+				 <0x00001000 0x000a5000 0x00001000>;
-+		};
-+
-+		target-module@a8000 {			/* 0x480a8000, ap 59 1a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xa8000 0x4000>;
-+		};
-+
-+		target-module@ad000 {			/* 0x480ad000, ap 61 20.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mmc3";
-+			reg = <0xad000 0x4>,
-+			      <0xad010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_MMC3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xad000 0x1000>;
-+		};
-+
-+		target-module@b2000 {			/* 0x480b2000, ap 37 52.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "hdq1w";
-+			reg = <0xb2000 0x4>,
-+			      <0xb2014 0x4>,
-+			      <0xb2018 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,syss-mask = <1>;
-+			ti,no-reset-on-init;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_HDQ1W_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xb2000 0x1000>;
-+		};
-+
-+		target-module@b4000 {			/* 0x480b4000, ap 65 40.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mmc2";
-+			reg = <0xb4000 0x4>,
-+			      <0xb4010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_MMC2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xb4000 0x1000>;
-+		};
-+
-+		target-module@b8000 {			/* 0x480b8000, ap 67 48.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mcspi3";
-+			reg = <0xb8000 0x4>,
-+			      <0xb8010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_MCSPI3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xb8000 0x1000>;
-+		};
-+
-+		target-module@ba000 {			/* 0x480ba000, ap 69 18.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mcspi4";
-+			reg = <0xba000 0x4>,
-+			      <0xba010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_MCSPI4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xba000 0x1000>;
-+		};
-+
-+		target-module@d1000 {			/* 0x480d1000, ap 71 28.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mmc4";
-+			reg = <0xd1000 0x4>,
-+			      <0xd1010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per_clkdm */
-+			clocks = <&l4per_clkctrl DRA7_L4PER_MMC4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xd1000 0x1000>;
-+		};
-+
-+		target-module@d5000 {			/* 0x480d5000, ap 73 30.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xd5000 0x1000>;
-+		};
-+	};
-+
-+	segment@200000 {					/* 0x48200000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
-+
-+&l4_per2 {						/* 0x48400000 */
-+	compatible = "ti,dra7-l4-per2", "simple-bus";
-+	reg = <0x48400000 0x800>,
-+	      <0x48400800 0x800>,
-+	      <0x48401000 0x400>,
-+	      <0x48401400 0x400>,
-+	      <0x48401800 0x400>;
-+	reg-names = "ap", "la", "ia0", "ia1", "ia2";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x00000000 0x48400000 0x400000>;	/* segment 0 */
-+
-+	segment@0 {					/* 0x48400000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x000800>,	/* ap 0 */
-+			 <0x00001000 0x00001000 0x000400>,	/* ap 1 */
-+			 <0x00000800 0x00000800 0x000800>,	/* ap 2 */
-+			 <0x00084000 0x00084000 0x004000>,	/* ap 3 */
-+			 <0x00001400 0x00001400 0x000400>,	/* ap 4 */
-+			 <0x00001800 0x00001800 0x000400>,	/* ap 5 */
-+			 <0x00088000 0x00088000 0x001000>,	/* ap 6 */
-+			 <0x0002c000 0x0002c000 0x001000>,	/* ap 7 */
-+			 <0x0002d000 0x0002d000 0x001000>,	/* ap 8 */
-+			 <0x00060000 0x00060000 0x002000>,	/* ap 9 */
-+			 <0x00062000 0x00062000 0x001000>,	/* ap 10 */
-+			 <0x00064000 0x00064000 0x002000>,	/* ap 11 */
-+			 <0x00066000 0x00066000 0x001000>,	/* ap 12 */
-+			 <0x00068000 0x00068000 0x002000>,	/* ap 13 */
-+			 <0x0006a000 0x0006a000 0x001000>,	/* ap 14 */
-+			 <0x0006c000 0x0006c000 0x002000>,	/* ap 15 */
-+			 <0x0006e000 0x0006e000 0x001000>,	/* ap 16 */
-+			 <0x00036000 0x00036000 0x001000>,	/* ap 17 */
-+			 <0x00037000 0x00037000 0x001000>,	/* ap 18 */
-+			 <0x00070000 0x00070000 0x002000>,	/* ap 19 */
-+			 <0x00072000 0x00072000 0x001000>,	/* ap 20 */
-+			 <0x0003a000 0x0003a000 0x001000>,	/* ap 21 */
-+			 <0x0003b000 0x0003b000 0x001000>,	/* ap 22 */
-+			 <0x0003c000 0x0003c000 0x001000>,	/* ap 23 */
-+			 <0x0003d000 0x0003d000 0x001000>,	/* ap 24 */
-+			 <0x0003e000 0x0003e000 0x001000>,	/* ap 25 */
-+			 <0x0003f000 0x0003f000 0x001000>,	/* ap 26 */
-+			 <0x00040000 0x00040000 0x001000>,	/* ap 27 */
-+			 <0x00041000 0x00041000 0x001000>,	/* ap 28 */
-+			 <0x00042000 0x00042000 0x001000>,	/* ap 29 */
-+			 <0x00043000 0x00043000 0x001000>,	/* ap 30 */
-+			 <0x00080000 0x00080000 0x002000>,	/* ap 31 */
-+			 <0x00082000 0x00082000 0x001000>,	/* ap 32 */
-+			 <0x0004a000 0x0004a000 0x001000>,	/* ap 33 */
-+			 <0x0004b000 0x0004b000 0x001000>,	/* ap 34 */
-+			 <0x00074000 0x00074000 0x002000>,	/* ap 35 */
-+			 <0x00076000 0x00076000 0x001000>,	/* ap 36 */
-+			 <0x00050000 0x00050000 0x001000>,	/* ap 37 */
-+			 <0x00051000 0x00051000 0x001000>,	/* ap 38 */
-+			 <0x00078000 0x00078000 0x002000>,	/* ap 39 */
-+			 <0x0007a000 0x0007a000 0x001000>,	/* ap 40 */
-+			 <0x00054000 0x00054000 0x001000>,	/* ap 41 */
-+			 <0x00055000 0x00055000 0x001000>,	/* ap 42 */
-+			 <0x0007c000 0x0007c000 0x002000>,	/* ap 43 */
-+			 <0x0007e000 0x0007e000 0x001000>,	/* ap 44 */
-+			 <0x0004c000 0x0004c000 0x001000>,	/* ap 45 */
-+			 <0x0004d000 0x0004d000 0x001000>,	/* ap 46 */
-+			 <0x00020000 0x00020000 0x001000>,	/* ap 47 */
-+			 <0x00021000 0x00021000 0x001000>,	/* ap 48 */
-+			 <0x00022000 0x00022000 0x001000>,	/* ap 49 */
-+			 <0x00023000 0x00023000 0x001000>,	/* ap 50 */
-+			 <0x00024000 0x00024000 0x001000>,	/* ap 51 */
-+			 <0x00025000 0x00025000 0x001000>,	/* ap 52 */
-+			 <0x00046000 0x00046000 0x001000>,	/* ap 53 */
-+			 <0x00047000 0x00047000 0x001000>,	/* ap 54 */
-+			 <0x00048000 0x00048000 0x001000>,	/* ap 55 */
-+			 <0x00049000 0x00049000 0x001000>,	/* ap 56 */
-+			 <0x00058000 0x00058000 0x002000>,	/* ap 57 */
-+			 <0x0005a000 0x0005a000 0x001000>,	/* ap 58 */
-+			 <0x0005b000 0x0005b000 0x001000>,	/* ap 59 */
-+			 <0x0005c000 0x0005c000 0x001000>,	/* ap 60 */
-+			 <0x0005d000 0x0005d000 0x001000>,	/* ap 61 */
-+			 <0x0005e000 0x0005e000 0x001000>;	/* ap 62 */
-+
-+		target-module@20000 {			/* 0x48420000, ap 47 02.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart7";
-+			reg = <0x20050 0x4>,
-+			      <0x20054 0x4>,
-+			      <0x20058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_UART7_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x20000 0x1000>;
-+		};
-+
-+		target-module@22000 {			/* 0x48422000, ap 49 0a.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart8";
-+			reg = <0x22050 0x4>,
-+			      <0x22054 0x4>,
-+			      <0x22058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_UART8_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x22000 0x1000>;
-+		};
-+
-+		target-module@24000 {			/* 0x48424000, ap 51 12.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart9";
-+			reg = <0x24050 0x4>,
-+			      <0x24054 0x4>,
-+			      <0x24058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_UART9_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x24000 0x1000>;
-+		};
-+
-+		target-module@2c000 {			/* 0x4842c000, ap 7 18.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2c000 0x1000>;
-+		};
-+
-+		target-module@36000 {			/* 0x48436000, ap 17 06.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x36000 0x1000>;
-+		};
-+
-+		target-module@3a000 {			/* 0x4843a000, ap 21 3e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3a000 0x1000>;
-+		};
-+
-+		target-module@3c000 {			/* 0x4843c000, ap 23 08.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3c000 0x1000>;
-+		};
-+
-+		target-module@3e000 {			/* 0x4843e000, ap 25 30.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "epwmss0";
-+			reg = <0x3e000 0x4>,
-+			      <0x3e004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_EPWMSS0_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3e000 0x1000>;
-+		};
-+
-+		target-module@40000 {			/* 0x48440000, ap 27 38.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "epwmss1";
-+			reg = <0x40000 0x4>,
-+			      <0x40004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_EPWMSS1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x40000 0x1000>;
-+		};
-+
-+		target-module@42000 {			/* 0x48442000, ap 29 20.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "epwmss2";
-+			reg = <0x42000 0x4>,
-+			      <0x42004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_EPWMSS2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x42000 0x1000>;
-+		};
-+
-+		target-module@46000 {			/* 0x48446000, ap 53 40.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x46000 0x1000>;
-+		};
-+
-+		target-module@48000 {			/* 0x48448000, ap 55 48.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x48000 0x1000>;
-+		};
-+
-+		target-module@4a000 {			/* 0x4844a000, ap 33 1a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4a000 0x1000>;
-+		};
-+
-+		target-module@4c000 {			/* 0x4844c000, ap 45 1c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4c000 0x1000>;
-+		};
-+
-+		target-module@50000 {			/* 0x48450000, ap 37 24.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x50000 0x1000>;
-+		};
-+
-+		target-module@54000 {			/* 0x48454000, ap 41 2c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x54000 0x1000>;
-+		};
-+
-+		target-module@58000 {			/* 0x48458000, ap 57 28.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x58000 0x2000>;
-+		};
-+
-+		target-module@5b000 {			/* 0x4845b000, ap 59 46.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5b000 0x1000>;
-+		};
-+
-+		target-module@5d000 {			/* 0x4845d000, ap 61 22.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5d000 0x1000>;
-+		};
-+
-+		target-module@60000 {			/* 0x48460000, ap 9 0e.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp1";
-+			reg = <0x60000 0x4>,
-+			      <0x60004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_MCASP1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x60000 0x2000>;
-+		};
-+
-+		target-module@64000 {			/* 0x48464000, ap 11 1e.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp2";
-+			reg = <0x64000 0x4>,
-+			      <0x64004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x64000 0x2000>;
-+		};
-+
-+		target-module@68000 {			/* 0x48468000, ap 13 26.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp3";
-+			reg = <0x68000 0x4>,
-+			      <0x68004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x68000 0x2000>;
-+		};
-+
-+		target-module@6c000 {			/* 0x4846c000, ap 15 2e.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp4";
-+			reg = <0x6c000 0x4>,
-+			      <0x6c004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6c000 0x2000>;
-+		};
-+
-+		target-module@70000 {			/* 0x48470000, ap 19 36.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp5";
-+			reg = <0x70000 0x4>,
-+			      <0x70004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP5_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x70000 0x2000>;
-+		};
-+
-+		target-module@74000 {			/* 0x48474000, ap 35 14.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp6";
-+			reg = <0x74000 0x4>,
-+			      <0x74004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP6_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x74000 0x2000>;
-+		};
-+
-+		target-module@78000 {			/* 0x48478000, ap 39 0c.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp7";
-+			reg = <0x78000 0x4>,
-+			      <0x78004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP7_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x78000 0x2000>;
-+		};
-+
-+		target-module@7c000 {			/* 0x4847c000, ap 43 04.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "mcasp8";
-+			reg = <0x7c000 0x4>,
-+			      <0x7c004 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): l4per_pwrdm, l4per2_clkdm */
-+			clocks = <&l4per2_clkctrl DRA7_L4PER2_MCASP8_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x7c000 0x2000>;
-+		};
-+
-+		target-module@80000 {			/* 0x48480000, ap 31 16.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x80000 0x2000>;
-+		};
-+
-+		target-module@84000 {			/* 0x48484000, ap 3 10.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x84000 0x4000>;
-+		};
-+	};
-+};
-+
-+&l4_per3 {						/* 0x48800000 */
-+	compatible = "ti,dra7-l4-per3", "simple-bus";
-+	reg = <0x48800000 0x800>,
-+	      <0x48800800 0x800>,
-+	      <0x48801000 0x400>,
-+	      <0x48801400 0x400>,
-+	      <0x48801800 0x400>;
-+	reg-names = "ap", "la", "ia0", "ia1", "ia2";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x00000000 0x48800000 0x200000>;	/* segment 0 */
-+
-+	segment@0 {					/* 0x48800000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x000800>,	/* ap 0 */
-+			 <0x00000800 0x00000800 0x000800>,	/* ap 1 */
-+			 <0x00001000 0x00001000 0x000400>,	/* ap 2 */
-+			 <0x00001400 0x00001400 0x000400>,	/* ap 3 */
-+			 <0x00001800 0x00001800 0x000400>,	/* ap 4 */
-+			 <0x00020000 0x00020000 0x001000>,	/* ap 5 */
-+			 <0x00021000 0x00021000 0x001000>,	/* ap 6 */
-+			 <0x00022000 0x00022000 0x001000>,	/* ap 7 */
-+			 <0x00023000 0x00023000 0x001000>,	/* ap 8 */
-+			 <0x00024000 0x00024000 0x001000>,	/* ap 9 */
-+			 <0x00025000 0x00025000 0x001000>,	/* ap 10 */
-+			 <0x00026000 0x00026000 0x001000>,	/* ap 11 */
-+			 <0x00027000 0x00027000 0x001000>,	/* ap 12 */
-+			 <0x00028000 0x00028000 0x001000>,	/* ap 13 */
-+			 <0x00029000 0x00029000 0x001000>,	/* ap 14 */
-+			 <0x0002a000 0x0002a000 0x001000>,	/* ap 15 */
-+			 <0x0002b000 0x0002b000 0x001000>,	/* ap 16 */
-+			 <0x0002c000 0x0002c000 0x001000>,	/* ap 17 */
-+			 <0x0002d000 0x0002d000 0x001000>,	/* ap 18 */
-+			 <0x0002e000 0x0002e000 0x001000>,	/* ap 19 */
-+			 <0x0002f000 0x0002f000 0x001000>,	/* ap 20 */
-+			 <0x00170000 0x00170000 0x010000>,	/* ap 21 */
-+			 <0x00180000 0x00180000 0x001000>,	/* ap 22 */
-+			 <0x00190000 0x00190000 0x010000>,	/* ap 23 */
-+			 <0x001a0000 0x001a0000 0x001000>,	/* ap 24 */
-+			 <0x001b0000 0x001b0000 0x010000>,	/* ap 25 */
-+			 <0x001c0000 0x001c0000 0x001000>,	/* ap 26 */
-+			 <0x001d0000 0x001d0000 0x010000>,	/* ap 27 */
-+			 <0x001e0000 0x001e0000 0x001000>,	/* ap 28 */
-+			 <0x00038000 0x00038000 0x001000>,	/* ap 29 */
-+			 <0x00039000 0x00039000 0x001000>,	/* ap 30 */
-+			 <0x0005c000 0x0005c000 0x001000>,	/* ap 31 */
-+			 <0x0005d000 0x0005d000 0x001000>,	/* ap 32 */
-+			 <0x0003a000 0x0003a000 0x001000>,	/* ap 33 */
-+			 <0x0003b000 0x0003b000 0x001000>,	/* ap 34 */
-+			 <0x0003c000 0x0003c000 0x001000>,	/* ap 35 */
-+			 <0x0003d000 0x0003d000 0x001000>,	/* ap 36 */
-+			 <0x0003e000 0x0003e000 0x001000>,	/* ap 37 */
-+			 <0x0003f000 0x0003f000 0x001000>,	/* ap 38 */
-+			 <0x00040000 0x00040000 0x001000>,	/* ap 39 */
-+			 <0x00041000 0x00041000 0x001000>,	/* ap 40 */
-+			 <0x00042000 0x00042000 0x001000>,	/* ap 41 */
-+			 <0x00043000 0x00043000 0x001000>,	/* ap 42 */
-+			 <0x00044000 0x00044000 0x001000>,	/* ap 43 */
-+			 <0x00045000 0x00045000 0x001000>,	/* ap 44 */
-+			 <0x00046000 0x00046000 0x001000>,	/* ap 45 */
-+			 <0x00047000 0x00047000 0x001000>,	/* ap 46 */
-+			 <0x00048000 0x00048000 0x001000>,	/* ap 47 */
-+			 <0x00049000 0x00049000 0x001000>,	/* ap 48 */
-+			 <0x0004a000 0x0004a000 0x001000>,	/* ap 49 */
-+			 <0x0004b000 0x0004b000 0x001000>,	/* ap 50 */
-+			 <0x0004c000 0x0004c000 0x001000>,	/* ap 51 */
-+			 <0x0004d000 0x0004d000 0x001000>,	/* ap 52 */
-+			 <0x0004e000 0x0004e000 0x001000>,	/* ap 53 */
-+			 <0x0004f000 0x0004f000 0x001000>,	/* ap 54 */
-+			 <0x00050000 0x00050000 0x001000>,	/* ap 55 */
-+			 <0x00051000 0x00051000 0x001000>,	/* ap 56 */
-+			 <0x00052000 0x00052000 0x001000>,	/* ap 57 */
-+			 <0x00053000 0x00053000 0x001000>,	/* ap 58 */
-+			 <0x00054000 0x00054000 0x001000>,	/* ap 59 */
-+			 <0x00055000 0x00055000 0x001000>,	/* ap 60 */
-+			 <0x00056000 0x00056000 0x001000>,	/* ap 61 */
-+			 <0x00057000 0x00057000 0x001000>,	/* ap 62 */
-+			 <0x00058000 0x00058000 0x001000>,	/* ap 63 */
-+			 <0x00059000 0x00059000 0x001000>,	/* ap 64 */
-+			 <0x0005a000 0x0005a000 0x001000>,	/* ap 65 */
-+			 <0x0005b000 0x0005b000 0x001000>,	/* ap 66 */
-+			 <0x00064000 0x00064000 0x001000>,	/* ap 67 */
-+			 <0x00065000 0x00065000 0x001000>,	/* ap 68 */
-+			 <0x0005e000 0x0005e000 0x001000>,	/* ap 69 */
-+			 <0x0005f000 0x0005f000 0x001000>,	/* ap 70 */
-+			 <0x00060000 0x00060000 0x001000>,	/* ap 71 */
-+			 <0x00061000 0x00061000 0x001000>,	/* ap 72 */
-+			 <0x00062000 0x00062000 0x001000>,	/* ap 73 */
-+			 <0x00063000 0x00063000 0x001000>,	/* ap 74 */
-+			 <0x00140000 0x00140000 0x020000>,	/* ap 75 */
-+			 <0x00160000 0x00160000 0x001000>,	/* ap 76 */
-+			 <0x00016000 0x00016000 0x001000>,	/* ap 77 */
-+			 <0x00017000 0x00017000 0x001000>,	/* ap 78 */
-+			 <0x000c0000 0x000c0000 0x020000>,	/* ap 79 */
-+			 <0x000e0000 0x000e0000 0x001000>,	/* ap 80 */
-+			 <0x00004000 0x00004000 0x001000>,	/* ap 81 */
-+			 <0x00005000 0x00005000 0x001000>,	/* ap 82 */
-+			 <0x00080000 0x00080000 0x020000>,	/* ap 83 */
-+			 <0x000a0000 0x000a0000 0x001000>,	/* ap 84 */
-+			 <0x00100000 0x00100000 0x020000>,	/* ap 85 */
-+			 <0x00120000 0x00120000 0x001000>,	/* ap 86 */
-+			 <0x00010000 0x00010000 0x001000>,	/* ap 87 */
-+			 <0x00011000 0x00011000 0x001000>,	/* ap 88 */
-+			 <0x0000a000 0x0000a000 0x001000>,	/* ap 89 */
-+			 <0x0000b000 0x0000b000 0x001000>,	/* ap 90 */
-+			 <0x0001c000 0x0001c000 0x001000>,	/* ap 91 */
-+			 <0x0001d000 0x0001d000 0x001000>,	/* ap 92 */
-+			 <0x0001e000 0x0001e000 0x001000>,	/* ap 93 */
-+			 <0x0001f000 0x0001f000 0x001000>,	/* ap 94 */
-+			 <0x00002000 0x00002000 0x001000>,	/* ap 95 */
-+			 <0x00003000 0x00003000 0x001000>;	/* ap 96 */
-+
-+		target-module@2000 {			/* 0x48802000, ap 95 7c.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox13";
-+			reg = <0x2000 0x4>,
-+			      <0x2010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX13_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2000 0x1000>;
-+		};
-+
-+		target-module@4000 {			/* 0x48804000, ap 81 20.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4000 0x1000>;
-+		};
-+
-+		target-module@a000 {			/* 0x4880a000, ap 89 18.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xa000 0x1000>;
-+		};
-+
-+		target-module@10000 {			/* 0x48810000, ap 87 28.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x10000 0x1000>;
-+		};
-+
-+		target-module@16000 {			/* 0x48816000, ap 77 1e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x16000 0x1000>;
-+		};
-+
-+		target-module@1c000 {			/* 0x4881c000, ap 91 1c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1c000 0x1000>;
-+		};
-+
-+		target-module@1e000 {			/* 0x4881e000, ap 93 2c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1e000 0x1000>;
-+		};
-+
-+		target-module@20000 {			/* 0x48820000, ap 5 08.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer5";
-+			reg = <0x20000 0x4>,
-+			      <0x20010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_TIMER5_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x20000 0x1000>;
-+		};
-+
-+		target-module@22000 {			/* 0x48822000, ap 7 24.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer6";
-+			reg = <0x22000 0x4>,
-+			      <0x22010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_TIMER6_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x22000 0x1000>;
-+		};
-+
-+		target-module@24000 {			/* 0x48824000, ap 9 26.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer7";
-+			reg = <0x24000 0x4>,
-+			      <0x24010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_TIMER7_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x24000 0x1000>;
-+		};
-+
-+		target-module@26000 {			/* 0x48826000, ap 11 0c.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer8";
-+			reg = <0x26000 0x4>,
-+			      <0x26010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): ipu_pwrdm, ipu_clkdm */
-+			clocks = <&ipu_clkctrl DRA7_IPU_TIMER8_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x26000 0x1000>;
-+		};
-+
-+		target-module@28000 {			/* 0x48828000, ap 13 16.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer13";
-+			reg = <0x28000 0x4>,
-+			      <0x28010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per3_clkdm */
-+			clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER13_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x28000 0x1000>;
-+		};
-+
-+		target-module@2a000 {			/* 0x4882a000, ap 15 10.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer14";
-+			reg = <0x2a000 0x4>,
-+			      <0x2a010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per3_clkdm */
-+			clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER14_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2a000 0x1000>;
-+		};
-+
-+		target-module@2c000 {			/* 0x4882c000, ap 17 02.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer15";
-+			reg = <0x2c000 0x4>,
-+			      <0x2c010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per3_clkdm */
-+			clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER15_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2c000 0x1000>;
-+		};
-+
-+		target-module@2e000 {			/* 0x4882e000, ap 19 14.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer16";
-+			reg = <0x2e000 0x4>,
-+			      <0x2e010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l4per_pwrdm, l4per3_clkdm */
-+			clocks = <&l4per3_clkctrl DRA7_L4PER3_TIMER16_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2e000 0x1000>;
-+		};
-+
-+		target-module@38000 {			/* 0x48838000, ap 29 12.0 */
-+			compatible = "ti,sysc-omap4-simple", "ti,sysc";
-+			ti,hwmods = "rtcss";
-+			reg = <0x38074 0x4>,
-+			      <0x38078 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): rtc_pwrdm, rtc_clkdm */
-+			clocks = <&rtc_clkctrl DRA7_RTC_RTCSS_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x38000 0x1000>;
-+		};
-+
-+		target-module@3a000 {			/* 0x4883a000, ap 33 3e.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox2";
-+			reg = <0x3a000 0x4>,
-+			      <0x3a010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3a000 0x1000>;
-+		};
-+
-+		target-module@3c000 {			/* 0x4883c000, ap 35 3a.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox3";
-+			reg = <0x3c000 0x4>,
-+			      <0x3c010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3c000 0x1000>;
-+		};
-+
-+		target-module@3e000 {			/* 0x4883e000, ap 37 46.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox4";
-+			reg = <0x3e000 0x4>,
-+			      <0x3e010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3e000 0x1000>;
-+		};
-+
-+		target-module@40000 {			/* 0x48840000, ap 39 64.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox5";
-+			reg = <0x40000 0x4>,
-+			      <0x40010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX5_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x40000 0x1000>;
-+		};
-+
-+		target-module@42000 {			/* 0x48842000, ap 41 4e.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox6";
-+			reg = <0x42000 0x4>,
-+			      <0x42010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX6_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x42000 0x1000>;
-+		};
-+
-+		target-module@44000 {			/* 0x48844000, ap 43 42.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox7";
-+			reg = <0x44000 0x4>,
-+			      <0x44010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX7_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x44000 0x1000>;
-+		};
-+
-+		target-module@46000 {			/* 0x48846000, ap 45 48.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox8";
-+			reg = <0x46000 0x4>,
-+			      <0x46010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX8_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x46000 0x1000>;
-+		};
-+
-+		target-module@48000 {			/* 0x48848000, ap 47 36.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x48000 0x1000>;
-+		};
-+
-+		target-module@4a000 {			/* 0x4884a000, ap 49 38.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4a000 0x1000>;
-+		};
-+
-+		target-module@4c000 {			/* 0x4884c000, ap 51 44.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4c000 0x1000>;
-+		};
-+
-+		target-module@4e000 {			/* 0x4884e000, ap 53 4c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4e000 0x1000>;
-+		};
-+
-+		target-module@50000 {			/* 0x48850000, ap 55 40.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x50000 0x1000>;
-+		};
-+
-+		target-module@52000 {			/* 0x48852000, ap 57 54.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x52000 0x1000>;
-+		};
-+
-+		target-module@54000 {			/* 0x48854000, ap 59 1a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x54000 0x1000>;
-+		};
-+
-+		target-module@56000 {			/* 0x48856000, ap 61 22.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x56000 0x1000>;
-+		};
-+
-+		target-module@58000 {			/* 0x48858000, ap 63 2a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x58000 0x1000>;
-+		};
-+
-+		target-module@5a000 {			/* 0x4885a000, ap 65 5c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5a000 0x1000>;
-+		};
-+
-+		target-module@5c000 {			/* 0x4885c000, ap 31 32.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5c000 0x1000>;
-+		};
-+
-+		target-module@5e000 {			/* 0x4885e000, ap 69 6c.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox9";
-+			reg = <0x5e000 0x4>,
-+			      <0x5e010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX9_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5e000 0x1000>;
-+		};
-+
-+		target-module@60000 {			/* 0x48860000, ap 71 4a.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox10";
-+			reg = <0x60000 0x4>,
-+			      <0x60010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX10_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x60000 0x1000>;
-+		};
-+
-+		target-module@62000 {			/* 0x48862000, ap 73 74.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox11";
-+			reg = <0x62000 0x4>,
-+			      <0x62010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX11_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x62000 0x1000>;
-+		};
-+
-+		target-module@64000 {			/* 0x48864000, ap 67 52.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "mailbox12";
-+			reg = <0x64000 0x4>,
-+			      <0x64010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_SOFTRESET>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>;
-+			/* Domains (P, C): core_pwrdm, l4cfg_clkdm */
-+			clocks = <&l4cfg_clkctrl DRA7_L4CFG_MAILBOX12_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x64000 0x1000>;
-+		};
-+
-+		target-module@80000 {			/* 0x48880000, ap 83 0e.1 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "usb_otg_ss1";
-+			reg = <0x80000 0x4>,
-+			      <0x80010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_DMADISABLE>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_USB_OTG_SS1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x80000 0x20000>;
-+		};
-+
-+		target-module@c0000 {			/* 0x488c0000, ap 79 06.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "usb_otg_ss2";
-+			reg = <0xc0000 0x4>,
-+			      <0xc0010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_DMADISABLE>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_USB_OTG_SS2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xc0000 0x20000>;
-+		};
-+
-+		target-module@100000 {			/* 0x48900000, ap 85 04.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "usb_otg_ss3";
-+			reg = <0x100000 0x4>,
-+			      <0x100010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_DMADISABLE>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_USB_OTG_SS3_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x100000 0x20000>;
-+		};
-+
-+		target-module@140000 {			/* 0x48940000, ap 75 3c.0 */
-+			compatible = "ti,sysc-omap4", "ti,sysc";
-+			ti,hwmods = "usb_otg_ss4";
-+			reg = <0x140000 0x4>,
-+			      <0x140010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <SYSC_OMAP4_DMADISABLE>;
-+			ti,sysc-midle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): l3init_pwrdm, l3init_clkdm */
-+			clocks = <&l3init_clkctrl DRA7_L3INIT_USB_OTG_SS4_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x140000 0x20000>;
-+		};
-+
-+		target-module@170000 {			/* 0x48970000, ap 21 0a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x170000 0x10000>;
-+		};
-+
-+		target-module@190000 {			/* 0x48990000, ap 23 2e.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x190000 0x10000>;
-+		};
-+
-+		target-module@1b0000 {			/* 0x489b0000, ap 25 34.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1b0000 0x10000>;
-+		};
-+
-+		target-module@1d0000 {			/* 0x489d0000, ap 27 30.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1d0000 0x10000>;
-+		};
-+	};
-+};
-+
-+&l4_wkup {						/* 0x4ae00000 */
-+	compatible = "ti,dra7-l4-wkup", "simple-bus";
-+	reg = <0x4ae00000 0x800>,
-+	      <0x4ae00800 0x800>,
-+	      <0x4ae01000 0x1000>;
-+	reg-names = "ap", "la", "ia0";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	ranges = <0x00000000 0x4ae00000 0x010000>,	/* segment 0 */
-+		 <0x00010000 0x4ae10000 0x010000>,	/* segment 1 */
-+		 <0x00020000 0x4ae20000 0x010000>,	/* segment 2 */
-+		 <0x00030000 0x4ae30000 0x010000>;	/* segment 3 */
-+
-+	segment@0 {					/* 0x4ae00000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00000000 0x000800>,	/* ap 0 */
-+			 <0x00001000 0x00001000 0x001000>,	/* ap 1 */
-+			 <0x00000800 0x00000800 0x000800>,	/* ap 2 */
-+			 <0x00006000 0x00006000 0x002000>,	/* ap 3 */
-+			 <0x00008000 0x00008000 0x001000>,	/* ap 4 */
-+			 <0x00004000 0x00004000 0x001000>,	/* ap 15 */
-+			 <0x00005000 0x00005000 0x001000>,	/* ap 16 */
-+			 <0x0000c000 0x0000c000 0x001000>,	/* ap 17 */
-+			 <0x0000d000 0x0000d000 0x001000>;	/* ap 18 */
-+
-+		target-module@4000 {			/* 0x4ae04000, ap 15 40.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "counter_32k";
-+			reg = <0x4000 0x4>,
-+			      <0x4010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): wkupaon_pwrdm, wkupaon_clkdm */
-+			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_COUNTER_32K_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4000 0x1000>;
-+		};
-+
-+		target-module@6000 {			/* 0x4ae06000, ap 3 10.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x6000 0x2000>;
-+		};
-+
-+		target-module@c000 {			/* 0x4ae0c000, ap 17 50.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xc000 0x1000>;
-+		};
-+	};
-+
-+	segment@10000 {					/* 0x4ae10000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00000000 0x00010000 0x001000>,	/* ap 5 */
-+			 <0x00001000 0x00011000 0x001000>,	/* ap 6 */
-+			 <0x00004000 0x00014000 0x001000>,	/* ap 7 */
-+			 <0x00005000 0x00015000 0x001000>,	/* ap 8 */
-+			 <0x00008000 0x00018000 0x001000>,	/* ap 9 */
-+			 <0x00009000 0x00019000 0x001000>,	/* ap 10 */
-+			 <0x0000c000 0x0001c000 0x001000>,	/* ap 11 */
-+			 <0x0000d000 0x0001d000 0x001000>;	/* ap 12 */
-+
-+		target-module@0 {			/* 0x4ae10000, ap 5 20.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "gpio1";
-+			reg = <0x0 0x4>,
-+			      <0x10 0x4>,
-+			      <0x114 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): wkupaon_pwrdm, wkupaon_clkdm */
-+			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_GPIO1_CLKCTRL 0>,
-+				 <&wkupaon_clkctrl DRA7_WKUPAON_GPIO1_CLKCTRL 8>;
-+			clock-names = "fck", "dbclk";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x1000>;
-+		};
-+
-+		target-module@4000 {			/* 0x4ae14000, ap 7 28.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "wd_timer2";
-+			reg = <0x4000 0x4>,
-+			      <0x4010 0x4>,
-+			      <0x4014 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_EMUFREE |
-+					 SYSC_OMAP2_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): wkupaon_pwrdm, wkupaon_clkdm */
-+			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_WD_TIMER2_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x4000 0x1000>;
-+		};
-+
-+		target-module@8000 {			/* 0x4ae18000, ap 9 30.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer1";
-+			reg = <0x8000 0x4>,
-+			      <0x8010 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): wkupaon_pwrdm, wkupaon_clkdm */
-+			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER1_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x8000 0x1000>;
-+		};
-+
-+		target-module@c000 {			/* 0x4ae1c000, ap 11 38.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xc000 0x1000>;
-+		};
-+	};
-+
-+	segment@20000 {					/* 0x4ae20000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x00006000 0x00026000 0x001000>,	/* ap 13 */
-+			 <0x0000a000 0x0002a000 0x001000>,	/* ap 14 */
-+			 <0x00000000 0x00020000 0x001000>,	/* ap 19 */
-+			 <0x00001000 0x00021000 0x001000>,	/* ap 20 */
-+			 <0x00002000 0x00022000 0x001000>,	/* ap 21 */
-+			 <0x00003000 0x00023000 0x001000>,	/* ap 22 */
-+			 <0x00007000 0x00027000 0x000400>,	/* ap 23 */
-+			 <0x00008000 0x00028000 0x000800>,	/* ap 24 */
-+			 <0x00009000 0x00029000 0x000100>,	/* ap 25 */
-+			 <0x00008800 0x00028800 0x000200>,	/* ap 26 */
-+			 <0x00008a00 0x00028a00 0x000100>,	/* ap 27 */
-+			 <0x0000b000 0x0002b000 0x001000>,	/* ap 28 */
-+			 <0x0000c000 0x0002c000 0x001000>,	/* ap 29 */
-+			 <0x0000f000 0x0002f000 0x001000>;	/* ap 32 */
-+
-+		target-module@0 {			/* 0x4ae20000, ap 19 08.0 */
-+			compatible = "ti,sysc-omap4-timer", "ti,sysc";
-+			ti,hwmods = "timer12";
-+			reg = <0x0 0x4>,
-+			      <0x10 0x4>;
-+			reg-names = "rev", "sysc";
-+			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
-+					 SYSC_OMAP4_SOFTRESET)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			/* Domains (P, C): wkupaon_pwrdm, wkupaon_clkdm */
-+			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_TIMER12_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x1000>;
-+		};
-+
-+		target-module@2000 {			/* 0x4ae22000, ap 21 18.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x2000 0x1000>;
-+		};
-+
-+		target-module@6000 {			/* 0x4ae26000, ap 13 48.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x00000000 0x00006000 0x00001000>,
-+				 <0x00001000 0x00007000 0x00000400>,
-+				 <0x00002000 0x00008000 0x00000800>,
-+				 <0x00002800 0x00008800 0x00000200>,
-+				 <0x00002a00 0x00008a00 0x00000100>,
-+				 <0x00003000 0x00009000 0x00000100>;
-+		};
-+
-+		target-module@b000 {			/* 0x4ae2b000, ap 28 02.0 */
-+			compatible = "ti,sysc-omap2", "ti,sysc";
-+			ti,hwmods = "uart10";
-+			reg = <0xb050 0x4>,
-+			      <0xb054 0x4>,
-+			      <0xb058 0x4>;
-+			reg-names = "rev", "sysc", "syss";
-+			ti,sysc-mask = <(SYSC_OMAP2_ENAWAKEUP |
-+					 SYSC_OMAP2_SOFTRESET |
-+					 SYSC_OMAP2_AUTOIDLE)>;
-+			ti,sysc-sidle = <SYSC_IDLE_FORCE>,
-+					<SYSC_IDLE_NO>,
-+					<SYSC_IDLE_SMART>,
-+					<SYSC_IDLE_SMART_WKUP>;
-+			ti,syss-mask = <1>;
-+			/* Domains (P, C): wkupaon_pwrdm, wkupaon_clkdm */
-+			clocks = <&wkupaon_clkctrl DRA7_WKUPAON_UART10_CLKCTRL 0>;
-+			clock-names = "fck";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xb000 0x1000>;
-+		};
-+
-+		target-module@f000 {			/* 0x4ae2f000, ap 32 58.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xf000 0x1000>;
-+		};
-+	};
-+
-+	segment@30000 {					/* 0x4ae30000 */
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0000c000 0x0003c000 0x002000>,	/* ap 30 */
-+			 <0x0000e000 0x0003e000 0x001000>,	/* ap 31 */
-+			 <0x00000000 0x00030000 0x001000>,	/* ap 33 */
-+			 <0x00001000 0x00031000 0x001000>,	/* ap 34 */
-+			 <0x00002000 0x00032000 0x001000>,	/* ap 35 */
-+			 <0x00003000 0x00033000 0x001000>,	/* ap 36 */
-+			 <0x00004000 0x00034000 0x001000>,	/* ap 37 */
-+			 <0x00005000 0x00035000 0x001000>,	/* ap 38 */
-+			 <0x00006000 0x00036000 0x001000>,	/* ap 39 */
-+			 <0x00007000 0x00037000 0x001000>,	/* ap 40 */
-+			 <0x00008000 0x00038000 0x001000>,	/* ap 41 */
-+			 <0x00009000 0x00039000 0x001000>,	/* ap 42 */
-+			 <0x0000a000 0x0003a000 0x001000>;	/* ap 43 */
-+
-+		target-module@1000 {			/* 0x4ae31000, ap 34 60.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x1000 0x1000>;
-+		};
-+
-+		target-module@3000 {			/* 0x4ae33000, ap 36 0a.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x3000 0x1000>;
-+		};
-+
-+		target-module@5000 {			/* 0x4ae35000, ap 38 0c.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x5000 0x1000>;
-+		};
-+
-+		target-module@7000 {			/* 0x4ae37000, ap 40 68.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x7000 0x1000>;
-+		};
-+
-+		target-module@9000 {			/* 0x4ae39000, ap 42 70.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x9000 0x1000>;
-+		};
-+
-+		target-module@c000 {			/* 0x4ae3c000, ap 30 04.0 */
-+			compatible = "ti,sysc";
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0xc000 0x2000>;
-+		};
-+	};
-+};
-+
+parenthesis not needed
+
+> +
+> +#define AMS_PS_RESET_VALUE		0xFFFFU
+> +#define AMS_PL_RESET_VALUE		0xFFFFU
+
+why U only here?
+
+> +
+> +#define AMS_CONF0_CHANNEL_NUM_MASK	(0x3f << 0)
+
+can use GENMASK()
+
+> +
+> +#define AMS_CONF1_SEQ_MASK		(0xf << 12)
+> +#define AMS_CONF1_SEQ_DEFAULT		(0 << 12)
+> +#define AMS_CONF1_SEQ_CONTINUOUS	(2 << 12)
+> +#define AMS_CONF1_SEQ_SINGLE_CHANNEL	(3 << 12)
+> +
+> +#define AMS_REG_SEQ0_MASK		0xFFFF
+> +#define AMS_REG_SEQ2_MASK		0x3F
+
+0x003F?
+
+> +#define AMS_REG_SEQ1_MASK		0xFFFF
+> +#define AMS_REG_SEQ2_MASK_SHIFT		16
+> +#define AMS_REG_SEQ1_MASK_SHIFT		22
+> +
+> +#define AMS_REGCFG1_ALARM_MASK		0xF0F
+> +#define AMS_REGCFG3_ALARM_MASK		0x3F
+> +
+> +#define AMS_ALARM_TEMP			0x140
+> +#define AMS_ALARM_SUPPLY1		0x144
+> +#define AMS_ALARM_SUPPLY2		0x148
+> +#define AMS_ALARM_SUPPLY3		0x160
+> +#define AMS_ALARM_SUPPLY4		0x164
+> +#define AMS_ALARM_SUPPLY5		0x168
+> +#define AMS_ALARM_SUPPLY6		0x16c
+> +#define AMS_ALARM_SUPPLY7		0x180
+> +#define AMS_ALARM_SUPPLY8		0x184
+> +#define AMS_ALARM_SUPPLY9		0x188
+> +#define AMS_ALARM_SUPPLY10		0x18c
+> +#define AMS_ALARM_VCCAMS		0x190
+> +#define AMS_ALARM_TEMP_REMOTE		0x194
+> +#define AMS_ALARM_THRESHOLD_OFF_10	0x10
+> +#define AMS_ALARM_THRESHOLD_OFF_20	0x20
+> +
+> +#define AMS_ALARM_THR_DIRECT_MASK	0x01
+> +#define AMS_ALARM_THR_MIN		0x0000
+> +#define AMS_ALARM_THR_MAX		0xffff
+> +
+> +#define AMS_NO_OF_ALARMS		32
+> +#define AMS_PL_ALARM_START		16
+> +#define AMS_ISR0_ALARM_MASK		0xFFFFFFFFU
+> +#define AMS_ISR1_ALARM_MASK		0xE000001FU
+> +#define AMS_ISR1_EOC_MASK		0x00000008U
+> +#define AMS_ISR1_INTR_MASK_SHIFT	32
+> +#define AMS_ISR0_ALARM_2_TO_0_MASK	0x07
+> +#define AMS_ISR0_ALARM_6_TO_3_MASK	0x78
+> +#define AMS_ISR0_ALARM_12_TO_7_MASK	0x3F
+> +#define AMS_CONF1_ALARM_2_TO_0_SHIFT	1
+> +#define AMS_CONF1_ALARM_6_TO_3_SHIFT	5
+> +#define AMS_CONF3_ALARM_12_TO_7_SHIFT	8
+> +
+> +#define AMS_PS_CSTS_PS_READY		0x08010000U
+> +#define AMS_PL_CSTS_ACCESS_MASK		0x00000001U
+> +
+> +#define AMS_PL_MAX_FIXED_CHANNEL	10
+> +#define AMS_PL_MAX_EXT_CHANNEL		20
+> +
+> +#define AMS_INIT_TIMEOUT		10000
+
+unit?
+
+
+> +
+> +/*
+> + * Following scale and offset value is derived from
+> + * UG580 (v1.7) December 20, 2016
+> + */
+> +#define AMS_SUPPLY_SCALE_1VOLT		1000
+> +#define AMS_SUPPLY_SCALE_3VOLT		3000
+> +#define AMS_SUPPLY_SCALE_6VOLT		6000
+> +#define AMS_SUPPLY_SCALE_DIV_BIT	16
+> +
+> +#define AMS_TEMP_SCALE			509314
+> +#define AMS_TEMP_SCALE_DIV_BIT		16
+> +#define AMS_TEMP_OFFSET			-((280230L << 16) / 509314)
+> +
+> +enum ams_alarm_bit {
+> +	AMS_ALARM_BIT_TEMP,
+> +	AMS_ALARM_BIT_SUPPLY1,
+> +	AMS_ALARM_BIT_SUPPLY2,
+> +	AMS_ALARM_BIT_SUPPLY3,
+> +	AMS_ALARM_BIT_SUPPLY4,
+> +	AMS_ALARM_BIT_SUPPLY5,
+> +	AMS_ALARM_BIT_SUPPLY6,
+> +	AMS_ALARM_BIT_RESERVED,
+> +	AMS_ALARM_BIT_SUPPLY7,
+> +	AMS_ALARM_BIT_SUPPLY8,
+> +	AMS_ALARM_BIT_SUPPLY9,
+> +	AMS_ALARM_BIT_SUPPLY10,
+> +	AMS_ALARM_BIT_VCCAMS,
+> +	AMS_ALARM_BIT_TEMP_REMOTE
+> +};
+> +
+> +enum ams_seq {
+> +	AMS_SEQ_VCC_PSPLL,
+> +	AMS_SEQ_VCC_PSBATT,
+> +	AMS_SEQ_VCCINT,
+> +	AMS_SEQ_VCCBRAM,
+> +	AMS_SEQ_VCCAUX,
+> +	AMS_SEQ_PSDDRPLL,
+> +	AMS_SEQ_INTDDR
+> +};
+> +
+> +enum ams_ps_pl_seq {
+> +	AMS_SEQ_CALIB,
+> +	AMS_SEQ_RSVD_1,
+> +	AMS_SEQ_RSVD_2,
+> +	AMS_SEQ_TEST,
+> +	AMS_SEQ_RSVD_4,
+> +	AMS_SEQ_SUPPLY4,
+> +	AMS_SEQ_SUPPLY5,
+> +	AMS_SEQ_SUPPLY6,
+> +	AMS_SEQ_TEMP,
+> +	AMS_SEQ_SUPPLY2,
+> +	AMS_SEQ_SUPPLY1,
+> +	AMS_SEQ_VP_VN,
+> +	AMS_SEQ_VREFP,
+> +	AMS_SEQ_VREFN,
+> +	AMS_SEQ_SUPPLY3,
+> +	AMS_SEQ_CURRENT_MON,
+> +	AMS_SEQ_SUPPLY7,
+> +	AMS_SEQ_SUPPLY8,
+> +	AMS_SEQ_SUPPLY9,
+> +	AMS_SEQ_SUPPLY10,
+> +	AMS_SEQ_VCCAMS,
+> +	AMS_SEQ_TEMP_REMOTE,
+> +	AMS_SEQ_MAX
+> +};
+> +
+> +#define AMS_SEQ(x)          (AMS_SEQ_MAX + (x))
+> +#define AMS_VAUX_SEQ(x)     (AMS_SEQ_MAX + (x))
+> +
+> +#define PS_SEQ_MAX          AMS_SEQ_MAX
+
+AMS_ prefix for there?
+
+> +#define PS_SEQ(x)           (x)
+> +#define PL_SEQ(x)           (PS_SEQ_MAX + x)
+
+(PS_SEQ_MAX + (x))
+
+> +
+> +#define AMS_CHAN_TEMP(_scan_index, _addr, _ext) { \
+> +	.type = IIO_TEMP, \
+> +	.indexed = 1, \
+> +	.address = (_addr), \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
+> +		BIT(IIO_CHAN_INFO_SCALE) | \
+> +		BIT(IIO_CHAN_INFO_OFFSET), \
+> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+> +	.event_spec = ams_temp_events, \
+> +	.num_event_specs = ARRAY_SIZE(ams_temp_events), \
+> +	.scan_index = (_scan_index), \
+> +	.scan_type = { \
+> +		.sign = 'u', \
+> +		.realbits = 12, \
+> +		.storagebits = 16, \
+> +		.shift = 4, \
+> +		.endianness = IIO_CPU, \
+> +	}, \
+> +	.extend_name = _ext, \
+> +}
+> +
+> +#define AMS_CHAN_VOLTAGE(_scan_index, _addr, _ext, _alarm) { \
+> +	.type = IIO_VOLTAGE, \
+> +	.indexed = 1, \
+> +	.address = (_addr), \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) | \
+> +		BIT(IIO_CHAN_INFO_SCALE), \
+> +	.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+> +	.event_spec = (_alarm) ? ams_voltage_events : NULL, \
+> +	.num_event_specs = (_alarm) ? ARRAY_SIZE(ams_voltage_events) : 0, \
+> +	.scan_index = (_scan_index), \
+> +	.scan_type = { \
+> +		.realbits = 10, \
+> +		.storagebits = 16, \
+> +		.shift = 6, \
+> +		.endianness = IIO_CPU, \
+> +	}, \
+> +	.extend_name = _ext, \
+> +}
+> +
+> +#define AMS_PS_CHAN_TEMP(_scan_index, _addr, _ext) \
+> +	AMS_CHAN_TEMP(PS_SEQ(_scan_index), _addr, _ext)
+> +#define AMS_PS_CHAN_VOLTAGE(_scan_index, _addr, _ext) \
+> +	AMS_CHAN_VOLTAGE(PS_SEQ(_scan_index), _addr, _ext, true)
+> +
+> +#define AMS_PL_CHAN_TEMP(_scan_index, _addr, _ext) \
+> +	AMS_CHAN_TEMP(PL_SEQ(_scan_index), _addr, _ext)
+> +#define AMS_PL_CHAN_VOLTAGE(_scan_index, _addr, _ext, _alarm) \
+> +	AMS_CHAN_VOLTAGE(PL_SEQ(_scan_index), _addr, _ext, _alarm)
+> +#define AMS_PL_AUX_CHAN_VOLTAGE(_auxno, _ext) \
+> +	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_VAUX_SEQ(_auxno)), \
+> +			AMS_REG_VAUX(_auxno), _ext, false)
+> +#define AMS_CTRL_CHAN_VOLTAGE(_scan_index, _addr, _ext) \
+> +	AMS_CHAN_VOLTAGE(PL_SEQ(AMS_VAUX_SEQ(AMS_SEQ(_scan_index))), \
+> +			_addr, _ext, false)
+> +
+> +struct ams {
+> +	void __iomem *base;
+> +	void __iomem *ps_base;
+> +	void __iomem *pl_base;
+> +	struct clk *clk;
+> +	struct device *dev;
+> +	struct mutex lock;
+> +	unsigned int alarm_mask;
+> +	unsigned int masked_alarm;
+> +	u64 intr_mask;
+> +	int irq;
+> +	struct delayed_work ams_unmask_work;
+> +};
+> +
+> +static inline void ams_ps_update_reg(struct ams *ams, unsigned int offset,
+> +				     u32 mask, u32 data)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(ams->ps_base + offset);
+> +	writel((val & ~mask) | (data & mask), ams->ps_base + offset);
+> +}
+> +
+> +static inline void ams_pl_update_reg(struct ams *ams, unsigned int offset,
+> +					 u32 mask, u32 data)
+> +{
+> +	u32 val;
+> +
+> +	val = readl(ams->pl_base + offset);
+> +	writel((val & ~mask) | (data & mask), ams->pl_base + offset);
+> +}
+> +
+> +static void ams_update_intrmask(struct ams *ams, u64 mask, u64 val)
+> +{
+> +	ams->intr_mask &= ~mask;
+> +	ams->intr_mask |= (val & mask);
+> +
+> +	writel(~(ams->intr_mask | ams->masked_alarm), ams->base + AMS_IER_0);
+> +	writel(~(ams->intr_mask >> AMS_ISR1_INTR_MASK_SHIFT),
+> +			ams->base + AMS_IER_1);
+> +	writel(ams->intr_mask | ams->masked_alarm, ams->base + AMS_IDR_0);
+> +	writel(ams->intr_mask >> AMS_ISR1_INTR_MASK_SHIFT,
+> +			ams->base + AMS_IDR_1);
+> +}
+> +
+> +static void ams_disable_all_alarms(struct ams *ams)
+> +{
+> +	/* disable PS module alarm */
+> +	if (ams->ps_base) {
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG1, AMS_REGCFG1_ALARM_MASK,
+> +				  AMS_REGCFG1_ALARM_MASK);
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG3, AMS_REGCFG3_ALARM_MASK,
+> +				  AMS_REGCFG3_ALARM_MASK);
+> +	}
+> +
+> +	/* disable PL module alarm */
+> +	if (ams->pl_base) {
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG1,
+> +				    AMS_REGCFG1_ALARM_MASK,
+> +				    AMS_REGCFG1_ALARM_MASK);
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG3,
+> +				    AMS_REGCFG3_ALARM_MASK,
+> +				    AMS_REGCFG3_ALARM_MASK);
+> +	}
+> +}
+> +
+> +static void iio_ams_update_alarm(struct ams *ams, unsigned long alarm_mask)
+
+please use consistent ams_ prefix; why iio here?
+
+> +{
+> +	u32 cfg;
+> +	unsigned long pl_alarm_mask;
+> +
+> +	if (ams->ps_base) {
+> +		/* Configuring PS alarm enable */
+> +		cfg = ~((alarm_mask & AMS_ISR0_ALARM_2_TO_0_MASK) <<
+> +			       AMS_CONF1_ALARM_2_TO_0_SHIFT);
+> +		cfg &= ~((alarm_mask & AMS_ISR0_ALARM_6_TO_3_MASK) <<
+> +				AMS_CONF1_ALARM_6_TO_3_SHIFT);
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG1, AMS_REGCFG1_ALARM_MASK,
+> +				  cfg);
+> +
+> +		cfg = ~((alarm_mask >> AMS_CONF3_ALARM_12_TO_7_SHIFT) &
+> +				AMS_ISR0_ALARM_12_TO_7_MASK);
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG3, AMS_REGCFG3_ALARM_MASK,
+> +				  cfg);
+> +	}
+> +
+> +	if (ams->pl_base) {
+> +		pl_alarm_mask = (alarm_mask >> AMS_PL_ALARM_START);
+> +		/* Configuring PL alarm enable */
+> +		cfg = ~((pl_alarm_mask & AMS_ISR0_ALARM_2_TO_0_MASK) <<
+> +			       AMS_CONF1_ALARM_2_TO_0_SHIFT);
+> +		cfg &= ~((pl_alarm_mask & AMS_ISR0_ALARM_6_TO_3_MASK) <<
+> +				AMS_CONF1_ALARM_6_TO_3_SHIFT);
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG1,
+> +				AMS_REGCFG1_ALARM_MASK, cfg);
+> +
+> +		cfg = ~((pl_alarm_mask >> AMS_CONF3_ALARM_12_TO_7_SHIFT) &
+> +				AMS_ISR0_ALARM_12_TO_7_MASK);
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG3,
+> +				AMS_REGCFG3_ALARM_MASK, cfg);
+> +	}
+> +
+> +	mutex_lock(&ams->lock);
+> +	ams_update_intrmask(ams, AMS_ISR0_ALARM_MASK, ~alarm_mask);
+> +	mutex_unlock(&ams->lock);
+> +}
+> +
+> +static void ams_enable_channel_sequence(struct ams *ams)
+> +{
+> +	int i;
+> +	unsigned long long scan_mask;
+> +	struct iio_dev *indio_dev = iio_priv_to_dev(ams);
+> +
+> +	/*
+> +	 * Enable channel sequence. First 22 bit of scan_mask represent
+
+bits
+
+> +	 * PS channels, and next remaining bit represents PL channels.
+
+bits
+
+> +	 */
+> +
+> +	/* Run calibration of PS & PL as part of the sequence */
+> +	scan_mask = 0x1 | BIT(PS_SEQ_MAX);
+> +	for (i = 0; i < indio_dev->num_channels; i++)
+> +		scan_mask |= BIT(indio_dev->channels[i].scan_index);
+> +
+> +	if (ams->ps_base) {
+> +		/* put sysmon in a soft reset to change the sequence */
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +				  AMS_CONF1_SEQ_DEFAULT);
+> +
+> +		/* configure basic channels */
+> +		writel(scan_mask & AMS_REG_SEQ0_MASK,
+> +				ams->ps_base + AMS_REG_SEQ_CH0);
+> +		writel(AMS_REG_SEQ2_MASK &
+> +			(scan_mask >> AMS_REG_SEQ2_MASK_SHIFT),
+> +			ams->ps_base + AMS_REG_SEQ_CH2);
+> +
+> +		/* set continuous sequence mode */
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +				  AMS_CONF1_SEQ_CONTINUOUS);
+> +	}
+> +
+> +	if (ams->pl_base) {
+> +		/* put sysmon in a soft reset to change the sequence */
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +				    AMS_CONF1_SEQ_DEFAULT);
+> +
+> +		/* configure basic channels */
+> +		scan_mask = scan_mask >> PS_SEQ_MAX;
+> +		writel(scan_mask & AMS_REG_SEQ0_MASK,
+> +				ams->pl_base + AMS_REG_SEQ_CH0);
+> +		writel(AMS_REG_SEQ2_MASK &
+> +				(scan_mask >> AMS_REG_SEQ2_MASK_SHIFT),
+> +				ams->pl_base + AMS_REG_SEQ_CH2);
+> +		writel(AMS_REG_SEQ1_MASK &
+> +				(scan_mask >> AMS_REG_SEQ1_MASK_SHIFT),
+> +				ams->pl_base + AMS_REG_SEQ_CH1);
+> +
+> +		/* set continuous sequence mode */
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +				AMS_CONF1_SEQ_CONTINUOUS);
+> +	}
+> +}
+> +
+> +static int iio_ams_init_device(struct ams *ams)
+
+prefix
+
+> +{
+> +	u32 reg;
+> +	int ret;
+> +
+> +	/* reset AMS */
+> +	if (ams->ps_base) {
+> +		writel(AMS_PS_RESET_VALUE, ams->ps_base + AMS_VP_VN);
+> +
+> +		ret = readl_poll_timeout(ams->base + AMS_PS_CSTS, reg,
+> +					 (reg & AMS_PS_CSTS_PS_READY) ==
+> +					 AMS_PS_CSTS_PS_READY, 0,
+> +					 AMS_INIT_TIMEOUT);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* put sysmon in a default state */
+> +		ams_ps_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +				  AMS_CONF1_SEQ_DEFAULT);
+> +	}
+> +
+> +	if (ams->pl_base) {
+> +		writel(AMS_PL_RESET_VALUE, ams->pl_base + AMS_VP_VN);
+> +
+> +		ret = readl_poll_timeout(ams->base + AMS_PL_CSTS, reg,
+> +					 (reg & AMS_PL_CSTS_ACCESS_MASK) ==
+> +					 AMS_PL_CSTS_ACCESS_MASK, 0,
+> +					 AMS_INIT_TIMEOUT);
+> +		if (ret)
+> +			return ret;
+> +
+> +		/* put sysmon in a default state */
+> +		ams_pl_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +				    AMS_CONF1_SEQ_DEFAULT);
+> +	}
+> +
+> +	ams_disable_all_alarms(ams);
+> +
+> +	/* Disable interrupt */
+> +	ams_update_intrmask(ams, ~0, ~0);
+> +
+> +	/* Clear any pending interrupt */
+> +	writel(AMS_ISR0_ALARM_MASK, ams->base + AMS_ISR_0);
+> +	writel(AMS_ISR1_ALARM_MASK, ams->base + AMS_ISR_1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ams_enable_single_channel(struct ams *ams, unsigned int offset)
+> +{
+> +	u8 channel_num = 0;
+> +
+> +	switch (offset) {
+> +	case AMS_VCC_PSPLL0:
+> +		channel_num = AMS_VCC_PSPLL0_CH;
+> +		break;
+> +	case AMS_VCC_PSPLL3:
+> +		channel_num = AMS_VCC_PSPLL3_CH;
+> +		break;
+> +	case AMS_VCCINT:
+> +		channel_num = AMS_VCCINT_CH;
+> +		break;
+> +	case AMS_VCCBRAM:
+> +		channel_num = AMS_VCCBRAM_CH;
+> +		break;
+> +	case AMS_VCCAUX:
+> +		channel_num = AMS_VCCAUX_CH;
+> +		break;
+> +	case AMS_PSDDRPLL:
+> +		channel_num = AMS_PSDDRPLL_CH;
+> +		break;
+> +	case AMS_PSINTFPDDR:
+> +		channel_num = AMS_PSINTFPDDR_CH;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* set single channel, sequencer off mode */
+> +	ams_ps_update_reg(ams, AMS_REG_CONFIG1, AMS_CONF1_SEQ_MASK,
+> +			AMS_CONF1_SEQ_SINGLE_CHANNEL);
+> +
+> +	/* write the channel number */
+> +	ams_ps_update_reg(ams, AMS_REG_CONFIG0, AMS_CONF0_CHANNEL_NUM_MASK,
+> +			channel_num);
+> +	return 0;
+> +}
+> +
+> +static int ams_read_vcc_reg(struct ams *ams, unsigned int offset, u32 *data)
+> +{
+> +	u32 reg;
+> +	int ret;
+> +
+> +	ret = ams_enable_single_channel(ams, offset);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = readl_poll_timeout(ams->base + AMS_ISR_1, reg,
+> +				 (reg & AMS_ISR1_EOC_MASK) == AMS_ISR1_EOC_MASK,
+> +				 0, AMS_INIT_TIMEOUT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*data = readl(ams->base + offset);
+> +	ams_enable_channel_sequence(ams);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ams_read_raw(struct iio_dev *indio_dev,
+> +			struct iio_chan_spec const *chan,
+> +			int *val, int *val2, long mask)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		mutex_lock(&ams->lock);
+> +		if (chan->scan_index >= (PS_SEQ_MAX * 3)) {
+> +			ret = ams_read_vcc_reg(ams, chan->address, val);
+> +			if (ret) {
+> +				mutex_unlock(&ams->lock);
+> +				return -EINVAL;
+> +			}
+> +		} else if (chan->scan_index >= PS_SEQ_MAX)
+> +			*val = readl(ams->pl_base + chan->address);
+> +		else
+> +			*val = readl(ams->ps_base + chan->address);
+> +		mutex_unlock(&ams->lock);
+> +
+> +		return IIO_VAL_INT;
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			switch (chan->address) {
+> +			case AMS_SUPPLY1:
+> +			case AMS_SUPPLY2:
+> +			case AMS_SUPPLY3:
+> +			case AMS_SUPPLY4:
+> +				*val = AMS_SUPPLY_SCALE_3VOLT;
+> +				break;
+> +			case AMS_SUPPLY5:
+> +			case AMS_SUPPLY6:
+> +				if (chan->scan_index < PS_SEQ_MAX)
+> +					*val = AMS_SUPPLY_SCALE_6VOLT;
+> +				else
+> +					*val = AMS_SUPPLY_SCALE_3VOLT;
+> +				break;
+> +			case AMS_SUPPLY7:
+> +			case AMS_SUPPLY8:
+> +				*val = AMS_SUPPLY_SCALE_6VOLT;
+> +				break;
+> +			case AMS_SUPPLY9:
+> +			case AMS_SUPPLY10:
+> +				if (chan->scan_index < PS_SEQ_MAX)
+> +					*val = AMS_SUPPLY_SCALE_3VOLT;
+> +				else
+> +					*val = AMS_SUPPLY_SCALE_6VOLT;
+> +				break;
+> +			case AMS_VCC_PSPLL0:
+> +			case AMS_VCC_PSPLL3:
+> +			case AMS_VCCINT:
+> +			case AMS_VCCBRAM:
+> +			case AMS_VCCAUX:
+> +			case AMS_PSDDRPLL:
+> +			case AMS_PSINTFPDDR:
+> +				*val = AMS_SUPPLY_SCALE_3VOLT;
+> +				break;
+> +			default:
+> +				*val = AMS_SUPPLY_SCALE_1VOLT;
+> +				break;
+> +			}
+> +			*val2 = AMS_SUPPLY_SCALE_DIV_BIT;
+> +			return IIO_VAL_FRACTIONAL_LOG2;
+> +		case IIO_TEMP:
+> +			*val = AMS_TEMP_SCALE;
+> +			*val2 = AMS_TEMP_SCALE_DIV_BIT;
+> +			return IIO_VAL_FRACTIONAL_LOG2;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case IIO_CHAN_INFO_OFFSET:
+> +		/* Only the temperature channel has an offset */
+> +		*val = AMS_TEMP_OFFSET;
+> +		return IIO_VAL_INT;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static int ams_get_alarm_offset(int scan_index, enum iio_event_direction dir)
+> +{
+> +	int offset = 0;
+> +
+> +	if (scan_index >= PS_SEQ_MAX)
+> +		scan_index -= PS_SEQ_MAX;
+> +
+> +	if (dir == IIO_EV_DIR_FALLING) {
+> +		if (scan_index < AMS_SEQ_SUPPLY7)
+> +			offset = AMS_ALARM_THRESHOLD_OFF_10;
+> +		else
+> +			offset = AMS_ALARM_THRESHOLD_OFF_20;
+> +	}
+> +
+> +	switch (scan_index) {
+> +	case AMS_SEQ_TEMP:
+> +		return AMS_ALARM_TEMP + offset;
+> +	case AMS_SEQ_SUPPLY1:
+> +		return AMS_ALARM_SUPPLY1 + offset;
+> +	case AMS_SEQ_SUPPLY2:
+> +		return AMS_ALARM_SUPPLY2 + offset;
+> +	case AMS_SEQ_SUPPLY3:
+> +		return AMS_ALARM_SUPPLY3 + offset;
+> +	case AMS_SEQ_SUPPLY4:
+> +		return AMS_ALARM_SUPPLY4 + offset;
+> +	case AMS_SEQ_SUPPLY5:
+> +		return AMS_ALARM_SUPPLY5 + offset;
+> +	case AMS_SEQ_SUPPLY6:
+> +		return AMS_ALARM_SUPPLY6 + offset;
+> +	case AMS_SEQ_SUPPLY7:
+> +		return AMS_ALARM_SUPPLY7 + offset;
+> +	case AMS_SEQ_SUPPLY8:
+> +		return AMS_ALARM_SUPPLY8 + offset;
+> +	case AMS_SEQ_SUPPLY9:
+> +		return AMS_ALARM_SUPPLY9 + offset;
+> +	case AMS_SEQ_SUPPLY10:
+> +		return AMS_ALARM_SUPPLY10 + offset;
+> +	case AMS_SEQ_VCCAMS:
+> +		return AMS_ALARM_VCCAMS + offset;
+> +	case AMS_SEQ_TEMP_REMOTE:
+> +		return AMS_ALARM_TEMP_REMOTE + offset;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct iio_chan_spec *ams_event_to_channel(
+> +		struct iio_dev *indio_dev, u32 event)
+> +{
+> +	int scan_index = 0, i;
+> +
+> +	if (event >= AMS_PL_ALARM_START) {
+> +		event -= AMS_PL_ALARM_START;
+> +		scan_index = PS_SEQ_MAX;
+> +	}
+> +
+> +	switch (event) {
+> +	case AMS_ALARM_BIT_TEMP:
+> +		scan_index += AMS_SEQ_TEMP;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY1:
+> +		scan_index += AMS_SEQ_SUPPLY1;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY2:
+> +		scan_index += AMS_SEQ_SUPPLY2;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY3:
+> +		scan_index += AMS_SEQ_SUPPLY3;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY4:
+> +		scan_index += AMS_SEQ_SUPPLY4;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY5:
+> +		scan_index += AMS_SEQ_SUPPLY5;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY6:
+> +		scan_index += AMS_SEQ_SUPPLY6;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY7:
+> +		scan_index += AMS_SEQ_SUPPLY7;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY8:
+> +		scan_index += AMS_SEQ_SUPPLY8;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY9:
+> +		scan_index += AMS_SEQ_SUPPLY9;
+> +		break;
+> +	case AMS_ALARM_BIT_SUPPLY10:
+> +		scan_index += AMS_SEQ_SUPPLY10;
+> +		break;
+> +	case AMS_ALARM_BIT_VCCAMS:
+> +		scan_index += AMS_SEQ_VCCAMS;
+> +		break;
+> +	case AMS_ALARM_BIT_TEMP_REMOTE:
+> +		scan_index += AMS_SEQ_TEMP_REMOTE;
+> +		break;
+> +	}
+> +
+> +	for (i = 0; i < indio_dev->num_channels; i++)
+> +		if (indio_dev->channels[i].scan_index == scan_index)
+> +			break;
+> +
+> +	return &indio_dev->channels[i];
+> +}
+> +
+> +static int ams_get_alarm_mask(int scan_index)
+> +{
+> +	int bit = 0;
+> +
+> +	if (scan_index >= PS_SEQ_MAX) {
+> +		bit = AMS_PL_ALARM_START;
+> +		scan_index -= PS_SEQ_MAX;
+> +	}
+> +
+> +	switch (scan_index) {
+> +	case AMS_SEQ_TEMP:
+> +		return BIT(AMS_ALARM_BIT_TEMP + bit);
+> +	case AMS_SEQ_SUPPLY1:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY1 + bit);
+> +	case AMS_SEQ_SUPPLY2:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY2 + bit);
+> +	case AMS_SEQ_SUPPLY3:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY3 + bit);
+> +	case AMS_SEQ_SUPPLY4:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY4 + bit);
+> +	case AMS_SEQ_SUPPLY5:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY5 + bit);
+> +	case AMS_SEQ_SUPPLY6:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY6 + bit);
+> +	case AMS_SEQ_SUPPLY7:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY7 + bit);
+> +	case AMS_SEQ_SUPPLY8:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY8 + bit);
+> +	case AMS_SEQ_SUPPLY9:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY9 + bit);
+> +	case AMS_SEQ_SUPPLY10:
+> +		return BIT(AMS_ALARM_BIT_SUPPLY10 + bit);
+> +	case AMS_SEQ_VCCAMS:
+> +		return BIT(AMS_ALARM_BIT_VCCAMS + bit);
+> +	case AMS_SEQ_TEMP_REMOTE:
+> +		return BIT(AMS_ALARM_BIT_TEMP_REMOTE + bit);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int ams_read_event_config(struct iio_dev *indio_dev,
+> +				 const struct iio_chan_spec *chan,
+> +				 enum iio_event_type type,
+> +				 enum iio_event_direction dir)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +
+> +	return (ams->alarm_mask & ams_get_alarm_mask(chan->scan_index)) ? 1 : 0;
+> +}
+> +
+> +static int ams_write_event_config(struct iio_dev *indio_dev,
+> +				  const struct iio_chan_spec *chan,
+> +				  enum iio_event_type type,
+> +				  enum iio_event_direction dir,
+> +				  int state)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	unsigned int alarm;
+> +
+> +	alarm = ams_get_alarm_mask(chan->scan_index);
+> +
+> +	mutex_lock(&ams->lock);
+> +
+> +	if (state)
+> +		ams->alarm_mask |= alarm;
+> +	else
+> +		ams->alarm_mask &= ~alarm;
+> +
+> +	iio_ams_update_alarm(ams, ams->alarm_mask);
+> +
+> +	mutex_unlock(&ams->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static int ams_read_event_value(struct iio_dev *indio_dev,
+> +				const struct iio_chan_spec *chan,
+> +				enum iio_event_type type,
+> +				enum iio_event_direction dir,
+> +				enum iio_event_info info, int *val, int *val2)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	unsigned int offset = ams_get_alarm_offset(chan->scan_index, dir);
+> +
+> +	mutex_lock(&ams->lock);
+> +
+> +	if (chan->scan_index >= PS_SEQ_MAX)
+> +		*val = readl(ams->pl_base + offset);
+> +	else
+> +		*val = readl(ams->ps_base + offset);
+> +
+> +	mutex_unlock(&ams->lock);
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int ams_write_event_value(struct iio_dev *indio_dev,
+> +				 const struct iio_chan_spec *chan,
+> +				 enum iio_event_type type,
+> +				 enum iio_event_direction dir,
+> +				 enum iio_event_info info, int val, int val2)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	unsigned int offset;
+> +
+> +	mutex_lock(&ams->lock);
+> +
+> +	/* Set temperature channel threshold to direct threshold */
+> +	if (chan->type == IIO_TEMP) {
+> +		offset = ams_get_alarm_offset(chan->scan_index,
+> +					      IIO_EV_DIR_FALLING);
+> +
+> +		if (chan->scan_index >= PS_SEQ_MAX)
+> +			ams_pl_update_reg(ams, offset,
+> +					    AMS_ALARM_THR_DIRECT_MASK,
+> +					    AMS_ALARM_THR_DIRECT_MASK);
+> +		else
+> +			ams_ps_update_reg(ams, offset,
+> +					  AMS_ALARM_THR_DIRECT_MASK,
+> +					  AMS_ALARM_THR_DIRECT_MASK);
+> +	}
+> +
+> +	offset = ams_get_alarm_offset(chan->scan_index, dir);
+> +	if (chan->scan_index >= PS_SEQ_MAX)
+> +		writel(val, ams->pl_base + offset);
+> +	else
+> +		writel(val, ams->ps_base + offset);
+> +
+> +	mutex_unlock(&ams->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static void ams_handle_event(struct iio_dev *indio_dev, u32 event)
+> +{
+> +	const struct iio_chan_spec *chan;
+> +
+> +	chan = ams_event_to_channel(indio_dev, event);
+> +
+> +	if (chan->type == IIO_TEMP) {
+> +		/*
+> +		 * The temperature channel only supports over-temperature
+> +		 * events
+> +		 */
+> +		iio_push_event(indio_dev,
+> +			       IIO_UNMOD_EVENT_CODE(chan->type, chan->channel,
+> +						    IIO_EV_TYPE_THRESH,
+> +						    IIO_EV_DIR_RISING),
+> +			iio_get_time_ns(indio_dev));
+> +	} else {
+> +		/*
+> +		 * For other channels we don't know whether it is a upper or
+> +		 * lower threshold event. Userspace will have to check the
+> +		 * channel value if it wants to know.
+> +		 */
+> +		iio_push_event(indio_dev,
+> +			       IIO_UNMOD_EVENT_CODE(chan->type, chan->channel,
+> +						    IIO_EV_TYPE_THRESH,
+> +						    IIO_EV_DIR_EITHER),
+> +			iio_get_time_ns(indio_dev));
+> +	}
+> +}
+> +
+> +static void ams_handle_events(struct iio_dev *indio_dev, unsigned long events)
+> +{
+> +	unsigned int bit;
+> +
+> +	for_each_set_bit(bit, &events, AMS_NO_OF_ALARMS)
+> +		ams_handle_event(indio_dev, bit);
+> +}
+> +
+> +/**
+> + * ams_unmask_worker - ams alarm interrupt unmask worker
+> + * @work :		work to be done
+> + *
+> + * The ZynqMP threshold interrupts are level sensitive. Since we can't make the
+> + * threshold condition go way from within the interrupt handler, this means as
+> + * soon as a threshold condition is present we would enter the interrupt handler
+> + * again and again. To work around this we mask all active threshold interrupts
+> + * in the interrupt handler and start a timer. In this timer we poll the
+> + * interrupt status and only if the interrupt is inactive we unmask it again.
+> + */
+> +static void ams_unmask_worker(struct work_struct *work)
+> +{
+> +	struct ams *ams = container_of(work, struct ams, ams_unmask_work.work);
+> +	unsigned int status, unmask;
+> +
+> +	mutex_lock(&ams->lock);
+> +
+> +	status = readl(ams->base + AMS_ISR_0);
+> +
+> +	/* Clear those bits which are not active anymore */
+> +	unmask = (ams->masked_alarm ^ status) & ams->masked_alarm;
+> +
+> +	/* clear status of disabled alarm */
+> +	unmask |= ams->intr_mask;
+> +
+> +	ams->masked_alarm &= status;
+> +
+> +	/* Also clear those which are masked out anyway */
+> +	ams->masked_alarm &= ~ams->intr_mask;
+> +
+> +	/* Clear the interrupts before we unmask them */
+> +	writel(unmask, ams->base + AMS_ISR_0);
+> +
+> +	ams_update_intrmask(ams, 0, 0);
+> +
+> +	mutex_unlock(&ams->lock);
+> +
+> +	/* if still pending some alarm re-trigger the timer */
+> +	if (ams->masked_alarm)
+> +		schedule_delayed_work(&ams->ams_unmask_work,
+> +				      msecs_to_jiffies(AMS_UNMASK_TIMEOUT_MS));
+> +}
+> +
+> +static irqreturn_t ams_iio_irq(int irq, void *data)
+> +{
+> +	struct iio_dev *indio_dev = data;
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	irqreturn_t irq_status = IRQ_NONE;
+> +	u32 isr0;
+> +
+> +	isr0 = readl(ams->base + AMS_ISR_0);
+> +
+> +	/* only process alarms that are not masked */
+> +	isr0 &= ~((ams->intr_mask & AMS_ISR0_ALARM_MASK) | ams->masked_alarm);
+> +
+> +	if (isr0) {
+> +		/* clear interrupt */
+> +		writel(isr0, ams->base + AMS_ISR_0);
+> +
+> +		/* Once the alarm interrupt occurred, mask until get cleared */
+
+wording in comment not clear
+
+> +		ams->masked_alarm |= isr0;
+> +		ams_update_intrmask(ams, 0, 0);
+> +
+> +		ams_handle_events(indio_dev, isr0);
+> +
+> +		schedule_delayed_work(&ams->ams_unmask_work,
+> +				      msecs_to_jiffies(AMS_UNMASK_TIMEOUT_MS));
+> +		irq_status = IRQ_HANDLED;
+> +	}
+> +
+> +	return irq_status;
+> +}
+> +
+> +static const struct iio_event_spec ams_temp_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE) |
+> +				BIT(IIO_EV_INFO_VALUE),
+> +	},
+> +};
+> +
+> +static const struct iio_event_spec ams_voltage_events[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_EITHER,
+> +		.mask_separate = BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+> +static const struct iio_chan_spec ams_ps_channels[] = {
+> +	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP, "ps_temp"),
+> +	AMS_PS_CHAN_TEMP(AMS_SEQ_TEMP_REMOTE, AMS_TEMP_REMOTE, "remote_temp"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, "vccpsintlp"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, "vccpsintfp"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, "vccpsaux"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, "vccpsddr"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, "vccpsio3"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, "vccpsio0"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, "vccpsio1"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, "vccpsio2"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, "psmgtravcc"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, "psmgtravtt"),
+> +	AMS_PS_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, "vccams"),
+> +};
+> +
+> +static const struct iio_chan_spec ams_pl_channels[] = {
+> +	AMS_PL_CHAN_TEMP(AMS_SEQ_TEMP, AMS_TEMP, "pl_temp"),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY1, AMS_SUPPLY1, "vccint", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY2, AMS_SUPPLY2, "vccaux", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFP, AMS_VREFP, "vccvrefp", false),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VREFN, AMS_VREFN, "vccvrefn", false),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY3, AMS_SUPPLY3, "vccbram", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY4, AMS_SUPPLY4, "vccplintlp", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY5, AMS_SUPPLY5, "vccplintfp", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY6, AMS_SUPPLY6, "vccplaux", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VCCAMS, AMS_VCCAMS, "vccams", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_VP_VN, AMS_VP_VN, "vccvpvn", false),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY7, AMS_SUPPLY7, "vuser0", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY8, AMS_SUPPLY8, "vuser1", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY9, AMS_SUPPLY9, "vuser2", true),
+> +	AMS_PL_CHAN_VOLTAGE(AMS_SEQ_SUPPLY10, AMS_SUPPLY10, "vuser3", true),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(0, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(1, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(2, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(3, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(4, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(5, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(6, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(7, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(8, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(9, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(10, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(11, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(12, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(13, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(14, NULL),
+> +	AMS_PL_AUX_CHAN_VOLTAGE(15, NULL),
+> +};
+> +
+> +static const struct iio_chan_spec ams_ctrl_channels[] = {
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSPLL, AMS_VCC_PSPLL0, "vcc_pspll0"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCC_PSBATT, AMS_VCC_PSPLL3, "vcc_psbatt"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCINT, AMS_VCCINT, "vccint"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCBRAM, AMS_VCCBRAM, "vccbram"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_VCCAUX, AMS_VCCAUX, "vccaux"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_PSDDRPLL, AMS_PSDDRPLL, "psddrpll"),
+> +	AMS_CTRL_CHAN_VOLTAGE(AMS_SEQ_INTDDR, AMS_PSINTFPDDR, "psintfpddr"),
+> +};
+> +
+> +static int ams_init_module(struct iio_dev *indio_dev, struct device_node *np,
+> +			   struct iio_chan_spec *channels)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	struct device_node *chan_node, *child;
+> +	int ret, num_channels = 0;
+> +	unsigned int reg;
+> +
+> +	if (of_device_is_compatible(np, "xlnx,zynqmp-ams-ps")) {
+> +		ams->ps_base = of_iomap(np, 0);
+> +		if (!ams->ps_base)
+> +			return -ENXIO;
+> +
+> +		/* add PS channels to iio device channels */
+> +		memcpy(channels + num_channels, ams_ps_channels,
+> +		       sizeof(ams_ps_channels));
+> +		num_channels += ARRAY_SIZE(ams_ps_channels);
+> +	} else if (of_device_is_compatible(np, "xlnx,zynqmp-ams-pl")) {
+> +		ams->pl_base = of_iomap(np, 0);
+> +		if (!ams->pl_base)
+> +			return -ENXIO;
+> +
+> +		/* Copy only first 10 fix channels */
+> +		memcpy(channels + num_channels, ams_pl_channels,
+> +		       AMS_PL_MAX_FIXED_CHANNEL * sizeof(*channels));
+> +		num_channels += AMS_PL_MAX_FIXED_CHANNEL;
+> +
+> +		chan_node = of_get_child_by_name(np, "xlnx,ext-channels");
+> +		if (chan_node) {
+> +			for_each_child_of_node(chan_node, child) {
+> +				ret = of_property_read_u32(child, "reg", &reg);
+> +				if (ret || reg > AMS_PL_MAX_EXT_CHANNEL)
+> +					continue;
+> +
+> +				memcpy(&channels[num_channels],
+> +				       &ams_pl_channels[reg +
+> +				       AMS_PL_MAX_FIXED_CHANNEL],
+> +				       sizeof(*channels));
+> +
+> +				if (of_property_read_bool(child,
+> +							  "xlnx,bipolar"))
+> +					channels[num_channels].scan_type.sign =
+> +						's';
+> +
+> +				num_channels++;
+> +			}
+> +		}
+> +		of_node_put(chan_node);
+> +	} else if (of_device_is_compatible(np, "xlnx,zynqmp-ams")) {
+> +		/* add AMS channels to iio device channels */
+> +		memcpy(channels + num_channels, ams_ctrl_channels,
+> +				sizeof(ams_ctrl_channels));
+> +		num_channels += ARRAY_SIZE(ams_ctrl_channels);
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	return num_channels;
+> +}
+> +
+> +static int ams_parse_dt(struct iio_dev *indio_dev, struct platform_device *pdev)
+> +{
+> +	struct ams *ams = iio_priv(indio_dev);
+> +	struct iio_chan_spec *ams_channels, *dev_channels;
+> +	struct device_node *child_node = NULL, *np = pdev->dev.of_node;
+> +	int ret, vol_ch_cnt = 0, temp_ch_cnt = 0, i, rising_off, falling_off;
+> +	unsigned int num_channels = 0;
+> +
+> +	/* Initialize buffer for channel specification */
+> +	ams_channels = kzalloc(sizeof(ams_ps_channels) +
+> +			       sizeof(ams_pl_channels) +
+> +			       sizeof(ams_ctrl_channels), GFP_KERNEL);
+> +	if (!ams_channels)
+> +		return -ENOMEM;
+> +
+> +	if (of_device_is_available(np)) {
+> +		ret = ams_init_module(indio_dev, np, ams_channels);
+> +		if (ret < 0)
+> +			goto err;
+> +
+> +		num_channels += ret;
+> +	}
+> +
+> +	for_each_child_of_node(np, child_node) {
+> +		if (of_device_is_available(child_node)) {
+> +			ret = ams_init_module(indio_dev, child_node,
+> +					      ams_channels + num_channels);
+> +			if (ret < 0)
+> +				goto err;
+> +
+> +			num_channels += ret;
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < num_channels; i++) {
+> +		if (ams_channels[i].type == IIO_VOLTAGE)
+> +			ams_channels[i].channel = vol_ch_cnt++;
+> +		else
+> +			ams_channels[i].channel = temp_ch_cnt++;
+> +
+> +		if (ams_channels[i].scan_index < (PS_SEQ_MAX * 3)) {
+> +			/* set threshold to max and min for each channel */
+> +			falling_off = ams_get_alarm_offset(
+> +					ams_channels[i].scan_index,
+> +					IIO_EV_DIR_FALLING);
+> +			rising_off = ams_get_alarm_offset(
+> +					ams_channels[i].scan_index,
+> +					IIO_EV_DIR_RISING);
+> +			if (ams_channels[i].scan_index >= PS_SEQ_MAX) {
+> +				writel(AMS_ALARM_THR_MIN,
+> +						ams->pl_base + falling_off);
+> +				writel(AMS_ALARM_THR_MAX,
+> +						ams->pl_base + rising_off);
+> +			} else {
+> +				writel(AMS_ALARM_THR_MIN,
+> +						ams->ps_base + falling_off);
+> +				writel(AMS_ALARM_THR_MAX,
+> +						ams->ps_base + rising_off);
+> +			}
+> +		}
+> +	}
+> +
+> +	dev_channels = devm_kzalloc(&pdev->dev, sizeof(*dev_channels) *
+> +				    num_channels, GFP_KERNEL);
+> +	if (!dev_channels) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	memcpy(dev_channels, ams_channels,
+> +	       sizeof(*ams_channels) * num_channels);
+> +	indio_dev->channels = dev_channels;
+> +	indio_dev->num_channels = num_channels;
+> +
+> +	ret = 0;
+> +err:
+> +	kfree(ams_channels);
+> +
+> +	return ret;
+> +}
+> +
+> +static const struct iio_info iio_pl_info = {
+> +	.read_raw = &ams_read_raw,
+> +	.read_event_config = &ams_read_event_config,
+> +	.write_event_config = &ams_write_event_config,
+> +	.read_event_value = &ams_read_event_value,
+> +	.write_event_value = &ams_write_event_value,
+> +};
+> +
+> +static const struct of_device_id ams_of_match_table[] = {
+> +	{ .compatible = "xlnx,zynqmp-ams" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, ams_of_match_table);
+> +
+> +static int ams_probe(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev;
+> +	struct ams *ams;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	if (!pdev->dev.of_node)
+> +		return -ENODEV;
+> +
+> +	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*ams));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	ams = iio_priv(indio_dev);
+> +	mutex_init(&ams->lock);
+> +
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->dev.of_node = pdev->dev.of_node;
+> +	indio_dev->name = "xilinx-ams";
+> +
+> +	indio_dev->info = &iio_pl_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ams-base");
+> +	ams->base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(ams->base))
+> +		return PTR_ERR(ams->base);
+> +
+> +	ams->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(ams->clk))
+> +		return PTR_ERR(ams->clk);
+> +	clk_prepare_enable(ams->clk);
+> +
+> +	INIT_DELAYED_WORK(&ams->ams_unmask_work, ams_unmask_worker);
+> +
+> +	ret = iio_ams_init_device(ams);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to initialize AMS\n");
+> +		goto err_probe;
+> +	}
+> +
+> +	ret = ams_parse_dt(indio_dev, pdev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failure in parsing DT\n");
+> +		goto err_probe;
+> +	}
+> +
+> +	ams_enable_channel_sequence(ams);
+> +
+> +	ams->irq = platform_get_irq_byname(pdev, "ams-irq");
+> +	ret = request_irq(ams->irq, &ams_iio_irq, 0, "ams-irq", indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to register interrupt\n");
+> +		goto err_probe;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	ret = iio_device_register(indio_dev);
+> +	if (ret)
+> +		goto err_irq_free;
+> +
+> +	return 0;
+> +
+> +err_irq_free:
+> +	free_irq(ams->irq, indio_dev);
+> +
+> +err_probe:
+> +	cancel_delayed_work(&ams->ams_unmask_work);
+> +	clk_disable_unprepare(ams->clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int ams_remove(struct platform_device *pdev)
+> +{
+> +	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> +	struct ams *ams = iio_priv(indio_dev);
+> +
+> +	cancel_delayed_work(&ams->ams_unmask_work);
+
+not sure about the order things get torn down
+
+> +
+> +	free_irq(ams->irq, indio_dev);
+> +	/* Unregister the device */
+> +	iio_device_unregister(indio_dev);
+> +	clk_disable_unprepare(ams->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused ams_suspend(struct device *dev)
+> +{
+> +	struct ams *ams = iio_priv(dev_get_drvdata(dev));
+> +
+> +	clk_disable_unprepare(ams->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static int __maybe_unused ams_resume(struct device *dev)
+> +{
+> +	struct ams *ams = iio_priv(dev_get_drvdata(dev));
+> +
+> +	clk_prepare_enable(ams->clk);
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(ams_pm_ops, ams_suspend, ams_resume);
+> +
+> +static struct platform_driver ams_driver = {
+> +	.probe = ams_probe,
+> +	.remove = ams_remove,
+> +	.driver = {
+> +		.name = "xilinx-ams",
+> +		.pm = &ams_pm_ops,
+> +		.of_match_table = ams_of_match_table,
+> +	},
+> +};
+> +module_platform_driver(ams_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Xilinx, Inc.");
+> 
+
 -- 
-2.19.0
+
+Peter Meerwald-Stadler
+Mobile: +43 664 24 44 418
