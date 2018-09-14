@@ -1,80 +1,89 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
-Date: Fri, 14 Sep 2018 10:23:58 +0200
-Message-ID: <20180914082358.GB21830@amd>
-References: <20180911170825.17789-1-dmurphy@ti.com>
- <20180911170825.17789-2-dmurphy@ti.com>
- <20180911200530.GA28290@amd>
- <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com>
- <20180912214938.GA30654@amd>
- <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [PATCH v3 0/7] regulator/mfd/dt_bindings: bd718x7: Support ROHM
+ bd71847
+Date: Fri, 14 Sep 2018 11:27:20 +0300
+Message-ID: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, sboyd@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Patch series adding support for ROHM BD71847 PMIC.
 
---cmJC7u66zC7hs+87
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+ROHM BD71847 is modified version of ROHM BD71837 Power Management IC.
+BD71847 integrates 6 buck regulators and 6  LDO’s.
 
-Hi!
+The patch series adds support for BD71847 in BD71837 driver. It also
+extends BD71837 to support all BUCK/LDO output voltages.
 
-> All be it the analog side of these devices may be the same but the digita=
-l side for each chip is different.
-> The register maps are not the same, the number of supported LED strings a=
-re not
-> the same, there are features not supported by this driver and will
-> be a pain to add.
+Support for "pickable voltage ranges" is introduced in order to fully
+support BD71837/BD71847 voltage selection registers. Some of the voltage
+regulators provide different multiple voltage ranges and output voltage
+is determined by range selection bit(s) and voltage selection bits
+instead of plain voltage selection bits.
 
-Digital side looks similar enough that Milo was able to share code
-between them.
+Changelog v3
+- Fix warning caused by void * to unsigned int cast
+- Fix patch dependency issue (patch 4 used define from patch 5)
+- Fix indent problem.
+Changelog v2
+- Dropped first patch (voltage monitoring fix) and "rebased" on top of
+  next-20180912 because first patch was already applied.
+- Fixed two commit message typos.
+Fixes based on comments from Lee Jones
+- removed PMIC revision check.
+- stored chip type directly to data pointer
+- minor readability improvement to DT binding
+- unified naming for last enum members
+- moved unrelated changes from pickable ranges patch
+- removed C++ style comment
 
-Yes, obviously register map will be different.
+Patch 2:
+	limited BD71847 support (without range selection)
+Patch 3:
+	BD71847 device-tree bindings for regulators
+Patch 4:
+	BD71847 device-tree bindings for mfd
+Patch 5:
+	Voltage range selection support to regulator helpers
+Patch 6:
+	Simple renaming plenty of BD71837 occurrences to BD718XX
+Patch 7:
+	BD71837/BD71847 Full voltage range support using helpers from
+	patch 5
+Patch 8:
+	Renaming bd71837 regulator driver to bd718x7
 
-> Adding features will be a complete night mare especially for the LM3632 w=
-hich also support Torch and Flash.
->=20
->=20
-> Here are where a single driver will start getting messy and support diffi=
-cult
-> LM3533 has ALS and an ADC for an ALS analog sensor
-> LM3631 has no ALS functionality
-> LM3632 has strobe/torch functionality and no ramp support
-> LM3633 has lvled support coupled with the hvled support
-> LM3695 does not even appear to be available publicly
-> LM3697 is the only device that that this driver could be used for as is.
+this patch series is based on linux-next tag next-20180912.
 
-We already been through this once. More than one of these has ramp
-support, and more than one has overvoltage protection. (Plus, all of
-them are LED drivers).
+Matti Vaittinen (7):
+  regulator/mfd: Support ROHM BD71847 power management IC
+  regulator: dt bindings: add BD71847 device-tree binding documentation
+  mfd: dt bindings: add BD71847 device-tree binding documentation
+  regulator: Support regulators where voltage ranges are selectable
+  regulator/mfd: bd718xx: rename bd71837/bd71847 common instances
+  regulator: bd718XX use pickable ranges
+  regulator: bd718xx: rename bd71837 to 718xx
 
-Surely non-ugly design can be done where the code is shared?
+ .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |   17 +-
+ .../bindings/regulator/rohm,bd71837-regulator.txt  |   12 +-
+ drivers/mfd/rohm-bd718x7.c                         |  162 ++-
+ drivers/regulator/Kconfig                          |    2 +-
+ drivers/regulator/Makefile                         |    2 +-
+ drivers/regulator/bd71837-regulator.c              |  644 -----------
+ drivers/regulator/bd718x7-regulator.c              | 1138 ++++++++++++++++++++
+ drivers/regulator/core.c                           |    5 +
+ drivers/regulator/helpers.c                        |  232 ++++
+ include/linux/mfd/rohm-bd718x7.h                   |  333 +++---
+ include/linux/regulator/driver.h                   |   20 +-
+ 11 files changed, 1646 insertions(+), 921 deletions(-)
+ delete mode 100644 drivers/regulator/bd71837-regulator.c
+ create mode 100644 drivers/regulator/bd718x7-regulator.c
 
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---cmJC7u66zC7hs+87
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlubcB4ACgkQMOfwapXb+vIx/ACdGLXPOdVkAMSp7NmhmCy2KVeL
-cRUAoIQy7E5m6AYFpZEe0fo4ejivKwqL
-=XvZc
------END PGP SIGNATURE-----
-
---cmJC7u66zC7hs+87--
+-- 
+2.14.3
