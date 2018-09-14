@@ -1,185 +1,73 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v3 11/11] net: mscc: ocelot: make use of SerDes PHYs for handling their configuration
-Date: Fri, 14 Sep 2018 10:16:09 +0200
-Message-ID: <00989856964175eafbe1435a70862c2ac66cffc0.1536912834.git-series.quentin.schulz@bootlin.com>
-References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
+From: Janek Kotas <jank@cadence.com>
+Subject: Re: [PATCH v3 2/2] scsi: ufs: Add UFS platform driver for Cadence UFS
+Date: Fri, 14 Sep 2018 07:46:34 +0000
+Message-ID: <5BC4E8E4-566E-415A-9B57-36D725D8AB38@global.cadence.com>
+References: <66C16650-56D0-46A3-8050-A5540E48C702@global.cadence.com>
+ <0b273e2e-6d60-ac10-a1d5-78ea2346c1d9@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
-In-Reply-To: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
-References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <0b273e2e-6d60-ac10-a1d5-78ea2346c1d9@ti.com>
+Content-Language: en-US
+Content-ID: <3BF4028831657345B0488A31841B350F@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Janek Kotas <jank@cadence.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Previously, the SerDes muxing was hardcoded to a given mode in the MAC
-controller driver. Now, the SerDes muxing is configured within the
-Device Tree and is enforced in the MAC controller driver so we can have
-a lot of different SerDes configurations.
-
-Make use of the SerDes PHYs in the MAC controller to set up the SerDes
-according to the SerDes<->switch port mapping and the communication mode
-with the Ethernet PHY.
-
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- drivers/net/ethernet/mscc/Kconfig        |  2 +-
- drivers/net/ethernet/mscc/ocelot.c       | 16 +++++++-
- drivers/net/ethernet/mscc/ocelot.h       |  5 +++-
- drivers/net/ethernet/mscc/ocelot_board.c | 50 ++++++++++++++++++++-----
- 4 files changed, 62 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/net/ethernet/mscc/Kconfig b/drivers/net/ethernet/mscc/Kconfig
-index 36c8462..bcec058 100644
---- a/drivers/net/ethernet/mscc/Kconfig
-+++ b/drivers/net/ethernet/mscc/Kconfig
-@@ -23,6 +23,8 @@ config MSCC_OCELOT_SWITCH
- config MSCC_OCELOT_SWITCH_OCELOT
- 	tristate "Ocelot switch driver on Ocelot"
- 	depends on MSCC_OCELOT_SWITCH
-+	depends on GENERIC_PHY
-+	depends on OF_NET
- 	help
- 	  This driver supports the Ocelot network switch device as present on
- 	  the Ocelot SoCs.
-diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
-index 1a4f2bb..8f11fdb 100644
---- a/drivers/net/ethernet/mscc/ocelot.c
-+++ b/drivers/net/ethernet/mscc/ocelot.c
-@@ -472,6 +472,7 @@ static int ocelot_port_open(struct net_device *dev)
- {
- 	struct ocelot_port *port = netdev_priv(dev);
- 	struct ocelot *ocelot = port->ocelot;
-+	enum phy_mode phy_mode;
- 	int err;
- 
- 	/* Enable receiving frames on the port, and activate auto-learning of
-@@ -482,8 +483,21 @@ static int ocelot_port_open(struct net_device *dev)
- 			 ANA_PORT_PORT_CFG_PORTID_VAL(port->chip_port),
- 			 ANA_PORT_PORT_CFG, port->chip_port);
- 
-+	if (port->serdes) {
-+		if (port->phy_mode == PHY_INTERFACE_MODE_SGMII)
-+			phy_mode = PHY_MODE_SGMII;
-+		else
-+			phy_mode = PHY_MODE_QSGMII;
-+
-+		err = phy_set_mode(port->serdes, phy_mode);
-+		if (err) {
-+			netdev_err(dev, "Could not set mode of SerDes\n");
-+			return err;
-+		}
-+	}
-+
- 	err = phy_connect_direct(dev, port->phy, &ocelot_port_adjust_link,
--				 PHY_INTERFACE_MODE_NA);
-+				 port->phy_mode);
- 	if (err) {
- 		netdev_err(dev, "Could not attach to PHY\n");
- 		return err;
-diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
-index 3720e51..62c7c8e 100644
---- a/drivers/net/ethernet/mscc/ocelot.h
-+++ b/drivers/net/ethernet/mscc/ocelot.h
-@@ -11,6 +11,8 @@
- #include <linux/bitops.h>
- #include <linux/etherdevice.h>
- #include <linux/if_vlan.h>
-+#include <linux/phy.h>
-+#include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- 
-@@ -453,6 +455,9 @@ struct ocelot_port {
- 	u8 vlan_aware;
- 
- 	u64 *stats;
-+
-+	phy_interface_t phy_mode;
-+	struct phy *serdes;
- };
- 
- u32 __ocelot_read_ix(struct ocelot *ocelot, u32 reg, u32 offset);
-diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
-index b7d755b..a26a06e 100644
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -6,6 +6,7 @@
-  */
- #include <linux/interrupt.h>
- #include <linux/module.h>
-+#include <linux/of_net.h>
- #include <linux/netdevice.h>
- #include <linux/of_mdio.h>
- #include <linux/of_platform.h>
-@@ -247,18 +248,12 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
- 	INIT_LIST_HEAD(&ocelot->multicast);
- 	ocelot_init(ocelot);
- 
--	ocelot_rmw(ocelot, HSIO_HW_CFG_DEV1G_4_MODE |
--		     HSIO_HW_CFG_DEV1G_6_MODE |
--		     HSIO_HW_CFG_DEV1G_9_MODE,
--		     HSIO_HW_CFG_DEV1G_4_MODE |
--		     HSIO_HW_CFG_DEV1G_6_MODE |
--		     HSIO_HW_CFG_DEV1G_9_MODE,
--		     HSIO_HW_CFG);
--
- 	for_each_available_child_of_node(ports, portnp) {
- 		struct device_node *phy_node;
- 		struct phy_device *phy;
- 		struct resource *res;
-+		struct phy *serdes;
-+		enum phy_mode phy_mode;
- 		void __iomem *regs;
- 		char res_name[8];
- 		u32 port;
-@@ -283,10 +278,45 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
- 			continue;
- 
- 		err = ocelot_probe_port(ocelot, port, regs, phy);
--		if (err) {
--			dev_err(&pdev->dev, "failed to probe ports\n");
-+		if (err)
-+			return err;
-+
-+		err = of_get_phy_mode(portnp);
-+		if (err < 0)
-+			ocelot->ports[port]->phy_mode = PHY_INTERFACE_MODE_NA;
-+		else
-+			ocelot->ports[port]->phy_mode = err;
-+
-+		switch (ocelot->ports[port]->phy_mode) {
-+		case PHY_INTERFACE_MODE_NA:
-+			continue;
-+		case PHY_INTERFACE_MODE_SGMII:
-+			phy_mode = PHY_MODE_SGMII;
-+			break;
-+		case PHY_INTERFACE_MODE_QSGMII:
-+			phy_mode = PHY_MODE_QSGMII;
-+			break;
-+		default:
-+			dev_err(ocelot->dev,
-+				"invalid phy mode for port%d, (Q)SGMII only\n",
-+				port);
-+			return -EINVAL;
-+		}
-+
-+		serdes = devm_of_phy_get(ocelot->dev, portnp, NULL);
-+		if (IS_ERR(serdes)) {
-+			err = PTR_ERR(serdes);
-+			if (err == -EPROBE_DEFER) {
-+				dev_dbg(ocelot->dev, "deferring probe\n");
-+				goto err_probe_ports;
-+			}
-+
-+			dev_err(ocelot->dev, "missing SerDes phys for port%d\n",
-+				port);
- 			goto err_probe_ports;
- 		}
-+
-+		ocelot->ports[port]->serdes = serdes;
- 	}
- 
- 	register_netdevice_notifier(&ocelot_netdevice_nb);
--- 
-git-series 0.9.1
+DQo+IE9uIDI5IEF1ZyAyMDE4LCBhdCAxMjoyNywgU2VraGFyIE5vcmkgPG5zZWtoYXJAdGkuY29t
+PiB3cm90ZToNCj4gDQo+IE9uIFRodXJzZGF5IDA5IEF1Z3VzdCAyMDE4IDA2OjU1IFBNLCBKYW5l
+ayBLb3RhcyB3cm90ZToNCj4+IFRoaXMgcGF0Y2ggYWRkcyBhIGRldmljZSB0cmVlIHBsYXRmb3Jt
+IGRyaXZlciBmb3INCj4+IENhZGVuY2UgVUZTIEhvc3QgQ29udHJvbGxlci4NCj4+IEl0IGNhbiBi
+ZSBlbmFibGVkIHdpdGggU0NTSV9VRlNfQ0ROU19QTEFURk9STSBLY29uZmlnIG9wdGlvbi4NCj4+
+IA0KPj4gU2lnbmVkLW9mZi1ieTogSmFuIEtvdGFzIDxqYW5rQGNhZGVuY2UuY29tPg0KPiANCj4g
+Wy4uLl0NCj4gDQo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy9jZG5zLXBsdGZybS5j
+IGIvZHJpdmVycy9zY3NpL3Vmcy9jZG5zLXBsdGZybS5jDQo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0
+NA0KPj4gaW5kZXggMDAwMDAwMDAuLjVkOWU0ODc1DQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysg
+Yi9kcml2ZXJzL3Njc2kvdWZzL2NkbnMtcGx0ZnJtLmMNCj4+IEBAIC0wLDAgKzEsMTQ3IEBADQo+
+PiArLy8gU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4+ICsvKg0KPj4gKyAqIFBs
+YXRmb3JtIFVGUyBIb3N0IGRyaXZlciBmb3IgQ2FkZW5jZSBjb250cm9sbGVyDQo+PiArICoNCj4+
+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggQ2FkZW5jZSBEZXNpZ24gU3lzdGVtcywgSW5jLg0KPj4g
+KyAqDQo+PiArICogQXV0aG9yczoNCj4+ICsgKglKYW4gS290YXMgPGphbmtAY2FkZW5jZS5jb20+
+DQo+PiArICoNCj4+ICsgKi8NCj4+ICsNCj4+ICsjaW5jbHVkZSA8bGludXgva2VybmVsLmg+DQo+
+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPj4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9y
+bV9kZXZpY2UuaD4NCj4+ICsjaW5jbHVkZSA8bGludXgvb2YuaD4NCj4+ICsjaW5jbHVkZSA8bGlu
+dXgvdGltZS5oPg0KPj4gKw0KPj4gKyNpbmNsdWRlICJ1ZnNoY2QtcGx0ZnJtLmgiDQo+PiArDQo+
+PiArI2RlZmluZSBDRE5TX1VGU19SRUdfSENMS0RJViAweEZDDQo+PiArDQo+PiArLyoqDQo+PiAr
+ICogU2V0cyBIQ0xLRElWIHJlZ2lzdGVyIHZhbHVlIGJhc2VkIG9uIHRoZSBjb3JlX2Nsaw0KPj4g
+KyAqIEBoYmE6IGhvc3QgY29udHJvbGxlciBpbnN0YW5jZQ0KPj4gKyAqDQo+PiArICogUmV0dXJu
+IHplcm8gZm9yIHN1Y2Nlc3MgYW5kIG5vbi16ZXJvIGZvciBmYWlsdXJlDQo+PiArICovDQo+PiAr
+c3RhdGljIGludCBjZG5zX3Vmc19zZXRfaGNsa2RpdihzdHJ1Y3QgdWZzX2hiYSAqaGJhKQ0KPj4g
+K3sNCj4+ICsJc3RydWN0IHVmc19jbGtfaW5mbyAqY2xraTsNCj4+ICsJc3RydWN0IGxpc3RfaGVh
+ZCAqaGVhZCA9ICZoYmEtPmNsa19saXN0X2hlYWQ7DQo+PiArCXVuc2lnbmVkIGxvbmcgY29yZV9j
+bGtfcmF0ZSA9IDA7DQo+PiArCXUzMiBjb3JlX2Nsa19kaXYgPSAwOw0KPj4gKw0KPj4gKwlpZiAo
+bGlzdF9lbXB0eShoZWFkKSkNCj4+ICsJCXJldHVybiAwOw0KPj4gKw0KPj4gKwlsaXN0X2Zvcl9l
+YWNoX2VudHJ5KGNsa2ksIGhlYWQsIGxpc3QpIHsNCj4+ICsJCWlmIChJU19FUlJfT1JfTlVMTChj
+bGtpLT5jbGspKQ0KPj4gKwkJCWNvbnRpbnVlOw0KPj4gKwkJaWYgKCFzdHJjbXAoY2xraS0+bmFt
+ZSwgImNvcmVfY2xrIikpDQo+PiArCQkJY29yZV9jbGtfcmF0ZSA9IGNsa19nZXRfcmF0ZShjbGtp
+LT5jbGspOw0KPj4gKwl9DQo+PiArDQo+PiArCWlmICghY29yZV9jbGtfcmF0ZSkgew0KPj4gKwkJ
+ZGV2X2VycihoYmEtPmRldiwgIiVzOiB1bmFibGUgdG8gZmluZCBjb3JlX2NsayByYXRlXG4iLA0K
+Pj4gKwkJCV9fZnVuY19fKTsNCj4+ICsJCXJldHVybiAtRUlOVkFMOw0KPj4gKwl9DQo+PiArDQo+
+PiArCWNvcmVfY2xrX2RpdiA9IGNvcmVfY2xrX3JhdGUgLyBVU0VDX1BFUl9TRUM7DQo+PiArDQo+
+PiArCXVmc2hjZF93cml0ZWwoaGJhLCBjb3JlX2Nsa19kaXYsIENETlNfVUZTX1JFR19IQ0xLRElW
+KTsNCj4+ICsJLyogTWFrZSBzdXJlIHRoZSByZWdpc3RlciB3YXMgdXBkYXRlZCAqLw0KPj4gKwlt
+YigpOw0KPiANCj4gV2h5IGlzIGl0IGNyaXRpY2FsIHRvIGVuc3VyZSB3cml0ZSBjb21wbGV0ZWQg
+aGVyZT8NCg0KVGhlIFVuaVBybyBjbG9jayByYXRlIG5lZWRzIHRvIGJlIHNldCBiZWZvcmUgaXTi
+gJlzIGVuYWJsZWQsIA0Kb3RoZXJ3aXNlIGl0IHdpbGwgY2F1c2UgYSBsb3Qgb2YgZXJyb3JzIGF0
+IHRoZSBsaW5rIGxheWVyLg0KDQo+IA0KPj4gKw0KPj4gKwlyZXR1cm4gMDsNCj4+ICt9DQo+PiAr
+DQo+IA0KPj4gKy8qKg0KPj4gKyAqIGNkbnNfdWZzX3BsdGZybV9yZW1vdmUgLSBzZXQgZHJpdmVy
+X2RhdGEgb2YgdGhlIGRldmljZSB0byBOVUxMDQo+IA0KPiBUaGlzIGFwcGVhciB0byBkbyBtb3Jl
+IHRoYW4gc2V0dGluZyBkcml2ZXJfZGF0YSB0byBOVUxMLg0KDQpJIHdpbGwgdXBkYXRlIHRoZSBk
+ZXNjcmlwdGlvbiwgdGhhbmsgeW91IGZvciBwb2ludGluZyB0aGF0Lg0KDQo+IA0KPj4gKyAqIEBw
+ZGV2OiBwb2ludGVyIHRvIHBsYXRmb3JtIGRldmljZSBoYW5kbGUNCj4+ICsgKg0KPj4gKyAqIEFs
+d2F5cyByZXR1cm5zIDANCj4+ICsgKi8NCj4+ICtzdGF0aWMgaW50IGNkbnNfdWZzX3BsdGZybV9y
+ZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4+ICt7DQo+PiArCXN0cnVjdCB1
+ZnNfaGJhICpoYmEgPSAgcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+PiArDQo+PiArCXBt
+X3J1bnRpbWVfZ2V0X3N5bmMoJihwZGV2KS0+ZGV2KTsNCj4gDQo+IFRoaXMgbG9va3Mgc3VzcGVj
+dC4gV2h5IGRvIHlvdSBuZWVkIHRoaXMgZ2V0X3N5bmMoKSBvbiByZW1vdmUoKSBhbmQNCj4gd2hl
+cmUgaXMgdGhlIGNvcnJlc3BvbmRpbmcgcHV0X3N5bmMoKT8NCg0KSSBsb29rZWQgYXQgcWNvbSBk
+cml2ZXIgYXMgYSByZWZlcmVuY2UsIEkgd2lsbCByZXZpZXcgdGhpcywgdGhhbmsgeW91Lg0KDQo+
+PiArCXVmc2hjZF9yZW1vdmUoaGJhKTsNCj4+ICsJcmV0dXJuIDA7DQo+PiArfQ0KPiANCj4gVGhh
+bmtzLA0KPiBTZWtoYXINCg0KVGhhbmsgeW91IGZvciB5b3VyIHJlcGx5Lg0KSSB3aWxsIHVwZGF0
+ZSB0aGUgcGF0Y2guDQoNCkphbg0KDQo=
