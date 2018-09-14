@@ -1,45 +1,107 @@
-From: Patrick Venture <venture@google.com>
-Subject: Re: [PATCH] arm: dts: aspeed: quanta-q71l: Enable adc & ibt nodes
-Date: Thu, 13 Sep 2018 16:31:31 -0700
-Message-ID: <CAO=notza+JB-1eVHLKVbux2fDV-KYrOvctNKfi1YBqomOmxT-g@mail.gmail.com>
-References: <20180904155329.258447-1-venture@google.com>
- <CACPK8XfH74Z1FYvWxU-vkxJ-APKG_w14dWMjLnj87eH-zrt02w@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 2/2] cpufreq: imx6q: read OCOTP through nvmem for imx6ul/imx6ull
+Date: Fri, 14 Sep 2018 10:59:22 +0800
+Message-ID: <1536893962-11200-2-git-send-email-Anson.Huang@nxp.com>
+References: <1536893962-11200-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACPK8XfH74Z1FYvWxU-vkxJ-APKG_w14dWMjLnj87eH-zrt02w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1536893962-11200-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2018 at 4:30 PM Joel Stanley <joel@jms.id.au> wrote:
->
-> On Wed, 5 Sep 2018 at 01:23, Patrick Venture <venture@google.com> wrote:
-> >
-> > ADC node is disabled by default in 4.13 tree onward and
-> > needs to be enabled explicitly in separate device trees.
-> >
-> > ibt(ipmi-bt-host) node is disabled by default in 4.13 tree onward and
-> > needs to be enabled explicitly in separate device trees.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
->
-> Applied to dt-for-v4.20 with a tweak to the commit message. (FYI: the
-> 4.13 messages relate to the openbmc tree; the upstream tree introduced
-> these drivers earlier, and it has always been disabled in the dtsi).
+On i.MX6UL/i.MX6ULL, accessing OCOTP directly is wrong because
+the ocotp clock needs to be enabled first. Add support for reading
+OCOTP through the nvmem API instead.
 
-Thanks -- sorry, didn't know that it was an openbmc-ism.
->
-> Cheers,
->
-> Joel
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ drivers/cpufreq/imx6q-cpufreq.c | 39 +++++++++++++++++++--------------------
+ 1 file changed, 19 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/cpufreq/imx6q-cpufreq.c b/drivers/cpufreq/imx6q-cpufreq.c
+index b2ff423..4ae6c74 100644
+--- a/drivers/cpufreq/imx6q-cpufreq.c
++++ b/drivers/cpufreq/imx6q-cpufreq.c
+@@ -12,6 +12,7 @@
+ #include <linux/cpu_cooling.h>
+ #include <linux/err.h>
+ #include <linux/module.h>
++#include <linux/nvmem-consumer.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/pm_opp.h>
+@@ -290,22 +291,11 @@ static void imx6q_opp_check_speed_grading(struct device *dev)
+ #define OCOTP_CFG3_6ULL_SPEED_792MHZ	0x2
+ #define OCOTP_CFG3_6ULL_SPEED_900MHZ	0x3
+ 
+-static void imx6ul_opp_check_speed_grading(struct device *dev)
++static int imx6ul_opp_check_speed_grading(struct device *dev)
+ {
+-	struct device_node *np;
+-	void __iomem *base;
++	int ret;
+ 	u32 val;
+ 
+-	np = of_find_compatible_node(NULL, NULL, "fsl,imx6ul-ocotp");
+-	if (!np)
+-		return;
+-
+-	base = of_iomap(np, 0);
+-	if (!base) {
+-		dev_err(dev, "failed to map ocotp\n");
+-		goto put_node;
+-	}
+-
+ 	/*
+ 	 * Speed GRADING[1:0] defines the max speed of ARM:
+ 	 * 2b'00: Reserved;
+@@ -314,7 +304,10 @@ static void imx6ul_opp_check_speed_grading(struct device *dev)
+ 	 * 2b'11: 900000000Hz on i.MX6ULL only;
+ 	 * We need to set the max speed of ARM according to fuse map.
+ 	 */
+-	val = readl_relaxed(base + OCOTP_CFG3);
++	ret = nvmem_cell_read_u32(dev, "speed_grade", &val);
++	if (ret)
++		return ret;
++
+ 	val >>= OCOTP_CFG3_SPEED_SHIFT;
+ 	val &= 0x3;
+ 
+@@ -334,9 +327,7 @@ static void imx6ul_opp_check_speed_grading(struct device *dev)
+ 				dev_warn(dev, "failed to disable 900MHz OPP\n");
+ 	}
+ 
+-	iounmap(base);
+-put_node:
+-	of_node_put(np);
++	return ret;
+ }
+ 
+ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+@@ -394,10 +385,18 @@ static int imx6q_cpufreq_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (of_machine_is_compatible("fsl,imx6ul") ||
+-	    of_machine_is_compatible("fsl,imx6ull"))
+-		imx6ul_opp_check_speed_grading(cpu_dev);
+-	else
++	    of_machine_is_compatible("fsl,imx6ull")) {
++		ret = imx6ul_opp_check_speed_grading(cpu_dev);
++		if (ret == -EPROBE_DEFER)
++			return ret;
++		if (ret) {
++			dev_err(cpu_dev, "failed to read from nvmem: %d\n",
++				ret);
++			return ret;
++		}
++	} else {
+ 		imx6q_opp_check_speed_grading(cpu_dev);
++	}
+ 
+ 	/* Because we have added the OPPs here, we must free them */
+ 	free_opp = true;
+-- 
+2.7.4
