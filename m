@@ -1,57 +1,260 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: Fix SPI controller node names
-Date: Fri, 14 Sep 2018 14:25:53 +0200
-Message-ID: <3b90da6c-e375-77e4-40c8-cfce68582c4a@st.com>
-References: <20180913181245.25484-11-robh@kernel.org>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] PM / devfreq: Add devfreq driver for interconnect
+ bandwidth voting
+Date: Fri, 14 Sep 2018 18:23:34 +0530
+Message-ID: <66c67d0b0e551aba11a83ce6a840ad29@codeaurora.org>
+References: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180913181245.25484-11-robh@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1533171465-25508-2-git-send-email-skannan@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <skannan@codeaurora.org>
+Cc: MyungJoo Ham <myungjoo.ham@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, vincent.guittot@linaro.org, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org, rnayak@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Saravana,
 
-
-On 09/13/2018 08:12 PM, Rob Herring wrote:
-> SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
-> name enables dtc SPI bus checks.
+On 2018-08-02 06:27, Saravana Kannan wrote:
+> This driver registers itself as a devfreq device that allows devfreq
+> governors to make bandwidth votes for an interconnect path. This allows
+> applying various policies for different interconnect paths using 
+> devfreq
+> governors.
 > 
-> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Example uses:
+> * Use the devfreq performance governor to set the CPU to DDR 
+> interconnect
+>   path for maximum performance.
+> * Use the devfreq performance governor to set the GPU to DDR 
+> interconnect
+>   path for maximum performance.
+> * Use the CPU frequency to device frequency mapping governor to scale 
+> the
+>   DDR frequency based on the needs of the CPUs' current frequency.
+> 
+> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
 > ---
-> Please apply to the sub-arch tree. The dtc changes haven't landed, but
-> will for 4.20.
+>  Documentation/devicetree/bindings/devfreq/icbw.txt |  21 ++++
+>  drivers/devfreq/Kconfig                            |  13 +++
+>  drivers/devfreq/Makefile                           |   1 +
+>  drivers/devfreq/devfreq_icbw.c                     | 116 
+> +++++++++++++++++++++
+>  4 files changed, 151 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/devfreq/icbw.txt
+>  create mode 100644 drivers/devfreq/devfreq_icbw.c
+> 
+> diff --git a/Documentation/devicetree/bindings/devfreq/icbw.txt
+> b/Documentation/devicetree/bindings/devfreq/icbw.txt
+> new file mode 100644
+> index 0000000..36cf045
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/devfreq/icbw.txt
+> @@ -0,0 +1,21 @@
+> +Interconnect bandwidth device
+> +
+> +icbw is a device that represents an interconnect path that connects 
+> two
+> +devices. This device is typically used to vote for BW requirements 
+> between
+> +two devices. Eg: CPU to DDR, GPU to DDR, etc
+> +
+> +Required properties:
+> +- compatible:		Must be "devfreq-icbw"
+> +- interconnects:	Pairs of phandles and interconnect provider specifier
+> +			to denote the edge source and destination ports of
+> +			the interconnect path. See also:
+> +		Documentation/devicetree/bindings/interconnect/interconnect.txt
+> +- interconnect-names:	Must have one entry with the name "path".
+> +
+> +Example:
+> +
+> +	qcom,cpubw {
+> +		compatible = "devfreq-icbw";
+> +		interconnects = <&snoc MASTER_APSS_1 &bimc SLAVE_EBI_CH0>;
+> +		interconnect-names = "path";
+> +	};
+> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+> index 3d9ae68..590370e 100644
+> --- a/drivers/devfreq/Kconfig
+> +++ b/drivers/devfreq/Kconfig
+> @@ -121,6 +121,19 @@ config ARM_RK3399_DMC_DEVFREQ
+>            It sets the frequency for the memory controller and reads
+> the usage counts
+>            from hardware.
+> 
+> +config DEVFREQ_ICBW
+> +	bool "DEVFREQ device for making bandwidth votes on interconnect 
+> paths"
+> +	select DEVFREQ_GOV_PERFORMANCE
+> +	select DEVFREQ_GOV_POWERSAVE
+> +	select DEVFREQ_GOV_USERSPACE
+> +	default n
+> +	help
+> +	  Different devfreq governors use this devfreq device to make
+> +	  bandwidth votes for interconnect paths between different devices
+> +	  (Eg: CPU to DDR, GPU to DDR, etc). This driver provides a generic
+> +	  interface so that the devfreq governors can be shared across SoCs
+> +	  and architectures.
+> +
+>  source "drivers/devfreq/event/Kconfig"
+> 
+>  endif # PM_DEVFREQ
+> diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+> index e9dc3e9..b302c5cf 100644
+> --- a/drivers/devfreq/Makefile
+> +++ b/drivers/devfreq/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_DEVFREQ_GOV_CPUFREQ_MAP)	+=
+> governor_cpufreq_map.o
+>  obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+>  obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
+>  obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra-devfreq.o
+> +obj-$(CONFIG_DEVFREQ_ICBW)		+= devfreq_icbw.o
+> 
+>  # DEVFREQ Event Drivers
+>  obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
+> diff --git a/drivers/devfreq/devfreq_icbw.c 
+> b/drivers/devfreq/devfreq_icbw.c
+> new file mode 100644
+> index 0000000..231fb21
+> --- /dev/null
+> +++ b/drivers/devfreq/devfreq_icbw.c
+> @@ -0,0 +1,116 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2013-2014, 2018, The Linux Foundation. All rights 
+> reserved.
+> + */
+> +
+> +#define pr_fmt(fmt) "icbw: " fmt
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/err.h>
+> +#include <linux/errno.h>
+> +#include <linux/mutex.h>
+> +#include <linux/devfreq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/interconnect.h>
+> +
+> +struct dev_data {
+> +	struct icc_path *path;
+> +	u32 cur_ab;
+> +	u32 cur_pb;
+> +	unsigned long gov_ab;
+> +	struct devfreq *df;
+> +	struct devfreq_dev_profile dp;
+> +};
+> +
+> +static int icbw_target(struct device *dev, unsigned long *freq, u32 
+> flags)
+> +{
+> +	struct dev_data *d = dev_get_drvdata(dev);
+> +	int ret;
+> +	u32 new_pb = *freq, new_ab = d->gov_ab;
+> +
+> +	if (d->cur_pb == new_pb && d->cur_ab == new_ab)
+> +		return 0;
+> +
+> +	dev_dbg(dev, "BW KBps: AB: %u PB: %u\n", new_ab, new_pb);
+> +
+> +	ret = icc_set(d->path, new_ab, new_pb);
+> +	if (ret) {
+> +		dev_err(dev, "bandwidth request failed (%d)\n", ret);
+> +	} else {
+> +		d->cur_pb = new_pb;
+> +		d->cur_ab = new_ab;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int icbw_get_dev_status(struct device *dev,
+> +				struct devfreq_dev_status *stat)
+> +{
+> +	struct dev_data *d = dev_get_drvdata(dev);
+> +
+> +	stat->private_data = &d->gov_ab;
+> +	return 0;
+> +}
+> +
+> +static int devfreq_icbw_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dev_data *d;
+> +	struct devfreq_dev_profile *p;
+> +
+> +	d = devm_kzalloc(dev, sizeof(*d), GFP_KERNEL);
+> +	if (!d)
+> +		return -ENOMEM;
+> +	dev_set_drvdata(dev, d);
+> +
+> +	p = &d->dp;
+> +	p->polling_ms = 50;
+> +	p->target = icbw_target;
+> +	p->get_dev_status = icbw_get_dev_status;
+> +
+> +	d->path = of_icc_get(dev, "path");
+> +	if (IS_ERR(d->path)) {
+> +		dev_err(dev, "Unable to register interconnect path\n");
+> +		return -ENODEV;
+> +	}
 
-Thanks Rob. I will add it in my next PR for 4.20.
+The probe fails if the provider is not registered yet. Worked around it 
+using -EPROBE_DEFER
+but this should probably come from of_icc_get itself.
 
-> 
->   arch/arm/boot/dts/stm32mp157c.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-> index 661be948ab74..0e5a2f89f2d9 100644
-> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
-> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-> @@ -947,7 +947,7 @@
->   			dma-requests = <48>;
->   		};
->   
-> -		qspi: qspi@58003000 {
-> +		qspi: spi@58003000 {
->   			compatible = "st,stm32f469-qspi";
->   			reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
->   			reg-names = "qspi", "qspi_mm";
-> 
+> +
+> +	d->df = devfreq_add_device(dev, p, "performance", NULL);
+> +	if (IS_ERR(d->df)) {
+> +		icc_put(d->path);
+> +		return PTR_ERR(d->df);
+> +	}
+
+devfreq_add_device will fail with -EINVAL for set_table_freq, 
+find_available_min_freq and
+find_available_max_freq. If you end up working your way around it, I 
+still ended up getting
+multiple errors like "Couldn't update frequency transition information" 
+after probing.
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int devfreq_icbw_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dev_data *d = dev_get_drvdata(dev);
+> +
+> +	devfreq_remove_device(d->df);
+> +	icc_put(d->path);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id icbw_match_table[] = {
+> +	{ .compatible = "devfreq-icbw" },
+> +	{}
+> +};
+> +
+> +static struct platform_driver icbw_driver = {
+> +	.probe = devfreq_icbw_probe,
+> +	.remove = devfreq_icbw_remove,
+> +	.driver = {
+> +		.name = "devfreq-icbw",
+> +		.of_match_table = icbw_match_table,
+> +	},
+> +};
+> +
+> +module_platform_driver(icbw_driver);
+> +MODULE_DESCRIPTION("Interconnect bandwidth voting driver");
+> +MODULE_LICENSE("GPL v2");
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
