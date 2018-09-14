@@ -1,33 +1,34 @@
-Return-Path: <SRS0=HlV8=LZ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 1/2] dt-bindings: pinctrl: sh-pfc: Document r8a7744 PFC support
-Date: Tue, 11 Sep 2018 11:30:04 +0100
-Message-Id: <1536661805-36464-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1536661805-36464-1-git-send-email-biju.das@bp.renesas.com>
-References: <1536661805-36464-1-git-send-email-biju.das@bp.renesas.com>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=UYfu=L4=linaro.org=daniel.lezcano@kernel.org>
+Subject: Re: [PATCH v2 0/3] Add R-Car gen3 SoC support to the CMT driver
+References: <c94a4ad6-93ee-05e4-e2c1-e8d24d3bc75e@cogentembedded.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <4283320b-2f6f-0b77-a8d8-734f6540bc49@linaro.org>
+Date: Fri, 14 Sep 2018 16:34:14 +0200
+MIME-Version: 1.0
+In-Reply-To: <c94a4ad6-93ee-05e4-e2c1-e8d24d3bc75e@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org, linux-sh@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document PFC support for the RZ/G1N (R8A7744) SoC.
+On 12/09/2018 22:10, Sergei Shtylyov wrote:
+> Hello!
+> 
+> Here's the set of 3 patches against the 'tip.git' repo's 'timers/core' branch
+> plus the CMT driver fixups for the 32/64-bit machines posted recently. We're
+> adding support for the CMT types0/1 found in the R-Car gen3 SoCs.
+> 
+> [1/3] clocksource: sh_cmt: properly line-wrap sh_cmt_of_table[] initializer
+> [2/3] dt-bindings: timer: renesas: cmt: document R-Car gen3 support
+> [3/3] clocksource: sh_cmt: add R-Car gen3 support
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt | 1 +
- 1 file changed, 1 insertion(+)
+Applied for 4.20, thanks.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-index 01c6f5f..564725d 100644
---- a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
-@@ -14,6 +14,7 @@ Required Properties:
-     - "renesas,pfc-r8a73a4": for R8A73A4 (R-Mobile APE6) compatible pin-controller.
-     - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-controller.
-     - "renesas,pfc-r8a7743": for R8A7743 (RZ/G1M) compatible pin-controller.
-+    - "renesas,pfc-r8a7744": for R8A7744 (RZ/G1N) compatible pin-controller.
-     - "renesas,pfc-r8a7745": for R8A7745 (RZ/G1E) compatible pin-controller.
-     - "renesas,pfc-r8a77470": for R8A77470 (RZ/G1C) compatible pin-controller.
-     - "renesas,pfc-r8a774a1": for R8A774A1 (RZ/G2M) compatible pin-controller.
 -- 
-2.7.4
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
