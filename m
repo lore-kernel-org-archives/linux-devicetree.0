@@ -1,47 +1,62 @@
-Return-Path: <SRS0=aBeZ=LQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:33582 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726978AbeICApV (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 2 Sep 2018 20:45:21 -0400
-Date: Sun, 2 Sep 2018 21:28:19 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 0/5] add support to STM LSM6DSO 6-axis Mems sensor
-Message-ID: <20180902212819.00c34a7f@archlinux>
-In-Reply-To: <20180830205259.7029-1-lorenzo.bianconi@redhat.com>
-References: <20180830205259.7029-1-lorenzo.bianconi@redhat.com>
+Return-Path: <SRS0=AnC+=L4=nvidia.com=pdeschrijver@kernel.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [RFC 07/14] memory: tegra: scaled LA register for Tegra210
+Date: Fri, 14 Sep 2018 23:03:02 +0300
+Message-ID: <1536955389-30442-8-git-send-email-pdeschrijver@nvidia.com>
+In-Reply-To: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+To: vkuruturi@nvidia.com, linux-tegra=linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: daniel@octaforge.org, a.heider@gmail.com, swtcr0@gmail.com, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, 30 Aug 2018 22:52:54 +0200
-Lorenzo Bianconi <lorenzo.bianconi@redhat.com> wrote:
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+---
+ drivers/memory/tegra/tegra210.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-I'm in a fussy mood.  Not a lot of point in putting a cover letter on
-a series with nothing in it.  Please give a nice 'general' description
-of what you are adding. In particular point out anything you think
-might be controversial :)
-
-Thanks,
-
-Jonathan
-
-> Lorenzo Bianconi (5):
->   iio: imu: st_lsm6dsx: add read_fifo callback to fifo_ops
->   iio: imu: st_lsm6dsx: make st_lsm6dsx_check_odr() non-static
->   iio: imu: st_lsm6dsx: add addr/max_word_len to st_lsm6dsx_read_block()
->   iio: imu: st_lsm6dsx: add support to LSM6DSO
->   dt-bindings: iio: imu: st_lsm6dsx: add LSM6DSO device bindings
-> 
->  .../bindings/iio/imu/st_lsm6dsx.txt           |   1 +
->  drivers/iio/imu/st_lsm6dsx/Kconfig            |   2 +-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h       |  18 +-
->  .../iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c    | 166 ++++++++++++++++--
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c  |  51 +++++-
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c   |   5 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c   |   5 +
->  7 files changed, 228 insertions(+), 20 deletions(-)
-> 
+diff --git a/drivers/memory/tegra/tegra210.c b/drivers/memory/tegra/tegra210.c
+index aa9dcf0..b4dd533 100644
+--- a/drivers/memory/tegra/tegra210.c
++++ b/drivers/memory/tegra/tegra210.c
+@@ -53,6 +53,13 @@
+ #define MC_EMEM_ARB_DHYST_TIMEOUT_UTIL_6			0xbe8
+ #define MC_EMEM_ARB_DHYST_TIMEOUT_UTIL_7			0xbec
+ 
++#define MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0AB			0x694
++#define MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0B			0x698
++#define MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0C			0x6a0
++#define MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0BB			0x69c
++#define MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0CB			0x6a4
++#define MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0A			0x690
++
+ static const unsigned long tegra210_mc_emem_regs[] = {
+ 	 MC_EMEM_ADR_CFG,
+ 	 MC_EMEM_ARB_CFG,
+@@ -93,6 +100,15 @@
+ 	 MC_EMEM_ARB_DHYST_TIMEOUT_UTIL_7,
+ };
+ 
++static const unsigned long tegra210_scaled_la_regs[] = {
++	 MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0AB,
++	 MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0B,
++	 MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0C,
++	 MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0BB,
++	 MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0CB,
++	 MC_SCALED_LATENCY_ALLOWANCE_DISPLAY0A,
++};
++
+ static const struct tegra_mc_client tegra210_mc_clients[] = {
+ 	{
+ 		.id = 0x00,
+@@ -1157,4 +1173,7 @@
+ 	.smmu = &tegra210_smmu_soc,
+ 	.emem_regs = tegra210_mc_emem_regs,
+ 	.num_emem_regs = ARRAY_SIZE(tegra210_mc_emem_regs),
++	.scaled_la_regs = tegra210_scaled_la_regs,
++	.num_scaled_la_regs = ARRAY_SIZE(tegra210_scaled_la_regs),
++	.has_scaled_la = true,
+ };
+-- 
+1.9.1
