@@ -1,53 +1,38 @@
-Return-Path: <SRS0=Rtep=LY=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/3] dt-bindings: power: Add r8a774c0 SYSC power domain definitions
-Date: Mon, 10 Sep 2018 15:41:26 +0100
-Message-Id: <1536590488-23270-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1536590488-23270-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1536590488-23270-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=AnC+=L4=nvidia.com=pdeschrijver@kernel.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [RFC 13/14] memory: tegra: enable Tegra210 EMC scaling driver
+Date: Fri, 14 Sep 2018 23:03:08 +0300
+Message-ID: <1536955389-30442-14-git-send-email-pdeschrijver@nvidia.com>
+In-Reply-To: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: vkuruturi@nvidia.com, linux-tegra=linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: daniel@octaforge.org, a.heider@gmail.com, swtcr0@gmail.com, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds power domain indices for RZ/G2E.
-
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 ---
- include/dt-bindings/power/r8a774c0-sysc.h | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a774c0-sysc.h
+ drivers/memory/tegra/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/include/dt-bindings/power/r8a774c0-sysc.h b/include/dt-bindings/power/r8a774c0-sysc.h
-new file mode 100644
-index 0000000..9922d4c
---- /dev/null
-+++ b/include/dt-bindings/power/r8a774c0-sysc.h
-@@ -0,0 +1,25 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A774C0_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A774C0_SYSC_H__
+diff --git a/drivers/memory/tegra/Kconfig b/drivers/memory/tegra/Kconfig
+index 6d74e49..456719a 100644
+--- a/drivers/memory/tegra/Kconfig
++++ b/drivers/memory/tegra/Kconfig
+@@ -15,3 +15,13 @@ config TEGRA124_EMC
+ 	  Tegra124 chips. The EMC controls the external DRAM on the board.
+ 	  This driver is required to change memory timings / clock rate for
+ 	  external memory.
 +
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ */
-+
-+#define R8A774C0_PD_CA53_CPU0		5
-+#define R8A774C0_PD_CA53_CPU1		6
-+#define R8A774C0_PD_A3VC		14
-+#define R8A774C0_PD_3DG_A		17
-+#define R8A774C0_PD_3DG_B		18
-+#define R8A774C0_PD_CA53_SCU		21
-+#define R8A774C0_PD_A2VC1		26
-+
-+/* Always-on power area */
-+#define R8A774C0_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A774C0_SYSC_H__ */
++config TEGRA210_EMC
++	bool "NVIDIA Tegra210 External Memory Controller driver"
++	default y
++	depends on TEGRA_MC && ARCH_TEGRA_210_SOC
++	help
++	  This driver is for the External Memory Controller (EMC) found on
++	  Tegra210 chips. The EMC controls the external DRAM on the board.
++	  This driver is required to change memory timings / clock rate for
++	  external memory.
 -- 
-2.7.4
+1.9.1
