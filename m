@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v3 07/11] dt-bindings: phy: add DT binding for Microsemi Ocelot SerDes muxing
-Date: Fri, 14 Sep 2018 10:16:05 +0200
-Message-ID: <f392dafca9165800439fc09cd7d16e6a9506d457.1536912834.git-series.quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v3 11/11] net: mscc: ocelot: make use of SerDes PHYs for handling their configuration
+Date: Fri, 14 Sep 2018 10:16:09 +0200
+Message-ID: <00989856964175eafbe1435a70862c2ac66cffc0.1536912834.git-series.quentin.schulz@bootlin.com>
 References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
@@ -12,57 +12,174 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+Previously, the SerDes muxing was hardcoded to a given mode in the MAC
+controller driver. Now, the SerDes muxing is configured within the
+Device Tree and is enforced in the MAC controller driver so we can have
+a lot of different SerDes configurations.
+
+Make use of the SerDes PHYs in the MAC controller to set up the SerDes
+according to the SerDes<->switch port mapping and the communication mode
+with the Ethernet PHY.
+
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt | 40 +++++++-
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+ drivers/net/ethernet/mscc/Kconfig        |  2 +-
+ drivers/net/ethernet/mscc/ocelot.c       | 16 +++++++-
+ drivers/net/ethernet/mscc/ocelot.h       |  5 +++-
+ drivers/net/ethernet/mscc/ocelot_board.c | 50 ++++++++++++++++++++-----
+ 4 files changed, 62 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
-new file mode 100644
-index 0000000..2a88cc3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
-@@ -0,0 +1,40 @@
-+Microsemi Ocelot SerDes muxing driver
-+-------------------------------------
+diff --git a/drivers/net/ethernet/mscc/Kconfig b/drivers/net/ethernet/mscc/Kconfig
+index 36c8462..bcec058 100644
+--- a/drivers/net/ethernet/mscc/Kconfig
++++ b/drivers/net/ethernet/mscc/Kconfig
+@@ -23,6 +23,8 @@ config MSCC_OCELOT_SWITCH
+ config MSCC_OCELOT_SWITCH_OCELOT
+ 	tristate "Ocelot switch driver on Ocelot"
+ 	depends on MSCC_OCELOT_SWITCH
++	depends on GENERIC_PHY
++	depends on OF_NET
+ 	help
+ 	  This driver supports the Ocelot network switch device as present on
+ 	  the Ocelot SoCs.
+diff --git a/drivers/net/ethernet/mscc/ocelot.c b/drivers/net/ethernet/mscc/ocelot.c
+index 1a4f2bb..8f11fdb 100644
+--- a/drivers/net/ethernet/mscc/ocelot.c
++++ b/drivers/net/ethernet/mscc/ocelot.c
+@@ -472,6 +472,7 @@ static int ocelot_port_open(struct net_device *dev)
+ {
+ 	struct ocelot_port *port = netdev_priv(dev);
+ 	struct ocelot *ocelot = port->ocelot;
++	enum phy_mode phy_mode;
+ 	int err;
+ 
+ 	/* Enable receiving frames on the port, and activate auto-learning of
+@@ -482,8 +483,21 @@ static int ocelot_port_open(struct net_device *dev)
+ 			 ANA_PORT_PORT_CFG_PORTID_VAL(port->chip_port),
+ 			 ANA_PORT_PORT_CFG, port->chip_port);
+ 
++	if (port->serdes) {
++		if (port->phy_mode == PHY_INTERFACE_MODE_SGMII)
++			phy_mode = PHY_MODE_SGMII;
++		else
++			phy_mode = PHY_MODE_QSGMII;
 +
-+On Microsemi Ocelot, there is a handful of registers in HSIO address
-+space for setting up the SerDes to switch port muxing.
++		err = phy_set_mode(port->serdes, phy_mode);
++		if (err) {
++			netdev_err(dev, "Could not set mode of SerDes\n");
++			return err;
++		}
++	}
 +
-+A SerDes X can be "muxed" to work with switch port Y or Z for example.
-+One specific SerDes can also be used as a PCIe interface.
+ 	err = phy_connect_direct(dev, port->phy, &ocelot_port_adjust_link,
+-				 PHY_INTERFACE_MODE_NA);
++				 port->phy_mode);
+ 	if (err) {
+ 		netdev_err(dev, "Could not attach to PHY\n");
+ 		return err;
+diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
+index 3720e51..62c7c8e 100644
+--- a/drivers/net/ethernet/mscc/ocelot.h
++++ b/drivers/net/ethernet/mscc/ocelot.h
+@@ -11,6 +11,8 @@
+ #include <linux/bitops.h>
+ #include <linux/etherdevice.h>
+ #include <linux/if_vlan.h>
++#include <linux/phy.h>
++#include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
+ 
+@@ -453,6 +455,9 @@ struct ocelot_port {
+ 	u8 vlan_aware;
+ 
+ 	u64 *stats;
 +
-+Hence, a SerDes represents an interface, be it an Ethernet or a PCIe one.
++	phy_interface_t phy_mode;
++	struct phy *serdes;
+ };
+ 
+ u32 __ocelot_read_ix(struct ocelot *ocelot, u32 reg, u32 offset);
+diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+index b7d755b..a26a06e 100644
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -6,6 +6,7 @@
+  */
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
++#include <linux/of_net.h>
+ #include <linux/netdevice.h>
+ #include <linux/of_mdio.h>
+ #include <linux/of_platform.h>
+@@ -247,18 +248,12 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 	INIT_LIST_HEAD(&ocelot->multicast);
+ 	ocelot_init(ocelot);
+ 
+-	ocelot_rmw(ocelot, HSIO_HW_CFG_DEV1G_4_MODE |
+-		     HSIO_HW_CFG_DEV1G_6_MODE |
+-		     HSIO_HW_CFG_DEV1G_9_MODE,
+-		     HSIO_HW_CFG_DEV1G_4_MODE |
+-		     HSIO_HW_CFG_DEV1G_6_MODE |
+-		     HSIO_HW_CFG_DEV1G_9_MODE,
+-		     HSIO_HW_CFG);
+-
+ 	for_each_available_child_of_node(ports, portnp) {
+ 		struct device_node *phy_node;
+ 		struct phy_device *phy;
+ 		struct resource *res;
++		struct phy *serdes;
++		enum phy_mode phy_mode;
+ 		void __iomem *regs;
+ 		char res_name[8];
+ 		u32 port;
+@@ -283,10 +278,45 @@ static int mscc_ocelot_probe(struct platform_device *pdev)
+ 			continue;
+ 
+ 		err = ocelot_probe_port(ocelot, port, regs, phy);
+-		if (err) {
+-			dev_err(&pdev->dev, "failed to probe ports\n");
++		if (err)
++			return err;
 +
-+There are two kinds of SerDes: SERDES1G supports 10/100Mbps in
-+half/full-duplex and 1000Mbps in full-duplex mode while SERDES6G supports
-+10/100Mbps in half/full-duplex and 1000/2500Mbps in full-duplex mode.
++		err = of_get_phy_mode(portnp);
++		if (err < 0)
++			ocelot->ports[port]->phy_mode = PHY_INTERFACE_MODE_NA;
++		else
++			ocelot->ports[port]->phy_mode = err;
 +
-+Also, SERDES6G number (aka "macro") 0 is the only interface supporting
-+QSGMII.
++		switch (ocelot->ports[port]->phy_mode) {
++		case PHY_INTERFACE_MODE_NA:
++			continue;
++		case PHY_INTERFACE_MODE_SGMII:
++			phy_mode = PHY_MODE_SGMII;
++			break;
++		case PHY_INTERFACE_MODE_QSGMII:
++			phy_mode = PHY_MODE_QSGMII;
++			break;
++		default:
++			dev_err(ocelot->dev,
++				"invalid phy mode for port%d, (Q)SGMII only\n",
++				port);
++			return -EINVAL;
++		}
 +
-+Required properties:
++		serdes = devm_of_phy_get(ocelot->dev, portnp, NULL);
++		if (IS_ERR(serdes)) {
++			err = PTR_ERR(serdes);
++			if (err == -EPROBE_DEFER) {
++				dev_dbg(ocelot->dev, "deferring probe\n");
++				goto err_probe_ports;
++			}
 +
-+- compatible: should be "mscc,vsc7514-serdes"
-+- #phy-cells : from the generic phy bindings, must be 2.
-+	       The first number defines the input port to use for a given
-+	       SerDes macro. The second defines the macro to use. They are
-+	       defined in dt-bindings/phy/phy-ocelot-serdes.h
++			dev_err(ocelot->dev, "missing SerDes phys for port%d\n",
++				port);
+ 			goto err_probe_ports;
+ 		}
 +
-+Example:
-+
-+	serdes: serdes {
-+		compatible = "mscc,vsc7514-serdes";
-+		#phy-cells = <2>;
-+	};
-+
-+	ethernet {
-+		port1 {
-+			phy-handle = <&phy_foo>;
-+			/* Link SERDES1G_5 to port1 */
-+			phys = <&serdes 1 SERDES1G_5>;
-+		};
-+	};
++		ocelot->ports[port]->serdes = serdes;
+ 	}
+ 
+ 	register_netdevice_notifier(&ocelot_netdevice_nb);
 -- 
 git-series 0.9.1
