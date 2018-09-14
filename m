@@ -1,164 +1,46 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: [PATCH v7 3/5] venus: firmware: register separate platform_device for firmware loader
-Date: Fri, 14 Sep 2018 18:54:35 +0530
-Message-ID: <1536931477-13018-4-git-send-email-vgarodia@codeaurora.org>
-References: <1536931477-13018-1-git-send-email-vgarodia@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536931477-13018-1-git-send-email-vgarodia@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: [PATCH v2 2/4] dt-bindings: soc: Document "brcm,bcm2836-vchiq"
+Date: Fri, 14 Sep 2018 14:22:53 +0100
+Message-ID: <1536931375-48769-3-git-send-email-phil@raspberrypi.org>
+References: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+"brcm,bcm2836-vchiq" should be used on BCM2836 and BCM2837 to ensure
+correct operation.
 
-This registers a firmware platform_device and associate it with
-video-firmware DT subnode. Then calls dma configure to initialize
-dma and iommu.
-
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 ---
- drivers/media/platform/qcom/venus/core.c     | 14 +++++---
- drivers/media/platform/qcom/venus/core.h     |  3 ++
- drivers/media/platform/qcom/venus/firmware.c | 54 ++++++++++++++++++++++++++++
- drivers/media/platform/qcom/venus/firmware.h |  2 ++
- 4 files changed, 69 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/qcom/venus/core.c b/drivers/media/platform/qcom/venus/core.c
-index 75b9785..440f25f 100644
---- a/drivers/media/platform/qcom/venus/core.c
-+++ b/drivers/media/platform/qcom/venus/core.c
-@@ -284,6 +284,14 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_runtime_disable;
+diff --git a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+index 8dd7b3a..f331316 100644
+--- a/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
++++ b/Documentation/devicetree/bindings/soc/bcm/brcm,bcm2835-vchiq.txt
+@@ -2,7 +2,8 @@ Broadcom VCHIQ firmware services
  
-+	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
-+	if (ret)
-+		goto err_runtime_disable;
-+
-+	ret = venus_firmware_init(core);
-+	if (ret)
-+		goto err_runtime_disable;
-+
- 	ret = venus_boot(core);
- 	if (ret)
- 		goto err_runtime_disable;
-@@ -308,10 +316,6 @@ static int venus_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto err_core_deinit;
+ Required properties:
  
--	ret = of_platform_populate(dev->of_node, NULL, NULL, dev);
--	if (ret)
--		goto err_dev_unregister;
--
- 	ret = pm_runtime_put_sync(dev);
- 	if (ret)
- 		goto err_dev_unregister;
-@@ -347,6 +351,8 @@ static int venus_remove(struct platform_device *pdev)
- 	venus_shutdown(dev);
- 	of_platform_depopulate(dev);
- 
-+	venus_firmware_deinit(core);
-+
- 	pm_runtime_put_sync(dev);
- 	pm_runtime_disable(dev);
- 
-diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-index dfd5c10..3a53d5d 100644
---- a/drivers/media/platform/qcom/venus/core.h
-+++ b/drivers/media/platform/qcom/venus/core.h
-@@ -130,6 +130,9 @@ struct venus_core {
- 	struct device *dev;
- 	struct device *dev_dec;
- 	struct device *dev_enc;
-+	struct video_firmware {
-+	struct device *dev;
-+	} fw;
- 	bool no_tz;
- 	struct mutex lock;
- 	struct list_head instances;
-diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
-index 34224eb..69a99cd 100644
---- a/drivers/media/platform/qcom/venus/firmware.c
-+++ b/drivers/media/platform/qcom/venus/firmware.c
-@@ -18,6 +18,8 @@
- #include <linux/io.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/of_device.h>
- #include <linux/qcom_scm.h>
- #include <linux/sizes.h>
- #include <linux/soc/qcom/mdt_loader.h>
-@@ -144,3 +146,55 @@ int venus_shutdown(struct device *dev)
- {
- 	return qcom_scm_pas_shutdown(VENUS_PAS_ID);
- }
-+
-+int venus_firmware_init(struct venus_core *core)
-+{
-+	struct platform_device_info info;
-+	struct platform_device *pdev;
-+	struct device_node *np;
-+	int ret;
-+
-+	np = of_get_child_by_name(core->dev->of_node, "video-firmware");
-+	if (!np)
-+		return 0;
-+
-+	memset(&info, 0, sizeof(info));
-+	info.fwnode = &np->fwnode;
-+	info.parent = core->dev;
-+	info.name = np->name;
-+	info.dma_mask = DMA_BIT_MASK(32);
-+
-+	pdev = platform_device_register_full(&info);
-+	if (IS_ERR(pdev)) {
-+		of_node_put(np);
-+		return PTR_ERR(pdev);
-+	}
-+
-+	pdev->dev.of_node = np;
-+
-+	ret = of_dma_configure(&pdev->dev, np);
-+	if (ret) {
-+		dev_err(core->dev, "dma configure fail\n");
-+		goto err_unregister;
-+	}
-+
-+	core->fw.dev = &pdev->dev;
-+	core->no_tz = true;
-+
-+	of_node_put(np);
-+
-+	return 0;
-+
-+err_unregister:
-+	platform_device_unregister(pdev);
-+	of_node_put(np);
-+	return ret;
-+}
-+
-+void venus_firmware_deinit(struct venus_core *core)
-+{
-+	if (!core->fw.dev)
-+		return;
-+
-+	platform_device_unregister(to_platform_device(core->fw.dev));
-+}
-diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
-index 1343747..fd7edf0 100644
---- a/drivers/media/platform/qcom/venus/firmware.h
-+++ b/drivers/media/platform/qcom/venus/firmware.h
-@@ -16,6 +16,8 @@
- 
- struct device;
- 
-+int venus_firmware_init(struct venus_core *core);
-+void venus_firmware_deinit(struct venus_core *core);
- int venus_boot(struct venus_core *core);
- int venus_shutdown(struct device *dev);
- int venus_set_hw_state(struct venus_core *core, bool suspend);
+-- compatible:	Should be "brcm,bcm2835-vchiq"
++- compatible:	Should be "brcm,bcm2835-vchiq" on BCM2835, otherwise
++		"brcm,bcm2836-vchiq".
+ - reg:		Physical base address and length of the doorbell register pair
+ - interrupts:	The interrupt number
+ 		  See bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
