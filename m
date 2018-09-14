@@ -1,69 +1,102 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next 2/7] net: phy: mscc: add support for VSC8584 PHY
-Date: Fri, 14 Sep 2018 15:29:30 +0200
-Message-ID: <20180914132930.fphdm3dm2incetbq@qschulz>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <a61d9affd3f1ec9deb60c882cce1daf37fbe2427.1536916714.git-series.quentin.schulz@bootlin.com>
- <20180914131846.GG14865@lunn.ch>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="w2cfxpmyvzbuyq6t"
+From: Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2 1/3] watchdog: mpc8xxx: use dev_xxxx() instead of pr_xxxx()
+Date: Fri, 14 Sep 2018 13:31:59 +0000 (UTC)
+Message-ID: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180914131846.GG14865@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+mpc8xxx watchdog driver is a platform device drivers, it is
+therefore possible to use dev_xxx() messaging rather than pr_xxx()
 
---w2cfxpmyvzbuyq6t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ drivers/watchdog/mpc8xxx_wdt.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Hi Andrew,
-
-On Fri, Sep 14, 2018 at 03:18:46PM +0200, Andrew Lunn wrote:
-> > Most of the init sequence of a PHY of the package is common to all PHYs
-> > in the package, thus we use the SMI broadcast feature which enables us
-> > to propagate a write in one register of one PHY to all PHYs in the
-> > package.
->=20
-> Hi Quinten
->=20
-> Could you say a bit more about the broadcast. Does the SMI broadcast
-> go to all PHY everywhere on an MDIO bus, or only all PHYs within one
-> package? I'm just thinking about the case you need two of these
-> packages to cover 8 switch ports.
->=20
-
-Ah sorry, that wasn't very explicit. That's a feature on the PHY side so
-my wildest guess is that it wouldn't impact any other PHY outside of
-this package. Affecting any other PHY on the bus is counter-intuitive to
-me but I'll ask the HW engineers for confirmation.
-
-Thanks,
-Quentin
-
---w2cfxpmyvzbuyq6t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlubt7oACgkQhLiadT7g
-8aMP+g/+L2iC+PhfMSiTn/swWLrAkWxgR7/1NH4N7Kb5wIBJPN659JJnEUHtnQQd
-HRu4vqlMEu9c6T6B6fo23w8xHvKSTtQdcPtKgX2AbtwvuNelfPTUtOVQYbdAzqKB
-ZG0TKTL5BIFn49N9vwf9SpvVKFJ4e3+XU2/OMAO/PiG3hTwlcqH3JX5TXzDlBSUM
-1w+MS/UMzqTRVNnXfCvyGk6/xtAcOIu/GCxCGQviP6iZWtewVrnowqY94FURE8h4
-eF4Mc8udp3OLVUOh5Ki3DtWY42oRTG9KPqwDXzxKIgZ4V91n1USVOE8kPIZrvbW8
-6N61KHuJTlwZfdcpl5VdUqkOfVfpclnCkJOQkmySZcn9OEGHNxAa/IHN+1eX6wOX
-zbD0i7IccvHdjIfoAmQwpO5kO72x3XFaJhcZEq87LBpdcY6QodUJddqjlUdyeSae
-BmJN4RhgNi+l3IFFYbOTAQY0o6dTdvSO1W2RzA0//IDeUSXBSirf+dow6vockwf6
-cPOjUaq82xJlFzyucsGH1G4Xp6G/sZN1ML3ETnRKLRBIy34dREcfgOE2k5FAtcN4
-hzv322g8YR+tuQ7EIXWwxQwM/osiCniaz8Zi7IzJ/aksFJBITLP24rLHEb/xEknL
-nIOZfQaVOkE02pxyW/qPU7nUe66hnJUAwdcgr/TIk/hoIeKRVUs=
-=Rb1D
------END PGP SIGNATURE-----
-
---w2cfxpmyvzbuyq6t--
+diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
+index aca2d6323f8a..1dcf5f10cdd9 100644
+--- a/drivers/watchdog/mpc8xxx_wdt.c
++++ b/drivers/watchdog/mpc8xxx_wdt.c
+@@ -17,8 +17,6 @@
+  * option) any later version.
+  */
+ 
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+ #include <linux/fs.h>
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+@@ -137,26 +135,27 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+ 	struct mpc8xxx_wdt_ddata *ddata;
+ 	u32 freq = fsl_get_sys_freq();
+ 	bool enabled;
++	struct device *dev = &ofdev->dev;
+ 
+-	wdt_type = of_device_get_match_data(&ofdev->dev);
++	wdt_type = of_device_get_match_data(dev);
+ 	if (!wdt_type)
+ 		return -EINVAL;
+ 
+ 	if (!freq || freq == -1)
+ 		return -EINVAL;
+ 
+-	ddata = devm_kzalloc(&ofdev->dev, sizeof(*ddata), GFP_KERNEL);
++	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+ 	if (!ddata)
+ 		return -ENOMEM;
+ 
+ 	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
+-	ddata->base = devm_ioremap_resource(&ofdev->dev, res);
++	ddata->base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(ddata->base))
+ 		return PTR_ERR(ddata->base);
+ 
+ 	enabled = in_be32(&ddata->base->swcrr) & SWCRR_SWEN;
+ 	if (!enabled && wdt_type->hw_enabled) {
+-		pr_info("could not be enabled in software\n");
++		dev_info(dev, "could not be enabled in software\n");
+ 		return -ENODEV;
+ 	}
+ 
+@@ -166,7 +165,7 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+ 	ddata->wdd.ops = &mpc8xxx_wdt_ops,
+ 
+ 	ddata->wdd.timeout = WATCHDOG_TIMEOUT;
+-	watchdog_init_timeout(&ddata->wdd, timeout, &ofdev->dev);
++	watchdog_init_timeout(&ddata->wdd, timeout, dev);
+ 
+ 	watchdog_set_nowayout(&ddata->wdd, nowayout);
+ 
+@@ -189,12 +188,13 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+ 
+ 	ret = watchdog_register_device(&ddata->wdd);
+ 	if (ret) {
+-		pr_err("cannot register watchdog device (err=%d)\n", ret);
++		dev_err(dev, "cannot register watchdog device (err=%d)\n", ret);
+ 		return ret;
+ 	}
+ 
+-	pr_info("WDT driver for MPC8xxx initialized. mode:%s timeout=%d sec\n",
+-		reset ? "reset" : "interrupt", ddata->wdd.timeout);
++	dev_info(dev,
++		 "WDT driver for MPC8xxx initialized. mode:%s timeout=%d sec\n",
++		 reset ? "reset" : "interrupt", ddata->wdd.timeout);
+ 
+ 	platform_set_drvdata(ofdev, ddata);
+ 	return 0;
+@@ -204,8 +204,8 @@ static int mpc8xxx_wdt_remove(struct platform_device *ofdev)
+ {
+ 	struct mpc8xxx_wdt_ddata *ddata = platform_get_drvdata(ofdev);
+ 
+-	pr_crit("Watchdog removed, expect the %s soon!\n",
+-		reset ? "reset" : "machine check exception");
++	dev_crit(&ofdev->dev, "Watchdog removed, expect the %s soon!\n",
++		 reset ? "reset" : "machine check exception");
+ 	watchdog_unregister_device(&ddata->wdd);
+ 
+ 	return 0;
+-- 
+2.13.3
