@@ -1,1171 +1,1906 @@
-Return-Path: <SRS0=pRDT=LU=gmail.com=jim2101024@kernel.org>
-From: Jim Quinlan <jim2101024@gmail.com>
-Subject: [PATCH v5 03/12] PCI: brcmstb: add Broadcom STB PCIe host controller driver
-Date: Thu,  6 Sep 2018 16:42:52 -0400
-Message-Id: <1536266581-7308-4-git-send-email-jim2101024@gmail.com>
-In-Reply-To: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
-References: <1536266581-7308-1-git-send-email-jim2101024@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Russell King <linux@armlinux.org.uk>, Ray Jui <ray.jui@broadcom.com>, Scott Branden <scott.branden@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Kevin Cernekee <cernekee@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kees Cook <keescook@chromium.org>, Jinbum Park <jinb.park7@gmail.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jim Quinlan <jim2101024@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Palmer Dabbelt <palmer@sifive.com>, Stefan Agner <stefan@agner.ch>, Eric Anholt <eric@anholt.net>, Simon Horman <horms+renesas@verge.net.au>, Tony Lindgren <tony@atomide.com>, Stefan Wahren <stefan.wahren@i2se.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Olof Johansson <olof@lixom.net>, Thomas Hellstrom <thellstrom@vmware.com>, Alex Deucher <alexander.deucher@amd.com>, "Dirk Hohndel (VMware)" <dirk@hohndel.org>, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Robin Murphy <robin.murphy@arm.com>, Justin Chen <justinpopo6@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Gareth Powell <gpowell@broadcom.com>, Doug Berger <opendmb@gmail.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@linux-mips.org, Christoph Hellwig <hch@lst.de>
+Return-Path: <SRS0=AnC+=L4=nvidia.com=pdeschrijver@kernel.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [RFC 09/14] memory: tegra: Add definitions shared by Tegra210 EMC scaling code
+Date: Fri, 14 Sep 2018 23:03:04 +0300
+Message-ID: <1536955389-30442-10-git-send-email-pdeschrijver@nvidia.com>
+In-Reply-To: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: vkuruturi@nvidia.com, linux-tegra=linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: daniel@octaforge.org, a.heider@gmail.com, swtcr0@gmail.com, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This commit adds the basic Broadcom STB PCIe controller.  Missing is
-the ability to process MSI and also handle dma-ranges for inbound
-memory accesses.  These two functionalities are added in subsequent
-commits.
-
-The PCIe block contains an MDIO interface.  This is a local interface
-only accessible by the PCIe controller.  It cannot be used or shared
-by any other HW.  As such, the small amount of code for this
-controller is included in this driver as there is little upside to put
-it elsewhere.
-
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 ---
- drivers/pci/controller/Kconfig        |   12 +
- drivers/pci/controller/Makefile       |    1 +
- drivers/pci/controller/pcie-brcmstb.c | 1099 +++++++++++++++++++++++++++++++++
- 3 files changed, 1112 insertions(+)
- create mode 100644 drivers/pci/controller/pcie-brcmstb.c
+ drivers/memory/tegra/tegra210-emc-reg.h | 1879 +++++++++++++++++++++++++++++++
+ 1 file changed, 1879 insertions(+)
+ create mode 100644 drivers/memory/tegra/tegra210-emc-reg.h
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 028b287..c863c67 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -278,5 +278,17 @@ config VMD
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called vmd.
- 
-+config PCIE_BRCMSTB
-+	bool "Broadcom Brcmstb PCIe host controller"
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC
-+	depends on OF
-+	depends on SOC_BRCMSTB
-+	default ARCH_BRCMSTB || BMIPS_GENERIC
-+	help
-+	  Say Y here to enable PCIe host controller support for
-+	  Broadcom Settop Box SOCs.  A Broadcom SOC will may have
-+	  multiple host controllers as opposed to a single host
-+	  controller with multiple ports.
-+
- source "drivers/pci/controller/dwc/Kconfig"
- endmenu
-diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-index d56a507..e76bfb2 100644
---- a/drivers/pci/controller/Makefile
-+++ b/drivers/pci/controller/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
- obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
- obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
- obj-$(CONFIG_VMD) += vmd.o
-+obj-$(CONFIG_PCIE_BRCMSTB) += pcie-brcmstb.o
- # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
- obj-y				+= dwc/
- 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+diff --git a/drivers/memory/tegra/tegra210-emc-reg.h b/drivers/memory/tegra/tegra210-emc-reg.h
 new file mode 100644
-index 0000000..9c87d10
+index 0000000..2bd0be5
 --- /dev/null
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -0,0 +1,1099 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (C) 2009 - 2018 Broadcom */
++++ b/drivers/memory/tegra/tegra210-emc-reg.h
+@@ -0,0 +1,1879 @@
++/*
++ * Copyright (c) 2015, NVIDIA CORPORATION.  All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++#ifndef _TEGRA210_EMC_REG_H
++#define _TEGRA210_EMC_REG_H
 +
 +#include <linux/clk.h>
-+#include <linux/compiler.h>
-+#include <linux/delay.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/ioport.h>
-+#include <linux/irqdomain.h>
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/log2.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_pci.h>
++#include <linux/clk-provider.h>
 +#include <linux/of_platform.h>
-+#include <linux/pci.h>
-+#include <linux/printk.h>
-+#include <linux/sizes.h>
-+#include <linux/slab.h>
-+#include <soc/brcmstb/memory_api.h>
-+#include <linux/string.h>
-+#include <linux/types.h>
 +
-+#include "../pci.h"
++#define DVFS_FGCG_HIGH_SPEED_THRESHOLD				1000
++#define IOBRICK_DCC_THRESHOLD					2400
++#define DVFS_FGCG_MID_SPEED_THRESHOLD				600
 +
-+/* BRCM_PCIE_CAP_REGS - Offset for the mandatory capability config regs */
-+#define BRCM_PCIE_CAP_REGS				0x00ac
++#define TEGRA21_MAX_TABLE_ID_LEN				50
++#define TEGRA_EMC_ISO_USE_FREQ_MAX_NUM				12
++#define PLL_C_DIRECT_FLOOR					333500000
++#define EMC_STATUS_UPDATE_TIMEOUT				1000
++#define TEGRA_EMC_TABLE_MAX_SIZE				16
 +
-+/*
-+ * Broadcom Settop Box PCIe Register Offsets. The names are from
-+ * the chip's RDB and we use them here so that a script can correlate
-+ * this code and the RDB to prevent discrepancies.
-+ */
-+#define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1		0x0188
-+#define PCIE_RC_CFG_PRIV1_ID_VAL3			0x043c
-+#define PCIE_RC_DL_MDIO_ADDR				0x1100
-+#define PCIE_RC_DL_MDIO_WR_DATA				0x1104
-+#define PCIE_RC_DL_MDIO_RD_DATA				0x1108
-+#define PCIE_MISC_MISC_CTRL				0x4008
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO		0x400c
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI		0x4010
-+#define PCIE_MISC_RC_BAR1_CONFIG_LO			0x402c
-+#define PCIE_MISC_RC_BAR2_CONFIG_LO			0x4034
-+#define PCIE_MISC_RC_BAR2_CONFIG_HI			0x4038
-+#define PCIE_MISC_RC_BAR3_CONFIG_LO			0x403c
-+#define PCIE_MISC_PCIE_CTRL				0x4064
-+#define PCIE_MISC_PCIE_STATUS				0x4068
-+#define PCIE_MISC_REVISION				0x406c
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT	0x4070
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI		0x4080
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI		0x4084
-+#define PCIE_MISC_HARD_PCIE_HARD_DEBUG			0x4204
-+#define PCIE_INTR2_CPU_BASE				0x4300
++#define TEGRA_EMC_MODE_REG_17					0x00110000
++#define TEGRA_EMC_MRW_DEV_SHIFT					30
++#define TEGRA_EMC_MRW_DEV1					2
++#define TEGRA_EMC_MRW_DEV2					1
 +
-+/*
-+ * Broadcom Settop Box PCIe Register Field shift and mask info. The
-+ * names are from the chip's RDB and we use them here so that a script
-+ * can correlate this code and the RDB to prevent discrepancies.
-+ */
-+#define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_MASK	0xc
-+#define PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1_ENDIAN_MODE_BAR2_SHIFT	0x2
-+#define PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_MASK		0xffffff
-+#define PCIE_RC_CFG_PRIV1_ID_VAL3_CLASS_CODE_SHIFT		0x0
-+#define PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_MASK			0x1000
-+#define PCIE_MISC_MISC_CTRL_SCB_ACCESS_EN_SHIFT			0xc
-+#define PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_MASK		0x2000
-+#define PCIE_MISC_MISC_CTRL_CFG_READ_UR_MODE_SHIFT		0xd
-+#define PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_MASK			0x300000
-+#define PCIE_MISC_MISC_CTRL_MAX_BURST_SIZE_SHIFT		0x14
-+#define PCIE_MISC_MISC_CTRL_SCB0_SIZE_MASK			0xf8000000
-+#define PCIE_MISC_MISC_CTRL_SCB0_SIZE_SHIFT			0x1b
-+#define PCIE_MISC_MISC_CTRL_SCB1_SIZE_MASK			0x7c00000
-+#define PCIE_MISC_MISC_CTRL_SCB1_SIZE_SHIFT			0x16
-+#define PCIE_MISC_MISC_CTRL_SCB2_SIZE_MASK			0x1f
-+#define PCIE_MISC_MISC_CTRL_SCB2_SIZE_SHIFT			0x0
-+#define PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_MASK			0x1f
-+#define PCIE_MISC_RC_BAR1_CONFIG_LO_SIZE_SHIFT			0x0
-+#define PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_MASK			0x1f
-+#define PCIE_MISC_RC_BAR2_CONFIG_LO_SIZE_SHIFT			0x0
-+#define PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_MASK			0x1f
-+#define PCIE_MISC_RC_BAR3_CONFIG_LO_SIZE_SHIFT			0x0
-+#define PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_MASK			0x4
-+#define PCIE_MISC_PCIE_CTRL_PCIE_PERSTB_SHIFT			0x2
-+#define PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_MASK		0x1
-+#define PCIE_MISC_PCIE_CTRL_PCIE_L23_REQUEST_SHIFT		0x0
-+#define PCIE_MISC_PCIE_STATUS_PCIE_PORT_MASK			0x80
-+#define PCIE_MISC_PCIE_STATUS_PCIE_PORT_SHIFT			0x7
-+#define PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_MASK		0x20
-+#define PCIE_MISC_PCIE_STATUS_PCIE_DL_ACTIVE_SHIFT		0x5
-+#define PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_MASK		0x10
-+#define PCIE_MISC_PCIE_STATUS_PCIE_PHYLINKUP_SHIFT		0x4
-+#define PCIE_MISC_PCIE_STATUS_PCIE_LINK_IN_L23_MASK		0x40
-+#define PCIE_MISC_PCIE_STATUS_PCIE_LINK_IN_L23_SHIFT		0x6
-+#define PCIE_MISC_REVISION_MAJMIN_MASK				0xffff
-+#define PCIE_MISC_REVISION_MAJMIN_SHIFT				0
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_LIMIT_MASK	0xfff00000
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_LIMIT_SHIFT	0x14
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_BASE_MASK	0xfff0
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_BASE_SHIFT	0x4
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS	0xc
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI_BASE_MASK		0xff
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI_BASE_SHIFT	0x0
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI_LIMIT_MASK	0xff
-+#define PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI_LIMIT_SHIFT	0x0
-+#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
-+#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_SHIFT 0x1
-+#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
-+#define PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_SHIFT	0x1b
-+#define PCIE_RGR1_SW_INIT_1_PERST_MASK				0x1
-+#define PCIE_RGR1_SW_INIT_1_PERST_SHIFT				0x0
++#define EMC_CLK_EMC_2X_CLK_SRC_SHIFT 				29
++#define EMC_CLK_EMC_2X_CLK_SRC_MASK				\
++	(0x7 << EMC_CLK_EMC_2X_CLK_SRC_SHIFT)
++#define EMC_CLK_EMC_2X_CLK_DIVISOR_SHIFT			0
++#define EMC_CLK_EMC_2X_CLK_DIVISOR_MASK				\
++	(0xff << EMC_CLK_EMC_2X_CLK_DIVISOR_SHIFT)
 +
-+#define BRCM_NUM_PCIE_OUT_WINS		0x4
-+#define BRCM_MAX_SCB			0x4
++#define EMC_INTSTATUS						0x0
++#define EMC_INTSTATUS_MRR_DIVLD					(0x1 << 5)
++#define EMC_INTSTATUS_CLKCHANGE_COMPLETE			(0x1 << 4)
 +
-+#define BRCM_MSI_TARGET_ADDR_LT_4GB	0x0fffffffcULL
-+#define BRCM_MSI_TARGET_ADDR_GT_4GB	0xffffffffcULL
++#define EMC_INTMASK						0x4
++#define EMC_DBG							0x8
++#define EMC_DBG_WRITE_MUX_ACTIVE				(1 << 1)
++#define EMC_DBG_CFG_SWAP_SHIFT					26
++#define EMC_DBG_CFG_SWAP_MASK					\
++	(0x3 <<	EMC_DBG_CFG_SWAP_SHIFT)
++#define EMC_DBG_WRITE_ACTIVE_ONLY				(1 << 30)
 +
-+#define BURST_SIZE_128			0
-+#define BURST_SIZE_256			1
-+#define BURST_SIZE_512			2
++#define EMC_CONFIG_SAMPLE_DELAY					0x5f0
++#define EMC_CFG_UPDATE						0x5f4
++#define EMC_CFG_UPDATE_UPDATE_DLL_IN_UPDATE_SHIFT		9
++#define EMC_CFG_UPDATE_UPDATE_DLL_IN_UPDATE_MASK		\
++	(0x3 << EMC_CFG_UPDATE_UPDATE_DLL_IN_UPDATE_SHIFT)
++#define EMC_CFG							0xc
++#define EMC_CFG_DRAM_CLKSTOP_PD					(1 << 31)
++#define EMC_CFG_DRAM_CLKSTOP_SR					(1 << 30)
++#define EMC_CFG_DRAM_ACPD					(1 << 29)
++#define EMC_CFG_DYN_SELF_REF					(1 << 28)
++#define EMC_CFG_REQACT_ASYNC					(1 << 26)
++#define EMC_CFG_AUTO_PRE_WR					(1 << 25)
++#define EMC_CFG_AUTO_PRE_RD					(1 << 24)
++#define EMC_CFG_MAM_PRE_WR					(1 << 23)
++#define EMC_CFG_MAN_PRE_RD					(1 << 22)
++#define EMC_CFG_PERIODIC_QRST					(1 << 21)
++#define EMC_CFG_PERIODIC_QRST_SHIFT				(21)
++#define EMC_CFG_EN_DYNAMIC_PUTERM				(1 << 20)
++#define EMC_CFG_DLY_WR_DQ_HALF_CLOCK				(1 << 19)
++#define EMC_CFG_DSR_VTTGEN_DRV_EN				(1 << 18)
++#define EMC_CFG_EMC2MC_CLK_RATIO				(3 << 16)
++#define EMC_CFG_WAIT_FOR_ISP2B_READY_B4_CC			(1 << 9)
++#define EMC_CFG_WAIT_FOR_VI2_READY_B4_CC			(1 << 8)
++#define EMC_CFG_WAIT_FOR_ISP2_READY_B4_CC			(1 << 7)
++#define EMC_CFG_INVERT_DQM					(1 << 6)
++#define EMC_CFG_WAIT_FOR_DISPLAYB_READY_B4_CC			(1 << 5)
++#define EMC_CFG_WAIT_FOR_DISPLAY_READY_B4_CC			(1 << 4)
++#define EMC_CFG_EMC2PMACRO_CFG_BYPASS_DATAPIPE2			(1 << 3)
++#define EMC_CFG_EMC2PMACRO_CFG_BYPASS_DATAPIPE1			(1 << 2)
++#define EMC_CFG_EMC2PMACRO_CFG_BYPASS_ADDRPIPE			(1 << 1)
 +
-+/* Offsets from PCIE_INTR2_CPU_BASE */
-+#define STATUS				0x0
-+#define SET				0x4
-+#define CLR				0x8
-+#define MASK_STATUS			0xc
-+#define MASK_SET			0x10
-+#define MASK_CLR			0x14
++#define EMC_ADR_CFG						0x10
++#define EMC_REFCTRL						0x20
++#define EMC_REFCTRL_DEV_SEL_SHIFT				0
++#define EMC_REFCTRL_DEV_SEL_MASK				\
++	(0x3 << EMC_REFCTRL_DEV_SEL_SHIFT)
++#define EMC_REFCTRL_ENABLE					(0x1 << 31)
++#define EMC_REFCTRL_ENABLE_ALL(num)				\
++	(((((num) > 1) ? 0 : 2) << EMC_REFCTRL_DEV_SEL_SHIFT)	\
++	 | EMC_REFCTRL_ENABLE)
++#define EMC_REFCTRL_DISABLE_ALL(num)				\
++	((((num) > 1) ? 0 : 2) << EMC_REFCTRL_DEV_SEL_SHIFT)
 +
-+#define PCIE_BUSNUM_SHIFT		20
-+#define PCIE_SLOT_SHIFT			15
-+#define PCIE_FUNC_SHIFT			12
++#define EMC_PIN							0x24
++#define EMC_PIN_PIN_CKE_PER_DEV					(1 << 2)
++#define EMC_PIN_PIN_CKEB					(1 << 1)
++#define EMC_PIN_PIN_CKE						(1 << 0)
 +
-+#if defined(__BIG_ENDIAN)
-+#define	DATA_ENDIAN			2	/* PCIe->DDR inbound traffic */
-+#define MMIO_ENDIAN			2	/* CPU->PCIe outbound traffic */
-+#else
-+#define	DATA_ENDIAN			0
-+#define MMIO_ENDIAN			0
-+#endif
++#define EMC_CLK_FORCE_CC_TRIGGER				(1 << 27)
 +
-+#define MDIO_PORT0			0x0
-+#define MDIO_DATA_MASK			0x7fffffff
-+#define MDIO_DATA_SHIFT			0x0
-+#define MDIO_PORT_MASK			0xf0000
-+#define MDIO_PORT_SHIFT			0x16
-+#define MDIO_REGAD_MASK			0xffff
-+#define MDIO_REGAD_SHIFT		0x0
-+#define MDIO_CMD_MASK			0xfff00000
-+#define MDIO_CMD_SHIFT			0x14
-+#define MDIO_CMD_READ			0x1
-+#define MDIO_CMD_WRITE			0x0
-+#define MDIO_DATA_DONE_MASK		0x80000000
-+#define MDIO_RD_DONE(x)			(((x) & MDIO_DATA_DONE_MASK) ? 1 : 0)
-+#define MDIO_WT_DONE(x)			(((x) & MDIO_DATA_DONE_MASK) ? 0 : 1)
-+#define SSC_REGS_ADDR			0x1100
-+#define SET_ADDR_OFFSET			0x1f
-+#define SSC_CNTL_OFFSET			0x2
-+#define SSC_CNTL_OVRD_EN_MASK		0x8000
-+#define SSC_CNTL_OVRD_EN_SHIFT		0xf
-+#define SSC_CNTL_OVRD_VAL_MASK		0x4000
-+#define SSC_CNTL_OVRD_VAL_SHIFT		0xe
-+#define SSC_STATUS_OFFSET		0x1
-+#define SSC_STATUS_SSC_MASK		0x400
-+#define SSC_STATUS_SSC_SHIFT		0xa
-+#define SSC_STATUS_PLL_LOCK_MASK	0x800
-+#define SSC_STATUS_PLL_LOCK_SHIFT	0xb
++#define EMC_TIMING_CONTROL					0x28
++#define EMC_RC							0x2c
++#define EMC_RFC							0x30
++#define EMC_RFCPB						0x590
++#define EMC_RAS							0x34
++#define EMC_RP							0x38
++#define EMC_R2W							0x3c
++#define EMC_W2R							0x40
++#define EMC_R2P							0x44
++#define EMC_W2P							0x48
++#define EMC_CCDMW						0x5c0
++#define EMC_RD_RCD						0x4c
++#define EMC_WR_RCD						0x50
++#define EMC_RRD							0x54
++#define EMC_REXT						0x58
++#define EMC_WDV							0x5c
++#define EMC_QUSE						0x60
++#define EMC_QRST						0x64
++#define EMC_ISSUE_QRST						0x428
++#define EMC_QSAFE						0x68
++#define EMC_RDV							0x6c
++#define EMC_REFRESH						0x70
++#define EMC_BURST_REFRESH_NUM					0x74
++#define EMC_PDEX2WR						0x78
++#define EMC_PDEX2RD						0x7c
++#define EMC_PDEX2CKE						0x118
++#define EMC_PCHG2PDEN						0x80
++#define EMC_ACT2PDEN						0x84
++#define EMC_AR2PDEN						0x88
++#define EMC_RW2PDEN						0x8c
++#define EMC_CKE2PDEN						0x11c
++#define EMC_TXSR						0x90
++#define EMC_TCKE						0x94
++#define EMC_TFAW						0x98
++#define EMC_TRPAB						0x9c
++#define EMC_TCLKSTABLE						0xa0
++#define EMC_TCLKSTOP						0xa4
++#define EMC_TREFBW						0xa8
++#define EMC_TPPD						0xac
++#define EMC_PDEX2MRR						0xb4
++#define EMC_ODT_WRITE						0xb0
++#define EMC_WEXT						0xb8
++#define EMC_RFC_SLR						0xc0
++#define EMC_MRS_WAIT_CNT2					0xc4
++#define EMC_MRS_WAIT_CNT2_MRS_EXT2_WAIT_CNT_SHIFT		16
++#define EMC_MRS_WAIT_CNT2_MRS_EXT2_WAIT_CNT_MASK		\
++	(0x7ff << EMC_MRS_WAIT_CNT2_MRS_EXT2_WAIT_CNT_SHIFT)
++#define EMC_MRS_WAIT_CNT2_MRS_EXT1_WAIT_CNT_SHIFT		0
++#define EMC_MRS_WAIT_CNT2_MRS_EXT1_WAIT_CNT_MASK		\
++	(0x3ff << EMC_MRS_WAIT_CNT2_MRS_EXT1_WAIT_CNT_SHIFT)
 +
-+#define IDX_ADDR(pcie)	\
-+	((pcie)->reg_offsets[EXT_CFG_INDEX])
-+#define DATA_ADDR(pcie)	\
-+	((pcie)->reg_offsets[EXT_CFG_DATA])
-+#define PCIE_RGR1_SW_INIT_1(pcie) \
-+	((pcie)->reg_offsets[RGR1_SW_INIT_1])
++#define EMC_MRS_WAIT_CNT					0xc8
++#define EMC_MRS_WAIT_CNT_SHORT_WAIT_SHIFT			0
++#define EMC_MRS_WAIT_CNT_SHORT_WAIT_MASK			\
++	(0x3FF << EMC_MRS_WAIT_CNT_SHORT_WAIT_SHIFT)
++#define EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT			16
++#define EMC_MRS_WAIT_CNT_LONG_WAIT_MASK				\
++	(0x3FF << EMC_MRS_WAIT_CNT_LONG_WAIT_SHIFT)
++
++#define EMC_MRS							0xcc
++#define EMC_MODE_SET_DLL_RESET					(1 << 8)
++#define EMC_MRS_USE_MRS_LONG_CNT				(1 << 26)
++
++#define EMC_EMRS						0xd0
++#define EMC_EMRS_USE_EMRS_LONG_CNT				(1 << 26)
++
++#define EMC_REF							0xd4
++#define EMC_REF_FORCE_CMD					1
++
++#define EMC_PRE							0xd8
++#define EMC_NOP							0xdc
++#define EMC_SELF_REF							0xe0
++#define EMC_SELF_REF_CMD_ENABLED				(1 << 0)
++#define EMC_SELF_REF_ACTIVE_SELF_REF				(1 << 8)
++#define EMC_SELF_REF_DEV_SEL_SHIFT				30
++#define EMC_SELF_REF_DEV_SEL_MASK				\
++	(0x3 << EMC_SELF_REF_DEV_SEL_SHIFT)
++
++#define EMC_DPD							0xe4
++#define EMC_MRW							0xe8
++#define EMC_MRW_MRW_OP_SHIFT					0
++#define EMC_MRW_MRW_OP_MASK					\
++	(0xff << EMC_MRW_MRW_OP_SHIFT)
++#define EMC_MRW_MRW_MA_SHIFT					16
++#define EMC_MRW_MRW_MA_MASK					\
++	(0xff << EMC_MRW_MRW_MA_SHIFT)
++#define EMC_MRW_USE_MRW_LONG_CNT				26
++#define EMC_MRW_USE_MRW_EXT_CNT					27
++#define EMC_MRW_MRW_DEV_SELECTN_SHIFT				30
++#define EMC_MRW_MRW_DEV_SELECTN_MASK				\
++	(0x3 << EMC_MRW_MRW_DEV_SELECTN_SHIFT)
++
++#define EMC_MRR							0xec
++#define EMC_MRR_DEV_SEL_SHIFT					30
++#define EMC_MRR_DEV_SEL_MASK					\
++	(0x3 << EMC_SELF_REF_DEV_SEL_SHIFT)
++#define EMC_MRR_MA_SHIFT					16
++#define EMC_MRR_MA_MASK						\
++	(0xff << EMC_MRR_MA_SHIFT)
++#define EMC_MRR_DATA_SHIFT					0
++#define EMC_MRR_DATA_MASK					\
++	(0xffff << EMC_MRR_DATA_SHIFT)
++#define LPDDR2_MR4_TEMP_SHIFT					0
++#define LPDDR2_MR4_TEMP_MASK					\
++	(0x7 << LPDDR2_MR4_TEMP_SHIFT)
++
++#define EMC_CMDQ						0xf0
++#define EMC_MC2EMCQ						0xf4
++#define EMC_FBIO_SPARE						0x100
++#define EMC_FBIO_CFG5						0x104
++#define EMC_FBIO_CFG5_DRAM_TYPE_SHIFT				0
++#define EMC_FBIO_CFG5_DRAM_TYPE_MASK				\
++	(0x3 <<	EMC_FBIO_CFG5_DRAM_TYPE_SHIFT)
++#define EMC_FBIO_CFG5_CMD_TX_DIS				(1 << 8)
++#define EMC_FBIO_CFG5_CMD_BUS_RETURN_TO_ZERO			(1 << 27)
++
++#define EMC_CFG5_QUSE_MODE_SHIFT				13
++#define EMC_CFG5_QUSE_MODE_MASK					\
++	(0x7 << EMC_CFG5_QUSE_MODE_SHIFT)
++
++#define EMC_CFG_RSV						0x120
++#define EMC_ACPD_CONTROL					0x124
++#define EMC_MPC							0x128
++#define EMC_EMRS2						0x12c
++#define EMC_EMRS2_USE_EMRS2_LONG_CNT				(1 << 26)
++
++#define EMC_EMRS3						0x130
++#define EMC_MRW2						0x134
++#define EMC_MRW3						0x138
++#define EMC_MRW4						0x13c
++#define EMC_MRW5						0x4a0
++#define EMC_MRW6						0x4a4
++#define EMC_MRW7						0x4a8
++#define EMC_MRW8						0x4ac
++#define EMC_MRW9						0x4b0
++#define EMC_MRW10						0x4b4
++#define EMC_MRW11						0x4b8
++#define EMC_MRW12						0x4bc
++#define EMC_MRW13						0x4c0
++#define EMC_MRW14						0x4c4
++#define EMC_MRW15						0x4d0
++#define EMC_CFG_SYNC						0x4d4
++#define EMC_CLKEN_OVERRIDE					0x140
++#define EMC_R2R							0x144
++#define EMC_W2W							0x148
++#define EMC_EINPUT						0x14c
++#define EMC_EINPUT_DURATION 					0x150
++#define EMC_PUTERM_EXTRA					0x154
++#define EMC_TCKESR						0x158
++#define EMC_TPD							0x15c
++#define EMC_STAT_CONTROL					0x160
++#define EMC_STAT_STATUS						0x164
++#define EMC_STAT_DRAM_CLOCK_LIMIT_LO				0x19c
++#define EMC_STAT_DRAM_CLOCK_LIMIT_HI				0x1a0
++#define EMC_STAT_DRAM_CLOCKS_LO					0x1a4
++#define EMC_STAT_DRAM_CLOCKS_HI					0x1a8
++#define EMC_STAT_DRAM_DEV0_ACTIVATE_CNT_LO			0x1ac
++#define EMC_STAT_DRAM_DEV0_ACTIVATE_CNT_HI			0x1b0
++#define EMC_STAT_DRAM_DEV0_READ_CNT_LO				0x1b4
++#define EMC_STAT_DRAM_DEV0_READ_CNT_HI				0x1b8
++#define EMC_STAT_DRAM_DEV0_READ8_CNT_LO				0x1bc
++#define EMC_STAT_DRAM_DEV0_READ8_CNT_HI				0x1c0
++#define EMC_STAT_DRAM_DEV0_WRITE_CNT_LO				0x1c4
++#define EMC_STAT_DRAM_DEV0_WRITE_CNT_HI				0x1c8
++#define EMC_STAT_DRAM_DEV0_WRITE8_CNT_LO			0x1cc
++#define EMC_STAT_DRAM_DEV0_WRITE8_CNT_HI			0x1d0
++#define EMC_STAT_DRAM_DEV0_REF_CNT_LO				0x1d4
++#define EMC_STAT_DRAM_DEV0_REF_CNT_HI				0x1d8
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_LO	0x1dc
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_HI	0x1e0
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_LO	0x1e4
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_HI	0x1e8
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_LO	0x1ec
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_HI	0x1f0
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_LO	0x1f4
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_HI	0x1f8
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_LO	0x1fc
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_HI	0x200
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_LO	0x204
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_HI	0x208
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_LO	0x20c
++#define EMC_STAT_DRAM_DEV0_EXTCLKS_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_HI	0x210
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_LO	0x214
++#define EMC_STAT_DRAM_DEV0_CLKSTOP_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_HI	0x218
++#define EMC_STAT_DRAM_DEV0_SR_CKE_EQ0_CLKS_LO				0x21c
++#define EMC_STAT_DRAM_DEV0_SR_CKE_EQ0_CLKS_HI				0x220
++#define EMC_STAT_DRAM_DEV0_DSR						0x224
++#define EMC_STAT_DRAM_DEV1_ACTIVATE_CNT_LO				0x228
++#define EMC_STAT_DRAM_DEV1_ACTIVATE_CNT_HI				0x22c
++#define EMC_STAT_DRAM_DEV1_READ_CNT_LO					0x230
++#define EMC_STAT_DRAM_DEV1_READ_CNT_HI					0x234
++#define EMC_STAT_DRAM_DEV1_READ8_CNT_LO					0x238
++#define EMC_STAT_DRAM_DEV1_READ8_CNT_HI					0x23c
++#define EMC_STAT_DRAM_DEV1_WRITE_CNT_LO					0x240
++#define EMC_STAT_DRAM_DEV1_WRITE_CNT_HI					0x244
++#define EMC_STAT_DRAM_DEV1_WRITE8_CNT_LO				0x248
++#define EMC_STAT_DRAM_DEV1_WRITE8_CNT_HI				0x24c
++#define EMC_STAT_DRAM_DEV1_REF_CNT_LO					0x250
++#define EMC_STAT_DRAM_DEV1_REF_CNT_HI					0x254
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_LO	0x258
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_HI	0x25c
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_LO	0x260
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_HI	0x264
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_LO	0x268
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_HI	0x26c
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_LO	0x270
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_HI	0x274
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_LO	0x278
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_HI	0x27c
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_LO	0x280
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_HI	0x284
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_LO	0x288
++#define EMC_STAT_DRAM_DEV1_EXTCLKS_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_HI	0x28c
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_LO	0x290
++#define EMC_STAT_DRAM_DEV1_CLKSTOP_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_HI	0x294
++#define EMC_STAT_DRAM_DEV1_SR_CKE_EQ0_CLKS_LO				0x298
++#define EMC_STAT_DRAM_DEV1_SR_CKE_EQ0_CLKS_HI				0x29c
++#define EMC_STAT_DRAM_DEV1_DSR						0x2a0
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_LO	0xc8c
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_HI	0xc90
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_LO	0xc94
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ0_NO_BANKS_ACTIVE_CLKS_HI	0xc98
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_LO	0xc9c
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_HI	0xca0
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_LO	0xca4
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ1_NO_BANKS_ACTIVE_CLKS_HI	0xca8
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_LO	0xcac
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_HI	0xcb0
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_LO	0xcb4
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ0_SOME_BANKS_ACTIVE_CLKS_HI	0xcb8
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_LO	0xcbc
++#define EMC_STAT_DRAM_IO_EXTCLKS_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_HI	0xcc0
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_LO	0xcc4
++#define EMC_STAT_DRAM_IO_CLKSTOP_CKE_EQ1_SOME_BANKS_ACTIVE_CLKS_HI	0xcc8
++#define EMC_STAT_DRAM_IO_SR_CKE_EQ0_CLKS_LO			0xccc
++#define EMC_STAT_DRAM_IO_SR_CKE_EQ0_CLKS_HI			0xcd0
++#define EMC_STAT_DRAM_IO_DSR					0xcd4
++#define EMC_AUTO_CAL_CONFIG					0x2a4
++#define EMC_AUTO_CAL_CONFIG_AUTO_CAL_COMPUTE_START		(1 << 0)
++#define EMC_AUTO_CAL_CONFIG_AUTO_CAL_MEASURE_STALL		(1 << 9)
++#define EMC_AUTO_CAL_CONFIG_AUTO_CAL_UPDATE_STALL		(1 << 10)
++#define EMC_AUTO_CAL_CONFIG_AUTO_CAL_ENABLE			(1 << 29)
++#define EMC_AUTO_CAL_CONFIG_AUTO_CAL_START			(1 << 31)
++
++#define EMC_AUTO_CAL_CONFIG2					0x458
++#define EMC_AUTO_CAL_CONFIG3					0x45c
++#define EMC_AUTO_CAL_CONFIG4					0x5b0
++#define EMC_AUTO_CAL_CONFIG5					0x5b4
++#define EMC_AUTO_CAL_CONFIG6					0x5cc
++#define EMC_AUTO_CAL_CONFIG7					0x574
++#define EMC_AUTO_CAL_CONFIG8					0x2dc
++#define EMC_AUTO_CAL_VREF_SEL_0					0x2f8
++#define EMC_AUTO_CAL_VREF_SEL_1					0x300
++#define EMC_AUTO_CAL_INTERVAL					0x2a8
++#define EMC_AUTO_CAL_STATUS					0x2ac
++#define EMC_AUTO_CAL_STATUS2					0x3d4
++#define EMC_AUTO_CAL_CHANNEL					0x464
++#define EMC_PMACRO_RX_TERM					0xc48
++#define EMC_PMACRO_DQ_TX_DRV					0xc70
++#define EMC_PMACRO_CA_TX_DRV					0xc74
++#define EMC_PMACRO_CMD_TX_DRV					0xc4c
++#define EMC_PMACRO_AUTOCAL_CFG_0				0x700
++#define EMC_PMACRO_AUTOCAL_CFG_1				0x704
++#define EMC_PMACRO_AUTOCAL_CFG_2				0x708
++#define EMC_PMACRO_AUTOCAL_CFG_COMMON				0xc78
++#define EMC_PMACRO_AUTOCAL_CFG_COMMON_E_CAL_BYPASS_DVFS		(1 << 16)
++
++#define EMC_PMACRO_ZCTRL					0xc44
++#define EMC_XM2COMPPADCTRL					0x30c
++#define EMC_XM2COMPPADCTRL_VREF_CAL_ENABLE			(1 << 10)
++
++#define EMC_XM2COMPPADCTRL2					0x578
++#define EMC_XM2COMPPADCTRL3					0x2f4
++#define EMC_COMP_PAD_SW_CTRL					0x57c
++#define EMC_REQ_CTRL						0x2b0
++#define EMC_EMC_STATUS						0x2b4
++#define EMC_EMC_STATUS_MRR_DIVLD				(1 << 20)
++#define EMC_EMC_STATUS_TIMING_UPDATE_STALLED			(1 << 23)
++#define EMC_EMC_STATUS_DRAM_IN_POWERDOWN_SHIFT			4
++#define EMC_EMC_STATUS_DRAM_IN_POWERDOWN_MASK			\
++	(0x3 << EMC_EMC_STATUS_DRAM_IN_POWERDOWN_SHIFT)
++#define EMC_EMC_STATUS_DRAM_IN_SELF_REFRESH_SHIFT		8
++#define EMC_EMC_STATUS_DRAM_IN_SELF_REFRESH_MASK		\
++	(0x3 << EMC_EMC_STATUS_DRAM_IN_SELF_REFRESH_SHIFT)
++
++#define EMC_CFG_2						0x2b8
++#define EMC_CFG_DIG_DLL						0x2bc
++#define EMC_CFG_DIG_DLL_CFG_DLL_EN				(1 << 0)
++#define EMC_CFG_DIG_DLL_CFG_DLL_STALL_ALL_UNTIL_LOCK		(1 << 1)
++#define EMC_CFG_DIG_DLL_CFG_DLL_STALL_ALL_TRAFFIC		(1 << 3)
++#define EMC_CFG_DIG_DLL_CFG_DLL_STALL_RW_UNTIL_LOCK		(1 << 4)
++#define EMC_CFG_DIG_DLL_CFG_DLL_MODE_SHIFT			6
++#define EMC_CFG_DIG_DLL_CFG_DLL_MODE_MASK			\
++	(0x3 << EMC_CFG_DIG_DLL_CFG_DLL_MODE_SHIFT)
++#define EMC_CFG_DIG_DLL_CFG_DLL_LOCK_LIMIT_SHIFT		8
++#define EMC_CFG_DIG_DLL_CFG_DLL_LOCK_LIMIT_MASK			\
++	(0x7 << EMC_CFG_DIG_DLL_CFG_DLL_LOCK_LIMIT_SHIFT)
++
++#define EMC_CFG_DIG_DLL_PERIOD					0x2c0
++#define EMC_DIG_DLL_STATUS					0x2c4
++#define EMC_DIG_DLL_STATUS_DLL_LOCK				(1 << 15)
++#define EMC_DIG_DLL_STATUS_DLL_PRIV_UPDATED			(1 << 17)
++#define EMC_DIG_DLL_STATUS_DLL_OUT_SHIFT			0
++#define EMC_DIG_DLL_STATUS_DLL_OUT_MASK				\
++	(0x7ff << EMC_DIG_DLL_STATUS_DLL_OUT_SHIFT)
++
++#define EMC_CFG_DIG_DLL_1					0x2c8
++#define EMC_RDV_MASK						0x2cc
++#define EMC_WDV_MASK						0x2d0
++#define EMC_RDV_EARLY_MASK					0x2d4
++#define EMC_RDV_EARLY						0x2d8
++#define EMC_WDV_CHK						0x4e0
++#define EMC_ZCAL_INTERVAL					0x2e0
++#define EMC_ZCAL_WAIT_CNT					0x2e4
++#define EMC_ZCAL_WAIT_CNT_ZCAL_WAIT_CNT_MASK			0x7ff
++#define EMC_ZCAL_WAIT_CNT_ZCAL_WAIT_CNT_SHIFT			0
++
++#define EMC_ZCAL_MRW_CMD					0x2e8
++#define EMC_ZQ_CAL						0x2ec
++#define EMC_ZQ_CAL_DEV_SEL_SHIFT				30
++#define EMC_ZQ_CAL_DEV_SEL_MASK					\
++	(0x3 << EMC_SELF_REF_DEV_SEL_SHIFT)
++#define EMC_ZQ_CAL_LONG						(1 << 4)
++#define EMC_ZQ_CAL_ZQ_LATCH_CMD					(1 << 1)
++#define EMC_ZQ_CAL_ZQ_CAL_CMD					(1 << 0)
++#define EMC_ZQ_CAL_LONG_CMD_DEV0				\
++	(DRAM_DEV_SEL_0 | EMC_ZQ_CAL_LONG | EMC_ZQ_CAL_CMD)
++#define EMC_ZQ_CAL_LONG_CMD_DEV1				\
++	(DRAM_DEV_SEL_1 | EMC_ZQ_CAL_LONG | EMC_ZQ_CAL_CMD)
++
++#define EMC_SCRATCH0						0x324
++#define EMC_STALL_THEN_EXE_BEFORE_CLKCHANGE			0x3c8
++#define EMC_STALL_THEN_EXE_AFTER_CLKCHANGE			0x3cc
++#define EMC_UNSTALL_RW_AFTER_CLKCHANGE				0x3d0
++#define EMC_FDPD_CTRL_CMD_NO_RAMP				0x4d8
++#define EMC_FDPD_CTRL_CMD_NO_RAMP_CMD_DPD_NO_RAMP_ENABLE	(1 << 0)
++
++#define EMC_SEL_DPD_CTRL					0x3d8
++#define EMC_SEL_DPD_CTRL_DATA_SEL_DPD_EN			(1 << 8)
++#define EMC_SEL_DPD_CTRL_ODT_SEL_DPD_EN				(1 << 5)
++#define EMC_SEL_DPD_CTRL_RESET_SEL_DPD_EN			(1 << 4)
++#define EMC_SEL_DPD_CTRL_CA_SEL_DPD_EN				(1 << 3)
++#define EMC_SEL_DPD_CTRL_CLK_SEL_DPD_EN				(1 << 2)
++#define EMC_SEL_DPD_CTRL_DDR3_MASK				\
++	((0xf << 2) | (0x1 << 8))
++#define EMC_SEL_DPD_CTRL_MAS					\
++	((0x3 << 2) | (0x1 << 5) | (0x1 << 8))
++
++#define EMC_FDPD_CTRL_DQ					0x310
++#define EMC_FDPD_CTRL_CMD					0x314
++#define EMC_PRE_REFRESH_REQ_CNT					0x3dc
++#define EMC_REFCTRL2						0x580
++#define EMC_FBIO_CFG7						0x584
++#define EMC_FBIO_CFG7_CH0_ENABLE				(1 << 1)
++#define EMC_FBIO_CFG7_CH1_ENABLE				(1 << 2)
++
++#define EMC_DATA_BRLSHFT_0					0x588
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE7_DATA_BRLSHFT_SHIFT	21
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE7_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE7_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE6_DATA_BRLSHFT_SHIFT	18
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE6_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE6_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE5_DATA_BRLSHFT_SHIFT	15
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE5_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE5_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE4_DATA_BRLSHFT_SHIFT	12
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE4_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE4_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE3_DATA_BRLSHFT_SHIFT	9
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE3_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE3_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE2_DATA_BRLSHFT_SHIFT	6
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE2_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE2_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE1_DATA_BRLSHFT_SHIFT	3
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE1_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE1_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE0_DATA_BRLSHFT_SHIFT	0
++#define EMC_DATA_BRLSHFT_0_RANK0_BYTE0_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_0_RANK0_BYTE0_DATA_BRLSHFT_SHIFT)
++
++#define EMC_DATA_BRLSHFT_1					0x58c
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE7_DATA_BRLSHFT_SHIFT	21
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE7_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE7_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE6_DATA_BRLSHFT_SHIFT	18
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE6_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE6_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE5_DATA_BRLSHFT_SHIFT	15
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE5_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE5_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE4_DATA_BRLSHFT_SHIFT	12
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE4_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE4_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE3_DATA_BRLSHFT_SHIFT	9
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE3_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE3_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE2_DATA_BRLSHFT_SHIFT	6
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE2_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE2_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE1_DATA_BRLSHFT_SHIFT	3
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE1_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE1_DATA_BRLSHFT_SHIFT)
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE0_DATA_BRLSHFT_SHIFT	0
++#define EMC_DATA_BRLSHFT_1_RANK1_BYTE0_DATA_BRLSHFT_MASK	\
++	(0x7 << EMC_DATA_BRLSHFT_1_RANK1_BYTE0_DATA_BRLSHFT_SHIFT)
++
++#define EMC_DQS_BRLSHFT_0					0x594
++#define EMC_DQS_BRLSHFT_1					0x598
++#define EMC_CMD_BRLSHFT_0					0x59c
++#define EMC_CMD_BRLSHFT_1					0x5a0
++#define EMC_CMD_BRLSHFT_2					0x5a4
++#define EMC_CMD_BRLSHFT_3					0x5a8
++#define EMC_QUSE_BRLSHFT_0					0x5ac
++#define EMC_QUSE_BRLSHFT_1					0x5b8
++#define EMC_QUSE_BRLSHFT_2					0x5bc
++#define EMC_QUSE_BRLSHFT_3					0x5c4
++#define EMC_FBIO_CFG8						0x5c8
++#define EMC_CMD_MAPPING_CMD0_0					0x380
++#define EMC_CMD_MAPPING_CMD0_1					0x384
++#define EMC_CMD_MAPPING_CMD0_2					0x388
++#define EMC_CMD_MAPPING_CMD1_0					0x38c
++#define EMC_CMD_MAPPING_CMD1_1					0x390
++#define EMC_CMD_MAPPING_CMD1_2					0x394
++#define EMC_CMD_MAPPING_CMD2_0					0x398
++#define EMC_CMD_MAPPING_CMD2_1					0x39c
++#define EMC_CMD_MAPPING_CMD2_2					0x3a0
++#define EMC_CMD_MAPPING_CMD3_0					0x3a4
++#define EMC_CMD_MAPPING_CMD3_1					0x3a8
++#define EMC_CMD_MAPPING_CMD3_2					0x3ac
++#define EMC_CMD_MAPPING_BYTE					0x3b0
++#define EMC_DYN_SELF_REF_CONTROL				0x3e0
++#define EMC_TXSRDLL						0x3e4
++#define EMC_CCFIFO_ADDR						0x3e8
++#define EMC_CCFIFO_DATA						0x3ec
++#define EMC_CCFIFO_STATUS					0x3f0
++#define EMC_SWIZZLE_RANK0_BYTE0					0x404
++#define EMC_SWIZZLE_RANK0_BYTE1					0x408
++#define EMC_SWIZZLE_RANK0_BYTE2					0x40c
++#define EMC_SWIZZLE_RANK0_BYTE3					0x410
++#define EMC_SWIZZLE_RANK1_BYTE0					0x418
++#define EMC_SWIZZLE_RANK1_BYTE1					0x41c
++#define EMC_SWIZZLE_RANK1_BYTE2					0x420
++#define EMC_SWIZZLE_RANK1_BYTE3					0x424
++#define EMC_TR_TIMING_0						0x3b4
++#define EMC_TR_CTRL_0						0x3b8
++#define EMC_TR_CTRL_1						0x3bc
++#define EMC_TR_DVFS						0x460
++#define EMC_TR_DVFS_TRAINING_DVFS				(1 << 0)
++
++#define EMC_SWITCH_BACK_CTRL					0x3c0
++#define EMC_TR_RDV						0x3c4
++#define EMC_TR_QPOP						0x3f4
++#define EMC_TR_RDV_MASK						0x3f8
++#define EMC_TR_QSAFE						0x3fc
++#define EMC_TR_QRST						0x400
++#define EMC_IBDLY						0x468
++#define EMC_OBDLY						0x46c
++#define EMC_TXDSRVTTGEN						0x480
++#define EMC_WE_DURATION						0x48c
++#define EMC_WS_DURATION						0x490
++#define EMC_WEV							0x494
++#define EMC_WSV							0x498
++#define EMC_CFG_3						0x49c
++#define EMC_CFG_PIPE_2						0x554
++#define EMC_CFG_PIPE_CLK					0x558
++#define EMC_CFG_PIPE_CLK_CLK_ALWAYS_ON				(1 << 0)
++
++#define EMC_CFG_PIPE_1						0x55c
++#define EMC_CFG_PIPE						0x560
++#define EMC_QPOP						0x564
++#define EMC_QUSE_WIDTH						0x568
++#define EMC_PUTERM_WIDTH					0x56c
++#define EMC_PROTOBIST_CONFIG_ADR_1				0x5d0
++#define EMC_PROTOBIST_CONFIG_ADR_2				0x5d4
++#define EMC_PROTOBIST_MISC					0x5d8
++#define EMC_PROTOBIST_WDATA_LOWER				0x5dc
++#define EMC_PROTOBIST_WDATA_UPPER				0x5e0
++#define EMC_PROTOBIST_RDATA					0x5ec
++#define EMC_DLL_CFG_0						0x5e4
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_IGNORE_START			(1 << 29)
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_DUAL_PASS_LOCK		(1 << 28)
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_STEP_SIZE_SHIFT		24
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_STEP_SIZE_MASK		\
++	(0xf << EMC_DLL_CFG_0_DDLLCAL_CTRL_STEP_SIZE_SHIFT)
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_END_COUNT_SHIFT		20
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_END_COUNT_MASK		\
++	(0xf << EMC_DLL_CFG_0_DDLLCAL_CTRL_END_COUNT_SHIFT)
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_FILTER_BITS_SHIFT		16
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_FILTER_BITS_MASK		\
++	(0xf << EMC_DLL_CFG_0_DDLLCAL_CTRL_FILTER_BITS_SHIFT)
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_SAMPLE_COUNT_SHIFT		12
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_SAMPLE_COUNT_MASK		\
++	(0xf << EMC_DLL_CFG_0_DDLLCAL_CTRL_SAMPLE_COUNT_SHIFT)
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_SAMPLE_DELAY_SHIFT		4
++#define EMC_DLL_CFG_0_DDLLCAL_CTRL_SAMPLE_DELAY_MASK		\
++	(0xff << EMC_DLL_CFG_0_DDLLCAL_CTRL_SAMPLE_DELAY_SHIFT)
++#define EMC_DLL_CFG_0_DDLLCAL_UPDATE_CNT_LIMIT_SHIFT		0
++#define EMC_DLL_CFG_0_DDLLCAL_UPDATE_CNT_LIMIT_MASK		\
++	(0xf << EMC_DLL_CFG_0_DDLLCAL_UPDATE_CNT_LIMIT_SHIFT)
++
++#define EMC_DLL_CFG_1						0x5e8
++#define EMC_DLL_CFG_1_DDLLCAL_CTRL_START_TRIM_SHIFT		10
++#define EMC_DLL_CFG_1_DDLLCAL_CTRL_START_TRIM_MASK		\
++	(0x7ff << EMC_DLL_CFG_1_DDLLCAL_CTRL_START_TRIM_SHIFT)
++
++#define EMC_TRAINING_CMD					0xe00
++#define EMC_TRAINING_CMD_PRIME					(1 << 0)
++#define EMC_TRAINING_CMD_CA					(1 << 1)
++#define EMC_TRAINING_CMD_RD					(1 << 2)
++#define EMC_TRAINING_CMD_WR					(1 << 3)
++#define EMC_TRAINING_CMD_QUSE					(1 << 4)
++#define EMC_TRAINING_CMD_CA_VREF				(1 << 5)
++#define EMC_TRAINING_CMD_RD_VREF				(1 << 6)
++#define EMC_TRAINING_CMD_WR_VREF				(1 << 7)
++#define EMC_TRAINING_CMD_QUSE_VREF				(1 << 8)
++#define EMC_TRAINING_CMD_GO					(1 << 31)
++
++#define EMC_TRAINING_CTRL					0xe04
++#define EMC_TRAINING_CTRL_SWAP_RANK				(1 << 14)
++
++#define EMC_TRAINING_STATUS					0xe08
++#define EMC_TRAINING_QUSE_CORS_CTRL				0xe0c
++#define EMC_TRAINING_QUSE_FINE_CTRL				0xe10
++#define EMC_TRAINING_QUSE_CTRL_MISC				0xe14
++#define EMC_TRAINING_WRITE_FINE_CTRL				0xe18
++#define EMC_TRAINING_WRITE_CTRL_MISC				0xe1c
++#define EMC_TRAINING_WRITE_VREF_CTRL				0xe20
++#define EMC_TRAINING_READ_FINE_CTRL				0xe24
++#define EMC_TRAINING_READ_CTRL_MISC				0xe28
++#define EMC_TRAINING_READ_VREF_CTRL				0xe2c
++#define EMC_TRAINING_CA_FINE_CTRL				0xe30
++#define EMC_TRAINING_CA_CTRL_MISC				0xe34
++#define EMC_TRAINING_CA_CTRL_MISC1				0xe38
++#define EMC_TRAINING_CA_VREF_CTRL				0xe3c
++#define EMC_TRAINING_CA_TADR_CTRL				0xe40
++#define EMC_TRAINING_SETTLE					0xe44
++#define EMC_TRAINING_DEBUG_CTRL					0xe48
++#define EMC_TRAINING_DEBUG_DQ0					0xe4c
++#define EMC_TRAINING_DEBUG_DQ1					0xe50
++#define EMC_TRAINING_DEBUG_DQ2					0xe54
++#define EMC_TRAINING_DEBUG_DQ3					0xe58
++#define EMC_TRAINING_MPC					0xe5c
++#define EMC_TRAINING_PATRAM_CTRL				0xe60
++#define EMC_TRAINING_PATRAM_DQ					0xe64
++#define EMC_TRAINING_PATRAM_DMI					0xe68
++#define EMC_TRAINING_VREF_SETTLE				0xe6c
++#define EMC_TRAINING_RW_EYE_CENTER_IB_BYTE0			0xe70
++#define EMC_TRAINING_RW_EYE_CENTER_IB_BYTE1			0xe74
++#define EMC_TRAINING_RW_EYE_CENTER_IB_BYTE2			0xe78
++#define EMC_TRAINING_RW_EYE_CENTER_IB_BYTE3			0xe7c
++#define EMC_TRAINING_RW_EYE_CENTER_IB_MISC			0xe80
++#define EMC_TRAINING_RW_EYE_CENTER_OB_BYTE0			0xe84
++#define EMC_TRAINING_RW_EYE_CENTER_OB_BYTE1			0xe88
++#define EMC_TRAINING_RW_EYE_CENTER_OB_BYTE2			0xe8c
++#define EMC_TRAINING_RW_EYE_CENTER_OB_BYTE3			0xe90
++#define EMC_TRAINING_RW_EYE_CENTER_OB_MISC			0xe94
++#define EMC_TRAINING_RW_OFFSET_IB_BYTE0				0xe98
++#define EMC_TRAINING_RW_OFFSET_IB_BYTE1				0xe9c
++#define EMC_TRAINING_RW_OFFSET_IB_BYTE2				0xea0
++#define EMC_TRAINING_RW_OFFSET_IB_BYTE3				0xea4
++#define EMC_TRAINING_RW_OFFSET_IB_MISC				0xea8
++#define EMC_TRAINING_RW_OFFSET_OB_BYTE0				0xeac
++#define EMC_TRAINING_RW_OFFSET_OB_BYTE1				0xeb0
++#define EMC_TRAINING_RW_OFFSET_OB_BYTE2				0xeb4
++#define EMC_TRAINING_RW_OFFSET_OB_BYTE3				0xeb8
++#define EMC_TRAINING_RW_OFFSET_OB_MISC				0xebc
++#define EMC_TRAINING_OPT_CA_VREF				0xec0
++#define EMC_TRAINING_OPT_DQ_OB_VREF				0xec4
++#define EMC_TRAINING_OPT_DQ_IB_VREF_RANK0			0xec8
++#define EMC_TRAINING_OPT_DQ_IB_VREF_RANK1			0xecc
++#define EMC_TRAINING_QUSE_VREF_CTRL				0xed0
++#define EMC_TRAINING_OPT_DQS_IB_VREF_RANK0			0xed4
++#define EMC_TRAINING_OPT_DQS_IB_VREF_RANK1			0xed8
++#define EMC_TRAINING_DRAMC_TIMING				0xedc
++#define EMC_PMACRO_QUSE_DDLL_RANK0_0				0x600
++#define EMC_PMACRO_QUSE_DDLL_RANK0_1				0x604
++#define EMC_PMACRO_QUSE_DDLL_RANK0_2				0x608
++#define EMC_PMACRO_QUSE_DDLL_RANK0_3				0x60c
++#define EMC_PMACRO_QUSE_DDLL_RANK0_4				0x610
++#define EMC_PMACRO_QUSE_DDLL_RANK0_5				0x614
++#define EMC_PMACRO_QUSE_DDLL_RANK1_0				0x620
++#define EMC_PMACRO_QUSE_DDLL_RANK1_1				0x624
++#define EMC_PMACRO_QUSE_DDLL_RANK1_2				0x628
++#define EMC_PMACRO_QUSE_DDLL_RANK1_3				0x62c
++#define EMC_PMACRO_QUSE_DDLL_RANK1_4				0x630
++#define EMC_PMACRO_QUSE_DDLL_RANK1_5				0x634
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0			0x640
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0_OB_DDLL_LONG_DQ_RANK0_BYTE1_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0_OB_DDLL_LONG_DQ_RANK0_BYTE1_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0_OB_DDLL_LONG_DQ_RANK0_BYTE1_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0_OB_DDLL_LONG_DQ_RANK0_BYTE0_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0_OB_DDLL_LONG_DQ_RANK0_BYTE0_MASK \
++	0x3ff <<							    \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0_OB_DDLL_LONG_DQ_RANK0_BYTE0_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1			0x644
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1_OB_DDLL_LONG_DQ_RANK0_BYTE3_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1_OB_DDLL_LONG_DQ_RANK0_BYTE3_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1_OB_DDLL_LONG_DQ_RANK0_BYTE3_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1_OB_DDLL_LONG_DQ_RANK0_BYTE2_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1_OB_DDLL_LONG_DQ_RANK0_BYTE2_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1_OB_DDLL_LONG_DQ_RANK0_BYTE2_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2			0x648
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2_OB_DDLL_LONG_DQ_RANK0_BYTE5_SHIFT  \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2_OB_DDLL_LONG_DQ_RANK0_BYTE5_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2_OB_DDLL_LONG_DQ_RANK0_BYTE5_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2_OB_DDLL_LONG_DQ_RANK0_BYTE4_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2_OB_DDLL_LONG_DQ_RANK0_BYTE4_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2_OB_DDLL_LONG_DQ_RANK0_BYTE4_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3			0x64c
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3_OB_DDLL_LONG_DQ_RANK0_BYTE7_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3_OB_DDLL_LONG_DQ_RANK0_BYTE7_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3_OB_DDLL_LONG_DQ_RANK0_BYTE7_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3_OB_DDLL_LONG_DQ_RANK0_BYTE6_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3_OB_DDLL_LONG_DQ_RANK0_BYTE6_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3_OB_DDLL_LONG_DQ_RANK0_BYTE6_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_4			0x650
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_5			0x654
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0			0x660
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0_OB_DDLL_LONG_DQ_RANK1_BYTE1_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0_OB_DDLL_LONG_DQ_RANK1_BYTE1_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0_OB_DDLL_LONG_DQ_RANK1_BYTE1_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0_OB_DDLL_LONG_DQ_RANK1_BYTE0_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0_OB_DDLL_LONG_DQ_RANK1_BYTE0_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0_OB_DDLL_LONG_DQ_RANK1_BYTE0_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1			0x664
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1_OB_DDLL_LONG_DQ_RANK1_BYTE3_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1_OB_DDLL_LONG_DQ_RANK1_BYTE3_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1_OB_DDLL_LONG_DQ_RANK1_BYTE3_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1_OB_DDLL_LONG_DQ_RANK1_BYTE2_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1_OB_DDLL_LONG_DQ_RANK1_BYTE2_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1_OB_DDLL_LONG_DQ_RANK1_BYTE2_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2			0x668
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2_OB_DDLL_LONG_DQ_RANK1_BYTE5_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2_OB_DDLL_LONG_DQ_RANK1_BYTE5_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2_OB_DDLL_LONG_DQ_RANK1_BYTE5_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2_OB_DDLL_LONG_DQ_RANK1_BYTE4_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2_OB_DDLL_LONG_DQ_RANK1_BYTE4_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2_OB_DDLL_LONG_DQ_RANK1_BYTE4_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3			0x66c
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3_OB_DDLL_LONG_DQ_RANK1_BYTE7_SHIFT \
++	16
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3_OB_DDLL_LONG_DQ_RANK1_BYTE7_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3_OB_DDLL_LONG_DQ_RANK1_BYTE7_SHIFT
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3_OB_DDLL_LONG_DQ_RANK1_BYTE6_SHIFT \
++	0
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3_OB_DDLL_LONG_DQ_RANK1_BYTE6_MASK  \
++	0x3ff <<							     \
++	EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3_OB_DDLL_LONG_DQ_RANK1_BYTE6_SHIFT
++
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_4			0x670
++#define EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_5			0x674
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_0			0x680
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_1			0x684
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_2			0x688
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_3			0x68c
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_4			0x690
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_5			0x694
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_0			0x6a0
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_1			0x6a4
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_2			0x6a8
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_3			0x6ac
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_4			0x6b0
++#define EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_5			0x6b4
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_0			0x6c0
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_1			0x6c4
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_2			0x6c8
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_3			0x6cc
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_4			0x6d0
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_5			0x6d4
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_0			0x6e0
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_1			0x6e4
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_2			0x6e8
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_3			0x6ec
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_4			0x6f0
++#define EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_5			0x6f4
++#define EMC_PMACRO_TX_PWRD_0					0x720
++#define EMC_PMACRO_TX_PWRD_1					0x724
++#define EMC_PMACRO_TX_PWRD_2					0x728
++#define EMC_PMACRO_TX_PWRD_3					0x72c
++#define EMC_PMACRO_TX_PWRD_4					0x730
++#define EMC_PMACRO_TX_PWRD_5					0x734
++#define EMC_PMACRO_TX_SEL_CLK_SRC_0				0x740
++#define EMC_PMACRO_TX_SEL_CLK_SRC_1				0x744
++#define EMC_PMACRO_TX_SEL_CLK_SRC_3				0x74c
++#define EMC_PMACRO_TX_SEL_CLK_SRC_2				0x748
++#define EMC_PMACRO_TX_SEL_CLK_SRC_4				0x750
++#define EMC_PMACRO_TX_SEL_CLK_SRC_5				0x754
++#define EMC_PMACRO_DDLL_BYPASS					0x760
++#define EMC_PMACRO_DDLL_PWRD_0					0x770
++#define EMC_PMACRO_DDLL_PWRD_1					0x774
++#define EMC_PMACRO_DDLL_PWRD_2					0x778
++#define EMC_PMACRO_CMD_CTRL_0					0x780
++#define EMC_PMACRO_CMD_CTRL_1					0x784
++#define EMC_PMACRO_CMD_CTRL_2					0x788
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_0		0x800
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_1		0x804
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_2		0x808
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_3		0x80c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_0		0x810
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_1		0x814
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_2		0x818
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_3		0x81c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_0		0x820
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_1		0x824
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_2		0x828
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_3		0x82c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_0		0x830
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_1		0x834
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_2		0x838
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_3		0x83c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_0		0x840
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_1		0x844
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_2		0x848
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_3		0x84c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_0		0x850
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_1		0x854
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_2		0x858
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_3		0x85c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_0		0x860
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_1		0x864
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_2		0x868
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_3		0x86c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_0		0x870
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_1		0x874
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_2		0x878
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_3		0x87c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_0		0x880
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_1		0x884
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_2		0x888
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_3		0x88c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_0		0x890
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_1		0x894
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_2		0x898
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_3		0x89c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_0		0x8a0
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_1		0x8a4
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_2		0x8a8
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_3		0x8ac
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_0		0x8b0
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_1		0x8b4
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_2		0x8b8
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_3		0x8bc
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_0		0x900
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_1		0x904
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_2		0x908
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_3		0x90c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_0		0x910
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_1		0x914
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_2		0x918
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_3		0x91c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_0		0x920
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_1		0x924
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_2		0x928
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_3		0x92c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_0		0x930
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_1		0x934
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_2		0x938
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_3		0x93c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_0		0x940
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_1		0x944
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_2		0x948
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_3		0x94c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_0		0x950
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_1		0x954
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_2		0x958
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_3		0x95c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_0		0x960
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_1		0x964
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_2		0x968
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_3		0x96c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_0		0x970
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_1		0x974
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_2		0x978
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_3		0x97c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_0		0x980
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_1		0x984
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_2		0x988
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_3		0x98c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_0		0x990
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_1		0x994
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_2		0x998
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_3		0x99c
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_0		0x9a0
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_1		0x9a4
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_2		0x9a8
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_3		0x9ac
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_0		0x9b0
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_1		0x9b4
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_2		0x9b8
++#define EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_3		0x9bc
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE0_0		0xa00
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE0_1		0xa04
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE0_2		0xa08
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE1_0		0xa10
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE1_1		0xa14
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE1_2		0xa18
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE2_0		0xa20
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE2_1		0xa24
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE2_2		0xa28
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE3_0		0xa30
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE3_1		0xa34
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE3_2		0xa38
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE4_0		0xa40
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE4_1		0xa44
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE4_2		0xa48
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE5_0		0xa50
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE5_1		0xa54
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE5_2		0xa58
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE6_0		0xa60
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE6_1		0xa64
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE6_2		0xa68
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE7_0		0xa70
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE7_1		0xa74
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE7_2		0xa78
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD0_0		0xa80
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD0_1		0xa84
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD0_2		0xa88
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD1_0		0xa90
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD1_1		0xa94
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD1_2		0xa98
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD2_0		0xaa0
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD2_1		0xaa4
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD2_2		0xaa8
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD3_0		0xab0
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD3_1		0xab4
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_CMD3_2		0xab8
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE0_0		0xb00
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE0_1		0xb04
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE0_2		0xb08
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE1_0		0xb10
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE1_1		0xb14
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE1_2		0xb18
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE2_0		0xb20
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE2_1		0xb24
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE2_2		0xb28
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE3_0		0xb30
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE3_1		0xb34
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE3_2		0xb38
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE4_0		0xb40
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE4_1		0xb44
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE4_2		0xb48
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE5_0		0xb50
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE5_1		0xb54
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE5_2		0xb58
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE6_0		0xb60
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE6_1		0xb64
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE6_2		0xb68
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE7_0		0xb70
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE7_1		0xb74
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE7_2		0xb78
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD0_0		0xb80
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD0_1		0xb84
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD0_2		0xb88
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD1_0		0xb90
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD1_1		0xb94
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD1_2		0xb98
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD2_0		0xba0
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD2_1		0xba4
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD2_2		0xba8
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD3_0		0xbb0
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD3_1		0xbb4
++#define EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_CMD3_2		0xbb8
++#define EMC_PMACRO_IB_VREF_DQ_0					0xbe0
++#define EMC_PMACRO_IB_VREF_DQ_1					0xbe4
++#define EMC_PMACRO_IB_VREF_DQ_2					0xbe8
++#define EMC_PMACRO_IB_VREF_DQS_0				0xbf0
++#define EMC_PMACRO_IB_VREF_DQS_1				0xbf4
++#define EMC_PMACRO_IB_VREF_DQS_2				0xbf8
++#define EMC_PMACRO_IB_RXRT					0xcf4
++#define EMC_PMACRO_DDLL_LONG_CMD_0				0xc00
++#define EMC_PMACRO_DDLL_LONG_CMD_1				0xc04
++#define EMC_PMACRO_DDLL_LONG_CMD_2				0xc08
++#define EMC_PMACRO_DDLL_LONG_CMD_3				0xc0c
++#define EMC_PMACRO_DDLL_LONG_CMD_4				0xc10
++#define EMC_PMACRO_DDLL_LONG_CMD_5				0xc14
++#define EMC_PMACRO_DDLL_SHORT_CMD_0				0xc20
++#define EMC_PMACRO_DDLL_SHORT_CMD_1				0xc24
++#define EMC_PMACRO_DDLL_SHORT_CMD_2				0xc28
++#define EMC_PMACRO_CFG_PM_GLOBAL_0				0xc30
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE0		(1 << 16)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE1		(1 << 17)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE2		(1 << 18)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE3		(1 << 19)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE4		(1 << 20)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE5		(1 << 21)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE6		(1 << 22)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_BYTE7		(1 << 23)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_CMD0		(1 << 24)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_CMD1		(1 << 25)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_CMD2		(1 << 26)
++#define EMC_PMACRO_CFG_PM_GLOBAL_0_DISABLE_CFG_CMD3		(1 << 27)
++
++#define EMC_PMACRO_VTTGEN_CTRL_0				0xc34
++#define EMC_PMACRO_VTTGEN_CTRL_1				0xc38
++#define EMC_PMACRO_VTTGEN_CTRL_2				0xcf0
++#define EMC_PMACRO_BG_BIAS_CTRL_0				0xc3c
++#define EMC_PMACRO_BG_BIAS_CTRL_0_BG_E_PWRD			(1 << 0)
++#define EMC_PMACRO_BG_BIAS_CTRL_0_BG_MODE			(1 << 1)
++#define EMC_PMACRO_BG_BIAS_CTRL_0_BGLP_E_PWRD			(1 << 2)
++
++#define EMC_PMACRO_PAD_CFG_CTRL					0xc40
++#define EMC_PMACRO_CMD_PAD_RX_CTRL				0xc50
++#define EMC_PMACRO_DATA_PAD_RX_CTRL				0xc54
++#define EMC_PMACRO_CMD_RX_TERM_MODE				0xc58
++#define EMC_PMACRO_DATA_RX_TERM_MODE				0xc5c
++#define EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSN_RX_TERM_MODE_SHIFT 8
++#define EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSN_RX_TERM_MODE_MASK (0x3 << \
++	EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSN_RX_TERM_MODE_SHIFT)
++#define EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSP_RX_TERM_MODE_SHIFT 4
++#define EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSP_RX_TERM_MODE_MASK (0x3 << \
++	EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSP_RX_TERM_MODE_SHIFT)
++#define EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQ_RX_TERM_MODE_SHIFT   0
++#define EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQ_RX_TERM_MODE_MASK   (0x3 << \
++	EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQ_RX_TERM_MODE_SHIFT)
++
++#define RX_TERM_MODE							\
++	~(EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSN_RX_TERM_MODE_MASK |	\
++	  EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQSP_RX_TERM_MODE_MASK |	\
++	  EMC_PMACRO_DATA_RX_TERM_MODE_DATA_DQ_RX_TERM_MODE_MASK)
++
++#define EMC_PMACRO_CMD_PAD_TX_CTRL				0xc60
++#define EMC_PMACRO_CMD_PAD_TX_CTRL_CMD_DQ_TX_E_DCC		(1 << 1)
++#define EMC_PMACRO_CMD_PAD_TX_CTRL_CMD_DQSP_TX_E_DCC		(1 << 9)
++#define EMC_PMACRO_CMD_PAD_TX_CTRL_CMD_DQSN_TX_E_DCC		(1 << 16)
++#define EMC_PMACRO_CMD_PAD_TX_CTRL_CMD_CMD_TX_E_DCC		(1 << 24)
++#define EMC_PMACRO_CMD_PAD_TX_CTRL_CMD_DQ_TX_DRVFORCEON		(1 << 26)
++
++#define EMC_PMACRO_DATA_PAD_TX_CTRL				0xc64
++#define EMC_PMACRO_DATA_PAD_TX_CTRL_DATA_DQ_E_IVREF		(1 << 0)
++#define EMC_PMACRO_DATA_PAD_TX_CTRL_DATA_DQ_TX_E_DCC		(1 << 1)
++#define EMC_PMACRO_DATA_PAD_TX_CTRL_DATA_DQS_E_IVREF		(1 << 8)
++#define EMC_PMACRO_DATA_PAD_TX_CTRL_DATA_DQSP_TX_E_DCC		(1 << 9)
++#define EMC_PMACRO_DATA_PAD_TX_CTRL_DATA_DQSN_TX_E_DCC		(1 << 16)
++#define EMC_PMACRO_DATA_PAD_TX_CTRL_DATA_CMD_TX_E_DCC		(1 << 24)
++
++#define EMC_PMACRO_COMMON_PAD_TX_CTRL				0xc68
++#define EMC_PMACRO_BRICK_MAPPING_0				0xc80
++#define EMC_PMACRO_BRICK_MAPPING_1				0xc84
++#define EMC_PMACRO_BRICK_MAPPING_2				0xc88
++#define EMC_PMACRO_DDLLCAL_CAL					0xce0
++#define EMC_PMACRO_DDLL_OFFSET					0xce4
++#define EMC_PMACRO_DDLL_PERIODIC_OFFSET				0xce8
++#define EMC_PMACRO_BRICK_CTRL_RFU1				0x330
++#define EMC_PMACRO_BRICK_CTRL_RFU2				0x334
++#define EMC_PMACRO_CMD_BRICK_CTRL_FDPD				0x318
++#define EMC_PMACRO_DATA_BRICK_CTRL_FDPD				0x31c
++#define EMC_PMACRO_TRAINING_CTRL_0				0xcf8
++#define EMC_PMACRO_TRAINING_CTRL_0_CH0_TRAINING_E_WRPTR		(1 << 3)
++
++#define EMC_PMACRO_TRAINING_CTRL_1				0xcfc
++#define EMC_PMACRO_TRAINING_CTRL_1_CH1_TRAINING_E_WRPTR		(1 << 3)
++
++#define EMC_PMC_SCRATCH1					0x440
++#define EMC_PMC_SCRATCH2					0x444
++#define EMC_PMC_SCRATCH3					0x448
++
++
++#define MC_EMEM_ARB_MISC0_EMC_SAME_FREQ				(1 << 27)
++#define MC_EMEM_ARB_MISC1					0xdc
++#define MC_EMEM_ARB_RING1_THROTTLE				0xe0
++#define MC_EMEM_ARB_RING3_THROTTLE				0xe4
++#define MC_EMEM_ARB_OVERRIDE					0xe8
++#define MC_EMEM_ARB_RSV						0xec
++
++#define MC_CLKEN_OVERRIDE					0xf4
++#define MC_TIMING_CONTROL_DBG					0xf8
++#define MC_TIMING_CONTROL					0xfc
++#define MC_EMEM_ARB_ISOCHRONOUS_0				0x208
++#define MC_EMEM_ARB_ISOCHRONOUS_1				0x20c
++#define MC_EMEM_ARB_ISOCHRONOUS_2				0x210
++#define MC_EMEM_ARB_HYSTERESIS_0_0				0x218
++#define MC_EMEM_ARB_HYSTERESIS_1_0				0x21c
++#define MC_EMEM_ARB_HYSTERESIS_2_0				0x220
++#define MC_EMEM_ARB_HYSTERESIS_3_0				0x224
++
++#define HYST_SATAR						(0x1 << 31)
++#define HYST_PPCSAHBSLVR					(0x1 << 30)
++#define HYST_PPCSAHBDMAR					(0x1 << 29)
++#define HYST_NVENCSRD						(0x1 << 28)
++#define HYST_HOST1XR						(0x1 << 23)
++#define HYST_HOST1XDMAR						(0x1 << 22)
++#define HYST_HDAR						(0x1 << 21)
++#define HYST_DISPLAYHCB						(0x1 << 17)
++#define HYST_DISPLAYHC						(0x1 << 16)
++#define HYST_AVPCARM7R						(0x1 << 15)
++#define HYST_AFIR						(0x1 << 14)
++#define HYST_DISPLAY0CB						(0x1 << 6)
++#define HYST_DISPLAY0C						(0x1 << 5)
++#define HYST_DISPLAY0BB						(0x1 << 4)
++#define HYST_DISPLAY0B						(0x1 << 3)
++#define HYST_DISPLAY0AB						(0x1 << 2)
++#define HYST_DISPLAY0A						(0x1 << 1)
++#define HYST_PTCR						(0x1 << 0)
++
++#define HYST_VDEDBGW						(0x1 << 31)
++#define HYST_VDEBSEVW						(0x1 << 30)
++#define HYST_SATAW						(0x1 << 29)
++#define HYST_PPCSAHBSLVW					(0x1 << 28)
++#define HYST_PPCSAHBDMAW					(0x1 << 27)
++#define HYST_MPCOREW						(0x1 << 25)
++#define HYST_MPCORELPW						(0x1 << 24)
++#define HYST_HOST1XW						(0x1 << 22)
++#define HYST_HDAW						(0x1 << 21)
++#define HYST_AVPCARM7W						(0x1 << 18)
++#define HYST_AFIW						(0x1 << 17)
++#define HYST_NVENCSWR						(0x1 << 11)
++#define HYST_MPCORER						(0x1 << 7)
++#define HYST_MPCORELPR						(0x1 << 6)
++#define HYST_VDETPER						(0x1 << 5)
++#define HYST_VDEMCER						(0x1 << 4)
++#define HYST_VDEMBER						(0x1 << 3)
++#define HYST_VDEBSEVR						(0x1 << 2)
++
++#define HYST_DISPLAYT						(0x1 << 26)
++#define HYST_GPUSWR						(0x1 << 25)
++#define HYST_GPUSRD						(0x1 << 24)
++#define HYST_A9AVPSCW						(0x1 << 23)
++#define HYST_A9AVPSCR						(0x1 << 22)
++#define HYST_TSECSWR						(0x1 << 21)
++#define HYST_TSECSRD						(0x1 << 20)
++#define HYST_ISPWBB						(0x1 << 17)
++#define HYST_ISPWAB						(0x1 << 16)
++#define HYST_ISPRAB						(0x1 << 14)
++#define HYST_XUSB_DEVW						(0x1 << 13)
++#define HYST_XUSB_DEVR						(0x1 << 12)
++#define HYST_XUSB_HOSTW						(0x1 << 11)
++#define HYST_XUSB_HOSTR						(0x1 << 10)
++#define HYST_ISPWB						(0x1 << 7)
++#define HYST_ISPWA						(0x1 << 6)
++#define HYST_ISPRA						(0x1 << 4)
++#define HYST_VDETPMW						(0x1 << 1)
++#define HYST_VDEMBEW						(0x1 << 0)
++
++#define HYST_DISPLAYD						(0x1 << 19)
++#define HYST_VIW						(0x1 << 18)
++#define HYST_VICSWR						(0x1 << 13)
++#define HYST_VICSRD						(0x1 << 12)
++#define HYST_SDMMCWAB						(0x1 << 7)
++#define HYST_SDMMCW						(0x1 << 6)
++#define HYST_SDMMCWAA						(0x1 << 5)
++#define HYST_SDMMCWA						(0x1 << 4)
++#define HYST_SDMMCRAB						(0x1 << 3)
++#define HYST_SDMMCR						(0x1 << 2)
++#define HYST_SDMMCRAA						(0x1 << 1)
++#define HYST_SDMMCRA						(0x1 << 0)8
++
++#define EMC_COPY_TABLE_PARAM_PERIODIC_FIELDS			BIT(0)
++#define EMC_COPY_TABLE_PARAM_TRIM_REGS				BIT(1)
 +
 +enum {
-+	RGR1_SW_INIT_1,
-+	EXT_CFG_INDEX,
-+	EXT_CFG_DATA,
++	REG_MC,
++	REG_EMC,
++	REG_EMC0,
++	REG_EMC1,
++};
++
++#define BURST_REGS_PER_CH_LIST						\
++{									\
++	DEFINE_REG(REG_EMC0, EMC_MRW10),				\
++	DEFINE_REG(REG_EMC1, EMC_MRW10),				\
++	DEFINE_REG(REG_EMC0, EMC_MRW11),				\
++	DEFINE_REG(REG_EMC1, EMC_MRW11),				\
++	DEFINE_REG(REG_EMC0, EMC_MRW12),				\
++	DEFINE_REG(REG_EMC1, EMC_MRW12),				\
++	DEFINE_REG(REG_EMC0, EMC_MRW13),				\
++	DEFINE_REG(REG_EMC1, EMC_MRW13),				\
++}
++
++#define BURST_REGS_LIST							\
++{									\
++	DEFINE_REG(REG_EMC, EMC_RC),					\
++	DEFINE_REG(REG_EMC, EMC_RFC),					\
++	DEFINE_REG(REG_EMC, EMC_RFCPB),					\
++	DEFINE_REG(REG_EMC, EMC_REFCTRL2),				\
++	DEFINE_REG(REG_EMC, EMC_RFC_SLR),				\
++	DEFINE_REG(REG_EMC, EMC_RAS),					\
++	DEFINE_REG(REG_EMC, EMC_RP),					\
++	DEFINE_REG(REG_EMC, EMC_R2W),					\
++	DEFINE_REG(REG_EMC, EMC_W2R),					\
++	DEFINE_REG(REG_EMC, EMC_R2P),					\
++	DEFINE_REG(REG_EMC, EMC_W2P),					\
++	DEFINE_REG(REG_EMC, EMC_R2R),					\
++	DEFINE_REG(REG_EMC, EMC_TPPD),					\
++	DEFINE_REG(REG_EMC, EMC_CCDMW),					\
++	DEFINE_REG(REG_EMC, EMC_RD_RCD),				\
++	DEFINE_REG(REG_EMC, EMC_WR_RCD),				\
++	DEFINE_REG(REG_EMC, EMC_RRD),					\
++	DEFINE_REG(REG_EMC, EMC_REXT),					\
++	DEFINE_REG(REG_EMC, EMC_WEXT),					\
++	DEFINE_REG(REG_EMC, EMC_WDV_CHK),				\
++	DEFINE_REG(REG_EMC, EMC_WDV),					\
++	DEFINE_REG(REG_EMC, EMC_WSV),					\
++	DEFINE_REG(REG_EMC, EMC_WEV),					\
++	DEFINE_REG(REG_EMC, EMC_WDV_MASK),				\
++	DEFINE_REG(REG_EMC, EMC_WS_DURATION),				\
++	DEFINE_REG(REG_EMC, EMC_WE_DURATION),				\
++	DEFINE_REG(REG_EMC, EMC_QUSE),					\
++	DEFINE_REG(REG_EMC, EMC_QUSE_WIDTH),				\
++	DEFINE_REG(REG_EMC, EMC_IBDLY),					\
++	DEFINE_REG(REG_EMC, EMC_OBDLY),					\
++	DEFINE_REG(REG_EMC, EMC_EINPUT),				\
++	DEFINE_REG(REG_EMC, EMC_MRW6),					\
++	DEFINE_REG(REG_EMC, EMC_EINPUT_DURATION),			\
++	DEFINE_REG(REG_EMC, EMC_PUTERM_EXTRA),				\
++	DEFINE_REG(REG_EMC, EMC_PUTERM_WIDTH),				\
++	DEFINE_REG(REG_EMC, EMC_QRST),					\
++	DEFINE_REG(REG_EMC, EMC_QSAFE),					\
++	DEFINE_REG(REG_EMC, EMC_RDV),					\
++	DEFINE_REG(REG_EMC, EMC_RDV_MASK),				\
++	DEFINE_REG(REG_EMC, EMC_RDV_EARLY),				\
++	DEFINE_REG(REG_EMC, EMC_RDV_EARLY_MASK),			\
++	DEFINE_REG(REG_EMC, EMC_REFRESH),				\
++	DEFINE_REG(REG_EMC, EMC_BURST_REFRESH_NUM),			\
++	DEFINE_REG(REG_EMC, EMC_PRE_REFRESH_REQ_CNT),			\
++	DEFINE_REG(REG_EMC, EMC_PDEX2WR),				\
++	DEFINE_REG(REG_EMC, EMC_PDEX2RD),				\
++	DEFINE_REG(REG_EMC, EMC_PCHG2PDEN),				\
++	DEFINE_REG(REG_EMC, EMC_ACT2PDEN),				\
++	DEFINE_REG(REG_EMC, EMC_AR2PDEN),				\
++	DEFINE_REG(REG_EMC, EMC_RW2PDEN),				\
++	DEFINE_REG(REG_EMC, EMC_CKE2PDEN),				\
++	DEFINE_REG(REG_EMC, EMC_PDEX2CKE),				\
++	DEFINE_REG(REG_EMC, EMC_PDEX2MRR),				\
++	DEFINE_REG(REG_EMC, EMC_TXSR),					\
++	DEFINE_REG(REG_EMC, EMC_TXSRDLL),				\
++	DEFINE_REG(REG_EMC, EMC_TCKE),					\
++	DEFINE_REG(REG_EMC, EMC_TCKESR),				\
++	DEFINE_REG(REG_EMC, EMC_TPD),					\
++	DEFINE_REG(REG_EMC, EMC_TFAW),					\
++	DEFINE_REG(REG_EMC, EMC_TRPAB),					\
++	DEFINE_REG(REG_EMC, EMC_TCLKSTABLE),				\
++	DEFINE_REG(REG_EMC, EMC_TCLKSTOP),				\
++	DEFINE_REG(REG_EMC, EMC_MRW7),					\
++	DEFINE_REG(REG_EMC, EMC_TREFBW),				\
++	DEFINE_REG(REG_EMC, EMC_ODT_WRITE),				\
++	DEFINE_REG(REG_EMC, EMC_FBIO_CFG5),				\
++	DEFINE_REG(REG_EMC, EMC_FBIO_CFG7),				\
++	DEFINE_REG(REG_EMC, EMC_CFG_DIG_DLL),				\
++	DEFINE_REG(REG_EMC, EMC_CFG_DIG_DLL_PERIOD),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_RXRT),			\
++	DEFINE_REG(REG_EMC, EMC_CFG_PIPE_1),				\
++	DEFINE_REG(REG_EMC, EMC_CFG_PIPE_2),				\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK0_4),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK0_5),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK1_4),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK1_5),		\
++	DEFINE_REG(REG_EMC, EMC_MRW8),					\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_4),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_5),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_4),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK0_5),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_4),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQS_RANK1_5),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_LONG_CMD_0),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_LONG_CMD_1),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_LONG_CMD_2),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_LONG_CMD_3),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_LONG_CMD_4),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_SHORT_CMD_0),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_SHORT_CMD_1),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_SHORT_CMD_2),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD2_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_CMD3_3),	\
++	DEFINE_REG(REG_EMC, EMC_TXDSRVTTGEN),				\
++	DEFINE_REG(REG_EMC, EMC_FDPD_CTRL_DQ),				\
++	DEFINE_REG(REG_EMC, EMC_FDPD_CTRL_CMD),				\
++	DEFINE_REG(REG_EMC, EMC_FBIO_SPARE),				\
++	DEFINE_REG(REG_EMC, EMC_ZCAL_INTERVAL),				\
++	DEFINE_REG(REG_EMC, EMC_ZCAL_WAIT_CNT),				\
++	DEFINE_REG(REG_EMC, EMC_MRS_WAIT_CNT),				\
++	DEFINE_REG(REG_EMC, EMC_MRS_WAIT_CNT2),				\
++	DEFINE_REG(REG_EMC, EMC_AUTO_CAL_CHANNEL),			\
++	DEFINE_REG(REG_EMC, EMC_DLL_CFG_0),				\
++	DEFINE_REG(REG_EMC, EMC_DLL_CFG_1),				\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_AUTOCAL_CFG_COMMON),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_ZCTRL),				\
++	DEFINE_REG(REG_EMC, EMC_CFG),					\
++	DEFINE_REG(REG_EMC, EMC_CFG_PIPE),				\
++	DEFINE_REG(REG_EMC, EMC_DYN_SELF_REF_CONTROL),			\
++	DEFINE_REG(REG_EMC, EMC_QPOP),					\
++	DEFINE_REG(REG_EMC, EMC_DQS_BRLSHFT_0),				\
++	DEFINE_REG(REG_EMC, EMC_DQS_BRLSHFT_1),				\
++	DEFINE_REG(REG_EMC, EMC_CMD_BRLSHFT_2),				\
++	DEFINE_REG(REG_EMC, EMC_CMD_BRLSHFT_3),				\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_PAD_CFG_CTRL),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DATA_PAD_RX_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_PAD_RX_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DATA_RX_TERM_MODE),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_RX_TERM_MODE),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_PAD_TX_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DATA_PAD_TX_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_COMMON_PAD_TX_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_VTTGEN_CTRL_0),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_VTTGEN_CTRL_1),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_VTTGEN_CTRL_2),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_BRICK_CTRL_RFU1),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_BRICK_CTRL_FDPD),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_BRICK_CTRL_RFU2),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DATA_BRICK_CTRL_FDPD),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_BG_BIAS_CTRL_0),			\
++	DEFINE_REG(REG_EMC, EMC_CFG_3),					\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_PWRD_0),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_PWRD_1),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_PWRD_2),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_PWRD_3),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_PWRD_4),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_PWRD_5),			\
++	DEFINE_REG(REG_EMC, EMC_CONFIG_SAMPLE_DELAY),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_SEL_CLK_SRC_0),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_SEL_CLK_SRC_1),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_SEL_CLK_SRC_2),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_SEL_CLK_SRC_3),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_SEL_CLK_SRC_4),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_TX_SEL_CLK_SRC_5),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_BYPASS),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_PWRD_0),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_PWRD_1),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_DDLL_PWRD_2),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_CTRL_0),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_CTRL_1),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_CMD_CTRL_2),			\
++	DEFINE_REG(REG_EMC, EMC_TR_TIMING_0),				\
++	DEFINE_REG(REG_EMC, EMC_TR_DVFS),				\
++	DEFINE_REG(REG_EMC, EMC_TR_CTRL_1),				\
++	DEFINE_REG(REG_EMC, EMC_TR_RDV),				\
++	DEFINE_REG(REG_EMC, EMC_TR_QPOP),				\
++	DEFINE_REG(REG_EMC, EMC_TR_RDV_MASK),				\
++	DEFINE_REG(REG_EMC, EMC_MRW14),					\
++	DEFINE_REG(REG_EMC, EMC_TR_QSAFE),				\
++	DEFINE_REG(REG_EMC, EMC_TR_QRST),				\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_CTRL),				\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_SETTLE),			\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_VREF_SETTLE),			\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_CA_FINE_CTRL),			\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_CA_CTRL_MISC),			\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_CA_CTRL_MISC1),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_CA_VREF_CTRL),			\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_QUSE_CORS_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_QUSE_FINE_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_QUSE_CTRL_MISC),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_QUSE_VREF_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_READ_FINE_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_READ_CTRL_MISC),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_READ_VREF_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_WRITE_FINE_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_WRITE_CTRL_MISC),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_WRITE_VREF_CTRL),		\
++	DEFINE_REG(REG_EMC, EMC_TRAINING_MPC),				\
++	DEFINE_REG(REG_EMC, EMC_MRW15),					\
++}
++
++#define TRIM_REGS_PER_CH_LIST						\
++{									\
++	DEFINE_REG(REG_EMC0, EMC_CMD_BRLSHFT_0),			\
++	DEFINE_REG(REG_EMC1, EMC_CMD_BRLSHFT_1),			\
++	DEFINE_REG(REG_EMC0, EMC_DATA_BRLSHFT_0),			\
++	DEFINE_REG(REG_EMC1, EMC_DATA_BRLSHFT_0),			\
++	DEFINE_REG(REG_EMC0, EMC_DATA_BRLSHFT_1),			\
++	DEFINE_REG(REG_EMC1, EMC_DATA_BRLSHFT_1),			\
++	DEFINE_REG(REG_EMC0, EMC_QUSE_BRLSHFT_0),			\
++	DEFINE_REG(REG_EMC1, EMC_QUSE_BRLSHFT_1),			\
++	DEFINE_REG(REG_EMC0, EMC_QUSE_BRLSHFT_2),			\
++	DEFINE_REG(REG_EMC1, EMC_QUSE_BRLSHFT_3),			\
++}
++
++#define TRIM_REGS_LIST							\
++{									\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_LONG_DQS_RANK1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE2_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE2_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE2_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE3_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE3_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE3_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE4_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE4_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE4_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE5_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE5_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE5_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE6_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE6_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE6_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE7_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE7_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK0_BYTE7_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE2_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE2_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE2_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE3_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE3_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE3_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE4_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE4_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE4_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE5_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE5_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE5_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE6_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE6_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE6_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE7_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE7_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_DDLL_SHORT_DQ_RANK1_BYTE7_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_VREF_DQS_0),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_VREF_DQS_1),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_VREF_DQ_0),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_IB_VREF_DQ_1),			\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_4),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK0_5),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_LONG_DQ_RANK1_3),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE2_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE3_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE4_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE5_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE6_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_BYTE7_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD2_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK0_CMD3_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE0_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE1_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE2_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE3_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE4_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE5_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE6_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_0),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_1),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_OB_DDLL_SHORT_DQ_RANK1_BYTE7_2),	\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK0_0),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK0_1),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK0_2),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK0_3),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK1_0),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK1_1),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK1_2),		\
++	DEFINE_REG(REG_EMC, EMC_PMACRO_QUSE_DDLL_RANK1_3),		\
++}
++
++#define VREF_REGS_PER_CH_LIST						\
++{									\
++	DEFINE_REG(REG_EMC0, EMC_TRAINING_OPT_DQS_IB_VREF_RANK0),	\
++	DEFINE_REG(REG_EMC1, EMC_TRAINING_OPT_DQS_IB_VREF_RANK0),	\
++	DEFINE_REG(REG_EMC0, EMC_TRAINING_OPT_DQS_IB_VREF_RANK1),	\
++	DEFINE_REG(REG_EMC1, EMC_TRAINING_OPT_DQS_IB_VREF_RANK1),	\
++}
++
++#define DEFINE_REG(type, reg)	reg##_INDEX
++enum BURST_REGS_LIST;
++enum TRIM_REGS_LIST;
++enum BURST_MC_REGS_LIST;
++enum BURST_UP_DOWN_REGS_LIST;
++#undef DEFINE_REG
++
++#define DEFINE_REG(type, reg)	type##_##reg##_INDEX
++enum BURST_REGS_PER_CH_LIST;
++enum TRIM_REGS_PER_CH_LIST;
++enum VREF_REGS_PER_CH_LIST;
++#undef DEFINE_REG
++
++struct emc_timing {
++	u32 rev;
++	char dvfs_ver[60];
++	u32 rate;
++	u32 min_volt;
++	u32 gpu_min_volt;
++	char clock_src[32];
++	u32 clk_src_emc;
++	u32 needs_training;
++	u32 training_parttern;
++	u32 trained;
++
++	u32 periodic_training;
++	u32 trained_dram_clktree_c0d0u0;
++	u32 trained_dram_clktree_c0d0u1;
++	u32 trained_dram_clktree_c0d1u0;
++	u32 trained_dram_clktree_c0d1u1;
++	u32 trained_dram_clktree_c1d0u0;
++	u32 trained_dram_clktree_c1d0u1;
++	u32 trained_dram_clktree_c1d1u0;
++	u32 trained_dram_clktree_c1d1u1;
++	u32 current_dram_clktree_c0d0u0;
++	u32 current_dram_clktree_c0d0u1;
++	u32 current_dram_clktree_c0d1u0;
++	u32 current_dram_clktree_c0d1u1;
++	u32 current_dram_clktree_c1d0u0;
++	u32 current_dram_clktree_c1d0u1;
++	u32 current_dram_clktree_c1d1u0;
++	u32 current_dram_clktree_c1d1u1;
++	u32 run_clocks;
++	u32 tree_margin;
++
++	u32 num_burst;
++	u32 num_burst_per_ch;
++	u32 num_trim;
++	u32 num_trim_per_ch;
++	u32 num_mc_regs;
++	u32 num_up_down;
++	u32 vref_num;
++	u32 training_mod_num;
++	u32 dram_timing_num;
++
++	u32  ptfv_list[12];
++
++	u32 burst_regs[221];
++	u32 burst_reg_per_ch[8];
++	u32 shadow_regs_ca_train[221];
++	u32 shadow_regs_quse_train[221];
++	u32 shadow_regs_rdwr_train[221];
++
++	u32 trim_regs[138];
++	u32 trim_perch_regs[10];
++
++	u32 vref_perch_regs[4];
++
++	u32 dram_timings[5];
++	u32 training_mod_regs[20];
++	u32 save_restore_mod_regs[12];
++	u32 burst_mc_regs[33];
++	u32 la_scale_regs[24];
++
++	u32 min_mrs_wait;
++	u32 emc_mrw;
++	u32 emc_mrw2;
++	u32 emc_mrw3;
++	u32 emc_mrw4;
++	u32 emc_mrw9;
++	u32 emc_mrs;
++	u32 emc_emrs;
++	u32 emc_emrs2;
++	u32 emc_auto_cal_config;
++	u32 emc_auto_cal_config2;
++	u32 emc_auto_cal_config3;
++	u32 emc_auto_cal_config4;
++	u32 emc_auto_cal_config5;
++	u32 emc_auto_cal_config6;
++	u32 emc_auto_cal_config7;
++	u32 emc_auto_cal_config8;
++	u32 emc_cfg_2;
++	u32 emc_sel_dpd_ctrl;
++	u32 emc_fdpd_ctrl_cmd_no_ramp;
++	u32 dll_clk_src;
++	u32 clk_out_enb_x_0_clk_enb_emc_dll;
++	u32 latency;
++};
++
++struct emc_stats {
++	u64 time_at_clock[TEGRA_EMC_TABLE_MAX_SIZE];
++	int last_sel;
++	u64 last_update;
++	u64 clkchange_count;
++	spinlock_t spinlock;
++};
++
++struct tegra_emc {
++	struct clk_hw hw;
++
++	struct tegra_mc *mc;
++
++	void __iomem *emc_base;
++	void __iomem *emc0_base;
++	void __iomem *emc1_base;
++
++	struct emc_timing *current_timing;
++	struct emc_timing *next_timing;
++	struct emc_timing start_timing;
++
++	struct emc_timing *emc_table;
++	struct emc_timing *emc_table_normal;
++	struct emc_timing *emc_table_derated;
++	
++	unsigned int num_timings;
++
++	int dram_dev_num;
++	u32 dram_type;
++	u32 ram_code;
++	u32 clk_setting;
++
++	struct clk *emc_dll_clk;
++};
++#define to_emc(_hw) container_of(_hw, struct tegra_emc, hw)
++
++struct supported_sequence {
++	u8     table_rev;
++	void (*set_clock)(struct tegra_emc *emc, struct clk *new_parent);
++	u32  (*periodic_compensation)(struct tegra_emc *emc);
++	char  *seq_rev;
 +};
 +
 +enum {
-+	RGR1_SW_INIT_1_INIT_MASK,
-+	RGR1_SW_INIT_1_INIT_SHIFT,
-+	RGR1_SW_INIT_1_PERST_MASK,
-+	RGR1_SW_INIT_1_PERST_SHIFT,
++	DRAM_TYPE_DDR3   = 0,
++	DRAM_TYPE_LPDDR4 = 1,
++	DRAM_TYPE_LPDDR2 = 2,
++	DRAM_TYPE_DDR2 = 3,
 +};
 +
-+enum pcie_type {
-+	BCM7425,
-+	BCM7435,
-+	GENERIC,
-+	BCM7278,
++enum {
++	DLL_CHANGE_NONE = 0,
++	DLL_CHANGE_ON,
++	DLL_CHANGE_OFF,
 +};
 +
-+struct brcm_window {
-+	dma_addr_t pcie_addr;
-+	phys_addr_t cpu_addr;
-+	dma_addr_t size;
++enum {
++	DLL_OFF,
++	DLL_ON
 +};
 +
-+/* Internal PCIe Host Controller Information.*/
-+struct brcm_pcie {
-+	struct device		*dev;
-+	void __iomem		*base;
-+	struct list_head	resources;
-+	int			irq;
-+	struct clk		*clk;
-+	struct pci_bus		*root_bus;
-+	struct device_node	*dn;
-+	int			id;
-+	bool			suspended;
-+	int			num_out_wins;
-+	bool			ssc;
-+	int			gen;
-+	struct brcm_window	out_wins[BRCM_NUM_PCIE_OUT_WINS];
-+	unsigned int		rev;
-+	const int		*reg_offsets;
-+	const int		*reg_field_info;
-+	enum pcie_type		type;
++enum {
++	AUTO_PD = 0,
++	MAN_SR  = 2
 +};
 +
-+struct pcie_cfg_data {
-+	const int		*reg_field_info;
-+	const int		*offsets;
-+	const enum pcie_type	type;
++enum {
++	ASSEMBLY = 0,
++	ACTIVE
 +};
 +
-+static const int pcie_reg_field_info[] = {
-+	[RGR1_SW_INIT_1_INIT_MASK] = 0x2,
-+	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x1,
++enum {
++	T_RP = 0,
++	T_FC_LPDDR4,
++	T_RFC,
++	T_PDEX,
++	RL
 +};
 +
-+static const int pcie_reg_field_info_bcm7278[] = {
-+	[RGR1_SW_INIT_1_INIT_MASK] = 0x1,
-+	[RGR1_SW_INIT_1_INIT_SHIFT] = 0x0,
++enum {
++	ONE_RANK = 1,
++	TWO_RANK = 2
 +};
 +
-+static const int pcie_offset_bcm7425[] = {
-+	[RGR1_SW_INIT_1] = 0x8010,
-+	[EXT_CFG_INDEX]  = 0x8300,
-+	[EXT_CFG_DATA]   = 0x8304,
++enum {
++	SINGLE_CHANNEL = 0,
++	DUAL_CHANNEL
 +};
 +
-+static const struct pcie_cfg_data bcm7425_cfg = {
-+	.reg_field_info	= pcie_reg_field_info,
-+	.offsets	= pcie_offset_bcm7425,
-+	.type		= BCM7425,
++enum {
++	DRAM_DEV_SEL_ALL = 0,
++	DRAM_DEV_SEL_0	 = (2 << 30),
++	DRAM_DEV_SEL_1   = (1 << 30),
 +};
 +
-+static const int pcie_offsets[] = {
-+	[RGR1_SW_INIT_1] = 0x9210,
-+	[EXT_CFG_INDEX]  = 0x9000,
-+	[EXT_CFG_DATA]   = 0x9004,
++enum {
++	EMC_CFG5_QUSE_MODE_NORMAL = 0,
++	EMC_CFG5_QUSE_MODE_ALWAYS_ON,
++	EMC_CFG5_QUSE_MODE_INTERNAL_LPBK,
++	EMC_CFG5_QUSE_MODE_PULSE_INTERN,
++	EMC_CFG5_QUSE_MODE_PULSE_EXTERN,
++	EMC_CFG5_QUSE_MODE_DIRECT_QUSE,
 +};
 +
-+static const struct pcie_cfg_data bcm7435_cfg = {
-+	.reg_field_info	= pcie_reg_field_info,
-+	.offsets	= pcie_offsets,
-+	.type		= BCM7435,
-+};
++extern void __iomem *clk_base;
++extern unsigned long dram_over_temp_state;
 +
-+static const struct pcie_cfg_data generic_cfg = {
-+	.reg_field_info	= pcie_reg_field_info,
-+	.offsets	= pcie_offsets,
-+	.type		= GENERIC,
-+};
++extern struct emc_table *tegra_emc_table;
++extern struct emc_table *tegra_emc_table_normal;
++extern struct emc_table *tegra_emc_table_derated;
++extern int tegra_emc_table_size;
 +
-+static const int pcie_offset_bcm7278[] = {
-+	[RGR1_SW_INIT_1] = 0xc010,
-+	[EXT_CFG_INDEX] = 0x9000,
-+	[EXT_CFG_DATA] = 0x9004,
-+};
++extern u32 burst_regs_per_ch_off[];
++extern u32 burst_regs_off[];
++extern u32 trim_regs_per_ch_off[];
++extern u32 trim_regs_off[];
++extern u32 burst_mc_regs_off[];
++extern u32 la_scale_regs_off[];
++extern u32 vref_regs_per_ch_off[];
++extern u32 burst_regs_per_ch_type[];
++extern u32 trim_regs_per_ch_type[];
++extern u32 vref_regs_per_ch_type[];
 +
-+static const struct pcie_cfg_data bcm7278_cfg = {
-+	.reg_field_info = pcie_reg_field_info_bcm7278,
-+	.offsets	= pcie_offset_bcm7278,
-+	.type		= BCM7278,
-+};
++u32 tegra210_apply_periodic_compensation_trimmer(
++		struct emc_timing *next_timing, u32 offset);
++void emc_writel(struct tegra_emc *emc, u32 val, unsigned long offset);
++u32  emc_readl(struct tegra_emc *emc, unsigned long offset);
++void emc1_writel(struct tegra_emc *emc, u32 val, unsigned long offset);
++u32  emc1_readl(struct tegra_emc *emc, unsigned long offset);
++void emc_writel_per_ch(struct tegra_emc *emc, u32 val, int type,
++		       unsigned long offset);
++u32 emc_readl_per_ch(struct tegra_emc *emc, int type, unsigned long offset);
++void mc_writel(u32 val, unsigned long offset);
++u32  mc_readl(unsigned long offset);
++void clk_cfg_writel(u32 val);
++u32  clk_cfg_readl(void);
++void ccfifo_writel(struct tegra_emc *emc, u32 val, unsigned long addr,
++		   u32 delay);
++void do_clock_change(struct tegra_emc *emc);
++int wait_for_update(struct tegra_emc *emc, u32 status_reg, u32 bit_mask,
++		    bool updated_state, int chan);
++u32  div_o3(u32 a, u32 b);
++struct emc_timing *emc_get_table(struct tegra_emc *emc,
++				 unsigned long over_temp_state);
++void set_over_temp_timing(struct tegra_emc *emc, struct emc_timing *timing,
++			  unsigned long state);
++void tegra210_update_emc_alt_timing(struct tegra_emc *emc,
++				    struct emc_timing *current_timing);
++u32 tegra210_actual_osc_clocks(u32 in);
++void tegra210_start_periodic_compensation(struct tegra_emc *emc);
++u32 tegra210_dll_prelock(struct tegra_emc *emc, int dvfs_with_training,
++			 struct clk *newparent);
++void tegra210_reset_dram_clktree_values(struct emc_timing *table);
++u32 tegra210_dvfs_power_ramp_up(struct tegra_emc *emc, u32 clk,
++				int flip_backward);
++u32 tegra210_dvfs_power_ramp_down(struct tegra_emc *emc, u32 clk,
++				  int flip_backward);
++void tegra210_dll_disable(struct tegra_emc *emc, int channel_mode);
++void tegra210_dll_enable(struct tegra_emc *emc, int channel_mode);
++void emc_set_shadow_bypass(struct tegra_emc *emc, int set);
++void emc_timing_update(struct tegra_emc *emc, int dual_chan);
++struct emc_timing *get_timing_from_freq(struct tegra_emc *emc,
++					unsigned long rate);
++u32 get_dll_state(struct emc_timing *next_timing);
 +
-+static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
-+					int where);
++void emc_set_clock_r21012(struct emc_table *next_timing,
++			  struct emc_table *last_timing,
++			  int training, u32 clksrc);
++void emc_set_clock_r21015(struct emc_table *next_timing,
++			  struct emc_table *last_timing,
++			  int training, u32 clksrc);
++u32  __do_periodic_emc_compensation_r21015(struct emc_table *current_timing);
++void emc_set_clock_r21021(struct tegra_emc *emc, struct clk *new_parent);
++u32  __do_periodic_emc_compensation_r21021(struct tegra_emc *emc);
 +
-+static struct pci_ops brcm_pcie_ops = {
-+	.map_bus = brcm_pcie_map_conf,
-+	.read = pci_generic_config_read,
-+	.write = pci_generic_config_write,
-+};
++int tegra_emc_dt_parse_pdata(struct platform_device *pdev,
++			     struct emc_timing **tables,
++			     struct emc_timing **derated_tables,
++			     int *num_entries);
 +
-+#if defined(CONFIG_MIPS)
-+/* Broadcom MIPs HW implicitly does the swapping if necessary */
-+#define bcm_readl(a)		__raw_readl(a)
-+#define bcm_writel(d, a)	__raw_writel(d, a)
-+#define bcm_readw(a)		__raw_readw(a)
-+#define bcm_writew(d, a)	__raw_writew(d, a)
-+#else
-+#define bcm_readl(a)		readl(a)
-+#define bcm_writel(d, a)	writel(d, a)
-+#define bcm_readw(a)		readw(a)
-+#define bcm_writew(d, a)	writew(d, a)
 +#endif
-+
-+/* These macros extract/insert fields to host controller's register set. */
-+#define RD_FLD(base, reg, field) \
-+	rd_fld((base) + reg, reg##_##field##_MASK, reg##_##field##_SHIFT)
-+#define WR_FLD(base, reg, field, val) \
-+	wr_fld((base) + reg, reg##_##field##_MASK, reg##_##field##_SHIFT, val)
-+#define WR_FLD_RB(base, reg, field, val) \
-+	wr_fld_rb((base) + reg, reg##_##field##_MASK, \
-+		reg##_##field##_SHIFT, val)
-+#define WR_FLD_WITH_OFFSET(base, off, reg, field, val) \
-+	wr_fld((base) + reg + (off), reg##_##field##_MASK, \
-+	       reg##_##field##_SHIFT, val)
-+#define EXTRACT_FIELD(val, reg, field) \
-+	(((val) & reg##_##field##_MASK) >> reg##_##field##_SHIFT)
-+#define INSERT_FIELD(val, reg, field, field_val) \
-+	(((val) & ~reg##_##field##_MASK) | \
-+	 (reg##_##field##_MASK & (field_val << reg##_##field##_SHIFT)))
-+
-+static phys_addr_t scb_size[BRCM_MAX_SCB];
-+static int num_memc;
-+static int num_pcie;
-+static DEFINE_MUTEX(brcm_pcie_lock);
-+
-+static u32 rd_fld(void __iomem *p, u32 mask, int shift)
-+{
-+	return (bcm_readl(p) & mask) >> shift;
-+}
-+
-+static void wr_fld(void __iomem *p, u32 mask, int shift, u32 val)
-+{
-+	u32 reg = bcm_readl(p);
-+
-+	reg = (reg & ~mask) | ((val << shift) & mask);
-+	bcm_writel(reg, p);
-+}
-+
-+static void wr_fld_rb(void __iomem *p, u32 mask, int shift, u32 val)
-+{
-+	wr_fld(p, mask, shift, val);
-+	(void)bcm_readl(p);
-+}
-+
-+static const char *link_speed_to_str(int s)
-+{
-+	switch (s) {
-+	case 1:
-+		return "2.5";
-+	case 2:
-+		return "5.0";
-+	case 3:
-+		return "8.0";
-+	default:
-+		break;
-+	}
-+	return "???";
-+}
-+
-+/*
-+ * The roundup_pow_of_two() from log2.h invokes
-+ * __roundup_pow_of_two(unsigned long), but we really need a
-+ * such a function to take a native u64 since unsigned long
-+ * is 32 bits on some configurations.  So we provide this helper
-+ * function below.
-+ */
-+static u64 roundup_pow_of_two_64(u64 n)
-+{
-+	return 1ULL << fls64(n - 1);
-+}
-+
-+/*
-+ * This is to convert the size of the inbound "BAR" region to the
-+ * non-linear values of PCIE_X_MISC_RC_BAR[123]_CONFIG_LO.SIZE
-+ */
-+int encode_ibar_size(u64 size)
-+{
-+	int log2_in = ilog2(size);
-+
-+	if (log2_in >= 12 && log2_in <= 15)
-+		/* Covers 4KB to 32KB (inclusive) */
-+		return (log2_in - 12) + 0x1c;
-+	else if (log2_in >= 16 && log2_in <= 37)
-+		/* Covers 64KB to 32GB, (inclusive) */
-+		return log2_in - 15;
-+	/* Something is awry so disable */
-+	return 0;
-+}
-+
-+static u32 mdio_form_pkt(int port, int regad, int cmd)
-+{
-+	u32 pkt = 0;
-+
-+	pkt |= (port << MDIO_PORT_SHIFT) & MDIO_PORT_MASK;
-+	pkt |= (regad << MDIO_REGAD_SHIFT) & MDIO_REGAD_MASK;
-+	pkt |= (cmd << MDIO_CMD_SHIFT) & MDIO_CMD_MASK;
-+
-+	return pkt;
-+}
-+
-+/* negative return value indicates error */
-+static int mdio_read(void __iomem *base, u8 port, u8 regad)
-+{
-+	int tries;
-+	u32 data;
-+
-+	bcm_writel(mdio_form_pkt(port, regad, MDIO_CMD_READ),
-+		   base + PCIE_RC_DL_MDIO_ADDR);
-+	bcm_readl(base + PCIE_RC_DL_MDIO_ADDR);
-+
-+	data = bcm_readl(base + PCIE_RC_DL_MDIO_RD_DATA);
-+	for (tries = 0; !MDIO_RD_DONE(data) && tries < 10; tries++) {
-+		udelay(10);
-+		data = bcm_readl(base + PCIE_RC_DL_MDIO_RD_DATA);
-+	}
-+
-+	return MDIO_RD_DONE(data)
-+		? (data & MDIO_DATA_MASK) >> MDIO_DATA_SHIFT
-+		: -EIO;
-+}
-+
-+/* negative return value indicates error */
-+static int mdio_write(void __iomem *base, u8 port, u8 regad, u16 wrdata)
-+{
-+	int tries;
-+	u32 data;
-+
-+	bcm_writel(mdio_form_pkt(port, regad, MDIO_CMD_WRITE),
-+		   base + PCIE_RC_DL_MDIO_ADDR);
-+	bcm_readl(base + PCIE_RC_DL_MDIO_ADDR);
-+	bcm_writel(MDIO_DATA_DONE_MASK | wrdata,
-+		   base + PCIE_RC_DL_MDIO_WR_DATA);
-+
-+	data = bcm_readl(base + PCIE_RC_DL_MDIO_WR_DATA);
-+	for (tries = 0; !MDIO_WT_DONE(data) && tries < 10; tries++) {
-+		udelay(10);
-+		data = bcm_readl(base + PCIE_RC_DL_MDIO_WR_DATA);
-+	}
-+
-+	return MDIO_WT_DONE(data) ? 0 : -EIO;
-+}
-+
-+/*
-+ * Configures device for Spread Spectrum Clocking (SSC) mode; a negative
-+ * return value indicates error.
-+ */
-+static int set_ssc(void __iomem *base)
-+{
-+	int tmp;
-+	u16 wrdata;
-+	int pll, ssc;
-+
-+	tmp = mdio_write(base, MDIO_PORT0, SET_ADDR_OFFSET, SSC_REGS_ADDR);
-+	if (tmp < 0)
-+		return tmp;
-+
-+	tmp = mdio_read(base, MDIO_PORT0, SSC_CNTL_OFFSET);
-+	if (tmp < 0)
-+		return tmp;
-+
-+	wrdata = INSERT_FIELD(tmp, SSC_CNTL_OVRD, EN, 1);
-+	wrdata = INSERT_FIELD(wrdata, SSC_CNTL_OVRD, VAL, 1);
-+	tmp = mdio_write(base, MDIO_PORT0, SSC_CNTL_OFFSET, wrdata);
-+	if (tmp < 0)
-+		return tmp;
-+
-+	usleep_range(1000, 2000);
-+	tmp = mdio_read(base, MDIO_PORT0, SSC_STATUS_OFFSET);
-+	if (tmp < 0)
-+		return tmp;
-+
-+	ssc = EXTRACT_FIELD(tmp, SSC_STATUS, SSC);
-+	pll = EXTRACT_FIELD(tmp, SSC_STATUS, PLL_LOCK);
-+
-+	return (ssc && pll) ? 0 : -EIO;
-+}
-+
-+/* Limits operation to a specific generation (1, 2, or 3) */
-+static void set_gen(void __iomem *base, int gen)
-+{
-+	u32 lnkcap = bcm_readl(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
-+	u16 lnkctl2 = bcm_readw(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
-+
-+	lnkcap = (lnkcap & ~PCI_EXP_LNKCAP_SLS) | gen;
-+	bcm_writel(lnkcap, base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCAP);
-+
-+	lnkctl2 = (lnkctl2 & ~0xf) | gen;
-+	bcm_writew(lnkctl2, base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKCTL2);
-+}
-+
-+static void brcm_pcie_set_outbound_win(struct brcm_pcie *pcie,
-+				       unsigned int win, phys_addr_t cpu_addr,
-+				       dma_addr_t  pcie_addr, dma_addr_t size)
-+{
-+	void __iomem *base = pcie->base;
-+	phys_addr_t cpu_addr_mb, limit_addr_mb;
-+	u32 tmp;
-+
-+	/* Set the base of the pcie_addr window */
-+	bcm_writel(lower_32_bits(pcie_addr) + MMIO_ENDIAN,
-+		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LO + (win * 8));
-+	bcm_writel(upper_32_bits(pcie_addr),
-+		   base + PCIE_MISC_CPU_2_PCIE_MEM_WIN0_HI + (win * 8));
-+
-+	cpu_addr_mb = cpu_addr >> 20;
-+	limit_addr_mb = (cpu_addr + size - 1) >> 20;
-+
-+	/* Write the addr base low register */
-+	WR_FLD_WITH_OFFSET(base, (win * 4),
-+			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
-+			   BASE, cpu_addr_mb);
-+	/* Write the addr limit low register */
-+	WR_FLD_WITH_OFFSET(base, (win * 4),
-+			   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT,
-+			   LIMIT, limit_addr_mb);
-+
-+	if (pcie->type != BCM7435 && pcie->type != BCM7425) {
-+		/* Write the cpu addr high register */
-+		tmp = (u32)(cpu_addr_mb >>
-+			PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS);
-+		WR_FLD_WITH_OFFSET(base, (win * 8),
-+				   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_HI,
-+				   BASE, tmp);
-+		/* Write the cpu limit high register */
-+		tmp = (u32)(limit_addr_mb >>
-+			PCIE_MISC_CPU_2_PCIE_MEM_WIN0_BASE_LIMIT_NUM_MASK_BITS);
-+		WR_FLD_WITH_OFFSET(base, (win * 8),
-+				   PCIE_MISC_CPU_2_PCIE_MEM_WIN0_LIMIT_HI,
-+				   LIMIT, tmp);
-+	}
-+}
-+
-+/* Configuration space read/write support */
-+static int cfg_index(int busnr, int devfn, int reg)
-+{
-+	return ((PCI_SLOT(devfn) & 0x1f) << PCIE_SLOT_SHIFT)
-+		| ((PCI_FUNC(devfn) & 0x07) << PCIE_FUNC_SHIFT)
-+		| (busnr << PCIE_BUSNUM_SHIFT)
-+		| (reg & ~3);
-+}
-+
-+/* The controller is capable of serving in both RC and EP roles */
-+static bool brcm_pcie_rc_mode(struct brcm_pcie *pcie)
-+{
-+	void __iomem *base = pcie->base;
-+	u32 val = bcm_readl(base + PCIE_MISC_PCIE_STATUS);
-+
-+	return !!EXTRACT_FIELD(val, PCIE_MISC_PCIE_STATUS, PCIE_PORT);
-+}
-+
-+static bool brcm_pcie_link_up(struct brcm_pcie *pcie)
-+{
-+	void __iomem *base = pcie->base;
-+	u32 val = bcm_readl(base + PCIE_MISC_PCIE_STATUS);
-+	u32 dla = EXTRACT_FIELD(val, PCIE_MISC_PCIE_STATUS, PCIE_DL_ACTIVE);
-+	u32 plu = EXTRACT_FIELD(val, PCIE_MISC_PCIE_STATUS, PCIE_PHYLINKUP);
-+
-+	return  (dla && plu) ? true : false;
-+}
-+
-+static void __iomem *brcm_pcie_map_conf(struct pci_bus *bus, unsigned int devfn,
-+					int where)
-+{
-+	struct brcm_pcie *pcie = bus->sysdata;
-+	void __iomem *base = pcie->base;
-+	int idx;
-+
-+	/* Accesses to the RC go right to the RC registers if slot==0 */
-+	if (pci_is_root_bus(bus))
-+		return PCI_SLOT(devfn) ? NULL : base + where;
-+
-+	/* For devices, write to the config space index register */
-+	idx = cfg_index(bus->number, devfn, where);
-+	bcm_writel(idx, pcie->base + IDX_ADDR(pcie));
-+	return base + DATA_ADDR(pcie) + (where & 0x3);
-+}
-+
-+static inline void brcm_pcie_bridge_sw_init_set(struct brcm_pcie *pcie,
-+						unsigned int val)
-+{
-+	unsigned int shift = pcie->reg_field_info[RGR1_SW_INIT_1_INIT_SHIFT];
-+	u32 mask =  pcie->reg_field_info[RGR1_SW_INIT_1_INIT_MASK];
-+
-+	wr_fld_rb(pcie->base + PCIE_RGR1_SW_INIT_1(pcie), mask, shift, val);
-+}
-+
-+static inline void brcm_pcie_perst_set(struct brcm_pcie *pcie,
-+				       unsigned int val)
-+{
-+	if (pcie->type != BCM7278)
-+		wr_fld_rb(pcie->base + PCIE_RGR1_SW_INIT_1(pcie),
-+			  PCIE_RGR1_SW_INIT_1_PERST_MASK,
-+			  PCIE_RGR1_SW_INIT_1_PERST_SHIFT, val);
-+	else
-+		/* Assert = 0, de-assert = 1 on 7278 */
-+		WR_FLD_RB(pcie->base, PCIE_MISC_PCIE_CTRL, PCIE_PERSTB, !val);
-+}
-+
-+static int brcm_pcie_add_controller(struct brcm_pcie *pcie)
-+{
-+	int i, ret = 0;
-+	struct device *dev = pcie->dev;
-+
-+	mutex_lock(&brcm_pcie_lock);
-+	if (num_pcie > 0) {
-+		num_pcie++;
-+		goto done;
-+	}
-+
-+	/* Determine num_memc and their sizes */
-+	for (i = 0, num_memc = 0; i < BRCM_MAX_SCB; i++) {
-+		u64 size = brcmstb_memory_memc_size(i);
-+
-+		if (size == (u64)-1) {
-+			dev_err(dev, "cannot get memc%d size\n", i);
-+			ret = -EINVAL;
-+			goto done;
-+		} else if (size) {
-+			scb_size[i] = roundup_pow_of_two_64(size);
-+			num_memc++;
-+		} else {
-+			break;
-+		}
-+	}
-+	if (!ret && num_memc == 0) {
-+		ret = -EINVAL;
-+		goto done;
-+	}
-+
-+	num_pcie++;
-+done:
-+	mutex_unlock(&brcm_pcie_lock);
-+	return ret;
-+}
-+
-+static void brcm_pcie_remove_controller(struct brcm_pcie *pcie)
-+{
-+	mutex_lock(&brcm_pcie_lock);
-+	if (--num_pcie == 0)
-+		num_memc = 0;
-+	mutex_unlock(&brcm_pcie_lock);
-+}
-+
-+static int brcm_pcie_parse_request_of_pci_ranges(struct brcm_pcie *pcie)
-+{
-+	struct resource_entry *win;
-+	int ret;
-+
-+	ret = devm_of_pci_get_host_bridge_resources(pcie->dev, 0, 0xff,
-+						    &pcie->resources, NULL);
-+	if (ret) {
-+		dev_err(pcie->dev, "failed to get host resources\n");
-+		return ret;
-+	}
-+
-+	resource_list_for_each_entry(win, &pcie->resources) {
-+		struct resource *res = win->res;
-+		dma_addr_t offset = (dma_addr_t)win->offset;
-+
-+		if (resource_type(res) != IORESOURCE_MEM)
-+			continue;
-+
-+		if (pcie->num_out_wins >= BRCM_NUM_PCIE_OUT_WINS) {
-+			dev_err(pcie->dev, "too many outbound wins\n");
-+			return -EINVAL;
-+		}
-+		pcie->out_wins[pcie->num_out_wins].cpu_addr =
-+			(phys_addr_t)res->start;
-+		pcie->out_wins[pcie->num_out_wins].pcie_addr =
-+			(dma_addr_t)(res->start - (phys_addr_t)offset);
-+		pcie->out_wins[pcie->num_out_wins].size =
-+			(dma_addr_t)(res->end - res->start + 1);
-+		pcie->num_out_wins++;
-+	}
-+
-+	ret = devm_request_pci_bus_resources(pcie->dev, &pcie->resources);
-+	if (ret)
-+		dev_err(pcie->dev, "failed to request pci resources\n");
-+	return ret;
-+}
-+
-+static int brcm_pcie_setup(struct brcm_pcie *pcie)
-+{
-+	void __iomem *base = pcie->base;
-+	unsigned int scb_size_val;
-+	u64 rc_bar2_offset, rc_bar2_size, total_mem_size = 0;
-+	u32 tmp, burst;
-+	int i, j, ret, limit;
-+	u16 nlw, cls, lnksta;
-+	bool ssc_good = false;
-+	struct device *dev = pcie->dev;
-+
-+	/* Reset the bridge */
-+	brcm_pcie_bridge_sw_init_set(pcie, 1);
-+
-+	/*
-+	 * Ensure that the fundamental reset is asserted, except for 7278,
-+	 * which fails if we do this.
-+	 */
-+	if (pcie->type != BCM7278)
-+		brcm_pcie_perst_set(pcie, 1);
-+
-+	usleep_range(100, 200);
-+
-+	/* Take the bridge out of reset */
-+	brcm_pcie_bridge_sw_init_set(pcie, 0);
-+
-+	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
-+	/* Wait for SerDes to be stable */
-+	usleep_range(100, 200);
-+
-+	/* Grab the PCIe hw revision number */
-+	tmp = bcm_readl(base + PCIE_MISC_REVISION);
-+	pcie->rev = EXTRACT_FIELD(tmp, PCIE_MISC_REVISION, MAJMIN);
-+
-+	/* Set SCB_MAX_BURST_SIZE, CFG_READ_UR_MODE, SCB_ACCESS_EN */
-+	tmp = INSERT_FIELD(0, PCIE_MISC_MISC_CTRL, SCB_ACCESS_EN, 1);
-+	tmp = INSERT_FIELD(tmp, PCIE_MISC_MISC_CTRL, CFG_READ_UR_MODE, 1);
-+	burst = (pcie->type == GENERIC || pcie->type == BCM7278)
-+		? BURST_SIZE_512 : BURST_SIZE_256;
-+	tmp = INSERT_FIELD(tmp, PCIE_MISC_MISC_CTRL, MAX_BURST_SIZE, burst);
-+	bcm_writel(tmp, base + PCIE_MISC_MISC_CTRL);
-+
-+	/*
-+	 * Set up inbound memory view for the EP (called RC_BAR2,
-+	 * not to be confused with the BARs that are advertised by
-+	 * the EP).
-+	 */
-+	for (i = 0; i < num_memc; i++)
-+		total_mem_size += scb_size[i];
-+
-+	/*
-+	 * The PCIe host controller by design must set the inbound
-+	 * viewport to be a contiguous arrangement of all of the
-+	 * system's memory.  In addition, its size mut be a power of
-+	 * two.  To further complicate matters, the viewport must
-+	 * start on a pcie-address that is aligned on a multiple of its
-+	 * size.  If a portion of the viewport does not represent
-+	 * system memory -- e.g. 3GB of memory requires a 4GB viewport
-+	 * -- we can map the outbound memory in or after 3GB and even
-+	 * though the viewport will overlap the outbound memory the
-+	 * controller will know to send outbound memory downstream and
-+	 * everything else upstream.
-+	 */
-+	rc_bar2_size = roundup_pow_of_two_64(total_mem_size);
-+
-+	/*
-+	 * Set simple configuration based on memory sizes
-+	 * only.  We always start the viewport at address 0.
-+	 */
-+	rc_bar2_offset = 0;
-+
-+	tmp = lower_32_bits(rc_bar2_offset);
-+	tmp = INSERT_FIELD(tmp, PCIE_MISC_RC_BAR2_CONFIG_LO, SIZE,
-+			   encode_ibar_size(rc_bar2_size));
-+	bcm_writel(tmp, base + PCIE_MISC_RC_BAR2_CONFIG_LO);
-+	bcm_writel(upper_32_bits(rc_bar2_offset),
-+		   base + PCIE_MISC_RC_BAR2_CONFIG_HI);
-+
-+	scb_size_val = scb_size[0]
-+		? ilog2(scb_size[0]) - 15 : 0xf; /* 0xf is 1GB */
-+	WR_FLD(base, PCIE_MISC_MISC_CTRL, SCB0_SIZE, scb_size_val);
-+
-+	if (num_memc > 1) {
-+		scb_size_val = scb_size[1]
-+			? ilog2(scb_size[1]) - 15 : 0xf; /* 0xf is 1GB */
-+		WR_FLD(base, PCIE_MISC_MISC_CTRL, SCB1_SIZE, scb_size_val);
-+	}
-+
-+	if (num_memc > 2) {
-+		scb_size_val = scb_size[2]
-+			? ilog2(scb_size[2]) - 15 : 0xf; /* 0xf is 1GB */
-+		WR_FLD(base, PCIE_MISC_MISC_CTRL, SCB2_SIZE, scb_size_val);
-+	}
-+
-+	/* disable the PCIe->GISB memory window (RC_BAR1) */
-+	WR_FLD(base, PCIE_MISC_RC_BAR1_CONFIG_LO, SIZE, 0);
-+
-+	/* disable the PCIe->SCB memory window (RC_BAR3) */
-+	WR_FLD(base, PCIE_MISC_RC_BAR3_CONFIG_LO, SIZE, 0);
-+
-+	if (!pcie->suspended) {
-+		/* clear any interrupts we find on boot */
-+		bcm_writel(0xffffffff, base + PCIE_INTR2_CPU_BASE + CLR);
-+		(void)bcm_readl(base + PCIE_INTR2_CPU_BASE + CLR);
-+	}
-+
-+	/* Mask all interrupts since we are not handling any yet */
-+	bcm_writel(0xffffffff, base + PCIE_INTR2_CPU_BASE + MASK_SET);
-+	(void)bcm_readl(base + PCIE_INTR2_CPU_BASE + MASK_SET);
-+
-+	if (pcie->gen)
-+		set_gen(base, pcie->gen);
-+
-+	/* Unassert the fundamental reset */
-+	brcm_pcie_perst_set(pcie, 0);
-+
-+	/*
-+	 * Give the RC/EP time to wake up, before trying to configure RC.
-+	 * Intermittently check status for link-up, up to a total of 100ms
-+	 * when we don't know if the device is there, and up to 1000ms if
-+	 * we do know the device is there.
-+	 */
-+	limit = pcie->suspended ? 1000 : 100;
-+	for (i = 1, j = 0; j < limit && !brcm_pcie_link_up(pcie);
-+	     j += i, i = i * 2)
-+		msleep(i + j > limit ? limit - j : i);
-+
-+	if (!brcm_pcie_link_up(pcie)) {
-+		dev_info(dev, "link down\n");
-+		return -ENODEV;
-+	}
-+
-+	if (!brcm_pcie_rc_mode(pcie)) {
-+		dev_err(dev, "PCIe misconfigured; is in EP mode\n");
-+		return -EINVAL;
-+	}
-+
-+	for (i = 0; i < pcie->num_out_wins; i++)
-+		brcm_pcie_set_outbound_win(pcie, i, pcie->out_wins[i].cpu_addr,
-+					   pcie->out_wins[i].pcie_addr,
-+					   pcie->out_wins[i].size);
-+
-+	/*
-+	 * For config space accesses on the RC, show the right class for
-+	 * a PCIe-PCIe bridge (the default setting is to be EP mode).
-+	 */
-+	WR_FLD_RB(base, PCIE_RC_CFG_PRIV1_ID_VAL3, CLASS_CODE, 0x060400);
-+
-+	if (pcie->ssc) {
-+		ret = set_ssc(base);
-+		if (ret == 0)
-+			ssc_good = true;
-+		else
-+			dev_err(dev, "failed attempt to enter ssc mode\n");
-+	}
-+
-+	lnksta = bcm_readw(base + BRCM_PCIE_CAP_REGS + PCI_EXP_LNKSTA);
-+	cls = lnksta & PCI_EXP_LNKSTA_CLS;
-+	nlw = (lnksta & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT;
-+	dev_info(dev, "link up, %s Gbps x%u %s\n", link_speed_to_str(cls),
-+		 nlw, ssc_good ? "(SSC)" : "(!SSC)");
-+
-+	/* PCIe->SCB endian mode for BAR */
-+	/* field ENDIAN_MODE_BAR2 = DATA_ENDIAN */
-+	WR_FLD_RB(base, PCIE_RC_CFG_VENDOR_VENDOR_SPECIFIC_REG1,
-+		  ENDIAN_MODE_BAR2, DATA_ENDIAN);
-+
-+	/*
-+	 * Refclk from RC should be gated with CLKREQ# input when ASPM L0s,L1
-+	 * is enabled =>  setting the CLKREQ_DEBUG_ENABLE field to 1.
-+	 */
-+	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, CLKREQ_DEBUG_ENABLE, 1);
-+
-+	return 0;
-+}
-+
-+/* L23 is a low-power PCIe link state */
-+static void enter_l23(struct brcm_pcie *pcie)
-+{
-+	void __iomem *base = pcie->base;
-+	int l23, i;
-+
-+	/* assert request for L23 */
-+	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 1);
-+
-+	/* Wait up to 30 msec for L23 */
-+	l23 = RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
-+	for (i = 0; i < 15 && !l23; i++) {
-+		usleep_range(2000, 2400);
-+		l23 = RD_FLD(base, PCIE_MISC_PCIE_STATUS, PCIE_LINK_IN_L23);
-+	}
-+
-+	if (!l23)
-+		dev_err(pcie->dev, "failed to enter L23\n");
-+}
-+
-+static void turn_off(struct brcm_pcie *pcie)
-+{
-+	void __iomem *base = pcie->base;
-+
-+	if (brcm_pcie_link_up(pcie))
-+		enter_l23(pcie);
-+	/* Assert fundamental reset */
-+	brcm_pcie_perst_set(pcie, 1);
-+	/* Deassert request for L23 in case it was asserted */
-+	WR_FLD_RB(base, PCIE_MISC_PCIE_CTRL, PCIE_L23_REQUEST, 0);
-+	/* Turn off SerDes */
-+	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 1);
-+	/* Shutdown PCIe bridge */
-+	brcm_pcie_bridge_sw_init_set(pcie, 1);
-+}
-+
-+static int brcm_pcie_suspend(struct device *dev)
-+{
-+	struct brcm_pcie *pcie = dev_get_drvdata(dev);
-+
-+	turn_off(pcie);
-+	clk_disable_unprepare(pcie->clk);
-+	pcie->suspended = true;
-+
-+	return 0;
-+}
-+
-+static int brcm_pcie_resume(struct device *dev)
-+{
-+	struct brcm_pcie *pcie = dev_get_drvdata(dev);
-+	void __iomem *base;
-+	int ret;
-+
-+	base = pcie->base;
-+	clk_prepare_enable(pcie->clk);
-+
-+	/* Take bridge out of reset so we can access the SerDes reg */
-+	brcm_pcie_bridge_sw_init_set(pcie, 0);
-+
-+	/* Turn on SerDes */
-+	WR_FLD_RB(base, PCIE_MISC_HARD_PCIE_HARD_DEBUG, SERDES_IDDQ, 0);
-+	/* Wait for SerDes to be stable */
-+	usleep_range(100, 200);
-+
-+	ret = brcm_pcie_setup(pcie);
-+	if (ret)
-+		return ret;
-+
-+	pcie->suspended = false;
-+
-+	return 0;
-+}
-+
-+static void _brcm_pcie_remove(struct brcm_pcie *pcie)
-+{
-+	turn_off(pcie);
-+	clk_disable_unprepare(pcie->clk);
-+	clk_put(pcie->clk);
-+	pci_free_resource_list(&pcie->resources);
-+	brcm_pcie_remove_controller(pcie);
-+}
-+
-+static int brcm_pcie_remove(struct platform_device *pdev)
-+{
-+	struct brcm_pcie *pcie = platform_get_drvdata(pdev);
-+
-+	pci_stop_root_bus(pcie->root_bus);
-+	pci_remove_root_bus(pcie->root_bus);
-+	_brcm_pcie_remove(pcie);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id brcm_pcie_match[] = {
-+	{ .compatible = "brcm,bcm7425-pcie", .data = &bcm7425_cfg },
-+	{ .compatible = "brcm,bcm7435-pcie", .data = &bcm7435_cfg },
-+	{ .compatible = "brcm,bcm7278-pcie", .data = &bcm7278_cfg },
-+	{ .compatible = "brcm,bcm7445-pcie", .data = &generic_cfg },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, brcm_pcie_match);
-+
-+static int brcm_pcie_probe(struct platform_device *pdev)
-+{
-+	struct device_node *dn = pdev->dev.of_node;
-+	const struct of_device_id *of_id;
-+	const struct pcie_cfg_data *data;
-+	int ret;
-+	struct brcm_pcie *pcie;
-+	struct resource *res;
-+	void __iomem *base;
-+	u32 tmp;
-+	struct pci_host_bridge *bridge;
-+	struct pci_bus *child;
-+
-+	bridge = devm_pci_alloc_host_bridge(&pdev->dev, sizeof(*pcie));
-+	if (!bridge)
-+		return -ENOMEM;
-+
-+	pcie = pci_host_bridge_priv(bridge);
-+	INIT_LIST_HEAD(&pcie->resources);
-+
-+	of_id = of_match_node(brcm_pcie_match, dn);
-+	if (!of_id) {
-+		dev_err(&pdev->dev, "failed to look up compatible string\n");
-+		return -EINVAL;
-+	}
-+
-+	if (of_property_read_u32(dn, "dma-ranges", &tmp) == 0) {
-+		dev_err(&pdev->dev, "cannot yet handle dma-ranges\n");
-+		return -EINVAL;
-+	}
-+
-+	data = of_id->data;
-+	pcie->reg_offsets = data->offsets;
-+	pcie->reg_field_info = data->reg_field_info;
-+	pcie->type = data->type;
-+	pcie->dn = dn;
-+	pcie->dev = &pdev->dev;
-+
-+	/* We use the domain number as our controller number */
-+	pcie->id = of_get_pci_domain_nr(dn);
-+	if (pcie->id < 0)
-+		return pcie->id;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EINVAL;
-+
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	pcie->clk = of_clk_get_by_name(dn, "sw_pcie");
-+	if (IS_ERR(pcie->clk)) {
-+		dev_err(&pdev->dev, "could not get clock\n");
-+		pcie->clk = NULL;
-+	}
-+	pcie->base = base;
-+
-+	ret = of_pci_get_max_link_speed(dn);
-+	pcie->gen = (ret < 0) ? 0 : ret;
-+
-+	pcie->ssc = of_property_read_bool(dn, "brcm,enable-ssc");
-+
-+	ret = irq_of_parse_and_map(pdev->dev.of_node, 0);
-+	if (ret == 0)
-+		/* keep going, as we don't use this intr yet */
-+		dev_warn(pcie->dev, "cannot get PCIe interrupt\n");
-+	else
-+		pcie->irq = ret;
-+
-+	ret = brcm_pcie_parse_request_of_pci_ranges(pcie);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(pcie->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not enable clock\n");
-+		return ret;
-+	}
-+
-+	ret = brcm_pcie_add_controller(pcie);
-+	if (ret)
-+		return ret;
-+
-+	ret = brcm_pcie_setup(pcie);
-+	if (ret)
-+		goto fail;
-+
-+	list_splice_init(&pcie->resources, &bridge->windows);
-+	bridge->dev.parent = &pdev->dev;
-+	bridge->busnr = 0;
-+	bridge->ops = &brcm_pcie_ops;
-+	bridge->sysdata = pcie;
-+	bridge->map_irq = of_irq_parse_and_map_pci;
-+	bridge->swizzle_irq = pci_common_swizzle;
-+
-+	ret = pci_scan_root_bus_bridge(bridge);
-+	if (ret < 0) {
-+		dev_err(pcie->dev, "Scanning root bridge failed\n");
-+		goto fail;
-+	}
-+
-+	pci_assign_unassigned_bus_resources(bridge->bus);
-+	list_for_each_entry(child, &bridge->bus->children, node)
-+		pcie_bus_configure_settings(child);
-+	pci_bus_add_devices(bridge->bus);
-+	platform_set_drvdata(pdev, pcie);
-+	pcie->root_bus = bridge->bus;
-+
-+	return 0;
-+
-+fail:
-+	_brcm_pcie_remove(pcie);
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops brcm_pcie_pm_ops = {
-+	.suspend_noirq = brcm_pcie_suspend,
-+	.resume_noirq = brcm_pcie_resume,
-+};
-+
-+static struct platform_driver brcm_pcie_driver = {
-+	.probe = brcm_pcie_probe,
-+	.remove = brcm_pcie_remove,
-+	.driver = {
-+		.name = "brcm-pcie",
-+		.owner = THIS_MODULE,
-+		.of_match_table = brcm_pcie_match,
-+		.pm = &brcm_pcie_pm_ops,
-+	},
-+};
-+
-+module_platform_driver(brcm_pcie_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Broadcom STB PCIe RC driver");
-+MODULE_AUTHOR("Broadcom");
 -- 
-1.9.0.138.g2de3478
+1.9.1
