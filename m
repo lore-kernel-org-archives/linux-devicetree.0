@@ -1,15 +1,14 @@
 From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 03/16] dt-bindings: display: renesas: lvds: Add EXTAL and
- DU_DOTCLKIN clocks
-Date: Fri, 14 Sep 2018 10:35:15 +0200
-Message-ID: <20180914083515.GC28160@w540>
+Subject: Re: [PATCH 02/16] dt-bindings: display: renesas: lvds: Document
+ r8a77990 bindings
+Date: Fri, 14 Sep 2018 09:57:11 +0200
+Message-ID: <20180914075711.GJ11509@w540>
 References: <20180904121027.24031-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180904121027.24031-4-laurent.pinchart+renesas@ideasonboard.com>
- <20180914080046.GK11509@w540> <6030546.koD4IuRgeG@avalon>
+ <20180904121027.24031-3-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1145816631=="
+Content-Type: multipart/mixed; boundary="===============0727628071=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <6030546.koD4IuRgeG@avalon>
+In-Reply-To: <20180904121027.24031-3-laurent.pinchart+renesas@ideasonboard.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -19,138 +18,78 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1145816631==
+--===============0727628071==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="eu8nj/18vubUeVCi"
+	protocol="application/pgp-signature"; boundary="u3W6riq+uV6J42Ub"
 Content-Disposition: inline
 
 
---eu8nj/18vubUeVCi
+--u3W6riq+uV6J42Ub
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 
 Hi Laurent,
 
-On Fri, Sep 14, 2018 at 11:24:32AM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
+On Tue, Sep 04, 2018 at 03:10:13PM +0300, Laurent Pinchart wrote:
+> The E3 (r8a77990) supports two LVDS channels. Extend the binding to
+> support them.
 >
-> On Friday, 14 September 2018 11:00:46 EEST jacopo mondi wrote:
-> > On Tue, Sep 04, 2018 at 03:10:14PM +0300, Laurent Pinchart wrote:
-> > > On the D3 and E3 SoCs, the LVDS encoder can derive its internal pixel
-> > > clock from an externally supplied clock, either through the EXTAL pin or
-> > > through one of the DU_DOTCLKINx pins. Add corresponding clocks to the DT
-> > > bindings.
-> > >
-> > > To retain backward compatibility with DT that don't specify the
-> > > clock-names property, the functional clock must always be specified
-> > > first, and the clock-names property is optional when only the functional
-> > > clock is specified.
-> > >
-> > > Signed-off-by: Laurent Pinchart
-> > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > ---
-> > >
-> > >  .../devicetree/bindings/display/bridge/renesas,lvds.txt      | 12 ++++++-
-> > >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git
-> > > a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt index
-> > > 13af7e2ac7e8..9e3913f6a643 100644
-> > > --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
-> > > @@ -19,7 +19,17 @@ Required properties:
-> > >    - "renesas,r8a77995-lvds" for R8A77995 (R-Car D3) compatible LVDS
-> > >    encoders
-> > >
-> > >  - reg: Base address and length for the memory-mapped registers
-> > >
-> > > -- clocks: A phandle + clock-specifier pair for the functional clock
-> > > +- clocks: A list of phandles + clock-specifier pairs, one for each entry
-> > > in
-> > > +  the clock-names property.
-> > > +- clock-names: Name of the clocks. This property is model-dependent.
-> > > +  - The functional clock is mandatory for all models, shall be listed
-> > > first,
-> >
-> > I would write
-> >
-> > The functional clock, which is mandatory for all models, shall be listed
-> > first and shall be named "fck".
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> ---
+>  Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> I'll change that.
+> diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> index 5a4e379bb414..13af7e2ac7e8 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/renesas,lvds.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>    - "renesas,r8a7796-lvds" for R8A7796 (R-Car M3-W) compatible LVDS encoders
+>    - "renesas,r8a77970-lvds" for R8A77970 (R-Car V3M) compatible LVDS encoders
+>    - "renesas,r8a77980-lvds" for R8A77980 (R-Car V3H) compatible LVDS encoders
+> +  - "renesas,r8a77990-lvds" for R8A77990 (R-Car E3) compatible LVDS encoders
+>    - "renesas,r8a77995-lvds" for R8A77995 (R-Car D3) compatible LVDS encoders
 >
-> > > +    and shall be named "fck".
-> > > +  - On R8A77990 and R8A77995, the LVDS encoder can use the EXTAL or
-> > > +    DU_DOTCLKINx clocks. Those clocks are optional. When supplied they
-> > > must be
-> > > +    named "extal" and "dclkin.x" respectively, with "x" being the
-> > > DU_DOTCLKIN
-> > > +    numerical index.
-> >
-> > Is it valid to list other clocks here for the other SoCs?
->
-> No, those clocks only exist for D3 and E3, as stated (R8A77990 and R8A77995).
-> Do you think the text isn't clear enough ?
-
-It's fine. I now read it as:
-"On R8A77990 and R8A77995 _only_, the LVDS encoder can use the EXTAL or"
-
-It's all good, with the little "which" added to the first statement
-please add to v2:
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-   j
-
->
-> > > +  - When the clocks property only contains the functional clock, the
-> > > +    clock-names property may be omitted.
-> > >
-> > >  - resets: A phandle + reset specifier for the module reset
-> >
-> > Thanks
-> >    j
-> >
-> > >  Required nodes:
->
+>  - reg: Base address and length for the memory-mapped registers
 > --
 > Regards,
 >
+Thanks,
+
+Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+
 > Laurent Pinchart
 >
->
->
 
---eu8nj/18vubUeVCi
+--u3W6riq+uV6J42Ub
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJbm3LDAAoJEHI0Bo8WoVY80o0QALB5qyw+YDGKucV1yxGTYuuj
-uWALz98xOhfFePemFJy+X5KIcAdjbWfQNJMCMUr1Ui5euD+0mGaDKEP5gZ3LgkYA
-joghUmx0Ybhos98fUPjy8K0fNYNXNW0ZSE4/XBLo79nbMcTp71RHNAB2hJpgtvxu
-ARAI1WOpUEQek2/hmm87Yow5J8C8+vOVCprkQobpNIB4E1ibm/RcmJrXsiRqXCeq
-lHqPmfhErCnyreUU72MN8ZFH0CtlpJ4Larrb2lgAwc3GMRVekHicmiPeMsq6JXhR
-6AHcMriDYPPW4/SmShZ7sqDuPx+sOiJOWbb/0sHT3JEBA0DnbHm6ffS0yd2Oi0+y
-2UzjhZuxscRE5qd4Epm4C8zlK+hoOksHMVYQeT7p79ZXzyuxo1y+p14vQJevmj+W
-yxVi+4f5cI7zcrT0OO6X74Gz3uYKK0p6mu+q7nQ22FYN8Lc1n7BKQSaoeWhIJdKL
-vX+lMpxfp6IWJ7BSowzn6AEbkOyd3YUGhnarKluKXTya93caXzwoCb9+AdEm5PFm
-+ZDCKuvvp975lkFaDCkNdXIF2nWI0vaW4ySTNt77B8B99Nz7T13240LZ7NaILfkL
-+t17u/oseet9yay7ek1bDE0Ebt0paydmBCoDbHvvEaBVKykGQ6lR33qKkfOK83Ww
-CPrE+ZmT2L0VngBrW62x
-=HaL4
+iQIcBAEBAgAGBQJbm2nXAAoJEHI0Bo8WoVY8LxkP/i05SUXlCrraWDiSpTvM71Ss
+m09cOwIMX05YMXrPCXSyeR4N11jfvw64DnVjBpQ+tJTjNiSCNKipUBNDmsJX4tQj
+cCkWJRut6vMrSFnO1r/yRHj9zcm6mudqX/G/jkyV7/61qr8/aDMcjH+EMZ/usZan
+WxEwEpXmbZ5s/UEt61A1g7UkAMZRF5Sdr3XumlN8g9k3Caq+IAixqsa9C7gITGZj
+u7jcSCRvjkaZ3k2KiboSdhJTwVcNoAT+qPNSiAWu28/6ETcmJ2ey0CrG/GF7YZBN
+jInmsaurmwR4snogIzr8P10YqLd//teNMwGdPQKYanVgjk9xK7IaayvBDYW3UR4K
+a2Wrph+nKjTaQ45zimTcK65aSyGrrfntOI3PegUpn3hoXiFiHmTmTePbMj3hpHw1
+syEap3ko/K8iETQZwiub0maHNMCK1wT/9iC8/8YrtI3t/d0gQuwDDjRLA3WXdJ1M
+5ylMHoCrUqGFtj37ApL1lykN7g1LE6cnWmjv9HhD05y0YuRkKiea0AQi6noKcXZc
+qzkL5Sm+tNzjKrXR6j/CTc9KkH0sG+4jydSXzzw2PLbv6IgzFobOQd2qbZFagK8u
+7a7zwtKXdZ63E2aPMn3Fj3YcA1shnnKVVnp9PcgYHgXeh/HgodLQG/LPRBaoIPQC
+XCI2p8rP5ZnWSjpomdwK
+=AiFR
 -----END PGP SIGNATURE-----
 
---eu8nj/18vubUeVCi--
+--u3W6riq+uV6J42Ub--
 
---===============1145816631==
+--===============0727628071==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -160,4 +99,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============1145816631==--
+--===============0727628071==--
