@@ -1,59 +1,60 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 4/4] ARM: dts: bcm283x: Correct mailbox register sizes
-Date: Fri, 14 Sep 2018 10:01:12 -0700
-Message-ID: <f1322c43-061d-ca04-a0e8-cd4fe02ea1ac@gmail.com>
-References: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
- <1536931375-48769-5-git-send-email-phil@raspberrypi.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 5/7] MIPS: mscc: ocelot: add GPIO4 pinmuxing DT node
+Date: Fri, 14 Sep 2018 19:02:21 +0200
+Message-ID: <20180914170221.GB3811@lunn.ch>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <92e37a04e77003f01a67ac5e49e66ae83f87c591.1536916714.git-series.quentin.schulz@bootlin.com>
+ <20180914145446.GQ14988@piout.net>
+ <20180914162638.fgzzjin2bzgx74de@qschulz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1536931375-48769-5-git-send-email-phil@raspberrypi.org>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180914162638.fgzzjin2bzgx74de@qschulz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2018 06:22 AM, Phil Elwell wrote:
-> The size field in a Device Tree "reg" property is encoded in bytes, not
-> words.
+On Fri, Sep 14, 2018 at 06:26:38PM +0200, Quentin Schulz wrote:
+> Hi Alexandre,
 > 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-
-This should probably have a:
-
-Fixes: 614fa22119d6 ("ARM: dts: bcm2835: Add VCHIQ node to the Raspberry
-Pi boards. (v3)")
-
-as well?
-
-> ---
->  arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Fri, Sep 14, 2018 at 04:54:46PM +0200, Alexandre Belloni wrote:
+> > Hi,
+> > 
+> > On 14/09/2018 11:44:26+0200, Quentin Schulz wrote:
+> > > In order to use GPIO4 as a GPIO, we need to mux it in this mode so let's
+> > > declare a new pinctrl DT node for it.
+> > > 
+> > > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > > ---
+> > >  arch/mips/boot/dts/mscc/ocelot.dtsi | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > index 8ce317c..b5c4c74 100644
+> > > --- a/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > @@ -182,6 +182,11 @@
+> > >  			interrupts = <13>;
+> > >  			#interrupt-cells = <2>;
+> > >  
+> > > +			gpio4: gpio4 {
+> > > +				pins = "GPIO_4";
+> > > +				function = "gpio";
+> > > +			};
+> > > +
+> > 
+> > For a GPIO, I would do that in the board dts because it is not used
+> > directly in the dtsi.
+> > 
 > 
-> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> index 215d8cc..29f970f 100644
-> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-> @@ -32,7 +32,7 @@
->  
->  		vchiq: mailbox@7e00b840 {
->  			compatible = "brcm,bcm2835-vchiq";
-> -			reg = <0x7e00b840 0xf>;
-> +			reg = <0x7e00b840 0x3c>;
->  			interrupts = <0 2>;
->  		};
->  	};
-> 
+> And the day we've two boards using this pinctrl we move it to a dtsi. Is
+> that the plan?
 
+Hi Quentin
 
--- 
-Florian
+gpio4 appears to be pretty arbitrary. Could a different design use a
+different gpio? It me, this seems like a board property.
+
+    Andrew
