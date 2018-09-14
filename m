@@ -1,129 +1,85 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v4 2/3] firmware: xilinx: Implement ZynqMP power management APIs
-Date: Fri, 14 Sep 2018 12:39:49 -0700
-Message-ID: <1536953990-12755-3-git-send-email-jollys@xilinx.com>
-References: <1536953990-12755-1-git-send-email-jollys@xilinx.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
+Date: Fri, 14 Sep 2018 22:15:38 +0200
+Message-ID: <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com>
+References: <20180911170825.17789-1-dmurphy@ti.com>
+ <20180911170825.17789-2-dmurphy@ti.com> <20180911200530.GA28290@amd>
+ <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com> <20180912214938.GA30654@amd>
+ <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com> <20180914081822.GA21830@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536953990-12755-1-git-send-email-jollys@xilinx.com>
+In-Reply-To: <20180914081822.GA21830@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+To: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+Hi Pavel,
 
-Add Xilinx ZynqMP firmware APIs to set suspend mode
-and inform firmware that master has initialized its
-own power management.
+On 09/14/2018 10:18 AM, Pavel Machek wrote:
+> Hi!
+> 
+>>>> How do I politely explain that the original implementation was wrong for certain devices?
+>>>
+>>> Implementation? Device tree is hardware description.
+>>
+>> Yes this hardware description is incorrect.  The hardware description is
+>> describing a MFD but this LED driver (and a couple others) only perform
+>> 1 function and that is to drive a LED string.
+> 
+> So what? Does not seem incorrect to me. Maybe the description should
+> not be in MFD directory, but other than that...
+> 
+>>>> Isn't code and documentation supposed to be pushed in stages
+>>>> together?
+>>>
+>>> Device tree is _not_ documentation. And yes, it is normally pushed
+>>> together. But that did not happen here, and bindings are already in.
+>>
+>> Hmm..  Its not documentation but it is in the Documentation folder.
+>> And just because the bindings are in does not mean they cannot be
+>> changed.
+> 
+> You may want to learn more about device tree and/or talk to the device
+> tree maintainers. This is an old article. https://lwn.net/Articles/561462/
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
----
- drivers/firmware/xilinx/zynqmp.c     | 29 +++++++++++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h | 20 ++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+The article title is "Device trees as ABI". A device tree is defined
+in the "*.dts" file that is then compiled to a dtb blob, which
+constitutes the ABI. And this ABI should be kept backwards compatible.
 
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 84b3fd2..c7a3b6c 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -428,6 +428,33 @@ static int zynqmp_pm_clock_getparent(u32 clock_id, u32 *parent_id)
- 	return ret;
- }
- 
-+/**
-+ * zynqmp_pm_init_finalize() - PM call to inform firmware that the caller
-+ *			       master has initialized its own power management
-+ *
-+ * This API function is to be used for notify the power management controller
-+ * about the completed power management initialization.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_init_finalize(void)
-+{
-+	return zynqmp_pm_invoke_fn(PM_PM_INIT_FINALIZE, 0, 0, 0, 0, NULL);
-+}
-+
-+/**
-+ * zynqmp_pm_set_suspend_mode()	- Set system suspend mode
-+ * @mode:	Mode to set for system suspend
-+ *
-+ * This API function is used to set mode of system suspend.
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_set_suspend_mode(u32 mode)
-+{
-+	return zynqmp_pm_invoke_fn(PM_SET_SUSPEND_MODE, mode, 0, 0, 0, NULL);
-+}
-+
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.query_data = zynqmp_pm_query_data,
-@@ -440,6 +467,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.clock_getrate = zynqmp_pm_clock_getrate,
- 	.clock_setparent = zynqmp_pm_clock_setparent,
- 	.clock_getparent = zynqmp_pm_clock_getparent,
-+	.init_finalize = zynqmp_pm_init_finalize,
-+	.set_suspend_mode = zynqmp_pm_set_suspend_mode,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 015e130..1424170 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -28,12 +28,21 @@
- /* SMC SIP service Call Function Identifier Prefix */
- #define PM_SIP_SVC			0xC2000000
- #define PM_GET_TRUSTZONE_VERSION	0xa03
-+#define PM_SET_SUSPEND_MODE		0xa02
-+#define GET_CALLBACK_DATA		0xa01
- 
- /* Number of 32bits values in payload */
- #define PAYLOAD_ARG_CNT	4U
- 
-+/* Number of arguments for a callback */
-+#define CB_ARG_CNT	4
-+
-+/* Payload size (consists of callback API ID + arguments) */
-+#define CB_PAYLOAD_SIZE (CB_ARG_CNT + 1)
-+
- enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
-+	PM_PM_INIT_FINALIZE = 21,
- 	PM_QUERY_DATA = 35,
- 	PM_CLOCK_ENABLE,
- 	PM_CLOCK_DISABLE,
-@@ -73,6 +82,12 @@ enum pm_query_id {
- 	PM_QID_CLOCK_GET_ATTRIBUTES,
- };
- 
-+enum zynqmp_pm_suspend_reason {
-+	SUSPEND_POWER_REQUEST = 201,
-+	SUSPEND_ALERT,
-+	SUSPEND_SYSTEM_SHUTDOWN,
-+};
-+
- /**
-  * struct zynqmp_pm_query_data - PM query data
-  * @qid:	query ID
-@@ -99,8 +114,13 @@ struct zynqmp_eemi_ops {
- 	int (*clock_getrate)(u32 clock_id, u64 *rate);
- 	int (*clock_setparent)(u32 clock_id, u32 parent_id);
- 	int (*clock_getparent)(u32 clock_id, u32 *parent_id);
-+	int (*init_finalize)(void);
-+	int (*set_suspend_mode)(u32 mode);
- };
- 
-+int zynqmp_pm_invoke_fn(u32 pm_api_id, u32 arg0, u32 arg1,
-+			u32 arg2, u32 arg3, u32 *ret_payload);
-+
- #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
- const struct zynqmp_eemi_ops *zynqmp_pm_get_eemi_ops(void);
- #else
+What is discussed here is a documentation of bindings, i.e. according
+to ePAPR: "requirements for how specific types and classes of devices
+are represented in the device tree".
+
+>From the bindings documented in the
+Documentation/devicetree/bindings/mfd/ti-lmu.txt only
+ti,lm3532-backlight is used in the mainline dts file
+(arch/arm/boot/dts/omap4-droid4-xt894.dts).
+
+Having the above it seems that there is no risk of breaking any
+users.
+
+> NAK on this patch. I see that this binding has problems, but
+> introducing different binding for subset of devices is _not_ a fix.
+> 
+>>> What about the multi function devices? They should have same binding.
+>>
+>> The MFD devices defined are not in contention here only the SFD.
+> 
+> I'd like to see common solutions for SFD and MFD, as the hardware is
+> similar, and that includes the code. Having code that is easier to
+> maintain is important, and having many drivers are harder to maintain
+> than one driver.
+> 
+> Milo's code looks better than yours in that regard. I disagree about
+> Milo's code being "nightmare" to modify, and care about "easy to
+> maintain" more than "binary size".
+
+Easy to maintain will be a dedicated LED class driver.
+
 -- 
-2.7.4
+Best regards,
+Jacek Anaszewski
