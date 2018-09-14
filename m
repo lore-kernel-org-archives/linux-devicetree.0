@@ -1,47 +1,73 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v5 0/3] usb: renesas_usbhs: add reset_control and multiple clocks management
-Date: Tue, 11 Sep 2018 17:47:02 +0900
-Message-Id: <1536655625-10550-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=ZGae=L4=verge.net.au=horms@kernel.org>
+Date: Fri, 14 Sep 2018 15:29:18 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/3] dt-bindings: power: Add r8a774c0 SYSC power domain
+ definitions
+Message-ID: <20180914132913.22ely2tshyrtchyk@verge.net.au>
+References: <1536590488-23270-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1536590488-23270-2-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180912084219.krefscb47b2j4bs6@verge.net.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180912084219.krefscb47b2j4bs6@verge.net.au>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on Felipe's usb.git / testing/next branch
-(the commit id is 5b394b2ddf0347bef56e50c69a58773c94343ff3) with
-the following patch:
-  https://patchwork.kernel.org/patch/10574875/
+On Wed, Sep 12, 2018 at 10:42:20AM +0200, Simon Horman wrote:
+> On Mon, Sep 10, 2018 at 03:41:26PM +0100, Fabrizio Castro wrote:
+> > This patch adds power domain indices for RZ/G2E.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> Thanks Fabrizio,
+> 
+> This looks fine to me but I will wait to see if there are other reviews
+> before applying.
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Changes from v4:
- - Revise the dt-bindings to add how many clocks are required and expect
-   for "renesas,rcar-gen3-usbhs".
+Thanks again, applied for v4.20.
 
-Changes from v3:
- - Change the dt-bindings not to use clock-names in patch 2.
- - To achieve backward compatibility with old DT, the driver should get
-   the first clock and the second clock is an optional.
- - Add "clk_put" calling in the remove function.
-
-Changes from v2:
- - Use clk_bulk_enable_prepare() instead of two functions on patch 3/3.
-
-Changes from v1:
- - Fix error path on patch 3/3.
- - Use clk_bulk_disable_unprepare() instead of two functions on patch 3/3.
- - Use staic array of struct clk_bulk_data instead of a pointer on patch 3/3.
- 
-
-Yoshihiro Shimoda (3):
-  usb: renesas_usbhs: Add reset_control
-  dt-bindings: usb: renesas_usbhs: add clock-names property
-  usb: renesas_usbhs: Add multiple clocks management
-
- .../devicetree/bindings/usb/renesas_usbhs.txt      |   6 +-
- drivers/usb/renesas_usbhs/common.c                 | 100 +++++++++++++++++++++
- drivers/usb/renesas_usbhs/common.h                 |   4 +
- 3 files changed, 109 insertions(+), 1 deletion(-)
-
--- 
-1.9.1
+> > ---
+> >  include/dt-bindings/power/r8a774c0-sysc.h | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> >  create mode 100644 include/dt-bindings/power/r8a774c0-sysc.h
+> > 
+> > diff --git a/include/dt-bindings/power/r8a774c0-sysc.h b/include/dt-bindings/power/r8a774c0-sysc.h
+> > new file mode 100644
+> > index 0000000..9922d4c
+> > --- /dev/null
+> > +++ b/include/dt-bindings/power/r8a774c0-sysc.h
+> > @@ -0,0 +1,25 @@
+> > +/* SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + * Copyright (C) 2018 Renesas Electronics Corp.
+> > + */
+> > +#ifndef __DT_BINDINGS_POWER_R8A774C0_SYSC_H__
+> > +#define __DT_BINDINGS_POWER_R8A774C0_SYSC_H__
+> > +
+> > +/*
+> > + * These power domain indices match the numbers of the interrupt bits
+> > + * representing the power areas in the various Interrupt Registers
+> > + * (e.g. SYSCISR, Interrupt Status Register)
+> > + */
+> > +
+> > +#define R8A774C0_PD_CA53_CPU0		5
+> > +#define R8A774C0_PD_CA53_CPU1		6
+> > +#define R8A774C0_PD_A3VC		14
+> > +#define R8A774C0_PD_3DG_A		17
+> > +#define R8A774C0_PD_3DG_B		18
+> > +#define R8A774C0_PD_CA53_SCU		21
+> > +#define R8A774C0_PD_A2VC1		26
+> > +
+> > +/* Always-on power area */
+> > +#define R8A774C0_PD_ALWAYS_ON		32
+> > +
+> > +#endif /* __DT_BINDINGS_POWER_R8A774C0_SYSC_H__ */
+> > -- 
+> > 2.7.4
+> > 
+> 
