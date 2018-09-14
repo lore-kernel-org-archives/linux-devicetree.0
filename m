@@ -1,56 +1,49 @@
 From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] ARM: at91/dt: fix typo in sama5d2 pinmux descriptions
-Date: Fri, 14 Sep 2018 17:30:12 +0200
-Message-ID: <2d8dcf62-eb7b-03de-7774-b5b4017db949@microchip.com>
-References: <b996f1c2271834bbf1220431ed0a08af09a6fb55.1536938317.git.mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] net: macb: disable scatter-gather for macb on sama5d3
+Date: Fri, 14 Sep 2018 17:48:10 +0200
+Message-ID: <20180914154811.12090-1-nicolas.ferre@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b996f1c2271834bbf1220431ed0a08af09a6fb55.1536938317.git.mirq-linux@rere.qmqm.pl>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Claudiu Beznea <claudiu.beznea@microchip.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTQvMDkvMjAxOCBhdCAxNzoyMCwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6Cj4gRml4IFNT
-QzAgcGluIFREMCB3aGVyZSB3cm9uZ2x5IGNhbGxlZCBURE8uCj4gCj4gU2lnbmVkLW9mZi1ieTog
-TWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPgoKTWljaGHFgiwKClRo
-YW5rcyBmb3IgeW91ciBwYXRjaC4gQnV0IHRoZSBleGFjdCBzYW1lIG9uZSBpcyBhbHJlYWR5IGlu
-dGVncmF0ZWQgaW4gCkxpbnVzJyB0cmVlIGFzOgpjOGNiYzFjMjBjMjkgKCJBUk06IGR0czogYXQ5
-MTogZml4IHR5cG9zIGZvciBTU0MgVEQgZnVuY3Rpb25zIikKCkJlc3QgcmVnYXJkcywKICAgTmlj
-b2xhcwoKPiAtLS0KPiBBZ2FpbnN0IHY0LjE4LjcKPiAKPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3Nh
-bWE1ZDItcGluZnVuYy5oIHwgNCArKy0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
-YW1hNWQyLXBpbmZ1bmMuaCBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDItcGluZnVuYy5oCj4g
-aW5kZXggZTU3MTkxZmI4M2RlLi4xYzAxYTZmODQzZDggMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmgKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zYW1h
-NWQyLXBpbmZ1bmMuaAo+IEBAIC0zNzUsNyArMzc1LDcgQEAKPiAgICNkZWZpbmUgUElOX1BCMjJf
-X0dQSU8JCQlQSU5NVVhfUElOKFBJTl9QQjIyLCAwLCAwKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9f
-TENEREFUMTEJCVBJTk1VWF9QSU4oUElOX1BCMjIsIDEsIDEpCj4gICAjZGVmaW5lIFBJTl9QQjIy
-X19BMTEJCQlQSU5NVVhfUElOKFBJTl9QQjIyLCAyLCAxKQo+IC0jZGVmaW5lIFBJTl9QQjIyX19U
-RE8JCQlQSU5NVVhfUElOKFBJTl9QQjIyLCAzLCAxKQo+ICsjZGVmaW5lIFBJTl9QQjIyX19URDAJ
-CQlQSU5NVVhfUElOKFBJTl9QQjIyLCAzLCAxKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9fVElPQTIJ
-CQlQSU5NVVhfUElOKFBJTl9QQjIyLCA0LCAyKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9fRkxFWENP
-TTNfSU8xCQlQSU5NVVhfUElOKFBJTl9QQjIyLCA1LCAzKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9f
-R01EQwkJCVBJTk1VWF9QSU4oUElOX1BCMjIsIDYsIDMpCj4gQEAgLTU1Niw3ICs1NTYsNyBAQAo+
-ICAgI2RlZmluZSBQSU5fUEMxNF9fTENEREFUNgkJUElOTVVYX1BJTihQSU5fUEMxNCwgMSwgMikK
-PiAgICNkZWZpbmUgUElOX1BDMTRfX0dSWDAJCQlQSU5NVVhfUElOKFBJTl9QQzE0LCAyLCAxKQo+
-ICAgI2RlZmluZSBQSU5fUEMxNF9fSVNDX0Q1CQlQSU5NVVhfUElOKFBJTl9QQzE0LCAzLCAxKQo+
-IC0jZGVmaW5lIFBJTl9QQzE0X19URE8JCQlQSU5NVVhfUElOKFBJTl9QQzE0LCA1LCAyKQo+ICsj
-ZGVmaW5lIFBJTl9QQzE0X19URDAJCQlQSU5NVVhfUElOKFBJTl9QQzE0LCA1LCAyKQo+ICAgI2Rl
-ZmluZSBQSU5fUEMxNF9fQTMJCQlQSU5NVVhfUElOKFBJTl9QQzE0LCA2LCAyKQo+ICAgI2RlZmlu
-ZSBQSU5fUEMxNQkJCTc5Cj4gICAjZGVmaW5lIFBJTl9QQzE1X19HUElPCQkJUElOTVVYX1BJTihQ
-SU5fUEMxNSwgMCwgMCkKPiAKCgotLSAKTmljb2xhcyBGZXJyZQoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Create a new configuration for the sama5d3-macb new compatibility string.
+This configuration disables scatter-gather because we experienced lock down
+of the macb interface of this particular SoC under very high load.
+
+Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+---
+ drivers/net/ethernet/cadence/macb_main.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 16e4ef7d7185..f1a86b422617 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3837,6 +3837,13 @@ static const struct macb_config at91sam9260_config = {
+ 	.init = macb_init,
+ };
+ 
++static const struct macb_config sama5d3macb_config = {
++	.caps = MACB_CAPS_SG_DISABLED
++	      | MACB_CAPS_USRIO_HAS_CLKEN | MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII,
++	.clk_init = macb_clk_init,
++	.init = macb_init,
++};
++
+ static const struct macb_config pc302gem_config = {
+ 	.caps = MACB_CAPS_SG_DISABLED | MACB_CAPS_GIGABIT_MODE_AVAILABLE,
+ 	.dma_burst_length = 16,
+@@ -3904,6 +3911,7 @@ static const struct of_device_id macb_dt_ids[] = {
+ 	{ .compatible = "cdns,gem", .data = &pc302gem_config },
+ 	{ .compatible = "atmel,sama5d2-gem", .data = &sama5d2_config },
+ 	{ .compatible = "atmel,sama5d3-gem", .data = &sama5d3_config },
++	{ .compatible = "atmel,sama5d3-macb", .data = &sama5d3macb_config },
+ 	{ .compatible = "atmel,sama5d4-gem", .data = &sama5d4_config },
+ 	{ .compatible = "cdns,at91rm9200-emac", .data = &emac_config },
+ 	{ .compatible = "cdns,emac", .data = &emac_config },
+-- 
+2.15.1
