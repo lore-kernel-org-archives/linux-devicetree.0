@@ -1,53 +1,69 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/7] net: phy: mscc: add support for VSC8584 PHY
-Date: Fri, 14 Sep 2018 19:27:54 +0200
-Message-ID: <20180914172754.GC3811@lunn.ch>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <a61d9affd3f1ec9deb60c882cce1daf37fbe2427.1536916714.git-series.quentin.schulz@bootlin.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 3/3] dt-bindings: watchdog: add mpc8xxx-wdt support
+Date: Fri, 14 Sep 2018 10:29:53 -0700
+Message-ID: <20180914172953.GF26861@roeck-us.net>
+References: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
+ <e68ed01cdfba5b7610559607a3c706b294a216fc.1536931725.git.christophe.leroy@c-s.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a61d9affd3f1ec9deb60c882cce1daf37fbe2427.1536916714.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <e68ed01cdfba5b7610559607a3c706b294a216fc.1536931725.git.christophe.leroy@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
->  struct vsc8531_private {
->  	int rate_magic;
->  	u16 supp_led_modes;
-> @@ -181,6 +354,7 @@ struct vsc8531_private {
->  	struct vsc85xx_hw_stat *hw_stats;
->  	u64 *stats;
->  	int nstats;
-> +	bool pkg_init;
-
-> +/* bus->mdio_lock should be locked when using this function */
-> +static int vsc8584_cmd(struct mii_bus *bus, int phy, u16 val)
-> +{
-> +	unsigned long deadline;
-> +	u16 reg_val;
+On Fri, Sep 14, 2018 at 01:32:03PM +0000, Christophe Leroy wrote:
+> Add description of DT bindings for mpc8xxx-wdt driver which
+> handles the CPU watchdog timer on the mpc83xx, mpc86xx and mpc8xx.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>  .../devicetree/bindings/watchdog/mpc8xxx-wdt.txt   | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
+> new file mode 100644
+> index 000000000000..1d99e1e4d306
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
+> @@ -0,0 +1,25 @@
+> +* Freescale mpc8xxx watchdog driver (For 83xx, 86xx and 8xx)
 > +
-> +	__mdiobus_write(bus, phy, MSCC_EXT_PAGE_ACCESS,
-> +			MSCC_PHY_PAGE_EXTENDED_GPIO);
+> +Required properties:
+> +- compatible: Shall contain one of the following:
+> +	"mpc83xx_wdt" for an mpc83xx
+> +	"fsl,mpc8610-wdt" for an mpc86xx
+> +	"fsl,mpc823-wdt" for an mpc8xx
+> +- reg: base physical address and length of the area hosting the
+> +       watchdog registers.
+> +		On the 83xx, "Watchdog Timer Registers" area:	<0x200 0x100>
+> +		On the 86xx, "Watchdog Timer Registers" area:	<0xe4000 0x100>
+> +		On the 8xx, "General System Interface Unit" area: <0x0 0x10>
 > +
-> +	__mdiobus_write(bus, phy, MSCC_PHY_PROC_CMD, PROC_CMD_NCOMPLETED | val);
 
-Hi Quentin
+Note for Rob: The above has been implemented for several years.
+This is merely to document the current implementation.
+Maybe "mpc83xx_wdt" should be deprecated and replaced, but I think
+that should be a separate patch.
 
-All the __mdiobus_write() look a bit ugly. Maybe add bus and base_addr
-to the vsc8531_private structure. Then add helpers
-phy_write_base_phy(priv, reg, val) and phy_read_base_phy(priv, reg).
+> +Optional properties:
+> +- reg: additionnal physical address and length (4) of location of the
 
-You could also add in:
+s/additionnal/additional/
 
-        if (unlikely(!mutex_is_locked(&priv->bus->mdio_lock))) {
-                dev_err(bus->dev, "MDIO bus lock not held!\n");
-                dump_stack();
-        }
-
-Having such code in the mv88e6xxx driver has found a few bugs for me.
-
-       Andrew
+> +       Reset Status Register (called RSTRSCR on the mpc86xx)
+> +       		On the 83xx, it is located at offset 0x910
+> +       		On the 86xx, it is located at offset 0xe0094
+> +       		On the 8xx, it is located at offset 0x288
+> +
+> +Example:
+> +		WDT: watchdog@0 {
+> +		    compatible = "fsl,mpc823-wdt";
+> +		    reg = <0x0 0x10 0x288 0x4>;
+> +		};
+> -- 
+> 2.13.3
+> 
