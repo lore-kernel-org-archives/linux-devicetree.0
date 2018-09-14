@@ -1,52 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Fri, 14 Sep 2018 16:46:56 +0200
-Message-ID: <CAK8P3a0fZYbd4a2nBnExPVXKs-898R9vaCSa4kXyz0qA=rCzZQ@mail.gmail.com>
-References: <cover.1536757532.git.ren_guo@c-sky.com> <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
- <20180914143719.GA27689@guoren-Inspiron-7460>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 5/7] MIPS: mscc: ocelot: add GPIO4 pinmuxing DT node
+Date: Fri, 14 Sep 2018 16:54:46 +0200
+Message-ID: <20180914145446.GQ14988@piout.net>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <92e37a04e77003f01a67ac5e49e66ae83f87c591.1536916714.git-series.quentin.schulz@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180914143719.GA27689@guoren-Inspiron-7460>
+Content-Disposition: inline
+In-Reply-To: <92e37a04e77003f01a67ac5e49e66ae83f87c591.1536916714.git-series.quentin.schulz@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2018 at 4:37 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
-> > On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > One big question for me is what to do about time_t. Deepa and I are
-> > in the process of finalizing the system call ABI for 32-bit architectures
-> > with 64-bit time_t, but we are not done yet and it won't be complete
-> > for 4.20. If you target 4.21, that could be a chance to make csky the
-> > first architecture to only need the 64-bit time_t interface, with the
-> > corresponding user space changes.
-> y2038 is very important and csky32 has the issue. But 4.21 is too late for
-> us, we really want to get into kernel.org as soon as possible.
-> We could remove 32-bit time_t in future.
+Hi,
 
-Not really: the way we deal with user-visible APIs in the kernel, it's
-practically impossible to remove something that was working before,
-since there may always be users relying on it. This is why it is so
-important that we get the ABI right at the first try.
+On 14/09/2018 11:44:26+0200, Quentin Schulz wrote:
+> In order to use GPIO4 as a GPIO, we need to mux it in this mode so let's
+> declare a new pinctrl DT node for it.
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> ---
+>  arch/mips/boot/dts/mscc/ocelot.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> index 8ce317c..b5c4c74 100644
+> --- a/arch/mips/boot/dts/mscc/ocelot.dtsi
+> +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> @@ -182,6 +182,11 @@
+>  			interrupts = <13>;
+>  			#interrupt-cells = <2>;
+>  
+> +			gpio4: gpio4 {
+> +				pins = "GPIO_4";
+> +				function = "gpio";
+> +			};
+> +
 
-We can always add new ABIs later, and that's what we're doing with
-all the other 32-bit architectures as well: each system call that takes a
-32-bit time_t argument also needs to get the corresponding 64-bit
-replacement, and then we have to keep them both around.
+For a GPIO, I would do that in the board dts because it is not used
+directly in the dtsi.
 
-However, once the 64-bit syscalls are there, you don't need to
-use them, so if you merge the glibc port after both csky and
-the time64 syscalls are merged upstream, you can choose
-to only support the time64 syscalls rather than making it a compile
-time decision in each application. If you merge the glibc port
-before migrating to 64-bit syscalls, glibc will also have to support
-both indefinitely for compatibility with existing binaries.
+>  			uart_pins: uart-pins {
+>  				pins = "GPIO_6", "GPIO_7";
+>  				function = "uart";
+> -- 
+> git-series 0.9.1
 
-One level below that, you can of course choose to build
-a distro with only 64-bit time_t regardless of whether there
-is still support for 32-bit time_t in kernel and glibc or not.
-
-        Arnd
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
