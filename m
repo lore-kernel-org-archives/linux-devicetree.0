@@ -1,85 +1,83 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
-Date: Fri, 14 Sep 2018 22:15:38 +0200
-Message-ID: <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com>
-References: <20180911170825.17789-1-dmurphy@ti.com>
- <20180911170825.17789-2-dmurphy@ti.com> <20180911200530.GA28290@amd>
- <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com> <20180912214938.GA30654@amd>
- <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com> <20180914081822.GA21830@amd>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next 4/7] net: phy: mscc: add support for VSC8574 PHY
+Date: Fri, 14 Sep 2018 13:26:06 -0700
+Message-ID: <bc95fae7-cf2f-5cf1-4e24-59fcc231fd64@gmail.com>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <236ef7815c0bec6048e79ef06868719b65c63892.1536916714.git-series.quentin.schulz@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180914081822.GA21830@amd>
+In-Reply-To: <236ef7815c0bec6048e79ef06868719b65c63892.1536916714.git-series.quentin.schulz@bootlin.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>, alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch
+Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On 09/14/2018 10:18 AM, Pavel Machek wrote:
-> Hi!
+On 09/14/2018 02:44 AM, Quentin Schulz wrote:
+> The VSC8574 PHY is a 4-ports PHY that is 10/100/1000BASE-T, 100BASE-FX,
+> 1000BASE-X and triple-speed copper SFP capable, can communicate with
+> the MAC via SGMII, QSGMII or 1000BASE-X, supports WOL, downshifting and
+> can set the blinking pattern of each of its 4 LEDs, supports SyncE as
+> well as HP Auto-MDIX detection.
 > 
->>>> How do I politely explain that the original implementation was wrong for certain devices?
->>>
->>> Implementation? Device tree is hardware description.
->>
->> Yes this hardware description is incorrect.  The hardware description is
->> describing a MFD but this LED driver (and a couple others) only perform
->> 1 function and that is to drive a LED string.
+> This adds support for 10/100/1000BASE-T, SGMII/QSGMII link with the MAC,
+> WOL, downshifting, HP Auto-MDIX detection and blinking pattern for its 4
+> LEDs.
 > 
-> So what? Does not seem incorrect to me. Maybe the description should
-> not be in MFD directory, but other than that...
+> The VSC8574 has also an internal Intel 8051 microcontroller whose
+> firmware needs to be patched when the PHY is reset. If the 8051's
+> firmware has the expected CRC, its patching can be skipped. The
+> microcontroller can be accessed from any port of the PHY, though the CRC
+> function can only be done through the PHY that is the base PHY of the
+> package (internal address 0) due to a limitation of the firmware.
 > 
->>>> Isn't code and documentation supposed to be pushed in stages
->>>> together?
->>>
->>> Device tree is _not_ documentation. And yes, it is normally pushed
->>> together. But that did not happen here, and bindings are already in.
->>
->> Hmm..  Its not documentation but it is in the Documentation folder.
->> And just because the bindings are in does not mean they cannot be
->> changed.
+> The GPIO register bank is a set of registers that are common to all PHYs
+> in the package. So any modification in any register of this bank affects
+> all PHYs of the package.
 > 
-> You may want to learn more about device tree and/or talk to the device
-> tree maintainers. This is an old article. https://lwn.net/Articles/561462/
-
-The article title is "Device trees as ABI". A device tree is defined
-in the "*.dts" file that is then compiled to a dtb blob, which
-constitutes the ABI. And this ABI should be kept backwards compatible.
-
-What is discussed here is a documentation of bindings, i.e. according
-to ePAPR: "requirements for how specific types and classes of devices
-are represented in the device tree".
-
->From the bindings documented in the
-Documentation/devicetree/bindings/mfd/ti-lmu.txt only
-ti,lm3532-backlight is used in the mainline dts file
-(arch/arm/boot/dts/omap4-droid4-xt894.dts).
-
-Having the above it seems that there is no risk of breaking any
-users.
-
-> NAK on this patch. I see that this binding has problems, but
-> introducing different binding for subset of devices is _not_ a fix.
+> If the PHYs haven't been reset before booting the Linux kernel and were
+> configured to use interrupts for e.g. link status updates, it is
+> required to clear the interrupts mask register of all PHYs before being
+> able to use interrupts with any PHY. The first PHY of the package that
+> will be init will take care of clearing all PHYs interrupts mask
+> registers. Thus, we need to keep track of the init sequence in the
+> package, if it's already been done or if it's to be done.
 > 
->>> What about the multi function devices? They should have same binding.
->>
->> The MFD devices defined are not in contention here only the SFD.
+> Most of the init sequence of a PHY of the package is common to all PHYs
+> in the package, thus we use the SMI broadcast feature which enables us
+> to propagate a write in one register of one PHY to all PHYs in the
+> package.
 > 
-> I'd like to see common solutions for SFD and MFD, as the hardware is
-> similar, and that includes the code. Having code that is easier to
-> maintain is important, and having many drivers are harder to maintain
-> than one driver.
-> 
-> Milo's code looks better than yours in that regard. I disagree about
-> Milo's code being "nightmare" to modify, and care about "easy to
-> maintain" more than "binary size".
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> ---
 
-Easy to maintain will be a dedicated LED class driver.
+[snip]
 
+> +	reg = __mdiobus_read(bus, phy, MSCC_PHY_TEST_PAGE_8);
+> +	reg |= 0x8000;
+
+Having a define would be nice here? This looks like a write enable?
+
+> +	__mdiobus_write(bus, phy, MSCC_PHY_TEST_PAGE_8, reg);
+> +
+> +	__mdiobus_write(bus, phy, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
+> +
+> +	vsc8584_csr_write(bus, phy, 0x8fae, 0x000401bd);
+
+Just make this an array of address + value pairs and blast it to the
+PHY, having them be inlined here is both error prone and does not scale
+well at all.
+[snip]
+> +	vsc8584_csr_write(bus, phy, 0x84a8, 0x00000000);
+> +	vsc8584_csr_write(bus, phy, 0x84aa, 0x00000000);
+> +	vsc8584_csr_write(bus, phy, 0x84ae, 0x007df7dd);
+> +	vsc8584_csr_write(bus, phy, 0x84b0, 0x006d95d4);
+> +	vsc8584_csr_write(bus, phy, 0x84b2, 0x00492410);
+
+Likewise
+
+[snip]
 -- 
-Best regards,
-Jacek Anaszewski
+Florian
