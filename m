@@ -1,108 +1,99 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/8] drm/bridge: use bus flags in bridge timings
-Date: Fri, 14 Sep 2018 12:23:52 +0300
-Message-ID: <6714863.eJMplaj6yU@avalon>
-References: <20180912183222.25414-1-stefan@agner.ch> <20180912183222.25414-2-stefan@agner.ch>
+Subject: Re: [PATCH v2 3/8] drm/bridge: simplify bridge timing info
+Date: Fri, 14 Sep 2018 12:34:47 +0300
+Message-ID: <1573320.Q96Iu7qNKK@avalon>
+References: <20180912183222.25414-1-stefan@agner.ch>
+ <20180912183222.25414-4-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912183222.25414-2-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180912183222.25414-4-stefan@agner.ch>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: Stefan Agner <stefan@agner.ch>
-Cc: linus.walleij@linaro.org, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
-
-Thankk you for the patch.
-
-On Wednesday, 12 September 2018 21:32:15 EEST Stefan Agner wrote:
-> The DRM bus flags conveys additional information on pixel data on
-> the bus. All currently available bus flags might be of interest for
-> a bridge. In the case at hand a dumb VGA bridge needs a specific
-> data enable polarity (DRM_BUS_FLAG_DE_LOW).
-> 
-> Replace the sampling_edge field with input_bus_flags and allow all
-> currently documented bus flags.
-> 
-> This changes the perspective from sampling side to the driving
-> side for the currently supported flags. We assume that the sampling
-> edge is always the opposite of the driving edge (hence we need to
-> invert the DRM_BUS_FLAG_PIXDATA_[POS|NEG]EDGE flags). This is an
-> assumption we already make for displays. For all we know it is a
-> safe assumption for bridges too.
-
-Please don't, that will get confusing very quickly. Flag names such as 
-DRM_BUS_FLAG_PIXDATA_NEGEDGE don't mention sampling or driving. There's only a 
-small comment next to their definition, which will easily be overlooked. I'd 
-rather update the definition to cover both sampling and driving, and document 
-the input_bus_flags field to explain that all flags refer to sampling.
-
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
-> ---
->  drivers/gpu/drm/bridge/dumb-vga-dac.c |  6 +++---
->  include/drm/drm_bridge.h              | 11 +++++------
->  2 files changed, 8 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> b/drivers/gpu/drm/bridge/dumb-vga-dac.c index 9b706789a341..d5aa0f931ef2
-> 100644
-> --- a/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> +++ b/drivers/gpu/drm/bridge/dumb-vga-dac.c
-> @@ -234,7 +234,7 @@ static int dumb_vga_remove(struct platform_device *pdev)
-> */
->  static const struct drm_bridge_timings default_dac_timings = {
->  	/* Timing specifications, datasheet page 7 */
-> -	.sampling_edge = DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> +	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_NEGEDGE,
->  	.setup_time_ps = 500,
->  	.hold_time_ps = 1500,
->  };
-> @@ -245,7 +245,7 @@ static const struct drm_bridge_timings
-> default_dac_timings = { */
->  static const struct drm_bridge_timings ti_ths8134_dac_timings = {
->  	/* From timing diagram, datasheet page 9 */
-> -	.sampling_edge = DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> +	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_NEGEDGE,
->  	/* From datasheet, page 12 */
->  	.setup_time_ps = 3000,
->  	/* I guess this means latched input */
-> @@ -258,7 +258,7 @@ static const struct drm_bridge_timings
-> ti_ths8134_dac_timings = { */
->  static const struct drm_bridge_timings ti_ths8135_dac_timings = {
->  	/* From timing diagram, datasheet page 14 */
-> -	.sampling_edge = DRM_BUS_FLAG_PIXDATA_POSEDGE,
-> +	.input_bus_flags = DRM_BUS_FLAG_PIXDATA_NEGEDGE,
->  	/* From datasheet, page 16 */
->  	.setup_time_ps = 2000,
->  	.hold_time_ps = 500,
-> diff --git a/include/drm/drm_bridge.h b/include/drm/drm_bridge.h
-> index bd850747ce54..45e90f4b46c3 100644
-> --- a/include/drm/drm_bridge.h
-> +++ b/include/drm/drm_bridge.h
-> @@ -244,14 +244,13 @@ struct drm_bridge_funcs {
->   */
->  struct drm_bridge_timings {
->  	/**
-> -	 * @sampling_edge:
-> +	 * @input_bus_flags:
->  	 *
-> -	 * Tells whether the bridge samples the digital input signal
-> -	 * from the display engine on the positive or negative edge of the
-> -	 * clock, this should reuse the DRM_BUS_FLAG_PIXDATA_[POS|NEG]EDGE
-> -	 * bitwise flags from the DRM connector (bit 2 and 3 valid).
-> +	 * Additional settings this bridge requires for the pixel data on
-> +	 * the input bus (e.g. pixel signal polarity). See also
-> +	 * &drm_display_info->bus_flags.
->  	 */
-> -	u32 sampling_edge;
-> +	u32 input_bus_flags;
->  	/**
->  	 * @setup_time_ps:
->  	 *
-
--- 
-Regards,
-
-Laurent Pinchart
+SGkgU3RlZmFuLAoKT24gV2VkbmVzZGF5LCAxMiBTZXB0ZW1iZXIgMjAxOCAyMTozMjoxNyBFRVNU
+IFN0ZWZhbiBBZ25lciB3cm90ZToKPiBCcmlkZ2VzIGFyZSB0eXBpY2FsbHkgY29ubmVjdGVkIHRv
+IGEgcGFyYWxsZWwgZGlzcGxheSBzaWduYWwgd2l0aAo+IHBpeGVsIGNsb2NrLCBzeW5jIHNpZ25h
+bHMgYW5kIGRhdGEgbGluZXMuIFBhcmFsbGVsIGRpc3BsYXkgc2lnbmFscwo+IGFyZSBhbHNvIHVz
+ZWQgaW4gbG93ZXItZW5kIGVtYmVkZGVkIGRpc3BsYXkgcGFuZWxzLiBGb3IgcGFyYWxsZWwKPiBk
+aXNwbGF5IHBhbmVscyB3ZSBjdXJyZW50bHkgZG8gbm90IHNwZWNpZnkgc2V0dXAvaG9sZCB0aW1l
+cy4gRnJvbQo+IGRpc2N1c3Npb25zIG9uIHRoZSBtYWlsaW5nIGxpc3QgaXQgc2VlbXMgbm90IGNv
+bnZpbmNpbmcgdGhhdCB0aGlzCj4gaXMgY3VycmVudGx5IHJlYWxseSByZXF1aXJlZCBmb3IgYnJp
+ZGdlcyBlaXRoZXIuCj4gCj4gUmVtb3ZlIHNldHVwL2hvbGQgdGltaW5ncyBhZ2FpbiB0byBiZXR0
+ZXIgYWxpZ24gdGltaW5nIGluZm9ybWF0aW9uCj4gb2YgZGlzcGxheXMgYW5kIGJyaWdlcy4KClRo
+ZSBzZXR1cCBhbmQgaG9sZCB0aW1pbmdzIHdlcmUgdGhlIHJlc3VsdCBvZiBhIGxvbmcgZGlzY3Vz
+c2lvbiB3aXRoIExpbnV4IApXYWxsZWlqLCB3aG8gd2FzIGNvbmZyb250ZWQgd2l0aCBhIHN5c3Rl
+bSB0aGF0IGRpZG4ndCB3b3JrIHByb3Blcmx5IHVubGVzcyBoZSAKZmxpcHBlZCB0aGUgY2xvY2sg
+cG9sYXJpdHkuIEhpcyBpbml0aWFsIHBhdGNoIGNvbnRyYWRpY3RlZCB0aGUgYnJpZGdlIApkYXRh
+c2hlZXQsIGFuZCBhZnRlciBpbnZlc3RpZ2F0aW5nIHdlIGZvdW5kIG91dCB0aGF0IHRpbWluZ3Mg
+cGxheWVkIGEgbWFqb3IgCnJvbGUuCgpJbiBhIG51dHNoZWxsLCBnaXZlbiB0aGUgc2V0dXAgYW5k
+IGhvbGQgdGltZSByZXF1aXJlbWVudHMsIHRoZSBwb2xhcml0eSBvbiB0aGUgCmRyaXZpbmcgc2lk
+ZSBkZXBlbmRzIG9uIHRoZSBwaXhlbCBjbG9jayBmcmVxdWVuY3kuIEFzIHRoZSBmcmVxdWVuY3kg
+aW5jcmVhc2VzLCAKd2hlbiB0aGUgaGFsZiBjbG9jayBwZXJpb2QgcmVhY2hlcyB0aGUgc2V0dXAg
+dGltZSwgeW91IGNhbid0IGxhdGNoIG9uIHRoZSAKb3Bwb3NpdGUgZWRnZSBhbnltb3JlIG9yIHlv
+dSB3aWxsIHZpb2xhdGUgdGhlIHNldHVwIHRpbWUuIFRoZSBjb21wb25lbnQgCmNvbm5lY3RlZCB0
+byB0aGUgYnJpZGdlIHRodXMgbmVlZHMgdG8gc2VsZWN0IGEgZHJpdmluZyBlZGdlIGJhc2VkIG9u
+IHRoZSAKc2FtcGxpbmcgZWRnZSBvZiB0aGUgYnJpZGdlLCBvbiB0aGUgYnJpZGdlJ3Mgc2V0dXAg
+dGltZSByZXF1aXJlbWVudCwgYW5kIG9uIAp0aGUgcGl4ZWwgY2xvY2sgZnJlcXVlbmN5LgoKPiBT
+aWduZWQtb2ZmLWJ5OiBTdGVmYW4gQWduZXIgPHN0ZWZhbkBhZ25lci5jaD4KPiAtLS0KPiAgZHJp
+dmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1kYWMuYyB8IDE3ICsrKysrLS0tLS0tLS0tLS0t
+Cj4gIGluY2x1ZGUvZHJtL2RybV9icmlkZ2UuaCAgICAgICAgICAgICAgfCAxNCAtLS0tLS0tLS0t
+LS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgMjYgZGVsZXRpb25zKC0p
+Cj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMK
+PiBiL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvZHVtYi12Z2EtZGFjLmMgaW5kZXggZDVhYTBmOTMx
+ZWYyLi5iMjMwOWFkMjI4Y2YKPiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdl
+L2R1bWItdmdhLWRhYy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9kdW1iLXZnYS1k
+YWMuYwo+IEBAIC0yMjksMTQgKzIyOSwxNCBAQCBzdGF0aWMgaW50IGR1bWJfdmdhX3JlbW92ZShz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlCj4gKnBkZXYpIC8qCj4gICAqIFdlIGFzc3VtZSB0aGUgQURW
+NzEyMyBEQUMgaXMgdGhlICJkZWZhdWx0IiBmb3IgaGlzdG9yaWNhbCByZWFzb25zCj4gICAqIElu
+Zm9ybWF0aW9uIHRha2VuIGZyb20gdGhlIEFEVjcxMjMgZGF0YXNoZWV0LCByZXZpc2lvbiBELgo+
+IC0gKiBOT1RFOiB0aGUgQURWNzEyM0VQIHNlZW1zIHRvIGhhdmUgb3RoZXIgdGltaW5ncyBhbmQg
+bmVlZCBhIG5ldyB0aW1pbmdzCj4gLSAqIHNldCBpZiB1c2VkLgo+ICAgKi8KPiAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MgZGVmYXVsdF9kYWNfdGltaW5ncyA9IHsKPiAt
+CS8qIFRpbWluZyBzcGVjaWZpY2F0aW9ucywgZGF0YXNoZWV0IHBhZ2UgNyAqLwo+ICsJLyoKPiAr
+CSAqIEZyb20gVGltaW5nIGRpYWdyYW0sIGRhdGFzaGVldCBwYWdlIDcuIFRoZSBicmlkZ2Ugc2Ft
+cGxlcwo+ICsJICogb24gcGl4ZWwgY2xvY2tzIHBvc2l0aXZlIGVkZ2UsIGhlbmNlIHRoZSBkaXNw
+bGF5IGNvbnRyb2xsZXIKPiArCSAqIHNob3VsZCBkcml2ZSBzaWduYWxzIG9uIHRoZSBuZWdhdGl2
+ZSBlZGdlLgo+ICsJICovCj4gIAkuaW5wdXRfYnVzX2ZsYWdzID0gRFJNX0JVU19GTEFHX1BJWERB
+VEFfTkVHRURHRSwKPiAtCS5zZXR1cF90aW1lX3BzID0gNTAwLAo+IC0JLmhvbGRfdGltZV9wcyA9
+IDE1MDAsCj4gIH07Cj4gCj4gIC8qCj4gQEAgLTI0NiwxMCArMjQ2LDYgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MKPiBkZWZhdWx0X2RhY190aW1pbmdzID0geyBzdGF0
+aWMgY29uc3Qgc3RydWN0IGRybV9icmlkZ2VfdGltaW5ncwo+IHRpX3RoczgxMzRfZGFjX3RpbWlu
+Z3MgPSB7IC8qIEZyb20gdGltaW5nIGRpYWdyYW0sIGRhdGFzaGVldCBwYWdlIDkgKi8KPiAgCS5p
+bnB1dF9idXNfZmxhZ3MgPSBEUk1fQlVTX0ZMQUdfUElYREFUQV9ORUdFREdFLAo+IC0JLyogRnJv
+bSBkYXRhc2hlZXQsIHBhZ2UgMTIgKi8KPiAtCS5zZXR1cF90aW1lX3BzID0gMzAwMCwKPiAtCS8q
+IEkgZ3Vlc3MgdGhpcyBtZWFucyBsYXRjaGVkIGlucHV0ICovCj4gLQkuaG9sZF90aW1lX3BzID0g
+MCwKPiAgfTsKPiAKPiAgLyoKPiBAQCAtMjU5LDkgKzI1NSw2IEBAIHN0YXRpYyBjb25zdCBzdHJ1
+Y3QgZHJtX2JyaWRnZV90aW1pbmdzCj4gdGlfdGhzODEzNF9kYWNfdGltaW5ncyA9IHsgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBkcm1fYnJpZGdlX3RpbWluZ3MKPiB0aV90aHM4MTM1X2RhY190aW1pbmdz
+ID0geyAvKiBGcm9tIHRpbWluZyBkaWFncmFtLCBkYXRhc2hlZXQgcGFnZSAxNCAqLwo+ICAJLmlu
+cHV0X2J1c19mbGFncyA9IERSTV9CVVNfRkxBR19QSVhEQVRBX05FR0VER0UsCj4gLQkvKiBGcm9t
+IGRhdGFzaGVldCwgcGFnZSAxNiAqLwo+IC0JLnNldHVwX3RpbWVfcHMgPSAyMDAwLAo+IC0JLmhv
+bGRfdGltZV9wcyA9IDUwMCwKPiAgfTsKPiAKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZp
+Y2VfaWQgZHVtYl92Z2FfbWF0Y2hbXSA9IHsKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vZHJt
+X2JyaWRnZS5oIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gaW5kZXggNDVlOTBmNGI0NmMz
+Li4xYTFkMDgzNTBlYWYgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4g
+KysrIGIvaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oCj4gQEAgLTI1MSwyMCArMjUxLDYgQEAgc3Ry
+dWN0IGRybV9icmlkZ2VfdGltaW5ncyB7Cj4gIAkgKiAmZHJtX2Rpc3BsYXlfaW5mby0+YnVzX2Zs
+YWdzLgo+ICAJICovCj4gIAl1MzIgaW5wdXRfYnVzX2ZsYWdzOwo+IC0JLyoqCj4gLQkgKiBAc2V0
+dXBfdGltZV9wczoKPiAtCSAqCj4gLQkgKiBEZWZpbmVzIHRoZSB0aW1lIGluIHBpY29zZWNvbmRz
+IHRoZSBpbnB1dCBkYXRhIGxpbmVzIG11c3QgYmUKPiAtCSAqIHN0YWJsZSBiZWZvcmUgdGhlIGNs
+b2NrIGVkZ2UuCj4gLQkgKi8KPiAtCXUzMiBzZXR1cF90aW1lX3BzOwo+IC0JLyoqCj4gLQkgKiBA
+aG9sZF90aW1lX3BzOgo+IC0JICoKPiAtCSAqIERlZmluZXMgdGhlIHRpbWUgaW4gcGljb3NlY29u
+ZHMgdGFrZW4gZm9yIHRoZSBicmlkZ2UgdG8gc2FtcGxlIHRoZQo+IC0JICogaW5wdXQgc2lnbmFs
+IGFmdGVyIHRoZSBjbG9jayBlZGdlLgo+IC0JICovCj4gLQl1MzIgaG9sZF90aW1lX3BzOwo+ICB9
+Owo+IAo+ICAvKioKCgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
