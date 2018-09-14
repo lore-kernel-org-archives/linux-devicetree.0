@@ -1,8 +1,8 @@
 Return-Path: <SRS0=AnC+=L4=nvidia.com=pdeschrijver@kernel.org>
 From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: [RFC 04/14] clk: tegra: emc: prepare for Tegra210 parent table
-Date: Fri, 14 Sep 2018 23:02:59 +0300
-Message-ID: <1536955389-30442-5-git-send-email-pdeschrijver@nvidia.com>
+Subject: [RFC 05/14] memory: tegra: mc: Introduce helpers
+Date: Fri, 14 Sep 2018 23:03:00 +0300
+Message-ID: <1536955389-30442-6-git-send-email-pdeschrijver@nvidia.com>
 In-Reply-To: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
 References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
 MIME-Version: 1.0
@@ -11,83 +11,74 @@ To: vkuruturi@nvidia.com, linux-tegra=linux-clk@vger.kernel.org, linux-tegra@vge
 Cc: daniel@octaforge.org, a.heider@gmail.com, swtcr0@gmail.com, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The set of possible emc parents is different in Tegra124 compared to
-Tegra210. Hence make this list a Tegra124 specific table and adjust the
-users to allow for other tables.
+Introduce a few helper functions to lookup a timing for a given rate and
+modify MC register field. These will be useful when adding support for
+updating the latency allowance (LA) registers when scaling the EMC clock.
 
 Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 ---
- drivers/clk/tegra/clk-emc.c | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
+ drivers/memory/tegra/mc.c | 30 +++++++++++++++++++++++-------
+ 1 file changed, 23 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-emc.c b/drivers/clk/tegra/clk-emc.c
-index e836a9b..84fa806 100644
---- a/drivers/clk/tegra/clk-emc.c
-+++ b/drivers/clk/tegra/clk-emc.c
-@@ -44,7 +44,7 @@
- #define CLK_SOURCE_EMC_EMC_2X_CLK_SRC(x) (((x) & CLK_SOURCE_EMC_EMC_2X_CLK_SRC_MASK) << \
- 					  CLK_SOURCE_EMC_EMC_2X_CLK_SRC_SHIFT)
- 
--static const char * const emc_parent_clk_names[] = {
-+static const char * const tegra124_emc_parent_clk_names[] = {
- 	"pll_m", "pll_c", "pll_p", "clk_m", "pll_m_ud",
- 	"pll_c2", "pll_c3", "pll_c_ud"
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index a4803ac..af4bf29 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -73,6 +73,17 @@
  };
-@@ -376,7 +376,9 @@ static int emc_set_rate(struct clk_hw *hw, unsigned long rate,
+ MODULE_DEVICE_TABLE(of, tegra_mc_of_match);
  
- static int load_one_timing_from_dt(struct tegra_clk_emc *tegra,
- 				   struct emc_timing *timing,
--				   struct device_node *node)
-+				   struct device_node *node,
-+				   const * char const *parent_names,
-+				   int num_parents)
++static void mc_modifyl(struct tegra_mc *mc, u32 reg, u32 value, u8 shift,
++		       u8 mask)
++{
++	u32 val;
++
++	val = readl(mc->regs + reg);
++	val &= ~(mask << shift);
++	val |= (value & mask) << shift;
++	writel(val, mc->regs + reg);
++}
++
+ static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
  {
- 	int err, i;
- 	u32 tmp;
-@@ -404,9 +406,9 @@ static int load_one_timing_from_dt(struct tegra_clk_emc *tegra,
+ 	unsigned long long tick;
+@@ -91,18 +102,14 @@ static int tegra_mc_setup_latency_allowance(struct tegra_mc *mc)
+ 	/* write latency allowance defaults */
+ 	for (i = 0; i < mc->soc->num_clients; i++) {
+ 		const struct tegra_mc_la *la = &mc->soc->clients[i].la;
+-		u32 value;
+-
+-		value = readl(mc->regs + la->reg);
+-		value &= ~(la->mask << la->shift);
+-		value |= (la->def & la->mask) << la->shift;
+-		writel(value, mc->regs + la->reg);
++		mc_modifyl(mc, la->reg, la->def, la->shift, la->mask);
  	}
  
- 	timing->parent_index = 0xff;
--	for (i = 0; i < ARRAY_SIZE(emc_parent_clk_names); i++) {
--		if (!strcmp(emc_parent_clk_names[i],
--			    __clk_get_name(timing->parent))) {
-+	for (i = 0; i < num_parents; i++) {
-+		if (!strcmp(parent_names([i],
-+			__clk_get_name(timing->parent)))) {
- 			timing->parent_index = i;
- 			break;
- 		}
-@@ -436,7 +438,9 @@ static int cmp_timings(const void *_a, const void *_b)
+ 	return 0;
+ }
  
- static int load_timings_from_dt(struct tegra_clk_emc *tegra,
- 				struct device_node *node,
--				u32 ram_code)
-+				u32 ram_code,
-+				const * char const *parent_names,
-+				int num_parents)
+-void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
++static struct tegra_mc_timing *find_mc_timing(struct tegra_mc *mc,
++					      unsigned long rate)
  {
- 	struct device_node *child;
- 	int child_count = of_get_child_count(node);
-@@ -452,7 +456,8 @@ static int load_timings_from_dt(struct tegra_clk_emc *tegra,
- 	for_each_child_of_node(node, child) {
- 		struct emc_timing *timing = tegra->timings + (i++);
+ 	unsigned int i;
+ 	struct tegra_mc_timing *timing = NULL;
+@@ -114,6 +121,15 @@ void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
+ 		}
+ 	}
  
--		err = load_one_timing_from_dt(tegra, timing, child);
-+		err = load_one_timing_from_dt(tegra, timing, child,
-+					      parent_names, num_parents);
- 		if (err) {
- 			of_node_put(child);
- 			return err;
-@@ -503,7 +508,9 @@ struct clk *tegra_clk_register_emc(void __iomem *base, struct device_node *np,
- 		 * Store timings for all ram codes as we cannot read the
- 		 * fuses until the apbmisc driver is loaded.
- 		 */
--		err = load_timings_from_dt(tegra, node, node_ram_code);
-+		err = load_timings_from_dt(tegra, node, node_ram_code,
-+					   tegra124_emc_parents,
-+					   ARRAY_SIZE(tegra124_emc_parents));
- 		of_node_put(node);
- 		if (err)
- 			return ERR_PTR(err);
++	return timing;
++}
++
++void tegra_mc_write_emem_configuration(struct tegra_mc *mc, unsigned long rate)
++{
++	unsigned int i;
++	struct tegra_mc_timing *timing = NULL;
++
++	timing = find_mc_timing(mc, rate);
+ 	if (!timing) {
+ 		dev_err(mc->dev, "no memory timing registered for rate %lu\n",
+ 			rate);
 -- 
 1.9.1
