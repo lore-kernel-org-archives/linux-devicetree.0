@@ -1,138 +1,82 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/3] watchdog: mpc8xxx: provide boot status
-Date: Fri, 14 Sep 2018 10:35:41 -0700
-Message-ID: <20180914173541.GG26861@roeck-us.net>
-References: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
- <4381d1515addcbc5329fbc955ef4a5074ab9afef.1536931725.git.christophe.leroy@c-s.fr>
+From: Ezequiel Garcia <ezequiel@collabora.com>
+Subject: Re: [PATCH v3 0/4] Add 96Boards Rock960 CE board support
+Date: Fri, 14 Sep 2018 14:42:51 -0300
+Message-ID: <a40ed76f22fd43f68af07d9bb56a0ff38171eef9.camel@collabora.com>
+References: <20180913180545.29756-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4381d1515addcbc5329fbc955ef4a5074ab9afef.1536931725.git.christophe.leroy@c-s.fr>
+In-Reply-To: <20180913180545.29756-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, heiko@sntech.de, robh+dt@kernel.org
+Cc: vicencb@gmail.com, shawn.lin@rock-chips.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2018 at 01:32:01PM +0000, Christophe Leroy wrote:
-> mpc8xxx watchdog driver supports the following platforms:
-> - mpc8xx
-> - mpc83xx
-> - mpc86xx
+On Thu, 2018-09-13 at 23:35 +0530, Manivannan Sadhasivam wrote:
+> This patchset adds 96Boards Rock960 CE board support. Rock960 CE
+> (Consumer Edition) board is one of the member of 96Boards Consumer
+> Edition and AI platform and is manufactured by Vamrs Limited. Most of
+> the board configuration is shared with the Ficus board manufactured by
+> vamrs, which is an Enterprise 96Board.
 > 
-> Those three platforms have a 32 bits register which provides the
-> reason of the last boot, including whether it was caused by the
-> watchdog.
+> For the sake of avoiding code duplication, a common rock960.dtsi file
+> with common DT nodes for both boards and separate board specific DTS
+> files has been added.
 > 
-> mpc8xx: Register RSR, bit SWRS (bit 3)
-> mpc83xx: Register RSR, bit SWRS (bit 28)
-> mpc86xx: Register RSTRSCR, bit WDT_RR (bit 11)
+> To be specific, below are some of the key differences between both
+> boards:
 > 
-> This patch maps the register as defined in the device tree and updates
-> wdt.bootstatus based on the value of the watchdog related bit. Then
-> the information can be retrieved via the WDIOC_GETBOOTSTATUS ioctl.
+> 1. Different host enable GPIO for USB
+> 2. Different power and reset GPIO for PCI-E
+> 3. No Ethernet port on Rock960
 > 
-> Hereunder is an example of devicetree for mpc8xx,
-> the Reset Status Register being at offset 0x288:
+> While adding the board support, SD card Chip detection support is also
+> added to the common dtsi file, shared by both boards.
 > 
-> 		WDT: watchdog@0 {
-> 			compatible = "fsl,mpc823-wdt";
-> 			reg = <0x0 0x10 0x288 0x4>;
-> 		};
+> This series has been tested on Rock960 CE v1.2 board.
 > 
-> On the mpc83xx, RSR is at offset 0x910
-> On the mpc86xx, RSTRSCR is at offset 0xe0094
+> Thanks,
+> Mani
 > 
-> Suggested-by: Radu Rendec <radu.rendec@gmail.com>
-> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> # On mpc885
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  drivers/watchdog/mpc8xxx_wdt.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> Changes in v3:
 > 
-> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
-> index 1dcf5f10cdd9..4a4700458b17 100644
-> --- a/drivers/watchdog/mpc8xxx_wdt.c
-> +++ b/drivers/watchdog/mpc8xxx_wdt.c
-> @@ -47,6 +47,7 @@ struct mpc8xxx_wdt {
->  struct mpc8xxx_wdt_type {
->  	int prescaler;
->  	bool hw_enabled;
-> +	u32 rsr_mask;
->  };
->  
->  struct mpc8xxx_wdt_ddata {
-> @@ -136,6 +137,7 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
->  	u32 freq = fsl_get_sys_freq();
->  	bool enabled;
->  	struct device *dev = &ofdev->dev;
-> +	u32 __iomem *rsr = NULL;
->  
->  	wdt_type = of_device_get_match_data(dev);
->  	if (!wdt_type)
-> @@ -159,6 +161,21 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
->  		return -ENODEV;
->  	}
->  
-> +	res = platform_get_resource(ofdev, IORESOURCE_MEM, 1);
-> +	if (res)
-> +		rsr = ioremap(res->start, resource_size(res));
-> +	if (rsr) {
+> * Moved usb and pcie nodes to common dtsi and kept only the properties
+>   which differ in board specific dts.
+> * Updated the common dtsi commit description.
+> 
+> Changes in v2:
+> 
+> * Changed the board compatible to "vamrs,rock960"
+> 
+> Manivannan Sadhasivam (4):
+>   arm64: dts: rockchip: Split out common nodes for Rock960 based boards
+>   dt-bindings: arm: rockchip: Add binding for Rock960 board
+>   arm64: boot: dts: rockchip: Add support for Rock960 board
+>   arm64: dts: rockchip: Enable SD card detection for Rock960 boards
+> 
+>  .../devicetree/bindings/arm/rockchip.txt      |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 524 +----------------
+>  .../boot/dts/rockchip/rk3399-rock960.dts      |  52 ++
+>  .../boot/dts/rockchip/rk3399-rock960.dtsi     | 542 ++++++++++++++++++
+>  5 files changed, 604 insertions(+), 519 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
+> 
 
-This if() can be inside the first if(), and it should be something like
+Looks pretty good!
 
-	if (res) {
-		rsr = ioremap(res->start, resource_size(res));
-		if (!rsr) {
-			dev_err(...);
-			return -ENOMEM;
-		}
-		...
-	}
+When applying this series, I noticed that it conflicts with
 
-... because _if_ the resource is provided in dt it should be valid.
+commit 8bb878cf20ae10809c36db96993bfce7026d062b
+Author: Levin Du <djw@t-chip.com.cn>
+Date:   Mon Jul 30 10:12:01 2018 +0800
+
+    arm64: dts: rockchip: add support for ROC-RK3399-PC board
+
+resolution is trivial, but you might want to rebase and resend,
+to make Heiko's life easier.
 
 Thanks,
-Guenter
-
-> +		bool status = in_be32(rsr) & wdt_type->rsr_mask;
-> +
-> +		ddata->wdd.bootstatus = status ? WDIOF_CARDRESET : 0;
-> +		 /* clear reset status bits related to watchdog timer */
-> +		out_be32(rsr, wdt_type->rsr_mask);
-> +		iounmap(rsr);
-> +
-> +		dev_info(dev, "Last boot was %scaused by watchdog\n",
-> +			 status ? "" : "not ");
-> +	}
-> +
->  	spin_lock_init(&ddata->lock);
->  
->  	ddata->wdd.info = &mpc8xxx_wdt_info,
-> @@ -216,6 +233,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
->  		.compatible = "mpc83xx_wdt",
->  		.data = &(struct mpc8xxx_wdt_type) {
->  			.prescaler = 0x10000,
-> +			.rsr_mask = BIT(3), /* RSR Bit SWRS */
->  		},
->  	},
->  	{
-> @@ -223,6 +241,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
->  		.data = &(struct mpc8xxx_wdt_type) {
->  			.prescaler = 0x10000,
->  			.hw_enabled = true,
-> +			.rsr_mask = BIT(20), /* RSTRSCR Bit WDT_RR */
->  		},
->  	},
->  	{
-> @@ -230,6 +249,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
->  		.data = &(struct mpc8xxx_wdt_type) {
->  			.prescaler = 0x800,
->  			.hw_enabled = true,
-> +			.rsr_mask = BIT(28), /* RSR Bit SWRS */
->  		},
->  	},
->  	{},
-> -- 
-> 2.13.3
-> 
+Eze
