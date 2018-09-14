@@ -1,66 +1,95 @@
-Return-Path: <SRS0=r4+v=L3=linaro.org=linus.walleij@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH] gpio: OF: Remove bad practice examples
-Date: Thu, 13 Sep 2018 09:47:32 +0200
-Message-Id: <20180913074732.5911-1-linus.walleij@linaro.org>
-To: linux-gpio@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Return-Path: <SRS0=AnC+=L4=nvidia.com=pdeschrijver@kernel.org>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [RFC 02/14] clk: tegra: rename emc timing functions
+Date: Fri, 14 Sep 2018 23:02:57 +0300
+Message-ID: <1536955389-30442-3-git-send-email-pdeschrijver@nvidia.com>
+In-Reply-To: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: vkuruturi@nvidia.com, linux-tegra=linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, robh+dt@kernel.org
+Cc: daniel@octaforge.org, a.heider@gmail.com, swtcr0@gmail.com, Peter De Schrijver <pdeschrijver@nvidia.com>
 List-ID: <devicetree@vger.kernel.org>
 
-We remove the references to anything but two-cell GPIO specifiers
-and just mention that controllers need to specify their bindings
-and that we strongly recommend two-cell bindings.
+Tegra210 emc scaling is similar but sufficiently different to require a new
+implementation of the clock driver and the emc timing code. Hence rename
+the existing tegra_emc_prepare_timing_change and
+tegra_emc_complete_timing_change to tegra124_emc_prepare_timing_change
+and tegra124_emc_complete_timing_change because they really only
+apply to Tegra124.
 
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
 ---
- .../devicetree/bindings/gpio/gpio.txt         | 24 +++++++------------
- 1 file changed, 9 insertions(+), 15 deletions(-)
+ drivers/clk/tegra/clk-emc.c         | 4 ++--
+ drivers/memory/tegra/tegra124-emc.c | 8 ++++----
+ include/soc/tegra/emc.h             | 8 ++++----
+ 3 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-index 3afaa396adf7..f0ba154b5723 100644
---- a/Documentation/devicetree/bindings/gpio/gpio.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-@@ -27,30 +27,24 @@ and bit-banged data signals:
- 		gpio-controller;
- 		#gpio-cells = <2>;
- 	};
--	gpio2: gpio2 {
--		gpio-controller;
--		#gpio-cells = <1>;
--	};
- 	[...]
+diff --git a/drivers/clk/tegra/clk-emc.c b/drivers/clk/tegra/clk-emc.c
+index 11a5066..ce41d07 100644
+--- a/drivers/clk/tegra/clk-emc.c
++++ b/drivers/clk/tegra/clk-emc.c
+@@ -237,7 +237,7 @@ static int emc_set_timing(struct tegra_clk_emc *tegra,
  
--	enable-gpios = <&gpio2 2>;
- 	data-gpios = <&gpio1 12 0>,
- 		     <&gpio1 13 0>,
- 		     <&gpio1 14 0>,
- 		     <&gpio1 15 0>;
+ 	div = timing->parent_rate / (timing->rate / 2) - 2;
  
--Note that gpio-specifier length is controller dependent.  In the
--above example, &gpio1 uses 2 cells to specify a gpio, while &gpio2
--only uses one.
--
--gpio-specifier may encode: bank, pin position inside the bank,
--whether pin is open-drain and whether pin is logically inverted.
-+In the above example, &gpio1 uses 2 cells to specify a gpio. The first cell is
-+a local offset to the GPIO line and the second cell represent consumer flags,
-+such as if the consumer desire the line to be active low (inverted) or open
-+drain. This is the recommended practice.
+-	err = tegra_emc_prepare_timing_change(emc, timing->rate);
++	err = tegra124_emc_prepare_timing_change(emc, timing->rate);
+ 	if (err)
+ 		return err;
  
--Exact meaning of each specifier cell is controller specific, and must
--be documented in the device tree binding for the device.
-+The exact meaning of each specifier cell is controller specific, and must be
-+documented in the device tree binding for the device, but it is strongly
-+recommended to use the two-cell approach.
+@@ -255,7 +255,7 @@ static int emc_set_timing(struct tegra_clk_emc *tegra,
  
--Most controllers are however specifying a generic flag bitfield
--in the last cell, so for these, use the macros defined in
-+Most controllers are specifying a generic flag bitfield in the last cell, so
-+for these, use the macros defined in
- include/dt-bindings/gpio/gpio.h whenever possible:
+ 	spin_unlock_irqrestore(tegra->lock, flags);
  
- Example of a node using GPIOs:
+-	tegra_emc_complete_timing_change(emc, timing->rate);
++	tegra124_emc_complete_timing_change(emc, timing->rate);
+ 
+ 	clk_hw_reparent(&tegra->hw, __clk_get_hw(timing->parent));
+ 	clk_disable_unprepare(tegra->prev_parent);
+diff --git a/drivers/memory/tegra/tegra124-emc.c b/drivers/memory/tegra/tegra124-emc.c
+index 392dc8d..7140ec8 100644
+--- a/drivers/memory/tegra/tegra124-emc.c
++++ b/drivers/memory/tegra/tegra124-emc.c
+@@ -562,8 +562,8 @@ static struct emc_timing *tegra_emc_find_timing(struct tegra_emc *emc,
+ 	return timing;
+ }
+ 
+-int tegra_emc_prepare_timing_change(struct tegra_emc *emc,
+-				    unsigned long rate)
++int tegra124_emc_prepare_timing_change(struct tegra_emc *emc,
++				       unsigned long rate)
+ {
+ 	struct emc_timing *timing = tegra_emc_find_timing(emc, rate);
+ 	struct emc_timing *last = &emc->last_timing;
+@@ -790,8 +790,8 @@ int tegra_emc_prepare_timing_change(struct tegra_emc *emc,
+ 	return 0;
+ }
+ 
+-void tegra_emc_complete_timing_change(struct tegra_emc *emc,
+-				      unsigned long rate)
++void tegra124_emc_complete_timing_change(struct tegra_emc *emc,
++					 unsigned long rate)
+ {
+ 	struct emc_timing *timing = tegra_emc_find_timing(emc, rate);
+ 	struct emc_timing *last = &emc->last_timing;
+diff --git a/include/soc/tegra/emc.h b/include/soc/tegra/emc.h
+index f6db33b..625f77d 100644
+--- a/include/soc/tegra/emc.h
++++ b/include/soc/tegra/emc.h
+@@ -11,9 +11,9 @@
+ 
+ struct tegra_emc;
+ 
+-int tegra_emc_prepare_timing_change(struct tegra_emc *emc,
+-				    unsigned long rate);
+-void tegra_emc_complete_timing_change(struct tegra_emc *emc,
+-				      unsigned long rate);
++int tegra124_emc_prepare_timing_change(struct tegra_emc *emc,
++				       unsigned long rate);
++void tegra124_emc_complete_timing_change(struct tegra_emc *emc,
++					 unsigned long rate);
+ 
+ #endif /* __SOC_TEGRA_EMC_H__ */
 -- 
-2.17.1
+1.9.1
