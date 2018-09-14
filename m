@@ -1,130 +1,76 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 1/2] staging/vc04_services: Derive g_cache_line_size
-Date: Fri, 14 Sep 2018 13:25:18 +0200
-Message-ID: <44ed663c-7499-23bd-6c64-39d9275da66d@i2se.com>
-References: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
- <1536770554-107314-2-git-send-email-phil@raspberrypi.org>
- <107b707e-1f8c-1305-2582-0a131011758d@i2se.com>
- <2f836805-79dc-adee-e2b7-21c45781afff@raspberrypi.org>
- <8500357f-f5aa-5f87-995f-d355d9b8c469@i2se.com>
- <2aaa0f5f-b54d-396c-737e-73591b3083c8@raspberrypi.org>
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH v2 3/4] iio: adc: Add Xilinx AMS driver
+Date: Fri, 14 Sep 2018 17:29:28 +0530
+Message-ID: <20180914115928.GA6465@himanshu-Vostro-3559>
+References: <1536909510-7166-1-git-send-email-manish.narani@xilinx.com>
+ <1536909510-7166-4-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <2aaa0f5f-b54d-396c-737e-73591b3083c8-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Content-Language: de-DE
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rpi-kernel/>
-List-Post: <mailto:linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rpi-kernel>,
- <mailto:linux-rpi-kernel-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "linux-rpi-kernel" <linux-rpi-kernel-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rpi-kernel-bounces+glkr-linux-rpi-kernel=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536909510-7166-4-git-send-email-manish.narani@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, leoyang.li@nxp.com, broonie@kernel.org, arnaud.pouliquen@st.com, eugen.hristev@microchip.com, rdunlap@infradead.org, geert@linux-m68k.org, ak@it-klinger.de, freeman.liu@spreadtrum.com, lukas@wunner.de, vilhelm.gray@gmail.com, gregkh@linuxfoundation.org, kstewart@linuxfoundation.org, sgoud@xilinx.com, anirudh@xilinx.com, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gustavo@embeddedor.com
 List-Id: devicetree@vger.kernel.org
 
-Am 14.09.2018 um 13:09 schrieb Phil Elwell:
-> On 14/09/2018 12:03, Stefan Wahren wrote:
->> Hi,
->>
->> Am 14.09.2018 um 12:26 schrieb Phil Elwell:
->>> Hi Stefan,
->>>
->>> On 14/09/2018 11:11, Stefan Wahren wrote:
->>>> Hi Phil,
->>>>
->>>> Am 12.09.2018 um 18:42 schrieb Phil Elwell:
->>>>> The ARM coprocessor registers include dcache line size, but there is no
->>>>> function to expose this value. Rather than create a new one, use the
->>>>> read_cpuid_id function to derive the correct value, which is 32 for
->>>>> BCM2835 and 64 for BCM2836/7.
->>>>>
->>>>> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
->>>>> ---
->>>>>  .../interface/vchiq_arm/vchiq_2835_arm.c           | 24 +++++++++++++++++-----
->>>>>  1 file changed, 19 insertions(+), 5 deletions(-)
->>>>>
->>>>> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
->>>>> index e767209..3537f60 100644
->>>>> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
->>>>> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
->>>>> @@ -42,6 +42,7 @@
->>>>>  #include <linux/uaccess.h>
->>>>>  #include <linux/mm.h>
->>>>>  #include <linux/of.h>
->>>>> +#include <asm/cputype.h>
->>>>>  #include <soc/bcm2835/raspberrypi-firmware.h>
->>>>>  
->>>>>  #define TOTAL_SLOTS (VCHIQ_SLOT_ZERO_SLOTS + 2 * 32)
->>>>> @@ -81,13 +82,15 @@ static void __iomem *g_regs;
->>>>>   * VPU firmware, which determines the required alignment of the
->>>>>   * offsets/sizes in pagelists.
->>>>>   *
->>>>> - * Modern VPU firmware looks for a DT "cache-line-size" property in
->>>>> - * the VCHIQ node and will overwrite it with the actual L2 cache size,
->>>>> + * Previous VPU firmware looked for a DT "cache-line-size" property in
->>>>> + * the VCHIQ node and would overwrite it with the actual L2 cache size,
->>>>>   * which the kernel must then respect.  That property was rejected
->>>>> - * upstream, so we have to use the VPU firmware's compatibility value
->>>>> - * of 32.
->>>>> + * upstream, so we now rely on both sides to "do the right thing" independently
->>>>> + * of the other. To improve backwards compatibility, this new behaviour is
->>>>> + * signalled to the firmware by the use of a corrected "reg" property on the
->>>>> + * relevant Device Tree node.
->>>>>   */
->>>>> -static unsigned int g_cache_line_size = 32;
->>>>> +static unsigned int g_cache_line_size;
->>>>>  static unsigned int g_fragments_size;
->>>>>  static char *g_fragments_base;
->>>>>  static char *g_free_fragments;
->>>>> @@ -127,6 +130,17 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
->>>>>  	if (err < 0)
->>>>>  		return err;
->>>>>  
->>>>> +	/*
->>>>> +	 * The tempting L1_CACHE_BYTES macro doesn't work in the case of
->>>>> +	 * a kernel built with bcm2835_defconfig running on a BCM2836/7
->>>>> +	 * processor, hence the need for a runtime check. The dcache line size
->>>>> +	 * is encoded in one of the coprocessor registers, but there is no
->>>>> +	 * convenient way to access it short of embedded assembler, hence
->>>>> +	 * the use of read_cpuid_id(). The following test evaluates to true
->>>>> +	 * on a BCM2835 showing that it is ARMv6-ish, whereas
->>>>> +	 * cpu_architecture() will indicate that it is an ARMv7.
->>>>> +	 */
->>>>> +	g_cache_line_size = ((read_cpuid_id() & 0x7f000) == 0x7b000) ? 32 : 64;
->>>> is there a chance to use ARM_CPU_PART_ARM1176 or something else instead
->>>> of this magic numbers?
->>> One could. It's a trade-off between specific and human-readable vs. generic and less-so,
->>> and possibly moot given the next question.
->>>
->>>> Sorry, i cannot remember the whole discussion but why we can use
->>>> different compatible here instead of using ARM specific stuff.
->>>>
->>>> compatible = "brcm,bcm2836-vchiq", "brcm,bcm2835-vchiq"; // for BCM2836/7
->>>>
->>>> compatible = "brcm,bcm2835"; // only for BCM2835
->>> It wasn't an option you raised in the offline discussion. 
->> maybe this was too obvious :-(
->>
->>> Assuming you meant
->>> "brcm,bcm2835-vchiq", I suppose you could think of it as being a different type
->>> of device if that is more acceptable.
->> Yes, it's a different SoC. Do you see any problems with the VC4 firmware
->> according to this approach?
-> No, it can be made to work. Expect V2 shortly.
+Hi Manish,
 
-Great. I forgot a mailing list in my first comment. Please also add
-devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org in CC.
+On Fri, Sep 14, 2018 at 12:48:29PM +0530, Manish Narani wrote:
+> The AMS includes an ADC as well as on-chip sensors that can be used to
+> sample external voltages and monitor on-die operating conditions, such
+> as temperature and supply voltage levels. The AMS has two SYSMON blocks.
+> PL-SYSMON block is capable of monitoring off chip voltage and
+> temperature.
+> PL-SYSMON block has DRP, JTAG and I2C interface to enable monitoring
+> from external master. Out of these interface currently only DRP is
+> supported.
+> Other block PS-SYSMON is memory mapped to PS.
+> The AMS can use internal channels to monitor voltage and temperature as
+> well as one primary and up to 16 auxiliary channels for measuring
+> external voltages.
+> The voltage and temperature monitoring channels also have event
+> capability which allows to generate an interrupt when their value falls
+> below or raises above a set threshold.
+> 
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+[]
+> +// SPDX-License-Identifier: GPL-2.0
 
->
->>>>>  	g_fragments_size = 2 * g_cache_line_size;
->>>>>  
->>>>>  	/* Allocate space for the channels in coherent memory */
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
+License Identifier seems inconsistent as below you
+mentioned "GPL" and not "GPLv2".
+
+
+Please check once.
+Documentation/process/license-rules.rst
+
+
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->type) {
+> +		case IIO_VOLTAGE:
+> +			switch (chan->address) {
+> +			case AMS_SUPPLY1:
+			/* fall through */
+> +			case AMS_SUPPLY2:
+			/* fall through */
+
+
+Similarly to others as well.
+There is a plan to enable "-Wimplicit-fallthrough" gcc flag
+https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
+
+Also, Gustavo nearly cleaned all the cases and would save
+his effort of doing it again :)
+https://lore.kernel.org/lkml/20180903183618.GA6905@embeddedor.com/
+
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Xilinx, Inc.");
+
+
+Thanks
+-- 
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
