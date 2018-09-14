@@ -1,46 +1,40 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 1/2] ARM: dts: imx6ul: use nvmem-cells for cpu speed grading
-Date: Fri, 14 Sep 2018 10:59:21 +0800
-Message-ID: <1536893962-11200-1-git-send-email-Anson.Huang@nxp.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] ARM: dts: socfpga: Fix I2C bus unit-address error
+Date: Thu, 13 Sep 2018 23:48:30 -0500
+Message-ID: <086796ff-989e-4cca-f85e-0a2a9878c41e@kernel.org>
+References: <20180913181245.25484-13-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-13-robh@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On i.MX6UL, accessing OCOTP directly is wrong because the ocotp clock
-needs to be enabled first, so use the nvmem-cells binding instead.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6ul.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 6dc0b56..c670d8e 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -89,6 +89,8 @@
- 				      "pll1_sys";
- 			arm-supply = <&reg_arm>;
- 			soc-supply = <&reg_soc>;
-+			nvmem-cells = <&cpu_speed_grade>;
-+			nvmem-cell-names = "speed_grade";
- 		};
- 	};
- 
-@@ -932,6 +934,10 @@
- 				tempmon_temp_grade: temp-grade@20 {
- 					reg = <0x20 4>;
- 				};
-+
-+				cpu_speed_grade: speed-grade@10 {
-+					reg = <0x10 4>;
-+				};
- 			};
- 
- 			lcdif: lcdif@21c8000 {
--- 
-2.7.4
+On 09/13/2018 01:12 PM, Rob Herring wrote:
+> dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
+> 
+> arch/arm/boot/dts/socfpga_cyclone5_de0_sockit.dtb: Warning (i2c_bus_reg): /soc/i2c@ffc04000/adxl345@0: I2C bus unit address format error, expected "53"
+> 
+> Cc: Dinh Nguyen <dinguyen@kernel.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please apply to the sub-arch tree. The dtc changes haven't landed, but 
+> will for 4.20.
+> 
+
+Thanks for the fix! Applied!
+
+Dinh
