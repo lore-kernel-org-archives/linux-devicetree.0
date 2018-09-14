@@ -1,104 +1,94 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: Multi-parent IRQ domains
-Date: Fri, 14 Sep 2018 10:10:23 +0200
-Message-ID: <20180914081023.GA22750@ulmo>
-References: <20180913155945.GA19903@ulmo>
- <ea9261a9-2c4d-7ca4-6dca-73f385aa46d5@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qDbXVdCdHGoSgWSk"
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v3 00/11] mscc: ocelot: add support for SerDes muxing configuration
+Date: Fri, 14 Sep 2018 10:15:58 +0200
+Message-ID: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ea9261a9-2c4d-7ca4-6dca-73f385aa46d5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+The Ocelot switch has currently an hardcoded SerDes muxing that suits only
+a particular use case. Any other board setup will fail to work.
 
---qDbXVdCdHGoSgWSk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+To prepare for upcoming boards' support that do not have the same muxing,
+create a PHY driver that will handle all possible cases.
 
-On Thu, Sep 13, 2018 at 02:50:21PM -0700, Florian Fainelli wrote:
->=20
->=20
-> On 09/13/18 08:59, Thierry Reding wrote:
-> > Hi everyone,
-> >=20
-> > I've been trying to implement a feature on recent Tegra chips that's
-> > called "wake events". These wake events are implemented as part of the
-> > power management controller (PMC) and they control which events can be
-> > used to wake the system from suspend. Events include things like an
-> > alarm interrupt from an RTC, or the GPIO interrupt hooked up to a
-> > power button for example.
-> >=20
-> > We already have a driver for a couple of other things that the PMC does,
-> > so I thought it'd be natural to implement this functionality as an IRQ
-> > chip in the PMC driver. The way that this would work is that for all the
-> > devices that are wakeup sources, we'd end up specifying the PMC as the
-> > interrupt parent and the PMC would then itself have the main GIC as its
-> > parent. That way, the hierarchical IRQ domain infrastructure would take
-> > care of pretty much everything.
-> >=20
-> > Unfortunately I've run into some issues here. One problem that I'm
-> > facing is that PMC could have more than one parent. For example, the RTC
-> > alarm interrupt goes straight to the GIC, but the power button GPIO goes
-> > through the GPIO controller first and then to the GIC. This doesn't seem
-> > to be something that's currently possible.
-> >=20
-> > The way I imagine this to work from a DT perspective is as follows:
->=20
-> There is an interrupts-extended property which as a first cell takes a
-> phandle to the parent interrupt controller, e.g:
->=20
-> interrupts-extended =3D <&gic 73 GIPC_SPI IRQ_TYPE_LEVEL_HIGH>,
-> 			<&pmc 10>;
->=20
-> (provided that I understood your problem and example correctly). We have
-> a similar use case on our STB chips where we have "main" interrupts
-> wired to the ARM GIC and wake-up interrupts wired to a specific wake-up
-> interrupt controller in an always-on domain. The two controllers have a
-> different #interrupt-cells specifier.
->=20
-> The interrupt infrastructure in Linux already knows how to deal with
-> that and whether you use of_get_irq() or platform_get_irq() you should
-> obtain the correct virtual interrupt numbers that you expected, parented
-> to the appropriate interrupt controller.
+A SerDes can work in SGMII, QSGMII or PCIe and is also muxed to use a
+given port depending on the selected mode or board design.
 
-Yeah, I had looked at the interrupts-extended property as well, but
-while I think it might work, one issue with that is that we'd be
-modelling the regular IRQ and wakeup IRQ as two different IRQs. On
-Tegra, however, the wakeup interrupt is the same as the regular
-interrupt, except that the bits to enable the wake logic is in a
-different hardware block. So the PMC acts more like an additional
-mux for a subset of the interrupts in the system.
+The SerDes configuration is in the middle of an address space (HSIO) that
+is used to configure some parts in the MAC controller driver, that is why
+we need to use a syscon so that we can write to the same address space from
+different drivers safely using regmap.
 
-In addition to that, if I were to model the interrupts separately, I'd
-also have to modify existing drivers for all the wakeup-able devices to
-deal with two separate interrupts, which is rather undesirable.
+This breaks backward compatibility but it's fine because there's only one
+board at the moment that is using what's modified in this patch series.
+This will break git bisect.
 
-Thierry
+Even though this patch series is about SerDes __muxing__ configuration, the
+DT node is named serdes for the simple reason that I couldn't find any
+mention to SerDes anywhere else from the address space handled by this
+driver.
 
---qDbXVdCdHGoSgWSk
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Quentin
 
------BEGIN PGP SIGNATURE-----
+v3:
+  - add Paul Burton's Acked-By on MIPS patches so that the patch series can
+  be merged in the net tree in its entirety,
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlubbO0ACgkQ3SOs138+
-s6Eo4w/8CFdu6waD5JsOQH7TrFv98Q/Fsq9TLrsUvPHL/wEacrne8/PLtbidu4pv
-RohmWSf4br1GhN8+3D/U3gFw/uI5I8oD3lqHXHHRxCc297gK5t+tXXhNOZeuaZ0l
-NyuRqZ8o47EPxAkOrDsu+ZfBc1u2m9l4zYMA1OB0X3NIjT2w3Rt7msPZQapZrxlV
-mp9Iw/d6ArOegaukW0l98YtmZnSmpg4tbqB6pGzoCMfAtRsf3jf+DUuhdn36t0VD
-eBUqhRo6MVqECi3NiELGpZ+ya3rrgKn94PzU65aVDX/6K9AquOz5GdNaYR++/UsK
-zHfppn31Ecr6Y9LW9mrP8yj2k7hMAbMnlKcYcS0G23xUf++N9dc7d8aR/RWP74Q5
-CxmiIGhLttnFyTcEhU2p07+dKZOTzkNpd3ZVpNNp0OV3e43IpjUL4QpCK+IaWlWp
-zFDFtbhrCL3A2FVAW+bQcozzC2vtMalBMuiwVRIOBExSd/yLg5vZdHlJVXWU5jgT
-Xc7KBPDbGCG42im7nzF6Bt7bW/af8pLG0d+U88OKShX3drQFxRJWY5hmfTrjoq4v
-7JBJD25vDgACnHoWVwUuiiOuui5RD1WdMQQqqoe3HyHaINMjn4iroKpDWFeQ64EK
-cW2Wu5eOCizrvPxOM3C87outtt3n0OTJmlZQWFmhEp6D5Xj04yU=
-=Y+K7
------END PGP SIGNATURE-----
+v2:
+  - use a switch case for setting the phy_mode in the SerDes driver as
+  suggested by Andrew,
+  - stop replacing the value of the error pointer in the SerDes driver,
+  - use a dev_dbg for the deferring of the probe in the SerDes driver,
+  - use constants in the Device Tree to select the SerDes macro in use with
+  a port,
+  - adapt the SerDes driver to use those constants,
+  - add a header file in include/dt-bindings for the constants,
+  - fix space/tab issue,
 
---qDbXVdCdHGoSgWSk--
+Quentin Schulz (11):
+  MIPS: mscc: ocelot: make HSIO registers address range a syscon
+  dt-bindings: net: ocelot: remove hsio from the list of register address spaces
+  net: mscc: ocelot: get HSIO regmap from syscon
+  net: mscc: ocelot: move the HSIO header to include/soc
+  net: mscc: ocelot: simplify register access for PLL5 configuration
+  phy: add QSGMII and PCIE modes
+  dt-bindings: phy: add DT binding for Microsemi Ocelot SerDes muxing
+  MIPS: mscc: ocelot: add SerDes mux DT node
+  dt-bindings: add constants for Microsemi Ocelot SerDes driver
+  phy: add driver for Microsemi Ocelot SerDes muxing
+  net: mscc: ocelot: make use of SerDes PHYs for handling their configuration
+
+ Documentation/devicetree/bindings/mips/mscc.txt             |  16 +-
+ Documentation/devicetree/bindings/net/mscc-ocelot.txt       |   9 +-
+ Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt |  40 +-
+ arch/mips/boot/dts/mscc/ocelot.dtsi                         |  19 +-
+ drivers/net/ethernet/mscc/Kconfig                           |   2 +-
+ drivers/net/ethernet/mscc/ocelot.c                          |  16 +-
+ drivers/net/ethernet/mscc/ocelot.h                          |  79 +-
+ drivers/net/ethernet/mscc/ocelot_board.c                    |  61 +-
+ drivers/net/ethernet/mscc/ocelot_hsio.h                     | 785 +------
+ drivers/net/ethernet/mscc/ocelot_regs.c                     |  93 +-
+ drivers/phy/Kconfig                                         |   1 +-
+ drivers/phy/Makefile                                        |   1 +-
+ drivers/phy/mscc/Kconfig                                    |  11 +-
+ drivers/phy/mscc/Makefile                                   |   5 +-
+ drivers/phy/mscc/phy-ocelot-serdes.c                        | 288 ++-
+ include/dt-bindings/phy/phy-ocelot-serdes.h                 |  19 +-
+ include/linux/phy/phy.h                                     |   2 +-
+ include/soc/mscc/ocelot_hsio.h                              | 859 +++++++-
+ 18 files changed, 1341 insertions(+), 965 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+ delete mode 100644 drivers/net/ethernet/mscc/ocelot_hsio.h
+ create mode 100644 drivers/phy/mscc/Kconfig
+ create mode 100644 drivers/phy/mscc/Makefile
+ create mode 100644 drivers/phy/mscc/phy-ocelot-serdes.c
+ create mode 100644 include/dt-bindings/phy/phy-ocelot-serdes.h
+ create mode 100644 include/soc/mscc/ocelot_hsio.h
+
+base-commit: ee4fccbee7d397c4d937e20d8c76212ffc23a7e3
+-- 
+git-series 0.9.1
