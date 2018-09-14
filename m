@@ -1,60 +1,113 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 5/5] ARM: dts: meson8b: Add support for the Endless Mini
- (EC-100)
-Date: Fri, 14 Sep 2018 19:22:03 +0200
-Message-ID: <CAFBinCCU566Ki+fqNL_LdK_BhihWmM158fp-V4MJE6rjX9WD7w@mail.gmail.com>
-References: <20180913202203.19636-1-martin.blumenstingl@googlemail.com>
- <20180913202203.19636-6-martin.blumenstingl@googlemail.com>
- <CAD8Lp47sSFrv9QopqPn6Ohv-2aupeGbX_Bb2dBXubUzFqjK=-Q@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 1/3] watchdog: mpc8xxx: use dev_xxxx() instead of
+ pr_xxxx()
+Date: Fri, 14 Sep 2018 10:25:01 -0700
+Message-ID: <20180914172501.GE26861@roeck-us.net>
+References: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD8Lp47sSFrv9QopqPn6Ohv-2aupeGbX_Bb2dBXubUzFqjK=-Q@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: drake@endlessm.com
-Cc: devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+On Fri, Sep 14, 2018 at 01:31:59PM +0000, Christophe Leroy wrote:
+> mpc8xxx watchdog driver is a platform device drivers, it is
+> therefore possible to use dev_xxx() messaging rather than pr_xxx()
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-On Fri, Sep 14, 2018 at 8:24 AM Daniel Drake <drake@endlessm.com> wrote:
->
-> Hi Martin,
->
-> On Fri, Sep 14, 2018 at 4:22 AM, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
-> > The Endless Mini (EC-100) is a grapefruit-sized computer based on the
-> > Amlogic Meson8b (S805) SoC which comes in two variants.
->
-> Thanks for your work here, really happy to see this go by!
-you're welcome - actually having a EC-100 helped a lot! :)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> Would it be possible to adjust the compatible string to
-> "endless,ec100" without the hyphen to match what we've already been
-> shipping?
-sure, I'll wait a few days if more questions come up then I'll send a v2
-
-> Just curious, is there now working USB and HDMI support in mainline on
-> this platform?
-USB is working fine - you just need d9707490077bee "usb: dwc2: Fix
-call location of dwc2_check_core_endianness" (which hit mainline
-today) or test this against linux-next
-HDMI is not supported
-
-other topics I'm working on:
-- CPU frequency scaling
-- temperature sensor support in the SAR ADC driver
-- ...whatever attracts my attention / interest ;)
-
-
-Regards
-Martin
+> ---
+>  drivers/watchdog/mpc8xxx_wdt.c | 24 ++++++++++++------------
+>  1 file changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
+> index aca2d6323f8a..1dcf5f10cdd9 100644
+> --- a/drivers/watchdog/mpc8xxx_wdt.c
+> +++ b/drivers/watchdog/mpc8xxx_wdt.c
+> @@ -17,8 +17,6 @@
+>   * option) any later version.
+>   */
+>  
+> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> -
+>  #include <linux/fs.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> @@ -137,26 +135,27 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>  	struct mpc8xxx_wdt_ddata *ddata;
+>  	u32 freq = fsl_get_sys_freq();
+>  	bool enabled;
+> +	struct device *dev = &ofdev->dev;
+>  
+> -	wdt_type = of_device_get_match_data(&ofdev->dev);
+> +	wdt_type = of_device_get_match_data(dev);
+>  	if (!wdt_type)
+>  		return -EINVAL;
+>  
+>  	if (!freq || freq == -1)
+>  		return -EINVAL;
+>  
+> -	ddata = devm_kzalloc(&ofdev->dev, sizeof(*ddata), GFP_KERNEL);
+> +	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
+>  	if (!ddata)
+>  		return -ENOMEM;
+>  
+>  	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
+> -	ddata->base = devm_ioremap_resource(&ofdev->dev, res);
+> +	ddata->base = devm_ioremap_resource(dev, res);
+>  	if (IS_ERR(ddata->base))
+>  		return PTR_ERR(ddata->base);
+>  
+>  	enabled = in_be32(&ddata->base->swcrr) & SWCRR_SWEN;
+>  	if (!enabled && wdt_type->hw_enabled) {
+> -		pr_info("could not be enabled in software\n");
+> +		dev_info(dev, "could not be enabled in software\n");
+>  		return -ENODEV;
+>  	}
+>  
+> @@ -166,7 +165,7 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>  	ddata->wdd.ops = &mpc8xxx_wdt_ops,
+>  
+>  	ddata->wdd.timeout = WATCHDOG_TIMEOUT;
+> -	watchdog_init_timeout(&ddata->wdd, timeout, &ofdev->dev);
+> +	watchdog_init_timeout(&ddata->wdd, timeout, dev);
+>  
+>  	watchdog_set_nowayout(&ddata->wdd, nowayout);
+>  
+> @@ -189,12 +188,13 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>  
+>  	ret = watchdog_register_device(&ddata->wdd);
+>  	if (ret) {
+> -		pr_err("cannot register watchdog device (err=%d)\n", ret);
+> +		dev_err(dev, "cannot register watchdog device (err=%d)\n", ret);
+>  		return ret;
+>  	}
+>  
+> -	pr_info("WDT driver for MPC8xxx initialized. mode:%s timeout=%d sec\n",
+> -		reset ? "reset" : "interrupt", ddata->wdd.timeout);
+> +	dev_info(dev,
+> +		 "WDT driver for MPC8xxx initialized. mode:%s timeout=%d sec\n",
+> +		 reset ? "reset" : "interrupt", ddata->wdd.timeout);
+>  
+>  	platform_set_drvdata(ofdev, ddata);
+>  	return 0;
+> @@ -204,8 +204,8 @@ static int mpc8xxx_wdt_remove(struct platform_device *ofdev)
+>  {
+>  	struct mpc8xxx_wdt_ddata *ddata = platform_get_drvdata(ofdev);
+>  
+> -	pr_crit("Watchdog removed, expect the %s soon!\n",
+> -		reset ? "reset" : "machine check exception");
+> +	dev_crit(&ofdev->dev, "Watchdog removed, expect the %s soon!\n",
+> +		 reset ? "reset" : "machine check exception");
+>  	watchdog_unregister_device(&ddata->wdd);
+>  
+>  	return 0;
+> -- 
+> 2.13.3
+> 
