@@ -1,54 +1,56 @@
-From: Afonso Bordado <afonsobordado@az8.co>
-Subject: Re: [PATCH v4 4/5] iio: fxas21002c: add ODR/Scale support
-Date: Fri, 14 Sep 2018 16:26:44 +0100
-Message-ID: <2cd9b1674ae88f153a5afe65c151cabf308e4fe7.camel@az8.co>
-References: <20180911150011.31964-4-afonsobordado@az8.co>
-         <201809121715.5Babt1QC%fengguang.wu@intel.com>
-         <20180912182350.GA13032@himanshu-Vostro-3559>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: Re: [PATCH] ARM: at91/dt: fix typo in sama5d2 pinmux descriptions
+Date: Fri, 14 Sep 2018 17:30:12 +0200
+Message-ID: <2d8dcf62-eb7b-03de-7774-b5b4017db949@microchip.com>
+References: <b996f1c2271834bbf1220431ed0a08af09a6fb55.1536938317.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180912182350.GA13032@himanshu-Vostro-3559>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Himanshu Jha <himanshujha199640@gmail.com>
-Cc: kbuild-all@01.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b996f1c2271834bbf1220431ed0a08af09a6fb55.1536938317.git.mirq-linux@rere.qmqm.pl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Claudiu Beznea - M18063 <Claudiu.Beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Thanks for your help with this.
-
-> And I suspect it may be originating from your code snippet:
-> 
-> #define FXAS21002C_SCALE(scale) (IIO_DEGREE_TO_RAD(62500U >>
-> (scale)))
-> 
-> and looking at the implementation:
-> 
-> include/linux/iio/iio.h
-> /**
->  * IIO_DEGREE_TO_RAD() - Convert degree to rad
->  * @deg: A value in degree
->  *
->  * Returns the given value converted from degree to rad
->  */
-> #define IIO_DEGREE_TO_RAD(deg) (((deg) * 314159ULL + 9000000ULL) /
-> 18000000ULL)
-> 
-> This '/' operator might be the culprit!
-> 
-> Just for checking that the error, remove the macro declaration
-> `FXAS21002C_SCALE`
-> plus its usage and re-cross compile using `make ARCH=i386`.
-> 
-> In my case I used the `div64_s64` function handles builds for both
-> 32/64
-> arch accordingly.
-
-Yes, this is indeed the culprit. If `div64_s64` works the same way, I
-wonder if the best option is to change the macro definition.
-
-I can provide a patch for this along with changing the rest of the
-definitions. However i would like some confirmation before starting
-this.
+T24gMTQvMDkvMjAxOCBhdCAxNzoyMCwgTWljaGHFgiBNaXJvc8WCYXcgd3JvdGU6Cj4gRml4IFNT
+QzAgcGluIFREMCB3aGVyZSB3cm9uZ2x5IGNhbGxlZCBURE8uCj4gCj4gU2lnbmVkLW9mZi1ieTog
+TWljaGHFgiBNaXJvc8WCYXcgPG1pcnEtbGludXhAcmVyZS5xbXFtLnBsPgoKTWljaGHFgiwKClRo
+YW5rcyBmb3IgeW91ciBwYXRjaC4gQnV0IHRoZSBleGFjdCBzYW1lIG9uZSBpcyBhbHJlYWR5IGlu
+dGVncmF0ZWQgaW4gCkxpbnVzJyB0cmVlIGFzOgpjOGNiYzFjMjBjMjkgKCJBUk06IGR0czogYXQ5
+MTogZml4IHR5cG9zIGZvciBTU0MgVEQgZnVuY3Rpb25zIikKCkJlc3QgcmVnYXJkcywKICAgTmlj
+b2xhcwoKPiAtLS0KPiBBZ2FpbnN0IHY0LjE4LjcKPiAKPiAgIGFyY2gvYXJtL2Jvb3QvZHRzL3Nh
+bWE1ZDItcGluZnVuYy5oIHwgNCArKy0tCj4gICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
+KCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
+YW1hNWQyLXBpbmZ1bmMuaCBiL2FyY2gvYXJtL2Jvb3QvZHRzL3NhbWE1ZDItcGluZnVuYy5oCj4g
+aW5kZXggZTU3MTkxZmI4M2RlLi4xYzAxYTZmODQzZDggMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvc2FtYTVkMi1waW5mdW5jLmgKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9zYW1h
+NWQyLXBpbmZ1bmMuaAo+IEBAIC0zNzUsNyArMzc1LDcgQEAKPiAgICNkZWZpbmUgUElOX1BCMjJf
+X0dQSU8JCQlQSU5NVVhfUElOKFBJTl9QQjIyLCAwLCAwKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9f
+TENEREFUMTEJCVBJTk1VWF9QSU4oUElOX1BCMjIsIDEsIDEpCj4gICAjZGVmaW5lIFBJTl9QQjIy
+X19BMTEJCQlQSU5NVVhfUElOKFBJTl9QQjIyLCAyLCAxKQo+IC0jZGVmaW5lIFBJTl9QQjIyX19U
+RE8JCQlQSU5NVVhfUElOKFBJTl9QQjIyLCAzLCAxKQo+ICsjZGVmaW5lIFBJTl9QQjIyX19URDAJ
+CQlQSU5NVVhfUElOKFBJTl9QQjIyLCAzLCAxKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9fVElPQTIJ
+CQlQSU5NVVhfUElOKFBJTl9QQjIyLCA0LCAyKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9fRkxFWENP
+TTNfSU8xCQlQSU5NVVhfUElOKFBJTl9QQjIyLCA1LCAzKQo+ICAgI2RlZmluZSBQSU5fUEIyMl9f
+R01EQwkJCVBJTk1VWF9QSU4oUElOX1BCMjIsIDYsIDMpCj4gQEAgLTU1Niw3ICs1NTYsNyBAQAo+
+ICAgI2RlZmluZSBQSU5fUEMxNF9fTENEREFUNgkJUElOTVVYX1BJTihQSU5fUEMxNCwgMSwgMikK
+PiAgICNkZWZpbmUgUElOX1BDMTRfX0dSWDAJCQlQSU5NVVhfUElOKFBJTl9QQzE0LCAyLCAxKQo+
+ICAgI2RlZmluZSBQSU5fUEMxNF9fSVNDX0Q1CQlQSU5NVVhfUElOKFBJTl9QQzE0LCAzLCAxKQo+
+IC0jZGVmaW5lIFBJTl9QQzE0X19URE8JCQlQSU5NVVhfUElOKFBJTl9QQzE0LCA1LCAyKQo+ICsj
+ZGVmaW5lIFBJTl9QQzE0X19URDAJCQlQSU5NVVhfUElOKFBJTl9QQzE0LCA1LCAyKQo+ICAgI2Rl
+ZmluZSBQSU5fUEMxNF9fQTMJCQlQSU5NVVhfUElOKFBJTl9QQzE0LCA2LCAyKQo+ICAgI2RlZmlu
+ZSBQSU5fUEMxNQkJCTc5Cj4gICAjZGVmaW5lIFBJTl9QQzE1X19HUElPCQkJUElOTVVYX1BJTihQ
+SU5fUEMxNSwgMCwgMCkKPiAKCgotLSAKTmljb2xhcyBGZXJyZQoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
+c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
