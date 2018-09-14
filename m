@@ -1,76 +1,173 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next 2/7] net: phy: mscc: add support for VSC8584 PHY
-Date: Fri, 14 Sep 2018 18:28:28 +0200
-Message-ID: <20180914162828.5e75ffh5sig4om3d@qschulz>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <a61d9affd3f1ec9deb60c882cce1daf37fbe2427.1536916714.git-series.quentin.schulz@bootlin.com>
- <20180914131846.GG14865@lunn.ch>
- <20180914132930.fphdm3dm2incetbq@qschulz>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 1/4] staging/vc04_services: Use correct cache line size
+Date: Fri, 14 Sep 2018 18:46:36 +0200 (CEST)
+Message-ID: <1959663666.203679.1536943596158@email.1und1.de>
+References: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
+ <1536931375-48769-2-git-send-email-phil@raspberrypi.org>
+ <9d43a912-0928-fe8e-7719-b327a1667b30@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lrvuohlm2to6nryf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180914132930.fphdm3dm2incetbq@qschulz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <9d43a912-0928-fe8e-7719-b327a1667b30@raspberrypi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Phil,
 
---lrvuohlm2to6nryf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Phil Elwell <phil@raspberrypi.org> hat am 14. September 2018 um 17:22 geschrieben:
+> 
+> 
+> On 14/09/2018 14:22, Phil Elwell wrote:
+> > Use the compatible string in the DTB to select the correct cache line
+> > size for the SoC - 32 for BCM2835, and 64 for BCM2836 and BCM2837.
+> > 
+> > Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+> > ---
+> >   .../interface/vchiq_arm/vchiq_2835_arm.c           |  4 ++-
+> >   .../vc04_services/interface/vchiq_arm/vchiq_arm.c  | 36 ++++++++++++++++------
+> >   .../vc04_services/interface/vchiq_arm/vchiq_arm.h  |  5 +++
+> >   3 files changed, 34 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> > index e767209..83d740f 100644
+> > --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> > +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> > @@ -109,7 +109,8 @@ free_pagelist(struct vchiq_pagelist_info *pagelistinfo,
+> >   int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
+> >   {
+> >   	struct device *dev = &pdev->dev;
+> > -	struct rpi_firmware *fw = platform_get_drvdata(pdev);
+> > +	struct vchiq_drvdata *drvdata = platform_get_drvdata(pdev);
+> > +	struct rpi_firmware *fw = drvdata->fw;
+> >   	VCHIQ_SLOT_ZERO_T *vchiq_slot_zero;
+> >   	struct resource *res;
+> >   	void *slot_mem;
+> > @@ -127,6 +128,7 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
+> >   	if (err < 0)
+> >   		return err;
+> >   
+> > +	g_cache_line_size = drvdata->cache_line_size;
+> >   	g_fragments_size = 2 * g_cache_line_size;
+> >   
+> >   	/* Allocate space for the channels in coherent memory */
+> > diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+> > index bc05c69..b2ae9259 100644
+> > --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+> > +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.c
+> > @@ -170,6 +170,14 @@ static struct device *vchiq_dev;
+> >   static DEFINE_SPINLOCK(msg_queue_spinlock);
+> >   static struct platform_device *bcm2835_camera;
+> >   
+> > +static struct vchiq_drvdata bcm2835_drvdata = {
+> > +	.cache_line_size = 32,
+> > +};
+> > +
+> > +static struct vchiq_drvdata bcm2836_drvdata = {
+> > +	.cache_line_size = 64,
+> > +};
+> > +
+> >   static const char *const ioctl_names[] = {
+> >   	"CONNECT",
+> >   	"SHUTDOWN",
+> > @@ -3573,12 +3581,26 @@ void vchiq_platform_conn_state_changed(VCHIQ_STATE_T *state,
+> >   	}
+> >   }
+> >   
+> > +static const struct of_device_id vchiq_of_match[] = {
+> > +	{ .compatible = "brcm,bcm2835-vchiq", .data = &bcm2835_drvdata },
+> > +	{ .compatible = "brcm,bcm2836-vchiq", .data = &bcm2836_drvdata },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, vchiq_of_match);
+> > +
+> >   static int vchiq_probe(struct platform_device *pdev)
+> >   {
+> >   	struct device_node *fw_node;
+> > -	struct rpi_firmware *fw;
+> > +	const struct of_device_id *of_id;
+> > +	struct vchiq_drvdata *drvdata;
+> >   	int err;
+> >   
+> > +	snd_rpi_simple.dev = &pdev->dev;
+> > +	of_id = of_match_node(vchiq_of_match, pdev->dev.of_node);
+> > +	drvdata = of_id->data;
+> > +	if (!drvdata)
+> > +		return -EINVAL;
+> > +
+> >   	fw_node = of_find_compatible_node(NULL, NULL,
+> >   					  "raspberrypi,bcm2835-firmware");
+> >   	if (!fw_node) {
+> > @@ -3586,12 +3608,12 @@ static int vchiq_probe(struct platform_device *pdev)
+> >   		return -ENOENT;
+> >   	}
+> >   
+> > -	fw = rpi_firmware_get(fw_node);
+> > +	drvdata->fw = rpi_firmware_get(fw_node);
+> >   	of_node_put(fw_node);
+> > -	if (!fw)
+> > +	if (!drvdata->fw)
+> >   		return -EPROBE_DEFER;
+> >   
+> > -	platform_set_drvdata(pdev, fw);
+> > +	platform_set_drvdata(pdev, drvdata);
+> >   
+> >   	err = vchiq_platform_init(pdev, &g_state);
+> >   	if (err != 0)
+> > @@ -3661,12 +3683,6 @@ static int vchiq_remove(struct platform_device *pdev)
+> >   	return 0;
+> >   }
+> >   
+> > -static const struct of_device_id vchiq_of_match[] = {
+> > -	{ .compatible = "brcm,bcm2835-vchiq", },
+> > -	{},
+> > -};
+> > -MODULE_DEVICE_TABLE(of, vchiq_of_match);
+> > -
+> >   static struct platform_driver vchiq_driver = {
+> >   	.driver = {
+> >   		.name = "bcm2835_vchiq",
+> > diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+> > index 40bb0c6..2f3ebc9 100644
+> > --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+> > +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_arm.h
+> > @@ -123,6 +123,11 @@ typedef struct vchiq_arm_state_struct {
+> >   
+> >   } VCHIQ_ARM_STATE_T;
+> >   
+> > +struct vchiq_drvdata {
+> > +	const unsigned int cache_line_size;
+> > +	struct rpi_firmware *fw;
+> > +};
+> > +
+> >   extern int vchiq_arm_log_level;
+> >   extern int vchiq_susp_log_level;
+> >   
+> > 
+> 
+> This version doesn't compile (wrong defconfig used when building), but any criticism of the
+> approach before v3 is welcome.
 
-Hi Andrew,
+no need to hurry, my pull requests for 4.20 are already out. Please take the time to test this properly.
 
-On Fri, Sep 14, 2018 at 03:29:30PM +0200, Quentin Schulz wrote:
-> Hi Andrew,
->=20
-> On Fri, Sep 14, 2018 at 03:18:46PM +0200, Andrew Lunn wrote:
-> > > Most of the init sequence of a PHY of the package is common to all PH=
-Ys
-> > > in the package, thus we use the SMI broadcast feature which enables us
-> > > to propagate a write in one register of one PHY to all PHYs in the
-> > > package.
-> >=20
-> > Hi Quinten
-> >=20
-> > Could you say a bit more about the broadcast. Does the SMI broadcast
-> > go to all PHY everywhere on an MDIO bus, or only all PHYs within one
-> > package? I'm just thinking about the case you need two of these
-> > packages to cover 8 switch ports.
-> >=20
->=20
-> Ah sorry, that wasn't very explicit. That's a feature on the PHY side so
-> my wildest guess is that it wouldn't impact any other PHY outside of
-> this package. Affecting any other PHY on the bus is counter-intuitive to
-> me but I'll ask the HW engineers for confirmation.
->=20
+Patch 2-4 are:
 
-Confirmed by HW engineers, it only impacts PHYs in the same package.
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-Quentin
-
---lrvuohlm2to6nryf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlub4awACgkQhLiadT7g
-8aP1fg//V+Mup3knhZdlR5JAs/en28BkBQ1Tc76y+7zpzgqSMjAyP2gfg4vMoKz2
-3H1Y+jQcX0QopeLDwks0To8eyHwYcq//Wvlv6XSvl7W3/8qPYqIaTXlWZD+O4smK
-d0+MP8u5silgh5hS9NKDBKdKheXirH7gdCDLbXDhY2TMCDYYTfrx6Xi3dwRfdivc
-x+Zhhmp14p5qhyvEDE7IUSzMcqGo9tKKwR6VQPHtMCyJ3+Wfe4kmTm8nkTFwL1fF
-T2l1V1U7ROEQXhyUni61JEH33CZzp8WwOwOkaUjvBIOsur8K+xb7LboHYvh5b0ni
-szCdTBqtybkKxUT4FHLm2xWexBBDb5vWQYOQUxMxybe/xfsIsGLUX2MQt9g4PNMO
-MTWW7H662G9H0lsqcp4/e05eyIkroBX8Qt547NuQ3dr+RjPn1C9ZbwEPz4C/14+T
-GaXc+sncNluq2A+VaMGTx2ZjZOo/Y+coVdhm9nuup9kMibboAd10KqchPBvtBGS0
-4IqacfOHH+oNzAkoq30s6Ta4uixULZls6Exfzrn0yKLffxwOeD3fPisCwLGsW2zV
-DN1L0uubJWCkTFYuO5tilgZrl3HuF1f4cu/xhtl2kq0bMm3pgAVK/UXXQcqnZ/Rh
-bFNMfRwHSSMhAnDHKIXzmLgNf9iGE2skB/QyNuvZr9Nc+7VxlO4=
-=qNw+
------END PGP SIGNATURE-----
-
---lrvuohlm2to6nryf--
+> 
+> Phil
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
