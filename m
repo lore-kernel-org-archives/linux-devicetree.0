@@ -1,54 +1,100 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 6/8] drm/imx: support handling bridge timings bus flags
-Date: Fri, 14 Sep 2018 13:00:29 +0300
-Message-ID: <1666767.e3BgH42IGz@avalon>
-References: <20180912183222.25414-1-stefan@agner.ch>
- <20180912183222.25414-7-stefan@agner.ch>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 1/2] staging/vc04_services: Derive g_cache_line_size
+Date: Fri, 14 Sep 2018 12:11:54 +0200
+Message-ID: <107b707e-1f8c-1305-2582-0a131011758d@i2se.com>
+References: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
+ <1536770554-107314-2-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180912183222.25414-7-stefan@agner.ch>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stefan Agner <stefan@agner.ch>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, max.krummenacher@toradex.com, kernel@pengutronix.de, marcel.ziswiler@toradex.com, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, linux-imx@nxp.com, fabio.estevam@nxp.com, sean@poorly.run, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536770554-107314-2-git-send-email-phil@raspberrypi.org>
+Content-Language: de-DE
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmFuLAoKVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCgpPbiBXZWRuZXNkYXksIDEyIFNl
-cHRlbWJlciAyMDE4IDIxOjMyOjIwIEVFU1QgU3RlZmFuIEFnbmVyIHdyb3RlOgo+IEEgYnJpZGdl
-IG1pZ2h0IHJlcXVpcmUgc3BlY2lmaWMgc2V0dGluZ3MgZm9yIHRoZSBwaXhlbCBkYXRhIG9uCj4g
-dGhlIGJ1cy4gQ29weSB0aGUgYnVzIGZsYWdzIGZyb20gdGhlIGJyaWRnZSB0aW1pbmdzIGlmIGEg
-YnJpZGdlCj4gaXMgaW4gdXNlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFN0ZWZhbiBBZ25lciA8c3Rl
-ZmFuQGFnbmVyLmNoPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vaW14L3BhcmFsbGVsLWRpc3Bs
-YXkuYyB8IDMgKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykKPiAKPiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2lteC9wYXJhbGxlbC1kaXNwbGF5LmMKPiBiL2RyaXZl
-cnMvZ3B1L2RybS9pbXgvcGFyYWxsZWwtZGlzcGxheS5jIGluZGV4IGFlZmQwNGUxOGY5My4uNzc5
-OGEwNjIxZGY3Cj4gMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2lteC9wYXJhbGxlbC1k
-aXNwbGF5LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vaW14L3BhcmFsbGVsLWRpc3BsYXkuYwo+
-IEBAIC0yMzksNiArMjM5LDkgQEAgc3RhdGljIGludCBpbXhfcGRfYmluZChzdHJ1Y3QgZGV2aWNl
-ICpkZXYsIHN0cnVjdCBkZXZpY2UKPiAqbWFzdGVyLCB2b2lkICpkYXRhKSBpZiAocmV0ICYmIHJl
-dCAhPSAtRU5PREVWKQo+ICAJCXJldHVybiByZXQ7Cj4gCj4gKwlpZiAoaW14cGQtPmJyaWRnZSAm
-JiBpbXhwZC0+YnJpZGdlLT50aW1pbmdzKQo+ICsJCWlteHBkLT5idXNfZmxhZ3MgPSBpbXhwZC0+
-YnJpZGdlLT50aW1pbmdzLT5pbnB1dF9idXNfZmxhZ3M7CgpBcyBleHBsYWluZWQgaW4gZGlmZmVy
-ZW50IHJlcGxpZXMgaW4gdGhpcyBtYWlsIHRocmVhZCAoYW5kIGluIHYxKSwgd2UgbmVlZCAKc29t
-ZXRoaW5nIG1vcmUgY29tcGxleCB0aGFuIHRoaXMuCgpIb3cgYWJvdXQgY3JlYXRpbmcgYSBoZWxw
-ZXIgZnVuY3Rpb24gdGhhdCB3b3VsZCB0YWtlIGEgc2FtcGxpbmcgZWRnZSwgc2V0dXAgCmFuZCBo
-b2xkIHRpbWVzLCBjbG9jayBmcmVxdWVuY3kgYW5kIGludGVybmFsIGRlbGF5IG9uIHRoZSBkcml2
-aW5nIHNpZGUsIGFuZCAKcmV0dXJuIHdoaWNoIGVkZ2UgdG8gZHJpdmUgdGhlIGRhdGEgb24gPyBJ
-IGFncmVlIHdpdGggeW91IHRoYXQgdGhlIGxvZ2ljIGlzIApjb21wbGV4LCBzbyB3ZSBzaG91bGRu
-J3QgZHVwbGljYXRlIGl0IGluIG11bHRpcGxlIGRyaXZlcnMuIElmIHlvdSBzdWJtaXQgc3VjaCAK
-YSBwYXRjaCBJJ2xsIGltcGxlbWVudCBzdXBwb3J0IGZvciBjb25maWd1cmluZyB0aGUgY2xvY2sg
-ZWRnZSBpbiB0aGUgUi1DYXIgRFUgCmRyaXZlciBhbmQgdGVzdCBpdCB3aXRoIHRoZSBBRFY3MTIz
-LgoKPiAgCWlteHBkLT5kZXYgPSBkZXY7Cj4gCj4gIAlyZXQgPSBpbXhfcGRfcmVnaXN0ZXIoZHJt
-LCBpbXhwZCk7CgotLSAKUmVnYXJkcywKCkxhdXJlbnQgUGluY2hhcnQKCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Phil,
+
+Am 12.09.2018 um 18:42 schrieb Phil Elwell:
+> The ARM coprocessor registers include dcache line size, but there is no
+> function to expose this value. Rather than create a new one, use the
+> read_cpuid_id function to derive the correct value, which is 32 for
+> BCM2835 and 64 for BCM2836/7.
+>
+> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+> ---
+>  .../interface/vchiq_arm/vchiq_2835_arm.c           | 24 +++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> index e767209..3537f60 100644
+> --- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> +++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
+> @@ -42,6 +42,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/mm.h>
+>  #include <linux/of.h>
+> +#include <asm/cputype.h>
+>  #include <soc/bcm2835/raspberrypi-firmware.h>
+>  
+>  #define TOTAL_SLOTS (VCHIQ_SLOT_ZERO_SLOTS + 2 * 32)
+> @@ -81,13 +82,15 @@ static void __iomem *g_regs;
+>   * VPU firmware, which determines the required alignment of the
+>   * offsets/sizes in pagelists.
+>   *
+> - * Modern VPU firmware looks for a DT "cache-line-size" property in
+> - * the VCHIQ node and will overwrite it with the actual L2 cache size,
+> + * Previous VPU firmware looked for a DT "cache-line-size" property in
+> + * the VCHIQ node and would overwrite it with the actual L2 cache size,
+>   * which the kernel must then respect.  That property was rejected
+> - * upstream, so we have to use the VPU firmware's compatibility value
+> - * of 32.
+> + * upstream, so we now rely on both sides to "do the right thing" independently
+> + * of the other. To improve backwards compatibility, this new behaviour is
+> + * signalled to the firmware by the use of a corrected "reg" property on the
+> + * relevant Device Tree node.
+>   */
+> -static unsigned int g_cache_line_size = 32;
+> +static unsigned int g_cache_line_size;
+>  static unsigned int g_fragments_size;
+>  static char *g_fragments_base;
+>  static char *g_free_fragments;
+> @@ -127,6 +130,17 @@ int vchiq_platform_init(struct platform_device *pdev, VCHIQ_STATE_T *state)
+>  	if (err < 0)
+>  		return err;
+>  
+> +	/*
+> +	 * The tempting L1_CACHE_BYTES macro doesn't work in the case of
+> +	 * a kernel built with bcm2835_defconfig running on a BCM2836/7
+> +	 * processor, hence the need for a runtime check. The dcache line size
+> +	 * is encoded in one of the coprocessor registers, but there is no
+> +	 * convenient way to access it short of embedded assembler, hence
+> +	 * the use of read_cpuid_id(). The following test evaluates to true
+> +	 * on a BCM2835 showing that it is ARMv6-ish, whereas
+> +	 * cpu_architecture() will indicate that it is an ARMv7.
+> +	 */
+> +	g_cache_line_size = ((read_cpuid_id() & 0x7f000) == 0x7b000) ? 32 : 64;
+
+is there a chance to use ARM_CPU_PART_ARM1176 or something else instead
+of this magic numbers?
+
+Sorry, i cannot remember the whole discussion but why we can use
+different compatible here instead of using ARM specific stuff.
+
+compatible = "brcm,bcm2836-vchiq", "brcm,bcm2835-vchiq"; // for BCM2836/7
+
+compatible = "brcm,bcm2835"; // only for BCM2835
+
+
+>  	g_fragments_size = 2 * g_cache_line_size;
+>  
+>  	/* Allocate space for the channels in coherent memory */
