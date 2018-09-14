@@ -1,216 +1,44 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH v2] ARM: dts: aspeed: Adding Facebook TioagaPass BMC
-Date: Fri, 14 Sep 2018 11:55:01 -0700
-Message-ID: <20180914185504.739686-1-vijaykhemka@fb.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] Devicetree fix for 4.19-rc
+Date: Fri, 14 Sep 2018 14:25:48 -0500
+Message-ID: <CAL_JsqJmyiAOAvEhWxBy11xw==m5kqg_V90CCLPV1PqGDuHD7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Thierry Reding <treding@nvidia.com>, David Lechner <david@lechnology.com>, Florian Fainelli <f.fainelli@gmail.com>, Johan Hovold <johan@kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org
-Cc: vijaykhemka@fb.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Initial introduction of Facebook TioagaPass family equipped with
-Aspeed 2500 BMC SoC. Neptune is a x86 server development kit
-with a ASPEED ast2500 BMC manufactured by Facebook.
-Specifically, This adds the tiogapass platform device tree file
-including the flash layout used by the tiogapass BMC machines.
+Linus,
 
-This also adds an entry of tiogapass device tree file in Makefile
-as well an entry of Facebook in Documentation for vendor prefix
+Please pull. One regression for a 20 year old PowerMac.
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- .../dts/aspeed-bmc-facebook-tiogapass.dts     | 146 ++++++++++++++++++
- 3 files changed, 148 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+Rob
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2c3fc512e746..733b2d523642 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -127,6 +127,7 @@ everspin	Everspin Technologies, Inc.
- exar	Exar Corporation
- excito	Excito
- ezchip	EZchip Semiconductor
-+facebook  Facebook
- fairphone	Fairphone B.V.
- faraday	Faraday Technology Corporation
- fastrax	Fastrax Oy
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b5bd3de87c33..1a2db605185a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1199,6 +1199,7 @@ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
- dtb-$(CONFIG_ARCH_ASPEED) += \
- 	aspeed-ast2500-evb.dtb \
- 	aspeed-bmc-arm-centriq2400-rep.dtb \
-+	aspeed-bmc-facebook-tiogapass.dtb \
- 	aspeed-bmc-intel-s2600wf.dtb \
- 	aspeed-bmc-opp-lanyang.dtb \
- 	aspeed-bmc-opp-palmetto.dtb \
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-new file mode 100644
-index 000000000000..90f5f958bc3a
---- /dev/null
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -0,0 +1,146 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2017 Facebook Inc.
-+// Author: Vijay Khemka <vijaykhemka@fb.com>
-+/dts-v1/;
-+
-+#include "aspeed-g5.dtsi"
-+#include <dt-bindings/gpio/aspeed-gpio.h>
-+
-+/ {
-+	model = "Facebook TiogaPass BMC";
-+	compatible = "facebook,tiogapass-bmc", "aspeed,ast2500";
-+	aliases {
-+		serial0 = &uart1;
-+		serial4 = &uart5;
-+	};
-+	chosen {
-+		stdout-path = &uart5;
-+		bootargs = "console=ttyS4,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		reg = <0x80000000 0x20000000>;
-+	};
-+};
-+
-+&fmc {
-+	status = "okay";
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+#include "openbmc-flash-layout.dtsi"
-+	};
-+};
-+
-+&spi1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_spi1_default>;
-+	flash@0 {
-+		status = "okay";
-+		m25p,fast-read;
-+		label = "pnor";
-+	};
-+};
-+
-+&uart1 {
-+	// Host Console
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_txd1_default
-+		     &pinctrl_rxd1_default>;
-+};
-+
-+&uart5 {
-+	// BMC Console
-+	status = "okay";
-+};
-+
-+&mac0 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_rmii1_default>;
-+	use-ncsi;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	//Airmax Conn B, CPU0 PIROM, CPU1 PIROM
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	//X24 Riser
-+};
-+
-+&i2c2 {
-+	status = "okay";
-+	// Mezz Management SMBus
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+	// SMBus to Board ID EEPROM
-+};
-+
-+&i2c4 {
-+	status = "okay";
-+	// BMC Debug Header
-+};
-+
-+&i2c5 {
-+	status = "okay";
-+  //CPU Voltage regulators
-+};
-+
-+&i2c6 {
-+	status = "okay";
-+	tpm@20 {
-+		compatible = "infineon,slb9645tt";
-+		reg = <0x20>;
-+	};
-+	tmp421@4e {
-+		compatible = "ti,tmp421";
-+		reg = <0x4e>;
-+	};
-+	tmp421@4f {
-+		compatible = "ti,tmp421";
-+		reg = <0x4f>;
-+	};
-+	eeprom@54 {
-+		compatible = "atmel,24c64";
-+		reg = <0x54>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&i2c7 {
-+	status = "okay";
-+  //HSC, AirMax Conn A
-+};
-+
-+&i2c8 {
-+	status = "okay";
-+  //Mezz Sensor SMBus
-+};
-+
-+&i2c9 {
-+	status = "okay";
-+  //USB Debug Connector
-+};
-+
-+&pwm_tacho {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	fan@0 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x00>;
-+	};
-+
-+	fan@1 {
-+		reg = <0x00>;
-+		aspeed,fan-tach-ch = /bits/ 8 <0x01>;
-+	};
-+};
--- 
-2.17.1
+The following changes since commit 0413bedabc886c3a56804d1c80a58e99077b1d91:
+
+  of: Add device_type access helper functions (2018-08-31 08:30:42 -0400)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+tags/devicetree-fixes-for-4.19-2
+
+for you to fetch changes up to e54192b48da75f025ae4b277925eaf6aca1d13bd:
+
+  of: fix phandle cache creation for DTs with no phandles (2018-09-11
+11:28:40 -0500)
+
+----------------------------------------------------------------
+Devicetree fixes for 4.19, part 2:
+
+- Fix a regression on systems having a DT without any phandles which
+  happens on a PowerMac G3.
+
+----------------------------------------------------------------
+Rob Herring (1):
+      of: fix phandle cache creation for DTs with no phandles
+
+ drivers/of/base.c | 3 +++
+ 1 file changed, 3 insertions(+)
