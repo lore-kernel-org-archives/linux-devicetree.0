@@ -1,46 +1,66 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 3/7] net: phy: mscc: split config_init in two
- functions for VSC8584
-Date: Fri, 14 Sep 2018 10:57:08 -0700
-Message-ID: <bc31175f-52eb-cb7d-669e-192aec79ac5c@gmail.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 5/7] MIPS: mscc: ocelot: add GPIO4 pinmuxing DT node
+Date: Fri, 14 Sep 2018 20:02:22 +0200
+Message-ID: <20180914180222.GT14988@piout.net>
 References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <5daa7f3e467b218410238ef0fb97f01779f8f49f.1536916714.git-series.quentin.schulz@bootlin.com>
+ <92e37a04e77003f01a67ac5e49e66ae83f87c591.1536916714.git-series.quentin.schulz@bootlin.com>
+ <20180914145446.GQ14988@piout.net>
+ <20180914162638.fgzzjin2bzgx74de@qschulz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5daa7f3e467b218410238ef0fb97f01779f8f49f.1536916714.git-series.quentin.schulz@bootlin.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180914162638.fgzzjin2bzgx74de@qschulz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>, alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Quentin Schulz <quentin.schulz@bootlin.com>
+Cc: ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/14/2018 02:44 AM, Quentin Schulz wrote:
-> Part of the config init is common between the VSC8584 and the VSC8574,
-> so to prepare the upcoming support for VSC8574, separate config_init
-> PHY-specific code to config_pre_init function which is set in the probe
-> function of the PHY and used in config_init.
+On 14/09/2018 18:26:38+0200, Quentin Schulz wrote:
+> Hi Alexandre,
 > 
-> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> ---
->  drivers/net/phy/mscc.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> On Fri, Sep 14, 2018 at 04:54:46PM +0200, Alexandre Belloni wrote:
+> > Hi,
+> > 
+> > On 14/09/2018 11:44:26+0200, Quentin Schulz wrote:
+> > > In order to use GPIO4 as a GPIO, we need to mux it in this mode so let's
+> > > declare a new pinctrl DT node for it.
+> > > 
+> > > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > > ---
+> > >  arch/mips/boot/dts/mscc/ocelot.dtsi | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > > 
+> > > diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > index 8ce317c..b5c4c74 100644
+> > > --- a/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > @@ -182,6 +182,11 @@
+> > >  			interrupts = <13>;
+> > >  			#interrupt-cells = <2>;
+> > >  
+> > > +			gpio4: gpio4 {
+> > > +				pins = "GPIO_4";
+> > > +				function = "gpio";
+> > > +			};
+> > > +
+> > 
+> > For a GPIO, I would do that in the board dts because it is not used
+> > directly in the dtsi.
+> > 
 > 
-> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-> index b450489..69cc3cf 100644
-> --- a/drivers/net/phy/mscc.c
-> +++ b/drivers/net/phy/mscc.c
-> @@ -355,6 +355,7 @@ struct vsc8531_private {
->  	u64 *stats;
->  	int nstats;
->  	bool pkg_init;
-> +	int (*config_pre_init)(struct mii_bus *bus, int phy);
+> And the day we've two boards using this pinctrl we move it to a dtsi. Is
+> that the plan?
+> 
 
-Is not this overkill given that you have a reference to the phy_device,
-you could check for the for phy_id to know which exact type you have and
-call the appropriate pre_init function?
+Not really, at least not for gpios. I've included the pinctrl for the
+uart, i2c and spi because they are the only option if you are to use
+those peripherals. Else, I've would have left the pinctrl to the board
+file. From my point of view, the gpios are too board specific to be in a
+soc dtsi.
 
-unsigned int phy might be more appropriate.
+
 -- 
-Florian
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
