@@ -1,86 +1,46 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3 0/4] Add 96Boards Rock960 CE board support
-Date: Fri, 14 Sep 2018 19:55:12 +0200
-Message-ID: <3932568.1d4PiNsIum@phil>
-References: <20180913180545.29756-1-manivannan.sadhasivam@linaro.org> <a40ed76f22fd43f68af07d9bb56a0ff38171eef9.camel@collabora.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next 3/7] net: phy: mscc: split config_init in two
+ functions for VSC8584
+Date: Fri, 14 Sep 2018 10:57:08 -0700
+Message-ID: <bc31175f-52eb-cb7d-669e-192aec79ac5c@gmail.com>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <5daa7f3e467b218410238ef0fb97f01779f8f49f.1536916714.git-series.quentin.schulz@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a40ed76f22fd43f68af07d9bb56a0ff38171eef9.camel@collabora.com>
+In-Reply-To: <5daa7f3e467b218410238ef0fb97f01779f8f49f.1536916714.git-series.quentin.schulz@bootlin.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel@collabora.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org, vicencb@gmail.com, shawn.lin@rock-chips.com, enric.balletbo@collabora.com, pbrobinson@gmail.com, tom@vamrs.com, dev@vamrs.com, stephen@vamrs.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Quentin Schulz <quentin.schulz@bootlin.com>, alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch
+Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 14. September 2018, 19:42:51 CEST schrieb Ezequiel Garcia:
-> On Thu, 2018-09-13 at 23:35 +0530, Manivannan Sadhasivam wrote:
-> > This patchset adds 96Boards Rock960 CE board support. Rock960 CE
-> > (Consumer Edition) board is one of the member of 96Boards Consumer
-> > Edition and AI platform and is manufactured by Vamrs Limited. Most of
-> > the board configuration is shared with the Ficus board manufactured by
-> > vamrs, which is an Enterprise 96Board.
-> > 
-> > For the sake of avoiding code duplication, a common rock960.dtsi file
-> > with common DT nodes for both boards and separate board specific DTS
-> > files has been added.
-> > 
-> > To be specific, below are some of the key differences between both
-> > boards:
-> > 
-> > 1. Different host enable GPIO for USB
-> > 2. Different power and reset GPIO for PCI-E
-> > 3. No Ethernet port on Rock960
-> > 
-> > While adding the board support, SD card Chip detection support is also
-> > added to the common dtsi file, shared by both boards.
-> > 
-> > This series has been tested on Rock960 CE v1.2 board.
-> > 
-> > Thanks,
-> > Mani
-> > 
-> > Changes in v3:
-> > 
-> > * Moved usb and pcie nodes to common dtsi and kept only the properties
-> >   which differ in board specific dts.
-> > * Updated the common dtsi commit description.
-> > 
-> > Changes in v2:
-> > 
-> > * Changed the board compatible to "vamrs,rock960"
-> > 
-> > Manivannan Sadhasivam (4):
-> >   arm64: dts: rockchip: Split out common nodes for Rock960 based boards
-> >   dt-bindings: arm: rockchip: Add binding for Rock960 board
-> >   arm64: boot: dts: rockchip: Add support for Rock960 board
-> >   arm64: dts: rockchip: Enable SD card detection for Rock960 boards
-> > 
-> >  .../devicetree/bindings/arm/rockchip.txt      |   4 +
-> >  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
-> >  arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 524 +----------------
-> >  .../boot/dts/rockchip/rk3399-rock960.dts      |  52 ++
-> >  .../boot/dts/rockchip/rk3399-rock960.dtsi     | 542 ++++++++++++++++++
-> >  5 files changed, 604 insertions(+), 519 deletions(-)
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock960.dts
-> >  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock960.dtsi
-> > 
+On 09/14/2018 02:44 AM, Quentin Schulz wrote:
+> Part of the config init is common between the VSC8584 and the VSC8574,
+> so to prepare the upcoming support for VSC8574, separate config_init
+> PHY-specific code to config_pre_init function which is set in the probe
+> function of the PHY and used in config_init.
 > 
-> Looks pretty good!
+> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> ---
+>  drivers/net/phy/mscc.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> When applying this series, I noticed that it conflicts with
-> 
-> commit 8bb878cf20ae10809c36db96993bfce7026d062b
-> Author: Levin Du <djw@t-chip.com.cn>
-> Date:   Mon Jul 30 10:12:01 2018 +0800
-> 
->     arm64: dts: rockchip: add support for ROC-RK3399-PC board
-> 
-> resolution is trivial, but you might want to rebase and resend,
-> to make Heiko's life easier.
+> diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+> index b450489..69cc3cf 100644
+> --- a/drivers/net/phy/mscc.c
+> +++ b/drivers/net/phy/mscc.c
+> @@ -355,6 +355,7 @@ struct vsc8531_private {
+>  	u64 *stats;
+>  	int nstats;
+>  	bool pkg_init;
+> +	int (*config_pre_init)(struct mii_bus *bus, int phy);
 
-nah, that's ok as it is ;-)
-Such a Makefile conflict I can fix up myself.
+Is not this overkill given that you have a reference to the phy_device,
+you could check for the for phy_id to know which exact type you have and
+call the appropriate pre_init function?
 
-As it looks pretty good, I'd like to just give Rob a chance
-to look at the added binding before applying.
+unsigned int phy might be more appropriate.
+-- 
+Florian
