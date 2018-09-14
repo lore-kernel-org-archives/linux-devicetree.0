@@ -1,54 +1,45 @@
-From: Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v2 3/3] dt-bindings: watchdog: add mpc8xxx-wdt support
-Date: Fri, 14 Sep 2018 13:32:03 +0000 (UTC)
-Message-ID: <e68ed01cdfba5b7610559607a3c706b294a216fc.1536931725.git.christophe.leroy@c-s.fr>
-References: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2] ARM: dts: r9a06g032: Correct UART and add all other
+ UARTs
+Date: Fri, 14 Sep 2018 15:36:01 +0200
+Message-ID: <20180914133600.nhbgbmxiafc65abw@verge.net.au>
+References: <20180910160254.3882-1-phil.edworthy@renesas.com>
+ <20180912092035.lhzlebd6rh72yjgj@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20180912092035.lhzlebd6rh72yjgj@verge.net.au>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Phil Edworthy <phil.edworthy@renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add description of DT bindings for mpc8xxx-wdt driver which
-handles the CPU watchdog timer on the mpc83xx, mpc86xx and mpc8xx.
+On Wed, Sep 12, 2018 at 11:20:39AM +0200, Simon Horman wrote:
+> On Mon, Sep 10, 2018 at 05:02:54PM +0100, Phil Edworthy wrote:
+> > - UART0 was missing the bus clock ("apb_pclk").
+> > - Now that the relevant rzn1 bindings have been added, replace the Synopsys
+> >   compat string with the rzn1 strings.
+> 
+> Perhaps: Use recently accepted r9a06g032 and rzn1 compat strings.
+> 
+> > - Add all the other UARTs.
+> > 
+> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> 
+> The above notwithstanding this looks good to me but I will wait to see if
+> there are other reviews before applying.
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
----
- .../devicetree/bindings/watchdog/mpc8xxx-wdt.txt   | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-
-diff --git a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-new file mode 100644
-index 000000000000..1d99e1e4d306
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-@@ -0,0 +1,25 @@
-+* Freescale mpc8xxx watchdog driver (For 83xx, 86xx and 8xx)
-+
-+Required properties:
-+- compatible: Shall contain one of the following:
-+	"mpc83xx_wdt" for an mpc83xx
-+	"fsl,mpc8610-wdt" for an mpc86xx
-+	"fsl,mpc823-wdt" for an mpc8xx
-+- reg: base physical address and length of the area hosting the
-+       watchdog registers.
-+		On the 83xx, "Watchdog Timer Registers" area:	<0x200 0x100>
-+		On the 86xx, "Watchdog Timer Registers" area:	<0xe4000 0x100>
-+		On the 8xx, "General System Interface Unit" area: <0x0 0x10>
-+
-+Optional properties:
-+- reg: additionnal physical address and length (4) of location of the
-+       Reset Status Register (called RSTRSCR on the mpc86xx)
-+       		On the 83xx, it is located at offset 0x910
-+       		On the 86xx, it is located at offset 0xe0094
-+       		On the 8xx, it is located at offset 0x288
-+
-+Example:
-+		WDT: watchdog@0 {
-+		    compatible = "fsl,mpc823-wdt";
-+		    reg = <0x0 0x10 0x288 0x4>;
-+		};
--- 
-2.13.3
+Thanks again, I have applied this for v4.20 with the changelog
+update above.
