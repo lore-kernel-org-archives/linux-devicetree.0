@@ -1,30 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH net-next 2/7] net: phy: mscc: add support for VSC8584 PHY
-Date: Fri, 14 Sep 2018 18:58:24 +0200
-Message-ID: <20180914165824.GA3811@lunn.ch>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <a61d9affd3f1ec9deb60c882cce1daf37fbe2427.1536916714.git-series.quentin.schulz@bootlin.com>
- <20180914131846.GG14865@lunn.ch>
- <20180914132930.fphdm3dm2incetbq@qschulz>
- <20180914162828.5e75ffh5sig4om3d@qschulz>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 4/4] ARM: dts: bcm283x: Correct mailbox register sizes
+Date: Fri, 14 Sep 2018 10:01:12 -0700
+Message-ID: <f1322c43-061d-ca04-a0e8-cd4fe02ea1ac@gmail.com>
+References: <1536931375-48769-1-git-send-email-phil@raspberrypi.org>
+ <1536931375-48769-5-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180914162828.5e75ffh5sig4om3d@qschulz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1536931375-48769-5-git-send-email-phil@raspberrypi.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-> Confirmed by HW engineers, it only impacts PHYs in the same package.
+On 09/14/2018 06:22 AM, Phil Elwell wrote:
+> The size field in a Device Tree "reg" property is encoded in bytes, not
+> words.
+> 
+> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 
-Hi Quentin
+This should probably have a:
 
-Thanks for checking. As you said, it would be counter intuitive,
-meaning a lot of confusion if it actually did happen.
+Fixes: 614fa22119d6 ("ARM: dts: bcm2835: Add VCHIQ node to the Raspberry
+Pi boards. (v3)")
 
-Maybe you can add "in package" before broadcast in the commit message
-and the code comments.
+as well?
 
-       Andrew
+> ---
+>  arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> index 215d8cc..29f970f 100644
+> --- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> +++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+> @@ -32,7 +32,7 @@
+>  
+>  		vchiq: mailbox@7e00b840 {
+>  			compatible = "brcm,bcm2835-vchiq";
+> -			reg = <0x7e00b840 0xf>;
+> +			reg = <0x7e00b840 0x3c>;
+>  			interrupts = <0 2>;
+>  		};
+>  	};
+> 
+
+
+-- 
+Florian
