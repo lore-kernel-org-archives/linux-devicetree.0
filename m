@@ -1,70 +1,54 @@
-From: Himanshu Jha <himanshujha199640@gmail.com>
-Subject: Re: [PATCH] iio: proximity: Add driver support for ST's VL53L0X ToF
- ranging sensor.
-Date: Sat, 15 Sep 2018 00:13:22 +0530
-Message-ID: <20180914184322.GA9481@himanshu-Vostro-3559>
-References: <20180913022229.21563-1-songqiang.1304521@gmail.com>
+From: Ricardo Salveti <rsalveti@rsalveti.net>
+Subject: Re: [PATCH v13 3/8] clk: Use devm_ in the register fixed factor clock
+Date: Fri, 14 Sep 2018 15:53:02 -0300
+Message-ID: <CAHYQr0rR=mcV-SxZFW+5M4CTUaTv_f_bruyq91HiGP6sqUZ3Yw@mail.gmail.com>
+References: <20180614215358.11264-1-ilia.lin@gmail.com> <20180614215358.11264-4-ilia.lin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180913022229.21563-1-songqiang.1304521@gmail.com>
+In-Reply-To: <20180614215358.11264-4-ilia.lin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang.1304521@gmail.com>
+To: ilia.lin@gmail.com
+Cc: ilialin@codeaurora.org, mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, Amit Kucheria <amit.kucheria@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Song,
-
-On Thu, Sep 13, 2018 at 10:22:29AM +0800, Song Qiang wrote:
-> This driver was originally written by ST in 2016 as a misc input device
-> driver, and hasn't been maintained for a long time. I grabbed some code
-> from it's API and reformed it into a iio proximity device driver.
-> This version of driver uses i2c bus to talk to the sensor and
-> polling for measuring completes, so no irq line is needed.
-> This version of driver supports only one-shot mode, and it can be
-> tested with reading from
-> /sys/bus/iio/devices/iio:deviceX/in_distance_raw
-> 
-> Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
-
-I'm sorry but you probably need another revision.
-
-And don't feel embarrassed, I mean this is your first patch
-in the kernel and that's an IIO driver!!
-
-I used to fix spelling mistakes, align parameters, ... an year ago
-and even those got rejected several times ;)
-
+On Thu, Jun 14, 2018 at 6:55 PM <ilia.lin@gmail.com> wrote:
+>
+> From: Ilia Lin <ilialin@codeaurora.org>
+>
+> Use devm_clk_hw_register instead of clk_hw_register
+> to simplify the usage of this API. This way drivers that call
+> the clk_hw_register_fixed_factor won't need to maintain
+> a data structure for further cleanup.
+>
+> Signed-off-by: Ilia Lin <ilialin@codeaurora.org>
+> Tested-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
+>  drivers/clk/clk-fixed-factor.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/clk-fixed-factor.c b/drivers/clk/clk-fixed-factor.c
+> index a5d402de5584..8e39bda8e596 100644
+> --- a/drivers/clk/clk-fixed-factor.c
+> +++ b/drivers/clk/clk-fixed-factor.c
+> @@ -94,7 +94,7 @@ struct clk_hw *clk_hw_register_fixed_factor(struct device *dev,
+>         init.num_parents = 1;
+>
+>         hw = &fix->hw;
+> -       ret = clk_hw_register(dev, hw);
+> +       ret = devm_clk_hw_register(dev, hw);
 
-> +ST VL53L0X ToF RANGER(I2C) IIO DRIVER
-> +M:	Song Qiang <songqiang.1304521@gmail.com>
-> +L:	linux-iio@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/iio/proximity/vl53l0x-i2c.c
-> +F:	Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+Not sure what is the current state of this patch-set, but this change
+breaks drivers calling clk_hw_register_fixed_factor with a NULL dev
+(e.g. imx_clk_fixed_factor), as devm_clk_hw_register needs a valid dev
+for devres_add to work.
 
-Obligations!
+>         if (ret) {
+>                 kfree(fix);
+>                 hw = ERR_PTR(ret);
+> --
+> 2.11.0
 
-Just don't go "Keyser Söze" once you're done with your major
-at University. You would need to test/review patches in future.
-
-Not a big deal though..
-
-> +
-> +static const struct of_device_id st_vl53l0x_dt_match[] = {
-> +	{ .compatible = "st,vl53l0x-i2c", },
-> +	{ }
-> +};
-
-MODULE_DEVICE_TABLE(of, st_vl53l0x_dt_match); ?
-
-
-Thanks
+Cheers,
 -- 
-Himanshu Jha
-Undergraduate Student
-Department of Electronics & Communication
-Guru Tegh Bahadur Institute of Technology
+Ricardo Salveti de Araujo
