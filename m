@@ -1,44 +1,90 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 0/8] drm/bridge: add bus flag support
-Date: Fri, 14 Sep 2018 12:35:42 +0300
-Message-ID: <4703489.BS6gAglWfc@avalon>
-References: <20180912183222.25414-1-stefan@agner.ch>
- <CACRpkdZdxLMkECq8BBJHDqKszHPMt2uUPFbwbPVNKXyxu-SWGQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CACRpkdZdxLMkECq8BBJHDqKszHPMt2uUPFbwbPVNKXyxu-SWGQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, max.krummenacher@toradex.com, Sascha Hauer <kernel@pengutronix.de>, Marcel Ziswiler <marcel.ziswiler@toradex.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Dave Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, sean@poorly.run, Shawn Guo <shawnguo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: [PATCH net-next 0/7] add support for VSC8584 and VSC8574 Microsemi quad-port PHYs
+Date: Fri, 14 Sep 2018 11:44:21 +0200
+Message-ID: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpPbiBGcmlkYXksIDE0IFNlcHRlbWJlciAyMDE4IDEyOjA3OjAzIEVFU1QgTGludXMg
-V2FsbGVpaiB3cm90ZToKPiBPbiBXZWQsIFNlcCAxMiwgMjAxOCBhdCA4OjMyIFBNIFN0ZWZhbiBB
-Z25lciA8c3RlZmFuQGFnbmVyLmNoPiB3cm90ZToKPiA+IEBMaW51cyBXYWxsZWlqLCBMYXVyZW50
-IFBpbmNoYXJ0OiBTaW5jZSB5b3UgaGF2ZSBiZWVuIGludm9sdmVkIGluCj4gPiB0aGUgaW5pdGlh
-bCBidXMgdGltaW5ncyBkaXNjdXNzaW9uLCBJIHdvdWxkIGxpa2UgdG8gaGF2ZSB5b3VyIEFjawo+
-ID4gb24gYXQgbGVhc3QgcGF0Y2ggMi8zLi4uIElmIHdlIHdhbnQgdG8ga2VlcCB0aGUgc2V0dXAv
-aG9sZCB0aW1pbmdzLAo+ID4gdGhlIHBhdGNoc2V0IHNob3VsZCBhbHNvIHdvcmsgd2l0aG91dCB0
-aG9zZSB0d28gcGF0Y2hlcy4KPiAKPiBBRkFJQ1QgdGhpcyBlbmRzIHVwIHdpdGggdGhlIFBMMTEx
-IGNvZGUgaWRlbnRpY2FsIHRvIHdoYXQgSQo+IHByb3Bvc2VkIGluIG15IGZpcnN0IHBhdGNoIHNl
-dCB0byBzdXBwb3J0IHRoZSBsYXRjaGluZyBwcm9wZXJseSwKPiBzbyBJIGFtIHByZXR0eSBtdWNo
-IGhhcHB5IGFzIGxvbmcgYXMgbXkgaGFyZHdhcmUgZG9lcyBub3QKPiBmbGlja2VyLiAoUm91Z2gg
-Y29uc2Vuc3VzIGFuZCBydW5uaW5nIGNvZGUuKSBJJ20gbm90IHZlcnkgaW52ZXN0ZWQKPiBpbiBl
-aXRoZXIgaWRlYSB0byByZXByZXNlbnQgdGhlc2UgdGltaW5ncywgc28KPiBBY2tlZC1ieTogTGlu
-dXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgoKSSd2ZSBqdXN0IHJlcGxpZWQg
-dG8gcGF0Y2ggMy84IHdpdGggYW4gZXhwbGFuYXRpb24gb2Ygd2h5IHdlIGhhdmUgYWRkZWQgdGhp
-cyAKcGFydGljdWxhciBBUEksIGFuZCB3aHkgd2UgbmVlZCB0byBrZWVwIGl0LgoKLS0gClJlZ2Fy
-ZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL2RyaS1kZXZlbAo=
+Both PHYs are 4-port PHY that are 10/100/1000BASE-T, 100BASE-FX, 1000BASE-X
+and triple-speed copper SFP capable, can communicate with the MAC via
+SGMII, QSGMII or 1000BASE-X, supports downshifting and can set the blinking
+pattern of each of its 4 LEDs, supports SyncE as well as HP Auto-MDIX
+detection.
+
+VSC8574 supports WOL and VSC8584 supports hardware offloading of MACsec.
+
+This patch series add support for 10/100/1000BASE-T, SGMII/QSGMII link with
+the MAC, downshifting, HP Auto-MDIX detection and blinking pattern for
+their 4 LEDs.
+
+They have also an internal Intel 8051 microcontroller whose firmware needs
+to be patched when the PHY is reset. If the 8051's firmware has the
+expected CRC, its patching can be skipped. The microcontroller can be
+accessed from any port of the PHY, though the CRC function can only be done
+through the PHY that is the base PHY of the package (internal address 0)
+due to a limitation of the firmware.
+
+The GPIO register bank is a set of registers that are common to all PHYs in
+the package. So any modification in any register of this bank affects all
+PHYs of the package.
+
+If the PHYs haven't been reset before booting the Linux kernel and were
+configured to use interrupts for e.g. link status updates, it is required
+to clear the interrupts mask register of all PHYs before being able to use
+interrupts with any PHY. The first PHY of the package that will be init
+will take care of clearing all PHYs interrupts mask registers. Thus, we
+need to keep track of the init sequence in the package, if it's already
+been done or if it's to be done.
+
+Most of the init sequence of a PHY of the package is common to all PHYs in
+the package, thus we use the SMI broadcast feature which enables us to
+propagate a write in one register of one PHY to all PHYs in the package.
+
+We also introduce a new development board called PCB120 which exists in
+variants for VSC8584 and VSC8574 (and that's the only difference to the
+best of my knowledge).
+
+I suggest patches 1 to 4 go through net tree and patches 5 to 7 go through
+MIPS tree. Patches going through net tree and those going through MIPS tree
+do not depend on one another.
+
+This patch series depends on two patch series though:
+"mscc: ocelot: add support for SerDes muxing configuration"
+(https://lore.kernel.org/lkml/cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com/)
+"Various improvements to Microsemi PHY driver"
+(https://lore.kernel.org/lkml/cover.616d15610d44a0e3d463acd8119859f243163ad2.1536913944.git-series.quentin.schulz@bootlin.com/)
+specifically patch 2/5 which defines constants that are used in this patch
+series.
+
+Thanks,
+Quentin
+
+Quentin Schulz (7):
+  dt-bindings: net: vsc8531: add two additional LED modes for VSC8584
+  net: phy: mscc: add support for VSC8584 PHY
+  net: phy: mscc: split config_init in two functions for VSC8584
+  net: phy: mscc: add support for VSC8574 PHY
+  MIPS: mscc: ocelot: add GPIO4 pinmuxing DT node
+  MIPS: mscc: add DT for Ocelot PCB120
+  MIPS: mscc: add PCB120 to the ocelot fitImage
+
+ arch/mips/boot/dts/mscc/Makefile            |    2 +-
+ arch/mips/boot/dts/mscc/ocelot.dtsi         |    5 +-
+ arch/mips/boot/dts/mscc/ocelot_pcb120.dts   |  100 ++-
+ arch/mips/generic/Kconfig                   |    6 +-
+ arch/mips/generic/Platform                  |    2 +-
+ arch/mips/generic/board-ocelot.its.S        |   40 +-
+ arch/mips/generic/board-ocelot_pcb123.its.S |   23 +-
+ drivers/net/phy/mscc.c                      | 1019 ++++++++++++++++++++-
+ include/dt-bindings/net/mscc-phy-vsc8531.h  |    2 +-
+ 9 files changed, 1171 insertions(+), 28 deletions(-)
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb120.dts
+ create mode 100644 arch/mips/generic/board-ocelot.its.S
+ delete mode 100644 arch/mips/generic/board-ocelot_pcb123.its.S
+
+base-commit: d9cca8eef36bb8918c9ed28574b79b7674fd36f6
+-- 
+git-series 0.9.1
