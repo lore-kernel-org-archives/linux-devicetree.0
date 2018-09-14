@@ -1,14 +1,16 @@
-From: jacopo mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH 01/16] dt-bindings: display: renesas: du: Document
- r8a77990 bindings
-Date: Fri, 14 Sep 2018 09:56:35 +0200
-Message-ID: <20180914075635.GI11509@w540>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 03/16] dt-bindings: display: renesas: lvds: Add EXTAL and
+ DU_DOTCLKIN clocks
+Date: Fri, 14 Sep 2018 11:24:32 +0300
+Message-ID: <6030546.koD4IuRgeG@avalon>
 References: <20180904121027.24031-1-laurent.pinchart+renesas@ideasonboard.com>
- <20180904121027.24031-2-laurent.pinchart+renesas@ideasonboard.com>
+ <20180904121027.24031-4-laurent.pinchart+renesas@ideasonboard.com>
+ <20180914080046.GK11509@w540>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1767284064=="
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180904121027.24031-2-laurent.pinchart+renesas@ideasonboard.com>
+In-Reply-To: <20180914080046.GK11509@w540>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -18,96 +20,58 @@ List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============1767284064==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+9faIjRurCDpBc7U"
-Content-Disposition: inline
-
-
---+9faIjRurCDpBc7U
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-
-Hi Laurent,
-
-On Tue, Sep 04, 2018 at 03:10:12PM +0300, Laurent Pinchart wrote:
-> Document the E3 (r8a77990) SoC in the R-Car DU bindings.
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> ---
->  Documentation/devicetree/bindings/display/renesas,du.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt b/Documentation/devicetree/bindings/display/renesas,du.txt
-> index caae2348a292..9de67be632d1 100644
-> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> @@ -16,6 +16,7 @@ Required Properties:
->      - "renesas,du-r8a77965" for R8A77965 (R-Car M3-N) compatible DU
->      - "renesas,du-r8a77970" for R8A77970 (R-Car V3M) compatible DU
->      - "renesas,du-r8a77980" for R8A77980 (R-Car V3H) compatible DU
-> +    - "renesas,du-r8a77990" for R8A77990 (R-Car E3) compatible DU
->      - "renesas,du-r8a77995" for R8A77995 (R-Car D3) compatible DU
->
->    - reg: the memory-mapped I/O registers base address and length
-> @@ -63,6 +64,7 @@ corresponding to each DU output.
->   R8A77965 (R-Car M3-N)  DPAD 0         HDMI 0         LVDS 0         -
->   R8A77970 (R-Car V3M)   DPAD 0         LVDS 0         -              -
->   R8A77980 (R-Car V3H)   DPAD 0         LVDS 0         -              -
-> + R8A77990 (R-Car E3)    DPAD 0         LVDS 0         LVDS 1         -
->   R8A77995 (R-Car D3)    DPAD 0         LVDS 0         LVDS 1         -
-
-Thanks,
-
-Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-
-Thanks
-  j
-
->
->
-> --
-> Regards,
->
-> Laurent Pinchart
->
-
---+9faIjRurCDpBc7U
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJbm2mzAAoJEHI0Bo8WoVY80hsP/2MDLSl7+8AmiKtU/1y5bk+d
-PJCGU1L3ORZkFtuY1eObwfWKn9g51iriB3jqv0O/+6s9GMk8fHqykGY5UUu8Yf0B
-iVfo2RJS2JAH01mkh24DUV6dQXVWgdq22oT1HMNIl0YbjZ95BSLkWeaDwjZUYo6E
-JNObPfzh+IxdnMoPFJhc145gV90dSYScxU9qqvqm8hsqx+keXHzKv7Tb1hWehmkR
-Rs+yaW13jh1FeF60BoB1eaEC39gneLcscefYw+8M+R2rx1BBD4SJyGOmXezTy/42
-yaD/Q95qYo958Cz6JkLvuIz/gW5LRDILr2Flzknzib4iNOmzlLXkApNEqQzcaM1K
-f33YW2nQR776j/W77mM/2HHrqAtRFAEBBBRVBbIpXWWEI05iyX3Inrac87luu60D
-1p+Gmspb+H0KTuqD0JTrZs71aqWq4/9ZBaNQ0ITn7wXwcPno+rptq61P0snN/2XS
-NcChgcd/npTv02fCLivm9a2K9AznIbs+ZbfC1Ss32/7fUGsSN5gvyUZ+Ew/Skd8P
-5JYdypGh8iIxTlCQVjkP6Gyy1W3+cIk7hwBKL+pw/b70e7Z/Zry3H+bkJD8LuCsa
-XyucLKt+L6QoaUZQ3VwGqaMCY+3V6KjKrEQKWJte87VS7mS/qSiDouQq1FlND8hn
-g7tNUBpd9JQpu8Ht1MFQ
-=Dtbv
------END PGP SIGNATURE-----
-
---+9faIjRurCDpBc7U--
-
---===============1767284064==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1767284064==--
+SGkgSmFjb3BvLAoKT24gRnJpZGF5LCAxNCBTZXB0ZW1iZXIgMjAxOCAxMTowMDo0NiBFRVNUIGph
+Y29wbyBtb25kaSB3cm90ZToKPiBPbiBUdWUsIFNlcCAwNCwgMjAxOCBhdCAwMzoxMDoxNFBNICsw
+MzAwLCBMYXVyZW50IFBpbmNoYXJ0IHdyb3RlOgo+ID4gT24gdGhlIEQzIGFuZCBFMyBTb0NzLCB0
+aGUgTFZEUyBlbmNvZGVyIGNhbiBkZXJpdmUgaXRzIGludGVybmFsIHBpeGVsCj4gPiBjbG9jayBm
+cm9tIGFuIGV4dGVybmFsbHkgc3VwcGxpZWQgY2xvY2ssIGVpdGhlciB0aHJvdWdoIHRoZSBFWFRB
+TCBwaW4gb3IKPiA+IHRocm91Z2ggb25lIG9mIHRoZSBEVV9ET1RDTEtJTnggcGlucy4gQWRkIGNv
+cnJlc3BvbmRpbmcgY2xvY2tzIHRvIHRoZSBEVAo+ID4gYmluZGluZ3MuCj4gPiAKPiA+IFRvIHJl
+dGFpbiBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHdpdGggRFQgdGhhdCBkb24ndCBzcGVjaWZ5IHRo
+ZQo+ID4gY2xvY2stbmFtZXMgcHJvcGVydHksIHRoZSBmdW5jdGlvbmFsIGNsb2NrIG11c3QgYWx3
+YXlzIGJlIHNwZWNpZmllZAo+ID4gZmlyc3QsIGFuZCB0aGUgY2xvY2stbmFtZXMgcHJvcGVydHkg
+aXMgb3B0aW9uYWwgd2hlbiBvbmx5IHRoZSBmdW5jdGlvbmFsCj4gPiBjbG9jayBpcyBzcGVjaWZp
+ZWQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnQgUGluY2hhcnQKPiA+IDxsYXVyZW50
+LnBpbmNoYXJ0K3JlbmVzYXNAaWRlYXNvbmJvYXJkLmNvbT4KPiA+IC0tLQo+ID4gCj4gPiAgLi4u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4dCAgICAg
+IHwgMTIgKysrKysrLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxMSBpbnNlcnRpb25zKCspLCAxIGRl
+bGV0aW9uKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQKPiA+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50eHQKPiA+IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMsbHZkcy50
+eHQgaW5kZXgKPiA+IDEzYWY3ZTJhYzdlOC4uOWUzOTEzZjZhNjQzIDEwMDY0NAo+ID4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3JlbmVzYXMs
+bHZkcy50eHQKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS9yZW5lc2FzLGx2ZHMudHh0Cj4gPiBAQCAtMTksNyArMTksMTcgQEAgUmVxdWly
+ZWQgcHJvcGVydGllczoKPiA+ICAgIC0gInJlbmVzYXMscjhhNzc5OTUtbHZkcyIgZm9yIFI4QTc3
+OTk1IChSLUNhciBEMykgY29tcGF0aWJsZSBMVkRTCj4gPiAgICBlbmNvZGVycwo+ID4gIAo+ID4g
+IC0gcmVnOiBCYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBmb3IgdGhlIG1lbW9yeS1tYXBwZWQgcmVn
+aXN0ZXJzCj4gPiAKPiA+IC0tIGNsb2NrczogQSBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBh
+aXIgZm9yIHRoZSBmdW5jdGlvbmFsIGNsb2NrCj4gPiArLSBjbG9ja3M6IEEgbGlzdCBvZiBwaGFu
+ZGxlcyArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZvciBlYWNoIGVudHJ5Cj4gPiBpbgo+
+ID4gKyAgdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5Lgo+ID4gKy0gY2xvY2stbmFtZXM6IE5hbWUg
+b2YgdGhlIGNsb2Nrcy4gVGhpcyBwcm9wZXJ0eSBpcyBtb2RlbC1kZXBlbmRlbnQuCj4gPiArICAt
+IFRoZSBmdW5jdGlvbmFsIGNsb2NrIGlzIG1hbmRhdG9yeSBmb3IgYWxsIG1vZGVscywgc2hhbGwg
+YmUgbGlzdGVkCj4gPiBmaXJzdCwKPiAKPiBJIHdvdWxkIHdyaXRlCj4gCj4gVGhlIGZ1bmN0aW9u
+YWwgY2xvY2ssIHdoaWNoIGlzIG1hbmRhdG9yeSBmb3IgYWxsIG1vZGVscywgc2hhbGwgYmUgbGlz
+dGVkCj4gZmlyc3QgYW5kIHNoYWxsIGJlIG5hbWVkICJmY2siLgoKSSdsbCBjaGFuZ2UgdGhhdC4K
+Cj4gPiArICAgIGFuZCBzaGFsbCBiZSBuYW1lZCAiZmNrIi4KPiA+ICsgIC0gT24gUjhBNzc5OTAg
+YW5kIFI4QTc3OTk1LCB0aGUgTFZEUyBlbmNvZGVyIGNhbiB1c2UgdGhlIEVYVEFMIG9yCj4gPiAr
+ICAgIERVX0RPVENMS0lOeCBjbG9ja3MuIFRob3NlIGNsb2NrcyBhcmUgb3B0aW9uYWwuIFdoZW4g
+c3VwcGxpZWQgdGhleQo+ID4gbXVzdCBiZQo+ID4gKyAgICBuYW1lZCAiZXh0YWwiIGFuZCAiZGNs
+a2luLngiIHJlc3BlY3RpdmVseSwgd2l0aCAieCIgYmVpbmcgdGhlCj4gPiBEVV9ET1RDTEtJTgo+
+ID4gKyAgICBudW1lcmljYWwgaW5kZXguCj4gCj4gSXMgaXQgdmFsaWQgdG8gbGlzdCBvdGhlciBj
+bG9ja3MgaGVyZSBmb3IgdGhlIG90aGVyIFNvQ3M/CgpObywgdGhvc2UgY2xvY2tzIG9ubHkgZXhp
+c3QgZm9yIEQzIGFuZCBFMywgYXMgc3RhdGVkIChSOEE3Nzk5MCBhbmQgUjhBNzc5OTUpLiAKRG8g
+eW91IHRoaW5rIHRoZSB0ZXh0IGlzbid0IGNsZWFyIGVub3VnaCA/Cgo+ID4gKyAgLSBXaGVuIHRo
+ZSBjbG9ja3MgcHJvcGVydHkgb25seSBjb250YWlucyB0aGUgZnVuY3Rpb25hbCBjbG9jaywgdGhl
+Cj4gPiArICAgIGNsb2NrLW5hbWVzIHByb3BlcnR5IG1heSBiZSBvbWl0dGVkLgo+ID4gCj4gPiAg
+LSByZXNldHM6IEEgcGhhbmRsZSArIHJlc2V0IHNwZWNpZmllciBmb3IgdGhlIG1vZHVsZSByZXNl
+dAo+IAo+IFRoYW5rcwo+ICAgIGoKPiAKPiA+ICBSZXF1aXJlZCBub2RlczoKCi0tIApSZWdhcmRz
+LAoKTGF1cmVudCBQaW5jaGFydAoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
