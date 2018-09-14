@@ -1,69 +1,88 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 3/3] dt-bindings: watchdog: add mpc8xxx-wdt support
-Date: Fri, 14 Sep 2018 10:29:53 -0700
-Message-ID: <20180914172953.GF26861@roeck-us.net>
-References: <5edda1a360cf7867b98a72a1dfa22db3bd5ed7b4.1536931725.git.christophe.leroy@c-s.fr>
- <e68ed01cdfba5b7610559607a3c706b294a216fc.1536931725.git.christophe.leroy@c-s.fr>
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH v4 4/5] iio: fxas21002c: add ODR/Scale support
+Date: Fri, 14 Sep 2018 23:00:58 +0530
+Message-ID: <20180914173058.GA8405@himanshu-Vostro-3559>
+References: <20180911150011.31964-4-afonsobordado@az8.co>
+ <201809121715.5Babt1QC%fengguang.wu@intel.com>
+ <20180912182350.GA13032@himanshu-Vostro-3559>
+ <2cd9b1674ae88f153a5afe65c151cabf308e4fe7.camel@az8.co>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e68ed01cdfba5b7610559607a3c706b294a216fc.1536931725.git.christophe.leroy@c-s.fr>
+In-Reply-To: <2cd9b1674ae88f153a5afe65c151cabf308e4fe7.camel@az8.co>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+To: Afonso Bordado <afonsobordado@az8.co>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2018 at 01:32:03PM +0000, Christophe Leroy wrote:
-> Add description of DT bindings for mpc8xxx-wdt driver which
-> handles the CPU watchdog timer on the mpc83xx, mpc86xx and mpc8xx.
+On Fri, Sep 14, 2018 at 04:26:44PM +0100, Afonso Bordado wrote:
+> Hi,
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  .../devicetree/bindings/watchdog/mpc8xxx-wdt.txt   | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
+> Thanks for your help with this.
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-> new file mode 100644
-> index 000000000000..1d99e1e4d306
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-> @@ -0,0 +1,25 @@
-> +* Freescale mpc8xxx watchdog driver (For 83xx, 86xx and 8xx)
-> +
-> +Required properties:
-> +- compatible: Shall contain one of the following:
-> +	"mpc83xx_wdt" for an mpc83xx
-> +	"fsl,mpc8610-wdt" for an mpc86xx
-> +	"fsl,mpc823-wdt" for an mpc8xx
-> +- reg: base physical address and length of the area hosting the
-> +       watchdog registers.
-> +		On the 83xx, "Watchdog Timer Registers" area:	<0x200 0x100>
-> +		On the 86xx, "Watchdog Timer Registers" area:	<0xe4000 0x100>
-> +		On the 8xx, "General System Interface Unit" area: <0x0 0x10>
-> +
-
-Note for Rob: The above has been implemented for several years.
-This is merely to document the current implementation.
-Maybe "mpc83xx_wdt" should be deprecated and replaced, but I think
-that should be a separate patch.
-
-> +Optional properties:
-> +- reg: additionnal physical address and length (4) of location of the
-
-s/additionnal/additional/
-
-> +       Reset Status Register (called RSTRSCR on the mpc86xx)
-> +       		On the 83xx, it is located at offset 0x910
-> +       		On the 86xx, it is located at offset 0xe0094
-> +       		On the 8xx, it is located at offset 0x288
-> +
-> +Example:
-> +		WDT: watchdog@0 {
-> +		    compatible = "fsl,mpc823-wdt";
-> +		    reg = <0x0 0x10 0x288 0x4>;
-> +		};
-> -- 
-> 2.13.3
+> > And I suspect it may be originating from your code snippet:
+> > 
+> > #define FXAS21002C_SCALE(scale) (IIO_DEGREE_TO_RAD(62500U >>
+> > (scale)))
+> > 
+> > and looking at the implementation:
+> > 
+> > include/linux/iio/iio.h
+> > /**
+> >  * IIO_DEGREE_TO_RAD() - Convert degree to rad
+> >  * @deg: A value in degree
+> >  *
+> >  * Returns the given value converted from degree to rad
+> >  */
+> > #define IIO_DEGREE_TO_RAD(deg) (((deg) * 314159ULL + 9000000ULL) /
+> > 18000000ULL)
+> > 
+> > This '/' operator might be the culprit!
+> > 
+> > Just for checking that the error, remove the macro declaration
+> > `FXAS21002C_SCALE`
+> > plus its usage and re-cross compile using `make ARCH=i386`.
+> > 
+> > In my case I used the `div64_s64` function handles builds for both
+> > 32/64
+> > arch accordingly.
 > 
+> Yes, this is indeed the culprit. If `div64_s64` works the same way, I
+> wonder if the best option is to change the macro definition.
+
+"....works the same way" ?
+
+Let us assume that the problem arises due to the 64 bit division, in
+which gcc places the __divdi3() runtime function to promote the
+"freestanding" environment implementation. And then linking fails
+due to unavailability of definitions/declarations of the aforementioned
+function.
+
+With `div64_s64` usgae the linker binds the definition present at lib/div64.c
+and the build completes successfully whether building for 32/64 bit
+environment.
+
+But then why didn't this error showed up in the past, in the rest 
+of the drivers ?
+
+I see its wide usage in IIO without bug reports:
+
+himanshu@himanshu-Vostro-3559:~/linux-next$ git grep -w "IIO_DEGREE_TO_RAD" drivers/iio/ | wc -l
+34
+
+And that concludes, that there is some problem within your code!
+
+In the meantime, you can try to look the disassembly of the function
+where this macro is actually used and search for __divdi3/__udivdi3
+function referenced in the plt.
+
+I might be wrong though...
+
+Wait a while for the experts to join in!
+
+-- 
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
