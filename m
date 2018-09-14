@@ -1,44 +1,43 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] Devicetree fix for 4.19-rc
-Date: Fri, 14 Sep 2018 14:25:48 -0500
-Message-ID: <CAL_JsqJmyiAOAvEhWxBy11xw==m5kqg_V90CCLPV1PqGDuHD7w@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson: Fix erroneous SPI bus warnings
+Date: Fri, 14 Sep 2018 12:39:47 -0700
+Message-ID: <7hk1nnuav0.fsf@baylibre.com>
+References: <20180913181245.25484-17-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-17-robh@kernel.org> (Rob Herring's message
+ of "Thu, 13 Sep 2018 13:12:41 -0500")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+Rob Herring <robh@kernel.org> writes:
 
-Please pull. One regression for a 20 year old PowerMac.
+> dtc has new checks for SPI buses. The meson dts files have a node named
+> spi' which causes false positive warnings. As the node is a pinctrl child
+> node, change the node name to be 'spi-pins' to fix the warnings.
+>
+> arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dtb: Warning (spi_bus_bridge): /soc/periphs@c8834000/pinctrl@4b0/spi: incorrect #address-cells for SPI bus
+>
+> Cc: Carlo Caione <carlo@caione.org>
+> Cc: Kevin Hilman <khilman@baylibre.com>
+> Cc: linux-amlogic@lists.infradead.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please apply to the sub-arch tree. The dtc changes haven't landed, but 
+> will for 4.20.
 
-Rob
+Applied, will queue for v4.20.
 
-The following changes since commit 0413bedabc886c3a56804d1c80a58e99077b1d91:
-
-  of: Add device_type access helper functions (2018-08-31 08:30:42 -0400)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-4.19-2
-
-for you to fetch changes up to e54192b48da75f025ae4b277925eaf6aca1d13bd:
-
-  of: fix phandle cache creation for DTs with no phandles (2018-09-11
-11:28:40 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for 4.19, part 2:
-
-- Fix a regression on systems having a DT without any phandles which
-  happens on a PowerMac G3.
-
-----------------------------------------------------------------
-Rob Herring (1):
-      of: fix phandle cache creation for DTs with no phandles
-
- drivers/of/base.c | 3 +++
- 1 file changed, 3 insertions(+)
+Kevin
