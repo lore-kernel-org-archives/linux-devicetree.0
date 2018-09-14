@@ -1,398 +1,79 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [PATCH v3 6/7] regulator: bd718XX use pickable ranges
-Date: Fri, 14 Sep 2018 11:33:11 +0300
-Message-ID: <e27e4476ead676f9477543a96e80e9aef5c34dad.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] clk: meson-g12a: Add AO Clock controller driver
+Date: Fri, 14 Sep 2018 10:33:35 +0200
+Message-ID: <6f12fc39c52adaaf63cb99cefe0809a52606c3a8.camel@baylibre.com>
+References: <1533894868-85815-1-git-send-email-jian.hu@amlogic.com>
+         <1533894868-85815-3-git-send-email-jian.hu@amlogic.com>
+         <6c855dc62fe6ed1a01216bd708d401a280f8762c.camel@baylibre.com>
+         <fff1f982-c9f3-8aa4-b108-6c0998827e79@amlogic.com>
+         <89b058a7bba26058fab95dea01155221dbb642ce.camel@baylibre.com>
+         <977d8010-6d82-5eac-5da5-6dbe0f73971a@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <977d8010-6d82-5eac-5da5-6dbe0f73971a@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, sboyd@kernel.org, mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Jian Hu <jian.hu@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Few regulators in BD71837 and BD71847 can output voltages from
-different voltage ranges. Register interface is arranged so that
-used range is selected by toggling bits which are not next to actual
-voltage selection bits. Then the voltage inside selected range is
-determined by voltage selection bits (as usual). Support BD71837
-and BD71847 selectible range voltages using new pickable ranges
-helpers.
+On Tue, 2018-08-28 at 11:35 +0800, Jian Hu wrote:
+> Hi: Jerome
+> 
+> On 2018/8/27 21:07, Jerome Brunet wrote:
+> > On Fri, 2018-08-24 at 21:34 +0800, Jian Hu wrote:
+> > > > 
+> > > 
+> > > I am confued about aoclk81's parent clocks.
+> > > 
+> > > I can not get the example of axg audio clock driver, Could you provide
+> > > the link? Had it merged into clk-meson.git?
+> > 
+> > Yes and mainline as well : drivers/clk/meson/axg-audio.c
+> > 
+> > Basically this driver is creating bypass input clocks (audio_pclk, mst_in[0-9],
+> > etc...) .
+> > 
+> > This allows to collect input clocks from DT (like any consumer should) will
+> > keeping constant in the controller clock tree.
+> > 
+> > > From what I've seen of your controller drivers, the EE controller should have
+> > 
+> > one input, the AO should have 3.
+> > 
+> > 
+> > 
+> > .
+> > 
+> 
+> I still can not get the example meaning in axg audio driver.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/regulator/bd71837-regulator.c | 153 +++++++++++++++++++++++++++-------
- include/linux/mfd/rohm-bd718x7.h      |  32 +++----
- 2 files changed, 143 insertions(+), 42 deletions(-)
+here is one specific example:
 
-diff --git a/drivers/regulator/bd71837-regulator.c b/drivers/regulator/bd71837-regulator.c
-index 8e89334f94d1..d2522d4e1505 100644
---- a/drivers/regulator/bd71837-regulator.c
-+++ b/drivers/regulator/bd71837-regulator.c
-@@ -78,6 +78,34 @@ static int bd718xx_set_voltage_sel_restricted(struct regulator_dev *rdev,
- 	return regulator_set_voltage_sel_regmap(rdev, sel);
- }
- 
-+static int bd718xx_set_voltage_sel_pickable_restricted(
-+		struct regulator_dev *rdev, unsigned int sel)
-+{
-+	if (regulator_is_enabled_regmap(rdev))
-+		return -EBUSY;
-+
-+	return regulator_set_voltage_sel_pickable_regmap(rdev, sel);
-+}
-+
-+static struct regulator_ops bd718xx_pickable_range_ldo_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_pickable_linear_range,
-+	.set_voltage_sel = bd718xx_set_voltage_sel_pickable_restricted,
-+	.get_voltage_sel = regulator_get_voltage_sel_pickable_regmap,
-+};
-+
-+static struct regulator_ops bd718xx_pickable_range_buck_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_pickable_linear_range,
-+	.set_voltage_sel = bd718xx_set_voltage_sel_pickable_restricted,
-+	.get_voltage_sel = regulator_get_voltage_sel_pickable_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+};
-+
- static struct regulator_ops bd718xx_ldo_regulator_ops = {
- 	.enable = regulator_enable_regmap,
- 	.disable = regulator_disable_regmap,
-@@ -139,24 +167,61 @@ static const struct regulator_linear_range bd718xx_dvs_buck_volts[] = {
- 
- /*
-  * BD71837 BUCK5
-+ * 0.7V to 1.35V  (range 0)
-+ * and
-+ * 0.675 to 1.325 (range 1)
-+ */
-+static const struct regulator_linear_range bd71837_buck5_volts[] = {
-+	/* Ranges when VOLT_SEL bit is 0 */
-+	REGULATOR_LINEAR_RANGE(700000, 0x00, 0x03, 100000),
-+	REGULATOR_LINEAR_RANGE(1050000, 0x04, 0x05, 50000),
-+	REGULATOR_LINEAR_RANGE(1200000, 0x06, 0x07, 150000),
-+	/* Ranges when VOLT_SEL bit is 1  */
-+	REGULATOR_LINEAR_RANGE(675000, 0x0, 0x3, 100000),
-+	REGULATOR_LINEAR_RANGE(1025000, 0x4, 0x5, 50000),
-+	REGULATOR_LINEAR_RANGE(1175000, 0x6, 0x7, 150000),
-+};
-+
-+/*
-+ * Range selector for first 3 linear ranges is 0x0
-+ * and 0x1 for last 3 ranges.
-+ */
-+static const unsigned int bd71837_buck5_volt_range_sel[] = {
-+	0x0, 0x0, 0x0, 0x80, 0x80, 0x80
-+};
-+
-+/*
-  * BD71847 BUCK3
-- * 0.7V to 1.35V ()
-  */
--static const struct regulator_linear_range bd718xx_1st_nodvs_buck_volts[] = {
-+static const struct regulator_linear_range bd71847_buck3_volts[] = {
-+	/* Ranges when VOLT_SEL bits are 00 */
- 	REGULATOR_LINEAR_RANGE(700000, 0x00, 0x03, 100000),
- 	REGULATOR_LINEAR_RANGE(1050000, 0x04, 0x05, 50000),
- 	REGULATOR_LINEAR_RANGE(1200000, 0x06, 0x07, 150000),
-+	/* Ranges when VOLT_SEL bits are 01 */
-+	REGULATOR_LINEAR_RANGE(550000, 0x0, 0x7, 50000),
-+	/* Ranges when VOLT_SEL bits are 11 */
-+	REGULATOR_LINEAR_RANGE(675000, 0x0, 0x3, 100000),
-+	REGULATOR_LINEAR_RANGE(1025000, 0x4, 0x5, 50000),
-+	REGULATOR_LINEAR_RANGE(1175000, 0x6, 0x7, 150000),
-+};
-+
-+static const unsigned int bd71847_buck3_volt_range_sel[] = {
-+	0x0, 0x0, 0x0, 0x40, 0x80, 0x80, 0x80
- };
- 
--static const struct regulator_linear_range bd71847_buck4_voltage_ranges[] = {
-+static const struct regulator_linear_range bd71847_buck4_volts[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0x00, 0x03, 100000),
-+	REGULATOR_LINEAR_RANGE(2600000, 0x00, 0x03, 100000),
- };
- 
-+static const unsigned int bd71847_buck4_volt_range_sel[] = { 0x0, 0x40 };
-+
- /*
-  * BUCK6
-  * 3.0V to 3.3V (step 100mV)
-  */
--static const struct regulator_linear_range bd71837_buck6_voltage_ranges[] = {
-+static const struct regulator_linear_range bd71837_buck6_volts[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0x00, 0x03, 100000),
- };
- 
-@@ -190,8 +255,11 @@ static const struct regulator_linear_range bd718xx_4th_nodvs_buck_volts[] = {
-  */
- static const struct regulator_linear_range bd718xx_ldo1_volts[] = {
- 	REGULATOR_LINEAR_RANGE(3000000, 0x00, 0x03, 100000),
-+	REGULATOR_LINEAR_RANGE(1600000, 0x00, 0x03, 100000),
- };
- 
-+static const unsigned int bd718xx_ldo1_volt_range_sel[] = { 0x0, 0x20 };
-+
- /*
-  * LDO2
-  * 0.8 or 0.9V
-@@ -220,10 +288,21 @@ static const struct regulator_linear_range bd718xx_ldo4_volts[] = {
-  * LDO5 for BD71837
-  * 1.8 to 3.3V (100mV step)
-  */
--static const struct regulator_linear_range bd718xx_ldo5_volts[] = {
-+static const struct regulator_linear_range bd71837_ldo5_volts[] = {
- 	REGULATOR_LINEAR_RANGE(1800000, 0x00, 0x0F, 100000),
- };
- 
-+/*
-+ * LDO5 for BD71837
-+ * 1.8 to 3.3V (100mV step)
-+ */
-+static const struct regulator_linear_range bd71847_ldo5_volts[] = {
-+	REGULATOR_LINEAR_RANGE(1800000, 0x00, 0x0F, 100000),
-+	REGULATOR_LINEAR_RANGE(800000, 0x00, 0x0F, 100000),
-+};
-+
-+static const unsigned int bd71847_ldo5_volt_range_sel[] = { 0x0, 0x20 };
-+
- /*
-  * LDO6
-  * 0.9 to 1.8V (100mV step)
-@@ -332,14 +411,17 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.of_match = of_match_ptr("BUCK3"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK3,
--			.ops = &bd718xx_buck_regulator_ops,
-+			.ops = &bd718xx_pickable_range_buck_ops,
- 			.type = REGULATOR_VOLTAGE,
--			.n_voltages = BD718XX_1ST_NODVS_BUCK_VOLTAGE_NUM,
--			.linear_ranges = bd718xx_1st_nodvs_buck_volts,
-+			.n_voltages = BD71847_BUCK3_VOLTAGE_NUM,
-+			.linear_ranges = bd71847_buck3_volts,
- 			.n_linear_ranges =
--				ARRAY_SIZE(bd718xx_1st_nodvs_buck_volts),
-+				ARRAY_SIZE(bd71847_buck3_volts),
- 			.vsel_reg = BD718XX_REG_1ST_NODVS_BUCK_VOLT,
- 			.vsel_mask = BD718XX_1ST_NODVS_BUCK_MASK,
-+			.vsel_range_reg = BD718XX_REG_1ST_NODVS_BUCK_VOLT,
-+			.vsel_range_mask = BD71847_BUCK3_RANGE_MASK,
-+			.linear_range_selectors = bd71847_buck3_volt_range_sel,
- 			.enable_reg = BD718XX_REG_1ST_NODVS_BUCK_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-@@ -356,15 +438,18 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.of_match = of_match_ptr("BUCK4"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK4,
--			.ops = &bd718xx_buck_regulator_ops,
-+			.ops = &bd718xx_pickable_range_buck_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD71847_BUCK4_VOLTAGE_NUM,
--			.linear_ranges = bd71847_buck4_voltage_ranges,
-+			.linear_ranges = bd71847_buck4_volts,
- 			.n_linear_ranges =
--				ARRAY_SIZE(bd71847_buck4_voltage_ranges),
-+				ARRAY_SIZE(bd71847_buck4_volts),
- 			.enable_reg = BD718XX_REG_2ND_NODVS_BUCK_CTRL,
- 			.vsel_reg = BD718XX_REG_2ND_NODVS_BUCK_VOLT,
- 			.vsel_mask = BD71847_BUCK4_MASK,
-+			.vsel_range_reg = BD718XX_REG_2ND_NODVS_BUCK_VOLT,
-+			.vsel_range_mask = BD71847_BUCK4_RANGE_MASK,
-+			.linear_range_selectors = bd71847_buck4_volt_range_sel,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
- 		},
-@@ -426,13 +511,16 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.of_match = of_match_ptr("LDO1"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_LDO1,
--			.ops = &bd718xx_ldo_regulator_ops,
-+			.ops = &bd718xx_pickable_range_ldo_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD718XX_LDO1_VOLTAGE_NUM,
- 			.linear_ranges = bd718xx_ldo1_volts,
- 			.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo1_volts),
- 			.vsel_reg = BD718XX_REG_LDO1_VOLT,
- 			.vsel_mask = BD718XX_LDO1_MASK,
-+			.vsel_range_reg = BD718XX_REG_LDO1_VOLT,
-+			.vsel_range_mask = BD718XX_LDO1_RANGE_MASK,
-+			.linear_range_selectors = bd718xx_ldo1_volt_range_sel,
- 			.enable_reg = BD718XX_REG_LDO1_VOLT,
- 			.enable_mask = BD718XX_LDO_EN,
- 			.owner = THIS_MODULE,
-@@ -517,13 +605,16 @@ static const struct bd718xx_regulator_data bd71847_regulators[] = {
- 			.of_match = of_match_ptr("LDO5"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_LDO5,
--			.ops = &bd718xx_ldo_regulator_ops,
-+			.ops = &bd718xx_pickable_range_ldo_ops,
- 			.type = REGULATOR_VOLTAGE,
--			.n_voltages = BD718XX_LDO5_VOLTAGE_NUM,
--			.linear_ranges = bd718xx_ldo5_volts,
--			.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo5_volts),
-+			.n_voltages = BD71847_LDO5_VOLTAGE_NUM,
-+			.linear_ranges = bd71847_ldo5_volts,
-+			.n_linear_ranges = ARRAY_SIZE(bd71847_ldo5_volts),
- 			.vsel_reg = BD718XX_REG_LDO5_VOLT,
- 			.vsel_mask = BD71847_LDO5_MASK,
-+			.vsel_range_reg = BD718XX_REG_LDO5_VOLT,
-+			.vsel_range_mask = BD71847_LDO5_RANGE_MASK,
-+			.linear_range_selectors = bd71847_ldo5_volt_range_sel,
- 			.enable_reg = BD718XX_REG_LDO5_VOLT,
- 			.enable_mask = BD718XX_LDO_EN,
- 			.owner = THIS_MODULE,
-@@ -660,14 +751,17 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.of_match = of_match_ptr("BUCK5"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_BUCK5,
--			.ops = &bd718xx_buck_regulator_ops,
-+			.ops = &bd718xx_pickable_range_buck_ops,
- 			.type = REGULATOR_VOLTAGE,
--			.n_voltages = BD718XX_1ST_NODVS_BUCK_VOLTAGE_NUM,
--			.linear_ranges = bd718xx_1st_nodvs_buck_volts,
-+			.n_voltages = BD71837_BUCK5_VOLTAGE_NUM,
-+			.linear_ranges = bd71837_buck5_volts,
- 			.n_linear_ranges =
--				ARRAY_SIZE(bd718xx_1st_nodvs_buck_volts),
-+				ARRAY_SIZE(bd71837_buck5_volts),
- 			.vsel_reg = BD718XX_REG_1ST_NODVS_BUCK_VOLT,
--			.vsel_mask = BD718XX_1ST_NODVS_BUCK_MASK,
-+			.vsel_mask = BD71837_BUCK5_MASK,
-+			.vsel_range_reg = BD718XX_REG_1ST_NODVS_BUCK_VOLT,
-+			.vsel_range_mask = BD71837_BUCK5_RANGE_MASK,
-+			.linear_range_selectors = bd71837_buck5_volt_range_sel,
- 			.enable_reg = BD718XX_REG_1ST_NODVS_BUCK_CTRL,
- 			.enable_mask = BD718XX_BUCK_EN,
- 			.owner = THIS_MODULE,
-@@ -687,9 +781,9 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.ops = &bd718xx_buck_regulator_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD71837_BUCK6_VOLTAGE_NUM,
--			.linear_ranges = bd71837_buck6_voltage_ranges,
-+			.linear_ranges = bd71837_buck6_volts,
- 			.n_linear_ranges =
--				ARRAY_SIZE(bd71837_buck6_voltage_ranges),
-+				ARRAY_SIZE(bd71837_buck6_volts),
- 			.vsel_reg = BD718XX_REG_2ND_NODVS_BUCK_VOLT,
- 			.vsel_mask = BD71837_BUCK6_MASK,
- 			.enable_reg = BD718XX_REG_2ND_NODVS_BUCK_CTRL,
-@@ -754,13 +848,16 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.of_match = of_match_ptr("LDO1"),
- 			.regulators_node = of_match_ptr("regulators"),
- 			.id = BD718XX_LDO1,
--			.ops = &bd718xx_ldo_regulator_ops,
-+			.ops = &bd718xx_pickable_range_ldo_ops,
- 			.type = REGULATOR_VOLTAGE,
- 			.n_voltages = BD718XX_LDO1_VOLTAGE_NUM,
- 			.linear_ranges = bd718xx_ldo1_volts,
- 			.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo1_volts),
- 			.vsel_reg = BD718XX_REG_LDO1_VOLT,
- 			.vsel_mask = BD718XX_LDO1_MASK,
-+			.vsel_range_reg = BD718XX_REG_LDO1_VOLT,
-+			.vsel_range_mask = BD718XX_LDO1_RANGE_MASK,
-+			.linear_range_selectors = bd718xx_ldo1_volt_range_sel,
- 			.enable_reg = BD718XX_REG_LDO1_VOLT,
- 			.enable_mask = BD718XX_LDO_EN,
- 			.owner = THIS_MODULE,
-@@ -847,9 +944,9 @@ static const struct bd718xx_regulator_data bd71837_regulators[] = {
- 			.id = BD718XX_LDO5,
- 			.ops = &bd718xx_ldo_regulator_ops,
- 			.type = REGULATOR_VOLTAGE,
--			.n_voltages = BD718XX_LDO5_VOLTAGE_NUM,
--			.linear_ranges = bd718xx_ldo5_volts,
--			.n_linear_ranges = ARRAY_SIZE(bd718xx_ldo5_volts),
-+			.n_voltages = BD71837_LDO5_VOLTAGE_NUM,
-+			.linear_ranges = bd71837_ldo5_volts,
-+			.n_linear_ranges = ARRAY_SIZE(bd71837_ldo5_volts),
- 			/* LDO5 is supplied by buck6 */
- 			.supply_name = "buck6",
- 			.vsel_reg = BD718XX_REG_LDO5_VOLT,
-diff --git a/include/linux/mfd/rohm-bd718x7.h b/include/linux/mfd/rohm-bd718x7.h
-index fed5fed75732..26acf9a92498 100644
---- a/include/linux/mfd/rohm-bd718x7.h
-+++ b/include/linux/mfd/rohm-bd718x7.h
-@@ -31,31 +31,27 @@ enum {
- 	BD718XX_REGULATOR_AMOUNT,
- };
- 
--/* Common voltage configurations
-- *
-- * Note, we support only one range of voltages for each buck/LDO until we
-- * get pickable ranges support. (See range selection bits for BUCK5 and
-- * LDO1. On BD71847 also the second no DVS buck and LDO5)
-- */
--
-+/* Common voltage configurations */
- #define BD718XX_DVS_BUCK_VOLTAGE_NUM		0x3D
--#define BD718XX_1ST_NODVS_BUCK_VOLTAGE_NUM	0x08
- #define BD718XX_4TH_NODVS_BUCK_VOLTAGE_NUM	0x3D
- 
--#define BD718XX_LDO1_VOLTAGE_NUM	0x04
-+#define BD718XX_LDO1_VOLTAGE_NUM	0x08
- #define BD718XX_LDO2_VOLTAGE_NUM	0x02
- #define BD718XX_LDO3_VOLTAGE_NUM	0x10
- #define BD718XX_LDO4_VOLTAGE_NUM	0x0A
--#define BD718XX_LDO5_VOLTAGE_NUM	0x10
- #define BD718XX_LDO6_VOLTAGE_NUM	0x0A
- 
- /* BD71837 specific voltage configurations */
-+#define BD71837_BUCK5_VOLTAGE_NUM	0x10
- #define BD71837_BUCK6_VOLTAGE_NUM	0x04
- #define BD71837_BUCK7_VOLTAGE_NUM	0x08
-+#define BD71837_LDO5_VOLTAGE_NUM	0x10
- #define BD71837_LDO7_VOLTAGE_NUM	0x10
- 
- /* BD71847 specific voltage configurations */
--#define BD71847_BUCK4_VOLTAGE_NUM	0x04
-+#define BD71847_BUCK3_VOLTAGE_NUM	0x18
-+#define BD71847_BUCK4_VOLTAGE_NUM	0x08
-+#define BD71847_LDO5_VOLTAGE_NUM	0x20
- 
- /* Registers specific to BD71837 */
- enum {
-@@ -139,12 +135,20 @@ enum {
- #define DVS_BUCK_IDLE_MASK	0x3F
- 
- #define BD718XX_1ST_NODVS_BUCK_MASK	0x07
--#define BD71847_BUCK4_MASK		0x03
--#define BD71837_BUCK6_MASK		0x03
- #define BD718XX_3RD_NODVS_BUCK_MASK	0x07
- #define BD718XX_4TH_NODVS_BUCK_MASK	0x3F
- 
-+#define BD71847_BUCK3_MASK		0x07
-+#define BD71847_BUCK3_RANGE_MASK	0xC0
-+#define BD71847_BUCK4_MASK		0x03
-+#define BD71847_BUCK4_RANGE_MASK	0x40
-+
-+#define BD71837_BUCK5_MASK		0x07
-+#define BD71837_BUCK5_RANGE_MASK	0x80
-+#define BD71837_BUCK6_MASK		0x03
-+
- #define BD718XX_LDO1_MASK		0x03
-+#define BD718XX_LDO1_RANGE_MASK		0x20
- #define BD718XX_LDO2_MASK		0x20
- #define BD718XX_LDO3_MASK		0x0F
- #define BD718XX_LDO4_MASK		0x0F
-@@ -152,10 +156,10 @@ enum {
- 
- #define BD71837_LDO5_MASK		0x0F
- #define BD71847_LDO5_MASK		0x0F
-+#define BD71847_LDO5_RANGE_MASK		0x20
- 
- #define BD71837_LDO7_MASK		0x0F
- 
--
- /* BD718XX Voltage monitoring masks */
- #define BD718XX_BUCK1_VRMON80           0x1
- #define BD718XX_BUCK1_VRMON130          0x2
--- 
-2.14.3
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/clk/meson/axg-audio.c?h=v4.19-rc1#n785
+
+
+> 
+> In 26 page of A113D_Datasheet V0.7 20170725-Baylibre.pdf,We can see the 
+> aoclk81 has two parents. clk81 and ao_slow_clk. I can not get 3 parents.
+> 
+>                           clk81|\
+>                         -------| \        aoclk81
+> src0 |\                       |  |-------------------
+> -----| \     ao_slow_clk      |  |
+>       |  |---------------------| /
+> -----| /                      |/
+>   src1|/
+> 
+> 
+> src0 is from xtal, if can generate 32k clock, but it is never used.
+> src1 is from gpio clock, It is never used. If necessary， the ao_slow_clk 
+> maybe described.
+> 
+> So why aoclk81 has 3 parents?
+
+I never said that. I said your clock controller driver should have 3 input
+clocks. These clock are the one used by the controller but not produced by it:
+for the AO controller xtal, ao_xtal, and ee controller clk81.
