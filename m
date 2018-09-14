@@ -1,102 +1,43 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH 4/5] Documentation: dt-bindings: Document bindings for DW MIPI CSI-2 Host
-Date: Sat, 15 Sep 2018 00:48:40 +0200
-Message-ID: <20180914224849.27173-5-lolivei@synopsys.com>
-References: <20180914224849.27173-1-lolivei@synopsys.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Sat, 15 Sep 2018 07:28:26 +0800
+Message-ID: <20180914232826.GA1497@guoren-Inspiron-7460>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
+ <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
+ <20180914143719.GA27689@guoren-Inspiron-7460>
+ <CAK8P3a0fZYbd4a2nBnExPVXKs-898R9vaCSa4kXyz0qA=rCzZQ@mail.gmail.com>
+ <20180914160231.GA32161@guoren-Inspiron-7460>
+ <CAK8P3a0ZBBL8LHoV=tDr3Ner6wRK=QcrepciZqCPNEHk=B2n7A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180914224849.27173-1-lolivei@synopsys.com>
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a0ZBBL8LHoV=tDr3Ner6wRK=QcrepciZqCPNEHk=B2n7A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: all-jpinto-org-pt02@synopsys.com, Luis Oliveira <Luis.Oliveira@synopsys.com>, Luis Oliveira <luis.oliveira@synopsys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Synopsys DesignWare MIPI CSI-2 host.
+On Fri, Sep 14, 2018 at 06:09:35PM +0200, Arnd Bergmann wrote:
+> On Fri, Sep 14, 2018 at 6:02 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> >
+> > On Fri, Sep 14, 2018 at 04:46:56PM +0200, Arnd Bergmann wrote:
+> > > On Fri, Sep 14, 2018 at 4:37 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> >
+> > > One level below that, you can of course choose to build
+> > > a distro with only 64-bit time_t regardless of whether there
+> > > is still support for 32-bit time_t in kernel and glibc or not.
+> > Do you mean I could merge kernel port into linux-4.19 or linux-4.20.
+> > But let glibc merged after linux-4.21 and csky glibc only support
+> > time64 syscalls ?
+> 
+> Yes, that's what I meant. Note that it won't get merged into 4.19:
+> the merge window for that was after the 4.18 release and no
+> new features are getting merged for 4.19 that have not made it
+> into 4.19-rc1 already.
+> 
+> Getting your code into linux-next now is the prerequisite for you
+> sending a pull request during the 4.20 window.
+Got it, thank you very much.
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
----
- .../devicetree/bindings/media/snps,dw-csi-plat.txt | 74 ++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-
-diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt b/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-new file mode 100644
-index 0000000..0cc2915
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-@@ -0,0 +1,74 @@
-+Synopsys DesignWare CSI-2 Host controller
-+
-+Description
-+-----------
-+
-+This HW block is used to receive image coming from an MIPI CSI-2 compatible
-+camera.
-+
-+Required properties:
-+- compatible: shall be "snps,dw-csi-plat"
-+- reg			: physical base address and size of the device memory mapped
-+  registers;
-+- interrupts		: CSI-2 Host interrupt
-+- snps,output-type	: Core output to be used (IPI-> 0 or IDI->1 or BOTH->2) These
-+  			  values choose which of the Core outputs will be used, it
-+			  can be Image Data Interface or Image Pixel Interface.
-+- phys			: List of one PHY specifier (as defined in
-+			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-+			  This PHY is a MIPI DPHY working in RX mode.
-+- resets		: Reference to a reset controller (optional)
-+
-+Optional properties(if in IPI mode):
-+- snps,ipi-mode 	: Mode to be used when in IPI(Camera -> 0 or Controller -> 1)
-+			  This property defines if the controller will use the video
-+			  timings available
-+			  in the video stream or if it will use pre-defined ones.
-+- snps,ipi-color-mode	: Bus depth to be used in IPI (48 bits -> 0 or 16 bits -> 1)
-+			  This property defines the width of the IPI bus.
-+- snps,ipi-auto-flush	: Data auto-flush (1 -> Yes or 0 -> No). This property defines
-+			  if the data is automatically flushed in each vsync or if
-+			  this process is done manually
-+- snps,virtual-channel	: Virtual channel where data is present when in IPI mode. This
-+			  property chooses the virtual channel which IPI will use to
-+			  retrieve the video stream.
-+
-+The per-board settings:
-+ - port sub-node describing a single endpoint connected to the camera as
-+   described in video-interfaces.txt[1].
-+
-+Example:
-+
-+	csi2_1: csi2@3000 {
-+		compatible = "snps,dw-csi-plat";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = < 0x03000 0x7FF>;
-+		interrupts = <2>;
-+		output-type = <2>;
-+		resets = <&dw_rst 1>;
-+		phys = <&mipi_dphy_rx1 0>;
-+		phy-names = "csi2-dphy";
-+
-+		/* IPI optional Configurations */
-+		snps,ipi-mode = <0>;
-+		snps,ipi-color-mode = <0>;
-+		snps,ipi-auto-flush = <1>;
-+		snps,virtual-channel = <0>;
-+
-+		/* CSI-2 per-board settings */
-+		port@1 {
-+			reg = <1>;
-+			csi1_ep1: endpoint {
-+				remote-endpoint = <&camera_1>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+		port@2 {
-+			csi1_ep2: endpoint {
-+				remote-endpoint = <&vif1_ep>;
-+			};
-+		};
-+	};
-+
-+
--- 
-2.9.3
+ Guo Ren
