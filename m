@@ -1,144 +1,164 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 7/7] MIPS: mscc: add PCB120 to the ocelot fitImage
-Date: Fri, 14 Sep 2018 17:00:59 +0200
-Message-ID: <20180914150059.GS14988@piout.net>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <87ab2f80e3942dfca4eab896ba087e7b69bb7b12.1536916714.git-series.quentin.schulz@bootlin.com>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH 0/4] media: platform: Add Aspeed Video Engine driver
+Date: Fri, 14 Sep 2018 10:07:37 -0500
+Message-ID: <ffb15f70-baa9-de71-dfc5-8200b447a6a7@linux.vnet.ibm.com>
+References: <1535576973-8067-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <364c2565-fdb0-dd31-5852-6358066810a5@xs4all.nl>
+ <64db5bad-d774-f5a5-3003-b361941355a2@linux.vnet.ibm.com>
+ <37fba44b-f7ef-c877-5533-986d21831f9f@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87ab2f80e3942dfca4eab896ba087e7b69bb7b12.1536916714.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <37fba44b-f7ef-c877-5533-986d21831f9f@xs4all.nl>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Hans Verkuil <hverkuil@xs4all.nl>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, linux-clk@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org, mchehab@kernel.org, mturquette@baylibre.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/09/2018 11:44:28+0200, Quentin Schulz wrote:
-> PCB120 and PCB123 are both development boards based on Microsemi Ocelot
-> so let's use the same fitImage for both.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-> ---
->  arch/mips/generic/Kconfig                   |  6 +--
->  arch/mips/generic/Platform                  |  2 +-
->  arch/mips/generic/board-ocelot.its.S        | 40 ++++++++++++++++++++++-
->  arch/mips/generic/board-ocelot_pcb123.its.S | 23 +-------------
->  4 files changed, 44 insertions(+), 27 deletions(-)
->  create mode 100644 arch/mips/generic/board-ocelot.its.S
->  delete mode 100644 arch/mips/generic/board-ocelot_pcb123.its.S
-> 
-> diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-> index 08e33c6..fd60198 100644
-> --- a/arch/mips/generic/Kconfig
-> +++ b/arch/mips/generic/Kconfig
-> @@ -65,11 +65,11 @@ config FIT_IMAGE_FDT_XILFPGA
->  	  Enable this to include the FDT for the MIPSfpga platform
->  	  from Imagination Technologies in the FIT kernel image.
->  
-> -config FIT_IMAGE_FDT_OCELOT_PCB123
-> -	bool "Include FDT for Microsemi Ocelot PCB123"
-> +config FIT_IMAGE_FDT_OCELOT
-> +	bool "Include FDT for Microsemi Ocelot development platforms"
->  	select MSCC_OCELOT
->  	help
-> -	  Enable this to include the FDT for the Ocelot PCB123 platform
-> +	  Enable this to include the FDT for the Ocelot development platforms
->  	  from Microsemi in the FIT kernel image.
->  	  This requires u-boot on the platform.
->  
-> diff --git a/arch/mips/generic/Platform b/arch/mips/generic/Platform
-> index 879cb80..eaa19d1 100644
-> --- a/arch/mips/generic/Platform
-> +++ b/arch/mips/generic/Platform
-> @@ -16,5 +16,5 @@ all-$(CONFIG_MIPS_GENERIC)	:= vmlinux.gz.itb
->  its-y					:= vmlinux.its.S
->  its-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= board-boston.its.S
->  its-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= board-ni169445.its.S
-> -its-$(CONFIG_FIT_IMAGE_FDT_OCELOT_PCB123) += board-ocelot_pcb123.its.S
-> +its-$(CONFIG_FIT_IMAGE_FDT_OCELOT)	+= board-ocelot.its.S
->  its-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= board-xilfpga.its.S
-> diff --git a/arch/mips/generic/board-ocelot.its.S b/arch/mips/generic/board-ocelot.its.S
-> new file mode 100644
-> index 0000000..3da2398
-> --- /dev/null
-> +++ b/arch/mips/generic/board-ocelot.its.S
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> +/ {
-> +	images {
-> +		fdt@ocelot_pcb123 {
-> +			description = "MSCC Ocelot PCB123 Device Tree";
-> +			data = /incbin/("boot/dts/mscc/ocelot_pcb123.dtb");
-> +			type = "flat_dt";
-> +			arch = "mips";
-> +			compression = "none";
-> +			hash@0 {
-> +				algo = "sha1";
-> +			};
-> +		};
-> +
-> +		fdt@ocelot_pcb120 {
-> +			description = "MSCC Ocelot PCB120 Device Tree";
-> +			data = /incbin/("boot/dts/mscc/ocelot_pcb120.dtb");
-> +			type = "flat_dt";
-> +			arch = "mips";
-> +			compression = "none";
-> +			hash@0 {
-> +				algo = "sha1";
-> +			};
-> +		};
-> +	};
-> +
-> +	configurations {
-> +		conf@ocelot_pcb123 {
-> +			description = "Ocelot Linux kernel";
-> +			kernel = "kernel@0";
-> +			fdt = "fdt@ocelot_pcb123";
-> +		};
-> +
-> +		conf@ocelot_pcb120 {
-> +			description = "Ocelot Linux kernel";
-> +			kernel = "kernel@0";
-> +			fdt = "fdt@ocelot_pcb120";
-> +		};
-> +	};
-> +};
-> diff --git a/arch/mips/generic/board-ocelot_pcb123.its.S b/arch/mips/generic/board-ocelot_pcb123.its.S
-> deleted file mode 100644
-> index 5a7d5e1..0000000
-> --- a/arch/mips/generic/board-ocelot_pcb123.its.S
-> +++ /dev/null
-> @@ -1,23 +0,0 @@
-> -/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-> -/ {
-> -	images {
-> -		fdt@ocelot_pcb123 {
-> -			description = "MSCC Ocelot PCB123 Device Tree";
-> -			data = /incbin/("boot/dts/mscc/ocelot_pcb123.dtb");
-> -			type = "flat_dt";
-> -			arch = "mips";
-> -			compression = "none";
-> -			hash@0 {
-> -				algo = "sha1";
-> -			};
-> -		};
-> -	};
-> -
-> -	configurations {
-> -		conf@ocelot_pcb123 {
-> -			description = "Ocelot Linux kernel";
-> -			kernel = "kernel@0";
-> -			fdt = "fdt@ocelot_pcb123";
-> -		};
-> -	};
-> -};
-> -- 
-> git-series 0.9.1
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+On 09/14/2018 01:56 AM, Hans Verkuil wrote:
+> On 09/13/2018 09:11 PM, Eddie James wrote:
+>>
+>> On 09/03/2018 06:57 AM, Hans Verkuil wrote:
+>>> Hi Eddie,
+>>>
+>>> Thank you for your work on this. Interesting to see support for this SoC :-)
+>>>
+>>> On 08/29/2018 11:09 PM, Eddie James wrote:
+>>>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>>>> can capture and compress video data from digital or analog sources. With
+>>>> the Aspeed chip acting as a service processor, the Video Engine can
+>>>> capture the host processor graphics output.
+>>>>
+>>>> This series adds a V4L2 driver for the VE, providing a read() interface
+>>>> only. The driver triggers the hardware to capture the host graphics output
+>>>> and compress it to JPEG format.
+>>>>
+>>>> Testing on an AST2500 determined that the videobuf/streaming/mmap interface
+>>>> was significantly slower than the simple read() interface, so I have not
+>>>> included the streaming part.
+>>> Do you know why? It should be equal or faster, not slower.
+>> Yes, it seems to be an issue with the timing of the video engine
+>> interrupts compared with how a normal v4l2 application queues buffers.
+>> With the simple read() application, the driver can swap between DMA
+>> buffers freely and get a frame ahead. With the streaming buffers, I
+>> found the driver ran through the queue quite quickly, but then, once
+>> userspace queues again, we had to wait for the next frame, as I couldn't
+>> get a frame ahead since no buffers were available during that time
+>> period. This could possibly be solved with more buffers but this gets to
+>> require a lot of memory, since each buffer is allocated for the full
+>> frame size even though we only fill a fraction of it with JPEG data...
+> For stream I/O you usually need 3 buffers: one is being DMAed, one is
+> the next queued up frame for the DMA and the third is being processed
+> in userspace. If userspace doesn't process buffers fast enough, then
+> the driver will need to capture into the same buffer over and over again
+> until userspace finally queues another buffer.
+>
+> What I don't understand here is what the frame rate is. Is the capture
+> framerate the same as the host processor graphics output? Or is it
+> unrelated to that?
+
+Yes, the frame rate is the capture frame rate, unrelated to the host 
+graphics output frame rate. It's really just a bandwidth-saving measure.
+
+>
+> The problem with read() is that 1) it requires copying the video data, and
+> 2) you cannot use dmabuf for zero-copying pipelines. Whether or not 2 is
+> needed depends on your hardware.
+>
+>>> I reviewed about half of the driver, but then I stopped since there were too
+>>> many things missing.
+>>>
+>>> First of all, you need to test your driver with v4l2-compliance (available here:
+>>> https://git.linuxtv.org/v4l-utils.git/). Always compile from the git repo since
+>>> the versions from distros tend to be too old.
+>>>
+>>> Just run 'v4l2-compliance -d /dev/videoX' and fix all issues. Then run
+>>> 'v4l2-compliance -s -d /dev/videoX' to test streaming.
+>>>
+>>> This utility checks if the driver follows the V4L2 API correctly, implements
+>>> all ioctls that it should and fills in all the fields that it should.
+>>>
+>>> Please add the output of 'v4l2-compliance -s' to future versions of this patch
+>>> series: I don't accept V4L2 drivers without a clean report of this utility.
+>> Sure thing. Thanks for the guidance.
+>>
+>>> If you have any questions, then mail me or (usually quicker) ask on the #v4l
+>>> freenode irc channel (I'm in the CET timezone).
+>>>
+>>> One thing that needs more explanation: from what I could tell from the driver
+>>> the VIDIOC_G_FMT ioctl returns the detected format instead of the current
+>>> format. This is wrong. Instead you should implement the VIDIOC_*_DV_TIMINGS
+>>> ioctls and the V4L2_EVENT_SOURCE_CHANGE event.
+>>>
+>>> The normal sequence is that userspace queries the current timings with
+>>> VIDIOC_QUERY_DV_TIMINGS, if it finds valid timings, then it sets these
+>>> timings with _S_DV_TIMINGS. Now it can call G/S_FMT. If the timings
+>>> change, then the driver should detect that and send a V4L2_EVENT_SOURCE_CHANGE
+>>> event.
+>> OK I see. I ended up simplifying this part anyway since it's not
+>> possible to change the video size from the driver. I don't think there
+>> is a need for VIDIOC_QUERY_DV_TIMINGS now, but feel free to review.
+> You are capturing the host graphics output, right? So you need to know
+> the resolution, timings, etc. of that output? What if the host changes
+> resolution? That's something you need to know, or am I missing something?
+
+Yes, that's why I had those extra lines in set_format, so that if the 
+set format resolution matches the actual frame size, then it can 
+change... I guess I'm probably mis-using the API. Will look into the 
+source event change and timings calls.
+
+>
+> This is obviously a somewhat different environment than what I am used to,
+> so bear with me if I ask stupid questions...
+
+No problem!
+
+Thanks,
+Eddie
+>
+> Regards,
+>
+> 	Hans
+>
+>> Thanks again,
+>> Eddie
+>>
+>>> When the application receives this event it can take action, such as
+>>> increasing the size of the buffer for the jpeg data that it reads into.
+>>>
+>>> The reason for this sequence of events is that you can't just change the
+>>> format/resolution mid-stream without giving userspace the chance to
+>>> reconfigure.
+>>>
+>>> Regards,
+>>>
+>>> 	Hans
+>>>
+>>>> It's also possible to use an automatic mode for the VE such that
+>>>> re-triggering the HW every frame isn't necessary. However this wasn't
+>>>> reliable on the AST2400, and probably used more CPU anyway due to excessive
+>>>> interrupts. It was approximately 15% faster.
+>>>>
+>>>> The series also adds the necessary parent clock definitions to the Aspeed
+>>>> clock driver, with both a mux and clock divider.
+>>>>
+>>>> Eddie James (4):
+>>>>     clock: aspeed: Add VIDEO reset index definition
+>>>>     clock: aspeed: Setup video engine clocking
+>>>>     dt-bindings: media: Add Aspeed Video Engine binding documentation
+>>>>     media: platform: Add Aspeed Video Engine driver
+>>>>
+>>>>    .../devicetree/bindings/media/aspeed-video.txt     |   23 +
+>>>>    drivers/clk/clk-aspeed.c                           |   41 +-
+>>>>    drivers/media/platform/Kconfig                     |    8 +
+>>>>    drivers/media/platform/Makefile                    |    1 +
+>>>>    drivers/media/platform/aspeed-video.c              | 1307 ++++++++++++++++++++
+>>>>    include/dt-bindings/clock/aspeed-clock.h           |    1 +
+>>>>    6 files changed, 1379 insertions(+), 2 deletions(-)
+>>>>    create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+>>>>    create mode 100644 drivers/media/platform/aspeed-video.c
+>>>>
