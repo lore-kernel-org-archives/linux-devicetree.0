@@ -1,47 +1,170 @@
-Return-Path: <SRS0=GHC0=L2=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 3/3] dt-bindings: clock: renesas: cpg-mssr: Document r8a774c0
-Date: Wed, 12 Sep 2018 11:41:54 +0100
-Message-Id: <1536748914-27416-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1536748914-27416-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1536748914-27416-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=T86q=L4=pengutronix.de=mfe@kernel.org>
+Date: Fri, 14 Sep 2018 20:10:04 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 4/7] [media] v4l2-subdev: fix v4l2_subdev_get_try_*
+ dependency
+Message-ID: <20180914181004.i2yemrfbrr6xltvz@pengutronix.de>
+References: <20180813092508.1334-1-m.felsch@pengutronix.de>
+ <20180813092508.1334-5-m.felsch@pengutronix.de>
+ <20180914132538.5anptpaqt6cgkxow@paasikivi.fi.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180914132538.5anptpaqt6cgkxow@paasikivi.fi.intel.com>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch documents RZ/G2E (a.k.a. R8A774C0) bindings for the
-Clock Pulse Generator driver.
+Hi Sakari,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On 18-09-14 16:25, Sakari Ailus wrote:
+> Hi Marco,
+> 
+> On Mon, Aug 13, 2018 at 11:25:05AM +0200, Marco Felsch wrote:
+> > These helpers make us of the media-controller entity which is only
+> > available if the CONFIG_MEDIA_CONTROLLER is enabled.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  include/media/v4l2-subdev.h | 100 ++++++++++++++++++------------------
+> >  1 file changed, 50 insertions(+), 50 deletions(-)
+> > 
+> > diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> > index ce48f1fcf295..79c066934ad2 100644
+> > --- a/include/media/v4l2-subdev.h
+> > +++ b/include/media/v4l2-subdev.h
+> > @@ -912,6 +912,56 @@ struct v4l2_subdev_fh {
+> >  #define to_v4l2_subdev_fh(fh)	\
+> >  	container_of(fh, struct v4l2_subdev_fh, vfh)
+> >  
+> > +extern const struct v4l2_file_operations v4l2_subdev_fops;
+> > +
+> > +/**
+> > + * v4l2_set_subdevdata - Sets V4L2 dev private device data
+> > + *
+> > + * @sd: pointer to &struct v4l2_subdev
+> > + * @p: pointer to the private device data to be stored.
+> > + */
+> > +static inline void v4l2_set_subdevdata(struct v4l2_subdev *sd, void *p)
+> > +{
+> > +	sd->dev_priv = p;
+> > +}
+> > +
+> > +/**
+> > + * v4l2_get_subdevdata - Gets V4L2 dev private device data
+> > + *
+> > + * @sd: pointer to &struct v4l2_subdev
+> > + *
+> > + * Returns the pointer to the private device data to be stored.
+> > + */
+> > +static inline void *v4l2_get_subdevdata(const struct v4l2_subdev *sd)
+> > +{
+> > +	return sd->dev_priv;
+> > +}
+> > +
+> > +/**
+> > + * v4l2_set_subdev_hostdata - Sets V4L2 dev private host data
+> > + *
+> > + * @sd: pointer to &struct v4l2_subdev
+> > + * @p: pointer to the private data to be stored.
+> > + */
+> > +static inline void v4l2_set_subdev_hostdata(struct v4l2_subdev *sd, void *p)
+> > +{
+> > +	sd->host_priv = p;
+> > +}
+> > +
+> > +/**
+> > + * v4l2_get_subdev_hostdata - Gets V4L2 dev private data
+> > + *
+> > + * @sd: pointer to &struct v4l2_subdev
+> > + *
+> > + * Returns the pointer to the private host data to be stored.
+> > + */
+> > +static inline void *v4l2_get_subdev_hostdata(const struct v4l2_subdev *sd)
+> > +{
+> > +	return sd->host_priv;
+> > +}
+> 
+> Could you leave the functions dealing with host_priv where they are? I'd
+> like to avoid expanding their use; rather reduce it. The field is
+> problematic in some cases and generally not really needed either.
 
-diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-index 5e46e6b..1b4ebe3 100644
---- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-+++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
-@@ -18,6 +18,7 @@ Required Properties:
-       - "renesas,r8a7745-cpg-mssr" for the r8a7745 SoC (RZ/G1E)
-       - "renesas,r8a77470-cpg-mssr" for the r8a77470 SoC (RZ/G1C)
-       - "renesas,r8a774a1-cpg-mssr" for the r8a774a1 SoC (RZ/G2M)
-+      - "renesas,r8a774c0-cpg-mssr" for the r8a774c0 SoC (RZ/G2E)
-       - "renesas,r8a7790-cpg-mssr" for the r8a7790 SoC (R-Car H2)
-       - "renesas,r8a7791-cpg-mssr" for the r8a7791 SoC (R-Car M2-W)
-       - "renesas,r8a7792-cpg-mssr" for the r8a7792 SoC (R-Car V2H)
-@@ -37,9 +38,9 @@ Required Properties:
-   - clocks: References to external parent clocks, one entry for each entry in
-     clock-names
-   - clock-names: List of external parent clock names. Valid names are:
--      - "extal" (r7s9210, r8a7743, r8a7745, r8a77470, r8a774a1, r8a7790,
--		 r8a7791, r8a7792, r8a7793, r8a7794, r8a7795, r8a7796, r8a77965,
--		 r8a77970, r8a77980, r8a77990, r8a77995)
-+      - "extal" (r7s9210, r8a7743, r8a7745, r8a77470, r8a774a1, r8a774c0,
-+		 r8a7790, r8a7791, r8a7792, r8a7793, r8a7794, r8a7795, r8a7796,
-+		 r8a77965, r8a77970, r8a77980, r8a77990, r8a77995)
-       - "extalr" (r8a774a1, r8a7795, r8a7796, r8a77965, r8a77970, r8a77980)
-       - "usb_extal" (r8a7743, r8a7745, r8a77470, r8a7790, r8a7791, r8a7793,
- 		     r8a7794)
--- 
-2.7.4
+Sure, I just moved the v4l2_subdev_get_try_* formats to the
+CONFIG_MEDIA_CONTROLLER ifdef block to avoid a second ifdef block (see
+below). Git made it that way.. and I'm with you, the patch looks not good.
+Should I open a 2nd ifdef CONFIG_MEDIA_CONTROLLER block instead?
+
+Regards,
+Marco
+
+> 
+> > +
+> > +#ifdef CONFIG_MEDIA_CONTROLLER
+> > +
+> >  /**
+> >   * v4l2_subdev_get_try_format - ancillary routine to call
+> >   *	&struct v4l2_subdev_pad_config->try_fmt
+> > @@ -978,56 +1028,6 @@ static inline struct v4l2_rect
+> >  #endif
+> >  }
+> >  
+> > -extern const struct v4l2_file_operations v4l2_subdev_fops;
+> > -
+> > -/**
+> > - * v4l2_set_subdevdata - Sets V4L2 dev private device data
+> > - *
+> > - * @sd: pointer to &struct v4l2_subdev
+> > - * @p: pointer to the private device data to be stored.
+> > - */
+> > -static inline void v4l2_set_subdevdata(struct v4l2_subdev *sd, void *p)
+> > -{
+> > -	sd->dev_priv = p;
+> > -}
+> > -
+> > -/**
+> > - * v4l2_get_subdevdata - Gets V4L2 dev private device data
+> > - *
+> > - * @sd: pointer to &struct v4l2_subdev
+> > - *
+> > - * Returns the pointer to the private device data to be stored.
+> > - */
+> > -static inline void *v4l2_get_subdevdata(const struct v4l2_subdev *sd)
+> > -{
+> > -	return sd->dev_priv;
+> > -}
+> > -
+> > -/**
+> > - * v4l2_set_subdev_hostdata - Sets V4L2 dev private host data
+> > - *
+> > - * @sd: pointer to &struct v4l2_subdev
+> > - * @p: pointer to the private data to be stored.
+> > - */
+> > -static inline void v4l2_set_subdev_hostdata(struct v4l2_subdev *sd, void *p)
+> > -{
+> > -	sd->host_priv = p;
+> > -}
+> > -
+> > -/**
+> > - * v4l2_get_subdev_hostdata - Gets V4L2 dev private data
+> > - *
+> > - * @sd: pointer to &struct v4l2_subdev
+> > - *
+> > - * Returns the pointer to the private host data to be stored.
+> > - */
+> > -static inline void *v4l2_get_subdev_hostdata(const struct v4l2_subdev *sd)
+> > -{
+> > -	return sd->host_priv;
+> > -}
+> > -
+> > -#ifdef CONFIG_MEDIA_CONTROLLER
+> > -
+> >  /**
+> >   * v4l2_subdev_link_validate_default - validates a media link
+> >   *
+> 
+> -- 
+> Kind regards,
+> 
+> Sakari Ailus
+> sakari.ailus@linux.intel.com
+> 
