@@ -1,43 +1,83 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Sat, 15 Sep 2018 07:28:26 +0800
-Message-ID: <20180914232826.GA1497@guoren-Inspiron-7460>
-References: <cover.1536757532.git.ren_guo@c-sky.com>
- <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
- <20180914143719.GA27689@guoren-Inspiron-7460>
- <CAK8P3a0fZYbd4a2nBnExPVXKs-898R9vaCSa4kXyz0qA=rCzZQ@mail.gmail.com>
- <20180914160231.GA32161@guoren-Inspiron-7460>
- <CAK8P3a0ZBBL8LHoV=tDr3Ner6wRK=QcrepciZqCPNEHk=B2n7A@mail.gmail.com>
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: Re: [PATCH] iio: proximity: Add driver support for ST's VL53L0X ToF
+ ranging sensor.
+Date: Sat, 15 Sep 2018 10:25:57 +0800
+Message-ID: <20180915022557.GA18453@Eros>
+References: <20180913022229.21563-1-songqiang.1304521@gmail.com>
+ <20180914184322.GA9481@himanshu-Vostro-3559>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a0ZBBL8LHoV=tDr3Ner6wRK=QcrepciZqCPNEHk=B2n7A@mail.gmail.com>
+In-Reply-To: <20180914184322.GA9481@himanshu-Vostro-3559>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Himanshu Jha <himanshujha199640@gmail.com>
+Cc: Song Qiang <songqiang1304521@gmail.com>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2018 at 06:09:35PM +0200, Arnd Bergmann wrote:
-> On Fri, Sep 14, 2018 at 6:02 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > On Fri, Sep 14, 2018 at 04:46:56PM +0200, Arnd Bergmann wrote:
-> > > On Fri, Sep 14, 2018 at 4:37 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > > One level below that, you can of course choose to build
-> > > a distro with only 64-bit time_t regardless of whether there
-> > > is still support for 32-bit time_t in kernel and glibc or not.
-> > Do you mean I could merge kernel port into linux-4.19 or linux-4.20.
-> > But let glibc merged after linux-4.21 and csky glibc only support
-> > time64 syscalls ?
+On Sat, Sep 15, 2018 at 12:13:22AM +0530, Himanshu Jha wrote:
+> Hi Song,
 > 
-> Yes, that's what I meant. Note that it won't get merged into 4.19:
-> the merge window for that was after the 4.18 release and no
-> new features are getting merged for 4.19 that have not made it
-> into 4.19-rc1 already.
+> On Thu, Sep 13, 2018 at 10:22:29AM +0800, Song Qiang wrote:
+> > This driver was originally written by ST in 2016 as a misc input device
+> > driver, and hasn't been maintained for a long time. I grabbed some code
+> > from it's API and reformed it into a iio proximity device driver.
+> > This version of driver uses i2c bus to talk to the sensor and
+> > polling for measuring completes, so no irq line is needed.
+> > This version of driver supports only one-shot mode, and it can be
+> > tested with reading from
+> > /sys/bus/iio/devices/iio:deviceX/in_distance_raw
+> > 
+> > Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
 > 
-> Getting your code into linux-next now is the prerequisite for you
-> sending a pull request during the 4.20 window.
-Got it, thank you very much.
+> I'm sorry but you probably need another revision.
+> 
+> And don't feel embarrassed, I mean this is your first patch
+> in the kernel and that's an IIO driver!!
+> 
+> I used to fix spelling mistakes, align parameters, ... an year ago
+> and even those got rejected several times ;)
+> 
+> > ---
+> 
+> > +ST VL53L0X ToF RANGER(I2C) IIO DRIVER
+> > +M:	Song Qiang <songqiang.1304521@gmail.com>
+> > +L:	linux-iio@vger.kernel.org
+> > +S:	Maintained
+> > +F:	drivers/iio/proximity/vl53l0x-i2c.c
+> > +F:	Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+> 
+> Obligations!
+> 
+> Just don't go "Keyser Söze" once you're done with your major
+> at University. You would need to test/review patches in future.
+> 
+> Not a big deal though..
+> 
+> > +
+> > +static const struct of_device_id st_vl53l0x_dt_match[] = {
+> > +	{ .compatible = "st,vl53l0x-i2c", },
+> > +	{ }
+> > +};
+> 
+> MODULE_DEVICE_TABLE(of, st_vl53l0x_dt_match); ?
+> 
+> 
+> Thanks
+> -- 
+> Himanshu Jha
+> Undergraduate Student
+> Department of Electronics & Communication
+> Guru Tegh Bahadur Institute of Technology
 
- Guo Ren
+Hi Himanshu,
+
+I think I'll do some double check on it to make sure it's good, compare
+my patch with other drivers to see some more problems I miss.
+Thanks for your kindness, and with or without this patch accepted, I've
+been feeling glad to get connected with the community and learned a lot
+from people like you. :)
+
+yours,
+Song Qiang
