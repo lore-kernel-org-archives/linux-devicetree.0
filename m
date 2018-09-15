@@ -1,328 +1,627 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: [PATCH v5] iio: proximity: Add driver support for ST's VL53L0X ToF ranging sensor.
-Date: Sat, 15 Sep 2018 17:57:52 +0800
-Message-ID: <20180915095752.8116-1-songqiang.1304521@gmail.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v4] ARM: dts: pxa: add mioa701 board description
+Date: Sat, 15 Sep 2018 13:02:06 +0200
+Message-ID: <20180915110206.23110-1-robert.jarzmik@free.fr>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, himanshujha199640@gmail.com, Song Qiang <songqiang.1304521@gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Marcel Ziswiler <marcel@ziswiler.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-This driver was originally written by ST in 2016 as a misc input device
-driver, and hasn't been maintained for a long time. I grabbed some code
-from it's API and reformed it into an iio proximity device driver.
-This version of driver uses i2c bus to talk to the sensor and
-polling for measuring completes, so no irq line is needed.
-This version of driver supports only one-shot mode, and it can be
-tested with reading from
-/sys/bus/iio/devices/iio:deviceX/in_distance_raw
+Add device-tree description of the Mitac MIO A701 board.
+This is aimed at replacing mioa701.c board file, and once stabilized,
+the leftover, such as the suspend resume mechanics will rely on a new
+IPL, and not the legacy Windows CE one.
 
-Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
-Changes in v5:
-	- Correct some spell problems.
-	- Change tries-- to --tries to fix the count error.
-	- Add MODULE_DEVICE_TABLE().
-	- Add some comments.
+Since v1: fix lcd_supply and lcd_backlight
+          These were depending on my internal tree changes, fit it.
+Since v2: take into account Rob's comments
+Since v3: take into account Marcel's comments
 
-Changes in v4:
-	- Add datasheet link, default i2c address and TODO list.
-	- Make capitalization of defines consistent.
-	- Replace i2c_transfer() with i2c_smbus_read_i2c_block_data().
-	- Remove IIO_CHAN_SOFT_TIMESTAMP() since no buffer/trigger
-	  support.
-	- Add information to MAINTAINERS.
+This patch deserves some special "love review". As it will probably
+serve for a more broad pxa conversion to devicetree of the other boards,
+and because it touches almost all domains for a pxa platform (camera,
+video, audio, i2c, ...), it should be as clean as possible so that
+mistakes are not carried on ...
 
-Changes in v3:
-	- Recover ST's copyright.
-	- Clean up indio_dev member in vl53l0x_data struct since it's
-	  useless now.
-	- Replace __le16_to_cpu() with le16_to_cpu().
-	- Remove the iio_device_{claim|release}_direct_mode() since it's
-	  only needed when we use buffered mode.
-	- Clean up some coding style problems.
+Therefore I expect the review of this one to be long (ie. it won't land
+for v4.19), until it looks good enough.
+---
+ arch/arm/boot/dts/Makefile    |   2 +
+ arch/arm/boot/dts/mioa701.dts | 570 ++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 572 insertions(+)
+ create mode 100644 arch/arm/boot/dts/mioa701.dts
 
-Changes in v2:
-	- Clean up the register table.
-	- Sort header files declarations.
-	- Replace some bit definations with GENMASK() and BIT().
-	- Clean up some code and comments that's useless for now.
-	- Change the order of some the definations of some variables to reversed
-	  xmas tree order.
-	- Using do...while() rather while and check.
-	- Replace pr_err() with dev_err().
-	- Remove device id declaration since we recommend to use DT.
-	- Remove .owner = THIS_MODULE.
-	- Replace probe() with probe_new() hook.
-	- Remove IIO_BUFFER and IIO_TRIGGERED_BUFFER dependences.
-	- Change the driver module name to vl53l0x-i2c.
-	- Align all the parameters if they are in the same function with open
-	  parentheses.
-	- Replace iio_device_register() with devm_iio_device_register
-	  for better resource management.
-	- Remove the vl53l0x_remove() since it's not needed.
-	- Remove dev_set_drvdata() since it's already setted above.
-
- .../bindings/iio/proximity/vl53l0x.txt        |  12 ++
- MAINTAINERS                                   |   7 +
- drivers/iio/proximity/Kconfig                 |  11 ++
- drivers/iio/proximity/Makefile                |   2 +
- drivers/iio/proximity/vl53l0x-i2c.c           | 180 ++++++++++++++++++
- 5 files changed, 212 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
- create mode 100644 drivers/iio/proximity/vl53l0x-i2c.c
-
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5bd3de87c33..8809f4e2244d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -775,6 +775,8 @@ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ dtb-$(CONFIG_ARCH_OXNAS) += \
+ 	ox810se-wd-mbwe.dtb \
+ 	ox820-cloudengines-pogoplug-series-3.dtb
++dtb-$(CONFIG_ARCH_PXA) += \
++	mioa701.dtb
+ dtb-$(CONFIG_ARCH_QCOM) += \
+ 	qcom-apq8060-dragonboard.dtb \
+ 	qcom-apq8064-arrow-sd-600eval.dtb \
+diff --git a/arch/arm/boot/dts/mioa701.dts b/arch/arm/boot/dts/mioa701.dts
 new file mode 100644
-index 000000000000..ab9a9539fec4
+index 000000000000..9e368361d498
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-@@ -0,0 +1,12 @@
-+ST VL53L0X ToF ranging sensor
-+
-+Required properties:
-+	- compatible: must be "st,vl53l0x-i2c"
-+	- reg: i2c address where to find the device
-+
-+Example:
-+
-+vl53l0x@29 {
-+	compatible = "st,vl53l0x-i2c";
-+	reg = <0x29>;
-+};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 967ce8cdd1cc..a35d80e63506 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13510,6 +13510,13 @@ L:	linux-i2c@vger.kernel.org
- S:	Maintained
- F:	drivers/i2c/busses/i2c-stm32*
- 
-+ST VL53L0X ToF RANGER(I2C) IIO DRIVER
-+M:	Song Qiang <songqiang.1304521@gmail.com>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/proximity/vl53l0x-i2c.c
-+F:	Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-+
- STABLE BRANCH
- M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
- L:	stable@vger.kernel.org
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index f726f9427602..5f421cbd37f3 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -79,4 +79,15 @@ config SRF08
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called srf08.
- 
-+config VL53L0X_I2C
-+	tristate "STMicroelectronics VL53L0X ToF ranger sensor (I2C)"
-+	depends on I2C
-+	help
-+	  Say Y here to build a driver for STMicroelectronics VL53L0X
-+	  ToF ranger sensors with i2c interface.
-+	  This driver can be used to measure the distance of objects.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vl53l0x-i2c.
-+
- endmenu
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 4f4ed45e87ef..dedfb5bf3475 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -10,3 +10,5 @@ obj-$(CONFIG_RFD77402)		+= rfd77402.o
- obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SRF08)		+= srf08.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-+obj-$(CONFIG_VL53L0X_I2C)	+= vl53l0x-i2c.o
-+
-diff --git a/drivers/iio/proximity/vl53l0x-i2c.c b/drivers/iio/proximity/vl53l0x-i2c.c
-new file mode 100644
-index 000000000000..4837cc2fff19
---- /dev/null
-+++ b/drivers/iio/proximity/vl53l0x-i2c.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0+
++++ b/arch/arm/boot/dts/mioa701.dts
+@@ -0,0 +1,570 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Support for ST VL53L0X FlightSense ToF Ranging Sensor on a i2c bus.
++ *  Copyright (C) 2018 Robert Jarzmik <robert.jarzmik@free.fr>
 + *
-+ * Copyright (C) 2016 STMicroelectronics Imaging Division.
-+ * Copyright (C) 2018 Song Qiang <songqiang.1304521@gmail.com>
-+ *
-+ * Datasheet available at
-+ * <https://www.st.com/resource/en/datasheet/vl53l0x.pdf>
-+ *
-+ * Default 7-bit i2c slave address 0x29.
-+ *
-+ * TODO: FIFO buffer, continuous mode, interrupts, range selection,
-+ * sensor ID check.
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  publishhed by the Free Software Foundation.
 + */
 +
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/delay.h>
++/dts-v1/;
++#include "pxa27x.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/input/gpio-keys.h>
++#include <dt-bindings/clock/pxa-clock.h>
 +
-+#include <linux/iio/iio.h>
++/ {
++	model = "Mitac Mio A701 Board";
++	compatible = "mitac,mioa701", "marvell,pxa270";
 +
-+#define VL53L0X_DRV_NAME				"vl53l0x-i2c"
++	chosen {
++		bootargs = "mtdparts=docg3.0:256k@3456k(barebox)ro,256k(barebox-logo),128k(barebox-env),4M(kernel),-(root) ubi.mtd=4 rootfstype=ubifs root=ubi0:linux_root ro";
++	};
 +
-+#define VL_REG_SYSRANGE_START				0x00
++	memory {
++		reg = <0xa0000000 0x04000000>;
 +
-+#define VL_REG_SYSRANGE_MODE_MASK			GENMASK(3, 0)
-+#define VL_REG_SYSRANGE_MODE_SINGLESHOT			0x00
-+#define VL_REG_SYSRANGE_MODE_START_STOP			BIT(0)
-+#define VL_REG_SYSRANGE_MODE_BACKTOBACK			BIT(1)
-+#define VL_REG_SYSRANGE_MODE_TIMED			BIT(2)
-+#define VL_REG_SYSRANGE_MODE_HISTOGRAM			BIT(3)
++		reserved-memory {
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
-+#define VL_REG_SYS_SEQUENCE_CFG				BIT(0)
-+#define VL_REG_SYS_INTERMEASUREMENT_PERIOD		BIT(2)
-+#define VL_REG_SYS_RANGE_CFG				0x09
-+#define VL_REG_SYS_INT_GPIO_DISABLED			0x00
-+#define VL_REG_SYS_INT_GPIO_LEVEL_LOW			BIT(0)
-+#define VL_REG_SYS_INT_GPIO_LEVEL_HIGH			BIT(1)
-+#define VL_REG_SYS_INT_GPIO_OUT_OF_WINDOW		0x03
-+#define VL_REG_SYS_INT_GPIO_NEW_SAMPLE_READY		BIT(2)
-+#define VL_REG_SYS_INT_CFG_GPIO				0x0A
-+#define VL_REG_SYS_INT_CLEAR				0x0B
-+#define VL_REG_GPIO_HV_MUX_ACTIVE_HIGH			0x84
++			pstore_region:region@a2000000 {
++				compatible = "linux,contiguous-memory-region";
++				reg = <0xa2000000 0x100000>;
++			};
++		};
++	};
 +
-+#define VL_REG_RESULT_INT_STATUS			0x13
-+#define VL_REG_RESULT_RANGE_STATUS			0x14
-+#define VL_REG_RESULT_RANGE_STATUS_COMPLETE		BIT(0)
++	cpus {
++		cpu {
++			cpu-supply = <&vcc_core>;
++		};
++	};
 +
-+/* Check contents of these registers to verify the device. */
-+#define VL_REG_IDENTIFICATION_MODEL_ID			0xC0
-+#define VL_REG_IDENTIFICATION_REVISION_ID		0xC2
++	pxabus {
++		pinctrl: pinctrl@40e00000 {
++			status = "okay";
 +
-+struct vl53l0x_data {
-+	struct i2c_client *client;
++			pinctrl_ac97_default: ac97-default {
++				PMMUX(hpjack-detect, 12, gpio_in);
++				PMMUX(ac97-bitclk, 28, AC97_BITCLK);
++				PMMUX(ac97-sdata-in-0, 29, AC97_SDATA_IN_0);
++				PMMUX(ac97-sdata-out, 30, AC97_SDATA_OUT);
++				PMMUX(ac97-sync, 31, AC97_SYNC);
++				PMMUX(ac97-sysclk, 89, AC97_SYSCLK);
++			};
++
++			pinctrl_btuart_default: btuart-default {
++				PMMUX(btuart-nactivity, 14, gpio_in);
++				PMMUX(btuart-rxd, 42, BTRXD);
++				PMMUX(btuart-txd, 43, BTTXD);
++				PMMUX(btuart-cts, 44, BTCTS);
++				PMMUX(btuart-rts, 45, BTRTS);
++				PMMUX_LPM_LOW(bt-on, 83, gpio_out);
++				PMMUX_LPM_HIGH(bt-unknown, 77, gpio_out);
++				PMMUX_LPM_HIGH(bt-nreset, 86, gpio_out);
++			};
++
++			pinctrl_ffuart_default: ffuart-default {
++				PMMUX(ffuart-rxd, 34, FFRXD);
++				PMMUX(ffuart-cts, 35, FFCTS);
++				PMMUX(ffuart-dcd, 36, FFDCD);
++				PMMUX(ffuart-dsr, 37, FFDSR);
++				PMMUX(ffuart-txd, 39, FFTXD);
++				PMMUX(ffuart-dtr, 40, FFDTR);
++				PMMUX(ffuart-rts, 41, FFRTS);
++				PMMUX_LPM_LOW(gsm-reset, 24, gpio_out);
++				PMMUX(gsm-is-on, 25, gpio_in);
++				PMMUX_LPM_HIGH(gsm-nset-on, 88, gpio_out);
++				PMMUX_LPM_HIGH(gsm-nset-off, 90, gpio_out);
++				PMMUX(gsm-event-available, 113, gpio_in);
++				PMMUX_LPM_HIGH(gsm-dte-state, 114, gpio_out);
++			};
++
++			pinctrl_gpiokeys_default: gpiokeys-default {
++				PMMUX(key-power, 0, gpio_in);
++				PMMUX(key-volume_up, 93, gpio_in);
++				PMMUX(key-volume_down, 94, gpio_in);
++			};
++
++			pinctrl_keypad_default: keypad-default {
++				PMMUX(keypad-mkin0, 100, KP_MKIN<0>);
++				PMMUX(keypad-mkin1, 101, KP_MKIN<1>);
++				PMMUX(keypad-mkin2, 102, KP_MKIN<2>);
++				PMMUX(keypad-mkout0, 103, KP_MKOUT<0>);
++				PMMUX(keypad-mkout1, 104, KP_MKOUT<1>);
++				PMMUX(keypad-mkout2, 105, KP_MKOUT<2>);
++			};
++
++			pinctrl_i2c_default: i2c-default {
++				PMMUX(i2c-scl, 117, SCL);
++				PMMUX(i2c-sda, 118, SDA);
++			};
++
++			pinctrl_lcd_default: lcd-default {
++				PMMUX(ldd0, 58, LDD<0>);
++				PMMUX(ldd1, 59, LDD<1>);
++				PMMUX(ldd2, 60, LDD<2>);
++				PMMUX(ldd3, 61, LDD<3>);
++				PMMUX(ldd4, 62, LDD<4>);
++				PMMUX(ldd5, 63, LDD<5>);
++				PMMUX(ldd6, 64, LDD<6>);
++				PMMUX(ldd7, 65, LDD<7>);
++				PMMUX(ldd8, 66, LDD<8>);
++				PMMUX(ldd9, 67, LDD<9>);
++				PMMUX(ldd10, 68, LDD<10>);
++				PMMUX(ldd11, 69, LDD<11>);
++				PMMUX(ldd12, 70, LDD<12>);
++				PMMUX(ldd13, 71, LDD<13>);
++				PMMUX(ldd14, 72, LDD<14>);
++				PMMUX(ldd16, 73, LDD<15>);
++				PMMUX(lcd-fclk, 74, L_FCLK_RD);
++				PMMUX(lcd-lclk, 75, L_LCLK_A0);
++				PMMUX(lcd-pclk, 76, L_PCLK_WR);
++				PMMUX(lcd-power, 87, gpio_out);
++			};
++
++			pinctrl_leds_default: leds-default {
++				PMMUX_LPM_HIGH(led-charging, 10, gpio_out);
++				PMMUX_LPM_HIGH(led-vibra, 82, gpio_out);
++				PMMUX_LPM_HIGH(led-blue, 97, gpio_out);
++				PMMUX_LPM_HIGH(led-orange, 98, gpio_out);
++				PMMUX_LPM_HIGH(led-keyboard, 115, gpio_out);
++			};
++
++			pinctrl_pwm0_default: pwm0-defaut {
++				PMMUX(pwm0, 16, PWM_OUT<0>);
++			};
++
++			pinctrl_qci_default: qci-defaut {
++				PMMUX(cif-dd6, 17, CIF_DD<6>);
++				PMMUX(cif-dd3, 50, CIF_DD<3>);
++				PMMUX(cif-dd2, 51, CIF_DD<2>);
++				PMMUX(cif-dd4, 52, CIF_DD<4>);
++				PMMUX(cif-mclk, 53, CIF_MCLK);
++				PMMUX(cif-pclk, 54, CIF_PCLK);
++				PMMUX_LPM_HIGH(mt9m111-nOE, 56, gpio_out);
++				PMMUX(cif-dd1, 55, CIF_DD<1>);
++				PMMUX(cif-dd0, 81, CIF_DD<0>);
++				PMMUX(cif-dd5, 48, CIF_DD<5>);
++				PMMUX(cif-fv, 84, CIF_FV);
++				PMMUX(cif-lv, 85, CIF_LV);
++				PMMUX(cif-dd7, 108, CIF_DD<7>);
++			};
++
++			pinctrl_mmc_default: mmc-default {
++				PMMUX(sd-insert, 15, gpio_in);
++				PMMUX(mmclk, 32, MMCLK);
++				PMMUX(sd-ro, 78, gpio_in);
++				PMMUX_LPM_LOW(sd-enable, 91, gpio_out);
++				PMMUX(mmdat0, 92, MMDAT<0>);
++				PMMUX(mmdat1, 109, MMDAT<1>);
++				PMMUX(mmdat2, 110, MMDAT<2>);
++				PMMUX(mmdat3, 111, MMDAT<3>);
++				PMMUX(mmcmd, 112, MMCMD);
++			};
++
++			pinctrl_stuart_default: stuart-default {
++				PMMUX_LPM_LOW(gps-unknown1, 23, gpio_out);
++				PMMUX_LPM_LOW(gps-on, 26, gpio_out);
++				PMMUX_LPM_LOW(gps-nreset, 27, gpio_out);
++				PMMUX(stuart-rxd, 46, STRXD);
++				PMMUX(stuart-txd, 47, STTXD);
++				PMMUX_LPM_LOW(gps-unknown2, 106, gpio_out);
++				PMMUX_LPM_LOW(gps-unknown3, 107, gpio_out);
++			};
++
++			pinctrl_usb_default: usb-default {
++				PMMUX(n-usb-detect, 13, gpio_in);
++				PMMUX_LPM_LOW(n-dplus-pullup, 22, gpio_out);
++			};
++
++			pinctrl_power_default: power-default {
++				PMMUX_LPM_LOW(charge-enable, 9, gpio_out);
++				PMMUX(charge-vdrop, 80, gpio_out);
++				PMMUX(ac-detect, 96, gpio_in);
++			};
++		};
++
++		pwm0: pwm@40b00000 {
++		      status = "okay";
++		};
++
++		gpio: gpio@40e00000 {
++			status = "okay";
++		};
++
++		ffuart: serial@40100000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_ffuart_default>;
++			status = "okay";
++		};
++
++		btuart: serial@40200000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_btuart_default>;
++			status = "okay";
++		};
++
++		stuart: serial@40700000 {
++			status = "okay";
++		};
++
++		usb2phy: gpio-vbus@13 {
++			compatible = "usb-nop-xceiv";
++			#phy-cells = <1>;
++			vbus-detect-gpio = <&gpio 13 GPIO_ACTIVE_LOW>;
++			wakeup;
++		};
++
++		pxa27x_udc: udc@40600000 {
++			status = "okay";
++			gpios = <&gpio 22 GPIO_ACTIVE_HIGH>;
++			phys = <&usb2phy>;
++			phys-names = "usb2phy";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_usb_default>;
++		};
++
++		pwri2c: i2c@40f00180 {
++			status = "okay";
++
++			regulator@14 {
++				compatible = "maxim,max1586";
++				reg = <0x14>;
++				v3-gain = <1000000>;
++
++				regulators {
++					vcc_core: v3 {
++						regulator-name = "vcc_core";
++						regulator-compatible = "Output_V3";
++						regulator-min-microvolt = <1000000>;
++						regulator-max-microvolt = <1705000>;
++						regulator-always-on;
++					};
++				};
++			};
++		};
++
++		pxai2c1: i2c@40301680 {
++			mrvl,i2c-fast-mode;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_i2c_default>;
++			status = "okay";
++
++			camera@5d {
++				compatible = "micron,mt9m111";
++				reg = <0x5d>;
++				gpios = <&gpio 56 GPIO_ACTIVE_HIGH>;
++				remote = <&pxa_camera>;
++
++				port {
++					mt9m111_1: endpoint {
++						bus-width = <8>;
++						remote-endpoint = <&pxa_camera>;
++					};
++				};
++			};
++		};
++
++		keypad: keypad@41500000 {
++			status = "okay";
++			keypad,num-rows = <3>;
++			keypad,num-columns = <3>;
++			linux,keymap = <
++				0x00000067	/* KEY_UP */
++				0x0001006a	/* KEY_RIGHT */
++				0x000200e2	/* KEY_MEDIA */
++				0x0100006c	/* KEY_DOWN */
++				0x0101001c	/* KEY_ENTER */
++				0x010200da	/* KEY_CONNECT */
++				0x02000069	/* KEY_LEFT */
++				0x020100a9	/* KEY_PHONE */
++				0x020200d4>;	/* KEY_CAMERA */
++			marvell,debounce-interval = <0>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_keypad_default>;
++		};
++
++		gpio-keys {
++			compatible = "gpio-keys";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			autorepeat;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_gpiokeys_default>;
++			status = "okay";
++
++			power-button {
++				label = "GPIO Key Power";
++				linux,code = <174>;
++				gpios = <&gpio 0 GPIO_ACTIVE_HIGH>;
++				wakeup-source;
++				wakeup-event-action = <EV_ACT_ASSERTED>;
++			};
++
++			hp-jack-detect {
++				label = "HP jack detect";
++				linux,code = <211>;
++				gpios = <&gpio 12 GPIO_ACTIVE_HIGH>;
++			};
++
++			volume-up {
++				label = "Volume Up Key";
++				linux,code = <115>;
++				gpios = <&gpio 93 GPIO_ACTIVE_HIGH>;
++			};
++
++			volume-down {
++				label = "Volume Down Key";
++				linux,code = <114>;
++				gpios = <&gpio 94 GPIO_ACTIVE_HIGH>;
++			};
++		};
++
++		mmc0: mmc@41100000 {
++			vmmc-supply = <&reg_vmmc>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_mmc_default>;
++			bus-width = <4>;
++			cd-gpios = <&gpio 15 GPIO_ACTIVE_LOW>;
++			wp-gpios = <&gpio 78 GPIO_ACTIVE_HIGH>;
++			status = "okay";
++		};
++
++		pxa_camera: imaging@50000000 {
++			status = "okay";
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_qci_default>;
++
++			port {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				/* Parallel bus endpoint */
++				qci: endpoint@0 {
++					reg = <0>;
++					remote-endpoint = <&mt9m111_1>;
++					bus-width = <8>;
++					hsync-active = <0>;
++					vsync-active = <0>;
++					pclk-sample = <1>;
++				};
++			};
++		};
++
++		rtc@40900000 {
++			status = "okay";
++		};
++
++		lcd-controller@40500000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_lcd_default>;
++			status = "okay";
++
++			port {
++				lcdc_out: endpoint {
++					remote-endpoint = <&panel_in>;
++					bus-width = <16>;
++				};
++			};
++		};
++
++		ac97: sound@40500000 {
++			compatible = "marvell,pxa270-ac97";
++			reg = < 0x40500000 0x1000 >;
++			interrupts = <14>;
++			reset-gpios = <&gpio 95 GPIO_ACTIVE_HIGH>;
++			pinctrl-names = "default";
++			pinctrl-0 = < &pinctrl_ac97_default >;
++			clocks = <&clks CLK_AC97>, <&clks CLK_AC97CONF>;
++			clock-names = "AC97CLK", "AC97CONFCLK";
++			dmas = <&pdma 8 0
++				&pdma 9 0
++				&pdma 10 0
++				&pdma 11 0
++				&pdma 12 0>;
++			dma-names = "pcm_pcm_mic_mono", "pcm_pcm_aux_mono_in",
++				    "pcm_pcm_aux_mono_out", "pcm_pcm_stereo_in",
++				    "pcm_pcm_stereo_out";
++			#sound-dai-cells = <0>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			wm9713: codec@0 {
++				reg = <0>;
++				compatible = "ac97,574d,4c13";
++				clocks = <&wm9713_bitclk>;
++				clock-names = "ac97_clk";
++				#sound-dai-cells = <0>;
++
++				wm9713_bitclk: ac97_bitclk {
++					compatible = "fixed-clock";
++					#clock-cells = <0>;
++					clock-frequency = <12285000>;
++					status = "okay";
++				};
++			};
++		};
++
++		pxa_pcm_audio: snd-soc-pxa-audio {
++			compatible = "mrvl,pxa-pcm-audio";
++			#sound-dai-cells = <0>;
++			status = "okay";
++		};
++
++		lcd-controller@40500000 {
++			lcd-supply = <&reg_lcd_vmmc>;
++		};
++
++		docg3: flash@0 {
++			compatible = "m-systems,diskonchip-g3";
++			reg = <0x0 0x2000>;
++		};
++
++	};
++
++	reg_vmmc: regulator-vmcc {
++		compatible = "regulator-fixed";
++		regulator-name = "vmmc";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		gpio = <&gpio 91 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	reg_lcd_vmmc: regulator-lcd-supply {
++		compatible = "regulator-fixed";
++		regulator-name = "lcd-supply";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		gpio = <&gpio 87 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
++	lcd_backlight: backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm0 4096000>;
++		pwm-names = "backlight";
++		brightness-levels = <0 4 8 16 32 64 128 255>;
++		default-brightness-level = <2>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pwm0_default>;
++	};
++
++	panel {
++		compatible = "toshiba,ltm0305a776";
++		lcd-type = "color-tft";
++		backlight = <&lcd_backlight>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&lcdc_out>;
++			};
++		};
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: 240p {
++				/* 240x320p24 */
++				clock-frequency = <4545000>;
++				hactive = <240>;
++				vactive = <320>;
++				hfront-porch = <4>;
++				hback-porch = <6>;
++				hsync-len = <4>;
++				vback-porch = <5>;
++				vfront-porch = <3>;
++				vsync-len = <2>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_leds_default>;
++
++		charger-led {
++			label = "mioa701:charging";
++			gpios = <&gpio 10 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		vibrator {
++			label = "mioa701:vibra";
++			gpios = <&gpio 82 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		bluetooth-led {
++			label = "mioa701:blue";
++			gpios = <&gpio 97 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		orange-led {
++			label = "mioa701:orange";
++			gpios = <&gpio 98 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++
++		keyboard-led {
++			label = "mioa701:keyboard";
++			gpios = <&gpio 115 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
++	};
++
++	sound {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "MioA701";
++		simple-audio-card,widgets =
++		"Speaker", "Front Speaker",
++		"Speaker", "Rear Speaker",
++		"Microphone", "Headset",
++		"Microphone", "GSM Line Out",
++		"Line", "GSM Line In",
++		"Microphone", "Headset Mic",
++		"Microphone", "Front Mic";
++		simple-audio-card,routing =
++			/* Call Mic */
++			"Mic Bias", "Front Mic",
++			"MIC1", "Mic Bias",
++			/* Headset Mic */
++			"LINEL", "Headset Mic",
++			"LINER", "Headset Mic",
++			/* GSM Module */
++			"MONOIN", "GSM Line Out",
++			"PCBEEP", "GSM Line Out",
++			"GSM Line In", "MONO",
++			/* headphone connected to HPL, HPR */
++			"Headset", "HPL",
++			"Headset", "HPR",
++			/* front speaker connected to HPL, OUT3 */
++			"Front Speaker", "HPL",
++			"Front Speaker", "OUT3",
++			/* rear speaker connected to SPKL, SPKR */
++			"Rear Speaker", "SPKL",
++			"Rear Speaker", "SPKR";
++
++		simple-audio-card,cpu {
++			sound-dai = <&ac97>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&wm9713>;
++		};
++
++		simple-audio-card,plat {
++			sound-dai = <&pxa_pcm_audio>;
++		};
++	};
++
++	ac_charger: charger {
++		compatible = "gpio-charger";
++		charger-type = "usb-aca";
++		gpios = <&gpio 96 GPIO_ACTIVE_HIGH>;
++	};
 +};
-+
-+static int vl53l0x_read_proximity(struct vl53l0x_data *data,
-+				  const struct iio_chan_spec *chan,
-+				  int *val)
-+{
-+	struct i2c_client *client = data->client;
-+	unsigned int tries = 20;
-+	u8 buffer[12];
-+	int ret;
-+
-+	ret = i2c_smbus_write_byte_data(client,
-+		VL_REG_SYSRANGE_START, 1);
-+	if (ret < 0)
-+		return ret;
-+
-+	do {
-+		ret = i2c_smbus_read_byte_data(client,
-+			VL_REG_RESULT_RANGE_STATUS);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ret & VL_REG_RESULT_RANGE_STATUS_COMPLETE)
-+			break;
-+
-+		usleep_range(1000, 5000);
-+	} while (--tries);
-+	if (!tries)
-+		return -ETIMEDOUT;
-+
-+	ret = i2c_smbus_read_i2c_block_data(client, VL_REG_RESULT_RANGE_STATUS,
-+		12, buffer);
-+	if (ret < 0)
-+		return ret;
-+	else if (ret != 12)
-+		return -EREMOTEIO;
-+
-+	/* Values should be between 30~1200. */
-+	*val = le16_to_cpu((buffer[10] << 8) + buffer[11]);
-+
-+	return 0;
-+}
-+
-+static const struct iio_chan_spec vl53l0x_channels[] = {
-+	{
-+		.type = IIO_DISTANCE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-+	},
-+};
-+
-+static int vl53l0x_read_raw(struct iio_dev *indio_dev,
-+			    const struct iio_chan_spec *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	struct vl53l0x_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (chan->type != IIO_DISTANCE) {
-+		dev_err(&data->client->dev, "iio type error");
-+		return -EINVAL;
-+	}
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = vl53l0x_read_proximity(data, chan, val);
-+		if (ret < 0)
-+			dev_err(&data->client->dev,
-+				"raw value read error with %d", ret);
-+
-+		return IIO_VAL_INT;
-+	default:
-+		dev_err(&data->client->dev, "IIO_CHAN_* not recognized.");
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info vl53l0x_info = {
-+	.read_raw = vl53l0x_read_raw,
-+};
-+
-+static int vl53l0x_probe(struct i2c_client *client)
-+{
-+	struct vl53l0x_data *data;
-+	struct iio_dev *indio_dev;
-+
-+	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	data = iio_priv(indio_dev);
-+	data->client = client;
-+	i2c_set_clientdata(client, indio_dev);
-+
-+	if (!i2c_check_functionality(client->adapter,
-+		I2C_FUNC_SMBUS_READ_I2C_BLOCK | I2C_FUNC_SMBUS_BYTE_DATA))
-+		return -EOPNOTSUPP;
-+
-+	indio_dev->dev.parent = &client->dev;
-+	indio_dev->name = VL53L0X_DRV_NAME;
-+	indio_dev->info = &vl53l0x_info;
-+	indio_dev->channels = vl53l0x_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(vl53l0x_channels);
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	return devm_iio_device_register(&client->dev, indio_dev);
-+}
-+
-+static const struct of_device_id st_vl53l0x_dt_match[] = {
-+	{ .compatible = "st,vl53l0x-i2c", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, st_vl53l0x_dt_match);
-+
-+static struct i2c_driver vl53l0x_driver = {
-+	.driver = {
-+		.name = VL53L0X_DRV_NAME,
-+		.of_match_table = st_vl53l0x_dt_match,
-+	},
-+	.probe_new = vl53l0x_probe,
-+};
-+module_i2c_driver(vl53l0x_driver);
-+
-+MODULE_AUTHOR("Song Qiang <songqiang.1304521@gmail.com>");
-+MODULE_DESCRIPTION("ST vl53l0x ToF ranging sensor driver");
-+MODULE_LICENSE("GPL v2");
 -- 
-2.17.1
+2.11.0
