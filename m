@@ -1,15 +1,15 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next v3 10/11] phy: add driver for Microsemi Ocelot
- SerDes muxing
-Date: Sat, 15 Sep 2018 14:20:25 -0700
-Message-ID: <1dc66b5d-e60e-dad2-eed9-e283de260dc3@gmail.com>
+Subject: Re: [PATCH net-next v3 11/11] net: mscc: ocelot: make use of SerDes
+ PHYs for handling their configuration
+Date: Sat, 15 Sep 2018 14:25:05 -0700
+Message-ID: <0f762d63-a392-d2fe-a121-a013a13a8584@gmail.com>
 References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
- <cde4ccafdbd948db7ccbb263dd5b1a803e63a83e.1536912834.git-series.quentin.schulz@bootlin.com>
+ <00989856964175eafbe1435a70862c2ac66cffc0.1536912834.git-series.quentin.schulz@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <cde4ccafdbd948db7ccbb263dd5b1a803e63a83e.1536912834.git-series.quentin.schulz@bootlin.com>
+In-Reply-To: <00989856964175eafbe1435a70862c2ac66cffc0.1536912834.git-series.quentin.schulz@bootlin.com>
 Content-Language: en-US
 Sender: netdev-owner@vger.kernel.org
 To: Quentin Schulz <quentin.schulz@bootlin.com>, alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch
@@ -19,151 +19,74 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 09/14/18 01:16, Quentin Schulz wrote:
-> The Microsemi Ocelot can mux SerDes lanes (aka macros) to different
-> switch ports or even make it act as a PCIe interface.
+> Previously, the SerDes muxing was hardcoded to a given mode in the MAC
+> controller driver. Now, the SerDes muxing is configured within the
+> Device Tree and is enforced in the MAC controller driver so we can have
+> a lot of different SerDes configurations.
 > 
-> This adds support for the muxing of the SerDes.
+> Make use of the SerDes PHYs in the MAC controller to set up the SerDes
+> according to the SerDes<->switch port mapping and the communication mode
+> with the Ethernet PHY.
+
+This looks good, just a few comments below:
+
+[snip]
+
+> +		err = of_get_phy_mode(portnp);
+> +		if (err < 0)
+> +			ocelot->ports[port]->phy_mode = PHY_INTERFACE_MODE_NA;
+> +		else
+> +			ocelot->ports[port]->phy_mode = err;
+> +
+> +		switch (ocelot->ports[port]->phy_mode) {
+> +		case PHY_INTERFACE_MODE_NA:
+> +			continue;
+
+Would not you want to issue a message indicating that the Device Tree
+must be updated here? AFAICT with your patch series, this should no
+longer be a condition that you will hit unless you kept the old DTB
+around, right?
+
+> +		case PHY_INTERFACE_MODE_SGMII:
+> +			phy_mode = PHY_MODE_SGMII;
+> +			break;
+> +		case PHY_INTERFACE_MODE_QSGMII:
+> +			phy_mode = PHY_MODE_QSGMII;
+> +			break;
+> +		default:
+> +			dev_err(ocelot->dev,
+> +				"invalid phy mode for port%d, (Q)SGMII only\n",
+> +				port);
+> +			return -EINVAL;
+> +		}
+> +
+> +		serdes = devm_of_phy_get(ocelot->dev, portnp, NULL);
+> +		if (IS_ERR(serdes)) {
+> +			err = PTR_ERR(serdes);
+> +			if (err == -EPROBE_DEFER) {
+
+This can be simplified into:
+
+			if (err == -EPROBE_DEFER)
+				dev_dbg();
+			else
+				dev_err();
+			goto err_probe_ports;
+
+> +				dev_dbg(ocelot->dev, "deferring probe\n");
+> +				goto err_probe_ports;
+> +			}
+> +
+> +			dev_err(ocelot->dev, "missing SerDes phys for port%d\n",
+> +				port);
+>  			goto err_probe_ports;
+>  		}
+> +
+> +		ocelot->ports[port]->serdes = serdes;
+>  	}
+>  
+>  	register_netdevice_notifier(&ocelot_netdevice_nb);
 > 
-> Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> ---
 
-[snip]
-
-> +
-> +struct serdes_macro {
-> +	u8			idx;
-> +	/* Not used when in QSGMII or PCIe mode */
-> +	int			port;
-
-u8 port to be consistent with the mux table?
-
-[snip]
-
-> +#define SERDES_MUX(_idx, _port, _mode, _mask, _mux) {	\
-> +	.idx = _idx,						\
-> +	.port = _port,						\
-> +	.mode = _mode,						\
-> +	.mask = _mask,						\
-> +	.mux = _mux,						\
-> +}
-> +
-> +static const struct serdes_mux ocelot_serdes_muxes[] = {
-> +	SERDES_MUX(SERDES1G_0, 0, PHY_MODE_SGMII, 0, 0),
-> +	SERDES_MUX(SERDES1G_1, 1, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_5_MODE, 0),
-> +	SERDES_MUX(SERDES1G_1, 5, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
-> +		   HSIO_HW_CFG_DEV1G_5_MODE, HSIO_HW_CFG_DEV1G_5_MODE),
-
-Why not go one step further and define a SERDES_MUX_SGMII() macro which
-automatically resolves the correct bit definitions to use?
-
-The current macro does not make this particularly easy to read :/
-
-> +	SERDES_MUX(SERDES1G_2, 2, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_4_MODE, 0),
-> +	SERDES_MUX(SERDES1G_2, 4, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
-> +		   HSIO_HW_CFG_DEV1G_4_MODE, HSIO_HW_CFG_DEV1G_4_MODE),
-> +	SERDES_MUX(SERDES1G_3, 3, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_6_MODE, 0),
-> +	SERDES_MUX(SERDES1G_3, 6, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
-> +		   HSIO_HW_CFG_DEV1G_6_MODE, HSIO_HW_CFG_DEV1G_6_MODE),
-> +	SERDES_MUX(SERDES1G_4, 4, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
-> +		   HSIO_HW_CFG_DEV1G_4_MODE | HSIO_HW_CFG_DEV1G_9_MODE, 0),
-> +	SERDES_MUX(SERDES1G_4, 9, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_4_MODE |
-> +		   HSIO_HW_CFG_DEV1G_9_MODE, HSIO_HW_CFG_DEV1G_4_MODE |
-> +		   HSIO_HW_CFG_DEV1G_9_MODE),
-> +	SERDES_MUX(SERDES1G_5, 5, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
-> +		   HSIO_HW_CFG_DEV1G_5_MODE | HSIO_HW_CFG_DEV2G5_10_MODE, 0),
-> +	SERDES_MUX(SERDES1G_5, 10, PHY_MODE_SGMII, HSIO_HW_CFG_PCIE_ENA |
-> +		   HSIO_HW_CFG_DEV1G_5_MODE | HSIO_HW_CFG_DEV2G5_10_MODE,
-> +		   HSIO_HW_CFG_DEV1G_5_MODE | HSIO_HW_CFG_DEV2G5_10_MODE),
-> +	SERDES_MUX(SERDES6G_0, 4, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
-> +		   HSIO_HW_CFG_QSGMII_ENA),
-> +	SERDES_MUX(SERDES6G_0, 5, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
-> +		   HSIO_HW_CFG_QSGMII_ENA),
-> +	SERDES_MUX(SERDES6G_0, 6, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
-> +		   HSIO_HW_CFG_QSGMII_ENA),
-> +	SERDES_MUX(SERDES6G_0, 7, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA, 0),
-> +	SERDES_MUX(SERDES6G_0, 7, PHY_MODE_QSGMII, HSIO_HW_CFG_QSGMII_ENA,
-> +		   HSIO_HW_CFG_QSGMII_ENA),
-> +	SERDES_MUX(SERDES6G_1, 8, PHY_MODE_SGMII, 0, 0),
-> +	SERDES_MUX(SERDES6G_2, 10, PHY_MODE_SGMII, HSIO_HW_CFG_PCIE_ENA |
-> +		   HSIO_HW_CFG_DEV2G5_10_MODE, 0),
-> +	SERDES_MUX(SERDES6G_2, 10, PHY_MODE_PCIE, HSIO_HW_CFG_PCIE_ENA,
-> +		   HSIO_HW_CFG_PCIE_ENA),
-> +};
-> +
-> +static int serdes_set_mode(struct phy *phy, enum phy_mode mode)
-> +{
-> +	struct serdes_macro *macro = phy_get_drvdata(phy);
-> +	int ret, i;
-
-unsigned int i;
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ocelot_serdes_muxes); i++) {
-> +		if (macro->idx != ocelot_serdes_muxes[i].idx ||
-> +		    mode != ocelot_serdes_muxes[i].mode)
-> +			continue;
-> +
-> +		if (mode != PHY_MODE_QSGMII &&
-> +		    macro->port != ocelot_serdes_muxes[i].port)
-> +			continue;
-> +
-> +		ret = regmap_update_bits(macro->ctrl->regs, HSIO_HW_CFG,
-> +					 ocelot_serdes_muxes[i].mask,
-> +					 ocelot_serdes_muxes[i].mux);
-> +		if (ret)
-> +			return ret;
-> +
-> +		if (macro->idx < SERDES1G_MAX)
-> +			return serdes_init_s1g(macro->ctrl->regs, macro->idx);
-> +
-> +		/* SERDES6G and PCIe not supported yet */
-> +		return 0;
-
-Would not returning -EOPNOTSUPP be more helpful rather than leaving the
-PHY unconfigured (or did the bootloader somehow configure it before for us)?
-
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static const struct phy_ops serdes_ops = {
-> +	.set_mode	= serdes_set_mode,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static struct phy *serdes_simple_xlate(struct device *dev,
-> +				       struct of_phandle_args *args)
-> +{
-> +	struct serdes_ctrl *ctrl = dev_get_drvdata(dev);
-> +	int port, idx, i;
-
-unsigned int port, idx, i;
-
-[snip]
-
-
-> +
-> +static int serdes_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *provider;
-> +	struct serdes_ctrl *ctrl;
-> +	int i, ret;
-
-unsigned int i;
-
-> +
-> +	ctrl = devm_kzalloc(&pdev->dev, sizeof(*ctrl), GFP_KERNEL);
-> +	if (!ctrl)
-> +		return -ENOMEM;
-> +
-> +	ctrl->dev = &pdev->dev;
-> +	ctrl->regs = syscon_node_to_regmap(pdev->dev.parent->of_node);
-> +	if (!ctrl->regs)
-> +		return -ENODEV;
-> +
-> +	for (i = 0; i <= SERDES_MAX; i++) {
-
-Every other loop you have is using <, is this one off-by-one?
 -- 
 Florian
