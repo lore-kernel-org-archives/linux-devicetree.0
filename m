@@ -1,61 +1,81 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH v2 3/5] drivers: clk-qoriq: Add clockgen support for
- lx2160a
-Date: Sat, 15 Sep 2018 14:24:21 -0500
-Message-ID: <4fa10f679ad4b1b619daa521a8641c145cf8537e.camel@buserror.net>
-References: <1536871075-3732-1-git-send-email-vabhav.sharma@nxp.com>
- <1536871075-3732-4-git-send-email-vabhav.sharma@nxp.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
+Date: Sat, 15 Sep 2018 22:00:37 +0200
+Message-ID: <be2ee681-7ae0-6545-0208-6ae5c1b7affd@gmail.com>
+References: <20180911170825.17789-1-dmurphy@ti.com>
+ <20180911170825.17789-2-dmurphy@ti.com> <20180911200530.GA28290@amd>
+ <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com> <20180912214938.GA30654@amd>
+ <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com> <20180914081822.GA21830@amd>
+ <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com> <20180914214220.GA2081@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1536871075-3732-4-git-send-email-vabhav.sharma@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vabhav Sharma <vabhav.sharma@nxp.com>, sudeep.holla@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com
-Cc: Tang Yuantian <andy.tang@nxp.com>, udit.kumar@nxp.com, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, linux@armlinux.org.uk, V.Sethi@nxp.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180914214220.GA2081@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-09-14 at 02:07 +0530, Vabhav Sharma wrote:
-> From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Hi Pavel.
+
+On 09/14/2018 11:42 PM, Pavel Machek wrote:
+> Hi!
 > 
-> Add clockgen support for lx2160a.
-> Added entry for compat 'fsl,lx2160a-clockgen'.
+>>> You may want to learn more about device tree and/or talk to the device
+>>> tree maintainers. This is an old article. https://lwn.net/Articles/561462/
+>>
+>> The article title is "Device trees as ABI". A device tree is defined
+>> in the "*.dts" file that is then compiled to a dtb blob, which
+>> constitutes the ABI. And this ABI should be kept backwards compatible.
+>>
+>> What is discussed here is a documentation of bindings, i.e. according
+>> to ePAPR: "requirements for how specific types and classes of devices
+>> are represented in the device tree".
+>>
+>> >From the bindings documented in the
+>> Documentation/devicetree/bindings/mfd/ti-lmu.txt only
+>> ti,lm3532-backlight is used in the mainline dts file
+>> (arch/arm/boot/dts/omap4-droid4-xt894.dts).
+>>
+>> Having the above it seems that there is no risk of breaking any
+>> users.
 > 
-> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
-> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  drivers/clk/clk-qoriq.c         | 14 +++++++++++++-
->  drivers/cpufreq/qoriq-cpufreq.c |  1 +
->  2 files changed, 14 insertions(+), 1 deletion(-)
+> DTBs and bindings are supposed to be portable between operating
+> systems. You are right there are no _mainline_ _Linux_ users.
+
+No mainline users means no users we should care of.
+Other people also don't care - see patch [0].
+
+>>> NAK on this patch. I see that this binding has problems, but
+>>> introducing different binding for subset of devices is _not_ a fix.
+>>>
+>>>>> What about the multi function devices? They should have same binding.
+>>>>
+>>>> The MFD devices defined are not in contention here only the SFD.
+>>>
+>>> I'd like to see common solutions for SFD and MFD, as the hardware is
+>>> similar, and that includes the code. Having code that is easier to
+>>> maintain is important, and having many drivers are harder to maintain
+>>> than one driver.
+>>>
+>>> Milo's code looks better than yours in that regard. I disagree about
+>>> Milo's code being "nightmare" to modify, and care about "easy to
+>>> maintain" more than "binary size".
+>>
+>> Easy to maintain will be a dedicated LED class driver.
 > 
-> diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-> index 3a1812f..e9ae70b 100644
-> --- a/drivers/clk/clk-qoriq.c
-> +++ b/drivers/clk/clk-qoriq.c
-> @@ -79,7 +79,7 @@ struct clockgen_chipinfo {
->  	const struct clockgen_muxinfo *cmux_groups[2];
->  	const struct clockgen_muxinfo *hwaccel[NUM_HWACCEL];
->  	void (*init_periph)(struct clockgen *cg);
-> -	int cmux_to_group[NUM_CMUX]; /* -1 terminates if fewer than
-> NUM_CMUX */
-> +	int cmux_to_group[NUM_CMUX+1]; /* -1 terminate if fewer to
-> NUM_CMUX+1 */
+> You mean, 3 dedicated LED class drivers and 3 MFD drivers with LED
+> parts? We'll need complex driver anyway, and I'd really like to have
+> just one.
 
-You need to add the -1 terminator to p4080, and remove the "if fewer" comment
-since the whole point of this is that every array gets -1 terminated.
+In the LED subsystem we can wrap common functionalities
+into a library object. MFD driver will be able to reuse it then.
 
-Why did you change "terminates" to "terminate" and "than" to "to"?
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/commit/?h=droid4-pending-v4.19&id=d774c7e447ac911e73a1b3c775e6d89f0422218c
 
-This +1 change should be a separate patch from lx2160a support.
-
--Scott
+-- 
+Best regards,
+Jacek Anaszewski
