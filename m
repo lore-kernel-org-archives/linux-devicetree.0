@@ -1,59 +1,233 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
-Date: Sun, 16 Sep 2018 10:45:26 +0100
-Message-ID: <20180916104526.2c386591@archlinux>
-References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
-        <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: iio: adc: Add Xilinx AMS binding
+ documentation
+Date: Sun, 16 Sep 2018 11:01:20 +0100
+Message-ID: <20180916110120.243fcf11@archlinux>
+References: <1536909510-7166-1-git-send-email-manish.narani@xilinx.com>
+ <1536909510-7166-2-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ryang <decatf@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536909510-7166-2-git-send-email-manish.narani@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: mark.rutland@arm.com, kstewart@linuxfoundation.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, lars@metafoo.de, michal.simek@xilinx.com, geert@linux-m68k.org, sgoud@xilinx.com, devicetree@vger.kernel.org, knaack.h@gmx.de, vilhelm.gray@gmail.com, broonie@kernel.org, ak@it-klinger.de, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, leoyang.li@nxp.com, lukas@wunner.de, anirudh@xilinx.com, sudeep.holla@arm.com, eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 15 Sep 2018 13:42:14 -0400
-ryang <decatf@gmail.com> wrote:
+On Fri, 14 Sep 2018 12:48:27 +0530
+Manish Narani <manish.narani@xilinx.com> wrote:
 
-> Add device tree support for ROHM BH1750 series ambient light sensors.
+> Xilinx AMS have several ADC channels that can be used for measurement of
+> different voltages and temperatures. Document the same in the bindings.
 > 
-> Signed-off-by: ryang <decatf@gmail.com>
-Just to check, how is it picking up on the enum value which is provided
-in the i2c_device_id entries?
-
-i.e. What is setting id->driver_data in the probe?
-There may be something in the i2c core that I'm missing that will do the
-association but I don't remember anything trying to do this.
-
-Jonathan
-
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 > ---
->  drivers/iio/light/bh1750.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  .../devicetree/bindings/iio/adc/xilinx-ams.txt     | 180 +++++++++++++++++++++
+>  1 file changed, 180 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
 > 
-> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> index a814828e69f5..50b599abb383 100644
-> --- a/drivers/iio/light/bh1750.c
-> +++ b/drivers/iio/light/bh1750.c
-> @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, bh1750_id);
->  
-> +static const struct of_device_id bh1750_of_match[] = {
-> +	{ .compatible = "rohm,bh1710", },
-> +	{ .compatible = "rohm,bh1715", },
-> +	{ .compatible = "rohm,bh1721", },
-> +	{ .compatible = "rohm,bh1750", },
-> +	{ .compatible = "rohm,bh1751", },
-> +	{ }
-> +};
+> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> new file mode 100644
+> index 0000000..d0958a1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
+> @@ -0,0 +1,180 @@
+> +Xilinx AMS controller
+> +`````````````````````
+> +The AMS includes an ADC as well as on-chip sensors that can be used to
+> +sample external voltages and monitor on-die operating conditions, such as
+> +temperature and supply voltage levels.
+> +The AMS has two SYSMON blocks which are PL (Programmable Logic) SYSMON and
+> +PS (Processing System) SYSMON.
+> +All designs should have AMS registers, but PS and PL are optional. The
+> +AMS controller can work with only PS, only PL and both PS and PL
+> +configurations. Please specify registers according to your design. Devicetree
+> +should always have AMS module property. Providing PS & PL module is optional.
 > +
->  static struct i2c_driver bh1750_driver = {
->  	.driver = {
->  		.name = "bh1750",
-> +		.of_match_table = of_match_ptr(bh1750_of_match),
->  		.pm = BH1750_PM_OPS,
->  	},
->  	.probe = bh1750_probe,
+> +Required properties:
+> +	- compatible: Should be "xlnx,zynqmp-ams"
+> +	- reg: Should specify AMS register space
+> +	- interrupts: Interrupt number for the AMS control interface
+> +	- interrupt-names: Interrupt name, must be "ams-irq"
+> +	- clocks: Should contain a clock specifier for the device
+> +	- ranges: keep the property empty to map child address space
+> +	          (for PS and/or PL) nodes 1:1 onto the parent address
+> +	          space
+> +
+> +	AMS sub-nodes:
+> +		- ams_ps : Used as PS-SYSMON node
+> +		- ams_pl : Used as PL-SYSMON node
+> +
+> +
+> +
+> +AMS PS-SYSMON
+> +`````````````
+> +PS (Processing System) SYSMON is memory mapped to PS. This block has built-in
+> +alarm generation logic that is used to interrupt the processor based on
+> +condition set.
+> +
+> +Required properties:
+> +	- compatible: Should be "xlnx,zynqmp-ams-ps"
+> +	- reg: Register space for PS-SYSMON
+> +
+> +
+> +
+> +AMS PL-SYSMON
+> +`````````````
+> +PL-SYSMON is capable of monitoring off chip voltage and temperature. PL-SYSMON
+> +block has DRP, JTAG and I2C interface to enable monitoring from external master.
+> +Out of this interface currently only DRP is supported. This block has alarm
+> +generation logic that is used to interrupt the processor based on condition set.
+> +
+> +Required properties:
+> +	- compatible: Should be "xlnx,zynqmp-ams-pl"
+> +	- reg: Register space for PL-SYSMON
+> +
+> +PL-SYSMON optional sub-nodes:
+> +	- xlnx,ext-channels: List of external channels that are connected to the
+> +	                     AMS PL module.
+> +
+> +	  The child nodes of PL-SYSMON represent the external channels which are
+> +	  connected to this Module. If the property is not present
+> +	  no external channels will be assumed to be connected.
+> +
+> +	  Each child node represents one channel and has the following
+> +	  properties:
+> +
+> +	Required properties:
+> +		* reg: Pair of pins the channel is connected to.
+> +
+> +		    'reg' value		Channel Name		Channel Number
+> +		    -----------		------------		--------------
+> +			 0		VP/VN			      30
+> +			 1		VUSER0			      31
+> +			 2		VUSER1			      32
+> +			 3		VUSER3			      33
+> +			 4		VUSER4			      34
+> +			 5		VAUXP[0]/VAUXN[0]	      35
+> +			 6		VAUXP[1]/VAUXN[1]	      36
+> +			...
+> +			20		VAUXP[15]/VAUXN[15]	      50
+> +
+> +		Each channel number should only be used at most once. For
+> +		more details on channels, refer table given at the end.
+> +
+> +	Optional properties:
+> +		* xlnx,bipolar: If set the channel is used in bipolar
+> +		  mode.
+> +
+> +
+> +Example:
+> +	xilinx_ams: ams@ffa50000 {
+> +		compatible = "xlnx,zynqmp-ams";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 56 4>;
+> +		interrupt-names = "ams-irq";
+> +		clocks = <&clkc 70>;
+> +		reg = <0x0 0xffa50000 0x0 0x800>;
+> +		reg-names = "ams-base";
+> +		ranges;
+> +
+> +		ams_ps: ams_ps@ffa50800 {
+> +			compatible = "xlnx,zynqmp-ams-ps";
+> +			reg = <0x0 0xffa50800 0x0 0x400>;
+
+Rob Herring mentioned this in the previous version.
+Why 64 bit addresses?
+
+Also this isn't how I understand ranges to be used...
+
+https://elinux.org/Device_Tree_Usage#Ranges_.28Address_Translation.29
+
+
+
+> +		};
+> +
+> +		ams_pl: ams_pl@ffa50c00 {
+> +			compatible = "xlnx,zynqmp-ams-pl";
+> +			reg = <0x0 0xffa50c00 0x0 0x400>;
+> +			xlnx,ext-channels {
+> +				channel@0 {
+> +					reg = <0>;
+> +					xlnx,bipolar;
+> +				};
+> +				channel@1 {
+> +					reg = <1>;
+> +				};
+> +				channel@8 {
+> +					reg = <8>;
+> +					xlnx,bipolar;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +
+> +AMS Channels Details
+> +````````````````````
+> +Sysmon Block	|Channel|			Details					|Measurement
+> +		 Number									 Type
+> +---------------------------------------------------------------------------------------------------------
+> +AMS CTRL	|0	|System PLLs voltage measurement, VCC_PSPLL.			|Voltage
+> +		|1	|Battery voltage measurement, VCC_PSBATT.			|Voltage
+> +		|2	|PL Internal voltage measurement, VCCINT.			|Voltage
+> +		|3	|Block RAM voltage measurement, VCCBRAM.			|Voltage
+> +		|4	|PL Aux voltage measurement, VCCAUX.				|Voltage
+> +		|5	|Voltage measurement for six DDR I/O PLLs, VCC_PSDDR_PLL.	|Voltage
+> +		|6	|VCC_PSINTFP_DDR voltage measurement.				|Voltage
+> +---------------------------------------------------------------------------------------------------------
+> +PS Sysmon	|7	|LPD temperature measurement.					|Temperature
+> +		|8	|FPD Temperature Measurment (REMOTE).				|Temperature
+> +		|9	|VCC PS LPD voltage measurement (supply1).			|Voltage
+> +		|10	|VCC PS FPD voltage measurement (supply2).			|Voltage
+> +		|11	|PS Aux voltage reference (supply3).				|Voltage
+> +		|12	|DDR I/O VCC voltage measurement.				|Voltage
+> +		|13	|PS IO Bank 503 voltage measurement (supply5).			|Voltage
+> +		|14	|PS IO Bank 500 voltage measurement (supply6).			|Voltage
+> +		|15	|VCCO_PSIO1 voltage measurement.				|Voltage
+> +		|16	|VCCO_PSIO2 voltage measurement.				|Voltage
+> +		|17	|VCC_PS_GTR voltage measurement (VPS_MGTRAVCC).			|Voltage
+> +		|18	|VTT_PS_GTR voltage measurement (VPS_MGTRAVTT).			|Voltage
+> +		|19	|VCC_PSADC voltage measurement.					|Voltage
+> +---------------------------------------------------------------------------------------------------------
+> +PL Sysmon	|20	|PL Temperature measurement.					|Temperature
+> +		|21	|PL Internal Voltage Voltage measurement, VCCINT.		|Voltage
+> +		|22	|PL Auxiliary Voltage measurement, VCCAUX.			|Voltage
+> +		|23	|ADC Reference P+ Voltage measurement.				|Voltage
+> +		|24	|ADC Reference N- Voltage measurement.				|Voltage
+> +		|25	|PL Block RAM Voltage measurement, VCCBRAM.			|Voltage
+> +		|26	|LPD Internal Voltage measurement, VCC_PSINTLP (supply4).	|Voltage
+> +		|27	|FPD Internal Voltage measurement, VCC_PSINTFP (supply5).	|Voltage
+> +		|28	|PS Auxiliary Voltage measurement (supply6).			|Voltage
+> +		|29	|PL VCCADC Voltage measurement (vccams).			|Voltage
+> +		|30	|Differencial analog input signal Voltage measurment.		|Voltage
+> +		|31	|VUser0 Voltage measurement (supply7).				|Voltage
+> +		|32	|VUser1 Voltage measurement (supply8).				|Voltage
+> +		|33	|VUser2 Voltage measurement (supply9).				|Voltage
+> +		|34	|VUser3 Voltage measurement (supply10).				|Voltage
+> +		|35	|Auxiliary ch 0 Voltage measurement (VAux0).			|Voltage
+> +		|36	|Auxiliary ch 1 Voltage measurement (VAux1).			|Voltage
+> +		|37	|Auxiliary ch 2 Voltage measurement (VAux2).			|Voltage
+> +		|38	|Auxiliary ch 3 Voltage measurement (VAux3).			|Voltage
+> +		|39	|Auxiliary ch 4 Voltage measurement (VAux4).			|Voltage
+> +		|40	|Auxiliary ch 5 Voltage measurement (VAux5).			|Voltage
+> +		|41	|Auxiliary ch 6 Voltage measurement (VAux6).			|Voltage
+> +		|42	|Auxiliary ch 7 Voltage measurement (VAux7).			|Voltage
+> +		|43	|Auxiliary ch 8 Voltage measurement (VAux8).			|Voltage
+> +		|44	|Auxiliary ch 9 Voltage measurement (VAux9).			|Voltage
+> +		|45	|Auxiliary ch 10 Voltage measurement (VAux10).			|Voltage
+> +		|46	|Auxiliary ch 11 Voltage measurement (VAux11).			|Voltage
+> +		|47	|Auxiliary ch 12 Voltage measurement (VAux12).			|Voltage
+> +		|48	|Auxiliary ch 13 Voltage measurement (VAux13).			|Voltage
+> +		|49	|Auxiliary ch 14 Voltage measurement (VAux14).			|Voltage
+> +		|50	|Auxiliary ch 15 Voltage measurement (VAux15).			|Voltage
+> +---------------------------------------------------------------------------------------------------------
