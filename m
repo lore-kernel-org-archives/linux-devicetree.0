@@ -1,51 +1,76 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM: sun8i: dts: drop A64 HDMI PHY
- fallback compatible from R40 DT
-Date: Sun, 16 Sep 2018 12:34:09 +0800
-Message-ID: <20180916043409.62374-5-icenowy@aosc.io>
-References: <20180916043409.62374-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Sun, 16 Sep 2018 12:53:26 +0800
+Message-ID: <b5bbb3e5-d970-dd82-400f-ae13ca782fd5@c-sky.com>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
+ <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBFF367OAKGQE67MFYUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180916043409.62374-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The R40 HDMI PHY seems to be different to the A64 one, the A64 one
-has no input mux, but the R40 one has.
+Hello Stephen,
 
-Drop the A64 fallback compatible from the HDMI PHY node in R40 DT.
+I'm Guo Ren from C-SKY and I'm working on csky linux port upstream.
+I've prepared my git-tree based on linux-4.19-rc3:
+git clone -b linux-next https://github.com/c-sky/csky-linux.git
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
-Changes in v2:
-- none.
+Here is the pre-built cross compiler for fast test from our CI:
+https://gitlab.com/c-sky/buildroot/-/jobs/97941896/artifacts/file/output/images/csky_toolchain_csky_ck860_platform_defconfig_72371bf75a51f27ea59fc34eeaf236e06b75bf69.tar.xz
 
- arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+You can also build newest gcc, binutils and they are upstreamed but not
+released on gnu.org. Glibc is uptreaming now.
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index ffd9f00f74a4..5f547c161baf 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -800,8 +800,7 @@
- 		};
- 
- 		hdmi_phy: hdmi-phy@1ef0000 {
--			compatible = "allwinner,sun8i-r40-hdmi-phy",
--				     "allwinner,sun50i-a64-hdmi-phy";
-+			compatible = "allwinner,sun8i-r40-hdmi-phy";
- 			reg = <0x01ef0000 0x10000>;
- 			clocks = <&ccu CLK_BUS_HDMI1>, <&ccu CLK_HDMI_SLOW>,
- 				 <&ccu 7>, <&ccu 16>;
--- 
-2.18.0
+Please have a look and any feed back is welcome.
+
+Best Regards
+  Guo Ren
+
+On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
+> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> >
+> > This is the 3th version patchset to add the Linux kernel port for C-SKY(csky).
+> > Thanks to everyone who provided feedback on the previous version.
+> >
+> > This patchset adds architecture support to Linux for C-SKY's 32-bit embedded
+> > CPU cores and the patches are based on linux-4.18.4
+> >
+> > There are two ABI versions with several CPU cores in this patchset:
+> >   ABIv1: ck610 (16-bit instruction, 32-bit data path, VIPT Cache ...)
+> >   ABIv2: ck807 ck810 ck860 (16/32-bit variable length instruction, PIPT Cache,
+> >          SMP ...)
+> >
+> > More information: http://en.c-sky.com
+> 
+> This looks good to me overall. I think a good next step would be to get the port
+> included in linux-next, by preparing a git tree with all the patches and asking
+> Stephen Rothwell to include it there. Further comments on the architecture
+> port itself can be done on top of the existing patches. I would suggest you
+> base the git tree on an -rc release (either 4.19-rc1 or 4.19-rc3) and then never
+> rebase again.
+> 
+> You have included a couple of drivers in the submission: two timer and
+> two irqchip drivers. Please leave those out for the moment, and either have
+> them merged through the respective subsystem  trees, or get an Ack
+> from the maintainers to merge them through your tree.
+> 
+> I notice that a lot of the patches have no changeset comments on them.
+> You should fix that and make a habit of describing every single patch
+> with a few sentences, even if it seems obvious to you. Have a look at
+> the changeset descriptions for the nds32 and riscv architectures when
+> they got merged.
+> 
+> One big question for me is what to do about time_t. Deepa and I are
+> in the process of finalizing the system call ABI for 32-bit architectures
+> with 64-bit time_t, but we are not done yet and it won't be complete
+> for 4.20. If you target 4.21, that could be a chance to make csky the
+> first architecture to only need the 64-bit time_t interface, with the
+> corresponding user space changes.
+> 
+>         Arnd
