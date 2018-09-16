@@ -1,107 +1,54 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC PATCH v2 3/3] nvmem: zynqmp: Added zynqmp nvmem firmware
- driver
-Date: Sun, 16 Sep 2018 15:10:37 +0100
-Message-ID: <d9cab203-9637-3233-4b44-96222ba3551c@linaro.org>
-References: <1536054754-3119-1-git-send-email-nava.manne@xilinx.com>
- <1536054754-3119-4-git-send-email-nava.manne@xilinx.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 0/2] Improve VCHIQ cache line size handling
+Date: Sun, 16 Sep 2018 17:25:19 +0200 (CEST)
+Message-ID: <1485322276.234696.1537111519181@email.1und1.de>
+References: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536054754-3119-4-git-send-email-nava.manne@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Phil Elwell <phil@raspberrypi.org>
+Cc: greg@embeddedgreg.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Few minor Nits...
+Hi,
 
-I remember asking about this in the last review!
-
-On 04/09/18 10:52, Nava kishore Manne wrote:
-> This patch adds zynqmp nvmem firmware driver to access the
-> SoC revision information from the hardware register.
+> Phil Elwell <phil@raspberrypi.org> hat am 12. September 2018 um 18:42 geschrieben:
 > 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> ---
-> diff --git a/drivers/nvmem/zynqmp_nvmem.c b/drivers/nvmem/zynqmp_nvmem.c
-> new file mode 100644
-> index 0000000..e377900
-> --- /dev/null
-> +++ b/drivers/nvmem/zynqmp_nvmem.c
-> @@ -0,0 +1,84 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * Copyright (C) 2018 Xilinx, Inc.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/firmware/xlnx-zynqmp.h>
-> +
-> +#define SILICON_REVISION_MASK 0xF
-> +
-> +static int zynqmp_nvmem_read(void *context, unsigned int offset,
-> +			     void *val, size_t bytes)
-> +{
-> +	int ret;
-> +	int idcode, version;
-> +	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
-> +
-> +	if (!eemi_ops || !eemi_ops->get_chipid)
-> +		return -ENXIO;
-> +
-> +	ret = eemi_ops->get_chipid(&idcode, &version);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	pr_debug("Read chipid val %x %x\n", idcode, version);
-> +	*(int *)val = version & SILICON_REVISION_MASK;
+> 
+> Both sides of the VCHIQ communications mechanism need to agree on the cache
+> line size. Using an incorrect value can lead to data corruption, but having the
+> two sides using different values is usually worse.
+> 
+> In the absence of an obvious convenient run-time method to determine the
+> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
+> Device Tree property, written by the firmware, to configure the kernel driver.
+> This method was vetoed during the upstreaming process, so a fixed value of 32
+> was used instead, and some corruptions ensued. This is take 2 at arriving at
+> the correct value.
+> 
+> Part one of the fix is deriving the correct value from the ARM's cpuid register.
+> Part two is a (seemingly cosmetic) correction of the Device Tree reg declaration
+> used by the driver, but it doubles as an indication to the Raspberry Pi firmware
+> that the kernel driver is running a recent kernel driver that chooses the
+> correct value. As such I would like very much for the DT patch not to be merged
+> before the driver patch - just tell me what hoops I need to jump through.
+> 
 
-Use dev_dbg here.
-> +
-> +	return 0;
-> +}
-> +
-> +static struct nvmem_config econfig = {
-> +	.name = "zynqmp-nvmem",
-> +	.owner = THIS_MODULE,
-> +	.word_size = 1,
-> +	.size = 1,
-> +	.read_only = true,
-> +};
-> +
-> +static const struct of_device_id zynqmp_nvmem_match[] = {
-> +	{ .compatible = "xlnx,zynqmp-nvmem-fw", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, zynqmp_nvmem_match);
-> +
-> +static int zynqmp_nvmem_probe(struct platform_device *pdev)
-> +{
-> +	struct nvmem_device *nvmem;
-> +
-> +	econfig.dev = &pdev->dev;
-> +	econfig.reg_read = zynqmp_nvmem_read;
-> +
-> +	nvmem = nvmem_register(&econfig);
-You can use devm_ variant and remove the zynqmp_nvmem_remove() totally
+even if this version isn't the best, the test results for vchiq_test -f 1 (using recent firmware 2018-09-10) are very good:
 
-> +	if (IS_ERR(nvmem))
-> +		return PTR_ERR(nvmem);
-> +
-> +	platform_set_drvdata(pdev, nvmem);
-> +
-> +	return 0;
-> +}
-> +
-> +static int zynqmp_nvmem_remove(struct platform_device *pdev)
-> +{
-> +	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-> +
-> +	return nvmem_unregister(nvmem);
-> +}
-> +
+Raspberry 1 B, bcm2835_defconfig -> success
+Raspberry 2 B, multi_v7_defconfig -> success
+Raspberry 3 B, arm64/defconfig -> success
+
+Thanks Stefan
