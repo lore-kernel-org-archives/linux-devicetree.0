@@ -1,623 +1,658 @@
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v2 2/2] power: supply: Add Spreadtrum SC2731 charger
- support
-Date: Sun, 16 Sep 2018 12:17:07 +0200
-Message-ID: <20180916101707.zrdi4w47ruemx24y@earth.universe>
-References: <a582871f84c4dd588ae1651d1d9192cc80e2b272.1535964281.git.baolin.wang@linaro.org>
- <22074e17cb853123f926e909eac4418d88af0b98.1535964281.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH v7 2/4] power: supply: Add support for the Qualcomm
+ Battery Monitoring System
+Date: Sun, 16 Sep 2018 15:48:36 +0200
+Message-ID: <20180916134836.73lggsydppdhhrpf@earth.universe>
+References: <20180407135934.26122-1-ctatlor97@gmail.com>
+ <20180614151435.6471-1-ctatlor97@gmail.com>
+ <20180614151435.6471-2-ctatlor97@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5ycneaxzqwvwo2go"
+        protocol="application/pgp-signature"; boundary="fynnm6azsqtphcbk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <22074e17cb853123f926e909eac4418d88af0b98.1535964281.git.baolin.wang@linaro.org>
+In-Reply-To: <20180614151435.6471-2-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org, krzk@kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---5ycneaxzqwvwo2go
+--fynnm6azsqtphcbk
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Baolin,
+Hi,
 
-On Mon, Sep 03, 2018 at 04:55:46PM +0800, Baolin Wang wrote:
-> This patch adds the SC2731 PMIC switch charger support.
+First of all thanks for the patch and big sorry for the long delay
+in reviewing this. I did not find enough time to do it properly
+until now :(
+
+On Thu, Jun 14, 2018 at 04:14:15PM +0100, Craig Tatlor wrote:
+> This patch adds a driver for the BMS (Battery Monitoring System)
+> block of the PM8941 PMIC, it uses a lookup table defined in the
+> device tree to generate a capacity from the BMS supplied OCV, it
+> then amends the coulomb counter to that to increase the accuracy
+> of the estimated capacity.
 >=20
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 > ---
-
-The power-supply sysfs files uses uA instead of mA, otherwise the
-driver and the binding looks fine to me.
-
--- Sebastian
-
-> Changes from v1:
->  - Remove some redundant head files.
->  - Add one mutex to make sure getting the charger status is correct.
->  - Fix some coding style issues.
->  - Use standard DT properties.
-> ---
->  drivers/power/supply/Kconfig          |    7 +
->  drivers/power/supply/Makefile         |    1 +
->  drivers/power/supply/sc2731_charger.c |  503 +++++++++++++++++++++++++++=
-++++++
->  3 files changed, 511 insertions(+)
->  create mode 100644 drivers/power/supply/sc2731_charger.c
+>=20
+> * Changes from v5:                                                       =
+                                                                           =
+                                                                =20
+>   Uses select for REGMAP_SPMI.                                           =
+                                                                           =
+                                                                =20
+>                                                                          =
+                                                                           =
+                                                                =20
+> * Changes from v4:                                                       =
+                                                                           =
+                                                                =20
+>   Cleaned up percentage interpolation function,                          =
+                                                                           =
+                                                                =20
+>   uses new fixp interpolation helper,                                    =
+                                                                           =
+                                                                =20
+>   added some more error cases,                                           =
+                                                                           =
+                                                                =20
+>   uses devm_power_supply_register(),                                     =
+                                                                           =
+                                                                =20
+>   uses a DIV_ROUND_CLOSEST for division and                              =
+                                                                           =
+                                                                =20
+>   uses micro(volts / amp hours) instead of                               =
+                                                                           =
+                                                                =20
+>   milli (volts / amp hours). =20
+>=20
+>  drivers/power/supply/Kconfig    |   9 +
+>  drivers/power/supply/Makefile   |   1 +
+>  drivers/power/supply/qcom_bms.c | 487 ++++++++++++++++++++++++++++++++
+>  3 files changed, 497 insertions(+)
+>  create mode 100644 drivers/power/supply/qcom_bms.c
 >=20
 > diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index ff6dab0..f27cf07 100644
+> index 428b426842f4..75f2f375f992 100644
 > --- a/drivers/power/supply/Kconfig
 > +++ b/drivers/power/supply/Kconfig
-> @@ -645,4 +645,11 @@ config CHARGER_CROS_USBPD
->  	  what is connected to USB PD ports from the EC and converts
->  	  that into power_supply properties.
+> @@ -82,6 +82,15 @@ config BATTERY_ACT8945A
+>  	  Say Y here to enable support for power supply provided by
+>  	  Active-semi ActivePath ACT8945A charger.
 > =20
-> +config CHARGER_SC2731
-> +	tristate "Spreadtrum SC2731 charger driver"
-> +	depends on MFD_SC27XX_PMIC || COMPILE_TEST
+> +config BATTERY_BMS
+> +	tristate "Qualcomm Battery Monitoring System driver"
+> +	depends on MFD_SPMI_PMIC || COMPILE_TEST
+> +	depends on OF
+> +	select REGMAP_SPMI
 > +	help
-> +	 Say Y here to enable support for battery charging with SC2731
-> +	 PMIC chips.
+> +	  Say Y to include support for the Battery Monitoring hardware
+> +	  found in some Qualcomm PM series PMICs.
 > +
->  endif # POWER_SUPPLY
+>  config BATTERY_CPCAP
+>  	tristate "Motorola CPCAP PMIC battery driver"
+>  	depends on MFD_CPCAP && IIO
 > diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index a26b402..767105b 100644
+> index e83aa843bcc6..04204174b047 100644
 > --- a/drivers/power/supply/Makefile
 > +++ b/drivers/power/supply/Makefile
-> @@ -85,3 +85,4 @@ obj-$(CONFIG_CHARGER_TPS65217)	+=3D tps65217_charger.o
->  obj-$(CONFIG_AXP288_FUEL_GAUGE) +=3D axp288_fuel_gauge.o
->  obj-$(CONFIG_AXP288_CHARGER)	+=3D axp288_charger.o
->  obj-$(CONFIG_CHARGER_CROS_USBPD)	+=3D cros_usbpd-charger.o
-> +obj-$(CONFIG_CHARGER_SC2731)	+=3D sc2731_charger.o
-> diff --git a/drivers/power/supply/sc2731_charger.c b/drivers/power/supply=
-/sc2731_charger.c
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_BATTERY_88PM860X)	+=3D 88pm860x_battery.o
+>  obj-$(CONFIG_BATTERY_ACT8945A)	+=3D act8945a_charger.o
+>  obj-$(CONFIG_BATTERY_AXP20X)	+=3D axp20x_battery.o
+>  obj-$(CONFIG_CHARGER_AXP20X)	+=3D axp20x_ac_power.o
+> +obj-$(CONFIG_BATTERY_BMS)	+=3D qcom_bms.o
+>  obj-$(CONFIG_BATTERY_CPCAP)	+=3D cpcap-battery.o
+>  obj-$(CONFIG_BATTERY_DS2760)	+=3D ds2760_battery.o
+>  obj-$(CONFIG_BATTERY_DS2780)	+=3D ds2780_battery.o
+> diff --git a/drivers/power/supply/qcom_bms.c b/drivers/power/supply/qcom_=
+bms.c
 > new file mode 100644
-> index 0000000..c92e5fc
+> index 000000000000..718fd745c0f7
 > --- /dev/null
-> +++ b/drivers/power/supply/sc2731_charger.c
-> @@ -0,0 +1,503 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Spreadtrum Communications Inc.
+> +++ b/drivers/power/supply/qcom_bms.c
+> @@ -0,0 +1,487 @@
+> +// SPDX-License-Identifier: GPL
+> +
+> +/*
+> + * Qualcomm Battery Monitoring System driver
+> + *
+> + * Copyright (C) 2018 Craig Tatlor <ctatlor97@gmail.com>
+> + */
 > +
 > +#include <linux/module.h>
+> +#include <linux/fixp-arith.h>
 > +#include <linux/platform_device.h>
 > +#include <linux/power_supply.h>
-> +#include <linux/usb/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/notifier.h>
+> +#include <linux/slab.h>
+> +#include <linux/bitops.h>
 > +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/regmap.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/iio/consumer.h>
 > +
-> +/* PMIC global registers definition */
-> +#define SC2731_CHARGE_STATUS		0xedc
-> +#define SC2731_CHARGE_FULL		BIT(4)
-> +#define SC2731_MODULE_EN1		0xc0c
-> +#define SC2731_CHARGE_EN		BIT(5)
+> +#define REG_BMS_OCV_FOR_SOC_DATA0	0x90
+> +#define REG_BMS_SHDW_CC_DATA0		0xA8
+> +#define REG_BMS_CC_DATA_CTL		0x42
+> +#define REG_BMS_CC_CLEAR_CTL		0x4
 > +
-> +/* SC2731 switch charger registers definition */
-> +#define SC2731_CHG_CFG0			0x0
-> +#define SC2731_CHG_CFG1			0x4
-> +#define SC2731_CHG_CFG2			0x8
-> +#define SC2731_CHG_CFG3			0xc
-> +#define SC2731_CHG_CFG4			0x10
-> +#define SC2731_CHG_CFG5			0x28
+> +#define BMS_HOLD_OREG_DATA		BIT(0)
+> +#define BMS_CLEAR_SHDW_CC		BIT(6)
 > +
-> +/* SC2731_CHG_CFG0 register definition */
-> +#define SC2731_PRECHG_RNG_SHIFT		11
-> +#define SC2731_PRECHG_RNG_MASK		GENMASK(12, 11)
+> +#define BMS_CC_READING_RESOLUTION_N	542535
+> +#define BMS_CC_READING_RESOLUTION_D	10000
+> +#define BMS_CC_READING_TICKS		56
+> +#define BMS_SLEEP_CLK_HZ		32764
 > +
-> +#define SC2731_TERMINATION_VOL_MASK	GENMASK(2, 1)
-> +#define SC2731_TERMINATION_VOL_SHIFT	1
-> +#define SC2731_TERMINATION_VOL_CAL_MASK	GENMASK(8, 3)
-> +#define SC2731_TERMINATION_VOL_CAL_SHIFT	3
-> +#define SC2731_TERMINATION_CUR_MASK	GENMASK(2, 0)
+> +#define SECONDS_PER_HOUR		3600
+> +#define TEMPERATURE_COLS		5
+> +#define MAX_CAPACITY_ROWS		50
 > +
-> +#define SC2731_CC_EN			BIT(13)
-> +#define SC2731_CHARGER_PD		BIT(0)
-> +
-> +/* SC2731_CHG_CFG1 register definition */
-> +#define SC2731_CUR_MASK			GENMASK(5, 0)
-> +
-> +/* SC2731_CHG_CFG5 register definition */
-> +#define SC2731_CUR_LIMIT_SHIFT		8
-> +#define SC2731_CUR_LIMIT_MASK		GENMASK(9, 8)
-> +
-> +/* Default current definition (unit is mA) */
-> +#define SC2731_CURRENT_LIMIT_100	100
-> +#define SC2731_CURRENT_LIMIT_500	500
-> +#define SC2731_CURRENT_LIMIT_900	900
-> +#define SC2731_CURRENT_LIMIT_2000	2000
-> +#define SC2731_CURRENT_PRECHG		450
-> +#define SC2731_CURRENT_STEP		50
-> +
-> +struct sc2731_charger_info {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct usb_phy *usb_phy;
-> +	struct notifier_block usb_notify;
-> +	struct power_supply *psy_usb;
-> +	struct mutex lock;
-> +	bool charging;
-> +	u32 base;
+> +/* lookup table for ocv -> capacity conversion */
+> +struct bms_ocv_lut {
+> +	int rows;
+> +	s8 temp_legend[TEMPERATURE_COLS];
+> +	u8 capacity_legend[MAX_CAPACITY_ROWS];
+> +	u32 lut[MAX_CAPACITY_ROWS][TEMPERATURE_COLS];
 > +};
 > +
-> +static void sc2731_charger_stop_charge(struct sc2731_charger_info *info)
-> +{
-> +	regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +			   SC2731_CC_EN, 0);
+> +/* lookup table for battery temperature -> fcc conversion */
+> +struct bms_fcc_lut {
+> +	s8 temp_legend[TEMPERATURE_COLS];
+> +	u32 lut[TEMPERATURE_COLS];
+> +};
 > +
-> +	regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +			   SC2731_CHARGER_PD, SC2731_CHARGER_PD);
+> +struct bms_device_info {
+> +	struct device *dev;
+> +	struct regmap *regmap;
+> +	struct bms_ocv_lut ocv_lut;
+> +	struct power_supply_desc bat_desc;
+> +	struct bms_fcc_lut fcc_lut;
+> +	struct iio_channel *adc;
+> +	struct mutex bms_output_lock;
+> +	u32 base_addr;
+> +
+> +	int ocv_thr_irq;
+> +	u32 ocv;
+> +};
+> +
+> +static bool between(int left, int right, int val)
+> +{
+> +	if (left <=3D val && val <=3D right)
+> +		return true;
+> +
+> +	if (left >=3D val && val >=3D right)
+> +		return true;
+> +
+> +	return false;
 > +}
 > +
-> +static int sc2731_charger_start_charge(struct sc2731_charger_info *info)
+> +static int interpolate_capacity(int temp, u32 ocv,
+> +				struct bms_ocv_lut *ocv_lut)
+> +{
+> +	int pcj_minus_one =3D 0, pcj =3D 0, i2 =3D 0, i3 =3D 0, i, j;
+> +
+> +	for (j =3D 0; j < TEMPERATURE_COLS; j++)
+> +		if (temp <=3D ocv_lut->temp_legend[j])
+> +			break;
+> +
+> +	if (ocv >=3D ocv_lut->lut[0][j])
+> +		return ocv_lut->capacity_legend[0];
+> +
+> +	if (ocv <=3D ocv_lut->lut[ocv_lut->rows-1][j-1])
+> +		return ocv_lut->capacity_legend[ocv_lut->rows-1];
+> +
+> +	for (i =3D 0; i < ocv_lut->rows-1; i++) {
+> +		if (between(ocv_lut->lut[i][j],
+> +			    ocv_lut->lut[i+1][j], ocv))
+> +			i2 =3D i;
+> +
+> +		if (between(ocv_lut->lut[i][j-1],
+> +			    ocv_lut->lut[i+1][j-1], ocv))
+> +			i3 =3D i;
+> +	}
+> +
+> +	/* interpolate two capacities */
+> +	pcj =3D fixp_linear_interpolate(ocv_lut->lut[i2][j],
+> +				      ocv_lut->capacity_legend[i2],
+> +				      ocv_lut->lut[i2+1][j],
+> +				      ocv_lut->capacity_legend[i2+1],
+> +				      ocv);
+> +
+> +	pcj_minus_one =3D fixp_linear_interpolate(ocv_lut->lut[i3][j-1],
+> +						ocv_lut->capacity_legend[i3],
+> +						ocv_lut->lut[i3+1][j-1],
+> +						ocv_lut->capacity_legend[i3+1],
+> +						ocv);
+> +
+> +	/* interpolate them with the battery temperature */
+> +	return fixp_linear_interpolate(ocv_lut->temp_legend[j-1],
+> +				       pcj_minus_one,
+> +				       ocv_lut->temp_legend[j],
+> +				       pcj,
+> +				       temp);
+> +}
+> +
+> +static int interpolate_fcc(int temp, struct bms_fcc_lut *fcc_lut)
+> +{
+> +	int i;
+> +
+> +	for (i =3D 0; i < TEMPERATURE_COLS; i++)
+> +		if (temp <=3D fcc_lut->temp_legend[i])
+> +			break;
+> +
+> +	return fixp_linear_interpolate(fcc_lut->temp_legend[i-1],
+> +			     fcc_lut->lut[i-1],
+> +			     fcc_lut->temp_legend[i],
+> +			     fcc_lut->lut[i],
+> +			     temp);
+> +}
+> +
+> +static int bms_lock_output_data(struct bms_device_info *di)
 > +{
 > +	int ret;
 > +
-> +	/* Enable charger constant current mode */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				 SC2731_CC_EN, SC2731_CC_EN);
-> +	if (ret)
+> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+> +				 REG_BMS_CC_DATA_CTL,
+> +				 BMS_HOLD_OREG_DATA, BMS_HOLD_OREG_DATA);
+> +	if (ret) {
+> +		dev_err(di->dev, "failed to lock bms output: %d", ret);
 > +		return ret;
+> +	}
 > +
-> +	/* Start charging */
-> +	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				  SC2731_CHARGER_PD, 0);
-> +}
-> +
-> +static int sc2731_charger_set_current_limit(struct sc2731_charger_info *=
-info,
-> +					    u32 limit)
-> +{
-> +	u32 val;
-> +
-> +	if (limit <=3D SC2731_CURRENT_LIMIT_100)
-> +		val =3D 0;
-> +	else if (limit <=3D SC2731_CURRENT_LIMIT_500)
-> +		val =3D 3;
-> +	else if (limit <=3D SC2731_CURRENT_LIMIT_900)
-> +		val =3D 2;
-> +	else
-> +		val =3D 1;
-> +
-> +	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG5,
-> +				  SC2731_CUR_LIMIT_MASK,
-> +				  val << SC2731_CUR_LIMIT_SHIFT);
-> +}
-> +
-> +static int sc2731_charger_set_current(struct sc2731_charger_info *info, =
-u32 cur)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (cur > SC2731_CURRENT_LIMIT_2000)
-> +		cur =3D SC2731_CURRENT_LIMIT_2000;
-> +	else if (cur < SC2731_CURRENT_PRECHG)
-> +		cur =3D SC2731_CURRENT_PRECHG;
-> +
-> +	/* Calculate the step value, each step is 50 mA */
-> +	val =3D (cur - SC2731_CURRENT_PRECHG) / SC2731_CURRENT_STEP;
-> +
-> +	/* Set pre-charge current as 450 mA */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				 SC2731_PRECHG_RNG_MASK,
-> +				 0x3 << SC2731_PRECHG_RNG_SHIFT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG1,
-> +				  SC2731_CUR_MASK, val);
-> +}
-> +
-> +static int sc2731_charger_get_status(struct sc2731_charger_info *info)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(info->regmap, SC2731_CHARGE_STATUS, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val & SC2731_CHARGE_FULL)
-> +		return POWER_SUPPLY_STATUS_FULL;
-> +
-> +	return POWER_SUPPLY_STATUS_CHARGING;
-> +}
-> +
-> +static int sc2731_charger_get_current(struct sc2731_charger_info *info,
-> +				      u32 *cur)
-> +{
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret =3D regmap_read(info->regmap, info->base + SC2731_CHG_CFG1, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val &=3D SC2731_CUR_MASK;
-> +	*cur =3D val * SC2731_CURRENT_STEP + SC2731_CURRENT_PRECHG;
+> +	/*
+> +	 * Sleep for at least 100 microseconds here to make sure
+> +	 * there has been at least three cycles of the sleep clock
+> +	 * so that the registers are correctly locked.
+> +	 */
+> +	usleep_range(100, 1000);
 > +
 > +	return 0;
 > +}
 > +
-> +static int sc2731_charger_get_current_limit(struct sc2731_charger_info *=
-info,
-> +					    u32 *cur)
+> +static int bms_unlock_output_data(struct bms_device_info *di)
 > +{
 > +	int ret;
-> +	u32 val;
 > +
-> +	ret =3D regmap_read(info->regmap, info->base + SC2731_CHG_CFG5, &val);
-> +	if (ret)
+> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+> +				 REG_BMS_CC_DATA_CTL,
+> +				 BMS_HOLD_OREG_DATA, 0);
+> +	if (ret) {
+> +		dev_err(di->dev, "failed to unlock bms output: %d", ret);
 > +		return ret;
+> +	}
 > +
-> +	val =3D (val & SC2731_CUR_LIMIT_MASK) >> SC2731_CUR_LIMIT_SHIFT;
+> +	return 0;
+> +}
 > +
-> +	switch (val) {
-> +	case 0:
-> +		*cur =3D SC2731_CURRENT_LIMIT_100;
+> +static int bms_read_ocv(struct bms_device_info *di, u32 *ocv)
+> +{
+> +	int ret;
+> +	u16 read_ocv;
+> +
+> +	mutex_lock(&di->bms_output_lock);
+> +
+> +	ret =3D bms_lock_output_data(di);
+> +	if (ret)
+> +		goto err_lock;
+> +
+> +	ret =3D regmap_bulk_read(di->regmap, di->base_addr+
+> +			       REG_BMS_OCV_FOR_SOC_DATA0, &read_ocv, 2);
+> +	if (ret) {
+> +		dev_err(di->dev, "open circuit voltage read failed: %d", ret);
+> +		goto err_read;
+> +	}
+> +
+> +	dev_dbg(di->dev, "read open circuit voltage of: %d mv", read_ocv);
+> +
+> +
+
+one empty line is enough.
+
+> +	*ocv =3D read_ocv * 1000;
+> +
+> +err_read:
+> +	bms_unlock_output_data(di);
+> +
+> +err_lock:
+> +	mutex_unlock(&di->bms_output_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int bms_read_cc(struct bms_device_info *di, s64 *cc_uah)
+> +{
+> +	int ret;
+> +	s64 cc_raw_s36, cc_raw, cc_uv, cc_pvh;
+> +
+> +	mutex_lock(&di->bms_output_lock);
+> +
+> +	ret =3D bms_lock_output_data(di);
+> +	if (ret)
+> +		goto err_lock;
+> +
+> +	ret =3D regmap_bulk_read(di->regmap, di->base_addr +
+> +			       REG_BMS_SHDW_CC_DATA0,
+> +			       &cc_raw_s36, 5);
+> +	if (ret) {
+> +		dev_err(di->dev, "coulomb counter read failed: %d", ret);
+> +		goto err_read;
+> +	}
+> +
+> +	ret =3D bms_unlock_output_data(di);
+> +	if (ret)
+> +		goto err_lock;
+> +
+> +	mutex_unlock(&di->bms_output_lock);
+> +
+> +	cc_raw =3D sign_extend32(cc_raw_s36, 28);
+> +
+> +	/* convert raw to uv */
+> +	cc_uv =3D div_s64(cc_raw * BMS_CC_READING_RESOLUTION_N,
+> +			BMS_CC_READING_RESOLUTION_D);
+> +
+> +	/* convert uv to pvh */
+> +	cc_pvh =3D div_s64(cc_uv * BMS_CC_READING_TICKS * 100000,
+> +			 BMS_SLEEP_CLK_HZ * SECONDS_PER_HOUR);
+> +
+> +	/* divide by impedance */
+> +	*cc_uah =3D div_s64(cc_pvh, 10000);
+> +
+> +	dev_dbg(di->dev, "read coulomb counter value of: %lld uah", *cc_uah);
+> +
+> +	return 0;
+> +
+> +err_read:
+> +	bms_unlock_output_data(di);
+> +
+> +err_lock:
+> +	mutex_unlock(&di->bms_output_lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static void bms_reset_cc(struct bms_device_info *di)
+> +{
+> +	int ret;
+> +
+> +	mutex_lock(&di->bms_output_lock);
+> +
+> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+> +				 REG_BMS_CC_CLEAR_CTL,
+> +				 BMS_CLEAR_SHDW_CC,
+> +				 BMS_CLEAR_SHDW_CC);
+> +	if (ret) {
+> +		dev_err(di->dev, "coulomb counter reset failed: %d", ret);
+> +		goto err_lock;
+> +	}
+> +
+> +	/* wait at least three sleep cycles for cc to reset */
+> +	usleep_range(100, 1000);
+> +
+> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+> +				 REG_BMS_CC_CLEAR_CTL,
+> +				 BMS_CLEAR_SHDW_CC, 0);
+> +	if (ret)
+> +		dev_err(di->dev, "coulomb counter re-enable failed: %d", ret);
+> +
+> +err_lock:
+> +	mutex_unlock(&di->bms_output_lock);
+> +}
+> +
+> +static int bms_calculate_capacity(struct bms_device_info *di, int *capac=
+ity)
+> +{
+> +	unsigned long fcc;
+> +	int ret, temp, ocv_capacity, temp_degc;
+> +	s64 cc =3D 0;
+> +
+> +	ret =3D iio_read_channel_raw(di->adc, &temp);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "failed to read temperature: %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	temp_degc =3D DIV_ROUND_CLOSEST(temp, 1000);
+> +
+> +	ret =3D bms_read_cc(di, &cc);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "failed to read coulomb counter: %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* interpolate capacity from open circuit voltage */
+> +	ocv_capacity =3D interpolate_capacity(temp_degc, di->ocv,
+> +					    &di->ocv_lut);
+> +
+> +	/* interpolate the full charge capacity from temperature */
+> +	fcc =3D interpolate_fcc(temp_degc, &di->fcc_lut);
+> +
+> +	/* append coloumb counter to capacity */
+> +	*capacity =3D DIV_ROUND_CLOSEST(fcc * ocv_capacity, 100);
+> +	*capacity =3D div_s64((*capacity - cc) * 100, fcc);
+> +
+> +	return 0;
+> +}
+> +
+> +
+> +
+
+one empty line is enough.=20
+
+> +/*
+> + * Return power_supply property
+> + */
+> +static int bms_get_property(struct power_supply *psy,
+> +				   enum power_supply_property psp,
+> +				   union power_supply_propval *val)
+> +{
+> +	struct bms_device_info *di =3D power_supply_get_drvdata(psy);
+> +	int ret;
+> +
+> +	switch (psp) {
+> +	case POWER_SUPPLY_PROP_CAPACITY:
+> +		ret =3D bms_calculate_capacity(di, &val->intval);
 > +		break;
-> +
-> +	case 1:
-> +		*cur =3D SC2731_CURRENT_LIMIT_2000;
-> +		break;
-> +
-> +	case 2:
-> +		*cur =3D SC2731_CURRENT_LIMIT_900;
-> +		break;
-> +
-> +	case 3:
-> +		*cur =3D SC2731_CURRENT_LIMIT_500;
-> +		break;
-> +
 > +	default:
+> +		ret =3D -EINVAL;
+> +		break;
+> +	}
+> +
+> +	if (val->intval =3D=3D INT_MAX || val->intval =3D=3D INT_MIN)
+> +		ret =3D -EINVAL;
+> +
+> +	return ret;
+> +}
+> +
+> +static enum power_supply_property bms_props[] =3D {
+> +	POWER_SUPPLY_PROP_CAPACITY,
+> +};
+
+Why does the driver not expose the following battery information?
+
+temperature info via POWER_SUPPLY_PROP_TEMP
+ocv info via POWER_SUPPLY_PROP_VOLTAGE_OCV
+CC info via POWER_SUPPLY_PROP_CHARGE_COUNTER
+max current via POWER_SUPPLY_PROP_CURRENT_MAX
+
+> +static irqreturn_t bms_ocv_thr_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct bms_device_info *di =3D dev_id;
+> +
+> +	if (bms_read_ocv(di, &di->ocv) < 0)
+> +		return IRQ_HANDLED;
+> +
+> +	bms_reset_cc(di);
+> +	return IRQ_HANDLED;
+> +}
+
+You want to call power_supply_changed() here to notify userspace.
+
+> +static int bms_probe(struct platform_device *pdev)
+> +{
+> +	struct power_supply_config psy_cfg =3D {};
+> +	struct bms_device_info *di;
+> +	struct power_supply *bat;
+> +	int ret;
+> +
+> +	di =3D devm_kzalloc(&pdev->dev, sizeof(*di), GFP_KERNEL);
+> +	if (!di)
+> +		return -ENOMEM;
+> +
+> +	di->dev =3D &pdev->dev;
+> +
+> +	di->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
+> +	if (!di->regmap) {
+> +		dev_err(di->dev, "Unable to get regmap");
 > +		return -EINVAL;
 > +	}
 > +
-> +	return 0;
-> +}
+> +	di->adc =3D devm_iio_channel_get(&pdev->dev, "temp");
+> +	if (IS_ERR(di->adc))
+> +		return PTR_ERR(di->adc);
 > +
-> +static int
-> +sc2731_charger_usb_set_property(struct power_supply *psy,
-> +				enum power_supply_property psp,
-> +				const union power_supply_propval *val)
-> +{
-> +	struct sc2731_charger_info *info =3D power_supply_get_drvdata(psy);
-> +	int ret;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	if (!info->charging) {
-> +		mutex_unlock(&info->lock);
-> +		return -ENODEV;
-> +	}
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-> +		ret =3D sc2731_charger_set_current(info, val->intval);
-> +		if (ret < 0)
-> +			dev_err(info->dev, "set charge current failed\n");
-> +		break;
-
-This gets uA as input (instead of mA).
-
-> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-> +		ret =3D sc2731_charger_set_current_limit(info, val->intval);
-> +		if (ret < 0)
-> +			dev_err(info->dev, "set input current limit failed\n");
-> +		break;
-
-This gets uA as input (instead of mA).
-
-> +
-> +	default:
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_usb_get_property(struct power_supply *psy,
-> +					   enum power_supply_property psp,
-> +					   union power_supply_propval *val)
-> +{
-> +	struct sc2731_charger_info *info =3D power_supply_get_drvdata(psy);
-> +	int ret =3D 0;
-> +	u32 cur;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_STATUS:
-> +		if (info->charging)
-> +			val->intval =3D sc2731_charger_get_status(info);
-> +		else
-> +			val->intval =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +		break;
-> +
-> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-> +		if (!info->charging) {
-> +			val->intval =3D 0;
-> +		} else {
-> +			ret =3D sc2731_charger_get_current(info, &cur);
-> +			if (ret)
-> +				goto out;
-> +
-> +			val->intval =3D cur;
-> +		}
-> +		break;
-
-This should always report uA (instead of mA).
-
-> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-> +		if (!info->charging) {
-> +			val->intval =3D 0;
-> +		} else {
-> +			ret =3D sc2731_charger_get_current_limit(info, &cur);
-> +			if (ret)
-> +				goto out;
-> +
-> +			val->intval =3D cur;
-> +		}
-> +		break;
-
-This should always report uA (instead of mA).
-
-> +	default:
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_property_is_writeable(struct power_supply *psy,
-> +						enum power_supply_property psp)
-> +{
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-> +		ret =3D 1;
-> +		break;
-> +
-> +	default:
-> +		ret =3D 0;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static enum power_supply_property sc2731_usb_props[] =3D {
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-> +	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-> +};
-> +
-> +static const struct power_supply_desc sc2731_charger_desc =3D {
-> +	.name			=3D "sc2731_charger",
-> +	.type			=3D POWER_SUPPLY_TYPE_USB,
-> +	.properties		=3D sc2731_usb_props,
-> +	.num_properties		=3D ARRAY_SIZE(sc2731_usb_props),
-> +	.get_property		=3D sc2731_charger_usb_get_property,
-> +	.set_property		=3D sc2731_charger_usb_set_property,
-> +	.property_is_writeable	=3D sc2731_charger_property_is_writeable,
-> +};
-> +
-> +static int sc2731_charger_usb_change(struct notifier_block *nb,
-> +				     unsigned long limit, void *data)
-> +{
-> +	struct sc2731_charger_info *info =3D
-> +		container_of(nb, struct sc2731_charger_info, usb_notify);
-> +	int ret =3D 0;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	if (limit > 0) {
-> +		/* set current limitation and start to charge */
-> +		ret =3D sc2731_charger_set_current_limit(info, limit);
-> +		if (ret)
-> +			goto out;
-> +
-> +		ret =3D sc2731_charger_set_current(info, limit);
-> +		if (ret)
-> +			goto out;
-> +
-> +		ret =3D sc2731_charger_start_charge(info);
-> +		if (ret)
-> +			goto out;
-> +
-> +		info->charging =3D true;
-> +	} else {
-> +		/* Stop charging */
-> +		info->charging =3D false;
-> +		sc2731_charger_stop_charge(info);
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_hw_init(struct sc2731_charger_info *info)
-> +{
-> +	struct power_supply_battery_info bat_info =3D { };
-> +	u32 term_currrent, term_voltage, cur_val, vol_val;
-> +	int ret;
-> +
-> +	/* Enable charger module */
-> +	ret =3D regmap_update_bits(info->regmap, SC2731_MODULE_EN1,
-> +				 SC2731_CHARGE_EN, SC2731_CHARGE_EN);
-> +	if (ret)
+> +	ret =3D of_property_read_u32(di->dev->of_node, "reg", &di->base_addr);
+> +	if (ret < 0)
 > +		return ret;
 > +
-> +	ret =3D power_supply_get_battery_info(info->psy_usb, &bat_info);
-> +	if (ret) {
-> +		dev_warn(info->dev, "no battery information is supplied\n");
-> +
-> +		/*
-> +		 * If no battery information is supplied, we should set
-> +		 * default charge termination current to 120 mA, and default
-> +		 * charge termination voltage to 4.35V.
-> +		 */
-> +		cur_val =3D 0x2;
-> +		vol_val =3D 0x1;
-> +	} else {
-> +		term_currrent =3D bat_info.charge_term_current_ua / 1000;
-> +
-> +		if (term_currrent <=3D 90)
-> +			cur_val =3D 0;
-> +		else if (term_currrent >=3D 265)
-> +			cur_val =3D 0x7;
-> +		else
-> +			cur_val =3D ((term_currrent - 90) / 25) + 1;
-> +
-> +		term_voltage =3D bat_info.constant_charge_voltage_max_uv / 1000;
-> +
-> +		if (term_voltage > 4500)
-> +			term_voltage =3D 4500;
-> +
-> +		if (term_voltage > 4200)
-> +			vol_val =3D (term_voltage - 4200) / 100;
-> +		else
-> +			vol_val =3D 0;
-> +	}
-> +
-> +	/* Set charge termination current */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG2,
-> +				 SC2731_TERMINATION_CUR_MASK, cur_val);
-> +	if (ret)
-> +		goto error;
-> +
-> +	/* Set charge termination voltage */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				 SC2731_TERMINATION_VOL_MASK |
-> +				 SC2731_TERMINATION_VOL_CAL_MASK,
-> +				 (vol_val << SC2731_TERMINATION_VOL_SHIFT) |
-> +				 (0x6 << SC2731_TERMINATION_VOL_CAL_SHIFT));
-> +	if (ret)
-> +		goto error;
-> +
-> +	return 0;
-> +
-> +error:
-> +	regmap_update_bits(info->regmap, SC2731_MODULE_EN1, SC2731_CHARGE_EN, 0=
-);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct sc2731_charger_info *info;
-> +	struct power_supply_config charger_cfg =3D { };
-> +	int ret;
-> +
-> +	info =3D devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&info->lock);
-> +	info->dev =3D &pdev->dev;
-> +
-> +	info->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!info->regmap) {
-> +		dev_err(&pdev->dev, "failed to get charger regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret =3D of_property_read_u32(np, "reg", &info->base);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to get register address\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	charger_cfg.drv_data =3D info;
-> +	charger_cfg.of_node =3D np;
-> +	info->psy_usb =3D devm_power_supply_register(&pdev->dev,
-> +						   &sc2731_charger_desc,
-> +						   &charger_cfg);
-> +	if (IS_ERR(info->psy_usb)) {
-> +		dev_err(&pdev->dev, "failed to register power supply\n");
-> +		return PTR_ERR(info->psy_usb);
-> +	}
-> +
-> +	ret =3D sc2731_charger_hw_init(info);
-> +	if (ret)
-> +		return ret;
-> +
-> +	info->usb_phy =3D devm_usb_get_phy_by_phandle(&pdev->dev, "phys", 0);
-> +	if (IS_ERR(info->usb_phy)) {
-> +		dev_err(&pdev->dev, "failed to find USB phy\n");
-> +		return PTR_ERR(info->usb_phy);
-> +	}
-> +
-> +	info->usb_notify.notifier_call =3D sc2731_charger_usb_change;
-> +	ret =3D usb_register_notifier(info->usb_phy, &info->usb_notify);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register notifier: %d\n", ret);
+> +	ret =3D of_property_read_u8_array(di->dev->of_node,
+> +						 "qcom,ocv-temp-legend-celsius",
+> +						 (u8 *)di->ocv_lut.temp_legend,
+> +						 TEMPERATURE_COLS);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "no open circuit voltage temperature legend found");
 > +		return ret;
 > +	}
 > +
-> +	return 0;
+> +	di->ocv_lut.rows =3D of_property_read_variable_u8_array(di->dev->of_nod=
+e,
+> +						 "qcom,ocv-capacity-legend",
+> +						 di->ocv_lut.capacity_legend, 0,
+> +						 MAX_CAPACITY_ROWS);
+> +	if (di->ocv_lut.rows < 0) {
+> +		dev_err(di->dev, "no open circuit voltage capacity legend found");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D of_property_read_variable_u32_array(di->dev->of_node,
+> +						  "qcom,ocv-lut-microvolt",
+> +						  (u32 *)di->ocv_lut.lut,
+> +						  TEMPERATURE_COLS,
+> +						  TEMPERATURE_COLS *
+> +						  MAX_CAPACITY_ROWS);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "no open circuit voltage lut array found");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D of_property_read_u8_array(di->dev->of_node,
+> +						 "qcom,fcc-temp-legend-celsius",
+> +						 (u8 *)di->fcc_lut.temp_legend,
+> +						 TEMPERATURE_COLS);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "no full charge capacity temperature legend found");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D of_property_read_u32_array(di->dev->of_node,
+> +						  "qcom,fcc-lut-microamp-hours",
+> +						  di->fcc_lut.lut,
+> +						  TEMPERATURE_COLS);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "no full charge capacity lut array found");
+> +		return ret;
+> +	}
+> +
+> +	ret =3D bms_read_ocv(di, &di->ocv);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "failed to read initial open circuit voltage: %d",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_init(&di->bms_output_lock);
+> +
+> +	di->ocv_thr_irq =3D platform_get_irq_byname(pdev, "ocv_thr");
+> +
+> +	ret =3D devm_request_threaded_irq(di->dev, di->ocv_thr_irq, NULL,
+> +					bms_ocv_thr_irq_handler,
+> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+> +					pdev->name, di);
+> +	if (ret < 0) {
+> +		dev_err(di->dev, "failed to request handler for open circuit voltage t=
+hreshold IRQ");
+> +		return ret;
+> +	}
+> +
+> +
+
+one empty line is enough.
+
+> +	di->bat_desc.name =3D "bms";
+> +	di->bat_desc.type =3D POWER_SUPPLY_TYPE_BATTERY;
+> +	di->bat_desc.properties =3D bms_props;
+> +	di->bat_desc.num_properties =3D ARRAY_SIZE(bms_props);
+> +	di->bat_desc.get_property =3D bms_get_property;
+> +
+> +	psy_cfg.drv_data =3D di;
+
+psy_cfg.of_node =3D pdev->dev.of_node;
+
+> +	bat =3D devm_power_supply_register(di->dev, &di->bat_desc, &psy_cfg);
+> +
+> +	return PTR_ERR_OR_ZERO(bat);
 > +}
 > +
-> +static int sc2731_charger_remove(struct platform_device *pdev)
-> +{
-> +	struct sc2731_charger_info *info =3D platform_get_drvdata(pdev);
-> +
-> +	usb_unregister_notifier(info->usb_phy, &info->usb_notify);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sc2731_charger_of_match[] =3D {
-> +	{ .compatible =3D "sprd,sc2731-charger", },
-> +	{ }
+> +static const struct of_device_id bms_of_match[] =3D {
+> +	{.compatible =3D "qcom,pm8941-bms", },
+> +	{ },
 > +};
+> +MODULE_DEVICE_TABLE(of, bms_of_match);
 > +
-> +static struct platform_driver sc2731_charger_driver =3D {
+> +static struct platform_driver bms_driver =3D {
+> +	.probe =3D bms_probe,
 > +	.driver =3D {
-> +		.name =3D "sc2731-charger",
-> +		.of_match_table =3D sc2731_charger_of_match,
+> +		.name =3D "qcom-bms",
+> +		.of_match_table =3D of_match_ptr(bms_of_match),
 > +	},
-> +	.probe =3D sc2731_charger_probe,
-> +	.remove =3D sc2731_charger_remove,
 > +};
+> +module_platform_driver(bms_driver);
 > +
-> +module_platform_driver(sc2731_charger_driver);
-> +
-> +MODULE_DESCRIPTION("Spreadtrum SC2731 Charger Driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 1.7.9.5
->=20
+> +MODULE_AUTHOR("Craig Tatlor <ctatlor97@gmail.com>");
+> +MODULE_DESCRIPTION("Qualcomm BMS driver");
+> +MODULE_LICENSE("GPL");
 
---5ycneaxzqwvwo2go
+Apart from the things above I would like to see the information
+about the battery cell itself being moved to 'struct
+power_supply_battery_info', see also my comment in the DT bindings.
+
+-- Sebastian
+
+--fynnm6azsqtphcbk
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlueLaAACgkQ2O7X88g7
-+prQcw//YKfBSJNm9G+bDLHk3ijMbsawtfaj2NugUxKBjrNXZDWmvtiLNAQGObHr
-FCuz1I+Q2+PhcnJkB9AH8oow8zfqmiQzfrV7tvwnrZ8lu25WBHYAhv4g3Fev0vAY
-OOZOkeEEFgJDL0Vov08+BucVBlGJtcj/HAHeNrMcbf+R/vyOb82QMaZbHg+/udqD
-edwoektm9+GemvVFyQ3703erSLv8OSu6WdGfaISRprh+B3b7ppQcUKGTmViSYe9V
-PwZjekDmoV74f5JyvFbXKUbnKV06SI5/Qug1Gqpxms85Us14cNozu3jNJpo7Yt23
-CRzPhfqj7WafXLDnpkaTapM/DQaj3UnRdttQmPhZXWJ3On881kLnLNcDInwzseMv
-q+tqx3hFw4uRAr+FY1hnIwJfyRRjSlweO82vxpUAI7OXD/QEx/IsBy7cme8USQH5
-Hr8pX+WTCIzlOLCRS6IgX2CkHvFjILvNvb4/1oOb+62P9ZY6MZW1l5KCJYB6JDAT
-T1/c5hQalY/zrLaU76q8q5EMDUmBHbPjkMVYQyt07PVEQkb2ubY2vS8yAjfM0ZWu
-oFdE/Bcu0mYOGEUqJGgugacKqvTAyzAK+M9Y1TwLqK3UMfHUYPJqY1PIxazKgQB5
-bJ4Lm2v947+UFDVRxB+f0pvKFqCvZgrYpP5mL08JZKKrTFcMJhE=
-=OGjF
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlueXyoACgkQ2O7X88g7
++pqyVBAAjxQOxCdhJ0ZF+hLVJBAjrEue23TmIT+RNYSetbxlMfnPt0NQX1wc8J1W
+WURBgX7gKXC+r4aARoG2kpmZtgSs39bmxJ54sSZdPmc+m+HU9rSUssdJPr24E3tP
+vHGp6NFamSIAHvOESzMBDQgSt5KxeiDhloXU7wx1GyPcELWuio0DyXilX348jisP
+iABCBm5CtU5gVNIiGDtLmpbixVxdWs3Opv8jGMqUPDajiGylQqD5ZqPAbjQm/zoZ
+zaT3oxLA0Ys97xKJgnEpxMtZI2WhDVEFW6r/0TK8z9gG8fBvuARRp6PGKL0b2cst
+RSzIlapncrthkmaMacd7o8ve22WVGUDdh/BHNyTKBAnBS2qS9pGoDTYBAFhIM555
+7QnLl2eMK6VCm7DbdYeIR6LupvrTP2ee9G2dCPt5ut81ZTVxKvwPBEDSLITTJRlf
+zmy7/dUe9RXn6ATDlbxOZtmIM8P1yx8Pn0RpDvbFpCu7rkr5p6lsW/H4rz6ycQbX
+z2KhHELFTTBn5SDD6HnIaoxi76g7HRT/wXoDfiTEUoBMH4r+GpbrK6kRAjW8AcqQ
+m6DDvYcN13SQmlirU9KqjuSa8v5Q1Cvooi3N78miSoC3QndOuhqUGl/T0/Roek8J
+d9sicBH/SQBJAuktP2yRWow9C+2pTS+E7Jr90ODkicWX0BoKZAY=
+=lDGX
 -----END PGP SIGNATURE-----
 
---5ycneaxzqwvwo2go--
+--fynnm6azsqtphcbk--
