@@ -1,63 +1,71 @@
-Return-Path: <SRS0=qjSo=MA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52132 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727207AbeIRTE7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Sep 2018 15:04:59 -0400
-Received: from dlelxv90.itg.ti.com ([172.17.2.17])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id w8IDWMIk091587
-        for <devicetree@vger.kernel.org>; Tue, 18 Sep 2018 08:32:22 -0500
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by dlelxv90.itg.ti.com (8.14.3/8.13.8) with ESMTP id w8IDWLSC014355
-        for <devicetree@vger.kernel.org>; Tue, 18 Sep 2018 08:32:21 -0500
-From: Jyri Sarha <jsarha@ti.com>
-Subject: [tiL-k3-AD-4.19 PATCH 02/24] dt-bindings: display/ti: add am65x-dss bindings
-Date: Tue, 18 Sep 2018 16:31:50 +0300
-Message-ID: <1537277532-6386-3-git-send-email-jsarha@ti.com>
-In-Reply-To: <1537277532-6386-1-git-send-email-jsarha@ti.com>
-References: <1537277532-6386-1-git-send-email-jsarha@ti.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b9f3f61.1c69fb81.f4e64.f592@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
+ <CACRpkdakAAAFKfRFeB_8kUCyGts_7sojVwyexe4aL4QQo2CcGg@mail.gmail.com>
+ <20180906144834.GD1653@imbe.wolfsonmicro.main>
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: tomi.valkeinen@ti.com, subhajit_paul@ti.com, jjhiblot@ti.com, linux-patch-review@list.ti.com, lcpd_audiovideo@list.ti.com
-Cc: Jyri Sarha <jsarha@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180906144834.GD1653@imbe.wolfsonmicro.main>
+Date: Sun, 16 Sep 2018 18:11:08 -0500
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
 List-ID: <devicetree@vger.kernel.org>
 
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+On Thu, Sep 06, 2018 at 03:48:34PM +0100, Charles Keepax wrote:
+> On Thu, Sep 06, 2018 at 03:46:12PM +0200, Linus Walleij wrote:
+> > On Wed, Sep 5, 2018 at 12:41 PM Charles Keepax
+> > <ckeepax@opensource.cirrus.com> wrote:
+> > 
+> > > From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> > >
+> > > Lochnagar is an evaluation and development board for Cirrus
+> > > Logic Smart CODEC and Amp devices. It allows the connection of
+> > > most Cirrus Logic devices on mini-cards, as well as allowing
+> > > connection of various application processor systems to provide a
+> > > full evaluation platform.  Audio system topology, clocking and
+> > > power can all be controlled through the Lochnagar, allowing the
+> > > device under test to be used in a variety of possible use cases.
+> > >
+> > > As the Lochnagar is a fairly complex device this MFD driver
+> > > allows the drivers for the various features to be bound
+> > > in. Initially clocking, regulator and pinctrl will be added as
+> > > these are necessary to configure the system. But in time at least
+> > > audio and voltage/current monitoring will also be added.
+> > >
+> > > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+> > 
+> > It's a bit confusing, maybe you can clear it up:
+> > it appears to be an I2C device, so when you say this is a
+> > "development board" is there something like a board
+> > controller that is accessed over I2C and this is what the
+> > driver really probes to, not the board per se?
+> > 
+> > I guess jamming this card into the I2C slot of any other
+> > system (would work fine with a 96Boards LS connector
+> > as it seems, actually)  also involves connecting some
+> > I2S or similar on the side for high-datarate traffic?
+> > 
+> > This driver seems to only concern itself with the I2C
+> > board controller per se, not the board is that right?
+> > 
+> 
+> Yeah I have poorly phrased that, these patches are very much
+> just dealing with the board controller chip.
 
-Add DT bindings for Texas Instruments AM65x SoC Display Subsystem.  The
-DSS7 on AM65x SoC has two video ports (DPI and OLDI) and two video
-pipelines.
+How would the codec I2C connect to the host? Is there one I2C bus or 
+2? The binding looks mostly fine to me, but I think we need to 
+understand that part.
 
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Jyri Sarha <jsarha@ti.com>
----
- .../devicetree/bindings/display/ti/ti,am6-dss.txt        | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/ti/ti,am6-dss.txt
-
-diff --git a/Documentation/devicetree/bindings/display/ti/ti,am6-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,am6-dss.txt
-new file mode 100644
-index 0000000..3466f09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/ti/ti,am6-dss.txt
-@@ -0,0 +1,16 @@
-+Texas Instruments AM65x Display Subsystem
-+==========================================
-+
-+Required properties:
-+- compatible: "ti,am65x-dss", "ti,am6-dss"
-+- reg: address and length of the register spaces for DSS submodules
-+- reg-names: "common", "vidl1", "vid", "ovr1", "ovr2", "vp1", "vp2"
-+- clocks: phandle to fclk, vp1, and vp2 clocks
-+- clock-names: "fck", "vp1", "vp2"
-+- interrupts: phandle to the DISPC interrupt
-+- syscon: phandle to syscon device handling OLDI_PWRDN_TX (partition 1 of
-+  AM654 CTRL MMR0)
-+
-+The DSS outputs are described using the device graphs as documented in
-+Documentation/devicetree/bindings/graph.txt. AM6 DSS has a DPI output as port 0
-+and an OLDI output as port 1.
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+> You could connect just the I2C to something like the 96Boards LS
+> connector, and control all the functionality accessed by this
+> driver. Although if you want to send audio between your 96Boards
+> device and the Lochnagar you would need to connect up some I2S as
+> well.
+> 
+> Thanks,
+> Charles
