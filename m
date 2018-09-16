@@ -1,12 +1,12 @@
 From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V5 2/2] dt-bindings: timer: gx6605s SOC timer
-Date: Sun, 16 Sep 2018 17:29:06 +0800
-Message-ID: <ff38586ad4904f5cbbaf03623853e01acf0d0007.1537090062.git.ren_guo@c-sky.com>
-References: <dce7c1bc36ba39635b0ae5fd3d9b30172936727d.1537089130.git.ren_guo@c-sky.com>
+Subject: [PATCH V6 2/2] dt-bindings: timer: gx6605s SOC timer
+Date: Sun, 16 Sep 2018 17:30:56 +0800
+Message-ID: <ff38586ad4904f5cbbaf03623853e01acf0d0007.1537090237.git.ren_guo@c-sky.com>
+References: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090237.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dce7c1bc36ba39635b0ae5fd3d9b30172936727d.1537089130.git.ren_guo@c-sky.com>
-In-Reply-To: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090062.git.ren_guo@c-sky.com>
-References: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090062.git.ren_guo@c-sky.com>
+In-Reply-To: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090237.git.ren_guo@c-sky.com>
+In-Reply-To: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090237.git.ren_guo@c-sky.com>
+References: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090237.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
