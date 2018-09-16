@@ -1,208 +1,248 @@
 From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V6 1/2] clocksource: add gx6605s SOC system timer
-Date: Sun, 16 Sep 2018 17:30:55 +0800
-Message-ID: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090237.git.ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 1/2] clocksource: add C-SKY SMP timer
+Date: Sun, 16 Sep 2018 17:36:46 +0800
+Message-ID: <20180916093646.GA4305@guoren-Inspiron-7460>
+References: <dce7c1bc36ba39635b0ae5fd3d9b30172936727d.1537089130.git.ren_guo@c-sky.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <dce7c1bc36ba39635b0ae5fd3d9b30172936727d.1537089130.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+To: tglx@linutronix.de, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Changelog:
- - Add License and Copyright
- - Use timer-of framework
- - Change name with upstream feedback
- - Use clksource_mmio framework
+Sorry for duplicate patch-sets, for gx6605s-timer See PATCH V6.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
----
- drivers/clocksource/Kconfig         |   8 ++
- drivers/clocksource/Makefile        |   1 +
- drivers/clocksource/timer-gx6605s.c | 150 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 159 insertions(+)
- create mode 100644 drivers/clocksource/timer-gx6605s.c
-
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index a11f4ba..6d0f18d 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -620,4 +620,12 @@ config RISCV_TIMER
- 	  is accessed via both the SBI and the rdcycle instruction.  This is
- 	  required for all RISC-V systems.
- 
-+config GX6605S_TIMER
-+	bool "Gx6605s SOC system timer driver"
-+	depends on CSKY
-+	select CLKSRC_MMIO
-+	select TIMER_OF
-+	help
-+	  This option enables support for gx6605s SOC's timer.
-+
- endmenu
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index db51b24..dc5621d 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -79,3 +79,4 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
- obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
- obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
- obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
-+obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
-diff --git a/drivers/clocksource/timer-gx6605s.c b/drivers/clocksource/timer-gx6605s.c
-new file mode 100644
-index 0000000..10194c9
---- /dev/null
-+++ b/drivers/clocksource/timer-gx6605s.c
-@@ -0,0 +1,150 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-+
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/sched_clock.h>
-+
-+#include "timer-of.h"
-+
-+#define CLKSRC_OFFSET	0x40
-+
-+#define TIMER_STATUS	0x00
-+#define TIMER_VALUE	0x04
-+#define TIMER_CONTRL	0x10
-+#define TIMER_CONFIG	0x20
-+#define TIMER_DIV	0x24
-+#define TIMER_INI	0x28
-+
-+#define GX6605S_STATUS_CLR	BIT(0)
-+#define GX6605S_CONTRL_RST	BIT(0)
-+#define GX6605S_CONTRL_START	BIT(1)
-+#define GX6605S_CONFIG_EN	BIT(0)
-+#define GX6605S_CONFIG_IRQ_EN	BIT(1)
-+
-+static irqreturn_t gx6605s_timer_interrupt(int irq, void *dev)
-+{
-+	struct clock_event_device *ce = (struct clock_event_device *) dev;
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	writel_relaxed(GX6605S_STATUS_CLR, base + TIMER_STATUS);
-+
-+	ce->event_handler(ce);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int gx6605s_timer_set_oneshot(struct clock_event_device *ce)
-+{
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	/* reset and stop counter */
-+	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
-+
-+	/* enable with irq and start */
-+	writel_relaxed(GX6605S_CONFIG_EN | GX6605S_CONFIG_IRQ_EN, base + TIMER_CONFIG);
-+
-+	return 0;
-+}
-+
-+static int gx6605s_timer_set_next_event(unsigned long delta, struct clock_event_device *ce)
-+{
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	/* use reset to pause timer */
-+	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
-+
-+	/* config next timeout value */
-+	writel_relaxed(ULONG_MAX - delta, base + TIMER_INI);
-+	writel_relaxed(GX6605S_CONTRL_START, base + TIMER_CONTRL);
-+
-+	return 0;
-+}
-+
-+static int gx6605s_timer_shutdown(struct clock_event_device *ce)
-+{
-+	void __iomem *base = timer_of_base(to_timer_of(ce));
-+
-+	writel_relaxed(0, base + TIMER_CONTRL);
-+	writel_relaxed(0, base + TIMER_CONFIG);
-+
-+	return 0;
-+}
-+
-+static struct timer_of to = {
-+	.flags = TIMER_OF_IRQ | TIMER_OF_BASE | TIMER_OF_CLOCK,
-+	.clkevt = {
-+		.rating			= 300,
-+		.features		= CLOCK_EVT_FEAT_DYNIRQ |
-+					  CLOCK_EVT_FEAT_ONESHOT,
-+		.set_state_shutdown	= gx6605s_timer_shutdown,
-+		.set_state_oneshot	= gx6605s_timer_set_oneshot,
-+		.set_next_event		= gx6605s_timer_set_next_event,
-+		.cpumask		= cpu_possible_mask,
-+	},
-+	.of_irq = {
-+		.handler		= gx6605s_timer_interrupt,
-+		.flags			= IRQF_TIMER | IRQF_IRQPOLL,
-+	},
-+};
-+
-+static u64 notrace gx6605s_sched_clock_read(void)
-+{
-+	void __iomem *base;
-+
-+	base = timer_of_base(&to) + CLKSRC_OFFSET;
-+
-+	return (u64) readl_relaxed(base + TIMER_VALUE);
-+}
-+
-+static void gx6605s_clkevt_init(void __iomem *base)
-+{
-+	writel_relaxed(0, base + TIMER_DIV);
-+	writel_relaxed(0, base + TIMER_CONFIG);
-+
-+	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to), 2, ULONG_MAX);
-+}
-+
-+static int gx6605s_clksrc_init(void __iomem *base)
-+{
-+	writel_relaxed(0, base + TIMER_DIV);
-+	writel_relaxed(0, base + TIMER_INI);
-+
-+	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
-+
-+	writel_relaxed(GX6605S_CONFIG_EN, base + TIMER_CONFIG);
-+
-+	writel_relaxed(GX6605S_CONTRL_START, base + TIMER_CONTRL);
-+
-+	sched_clock_register(gx6605s_sched_clock_read, 32, timer_of_rate(&to));
-+
-+	return clocksource_mmio_init(base + TIMER_VALUE, "gx6605s", timer_of_rate(&to),
-+				     200, 32, clocksource_mmio_readl_up);
-+}
-+
-+static int __init gx6605s_timer_init(struct device_node *np)
-+{
-+	int ret;
-+
-+	/*
-+	 * The timer driver is for nationalchip gx6605s SOC and there are two same timer
-+	 * in gx6605s. We use one for clkevt and another for clksrc.
-+	 *
-+	 * The timer is mmio map to access, so we need give mmio addres in dts.
-+	 *
-+	 * It provides a 32bit countup timer and interrupt will be caused by count-overflow.
-+	 * So we need set-next-event by ULONG_MAX - delta in TIMER_INI reg.
-+	 *
-+	 * The counter at 0x0  offset is clock event.
-+	 * The counter at 0x40 offset is clock source.
-+	 * They are the same in hardware, just different used by driver.
-+	 */
-+	ret = timer_of_init(np, &to);
-+	if (ret)
-+		return ret;
-+
-+	gx6605s_clkevt_init(timer_of_base(&to));
-+
-+	return gx6605s_clksrc_init(timer_of_base(&to) + CLKSRC_OFFSET);
-+}
-+TIMER_OF_DECLARE(csky_gx6605s_timer, "csky,gx6605s-timer", gx6605s_timer_init);
--- 
-2.7.4
+On Sun, Sep 16, 2018 at 05:13:57PM +0800, Guo Ren wrote:
+> This timer is used by SMP system and use mfcr/mtcr instruction
+> to access the regs.
+> 
+> Changelog:
+>  - Support csky mp timer alpha version.
+>  - Just use low-counter with 32bit width as clocksource.
+>  - Coding convention with upstream feed-back.
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ---
+>  drivers/clocksource/Kconfig        |   8 ++
+>  drivers/clocksource/Makefile       |   1 +
+>  drivers/clocksource/csky_mptimer.c | 178 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 187 insertions(+)
+>  create mode 100644 drivers/clocksource/csky_mptimer.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index a11f4ba..51286be 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -609,6 +609,14 @@ config ATCPIT100_TIMER
+>  	help
+>  	  This option enables support for the Andestech ATCPIT100 timers.
+>  
+> +config CSKY_MPTIMER
+> +	bool "C-SKY Multi Processor Timer"
+> +	depends on CSKY
+> +	select TIMER_OF
+> +	help
+> +	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
+> +	  system.
+> +
+>  config RISCV_TIMER
+>  	bool "Timer for the RISC-V platform"
+>  	depends on RISCV
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index db51b24..848c676 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -79,3 +79,4 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+>  obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
+> +obj-$(CONFIG_CSKY_MPTIMER)		+= csky_mptimer.o
+> diff --git a/drivers/clocksource/csky_mptimer.c b/drivers/clocksource/csky_mptimer.c
+> new file mode 100644
+> index 0000000..da2b239
+> --- /dev/null
+> +++ b/drivers/clocksource/csky_mptimer.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> +
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/cpu.h>
+> +#include <asm/reg_ops.h>
+> +
+> +#include "timer-of.h"
+> +
+> +#define PTIM_CCVR	"cr<3, 14>"
+> +#define PTIM_CTLR	"cr<0, 14>"
+> +#define PTIM_LVR	"cr<6, 14>"
+> +#define PTIM_TSR	"cr<1, 14>"
+> +
+> +static int csky_mptimer_set_next_event(unsigned long delta, struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_LVR, delta);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_shutdown(struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_CTLR, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_oneshot(struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_CTLR, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_oneshot_stopped(struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_CTLR, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct timer_of, csky_to) = {
+> +	.flags					= TIMER_OF_CLOCK,
+> +	.clkevt = {
+> +		.rating				= 300,
+> +		.features			= CLOCK_EVT_FEAT_PERCPU |
+> +						  CLOCK_EVT_FEAT_ONESHOT,
+> +		.set_state_shutdown		= csky_mptimer_shutdown,
+> +		.set_state_oneshot		= csky_mptimer_oneshot,
+> +		.set_state_oneshot_stopped	= csky_mptimer_oneshot_stopped,
+> +		.set_next_event			= csky_mptimer_set_next_event,
+> +	},
+> +	.of_irq = {
+> +		.flags				= IRQF_TIMER,
+> +		.percpu				= 1,
+> +	},
+> +};
+> +
+> +static irqreturn_t timer_interrupt(int irq, void *dev)
+> +{
+> +	struct timer_of *to = this_cpu_ptr(&csky_to);
+> +
+> +	mtcr(PTIM_TSR, 0);
+> +
+> +	to->clkevt.event_handler(&to->clkevt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/*
+> + * clock event for percpu
+> + */
+> +static int csky_mptimer_starting_cpu(unsigned int cpu)
+> +{
+> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
+> +
+> +	to->clkevt.cpumask = cpumask_of(cpu);
+> +
+> +	clockevents_config_and_register(&to->clkevt, timer_of_rate(to), 2, ULONG_MAX);
+> +
+> +	enable_percpu_irq(timer_of_irq(to), 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_dying_cpu(unsigned int cpu)
+> +{
+> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
+> +
+> +	disable_percpu_irq(timer_of_irq(to));
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * clock source
+> + */
+> +static u64 sched_clock_read(void)
+> +{
+> +	return (u64) mfcr(PTIM_CCVR);
+> +}
+> +
+> +static u64 clksrc_read(struct clocksource *c)
+> +{
+> +	return (u64) mfcr(PTIM_CCVR);
+> +}
+> +
+> +struct clocksource csky_clocksource = {
+> +	.name	= "csky",
+> +	.rating	= 400,
+> +	.mask	= CLOCKSOURCE_MASK(32),
+> +	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.read	= clksrc_read,
+> +};
+> +
+> +#define CPUHP_AP_CSKY_TIMER_STARTING CPUHP_AP_DUMMY_TIMER_STARTING
+> +
+> +static int __init csky_mptimer_init(struct device_node *np)
+> +{
+> +	int ret, cpu;
+> +	struct timer_of *to;
+> +	int rate = 0;
+> +	int irq	 = 0;
+> +
+> +	/*
+> +	 * Csky_mptimer is designed for C-SKY SMP multi-processors and
+> +	 * every core has it's own private irq and regs for clkevt and
+> +	 * clksrc.
+> +	 *
+> +	 * The regs is accessed by cpu instruction: mfcr/mtcr instead of
+> +	 * mmio map style. So we needn't mmio-address in dts, but we still
+> +	 * need to give clk and irq number.
+> +	 *
+> +	 * We use private irq for the mptimer and irq number is the same
+> +	 * for every core. So we use request_percpu_irq() in timer_of_init.
+> +	 */
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		to = per_cpu_ptr(&csky_to, cpu);
+> +
+> +		if (cpu == 0) {
+> +			to->flags	  |= TIMER_OF_IRQ;
+> +			to->of_irq.handler = timer_interrupt;
+> +
+> +			ret = timer_of_init(np, to);
+> +			if (ret)
+> +				return ret;
+> +
+> +			rate	= timer_of_rate(to);
+> +			irq	= to->of_irq.irq;
+> +		} else {
+> +			ret = timer_of_init(np, to);
+> +			if (ret)
+> +				return ret;
+> +
+> +			to->of_clk.rate	= rate;
+> +			to->of_irq.irq	= irq;
+> +		}
+> +	}
+> +
+> +	ret = cpuhp_setup_state(CPUHP_AP_CSKY_TIMER_STARTING,
+> +				"clockevents/csky/timer:starting",
+> +				csky_mptimer_starting_cpu,
+> +				csky_mptimer_dying_cpu);
+> +	if (ret) {
+> +		pr_err("%s: Failed to cpuhp_setup_state.\n", __func__);
+> +		return ret;
+> +	}
+> +
+> +	clocksource_register_hz(&csky_clocksource, rate);
+> +	sched_clock_register(sched_clock_read, 32, rate);
+> +
+> +	return 0;
+> +}
+> +TIMER_OF_DECLARE(csky_mptimer, "csky,mptimer", csky_mptimer_init);
+> -- 
+> 2.7.4
