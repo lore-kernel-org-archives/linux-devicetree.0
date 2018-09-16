@@ -1,77 +1,67 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v4 3/5] dt-bindings: fxas21002c: Document the fxas21002c
- I2C bindings
-Date: Sun, 16 Sep 2018 14:01:21 +0100
-Message-ID: <20180916140121.0c88cf03@archlinux>
-References: <20180911150011.31964-1-afonsobordado@az8.co>
-        <20180911150011.31964-3-afonsobordado@az8.co>
+Subject: Re: [PATCH v3 1/3] dt-bindings: iio: vadc: Fix documentation of
+ 'reg'
+Date: Sun, 16 Sep 2018 14:05:46 +0100
+Message-ID: <20180916140546.264c4310@archlinux>
+References: <20180910160301.237538-1-mka@chromium.org>
+        <20180910160301.237538-2-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911150011.31964-3-afonsobordado@az8.co>
+In-Reply-To: <20180910160301.237538-2-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Afonso Bordado <afonsobordado@az8.co>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Sep 2018 16:00:09 +0100
-Afonso Bordado <afonsobordado@az8.co> wrote:
+On Mon, 10 Sep 2018 09:02:59 -0700
+Matthias Kaehlcke <mka@chromium.org> wrote:
 
-> Add documentation for the fxas21002c I2C bindings.
+> The documentation of Qualcomm's SPMI PMIC voltage ADC claims that the
+> 'reg' property consists of two values, the SPMI address and the length
+> of the controller's registers. However the SPMI bus to which it is added
+> specifies "#size-cells = <0>;". Remove the controller register length
+> from the documentation of the field and the example.
 > 
-> Signed-off-by: Afonso Bordado <afonsobordado@az8.co>
-Device tree bindings should go to the devicetree maintainers
-and the devicetree binding list. Make sure v5 goes
-that way.
-
-This one is just about complex enough I'll want a review from
-Rob as he is more likely to catch a problem than I am.
-
-Thanks,
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+I've already tidied this up and applied.  It should hit linux-next
+tomorrow.
 
 Jonathan
 > ---
->  .../bindings/iio/gyroscope/fsl,fxas21002c.txt | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
+
+> Changes in v3:
+> - fixed separator in commit message
+> - removed duplicate 'Signed-off-by' tag
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
-> new file mode 100644
-> index 000000000000..9e5cdf0c0b69
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/gyroscope/fsl,fxas21002c.txt
-> @@ -0,0 +1,33 @@
-> +* Freescale FXAS21002C Digital Angular Rate Gyroscope
-> +
-> +Required properties:
-> +
-> +  - compatible: must be "fsl,fxas21002c"
-> +  - reg : the I2C address of the sensor
-> +
-> +Optional properties:
-> +
-> +  - interrupts		: The first interrupt listed must be the one
-> +			  connected to the INT1 pin, the second interrupt
-> +			  listed must be the one connected to the INT2 pin.
-> +			  The interrupts can be triggered on rising or falling
-> +			  edges alike.
-> +			  see interrupt-controller/interrupts.txt
-> +  - vdd-supply		: The main voltage regulator
-> +  - iovdd-supply	: The IO voltage regulator
-> +			  see regulator/regulator.txt
-> +  - reset-gpios		: GPIO used to reset the device.
-> +			  see gpio/gpio.txt.
-> +  - mount-matrix	: see iio/mount-matrix.txt
-> +
-> +Example:
-> +gyroscope@20 {
-> +	compatible = "fsl,fxas21002c";
-> +	reg = <0x20>;
-> +	reset-gpios = <&gpio0 2 0>;
-> +	vdd-supply = <&vref>;
-> +	iovdd-supply = <&vref2>;
-> +	interrupt-parent = <&foo>;
-> +	interrupts = <0 IRQ_TYPE_EDGE_RISING>,
-> +		     <1 (IRQ_TYPE_EDGE_RISING | IRQ_TYPE_EDGE_FALLING)>;
-> +};
+> Changes in v2:
+> - none
+> ---
+>  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> index 0fb46137f936..d0c188e5c922 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> @@ -13,7 +13,7 @@ VADC node:
+>  - reg:
+>      Usage: required
+>      Value type: <prop-encoded-array>
+> -    Definition: VADC base address and length in the SPMI PMIC register map.
+> +    Definition: VADC base address in the SPMI PMIC register map.
+>  
+>  - #address-cells:
+>      Usage: required
+> @@ -104,7 +104,7 @@ Example:
+>  	/* VADC node */
+>  	pmic_vadc: vadc@3100 {
+>  		compatible = "qcom,spmi-vadc";
+> -		reg = <0x3100 0x100>;
+> +		reg = <0x3100>;
+>  		interrupts = <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
