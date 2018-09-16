@@ -1,13 +1,11 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 0/2] Improve VCHIQ cache line size handling
-Date: Sun, 16 Sep 2018 17:25:19 +0200 (CEST)
-Message-ID: <1485322276.234696.1537111519181@email.1und1.de>
-References: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
+From: "David Summers" <beagleboard@davidjohnsummers.uk>
+Subject: [PATCH] Device Tree for ASUS Tinker Board S (v2)
+Date: Sun, 16 Sep 2018 19:16:33 +0100
+Message-ID: <20180916181636.7938-1-beagleboard@davidjohnsummers.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1536770554-107314-1-git-send-email-phil@raspberrypi.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,38 +15,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: greg@embeddedgreg.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Thanks to Heiko for comments on the first
 
-> Phil Elwell <phil@raspberrypi.org> hat am 12. September 2018 um 18:42 geschrieben:
-> 
-> 
-> Both sides of the VCHIQ communications mechanism need to agree on the cache
-> line size. Using an incorrect value can lead to data corruption, but having the
-> two sides using different values is usually worse.
-> 
-> In the absence of an obvious convenient run-time method to determine the
-> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
-> Device Tree property, written by the firmware, to configure the kernel driver.
-> This method was vetoed during the upstreaming process, so a fixed value of 32
-> was used instead, and some corruptions ensued. This is take 2 at arriving at
-> the correct value.
-> 
-> Part one of the fix is deriving the correct value from the ARM's cpuid register.
-> Part two is a (seemingly cosmetic) correction of the Device Tree reg declaration
-> used by the driver, but it doubles as an indication to the Raspberry Pi firmware
-> that the kernel driver is running a recent kernel driver that chooses the
-> correct value. As such I would like very much for the DT patch not to be merged
-> before the driver patch - just tell me what hoops I need to jump through.
-> 
+The tinkerboard S is an ASUS device, it is similar to the tinker board
+but with an eMMC chip, which needs enabling in the device tree.
 
-even if this version isn't the best, the test results for vchiq_test -f 1 (using recent firmware 2018-09-10) are very good:
+This patch is split into 3 parts
+1) It creates a common include file rk3288-tinker.dtsi and sets up
+rk3288-tinker.dts and rk3288-tinker-s.dts to do device trees for the two boards
+2) It patches the rk3288-tinker-s.dts to enable eMMC
+3) It patches the rk3299-tinker-s.dts to enable WiFi and Bluetooth
 
-Raspberry 1 B, bcm2835_defconfig -> success
-Raspberry 2 B, multi_v7_defconfig -> success
-Raspberry 3 B, arm64/defconfig -> success
+I'm not sure if the wifi should be common for both boards (so in the dtsi)
+But am sure its needed to enable wifi on the S variant.
 
-Thanks Stefan
+I have asked for the dtb to be tested - but sending these patches anyway
+to get comments back.
+
+Regards
+
+David Summers
+signed-off: "David Summers" <beagleboard@davidjohnsummers.uk>
