@@ -1,28 +1,110 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 2/6] pstore: Add event tracing support
-Date: Mon, 17 Sep 2018 19:04:54 -0400
-Message-ID: <20180917190454.3cfbe7e3@gandalf.local.home>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
-        <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
-        <141901b8-0a9a-2e7a-f7a4-cdefd157f4c6@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.18 031/158] ARC: [plat-axs*/plat-hsdk]: Allow U-Boot to pass MAC-address to the kernel
+Date: Tue, 18 Sep 2018 00:41:01 +0200
+Message-ID: <20180917211712.435728565@linuxfoundation.org>
+References: <20180917211710.383360696@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <141901b8-0a9a-2e7a-f7a4-cdefd157f4c6@codeaurora.org>
+In-Reply-To: <20180917211710.383360696@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vg
+To: linux-kernel@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 16 Sep 2018 12:37:52 +0530
-Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
+4.18-stable review patch.  If anyone has any objections, please let me know.
 
-> Hi,
-> 
-> Anyone here?
+------------------
 
-You also just caught me from coming back from a trip. I'm looking at
-your patches now.
+From: Alexey Brodkin <abrodkin@synopsys.com>
 
--- Steve
+commit 5c0920897af59779546e9ea0e89c5db45c8aff33 upstream.
+
+Otherwise kernel uses random MAC which is not very conveniet.
+With that change in place use might set desired MAC in U-Boot
+with "setenv ethaddr 11:22:33:44:55:66", save environment and
+then from boot to boot the same MAC will be used by the kernel.
+
+One other note for this to happen it's required to pass
+board's .dtb in U-Boot's "bootm" command like that:
+------------------->8-----------------
+bootm 0x82000000 - 0x84000000
+------------------->8-----------------
+
+Here 0x82000000 is location of uImage while
+0x80000000 is location of either axs10x.dtb or hsdk.dtb
+previously loaded from SD-card, USB storage or TFTP server.
+
+Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: stable@vger.kernel.org # 4.14
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/arc/boot/dts/axs10x_mb.dtsi |    7 ++++++-
+ arch/arc/boot/dts/hsdk.dts       |    7 ++++++-
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -9,6 +9,10 @@
+  */
+ 
+ / {
++	aliases {
++		ethernet = &gmac;
++	};
++
+ 	axs10x_mb {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -68,7 +72,7 @@
+ 			};
+ 		};
+ 
+-		ethernet@0x18000 {
++		gmac: ethernet@0x18000 {
+ 			#interrupt-cells = <1>;
+ 			compatible = "snps,dwmac";
+ 			reg = < 0x18000 0x2000 >;
+@@ -81,6 +85,7 @@
+ 			max-speed = <100>;
+ 			resets = <&creg_rst 5>;
+ 			reset-names = "stmmaceth";
++			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
+ 		};
+ 
+ 		ehci@0x40000 {
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -25,6 +25,10 @@
+ 		bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
+ 	};
+ 
++	aliases {
++		ethernet = &gmac;
++	};
++
+ 	cpus {
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+@@ -163,7 +167,7 @@
+ 			#clock-cells = <0>;
+ 		};
+ 
+-		ethernet@8000 {
++		gmac: ethernet@8000 {
+ 			#interrupt-cells = <1>;
+ 			compatible = "snps,dwmac";
+ 			reg = <0x8000 0x2000>;
+@@ -176,6 +180,7 @@
+ 			phy-handle = <&phy0>;
+ 			resets = <&cgu_rst HSDK_ETH_RESET>;
+ 			reset-names = "stmmaceth";
++			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
+ 
+ 			mdio {
+ 				#address-cells = <1>;
