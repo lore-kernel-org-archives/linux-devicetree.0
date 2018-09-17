@@ -1,83 +1,102 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH 0/4] power: supply: MAX17040: Add IRQ for low level and
- alert SOC changes
-Date: Sun, 16 Sep 2018 13:45:20 +0200
-Message-ID: <20180916114520.4375nr2gv3y4ghzv@earth.universe>
-References: <20180723040816.19455-1-matheus@castello.eng.br>
+From: srinivas.kandagatla@linaro.org
+Subject: [PATCH v4 00/14] ASoC: Add support to WCD9335 Audio
+	Codec
+Date: Sun, 16 Sep 2018 17:57:13 -0700
+Message-ID: <20180917005727.32728-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="k533wzevwisygjeg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180723040816.19455-1-matheus@castello.eng.br>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matheus Castello <matheus@castello.eng.br>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, vkoul@kernel.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
---k533wzevwisygjeg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thankyou for reviewing v3 patchset, here is v4 addressing comments from v3.
 
-Hi Matheus,
+Qualcomm WCD9335 Codec is a standalone Hi-Fi audio codec IC.
+It is integrated in multiple Qualcomm SoCs like: MSM8996, MSM8976,
+and MSM8956 chipsets.
 
-Did I miss a v2 of this patchset, that solves the issues
-found by Krzysztof?
+WCD9335 had multiple functional blocks, like: Soundwire controller,
+interrupt mux, pin controller, Audio codec, MBHC, MAD(Mic activity Detection),
+Ultrasonic proximity and pen detection, Battery-voltage monitoring and
+Codec processing engine.
 
--- Sebastian
+Currently this patchset has been only tested with SLIMbus interface due
+to hardware avaiablity, but it can be easily made to work with both SLIMbus
+and I2C/I2S.    
 
-On Mon, Jul 23, 2018 at 12:08:12AM -0400, Matheus Castello wrote:
-> This series add IRQ handler for low level SOC alert, define a devicetree=
-=20
-> binding attribute to configure the alert level threshold and check for ch=
-anges
-> in SOC for send uevents.
->=20
-> Max17040 have a pin for alert host about low level state of charge and th=
-is=20
-> alert can be configured in a threshold from 1% up to 32% of SOC.
->=20
-> Tested on Raspberry Pi Zero W, with a SparkFun Lipo Fuel Gauge module bas=
-ed on
-> MAXIM MAX17043.
->=20
-> Matheus Castello (4):
->   power: supply: max17040: Add IRQ handler for low SOC alert
->   power: supply: max17040: Config alert SOC low level threshold from FDT
->   dt-bindings: power: supply: Max17040: Add low level SOC alert threshold
->   power: supply: max17040: Send uevent in SOC changes
->=20
->  .../bindings/power/supply/max17040_battery.txt     | 24 ++++++
->  drivers/power/supply/max17040_battery.c            | 95 ++++++++++++++++=
-++++++
->  2 files changed, 119 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/max170=
-40_battery.txt
->=20
-> --=20
-> 2.13.3
->=20
+This patchset adds very basic playback and capture support witout much
+fancy features. New features will be added once the basic support is in.
+This patchset is tested on top of linux-next on DB820c for both playback
+, capture paths and MBHC.
 
---k533wzevwisygjeg
-Content-Type: application/pgp-signature; name="signature.asc"
+Some parts of the code has been inherited from Qualcomm andriod kernel,
+so credits to various authors.
 
------BEGIN PGP SIGNATURE-----
+WCD9335 can be interfaced via I2S/I2C or SLIMbus. 
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlueQlAACgkQ2O7X88g7
-+ppLrg/7BYjg6/pKDHyZ+vtYMvAJDd4hrJpRJ93dyzVNteZscXRWhaRj1JjQB2SY
-pJi0IzL62/RwGT0Irtv5yetlYVtOv651sXa4ICY07OInLFMW3StSFGbR5NlnF2QF
-YLhg4KUkGM08KbwIwPkVLWjKCyloUYIeRKAJnODhWuIH5FX3EH/sLUQCMvFHc1M2
-wtnPPiOdGHOEZmzB0zEwJku6Ts0CkuYh4+UL95C3NkFQNJ1TPo9XVj18ovpGFIgF
-LLpQY51Iz4EZeLvGmQvUt2u6tI45g93+LU7RBOyqFc9pSwhx0PDS8ZYz5ajPLL58
-9GEeO79kD23T8ys6RJiBSUL3YLkMGuyukQJsTCO2eI8D7iX/L/yFjXkLTSmb7+a1
-g0zQwDFtwiFypdJgvMR78h4hZdTK07SlDF3rUUcKxUONkJeekx26HE6Xjtv348e5
-vtjLp9u6rrfvANPujIw2QF0VFWqaA/1TIwPtUgDivbHZo/BKHvAu3tUezIzfGUUM
-XZTf7D6441KHHnM2/PnaPMjCvjxBnxatnCBiCX7n7oCRDiEzGkMG+YiYWp+ADLVy
-lJ1ZSCboQbwPSnpW7ckcccyRLjExu78YVgVK+KaVC5YOxwp306bhRU1aApGNwLHN
-YHeWVeK7s3rQJWSywQ6ObhI3jxylekC4FuHkggjDTWrTdgAiSVs=
-=IHXf
------END PGP SIGNATURE-----
+Here is my test branch incase someone want to try this out:
+https://git.linaro.org/people/srinivas.kandagatla/linux.git/log/?h=wcd9335
 
---k533wzevwisygjeg--
+Thanks,
+Srini
+
+Changes since v3 (https://lkml.org/lkml/2018/9/4/318/)
+ - Updated mbhc dt bindings according to Robs Comments.
+ - Added a cleanup patch to common up fixups.
+ - Addressed various comments on mfd driver by Lee Jones.
+ - Added acks on bindings and irq support.
+ - fixed module loading
+
+Srinivas Kandagatla (14):
+  ASoC: dt-bindings: update wcd9335 bindings.
+  mfd: wcd9335: add support to wcd9335 core
+  mfd: wcd9335: add wcd irq support
+  ASoC: wcd9335: add support to wcd9335 codec
+  ASoC: wcd9335: add CLASS-H Controller support
+  ASoC: wcd9335: add basic controls
+  ASoC: wcd9335: add playback dapm widgets
+  ASoC: wcd9335: add capture dapm widgets
+  ASoC: wcd9335: add audio routings
+  ASoC: dt-bindings: Add WCD9335 MBHC specific properties
+  ASoC: wcd9335: add mbhc support
+  ASoC: apq8096: add slim support
+  ASoC: apq8096: add headset JACK support
+  ASoC: qcom: common: move be_hw_fixup to common
+
+ .../devicetree/bindings/sound/qcom,wcd9335.txt     |   30 +-
+ drivers/mfd/Kconfig                                |   13 +
+ drivers/mfd/Makefile                               |    4 +
+ drivers/mfd/wcd9335-core.c                         |  394 ++
+ include/linux/mfd/wcd9335/registers.h              |  640 +++
+ include/linux/mfd/wcd9335/wcd9335.h                |   81 +
+ sound/soc/codecs/Kconfig                           |    5 +
+ sound/soc/codecs/Makefile                          |    2 +
+ sound/soc/codecs/wcd-clsh-v2.c                     |  577 +++
+ sound/soc/codecs/wcd-clsh-v2.h                     |   49 +
+ sound/soc/codecs/wcd9335.c                         | 5241 ++++++++++++++++++++
+ sound/soc/qcom/apq8096.c                           |  128 +-
+ sound/soc/qcom/common.c                            |   17 +
+ sound/soc/qcom/sdm845.c                            |   22 +-
+ 14 files changed, 7168 insertions(+), 35 deletions(-)
+ create mode 100644 drivers/mfd/wcd9335-core.c
+ create mode 100644 include/linux/mfd/wcd9335/registers.h
+ create mode 100644 include/linux/mfd/wcd9335/wcd9335.h
+ create mode 100644 sound/soc/codecs/wcd-clsh-v2.c
+ create mode 100644 sound/soc/codecs/wcd-clsh-v2.h
+ create mode 100644 sound/soc/codecs/wcd9335.c
+
+-- 
+2.9.3
