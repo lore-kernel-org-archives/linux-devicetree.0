@@ -1,80 +1,48 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
-Date: Mon, 17 Sep 2018 19:01:53 +0100
-Message-ID: <46c44e8f-8208-191c-c93b-f2f75ab8c67a@raspberrypi.org>
-References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
- <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
- <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
- <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v4 0/2] pci-dra7xx: Enable errata i870 workaround for RC mode
+Date: Mon, 17 Sep 2018 23:36:33 +0530
+Message-ID: <20180917180635.26996-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 17/09/2018 18:51, Florian Fainelli wrote:
-> On 09/17/2018 04:47 AM, Phil Elwell wrote:
->> Hi Stefan,
->>
->> On 17/09/2018 12:39, Stefan Wahren wrote:
->>> Hi Phil,
->>>
->>> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
->>>> Both sides of the VCHIQ communications mechanism need to agree on the cache
->>>> line size. Using an incorrect value can lead to data corruption, but having the
->>>> two sides using different values is usually worse.
->>>>
->>>> In the absence of an obvious convenient run-time method to determine the
->>>> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
->>>> Device Tree property, written by the firmware, to configure the kernel driver.
->>>> This method was vetoed during the upstreaming process, so a fixed value of 32
->>>> was used instead, and some corruptions ensued. This is take 2 at arriving at
->>>> the correct value.
->>>>
->>>> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
->>>> a 64-byte cache line. Document the new string in the binding, and use it on
->>>> the appropriate platforms.
->>>>
->>>> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
->>>> declaration for the device node, but it doubles as an indication to the
->>>> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
->>>> that chooses the correct value. As such it would help if the DT patches are
->>>> not merged before the driver patch.
->>>>
->>>> v3: Builds without errors, tested on multiple Raspberry Pi models.
->>>> v2: Replaced ARM-specific logic used to determine cache line size with
->>>>      a new compatible string for BCM2836 and BCM2837.
->>>>
->>>> Phil Elwell (4):
->>>>    staging/vc04_services: Use correct cache line size
->>>>    dt-bindings: soc: Document "brcm,bcm2836-vchiq"
->>>>    ARM: dts: bcm283x: Correct vchiq compatible string
->>>>    ARM: dts: bcm283x: Correct mailbox register sizes
->>>
->>> since my pull requests are out, would it be okay to apply patch #1 for
->>> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
->>> these patches)?
->>
->> Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
-> 
-> Humm, did you mean you would like not to be delayed? In any case Stefan,
-> you can send an additional pull request, and I will merge it and send a
-> second pull request towards ARM SoC maintainers, that's not a problem.
+Make workaround for errata i870 applicable in Host mode as
+well(previously it was enabled only for EP mode) as per errata
+documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
+Driver will continue to work with w/o applying errata in host mode when
+using older DT, to maintain backward compatibility.
 
-No, I meant what I wrote - I would prefer patch 1 to be merged before patch 4 (or at least
-in the same release) to avoid the need for another firmware change, hence delaying patch
-4 is good. It makes sense for the other commits to be merged in that order, but the
-normal compatible-string fallback mechanism means there is no hard dependency there.
+Tested on DRA72 EVM
 
-Phil
+Changes since v3:
+Rebase onto latest next
+Drop DT patches from this series. They will be sent separately once
+driver changes in this series is merged.
+
+Changes since v2:
+Reorder patch 2 to appear at the last.
+Collect all the ACKs
+
+Changes since v1:
+Drop IRQ handling rework (will be sent out separately)
+
+v2: https://patchwork.ozlabs.org/cover/935454/
+v1: https://lkml.org/lkml/2017/12/1/59
+
+
+Vignesh R (2):
+  dt-bindings: PCI: dra7xx: Add bindings for unaligned access in host
+    mode
+  pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
+
+ Documentation/devicetree/bindings/pci/ti-pci.txt |  5 +++++
+ drivers/pci/controller/dwc/pci-dra7xx.c          | 12 ++++++------
+ 2 files changed, 11 insertions(+), 6 deletions(-)
+
+-- 
+2.19.0
