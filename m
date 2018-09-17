@@ -1,60 +1,58 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v4 0/6] PCI: imx: Initial imx7d suspend/resume support
-Date: Mon, 17 Sep 2018 16:01:21 +0000
-Message-ID: <16d68541fd499dfda88e79d4386be7ad6d0919d9.camel@nxp.com>
-References: <cover.1534264292.git.leonard.crestez@nxp.com>
- <20180917150941.GH7239@e107981-ln.cambridge.arm.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH 0/2] add Ethernet driver support for mt2712
+Date: Mon, 17 Sep 2018 17:18:14 +0100
+Message-ID: <a8c0a091-6bee-6504-04cd-36e214e805aa@synopsys.com>
+References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
+ <20180917152441.GD5458@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180917150941.GH7239@e107981-ln.cambridge.arm.com>
-Content-Language: en-US
-Content-ID: <1053A0F5F2F184499B4BED2BF7DB069A@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Richard Zhu <hongxing.zhu@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180917152441.GD5458@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Biao Huang <biao.huang@mediatek.com>, peppe.cavallaro@st.com, alexandre.torgue@st.com, Jose.Abreu@synopsys.com
+Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-09-17 at 16:09 +0100, Lorenzo Pieralisi wrote:
-> On Tue, Aug 14, 2018 at 07:50:14PM +0300, Leonard Crestez wrote:
+Hi Andrew, Biao,
 
-> > V4 adds 4 more patches with PME_Turn_Off support on top, using a new
-> > reset bit. I generally try to keep series short but in this case some
-> > planning might be needed to get patches into 4.20.
-> > 
-> > Since the new reset is treated as optional with old DTB there should be
-> > again no problem if reset and pci are merged out of order.
-> > 
-> > Shawn/Philipp/Lorenzo: Would it make sense to merge this series through a
-> > single specific tree, such as the one for imx?
-> 
-> This series is a bit of a mixture of multiple things hard to discern
-> (actually I already merged patch 2 and patch 1 seems completely
-> unrelated).
-> 
-> I would take the series through the PCI tree but I need an ACK for
-> patches 5 and 6, please let me know how you want to handle it.
+On 17-09-2018 16:24, Andrew Lunn wrote:
+> On Mon, Sep 17, 2018 at 02:29:21PM +0800, Biao Huang wrote:
+>
+> Adding in the STMMAC driver maintainers.
+>
+>> Ethernet in mt2712 is totally different from that in
+>> drivers/net/ethernet/mediatek/*, so we add new folder for mt2712 SoC.
+>>
+>> The mt2712 Ethernet IP is from Synopsys, and we notice that there is a
+>> reference driver in drivers/net/ethernet/synopsys/*. But
+>> 1. our version is only for 10/100/1000Mbps, not for 2.5/4/5Gbps.
+>> mt2712 Ethernet design is differnet from that in synopsys folder in many
+>> aspects, and some key features are not included in mt2712, such as rss
+>> and split header. At the same time, some features we need have not been
+>> implenmented in synopsys folder.
+> In general, we don't have two very similar drivers. We try to have one
+> driver. If the problem was just missing features in the stmmac driver,
+> you can add them. I doubt not supporting 2.5/4/5Gbps in your silicon
+> is an issue, since very few STMMAC devices have this. By split header,
+> do you mean support for TSO? That seems to be a gmac4 or newer
+> feature, but the driver supports not having tso support in hardware.
+>
+> Giuseppe, Alexandre, Jose: Please can you look at the proposed driver
+> and see how much it really differs from the STMMAC driver. 
 
-Patches 1 and 2 are already in, the rest need review. I can now just
-resend patches 3-6 as a separate series, unless somebody complains
-about spam.
+Thanks for the cc Andrew, indeed this looks very similar and the
+register bank matches, by what I've seen, GMAC 4+.
 
-Multiple separate patches are required because it touches reset + dt +
-pci. I guess adding the include constant should be moved from the dts
-patch to dt-bindings though.
+> How easy
+> would it be to extend stmmac it to support the mt2712?
 
-Merging reset and pci out of order should be fine here and is required
-by DT compatibility rules anyway.
+Very easy, as I've just done with XGMAC2. If Biao wants to expand
+stmmac functionality I'm all in favor!
 
---
-Regards,
-Leonard
+Thanks and Best Regards,
+Jose Miguel Abreu
+
+>
+> Thanks
+> 	Andrew
