@@ -1,47 +1,106 @@
-Return-Path: <SRS0=gCiJ=LV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:55588 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726605AbeIGWRi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 7 Sep 2018 18:17:38 -0400
-Date: Fri, 7 Sep 2018 10:35:36 -0700
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: Fix omap l4per idling with wlcore   edge
- sensitive interrupt
-Message-ID: <20180907173536.GR5662@atomide.com>
-References: <8665E2433BC68541A24DFFCA87B70F5B3646AF81@DFRE01.ent.ti.com>
- <20171015162230.GU4394@atomide.com>
- <20171015221536.ybe7x52tenocel6c@lenoch>
- <20171016140147.GV4394@atomide.com>
+Return-Path: <robherring2@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC27XX fuel gauge
+ unit documentation
+Message-ID: <20180917032625.GA25442@bogus>
+References: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20171016140147.GV4394@atomide.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Ladislav Michl <ladis@linux-mips.org>
-Cc: "Reizer, Eyal" <eyalr@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Gerlach, Dave" <d-gerlach@ti.com>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, Kalle Valo <kvalo@codeaurora.org>, "Menon, Nishanth" <nm@ti.com>, "Kristo, Tero" <t-kristo@ti.com>
+In-Reply-To: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
+Date: Sun, 16 Sep 2018 22:26:27 -0500
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-* Tony Lindgren <tony@atomide.com> [171016 14:03]:
-> * Ladislav Michl <ladis@linux-mips.org> [171015 15:16]:
-> > On Sun, Oct 15, 2017 at 09:22:31AM -0700, Tony Lindgren wrote:
-> > > * Reizer, Eyal <eyalr@ti.com> [171014 23:55]:
-> > > > > From: Tony Lindgren [mailto:tony@atomide.com]
-> > > > > 
-> > > > > On omaps, if the wlcore interrupt is configured as level instead of edge,
-> > > > > L4PER will stop doing hardware based idling after ifconfig wlan0 down is
-> > > > > done and the WL_EN line is pulled down.
-> > > > > 
-> > > > Do we understand why omap is doing this? Is it a bug or a normal behavior?
+On Wed, Sep 12, 2018 at 03:29:38PM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
+> fuel gauge unit device, which is used to calculate the battery capacity.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   55 ++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> new file mode 100644
+> index 0000000..7447bae
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> @@ -0,0 +1,55 @@
+> +Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
+> +
+> +Required properties:
+> +- compatible: Should be one of the following:
+> +  "sprd,sc2720-fgu",
+> +  "sprd,sc2721-fgu",
+> +  "sprd,sc2723-fgu",
+> +  "sprd,sc2730-fgu",
+> +  "sprd,sc2731-fgu".
+> +- reg: The address offset of fuel gauge unit.
+> +- bat-detect-gpio: GPIO for battery detection.
 
-Just to document this, it looks like the gpio wake events
-behave in a different way on omap4 and later. We must only
-keep waken register configured during idle on omap4 and have
-edge and level registers cleared to prevent the gpio from
-keeping clocks on and blocking idle.
+We already have sbs,battery-detect-gpios, let's drop the 'sbs,' and copy 
+that.
 
-I'll be posting a proper fix for this at some point after
-some more testing and cleaning up my patch.
+> +- io-channels: Specify the IIO ADC channel to get temperature.
+> +- io-channel-names: Should be "bat-temp".
+> +- sprd,inner-resist: Specify the the battery inner resistance (mOhm).
 
-Regards,
+If this is a property of the battery, then why a sprd vendor prefix? 
+This should perhaps be a common property.
 
-Tony
+Minimally, it needs a unit suffix as defined in property-units.txt.
+
+> +- sprd,ocv-cap-table: Provide the battery capacity percent with corresponding
+> +  open circuit voltage (ocv) of the battery, which is used to look up current
+> +  battery capacity according to current baterry ocv values.
+
+Sounds like another battery property.
+
+> +- monitored-battery: Phandle of battery characteristics devicetree node.
+
+If the battery is represented in another node, why are properties of the 
+battery in this node.
+
+> +  The fuel gauge uses the following battery properties:
+> +- charge-full-design-microamp-hours: battery design capacity.
+> +- constant-charge-voltage-max-microvolt: maximum constant input voltage.
+> +  See Documentation/devicetree/bindings/power/supply/battery.txt
+> +
+> +Example:
+> +
+> +	bat: battery {
+> +		compatible = "simple-battery";
+> +		charge-full-design-microamp-hours = <1900000>;
+> +		constant-charge-voltage-max-microvolt = <4350000>;
+> +		......
+> +	};
+> +
+> +	sc2731_pmic: pmic@0 {
+> +		compatible = "sprd,sc2731";
+> +		reg = <0>;
+> +		spi-max-frequency = <26000000>;
+> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		fgu@a00 {
+> +			compatible = "sprd,sc2731-fgu";
+> +			reg = <0xa00>;
+> +			bat-detect-gpio = <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
+> +			io-channels = <&pmic_adc 5>;
+> +			io-channel-names = "bat-temp";
+> +			sprd,inner-resist = <250>;
+> +			sprd,ocv-cap-table = <4185 100>, <4113 95>, <4066 90>, <4022 85>, <3983 80>, <3949 75>, <3917 70>,
+> +				<3889 65>, <3864 60>, <3835 55>, <3805 50>, <3787 45>, <3777 40>, <3773 35>, <3770 30>,
+> +				<3765 25>, <3752 20>, <3724 15>, <3680 10>, <3605 5>, <3400 0>;
+> +			monitored-battery = <&bat>;
+> +		};
+> +	};
+> -- 
+> 1.7.9.5
+> 
