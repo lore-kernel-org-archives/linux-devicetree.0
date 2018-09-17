@@ -1,114 +1,74 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/6] pstore: Add event tracing support
-Date: Mon, 17 Sep 2018 10:38:20 -0700
-Message-ID: <153720590027.119890.15984895820368075914@swboyd.mtv.corp.google.com>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <444d7b13-2653-ba0e-e9e6-a448fded2a77@codeaurora.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
+Date: Mon, 17 Sep 2018 10:51:56 -0700
+Message-ID: <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
+References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
+ <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
+ <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <444d7b13-2653-ba0e-e9e6-a448fded2a77@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Colin Cross <ccross@android.com>, Ingo Molnar <mingo@redhat.com>, Jason Baron <jbaron@akamai.com>, Jim Cromie <jim.cromie@gmail.com>, Joe Perches <joe@perches.com>, Joel Fernandes <joel@joelfernandes.org>, Kees Cook <keescook@chromium.org>, Laura Abbott <labbott@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Rob Herring <robh+dt@kernel.org>, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Steven Rostedt <rostedt@goodmis.org>, Tony Luck <tony.luck@intel.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Ingo Molnar <mingo@kernel.org>, Tom Zanussi <tom.zanussi@linux.intel.com>, Prasad Sodagudi <psodagud@codeaurora.org>, tsoni@codeaurora.org, Bryan Huntsman <bryanh@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Phil Elwell <phil@raspberrypi.org>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sai Prakash Ranjan (2018-09-11 03:46:01)
-> On 9/9/2018 1:57 AM, Sai Prakash Ranjan wrote:
-> > +void notrace pstore_event_call(struct trace_event_buffer *fbuffer)
-> > +{
-> > +     struct trace_iterator *iter;
-> > +     struct trace_seq *s;
-> > +     struct trace_event_call *event_call;
-> > +     struct pstore_record record;
-> > +     struct trace_event *event;
-> > +     struct seq_buf *seq;
-> > +     unsigned long flags;
-> > +
-> > +     if (!psinfo)
-> > +             return;
-> > +
-> > +     if (unlikely(oops_in_progress))
-> > +             return;
-> > +
-> > +     pstore_record_init(&record, psinfo);
-> > +     record.type =3D PSTORE_TYPE_EVENT;
-> > +
-> > +     iter =3D kmalloc(sizeof(*iter), GFP_KERNEL);
-> > +     if (!iter)
-> > +             return;
-> > +
-> > +     event_call =3D fbuffer->trace_file->event_call;
-> > +     if (!event_call || !event_call->event.funcs ||
-> > +         !event_call->event.funcs->trace)
-> > +             goto fail_event;
-> > +
-> > +     event =3D &fbuffer->trace_file->event_call->event;
-> > +
-> > +     spin_lock_irqsave(&psinfo->buf_lock, flags);
-> > +
-> > +     trace_seq_init(&iter->seq);
-> > +     iter->ent =3D fbuffer->entry;
-> > +     event_call->event.funcs->trace(iter, 0, event);
-> > +     trace_seq_putc(&iter->seq, 0);
-> > +
-> > +     if (seq->size > psinfo->bufsize)
-> > +             seq->size =3D psinfo->bufsize;
-> > +
-> > +     s =3D &iter->seq;
-> > +     seq =3D &s->seq;
-> > +
-> > +     record.buf =3D (char *)(seq->buffer);
-> > +     record.size =3D seq->len;
-> > +     psinfo->write(&record);
-> > +
-> > +     spin_unlock_irqrestore(&psinfo->buf_lock, flags);
-> > +
-> > +fail_event:
-> > +     kfree(iter);
-> > +}
-> > +
-> > =
+On 09/17/2018 04:47 AM, Phil Elwell wrote:
+> Hi Stefan,
+> 
+> On 17/09/2018 12:39, Stefan Wahren wrote:
+>> Hi Phil,
+>>
+>> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
+>>> Both sides of the VCHIQ communications mechanism need to agree on the cache
+>>> line size. Using an incorrect value can lead to data corruption, but having the
+>>> two sides using different values is usually worse.
+>>>
+>>> In the absence of an obvious convenient run-time method to determine the
+>>> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
+>>> Device Tree property, written by the firmware, to configure the kernel driver.
+>>> This method was vetoed during the upstreaming process, so a fixed value of 32
+>>> was used instead, and some corruptions ensued. This is take 2 at arriving at
+>>> the correct value.
+>>>
+>>> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
+>>> a 64-byte cache line. Document the new string in the binding, and use it on
+>>> the appropriate platforms.
+>>>
+>>> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
+>>> declaration for the device node, but it doubles as an indication to the
+>>> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
+>>> that chooses the correct value. As such it would help if the DT patches are
+>>> not merged before the driver patch.
+>>>
+>>> v3: Builds without errors, tested on multiple Raspberry Pi models.
+>>> v2: Replaced ARM-specific logic used to determine cache line size with
+>>>     a new compatible string for BCM2836 and BCM2837.
+>>>
+>>> Phil Elwell (4):
+>>>   staging/vc04_services: Use correct cache line size
+>>>   dt-bindings: soc: Document "brcm,bcm2836-vchiq"
+>>>   ARM: dts: bcm283x: Correct vchiq compatible string
+>>>   ARM: dts: bcm283x: Correct mailbox register sizes
+>>
+>> since my pull requests are out, would it be okay to apply patch #1 for
+>> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
+>> these patches)?
+> 
+> Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
 
-> =
-
-> When tracing sched events on sdm845 mtp, I hit below bug repeatedly.
-> Seems like pstore_event_call can be called in atomic context.
-> I will respin the below fix in next version of the patch.
-> Reviews on other parts would be appreciated, thanks.
-> =
-
-> diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
-> index d47dc93ac098..a497cf782ee8 100644
-> --- a/fs/pstore/ftrace.c
-> +++ b/fs/pstore/ftrace.c
-> @@ -73,6 +73,7 @@ void notrace pstore_event_call(struct =
-
-> trace_event_buffer *fbuffer)
->          struct trace_event *event;
->          struct seq_buf *seq;
->          unsigned long flags;
-> +       gfp_t gfpflags;
-> =
-
->          if (!psinfo)
->                  return;
-> @@ -83,7 +84,9 @@ void notrace pstore_event_call(struct =
-
-> trace_event_buffer *fbuffer)
->          pstore_record_init(&record, psinfo);
->          record.type =3D PSTORE_TYPE_EVENT;
-> =
-
-> -       iter =3D kmalloc(sizeof(*iter), GFP_KERNEL);
-> +       gfpflags =3D (in_atomic() || irqs_disabled()) ? GFP_ATOMIC : =
-
-> GFP_KERNEL;
-> +
-
-Do you need to allocate at all? Can you throw the iter on the stack?
-
-Using in_atomic() and irqs_disabled() to figure out if an atomic or a
-non-atomic allocation should be used is not a good solution.
+Humm, did you mean you would like not to be delayed? In any case Stefan,
+you can send an additional pull request, and I will merge it and send a
+second pull request towards ARM SoC maintainers, that's not a problem.
+-- 
+Florian
