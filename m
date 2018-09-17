@@ -1,84 +1,80 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: mfd: max8998: Add charger subnode binding
-Date: Mon, 17 Sep 2018 13:49:39 +0200
-Message-ID: <CAJKOXPeYt2EWcSpVbCZtoWA_bmF8egHW1EaUFe=YaboxLHbJvA@mail.gmail.com>
-References: <1531843509-3533-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <1531843509-3533-4-git-send-email-pawel.mikolaj.chmiel@gmail.com>
- <20180807175741.GA30886@rob-hp-laptop> <24790346.rcfynqLzho@acerlaptop>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Mon, 17 Sep 2018 21:54:43 +1000
+Message-ID: <20180917215443.3b5808c5@canb.auug.org.au>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
+        <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
+        <b5bbb3e5-d970-dd82-400f-ae13ca782fd5@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/yEI4_c=IeDPHRljjUJxAYIO"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <24790346.rcfynqLzho@acerlaptop>
+In-Reply-To: <b5bbb3e5-d970-dd82-400f-ae13ca782fd5@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: pawel.mikolaj.chmiel@gmail.com
-Cc: robh@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Sep 2018 at 16:56, Pawe=C5=82 Chmiel
-<pawel.mikolaj.chmiel@gmail.com> wrote:
+--Sig_/yEI4_c=IeDPHRljjUJxAYIO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Guo,
+
+On Sun, 16 Sep 2018 12:53:26 +0800 Guo Ren <ren_guo@c-sky.com> wrote:
 >
-> On Tuesday, August 7, 2018 11:57:42 AM CEST Rob Herring wrote:
-> > On Tue, Jul 17, 2018 at 06:05:09PM +0200, Pawe=C5=82 Chmiel wrote:
-> > > This patch adds devicetree bindings documentation for
-> > > battery charging controller as the subnode of MAX8998 PMIC.
-> > >
-> > > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > > ---
-> > > Changes from v2:
-> > >   - Make charge-restart-level-microvolt optional.
-> > >   - Make charge-timeout-hours optional.
-> > >
-> > > Changes from v1:
-> > >   - Removed unneeded Fixes tag
-> > >   - Correct description of all charger values
-> > >   - Added missing property unit
-> > > ---
-> > >  Documentation/devicetree/bindings/mfd/max8998.txt | 25 +++++++++++++=
-++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docu=
-mentation/devicetree/bindings/mfd/max8998.txt
-> > > index 23a3650ff2a2..264040f4ad15 100644
-> > > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
-> > > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-> > > @@ -50,6 +50,24 @@ Additional properties required if max8998,pmic-buc=
-k2-dvs-gpio is defined:
-> > >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in mi=
-crovolts
-> > >    for buck2 regulator that can be selected using dvs gpio.
-> > >
-> > > +Charger: Configuration for battery charging controller should be add=
-ed
-> > > +inside a child node named 'charger'.
-> > > +  Required properties:
-> > > +  - max8998,charge-eoc-percent: Setup End of Charge Level.
-> >
-> > This should have a vendor prefix and max8998 is not a vendor. Don't
-> > continue that pattern even if we already have some properties like that=
-.
-> >
-> > These seem like perhaps they should be common charger properties.
-> Where i could find such properties (or any other driver which is using th=
-ose as an example) ?
-> Looking at few existing drivers, most of them have custom properties (tha=
-t's why i've followed the same pattern for max8998).
+> I'm Guo Ren from C-SKY and I'm working on csky linux port upstream.
+> I've prepared my git-tree based on linux-4.19-rc3:
+> git clone -b linux-next https://github.com/c-sky/csky-linux.git
+>=20
+> Here is the pre-built cross compiler for fast test from our CI:
+> https://gitlab.com/c-sky/buildroot/-/jobs/97941896/artifacts/file/output/=
+images/csky_toolchain_csky_ck860_platform_defconfig_72371bf75a51f27ea59fc34=
+eeaf236e06b75bf69.tar.xz
+>=20
+> You can also build newest gcc, binutils and they are upstreamed but not
+> released on gnu.org. Glibc is uptreaming now.
+>=20
+> Please have a look and any feed back is welcome.
 
-The common properties are now here:
-https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bin=
-dings/power/supply/battery.txt
+Added from today (called "csky").
 
-The property "max8998,charge-eoc-percent" seems unusual - what does
-"percent" mean in such case? Usually EOC should happen at 100% of
-charge so what is the point to set it as 45%?
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
 
-Have in mind that current driver is platform data only so you do not
-have to maintain any backwards compatibility. If the driver now has
-weird meaning of "eoc" in pdata, then you can change it. Also you do
-not have to map the bindings one-to-one to existing platform data. If
-needed you can translate them from something meaningful in DT to
-values expected by driver.
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
 
-Best regards,
-Krzysztof
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/yEI4_c=IeDPHRljjUJxAYIO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAluflgMACgkQAVBC80lX
+0Gy+0AgAi7LvoRN3SAZxDLH8U8IIVDVNkt7QObfeynIb1nTHO1dq3+SAHYC4+1p7
+EcGP2c+4FVY8QX7Zdxx0aQqxvr4T2I7ej7A4LKFI20KQB0nXBip2u5kmwGYRUE/4
+9y99/SyI6y8MXRURnM+bIB+qbXx1NJTTTgCR+UOVh4xSOmSIHiVpwoPpRHzsNevI
+MN43Ntd3AZ6mwhjbLUBfIabtiDNkaQ3aLuPoheZqnhEF066w37oPwYhKgvwYGeQh
+3wYwcVIvLm2xLJIJpy2jhHufjB1I5JG/r+kDzcuIey3/QHUUFKQmvCrexWE4bBZS
+49URtExtPUzaBtVZ3ZZvz/x+u0JR/A==
+=I9rI
+-----END PGP SIGNATURE-----
+
+--Sig_/yEI4_c=IeDPHRljjUJxAYIO--
