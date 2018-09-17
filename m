@@ -1,15 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: marvell,
- prestera: Add common compatible string
-Date: Mon, 17 Sep 2018 01:45:09 -0400
-Message-ID: <5b9f3f66.1c69fb81.e9b3c.3a62@mx.google.com>
-References: <20180907005926.27134-1-chris.packham@alliedtelesis.co.nz>
- <20180907005926.27134-2-chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH 1/5] dt-bindings: spi/spi-pxa2xx: add PXA2xx SSP SPI
+ Controller
+Date: Sun, 16 Sep 2018 22:00:14 -0500
+Message-ID: <5b9f3f71.1c69fb81.46bcf.b351@mx.google.com>
+References: <20180910115935.163121-1-lkundrak@v3.sk>
+ <20180910115935.163121-2-lkundrak@v3.sk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180907005926.27134-2-chris.packham@alliedtelesis.co.nz>
+Content-Disposition: inline
+In-Reply-To: <20180910115935.163121-2-lkundrak@v3.sk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,18 +20,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, andrew@lunn.ch, jason@lakedaemon.net, devicetree@vger.kernel.org, netdev@vger.kernel.org, gregory.clement@bootlin.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Eric Miao <eric.y.miao@gmail.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Haojian Zhuang <haojian.zhuang@gmail.com>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Daniel Mack <daniel@zonque.org>, Bjorn Helgaas <bhelgaas@google.com>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  7 Sep 2018 12:59:25 +1200, Chris Packham wrote:
-> Add "marvell,prestera" as a compatible string so that drivers can be
-> written to account for any prestera variant without needing to
-> specialise to the more specific values.
+On Mon, Sep 10, 2018 at 01:59:31PM +0200, Lubomir Rintel wrote:
+> This is the SPI controller found on Marvel MMP2 and perhaps more
+> platforms.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > ---
->  Documentation/devicetree/bindings/net/marvell,prestera.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/spi/spi-pxa2xx.txt    | 24 +++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
 > 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt b/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
+> new file mode 100644
+> index 000000000000..75be87cf9909
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-pxa2xx.txt
+> @@ -0,0 +1,24 @@
+> +PXA2xx SSP SPI Controller
+> +
+> +Required properties:
+> +- compatible: Must be "marvell,mmp2-ssp".
+> +- reg: Offset and length of the device's register set.
+> +- interrupts: Should be the interrupt number.
+> +- clocks: Should contain a single entry describing the clock input.
+> +- #address-cells:  Number of cells required to define a chip select address.
+> +- #size-cells: Should be zero.
+> +
+> +Optional properties:
+> +- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
+> +  Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Child nodes represent devices on the SPI bus
+> +  See ../spi/spi-bus.txt
+> +
+> +Example:
+> +	ssp1: ssp@d4035000 {
+
+spi@...
+
+Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +		compatible = "marvell,mmp2-ssp";
+> +		reg = <0xd4035000 0x1000>;
+> +		clocks = <&soc_clocks MMP2_CLK_SSP0>;
+> +		interrupts = <0>;
+> +	};
+> -- 
+> 2.17.1
+> 
