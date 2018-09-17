@@ -1,206 +1,109 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH v2 3/3] arm64: dts: synaptics: add dtsi file for Synaptics
- AS370 SoC
-Date: Mon, 17 Sep 2018 16:02:52 +0800
-Message-ID: <20180917160252.6c016dbc@xhacker.debian>
-References: <20180917160015.05a1fc5b@xhacker.debian>
+From: Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH V3 11/27] csky: Atomic operations
+Date: Mon, 17 Sep 2018 10:17:55 +0200
+Message-ID: <20180917081755.GO24124@hirez.programming.kicks-ass.net>
+References: <cover.1536757532.git.ren_guo@c-sky.com>
+ <93e8b592e429c156ad4d4ca5d85ef48fd0ab8b70.1536757532.git.ren_guo@c-sky.com>
+ <20180912155514.GV24082@hirez.programming.kicks-ass.net>
+ <20180915145512.GA18355@guoren-Inspiron-7460>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917160015.05a1fc5b@xhacker.debian>
+Content-Disposition: inline
+In-Reply-To: <20180915145512.GA18355@guoren-Inspiron-7460>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org, jason@lakedaemon.net, arnd@arndb.de, devicetree@vger.kernel.org, andrea.parri@amarulasolutions.com, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, thomas.petazzoni@bootlin.com, wbx@uclibc-ng.org, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add initial dtsi file to support Synaptics AS370 SoC with quad
-Cortex-A53 CPUs.
+On Sat, Sep 15, 2018 at 10:55:13PM +0800, Guo Ren wrote:
+> > > +#define ATOMIC_OP_RETURN(op, c_op)					\
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
----
- arch/arm64/boot/dts/synaptics/as370.dtsi | 173 +++++++++++++++++++++++
- 1 file changed, 173 insertions(+)
- create mode 100644 arch/arm64/boot/dts/synaptics/as370.dtsi
+> > > +#define ATOMIC_FETCH_OP(op, c_op)					\
 
-diff --git a/arch/arm64/boot/dts/synaptics/as370.dtsi b/arch/arm64/boot/dts/synaptics/as370.dtsi
-new file mode 100644
-index 000000000000..7331acf3874e
---- /dev/null
-+++ b/arch/arm64/boot/dts/synaptics/as370.dtsi
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright (C) 2018 Synaptics Incorporated
-+ *
-+ * Author: Jisheng Zhang <jszhang@kernel.org>
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "syna,as370";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-1.0";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x1>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x2>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x3>;
-+			enable-method = "psci";
-+			next-level-cache = <&l2>;
-+			cpu-idle-states = <&CPU_SLEEP_0>;
-+		};
-+
-+		l2: cache {
-+			compatible = "cache";
-+		};
-+
-+		idle-states {
-+			entry-method = "psci";
-+			CPU_SLEEP_0: cpu-sleep-0 {
-+				compatible = "arm,idle-state";
-+				local-timer-stop;
-+				arm,psci-suspend-param = <0x0010000>;
-+				entry-latency-us = <75>;
-+				exit-latency-us = <155>;
-+				min-residency-us = <1000>;
-+			};
-+		};
-+	};
-+
-+	osc: osc {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>,
-+				     <&cpu1>,
-+				     <&cpu2>,
-+				     <&cpu3>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc@f7000000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0 0xf7000000 0x1000000>;
-+
-+		gic: interrupt-controller@901000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			interrupt-controller;
-+			reg = <0x901000 0x1000>,
-+			      <0x902000 0x2000>,
-+			      <0x904000 0x2000>,
-+			      <0x906000 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-+		};
-+
-+		apb@e80000 {
-+			compatible = "simple-bus";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0 0xe80000 0x10000>;
-+
-+			uart0: serial@c00 {
-+				compatible = "snps,dw-apb-uart";
-+				reg = <0xc00 0x100>;
-+				interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&osc>;
-+				reg-shift = <2>;
-+				status = "disabled";
-+			};
-+
-+			gpio0: gpio@1800 {
-+				compatible = "snps,dw-apb-gpio";
-+				reg = <0x1800 0x400>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				porta: gpio-port@0 {
-+					compatible = "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					snps,nr-gpios = <32>;
-+					reg = <0>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+
-+			gpio1: gpio@2000 {
-+				compatible = "snps,dw-apb-gpio";
-+				reg = <0x2000 0x400>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				portb: gpio-port@1 {
-+					compatible = "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					snps,nr-gpios = <32>;
-+					reg = <0>;
-+					interrupt-controller;
-+					#interrupt-cells = <2>;
-+					interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-2.19.0
+> > For these you could generate _relaxed variants and not provide smp_mb()
+> > inside them.
+> Ok, but I'll modify it in next commit.
+
+That's fine. Just wanted to let you know about _relaxed() since it will
+benefit your platform.
+
+> > > +#define ATOMIC_OP(op, c_op)						\
+> > > +static inline void atomic_##op(int i, atomic_t *v)			\
+> > > +{									\
+> > > +	unsigned long tmp, flags;					\
+> > > +									\
+> > > +	raw_local_irq_save(flags);					\
+> > > +									\
+> > > +	asm volatile (							\
+> > > +	"	ldw		%0, (%2) \n"				\
+> > > +	"	" #op "		%0, %1   \n"				\
+> > > +	"	stw		%0, (%2) \n"				\
+> > > +		: "=&r" (tmp)						\
+> > > +		: "r" (i), "r"(&v->counter)				\
+> > > +		: "memory");						\
+> > > +									\
+> > > +	raw_local_irq_restore(flags);					\
+> > > +}
+> > 
+> > Is this really 'better' than the generic UP fallback implementation?
+> There is a lock irq instruction "idly4" with out irq_save. eg:
+> 	asm volatile (							\
+> 	"	idly4			 \n"				\
+> 	"	ldw		%0, (%2) \n"				\
+> 	"	" #op "		%0, %1   \n"				\
+> 	"	stw		%0, (%2) \n"				\
+> I'll change to that after full tested.
+
+That is pretty nifty, could you explain (or reference me to a arch doc
+that does) the exact semantics of that "idly4" instruction?
+
+> > > +static inline void arch_spin_lock(arch_spinlock_t *lock)
+> > > +{
+> > > +	arch_spinlock_t lockval;
+> > > +	u32 ticket_next = 1 << TICKET_NEXT;
+> > > +	u32 *p = &lock->lock;
+> > > +	u32 tmp;
+> > > +
+> > > +	smp_mb();
+> > 
+> > spin_lock() doesn't need smp_mb() before.
+> read_lock and write_lock also needn't smp_mb() before, isn't it?
+
+Correct. The various *_lock() functions only need imply an ACQUIRE
+barrier, such that the critical section happens after the lock is taken.
+
+> > > +
+> > > +static inline void arch_spin_unlock(arch_spinlock_t *lock)
+> > > +{
+> > > +	smp_mb();
+> > > +	lock->tickets.owner++;
+> > > +	smp_mb();
+> > 
+> > spin_unlock() doesn't need smp_mb() after.
+> read_unlock and write_unlock also needn't smp_mb() after, isn't it?
+
+Indeed so, the various *_unlock() functions only need imply a RELEASE
+barrier, such that the critical section happend before the lock is
+released.
+
+In both cases (lock and unlock) there is a great amount of subtle
+details, but most of that is irrelevant if all you have is smp_mb().
+
+
+> > > +/*
+> > > + * Test-and-set spin-locking.
+> > > + */
+> > 
+> > Why retain that?
+> > 
+> > same comments; it has far too many smp_mb()s in.
+> I'm not sure about queued_rwlocks and just for 2-cores-smp test-and-set is
+> faster and simpler, isn't it?
+
+Even on 2 cores I think you can create starvation cases with
+test-and-set spinlocks. And the maintenace overhead of carrying two lock
+implementations is non trivial.
+
+As to performance; I cannot say, but the ticket lock isn't very
+expensive, you could benchmark of course.
