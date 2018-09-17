@@ -1,32 +1,37 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: [PATCH v2 1/3] dt-bindings: arm: move berlin binding documentation
- to syna.txt
-Date: Mon, 17 Sep 2018 16:01:26 +0800
-Message-ID: <20180917160126.49211da9@xhacker.debian>
-References: <20180917160015.05a1fc5b@xhacker.debian>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH] ARM: dts: stm32: update SPI6 dmas property on stm32mp157c
+Date: Mon, 17 Sep 2018 10:04:47 +0200
+Message-ID: <1537171487-15191-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917160015.05a1fc5b@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Move berlin binding documentation as part of transition from Marvell
-berlin to Synaptics SoC.
+Remove unused parameter from SPI6 dmas property on stm32mp157c SoC.
 
-Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Fixes: dc3f8c86c10d ("ARM: dts: stm32: add SPI support on stm32mp157c")
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
- .../bindings/arm/{marvell/marvell,berlin.txt => syna.txt}         | 0
- 1 file changed, 0 insertions(+), 0 deletions(-)
- rename Documentation/devicetree/bindings/arm/{marvell/marvell,berlin.txt => syna.txt} (100%)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/marvell,berlin.txt b/Documentation/devicetree/bindings/arm/syna.txt
-similarity index 100%
-rename from Documentation/devicetree/bindings/arm/marvell/marvell,berlin.txt
-rename to Documentation/devicetree/bindings/arm/syna.txt
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 661be94..185541a 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -1078,8 +1078,8 @@
+ 			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&rcc SPI6_K>;
+ 			resets = <&rcc SPI6_R>;
+-			dmas = <&mdma1 34 0x0 0x40008 0x0 0x0 0>,
+-			       <&mdma1 35 0x0 0x40002 0x0 0x0 0>;
++			dmas = <&mdma1 34 0x0 0x40008 0x0 0x0>,
++			       <&mdma1 35 0x0 0x40002 0x0 0x0>;
+ 			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
 -- 
-2.19.0
+2.7.4
