@@ -1,54 +1,51 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v4 0/6] PCI: imx: Initial imx7d suspend/resume support
-Date: Mon, 17 Sep 2018 17:15:14 +0000
-Message-ID: <e367a04f3b5652aa9ed3baefbb7d0b12eb5eb8dd.camel@nxp.com>
-References: <cover.1534264292.git.leonard.crestez@nxp.com>
-         <20180917150941.GH7239@e107981-ln.cambridge.arm.com>
-         <16d68541fd499dfda88e79d4386be7ad6d0919d9.camel@nxp.com>
-         <20180917165257.GJ7239@e107981-ln.cambridge.arm.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 2/6] pstore: Add event tracing support
+Date: Mon, 17 Sep 2018 22:47:05 +0530
+Message-ID: <edd40dff-fc1e-6370-0839-7672ada4db54@codeaurora.org>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <141901b8-0a9a-2e7a-f7a4-cdefd157f4c6@codeaurora.org>
+ <CAEXW_YSPNqVgoYWjVAMvGg_WoRV4SC2xDH1wQWTdQfBUOMQbbQ@mail.gmail.com>
+ <CAGXu5jLkE+mZkVSFPeOq75im0Kozm+NzfqL9CD-OMe7b7=3O5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917165257.GJ7239@e107981-ln.cambridge.arm.com>
+In-Reply-To: <CAGXu5jLkE+mZkVSFPeOq75im0Kozm+NzfqL9CD-OMe7b7=3O5g@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <2E58251B00C34D4C858BA7BB5E7F3A7A@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Anson Huang <anson.huang@nxp.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
+To: Kees Cook <keescook@chromium.org>, Joel Fernandes <joel@joelfernandes.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.k
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE4LTA5LTE3IGF0IDE3OjUyICswMTAwLCBMb3JlbnpvIFBpZXJhbGlzaSB3cm90
-ZToNCj4gT24gTW9uLCBTZXAgMTcsIDIwMTggYXQgMDQ6MDE6MjFQTSArMDAwMCwgTGVvbmFyZCBD
-cmVzdGV6IHdyb3RlOg0KPiA+IE9uIE1vbiwgMjAxOC0wOS0xNyBhdCAxNjowOSArMDEwMCwgTG9y
-ZW56byBQaWVyYWxpc2kgd3JvdGU6DQo+ID4gPiBPbiBUdWUsIEF1ZyAxNCwgMjAxOCBhdCAwNzo1
-MDoxNFBNICswMzAwLCBMZW9uYXJkIENyZXN0ZXogd3JvdGU6DQo+ID4gPiA+IFY0IGFkZHMgNCBt
-b3JlIHBhdGNoZXMgd2l0aCBQTUVfVHVybl9PZmYgc3VwcG9ydCBvbiB0b3AsIHVzaW5nIGEgbmV3
-DQo+ID4gPiA+IHJlc2V0IGJpdC4gSSBnZW5lcmFsbHkgdHJ5IHRvIGtlZXAgc2VyaWVzIHNob3J0
-IGJ1dCBpbiB0aGlzIGNhc2Ugc29tZQ0KPiA+ID4gPiBwbGFubmluZyBtaWdodCBiZSBuZWVkZWQg
-dG8gZ2V0IHBhdGNoZXMgaW50byA0LjIwLg0KPiA+ID4gPiANCj4gPiA+ID4gU2luY2UgdGhlIG5l
-dyByZXNldCBpcyB0cmVhdGVkIGFzIG9wdGlvbmFsIHdpdGggb2xkIERUQiB0aGVyZSBzaG91bGQg
-YmUNCj4gPiA+ID4gYWdhaW4gbm8gcHJvYmxlbSBpZiByZXNldCBhbmQgcGNpIGFyZSBtZXJnZWQg
-b3V0IG9mIG9yZGVyLg0KPiA+ID4gPiANCj4gPiA+ID4gU2hhd24vUGhpbGlwcC9Mb3JlbnpvOiBX
-b3VsZCBpdCBtYWtlIHNlbnNlIHRvIG1lcmdlIHRoaXMgc2VyaWVzIHRocm91Z2ggYQ0KPiA+ID4g
-PiBzaW5nbGUgc3BlY2lmaWMgdHJlZSwgc3VjaCBhcyB0aGUgb25lIGZvciBpbXg/DQo+ID4gPiAN
-Cj4gPiA+IFRoaXMgc2VyaWVzIGlzIGEgYml0IG9mIGEgbWl4dHVyZSBvZiBtdWx0aXBsZSB0aGlu
-Z3MgaGFyZCB0byBkaXNjZXJuDQo+ID4gPiAoYWN0dWFsbHkgSSBhbHJlYWR5IG1lcmdlZCBwYXRj
-aCAyIGFuZCBwYXRjaCAxIHNlZW1zIGNvbXBsZXRlbHkNCj4gPiA+IHVucmVsYXRlZCkuDQo+ID4g
-PiANCj4gPiA+IEkgd291bGQgdGFrZSB0aGUgc2VyaWVzIHRocm91Z2ggdGhlIFBDSSB0cmVlIGJ1
-dCBJIG5lZWQgYW4gQUNLIGZvcg0KPiA+ID4gcGF0Y2hlcyA1IGFuZCA2LCBwbGVhc2UgbGV0IG1l
-IGtub3cgaG93IHlvdSB3YW50IHRvIGhhbmRsZSBpdC4NCj4gPiANCj4gPiBQYXRjaGVzIDEgYW5k
-IDIgYXJlIGFscmVhZHkgaW4sIHRoZSByZXN0IG5lZWQgcmV2aWV3LiBJIGNhbiBub3cganVzdA0K
-PiA+IHJlc2VuZCBwYXRjaGVzIDMtNiBhcyBhIHNlcGFyYXRlIHNlcmllcywgdW5sZXNzIHNvbWVi
-b2R5IGNvbXBsYWlucw0KPiA+IGFib3V0IHNwYW0uDQo+IA0KPiBXaGF0IGRvIHlvdSBtZWFuIGJ5
-ICJhcmUgYWxyZWFkeSBpbiIgPyBQYXRjaCAyIEkgcXVldWVkIHZpYSB0aGUgUENJDQo+IHRyZWUs
-IHBhdGNoIDEgPyBDYW4gSSBkcm9wIGl0IGZyb20gdGhlIFBDSSBwYXRjaCBxdWV1ZSA/DQoNClNv
-cnJ5LCB3aGF0IEkgbWVhbnQgaGVyZSBpcyAiYWNjZXB0ZWQgYnkgYSBtYWludGFpbmVyIi4gU28g
-a2VlcCBwYXRjaCAyDQpwbGVhc2U7IHBhdGNoIDEgd2FzIGFjY2VwdGVkIGJ5IFNoYXduIGZldyB3
-ZWVrcyBhZ28uDQoNCj4gSSBkbyBub3QgdGhpbmsgdGhlcmUgaXMgYW55IG5lZWQgdG8gcmVzZW5k
-LCBJIGNhbiBtZXJnZSBwYXRjaGVzIDMtNA0KPiBzaW5jZSB0aGV5IGhhdmUgYmVlbiByZXZpZXdl
-ZCBidXQgcGF0Y2hlcyA1IGFuZCA2IG5lZWQgcmV2aWV3Lg0KDQpQYXRjaGVzIDMtNCB3ZXJlIGFj
-a2VkIGJ5IFJvYiBIZXJyaW5nIG1vc3RseSBmcm9tIHRoZSBkZXZpY2V0cmVlDQpwZXJzcGVjdGl2
-ZS4gU2luY2UgcGF0Y2hlcyAzLTYgYXJlIG5vdCB1c2VmdWwgaW5kZXBlbmRlbnRseSBzb21lYm9k
-eQ0KbGlrZSBMdWNhcyBzaG91bGQgcmV2aWV3IHRoZSB3aG9sZSBzZXJpZXMgYW5kIHRoZW4gaXQg
-Y2FuIGJlIG1lcmdlZC4NCg0KLS0NClJlZ2FyZHMsDQpMZW9uYXJk
+On 9/17/2018 8:24 PM, Kees Cook wrote:
+> On Sun, Sep 16, 2018 at 6:55 AM, Joel Fernandes <joel@joelfernandes.org> wrote:
+>> On Sun, Sep 16, 2018, 12:08 AM Sai Prakash Ranjan
+>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>>
+>>> On 9/9/2018 1:57 AM, Sai Prakash Ranjan wrote:
+>>>> Currently pstore has function trace support which can be
+>>>> used to get the function call chain with limited data.
+>>>> Event tracing has extra data which is useful to debug wide
+>>>> variety of issues and is heavily used across the kernel.
+>>>>
+>>>> Adding this support to pstore can be very helpful to debug
+>>>> different subsystems since almost all of them have trace
+>>>> events already available. And also it is useful to debug
+>>>> unknown resets or crashes since we can get lot more info
+>>>> from event tracing by viewing the last occurred events.
+>>>
+>>> Anyone here?
+>>
+>> Sorry for the top post. I've been wanting to do this as well for some time.
+>> It's quite useful. I am out of office this week and away from work machine.
+>> I will take a look at your patches next week once I'm back at work. Thanks.
+> 
+> If Steven agrees this shouldn't live in ftrace directly and Joel
+> reviews these patches, I think it should be fine. I'm travelling, but
+> I can review it hopefully later this week.
+> 
+
+Thank you Kees.
+
+- Sai
