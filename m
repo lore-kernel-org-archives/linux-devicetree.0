@@ -1,68 +1,84 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
-Date: Mon, 17 Sep 2018 12:47:25 +0100
-Message-ID: <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
-References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
- <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 3/3] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Mon, 17 Sep 2018 13:49:39 +0200
+Message-ID: <CAJKOXPeYt2EWcSpVbCZtoWA_bmF8egHW1EaUFe=YaboxLHbJvA@mail.gmail.com>
+References: <1531843509-3533-1-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <1531843509-3533-4-git-send-email-pawel.mikolaj.chmiel@gmail.com>
+ <20180807175741.GA30886@rob-hp-laptop> <24790346.rcfynqLzho@acerlaptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <24790346.rcfynqLzho@acerlaptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: pawel.mikolaj.chmiel@gmail.com
+Cc: robh@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, sre@kernel.org, lee.jones@linaro.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Thu, 13 Sep 2018 at 16:56, Pawe=C5=82 Chmiel
+<pawel.mikolaj.chmiel@gmail.com> wrote:
+>
+> On Tuesday, August 7, 2018 11:57:42 AM CEST Rob Herring wrote:
+> > On Tue, Jul 17, 2018 at 06:05:09PM +0200, Pawe=C5=82 Chmiel wrote:
+> > > This patch adds devicetree bindings documentation for
+> > > battery charging controller as the subnode of MAX8998 PMIC.
+> > >
+> > > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > > ---
+> > > Changes from v2:
+> > >   - Make charge-restart-level-microvolt optional.
+> > >   - Make charge-timeout-hours optional.
+> > >
+> > > Changes from v1:
+> > >   - Removed unneeded Fixes tag
+> > >   - Correct description of all charger values
+> > >   - Added missing property unit
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/max8998.txt | 25 +++++++++++++=
+++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/mfd/max8998.txt b/Docu=
+mentation/devicetree/bindings/mfd/max8998.txt
+> > > index 23a3650ff2a2..264040f4ad15 100644
+> > > --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> > > +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> > > @@ -50,6 +50,24 @@ Additional properties required if max8998,pmic-buc=
+k2-dvs-gpio is defined:
+> > >  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in mi=
+crovolts
+> > >    for buck2 regulator that can be selected using dvs gpio.
+> > >
+> > > +Charger: Configuration for battery charging controller should be add=
+ed
+> > > +inside a child node named 'charger'.
+> > > +  Required properties:
+> > > +  - max8998,charge-eoc-percent: Setup End of Charge Level.
+> >
+> > This should have a vendor prefix and max8998 is not a vendor. Don't
+> > continue that pattern even if we already have some properties like that=
+.
+> >
+> > These seem like perhaps they should be common charger properties.
+> Where i could find such properties (or any other driver which is using th=
+ose as an example) ?
+> Looking at few existing drivers, most of them have custom properties (tha=
+t's why i've followed the same pattern for max8998).
 
-On 17/09/2018 12:39, Stefan Wahren wrote:
-> Hi Phil,
-> 
-> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
->> Both sides of the VCHIQ communications mechanism need to agree on the cache
->> line size. Using an incorrect value can lead to data corruption, but having the
->> two sides using different values is usually worse.
->>
->> In the absence of an obvious convenient run-time method to determine the
->> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
->> Device Tree property, written by the firmware, to configure the kernel driver.
->> This method was vetoed during the upstreaming process, so a fixed value of 32
->> was used instead, and some corruptions ensued. This is take 2 at arriving at
->> the correct value.
->>
->> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
->> a 64-byte cache line. Document the new string in the binding, and use it on
->> the appropriate platforms.
->>
->> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
->> declaration for the device node, but it doubles as an indication to the
->> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
->> that chooses the correct value. As such it would help if the DT patches are
->> not merged before the driver patch.
->>
->> v3: Builds without errors, tested on multiple Raspberry Pi models.
->> v2: Replaced ARM-specific logic used to determine cache line size with
->>     a new compatible string for BCM2836 and BCM2837.
->>
->> Phil Elwell (4):
->>   staging/vc04_services: Use correct cache line size
->>   dt-bindings: soc: Document "brcm,bcm2836-vchiq"
->>   ARM: dts: bcm283x: Correct vchiq compatible string
->>   ARM: dts: bcm283x: Correct mailbox register sizes
-> 
-> since my pull requests are out, would it be okay to apply patch #1 for
-> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
-> these patches)?
+The common properties are now here:
+https://elixir.bootlin.com/linux/latest/source/Documentation/devicetree/bin=
+dings/power/supply/battery.txt
 
-Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
+The property "max8998,charge-eoc-percent" seems unusual - what does
+"percent" mean in such case? Usually EOC should happen at 100% of
+charge so what is the point to set it as 45%?
 
-Phil
+Have in mind that current driver is platform data only so you do not
+have to maintain any backwards compatibility. If the driver now has
+weird meaning of "eoc" in pdata, then you can change it. Also you do
+not have to map the bindings one-to-one to existing platform data. If
+needed you can translate them from something meaningful in DT to
+values expected by driver.
+
+Best regards,
+Krzysztof
