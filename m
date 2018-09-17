@@ -1,101 +1,125 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 0/3] Add Amlogic video decoder driver
-Date: Mon, 17 Sep 2018 16:51:56 +0200
-Message-ID: <9c33c57e-2ce2-8752-b851-f85c03a7d761@xs4all.nl>
-References: <20180911150938.3844-1-mjourdan@baylibre.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: sun8i: dts: drop A64 HDMI PHY
+ fallback compatible from R40 DT
+Date: Mon, 17 Sep 2018 16:54:52 +0200
+Message-ID: <20180917145452.ewfuqkrxjjosbawd@flea>
+References: <20180907072234.48282-1-icenowy@aosc.io>
+ <20180907072234.48282-6-icenowy@aosc.io>
+ <20180910142354.5ldexkvnan6ohz4x@flea>
+ <1926288.mXGsSvSKgU@jernej-laptop>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911150938.3844-1-mjourdan@baylibre.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <mjourdan@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ujjjku5u3trhfpa5"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBR4A77OAKGQEFI56Q7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1926288.mXGsSvSKgU@jernej-laptop>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/11/2018 05:09 PM, Maxime Jourdan wrote:
-> Hi everyone,
-> 
-> This patch series adds support for the Amlogic video decoder,
-> as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
-> 
-> It features decoding for the following formats:
-> - MPEG 1
-> - MPEG 2
-> 
-> The following formats will be added in future patches:
-> - MJPEG
-> - MPEG 4 (incl. Xvid, H.263)
-> - H.264
-> - HEVC (incl. 10-bit)
-> 
-> The following formats' development has still not started, but they are
-> supported by the hardware:
-> - VC1
-> - VP9
-> 
-> The code was made in such a way to allow easy inclusion of those formats
-> in the future.
-> 
-> The decoder is single instance.
-> 
-> Files:
->  - vdec.c handles the V4L2 M2M logic
->  - esparser.c manages the hardware bitstream parser
->  - vdec_helpers.c provides helpers to DONE the dst buffers as well as
->  various common code used by the codecs
->  - vdec_1.c manages the VDEC_1 block of the vdec IP
->  - codec_mpeg12.c enables decoding for MPEG 1/2.
->  - vdec_platform.c links codec units with vdec units
->  (e.g vdec_1 with codec_mpeg12) and lists all the available
->  src/dst formats and requirements (max width/height, etc.),
->  per compatible chip.
-> 
-> Firmwares are necessary to run the vdec. They can currently be found at:
-> https://github.com/chewitt/meson-firmware
-> 
-> It was tested primarily with ffmpeg's v4l2-m2m implementation. For instance:
-> $ ffmpeg -c:v mpeg2_v4l2m2m -i sample_mpeg2.mkv -f null -
-> 
-> Note: This patch series depends on
-> "[PATCH v3 0/3] soc: amlogic: add meson-canvas"
-> https://patchwork.kernel.org/cover/10573763/
-> 
-> The v4l2-compliance results are available below the patch diff.
-> 
-> Changes since v1 [0]:
->  - use named interrupts in the bindings
->  - rewrite description in the bindings doc
->  - don't include the dts changes in the patch series
->  - fill the vb2 queues locks
->  - fill the video_device lock
->  - use helpers for wait_prepare and wait_finish vb2_ops
->  - remove unnecessary usleep in between esparser writes.
->  Extensive testing of every codec on GXBB/GXL didn't reveal
->  any fails without it, so just remove it.
->  - compile v4l2_compliance inside the git repo
->  - Check for plane number/plane size to pass the latest v4l2-compliance test
->  - Moved the single instance check (returning -EBUSY) to start/stop streaming
->  The check was previously in queue_setup but there was no great location to
->  clear it except for .close().
 
-Actually, you can clear it by called VIDIOC_REQBUFS with count set to 0. That
-freed all buffers and clears this.
+--ujjjku5u3trhfpa5
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Now, the difference between queue_setup and start/stop streaming is that if you
-do this in queue_setup you'll know early on that the device is busy. It is
-reasonable to assume that you only allocate buffers when you also want to start
-streaming, so that it a good place to know this quickly.
+On Mon, Sep 10, 2018 at 04:32:30PM +0200, Jernej =C5=A0krabec wrote:
+> Dne ponedeljek, 10. september 2018 ob 16:23:54 CEST je Maxime Ripard=20
+> napisal(a):
+> > On Fri, Sep 07, 2018 at 03:22:34PM +0800, Icenowy Zheng wrote:
+> > > The R40 HDMI PHY seems to be different to the A64 one, the A64 one
+> > > has no input mux, but the R40 one has.
+> > >=20
+> > > Drop the A64 fallback compatible from the HDMI PHY node in R40 DT.
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > ---
+> > >=20
+> > >  arch/arm/boot/dts/sun8i-r40.dtsi | 3 +--
+> > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > >=20
+> > > diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > > b/arch/arm/boot/dts/sun8i-r40.dtsi index ffd9f00f74a4..5f547c161baf
+> > > 100644
+> > > --- a/arch/arm/boot/dts/sun8i-r40.dtsi
+> > > +++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+> > > @@ -800,8 +800,7 @@
+> > >=20
+> > >  		};
+> > >  	=09
+> > >  		hdmi_phy: hdmi-phy@1ef0000 {
+> > >=20
+> > > -			compatible =3D "allwinner,sun8i-r40-hdmi-phy",
+> > > -				     "allwinner,sun50i-a64-hdmi-phy";
+> > > +			compatible =3D "allwinner,sun8i-r40-hdmi-phy";
+> >=20
+> > If you could use the A64 phy before, you can still use it now.
+>=20
+> Not exactly. Given that we don't know how to switch between HDMI PHY cloc=
+k=20
+> parents on A64 (if it is actually connected at all, there is no informati=
+on=20
+> about that in manual and AW didn't answered our questions, despite asking=
+ them=20
+> through different channels), A64 compatible will be associated with quirk=
+,=20
+> which will tell that only one clock parent is usable.
+>=20
+> However, R40 HDMI PHY has definetly two clock parents, as it was tested b=
+y me=20
+> and Icenowy and we know how to switch between them without issues.=20
+> Technically, we could have A64 compatible there, but that would mean only=
+=20
+> single PHY parent is considered instead of two.
 
-Whereas with start_streaming you won't know until you call STREAMON, or even later
-if you start streaming with no buffers queued, since start_streaming won't
-be called until you have at least 'min_buffers_needed' buffers queued (1 for this
-driver). So in that case EBUSY won't be returned until the first VIDIOC_QBUF.
+The DT change above would mean that you can't operate the R40 phy in
+the same way than the A64's. From what you're telling me now, this
+isn't exactly what is going on: you can operate the R40 phy just like
+the A64: with a single PLL instead of two. You operate in a degraded
+and non-optimal mode, but it still works.
 
-My preference is to check this in queue_setup, but it is up to you to decide.
-Just be aware of the difference between the two options.
+And it's exactly what the DT is already saying.
 
-Regards,
+Maxime
 
-	Hans
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--ujjjku5u3trhfpa5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlufwDsACgkQ0rTAlCFN
+r3QWaA//dPrmhPFXEjb96GM60VBvSnsdszdH8uRdbbz3VtOabA8Uf25Zs9kBoemE
+UYXS9GyHNaQnt9CEgRUJPZfLh8t480eXVIVD4U5whNXhjEYui6OXJnYgYjOrDGPX
+Br2YQxTkWPZ+JoaSbKMZsqe4fYUlSwkG6i4h+zioMudRTFmwqhUsf8DuBYkmGiL6
+AjLnflWl+wt7EoIhUXk4KYEjBZuhWBp+TdQzS4MybVjP21AcjJZYx4jbZWGdtYtD
+TECZQV5QysUZZALTcxKj4zztN63K6yOyfFCua6IRI5FjoNATw23ZWMuwWsr/ne9d
+ELEPxeI00swW/24mcmQ3EEL+Lvl3DXu3sQBUE91tj5AQbXYhNwDsuYm/gtQrhBV/
+7ZZqFSNWs8f1wQ0nt4UA/FYObPEZHWP2qPuMoHR+AjKh/Vk6LsCI9HmHv2cddIqY
+e4mz1AwMe8iclk640i2H4xOOqdIwEtEWG1cHAW50sO8RqtjVBr3LVn6N3kEHPHLW
+leWFSXCFPLbun7N3jxGduRQEZVdLLG8+IWbewYXvHzt/uNDVwZ7+dvBc2wQCxmvq
+xICwqWzKr9dwsNQEz8DDB6jvOvVhNsrRkbgkzYzQHihzo4LKTRchjF4EJ6G5qC9V
+FJCE188MzuTaE4202hN/ztOka+VdOmzu32KMOgHIvafwpq/6AKc=
+=MnaS
+-----END PGP SIGNATURE-----
+
+--ujjjku5u3trhfpa5--
