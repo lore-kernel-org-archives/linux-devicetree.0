@@ -1,518 +1,350 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 2/2] power: supply: Add Spreadtrum SC27XX fuel gauge unit driver
-Date: Mon, 17 Sep 2018 12:01:51 +0800
-Message-ID: <CAMz4kuJcA-Oo1vTtW=gf_oFmZ3TmgNxYPxO5wuWpy0Kcg2LFDw@mail.gmail.com>
-References: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
- <1295864a38810a6db6c97e298c6663ae2b1350c1.1536736399.git.baolin.wang@linaro.org>
- <20180916143552.3oxjqpo6vravh5cy@earth.universe>
+From: Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>
+Subject: RE: [PATCH] arm64: dts: Add support for NXP LS1028A SoC
+Date: Mon, 17 Sep 2018 05:43:47 +0000
+Message-ID: <AM6PR04MB4407A9A699D60F0243FD7FB98C1E0@AM6PR04MB4407.eurprd04.prod.outlook.com>
+References: <1535555668-7763-1-git-send-email-sudhanshu.gupta@nxp.com>
+ <20180903015709.GC3850@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180916143552.3oxjqpo6vravh5cy@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180903015709.GC3850@dragon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Harninder Rai <harninder.rai@nxp.com>, "stuart.yoder@nxp.com" <stuart.yoder@nxp.com>, Leo Li <leoyang.li@nxp.com>, "oss@buserror.net" <oss@buserror.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
 
-On 16 September 2018 at 22:35, Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
-> Hi,
+>-----Original Message-----
+>From: Shawn Guo <shawnguo@kernel.org>
+>Sent: Monday, September 3, 2018 7:27 AM
+>To: Sudhanshu Gupta <sudhanshu.gupta@nxp.com>
+>Cc: devicetree@vger.kernel.org; Harninder Rai <harninder.rai@nxp.com>;
+>Bhaskar Upadhaya <bhaskar.upadhaya@nxp.com>; stuart.yoder@nxp.com;
+>Leo Li <leoyang.li@nxp.com>; oss@buserror.net; linux-arm-
+>kernel@lists.infradead.org
+>Subject: Re: [PATCH] arm64: dts: Add support for NXP LS1028A SoC
 >
-> Looks mostly good. I have a couple of comments in addition to the
-> ones from the binding about using battery_info for the OCV ->
-> capacity mapping.
-
-OK.
-
->> +
->> +static int sc27xx_fgu_get_vbat_vol(struct sc27xx_fgu_data *data, int *val)
->> +{
->> +     int ret, vol;
->> +
->> +     ret = regmap_read(data->regmap, data->base + SC27XX_FGU_VOLTAGE, &vol);
->> +     if (ret)
->> +             return ret;
->> +
->> +     /*
->> +      * It is ADC values reading from registers which need to convert to
->> +      * corresponding voltage values.
->> +      */
->> +     *val = sc27xx_fgu_adc_to_voltage(vol);
->> +
->> +     return 0;
->> +}
->> +
->> +static int sc27xx_fgu_get_current(struct sc27xx_fgu_data *data, int *val)
->> +{
->> +     int ret, cur;
->> +
->> +     ret = regmap_read(data->regmap, data->base + SC27XX_FGU_CURRENT, &cur);
->> +     if (ret)
->> +             return ret;
->> +
->> +     /*
->> +      * It is ADC values reading from registers which need to convert to
->> +      * corresponding current values.
->> +      */
->> +     *val = sc27xx_fgu_adc_to_current(cur - SC27XX_FGU_CUR_BASIC_ADC);
->> +
->> +     return 0;
->> +}
->> +
->> +static int sc27xx_fgu_get_vbat_ocv(struct sc27xx_fgu_data *data, int *val)
->> +{
->> +     int vol, cur, ret;
->> +
->> +     ret = sc27xx_fgu_get_vbat_vol(data, &vol);
->> +     if (ret)
->> +             return ret;
->> +
->> +     ret = sc27xx_fgu_get_current(data, &cur);
->> +     if (ret)
->> +             return ret;
->> +
->> +     *val = vol - (cur * data->inner_resist) / 1000;
->
-> You multiply this with 1000 directly after this function to get back
-> to uV. Just drop the division and the multiplication.
-
-But the vol's unit is mV, so I can change to:
-
- *val = vol * 1000 - cur * data->inner_resist;
-
->> +
->> +     return 0;
->> +}
->> +
->> +static int sc27xx_fgu_get_temp(struct sc27xx_fgu_data *data, int *temp)
->> +{
->> +     return iio_read_channel_processed(data->channel, temp);
->> +}
->> +
->> +static int sc27xx_fgu_get_health(struct sc27xx_fgu_data *data, int *health)
->> +{
->> +     int ret, vol;
->> +
->> +     ret = sc27xx_fgu_get_vbat_vol(data, &vol);
->> +     if (ret)
->> +             return ret;
->> +
->> +     if (vol > data->max_volt)
->> +             *health = POWER_SUPPLY_HEALTH_OVERVOLTAGE;
->> +     else
->> +             *health = POWER_SUPPLY_HEALTH_GOOD;
->> +
->> +     return 0;
->> +}
->> +
->> +static int sc27xx_fgu_get_status(struct sc27xx_fgu_data *data, int *status)
->> +{
->> +     union power_supply_propval val;
->> +     struct power_supply *psy;
->> +     int i, ret = -EINVAL;
->> +
->> +     for (i = 0; i < ARRAY_SIZE(sc27xx_charger_supply_name); i++) {
->> +             psy = power_supply_get_by_name(sc27xx_charger_supply_name[i]);
->> +             if (!psy)
->> +                     continue;
->> +
->> +             ret = power_supply_get_property(psy, POWER_SUPPLY_PROP_STATUS,
->> +                                             &val);
->> +             power_supply_put(psy);
->> +             if (ret)
->> +                     return ret;
->> +
->> +             *status = val.intval;
->> +     }
->> +
->> +     return ret;
->> +}
->> +
->> +static int sc27xx_fgu_get_property(struct power_supply *psy,
->> +                                enum power_supply_property psp,
->> +                                union power_supply_propval *val)
->> +{
->> +     struct sc27xx_fgu_data *data = power_supply_get_drvdata(psy);
->> +     int ret = 0;
->> +     int value;
->> +
->> +     mutex_lock(&data->lock);
->> +
->> +     switch (psp) {
->> +     case POWER_SUPPLY_PROP_STATUS:
->> +             ret = sc27xx_fgu_get_status(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_HEALTH:
->> +             ret = sc27xx_fgu_get_health(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_PRESENT:
->> +             val->intval = data->bat_present;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_TEMP:
->> +             ret = sc27xx_fgu_get_temp(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_TECHNOLOGY:
->> +             val->intval = POWER_SUPPLY_TECHNOLOGY_LION;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_CAPACITY:
->> +             ret = sc27xx_fgu_get_capacity(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> +             ret = sc27xx_fgu_get_vbat_vol(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value * 1000;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_VOLTAGE_OCV:
->> +             ret = sc27xx_fgu_get_vbat_ocv(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value * 1000;
->> +             break;
->> +
->> +     case POWER_SUPPLY_PROP_CURRENT_NOW:
->> +     case POWER_SUPPLY_PROP_CURRENT_AVG:
->> +             ret = sc27xx_fgu_get_current(data, &value);
->> +             if (ret)
->> +                     goto error;
->> +
->> +             val->intval = value * 1000;
->> +             break;
->> +
->> +     default:
->> +             ret = -EINVAL;
->> +             break;
->> +     }
->> +
->> +error:
->> +     mutex_unlock(&data->lock);
->> +     return ret;
->> +}
->> +
->> +static void sc27xx_fgu_external_power_changed(struct power_supply *psy)
->> +{
->> +     struct sc27xx_fgu_data *data = power_supply_get_drvdata(psy);
->> +
->> +     power_supply_changed(data->battery);
->> +}
->> +
->> +static enum power_supply_property sc27xx_fgu_props[] = {
->> +     POWER_SUPPLY_PROP_STATUS,
->> +     POWER_SUPPLY_PROP_HEALTH,
->> +     POWER_SUPPLY_PROP_PRESENT,
->> +     POWER_SUPPLY_PROP_TEMP,
->> +     POWER_SUPPLY_PROP_TECHNOLOGY,
->> +     POWER_SUPPLY_PROP_CAPACITY,
->> +     POWER_SUPPLY_PROP_VOLTAGE_NOW,
->> +     POWER_SUPPLY_PROP_VOLTAGE_OCV,
->> +     POWER_SUPPLY_PROP_CURRENT_NOW,
->> +     POWER_SUPPLY_PROP_CURRENT_AVG,
->> +};
->> +
->> +static const struct power_supply_desc sc27xx_fgu_desc = {
->> +     .name                   = "sc27xx-fgu",
->> +     .type                   = POWER_SUPPLY_TYPE_BATTERY,
->> +     .properties             = sc27xx_fgu_props,
->> +     .num_properties         = ARRAY_SIZE(sc27xx_fgu_props),
->> +     .get_property           = sc27xx_fgu_get_property,
->> +     .external_power_changed = sc27xx_fgu_external_power_changed,
->> +};
->> +
->> +static irqreturn_t sc27xx_fgu_bat_detection(int irq, void *dev_id)
->> +{
->> +     struct sc27xx_fgu_data *data = dev_id;
->> +     int state;
->> +
->> +     mutex_lock(&data->lock);
->> +
->> +     state = gpiod_get_value_cansleep(data->gpiod);
->> +     if (state < 0) {
->> +             dev_err(data->dev, "failed to get gpio state\n");
->> +             mutex_unlock(&data->lock);
->> +             return IRQ_RETVAL(state);
->> +     }
->> +
->> +     if (state)
->> +             data->bat_present = true;
->> +     else
->> +             data->bat_present = false;
->> +
->> +     mutex_unlock(&data->lock);
->
-> You want to call power_supply_changed() here.
-
-Ah, right. Missed this.
-
->
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +static void sc27xx_fgu_disable(void *_data)
->> +{
->> +     struct sc27xx_fgu_data *data = _data;
->> +
->> +     regmap_update_bits(data->regmap, SC27XX_CLK_EN0, SC27XX_FGU_RTC_EN, 0);
->> +     regmap_update_bits(data->regmap, SC27XX_MODULE_EN0, SC27XX_FGU_EN, 0);
->> +}
->> +
->> +static int sc27xx_fgu_cap_to_clbcnt(struct sc27xx_fgu_data *data, int capacity)
->> +{
->> +     /*
->> +      * Get current capacity (mAh) = battery total capacity (mAh) *
->> +      * current capacity percent (capacity / 100).
->> +      */
->> +     int cur_cap = DIV_ROUND_CLOSEST(data->total_cap * capacity, 100);
->> +
->> +     /*
->> +      * Convert current capacity (mAh) to coulomb counter according to the
->> +      * formula: 1 mAh =3.6 coulomb.
->> +      */
->> +     return DIV_ROUND_CLOSEST(cur_cap * 36, 10);
->> +}
->> +
->> +static int sc27xx_fgu_hw_init(struct sc27xx_fgu_data *data)
->> +{
->> +     struct power_supply_battery_info info = { };
->> +     int ret;
->> +
->> +     ret = power_supply_get_battery_info(data->battery, &info);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to get battery information\n");
->> +             return ret;
->> +     }
->> +
->> +     data->total_cap = info.charge_full_design_uah / 1000;
->> +     data->max_volt = info.constant_charge_voltage_max_uv / 1000;
->> +
->> +     /* Enable the FGU module */
->> +     ret = regmap_update_bits(data->regmap, SC27XX_MODULE_EN0,
->> +                              SC27XX_FGU_EN, SC27XX_FGU_EN);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to enable fgu\n");
->> +             return ret;
->> +     }
->> +
->> +     /* Enable the FGU RTC clock to make it work */
->> +     ret = regmap_update_bits(data->regmap, SC27XX_CLK_EN0,
->> +                              SC27XX_FGU_RTC_EN, SC27XX_FGU_RTC_EN);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to enable fgu RTC clock\n");
->> +             goto disable_fgu;
->> +     }
->> +
->> +     /*
->> +      * Get the boot battery capacity when system powers on, which is used to
->> +      * initialize the coulomb counter. After that, we can read the coulomb
->> +      * counter to measure the battery capacity.
->> +      */
->> +     ret = sc27xx_fgu_get_boot_capacity(data, &data->init_cap);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to get boot capacity\n");
->> +             goto disable_clk;
->> +     }
->> +
->> +     /*
->> +      * Convert battery capacity to the corresponding initial coulomb counter
->> +      * and set into coulomb counter registers.
->> +      */
->> +     data->init_clbcnt = sc27xx_fgu_cap_to_clbcnt(data, data->init_cap);
->> +     ret = sc27xx_fgu_set_clbcnt(data, data->init_clbcnt);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to initialize coulomb counter\n");
->> +             goto disable_clk;
->> +     }
->> +
->> +     return 0;
->> +
->> +disable_clk:
->> +     regmap_update_bits(data->regmap, SC27XX_CLK_EN0, SC27XX_FGU_RTC_EN, 0);
->> +disable_fgu:
->> +     regmap_update_bits(data->regmap, SC27XX_MODULE_EN0, SC27XX_FGU_EN, 0);
->> +
->> +     return ret;
->> +}
->> +
->> +static int sc27xx_fgu_parse_dt(struct sc27xx_fgu_data *data,
->> +                            struct device_node *np)
->> +{
->> +     const __be32 *list;
->> +     int i, len, size, ret;
->> +
->> +     ret = of_property_read_u32(np, "reg", &data->base);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to get fgu address\n");
->> +             return ret;
->> +     }
->> +
->> +     data->gpiod = devm_gpiod_get_optional(data->dev, "bat-detect", GPIOD_IN);
->> +     if (IS_ERR(data->gpiod)) {
->> +             dev_err(data->dev, "failed to get battery detection GPIO\n");
->> +             return PTR_ERR(data->gpiod);
->> +     }
->
-> According to the binding (and the remaining code!) this gpio is not
-> optional.
-
-Yes, they are not optional. If we can not get the detection GPIO, we
-will return errors. So am I missing something else?
-
-Thanks for your comments.
-
->
-> -- Sebastian
->
->> +     data->channel = devm_iio_channel_get(data->dev, "bat-temp");
->> +     if (IS_ERR(data->channel)) {
->> +             dev_err(data->dev, "failed to get IIO channel\n");
->> +             return PTR_ERR(data->channel);
->> +     }
->> +
->> +     /* Get the battery inner resistance */
->> +     ret = of_property_read_u32(np, "sprd,inner-resist", &data->inner_resist);
->> +     if (ret) {
->> +             dev_err(data->dev, "failed to get battery inner resistance\n");
->> +             return ret;
->> +     }
->> +
->> +     /* Get battery ocv-capacity table */
->> +     list = of_get_property(np, "sprd,ocv-cap-table", &size);
->> +     if (!list || !size) {
->> +             dev_err(data->dev, "failed to get ocv-capacity table\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     len = size / 8;
->> +     data->table_len = len;
->> +     data->cap_table = devm_kzalloc(data->dev,
->> +                             sizeof(struct sc27xx_fgu_capacity_table) * len,
->> +                             GFP_KERNEL);
->> +     if (!data->cap_table)
->> +             return -ENOMEM;
->> +
->> +     for (i = 0; i < len; i++) {
->> +             data->cap_table[i].ocv = be32_to_cpu(*list++);
->> +             data->cap_table[i].capacity = be32_to_cpu(*list++);
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static int sc27xx_fgu_probe(struct platform_device *pdev)
->> +{
->> +     struct device_node *np = pdev->dev.of_node;
->> +     struct power_supply_config fgu_cfg = { };
->> +     struct sc27xx_fgu_data *data;
->> +     int ret, irq;
->> +
->> +     data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +     if (!data)
->> +             return -ENOMEM;
->> +
->> +     data->regmap = dev_get_regmap(pdev->dev.parent, NULL);
->> +     if (!data->regmap) {
->> +             dev_err(&pdev->dev, "failed to get regmap\n");
->> +             return -ENODEV;
->> +     }
->> +
->> +     mutex_init(&data->lock);
->> +     data->dev = &pdev->dev;
->> +     data->bat_present = true;
->> +
->> +     ret = sc27xx_fgu_parse_dt(data, np);
->> +     if (ret)
->> +             return ret;
->> +
->> +     fgu_cfg.drv_data = data;
->> +     fgu_cfg.of_node = np;
->> +     data->battery = devm_power_supply_register(&pdev->dev, &sc27xx_fgu_desc,
->> +                                                &fgu_cfg);
->> +     if (IS_ERR(data->battery)) {
->> +             dev_err(&pdev->dev, "failed to register power supply\n");
->> +             return PTR_ERR(data->battery);
->> +     }
->> +
->> +     ret = sc27xx_fgu_hw_init(data);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "failed to initialize fgu hardware\n");
->> +             return ret;
->> +     }
->> +
->> +     ret = devm_add_action(&pdev->dev, sc27xx_fgu_disable, data);
->> +     if (ret) {
->> +             sc27xx_fgu_disable(data);
->> +             dev_err(&pdev->dev, "failed to add fgu disable action\n");
->> +             return ret;
->> +     }
->> +
->> +     irq = gpiod_to_irq(data->gpiod);
->> +     if (irq < 0) {
->> +             dev_err(&pdev->dev, "failed to translate GPIO to IRQ\n");
->> +             return irq;
->> +     }
->> +
->> +     ret = devm_request_threaded_irq(&pdev->dev, irq, NULL,
->> +                                     sc27xx_fgu_bat_detection,
->> +                                     IRQF_ONESHOT | IRQF_TRIGGER_RISING |
->> +                                     IRQF_TRIGGER_FALLING,
->> +                                     pdev->name, data);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "failed to request IRQ\n");
->> +             return ret;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id sc27xx_fgu_of_match[] = {
->> +     { .compatible = "sprd,sc2731-fgu", },
->> +     { }
->> +};
->> +
->> +static struct platform_driver sc27xx_fgu_driver = {
->> +     .probe = sc27xx_fgu_probe,
->> +     .driver = {
->> +             .name = "sc27xx-fgu",
->> +             .of_match_table = sc27xx_fgu_of_match,
->> +     }
->> +};
->> +
->> +module_platform_driver(sc27xx_fgu_driver);
->> +
->> +MODULE_DESCRIPTION("Spreadtrum SC27XX PMICs Fual Gauge Unit Driver");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 1.7.9.5
+>On Wed, Aug 29, 2018 at 08:44:28PM +0530, Sudhanshu Gupta wrote:
+>> From: Bhaskar Upadhaya <Bhaskar.Upadhaya@nxp.com>
 >>
+>> LS1028A contains two ARM v8 CortexA72 processor cores with 32 KB L1-D
+>> cache and 48 KB L1-I cache
+>> +&i2c0 {
+>> +	status = "okay";
+>> +
+>> +	pca9847@77 {
+>
+>Please have generic node name for the device.
+is i2c-mux@77 ok ?
+>
+>> +		compatible = "nxp,pca9847";
+>> +		reg = <0x77>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		i2c@2 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x2>;
+>> +
+>> +			ina220@40 {
+>
+>Ditto
+Is current-monitor@40 ok ?
+>
+>> +				compatible = "ti,ina220";
+>> +				reg = <0x40>;
+>> +				shunt-resistor = <1000>;
+>> +			};
+>> +
+>> +			ina220@41 {
+>> +				compatible = "ti,ina220";
+>> +				reg = <0x41>;
+>> +				shunt-resistor = <1000>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c@3 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x3>;
+>> +
+>> +			eeprom@56 {
+>> +				compatible = "atmel,24c512";
+>> +				reg = <0x56>;
+>> +			};
+>> +
+>> +			eeprom@57 {
+>> +				compatible = "atmel,24c512";
+>> +				reg = <0x57>;
+>> +			};
+>> +
+>> +			sa56004@4c {
+>
+>Ditto
+Is thermal-monitor@4c ok ?
+>> +	};
+>> +};
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> new file mode 100644
+>> index 0000000..e5c4309
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a-rdb.dts
+>> @@ -0,0 +1,74 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Device Tree file for NXP LS1028A RDB Board.
+>> + *
+>> + * Copyright 2018 NXP
+>> + *
+>> + * Harninder Rai <harninder.rai@nxp.com>
+>> + *
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "fsl-ls1028a.dtsi"
+>> +
+>> +/ {
+>> +	model = "LS1028A RDB Board";
+>> +	compatible = "fsl,ls1028a-rdb", "fsl,ls1028a";
+>> +
+>> +	aliases {
+>> +		serial0 = &duart0;
+>> +		serial1 = &duart1;
+>> +	};
+>> +
+>> +	chosen {
+>> +		stdout-path = "serial0:115200n8";
+>> +	};
+>> +};
+>> +
+>> +	pca9847@77 {
+>> +		compatible = "nxp,pca9847";
+>> +		reg = <0x77>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		i2c@2 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x02>;
+>> +
+>> +			ina220@40 {
+>> +				compatible = "ti,ina220";
+>> +				reg = <0x40>;
+>> +				shunt-resistor = <500>;
+>> +			};
+>> +		};
+>> +
+>> +		i2c@3 {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +			reg = <0x3>;
+>> +
+>> +			sa56004@4c {
+>> +				compatible = "nxp,sa56004";
+>> +				reg = <0x4c>;
+>> +			};
+>> +
+>> +			rtc@51 {
+>> +				compatible = "nxp,pcf2129";
+>> +				reg = <0x51>;
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +
+>> +};
+>> +
+>> +&duart0 {
+>> +	status = "okay";
+>> +};
+>> +
+>> +&duart1 {
+>> +	status = "okay";
+>> +};
+>> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> new file mode 100644
+>> index 0000000..bc860e2
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+>> @@ -0,0 +1,355 @@
+>> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> +/*
+>> + * Device Tree Include file for NXP Layerscape-1028A family SoC.
+>> + *
+>> + * Copyright 2018 NXP
+>> + *
+>> + * Harninder Rai <harninder.rai@nxp.com>
+>> + *
+>> + */
+>> +
+>> +	};
+>> +
+>> +	sysclk: sysclk {
+>
+>clock-sysclk for node name might be better?
+Is clock-sysclk: sysclk { ok ?
+>
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <100000000>;
+>> +		clock-output-names = "sysclk";
+>> +	};
+>> +	soc: soc {
+>> +		compatible = "simple-bus";
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		smmu: iommu@5000000 {
+>> +			compatible = "arm,mmu-500";
+>> +			reg = <0 0x5000000 0 0x800000>;
+>> +			#global-interrupts = <8>;
+>> +			#iommu-cells = <1>;
+>> +			stream-match-mask = <0x7C00>;
+>> +			/* global secure fault */
+>> +			interrupts = <0 13 4>,
+>> +			/* combined secure interrupt */
+>> +				     <0 14 4>,
+>> +			/* global non-secure fault */
+>> +				     <0 15 4>,
+>> +			/* combined non-secure interrupt */
+>> +				     <0 16 4>,
+>> +			/* performance counter interrupts 0-7 */
+>> +				     <0 211 4>, <0 212 4>,
+>> +				     <0 213 4>, <0 214 4>,
+>> +			/* per context interrupt, 64 interrupts */
+>> +				     <0 146 4>, <0 147 4>,
+>> +				     <0 148 4>, <0 149 4>,
+>> +				     <0 150 4>, <0 151 4>,
+>> +				     <0 152 4>, <0 153 4>,
+>> +				     <0 154 4>, <0 155 4>,
+>> +				     <0 156 4>, <0 157 4>,
+>> +				     <0 158 4>, <0 159 4>,
+>> +				     <0 160 4>, <0 161 4>,
+>> +				     <0 162 4>, <0 163 4>,
+>> +				     <0 164 4>, <0 165 4>,
+>> +				     <0 166 4>, <0 167 4>,
+>> +				     <0 168 4>, <0 169 4>,
+>> +				     <0 170 4>, <0 171 4>,
+>> +				     <0 172 4>, <0 173 4>,
+>> +				     <0 174 4>, <0 175 4>,
+>> +				     <0 176 4>, <0 177 4>,
+>> +				     <0 178 4>, <0 179 4>,
+>> +				     <0 180 4>, <0 181 4>,
+>> +				     <0 182 4>, <0 183 4>,
+>> +				     <0 184 4>, <0 185 4>,
+>> +				     <0 186 4>, <0 187 4>,
+>> +				     <0 188 4>, <0 189 4>,
+>> +				     <0 190 4>, <0 191 4>,
+>> +				     <0 192 4>, <0 193 4>,
+>> +				     <0 194 4>, <0 195 4>,
+>> +				     <0 196 4>, <0 197 4>,
+>> +				     <0 198 4>, <0 199 4>,
+>> +				     <0 200 4>, <0 201 4>,
+>> +				     <0 202 4>, <0 203 4>,
+>> +				     <0 204 4>, <0 205 4>,
+>> +				     <0 206 4>, <0 207 4>,
+>> +				     <0 208 4>, <0 209 4>;
+>> +		};
+>> +
+>> +		ddr: memory-controller@1080000 {
+>> +			compatible = "fsl,qoriq-memory-controller";
+>> +			reg = <0x0 0x1080000 0x0 0x1000>;
+>> +			interrupts = <GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH>;
+>> +			big-endian;
+>> +		};
+>> +
+>> +		scfg: scfg@1fc0000 {
+>
+>syscon is recommended by device tree spec as the node name.
+Is syscon:scfg@1fc0000 { ok ?
 
-
-
--- 
-Baolin Wang
-Best Regards
+>
+>> +			compatible = "fsl,ls1028a-scfg", "syscon";
+>> +			reg = <0x0 0x1fc0000 0x0 0x10000>;
+>> +			big-endian;
+>> +		};
+>> +
+>> +		dcfg: dcfg@1e00000 {
+>
+>Ditto
+Is syscon:dcfg@1e00000 { ok ?
+>
+>> +			compatible = "fsl,ls1028a-dcfg", "syscon";
+>> +			reg = <0x0 0x1e00000 0x0 0x10000>;
+>> +			big-endian;
+>> +		};
+>> +
+>> +		clockgen: clocking@1300000 {
+>
+>clock-controller is recommended by device tree spec as the node name.
+Is clock-controller: clocking@1300000 { ok ?
+>> +			compatible = "fsl,ls1028a-clockgen";
+>> +			reg = <0x0 0x1300000 0x0 0xa0000>;
+>> +			#clock-cells = <2>;
+>> +			clocks = <&sysclk>;
+>> +		};
+>> +
+>> +
+>> +		wdog0: watchdog@23c0000 {
+>> +			compatible= "arm,armv8-timer";
+>
+>Why does a watchdog device get a timer compatible?
+>
+>Shawn
+Ok will remove "arm,armv8-timer" and add "fsl,ls1028a-wdt" in compatible property.
+>
+>> +			reg = <0x0 0x23c0000 0x0 0x10000>;
+>> +			interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&clockgen 4 1>;
+>> +			big-endian;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +		sata: sata@3200000 {
+>> +			compatible = "fsl,ls1028a-ahci";
+>> +			reg = <0x0 0x3200000 0x0 0x10000>,
+>> +				<0x0 0x20140520 0x0 0x4>;
+>> +			reg-names = "ahci", "sata-ecc";
+>> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+>> +			clocks = <&clockgen 4 1>;
+>> +			status = "disabled";
+>> +		};
+>> +
+>> +	};
+>> +};
+>> +
+>> --
+>> 1.9.1
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> https://emea01.safelinks.protection.outlook.com/?url=http%3A%2F%2Flist
+>> s.infradead.org%2Fmailman%2Flistinfo%2Flinux-arm-
+>kernel&amp;data=02%7C
+>>
+>01%7CBhaskar.Upadhaya%40nxp.com%7Ce64045be25434453549f08d61140bc
+>b0%7C6
+>>
+>86ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636715367139688619&amp;
+>sdata
+>>
+>=hnyzdSymQ1J%2FUwuF2UGfKCm56%2Fh%2FFpSadxvZ3P%2FO%2Ftg%3D&a
+>mp;reserved
+>> =0
