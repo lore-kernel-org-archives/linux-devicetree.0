@@ -1,51 +1,24 @@
-Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH 0/4] OV5640: reduce rate according to maximum pixel clock
-Date: Thu, 27 Sep 2018 16:46:03 +0200
-Message-ID: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b9f4904.1c69fb81.a953f.0554@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V6 2/2] dt-bindings: timer: gx6605s SOC timer
+References: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537090237.git.ren_guo@c-sky.com>
+ <ff38586ad4904f5cbbaf03623853e01acf0d0007.1537090237.git.ren_guo@c-sky.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff38586ad4904f5cbbaf03623853e01acf0d0007.1537090237.git.ren_guo@c-sky.com>
+Date: Mon, 17 Sep 2018 02:14:39 -0400
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch serie aims to reduce parallel port rate according to maximum pixel
-clock frequency admissible by camera interface in front of the sensor.
-This allows to support any resolutions/framerate requests by decreasing
-the framerate according to maximum camera interface capabilities.
-This allows typically to enable 5Mp YUV/RGB frame capture even if 15fps
-framerate could not be reached by platform.
+On Sun, 16 Sep 2018 17:30:56 +0800, Guo Ren wrote:
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ---
+>  .../bindings/timer/csky,gx6605s-timer.txt          | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+> 
 
-This work is based on OV5640 Maxime Ripard's runtime clock computing serie [1]
-which allows to adapt the clock tree registers according to maximum pixel
-clock.
-
-Then the first patch adds handling of pclk divider registers
-DVP_PCLK_DIVIDER (0x3824) and VFIFO_CTRL0C (0x460c) in order to
-correlate the rate to the effective pixel clock output on parallel interface.
-
-A new devicetree property "pclk-max-frequency" is introduced in order
-to inform sensor of the camera interface maximum admissible pixel clock.
-This new devicetree property handling is added to V4L2 core.
-
-Then OV5640 ov5640_set_dvp_pclk() is modified to clip rate according
-to optional maximum pixel clock property.
-
-References:
-  [1] [PATCH v3 00/12] media: ov5640: Misc cleanup and improvements https://www.mail-archive.com/linux-media@vger.kernel.org/msg131655.html
-
-Hugues Fruchet (4):
-  media: ov5640: move parallel port pixel clock divider out of registers
-    set
-  media: v4l2-core: add pixel clock max frequency parallel port property
-  media: dt-bindings: media: Document pclk-max-frequency property
-  media: ov5640: reduce rate according to maximum pixel clock frequency
-
- .../devicetree/bindings/media/video-interfaces.txt |  2 +
- drivers/media/i2c/ov5640.c                         | 78 ++++++++++++++++------
- drivers/media/v4l2-core/v4l2-fwnode.c              |  3 +
- include/media/v4l2-fwnode.h                        |  2 +
- 4 files changed, 65 insertions(+), 20 deletions(-)
-
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
