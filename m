@@ -1,80 +1,169 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 2/4] iio: Documentation: Add Xilinx AMS sysfs
- documentation
-Date: Mon, 17 Sep 2018 12:23:29 +0200
-Message-ID: <469597c5-724f-08c9-ccbc-f076673e1744@xilinx.com>
-References: <1536909510-7166-1-git-send-email-manish.narani@xilinx.com>
- <1536909510-7166-3-git-send-email-manish.narani@xilinx.com>
- <20180916111242.73af71ed@archlinux>
- <cf2acc8a-ed2d-27f4-ca58-3e2132e17d2a@xilinx.com>
- <20180917110215.00002846@huawei.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v4] dt-binding: remoteproc: Add QTI ADSP PIL bindings
+Date: Mon, 17 Sep 2018 16:15:54 +0530
+Message-ID: <d4732c85-432f-def7-aabe-b2e9c39b9939@codeaurora.org>
+References: <1536638041-11033-1-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180917110215.00002846@huawei.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1536638041-11033-1-git-send-email-rohitkr@codeaurora.org>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jonathan.cameron@huawei.com>, Michal Simek <michal.simek@xilinx.com>
-Cc: mark.rutland@arm.com, kstewart@linuxfoundation.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, pmeerw@pmeerw.net, freeman.liu@spreadtrum.com, lars@metafoo.de, geert@linux-m68k.org, sgoud@xilinx.com, devicetree@vger.kernel.org, knaack.h@gmx.de, vilhelm.gray@gmail.com, broonie@kernel.org, ak@it-klinger.de, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, rdunlap@infradead.org, arnaud.pouliquen@st.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, leoyang.li@nxp.com, lukas@wunner.de, Manish Narani <manish.narani@xilinx.com>, anirudh@xilinx.com, sudeep.holla@arm.com, eugen.hristev@microchip.com, Jonathan Cameron <jic23@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On 17.9.2018 12:06, Jonathan Cameron wrote:
-> On Mon, 17 Sep 2018 11:56:08 +0200
-> Michal Simek <michal.simek@xilinx.com> wrote:
-> 
->> On 16.9.2018 12:12, Jonathan Cameron wrote:
->>> On Fri, 14 Sep 2018 12:48:28 +0530
->>> Manish Narani <manish.narani@xilinx.com> wrote:
->>>   
->>>> Add documentation for xilinx-ams driver. This contains information about
->>>> various voltages and temperatures on PS (Processing System), PL
->>>> (Programmable Logic) and AMS Control Block.
->>>>
->>>> Signed-off-by: Manish Narani <manish.narani@xilinx.com>  
->>> The more I look at this device the more I'm convinced it is very much a dedicated
->>> hardware monitoring function, not a generic ADC sensing unit at all.
->>>
->>> Hmm.  It is still fine to have it in IIO but you need to think in detail
->>> about how you are going to interface this to hwmon via the iio-hwmon bridge.
->>>
->>> Some of the interface complexity should only really be apparent when we hit
->>> hwmon perhaps rather than having so many different custom interfaces in IIO.
->>>
->>> Please also loop in the maintainers and lists for hwmon in the next
->>> version so we can get their input.  
->>
->> Isn't there iio-hwmon driver for this?
->>
->> Thanks,
->> Michal
-> 
-> Absolutely.  The interesting bit is that if we are planning to actually expose
-> the many monitoring channels via iio-hwmon IIRC it won't use the extended names
-> at all (I may have missremembered this thogh).  As such we may want to reduced
-> the amount of custom ABI in IIO in favour of a level of opaqueness with the
-> 'real' interface provided by the iio-hwmon bridge driver.  A quick glance
-> suggested we may need to increase the information exposed by the iio-hwmon
-> driver to make this work.
+Hello Rob,
 
-ok.
+Can you please review this patch and let me know if there is any concern 
+with this patch.
 
 
-> When we have run into cases like this (a very much hardware monitoring oriented
-> device with a few general purpose channels) in the past we have always gotten
-> agreement from the hwmon maintainers that they are happy with using an IIO provider
-> and the iio-hwmon driver route. It is just nice to keep everyone in agreement
-> and have no surprises!
-
-Definitely I agree with this.
+On 9/11/2018 9:24 AM, Rohit kumar wrote:
+> Add devicetree bindings documentation file for Qualcomm
+> Technolgies Inc ADSP Peripheral Image Loader.
+>
+> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+> Changes since v3:
+> Addressed comments given by Rob
+>
+>   .../bindings/remoteproc/qcom,adsp-pil.txt          | 126 +++++++++++++++++++++
+>   1 file changed, 126 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
+>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
+> new file mode 100644
+> index 0000000..06558de
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
+> @@ -0,0 +1,126 @@
+> +Qualcomm Technology Inc. ADSP Peripheral Image Loader
+> +
+> +This document defines the binding for a component that loads and boots firmware
+> +on the Qualcomm Technology Inc. ADSP Hexagon core.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,sdm845-adsp-pil"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must specify the base address and size of the qdsp6ss register
+> +
+> +- interrupts-extended:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: must list the watchdog, fatal IRQs ready, handover and
+> +		    stop-ack IRQs
+> +
+> +- interrupt-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+> +
+> +- clocks:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition:  List of 8 phandle and clock specifier pairs for the adsp.
+> +
+> +- clock-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: List of clock input name strings sorted in the same
+> +		    order as the clocks property. Definition must have
+> +		    "xo", "sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr",
+> +		    "lpass_ahbm_aon_cbcr", "qdsp6ss_xo", "qdsp6ss_sleep"
+> +		    and "qdsp6ss_core".
+> +
+> +- power-domains:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to cx power domain node.
+> +
+> +- resets:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the list of 2 reset-controller for the adsp.
+> +
+> +- reset-names:
+> +        Usage: required
+> +        Value type: <stringlist>
+> +        Definition: must be "pdc_sync" and "cc_lpass"
+> +
+> +- qcom,halt-regs:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: a phandle reference to a syscon representing TCSR followed
+> +			by the offset within syscon for lpass halt register.
+> +
+> +- memory-region:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the reserved-memory for the ADSP
+> +
+> +- qcom,smem-states:
+> +	Usage: required
+> +	Value type: <phandle>
+> +	Definition: reference to the smem state for requesting the ADSP to
+> +		    shut down
+> +
+> +- qcom,smem-state-names:
+> +	Usage: required
+> +	Value type: <stringlist>
+> +	Definition: must be "stop"
+> +
+> +
+> += SUBNODES
+> +The adsp node may have an subnode named "glink-edge" that describes the
+> +communication edge, channels and devices related to the ADSP.
+> +See ../soc/qcom/qcom,glink.txt for details on how to describe these.
+> +
+> += EXAMPLE
+> +The following example describes the resources needed to boot control the
+> +ADSP, as it is found on SDM845 boards.
+> +	adsp-pil {
+> +		compatible = "qcom,sdm845-adsp-pil";
+> +
+> +		reg = <0x17300000 0x40c>;
+> +
+> +		interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-names = "wdog", "fatal", "ready",
+> +			"handover", "stop-ack";
+> +
+> +		clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +			<&gcc GCC_LPASS_SWAY_CLK>,
+> +			<&lpasscc LPASS_AUDIO_WRAPPER_AON_CLK>,
+> +			<&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
+> +			<&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
+> +			<&lpasscc LPASS_QDSP6SS_XO_CLK>,
+> +			<&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
+> +			<&lpasscc LPASS_QDSP6SS_CORE_CLK>;
+> +		clock-names = "xo", "sway_cbcr", "lpass_aon",
+> +			"lpass_ahbs_aon_cbcr",
+> +			"lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
+> +			"qdsp6ss_sleep", "qdsp6ss_core";
+> +
+> +		power-domains = <&rpmhpd SDM845_CX>;
+> +
+> +		resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
+> +			 <&aoss_reset AOSS_CC_LPASS_RESTART>;
+> +		reset-names = "pdc_sync", "cc_lpass";
+> +
+> +		qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
+> +
+> +		memory-region = <&pil_adsp_mem>;
+> +
+> +		qcom,smem-states = <&adsp_smp2p_out 0>;
+> +		qcom,smem-state-names = "stop";
+> +	};
 
 Thanks,
-Michal
+Rohit
