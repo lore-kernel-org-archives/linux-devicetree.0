@@ -1,75 +1,64 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v4 2/2] pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
-Date: Mon, 17 Sep 2018 23:36:35 +0530
-Message-ID: <20180917180635.26996-3-vigneshr@ti.com>
-References: <20180917180635.26996-1-vigneshr@ti.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: egalax-ts: add support for wakeup event
+ action
+Date: Mon, 17 Sep 2018 11:07:44 -0700
+Message-ID: <20180917180744.GB104770@dtor-ws>
+References: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
+ <1536139607-16848-2-git-send-email-Anson.Huang@nxp.com>
+ <5b9f3f5d.1c69fb81.bca6d.cdee@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917180635.26996-1-vigneshr@ti.com>
+Content-Disposition: inline
+In-Reply-To: <5b9f3f5d.1c69fb81.bca6d.cdee@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Anson Huang <Anson.Huang@nxp.com>, mark.rutland@arm.com, marco.franchi@nxp.com, fabio.estevam@nxp.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Errata i870 is applicable in both EP and RC mode. Therefore rename
-function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
-workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
-common place. So, that errata workaround is applied for both modes of
-operation.
+On Sun, Sep 16, 2018 at 05:54:33PM -0500, Rob Herring wrote:
+> On Wed, Sep 05, 2018 at 05:26:47PM +0800, Anson Huang wrote:
+> > Add support for wakeup event action, this would allow the device
+> > to configure whether to be a wakeup source of system suspend.
+> > 
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+> > index 92fb262..296a9cd 100644
+> > --- a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
+> > @@ -6,6 +6,7 @@ Required properties:
+> >  - interrupts: touch controller interrupt
+> >  - wakeup-gpios: the gpio pin to be used for waking up the controller
+> >    and also used as irq pin
+> 
+> If the wakeup gpio is the same as the irq, then this should be removed 
+> since wakeup-source replaces it.
 
-Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+No, it does not: it is GPIO that we need to toggle to wake up the
+controller, not host, and we do not have generic API to map from IRQ to
+GPIO.
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index ce9224a36f62..43711561a199 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
- };
- 
- /*
-- * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-+ * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-  * @dra7xx: the dra7xx device where the workaround should be applied
-  *
-  * Access to the PCIe slave port that are not 32-bit aligned will result
-@@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
-  *
-  * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
-  */
--static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
-+static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
- {
- 	int ret;
- 	struct device_node *np = dev->of_node;
-@@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
- 		dra7xx->link_gen = 2;
- 
-+	ret = dra7xx_pcie_unaligned_memaccess(dev);
-+	if (ret)
-+		dev_err(dev, "WA for Errata i870 not applied. Update DT\n");
-+
- 	switch (mode) {
- 	case DW_PCIE_RC_TYPE:
- 		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
-@@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
- 				   DEVICE_TYPE_EP);
- 
--		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
--		if (ret)
--			goto err_gpio;
--
- 		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
- 		if (ret < 0)
- 			goto err_gpio;
+This is also existing binding...
+
+> 
+> > +- wakeup-source: boolean, touch screen can wake-up the system
+> >  
+> >  Example:
+> >  
+> > @@ -15,4 +16,5 @@ Example:
+> >  		interrupt-parent = <&gpio1>;
+> >  		interrupts = <9 2>;
+> >  		wakeup-gpios = <&gpio1 9 0>;
+> > +		wakeup-source;
+> >  	};
+> > -- 
+> > 2.7.4
+> > 
+> 
+
 -- 
-2.19.0
+Dmitry
