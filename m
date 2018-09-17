@@ -1,92 +1,38 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: add initial dts support for
- Rockpro64 board
-Date: Mon, 17 Sep 2018 01:44:14 -0400
-Message-ID: <20180917054414.GA13346@bogus>
-References: <Akash_Gajjar@mentor.com>
- <1536926957-12432-1-git-send-email-Akash_Gajjar@mentor.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/27] dt-bindings: bus: add H6 DE3 bus binding
+Date: Mon, 17 Sep 2018 01:44:40 -0400
+Message-ID: <5b9f3f49.1c69fb81.be303.28d7@mx.google.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-4-jernej.skrabec@siol.net>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536926957-12432-1-git-send-email-Akash_Gajjar@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Akash Gajjar <Akash_Gajjar@mentor.com>
-Cc: heiko@sntech.de, deepak_das@mentor.com, Mark Rutland <mark.rutland@arm.com>, Jagan Teki <jagan@amarulasolutions.com>, Levin Du <djw@t-chip.com.cn>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Shawn Lin <shawn.lin@rock-chips.com>, Heinrich Schuchardt <xypron.glpk@gmx.de>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBS767TOAKGQEMEAC2WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180902072643.4917-4-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 14, 2018 at 05:39:09PM +0530, Akash Gajjar wrote:
-> Rockpro64 board is a rockchip RK3399 based board from pine64.org.
-> This commit adds initial device tree support for Rockpro64 board.
+On Sun,  2 Sep 2018 09:26:19 +0200, Jernej Skrabec wrote:
+> From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > 
-> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+> The Allwinner H6 DE3 bus is similar to the A64 DE2 one.
+> 
+> Add its compatible string with the A64 string as fallback to the
+> binding.
+> 
+> Some description of the binding is modified to make it more generic.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
->  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
->  arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts  | 770 +++++++++++++++++++++
->  3 files changed, 775 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+>  Documentation/devicetree/bindings/bus/sun50i-de2-bus.txt | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-> index acfd3c7..ac95183 100644
-> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> @@ -160,6 +160,10 @@ Rockchip platforms device tree bindings
->      Required root node properties:
->      - compatible = "pine64,rock64", "rockchip,rk3328";
->  
-> +- Pine64 RockPro64 board:
-> +    Required root node properties:
-> +    - compatible = "pine64,rockpro64", "rockchip,rk3399";
-> +
->  - Rockchip PX3 Evaluation board:
->      Required root node properties:
->        - compatible = "rockchip,px3-evb", "rockchip,px3", "rockchip,rk3188";
-> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
-> index b0092d9..03d523a 100644
-> --- a/arch/arm64/boot/dts/rockchip/Makefile
-> +++ b/arch/arm64/boot/dts/rockchip/Makefile
-> @@ -14,5 +14,6 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-firefly.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-bob.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
-> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire.dtb
->  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-sapphire-excavator.dtb
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> new file mode 100644
-> index 0000000..9e2d4d9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> @@ -0,0 +1,770 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/input/linux-event-codes.h>
-> +#include <dt-bindings/pwm/pwm.h>
-> +#include "rk3399.dtsi"
-> +#include "rk3399-opp.dtsi"
-> +
-> +/ {
-> +	model = "Pine64 RockPro64";
-> +	compatible = "pine64,rockpro64", "rockchip,rk3399";
-> +
-> +	chosen {
-> +		stdout-path = "serial2:1500000n8";
-> +	};
-> +
-> +	backlight: backlight {
-> +		compatible = "pwm-backlight";
-> +		enable-gpios = <&gpio1 RK_PB5 GPIO_ACTIVE_HIGH>;
-> +		pwms = <&pwm0 0 25000 0>;
-> +		brightness-levels = <
-> +			  0   1   2   3   4   5   6   7
-> +			  8   9  10  11  12  13  14  15
-> +			 16  17  18  19  20  21  22  23
 
-There's a binding now so you don't have to list every single entry.
-
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
