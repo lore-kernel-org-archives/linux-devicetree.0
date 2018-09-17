@@ -1,106 +1,76 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: Re: [PATCH v5] iio: proximity: Add driver support for ST's VL53L0X
- ToF ranging sensor.
-Date: Mon, 17 Sep 2018 15:38:29 +0800
-Message-ID: <20180917073829.GA25896@Eros>
-References: <20180915095752.8116-1-songqiang.1304521@gmail.com>
- <20180917061933.GA15262@bogus>
+From: =?utf-8?B?U1ogTGluICjmnpfkuIrmmbop?= <SZ.Lin@moxa.com>
+Subject: RE: [PATCH 3/3] ARM: dts: am335x: add support for Moxa UC-2102 open
+ platform
+Date: Mon, 17 Sep 2018 07:38:57 +0000
+Message-ID: <TY2PR0101MB252677F596F874B9CA11EE34E21E0@TY2PR0101MB2526.apcprd01.prod.exchangelabs.com>
+References: <20180830040929.23357-1-sz.lin@moxa.com>
+ <20180830040929.23357-4-sz.lin@moxa.com>
+ <5b8e8a68.1c69fb81.6eb62.cefe@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180917061933.GA15262@bogus>
+In-Reply-To: <5b8e8a68.1c69fb81.6eb62.cefe@mx.google.com>
+Content-Language: zh-TW
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, himanshujha199640@gmail.com
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, =?utf-8?B?QmVub8OudCBDb3Vzc29u?= <bcousson@baylibre.com>, =?utf-8?B?V2VzIEh1YW5nICjpu4Pmt7XmsrMp?= <Wes.Huang@moxa.com>, =?utf-8?B?RmVybyBKRCBaaG91ICjlkajkv4rpgZQp?= <FeroJD.Zhou@moxa.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 02:19:33AM -0400, Rob Herring wrote:
-> On Sat, Sep 15, 2018 at 05:57:52PM +0800, Song Qiang wrote:
-> > This driver was originally written by ST in 2016 as a misc input device
-> > driver, and hasn't been maintained for a long time. I grabbed some code
-> > from it's API and reformed it into an iio proximity device driver.
-> > This version of driver uses i2c bus to talk to the sensor and
-> > polling for measuring completes, so no irq line is needed.
-> > This version of driver supports only one-shot mode, and it can be
-> > tested with reading from
-> > /sys/bus/iio/devices/iio:deviceX/in_distance_raw
-> > 
-> > Signed-off-by: Song Qiang <songqiang.1304521@gmail.com>
-> 
-> checkpatch.pl complains that the author and signoff emails don't match. 
-> I think gmail ignores '.' in email names, but better to be consistent 
-> IMO.
-> 
-
-Hi Rob,
-
-This isn't the first time I've seen this '.' issue, but in most case it
-was fine. 
-The thing interesting is after I saw your email, I tried to access my
-account with songqiang1304521@gmail.com(just without '.'), and it
-succeeded! So maybe google just removed the '.' in my account everytime
-I logged in. I think I'll send next version of my patch with my email
-account without '.'.
-
-yours,
-Song Qiang
-
-> > ---
-> > Changes in v5:
-> > 	- Correct some spell problems.
-> > 	- Change tries-- to --tries to fix the count error.
-> > 	- Add MODULE_DEVICE_TABLE().
-> > 	- Add some comments.
-> > 
-> > Changes in v4:
-> > 	- Add datasheet link, default i2c address and TODO list.
-> > 	- Make capitalization of defines consistent.
-> > 	- Replace i2c_transfer() with i2c_smbus_read_i2c_block_data().
-> > 	- Remove IIO_CHAN_SOFT_TIMESTAMP() since no buffer/trigger
-> > 	  support.
-> > 	- Add information to MAINTAINERS.
-> > 
-> > Changes in v3:
-> > 	- Recover ST's copyright.
-> > 	- Clean up indio_dev member in vl53l0x_data struct since it's
-> > 	  useless now.
-> > 	- Replace __le16_to_cpu() with le16_to_cpu().
-> > 	- Remove the iio_device_{claim|release}_direct_mode() since it's
-> > 	  only needed when we use buffered mode.
-> > 	- Clean up some coding style problems.
-> > 
-> > Changes in v2:
-> > 	- Clean up the register table.
-> > 	- Sort header files declarations.
-> > 	- Replace some bit definations with GENMASK() and BIT().
-> > 	- Clean up some code and comments that's useless for now.
-> > 	- Change the order of some the definations of some variables to reversed
-> > 	  xmas tree order.
-> > 	- Using do...while() rather while and check.
-> > 	- Replace pr_err() with dev_err().
-> > 	- Remove device id declaration since we recommend to use DT.
-> > 	- Remove .owner = THIS_MODULE.
-> > 	- Replace probe() with probe_new() hook.
-> > 	- Remove IIO_BUFFER and IIO_TRIGGERED_BUFFER dependences.
-> > 	- Change the driver module name to vl53l0x-i2c.
-> > 	- Align all the parameters if they are in the same function with open
-> > 	  parentheses.
-> > 	- Replace iio_device_register() with devm_iio_device_register
-> > 	  for better resource management.
-> > 	- Remove the vl53l0x_remove() since it's not needed.
-> > 	- Remove dev_set_drvdata() since it's already setted above.
-> > 
-> >  .../bindings/iio/proximity/vl53l0x.txt        |  12 ++
-> >  MAINTAINERS                                   |   7 +
-> 
-> Otherwise,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> >  drivers/iio/proximity/Kconfig                 |  11 ++
-> >  drivers/iio/proximity/Makefile                |   2 +
-> >  drivers/iio/proximity/vl53l0x-i2c.c           | 180 ++++++++++++++++++
-> >  5 files changed, 212 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> >  create mode 100644 drivers/iio/proximity/vl53l0x-i2c.c
+SGksDQoNCjxzbmlwPg0KIA0KPiBUaGUgMjEwMiBpcyBhIHN1cGVyc2V0IG9mIHRoZSAyMTAxPyBJ
+ZiBzbywgdGhlIDIxMDIgc2hvdWxkIGNvbWUgZmlyc3QuDQo+IElmIG5vdCwgdGhpcyBzaG91bGQg
+cHJvYmFibHkgYmUgMiBzZXBhcmF0ZSBlbnRyaWVzLg0KPiANCg0KTm9wZSwgdGhleSB1c2UgZGlm
+ZmVyZW50IFNvQyBtb2RlbHMgYW5kIFBNSUNzLiBJJ2xsIHJlc2VuZCB0aGVtIHNlcGFyYXRlbHkg
+aW4gbmV4dCB2ZXJzaW9uLg0KDQpUaGFua3MgZm9yIGd1aWRhbmNlLg0KDQo+ID4gKyZ0cHMgew0K
+PiA+ICsJdmNjMS1zdXBwbHkgPSA8JnZiYXQ+Ow0KPiA+ICsJdmNjMi1zdXBwbHkgPSA8JnZiYXQ+
+Ow0KPiA+ICsJdmNjMy1zdXBwbHkgPSA8JnZiYXQ+Ow0KPiA+ICsJdmNjNC1zdXBwbHkgPSA8JnZi
+YXQ+Ow0KPiA+ICsJdmNjNS1zdXBwbHkgPSA8JnZiYXQ+Ow0KPiA+ICsJdmNjNi1zdXBwbHkgPSA8
+JnZiYXQ+Ow0KPiA+ICsJdmNjNy1zdXBwbHkgPSA8JnZiYXQ+Ow0KPiA+ICsJdmNjaW8tc3VwcGx5
+ID0gPCZ2YmF0PjsNCj4gPiArDQo+ID4gKwlyZWd1bGF0b3JzIHsNCj4gPiArCQl2cnRjX3JlZzog
+cmVndWxhdG9yQDAgew0KPiANCj4gV2l0aG91dCBhIHJlZyBwcm9wZXJ0eSwgeW91IHNob3VsZG4n
+dCBoYXZlIHVuaXQgYWRkcmVzc2VzLg0KDQpJIHdvdWxkIGxpa2UgdG8gYXNrIHdoeSBzaG91bGRu
+J3Qgd2Uga2VlcCB1bml0IGFkZHJlc3Mgd2l0aCAicmVndWxhdG9yLWFsd2F5cy1vbjsiIHJlZyBw
+cm9wZXJ0eT8NCg0KU1oNCg0KPiANCj4gDQo+ID4gKwkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+
+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJdmlvX3JlZzogcmVndWxhdG9yQDEgew0KPiA+ICsJCQly
+ZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXZkZDFfcmVnOiBy
+ZWd1bGF0b3JAMiB7DQo+ID4gKwkJCS8qIFZERF9NUFUgdm9sdGFnZSBsaW1pdHMgMC45NVYgLSAx
+LjI2ViB3aXRoICsvLTQlIHRvbGVyYW5jZSAqLw0KPiA+ICsJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2
+ZGRfbXB1IjsNCj4gPiArCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8OTEyNTAwPjsNCj4g
+PiArCQkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MTM3ODAwMD47DQo+ID4gKwkJCXJlZ3Vs
+YXRvci1ib290LW9uOw0KPiA+ICsJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCX07DQo+
+ID4gKw0KPiA+ICsJCXZkZDJfcmVnOiByZWd1bGF0b3JAMyB7DQo+ID4gKwkJCS8qIFZERF9DT1JF
+IHZvbHRhZ2UgbGltaXRzIDAuOTVWIC0gMS4xViB3aXRoICsvLTQlIHRvbGVyYW5jZSAqLw0KPiA+
+ICsJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2ZGRfY29yZSI7DQo+ID4gKwkJCXJlZ3VsYXRvci1taW4t
+bWljcm92b2x0ID0gPDkxMjUwMD47DQo+ID4gKwkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0g
+PDExNTAwMDA+Ow0KPiA+ICsJCQlyZWd1bGF0b3ItYm9vdC1vbjsNCj4gPiArCQkJcmVndWxhdG9y
+LWFsd2F5cy1vbjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQl2ZGQzX3JlZzogcmVndWxhdG9y
+QDQgew0KPiA+ICsJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+
+ICsJCXZkaWcxX3JlZzogcmVndWxhdG9yQDUgew0KPiA+ICsJCQlyZWd1bGF0b3ItYWx3YXlzLW9u
+Ow0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXZkaWcyX3JlZzogcmVndWxhdG9yQDYgew0KPiA+
+ICsJCQlyZWd1bGF0b3ItYWx3YXlzLW9uOw0KPiA+ICsJCX07DQo+ID4gKw0KPiA+ICsJCXZwbGxf
+cmVnOiByZWd1bGF0b3JANyB7DQo+ID4gKwkJCXJlZ3VsYXRvci1hbHdheXMtb247DQo+ID4gKwkJ
+fTsNCj4gPiArDQo+ID4gKwkJdmRhY19yZWc6IHJlZ3VsYXRvckA4IHsNCj4gPiArCQkJcmVndWxh
+dG9yLWFsd2F5cy1vbjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiArCQl2YXV4MV9yZWc6IHJlZ3Vs
+YXRvckA5IHsNCj4gPiArCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQl9Ow0KPiA+ICsN
+Cj4gPiArCQl2YXV4Ml9yZWc6IHJlZ3VsYXRvckAxMCB7DQo+ID4gKwkJCXJlZ3VsYXRvci1hbHdh
+eXMtb247DQo+ID4gKwkJfTsNCj4gPiArDQo+ID4gKwkJdmF1eDMzX3JlZzogcmVndWxhdG9yQDEx
+IHsNCj4gPiArCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAr
+CQl2bW1jX3JlZzogcmVndWxhdG9yQDEyIHsNCj4gPiArCQkJY29tcGF0aWJsZSA9ICJyZWd1bGF0
+b3ItZml4ZWQiOw0KPiA+ICsJCQlyZWd1bGF0b3ItbmFtZSA9ICJ2bW1jX3JlZyI7DQo+ID4gKwkJ
+CXJlZ3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KPiA+ICsJCQlyZWd1bGF0b3It
+bWF4LW1pY3Jvdm9sdCA9IDwzMzAwMDAwPjsNCj4gPiArCQkJcmVndWxhdG9yLWFsd2F5cy1vbjsN
+Cj4gPiArCQl9Ow0KPiA+ICsJfTsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZtYWMgew0KPiA+ICsJ
+cGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gPiArCXBpbmN0cmwtMCA9IDwmY3Bzd19kZWZh
+dWx0PjsNCj4gPiArCWR1YWxfZW1hYyA9IDwxPjsNCj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4g
+PiArfTsNCj4gPiArDQo+ID4gKyZjcHN3X2VtYWMwIHsNCj4gPiArCXN0YXR1cyA9ICJva2F5IjsN
+Cj4gPiArCXBoeV9pZCA9IDwmZGF2aW5jaV9tZGlvPiwgPDB4ND47DQo+ID4gKwlwaHktbW9kZSA9
+ICJybWlpIjsNCj4gPiArCWR1YWxfZW1hY19yZXNfdmxhbiA9IDwxPjsNCj4gPiArfTsNCj4gPiAr
+DQo+ID4gKyZjcHN3X2VtYWMxIHsNCj4gPiArCXN0YXR1cyA9ICJva2F5IjsNCj4gPiArCXBoeV9p
+ZCA9IDwmZGF2aW5jaV9tZGlvPiwgPDB4NT47DQo+ID4gKwlwaHktbW9kZSA9ICJybWlpIjsNCj4g
+PiArCWR1YWxfZW1hY19yZXNfdmxhbiA9IDwyPjsNCj4gPiArfTsNCj4gPiArDQo+ID4gKyZtbWMx
+IHsNCj4gPiArCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7DQo+ID4gKwl2bW1jLXN1cHBseSA9
+IDwmdm1tY3NkX2ZpeGVkPjsNCj4gPiArCWJ1cy13aWR0aCA9IDw0PjsNCj4gPiArCXBpbmN0cmwt
+MCA9IDwmbW1jMF9waW5zX2RlZmF1bHQ+Ow0KPiA+ICsJY2QtZ3Bpb3MgPSA8JmdwaW8zIDE0IEdQ
+SU9fQUNUSVZFX0hJR0g+Ow0KPiA+ICsJd3AtZ3Bpb3MgPSA8JmdwaW8zIDE4IEdQSU9fQUNUSVZF
+X0hJR0g+Ow0KPiA+ICsJc3RhdHVzID0gIm9rYXkiOw0KPiA+ICt9Ow0KPiA+IC0tDQo+ID4gMi4x
+OS4wLnJjMQ0KPiA+DQoNCg==
