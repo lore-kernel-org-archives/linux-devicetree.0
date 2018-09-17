@@ -1,131 +1,107 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC27XX fuel gauge
- unit documentation
-Date: Tue, 18 Sep 2018 04:45:09 +0800
-Message-ID: <CAMz4kuLQJq4LzB9ovt7cyr5ufY9KdKe7kF9n8ezyH4gB2Zu6oA@mail.gmail.com>
-References: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
- <20180917032625.GA25442@bogus>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
+Date: Mon, 17 Sep 2018 16:23:54 -0500
+Message-ID: <4feebb0e-c3e8-13ec-c6c3-5328fa8fffb7@ti.com>
+References: <20180911170825.17789-1-dmurphy@ti.com>
+ <20180911170825.17789-2-dmurphy@ti.com> <20180911200530.GA28290@amd>
+ <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com> <20180912214938.GA30654@amd>
+ <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com> <20180914081822.GA21830@amd>
+ <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com> <20180914214220.GA2081@amd>
+ <be2ee681-7ae0-6545-0208-6ae5c1b7affd@gmail.com>
+ <5a249ae3-e3f7-8eff-4022-ed982e364326@ti.com>
+ <7a6e83ad-2bc9-c776-21bf-e1d51413b0af@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917032625.GA25442@bogus>
+In-Reply-To: <7a6e83ad-2bc9-c776-21bf-e1d51413b0af@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Jacek
 
-On 17 September 2018 at 11:26, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Sep 12, 2018 at 03:29:38PM +0800, Baolin Wang wrote:
->> This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
->> fuel gauge unit device, which is used to calculate the battery capacity.
+On 09/17/2018 02:22 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 09/17/2018 05:24 PM, Dan Murphy wrote:
+>> Jacek
 >>
->> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->> ---
->>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   55 ++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>> On 09/15/2018 03:00 PM, Jacek Anaszewski wrote:
+>>> Hi Pavel.
+>>>
+>>> On 09/14/2018 11:42 PM, Pavel Machek wrote:
+>>>> Hi!
+>>>>
+>>>>>> You may want to learn more about device tree and/or talk to the device
+>>>>>> tree maintainers. This is an old article. https://lwn.net/Articles/561462/
+>>>>>
+>>>>> The article title is "Device trees as ABI". A device tree is defined
+>>>>> in the "*.dts" file that is then compiled to a dtb blob, which
+>>>>> constitutes the ABI. And this ABI should be kept backwards compatible.
+>>>>>
+>>>>> What is discussed here is a documentation of bindings, i.e. according
+>>>>> to ePAPR: "requirements for how specific types and classes of devices
+>>>>> are represented in the device tree".
+>>>>>
+>>>>> >From the bindings documented in the
+>>>>> Documentation/devicetree/bindings/mfd/ti-lmu.txt only
+>>>>> ti,lm3532-backlight is used in the mainline dts file
+>>>>> (arch/arm/boot/dts/omap4-droid4-xt894.dts).
+>>>>>
+>>>>> Having the above it seems that there is no risk of breaking any
+>>>>> users.
+>>>>
+>>>> DTBs and bindings are supposed to be portable between operating
+>>>> systems. You are right there are no _mainline_ _Linux_ users.
+>>>
+>>> No mainline users means no users we should care of.
+>>> Other people also don't care - see patch [0].
+>>>
+>>>>>> NAK on this patch. I see that this binding has problems, but
+>>>>>> introducing different binding for subset of devices is _not_ a fix.
+>>>>>>
+>>>>>>>> What about the multi function devices? They should have same binding.
+>>>>>>>
+>>>>>>> The MFD devices defined are not in contention here only the SFD.
+>>>>>>
+>>>>>> I'd like to see common solutions for SFD and MFD, as the hardware is
+>>>>>> similar, and that includes the code. Having code that is easier to
+>>>>>> maintain is important, and having many drivers are harder to maintain
+>>>>>> than one driver.
+>>>>>>
+>>>>>> Milo's code looks better than yours in that regard. I disagree about
+>>>>>> Milo's code being "nightmare" to modify, and care about "easy to
+>>>>>> maintain" more than "binary size".
+>>>>>
+>>>>> Easy to maintain will be a dedicated LED class driver.
+>>>>
+>>>> You mean, 3 dedicated LED class drivers and 3 MFD drivers with LED
+>>>> parts? We'll need complex driver anyway, and I'd really like to have
+>>>> just one.
+>>>
+>>> In the LED subsystem we can wrap common functionalities
+>>> into a library object. MFD driver will be able to reuse it then.
 >>
->> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
->> new file mode 100644
->> index 0000000..7447bae
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
->> @@ -0,0 +1,55 @@
->> +Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
->> +
->> +Required properties:
->> +- compatible: Should be one of the following:
->> +  "sprd,sc2720-fgu",
->> +  "sprd,sc2721-fgu",
->> +  "sprd,sc2723-fgu",
->> +  "sprd,sc2730-fgu",
->> +  "sprd,sc2731-fgu".
->> +- reg: The address offset of fuel gauge unit.
->> +- bat-detect-gpio: GPIO for battery detection.
->
-> We already have sbs,battery-detect-gpios, let's drop the 'sbs,' and copy
-> that.
+>> I am currently working on that code now.  I expect a RFC on this this week.
+> 
+> Will it affect the shape of the driver for lm3697 as of v7 [0]?
+> Or the patch set [0] state should be deemed "awaiting merge"?
+> 
 
-Sure.
+It will probably affect the driver to call into the library.  We can pull it in and
+modify or we can modify after the common code is there.
 
->
->> +- io-channels: Specify the IIO ADC channel to get temperature.
->> +- io-channel-names: Should be "bat-temp".
->> +- sprd,inner-resist: Specify the the battery inner resistance (mOhm).
->
-> If this is a property of the battery, then why a sprd vendor prefix?
-> This should perhaps be a common property.
->
-> Minimally, it needs a unit suffix as defined in property-units.txt.
+It should not affect the bindings though.
 
-Right. As Sebastian pointed out previously we should add one common
-property to describe the battery  inner resistance.
+Dan
 
->
->> +- sprd,ocv-cap-table: Provide the battery capacity percent with corresponding
->> +  open circuit voltage (ocv) of the battery, which is used to look up current
->> +  battery capacity according to current baterry ocv values.
->
-> Sounds like another battery property.
-
-Yes.
-
->
->> +- monitored-battery: Phandle of battery characteristics devicetree node.
->
-> If the battery is represented in another node, why are properties of the
-> battery in this node.
-
-Sure. I can remove these properties which are belonging to the battery
-node. Thanks.
-
->
->> +  The fuel gauge uses the following battery properties:
->> +- charge-full-design-microamp-hours: battery design capacity.
->> +- constant-charge-voltage-max-microvolt: maximum constant input voltage.
->> +  See Documentation/devicetree/bindings/power/supply/battery.txt
->> +
->> +Example:
->> +
->> +     bat: battery {
->> +             compatible = "simple-battery";
->> +             charge-full-design-microamp-hours = <1900000>;
->> +             constant-charge-voltage-max-microvolt = <4350000>;
->> +             ......
->> +     };
->> +
->> +     sc2731_pmic: pmic@0 {
->> +             compatible = "sprd,sc2731";
->> +             reg = <0>;
->> +             spi-max-frequency = <26000000>;
->> +             interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-controller;
->> +             #interrupt-cells = <2>;
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             fgu@a00 {
->> +                     compatible = "sprd,sc2731-fgu";
->> +                     reg = <0xa00>;
->> +                     bat-detect-gpio = <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
->> +                     io-channels = <&pmic_adc 5>;
->> +                     io-channel-names = "bat-temp";
->> +                     sprd,inner-resist = <250>;
->> +                     sprd,ocv-cap-table = <4185 100>, <4113 95>, <4066 90>, <4022 85>, <3983 80>, <3949 75>, <3917 70>,
->> +                             <3889 65>, <3864 60>, <3835 55>, <3805 50>, <3787 45>, <3777 40>, <3773 35>, <3770 30>,
->> +                             <3765 25>, <3752 20>, <3724 15>, <3680 10>, <3605 5>, <3400 0>;
->> +                     monitored-battery = <&bat>;
->> +             };
->> +     };
->> --
->> 1.7.9.5
->>
->
-
+> [0] https://lkml.org/lkml/2018/9/11/760
+> 
 
 
 -- 
-Baolin Wang
-Best Regards
+------------------
+Dan Murphy
