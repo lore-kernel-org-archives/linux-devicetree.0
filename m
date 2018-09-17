@@ -1,52 +1,26 @@
-Return-Path: <SRS0=HlV8=LZ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 02/10] dt-bindings: power: rcar-sysc: Add r8a7744 power domain index macros
-Date: Tue, 11 Sep 2018 11:12:43 +0100
-Message-Id: <1536660771-32278-3-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1536660771-32278-1-git-send-email-biju.das@bp.renesas.com>
-References: <1536660771-32278-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=jvXL=L7=verge.net.au=horms@kernel.org>
+Date: Mon, 17 Sep 2018 10:21:27 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/3] dt-bindings: timer: renesas: cmt: document R-Car
+ gen3 support
+Message-ID: <20180917082126.nrhvq3r4uzosjpiv@verge.net.au>
+References: <c94a4ad6-93ee-05e4-e2c1-e8d24d3bc75e@cogentembedded.com>
+ <42923b22-9ce9-b9cc-c569-0e364b63b783@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <42923b22-9ce9-b9cc-c569-0e364b63b783@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add power domain indices for RZ/G1N (R8A7744) SoC.
+On Wed, Sep 12, 2018 at 11:15:28PM +0300, Sergei Shtylyov wrote:
+> Document support for the R-Car gen3 CMT types 0/1 bindings -- they seem
+> to be the same CMT types 0/1 as in the R-Car gen2 SoCs.
+> 
+> Also document R8A779{7|8}0 bindings as these are the R-Car gen3 SoCs for
+> which the initial support was done.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- include/dt-bindings/power/r8a7744-sysc.h | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 include/dt-bindings/power/r8a7744-sysc.h
-
-diff --git a/include/dt-bindings/power/r8a7744-sysc.h b/include/dt-bindings/power/r8a7744-sysc.h
-new file mode 100644
-index 0000000..8b65297
---- /dev/null
-+++ b/include/dt-bindings/power/r8a7744-sysc.h
-@@ -0,0 +1,24 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corp.
-+ */
-+#ifndef __DT_BINDINGS_POWER_R8A7744_SYSC_H__
-+#define __DT_BINDINGS_POWER_R8A7744_SYSC_H__
-+
-+/*
-+ * These power domain indices match the numbers of the interrupt bits
-+ * representing the power areas in the various Interrupt Registers
-+ * (e.g. SYSCISR, Interrupt Status Register)
-+ *
-+ * Note that RZ/G1N is identical to RZ/G2M w.r.t. power domains.
-+ */
-+
-+#define R8A7744_PD_CA15_CPU0		 0
-+#define R8A7744_PD_CA15_CPU1		 1
-+#define R8A7744_PD_CA15_SCU		12
-+#define R8A7744_PD_SGX			20
-+
-+/* Always-on power area */
-+#define R8A7744_PD_ALWAYS_ON		32
-+
-+#endif /* __DT_BINDINGS_POWER_R8A7744_SYSC_H__ */
--- 
-2.7.4
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
