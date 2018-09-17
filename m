@@ -1,62 +1,59 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [RFC PATCH v3 2/3] dt-bindings: reset: Add bindings for ZynqMP
- reset driver
-Date: Mon, 17 Sep 2018 09:09:45 +0000
-Message-ID: <BYAPR02MB471009755B88F55A97DA5694C21E0@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <1536131342-28041-1-git-send-email-nava.manne@xilinx.com>
- <1536131342-28041-3-git-send-email-nava.manne@xilinx.com>
- <20180910201224.GA31501@bogus>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 0/4] pci-dra7xx: Enable errata i870 workaround for RC
+ mode
+Date: Mon, 17 Sep 2018 10:47:36 +0100
+Message-ID: <20180917094736.GA7072@e107981-ln.cambridge.arm.com>
+References: <20180724173150.2701-1-vigneshr@ti.com>
+ <20180808165700.GB486@e107981-ln.cambridge.arm.com>
+ <ba428a15-77bf-e09c-3bd7-b5a0eae7ee13@ti.com>
+ <20180907170009.GJ5662@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910201224.GA31501@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180907170009.GJ5662@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Vignesh R <vigneshr@ti.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Fri, Sep 07, 2018 at 10:00:09AM -0700, Tony Lindgren wrote:
+> * Vignesh R <vigneshr@ti.com> [180810 10:10]:
+> > 
+> > 
+> > On Wednesday 08 August 2018 10:27 PM, Lorenzo Pieralisi wrote:
+> > > On Tue, Jul 24, 2018 at 11:01:46PM +0530, Vignesh R wrote:
+> > >> Make workaround for errata i870 applicable in Host mode as
+> > >> well(previously it was enabled only for EP mode) as per errata
+> > >> documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
+> > >>
+> > >> Tested on DRA72 EVM
+> > >>
+> > >> Tony,
+> > >>
+> > >> If you are okay with the series, could you pick this via omap tree?
+> > >> All ACKs are in place and Lorenzo is okay with PCIe bits to go along with
+> > >> rest of DTS changes.
+> > > 
+> > > I think we have missed the v4.19 merge window by now - 
+> > 
+> > Right. I didn't get any response from Tony.
+> 
+> Sorry catching up with pending mails.. I try hard to not touch
+> anything except fixes around -rc6 time.
+> 
+> > > please let me know if I can drop this series from the PCI patch queue.
+> > > 
+> > 
+> > Ok, I will resend the patch after 4.19-rc. Thanks!
+> 
+> FYI, I'm untagging this thread too. Please post the dts
+> changes separately once the dependencies (if any) have
+> cleared.
 
-Thanks for providing the comments...
-Please find my response inline.
+Ok, Vignesh: I shall drop this series from the PCI patches queue,
+waiting for your new version, let me know how you want to handle this
+then please.
 
-> -----Original Message-----
-> From: Rob Herring [mailto:robh@kernel.org]
-> Sent: Tuesday, September 11, 2018 1:42 AM
-> To: Nava kishore Manne <navam@xilinx.com>
-> Cc: mark.rutland@arm.com; Michal Simek <michals@xilinx.com>;
-> p.zabel@pengutronix.de; Rajan Vaja <RAJANV@xilinx.com>; Jolly Shah
-> <JOLLYS@xilinx.com>; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> Subject: Re: [RFC PATCH v3 2/3] dt-bindings: reset: Add bindings for Zynq=
-MP
-> reset driver
->=20
-> On Wed, Sep 05, 2018 at 12:39:01PM +0530, Nava kishore Manne wrote:
-> > Add documentation to describe Xilinx ZynqMP reset driver bindings.
-> >
-> > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
-> > ---
-> > Changes for v3:
-> > 		-Corrected Commit Msg.
-> > Changes for v2:
-> > 		-Moved reset node as a child to firwmare
-> > 		 node.
->=20
-> Why? There's no reason for that. The parent can be multiple providers.
-> You only need child nodes if the sub functions have their own DT resource=
-s.
->=20
-
-This driver having a dependency on firmware. So I have moved this node as a=
- child to firmware
-As per other drivers which is using this firmware interface=20
-https://lkml.org/lkml/2018/8/14/432=20
-I didn't get your comment could you please elaborate more???=20
-Did you mean I should move the changes in the file to Documentation/devicet=
-ree/bindings/reset/ ???
-
-Regards,
-Navakishore.
+Thanks,
+Lorenzo
