@@ -1,39 +1,66 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Fix I2C bus unit-address error
-Date: Mon, 17 Sep 2018 10:21:46 +0200
-Message-ID: <2920025.RxADjLU2lV@phil>
-References: <20180913181245.25484-21-robh@kernel.org>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: [PATCH v3 0/4] Improve VCHIQ cache line size handling
+Date: Mon, 17 Sep 2018 09:22:20 +0100
+Message-ID: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180913181245.25484-21-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh+dt@kernel.org>, Stefan Wahren <stefan.wahren@i2se.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Phil Elwell <phil@raspberrypi.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 13. September 2018, 20:12:45 CEST schrieb Rob Herring:
-> dtc has new checks for I2C buses. Fix the warnings in unit-addresses.
-> 
-> arch/arm64/boot/dts/rockchip/rk3399-puma-haikou.dtb: Warning (i2c_bus_reg): /i2c@ff3d0000/codec@0a: I2C bus unit address format error, expected "a"
-> 
-> Cc: Heiko Stuebner <heiko@sntech.de>
-> Cc: linux-rockchip@lists.infradead.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please apply to the sub-arch tree. The dtc changes haven't landed, but 
-> will for 4.20.
+Both sides of the VCHIQ communications mechanism need to agree on the cache
+line size. Using an incorrect value can lead to data corruption, but having the
+two sides using different values is usually worse.
 
-applied for 4.20
+In the absence of an obvious convenient run-time method to determine the
+correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
+Device Tree property, written by the firmware, to configure the kernel driver.
+This method was vetoed during the upstreaming process, so a fixed value of 32
+was used instead, and some corruptions ensued. This is take 2 at arriving at
+the correct value.
 
-Thanks
-Heiko
+Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
+a 64-byte cache line. Document the new string in the binding, and use it on
+the appropriate platforms.
+
+The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
+declaration for the device node, but it doubles as an indication to the
+Raspberry Pi firmware that the kernel driver is running a recent kernel driver
+that chooses the correct value. As such it would help if the DT patches are
+not merged before the driver patch.
+
+v3: Builds without errors, tested on multiple Raspberry Pi models.
+v2: Replaced ARM-specific logic used to determine cache line size with
+    a new compatible string for BCM2836 and BCM2837.
+
+Phil Elwell (4):
+  staging/vc04_services: Use correct cache line size
+  dt-bindings: soc: Document "brcm,bcm2836-vchiq"
+  ARM: dts: bcm283x: Correct vchiq compatible string
+  ARM: dts: bcm283x: Correct mailbox register sizes
+
+ .../bindings/soc/bcm/brcm,bcm2835-vchiq.txt        |  3 +-
+ arch/arm/boot/dts/bcm2835-rpi.dtsi                 |  4 +--
+ arch/arm/boot/dts/bcm2836-rpi-2-b.dts              |  2 +-
+ arch/arm/boot/dts/bcm2836-rpi.dtsi                 |  6 ++++
+ arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts         |  2 +-
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts              |  2 +-
+ arch/arm/boot/dts/bcm2837-rpi-cm3.dtsi             |  2 +-
+ .../interface/vchiq_arm/vchiq_2835_arm.c           |  4 ++-
+ .../vc04_services/interface/vchiq_arm/vchiq_arm.c  | 35 +++++++++++++++-------
+ .../vc04_services/interface/vchiq_arm/vchiq_arm.h  |  5 ++++
+ 10 files changed, 47 insertions(+), 18 deletions(-)
+ create mode 100644 arch/arm/boot/dts/bcm2836-rpi.dtsi
+
+-- 
+2.7.4
