@@ -1,212 +1,58 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v6 4/6] edac: synopsys: Add macro defines for ZynqMP DDRC
-Date: Mon, 17 Sep 2018 19:14:31 +0530
-Message-ID: <1537191873-6582-5-git-send-email-manish.narani@xilinx.com>
-References: <1537191873-6582-1-git-send-email-manish.narani@xilinx.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 1/5] mfd: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Mon, 17 Sep 2018 14:50:16 +0100
+Message-ID: <20180917135016.GK1653@imbe.wolfsonmicro.main>
+References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
+ <CACRpkdakAAAFKfRFeB_8kUCyGts_7sojVwyexe4aL4QQo2CcGg@mail.gmail.com>
+ <20180906144834.GD1653@imbe.wolfsonmicro.main>
+ <5b9f3f61.1c69fb81.f4e64.f592@mx.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1537191873-6582-1-git-send-email-manish.narani@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org, michal.simek@xilinx.com, manish.narani@xilinx.com
-Cc: devicetree@vger.kernel.org, sgoud@xilinx.com, linux-kernel@vger.kernel.org, anirudh@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5b9f3f61.1c69fb81.f4e64.f592@mx.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-Add macro defines for ZynqMP DDR controller. These macros will be used
-for ZyqnMP ECC operations.
+On Sun, Sep 16, 2018 at 06:11:08PM -0500, Rob Herring wrote:
+> On Thu, Sep 06, 2018 at 03:48:34PM +0100, Charles Keepax wrote:
+> > On Thu, Sep 06, 2018 at 03:46:12PM +0200, Linus Walleij wrote:
+> > > On Wed, Sep 5, 2018 at 12:41 PM Charles Keepax
+> > > <ckeepax@opensource.cirrus.com> wrote:
+> > > It's a bit confusing, maybe you can clear it up:
+> > > it appears to be an I2C device, so when you say this is a
+> > > "development board" is there something like a board
+> > > controller that is accessed over I2C and this is what the
+> > > driver really probes to, not the board per se?
+> > > 
+> > > I guess jamming this card into the I2C slot of any other
+> > > system (would work fine with a 96Boards LS connector
+> > > as it seems, actually)  also involves connecting some
+> > > I2S or similar on the side for high-datarate traffic?
+> > > 
+> > > This driver seems to only concern itself with the I2C
+> > > board controller per se, not the board is that right?
+> > > 
+> > 
+> > Yeah I have poorly phrased that, these patches are very much
+> > just dealing with the board controller chip.
+> 
+> How would the codec I2C connect to the host? Is there one I2C bus or 
+> 2? The binding looks mostly fine to me, but I think we need to 
+> understand that part.
+> 
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- drivers/edac/synopsys_edac.c | 168 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 168 insertions(+)
+If the CODEC is I2C based then both the CODEC and the controller
+IC will be on the same I2C bus. If the CODEC is connected over
+SPI that is obviously a separate bus as the board controller
+chip is I2C only.
 
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index eb458e5..6bf7959 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -97,6 +97,174 @@
- #define SCRUB_MODE_MASK		0x7
- #define SCRUB_MODE_SECDED	0x4
- 
-+/* DDR ECC Quirks */
-+#define DDR_ECC_INTR_SUPPORT		BIT(0)
-+#define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
-+
-+/* ZynqMP Enhanced DDR memory controller registers that are relevant to ECC */
-+/* ECC Configuration Registers */
-+#define ECC_CFG0_OFST			0x70
-+#define ECC_CFG1_OFST			0x74
-+
-+/* ECC Status Register */
-+#define ECC_STAT_OFST			0x78
-+
-+/* ECC Clear Register */
-+#define ECC_CLR_OFST			0x7C
-+
-+/* ECC Error count Register */
-+#define ECC_ERRCNT_OFST			0x80
-+
-+/* ECC Corrected Error Address Register */
-+#define ECC_CEADDR0_OFST		0x84
-+#define ECC_CEADDR1_OFST		0x88
-+
-+/* ECC Syndrome Registers */
-+#define ECC_CSYND0_OFST			0x8C
-+#define ECC_CSYND1_OFST			0x90
-+#define ECC_CSYND2_OFST			0x94
-+
-+/* ECC Bit Mask0 Address Register */
-+#define ECC_BITMASK0_OFST		0x98
-+#define ECC_BITMASK1_OFST		0x9C
-+#define ECC_BITMASK2_OFST		0xA0
-+
-+/* ECC UnCorrected Error Address Register */
-+#define ECC_UEADDR0_OFST		0xA4
-+#define ECC_UEADDR1_OFST		0xA8
-+
-+/* ECC Syndrome Registers */
-+#define ECC_UESYND0_OFST		0xAC
-+#define ECC_UESYND1_OFST		0xB0
-+#define ECC_UESYND2_OFST		0xB4
-+
-+/* ECC Poison Address Reg */
-+#define ECC_POISON0_OFST		0xB8
-+#define ECC_POISON1_OFST		0xBC
-+
-+#define ECC_ADDRMAP0_OFFSET		0x200
-+
-+/* Control register bitfield definitions */
-+#define ECC_CTRL_BUSWIDTH_MASK		0x3000
-+#define ECC_CTRL_BUSWIDTH_SHIFT		12
-+#define ECC_CTRL_CLR_CE_ERRCNT		BIT(2)
-+#define ECC_CTRL_CLR_UE_ERRCNT		BIT(3)
-+
-+/* DDR Control Register width definitions  */
-+#define DDRCTL_EWDTH_16			2
-+#define DDRCTL_EWDTH_32			1
-+#define DDRCTL_EWDTH_64			0
-+
-+/* ECC status register definitions */
-+#define ECC_STAT_UECNT_MASK		0xF0000
-+#define ECC_STAT_UECNT_SHIFT		16
-+#define ECC_STAT_CECNT_MASK		0xF00
-+#define ECC_STAT_CECNT_SHIFT		8
-+#define ECC_STAT_BITNUM_MASK		0x7F
-+
-+/* DDR QOS Interrupt register definitions */
-+#define DDR_QOS_IRQ_STAT_OFST		0x20200
-+#define DDR_QOSUE_MASK			0x4
-+#define	DDR_QOSCE_MASK			0x2
-+#define	ECC_CE_UE_INTR_MASK		0x6
-+#define DDR_QOS_IRQ_EN_OFST		0x20208
-+#define DDR_QOS_IRQ_DB_OFST		0x2020C
-+
-+/* ECC Corrected Error Register Mask and Shifts*/
-+#define ECC_CEADDR0_RW_MASK		0x3FFFF
-+#define ECC_CEADDR0_RNK_MASK		BIT(24)
-+#define ECC_CEADDR1_BNKGRP_MASK		0x3000000
-+#define ECC_CEADDR1_BNKNR_MASK		0x70000
-+#define ECC_CEADDR1_BLKNR_MASK		0xFFF
-+#define ECC_CEADDR1_BNKGRP_SHIFT	24
-+#define ECC_CEADDR1_BNKNR_SHIFT		16
-+
-+/* ECC Poison register shifts */
-+#define ECC_POISON0_RANK_SHIFT		24
-+#define ECC_POISON0_RANK_MASK		BIT(24)
-+#define ECC_POISON0_COLUMN_SHIFT	0
-+#define ECC_POISON0_COLUMN_MASK		0xFFF
-+#define ECC_POISON1_BG_SHIFT		28
-+#define ECC_POISON1_BG_MASK		0x30000000
-+#define ECC_POISON1_BANKNR_SHIFT	24
-+#define ECC_POISON1_BANKNR_MASK		0x7000000
-+#define ECC_POISON1_ROW_SHIFT		0
-+#define ECC_POISON1_ROW_MASK		0x3FFFF
-+
-+/* DDR Memory type defines */
-+#define MEM_TYPE_DDR3			0x1
-+#define MEM_TYPE_LPDDR3			0x8
-+#define MEM_TYPE_DDR2			0x4
-+#define MEM_TYPE_DDR4			0x10
-+#define MEM_TYPE_LPDDR4			0x20
-+
-+/* DDRC Software control register */
-+#define DDRC_SWCTL			0x320
-+
-+/* DDRC ECC CE & UE poison mask */
-+#define ECC_CEPOISON_MASK		0x3
-+#define ECC_UEPOISON_MASK		0x1
-+
-+/* DDRC Device config masks */
-+#define DDRC_MSTR_CFG_MASK		0xC0000000
-+#define DDRC_MSTR_CFG_SHIFT		30
-+#define DDRC_MSTR_CFG_X4_MASK		0x0
-+#define DDRC_MSTR_CFG_X8_MASK		0x1
-+#define DDRC_MSTR_CFG_X16_MASK		0x2
-+#define DDRC_MSTR_CFG_X32_MASK		0x3
-+
-+#define DDR_MAX_ROW_SHIFT		18
-+#define DDR_MAX_COL_SHIFT		14
-+#define DDR_MAX_BANK_SHIFT		3
-+#define DDR_MAX_BANKGRP_SHIFT		2
-+
-+#define ROW_MAX_VAL_MASK		0xF
-+#define COL_MAX_VAL_MASK		0xF
-+#define BANK_MAX_VAL_MASK		0x1F
-+#define BANKGRP_MAX_VAL_MASK		0x1F
-+#define RANK_MAX_VAL_MASK		0x1F
-+
-+#define ROW_B0_BASE			6
-+#define ROW_B1_BASE			7
-+#define ROW_B2_BASE			8
-+#define ROW_B3_BASE			9
-+#define ROW_B4_BASE			10
-+#define ROW_B5_BASE			11
-+#define ROW_B6_BASE			12
-+#define ROW_B7_BASE			13
-+#define ROW_B8_BASE			14
-+#define ROW_B9_BASE			15
-+#define ROW_B10_BASE			16
-+#define ROW_B11_BASE			17
-+#define ROW_B12_BASE			18
-+#define ROW_B13_BASE			19
-+#define ROW_B14_BASE			20
-+#define ROW_B15_BASE			21
-+#define ROW_B16_BASE			22
-+#define ROW_B17_BASE			23
-+
-+#define COL_B2_BASE			2
-+#define COL_B3_BASE			3
-+#define COL_B4_BASE			4
-+#define COL_B5_BASE			5
-+#define COL_B6_BASE			6
-+#define COL_B7_BASE			7
-+#define COL_B8_BASE			8
-+#define COL_B9_BASE			9
-+#define COL_B10_BASE			10
-+#define COL_B11_BASE			11
-+#define COL_B12_BASE			12
-+#define COL_B13_BASE			13
-+
-+#define BANK_B0_BASE			2
-+#define BANK_B1_BASE			3
-+#define BANK_B2_BASE			4
-+
-+#define BANKGRP_B0_BASE			2
-+#define BANKGRP_B1_BASE			3
-+
-+#define RANK_B0_BASE			6
-+
- /**
-  * struct ecc_error_info - ECC error log information.
-  * @row:	Row number.
--- 
-2.1.1
+There are some additional I2C interfaces but they are not
+currently used on any mini-cards, and they are intended for
+secondary purposes not control of the CODEC itself.
+
+Thanks,
+Charles
