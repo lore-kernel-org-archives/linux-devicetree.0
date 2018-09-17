@@ -1,107 +1,77 @@
-From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-Subject: Re: [PATCH v3 3/3] i2c: designware: select gpio/default pin when
- prepare/unprepare recovery
-Date: Mon, 17 Sep 2018 11:34:18 +0800
-Message-ID: <20180917113418.16881f6c@xhacker.debian>
-References: <20180917112633.252c591c@xhacker.debian>
-        <20180917112949.414dd56f@xhacker.debian>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC27XX fuel gauge
+ unit documentation
+Date: Mon, 17 Sep 2018 11:43:30 +0800
+Message-ID: <CAMz4ku+4pJHivw2FLjtpaBs7yQxgDH-kZ3AgHWWQr5Lb_UcYwg@mail.gmail.com>
+References: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
+ <20180916135721.rhu3rn4fsrmmgnbf@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917112949.414dd56f@xhacker.debian>
+In-Reply-To: <20180916135721.rhu3rn4fsrmmgnbf@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: Craig Tatlor <ctatlor97@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-+ DT maintainers
+Hi Sebastian,
 
-On Mon, 17 Sep 2018 11:29:49 +0800
-Jisheng Zhang <Jisheng.Zhang@synaptics.com> wrote:
+On 16 September 2018 at 21:57, Sebastian Reichel
+<sebastian.reichel@collabora.com> wrote:
+> Hi,
+>
+> On Wed, Sep 12, 2018 at 03:29:38PM +0800, Baolin Wang wrote:
+>> This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
+>> fuel gauge unit device, which is used to calculate the battery capacity.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   55 ++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>> new file mode 100644
+>> index 0000000..7447bae
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>> @@ -0,0 +1,55 @@
+>> +Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
+>> +
+>> +Required properties:
+>> +- compatible: Should be one of the following:
+>> +  "sprd,sc2720-fgu",
+>> +  "sprd,sc2721-fgu",
+>> +  "sprd,sc2723-fgu",
+>> +  "sprd,sc2730-fgu",
+>> +  "sprd,sc2731-fgu".
+>> +- reg: The address offset of fuel gauge unit.
+>> +- bat-detect-gpio: GPIO for battery detection.
+>> +- io-channels: Specify the IIO ADC channel to get temperature.
+>> +- io-channel-names: Should be "bat-temp".
+>> +- sprd,inner-resist: Specify the the battery inner resistance (mOhm).
+>
+> This should be a property of the battery.without the sprd, prefix.
 
-> On some platforms, the sda/scl pins are muxed with gpio functions, so
-> they could be used for recovery. Select the gpio/default pin function
-> when prepare/unprepare recovery.
-> 
-> Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
-> ---
->  drivers/i2c/busses/i2c-designware-core.h   |  3 +++
->  drivers/i2c/busses/i2c-designware-master.c | 22 ++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index e367b1af4ab2..01d5f01691a4 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -271,6 +271,9 @@ struct dw_i2c_dev {
->  	int			(*init)(struct dw_i2c_dev *dev);
->  	int			mode;
->  	struct i2c_bus_recovery_info rinfo;
-> +	struct pinctrl		*pinctrl;
-> +	struct pinctrl_state	*pins_default;
-> +	struct pinctrl_state	*pins_gpio;
->  };
->  
->  #define ACCESS_SWAP		0x00000001
-> diff --git a/drivers/i2c/busses/i2c-designware-master.c b/drivers/i2c/busses/i2c-designware-master.c
-> index 94d94b4a9a0d..384d6630366a 100644
-> --- a/drivers/i2c/busses/i2c-designware-master.c
-> +++ b/drivers/i2c/busses/i2c-designware-master.c
-> @@ -17,6 +17,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
->  #include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/reset.h>
->  
-> @@ -629,6 +630,9 @@ static void i2c_dw_prepare_recovery(struct i2c_adapter *adap)
->  {
->  	struct dw_i2c_dev *dev = i2c_get_adapdata(adap);
->  
-> +	if (dev->pinctrl && dev->pins_gpio)
-> +		pinctrl_select_state(dev->pinctrl, dev->pins_gpio);
-> +
->  	i2c_dw_disable(dev);
->  	reset_control_assert(dev->rst);
->  	i2c_dw_prepare_clk(dev, false);
-> @@ -641,6 +645,9 @@ static void i2c_dw_unprepare_recovery(struct i2c_adapter *adap)
->  	i2c_dw_prepare_clk(dev, true);
->  	reset_control_deassert(dev->rst);
->  	i2c_dw_init_master(dev);
-> +
-> +	if (dev->pinctrl && dev->pins_default)
-> +		pinctrl_select_state(dev->pinctrl, dev->pins_default);
->  }
->  
->  static int i2c_dw_init_recovery_info(struct dw_i2c_dev *dev)
-> @@ -648,6 +655,8 @@ static int i2c_dw_init_recovery_info(struct dw_i2c_dev *dev)
->  	struct i2c_bus_recovery_info *rinfo = &dev->rinfo;
->  	struct i2c_adapter *adap = &dev->adapter;
->  	struct gpio_desc *gpio;
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *s;
->  	int r;
->  
->  	gpio = devm_gpiod_get(dev->dev, "scl", GPIOD_OUT_HIGH);
-> @@ -664,6 +673,19 @@ static int i2c_dw_init_recovery_info(struct dw_i2c_dev *dev)
->  		return PTR_ERR(gpio);
->  	rinfo->sda_gpiod = gpio;
->  
-> +	pinctrl = devm_pinctrl_get(dev->dev);
-> +	if (PTR_ERR(pinctrl) == -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +	if (!IS_ERR_OR_NULL(pinctrl)) {
-> +		dev->pinctrl = pinctrl;
-> +		s = pinctrl_lookup_state(pinctrl, PINCTRL_STATE_DEFAULT);
-> +		if (!IS_ERR_OR_NULL(s))
-> +			dev->pins_default = s;
-> +		s = pinctrl_lookup_state(pinctrl, "gpio");
-> +		if (!IS_ERR_OR_NULL(s))
-> +			dev->pins_gpio = s;
-> +	}
-> +
->  	rinfo->recover_bus = i2c_generic_scl_recovery;
->  	rinfo->prepare_recovery = i2c_dw_prepare_recovery;
->  	rinfo->unprepare_recovery = i2c_dw_unprepare_recovery;
+Right. But I did not find one proper property of the battery, so I
+will add one new standard property of battery named
+'inner-resistance-microohm' in next version. Is it OK for you?
+
+>
+>> +- sprd,ocv-cap-table: Provide the battery capacity percent with corresponding
+>> +  open circuit voltage (ocv) of the battery, which is used to look up current
+>> +  battery capacity according to current baterry ocv values.
+>
+> This should also be part of the battery binding. I just reviewed a
+> patchset for the Qualcomm Battery Monitoring System, which needs the
+> same functionality. The Qualcomm binding is more advanced, but
+> should also support this simpler case. Thus I think it makes sense
+> to use its description as base for adding support for this feature
+> to Documentation/devicetree/bindings/power/supply/battery.txt
+
+That's great. But could you give me the link of Qualcomm binding,
+which I can change my bindings. Thanks for your comments.
+
+-- 
+Baolin Wang
+Best Regards
