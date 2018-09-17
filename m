@@ -1,70 +1,47 @@
-From: Nava kishore Manne <navam@xilinx.com>
-Subject: RE: [RFC PATCH v2 3/3] nvmem: zynqmp: Added zynqmp nvmem firmware
- driver
-Date: Mon, 17 Sep 2018 03:14:14 +0000
-Message-ID: <BYAPR02MB471039817A37E2583A90FC21C21E0@BYAPR02MB4710.namprd02.prod.outlook.com>
-References: <1536054754-3119-1-git-send-email-nava.manne@xilinx.com>
- <1536054754-3119-4-git-send-email-nava.manne@xilinx.com>
- <d9cab203-9637-3233-4b44-96222ba3551c@linaro.org>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH V2 1/2] ARM: dts: imx6ul: use nvmem-cells for cpu speed grading
+Date: Mon, 17 Sep 2018 11:17:43 +0800
+Message-ID: <1537154264-23252-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d9cab203-9637-3233-4b44-96222ba3551c@linaro.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>, Jolly Shah <JOLLYS@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3Jpbml2YXMsDQoNCglUaGFuc2tzIGZvciBwcm92aWRpbmcgdGhlIGNvbW1lbnRzLi4NClBs
-ZWFzZSBmaW5kIG15IHJlcHNvbmNlIGlubGluZS4uLg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+IEZyb206IFNyaW5pdmFzIEthbmRhZ2F0bGEgW21haWx0bzpzcmluaXZhcy5rYW5k
-YWdhdGxhQGxpbmFyby5vcmddDQo+IFNlbnQ6IFN1bmRheSwgU2VwdGVtYmVyIDE2LCAyMDE4IDc6
-NDEgUE0NCj4gVG86IE5hdmEga2lzaG9yZSBNYW5uZSA8bmF2YW1AeGlsaW54LmNvbT47IHJvYmgr
-ZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFybS5jb207IE1pY2hhbCBTaW1layA8bWlj
-aGFsc0B4aWxpbnguY29tPjsgUmFqYW4gVmFqYQ0KPiA8UkFKQU5WQHhpbGlueC5jb20+OyBKb2xs
-eSBTaGFoIDxKT0xMWVNAeGlsaW54LmNvbT47DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiBrZXJuZWxA
-dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYyIDMvM10gbnZtZW06
-IHp5bnFtcDogQWRkZWQgenlucW1wIG52bWVtDQo+IGZpcm13YXJlIGRyaXZlcg0KPiANCj4gRmV3
-IG1pbm9yIE5pdHMuLi4NCj4gDQo+IEkgcmVtZW1iZXIgYXNraW5nIGFib3V0IHRoaXMgaW4gdGhl
-IGxhc3QgcmV2aWV3IQ0KPiANCj4gT24gMDQvMDkvMTggMTA6NTIsIE5hdmEga2lzaG9yZSBNYW5u
-ZSB3cm90ZToNCj4gPiBUaGlzIHBhdGNoIGFkZHMgenlucW1wIG52bWVtIGZpcm13YXJlIGRyaXZl
-ciB0byBhY2Nlc3MgdGhlIFNvQw0KPiA+IHJldmlzaW9uIGluZm9ybWF0aW9uIGZyb20gdGhlIGhh
-cmR3YXJlIHJlZ2lzdGVyLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTmF2YSBraXNob3JlIE1h
-bm5lIDxuYXZhLm1hbm5lQHhpbGlueC5jb20+DQo+ID4gLS0tDQo+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbnZtZW0venlucW1wX252bWVtLmMNCj4gPiBiL2RyaXZlcnMvbnZtZW0venlucW1wX252
-bWVtLmMgbmV3IGZpbGUgbW9kZSAxMDA2NDQgaW5kZXgNCj4gPiAwMDAwMDAwLi5lMzc3OTAwDQo+
-ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2RyaXZlcnMvbnZtZW0venlucW1wX252bWVtLmMN
-Cj4gPiBAQCAtMCwwICsxLDg0IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBH
-UEwtMi4wKw0KPiA+ICsvKg0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggWGlsaW54LCBJbmMu
-DQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2luY2x1ZGUgPGxpbnV4L21vZHVsZS5oPg0KPiA+ICsj
-aW5jbHVkZSA8bGludXgvbnZtZW0tcHJvdmlkZXIuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4L29m
-Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPiArI2luY2x1
-ZGUgPGxpbnV4L2Zpcm13YXJlL3hsbngtenlucW1wLmg+DQo+ID4gKw0KPiA+ICsjZGVmaW5lIFNJ
-TElDT05fUkVWSVNJT05fTUFTSyAweEYNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgenlucW1wX252
-bWVtX3JlYWQodm9pZCAqY29udGV4dCwgdW5zaWduZWQgaW50IG9mZnNldCwNCj4gPiArCQkJICAg
-ICB2b2lkICp2YWwsIHNpemVfdCBieXRlcykNCj4gPiArew0KPiA+ICsJaW50IHJldDsNCj4gPiAr
-CWludCBpZGNvZGUsIHZlcnNpb247DQo+ID4gKwljb25zdCBzdHJ1Y3QgenlucW1wX2VlbWlfb3Bz
-ICplZW1pX29wcyA9DQo+IHp5bnFtcF9wbV9nZXRfZWVtaV9vcHMoKTsNCj4gPiArDQo+ID4gKwlp
-ZiAoIWVlbWlfb3BzIHx8ICFlZW1pX29wcy0+Z2V0X2NoaXBpZCkNCj4gPiArCQlyZXR1cm4gLUVO
-WElPOw0KPiA+ICsNCj4gPiArCXJldCA9IGVlbWlfb3BzLT5nZXRfY2hpcGlkKCZpZGNvZGUsICZ2
-ZXJzaW9uKTsNCj4gPiArCWlmIChyZXQgPCAwKQ0KPiA+ICsJCXJldHVybiByZXQ7DQo+ID4gKw0K
-PiA+ICsJcHJfZGVidWcoIlJlYWQgY2hpcGlkIHZhbCAleCAleFxuIiwgaWRjb2RlLCB2ZXJzaW9u
-KTsNCj4gPiArCSooaW50ICopdmFsID0gdmVyc2lvbiAmIFNJTElDT05fUkVWSVNJT05fTUFTSzsN
-Cj4gDQo+IFVzZSBkZXZfZGJnIGhlcmUuDQoNCldpbGwgZml4IGluIHRoZSBuZXh0IHZlcnNpb24u
-Lg0KDQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0YXRpYyBz
-dHJ1Y3QgbnZtZW1fY29uZmlnIGVjb25maWcgPSB7DQo+ID4gKwkubmFtZSA9ICJ6eW5xbXAtbnZt
-ZW0iLA0KPiA+ICsJLm93bmVyID0gVEhJU19NT0RVTEUsDQo+ID4gKwkud29yZF9zaXplID0gMSwN
-Cj4gPiArCS5zaXplID0gMSwNCj4gPiArCS5yZWFkX29ubHkgPSB0cnVlLA0KPiA+ICt9Ow0KPiA+
-ICsNCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgenlucW1wX252bWVtX21h
-dGNoW10gPSB7DQo+ID4gKwl7IC5jb21wYXRpYmxlID0gInhsbngsenlucW1wLW52bWVtLWZ3Iiwg
-fSwNCj4gPiArCXsgLyogc2VudGluZWwgKi8gfSwNCj4gPiArfTsNCj4gPiArTU9EVUxFX0RFVklD
-RV9UQUJMRShvZiwgenlucW1wX252bWVtX21hdGNoKTsNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQg
-enlucW1wX252bWVtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpIHsNCj4gPiAr
-CXN0cnVjdCBudm1lbV9kZXZpY2UgKm52bWVtOw0KPiA+ICsNCj4gPiArCWVjb25maWcuZGV2ID0g
-JnBkZXYtPmRldjsNCj4gPiArCWVjb25maWcucmVnX3JlYWQgPSB6eW5xbXBfbnZtZW1fcmVhZDsN
-Cj4gPiArDQo+ID4gKwludm1lbSA9IG52bWVtX3JlZ2lzdGVyKCZlY29uZmlnKTsNCj4gWW91IGNh
-biB1c2UgZGV2bV8gdmFyaWFudCBhbmQgcmVtb3ZlIHRoZSB6eW5xbXBfbnZtZW1fcmVtb3ZlKCkg
-dG90YWxseQ0KPiANCldpbGwgZml4IGluIHRoZSBuZXh0IHZlcnNpb24uLi4NCg0KUmVnYXJkcywN
-Ck5hdmFraXNob3JlLg0K
+On i.MX6UL, accessing OCOTP directly is wrong because the ocotp clock
+needs to be enabled first, so use the nvmem-cells binding instead.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+no change since V1.
+ arch/arm/boot/dts/imx6ul.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
+index 5ef4320..ff8c6de 100644
+--- a/arch/arm/boot/dts/imx6ul.dtsi
++++ b/arch/arm/boot/dts/imx6ul.dtsi
+@@ -89,6 +89,8 @@
+ 				      "pll1_sys";
+ 			arm-supply = <&reg_arm>;
+ 			soc-supply = <&reg_soc>;
++			nvmem-cells = <&cpu_speed_grade>;
++			nvmem-cell-names = "speed_grade";
+ 		};
+ 	};
+ 
+@@ -943,6 +945,10 @@
+ 				tempmon_temp_grade: temp-grade@20 {
+ 					reg = <0x20 4>;
+ 				};
++
++				cpu_speed_grade: speed-grade@10 {
++					reg = <0x10 4>;
++				};
+ 			};
+ 
+ 			lcdif: lcdif@21c8000 {
+-- 
+2.7.4
