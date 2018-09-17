@@ -1,60 +1,88 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 02/13] mfd: wcd9335: add support to wcd9335 core
-Date: Mon, 17 Sep 2018 02:08:20 +0100
-Message-ID: <20180917010820.GB3900@dell>
-References: <20180904102500.30318-1-srinivas.kandagatla@linaro.org>
- <20180904102500.30318-3-srinivas.kandagatla@linaro.org>
- <20180911153340.GY4185@dell>
- <94c68436-b618-40fc-46d6-165799312289@linaro.org>
- <20180912085848.GP4185@dell>
- <b4ddfd10-360c-a844-8542-1f81a1cc9c6b@linaro.org>
- <20180912105941.GS4185@dell>
- <11f213e5-8c93-f75f-1b74-517f00cd9a96@linaro.org>
- <20180912114633.GU4185@dell>
- <ffcf1b3a-b66c-6e0e-3e7a-da092e9d1894@linaro.org>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 1/3] irqchip: add C-SKY irqchip drivers
+Date: Mon, 17 Sep 2018 10:09:29 +0800
+Message-ID: <20180917020928.GA22452@guoren-Inspiron-7460>
+References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
+ <86in35mfas.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ffcf1b3a-b66c-6e0e-3e7a-da092e9d1894@linaro.org>
+In-Reply-To: <86in35mfas.wl-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: robh+dt@kernel.org, broonie@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Sep 2018, Srinivas Kandagatla wrote:
-
+On Sun, Sep 16, 2018 at 08:07:55PM +0100, Marc Zyngier wrote:
+> On Sun, 16 Sep 2018 09:50:02 +0100,
+> Guo Ren <ren_guo@c-sky.com> wrote:
+> > +static void csky_mpintc_handler(struct pt_regs *regs)
+> > +{
+> > +	void __iomem *reg_base = this_cpu_read(intcl_reg);
+> > +
+> > +	do {
+> > +		handle_domain_irq(NULL,
 > 
-> > > 
-> > > There are two parts for device to be ready to talk at bus level:
-> > > 1> power up and reset,
-> > > 2> enumerate and assign a logical address by the slimbus controller.
-> > > 
-> > > First part as you said is already done in probe.
-> > > When second part happens when status callback is invoked, that is when the
-> > > slimdevice is ready for any kind of communication at bus level.
-> > 
-> > I see.  I still think it's hacky to conduct start-up procedures when
-> > all the SS requested was status.  Perhaps it needs a new API call
-> > init()?
+> It is definitely odd to call into handle_domain_irq without a
+> domain. A new architecture (which C-SKY apparently is) shouldn't
+> depend on this, and should always provide a domain.
+Ok, I'll change it to handle_domain_irq(root_domain and prepare the
+root_domain definition.
+
+> > +	ret = of_property_read_u32(node, "csky,num-irqs", &nr_irq);
+> > +	if (ret < 0) {
+> > +		nr_irq = INTC_IRQS;
+> > +	}
 > 
-> When we added these callbacks the purpose of this was to allow drivers to do
-> specific setup/teardown.
+> Drop the extra braces.
+Ok, and change it to: 
+	if (ret < 0)
+		nr_irq = INTC_IRQS
+
+> > +
+> > +	irq_set_default_host(root_domain);
 > 
-> AFIAU,
+> Please drop this. There is no reason to use this on any modern, DT
+> based architecture.
+Please let me keep this and in my arch/csky/kernel/smp.c:
 
-What does that mean?
+void __init setup_smp_ipi(void)
+{
+	...
+	irq_create_mapping(NULL, IPI_IRQ);
 
-> even-though if we add init(), SLIMbus would still call it just before
-> or after status which to me is redundant ATM.
-> Its up to slim driver what it exactly whats to do with status, in some cases
-> this can involve setting up the device.
+I need irq_set_default_host to pass the domain and this api is used by
+a lot of drivers:
 
-If you say so! ;)
+$ grep irq_set_default_host drivers/irqchip -r | wc -l
+16
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+In future we could find a better solution.
+
+> > diff --git a/irq-csky-apb-intc.c b/irq-csky-apb-intc.c
+> > new file mode 100644
+> > index 0000000..d56e6b5
+> > --- /dev/null
+> > +++ b/irq-csky-apb-intc.c
+> 
+> This is a separate driver, right? Please make it a separate patch.
+Ok, no problem.
+
+> > +static inline int handle_irq_perbit(struct pt_regs *regs, u32 hwirq, u32 irq_base)
+> 
+> Consider using bool as the return type, and use true/false as return
+> values.
+Ok, no problem.
+
+
+> > +	int ret;
+> 
+> bool.
+Ok, no problem.
+
+
+> > +	int ret;
+> 
+> bool.
+Ok, no problem.
