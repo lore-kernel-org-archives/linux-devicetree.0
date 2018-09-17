@@ -1,28 +1,45 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V5 2/3] dt-bindings: interrupt-controller: C-SKY APB intc
-Date: Mon, 17 Sep 2018 10:10:17 +0800
-Message-ID: <20180917021017.GB22452@guoren-Inspiron-7460>
-References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
- <162f7f98697cd9d806a1a843c6177bb943ea2b33.1537087118.git.ren_guo@c-sky.com>
- <86h8ipmeey.wl-marc.zyngier@arm.com>
+From: Leilk Liu <leilk.liu@mediatek.com>
+Subject: [PATCH v3 0/3] Add Mediatek SPI slave driver
+Date: Mon, 17 Sep 2018 10:19:19 +0800
+Message-ID: <1537150762-7072-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <86h8ipmeey.wl-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 16, 2018 at 08:27:01PM +0100, Marc Zyngier wrote:
-> On Sun, 16 Sep 2018 09:50:03 +0100,
-> Guo Ren <ren_guo@c-sky.com> wrote:
-> > 
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> 
-> Please write a commit message. Same thing for the following patch.
-Ok.
+>From 82bced99683343899dea4634452940b15d6374eb Mon Sep 17 00:00:00 2001
+From: Leilk Liu <leilk.liu@mediatek.com>
+Date: Mon, 17 Sep 2018 10:07:45 +0800
+Subject: [PATCH v3 0/3] Add Mediatek SPI slave driver
 
-Best Regards
- Guo Ren
+v3:
+1. Fix Rob Herring review comment about bindings.
+2. remove unused variables in driver.
+
+v2:
+1. Fix Sean Wang review comment.
+2. remove unused register and offset define.
+3. update bindings file with assigned-clocks and assigned-clocks-parents.
+
+v1:
+This series are based on 4.19-rc1 and provide three patches to add mediatek spi slave driver.
+
+Leilk Liu (3):
+  spis: mediatek: add bindings for Mediatek MT2712 soc platform
+  spis: mediatek: add spi slave for Mediatek MT2712
+  arm64: dts: Add spi slave dts
+
+ .../devicetree/bindings/spi/spi-slave-mt27xx.txt   |  32 ++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  11 +
+ drivers/spi/Kconfig                                |   8 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-slave-mt27xx.c                     | 553 +++++++++++++++++++++
+ 5 files changed, 605 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+ create mode 100644 drivers/spi/spi-slave-mt27xx.c
+
+-- 
+1.9.1
