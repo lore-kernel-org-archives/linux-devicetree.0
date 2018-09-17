@@ -1,572 +1,131 @@
 From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH v3 2/2] power: supply: Add Spreadtrum SC2731 charger support
-Date: Mon, 17 Sep 2018 13:03:31 -0700
-Message-ID: <57bf9920abdcd58b21833105cc7f3a98a3f7d45a.1537214465.git.baolin.wang@linaro.org>
-References: <8a8d31119bc723a0012afa8e517015dbba68fee9.1537214465.git.baolin.wang@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC27XX fuel gauge
+ unit documentation
+Date: Tue, 18 Sep 2018 04:45:09 +0800
+Message-ID: <CAMz4kuLQJq4LzB9ovt7cyr5ufY9KdKe7kF9n8ezyH4gB2Zu6oA@mail.gmail.com>
+References: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
+ <20180917032625.GA25442@bogus>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8a8d31119bc723a0012afa8e517015dbba68fee9.1537214465.git.baolin.wang@linaro.org>
-In-Reply-To: <8a8d31119bc723a0012afa8e517015dbba68fee9.1537214465.git.baolin.wang@linaro.org>
-References: <8a8d31119bc723a0012afa8e517015dbba68fee9.1537214465.git.baolin.wang@linaro.org>
+In-Reply-To: <20180917032625.GA25442@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, baolin.wang@linaro.org, broonie@kernel.org, yuanjiang.yu@spreadtrum.com, krzk@kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the SC2731 PMIC switch charger support.
+Hi Rob,
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
----
-Changes from v2:
- - Add reviewed tag from Krzysztof.
- - Change current unit to uA instead of mA.
+On 17 September 2018 at 11:26, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Sep 12, 2018 at 03:29:38PM +0800, Baolin Wang wrote:
+>> This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
+>> fuel gauge unit device, which is used to calculate the battery capacity.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   55 ++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>> new file mode 100644
+>> index 0000000..7447bae
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+>> @@ -0,0 +1,55 @@
+>> +Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
+>> +
+>> +Required properties:
+>> +- compatible: Should be one of the following:
+>> +  "sprd,sc2720-fgu",
+>> +  "sprd,sc2721-fgu",
+>> +  "sprd,sc2723-fgu",
+>> +  "sprd,sc2730-fgu",
+>> +  "sprd,sc2731-fgu".
+>> +- reg: The address offset of fuel gauge unit.
+>> +- bat-detect-gpio: GPIO for battery detection.
+>
+> We already have sbs,battery-detect-gpios, let's drop the 'sbs,' and copy
+> that.
 
-Changes from v1:
- - Remove some redundant head files.
- - Add one mutex to make sure getting the charger status is correct.
- - Fix some coding style issues.
- - Use standard DT properties.
----
- drivers/power/supply/Kconfig          |   7 +
- drivers/power/supply/Makefile         |   1 +
- drivers/power/supply/sc2731_charger.c | 504 ++++++++++++++++++++++++++++++++++
- 3 files changed, 512 insertions(+)
- create mode 100644 drivers/power/supply/sc2731_charger.c
+Sure.
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index ff6dab0..f27cf07 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -645,4 +645,11 @@ config CHARGER_CROS_USBPD
- 	  what is connected to USB PD ports from the EC and converts
- 	  that into power_supply properties.
- 
-+config CHARGER_SC2731
-+	tristate "Spreadtrum SC2731 charger driver"
-+	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-+	help
-+	 Say Y here to enable support for battery charging with SC2731
-+	 PMIC chips.
-+
- endif # POWER_SUPPLY
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index a26b402..767105b 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -85,3 +85,4 @@ obj-$(CONFIG_CHARGER_TPS65217)	+= tps65217_charger.o
- obj-$(CONFIG_AXP288_FUEL_GAUGE) += axp288_fuel_gauge.o
- obj-$(CONFIG_AXP288_CHARGER)	+= axp288_charger.o
- obj-$(CONFIG_CHARGER_CROS_USBPD)	+= cros_usbpd-charger.o
-+obj-$(CONFIG_CHARGER_SC2731)	+= sc2731_charger.o
-diff --git a/drivers/power/supply/sc2731_charger.c b/drivers/power/supply/sc2731_charger.c
-new file mode 100644
-index 0000000..525a820
---- /dev/null
-+++ b/drivers/power/supply/sc2731_charger.c
-@@ -0,0 +1,504 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 Spreadtrum Communications Inc.
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/power_supply.h>
-+#include <linux/usb/phy.h>
-+#include <linux/regmap.h>
-+#include <linux/notifier.h>
-+#include <linux/of.h>
-+
-+/* PMIC global registers definition */
-+#define SC2731_CHARGE_STATUS		0xedc
-+#define SC2731_CHARGE_FULL		BIT(4)
-+#define SC2731_MODULE_EN1		0xc0c
-+#define SC2731_CHARGE_EN		BIT(5)
-+
-+/* SC2731 switch charger registers definition */
-+#define SC2731_CHG_CFG0			0x0
-+#define SC2731_CHG_CFG1			0x4
-+#define SC2731_CHG_CFG2			0x8
-+#define SC2731_CHG_CFG3			0xc
-+#define SC2731_CHG_CFG4			0x10
-+#define SC2731_CHG_CFG5			0x28
-+
-+/* SC2731_CHG_CFG0 register definition */
-+#define SC2731_PRECHG_RNG_SHIFT		11
-+#define SC2731_PRECHG_RNG_MASK		GENMASK(12, 11)
-+
-+#define SC2731_TERMINATION_VOL_MASK	GENMASK(2, 1)
-+#define SC2731_TERMINATION_VOL_SHIFT	1
-+#define SC2731_TERMINATION_VOL_CAL_MASK	GENMASK(8, 3)
-+#define SC2731_TERMINATION_VOL_CAL_SHIFT	3
-+#define SC2731_TERMINATION_CUR_MASK	GENMASK(2, 0)
-+
-+#define SC2731_CC_EN			BIT(13)
-+#define SC2731_CHARGER_PD		BIT(0)
-+
-+/* SC2731_CHG_CFG1 register definition */
-+#define SC2731_CUR_MASK			GENMASK(5, 0)
-+
-+/* SC2731_CHG_CFG5 register definition */
-+#define SC2731_CUR_LIMIT_SHIFT		8
-+#define SC2731_CUR_LIMIT_MASK		GENMASK(9, 8)
-+
-+/* Default current definition (unit is mA) */
-+#define SC2731_CURRENT_LIMIT_100	100
-+#define SC2731_CURRENT_LIMIT_500	500
-+#define SC2731_CURRENT_LIMIT_900	900
-+#define SC2731_CURRENT_LIMIT_2000	2000
-+#define SC2731_CURRENT_PRECHG		450
-+#define SC2731_CURRENT_STEP		50
-+
-+struct sc2731_charger_info {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	struct usb_phy *usb_phy;
-+	struct notifier_block usb_notify;
-+	struct power_supply *psy_usb;
-+	struct mutex lock;
-+	bool charging;
-+	u32 base;
-+};
-+
-+static void sc2731_charger_stop_charge(struct sc2731_charger_info *info)
-+{
-+	regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-+			   SC2731_CC_EN, 0);
-+
-+	regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-+			   SC2731_CHARGER_PD, SC2731_CHARGER_PD);
-+}
-+
-+static int sc2731_charger_start_charge(struct sc2731_charger_info *info)
-+{
-+	int ret;
-+
-+	/* Enable charger constant current mode */
-+	ret = regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-+				 SC2731_CC_EN, SC2731_CC_EN);
-+	if (ret)
-+		return ret;
-+
-+	/* Start charging */
-+	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-+				  SC2731_CHARGER_PD, 0);
-+}
-+
-+static int sc2731_charger_set_current_limit(struct sc2731_charger_info *info,
-+					    u32 limit)
-+{
-+	u32 val;
-+
-+	if (limit <= SC2731_CURRENT_LIMIT_100)
-+		val = 0;
-+	else if (limit <= SC2731_CURRENT_LIMIT_500)
-+		val = 3;
-+	else if (limit <= SC2731_CURRENT_LIMIT_900)
-+		val = 2;
-+	else
-+		val = 1;
-+
-+	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG5,
-+				  SC2731_CUR_LIMIT_MASK,
-+				  val << SC2731_CUR_LIMIT_SHIFT);
-+}
-+
-+static int sc2731_charger_set_current(struct sc2731_charger_info *info, u32 cur)
-+{
-+	u32 val;
-+	int ret;
-+
-+	if (cur > SC2731_CURRENT_LIMIT_2000)
-+		cur = SC2731_CURRENT_LIMIT_2000;
-+	else if (cur < SC2731_CURRENT_PRECHG)
-+		cur = SC2731_CURRENT_PRECHG;
-+
-+	/* Calculate the step value, each step is 50 mA */
-+	val = (cur - SC2731_CURRENT_PRECHG) / SC2731_CURRENT_STEP;
-+
-+	/* Set pre-charge current as 450 mA */
-+	ret = regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-+				 SC2731_PRECHG_RNG_MASK,
-+				 0x3 << SC2731_PRECHG_RNG_SHIFT);
-+	if (ret)
-+		return ret;
-+
-+	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG1,
-+				  SC2731_CUR_MASK, val);
-+}
-+
-+static int sc2731_charger_get_status(struct sc2731_charger_info *info)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = regmap_read(info->regmap, SC2731_CHARGE_STATUS, &val);
-+	if (ret)
-+		return ret;
-+
-+	if (val & SC2731_CHARGE_FULL)
-+		return POWER_SUPPLY_STATUS_FULL;
-+
-+	return POWER_SUPPLY_STATUS_CHARGING;
-+}
-+
-+static int sc2731_charger_get_current(struct sc2731_charger_info *info,
-+				      u32 *cur)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(info->regmap, info->base + SC2731_CHG_CFG1, &val);
-+	if (ret)
-+		return ret;
-+
-+	val &= SC2731_CUR_MASK;
-+	*cur = val * SC2731_CURRENT_STEP + SC2731_CURRENT_PRECHG;
-+
-+	return 0;
-+}
-+
-+static int sc2731_charger_get_current_limit(struct sc2731_charger_info *info,
-+					    u32 *cur)
-+{
-+	int ret;
-+	u32 val;
-+
-+	ret = regmap_read(info->regmap, info->base + SC2731_CHG_CFG5, &val);
-+	if (ret)
-+		return ret;
-+
-+	val = (val & SC2731_CUR_LIMIT_MASK) >> SC2731_CUR_LIMIT_SHIFT;
-+
-+	switch (val) {
-+	case 0:
-+		*cur = SC2731_CURRENT_LIMIT_100;
-+		break;
-+
-+	case 1:
-+		*cur = SC2731_CURRENT_LIMIT_2000;
-+		break;
-+
-+	case 2:
-+		*cur = SC2731_CURRENT_LIMIT_900;
-+		break;
-+
-+	case 3:
-+		*cur = SC2731_CURRENT_LIMIT_500;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int
-+sc2731_charger_usb_set_property(struct power_supply *psy,
-+				enum power_supply_property psp,
-+				const union power_supply_propval *val)
-+{
-+	struct sc2731_charger_info *info = power_supply_get_drvdata(psy);
-+	int ret;
-+
-+	mutex_lock(&info->lock);
-+
-+	if (!info->charging) {
-+		mutex_unlock(&info->lock);
-+		return -ENODEV;
-+	}
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		ret = sc2731_charger_set_current(info, val->intval / 1000);
-+		if (ret < 0)
-+			dev_err(info->dev, "set charge current failed\n");
-+		break;
-+
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		ret = sc2731_charger_set_current_limit(info,
-+						       val->intval / 1000);
-+		if (ret < 0)
-+			dev_err(info->dev, "set input current limit failed\n");
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	mutex_unlock(&info->lock);
-+	return ret;
-+}
-+
-+static int sc2731_charger_usb_get_property(struct power_supply *psy,
-+					   enum power_supply_property psp,
-+					   union power_supply_propval *val)
-+{
-+	struct sc2731_charger_info *info = power_supply_get_drvdata(psy);
-+	int ret = 0;
-+	u32 cur;
-+
-+	mutex_lock(&info->lock);
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_STATUS:
-+		if (info->charging)
-+			val->intval = sc2731_charger_get_status(info);
-+		else
-+			val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+		break;
-+
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+		if (!info->charging) {
-+			val->intval = 0;
-+		} else {
-+			ret = sc2731_charger_get_current(info, &cur);
-+			if (ret)
-+				goto out;
-+
-+			val->intval = cur * 1000;
-+		}
-+		break;
-+
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		if (!info->charging) {
-+			val->intval = 0;
-+		} else {
-+			ret = sc2731_charger_get_current_limit(info, &cur);
-+			if (ret)
-+				goto out;
-+
-+			val->intval = cur * 1000;
-+		}
-+		break;
-+
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+out:
-+	mutex_unlock(&info->lock);
-+	return ret;
-+}
-+
-+static int sc2731_charger_property_is_writeable(struct power_supply *psy,
-+						enum power_supply_property psp)
-+{
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		ret = 1;
-+		break;
-+
-+	default:
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
-+static enum power_supply_property sc2731_usb_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+};
-+
-+static const struct power_supply_desc sc2731_charger_desc = {
-+	.name			= "sc2731_charger",
-+	.type			= POWER_SUPPLY_TYPE_USB,
-+	.properties		= sc2731_usb_props,
-+	.num_properties		= ARRAY_SIZE(sc2731_usb_props),
-+	.get_property		= sc2731_charger_usb_get_property,
-+	.set_property		= sc2731_charger_usb_set_property,
-+	.property_is_writeable	= sc2731_charger_property_is_writeable,
-+};
-+
-+static int sc2731_charger_usb_change(struct notifier_block *nb,
-+				     unsigned long limit, void *data)
-+{
-+	struct sc2731_charger_info *info =
-+		container_of(nb, struct sc2731_charger_info, usb_notify);
-+	int ret = 0;
-+
-+	mutex_lock(&info->lock);
-+
-+	if (limit > 0) {
-+		/* set current limitation and start to charge */
-+		ret = sc2731_charger_set_current_limit(info, limit);
-+		if (ret)
-+			goto out;
-+
-+		ret = sc2731_charger_set_current(info, limit);
-+		if (ret)
-+			goto out;
-+
-+		ret = sc2731_charger_start_charge(info);
-+		if (ret)
-+			goto out;
-+
-+		info->charging = true;
-+	} else {
-+		/* Stop charging */
-+		info->charging = false;
-+		sc2731_charger_stop_charge(info);
-+	}
-+
-+out:
-+	mutex_unlock(&info->lock);
-+	return ret;
-+}
-+
-+static int sc2731_charger_hw_init(struct sc2731_charger_info *info)
-+{
-+	struct power_supply_battery_info bat_info = { };
-+	u32 term_currrent, term_voltage, cur_val, vol_val;
-+	int ret;
-+
-+	/* Enable charger module */
-+	ret = regmap_update_bits(info->regmap, SC2731_MODULE_EN1,
-+				 SC2731_CHARGE_EN, SC2731_CHARGE_EN);
-+	if (ret)
-+		return ret;
-+
-+	ret = power_supply_get_battery_info(info->psy_usb, &bat_info);
-+	if (ret) {
-+		dev_warn(info->dev, "no battery information is supplied\n");
-+
-+		/*
-+		 * If no battery information is supplied, we should set
-+		 * default charge termination current to 120 mA, and default
-+		 * charge termination voltage to 4.35V.
-+		 */
-+		cur_val = 0x2;
-+		vol_val = 0x1;
-+	} else {
-+		term_currrent = bat_info.charge_term_current_ua / 1000;
-+
-+		if (term_currrent <= 90)
-+			cur_val = 0;
-+		else if (term_currrent >= 265)
-+			cur_val = 0x7;
-+		else
-+			cur_val = ((term_currrent - 90) / 25) + 1;
-+
-+		term_voltage = bat_info.constant_charge_voltage_max_uv / 1000;
-+
-+		if (term_voltage > 4500)
-+			term_voltage = 4500;
-+
-+		if (term_voltage > 4200)
-+			vol_val = (term_voltage - 4200) / 100;
-+		else
-+			vol_val = 0;
-+	}
-+
-+	/* Set charge termination current */
-+	ret = regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG2,
-+				 SC2731_TERMINATION_CUR_MASK, cur_val);
-+	if (ret)
-+		goto error;
-+
-+	/* Set charge termination voltage */
-+	ret = regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-+				 SC2731_TERMINATION_VOL_MASK |
-+				 SC2731_TERMINATION_VOL_CAL_MASK,
-+				 (vol_val << SC2731_TERMINATION_VOL_SHIFT) |
-+				 (0x6 << SC2731_TERMINATION_VOL_CAL_SHIFT));
-+	if (ret)
-+		goto error;
-+
-+	return 0;
-+
-+error:
-+	regmap_update_bits(info->regmap, SC2731_MODULE_EN1, SC2731_CHARGE_EN, 0);
-+	return ret;
-+}
-+
-+static int sc2731_charger_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct sc2731_charger_info *info;
-+	struct power_supply_config charger_cfg = { };
-+	int ret;
-+
-+	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-+	if (!info)
-+		return -ENOMEM;
-+
-+	mutex_init(&info->lock);
-+	info->dev = &pdev->dev;
-+
-+	info->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!info->regmap) {
-+		dev_err(&pdev->dev, "failed to get charger regmap\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = of_property_read_u32(np, "reg", &info->base);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to get register address\n");
-+		return -ENODEV;
-+	}
-+
-+	charger_cfg.drv_data = info;
-+	charger_cfg.of_node = np;
-+	info->psy_usb = devm_power_supply_register(&pdev->dev,
-+						   &sc2731_charger_desc,
-+						   &charger_cfg);
-+	if (IS_ERR(info->psy_usb)) {
-+		dev_err(&pdev->dev, "failed to register power supply\n");
-+		return PTR_ERR(info->psy_usb);
-+	}
-+
-+	ret = sc2731_charger_hw_init(info);
-+	if (ret)
-+		return ret;
-+
-+	info->usb_phy = devm_usb_get_phy_by_phandle(&pdev->dev, "phys", 0);
-+	if (IS_ERR(info->usb_phy)) {
-+		dev_err(&pdev->dev, "failed to find USB phy\n");
-+		return PTR_ERR(info->usb_phy);
-+	}
-+
-+	info->usb_notify.notifier_call = sc2731_charger_usb_change;
-+	ret = usb_register_notifier(info->usb_phy, &info->usb_notify);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register notifier: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sc2731_charger_remove(struct platform_device *pdev)
-+{
-+	struct sc2731_charger_info *info = platform_get_drvdata(pdev);
-+
-+	usb_unregister_notifier(info->usb_phy, &info->usb_notify);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id sc2731_charger_of_match[] = {
-+	{ .compatible = "sprd,sc2731-charger", },
-+	{ }
-+};
-+
-+static struct platform_driver sc2731_charger_driver = {
-+	.driver = {
-+		.name = "sc2731-charger",
-+		.of_match_table = sc2731_charger_of_match,
-+	},
-+	.probe = sc2731_charger_probe,
-+	.remove = sc2731_charger_remove,
-+};
-+
-+module_platform_driver(sc2731_charger_driver);
-+
-+MODULE_DESCRIPTION("Spreadtrum SC2731 Charger Driver");
-+MODULE_LICENSE("GPL v2");
+>
+>> +- io-channels: Specify the IIO ADC channel to get temperature.
+>> +- io-channel-names: Should be "bat-temp".
+>> +- sprd,inner-resist: Specify the the battery inner resistance (mOhm).
+>
+> If this is a property of the battery, then why a sprd vendor prefix?
+> This should perhaps be a common property.
+>
+> Minimally, it needs a unit suffix as defined in property-units.txt.
+
+Right. As Sebastian pointed out previously we should add one common
+property to describe the battery  inner resistance.
+
+>
+>> +- sprd,ocv-cap-table: Provide the battery capacity percent with corresponding
+>> +  open circuit voltage (ocv) of the battery, which is used to look up current
+>> +  battery capacity according to current baterry ocv values.
+>
+> Sounds like another battery property.
+
+Yes.
+
+>
+>> +- monitored-battery: Phandle of battery characteristics devicetree node.
+>
+> If the battery is represented in another node, why are properties of the
+> battery in this node.
+
+Sure. I can remove these properties which are belonging to the battery
+node. Thanks.
+
+>
+>> +  The fuel gauge uses the following battery properties:
+>> +- charge-full-design-microamp-hours: battery design capacity.
+>> +- constant-charge-voltage-max-microvolt: maximum constant input voltage.
+>> +  See Documentation/devicetree/bindings/power/supply/battery.txt
+>> +
+>> +Example:
+>> +
+>> +     bat: battery {
+>> +             compatible = "simple-battery";
+>> +             charge-full-design-microamp-hours = <1900000>;
+>> +             constant-charge-voltage-max-microvolt = <4350000>;
+>> +             ......
+>> +     };
+>> +
+>> +     sc2731_pmic: pmic@0 {
+>> +             compatible = "sprd,sc2731";
+>> +             reg = <0>;
+>> +             spi-max-frequency = <26000000>;
+>> +             interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupt-controller;
+>> +             #interrupt-cells = <2>;
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +
+>> +             fgu@a00 {
+>> +                     compatible = "sprd,sc2731-fgu";
+>> +                     reg = <0xa00>;
+>> +                     bat-detect-gpio = <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
+>> +                     io-channels = <&pmic_adc 5>;
+>> +                     io-channel-names = "bat-temp";
+>> +                     sprd,inner-resist = <250>;
+>> +                     sprd,ocv-cap-table = <4185 100>, <4113 95>, <4066 90>, <4022 85>, <3983 80>, <3949 75>, <3917 70>,
+>> +                             <3889 65>, <3864 60>, <3835 55>, <3805 50>, <3787 45>, <3777 40>, <3773 35>, <3770 30>,
+>> +                             <3765 25>, <3752 20>, <3724 15>, <3680 10>, <3605 5>, <3400 0>;
+>> +                     monitored-battery = <&bat>;
+>> +             };
+>> +     };
+>> --
+>> 1.7.9.5
+>>
+>
+
+
+
 -- 
-1.9.1
+Baolin Wang
+Best Regards
