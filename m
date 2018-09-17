@@ -1,58 +1,56 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH 0/2] add Ethernet driver support for mt2712
-Date: Mon, 17 Sep 2018 17:18:14 +0100
-Message-ID: <a8c0a091-6bee-6504-04cd-36e214e805aa@synopsys.com>
-References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
- <20180917152441.GD5458@lunn.ch>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v2 0/3] Add Amlogic video decoder driver
+Date: Mon, 17 Sep 2018 18:36:33 +0200
+Message-ID: <CAMO6nay7u4nMZcND6+g-GJAFsFcGrp_GDKBhVjeXVzpjF0ND4Q@mail.gmail.com>
+References: <20180911150938.3844-1-mjourdan@baylibre.com> <9c33c57e-2ce2-8752-b851-f85c03a7d761@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917152441.GD5458@lunn.ch>
+In-Reply-To: <9c33c57e-2ce2-8752-b851-f85c03a7d761@xs4all.nl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Biao Huang <biao.huang@mediatek.com>, peppe.cavallaro@st.com, alexandre.torgue@st.com, Jose.Abreu@synopsys.com
-Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew, Biao,
-
-On 17-09-2018 16:24, Andrew Lunn wrote:
-> On Mon, Sep 17, 2018 at 02:29:21PM +0800, Biao Huang wrote:
+2018-09-17 16:51 GMT+02:00 Hans Verkuil <hverkuil@xs4all.nl>:
+> On 09/11/2018 05:09 PM, Maxime Jourdan wrote:
+>>  - Moved the single instance check (returning -EBUSY) to start/stop streaming
+>>  The check was previously in queue_setup but there was no great location to
+>>  clear it except for .close().
 >
-> Adding in the STMMAC driver maintainers.
+> Actually, you can clear it by called VIDIOC_REQBUFS with count set to 0. That
+> freed all buffers and clears this.
 >
->> Ethernet in mt2712 is totally different from that in
->> drivers/net/ethernet/mediatek/*, so we add new folder for mt2712 SoC.
->>
->> The mt2712 Ethernet IP is from Synopsys, and we notice that there is a
->> reference driver in drivers/net/ethernet/synopsys/*. But
->> 1. our version is only for 10/100/1000Mbps, not for 2.5/4/5Gbps.
->> mt2712 Ethernet design is differnet from that in synopsys folder in many
->> aspects, and some key features are not included in mt2712, such as rss
->> and split header. At the same time, some features we need have not been
->> implenmented in synopsys folder.
-> In general, we don't have two very similar drivers. We try to have one
-> driver. If the problem was just missing features in the stmmac driver,
-> you can add them. I doubt not supporting 2.5/4/5Gbps in your silicon
-> is an issue, since very few STMMAC devices have this. By split header,
-> do you mean support for TSO? That seems to be a gmac4 or newer
-> feature, but the driver supports not having tso support in hardware.
+> Now, the difference between queue_setup and start/stop streaming is that if you
+> do this in queue_setup you'll know early on that the device is busy. It is
+> reasonable to assume that you only allocate buffers when you also want to start
+> streaming, so that it a good place to know this quickly.
 >
-> Giuseppe, Alexandre, Jose: Please can you look at the proposed driver
-> and see how much it really differs from the STMMAC driver. 
-
-Thanks for the cc Andrew, indeed this looks very similar and the
-register bank matches, by what I've seen, GMAC 4+.
-
-> How easy
-> would it be to extend stmmac it to support the mt2712?
-
-Very easy, as I've just done with XGMAC2. If Biao wants to expand
-stmmac functionality I'm all in favor!
-
-Thanks and Best Regards,
-Jose Miguel Abreu
-
+> Whereas with start_streaming you won't know until you call STREAMON, or even later
+> if you start streaming with no buffers queued, since start_streaming won't
+> be called until you have at least 'min_buffers_needed' buffers queued (1 for this
+> driver). So in that case EBUSY won't be returned until the first VIDIOC_QBUF.
 >
-> Thanks
-> 	Andrew
+> My preference is to check this in queue_setup, but it is up to you to decide.
+> Just be aware of the difference between the two options.
+>
+> Regards,
+>
+>         Hans
+
+I could for instance keep track of which queue(s) have been called
+with queue_setup, catch calls to VIDIOC_REQBUFS with count set to 0,
+and clear the current session once both queues have been reset ?
+
+You leverage another issue with min_buffers_needed. It's indeed set to
+1 but this value is wrong for the CAPTURE queue. The problem is that
+this value changes depending on the codec and the amount of CAPTURE
+buffers requested by userspace.
+Ultimately I want it set to the total amount of CAPTURE buffers,
+because the hardware needs the full buffer list before starting a
+decode job.
+Am I free to change this queue parameter later, or is m2m_queue_init
+the only place to do it ?
+
+Thanks,
+Maxime
