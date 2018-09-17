@@ -1,52 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: spi/spi-pxa2xx: add PXA2xx SSP SPI
- Controller
-Date: Mon, 17 Sep 2018 10:57:53 -0700
-Message-ID: <20180917175753.GE2471@sirena.org.uk>
-References: <20180917113559.11101-1-lkundrak@v3.sk>
- <20180917113559.11101-2-lkundrak@v3.sk>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
+Date: Mon, 17 Sep 2018 19:01:53 +0100
+Message-ID: <46c44e8f-8208-191c-c93b-f2f75ab8c67a@raspberrypi.org>
+References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
+ <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
+ <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
+ <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7LkOrbQMr4cezO2T"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180917113559.11101-2-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
+On 17/09/2018 18:51, Florian Fainelli wrote:
+> On 09/17/2018 04:47 AM, Phil Elwell wrote:
+>> Hi Stefan,
+>>
+>> On 17/09/2018 12:39, Stefan Wahren wrote:
+>>> Hi Phil,
+>>>
+>>> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
+>>>> Both sides of the VCHIQ communications mechanism need to agree on the cache
+>>>> line size. Using an incorrect value can lead to data corruption, but having the
+>>>> two sides using different values is usually worse.
+>>>>
+>>>> In the absence of an obvious convenient run-time method to determine the
+>>>> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
+>>>> Device Tree property, written by the firmware, to configure the kernel driver.
+>>>> This method was vetoed during the upstreaming process, so a fixed value of 32
+>>>> was used instead, and some corruptions ensued. This is take 2 at arriving at
+>>>> the correct value.
+>>>>
+>>>> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
+>>>> a 64-byte cache line. Document the new string in the binding, and use it on
+>>>> the appropriate platforms.
+>>>>
+>>>> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
+>>>> declaration for the device node, but it doubles as an indication to the
+>>>> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
+>>>> that chooses the correct value. As such it would help if the DT patches are
+>>>> not merged before the driver patch.
+>>>>
+>>>> v3: Builds without errors, tested on multiple Raspberry Pi models.
+>>>> v2: Replaced ARM-specific logic used to determine cache line size with
+>>>>      a new compatible string for BCM2836 and BCM2837.
+>>>>
+>>>> Phil Elwell (4):
+>>>>    staging/vc04_services: Use correct cache line size
+>>>>    dt-bindings: soc: Document "brcm,bcm2836-vchiq"
+>>>>    ARM: dts: bcm283x: Correct vchiq compatible string
+>>>>    ARM: dts: bcm283x: Correct mailbox register sizes
+>>>
+>>> since my pull requests are out, would it be okay to apply patch #1 for
+>>> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
+>>> these patches)?
+>>
+>> Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
+> 
+> Humm, did you mean you would like not to be delayed? In any case Stefan,
+> you can send an additional pull request, and I will merge it and send a
+> second pull request towards ARM SoC maintainers, that's not a problem.
 
---7LkOrbQMr4cezO2T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+No, I meant what I wrote - I would prefer patch 1 to be merged before patch 4 (or at least
+in the same release) to avoid the need for another firmware change, hence delaying patch
+4 is good. It makes sense for the other commits to be merged in that order, but the
+normal compatible-string fallback mechanism means there is no hard dependency there.
 
-On Mon, Sep 17, 2018 at 01:35:55PM +0200, Lubomir Rintel wrote:
-> This is the SPI controller found on Marvel MMP2 and perhaps more
-> platforms.
-
-I'm missing patches 2 and 5 from this series.  What's going on with
-them, are there any dependencies?
-
-> Changes since v1:
-> - s/ssp@d4035000/spi@d4035000/
-
-As covered in SubmittingPatches please put inter-version changelogs
-after the --- so they don't end up in the commits.
-
---7LkOrbQMr4cezO2T
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluf6yAACgkQJNaLcl1U
-h9DOQAf8Cv3fHKVpMtxvJzFX3pBXWcxF+8T6rJK1pzP5vPMEtdwL+liUyN2xbcyn
-sa3gE6JVmJ5EdBSFX+GiAw0iCPobbIlTV+k4a1ggJIAuRM94LD/cIgcCbSxFW8/S
-wskVlYdpdBlc2zis+99q7LAGVFnvbdQOe58PU4ZHRzlWSL3BGRitwL0lVrSvm3Yn
-AK3AT+EO4/U9gPntJDnNHlEZFdPXEA+ji7Y1OFrx3x54QgTxjlXSnY/1MT2tlb6q
-WUTtrcWBVVijOU3pZPUmgQTBEdekclIbjrfJZsZiIdcGBC5Msd1R6QP/yvp0tMGL
-radg15LAoOSaw66F8Qf0lOMaG0lZzQ==
-=g2nQ
------END PGP SIGNATURE-----
-
---7LkOrbQMr4cezO2T--
+Phil
