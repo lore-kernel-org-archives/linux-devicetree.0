@@ -1,78 +1,47 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V5 2/3] dt-bindings: interrupt-controller: C-SKY APB intc
-Date: Mon, 17 Sep 2018 23:41:50 +0800
-Message-ID: <20180917154150.GA6392@guoren-Inspiron-7460>
-References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
- <162f7f98697cd9d806a1a843c6177bb943ea2b33.1537087118.git.ren_guo@c-sky.com>
- <20180917062336.GA20555@bogus>
- <20180917083623.GA1069@guoren>
- <CAL_JsqJOoek+P+NR_jEfPJD1JLC4U-x_hmJL=vjvMU5JWxjVeA@mail.gmail.com>
+From: <christophe.kerello@st.com>
+Subject: [PATCH 0/3] mtd: rawnand: add STM32 FMC2 NAND flash controller driver
+Date: Mon, 17 Sep 2018 17:47:37 +0200
+Message-ID: <1537199260-7280-1-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJOoek+P+NR_jEfPJD1JLC4U-x_hmJL=vjvMU5JWxjVeA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: boris.brezillon@bootlin.com, miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Christophe Kerello <christophe.kerello@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 07:23:36AM -0700, Rob Herring wrote:
-> On Mon, Sep 17, 2018 at 1:36 AM Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > On Mon, Sep 17, 2018 at 02:23:36AM -0400, Rob Herring wrote:
-> > > On Sun, Sep 16, 2018 at 04:50:03PM +0800, Guo Ren wrote:
-> > > > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > >
-> > > Needs a commit description.
-> > >
-> > > > ---
-> > > >  .../interrupt-controller/csky,apb-intc.txt         | 70 ++++++++++++++++++++++
-> > > >  1 file changed, 70 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-> > > > new file mode 100644
-> > > > index 0000000..be7c3d1
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-> > > > @@ -0,0 +1,70 @@
-> > > > +==============================
-> > > > +C-SKY APB Interrupt Controller
-> > > > +==============================
-> > > > +
-> > > > +C-SKY APB Interrupt Controller is a simple soc interrupt controller
-> > > > +on the apb bus and we only use it as root irq controller.
-> > > > +
-> > > > + - csky,apb-intc is used in a lot of csky fpgas and socs, it support 64 irq nums.
-> > > > + - csky,dual-apb-intc consists of 2 apb-intc and 128 irq nums supported.
-> > > > + - csky,gx6605s-intc is gx6605s soc internal irq interrupt controller, 64 irq nums.
-> > >
-> > > Is there a relationship between csky,gx6605s-intc and csky,apb-intc?
-> > They all use pending register to get irq num and use enable register to
-> > mask/unmask.
-> >
-> > > > +        - support-pulse-signal:
-> > > > +                Usage: select
-> > > > +           Description: to support pulse signal flag
-> > >
-> > > What is this for?
-> > This is a level-triger interrupt controller at first, but we want it
-> > to support pulse signal. It means that when the pulse signal coming,
-> > the pending register will hold signals without clear the IFR reg.
-> >
-> > Some C-SKY cpu's socs need this feature to support pulse interrupt
-> > signal.
-> 
-> So an edge triggered interrupt. We have a way to support that on a per
-> interrupt basis with a 2nd cell (which you should consider if you may
-> need anyways). But this is a global setting for all interrupts the
-> interrupt controller serves? If so, it's fine, 
-Yes, it's a global setting for all interrupts. not really edge triggered
-interrupt for every interrupt.
+From: Christophe Kerello <christophe.kerello@st.com>
 
-> but does need a vendor prefix. 
-vendor prefix? Em ... it's just used in fpga now.
+This patchset adds the support for the STMicroelectronics FMC2 NAND flash
+controller found on STM32MP SOCs.
 
-Best Regards
- Guo Ren
+This patchset supports:
+  - the command sequencer feature, a hardware accelerator for read/write
+    within a page
+  - the manual mode feature, useful for debug purpose
+  - a maximum 8k page size
+  - following ECC strength and step size
+	- nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+	- nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+	- nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended ecc
+	  based on HAMMING)
+    
+This patchset has been tested on Micron MT29F8G08ABACAH4 (8-bit SLC NAND)
+and MT29F8G16ABACAH4 (16-bit SLC NAND)
+
+Christophe Kerello (3):
+  dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND controller
+    documentation
+  mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash controller driver
+  mtd: rawnand: stm32_fmc2: add manual mode
+
+ .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    |   90 +
+ drivers/mtd/nand/raw/Kconfig                       |    9 +
+ drivers/mtd/nand/raw/Makefile                      |    1 +
+ drivers/mtd/nand/raw/stm32_fmc2_nand.c             | 1980 ++++++++++++++++++++
+ 4 files changed, 2080 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+ create mode 100644 drivers/mtd/nand/raw/stm32_fmc2_nand.c
+
+-- 
+1.9.1
