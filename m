@@ -1,46 +1,60 @@
-From: Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: Re: [PATCH] net: macb: disable scatter-gather for macb on sama5d3
-Date: Mon, 17 Sep 2018 17:59:40 +0200
-Message-ID: <8da68995-4019-e0c7-0471-4fdbe40ad52a@microchip.com>
-References: <20180914154811.12090-1-nicolas.ferre@microchip.com>
- <20180917.075813.1145409055019392182.davem@davemloft.net>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v4 0/6] PCI: imx: Initial imx7d suspend/resume support
+Date: Mon, 17 Sep 2018 16:01:21 +0000
+Message-ID: <16d68541fd499dfda88e79d4386be7ad6d0919d9.camel@nxp.com>
+References: <cover.1534264292.git.leonard.crestez@nxp.com>
+ <20180917150941.GH7239@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917.075813.1145409055019392182.davem@davemloft.net>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180917150941.GH7239@e107981-ln.cambridge.arm.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, claudiu.beznea@microchip.com, alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com, devicetree@vger.kernel.org
+Content-ID: <1053A0F5F2F184499B4BED2BF7DB069A@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Joao.Pinto@synopsys.com" <Joao.Pinto@synopsys.com>, Richard Zhu <hongxing.zhu@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Anson Huang <anson.huang@nxp.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17/09/2018 at 16:58, David Miller wrote:
-> From: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Date: Fri, 14 Sep 2018 17:48:10 +0200
+On Mon, 2018-09-17 at 16:09 +0100, Lorenzo Pieralisi wrote:
+> On Tue, Aug 14, 2018 at 07:50:14PM +0300, Leonard Crestez wrote:
+
+> > V4 adds 4 more patches with PME_Turn_Off support on top, using a new
+> > reset bit. I generally try to keep series short but in this case some
+> > planning might be needed to get patches into 4.20.
+> > 
+> > Since the new reset is treated as optional with old DTB there should be
+> > again no problem if reset and pci are merged out of order.
+> > 
+> > Shawn/Philipp/Lorenzo: Would it make sense to merge this series through a
+> > single specific tree, such as the one for imx?
 > 
->> Create a new configuration for the sama5d3-macb new compatibility string.
->> This configuration disables scatter-gather because we experienced lock down
->> of the macb interface of this particular SoC under very high load.
->>
->> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+> This series is a bit of a mixture of multiple things hard to discern
+> (actually I already merged patch 2 and patch 1 seems completely
+> unrelated).
 > 
-> Applied, but are you really sure it isn't just some bug in the driver
-> or somesuch?
+> I would take the series through the PCI tree but I need an ACK for
+> patches 5 and 6, please let me know how you want to handle it.
 
-Actually, the same IP on other SoCs behaves correctly with same driver. 
-We tried hard to find the root cause of the problem without success and 
-we didn't have confirmation of an issue on Cadence's side either.
+Patches 1 and 2 are already in, the rest need review. I can now just
+resend patches 3-6 as a separate series, unless somebody complains
+about spam.
 
-The symptom is that we have a receive overrun on this interface under 
-heavy load but I think that it is more a result of the issue than the 
-real problem: I cannot escape from this overrun condition: the IP itself 
-is completely blocked.
+Multiple separate patches are required because it touches reset + dt +
+pci. I guess adding the include constant should be moved from the dts
+patch to dt-bindings though.
 
-Even if the problem is very difficult to reproduce (simple *perf tools 
-not sufficient), we play safe by simply disabling this feature on this 
-SoC only.
+Merging reset and pci out of order should be fine here and is required
+by DT compatibility rules anyway.
 
-Best regards,
--- 
-Nicolas Ferre
+--
+Regards,
+Leonard
