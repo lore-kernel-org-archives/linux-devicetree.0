@@ -1,59 +1,78 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 0/4] pci-dra7xx: Enable errata i870 workaround for RC
- mode
-Date: Mon, 17 Sep 2018 10:47:36 +0100
-Message-ID: <20180917094736.GA7072@e107981-ln.cambridge.arm.com>
-References: <20180724173150.2701-1-vigneshr@ti.com>
- <20180808165700.GB486@e107981-ln.cambridge.arm.com>
- <ba428a15-77bf-e09c-3bd7-b5a0eae7ee13@ti.com>
- <20180907170009.GJ5662@atomide.com>
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v2 0/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+Date: Mon, 17 Sep 2018 15:18:25 +0530
+Message-ID: <1537177710-9379-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180907170009.GJ5662@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Vignesh R <vigneshr@ti.com>, KISHON VIJAY ABRAHAM <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, robh@kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, linux-kernel@vger.kernel.org, frieder.schrempf@exceet.de, computersforpeace@gmail.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2018 at 10:00:09AM -0700, Tony Lindgren wrote:
-> * Vignesh R <vigneshr@ti.com> [180810 10:10]:
-> > 
-> > 
-> > On Wednesday 08 August 2018 10:27 PM, Lorenzo Pieralisi wrote:
-> > > On Tue, Jul 24, 2018 at 11:01:46PM +0530, Vignesh R wrote:
-> > >> Make workaround for errata i870 applicable in Host mode as
-> > >> well(previously it was enabled only for EP mode) as per errata
-> > >> documentation: http://www.ti.com/lit/er/sprz450/sprz450.pdf
-> > >>
-> > >> Tested on DRA72 EVM
-> > >>
-> > >> Tony,
-> > >>
-> > >> If you are okay with the series, could you pick this via omap tree?
-> > >> All ACKs are in place and Lorenzo is okay with PCIe bits to go along with
-> > >> rest of DTS changes.
-> > > 
-> > > I think we have missed the v4.19 merge window by now - 
-> > 
-> > Right. I didn't get any response from Tony.
-> 
-> Sorry catching up with pending mails.. I try hard to not touch
-> anything except fixes around -rc6 time.
-> 
-> > > please let me know if I can drop this series from the PCI patch queue.
-> > > 
-> > 
-> > Ok, I will resend the patch after 4.19-rc. Thanks!
-> 
-> FYI, I'm untagging this thread too. Please post the dts
-> changes separately once the dependencies (if any) have
-> cleared.
+- Add a driver for NXP FlexSPI host controller
 
-Ok, Vignesh: I shall drop this series from the PCI patches queue,
-waiting for your new version, let me know how you want to handle this
-then please.
+ FlexSPI is a flexsible SPI host controller [1], Chapter 30 page 1475,
+ which supports two SPI channels and up to 4 external devices.
+ Each channel supports Single/Dual/Quad/Octal mode data transfer (1/2/4/8 bidirectional data lines)
+ i.e. FlexSPI acts as an interface to external devices, maximum 4, each with up to 8
+ bidirectional data lines.
 
-Thanks,
-Lorenzo
+- Tested this driver with mtd_debug(Erase/Write/Read) utility and JFFS2
+ filesystem mounting and booting on NXP LX2160ARDB[2] and LX2160AQDS targets.
+ LX2160ARDB is having two NOR slave device connected on single bus A
+ i.e. A0 and A1 (CS0 and CS1).
+ LX2160AQDS is having two NOR slave device connected on separate buses
+ one flash on A0 and second on B1 i.e. (CS0 and CS3).
+ Verified this driver on following SPI NOR flashes:
+   Micron, mt35xu512aba[3], [Read - 1 bit mode]
+   Cypress, s25fl512s, [Read - 1/2/4 bit mode]
+
+ Support for octal flash commands and other Octal data transfer related framework
+ changes work is in progress.
+
+[1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=9721
+[3] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=63445
+
+Yogesh Gaur (5):
+  spi: spi-mem: Add driver for NXP FlexSPI controller
+  dt-bindings: spi: add binding file for NXP FlexSPI controller
+  arm64: dts: lx2160a: add FlexSPI node property
+  arm64: defconfig: enable NXP FlexSPI driver
+  MAINTAINERS: add maintainers for the NXP FlexSPI driver
+
+Changes for v2:
+- Incorporated Boris review comments and drop below patches as per the comments.
+ - Patch 'spi: add slave device size in spi_device struct'
+ - Patch 'spi: add flags for octal I/O data transfer'
+- Incorporated DTS and Binding file review comments of Shawn Guo and Rob Herring.
+
+ .../devicetree/bindings/spi/spi-nxp-fspi.txt       |   42 +
+ MAINTAINERS                                        |    6 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts  |   22 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |   12 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/spi/Kconfig                                |   10 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-nxp-fspi.c                         | 1246 ++++++++++++++++++++
+ 8 files changed, 1340 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+ create mode 100644 drivers/spi/spi-nxp-fspi.c
+
+-- 
+2.7.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
