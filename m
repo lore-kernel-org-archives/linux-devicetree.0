@@ -1,70 +1,85 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Mon, 17 Sep 2018 22:37:59 +0800
-Message-ID: <20180917143759.GA2612@guoren-Inspiron-7460>
-References: <cover.1536757532.git.ren_guo@c-sky.com>
- <CAK8P3a0CUYyMR9hDG97Zf2Oyj+D9vwQRnPZrEs0rrOLwHqxYfw@mail.gmail.com>
- <b5bbb3e5-d970-dd82-400f-ae13ca782fd5@c-sky.com>
- <20180917215443.3b5808c5@canb.auug.org.au>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
+ mdio bus
+Date: Mon, 17 Sep 2018 16:50:28 +0200
+Message-ID: <20180917145028.GC5458@lunn.ch>
+References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180917215443.3b5808c5@canb.auug.org.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>
+In-Reply-To: <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
+Sender: netdev-owner@vger.kernel.org
+To: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
+Cc: timur@kernel.org, davem@davemloft.net, yu.zheng@hxt-semitech.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 09:54:43PM +1000, Stephen Rothwell wrote:
-> Hi Guo,
+On Mon, Sep 17, 2018 at 04:53:29PM +0800, Wang Dongsheng wrote:
+> This property copy from "ibm,emac.txt" to describe a shared MIDO bus.
+> Since emac include MDIO, so If the motherboard has more than one PHY
+> connected to an MDIO bus, this property will point to the MAC device
+> that has the MDIO bus.
 > 
-> On Sun, 16 Sep 2018 12:53:26 +0800 Guo Ren <ren_guo@c-sky.com> wrote:
-> >
-> > I'm Guo Ren from C-SKY and I'm working on csky linux port upstream.
-> > I've prepared my git-tree based on linux-4.19-rc3:
-> > git clone -b linux-next https://github.com/c-sky/csky-linux.git
-> > 
-> > Here is the pre-built cross compiler for fast test from our CI:
-> > https://gitlab.com/c-sky/buildroot/-/jobs/97941896/artifacts/file/output/images/csky_toolchain_csky_ck860_platform_defconfig_72371bf75a51f27ea59fc34eeaf236e06b75bf69.tar.xz
-> > 
-> > You can also build newest gcc, binutils and they are upstreamed but not
-> > released on gnu.org. Glibc is uptreaming now.
-> > 
-> > Please have a look and any feed back is welcome.
+> Signed-off-by: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
+> ---
+> V2: s/Since QDF2400 emac/Since emac/
+> ---
+>  Documentation/devicetree/bindings/net/qcom-emac.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Added from today (called "csky").
-> 
-> Thanks for adding your subsystem tree as a participant of linux-next.  As
-> you may know, this is not a judgement of your code.  The purpose of
-> linux-next is for integration testing and to lower the impact of
-> conflicts between subsystems in the next merge window. 
-> 
-> You will need to ensure that the patches/commits in your tree/series have
-> been:
->      * submitted under GPL v2 (or later) and include the Contributor's
->         Signed-off-by,
->      * posted to the relevant mailing list,
->      * reviewed by you (or another maintainer of your subsystem tree),
->      * successfully unit tested, and 
->      * destined for the current or next Linux merge window.
-> 
-> Basically, this should be just what you would send to Linus (or ask him
-> to fetch).  It is allowed to be rebased if you deem it necessary.
+> diff --git a/Documentation/devicetree/bindings/net/qcom-emac.txt b/Documentation/devicetree/bindings/net/qcom-emac.txt
+> index 346e6c7f47b7..50db71771358 100644
+> --- a/Documentation/devicetree/bindings/net/qcom-emac.txt
+> +++ b/Documentation/devicetree/bindings/net/qcom-emac.txt
+> @@ -24,6 +24,9 @@ Internal PHY node:
+>  The external phy child node:
+>  - reg : The phy address
+>  
+> +Optional properties:
+> +- mdio-device : Shared MIDO bus.
 
- I am very excited to receive your mail. I have been preparing for this
- for nearly 3 years.
+Hi Dongsheng
 
- - All files are under GPL v2
- 
- - All Contributors have been Signed-off.
+I don't see why you need this property. The ethernet interface has a
+phy-handle which points to a PHY. That is all you need to find the PHY.
 
- - All have been reviewed.
+        emac0: ethernet@feb20000 {
+                compatible = "qcom,fsm9900-emac";
+                reg = <0xfeb20000 0x10000>,
+                      <0xfeb36000 0x1000>;
+                interrupts = <76>;
 
- - For develop detail you can find in: https://github.com/c-sky/csky-linux
-   It records from 'Dec 2015' to 'Sep 2018'.
+                clocks = <&gcc 0>, <&gcc 1>, <&gcc 3>, <&gcc 4>, <&gcc 5>,
+                        <&gcc 6>, <&gcc 7>;
+                clock-names = "axi_clk", "cfg_ahb_clk", "high_speed_clk",
+                        "mdio_clk", "tx_clk", "rx_clk", "sys_clk";
 
- - Here is the newest ltp test result: https://gitlab.com/c-sky/buildroot/-/jobs/98061317
+                internal-phy = <&emac_sgmii>;
 
- Best Regards
-  Guo Ren
+                phy-handle = <&phy0>;
+
+                #address-cells = <1>;
+                #size-cells = <0>;
+
+                phy0: ethernet-phy@0 {
+                        reg = <0>;
+                };
+
+                phy1: ethernet-phy@1 {
+                        reg = <1>;
+                };
+
+                pinctrl-names = "default";
+                pinctrl-0 = <&mdio_pins_a>;
+        };
+
+        emac1: ethernet@38900000 {
+                compatible = "qcom,fsm9900-emac";
+		...
+		...
+
+                phy-handle = <&phy1>;
+	};
+
+	Andrew
