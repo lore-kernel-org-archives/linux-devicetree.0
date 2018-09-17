@@ -1,70 +1,50 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V5 2/3] dt-bindings: interrupt-controller: C-SKY APB intc
-Date: Mon, 17 Sep 2018 16:36:25 +0800
-Message-ID: <20180917083623.GA1069@guoren>
-References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
- <162f7f98697cd9d806a1a843c6177bb943ea2b33.1537087118.git.ren_guo@c-sky.com>
- <20180917062336.GA20555@bogus>
+From: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
+Subject: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared mdio bus
+Date: Mon, 17 Sep 2018 16:53:29 +0800
+Message-ID: <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
+References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180917062336.GA20555@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+Sender: netdev-owner@vger.kernel.org
+To: timur@kernel.org, andrew@lunn.ch
+Cc: davem@davemloft.net, Wang Dongsheng <dongsheng.wang@hxt-semitech.com>, yu.zheng@hxt-semitech.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 02:23:36AM -0400, Rob Herring wrote:
-> On Sun, Sep 16, 2018 at 04:50:03PM +0800, Guo Ren wrote:
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> 
-> Needs a commit description.
-> 
-> > ---
-> >  .../interrupt-controller/csky,apb-intc.txt         | 70 ++++++++++++++++++++++
-> >  1 file changed, 70 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-> > new file mode 100644
-> > index 0000000..be7c3d1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-> > @@ -0,0 +1,70 @@
-> > +==============================
-> > +C-SKY APB Interrupt Controller
-> > +==============================
-> > +
-> > +C-SKY APB Interrupt Controller is a simple soc interrupt controller
-> > +on the apb bus and we only use it as root irq controller.
-> > +
-> > + - csky,apb-intc is used in a lot of csky fpgas and socs, it support 64 irq nums.
-> > + - csky,dual-apb-intc consists of 2 apb-intc and 128 irq nums supported.
-> > + - csky,gx6605s-intc is gx6605s soc internal irq interrupt controller, 64 irq nums.
-> 
-> Is there a relationship between csky,gx6605s-intc and csky,apb-intc?
-They all use pending register to get irq num and use enable register to
-mask/unmask.
+This property copy from "ibm,emac.txt" to describe a shared MIDO bus.
+Since emac include MDIO, so If the motherboard has more than one PHY
+connected to an MDIO bus, this property will point to the MAC device
+that has the MDIO bus.
 
-> > +        - support-pulse-signal:
-> > +                Usage: select
-> > +		Description: to support pulse signal flag
-> 
-> What is this for?
-This is a level-triger interrupt controller at first, but we want it
-to support pulse signal. It means that when the pulse signal coming,
-the pending register will hold signals without clear the IFR reg.
+Signed-off-by: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
+---
+V2: s/Since QDF2400 emac/Since emac/
+---
+ Documentation/devicetree/bindings/net/qcom-emac.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Some C-SKY cpu's socs need this feature to support pulse interrupt
-signal.
-
-> > +	intc: interrupt-controller@500000 {
-> > +		compatible = "csky,apb-intc";
-> > +		#interrupt-cells = <1>;
-> > +		reg = <0x00500000 0x400>;
-> > +		interrupt-controller;
-> > +	};
-> Not really worth 2 examples for just 1 property difference.
-Ok.
-I'll retain the above, because only a few socs use support-pulse-signal.
+diff --git a/Documentation/devicetree/bindings/net/qcom-emac.txt b/Documentation/devicetree/bindings/net/qcom-emac.txt
+index 346e6c7f47b7..50db71771358 100644
+--- a/Documentation/devicetree/bindings/net/qcom-emac.txt
++++ b/Documentation/devicetree/bindings/net/qcom-emac.txt
+@@ -24,6 +24,9 @@ Internal PHY node:
+ The external phy child node:
+ - reg : The phy address
+ 
++Optional properties:
++- mdio-device : Shared MIDO bus.
++
+ Example:
+ 
+ FSM9900:
+@@ -86,6 +89,7 @@ soc {
+ 		reg = <0x0 0x38800000 0x0 0x10000>,
+ 		      <0x0 0x38816000 0x0 0x1000>;
+ 		interrupts = <0 256 4>;
++		mdio-device = <&emac1>;
+ 
+ 		clocks = <&gcc 0>, <&gcc 1>, <&gcc 3>, <&gcc 4>, <&gcc 5>,
+ 			 <&gcc 6>, <&gcc 7>;
+-- 
+2.18.0
