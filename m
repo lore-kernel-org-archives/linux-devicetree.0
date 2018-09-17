@@ -1,88 +1,70 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] dt-binding: mediatek: Add binding document for
- MediaTek GMAC
-Date: Mon, 17 Sep 2018 11:33:22 +0300
-Message-ID: <fb327132-0830-9df0-434e-06bb0033bac4@cogentembedded.com>
-References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
- <1537165763-13112-2-git-send-email-biao.huang@mediatek.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 2/3] dt-bindings: interrupt-controller: C-SKY APB intc
+Date: Mon, 17 Sep 2018 16:36:25 +0800
+Message-ID: <20180917083623.GA1069@guoren>
+References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
+ <162f7f98697cd9d806a1a843c6177bb943ea2b33.1537087118.git.ren_guo@c-sky.com>
+ <20180917062336.GA20555@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537165763-13112-2-git-send-email-biao.huang@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180917062336.GA20555@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Biao Huang <biao.huang@mediatek.com>, davem@davemloft.net, robh+dt@kernel.org
-Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/17/2018 9:29 AM, Biao Huang wrote:
-
-> The commit adds the device tree binding documentation for the MediaTek
-> GMAC found on Mediatek MT2712.
+On Mon, Sep 17, 2018 at 02:23:36AM -0400, Rob Herring wrote:
+> On Sun, Sep 16, 2018 at 04:50:03PM +0800, Guo Ren wrote:
+> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 > 
-> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> ---
->   .../devicetree/bindings/net/mediatek-gmac.txt      |   45 ++++++++++++++++++++
->   1 file changed, 45 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/net/mediatek-gmac.txt
+> Needs a commit description.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek-gmac.txt b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
-> new file mode 100644
-> index 0000000..14876ed
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
-> @@ -0,0 +1,45 @@
-> +MediaTek Gigabit Ethernet controller
-> +=========================================
-> +
-> +The gigabit ethernet controller can be found on MediaTek SoCs.
-> +
-> +* Ethernet controller node
-> +
-> +Required properties:
-> +- compatible: Should be
-> +	"mediatek,mt2712-eth": for MT2712 SoC
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain the MAC interrupts
-> +- interrupt-names: the name of interrupt in the interrupts property. These are
-> +	"macirq": For MT2712 SoC
-> +- clocks: the clock used by the controller
-> +- clock-names: the names of the clock listed in the clocks property. These are
-> +	"axi", "apb", "mac_ext", "ptp", "ptp_parent", "ptp_top": For MT2712 SoC
-> +- mac-address: See ethernet.txt in the same directory
-> +- power-domains: phandle to the power domain that the ethernet is part of
+> > ---
+> >  .../interrupt-controller/csky,apb-intc.txt         | 70 ++++++++++++++++++++++
+> >  1 file changed, 70 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
+> > new file mode 100644
+> > index 0000000..be7c3d1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
+> > @@ -0,0 +1,70 @@
+> > +==============================
+> > +C-SKY APB Interrupt Controller
+> > +==============================
+> > +
+> > +C-SKY APB Interrupt Controller is a simple soc interrupt controller
+> > +on the apb bus and we only use it as root irq controller.
+> > +
+> > + - csky,apb-intc is used in a lot of csky fpgas and socs, it support 64 irq nums.
+> > + - csky,dual-apb-intc consists of 2 apb-intc and 128 irq nums supported.
+> > + - csky,gx6605s-intc is gx6605s soc internal irq interrupt controller, 64 irq nums.
+> 
+> Is there a relationship between csky,gx6605s-intc and csky,apb-intc?
+They all use pending register to get irq num and use enable register to
+mask/unmask.
 
-    This (required) prop is absent in your example.
+> > +        - support-pulse-signal:
+> > +                Usage: select
+> > +		Description: to support pulse signal flag
+> 
+> What is this for?
+This is a level-triger interrupt controller at first, but we want it
+to support pulse signal. It means that when the pulse signal coming,
+the pending register will hold signals without clear the IFR reg.
 
-> +- phy-mode: See ethernet.txt file in the same directory.
-> +- reset-gpio: gpio number for phy reset.
-> +
-> +Example:
-> +
-> +eth: eth@1101c000 {
+Some C-SKY cpu's socs need this feature to support pulse interrupt
+signal.
 
-eth: ethernet@1101c000 {
-
-> +		compatible = "mediatek,mt2712-eth";
-> +		reg = <0 0x1101c000 0 0x1200>;
-> +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-names = "macirq";
-> +		phy-mode ="rgmii";
-> +		mac-address = [00 55 7b b5 7d f7];
-> +		clock-names = "axi",
-> +			      "apb",
-> +			      "mac_ext",
-> +			      "ptp",
-> +			      "ptp_parent",
-> +			      "ptp_top";
-> +		clocks = <&pericfg CLK_PERI_GMAC>,
-> +			 <&pericfg CLK_PERI_GMAC_PCLK>,
-> +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
-> +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
-> +			 <&topckgen CLK_TOP_APLL1_D3>,
-> +			 <&topckgen CLK_TOP_APLL1>;
-> +		reset-gpio = <&pio 87 GPIO_ACTIVE_HIGH>;
-> +	};
-
-MBR, Sergei
+> > +	intc: interrupt-controller@500000 {
+> > +		compatible = "csky,apb-intc";
+> > +		#interrupt-cells = <1>;
+> > +		reg = <0x00500000 0x400>;
+> > +		interrupt-controller;
+> > +	};
+> Not really worth 2 examples for just 1 property difference.
+Ok.
+I'll retain the above, because only a few socs use support-pulse-signal.
