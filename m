@@ -1,7 +1,7 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.18 031/158] ARC: [plat-axs*/plat-hsdk]: Allow U-Boot to pass MAC-address to the kernel
-Date: Tue, 18 Sep 2018 00:41:01 +0200
-Message-ID: <20180917211712.435728565@linuxfoundation.org>
+Subject: [PATCH 4.18 154/158] MIPS: mscc: ocelot: fix length of memory address space for MIIM
+Date: Tue, 18 Sep 2018 00:43:04 +0200
+Message-ID: <20180917211718.210530654@linuxfoundation.org>
 References: <20180917211710.383360696@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,101 +10,49 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180917211710.383360696@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Alexey Brodkin <abrodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Quentin Schulz <quentin.schulz@bootlin.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Paul Burton <paul.burton@mips.com>, robh+dt@kernel.org, mark.rutland@arm.com, ralf@linux-mips.org, jhogan@kernel.org, linux-mips@linux-mips.org, devicetree@vger.kernel.org, thomas.petazzoni@bootlin.com, Sasha Levin <alexander.levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
 
 4.18-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
-From: Alexey Brodkin <abrodkin@synopsys.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-commit 5c0920897af59779546e9ea0e89c5db45c8aff33 upstream.
+[ Upstream commit 49e5bb13adc11fe6e2e40f65c04f3a461aea1fec ]
 
-Otherwise kernel uses random MAC which is not very conveniet.
-With that change in place use might set desired MAC in U-Boot
-with "setenv ethaddr 11:22:33:44:55:66", save environment and
-then from boot to boot the same MAC will be used by the kernel.
+The length of memory address space for MIIM0 is from 0x7107009c to
+0x710700bf included which is 36 bytes long in decimal, or 0x24 bytes in
+hexadecimal and not 0x36.
 
-One other note for this to happen it's required to pass
-board's .dtb in U-Boot's "bootm" command like that:
-------------------->8-----------------
-bootm 0x82000000 - 0x84000000
-------------------->8-----------------
+Fixes: 49b031690abe ("MIPS: mscc: Add switch to ocelot")
 
-Here 0x82000000 is location of uImage while
-0x80000000 is location of either axs10x.dtb or hsdk.dtb
-previously loaded from SD-card, USB storage or TFTP server.
-
-Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: stable@vger.kernel.org # 4.14
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Patchwork: https://patchwork.linux-mips.org/patch/20013/
+Cc: robh+dt@kernel.org
+Cc: mark.rutland@arm.com
+Cc: ralf@linux-mips.org
+Cc: jhogan@kernel.org
+Cc: linux-mips@linux-mips.org
 Cc: devicetree@vger.kernel.org
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: thomas.petazzoni@bootlin.com
+Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/arc/boot/dts/axs10x_mb.dtsi |    7 ++++++-
- arch/arc/boot/dts/hsdk.dts       |    7 ++++++-
- 2 files changed, 12 insertions(+), 2 deletions(-)
+ arch/mips/boot/dts/mscc/ocelot.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arc/boot/dts/axs10x_mb.dtsi
-+++ b/arch/arc/boot/dts/axs10x_mb.dtsi
-@@ -9,6 +9,10 @@
-  */
+--- a/arch/mips/boot/dts/mscc/ocelot.dtsi
++++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+@@ -184,7 +184,7 @@
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			compatible = "mscc,ocelot-miim";
+-			reg = <0x107009c 0x36>, <0x10700f0 0x8>;
++			reg = <0x107009c 0x24>, <0x10700f0 0x8>;
+ 			interrupts = <14>;
+ 			status = "disabled";
  
- / {
-+	aliases {
-+		ethernet = &gmac;
-+	};
-+
- 	axs10x_mb {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -68,7 +72,7 @@
- 			};
- 		};
- 
--		ethernet@0x18000 {
-+		gmac: ethernet@0x18000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
- 			reg = < 0x18000 0x2000 >;
-@@ -81,6 +85,7 @@
- 			max-speed = <100>;
- 			resets = <&creg_rst 5>;
- 			reset-names = "stmmaceth";
-+			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
- 		};
- 
- 		ehci@0x40000 {
---- a/arch/arc/boot/dts/hsdk.dts
-+++ b/arch/arc/boot/dts/hsdk.dts
-@@ -25,6 +25,10 @@
- 		bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
- 	};
- 
-+	aliases {
-+		ethernet = &gmac;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -163,7 +167,7 @@
- 			#clock-cells = <0>;
- 		};
- 
--		ethernet@8000 {
-+		gmac: ethernet@8000 {
- 			#interrupt-cells = <1>;
- 			compatible = "snps,dwmac";
- 			reg = <0x8000 0x2000>;
-@@ -176,6 +180,7 @@
- 			phy-handle = <&phy0>;
- 			resets = <&cgu_rst HSDK_ETH_RESET>;
- 			reset-names = "stmmaceth";
-+			mac-address = [00 00 00 00 00 00]; /* Filled in by U-Boot */
- 
- 			mdio {
- 				#address-cells = <1>;
