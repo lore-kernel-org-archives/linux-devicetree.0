@@ -1,104 +1,49 @@
-Return-Path: <SRS0=oGub=MD=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53616 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725898AbeIUQDB (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Sep 2018 12:03:01 -0400
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] arm64: tegra: I2C on Tegra194 is not compatible with Tegra114
-Date: Fri, 21 Sep 2018 12:14:46 +0200
-Message-Id: <20180921101446.12302-1-thierry.reding@gmail.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5b9f3f86.1c69fb81.c8019.1190@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] gpio: OF: Cut painful BNF experiments from bindings
+References: <20180913074702.5724-1-linus.walleij@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180913074702.5724-1-linus.walleij@linaro.org>
+Date: Sun, 16 Sep 2018 22:44:07 -0500
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Kumar Gala <galak@kernel.crashing.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, Sep 13, 2018 at 09:47:02AM +0200, Linus Walleij wrote:
+> In 2011 the commit bf859f84a19f
+> ("gpio/dt: Refine GPIO device tree binding") introduced an
+> experimental BNF notation for defining a regular grammar for
+> the GPIO phandles used by different devices.
+> 
+> This was an interesting approach, and shows that we have long
+> nutured the idea to formally verify device tree files using
+> regular grammar.
+> 
+> Most if not all other bindings use natural language to define
+> the bindings, and the recent thinking for verifying device
+> tree files is to use JSON schemas in separate definitions.
 
-Tegra194 contains a version of the I2C controller that is no longer
-compatible with the version found in Tegra114.
+The plan is json-schema will replace/incorporate all this. Of course, it 
+will still have human readable prose.
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+> Cut the BNF business and replace it with natural language
+> so that it becomes more human-readable for now.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Kumar Gala <galak@kernel.crashing.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio.txt         | 114 ++++++++++--------
+>  1 file changed, 64 insertions(+), 50 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-index a827e94523ec..96421b089df5 100644
---- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-@@ -468,7 +468,7 @@
- 		};
- 
- 		gen1_i2c: i2c@3160000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x03160000 0x10000>;
- 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -493,7 +493,7 @@
- 		};
- 
- 		cam_i2c: i2c@3180000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x03180000 0x10000>;
- 			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -507,7 +507,7 @@
- 
- 		/* shares pads with dpaux1 */
- 		dp_aux_ch1_i2c: i2c@3190000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x03190000 0x10000>;
- 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -521,7 +521,7 @@
- 
- 		/* shares pads with dpaux0 */
- 		dp_aux_ch0_i2c: i2c@31b0000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x031b0000 0x10000>;
- 			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -534,7 +534,7 @@
- 		};
- 
- 		gen7_i2c: i2c@31c0000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x031c0000 0x10000>;
- 			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -547,7 +547,7 @@
- 		};
- 
- 		gen9_i2c: i2c@31e0000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x031e0000 0x10000>;
- 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -614,7 +614,7 @@
- 		};
- 
- 		gen2_i2c: i2c@c240000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x0c240000 0x10000>;
- 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
-@@ -627,7 +627,7 @@
- 		};
- 
- 		gen8_i2c: i2c@c250000 {
--			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
-+			compatible = "nvidia,tegra194-i2c";
- 			reg = <0x0c250000 0x10000>;
- 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
--- 
-2.19.0
+Otherwise, this all looks fine to me. Would be nice to get some comment 
+from Grant on this given he wrote it.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+Rob
