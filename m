@@ -1,56 +1,387 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: Re: [PATCH v2 0/3] Add Amlogic video decoder driver
-Date: Mon, 17 Sep 2018 18:36:33 +0200
-Message-ID: <CAMO6nay7u4nMZcND6+g-GJAFsFcGrp_GDKBhVjeXVzpjF0ND4Q@mail.gmail.com>
-References: <20180911150938.3844-1-mjourdan@baylibre.com> <9c33c57e-2ce2-8752-b851-f85c03a7d761@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset controls
+Date: Mon, 17 Sep 2018 18:39:54 +0200
+Message-ID: <20180917163955.19023-2-geert+renesas@glider.be>
+References: <20180917163955.19023-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9c33c57e-2ce2-8752-b851-f85c03a7d761@xs4all.nl>
+In-Reply-To: <20180917163955.19023-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Eric Auger <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>
+Cc: kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-2018-09-17 16:51 GMT+02:00 Hans Verkuil <hverkuil@xs4all.nl>:
-> On 09/11/2018 05:09 PM, Maxime Jourdan wrote:
->>  - Moved the single instance check (returning -EBUSY) to start/stop streaming
->>  The check was previously in queue_setup but there was no great location to
->>  clear it except for .close().
->
-> Actually, you can clear it by called VIDIOC_REQBUFS with count set to 0. That
-> freed all buffers and clears this.
->
-> Now, the difference between queue_setup and start/stop streaming is that if you
-> do this in queue_setup you'll know early on that the device is busy. It is
-> reasonable to assume that you only allocate buffers when you also want to start
-> streaming, so that it a good place to know this quickly.
->
-> Whereas with start_streaming you won't know until you call STREAMON, or even later
-> if you start streaming with no buffers queued, since start_streaming won't
-> be called until you have at least 'min_buffers_needed' buffers queued (1 for this
-> driver). So in that case EBUSY won't be returned until the first VIDIOC_QBUF.
->
-> My preference is to check this in queue_setup, but it is up to you to decide.
-> Just be aware of the difference between the two options.
->
-> Regards,
->
->         Hans
+In some SoCs multiple hardware blocks may share a reset control.
+The existing reset control API for shared resets will only assert such a
+reset when the drivers for all hardware blocks agree.
+The existing exclusive reset control API still allows to assert such a
+reset, but that impacts all other hardware blocks sharing the reset.
 
-I could for instance keep track of which queue(s) have been called
-with queue_setup, catch calls to VIDIOC_REQBUFS with count set to 0,
-and clear the current session once both queues have been reset ?
+Sometimes a driver needs to reset a specific hardware block, and be 100%
+sure it has no impact on other hardware blocks.  This is e.g. the case
+for virtualization with device pass-through, where the host wants to
+reset any exported device before and after exporting it for use by the
+guest, for isolation.
 
-You leverage another issue with min_buffers_needed. It's indeed set to
-1 but this value is wrong for the CAPTURE queue. The problem is that
-this value changes depending on the codec and the amount of CAPTURE
-buffers requested by userspace.
-Ultimately I want it set to the total amount of CAPTURE buffers,
-because the hardware needs the full buffer list before starting a
-decode job.
-Am I free to change this queue parameter later, or is m2m_queue_init
-the only place to do it ?
+Hence a new flag for dedicated resets is added to the internal methods,
+with a new public reset_control_get_dedicated() method, to obtain an
+exclusive handle to a reset that is dedicated to one specific hardware
+block.
 
-Thanks,
-Maxime
+This supports both DT-based and lookup-based reset controls.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v4:
+  - New.
+
+Notes:
+  - Dedicated lookup-based reset controls were not tested,
+  - Several internal functions now take 3 boolean flags, and should
+    probably be converted to take a bitmask instead,
+  - I think __device_reset() should call __reset_control_get() with
+    dedicated=true.  However, that will impact existing users,
+  - Should a different error than -EINVAL be returned on failure?
+---
+ drivers/reset/core.c  | 76 ++++++++++++++++++++++++++++++++++++++-----
+ include/linux/reset.h | 60 ++++++++++++++++++++++------------
+ 2 files changed, 107 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 225e34c56b94a2e3..5bc4eeca70c0fcc2 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -459,9 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
+ 	kref_put(&rstc->refcnt, __reset_control_release);
+ }
+ 
++static bool __of_reset_is_dedicated(const struct device_node *node,
++				    const struct of_phandle_args args)
++{
++	struct of_phandle_args args2;
++	struct device_node *node2;
++	int index, ret;
++
++	for_each_node_with_property(node2, "resets") {
++		if (node == node2)
++			continue;
++
++		for (index = 0; ; index++) {
++			ret = of_parse_phandle_with_args(node2, "resets",
++							 "#reset-cells", index,
++							 &args2);
++			if (ret)
++				break;
++
++			if (args2.np == args.np &&
++			    args2.args_count == args.args_count &&
++			    !memcmp(args2.args, args.args,
++				    args.args_count * sizeof(args.args[0])))
++				return false;
++		}
++	}
++
++	return true;
++}
++
+ struct reset_control *__of_reset_control_get(struct device_node *node,
+ 				     const char *id, int index, bool shared,
+-				     bool optional)
++				     bool optional, bool dedicated)
+ {
+ 	struct reset_control *rstc;
+ 	struct reset_controller_dev *r, *rcdev;
+@@ -514,6 +543,11 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+ 		return ERR_PTR(rstc_id);
+ 	}
+ 
++	if (dedicated && !__of_reset_is_dedicated(node, args)) {
++		mutex_unlock(&reset_list_mutex);
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	/* reset_list_mutex also protects the rcdev's reset_control list */
+ 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
+ 
+@@ -541,9 +575,25 @@ __reset_controller_by_name(const char *name)
+ 	return NULL;
+ }
+ 
++static bool __reset_is_dedicated(const struct reset_control_lookup *lookup)
++{
++	const struct reset_control_lookup *lookup2;
++
++	list_for_each_entry(lookup, &reset_lookup_list, list) {
++		if (lookup2 == lookup)
++			continue;
++
++		if (lookup2->provider == lookup->provider &&
++		    lookup2->index == lookup->index)
++			return false;
++	}
++
++	return true;
++}
++
+ static struct reset_control *
+ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+-				bool shared, bool optional)
++				bool shared, bool optional, bool dedicated)
+ {
+ 	const struct reset_control_lookup *lookup;
+ 	struct reset_controller_dev *rcdev;
+@@ -562,6 +612,11 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+ 		if ((!con_id && !lookup->con_id) ||
+ 		    ((con_id && lookup->con_id) &&
+ 		     !strcmp(con_id, lookup->con_id))) {
++			if (dedicated && !__reset_is_dedicated(lookup)) {
++				mutex_unlock(&reset_lookup_mutex);
++				return ERR_PTR(-EINVAL);
++			}
++
+ 			mutex_lock(&reset_list_mutex);
+ 			rcdev = __reset_controller_by_name(lookup->provider);
+ 			if (!rcdev) {
+@@ -588,13 +643,15 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+ }
+ 
+ struct reset_control *__reset_control_get(struct device *dev, const char *id,
+-					  int index, bool shared, bool optional)
++					  int index, bool shared,
++					  bool optional, bool dedicated)
+ {
+ 	if (dev->of_node)
+ 		return __of_reset_control_get(dev->of_node, id, index, shared,
+-					      optional);
++					      optional, dedicated);
+ 
+-	return __reset_control_get_from_lookup(dev, id, shared, optional);
++	return __reset_control_get_from_lookup(dev, id, shared, optional,
++					       dedicated);
+ }
+ EXPORT_SYMBOL_GPL(__reset_control_get);
+ 
+@@ -635,7 +692,7 @@ static void devm_reset_control_release(struct device *dev, void *res)
+ 
+ struct reset_control *__devm_reset_control_get(struct device *dev,
+ 				     const char *id, int index, bool shared,
+-				     bool optional)
++				     bool optional, bool dedicated)
+ {
+ 	struct reset_control **ptr, *rstc;
+ 
+@@ -644,7 +701,7 @@ struct reset_control *__devm_reset_control_get(struct device *dev,
+ 	if (!ptr)
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	rstc = __reset_control_get(dev, id, index, shared, optional);
++	rstc = __reset_control_get(dev, id, index, shared, optional, dedicated);
+ 	if (!IS_ERR(rstc)) {
+ 		*ptr = rstc;
+ 		devres_add(dev, ptr);
+@@ -671,7 +728,7 @@ int __device_reset(struct device *dev, bool optional)
+ 	struct reset_control *rstc;
+ 	int ret;
+ 
+-	rstc = __reset_control_get(dev, NULL, 0, 0, optional);
++	rstc = __reset_control_get(dev, NULL, 0, false, optional, false);
+ 	if (IS_ERR(rstc))
+ 		return PTR_ERR(rstc);
+ 
+@@ -735,7 +792,8 @@ of_reset_control_array_get(struct device_node *np, bool shared, bool optional)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ 	for (i = 0; i < num; i++) {
+-		rstc = __of_reset_control_get(np, NULL, i, shared, optional);
++		rstc = __of_reset_control_get(np, NULL, i, shared, optional,
++					      false);
+ 		if (IS_ERR(rstc))
+ 			goto err_rst;
+ 		resets->rstc[i] = rstc;
+diff --git a/include/linux/reset.h b/include/linux/reset.h
+index 09732c36f3515a1e..6ca6e108b612f923 100644
+--- a/include/linux/reset.h
++++ b/include/linux/reset.h
+@@ -17,15 +17,15 @@ int reset_control_status(struct reset_control *rstc);
+ 
+ struct reset_control *__of_reset_control_get(struct device_node *node,
+ 				     const char *id, int index, bool shared,
+-				     bool optional);
++				     bool optional, bool dedicated);
+ struct reset_control *__reset_control_get(struct device *dev, const char *id,
+ 					  int index, bool shared,
+-					  bool optional);
++					  bool optional, bool dedicated);
+ void reset_control_put(struct reset_control *rstc);
+ int __device_reset(struct device *dev, bool optional);
+ struct reset_control *__devm_reset_control_get(struct device *dev,
+ 				     const char *id, int index, bool shared,
+-				     bool optional);
++				     bool optional, bool dedicated);
+ 
+ struct reset_control *devm_reset_control_array_get(struct device *dev,
+ 						   bool shared, bool optional);
+@@ -66,21 +66,23 @@ static inline int __device_reset(struct device *dev, bool optional)
+ static inline struct reset_control *__of_reset_control_get(
+ 					struct device_node *node,
+ 					const char *id, int index, bool shared,
+-					bool optional)
++					bool optional, bool dedicated)
+ {
+ 	return optional ? NULL : ERR_PTR(-ENOTSUPP);
+ }
+ 
+ static inline struct reset_control *__reset_control_get(
+ 					struct device *dev, const char *id,
+-					int index, bool shared, bool optional)
++					int index, bool shared, bool optional,
++					bool dedicated)
+ {
+ 	return optional ? NULL : ERR_PTR(-ENOTSUPP);
+ }
+ 
+ static inline struct reset_control *__devm_reset_control_get(
+ 					struct device *dev, const char *id,
+-					int index, bool shared, bool optional)
++					int index, bool shared, bool optional,
++					bool dedicated)
+ {
+ 	return optional ? NULL : ERR_PTR(-ENOTSUPP);
+ }
+@@ -127,7 +129,25 @@ static inline int device_reset_optional(struct device *dev)
+ static inline struct reset_control *
+ __must_check reset_control_get_exclusive(struct device *dev, const char *id)
+ {
+-	return __reset_control_get(dev, id, 0, false, false);
++	return __reset_control_get(dev, id, 0, false, false, false);
++}
++
++/**
++ * reset_control_get_dedicated - Lookup and obtain an exclusive reference
++ *                               to a dedicated reset controller.
++ * @dev: device to be reset by the controller
++ * @id: reset line name
++ *
++ * Returns a struct reset_control or IS_ERR() condition containing errno.
++ * If this function is called more than once for the same reset_control it will
++ * return -EBUSY.
++ *
++ * Use of id names is optional.
++ */
++static inline struct reset_control *
++__must_check reset_control_get_dedicated(struct device *dev, const char *id)
++{
++	return __reset_control_get(dev, id, 0, false, false, true);
+ }
+ 
+ /**
+@@ -155,19 +175,19 @@ __must_check reset_control_get_exclusive(struct device *dev, const char *id)
+ static inline struct reset_control *reset_control_get_shared(
+ 					struct device *dev, const char *id)
+ {
+-	return __reset_control_get(dev, id, 0, true, false);
++	return __reset_control_get(dev, id, 0, true, false, false);
+ }
+ 
+ static inline struct reset_control *reset_control_get_optional_exclusive(
+ 					struct device *dev, const char *id)
+ {
+-	return __reset_control_get(dev, id, 0, false, true);
++	return __reset_control_get(dev, id, 0, false, true, false);
+ }
+ 
+ static inline struct reset_control *reset_control_get_optional_shared(
+ 					struct device *dev, const char *id)
+ {
+-	return __reset_control_get(dev, id, 0, true, true);
++	return __reset_control_get(dev, id, 0, true, true, false);
+ }
+ 
+ /**
+@@ -183,7 +203,7 @@ static inline struct reset_control *reset_control_get_optional_shared(
+ static inline struct reset_control *of_reset_control_get_exclusive(
+ 				struct device_node *node, const char *id)
+ {
+-	return __of_reset_control_get(node, id, 0, false, false);
++	return __of_reset_control_get(node, id, 0, false, false, false);
+ }
+ 
+ /**
+@@ -208,7 +228,7 @@ static inline struct reset_control *of_reset_control_get_exclusive(
+ static inline struct reset_control *of_reset_control_get_shared(
+ 				struct device_node *node, const char *id)
+ {
+-	return __of_reset_control_get(node, id, 0, true, false);
++	return __of_reset_control_get(node, id, 0, true, false, false);
+ }
+ 
+ /**
+@@ -225,7 +245,7 @@ static inline struct reset_control *of_reset_control_get_shared(
+ static inline struct reset_control *of_reset_control_get_exclusive_by_index(
+ 					struct device_node *node, int index)
+ {
+-	return __of_reset_control_get(node, NULL, index, false, false);
++	return __of_reset_control_get(node, NULL, index, false, false, false);
+ }
+ 
+ /**
+@@ -253,7 +273,7 @@ static inline struct reset_control *of_reset_control_get_exclusive_by_index(
+ static inline struct reset_control *of_reset_control_get_shared_by_index(
+ 					struct device_node *node, int index)
+ {
+-	return __of_reset_control_get(node, NULL, index, true, false);
++	return __of_reset_control_get(node, NULL, index, true, false, false);
+ }
+ 
+ /**
+@@ -272,7 +292,7 @@ static inline struct reset_control *
+ __must_check devm_reset_control_get_exclusive(struct device *dev,
+ 					      const char *id)
+ {
+-	return __devm_reset_control_get(dev, id, 0, false, false);
++	return __devm_reset_control_get(dev, id, 0, false, false, false);
+ }
+ 
+ /**
+@@ -287,19 +307,19 @@ __must_check devm_reset_control_get_exclusive(struct device *dev,
+ static inline struct reset_control *devm_reset_control_get_shared(
+ 					struct device *dev, const char *id)
+ {
+-	return __devm_reset_control_get(dev, id, 0, true, false);
++	return __devm_reset_control_get(dev, id, 0, true, false, false);
+ }
+ 
+ static inline struct reset_control *devm_reset_control_get_optional_exclusive(
+ 					struct device *dev, const char *id)
+ {
+-	return __devm_reset_control_get(dev, id, 0, false, true);
++	return __devm_reset_control_get(dev, id, 0, false, true, false);
+ }
+ 
+ static inline struct reset_control *devm_reset_control_get_optional_shared(
+ 					struct device *dev, const char *id)
+ {
+-	return __devm_reset_control_get(dev, id, 0, true, true);
++	return __devm_reset_control_get(dev, id, 0, true, true, false);
+ }
+ 
+ /**
+@@ -317,7 +337,7 @@ static inline struct reset_control *devm_reset_control_get_optional_shared(
+ static inline struct reset_control *
+ devm_reset_control_get_exclusive_by_index(struct device *dev, int index)
+ {
+-	return __devm_reset_control_get(dev, NULL, index, false, false);
++	return __devm_reset_control_get(dev, NULL, index, false, false, false);
+ }
+ 
+ /**
+@@ -333,7 +353,7 @@ devm_reset_control_get_exclusive_by_index(struct device *dev, int index)
+ static inline struct reset_control *
+ devm_reset_control_get_shared_by_index(struct device *dev, int index)
+ {
+-	return __devm_reset_control_get(dev, NULL, index, true, false);
++	return __devm_reset_control_get(dev, NULL, index, true, false, false);
+ }
+ 
+ /*
+-- 
+2.17.1
