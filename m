@@ -1,74 +1,87 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/4] Improve VCHIQ cache line size handling
-Date: Mon, 17 Sep 2018 10:51:56 -0700
-Message-ID: <13b74c54-d115-8ff1-3c1d-a8888b43578c@gmail.com>
-References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
- <f1e38c0c-0702-5df2-7f7c-40bbb93115b2@i2se.com>
- <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH] ARM: dts: qcom-apq8064: use correct pci address for
+ address translation
+Date: Mon, 17 Sep 2018 19:52:19 +0200
+Message-ID: <20180917175219.GA4157@centauri>
+References: <20180509120135.25940-1-niklas.cassel@linaro.org>
+ <20180917112149.GE7239@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1ffe9824-d254-6dfb-7bd6-e146d6c9eada@raspberrypi.org>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Phil Elwell <phil@raspberrypi.org>, Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devel@driverdev.osuosl.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180917112149.GE7239@e107981-ln.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/2018 04:47 AM, Phil Elwell wrote:
-> Hi Stefan,
+On Mon, Sep 17, 2018 at 12:21:49PM +0100, Lorenzo Pieralisi wrote:
+> On Wed, May 09, 2018 at 02:01:34PM +0200, Niklas Cassel wrote:
+> > For PCI, the second and third cell in ranges specifies the upper and
+> > lower target address for address translation. This target address will
+> > be used to program the internal address translation unit (iATU).
+> > 
+> > The current device tree configuration will program the iATU to translate
+> > CPU accesses to 0x08000000 to PCI address 0x0 (with TLP type MEM).
+> > The device tree configuration also specifies that CPU acesses to
+> > 0x0fe00000 will be translated to PCI address 0x0 (with TLP type I/O).
+> > 
+> > We cannot have both I/O space and memory space at PCI address 0x0.
+> > 
+> > The PCI code already uses the CPU address when assigning addresses to
+> > memory BARs, so for memory space the PCI address should be the same as
+> > the CPU address. This also matches how all other device trees using
+> > snps,dw-pcie are configured.
+> > 
+> > The existing configuration appears to work, even if it is incorrect.
+> > For some reason the iATU doesn't obey the existing configuration,
+> > and doesn't translate CPU accesses from 0x08000000 to PCI address 0x0.
+> > 
+> > The reason why the existing configuration works at all is probably
+> > because the default behavior, when there is no match, is to use the
+> > untranslated address. This happens to work for memory space, since
+> > it's a 1:1 mapping. However, instead of relying on this behavior,
+> > let's configure the iATU correctly.
+> > 
+> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > ---
+> >  arch/arm/boot/dts/qcom-apq8064.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> On 17/09/2018 12:39, Stefan Wahren wrote:
->> Hi Phil,
->>
->> Am 17.09.2018 um 10:22 schrieb Phil Elwell:
->>> Both sides of the VCHIQ communications mechanism need to agree on the cache
->>> line size. Using an incorrect value can lead to data corruption, but having the
->>> two sides using different values is usually worse.
->>>
->>> In the absence of an obvious convenient run-time method to determine the
->>> correct value in the ARCH=arm world, the downstream Raspberry Pi trees used a
->>> Device Tree property, written by the firmware, to configure the kernel driver.
->>> This method was vetoed during the upstreaming process, so a fixed value of 32
->>> was used instead, and some corruptions ensued. This is take 2 at arriving at
->>> the correct value.
->>>
->>> Add a new compatible string - "brcm,bcm2836-vchiq" - to indicate an SoC with
->>> a 64-byte cache line. Document the new string in the binding, and use it on
->>> the appropriate platforms.
->>>
->>> The final patch is a (seemingly cosmetic) correction of the Device Tree "reg"
->>> declaration for the device node, but it doubles as an indication to the
->>> Raspberry Pi firmware that the kernel driver is running a recent kernel driver
->>> that chooses the correct value. As such it would help if the DT patches are
->>> not merged before the driver patch.
->>>
->>> v3: Builds without errors, tested on multiple Raspberry Pi models.
->>> v2: Replaced ARM-specific logic used to determine cache line size with
->>>     a new compatible string for BCM2836 and BCM2837.
->>>
->>> Phil Elwell (4):
->>>   staging/vc04_services: Use correct cache line size
->>>   dt-bindings: soc: Document "brcm,bcm2836-vchiq"
->>>   ARM: dts: bcm283x: Correct vchiq compatible string
->>>   ARM: dts: bcm283x: Correct mailbox register sizes
->>
->> since my pull requests are out, would it be okay to apply patch #1 for
->> 4.20 and the DT stuff for 4.21 (with the assumption Rob is okay with
->> these patches)?
+> Hi Niklas,
 > 
-> Patch 4 is the only one I'd like to be delayed, but delaying 2-4 is fine with me.
+> what's this patch status ? Please let me know if I have to keep
+> it in the PCI tree queue, I think, if ACKed, it should probably
+> go via the arm-soc tree.
 
-Humm, did you mean you would like not to be delayed? In any case Stefan,
-you can send an additional pull request, and I will merge it and send a
-second pull request towards ARM SoC maintainers, that's not a problem.
--- 
-Florian
+Hello Lorenzo,
+
+This patch has been merged and is included in v4.18.
+
+I CC:ed PCI just to get more eyes on it.
+
+
+Kind regards,
+Niklas
+
+
+> 
+> Thanks,
+> Lorenzo
+> 
+> > diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> > index 5341a39c0392..148cf7e565f6 100644
+> > --- a/arch/arm/boot/dts/qcom-apq8064.dtsi
+> > +++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+> > @@ -1417,7 +1417,7 @@
+> >  			#address-cells = <3>;
+> >  			#size-cells = <2>;
+> >  			ranges = <0x81000000 0 0 0x0fe00000 0 0x00100000   /* I/O */
+> > -				  0x82000000 0 0 0x08000000 0 0x07e00000>; /* memory */
+> > +				  0x82000000 0 0x08000000 0x08000000 0 0x07e00000>; /* memory */
+> >  			interrupts = <GIC_SPI 238 IRQ_TYPE_NONE>;
+> >  			interrupt-names = "msi";
+> >  			#interrupt-cells = <1>;
+> > -- 
+> > 2.17.0
+> > 
