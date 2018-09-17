@@ -1,40 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/27] dt-bindings: sunxi-sram: add binding for Allwinner
- H6  SRAM C
-Date: Sun, 16 Sep 2018 22:05:28 -0500
-Message-ID: <5b9f3f79.1c69fb81.21dc2.1e01@mx.google.com>
-References: <20180902072643.4917-1-jernej.skrabec@siol.net>
- <20180902072643.4917-2-jernej.skrabec@siol.net>
+Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add MediaTek Command-Queue
+ DMA controller bindings
+Date: Mon, 17 Sep 2018 01:44:54 -0400
+Message-ID: <5b9f3f57.1c69fb81.17be4.3001@mx.google.com>
+References: <1536050626-21927-1-git-send-email-shun-chih.yu@mediatek.com>
+ <1536050626-21927-2-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20180902072643.4917-2-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, maxime.ripard@bootlin.com, mturquette@baylibre.com, linux-sunxi@googlegroups.com, jernej.skrabec@siol.net, sboyd@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, airlied@linux.ie, wens@csie.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536050626-21927-2-git-send-email-shun-chih.yu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Shun-Chih Yu <shun-chih.yu@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCAgMiBTZXAgMjAxOCAwOToyNjoxNyArMDIwMCwgSmVybmVqIFNrcmFiZWMgd3JvdGU6
-Cj4gRnJvbTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlvPgo+IAo+IFRoZSBBbGx3aW5u
-ZXIgSDYgU29DJ3MgREUzIG5lZWRzIHRoZSBTUkFNIEMgc2VjdGlvbiBiZWluZyBjbGFpbWVkIGlu
-IHRoZQo+IHN5c3RlbSBjb250cm9sbGVyIHRvIHdvcmssIGxpa2UgQTY0IERFMi4KPiAKPiBBcyBI
-NiBhbmQgQTY0IHN5c3RlbSBjb250cm9sbGVyIGFyZSBxdWl0ZSBzaW1pbGFyLCBjb2RlIGlzIHJl
-dXNlZCBub3csCj4gYW5kIHRoZSBBNjQgZmFsbGJhY2sgY29tcGF0aWJsZSBzdHJpbmcgaXMgYWRk
-ZWQgYWZ0ZXIgdGhlIEg2IGNvbXBhdGlibGUKPiBzdHJpbmcuCj4gCj4gU2lnbmVkLW9mZi1ieTog
-SWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlvPgo+IFtmaXhlZCB0eXBvIGluIGNvbXBhdGli
-bGUgc3RyaW5nXQo+IFNpZ25lZC1vZmYtYnk6IEplcm5laiBTa3JhYmVjIDxqZXJuZWouc2tyYWJl
-Y0BzaW9sLm5ldD4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Ny
-YW0vc3VueGktc3JhbS50eHQgfCA0ICsrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9u
-cygrKQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, 4 Sep 2018 16:43:45 +0800, <shun-chih.yu@mediatek.com> wrote:
+> From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+> 
+> Document the devicetree bindings for MediaTek Command-Queue DMA controller
+> which could be found on MT6765 SoC or other similar Mediatek SoCs.
+> 
+> Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+> ---
+>  .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 ++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
