@@ -1,37 +1,52 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH] ARM: dts: stm32: update SPI6 dmas property on stm32mp157c
-Date: Mon, 17 Sep 2018 10:04:47 +0200
-Message-ID: <1537171487-15191-1-git-send-email-amelie.delaunay@st.com>
+From: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
+Subject: [PATCH v2 2/3] dt-bindings: arm: syna: add support for the AS370
+ SoC
+Date: Mon, 17 Sep 2018 16:02:11 +0800
+Message-ID: <20180917160211.7b1cd37d@xhacker.debian>
+References: <20180917160015.05a1fc5b@xhacker.debian>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180917160015.05a1fc5b@xhacker.debian>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+To: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Remove unused parameter from SPI6 dmas property on stm32mp157c SoC.
+The AS370 SoC is a new derivative of the berlin family. However, the
+SoC isn't named as berlin*.
 
-Fixes: dc3f8c86c10d ("ARM: dts: stm32: add SPI support on stm32mp157c")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Jisheng Zhang <Jisheng.Zhang@synaptics.com>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/syna.txt | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 661be94..185541a 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -1078,8 +1078,8 @@
- 			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&rcc SPI6_K>;
- 			resets = <&rcc SPI6_R>;
--			dmas = <&mdma1 34 0x0 0x40008 0x0 0x0 0>,
--			       <&mdma1 35 0x0 0x40002 0x0 0x0 0>;
-+			dmas = <&mdma1 34 0x0 0x40008 0x0 0x0>,
-+			       <&mdma1 35 0x0 0x40002 0x0 0x0>;
- 			dma-names = "rx", "tx";
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/syna.txt b/Documentation/devicetree/bindings/arm/syna.txt
+index 3bab18409b7a..2face46a5f64 100644
+--- a/Documentation/devicetree/bindings/arm/syna.txt
++++ b/Documentation/devicetree/bindings/arm/syna.txt
+@@ -1,4 +1,9 @@
+-Marvell Berlin SoC Family Device Tree Bindings
++Synaptics SoC Device Tree Bindings
++
++According to https://www.synaptics.com/company/news/conexant-marvell
++Synaptics has acquired the Multimedia Solutions Business of Marvell, so
++berlin SoCs are now Synaptics' SoCs now.
++
+ ---------------------------------------------------------------
+ 
+ Work in progress statement:
+@@ -13,6 +18,10 @@ stable binding/ABI.
+ 
+ ---------------------------------------------------------------
+ 
++Boards with the Synaptics AS370 SoC shall have the following properties:
++  Required root node property:
++    compatible: "syna,as370"
++
+ Boards with a SoC of the Marvell Berlin family, e.g. Armada 1500
+ shall have the following properties:
+ 
 -- 
-2.7.4
+2.19.0
