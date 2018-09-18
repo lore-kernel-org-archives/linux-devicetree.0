@@ -1,322 +1,105 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v5 2/2] clk: qcom: Add lpass clock controller driver for SDM845
-Date: Tue, 18 Sep 2018 15:55:38 +0530
-Message-ID: <1537266338-18661-3-git-send-email-tdas@codeaurora.org>
-References: <1537266338-18661-1-git-send-email-tdas@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537266338-18661-1-git-send-email-tdas@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] ARM: dts: xilinx: Fix I2C and SPI bus warnings
+Date: Tue, 18 Sep 2018 12:52:26 +0200
+Message-ID: <807013e3-b4c0-3a54-5464-15e7bed4e187@xilinx.com>
+References: <20180913181245.25484-15-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-15-robh@kernel.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Michal Simek <michal.simek@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the lpass clock controller found on SDM845 based devices.
-This would allow lpass peripheral loader drivers to control the clocks to
-bring the subsystem out of reset.
-LPASS clocks present on the global clock controller would be registered
-with the clock framework based on the device tree flag.
+On 13.9.2018 20:12, Rob Herring wrote:
+> dtc has new checks for I2C and SPI buses. Fix the warnings in node names
+> and unit-addresses.
+> 
+> arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@52: I2C bus unit address format error, expected "34"
+> arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@53: I2C bus unit address format error, expected "35"
+> arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@54: I2C bus unit address format error, expected "36"
+> arch/arm/boot/dts/zynq-zc770-xm013.dtb: Warning (spi_bus_reg): /amba/spi@e0006000/eeprom@0: SPI bus unit address format error, expected "2"
+> arch/arm/boot/dts/zynq-zc770-xm010.dtb: Warning (spi_bus_reg): /amba/spi@e0007000/flash@0: SPI bus unit address format error, expected "1"
+> 
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please apply to the sub-arch tree. The dtc changes haven't landed, but 
+> will for 4.20.
+> 
+>  arch/arm/boot/dts/zynq-zc702.dts       | 12 ++++++------
+>  arch/arm/boot/dts/zynq-zc770-xm010.dts |  2 +-
+>  arch/arm/boot/dts/zynq-zc770-xm013.dts |  2 +-
+>  3 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
+> index cc5a3dc2b4a0..27cd6cb52f1b 100644
+> --- a/arch/arm/boot/dts/zynq-zc702.dts
+> +++ b/arch/arm/boot/dts/zynq-zc702.dts
+> @@ -174,17 +174,17 @@
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+>  			reg = <7>;
+> -			hwmon@52 {
+> +			hwmon@34 {
+>  				compatible = "ti,ucd9248";
+> -				reg = <52>;
+> +				reg = <0x34>;
+>  			};
+> -			hwmon@53 {
+> +			hwmon@35 {
+>  				compatible = "ti,ucd9248";
+> -				reg = <53>;
+> +				reg = <0x35>;
+>  			};
+> -			hwmon@54 {
+> +			hwmon@36 {
+>  				compatible = "ti,ucd9248";
+> -				reg = <54>;
+> +				reg = <0x36>;
+>  			};
+>  		};
+>  	};
+> diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dts/zynq-zc770-xm010.dts
+> index 0e1bfdd3421f..0dd352289a45 100644
+> --- a/arch/arm/boot/dts/zynq-zc770-xm010.dts
+> +++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
+> @@ -68,7 +68,7 @@
+>  	status = "okay";
+>  	num-cs = <4>;
+>  	is-decoded-cs = <0>;
+> -	flash@0 {
+> +	flash@1 {
+>  		compatible = "sst25wf080", "jedec,spi-nor";
+>  		reg = <1>;
+>  		spi-max-frequency = <1000000>;
+> diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts/zynq-zc770-xm013.dts
+> index 651913f1afa2..4ae2c85df3a0 100644
+> --- a/arch/arm/boot/dts/zynq-zc770-xm013.dts
+> +++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
+> @@ -62,7 +62,7 @@
+>  	status = "okay";
+>  	num-cs = <4>;
+>  	is-decoded-cs = <0>;
+> -	eeprom: eeprom@0 {
+> +	eeprom: eeprom@2 {
+>  		at25,byte-len = <8192>;
+>  		at25,addr-mode = <2>;
+>  		at25,page-size = <32>;
+> 
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- drivers/clk/qcom/Kconfig          |   9 ++
- drivers/clk/qcom/Makefile         |   1 +
- drivers/clk/qcom/gcc-sdm845.c     |  35 +++++++
- drivers/clk/qcom/lpasscc-sdm845.c | 195 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 240 insertions(+)
- create mode 100644 drivers/clk/qcom/lpasscc-sdm845.c
+Applied. All checked.
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 5b181b1..747ffb4 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -272,6 +272,15 @@ config SDM_DISPCC_845
- 	  Say Y if you want to support display devices and functionality such as
- 	  splash screen.
- 
-+config SDM_LPASSCC_845
-+	tristate "SDM845 Low Power Audio Subsystem (LPAAS) Clock Controller"
-+	depends on COMMON_CLK_QCOM
-+	select SDM_GCC_845
-+	help
-+	  Support for the LPASS clock controller on SDM845 devices.
-+	  Say Y if you want to use the LPASS branch clocks of the LPASS clock
-+	  controller to reset the LPASS subsystem.
-+
- config SPMI_PMIC_CLKDIV
- 	tristate "SPMI PMIC clkdiv Support"
- 	depends on (COMMON_CLK_QCOM && SPMI) || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 935f142..53a5283 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -42,5 +42,6 @@ obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
- obj-$(CONFIG_SDM_CAMCC_845) += camcc-sdm845.o
- obj-$(CONFIG_SDM_DISPCC_845) += dispcc-sdm845.o
- obj-$(CONFIG_SDM_GCC_845) += gcc-sdm845.o
-+obj-$(CONFIG_SDM_LPASSCC_845) += lpasscc-sdm845.o
- obj-$(CONFIG_SDM_VIDEOCC_845) += videocc-sdm845.o
- obj-$(CONFIG_SPMI_PMIC_CLKDIV) += clk-spmi-pmic-div.o
-diff --git a/drivers/clk/qcom/gcc-sdm845.c b/drivers/clk/qcom/gcc-sdm845.c
-index 08d593e..fa8c37c 100644
---- a/drivers/clk/qcom/gcc-sdm845.c
-+++ b/drivers/clk/qcom/gcc-sdm845.c
-@@ -3169,6 +3169,32 @@ enum {
- 	},
- };
- 
-+static struct clk_branch gcc_lpass_q6_axi_clk = {
-+	.halt_reg = 0x47000,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x47000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_lpass_q6_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_lpass_sway_clk = {
-+	.halt_reg = 0x47008,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x47008,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_lpass_sway_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct gdsc pcie_0_gdsc = {
- 	.gdscr = 0x6b004,
- 	.pd = {
-@@ -3469,6 +3495,8 @@ enum {
- 	[GCC_QSPI_CORE_CLK_SRC] = &gcc_qspi_core_clk_src.clkr,
- 	[GCC_QSPI_CORE_CLK] = &gcc_qspi_core_clk.clkr,
- 	[GCC_QSPI_CNOC_PERIPH_AHB_CLK] = &gcc_qspi_cnoc_periph_ahb_clk.clkr,
-+	[GCC_LPASS_Q6_AXI_CLK] = NULL,
-+	[GCC_LPASS_SWAY_CLK] = NULL,
- };
- 
- static const struct qcom_reset_map gcc_sdm845_resets[] = {
-@@ -3583,6 +3611,13 @@ static int gcc_sdm845_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	if (of_property_read_bool(pdev->dev.of_node, "qcom,lpass-protected")) {
-+		gcc_sdm845_clocks[GCC_LPASS_Q6_AXI_CLK] =
-+			&gcc_lpass_q6_axi_clk.clkr;
-+		gcc_sdm845_clocks[GCC_LPASS_SWAY_CLK] =
-+			&gcc_lpass_sway_clk.clkr;
-+	}
-+
- 	return qcom_cc_really_probe(pdev, &gcc_sdm845_desc, regmap);
- }
- 
-diff --git a/drivers/clk/qcom/lpasscc-sdm845.c b/drivers/clk/qcom/lpasscc-sdm845.c
-new file mode 100644
-index 0000000..72c3cce
---- /dev/null
-+++ b/drivers/clk/qcom/lpasscc-sdm845.c
-@@ -0,0 +1,195 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/err.h>
-+#include <linux/platform_device.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,lpass-sdm845.h>
-+
-+#include "clk-regmap.h"
-+#include "clk-branch.h"
-+#include "common.h"
-+
-+static struct clk_branch lpass_audio_wrapper_aon_clk = {
-+	.halt_reg = 0x098,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x098,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_audio_wrapper_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lpass_q6ss_ahbm_aon_clk = {
-+	.halt_reg = 0x12000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x12000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_q6ss_ahbm_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch lpass_q6ss_ahbs_aon_clk = {
-+	.halt_reg = 0x1f000,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x1f000,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_q6ss_ahbs_aon_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* CLK_OFF would not toggle until LPASS is not out of reset */
-+static struct clk_branch lpass_qdsp6ss_core_clk = {
-+	.halt_reg = 0x20,
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x20,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_qdsp6ss_core_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* CLK_OFF would not toggle until LPASS is not out of reset */
-+static struct clk_branch lpass_qdsp6ss_xo_clk = {
-+	.halt_reg = 0x38,
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x38,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_qdsp6ss_xo_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+/* CLK_OFF would not toggle until LPASS is not out of reset */
-+static struct clk_branch lpass_qdsp6ss_sleep_clk = {
-+	.halt_reg = 0x3c,
-+	.halt_check = BRANCH_HALT_SKIP,
-+	.clkr = {
-+		.enable_reg = 0x3c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "lpass_qdsp6ss_sleep_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct regmap_config lpass_regmap_config = {
-+	.reg_bits	= 32,
-+	.reg_stride	= 4,
-+	.val_bits	= 32,
-+	.fast_io	= true,
-+};
-+
-+static struct clk_regmap *lpass_cc_sdm845_clocks[] = {
-+	[LPASS_AUDIO_WRAPPER_AON_CLK] = &lpass_audio_wrapper_aon_clk.clkr,
-+	[LPASS_Q6SS_AHBM_AON_CLK] = &lpass_q6ss_ahbm_aon_clk.clkr,
-+	[LPASS_Q6SS_AHBS_AON_CLK] = &lpass_q6ss_ahbs_aon_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc lpass_cc_sdm845_desc = {
-+	.config = &lpass_regmap_config,
-+	.clks = lpass_cc_sdm845_clocks,
-+	.num_clks = ARRAY_SIZE(lpass_cc_sdm845_clocks),
-+};
-+
-+static struct clk_regmap *lpass_qdsp6ss_sdm845_clocks[] = {
-+	[LPASS_QDSP6SS_XO_CLK] = &lpass_qdsp6ss_xo_clk.clkr,
-+	[LPASS_QDSP6SS_SLEEP_CLK] = &lpass_qdsp6ss_sleep_clk.clkr,
-+	[LPASS_QDSP6SS_CORE_CLK] = &lpass_qdsp6ss_core_clk.clkr,
-+};
-+
-+static const struct qcom_cc_desc lpass_qdsp6ss_sdm845_desc = {
-+	.config = &lpass_regmap_config,
-+	.clks = lpass_qdsp6ss_sdm845_clocks,
-+	.num_clks = ARRAY_SIZE(lpass_qdsp6ss_sdm845_clocks),
-+};
-+
-+static int lpass_clocks_sdm845_probe(struct platform_device *pdev, int index,
-+				     const struct qcom_cc_desc *desc)
-+{
-+	struct regmap *regmap;
-+	struct resource *res;
-+	void __iomem *base;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, index);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = devm_regmap_init_mmio(&pdev->dev, base, desc->config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	return qcom_cc_really_probe(pdev, desc, regmap);
-+}
-+
-+/* LPASS CC clock controller */
-+static const struct of_device_id lpass_cc_sdm845_match_table[] = {
-+	{ .compatible = "qcom,sdm845-lpasscc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lpass_cc_sdm845_match_table);
-+
-+static int lpass_cc_sdm845_probe(struct platform_device *pdev)
-+{
-+	const struct qcom_cc_desc *desc;
-+	int ret;
-+
-+	lpass_regmap_config.name = "cc";
-+	desc = &lpass_cc_sdm845_desc;
-+
-+	ret = lpass_clocks_sdm845_probe(pdev, 0, desc);
-+	if (ret)
-+		return ret;
-+
-+	lpass_regmap_config.name = "qdsp6ss";
-+	desc = &lpass_qdsp6ss_sdm845_desc;
-+
-+	return lpass_clocks_sdm845_probe(pdev, 1, desc);
-+}
-+
-+static struct platform_driver lpass_cc_sdm845_driver = {
-+	.probe		= lpass_cc_sdm845_probe,
-+	.driver		= {
-+		.name	= "sdm845-lpasscc",
-+		.of_match_table = lpass_cc_sdm845_match_table,
-+	},
-+};
-+
-+static int __init lpass_cc_sdm845_init(void)
-+{
-+	return platform_driver_register(&lpass_cc_sdm845_driver);
-+}
-+subsys_initcall(lpass_cc_sdm845_init);
-+
-+static void __exit lpass_cc_sdm845_exit(void)
-+{
-+	platform_driver_unregister(&lpass_cc_sdm845_driver);
-+}
-+module_exit(lpass_cc_sdm845_exit);
-+
-+MODULE_LICENSE("GPL v2");
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+Thanks,
+Michal
