@@ -1,147 +1,61 @@
-Return-Path: <robherring2@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] ARM: dts: am335x: add support for Moxa UC-2101 open
- platform
-Message-ID: <20180904010258.GA2461@bogus>
-References: <20180830040929.23357-1-sz.lin@moxa.com>
- <20180830040929.23357-3-sz.lin@moxa.com>
+Return-Path: <SRS0=qjSo=MA=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39056 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729416AbeIRTE5 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 18 Sep 2018 15:04:57 -0400
+Received: from dlelxv90.itg.ti.com ([172.17.2.17])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id w8IDWK4p096938
+        for <devicetree@vger.kernel.org>; Tue, 18 Sep 2018 08:32:20 -0500
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by dlelxv90.itg.ti.com (8.14.3/8.13.8) with ESMTP id w8IDWKnA014314
+        for <devicetree@vger.kernel.org>; Tue, 18 Sep 2018 08:32:20 -0500
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [tiL-k3-AD-4.19 PATCH 01/24] dt-bindings: display/ti: add k2g-dss bindings
+Date: Tue, 18 Sep 2018 16:31:49 +0300
+Message-ID: <1537277532-6386-2-git-send-email-jsarha@ti.com>
+In-Reply-To: <1537277532-6386-1-git-send-email-jsarha@ti.com>
+References: <1537277532-6386-1-git-send-email-jsarha@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20180830040929.23357-3-sz.lin@moxa.com>
-Date: Mon, 3 Sep 2018 20:03:00 -0500
-To: SZ Lin =?utf-8?B?KOael+S4iuaZuik=?= <sz.lin@moxa.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Wes Huang <wes.huang@moxa.com>, Fero JD Zhou <FeroJD.Zhou@moxa.com>
+Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
+To: tomi.valkeinen@ti.com, subhajit_paul@ti.com, jjhiblot@ti.com, linux-patch-review@list.ti.com, lcpd_audiovideo@list.ti.com
+Cc: devicetree@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Aug 30, 2018 at 12:09:28PM +0800, SZ Lin (林上智) wrote:
-> Add support for Moxa UC-2101 open platform
-> 
-> The UC-2101 computing platform is designed for industrial embedded
-> data acquisition and processing applications.
-> 
-> The features of UC-2101 are:
-> * eMMC
-> * SPI flash
-> * 1x LAN
-> * 1x RS-232/422/485 ports, software-selectable
-> * EEPROM
-> * TPM 2.0
-> * Watchdog
-> * RTC
-> * User gpio-keys
-> * User LEDs
-> * User button
-> 
-> Signed-off-by: Wes Huang (黃淵河) <wes.huang@moxa.com>
-> Signed-off-by: Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
-> Signed-off-by: SZ Lin (林上智) <sz.lin@moxa.com>
-> ---
->  .../devicetree/bindings/arm/omap/omap.txt     |  3 +
->  arch/arm/boot/dts/Makefile                    |  1 +
->  arch/arm/boot/dts/am335x-moxa-uc-2101.dts     | 63 +++++++++++++++++++
->  3 files changed, 67 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/omap/omap.txt b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> index 2ecc712bf707..c5ca3d6a8099 100644
-> --- a/Documentation/devicetree/bindings/arm/omap/omap.txt
-> +++ b/Documentation/devicetree/bindings/arm/omap/omap.txt
-> @@ -157,6 +157,9 @@ Boards:
->  - AM335X phyCORE-AM335x: Development kit
->    compatible = "phytec,am335x-pcm-953", "phytec,am335x-phycore-som", "ti,am33xx"
->  
-> +- AM335X UC-2100: Wireless-enabled palm-sized industrial computing platform
-> +  compatible = "moxa,uc-2101", "ti,am33xx"
-> +
->  - AM335X UC-8100-ME-T: Communication-centric industrial computing platform
->    compatible = "moxa,uc-8100-me-t", "ti,am33xx";
->  
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index b5bd3de87c33..6167c068601c 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -706,6 +706,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
->  	am335x-evmsk.dtb \
->  	am335x-icev2.dtb \
->  	am335x-lxm.dtb \
-> +	am335x-moxa-uc-2101.dtb \
->  	am335x-moxa-uc-8100-me-t.dtb \
->  	am335x-nano.dtb \
->  	am335x-pdu001.dtb \
-> diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2101.dts b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-> new file mode 100644
-> index 000000000000..d0c1eea4a6c9
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 MOXA Inc. - https://www.moxa.com/
-> + *
-> + * Authors: SZ Lin (林上智) <sz.lin@moxa.com>
-> + *          Wes Huang (黃淵河) <wes.huang@moxa.com>
-> + *          Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include "am335x-moxa-uc-2100-common.dtsi"
-> +
-> +/ {
-> +	model = "Moxa UC-2101";
-> +	compatible = "moxa,uc-2101", "ti,am33xx";
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		led1 {
-> +			label = "UC2100:GREEN:USER";
-> +			gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-> +			default-state = "off";
-> +		};
-> +	};
-> +};
-> +
-> +&am33xx_pinmux {
-> +	pinctrl-names = "default";
-> +
-> +	cpsw_default: cpsw_default {
-> +		pinctrl-single,pins = <
-> +			/* Slave 1 */
-> +			AM33XX_IOPAD(0x90c, PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_crs.rmii1_crs_dv */
-> +			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxerr.rmii1_rxerr */
-> +			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txen.rmii1_txen */
-> +			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd1.rmii1_txd1 */
-> +			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd0.rmii1_txd0 */
-> +			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd1.rmii1_rxd1 */
-> +			AM33XX_IOPAD(0x940, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd0.rmii1_rxd0 */
-> +			AM33XX_IOPAD(0x944, PIN_INPUT_PULLDOWN | MUX_MODE0)	/* mii1_refclk.rmii1_refclk */
-> +		>;
-> +	};
-> +
-> +	spi1_pins: pinmux_spi1 {
-> +		pinctrl-single,pins = <
-> +			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	 /* ecap0_in_pwm0_out.spi1_sclk */
-> +			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart1_ctsn.spi1_cs0 */
-> +			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart0_ctsn.spi1_d0 */
-> +			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart0_rtsn.spi1_d1 */
-> +		>;
-> +	};
-> +};
-> +
-> +&cpsw_emac0 {
-> +	status = "okay";
-> +	phy_id = <&davinci_mdio>, <0x4>;
-> +	phy-mode = "rmii";
-> +};
-> +
-> +&cpsw_emac1 {
-> +	status = "disable";
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-"disabled" is the correct value.
+Add DT bindings for Texas Instruments K2G SoC Display Subsystem. The DSS
+is quite simple, with a single plane and a single output.
 
-> +};
-> -- 
-> 2.19.0.rc1
-> 
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jyri Sarha <jsarha@ti.com>
+---
+ .../devicetree/bindings/display/ti/ti,k2g-dss.txt         | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/ti/ti,k2g-dss.txt
+
+diff --git a/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.txt b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.txt
+new file mode 100644
+index 0000000..1af1142
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/ti/ti,k2g-dss.txt
+@@ -0,0 +1,15 @@
++Texas Instruments K2G Display Subsystem
++=======================================
++
++Required properties:
++- compatible: "ti,k2g-dss"
++- reg: address and length of the register spaces for DSS submodules
++- reg-names: "cfg", "common", "vid1", "ovr1", "vp1"
++- clocks: phandle to fclk and vp1 clocks
++- clock-names: "fck", "vp1"
++- interrupts: phandle to the DISPC interrupt
++
++The DSS outputs are described using the device graphs as documented in
++Documentation/devicetree/bindings/graph.txt. K2G DSS has a single DPI output as
++port 0.
++
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
