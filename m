@@ -1,105 +1,120 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH] ARM: dts: xilinx: Fix I2C and SPI bus warnings
-Date: Tue, 18 Sep 2018 12:52:26 +0200
-Message-ID: <807013e3-b4c0-3a54-5464-15e7bed4e187@xilinx.com>
-References: <20180913181245.25484-15-robh@kernel.org>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V2 09/27] mmc: mmci: modify dma_setup callback
+Date: Tue, 18 Sep 2018 12:55:26 +0200
+Message-ID: <1537268144-21152-10-git-send-email-ludovic.Barre@st.com>
+References: <1537268144-21152-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180913181245.25484-15-robh@kernel.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Michal Simek <michal.simek@xilinx.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537268144-21152-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, benjamin.gaignard@linaro.org, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 13.9.2018 20:12, Rob Herring wrote:
-> dtc has new checks for I2C and SPI buses. Fix the warnings in node names
-> and unit-addresses.
-> 
-> arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@52: I2C bus unit address format error, expected "34"
-> arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@53: I2C bus unit address format error, expected "35"
-> arch/arm/boot/dts/zynq-zc702.dtb: Warning (i2c_bus_reg): /amba/i2c@e0004000/i2c-mux@74/i2c@7/hwmon@54: I2C bus unit address format error, expected "36"
-> arch/arm/boot/dts/zynq-zc770-xm013.dtb: Warning (spi_bus_reg): /amba/spi@e0006000/eeprom@0: SPI bus unit address format error, expected "2"
-> arch/arm/boot/dts/zynq-zc770-xm010.dtb: Warning (spi_bus_reg): /amba/spi@e0007000/flash@0: SPI bus unit address format error, expected "1"
-> 
-> Cc: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> Please apply to the sub-arch tree. The dtc changes haven't landed, but 
-> will for 4.20.
-> 
->  arch/arm/boot/dts/zynq-zc702.dts       | 12 ++++++------
->  arch/arm/boot/dts/zynq-zc770-xm010.dts |  2 +-
->  arch/arm/boot/dts/zynq-zc770-xm013.dts |  2 +-
->  3 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/zynq-zc702.dts b/arch/arm/boot/dts/zynq-zc702.dts
-> index cc5a3dc2b4a0..27cd6cb52f1b 100644
-> --- a/arch/arm/boot/dts/zynq-zc702.dts
-> +++ b/arch/arm/boot/dts/zynq-zc702.dts
-> @@ -174,17 +174,17 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			reg = <7>;
-> -			hwmon@52 {
-> +			hwmon@34 {
->  				compatible = "ti,ucd9248";
-> -				reg = <52>;
-> +				reg = <0x34>;
->  			};
-> -			hwmon@53 {
-> +			hwmon@35 {
->  				compatible = "ti,ucd9248";
-> -				reg = <53>;
-> +				reg = <0x35>;
->  			};
-> -			hwmon@54 {
-> +			hwmon@36 {
->  				compatible = "ti,ucd9248";
-> -				reg = <54>;
-> +				reg = <0x36>;
->  			};
->  		};
->  	};
-> diff --git a/arch/arm/boot/dts/zynq-zc770-xm010.dts b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-> index 0e1bfdd3421f..0dd352289a45 100644
-> --- a/arch/arm/boot/dts/zynq-zc770-xm010.dts
-> +++ b/arch/arm/boot/dts/zynq-zc770-xm010.dts
-> @@ -68,7 +68,7 @@
->  	status = "okay";
->  	num-cs = <4>;
->  	is-decoded-cs = <0>;
-> -	flash@0 {
-> +	flash@1 {
->  		compatible = "sst25wf080", "jedec,spi-nor";
->  		reg = <1>;
->  		spi-max-frequency = <1000000>;
-> diff --git a/arch/arm/boot/dts/zynq-zc770-xm013.dts b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-> index 651913f1afa2..4ae2c85df3a0 100644
-> --- a/arch/arm/boot/dts/zynq-zc770-xm013.dts
-> +++ b/arch/arm/boot/dts/zynq-zc770-xm013.dts
-> @@ -62,7 +62,7 @@
->  	status = "okay";
->  	num-cs = <4>;
->  	is-decoded-cs = <0>;
-> -	eeprom: eeprom@0 {
-> +	eeprom: eeprom@2 {
->  		at25,byte-len = <8192>;
->  		at25,addr-mode = <2>;
->  		at25,page-size = <32>;
-> 
+From: Ludovic Barre <ludovic.barre@st.com>
 
-Applied. All checked.
+This patch creates a generic mmci_dma_setup which calls
+dma_setup callback and manages common next_cookie.
+This patch is needed for sdmmc variant which has a different
+dma settings.
 
-Thanks,
-Michal
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c          | 25 +++++++++++++------------
+ drivers/mmc/host/mmci.h          |  1 +
+ drivers/mmc/host/mmci_qcom_dml.c |  2 ++
+ 3 files changed, 16 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 55c4222..2a433ed 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -398,6 +398,17 @@ void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+ 		host->ops->get_next_data(host, data);
+ }
+ 
++int mmci_dma_setup(struct mmci_host *host)
++{
++	if (!host->ops || !host->ops->dma_setup)
++		return 0;
++
++	/* initialize pre request cookie */
++	host->next_cookie = 1;
++
++	return host->ops->dma_setup(host);
++}
++
+ static void
+ mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
+ {
+@@ -472,7 +483,7 @@ struct mmci_dmae_priv {
+ 
+ #define mmci_dmae_inprogress(dmae) ((dmae)->in_progress)
+ 
+-static int mmci_dma_setup(struct mmci_host *host)
++int mmci_dmae_setup(struct mmci_host *host)
+ {
+ 	const char *rxname, *txname;
+ 	struct mmci_dmae_priv *dmae;
+@@ -488,9 +499,6 @@ static int mmci_dma_setup(struct mmci_host *host)
+ 	dmae->tx_channel = dma_request_slave_channel(mmc_dev(host->mmc),
+ 						     "tx");
+ 
+-	/* initialize pre request cookie */
+-	host->next_cookie = 1;
+-
+ 	/*
+ 	 * If only an RX channel is specified, the driver will
+ 	 * attempt to use it bidirectionally, however if it is
+@@ -531,9 +539,6 @@ static int mmci_dma_setup(struct mmci_host *host)
+ 			host->mmc->max_seg_size = max_seg_size;
+ 	}
+ 
+-	if (host->ops && host->ops->dma_setup)
+-		return host->ops->dma_setup(host);
+-
+ 	return 0;
+ }
+ 
+@@ -793,14 +798,10 @@ static struct mmci_host_ops mmci_variant_ops = {
+ 	.prep_data = mmci_dmae_prep_data,
+ 	.unprep_data = mmci_dmae_unprep_data,
+ 	.get_next_data = mmci_dmae_get_next_data,
++	.dma_setup = mmci_dmae_setup,
+ };
+ #else
+ /* Blank functions if the DMA engine is not available */
+-static inline int mmci_dma_setup(struct mmci_host *host)
+-{
+-	return 0;
+-}
+-
+ static inline void mmci_dma_release(struct mmci_host *host)
+ {
+ }
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index c0a84cf..5057e13 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -335,4 +335,5 @@ int mmci_dmae_prep_data(struct mmci_host *host, struct mmc_data *data,
+ void mmci_dmae_unprep_data(struct mmci_host *host, struct mmc_data *data,
+ 			   int err);
+ void mmci_dmae_get_next_data(struct mmci_host *host, struct mmc_data *data);
++int mmci_dmae_setup(struct mmci_host *host);
+ 
+diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
+index 432a823..003c497 100644
+--- a/drivers/mmc/host/mmci_qcom_dml.c
++++ b/drivers/mmc/host/mmci_qcom_dml.c
+@@ -126,6 +126,8 @@ static int qcom_dma_setup(struct mmci_host *host)
+ 	int consumer_id, producer_id;
+ 	struct device_node *np = host->mmc->parent->of_node;
+ 
++	mmci_dmae_setup(host);
++
+ 	consumer_id = of_get_dml_pipe_index(np, "tx");
+ 	producer_id = of_get_dml_pipe_index(np, "rx");
+ 
+-- 
+2.7.4
