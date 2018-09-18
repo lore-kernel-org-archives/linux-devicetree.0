@@ -1,69 +1,52 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH] powerpc/mpc85xx: fix issues in clock node
-Date: Tue, 18 Sep 2018 17:24:05 -0500
-Message-ID: <ee1869ae946229fe01f5269fcebd855a2fc8770d.camel@buserror.net>
-References: <20180911021224.30558-1-andy.tang@nxp.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 2/3] dmaengine: Add Slave and Cyclic mode support for
+ Actions Semi Owl S900 SoC
+Date: Tue, 18 Sep 2018 15:52:36 -0700
+Message-ID: <20180918225236.GA17306@Mani-XPS-13-9360>
+References: <20180901164215.3683-1-manivannan.sadhasivam@linaro.org>
+ <20180901164215.3683-3-manivannan.sadhasivam@linaro.org>
+ <20180918163512.GE2613@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20180911021224.30558-1-andy.tang@nxp.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: andy.tang@nxp.com
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180918163512.GE2613@vkoul-mobl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-09-11 at 10:12 +0800, andy.tang@nxp.com wrote:
-> From: Yuantian Tang <andy.tang@nxp.com>
+On Tue, Sep 18, 2018 at 09:35:12AM -0700, Vinod wrote:
+> On 01-09-18, 22:12, Manivannan Sadhasivam wrote:
 > 
-> The compatible string is not correct in the clock node.
-> The clocks property refers to the wrong node too.
-> This patch is to fix them.
+> > @@ -364,6 +372,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
+> >  			OWL_DMA_MODE_DT_DCU | OWL_DMA_MODE_SAM_INC |
+> >  			OWL_DMA_MODE_DAM_INC;
+> >  
+> > +		break;
+> > +	case DMA_MEM_TO_DEV:
+> > +		mode |= OWL_DMA_MODE_TS(vchan->drq)
+> > +			| OWL_DMA_MODE_ST_DCU | OWL_DMA_MODE_DT_DEV
+> > +			| OWL_DMA_MODE_SAM_INC | OWL_DMA_MODE_DAM_CONST;
+> > +
+> > +		/* Handle bus width for UART */
+> > +		if (sconfig->dst_addr_width == DMA_SLAVE_BUSWIDTH_1_BYTE)
+> > +			mode |= OWL_DMA_MODE_NDDBW_8BIT;
 > 
-> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
-> ---
->  arch/powerpc/boot/dts/fsl/t1023si-post.dtsi |    8 ++++----
->  1 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-> b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-> index 4908af5..763caf4 100644
-> --- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-> @@ -348,7 +348,7 @@
->  		mux0: mux0@0 {
->  			#clock-cells = <0>;
->  			reg = <0x0 4>;
-> -			compatible = "fsl,core-mux-clock";
-> +			compatible = "fsl,qoriq-core-mux-2.0";
->  			clocks = <&pll0 0>, <&pll0 1>;
->  			clock-names = "pll0_0", "pll0_1";
->  			clock-output-names = "cmux0";
-> @@ -356,9 +356,9 @@
->  		mux1: mux1@20 {
->  			#clock-cells = <0>;
->  			reg = <0x20 4>;
-> -			compatible = "fsl,core-mux-clock";
-> -			clocks = <&pll0 0>, <&pll0 1>;
-> -			clock-names = "pll0_0", "pll0_1";
-> +			compatible = "fsl,qoriq-core-mux-2.0";
-> +			clocks = <&pll1 0>, <&pll1 1>;
-> +			clock-names = "pll1_0", "pll1_1";
->  			clock-output-names = "cmux1";
->  		};
->  	};
+> this is fine per se, but not correct way to handle in dmaengine driver.
+> You should be agnostic to user of dmaengine, so handle all the buswidths
+> the IP block supports and update the values accordingly. That way new
+> uses can be added w/o requiring change in dmaengine driver
+>
 
-These are the legacy nodes.  Why not just remove them instead of fixing them? 
-Now that the cpufreq driver is fixed we could get rid of the legacy nodes for
-all the chips.
+Hi Vinod,
 
--Scott
+Currently, all members of Owl family supports only 32bit and 8bit
+bus widths. 32bit is common for all peripherals and 8bit applies to only
+UART since the internal buffer is 8bit wide. So, this makes sense to me!
+
+Thanks,
+Mani
+
+> -- 
+> ~Vinod
