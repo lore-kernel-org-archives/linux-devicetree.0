@@ -1,60 +1,69 @@
-From: Vikash Garodia <vgarodia@codeaurora.org>
-Subject: [PATCH v8 5/5] dt-bindings: media: Document bindings for venus firmware device
-Date: Wed, 19 Sep 2018 03:29:13 +0530
-Message-ID: <1537307954-9729-6-git-send-email-vgarodia@codeaurora.org>
-References: <1537307954-9729-1-git-send-email-vgarodia@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537307954-9729-1-git-send-email-vgarodia@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH] powerpc/mpc85xx: fix issues in clock node
+Date: Tue, 18 Sep 2018 17:24:05 -0500
+Message-ID: <ee1869ae946229fe01f5269fcebd855a2fc8770d.camel@buserror.net>
+References: <20180911021224.30558-1-andy.tang@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20180911021224.30558-1-andy.tang@nxp.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: andy.tang@nxp.com
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding documentation for firmware loader for video
-hardware running on qualcomm chip.
+On Tue, 2018-09-11 at 10:12 +0800, andy.tang@nxp.com wrote:
+> From: Yuantian Tang <andy.tang@nxp.com>
+> 
+> The compatible string is not correct in the clock node.
+> The clocks property refers to the wrong node too.
+> This patch is to fix them.
+> 
+> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> ---
+>  arch/powerpc/boot/dts/fsl/t1023si-post.dtsi |    8 ++++----
+>  1 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+> b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+> index 4908af5..763caf4 100644
+> --- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+> +++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
+> @@ -348,7 +348,7 @@
+>  		mux0: mux0@0 {
+>  			#clock-cells = <0>;
+>  			reg = <0x0 4>;
+> -			compatible = "fsl,core-mux-clock";
+> +			compatible = "fsl,qoriq-core-mux-2.0";
+>  			clocks = <&pll0 0>, <&pll0 1>;
+>  			clock-names = "pll0_0", "pll0_1";
+>  			clock-output-names = "cmux0";
+> @@ -356,9 +356,9 @@
+>  		mux1: mux1@20 {
+>  			#clock-cells = <0>;
+>  			reg = <0x20 4>;
+> -			compatible = "fsl,core-mux-clock";
+> -			clocks = <&pll0 0>, <&pll0 1>;
+> -			clock-names = "pll0_0", "pll0_1";
+> +			compatible = "fsl,qoriq-core-mux-2.0";
+> +			clocks = <&pll1 0>, <&pll1 1>;
+> +			clock-names = "pll1_0", "pll1_1";
+>  			clock-output-names = "cmux1";
+>  		};
+>  	};
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
----
- Documentation/devicetree/bindings/media/qcom,venus.txt | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+These are the legacy nodes.  Why not just remove them instead of fixing them? 
+Now that the cpufreq driver is fixed we could get rid of the legacy nodes for
+all the chips.
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-index 00d0d1b..7e04586 100644
---- a/Documentation/devicetree/bindings/media/qcom,venus.txt
-+++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-@@ -53,7 +53,7 @@
- 
- * Subnodes
- The Venus video-codec node must contain two subnodes representing
--video-decoder and video-encoder.
-+video-decoder and video-encoder, and one optional firmware subnode.
- 
- Every of video-encoder or video-decoder subnode should have:
- 
-@@ -79,6 +79,13 @@ Every of video-encoder or video-decoder subnode should have:
- 		    power domain which is responsible for collapsing
- 		    and restoring power to the subcore.
- 
-+The firmware subnode must have:
-+
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
- * An Example
- 	video-codec@1d00000 {
- 		compatible = "qcom,msm8916-venus";
-@@ -105,4 +112,8 @@ Every of video-encoder or video-decoder subnode should have:
- 			clock-names = "core";
- 			power-domains = <&mmcc VENUS_CORE1_GDSC>;
- 		};
-+
-+		video-firmware {
-+			iommus = <&apps_iommu 0x10b2 0x0>;
-+		};
- 	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+-Scott
