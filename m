@@ -1,142 +1,101 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH v3 1/2] of: base: Introduce of_alias_get_alias_list() to check alias IDs
-Date: Tue, 18 Sep 2018 16:57:58 +0200
-Message-ID: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537282676.git.michal.simek@xilinx.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v3 00/16] Another round of tsens cleanups
+Date: Tue, 18 Sep 2018 08:01:20 -0700
+Message-ID: <CAHLCerMknG771sdXwPkU4RUg33nuSCNx2HA+1LHmbz_SkzD5Pg@mail.gmail.com>
+References: <cover.1536744310.git.amit.kucheria@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1536744310.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Andy Gross <andy.gross@linaro.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The function travels the lookup table to record alias ids for the given
-device match structures and alias stem.
-This function will be used by serial drivers to check if requested alias
-is allocated or free to use.
+Hi Eduardo, Andy,
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
+On Wed, Sep 12, 2018 at 2:53 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> This is another series of tsens cleanups before we add interrupt support. This applies on top of 4.19-rc2.
+>
+> Patches [1-6] can directly be applied by Eduardo.
+> Patches [9-16] can directly be applied by Andy.
+> Patches [7-8] introduce a new check and needs review and can then be
+> applied completely separately by Eduardo.
+>
+> There is a *dependency* however. Patch 1 should be applied to the tree
+> before the DT changes in patches 9 and 10.
 
-Changes in v3:
-- Fix subject s/of_alias_check_id/of_alias_get_alias_list/
-- And also fix commit message description to match
-  of_alias_get_alias_list()
-- mark empty function with inline
+To clarify here, it might be easier if Eduardo acks patches 9 and 10
+so that they can be merged through Andy's tree before the rest of the
+DT patches. That would remove the need to create any immutable trees
+or having to worry about the ordering of the patches.
 
-Changes in v2:
-- Add empty function for !CONFIG_OF case
-- Add return to that function
-- Add Rob's Reviewed-by tag
+Just a suggestion.
 
-Based on discussion with Rob
-https://lkml.org/lkml/2018/4/27/397
-nbits is passed to the function not to limit only to 32/64bit fields.
-
-Greg: Please apply this together with serial: uartps: Change uart ID
-port allocation. Rob is fine with that (link above)
-
----
- drivers/of/base.c  | 52 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of.h | 10 ++++++++++
- 2 files changed, 62 insertions(+)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 74eaedd5b860..33011b88ed3f 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -16,6 +16,7 @@
- 
- #define pr_fmt(fmt)	"OF: " fmt
- 
-+#include <linux/bitmap.h>
- #include <linux/console.h>
- #include <linux/ctype.h>
- #include <linux/cpu.h>
-@@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
- EXPORT_SYMBOL_GPL(of_alias_get_id);
- 
- /**
-+ * of_alias_get_alias_list - Get alias list for the given device driver
-+ * @matches:	Array of OF device match structures to search in
-+ * @stem:	Alias stem of the given device_node
-+ * @bitmap:	Bitmap field pointer
-+ * @nbits:	Maximum number of alias ID which can be recorded it bitmap
-+ *
-+ * The function travels the lookup table to record alias ids for the given
-+ * device match structures and alias stem.
-+ *
-+ * Return:	0 or -ENOSYS when !CONFIG_OF
-+ */
-+int of_alias_get_alias_list(const struct of_device_id *matches,
-+			     const char *stem, unsigned long *bitmap,
-+			     unsigned int nbits)
-+{
-+	struct alias_prop *app;
-+
-+	/* Zero bitmap field to make sure that all the time it is clean */
-+	bitmap_zero(bitmap, nbits);
-+
-+	mutex_lock(&of_mutex);
-+	pr_debug("%s: Looking for stem: %s\n", __func__, stem);
-+	list_for_each_entry(app, &aliases_lookup, link) {
-+		pr_debug("%s: stem: %s, id: %d\n",
-+			 __func__, app->stem, app->id);
-+
-+		if (strcmp(app->stem, stem) != 0) {
-+			pr_debug("%s: stem comparison doesn't passed %s\n",
-+				 __func__, app->stem);
-+			continue;
-+		}
-+
-+		if (app->id >= nbits) {
-+			pr_debug("%s: ID %d greater then bitmap field %d\n",
-+				__func__, app->id, nbits);
-+			continue;
-+		}
-+
-+		if (of_match_node(matches, app->np)) {
-+			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
-+			set_bit(app->id, bitmap);
-+		}
-+		/* Alias exist but it not compatible with matches */
-+	}
-+	mutex_unlock(&of_mutex);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_alias_get_alias_list);
-+
-+/**
-  * of_alias_get_highest_id - Get highest alias id for the given stem
-  * @stem:	Alias stem to be examined
-  *
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 99b0ebf49632..d51457b40725 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -392,6 +392,9 @@ extern int of_phandle_iterator_args(struct of_phandle_iterator *it,
- extern void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align));
- extern int of_alias_get_id(struct device_node *np, const char *stem);
- extern int of_alias_get_highest_id(const char *stem);
-+extern int of_alias_get_alias_list(const struct of_device_id *matches,
-+				   const char *stem, unsigned long *bitmap,
-+				   unsigned int nbits);
- 
- extern int of_machine_is_compatible(const char *compat);
- 
-@@ -893,6 +896,13 @@ static inline int of_alias_get_highest_id(const char *stem)
- 	return -ENOSYS;
- }
- 
-+static inline int of_alias_get_alias_list(const struct of_device_id *matches,
-+					  const char *stem, unsigned long *bitmap,
-+					  unsigned int nbits)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_machine_is_compatible(const char *compat)
- {
- 	return 0;
--- 
-1.9.1
+> In this series, I've collected all outstanding tsens patches by combining
+> the patches from the v2 posting with 3 DT patches for sdm845 thermal zones
+> and msm8916 camera and gpu thermal zones. Details are as follows:
+>
+> - splitup 8916 and 8974 register address spaces for SROT and TM
+> - cleanups: move to spdx, dead code removal, removal of id field
+> - Add support to map the SROT address space for DTs that list it separately
+> - Check if TSENS IP is enabled in firmware by querying the SROT space
+> - Add myself as maintainer of tsens
+> - Add one-off patches adding sdm845 thermal zones and msm8916 gpu and
+>   camera thermal zones to this series.
+>
+> Changes since v2:
+> - Split up changes to code and dt and within dt, split into arm and arm64
+>   patches
+> - Rearrange the sequence of patches so that the thermal maintainer can pick
+>   up the first part and the platform maintainer can pick up the latter part
+>   of the series
+> - Drop patch 09/11 because it causes some issues on systems with
+>   non-contiguous enabled sensors e.g. db410c
+> - Drop patch 10/11 because reg-name property isn't encouraged
+> - Fix a bug on msm8916 to check if IP is enabled in firmware. This was due
+>   to the register being at a different offset on msm8916. Fixed by coding
+>   this information as private data.
+>
+> Changes since v1:
+> - Split up changes that split the address space and added qcom,sensors
+>   property into two separate patches
+> - Remove brackets in typo correction patch
+>
+> Amit Kucheria (16):
+>   thermal: tsens: Prepare 8916 and 8974 tsens to use SROT and TM address
+>     space
+>   thermal: tsens: Add SPDX license identifiers
+>   thermal: tsens: Get rid of dead code
+>   thermal: tsens: Rename map field in order to add a second address map
+>   thermal: tsens: Add the SROT address map
+>   MAINTAINERS: Add entry for Qualcomm TSENS thermal drivers
+>   thermal: tsens: Pass register offsets as private data
+>   thermal: tsens: Check if the IP is correctly enabled by firmware
+>   arm: dts: msm8974: thermal: split address space into two
+>   arm64: dts: msm8916: thermal: split address space into two
+>   arm: dts: msm8974: thermal: Add "qcom,sensors" property
+>   arm64: dts: msm8916: thermal: Add "qcom,sensors" property
+>   dt-bindings: thermal: Fix a typo in documentation
+>   arm64: dts: msm8916: Add gpu thermal zone
+>   arm64: dts: msm8916: Add camera thermal zone
+>   arm64: dts: sdm845: enable tsens thermal zones
+>
+>  .../devicetree/bindings/thermal/thermal.txt   |   2 +-
+>  MAINTAINERS                                   |   7 +
+>  arch/arm/boot/dts/qcom-msm8974.dtsi           |   6 +-
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi         |  47 ++++-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          | 170 ++++++++++++++++++
+>  drivers/thermal/qcom/tsens-8916.c             |  12 +-
+>  drivers/thermal/qcom/tsens-8960.c             |  41 ++---
+>  drivers/thermal/qcom/tsens-8974.c             |  12 +-
+>  drivers/thermal/qcom/tsens-common.c           |  62 ++++---
+>  drivers/thermal/qcom/tsens-v2.c               |   8 +-
+>  drivers/thermal/qcom/tsens.c                  |  19 +-
+>  drivers/thermal/qcom/tsens.h                  |  23 +--
+>  12 files changed, 309 insertions(+), 100 deletions(-)
+>
+> --
+> 2.17.1
+>
