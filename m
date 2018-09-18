@@ -1,95 +1,78 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 2/2] pci: dwc: pci-dra7xx: Enable errata i870 for both
- EP and RC mode
-Date: Tue, 18 Sep 2018 10:41:47 +0100
-Message-ID: <20180918094147.GA26886@e107981-ln.cambridge.arm.com>
-References: <20180917180635.26996-1-vigneshr@ti.com>
- <20180917180635.26996-3-vigneshr@ti.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH 0/3] ARM: dspi: Provide slave mode support for Vybryd
+ vf610
+Date: Tue, 18 Sep 2018 11:42:33 +0200
+Message-ID: <20180918114233.0622399c@jawa>
+References: <20180918093437.26799-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/vk1mDwG/8QNvqvfmzq9ddah"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180917180635.26996-3-vigneshr@ti.com>
+In-Reply-To: <20180918093437.26799-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Esben Haabendal <eha@deif.com>, Martin =?UTF-8?B?SHVuZGViw7hsbA==?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 11:36:35PM +0530, Vignesh R wrote:
-> Errata i870 is applicable in both EP and RC mode. Therefore rename
-> function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
-> workaround, to dra7xx_pcie_unaligned_memaccess() and call it from a
-> common place. So, that errata workaround is applied for both modes of
-> operation.
-> 
-> Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Acked-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  drivers/pci/controller/dwc/pci-dra7xx.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-> index ce9224a36f62..43711561a199 100644
-> --- a/drivers/pci/controller/dwc/pci-dra7xx.c
-> +++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-> @@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
->  };
->  
->  /*
-> - * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-> + * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
->   * @dra7xx: the dra7xx device where the workaround should be applied
->   *
->   * Access to the PCIe slave port that are not 32-bit aligned will result
-> @@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
->   *
->   * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
->   */
-> -static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
-> +static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
->  {
->  	int ret;
->  	struct device_node *np = dev->of_node;
-> @@ -695,6 +695,10 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  	if (dra7xx->link_gen < 0 || dra7xx->link_gen > 2)
->  		dra7xx->link_gen = 2;
->  
-> +	ret = dra7xx_pcie_unaligned_memaccess(dev);
-> +	if (ret)
-> +		dev_err(dev, "WA for Errata i870 not applied. Update DT\n");
+--Sig_/vk1mDwG/8QNvqvfmzq9ddah
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Vignesh,
+Dear All,
 
-I am not sure you want this code merged into an -rc given that without
-a DTS update is basically pointless (and for that bindings should at
-least be merged too as a fix).
+By a mistake I've forgotten to add (to CC/TO) some developers who worked
+on this driver before (they were not generated from get_maintainers.py
+script).
 
-I would also like to understand why a dev_err() is sufficient, can the
-controller work without the WA applied ?
+I'm sending the notification now.
 
-Nit: Lastly, in the dev_err() message, it is your call/code but I would not
-print "update DT", kernel log is not a command prompt but that's just my
-opinion so it is up to you.
+> This patch series provides support for DSPI slave mode operation.
+> It tries to maximally reuse current DMA driver (including its
+> limitations).
+>=20
+> For testing the spidev_test program has been used.
+> Test script for this patch can be found here:
+> https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
+>=20
+> Lukasz Majewski (3):
+>   dt-bindings: spi: Provide bindings for fsl dspi working in slave
+> mode ARM: dspi: Provide per DSPI instance of the MCR register (SLAVE
+> mode) ARM: dspi: Provide support for DSPI slave more operation (Vybryd
+>     vf610)
+>=20
+>  .../devicetree/bindings/spi/spi-fsl-dspi.txt       |  8 ++++
+>  drivers/spi/spi-fsl-dspi.c                         | 54
+> ++++++++++++++++------ 2 files changed, 49 insertions(+), 13
+> deletions(-)
+>=20
 
-Thanks,
-Lorenzo
 
->  	switch (mode) {
->  	case DW_PCIE_RC_TYPE:
->  		if (!IS_ENABLED(CONFIG_PCI_DRA7XX_HOST)) {
-> @@ -717,10 +721,6 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
->  		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
->  				   DEVICE_TYPE_EP);
->  
-> -		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
-> -		if (ret)
-> -			goto err_gpio;
-> -
->  		ret = dra7xx_add_pcie_ep(dra7xx, pdev);
->  		if (ret < 0)
->  			goto err_gpio;
-> -- 
-> 2.19.0
-> 
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/vk1mDwG/8QNvqvfmzq9ddah
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlugyIoACgkQAR8vZIA0
+zr2iwwf+JDDXKnvZjSt3h5f4uCKBZ1g48uQLvdPZUdxvlryuUL9ZaXCjaxJ1nQMs
+StKx8nZAQZlAV92Bgr7FdJXX+R7RDb9rRBRUUfKT5Fh1jZHAgMHUTibnyAC43UQO
+0TAUMf1OTFuHUMLmfcgsoOTx3S2MnGGgOJP0vyrn8jkItEk5SVsQuBUAINbzQlNy
+WKI24AQ3PP7NLv63JaGKMwNt049i66On8/RHyzL6uLvIGFMOi3lFGNKxy4FdvsAR
+uG7iXfiHaHxv8kyqnVZL39bXqmzrK7xPKK78sSOAolHmbqq8BZTMdLd9Hawx2ohN
+u+xZSjpW3uLA4VWGFlBbCq4yhhZypg==
+=T+bD
+-----END PGP SIGNATURE-----
+
+--Sig_/vk1mDwG/8QNvqvfmzq9ddah--
