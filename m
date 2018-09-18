@@ -1,46 +1,30 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 3/3] scripts/dtc: Update to upstream version
- v1.4.7-14-gc86da84d30e4
-Date: Tue, 18 Sep 2018 13:09:00 -0700
-Message-ID: <6414499d-2261-ef50-617e-a743173a3041@gmail.com>
-References: <20180913202828.15372-1-robh@kernel.org>
- <20180913202828.15372-3-robh@kernel.org>
- <f9684222-fae0-c305-d48a-be77ebb985a3@gmail.com>
- <CAL_JsqLTcLVGCmjTMi8GojomP=VbFQ5EqKcGnOPo=Wwh5Lc_mw@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH V4 1/4] dt-bindings: soc: qcom: Remove SPI controller
+ maximum frequency binding
+Date: Tue, 18 Sep 2018 13:11:01 -0700
+Message-ID: <CAD=FV=URrgXgSOmh-_FXGxH7oZmmKBoPSz3EYx6K9Wr6i38gcQ@mail.gmail.com>
+References: <1537294047-12093-1-git-send-email-dkota@codeaurora.org> <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLTcLVGCmjTMi8GojomP=VbFQ5EqKcGnOPo=Wwh5Lc_mw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Dilip Kota <dkota@codeaurora.org>
+Cc: Stephen Boyd <swboyd@chromium.org>, Mark Brown <broonie@kernel.org>, Matthias Kaehlcke <mka@chromium.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/18/18 11:55, Rob Herring wrote:
-> On Fri, Sep 14, 2018 at 2:32 PM Frank Rowand <frowand.list@gmail.com> wrote:
->>
->> On 09/13/18 13:28, Rob Herring wrote:
->>> Major changes are I2C and SPI bus checks, YAML output format (for
->>> future validation), some new libfdt functions, and more libfdt
->>> validation of dtbs.
->>>
->>> The YAML addition adds an optional dependency on libyaml. pkg-config is
->>> used to test for it and pkg-config became a kconfig dependency in 4.18.
->>
->> For Ubuntu, the libyaml dependency is provided by the packages:
->>
->>    libyaml-0-2
->>    libyaml-dev
-> 
-> Yes, but as it is not yet required by anything in the kernel I don't
-> think that needs to be documented yet. Also, offhand, I don't think we
-> generally document in the kernel distro specifics like package names.
-> 
-> Rob
-> 
+Hi,
 
-Agreed.  I was providing information that might save other people a bit
-of research.  It is sufficiently visible in the email thread and does
-not need to be in the commit message.
+On Tue, Sep 18, 2018 at 11:08 AM Dilip Kota <dkota@codeaurora.org> wrote:
+>
+> SPI controller driver should maintain the maximum frequency
+> of the controller instead of relying on device tree bindings.
+> Because maximum frequency is specific property of SPI
+> controller.
+>
+> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 --
+>  1 file changed, 2 deletions(-)
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
