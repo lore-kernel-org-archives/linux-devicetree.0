@@ -1,112 +1,123 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v5 2/7] dmaengine: xilinx_dma: in axidma slave_sg and
- dma_cyclic mode align split descriptors
-Date: Tue, 18 Sep 2018 09:21:05 -0700
-Message-ID: <20180918162105.GC2613@vkoul-mobl>
-References: <20180907062502.8241-1-andrea.merello@gmail.com>
- <20180907062502.8241-2-andrea.merello@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/3] watchdog: mpc8xxx: provide boot status
+Date: Tue, 18 Sep 2018 09:24:46 -0700
+Message-ID: <20180918162446.GE28152@roeck-us.net>
+References: <c09f541d459c29aca40d54fff152d5645e24b50d.1537163776.git.christophe.leroy@c-s.fr>
+ <207741bf9c994a869f574a93d4fb4152d4e169c9.1537163779.git.christophe.leroy@c-s.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180907062502.8241-2-andrea.merello@gmail.com>
+In-Reply-To: <207741bf9c994a869f574a93d4fb4152d4e169c9.1537163779.git.christophe.leroy@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
+To: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07-09-18, 08:24, Andrea Merello wrote:
-> Whenever a single or cyclic transaction is prepared, the driver
-> could eventually split it over several SG descriptors in order
-> to deal with the HW maximum transfer length.
+On Mon, Sep 17, 2018 at 06:22:50AM +0000, Christophe Leroy wrote:
+> mpc8xxx watchdog driver supports the following platforms:
+> - mpc8xx
+> - mpc83xx
+> - mpc86xx
 > 
-> This could end up in DMA operations starting from a misaligned
-> address. This seems fatal for the HW if DRE (Data Realignment Engine)
-> is not enabled.
+> Those three platforms have a 32 bits register which provides the
+> reason of the last boot, including whether it was caused by the
+> watchdog.
 > 
-> This patch eventually adjusts the transfer size in order to make sure
-> all operations start from an aligned address.
+> mpc8xx: Register RSR, bit SWRS (bit 3)
+> mpc83xx: Register RSR, bit SWRS (bit 28)
+> mpc86xx: Register RSTRSCR, bit WDT_RR (bit 11)
 > 
-> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> This patch maps the register as defined in the device tree and updates
+> wdt.bootstatus based on the value of the watchdog related bit. Then
+> the information can be retrieved via the WDIOC_GETBOOTSTATUS ioctl.
+> 
+> Hereunder is an example of devicetree for mpc8xx,
+> the Reset Status Register being at offset 0x288:
+> 
+> 		WDT: watchdog@0 {
+> 			compatible = "fsl,mpc823-wdt";
+> 			reg = <0x0 0x10 0x288 0x4>;
+> 		};
+> 
+> On the mpc83xx, RSR is at offset 0x910
+> On the mpc86xx, RSTRSCR is at offset 0xe0094
+> 
+> Suggested-by: Radu Rendec <radu.rendec@gmail.com>
+> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> # On mpc885
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 > ---
-> Changes in v2:
->         - don't introduce copy_mask field, rather rely on already-esistent
->           copy_align field. Suggested by Radhey Shyam Pandey
->         - reword title
-> Changes in v3:
-> 	- fix bug introduced in v2: wrong copy size when DRE is enabled
-> 	- use implementation suggested by Radhey Shyam Pandey
-> Changes in v4:
-> 	- rework on the top of 1/6
-> Changes in v5:
-> 	- fix typo in commit title
-> 	- add hint about "DRE" meaning in commit message
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 22 ++++++++++++++++++----
->  1 file changed, 18 insertions(+), 4 deletions(-)
+
+I am ok with the patch, though I would really appreciate change logs
+in the future. Consider this an informal Reviewed-by:.
+Waiting for DT review before final approval.
+
+Guenter
+
+>  drivers/watchdog/mpc8xxx_wdt.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
 > 
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index a3aaa0e34cc7..aaa6de8a70e4 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -954,15 +954,28 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
+> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
+> index 1dcf5f10cdd9..069072e6747d 100644
+> --- a/drivers/watchdog/mpc8xxx_wdt.c
+> +++ b/drivers/watchdog/mpc8xxx_wdt.c
+> @@ -47,6 +47,7 @@ struct mpc8xxx_wdt {
+>  struct mpc8xxx_wdt_type {
+>  	int prescaler;
+>  	bool hw_enabled;
+> +	u32 rsr_mask;
+>  };
 >  
->  /**
->   * xilinx_dma_calc_copysize - Calculate the amount of data to copy
-> + * @chan: Driver specific DMA channel
->   * @size: Total data that needs to be copied
->   * @done: Amount of data that has been already copied
->   *
->   * Return: Amount of data that has to be copied
->   */
-> -static int xilinx_dma_calc_copysize(int size, int done)
-> +static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
-> +				    int size, int done)
-
-align to preceeding line opening brace please
-
->  {
-> -	return min_t(size_t, size - done,
-> +	size_t copy = min_t(size_t, size - done,
->  		     XILINX_DMA_MAX_TRANS_LEN);
-
-so we can do this way in patch 1:
-
-        size t copy;
-
-        copy =  min_t(size_t, size - done,
-                      XILINX_DMA_MAX_TRANS_LEN);
-
-        return copy;
-
-and then add these here, feels like we are redoing change introduced in
-patch 1..
-
-
-> +	if ((copy + done < size) &&
-> +	    chan->xdev->common.copy_align) {
-> +		/*
-> +		 * If this is not the last descriptor, make sure
-> +		 * the next one will be properly aligned
-> +		 */
-> +		copy = rounddown(copy,
-> +				 (1 << chan->xdev->common.copy_align));
+>  struct mpc8xxx_wdt_ddata {
+> @@ -159,6 +160,24 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>  		return -ENODEV;
+>  	}
+>  
+> +	res = platform_get_resource(ofdev, IORESOURCE_MEM, 1);
+> +	if (res) {
+> +		bool status;
+> +		u32 __iomem *rsr = ioremap(res->start, resource_size(res));
+> +
+> +		if (!rsr)
+> +			return -ENOMEM;
+> +
+> +		status = in_be32(rsr) & wdt_type->rsr_mask;
+> +		ddata->wdd.bootstatus = status ? WDIOF_CARDRESET : 0;
+> +		 /* clear reset status bits related to watchdog timer */
+> +		out_be32(rsr, wdt_type->rsr_mask);
+> +		iounmap(rsr);
+> +
+> +		dev_info(dev, "Last boot was %scaused by watchdog\n",
+> +			 status ? "" : "not ");
 > +	}
-> +	return copy;
->  }
+> +
+>  	spin_lock_init(&ddata->lock);
 >  
->  /**
-> @@ -1804,7 +1817,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
->  			 * Calculate the maximum number of bytes to transfer,
->  			 * making sure it is less than the hw limit
->  			 */
-> -			copy = xilinx_dma_calc_copysize(sg_dma_len(sg),
-> +			copy = xilinx_dma_calc_copysize(chan, sg_dma_len(sg),
-
-why not keep chan in patch 1 and add only handling in patch 2, seems
-less churn to me..
-
--- 
-~Vinod
+>  	ddata->wdd.info = &mpc8xxx_wdt_info,
+> @@ -216,6 +235,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
+>  		.compatible = "mpc83xx_wdt",
+>  		.data = &(struct mpc8xxx_wdt_type) {
+>  			.prescaler = 0x10000,
+> +			.rsr_mask = BIT(3), /* RSR Bit SWRS */
+>  		},
+>  	},
+>  	{
+> @@ -223,6 +243,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
+>  		.data = &(struct mpc8xxx_wdt_type) {
+>  			.prescaler = 0x10000,
+>  			.hw_enabled = true,
+> +			.rsr_mask = BIT(20), /* RSTRSCR Bit WDT_RR */
+>  		},
+>  	},
+>  	{
+> @@ -230,6 +251,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
+>  		.data = &(struct mpc8xxx_wdt_type) {
+>  			.prescaler = 0x800,
+>  			.hw_enabled = true,
+> +			.rsr_mask = BIT(28), /* RSR Bit SWRS */
+>  		},
+>  	},
+>  	{},
+> -- 
+> 2.13.3
+> 
