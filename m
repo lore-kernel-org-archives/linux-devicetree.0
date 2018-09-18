@@ -1,38 +1,34 @@
-Return-Path: <SRS0=NUHq=LV=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] dt-bindings: timer: renesas: tmu: document R8A779{7|8}0
- bindings
-Message-ID: <72db4d8d-7b3d-7368-02a4-f652a7bc810d@cogentembedded.com>
-Date: Fri, 7 Sep 2018 23:02:53 +0300
+Return-Path: <SRS0=npSy=MA=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
+References: <1536748914-27416-1-git-send-email-fabrizio.castro@bp.renesas.com> <1536748914-27416-4-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1536748914-27416-4-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Sep 2018 09:59:42 +0200
+Message-ID: <CAMuHMdW40QN82__KwC9i-asn9MtwmU0+6MHsUPv40Mxr3RAxVQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] dt-bindings: clock: renesas: cpg-mssr: Document r8a774c0
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car V3{M|H} (R8A779{7|8}0) SoC in the Renesas TMU bindings;
-the TMU hardware in those is the Renesas standard 3-channel timer unit.
+On Wed, Sep 12, 2018 at 12:42 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> This patch documents RZ/G2E (a.k.a. R8A774C0) bindings for the
+> Clock Pulse Generator driver.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v4.20.
 
----
-The patch is against the 'tip.git' repo's 'timers/core' branch.
+Gr{oetje,eeting}s,
 
- Documentation/devicetree/bindings/timer/renesas,tmu.txt |    2 ++
- 1 file changed, 2 insertions(+)
+                        Geert
 
-Index: tip/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-===================================================================
---- tip.orig/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-+++ tip/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-@@ -12,6 +12,8 @@ Required Properties:
-     - "renesas,tmu-r8a7740" for the r8a7740 TMU
-     - "renesas,tmu-r8a7778" for the r8a7778 TMU
-     - "renesas,tmu-r8a7779" for the r8a7779 TMU
-+    - "renesas,tmu-r8a77970" for the r8a77970 TMU
-+    - "renesas,tmu-r8a77980" for the r8a77980 TMU
-     - "renesas,tmu" for any TMU.
-       This is a fallback for the above renesas,tmu-* entries
- 
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
