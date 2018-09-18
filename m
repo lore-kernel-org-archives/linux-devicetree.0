@@ -1,62 +1,66 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 2/7] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Tue, 18 Sep 2018 09:55:22 +0200
-Message-ID: <20180918075522.GC22202@nazgul.tnic>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
+From: Frieder Schrempf <frieder.schrempf@exceet.de>
+Subject: Re: [PATCH v2 1/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+Date: Tue, 18 Sep 2018 10:22:11 +0200
+Message-ID: <9529c765-cb3b-02f9-df15-4f79cfa48e47@exceet.de>
+References: <1537177710-9379-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1537177710-9379-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20180917133751.453ea6ed@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, michal.simek@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180917133751.453ea6ed@bbrezillon>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh@kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, marek.vasut@gmail.com, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 07:55:00PM +0530, Manish Narani wrote:
-> Add platform specific structures, so that we can add different IP
-> support later using quirks.
+Hi Boris, Yogesh,
+
+On 17.09.2018 13:37, Boris Brezillon wrote:
+> Hi Yogesh,
 > 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  drivers/edac/synopsys_edac.c | 91 +++++++++++++++++++++++++++++++-------------
->  1 file changed, 65 insertions(+), 26 deletions(-)
+> On Mon, 17 Sep 2018 15:18:26 +0530
+> Yogesh Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+> 
+>> +
+>> +	/*
+>> +	 * R/W functions for big- or little-endian registers:
+>> +	 * The FSPI controller's endianness is independent of
+>> +	 * the CPU core's endianness. So far, although the CPU
+>> +	 * core is little-endian the FSPI controller can use
+>> +	 * big-endian or little-endian.
+>> +	 */
+>> +	if (of_property_read_bool(np, "big-endian")) {
+>> +		f->write = fspi_writel_be;
+>> +		f->read = fspi_readl_be;
+>> +	} else {
+>> +		f->write = fspi_writel;
+>> +		f->read = fspi_readl;
+>> +	}
+> 
+> Hm, isn't it something you can extract from the compatible string? I'd
+> rather not allow users to set that in their DT if it's not something
+> you can change.
 
-...
+This was copied from the QSPI driver, but I think Boris is right. This 
+seems to be a fixed SOC-specific setting and we shouldn't set it in the 
+DT. This applies to QSPI and FSPI alike.
 
-> @@ -423,6 +465,7 @@ static void edac_mc_init(struct mem_ctl_info *mci,
->   */
->  static int synps_edac_mc_probe(struct platform_device *pdev)
->  {
-> +	const struct synps_platform_data *p_data;
->  	struct edac_mc_layer layers[2];
->  	struct synps_edac_priv *priv;
->  	struct mem_ctl_info *mci;
-> @@ -435,7 +478,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
->  	if (IS_ERR(baseaddr))
->  		return PTR_ERR(baseaddr);
->  
-> -	if (!edac_get_eccstate(baseaddr)) {
-> +	p_data = of_device_get_match_data(&pdev->dev);
-> +	if (!(p_data->get_eccstate(baseaddr))) {
+Regards,
+Frieder
 
->From last review round:
-
-"Too many parentheses:
-
-        if (!p_data->...
-
-is enough."
-
-So I'm going to stop reviewing this patchset until you go through the
-old review round again and make sure you've incorporated *all* review
-feedback and haven't forgotten some, like the one above.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+> 
+> Regards,
+> 
+> Boris
+> 
