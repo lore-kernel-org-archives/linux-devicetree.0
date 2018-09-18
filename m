@@ -1,82 +1,75 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset controls
-Date: Tue, 18 Sep 2018 08:42:46 +0200
-Message-ID: <CAMuHMdXUsOuYwe0jbC1bCSHMp=Rcu-a_oYOz9f8q3LNxNiO1JQ@mail.gmail.com>
-References: <20180917163955.19023-1-geert+renesas@glider.be> <20180917163955.19023-2-geert+renesas@glider.be>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v7 01/10] i3c: Add core I3C infrastructure
+Date: Tue, 18 Sep 2018 09:00:02 +0200
+Message-ID: <20180918090002.2e4012e6@bbrezillon>
+References: <20180905154108.20770-1-boris.brezillon@bootlin.com>
+        <20180905154108.20770-2-boris.brezillon@bootlin.com>
+        <aa29faa0-237c-3875-64da-b93a1e87ccff@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917163955.19023-2-geert+renesas@glider.be>
+In-Reply-To: <aa29faa0-237c-3875-64da-b93a1e87ccff@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: vitor <Vitor.Soares@synopsys.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 6:40 PM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
-> In some SoCs multiple hardware blocks may share a reset control.
-> The existing reset control API for shared resets will only assert such a
-> reset when the drivers for all hardware blocks agree.
-> The existing exclusive reset control API still allows to assert such a
-> reset, but that impacts all other hardware blocks sharing the reset.
->
-> Sometimes a driver needs to reset a specific hardware block, and be 100%
-> sure it has no impact on other hardware blocks.  This is e.g. the case
-> for virtualization with device pass-through, where the host wants to
-> reset any exported device before and after exporting it for use by the
-> guest, for isolation.
->
-> Hence a new flag for dedicated resets is added to the internal methods,
-> with a new public reset_control_get_dedicated() method, to obtain an
-> exclusive handle to a reset that is dedicated to one specific hardware
-> block.
->
-> This supports both DT-based and lookup-based reset controls.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v4:
->   - New.
->
-> Notes:
->   - Dedicated lookup-based reset controls were not tested,
+Hi Vitor,
 
-And untested code is buggy...
+Sorry for the late reply, I was not at the office last week.
 
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
+On Tue, 11 Sep 2018 11:04:07 +0100
+vitor <Vitor.Soares@synopsys.com> wrote:
 
-> @@ -541,9 +575,25 @@ __reset_controller_by_name(const char *name)
->         return NULL;
->  }
->
-> +static bool __reset_is_dedicated(const struct reset_control_lookup *lookup)
-> +{
-> +       const struct reset_control_lookup *lookup2;
-> +
-> +       list_for_each_entry(lookup, &reset_lookup_list, list) {
+> Hi Boris,
+> 
+> On 05-09-2018 16:40, Boris Brezillon wrote:
+> > +i3c_master_register_new_i3c_devs(struct i3c_master_controller *master)
+> > +{
+> > +	struct i3c_dev_desc *desc;
+> > +	int ret;
+> > +
+> > +	if (!master->init_done)
+> > +		return;
+> > +  
+> If you have a hot-join and call i3c_master_do_daa this function will 
+> return without create the i3c_device.
 
-... as the list_for_each() should use "lookup2" instead of "lookup" (warning
-reported by kbuild robot).
+Hm, you mean if hot-join happens when the I3C master is not yet
+registered? That shouldn't be a problem since all devices will be
+registered at the end of i3c_master_register(). Am I missing something?
+Is this a problem you actually face or just something you found out
+doing code inspection?
 
-> +               if (lookup2 == lookup)
-> +                       continue;
-> +
-> +               if (lookup2->provider == lookup->provider &&
-> +                   lookup2->index == lookup->index)
-> +                       return false;
-> +       }
-> +
-> +       return true;
-> +}
+> 
+> > +	i3c_bus_for_each_i3cdev(master->bus, desc) {
+> > +		if (desc->dev || !desc->info.dyn_addr || desc == master->this)
+> > +			continue;
+> > +
+> > +		desc->dev = kzalloc(sizeof(*desc->dev), GFP_KERNEL);
+> > +		if (!desc->dev)
+> > +			continue;
+> > +
+> > +		desc->dev->bus = master->bus;
+> > +		desc->dev->desc = desc;
+> > +		desc->dev->dev.parent = &master->bus->dev;
+> > +		desc->dev->dev.type = &i3c_device_type;
+> > +		desc->dev->dev.bus = &i3c_bus_type;
+> > +		desc->dev->dev.release = i3c_device_release;
+> > +		dev_set_name(&desc->dev->dev, "%d-%llx", master->bus->id,
+> > +			     desc->info.pid);
+> > +
+> > +		if (desc->boardinfo)
+> > +			desc->dev->dev.of_node = desc->boardinfo->of_node;
+> > +
+> > +		ret = device_register(&desc->dev->dev);
+> > +		if (ret)
+> > +			dev_err(master->parent,
+> > +				"Failed to add I3C device (err = %d)\n", ret);
+> > +	}
+> > +}
 
-Gr{oetje,eeting}s,
+Regards,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Boris
