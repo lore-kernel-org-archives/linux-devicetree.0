@@ -1,123 +1,89 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/3] watchdog: mpc8xxx: provide boot status
-Date: Tue, 18 Sep 2018 09:24:46 -0700
-Message-ID: <20180918162446.GE28152@roeck-us.net>
-References: <c09f541d459c29aca40d54fff152d5645e24b50d.1537163776.git.christophe.leroy@c-s.fr>
- <207741bf9c994a869f574a93d4fb4152d4e169c9.1537163779.git.christophe.leroy@c-s.fr>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v5 4/7] dmaengine: xilinx_dma: program hardware supported
+ buffer length
+Date: Tue, 18 Sep 2018 09:25:08 -0700
+Message-ID: <20180918162508.GD2613@vkoul-mobl>
+References: <20180907062502.8241-1-andrea.merello@gmail.com>
+ <20180907062502.8241-4-andrea.merello@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <207741bf9c994a869f574a93d4fb4152d4e169c9.1537163779.git.christophe.leroy@c-s.fr>
+In-Reply-To: <20180907062502.8241-4-andrea.merello@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 06:22:50AM +0000, Christophe Leroy wrote:
-> mpc8xxx watchdog driver supports the following platforms:
-> - mpc8xx
-> - mpc83xx
-> - mpc86xx
+On 07-09-18, 08:24, Andrea Merello wrote:
+> From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 > 
-> Those three platforms have a 32 bits register which provides the
-> reason of the last boot, including whether it was caused by the
-> watchdog.
+> AXI-DMA IP supports configurable (c_sg_length_width) buffer length
+> register width, hence read buffer length (xlnx,sg-length-width) DT
+> property and ensure that driver doesn't program buffer length
+> exceeding the supported limit. For VDMA and CDMA there is no change.
 > 
-> mpc8xx: Register RSR, bit SWRS (bit 3)
-> mpc83xx: Register RSR, bit SWRS (bit 28)
-> mpc86xx: Register RSTRSCR, bit WDT_RR (bit 11)
-> 
-> This patch maps the register as defined in the device tree and updates
-> wdt.bootstatus based on the value of the watchdog related bit. Then
-> the information can be retrieved via the WDIOC_GETBOOTSTATUS ioctl.
-> 
-> Hereunder is an example of devicetree for mpc8xx,
-> the Reset Status Register being at offset 0x288:
-> 
-> 		WDT: watchdog@0 {
-> 			compatible = "fsl,mpc823-wdt";
-> 			reg = <0x0 0x10 0x288 0x4>;
-> 		};
-> 
-> On the mpc83xx, RSR is at offset 0x910
-> On the mpc86xx, RSTRSCR is at offset 0xe0094
-> 
-> Suggested-by: Radu Rendec <radu.rendec@gmail.com>
-> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> # On mpc885
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com> [rebase, reword]
 > ---
-
-I am ok with the patch, though I would really appreciate change logs
-in the future. Consider this an informal Reviewed-by:.
-Waiting for DT review before final approval.
-
-Guenter
-
->  drivers/watchdog/mpc8xxx_wdt.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+> Changes in v2:
+>         - drop original patch and replace with the one in Xilinx tree
+> Changes in v3:
+> 	- cc DT maintainers/ML
+> Changes in v4:
+> 	- upper bound for the property should be 26, not 23
+> 	- add warn for width > 23 as per xilinx original patch
+> 	- rework due to changes introduced in 1/6
+> Changes in v5:
+> 	None
+> ---
+>  drivers/dma/xilinx/xilinx_dma.c | 36 +++++++++++++++++++++++++--------
+>  1 file changed, 28 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
-> index 1dcf5f10cdd9..069072e6747d 100644
-> --- a/drivers/watchdog/mpc8xxx_wdt.c
-> +++ b/drivers/watchdog/mpc8xxx_wdt.c
-> @@ -47,6 +47,7 @@ struct mpc8xxx_wdt {
->  struct mpc8xxx_wdt_type {
->  	int prescaler;
->  	bool hw_enabled;
-> +	u32 rsr_mask;
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index aaa6de8a70e4..b17f24e4ec35 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -158,7 +158,9 @@
+>  #define XILINX_DMA_REG_BTT		0x28
+>  
+>  /* AXI DMA Specific Masks/Bit fields */
+> -#define XILINX_DMA_MAX_TRANS_LEN	GENMASK(22, 0)
+> +#define XILINX_DMA_MAX_TRANS_LEN_MIN	8
+> +#define XILINX_DMA_MAX_TRANS_LEN_MAX	23
+> +#define XILINX_DMA_V2_MAX_TRANS_LEN_MAX	26
+>  #define XILINX_DMA_CR_COALESCE_MAX	GENMASK(23, 16)
+>  #define XILINX_DMA_CR_CYCLIC_BD_EN_MASK	BIT(4)
+>  #define XILINX_DMA_CR_COALESCE_SHIFT	16
+> @@ -418,6 +420,7 @@ struct xilinx_dma_config {
+>   * @rxs_clk: DMA s2mm stream clock
+>   * @nr_channels: Number of channels DMA device supports
+>   * @chan_id: DMA channel identifier
+> + * @max_buffer_len: Max buffer length
+>   */
+>  struct xilinx_dma_device {
+>  	void __iomem *regs;
+> @@ -437,6 +440,7 @@ struct xilinx_dma_device {
+>  	struct clk *rxs_clk;
+>  	u32 nr_channels;
+>  	u32 chan_id;
+> +	u32 max_buffer_len;
 >  };
 >  
->  struct mpc8xxx_wdt_ddata {
-> @@ -159,6 +160,24 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
->  		return -ENODEV;
->  	}
->  
-> +	res = platform_get_resource(ofdev, IORESOURCE_MEM, 1);
-> +	if (res) {
-> +		bool status;
-> +		u32 __iomem *rsr = ioremap(res->start, resource_size(res));
-> +
-> +		if (!rsr)
-> +			return -ENOMEM;
-> +
-> +		status = in_be32(rsr) & wdt_type->rsr_mask;
-> +		ddata->wdd.bootstatus = status ? WDIOF_CARDRESET : 0;
-> +		 /* clear reset status bits related to watchdog timer */
-> +		out_be32(rsr, wdt_type->rsr_mask);
-> +		iounmap(rsr);
-> +
-> +		dev_info(dev, "Last boot was %scaused by watchdog\n",
-> +			 status ? "" : "not ");
-> +	}
-> +
->  	spin_lock_init(&ddata->lock);
->  
->  	ddata->wdd.info = &mpc8xxx_wdt_info,
-> @@ -216,6 +235,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
->  		.compatible = "mpc83xx_wdt",
->  		.data = &(struct mpc8xxx_wdt_type) {
->  			.prescaler = 0x10000,
-> +			.rsr_mask = BIT(3), /* RSR Bit SWRS */
->  		},
->  	},
->  	{
-> @@ -223,6 +243,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
->  		.data = &(struct mpc8xxx_wdt_type) {
->  			.prescaler = 0x10000,
->  			.hw_enabled = true,
-> +			.rsr_mask = BIT(20), /* RSTRSCR Bit WDT_RR */
->  		},
->  	},
->  	{
-> @@ -230,6 +251,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
->  		.data = &(struct mpc8xxx_wdt_type) {
->  			.prescaler = 0x800,
->  			.hw_enabled = true,
-> +			.rsr_mask = BIT(28), /* RSR Bit SWRS */
->  		},
->  	},
->  	{},
-> -- 
-> 2.13.3
-> 
+>  /* Macros */
+> @@ -964,7 +968,7 @@ static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
+>  				    int size, int done)
+>  {
+>  	size_t copy = min_t(size_t, size - done,
+> -		     XILINX_DMA_MAX_TRANS_LEN);
+> +			    chan->xdev->max_buffer_len);
+
+hmm why not add max_buffer_len in patch 1 again, and then use default
+len as XILINX_DMA_MAX_TRANS_LEN and add multiple lengths here :)
+
+- 
+~Vinod
