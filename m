@@ -1,60 +1,51 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [RFC PATCH 2/4] dt-bindings: mmc: arasan: Document 'xlnx,zynqmp-8.9a' controller
-Date: Tue, 18 Sep 2018 19:15:37 +0530
-Message-ID: <1537278339-9257-3-git-send-email-manish.narani@xilinx.com>
-References: <1537278339-9257-1-git-send-email-manish.narani@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V7 1/2] csky/dma: bugfix dma_sync_for_cpu/device
+Date: Tue, 18 Sep 2018 21:48:13 +0800
+Message-ID: <1ccf1bed89758a5a9b57ac2ce6d11ca898a1b9ae.1537276837.git.ren_guo@c-sky.com>
+References: <cover.1537276837.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537278339-9257-1-git-send-email-manish.narani@xilinx.com>
+In-Reply-To: <cover.1537276837.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1537276837.git.ren_guo@c-sky.com>
+References: <cover.1537276837.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, adrian.hunter@intel.com, manish.narani@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, olof@lixom.net, amit.kucheria@linaro.org, rajanv@xilinx.com, jollys@xilinx.com
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, robh@kernel.org, sfr@canb.auug.org.au
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for 'xlnx,zynqmp-8.9a' SDHCI controller and required
-properties followed by example.
+ref: https://lkml.org/lkml/2018/5/18/1068
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+        map             for_cpu         for_device      unmap
+TO_DEV  writeback       none            writeback       none
+TO_CPU  invalidate      invalidate*     invalidate      invalidate*
+BIDIR   writeback       invalidate      writeback       invalidate
+
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 ---
- Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/csky/mm/dma-mapping.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-index f6ddba3..72769e0 100644
---- a/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-+++ b/Documentation/devicetree/bindings/mmc/arasan,sdhci.txt
-@@ -15,6 +15,7 @@ Required Properties:
-     - "arasan,sdhci-5.1": generic Arasan SDHCI 5.1 PHY
-     - "rockchip,rk3399-sdhci-5.1", "arasan,sdhci-5.1": rk3399 eMMC PHY
-       For this device it is strongly suggested to include arasan,soc-ctl-syscon.
-+    - "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a": Xilinx ZynqMP Arasan SDHCI 8.9a PHY
-   - reg: From mmc bindings: Register location and length.
-   - clocks: From clock bindings: Handles to clock inputs.
-   - clock-names: From clock bindings: Tuple including "clk_xin" and "clk_ahb"
-@@ -24,6 +25,9 @@ Required Properties for "arasan,sdhci-5.1":
-   - phys: From PHY bindings: Phandle for the Generic PHY for arasan.
-   - phy-names:  MUST be "phy_arasan".
+diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
+index 16c2087..30a2041 100644
+--- a/arch/csky/mm/dma-mapping.c
++++ b/arch/csky/mm/dma-mapping.c
+@@ -217,7 +217,8 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
+ 		break;
+ 	case DMA_FROM_DEVICE:
+ 	case DMA_BIDIRECTIONAL:
+-		BUG();
++		dma_wbinv_range(vaddr + offset, vaddr + offset + size);
++		break;
+ 	default:
+ 		BUG();
+ 	}
+@@ -240,7 +241,7 @@ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
  
-+Required Properties for "xlnx,zynqmp-8.9a":
-+  - xlnx,device_id: SD controller device ID. Must be either <0> or <1>.
-+
- Optional Properties:
-   - arasan,soc-ctl-syscon: A phandle to a syscon device (see ../mfd/syscon.txt)
-     used to access core corecfg registers.  Offsets of registers in this
-@@ -75,3 +79,13 @@ Example:
- 		phy-names = "phy_arasan";
- 		#clock-cells = <0>;
- 	};
-+
-+	sdhci: sdhci@ff160000 {
-+		compatible = "xlnx,zynqmp-8.9a", "arasan,sdhci-8.9a";
-+		reg = <0x0 0xff160000 0x0 0x1000>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 48 4>;
-+		clock-names = "clk_xin", "clk_ahb";
-+		clocks = <&clk 54>, <&clk 31>;
-+		xlnx,device_id = <0>;
-+	};
+ 	switch (dir) {
+ 	case DMA_TO_DEVICE:
+-		BUG();
++		break;
+ 	case DMA_FROM_DEVICE:
+ 	case DMA_BIDIRECTIONAL:
+ 		dma_wbinv_range(vaddr + offset, vaddr + offset + size);
 -- 
-2.1.1
+2.7.4
