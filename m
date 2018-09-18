@@ -1,40 +1,59 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 2/3] dmaengine: Add Slave and Cyclic mode support for
- Actions Semi Owl S900 SoC
-Date: Tue, 18 Sep 2018 09:35:12 -0700
-Message-ID: <20180918163512.GE2613@vkoul-mobl>
-References: <20180901164215.3683-1-manivannan.sadhasivam@linaro.org>
- <20180901164215.3683-3-manivannan.sadhasivam@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: spi/spi-pxa2xx: add PXA2xx SSP SPI
+ Controller
+Date: Tue, 18 Sep 2018 10:43:03 -0700
+Message-ID: <20180918174303.GU2471@sirena.org.uk>
+References: <20180917113559.11101-1-lkundrak@v3.sk>
+ <20180917113559.11101-2-lkundrak@v3.sk>
+ <20180917175753.GE2471@sirena.org.uk>
+ <54f5d070c8b0615baa26983e97e2a22401973096.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4WCFFtl4AQpQKunj"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180901164215.3683-3-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <54f5d070c8b0615baa26983e97e2a22401973096.camel@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01-09-18, 22:12, Manivannan Sadhasivam wrote:
 
-> @@ -364,6 +372,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma_vchan *vchan,
->  			OWL_DMA_MODE_DT_DCU | OWL_DMA_MODE_SAM_INC |
->  			OWL_DMA_MODE_DAM_INC;
->  
-> +		break;
-> +	case DMA_MEM_TO_DEV:
-> +		mode |= OWL_DMA_MODE_TS(vchan->drq)
-> +			| OWL_DMA_MODE_ST_DCU | OWL_DMA_MODE_DT_DEV
-> +			| OWL_DMA_MODE_SAM_INC | OWL_DMA_MODE_DAM_CONST;
-> +
-> +		/* Handle bus width for UART */
-> +		if (sconfig->dst_addr_width == DMA_SLAVE_BUSWIDTH_1_BYTE)
-> +			mode |= OWL_DMA_MODE_NDDBW_8BIT;
+--4WCFFtl4AQpQKunj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-this is fine per se, but not correct way to handle in dmaengine driver.
-You should be agnostic to user of dmaengine, so handle all the buswidths
-the IP block supports and update the values accordingly. That way new
-uses can be added w/o requiring change in dmaengine driver
+On Tue, Sep 18, 2018 at 02:15:12PM +0200, Lubomir Rintel wrote:
+> On Mon, 2018-09-17 at 10:57 -0700, Mark Brown wrote:
 
--- 
-~Vinod
+> > > Changes since v1:
+> > > - s/ssp@d4035000/spi@d4035000/
+
+> > As covered in SubmittingPatches please put inter-version changelogs
+> > after the --- so they don't end up in the commits.
+
+> Will do. I was actually not sure about that, so I took a short look at
+> the git log, and it seemed to me that commit messages with the
+> changelogs are quite common.
+
+For various reasons the drm subsystem explicitly does the opposite
+thing and it does leak out in other places (eg, when someone does it and
+then it doesn't get fixed up), it's a bit unfortunate that there's some
+divergence here.
+
+--4WCFFtl4AQpQKunj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluhOSYACgkQJNaLcl1U
+h9AHkgf/cCVVEd+WCSVik9ryhlUhC1/wAgNrQri8wZDg/H5Ljb+1eVnzdtry1IHU
+7sarVWP9dxDqyBro75/ECWPrB6+JEtOJ890j6eyf/4gpBjqSip0/4AKEBAT8ormp
+wL4CSLpyCQhzOkeOKXVHS5la+tUFvbzcstJnzDl4hT6FoOFEJ3zPnOZOvBw3+HNT
+zbcI3SiHIR+Mpp92Mn+ZhEA8tCDrSUyGMUXYxPlGMIT+0+wYdlubXDWFCQOrPQIm
+VSe+0t7pM5yHPMWDkpUm00mFR3Q0LEGtsMpIAnkxu2yzYQyBC/TtV5ajoCkmqdJN
+XXtDt31ZU8YSXyMeSw7Oh9XLEOdJZA==
+=/CR4
+-----END PGP SIGNATURE-----
+
+--4WCFFtl4AQpQKunj--
