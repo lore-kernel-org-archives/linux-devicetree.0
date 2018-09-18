@@ -1,87 +1,46 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 2/6] pstore: Add event tracing support
-Date: Tue, 18 Sep 2018 23:22:48 +0530
-Message-ID: <cb17a8c9-fca1-5492-3255-eab0ea33577c@codeaurora.org>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <20180917193426.41c99fd5@gandalf.local.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Dilip Kota <dkota@codeaurora.org>
+Subject: [PATCH V4 1/4] dt-bindings: soc: qcom: Remove SPI controller maximum frequency binding
+Date: Tue, 18 Sep 2018 23:37:23 +0530
+Message-ID: <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
+References: <1537294047-12093-1-git-send-email-dkota@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917193426.41c99fd5@gandalf.local.home>
-Content-Language: en-US
+In-Reply-To: <1537294047-12093-1-git-send-email-dkota@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vg
+To: swboyd@chromium.org, dianders@chromium.org, broonie@kernel.org, mka@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Dilip Kota <dkota@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/18/2018 5:04 AM, Steven Rostedt wrote:
-> 
-> It looks like pstore_event_call() gets called from a trace event. You
-> can't call kmalloc() from one. One thing is that kmalloc has
-> tracepoints itself. You trace those you just entered an infinite loop.
-> 
-> 
+SPI controller driver should maintain the maximum frequency
+of the controller instead of relying on device tree bindings.
+Because maximum frequency is specific property of SPI
+controller.
 
-Ok will remove it in v2. But any alternative way to do this?
+Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 --
+ 1 file changed, 2 deletions(-)
 
->> +
->> +	event_call = fbuffer->trace_file->event_call;
->> +	if (!event_call || !event_call->event.funcs ||
->> +	    !event_call->event.funcs->trace)
->> +		goto fail_event;
->> +
->> +	event = &fbuffer->trace_file->event_call->event;
->> +
->> +	spin_lock_irqsave(&psinfo->buf_lock, flags);
->> +
->> +	trace_seq_init(&iter->seq);
->> +	iter->ent = fbuffer->entry;
-> 
-> I guess what you are doing is needing to translate the raw data into
-> ascii output, and need the trace_iterator to do so.
-> 
-> You are already under a psinfo->buf_lock. Add a dummy iterator to that
-> and use it instead.
-> 
-> 	trace_seq_init(&psinfo->iter->seq);
-> 
->> +	event_call->event.funcs->trace(iter, 0, event);
-> 
-> 				      (psinfo->iter, 0 , event);
-> 
-> etc.
-> 
-
-Sure, will update in v2.
-
->> +	trace_seq_putc(&iter->seq, 0);
->> +
->> +	if (seq->size > psinfo->bufsize)
->> +		seq->size = psinfo->bufsize;
->> +
->> +	s = &iter->seq;
->> +	seq = &s->seq;
->> +
->> +	record.buf = (char *)(seq->buffer);
->> +	record.size = seq->len;
->> +	psinfo->write(&record);
->> +
->> +	spin_unlock_irqrestore(&psinfo->buf_lock, flags);
-> 
-> You may also need to convert these spin_locks into raw_spin_locks as
-> when PREEMPT_RT enters the kernel you don't want them to turn into
-> mutexes.
-> 
-> But that can be another patch.
-> 
-
-I will change this in v2, but can't we have it in same patch?
-
-Thanks,
-Sai
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+index 68b7d62..16467ed 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+@@ -60,7 +60,6 @@ Required properties:
+ - interrupts:		Must contain SPI controller interrupts.
+ - clock-names:		Must contain "se".
+ - clocks:		Serial engine core clock needed by the device.
+-- spi-max-frequency:	Specifies maximum SPI clock frequency, units - Hz.
+ - #address-cells:	Must be <1> to define a chip select address on
+ 			the SPI bus.
+ - #size-cells:		Must be <0>.
+@@ -112,7 +111,6 @@ Example:
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&qup_1_spi_2_active>;
+ 			pinctrl-1 = <&qup_1_spi_2_sleep>;
+-			spi-max-frequency = <19200000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
