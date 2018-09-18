@@ -1,42 +1,53 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 5/6] arm64/io: Add header for instrumentation of io
- operations
-Date: Tue, 18 Sep 2018 12:40:57 +0530
-Message-ID: <c6470671-3abf-c296-586e-cca5131cc437@codeaurora.org>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <bb322d763aa6c58f036e5209a481c769be92ab9b.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <20180917193940.3d68ef88@gandalf.local.home>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 0/4] Add i.MX6ULZ SoC support
+Date: Tue, 18 Sep 2018 09:38:22 +0200
+Message-ID: <e82e2894-2a0d-0084-913c-b7c6d966fc13@i2se.com>
+References: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917193940.3d68ef88@gandalf.local.home>
+In-Reply-To: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vg
+To: Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On 9/18/2018 5:09 AM, Steven Rostedt wrote:
-> On Sun,  9 Sep 2018 01:57:06 +0530
-> Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
-> 
->> The new asm-generic/io-instrumented.h will keep arch code
->> clean and separate from instrumented version which traces
->> io register accesses. This instrumented header can later
->> be included in arm as well for tracing io register accesses.
->>
-> 
-> Looks good to me.
-> 
-> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> 
-> -- Steve
+Hi Anson,
 
-Thanks for the ack Steve.
+Am 18.09.2018 um 08:19 schrieb Anson Huang:
+> This patch set adds i.MX6ULZ SoC support, i.MX6ULZ is a new SoC of
+> i.MX6 family, compared to i.MX6ULL, it removes below modules:
+>
+>     - UART5/UART6/UART7/UART8;
+>     - PWM5/PWM6/PWM7/PWM8;
+>     - eCSPI3/eCSPI4;
+>     - CAN1/CAN2;
+>     - FEC1/FEC2;
+>     - I2C3/I2C4;
+>     - EPIT2;
+>     - LCDIF;
+>     - GPT2;
+>     - TSC;
+>
+> And i.MX6ULZ has same soc_id as i.MX6ULL, but SRC_SBMR2 bit[6] is
+> to differentiate i.MX6ULZ from i.MX6ULL, 1'b1 means i.MX6ULZ and
+> 1'b0 means i.MX6ULL. i.MX6ULZ reuse most of i.MX6UL/i.MX6ULL code,
+> just add the new CPU type and remove those non-exist modules from dtb.
+>
+> Anson Huang (4):
+>   ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
+>   ARM: imx: add i.mx6ulz msl support
+>   clk: imx6ul: add i.mx6ulz support
+>   dt-bindings: arm: add compatible for i.MX6ULZ 14x14 EVK board
+>
+>  
 
-@Will/Mark/Robin Let me know if you have any review comments, thanks.
+i recommend the following patch order:
+ARM: imx: add i.mx6ulz msl support
+clk: imx6ul: add i.mx6ulz support
+dt-bindings: arm: add compatible for i.MX6ULZ 14x14 EVK board
+ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Stefan
