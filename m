@@ -1,52 +1,34 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH v8 12/12] Add maintainers for the PECI subsystem
-Date: Tue, 18 Sep 2018 14:51:24 -0700
-Message-ID: <20180918215124.14003-13-jae.hyun.yoo@linux.intel.com>
-References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: [PATCH v8 0/5] Venus updates - PIL
+Date: Wed, 19 Sep 2018 03:29:08 +0530
+Message-ID: <1537307954-9729-1-git-send-email-vgarodia@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <dav>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, Jason M Biils <jason.m.bills@linux.intel.com>
+To: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds maintainer information for the PECI subsystem.
+This series just fixes the compilation for of_dma_configure.
+Minor #define name improvement and indentations.
 
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
----
- MAINTAINERS | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+Stanimir Varbanov (1):
+  venus: firmware: register separate platform_device for firmware loader
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 4ece30f15777..b9ffc217ec68 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11361,6 +11361,19 @@ L:	platform-driver-x86@vger.kernel.org
- S:	Maintained
- F:	drivers/platform/x86/peaq-wmi.c
- 
-+PECI SUBSYSTEM
-+M:	Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-+M:	Jason M Biils <jason.m.bills@linux.intel.com>
-+L:	openbmc@lists.ozlabs.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/peci/
-+F:	drivers/mfd/intel-peci-client.c
-+F:	drivers/peci/
-+F:	drivers/hwmon/peci-*.c
-+F:	include/linux/mfd/intel-peci-client.h
-+F:	include/linux/peci.h
-+F:	include/uapi/linux/peci-ioctl.h
-+
- PER-CPU MEMORY ALLOCATOR
- M:	Dennis Zhou <dennis@kernel.org>
- M:	Tejun Heo <tj@kernel.org>
+Vikash Garodia (4):
+  venus: firmware: add routine to reset ARM9
+  venus: firmware: move load firmware in a separate function
+  venus: firmware: add no TZ boot and shutdown routine
+  dt-bindings: media: Document bindings for venus firmware device
+
+ .../devicetree/bindings/media/qcom,venus.txt       |  13 +-
+ drivers/media/platform/qcom/venus/core.c           |  24 ++-
+ drivers/media/platform/qcom/venus/core.h           |   6 +
+ drivers/media/platform/qcom/venus/firmware.c       | 234 +++++++++++++++++++--
+ drivers/media/platform/qcom/venus/firmware.h       |  17 +-
+ drivers/media/platform/qcom/venus/hfi_venus.c      |  13 +-
+ drivers/media/platform/qcom/venus/hfi_venus_io.h   |   8 +
+ 7 files changed, 272 insertions(+), 43 deletions(-)
+
 -- 
-2.18.0
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
