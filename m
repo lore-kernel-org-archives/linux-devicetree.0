@@ -1,52 +1,54 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
- mdio bus
-Date: Tue, 18 Sep 2018 14:35:45 +0200
-Message-ID: <20180918123545.GA29092@lunn.ch>
-References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
- <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
- <20180917145028.GC5458@lunn.ch>
- <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
- <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
- <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 5/6] arm64/io: Add header for instrumentation of io
+ operations
+Date: Tue, 18 Sep 2018 18:13:33 +0530
+Message-ID: <b3bc8d9b-9199-655e-bc62-4e37760fca14@codeaurora.org>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <bb322d763aa6c58f036e5209a481c769be92ab9b.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <20180917193940.3d68ef88@gandalf.local.home>
+ <c6470671-3abf-c296-586e-cca5131cc437@codeaurora.org>
+ <20180918114727.GE16498@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
-Sender: netdev-owner@vger.kernel.org
-To: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "timur@kernel.org" <timur@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180918114727.GE16498@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.orglinux
 List-Id: devicetree@vger.kernel.org
 
-> > If you want to describe the MDIO controller, then you embed a mdio
-> > subnode into your Ethernet MAC node:
-> >
-> >  emac0: ethernet@feb20000 {
-> > 	mdio {
-> > 		#address-cells = <1>;
-> > 		#size-cells = <0>;
-> >
-> > 		phy0: ethernet-phy@0 {
-> > 			reg = <0>;
-> > 		};
-> > 	};
-> > };
-> >
-> > And then each Ethernet MAC controller refers to their appropriate PHY
-> > device tree node using a phy-handle property to point to either their
-> > own MDIO controller, or another MAC's MDIO controller.
+On 9/18/2018 5:17 PM, Will Deacon wrote:
+> On Tue, Sep 18, 2018 at 12:40:57PM +0530, Sai Prakash Ranjan wrote:
+>> On 9/18/2018 5:09 AM, Steven Rostedt wrote:
+>>> On Sun,  9 Sep 2018 01:57:06 +0530
+>>> Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
+>>>
+>>>> The new asm-generic/io-instrumented.h will keep arch code
+>>>> clean and separate from instrumented version which traces
+>>>> io register accesses. This instrumented header can later
+>>>> be included in arm as well for tracing io register accesses.
+>>>>
+>>>
+>>> Looks good to me.
+>>>
+>>> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+>>>
+>>> -- Steve
+>>
+>> Thanks for the ack Steve.
+>>
+>> @Will/Mark/Robin Let me know if you have any review comments, thanks.
+> 
+> As I said before, the arm64 bits looks fine to me. I just don't really want
+> to Ack the thing because the patch also contains the asm-generic changes.
+> 
+> Will
+> 
 
-> Sorry, I do not understand how phy-handle point to MDIO controller,
-> because phy-handle is defined to point to a phy.
+Ok thank you. Is there anyone else whom I should add for asm-generic?
 
-The MAC driver does not care what MDIO controller a PHY is on. All you
-need to do to register the PHY is:
-
-	phy_node = of_parse_phandle(np, "phy-handle", 0);
-	phy_interface = of_get_phy_mode(np);
-	phydev = of_phy_connect(dev, phy_node,
-                                &handle_link_change, 0,
-                                phy_interface);
-
-	Andrew
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
