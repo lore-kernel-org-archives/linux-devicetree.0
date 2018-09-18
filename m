@@ -1,47 +1,50 @@
-Return-Path: <SRS0=Yqoh=LY=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 3/5] media: dt-bindings: media: rcar_vin: Add r8a774a1 support
-Date: Mon, 10 Sep 2018 15:31:16 +0100
-Message-Id: <1536589878-26218-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
-References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=TIsf=MA=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 0/9] TVP5150 fixes and new features
+Date: Tue, 18 Sep 2018 15:14:44 +0200
+Message-Id: <20180918131453.21031-1-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document RZ/G2M (R8A774A1) SoC bindings.
+Hi,
 
-The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
+this is my v3 with the integrated reviews from my v2 [1]. This serie
+applies to Mauro's experimental.git [2].
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/media/rcar_vin.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+@Mauro:
+Patch ("media: tvp5150: fix irq_request error path during probe") is new
+in this series. Maybe you can squash them with ("media: tvp5150: Add sync lock
+interrupt handling"), thanks.
 
-diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Documentation/devicetree/bindings/media/rcar_vin.txt
-index 2f42005..8c81689 100644
---- a/Documentation/devicetree/bindings/media/rcar_vin.txt
-+++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
-@@ -12,6 +12,7 @@ on Gen3 platforms to a CSI-2 receiver.
-  - compatible: Must be one or more of the following
-    - "renesas,vin-r8a7743" for the R8A7743 device
-    - "renesas,vin-r8a7745" for the R8A7745 device
-+   - "renesas,vin-r8a774a1" for the R8A774A1 device
-    - "renesas,vin-r8a7778" for the R8A7778 device
-    - "renesas,vin-r8a7779" for the R8A7779 device
-    - "renesas,vin-r8a7790" for the R8A7790 device
-@@ -58,9 +59,9 @@ The per-board settings Gen2 platforms:
-     - data-enable-active: polarity of CLKENB signal, see [1] for
-       description. Default is active high.
- 
--The per-board settings Gen3 platforms:
-+The per-board settings Gen3 and RZ/G2 platforms:
- 
--Gen3 platforms can support both a single connected parallel input source
-+Gen3 and RZ/G2 platforms can support both a single connected parallel input source
- from external SoC pins (port@0) and/or multiple parallel input sources
- from local SoC CSI-2 receivers (port@1) depending on SoC.
- 
+I've tested this series on a customer dt-based board. Unfortunately I
+haven't a device which use the em28xx driver. So other tester a welcome :)
+
+[1] https://www.spinics.net/lists/devicetree/msg244129.html
+[2] https://git.linuxtv.org/mchehab/experimental.git/log/?h=tvp5150-4
+
+Javier Martinez Canillas (1):
+  partial revert of "[media] tvp5150: add HW input connectors support"
+
+Marco Felsch (7):
+  media: tvp5150: fix irq_request error path during probe
+  media: tvp5150: add input source selection of_graph support
+  media: dt-bindings: tvp5150: Add input port connectors DT bindings
+  media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+  media: v4l2-subdev: fix v4l2_subdev_get_try_* dependency
+  media: tvp5150: add FORMAT_TRY support for get/set selection handlers
+  media: tvp5150: add s_power callback
+
+Michael Tretter (1):
+  media: tvp5150: initialize subdev before parsing device tree
+
+ .../devicetree/bindings/media/i2c/tvp5150.txt |  92 ++-
+ drivers/media/i2c/tvp5150.c                   | 657 +++++++++++++-----
+ include/dt-bindings/media/tvp5150.h           |   2 -
+ include/media/v4l2-subdev.h                   |  15 +-
+ 4 files changed, 584 insertions(+), 182 deletions(-)
+
 -- 
-2.7.4
+2.19.0
