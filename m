@@ -1,78 +1,112 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: Re: [PATCH 0/2] add Ethernet driver support for mt2712
-Date: Tue, 18 Sep 2018 16:47:49 +0100
-Message-ID: <ff1ddad8-8f27-2e10-1b3e-09d17915779e@synopsys.com>
-References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
- <20180917152441.GD5458@lunn.ch>
- <a8c0a091-6bee-6504-04cd-36e214e805aa@synopsys.com>
- <1537241087.7058.6.camel@mhfsdcap03>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v5 2/7] dmaengine: xilinx_dma: in axidma slave_sg and
+ dma_cyclic mode align split descriptors
+Date: Tue, 18 Sep 2018 09:21:05 -0700
+Message-ID: <20180918162105.GC2613@vkoul-mobl>
+References: <20180907062502.8241-1-andrea.merello@gmail.com>
+ <20180907062502.8241-2-andrea.merello@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537241087.7058.6.camel@mhfsdcap03>
+Content-Disposition: inline
+In-Reply-To: <20180907062502.8241-2-andrea.merello@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: biao huang <biao.huang@mediatek.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Andrea Merello <andrea.merello@gmail.com>
+Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Biao,
+On 07-09-18, 08:24, Andrea Merello wrote:
+> Whenever a single or cyclic transaction is prepared, the driver
+> could eventually split it over several SG descriptors in order
+> to deal with the HW maximum transfer length.
+> 
+> This could end up in DMA operations starting from a misaligned
+> address. This seems fatal for the HW if DRE (Data Realignment Engine)
+> is not enabled.
+> 
+> This patch eventually adjusts the transfer size in order to make sure
+> all operations start from an aligned address.
+> 
+> Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
+> Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> ---
+> Changes in v2:
+>         - don't introduce copy_mask field, rather rely on already-esistent
+>           copy_align field. Suggested by Radhey Shyam Pandey
+>         - reword title
+> Changes in v3:
+> 	- fix bug introduced in v2: wrong copy size when DRE is enabled
+> 	- use implementation suggested by Radhey Shyam Pandey
+> Changes in v4:
+> 	- rework on the top of 1/6
+> Changes in v5:
+> 	- fix typo in commit title
+> 	- add hint about "DRE" meaning in commit message
+> ---
+>  drivers/dma/xilinx/xilinx_dma.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index a3aaa0e34cc7..aaa6de8a70e4 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -954,15 +954,28 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
+>  
+>  /**
+>   * xilinx_dma_calc_copysize - Calculate the amount of data to copy
+> + * @chan: Driver specific DMA channel
+>   * @size: Total data that needs to be copied
+>   * @done: Amount of data that has been already copied
+>   *
+>   * Return: Amount of data that has to be copied
+>   */
+> -static int xilinx_dma_calc_copysize(int size, int done)
+> +static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
+> +				    int size, int done)
 
-On 18-09-2018 04:24, biao huang wrote:
-> Hi Jose, Andrew,
-> 	Thanks for your comments.
-> 	Synopsys ip version in mt2712 is 4.21a, and followed ic will use 5.10a.
-> it seems GMAC4+ is a good choice. I'll try to  extend STMMAC to support
-> mt2712.
-> 	Any tips about extend STMMAC? or anythings I should pay attention to?
+align to preceeding line opening brace please
 
-STMMAC already supports 4.21a and 5.10a. You only have to make
-sure that your regbank and descriptors matches.
+>  {
+> -	return min_t(size_t, size - done,
+> +	size_t copy = min_t(size_t, size - done,
+>  		     XILINX_DMA_MAX_TRANS_LEN);
 
-Thanks and Best Regards,
-Jose Miguel Abreu
+so we can do this way in patch 1:
 
-> 	
-> On Mon, 2018-09-17 at 17:18 +0100, Jose Abreu wrote:
->> Hi Andrew, Biao,
->>
->> On 17-09-2018 16:24, Andrew Lunn wrote:
->>> On Mon, Sep 17, 2018 at 02:29:21PM +0800, Biao Huang wrote:
->>>
->>> Adding in the STMMAC driver maintainers.
->>>
->>>> Ethernet in mt2712 is totally different from that in
->>>> drivers/net/ethernet/mediatek/*, so we add new folder for mt2712 SoC.
->>>>
->>>> The mt2712 Ethernet IP is from Synopsys, and we notice that there is a
->>>> reference driver in drivers/net/ethernet/synopsys/*. But
->>>> 1. our version is only for 10/100/1000Mbps, not for 2.5/4/5Gbps.
->>>> mt2712 Ethernet design is differnet from that in synopsys folder in many
->>>> aspects, and some key features are not included in mt2712, such as rss
->>>> and split header. At the same time, some features we need have not been
->>>> implenmented in synopsys folder.
->>> In general, we don't have two very similar drivers. We try to have one
->>> driver. If the problem was just missing features in the stmmac driver,
->>> you can add them. I doubt not supporting 2.5/4/5Gbps in your silicon
->>> is an issue, since very few STMMAC devices have this. By split header,
->>> do you mean support for TSO? That seems to be a gmac4 or newer
->>> feature, but the driver supports not having tso support in hardware.
->>>
->>> Giuseppe, Alexandre, Jose: Please can you look at the proposed driver
->>> and see how much it really differs from the STMMAC driver. 
->> Thanks for the cc Andrew, indeed this looks very similar and the
->> register bank matches, by what I've seen, GMAC 4+.
->>
->>> How easy
->>> would it be to extend stmmac it to support the mt2712?
->> Very easy, as I've just done with XGMAC2. If Biao wants to expand
->> stmmac functionality I'm all in favor!
->>
->> Thanks and Best Regards,
->> Jose Miguel Abreu
->>
->>> Thanks
->>> 	Andrew
-> Best Regards!
-> Biao
->
+        size t copy;
+
+        copy =  min_t(size_t, size - done,
+                      XILINX_DMA_MAX_TRANS_LEN);
+
+        return copy;
+
+and then add these here, feels like we are redoing change introduced in
+patch 1..
+
+
+> +	if ((copy + done < size) &&
+> +	    chan->xdev->common.copy_align) {
+> +		/*
+> +		 * If this is not the last descriptor, make sure
+> +		 * the next one will be properly aligned
+> +		 */
+> +		copy = rounddown(copy,
+> +				 (1 << chan->xdev->common.copy_align));
+> +	}
+> +	return copy;
+>  }
+>  
+>  /**
+> @@ -1804,7 +1817,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
+>  			 * Calculate the maximum number of bytes to transfer,
+>  			 * making sure it is less than the hw limit
+>  			 */
+> -			copy = xilinx_dma_calc_copysize(sg_dma_len(sg),
+> +			copy = xilinx_dma_calc_copysize(chan, sg_dma_len(sg),
+
+why not keep chan in patch 1 and add only handling in patch 2, seems
+less churn to me..
+
+-- 
+~Vinod
