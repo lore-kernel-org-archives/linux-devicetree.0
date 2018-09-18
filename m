@@ -1,83 +1,116 @@
-From: r yang <decatf@gmail.com>
-Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
-Date: Mon, 17 Sep 2018 21:57:33 -0400
-Message-ID: <20180918015733.GA19976@r>
-References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
- <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
- <20180916104526.2c386591@archlinux>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v16 2/5] iommu/arm-smmu: Invoke pm_runtime during probe,
+	add/remove device
+Date: Tue, 18 Sep 2018 08:41:41 +0530
+Message-ID: <CAFp+6iHnHj_PkPFBUSTdJTW57K51wLqSEw6VOMKxAVo7O+ms9g@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+	<20180830144541.17740-3-vivek.gautam@codeaurora.org>
+	<CAAFQd5B7YR03Jm1upOg2nsaKOb1iDD7-WGo-qx7S8m-nounCvA@mail.gmail.com>
+	<3ccc3690-dc9d-56e7-e2d1-62e73a189bff@codeaurora.org>
+	<CAAFQd5DMDWEeBU=fg6arye3pXnrCqOA4tDtMSGutXk7vSz-EtQ@mail.gmail.com>
+	<CAFp+6iE3+qn6-gpXEzxfoP5yPMARmUcJNn0AZk-kA2AreTLnng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180916104526.2c386591@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CAFp+6iE3+qn6-gpXEzxfoP5yPMARmUcJNn0AZk-kA2AreTLnng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+	Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>,
+	" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 16, 2018 at 10:45:26AM +0100, Jonathan Cameron wrote:
-> On Sat, 15 Sep 2018 13:42:14 -0400
-> ryang <decatf@gmail.com> wrote:
-> 
-> > Add device tree support for ROHM BH1750 series ambient light sensors.
-> > 
-> > Signed-off-by: ryang <decatf@gmail.com>
-> Just to check, how is it picking up on the enum value which is provided
-> in the i2c_device_id entries?
-> 
-> i.e. What is setting id->driver_data in the probe?
-> There may be something in the i2c core that I'm missing that will do the
-> association but I don't remember anything trying to do this.
-> 
-> Jonathan
+Hi Robin,
+
+On Fri, Sep 7, 2018 at 3:52 PM Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 >
+> On Fri, Sep 7, 2018 at 3:22 PM Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> >
+> > On Fri, Sep 7, 2018 at 6:38 PM Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > >
+> > > Hi Tomasz,
+> > >
+> > >
+> > > On 9/7/2018 2:46 PM, Tomasz Figa wrote:
+> > > > Hi Vivek,
+> > > >
+> > > > On Thu, Aug 30, 2018 at 11:46 PM Vivek Gautam
+> > > > <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> > > >> From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > >>
+> > > >> The smmu device probe/remove and add/remove master device callbacks
+> > > >> gets called when the smmu is not linked to its master, that is without
+> > > >> the context of the master device. So calling runtime apis in those places
+> > > >> separately.
+> > > >> Global locks are also initialized before enabling runtime pm as the
+> > > >> runtime_resume() calls device_reset() which does tlb_sync_global()
+> > > >> that ultimately requires locks to be initialized.
+> > > >>
+> > > >> Signed-off-by: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > >> [vivek: Cleanup pm runtime calls]
+> > > >> Signed-off-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > > >> Reviewed-by: Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > >> Tested-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > >> ---
+> > > >>   drivers/iommu/arm-smmu.c | 89 +++++++++++++++++++++++++++++++++++++++++++-----
+> > > >>   1 file changed, 81 insertions(+), 8 deletions(-)
+> > > > [snip]
+> > > >> @@ -2215,10 +2281,17 @@ static int arm_smmu_device_remove(struct platform_device *pdev)
+> > > >>          if (!bitmap_empty(smmu->context_map, ARM_SMMU_MAX_CBS))
+> > > >>                  dev_err(&pdev->dev, "removing device with active domains!\n");
+> > > >>
+> > > >> +       arm_smmu_rpm_get(smmu);
+> > > >>          /* Turn the thing off */
+> > > >>          writel(sCR0_CLIENTPD, ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+> > > >> +       arm_smmu_rpm_put(smmu);
+> > > >> +
+> > > >> +       if (pm_runtime_enabled(smmu->dev))
+> > > >> +               pm_runtime_force_suspend(smmu->dev);
+> > > >> +       else
+> > > >> +               clk_bulk_disable(smmu->num_clks, smmu->clks);
+> > > >>
+> > > >> -       clk_bulk_disable_unprepare(smmu->num_clks, smmu->clks);
+> > > >> +       clk_bulk_unprepare(smmu->num_clks, smmu->clks);
+> > > > Aren't we missing pm_runtime_disable() here? We'll have the enable
+> > > > count unbalanced if the driver is removed and probed again.
+> > >
+> > > pm_runtime_force_suspend() does a pm_runtime_disable() also if i am not
+> > > wrong.
+> > > And, as mentioned in a previous thread [1], we were seeing a warning
+> > > which we avoided
+> > > by keeping force_suspend().
+> > >
+> > > [1] https://lkml.org/lkml/2018/7/8/124
+> >
+> > I see, thanks. I didn't realize that pm_runtime_force_suspend()
+> > already disables runtime PM indeed. Sorry for the noise.
+>
+> Hi Tomasz,
+> No problem. Thanks for looking back at it.
+>
+> Hi Robin,
+> If you are fine with this series, then can you please consider giving
+> Reviewed-by, so that we are certain that this series will go in the next merge
+> window.
+> Thanks
 
-I've looked through it and it is indeed in the i2c core.
-The i2c core probe function picks the id entry based on the i2c client
-name.
+Gentle ping.
+You ack will be very helpful in letting Will pull this series for 4.20.
+Thanks.
 
-The i2c client name is assigned based on the device tree compatible
-string.
+Best regards
+Vivek
 
-  of_i2c_register_device()
-    of_i2c_get_board_info()
-      of_modalias_node()
 
-During probe the i2c_device_id is picked by matching the i2c
-client->name to i2c_device_id->name in the i2c_match_id() function.
-
-  i2c_device_probe()
-    driver->probe(client, i2c_match_id(driver->id_table, client));
-
-I've tested this on device. It's Samsung Galaxy Tab 10.1. It has a
-BH1721.
-
-> > ---
-> >  drivers/iio/light/bh1750.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> > index a814828e69f5..50b599abb383 100644
-> > --- a/drivers/iio/light/bh1750.c
-> > +++ b/drivers/iio/light/bh1750.c
-> > @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
-> >  };
-> >  MODULE_DEVICE_TABLE(i2c, bh1750_id);
-> >  
-> > +static const struct of_device_id bh1750_of_match[] = {
-> > +	{ .compatible = "rohm,bh1710", },
-> > +	{ .compatible = "rohm,bh1715", },
-> > +	{ .compatible = "rohm,bh1721", },
-> > +	{ .compatible = "rohm,bh1750", },
-> > +	{ .compatible = "rohm,bh1751", },
-> > +	{ }
-> > +};
-> > +
-> >  static struct i2c_driver bh1750_driver = {
-> >  	.driver = {
-> >  		.name = "bh1750",
-> > +		.of_match_table = of_match_ptr(bh1750_of_match),
-> >  		.pm = BH1750_PM_OPS,
-> >  	},
-> >  	.probe = bh1750_probe,
-> 
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
