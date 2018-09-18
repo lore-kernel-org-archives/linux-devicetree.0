@@ -1,57 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: spi/spi-pxa2xx: add PXA2xx SSP SPI
- Controller
-Date: Tue, 18 Sep 2018 08:42:07 -0700
-Message-ID: <20180918154207.GJ2471@sirena.org.uk>
-References: <20180917113559.11101-1-lkundrak@v3.sk>
- <20180917113559.11101-2-lkundrak@v3.sk>
- <20180917175753.GE2471@sirena.org.uk>
- <54f5d070c8b0615baa26983e97e2a22401973096.camel@v3.sk>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH 0/2] add Ethernet driver support for mt2712
+Date: Tue, 18 Sep 2018 16:47:49 +0100
+Message-ID: <ff1ddad8-8f27-2e10-1b3e-09d17915779e@synopsys.com>
+References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
+ <20180917152441.GD5458@lunn.ch>
+ <a8c0a091-6bee-6504-04cd-36e214e805aa@synopsys.com>
+ <1537241087.7058.6.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="F4+N/OgRSdC8YnqX"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54f5d070c8b0615baa26983e97e2a22401973096.camel@v3.sk>
+In-Reply-To: <1537241087.7058.6.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: biao huang <biao.huang@mediatek.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Biao,
 
---F4+N/OgRSdC8YnqX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 18-09-2018 04:24, biao huang wrote:
+> Hi Jose, Andrew,
+> 	Thanks for your comments.
+> 	Synopsys ip version in mt2712 is 4.21a, and followed ic will use 5.10a.
+> it seems GMAC4+ is a good choice. I'll try to  extend STMMAC to support
+> mt2712.
+> 	Any tips about extend STMMAC? or anythings I should pay attention to?
 
-On Tue, Sep 18, 2018 at 02:15:12PM +0200, Lubomir Rintel wrote:
+STMMAC already supports 4.21a and 5.10a. You only have to make
+sure that your regbank and descriptors matches.
 
-> Should I've Cc'd everyone on the full series, even if only a patch or
-> two might be really interesting to them? How do I decide whether the
+Thanks and Best Regards,
+Jose Miguel Abreu
 
-It's a judgement call about who gets the patches but in general it's
-good to either do that or make sure that everyone sees the cover letter
-which explains what the whole series is.
-
-> recipient needs to be in the commit's commit message (as opposed to
-> just --cc on a command line)?
-
-Using CCs in the commit message is entirely optional TBH - a lot of
-people just don't do it at all, often when it is done it's a list of
-everyone who got the mail.
-
---F4+N/OgRSdC8YnqX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluhHM4ACgkQJNaLcl1U
-h9Cezwf5AfaAGyXR47c4q3qjI8ELdyasWL5tIcpl3Qhd6YeLW6GBKyhlOl2Cu/Ey
-ZXO1TLEnOy35eFKL2Wh2YHsxMgHb4fPy3kA2alWhRgzURgKR68ywzOIO+IlvAGLQ
-Wh6Mj8BCKYk0E338mZ0VJWTqJxx4dmXoXU2d18G2FnO5ix5ukNOaKEhHwkl610Dd
-pIkrHio8u82+xQ1TQ/KhEbEw3WoqvWY9Z6a9qd2dbevhLQei3zTS4Bj6SdHxDqrR
-YHZQvQPdh5CuLpvFKOPClF+Gjep6SoWb+M3CAGKmlhO7mwqYG0gqms88QeEsQnbx
-4NjHfimOKlW88L02ntofOFnTwBg+jQ==
-=FDO6
------END PGP SIGNATURE-----
-
---F4+N/OgRSdC8YnqX--
+> 	
+> On Mon, 2018-09-17 at 17:18 +0100, Jose Abreu wrote:
+>> Hi Andrew, Biao,
+>>
+>> On 17-09-2018 16:24, Andrew Lunn wrote:
+>>> On Mon, Sep 17, 2018 at 02:29:21PM +0800, Biao Huang wrote:
+>>>
+>>> Adding in the STMMAC driver maintainers.
+>>>
+>>>> Ethernet in mt2712 is totally different from that in
+>>>> drivers/net/ethernet/mediatek/*, so we add new folder for mt2712 SoC.
+>>>>
+>>>> The mt2712 Ethernet IP is from Synopsys, and we notice that there is a
+>>>> reference driver in drivers/net/ethernet/synopsys/*. But
+>>>> 1. our version is only for 10/100/1000Mbps, not for 2.5/4/5Gbps.
+>>>> mt2712 Ethernet design is differnet from that in synopsys folder in many
+>>>> aspects, and some key features are not included in mt2712, such as rss
+>>>> and split header. At the same time, some features we need have not been
+>>>> implenmented in synopsys folder.
+>>> In general, we don't have two very similar drivers. We try to have one
+>>> driver. If the problem was just missing features in the stmmac driver,
+>>> you can add them. I doubt not supporting 2.5/4/5Gbps in your silicon
+>>> is an issue, since very few STMMAC devices have this. By split header,
+>>> do you mean support for TSO? That seems to be a gmac4 or newer
+>>> feature, but the driver supports not having tso support in hardware.
+>>>
+>>> Giuseppe, Alexandre, Jose: Please can you look at the proposed driver
+>>> and see how much it really differs from the STMMAC driver. 
+>> Thanks for the cc Andrew, indeed this looks very similar and the
+>> register bank matches, by what I've seen, GMAC 4+.
+>>
+>>> How easy
+>>> would it be to extend stmmac it to support the mt2712?
+>> Very easy, as I've just done with XGMAC2. If Biao wants to expand
+>> stmmac functionality I'm all in favor!
+>>
+>> Thanks and Best Regards,
+>> Jose Miguel Abreu
+>>
+>>> Thanks
+>>> 	Andrew
+> Best Regards!
+> Biao
+>
