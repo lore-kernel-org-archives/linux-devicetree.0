@@ -1,102 +1,82 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH 2/4] ARM: imx: add i.mx6ulz msl support
-Date: Tue, 18 Sep 2018 14:19:06 +0800
-Message-ID: <1537251548-27845-3-git-send-email-Anson.Huang@nxp.com>
-References: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset controls
+Date: Tue, 18 Sep 2018 08:42:46 +0200
+Message-ID: <CAMuHMdXUsOuYwe0jbC1bCSHMp=Rcu-a_oYOz9f8q3LNxNiO1JQ@mail.gmail.com>
+References: <20180917163955.19023-1-geert+renesas@glider.be> <20180917163955.19023-2-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Linux-imx@nxp.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180917163955.19023-2-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGkuTVggNlVMWiBwcm9jZXNzb3IgaXMgYSBoaWdoLXBlcmZvcm1hbmNlLCB1bHRyYQpjb3N0
-LWVmZmljaWVudCBjb25zdW1lciBMaW51eCBwcm9jZXNzb3IgZmVhdHVyaW5nIGFuCmFkdmFuY2Vk
-IGltcGxlbWVudGF0aW9uIG9mIGEgc2luZ2xlIEFybcKuIENvcnRleMKuLUE3IGNvcmUsCndoaWNo
-IG9wZXJhdGVzIGF0IHNwZWVkcyB1cCB0byA5MDAgTUh6LgoKVGhpcyBwYXRjaCBhZGRzIGJhc2lj
-IE1TTCBzdXBwb3J0IGZvciBpLk1YNlVMWiwgdGhlCmkuTVg2VUxaIGhhcyBzYW1lIHNvY19pZCBh
-cyBpLk1YNlVMTCwgYW5kIFNSQ19TQk1SMiBiaXRbNl0KaXMgdG8gZGlmZmVyZW50aWF0ZSBpLk1Y
-NlVMWiBmcm9tIGkuTVg2VUxMLCAxJ2IxIG1lYW5zCmkuTVg2VUxaIGFuZCAxJ2IwIG1lYW5zIGku
-TVg2VUxMLgoKU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+
-Ci0tLQogYXJjaC9hcm0vbWFjaC1pbXgvYW5hdG9wLmMgICAgICB8IDIwICsrKysrKysrKysrKysr
-KysrKysrCiBhcmNoL2FybS9tYWNoLWlteC9jcHUuYyAgICAgICAgIHwgIDMgKysrCiBhcmNoL2Fy
-bS9tYWNoLWlteC9tYWNoLWlteDZ1bC5jIHwgIDEgKwogYXJjaC9hcm0vbWFjaC1pbXgvbXhjLmgg
-ICAgICAgICB8ICA3ICsrKysrKysKIGFyY2gvYXJtL21hY2gtaW14L3BtLWlteDYuYyAgICAgfCAg
-NCArKy0tCiA1IGZpbGVzIGNoYW5nZWQsIDMzIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0p
-CgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1pbXgvYW5hdG9wLmMgYi9hcmNoL2FybS9tYWNo
-LWlteC9hbmF0b3AuYwppbmRleCA2MWYzZDk0Li40NWQ2MThhIDEwMDY0NAotLS0gYS9hcmNoL2Fy
-bS9tYWNoLWlteC9hbmF0b3AuYworKysgYi9hcmNoL2FybS9tYWNoLWlteC9hbmF0b3AuYwpAQCAt
-MzEsNiArMzEsOCBAQAogI2RlZmluZSBBTkFESUdfRElHUFJPR19JTVg2U0wJMHgyODAKICNkZWZp
-bmUgQU5BRElHX0RJR1BST0dfSU1YN0QJMHg4MDAKIAorI2RlZmluZSBTUkNfU0JNUjIJCTB4MWMK
-KwogI2RlZmluZSBCTV9BTkFESUdfUkVHXzJQNV9FTkFCTEVfV0VBS19MSU5SRUcJMHg0MDAwMAog
-I2RlZmluZSBCTV9BTkFESUdfUkVHXzJQNV9FTkFCTEVfUFVMTERPV04JMHg4CiAjZGVmaW5lIEJN
-X0FOQURJR19SRUdfQ09SRV9GRVRfT0RSSVZFCQkweDIwMDAwMDAwCkBAIC0xNDgsNiArMTUwLDI0
-IEBAIHZvaWQgX19pbml0IGlteF9pbml0X3JldmlzaW9uX2Zyb21fYW5hdG9wKHZvaWQpCiAJCW1h
-am9yX3BhcnQgPSAoZGlncHJvZyA+PiA4KSAmIDB4ZjsKIAkJbWlub3JfcGFydCA9IGRpZ3Byb2cg
-JiAweGY7CiAJCXJldmlzaW9uID0gKChtYWpvcl9wYXJ0ICsgMSkgPDwgNCkgfCBtaW5vcl9wYXJ0
-OworCisJCWlmICgoZGlncHJvZyA+PiAxNikgPT0gTVhDX0NQVV9JTVg2VUxMKSB7CisJCQl2b2lk
-IF9faW9tZW0gKnNyY19iYXNlOworCQkJdTMyIHNibXIyOworCisJCQlucCA9IG9mX2ZpbmRfY29t
-cGF0aWJsZV9ub2RlKE5VTEwsIE5VTEwsCisJCQkJCQkgICAgICJmc2wsaW14NnVsLXNyYyIpOwor
-CQkJc3JjX2Jhc2UgPSBvZl9pb21hcChucCwgMCk7CisJCQlXQVJOX09OKCFzcmNfYmFzZSk7CisJ
-CQlzYm1yMiA9IHJlYWRsX3JlbGF4ZWQoc3JjX2Jhc2UgKyBTUkNfU0JNUjIpOworCQkJaW91bm1h
-cChzcmNfYmFzZSk7CisKKwkJCS8qIHNyY19zYm1yMiBiaXQgNiBpcyB0byBpZGVudGlmeSBpZiBp
-dCBpcyBpLk1YNlVMWiAqLworCQkJaWYgKHNibXIyICYgKDEgPDwgNikpIHsKKwkJCQlkaWdwcm9n
-ICY9IH4oMHhmZiA8PCAxNik7CisJCQkJZGlncHJvZyB8PSAoTVhDX0NQVV9JTVg2VUxaIDw8IDE2
-KTsKKwkJCX0KKwkJfQogCX0KIAogCW14Y19zZXRfY3B1X3R5cGUoZGlncHJvZyA+PiAxNiAmIDB4
-ZmYpOwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1pbXgvY3B1LmMgYi9hcmNoL2FybS9tYWNo
-LWlteC9jcHUuYwppbmRleCBjNmIxYmY5Li5jNzM1OTNlIDEwMDY0NAotLS0gYS9hcmNoL2FybS9t
-YWNoLWlteC9jcHUuYworKysgYi9hcmNoL2FybS9tYWNoLWlteC9jcHUuYwpAQCAtMTM2LDYgKzEz
-Niw5IEBAIHN0cnVjdCBkZXZpY2UgKiBfX2luaXQgaW14X3NvY19kZXZpY2VfaW5pdCh2b2lkKQog
-CWNhc2UgTVhDX0NQVV9JTVg2VUxMOgogCQlzb2NfaWQgPSAiaS5NWDZVTEwiOwogCQlicmVhazsK
-KwljYXNlIE1YQ19DUFVfSU1YNlVMWjoKKwkJc29jX2lkID0gImkuTVg2VUxaIjsKKwkJYnJlYWs7
-CiAJY2FzZSBNWENfQ1BVX0lNWDZTTEw6CiAJCXNvY19pZCA9ICJpLk1YNlNMTCI7CiAJCWJyZWFr
-OwpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2dWwuYyBiL2FyY2gvYXJt
-L21hY2gtaW14L21hY2gtaW14NnVsLmMKaW5kZXggNmNiOGEyMi4uNGZmZTNjOCAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vbWFjaC1pbXgvbWFjaC1pbXg2dWwuYworKysgYi9hcmNoL2FybS9tYWNoLWlt
-eC9tYWNoLWlteDZ1bC5jCkBAIC05MCw2ICs5MCw3IEBAIHN0YXRpYyB2b2lkIF9faW5pdCBpbXg2
-dWxfaW5pdF9sYXRlKHZvaWQpCiBzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IGlteDZ1bF9kdF9j
-b21wYXRbXSBfX2luaXRjb25zdCA9IHsKIAkiZnNsLGlteDZ1bCIsCiAJImZzbCxpbXg2dWxsIiwK
-KwkiZnNsLGlteDZ1bHoiLAogCU5VTEwsCiB9OwogCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNo
-LWlteC9teGMuaCBiL2FyY2gvYXJtL21hY2gtaW14L214Yy5oCmluZGV4IDAyNmUyY2EuLmIxMzBh
-NTMgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL21hY2gtaW14L214Yy5oCisrKyBiL2FyY2gvYXJtL21h
-Y2gtaW14L214Yy5oCkBAIC00MCw2ICs0MCw4IEBACiAjZGVmaW5lIE1YQ19DUFVfSU1YNlEJCTB4
-NjMKICNkZWZpbmUgTVhDX0NQVV9JTVg2VUwJCTB4NjQKICNkZWZpbmUgTVhDX0NQVV9JTVg2VUxM
-CQkweDY1CisvKiB2aXJ0dWFsIGNwdSBpZCBmb3IgaS5teDZ1bHogKi8KKyNkZWZpbmUgTVhDX0NQ
-VV9JTVg2VUxaCQkweDZiCiAjZGVmaW5lIE1YQ19DUFVfSU1YNlNMTAkJMHg2NwogI2RlZmluZSBN
-WENfQ1BVX0lNWDdECQkweDcyCiAKQEAgLTgwLDYgKzgyLDExIEBAIHN0YXRpYyBpbmxpbmUgYm9v
-bCBjcHVfaXNfaW14NnVsbCh2b2lkKQogCXJldHVybiBfX214Y19jcHVfdHlwZSA9PSBNWENfQ1BV
-X0lNWDZVTEw7CiB9CiAKK3N0YXRpYyBpbmxpbmUgYm9vbCBjcHVfaXNfaW14NnVseih2b2lkKQor
-eworCXJldHVybiBfX214Y19jcHVfdHlwZSA9PSBNWENfQ1BVX0lNWDZVTFo7Cit9CisKIHN0YXRp
-YyBpbmxpbmUgYm9vbCBjcHVfaXNfaW14NnNsbCh2b2lkKQogewogCXJldHVybiBfX214Y19jcHVf
-dHlwZSA9PSBNWENfQ1BVX0lNWDZTTEw7CmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWlteC9w
-bS1pbXg2LmMgYi9hcmNoL2FybS9tYWNoLWlteC9wbS1pbXg2LmMKaW5kZXggNTI5ZjRiNS4uODdm
-NDViOSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vbWFjaC1pbXgvcG0taW14Ni5jCisrKyBiL2FyY2gv
-YXJtL21hY2gtaW14L3BtLWlteDYuYwpAQCAtMzEzLDcgKzMxMyw3IEBAIGludCBpbXg2X3NldF9s
-cG0oZW51bSBteGNfY3B1X3B3cl9tb2RlIG1vZGUpCiAJCWlmIChjcHVfaXNfaW14NnNsKCkpCiAJ
-CQl2YWwgfD0gQk1fQ0xQQ1JfQllQQVNTX1BNSUNfUkVBRFk7CiAJCWlmIChjcHVfaXNfaW14NnNs
-KCkgfHwgY3B1X2lzX2lteDZzeCgpIHx8IGNwdV9pc19pbXg2dWwoKSB8fAotCQkgICAgY3B1X2lz
-X2lteDZ1bGwoKSB8fCBjcHVfaXNfaW14NnNsbCgpKQorCQkgICAgY3B1X2lzX2lteDZ1bGwoKSB8
-fCBjcHVfaXNfaW14NnNsbCgpIHx8IGNwdV9pc19pbXg2dWx6KCkpCiAJCQl2YWwgfD0gQk1fQ0xQ
-Q1JfQllQX01NRENfQ0gwX0xQTV9IUzsKIAkJZWxzZQogCQkJdmFsIHw9IEJNX0NMUENSX0JZUF9N
-TURDX0NIMV9MUE1fSFM7CkBAIC0zMzEsNyArMzMxLDcgQEAgaW50IGlteDZfc2V0X2xwbShlbnVt
-IG14Y19jcHVfcHdyX21vZGUgbW9kZSkKIAkJaWYgKGNwdV9pc19pbXg2c2woKSB8fCBjcHVfaXNf
-aW14NnN4KCkpCiAJCQl2YWwgfD0gQk1fQ0xQQ1JfQllQQVNTX1BNSUNfUkVBRFk7CiAJCWlmIChj
-cHVfaXNfaW14NnNsKCkgfHwgY3B1X2lzX2lteDZzeCgpIHx8IGNwdV9pc19pbXg2dWwoKSB8fAot
-CQkgICAgY3B1X2lzX2lteDZ1bGwoKSB8fCBjcHVfaXNfaW14NnNsbCgpKQorCQkgICAgY3B1X2lz
-X2lteDZ1bGwoKSB8fCBjcHVfaXNfaW14NnNsbCgpIHx8IGNwdV9pc19pbXg2dWx6KCkpCiAJCQl2
-YWwgfD0gQk1fQ0xQQ1JfQllQX01NRENfQ0gwX0xQTV9IUzsKIAkJZWxzZQogCQkJdmFsIHw9IEJN
-X0NMUENSX0JZUF9NTURDX0NIMV9MUE1fSFM7Ci0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Mon, Sep 17, 2018 at 6:40 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> In some SoCs multiple hardware blocks may share a reset control.
+> The existing reset control API for shared resets will only assert such a
+> reset when the drivers for all hardware blocks agree.
+> The existing exclusive reset control API still allows to assert such a
+> reset, but that impacts all other hardware blocks sharing the reset.
+>
+> Sometimes a driver needs to reset a specific hardware block, and be 100%
+> sure it has no impact on other hardware blocks.  This is e.g. the case
+> for virtualization with device pass-through, where the host wants to
+> reset any exported device before and after exporting it for use by the
+> guest, for isolation.
+>
+> Hence a new flag for dedicated resets is added to the internal methods,
+> with a new public reset_control_get_dedicated() method, to obtain an
+> exclusive handle to a reset that is dedicated to one specific hardware
+> block.
+>
+> This supports both DT-based and lookup-based reset controls.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v4:
+>   - New.
+>
+> Notes:
+>   - Dedicated lookup-based reset controls were not tested,
+
+And untested code is buggy...
+
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+
+> @@ -541,9 +575,25 @@ __reset_controller_by_name(const char *name)
+>         return NULL;
+>  }
+>
+> +static bool __reset_is_dedicated(const struct reset_control_lookup *lookup)
+> +{
+> +       const struct reset_control_lookup *lookup2;
+> +
+> +       list_for_each_entry(lookup, &reset_lookup_list, list) {
+
+... as the list_for_each() should use "lookup2" instead of "lookup" (warning
+reported by kbuild robot).
+
+> +               if (lookup2 == lookup)
+> +                       continue;
+> +
+> +               if (lookup2->provider == lookup->provider &&
+> +                   lookup2->index == lookup->index)
+> +                       return false;
+> +       }
+> +
+> +       return true;
+> +}
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
