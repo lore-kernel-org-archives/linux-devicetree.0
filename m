@@ -1,59 +1,87 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: spi/spi-pxa2xx: add PXA2xx SSP SPI
- Controller
-Date: Tue, 18 Sep 2018 10:43:03 -0700
-Message-ID: <20180918174303.GU2471@sirena.org.uk>
-References: <20180917113559.11101-1-lkundrak@v3.sk>
- <20180917113559.11101-2-lkundrak@v3.sk>
- <20180917175753.GE2471@sirena.org.uk>
- <54f5d070c8b0615baa26983e97e2a22401973096.camel@v3.sk>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 2/6] pstore: Add event tracing support
+Date: Tue, 18 Sep 2018 23:22:48 +0530
+Message-ID: <cb17a8c9-fca1-5492-3255-eab0ea33577c@codeaurora.org>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <20180917193426.41c99fd5@gandalf.local.home>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4WCFFtl4AQpQKunj"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <54f5d070c8b0615baa26983e97e2a22401973096.camel@v3.sk>
+In-Reply-To: <20180917193426.41c99fd5@gandalf.local.home>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vg
 List-Id: devicetree@vger.kernel.org
 
+On 9/18/2018 5:04 AM, Steven Rostedt wrote:
+> 
+> It looks like pstore_event_call() gets called from a trace event. You
+> can't call kmalloc() from one. One thing is that kmalloc has
+> tracepoints itself. You trace those you just entered an infinite loop.
+> 
+> 
 
---4WCFFtl4AQpQKunj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ok will remove it in v2. But any alternative way to do this?
 
-On Tue, Sep 18, 2018 at 02:15:12PM +0200, Lubomir Rintel wrote:
-> On Mon, 2018-09-17 at 10:57 -0700, Mark Brown wrote:
+>> +
+>> +	event_call = fbuffer->trace_file->event_call;
+>> +	if (!event_call || !event_call->event.funcs ||
+>> +	    !event_call->event.funcs->trace)
+>> +		goto fail_event;
+>> +
+>> +	event = &fbuffer->trace_file->event_call->event;
+>> +
+>> +	spin_lock_irqsave(&psinfo->buf_lock, flags);
+>> +
+>> +	trace_seq_init(&iter->seq);
+>> +	iter->ent = fbuffer->entry;
+> 
+> I guess what you are doing is needing to translate the raw data into
+> ascii output, and need the trace_iterator to do so.
+> 
+> You are already under a psinfo->buf_lock. Add a dummy iterator to that
+> and use it instead.
+> 
+> 	trace_seq_init(&psinfo->iter->seq);
+> 
+>> +	event_call->event.funcs->trace(iter, 0, event);
+> 
+> 				      (psinfo->iter, 0 , event);
+> 
+> etc.
+> 
 
-> > > Changes since v1:
-> > > - s/ssp@d4035000/spi@d4035000/
+Sure, will update in v2.
 
-> > As covered in SubmittingPatches please put inter-version changelogs
-> > after the --- so they don't end up in the commits.
+>> +	trace_seq_putc(&iter->seq, 0);
+>> +
+>> +	if (seq->size > psinfo->bufsize)
+>> +		seq->size = psinfo->bufsize;
+>> +
+>> +	s = &iter->seq;
+>> +	seq = &s->seq;
+>> +
+>> +	record.buf = (char *)(seq->buffer);
+>> +	record.size = seq->len;
+>> +	psinfo->write(&record);
+>> +
+>> +	spin_unlock_irqrestore(&psinfo->buf_lock, flags);
+> 
+> You may also need to convert these spin_locks into raw_spin_locks as
+> when PREEMPT_RT enters the kernel you don't want them to turn into
+> mutexes.
+> 
+> But that can be another patch.
+> 
 
-> Will do. I was actually not sure about that, so I took a short look at
-> the git log, and it seemed to me that commit messages with the
-> changelogs are quite common.
+I will change this in v2, but can't we have it in same patch?
 
-For various reasons the drm subsystem explicitly does the opposite
-thing and it does leak out in other places (eg, when someone does it and
-then it doesn't get fixed up), it's a bit unfortunate that there's some
-divergence here.
+Thanks,
+Sai
 
---4WCFFtl4AQpQKunj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluhOSYACgkQJNaLcl1U
-h9AHkgf/cCVVEd+WCSVik9ryhlUhC1/wAgNrQri8wZDg/H5Ljb+1eVnzdtry1IHU
-7sarVWP9dxDqyBro75/ECWPrB6+JEtOJ890j6eyf/4gpBjqSip0/4AKEBAT8ormp
-wL4CSLpyCQhzOkeOKXVHS5la+tUFvbzcstJnzDl4hT6FoOFEJ3zPnOZOvBw3+HNT
-zbcI3SiHIR+Mpp92Mn+ZhEA8tCDrSUyGMUXYxPlGMIT+0+wYdlubXDWFCQOrPQIm
-VSe+0t7pM5yHPMWDkpUm00mFR3Q0LEGtsMpIAnkxu2yzYQyBC/TtV5ajoCkmqdJN
-XXtDt31ZU8YSXyMeSw7Oh9XLEOdJZA==
-=/CR4
------END PGP SIGNATURE-----
-
---4WCFFtl4AQpQKunj--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
