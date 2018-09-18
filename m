@@ -1,40 +1,84 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 2/2] dt-bindings: usb: ohci: Add clocks description for R-Car Gen3
-Date: Mon, 10 Sep 2018 20:15:48 +0900
-Message-Id: <1536578148-27656-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <1536578148-27656-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1536578148-27656-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=TIsf=MA=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 5/9] media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
+Date: Tue, 18 Sep 2018 15:14:49 +0200
+Message-Id: <20180918131453.21031-6-m.felsch@pengutronix.de>
+In-Reply-To: <20180918131453.21031-1-m.felsch@pengutronix.de>
+References: <20180918131453.21031-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Content-Transfer-Encoding: 8bit
+To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds detailed information of an optional property "clocks"
-description for R-Car Gen3.
+In case of missing CONFIG_VIDEO_V4L2_SUBDEV_API those helpers aren't
+available. So each driver have to add ifdefs around those helpers or
+add the CONFIG_VIDEO_V4L2_SUBDEV_API as dependcy.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Make these helpers available in case of CONFIG_VIDEO_V4L2_SUBDEV_API
+isn't set to avoid ifdefs. This approach is less error prone too.
+
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
 ---
- Documentation/devicetree/bindings/usb/usb-ohci.txt | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/media/v4l2-subdev.h | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-ohci.txt b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-index a8d2103..aaaa525 100644
---- a/Documentation/devicetree/bindings/usb/usb-ohci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-ohci.txt
-@@ -12,7 +12,11 @@ Optional properties:
- - no-big-frame-no : boolean, set if frame_no lives in bits [15:0] of HCCA
- - remote-wakeup-connected: remote wakeup is wired on the platform
- - num-ports : u32, to override the detected port count
--- clocks : a list of phandle + clock specifier pairs
-+- clocks : a list of phandle + clock specifier pairs. In case of Renesas
-+	   R-Car Gen3 SoCs:
-+	   - if a host only channel: first clock should be host.
-+	   - if a USB DRD channel: first clock should be host and second one
-+				   should be peripheral.
- - phys : see usb-hcd.txt in the current directory
- - resets : a list of phandle + reset specifier pairs
+diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+index 9102d6ca566e..ce48f1fcf295 100644
+--- a/include/media/v4l2-subdev.h
++++ b/include/media/v4l2-subdev.h
+@@ -912,8 +912,6 @@ struct v4l2_subdev_fh {
+ #define to_v4l2_subdev_fh(fh)	\
+ 	container_of(fh, struct v4l2_subdev_fh, vfh)
+ 
+-#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+-
+ /**
+  * v4l2_subdev_get_try_format - ancillary routine to call
+  *	&struct v4l2_subdev_pad_config->try_fmt
+@@ -927,9 +925,13 @@ static inline struct v4l2_mbus_framefmt
+ 			    struct v4l2_subdev_pad_config *cfg,
+ 			    unsigned int pad)
+ {
++#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+ 	if (WARN_ON(pad >= sd->entity.num_pads))
+ 		pad = 0;
+ 	return &cfg[pad].try_fmt;
++#else
++	return NULL;
++#endif
+ }
+ 
+ /**
+@@ -945,9 +947,13 @@ static inline struct v4l2_rect
+ 			  struct v4l2_subdev_pad_config *cfg,
+ 			  unsigned int pad)
+ {
++#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+ 	if (WARN_ON(pad >= sd->entity.num_pads))
+ 		pad = 0;
+ 	return &cfg[pad].try_crop;
++#else
++	return NULL;
++#endif
+ }
+ 
+ /**
+@@ -963,11 +969,14 @@ static inline struct v4l2_rect
+ 			     struct v4l2_subdev_pad_config *cfg,
+ 			     unsigned int pad)
+ {
++#if defined(CONFIG_VIDEO_V4L2_SUBDEV_API)
+ 	if (WARN_ON(pad >= sd->entity.num_pads))
+ 		pad = 0;
+ 	return &cfg[pad].try_compose;
+-}
++#else
++	return NULL;
+ #endif
++}
+ 
+ extern const struct v4l2_file_operations v4l2_subdev_fops;
  
 -- 
-1.9.1
+2.19.0
