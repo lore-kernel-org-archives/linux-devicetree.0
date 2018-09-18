@@ -1,70 +1,45 @@
-From: biao huang <biao.huang@mediatek.com>
-Subject: Re: [PATCH 0/2] add Ethernet driver support for mt2712
-Date: Tue, 18 Sep 2018 11:24:47 +0800
-Message-ID: <1537241087.7058.6.camel@mhfsdcap03>
-References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
-         <20180917152441.GD5458@lunn.ch>
-         <a8c0a091-6bee-6504-04cd-36e214e805aa@synopsys.com>
+From: Matheus Castello <matheus@castello.eng.br>
+Subject: Re: [PATCH 0/4] power: supply: MAX17040: Add IRQ for low level and
+ alert SOC changes
+Date: Tue, 18 Sep 2018 00:45:09 -0300
+Message-ID: <473eb21a-d08d-63c2-93c1-7a445e6fd4bc@castello.eng.br>
+References: <20180723040816.19455-1-matheus@castello.eng.br>
+ <20180916114520.4375nr2gv3y4ghzv@earth.universe>
+ <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a8c0a091-6bee-6504-04cd-36e214e805aa@synopsys.com>
+In-Reply-To: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jose Abreu <Jose.Abreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>
-Cc: peppe.cavallaro@st.com, alexandre.torgue@st.com, davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, sebastian.reichel@collabora.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jose, Andrew,
-	Thanks for your comments.
-	Synopsys ip version in mt2712 is 4.21a, and followed ic will use 5.10a.
-it seems GMAC4+ is a good choice. I'll try to  extend STMMAC to support
-mt2712.
-	Any tips about extend STMMAC? or anythings I should pay attention to?
-	
-On Mon, 2018-09-17 at 17:18 +0100, Jose Abreu wrote:
-> Hi Andrew, Biao,
+Hi Krzysztof and Sebastian,
+
+please forgive me for the delay in working with this patch.
+I've been having some personal issues these months, but leaving the 
+excuses I still intend to send a v2 for this.
+
+Thanks Krzysztof for review and tips I'll work on it.
+
+Best Regards,
+Matheus Castello
+
+On 09/17/2018 08:32 AM, Krzysztof Kozlowski wrote:
+> On Sun, 16 Sep 2018 at 22:03, Sebastian Reichel
+> <sebastian.reichel@collabora.com> wrote:
+>>
+>> Hi Matheus,
+>>
+>> Did I miss a v2 of this patchset, that solves the issues
+>> found by Krzysztof?
 > 
-> On 17-09-2018 16:24, Andrew Lunn wrote:
-> > On Mon, Sep 17, 2018 at 02:29:21PM +0800, Biao Huang wrote:
-> >
-> > Adding in the STMMAC driver maintainers.
-> >
-> >> Ethernet in mt2712 is totally different from that in
-> >> drivers/net/ethernet/mediatek/*, so we add new folder for mt2712 SoC.
-> >>
-> >> The mt2712 Ethernet IP is from Synopsys, and we notice that there is a
-> >> reference driver in drivers/net/ethernet/synopsys/*. But
-> >> 1. our version is only for 10/100/1000Mbps, not for 2.5/4/5Gbps.
-> >> mt2712 Ethernet design is differnet from that in synopsys folder in many
-> >> aspects, and some key features are not included in mt2712, such as rss
-> >> and split header. At the same time, some features we need have not been
-> >> implenmented in synopsys folder.
-> > In general, we don't have two very similar drivers. We try to have one
-> > driver. If the problem was just missing features in the stmmac driver,
-> > you can add them. I doubt not supporting 2.5/4/5Gbps in your silicon
-> > is an issue, since very few STMMAC devices have this. By split header,
-> > do you mean support for TSO? That seems to be a gmac4 or newer
-> > feature, but the driver supports not having tso support in hardware.
-> >
-> > Giuseppe, Alexandre, Jose: Please can you look at the proposed driver
-> > and see how much it really differs from the STMMAC driver. 
+> I did not see v2. This patchset brings nice feature so it would be a
+> pity if it were discontinued.
 > 
-> Thanks for the cc Andrew, indeed this looks very similar and the
-> register bank matches, by what I've seen, GMAC 4+.
+> Best regards,
+> Krzysztof
 > 
-> > How easy
-> > would it be to extend stmmac it to support the mt2712?
-> 
-> Very easy, as I've just done with XGMAC2. If Biao wants to expand
-> stmmac functionality I'm all in favor!
-> 
-> Thanks and Best Regards,
-> Jose Miguel Abreu
-> 
-> >
-> > Thanks
-> > 	Andrew
-> 
-Best Regards!
-Biao
