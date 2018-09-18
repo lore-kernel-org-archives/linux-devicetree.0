@@ -1,51 +1,83 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH] ARM: dts: imx6ull: update vdd_soc voltage for 900MHz
- operating point
-Date: Tue, 18 Sep 2018 01:15:02 +0000
-Message-ID: <DB3PR0402MB3916936F80C14D00F5D07966F51D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1536740009-32735-1-git-send-email-Anson.Huang@nxp.com>
- <d989e700-0cf1-607a-b333-bdead49ae813@i2se.com>
- <DB3PR0402MB3916249305E241849A32DC05F51B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From: r yang <decatf@gmail.com>
+Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
+Date: Mon, 17 Sep 2018 21:57:33 -0400
+Message-ID: <20180918015733.GA19976@r>
+References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
+ <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
+ <20180916104526.2c386591@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <DB3PR0402MB3916249305E241849A32DC05F51B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180916104526.2c386591@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0ZWZhbg0KDQpBbnNvbiBIdWFuZw0KQmVzdCBSZWdhcmRzIQ0KDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5zb24gSHVhbmcNCj4gU2VudDogV2VkbmVzZGF5
-LCBTZXB0ZW1iZXIgMTIsIDIwMTggNDozMCBQTQ0KPiBUbzogU3RlZmFuIFdhaHJlbiA8c3RlZmFu
-LndhaHJlbkBpMnNlLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0
-cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgRmFiaW8gRXN0ZXZhbQ0KPiA8ZmFiaW8u
-ZXN0ZXZhbUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNv
-bTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZn
-ZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzogZGwt
-bGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gQVJN
-OiBkdHM6IGlteDZ1bGw6IHVwZGF0ZSB2ZGRfc29jIHZvbHRhZ2UgZm9yIDkwME1Ieg0KPiBvcGVy
-YXRpbmcgcG9pbnQNCj4gDQo+IEhpLCBTdGVmYW4NCj4gDQo+IEFuc29uIEh1YW5nDQo+IEJlc3Qg
-UmVnYXJkcyENCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
-bTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4NCj4gPiBTZW50OiBXZWRu
-ZXNkYXksIFNlcHRlbWJlciAxMiwgMjAxOCA0OjI4IFBNDQo+ID4gVG86IEFuc29uIEh1YW5nIDxh
-bnNvbi5odWFuZ0BueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gPiBzLmhhdWVyQHBl
-bmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IEZhYmlvIEVzdGV2YW0NCj4gPiA8
-ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRA
-YXJtLmNvbTsNCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmlj
-ZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcN
-Cj4gPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBS
-ZTogW1BBVENIXSBBUk06IGR0czogaW14NnVsbDogdXBkYXRlIHZkZF9zb2Mgdm9sdGFnZSBmb3IN
-Cj4gPiA5MDBNSHogb3BlcmF0aW5nIHBvaW50DQo+ID4NCj4gPiBIaSBBbnNvbiwNCj4gPg0KPiA+
-IEFtIDEyLjA5LjIwMTggdW0gMTA6MTMgc2NocmllYiBBbnNvbiBIdWFuZzoNCj4gPiA+IFVwZGF0
-ZSBWRERfU09DIHZvbHRhZ2UgdG8gMS4yNVYgZm9yIDkwME1IeiBvcGVyYXRpbmcgcG9pbnQgYWNj
-b3JkaW5nDQo+ID4gPiB0byBkYXRhc2hlZXQgUmV2LiAxLjMsIDA4LzIwMTgsIDI1bVYgaXMgYWRk
-ZWQgdG8gdGhlIG1pbmltdW0gYWxsb3dlZA0KPiA+ID4gdmFsdWVzIHRvIGNvdmVyIHBvd2VyIHN1
-cHBseSByaXBwbGUuDQo+ID4NCj4gPiBpcyB0aGVyZSBhIHJlYXNvbiB3aHkgdGhlIG5ldyBkYXRh
-c2hlZXQgaXNuJ3QgcHVibGlzaGVkIHlldD8NCj4gDQo+IFdlIGp1c3QgZ290IHRoaXMgbmV3IGRh
-dGFzaGVldCByZWNlbnRseSwgaXQgd2lsbCBiZSBwdWJsaXNoZWQgc29vbi4NCj4gDQo+IEFuc29u
-IA0KDQpUaGUgdjEuMyBkYXRhc2hlZXQgaGFzIGJlZW4gcHVibGlzaGVkLiBQbGVhc2UgY2hlY2sg
-aXQgZnJvbSBOWFAgd2Vic2l0ZSwgdGhhbmtzLg0KDQpBbnNvbi4NCg0KPiANCj4gPg0KPiA+IFJl
-Z2FyZHMNCj4gPiBTdGVmYW4NCg0K
+On Sun, Sep 16, 2018 at 10:45:26AM +0100, Jonathan Cameron wrote:
+> On Sat, 15 Sep 2018 13:42:14 -0400
+> ryang <decatf@gmail.com> wrote:
+> 
+> > Add device tree support for ROHM BH1750 series ambient light sensors.
+> > 
+> > Signed-off-by: ryang <decatf@gmail.com>
+> Just to check, how is it picking up on the enum value which is provided
+> in the i2c_device_id entries?
+> 
+> i.e. What is setting id->driver_data in the probe?
+> There may be something in the i2c core that I'm missing that will do the
+> association but I don't remember anything trying to do this.
+> 
+> Jonathan
+>
+
+I've looked through it and it is indeed in the i2c core.
+The i2c core probe function picks the id entry based on the i2c client
+name.
+
+The i2c client name is assigned based on the device tree compatible
+string.
+
+  of_i2c_register_device()
+    of_i2c_get_board_info()
+      of_modalias_node()
+
+During probe the i2c_device_id is picked by matching the i2c
+client->name to i2c_device_id->name in the i2c_match_id() function.
+
+  i2c_device_probe()
+    driver->probe(client, i2c_match_id(driver->id_table, client));
+
+I've tested this on device. It's Samsung Galaxy Tab 10.1. It has a
+BH1721.
+
+> > ---
+> >  drivers/iio/light/bh1750.c | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> > 
+> > diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+> > index a814828e69f5..50b599abb383 100644
+> > --- a/drivers/iio/light/bh1750.c
+> > +++ b/drivers/iio/light/bh1750.c
+> > @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
+> >  };
+> >  MODULE_DEVICE_TABLE(i2c, bh1750_id);
+> >  
+> > +static const struct of_device_id bh1750_of_match[] = {
+> > +	{ .compatible = "rohm,bh1710", },
+> > +	{ .compatible = "rohm,bh1715", },
+> > +	{ .compatible = "rohm,bh1721", },
+> > +	{ .compatible = "rohm,bh1750", },
+> > +	{ .compatible = "rohm,bh1751", },
+> > +	{ }
+> > +};
+> > +
+> >  static struct i2c_driver bh1750_driver = {
+> >  	.driver = {
+> >  		.name = "bh1750",
+> > +		.of_match_table = of_match_ptr(bh1750_of_match),
+> >  		.pm = BH1750_PM_OPS,
+> >  	},
+> >  	.probe = bh1750_probe,
+> 
