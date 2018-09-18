@@ -1,57 +1,93 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH] powerpc/mpc85xx: fix issues in clock node
-Date: Tue, 18 Sep 2018 00:43:42 +0000
-Message-ID: <DB5PR0401MB22130D7DA4C0AC850AD54909F31D0@DB5PR0401MB2213.eurprd04.prod.outlook.com>
-References: <20180911021224.30558-1-andy.tang@nxp.com>
+From: biao huang <biao.huang@mediatek.com>
+Subject: Re: [PATCH 1/2] dt-binding: mediatek: Add binding document for
+ MediaTek GMAC
+Date: Tue, 18 Sep 2018 09:14:19 +0800
+Message-ID: <1537233259.12247.3.camel@mhfsdcap03>
+References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
+         <1537165763-13112-2-git-send-email-biao.huang@mediatek.com>
+         <fb327132-0830-9df0-434e-06bb0033bac4@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <20180911021224.30558-1-andy.tang@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Andy Tang <andy.tang@nxp.com>, "oss@buserror.net" <oss@buserror.net>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fb327132-0830-9df0-434e-06bb0033bac4@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2NvdHQsDQoNCkNvdWxkIHlvdSBwbGVhc2UgdGFrZSBhIGxvb2sgYXQgdGhpcyBwYXRjaD8N
-Cg0KVGhhbmtzLA0KQW5keQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IGFuZHkudGFuZ0BueHAuY29tIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAxOMTqOdTC
-MTHI1SAxMDoxMg0KPiBUbzogb3NzQGJ1c2Vycm9yLm5ldA0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
-b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmc7IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gcG93
-ZXJwYy9tcGM4NXh4OiBmaXggaXNzdWVzIGluIGNsb2NrIG5vZGUNCj4gDQo+IEZyb206IFl1YW50
-aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiANCj4gVGhlIGNvbXBhdGlibGUgc3RyaW5n
-IGlzIG5vdCBjb3JyZWN0IGluIHRoZSBjbG9jayBub2RlLg0KPiBUaGUgY2xvY2tzIHByb3BlcnR5
-IHJlZmVycyB0byB0aGUgd3Jvbmcgbm9kZSB0b28uDQo+IFRoaXMgcGF0Y2ggaXMgdG8gZml4IHRo
-ZW0uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxhbmR5LnRhbmdAbnhwLmNv
-bT4NCj4gLS0tDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNp
-IHwgICAgOCArKysrLS0tLQ0KPiAgMSBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQg
-ZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
-bC90MTAyM3NpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwMjNz
-aS1wb3N0LmR0c2kNCj4gaW5kZXggNDkwOGFmNS4uNzYzY2FmNCAxMDA2NDQNCj4gLS0tIGEvYXJj
-aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyM3NpLXBvc3QuZHRzaQ0KPiArKysgYi9hcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNpDQo+IEBAIC0zNDgsNyArMzQ4LDcg
-QEANCj4gIAkJbXV4MDogbXV4MEAwIHsNCj4gIAkJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gIAkJ
-CXJlZyA9IDwweDAgND47DQo+IC0JCQljb21wYXRpYmxlID0gImZzbCxjb3JlLW11eC1jbG9jayI7
-DQo+ICsJCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOw0KPiAgCQkJY2xv
-Y2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT47DQo+ICAJCQljbG9jay1uYW1lcyA9ICJwbGwwXzAi
-LCAicGxsMF8xIjsNCj4gIAkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MCI7DQo+IEBAIC0z
-NTYsOSArMzU2LDkgQEANCj4gIAkJbXV4MTogbXV4MUAyMCB7DQo+ICAJCQkjY2xvY2stY2VsbHMg
-PSA8MD47DQo+ICAJCQlyZWcgPSA8MHgyMCA0PjsNCj4gLQkJCWNvbXBhdGlibGUgPSAiZnNsLGNv
-cmUtbXV4LWNsb2NrIjsNCj4gLQkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+Ow0KPiAt
-CQkJY2xvY2stbmFtZXMgPSAicGxsMF8wIiwgInBsbDBfMSI7DQo+ICsJCQljb21wYXRpYmxlID0g
-ImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOw0KPiArCQkJY2xvY2tzID0gPCZwbGwxIDA+LCA8JnBs
-bDEgMT47DQo+ICsJCQljbG9jay1uYW1lcyA9ICJwbGwxXzAiLCAicGxsMV8xIjsNCj4gIAkJCWNs
-b2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MSI7DQo+ICAJCX07DQo+ICAJfTsNCj4gLS0NCj4gMS43
-LjENCg0K
+On Mon, 2018-09-17 at 11:33 +0300, Sergei Shtylyov wrote:
+> On 9/17/2018 9:29 AM, Biao Huang wrote:
+> 
+> > The commit adds the device tree binding documentation for the MediaTek
+> > GMAC found on Mediatek MT2712.
+> > 
+> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+> > ---
+> >   .../devicetree/bindings/net/mediatek-gmac.txt      |   45 ++++++++++++++++++++
+> >   1 file changed, 45 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/net/mediatek-gmac.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/mediatek-gmac.txt b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
+> > new file mode 100644
+> > index 0000000..14876ed
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
+> > @@ -0,0 +1,45 @@
+> > +MediaTek Gigabit Ethernet controller
+> > +=========================================
+> > +
+> > +The gigabit ethernet controller can be found on MediaTek SoCs.
+> > +
+> > +* Ethernet controller node
+> > +
+> > +Required properties:
+> > +- compatible: Should be
+> > +	"mediatek,mt2712-eth": for MT2712 SoC
+> > +- reg: Address and length of the register set for the device
+> > +- interrupts: Should contain the MAC interrupts
+> > +- interrupt-names: the name of interrupt in the interrupts property. These are
+> > +	"macirq": For MT2712 SoC
+> > +- clocks: the clock used by the controller
+> > +- clock-names: the names of the clock listed in the clocks property. These are
+> > +	"axi", "apb", "mac_ext", "ptp", "ptp_parent", "ptp_top": For MT2712 SoC
+> > +- mac-address: See ethernet.txt in the same directory
+> > +- power-domains: phandle to the power domain that the ethernet is part of
+> 
+>     This (required) prop is absent in your example.
+thanks for your comments, power-domains is not a required property, and
+I'll modify this property in next version.
+> 
+> > +- phy-mode: See ethernet.txt file in the same directory.
+> > +- reset-gpio: gpio number for phy reset.
+> > +
+> > +Example:
+> > +
+> > +eth: eth@1101c000 {
+> 
+> eth: ethernet@1101c000 {
+> 
+> > +		compatible = "mediatek,mt2712-eth";
+> > +		reg = <0 0x1101c000 0 0x1200>;
+> > +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
+> > +		interrupt-names = "macirq";
+> > +		phy-mode ="rgmii";
+> > +		mac-address = [00 55 7b b5 7d f7];
+> > +		clock-names = "axi",
+> > +			      "apb",
+> > +			      "mac_ext",
+> > +			      "ptp",
+> > +			      "ptp_parent",
+> > +			      "ptp_top";
+> > +		clocks = <&pericfg CLK_PERI_GMAC>,
+> > +			 <&pericfg CLK_PERI_GMAC_PCLK>,
+> > +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
+> > +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
+> > +			 <&topckgen CLK_TOP_APLL1_D3>,
+> > +			 <&topckgen CLK_TOP_APLL1>;
+> > +		reset-gpio = <&pio 87 GPIO_ACTIVE_HIGH>;
+> > +	};
+> 
+> MBR, Sergei
+Best Regards!
+Biao
