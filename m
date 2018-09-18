@@ -1,89 +1,111 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v5 4/7] dmaengine: xilinx_dma: program hardware supported
- buffer length
-Date: Tue, 18 Sep 2018 09:25:08 -0700
-Message-ID: <20180918162508.GD2613@vkoul-mobl>
-References: <20180907062502.8241-1-andrea.merello@gmail.com>
- <20180907062502.8241-4-andrea.merello@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/3] spis: mediatek: add spi slave for Mediatek MT2712
+Date: Tue, 18 Sep 2018 09:30:48 -0700
+Message-ID: <20180918163048.GN2471@sirena.org.uk>
+References: <1537150762-7072-1-git-send-email-leilk.liu@mediatek.com>
+ <1537150762-7072-3-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="o+ZCuNqY+dEAKBWl"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180907062502.8241-4-andrea.merello@gmail.com>
+In-Reply-To: <1537150762-7072-3-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, radhey.shyam.pandey@xilinx.com
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 07-09-18, 08:24, Andrea Merello wrote:
-> From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> 
-> AXI-DMA IP supports configurable (c_sg_length_width) buffer length
-> register width, hence read buffer length (xlnx,sg-length-width) DT
-> property and ensure that driver doesn't program buffer length
-> exceeding the supported limit. For VDMA and CDMA there is no change.
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Signed-off-by: Andrea Merello <andrea.merello@gmail.com> [rebase, reword]
-> ---
-> Changes in v2:
->         - drop original patch and replace with the one in Xilinx tree
-> Changes in v3:
-> 	- cc DT maintainers/ML
-> Changes in v4:
-> 	- upper bound for the property should be 26, not 23
-> 	- add warn for width > 23 as per xilinx original patch
-> 	- rework due to changes introduced in 1/6
-> Changes in v5:
-> 	None
-> ---
->  drivers/dma/xilinx/xilinx_dma.c | 36 +++++++++++++++++++++++++--------
->  1 file changed, 28 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index aaa6de8a70e4..b17f24e4ec35 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -158,7 +158,9 @@
->  #define XILINX_DMA_REG_BTT		0x28
->  
->  /* AXI DMA Specific Masks/Bit fields */
-> -#define XILINX_DMA_MAX_TRANS_LEN	GENMASK(22, 0)
-> +#define XILINX_DMA_MAX_TRANS_LEN_MIN	8
-> +#define XILINX_DMA_MAX_TRANS_LEN_MAX	23
-> +#define XILINX_DMA_V2_MAX_TRANS_LEN_MAX	26
->  #define XILINX_DMA_CR_COALESCE_MAX	GENMASK(23, 16)
->  #define XILINX_DMA_CR_CYCLIC_BD_EN_MASK	BIT(4)
->  #define XILINX_DMA_CR_COALESCE_SHIFT	16
-> @@ -418,6 +420,7 @@ struct xilinx_dma_config {
->   * @rxs_clk: DMA s2mm stream clock
->   * @nr_channels: Number of channels DMA device supports
->   * @chan_id: DMA channel identifier
-> + * @max_buffer_len: Max buffer length
->   */
->  struct xilinx_dma_device {
->  	void __iomem *regs;
-> @@ -437,6 +440,7 @@ struct xilinx_dma_device {
->  	struct clk *rxs_clk;
->  	u32 nr_channels;
->  	u32 chan_id;
-> +	u32 max_buffer_len;
->  };
->  
->  /* Macros */
-> @@ -964,7 +968,7 @@ static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
->  				    int size, int done)
->  {
->  	size_t copy = min_t(size_t, size - done,
-> -		     XILINX_DMA_MAX_TRANS_LEN);
-> +			    chan->xdev->max_buffer_len);
 
-hmm why not add max_buffer_len in patch 1 again, and then use default
-len as XILINX_DMA_MAX_TRANS_LEN and add multiple lengths here :)
+--o+ZCuNqY+dEAKBWl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- 
-~Vinod
+On Mon, Sep 17, 2018 at 10:19:21AM +0800, Leilk Liu wrote:
+
+This looks overall pretty good, a few smallish comments below:
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+>  if SPI_SLAVE
+> +config SPI_SLAVE_MT27XX
+> +	tristate "MediaTek SPI slave device"
+> +	depends on ARCH_MEDIATEK || COMPILE_TEST
+> +	help
+> +	  This selects the MediaTek(R) SPI slave device driver.
+> +	  If you want to use MediaTek(R) SPI slave interface,
+> +	  say Y or M here.If you are not sure, say N.
+> +	  SPI slave drivers for Mediatek MT27XX series ARM SoCs.
+> =20
+>  config SPI_SLAVE_TIME
+
+This is a driver not a slave implementation, it should be with the other
+drivers in the Kconfig.  The slave implementations are for the
+functionality that uses the drivers, not the drivers themselves.
+
+> +	/* set the tx/rx endian */
+> +#ifdef __LITTLE_ENDIAN
+> +	reg_val &=3D ~SPIS_TX_ENDIAN;
+> +	reg_val &=3D ~SPIS_RX_ENDIAN;
+> +#else
+> +	reg_val |=3D SPIS_TX_ENDIAN;
+> +	reg_val |=3D SPIS_RX_ENDIAN;
+> +#endif
+> +	writel(reg_val, mdata->base + SPIS_CFG_REG);
+
+This seems weird - it looks like it's changing the endianess of the
+protocol based on the endianness the processor is running in.  What's
+going on here?  I'd expect the driver to be just treating everything as
+a byte stream and letting the protocol driver handle the endianness
+issues, otherwise we might end up with double converions.
+
+> +		xfer->tx_dma =3D dma_map_single(dev, (void *)xfer->tx_buf,
+> +					      xfer->len, DMA_TO_DEVICE);
+
+Why is there a cast to void here?  That's usually a sign that there's a
+type safety issue, the whole point with void is that it's compatible
+with any other pointer.
+
+> +static irqreturn_t mtk_spi_slave_interrupt(int irq, void *dev_id)
+> +{
+> +	struct spi_controller *ctlr =3D dev_id;
+> +	struct mtk_spi_slave *mdata =3D spi_controller_get_devdata(ctlr);
+> +	struct spi_transfer *trans =3D mdata->cur_transfer;
+> +	u32 int_status, reg_val, cnt, remainder;
+> +
+> +	int_status =3D readl(mdata->base + SPIS_IRQ_ST_REG);
+> +	writel(int_status, mdata->base + SPIS_IRQ_CLR_REG);
+> +
+> +	if (!trans)
+> +		return IRQ_HANDLED;
+
+Are you sure that this is the right thing to do if we get a spurious
+interrupt - the normal thing would be to return IRQ_NONE, possibly
+logging a warning as well?
+
+> +	if (int_status & CMD_INVALID_ST)
+> +		dev_err(&ctlr->dev, "cmd invalid\n");
+
+If there's an interrupt that doesn't have any of the interrupt status
+flags set I'd expect to see a warning and probably IRQ_NONE being
+returned.  That way if the interrupt line is shared we work correctly
+and if something goes wrong and the interrupt gets stuck on then the
+core interrupt code's error handling can kick in.
+
+--o+ZCuNqY+dEAKBWl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluhKDcACgkQJNaLcl1U
+h9CQEAf8C+HMOrV3AB7YV2i/5k6xdvpMbOqH1q+eUO4Ct6kJZ9L2EsVgx12Iir3o
+ujpI8qL4DKvYs8RgPjmDc/ktxYyFfeAUaz5AzJUyuGNUgaYhJjXbPtJkBcjpZ9c3
+6He4fx1RWgkol/a4XLc2JBcVv8zqh9ayctLykKujLlOLUKwAvUdqSRH5tzJu7sr0
+evNsuDeuGVHsOSOu1LCPO/MbWql85YL0iEHRZm2PfmYYaVf1TwMQjRjUkiUC7K8R
++4PwwLGJTNgcaePGK9r8apszvbcZwRlO6h0YClZLRp+h1TJpml9OMgXx/Y5roUxV
+CVVo/lYIq+e/4M7oVePEVB0cwGv+ew==
+=aBM1
+-----END PGP SIGNATURE-----
+
+--o+ZCuNqY+dEAKBWl--
