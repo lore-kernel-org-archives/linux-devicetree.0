@@ -1,249 +1,58 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
-Date: Tue, 18 Sep 2018 16:24:22 +0800
-Message-ID: <20180918082422.13050-2-songqiang1304521@gmail.com>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH v2 1/5] spi: spi-mem: Add driver for NXP FlexSPI
+ controller
+Date: Tue, 18 Sep 2018 08:28:23 +0000
+Message-ID: <VI1PR04MB1038A85DC36665244DF2104A991D0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <1537177710-9379-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1537177710-9379-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20180917133751.453ea6ed@bbrezillon>
+ <9529c765-cb3b-02f9-df15-4f79cfa48e47@exceet.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918082422.13050-1-songqiang1304521@gmail.com>
+In-Reply-To: <9529c765-cb3b-02f9-df15-4f79cfa48e47@exceet.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>
+To: Frieder Schrempf <frieder.schrempf@exceet.de>, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The first version of this driver issues a measuring request and polling
-for a status register in the device for measuring completes.
-vl53l0x support configuring GPIO1 on it to generate interrupt to
-indicate that new measurement is ready. This patch adds support for
-using this mechanisim to reduce cpu cost.
-
-Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
----
- .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
- drivers/iio/proximity/vl53l0x-i2c.c           | 135 +++++++++++++++---
- 2 files changed, 129 insertions(+), 20 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-index ab9a9539fec4..40290f8dd70f 100644
---- a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-+++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-@@ -4,9 +4,21 @@ Required properties:
- 	- compatible: must be "st,vl53l0x-i2c"
- 	- reg: i2c address where to find the device
- 
-+Optional properties:
-+	- interrupts : Interrupt line receiving GPIO1's measuring complete
-+	  output, supports IRQ_TYPE_EDGE_FALLING only.
-+
-+	Refer to interrupt-controller/interrupts.txt for generic
-+	interrupt client node bindings.
-+
- Example:
- 
- vl53l0x@29 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&vl53l0x_pins>;
-+
- 	compatible = "st,vl53l0x-i2c";
- 	reg = <0x29>;
--};
-+	interrupt-parent = <&gpio3>;
-+	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-+}
-diff --git a/drivers/iio/proximity/vl53l0x-i2c.c b/drivers/iio/proximity/vl53l0x-i2c.c
-index 1aad45df8d95..a5cff11f41de 100644
---- a/drivers/iio/proximity/vl53l0x-i2c.c
-+++ b/drivers/iio/proximity/vl53l0x-i2c.c
-@@ -10,18 +10,21 @@
-  *
-  * Default 7-bit i2c slave address 0x29.
-  *
-- * TODO: FIFO buffer, continuous mode, interrupts, range selection,
-- * sensor ID check.
-+ * TODO: FIFO buffer, continuous mode, range selection.
-  */
- 
- #include <linux/module.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-+#include <linux/interrupt.h>
- 
- #include <linux/iio/iio.h>
- 
-+#include <stdbool.h>
-+
- #define VL_REG_SYSRANGE_START				0x00
- 
-+/* Mode configuration registers. */
- #define VL_REG_SYSRANGE_MODE_MASK			GENMASK(3, 0)
- #define VL_REG_SYSRANGE_MODE_SINGLESHOT			0x00
- #define VL_REG_SYSRANGE_MODE_START_STOP			BIT(0)
-@@ -29,14 +32,61 @@
- #define VL_REG_SYSRANGE_MODE_TIMED			BIT(2)
- #define VL_REG_SYSRANGE_MODE_HISTOGRAM			BIT(3)
- 
-+/* Result registers. */
- #define VL_REG_RESULT_INT_STATUS			0x13
- #define VL_REG_RESULT_RANGE_STATUS			0x14
- #define VL_REG_RESULT_RANGE_STATUS_COMPLETE		BIT(0)
- 
-+/* GPIO function configuration registers. */
-+#define VL_REG_GPIO_HV_MUX_ACTIVE_GIGH			0x84
-+#define VL_REG_SYS_INT_CFG_GPIO				0x0A
-+#define VL_GPIOFUNC_NEW_MEASURE_RDY			BIT(2)
-+
-+/* Interrupt configuration registers. */
-+#define VL_REG_SYS_INT_CLEAR				0x0B
-+#define VL_REG_RESULT_INT_STATUS			0x13
-+#define VL_INT_POLARITY_LOW				0x00
-+#define VL_INT_POLARITY_HIGH				BIT(0)
-+
-+/* Should be 0xEE if connection is fine. */
-+#define VL_REG_MODEL_ID					0xC0
-+
- struct vl53l0x_data {
- 	struct i2c_client *client;
-+	struct completion measuring_done;
-+	bool use_interrupt;
- };
- 
-+static int vl53l0x_clear_interrupt(struct vl53l0x_data *data)
-+{
-+	int ret;
-+	u8 cnt = 0;
-+
-+	do {
-+		/* bit 0 for measuring interrupt, bit 1 for error interrupt.  */
-+		i2c_smbus_write_byte_data(data->client,
-+			VL_REG_SYS_INT_CLEAR, 1);
-+		i2c_smbus_write_byte_data(data->client,
-+			VL_REG_SYS_INT_CLEAR, 0);
-+		ret = i2c_smbus_read_byte_data(data->client,
-+			VL_REG_RESULT_INT_STATUS);
-+		cnt++;
-+	} while ((ret & 0x07) && (cnt < 3));
-+	if (cnt > 2)
-+		return -ETIMEDOUT;
-+	else
-+		return 0;
-+}
-+
-+static irqreturn_t vl53l0x_irq_handler(int irq, void *d)
-+{
-+	struct vl53l0x_data *data = d;
-+
-+	complete(&data->measuring_done);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int vl53l0x_read_proximity(struct vl53l0x_data *data,
- 				  const struct iio_chan_spec *chan,
- 				  int *val)
-@@ -46,23 +96,31 @@ static int vl53l0x_read_proximity(struct vl53l0x_data *data,
- 	u8 buffer[12];
- 	int ret;
- 
--	ret = i2c_smbus_write_byte_data(client, VL_REG_SYSRANGE_START, 1);
--	if (ret < 0)
--		return ret;
--
--	do {
--		ret = i2c_smbus_read_byte_data(client,
--			VL_REG_RESULT_RANGE_STATUS);
--		if (ret < 0)
--			return ret;
--
--		if (ret & VL_REG_RESULT_RANGE_STATUS_COMPLETE)
--			break;
--
--		usleep_range(1000, 5000);
--	} while (--tries);
--	if (!tries)
--		return -ETIMEDOUT;
-+	if (data->use_interrupt)
-+		reinit_completion(&data->measuring_done);
-+
-+	i2c_smbus_write_byte_data(client, VL_REG_SYSRANGE_START, 1);
-+
-+	/* In usual case the longest valid conversion time is less than 70ms. */
-+	if (data->use_interrupt) {
-+		ret = wait_for_completion_timeout(&data->measuring_done,
-+			msecs_to_jiffies(100));
-+		if (!ret)
-+			return -ETIMEDOUT;
-+		vl53l0x_clear_interrupt(data);
-+	} else {
-+		do {
-+			ret = i2c_smbus_read_byte_data(client,
-+				VL_REG_RESULT_RANGE_STATUS);
-+
-+			if (ret & VL_REG_RESULT_RANGE_STATUS_COMPLETE)
-+				break;
-+
-+			usleep_range(1000, 5000);
-+		} while (--tries);
-+		if (!tries)
-+			return -ETIMEDOUT;
-+	}
- 
- 	ret = i2c_smbus_read_i2c_block_data(client, VL_REG_RESULT_RANGE_STATUS,
- 		12, buffer);
-@@ -110,10 +168,21 @@ static const struct iio_info vl53l0x_info = {
- 	.read_raw = vl53l0x_read_raw,
- };
- 
-+/* Congigure the GPIO1 pin to generate interrupt for measurement ready,
-+ * default polarity is level low.
-+ */
-+static int vl53l0x_config_irq(struct vl53l0x_data *data)
-+{
-+	i2c_smbus_write_byte_data(data->client, VL_REG_SYS_INT_CFG_GPIO,
-+		VL_GPIOFUNC_NEW_MEASURE_RDY);
-+	return vl53l0x_clear_interrupt(data);
-+}
-+
- static int vl53l0x_probe(struct i2c_client *client)
- {
- 	struct vl53l0x_data *data;
- 	struct iio_dev *indio_dev;
-+	int ret;
- 
- 	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
- 	if (!indio_dev)
-@@ -134,6 +203,34 @@ static int vl53l0x_probe(struct i2c_client *client)
- 	indio_dev->num_channels = ARRAY_SIZE(vl53l0x_channels);
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
-+	if (!client->irq)
-+		data->use_interrupt = false;
-+	else {
-+		data->use_interrupt = true;
-+		ret = devm_request_irq(&client->dev,
-+			client->irq,
-+			vl53l0x_irq_handler,
-+			IRQF_TRIGGER_FALLING,
-+			indio_dev->name,
-+			data);
-+		if (ret < 0) {
-+			dev_err(&client->dev,
-+			"request irq line failed.");
-+			return -EINVAL;
-+		}
-+		vl53l0x_config_irq(data);
-+		init_completion(&data->measuring_done);
-+	}
-+
-+	/* After checking this, assuming write and read byte operations should
-+	 *  never fails.
-+	 */
-+	ret = i2c_smbus_read_byte_data(client, VL_REG_MODEL_ID);
-+	if (ret != 0xEE) {
-+		dev_err(&client->dev, "device not found. ");
-+		return -EREMOTEIO;
-+	}
-+
- 	return devm_iio_device_register(&client->dev, indio_dev);
- }
- 
--- 
-2.17.1
+SGkgRnJpZWRlciwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBGcmll
+ZGVyIFNjaHJlbXBmIFttYWlsdG86ZnJpZWRlci5zY2hyZW1wZkBleGNlZXQuZGVdDQo+IFNlbnQ6
+IFR1ZXNkYXksIFNlcHRlbWJlciAxOCwgMjAxOCAxOjUyIFBNDQo+IFRvOiBCb3JpcyBCcmV6aWxs
+b24gPGJvcmlzLmJyZXppbGxvbkBib290bGluLmNvbT47IFlvZ2VzaCBOYXJheWFuIEdhdXINCj4g
+PHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPg0KPiBDYzogbGludXgtbXRkQGxpc3RzLmluZnJh
+ZGVhZC5vcmc7IG1hcmVrLnZhc3V0QGdtYWlsLmNvbTsgbGludXgtDQo+IHNwaUB2Z2VyLmtlcm5l
+bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyByb2JoQGtlcm5lbC5vcmc7DQo+IG1h
+cmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+IGtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBjb21wdXRlcnNmb3JwZWFjZUBnbWFpbC5jb207IGxp
+bnV4LQ0KPiBrZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIg
+MS81XSBzcGk6IHNwaS1tZW06IEFkZCBkcml2ZXIgZm9yIE5YUCBGbGV4U1BJIGNvbnRyb2xsZXIN
+Cj4gDQo+IEhpIEJvcmlzLCBZb2dlc2gsDQo+IA0KPiBPbiAxNy4wOS4yMDE4IDEzOjM3LCBCb3Jp
+cyBCcmV6aWxsb24gd3JvdGU6DQo+ID4gSGkgWW9nZXNoLA0KPiA+DQo+ID4gT24gTW9uLCAxNyBT
+ZXAgMjAxOCAxNToxODoyNiArMDUzMA0KPiA+IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFuLmdh
+dXJAbnhwLmNvbT4gd3JvdGU6DQo+ID4NCj4gPj4gKw0KPiA+PiArCS8qDQo+ID4+ICsJICogUi9X
+IGZ1bmN0aW9ucyBmb3IgYmlnLSBvciBsaXR0bGUtZW5kaWFuIHJlZ2lzdGVyczoNCj4gPj4gKwkg
+KiBUaGUgRlNQSSBjb250cm9sbGVyJ3MgZW5kaWFubmVzcyBpcyBpbmRlcGVuZGVudCBvZg0KPiA+
+PiArCSAqIHRoZSBDUFUgY29yZSdzIGVuZGlhbm5lc3MuIFNvIGZhciwgYWx0aG91Z2ggdGhlIENQ
+VQ0KPiA+PiArCSAqIGNvcmUgaXMgbGl0dGxlLWVuZGlhbiB0aGUgRlNQSSBjb250cm9sbGVyIGNh
+biB1c2UNCj4gPj4gKwkgKiBiaWctZW5kaWFuIG9yIGxpdHRsZS1lbmRpYW4uDQo+ID4+ICsJICov
+DQo+ID4+ICsJaWYgKG9mX3Byb3BlcnR5X3JlYWRfYm9vbChucCwgImJpZy1lbmRpYW4iKSkgew0K
+PiA+PiArCQlmLT53cml0ZSA9IGZzcGlfd3JpdGVsX2JlOw0KPiA+PiArCQlmLT5yZWFkID0gZnNw
+aV9yZWFkbF9iZTsNCj4gPj4gKwl9IGVsc2Ugew0KPiA+PiArCQlmLT53cml0ZSA9IGZzcGlfd3Jp
+dGVsOw0KPiA+PiArCQlmLT5yZWFkID0gZnNwaV9yZWFkbDsNCj4gPj4gKwl9DQo+ID4NCj4gPiBI
+bSwgaXNuJ3QgaXQgc29tZXRoaW5nIHlvdSBjYW4gZXh0cmFjdCBmcm9tIHRoZSBjb21wYXRpYmxl
+IHN0cmluZz8gSSdkDQo+ID4gcmF0aGVyIG5vdCBhbGxvdyB1c2VycyB0byBzZXQgdGhhdCBpbiB0
+aGVpciBEVCBpZiBpdCdzIG5vdCBzb21ldGhpbmcNCj4gPiB5b3UgY2FuIGNoYW5nZS4NCj4gDQo+
+IFRoaXMgd2FzIGNvcGllZCBmcm9tIHRoZSBRU1BJIGRyaXZlciwgYnV0IEkgdGhpbmsgQm9yaXMg
+aXMgcmlnaHQuIFRoaXMgc2VlbXMgdG8gYmUgYQ0KPiBmaXhlZCBTT0Mtc3BlY2lmaWMgc2V0dGlu
+ZyBhbmQgd2Ugc2hvdWxkbid0IHNldCBpdCBpbiB0aGUgRFQuIFRoaXMgYXBwbGllcyB0byBRU1BJ
+DQo+IGFuZCBGU1BJIGFsaWtlLg0KPiANCg0KWWVzLCBpdCBjYW4gYmUgbW9kaWZpZWQuIEluc3Rl
+YWQgb2YgcmVhZGluZyBlbmRpYW5uZXNzIHByb3BlcnR5IGZyb20gZGV2aWNlIHRyZWUgY2FuIGJl
+IG1vdmVkIHRvIHRoZSBwbGF0Zm9ybSBzdHJ1Y3R1cmUgbnhwX2ZzcGlfZGV2dHlwZV9kYXRhIHdo
+aWNoIGlzIGxpbmtlZCB3aXRoIHRoZSBjb21wYXRpYmxlIHN0cmluZw0KeyAuY29tcGF0aWJsZSA9
+ICJueHAsbHgyMTYwYS1mc3BpIiwgLmRhdGEgPSAodm9pZCAqKSZseDIxNjBhX2RhdGEsIH0NCg0K
+VGhhbmtzLg0KDQpXb3VsZCBzZW5kIHRoZSBjaGFuZ2VzIGluIG5leHQgdmVyc2lvbi4NCg0KLS0N
+ClJlZ2FyZHMsDQpZb2dlc2ggR2F1ci4NCg0KPiBSZWdhcmRzLA0KPiBGcmllZGVyDQo+IA0KPiA+
+DQo+ID4gUmVnYXJkcywNCj4gPg0KPiA+IEJvcmlzDQo+ID4NCg==
