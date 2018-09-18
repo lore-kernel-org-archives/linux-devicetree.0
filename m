@@ -1,45 +1,54 @@
-From: Matheus Castello <matheus@castello.eng.br>
-Subject: Re: [PATCH 0/4] power: supply: MAX17040: Add IRQ for low level and
- alert SOC changes
-Date: Tue, 18 Sep 2018 00:45:09 -0300
-Message-ID: <473eb21a-d08d-63c2-93c1-7a445e6fd4bc@castello.eng.br>
-References: <20180723040816.19455-1-matheus@castello.eng.br>
- <20180916114520.4375nr2gv3y4ghzv@earth.universe>
- <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+From: Anson Huang <Anson.Huang@nxp.com>
+Subject: [PATCH 0/4] Add i.MX6ULZ SoC support
+Date: Tue, 18 Sep 2018 14:19:04 +0800
+Message-ID: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, sebastian.reichel@collabora.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof and Sebastian,
+This patch set adds i.MX6ULZ SoC support, i.MX6ULZ is a new SoC of
+i.MX6 family, compared to i.MX6ULL, it removes below modules:
 
-please forgive me for the delay in working with this patch.
-I've been having some personal issues these months, but leaving the 
-excuses I still intend to send a v2 for this.
+    - UART5/UART6/UART7/UART8;
+    - PWM5/PWM6/PWM7/PWM8;
+    - eCSPI3/eCSPI4;
+    - CAN1/CAN2;
+    - FEC1/FEC2;
+    - I2C3/I2C4;
+    - EPIT2;
+    - LCDIF;
+    - GPT2;
+    - TSC;
 
-Thanks Krzysztof for review and tips I'll work on it.
+And i.MX6ULZ has same soc_id as i.MX6ULL, but SRC_SBMR2 bit[6] is
+to differentiate i.MX6ULZ from i.MX6ULL, 1'b1 means i.MX6ULZ and
+1'b0 means i.MX6ULL. i.MX6ULZ reuse most of i.MX6UL/i.MX6ULL code,
+just add the new CPU type and remove those non-exist modules from dtb.
 
-Best Regards,
-Matheus Castello
+Anson Huang (4):
+  ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
+  ARM: imx: add i.mx6ulz msl support
+  clk: imx6ul: add i.mx6ulz support
+  dt-bindings: arm: add compatible for i.MX6ULZ 14x14 EVK board
 
-On 09/17/2018 08:32 AM, Krzysztof Kozlowski wrote:
-> On Sun, 16 Sep 2018 at 22:03, Sebastian Reichel
-> <sebastian.reichel@collabora.com> wrote:
->>
->> Hi Matheus,
->>
->> Did I miss a v2 of this patchset, that solves the issues
->> found by Krzysztof?
-> 
-> I did not see v2. This patchset brings nice feature so it would be a
-> pity if it were discontinued.
-> 
-> Best regards,
-> Krzysztof
-> 
+ Documentation/devicetree/bindings/arm/fsl.txt |  4 +++
+ arch/arm/boot/dts/Makefile                    |  3 ++-
+ arch/arm/boot/dts/imx6ulz-14x14-evk.dts       | 20 ++++++++++++++
+ arch/arm/boot/dts/imx6ulz.dtsi                | 38 +++++++++++++++++++++++++++
+ arch/arm/mach-imx/anatop.c                    | 20 ++++++++++++++
+ arch/arm/mach-imx/cpu.c                       |  3 +++
+ arch/arm/mach-imx/mach-imx6ul.c               |  1 +
+ arch/arm/mach-imx/mxc.h                       |  7 +++++
+ arch/arm/mach-imx/pm-imx6.c                   |  4 +--
+ drivers/clk/imx/clk-imx6ul.c                  |  3 ++-
+ 10 files changed, 99 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6ulz-14x14-evk.dts
+ create mode 100644 arch/arm/boot/dts/imx6ulz.dtsi
+
+-- 
+2.7.4
