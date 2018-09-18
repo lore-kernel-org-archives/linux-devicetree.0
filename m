@@ -1,171 +1,57 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 5/6] arm64/io: Add header for instrumentation of io
- operations
-Date: Mon, 17 Sep 2018 19:39:40 -0400
-Message-ID: <20180917193940.3d68ef88@gandalf.local.home>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
-        <bb322d763aa6c58f036e5209a481c769be92ab9b.1536430404.git.saiprakash.ranjan@codeaurora.org>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH] powerpc/mpc85xx: fix issues in clock node
+Date: Tue, 18 Sep 2018 00:43:42 +0000
+Message-ID: <DB5PR0401MB22130D7DA4C0AC850AD54909F31D0@DB5PR0401MB2213.eurprd04.prod.outlook.com>
+References: <20180911021224.30558-1-andy.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bb322d763aa6c58f036e5209a481c769be92ab9b.1536430404.git.saiprakash.ranjan@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vg
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <20180911021224.30558-1-andy.tang@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Andy Tang <andy.tang@nxp.com>, "oss@buserror.net" <oss@buserror.net>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun,  9 Sep 2018 01:57:06 +0530
-Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
-
-> The new asm-generic/io-instrumented.h will keep arch code
-> clean and separate from instrumented version which traces
-> io register accesses. This instrumented header can later
-> be included in arm as well for tracing io register accesses.
-> 
-
-Looks good to me.
-
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-> Suggested-by: Will Deacon <will.deacon@arm.com>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  arch/arm64/include/asm/io.h           | 25 ++++++---------
->  include/asm-generic/io-instrumented.h | 45 +++++++++++++++++++++++++++
->  2 files changed, 54 insertions(+), 16 deletions(-)
->  create mode 100644 include/asm-generic/io-instrumented.h
-> 
-> diff --git a/arch/arm64/include/asm/io.h b/arch/arm64/include/asm/io.h
-> index 35b2e50f17fb..768a6a8c5778 100644
-> --- a/arch/arm64/include/asm/io.h
-> +++ b/arch/arm64/include/asm/io.h
-> @@ -36,32 +36,27 @@
->  /*
->   * Generic IO read/write.  These perform native-endian accesses.
->   */
-> -#define __raw_writeb __raw_writeb
-> -static inline void __raw_writeb(u8 val, volatile void __iomem *addr)
-> +static inline void arch_raw_writeb(u8 val, volatile void __iomem *addr)
->  {
->  	asm volatile("strb %w0, [%1]" : : "rZ" (val), "r" (addr));
->  }
->  
-> -#define __raw_writew __raw_writew
-> -static inline void __raw_writew(u16 val, volatile void __iomem *addr)
-> +static inline void arch_raw_writew(u16 val, volatile void __iomem *addr)
->  {
->  	asm volatile("strh %w0, [%1]" : : "rZ" (val), "r" (addr));
->  }
->  
-> -#define __raw_writel __raw_writel
-> -static inline void __raw_writel(u32 val, volatile void __iomem *addr)
-> +static inline void arch_raw_writel(u32 val, volatile void __iomem *addr)
->  {
->  	asm volatile("str %w0, [%1]" : : "rZ" (val), "r" (addr));
->  }
->  
-> -#define __raw_writeq __raw_writeq
-> -static inline void __raw_writeq(u64 val, volatile void __iomem *addr)
-> +static inline void arch_raw_writeq(u64 val, volatile void __iomem *addr)
->  {
->  	asm volatile("str %x0, [%1]" : : "rZ" (val), "r" (addr));
->  }
->  
-> -#define __raw_readb __raw_readb
-> -static inline u8 __raw_readb(const volatile void __iomem *addr)
-> +static inline u8 arch_raw_readb(const volatile void __iomem *addr)
->  {
->  	u8 val;
->  	asm volatile(ALTERNATIVE("ldrb %w0, [%1]",
-> @@ -71,8 +66,7 @@ static inline u8 __raw_readb(const volatile void __iomem *addr)
->  	return val;
->  }
->  
-> -#define __raw_readw __raw_readw
-> -static inline u16 __raw_readw(const volatile void __iomem *addr)
-> +static inline u16 arch_raw_readw(const volatile void __iomem *addr)
->  {
->  	u16 val;
->  
-> @@ -83,8 +77,7 @@ static inline u16 __raw_readw(const volatile void __iomem *addr)
->  	return val;
->  }
->  
-> -#define __raw_readl __raw_readl
-> -static inline u32 __raw_readl(const volatile void __iomem *addr)
-> +static inline u32 arch_raw_readl(const volatile void __iomem *addr)
->  {
->  	u32 val;
->  	asm volatile(ALTERNATIVE("ldr %w0, [%1]",
-> @@ -94,8 +87,7 @@ static inline u32 __raw_readl(const volatile void __iomem *addr)
->  	return val;
->  }
->  
-> -#define __raw_readq __raw_readq
-> -static inline u64 __raw_readq(const volatile void __iomem *addr)
-> +static inline u64 arch_raw_readq(const volatile void __iomem *addr)
->  {
->  	u64 val;
->  	asm volatile(ALTERNATIVE("ldr %0, [%1]",
-> @@ -193,6 +185,7 @@ extern void __iomem *ioremap_cache(phys_addr_t phys_addr, size_t size);
->  #define iowrite32be(v,p)	({ __iowmb(); __raw_writel((__force __u32)cpu_to_be32(v), p); })
->  #define iowrite64be(v,p)	({ __iowmb(); __raw_writeq((__force __u64)cpu_to_be64(v), p); })
->  
-> +#include <asm-generic/io-instrumented.h>
->  #include <asm-generic/io.h>
->  
->  /*
-> diff --git a/include/asm-generic/io-instrumented.h b/include/asm-generic/io-instrumented.h
-> new file mode 100644
-> index 000000000000..7b050e2487ed
-> --- /dev/null
-> +++ b/include/asm-generic/io-instrumented.h
-> @@ -0,0 +1,45 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_GENERIC_IO_INSTRUMENTED_H
-> +#define _ASM_GENERIC_IO_INSTRUMENTED_H
-> +
-> +#if defined(CONFIG_TRACING_EVENTS_IO)
-> +#include <linux/tracepoint-defs.h>
-> +
-> +extern struct tracepoint __tracepoint_io_write;
-> +extern struct tracepoint __tracepoint_io_read;
-> +#define io_tracepoint_active(t) static_key_false(&(t).key)
-> +extern void do_trace_io_write(const char *type, void *addr);
-> +extern void do_trace_io_read(const char *type, void *addr);
-> +#else
-> +#define io_tracepoint_active(t) false
-> +static inline void do_trace_io_write(const char *type, void *addr) {}
-> +static inline void do_trace_io_read(const char *type, void *addr) {}
-> +#endif /* CONFIG_TRACING_EVENTS_IO */
-> +
-> +#define __raw_write(v, a, _l)	({						\
-> +	volatile void __iomem *_a = (a);					\
-> +	if (io_tracepoint_active(__tracepoint_io_write))			\
-> +		do_trace_io_write(__stringify(write##_l), (void __force *)(_a));\
-> +	arch_raw_write##_l((v), _a);						\
-> +	})
-> +
-> +#define __raw_writeb(v, a)	__raw_write((v), a, b)
-> +#define __raw_writew(v, a)	__raw_write((v), a, w)
-> +#define __raw_writel(v, a)	__raw_write((v), a, l)
-> +#define __raw_writeq(v, a)	__raw_write((v), a, q)
-> +
-> +#define __raw_read(a, _l, _t)    ({						\
-> +	_t __a;									\
-> +	const volatile void __iomem *_a = (a);					\
-> +	if (io_tracepoint_active(__tracepoint_io_read))				\
-> +		do_trace_io_read(__stringify(read##_l), (void __force *)(_a));	\
-> +	__a = arch_raw_read##_l(_a);						\
-> +	__a;									\
-> +	})
-> +
-> +#define __raw_readb(a)	__raw_read((a), b, u8)
-> +#define __raw_readw(a)	__raw_read((a), w, u16)
-> +#define __raw_readl(a)	__raw_read((a), l, u32)
-> +#define __raw_readq(a)	__raw_read((a), q, u64)
-> +
-> +#endif /* _ASM_GENERIC_IO_INSTRUMENTED_H */
+SGkgU2NvdHQsDQoNCkNvdWxkIHlvdSBwbGVhc2UgdGFrZSBhIGxvb2sgYXQgdGhpcyBwYXRjaD8N
+Cg0KVGhhbmtzLA0KQW5keQ0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
+IGFuZHkudGFuZ0BueHAuY29tIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gU2VudDogMjAxOMTqOdTC
+MTHI1SAxMDoxMg0KPiBUbzogb3NzQGJ1c2Vycm9yLm5ldA0KPiBDYzogcm9iaCtkdEBrZXJuZWwu
+b3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsNCj4gYmVuaEBrZXJuZWwuY3Jhc2hpbmcub3JnOyBk
+ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
+cmc7IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFtQQVRDSF0gcG93
+ZXJwYy9tcGM4NXh4OiBmaXggaXNzdWVzIGluIGNsb2NrIG5vZGUNCj4gDQo+IEZyb206IFl1YW50
+aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiANCj4gVGhlIGNvbXBhdGlibGUgc3RyaW5n
+IGlzIG5vdCBjb3JyZWN0IGluIHRoZSBjbG9jayBub2RlLg0KPiBUaGUgY2xvY2tzIHByb3BlcnR5
+IHJlZmVycyB0byB0aGUgd3Jvbmcgbm9kZSB0b28uDQo+IFRoaXMgcGF0Y2ggaXMgdG8gZml4IHRo
+ZW0uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBUYW5nIFl1YW50aWFuIDxhbmR5LnRhbmdAbnhwLmNv
+bT4NCj4gLS0tDQo+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNp
+IHwgICAgOCArKysrLS0tLQ0KPiAgMSBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDQg
+ZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2Zz
+bC90MTAyM3NpLXBvc3QuZHRzaQ0KPiBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDEwMjNz
+aS1wb3N0LmR0c2kNCj4gaW5kZXggNDkwOGFmNS4uNzYzY2FmNCAxMDA2NDQNCj4gLS0tIGEvYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC90MTAyM3NpLXBvc3QuZHRzaQ0KPiArKysgYi9hcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL3QxMDIzc2ktcG9zdC5kdHNpDQo+IEBAIC0zNDgsNyArMzQ4LDcg
+QEANCj4gIAkJbXV4MDogbXV4MEAwIHsNCj4gIAkJCSNjbG9jay1jZWxscyA9IDwwPjsNCj4gIAkJ
+CXJlZyA9IDwweDAgND47DQo+IC0JCQljb21wYXRpYmxlID0gImZzbCxjb3JlLW11eC1jbG9jayI7
+DQo+ICsJCQljb21wYXRpYmxlID0gImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOw0KPiAgCQkJY2xv
+Y2tzID0gPCZwbGwwIDA+LCA8JnBsbDAgMT47DQo+ICAJCQljbG9jay1uYW1lcyA9ICJwbGwwXzAi
+LCAicGxsMF8xIjsNCj4gIAkJCWNsb2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MCI7DQo+IEBAIC0z
+NTYsOSArMzU2LDkgQEANCj4gIAkJbXV4MTogbXV4MUAyMCB7DQo+ICAJCQkjY2xvY2stY2VsbHMg
+PSA8MD47DQo+ICAJCQlyZWcgPSA8MHgyMCA0PjsNCj4gLQkJCWNvbXBhdGlibGUgPSAiZnNsLGNv
+cmUtbXV4LWNsb2NrIjsNCj4gLQkJCWNsb2NrcyA9IDwmcGxsMCAwPiwgPCZwbGwwIDE+Ow0KPiAt
+CQkJY2xvY2stbmFtZXMgPSAicGxsMF8wIiwgInBsbDBfMSI7DQo+ICsJCQljb21wYXRpYmxlID0g
+ImZzbCxxb3JpcS1jb3JlLW11eC0yLjAiOw0KPiArCQkJY2xvY2tzID0gPCZwbGwxIDA+LCA8JnBs
+bDEgMT47DQo+ICsJCQljbG9jay1uYW1lcyA9ICJwbGwxXzAiLCAicGxsMV8xIjsNCj4gIAkJCWNs
+b2NrLW91dHB1dC1uYW1lcyA9ICJjbXV4MSI7DQo+ICAJCX07DQo+ICAJfTsNCj4gLS0NCj4gMS43
+LjENCg0K
