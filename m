@@ -1,53 +1,45 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 0/4] Add i.MX6ULZ SoC support
-Date: Tue, 18 Sep 2018 09:38:22 +0200
-Message-ID: <e82e2894-2a0d-0084-913c-b7c6d966fc13@i2se.com>
-References: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
+From: =?UTF-8?Q?S=c3=a9bastien_Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: Re: [PATCH] ARM: dts: imx6ull: update vdd_soc voltage for 900MHz
+ operating point
+Date: Tue, 18 Sep 2018 09:57:51 +0200
+Message-ID: <b145ac3a-279e-ddbe-770b-08d18fa10feb@armadeus.com>
+References: <1536740009-32735-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1536740009-32735-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <Anson.Huang@nxp.com>, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Anson,
-
-Am 18.09.2018 um 08:19 schrieb Anson Huang:
-> This patch set adds i.MX6ULZ SoC support, i.MX6ULZ is a new SoC of
-> i.MX6 family, compared to i.MX6ULL, it removes below modules:
->
->     - UART5/UART6/UART7/UART8;
->     - PWM5/PWM6/PWM7/PWM8;
->     - eCSPI3/eCSPI4;
->     - CAN1/CAN2;
->     - FEC1/FEC2;
->     - I2C3/I2C4;
->     - EPIT2;
->     - LCDIF;
->     - GPT2;
->     - TSC;
->
-> And i.MX6ULZ has same soc_id as i.MX6ULL, but SRC_SBMR2 bit[6] is
-> to differentiate i.MX6ULZ from i.MX6ULL, 1'b1 means i.MX6ULZ and
-> 1'b0 means i.MX6ULL. i.MX6ULZ reuse most of i.MX6UL/i.MX6ULL code,
-> just add the new CPU type and remove those non-exist modules from dtb.
->
-> Anson Huang (4):
->   ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
->   ARM: imx: add i.mx6ulz msl support
->   clk: imx6ul: add i.mx6ulz support
->   dt-bindings: arm: add compatible for i.MX6ULZ 14x14 EVK board
->
->  
-
-i recommend the following patch order:
-ARM: imx: add i.mx6ulz msl support
-clk: imx6ul: add i.mx6ulz support
-dt-bindings: arm: add compatible for i.MX6ULZ 14x14 EVK board
-ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
-
-Stefan
+T24gMDkvMTIvMjAxOCAxMDoxMyBBTSwgQW5zb24gSHVhbmcgd3JvdGU6Cj4gVXBkYXRlIFZERF9T
+T0Mgdm9sdGFnZSB0byAxLjI1ViBmb3IgOTAwTUh6IG9wZXJhdGluZyBwb2ludAo+IGFjY29yZGlu
+ZyB0byBkYXRhc2hlZXQgUmV2LiAxLjMsIDA4LzIwMTgsIDI1bVYgaXMgYWRkZWQgdG8KPiB0aGUg
+bWluaW11bSBhbGxvd2VkIHZhbHVlcyB0byBjb3ZlciBwb3dlciBzdXBwbHkgcmlwcGxlLgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPgo+IC0tLQo+
+ICBhcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLmR0c2kgfCAyICstCj4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2Fy
+bS9ib290L2R0cy9pbXg2dWxsLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9pbXg2dWxsLmR0c2kK
+PiBpbmRleCBjZDE3NzZhLi43OTZlZDM1IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
+L2lteDZ1bGwuZHRzaQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZ1bGwuZHRzaQo+IEBA
+IC0yMiw3ICsyMiw3IEBACj4gIAk+Owo+ICAJZnNsLHNvYy1vcGVyYXRpbmctcG9pbnRzID0gPAo+
+ICAJCS8qIEtIegl1ViAqLwo+IC0JCTkwMDAwMAkxMTc1MDAwCj4gKwkJOTAwMDAwCTEyNTAwMDAK
+PiAgCQk3OTIwMDAJMTE3NTAwMAo+ICAJCTUyODAwMAkxMTc1MDAwCj4gIAkJMzk2MDAwCTExNzUw
+MDAKPiAKClJldmlld2VkLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1h
+bnNraUBhcm1hZGV1cy5jb20+CgotLSAKU8OpYmFzdGllbiBTenltYW5za2kKU29mdHdhcmUgZW5n
+aW5lZXIsIEFybWFkZXVzIFN5c3RlbXMKVGVsOiArMzMgKDApOSA3MiAyOSA0MSA0NApGYXg6ICsz
+MyAoMCk5IDcyIDI4IDc5IDI2CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
