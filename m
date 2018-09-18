@@ -1,93 +1,51 @@
-From: biao huang <biao.huang@mediatek.com>
-Subject: Re: [PATCH 1/2] dt-binding: mediatek: Add binding document for
- MediaTek GMAC
-Date: Tue, 18 Sep 2018 09:14:19 +0800
-Message-ID: <1537233259.12247.3.camel@mhfsdcap03>
-References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
-         <1537165763-13112-2-git-send-email-biao.huang@mediatek.com>
-         <fb327132-0830-9df0-434e-06bb0033bac4@cogentembedded.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH] ARM: dts: imx6ull: update vdd_soc voltage for 900MHz
+ operating point
+Date: Tue, 18 Sep 2018 01:15:02 +0000
+Message-ID: <DB3PR0402MB3916936F80C14D00F5D07966F51D0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1536740009-32735-1-git-send-email-Anson.Huang@nxp.com>
+ <d989e700-0cf1-607a-b333-bdead49ae813@i2se.com>
+ <DB3PR0402MB3916249305E241849A32DC05F51B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fb327132-0830-9df0-434e-06bb0033bac4@cogentembedded.com>
+In-Reply-To: <DB3PR0402MB3916249305E241849A32DC05F51B0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, sean.wang@mediatek.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-09-17 at 11:33 +0300, Sergei Shtylyov wrote:
-> On 9/17/2018 9:29 AM, Biao Huang wrote:
-> 
-> > The commit adds the device tree binding documentation for the MediaTek
-> > GMAC found on Mediatek MT2712.
-> > 
-> > Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-> > ---
-> >   .../devicetree/bindings/net/mediatek-gmac.txt      |   45 ++++++++++++++++++++
-> >   1 file changed, 45 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/net/mediatek-gmac.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/net/mediatek-gmac.txt b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
-> > new file mode 100644
-> > index 0000000..14876ed
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
-> > @@ -0,0 +1,45 @@
-> > +MediaTek Gigabit Ethernet controller
-> > +=========================================
-> > +
-> > +The gigabit ethernet controller can be found on MediaTek SoCs.
-> > +
-> > +* Ethernet controller node
-> > +
-> > +Required properties:
-> > +- compatible: Should be
-> > +	"mediatek,mt2712-eth": for MT2712 SoC
-> > +- reg: Address and length of the register set for the device
-> > +- interrupts: Should contain the MAC interrupts
-> > +- interrupt-names: the name of interrupt in the interrupts property. These are
-> > +	"macirq": For MT2712 SoC
-> > +- clocks: the clock used by the controller
-> > +- clock-names: the names of the clock listed in the clocks property. These are
-> > +	"axi", "apb", "mac_ext", "ptp", "ptp_parent", "ptp_top": For MT2712 SoC
-> > +- mac-address: See ethernet.txt in the same directory
-> > +- power-domains: phandle to the power domain that the ethernet is part of
-> 
->     This (required) prop is absent in your example.
-thanks for your comments, power-domains is not a required property, and
-I'll modify this property in next version.
-> 
-> > +- phy-mode: See ethernet.txt file in the same directory.
-> > +- reset-gpio: gpio number for phy reset.
-> > +
-> > +Example:
-> > +
-> > +eth: eth@1101c000 {
-> 
-> eth: ethernet@1101c000 {
-> 
-> > +		compatible = "mediatek,mt2712-eth";
-> > +		reg = <0 0x1101c000 0 0x1200>;
-> > +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
-> > +		interrupt-names = "macirq";
-> > +		phy-mode ="rgmii";
-> > +		mac-address = [00 55 7b b5 7d f7];
-> > +		clock-names = "axi",
-> > +			      "apb",
-> > +			      "mac_ext",
-> > +			      "ptp",
-> > +			      "ptp_parent",
-> > +			      "ptp_top";
-> > +		clocks = <&pericfg CLK_PERI_GMAC>,
-> > +			 <&pericfg CLK_PERI_GMAC_PCLK>,
-> > +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
-> > +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
-> > +			 <&topckgen CLK_TOP_APLL1_D3>,
-> > +			 <&topckgen CLK_TOP_APLL1>;
-> > +		reset-gpio = <&pio 87 GPIO_ACTIVE_HIGH>;
-> > +	};
-> 
-> MBR, Sergei
-Best Regards!
-Biao
+SGksIFN0ZWZhbg0KDQpBbnNvbiBIdWFuZw0KQmVzdCBSZWdhcmRzIQ0KDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW5zb24gSHVhbmcNCj4gU2VudDogV2VkbmVzZGF5
+LCBTZXB0ZW1iZXIgMTIsIDIwMTggNDozMCBQTQ0KPiBUbzogU3RlZmFuIFdhaHJlbiA8c3RlZmFu
+LndhaHJlbkBpMnNlLmNvbT47IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+IHMuaGF1ZXJAcGVuZ3V0
+cm9uaXguZGU7IGtlcm5lbEBwZW5ndXRyb25peC5kZTsgRmFiaW8gRXN0ZXZhbQ0KPiA8ZmFiaW8u
+ZXN0ZXZhbUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNv
+bTsNCj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZpY2V0cmVlQHZn
+ZXIua2VybmVsLm9yZzsNCj4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBDYzogZGwt
+bGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSF0gQVJN
+OiBkdHM6IGlteDZ1bGw6IHVwZGF0ZSB2ZGRfc29jIHZvbHRhZ2UgZm9yIDkwME1Ieg0KPiBvcGVy
+YXRpbmcgcG9pbnQNCj4gDQo+IEhpLCBTdGVmYW4NCj4gDQo+IEFuc29uIEh1YW5nDQo+IEJlc3Qg
+UmVnYXJkcyENCj4gDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
+bTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBpMnNlLmNvbT4NCj4gPiBTZW50OiBXZWRu
+ZXNkYXksIFNlcHRlbWJlciAxMiwgMjAxOCA0OjI4IFBNDQo+ID4gVG86IEFuc29uIEh1YW5nIDxh
+bnNvbi5odWFuZ0BueHAuY29tPjsgc2hhd25ndW9Aa2VybmVsLm9yZzsNCj4gPiBzLmhhdWVyQHBl
+bmd1dHJvbml4LmRlOyBrZXJuZWxAcGVuZ3V0cm9uaXguZGU7IEZhYmlvIEVzdGV2YW0NCj4gPiA8
+ZmFiaW8uZXN0ZXZhbUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRA
+YXJtLmNvbTsNCj4gPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmlj
+ZXRyZWVAdmdlci5rZXJuZWwub3JnOw0KPiA+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcN
+Cj4gPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBS
+ZTogW1BBVENIXSBBUk06IGR0czogaW14NnVsbDogdXBkYXRlIHZkZF9zb2Mgdm9sdGFnZSBmb3IN
+Cj4gPiA5MDBNSHogb3BlcmF0aW5nIHBvaW50DQo+ID4NCj4gPiBIaSBBbnNvbiwNCj4gPg0KPiA+
+IEFtIDEyLjA5LjIwMTggdW0gMTA6MTMgc2NocmllYiBBbnNvbiBIdWFuZzoNCj4gPiA+IFVwZGF0
+ZSBWRERfU09DIHZvbHRhZ2UgdG8gMS4yNVYgZm9yIDkwME1IeiBvcGVyYXRpbmcgcG9pbnQgYWNj
+b3JkaW5nDQo+ID4gPiB0byBkYXRhc2hlZXQgUmV2LiAxLjMsIDA4LzIwMTgsIDI1bVYgaXMgYWRk
+ZWQgdG8gdGhlIG1pbmltdW0gYWxsb3dlZA0KPiA+ID4gdmFsdWVzIHRvIGNvdmVyIHBvd2VyIHN1
+cHBseSByaXBwbGUuDQo+ID4NCj4gPiBpcyB0aGVyZSBhIHJlYXNvbiB3aHkgdGhlIG5ldyBkYXRh
+c2hlZXQgaXNuJ3QgcHVibGlzaGVkIHlldD8NCj4gDQo+IFdlIGp1c3QgZ290IHRoaXMgbmV3IGRh
+dGFzaGVldCByZWNlbnRseSwgaXQgd2lsbCBiZSBwdWJsaXNoZWQgc29vbi4NCj4gDQo+IEFuc29u
+IA0KDQpUaGUgdjEuMyBkYXRhc2hlZXQgaGFzIGJlZW4gcHVibGlzaGVkLiBQbGVhc2UgY2hlY2sg
+aXQgZnJvbSBOWFAgd2Vic2l0ZSwgdGhhbmtzLg0KDQpBbnNvbi4NCg0KPiANCj4gPg0KPiA+IFJl
+Z2FyZHMNCj4gPiBTdGVmYW4NCg0K
