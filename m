@@ -1,7 +1,7 @@
 From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH v8 02/12] Documentation: ioctl: Add ioctl numbers for PECI subsystem
-Date: Tue, 18 Sep 2018 14:51:14 -0700
-Message-ID: <20180918215124.14003-3-jae.hyun.yoo@linux.intel.com>
+Subject: [PATCH v8 07/12] dt-bindings: mfd: Add a document for PECI client MFD
+Date: Tue, 18 Sep 2018 14:51:19 -0700
+Message-ID: <20180918215124.14003-8-jae.hyun.yoo@linux.intel.com>
 References: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180918215124.14003-1-jae.hyun.yoo@linux.intel.com>
@@ -10,40 +10,61 @@ To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Del
 Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit updates ioctl-number.txt to reflect ioctl numbers used
-by the PECI subsystem.
+This commit adds a dt-bindings document for PECI client MFD.
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: Tomohiro Kusumi <kusumi.tomohiro@gmail.com>
-Cc: Eric Sandeen <sandeen@redhat.com>
-Cc: Frederic Barrat <fbarrat@linux.vnet.ibm.com>
-Cc: Bryant G. Ly <bryantly@linux.vnet.ibm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Jeffery <andrew@aj.id.au>
 Cc: James Feist <james.feist@linux.intel.com>
 Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+Cc: Joel Stanley <joel@jms.id.au>
 Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
 Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 ---
- Documentation/ioctl/ioctl-number.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ .../bindings/mfd/intel-peci-client.txt        | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/intel-peci-client.txt
 
-diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-index 13a7c999c04a..d9577593647e 100644
---- a/Documentation/ioctl/ioctl-number.txt
-+++ b/Documentation/ioctl/ioctl-number.txt
-@@ -325,6 +325,8 @@ Code  Seq#(hex)	Include File		Comments
- 0xB4	00-0F	linux/gpio.h		<mailto:linux-gpio@vger.kernel.org>
- 0xB5	00-0F	uapi/linux/rpmsg.h	<mailto:linux-remoteproc@vger.kernel.org>
- 0xB6	all	linux/fpga-dfl.h
-+0xB7	00-0F	uapi/linux/peci-ioctl.h	PECI subsystem
-+					<mailto:jae.hyun.yoo@linux.intel.com>
- 0xC0	00-0F	linux/usb/iowarrior.h
- 0xCA	00-0F	uapi/misc/cxl.h
- 0xCA	10-2F	uapi/misc/ocxl.h
+diff --git a/Documentation/devicetree/bindings/mfd/intel-peci-client.txt b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+new file mode 100644
+index 000000000000..cb341e363add
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+@@ -0,0 +1,34 @@
++* Intel PECI client bindings
++
++PECI (Platform Environment Control Interface) is a one-wire bus interface that
++provides a communication channel from PECI clients in Intel processors and
++chipset components to external monitoring or control devices. PECI is designed
++to support the following sideband functions:
++
++- Processor and DRAM thermal management
++- Platform Manageability
++- Processor Interface Tuning and Diagnostics
++- Failure Analysis
++
++Required properties:
++- compatible : Should be "intel,peci-client".
++- reg        : Should contain address of a client CPU. Address range of CPU
++	       clients starts from 0x30 based on PECI specification.
++
++Example:
++	peci-bus@0 {
++		compatible = "vendor,soc-peci";
++		reg = <0x0 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		peci-client@30 {
++			compatible = "intel,peci-client";
++			reg = <0x30>;
++		};
++
++		peci-client@31 {
++			compatible = "intel,peci-client";
++			reg = <0x31>;
++		};
++	};
 -- 
 2.18.0
