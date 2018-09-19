@@ -1,78 +1,92 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
- mdio bus
-Date: Wed, 19 Sep 2018 14:25:21 +0200
-Message-ID: <20180919122521.GA26940@lunn.ch>
-References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
- <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
- <20180917145028.GC5458@lunn.ch>
- <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
- <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
- <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180918123545.GA29092@lunn.ch>
- <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
-Sender: netdev-owner@vger.kernel.org
-To: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "timur@kernel.org" <timur@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: laurentiu.tudor@nxp.com
+Subject: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
+Date: Wed, 19 Sep 2018 15:35:52 +0300
+Message-ID: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 19, 2018 at 09:19:19AM +0000, Wang, Dongsheng wrote:
-> On 2018/9/18 20:35, Andrew Lunn wrote:
-> >>> If you want to describe the MDIO controller, then you embed a mdio
-> >>> subnode into your Ethernet MAC node:
-> >>>
-> >>>  emac0: ethernet@feb20000 {
-> >>> 	mdio {
-> >>> 		#address-cells = <1>;
-> >>> 		#size-cells = <0>;
-> >>>
-> >>> 		phy0: ethernet-phy@0 {
-> >>> 			reg = <0>;
-> >>> 		};
-> >>> 	};
-> >>> };
-> >>>
-> >>> And then each Ethernet MAC controller refers to their appropriate PHY
-> >>> device tree node using a phy-handle property to point to either their
-> >>> own MDIO controller, or another MAC's MDIO controller.
-> >> Sorry, I do not understand how phy-handle point to MDIO controller,
-> >> because phy-handle is defined to point to a phy.
-> > The MAC driver does not care what MDIO controller a PHY is on. All you
-> > need to do to register the PHY is:
-> 
-> Yes, these are all things that must be done, and emac driver will
-> connect phy when mac up.
-> If we had a separate MDIO controller, the MAC would not care about MDIO
-> bus. But MDIO is integrated within the EMAC, and emac driver maintains
-> the mdio.
-> 
-> Each EMAC do their mdio register/unregister. But in the shared scenario,
-> the EMACs that use the shared bus do not need to create an MDIO and
-> cannot release the Shared bus.
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Hi Dongsheng
+This patch series adds SMMU support for NXP LS1043A and LS1046A chips
+and consists mostly in important driver fixes and the required device
+tree updates. It touches several subsystems and consists of three main
+parts:
+ - changes in soc/drivers/fsl/qbman drivers adding iommu mapping of
+   reserved memory areas, fixes and defered probe support
+ - changes in drivers/net/ethernet/freescale/dpaa_eth drivers
+   consisting in misc dma mapping related fixes and probe ordering
+ - addition of the actual arm smmu device tree node together with
+   various adjustments to the device trees
 
-There is nothing new here. Many Ethernet drivers export an MDIO bus
-which is then used by some other device, often an Ethernet
-switch. Ordering should not be a problem, you just need to handle
-EPROBE_DEFER, which will happen if the MDIO bus has not yet been
-probed when you try to lookup the phy-handle. And once the phy has
-been connected, the MDIO bus will be locked, preventing it from being
-removed.
+Performance impact
 
-> But ACPI environment my understand is this:
+    Running iperf benchmarks in a back-to-back setup (both sides
+    having smmu enabled) on a 10GBps port show an important
+    networking performance degradation of around %40 (9.48Gbps
+    linerate vs 5.45Gbps). If you need performance but without
+    SMMU support you can use "iommu.passthrough=1" to disable
+    SMMU.
 
-ACPI is completely separate and should not affect the DT binding.
-I've not yet looked at the ACPI changes you added.
+USB issue and workaround
 
-> I will rework this patchset and maybe patches will be a delay for a few
-> days.
+    There's a problem with the usb controllers in these chips
+    generating smaller, 40-bit wide dma addresses instead of the 48-bit
+    supported at the smmu input. So you end up in a situation where the
+    smmu is mapped with 48-bit address translations, but the device
+    generates transactions with clipped 40-bit addresses, thus smmu
+    context faults are triggered. I encountered a similar situation for
+    mmc that I  managed to fix in software [1] however for USB I did not
+    find a proper place in the code to add a similar fix. The only
+    workaround I found was to add this kernel parameter which limits the
+    usb dma to 32-bit size: "xhci-hcd.quirks=0x800000".
+    This workaround if far from ideal, so any suggestions for a code
+    based workaround in this area would be greatly appreciated.
 
-Thanks
+The patch set is based on net-next so, if generally agreed, I'd suggest
+to get the patches through the netdev tree after getting all the Acks.
 
-	Andrew
+[1] https://patchwork.kernel.org/patch/10506627/
+
+Laurentiu Tudor (21):
+  soc/fsl/qman: fixup liodns only on ppc targets
+  soc/fsl/bman: map FBPR area in the iommu
+  soc/fsl/qman: map FQD and PFDR areas in the iommu
+  soc/fsl/qman-portal: map CENA area in the iommu
+  soc/fsl/qbman: add APIs to retrieve the probing status
+  soc/fsl/qman_portals: defer probe after qman's probe
+  soc/fsl/bman_portals: defer probe after bman's probe
+  soc/fsl/qbman_portals: add APIs to retrieve the probing status
+  fsl/fman: backup and restore ICID registers
+  fsl/fman: add API to get the device behind a fman port
+  dpaa_eth: defer probing after qbman
+  dpaa_eth: base dma mappings on the fman rx port
+  dpaa_eth: fix iova handling for contiguous frames
+  dpaa_eth: fix iova handling for sg frames
+  dpaa_eth: fix SG frame cleanup
+  arm64: dts: ls1046a: add smmu node
+  arm64: dts: ls1043a: add smmu node
+  arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
+  arm64: dts: ls104x: add missing dma ranges property
+  arm64: dts: ls104x: add iommu-map to pci controllers
+  arm64: dts: ls104x: make dma-coherent global to the SoC
+
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  52 ++++++-
+ .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  48 +++++++
+ .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 136 ++++++++++++------
+ drivers/net/ethernet/freescale/fman/fman.c    |  35 ++++-
+ drivers/net/ethernet/freescale/fman/fman.h    |   4 +
+ .../net/ethernet/freescale/fman/fman_port.c   |  14 ++
+ .../net/ethernet/freescale/fman/fman_port.h   |   2 +
+ drivers/soc/fsl/qbman/bman_ccsr.c             |  23 +++
+ drivers/soc/fsl/qbman/bman_portal.c           |  20 ++-
+ drivers/soc/fsl/qbman/qman_ccsr.c             |  30 ++++
+ drivers/soc/fsl/qbman/qman_portal.c           |  35 +++++
+ include/soc/fsl/bman.h                        |  16 +++
+ include/soc/fsl/qman.h                        |  17 +++
+ 13 files changed, 379 insertions(+), 53 deletions(-)
+
+-- 
+2.17.1
