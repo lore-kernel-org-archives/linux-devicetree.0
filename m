@@ -1,47 +1,68 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v7 2/7] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Wed, 19 Sep 2018 13:33:58 +0000
-Message-ID: <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
- <20180918075522.GC22202@nazgul.tnic>
- <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
- <20180919111553.GA9140@nazgul.tnic>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 18/21] arm64: dts: ls104xa: set mask to drop TBU ID from
+ StreamID
+Date: Wed, 19 Sep 2018 14:41:49 +0100
+Message-ID: <fe2af486-3d7d-a38f-ef62-6754f809298f@arm.com>
+References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
+ <20180919123613.15092-19-laurentiu.tudor@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180919111553.GA9140@nazgul.tnic>
-Content-Language: en-US
+In-Reply-To: <20180919123613.15092-19-laurentiu.tudor@nxp.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: laurentiu.tudor@nxp.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: madalin.bucur@nxp.com, roy.pledge@nxp.com, leoyang.li@nxp.com, shawnguo@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQm9yaXNs
-YXYgUGV0a292IFttYWlsdG86YnBAYWxpZW44LmRlXQ0KPiBTZW50OiBXZWRuZXNkYXksIFNlcHRl
-bWJlciAxOSwgMjAxOCA0OjQ2IFBNDQo+IFRvOiBNYW5pc2ggTmFyYW5pIDxNTkFSQU5JQHhpbGlu
-eC5jb20+DQo+IENjOiByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBt
-Y2hlaGFiQGtlcm5lbC5vcmc7DQo+IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsg
-bGVveWFuZy5saUBueHAuY29tOw0KPiBzdWRlZXAuaG9sbGFAYXJtLmNvbTsgYW1pdC5rdWNoZXJp
-YUBsaW5hcm8ub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVs
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1h
-cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NyAy
-LzddIGVkYWM6IHN5bnBzOiBBZGQgcGxhdGZvcm0gc3BlY2lmaWMgc3RydWN0dXJlcyBmb3INCj4g
-ZGRyYyBjb250cm9sbGVyDQo+IA0KPiBPbiBXZWQsIFNlcCAxOSwgMjAxOCBhdCAwNToxNDo1MUFN
-ICswMDAwLCBNYW5pc2ggTmFyYW5pIHdyb3RlOg0KPiA+ID4gU28gSSdtIGdvaW5nIHRvIHN0b3Ag
-cmV2aWV3aW5nIHRoaXMgcGF0Y2hzZXQgdW50aWwgeW91IGdvIHRocm91Z2gNCj4gPiA+IHRoZSBv
-bGQgcmV2aWV3IHJvdW5kIGFnYWluIGFuZCBtYWtlIHN1cmUgeW91J3ZlIGluY29ycG9yYXRlZCAq
-YWxsKg0KPiA+ID4gcmV2aWV3IGZlZWRiYWNrIGFuZCBoYXZlbid0IGZvcmdvdHRlbiBzb21lLCBs
-aWtlIHRoZSBvbmUgYWJvdmUuDQo+ID4gPg0KPiA+IE9rYXksIEkgd2lsbCBkb3VibGUgY2hlY2sg
-YWdhaW4gZm9yIHRoZSBjb21tZW50cyBmcm9tIHByZXZpb3VzIHJldmlldw0KPiA+IGFuZCByZWN0
-aWZ5IHRoZSBzYW1lIGluIHY4LiBDYW4geW91IHBsZWFzZSByZXZpZXcgdGhlIHJlbWFpbmluZw0K
-PiA+IHBhdGNoZXMgc28gdGhhdCBJIGNhbiBhY2NvbW1vZGF0ZSBhbnkgY2hhbmdlcyBmb3IgdGhl
-bSBpbiB2OD8NCj4gDQo+IFJlYWQgYWdhaW4gd2hhdCBJIHNhaWQ6ICJJJ20gZ29pbmcgdG8gc3Rv
-cCByZXZpZXdpbmcgdGhpcyBwYXRjaHNldCB1bnRpbCB5b3UgZ28NCj4gdGhyb3VnaCB0aGUgb2xk
-IHJldmlldy4uLiIgWW91IGNhbiBnbyB0aHJvdWdoIHRoZSBvbGQgcmV2aWV3IGFuZCBjaGVjayB5
-b3VyIHY3Lg0KPiBJZiB5b3UgaGF2ZW4ndCBtaXNzZWQgYW55dGhpbmcsIGxlbW1lIGtub3cgYW5k
-IEknbGwgbG9vayBhdCB0aGUgcmVzdC4NCg0KQXBhcnQgZnJvbSB0aGlzIG9uZSwgSSBoYXZlIGNv
-dmVyZWQgYWxsIHRoZSBjb21tZW50cyBmcm9tIHRoZSBwcmV2aW91cyByZXZpZXcuDQoNClRoYW5r
-cywNCk1hbmlzaA0K
+On 19/09/18 13:36, laurentiu.tudor@nxp.com wrote:
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> 
+> The StreamID entering the SMMU is actually a concatenation of the
+> SMMU TBU ID and the ICID configured in software.
+> Since the TBU ID is internal to the SoC and since we want that the
+> actual the ICID configured in software to enter the SMMU witout any
+> additional set bits, mask out the TBU ID bits and leave only the
+> relevant ICID bits to enter SMMU.
+> 
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+> ---
+>   arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+>   arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
+>   2 files changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> index 8b3eba167508..90296b9fb171 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+> @@ -226,6 +226,7 @@
+>   			compatible = "arm,mmu-500";
+>   			reg = <0 0x9000000 0 0x400000>;
+>   			dma-coherent;
+> +			stream-match-mask = <0x7f00>;
+
+The TBU ID only forms the top 5 bits, so also ignoring bits 9:8 raises 
+an eyebrow - if the LS104x SMMU really is configured for 8-bit SID input 
+then it's harmless, but if it's actually a 9 or 10-bit configuration 
+then you probably want to avoid masking them (or at least document why) 
+- IIRC there *was* stuff wired there on LS2085 at least.
+
+Robin.
+
+>   			#global-interrupts = <2>;
+>   			#iommu-cells = <1>;
+>   			interrupts = <0 142 4>, /* global secure fault */
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> index 06863d3e4a7d..15094dd8400e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+> @@ -232,6 +232,7 @@
+>   			compatible = "arm,mmu-500";
+>   			reg = <0 0x9000000 0 0x400000>;
+>   			dma-coherent;
+> +			stream-match-mask = <0x7f00>;
+>   			#global-interrupts = <2>;
+>   			#iommu-cells = <1>;
+>   			interrupts = <0 142 4>, /* global secure fault */
+> 
