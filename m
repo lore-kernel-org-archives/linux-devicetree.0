@@ -1,53 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: egalax-ts: add support for wakeup event action
-Date: Tue, 18 Sep 2018 18:01:42 -0700
-Message-ID: <CAL_JsqKTm7Rc5a0Y4UMwpsTZm5amRRC8H6y0yWsOd4StmAWqJQ@mail.gmail.com>
-References: <1536139607-16848-1-git-send-email-Anson.Huang@nxp.com>
- <1536139607-16848-2-git-send-email-Anson.Huang@nxp.com> <5b9f3f5d.1c69fb81.bca6d.cdee@mx.google.com>
- <20180917180744.GB104770@dtor-ws>
+From: Brian Dodge <bdodge09@gmail.com>
+Subject: arc vendor prefix
+Date: Tue, 18 Sep 2018 21:05:20 -0400
+Message-ID: <527da392-9629-792b-08cc-970ffc8173ee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917180744.GB104770@dtor-ws>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Anson Huang <Anson.Huang@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Marco Franchi <marco.franchi@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, NXP Linux Team <Linux-imx@nxp.com>
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 11:07 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Sun, Sep 16, 2018 at 05:54:33PM -0500, Rob Herring wrote:
-> > On Wed, Sep 05, 2018 at 05:26:47PM +0800, Anson Huang wrote:
-> > > Add support for wakeup event action, this would allow the device
-> > > to configure whether to be a wakeup source of system suspend.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-> > > index 92fb262..296a9cd 100644
-> > > --- a/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/egalax-ts.txt
-> > > @@ -6,6 +6,7 @@ Required properties:
-> > >  - interrupts: touch controller interrupt
-> > >  - wakeup-gpios: the gpio pin to be used for waking up the controller
-> > >    and also used as irq pin
-> >
-> > If the wakeup gpio is the same as the irq, then this should be removed
-> > since wakeup-source replaces it.
->
-> No, it does not: it is GPIO that we need to toggle to wake up the
-> controller, not host, and we do not have generic API to map from IRQ to
-> GPIO.
+Hi,
 
-Ah, okay.
+In the linux kernel commit 91ab076e3a2f092254fe5231bbfa92b37fd52e38 the 
+vendor prefix "arctic" was added to vendor-prefixes.txt.
 
-> This is also existing binding...
+The original change I authored used "arc" not "arctic", and the device 
+tree bindings were added assuming that prefix in commit 
+ce9d22573d85341c987f997461ac712e4dbe47b1
 
-Right, I meant removed as in moved to deprecated. Sometimes we just
-remove the documentation when deprecating.
+Perhaps odeju changed the name to arctic in the patch after I created it 
+and before it was approved.
 
-Rob
+This pairing isn't really compatible is it?  Either the prefix should be 
+reverted to "arc" or the bindings (and driver source) changed to use 
+"arctic", as in "arctic,arc2c0608" vs. "arc,arc2c0608"
+
+The arcticsand company is now part of psemi (formerly peregrine 
+semiconductor) and they would like to keep using the arc prefix for 
+these chips and in the driver and I plan on changing the 
+vendor-prefix.txt to reflect that.
+
+I am in the process of updating the driver code to support different and 
+new variants of the chip and would like to know what the preference is 
+for this prefix going forward.
+
+Thank you
+
+Brian
