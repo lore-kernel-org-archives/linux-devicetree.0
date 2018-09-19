@@ -1,77 +1,264 @@
-Return-Path: <SRS0=c6Dm=MD=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 2/4] pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage switch
-Date: Fri, 21 Sep 2018 12:55:09 +0100
-Message-Id: <1537530911-443-3-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=6+VU=MB=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCH 5/6] EDAC, altera: Add Stratix10 peripheral support.
+Date: Wed, 19 Sep 2018 14:39:00 -0500
+Message-Id: <1537385941-11582-6-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1537385941-11582-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1537385941-11582-1-git-send-email-thor.thayer@linux.intel.com>
+To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add SH_PFC_PIN_CFG_IO_VOLTAGE definition for the SDHI2 pins
-capable of switching voltage. Please note that with the
-RZ/G1C only 1 bit of the POC Control Register is used to
-control each interface.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Add a new the peripheral ECC error injection algorithm
+for Stratix10 and some Arria10 peripherals.
+Inject a single bit error and upon readback, it will be
+corrected and the SBE IRQ handler will be called.
+
+Add regmap selection for Stratix10 or Arria10 peripheral
+device memory initialization.
+
+Add checks for both Arria10 and Stratix10 to the
+peripheral ECC setup.
+
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- drivers/pinctrl/sh-pfc/pfc-r8a77470.c | 32 +++++++++++++++++++++++++++++++-
- 1 file changed, 31 insertions(+), 1 deletion(-)
+ drivers/edac/altera_edac.c | 129 +++++++++++++++++++++++++++++++++++++++++----
+ drivers/edac/altera_edac.h |  25 +++++++++
+ 2 files changed, 143 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77470.c b/drivers/pinctrl/sh-pfc/pfc-r8a77470.c
-index 9d3ed43..a1248e2 100644
---- a/drivers/pinctrl/sh-pfc/pfc-r8a77470.c
-+++ b/drivers/pinctrl/sh-pfc/pfc-r8a77470.c
-@@ -17,7 +17,19 @@
- 	PORT_GP_1(3, 27, fn, sfx),					\
- 	PORT_GP_1(3, 28, fn, sfx),					\
- 	PORT_GP_1(3, 29, fn, sfx),					\
--	PORT_GP_26(4, fn, sfx),						\
-+	PORT_GP_14(4, fn, sfx),						\
-+	PORT_GP_CFG_1(4, 14, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
-+	PORT_GP_CFG_1(4, 15, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
-+	PORT_GP_CFG_1(4, 16, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
-+	PORT_GP_CFG_1(4, 17, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
-+	PORT_GP_CFG_1(4, 18, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
-+	PORT_GP_CFG_1(4, 19, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
-+	PORT_GP_1(4, 20, fn, sfx),					\
-+	PORT_GP_1(4, 21, fn, sfx),					\
-+	PORT_GP_1(4, 22, fn, sfx),					\
-+	PORT_GP_1(4, 23, fn, sfx),					\
-+	PORT_GP_1(4, 24, fn, sfx),					\
-+	PORT_GP_1(4, 25, fn, sfx),					\
- 	PORT_GP_32(5, fn, sfx)
- 
- enum {
-@@ -2321,9 +2333,27 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
- 	{ },
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 48b58063a7a3..523ae84a4dd8 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -713,6 +713,16 @@ static const struct file_operations altr_edac_a10_device_inject_fops = {
+ 	.llseek = generic_file_llseek,
  };
  
-+static int r8a77470_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
-+				   u32 *pocctrl)
-+{
-+	unsigned int _bank = pin >> 5;
-+	unsigned int _pin = pin & 0x1f;
-+	*pocctrl = 0xe60600b0;
++static ssize_t altr_edac_a10_device_trig2(struct file *file,
++					  const char __user *user_buf,
++					  size_t count, loff_t *ppos);
 +
-+	if (_bank == 4 && _pin >= 14 && _pin <= 19)
-+		return 1;
-+
-+	return -EINVAL;
-+}
-+
-+static const struct sh_pfc_soc_operations r8a77470_pinmux_ops = {
-+	.pin_to_pocctrl = r8a77470_pin_to_pocctrl,
++static const struct file_operations altr_edac_a10_device_inject2_fops = {
++	.open = simple_open,
++	.write = altr_edac_a10_device_trig2,
++	.llseek = generic_file_llseek,
 +};
 +
- #ifdef CONFIG_PINCTRL_PFC_R8A77470
- const struct sh_pfc_soc_info r8a77470_pinmux_info = {
- 	.name = "r8a77470_pfc",
-+	.ops = &r8a77470_pinmux_ops,
- 	.unlock_reg = 0xe6060000, /* PMMR */
+ static void altr_create_edacdev_dbgfs(struct edac_device_ctl_info *edac_dci,
+ 				      const struct edac_device_prv_data *priv)
+ {
+@@ -994,6 +1004,16 @@ static int __maybe_unused altr_init_memory_port(void __iomem *ioaddr, int port)
+ 	return ret;
+ }
  
- 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
++static int socfpga_is_a10(void)
++{
++	return of_machine_is_compatible("altr,socfpga-arria10");
++}
++
++static int socfpga_is_s10(void)
++{
++	return of_machine_is_compatible("altr,socfpga-stratix10");
++}
++
+ static __init int __maybe_unused
+ altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
+ 			u32 ecc_ctrl_en_mask, bool dual_port)
+@@ -1008,8 +1028,32 @@ altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
+ 
+ 	/* Get the ECC Manager - parent of the device EDACs */
+ 	np_eccmgr = of_get_parent(np);
+-	ecc_mgr_map = syscon_regmap_lookup_by_phandle(np_eccmgr,
+-						      "altr,sysmgr-syscon");
++
++	if (socfpga_is_a10()) {
++		ecc_mgr_map = syscon_regmap_lookup_by_phandle(np_eccmgr,
++							      "altr,sysmgr-syscon");
++	} else {
++		struct device_node *sysmgr_np;
++		struct resource res;
++		void __iomem *base;
++
++		sysmgr_np = of_parse_phandle(np_eccmgr,
++					     "altr,sysmgr-syscon", 0);
++		if (!sysmgr_np) {
++			edac_printk(KERN_ERR, EDAC_DEVICE,
++				    "Unable to find altr,sysmgr-syscon\n");
++			return -ENODEV;
++		}
++
++		if (of_address_to_resource(sysmgr_np, 0, &res))
++			return -ENOMEM;
++
++		/* Need physical address for SMCC call */
++		base = (void __iomem *)res.start;
++
++		ecc_mgr_map = regmap_init(NULL, NULL, base,
++					  &s10_sdram_regmap_cfg);
++	}
+ 	of_node_put(np_eccmgr);
+ 	if (IS_ERR(ecc_mgr_map)) {
+ 		edac_printk(KERN_ERR, EDAC_DEVICE,
+@@ -1067,11 +1111,6 @@ altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
+ 	return ret;
+ }
+ 
+-static int socfpga_is_a10(void)
+-{
+-	return of_machine_is_compatible("altr,socfpga-arria10");
+-}
+-
+ static int validate_parent_available(struct device_node *np);
+ static const struct of_device_id altr_edac_a10_device_of_match[];
+ static int __init __maybe_unused altr_init_a10_ecc_device_type(char *compat)
+@@ -1079,7 +1118,7 @@ static int __init __maybe_unused altr_init_a10_ecc_device_type(char *compat)
+ 	int irq;
+ 	struct device_node *child, *np;
+ 
+-	if (!socfpga_is_a10())
++	if (!socfpga_is_a10() && !socfpga_is_s10())
+ 		return -ENODEV;
+ 
+ 	np = of_find_compatible_node(NULL, NULL,
+@@ -1325,7 +1364,7 @@ static const struct edac_device_prv_data a10_enetecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ };
+ 
+ static int __init socfpga_init_ethernet_ecc(void)
+@@ -1403,7 +1442,7 @@ static const struct edac_device_prv_data a10_usbecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ };
+ 
+ static int __init socfpga_init_usb_ecc(void)
+@@ -1601,7 +1640,7 @@ static int __init socfpga_init_sdmmc_ecc(void)
+ 	int rc = -ENODEV;
+ 	struct device_node *child;
+ 
+-	if (!socfpga_is_a10())
++	if (!socfpga_is_a10() && !socfpga_is_s10())
+ 		return -ENODEV;
+ 
+ 	child = of_find_compatible_node(NULL, NULL, "altr,socfpga-sdmmc-ecc");
+@@ -1685,6 +1724,74 @@ static ssize_t altr_edac_a10_device_trig(struct file *file,
+ 		writel(priv->ue_set_mask, set_addr);
+ 	else
+ 		writel(priv->ce_set_mask, set_addr);
++
++	/* Ensure the interrupt test bits are set */
++	wmb();
++	local_irq_restore(flags);
++
++	return count;
++}
++
++/*
++ * The Stratix10 EDAC Error Injection Functions differ from Arria10
++ * slightly. A few Arria10 peripherals can use this injection function.
++ * Inject the error into the memory and then readback to trigger the IRQ.
++ */
++static ssize_t altr_edac_a10_device_trig2(struct file *file,
++					  const char __user *user_buf,
++					  size_t count, loff_t *ppos)
++{
++	struct edac_device_ctl_info *edac_dci = file->private_data;
++	struct altr_edac_device_dev *drvdata = edac_dci->pvt_info;
++	const struct edac_device_prv_data *priv = drvdata->data;
++	void __iomem *set_addr = (drvdata->base + priv->set_err_ofst);
++	unsigned long flags;
++	u8 trig_type;
++
++	if (!user_buf || get_user(trig_type, user_buf))
++		return -EFAULT;
++
++	local_irq_save(flags);
++	if (trig_type == ALTR_UE_TRIGGER_CHAR) {
++		writel(priv->ue_set_mask, set_addr);
++	} else {
++		/* Setup write of 0 to first 4 bytes */
++		writel(0x0, drvdata->base + ECC_BLK_WDATA0_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
++		/* Setup write of 4 bytes */
++		writel(ECC_WORD_WRITE, drvdata->base + ECC_BLK_DBYTECTRL_OFST);
++		/* Setup Address to 0 */
++		writel(0x0, drvdata->base + ECC_BLK_ADDRESS_OFST);
++		/* Setup accctrl to write & data override */
++		writel(ECC_WRITE_DOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++		/* Setup accctrl to read & ecc override */
++		writel(ECC_READ_EOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++		/* Setup write for single bit change */
++		writel(0x1, drvdata->base + ECC_BLK_WDATA0_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
++		/* Copy Read ECC to Write ECC */
++		writel(readl(drvdata->base + ECC_BLK_RECC0_OFST),
++		       drvdata->base + ECC_BLK_WECC0_OFST);
++		writel(readl(drvdata->base + ECC_BLK_RECC1_OFST),
++		       drvdata->base + ECC_BLK_WECC1_OFST);
++		/* Setup accctrl to write & ecc override & data override */
++		writel(ECC_WRITE_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++		/* Setup accctrl to read & ecc overwrite & data overwrite */
++		writel(ECC_READ_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++	}
++
+ 	/* Ensure the interrupt test bits are set */
+ 	wmb();
+ 	local_irq_restore(flags);
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index e9e3f9b61947..4213cb0bb2a7 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -300,6 +300,31 @@ struct altr_sdram_mc_data {
+ 
+ #define S10_DDR0_IRQ_MASK                 BIT(16)
+ 
++/* Define ECC Block Offsets for peripherals */
++#define ECC_BLK_ADDRESS_OFST              0x40
++#define ECC_BLK_RDATA0_OFST               0x44
++#define ECC_BLK_RDATA1_OFST               0x48
++#define ECC_BLK_RDATA2_OFST               0x4C
++#define ECC_BLK_RDATA3_OFST               0x50
++#define ECC_BLK_WDATA0_OFST               0x54
++#define ECC_BLK_WDATA1_OFST               0x58
++#define ECC_BLK_WDATA2_OFST               0x5C
++#define ECC_BLK_WDATA3_OFST               0x60
++#define ECC_BLK_RECC0_OFST                0x64
++#define ECC_BLK_RECC1_OFST                0x68
++#define ECC_BLK_WECC0_OFST                0x6C
++#define ECC_BLK_WECC1_OFST                0x70
++#define ECC_BLK_DBYTECTRL_OFST            0x74
++#define ECC_BLK_ACCCTRL_OFST              0x78
++#define ECC_BLK_STARTACC_OFST             0x7C
++
++#define ECC_XACT_KICK                     0x10000
++#define ECC_WORD_WRITE                    0xF
++#define ECC_WRITE_DOVR                    0x101
++#define ECC_WRITE_EDOVR                   0x103
++#define ECC_READ_EOVR                     0x2
++#define ECC_READ_EDOVR                    0x3
++
+ struct altr_edac_device_dev;
+ 
+ struct edac_device_prv_data {
 -- 
 2.7.4
