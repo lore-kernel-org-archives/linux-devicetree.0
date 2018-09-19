@@ -1,61 +1,67 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH 02/21] soc/fsl/bman: map FBPR area in the iommu
-Date: Wed, 19 Sep 2018 15:35:54 +0300
-Message-ID: <20180919123613.15092-3-laurentiu.tudor@nxp.com>
+Subject: [PATCH 04/21] soc/fsl/qman-portal: map CENA area in the iommu
+Date: Wed, 19 Sep 2018 15:35:56 +0300
+Message-ID: <20180919123613.15092-5-laurentiu.tudor@nxp.com>
 References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Add a one-to-one iommu mapping for bman private data memory (FBPR).
-This is required for BMAN to work without faults behind an iommu.
+Add a one-to-one iommu mapping for qman portal CENA register area.
+This is required for QMAN stashing to work without faults behind
+an iommu.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/soc/fsl/qbman/bman_ccsr.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/soc/fsl/qbman/qman_portal.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/soc/fsl/qbman/bman_ccsr.c b/drivers/soc/fsl/qbman/bman_ccsr.c
-index 05c42235dd41..680f67f04fb4 100644
---- a/drivers/soc/fsl/qbman/bman_ccsr.c
-+++ b/drivers/soc/fsl/qbman/bman_ccsr.c
+diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
+index a120002b630e..012bb95e87e1 100644
+--- a/drivers/soc/fsl/qbman/qman_portal.c
++++ b/drivers/soc/fsl/qbman/qman_portal.c
 @@ -29,6 +29,7 @@
   */
  
- #include "bman_priv.h"
+ #include "qman_priv.h"
 +#include <linux/iommu.h>
  
- u16 bman_ip_rev;
- EXPORT_SYMBOL(bman_ip_rev);
-@@ -171,6 +172,7 @@ static int fsl_bman_probe(struct platform_device *pdev)
- 	int ret, err_irq;
+ struct qman_portal *qman_dma_portal;
+ EXPORT_SYMBOL(qman_dma_portal);
+@@ -222,6 +223,7 @@ static int qman_portal_probe(struct platform_device *pdev)
+ {
  	struct device *dev = &pdev->dev;
  	struct device_node *node = dev->of_node;
 +	struct iommu_domain *domain;
- 	struct resource *res;
- 	u16 id, bm_pool_cnt;
- 	u8 major, minor;
-@@ -216,6 +218,16 @@ static int fsl_bman_probe(struct platform_device *pdev)
+ 	struct qm_portal_config *pcfg;
+ 	struct resource *addr_phys[2];
+ 	int irq, cpu, err;
+@@ -276,6 +278,21 @@ static int qman_portal_probe(struct platform_device *pdev)
+ 		goto err_ioremap2;
+ 	}
  
- 	dev_dbg(dev, "Allocated FBPR 0x%llx 0x%zx\n", fbpr_a, fbpr_sz);
- 
-+	/* Create an 1-to-1 iommu mapping for FBPR area */
++	/* Create an 1-to-1 iommu mapping for cena portal area */
 +	domain = iommu_get_domain_for_dev(dev);
 +	if (domain) {
-+		ret = iommu_map(iommu_get_domain_for_dev(dev),
-+				fbpr_a, fbpr_a, fbpr_sz,
++		/*
++		 * Note: not mapping this as cacheable triggers the infamous
++		 * QMan CIDE error.
++		 */
++		err = iommu_map(iommu_get_domain_for_dev(dev),
++				addr_phys[0]->start, addr_phys[0]->start,
++				resource_size(addr_phys[0]),
 +				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-+		if (ret)
-+			dev_warn(dev, "failed to iommu_map() %d\n", ret);
++		if (err)
++			dev_warn(dev, "failed to iommu_map() %d\n", err);
 +	}
 +
- 	bm_set_memory(fbpr_a, fbpr_sz);
+ 	pcfg->pools = qm_get_pools_sdqcr();
  
- 	err_irq = platform_get_irq(pdev, 0);
+ 	spin_lock(&qman_lock);
 -- 
 2.17.1
