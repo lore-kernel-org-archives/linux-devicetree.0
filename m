@@ -1,67 +1,98 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH 04/21] soc/fsl/qman-portal: map CENA area in the iommu
-Date: Wed, 19 Sep 2018 15:35:56 +0300
-Message-ID: <20180919123613.15092-5-laurentiu.tudor@nxp.com>
+Subject: [PATCH 06/21] soc/fsl/qman_portals: defer probe after qman's probe
+Date: Wed, 19 Sep 2018 15:35:58 +0300
+Message-ID: <20180919123613.15092-7-laurentiu.tudor@nxp.com>
 References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Add a one-to-one iommu mapping for qman portal CENA register area.
-This is required for QMAN stashing to work without faults behind
-an iommu.
+Defer probe of qman portals after qman probing. This fixes the crash
+below, seen on NXP LS1043A SoCs:
+
+Unable to handle kernel NULL pointer dereference at virtual address
+0000000000000004
+Mem abort info:
+  ESR = 0x96000004
+  Exception class = DABT (current EL), IL = 32 bits
+  SET = 0, FnV = 0
+  EA = 0, S1PTW = 0
+Data abort info:
+  ISV = 0, ISS = 0x00000004
+  CM = 0, WnR = 0
+[0000000000000004] user address but active_mm is swapper
+Internal error: Oops: 96000004 [#1] PREEMPT SMP
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted
+4.18.0-rc1-next-20180622-00200-g986f5c179185 #9
+Hardware name: LS1043A RDB Board (DT)
+pstate: 80000005 (Nzcv daif -PAN -UAO)
+pc : qman_set_sdest+0x74/0xa0
+lr : qman_portal_probe+0x22c/0x470
+sp : ffff00000803bbc0
+x29: ffff00000803bbc0 x28: 0000000000000000
+x27: ffff0000090c1b88 x26: ffff00000927cb68
+x25: ffff00000927c000 x24: ffff00000927cb60
+x23: 0000000000000000 x22: 0000000000000000
+x21: ffff0000090e9000 x20: ffff800073b5c810
+x19: ffff800027401298 x18: ffffffffffffffff
+x17: 0000000000000001 x16: 0000000000000000
+x15: ffff0000090e96c8 x14: ffff80002740138a
+x13: ffff0000090f2000 x12: 0000000000000030
+x11: ffff000008f25000 x10: 0000000000000000
+x9 : ffff80007bdfd2c0 x8 : 0000000000004000
+x7 : ffff80007393cc18 x6 : 0040000000000001
+x5 : 0000000000000000 x4 : ffffffffffffffff
+x3 : 0000000000000004 x2 : ffff00000927c900
+x1 : 0000000000000000 x0 : 0000000000000004
+Process swapper/0 (pid: 1, stack limit = 0x(____ptrval____))
+Call trace:
+ qman_set_sdest+0x74/0xa0
+ platform_drv_probe+0x50/0xa8
+ driver_probe_device+0x214/0x2f8
+ __driver_attach+0xd8/0xe0
+ bus_for_each_dev+0x68/0xc8
+ driver_attach+0x20/0x28
+ bus_add_driver+0x108/0x228
+ driver_register+0x60/0x110
+ __platform_driver_register+0x40/0x48
+ qman_portal_driver_init+0x20/0x84
+ do_one_initcall+0x58/0x168
+ kernel_init_freeable+0x184/0x22c
+ kernel_init+0x10/0x108
+ ret_from_fork+0x10/0x18
+Code: f9400443 11001000 927e4800 8b000063 (b9400063)
+---[ end trace 4f6d50489ecfb930 ]---
+Kernel panic - not syncing: Attempted to kill init! exitcode=0x0000000b
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/soc/fsl/qbman/qman_portal.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/soc/fsl/qbman/qman_portal.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
-index a120002b630e..012bb95e87e1 100644
+index 012bb95e87e1..7fd13f8c8da2 100644
 --- a/drivers/soc/fsl/qbman/qman_portal.c
 +++ b/drivers/soc/fsl/qbman/qman_portal.c
-@@ -29,6 +29,7 @@
-  */
- 
- #include "qman_priv.h"
-+#include <linux/iommu.h>
- 
- struct qman_portal *qman_dma_portal;
- EXPORT_SYMBOL(qman_dma_portal);
-@@ -222,6 +223,7 @@ static int qman_portal_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct device_node *node = dev->of_node;
-+	struct iommu_domain *domain;
- 	struct qm_portal_config *pcfg;
- 	struct resource *addr_phys[2];
+@@ -229,6 +229,14 @@ static int qman_portal_probe(struct platform_device *pdev)
  	int irq, cpu, err;
-@@ -276,6 +278,21 @@ static int qman_portal_probe(struct platform_device *pdev)
- 		goto err_ioremap2;
- 	}
+ 	u32 val;
  
-+	/* Create an 1-to-1 iommu mapping for cena portal area */
-+	domain = iommu_get_domain_for_dev(dev);
-+	if (domain) {
-+		/*
-+		 * Note: not mapping this as cacheable triggers the infamous
-+		 * QMan CIDE error.
-+		 */
-+		err = iommu_map(iommu_get_domain_for_dev(dev),
-+				addr_phys[0]->start, addr_phys[0]->start,
-+				resource_size(addr_phys[0]),
-+				IOMMU_READ | IOMMU_WRITE | IOMMU_CACHE);
-+		if (err)
-+			dev_warn(dev, "failed to iommu_map() %d\n", err);
++	err = qman_is_probed();
++	if (!err)
++		return -EPROBE_DEFER;
++	if (err < 0) {
++		dev_err(&pdev->dev, "failing probe due to qman probe error\n");
++		return -ENODEV;
 +	}
 +
- 	pcfg->pools = qm_get_pools_sdqcr();
- 
- 	spin_lock(&qman_lock);
+ 	pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
+ 	if (!pcfg)
+ 		return -ENOMEM;
 -- 
 2.17.1
