@@ -1,92 +1,52 @@
-From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH/RFC v4 2/2] vfio: platform: Add generic reset controller
- support
-Date: Wed, 19 Sep 2018 17:31:43 +0200
-Message-ID: <9dc74e23-2f57-7db3-6fb6-4f75ed61575f@redhat.com>
-References: <20180917163955.19023-1-geert+renesas@glider.be>
- <20180917163955.19023-3-geert+renesas@glider.be>
- <b7c4f5d1-020b-4a64-d511-b8e89f8c9196@redhat.com>
- <CAMuHMdXM9eog_+1oV_YCmSbOfBSFWOXy+YXwKGvfJA65rDqtzA@mail.gmail.com>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH 0/4] Add HiSilicon Hi3670 SoC and HiKey970 board
+Date: Wed, 19 Sep 2018 16:32:15 +0100
+Message-ID: <5BA26BFF.1020906@hisilicon.com>
+References: <20180810175339.25421-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXM9eog_+1oV_YCmSbOfBSFWOXy+YXwKGvfJA65rDqtzA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180810175339.25421-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Philipp Zabel <p.zabel@pengutronix.de>, Alex Williamson <alex.williamson@redhat.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, guodong.xu@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Manivannan,
 
-On 9/19/18 2:54 PM, Geert Uytterhoeven wrote:
-> Hi Eric,
+On 2018/8/10 18:53, Manivannan Sadhasivam wrote:
+> This patchset adds support for Hi3670 SoC and HiKey970 board. Hi3670 SoC
+> is very similar to the Hi3660 SoC with additional NPU support. For now,
+> only UART6 has been enabled which is configured by the bootloader for
+> console support.
 > 
-> On Wed, Sep 19, 2018 at 2:36 PM Auger Eric <eric.auger@redhat.com> wrote:
->> On 9/17/18 6:39 PM, Geert Uytterhoeven wrote:
->>> Vfio-platform requires dedicated reset support, provided either by ACPI,
->>> or, on DT platforms, by a device-specific reset driver matching against
->>> the device's compatible value.
->>>
->>> On many SoCs, devices are connected to an SoC-internal reset controller.
->>> If the reset hierarchy is described in DT using "resets" properties, or
->>> in lookup tables in platform code, such devices can be reset in a
->>> generic way through the reset controller subsystem.  Hence add support
->>> for this, avoiding the need to write device-specific reset drivers for
->>> each single device on affected SoCs.
->>>
->>> Devices that do require a more complex reset procedure can still provide
->>> a device-specific reset driver, as that takes precedence.
->>>
->>> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
->>> becomes a no-op (as in: "No reset function found for device") if reset
->>> controller support is disabled.
->>>
->>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
->>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> HiKey970 board is one of the 96Boards Consumer Edition and AI platform
+> based on the Hi3670 SoC.
 > 
->>> --- a/drivers/vfio/platform/vfio_platform_common.c
->>> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> With this patchset, the Hikey970 board is able to boot into ramdisk with
+> 8 cores.
 > 
->>> @@ -128,8 +131,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
->>>               vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
->>>                                                       &vdev->reset_module);
->>>       }
->>> +     if (vdev->of_reset)
->>> +             return 0;
->>> +
->>> +     rstc = reset_control_get_dedicated(vdev->device, NULL);
->>> +     if (!IS_ERR(rstc)) {
->>> +             vdev->reset_control = rstc;
->>> +             return 0;
->>> +     }
->>>
->>> -     return vdev->of_reset ? 0 : -ENOENT;
->>> +     return PTR_ERR(rstc);
->> This changes the returned value as seen by the user (probe returned
->> valud). Can we keep -ENOENT in case of no reset controller found?
+> Thanks,
+> Mani
 > 
-> On success, it still returns 0.
-> On failure, it forwards the error from reset_control_get_dedicated(), which
-> is IMHO better than replacing it by -ENOENT: we try to propagate error
-> codes as much as possible.  It could e.g. return -EPROBE_DEFER.
+> Manivannan Sadhasivam (4):
+>   dt-bindings: arm: hisilicon: Add binding for Hi3670 SoC
+>   arm64: dts: Add devicetree for Hisilicon Hi3670 SoC
+>   dt-bindings: arm: hisilicon: Add binding for HiKey970 board
+>   arm64: dts: Add devicetree support for HiKey970 board
 > 
-> Is there anything that relies on the function returning -ENOENT?
-None I am aware of actually. I was afraid about compatibility break but
-here we would change an errno by another one so maybe that's not a big
-deal at that stage of vfio_platform usage?
+>  .../bindings/arm/hisilicon/hisilicon.txt      |   8 +
+>  arch/arm64/boot/dts/hisilicon/Makefile        |   1 +
+>  .../boot/dts/hisilicon/hi3670-hikey970.dts    |  35 ++++
+>  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     | 162 ++++++++++++++++++
+>  4 files changed, 206 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3670-hikey970.dts
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3670.dtsi
+> 
 
-Thanks
+Thanks!
+Fine to me and applied the series to the hisilicon dts tree.
 
-Eric
-> 
->> Otherwise looks good to me with the new "dedicated" reset semantics.
-> 
-> Thanks!
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
+Best Regards,
+Wei
