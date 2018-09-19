@@ -1,87 +1,47 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH] ASoC: q6afe: dt-bindings: Update input range for qcom,sd-lines
-Date: Wed, 19 Sep 2018 11:41:21 +0530
-Message-ID: <1537337481-2123-1-git-send-email-rohitkr@codeaurora.org>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v3 7/7] regulator: bd718xx: rename bd71837 to 718xx
+Date: Wed, 19 Sep 2018 09:32:47 +0300
+Message-ID: <20180919063247.GC2295@localhost.localdomain>
+References: <6b3e7b3aeef67d85083f49894e0b0fe482fc08c4.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <201809181853.7HyPgIo6%fengguang.wu@intel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201809181853.7HyPgIo6%fengguang.wu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rohkumar@qti.qualcomm.com, srinivas.kandagatla@linaro.org
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Input to qcom,sd-lines should be between 0 and 3 instead of
-1 to 4 as 0 corresponds to BIT(0) which is MI2S_SD0 line.
-Bit 1 to 3 corresponds to SD1 to SD3 lines respectively.
-Updated documentation for the same.
+Hello All,
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
- Documentation/devicetree/bindings/sound/qcom,q6afe.txt | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+On Tue, Sep 18, 2018 at 06:13:48PM +0800, kbuild test robot wrote:
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on regulator/for-next]
+> [also build test ERROR on next-20180913]
+> [cannot apply to v4.19-rc4]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Matti-Vaittinen/regulator-mfd-dt_bindings-bd718x7-Support-ROHM-bd71847/20180914-210454
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+> config: x86_64-randconfig-s4-09181517 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+> >> drivers/regulator/bd718x7-regulator.c:364:16: error: implicit declaration of function 'of_match_ptr'; did you mean 'hash_ptr'? [-Werror=implicit-function-declaration]
+>        .of_match = of_match_ptr("BUCK1"),
+>                    ^~~~~~~~~~~~
+>                    hash_ptr
 
-diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
-index a817940..d74888b 100644
---- a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
-+++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
-@@ -49,7 +49,7 @@ configuration of each dai. Must contain the following properties.
- 	Usage: required for mi2s interface
- 	Value type: <prop-encoded-array>
- 	Definition: Must be list of serial data lines used by this dai.
--	should be one or more of the 1-4 sd lines.
-+	should be one or more of the 0-3 sd lines.
- 
-  - qcom,tdm-sync-mode:
- 	Usage: required for tdm interface
-@@ -137,42 +137,42 @@ q6afe@4 {
- 
- 		prim-mi2s-rx@16 {
- 			reg = <16>;
--			qcom,sd-lines = <1 3>;
-+			qcom,sd-lines = <0 2>;
- 		};
- 
- 		prim-mi2s-tx@17 {
- 			reg = <17>;
--			qcom,sd-lines = <2>;
-+			qcom,sd-lines = <1>;
- 		};
- 
- 		sec-mi2s-rx@18 {
- 			reg = <18>;
--			qcom,sd-lines = <1 4>;
-+			qcom,sd-lines = <0 3>;
- 		};
- 
- 		sec-mi2s-tx@19 {
- 			reg = <19>;
--			qcom,sd-lines = <2>;
-+			qcom,sd-lines = <1>;
- 		};
- 
- 		tert-mi2s-rx@20 {
- 			reg = <20>;
--			qcom,sd-lines = <2 4>;
-+			qcom,sd-lines = <1 3>;
- 		};
- 
- 		tert-mi2s-tx@21 {
- 			reg = <21>;
--			qcom,sd-lines = <1>;
-+			qcom,sd-lines = <0>;
- 		};
- 
- 		quat-mi2s-rx@22 {
- 			reg = <22>;
--			qcom,sd-lines = <1>;
-+			qcom,sd-lines = <0>;
- 		};
- 
- 		quat-mi2s-tx@23 {
- 			reg = <23>;
--			qcom,sd-lines = <2>;
-+			qcom,sd-lines = <1>;
- 		};
- 	};
- };
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+This error is not introduced in this patch series. The already in-tree
+implementation of bd71837 driver has this bug already. I'll send a
+trivial patch to Mark for adding the missing include.
+
+Br,
+	Matti Vaittinen
