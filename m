@@ -1,34 +1,87 @@
-Return-Path: <SRS0=pfTY=L7=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/2] dt-bindings: apmu: Document r8a77470 support
-Date: Mon, 17 Sep 2018 09:44:09 +0100
-Message-Id: <1537173850-5310-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1537173850-5310-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1537173850-5310-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms+renesas@verge.net.au>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=peqv=MB=pengutronix.de=mfe@kernel.org>
+Date: Wed, 19 Sep 2018 14:37:21 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v3 6/9] media: v4l2-subdev: fix v4l2_subdev_get_try_*
+ dependency
+Message-ID: <20180919123721.4btogporyk7iwfly@pengutronix.de>
+References: <20180918131453.21031-1-m.felsch@pengutronix.de>
+ <20180918131453.21031-7-m.felsch@pengutronix.de>
+ <20180919104502.2ex2yhwf7fltmnco@valkosipuli.retiisi.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180919104502.2ex2yhwf7fltmnco@valkosipuli.retiisi.org.uk>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document APMU and SMP enable method for RZ/G1C (also known as
-r8a77470) SoC.
+Hi Sakari,
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/power/renesas,apmu.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 18-09-19 13:45, Sakari Ailus wrote:
+> Hi Marco,
+> 
+> On Tue, Sep 18, 2018 at 03:14:50PM +0200, Marco Felsch wrote:
+> > These helpers make us of the media-controller entity which is only
+> > available if the CONFIG_MEDIA_CONTROLLER is enabled.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> > Changelog:
+> > 
+> > v3:
+> > - add CONFIG_MEDIA_CONTROLLER switch instead of moving the
+> >   v4l2_subdev_get_try_* APIs into the existing one.
+> > 
+> > v2:
+> > - Initial commit
+> > 
+> >  include/media/v4l2-subdev.h | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> > index ce48f1fcf295..d2479d5ebca8 100644
+> > --- a/include/media/v4l2-subdev.h
+> > +++ b/include/media/v4l2-subdev.h
+> > @@ -912,6 +912,8 @@ struct v4l2_subdev_fh {
+> >  #define to_v4l2_subdev_fh(fh)	\
+> >  	container_of(fh, struct v4l2_subdev_fh, vfh)
+> >  
+> > +#ifdef CONFIG_MEDIA_CONTROLLER
+> 
+> VIDEO_V4L2_SUBDEV_API (used below) depends on MEDIA_CONTROLLER. Either this
+> or the previous patch would be meaningful but not both.
+> 
+> Considering a driver wouldn't use the functions below if it did not need or
+> could use VIDEO_V4L2_SUBDEV_API, I'd suggest retaining the other patch.
 
-diff --git a/Documentation/devicetree/bindings/power/renesas,apmu.txt b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-index f747f95..e6f47c9 100644
---- a/Documentation/devicetree/bindings/power/renesas,apmu.txt
-+++ b/Documentation/devicetree/bindings/power/renesas,apmu.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	      Examples with soctypes are:
- 		- "renesas,r8a7743-apmu" (RZ/G1M)
- 		- "renesas,r8a7745-apmu" (RZ/G1E)
-+		- "renesas,r8a77470-apmu" (RZ/G1C)
- 		- "renesas,r8a7790-apmu" (R-Car H2)
- 		- "renesas,r8a7791-apmu" (R-Car M2-W)
- 		- "renesas,r8a7792-apmu" (R-Car V2H)
+Oh sorry didn't checked the Kconfig.
+Mauro can you drop that patch and use only the patch ("media: v4l2-subdev:
+add stubs for v4l2_subdev_get_try_*")?
+
+Regards,
+Marco
+
+> > +
+> >  /**
+> >   * v4l2_subdev_get_try_format - ancillary routine to call
+> >   *	&struct v4l2_subdev_pad_config->try_fmt
+> > @@ -978,6 +980,8 @@ static inline struct v4l2_rect
+> >  #endif
+> >  }
+> >  
+> > +#endif
+> > +
+> >  extern const struct v4l2_file_operations v4l2_subdev_fops;
+> >  
+> >  /**
+> 
+> -- 
+> Sakari Ailus
+> e-mail: sakari.ailus@iki.fi
+> 
+
 -- 
-2.7.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
