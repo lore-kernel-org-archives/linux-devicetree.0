@@ -1,81 +1,76 @@
-Return-Path: <SRS0=TIsf=MA=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v3 9/9] media: tvp5150: add s_power callback
-Date: Tue, 18 Sep 2018 15:14:53 +0200
-Message-Id: <20180918131453.21031-10-m.felsch@pengutronix.de>
-In-Reply-To: <20180918131453.21031-1-m.felsch@pengutronix.de>
-References: <20180918131453.21031-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=njd1=MB=verge.net.au=horms@kernel.org>
+Date: Wed, 19 Sep 2018 11:22:09 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: timer: renesas: tmu: document R8A779{7|8}0
+ bindings
+Message-ID: <20180919092208.3mlzdik4e3fcziyn@verge.net.au>
+References: <72db4d8d-7b3d-7368-02a4-f652a7bc810d@cogentembedded.com>
+ <CAMuHMdW3nfPNOPQR9mWN+tdtLRz8LwR797gzORG7RRiiiHYeHQ@mail.gmail.com>
+ <eed804ea-35ae-5c8f-7575-070cdefe02ba@cogentembedded.com>
+ <a14f6f87-0b55-4c2c-1cd0-27de68562213@cogentembedded.com>
+ <CAMuHMdUQkPK3=C5XJRVdBewbosTvZHSFBijUFd5JUVmKa_wNtQ@mail.gmail.com>
+ <20180919091941.ztolecwsw6krvb5n@verge.net.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180919091941.ztolecwsw6krvb5n@verge.net.au>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Don't en-/disable the interrupts during s_stream because someone can
-disable the stream but wants to get informed if the stream is locked
-again. So keep the interrupts enabled the whole time the pipeline is
-opened.
+On Wed, Sep 19, 2018 at 11:19:42AM +0200, Simon Horman wrote:
+> On Wed, Sep 19, 2018 at 09:48:53AM +0200, Geert Uytterhoeven wrote:
+> > On Fri, Sep 14, 2018 at 10:17 PM Sergei Shtylyov
+> > <sergei.shtylyov@cogentembedded.com> wrote:
+> > > On 09/11/2018 09:26 PM, Sergei Shtylyov wrote:
+> > >
+> > > >>> Document the R-Car V3{M|H} (R8A779{7|8}0) SoC in the Renesas TMU bindings;
+> > > >>> the TMU hardware in those is the Renesas standard 3-channel timer unit.
+> > > >>>
+> > > >>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > > >>
+> > > >> Thanks for your patch!
+> > > >>
+> > > >> Not all channels seem to be identical, but the driver just matches against
+> > > >> the "renesas,tmu" fallback?
+> > > >
+> > > >    The only difference between TMUs is the input capture capability on the 3rd
+> > > > channel in each TMU -- that includes TCPR register and extra interrupt output
+> > >
+> > >    Not only that, the TMUs having the input capture also can use external clock
+> > > as they have the TCLK<n> signal.
+> > >
+> > > > TICPI<n> (perhaps has to do with 4th TMU IRQ?).
+> > >
+> > >    They don't, most probably.
+> > >
+> > > > The driver is blissfully unaware
+> > > > of this extra capability. :-)
+> > >
+> > >    Perhaps we should describe a "renesas,tmu-ext-clk" for the TMUs having an external
+> > > clock? Will this make you happy?
+> > >
+> > > >> In addition, the V3H TMU seems to differ from the TMU in other R-Car Gen3
+> > > >> variants?
+> > > >
+> > > >    Yes, but they only differ in the number of channels capable of input capture.
+> > >
+> > >    ... and having external clock.
+> > >
+> > > >> How is this handled?
+> > > >
+> > > >    Nohow. And I'm not sure we should care about this difference...
+> > >
+> > >    At this point, the driver only uses internal clock... we can document the external
+> > > clock for the compatible value I've just suggested... Will that make you happy? :-)
+> > 
+> > OK, we can add the external clocks to differentiate later, when the driver can
+> > handle them.
+> > 
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+... and applied for v4.20.
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index 535e97c7b266..40536f8ffcae 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1389,11 +1389,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-+static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int val = 0;
-+
-+	if (on)
-+		val = TVP5150_INT_A_LOCK;
-+
-+	if (decoder->irq)
-+		/* Enable / Disable lock interrupt */
-+		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-+				   TVP5150_INT_A_LOCK, val);
-+
-+	return 0;
-+}
- 
- static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
--	unsigned int mask, val = 0, int_val = 0;
-+	unsigned int mask, val = 0;
- 
- 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
- 	       TVP5150_MISC_CTL_CLOCK_OE;
-@@ -1406,15 +1421,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 			val = decoder->lock ? decoder->oe : 0;
- 		else
- 			val = decoder->oe;
--		int_val = TVP5150_INT_A_LOCK;
- 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
- 	}
- 
- 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
--	if (decoder->irq)
--		/* Enable / Disable lock interrupt */
--		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
--				   TVP5150_INT_A_LOCK, int_val);
- 
- 	return 0;
- }
-@@ -1616,6 +1626,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
- 	.g_register = tvp5150_g_register,
- 	.s_register = tvp5150_s_register,
- #endif
-+	.s_power = tvp5150_s_power,
- };
- 
- static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
--- 
-2.19.0
+Thanks everyone.
