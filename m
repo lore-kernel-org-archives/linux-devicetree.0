@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH 10/21] fsl/fman: add API to get the device behind a fman port
-Date: Wed, 19 Sep 2018 15:36:02 +0300
-Message-ID: <20180919123613.15092-11-laurentiu.tudor@nxp.com>
+Subject: [PATCH 07/21] soc/fsl/bman_portals: defer probe after bman's probe
+Date: Wed, 19 Sep 2018 15:35:59 +0300
+Message-ID: <20180919123613.15092-8-laurentiu.tudor@nxp.com>
 References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
@@ -12,51 +12,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Add an API that retrieves the 'struct device' that the specified fman
-port probed against. The new API will be used in a subsequent iommu
-enablement related patch.
+A crash in bman portal probing could not be triggered (as is the case
+with qman portals) but it does make calls [1] into the bman driver so
+lets make sure the bman portal probing happens after bman's.
+
+[1]  bman_p_irqsource_add() (in bman) called by:
+       init_pcfg() called by:
+         bman_portal_probe()
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/net/ethernet/freescale/fman/fman_port.c | 14 ++++++++++++++
- drivers/net/ethernet/freescale/fman/fman_port.h |  2 ++
- 2 files changed, 16 insertions(+)
+ drivers/soc/fsl/qbman/bman_portal.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.c b/drivers/net/ethernet/freescale/fman/fman_port.c
-index ee82ee1384eb..bd76c9730692 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.c
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.c
-@@ -1728,6 +1728,20 @@ u32 fman_port_get_qman_channel_id(struct fman_port *port)
- }
- EXPORT_SYMBOL(fman_port_get_qman_channel_id);
- 
-+/**
-+ * fman_port_get_device
-+ * port:	Pointer to the FMan port device
-+ *
-+ * Get the 'struct device' associated to the specified FMan port device
-+ *
-+ * Return: pointer to associated 'struct device'
-+ */
-+struct device *fman_port_get_device(struct fman_port *port)
-+{
-+	return port->dev;
-+}
-+EXPORT_SYMBOL(fman_port_get_device);
+diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+index 2f71f7df3465..f9edd28894fd 100644
+--- a/drivers/soc/fsl/qbman/bman_portal.c
++++ b/drivers/soc/fsl/qbman/bman_portal.c
+@@ -91,7 +91,15 @@ static int bman_portal_probe(struct platform_device *pdev)
+ 	struct device_node *node = dev->of_node;
+ 	struct bm_portal_config *pcfg;
+ 	struct resource *addr_phys[2];
+-	int irq, cpu;
++	int irq, cpu, err;
 +
- int fman_port_get_hash_result_offset(struct fman_port *port, u32 *offset)
- {
- 	if (port->buffer_offsets.hash_result_offset == ILLEGAL_BASE)
-diff --git a/drivers/net/ethernet/freescale/fman/fman_port.h b/drivers/net/ethernet/freescale/fman/fman_port.h
-index 9dbb69f40121..82f12661a46d 100644
---- a/drivers/net/ethernet/freescale/fman/fman_port.h
-+++ b/drivers/net/ethernet/freescale/fman/fman_port.h
-@@ -157,4 +157,6 @@ int fman_port_get_tstamp(struct fman_port *port, const void *data, u64 *tstamp);
++	err = bman_is_probed();
++	if (!err)
++		return -EPROBE_DEFER;
++	if (err < 0) {
++		dev_err(&pdev->dev, "failing probe due to bman probe error\n");
++		return -ENODEV;
++	}
  
- struct fman_port *fman_port_bind(struct device *dev);
- 
-+struct device *fman_port_get_device(struct fman_port *port);
-+
- #endif /* __FMAN_PORT_H */
+ 	pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
+ 	if (!pcfg)
 -- 
 2.17.1
