@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH 18/21] arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
-Date: Wed, 19 Sep 2018 15:36:10 +0300
-Message-ID: <20180919123613.15092-19-laurentiu.tudor@nxp.com>
+Subject: [PATCH 21/21] arm64: dts: ls104x: make dma-coherent global to the SoC
+Date: Wed, 19 Sep 2018 15:36:13 +0300
+Message-ID: <20180919123613.15092-22-laurentiu.tudor@nxp.com>
 References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
@@ -12,42 +12,71 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-The StreamID entering the SMMU is actually a concatenation of the
-SMMU TBU ID and the ICID configured in software.
-Since the TBU ID is internal to the SoC and since we want that the
-actual the ICID configured in software to enter the SMMU witout any
-additional set bits, mask out the TBU ID bits and leave only the
-relevant ICID bits to enter SMMU.
+These SoCs are really completely dma coherent in their entirety so add
+the dma-coherent property at the soc level in the device tree and drop
+the instances where it's specifically added to a few select devices.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 5 +----
  arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
- 2 files changed, 2 insertions(+)
+ 2 files changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 8b3eba167508..90296b9fb171 100644
+index 3b7b2e60bd9a..d02106cb2116 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -226,6 +226,7 @@
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x9000000 0 0x400000>;
- 			dma-coherent;
-+			stream-match-mask = <0x7f00>;
- 			#global-interrupts = <2>;
- 			#iommu-cells = <1>;
- 			interrupts = <0 142 4>, /* global secure fault */
+@@ -215,6 +215,7 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
++		dma-coherent;
+ 
+ 		clockgen: clocking@1ee1000 {
+ 			compatible = "fsl,ls1043a-clockgen";
+@@ -680,7 +681,6 @@
+ 			reg-names = "ahci", "sata-ecc";
+ 			interrupts = <0 69 0x4>;
+ 			clocks = <&clockgen 4 0>;
+-			dma-coherent;
+ 		};
+ 
+ 		msi1: msi-controller1@1571000 {
+@@ -715,7 +715,6 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			dma-coherent;
+ 			iommu-map = <0 &mmu 0 1>;
+ 			num-lanes = <4>;
+ 			bus-range = <0x0 0xff>;
+@@ -741,7 +740,6 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			dma-coherent;
+ 			iommu-map = <0 &mmu 0 1>;
+ 			num-lanes = <2>;
+ 			bus-range = <0x0 0xff>;
+@@ -767,7 +765,6 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+-			dma-coherent;
+ 			iommu-map = <0 &mmu 0 1>;
+ 			num-lanes = <2>;
+ 			bus-range = <0x0 0xff>;
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 06863d3e4a7d..15094dd8400e 100644
+index 890d1565791f..3bdea0470f69 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -232,6 +232,7 @@
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x9000000 0 0x400000>;
- 			dma-coherent;
-+			stream-match-mask = <0x7f00>;
- 			#global-interrupts = <2>;
- 			#iommu-cells = <1>;
- 			interrupts = <0 142 4>, /* global secure fault */
+@@ -188,6 +188,7 @@
+ 		#size-cells = <2>;
+ 		ranges;
+ 		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
++		dma-coherent;
+ 
+ 		ddr: memory-controller@1080000 {
+ 			compatible = "fsl,qoriq-memory-controller";
 -- 
 2.17.1
