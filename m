@@ -1,162 +1,105 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [alsa-devel] [PATCH v4 14/14] ASoC: qcom: common: move
- be_hw_fixup to common
-Date: Wed, 19 Sep 2018 11:19:38 +0530
-Message-ID: <500df2e4-6593-5537-ca08-b20a9b601c47@codeaurora.org>
-References: <20180917005727.32728-1-srinivas.kandagatla@linaro.org>
- <20180917005727.32728-15-srinivas.kandagatla@linaro.org>
+From: lei liu <leilk.liu@mediatek.com>
+Subject: Re: [PATCH v3 2/3] spis: mediatek: add spi slave for Mediatek MT2712
+Date: Wed, 19 Sep 2018 13:50:05 +0800
+Message-ID: <1537336205.27607.23.camel@mhfsdcap03>
+References: <1537150762-7072-1-git-send-email-leilk.liu@mediatek.com>
+         <1537150762-7072-3-git-send-email-leilk.liu@mediatek.com>
+         <20180918163048.GN2471@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917005727.32728-15-srinivas.kandagatla@linaro.org>
-Content-Language: en-US
+In-Reply-To: <20180918163048.GN2471@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: srinivas.kandagatla@linaro.org, lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, vkoul@kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Srinivas,
+Hi Mark,
+  Thanks for your comments.
 
+On Tue, 2018-09-18 at 09:30 -0700, Mark Brown wrote:
+> On Mon, Sep 17, 2018 at 10:19:21AM +0800, Leilk Liu wrote:
+> 
+> This looks overall pretty good, a few smallish comments below:
+> 
+> Please use subject lines matching the style for the subsystem.  This
+> makes it easier for people to identify relevant patches.
+> 
+OK, I'll fix it, thanks.
 
-We will add support for vi feedback usecase in sdm845 machine driver 
-where we have to support 4 channel tx data for a particular backend. We 
-should probably keep be_hw_params_fixup in respective machine driver for 
-now to support such requirement.
+> >  if SPI_SLAVE
+> > +config SPI_SLAVE_MT27XX
+> > +	tristate "MediaTek SPI slave device"
+> > +	depends on ARCH_MEDIATEK || COMPILE_TEST
+> > +	help
+> > +	  This selects the MediaTek(R) SPI slave device driver.
+> > +	  If you want to use MediaTek(R) SPI slave interface,
+> > +	  say Y or M here.If you are not sure, say N.
+> > +	  SPI slave drivers for Mediatek MT27XX series ARM SoCs.
+> >  
+> >  config SPI_SLAVE_TIME
+> 
+> This is a driver not a slave implementation, it should be with the other
+> drivers in the Kconfig.  The slave implementations are for the
+> functionality that uses the drivers, not the drivers themselves.
+> 
+OK, I'll fix it, thanks.
 
+> > +	/* set the tx/rx endian */
+> > +#ifdef __LITTLE_ENDIAN
+> > +	reg_val &= ~SPIS_TX_ENDIAN;
+> > +	reg_val &= ~SPIS_RX_ENDIAN;
+> > +#else
+> > +	reg_val |= SPIS_TX_ENDIAN;
+> > +	reg_val |= SPIS_RX_ENDIAN;
+> > +#endif
+> > +	writel(reg_val, mdata->base + SPIS_CFG_REG);
+> 
+> This seems weird - it looks like it's changing the endianess of the
+> protocol based on the endianness the processor is running in.  What's
+> going on here?  I'd expect the driver to be just treating everything as
+> a byte stream and letting the protocol driver handle the endianness
+> issues, otherwise we might end up with double converions.
+> 
+OK, I'll set the endian of SPI the same with the processor. Thanks.
 
-Thanks,
+> > +		xfer->tx_dma = dma_map_single(dev, (void *)xfer->tx_buf,
+> > +					      xfer->len, DMA_TO_DEVICE);
+> 
+> Why is there a cast to void here?  That's usually a sign that there's a
+> type safety issue, the whole point with void is that it's compatible
+> with any other pointer.
+> 
+tx_buf is a const void*, here it need a void * for the dma mapping.
+And I'll remove void * from dma_map_single((void *)rx_buf).
+Thanks.
 
-Rohit
+> > +static irqreturn_t mtk_spi_slave_interrupt(int irq, void *dev_id)
+> > +{
+> > +	struct spi_controller *ctlr = dev_id;
+> > +	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
+> > +	struct spi_transfer *trans = mdata->cur_transfer;
+> > +	u32 int_status, reg_val, cnt, remainder;
+> > +
+> > +	int_status = readl(mdata->base + SPIS_IRQ_ST_REG);
+> > +	writel(int_status, mdata->base + SPIS_IRQ_CLR_REG);
+> > +
+> > +	if (!trans)
+> > +		return IRQ_HANDLED;
+> 
+> Are you sure that this is the right thing to do if we get a spurious
+> interrupt - the normal thing would be to return IRQ_NONE, possibly
+> logging a warning as well?
+> 
+OK, it should reture IRQ_NONE here, thanks.
 
-
-On 9/17/2018 6:27 AM, srinivas.kandagatla@linaro.org wrote:
-> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->
-> be_hw_fixup for qdsp is common across mutiple qcom machine drivers,
-> so move it to common file and remove the redundant code.
->
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   sound/soc/qcom/apq8096.c | 15 ---------------
->   sound/soc/qcom/common.c  | 17 +++++++++++++++++
->   sound/soc/qcom/sdm845.c  | 22 ++--------------------
->   3 files changed, 19 insertions(+), 35 deletions(-)
->
-> diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
-> index daad43f..9cb26aee 100644
-> --- a/sound/soc/qcom/apq8096.c
-> +++ b/sound/soc/qcom/apq8096.c
-> @@ -20,20 +20,6 @@ struct apq8096_card_data {
->   	bool jack_setup;
->   };
->   
-> -static int apq8096_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
-> -				      struct snd_pcm_hw_params *params)
-> -{
-> -	struct snd_interval *rate = hw_param_interval(params,
-> -					SNDRV_PCM_HW_PARAM_RATE);
-> -	struct snd_interval *channels = hw_param_interval(params,
-> -					SNDRV_PCM_HW_PARAM_CHANNELS);
-> -
-> -	rate->min = rate->max = 48000;
-> -	channels->min = channels->max = 2;
-> -
-> -	return 0;
-> -}
-> -
->   static int msm_snd_hw_params(struct snd_pcm_substream *substream,
->   			     struct snd_pcm_hw_params *params)
->   {
-> @@ -139,7 +125,6 @@ static void apq8096_add_be_ops(struct snd_soc_card *card)
->   
->   	for (i = 0; i < num_links; i++) {
->   		if (link->no_pcm == 1) {
-> -			link->be_hw_params_fixup = apq8096_be_hw_params_fixup;
->   			link->init = apq8096_init;
->   			link->ops = &apq8096_ops;
->   		}
-> diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-> index eb1b9da..ce8e759 100644
-> --- a/sound/soc/qcom/common.c
-> +++ b/sound/soc/qcom/common.c
-> @@ -3,8 +3,24 @@
->   // Copyright (c) 2018, The Linux Foundation. All rights reserved.
->   
->   #include <linux/module.h>
-> +#include <sound/pcm_params.h>
->   #include "common.h"
->   
-> +static int qcom_snd_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
-> +				       struct snd_pcm_hw_params *params)
-> +{
-> +	struct snd_interval *rate = hw_param_interval(params,
-> +					SNDRV_PCM_HW_PARAM_RATE);
-> +	struct snd_interval *channels = hw_param_interval(params,
-> +					SNDRV_PCM_HW_PARAM_CHANNELS);
-> +
-> +	rate->min = rate->max = 48000;
-> +	channels->min = channels->max = 2;
-> +	params_set_format(params, SNDRV_PCM_FORMAT_S16_LE);
-> +
-> +	return 0;
-> +}
-> +
->   int qcom_snd_parse_of(struct snd_soc_card *card)
->   {
->   	struct device_node *np;
-> @@ -79,6 +95,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
->   			}
->   			link->no_pcm = 1;
->   			link->ignore_pmdown_time = 1;
-> +			link->be_hw_params_fixup = qcom_snd_be_hw_params_fixup;
->   		} else {
->   			link->platform_of_node = link->cpu_of_node;
->   			link->codec_dai_name = "snd-soc-dummy-dai";
-> diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
-> index 2a781d8..87e150c 100644
-> --- a/sound/soc/qcom/sdm845.c
-> +++ b/sound/soc/qcom/sdm845.c
-> @@ -11,7 +11,6 @@
->   #include "common.h"
->   #include "qdsp6/q6afe.h"
->   
-> -#define DEFAULT_SAMPLE_RATE_48K		48000
->   #define DEFAULT_MCLK_RATE		24576000
->   #define DEFAULT_BCLK_RATE		12288000
->   
-> @@ -177,32 +176,15 @@ static struct snd_soc_ops sdm845_be_ops = {
->   	.shutdown = sdm845_snd_shutdown,
->   };
->   
-> -static int sdm845_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
-> -				struct snd_pcm_hw_params *params)
-> -{
-> -	struct snd_interval *rate = hw_param_interval(params,
-> -					SNDRV_PCM_HW_PARAM_RATE);
-> -	struct snd_interval *channels = hw_param_interval(params,
-> -					SNDRV_PCM_HW_PARAM_CHANNELS);
-> -	struct snd_mask *fmt = hw_param_mask(params, SNDRV_PCM_HW_PARAM_FORMAT);
-> -
-> -	rate->min = rate->max = DEFAULT_SAMPLE_RATE_48K;
-> -	channels->min = channels->max = 2;
-> -	snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
-> -
-> -	return 0;
-> -}
-> -
->   static void sdm845_add_be_ops(struct snd_soc_card *card)
->   {
->   	struct snd_soc_dai_link *link = card->dai_link;
->   	int i, num_links = card->num_links;
->   
->   	for (i = 0; i < num_links; i++) {
-> -		if (link->no_pcm == 1) {
-> +		if (link->no_pcm == 1)
->   			link->ops = &sdm845_be_ops;
-> -			link->be_hw_params_fixup = sdm845_be_hw_params_fixup;
-> -		}
-> +
->   		link++;
->   	}
->   }
+> > +	if (int_status & CMD_INVALID_ST)
+> > +		dev_err(&ctlr->dev, "cmd invalid\n");
+> 
+> If there's an interrupt that doesn't have any of the interrupt status
+> flags set I'd expect to see a warning and probably IRQ_NONE being
+> returned.  That way if the interrupt line is shared we work correctly
+> and if something goes wrong and the interrupt gets stuck on then the
+> core interrupt code's error handling can kick in.
+OK, I'll fix it, thanks.
