@@ -1,8 +1,10 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
-Date: Wed, 19 Sep 2018 15:35:52 +0300
-Message-ID: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
+Subject: [PATCH 01/21] soc/fsl/qman: fixup liodns only on ppc targets
+Date: Wed, 19 Sep 2018 15:35:53 +0300
+Message-ID: <20180919123613.15092-2-laurentiu.tudor@nxp.com>
+References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
@@ -10,83 +12,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-This patch series adds SMMU support for NXP LS1043A and LS1046A chips
-and consists mostly in important driver fixes and the required device
-tree updates. It touches several subsystems and consists of three main
-parts:
- - changes in soc/drivers/fsl/qbman drivers adding iommu mapping of
-   reserved memory areas, fixes and defered probe support
- - changes in drivers/net/ethernet/freescale/dpaa_eth drivers
-   consisting in misc dma mapping related fixes and probe ordering
- - addition of the actual arm smmu device tree node together with
-   various adjustments to the device trees
+ARM SoCs use SMMU so the liodn fixup done in the qman driver is no
+longer making sense and it also breaks the ICID settings inherited
+from u-boot. Do the fixups only for PPC targets.
 
-Performance impact
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+---
+ drivers/soc/fsl/qbman/qman_ccsr.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-    Running iperf benchmarks in a back-to-back setup (both sides
-    having smmu enabled) on a 10GBps port show an important
-    networking performance degradation of around %40 (9.48Gbps
-    linerate vs 5.45Gbps). If you need performance but without
-    SMMU support you can use "iommu.passthrough=1" to disable
-    SMMU.
-
-USB issue and workaround
-
-    There's a problem with the usb controllers in these chips
-    generating smaller, 40-bit wide dma addresses instead of the 48-bit
-    supported at the smmu input. So you end up in a situation where the
-    smmu is mapped with 48-bit address translations, but the device
-    generates transactions with clipped 40-bit addresses, thus smmu
-    context faults are triggered. I encountered a similar situation for
-    mmc that I  managed to fix in software [1] however for USB I did not
-    find a proper place in the code to add a similar fix. The only
-    workaround I found was to add this kernel parameter which limits the
-    usb dma to 32-bit size: "xhci-hcd.quirks=0x800000".
-    This workaround if far from ideal, so any suggestions for a code
-    based workaround in this area would be greatly appreciated.
-
-The patch set is based on net-next so, if generally agreed, I'd suggest
-to get the patches through the netdev tree after getting all the Acks.
-
-[1] https://patchwork.kernel.org/patch/10506627/
-
-Laurentiu Tudor (21):
-  soc/fsl/qman: fixup liodns only on ppc targets
-  soc/fsl/bman: map FBPR area in the iommu
-  soc/fsl/qman: map FQD and PFDR areas in the iommu
-  soc/fsl/qman-portal: map CENA area in the iommu
-  soc/fsl/qbman: add APIs to retrieve the probing status
-  soc/fsl/qman_portals: defer probe after qman's probe
-  soc/fsl/bman_portals: defer probe after bman's probe
-  soc/fsl/qbman_portals: add APIs to retrieve the probing status
-  fsl/fman: backup and restore ICID registers
-  fsl/fman: add API to get the device behind a fman port
-  dpaa_eth: defer probing after qbman
-  dpaa_eth: base dma mappings on the fman rx port
-  dpaa_eth: fix iova handling for contiguous frames
-  dpaa_eth: fix iova handling for sg frames
-  dpaa_eth: fix SG frame cleanup
-  arm64: dts: ls1046a: add smmu node
-  arm64: dts: ls1043a: add smmu node
-  arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
-  arm64: dts: ls104x: add missing dma ranges property
-  arm64: dts: ls104x: add iommu-map to pci controllers
-  arm64: dts: ls104x: make dma-coherent global to the SoC
-
- .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  52 ++++++-
- .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  48 +++++++
- .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 136 ++++++++++++------
- drivers/net/ethernet/freescale/fman/fman.c    |  35 ++++-
- drivers/net/ethernet/freescale/fman/fman.h    |   4 +
- .../net/ethernet/freescale/fman/fman_port.c   |  14 ++
- .../net/ethernet/freescale/fman/fman_port.h   |   2 +
- drivers/soc/fsl/qbman/bman_ccsr.c             |  23 +++
- drivers/soc/fsl/qbman/bman_portal.c           |  20 ++-
- drivers/soc/fsl/qbman/qman_ccsr.c             |  30 ++++
- drivers/soc/fsl/qbman/qman_portal.c           |  35 +++++
- include/soc/fsl/bman.h                        |  16 +++
- include/soc/fsl/qman.h                        |  17 +++
- 13 files changed, 379 insertions(+), 53 deletions(-)
-
+diff --git a/drivers/soc/fsl/qbman/qman_ccsr.c b/drivers/soc/fsl/qbman/qman_ccsr.c
+index 79cba58387a5..619e22030460 100644
+--- a/drivers/soc/fsl/qbman/qman_ccsr.c
++++ b/drivers/soc/fsl/qbman/qman_ccsr.c
+@@ -597,6 +597,7 @@ static int qman_init_ccsr(struct device *dev)
+ #define LIO_CFG_LIODN_MASK 0x0fff0000
+ void qman_liodn_fixup(u16 channel)
+ {
++#ifdef CONFIG_PPC
+ 	static int done;
+ 	static u32 liodn_offset;
+ 	u32 before, after;
+@@ -616,6 +617,7 @@ void qman_liodn_fixup(u16 channel)
+ 		qm_ccsr_out(REG_REV3_QCSP_LIO_CFG(idx), after);
+ 	else
+ 		qm_ccsr_out(REG_QCSP_LIO_CFG(idx), after);
++#endif
+ }
+ 
+ #define IO_CFG_SDEST_MASK 0x00ff0000
 -- 
 2.17.1
