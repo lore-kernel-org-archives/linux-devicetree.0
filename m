@@ -1,79 +1,41 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 3/3] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for vibrator
-Date: Wed, 19 Sep 2018 11:09:12 -0400
-Message-ID: <20180919150912.8948-4-masneyb@onstation.org>
-References: <20180919150912.8948-1-masneyb@onstation.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180919150912.8948-1-masneyb@onstation.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, linux-pwm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: sebastian.reichel@collabora.co.uk, masneyb@onstation.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
+ mdio bus
+Date: Wed, 19 Sep 2018 17:20:52 +0200
+Message-ID: <20180919152052.GD17466@lunn.ch>
+References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <20180917145028.GC5458@lunn.ch>
+ <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
+ <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
+ <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180918123545.GA29092@lunn.ch>
+ <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180919122521.GA26940@lunn.ch>
+ <1226d3d3-e2ba-571d-5b70-b246cbde2fb6@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1226d3d3-e2ba-571d-5b70-b246cbde2fb6@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Timur Tabi <timur@kernel.org>
+Cc: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>, Florian Fainelli <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device device tree bindings for the vibrator found on
-the LG Nexus 5 (hammerhead) phone.
+> The focus of any patches for the EMAC should be ACPI, not DT.  If anything,
+> ACPI support should come first.  No one should be writing or reviewing DT
+> code before ACPI code.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+I suspect that is not going to be easy. Last time i looked, the ACPI
+standard had nothing about MDIO busses or PHYs. Marcin Wojtas did some
+work in this area a while back for the mvpp2, but if i remember
+correctly, he worked around this by simply not having a PHY when using
+ACPI, and making use of a MAC interrupt which indicated when there was
+link.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index ed8f064d0895..e738a472cb99 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -5,6 +5,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8974.h>
- 
- / {
- 	model = "LGE MSM 8974 HAMMERHEAD";
-@@ -268,6 +269,44 @@
- 				input-enable;
- 			};
- 		};
-+
-+		vibrator_pin: vibrator {
-+			pwm {
-+				pins = "gpio27";
-+				function = "gp1_clk";
-+
-+				drive-strength = <6>;
-+				bias-disable;
-+			};
-+
-+			enable {
-+				pins = "gpio60";
-+				function = "gpio";
-+			};
-+		};
-+	};
-+
-+	msm_pwm_vibrator_enable: msm_pwm_vibrator@fd8c3450 {
-+		compatible = "qcom,msm8974-pwm-vibrator";
-+		reg = <0xfd8c3450 0x400>;
-+		#pwm-cells = <3>;
-+
-+		vcc-supply = <&pm8941_l19>;
-+
-+		clocks = <&mmcc CAMSS_GP1_CLK>;
-+		clock-names = "pwm";
-+
-+		enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_pin>;
-+	};
-+
-+	vibrator {
-+		compatible = "pwm-vibrator";
-+
-+		pwms = <&msm_pwm_vibrator_enable 0 1000000000 0>;
-+		pwm-names = "enable";
- 	};
- 
- 	sdhci@f9824900 {
--- 
-2.17.1
+Whoever implements this first needs to be an ACPI expert and probably
+needs to write it up and submit it as an amendment to the ACPI
+standard.
+
+      Andrew
