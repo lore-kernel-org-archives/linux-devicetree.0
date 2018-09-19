@@ -1,54 +1,87 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH 0/4] Add i.MX6ULZ SoC support
-Date: Wed, 19 Sep 2018 06:10:16 +0000
-Message-ID: <DB3PR0402MB39162EA4FD240720276A4482F51C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
- <e82e2894-2a0d-0084-913c-b7c6d966fc13@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Rohit kumar <rohitkr@codeaurora.org>
+Subject: [PATCH] ASoC: q6afe: dt-bindings: Update input range for qcom,sd-lines
+Date: Wed, 19 Sep 2018 11:41:21 +0530
+Message-ID: <1537337481-2123-1-git-send-email-rohitkr@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e82e2894-2a0d-0084-913c-b7c6d966fc13@i2se.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.k>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rohkumar@qti.qualcomm.com, srinivas.kandagatla@linaro.org
+Cc: Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFN0ZWZhbg0KDQpBbnNvbiBIdWFuZw0KQmVzdCBSZWdhcmRzIQ0KDQoNCj4gLS0tLS1Pcmln
-aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBp
-MnNlLmNvbT4NCj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDE4LCAyMDE4IDM6MzggUE0NCj4g
-VG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3Jn
-Ow0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBw
-ZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBGYWJpbyBFc3RldmFtIDxm
-YWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBsaW51eEBhcm1saW51eC5vcmcudWs7IG10dXJxdWV0
-dGVAYmF5bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOyBKYWNreQ0KPiBCYWkgPHBpbmcuYmFp
-QG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsNCj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtY2xrQHZnZXIua2VybmVsLm9y
-Zw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCAwLzRdIEFkZCBpLk1YNlVMWiBTb0Mgc3VwcG9ydA0KPiANCj4gSGkgQW5zb24sDQo+
-IA0KPiBBbSAxOC4wOS4yMDE4IHVtIDA4OjE5IHNjaHJpZWIgQW5zb24gSHVhbmc6DQo+ID4gVGhp
-cyBwYXRjaCBzZXQgYWRkcyBpLk1YNlVMWiBTb0Mgc3VwcG9ydCwgaS5NWDZVTFogaXMgYSBuZXcg
-U29DIG9mDQo+ID4gaS5NWDYgZmFtaWx5LCBjb21wYXJlZCB0byBpLk1YNlVMTCwgaXQgcmVtb3Zl
-cyBiZWxvdyBtb2R1bGVzOg0KPiA+DQo+ID4gICAgIC0gVUFSVDUvVUFSVDYvVUFSVDcvVUFSVDg7
-DQo+ID4gICAgIC0gUFdNNS9QV002L1BXTTcvUFdNODsNCj4gPiAgICAgLSBlQ1NQSTMvZUNTUEk0
-Ow0KPiA+ICAgICAtIENBTjEvQ0FOMjsNCj4gPiAgICAgLSBGRUMxL0ZFQzI7DQo+ID4gICAgIC0g
-STJDMy9JMkM0Ow0KPiA+ICAgICAtIEVQSVQyOw0KPiA+ICAgICAtIExDRElGOw0KPiA+ICAgICAt
-IEdQVDI7DQo+ID4gICAgIC0gVFNDOw0KPiA+DQo+ID4gQW5kIGkuTVg2VUxaIGhhcyBzYW1lIHNv
-Y19pZCBhcyBpLk1YNlVMTCwgYnV0IFNSQ19TQk1SMiBiaXRbNl0gaXMgdG8NCj4gPiBkaWZmZXJl
-bnRpYXRlIGkuTVg2VUxaIGZyb20gaS5NWDZVTEwsIDEnYjEgbWVhbnMgaS5NWDZVTFogYW5kDQo+
-ID4gMSdiMCBtZWFucyBpLk1YNlVMTC4gaS5NWDZVTFogcmV1c2UgbW9zdCBvZiBpLk1YNlVML2ku
-TVg2VUxMIGNvZGUsDQo+ID4ganVzdCBhZGQgdGhlIG5ldyBDUFUgdHlwZSBhbmQgcmVtb3ZlIHRo
-b3NlIG5vbi1leGlzdCBtb2R1bGVzIGZyb20gZHRiLg0KPiA+DQo+ID4gQW5zb24gSHVhbmcgKDQp
-Og0KPiA+ICAgQVJNOiBkdHM6IGlteDogYWRkIGkubXg2dWx6IGFuZCBpLm14NnVseiAxNHgxNCBl
-dmsgc3VwcG9ydA0KPiA+ICAgQVJNOiBpbXg6IGFkZCBpLm14NnVseiBtc2wgc3VwcG9ydA0KPiA+
-ICAgY2xrOiBpbXg2dWw6IGFkZCBpLm14NnVseiBzdXBwb3J0DQo+ID4gICBkdC1iaW5kaW5nczog
-YXJtOiBhZGQgY29tcGF0aWJsZSBmb3IgaS5NWDZVTFogMTR4MTQgRVZLIGJvYXJkDQo+ID4NCj4g
-Pg0KPiANCj4gaSByZWNvbW1lbmQgdGhlIGZvbGxvd2luZyBwYXRjaCBvcmRlcjoNCj4gQVJNOiBp
-bXg6IGFkZCBpLm14NnVseiBtc2wgc3VwcG9ydA0KPiBjbGs6IGlteDZ1bDogYWRkIGkubXg2dWx6
-IHN1cHBvcnQNCj4gZHQtYmluZGluZ3M6IGFybTogYWRkIGNvbXBhdGlibGUgZm9yIGkuTVg2VUxa
-IDE0eDE0IEVWSyBib2FyZA0KPiBBUk06IGR0czogaW14OiBhZGQgaS5teDZ1bHogYW5kIGkubXg2
-dWx6IDE0eDE0IGV2ayBzdXBwb3J0DQo+IA0KPiBTdGVmYW4NCiANClRoYW5rcywgSSByZXNlbmQg
-dGhlIFYyIHBhdGNoIHNldCB3aXRoIHRoZSBwYXRjaCBvcmRlciB5b3UgcmVjb21tZW5kZWQuDQoN
-CkFuc29uLg0KDQo=
+Input to qcom,sd-lines should be between 0 and 3 instead of
+1 to 4 as 0 corresponds to BIT(0) which is MI2S_SD0 line.
+Bit 1 to 3 corresponds to SD1 to SD3 lines respectively.
+Updated documentation for the same.
+
+Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+---
+ Documentation/devicetree/bindings/sound/qcom,q6afe.txt | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+index a817940..d74888b 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
++++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
+@@ -49,7 +49,7 @@ configuration of each dai. Must contain the following properties.
+ 	Usage: required for mi2s interface
+ 	Value type: <prop-encoded-array>
+ 	Definition: Must be list of serial data lines used by this dai.
+-	should be one or more of the 1-4 sd lines.
++	should be one or more of the 0-3 sd lines.
+ 
+  - qcom,tdm-sync-mode:
+ 	Usage: required for tdm interface
+@@ -137,42 +137,42 @@ q6afe@4 {
+ 
+ 		prim-mi2s-rx@16 {
+ 			reg = <16>;
+-			qcom,sd-lines = <1 3>;
++			qcom,sd-lines = <0 2>;
+ 		};
+ 
+ 		prim-mi2s-tx@17 {
+ 			reg = <17>;
+-			qcom,sd-lines = <2>;
++			qcom,sd-lines = <1>;
+ 		};
+ 
+ 		sec-mi2s-rx@18 {
+ 			reg = <18>;
+-			qcom,sd-lines = <1 4>;
++			qcom,sd-lines = <0 3>;
+ 		};
+ 
+ 		sec-mi2s-tx@19 {
+ 			reg = <19>;
+-			qcom,sd-lines = <2>;
++			qcom,sd-lines = <1>;
+ 		};
+ 
+ 		tert-mi2s-rx@20 {
+ 			reg = <20>;
+-			qcom,sd-lines = <2 4>;
++			qcom,sd-lines = <1 3>;
+ 		};
+ 
+ 		tert-mi2s-tx@21 {
+ 			reg = <21>;
+-			qcom,sd-lines = <1>;
++			qcom,sd-lines = <0>;
+ 		};
+ 
+ 		quat-mi2s-rx@22 {
+ 			reg = <22>;
+-			qcom,sd-lines = <1>;
++			qcom,sd-lines = <0>;
+ 		};
+ 
+ 		quat-mi2s-tx@23 {
+ 			reg = <23>;
+-			qcom,sd-lines = <2>;
++			qcom,sd-lines = <1>;
+ 		};
+ 	};
+ };
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
