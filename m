@@ -1,41 +1,30 @@
-From: Brian Dodge <bdodge09@gmail.com>
-Subject: arc vendor prefix
-Date: Tue, 18 Sep 2018 21:05:20 -0400
-Message-ID: <527da392-9629-792b-08cc-970ffc8173ee@gmail.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 2/3] dt-bindings: interrupt-controller: C-SKY APB intc
+Date: Wed, 19 Sep 2018 10:52:35 +0800
+Message-ID: <20180919025235.GA1834@guoren>
+References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
+ <162f7f98697cd9d806a1a843c6177bb943ea2b33.1537087118.git.ren_guo@c-sky.com>
+ <20180917062336.GA20555@bogus>
+ <20180917083623.GA1069@guoren>
+ <CAL_JsqJOoek+P+NR_jEfPJD1JLC4U-x_hmJL=vjvMU5JWxjVeA@mail.gmail.com>
+ <20180917154150.GA6392@guoren-Inspiron-7460>
+ <CAL_JsqJ0OXjyX+Tn7zFy_=VrDgyQx3nX384drP_4T8brko+W7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJ0OXjyX+Tn7zFy_=VrDgyQx3nX384drP_4T8brko+W7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Sep 18, 2018 at 05:56:50PM -0700, Rob Herring wrote:
+> > > but does need a vendor prefix.
+> > vendor prefix? Em ... it's just used in fpga now.
+> 
+> What I mean is make it: csky,support-pulse-signal
+Ok. no problem.
 
-In the linux kernel commit 91ab076e3a2f092254fe5231bbfa92b37fd52e38 the 
-vendor prefix "arctic" was added to vendor-prefixes.txt.
-
-The original change I authored used "arc" not "arctic", and the device 
-tree bindings were added assuming that prefix in commit 
-ce9d22573d85341c987f997461ac712e4dbe47b1
-
-Perhaps odeju changed the name to arctic in the patch after I created it 
-and before it was approved.
-
-This pairing isn't really compatible is it?  Either the prefix should be 
-reverted to "arc" or the bindings (and driver source) changed to use 
-"arctic", as in "arctic,arc2c0608" vs. "arc,arc2c0608"
-
-The arcticsand company is now part of psemi (formerly peregrine 
-semiconductor) and they would like to keep using the arc prefix for 
-these chips and in the driver and I plan on changing the 
-vendor-prefix.txt to reflect that.
-
-I am in the process of updating the driver code to support different and 
-new variants of the chip and would like to know what the preference is 
-for this prefix going forward.
-
-Thank you
-
-Brian
+Best Regards
+ Guo Ren
