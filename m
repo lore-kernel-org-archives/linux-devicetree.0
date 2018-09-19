@@ -1,15 +1,14 @@
 Return-Path: <SRS0=WAAy=MB=bp.renesas.com=fabrizio.castro@kernel.org>
 From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 Subject: RE: [PATCH 2/2] ARM: dts: r8a77470: Add APMU node and second CPU core
-Date: Wed, 19 Sep 2018 10:32:24 +0000
+Date: Wed, 19 Sep 2018 10:24:00 +0000
 Message-ID: 
- <TY1PR01MB1770F47F0A5C7B8C4F55B44FC01C0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+ <TY1PR01MB1770A0F466B1CAFE68CD7C0CC01C0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1537173850-5310-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1537173850-5310-3-git-send-email-fabrizio.castro@bp.renesas.com>
  <CAMuHMdVmwevtcjHyKcY5Y0pXFOQhAGeyhdSqF4PGJzVt5C2XMA@mail.gmail.com>
  <20180919082541.q6izcnj5pigp2fdz@verge.net.au>
- <20180919092329.uwzpn7di4zfonzgj@verge.net.au>
-In-Reply-To: <20180919092329.uwzpn7di4zfonzgj@verge.net.au>
+In-Reply-To: <20180919082541.q6izcnj5pigp2fdz@verge.net.au>
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -25,36 +24,28 @@ Thank you for your feedback.
 > Subject: Re: [PATCH 2/2] ARM: dts: r8a77470: Add APMU node and second CPU=
  core
 >
-> On Wed, Sep 19, 2018 at 10:25:42AM +0200, Simon Horman wrote:
-> > On Mon, Sep 17, 2018 at 10:53:16AM +0200, Geert Uytterhoeven wrote:
-> > > Perhaps "ARM: dts: r8a77470: Add SMP support"?
-> > >
-> > > On Mon, Sep 17, 2018 at 10:44 AM Fabrizio Castro
-> > > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > Add DT node for the Advanced Power Management Unit (APMU), add the
-> > > > second CPU core, and use "renesas,apmu" as "enable-method".
-> > > >
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-> > >
-> > > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> On Mon, Sep 17, 2018 at 10:53:16AM +0200, Geert Uytterhoeven wrote:
+> > Perhaps "ARM: dts: r8a77470: Add SMP support"?
 > >
-> > I would like to ask to what extent this has been tested with respect to
-> > CPU hotplug, suspend to RAM, and combinations thereof.
+> > On Mon, Sep 17, 2018 at 10:44 AM Fabrizio Castro
+> > <fabrizio.castro@bp.renesas.com> wrote:
+> > > Add DT node for the Advanced Power Management Unit (APMU), add the
+> > > second CPU core, and use "renesas,apmu" as "enable-method".
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> >
+> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 >
-> And any details of firmware, bootloader, ... version stacks where this is
-> supported.
+> I would like to ask to what extent this has been tested with respect to
+> CPU hotplug, suspend to RAM, and combinations thereof.
 
-iW-RainboW-G23S SPI_LOADER(DDR3) V1.00 2016.03.25
-U-Boot 2013.01.01-gaa28b1d-dirty (Feb 01 2018 - 22:55:39)
-
-# cat /sys/devices/soc0/revision
-ES2.0
-
-I hope this helps.
+Both CPU hotplug and STR were tested on their own and combined, I haven't e=
+ncountered any issue so far.
 
 Thanks,
 Fab
+
 
 
 
