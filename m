@@ -1,35 +1,70 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/3] arm64: dts: ti: am654: Enable additional nodes
-Date: Wed, 19 Sep 2018 21:42:28 +0300
-Message-ID: <44d45b6c-5daa-aa54-da3a-efb388e4fef0@ti.com>
-References: <20180905162024.28243-1-nm@ti.com>
- <20180905203313.GE5662@atomide.com>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
+Date: Wed, 19 Sep 2018 21:22:39 +0200
+Message-ID: <20180919192238.GA19391@arch>
+References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
+ <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180905203313.GE5662@atomide.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Vignesh R <vigneshr@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>
+To: ryang <decatf@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/18 23:33, Tony Lindgren wrote:
-> * Nishanth Menon <nm@ti.com> [180905 16:24]:
->> Nishanth Menon (3):
->>    arm64: dts: ti: am654: Add uart nodes
->>    arm64: dts: ti: am654: Add secure proxy instance for main domain
->>    arm64: dts: ti: k3-am6: Add Device Management Security Controller
->>      support
-> 
-> All look good to me:
-> 
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> 
+Comments inline.
 
-Queuing up for 4.20, thanks.
+On Sat, Sep 15, 2018 at 01:42:14PM -0400, ryang wrote:
+> Add device tree support for ROHM BH1750 series ambient light sensors.
+>
+> Signed-off-by: ryang <decatf@gmail.com>
+> ---
+>  drivers/iio/light/bh1750.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+> index a814828e69f5..50b599abb383 100644
+> --- a/drivers/iio/light/bh1750.c
+> +++ b/drivers/iio/light/bh1750.c
+> @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, bh1750_id);
+>
+> +static const struct of_device_id bh1750_of_match[] = {
+> +	{ .compatible = "rohm,bh1710", },
+> +	{ .compatible = "rohm,bh1715", },
+> +	{ .compatible = "rohm,bh1721", },
+> +	{ .compatible = "rohm,bh1750", },
+> +	{ .compatible = "rohm,bh1751", },
+> +	{ }
+> +};
+> +
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Hmm, I believe this should be exported additionally using
+MODULE_DEVICE_TABLE(of, bh1750_of_match). Otherwise module loading
+will not work as expected.
+
+Moreover, we can do without DT and if you want to avoid
+warning about unused variables you may consider enclosing everything
+with:
+
+#ifdef CONFIG_OF
+...
+#endif
+
+>  static struct i2c_driver bh1750_driver = {
+>  	.driver = {
+>  		.name = "bh1750",
+> +		.of_match_table = of_match_ptr(bh1750_of_match),
+>  		.pm = BH1750_PM_OPS,
+
+I've recently simplified setting pm ops so this would not apply to
+iio/togreg cleanly.
+
+>  	},
+>  	.probe = bh1750_probe,
+> --
+> 2.17.1
+>
