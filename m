@@ -1,127 +1,54 @@
-From: Anson Huang <Anson.Huang@nxp.com>
-Subject: [PATCH V2 4/4] ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
-Date: Wed, 19 Sep 2018 14:04:48 +0800
-Message-ID: <1537337088-28819-5-git-send-email-Anson.Huang@nxp.com>
-References: <1537337088-28819-1-git-send-email-Anson.Huang@nxp.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: RE: [PATCH 0/4] Add i.MX6ULZ SoC support
+Date: Wed, 19 Sep 2018 06:10:16 +0000
+Message-ID: <DB3PR0402MB39162EA4FD240720276A4482F51C0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1537251548-27845-1-git-send-email-Anson.Huang@nxp.com>
+ <e82e2894-2a0d-0084-913c-b7c6d966fc13@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537337088-28819-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <e82e2894-2a0d-0084-913c-b7c6d966fc13@i2se.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Linux-imx@nxp.com
+To: Stefan Wahren <stefan.wahren@i2se.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Jacky Bai <ping.bai@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.k>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6ULZ is new SoC of i.MX6 family, compared to i.MX6ULL,
-it removes below modules:
-
-- UART5/UART6/UART7/UART8;
-- PWM5/PWM6/PWM7/PWM8;
-- eCSPI3/eCSPI4;
-- CAN1/CAN2;
-- FEC1/FEC2;
-- I2C3/I2C4;
-- EPIT2;
-- LCDIF;
-- GPT2;
-- ADC1;
-- TSC;
-
-This patch adds support for i.MX6ULZ and i.MX6ULZ 14x14 EVK
-board.
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/Makefile              |  3 ++-
- arch/arm/boot/dts/imx6ulz-14x14-evk.dts | 20 +++++++++++++++++
- arch/arm/boot/dts/imx6ulz.dtsi          | 38 +++++++++++++++++++++++++++++++++
- 3 files changed, 60 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/imx6ulz-14x14-evk.dts
- create mode 100644 arch/arm/boot/dts/imx6ulz.dtsi
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b3ec70d..d7268ae 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -560,7 +560,8 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-tx6ul-mainboard.dtb \
- 	imx6ull-14x14-evk.dtb \
- 	imx6ull-colibri-eval-v3.dtb \
--	imx6ull-colibri-wifi-eval-v3.dtb
-+	imx6ull-colibri-wifi-eval-v3.dtb \
-+	imx6ulz-14x14-evk.dtb
- dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-cl-som-imx7.dtb \
- 	imx7d-colibri-emmc-eval-v3.dtb \
-diff --git a/arch/arm/boot/dts/imx6ulz-14x14-evk.dts b/arch/arm/boot/dts/imx6ulz-14x14-evk.dts
-new file mode 100644
-index 0000000..e2d67a3
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ulz-14x14-evk.dts
-@@ -0,0 +1,20 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Copyright 2018 NXP.
-+
-+/dts-v1/;
-+
-+#include "imx6ulz.dtsi"
-+#include "imx6ul-14x14-evk.dtsi"
-+
-+/delete-node/ &fec1;
-+/delete-node/ &fec2;
-+/delete-node/ &lcdif;
-+/delete-node/ &tsc;
-+
-+/ {
-+	model = "Freescale i.MX6 ULZ 14x14 EVK Board";
-+	compatible = "fsl,imx6ulz-14x14-evk", "fsl,imx6ulz";
-+
-+	/delete-node/ panel;
-+};
-diff --git a/arch/arm/boot/dts/imx6ulz.dtsi b/arch/arm/boot/dts/imx6ulz.dtsi
-new file mode 100644
-index 0000000..ae6d7e5
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ulz.dtsi
-@@ -0,0 +1,38 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Copyright 2018 NXP.
-+
-+#include "imx6ull.dtsi"
-+
-+/ {
-+	aliases {
-+		/delete-property/ ethernet0;
-+		/delete-property/ ethernet1;
-+		/delete-property/ i2c2;
-+		/delete-property/ i2c3;
-+		/delete-property/ serial4;
-+		/delete-property/ serial5;
-+		/delete-property/ serial6;
-+		/delete-property/ serial7;
-+		/delete-property/ spi2;
-+		/delete-property/ spi3;
-+	};
-+};
-+
-+/delete-node/ &adc1;
-+/delete-node/ &can1;
-+/delete-node/ &can2;
-+/delete-node/ &ecspi3;
-+/delete-node/ &ecspi4;
-+/delete-node/ &epit2;
-+/delete-node/ &gpt2;
-+/delete-node/ &i2c3;
-+/delete-node/ &i2c4;
-+/delete-node/ &pwm5;
-+/delete-node/ &pwm6;
-+/delete-node/ &pwm7;
-+/delete-node/ &pwm8;
-+/delete-node/ &uart5;
-+/delete-node/ &uart6;
-+/delete-node/ &uart7;
-+/delete-node/ &uart8;
--- 
-2.7.4
+SGksIFN0ZWZhbg0KDQpBbnNvbiBIdWFuZw0KQmVzdCBSZWdhcmRzIQ0KDQoNCj4gLS0tLS1Pcmln
+aW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndhaHJlbkBp
+MnNlLmNvbT4NCj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDE4LCAyMDE4IDM6MzggUE0NCj4g
+VG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3Jn
+Ow0KPiBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsgcy5oYXVlckBw
+ZW5ndXRyb25peC5kZTsNCj4ga2VybmVsQHBlbmd1dHJvbml4LmRlOyBGYWJpbyBFc3RldmFtIDxm
+YWJpby5lc3RldmFtQG54cC5jb20+Ow0KPiBsaW51eEBhcm1saW51eC5vcmcudWs7IG10dXJxdWV0
+dGVAYmF5bGlicmUuY29tOyBzYm95ZEBrZXJuZWwub3JnOyBKYWNreQ0KPiBCYWkgPHBpbmcuYmFp
+QG54cC5jb20+OyBBLnMuIERvbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPjsNCj4gZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgtY2xrQHZnZXIua2VybmVsLm9y
+Zw0KPiBDYzogZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVjdDogUmU6
+IFtQQVRDSCAwLzRdIEFkZCBpLk1YNlVMWiBTb0Mgc3VwcG9ydA0KPiANCj4gSGkgQW5zb24sDQo+
+IA0KPiBBbSAxOC4wOS4yMDE4IHVtIDA4OjE5IHNjaHJpZWIgQW5zb24gSHVhbmc6DQo+ID4gVGhp
+cyBwYXRjaCBzZXQgYWRkcyBpLk1YNlVMWiBTb0Mgc3VwcG9ydCwgaS5NWDZVTFogaXMgYSBuZXcg
+U29DIG9mDQo+ID4gaS5NWDYgZmFtaWx5LCBjb21wYXJlZCB0byBpLk1YNlVMTCwgaXQgcmVtb3Zl
+cyBiZWxvdyBtb2R1bGVzOg0KPiA+DQo+ID4gICAgIC0gVUFSVDUvVUFSVDYvVUFSVDcvVUFSVDg7
+DQo+ID4gICAgIC0gUFdNNS9QV002L1BXTTcvUFdNODsNCj4gPiAgICAgLSBlQ1NQSTMvZUNTUEk0
+Ow0KPiA+ICAgICAtIENBTjEvQ0FOMjsNCj4gPiAgICAgLSBGRUMxL0ZFQzI7DQo+ID4gICAgIC0g
+STJDMy9JMkM0Ow0KPiA+ICAgICAtIEVQSVQyOw0KPiA+ICAgICAtIExDRElGOw0KPiA+ICAgICAt
+IEdQVDI7DQo+ID4gICAgIC0gVFNDOw0KPiA+DQo+ID4gQW5kIGkuTVg2VUxaIGhhcyBzYW1lIHNv
+Y19pZCBhcyBpLk1YNlVMTCwgYnV0IFNSQ19TQk1SMiBiaXRbNl0gaXMgdG8NCj4gPiBkaWZmZXJl
+bnRpYXRlIGkuTVg2VUxaIGZyb20gaS5NWDZVTEwsIDEnYjEgbWVhbnMgaS5NWDZVTFogYW5kDQo+
+ID4gMSdiMCBtZWFucyBpLk1YNlVMTC4gaS5NWDZVTFogcmV1c2UgbW9zdCBvZiBpLk1YNlVML2ku
+TVg2VUxMIGNvZGUsDQo+ID4ganVzdCBhZGQgdGhlIG5ldyBDUFUgdHlwZSBhbmQgcmVtb3ZlIHRo
+b3NlIG5vbi1leGlzdCBtb2R1bGVzIGZyb20gZHRiLg0KPiA+DQo+ID4gQW5zb24gSHVhbmcgKDQp
+Og0KPiA+ICAgQVJNOiBkdHM6IGlteDogYWRkIGkubXg2dWx6IGFuZCBpLm14NnVseiAxNHgxNCBl
+dmsgc3VwcG9ydA0KPiA+ICAgQVJNOiBpbXg6IGFkZCBpLm14NnVseiBtc2wgc3VwcG9ydA0KPiA+
+ICAgY2xrOiBpbXg2dWw6IGFkZCBpLm14NnVseiBzdXBwb3J0DQo+ID4gICBkdC1iaW5kaW5nczog
+YXJtOiBhZGQgY29tcGF0aWJsZSBmb3IgaS5NWDZVTFogMTR4MTQgRVZLIGJvYXJkDQo+ID4NCj4g
+Pg0KPiANCj4gaSByZWNvbW1lbmQgdGhlIGZvbGxvd2luZyBwYXRjaCBvcmRlcjoNCj4gQVJNOiBp
+bXg6IGFkZCBpLm14NnVseiBtc2wgc3VwcG9ydA0KPiBjbGs6IGlteDZ1bDogYWRkIGkubXg2dWx6
+IHN1cHBvcnQNCj4gZHQtYmluZGluZ3M6IGFybTogYWRkIGNvbXBhdGlibGUgZm9yIGkuTVg2VUxa
+IDE0eDE0IEVWSyBib2FyZA0KPiBBUk06IGR0czogaW14OiBhZGQgaS5teDZ1bHogYW5kIGkubXg2
+dWx6IDE0eDE0IGV2ayBzdXBwb3J0DQo+IA0KPiBTdGVmYW4NCiANClRoYW5rcywgSSByZXNlbmQg
+dGhlIFYyIHBhdGNoIHNldCB3aXRoIHRoZSBwYXRjaCBvcmRlciB5b3UgcmVjb21tZW5kZWQuDQoN
+CkFuc29uLg0KDQo=
