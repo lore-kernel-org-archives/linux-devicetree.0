@@ -1,109 +1,43 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset controls
-Date: Wed, 19 Sep 2018 15:16:02 +0200
-Message-ID: <CAMuHMdUFY8CMfb9P=8Tox31_dUzau-jB7YHgYo6jffQ4L7GBqA@mail.gmail.com>
-References: <20180917163955.19023-1-geert+renesas@glider.be>
- <20180917163955.19023-2-geert+renesas@glider.be> <727f9a0b-79bb-dea9-1da7-12ef58e8081b@redhat.com>
+From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Subject: [PATCH v2 1/3] video: ssd1307fb: Use gpiod_set_value_cansleep() for reset
+Date: Wed, 19 Sep 2018 15:17:27 +0200
+Message-ID: <1537363049-48399-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <727f9a0b-79bb-dea9-1da7-12ef58e8081b@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Auger Eric <eric.auger@redhat.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Philipp Zabel <p.zabel@pengutronix.de>, Alex Williamson <alex.williamson@redhat.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eric,
+The reset signal can be produced by GPIO expander that can sleep.
+In that case the probe function fails. Allow using GPIO expanders for
+the reset signal by using the non-atomic gpiod_set_value_cansleep()
+function.
 
-On Wed, Sep 19, 2018 at 2:09 PM Auger Eric <eric.auger@redhat.com> wrote:
-> On 9/17/18 6:39 PM, Geert Uytterhoeven wrote:
-> > In some SoCs multiple hardware blocks may share a reset control.
-> > The existing reset control API for shared resets will only assert such a
-> > reset when the drivers for all hardware blocks agree.
-> > The existing exclusive reset control API still allows to assert such a
-> > reset, but that impacts all other hardware blocks sharing the reset.
-> >
-> > Sometimes a driver needs to reset a specific hardware block, and be 100%
-> > sure it has no impact on other hardware blocks.  This is e.g. the case
-> > for virtualization with device pass-through, where the host wants to
-> > reset any exported device before and after exporting it for use by the
-> > guest, for isolation.
-> >
-> > Hence a new flag for dedicated resets is added to the internal methods,
-> > with a new public reset_control_get_dedicated() method, to obtain an
-> > exclusive handle to a reset that is dedicated to one specific hardware
-> > block.
-> >
-> > This supports both DT-based and lookup-based reset controls.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v4:
-> >   - New.
-> >
-> > Notes:
-> >   - Dedicated lookup-based reset controls were not tested,
-> >   - Several internal functions now take 3 boolean flags, and should
-> >     probably be converted to take a bitmask instead,
-> >   - I think __device_reset() should call __reset_control_get() with
-> >     dedicated=true.  However, that will impact existing users,
->
-> why should it?
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+---
+v2 changes: none
 
-device_reset{,_optional}() are supposed to reset the passed device.
-If the reset is not dedicated, doing so will reset other devices, too.
+ drivers/video/fbdev/ssd1307fb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > --- a/drivers/reset/core.c
-> > +++ b/drivers/reset/core.c
-> > @@ -459,9 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
-> >       kref_put(&rstc->refcnt, __reset_control_release);
-> >  }
-> >
-> > +static bool __of_reset_is_dedicated(const struct device_node *node,
-> > +                                 const struct of_phandle_args args)
-> > +{
-> > +     struct of_phandle_args args2;
-> > +     struct device_node *node2;
-> > +     int index, ret;
-> > +
-> > +     for_each_node_with_property(node2, "resets") {
-> > +             if (node == node2)
-> > +                     continue;
-> > +
-> > +             for (index = 0; ; index++) {
-> > +                     ret = of_parse_phandle_with_args(node2, "resets",
-> > +                                                      "#reset-cells", index,
-> > +                                                      &args2);
-> > +                     if (ret)
-> > +                             break;
-> > +
-> > +                     if (args2.np == args.np &&
-> > +                         args2.args_count == args.args_count &&
-> > +                         !memcmp(args2.args, args.args,
-> > +                                 args.args_count * sizeof(args.args[0])))
-> > +                             return false;
-> You need to call of_node_put(args2.np) (see of_parse_phandle_with_args
-> kernel doc)
-
-Thanks, nice catch!
-
-> Isn't it sufficient to check device_node handles are equal?
-
-That would make it work with #reset-cells == 0 only.
-If #reset-cells > 0, the reset line specifier includes extra arguments.
-
-On the Renesas SoCs I'm using, there's a single reset controller, so
-args.np is always the same.  The actual reset line is specified by
-args.args[0].  See the "resets" properties in e.g.
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/tree/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index ba66c02..e7ae135 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -728,9 +728,9 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 
+ 	if (par->reset) {
+ 		/* Reset the screen */
+-		gpiod_set_value(par->reset, 0);
++		gpiod_set_value_cansleep(par->reset, 0);
+ 		udelay(4);
+-		gpiod_set_value(par->reset, 1);
++		gpiod_set_value_cansleep(par->reset, 1);
+ 		udelay(4);
+ 	}
+ 
+-- 
+2.1.4
