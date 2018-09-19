@@ -1,17 +1,17 @@
 From: Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset
- controls
-Date: Wed, 19 Sep 2018 17:28:20 +0200
-Message-ID: <6a0b6cc8-d299-0f9b-46bc-ebbd9e5b76e9@redhat.com>
+Subject: Re: [PATCH/RFC v4 2/2] vfio: platform: Add generic reset controller
+ support
+Date: Wed, 19 Sep 2018 17:31:43 +0200
+Message-ID: <9dc74e23-2f57-7db3-6fb6-4f75ed61575f@redhat.com>
 References: <20180917163955.19023-1-geert+renesas@glider.be>
- <20180917163955.19023-2-geert+renesas@glider.be>
- <727f9a0b-79bb-dea9-1da7-12ef58e8081b@redhat.com>
- <CAMuHMdUFY8CMfb9P=8Tox31_dUzau-jB7YHgYo6jffQ4L7GBqA@mail.gmail.com>
+ <20180917163955.19023-3-geert+renesas@glider.be>
+ <b7c4f5d1-020b-4a64-d511-b8e89f8c9196@redhat.com>
+ <CAMuHMdXM9eog_+1oV_YCmSbOfBSFWOXy+YXwKGvfJA65rDqtzA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUFY8CMfb9P=8Tox31_dUzau-jB7YHgYo6jffQ4L7GBqA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXM9eog_+1oV_YCmSbOfBSFWOXy+YXwKGvfJA65rDqtzA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
@@ -20,106 +20,73 @@ List-Id: devicetree@vger.kernel.org
 
 Hi Geert,
 
-On 9/19/18 3:16 PM, Geert Uytterhoeven wrote:
+On 9/19/18 2:54 PM, Geert Uytterhoeven wrote:
 > Hi Eric,
 > 
-> On Wed, Sep 19, 2018 at 2:09 PM Auger Eric <eric.auger@redhat.com> wrote:
+> On Wed, Sep 19, 2018 at 2:36 PM Auger Eric <eric.auger@redhat.com> wrote:
 >> On 9/17/18 6:39 PM, Geert Uytterhoeven wrote:
->>> In some SoCs multiple hardware blocks may share a reset control.
->>> The existing reset control API for shared resets will only assert such a
->>> reset when the drivers for all hardware blocks agree.
->>> The existing exclusive reset control API still allows to assert such a
->>> reset, but that impacts all other hardware blocks sharing the reset.
+>>> Vfio-platform requires dedicated reset support, provided either by ACPI,
+>>> or, on DT platforms, by a device-specific reset driver matching against
+>>> the device's compatible value.
 >>>
->>> Sometimes a driver needs to reset a specific hardware block, and be 100%
->>> sure it has no impact on other hardware blocks.  This is e.g. the case
->>> for virtualization with device pass-through, where the host wants to
->>> reset any exported device before and after exporting it for use by the
->>> guest, for isolation.
+>>> On many SoCs, devices are connected to an SoC-internal reset controller.
+>>> If the reset hierarchy is described in DT using "resets" properties, or
+>>> in lookup tables in platform code, such devices can be reset in a
+>>> generic way through the reset controller subsystem.  Hence add support
+>>> for this, avoiding the need to write device-specific reset drivers for
+>>> each single device on affected SoCs.
 >>>
->>> Hence a new flag for dedicated resets is added to the internal methods,
->>> with a new public reset_control_get_dedicated() method, to obtain an
->>> exclusive handle to a reset that is dedicated to one specific hardware
->>> block.
+>>> Devices that do require a more complex reset procedure can still provide
+>>> a device-specific reset driver, as that takes precedence.
 >>>
->>> This supports both DT-based and lookup-based reset controls.
+>>> Note that this functionality depends on CONFIG_RESET_CONTROLLER=y, and
+>>> becomes a no-op (as in: "No reset function found for device") if reset
+>>> controller support is disabled.
 >>>
 >>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->>> ---
->>> v4:
->>>   - New.
+>>> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+>>> --- a/drivers/vfio/platform/vfio_platform_common.c
+>>> +++ b/drivers/vfio/platform/vfio_platform_common.c
+> 
+>>> @@ -128,8 +131,16 @@ static int vfio_platform_get_reset(struct vfio_platform_device *vdev)
+>>>               vdev->of_reset = vfio_platform_lookup_reset(vdev->compat,
+>>>                                                       &vdev->reset_module);
+>>>       }
+>>> +     if (vdev->of_reset)
+>>> +             return 0;
+>>> +
+>>> +     rstc = reset_control_get_dedicated(vdev->device, NULL);
+>>> +     if (!IS_ERR(rstc)) {
+>>> +             vdev->reset_control = rstc;
+>>> +             return 0;
+>>> +     }
 >>>
->>> Notes:
->>>   - Dedicated lookup-based reset controls were not tested,
->>>   - Several internal functions now take 3 boolean flags, and should
->>>     probably be converted to take a bitmask instead,
->>>   - I think __device_reset() should call __reset_control_get() with
->>>     dedicated=true.  However, that will impact existing users,
->>
->> why should it?
+>>> -     return vdev->of_reset ? 0 : -ENOENT;
+>>> +     return PTR_ERR(rstc);
+>> This changes the returned value as seen by the user (probe returned
+>> valud). Can we keep -ENOENT in case of no reset controller found?
 > 
-> device_reset{,_optional}() are supposed to reset the passed device.
-> If the reset is not dedicated, doing so will reset other devices, too.
-ok, that's not obvious too me but I am not familiar enough with the API
-and existing callers.
+> On success, it still returns 0.
+> On failure, it forwards the error from reset_control_get_dedicated(), which
+> is IMHO better than replacing it by -ENOENT: we try to propagate error
+> codes as much as possible.  It could e.g. return -EPROBE_DEFER.
 > 
->>> --- a/drivers/reset/core.c
->>> +++ b/drivers/reset/core.c
->>> @@ -459,9 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
->>>       kref_put(&rstc->refcnt, __reset_control_release);
->>>  }
->>>
->>> +static bool __of_reset_is_dedicated(const struct device_node *node,
->>> +                                 const struct of_phandle_args args)
->>> +{
->>> +     struct of_phandle_args args2;
->>> +     struct device_node *node2;
->>> +     int index, ret;
->>> +
->>> +     for_each_node_with_property(node2, "resets") {
->>> +             if (node == node2)
->>> +                     continue;
->>> +
->>> +             for (index = 0; ; index++) {
->>> +                     ret = of_parse_phandle_with_args(node2, "resets",
->>> +                                                      "#reset-cells", index,
->>> +                                                      &args2);
->>> +                     if (ret)
->>> +                             break;
->>> +
->>> +                     if (args2.np == args.np &&
->>> +                         args2.args_count == args.args_count &&
->>> +                         !memcmp(args2.args, args.args,
->>> +                                 args.args_count * sizeof(args.args[0])))
->>> +                             return false;
->> You need to call of_node_put(args2.np) (see of_parse_phandle_with_args
->> kernel doc)
-> 
-> Thanks, nice catch!
-> 
->> Isn't it sufficient to check device_node handles are equal?
-> 
-> That would make it work with #reset-cells == 0 only.
-> If #reset-cells > 0, the reset line specifier includes extra arguments.
-> 
-> On the Renesas SoCs I'm using, there's a single reset controller, so
-> args.np is always the same.  The actual reset line is specified by
-> args.args[0].  See the "resets" properties in e.g.
-> https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git/tree/arch/arm64/boot/dts/renesas/r8a7795.dtsi
-OK get it now. Thank you for the explanations.
+> Is there anything that relies on the function returning -ENOENT?
+None I am aware of actually. I was afraid about compatibility break but
+here we would change an errno by another one so maybe that's not a big
+deal at that stage of vfio_platform usage?
 
-Best Regards
+Thanks
 
 Eric
+> 
+>> Otherwise looks good to me with the new "dedicated" reset semantics.
+> 
+> Thanks!
 > 
 > Gr{oetje,eeting}s,
 > 
 >                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
 > 
