@@ -1,80 +1,120 @@
-From: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
- mdio bus
-Date: Wed, 19 Sep 2018 09:19:19 +0000
-Message-ID: <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
-References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
- <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
- <20180917145028.GC5458@lunn.ch>
- <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
- <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
- <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180918123545.GA29092@lunn.ch>
+From: Andre Kalb <Andre.Kalb@sma.de>
+Subject: [PATCH v2] of: __of_update_property_sysfs only call
+ __of_sysfs_remove_bin_file if of_node_is_attached
+Date: Wed, 19 Sep 2018 09:25:32 +0000
+Message-ID: <DB7PR04MB5243B43ED321F828C5094DA8FC1C0@DB7PR04MB5243.eurprd04.prod.outlook.com>
+References: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
+ <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com>
+ <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
+ <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "timur@kernel.org" <timur@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
+Content-Language: de-DE
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2018/9/18 20:35, Andrew Lunn wrote:
->>> If you want to describe the MDIO controller, then you embed a mdio
->>> subnode into your Ethernet MAC node:
->>>
->>>  emac0: ethernet@feb20000 {
->>> 	mdio {
->>> 		#address-cells = <1>;
->>> 		#size-cells = <0>;
->>>
->>> 		phy0: ethernet-phy@0 {
->>> 			reg = <0>;
->>> 		};
->>> 	};
->>> };
->>>
->>> And then each Ethernet MAC controller refers to their appropriate PHY
->>> device tree node using a phy-handle property to point to either their
->>> own MDIO controller, or another MAC's MDIO controller.
->> Sorry, I do not understand how phy-handle point to MDIO controller,
->> because phy-handle is defined to point to a phy.
-> The MAC driver does not care what MDIO controller a PHY is on. All you
-> need to do to register the PHY is:
+Hi Rob,
 
-Yes, these are all things that must be done, and emac driver will
-connect phy when mac up.
-If we had a separate MDIO controller, the MAC would not care about MDIO
-bus. But MDIO is integrated within the EMAC, and emac driver maintains
-the mdio.
+I have used an other hardware to check the patch. I hope it doesn't matter. I added few lines at the untitest.c. All existing unittest use an attached sysfs, therefore the bug isn't detectable.
 
-Each EMAC do their mdio register/unregister. But in the shared scenario,
-the EMACs that use the shared bus do not need to create an MDIO and
-cannot release the Shared bus.
+The patch of the unittest is posted: https://lore.kernel.org/patchwork/patch/985738/
 
-In device tree environment as you and Florian said. Just use phy-handle
-get the phy_node.
-The EMAC would not care about the phy come from which MDIO bus because
-the phy device gets from the device_node match(phy-handle). And if the
-phy_dev cannot get through phy_node means, the mdio bus is not ready.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at fs/kernfs/dir.c:1481 kernfs_remove_by_name_ns+0x9c/0xa4
+kernfs: can not remove '(null)', no directory
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 4.18.7 #3
+Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+[<c010f338>] (unwind_backtrace) from [<c010cefc>] (show_stack+0x10/0x14)
+[<c010cefc>] (show_stack) from [<c0122004>] (__warn+0xe0/0xf8)
+[<c0122004>] (__warn) from [<c0122060>] (warn_slowpath_fmt+0x44/0x68)
+[<c0122060>] (warn_slowpath_fmt) from [<c02c6540>] (kernfs_remove_by_name_ns+0x9c/0xa4)
+[<c02c6540>] (kernfs_remove_by_name_ns) from [<c055a704>] (__of_update_property_sysfs+0x38/0x50)
+[<c055a704>] (__of_update_property_sysfs) from [<c0557b94>] (of_update_property+0xc0/0x104)
+[<c0557b94>] (of_update_property) from [<c09521bc>] (of_unittest+0x1b8/0x28d4)
+[<c09521bc>] (of_unittest) from [<c0102d88>] (do_one_initcall+0x40/0x218)
+[<c0102d88>] (do_one_initcall) from [<c090101c>] (kernel_init_freeable+0x24c/0x2e4)
+[<c090101c>] (kernel_init_freeable) from [<c06a1f6c>] (kernel_init+0x8/0x110)
+[<c06a1f6c>] (kernel_init) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+Exception stack(0xcc099fb0 to 0xcc099ff8)
+9fa0:                                     00000000 00000000 00000000 00000000
+9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+---[ end trace 4522f69e0760e4d5 ]---
 
-But ACPI environment my understand is this:
-First method. EMAC driver gets the shared MDIO bus, and maintain it.
-The second way, EMAC match the phy_dev from the name.
-These patch series try to use the FIRST way. Now I prefer to use the
-second way to do the shared function.
+Best regards
+Andre Kalb
 
-I will rework this patchset and maybe patches will be a delay for a few
-days.
-
-Cheers,
-Dongsheng
-> 	phy_node = of_parse_phandle(np, "phy-handle", 0);
-> 	phy_interface = of_get_phy_mode(np);
-> 	phydev = of_phy_connect(dev, phy_node,
->                                 &handle_link_change, 0,
->                                 phy_interface);
+> -----Ursprüngliche Nachricht-----
+> Von: Rob Herring [mailto:robh+dt@kernel.org]
+> Gesendet: Montag, 10. September 2018 15:47
+> An: Andre Kalb
+> Cc: Frank Rowand; devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Betreff: Re: [PATCH v2] of: __of_update_property_sysfs only call
+> __of_sysfs_remove_bin_file if of_node_is_attached
 >
-> 	Andrew
+> On Mon, Sep 10, 2018 at 4:51 AM Andre Kalb <Andre.Kalb@sma.de> wrote:
+> >
+> > Hi Frank,
+> >
+> > > -----Ursprüngliche Nachricht-----
+> > > Von: Frank Rowand [mailto:frowand.list@gmail.com]
+> > > Gesendet: Freitag, 7. September 2018 22:01
+> > > An: Andre Kalb; robh+dt@kernel.org; devicetree@vger.kernel.org;
+> > > linux- kernel@vger.kernel.org
+> > > Betreff: Re: [PATCH v2] of: __of_update_property_sysfs only call
+> > > __of_sysfs_remove_bin_file if of_node_is_attached
+> > >
+> > > Hi Andred,
+> > >
+> > > On 09/04/18 08:51, Andre Kalb wrote:
+> > > > To prevent warning "kernfs: can not remove '(null)', no directory"
+> > > > if an overlay
+> > > isn't applied to the active devicetree.
+> > > >
+> > > > Using of_remove_property and then of_add_property doesn't show the
+> > > warning.
 >
+> [...]
+>
+> > > What is the calling path that results in the warning?
+> > >
+> > > -Frank
+> >
+> > There is the callstack of the warning.
+> >
+> > [   10.782830] ------------[ cut here ]------------
+> > [   10.830357] WARNING: CPU: 0 PID: 170 at /linux-4.x/fs/kernfs/dir.c:1276
+> kernfs_remove_by_name_ns+0x30/0x80()
+> > [   10.928997] kernfs: can not remove '(null)', no directory
+> > [   10.993107] Modules linked in: module_capemgr(+)
+> > [   11.045750] CPU: 0 PID: 170 Comm: systemd-udevd Not tainted 4.4.143-
+> 00158-g8e5ca65ec7ee-dirty #114
+>
+> 158 patches on top of an almost 3 year old kernel...
+>
+> > [   12.011373] [<bf0000e4>] (module_capemgr_slot_scan [module_capemgr])
+> from [<bf0007bc>] (module_capemgr_probe+0x3c/0x58 [module_capemgr])
+>
+> And a driver that's not upstream.
+>
+> Not saying the fix isn't valid, but please reproduce on recent mainline. Add a
+> unittest if you have to.
+>
+> Rob
+
+___________________________________________________
+
+SMA Solar Technology AG
+Aufsichtsrat: Dr. Erik Ehrentraut (Vorsitzender)
+Vorstand: Ulrich Hadding, Dr.-Ing. Juergen Reinert, Pierre-Pascal Urbon
+Handelsregister: Amtsgericht Kassel HRB 3972
+Sitz der Gesellschaft: 34266 Niestetal
+USt-ID-Nr. DE 113 08 59 54
+WEEE-Reg.-Nr. DE 95881150
+___________________________________________________
