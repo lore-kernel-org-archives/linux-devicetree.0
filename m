@@ -1,117 +1,153 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset
- controls
-Date: Wed, 19 Sep 2018 16:58:18 +0200
-Message-ID: <1537369098.6816.6.camel@pengutronix.de>
-References: <20180917163955.19023-1-geert+renesas@glider.be>
-         <20180917163955.19023-2-geert+renesas@glider.be>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v9 1/5] venus: firmware: add routine to reset ARM9
+Date: Wed, 19 Sep 2018 18:00:27 +0300
+Message-ID: <97b94b9b-f028-cb8b-a3db-67626dc517ab@linaro.org>
+References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
+ <1537314192-26892-2-git-send-email-vgarodia@codeaurora.org>
+ <CAPBb6MXMv_TD2dbxyM+D2p3pWfCJpQ-_FHK6WdkAEgBhwTdL6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917163955.19023-2-geert+renesas@glider.be>
+In-Reply-To: <CAPBb6MXMv_TD2dbxyM+D2p3pWfCJpQ-_FHK6WdkAEgBhwTdL6g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Eric Auger <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>
-Cc: kvm@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Alexandre Courbot <acourbot@chromium.org>, vgarodia@codeaurora.org
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-09-17 at 18:39 +0200, Geert Uytterhoeven wrote:
-> In some SoCs multiple hardware blocks may share a reset control.
-> The existing reset control API for shared resets will only assert such a
-> reset when the drivers for all hardware blocks agree.
-> The existing exclusive reset control API still allows to assert such a
-> reset, but that impacts all other hardware blocks sharing the reset.
+Hi Alex,
 
-I consider requesting exclusive access to a shared reset line a misuse
-of the API. Are there such cases? Can they be fixed?
-
-> Sometimes a driver needs to reset a specific hardware block, and be 100%
-> sure it has no impact on other hardware blocks.  This is e.g. the case
-> for virtualization with device pass-through, where the host wants to
-> reset any exported device before and after exporting it for use by the
-> guest, for isolation.
+On 09/19/2018 10:32 AM, Alexandre Courbot wrote:
+> On Wed, Sep 19, 2018 at 8:43 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
+>>
+>> Add routine to reset the ARM9 and brings it out of reset. Also
+>> abstract the Venus CPU state handling with a new function. This
+>> is in preparation to add PIL functionality in venus driver.
+>>
+>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/core.h         |  2 ++
+>>  drivers/media/platform/qcom/venus/firmware.c     | 33 ++++++++++++++++++++++++
+>>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
+>>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
+>>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
+>>  5 files changed, 57 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
+>> index 2f02365..dfd5c10 100644
+>> --- a/drivers/media/platform/qcom/venus/core.h
+>> +++ b/drivers/media/platform/qcom/venus/core.h
+>> @@ -98,6 +98,7 @@ struct venus_caps {
+>>   * @dev:               convenience struct device pointer
+>>   * @dev_dec:   convenience struct device pointer for decoder device
+>>   * @dev_enc:   convenience struct device pointer for encoder device
+>> + * @no_tz:     a flag that suggests presence of trustzone
 > 
-> Hence a new flag for dedicated resets is added to the internal methods,
-> with a new public reset_control_get_dedicated() method, to obtain an
-> exclusive handle to a reset that is dedicated to one specific hardware
-> block.
-
-I'm not sure a new flag is necessary, this is what exclusive resets
-should be.
-Also I fear there will be confusion about the difference between
-exclusive (refering to the reset control) and dedicated (refering to
-the reset line) reset controls.
-
-> This supports both DT-based and lookup-based reset controls.
+> Looks like it suggests the absence of trustzone?
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v4:
->   - New.
+> Actually I would rename it as use_tz and set it if TrustZone is used.
+> This would avoid double-negative statements like what we see below.
+
+I find this suggestion reasonable.
+
 > 
-> Notes:
->   - Dedicated lookup-based reset controls were not tested,
->   - Several internal functions now take 3 boolean flags, and should
->     probably be converted to take a bitmask instead,
-
-In case we have to add more flags, yes.
-
->   - I think __device_reset() should call __reset_control_get() with
->     dedicated=true.  However, that will impact existing users,
-
-Which ones? And how?
-
->   - Should a different error than -EINVAL be returned on failure?
-> ---
->  drivers/reset/core.c  | 76 ++++++++++++++++++++++++++++++++++++++-----
->  include/linux/reset.h | 60 ++++++++++++++++++++++------------
->  2 files changed, 107 insertions(+), 29 deletions(-)
+>>   * @lock:      a lock for this strucure
+>>   * @instances: a list_head of all instances
+>>   * @insts_count:       num of instances
+>> @@ -129,6 +130,7 @@ struct venus_core {
+>>         struct device *dev;
+>>         struct device *dev_dec;
+>>         struct device *dev_enc;
+>> +       bool no_tz;
+>>         struct mutex lock;
+>>         struct list_head instances;
+>>         atomic_t insts_count;
+>> diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+>> index c4a5778..f2ae2f0 100644
+>> --- a/drivers/media/platform/qcom/venus/firmware.c
+>> +++ b/drivers/media/platform/qcom/venus/firmware.c
+>> @@ -22,10 +22,43 @@
+>>  #include <linux/sizes.h>
+>>  #include <linux/soc/qcom/mdt_loader.h>
+>>
+>> +#include "core.h"
+>>  #include "firmware.h"
+>> +#include "hfi_venus_io.h"
+>>
+>>  #define VENUS_PAS_ID                   9
+>>  #define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
+>> +#define VENUS_FW_START_ADDR            0x0
+>> +
+>> +static void venus_reset_cpu(struct venus_core *core)
+>> +{
+>> +       void __iomem *base = core->base;
+>> +
+>> +       writel(0, base + WRAPPER_FW_START_ADDR);
+>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_FW_END_ADDR);
+>> +       writel(0, base + WRAPPER_CPA_START_ADDR);
+>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_CPA_END_ADDR);
+>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_NONPIX_START_ADDR);
+>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_NONPIX_END_ADDR);
+>> +       writel(0x0, base + WRAPPER_CPU_CGC_DIS);
+>> +       writel(0x0, base + WRAPPER_CPU_CLOCK_CONFIG);
+>> +
+>> +       /* Bring ARM9 out of reset */
+>> +       writel(0, base + WRAPPER_A9SS_SW_RESET);
+>> +}
+>> +
+>> +int venus_set_hw_state(struct venus_core *core, bool resume)
+>> +{
+>> +       if (!core->no_tz)
 > 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 225e34c56b94a2e3..5bc4eeca70c0fcc2 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -459,9 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
->  	kref_put(&rstc->refcnt, __reset_control_release);
->  }
->  
-> +static bool __of_reset_is_dedicated(const struct device_node *node,
-> +				    const struct of_phandle_args args)
-> +{
-> +	struct of_phandle_args args2;
-> +	struct device_node *node2;
-> +	int index, ret;
-> +
-> +	for_each_node_with_property(node2, "resets") {
-> +		if (node == node2)
-> +			continue;
-> +
-> +		for (index = 0; ; index++) {
-> +			ret = of_parse_phandle_with_args(node2, "resets",
-> +							 "#reset-cells", index,
-> +							 &args2);
-> +			if (ret)
-> +				break;
-> +
-> +			if (args2.np == args.np &&
-> +			    args2.args_count == args.args_count &&
-> +			    !memcmp(args2.args, args.args,
-> +				    args.args_count * sizeof(args.args[0])))
-> +				return false;
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
+> This is the kind of double negative statement I was referring do
+> above: "if we do not not have TrustZone". Turning it into
+> 
+>     if (core->use_tz)
+> 
+> would save the reader a few neurons. :)
+> 
+>> +               return qcom_scm_set_remote_state(resume, 0);
+>> +
+>> +       if (resume)
+>> +               venus_reset_cpu(core);
+>> +       else
+>> +               writel(1, core->base + WRAPPER_A9SS_SW_RESET);
+>> +
+>> +       return 0;
+>> +}
+>>
+>>  int venus_boot(struct device *dev, const char *fwname)
+>>  {
+>> diff --git a/drivers/media/platform/qcom/venus/firmware.h b/drivers/media/platform/qcom/venus/firmware.h
+>> index 428efb5..397570c 100644
+>> --- a/drivers/media/platform/qcom/venus/firmware.h
+>> +++ b/drivers/media/platform/qcom/venus/firmware.h
+>> @@ -18,5 +18,16 @@
+>>
+>>  int venus_boot(struct device *dev, const char *fwname);
+>>  int venus_shutdown(struct device *dev);
+>> +int venus_set_hw_state(struct venus_core *core, bool suspend);
+>> +
+>> +static inline int venus_set_hw_state_suspend(struct venus_core *core)
+>> +{
+>> +       return venus_set_hw_state(core, false);
+>> +}
+>> +
+>> +static inline int venus_set_hw_state_resume(struct venus_core *core)
+>> +{
+>> +       return venus_set_hw_state(core, true);
+>> +}
+> 
+> I think these two venus_set_hw_state_suspend() and
+> venus_set_hw_state_resume() are superfluous, if you want to make the
+> state explicit you can also define an enum { SUSPEND, RESUME } to use
+> as argument of venus_set_hw_state() and call it directly.
 
-I want to hear the device tree maintainers' opinion about this.
-I'd very much like to have such a check for exclusive resets, but my
-understanding is that we are not allowed to make the assumption that
-other nodes' "reset" properties follow the common reset signal device
-tree bindings.
+Infact this was by my request, and I wanted to avoid enum and have the
+type of the action in the function name and also avoid one extra
+function argument. Of course it is a matter of taste.
 
-Maybe this is something that should be checked in a device tree
-validation step?
-
-regards
-Philipp
+-- 
+regards,
+Stan
