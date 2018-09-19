@@ -1,70 +1,30 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
-Date: Wed, 19 Sep 2018 21:22:39 +0200
-Message-ID: <20180919192238.GA19391@arch>
-References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
- <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: mfd: Add ST Multi-Function eXpander
+ (STMFX) core bindings
+Date: Wed, 19 Sep 2018 12:37:58 -0700
+Message-ID: <CACRpkdZBeHC3EVzGU_GNSeW_y7FBbsEibOO5JPi+LD-jhzSooA@mail.gmail.com>
+References: <1537363669-25991-1-git-send-email-amelie.delaunay@st.com> <1537363669-25991-2-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
+In-Reply-To: <1537363669-25991-2-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ryang <decatf@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Comments inline.
+On Wed, Sep 19, 2018 at 6:28 AM Amelie Delaunay <amelie.delaunay@st.com> wrote:
 
-On Sat, Sep 15, 2018 at 01:42:14PM -0400, ryang wrote:
-> Add device tree support for ROHM BH1750 series ambient light sensors.
+> This patch adds documentation of device tree bindings for the
+> STMicroelectronics Multi-Function eXpander (STMFX) MFD core.
 >
-> Signed-off-by: ryang <decatf@gmail.com>
-> ---
->  drivers/iio/light/bh1750.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> index a814828e69f5..50b599abb383 100644
-> --- a/drivers/iio/light/bh1750.c
-> +++ b/drivers/iio/light/bh1750.c
-> @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, bh1750_id);
->
-> +static const struct of_device_id bh1750_of_match[] = {
-> +	{ .compatible = "rohm,bh1710", },
-> +	{ .compatible = "rohm,bh1715", },
-> +	{ .compatible = "rohm,bh1721", },
-> +	{ .compatible = "rohm,bh1750", },
-> +	{ .compatible = "rohm,bh1751", },
-> +	{ }
-> +};
-> +
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 
-Hmm, I believe this should be exported additionally using
-MODULE_DEVICE_TABLE(of, bh1750_of_match). Otherwise module loading
-will not work as expected.
+These bindings look good to me.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Moreover, we can do without DT and if you want to avoid
-warning about unused variables you may consider enclosing everything
-with:
+If you want you can shorten the interrupt description by just referring
+to interrupt-controller/interrupts.txt
 
-#ifdef CONFIG_OF
-...
-#endif
-
->  static struct i2c_driver bh1750_driver = {
->  	.driver = {
->  		.name = "bh1750",
-> +		.of_match_table = of_match_ptr(bh1750_of_match),
->  		.pm = BH1750_PM_OPS,
-
-I've recently simplified setting pm ops so this would not apply to
-iio/togreg cleanly.
-
->  	},
->  	.probe = bh1750_probe,
-> --
-> 2.17.1
->
+Yours,
+Linus Walleij
