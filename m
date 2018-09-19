@@ -1,122 +1,166 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: q6afe: dt-bindings: Update input range for qcom,sd-lines" to the asoc tree
-Date: Wed, 19 Sep 2018 18:53:07 +0100 (BST)
-Message-ID: <20180919175307.277CC440078@finisterre.ee.mobilebroadband>
-References: <1537337481-2123-1-git-send-email-rohitkr@codeaurora.org>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v9 1/5] venus: firmware: add routine to reset ARM9
+Date: Wed, 19 Sep 2018 23:25:01 +0530
+Message-ID: <175fcecf3be715d2a20b71746c648f1e@codeaurora.org>
+References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
+ <1537314192-26892-2-git-send-email-vgarodia@codeaurora.org>
+ <CAPBb6MXMv_TD2dbxyM+D2p3pWfCJpQ-_FHK6WdkAEgBhwTdL6g@mail.gmail.com>
+ <97b94b9b-f028-cb8b-a3db-67626dc517ab@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537337481-2123-1-git-send-email-rohitkr@codeaurora.org>
+In-Reply-To: <97b94b9b-f028-cb8b-a3db-67626dc517ab@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: Mark Brown <broonie@kernel.org>, plai@codeaurora.org, bgoswami@codeaurora.org, lgirdwood@gmail.combroonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rohkumar@qti.qualcomm.com, srinivas.kandagatla@linaro.orgalsa-devel@alsa-project.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 2018-09-19 20:30, Stanimir Varbanov wrote:
+> Hi Alex,
+> 
+> On 09/19/2018 10:32 AM, Alexandre Courbot wrote:
+>> On Wed, Sep 19, 2018 at 8:43 AM Vikash Garodia 
+>> <vgarodia@codeaurora.org> wrote:
+>>> 
+>>> Add routine to reset the ARM9 and brings it out of reset. Also
+>>> abstract the Venus CPU state handling with a new function. This
+>>> is in preparation to add PIL functionality in venus driver.
+>>> 
+>>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+>>> ---
+>>>  drivers/media/platform/qcom/venus/core.h         |  2 ++
+>>>  drivers/media/platform/qcom/venus/firmware.c     | 33 
+>>> ++++++++++++++++++++++++
+>>>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
+>>>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
+>>>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
+>>>  5 files changed, 57 insertions(+), 9 deletions(-)
+>>> 
+>>> diff --git a/drivers/media/platform/qcom/venus/core.h 
+>>> b/drivers/media/platform/qcom/venus/core.h
+>>> index 2f02365..dfd5c10 100644
+>>> --- a/drivers/media/platform/qcom/venus/core.h
+>>> +++ b/drivers/media/platform/qcom/venus/core.h
+>>> @@ -98,6 +98,7 @@ struct venus_caps {
+>>>   * @dev:               convenience struct device pointer
+>>>   * @dev_dec:   convenience struct device pointer for decoder device
+>>>   * @dev_enc:   convenience struct device pointer for encoder device
+>>> + * @no_tz:     a flag that suggests presence of trustzone
+>> 
+>> Looks like it suggests the absence of trustzone?
+>> 
+>> Actually I would rename it as use_tz and set it if TrustZone is used.
+>> This would avoid double-negative statements like what we see below.
+> 
+> I find this suggestion reasonable.
 
-   ASoC: q6afe: dt-bindings: Update input range for qcom,sd-lines
+Initially i planned to keep it as a positive flag. The reason behind 
+keeping it
+as no_tz was to keep the default value of this flag to 0 indicating tz 
+is present
+by default.
+I can switch it to use_tz though and set it in firmware_init after the 
+presence of
+firmware node is checked.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 3a6818c771671c34b090244c92ab5aea6176d6da Mon Sep 17 00:00:00 2001
-From: Rohit kumar <rohitkr@codeaurora.org>
-Date: Wed, 19 Sep 2018 11:41:21 +0530
-Subject: [PATCH] ASoC: q6afe: dt-bindings: Update input range for
- qcom,sd-lines
-
-Input to qcom,sd-lines should be between 0 and 3 instead of
-1 to 4 as 0 corresponds to BIT(0) which is MI2S_SD0 line.
-Bit 1 to 3 corresponds to SD1 to SD3 lines respectively.
-Updated documentation for the same.
-
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/qcom,q6afe.txt   | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
-index a8179409c194..d74888b9f1bb 100644
---- a/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
-+++ b/Documentation/devicetree/bindings/sound/qcom,q6afe.txt
-@@ -49,7 +49,7 @@ configuration of each dai. Must contain the following properties.
- 	Usage: required for mi2s interface
- 	Value type: <prop-encoded-array>
- 	Definition: Must be list of serial data lines used by this dai.
--	should be one or more of the 1-4 sd lines.
-+	should be one or more of the 0-3 sd lines.
- 
-  - qcom,tdm-sync-mode:
- 	Usage: required for tdm interface
-@@ -137,42 +137,42 @@ q6afe@4 {
- 
- 		prim-mi2s-rx@16 {
- 			reg = <16>;
--			qcom,sd-lines = <1 3>;
-+			qcom,sd-lines = <0 2>;
- 		};
- 
- 		prim-mi2s-tx@17 {
- 			reg = <17>;
--			qcom,sd-lines = <2>;
-+			qcom,sd-lines = <1>;
- 		};
- 
- 		sec-mi2s-rx@18 {
- 			reg = <18>;
--			qcom,sd-lines = <1 4>;
-+			qcom,sd-lines = <0 3>;
- 		};
- 
- 		sec-mi2s-tx@19 {
- 			reg = <19>;
--			qcom,sd-lines = <2>;
-+			qcom,sd-lines = <1>;
- 		};
- 
- 		tert-mi2s-rx@20 {
- 			reg = <20>;
--			qcom,sd-lines = <2 4>;
-+			qcom,sd-lines = <1 3>;
- 		};
- 
- 		tert-mi2s-tx@21 {
- 			reg = <21>;
--			qcom,sd-lines = <1>;
-+			qcom,sd-lines = <0>;
- 		};
- 
- 		quat-mi2s-rx@22 {
- 			reg = <22>;
--			qcom,sd-lines = <1>;
-+			qcom,sd-lines = <0>;
- 		};
- 
- 		quat-mi2s-tx@23 {
- 			reg = <23>;
--			qcom,sd-lines = <2>;
-+			qcom,sd-lines = <1>;
- 		};
- 	};
- };
--- 
-2.19.0
+>> 
+>>>   * @lock:      a lock for this strucure
+>>>   * @instances: a list_head of all instances
+>>>   * @insts_count:       num of instances
+>>> @@ -129,6 +130,7 @@ struct venus_core {
+>>>         struct device *dev;
+>>>         struct device *dev_dec;
+>>>         struct device *dev_enc;
+>>> +       bool no_tz;
+>>>         struct mutex lock;
+>>>         struct list_head instances;
+>>>         atomic_t insts_count;
+>>> diff --git a/drivers/media/platform/qcom/venus/firmware.c 
+>>> b/drivers/media/platform/qcom/venus/firmware.c
+>>> index c4a5778..f2ae2f0 100644
+>>> --- a/drivers/media/platform/qcom/venus/firmware.c
+>>> +++ b/drivers/media/platform/qcom/venus/firmware.c
+>>> @@ -22,10 +22,43 @@
+>>>  #include <linux/sizes.h>
+>>>  #include <linux/soc/qcom/mdt_loader.h>
+>>> 
+>>> +#include "core.h"
+>>>  #include "firmware.h"
+>>> +#include "hfi_venus_io.h"
+>>> 
+>>>  #define VENUS_PAS_ID                   9
+>>>  #define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
+>>> +#define VENUS_FW_START_ADDR            0x0
+>>> +
+>>> +static void venus_reset_cpu(struct venus_core *core)
+>>> +{
+>>> +       void __iomem *base = core->base;
+>>> +
+>>> +       writel(0, base + WRAPPER_FW_START_ADDR);
+>>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_FW_END_ADDR);
+>>> +       writel(0, base + WRAPPER_CPA_START_ADDR);
+>>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_CPA_END_ADDR);
+>>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_NONPIX_START_ADDR);
+>>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_NONPIX_END_ADDR);
+>>> +       writel(0x0, base + WRAPPER_CPU_CGC_DIS);
+>>> +       writel(0x0, base + WRAPPER_CPU_CLOCK_CONFIG);
+>>> +
+>>> +       /* Bring ARM9 out of reset */
+>>> +       writel(0, base + WRAPPER_A9SS_SW_RESET);
+>>> +}
+>>> +
+>>> +int venus_set_hw_state(struct venus_core *core, bool resume)
+>>> +{
+>>> +       if (!core->no_tz)
+>> 
+>> This is the kind of double negative statement I was referring do
+>> above: "if we do not not have TrustZone". Turning it into
+>> 
+>>     if (core->use_tz)
+>> 
+>> would save the reader a few neurons. :)
+>> 
+>>> +               return qcom_scm_set_remote_state(resume, 0);
+>>> +
+>>> +       if (resume)
+>>> +               venus_reset_cpu(core);
+>>> +       else
+>>> +               writel(1, core->base + WRAPPER_A9SS_SW_RESET);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> 
+>>>  int venus_boot(struct device *dev, const char *fwname)
+>>>  {
+>>> diff --git a/drivers/media/platform/qcom/venus/firmware.h 
+>>> b/drivers/media/platform/qcom/venus/firmware.h
+>>> index 428efb5..397570c 100644
+>>> --- a/drivers/media/platform/qcom/venus/firmware.h
+>>> +++ b/drivers/media/platform/qcom/venus/firmware.h
+>>> @@ -18,5 +18,16 @@
+>>> 
+>>>  int venus_boot(struct device *dev, const char *fwname);
+>>>  int venus_shutdown(struct device *dev);
+>>> +int venus_set_hw_state(struct venus_core *core, bool suspend);
+>>> +
+>>> +static inline int venus_set_hw_state_suspend(struct venus_core 
+>>> *core)
+>>> +{
+>>> +       return venus_set_hw_state(core, false);
+>>> +}
+>>> +
+>>> +static inline int venus_set_hw_state_resume(struct venus_core *core)
+>>> +{
+>>> +       return venus_set_hw_state(core, true);
+>>> +}
+>> 
+>> I think these two venus_set_hw_state_suspend() and
+>> venus_set_hw_state_resume() are superfluous, if you want to make the
+>> state explicit you can also define an enum { SUSPEND, RESUME } to use
+>> as argument of venus_set_hw_state() and call it directly.
+> 
+> Infact this was by my request, and I wanted to avoid enum and have the
+> type of the action in the function name and also avoid one extra
+> function argument. Of course it is a matter of taste.
