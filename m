@@ -1,68 +1,96 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 18/21] arm64: dts: ls104xa: set mask to drop TBU ID from
- StreamID
-Date: Wed, 19 Sep 2018 14:41:49 +0100
-Message-ID: <fe2af486-3d7d-a38f-ef62-6754f809298f@arm.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH 16/21] arm64: dts: ls1046a: add smmu node
+Date: Wed, 19 Sep 2018 13:51:57 +0000
+Message-ID: <c5dfa099-c927-8843-9519-0687e68c4faf@nxp.com>
 References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
- <20180919123613.15092-19-laurentiu.tudor@nxp.com>
+ <20180919123613.15092-17-laurentiu.tudor@nxp.com>
+ <a4d32163-71b1-35df-3a4c-eb27b605fc46@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180919123613.15092-19-laurentiu.tudor@nxp.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: laurentiu.tudor@nxp.com, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: madalin.bucur@nxp.com, roy.pledge@nxp.com, leoyang.li@nxp.com, shawnguo@kernel.org, davem@davemloft.net
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a4d32163-71b1-35df-3a4c-eb27b605fc46@arm.com>
+Content-Language: en-US
+Content-ID: <471585F071FE6148B5ACF777B23D3565@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Madalin-cristian Bucur <madalin.bucur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/09/18 13:36, laurentiu.tudor@nxp.com wrote:
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> 
-> The StreamID entering the SMMU is actually a concatenation of the
-> SMMU TBU ID and the ICID configured in software.
-> Since the TBU ID is internal to the SoC and since we want that the
-> actual the ICID configured in software to enter the SMMU witout any
-> additional set bits, mask out the TBU ID bits and leave only the
-> relevant ICID bits to enter SMMU.
-> 
-> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> ---
->   arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
->   arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
->   2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index 8b3eba167508..90296b9fb171 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -226,6 +226,7 @@
->   			compatible = "arm,mmu-500";
->   			reg = <0 0x9000000 0 0x400000>;
->   			dma-coherent;
-> +			stream-match-mask = <0x7f00>;
-
-The TBU ID only forms the top 5 bits, so also ignoring bits 9:8 raises 
-an eyebrow - if the LS104x SMMU really is configured for 8-bit SID input 
-then it's harmless, but if it's actually a 9 or 10-bit configuration 
-then you probably want to avoid masking them (or at least document why) 
-- IIRC there *was* stuff wired there on LS2085 at least.
-
-Robin.
-
->   			#global-interrupts = <2>;
->   			#iommu-cells = <1>;
->   			interrupts = <0 142 4>, /* global secure fault */
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 06863d3e4a7d..15094dd8400e 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -232,6 +232,7 @@
->   			compatible = "arm,mmu-500";
->   			reg = <0 0x9000000 0 0x400000>;
->   			dma-coherent;
-> +			stream-match-mask = <0x7f00>;
->   			#global-interrupts = <2>;
->   			#iommu-cells = <1>;
->   			interrupts = <0 142 4>, /* global secure fault */
-> 
+SGkgUm9iaW4sDQoNCk9uIDE5LjA5LjIwMTggMTY6MzAsIFJvYmluIE11cnBoeSB3cm90ZToNCj4g
+T24gMTkvMDkvMTggMTM6MzYsIGxhdXJlbnRpdS50dWRvckBueHAuY29tIHdyb3RlOg0KPj4gRnJv
+bTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4NCj4+DQo+PiBUaGlz
+IGFsbG93cyBmb3IgdGhlIFNNTVUgZGV2aWNlIHRvIGJlIHByb2JlZCBieSB0aGUgU01NVSBrZXJu
+ZWwgZHJpdmVyLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnRpdSBUdWRvciA8bGF1cmVu
+dGl1LnR1ZG9yQG54cC5jb20+DQo+PiAtLS0NCj4+IMKgIC4uLi9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA0NmEuZHRzaSB8IDQyICsrKysrKysrKysrKysrKysrKysNCj4+IMKgIDEg
+ZmlsZSBjaGFuZ2VkLCA0MiBpbnNlcnRpb25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgDQo+PiBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj4+IGluZGV4IGVmODM3ODZi
+OGI5MC4uMDY4NjNkM2U0YTdkIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTA0NmEuZHRzaQ0KPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvZnNsLWxzMTA0NmEuZHRzaQ0KPj4gQEAgLTIyOCw2ICsyMjgsNDggQEANCj4+IMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGJ1cy13aWR0aCA9IDw0PjsNCj4+IMKgwqDCoMKgwqDC
+oMKgwqDCoCB9Ow0KPj4gK8KgwqDCoMKgwqDCoMKgIG1tdTogaW9tbXVAOTAwMDAwMCB7DQo+PiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBjb21wYXRpYmxlID0gImFybSxtbXUtNTAwIjsNCj4+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHJlZyA9IDwwIDB4OTAwMDAwMCAwIDB4NDAwMDAwPjsNCj4+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRtYS1jb2hlcmVudDsNCj4+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgICNnbG9iYWwtaW50ZXJydXB0cyA9IDwyPjsNCj4+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgICNpb21tdS1jZWxscyA9IDwxPjsNCj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGlu
+dGVycnVwdHMgPSA8MCAxNDIgND4sIC8qIGdsb2JhbCBzZWN1cmUgZmF1bHQgKi8NCj4gDQo+IEVp
+dGhlciB0aGF0J3Mgbm90IHJlYWxseSB0aGUgc2VjdXJlIGdsb2JhbCBpbnRlcnJ1cHQsIG9yIHRo
+b3NlIGNvbnRleHQgDQo+IGludGVycnVwdHMgYXJlIHdyb25nLg0KDQpOb3cgdGhhdCB5b3UgcG9p
+bnRpbmcgb3V0LCBJIHJlYWxpemUgdGhhdCB0aGUgY29tbWVudHMgZG9uJ3QgbWFrZSBtdWNoIA0K
+c2Vuc2UuIEFjdHVhbGx5LCAxNDIgaXMgdGhlIG5vbi1zZWN1cmUgaW50ZXJydXB0IChhbGwgaW50
+cyBhcmUgT1JlZCBvbiANCnRoaXMgSVJRKSB3aGlsZSAxNDMgaXMgdGhlIHNlY3VyZSB2ZXJzaW9u
+LiBJJ2xsIHVwZGF0ZSB0aGUgY29tbWVudHMgaW4gDQp0aGUgbmV4dCByZS1zcGluLg0KDQotLS0N
+ClRoYW5rcyAmIEJlc3QgUmVnYXJkcywgTGF1cmVudGl1DQoNCg0KPiANCj4+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDwwIDE0MyA0PiwgLyogY29tYmluZWQgc2Vj
+dXJlIGludGVycnVwdCAqLw0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+LA0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgPDAgMTQyIDQ+Ow0KPj4gK8KgwqDCoMKgwqDCoMKgIH07DQo+PiArDQo+PiDCoMKgwqDC
+oMKgwqDCoMKgwqAgc2NmZzogc2NmZ0AxNTcwMDAwIHsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIGNvbXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtc2NmZyIsICJzeXNjb24iOw0KPj4gwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVnID0gPDB4MCAweDE1NzAwMDAgMHgwIDB4MTAwMDA+
+Ow0KPj4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
