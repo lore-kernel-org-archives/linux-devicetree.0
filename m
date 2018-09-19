@@ -1,59 +1,93 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v7 2/7] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Wed, 19 Sep 2018 05:14:51 +0000
-Message-ID: <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
- <20180918075522.GC22202@nazgul.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH 2/3] serial: 8250_uniphier: flatten probe function
+Date: Wed, 19 Sep 2018 14:28:12 +0900
+Message-ID: <1537334893-26079-3-git-send-email-yamada.masahiro@socionext.com>
+References: <1537334893-26079-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918075522.GC22202@nazgul.tnic>
-Content-Language: en-US
+In-Reply-To: <1537334893-26079-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Greg KH <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dai Okamura <okamura.dai@socionext.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNClRoYW5rcyBmb3IgeW91ciBjb250aW51b3VzIGd1aWRhbmNlLg0KDQo+IC0t
-LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJvcmlzbGF2IFBldGtvdiBbbWFpbHRv
-OmJwQGFsaWVuOC5kZV0NCj4gU2VudDogVHVlc2RheSwgU2VwdGVtYmVyIDE4LCAyMDE4IDE6MjUg
-UE0NCj4gVG86IE1hbmlzaCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNvbT4NCj4gQ2M6IHJvYmgr
-ZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IG1jaGVoYWJAa2VybmVsLm9yZzsN
-Cj4gTWljaGFsIFNpbWVrIDxtaWNoYWxzQHhpbGlueC5jb20+OyBsZW95YW5nLmxpQG54cC5jb207
-DQo+IHN1ZGVlcC5ob2xsYUBhcm0uY29tOyBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7DQo+IGRl
-dmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC0NCj4gZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY3IDIvN10gZWRhYzogc3lucHM6IEFk
-ZCBwbGF0Zm9ybSBzcGVjaWZpYyBzdHJ1Y3R1cmVzIGZvcg0KPiBkZHJjIGNvbnRyb2xsZXINCj4g
-DQo+IE9uIE1vbiwgU2VwIDE3LCAyMDE4IGF0IDA3OjU1OjAwUE0gKzA1MzAsIE1hbmlzaCBOYXJh
-bmkgd3JvdGU6DQo+ID4gQWRkIHBsYXRmb3JtIHNwZWNpZmljIHN0cnVjdHVyZXMsIHNvIHRoYXQg
-d2UgY2FuIGFkZCBkaWZmZXJlbnQgSVANCj4gPiBzdXBwb3J0IGxhdGVyIHVzaW5nIHF1aXJrcy4N
-Cj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hbmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGls
-aW54LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyB8IDkx
-DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0NCj4gPiAg
-MSBmaWxlIGNoYW5nZWQsIDY1IGluc2VydGlvbnMoKyksIDI2IGRlbGV0aW9ucygtKQ0KPiANCj4g
-Li4uDQo+IA0KPiA+IEBAIC00MjMsNiArNDY1LDcgQEAgc3RhdGljIHZvaWQgZWRhY19tY19pbml0
-KHN0cnVjdCBtZW1fY3RsX2luZm8gKm1jaSwNCj4gPiAgICovDQo+ID4gIHN0YXRpYyBpbnQgc3lu
-cHNfZWRhY19tY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KSAgew0KPiA+ICsJ
-Y29uc3Qgc3RydWN0IHN5bnBzX3BsYXRmb3JtX2RhdGEgKnBfZGF0YTsNCj4gPiAgCXN0cnVjdCBl
-ZGFjX21jX2xheWVyIGxheWVyc1syXTsNCj4gPiAgCXN0cnVjdCBzeW5wc19lZGFjX3ByaXYgKnBy
-aXY7DQo+ID4gIAlzdHJ1Y3QgbWVtX2N0bF9pbmZvICptY2k7DQo+ID4gQEAgLTQzNSw3ICs0Nzgs
-OCBAQCBzdGF0aWMgaW50IHN5bnBzX2VkYWNfbWNfcHJvYmUoc3RydWN0DQo+IHBsYXRmb3JtX2Rl
-dmljZSAqcGRldikNCj4gPiAgCWlmIChJU19FUlIoYmFzZWFkZHIpKQ0KPiA+ICAJCXJldHVybiBQ
-VFJfRVJSKGJhc2VhZGRyKTsNCj4gPg0KPiA+IC0JaWYgKCFlZGFjX2dldF9lY2NzdGF0ZShiYXNl
-YWRkcikpIHsNCj4gPiArCXBfZGF0YSA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YSgmcGRldi0+
-ZGV2KTsNCj4gPiArCWlmICghKHBfZGF0YS0+Z2V0X2VjY3N0YXRlKGJhc2VhZGRyKSkpIHsNCj4g
-DQo+IEZyb20gbGFzdCByZXZpZXcgcm91bmQ6DQo+IA0KPiAiVG9vIG1hbnkgcGFyZW50aGVzZXM6
-DQo+IA0KPiAgICAgICAgIGlmICghcF9kYXRhLT4uLi4NCj4gDQo+IGlzIGVub3VnaC4iDQo+IA0K
-PiBTbyBJJ20gZ29pbmcgdG8gc3RvcCByZXZpZXdpbmcgdGhpcyBwYXRjaHNldCB1bnRpbCB5b3Ug
-Z28gdGhyb3VnaCB0aGUgb2xkIHJldmlldw0KPiByb3VuZCBhZ2FpbiBhbmQgbWFrZSBzdXJlIHlv
-dSd2ZSBpbmNvcnBvcmF0ZWQgKmFsbCogcmV2aWV3IGZlZWRiYWNrIGFuZA0KPiBoYXZlbid0IGZv
-cmdvdHRlbiBzb21lLCBsaWtlIHRoZSBvbmUgYWJvdmUuDQo+IA0KT2theSwgSSB3aWxsIGRvdWJs
-ZSBjaGVjayBhZ2FpbiBmb3IgdGhlIGNvbW1lbnRzIGZyb20gcHJldmlvdXMgcmV2aWV3IGFuZCBy
-ZWN0aWZ5IHRoZSBzYW1lIGluIHY4LiBDYW4geW91IHBsZWFzZSByZXZpZXcgdGhlIHJlbWFpbmlu
-ZyBwYXRjaGVzIHNvIHRoYXQgSSBjYW4gYWNjb21tb2RhdGUgYW55IGNoYW5nZXMgZm9yIHRoZW0g
-aW4gdjg/IEkgcmVncmV0IHRoZSBpbmNvbnZlbmllbmNlIGNhdXNlZCB0byB5b3UgaW4gdGhpcy4N
-Cg0KVGhhbmtzLA0KTWFuaXNoDQo=
+Currently, the DT-related settings are split out to
+uniphier_of_serial_setup(), but it turned out to be not nice.
+The next commit will add a DT property, but it will not fit in
+the helper.  Merge the helper into the probe function.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+ drivers/tty/serial/8250/8250_uniphier.c | 49 ++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 32 deletions(-)
+
+diff --git a/drivers/tty/serial/8250/8250_uniphier.c b/drivers/tty/serial/8250/8250_uniphier.c
+index d292654..1028c02 100644
+--- a/drivers/tty/serial/8250/8250_uniphier.c
++++ b/drivers/tty/serial/8250/8250_uniphier.c
+@@ -155,36 +155,6 @@ static void uniphier_serial_dl_write(struct uart_8250_port *up, int value)
+ 	writel(value, up->port.membase + UNIPHIER_UART_DLR);
+ }
+ 
+-static int uniphier_of_serial_setup(struct device *dev, struct uart_port *port,
+-				    struct uniphier8250_priv *priv)
+-{
+-	int ret;
+-	u32 prop;
+-	struct device_node *np = dev->of_node;
+-
+-	ret = of_alias_get_id(np, "serial");
+-	if (ret < 0) {
+-		dev_err(dev, "failed to get alias id\n");
+-		return ret;
+-	}
+-	port->line = ret;
+-
+-	/* Get clk rate through clk driver */
+-	priv->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(priv->clk)) {
+-		dev_err(dev, "failed to get clock\n");
+-		return PTR_ERR(priv->clk);
+-	}
+-
+-	ret = clk_prepare_enable(priv->clk);
+-	if (ret < 0)
+-		return ret;
+-
+-	port->uartclk = clk_get_rate(priv->clk);
+-
+-	return 0;
+-}
+-
+ static int uniphier_uart_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -217,9 +187,24 @@ static int uniphier_uart_probe(struct platform_device *pdev)
+ 
+ 	memset(&up, 0, sizeof(up));
+ 
+-	ret = uniphier_of_serial_setup(dev, &up.port, priv);
+-	if (ret < 0)
++	ret = of_alias_get_id(dev->of_node, "serial");
++	if (ret < 0) {
++		dev_err(dev, "failed to get alias id\n");
+ 		return ret;
++	}
++	up.port.line = ret;
++
++	priv->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(priv->clk)) {
++		dev_err(dev, "failed to get clock\n");
++		return PTR_ERR(priv->clk);
++	}
++
++	ret = clk_prepare_enable(priv->clk);
++	if (ret)
++		return ret;
++
++	up.port.uartclk = clk_get_rate(priv->clk);
+ 
+ 	spin_lock_init(&priv->atomic_write_lock);
+ 
+-- 
+2.7.4
