@@ -1,40 +1,70 @@
-From: Timur Tabi <timur@kernel.org>
-Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
- mdio bus
-Date: Wed, 19 Sep 2018 09:05:36 -0500
-Message-ID: <1226d3d3-e2ba-571d-5b70-b246cbde2fb6@kernel.org>
-References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
- <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
- <20180917145028.GC5458@lunn.ch>
- <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
- <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
- <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180918123545.GA29092@lunn.ch>
- <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180919122521.GA26940@lunn.ch>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH 18/21] arm64: dts: ls104xa: set mask to drop TBU ID from
+ StreamID
+Date: Wed, 19 Sep 2018 14:06:53 +0000
+Message-ID: <a4324a5b-abeb-f43a-cac3-7721577e183d@nxp.com>
+References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
+ <20180919123613.15092-19-laurentiu.tudor@nxp.com>
+ <fe2af486-3d7d-a38f-ef62-6754f809298f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20180919122521.GA26940@lunn.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fe2af486-3d7d-a38f-ef62-6754f809298f@arm.com>
 Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-ID: <322D58CA903F7142826549752DC6FA23@eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Madalin-cristian Bucur <madalin.bucur@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On 9/19/18 7:25 AM, Andrew Lunn wrote:
-> ACPI is completely separate and should not affect the DT binding.
-> I've not yet looked at the ACPI changes you added.
-
-Just FYI, there is no device tree platform on which the upstream EMAC 
-driver works.  All of the DT code in the driver is theoretical.  It 
-worked once on a prototype platform, when I originally wrote the code, 
-but since then DT support is mostly a guess.
-
-The focus of any patches for the EMAC should be ACPI, not DT.  If 
-anything, ACPI support should come first.  No one should be writing or 
-reviewing DT code before ACPI code.
-
-The upstream EMAC driver is only known to work on the QDF2400, which is 
-an ACPI-only chip.  I feel like I've been repeating this too often.
+SGkgUm9iaW4sDQoNCk9uIDE5LjA5LjIwMTggMTY6NDEsIFJvYmluIE11cnBoeSB3cm90ZToNCj4g
+T24gMTkvMDkvMTggMTM6MzYsIGxhdXJlbnRpdS50dWRvckBueHAuY29tIHdyb3RlOg0KPj4gRnJv
+bTogTGF1cmVudGl1IFR1ZG9yIDxsYXVyZW50aXUudHVkb3JAbnhwLmNvbT4NCj4+DQo+PiBUaGUg
+U3RyZWFtSUQgZW50ZXJpbmcgdGhlIFNNTVUgaXMgYWN0dWFsbHkgYSBjb25jYXRlbmF0aW9uIG9m
+IHRoZQ0KPj4gU01NVSBUQlUgSUQgYW5kIHRoZSBJQ0lEIGNvbmZpZ3VyZWQgaW4gc29mdHdhcmUu
+DQo+PiBTaW5jZSB0aGUgVEJVIElEIGlzIGludGVybmFsIHRvIHRoZSBTb0MgYW5kIHNpbmNlIHdl
+IHdhbnQgdGhhdCB0aGUNCj4+IGFjdHVhbCB0aGUgSUNJRCBjb25maWd1cmVkIGluIHNvZnR3YXJl
+IHRvIGVudGVyIHRoZSBTTU1VIHdpdG91dCBhbnkNCj4+IGFkZGl0aW9uYWwgc2V0IGJpdHMsIG1h
+c2sgb3V0IHRoZSBUQlUgSUQgYml0cyBhbmQgbGVhdmUgb25seSB0aGUNCj4+IHJlbGV2YW50IElD
+SUQgYml0cyB0byBlbnRlciBTTU1VLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IExhdXJlbnRpdSBU
+dWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+PiAtLS0NCj4+IMKgIGFyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kgfCAxICsNCj4+IMKgIGFyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kgfCAxICsNCj4+IMKgIDIgZmls
+ZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kgDQo+PiBiL2FyY2gvYXJtNjQv
+Ym9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDNhLmR0c2kNCj4+IGluZGV4IDhiM2ViYTE2NzUw
+OC4uOTAyOTZiOWZiMTcxIDEwMDY0NA0KPj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA0M2EuZHRzaQ0KPj4gKysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVl
+c2NhbGUvZnNsLWxzMTA0M2EuZHRzaQ0KPj4gQEAgLTIyNiw2ICsyMjYsNyBAQA0KPj4gwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqAgY29tcGF0aWJsZSA9ICJhcm0sbW11LTUwMCI7DQo+PiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByZWcgPSA8MCAweDkwMDAwMDAgMCAweDQwMDAwMD47DQo+
+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkbWEtY29oZXJlbnQ7DQo+PiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoCBzdHJlYW0tbWF0Y2gtbWFzayA9IDwweDdmMDA+Ow0KPiANCj4gVGhlIFRC
+VSBJRCBvbmx5IGZvcm1zIHRoZSB0b3AgNSBiaXRzLCBzbyBhbHNvIGlnbm9yaW5nIGJpdHMgOTo4
+IHJhaXNlcyANCj4gYW4gZXllYnJvdyAtIGlmIHRoZSBMUzEwNHggU01NVSByZWFsbHkgaXMgY29u
+ZmlndXJlZCBmb3IgOC1iaXQgU0lEIGlucHV0IA0KPiB0aGVuIGl0J3MgaGFybWxlc3MsIA0KDQpP
+biB0aGVzZSBsb3dlci1lbmQgcGxhdGZvcm1zIHRoZSBTSUQgaW5wdXQgaXMgY29uZmlndXJlZCBh
+bmQgZG9jdW1lbnRlZCANCmFzIDgtYml0Lg0KDQo+IGJ1dCBpZiBpdCdzIGFjdHVhbGx5IGEgOSBv
+ciAxMC1iaXQgY29uZmlndXJhdGlvbiANCj4gdGhlbiB5b3UgcHJvYmFibHkgd2FudCB0byBhdm9p
+ZCBtYXNraW5nIHRoZW0gKG9yIGF0IGxlYXN0IGRvY3VtZW50IHdoeSkgDQo+IC0gSUlSQyB0aGVy
+ZSAqd2FzKiBzdHVmZiB3aXJlZCB0aGVyZSBvbiBMUzIwODUgYXQgbGVhc3QuDQoNClllcywgb24g
+TFMycyB0aGVyZSBhcmUgMiBleHRyYS1iaXRzIGluIHRoZXJlIGNhcnJ5aW5nIHNvbWUgc2lnbmFs
+aW5nLiANCkhvd2V2ZXIsIG9uIExTMXMgdGhleSBhcmUgbm90IHByZXNlbnQuDQoNCi0tLQ0KVGhh
+bmtzICYgQmVzdCBSZWdhcmRzLCBMYXVyZW50aXUNCg0KPiANCj4+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgICNnbG9iYWwtaW50ZXJydXB0cyA9IDwyPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgICNpb21tdS1jZWxscyA9IDwxPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGludGVycnVwdHMgPSA8MCAxNDIgND4sIC8qIGdsb2JhbCBzZWN1cmUgZmF1bHQgKi8NCj4+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS5k
+dHNpIA0KPj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDQ2YS5kdHNp
+DQo+PiBpbmRleCAwNjg2M2QzZTRhN2QuLjE1MDk0ZGQ4NDAwZSAxMDA2NDQNCj4+IC0tLSBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj4+ICsrKyBiL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwNDZhLmR0c2kNCj4+IEBAIC0yMzIs
+NiArMjMyLDcgQEANCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGNvbXBhdGlibGUgPSAi
+YXJtLG1tdS01MDAiOw0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmVnID0gPDAgMHg5
+MDAwMDAwIDAgMHg0MDAwMDA+Ow0KPj4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgZG1hLWNv
+aGVyZW50Ow0KPj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RyZWFtLW1hdGNoLW1hc2sgPSA8
+MHg3ZjAwPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICNnbG9iYWwtaW50ZXJydXB0
+cyA9IDwyPjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgICNpb21tdS1jZWxscyA9IDwx
+PjsNCj4+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGludGVycnVwdHMgPSA8MCAxNDIgND4s
+IC8qIGdsb2JhbCBzZWN1cmUgZmF1bHQgKi8NCj4+
