@@ -1,102 +1,47 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] Re: [PATCH 5/5] ARM: sun8i: dts: drop A64 HDMI PHY
- fallback compatible from R40 DT
-Date: Thu, 20 Sep 2018 00:20:19 +0800
-Message-ID: <CAGb2v64N16=3APDnNN5R+EB0524KR86eq1itOnQ8bXsv-HDUOA@mail.gmail.com>
-References: <20180907072234.48282-1-icenowy@aosc.io>
- <20180907072234.48282-6-icenowy@aosc.io>
- <20180910142354.5ldexkvnan6ohz4x@flea> <1926288.mXGsSvSKgU@jernej-laptop>
- <20180917145452.ewfuqkrxjjosbawd@flea>
- <f968f15fec21ba5b0415b1792536af3e5aba6e57.camel@aosc.io>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH] arm: dts: pxa3xx: provide correct clk-names property for
+ nand controller node
+Date: Wed, 19 Sep 2018 18:20:38 +0200
+Message-ID: <f3e704f5-a5ac-ea4a-65f2-9dc11a67c9f2@zonque.org>
+References: <20180624174205.20648-1-daniel@zonque.org>
+ <87po0emxhg.fsf@belgarion.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <f968f15fec21ba5b0415b1792536af3e5aba6e57.camel@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: devicetree <devicetree@vger.kernel.org>, Jernej Skrabec <jernej.skrabec@siol.net>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87po0emxhg.fsf@belgarion.home>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, haojian.zhuang@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBTZXAgMTgsIDIwMTggYXQgNjo1NyBBTSBJY2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFv
-c2MuaW8+IHdyb3RlOgo+Cj4g5ZyoIDIwMTgtMDktMTfkuIDnmoQgMTY6NTQgKzAyMDDvvIxNYXhp
-bWUgUmlwYXJk5YaZ6YGT77yaCj4gPiBPbiBNb24sIFNlcCAxMCwgMjAxOCBhdCAwNDozMjozMFBN
-ICswMjAwLCBKZXJuZWogxaBrcmFiZWMgd3JvdGU6Cj4gPiA+IERuZSBwb25lZGVsamVrLCAxMC4g
-c2VwdGVtYmVyIDIwMTggb2IgMTY6MjM6NTQgQ0VTVCBqZSBNYXhpbWUKPiA+ID4gUmlwYXJkCj4g
-PiA+IG5hcGlzYWwoYSk6Cj4gPiA+ID4gT24gRnJpLCBTZXAgMDcsIDIwMTggYXQgMDM6MjI6MzRQ
-TSArMDgwMCwgSWNlbm93eSBaaGVuZyB3cm90ZToKPiA+ID4gPiA+IFRoZSBSNDAgSERNSSBQSFkg
-c2VlbXMgdG8gYmUgZGlmZmVyZW50IHRvIHRoZSBBNjQgb25lLCB0aGUgQTY0Cj4gPiA+ID4gPiBv
-bmUKPiA+ID4gPiA+IGhhcyBubyBpbnB1dCBtdXgsIGJ1dCB0aGUgUjQwIG9uZSBoYXMuCj4gPiA+
-ID4gPgo+ID4gPiA+ID4gRHJvcCB0aGUgQTY0IGZhbGxiYWNrIGNvbXBhdGlibGUgZnJvbSB0aGUg
-SERNSSBQSFkgbm9kZSBpbiBSNDAKPiA+ID4gPiA+IERULgo+ID4gPiA+ID4KPiA+ID4gPiA+IFNp
-Z25lZC1vZmYtYnk6IEljZW5vd3kgWmhlbmcgPGljZW5vd3lAYW9zYy5pbz4KPiA+ID4gPiA+IC0t
-LQo+ID4gPiA+ID4KPiA+ID4gPiA+ICBhcmNoL2FybS9ib290L2R0cy9zdW44aS1yNDAuZHRzaSB8
-IDMgKy0tCj4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyIGRlbGV0
-aW9ucygtKQo+ID4gPiA+ID4KPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9zdW44aS1yNDAuZHRzaQo+ID4gPiA+ID4gYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1yNDAu
-ZHRzaSBpbmRleAo+ID4gPiA+ID4gZmZkOWYwMGY3NGE0Li41ZjU0N2MxNjFiYWYKPiA+ID4gPiA+
-IDEwMDY0NAo+ID4gPiA+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuOGktcjQwLmR0c2kK
-PiA+ID4gPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLXI0MC5kdHNpCj4gPiA+ID4g
-PiBAQCAtODAwLDggKzgwMCw3IEBACj4gPiA+ID4gPgo+ID4gPiA+ID4gICAgICAgICAgICAgICAg
-IH07Cj4gPiA+ID4gPgo+ID4gPiA+ID4gICAgICAgICAgICAgICAgIGhkbWlfcGh5OiBoZG1pLXBo
-eUAxZWYwMDAwIHsKPiA+ID4gPiA+Cj4gPiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICBj
-b21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1yNDAtaGRtaS0KPiA+ID4gPiA+IHBoeSIsCj4g
-PiA+ID4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgImFsbHdpbm5lcixz
-dW41MGktYTY0LQo+ID4gPiA+ID4gaGRtaS1waHkiOwo+ID4gPiA+ID4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOGktcjQwLWhkbWktCj4gPiA+ID4g
-PiBwaHkiOwo+ID4gPiA+Cj4gPiA+ID4gSWYgeW91IGNvdWxkIHVzZSB0aGUgQTY0IHBoeSBiZWZv
-cmUsIHlvdSBjYW4gc3RpbGwgdXNlIGl0IG5vdy4KPiA+ID4KPiA+ID4gTm90IGV4YWN0bHkuIEdp
-dmVuIHRoYXQgd2UgZG9uJ3Qga25vdyBob3cgdG8gc3dpdGNoIGJldHdlZW4gSERNSQo+ID4gPiBQ
-SFkgY2xvY2sKPiA+ID4gcGFyZW50cyBvbiBBNjQgKGlmIGl0IGlzIGFjdHVhbGx5IGNvbm5lY3Rl
-ZCBhdCBhbGwsIHRoZXJlIGlzIG5vCj4gPiA+IGluZm9ybWF0aW9uCj4gPiA+IGFib3V0IHRoYXQg
-aW4gbWFudWFsIGFuZCBBVyBkaWRuJ3QgYW5zd2VyZWQgb3VyIHF1ZXN0aW9ucywgZGVzcGl0ZQo+
-ID4gPiBhc2tpbmcgdGhlbQo+ID4gPiB0aHJvdWdoIGRpZmZlcmVudCBjaGFubmVscyksIEE2NCBj
-b21wYXRpYmxlIHdpbGwgYmUgYXNzb2NpYXRlZCB3aXRoCj4gPiA+IHF1aXJrLAo+ID4gPiB3aGlj
-aCB3aWxsIHRlbGwgdGhhdCBvbmx5IG9uZSBjbG9jayBwYXJlbnQgaXMgdXNhYmxlLgo+ID4gPgo+
-ID4gPiBIb3dldmVyLCBSNDAgSERNSSBQSFkgaGFzIGRlZmluZXRseSB0d28gY2xvY2sgcGFyZW50
-cywgYXMgaXQgd2FzCj4gPiA+IHRlc3RlZCBieSBtZQo+ID4gPiBhbmQgSWNlbm93eSBhbmQgd2Ug
-a25vdyBob3cgdG8gc3dpdGNoIGJldHdlZW4gdGhlbSB3aXRob3V0IGlzc3Vlcy4KPiA+ID4gVGVj
-aG5pY2FsbHksIHdlIGNvdWxkIGhhdmUgQTY0IGNvbXBhdGlibGUgdGhlcmUsIGJ1dCB0aGF0IHdv
-dWxkCj4gPiA+IG1lYW4gb25seQo+ID4gPiBzaW5nbGUgUEhZIHBhcmVudCBpcyBjb25zaWRlcmVk
-IGluc3RlYWQgb2YgdHdvLgo+ID4KPiA+IFRoZSBEVCBjaGFuZ2UgYWJvdmUgd291bGQgbWVhbiB0
-aGF0IHlvdSBjYW4ndCBvcGVyYXRlIHRoZSBSNDAgcGh5IGluCj4gPiB0aGUgc2FtZSB3YXkgdGhh
-biB0aGUgQTY0J3MuIEZyb20gd2hhdCB5b3UncmUgdGVsbGluZyBtZSBub3csIHRoaXMKPiA+IGlz
-bid0IGV4YWN0bHkgd2hhdCBpcyBnb2luZyBvbjogeW91IGNhbiBvcGVyYXRlIHRoZSBSNDAgcGh5
-IGp1c3QgbGlrZQo+ID4gdGhlIEE2NDogd2l0aCBhIHNpbmdsZSBQTEwgaW5zdGVhZCBvZiB0d28u
-IFlvdSBvcGVyYXRlIGluIGEgZGVncmFkZWQKPiA+IGFuZCBub24tb3B0aW1hbCBtb2RlLCBidXQg
-aXQgc3RpbGwgd29ya3MuCgpJIHN1cHBvc2UgaXQncyBhIHNsaWdodGx5IGRpZmZlcmVudCBzZW1h
-bnRpYy4gV2hpbGUgd2UgaGF2ZSBubyBkZWZpbml0ZQpkYXRhIHJlZ2FyZGluZyB0aGUgQTY0LCB0
-aGVyZSBhcmUgc29tZSBwb3NzaWJpbGl0aWVzOgoKICAxLiBUaGUgbXV4aW5nIG1lY2hhbmlzbSBp
-c24ndCBwcmVzZW50IG9uIHRoZSBBNjQsIGFuZCB0aGUgSERNSSBQSFkKICAgICBvbmx5IHRha2Vz
-IG9uZSBjbG9jay4KCiAgMi4gVGhlIG11eGluZyBpcyBwcmVzZW50LCBidXQgb25seSB0aGUgZmly
-c3QgcGFyZW50IGlzIGNvbm5lY3RlZC4KICAgICBTd2l0Y2hpbmcgdG8gdGhlIHNlY29uZCBpbnB1
-dCBjYXVzZXMgaXQgdG8gc3RvcCB3b3JraW5nLgoKICAzLiBTYW1lIGFzIGFib3ZlLCBidXQgYm90
-aCBwYXJlbnRzIGFyZSBjb25uZWN0ZWQgdG8gdmlkZW8wLXBsbC4KICAgICBUaGlzIG1pZ2h0IGJl
-IGluZGlzdGluZ3Vpc2hhYmxlIGZyb20gMS4sIGV2ZW4gaWYgY2hlY2tpbmcgd2hldGhlcgogICAg
-IHRoZSBiaXQgbW9kaWZpY2F0aW9ucyBzdGljayBvciBub3QuCgpJbiBhbnkgY2FzZSwgSSB0aGlu
-ayB0aGlzIGRlc2VydmVzIHByb3BlciBleHBlcmltZW50YXRpb24sIGFuZCBzdWJzZXF1ZW50CmRv
-Y3VtZW50YXRpb24gaW4gdGhlIGJpbmRpbmdzIG9mIG91ciAiYXNzdW1wdGlvbnMiIChpLmUuIGVk
-dWNhdGVkIGd1ZXNzKQphYm91dCB3aGF0IHRoZSBoYXJkd2FyZSBpcyBkb2luZy4KCj4KPiBUaGUg
-c3RhdHVzIG9mIFI0MCBIRE1JIFBIWSBpbnB1dCBtdXggaXMgbm90IGRldGVybWluZWQgd2hlbiB1
-c2UgQTY0Cj4gZHJpdmVyLCB3aGljaCBtYWtlcyBpdCBub3Qgd29ya2luZyB3aGVuIHRoZSBib290
-bG9hZGVyIGluaXRpYWxpemVzIGl0Cj4gdG8gdXNlIHRoZSBzZWNvbmQgUExMICh0aGUgQTY0IGRy
-aXZlciB3aWxsIGFzc3VtZSB0aGUgcGFyZW50IGlzIHRoZQo+IGZpcnN0IFBMTCkuCgpUaGF0IGRv
-ZXNuJ3Qgc291bmQgZ29vZC4gQnV0IGl0IHJlYWxseSBkZXBlbmRzIG9uIHdoYXQgd2UgYXNzdW1l
-IHRoZQpBNjQgaXMgZG9pbmcuCgpDaGVuWXUKCj4gPgo+ID4gQW5kIGl0J3MgZXhhY3RseSB3aGF0
-IHRoZSBEVCBpcyBhbHJlYWR5IHNheWluZy4KPiA+Cj4gPiBNYXhpbWUKPiA+Cj4KPiAtLQo+IFlv
-dSByZWNlaXZlZCB0aGlzIG1lc3NhZ2UgYmVjYXVzZSB5b3UgYXJlIHN1YnNjcmliZWQgdG8gdGhl
-IEdvb2dsZSBHcm91cHMgImxpbnV4LXN1bnhpIiBncm91cC4KPiBUbyB1bnN1YnNjcmliZSBmcm9t
-IHRoaXMgZ3JvdXAgYW5kIHN0b3AgcmVjZWl2aW5nIGVtYWlscyBmcm9tIGl0LCBzZW5kIGFuIGVt
-YWlsIHRvIGxpbnV4LXN1bnhpK3Vuc3Vic2NyaWJlQGdvb2dsZWdyb3Vwcy5jb20uCj4gRm9yIG1v
-cmUgb3B0aW9ucywgdmlzaXQgaHR0cHM6Ly9ncm91cHMuZ29vZ2xlLmNvbS9kL29wdG91dC4KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi Robert,
+
+On 25/6/2018 10:18 PM, Robert Jarzmik wrote:
+> Daniel Mack <daniel@zonque.org> writes:
+> 
+>> The NAND driver looks for a clock named "core" and falls back to a pdev
+>> clock that has a wrong rate if not set.
+>>
+>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+> Applied to pxa/dt with a small "line swap", ie. clock-names is one line below
+> "clocks" line.
+
+This patch got applied twice in mainline, as ce4313f318de and as 
+267a113cec97. Not sure what went wrong here, but the same property npow 
+occurs twice in the node, which leads to an error during dtb complication.
+
+Could you queue a revert for ce4313f318de?
+
+
+Thanks,
+Daniel
