@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH 19/21] arm64: dts: ls104x: add missing dma ranges property
-Date: Wed, 19 Sep 2018 15:36:11 +0300
-Message-ID: <20180919123613.15092-20-laurentiu.tudor@nxp.com>
+Subject: [PATCH 18/21] arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
+Date: Wed, 19 Sep 2018 15:36:10 +0300
+Message-ID: <20180919123613.15092-19-laurentiu.tudor@nxp.com>
 References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
@@ -12,9 +12,12 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-These chips have a 48-bit address size so make sure that the dma-ranges
-reflects this. Otherwise the linux kernel's dma sub-system will set
-the default dma masks to full 64-bit, badly breaking dmas.
+The StreamID entering the SMMU is actually a concatenation of the
+SMMU TBU ID and the ICID configured in software.
+Since the TBU ID is internal to the SoC and since we want that the
+actual the ICID configured in software to enter the SMMU witout any
+additional set bits, mask out the TBU ID bits and leave only the
+relevant ICID bits to enter SMMU.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
@@ -23,28 +26,28 @@ Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
  2 files changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 90296b9fb171..48091409c472 100644
+index 8b3eba167508..90296b9fb171 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -214,6 +214,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
- 
- 		clockgen: clocking@1ee1000 {
- 			compatible = "fsl,ls1043a-clockgen";
+@@ -226,6 +226,7 @@
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x9000000 0 0x400000>;
+ 			dma-coherent;
++			stream-match-mask = <0x7f00>;
+ 			#global-interrupts = <2>;
+ 			#iommu-cells = <1>;
+ 			interrupts = <0 142 4>, /* global secure fault */
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 15094dd8400e..40484f6f6d42 100644
+index 06863d3e4a7d..15094dd8400e 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -187,6 +187,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
- 
- 		ddr: memory-controller@1080000 {
- 			compatible = "fsl,qoriq-memory-controller";
+@@ -232,6 +232,7 @@
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x9000000 0 0x400000>;
+ 			dma-coherent;
++			stream-match-mask = <0x7f00>;
+ 			#global-interrupts = <2>;
+ 			#iommu-cells = <1>;
+ 			interrupts = <0 142 4>, /* global secure fault */
 -- 
 2.17.1
