@@ -1,89 +1,97 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset controls
-Date: Thu, 20 Sep 2018 11:37:52 +0200
-Message-ID: <CAMuHMdUaXjvOOAYTxTJ+ZzJn359CFYHsGKYoKf4ZkU_Goyen6g@mail.gmail.com>
-References: <20180917163955.19023-1-geert+renesas@glider.be>
- <20180917163955.19023-2-geert+renesas@glider.be> <1537369098.6816.6.camel@pengutronix.de>
- <CAMuHMdWSO6JcBRmmpwCPz0u-85ZC3ffZkNbdd8DjokJT2opAtw@mail.gmail.com> <1537435641.4156.1.camel@pengutronix.de>
+From: Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: Re: [PATCH] power: reset: qcom-pon: Add pms405 pon support
+Date: Thu, 20 Sep 2018 11:42:17 +0200
+Message-ID: <20180920094217.n3lcyg6k7oj6gxrs@earth.universe>
+References: <20180920015044.15686-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="igmfdv2znylmvn3z"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537435641.4156.1.camel@pengutronix.de>
+Content-Disposition: inline
+In-Reply-To: <20180920015044.15686-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philip,
 
-On Thu, Sep 20, 2018 at 11:27 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Wed, 2018-09-19 at 17:24 +0200, Geert Uytterhoeven wrote:
-> > On Wed, Sep 19, 2018 at 4:58 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> [...]
-> > > I consider requesting exclusive access to a shared reset line a misuse
-> > > of the API. Are there such cases? Can they be fixed?
-> >
-> > I guess there are plenty.
->
-> I did a cursory search for drivers that request exclusive reset controls
-> for resets that have multiple phandle references in the corresponding
-> DT. So far I have found none.
+--igmfdv2znylmvn3z
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK.
+Hi,
 
-> > Whether a line is shared or dedicated depends on SoC integration.
-> >
-> > The issue is that a driver requesting exclusive access has no way to know
-> > if the reset line is dedicated to its device or not. If no other
-> > driver requested the reset control (most drivers don't use reset
-> > controls), it will succeed.
->
-> True. It would be great to have a way to make sure an exclusive request
-> for a shared reset line never succeeds.
->
-> > > > Sometimes a driver needs to reset a specific hardware block, and be 100%
-> > > > sure it has no impact on other hardware blocks.  This is e.g. the case
-> > > > for virtualization with device pass-through, where the host wants to
-> > > > reset any exported device before and after exporting it for use by the
-> > > > guest, for isolation.
-> > > >
-> > > > Hence a new flag for dedicated resets is added to the internal methods,
-> > > > with a new public reset_control_get_dedicated() method, to obtain an
-> > > > exclusive handle to a reset that is dedicated to one specific hardware
-> > > > block.
-> > >
-> > > I'm not sure a new flag is necessary, this is what exclusive resets
-> > > should be.
-> >
-> > So perhaps the check should be done for the existing exclusive resets
-> > instead, without adding a new flag?
->
-> That would be my preference, if possible.
+On Wed, Sep 19, 2018 at 06:50:44PM -0700, Bjorn Andersson wrote:
+> From: Vinod Koul <vkoul@kernel.org>
+>=20
+> Update the binding and driver for pms405 pon.
+>=20
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 
-OK, will make it so.
+Thanks, queued.
 
-> > > Also I fear there will be confusion about the difference between
-> > > exclusive (refering to the reset control) and dedicated (refering to
-> > > the reset line) reset controls.
-> >
-> > Indeed, exclusive has multiple meanings here:
-> >   1. Exclusive vs. shared access to the reset control,
-> >   2. Reset line is dedicated to a single device, or shared with multiple
-> >      devices.
->
-> 2. is the more important factor, and that's what I have in mind when
-> talking about exclusive vs. shared resets. Admittedly, the kernel doc
-> comments only mention 1.
+-- Sebastian
 
-OK. That did contribute to my confustion...
+>  Documentation/devicetree/bindings/power/reset/qcom,pon.txt | 5 ++++-
+>  drivers/power/reset/qcom-pon.c                             | 1 +
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt b=
+/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> index 651491bb63b7..5705f575862d 100644
+> --- a/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> +++ b/Documentation/devicetree/bindings/power/reset/qcom,pon.txt
+> @@ -6,7 +6,10 @@ and resin along with the Android reboot-mode.
+>  This DT node has pwrkey and resin as sub nodes.
+> =20
+>  Required Properties:
+> --compatible: "qcom,pm8916-pon"
+> +-compatible: Must be one of:
+> +	"qcom,pm8916-pon"
+> +	"qcom,pms405-pon"
+> +
+>  -reg: Specifies the physical address of the pon register
+> =20
+>  Optional subnode:
+> diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-po=
+n.c
+> index 0c4caaa7e88f..3fa1642d4c54 100644
+> --- a/drivers/power/reset/qcom-pon.c
+> +++ b/drivers/power/reset/qcom-pon.c
+> @@ -74,6 +74,7 @@ static int pm8916_pon_probe(struct platform_device *pde=
+v)
+> =20
+>  static const struct of_device_id pm8916_pon_id_table[] =3D {
+>  	{ .compatible =3D "qcom,pm8916-pon" },
+> +	{ .compatible =3D "qcom,pms405-pon" },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
+> --=20
+> 2.18.0
+>=20
 
-Gr{oetje,eeting}s,
+--igmfdv2znylmvn3z
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAluja3kACgkQ2O7X88g7
++prVcA/6AtI5k9Dui7cZUevF/k1CJSPBxzK6rHi7vtmgDEebU4+7Nkd1fnZkusWu
+nDxOf7ZWksi8rFcfV8csXyivcC+ZLotHgJ+w1sUN8uc1s68yFNMM8cPDsTMMVZsZ
+SeeXsGtfDxKlHsQtjcAp5bu3NjVWvXp4nDDa4NUNoN0WrIs7fN8a/y9pMR77ZB5X
+GpunyWmUbzeFZwWydUg/646WK0cepE0r334qS2SRudv1mOVlHon80EBHP50wg8VA
+QfxOkRQxiYH7GXQTEXh2Jthp8rK8yGkavfirjImN5NtCqcUzqDWOv/Ks7PCfH15e
+FQF/yIjtPwXXXQDBKvgR7nGr5+O7xZ12vUVCdl+xO85WNx7mFciMFNkrEusw+pAc
+DGqVEsfdUxvddFD6nJRn/q8VvayA/QVRWc9/JPsVaeBClFnqAOz0AGEi0QfX5GIl
+PJ0yLbW3XMtWuU/CZvGm8kHx+VjG6sTy+/7iLkGmsStpyFM3gL3nhLuUfmS7DtuK
+L/5ir/mgjHQL8RgU7rhUogaxVC+PhFyrTvDxd5RDIj/C3mNfsg3NkRfPnw5E/t1C
+1bLEenhNkaNocbEPFUr0PVpGoXvju/suTplAxyWmvPvqkL222pOidOztmqh3ukji
+lL+Lt+uZRIbH0UaYh0ZgbJiNZf9lzOPk9CNcYNETlku04usmdoY=
+=GXhm
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--igmfdv2znylmvn3z--
