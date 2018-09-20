@@ -1,41 +1,44 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: Add pms405 gpio support
-Date: Thu, 20 Sep 2018 09:34:05 -0700
-Message-ID: <20180920163405.GE1367@tuxbook-pro>
-References: <20180920014705.15144-1-bjorn.andersson@linaro.org>
- <153745740342.119890.12073424910838960020@swboyd.mtv.corp.google.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [RESEND PATCH v3 0/3] sh: make early_platform code
+ SuperH-specific
+Date: Thu, 20 Sep 2018 18:48:57 +0200
+Message-ID: <0622b4da-20d3-5f05-5774-85c1dbabe00e@linaro.org>
+References: <20180827090651.25062-1-brgl@bgdev.pl>
+ <CAMRc=McWre+5PRuozF69YKONvzy4X31=MzZim-QjhaAZ9iAVTw@mail.gmail.com>
+ <9963d3f3-ba14-0d18-d669-53fc79b783c2@linaro.org>
+ <CAMRc=MeC8gwEpjNf5AEX4oocHYv8c_CJXkCDMM9CQvaqxrbdXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153745740342.119890.12073424910838960020@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAMRc=MeC8gwEpjNf5AEX4oocHYv8c_CJXkCDMM9CQvaqxrbdXQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank
 List-Id: devicetree@vger.kernel.org
 
-On Thu 20 Sep 08:30 PDT 2018, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2018-09-19 18:47:05)
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > index a29efbe08f48..b54891998caa 100644
-> > --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> > @@ -1055,6 +1055,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
-> >         { .compatible = "qcom,pm8994-gpio" },   /* 22 GPIO's */
-> >         { .compatible = "qcom,pmi8994-gpio" },  /* 10 GPIO's */
-> >         { .compatible = "qcom,pma8084-gpio" },  /* 22 GPIO's */
-> > +       { .compatible = "qcom,pms405-gpio" }, /* 11 GPIO's */
+On 20/09/2018 18:19, Bartosz Golaszewski wrote:
+> 2018-09-20 18:09 GMT+02:00 Daniel Lezcano <daniel.lezcano@linaro.org>:
+>> On 20/09/2018 15:00, Bartosz Golaszewski wrote:
+>>
+>> [ ... ]
+>>
+>>> Ping for 4.20. This is the third release cycle I'm trying to get this
+>>> merged and there never were any objections.
+>>
+>> Thanks for the heads up, it is in the pipe.
+>>
 > 
-> I thought we didn't update the C driver, because there isn't anything to
-> do here. Just make binding updates and it's all fine.
-> 
+> I guess you mean only the clocksource patch?
 
-Right, forgot that we just use the fallback.
 
-Thanks,
-Bjorn
+I meant it is in the pipe of things to review :)
 
-> >         { .compatible = "qcom,spmi-gpio" }, /* Generic */
-> >         { },
-> >  };
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
