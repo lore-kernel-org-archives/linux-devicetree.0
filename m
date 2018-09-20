@@ -1,120 +1,80 @@
-Return-Path: <SRS0=4s6K=MK=flex--kunyi.bounces.google.com=3PIiuWwUKB-kVfYjTRZZRWP.NZXcZMS+OeVPcYPW.ZcR@kernel.org>
-Date: Fri, 28 Sep 2018 12:58:00 -0700
-Message-Id: <20180928195800.153914-1-kunyi@google.com>
-Mime-Version: 1.0
-Subject: [PATCH v2] hwmon: (adm1275): Add device tree param for shunt resistor
-From: Kun Yi <kunyi@google.com>
-Content-Type: text/plain; charset="UTF-8"
-To: linux@roeck-us.net, linux-hwmon@vger.kernel.org, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
-Cc: rlippert@google.com, benjaminfair@google.com, openbmc@lists.ozlabs.org, Kun Yi <kunyi@google.com>
+Return-Path: <SRS0=pweU=MC=redhat.com=hdegoede@kernel.org>
+Subject: Re: [PATCH resend v2 1/2] Input: touchscreen DT binding - add
+ touchscreen-min-x and -min-y properties
+References: <20180731111958.20043-1-hdegoede@redhat.com>
+ <20180731111958.20043-2-hdegoede@redhat.com>
+ <20180803003101.GA118981@dtor-ws>
+From: Hans de Goede <hdegoede@redhat.com>
+Message-ID: <6f1b0575-87e7-3443-9080-5abfd8e6c726@redhat.com>
+Date: Thu, 20 Sep 2018 19:31:43 +0200
+MIME-Version: 1.0
+In-Reply-To: <20180803003101.GA118981@dtor-ws>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benjamin Tissoires <benjamin.tissoires@redhat.com>, robh@kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The ADM series of hotswap controllers support extending
-the current measurement range by using a sensing resistor
-value other than the typical 1 mOhm. For example, using a 0.5 mOhm
-sensing resistor doubles the maximal current can be measured.
+Hi,
 
-Current driver assumes a shunt resistor value of 1 mOhm in calculation,
-meaning for other resistor values, hwmon will report scaled
-current/power measurements. This patch adds a device tree parameter so
-that individual boards can configure its shunt resistor value.
+I completely missed this mail earlier, sorry.
 
-Signed-off-by: Kun Yi <kunyi@google.com>
----
- .../devicetree/bindings/hwmon/adm1275.txt     | 25 +++++++++++++++++++
- Documentation/hwmon/adm1275                   |  3 +++
- drivers/hwmon/pmbus/adm1275.c                 | 15 +++++++++--
- 3 files changed, 41 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/adm1275.txt
+Thank you Benjamin for pointing this out to me.
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adm1275.txt b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-new file mode 100644
-index 000000000000..1ecd03f3da4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/adm1275.txt
-@@ -0,0 +1,25 @@
-+adm1275 properties
-+
-+Required properties:
-+- compatible: Must be one of the supported compatible strings:
-+	- "adi,adm1075" for adm1075
-+	- "adi,adm1272" for adm1272
-+	- "adi,adm1275" for adm1275
-+	- "adi,adm1276" for adm1276
-+	- "adi,adm1278" for adm1278
-+	- "adi,adm1293" for adm1293
-+	- "adi,adm1294" for adm1294
-+- reg: I2C address
-+
-+Optional properties:
-+
-+- shunt-resistor-micro-ohms
-+	Shunt resistor value in micro-Ohm
-+
-+Example:
-+
-+adm1272@10 {
-+	compatible = "adi,adm1272";
-+	reg = <0x10>;
-+	shunt-resistor-micro-ohms = <500>;
-+};
-diff --git a/Documentation/hwmon/adm1275 b/Documentation/hwmon/adm1275
-index 39033538eb03..5e277b0d91ce 100644
---- a/Documentation/hwmon/adm1275
-+++ b/Documentation/hwmon/adm1275
-@@ -58,6 +58,9 @@ The ADM1075, unlike many other PMBus devices, does not support internal voltage
- or current scaling. Reported voltages, currents, and power are raw measurements,
- and will typically have to be scaled.
- 
-+The shunt value in micro-ohms can be set via device tree at compile-time. Please
-+refer to the Documentation/devicetree/bindings/hwmon/adm1275.txt for bindings
-+if the device tree is used.
- 
- Platform data support
- ---------------------
-diff --git a/drivers/hwmon/pmbus/adm1275.c b/drivers/hwmon/pmbus/adm1275.c
-index 13600fa79e7f..f569372c9204 100644
---- a/drivers/hwmon/pmbus/adm1275.c
-+++ b/drivers/hwmon/pmbus/adm1275.c
-@@ -373,6 +373,7 @@ static int adm1275_probe(struct i2c_client *client,
- 	const struct coefficients *coefficients;
- 	int vindex = -1, voindex = -1, cindex = -1, pindex = -1;
- 	int tindex = -1;
-+	u32 shunt;
- 
- 	if (!i2c_check_functionality(client->adapter,
- 				     I2C_FUNC_SMBUS_READ_BYTE_DATA
-@@ -421,6 +422,13 @@ static int adm1275_probe(struct i2c_client *client,
- 	if (!data)
- 		return -ENOMEM;
- 
-+	if (of_property_read_u32(client->dev.of_node,
-+				 "shunt-resistor-micro-ohms", &shunt))
-+		shunt = 1000; /* 1 mOhm if not set via DT */
-+
-+	if (shunt == 0)
-+		return -EINVAL;
-+
- 	data->id = mid->driver_data;
- 
- 	info = &data->info;
-@@ -654,12 +662,15 @@ static int adm1275_probe(struct i2c_client *client,
- 		info->R[PSC_VOLTAGE_OUT] = coefficients[voindex].R;
- 	}
- 	if (cindex >= 0) {
--		info->m[PSC_CURRENT_OUT] = coefficients[cindex].m;
-+		/* Scale current with sense resistor value */
-+		info->m[PSC_CURRENT_OUT] =
-+			coefficients[cindex].m * shunt / 1000;
- 		info->b[PSC_CURRENT_OUT] = coefficients[cindex].b;
- 		info->R[PSC_CURRENT_OUT] = coefficients[cindex].R;
- 	}
- 	if (pindex >= 0) {
--		info->m[PSC_POWER] = coefficients[pindex].m;
-+		info->m[PSC_POWER] =
-+			coefficients[pindex].m * shunt / 1000;
- 		info->b[PSC_POWER] = coefficients[pindex].b;
- 		info->R[PSC_POWER] = coefficients[pindex].R;
- 	}
--- 
-2.19.0.605.g01d371f741-goog
+On 03-08-18 02:31, Dmitry Torokhov wrote:
+> Hi Hans,
+> 
+> On Tue, Jul 31, 2018 at 01:19:57PM +0200, Hans de Goede wrote:
+>> Some touchscreens, depending on the firmware and/or the digitizer report
+>> coordinates which never reach 0 along one or both of their axis.
+>>
+>> This has been seen for example on the Silead touchscreens on a Onda V891w
+>> and a Point of View mobii TAB-P800w(v2.0).
+>>
+>> This commits documents 2 new touchscreen properties for communicating
+>> the minimum reported values to the OS: touchscreen-min-x and -min-y.
+>>
+>> This commit also drop the (in pixels) comment from the documentation
+>> of the touchscreen-size-x and touchscreen-size-y properties. This comment
+>> suggests that there is a relation between the range of reported
+>> coordinates and the display resolution, which is only true for some
+>> devices. The (in pixels) comment is replaced with "(maximum x coordinate
+>> reported + 1)" to mirror the language describing the new touchscreen-min-x
+>> and -min-y properties.
+> 
+> I am concerned that people will not read the documentation carefully and
+> will treat it as true size, since it is what in the name. Maybe we
+> should say that it is size of usable area, in device units, and that
+> maximum reported coordinate is "touchscreen-min-x + touchscreen-size-x -
+> 1"?
+
+Not sure what you mean with "true size" but in the implementation
+from this series, the maximum coordinated reported is (touchscreen-size-x - 1)
+not (touchscreen-min-x + touchscreen-size-x - 1) as you suggest.
+
+Basically what this series does is set:
+
+input_absinfo.minimum to the new touchscreen-min-x value (or 0 if not specified)
+input_absinfo.maximum to touchscreen-size-x - 1 as we've always done.
+
+So the usable range / the range mapping from one screen edge to the other is:
+
+touchscreen-min-x - (touchscreen-size-x - 1)
+
+Which matches with the dt bindings doc after this patch, which
+reads after this patch:
+
+  - touchscreen-min-x		: minimum x coordinate reported (0 if not set)
+  - touchscreen-min-y		: minimum y coordinate reported (0 if not set)
+  - touchscreen-size-x		: horizontal resolution of touchscreen
+				  (maximum x coordinate reported + 1)
+  - touchscreen-size-y		: vertical resolution of touchscreen
+				  (maximum y coordinate reported + 1)
+
+I hope this clarifies things and if you want to change anything let
+me know.
+
+Regards,
+
+Hans
