@@ -1,45 +1,112 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: update SPI6 dmas property on stm32mp157c
-Date: Thu, 20 Sep 2018 17:50:33 +0200
-Message-ID: <1efc3bad-cea0-95c4-078d-67463f2b9e6d@st.com>
-References: <1537171487-15191-1-git-send-email-amelie.delaunay@st.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH 0/4] ARM: dts: mvebu: updates and new board
+Date: Thu, 20 Sep 2018 17:56:56 +0200
+Message-ID: <87bm8sjh6f.fsf@bootlin.com>
+References: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1537171487-15191-1-git-send-email-amelie.delaunay@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz> (Chris
+        Packham's message of "Thu, 26 Jul 2018 16:02:53 +1200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW3DqWxpZQoKT24gMDkvMTcvMjAxOCAxMDowNCBBTSwgQW1lbGllIERlbGF1bmF5IHdyb3Rl
-Ogo+IFJlbW92ZSB1bnVzZWQgcGFyYW1ldGVyIGZyb20gU1BJNiBkbWFzIHByb3BlcnR5IG9uIHN0
-bTMybXAxNTdjIFNvQy4KPiAKPiBGaXhlczogZGMzZjhjODZjMTBkICgiQVJNOiBkdHM6IHN0bTMy
-OiBhZGQgU1BJIHN1cHBvcnQgb24gc3RtMzJtcDE1N2MiKQo+IFNpZ25lZC1vZmYtYnk6IEFtZWxp
-ZSBEZWxhdW5heSA8YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4KPiAtLS0KPiAgIGFyY2gvYXJtL2Jv
-b3QvZHRzL3N0bTMybXAxNTdjLmR0c2kgfCA0ICsrLS0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL3N0bTMybXAxNTdjLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zdG0zMm1wMTU3Yy5k
-dHNpCj4gaW5kZXggNjYxYmU5NC4uMTg1NTQxYSAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290
-L2R0cy9zdG0zMm1wMTU3Yy5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RtMzJtcDE1
-N2MuZHRzaQo+IEBAIC0xMDc4LDggKzEwNzgsOCBAQAo+ICAgCQkJaW50ZXJydXB0cyA9IDxHSUNf
-U1BJIDg2IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICAgCQkJY2xvY2tzID0gPCZyY2MgU1BJNl9L
-PjsKPiAgIAkJCXJlc2V0cyA9IDwmcmNjIFNQSTZfUj47Cj4gLQkJCWRtYXMgPSA8Jm1kbWExIDM0
-IDB4MCAweDQwMDA4IDB4MCAweDAgMD4sCj4gLQkJCSAgICAgICA8Jm1kbWExIDM1IDB4MCAweDQw
-MDAyIDB4MCAweDAgMD47Cj4gKwkJCWRtYXMgPSA8Jm1kbWExIDM0IDB4MCAweDQwMDA4IDB4MCAw
-eDA+LAo+ICsJCQkgICAgICAgPCZtZG1hMSAzNSAweDAgMHg0MDAwMiAweDAgMHgwPjsKPiAgIAkJ
-CWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7Cj4gICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAg
-CQl9Owo+IAoKQXBwbGllZCBvbiBzdG0zMi1uZXh0LgoKVGhhbmtzLgpBbGV4CgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Chris,
+ 
+ On jeu., juil. 26 2018, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
+
+> This series updates the armada-xp-98dx3236 SoC and related boards to use the
+> new style dts bindings for nand.
+>
+> I've also added a new db-88f6820-amc board which is an Armada-385 based
+> reference board from Marvell's switch team. It's a plugin card for either the
+> db-dxbc2 or db-xc3-24g4 which can be used if you disable the internal CPU on
+> those platforms.
+>
+> Chris Packham (4):
+>   ARM: dts: mvebu: 98dx3236: Rename nand controller node
+>   ARM: dts: mvebu: db-dxbc2: use new style nand binding
+>   ARM: dts: mvebu: db-xc3-24g4: use new style nand binding
+>   ARM: dts: mvebu: Add device tree for db-88f6820-amc board
+
+While applying this series mvebu/dt, I got few warning with "ARM: dts:
+mvebu: 98dx3236: Rename nand controller node".
+
+I fix them and also use the new partition binding, the diff is the
+following:
+
+iff --git a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
+index d87614057e3f..dc9ccce1d4a1 100644
+--- a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
++++ b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
+@@ -102,9 +102,14 @@
+                nand-ecc-strength = <4>;
+                nand-ecc-step-size = <512>;
+ 
+-               partition@user {
+-                       reg = <0x00000000 0x40000000>;
+-                       label = "user";
++               partitions {
++                       compatible = "fixed-partitions";
++                       #address-cells = <1>;
++                       #size-cells = <1>;
++                       partition@0 {
++                               reg = <0x00000000 0x40000000>;
++                               label = "user";
++                       };
+                };
+        };
+ };
+@@ -131,13 +136,18 @@
+                spi-max-frequency = <50000000>;
+                m25p,fast-read;
+ 
+-               partition@u-boot {
+-                       reg = <0x00000000 0x00100000>;
+-                       label = "u-boot";
+-               };
+-               partition@u-boot-env {
+-                       reg = <0x00100000 0x00040000>;
+-                       label = "u-boot-env";
++               partitions {
++                       compatible = "fixed-partitions";
++                       #address-cells = <1>;
++                       #size-cells = <1>;
++                       partition@0 {
++                               reg = <0x00000000 0x00100000>;
++                               label = "u-boot";
++                       };
++                       partition@100000 {
++                               reg = <0x00100000 0x00040000>;
++                               label = "u-boot-env";
++                       };
+                };
+        };
+ };
+
+I amended your patch with it, but if you don't agree with it, I can
+still modify it, the branch is not immutable yet.
+
+Thanks,
+
+Gregory
+
+>
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../boot/dts/armada-385-db-88f6820-amc.dts    | 184 ++++++++++++++++++
+>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi     |   2 +-
+>  arch/arm/boot/dts/armada-xp-db-dxbc2.dts      |  18 +-
+>  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts |  18 +-
+>  5 files changed, 208 insertions(+), 15 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
+>
+> -- 
+> 2.18.0
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
