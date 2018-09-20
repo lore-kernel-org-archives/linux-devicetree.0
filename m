@@ -1,55 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
- driver bindings
-Date: Thu, 20 Sep 2018 11:51:35 -0700
-Message-ID: <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
-References: <20180627045234.27403-1-rnayak@codeaurora.org> <20180627045234.27403-3-rnayak@codeaurora.org>
- <20180703223554.GA32313@rob-hp-laptop> <20180704055757.4li26b6poxllmh2k@vireshk-i7>
- <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org>
+From: Andy Gross <andy.gross@linaro.org>
+Subject: Re: [PATCH v3 09/16] arm: dts: msm8974: thermal: split address space
+ into two
+Date: Thu, 20 Sep 2018 11:57:28 -0700
+Message-ID: <20180920185728.GA28458@hector.localdomain>
+References: <cover.1536744310.git.amit.kucheria@linaro.org>
+ <088724896f21d556ecf1e16a6c59c0e404444fa6.1536744310.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <088724896f21d556ecf1e16a6c59c0e404444fa6.1536744310.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, rnayak@codeaurora.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, smohanad@codeaurora.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 11:31 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
->
->
-> On 7/4/2018 11:27 AM, Viresh Kumar wrote:
-> > On 03-07-18, 16:35, Rob Herring wrote:
-> >>> +qcom,level values specified in the OPP tables for RPMh power domains
-> >>> +should use the RPMH_REGULATOR_LEVEL_* constants from
-> >>> +<dt-bindings/power/qcom-rpmhpd.h>
-> >>> +
-> >>> +   rpmhpd: power-controller {
-> >>> +           compatible = "qcom,sdm845-rpmhpd";
-> >>> +           #power-domain-cells = <1>;
-> >>> +           operating-points-v2 = <&rpmhpd_opp_table>;
-> >>> +   };
-> >>> +
-> >>> +   rpmhpd_opp_table: opp-table {
-> >>> +           compatible = "operating-points-v2-qcom-level";
-> >>> +
-> >>> +           rpmhpd_opp_ret: opp1 {
-> >>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> >>> +           };
-> >>
-> >> I don't see the point in using the OPP binding here when you aren't
-> >> using *any* of the properties from it.
-> >
-> > Yeah, that's the case for now. But there are cases (as Stephen
-> > mentioned earlier [1]) where the voltage values (and maybe other
-> > values like current, etc) would be known and filled in DT. And that's
-> > why we all agreed to use OPP tables for PM domains as well, as these
-> > are really "operating performance points" of these PM domains.
->
-> Rob, are you fine with these bindings then?
+On Wed, Sep 12, 2018 at 03:22:54PM +0530, Amit Kucheria wrote:
+> We've earlier added support to split the register address space into TM
+> and SROT regions. Split up the regmap address space into two for msm8974
+> that has a similar register layout.
+> 
+> Since tsens-common.c/init_common() currently only registers one address
+> space, the order is important (TM before SROT).  This is OK since the
+> code doesn't really use the SROT functionality yet.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
 
-Okay, my only thought is whether we should just use 'reg' here, or do
-we need 'level' for anything else and should make it common?
-
-Rob
+Acked-by: Andy Gross <andy.gross@linaro.org>
