@@ -1,293 +1,171 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 1/4] pinctrl: qcom: Introduce readl/writel accessors
-Date: Wed, 19 Sep 2018 18:37:09 -0700
-Message-ID: <20180920013712.2361-2-bjorn.andersson@linaro.org>
-References: <20180920013712.2361-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] regulators: qcom: Add PMS405 regulators
+Date: Wed, 19 Sep 2018 18:40:20 -0700
+Message-ID: <20180920014020.14408-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920013712.2361-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation for the support for dispersed tiles move all readl and
-writel calls to helper functions. This will allow us to isolate the
-added complexity of another indirection.
+The PMS405 provdies 5 SMPS regulators and 13 LDOs, add these to the RPM
+regulator driver.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/pinctrl/qcom/pinctrl-msm.c | 90 ++++++++++++++++++------------
- 1 file changed, 54 insertions(+), 36 deletions(-)
+ .../regulator/qcom,smd-rpm-regulator.txt      | 23 ++++++
+ drivers/regulator/qcom_smd-regulator.c        | 77 +++++++++++++++++++
+ 2 files changed, 100 insertions(+)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 1684b2da09d5..86fbb5fe4d0e 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -73,6 +73,24 @@ struct msm_pinctrl {
- 	void __iomem *regs;
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+index 58a1d97972f5..45025b5b67f6 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+@@ -26,6 +26,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8998-regulators"
+ 		    "qcom,rpm-pma8084-regulators"
+ 		    "qcom,rpm-pmi8998-regulators"
++		    "qcom,rpm-pms405-regulators"
+ 
+ - vdd_s1-supply:
+ - vdd_s2-supply:
+@@ -188,6 +189,24 @@ Regulator nodes are identified by their compatible:
+ 	Definition: reference to regulator supplying the input pin, as
+ 		    described in the data sheet
+ 
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_s4-supply:
++- vdd_s5-supply:
++- vdd_l1_l2-supply:
++- vdd_l3_l8-supply:
++- vdd_l4-supply:
++- vdd_l5_l6-supply:
++- vdd_l7-supply:
++- vdd_l3_l8-supply:
++- vdd_l9-supply:
++- vdd_l10_l11_l12_l13-supply:
++	Usage: optional (pms405 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
+ The regulator node houses sub-nodes for each regulator within the device. Each
+ sub-node is identified using the node's name, with valid values listed for each
+ of the pmics below.
+@@ -222,6 +241,10 @@ pma8084:
+ pmi8998:
+ 	bob
+ 
++pms405:
++	s1, s2, s3, s4, s5, l1, l2, l3, l4, l5, l6, l7, l8, l9, l10, l11, l12,
++	l13
++
+ The content of each sub-node is defined by the standard binding for regulators -
+ see regulator.txt.
+ 
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index fe2fb36803e0..f5bca77d67c1 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -420,6 +420,60 @@ static const struct regulator_desc pmi8998_bob = {
+ 	.ops = &rpm_bob_ops,
  };
  
-+#define MSM_ACCESSOR(name) \
-+static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
-+			    const struct msm_pingroup *g) \
-+{ \
-+	return readl(pctrl->regs + g->name##_reg); \
-+} \
-+static void msm_writel_##name(u32 val, struct msm_pinctrl *pctrl, \
-+			      const struct msm_pingroup *g) \
-+{ \
-+	writel(val, pctrl->regs + g->name##_reg); \
-+}
++static const struct regulator_desc pms405_hfsmps3 = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(320000, 0, 215, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 216,
++	.ops = &rpm_smps_ldo_ops,
++};
 +
-+MSM_ACCESSOR(ctl)
-+MSM_ACCESSOR(io)
-+MSM_ACCESSOR(intr_cfg)
-+MSM_ACCESSOR(intr_status)
-+MSM_ACCESSOR(intr_target)
++static const struct regulator_desc pms405_nldo300 = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 128,
++	.ops = &rpm_smps_ldo_ops,
++};
 +
- static int msm_get_groups_count(struct pinctrl_dev *pctldev)
- {
- 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-@@ -166,10 +184,10 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
++static const struct regulator_desc pms405_nldo1200 = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(312000, 0, 127, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 128,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pms405_pldo50 = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(1664000, 0, 128, 16000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 129,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pms405_pldo150 = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(1664000, 0, 128, 16000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 129,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pms405_pldo600 = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(1256000, 0, 98, 8000),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 99,
++	.ops = &rpm_smps_ldo_ops,
++};
++
+ struct rpm_regulator_data {
+ 	const char *name;
+ 	u32 type;
+@@ -661,6 +715,28 @@ static const struct rpm_regulator_data rpm_pmi8998_regulators[] = {
+ 	{}
+ };
  
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->ctl_reg);
-+	val = msm_readl_ctl(pctrl, g);
- 	val &= ~mask;
- 	val |= i << g->mux_bit;
--	writel(val, pctrl->regs + g->ctl_reg);
-+	msm_writel_ctl(val, pctrl, g);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-@@ -260,7 +278,7 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 	if (ret < 0)
- 		return ret;
- 
--	val = readl(pctrl->regs + g->ctl_reg);
-+	val = msm_readl_ctl(pctrl, g);
- 	arg = (val >> bit) & mask;
- 
- 	/* Convert register value to pinconf value */
-@@ -299,7 +317,7 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 		if (!arg)
- 			return -EINVAL;
- 
--		val = readl(pctrl->regs + g->io_reg);
-+		val = msm_readl_io(pctrl, g);
- 		arg = !!(val & BIT(g->in_bit));
- 		break;
- 	case PIN_CONFIG_INPUT_ENABLE:
-@@ -373,12 +391,12 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
- 		case PIN_CONFIG_OUTPUT:
- 			/* set output value */
- 			raw_spin_lock_irqsave(&pctrl->lock, flags);
--			val = readl(pctrl->regs + g->io_reg);
-+			val = msm_readl_io(pctrl, g);
- 			if (arg)
- 				val |= BIT(g->out_bit);
- 			else
- 				val &= ~BIT(g->out_bit);
--			writel(val, pctrl->regs + g->io_reg);
-+			msm_writel_io(val, pctrl, g);
- 			raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
- 			/* enable output */
-@@ -401,10 +419,10 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
- 		}
- 
- 		raw_spin_lock_irqsave(&pctrl->lock, flags);
--		val = readl(pctrl->regs + g->ctl_reg);
-+		val = msm_readl_ctl(pctrl, g);
- 		val &= ~(mask << bit);
- 		val |= arg << bit;
--		writel(val, pctrl->regs + g->ctl_reg);
-+		msm_writel_ctl(val, pctrl, g);
- 		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 	}
- 
-@@ -428,9 +446,9 @@ static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->ctl_reg);
-+	val = msm_readl_ctl(pctrl, g);
- 	val &= ~BIT(g->oe_bit);
--	writel(val, pctrl->regs + g->ctl_reg);
-+	msm_writel_ctl(val, pctrl, g);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-@@ -448,16 +466,16 @@ static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, in
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->io_reg);
-+	val = msm_readl_io(pctrl, g);
- 	if (value)
- 		val |= BIT(g->out_bit);
- 	else
- 		val &= ~BIT(g->out_bit);
--	writel(val, pctrl->regs + g->io_reg);
-+	msm_writel_io(val, pctrl, g);
- 
--	val = readl(pctrl->regs + g->ctl_reg);
-+	val = msm_readl_ctl(pctrl, g);
- 	val |= BIT(g->oe_bit);
--	writel(val, pctrl->regs + g->ctl_reg);
-+	msm_writel_ctl(val, pctrl, g);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- 
-@@ -472,7 +490,7 @@ static int msm_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
- 
- 	g = &pctrl->soc->groups[offset];
- 
--	val = readl(pctrl->regs + g->ctl_reg);
-+	val = msm_readl_ctl(pctrl, g);
- 
- 	/* 0 = output, 1 = input */
- 	return val & BIT(g->oe_bit) ? 0 : 1;
-@@ -486,7 +504,7 @@ static int msm_gpio_get(struct gpio_chip *chip, unsigned offset)
- 
- 	g = &pctrl->soc->groups[offset];
- 
--	val = readl(pctrl->regs + g->io_reg);
-+	val = msm_readl_io(pctrl, g);
- 	return !!(val & BIT(g->in_bit));
- }
- 
-@@ -501,12 +519,12 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->io_reg);
-+	val = msm_readl_io(pctrl, g);
- 	if (value)
- 		val |= BIT(g->out_bit);
- 	else
- 		val &= ~BIT(g->out_bit);
--	writel(val, pctrl->regs + g->io_reg);
-+	msm_writel_io(val, pctrl, g);
- 
- 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
- }
-@@ -546,8 +564,8 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
- 		return;
- 
- 	g = &pctrl->soc->groups[offset];
--	ctl_reg = readl(pctrl->regs + g->ctl_reg);
--	io_reg = readl(pctrl->regs + g->io_reg);
-+	ctl_reg = msm_readl_ctl(pctrl, g);
-+	io_reg = msm_readl_io(pctrl, g);
- 
- 	is_out = !!(ctl_reg & BIT(g->oe_bit));
- 	func = (ctl_reg >> g->mux_bit) & 7;
-@@ -622,14 +640,14 @@ static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
- 	unsigned pol;
- 
- 	do {
--		val = readl(pctrl->regs + g->io_reg) & BIT(g->in_bit);
-+		val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
- 
--		pol = readl(pctrl->regs + g->intr_cfg_reg);
-+		pol = msm_readl_intr_cfg(pctrl, g);
- 		pol ^= BIT(g->intr_polarity_bit);
--		writel(pol, pctrl->regs + g->intr_cfg_reg);
-+		msm_writel_intr_cfg(val, pctrl, g);
- 
--		val2 = readl(pctrl->regs + g->io_reg) & BIT(g->in_bit);
--		intstat = readl(pctrl->regs + g->intr_status_reg);
-+		val2 = msm_readl_io(pctrl, g) & BIT(g->in_bit);
-+		intstat = msm_readl_intr_status(pctrl, g);
- 		if (intstat || (val == val2))
- 			return;
- 	} while (loop_limit-- > 0);
-@@ -649,7 +667,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->intr_cfg_reg);
-+	val = msm_readl_intr_cfg(pctrl, g);
- 	/*
- 	 * There are two bits that control interrupt forwarding to the CPU. The
- 	 * RAW_STATUS_EN bit causes the level or edge sensed on the line to be
-@@ -674,7 +692,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
- 		val &= ~BIT(g->intr_raw_status_bit);
- 
- 	val &= ~BIT(g->intr_enable_bit);
--	writel(val, pctrl->regs + g->intr_cfg_reg);
-+	msm_writel_intr_cfg(val, pctrl, g);
- 
- 	clear_bit(d->hwirq, pctrl->enabled_irqs);
- 
-@@ -693,10 +711,10 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->intr_cfg_reg);
-+	val = msm_readl_intr_cfg(pctrl, g);
- 	val |= BIT(g->intr_raw_status_bit);
- 	val |= BIT(g->intr_enable_bit);
--	writel(val, pctrl->regs + g->intr_cfg_reg);
-+	msm_writel_intr_cfg(val, pctrl, g);
- 
- 	set_bit(d->hwirq, pctrl->enabled_irqs);
- 
-@@ -715,12 +733,12 @@ static void msm_gpio_irq_ack(struct irq_data *d)
- 
- 	raw_spin_lock_irqsave(&pctrl->lock, flags);
- 
--	val = readl(pctrl->regs + g->intr_status_reg);
-+	val = msm_readl_intr_status(pctrl, g);
- 	if (g->intr_ack_high)
- 		val |= BIT(g->intr_status_bit);
- 	else
- 		val &= ~BIT(g->intr_status_bit);
--	writel(val, pctrl->regs + g->intr_status_reg);
-+	msm_writel_intr_status(val, pctrl, g);
- 
- 	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
- 		msm_gpio_update_dual_edge_pos(pctrl, g, d);
-@@ -749,17 +767,17 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
- 
- 	/* Route interrupts to application cpu */
--	val = readl(pctrl->regs + g->intr_target_reg);
-+	val = msm_readl_intr_target(pctrl, g);
- 	val &= ~(7 << g->intr_target_bit);
- 	val |= g->intr_target_kpss_val << g->intr_target_bit;
--	writel(val, pctrl->regs + g->intr_target_reg);
-+	msm_writel_intr_target(val, pctrl, g);
- 
- 	/* Update configuration for gpio.
- 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
- 	 * internal circuitry of TLMM, toggling the RAW_STATUS
- 	 * could cause the INTR_STATUS to be set for EDGE interrupts.
- 	 */
--	val = readl(pctrl->regs + g->intr_cfg_reg);
-+	val = msm_readl_intr_cfg(pctrl, g);
- 	val |= BIT(g->intr_raw_status_bit);
- 	if (g->intr_detection_width == 2) {
- 		val &= ~(3 << g->intr_detection_bit);
-@@ -807,7 +825,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	} else {
- 		BUG();
- 	}
--	writel(val, pctrl->regs + g->intr_cfg_reg);
-+	msm_writel_intr_cfg(val, pctrl, g);
- 
- 	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
- 		msm_gpio_update_dual_edge_pos(pctrl, g, d);
-@@ -891,7 +909,7 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
- 	 */
- 	for_each_set_bit(i, pctrl->enabled_irqs, pctrl->chip.ngpio) {
- 		g = &pctrl->soc->groups[i];
--		val = readl(pctrl->regs + g->intr_status_reg);
-+		val = msm_readl_intr_status(pctrl, g);
- 		if (val & BIT(g->intr_status_bit)) {
- 			irq_pin = irq_find_mapping(gc->irq.domain, i);
- 			generic_handle_irq(irq_pin);
++static const struct rpm_regulator_data rpm_pms405_regulators[] = {
++	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pms405_hfsmps3, "vdd_s1" },
++	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pms405_hfsmps3, "vdd_s2" },
++	{ "s3", QCOM_SMD_RPM_SMPA, 3, &pms405_hfsmps3, "vdd_s3" },
++	{ "s4", QCOM_SMD_RPM_SMPA, 4, &pms405_hfsmps3, "vdd_s4" },
++	{ "s5", QCOM_SMD_RPM_SMPA, 5, &pms405_hfsmps3, "vdd_s5" },
++	{ "l1", QCOM_SMD_RPM_LDOA, 1, &pms405_nldo1200, "vdd_l1_l2" },
++	{ "l2", QCOM_SMD_RPM_LDOA, 2, &pms405_nldo1200, "vdd_l1_l2" },
++	{ "l3", QCOM_SMD_RPM_LDOA, 3, &pms405_nldo1200, "vdd_l3_l8" },
++	{ "l4", QCOM_SMD_RPM_LDOA, 4, &pms405_nldo300, "vdd_l4" },
++	{ "l5", QCOM_SMD_RPM_LDOA, 5, &pms405_pldo600, "vdd_l5_l6" },
++	{ "l6", QCOM_SMD_RPM_LDOA, 6, &pms405_pldo600, "vdd_l5_l6" },
++	{ "l7", QCOM_SMD_RPM_LDOA, 7, &pms405_pldo150, "vdd_l7" },
++	{ "l8", QCOM_SMD_RPM_LDOA, 8, &pms405_nldo1200, "vdd_l3_l8" },
++	{ "l9", QCOM_SMD_RPM_LDOA, 9, &pms405_nldo1200, "vdd_l9" },
++	{ "l10", QCOM_SMD_RPM_LDOA, 10, &pms405_pldo50, "vdd_l10_l11_l12_l13" },
++	{ "l11", QCOM_SMD_RPM_LDOA, 11, &pms405_pldo150, "vdd_l10_l11_l12_l13" },
++	{ "l12", QCOM_SMD_RPM_LDOA, 12, &pms405_pldo150, "vdd_l10_l11_l12_l13" },
++	{ "l13", QCOM_SMD_RPM_LDOA, 13, &pms405_pldo150, "vdd_l10_l11_l12_l13" },
++	{}
++};
++
+ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
+ 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
+@@ -669,6 +745,7 @@ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8998-regulators", .data = &rpm_pm8998_regulators },
+ 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
+ 	{ .compatible = "qcom,rpm-pmi8998-regulators", .data = &rpm_pmi8998_regulators },
++	{ .compatible = "qcom,rpm-pms405-regulators", .data = &rpm_pms405_regulators },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, rpm_of_match);
 -- 
 2.18.0
