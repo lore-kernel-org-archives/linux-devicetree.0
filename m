@@ -1,228 +1,293 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 3/4] dt-bindings: pinctrl: qcom: Add QCS404 pinctrl binding
-Date: Wed, 19 Sep 2018 18:37:11 -0700
-Message-ID: <20180920013712.2361-4-bjorn.andersson@linaro.org>
+Subject: [PATCH 1/4] pinctrl: qcom: Introduce readl/writel accessors
+Date: Wed, 19 Sep 2018 18:37:09 -0700
+Message-ID: <20180920013712.2361-2-bjorn.andersson@linaro.org>
 References: <20180920013712.2361-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180920013712.2361-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the binding for the TLMM pinctrl block found in the QCS404 platform.
+In preparation for the support for dispersed tiles move all readl and
+writel calls to helper functions. This will allow us to isolate the
+added complexity of another indirection.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../bindings/pinctrl/qcom,qcs404-pinctrl.txt  | 200 ++++++++++++++++++
- 1 file changed, 200 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
+ drivers/pinctrl/qcom/pinctrl-msm.c | 90 ++++++++++++++++++------------
+ 1 file changed, 54 insertions(+), 36 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
-new file mode 100644
-index 000000000000..ed169adaacce
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
-@@ -0,0 +1,200 @@
-+Qualcomm QCS404 TLMM block
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 1684b2da09d5..86fbb5fe4d0e 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -73,6 +73,24 @@ struct msm_pinctrl {
+ 	void __iomem *regs;
+ };
+ 
++#define MSM_ACCESSOR(name) \
++static u32 msm_readl_##name(struct msm_pinctrl *pctrl, \
++			    const struct msm_pingroup *g) \
++{ \
++	return readl(pctrl->regs + g->name##_reg); \
++} \
++static void msm_writel_##name(u32 val, struct msm_pinctrl *pctrl, \
++			      const struct msm_pingroup *g) \
++{ \
++	writel(val, pctrl->regs + g->name##_reg); \
++}
 +
-+This binding describes the Top Level Mode Multiplexer block found in the
-+QCS404 platform.
++MSM_ACCESSOR(ctl)
++MSM_ACCESSOR(io)
++MSM_ACCESSOR(intr_cfg)
++MSM_ACCESSOR(intr_status)
++MSM_ACCESSOR(intr_target)
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,qcs404-pinctrl"
-+
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the north, south and east TLMM
-+		    tiles.
-+
-+- reg-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Defintiion: names for the cells of reg, must contain "north", "south"
-+		    and "east".
-+
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the TLMM summary IRQ.
-+
-+- interrupt-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as an interrupt controller
-+
-+- #interrupt-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/interrupt-controller/irq.h>
-+
-+- gpio-controller:
-+	Usage: required
-+	Value type: <none>
-+	Definition: identifies this node as a gpio controller
-+
-+- #gpio-cells:
-+	Usage: required
-+	Value type: <u32>
-+	Definition: must be 2. Specifying the pin number and flags, as defined
-+		    in <dt-bindings/gpio/gpio.h>
-+
-+- gpio-ranges:
-+	Usage: required
-+	Definition:  see ../gpio/gpio.txt
-+
-+Please refer to ../gpio/gpio.txt and ../interrupt-controller/interrupts.txt for
-+a general description of GPIO and interrupt bindings.
-+
-+Please refer to pinctrl-bindings.txt in this directory for details of the
-+common pinctrl bindings used by client devices, including the meaning of the
-+phrase "pin configuration node".
-+
-+The pin configuration nodes act as a container for an arbitrary number of
-+subnodes. Each of these subnodes represents some desired configuration for a
-+pin, a group, or a list of pins or groups. This configuration can include the
-+mux function to select on those pin(s)/group(s), and various pin configuration
-+parameters, such as pull-up, drive strength, etc.
-+
-+
-+PIN CONFIGURATION NODES:
-+
-+The name of each subnode is not important; all subnodes should be enumerated
-+and processed purely based on their content.
-+
-+Each subnode only affects those parameters that are explicitly listed. In
-+other words, a subnode that lists a mux function but no pin configuration
-+parameters implies no information about any pin configuration parameters.
-+Similarly, a pin subnode that describes a pullup parameter implies no
-+information about e.g. the mux function.
-+
-+
-+The following generic properties as defined in pinctrl-bindings.txt are valid
-+to specify in a pin configuration subnode:
-+
-+- pins:
-+	Usage: required
-+	Value type: <string-array>
-+	Definition: List of gpio pins affected by the properties specified in
-+		    this subnode.
-+
-+		    Valid pins are:
-+		      gpio0-gpio119
-+		        Supports mux, bias and drive-strength
-+
-+		      sdc1_clk, sdc1_cmd, sdc1_data, sdc2_clk, sdc2_cmd,
-+		      sdc2_data
-+		        Supports bias and drive-strength
-+
-+		      ufs_reset
-+		        Supports bias and drive-strength
-+
-+- function:
-+	Usage: required
-+	Value type: <string>
-+	Definition: Specify the alternative function to be configured for the
-+		    specified pins. Functions are only valid for gpio pins.
-+		    Valid values are:
-+
-+		    gpio, hdmi_tx, hdmi_ddc, blsp_uart_tx_a2, blsp_spi2, m_voc,
-+		    qdss_cti_trig_in_a0, blsp_uart_rx_a2, qdss_tracectl_a,
-+		    blsp_uart2, aud_cdc, blsp_i2c_sda_a2, qdss_tracedata_a,
-+		    blsp_i2c_scl_a2, qdss_tracectl_b, qdss_cti_trig_in_b0,
-+		    blsp_uart1, blsp_spi_mosi_a1, blsp_spi_miso_a1,
-+		    qdss_tracedata_b, blsp_i2c1, blsp_spi_cs_n_a1, gcc_plltest,
-+		    blsp_spi_clk_a1, rgb_data0, blsp_uart5, blsp_spi5,
-+		    adsp_ext, rgb_data1, prng_rosc, rgb_data2, blsp_i2c5,
-+		    gcc_gp1_clk_b, rgb_data3, gcc_gp2_clk_b, blsp_spi0,
-+		    blsp_uart0, gcc_gp3_clk_b, blsp_i2c0, qdss_traceclk_b,
-+		    pcie_clk, nfc_irq, blsp_spi4, nfc_dwl, audio_ts, rgb_data4,
-+		    spi_lcd, blsp_uart_tx_b2, gcc_gp3_clk_a, rgb_data5,
-+		    blsp_uart_rx_b2, blsp_i2c_sda_b2, blsp_i2c_scl_b2,
-+		    pwm_led11, i2s_3_data0_a, ebi2_lcd, i2s_3_data1_a,
-+		    i2s_3_data2_a, atest_char, pwm_led3, i2s_3_data3_a,
-+		    pwm_led4, i2s_4, ebi2_a, dsd_clk_b, pwm_led5, pwm_led6,
-+		    pwm_led7, pwm_led8, pwm_led24, spkr_dac0, blsp_i2c4,
-+		    pwm_led9, pwm_led10, spdifrx_opt, pwm_led12, pwm_led13,
-+		    pwm_led14, wlan1_adc1, rgb_data_b0, pwm_led15,
-+		    blsp_spi_mosi_b1, wlan1_adc0, rgb_data_b1, pwm_led16,
-+		    blsp_spi_miso_b1, qdss_cti_trig_out_b0, wlan2_adc1,
-+		    rgb_data_b2, pwm_led17, blsp_spi_cs_n_b1, wlan2_adc0,
-+		    rgb_data_b3, pwm_led18, blsp_spi_clk_b1, rgb_data_b4,
-+		    pwm_led19, ext_mclk1_b, qdss_traceclk_a, rgb_data_b5,
-+		    pwm_led20, atest_char3, i2s_3_sck_b, ldo_update, bimc_dte0,
-+		    rgb_hsync, pwm_led21, i2s_3_ws_b, dbg_out, rgb_vsync,
-+		    i2s_3_data0_b, ldo_en, hdmi_dtest, rgb_de, i2s_3_data1_b,
-+		    hdmi_lbk9, rgb_clk, atest_char1, i2s_3_data2_b, ebi_cdc,
-+		    hdmi_lbk8, rgb_mdp, atest_char0, i2s_3_data3_b, hdmi_lbk7,
-+		    rgb_data_b6, rgb_data_b7, hdmi_lbk6, rgmii_int, cri_trng1,
-+		    rgmii_wol, cri_trng0, gcc_tlmm, rgmii_ck, rgmii_tx,
-+		    hdmi_lbk5, hdmi_pixel, hdmi_rcv, hdmi_lbk4, rgmii_ctl,
-+		    ext_lpass, rgmii_rx, cri_trng, hdmi_lbk3, hdmi_lbk2,
-+		    qdss_cti_trig_out_b1, rgmii_mdio, hdmi_lbk1, rgmii_mdc,
-+		    hdmi_lbk0, ir_in, wsa_en, rgb_data6, rgb_data7,
-+		    atest_char2, ebi_ch0, blsp_uart3, blsp_spi3, sd_write,
-+		    blsp_i2c3, gcc_gp1_clk_a, qdss_cti_trig_in_b1,
-+		    gcc_gp2_clk_a, ext_mclk0, mclk_in1, i2s_1, dsd_clk_a,
-+		    qdss_cti_trig_in_a1, rgmi_dll1, pwm_led22, pwm_led23,
-+		    qdss_cti_trig_out_a0, rgmi_dll2, pwm_led1,
-+		    qdss_cti_trig_out_a1, pwm_led2, i2s_2, pll_bist,
-+		    ext_mclk1_a, mclk_in2, bimc_dte1, i2s_3_sck_a, i2s_3_ws_a
-+
-+- bias-disable:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as no pull.
-+
-+- bias-pull-down:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as pull down.
-+
-+- bias-pull-up:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins should be configued as pull up.
-+
-+- output-high:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    high.
-+		    Not valid for sdc pins.
-+
-+- output-low:
-+	Usage: optional
-+	Value type: <none>
-+	Definition: The specified pins are configured in output mode, driven
-+		    low.
-+		    Not valid for sdc pins.
-+
-+- drive-strength:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: Selects the drive strength for the specified pins, in mA.
-+		    Valid values are: 2, 4, 6, 8, 10, 12, 14 and 16
-+
-+Example:
-+
-+	tlmm: pinctrl@01000000 {
-+		compatible = "qcom,qcs404-pinctrl";
-+		reg = <0x01000000 0x200000>,
-+		      <0x01300000 0x200000>,
-+		      <0x07b00000 0x200000>;
-+		reg-names = "south", "north", "east";
-+		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		gpio-ranges = <&tlmm 0 0 120>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+	};
-+
+ static int msm_get_groups_count(struct pinctrl_dev *pctldev)
+ {
+ 	struct msm_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
+@@ -166,10 +184,10 @@ static int msm_pinmux_set_mux(struct pinctrl_dev *pctldev,
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->ctl_reg);
++	val = msm_readl_ctl(pctrl, g);
+ 	val &= ~mask;
+ 	val |= i << g->mux_bit;
+-	writel(val, pctrl->regs + g->ctl_reg);
++	msm_writel_ctl(val, pctrl, g);
+ 
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ 
+@@ -260,7 +278,7 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	val = readl(pctrl->regs + g->ctl_reg);
++	val = msm_readl_ctl(pctrl, g);
+ 	arg = (val >> bit) & mask;
+ 
+ 	/* Convert register value to pinconf value */
+@@ -299,7 +317,7 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
+ 		if (!arg)
+ 			return -EINVAL;
+ 
+-		val = readl(pctrl->regs + g->io_reg);
++		val = msm_readl_io(pctrl, g);
+ 		arg = !!(val & BIT(g->in_bit));
+ 		break;
+ 	case PIN_CONFIG_INPUT_ENABLE:
+@@ -373,12 +391,12 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
+ 		case PIN_CONFIG_OUTPUT:
+ 			/* set output value */
+ 			raw_spin_lock_irqsave(&pctrl->lock, flags);
+-			val = readl(pctrl->regs + g->io_reg);
++			val = msm_readl_io(pctrl, g);
+ 			if (arg)
+ 				val |= BIT(g->out_bit);
+ 			else
+ 				val &= ~BIT(g->out_bit);
+-			writel(val, pctrl->regs + g->io_reg);
++			msm_writel_io(val, pctrl, g);
+ 			raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ 
+ 			/* enable output */
+@@ -401,10 +419,10 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
+ 		}
+ 
+ 		raw_spin_lock_irqsave(&pctrl->lock, flags);
+-		val = readl(pctrl->regs + g->ctl_reg);
++		val = msm_readl_ctl(pctrl, g);
+ 		val &= ~(mask << bit);
+ 		val |= arg << bit;
+-		writel(val, pctrl->regs + g->ctl_reg);
++		msm_writel_ctl(val, pctrl, g);
+ 		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ 	}
+ 
+@@ -428,9 +446,9 @@ static int msm_gpio_direction_input(struct gpio_chip *chip, unsigned offset)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->ctl_reg);
++	val = msm_readl_ctl(pctrl, g);
+ 	val &= ~BIT(g->oe_bit);
+-	writel(val, pctrl->regs + g->ctl_reg);
++	msm_writel_ctl(val, pctrl, g);
+ 
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ 
+@@ -448,16 +466,16 @@ static int msm_gpio_direction_output(struct gpio_chip *chip, unsigned offset, in
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->io_reg);
++	val = msm_readl_io(pctrl, g);
+ 	if (value)
+ 		val |= BIT(g->out_bit);
+ 	else
+ 		val &= ~BIT(g->out_bit);
+-	writel(val, pctrl->regs + g->io_reg);
++	msm_writel_io(val, pctrl, g);
+ 
+-	val = readl(pctrl->regs + g->ctl_reg);
++	val = msm_readl_ctl(pctrl, g);
+ 	val |= BIT(g->oe_bit);
+-	writel(val, pctrl->regs + g->ctl_reg);
++	msm_writel_ctl(val, pctrl, g);
+ 
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ 
+@@ -472,7 +490,7 @@ static int msm_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 
+ 	g = &pctrl->soc->groups[offset];
+ 
+-	val = readl(pctrl->regs + g->ctl_reg);
++	val = msm_readl_ctl(pctrl, g);
+ 
+ 	/* 0 = output, 1 = input */
+ 	return val & BIT(g->oe_bit) ? 0 : 1;
+@@ -486,7 +504,7 @@ static int msm_gpio_get(struct gpio_chip *chip, unsigned offset)
+ 
+ 	g = &pctrl->soc->groups[offset];
+ 
+-	val = readl(pctrl->regs + g->io_reg);
++	val = msm_readl_io(pctrl, g);
+ 	return !!(val & BIT(g->in_bit));
+ }
+ 
+@@ -501,12 +519,12 @@ static void msm_gpio_set(struct gpio_chip *chip, unsigned offset, int value)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->io_reg);
++	val = msm_readl_io(pctrl, g);
+ 	if (value)
+ 		val |= BIT(g->out_bit);
+ 	else
+ 		val &= ~BIT(g->out_bit);
+-	writel(val, pctrl->regs + g->io_reg);
++	msm_writel_io(val, pctrl, g);
+ 
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+@@ -546,8 +564,8 @@ static void msm_gpio_dbg_show_one(struct seq_file *s,
+ 		return;
+ 
+ 	g = &pctrl->soc->groups[offset];
+-	ctl_reg = readl(pctrl->regs + g->ctl_reg);
+-	io_reg = readl(pctrl->regs + g->io_reg);
++	ctl_reg = msm_readl_ctl(pctrl, g);
++	io_reg = msm_readl_io(pctrl, g);
+ 
+ 	is_out = !!(ctl_reg & BIT(g->oe_bit));
+ 	func = (ctl_reg >> g->mux_bit) & 7;
+@@ -622,14 +640,14 @@ static void msm_gpio_update_dual_edge_pos(struct msm_pinctrl *pctrl,
+ 	unsigned pol;
+ 
+ 	do {
+-		val = readl(pctrl->regs + g->io_reg) & BIT(g->in_bit);
++		val = msm_readl_io(pctrl, g) & BIT(g->in_bit);
+ 
+-		pol = readl(pctrl->regs + g->intr_cfg_reg);
++		pol = msm_readl_intr_cfg(pctrl, g);
+ 		pol ^= BIT(g->intr_polarity_bit);
+-		writel(pol, pctrl->regs + g->intr_cfg_reg);
++		msm_writel_intr_cfg(val, pctrl, g);
+ 
+-		val2 = readl(pctrl->regs + g->io_reg) & BIT(g->in_bit);
+-		intstat = readl(pctrl->regs + g->intr_status_reg);
++		val2 = msm_readl_io(pctrl, g) & BIT(g->in_bit);
++		intstat = msm_readl_intr_status(pctrl, g);
+ 		if (intstat || (val == val2))
+ 			return;
+ 	} while (loop_limit-- > 0);
+@@ -649,7 +667,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->intr_cfg_reg);
++	val = msm_readl_intr_cfg(pctrl, g);
+ 	/*
+ 	 * There are two bits that control interrupt forwarding to the CPU. The
+ 	 * RAW_STATUS_EN bit causes the level or edge sensed on the line to be
+@@ -674,7 +692,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 		val &= ~BIT(g->intr_raw_status_bit);
+ 
+ 	val &= ~BIT(g->intr_enable_bit);
+-	writel(val, pctrl->regs + g->intr_cfg_reg);
++	msm_writel_intr_cfg(val, pctrl, g);
+ 
+ 	clear_bit(d->hwirq, pctrl->enabled_irqs);
+ 
+@@ -693,10 +711,10 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->intr_cfg_reg);
++	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	val |= BIT(g->intr_enable_bit);
+-	writel(val, pctrl->regs + g->intr_cfg_reg);
++	msm_writel_intr_cfg(val, pctrl, g);
+ 
+ 	set_bit(d->hwirq, pctrl->enabled_irqs);
+ 
+@@ -715,12 +733,12 @@ static void msm_gpio_irq_ack(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
+-	val = readl(pctrl->regs + g->intr_status_reg);
++	val = msm_readl_intr_status(pctrl, g);
+ 	if (g->intr_ack_high)
+ 		val |= BIT(g->intr_status_bit);
+ 	else
+ 		val &= ~BIT(g->intr_status_bit);
+-	writel(val, pctrl->regs + g->intr_status_reg);
++	msm_writel_intr_status(val, pctrl, g);
+ 
+ 	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
+ 		msm_gpio_update_dual_edge_pos(pctrl, g, d);
+@@ -749,17 +767,17 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 		clear_bit(d->hwirq, pctrl->dual_edge_irqs);
+ 
+ 	/* Route interrupts to application cpu */
+-	val = readl(pctrl->regs + g->intr_target_reg);
++	val = msm_readl_intr_target(pctrl, g);
+ 	val &= ~(7 << g->intr_target_bit);
+ 	val |= g->intr_target_kpss_val << g->intr_target_bit;
+-	writel(val, pctrl->regs + g->intr_target_reg);
++	msm_writel_intr_target(val, pctrl, g);
+ 
+ 	/* Update configuration for gpio.
+ 	 * RAW_STATUS_EN is left on for all gpio irqs. Due to the
+ 	 * internal circuitry of TLMM, toggling the RAW_STATUS
+ 	 * could cause the INTR_STATUS to be set for EDGE interrupts.
+ 	 */
+-	val = readl(pctrl->regs + g->intr_cfg_reg);
++	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	if (g->intr_detection_width == 2) {
+ 		val &= ~(3 << g->intr_detection_bit);
+@@ -807,7 +825,7 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+ 	} else {
+ 		BUG();
+ 	}
+-	writel(val, pctrl->regs + g->intr_cfg_reg);
++	msm_writel_intr_cfg(val, pctrl, g);
+ 
+ 	if (test_bit(d->hwirq, pctrl->dual_edge_irqs))
+ 		msm_gpio_update_dual_edge_pos(pctrl, g, d);
+@@ -891,7 +909,7 @@ static void msm_gpio_irq_handler(struct irq_desc *desc)
+ 	 */
+ 	for_each_set_bit(i, pctrl->enabled_irqs, pctrl->chip.ngpio) {
+ 		g = &pctrl->soc->groups[i];
+-		val = readl(pctrl->regs + g->intr_status_reg);
++		val = msm_readl_intr_status(pctrl, g);
+ 		if (val & BIT(g->intr_status_bit)) {
+ 			irq_pin = irq_find_mapping(gc->irq.domain, i);
+ 			generic_handle_irq(irq_pin);
 -- 
 2.18.0
