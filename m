@@ -1,34 +1,27 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 08/11] arm: dts: omap: Update coresight bindings for
- hardware ports
-Date: Thu, 20 Sep 2018 15:01:11 -0700
-Message-ID: <20180920220111.GZ5662@atomide.com>
-References: <20180912135352.19722-1-suzuki.poulose@arm.com>
- <20180912135352.19722-9-suzuki.poulose@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 11/11] arm: dts: ste-dbx5x0: Update coresight bindings
+ for hardware port
+Date: Thu, 20 Sep 2018 15:02:11 -0700
+Message-ID: <CACRpkdZ8HnbLKMcFcROa1h6+SN9zH_QKE=1LMFiiaNUmTnzV4w@mail.gmail.com>
+References: <20180912135352.19722-1-suzuki.poulose@arm.com> <20180912135352.19722-12-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180912135352.19722-9-suzuki.poulose@arm.com>
+In-Reply-To: <20180912135352.19722-12-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, coresight@lists.linaro.org, leo.yan@linaro.org, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>
+To: "Suzuki K. Poulose" <suzuki.poulose@arm.com>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, mathieu poirier <mathieu.poirier@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Suzuki K Poulose <suzuki.poulose@arm.com> [180912 06:58]:
-> Switch to the new coresight bindings for hardware ports
-> 
-> Cc: linux-omap@vger.kernel.org
-> Cc: "Benoît Cousson" <bcousson@baylibre.com>
-> Cc: Tony Lindgren <tony@atomide.com>
+On Wed, Sep 12, 2018 at 6:54 AM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+
+> Switch to the new coresight bindings
+>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
 > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> ---
->  arch/arm/boot/dts/omap3-beagle-xm.dts | 17 ++++++++++-------
->  arch/arm/boot/dts/omap3-beagle.dts    | 17 ++++++++++-------
->  2 files changed, 20 insertions(+), 14 deletions(-)
 
-Thanks applying this into omap-for-v4.20/dt.
+Applied to the ux500 tree.
 
-Tony
+Yours,
+Linus Walleij
