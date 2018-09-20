@@ -1,180 +1,644 @@
 From: Craig <ctatlor97@gmail.com>
-Subject: Re: [PATCH v7 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
-Date: Thu, 20 Sep 2018 15:32:29 +0100
-Message-ID: <4BBA3F28-A769-4F09-86DC-1E3906C53B26@gmail.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180614151435.6471-1-ctatlor97@gmail.com> <20180614151435.6471-3-ctatlor97@gmail.com> <20180916121045.aptj6nciwskfg4st@earth.universe>
+Subject: Re: [PATCH v7 2/4] power: supply: Add support for the Qualcomm Battery Monitoring System
+Date: Thu, 20 Sep 2018 15:43:52 +0100
+Message-ID: <00EB2660-4C2A-4A40-9D60-DA8152349585@gmail.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180614151435.6471-1-ctatlor97@gmail.com> <20180614151435.6471-2-ctatlor97@gmail.com> <20180916134836.73lggsydppdhhrpf@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain;
  charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180916121045.aptj6nciwskfg4st@earth.universe>
+In-Reply-To: <20180916134836.73lggsydppdhhrpf@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Reichel <sebastian.reichel@collabora.com>
 Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Replies inline
 
-
-On 16 September 2018 13:10:45 BST, Sebastian Reichel <sebastian=2Ereichel@=
+On 16 September 2018 14:48:36 BST, Sebastian Reichel <sebastian=2Ereichel@=
 collabora=2Ecom> wrote:
 >Hi,
 >
->Sorry for my long delay in reviewing this=2E I like the binding,
->but the "qcom," specific properties should become common properties
->in
+>First of all thanks for the patch and big sorry for the long delay
+>in reviewing this=2E I did not find enough time to do it properly
+>until now :(
 >
->Documentation/devicetree/bindings/power/supply/battery=2Etxt
-Thanks for the review, what bindings for ocv would you prefer? The spreadt=
-rum ones or mine?
->and referenced via monitored-battery=2E
->
->-- Sebastian
->
->On Thu, Jun 14, 2018 at 04:14:16PM +0100, Craig Tatlor wrote:
->> Add bindings for the Qualcomm Battery Monitoring system=2E
+>On Thu, Jun 14, 2018 at 04:14:15PM +0100, Craig Tatlor wrote:
+>> This patch adds a driver for the BMS (Battery Monitoring System)
+>> block of the PM8941 PMIC, it uses a lookup table defined in the
+>> device tree to generate a capacity from the BMS supplied OCV, it
+>> then amends the coulomb counter to that to increase the accuracy
+>> of the estimated capacity=2E
 >>=20
 >> Signed-off-by: Craig Tatlor <ctatlor97@gmail=2Ecom>
->> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
+>> Reviewed-by: Linus Walleij <linus=2Ewalleij@linaro=2Eorg>
 >> ---
->>=20
->> * Changes from v6:
->>   s/celcius/celsius
->>   change uah to uAh=2E
 >>=20
 >> * Changes from v5:                                                  =20
 >                                                                      =20
->>   Mentions which values are 8 bit=2E                                  =
+>>   Uses select for REGMAP_SPMI=2E                                      =
 =20
 >                                                                      =20
 >>                                                                     =20
 >                                                                      =20
 >> * Changes from v4:                                                  =20
 >                                                                      =20
->>   Uses proper units and expands some definitions,                   =20
+>>   Cleaned up percentage interpolation function,                     =20
 >                                                                      =20
->>   along with changing vadc@ to adc@=2E   =20
+>>   uses new fixp interpolation helper,                               =20
+>                                                                      =20
+>>   added some more error cases,                                      =20
+>                                                                      =20
+>>   uses devm_power_supply_register(),                                =20
+>                                                                      =20
+>>   uses a DIV_ROUND_CLOSEST for division and                         =20
+>                                                                      =20
+>>   uses micro(volts / amp hours) instead of                          =20
+>                                                                      =20
+>>   milli (volts / amp hours)=2E =20
 >>=20
->>  =2E=2E=2E/bindings/power/supply/qcom_bms=2Etxt        | 92
->+++++++++++++++++++
->>  1 file changed, 92 insertions(+)
->>  create mode 100644
->Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
+>>  drivers/power/supply/Kconfig    |   9 +
+>>  drivers/power/supply/Makefile   |   1 +
+>>  drivers/power/supply/qcom_bms=2Ec | 487
+>++++++++++++++++++++++++++++++++
+>>  3 files changed, 497 insertions(+)
+>>  create mode 100644 drivers/power/supply/qcom_bms=2Ec
 >>=20
->> diff --git
->a/Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
->b/Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
+>> diff --git a/drivers/power/supply/Kconfig
+>b/drivers/power/supply/Kconfig
+>> index 428b426842f4=2E=2E75f2f375f992 100644
+>> --- a/drivers/power/supply/Kconfig
+>> +++ b/drivers/power/supply/Kconfig
+>> @@ -82,6 +82,15 @@ config BATTERY_ACT8945A
+>>  	  Say Y here to enable support for power supply provided by
+>>  	  Active-semi ActivePath ACT8945A charger=2E
+>> =20
+>> +config BATTERY_BMS
+>> +	tristate "Qualcomm Battery Monitoring System driver"
+>> +	depends on MFD_SPMI_PMIC || COMPILE_TEST
+>> +	depends on OF
+>> +	select REGMAP_SPMI
+>> +	help
+>> +	  Say Y to include support for the Battery Monitoring hardware
+>> +	  found in some Qualcomm PM series PMICs=2E
+>> +
+>>  config BATTERY_CPCAP
+>>  	tristate "Motorola CPCAP PMIC battery driver"
+>>  	depends on MFD_CPCAP && IIO
+>> diff --git a/drivers/power/supply/Makefile
+>b/drivers/power/supply/Makefile
+>> index e83aa843bcc6=2E=2E04204174b047 100644
+>> --- a/drivers/power/supply/Makefile
+>> +++ b/drivers/power/supply/Makefile
+>> @@ -21,6 +21,7 @@ obj-$(CONFIG_BATTERY_88PM860X)	+=3D
+>88pm860x_battery=2Eo
+>>  obj-$(CONFIG_BATTERY_ACT8945A)	+=3D act8945a_charger=2Eo
+>>  obj-$(CONFIG_BATTERY_AXP20X)	+=3D axp20x_battery=2Eo
+>>  obj-$(CONFIG_CHARGER_AXP20X)	+=3D axp20x_ac_power=2Eo
+>> +obj-$(CONFIG_BATTERY_BMS)	+=3D qcom_bms=2Eo
+>>  obj-$(CONFIG_BATTERY_CPCAP)	+=3D cpcap-battery=2Eo
+>>  obj-$(CONFIG_BATTERY_DS2760)	+=3D ds2760_battery=2Eo
+>>  obj-$(CONFIG_BATTERY_DS2780)	+=3D ds2780_battery=2Eo
+>> diff --git a/drivers/power/supply/qcom_bms=2Ec
+>b/drivers/power/supply/qcom_bms=2Ec
 >> new file mode 100644
->> index 000000000000=2E=2Edc0a9ab9aa64
+>> index 000000000000=2E=2E718fd745c0f7
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
->> @@ -0,0 +1,92 @@
->> +Qualcomm Battery Monitoring System
+>> +++ b/drivers/power/supply/qcom_bms=2Ec
+>> @@ -0,0 +1,487 @@
+>> +// SPDX-License-Identifier: GPL
 >> +
->> +The Qualcomm Battery Monitoring System is found inside of Qualcomm
->PM8941
->> +PMICs=2E It provides open circuit voltage (OCV) and coulomb counter
->registers
->> +that allow the OS to infer a capacity level=2E
+>> +/*
+>> + * Qualcomm Battery Monitoring System driver
+>> + *
+>> + * Copyright (C) 2018 Craig Tatlor <ctatlor97@gmail=2Ecom>
+>> + */
 >> +
->> +Required properties:
->> +- compatible:                   Should contain "qcom,pm8941-bms"=2E
->> +- reg:                          Specifies the SPMI address and
->length of the
->> +				controller's registers=2E
->> +- interrupts:                   OCV threshold interrupt=2E
->> +- io-channels:                  Should contain IIO channel specifier
->for the
->> +				ADC channel that reports battery temperature=2E
->> +- io-channel-names:             Should contain "temp"=2E
->> +- qcom,fcc-temp-legend-celsius: An 8 bit array containing the
->temperature,
->> +				in degC, for each column of the full charge
->> +				capacity lookup table=2E
->> +- qcom,fcc-lut-microamp-hours:  An array of full charge capacity
->values in uAh,
->> +				one entry for each temperature defined in in
->> +				qcom,fcc-temp-legend-celsius=2E
->> +- qcom,ocv-temp-legend-celsius: An 8 bit array containing the
->temperature,
->> +				in degC, for each column of the OCV lookup
->> +				table=2E
->> +- qcom,ocv-capacity-legend:     An 8 bit array containing the
->capacity for each
->> +				row of the OCV lookup table=2E
->> +- qcom,ocv-lut-microvolt:       An array of OCV values in uV, one
->entry for each
->> +				capacity defined in qcom,ocv-capacity-legend=2E
+>> +#include <linux/module=2Eh>
+>> +#include <linux/fixp-arith=2Eh>
+>> +#include <linux/platform_device=2Eh>
+>> +#include <linux/power_supply=2Eh>
+>> +#include <linux/slab=2Eh>
+>> +#include <linux/bitops=2Eh>
+>> +#include <linux/of=2Eh>
+>> +#include <linux/of_platform=2Eh>
+>> +#include <linux/regmap=2Eh>
+>> +#include <linux/irq=2Eh>
+>> +#include <linux/interrupt=2Eh>
+>> +#include <linux/iio/consumer=2Eh>
 >> +
->> +Example:
->> +		pm8941_vadc: adc@3100 {
->> +			compatible =3D "qcom,spmi-vadc";
->> +			reg =3D <0x3100>;
->> +			interrupts =3D <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
->> +			#address-cells =3D <1>;
->> +			#size-cells =3D <0>;
->> +			#io-channel-cells =3D <1>;
+>> +#define REG_BMS_OCV_FOR_SOC_DATA0	0x90
+>> +#define REG_BMS_SHDW_CC_DATA0		0xA8
+>> +#define REG_BMS_CC_DATA_CTL		0x42
+>> +#define REG_BMS_CC_CLEAR_CTL		0x4
 >> +
->> +			bat_temp {
->> +				reg =3D <VADC_LR_MUX1_BAT_THERM>;
->> +			};
->> +		};
+>> +#define BMS_HOLD_OREG_DATA		BIT(0)
+>> +#define BMS_CLEAR_SHDW_CC		BIT(6)
 >> +
->> +		bms@4000 {
->> +			compatible =3D "qcom,pm8941-bms";
->> +			reg =3D <0x4000>;
->> +			interrupts =3D <0x0 0x40 0x4 IRQ_TYPE_EDGE_RISING>;
->> +			interrupt-names =3D "ocv_thr";
+>> +#define BMS_CC_READING_RESOLUTION_N	542535
+>> +#define BMS_CC_READING_RESOLUTION_D	10000
+>> +#define BMS_CC_READING_TICKS		56
+>> +#define BMS_SLEEP_CLK_HZ		32764
 >> +
->> +			io-channels =3D <&pm8941_vadc VADC_LR_MUX1_BAT_THERM>;
->> +			io-channel-names =3D "temp";
+>> +#define SECONDS_PER_HOUR		3600
+>> +#define TEMPERATURE_COLS		5
+>> +#define MAX_CAPACITY_ROWS		50
 >> +
->> +			qcom,fcc-temp-legend-celsius =3D /bits/ 8 <(-10) 0 25 50 65>;
->> +			qcom,fcc-lut-microamp-hours =3D <3230000 3260000 3380000 3410000
->3360000>;
->> +
->> +			qcom,ocv-capacity-legend =3D /bits/ 8 <100 95 90 85 80 75
->> +							     70 65 60 55 50 45
->> +							     40 35 30 25 20 15
->> +							     10 9 8 7 6 5 4 3 2
->> +							     1 0>;
->> +			qcom,ocv-temp-legend-celsius =3D /bits/ 8 <(-10) 0 25 50 65>;
->> +			qcom,ocv-lut-microvolt =3D <43050000 43050000 43030000 42990000
->42950000
->> +						  42770000 42570000 42550000 42510000 42310000
->> +						  42180000 41980000 41970000 41920000 41720000
->> +						  41590000 41390000 41450000 41400000 41200000
->> +						  41010000 40810000 40920000 40890000 40690000
->> +						  40480000 40280000 40440000 40420000 40220000
->> +						  40040000 39840000 40010000 39980000 39780000
->> +						  39620000 39420000 39550000 39560000 39360000
->> +						  39210000 39010000 39090000 39160000 38960000
->> +						  38830000 38630000 38740000 38790000 38590000
->> +						  38550000 38350000 38440000 38430000 38230000
->> +						  38310000 38110000 38230000 38180000 37980000
->> +						  38190000 37990000 38040000 38000000 37800000
->> +						  38060000 37860000 37900000 37840000 37640000
->> +						  37890000 37690000 37770000 37660000 37460000
->> +						  37720000 37520000 37560000 37450000 37250000
->> +						  37480000 37280000 37290000 37250000 37050000
->> +						  37240000 37040000 37020000 36990000 36790000
->> +						  37030000 36830000 36730000 36700000 36500000
->> +						  36940000 36740000 36670000 36640000 36440000
->> +						  36850000 36650000 36600000 36590000 36390000
->> +						  36750000 36550000 36520000 36550000 36350000
->> +						  36690000 36490000 36380000 36400000 36200000
->> +						  36460000 36260000 36180000 36120000 35920000
->> +						  36080000 35880000 35680000 35640000 35440000
->> +						  35510000 35310000 35050000 35020000 34820000
->> +						  34730000 34530000 34300000 34250000 34050000
->> +						  33870000 33670000 33040000 32820000 32620000
->> +						  30000000 30000000 30000000 30000000 30000000>;
->> +		};
->> +	};
+>> +/* lookup table for ocv -> capacity conversion */
+>> +struct bms_ocv_lut {
+>> +	int rows;
+>> +	s8 temp_legend[TEMPERATURE_COLS];
+>> +	u8 capacity_legend[MAX_CAPACITY_ROWS];
+>> +	u32 lut[MAX_CAPACITY_ROWS][TEMPERATURE_COLS];
 >> +};
->> --=20
->> 2=2E17=2E0
->>=20
+>> +
+>> +/* lookup table for battery temperature -> fcc conversion */
+>> +struct bms_fcc_lut {
+>> +	s8 temp_legend[TEMPERATURE_COLS];
+>> +	u32 lut[TEMPERATURE_COLS];
+>> +};
+>> +
+>> +struct bms_device_info {
+>> +	struct device *dev;
+>> +	struct regmap *regmap;
+>> +	struct bms_ocv_lut ocv_lut;
+>> +	struct power_supply_desc bat_desc;
+>> +	struct bms_fcc_lut fcc_lut;
+>> +	struct iio_channel *adc;
+>> +	struct mutex bms_output_lock;
+>> +	u32 base_addr;
+>> +
+>> +	int ocv_thr_irq;
+>> +	u32 ocv;
+>> +};
+>> +
+>> +static bool between(int left, int right, int val)
+>> +{
+>> +	if (left <=3D val && val <=3D right)
+>> +		return true;
+>> +
+>> +	if (left >=3D val && val >=3D right)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static int interpolate_capacity(int temp, u32 ocv,
+>> +				struct bms_ocv_lut *ocv_lut)
+>> +{
+>> +	int pcj_minus_one =3D 0, pcj =3D 0, i2 =3D 0, i3 =3D 0, i, j;
+>> +
+>> +	for (j =3D 0; j < TEMPERATURE_COLS; j++)
+>> +		if (temp <=3D ocv_lut->temp_legend[j])
+>> +			break;
+>> +
+>> +	if (ocv >=3D ocv_lut->lut[0][j])
+>> +		return ocv_lut->capacity_legend[0];
+>> +
+>> +	if (ocv <=3D ocv_lut->lut[ocv_lut->rows-1][j-1])
+>> +		return ocv_lut->capacity_legend[ocv_lut->rows-1];
+>> +
+>> +	for (i =3D 0; i < ocv_lut->rows-1; i++) {
+>> +		if (between(ocv_lut->lut[i][j],
+>> +			    ocv_lut->lut[i+1][j], ocv))
+>> +			i2 =3D i;
+>> +
+>> +		if (between(ocv_lut->lut[i][j-1],
+>> +			    ocv_lut->lut[i+1][j-1], ocv))
+>> +			i3 =3D i;
+>> +	}
+>> +
+>> +	/* interpolate two capacities */
+>> +	pcj =3D fixp_linear_interpolate(ocv_lut->lut[i2][j],
+>> +				      ocv_lut->capacity_legend[i2],
+>> +				      ocv_lut->lut[i2+1][j],
+>> +				      ocv_lut->capacity_legend[i2+1],
+>> +				      ocv);
+>> +
+>> +	pcj_minus_one =3D fixp_linear_interpolate(ocv_lut->lut[i3][j-1],
+>> +						ocv_lut->capacity_legend[i3],
+>> +						ocv_lut->lut[i3+1][j-1],
+>> +						ocv_lut->capacity_legend[i3+1],
+>> +						ocv);
+>> +
+>> +	/* interpolate them with the battery temperature */
+>> +	return fixp_linear_interpolate(ocv_lut->temp_legend[j-1],
+>> +				       pcj_minus_one,
+>> +				       ocv_lut->temp_legend[j],
+>> +				       pcj,
+>> +				       temp);
+>> +}
+>> +
+>> +static int interpolate_fcc(int temp, struct bms_fcc_lut *fcc_lut)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i =3D 0; i < TEMPERATURE_COLS; i++)
+>> +		if (temp <=3D fcc_lut->temp_legend[i])
+>> +			break;
+>> +
+>> +	return fixp_linear_interpolate(fcc_lut->temp_legend[i-1],
+>> +			     fcc_lut->lut[i-1],
+>> +			     fcc_lut->temp_legend[i],
+>> +			     fcc_lut->lut[i],
+>> +			     temp);
+>> +}
+>> +
+>> +static int bms_lock_output_data(struct bms_device_info *di)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+>> +				 REG_BMS_CC_DATA_CTL,
+>> +				 BMS_HOLD_OREG_DATA, BMS_HOLD_OREG_DATA);
+>> +	if (ret) {
+>> +		dev_err(di->dev, "failed to lock bms output: %d", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Sleep for at least 100 microseconds here to make sure
+>> +	 * there has been at least three cycles of the sleep clock
+>> +	 * so that the registers are correctly locked=2E
+>> +	 */
+>> +	usleep_range(100, 1000);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bms_unlock_output_data(struct bms_device_info *di)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+>> +				 REG_BMS_CC_DATA_CTL,
+>> +				 BMS_HOLD_OREG_DATA, 0);
+>> +	if (ret) {
+>> +		dev_err(di->dev, "failed to unlock bms output: %d", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int bms_read_ocv(struct bms_device_info *di, u32 *ocv)
+>> +{
+>> +	int ret;
+>> +	u16 read_ocv;
+>> +
+>> +	mutex_lock(&di->bms_output_lock);
+>> +
+>> +	ret =3D bms_lock_output_data(di);
+>> +	if (ret)
+>> +		goto err_lock;
+>> +
+>> +	ret =3D regmap_bulk_read(di->regmap, di->base_addr+
+>> +			       REG_BMS_OCV_FOR_SOC_DATA0, &read_ocv, 2);
+>> +	if (ret) {
+>> +		dev_err(di->dev, "open circuit voltage read failed: %d", ret);
+>> +		goto err_read;
+>> +	}
+>> +
+>> +	dev_dbg(di->dev, "read open circuit voltage of: %d mv", read_ocv);
+>> +
+>> +
+>
+>one empty line is enough=2E
+Will fix
+>
+>> +	*ocv =3D read_ocv * 1000;
+>> +
+>> +err_read:
+>> +	bms_unlock_output_data(di);
+>> +
+>> +err_lock:
+>> +	mutex_unlock(&di->bms_output_lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int bms_read_cc(struct bms_device_info *di, s64 *cc_uah)
+>> +{
+>> +	int ret;
+>> +	s64 cc_raw_s36, cc_raw, cc_uv, cc_pvh;
+>> +
+>> +	mutex_lock(&di->bms_output_lock);
+>> +
+>> +	ret =3D bms_lock_output_data(di);
+>> +	if (ret)
+>> +		goto err_lock;
+>> +
+>> +	ret =3D regmap_bulk_read(di->regmap, di->base_addr +
+>> +			       REG_BMS_SHDW_CC_DATA0,
+>> +			       &cc_raw_s36, 5);
+>> +	if (ret) {
+>> +		dev_err(di->dev, "coulomb counter read failed: %d", ret);
+>> +		goto err_read;
+>> +	}
+>> +
+>> +	ret =3D bms_unlock_output_data(di);
+>> +	if (ret)
+>> +		goto err_lock;
+>> +
+>> +	mutex_unlock(&di->bms_output_lock);
+>> +
+>> +	cc_raw =3D sign_extend32(cc_raw_s36, 28);
+>> +
+>> +	/* convert raw to uv */
+>> +	cc_uv =3D div_s64(cc_raw * BMS_CC_READING_RESOLUTION_N,
+>> +			BMS_CC_READING_RESOLUTION_D);
+>> +
+>> +	/* convert uv to pvh */
+>> +	cc_pvh =3D div_s64(cc_uv * BMS_CC_READING_TICKS * 100000,
+>> +			 BMS_SLEEP_CLK_HZ * SECONDS_PER_HOUR);
+>> +
+>> +	/* divide by impedance */
+>> +	*cc_uah =3D div_s64(cc_pvh, 10000);
+>> +
+>> +	dev_dbg(di->dev, "read coulomb counter value of: %lld uah",
+>*cc_uah);
+>> +
+>> +	return 0;
+>> +
+>> +err_read:
+>> +	bms_unlock_output_data(di);
+>> +
+>> +err_lock:
+>> +	mutex_unlock(&di->bms_output_lock);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void bms_reset_cc(struct bms_device_info *di)
+>> +{
+>> +	int ret;
+>> +
+>> +	mutex_lock(&di->bms_output_lock);
+>> +
+>> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+>> +				 REG_BMS_CC_CLEAR_CTL,
+>> +				 BMS_CLEAR_SHDW_CC,
+>> +				 BMS_CLEAR_SHDW_CC);
+>> +	if (ret) {
+>> +		dev_err(di->dev, "coulomb counter reset failed: %d", ret);
+>> +		goto err_lock;
+>> +	}
+>> +
+>> +	/* wait at least three sleep cycles for cc to reset */
+>> +	usleep_range(100, 1000);
+>> +
+>> +	ret =3D regmap_update_bits(di->regmap, di->base_addr +
+>> +				 REG_BMS_CC_CLEAR_CTL,
+>> +				 BMS_CLEAR_SHDW_CC, 0);
+>> +	if (ret)
+>> +		dev_err(di->dev, "coulomb counter re-enable failed: %d", ret);
+>> +
+>> +err_lock:
+>> +	mutex_unlock(&di->bms_output_lock);
+>> +}
+>> +
+>> +static int bms_calculate_capacity(struct bms_device_info *di, int
+>*capacity)
+>> +{
+>> +	unsigned long fcc;
+>> +	int ret, temp, ocv_capacity, temp_degc;
+>> +	s64 cc =3D 0;
+>> +
+>> +	ret =3D iio_read_channel_raw(di->adc, &temp);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "failed to read temperature: %d", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	temp_degc =3D DIV_ROUND_CLOSEST(temp, 1000);
+>> +
+>> +	ret =3D bms_read_cc(di, &cc);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "failed to read coulomb counter: %d", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	/* interpolate capacity from open circuit voltage */
+>> +	ocv_capacity =3D interpolate_capacity(temp_degc, di->ocv,
+>> +					    &di->ocv_lut);
+>> +
+>> +	/* interpolate the full charge capacity from temperature */
+>> +	fcc =3D interpolate_fcc(temp_degc, &di->fcc_lut);
+>> +
+>> +	/* append coloumb counter to capacity */
+>> +	*capacity =3D DIV_ROUND_CLOSEST(fcc * ocv_capacity, 100);
+>> +	*capacity =3D div_s64((*capacity - cc) * 100, fcc);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +
+>> +
+>
+>one empty line is enough=2E=20
+Will fix
+>
+>> +/*
+>> + * Return power_supply property
+>> + */
+>> +static int bms_get_property(struct power_supply *psy,
+>> +				   enum power_supply_property psp,
+>> +				   union power_supply_propval *val)
+>> +{
+>> +	struct bms_device_info *di =3D power_supply_get_drvdata(psy);
+>> +	int ret;
+>> +
+>> +	switch (psp) {
+>> +	case POWER_SUPPLY_PROP_CAPACITY:
+>> +		ret =3D bms_calculate_capacity(di, &val->intval);
+>> +		break;
+>> +	default:
+>> +		ret =3D -EINVAL;
+>> +		break;
+>> +	}
+>> +
+>> +	if (val->intval =3D=3D INT_MAX || val->intval =3D=3D INT_MIN)
+>> +		ret =3D -EINVAL;
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static enum power_supply_property bms_props[] =3D {
+>> +	POWER_SUPPLY_PROP_CAPACITY,
+>> +};
+>
+>Why does the driver not expose the following battery information?
+>
+>temperature info via POWER_SUPPLY_PROP_TEMP
+>ocv info via POWER_SUPPLY_PROP_VOLTAGE_OCV
+>CC info via POWER_SUPPLY_PROP_CHARGE_COUNTER
+>max current via POWER_SUPPLY_PROP_CURRENT_MAX
 
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+1=2E This is handled in the tsens driver iirc
+2=2E Ocv is very inaccurate as it is only updated when device uses a very =
+low amount of power (<10ma)=20
+3=2E This isn't possible (unless you want to just give out the value anywa=
+y) due to the way the driver tracks the cc (resets on every ocv update)
+4=2Ethis is done in the smbb driver, the BMS is only a fuelguage and not a=
+ fully blown charging ic
+>
+>> +static irqreturn_t bms_ocv_thr_irq_handler(int irq, void *dev_id)
+>> +{
+>> +	struct bms_device_info *di =3D dev_id;
+>> +
+>> +	if (bms_read_ocv(di, &di->ocv) < 0)
+>> +		return IRQ_HANDLED;
+>> +
+>> +	bms_reset_cc(di);
+>> +	return IRQ_HANDLED;
+>> +}
+>
+>You want to call power_supply_changed() here to notify userspace=2E
+This doesn't mean battery is charged, just means ocv was updated (device u=
+sed < 10ma of power)
+>
+>> +static int bms_probe(struct platform_device *pdev)
+>> +{
+>> +	struct power_supply_config psy_cfg =3D {};
+>> +	struct bms_device_info *di;
+>> +	struct power_supply *bat;
+>> +	int ret;
+>> +
+>> +	di =3D devm_kzalloc(&pdev->dev, sizeof(*di), GFP_KERNEL);
+>> +	if (!di)
+>> +		return -ENOMEM;
+>> +
+>> +	di->dev =3D &pdev->dev;
+>> +
+>> +	di->regmap =3D dev_get_regmap(pdev->dev=2Eparent, NULL);
+>> +	if (!di->regmap) {
+>> +		dev_err(di->dev, "Unable to get regmap");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	di->adc =3D devm_iio_channel_get(&pdev->dev, "temp");
+>> +	if (IS_ERR(di->adc))
+>> +		return PTR_ERR(di->adc);
+>> +
+>> +	ret =3D of_property_read_u32(di->dev->of_node, "reg",
+>&di->base_addr);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret =3D of_property_read_u8_array(di->dev->of_node,
+>> +						 "qcom,ocv-temp-legend-celsius",
+>> +						 (u8 *)di->ocv_lut=2Etemp_legend,
+>> +						 TEMPERATURE_COLS);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "no open circuit voltage temperature legend
+>found");
+>> +		return ret;
+>> +	}
+>> +
+>> +	di->ocv_lut=2Erows =3D
+>of_property_read_variable_u8_array(di->dev->of_node,
+>> +						 "qcom,ocv-capacity-legend",
+>> +						 di->ocv_lut=2Ecapacity_legend, 0,
+>> +						 MAX_CAPACITY_ROWS);
+>> +	if (di->ocv_lut=2Erows < 0) {
+>> +		dev_err(di->dev, "no open circuit voltage capacity legend found");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret =3D of_property_read_variable_u32_array(di->dev->of_node,
+>> +						  "qcom,ocv-lut-microvolt",
+>> +						  (u32 *)di->ocv_lut=2Elut,
+>> +						  TEMPERATURE_COLS,
+>> +						  TEMPERATURE_COLS *
+>> +						  MAX_CAPACITY_ROWS);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "no open circuit voltage lut array found");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret =3D of_property_read_u8_array(di->dev->of_node,
+>> +						 "qcom,fcc-temp-legend-celsius",
+>> +						 (u8 *)di->fcc_lut=2Etemp_legend,
+>> +						 TEMPERATURE_COLS);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "no full charge capacity temperature legend
+>found");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret =3D of_property_read_u32_array(di->dev->of_node,
+>> +						  "qcom,fcc-lut-microamp-hours",
+>> +						  di->fcc_lut=2Elut,
+>> +						  TEMPERATURE_COLS);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "no full charge capacity lut array found");
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret =3D bms_read_ocv(di, &di->ocv);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "failed to read initial open circuit voltage:
+>%d",
+>> +			ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	mutex_init(&di->bms_output_lock);
+>> +
+>> +	di->ocv_thr_irq =3D platform_get_irq_byname(pdev, "ocv_thr");
+>> +
+>> +	ret =3D devm_request_threaded_irq(di->dev, di->ocv_thr_irq, NULL,
+>> +					bms_ocv_thr_irq_handler,
+>> +					IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+>> +					pdev->name, di);
+>> +	if (ret < 0) {
+>> +		dev_err(di->dev, "failed to request handler for open circuit
+>voltage threshold IRQ");
+>> +		return ret;
+>> +	}
+>> +
+>> +
+>
+>one empty line is enough=2E
+>
+>> +	di->bat_desc=2Ename =3D "bms";
+>> +	di->bat_desc=2Etype =3D POWER_SUPPLY_TYPE_BATTERY;
+>> +	di->bat_desc=2Eproperties =3D bms_props;
+>> +	di->bat_desc=2Enum_properties =3D ARRAY_SIZE(bms_props);
+>> +	di->bat_desc=2Eget_property =3D bms_get_property;
+>> +
+>> +	psy_cfg=2Edrv_data =3D di;
+>
+>psy_cfg=2Eof_node =3D pdev->dev=2Eof_node;
+>
+>> +	bat =3D devm_power_supply_register(di->dev, &di->bat_desc, &psy_cfg);
+>> +
+>> +	return PTR_ERR_OR_ZERO(bat);
+>> +}
+>> +
+>> +static const struct of_device_id bms_of_match[] =3D {
+>> +	{=2Ecompatible =3D "qcom,pm8941-bms", },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, bms_of_match);
+>> +
+>> +static struct platform_driver bms_driver =3D {
+>> +	=2Eprobe =3D bms_probe,
+>> +	=2Edriver =3D {
+>> +		=2Ename =3D "qcom-bms",
+>> +		=2Eof_match_table =3D of_match_ptr(bms_of_match),
+>> +	},
+>> +};
+>> +module_platform_driver(bms_driver);
+>> +
+>> +MODULE_AUTHOR("Craig Tatlor <ctatlor97@gmail=2Ecom>");
+>> +MODULE_DESCRIPTION("Qualcomm BMS driver");
+>> +MODULE_LICENSE("GPL");
+>
+>Apart from the things above I would like to see the information
+>about the battery cell itself being moved to 'struct
+>power_supply_battery_info', see also my comment in the DT bindings=2E
+Sure, will look into it
+>
+>-- Sebastian
