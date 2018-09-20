@@ -1,452 +1,100 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH v2 2/2] phy: cadence: Add driver for Sierra PHY
-Date: Thu, 20 Sep 2018 15:40:07 +0530
-Message-ID: <80328703-d99d-599f-956f-ed13cb8313a7@ti.com>
-References: <1536244971-26714-1-git-send-email-adouglas@cadence.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
+Date: Thu, 20 Sep 2018 10:38:53 +0000
+Message-ID: <33eac426-cbb7-f899-5a35-aea28f8e5dc4@nxp.com>
+References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
+ <7d7646dc-9d0b-013d-75d7-a6cb4453f41f@arm.com>
+ <fd8ab351-46aa-f73e-593b-502a57de1975@nxp.com>
+ <39211e7a-034b-cdca-f182-1b6f6e5fbc53@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536244971-26714-1-git-send-email-adouglas@cadence.com>
+In-Reply-To: <39211e7a-034b-cdca-f182-1b6f6e5fbc53@arm.com>
 Content-Language: en-US
+Content-ID: <62B758932A5F144AB2B7FD7494933B5D@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Douglas <adouglas@cadence.com>, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Madalin-cristian Bucur <madalin.bucur@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 06 September 2018 08:12 PM, Alan Douglas wrote:
-> Add a Sierra PHY driver with PCIe and USB support.
-> 
-> The PHY has multiple lanes, which can be configured into
-> groups, and a generic PHY device is created for each group.
-> 
-> There are two resets controlling the overall PHY block, one
-> to enable the APB interface for programming registers, and
-> another to enable the PHY itself.  Additionally there are
-> resets for each PHY lane.
-> 
-> The PHY can be configured in hardware to read register
-> settings from ROM, or they can be written by the driver.
-> 
-> The sequence of operation on startup is to enable the APB
-> bus, write the PHY registers (if required)  for each lane
-> group, and then enable the PHY.  Each group of lanes
-> can then be individually controlled using the power_on()/
-> power_off() function for that generic PHY
-> 
-> Signed-off-by: Alan Douglas <adouglas@cadence.com>
-> ---
->  drivers/phy/Kconfig               |   1 +
->  drivers/phy/Makefile              |   1 +
->  drivers/phy/cadence/Kconfig       |   9 +
->  drivers/phy/cadence/Makefile      |   2 +
->  drivers/phy/cadence/cdns-sierra.c | 385 ++++++++++++++++++++++++++++++++++++++
->  5 files changed, 398 insertions(+)
->  create mode 100644 drivers/phy/cadence/Kconfig
->  create mode 100644 drivers/phy/cadence/Makefile
->  create mode 100644 drivers/phy/cadence/cdns-sierra.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 5c8d452..cc47f85 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -43,6 +43,7 @@ config PHY_XGENE
->  source "drivers/phy/allwinner/Kconfig"
->  source "drivers/phy/amlogic/Kconfig"
->  source "drivers/phy/broadcom/Kconfig"
-> +source "drivers/phy/cadence/Kconfig"
->  source "drivers/phy/hisilicon/Kconfig"
->  source "drivers/phy/lantiq/Kconfig"
->  source "drivers/phy/marvell/Kconfig"
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 84e3bd9..ba48acd 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
->  obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
->  obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
->  obj-y					+= broadcom/	\
-> +					   cadence/	\
->  					   hisilicon/	\
->  					   marvell/	\
->  					   motorola/	\
-> diff --git a/drivers/phy/cadence/Kconfig b/drivers/phy/cadence/Kconfig
-> new file mode 100644
-> index 0000000..098df0f
-> --- /dev/null
-> +++ b/drivers/phy/cadence/Kconfig
-> @@ -0,0 +1,9 @@
-> +#
-> +# Phy drivers for Cadence PHYs
-> +#
-> +config CDNS_SIERRA_PHY
-> +	tristate "Cadence Sierra PHY Driver"
-> +	depends on OF && HAS_IOMEM && RESET_CONTROLLER
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support the Cadence Sierra PHY driver
-> diff --git a/drivers/phy/cadence/Makefile b/drivers/phy/cadence/Makefile
-> new file mode 100644
-> index 0000000..c396c69
-> --- /dev/null
-> +++ b/drivers/phy/cadence/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +obj-$(CONFIG_CDNS_SIERRA_PHY)		+= cdns-sierra.o
-> diff --git a/drivers/phy/cadence/cdns-sierra.c b/drivers/phy/cadence/cdns-sierra.c
-> new file mode 100644
-> index 0000000..83568b4
-> --- /dev/null
-> +++ b/drivers/phy/cadence/cdns-sierra.c
-> @@ -0,0 +1,385 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Cadence Sierra PHY Driver
-> + *
-> + * Copyright (c) 2018 Cadence Design Systems
-> + * Author: Alan Douglas <adouglas@cadence.com>
-> + *
-> + */
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/slab.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +/* PHY register offsets */
-> +#define SIERRA_PHY_PLL_CFG		(0xc00e << 2)
-> +#define SIERRA_DET_STANDEC_A		(0x4000 << 2)
-> +#define SIERRA_DET_STANDEC_B		(0x4001 << 2)
-> +#define SIERRA_DET_STANDEC_C		(0x4002 << 2)
-> +#define SIERRA_DET_STANDEC_D		(0x4003 << 2)
-> +#define SIERRA_DET_STANDEC_E		(0x4004 << 2)
-> +#define SIERRA_PSM_LANECAL		(0x4008 << 2)
-> +#define SIERRA_PSM_DIAG			(0x4015 << 2)
-> +#define SIERRA_PSC_TX_A0		(0x4028 << 2)
-> +#define SIERRA_PSC_TX_A1		(0x4029 << 2)
-> +#define SIERRA_PSC_TX_A2		(0x402A << 2)
-> +#define SIERRA_PSC_TX_A3		(0x402B << 2)
-> +#define SIERRA_PSC_RX_A0		(0x4030 << 2)
-> +#define SIERRA_PSC_RX_A1		(0x4031 << 2)
-> +#define SIERRA_PSC_RX_A2		(0x4032 << 2)
-> +#define SIERRA_PSC_RX_A3		(0x4033 << 2)
-> +#define SIERRA_PLLCTRL_SUBRATE		(0x403A << 2)
-> +#define SIERRA_PLLCTRL_GEN_D		(0x403E << 2)
-> +#define SIERRA_DRVCTRL_ATTEN		(0x406A << 2)
-> +#define SIERRA_CLKPATHCTRL_TMR		(0x4081 << 2)
-> +#define SIERRA_RX_CREQ_FLTR_A_MODE1	(0x4087 << 2)
-> +#define SIERRA_RX_CREQ_FLTR_A_MODE0	(0x4088 << 2)
-> +#define SIERRA_CREQ_CCLKDET_MODE01	(0x408E << 2)
-> +#define SIERRA_RX_CTLE_MAINTENANCE	(0x4091 << 2)
-> +#define SIERRA_CREQ_FSMCLK_SEL		(0x4092 << 2)
-> +#define SIERRA_CTLELUT_CTRL		(0x4098 << 2)
-> +#define SIERRA_DFE_ECMP_RATESEL		(0x40C0 << 2)
-> +#define SIERRA_DFE_SMP_RATESEL		(0x40C1 << 2)
-> +#define SIERRA_DEQ_VGATUNE_CTRL		(0x40E1 << 2)
-> +#define SIERRA_TMRVAL_MODE3		(0x416E << 2)
-> +#define SIERRA_TMRVAL_MODE2		(0x416F << 2)
-> +#define SIERRA_TMRVAL_MODE1		(0x4170 << 2)
-> +#define SIERRA_TMRVAL_MODE0		(0x4171 << 2)
-> +#define SIERRA_PICNT_MODE1		(0x4174 << 2)
-> +#define SIERRA_CPI_OUTBUF_RATESEL	(0x417C << 2)
-> +#define SIERRA_LFPSFILT_NS		(0x418A << 2)
-> +#define SIERRA_LFPSFILT_RD		(0x418B << 2)
-> +#define SIERRA_LFPSFILT_MP		(0x418C << 2)
-> +#define SIERRA_SDFILT_H2L_A		(0x4191 << 2)
-> +
-> +#define SIERRA_MACRO_ID			0x00007364
-> +#define SIERRA_MAX_LANES		4
-> +
-> +struct cdns_sierra_inst {
-> +	struct phy *phy;
-> +	u32 phy_type;
-> +	u32 num_lanes;
-> +	u32 mlane;
-> +	struct reset_control *lnk_rst;
-> +};
-> +
-> +struct cdns_reg_pairs {
-> +	u16 val;
-> +	u32 off;
-> +};
-> +
-> +struct cdns_sierra_data {
-> +		u32 id_value;
-> +		u32 pcie_regs;
-> +		u32 usb_regs;
-> +		struct cdns_reg_pairs *pcie_vals;
-> +		struct cdns_reg_pairs  *usb_vals;
-> +};
-> +
-> +struct cdns_sierra_phy {
-> +	struct device *dev;
-> +	void __iomem *base;
-> +	struct cdns_sierra_data *init_data;
-> +	struct cdns_sierra_inst phys[SIERRA_MAX_LANES];
-> +	struct reset_control *phy_rst;
-> +	struct reset_control *apb_rst;
-> +	struct clk *clk;
-> +	struct phy *pcie_phy;
-> +	bool autoconf;
-> +};
-> +
-> +static void cdns_sierra_phy_init(struct phy *gphy)
-> +{
-> +	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-> +	struct cdns_sierra_phy *phy = dev_get_drvdata(gphy->dev.parent);
-> +	int i, j;
-> +	struct cdns_reg_pairs *vals;
-> +	u32 num_regs;
-> +
-> +	if (ins->phy_type == PHY_TYPE_PCIE) {
-> +		num_regs = phy->init_data->pcie_regs;
-> +		vals = phy->init_data->pcie_vals;
-> +	} else if (ins->phy_type == PHY_TYPE_USB3) {
-> +		num_regs = phy->init_data->usb_regs;
-> +		vals = phy->init_data->usb_vals;
-> +	} else {
-> +		return;
-> +	}
-> +	for (i = 0; i < ins->num_lanes; i++)
-> +		for (j = 0; j < num_regs ; j++)
-> +			writel(vals[j].val, phy->base +
-> +				vals[j].off + (i + ins->mlane) * 0x800);
-> +}
-> +
-> +static int cdns_sierra_phy_on(struct phy *gphy)
-> +{
-> +	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-> +	int ret;
-> +
-> +	/* Take the PHY out of reset */
-> +	ret = reset_control_deassert(ins->lnk_rst);
-> +
-> +	if (ret)
-
-This check is unncessary.
-> +		return ret;
-> +
-> +	return ret;
-> +}
-> +
-> +static int cdns_sierra_phy_off(struct phy *gphy)
-> +{
-> +	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
-> +
-> +	reset_control_assert(ins->lnk_rst);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct phy_ops ops = {
-> +	.power_on	= cdns_sierra_phy_on,
-> +	.power_off	= cdns_sierra_phy_off,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int cdns_sierra_get_optional(struct cdns_sierra_inst *inst,
-> +				    struct device_node *child)
-> +{
-> +	if (of_property_read_u32(child, "reg", &inst->mlane))
-> +		return -EINVAL;
-> +
-> +	if (of_property_read_u32(child, "cdns,num-lanes", &inst->num_lanes))
-> +		return -EINVAL;
-> +
-> +	if (of_property_read_u32(child, "cdns,phy-type", &inst->phy_type))
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id cdns_sierra_id_table[];
-> +
-> +static int cdns_sierra_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct cdns_sierra_phy *sp;
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	const struct of_device_id *match;
-> +	struct resource *res;
-> +	int ret, node = 0;
-> +	struct device_node *dn = dev->of_node, *child;
-> +
-> +	if (of_get_child_count(dn) == 0)
-> +		return -ENODEV;
-> +
-> +	sp = devm_kzalloc(dev, sizeof(*sp), GFP_KERNEL);
-> +	if (!sp)
-> +		return -ENOMEM;
-> +	dev_set_drvdata(dev, sp);
-> +	sp->dev = dev;
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
-> +	sp->base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(sp->base)) {
-> +		dev_err(dev, "missing \"reg\"\n");
-> +		return PTR_ERR(sp->base);
-> +	}
-> +
-> +	/* Get init data for this PHY */
-> +	match = of_match_device(cdns_sierra_id_table, dev);
-> +	if (!match)
-> +		return -EINVAL;
-> +	sp->init_data = (struct cdns_sierra_data *)match->data;
-> +
-> +	platform_set_drvdata(pdev, sp);
-> +
-> +	sp->clk = devm_clk_get(dev, "phy_clk");
-> +	if (IS_ERR(sp->clk)) {
-> +		dev_err(dev, "failed to get clock phy_clk\n");
-> +		return PTR_ERR(sp->clk);
-> +	}
-> +
-> +	sp->phy_rst = devm_reset_control_get(dev, "sierra_reset");
-> +	if (IS_ERR(sp->phy_rst)) {
-> +		dev_err(dev, "failed to get reset\n");
-> +		return PTR_ERR(sp->phy_rst);
-> +	}
-> +
-> +	sp->apb_rst = devm_reset_control_get(dev, "sierra_apb");
-> +	if (IS_ERR(sp->apb_rst)) {
-> +		dev_err(dev, "failed to get apb reset\n");
-> +		return PTR_ERR(sp->apb_rst);
-> +	}
-> +
-> +	ret = clk_prepare_enable(sp->clk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Enable APB */
-> +	reset_control_deassert(sp->apb_rst);
-> +
-> +	/* Check that PHY is present */
-> +	if  (sp->init_data->id_value != readl(sp->base)) {
-> +		goto clk_disable;
-> +		return -EINVAL;
-> +	}
-> +
-> +	sp->autoconf = of_property_read_bool(dn, "cdns,autoconf");
-> +
-> +	for_each_available_child_of_node(dn, child) {
-> +		struct phy *gphy;
-> +
-> +		if (IS_ERR(sp->phys[node].lnk_rst)) {
-> +			dev_err(dev, "failed to get reset %s\n", child->name);
-> +			return PTR_ERR(sp->phys[node].lnk_rst);
-> +		}
-> +		sp->phys[node].lnk_rst =
-> +				devm_reset_control_get(dev, child->name);
-> +
-> +		if (!sp->autoconf) {
-> +			ret = cdns_sierra_get_optional(&sp->phys[node], child);
-> +			if (ret) {
-> +				dev_err(dev, "missing property in node %s\n",
-> +					child->name);
-> +				goto put_child;
-> +			}
-> +		}
-> +
-> +		gphy = devm_phy_create(dev, child, &ops);
-> +
-> +		if (IS_ERR(gphy)) {
-> +			ret = PTR_ERR(gphy);
-> +			goto put_child;
-> +		}
-> +		sp->phys[node].phy = gphy;
-> +		phy_set_drvdata(gphy, &sp->phys[node]);
-> +
-> +		/* Initialise the PHY registers, unless auto configured */
-> +		if (!sp->autoconf)
-> +			cdns_sierra_phy_init(gphy);
-> +
-> +		node++;
-> +	}
-> +
-> +	/* If more than one subnode, configure the PHY as multilink */
-> +	if (!sp->autoconf && of_get_child_count(dn) > 1)
-> +		writel(2, sp->base + SIERRA_PHY_PLL_CFG);
-> +
-> +	pm_runtime_enable(dev);
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	reset_control_deassert(sp->phy_rst);
-> +	return PTR_ERR_OR_ZERO(phy_provider);
-> +put_child:
-> +	of_node_put(child);
-> +clk_disable:
-> +	clk_disable_unprepare(sp->clk);
-> +	reset_control_assert(sp->apb_rst);
-> +	return ret;
-> +}
-> +
-> +static int cdns_sierra_phy_remove(struct platform_device *pdev)
-> +{
-> +	struct cdns_sierra_phy *phy = dev_get_drvdata(pdev->dev.parent);
-> +
-> +	reset_control_assert(phy->phy_rst);
-> +	reset_control_assert(phy->apb_rst);
-> +	pm_runtime_disable(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct cdns_reg_pairs cdns_usb_regs[] = {
-> +	/*
-> +	 * Write USB configuration parameters to the PHY.
-> +	 * These values are specific to this specific hardware
-> +	 * configuration.
-
-Your intention is to have different arrays for different hardware configurations?
-> +	 */
-> +	{0xFE0A, SIERRA_DET_STANDEC_A},
-> +	{0x000F, SIERRA_DET_STANDEC_B},
-> +	{0x55A5, SIERRA_DET_STANDEC_C},
-> +	{0x69AD, SIERRA_DET_STANDEC_D},
-> +	{0x0241, SIERRA_DET_STANDEC_E},
-> +	{0x0110, SIERRA_PSM_LANECAL},
-> +	{0xCF00, SIERRA_PSM_DIAG},
-> +	{0x001F, SIERRA_PSC_TX_A0},
-> +	{0x0007, SIERRA_PSC_TX_A1},
-> +	{0x0003, SIERRA_PSC_TX_A2},
-> +	{0x0003, SIERRA_PSC_TX_A3},
-> +	{0x0FFF, SIERRA_PSC_RX_A0},
-> +	{0x0003, SIERRA_PSC_RX_A1},
-> +	{0x0003, SIERRA_PSC_RX_A2},
-> +	{0x0001, SIERRA_PSC_RX_A3},
-> +	{0x0001, SIERRA_PLLCTRL_SUBRATE},
-> +	{0x0406, SIERRA_PLLCTRL_GEN_D},
-> +	{0x0000, SIERRA_DRVCTRL_ATTEN},
-> +	{0x823E, SIERRA_CLKPATHCTRL_TMR},
-> +	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1},
-> +	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0},
-> +	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01},
-> +	{0x023C, SIERRA_RX_CTLE_MAINTENANCE},
-> +	{0x3232, SIERRA_CREQ_FSMCLK_SEL},
-> +	{0x8452, SIERRA_CTLELUT_CTRL},
-> +	{0x4121, SIERRA_DFE_ECMP_RATESEL},
-> +	{0x4121, SIERRA_DFE_SMP_RATESEL},
-> +	{0x9999, SIERRA_DEQ_VGATUNE_CTRL},
-> +	{0x0330, SIERRA_TMRVAL_MODE0},
-> +	{0x01FF, SIERRA_PICNT_MODE1},
-> +	{0x0009, SIERRA_CPI_OUTBUF_RATESEL},
-> +	{0x000F, SIERRA_LFPSFILT_NS},
-> +	{0x0009, SIERRA_LFPSFILT_RD},
-> +	{0x0001, SIERRA_LFPSFILT_MP},
-> +	{0x8013, SIERRA_SDFILT_H2L_A},
-> +	{0x0400, SIERRA_TMRVAL_MODE1},
-
-Are all of them 16 bit value fields? Or some of them coalesced to form 16 bit
-values?
-
-Thanks
-Kishon
+DQoNCk9uIDE5LjA5LjIwMTggMTc6MzcsIFJvYmluIE11cnBoeSB3cm90ZToNCj4gT24gMTkvMDkv
+MTggMTU6MTgsIExhdXJlbnRpdSBUdWRvciB3cm90ZToNCj4+IEhpIFJvYmluLA0KPj4NCj4+IE9u
+IDE5LjA5LjIwMTggMTY6MjUsIFJvYmluIE11cnBoeSB3cm90ZToNCj4+PiBIaSBMYXVyZW50aXUs
+DQo+Pj4NCj4+PiBPbiAxOS8wOS8xOCAxMzozNSwgbGF1cmVudGl1LnR1ZG9yQG54cC5jb20gd3Jv
+dGU6DQo+Pj4+IEZyb206IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+
+DQo+Pj4+DQo+Pj4+IFRoaXMgcGF0Y2ggc2VyaWVzIGFkZHMgU01NVSBzdXBwb3J0IGZvciBOWFAg
+TFMxMDQzQSBhbmQgTFMxMDQ2QSBjaGlwcw0KPj4+PiBhbmQgY29uc2lzdHMgbW9zdGx5IGluIGlt
+cG9ydGFudCBkcml2ZXIgZml4ZXMgYW5kIHRoZSByZXF1aXJlZCBkZXZpY2UNCj4+Pj4gdHJlZSB1
+cGRhdGVzLiBJdCB0b3VjaGVzIHNldmVyYWwgc3Vic3lzdGVtcyBhbmQgY29uc2lzdHMgb2YgdGhy
+ZWUgbWFpbg0KPj4+PiBwYXJ0czoNCj4+Pj4gwqDCoCAtIGNoYW5nZXMgaW4gc29jL2RyaXZlcnMv
+ZnNsL3FibWFuIGRyaXZlcnMgYWRkaW5nIGlvbW11IG1hcHBpbmcgb2YNCj4+Pj4gwqDCoMKgwqAg
+cmVzZXJ2ZWQgbWVtb3J5IGFyZWFzLCBmaXhlcyBhbmQgZGVmZXJlZCBwcm9iZSBzdXBwb3J0DQo+
+Pj4+IMKgwqAgLSBjaGFuZ2VzIGluIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9kcGFh
+X2V0aCBkcml2ZXJzDQo+Pj4+IMKgwqDCoMKgIGNvbnNpc3RpbmcgaW4gbWlzYyBkbWEgbWFwcGlu
+ZyByZWxhdGVkIGZpeGVzIGFuZCBwcm9iZSBvcmRlcmluZw0KPj4+PiDCoMKgIC0gYWRkaXRpb24g
+b2YgdGhlIGFjdHVhbCBhcm0gc21tdSBkZXZpY2UgdHJlZSBub2RlIHRvZ2V0aGVyIHdpdGgNCj4+
+Pj4gwqDCoMKgwqAgdmFyaW91cyBhZGp1c3RtZW50cyB0byB0aGUgZGV2aWNlIHRyZWVzDQo+Pj4+
+DQo+Pj4+IFBlcmZvcm1hbmNlIGltcGFjdA0KPj4+Pg0KPj4+PiDCoMKgwqDCoMKgIFJ1bm5pbmcg
+aXBlcmYgYmVuY2htYXJrcyBpbiBhIGJhY2stdG8tYmFjayBzZXR1cCAoYm90aCBzaWRlcw0KPj4+
+PiDCoMKgwqDCoMKgIGhhdmluZyBzbW11IGVuYWJsZWQpIG9uIGEgMTBHQnBzIHBvcnQgc2hvdyBh
+biBpbXBvcnRhbnQNCj4+Pj4gwqDCoMKgwqDCoCBuZXR3b3JraW5nIHBlcmZvcm1hbmNlIGRlZ3Jh
+ZGF0aW9uIG9mIGFyb3VuZCAlNDAgKDkuNDhHYnBzDQo+Pj4+IMKgwqDCoMKgwqAgbGluZXJhdGUg
+dnMgNS40NUdicHMpLiBJZiB5b3UgbmVlZCBwZXJmb3JtYW5jZSBidXQgd2l0aG91dA0KPj4+PiDC
+oMKgwqDCoMKgIFNNTVUgc3VwcG9ydCB5b3UgY2FuIHVzZSAiaW9tbXUucGFzc3Rocm91Z2g9MSIg
+dG8gZGlzYWJsZQ0KPj4+PiDCoMKgwqDCoMKgIFNNTVUuDQo+Pj4+DQo+Pj4+IFVTQiBpc3N1ZSBh
+bmQgd29ya2Fyb3VuZA0KPj4+Pg0KPj4+PiDCoMKgwqDCoMKgIFRoZXJlJ3MgYSBwcm9ibGVtIHdp
+dGggdGhlIHVzYiBjb250cm9sbGVycyBpbiB0aGVzZSBjaGlwcw0KPj4+PiDCoMKgwqDCoMKgIGdl
+bmVyYXRpbmcgc21hbGxlciwgNDAtYml0IHdpZGUgZG1hIGFkZHJlc3NlcyBpbnN0ZWFkIG9mIHRo
+ZSANCj4+Pj4gNDgtYml0DQo+Pj4+IMKgwqDCoMKgwqAgc3VwcG9ydGVkIGF0IHRoZSBzbW11IGlu
+cHV0LiBTbyB5b3UgZW5kIHVwIGluIGEgc2l0dWF0aW9uIA0KPj4+PiB3aGVyZSB0aGUNCj4+Pj4g
+wqDCoMKgwqDCoCBzbW11IGlzIG1hcHBlZCB3aXRoIDQ4LWJpdCBhZGRyZXNzIHRyYW5zbGF0aW9u
+cywgYnV0IHRoZSBkZXZpY2UNCj4+Pj4gwqDCoMKgwqDCoCBnZW5lcmF0ZXMgdHJhbnNhY3Rpb25z
+IHdpdGggY2xpcHBlZCA0MC1iaXQgYWRkcmVzc2VzLCB0aHVzIHNtbXUNCj4+Pj4gwqDCoMKgwqDC
+oCBjb250ZXh0IGZhdWx0cyBhcmUgdHJpZ2dlcmVkLiBJIGVuY291bnRlcmVkIGEgc2ltaWxhciAN
+Cj4+Pj4gc2l0dWF0aW9uIGZvcg0KPj4+PiDCoMKgwqDCoMKgIG1tYyB0aGF0IEnCoCBtYW5hZ2Vk
+IHRvIGZpeCBpbiBzb2Z0d2FyZSBbMV0gaG93ZXZlciBmb3IgVVNCIEkgDQo+Pj4+IGRpZCBub3QN
+Cj4+Pj4gwqDCoMKgwqDCoCBmaW5kIGEgcHJvcGVyIHBsYWNlIGluIHRoZSBjb2RlIHRvIGFkZCBh
+IHNpbWlsYXIgZml4LiBUaGUgb25seQ0KPj4+PiDCoMKgwqDCoMKgIHdvcmthcm91bmQgSSBmb3Vu
+ZCB3YXMgdG8gYWRkIHRoaXMga2VybmVsIHBhcmFtZXRlciB3aGljaCANCj4+Pj4gbGltaXRzIHRo
+ZQ0KPj4+PiDCoMKgwqDCoMKgIHVzYiBkbWEgdG8gMzItYml0IHNpemU6ICJ4aGNpLWhjZC5xdWly
+a3M9MHg4MDAwMDAiLg0KPj4+PiDCoMKgwqDCoMKgIFRoaXMgd29ya2Fyb3VuZCBpZiBmYXIgZnJv
+bSBpZGVhbCwgc28gYW55IHN1Z2dlc3Rpb25zIGZvciBhIGNvZGUNCj4+Pj4gwqDCoMKgwqDCoCBi
+YXNlZCB3b3JrYXJvdW5kIGluIHRoaXMgYXJlYSB3b3VsZCBiZSBncmVhdGx5IGFwcHJlY2lhdGVk
+Lg0KPj4+DQo+Pj4gSWYgeW91IGhhdmUgYSBub21pbmFsbHktNjQtYml0IGRldmljZSB3aXRoIGEN
+Cj4+PiBuYXJyb3dlci10aGFuLXRoZS1tYWluLWludGVyY29ubmVjdCBsaW5rIGluIGZyb250IG9m
+IGl0LCB0aGF0IHNob3VsZA0KPj4+IGFscmVhZHkgYmUgZml4ZWQgaW4gNC4xOS1yYyBieSBidXNf
+ZG1hX21hc2sgcGlja2luZyB1cCBEVCBkbWEtcmFuZ2VzLA0KPj4+IHByb3ZpZGVkIHRoZSBpbnRl
+cmNvbm5lY3QgaGllcmFyY2h5IGNhbiBiZSBkZXNjcmliZWQgYXBwcm9wcmlhdGVseSAob3INCj4+
+PiBhdCBsZWFzdCBtYXNzYWdlZCBzdWZmaWNpZW50bHkgdG8gc2F0aXNmeSB0aGUgYmluZGluZyks
+IGUuZy46DQo+Pj4NCj4+PiAvIHsNCj4+PiDCoCDCoMKgwqDCoC4uLg0KPj4+DQo+Pj4gwqAgwqDC
+oMKgwqBzb2Mgew0KPj4+IMKgIMKgwqDCoMKgwqDCoMKgIHJhbmdlczsNCj4+PiDCoCDCoMKgwqDC
+oMKgwqDCoCBkbWEtcmFuZ2VzID0gPDAgMCAxMDAwMCAwPjsNCj4+Pg0KPj4+IMKgIMKgwqDCoMKg
+wqDCoMKgIGRldl80OGJpdCB7IC4uLiB9Ow0KPj4+DQo+Pj4gwqAgwqDCoMKgwqDCoMKgwqAgcGVy
+aXBoX2J1cyB7DQo+Pj4gwqAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCByYW5nZXM7DQo+Pj4gwqAg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBkbWEtcmFuZ2VzID0gPDAgMCAxMDAgMD47DQo+Pj4NCj4+
+PiDCoCDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGRldl80MGJpdCB7IC4uLiB9Ow0KPj4+IMKgIMKg
+wqDCoMKgwqDCoMKgIH07DQo+Pj4gwqAgwqDCoMKgwqB9Ow0KPj4+IH07DQo+Pj4NCj4+PiBhbmQg
+aWYgdGhhdCBmYWlscyB0byB3b3JrIGFzIGV4cGVjdGVkIChleGNlcHQgZm9yIFBDSSBob3N0cyB3
+aGVyZQ0KPj4+IGhhbmRsaW5nIGRtYS1yYW5nZXMgcHJvcGVybHkgc3RpbGwgbmVlZHMgc29ydGlu
+ZyBvdXQpLCBwbGVhc2UgZG8gbGV0IHVzDQo+Pj4ga25vdyA7KQ0KPj4+DQo+Pg0KPj4gSnVzdCB0
+byBjb25maXJtLCBJcyB0aGlzIFsxXSB0aGUgY2hhbmdlIEkgd2FzIHN1cHBvc2VkIHRvIHRlc3Q/
+DQo+IA0KPiBOb3QgcXVpdGUgLSBkbWEtcmFuZ2VzIGlzIG9ubHkgdmFsaWQgZm9yIG5vZGVzIHJl
+cHJlc2VudGluZyBhIGJ1cywgc28gDQo+IHB1dHRpbmcgaXQgZGlyZWN0bHkgaW4gdGhlIFVTQiBk
+ZXZpY2Ugbm9kZXMgZG9lc24ndCB3b3JrIChGV0lXIHRoYXQncyANCj4gd2h5IFBDSSBpcyBicm9r
+ZW4sIGJlY2F1c2UgdGhlIHBhcnNlciBkb2Vzbid0IGV4cGVjdCB0aGUgDQo+IGJ1cy1hcy1sZWFm
+LW5vZGUgY2FzZSkuIFRoYXQncyB0ZWggcG9pbnQgb2YgdGhhdCBpbnRlcm1lZGlhdGUgc2ltcGxl
+LWJ1cyANCj4gbm9kZSByZXByZXNlbnRlZCBieSAicGVyaXBoX2J1cyIgaW4gbXkgZXhhbXBsZSAo
+c29ycnksIEkgc2hvdWxkIGhhdmUgcHV0IA0KPiBjb21wYXRpYmxlcyBpbiB0byBtYWtlIGl0IGNs
+ZWFyZXIpIC0gb2Z0ZW4gdGhhdCdzIGFjdHVhbGx5IHRydWUgdG8gbGlmZSANCj4gKGkuZS4gInNv
+YyIgaXMgc29tZXRoaW5nIGxpa2UgYSBDQ0kgYW5kICJwZXJpcGhfYnVzIiBpcyBzb21ldGhpbmcg
+bGlrZSANCj4gYW4gQVhJIE5JQyBnbHVpbmcgYSBidW5jaCBvZiBsb3dlci1iYW5kd2lkdGggRE1B
+IG1hc3RlcnMgdG8gb25lIG9mIHRoZSANCj4gQ0NJIHBvcnRzKSBidXQgYXQgd29yc3QgaXQncyBq
+dXN0IGEgbmVjZXNzYXJ5IGV2aWwgdG8gbWFrZSB0aGUgYmluZGluZyANCj4gaGFwcHkgKGlmIGl0
+IGxpdGVyYWxseSBvbmx5IHJlcHJlc2VudHMgdGhlIHBvaW50LXRvLXBvaW50IGxpbmsgYmV0d2Vl
+biANCj4gdGhlIGRldmljZSBtYXN0ZXIgcG9ydCBhbmQgaW50ZXJjb25uZWN0IHNsYXZlIHBvcnQp
+Lg0KPiANCg0KUXVpY2sgdXBkYXRlOiBzbyBJIGFkanVzdGVkIHRvIGRldmljZSB0cmVlIGFjY29y
+ZGluZyB0byB5b3VyIGV4YW1wbGUgYW5kIA0KaXQgd29ya3Mgc28gbm93IEkgY2FuIGdldCByaWQg
+b2YgdGhhdCBuYXN0eSBrZXJuZWwgYXJnIGJhc2VkIHdvcmthcm91bmQsIA0KeWV5ISA6LSkNClRo
+YW5rcyBhIGxvdCwgdGhhdCB3YXMgcmVhbGx5IGhlbHBmdWwuDQoNCi0tLQ0KQmVzdCBSZWdhcmRz
+LCBMYXVyZW50aXU=
