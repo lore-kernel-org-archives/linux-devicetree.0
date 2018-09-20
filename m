@@ -1,49 +1,73 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
-Date: Fri, 21 Sep 2018 00:04:43 +0200
-Message-ID: <20180920220443.GB27468@xo-6d-61-c0.localdomain>
-References: <20180911170825.17789-2-dmurphy@ti.com>
- <20180911200530.GA28290@amd>
- <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com>
- <20180912214938.GA30654@amd>
- <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com>
- <20180914081822.GA21830@amd>
- <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com>
- <20180914214220.GA2081@amd>
- <be2ee681-7ae0-6545-0208-6ae5c1b7affd@gmail.com>
- <5a249ae3-e3f7-8eff-4022-ed982e364326@ti.com>
+From: Ryan Case <ryandcase@chromium.org>
+Subject: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Thu, 20 Sep 2018 15:40:54 -0700
+Message-ID: <20180920224055.164856-1-ryandcase@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5a249ae3-e3f7-8eff-4022-ed982e364326@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>, Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+From: Girish Mahadevan <girishm@codeaurora.org>
 
-> >>> Easy to maintain will be a dedicated LED class driver.
-> >>
-> >> You mean, 3 dedicated LED class drivers and 3 MFD drivers with LED
-> >> parts? We'll need complex driver anyway, and I'd really like to have
-> >> just one.
-> > 
-> > In the LED subsystem we can wrap common functionalities
-> > into a library object. MFD driver will be able to reuse it then.
-> 
-> I am currently working on that code now.  I expect a RFC on this this week.
+Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
 
-Looking forward to that.
+Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+Signed-off-by: Ryan Case <ryandcase@chromium.org>
+---
 
-But you really need acks for the bindings, and since Rob is usually quite slow
-acking them, it is easiest to use the existing binding... if it is wrong it
-needs to be fixed, anyway.
+Changes in v2:
+- Added commit text
+- Removed invalid property
+- Updated example to match sdm845 with attached spi-nor
 
-THanks,
+ .../bindings/spi/qcom,spi-qcom-qspi.txt       | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
 
-									Pavel
+diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+new file mode 100644
+index 000000000000..ecfb1e2bd520
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+@@ -0,0 +1,36 @@
++Qualcomm Quad Serial Peripheral Interface (QSPI)
++
++The QSPI controller allows SPI protocol communication in single, dual, or quad
++wire transmission modes for read/write access to slaves such as NOR flash.
++
++Required properties:
++- compatible:	Should contain:
++		"qcom,sdm845-qspi"
++- reg:		Should contain the base register location and length.
++- interrupts:	Interrupt number used by the controller.
++- clocks:	Should contain the core and AHB clock.
++- clock-names:	Should be "core" for core clock and "iface" for AHB clock.
++
++SPI slave nodes must be children of the SPI master node and can contain
++properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Example:
++
++	qspi: qspi@88df000 {
++		compatible = "qcom,sdm845-qspi";
++		reg = <0x88df000 0x600>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++		clock-names = "iface", "core";
++		clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
++			 <&gcc GCC_QSPI_CORE_CLK>;
++
++		device@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <25000000>;
++			spi-tx-bus-width = <2>;
++			spi-rx-bus-width = <2>;
++		};
++	};
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+2.19.0.444.g18242da7ef-goog
