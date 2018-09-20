@@ -1,104 +1,121 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 3/4] [media] ad5820: DT new optional field enable-gpios
-Date: Thu, 20 Sep 2018 22:28:40 +0200
-Message-ID: <20180920202840.GA31044@amd>
-References: <20180920161912.17063-1-ricardo.ribalda@gmail.com>
- <20180920161912.17063-3-ricardo.ribalda@gmail.com>
- <1939782.bRt5jKDIiS@avalon>
- <2983018.WjSXnZMEY4@avalon>
- <CAPybu_2Ke7qAx=3LRX6aEbGSD56Z+RhWKX=gEXR6WCgyOegxEw@mail.gmail.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH 0/4] ARM: dts: mvebu: updates and new board
+Date: Thu, 20 Sep 2018 20:38:54 +0000
+Message-ID: <e627c26d707f4a20a5a427a5a64232d3@svr-chch-ex1.atlnz.lc>
+References: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
+ <87bm8sjh6f.fsf@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jRHKVT23PllUwdXP"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPybu_2Ke7qAx=3LRX6aEbGSD56Z+RhWKX=gEXR6WCgyOegxEw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "andrew@lunn.ch" <andrew@lunn.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---jRHKVT23PllUwdXP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu 2018-09-20 22:25:54, Ricardo Ribalda Delgado wrote:
-> Hi
-> On Thu, Sep 20, 2018 at 10:23 PM Laurent Pinchart
-> <laurent.pinchart@ideasonboard.com> wrote:
-> >
-> > On Thursday, 20 September 2018 23:21:28 EEST Laurent Pinchart wrote:
-> > > Hi Ricardo,
-> > >
-> > > Thank you for the patch.
-> > >
-> > > On Thursday, 20 September 2018 19:19:11 EEST Ricardo Ribalda Delgado =
-wrote:
-> > > > Document new enable-gpio field. It can be used to disable the part
-> > > > without turning down its regulator.
-> > > >
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > > > ---
-> > > >
-> > > >  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > b/Documentation/devicetree/bindings/media/i2c/ad5820.txt index
-> > > > 5940ca11c021..07d577bb37f7 100644
-> > > > --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > >
-> > > > @@ -8,6 +8,11 @@ Required Properties:
-> > > >    - VANA-supply: supply of voltage for VANA pin
-> > > >
-> > > > +Optional properties:
-> > > > +
-> > > > +   - enable-gpios : GPIO spec for the XSHUTDOWN pin.
-> > >
-> > > xshutdown is active-low, so enable is active-high. Should this be doc=
-umented
-> > > explicitly, to avoid polarity errors ? Maybe something along the line=
-s of
-> > >
-> > > - enable-gpios: GPIO spec for the XSHUTDOWN pin. Note that the polari=
-ty of
-> > > the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the e=
-nable
-> > > GPIO deasserts the XSHUTDOWN signal and vice versa).
->=20
-> Agreed
->=20
-> >
-> > Or alternatively you could name the property xshutdown-gpios, as explai=
-ned in
-> > my (incorrect) review of 2/4.
->=20
-> I have double negatives :). If there is no other option I will rename
-> it xshutdown, but I want to give it a try to enable.
-
-I think enable is fine.
-
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---jRHKVT23PllUwdXP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlukAvgACgkQMOfwapXb+vKwZgCeM/O6ef+EQUJCEEyJ6OnPsaC+
-3p4AniB7FLELDJ+pEh3iebiI5PzkLqwc
-=+ulO
------END PGP SIGNATURE-----
-
---jRHKVT23PllUwdXP--
+On 21/09/18 03:57, Gregory CLEMENT wrote:=0A=
+> Hi Chris,=0A=
+>   =0A=
+>   On jeu., juil. 26 2018, Chris Packham <chris.packham@alliedtelesis.co.n=
+z> wrote:=0A=
+> =0A=
+>> This series updates the armada-xp-98dx3236 SoC and related boards to use=
+ the=0A=
+>> new style dts bindings for nand.=0A=
+>>=0A=
+>> I've also added a new db-88f6820-amc board which is an Armada-385 based=
+=0A=
+>> reference board from Marvell's switch team. It's a plugin card for eithe=
+r the=0A=
+>> db-dxbc2 or db-xc3-24g4 which can be used if you disable the internal CP=
+U on=0A=
+>> those platforms.=0A=
+>>=0A=
+>> Chris Packham (4):=0A=
+>>    ARM: dts: mvebu: 98dx3236: Rename nand controller node=0A=
+>>    ARM: dts: mvebu: db-dxbc2: use new style nand binding=0A=
+>>    ARM: dts: mvebu: db-xc3-24g4: use new style nand binding=0A=
+>>    ARM: dts: mvebu: Add device tree for db-88f6820-amc board=0A=
+> =0A=
+> While applying this series mvebu/dt, I got few warning with "ARM: dts:=0A=
+> mvebu: 98dx3236: Rename nand controller node".=0A=
+> =0A=
+> I fix them and also use the new partition binding, the diff is the=0A=
+> following:=0A=
+> =0A=
+> iff --git a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts b/arch/arm/bo=
+ot/dts/armada-385-db-88f6820-amc.dts=0A=
+> index d87614057e3f..dc9ccce1d4a1 100644=0A=
+> --- a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts=0A=
+> +++ b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts=0A=
+> @@ -102,9 +102,14 @@=0A=
+>                  nand-ecc-strength =3D <4>;=0A=
+>                  nand-ecc-step-size =3D <512>;=0A=
+>   =0A=
+> -               partition@user {=0A=
+> -                       reg =3D <0x00000000 0x40000000>;=0A=
+> -                       label =3D "user";=0A=
+> +               partitions {=0A=
+> +                       compatible =3D "fixed-partitions";=0A=
+> +                       #address-cells =3D <1>;=0A=
+> +                       #size-cells =3D <1>;=0A=
+> +                       partition@0 {=0A=
+> +                               reg =3D <0x00000000 0x40000000>;=0A=
+> +                               label =3D "user";=0A=
+> +                       };=0A=
+>                  };=0A=
+>          };=0A=
+>   };=0A=
+> @@ -131,13 +136,18 @@=0A=
+>                  spi-max-frequency =3D <50000000>;=0A=
+>                  m25p,fast-read;=0A=
+>   =0A=
+> -               partition@u-boot {=0A=
+> -                       reg =3D <0x00000000 0x00100000>;=0A=
+> -                       label =3D "u-boot";=0A=
+> -               };=0A=
+> -               partition@u-boot-env {=0A=
+> -                       reg =3D <0x00100000 0x00040000>;=0A=
+> -                       label =3D "u-boot-env";=0A=
+> +               partitions {=0A=
+> +                       compatible =3D "fixed-partitions";=0A=
+> +                       #address-cells =3D <1>;=0A=
+> +                       #size-cells =3D <1>;=0A=
+> +                       partition@0 {=0A=
+> +                               reg =3D <0x00000000 0x00100000>;=0A=
+> +                               label =3D "u-boot";=0A=
+> +                       };=0A=
+> +                       partition@100000 {=0A=
+> +                               reg =3D <0x00100000 0x00040000>;=0A=
+> +                               label =3D "u-boot-env";=0A=
+> +                       };=0A=
+>                  };=0A=
+>          };=0A=
+>   };=0A=
+> =0A=
+> I amended your patch with it, but if you don't agree with it, I can=0A=
+> still modify it, the branch is not immutable yet.=0A=
+=0A=
+Looks good to me. Thanks.=0A=
+=0A=
+> =0A=
+> Thanks,=0A=
+> =0A=
+> Gregory=0A=
+> =0A=
+>>=0A=
+>>   arch/arm/boot/dts/Makefile                    |   1 +=0A=
+>>   .../boot/dts/armada-385-db-88f6820-amc.dts    | 184 ++++++++++++++++++=
+=0A=
+>>   arch/arm/boot/dts/armada-xp-98dx3236.dtsi     |   2 +-=0A=
+>>   arch/arm/boot/dts/armada-xp-db-dxbc2.dts      |  18 +-=0A=
+>>   arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts |  18 +-=0A=
+>>   5 files changed, 208 insertions(+), 15 deletions(-)=0A=
+>>   create mode 100644 arch/arm/boot/dts/armada-385-db-88f6820-amc.dts=0A=
+>>=0A=
+>> -- =0A=
+>> 2.18.0=0A=
+>>=0A=
+> =0A=
+=0A=
