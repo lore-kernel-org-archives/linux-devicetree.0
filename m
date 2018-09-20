@@ -1,65 +1,102 @@
-From: Janek Kotas <jank@cadence.com>
-Subject: [PATCH v4 1/2] dt-bindings: ufs: Add bindings for Cadence UFS
-Date: Thu, 20 Sep 2018 13:08:22 +0000
-Message-ID: <9429A347-939A-44C6-BDBE-A892F5BCBD47@global.cadence.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [V2, 2/5] Documentation: dt-bindings: Document the Synopsys MIPI DPHY Rx bindings
+Date: Thu, 20 Sep 2018 16:11:14 +0300
+Message-ID: <1754496.WQhu2lOnZY@avalon>
+References: <20180920111648.27000-1-lolivei@synopsys.com> <20180920111648.27000-3-lolivei@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <434C8ECFBAFC2746BBFC95BE3C9A8644@namprd07.prod.outlook.com>
+In-Reply-To: <20180920111648.27000-3-lolivei@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com, festevam@gmail.com, Luis Oliveira <luis.oliveira@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a DT binding documentation for
-Cadence UFS Host Controller.
+Hi Louis,
 
-Signed-off-by: Jan Kotas <jank@cadence.com>
----
- .../devicetree/bindings/ufs/cdns,ufshc.txt         | 31 ++++++++++++++++++=
-++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
+Thank you for the patch.
 
-diff --git a/Documentation/devicetree/bindings/ufs/cdns,ufshc.txt b/Documen=
-tation/devicetree/bindings/ufs/cdns,ufshc.txt
-new file mode 100644
-index 0000000..a04a498
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
-@@ -0,0 +1,31 @@
-+* Cadence Universal Flash Storage (UFS) Controller
-+
-+UFS nodes are defined to describe on-chip UFS host controllers.
-+Each UFS controller instance should have its own node.
-+Please see the ufshcd-pltfrm.txt for a list of all available properties.
-+
-+Required properties:
-+- compatible	: Compatible list, contains the following controller:
-+			"cdns,ufshc"
-+		  complemented with the JEDEC version:
-+			"jedec,ufs-2.0"
-+
-+- reg		: Address and length of the UFS register set.
-+- interrupts	: One interrupt mapping.
-+- freq-table-hz	: Clock frequency table.
-+		  See the ufshcd-pltfrm.txt for details.
-+- clocks	: List of phandle and clock specifier pairs.
-+- clock-names	: List of clock input name strings sorted in the same
-+		  order as the clocks property. "core_clk" is mandatory.
-+		  Depending on a type of a PHY,
-+		  the "phy_clk" clock can also be added, if needed.
-+
-+Example:
-+	ufs@fd030000 {
-+		compatible =3D "cdns,ufshc", "jedec,ufs-2.0";
-+		reg =3D <0xfd030000 0x10000>;
-+		interrupts =3D <0 1 IRQ_TYPE_LEVEL_HIGH>;
-+		freq-table-hz =3D <0 0>, <0 0>;
-+		clocks =3D <&ufs_core_clk>, <&ufs_phy_clk>;
-+		clock-names =3D "core_clk", "phy_clk";
-+	};
---=20
-1.9.0
+On Thursday, 20 September 2018 14:16:40 EEST Luis Oliveira wrote:
+> Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+> RX mode.
+> 
+> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+> ---
+> Changelog
+> v2:
+> - no changes
+> 
+>  .../devicetree/bindings/phy/snps,dphy-rx.txt       | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+> b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt new file mode
+> 100644
+> index 0000000..9079f4a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+> @@ -0,0 +1,36 @@
+> +Synopsys DesignWare MIPI Rx D-PHY block details
+> +
+> +Description
+> +-----------
+> +
+> +The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
+> +Please refer to phy-bindings.txt for more information.
+> +
+> +Required properties:
+> +- compatible		: Shall be "snps,dphy-rx".
+> +- #phy-cells		: Must be 1.
+> +- snps,dphy-frequency	: Output frequency of the D-PHY.
+
+If that's the frequency of the clock on the output side of the RX PHY, doesn't 
+it depend on the frequency on the CSI-2 (or other) bus ? Can't it vary ? Why 
+do you need to have it in DT ?
+
+> +- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or
+> 12bits->12).
+
+We have similar properties in various bindings, such as bus-width in video-
+interfaces.txt. Couldn't we use a more standard name ?
+
+> +- reg			: Physical base address and size of the device memory mapped
+> +		 	  registers;
+
+The example below shows three ranges. Could you document the ranges that are 
+expected ?
+
+> +Optional properties:
+> +- snps,compat-mode	: Compatibility mode control
+
+What is this ?
+
+> +The per-board settings:
+> +- gpios 		: Synopsys testchip used as reference uses this to change 
+setup
+> +		  	  configurations.
+
+Here too, what is this for ?
+
+> +Example:
+> +
+> +	mipi_dphy_rx1: dphy@3040 {
+> +		compatible = "snps,dphy-rx";
+> +		#phy-cells = <1>;
+> +		snps,dphy-frequency = <300000>;
+> +		snps,dphy-te-len = <12>;
+> +		snps,compat-mode = <1>;
+> +		reg = < 0x03040 0x20
+> +			0x08000 0x100
+> +			0x09000 0x100>;
+
+The base addresses are pretty low, what kind of bus does this sit on ?
+
+> +	};
+> +
+
+-- 
+Regards,
+
+Laurent Pinchart
