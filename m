@@ -1,52 +1,89 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [RFC PATCH v2 0/4] Add support for SD Tap Delay setting for ZynqMP
-Date: Thu, 20 Sep 2018 15:00:41 +0530
-Message-ID: <1537435845-6682-1-git-send-email-manish.narani@xilinx.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC v4 1/2] reset: Add support for dedicated reset controls
+Date: Thu, 20 Sep 2018 11:37:52 +0200
+Message-ID: <CAMuHMdUaXjvOOAYTxTJ+ZzJn359CFYHsGKYoKf4ZkU_Goyen6g@mail.gmail.com>
+References: <20180917163955.19023-1-geert+renesas@glider.be>
+ <20180917163955.19023-2-geert+renesas@glider.be> <1537369098.6816.6.camel@pengutronix.de>
+ <CAMuHMdWSO6JcBRmmpwCPz0u-85ZC3ffZkNbdd8DjokJT2opAtw@mail.gmail.com> <1537435641.4156.1.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, adrian.hunter@intel.com, manish.narani@xilinx.com, amit.kucheria@linaro.org, sudeep.holla@arm.com, leoyang.li@nxp.com, jollys@xilinx.com, rajanv@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537435641.4156.1.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, KVM list <kvm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This series of patches are created On top of the
-below series of patches.
-1. https://lkml.org/lkml/2018/8/3/687 
-2. https://lkml.org/lkml/2018/9/18/1034
+Hi Philip,
 
-As the ZynqMP Firmware Driver is not yet merged, sending RFC to make
-modifications before sending the final patches.
+On Thu, Sep 20, 2018 at 11:27 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> On Wed, 2018-09-19 at 17:24 +0200, Geert Uytterhoeven wrote:
+> > On Wed, Sep 19, 2018 at 4:58 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> [...]
+> > > I consider requesting exclusive access to a shared reset line a misuse
+> > > of the API. Are there such cases? Can they be fixed?
+> >
+> > I guess there are plenty.
+>
+> I did a cursory search for drivers that request exclusive reset controls
+> for resets that have multiple phandle references in the corresponding
+> DT. So far I have found none.
 
-Changes in v2:
-- s/_/-/ in the property name
-- Changed order of the patches : DT binding change -> driver change -> DT change
+OK.
 
-Manish Narani (4):
-  dt: bindings: Add SD tap value properties details for
-    'xlnx,zynqmp-8.9a'
-  firmware: xilinx: Add macros and API for SD tap delays
-  sdhci: arasan: Add support to read and set tap delays from DT for
-    ZynqMP
-  arm64: zynqmp: Add 'xlnx,mio-bank' property in SDHCI node
+> > Whether a line is shared or dedicated depends on SoC integration.
+> >
+> > The issue is that a driver requesting exclusive access has no way to know
+> > if the reset line is dedicated to its device or not. If no other
+> > driver requested the reset control (most drivers don't use reset
+> > controls), it will succeed.
+>
+> True. It would be great to have a way to make sure an exclusive request
+> for a shared reset line never succeeds.
+>
+> > > > Sometimes a driver needs to reset a specific hardware block, and be 100%
+> > > > sure it has no impact on other hardware blocks.  This is e.g. the case
+> > > > for virtualization with device pass-through, where the host wants to
+> > > > reset any exported device before and after exporting it for use by the
+> > > > guest, for isolation.
+> > > >
+> > > > Hence a new flag for dedicated resets is added to the internal methods,
+> > > > with a new public reset_control_get_dedicated() method, to obtain an
+> > > > exclusive handle to a reset that is dedicated to one specific hardware
+> > > > block.
+> > >
+> > > I'm not sure a new flag is necessary, this is what exclusive resets
+> > > should be.
+> >
+> > So perhaps the check should be done for the existing exclusive resets
+> > instead, without adding a new flag?
+>
+> That would be my preference, if possible.
 
- .../devicetree/bindings/mmc/arasan,sdhci.txt       |  19 ++
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |   2 +
- drivers/firmware/xilinx/Makefile                   |   1 +
- drivers/firmware/xilinx/zynqmp-tap-delays.c        |  39 ++++
- drivers/mmc/host/sdhci-of-arasan.c                 | 215 +++++++++++++++++++++
- include/linux/firmware/xlnx-zynqmp.h               |  33 +++-
- 6 files changed, 308 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/xilinx/zynqmp-tap-delays.c
+OK, will make it so.
+
+> > > Also I fear there will be confusion about the difference between
+> > > exclusive (refering to the reset control) and dedicated (refering to
+> > > the reset line) reset controls.
+> >
+> > Indeed, exclusive has multiple meanings here:
+> >   1. Exclusive vs. shared access to the reset control,
+> >   2. Reset line is dedicated to a single device, or shared with multiple
+> >      devices.
+>
+> 2. is the more important factor, and that's what I have in mind when
+> talking about exclusive vs. shared resets. Admittedly, the kernel doc
+> comments only mention 1.
+
+OK. That did contribute to my confustion...
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-2.1.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
