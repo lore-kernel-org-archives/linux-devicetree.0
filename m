@@ -1,28 +1,33 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH] ARM: dts: stm32: enable display on stm32mp157c-ev1 board
-Date: Thu, 20 Sep 2018 17:30:05 +0200
-Message-ID: <32af7fbb-3734-1b06-488f-efe7e17bae25@st.com>
-References: <1534856316-30346-1-git-send-email-yannick.fertre@st.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: pinctrl: qcom: Add QCS404 pinctrl binding
+Date: Thu, 20 Sep 2018 08:34:45 -0700
+Message-ID: <153745768521.119890.130144479222793813@swboyd.mtv.corp.google.com>
+References: <20180920013712.2361-1-bjorn.andersson@linaro.org>
+ <20180920013712.2361-4-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534856316-30346-1-git-send-email-yannick.fertre@st.com>
-Content-Language: en-US
+In-Reply-To: <20180920013712.2361-4-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Yannick_Fertr=c3=a9?= <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Benjamin Gaignard <benjamin.gaignard@st.com>, Patrice Chotard <patrice.chotard@st.com>, Philippe Cornu <philippe.cornu@st.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yannick
+Quoting Bjorn Andersson (2018-09-19 18:37:11)
+> +
+> +Example:
+> +
+> +       tlmm: pinctrl@01000000 {
 
-On 08/21/2018 02:58 PM, Yannick Fertré wrote:
-> Enable panel raydium RM68200, DSI bridge & display controller.
-> 
-> Signed-off-by: Yannick Fertré <yannick.fertre@st.com>
-> ---
+Drop leading 0.
 
-Applied on stm32-next.
-
-Thanks.
-Alex
+> +               compatible =3D "qcom,qcs404-pinctrl";
+> +               reg =3D <0x01000000 0x200000>,
+> +                     <0x01300000 0x200000>,
+> +                     <0x07b00000 0x200000>;
+> +               reg-names =3D "south", "north", "east";
+> +               interrupts =3D <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> +               gpio-controller;
+> +               #gpio-cells =3D <2>;
+> +               gpio-ranges =3D <&tlmm 0 0 120>;
