@@ -1,458 +1,452 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v7 1/5] dt-bindings: add binding for i.MX8MQ CCM
-Date: Thu, 20 Sep 2018 13:06:36 +0300
-Message-ID: <1537438000-20313-2-git-send-email-abel.vesa@nxp.com>
-References: <1537438000-20313-1-git-send-email-abel.vesa@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [RFC PATCH v2 2/2] phy: cadence: Add driver for Sierra PHY
+Date: Thu, 20 Sep 2018 15:40:07 +0530
+Message-ID: <80328703-d99d-599f-956f-ed13cb8313a7@ti.com>
+References: <1536244971-26714-1-git-send-email-adouglas@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537438000-20313-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <1536244971-26714-1-git-send-email-adouglas@cadence.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: linux-imx@nxp.com, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Alan Douglas <adouglas@cadence.com>, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+Hi,
 
-This adds the binding for the i.MX8MQ Clock Controller Module.
+On Thursday 06 September 2018 08:12 PM, Alan Douglas wrote:
+> Add a Sierra PHY driver with PCIe and USB support.
+> 
+> The PHY has multiple lanes, which can be configured into
+> groups, and a generic PHY device is created for each group.
+> 
+> There are two resets controlling the overall PHY block, one
+> to enable the APB interface for programming registers, and
+> another to enable the PHY itself.  Additionally there are
+> resets for each PHY lane.
+> 
+> The PHY can be configured in hardware to read register
+> settings from ROM, or they can be written by the driver.
+> 
+> The sequence of operation on startup is to enable the APB
+> bus, write the PHY registers (if required)  for each lane
+> group, and then enable the PHY.  Each group of lanes
+> can then be individually controlled using the power_on()/
+> power_off() function for that generic PHY
+> 
+> Signed-off-by: Alan Douglas <adouglas@cadence.com>
+> ---
+>  drivers/phy/Kconfig               |   1 +
+>  drivers/phy/Makefile              |   1 +
+>  drivers/phy/cadence/Kconfig       |   9 +
+>  drivers/phy/cadence/Makefile      |   2 +
+>  drivers/phy/cadence/cdns-sierra.c | 385 ++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 398 insertions(+)
+>  create mode 100644 drivers/phy/cadence/Kconfig
+>  create mode 100644 drivers/phy/cadence/Makefile
+>  create mode 100644 drivers/phy/cadence/cdns-sierra.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 5c8d452..cc47f85 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -43,6 +43,7 @@ config PHY_XGENE
+>  source "drivers/phy/allwinner/Kconfig"
+>  source "drivers/phy/amlogic/Kconfig"
+>  source "drivers/phy/broadcom/Kconfig"
+> +source "drivers/phy/cadence/Kconfig"
+>  source "drivers/phy/hisilicon/Kconfig"
+>  source "drivers/phy/lantiq/Kconfig"
+>  source "drivers/phy/marvell/Kconfig"
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 84e3bd9..ba48acd 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -15,6 +15,7 @@ obj-$(CONFIG_ARCH_RENESAS)		+= renesas/
+>  obj-$(CONFIG_ARCH_ROCKCHIP)		+= rockchip/
+>  obj-$(CONFIG_ARCH_TEGRA)		+= tegra/
+>  obj-y					+= broadcom/	\
+> +					   cadence/	\
+>  					   hisilicon/	\
+>  					   marvell/	\
+>  					   motorola/	\
+> diff --git a/drivers/phy/cadence/Kconfig b/drivers/phy/cadence/Kconfig
+> new file mode 100644
+> index 0000000..098df0f
+> --- /dev/null
+> +++ b/drivers/phy/cadence/Kconfig
+> @@ -0,0 +1,9 @@
+> +#
+> +# Phy drivers for Cadence PHYs
+> +#
+> +config CDNS_SIERRA_PHY
+> +	tristate "Cadence Sierra PHY Driver"
+> +	depends on OF && HAS_IOMEM && RESET_CONTROLLER
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support the Cadence Sierra PHY driver
+> diff --git a/drivers/phy/cadence/Makefile b/drivers/phy/cadence/Makefile
+> new file mode 100644
+> index 0000000..c396c69
+> --- /dev/null
+> +++ b/drivers/phy/cadence/Makefile
+> @@ -0,0 +1,2 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_CDNS_SIERRA_PHY)		+= cdns-sierra.o
+> diff --git a/drivers/phy/cadence/cdns-sierra.c b/drivers/phy/cadence/cdns-sierra.c
+> new file mode 100644
+> index 0000000..83568b4
+> --- /dev/null
+> +++ b/drivers/phy/cadence/cdns-sierra.c
+> @@ -0,0 +1,385 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Cadence Sierra PHY Driver
+> + *
+> + * Copyright (c) 2018 Cadence Design Systems
+> + * Author: Alan Douglas <adouglas@cadence.com>
+> + *
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/slab.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +/* PHY register offsets */
+> +#define SIERRA_PHY_PLL_CFG		(0xc00e << 2)
+> +#define SIERRA_DET_STANDEC_A		(0x4000 << 2)
+> +#define SIERRA_DET_STANDEC_B		(0x4001 << 2)
+> +#define SIERRA_DET_STANDEC_C		(0x4002 << 2)
+> +#define SIERRA_DET_STANDEC_D		(0x4003 << 2)
+> +#define SIERRA_DET_STANDEC_E		(0x4004 << 2)
+> +#define SIERRA_PSM_LANECAL		(0x4008 << 2)
+> +#define SIERRA_PSM_DIAG			(0x4015 << 2)
+> +#define SIERRA_PSC_TX_A0		(0x4028 << 2)
+> +#define SIERRA_PSC_TX_A1		(0x4029 << 2)
+> +#define SIERRA_PSC_TX_A2		(0x402A << 2)
+> +#define SIERRA_PSC_TX_A3		(0x402B << 2)
+> +#define SIERRA_PSC_RX_A0		(0x4030 << 2)
+> +#define SIERRA_PSC_RX_A1		(0x4031 << 2)
+> +#define SIERRA_PSC_RX_A2		(0x4032 << 2)
+> +#define SIERRA_PSC_RX_A3		(0x4033 << 2)
+> +#define SIERRA_PLLCTRL_SUBRATE		(0x403A << 2)
+> +#define SIERRA_PLLCTRL_GEN_D		(0x403E << 2)
+> +#define SIERRA_DRVCTRL_ATTEN		(0x406A << 2)
+> +#define SIERRA_CLKPATHCTRL_TMR		(0x4081 << 2)
+> +#define SIERRA_RX_CREQ_FLTR_A_MODE1	(0x4087 << 2)
+> +#define SIERRA_RX_CREQ_FLTR_A_MODE0	(0x4088 << 2)
+> +#define SIERRA_CREQ_CCLKDET_MODE01	(0x408E << 2)
+> +#define SIERRA_RX_CTLE_MAINTENANCE	(0x4091 << 2)
+> +#define SIERRA_CREQ_FSMCLK_SEL		(0x4092 << 2)
+> +#define SIERRA_CTLELUT_CTRL		(0x4098 << 2)
+> +#define SIERRA_DFE_ECMP_RATESEL		(0x40C0 << 2)
+> +#define SIERRA_DFE_SMP_RATESEL		(0x40C1 << 2)
+> +#define SIERRA_DEQ_VGATUNE_CTRL		(0x40E1 << 2)
+> +#define SIERRA_TMRVAL_MODE3		(0x416E << 2)
+> +#define SIERRA_TMRVAL_MODE2		(0x416F << 2)
+> +#define SIERRA_TMRVAL_MODE1		(0x4170 << 2)
+> +#define SIERRA_TMRVAL_MODE0		(0x4171 << 2)
+> +#define SIERRA_PICNT_MODE1		(0x4174 << 2)
+> +#define SIERRA_CPI_OUTBUF_RATESEL	(0x417C << 2)
+> +#define SIERRA_LFPSFILT_NS		(0x418A << 2)
+> +#define SIERRA_LFPSFILT_RD		(0x418B << 2)
+> +#define SIERRA_LFPSFILT_MP		(0x418C << 2)
+> +#define SIERRA_SDFILT_H2L_A		(0x4191 << 2)
+> +
+> +#define SIERRA_MACRO_ID			0x00007364
+> +#define SIERRA_MAX_LANES		4
+> +
+> +struct cdns_sierra_inst {
+> +	struct phy *phy;
+> +	u32 phy_type;
+> +	u32 num_lanes;
+> +	u32 mlane;
+> +	struct reset_control *lnk_rst;
+> +};
+> +
+> +struct cdns_reg_pairs {
+> +	u16 val;
+> +	u32 off;
+> +};
+> +
+> +struct cdns_sierra_data {
+> +		u32 id_value;
+> +		u32 pcie_regs;
+> +		u32 usb_regs;
+> +		struct cdns_reg_pairs *pcie_vals;
+> +		struct cdns_reg_pairs  *usb_vals;
+> +};
+> +
+> +struct cdns_sierra_phy {
+> +	struct device *dev;
+> +	void __iomem *base;
+> +	struct cdns_sierra_data *init_data;
+> +	struct cdns_sierra_inst phys[SIERRA_MAX_LANES];
+> +	struct reset_control *phy_rst;
+> +	struct reset_control *apb_rst;
+> +	struct clk *clk;
+> +	struct phy *pcie_phy;
+> +	bool autoconf;
+> +};
+> +
+> +static void cdns_sierra_phy_init(struct phy *gphy)
+> +{
+> +	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
+> +	struct cdns_sierra_phy *phy = dev_get_drvdata(gphy->dev.parent);
+> +	int i, j;
+> +	struct cdns_reg_pairs *vals;
+> +	u32 num_regs;
+> +
+> +	if (ins->phy_type == PHY_TYPE_PCIE) {
+> +		num_regs = phy->init_data->pcie_regs;
+> +		vals = phy->init_data->pcie_vals;
+> +	} else if (ins->phy_type == PHY_TYPE_USB3) {
+> +		num_regs = phy->init_data->usb_regs;
+> +		vals = phy->init_data->usb_vals;
+> +	} else {
+> +		return;
+> +	}
+> +	for (i = 0; i < ins->num_lanes; i++)
+> +		for (j = 0; j < num_regs ; j++)
+> +			writel(vals[j].val, phy->base +
+> +				vals[j].off + (i + ins->mlane) * 0x800);
+> +}
+> +
+> +static int cdns_sierra_phy_on(struct phy *gphy)
+> +{
+> +	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
+> +	int ret;
+> +
+> +	/* Take the PHY out of reset */
+> +	ret = reset_control_deassert(ins->lnk_rst);
+> +
+> +	if (ret)
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 ++
- include/dt-bindings/clock/imx8mq-clock.h           | 395 +++++++++++++++++++++
- 2 files changed, 415 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
- create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
+This check is unncessary.
+> +		return ret;
+> +
+> +	return ret;
+> +}
+> +
+> +static int cdns_sierra_phy_off(struct phy *gphy)
+> +{
+> +	struct cdns_sierra_inst *ins = phy_get_drvdata(gphy);
+> +
+> +	reset_control_assert(ins->lnk_rst);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct phy_ops ops = {
+> +	.power_on	= cdns_sierra_phy_on,
+> +	.power_off	= cdns_sierra_phy_off,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static int cdns_sierra_get_optional(struct cdns_sierra_inst *inst,
+> +				    struct device_node *child)
+> +{
+> +	if (of_property_read_u32(child, "reg", &inst->mlane))
+> +		return -EINVAL;
+> +
+> +	if (of_property_read_u32(child, "cdns,num-lanes", &inst->num_lanes))
+> +		return -EINVAL;
+> +
+> +	if (of_property_read_u32(child, "cdns,phy-type", &inst->phy_type))
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id cdns_sierra_id_table[];
+> +
+> +static int cdns_sierra_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct cdns_sierra_phy *sp;
+> +	struct phy_provider *phy_provider;
+> +	struct device *dev = &pdev->dev;
+> +	const struct of_device_id *match;
+> +	struct resource *res;
+> +	int ret, node = 0;
+> +	struct device_node *dn = dev->of_node, *child;
+> +
+> +	if (of_get_child_count(dn) == 0)
+> +		return -ENODEV;
+> +
+> +	sp = devm_kzalloc(dev, sizeof(*sp), GFP_KERNEL);
+> +	if (!sp)
+> +		return -ENOMEM;
+> +	dev_set_drvdata(dev, sp);
+> +	sp->dev = dev;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg");
+> +	sp->base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(sp->base)) {
+> +		dev_err(dev, "missing \"reg\"\n");
+> +		return PTR_ERR(sp->base);
+> +	}
+> +
+> +	/* Get init data for this PHY */
+> +	match = of_match_device(cdns_sierra_id_table, dev);
+> +	if (!match)
+> +		return -EINVAL;
+> +	sp->init_data = (struct cdns_sierra_data *)match->data;
+> +
+> +	platform_set_drvdata(pdev, sp);
+> +
+> +	sp->clk = devm_clk_get(dev, "phy_clk");
+> +	if (IS_ERR(sp->clk)) {
+> +		dev_err(dev, "failed to get clock phy_clk\n");
+> +		return PTR_ERR(sp->clk);
+> +	}
+> +
+> +	sp->phy_rst = devm_reset_control_get(dev, "sierra_reset");
+> +	if (IS_ERR(sp->phy_rst)) {
+> +		dev_err(dev, "failed to get reset\n");
+> +		return PTR_ERR(sp->phy_rst);
+> +	}
+> +
+> +	sp->apb_rst = devm_reset_control_get(dev, "sierra_apb");
+> +	if (IS_ERR(sp->apb_rst)) {
+> +		dev_err(dev, "failed to get apb reset\n");
+> +		return PTR_ERR(sp->apb_rst);
+> +	}
+> +
+> +	ret = clk_prepare_enable(sp->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Enable APB */
+> +	reset_control_deassert(sp->apb_rst);
+> +
+> +	/* Check that PHY is present */
+> +	if  (sp->init_data->id_value != readl(sp->base)) {
+> +		goto clk_disable;
+> +		return -EINVAL;
+> +	}
+> +
+> +	sp->autoconf = of_property_read_bool(dn, "cdns,autoconf");
+> +
+> +	for_each_available_child_of_node(dn, child) {
+> +		struct phy *gphy;
+> +
+> +		if (IS_ERR(sp->phys[node].lnk_rst)) {
+> +			dev_err(dev, "failed to get reset %s\n", child->name);
+> +			return PTR_ERR(sp->phys[node].lnk_rst);
+> +		}
+> +		sp->phys[node].lnk_rst =
+> +				devm_reset_control_get(dev, child->name);
+> +
+> +		if (!sp->autoconf) {
+> +			ret = cdns_sierra_get_optional(&sp->phys[node], child);
+> +			if (ret) {
+> +				dev_err(dev, "missing property in node %s\n",
+> +					child->name);
+> +				goto put_child;
+> +			}
+> +		}
+> +
+> +		gphy = devm_phy_create(dev, child, &ops);
+> +
+> +		if (IS_ERR(gphy)) {
+> +			ret = PTR_ERR(gphy);
+> +			goto put_child;
+> +		}
+> +		sp->phys[node].phy = gphy;
+> +		phy_set_drvdata(gphy, &sp->phys[node]);
+> +
+> +		/* Initialise the PHY registers, unless auto configured */
+> +		if (!sp->autoconf)
+> +			cdns_sierra_phy_init(gphy);
+> +
+> +		node++;
+> +	}
+> +
+> +	/* If more than one subnode, configure the PHY as multilink */
+> +	if (!sp->autoconf && of_get_child_count(dn) > 1)
+> +		writel(2, sp->base + SIERRA_PHY_PLL_CFG);
+> +
+> +	pm_runtime_enable(dev);
+> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +	reset_control_deassert(sp->phy_rst);
+> +	return PTR_ERR_OR_ZERO(phy_provider);
+> +put_child:
+> +	of_node_put(child);
+> +clk_disable:
+> +	clk_disable_unprepare(sp->clk);
+> +	reset_control_assert(sp->apb_rst);
+> +	return ret;
+> +}
+> +
+> +static int cdns_sierra_phy_remove(struct platform_device *pdev)
+> +{
+> +	struct cdns_sierra_phy *phy = dev_get_drvdata(pdev->dev.parent);
+> +
+> +	reset_control_assert(phy->phy_rst);
+> +	reset_control_assert(phy->apb_rst);
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct cdns_reg_pairs cdns_usb_regs[] = {
+> +	/*
+> +	 * Write USB configuration parameters to the PHY.
+> +	 * These values are specific to this specific hardware
+> +	 * configuration.
 
-diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-new file mode 100644
-index 0000000..52de826
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-@@ -0,0 +1,20 @@
-+* Clock bindings for NXP i.MX8M Quad
-+
-+Required properties:
-+- compatible: Should be "fsl,imx8mq-ccm"
-+- reg: Address and length of the register set
-+- #clock-cells: Should be <1>
-+- clocks: list of clock specifiers, must contain an entry for each required
-+          entry in clock-names
-+- clock-names: should include the following entries:
-+    - "ckil"
-+    - "osc_25m"
-+    - "osc_27m"
-+    - "clk_ext1"
-+    - "clk_ext2"
-+    - "clk_ext3"
-+    - "clk_ext4"
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx8mq-clock.h
-+for the full list of i.MX8M Quad clock IDs.
-diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
-new file mode 100644
-index 0000000..b53be41
---- /dev/null
-+++ b/include/dt-bindings/clock/imx8mq-clock.h
-@@ -0,0 +1,395 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017 NXP
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_IMX8MQ_H
-+#define __DT_BINDINGS_CLOCK_IMX8MQ_H
-+
-+#define IMX8MQ_CLK_DUMMY		0
-+#define IMX8MQ_CLK_32K			1
-+#define IMX8MQ_CLK_25M			2
-+#define IMX8MQ_CLK_27M			3
-+#define IMX8MQ_CLK_EXT1			4
-+#define IMX8MQ_CLK_EXT2			5
-+#define IMX8MQ_CLK_EXT3			6
-+#define IMX8MQ_CLK_EXT4			7
-+
-+/* ANAMIX PLL clocks */
-+/* FRAC PLLs */
-+/* ARM PLL */
-+#define IMX8MQ_ARM_PLL_REF_SEL		8
-+#define IMX8MQ_ARM_PLL_REF_DIV		9
-+#define IMX8MQ_ARM_PLL			10
-+#define IMX8MQ_ARM_PLL_BYPASS		11
-+#define IMX8MQ_ARM_PLL_OUT		12
-+
-+/* GPU PLL */
-+#define IMX8MQ_GPU_PLL_REF_SEL		13
-+#define IMX8MQ_GPU_PLL_REF_DIV		14
-+#define IMX8MQ_GPU_PLL			15
-+#define IMX8MQ_GPU_PLL_BYPASS		16
-+#define IMX8MQ_GPU_PLL_OUT		17
-+
-+/* VPU PLL */
-+#define IMX8MQ_VPU_PLL_REF_SEL		18
-+#define IMX8MQ_VPU_PLL_REF_DIV		19
-+#define IMX8MQ_VPU_PLL			20
-+#define IMX8MQ_VPU_PLL_BYPASS		21
-+#define IMX8MQ_VPU_PLL_OUT		22
-+
-+/* AUDIO PLL1 */
-+#define IMX8MQ_AUDIO_PLL1_REF_SEL	23
-+#define IMX8MQ_AUDIO_PLL1_REF_DIV	24
-+#define IMX8MQ_AUDIO_PLL1		25
-+#define IMX8MQ_AUDIO_PLL1_BYPASS	26
-+#define IMX8MQ_AUDIO_PLL1_OUT		27
-+
-+/* AUDIO PLL2 */
-+#define IMX8MQ_AUDIO_PLL2_REF_SEL	28
-+#define IMX8MQ_AUDIO_PLL2_REF_DIV	29
-+#define IMX8MQ_AUDIO_PLL2		30
-+#define IMX8MQ_AUDIO_PLL2_BYPASS	31
-+#define IMX8MQ_AUDIO_PLL2_OUT		32
-+
-+/* VIDEO PLL1 */
-+#define IMX8MQ_VIDEO_PLL1_REF_SEL	33
-+#define IMX8MQ_VIDEO_PLL1_REF_DIV	34
-+#define IMX8MQ_VIDEO_PLL1		35
-+#define IMX8MQ_VIDEO_PLL1_BYPASS	36
-+#define IMX8MQ_VIDEO_PLL1_OUT		37
-+
-+/* SYS1 PLL */
-+#define IMX8MQ_SYS1_PLL1_REF_SEL	38
-+#define IMX8MQ_SYS1_PLL1_REF_DIV	39
-+#define IMX8MQ_SYS1_PLL1		40
-+#define IMX8MQ_SYS1_PLL1_OUT		41
-+#define IMX8MQ_SYS1_PLL1_OUT_DIV	42
-+#define IMX8MQ_SYS1_PLL2		43
-+#define IMX8MQ_SYS1_PLL2_DIV		44
-+#define IMX8MQ_SYS1_PLL2_OUT		45
-+
-+/* SYS2 PLL */
-+#define IMX8MQ_SYS2_PLL1_REF_SEL	46
-+#define IMX8MQ_SYS2_PLL1_REF_DIV	47
-+#define IMX8MQ_SYS2_PLL1		48
-+#define IMX8MQ_SYS2_PLL1_OUT		49
-+#define IMX8MQ_SYS2_PLL1_OUT_DIV	50
-+#define IMX8MQ_SYS2_PLL2		51
-+#define IMX8MQ_SYS2_PLL2_DIV		52
-+#define IMX8MQ_SYS2_PLL2_OUT		53
-+
-+/* SYS3 PLL */
-+#define IMX8MQ_SYS3_PLL1_REF_SEL	54
-+#define IMX8MQ_SYS3_PLL1_REF_DIV	55
-+#define IMX8MQ_SYS3_PLL1		56
-+#define IMX8MQ_SYS3_PLL1_OUT		57
-+#define IMX8MQ_SYS3_PLL1_OUT_DIV	58
-+#define IMX8MQ_SYS3_PLL2		59
-+#define IMX8MQ_SYS3_PLL2_DIV		60
-+#define IMX8MQ_SYS3_PLL2_OUT		61
-+
-+/* DRAM PLL */
-+#define IMX8MQ_DRAM_PLL1_REF_SEL	62
-+#define IMX8MQ_DRAM_PLL1_REF_DIV	63
-+#define IMX8MQ_DRAM_PLL1		64
-+#define IMX8MQ_DRAM_PLL1_OUT		65
-+#define IMX8MQ_DRAM_PLL1_OUT_DIV	66
-+#define IMX8MQ_DRAM_PLL2		67
-+#define IMX8MQ_DRAM_PLL2_DIV		68
-+#define IMX8MQ_DRAM_PLL2_OUT		69
-+
-+/* SYS PLL DIV */
-+#define IMX8MQ_SYS1_PLL_40M		70
-+#define IMX8MQ_SYS1_PLL_80M		71
-+#define IMX8MQ_SYS1_PLL_100M		72
-+#define IMX8MQ_SYS1_PLL_133M		73
-+#define IMX8MQ_SYS1_PLL_160M		74
-+#define IMX8MQ_SYS1_PLL_200M		75
-+#define IMX8MQ_SYS1_PLL_266M		76
-+#define IMX8MQ_SYS1_PLL_400M		77
-+#define IMX8MQ_SYS1_PLL_800M		78
-+
-+#define IMX8MQ_SYS2_PLL_50M		79
-+#define IMX8MQ_SYS2_PLL_100M		80
-+#define IMX8MQ_SYS2_PLL_125M		81
-+#define IMX8MQ_SYS2_PLL_166M		82
-+#define IMX8MQ_SYS2_PLL_200M		83
-+#define IMX8MQ_SYS2_PLL_250M		84
-+#define IMX8MQ_SYS2_PLL_333M		85
-+#define IMX8MQ_SYS2_PLL_500M		86
-+#define IMX8MQ_SYS2_PLL_1000M		87
-+
-+/* CCM ROOT clocks */
-+/* A53 */
-+#define IMX8MQ_CLK_A53_SRC		88
-+#define IMX8MQ_CLK_A53_CG		89
-+#define IMX8MQ_CLK_A53_DIV		90
-+/* M4 */
-+#define IMX8MQ_CLK_M4_SRC		91
-+#define IMX8MQ_CLK_M4_CG		92
-+#define IMX8MQ_CLK_M4_DIV		93
-+/* VPU */
-+#define IMX8MQ_CLK_VPU_SRC		94
-+#define IMX8MQ_CLK_VPU_CG		95
-+#define IMX8MQ_CLK_VPU_DIV		96
-+/* GPU CORE */
-+#define IMX8MQ_CLK_GPU_CORE_SRC		97
-+#define IMX8MQ_CLK_GPU_CORE_CG		98
-+#define IMX8MQ_CLK_GPU_CORE_DIV		99
-+/* GPU SHADER */
-+#define IMX8MQ_CLK_GPU_SHADER_SRC	100
-+#define IMX8MQ_CLK_GPU_SHADER_CG	101
-+#define IMX8MQ_CLK_GPU_SHADER_DIV	102
-+
-+/* BUS TYPE */
-+/* MAIN AXI */
-+#define IMX8MQ_CLK_MAIN_AXI		103
-+/* ENET AXI */
-+#define IMX8MQ_CLK_ENET_AXI		104
-+/* NAND_USDHC_BUS */
-+#define IMX8MQ_CLK_NAND_USDHC_BUS	105
-+/* VPU BUS */
-+#define IMX8MQ_CLK_VPU_BUS		106
-+/* DISP_AXI */
-+#define IMX8MQ_CLK_DISP_AXI		107
-+/* DISP APB */
-+#define IMX8MQ_CLK_DISP_APB		108
-+/* DISP RTRM */
-+#define IMX8MQ_CLK_DISP_RTRM		109
-+/* USB_BUS */
-+#define IMX8MQ_CLK_USB_BUS		110
-+/* GPU_AXI */
-+#define IMX8MQ_CLK_GPU_AXI		111
-+/* GPU_AHB */
-+#define IMX8MQ_CLK_GPU_AHB		112
-+/* NOC */
-+#define IMX8MQ_CLK_NOC			113
-+/* NOC_APB */
-+#define IMX8MQ_CLK_NOC_APB		115
-+
-+/* AHB */
-+#define IMX8MQ_CLK_AHB			116
-+/* AUDIO AHB */
-+#define IMX8MQ_CLK_AUDIO_AHB		117
-+
-+/* DRAM_ALT */
-+#define IMX8MQ_CLK_DRAM_ALT		118
-+/* DRAM APB */
-+#define IMX8MQ_CLK_DRAM_APB		119
-+/* VPU_G1 */
-+#define IMX8MQ_CLK_VPU_G1		120
-+/* VPU_G2 */
-+#define IMX8MQ_CLK_VPU_G2		121
-+/* DISP_DTRC */
-+#define IMX8MQ_CLK_DISP_DTRC		122
-+/* DISP_DC8000 */
-+#define IMX8MQ_CLK_DISP_DC8000		123
-+/* PCIE_CTRL */
-+#define IMX8MQ_CLK_PCIE1_CTRL		124
-+/* PCIE_PHY */
-+#define IMX8MQ_CLK_PCIE1_PHY		125
-+/* PCIE_AUX */
-+#define IMX8MQ_CLK_PCIE1_AUX		126
-+/* DC_PIXEL */
-+#define IMX8MQ_CLK_DC_PIXEL		127
-+/* LCDIF_PIXEL */
-+#define IMX8MQ_CLK_LCDIF_PIXEL		128
-+/* SAI1~6 */
-+#define IMX8MQ_CLK_SAI1			129
-+
-+#define IMX8MQ_CLK_SAI2			130
-+
-+#define IMX8MQ_CLK_SAI3			131
-+
-+#define IMX8MQ_CLK_SAI4			132
-+
-+#define IMX8MQ_CLK_SAI5			133
-+
-+#define IMX8MQ_CLK_SAI6			134
-+/* SPDIF1 */
-+#define IMX8MQ_CLK_SPDIF1		135
-+/* SPDIF2 */
-+#define IMX8MQ_CLK_SPDIF2		136
-+/* ENET_REF */
-+#define IMX8MQ_CLK_ENET_REF		137
-+/* ENET_TIMER */
-+#define IMX8MQ_CLK_ENET_TIMER		138
-+/* ENET_PHY */
-+#define IMX8MQ_CLK_ENET_PHY_REF		139
-+/* NAND */
-+#define IMX8MQ_CLK_NAND			140
-+/* QSPI */
-+#define IMX8MQ_CLK_QSPI			141
-+/* USDHC1 */
-+#define IMX8MQ_CLK_USDHC1		142
-+/* USDHC2 */
-+#define IMX8MQ_CLK_USDHC2		143
-+/* I2C1 */
-+#define IMX8MQ_CLK_I2C1			144
-+/* I2C2 */
-+#define IMX8MQ_CLK_I2C2			145
-+/* I2C3 */
-+#define IMX8MQ_CLK_I2C3			146
-+/* I2C4 */
-+#define IMX8MQ_CLK_I2C4			147
-+/* UART1 */
-+#define IMX8MQ_CLK_UART1		148
-+/* UART2 */
-+#define IMX8MQ_CLK_UART2		149
-+/* UART3 */
-+#define IMX8MQ_CLK_UART3		150
-+/* UART4 */
-+#define IMX8MQ_CLK_UART4		151
-+/* USB_CORE_REF */
-+#define IMX8MQ_CLK_USB_CORE_REF		152
-+/* USB_PHY_REF */
-+#define IMX8MQ_CLK_USB_PHY_REF		163
-+/* ECSPI1 */
-+#define IMX8MQ_CLK_ECSPI1		164
-+/* ECSPI2 */
-+#define IMX8MQ_CLK_ECSPI2		165
-+/* PWM1 */
-+#define IMX8MQ_CLK_PWM1			166
-+/* PWM2 */
-+#define IMX8MQ_CLK_PWM2			167
-+/* PWM3 */
-+#define IMX8MQ_CLK_PWM3			168
-+/* PWM4 */
-+#define IMX8MQ_CLK_PWM4			169
-+/* GPT1 */
-+#define IMX8MQ_CLK_GPT1			170
-+/* WDOG */
-+#define IMX8MQ_CLK_WDOG			171
-+/* WRCLK */
-+#define IMX8MQ_CLK_WRCLK		172
-+/* DSI_CORE */
-+#define IMX8MQ_CLK_DSI_CORE		173
-+/* DSI_PHY */
-+#define IMX8MQ_CLK_DSI_PHY_REF		174
-+/* DSI_DBI */
-+#define IMX8MQ_CLK_DSI_DBI		175
-+/*DSI_ESC */
-+#define IMX8MQ_CLK_DSI_ESC		176
-+/* CSI1_CORE */
-+#define IMX8MQ_CLK_CSI1_CORE		177
-+/* CSI1_PHY */
-+#define IMX8MQ_CLK_CSI1_PHY_REF		178
-+/* CSI_ESC */
-+#define IMX8MQ_CLK_CSI1_ESC		179
-+/* CSI2_CORE */
-+#define IMX8MQ_CLK_CSI2_CORE		170
-+/* CSI2_PHY */
-+#define IMX8MQ_CLK_CSI2_PHY_REF		181
-+/* CSI2_ESC */
-+#define IMX8MQ_CLK_CSI2_ESC		182
-+/* PCIE2_CTRL */
-+#define IMX8MQ_CLK_PCIE2_CTRL		183
-+/* PCIE2_PHY */
-+#define IMX8MQ_CLK_PCIE2_PHY		184
-+/* PCIE2_AUX */
-+#define IMX8MQ_CLK_PCIE2_AUX		185
-+/* ECSPI3 */
-+#define IMX8MQ_CLK_ECSPI3		186
-+
-+/* CCGR clocks */
-+#define IMX8MQ_CLK_A53_ROOT			187
-+#define IMX8MQ_CLK_DRAM_ROOT			188
-+#define IMX8MQ_CLK_ECSPI1_ROOT			189
-+#define IMX8MQ_CLK_ECSPI2_ROOT			180
-+#define IMX8MQ_CLK_ECSPI3_ROOT			181
-+#define IMX8MQ_CLK_ENET1_ROOT			182
-+#define IMX8MQ_CLK_GPT1_ROOT			193
-+#define IMX8MQ_CLK_I2C1_ROOT			194
-+#define IMX8MQ_CLK_I2C2_ROOT			195
-+#define IMX8MQ_CLK_I2C3_ROOT			196
-+#define IMX8MQ_CLK_I2C4_ROOT			197
-+#define IMX8MQ_CLK_M4_ROOT			198
-+#define IMX8MQ_CLK_PCIE1_ROOT			199
-+#define IMX8MQ_CLK_PCIE2_ROOT			200
-+#define IMX8MQ_CLK_PWM1_ROOT			201
-+#define IMX8MQ_CLK_PWM2_ROOT			202
-+#define IMX8MQ_CLK_PWM3_ROOT			203
-+#define IMX8MQ_CLK_PWM4_ROOT			204
-+#define IMX8MQ_CLK_QSPI_ROOT			205
-+#define IMX8MQ_CLK_SAI1_ROOT			206
-+#define IMX8MQ_CLK_SAI2_ROOT			207
-+#define IMX8MQ_CLK_SAI3_ROOT			208
-+#define IMX8MQ_CLK_SAI4_ROOT			209
-+#define IMX8MQ_CLK_SAI5_ROOT			210
-+#define IMX8MQ_CLK_SAI6_ROOT			212
-+#define IMX8MQ_CLK_UART1_ROOT			213
-+#define IMX8MQ_CLK_UART2_ROOT			214
-+#define IMX8MQ_CLK_UART3_ROOT			215
-+#define IMX8MQ_CLK_UART4_ROOT			216
-+#define IMX8MQ_CLK_USB1_CTRL_ROOT		217
-+#define IMX8MQ_CLK_USB2_CTRL_ROOT		218
-+#define IMX8MQ_CLK_USB1_PHY_ROOT		219
-+#define IMX8MQ_CLK_USB2_PHY_ROOT		220
-+#define IMX8MQ_CLK_USDHC1_ROOT			221
-+#define IMX8MQ_CLK_USDHC2_ROOT			222
-+#define IMX8MQ_CLK_WDOG1_ROOT			223
-+#define IMX8MQ_CLK_WDOG2_ROOT			224
-+#define IMX8MQ_CLK_WDOG3_ROOT			225
-+#define IMX8MQ_CLK_GPU_ROOT			226
-+#define IMX8MQ_CLK_HEVC_ROOT			227
-+#define IMX8MQ_CLK_AVC_ROOT			228
-+#define IMX8MQ_CLK_VP9_ROOT			229
-+#define IMX8MQ_CLK_HEVC_INTER_ROOT		230
-+#define IMX8MQ_CLK_DISP_ROOT			231
-+#define IMX8MQ_CLK_HDMI_ROOT			232
-+#define IMX8MQ_CLK_HDMI_PHY_ROOT		233
-+#define IMX8MQ_CLK_VPU_DEC_ROOT			234
-+#define IMX8MQ_CLK_CSI1_ROOT			235
-+#define IMX8MQ_CLK_CSI2_ROOT			236
-+#define IMX8MQ_CLK_RAWNAND_ROOT			237
-+#define IMX8MQ_CLK_SDMA1_ROOT			238
-+#define IMX8MQ_CLK_SDMA2_ROOT			239
-+#define IMX8MQ_CLK_VPU_G1_ROOT			240
-+#define IMX8MQ_CLK_VPU_G2_ROOT			241
-+
-+/* SCCG PLL GATE */
-+#define IMX8MQ_SYS1_PLL_OUT			232
-+#define IMX8MQ_SYS2_PLL_OUT			243
-+#define IMX8MQ_SYS3_PLL_OUT			244
-+#define IMX8MQ_DRAM_PLL_OUT			245
-+
-+#define IMX8MQ_GPT_3M_CLK			246
-+
-+#define IMX8MQ_CLK_IPG_ROOT			247
-+#define IMX8MQ_CLK_IPG_AUDIO_ROOT		248
-+#define IMX8MQ_CLK_SAI1_IPG			249
-+#define IMX8MQ_CLK_SAI2_IPG			250
-+#define IMX8MQ_CLK_SAI3_IPG			251
-+#define IMX8MQ_CLK_SAI4_IPG			252
-+#define IMX8MQ_CLK_SAI5_IPG			253
-+#define IMX8MQ_CLK_SAI6_IPG			254
-+
-+/* DSI AHB/IPG clocks */
-+/* rxesc clock */
-+#define IMX8MQ_CLK_DSI_AHB			255
-+/* txesc clock */
-+#define IMX8MQ_CLK_DSI_IPG_DIV                  256
-+
-+#define IMX8MQ_CLK_TMU_ROOT			265
-+
-+/* Display root clocks */
-+#define IMX8MQ_CLK_DISP_AXI_ROOT		266
-+#define IMX8MQ_CLK_DISP_APB_ROOT		267
-+#define IMX8MQ_CLK_DISP_RTRM_ROOT		268
-+
-+#define IMX8MQ_CLK_OCOTP_ROOT			269
-+
-+#define IMX8MQ_CLK_DRAM_ALT_ROOT		270
-+#define IMX8MQ_CLK_DRAM_CORE			271
-+
-+#define IMX8MQ_CLK_MU_ROOT			272
-+#define IMX8MQ_VIDEO2_PLL_OUT			273
-+
-+#define IMX8MQ_CLK_CLKO2			274
-+
-+#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	275
-+
-+#define IMX8MQ_CLK_END				276
-+#endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
--- 
-2.7.4
+Your intention is to have different arrays for different hardware configurations?
+> +	 */
+> +	{0xFE0A, SIERRA_DET_STANDEC_A},
+> +	{0x000F, SIERRA_DET_STANDEC_B},
+> +	{0x55A5, SIERRA_DET_STANDEC_C},
+> +	{0x69AD, SIERRA_DET_STANDEC_D},
+> +	{0x0241, SIERRA_DET_STANDEC_E},
+> +	{0x0110, SIERRA_PSM_LANECAL},
+> +	{0xCF00, SIERRA_PSM_DIAG},
+> +	{0x001F, SIERRA_PSC_TX_A0},
+> +	{0x0007, SIERRA_PSC_TX_A1},
+> +	{0x0003, SIERRA_PSC_TX_A2},
+> +	{0x0003, SIERRA_PSC_TX_A3},
+> +	{0x0FFF, SIERRA_PSC_RX_A0},
+> +	{0x0003, SIERRA_PSC_RX_A1},
+> +	{0x0003, SIERRA_PSC_RX_A2},
+> +	{0x0001, SIERRA_PSC_RX_A3},
+> +	{0x0001, SIERRA_PLLCTRL_SUBRATE},
+> +	{0x0406, SIERRA_PLLCTRL_GEN_D},
+> +	{0x0000, SIERRA_DRVCTRL_ATTEN},
+> +	{0x823E, SIERRA_CLKPATHCTRL_TMR},
+> +	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE1},
+> +	{0x078F, SIERRA_RX_CREQ_FLTR_A_MODE0},
+> +	{0x7B3C, SIERRA_CREQ_CCLKDET_MODE01},
+> +	{0x023C, SIERRA_RX_CTLE_MAINTENANCE},
+> +	{0x3232, SIERRA_CREQ_FSMCLK_SEL},
+> +	{0x8452, SIERRA_CTLELUT_CTRL},
+> +	{0x4121, SIERRA_DFE_ECMP_RATESEL},
+> +	{0x4121, SIERRA_DFE_SMP_RATESEL},
+> +	{0x9999, SIERRA_DEQ_VGATUNE_CTRL},
+> +	{0x0330, SIERRA_TMRVAL_MODE0},
+> +	{0x01FF, SIERRA_PICNT_MODE1},
+> +	{0x0009, SIERRA_CPI_OUTBUF_RATESEL},
+> +	{0x000F, SIERRA_LFPSFILT_NS},
+> +	{0x0009, SIERRA_LFPSFILT_RD},
+> +	{0x0001, SIERRA_LFPSFILT_MP},
+> +	{0x8013, SIERRA_SDFILT_H2L_A},
+> +	{0x0400, SIERRA_TMRVAL_MODE1},
+
+Are all of them 16 bit value fields? Or some of them coalesced to form 16 bit
+values?
+
+Thanks
+Kishon
