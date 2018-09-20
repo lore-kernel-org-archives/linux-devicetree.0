@@ -1,54 +1,47 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] pinctrl: qcom: spmi-gpio: Add pms405 gpio support
-Date: Wed, 19 Sep 2018 18:47:05 -0700
-Message-ID: <20180920014705.15144-1-bjorn.andersson@linaro.org>
+Subject: [PATCH] Input: pm8941-pwrkey - Add pms405 pwrkey support
+Date: Wed, 19 Sep 2018 18:49:28 -0700
+Message-ID: <20180920014928.15422-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vinod Koul <vkoul@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Vinod Koul <vkoul@kernel.org>
 
-Update the binding and driver for pms405-gpios
+Update the binding and driver for pms405 pwrkey.
 
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c                     | 1 +
- 2 files changed, 3 insertions(+)
+ Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt | 1 +
+ drivers/input/misc/pm8941-pwrkey.c                             | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index ffd4345415f3..ab4000eab07d 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -19,6 +19,7 @@ PMIC's from Qualcomm.
- 		    "qcom,pm8998-gpio"
- 		    "qcom,pma8084-gpio"
- 		    "qcom,pmi8994-gpio"
-+		    "qcom,pms405-gpio"
+diff --git a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+index 34ab5763f494..736fba3bad54 100644
+--- a/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
++++ b/Documentation/devicetree/bindings/input/qcom,pm8941-pwrkey.txt
+@@ -8,6 +8,7 @@ PROPERTIES
+ 	Definition: must be one of:
+ 		    "qcom,pm8941-pwrkey"
+ 		    "qcom,pm8941-resin"
++		    "qcom,pms405-pwrkey"
  
- 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
- 		    if the device is on an spmi bus or an ssbi bus respectively
-@@ -91,6 +92,7 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio26 for pm8998
- 		    gpio1-gpio22 for pma8084
- 		    gpio1-gpio10 for pmi8994
-+		    gpio1-gpio11 for pms405
- 
- - function:
+ - reg:
  	Usage: required
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index a29efbe08f48..b54891998caa 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1055,6 +1055,7 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
- 	{ .compatible = "qcom,pmi8994-gpio" },  /* 10 GPIO's */
- 	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
-+	{ .compatible = "qcom,pms405-gpio" }, /* 11 GPIO's */
- 	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
- 	{ },
+diff --git a/drivers/input/misc/pm8941-pwrkey.c b/drivers/input/misc/pm8941-pwrkey.c
+index 48153e0ca19a..fccf63263c1c 100644
+--- a/drivers/input/misc/pm8941-pwrkey.c
++++ b/drivers/input/misc/pm8941-pwrkey.c
+@@ -317,6 +317,7 @@ static const struct pm8941_data resin_data = {
+ static const struct of_device_id pm8941_pwr_key_id_table[] = {
+ 	{ .compatible = "qcom,pm8941-pwrkey", .data = &pwrkey_data },
+ 	{ .compatible = "qcom,pm8941-resin", .data = &resin_data },
++	{ .compatible = "qcom,pms405-pwrkey", .data = &pwrkey_data },
+ 	{ }
  };
+ MODULE_DEVICE_TABLE(of, pm8941_pwr_key_id_table);
 -- 
 2.18.0
