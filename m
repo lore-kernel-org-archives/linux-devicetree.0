@@ -1,309 +1,132 @@
-From: Craig <ctatlor97@gmail.com>
-Subject: Re: [PATCH V12 00/14] Krait clocks + Krait CPUfreq
-Date: Thu, 20 Sep 2018 15:27:21 +0100
-Message-ID: <132152AA-E8D1-49AF-87C7-3A9ECA0766FA@gmail.com>
-References: <1534248753-2440-1-git-send-email-sricharan@codeaurora.org> <2ae96741-94c0-ba4c-fc19-05d33179683c@codeaurora.org> <d682580d-5070-0271-197f-29d988172937@codeaurora.org> <D8FC68C0-2572-4A86-81D9-D0099D314A45@gmail.com> <F5A89365-C613-4FE2-AD32-DC0AC6DF380B@gmail.com> <d6d3a76c-43eb-4a37-55eb-a407b5267aa4@codeaurora.org>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
+Date: Thu, 20 Sep 2018 14:33:14 +0000
+Message-ID: <bb973ba9-ca45-c9f1-38d6-67e9bc05e429@nxp.com>
+References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
+ <7d7646dc-9d0b-013d-75d7-a6cb4453f41f@arm.com>
+ <fd8ab351-46aa-f73e-593b-502a57de1975@nxp.com>
+ <39211e7a-034b-cdca-f182-1b6f6e5fbc53@arm.com>
+ <33eac426-cbb7-f899-5a35-aea28f8e5dc4@nxp.com>
+ <c2acecc8-5357-6cbe-f93c-00d71470dff5@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d6d3a76c-43eb-4a37-55eb-a407b5267aa4@codeaurora.org>
+In-Reply-To: <c2acecc8-5357-6cbe-f93c-00d71470dff5@arm.com>
+Content-Language: en-US
+Content-ID: <E3A76D8239CF594D9E5A186FBF43A245@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>, mark.rutland@arm.com, robh@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, rjw@rjwysocki.net, viresh.kumar@linaro.org, mturquette@baylibre.com, linux-pm@vger.kernel.org, sboyd@codeaurora.org, linux@armlinux.org.uk, thierry.escande@linaro.org, linux-kernel@vger.kernel.org, david.brown@linaro.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, niklas.cassel@linaro.org
+To: Robin Murphy <robin.murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Madalin-cristian Bucur <madalin.bucur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20 September 2018 14:01:57 BST, Sricharan R <sricharan@codeaurora=2Eorg=
-> wrote:
->
->
->On 9/20/2018 1:54 AM, Craig wrote:
->> Yup, this patch seems to have fixed the higher frequencies from the
->quick test I did=2E
->>=20
->  Thanks !!=2E Can i take that as Craig Tatlor <ctatlor97@gmail=2Ecom> ?
-Sure, no problem
->
->Regards,
-> Sricharan
->
->       tested-by:=20
->> On 7 September 2018 15:28:53 BST, Craig Tatlor <ctatlor97@gmail=2Ecom>
->wrote:
->>>
->>>
->>> On 7 September 2018 10:57:34 BST, Sricharan R
->>> <sricharan@codeaurora=2Eorg> wrote:
->>>> Hi Craig,
->>>>
->>>>
->>>>>> [v12]
->>>>>>   * Added my signed-off that was missing in some patches=2E
->>>>>>   * Added Bjorn's acked that i missed earlier=2E
->>>>>>
->>>>>
->>>>>   Can you give this a try on your 8974 device and check if the
->>>>>   pvs version reporting, scaling for higher frequencies are fine ?
->>>>>   Sorry, i could not get hold of a 8974 device=2E So in-case if you
->>>> still
->>>>>   have the issues with higher frequencies, can you give a quick
->>> debug
->>>>>   and report=2E That would be of great help=2E
->>>>>
->>>>   Ping on this =2E=2E
->>>
->>> Hi, didn't see your last message,
->>>
->>> Will have a try on mine in the weekend and report back=2E
->>>>
->>>> Regards,
->>>> Sricharan
->>>>
->>>>> Regards,
->>>>>  Sricharan
->>>>>
->>>>>
->>>>>> [v11]
->>>>>>   * Dropped patch 13 and 14 from v10 and
->>>>>>     merged the qcom-cpufreq-krait driver to the existing
->>>> qcom-cpufreq-kryo=2Ec
->>>>>>   * Rebased on top of clk-next
->>>>>>   * Fixed a bug while populating the pvs version for krait=2E
->>>>>>
->>>>>> [v10]
->>>>>>   * Addressed Stephen's comments to add clocks bindings
->properties
->>>>>>     to the newly introduced nodes=2E
->>>>>>   * Added a change to include opp-supported-hw to qcom-cpufreq=2Ec
->>>>>>   * Rebased on top of clk-next
->>>>>>   * Although there were minor changes to bindings and the driver
->>>>>>     retained the acked-by tags from Rob and Viresh respectively=2E=
-=20
->=20
->>>
->>>>>>
->>>>>> [v9]
->>>>>>   * Fixed a rebase issue in Makefile and added Tag from Robh=2E
->>>>>>
->>>>>> [v8]
->>>>>>   * Fixed a bug in path#14 pointed out by Viresh and also added
->>>> tags=2E
->>>>>>     No change in any other patch=2E
->>>>>>
->>>>>> [v7]
->>>>>>   * Fixed comments from Viresh for cleaning up the error handling
->>>>>>     in qcom-cpufreq=2Ec=2E Also changed the init function to latein=
-it
->>>>>>     call=2E This is required because nvmem which gets initialised
->>> with
->>>>>>     module_init needs to go first=2E
->>>>>>   * Fixed Rob's comments for bindings documentation
->>>>>>   * Fixed kbuild build issue in clk-lpc32xx=2Ec
->>>>>>   * Rebased on top of clk-next
->>>>>>
->>>>>> [v6]
->>>>>>   * Adrressed comments from Viresh for patch #14 in v5 [5]
->>>>>>   * Introduced a new binding operating-points-v2-krait-cpu
->>>>>>     as per discussion with Rob
->>>>>>   * Added Review tags
->>>>>>
->>>>>> [v5]
->>>>>>   * Addressed comments from Rob for bindings
->>>>>>   * Addressed comments from Viresh to use
->dev_pm_opp_set_prop_name,
->>>> accordingly
->>>>>>     dropped patch #12 and corrected patch #11 from previous patch
->>>> set in [4]
->>>>>>   * Converted to use #spdx tags for newly introduced files
->>>>>>
->>>>>> Mostly a resend of the v3 posted by Stephen quite some time back
->>> [1]
->>>>>> except for few changes=2E
->>>>>>   Based on reading some feedback from list,
->>>>>>   * Dropped the patch "clk: Add safe switch hook" from v3 [2]=2E
->>>>>>     Now this is taken care by patch#10 in this series only for
->>>> Krait=2E
->>>>>>   * Dropped the path "clk: Avoid sending high rates to downstream
->>>>>> 		      clocks during set_rate" from v3 [3]=2E
->>>>>>   * Rebased on top of clk-next=2E
->>>>>>   * Dropped the DT update from the series=2E Will send separately
->>>>>>   * Now with cpufreq-dt+opp supporting voltage scaling,
->registering
->>>> the
->>>>>>     krait cpu supplies in DT should be sufficient=2E But one issue
->>> is,
->>>>>>     the qcom-cpufreq drivers reads the efuse and based on that
->>>> registers
->>>>>>     the opp data and then registers the cpufreq-dt device=2E So
->when
->>>>>>     cpufreq-dt driver probes and registers the regulator to the
->OPP
->>>> framework,
->>>>>>     it expects that the opp data for the device should not be
->>>> registered before
->>>>>>     the regulator=2E Will send a RFC patch removing that check, to
->>>> find out the
->>>>>>     right way of doing it=2E
->>>>>>
->>>>>> These patches provide cpufreq scaling on devices with Krait CPUs=2E
->>>>>> In Krait CPU designs there's one PLL and two muxes per CPU,
->>> allowing
->>>>>> us to switch CPU frequencies independently=2E
->>>>>>
->>>>>> 				 secondary
->>>>>> 	 +-----+                    +
->>>>>> 	 | QSB |-------+------------|\
->>>>>> 	 +-----+       |            | |-+
->>>>>> 		       |    +-------|/  |
->>>>>> 		       |    |       +   |
->>>>>> 	 +-----+       |    |           |
->>>>>> 	 | PLL |----+-------+           |   primary
->>>>>> 	 +-----+    |  |                |     +
->>>>>> 		    |  |                +-----|\       +------+
->>>>>> 	 +-------+  |  |                      | \      |      |
->>>>>> 	 | HFPLL |----------+-----------------|  |-----| CPU0 |
->>>>>> 	 +-------+  |  |    |                 |  |     |      |
->>>>>> 		    |  |    | +-----+         | /      +------+
->>>>>> 		    |  |    +-| / 2 |---------|/
->>>>>> 		    |  |      +-----+         +
->>>>>> 		    |  |         secondary
->>>>>> 		    |  |            +
->>>>>> 		    |  +------------|\
->>>>>> 		    |               | |-+
->>>>>> 		    +---------------|/  |   primary
->>>>>> 				    +   |     +
->>>>>> 					+-----|\       +------+
->>>>>> 	 +-------+                            | \      |      |
->>>>>> 	 | HFPLL |----------------------------|  |-----| CPU1 |
->>>>>> 	 +-------+          |                 |  |     |      |
->>>>>> 			    | +-----+         | /      +------+
->>>>>> 			    +-| / 2 |---------|/
->>>>>> 			      +-----+         +
->>>>>>
->>>>>> To support this in the common clock framework we model the muxes,
->>>>>> dividers, and PLLs as different clocks=2E CPUfreq only interacts
->>>>>> with the primary mux (farthest right in the diagram)=2E When
->CPUfreq
->>>>>> sets a rate, the mux code finds the best parent that can provide
->>> the
->>>> rate=2E
->>>>>> Due to the design, QSB and the top PLL are always a fixed rate
->and
->>>> thus
->>>>>> only support one frequency each=2E These sources provide the lowest
->>>>>> frequencies for the CPUs=2E The HFPLLs are where we can make the
->CPU
->>>> go
->>>>>> faster (GHz range)=2E Sometimes we need to run the HFPLL twice as
->>>>>> fast and divide it by two to get a particular frequency=2E
->>>>>>
->>>>>> When switching rates we can't leave the CPU clocked by the HFPLL
->>>> because
->>>>>> we need to turn off the output of the PLL when changing its
->>>> frequency=2E
->>>>>> This means we have to switch over to the secondary mux and use
->one
->>>> of the
->>>>>> fixed sources=2E This is why we need something like the safe parent
->>>> patch=2E
->>>>>>
->>>>>> [1]
->>>>
->http://lists=2Einfradead=2Eorg/pipermail/linux-arm-kernel/2015-March/3326=
-07=2Ehtml
->>>>>> [2]
->>>>
->http://lists=2Einfradead=2Eorg/pipermail/linux-arm-kernel/2015-March/3326=
-15=2Ehtml
->>>>>> [3]
->>>>
->http://lists=2Einfradead=2Eorg/pipermail/linux-arm-kernel/2015-March/3326=
-08=2Ehtml
->>>>>> [4] https://lwn=2Enet/Articles/740994/=20
->>>>>> [5] https://lkml=2Eorg/lkml/2017/12/19/537
->>>>>>
->>>>>>
->>>>>> Sricharan R (3):
->>>>>>   clk: qcom: Add safe switch hook for krait mux clocks
->>>>>>   cpufreq: qcom: Re-organise kryo cpufreq to use it for other
->nvmem
->>>>>>     based qcom socs
->>>>>>   cpufreq: qcom: Add support for krait based socs
->>>>>>
->>>>>> Stephen Boyd (11):
->>>>>>   ARM: Add Krait L2 register accessor functions
->>>>>>   clk: qcom: Add support for High-Frequency PLLs (HFPLLs)
->>>>>>   clk: qcom: Add HFPLL driver
->>>>>>   dt-bindings: clock: Document qcom,hfpll
->>>>>>   clk: qcom: Add MSM8960/APQ8064's HFPLLs
->>>>>>   clk: qcom: Add IPQ806X's HFPLLs
->>>>>>   clk: qcom: Add support for Krait clocks
->>>>>>   clk: qcom: Add KPSS ACC/GCC driver
->>>>>>   dt-bindings: arm: Document qcom,kpss-gcc
->>>>>>   clk: qcom: Add Krait clock controller driver
->>>>>>   dt-bindings: clock: Document qcom,krait-cc
->>>>>>
->>>>>>  =2E=2E=2E/devicetree/bindings/arm/msm/qcom,kpss-acc=2Etxt  |  19 +
->>>>>>  =2E=2E=2E/devicetree/bindings/arm/msm/qcom,kpss-gcc=2Etxt  |  44 +=
-++
->>>>>>  =2E=2E=2E/devicetree/bindings/clock/qcom,hfpll=2Etxt       |  60 +=
-+++
->>>>>>  =2E=2E=2E/devicetree/bindings/clock/qcom,krait-cc=2Etxt    |  34 +=
-+
->>>>>>  =2E=2E=2E/{kryo-cpufreq=2Etxt =3D> qcom-nvmem-cpufreq=2Etxt}   |  =
- 7 +-
->>>>>>  arch/arm/common/Kconfig                            |   3 +
->>>>>>  arch/arm/common/Makefile                           |   1 +
->>>>>>  arch/arm/common/krait-l2-accessors=2Ec               |  48 +++
->>>>>>  arch/arm/include/asm/krait-l2-accessors=2Eh          |   9 +
->>>>>>  drivers/clk/qcom/Kconfig                           |  28 ++
->>>>>>  drivers/clk/qcom/Makefile                          |   5 +
->>>>>>  drivers/clk/qcom/clk-hfpll=2Ec                       | 244
->>>> +++++++++++++
->>>>>>  drivers/clk/qcom/clk-hfpll=2Eh                       |  44 +++
->>>>>>  drivers/clk/qcom/clk-krait=2Ec                       | 126 +++++++
->>>>>>  drivers/clk/qcom/clk-krait=2Eh                       |  40 +++
->>>>>>  drivers/clk/qcom/gcc-ipq806x=2Ec                     |  82 +++++
->>>>>>  drivers/clk/qcom/gcc-msm8960=2Ec                     | 172
->+++++++++
->>>>>>  drivers/clk/qcom/hfpll=2Ec                           |  96 +++++
->>>>>>  drivers/clk/qcom/kpss-xcc=2Ec                        |  87 +++++
->>>>>>  drivers/clk/qcom/krait-cc=2Ec                        | 397
->>>> +++++++++++++++++++++
->>>>>>  drivers/cpufreq/Kconfig=2Earm                        |   6 +-
->>>>>>  drivers/cpufreq/Makefile                           |   2 +-
->>>>>>  drivers/cpufreq/cpufreq-dt-platdev=2Ec               |   5 +
->>>>>>  drivers/cpufreq/qcom-cpufreq-kryo=2Ec                | 232
->>>> ------------
->>>>>>  drivers/cpufreq/qcom-cpufreq-nvmem=2Ec               | 387
->>>> ++++++++++++++++++++
->>>>>>  include/dt-bindings/clock/qcom,gcc-msm8960=2Eh       |   2 +
->>>>>>  26 files changed, 1941 insertions(+), 239 deletions(-)
->>>>>>  create mode 100644
->>>> Documentation/devicetree/bindings/arm/msm/qcom,kpss-gcc=2Etxt
->>>>>>  create mode 100644
->>>> Documentation/devicetree/bindings/clock/qcom,hfpll=2Etxt
->>>>>>  create mode 100644
->>>> Documentation/devicetree/bindings/clock/qcom,krait-cc=2Etxt
->>>>>>  rename Documentation/devicetree/bindings/opp/{kryo-cpufreq=2Etxt
->=3D>
->>>> qcom-nvmem-cpufreq=2Etxt} (98%)
->>>>>>  create mode 100644 arch/arm/common/krait-l2-accessors=2Ec
->>>>>>  create mode 100644 arch/arm/include/asm/krait-l2-accessors=2Eh
->>>>>>  create mode 100644 drivers/clk/qcom/clk-hfpll=2Ec
->>>>>>  create mode 100644 drivers/clk/qcom/clk-hfpll=2Eh
->>>>>>  create mode 100644 drivers/clk/qcom/clk-krait=2Ec
->>>>>>  create mode 100644 drivers/clk/qcom/clk-krait=2Eh
->>>>>>  create mode 100644 drivers/clk/qcom/hfpll=2Ec
->>>>>>  create mode 100644 drivers/clk/qcom/kpss-xcc=2Ec
->>>>>>  create mode 100644 drivers/clk/qcom/krait-cc=2Ec
->>>>>>  delete mode 100644 drivers/cpufreq/qcom-cpufreq-kryo=2Ec
->>>>>>  create mode 100644 drivers/cpufreq/qcom-cpufreq-nvmem=2Ec
->>>>>>
->>>>>
->>=20
-
---=20
-Please, Don't Panic
+DQoNCk9uIDIwLjA5LjIwMTggMTQ6NDksIFJvYmluIE11cnBoeSB3cm90ZToNCj4gT24gMjAvMDkv
+MTggMTE6MzgsIExhdXJlbnRpdSBUdWRvciB3cm90ZToNCj4+DQo+Pg0KPj4gT24gMTkuMDkuMjAx
+OCAxNzozNywgUm9iaW4gTXVycGh5IHdyb3RlOg0KPj4+IE9uIDE5LzA5LzE4IDE1OjE4LCBMYXVy
+ZW50aXUgVHVkb3Igd3JvdGU6DQo+Pj4+IEhpIFJvYmluLA0KPj4+Pg0KPj4+PiBPbiAxOS4wOS4y
+MDE4IDE2OjI1LCBSb2JpbiBNdXJwaHkgd3JvdGU6DQo+Pj4+PiBIaSBMYXVyZW50aXUsDQo+Pj4+
+Pg0KPj4+Pj4gT24gMTkvMDkvMTggMTM6MzUsIGxhdXJlbnRpdS50dWRvckBueHAuY29tIHdyb3Rl
+Og0KPj4+Pj4+IEZyb206IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+
+DQo+Pj4+Pj4NCj4+Pj4+PiBUaGlzIHBhdGNoIHNlcmllcyBhZGRzIFNNTVUgc3VwcG9ydCBmb3Ig
+TlhQIExTMTA0M0EgYW5kIExTMTA0NkEgY2hpcHMNCj4+Pj4+PiBhbmQgY29uc2lzdHMgbW9zdGx5
+IGluIGltcG9ydGFudCBkcml2ZXIgZml4ZXMgYW5kIHRoZSByZXF1aXJlZCBkZXZpY2UNCj4+Pj4+
+PiB0cmVlIHVwZGF0ZXMuIEl0IHRvdWNoZXMgc2V2ZXJhbCBzdWJzeXN0ZW1zIGFuZCBjb25zaXN0
+cyBvZiB0aHJlZSANCj4+Pj4+PiBtYWluDQo+Pj4+Pj4gcGFydHM6DQo+Pj4+Pj4gwqDCoMKgIC0g
+Y2hhbmdlcyBpbiBzb2MvZHJpdmVycy9mc2wvcWJtYW4gZHJpdmVycyBhZGRpbmcgaW9tbXUgDQo+
+Pj4+Pj4gbWFwcGluZyBvZg0KPj4+Pj4+IMKgwqDCoMKgwqAgcmVzZXJ2ZWQgbWVtb3J5IGFyZWFz
+LCBmaXhlcyBhbmQgZGVmZXJlZCBwcm9iZSBzdXBwb3J0DQo+Pj4+Pj4gwqDCoMKgIC0gY2hhbmdl
+cyBpbiBkcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYV9ldGggZHJpdmVycw0KPj4+
+Pj4+IMKgwqDCoMKgwqAgY29uc2lzdGluZyBpbiBtaXNjIGRtYSBtYXBwaW5nIHJlbGF0ZWQgZml4
+ZXMgYW5kIHByb2JlIG9yZGVyaW5nDQo+Pj4+Pj4gwqDCoMKgIC0gYWRkaXRpb24gb2YgdGhlIGFj
+dHVhbCBhcm0gc21tdSBkZXZpY2UgdHJlZSBub2RlIHRvZ2V0aGVyIHdpdGgNCj4+Pj4+PiDCoMKg
+wqDCoMKgIHZhcmlvdXMgYWRqdXN0bWVudHMgdG8gdGhlIGRldmljZSB0cmVlcw0KPj4+Pj4+DQo+
+Pj4+Pj4gUGVyZm9ybWFuY2UgaW1wYWN0DQo+Pj4+Pj4NCj4+Pj4+PiDCoMKgwqDCoMKgwqAgUnVu
+bmluZyBpcGVyZiBiZW5jaG1hcmtzIGluIGEgYmFjay10by1iYWNrIHNldHVwIChib3RoIHNpZGVz
+DQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIGhhdmluZyBzbW11IGVuYWJsZWQpIG9uIGEgMTBHQnBzIHBv
+cnQgc2hvdyBhbiBpbXBvcnRhbnQNCj4+Pj4+PiDCoMKgwqDCoMKgwqAgbmV0d29ya2luZyBwZXJm
+b3JtYW5jZSBkZWdyYWRhdGlvbiBvZiBhcm91bmQgJTQwICg5LjQ4R2Jwcw0KPj4+Pj4+IMKgwqDC
+oMKgwqDCoCBsaW5lcmF0ZSB2cyA1LjQ1R2JwcykuIElmIHlvdSBuZWVkIHBlcmZvcm1hbmNlIGJ1
+dCB3aXRob3V0DQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIFNNTVUgc3VwcG9ydCB5b3UgY2FuIHVzZSAi
+aW9tbXUucGFzc3Rocm91Z2g9MSIgdG8gZGlzYWJsZQ0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBTTU1V
+Lg0KPiANCj4gSSBzaG91bGQgaGF2ZSBzYWlkIGJlZm9yZSAtIHRoYW5rcyBmb3IgdGhlIG51bWJl
+cnMgdGhlcmUgYXMgd2VsbC4gQWx3YXlzIA0KPiBnb29kIHRvIGFkZCBhbm90aGVyIGRhdGFwb2lu
+dCB0byBteSBjb2xsZWN0aW9uLiBJZiB5b3UncmUgaW50ZXJlc3RlZCANCj4gSSd2ZSBhZGRlZCBT
+TU1VdjIgc3VwcG9ydCB0byB0aGUgIm5vbi1zdHJpY3QgbW9kZSIgc2VyaWVzIChvZiB3aGljaCBJ
+IA0KPiBzaG91bGQgYmUgcG9zdGluZyB2OCBzb29uKSwgc28gaXQgbWlnaHQgYmUgZnVuIHRvIHNl
+ZSBob3cgd2VsbCB0aGF0IA0KPiB3b3JrcyBvbiBNTVUtNTAwIGluIHRoZSByZWFsIHdvcmxkLg0K
+DQpIbW0sIEkgdGhpbmsgSSBnYXZlIHRob3NlIGEgdHJ5IHNvbWUgd2Vla3MgYWdvIGFuZCB2YWd1
+ZWx5IHJlbWVtYmVyIHRoYXQgDQpJIGRpZCBzZWUgaW1wcm92ZW1lbnRzLiBDYW4ndCByZW1lbWJl
+ciB0aGUgbnVtYmVycyBvZmYgdGhlIHRvcCBvZiBteSANCmhlYWQgYnV0IEknbGwgcmUtdGVzdCB3
+aXRoIHRoZSBsYXRlc3Qgc3BpbiBhbmQgdXBkYXRlIHRoZSBudW1iZXJzLg0KDQo+Pj4+Pj4NCj4+
+Pj4+PiBVU0IgaXNzdWUgYW5kIHdvcmthcm91bmQNCj4+Pj4+Pg0KPj4+Pj4+IMKgwqDCoMKgwqDC
+oCBUaGVyZSdzIGEgcHJvYmxlbSB3aXRoIHRoZSB1c2IgY29udHJvbGxlcnMgaW4gdGhlc2UgY2hp
+cHMNCj4+Pj4+PiDCoMKgwqDCoMKgwqAgZ2VuZXJhdGluZyBzbWFsbGVyLCA0MC1iaXQgd2lkZSBk
+bWEgYWRkcmVzc2VzIGluc3RlYWQgb2YgdGhlDQo+Pj4+Pj4gNDgtYml0DQo+Pj4+Pj4gwqDCoMKg
+wqDCoMKgIHN1cHBvcnRlZCBhdCB0aGUgc21tdSBpbnB1dC4gU28geW91IGVuZCB1cCBpbiBhIHNp
+dHVhdGlvbg0KPj4+Pj4+IHdoZXJlIHRoZQ0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBzbW11IGlzIG1h
+cHBlZCB3aXRoIDQ4LWJpdCBhZGRyZXNzIHRyYW5zbGF0aW9ucywgYnV0IHRoZSANCj4+Pj4+PiBk
+ZXZpY2UNCj4+Pj4+PiDCoMKgwqDCoMKgwqAgZ2VuZXJhdGVzIHRyYW5zYWN0aW9ucyB3aXRoIGNs
+aXBwZWQgNDAtYml0IGFkZHJlc3NlcywgdGh1cyANCj4+Pj4+PiBzbW11DQo+Pj4+Pj4gwqDCoMKg
+wqDCoMKgIGNvbnRleHQgZmF1bHRzIGFyZSB0cmlnZ2VyZWQuIEkgZW5jb3VudGVyZWQgYSBzaW1p
+bGFyDQo+Pj4+Pj4gc2l0dWF0aW9uIGZvcg0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBtbWMgdGhhdCBJ
+wqAgbWFuYWdlZCB0byBmaXggaW4gc29mdHdhcmUgWzFdIGhvd2V2ZXIgZm9yIFVTQiBJDQo+Pj4+
+Pj4gZGlkIG5vdA0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBmaW5kIGEgcHJvcGVyIHBsYWNlIGluIHRo
+ZSBjb2RlIHRvIGFkZCBhIHNpbWlsYXIgZml4LiBUaGUgb25seQ0KPj4+Pj4+IMKgwqDCoMKgwqDC
+oCB3b3JrYXJvdW5kIEkgZm91bmQgd2FzIHRvIGFkZCB0aGlzIGtlcm5lbCBwYXJhbWV0ZXIgd2hp
+Y2gNCj4+Pj4+PiBsaW1pdHMgdGhlDQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIHVzYiBkbWEgdG8gMzIt
+Yml0IHNpemU6ICJ4aGNpLWhjZC5xdWlya3M9MHg4MDAwMDAiLg0KPj4+Pj4+IMKgwqDCoMKgwqDC
+oCBUaGlzIHdvcmthcm91bmQgaWYgZmFyIGZyb20gaWRlYWwsIHNvIGFueSBzdWdnZXN0aW9ucyBm
+b3IgYSANCj4+Pj4+PiBjb2RlDQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIGJhc2VkIHdvcmthcm91bmQg
+aW4gdGhpcyBhcmVhIHdvdWxkIGJlIGdyZWF0bHkgYXBwcmVjaWF0ZWQuDQo+Pj4+Pg0KPj4+Pj4g
+SWYgeW91IGhhdmUgYSBub21pbmFsbHktNjQtYml0IGRldmljZSB3aXRoIGENCj4+Pj4+IG5hcnJv
+d2VyLXRoYW4tdGhlLW1haW4taW50ZXJjb25uZWN0IGxpbmsgaW4gZnJvbnQgb2YgaXQsIHRoYXQg
+c2hvdWxkDQo+Pj4+PiBhbHJlYWR5IGJlIGZpeGVkIGluIDQuMTktcmMgYnkgYnVzX2RtYV9tYXNr
+IHBpY2tpbmcgdXAgRFQgZG1hLXJhbmdlcywNCj4+Pj4+IHByb3ZpZGVkIHRoZSBpbnRlcmNvbm5l
+Y3QgaGllcmFyY2h5IGNhbiBiZSBkZXNjcmliZWQgYXBwcm9wcmlhdGVseSAob3INCj4+Pj4+IGF0
+IGxlYXN0IG1hc3NhZ2VkIHN1ZmZpY2llbnRseSB0byBzYXRpc2Z5IHRoZSBiaW5kaW5nKSwgZS5n
+LjoNCj4+Pj4+DQo+Pj4+PiAvIHsNCj4+Pj4+IMKgwqAgwqDCoMKgwqAuLi4NCj4+Pj4+DQo+Pj4+
+PiDCoMKgIMKgwqDCoMKgc29jIHsNCj4+Pj4+IMKgwqAgwqDCoMKgwqDCoMKgwqAgcmFuZ2VzOw0K
+Pj4+Pj4gwqDCoCDCoMKgwqDCoMKgwqDCoCBkbWEtcmFuZ2VzID0gPDAgMCAxMDAwMCAwPjsNCj4+
+Pj4+DQo+Pj4+PiDCoMKgIMKgwqDCoMKgwqDCoMKgIGRldl80OGJpdCB7IC4uLiB9Ow0KPj4+Pj4N
+Cj4+Pj4+IMKgwqAgwqDCoMKgwqDCoMKgwqAgcGVyaXBoX2J1cyB7DQo+Pj4+PiDCoMKgIMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgcmFuZ2VzOw0KPj4+Pj4gwqDCoCDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgIGRtYS1yYW5nZXMgPSA8MCAwIDEwMCAwPjsNCj4+Pj4+DQo+Pj4+PiDCoMKgIMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqAgZGV2XzQwYml0IHsgLi4uIH07DQo+Pj4+PiDCoMKgIMKgwqDCoMKgwqDC
+oMKgIH07DQo+Pj4+PiDCoMKgIMKgwqDCoMKgfTsNCj4+Pj4+IH07DQo+Pj4+Pg0KPj4+Pj4gYW5k
+IGlmIHRoYXQgZmFpbHMgdG8gd29yayBhcyBleHBlY3RlZCAoZXhjZXB0IGZvciBQQ0kgaG9zdHMg
+d2hlcmUNCj4+Pj4+IGhhbmRsaW5nIGRtYS1yYW5nZXMgcHJvcGVybHkgc3RpbGwgbmVlZHMgc29y
+dGluZyBvdXQpLCBwbGVhc2UgZG8gDQo+Pj4+PiBsZXQgdXMNCj4+Pj4+IGtub3cgOykNCj4+Pj4+
+DQo+Pj4+DQo+Pj4+IEp1c3QgdG8gY29uZmlybSwgSXMgdGhpcyBbMV0gdGhlIGNoYW5nZSBJIHdh
+cyBzdXBwb3NlZCB0byB0ZXN0Pw0KPj4+DQo+Pj4gTm90IHF1aXRlIC0gZG1hLXJhbmdlcyBpcyBv
+bmx5IHZhbGlkIGZvciBub2RlcyByZXByZXNlbnRpbmcgYSBidXMsIHNvDQo+Pj4gcHV0dGluZyBp
+dCBkaXJlY3RseSBpbiB0aGUgVVNCIGRldmljZSBub2RlcyBkb2Vzbid0IHdvcmsgKEZXSVcgdGhh
+dCdzDQo+Pj4gd2h5IFBDSSBpcyBicm9rZW4sIGJlY2F1c2UgdGhlIHBhcnNlciBkb2Vzbid0IGV4
+cGVjdCB0aGUNCj4+PiBidXMtYXMtbGVhZi1ub2RlIGNhc2UpLiBUaGF0J3MgdGVoIHBvaW50IG9m
+IHRoYXQgaW50ZXJtZWRpYXRlIHNpbXBsZS1idXMNCj4+PiBub2RlIHJlcHJlc2VudGVkIGJ5ICJw
+ZXJpcGhfYnVzIiBpbiBteSBleGFtcGxlIChzb3JyeSwgSSBzaG91bGQgaGF2ZSBwdXQNCj4+PiBj
+b21wYXRpYmxlcyBpbiB0byBtYWtlIGl0IGNsZWFyZXIpIC0gb2Z0ZW4gdGhhdCdzIGFjdHVhbGx5
+IHRydWUgdG8gbGlmZQ0KPj4+IChpLmUuICJzb2MiIGlzIHNvbWV0aGluZyBsaWtlIGEgQ0NJIGFu
+ZCAicGVyaXBoX2J1cyIgaXMgc29tZXRoaW5nIGxpa2UNCj4+PiBhbiBBWEkgTklDIGdsdWluZyBh
+IGJ1bmNoIG9mIGxvd2VyLWJhbmR3aWR0aCBETUEgbWFzdGVycyB0byBvbmUgb2YgdGhlDQo+Pj4g
+Q0NJIHBvcnRzKSBidXQgYXQgd29yc3QgaXQncyBqdXN0IGEgbmVjZXNzYXJ5IGV2aWwgdG8gbWFr
+ZSB0aGUgYmluZGluZw0KPj4+IGhhcHB5IChpZiBpdCBsaXRlcmFsbHkgb25seSByZXByZXNlbnRz
+IHRoZSBwb2ludC10by1wb2ludCBsaW5rIGJldHdlZW4NCj4+PiB0aGUgZGV2aWNlIG1hc3RlciBw
+b3J0IGFuZCBpbnRlcmNvbm5lY3Qgc2xhdmUgcG9ydCkuDQo+Pj4NCj4+DQo+PiBRdWljayB1cGRh
+dGU6IHNvIEkgYWRqdXN0ZWQgdG8gZGV2aWNlIHRyZWUgYWNjb3JkaW5nIHRvIHlvdXIgZXhhbXBs
+ZSBhbmQNCj4+IGl0IHdvcmtzIHNvIG5vdyBJIGNhbiBnZXQgcmlkIG9mIHRoYXQgbmFzdHkga2Vy
+bmVsIGFyZyBiYXNlZCB3b3JrYXJvdW5kLA0KPj4geWV5ISA6LSkNCj4gDQo+IENvb2whIEluIGZh
+Y3QsIGp1ZGdpbmcgYnkgdGhlIGJsb2NrIGRpYWdyYW1zIG9uIHRoZSB3ZWJzaXRlLCB0aGUgImJh
+c2ljIA0KPiBwZXJpcGhlcmFscyBhbmQgaW50ZXJjb25uZWN0IiBzZWN0aW9uIGhhbmdpbmcgb2Zm
+IHRoZSBzaWRlIG9mIHRoZSBDQ0kgDQo+IGltcGxpZXMgdGhhdCBwcm9iYWJseSBpcyB0cnVlIHRv
+IHRoZSByZWFsIHRvcG9sb2d5IGFzIEkgaW1hZ2luZWQsIHNvIGl0IA0KPiBkb2Vzbid0IGV2ZW4g
+Y291bnQgYXMgYSBob3JyaWJsZSBoYWNrIDopDQoNCkluZGVlZCwgb24gdGhpcyBjaGlwIHRoZXJl
+J3MgYSBOb0MgbHVtcGluZyBiZWhpbmQgaXQgc2V2ZXJhbCBsb3ctc3BlZWQgDQpkZXZpY2VzIHN1
+Y2ggYXMgdXNiLCBzYXRhLCBlc2RoYy4NCg0KPj4gVGhhbmtzIGEgbG90LCB0aGF0IHdhcyByZWFs
+bHkgaGVscGZ1bC4NCj4gDQo+IE5vIHByb2JsZW0uIEZXSVcgaWYgeW91IGV2ZXIgY29tZSB0byBk
+b2luZyBBQ1BJIHN1cHBvcnQgZm9yIHRoZXNlIFNvQ3MsIA0KPiB0aGUgZXF1aXZhbGVudCBpcyBt
+ZXJlbHkgYSBjYXNlIG9mIHNldHRpbmcgdGhlIGRldmljZSBtZW1vcnkgYWRkcmVzcyANCj4gc2l6
+ZSBsaW1pdCBmaWVsZCBhcHByb3ByaWF0ZWx5IGZvciBhbGwgdGhlIG5hbWVkIGNvbXBvbmVudHMu
+DQo+IA0KDQpUaGFua3MsIEknbGwga2VlcCB0aGlzIGluIG1pbmQuIElmIGkgcmVtZW1iZXIgY29y
+cmVjdGx5LCB0aGVyZSBhcmUgDQpwZW9wbGUgb3ZlciBoZXJlIHdvcmtpbmcgb24gVUVGSSArIEFD
+UEkgc3VwcG9ydCBmb3Igc29tZSBMUyBjaGlwcyBidXQgDQpwcm9ncmVzcyBhcHBlYXJzIHRvIGJl
+IHNsb3cuDQoNCi0tLQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50aXU=
