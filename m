@@ -1,44 +1,34 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v2] ARM: multi_v7_defconfig: enable STM32 SPI
-Date: Thu, 20 Sep 2018 17:29:17 +0200
-Message-ID: <eb5a90e1-d3d6-fef7-7595-29f3ae38af55@st.com>
-References: <1534934989-22292-1-git-send-email-amelie.delaunay@st.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] pinctrl: qcom: spmi-gpio: Add pms405 gpio support
+Date: Thu, 20 Sep 2018 08:30:03 -0700
+Message-ID: <153745740342.119890.12073424910838960020@swboyd.mtv.corp.google.com>
+References: <20180920014705.15144-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534934989-22292-1-git-send-email-amelie.delaunay@st.com>
-Content-Language: en-US
+In-Reply-To: <20180920014705.15144-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Amélie
+Quoting Bjorn Andersson (2018-09-19 18:47:05)
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/q=
+com/pinctrl-spmi-gpio.c
+> index a29efbe08f48..b54891998caa 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -1055,6 +1055,7 @@ static const struct of_device_id pmic_gpio_of_match=
+[] =3D {
+>         { .compatible =3D "qcom,pm8994-gpio" },   /* 22 GPIO's */
+>         { .compatible =3D "qcom,pmi8994-gpio" },  /* 10 GPIO's */
+>         { .compatible =3D "qcom,pma8084-gpio" },  /* 22 GPIO's */
+> +       { .compatible =3D "qcom,pms405-gpio" }, /* 11 GPIO's */
 
-On 08/22/2018 12:49 PM, Amelie Delaunay wrote:
-> Enable the STM32 SPI driver, implemented on STM32MP1 SoC.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->   arch/arm/configs/multi_v7_defconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index b749d1e..4cdb622 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -417,6 +417,7 @@ CONFIG_SPI_S3C64XX=m
->   CONFIG_SPI_SH_MSIOF=m
->   CONFIG_SPI_SH_HSPI=y
->   CONFIG_SPI_SIRF=y
-> +CONFIG_SPI_STM32=m
->   CONFIG_SPI_SUN4I=y
->   CONFIG_SPI_SUN6I=y
->   CONFIG_SPI_TEGRA114=y
-> 
+I thought we didn't update the C driver, because there isn't anything to
+do here. Just make binding updates and it's all fine.
 
-Applied on stm32-next.
-
-Thanks.
-Alex
+>         { .compatible =3D "qcom,spmi-gpio" }, /* Generic */
+>         { },
+>  };
