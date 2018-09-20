@@ -1,147 +1,45 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [V2, 4/5] Documentation: dt-bindings: Document bindings for DW MIPI CSI-2 Host
-Date: Thu, 20 Sep 2018 16:24:54 +0300
-Message-ID: <1932462.yjy0pN2BsW@avalon>
-References: <20180920111648.27000-1-lolivei@synopsys.com> <20180920111648.27000-5-lolivei@synopsys.com>
+From: Timur Tabi <timur@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
+ mdio bus
+Date: Thu, 20 Sep 2018 08:42:04 -0500
+Message-ID: <78719753-77bd-596a-dfc7-ccd676850283@kernel.org>
+References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <20180917145028.GC5458@lunn.ch>
+ <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
+ <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
+ <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180918123545.GA29092@lunn.ch>
+ <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
+ <20180919122521.GA26940@lunn.ch>
+ <1226d3d3-e2ba-571d-5b70-b246cbde2fb6@kernel.org>
+ <20180919152052.GD17466@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920111648.27000-5-lolivei@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Joao.Pinto@synopsys.com, festevam@gmail.com, Luis Oliveira <luis.oliveira@synopsys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20180919152052.GD17466@lunn.ch>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>, Florian Fainelli <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Luis,
-
-Thank you for the patch.
-
-On Thursday, 20 September 2018 14:16:42 EEST Luis Oliveira wrote:
-> Add bindings for Synopsys DesignWare MIPI CSI-2 host.
+On 9/19/18 10:20 AM, Andrew Lunn wrote:
+> I suspect that is not going to be easy. Last time i looked, the ACPI
+> standard had nothing about MDIO busses or PHYs. Marcin Wojtas did some
+> work in this area a while back for the mvpp2, but if i remember
+> correctly, he worked around this by simply not having a PHY when using
+> ACPI, and making use of a MAC interrupt which indicated when there was
+> link.
 > 
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-> ---
-> Changelog
-> v2:
-> - no changes
-> 
->  .../devicetree/bindings/media/snps,dw-csi-plat.txt | 74 +++++++++++++++++++
->  1 file changed, 74 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-> b/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt new file
-> mode 100644
-> index 0000000..028f5eb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/snps,dw-csi-plat.txt
-> @@ -0,0 +1,74 @@
-> +Synopsys DesignWare CSI-2 Host controller
-> +
-> +Description
-> +-----------
-> +
-> +This HW block is used to receive image coming from an MIPI CSI-2 compatible
-> +camera.
-> +
-> +Required properties:
-> +- compatible: shall be "snps,dw-csi-plat"
-> +- reg			: physical base address and size of the device memory mapped
-> +  registers;
-> +- interrupts		: CSI-2 Host interrupt
-> +- snps,output-type	: Core output to be used (IPI-> 0 or IDI->1 or BOTH-
->2)
-> These
-> +			  values choose which of the Core outputs will be used, it
-> +			  can be Image Data Interface or Image Pixel Interface.
-> +- phys			: List of one PHY specifier (as defined in
-> +			  Documentation/devicetree/bindings/phy/phy-bindings.txt).
-> +			  This PHY is a MIPI DPHY working in RX mode.
-> +- resets		: Reference to a reset controller (optional)
-> +
-> +Optional properties(if in IPI mode):
-> +- snps,ipi-mode 	: Mode to be used when in IPI(Camera -> 0 or Controller -
->
-> 1)
-> +			  This property defines if the controller will use the video
-> +			  timings available
-> +			  in the video stream or if it will use pre-defined ones.
+> Whoever implements this first needs to be an ACPI expert and probably
+> needs to write it up and submit it as an amendment to the ACPI
+> standard.
 
-How does one select this ?
+If that's what it takes, then so be it.  But adding DT support for a 
+device that is only used on ACPI platforms is not a worthwhile endeavor.
 
-> +- snps,ipi-color-mode	: Bus depth to be used in IPI (48 bits -> 0 or 16
-> bits -> 1)
-> +			  This property defines the width of the IPI bus.
-
-How about using the standard bus-width property in the endpoint of the output 
-port ?
-
-> +- snps,ipi-auto-flush	: Data auto-flush (1 -> Yes or 0 -> No). This
-> property defines
-> +			  if the data is automatically flushed in each vsync
-> or if
-> +			  this process is done manually
-
-This seems like a configuration option, not a hardware property. I don't think 
-it belongs to DT.
-
-> +- snps,virtual-channel	: Virtual channel where data is present when in IPI
-> mode. This
-> +			  property chooses the virtual channel which IPI will use to
-> +			  retrieve the video stream.
-
-The virtual channel doesn't belong to DT, it should be queried from the sensor 
-at runtime (and when a sensor can send multiple data streams, that should even 
-be configurable).
-
-> +The per-board settings:
-> + - port sub-node describing a single endpoint connected to the camera as
-> +   described in video-interfaces.txt[1].
-
-You need to explicitly list all the ports for this device, with their number 
-and function.
-
-> +Example:
-> +
-> +	csi2_1: csi2@3000 {
-> +		compatible = "snps,dw-csi-plat";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = < 0x03000 0x7FF>;
-> +		interrupts = <2>;
-> +		output-type = <2>;
-> +		resets = <&dw_rst 1>;
-> +		phys = <&mipi_dphy_rx1 0>;
-> +		phy-names = "csi2-dphy";
-> +
-> +		/* IPI optional Configurations */
-> +		snps,ipi-mode = <0>;
-> +		snps,ipi-color-mode = <0>;
-> +		snps,ipi-auto-flush = <1>;
-> +		snps,virtual-channel = <0>;
-> +
-> +		/* CSI-2 per-board settings */
-> +		port@1 {
-> +			reg = <1>;
-> +			csi1_ep1: endpoint {
-> +				remote-endpoint = <&camera_1>;
-> +				data-lanes = <1 2>;
-> +			};
-> +		};
-> +		port@2 {
-> +			csi1_ep2: endpoint {
-> +				remote-endpoint = <&vif1_ep>;
-> +			};
-> +		};
-> +	};
-> +
-> +
-
-Extra blank lines.
-
--- 
-Regards,
-
-Laurent Pinchart
+After ACPI support is merged, Dongsheng can choose to add DT support to 
+maintain parity, if he wants.  Maybe one day the MSM developers will use 
+the upstream driver on one of their SOCs.
