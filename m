@@ -1,10 +1,10 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [[PATCH v3] 6/6] [media] ad5820: DT new compatible devices
-Date: Thu, 20 Sep 2018 22:45:40 +0200
-Message-ID: <20180920204540.28832-6-ricardo.ribalda@gmail.com>
-References: <20180920204540.28832-1-ricardo.ribalda@gmail.com>
+Subject: [PATCH v4 7/7] [media] ad5820: DT new compatible devices
+Date: Thu, 20 Sep 2018 22:47:51 +0200
+Message-ID: <20180920204751.29117-7-ricardo.ribalda@gmail.com>
+References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920204540.28832-1-ricardo.ribalda@gmail.com>
+In-Reply-To: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
