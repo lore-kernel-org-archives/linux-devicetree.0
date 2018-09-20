@@ -1,36 +1,57 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [RESEND PATCH v3 0/3] sh: make early_platform code
- SuperH-specific
-Date: Thu, 20 Sep 2018 18:09:52 +0200
-Message-ID: <9963d3f3-ba14-0d18-d669-53fc79b783c2@linaro.org>
-References: <20180827090651.25062-1-brgl@bgdev.pl>
- <CAMRc=McWre+5PRuozF69YKONvzy4X31=MzZim-QjhaAZ9iAVTw@mail.gmail.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] mailbox: qcom: Add QCS404 APPS Global compatible
+Date: Thu, 20 Sep 2018 09:17:03 -0700
+Message-ID: <20180920161703.GC2350@vkoul-mobl>
+References: <20180920014408.14645-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=McWre+5PRuozF69YKONvzy4X31=MzZim-QjhaAZ9iAVTw@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180920014408.14645-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Marc Zyngier <marc.zyngier@arm.com>, "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, Peter Rosin <peda@axentia.se>, Jiri Slaby <jslaby@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Johan Hovold <johan@kernel.org>, Rob
-Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/09/2018 15:00, Bartosz Golaszewski wrote:
+On 19-09-18, 18:44, Bjorn Andersson wrote:
+> Add support for the QCS404 APPS Global block with IPC register at offset
+> 8.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-[ ... ]
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-> Ping for 4.20. This is the third release cycle I'm trying to get this
-> merged and there never were any objections.
-
-Thanks for the heads up, it is in the pipe.
-
-  -- Daniel
-
+> ---
+>  .../devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt        | 1 +
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c                          | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> index 6e8a9ab0fdae..1232fc9fc709 100644
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> @@ -11,6 +11,7 @@ platforms.
+>  		    "qcom,msm8916-apcs-kpss-global",
+>  		    "qcom,msm8996-apcs-hmss-global"
+>  		    "qcom,msm8998-apcs-hmss-global"
+> +		    "qcom,qcs404-apcs-apps-global"
+>  		    "qcom,sdm845-apss-shared"
+>  
+>  - reg:
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index 333ed4a9d4b8..aed23ac9550d 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -126,6 +126,7 @@ static const struct of_device_id qcom_apcs_ipc_of_match[] = {
+>  	{ .compatible = "qcom,msm8916-apcs-kpss-global", .data = (void *)8 },
+>  	{ .compatible = "qcom,msm8996-apcs-hmss-global", .data = (void *)16 },
+>  	{ .compatible = "qcom,msm8998-apcs-hmss-global", .data = (void *)8 },
+> +	{ .compatible = "qcom,qcs404-apcs-apps-global", .data = (void *)8 },
+>  	{ .compatible = "qcom,sdm845-apss-shared", .data = (void *)12 },
+>  	{}
+>  };
+> -- 
+> 2.18.0
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+~Vinod
