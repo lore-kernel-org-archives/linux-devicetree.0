@@ -1,73 +1,53 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: bcm: add Northstar driver
-Date: Thu, 20 Sep 2018 07:44:27 +0200
-Message-ID: <b14fda92-14a1-0da7-02bf-758fa3751abe@gmail.com>
-References: <20180919210219.21921-1-zajec5@gmail.com>
- <20180919210219.21921-2-zajec5@gmail.com>
- <da0992c4-f8c8-7e3c-6d54-35a8cfdcd7bc@gmail.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 1/3] irqchip: add C-SKY irqchip drivers
+Date: Thu, 20 Sep 2018 13:47:14 +0800
+Message-ID: <20180920054713.GA5198@guoren-Inspiron-7460>
+References: <a70337117db84f6e1091d0b3fc28acb691ac9b35.1537087118.git.ren_guo@c-sky.com>
+ <86in35mfas.wl-marc.zyngier@arm.com>
+ <20180917020928.GA22452@guoren-Inspiron-7460>
+ <86tvmoz22k.wl-marc.zyngier@arm.com>
+ <20180918084331.GA10950@guoren>
+ <86r2hqu82l.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <da0992c4-f8c8-7e3c-6d54-35a8cfdcd7bc@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <86r2hqu82l.wl-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gOS8xOS8xOCAxMTo0NSBQTSwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAwOS8xOS8y
-MDE4IDAyOjAyIFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IEZyb206IFJhZmHFgiBNacWC
-ZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4KPj4gVGhpcyBkcml2ZXIgcHJvdmlkZXMgc3VwcG9y
-dCBmb3IgTm9ydGhzdGFyIG11eCBjb250cm9sbGVyLiBJdCBkaWZmZXJzCj4+IGZyb20gTm9ydGhz
-dGFyIFBsdXMgb25lIHNvIGEgbmV3IGJpbmRpbmcgYW5kIGRyaXZlciB3ZXJlIG5lZWRlZC4KPj4K
-Pj4gUmlnaHQgbm93IGl0IGluY2x1ZGVzIHN1cHBvcnQgZm9yIFNQSSBwaW5zIG9ubHkgd2hpY2gg
-aXMgY2F1c2VkIGJ5IGEKPj4gbGFjayBvZiBhY2Nlc3MgdG8gQnJvYWRjb20ncyBkYXRhc2hlZXQu
-IFNQSSBwaW5zIGluZm8gd2FzIGV4dHJhY3RlZCBmcm9tCj4+IHRoZSBCcm9hZGNvbSdzIFNESy4g
-T25jZSBtb3JlIHBpbnMgYXJlIGRpc2NvdmVyZWQgdGhleSBjYW4gYmUgYWRkZWQgdG8KPj4gdGhl
-IGRyaXZlciB3aXRob3V0IGJyZWFraW5nIGFueSBleGlzdGluZyBzZXR1cHMuCj4+Cj4+IFNpZ25l
-ZC1vZmYtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4gLS0tCj4gCj4g
-W3NuaXBdCj4gCj4+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBpbmN0cmxfcGluX2Rlc2MgbnNfcGlu
-Y3RybF9waW5zW10gPSB7Cj4+ICsJeyAwLCAic3BpX2NsayIgfSwKPj4gKwl7IDEsICJzcGlfc3Mi
-IH0sCj4+ICsJeyAyLCAic3BpX21vc2kiIH0sCj4+ICsJeyAzLCAic3BpX21pc28iIH0sCj4+ICt9
-Owo+IAo+IEluIGNhc2UgeW91IGFyZSBpbnRlcmVzdGVkLCBoZXJlIGFyZSB0aGUgYWRkaXRpb25h
-bCBmdW5jdGlvbnM6Cj4gCj4gNDogaTJjX3NjbAo+IDU6IGkyY19zZGEKPiAKPiA2OiBtZGMKPiA3
-OiBtZGlvCj4gCj4gODogcHdtMAo+IDk6IHB3bTEKPiAxMDogcHdtMgo+IDExOiBwd20zCj4gCj4g
-MTI6IHVhcnQxX3J4Cj4gMTM6IHVhcnQxX3R4Cj4gMTQ6IHVhcnQxX2N0cwo+IDE1OiB1YXJ0MV9y
-dHMKPiAKPiBPbiBCQ001MzAxMjoKPiAKPiAxNjogdWFydDJfcngKPiAxNzogdWFydDJfdHgKPiAy
-Mjogc2Rpb19jYXJkX3Bvd2VyX2N0bAo+IDIzOiBzZGlvX2VuXzFwOAo+IAo+IE9uIEJDTTUzMDEz
-Ogo+IAo+IDIxOiAyNU1oeiBjcnlzdGFsIG91dHB1dCBmb3IgSTJTCgpJIGJlbGlldmUgd2hhdCB5
-b3UgcHJvdmlkZWQgYXJlIG5hbWUgb2YgYml0cyBpbiB0aGUgY3J1X2dlbnBsbF9jb250cm9sMApy
-ZWdpc3Rlci4gRldJVyB0aGF0IGluZm8gd291bGQgYmUgcGFydCBvZiBuc19waW5zX2RhdGEgcmF0
-aGVyIHRoYW4KbnNfcGluY3RybF9waW5zLgoKSSB3YXMgYXdhcmUgb2YgbW9zdCBvZiB0aGVtIHRo
-YW5rcyB0byBhbmFseXppbmcgYmNtNTMwMXhfZG11LmMgZnJvbSB0aGUKU0RLIGJ1dCBzb21lIGFy
-ZSBzdGlsbCBuZXcgdG8gbWUsIHNvIHRoYW5rcyBmb3IgdGhhdCEKCldoYXQgSSdtIHJlYWxseSBt
-aXNzaW5nIGFyZSBTb0MgcGluIG51bWJlcnMgZm9yIGFsbCBhYm92ZS4gRS5nLiB3aGF0CmhhcmR3
-YXJlIHBpbiBudW1iZXIgaXMgdXNlZCBmb3IgdGhlIHVhcnQyX3J4PyBPciBzZGlvX2NhcmRfcG93
-ZXJfY3RsPwpBbmQgYWxsIHRoZSBvdGhlciBvbmVzLgoKSWYgeW91IGNvdWxkIHByb3ZpZGUgdGhh
-dCBpbmZvIGl0J2QgYmUgZXh0cmVtZWx5IGhlbHBmdWwuCgoqKioKCklmIHlvdSB0YWtlIGEgbG9v
-ayBhdCBwaW5jdHJsLW5zcC1tdXguYywgeW91J2xsIHNlZSB0aGF0IHRoZXJlIGlzbid0IDE6MQpt
-YXBwaW5nIHVzZWQgb24gQnJvYWRjb20gcGxhdGZvcm1zLgoKRS5nLiBOb3J0aHN0YXIgUGx1cyBo
-YXMgU29DIHBpbnMgNCBhbmQgNSB1c2VkIGZvciBJMkM6CmkyY19waW5zW10gPSB7NCwgNX07CmJ1
-dCB0aGV5IGFyZSBjb250cm9sbGVkIGJ5IEJJVCgzKSBhbmQgQklUKDQpIG9mIHRoZSBCQVNFMCBy
-ZWdpc3RlcjoKTlNQX1BJTl9HUk9VUChpMmMsIE5TUF9NVVhfQkFTRTAsIDMsIDB4MDMsIDB4MDAp
-LAooMHgwMyA8PCAzKQoKQW5vdGhlciBOU1AgZXhhbXBsZTogU29DIHBpbnMgMTYgYW5kIDE3IGFy
-ZSB1c2VkIGZvciBVQVJUMjoKdWFydDJfcGluc1tdID0gezE2LCAxN307CmJ1dCB0aGV5IGFyZSBj
-b250cm9sbGVkIGJ5IEJJVCgxNSkgYW5kIEJJVCgxNikgb2YgdGhlIEJBU0UwIHJlZ2lzdGVyOgpO
-U1BfUElOX0dST1VQKHVhcnQyLCBOU1BfTVVYX0JBU0UwLCAxNSwgMHgwMywgMHgwMCksCigweDAz
-IDw8IDE1KQoKT2YgY291cnNlLCBzb21lIHBpbnMgbWFwIDE6MSwgZS5nLiBwaW4gMjYgZm9yIExF
-RCBvZiBzd2l0Y2ggcG9ydCA1Ogpzd2l0Y2hfcDA1X2xlZDBfcGluc1tdID0gezI2fTsKbWFwcyBu
-aWNlbHkgdG8gQklUKDI2KSBvZiB0aGUgQkFTRTAgcmVnaXN0ZXI6Ck5TUF9QSU5fR1JPVVAoc3dp
-dGNoX3AwNV9sZWQwLCBOU1BfTVVYX0JBU0UwLCAyNiwgMHgwMSwgMHgwMSksCigweDAxIDw8IDI2
-KQpidXQgaXQgY2xlYXJseSBpc24ndCBhIHJ1bGUuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Marc,
+
+On Tue, Sep 18, 2018 at 04:41:22PM +0100, Marc Zyngier wrote:
+> > +#define IPI_IRQ	15
+> > +
+> 
+> It feels really bizarre that the function that maps the interrupt is
+> specific to the interrupt controller, and yet the interrupt number is
+> defined at the architecture level. I'd expect this to be just as
+> interrupt controller specific.
+>
+Ok, move IPI_IRQ to irq-csky-mpintc.c. See my PATCH V8
+
+
+> > +	irq = arch_ipi_irq_mapping();
+> 
+> How about checking the validity of the interrupt and that
+> arch_ipi_irq_mapping is actually non-NULL?
+Ok. 
+
+> > -	rc = request_percpu_irq(IPI_IRQ, handle_ipi, "IPI Interrupt", &ipi_dummy_dev);
+> > +	rc = request_percpu_irq(irq, handle_ipi, "IPI Interrupt", &ipi_dummy_dev);
+> >  	if (rc)
+> >  		panic("%s IRQ request failed\n", __func__);
+>
+> To be honest, I'd tend to question the need for this level of
+> abstraction, unless you actually plan for multiple SMP-capable
+> interrupt controllers... But at the end of the day, that's your call,
+> and the above code looks mostly correct.
+Thx for the review. I will consider your suggestion.
+
+Best Regards
+ GUo Ren
