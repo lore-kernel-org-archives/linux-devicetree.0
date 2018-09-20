@@ -1,48 +1,45 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v4 3/7] [media] ad5820: DT new optional field enable-gpios
-Date: Thu, 20 Sep 2018 22:47:47 +0200
-Message-ID: <20180920204751.29117-3-ricardo.ribalda@gmail.com>
-References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH net-next 0/7] add support for VSC8584 and VSC8574
+ Microsemi quad-port PHYs
+Date: Thu, 20 Sep 2018 14:38:44 -0700
+Message-ID: <CACRpkdZYpDJGzexRr7y4LO+hyJ92aEu_eRquK50iBWaaox5H5Q@mail.gmail.com>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+Sender: netdev-owner@vger.kernel.org
+To: quentin.schulz@bootlin.com
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ralf Baechle <ralf@linux-mips.org>, paul.burton@mips.com, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, allan.nielsen@microchip.com, Linux MIPS <linux-mips@linux-mips.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Document new enable-gpio field. It can be used to disable the part
-without turning down its regulator.
+Just as a drive-by comment this seems vaguely related to the Vitesse
+DSA switch I merged in drivers/net/dsa/vitesse-vsc73xx.c
+The VSC* product name handily gives away the origin in Vitesse's
+product line.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
----
- Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+The VSC73xx also have the 8051 CPU and internal RAM, but are
+accessed (typically) over SPI, and AFAICT this thing is talking over
+MDIO.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-index 5940ca11c021..9ccd96d3d5f0 100644
---- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-@@ -8,6 +8,12 @@ Required Properties:
- 
-   - VANA-supply: supply of voltage for VANA pin
- 
-+Optional properties:
-+
-+   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the polarity of
-+the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the enable
-+GPIO deasserts the XSHUTDOWN signal and vice versa).
-+
- Example:
- 
-        ad5820: coil@c {
-@@ -15,5 +21,6 @@ Example:
-                reg = <0x0c>;
- 
-                VANA-supply = <&vaux4>;
-+               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
-        };
- 
--- 
-2.18.0
+The Vitesse 73xx however also supports a WAN port and VLANs
+which makes it significantly different, falling into switch class I
+guess.
+
+These VSC85*4's does have an SPI interface as well, according
+to the data sheet but I assume your target boards don't even
+connect it?
+
+When it comes to 8051 code we have quite a lot of this in the kernel
+these days, I suspect the 8051 snippets in this code could be
+disassembled and put into linux-firmware in source form, but
+that is maybe a bit overly ambitious. We have done that for a few
+USB to serial controllers using the EzUSB 8051 though:
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/keyspan_pda
+https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/tree/usbdux
+
+These can rebuild their firmware using the as31 assembler.
+https://github.com/nitsky/as31
+
+Yours,
+Linus Walleij
