@@ -1,132 +1,180 @@
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
-Date: Thu, 20 Sep 2018 14:33:14 +0000
-Message-ID: <bb973ba9-ca45-c9f1-38d6-67e9bc05e429@nxp.com>
-References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
- <7d7646dc-9d0b-013d-75d7-a6cb4453f41f@arm.com>
- <fd8ab351-46aa-f73e-593b-502a57de1975@nxp.com>
- <39211e7a-034b-cdca-f182-1b6f6e5fbc53@arm.com>
- <33eac426-cbb7-f899-5a35-aea28f8e5dc4@nxp.com>
- <c2acecc8-5357-6cbe-f93c-00d71470dff5@arm.com>
+From: Craig <ctatlor97@gmail.com>
+Subject: Re: [PATCH v7 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
+Date: Thu, 20 Sep 2018 15:32:29 +0100
+Message-ID: <4BBA3F28-A769-4F09-86DC-1E3906C53B26@gmail.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180614151435.6471-1-ctatlor97@gmail.com> <20180614151435.6471-3-ctatlor97@gmail.com> <20180916121045.aptj6nciwskfg4st@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c2acecc8-5357-6cbe-f93c-00d71470dff5@arm.com>
-Content-Language: en-US
-Content-ID: <E3A76D8239CF594D9E5A186FBF43A245@eurprd04.prod.outlook.com>
+In-Reply-To: <20180916121045.aptj6nciwskfg4st@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Roy Pledge <roy.pledge@nxp.com>, Leo Li <leoyang.li@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, Madalin-cristian Bucur <madalin.bucur@nxp.com>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Randy Dunlap <rdunlap@infradead.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDIwLjA5LjIwMTggMTQ6NDksIFJvYmluIE11cnBoeSB3cm90ZToNCj4gT24gMjAvMDkv
-MTggMTE6MzgsIExhdXJlbnRpdSBUdWRvciB3cm90ZToNCj4+DQo+Pg0KPj4gT24gMTkuMDkuMjAx
-OCAxNzozNywgUm9iaW4gTXVycGh5IHdyb3RlOg0KPj4+IE9uIDE5LzA5LzE4IDE1OjE4LCBMYXVy
-ZW50aXUgVHVkb3Igd3JvdGU6DQo+Pj4+IEhpIFJvYmluLA0KPj4+Pg0KPj4+PiBPbiAxOS4wOS4y
-MDE4IDE2OjI1LCBSb2JpbiBNdXJwaHkgd3JvdGU6DQo+Pj4+PiBIaSBMYXVyZW50aXUsDQo+Pj4+
-Pg0KPj4+Pj4gT24gMTkvMDkvMTggMTM6MzUsIGxhdXJlbnRpdS50dWRvckBueHAuY29tIHdyb3Rl
-Og0KPj4+Pj4+IEZyb206IExhdXJlbnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+
-DQo+Pj4+Pj4NCj4+Pj4+PiBUaGlzIHBhdGNoIHNlcmllcyBhZGRzIFNNTVUgc3VwcG9ydCBmb3Ig
-TlhQIExTMTA0M0EgYW5kIExTMTA0NkEgY2hpcHMNCj4+Pj4+PiBhbmQgY29uc2lzdHMgbW9zdGx5
-IGluIGltcG9ydGFudCBkcml2ZXIgZml4ZXMgYW5kIHRoZSByZXF1aXJlZCBkZXZpY2UNCj4+Pj4+
-PiB0cmVlIHVwZGF0ZXMuIEl0IHRvdWNoZXMgc2V2ZXJhbCBzdWJzeXN0ZW1zIGFuZCBjb25zaXN0
-cyBvZiB0aHJlZSANCj4+Pj4+PiBtYWluDQo+Pj4+Pj4gcGFydHM6DQo+Pj4+Pj4gwqDCoMKgIC0g
-Y2hhbmdlcyBpbiBzb2MvZHJpdmVycy9mc2wvcWJtYW4gZHJpdmVycyBhZGRpbmcgaW9tbXUgDQo+
-Pj4+Pj4gbWFwcGluZyBvZg0KPj4+Pj4+IMKgwqDCoMKgwqAgcmVzZXJ2ZWQgbWVtb3J5IGFyZWFz
-LCBmaXhlcyBhbmQgZGVmZXJlZCBwcm9iZSBzdXBwb3J0DQo+Pj4+Pj4gwqDCoMKgIC0gY2hhbmdl
-cyBpbiBkcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvZHBhYV9ldGggZHJpdmVycw0KPj4+
-Pj4+IMKgwqDCoMKgwqAgY29uc2lzdGluZyBpbiBtaXNjIGRtYSBtYXBwaW5nIHJlbGF0ZWQgZml4
-ZXMgYW5kIHByb2JlIG9yZGVyaW5nDQo+Pj4+Pj4gwqDCoMKgIC0gYWRkaXRpb24gb2YgdGhlIGFj
-dHVhbCBhcm0gc21tdSBkZXZpY2UgdHJlZSBub2RlIHRvZ2V0aGVyIHdpdGgNCj4+Pj4+PiDCoMKg
-wqDCoMKgIHZhcmlvdXMgYWRqdXN0bWVudHMgdG8gdGhlIGRldmljZSB0cmVlcw0KPj4+Pj4+DQo+
-Pj4+Pj4gUGVyZm9ybWFuY2UgaW1wYWN0DQo+Pj4+Pj4NCj4+Pj4+PiDCoMKgwqDCoMKgwqAgUnVu
-bmluZyBpcGVyZiBiZW5jaG1hcmtzIGluIGEgYmFjay10by1iYWNrIHNldHVwIChib3RoIHNpZGVz
-DQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIGhhdmluZyBzbW11IGVuYWJsZWQpIG9uIGEgMTBHQnBzIHBv
-cnQgc2hvdyBhbiBpbXBvcnRhbnQNCj4+Pj4+PiDCoMKgwqDCoMKgwqAgbmV0d29ya2luZyBwZXJm
-b3JtYW5jZSBkZWdyYWRhdGlvbiBvZiBhcm91bmQgJTQwICg5LjQ4R2Jwcw0KPj4+Pj4+IMKgwqDC
-oMKgwqDCoCBsaW5lcmF0ZSB2cyA1LjQ1R2JwcykuIElmIHlvdSBuZWVkIHBlcmZvcm1hbmNlIGJ1
-dCB3aXRob3V0DQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIFNNTVUgc3VwcG9ydCB5b3UgY2FuIHVzZSAi
-aW9tbXUucGFzc3Rocm91Z2g9MSIgdG8gZGlzYWJsZQ0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBTTU1V
-Lg0KPiANCj4gSSBzaG91bGQgaGF2ZSBzYWlkIGJlZm9yZSAtIHRoYW5rcyBmb3IgdGhlIG51bWJl
-cnMgdGhlcmUgYXMgd2VsbC4gQWx3YXlzIA0KPiBnb29kIHRvIGFkZCBhbm90aGVyIGRhdGFwb2lu
-dCB0byBteSBjb2xsZWN0aW9uLiBJZiB5b3UncmUgaW50ZXJlc3RlZCANCj4gSSd2ZSBhZGRlZCBT
-TU1VdjIgc3VwcG9ydCB0byB0aGUgIm5vbi1zdHJpY3QgbW9kZSIgc2VyaWVzIChvZiB3aGljaCBJ
-IA0KPiBzaG91bGQgYmUgcG9zdGluZyB2OCBzb29uKSwgc28gaXQgbWlnaHQgYmUgZnVuIHRvIHNl
-ZSBob3cgd2VsbCB0aGF0IA0KPiB3b3JrcyBvbiBNTVUtNTAwIGluIHRoZSByZWFsIHdvcmxkLg0K
-DQpIbW0sIEkgdGhpbmsgSSBnYXZlIHRob3NlIGEgdHJ5IHNvbWUgd2Vla3MgYWdvIGFuZCB2YWd1
-ZWx5IHJlbWVtYmVyIHRoYXQgDQpJIGRpZCBzZWUgaW1wcm92ZW1lbnRzLiBDYW4ndCByZW1lbWJl
-ciB0aGUgbnVtYmVycyBvZmYgdGhlIHRvcCBvZiBteSANCmhlYWQgYnV0IEknbGwgcmUtdGVzdCB3
-aXRoIHRoZSBsYXRlc3Qgc3BpbiBhbmQgdXBkYXRlIHRoZSBudW1iZXJzLg0KDQo+Pj4+Pj4NCj4+
-Pj4+PiBVU0IgaXNzdWUgYW5kIHdvcmthcm91bmQNCj4+Pj4+Pg0KPj4+Pj4+IMKgwqDCoMKgwqDC
-oCBUaGVyZSdzIGEgcHJvYmxlbSB3aXRoIHRoZSB1c2IgY29udHJvbGxlcnMgaW4gdGhlc2UgY2hp
-cHMNCj4+Pj4+PiDCoMKgwqDCoMKgwqAgZ2VuZXJhdGluZyBzbWFsbGVyLCA0MC1iaXQgd2lkZSBk
-bWEgYWRkcmVzc2VzIGluc3RlYWQgb2YgdGhlDQo+Pj4+Pj4gNDgtYml0DQo+Pj4+Pj4gwqDCoMKg
-wqDCoMKgIHN1cHBvcnRlZCBhdCB0aGUgc21tdSBpbnB1dC4gU28geW91IGVuZCB1cCBpbiBhIHNp
-dHVhdGlvbg0KPj4+Pj4+IHdoZXJlIHRoZQ0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBzbW11IGlzIG1h
-cHBlZCB3aXRoIDQ4LWJpdCBhZGRyZXNzIHRyYW5zbGF0aW9ucywgYnV0IHRoZSANCj4+Pj4+PiBk
-ZXZpY2UNCj4+Pj4+PiDCoMKgwqDCoMKgwqAgZ2VuZXJhdGVzIHRyYW5zYWN0aW9ucyB3aXRoIGNs
-aXBwZWQgNDAtYml0IGFkZHJlc3NlcywgdGh1cyANCj4+Pj4+PiBzbW11DQo+Pj4+Pj4gwqDCoMKg
-wqDCoMKgIGNvbnRleHQgZmF1bHRzIGFyZSB0cmlnZ2VyZWQuIEkgZW5jb3VudGVyZWQgYSBzaW1p
-bGFyDQo+Pj4+Pj4gc2l0dWF0aW9uIGZvcg0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBtbWMgdGhhdCBJ
-wqAgbWFuYWdlZCB0byBmaXggaW4gc29mdHdhcmUgWzFdIGhvd2V2ZXIgZm9yIFVTQiBJDQo+Pj4+
-Pj4gZGlkIG5vdA0KPj4+Pj4+IMKgwqDCoMKgwqDCoCBmaW5kIGEgcHJvcGVyIHBsYWNlIGluIHRo
-ZSBjb2RlIHRvIGFkZCBhIHNpbWlsYXIgZml4LiBUaGUgb25seQ0KPj4+Pj4+IMKgwqDCoMKgwqDC
-oCB3b3JrYXJvdW5kIEkgZm91bmQgd2FzIHRvIGFkZCB0aGlzIGtlcm5lbCBwYXJhbWV0ZXIgd2hp
-Y2gNCj4+Pj4+PiBsaW1pdHMgdGhlDQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIHVzYiBkbWEgdG8gMzIt
-Yml0IHNpemU6ICJ4aGNpLWhjZC5xdWlya3M9MHg4MDAwMDAiLg0KPj4+Pj4+IMKgwqDCoMKgwqDC
-oCBUaGlzIHdvcmthcm91bmQgaWYgZmFyIGZyb20gaWRlYWwsIHNvIGFueSBzdWdnZXN0aW9ucyBm
-b3IgYSANCj4+Pj4+PiBjb2RlDQo+Pj4+Pj4gwqDCoMKgwqDCoMKgIGJhc2VkIHdvcmthcm91bmQg
-aW4gdGhpcyBhcmVhIHdvdWxkIGJlIGdyZWF0bHkgYXBwcmVjaWF0ZWQuDQo+Pj4+Pg0KPj4+Pj4g
-SWYgeW91IGhhdmUgYSBub21pbmFsbHktNjQtYml0IGRldmljZSB3aXRoIGENCj4+Pj4+IG5hcnJv
-d2VyLXRoYW4tdGhlLW1haW4taW50ZXJjb25uZWN0IGxpbmsgaW4gZnJvbnQgb2YgaXQsIHRoYXQg
-c2hvdWxkDQo+Pj4+PiBhbHJlYWR5IGJlIGZpeGVkIGluIDQuMTktcmMgYnkgYnVzX2RtYV9tYXNr
-IHBpY2tpbmcgdXAgRFQgZG1hLXJhbmdlcywNCj4+Pj4+IHByb3ZpZGVkIHRoZSBpbnRlcmNvbm5l
-Y3QgaGllcmFyY2h5IGNhbiBiZSBkZXNjcmliZWQgYXBwcm9wcmlhdGVseSAob3INCj4+Pj4+IGF0
-IGxlYXN0IG1hc3NhZ2VkIHN1ZmZpY2llbnRseSB0byBzYXRpc2Z5IHRoZSBiaW5kaW5nKSwgZS5n
-LjoNCj4+Pj4+DQo+Pj4+PiAvIHsNCj4+Pj4+IMKgwqAgwqDCoMKgwqAuLi4NCj4+Pj4+DQo+Pj4+
-PiDCoMKgIMKgwqDCoMKgc29jIHsNCj4+Pj4+IMKgwqAgwqDCoMKgwqDCoMKgwqAgcmFuZ2VzOw0K
-Pj4+Pj4gwqDCoCDCoMKgwqDCoMKgwqDCoCBkbWEtcmFuZ2VzID0gPDAgMCAxMDAwMCAwPjsNCj4+
-Pj4+DQo+Pj4+PiDCoMKgIMKgwqDCoMKgwqDCoMKgIGRldl80OGJpdCB7IC4uLiB9Ow0KPj4+Pj4N
-Cj4+Pj4+IMKgwqAgwqDCoMKgwqDCoMKgwqAgcGVyaXBoX2J1cyB7DQo+Pj4+PiDCoMKgIMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgcmFuZ2VzOw0KPj4+Pj4gwqDCoCDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIGRtYS1yYW5nZXMgPSA8MCAwIDEwMCAwPjsNCj4+Pj4+DQo+Pj4+PiDCoMKgIMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqAgZGV2XzQwYml0IHsgLi4uIH07DQo+Pj4+PiDCoMKgIMKgwqDCoMKgwqDC
-oMKgIH07DQo+Pj4+PiDCoMKgIMKgwqDCoMKgfTsNCj4+Pj4+IH07DQo+Pj4+Pg0KPj4+Pj4gYW5k
-IGlmIHRoYXQgZmFpbHMgdG8gd29yayBhcyBleHBlY3RlZCAoZXhjZXB0IGZvciBQQ0kgaG9zdHMg
-d2hlcmUNCj4+Pj4+IGhhbmRsaW5nIGRtYS1yYW5nZXMgcHJvcGVybHkgc3RpbGwgbmVlZHMgc29y
-dGluZyBvdXQpLCBwbGVhc2UgZG8gDQo+Pj4+PiBsZXQgdXMNCj4+Pj4+IGtub3cgOykNCj4+Pj4+
-DQo+Pj4+DQo+Pj4+IEp1c3QgdG8gY29uZmlybSwgSXMgdGhpcyBbMV0gdGhlIGNoYW5nZSBJIHdh
-cyBzdXBwb3NlZCB0byB0ZXN0Pw0KPj4+DQo+Pj4gTm90IHF1aXRlIC0gZG1hLXJhbmdlcyBpcyBv
-bmx5IHZhbGlkIGZvciBub2RlcyByZXByZXNlbnRpbmcgYSBidXMsIHNvDQo+Pj4gcHV0dGluZyBp
-dCBkaXJlY3RseSBpbiB0aGUgVVNCIGRldmljZSBub2RlcyBkb2Vzbid0IHdvcmsgKEZXSVcgdGhh
-dCdzDQo+Pj4gd2h5IFBDSSBpcyBicm9rZW4sIGJlY2F1c2UgdGhlIHBhcnNlciBkb2Vzbid0IGV4
-cGVjdCB0aGUNCj4+PiBidXMtYXMtbGVhZi1ub2RlIGNhc2UpLiBUaGF0J3MgdGVoIHBvaW50IG9m
-IHRoYXQgaW50ZXJtZWRpYXRlIHNpbXBsZS1idXMNCj4+PiBub2RlIHJlcHJlc2VudGVkIGJ5ICJw
-ZXJpcGhfYnVzIiBpbiBteSBleGFtcGxlIChzb3JyeSwgSSBzaG91bGQgaGF2ZSBwdXQNCj4+PiBj
-b21wYXRpYmxlcyBpbiB0byBtYWtlIGl0IGNsZWFyZXIpIC0gb2Z0ZW4gdGhhdCdzIGFjdHVhbGx5
-IHRydWUgdG8gbGlmZQ0KPj4+IChpLmUuICJzb2MiIGlzIHNvbWV0aGluZyBsaWtlIGEgQ0NJIGFu
-ZCAicGVyaXBoX2J1cyIgaXMgc29tZXRoaW5nIGxpa2UNCj4+PiBhbiBBWEkgTklDIGdsdWluZyBh
-IGJ1bmNoIG9mIGxvd2VyLWJhbmR3aWR0aCBETUEgbWFzdGVycyB0byBvbmUgb2YgdGhlDQo+Pj4g
-Q0NJIHBvcnRzKSBidXQgYXQgd29yc3QgaXQncyBqdXN0IGEgbmVjZXNzYXJ5IGV2aWwgdG8gbWFr
-ZSB0aGUgYmluZGluZw0KPj4+IGhhcHB5IChpZiBpdCBsaXRlcmFsbHkgb25seSByZXByZXNlbnRz
-IHRoZSBwb2ludC10by1wb2ludCBsaW5rIGJldHdlZW4NCj4+PiB0aGUgZGV2aWNlIG1hc3RlciBw
-b3J0IGFuZCBpbnRlcmNvbm5lY3Qgc2xhdmUgcG9ydCkuDQo+Pj4NCj4+DQo+PiBRdWljayB1cGRh
-dGU6IHNvIEkgYWRqdXN0ZWQgdG8gZGV2aWNlIHRyZWUgYWNjb3JkaW5nIHRvIHlvdXIgZXhhbXBs
-ZSBhbmQNCj4+IGl0IHdvcmtzIHNvIG5vdyBJIGNhbiBnZXQgcmlkIG9mIHRoYXQgbmFzdHkga2Vy
-bmVsIGFyZyBiYXNlZCB3b3JrYXJvdW5kLA0KPj4geWV5ISA6LSkNCj4gDQo+IENvb2whIEluIGZh
-Y3QsIGp1ZGdpbmcgYnkgdGhlIGJsb2NrIGRpYWdyYW1zIG9uIHRoZSB3ZWJzaXRlLCB0aGUgImJh
-c2ljIA0KPiBwZXJpcGhlcmFscyBhbmQgaW50ZXJjb25uZWN0IiBzZWN0aW9uIGhhbmdpbmcgb2Zm
-IHRoZSBzaWRlIG9mIHRoZSBDQ0kgDQo+IGltcGxpZXMgdGhhdCBwcm9iYWJseSBpcyB0cnVlIHRv
-IHRoZSByZWFsIHRvcG9sb2d5IGFzIEkgaW1hZ2luZWQsIHNvIGl0IA0KPiBkb2Vzbid0IGV2ZW4g
-Y291bnQgYXMgYSBob3JyaWJsZSBoYWNrIDopDQoNCkluZGVlZCwgb24gdGhpcyBjaGlwIHRoZXJl
-J3MgYSBOb0MgbHVtcGluZyBiZWhpbmQgaXQgc2V2ZXJhbCBsb3ctc3BlZWQgDQpkZXZpY2VzIHN1
-Y2ggYXMgdXNiLCBzYXRhLCBlc2RoYy4NCg0KPj4gVGhhbmtzIGEgbG90LCB0aGF0IHdhcyByZWFs
-bHkgaGVscGZ1bC4NCj4gDQo+IE5vIHByb2JsZW0uIEZXSVcgaWYgeW91IGV2ZXIgY29tZSB0byBk
-b2luZyBBQ1BJIHN1cHBvcnQgZm9yIHRoZXNlIFNvQ3MsIA0KPiB0aGUgZXF1aXZhbGVudCBpcyBt
-ZXJlbHkgYSBjYXNlIG9mIHNldHRpbmcgdGhlIGRldmljZSBtZW1vcnkgYWRkcmVzcyANCj4gc2l6
-ZSBsaW1pdCBmaWVsZCBhcHByb3ByaWF0ZWx5IGZvciBhbGwgdGhlIG5hbWVkIGNvbXBvbmVudHMu
-DQo+IA0KDQpUaGFua3MsIEknbGwga2VlcCB0aGlzIGluIG1pbmQuIElmIGkgcmVtZW1iZXIgY29y
-cmVjdGx5LCB0aGVyZSBhcmUgDQpwZW9wbGUgb3ZlciBoZXJlIHdvcmtpbmcgb24gVUVGSSArIEFD
-UEkgc3VwcG9ydCBmb3Igc29tZSBMUyBjaGlwcyBidXQgDQpwcm9ncmVzcyBhcHBlYXJzIHRvIGJl
-IHNsb3cuDQoNCi0tLQ0KQmVzdCBSZWdhcmRzLCBMYXVyZW50aXU=
+
+
+On 16 September 2018 13:10:45 BST, Sebastian Reichel <sebastian=2Ereichel@=
+collabora=2Ecom> wrote:
+>Hi,
+>
+>Sorry for my long delay in reviewing this=2E I like the binding,
+>but the "qcom," specific properties should become common properties
+>in
+>
+>Documentation/devicetree/bindings/power/supply/battery=2Etxt
+Thanks for the review, what bindings for ocv would you prefer? The spreadt=
+rum ones or mine?
+>and referenced via monitored-battery=2E
+>
+>-- Sebastian
+>
+>On Thu, Jun 14, 2018 at 04:14:16PM +0100, Craig Tatlor wrote:
+>> Add bindings for the Qualcomm Battery Monitoring system=2E
+>>=20
+>> Signed-off-by: Craig Tatlor <ctatlor97@gmail=2Ecom>
+>> Reviewed-by: Rob Herring <robh@kernel=2Eorg>
+>> ---
+>>=20
+>> * Changes from v6:
+>>   s/celcius/celsius
+>>   change uah to uAh=2E
+>>=20
+>> * Changes from v5:                                                  =20
+>                                                                      =20
+>>   Mentions which values are 8 bit=2E                                  =
+=20
+>                                                                      =20
+>>                                                                     =20
+>                                                                      =20
+>> * Changes from v4:                                                  =20
+>                                                                      =20
+>>   Uses proper units and expands some definitions,                   =20
+>                                                                      =20
+>>   along with changing vadc@ to adc@=2E   =20
+>>=20
+>>  =2E=2E=2E/bindings/power/supply/qcom_bms=2Etxt        | 92
+>+++++++++++++++++++
+>>  1 file changed, 92 insertions(+)
+>>  create mode 100644
+>Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
+>>=20
+>> diff --git
+>a/Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
+>b/Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
+>> new file mode 100644
+>> index 000000000000=2E=2Edc0a9ab9aa64
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/power/supply/qcom_bms=2Etxt
+>> @@ -0,0 +1,92 @@
+>> +Qualcomm Battery Monitoring System
+>> +
+>> +The Qualcomm Battery Monitoring System is found inside of Qualcomm
+>PM8941
+>> +PMICs=2E It provides open circuit voltage (OCV) and coulomb counter
+>registers
+>> +that allow the OS to infer a capacity level=2E
+>> +
+>> +Required properties:
+>> +- compatible:                   Should contain "qcom,pm8941-bms"=2E
+>> +- reg:                          Specifies the SPMI address and
+>length of the
+>> +				controller's registers=2E
+>> +- interrupts:                   OCV threshold interrupt=2E
+>> +- io-channels:                  Should contain IIO channel specifier
+>for the
+>> +				ADC channel that reports battery temperature=2E
+>> +- io-channel-names:             Should contain "temp"=2E
+>> +- qcom,fcc-temp-legend-celsius: An 8 bit array containing the
+>temperature,
+>> +				in degC, for each column of the full charge
+>> +				capacity lookup table=2E
+>> +- qcom,fcc-lut-microamp-hours:  An array of full charge capacity
+>values in uAh,
+>> +				one entry for each temperature defined in in
+>> +				qcom,fcc-temp-legend-celsius=2E
+>> +- qcom,ocv-temp-legend-celsius: An 8 bit array containing the
+>temperature,
+>> +				in degC, for each column of the OCV lookup
+>> +				table=2E
+>> +- qcom,ocv-capacity-legend:     An 8 bit array containing the
+>capacity for each
+>> +				row of the OCV lookup table=2E
+>> +- qcom,ocv-lut-microvolt:       An array of OCV values in uV, one
+>entry for each
+>> +				capacity defined in qcom,ocv-capacity-legend=2E
+>> +
+>> +Example:
+>> +		pm8941_vadc: adc@3100 {
+>> +			compatible =3D "qcom,spmi-vadc";
+>> +			reg =3D <0x3100>;
+>> +			interrupts =3D <0x0 0x31 0x0 IRQ_TYPE_EDGE_RISING>;
+>> +			#address-cells =3D <1>;
+>> +			#size-cells =3D <0>;
+>> +			#io-channel-cells =3D <1>;
+>> +
+>> +			bat_temp {
+>> +				reg =3D <VADC_LR_MUX1_BAT_THERM>;
+>> +			};
+>> +		};
+>> +
+>> +		bms@4000 {
+>> +			compatible =3D "qcom,pm8941-bms";
+>> +			reg =3D <0x4000>;
+>> +			interrupts =3D <0x0 0x40 0x4 IRQ_TYPE_EDGE_RISING>;
+>> +			interrupt-names =3D "ocv_thr";
+>> +
+>> +			io-channels =3D <&pm8941_vadc VADC_LR_MUX1_BAT_THERM>;
+>> +			io-channel-names =3D "temp";
+>> +
+>> +			qcom,fcc-temp-legend-celsius =3D /bits/ 8 <(-10) 0 25 50 65>;
+>> +			qcom,fcc-lut-microamp-hours =3D <3230000 3260000 3380000 3410000
+>3360000>;
+>> +
+>> +			qcom,ocv-capacity-legend =3D /bits/ 8 <100 95 90 85 80 75
+>> +							     70 65 60 55 50 45
+>> +							     40 35 30 25 20 15
+>> +							     10 9 8 7 6 5 4 3 2
+>> +							     1 0>;
+>> +			qcom,ocv-temp-legend-celsius =3D /bits/ 8 <(-10) 0 25 50 65>;
+>> +			qcom,ocv-lut-microvolt =3D <43050000 43050000 43030000 42990000
+>42950000
+>> +						  42770000 42570000 42550000 42510000 42310000
+>> +						  42180000 41980000 41970000 41920000 41720000
+>> +						  41590000 41390000 41450000 41400000 41200000
+>> +						  41010000 40810000 40920000 40890000 40690000
+>> +						  40480000 40280000 40440000 40420000 40220000
+>> +						  40040000 39840000 40010000 39980000 39780000
+>> +						  39620000 39420000 39550000 39560000 39360000
+>> +						  39210000 39010000 39090000 39160000 38960000
+>> +						  38830000 38630000 38740000 38790000 38590000
+>> +						  38550000 38350000 38440000 38430000 38230000
+>> +						  38310000 38110000 38230000 38180000 37980000
+>> +						  38190000 37990000 38040000 38000000 37800000
+>> +						  38060000 37860000 37900000 37840000 37640000
+>> +						  37890000 37690000 37770000 37660000 37460000
+>> +						  37720000 37520000 37560000 37450000 37250000
+>> +						  37480000 37280000 37290000 37250000 37050000
+>> +						  37240000 37040000 37020000 36990000 36790000
+>> +						  37030000 36830000 36730000 36700000 36500000
+>> +						  36940000 36740000 36670000 36640000 36440000
+>> +						  36850000 36650000 36600000 36590000 36390000
+>> +						  36750000 36550000 36520000 36550000 36350000
+>> +						  36690000 36490000 36380000 36400000 36200000
+>> +						  36460000 36260000 36180000 36120000 35920000
+>> +						  36080000 35880000 35680000 35640000 35440000
+>> +						  35510000 35310000 35050000 35020000 34820000
+>> +						  34730000 34530000 34300000 34250000 34050000
+>> +						  33870000 33670000 33040000 32820000 32620000
+>> +						  30000000 30000000 30000000 30000000 30000000>;
+>> +		};
+>> +	};
+>> +};
+>> --=20
+>> 2=2E17=2E0
+>>=20
+
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
