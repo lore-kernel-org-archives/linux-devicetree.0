@@ -1,164 +1,79 @@
-Return-Path: <SRS0=wXcc=LU=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 1/2] watchdog: rza_wdt: Support longer timeouts
-Date: Thu,  6 Sep 2018 13:37:37 -0500
-Message-Id: <20180906183738.81238-2-chris.brandt@renesas.com>
-In-Reply-To: <20180906183738.81238-1-chris.brandt@renesas.com>
-References: <20180906183738.81238-1-chris.brandt@renesas.com>
-To: Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=lNwp=MC=pengutronix.de=l.stach@kernel.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 2/4] Input: egalax_ts - use touchscreen helpers
+Date: Thu, 20 Sep 2018 16:22:54 +0200
+Message-Id: <20180920142256.2788-2-l.stach@pengutronix.de>
+In-Reply-To: <20180920142256.2788-1-l.stach@pengutronix.de>
+References: <20180920142256.2788-1-l.stach@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Chris Healy <cphealy@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/A2 watchdog timer extends the clock source options in order to
-allow for longer timeouts.
+Using those helpers the driver will support all the common OF
+touchscreen properties like rotation and axis swap.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
-v2:
-* use DIV_ROUND_UP
-* use %u for pr_debug
-* use of_match data to determine the size of CKS register
----
- drivers/watchdog/rza_wdt.c | 81 +++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 63 insertions(+), 18 deletions(-)
+ drivers/input/touchscreen/egalax_ts.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
-index e618218d2374..d55eb947d08c 100644
---- a/drivers/watchdog/rza_wdt.c
-+++ b/drivers/watchdog/rza_wdt.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/watchdog.h>
+diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
+index 5e7a60089c3d..4c751f8f806d 100644
+--- a/drivers/input/touchscreen/egalax_ts.c
++++ b/drivers/input/touchscreen/egalax_ts.c
+@@ -25,6 +25,7 @@
+ #include <linux/bitops.h>
+ #include <linux/input/mt.h>
+ #include <linux/of_gpio.h>
++#include <linux/input/touchscreen.h>
  
-@@ -34,12 +35,40 @@
- #define WRCSR_RSTE		BIT(6)
- #define WRCSR_CLEAR_WOVF	0xA500	/* special value */
+ /*
+  * Mouse Mode: some panel may configure the controller to mouse mode,
+@@ -52,13 +53,12 @@
  
-+#define CKS_3BIT		0x7
-+#define CKS_4BIT		0xF
-+
- struct rza_wdt {
- 	struct watchdog_device wdev;
- 	void __iomem *base;
- 	struct clk *clk;
-+	u8 count;
-+	u8 cks;
-+	u8 timeout;
+ #define MAX_I2C_DATA_LEN	10
+ 
+-#define EGALAX_MAX_X	32760
+-#define EGALAX_MAX_Y	32760
+ #define EGALAX_MAX_TRIES 100
+ 
+ struct egalax_ts {
+ 	struct i2c_client		*client;
+ 	struct input_dev		*input_dev;
++	struct touchscreen_properties	props;
  };
  
-+static void rza_wdt_calc_timeout(struct rza_wdt *priv, int timeout)
-+{
-+	int rate = clk_get_rate(priv->clk);
-+	u16 counter;
-+
-+	if (priv->cks == CKS_4BIT) {
-+		counter = DIV_ROUND_UP((timeout * rate),  4194304) + 1;
-+		if (counter > 255)
-+			counter = 0;
-+
-+		priv->count = 256 - counter;
-+	} else {
-+		/* Start timer with longest timeout */
-+		priv->count = 0;
-+	}
-+
-+	priv->timeout = timeout;
-+
-+	pr_debug("%s: timeout set to %u (WTCNT=%d)\n", __func__,
-+		 timeout, priv->count);
-+}
-+
- static int rza_wdt_start(struct watchdog_device *wdev)
- {
- 	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
-@@ -51,13 +80,12 @@ static int rza_wdt_start(struct watchdog_device *wdev)
- 	readb(priv->base + WRCSR);
- 	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
+ static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
+@@ -105,8 +105,7 @@ static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
+ 		down ? "down" : "up", id, x, y, z);
  
--	/*
--	 * Start timer with slowest clock source and reset option enabled.
--	 */
-+	rza_wdt_calc_timeout(priv, wdev->timeout);
-+
- 	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
--	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
--	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME | WTSCR_CKS(7),
--	       priv->base + WTCSR);
-+	writew(WTCNT_MAGIC | priv->count, priv->base + WTCNT);
-+	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME |
-+	       WTSCR_CKS(priv->cks), priv->base + WTCSR);
- 
- 	return 0;
- }
-@@ -75,7 +103,12 @@ static int rza_wdt_ping(struct watchdog_device *wdev)
- {
- 	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
- 
--	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
-+	if (priv->timeout != wdev->timeout)
-+		rza_wdt_calc_timeout(priv, wdev->timeout);
-+
-+	writew(WTCNT_MAGIC | priv->count, priv->base + WTCNT);
-+
-+	pr_debug("%s: timeout = %u\n", __func__, wdev->timeout);
- 
- 	return 0;
- }
-@@ -150,20 +183,31 @@ static int rza_wdt_probe(struct platform_device *pdev)
- 		return -ENOENT;
+ 	if (down) {
+-		input_report_abs(input_dev, ABS_MT_POSITION_X, x);
+-		input_report_abs(input_dev, ABS_MT_POSITION_Y, y);
++		touchscreen_report_pos(input_dev, &ts->props, x, y, true);
+ 		input_report_abs(input_dev, ABS_MT_PRESSURE, z);
  	}
  
--	/* Assume slowest clock rate possible (CKS=7) */
--	rate /= 16384;
--
- 	priv->wdev.info = &rza_wdt_ident,
- 	priv->wdev.ops = &rza_wdt_ops,
- 	priv->wdev.parent = &pdev->dev;
+@@ -199,10 +198,14 @@ static int egalax_ts_probe(struct i2c_client *client,
+ 	input_dev->name = "EETI eGalax Touch Screen";
+ 	input_dev->id.bustype = BUS_I2C;
  
--	/*
--	 * Since the max possible timeout of our 8-bit count register is less
--	 * than a second, we must use max_hw_heartbeat_ms.
--	 */
--	priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
--	dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
--		 priv->wdev.max_hw_heartbeat_ms);
-+	priv->cks = (unsigned int)of_device_get_match_data(&pdev->dev);
-+	if (priv->cks == CKS_4BIT) {
-+		/* Assume slowest clock rate possible (CKS=0xF) */
-+		priv->wdev.max_timeout = (4194304 * U8_MAX) / rate;
+-	input_set_abs_params(input_dev,
+-			     ABS_MT_POSITION_X, 0, EGALAX_MAX_X, 0, 0);
+-	input_set_abs_params(input_dev,
+-			     ABS_MT_POSITION_Y, 0, EGALAX_MAX_Y, 0, 0);
++	touchscreen_parse_properties(ts->input_dev, true, &ts->props);
++	if (!ts->props.max_x && !ts->props.max_y)
++		ts->props.max_x = ts->props.max_y = 32760;
 +
-+	} else if (priv->cks == CKS_3BIT) {
-+		/* Assume slowest clock rate possible (CKS=7) */
-+		rate /= 16384;
-+
-+		/*
-+		 * Since the max possible timeout of our 8-bit count
-+		 * register is less than a second, we must use
-+		 * max_hw_heartbeat_ms.
-+		 */
-+		priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
-+		dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
-+			 priv->wdev.max_hw_heartbeat_ms);
-+	} else {
-+		dev_err(&pdev->dev, "invalid CKS value (%u)\n", priv->cks);
-+		return -EINVAL;
-+	}
++	input_set_abs_params(input_dev, ABS_MT_POSITION_X,
++			     0, ts->props.max_x, 0, 0);
++	input_set_abs_params(input_dev, ABS_MT_POSITION_Y,
++			     0, ts->props.max_y, 0, 0);
+ 	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
  
- 	priv->wdev.min_timeout = 1;
- 	priv->wdev.timeout = DEFAULT_TIMEOUT;
-@@ -179,7 +223,8 @@ static int rza_wdt_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id rza_wdt_of_match[] = {
--	{ .compatible = "renesas,rza-wdt", },
-+	{ .compatible = "renesas,r7s9210-wdt",	.data = (void *)CKS_4BIT, },
-+	{ .compatible = "renesas,rza-wdt",	.data = (void *)CKS_3BIT, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, rza_wdt_of_match);
 -- 
-2.16.1
+2.19.0
