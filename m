@@ -1,29 +1,51 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V8 5/6] clocksource: add C-SKY SMP timer
-Date: Thu, 20 Sep 2018 13:54:40 +0800
-Message-ID: <20180920055439.GA5488@guoren-Inspiron-7460>
-References: <cover.1537417413.git.ren_guo@c-sky.com>
- <81ffeff6131882989652a0050e5a947ffc9a327c.1537417413.git.ren_guo@c-sky.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V2 2/3] dt-bindings: mmc: sdhci-msm: Add entries for passing load values
+Date: Thu, 20 Sep 2018 11:52:37 +0530
+Message-ID: <1537424558-17989-3-git-send-email-vbadigan@codeaurora.org>
+References: <1537424558-17989-1-git-send-email-vbadigan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <81ffeff6131882989652a0050e5a947ffc9a327c.1537417413.git.ren_guo@c-sky.com>
+In-Reply-To: <1537424558-17989-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, robh@kernel.org, sfr@canb.auug.org.au
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
+Cc: linux-mmc@vger.kernel.org, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, evgreen@chromium.org, dianders@google.com, Vijay Viswanath <vviswana@codeaurora.org>, Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 01:39:31PM +0800, Guo Ren wrote:
-> +struct clocksource csky_clocksource = {
-> +	.name	= "csky",
-> +	.rating	= 400,
-> +	.mask	= CLOCKSOURCE_MASK(32),
-> +	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.read	= clksrc_read,
-> +};
-> +
-> +#define CPUHP_AP_CSKY_TIMER_STARTING CPUHP_AP_RISCV_TIMER_STARTING
-My fault, forget delete the line above.
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
- Guo Ren
+The load a particular sdhc controller should request from a regulator
+is device specific and hence each device should individually vote for
+the required load.
+
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 502b3b8..3720385 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -26,6 +26,11 @@ Required properties:
+ 	"cal"	- reference clock for RCLK delay calibration (optional)
+ 	"sleep"	- sleep clock for RCLK delay calibration (optional)
+ 
++Optional properties:
++- qcom,<supply>-current-level-microamp - specifies load levels for supply during BUS_ON and
++					BUS_OFF states in power irq. Should be specified in
++					pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
++					Units uA.
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+@@ -37,6 +42,7 @@ Example:
+ 
+ 		vmmc-supply = <&pm8941_l20>;
+ 		vqmmc-supply = <&pm8941_s3>;
++		qcom,vqmmc-current-level-microamp = <200 22000>;
+ 
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
