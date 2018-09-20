@@ -1,42 +1,54 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH] ARM: dts: stm32: update HASH1 dma property on stm32mp157c
-Date: Thu, 20 Sep 2018 18:17:06 +0200
-Message-ID: <1537460226-1435-1-git-send-email-alexandre.torgue@st.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH] soc: qcom: smd-rpm: Add QCS404 compatible
+Date: Thu, 20 Sep 2018 09:18:13 -0700
+Message-ID: <20180920161813.GE2350@vkoul-mobl>
+References: <20180920014540.14894-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, arnd@arndb.de, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk
-Cc: lionel.debieve@st.com, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180920014540.14894-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unused parameter from HASH1 dma property on stm32mp157c SoC.
+On 19-09-18, 18:45, Bjorn Andersson wrote:
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Fixes: 1e726a40e067 ("ARM: dts: stm32: Add HASH support on stm32mp157c")
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
+>  drivers/soc/qcom/smd-rpm.c                                  | 1 +
+>  2 files changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+> index 89e1cb9212f6..ec95705ba692 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
+> @@ -23,6 +23,7 @@ resources.
+>  		    "qcom,rpm-msm8916"
+>  		    "qcom,rpm-msm8974"
+>  		    "qcom,rpm-msm8998"
+> +		    "qcom,rpm-qcs404"
+>  
+>  - qcom,smd-channels:
+>  	Usage: required
+> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
+> index 93517ed83355..b8e63724a49d 100644
+> --- a/drivers/soc/qcom/smd-rpm.c
+> +++ b/drivers/soc/qcom/smd-rpm.c
+> @@ -227,6 +227,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
+>  	{ .compatible = "qcom,rpm-msm8974" },
+>  	{ .compatible = "qcom,rpm-msm8996" },
+>  	{ .compatible = "qcom,rpm-msm8998" },
+> +	{ .compatible = "qcom,rpm-qcs404" },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, qcom_smd_rpm_of_match);
+> -- 
+> 2.18.0
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 185541a..04cf534 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -923,7 +923,7 @@
- 			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&rcc HASH1>;
- 			resets = <&rcc HASH1_R>;
--			dmas = <&mdma1 31 0x10 0x1000A02 0x0 0x0 0x0>;
-+			dmas = <&mdma1 31 0x10 0x1000A02 0x0 0x0>;
- 			dma-names = "in";
- 			dma-maxburst = <2>;
- 			status = "disabled";
 -- 
-2.7.4
+~Vinod
