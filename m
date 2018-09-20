@@ -1,85 +1,44 @@
-From: Damian Kos <dkos@cadence.com>
-Subject: [PATCH v4 3/5] drm/dp: make dp_get_lane_status usable from outside of the core
-Date: Thu, 20 Sep 2018 15:54:38 +0100
-Message-ID: <1537455288-20223-4-git-send-email-dkos@cadence.com>
-References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v2] ARM: multi_v7_defconfig: enable STM32 SPI
+Date: Thu, 20 Sep 2018 17:29:17 +0200
+Message-ID: <eb5a90e1-d3d6-fef7-7595-29f3ae38af55@st.com>
+References: <1534934989-22292-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537455288-20223-1-git-send-email-dkos@cadence.com>
+In-Reply-To: <1534934989-22292-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: dkos@cadence.com, pgaj@cadence.com, ltyrala@cadence.com, stelford@cadence.com, jartur@cadence.com, piotrs@cadence.com, quentin.schulz@bootlin.com, jbergsagel@ti.com, Quentin Schulz <quentin.schulz@free-electrons.com>
+To: Amelie Delaunay <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Hi Amélie
 
-dp_get_lane_status is pretty generic and can be used for other means,
-so let's make it "public".
+On 08/22/2018 12:49 PM, Amelie Delaunay wrote:
+> Enable the STM32 SPI driver, implemented on STM32MP1 SoC.
+> 
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> ---
+>   arch/arm/configs/multi_v7_defconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+> index b749d1e..4cdb622 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -417,6 +417,7 @@ CONFIG_SPI_S3C64XX=m
+>   CONFIG_SPI_SH_MSIOF=m
+>   CONFIG_SPI_SH_HSPI=y
+>   CONFIG_SPI_SIRF=y
+> +CONFIG_SPI_STM32=m
+>   CONFIG_SPI_SUN4I=y
+>   CONFIG_SPI_SUN6I=y
+>   CONFIG_SPI_TEGRA114=y
+> 
 
-This adds drm_dp_get_lane_status to the header file and add the appropriate
-EXPORT_SYMBOL for it so that it can be used by other drivers, be they compiled
-built-in or as modules.
+Applied on stm32-next.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Signed-off-by: Damian Kos <dkos@cadence.com>
----
- drivers/gpu/drm/drm_dp_helper.c | 9 +++++----
- include/drm/drm_dp_helper.h     | 2 ++
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 735ebde5c2f0..169db52f92f5 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -48,14 +48,15 @@ static u8 dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
- 	return link_status[r - DP_LANE0_1_STATUS];
- }
- 
--static u8 dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
--			     int lane)
-+u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
-+			  int lane)
- {
- 	int i = DP_LANE0_1_STATUS + (lane >> 1);
- 	int s = (lane & 1) * 4;
- 	u8 l = dp_link_status(link_status, i);
- 	return (l >> s) & 0xf;
- }
-+EXPORT_SYMBOL(drm_dp_get_lane_status);
- 
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count)
-@@ -69,7 +70,7 @@ bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	if ((lane_align & DP_INTERLANE_ALIGN_DONE) == 0)
- 		return false;
- 	for (lane = 0; lane < lane_count; lane++) {
--		lane_status = dp_get_lane_status(link_status, lane);
-+		lane_status = drm_dp_get_lane_status(link_status, lane);
- 		if ((lane_status & DP_CHANNEL_EQ_BITS) != DP_CHANNEL_EQ_BITS)
- 			return false;
- 	}
-@@ -84,7 +85,7 @@ bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	u8 lane_status;
- 
- 	for (lane = 0; lane < lane_count; lane++) {
--		lane_status = dp_get_lane_status(link_status, lane);
-+		lane_status = drm_dp_get_lane_status(link_status, lane);
- 		if ((lane_status & DP_LANE_CR_DONE) == 0)
- 			return false;
- 	}
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 698082a02b97..973d2fda9654 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -952,6 +952,8 @@
- #define DP_MST_LOGICAL_PORT_0 8
- 
- #define DP_LINK_STATUS_SIZE	   6
-+
-+u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE], int lane);
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count);
- bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
--- 
-2.17.1
+Thanks.
+Alex
