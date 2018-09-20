@@ -1,124 +1,78 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: Re: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
-Date: Thu, 20 Sep 2018 14:07:07 -0500
-Message-ID: <CADRPPNTot7U6vARqtrRrw4XqhDQPSXP1QO9ZbGpNQByJPcU37Q@mail.gmail.com>
-References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
- <7d7646dc-9d0b-013d-75d7-a6cb4453f41f@arm.com> <fd8ab351-46aa-f73e-593b-502a57de1975@nxp.com>
- <39211e7a-034b-cdca-f182-1b6f6e5fbc53@arm.com> <33eac426-cbb7-f899-5a35-aea28f8e5dc4@nxp.com>
+From: Craig <ctatlor97@gmail.com>
+Subject: Re: [PATCH v7 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
+Date: Thu, 20 Sep 2018 20:13:52 +0100
+Message-ID: <5039A15E-E604-4D03-AFEF-4B139EB18A30@gmail.com>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180614151435.6471-1-ctatlor97@gmail.com> <20180614151435.6471-3-ctatlor97@gmail.com> <20180916121045.aptj6nciwskfg4st@earth.universe> <4BBA3F28-A769-4F09-86DC-1E3906C53B26@gmail.com> <20180920165847.6xqzeoqzqkyotshx@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <33eac426-cbb7-f899-5a35-aea28f8e5dc4@nxp.com>
+In-Reply-To: <20180920165847.6xqzeoqzqkyotshx@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc: robin.murphy@arm.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, madalin.bucur@nxp.com, Roy Pledge <roy.pledge@nxp.com>, Shawn Guo <shawnguo@kernel.org>, David Miller <davem@davemloft.net>
+To: Sebastian Reichel <sebastian.reichel@collabora.com>, Baolin Wang <baolin.wang@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 5:39 AM Laurentiu Tudor <laurentiu.tudor@nxp.com> wrote:
->
->
->
-> On 19.09.2018 17:37, Robin Murphy wrote:
-> > On 19/09/18 15:18, Laurentiu Tudor wrote:
-> >> Hi Robin,
-> >>
-> >> On 19.09.2018 16:25, Robin Murphy wrote:
-> >>> Hi Laurentiu,
-> >>>
-> >>> On 19/09/18 13:35, laurentiu.tudor@nxp.com wrote:
-> >>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> >>>>
-> >>>> This patch series adds SMMU support for NXP LS1043A and LS1046A chips
-> >>>> and consists mostly in important driver fixes and the required device
-> >>>> tree updates. It touches several subsystems and consists of three main
-> >>>> parts:
-> >>>>    - changes in soc/drivers/fsl/qbman drivers adding iommu mapping of
-> >>>>      reserved memory areas, fixes and defered probe support
-> >>>>    - changes in drivers/net/ethernet/freescale/dpaa_eth drivers
-> >>>>      consisting in misc dma mapping related fixes and probe ordering
-> >>>>    - addition of the actual arm smmu device tree node together with
-> >>>>      various adjustments to the device trees
-> >>>>
-> >>>> Performance impact
-> >>>>
-> >>>>       Running iperf benchmarks in a back-to-back setup (both sides
-> >>>>       having smmu enabled) on a 10GBps port show an important
-> >>>>       networking performance degradation of around %40 (9.48Gbps
-> >>>>       linerate vs 5.45Gbps). If you need performance but without
-> >>>>       SMMU support you can use "iommu.passthrough=1" to disable
-> >>>>       SMMU.
-> >>>>
-> >>>> USB issue and workaround
-> >>>>
-> >>>>       There's a problem with the usb controllers in these chips
-> >>>>       generating smaller, 40-bit wide dma addresses instead of the
-> >>>> 48-bit
-> >>>>       supported at the smmu input. So you end up in a situation
-> >>>> where the
-> >>>>       smmu is mapped with 48-bit address translations, but the device
-> >>>>       generates transactions with clipped 40-bit addresses, thus smmu
-> >>>>       context faults are triggered. I encountered a similar
-> >>>> situation for
-> >>>>       mmc that I  managed to fix in software [1] however for USB I
-> >>>> did not
-> >>>>       find a proper place in the code to add a similar fix. The only
-> >>>>       workaround I found was to add this kernel parameter which
-> >>>> limits the
-> >>>>       usb dma to 32-bit size: "xhci-hcd.quirks=0x800000".
-> >>>>       This workaround if far from ideal, so any suggestions for a code
-> >>>>       based workaround in this area would be greatly appreciated.
-> >>>
-> >>> If you have a nominally-64-bit device with a
-> >>> narrower-than-the-main-interconnect link in front of it, that should
-> >>> already be fixed in 4.19-rc by bus_dma_mask picking up DT dma-ranges,
-> >>> provided the interconnect hierarchy can be described appropriately (or
-> >>> at least massaged sufficiently to satisfy the binding), e.g.:
-> >>>
-> >>> / {
-> >>>       ...
-> >>>
-> >>>       soc {
-> >>>           ranges;
-> >>>           dma-ranges = <0 0 10000 0>;
-> >>>
-> >>>           dev_48bit { ... };
-> >>>
-> >>>           periph_bus {
-> >>>               ranges;
-> >>>               dma-ranges = <0 0 100 0>;
-> >>>
-> >>>               dev_40bit { ... };
-> >>>           };
-> >>>       };
-> >>> };
-> >>>
-> >>> and if that fails to work as expected (except for PCI hosts where
-> >>> handling dma-ranges properly still needs sorting out), please do let us
-> >>> know ;)
-> >>>
-> >>
-> >> Just to confirm, Is this [1] the change I was supposed to test?
-> >
-> > Not quite - dma-ranges is only valid for nodes representing a bus, so
-> > putting it directly in the USB device nodes doesn't work (FWIW that's
-> > why PCI is broken, because the parser doesn't expect the
-> > bus-as-leaf-node case). That's teh point of that intermediate simple-bus
-> > node represented by "periph_bus" in my example (sorry, I should have put
-> > compatibles in to make it clearer) - often that's actually true to life
-> > (i.e. "soc" is something like a CCI and "periph_bus" is something like
-> > an AXI NIC gluing a bunch of lower-bandwidth DMA masters to one of the
-> > CCI ports) but at worst it's just a necessary evil to make the binding
-> > happy (if it literally only represents the point-to-point link between
-> > the device master port and interconnect slave port).
-> >
->
-> Quick update: so I adjusted to device tree according to your example and
-> it works so now I can get rid of that nasty kernel arg based workaround,
-> yey! :-)
 
-Great that we have a generic solution like I hoped for!  So you will
-submit a new revision of the series to include these dts updates,
-right?
 
-Regards,
-Leo
+On 20 September 2018 17:58:47 BST, Sebastian Reichel <sebastian=2Ereichel@=
+collabora=2Ecom> wrote:
+>[Dropped a couple of people from CC, added Baolin]
+>
+>Hi Craig, Baolin and Rob,
+>
+>On Thu, Sep 20, 2018 at 03:32:29PM +0100, Craig wrote:
+>> On 16 September 2018 13:10:45 BST, Sebastian Reichel
+><sebastian=2Ereichel@collabora=2Ecom> wrote:
+>> >Sorry for my long delay in reviewing this=2E I like the binding,
+>> >but the "qcom," specific properties should become common properties
+>> >in
+>> >
+>> >Documentation/devicetree/bindings/power/supply/battery=2Etxt
+>> >and referenced via monitored-battery=2E
+>
+>> Thanks for the review, what bindings for ocv would you prefer? The
+>> spreadtrum ones or mine?
+>
+>Most importantly I want to see only one generic binding supporting
+>both use cases=2E As far as I can see there are two major differences:
+>
+>1=2E Qcom uses legend properties and SC27XX embedds this into data
+>2=2E Qcom supports temperature based mapping
+>
+>The second point is easy: Not having temperature information can
+>be a subset of the data with temperature info=2E The main thing to
+>discuss are the legend properties=2E I suppose we have these
+>proposals:
+>
+>Proposal A (from Qcom BMS binding):
+>
+>ocv-capacity-legend =3D /bits/ 8 <100 95 90 85 80 75 70 65 60 55 50 45
+>=2E=2E=2E>;
+>ocv-temp-legend-celsius =3D /bits/ 8 <(-10) 0 25 50 65>;
+>ocv-lut-microvolt =3D <43050000 43050000 43030000 42990000
+>
+>Proposal B (from SC27XX binding):
+>
+>ocv-cap-table =3D <4185 100>, <4113 95>, <4066 90>, <4022 85> =2E=2E=2E;
+>
+>I prefer the second binding (with mV -> uV), but I think it becomes
+>messy when temperature is added=2E What do you think about the
+>following proposal (derived from pinctrl style):
+>
+>Proposal C:
+>
+>ocv-capacity-table-temperatures =3D <(-10) 0 10>;
+>ocv-capacity-table-0 =3D <4185000 100>, <4113000 95>, <4066000 90>, =2E=
+=2E=2E;
+>ocv-capacity-table-1 =3D <4200000 100>, <4185000 95>, <4113000 90>, =2E=
+=2E=2E;
+>ocv-capacity-table-2 =3D <4250000 100>, <4200000 95>, <4185000 90>, =2E=
+=2E=2E;
+>
+>-- Sebastian
+
+C looks good to me however I do kinda think it should be millivolts as I d=
+on't think any hardware reads in microvolts and the zeroes make it look qui=
+te ugly
