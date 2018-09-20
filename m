@@ -1,537 +1,458 @@
-From: Parthiban Nallathambi <pn@denx.de>
-Subject: Re: [PATCH v2 2/3] drivers/irqchip: Add Actions external interrupts
- support
-Date: Thu, 20 Sep 2018 11:42:17 +0200
-Message-ID: <50398e6b-0dff-48e3-c3ed-b8578fe0b138@denx.de>
-References: <20180812122215.1079590-1-pn@denx.de>
- <20180812122215.1079590-3-pn@denx.de>
- <64b9ae63-c2b9-a2e0-f648-4bf80f34a57a@arm.com>
- <e8ff35c7-813c-2597-ab51-781336d551c5@denx.de>
+From: Abel Vesa <abel.vesa@nxp.com>
+Subject: [PATCH v7 1/5] dt-bindings: add binding for i.MX8MQ CCM
+Date: Thu, 20 Sep 2018 13:06:36 +0300
+Message-ID: <1537438000-20313-2-git-send-email-abel.vesa@nxp.com>
+References: <1537438000-20313-1-git-send-email-abel.vesa@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8ff35c7-813c-2597-ab51-781336d551c5@denx.de>
-Content-Language: en-US
+In-Reply-To: <1537438000-20313-1-git-send-email-abel.vesa@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, afaerber@suse.de, catalin.marinas@arm.com, will.deacon@arm.com, manivannan.sadhasivam@linaro.org
-Cc: pn@denx.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sravanhome@gmail.com, thomas.liau@actions-semi.com, mp-cs@actions-semi.com, linux@cubietech.com, edgar.righi@lsitec.org.br, laisa.costa@lsitec.org.br, guilherme.simoes@lsitec.org.br, mkzuffo@lsi.usp.br
+To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: linux-imx@nxp.com, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc,
+From: Lucas Stach <l.stach@pengutronix.de>
 
-Ping on this patch for feedback.
+This adds the binding for the i.MX8MQ Clock Controller Module.
 
-On 08/26/2018 05:20 PM, Parthiban Nallathambi wrote:
-> Hello Marc,
-> 
-> Thanks for your feedback.
-> 
-> On 8/13/18 1:46 PM, Marc Zyngier wrote:
->> On 12/08/18 13:22, Parthiban Nallathambi wrote:
->>> Actions Semi Owl family SoC's S500, S700 and S900 provides support
->>> for 3 external interrupt controllers through SIRQ pins.
->>>
->>> Each line can be independently configured as interrupt and triggers
->>> on either of the edges (raising or falling) or either of the levels
->>> (high or low) . Each line can also be masked independently.
->>>
->>> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
->>> Signed-off-by: Saravanan Sekar <sravanhome@gmail.com>
->>> ---
->>>   drivers/irqchip/Makefile       |   1 +
->>>   drivers/irqchip/irq-owl-sirq.c | 305 +++++++++++++++++++++++++++++++++++++++++
->>>   2 files changed, 306 insertions(+)
->>>   create mode 100644 drivers/irqchip/irq-owl-sirq.c
->>>
->>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->>> index 15f268f646bf..072c4409e7c4 100644
->>> --- a/drivers/irqchip/Makefile
->>> +++ b/drivers/irqchip/Makefile
->>> @@ -7,6 +7,7 @@ obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
->>>   obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
->>>   obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
->>>   obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
->>> +obj-$(CONFIG_ARCH_ACTIONS)		+= irq-owl-sirq.o
->>>   obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
->>>   obj-$(CONFIG_ARCH_HIP04)		+= irq-hip04.o
->>>   obj-$(CONFIG_ARCH_LPC32XX)		+= irq-lpc32xx.o
->>> diff --git a/drivers/irqchip/irq-owl-sirq.c b/drivers/irqchip/irq-owl-sirq.c
->>> new file mode 100644
->>> index 000000000000..b69301388300
->>> --- /dev/null
->>> +++ b/drivers/irqchip/irq-owl-sirq.c
->>> @@ -0,0 +1,305 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + *
->>> + * Actions Semi Owl SoCs SIRQ interrupt controller driver
->>> + *
->>> + * Copyright (C) 2014 Actions Semi Inc.
->>> + * David Liu <liuwei@actions-semi.com>
->>> + *
->>> + * Author: Parthiban Nallathambi <pn@denx.de>
->>> + * Author: Saravanan Sekar <sravanhome@gmail.com>
->>> + */
->>> +
->>> +#include <linux/interrupt.h>
->>> +#include <linux/irqchip.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/of_address.h>
->>> +
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +#define INTC_GIC_INTERRUPT_PIN		13
->>
->> Why isn't that coming from the DT?
-> 
-> DT numbering is taken irqchip local, by which hwirq is directly used to
-> calculate the offset into register when it is shared. Even if this is
-> directly from DT, I need the value to offset into the register. So maintianed
-> inside the driver.
-> 
-> Should it make sense to move it to DT and use another macro (different name)
-> for offsetting?
-> 
->>
->>> +#define INTC_EXTCTL_PENDING		BIT(0)
->>> +#define INTC_EXTCTL_CLK_SEL		BIT(4)
->>> +#define INTC_EXTCTL_EN			BIT(5)
->>> +#define	INTC_EXTCTL_TYPE_MASK		GENMASK(6, 7)
->>> +#define	INTC_EXTCTL_TYPE_HIGH		0
->>> +#define	INTC_EXTCTL_TYPE_LOW		BIT(6)
->>> +#define	INTC_EXTCTL_TYPE_RISING		BIT(7)
->>> +#define	INTC_EXTCTL_TYPE_FALLING	(BIT(6) | BIT(7))
->>> +
->>> +#define get_sirq_offset(x)	chip_data->sirq[x].offset
->>> +
->>> +/* Per SIRQ data */
->>> +struct owl_sirq {
->>> +	u16 offset;
->>> +	/* software is responsible to clear interrupt pending bit when
->>> +	 * type is edge triggered. This value is for per SIRQ line.
->>> +	 */
->>
->> Please follow the normal multi-line comment style:
->>
->> /*
->>   * This is a comment, starting with a capital letter and ending with
->>   * a full stop.
->>   */
-> 
-> Sure, thanks.
-> 
->>
->>> +	bool type_edge;
->>> +};
->>> +
->>> +struct owl_sirq_chip_data {
->>> +	void __iomem *base;
->>> +	raw_spinlock_t lock;
->>> +	/* some SoC's share the register for all SIRQ lines, so maintain
->>> +	 * register is shared or not here. This value is from DT.
->>> +	 */
->>> +	bool shared_reg;
->>> +	struct owl_sirq *sirq;
->>
->> Given that this driver handles at most 3 interrupts, do we need the
->> overhead of a pointer and an additional allocation, while we could store
->> all of this data in the space taken by the pointer itself?
->>
->> Something like:
->>
->> 	u16 offset[3];
->> 	u8  trigger; // Bit mask indicating edge-triggered interrupts
->>
->> and we're done.
-> 
-> Sure, I will modify with one allocation.
-> 
->>
->>> +};
->>> +
->>> +static struct owl_sirq_chip_data *sirq_data;
->>> +
->>> +static unsigned int sirq_read_extctl(struct irq_data *data)
->>
->> Why isn't this taking a struct owl_sirq_chip_data as a parameter instead
->> of always passing irq_data?
->>
->> Also, this should return a well defined size, which "unsigned int"
->> isn't. Make that u32.
-> 
-> Sure, will adapt this.
-> 
->>
->>> +{
->>> +	struct owl_sirq_chip_data *chip_data = data->chip_data;
->>> +	unsigned int val;
->>
->> u32;
-> 
-> Sure.
-> 
->>
->>> +
->>> +	val = readl_relaxed(chip_data->base + get_sirq_offset(data->hwirq));
->>> +	if (chip_data->shared_reg)
->>> +		val = (val >> (2 - data->hwirq) * 8) & 0xff;
->>> +
->>> +	return val;
->>> +}
->>> +
->>> +static void sirq_write_extctl(struct irq_data *data, unsigned int extctl)
->>
->> Same comments.
-> 
-> Sure.
-> 
->>
->>> +{
->>> +	struct owl_sirq_chip_data *chip_data = data->chip_data;
->>> +	unsigned int val;
->>
->> u32;
-> 
-> Sure.
-> 
->>
->>> +
->>> +	if (chip_data->shared_reg) {
->>> +		val = readl_relaxed(chip_data->base +
->>> +				get_sirq_offset(data->hwirq));
->>
->> Single line, please.
-> 
-> Sure.
-> 
->>
->>> +		val &= ~(0xff << (2 - data->hwirq) * 8);
->>> +		extctl &= 0xff;
->>> +		extctl = (extctl << (2 - data->hwirq) * 8) | val;
->>> +	}
->>> +
->>> +	writel_relaxed(extctl, chip_data->base +
->>> +			get_sirq_offset(data->hwirq));
->>
->> Single line.
-> 
-> Sure.
-> 
->>
->>> +}
->>> +
->>> +static void owl_sirq_ack(struct irq_data *data)
->>> +{
->>> +	struct owl_sirq_chip_data *chip_data = data->chip_data;
->>> +	unsigned int extctl;
->>> +	unsigned long flags;
->>> +
->>> +	/* software must clear external interrupt pending, when interrupt type
->>> +	 * is edge triggered, so we need per SIRQ based clearing.
->>> +	 */
->>> +	if (chip_data->sirq[data->hwirq].type_edge) {
->>> +		raw_spin_lock_irqsave(&chip_data->lock, flags);
->>> +
->>> +		extctl = sirq_read_extctl(data);
->>> +		extctl |= INTC_EXTCTL_PENDING;
->>> +		sirq_write_extctl(data, extctl);
->>> +
->>> +		raw_spin_unlock_irqrestore(&chip_data->lock, flags);
->>
->> It would make a lot more sense if the lock was taken inside the accessor
->> so that the rest of the driver doesn't have to deal with it. Something
->> along of the line of:
->>
->> static void sirq_clear_set_extctl(struct owl_sirq_chip_data *d,
->>                                    u32 clear, u32 set)
->> {
->> 	unsigned long flags;
->> 	u32 val;
->>
->> 	raw_spin_lock_irqsave(&d->lock, flags);
->> 	val = sirq_read_extctl(d);
->> 	val &= ~clear;
->> 	val |= set;
->> 	sirq_write_extctl(d, val);
->> 	raw_spin_unlock_irqrestore(&d->lock, flags)
->> }
->>
->> And use that throughout the driver.
-> 
-> Thanks for sharing the function with lock, will update it.
-> 
->>
->>> +	}
->>> +	irq_chip_ack_parent(data);
->>
->> That being said, I'm terribly sceptical about this whole function. At
->> the end of the day, the flow handler used by the GIC is
->> handle_fasteoi_irq, which doesn't call the ack callback at all. So how
->> does this work?
-> 
-> That's my mistake. I will move this function for ".irq_eoi". Will that be fine?
-> In short, all the devices/interrupt controller connected to sirq lines are level
-> triggered in my board. So, I couldn't test this part last time.
-> 
->>
->>> +}
->>> +
->>> +static void owl_sirq_mask(struct irq_data *data)
->>> +{
->>> +	struct owl_sirq_chip_data *chip_data = data->chip_data;
->>> +	unsigned int extctl;
->>> +	unsigned long flags;
->>> +
->>> +	raw_spin_lock_irqsave(&chip_data->lock, flags);
->>> +
->>> +	extctl = sirq_read_extctl(data);
->>> +	extctl &= ~(INTC_EXTCTL_EN);
->>> +	sirq_write_extctl(data, extctl);
->>> +
->>> +	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
->>> +	irq_chip_mask_parent(data);
->>> +}
->>> +
->>> +static void owl_sirq_unmask(struct irq_data *data)
->>> +{
->>> +	struct owl_sirq_chip_data *chip_data = data->chip_data;
->>> +	unsigned int extctl;
->>> +	unsigned long flags;
->>> +
->>> +	raw_spin_lock_irqsave(&chip_data->lock, flags);
->>> +
->>> +	extctl = sirq_read_extctl(data);
->>> +	extctl |= INTC_EXTCTL_EN;
->>> +	sirq_write_extctl(data, extctl);
->>> +
->>> +	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
->>> +	irq_chip_unmask_parent(data);
->>> +}
->>> +
->>> +/* PAD_PULLCTL needs to be defined in pinctrl */
->>> +static int owl_sirq_set_type(struct irq_data *data, unsigned int flow_type)
->>> +{
->>> +	struct owl_sirq_chip_data *chip_data = data->chip_data;
->>> +	unsigned int extctl, type;
->>> +	unsigned long flags;
->>> +
->>> +	switch (flow_type) {
->>> +	case IRQF_TRIGGER_LOW:
->>> +		type = INTC_EXTCTL_TYPE_LOW;
->>> +		break;
->>> +	case IRQF_TRIGGER_HIGH:
->>> +		type = INTC_EXTCTL_TYPE_HIGH;
->>> +		break;
->>> +	case IRQF_TRIGGER_FALLING:
->>> +		type = INTC_EXTCTL_TYPE_FALLING;
->>> +		chip_data->sirq[data->hwirq].type_edge = true;
->>> +		break;
->>> +	case IRQF_TRIGGER_RISING:
->>> +		type = INTC_EXTCTL_TYPE_RISING;
->>> +		chip_data->sirq[data->hwirq].type_edge = true;
->>> +		break;
->>
->> So let's say I configure an interrupt as edge, then switch it to level.
->> The edge setting remains and bad things will happen.
-> 
-> Ok, I will update the value to false for edge cases.
-> 
->>
->>> +	default:
->>> +		return  -EINVAL;
->>> +	}
->>> +
->>> +	raw_spin_lock_irqsave(&chip_data->lock, flags);
->>> +
->>> +	extctl = sirq_read_extctl(data);
->>> +	extctl &= ~INTC_EXTCTL_TYPE_MASK;
->>> +	extctl |= type;
->>> +	sirq_write_extctl(data, extctl);
->>> +
->>> +	raw_spin_unlock_irqrestore(&chip_data->lock, flags);
->>> +	data = data->parent_data;
->>> +	return irq_chip_set_type_parent(data, flow_type);
->>> +}
->>> +
->>> +static struct irq_chip owl_sirq_chip = {
->>> +	.name		= "owl-sirq",
->>> +	.irq_ack	= owl_sirq_ack,
->>> +	.irq_mask	= owl_sirq_mask,
->>> +	.irq_unmask	= owl_sirq_unmask,
->>> +	.irq_set_type	= owl_sirq_set_type,
->>> +	.irq_eoi	= irq_chip_eoi_parent,
->>> +	.irq_retrigger	= irq_chip_retrigger_hierarchy,
->>> +};
->>> +
->>> +static int owl_sirq_domain_alloc(struct irq_domain *domain, unsigned int virq,
->>> +				 unsigned int nr_irqs, void *arg)
->>> +{
->>> +	struct irq_fwspec *fwspec = arg;
->>> +	struct irq_fwspec parent_fwspec = {
->>> +		.param_count	= 3,
->>> +		.param[0]	= GIC_SPI,
->>> +		.param[1]	= fwspec->param[0] + INTC_GIC_INTERRUPT_PIN,
->>> +		.param[2]	= fwspec->param[1],
->>
->> param[2] is supposed to be the trigger configuration. Your driver
->> supports LEVEL_LOW and EDGE_FALLING, which the GIC cannot handle. And
->> yet you're passing it directly.
-> 
-> That's my mistake. I will translate and restrict LEVEL_HIGH and EDGE_RISING
-> for GIC here. Thanks.
-> 
->>
->>> +		.fwnode		= domain->parent->fwnode,
->>> +	};
->>> +
->>> +	if (WARN_ON(nr_irqs != 1))
->>> +		return -EINVAL;
->>> +
->>> +	irq_domain_set_hwirq_and_chip(domain, virq, fwspec->param[0],
->>> +				      &owl_sirq_chip,
->>> +				      domain->host_data);
->>> +
->>> +	return irq_domain_alloc_irqs_parent(domain, virq, nr_irqs,
->>> +					    &parent_fwspec);
->>> +}
->>> +
->>> +static const struct irq_domain_ops sirq_domain_ops = {
->>> +	.alloc	= owl_sirq_domain_alloc,
->>> +	.free	= irq_domain_free_irqs_common,
->>
->> No translation method? Again, how does this work?
-> 
-> Missed this part, I will update this next version.
-> 
->>
->>> +};
->>> +
->>> +static void owl_sirq_clk_init(int offset, int hwirq)
->>> +{
->>> +	unsigned int val;
->>> +
->>> +	/* register default clock is 32Khz, change to 24Mhz only when defined */
->>> +	val = readl_relaxed(sirq_data->base + offset);
->>> +	if (sirq_data->shared_reg)
->>> +		val |= INTC_EXTCTL_CLK_SEL << (2 - hwirq) * 8;
->>> +	else
->>> +		val |= INTC_EXTCTL_CLK_SEL;
->>> +
->>> +	writel_relaxed(val, sirq_data->base + offset);
->>> +}
->>
->> I've asked questions about this in the first review, and you didn't
->> answer. Why is it even configurable? How do you choose the sample rate?
->> What's the drawback of always setting it one way or the other?
-> 
-> The provision for selecting sampling rate here seems meant for power
-> management, which I wasn't aware of. So this configuration doesn't need
-> to come from DT.
-> 
-> Possibly this needs to be implemented as "syscore_ops" suspend and resume
-> calls. Should I register this as "register_syscore_ops" or leaving 32MHz
-> is fine?
-> 
->>
->>> +
->>> +static int __init owl_sirq_of_init(struct device_node *node,
->>> +					struct device_node *parent)
->>> +{
->>> +	struct irq_domain *domain, *domain_parent;
->>> +	int ret = 0, i, sirq_cnt = 0;
->>> +	struct owl_sirq_chip_data *chip_data;
->>> +
->>> +	sirq_cnt = of_property_count_u32_elems(node, "actions,sirq-offset");
->>> +	if (sirq_cnt <= 0) {
->>> +		pr_err("owl_sirq: register offset not specified\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
->>> +	if (!chip_data)
->>> +		return -ENOMEM;
->>> +	sirq_data = chip_data;
->>> +
->>> +	chip_data->sirq = kcalloc(sirq_cnt, sizeof(*chip_data->sirq),
->>> +				GFP_KERNEL);
->>> +	if (!chip_data->sirq)
->>> +		goto out_free;
->>> +
->>> +	raw_spin_lock_init(&chip_data->lock);
->>> +	chip_data->base = of_iomap(node, 0);
->>> +	if (!chip_data->base) {
->>> +		pr_err("owl_sirq: unable to map sirq register\n");
->>> +		ret = -ENXIO;
->>> +		goto out_free;
->>> +	}
->>> +
->>> +	chip_data->shared_reg = of_property_read_bool(node,
->>> +						"actions,sirq-shared-reg");
->>> +	for (i = 0; i < sirq_cnt; i++) {
->>> +		u32 value;
->>> +
->>> +		ret = of_property_read_u32_index(node, "actions,sirq-offset",
->>> +						i, &value);
->>> +		if (ret)
->>> +			goto out_unmap;
->>> +
->>> +		get_sirq_offset(i) = (u16)value;
->>> +
->>> +		ret = of_property_read_u32_index(node, "actions,sirq-clk-sel",
->>> +						i, &value);
->>> +		if (ret || !value)
->>> +			continue;
->>> +
->>> +		/* external interrupt controller can be either connect to 32Khz/
->>> +		 * 24Mhz external/internal clock. This shall be configured for
->>> +		 * per SIRQ line. It can be defined from DT, failing defaults to
->>> +		 * 24Mhz clock.
->>> +		 */
->>> +		owl_sirq_clk_init(get_sirq_offset(i), i);
->>> +	}
->>> +
->>> +	domain_parent = irq_find_host(parent);
->>> +	if (!domain_parent) {
->>> +		pr_err("owl_sirq: interrupt-parent not found\n");
->>> +		goto out_unmap;
->>> +	}
->>> +
->>> +	domain = irq_domain_add_hierarchy(domain_parent, 0,
->>> +			sirq_cnt, node,
->>> +			&sirq_domain_ops, chip_data);
->>> +	if (!domain) {
->>> +		ret = -ENOMEM;
->>> +		goto out_unmap;
->>> +	}
->>> +
->>> +	return 0;
->>> +
->>> +out_unmap:
->>> +	iounmap(chip_data->base);
->>> +out_free:
->>> +	kfree(chip_data);
->>> +	kfree(chip_data->sirq);
->>> +	return ret;
->>> +}
->>> +
->>> +IRQCHIP_DECLARE(owl_sirq, "actions,owl-sirq", owl_sirq_of_init);
->>>
->>
->> As it stands, this driver is nowhere near ready. I don't even understand
->> how edge signalling works. Also, I'd appreciate if you could answer my
->> comments before respining another version.
-> 
-> As the previous version wasn't based on hierarchy, which I was working on
-> after your feedback. Apologize!
-> 
->>
->> Thanks,
->>
->> 	M.
->>
-> 
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 ++
+ include/dt-bindings/clock/imx8mq-clock.h           | 395 +++++++++++++++++++++
+ 2 files changed, 415 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+ create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
 
+diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+new file mode 100644
+index 0000000..52de826
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
+@@ -0,0 +1,20 @@
++* Clock bindings for NXP i.MX8M Quad
++
++Required properties:
++- compatible: Should be "fsl,imx8mq-ccm"
++- reg: Address and length of the register set
++- #clock-cells: Should be <1>
++- clocks: list of clock specifiers, must contain an entry for each required
++          entry in clock-names
++- clock-names: should include the following entries:
++    - "ckil"
++    - "osc_25m"
++    - "osc_27m"
++    - "clk_ext1"
++    - "clk_ext2"
++    - "clk_ext3"
++    - "clk_ext4"
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx8mq-clock.h
++for the full list of i.MX8M Quad clock IDs.
+diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
+new file mode 100644
+index 0000000..b53be41
+--- /dev/null
++++ b/include/dt-bindings/clock/imx8mq-clock.h
+@@ -0,0 +1,395 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2016 Freescale Semiconductor, Inc.
++ * Copyright 2017 NXP
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_IMX8MQ_H
++#define __DT_BINDINGS_CLOCK_IMX8MQ_H
++
++#define IMX8MQ_CLK_DUMMY		0
++#define IMX8MQ_CLK_32K			1
++#define IMX8MQ_CLK_25M			2
++#define IMX8MQ_CLK_27M			3
++#define IMX8MQ_CLK_EXT1			4
++#define IMX8MQ_CLK_EXT2			5
++#define IMX8MQ_CLK_EXT3			6
++#define IMX8MQ_CLK_EXT4			7
++
++/* ANAMIX PLL clocks */
++/* FRAC PLLs */
++/* ARM PLL */
++#define IMX8MQ_ARM_PLL_REF_SEL		8
++#define IMX8MQ_ARM_PLL_REF_DIV		9
++#define IMX8MQ_ARM_PLL			10
++#define IMX8MQ_ARM_PLL_BYPASS		11
++#define IMX8MQ_ARM_PLL_OUT		12
++
++/* GPU PLL */
++#define IMX8MQ_GPU_PLL_REF_SEL		13
++#define IMX8MQ_GPU_PLL_REF_DIV		14
++#define IMX8MQ_GPU_PLL			15
++#define IMX8MQ_GPU_PLL_BYPASS		16
++#define IMX8MQ_GPU_PLL_OUT		17
++
++/* VPU PLL */
++#define IMX8MQ_VPU_PLL_REF_SEL		18
++#define IMX8MQ_VPU_PLL_REF_DIV		19
++#define IMX8MQ_VPU_PLL			20
++#define IMX8MQ_VPU_PLL_BYPASS		21
++#define IMX8MQ_VPU_PLL_OUT		22
++
++/* AUDIO PLL1 */
++#define IMX8MQ_AUDIO_PLL1_REF_SEL	23
++#define IMX8MQ_AUDIO_PLL1_REF_DIV	24
++#define IMX8MQ_AUDIO_PLL1		25
++#define IMX8MQ_AUDIO_PLL1_BYPASS	26
++#define IMX8MQ_AUDIO_PLL1_OUT		27
++
++/* AUDIO PLL2 */
++#define IMX8MQ_AUDIO_PLL2_REF_SEL	28
++#define IMX8MQ_AUDIO_PLL2_REF_DIV	29
++#define IMX8MQ_AUDIO_PLL2		30
++#define IMX8MQ_AUDIO_PLL2_BYPASS	31
++#define IMX8MQ_AUDIO_PLL2_OUT		32
++
++/* VIDEO PLL1 */
++#define IMX8MQ_VIDEO_PLL1_REF_SEL	33
++#define IMX8MQ_VIDEO_PLL1_REF_DIV	34
++#define IMX8MQ_VIDEO_PLL1		35
++#define IMX8MQ_VIDEO_PLL1_BYPASS	36
++#define IMX8MQ_VIDEO_PLL1_OUT		37
++
++/* SYS1 PLL */
++#define IMX8MQ_SYS1_PLL1_REF_SEL	38
++#define IMX8MQ_SYS1_PLL1_REF_DIV	39
++#define IMX8MQ_SYS1_PLL1		40
++#define IMX8MQ_SYS1_PLL1_OUT		41
++#define IMX8MQ_SYS1_PLL1_OUT_DIV	42
++#define IMX8MQ_SYS1_PLL2		43
++#define IMX8MQ_SYS1_PLL2_DIV		44
++#define IMX8MQ_SYS1_PLL2_OUT		45
++
++/* SYS2 PLL */
++#define IMX8MQ_SYS2_PLL1_REF_SEL	46
++#define IMX8MQ_SYS2_PLL1_REF_DIV	47
++#define IMX8MQ_SYS2_PLL1		48
++#define IMX8MQ_SYS2_PLL1_OUT		49
++#define IMX8MQ_SYS2_PLL1_OUT_DIV	50
++#define IMX8MQ_SYS2_PLL2		51
++#define IMX8MQ_SYS2_PLL2_DIV		52
++#define IMX8MQ_SYS2_PLL2_OUT		53
++
++/* SYS3 PLL */
++#define IMX8MQ_SYS3_PLL1_REF_SEL	54
++#define IMX8MQ_SYS3_PLL1_REF_DIV	55
++#define IMX8MQ_SYS3_PLL1		56
++#define IMX8MQ_SYS3_PLL1_OUT		57
++#define IMX8MQ_SYS3_PLL1_OUT_DIV	58
++#define IMX8MQ_SYS3_PLL2		59
++#define IMX8MQ_SYS3_PLL2_DIV		60
++#define IMX8MQ_SYS3_PLL2_OUT		61
++
++/* DRAM PLL */
++#define IMX8MQ_DRAM_PLL1_REF_SEL	62
++#define IMX8MQ_DRAM_PLL1_REF_DIV	63
++#define IMX8MQ_DRAM_PLL1		64
++#define IMX8MQ_DRAM_PLL1_OUT		65
++#define IMX8MQ_DRAM_PLL1_OUT_DIV	66
++#define IMX8MQ_DRAM_PLL2		67
++#define IMX8MQ_DRAM_PLL2_DIV		68
++#define IMX8MQ_DRAM_PLL2_OUT		69
++
++/* SYS PLL DIV */
++#define IMX8MQ_SYS1_PLL_40M		70
++#define IMX8MQ_SYS1_PLL_80M		71
++#define IMX8MQ_SYS1_PLL_100M		72
++#define IMX8MQ_SYS1_PLL_133M		73
++#define IMX8MQ_SYS1_PLL_160M		74
++#define IMX8MQ_SYS1_PLL_200M		75
++#define IMX8MQ_SYS1_PLL_266M		76
++#define IMX8MQ_SYS1_PLL_400M		77
++#define IMX8MQ_SYS1_PLL_800M		78
++
++#define IMX8MQ_SYS2_PLL_50M		79
++#define IMX8MQ_SYS2_PLL_100M		80
++#define IMX8MQ_SYS2_PLL_125M		81
++#define IMX8MQ_SYS2_PLL_166M		82
++#define IMX8MQ_SYS2_PLL_200M		83
++#define IMX8MQ_SYS2_PLL_250M		84
++#define IMX8MQ_SYS2_PLL_333M		85
++#define IMX8MQ_SYS2_PLL_500M		86
++#define IMX8MQ_SYS2_PLL_1000M		87
++
++/* CCM ROOT clocks */
++/* A53 */
++#define IMX8MQ_CLK_A53_SRC		88
++#define IMX8MQ_CLK_A53_CG		89
++#define IMX8MQ_CLK_A53_DIV		90
++/* M4 */
++#define IMX8MQ_CLK_M4_SRC		91
++#define IMX8MQ_CLK_M4_CG		92
++#define IMX8MQ_CLK_M4_DIV		93
++/* VPU */
++#define IMX8MQ_CLK_VPU_SRC		94
++#define IMX8MQ_CLK_VPU_CG		95
++#define IMX8MQ_CLK_VPU_DIV		96
++/* GPU CORE */
++#define IMX8MQ_CLK_GPU_CORE_SRC		97
++#define IMX8MQ_CLK_GPU_CORE_CG		98
++#define IMX8MQ_CLK_GPU_CORE_DIV		99
++/* GPU SHADER */
++#define IMX8MQ_CLK_GPU_SHADER_SRC	100
++#define IMX8MQ_CLK_GPU_SHADER_CG	101
++#define IMX8MQ_CLK_GPU_SHADER_DIV	102
++
++/* BUS TYPE */
++/* MAIN AXI */
++#define IMX8MQ_CLK_MAIN_AXI		103
++/* ENET AXI */
++#define IMX8MQ_CLK_ENET_AXI		104
++/* NAND_USDHC_BUS */
++#define IMX8MQ_CLK_NAND_USDHC_BUS	105
++/* VPU BUS */
++#define IMX8MQ_CLK_VPU_BUS		106
++/* DISP_AXI */
++#define IMX8MQ_CLK_DISP_AXI		107
++/* DISP APB */
++#define IMX8MQ_CLK_DISP_APB		108
++/* DISP RTRM */
++#define IMX8MQ_CLK_DISP_RTRM		109
++/* USB_BUS */
++#define IMX8MQ_CLK_USB_BUS		110
++/* GPU_AXI */
++#define IMX8MQ_CLK_GPU_AXI		111
++/* GPU_AHB */
++#define IMX8MQ_CLK_GPU_AHB		112
++/* NOC */
++#define IMX8MQ_CLK_NOC			113
++/* NOC_APB */
++#define IMX8MQ_CLK_NOC_APB		115
++
++/* AHB */
++#define IMX8MQ_CLK_AHB			116
++/* AUDIO AHB */
++#define IMX8MQ_CLK_AUDIO_AHB		117
++
++/* DRAM_ALT */
++#define IMX8MQ_CLK_DRAM_ALT		118
++/* DRAM APB */
++#define IMX8MQ_CLK_DRAM_APB		119
++/* VPU_G1 */
++#define IMX8MQ_CLK_VPU_G1		120
++/* VPU_G2 */
++#define IMX8MQ_CLK_VPU_G2		121
++/* DISP_DTRC */
++#define IMX8MQ_CLK_DISP_DTRC		122
++/* DISP_DC8000 */
++#define IMX8MQ_CLK_DISP_DC8000		123
++/* PCIE_CTRL */
++#define IMX8MQ_CLK_PCIE1_CTRL		124
++/* PCIE_PHY */
++#define IMX8MQ_CLK_PCIE1_PHY		125
++/* PCIE_AUX */
++#define IMX8MQ_CLK_PCIE1_AUX		126
++/* DC_PIXEL */
++#define IMX8MQ_CLK_DC_PIXEL		127
++/* LCDIF_PIXEL */
++#define IMX8MQ_CLK_LCDIF_PIXEL		128
++/* SAI1~6 */
++#define IMX8MQ_CLK_SAI1			129
++
++#define IMX8MQ_CLK_SAI2			130
++
++#define IMX8MQ_CLK_SAI3			131
++
++#define IMX8MQ_CLK_SAI4			132
++
++#define IMX8MQ_CLK_SAI5			133
++
++#define IMX8MQ_CLK_SAI6			134
++/* SPDIF1 */
++#define IMX8MQ_CLK_SPDIF1		135
++/* SPDIF2 */
++#define IMX8MQ_CLK_SPDIF2		136
++/* ENET_REF */
++#define IMX8MQ_CLK_ENET_REF		137
++/* ENET_TIMER */
++#define IMX8MQ_CLK_ENET_TIMER		138
++/* ENET_PHY */
++#define IMX8MQ_CLK_ENET_PHY_REF		139
++/* NAND */
++#define IMX8MQ_CLK_NAND			140
++/* QSPI */
++#define IMX8MQ_CLK_QSPI			141
++/* USDHC1 */
++#define IMX8MQ_CLK_USDHC1		142
++/* USDHC2 */
++#define IMX8MQ_CLK_USDHC2		143
++/* I2C1 */
++#define IMX8MQ_CLK_I2C1			144
++/* I2C2 */
++#define IMX8MQ_CLK_I2C2			145
++/* I2C3 */
++#define IMX8MQ_CLK_I2C3			146
++/* I2C4 */
++#define IMX8MQ_CLK_I2C4			147
++/* UART1 */
++#define IMX8MQ_CLK_UART1		148
++/* UART2 */
++#define IMX8MQ_CLK_UART2		149
++/* UART3 */
++#define IMX8MQ_CLK_UART3		150
++/* UART4 */
++#define IMX8MQ_CLK_UART4		151
++/* USB_CORE_REF */
++#define IMX8MQ_CLK_USB_CORE_REF		152
++/* USB_PHY_REF */
++#define IMX8MQ_CLK_USB_PHY_REF		163
++/* ECSPI1 */
++#define IMX8MQ_CLK_ECSPI1		164
++/* ECSPI2 */
++#define IMX8MQ_CLK_ECSPI2		165
++/* PWM1 */
++#define IMX8MQ_CLK_PWM1			166
++/* PWM2 */
++#define IMX8MQ_CLK_PWM2			167
++/* PWM3 */
++#define IMX8MQ_CLK_PWM3			168
++/* PWM4 */
++#define IMX8MQ_CLK_PWM4			169
++/* GPT1 */
++#define IMX8MQ_CLK_GPT1			170
++/* WDOG */
++#define IMX8MQ_CLK_WDOG			171
++/* WRCLK */
++#define IMX8MQ_CLK_WRCLK		172
++/* DSI_CORE */
++#define IMX8MQ_CLK_DSI_CORE		173
++/* DSI_PHY */
++#define IMX8MQ_CLK_DSI_PHY_REF		174
++/* DSI_DBI */
++#define IMX8MQ_CLK_DSI_DBI		175
++/*DSI_ESC */
++#define IMX8MQ_CLK_DSI_ESC		176
++/* CSI1_CORE */
++#define IMX8MQ_CLK_CSI1_CORE		177
++/* CSI1_PHY */
++#define IMX8MQ_CLK_CSI1_PHY_REF		178
++/* CSI_ESC */
++#define IMX8MQ_CLK_CSI1_ESC		179
++/* CSI2_CORE */
++#define IMX8MQ_CLK_CSI2_CORE		170
++/* CSI2_PHY */
++#define IMX8MQ_CLK_CSI2_PHY_REF		181
++/* CSI2_ESC */
++#define IMX8MQ_CLK_CSI2_ESC		182
++/* PCIE2_CTRL */
++#define IMX8MQ_CLK_PCIE2_CTRL		183
++/* PCIE2_PHY */
++#define IMX8MQ_CLK_PCIE2_PHY		184
++/* PCIE2_AUX */
++#define IMX8MQ_CLK_PCIE2_AUX		185
++/* ECSPI3 */
++#define IMX8MQ_CLK_ECSPI3		186
++
++/* CCGR clocks */
++#define IMX8MQ_CLK_A53_ROOT			187
++#define IMX8MQ_CLK_DRAM_ROOT			188
++#define IMX8MQ_CLK_ECSPI1_ROOT			189
++#define IMX8MQ_CLK_ECSPI2_ROOT			180
++#define IMX8MQ_CLK_ECSPI3_ROOT			181
++#define IMX8MQ_CLK_ENET1_ROOT			182
++#define IMX8MQ_CLK_GPT1_ROOT			193
++#define IMX8MQ_CLK_I2C1_ROOT			194
++#define IMX8MQ_CLK_I2C2_ROOT			195
++#define IMX8MQ_CLK_I2C3_ROOT			196
++#define IMX8MQ_CLK_I2C4_ROOT			197
++#define IMX8MQ_CLK_M4_ROOT			198
++#define IMX8MQ_CLK_PCIE1_ROOT			199
++#define IMX8MQ_CLK_PCIE2_ROOT			200
++#define IMX8MQ_CLK_PWM1_ROOT			201
++#define IMX8MQ_CLK_PWM2_ROOT			202
++#define IMX8MQ_CLK_PWM3_ROOT			203
++#define IMX8MQ_CLK_PWM4_ROOT			204
++#define IMX8MQ_CLK_QSPI_ROOT			205
++#define IMX8MQ_CLK_SAI1_ROOT			206
++#define IMX8MQ_CLK_SAI2_ROOT			207
++#define IMX8MQ_CLK_SAI3_ROOT			208
++#define IMX8MQ_CLK_SAI4_ROOT			209
++#define IMX8MQ_CLK_SAI5_ROOT			210
++#define IMX8MQ_CLK_SAI6_ROOT			212
++#define IMX8MQ_CLK_UART1_ROOT			213
++#define IMX8MQ_CLK_UART2_ROOT			214
++#define IMX8MQ_CLK_UART3_ROOT			215
++#define IMX8MQ_CLK_UART4_ROOT			216
++#define IMX8MQ_CLK_USB1_CTRL_ROOT		217
++#define IMX8MQ_CLK_USB2_CTRL_ROOT		218
++#define IMX8MQ_CLK_USB1_PHY_ROOT		219
++#define IMX8MQ_CLK_USB2_PHY_ROOT		220
++#define IMX8MQ_CLK_USDHC1_ROOT			221
++#define IMX8MQ_CLK_USDHC2_ROOT			222
++#define IMX8MQ_CLK_WDOG1_ROOT			223
++#define IMX8MQ_CLK_WDOG2_ROOT			224
++#define IMX8MQ_CLK_WDOG3_ROOT			225
++#define IMX8MQ_CLK_GPU_ROOT			226
++#define IMX8MQ_CLK_HEVC_ROOT			227
++#define IMX8MQ_CLK_AVC_ROOT			228
++#define IMX8MQ_CLK_VP9_ROOT			229
++#define IMX8MQ_CLK_HEVC_INTER_ROOT		230
++#define IMX8MQ_CLK_DISP_ROOT			231
++#define IMX8MQ_CLK_HDMI_ROOT			232
++#define IMX8MQ_CLK_HDMI_PHY_ROOT		233
++#define IMX8MQ_CLK_VPU_DEC_ROOT			234
++#define IMX8MQ_CLK_CSI1_ROOT			235
++#define IMX8MQ_CLK_CSI2_ROOT			236
++#define IMX8MQ_CLK_RAWNAND_ROOT			237
++#define IMX8MQ_CLK_SDMA1_ROOT			238
++#define IMX8MQ_CLK_SDMA2_ROOT			239
++#define IMX8MQ_CLK_VPU_G1_ROOT			240
++#define IMX8MQ_CLK_VPU_G2_ROOT			241
++
++/* SCCG PLL GATE */
++#define IMX8MQ_SYS1_PLL_OUT			232
++#define IMX8MQ_SYS2_PLL_OUT			243
++#define IMX8MQ_SYS3_PLL_OUT			244
++#define IMX8MQ_DRAM_PLL_OUT			245
++
++#define IMX8MQ_GPT_3M_CLK			246
++
++#define IMX8MQ_CLK_IPG_ROOT			247
++#define IMX8MQ_CLK_IPG_AUDIO_ROOT		248
++#define IMX8MQ_CLK_SAI1_IPG			249
++#define IMX8MQ_CLK_SAI2_IPG			250
++#define IMX8MQ_CLK_SAI3_IPG			251
++#define IMX8MQ_CLK_SAI4_IPG			252
++#define IMX8MQ_CLK_SAI5_IPG			253
++#define IMX8MQ_CLK_SAI6_IPG			254
++
++/* DSI AHB/IPG clocks */
++/* rxesc clock */
++#define IMX8MQ_CLK_DSI_AHB			255
++/* txesc clock */
++#define IMX8MQ_CLK_DSI_IPG_DIV                  256
++
++#define IMX8MQ_CLK_TMU_ROOT			265
++
++/* Display root clocks */
++#define IMX8MQ_CLK_DISP_AXI_ROOT		266
++#define IMX8MQ_CLK_DISP_APB_ROOT		267
++#define IMX8MQ_CLK_DISP_RTRM_ROOT		268
++
++#define IMX8MQ_CLK_OCOTP_ROOT			269
++
++#define IMX8MQ_CLK_DRAM_ALT_ROOT		270
++#define IMX8MQ_CLK_DRAM_CORE			271
++
++#define IMX8MQ_CLK_MU_ROOT			272
++#define IMX8MQ_VIDEO2_PLL_OUT			273
++
++#define IMX8MQ_CLK_CLKO2			274
++
++#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	275
++
++#define IMX8MQ_CLK_END				276
++#endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
 -- 
-Thanks,
-Parthiban N
+2.7.4
