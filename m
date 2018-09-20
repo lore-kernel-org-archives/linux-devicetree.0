@@ -1,8 +1,8 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
 Subject: [PATCH] ARM: dts: BCM53573: Relicense Tenda AC9 file to the GPL 2.0+
  / MIT
-Date: Thu, 20 Sep 2018 13:37:47 +0200
-Message-ID: <20180920113747.26832-1-zajec5@gmail.com>
+Date: Thu, 20 Sep 2018 13:38:35 +0200
+Message-ID: <20180920113835.26928-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
@@ -16,7 +16,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
