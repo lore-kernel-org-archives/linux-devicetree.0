@@ -1,233 +1,220 @@
-Return-Path: <SRS0=wock=L4=pmeerw.net=pmeerw@kernel.org>
-Date: Fri, 14 Sep 2018 10:31:08 +0200 (CEST)
-From: Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2 1/4] dt-bindings: iio: adc: Add Xilinx AMS binding
- documentation
-In-Reply-To: <1536909510-7166-2-git-send-email-manish.narani@xilinx.com>
-Message-ID: <alpine.DEB.2.21.1809141026040.9866@vps.pmeerw.net>
-References: <1536909510-7166-1-git-send-email-manish.narani@xilinx.com> <1536909510-7166-2-git-send-email-manish.narani@xilinx.com>
+Return-Path: <SRS0=lNwp=MC=pengutronix.de=l.stach@kernel.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 4/4] Input: egalax_ts - add support for new protocol version
+Date: Thu, 20 Sep 2018 16:22:56 +0200
+Message-Id: <20180920142256.2788-4-l.stach@pengutronix.de>
+In-Reply-To: <20180920142256.2788-1-l.stach@pengutronix.de>
+References: <20180920142256.2788-1-l.stach@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: jic23@kernel.org, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, sgoud@xilinx.com, anirudh@xilinx.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Chris Healy <cphealy@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
+This implements support for the new protocol that supports up to
+10 touch slots spread over up to 2 i2c messages.
 
-> Xilinx AMS have several ADC channels that can be used for measurement of
-> different voltages and temperatures. Document the same in the bindings.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ drivers/input/touchscreen/egalax_ts.c | 132 +++++++++++++++++++++-----
+ 1 file changed, 106 insertions(+), 26 deletions(-)
 
-minor comments below
-
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  .../devicetree/bindings/iio/adc/xilinx-ams.txt     | 180 +++++++++++++++++++++
->  1 file changed, 180 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> new file mode 100644
-> index 0000000..d0958a1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/xilinx-ams.txt
-> @@ -0,0 +1,180 @@
-> +Xilinx AMS controller
-> +`````````````````````
-> +The AMS includes an ADC as well as on-chip sensors that can be used to
-> +sample external voltages and monitor on-die operating conditions, such as
-> +temperature and supply voltage levels.
-> +The AMS has two SYSMON blocks which are PL (Programmable Logic) SYSMON and
-> +PS (Processing System) SYSMON.
-> +All designs should have AMS registers, but PS and PL are optional. The
-> +AMS controller can work with only PS, only PL and both PS and PL
-> +configurations. Please specify registers according to your design. Devicetree
-> +should always have AMS module property. Providing PS & PL module is optional.
-> +
-> +Required properties:
-> +	- compatible: Should be "xlnx,zynqmp-ams"
-> +	- reg: Should specify AMS register space
-> +	- interrupts: Interrupt number for the AMS control interface
-> +	- interrupt-names: Interrupt name, must be "ams-irq"
-> +	- clocks: Should contain a clock specifier for the device
-> +	- ranges: keep the property empty to map child address space
-> +	          (for PS and/or PL) nodes 1:1 onto the parent address
-> +	          space
-> +
-> +	AMS sub-nodes:
-> +		- ams_ps : Used as PS-SYSMON node
-> +		- ams_pl : Used as PL-SYSMON node
-> +
-> +
-> +
-> +AMS PS-SYSMON
-> +`````````````
-> +PS (Processing System) SYSMON is memory mapped to PS. This block has built-in
-> +alarm generation logic that is used to interrupt the processor based on
-> +condition set.
-> +
-> +Required properties:
-> +	- compatible: Should be "xlnx,zynqmp-ams-ps"
-> +	- reg: Register space for PS-SYSMON
-> +
-> +
-> +
-> +AMS PL-SYSMON
-> +`````````````
-> +PL-SYSMON is capable of monitoring off chip voltage and temperature. PL-SYSMON
-> +block has DRP, JTAG and I2C interface to enable monitoring from external master.
-> +Out of this interface currently only DRP is supported. This block has alarm
-> +generation logic that is used to interrupt the processor based on condition set.
-> +
-> +Required properties:
-> +	- compatible: Should be "xlnx,zynqmp-ams-pl"
-> +	- reg: Register space for PL-SYSMON
-> +
-> +PL-SYSMON optional sub-nodes:
-> +	- xlnx,ext-channels: List of external channels that are connected to the
-> +	                     AMS PL module.
-> +
-> +	  The child nodes of PL-SYSMON represent the external channels which are
-> +	  connected to this Module. If the property is not present
-> +	  no external channels will be assumed to be connected.
-> +
-> +	  Each child node represents one channel and has the following
-> +	  properties:
-> +
-> +	Required properties:
-> +		* reg: Pair of pins the channel is connected to.
-> +
-> +		    'reg' value		Channel Name		Channel Number
-> +		    -----------		------------		--------------
-> +			 0		VP/VN			      30
-> +			 1		VUSER0			      31
-> +			 2		VUSER1			      32
-> +			 3		VUSER3			      33
-> +			 4		VUSER4			      34
-> +			 5		VAUXP[0]/VAUXN[0]	      35
-> +			 6		VAUXP[1]/VAUXN[1]	      36
-> +			...
-> +			20		VAUXP[15]/VAUXN[15]	      50
-> +
-> +		Each channel number should only be used at most once. For
-> +		more details on channels, refer table given at the end.
-
-refer to
-
-> +
-> +	Optional properties:
-> +		* xlnx,bipolar: If set the channel is used in bipolar
-> +		  mode.
-> +
-> +
-> +Example:
-> +	xilinx_ams: ams@ffa50000 {
-> +		compatible = "xlnx,zynqmp-ams";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 56 4>;
-> +		interrupt-names = "ams-irq";
-> +		clocks = <&clkc 70>;
-> +		reg = <0x0 0xffa50000 0x0 0x800>;
-> +		reg-names = "ams-base";
-> +		ranges;
-> +
-> +		ams_ps: ams_ps@ffa50800 {
-> +			compatible = "xlnx,zynqmp-ams-ps";
-> +			reg = <0x0 0xffa50800 0x0 0x400>;
-> +		};
-> +
-> +		ams_pl: ams_pl@ffa50c00 {
-> +			compatible = "xlnx,zynqmp-ams-pl";
-> +			reg = <0x0 0xffa50c00 0x0 0x400>;
-> +			xlnx,ext-channels {
-> +				channel@0 {
-> +					reg = <0>;
-> +					xlnx,bipolar;
-> +				};
-> +				channel@1 {
-> +					reg = <1>;
-> +				};
-> +				channel@8 {
-> +					reg = <8>;
-> +					xlnx,bipolar;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +
-> +AMS Channels Details
-
-Channel Details
-
-> +````````````````````
-> +Sysmon Block	|Channel|			Details					|Measurement
-> +		 Number									 Type
-> +---------------------------------------------------------------------------------------------------------
-> +AMS CTRL	|0	|System PLLs voltage measurement, VCC_PSPLL.			|Voltage
-> +		|1	|Battery voltage measurement, VCC_PSBATT.			|Voltage
-> +		|2	|PL Internal voltage measurement, VCCINT.			|Voltage
-> +		|3	|Block RAM voltage measurement, VCCBRAM.			|Voltage
-> +		|4	|PL Aux voltage measurement, VCCAUX.				|Voltage
-> +		|5	|Voltage measurement for six DDR I/O PLLs, VCC_PSDDR_PLL.	|Voltage
-> +		|6	|VCC_PSINTFP_DDR voltage measurement.				|Voltage
-> +---------------------------------------------------------------------------------------------------------
-> +PS Sysmon	|7	|LPD temperature measurement.					|Temperature
-> +		|8	|FPD Temperature Measurment (REMOTE).				|Temperature
-
-temperature measur_e_ment (and probably lowercase?)
-
-> +		|9	|VCC PS LPD voltage measurement (supply1).			|Voltage
-> +		|10	|VCC PS FPD voltage measurement (supply2).			|Voltage
-> +		|11	|PS Aux voltage reference (supply3).				|Voltage
-> +		|12	|DDR I/O VCC voltage measurement.				|Voltage
-> +		|13	|PS IO Bank 503 voltage measurement (supply5).			|Voltage
-> +		|14	|PS IO Bank 500 voltage measurement (supply6).			|Voltage
-> +		|15	|VCCO_PSIO1 voltage measurement.				|Voltage
-> +		|16	|VCCO_PSIO2 voltage measurement.				|Voltage
-> +		|17	|VCC_PS_GTR voltage measurement (VPS_MGTRAVCC).			|Voltage
-> +		|18	|VTT_PS_GTR voltage measurement (VPS_MGTRAVTT).			|Voltage
-> +		|19	|VCC_PSADC voltage measurement.					|Voltage
-> +---------------------------------------------------------------------------------------------------------
-> +PL Sysmon	|20	|PL Temperature measurement.					|Temperature
-> +		|21	|PL Internal Voltage Voltage measurement, VCCINT.		|Voltage
-
-Voltage Voltage?
-
-> +		|22	|PL Auxiliary Voltage measurement, VCCAUX.			|Voltage
-> +		|23	|ADC Reference P+ Voltage measurement.				|Voltage
-> +		|24	|ADC Reference N- Voltage measurement.				|Voltage
-> +		|25	|PL Block RAM Voltage measurement, VCCBRAM.			|Voltage
-> +		|26	|LPD Internal Voltage measurement, VCC_PSINTLP (supply4).	|Voltage
-> +		|27	|FPD Internal Voltage measurement, VCC_PSINTFP (supply5).	|Voltage
-> +		|28	|PS Auxiliary Voltage measurement (supply6).			|Voltage
-> +		|29	|PL VCCADC Voltage measurement (vccams).			|Voltage
-> +		|30	|Differencial analog input signal Voltage measurment.		|Voltage
-
-Differen_t_ial
-
-> +		|31	|VUser0 Voltage measurement (supply7).				|Voltage
-> +		|32	|VUser1 Voltage measurement (supply8).				|Voltage
-> +		|33	|VUser2 Voltage measurement (supply9).				|Voltage
-> +		|34	|VUser3 Voltage measurement (supply10).				|Voltage
-> +		|35	|Auxiliary ch 0 Voltage measurement (VAux0).			|Voltage
-> +		|36	|Auxiliary ch 1 Voltage measurement (VAux1).			|Voltage
-> +		|37	|Auxiliary ch 2 Voltage measurement (VAux2).			|Voltage
-> +		|38	|Auxiliary ch 3 Voltage measurement (VAux3).			|Voltage
-> +		|39	|Auxiliary ch 4 Voltage measurement (VAux4).			|Voltage
-> +		|40	|Auxiliary ch 5 Voltage measurement (VAux5).			|Voltage
-> +		|41	|Auxiliary ch 6 Voltage measurement (VAux6).			|Voltage
-> +		|42	|Auxiliary ch 7 Voltage measurement (VAux7).			|Voltage
-> +		|43	|Auxiliary ch 8 Voltage measurement (VAux8).			|Voltage
-> +		|44	|Auxiliary ch 9 Voltage measurement (VAux9).			|Voltage
-> +		|45	|Auxiliary ch 10 Voltage measurement (VAux10).			|Voltage
-> +		|46	|Auxiliary ch 11 Voltage measurement (VAux11).			|Voltage
-> +		|47	|Auxiliary ch 12 Voltage measurement (VAux12).			|Voltage
-> +		|48	|Auxiliary ch 13 Voltage measurement (VAux13).			|Voltage
-> +		|49	|Auxiliary ch 14 Voltage measurement (VAux14).			|Voltage
-> +		|50	|Auxiliary ch 15 Voltage measurement (VAux15).			|Voltage
-> +---------------------------------------------------------------------------------------------------------
-> 
-
+diff --git a/drivers/input/touchscreen/egalax_ts.c b/drivers/input/touchscreen/egalax_ts.c
+index 0f924d8c17c8..ef25aec71d56 100644
+--- a/drivers/input/touchscreen/egalax_ts.c
++++ b/drivers/input/touchscreen/egalax_ts.c
+@@ -41,6 +41,7 @@
+ #define REPORT_MODE_VENDOR		0x3
+ /* Multiple Touch Mode */
+ #define REPORT_MODE_MTTOUCH		0x4
++#define REPORT_MODE_MTTOUCH_NEW		0x6
+ 
+ #define MAX_SUPPORT_POINTS		5
+ 
+@@ -51,8 +52,9 @@
+ #define EVENT_IN_RANGE		(0x1 << 1)
+ #define EVENT_DOWN_UP		(0X1 << 0)
+ 
+-#define MAX_I2C_DATA_LEN	10
++#define MAX_I2C_DATA_LEN	(64 + 2)
+ 
++#define EGALAX_POINT_SIZE	10
+ #define EGALAX_MAX_TRIES 100
+ 
+ struct egalax_ts {
+@@ -62,41 +64,66 @@ struct egalax_ts {
+ 	struct touchscreen_properties	props;
+ };
+ 
+-static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
++static int egalax_ts_handle_points(struct egalax_ts *ts, u8 *msg,
++				   int num_points)
+ {
+-	struct egalax_ts *ts = dev_id;
+ 	struct input_dev *input_dev = ts->input_dev;
+ 	struct i2c_client *client = ts->client;
+-	u8 buf[MAX_I2C_DATA_LEN];
+-	int id, ret, x, y, z;
+-	int tries = 0;
+-	bool down, valid;
+-	u8 state;
++	bool down;
++	int i, id, x, y;
++
++	for (i = 0; i < min(MAX_SUPPORT_POINTS, num_points);
++	     i++, msg += EGALAX_POINT_SIZE, num_points--) {
++		down = !!(msg[0] & EVENT_DOWN_UP);
++		id = msg[1];
++		x = (msg[3] << 8) | msg[2];
++		y = (msg[5] << 8) | msg[4];
++
++		if (id > 10) {
++			dev_warn(&client->dev,
++				 "dropping out of range event %d\n", id);
++			continue;
++		}
++
++		input_mt_slot(input_dev, id);
++		input_mt_report_slot_state(input_dev, MT_TOOL_FINGER, down);
++
++		dev_dbg(&client->dev, "%s id:%d x:%d y:%d",
++			down ? "down" : "up", id, x, y);
++
++		if (down)
++			touchscreen_report_pos(input_dev, &ts->props,
++					       x, y, true);
++	}
+ 
+-	do {
+-		ret = i2c_master_recv(client, buf, MAX_I2C_DATA_LEN);
+-	} while (ret == -EAGAIN && tries++ < EGALAX_MAX_TRIES);
++	if (!num_points) {
++		input_mt_sync_frame(input_dev);
++		input_sync(input_dev);
++	}
+ 
+-	if (ret < 0)
+-		return IRQ_HANDLED;
++	return num_points;
++}
+ 
+-	if (buf[0] != REPORT_MODE_MTTOUCH) {
+-		/* ignore mouse events and vendor events */
+-		return IRQ_HANDLED;
+-	}
++static void egalax_ts_handle_points_legacy(struct egalax_ts *ts, u8 *msg)
++{
++	struct input_dev *input_dev = ts->input_dev;
++	struct i2c_client *client = ts->client;
++	bool down, valid;
++	int id, x, y, z;
++	u8 state;
+ 
+-	state = buf[1];
+-	x = (buf[3] << 8) | buf[2];
+-	y = (buf[5] << 8) | buf[4];
+-	z = (buf[7] << 8) | buf[6];
++	state = msg[0];
++	x = (msg[2] << 8) | msg[2];
++	y = (msg[4] << 8) | msg[3];
++	z = (msg[6] << 8) | msg[5];
+ 
+ 	valid = state & EVENT_VALID_MASK;
+ 	id = (state & EVENT_ID_MASK) >> EVENT_ID_OFFSET;
+ 	down = state & EVENT_DOWN_UP;
+ 
+-	if (!valid || id > MAX_SUPPORT_POINTS) {
++	if (!valid || id > 5) {
+ 		dev_dbg(&client->dev, "point invalid\n");
+-		return IRQ_HANDLED;
++		return;
+ 	}
+ 
+ 	input_mt_slot(input_dev, id);
+@@ -112,6 +139,52 @@ static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
+ 
+ 	input_mt_report_pointer_emulation(input_dev, true);
+ 	input_sync(input_dev);
++}
++
++static irqreturn_t egalax_ts_interrupt(int irq, void *dev_id)
++{
++	struct egalax_ts *ts = dev_id;
++	struct i2c_client *client = ts->client;
++	u8 buf[MAX_I2C_DATA_LEN], *payload;
++	int ret, num_points, tries = 0;
++	int remaining = 0;
++
++again:
++	do {
++		ret = i2c_master_recv(client, buf, MAX_I2C_DATA_LEN);
++	} while (ret == -EAGAIN && tries++ < EGALAX_MAX_TRIES);
++
++	if (ret < 0) {
++		dev_err_ratelimited(&client->dev,
++				    "reading touch info failed: %d\n", ret);
++		return IRQ_HANDLED;
++	}
++
++	if (ts->protocol_version == 0) {
++		payload = &buf[0];
++		num_points = 1;
++	} else {
++		payload = &buf[2];
++		num_points = buf[3];
++
++	}
++
++	switch (payload[0]) {
++	case REPORT_MODE_MTTOUCH:
++		egalax_ts_handle_points_legacy(ts, payload + 1);
++		break;
++	case REPORT_MODE_MTTOUCH_NEW:
++		if (!remaining)
++			remaining = payload[1];
++		remaining = egalax_ts_handle_points(ts, payload + 2, remaining);
++		break;
++	default:
++		/* ignore unknown report IDs */
++		break;
++	}
++
++	if (remaining)
++		goto again;
+ 
+ 	return IRQ_HANDLED;
+ }
+@@ -166,6 +239,7 @@ static int egalax_ts_probe(struct i2c_client *client,
+ {
+ 	struct egalax_ts *ts;
+ 	struct input_dev *input_dev;
++	unsigned int max_points = MAX_SUPPORT_POINTS;
+ 	int error;
+ 
+ 	ts = devm_kzalloc(&client->dev, sizeof(struct egalax_ts), GFP_KERNEL);
+@@ -203,14 +277,20 @@ static int egalax_ts_probe(struct i2c_client *client,
+ 	input_dev->id.bustype = BUS_I2C;
+ 
+ 	touchscreen_parse_properties(ts->input_dev, true, &ts->props);
+-	if (!ts->props.max_x && !ts->props.max_y)
+-		ts->props.max_x = ts->props.max_y = 32760;
++	if (!ts->props.max_x && !ts->props.max_y) {
++		if (ts->protocol_version == 0)
++			ts->props.max_x = ts->props.max_y = 32760;
++		else
++			ts->props.max_x = ts->props.max_y = 4095;
++	}
++	if (ts->protocol_version != 0)
++		max_points *= 2;
+ 
+ 	input_set_abs_params(input_dev, ABS_MT_POSITION_X,
+ 			     0, ts->props.max_x, 0, 0);
+ 	input_set_abs_params(input_dev, ABS_MT_POSITION_Y,
+ 			     0, ts->props.max_y, 0, 0);
+-	input_mt_init_slots(input_dev, MAX_SUPPORT_POINTS,
++	input_mt_init_slots(input_dev, max_points,
+ 			    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+ 
+ 	error = devm_request_threaded_irq(&client->dev, client->irq, NULL,
 -- 
-
-Peter Meerwald-Stadler
-Mobile: +43 664 24 44 418
+2.19.0
