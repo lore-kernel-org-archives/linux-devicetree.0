@@ -1,33 +1,28 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 3/4] dt-bindings: pinctrl: qcom: Add QCS404 pinctrl binding
-Date: Thu, 20 Sep 2018 08:34:45 -0700
-Message-ID: <153745768521.119890.130144479222793813@swboyd.mtv.corp.google.com>
-References: <20180920013712.2361-1-bjorn.andersson@linaro.org>
- <20180920013712.2361-4-bjorn.andersson@linaro.org>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH V4 1/4] dt-bindings: soc: qcom: Remove SPI controller maximum
+ frequency binding
+Date: Thu, 20 Sep 2018 08:38:52 -0700
+Message-ID: <153745793237.119890.13694179827956631445@swboyd.mtv.corp.google.com>
+References: <1537294047-12093-1-git-send-email-dkota@codeaurora.org>
+ <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920013712.2361-4-bjorn.andersson@linaro.org>
+In-Reply-To: <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, broonie@kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org, linux-spi@vger.kernel.org, mka@chromium.org
+Cc: Dilip Kota <dkota@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2018-09-19 18:37:11)
-> +
-> +Example:
-> +
-> +       tlmm: pinctrl@01000000 {
+Quoting Dilip Kota (2018-09-18 11:07:23)
+> SPI controller driver should maintain the maximum frequency
+> of the controller instead of relying on device tree bindings.
+> Because maximum frequency is specific property of SPI
+> controller.
+> =
 
-Drop leading 0.
+> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+> ---
 
-> +               compatible =3D "qcom,qcs404-pinctrl";
-> +               reg =3D <0x01000000 0x200000>,
-> +                     <0x01300000 0x200000>,
-> +                     <0x07b00000 0x200000>;
-> +               reg-names =3D "south", "north", "east";
-> +               interrupts =3D <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +               gpio-controller;
-> +               #gpio-cells =3D <2>;
-> +               gpio-ranges =3D <&tlmm 0 0 120>;
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
