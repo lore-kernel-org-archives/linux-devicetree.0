@@ -1,88 +1,48 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: sun8i-h3-nanopi-m1-plus:
- enable HDMI output
-Date: Thu, 20 Sep 2018 14:41:47 +0200
-Message-ID: <20180920124147.u2f72ygfch5my5sa@flea>
-References: <1537388051-39623-1-git-send-email-clabbe@baylibre.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: update rtc st,syscfg property on
+ stm32h743
+Date: Thu, 20 Sep 2018 14:53:38 +0200
+Message-ID: <b7cadb6f-d17f-3be7-38f4-1104026ea745@st.com>
+References: <1534931139-19817-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="75hr75ezvexduvs4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFVLR3OQKGQETNC5S2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1537388051-39623-1-git-send-email-clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1534931139-19817-1-git-send-email-amelie.delaunay@st.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie Delaunay <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Amélie
 
---75hr75ezvexduvs4
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi!
-
-On Wed, Sep 19, 2018 at 08:14:11PM +0000, Corentin Labbe wrote:
-> This patch enable HDMI output on sun8i-h3-nanopi-m1-plus.
+On 08/22/2018 11:45 AM, Amelie Delaunay wrote:
+> To fit with latest rtc driver updates, rtc st,syscfg property must contain
+> the control register offset of pwrcfg and the mask corresponding to the
+> DBP (Disable Backup Protection) bit.
 > 
-> Signed-off-by: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 > ---
->  arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>   arch/arm/boot/dts/stm32h743.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-> index 65cba1050802..88b5ff6b66b6 100644
-> --- a/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-m1-plus.dts
-> @@ -67,6 +67,21 @@
->  		pinctrl-names = "default";
->  		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
->  	};
-> +
-> +	connector {
-> +		compatible = "hdmi-connector";
-> +		type = "a";
-> +
-> +		port {
-> +			hdmi_con_in: endpoint {
-> +				remote-endpoint = <&hdmi_out_con>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&de {
-> +	status = "okay";
->  };
->  
->  &ehci1 {
-> @@ -94,6 +109,17 @@
->  	};
->  };
->  
-> +&hdmi {
-> +	status = "okay";
-> +};
-> +
-> +&hdmi_out {
-> +	hdmi_out_con: endpoint {
-> +		remote-endpoint = <&hdmi_con_in>;
-> +	};
-> +	status = "okay";
+> diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+> index 637beff..cbdd69c 100644
+> --- a/arch/arm/boot/dts/stm32h743.dtsi
+> +++ b/arch/arm/boot/dts/stm32h743.dtsi
+> @@ -472,7 +472,7 @@
+>   			interrupt-parent = <&exti>;
+>   			interrupts = <17 IRQ_TYPE_EDGE_RISING>;
+>   			interrupt-names = "alarm";
+> -			st,syscfg = <&pwrcfg>;
+> +			st,syscfg = <&pwrcfg 0x00 0x100>;
+>   			status = "disabled";
+>   		};
+>   
+> 
 
-you don't need that status property here
+Applied on stm32-next.
 
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---75hr75ezvexduvs4--
+Thanks.
+Alex
