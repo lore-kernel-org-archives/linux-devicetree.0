@@ -1,174 +1,61 @@
-From: Alexandre Courbot <acourbot@chromium.org>
-Subject: Re: [PATCH v9 1/5] venus: firmware: add routine to reset ARM9
-Date: Thu, 20 Sep 2018 12:31:39 +0900
-Message-ID: <CAPBb6MUo6X+L7UYgmw8qUe_2CiZEBKGxaREFhZGRU1jGq0fO=g@mail.gmail.com>
-References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
- <1537314192-26892-2-git-send-email-vgarodia@codeaurora.org>
- <CAPBb6MXMv_TD2dbxyM+D2p3pWfCJpQ-_FHK6WdkAEgBhwTdL6g@mail.gmail.com>
- <97b94b9b-f028-cb8b-a3db-67626dc517ab@linaro.org> <175fcecf3be715d2a20b71746c648f1e@codeaurora.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: document Broadcom Northstar pin
+ mux controller
+Date: Thu, 20 Sep 2018 06:59:41 +0200
+Message-ID: <CACna6rz13XswdcNqq1JHRAms5LpdRFuOT4RU=n6YTeydTGh5JA@mail.gmail.com>
+References: <20180919210219.21921-1-zajec5@gmail.com>
+ <7e381fba-a7bf-f587-7bbf-d6b30d9874c9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <175fcecf3be715d2a20b71746c648f1e@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vgarodia@codeaurora.org
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7e381fba-a7bf-f587-7bbf-d6b30d9874c9@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 2:55 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->
-> On 2018-09-19 20:30, Stanimir Varbanov wrote:
-> > Hi Alex,
-> >
-> > On 09/19/2018 10:32 AM, Alexandre Courbot wrote:
-> >> On Wed, Sep 19, 2018 at 8:43 AM Vikash Garodia
-> >> <vgarodia@codeaurora.org> wrote:
-> >>>
-> >>> Add routine to reset the ARM9 and brings it out of reset. Also
-> >>> abstract the Venus CPU state handling with a new function. This
-> >>> is in preparation to add PIL functionality in venus driver.
-> >>>
-> >>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
-> >>> ---
-> >>>  drivers/media/platform/qcom/venus/core.h         |  2 ++
-> >>>  drivers/media/platform/qcom/venus/firmware.c     | 33
-> >>> ++++++++++++++++++++++++
-> >>>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
-> >>>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
-> >>>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
-> >>>  5 files changed, 57 insertions(+), 9 deletions(-)
-> >>>
-> >>> diff --git a/drivers/media/platform/qcom/venus/core.h
-> >>> b/drivers/media/platform/qcom/venus/core.h
-> >>> index 2f02365..dfd5c10 100644
-> >>> --- a/drivers/media/platform/qcom/venus/core.h
-> >>> +++ b/drivers/media/platform/qcom/venus/core.h
-> >>> @@ -98,6 +98,7 @@ struct venus_caps {
-> >>>   * @dev:               convenience struct device pointer
-> >>>   * @dev_dec:   convenience struct device pointer for decoder device
-> >>>   * @dev_enc:   convenience struct device pointer for encoder device
-> >>> + * @no_tz:     a flag that suggests presence of trustzone
-> >>
-> >> Looks like it suggests the absence of trustzone?
-> >>
-> >> Actually I would rename it as use_tz and set it if TrustZone is used.
-> >> This would avoid double-negative statements like what we see below.
-> >
-> > I find this suggestion reasonable.
->
-> Initially i planned to keep it as a positive flag. The reason behind
-> keeping it
-> as no_tz was to keep the default value of this flag to 0 indicating tz
-> is present
-> by default.
-> I can switch it to use_tz though and set it in firmware_init after the
-> presence of
-> firmware node is checked.
-
-Making sure the flag is explicitly initialized instead of relying on
-default initialization is another good reason to have that change
-IMHO. :)
-
->
-> >>
-> >>>   * @lock:      a lock for this strucure
-> >>>   * @instances: a list_head of all instances
-> >>>   * @insts_count:       num of instances
-> >>> @@ -129,6 +130,7 @@ struct venus_core {
-> >>>         struct device *dev;
-> >>>         struct device *dev_dec;
-> >>>         struct device *dev_enc;
-> >>> +       bool no_tz;
-> >>>         struct mutex lock;
-> >>>         struct list_head instances;
-> >>>         atomic_t insts_count;
-> >>> diff --git a/drivers/media/platform/qcom/venus/firmware.c
-> >>> b/drivers/media/platform/qcom/venus/firmware.c
-> >>> index c4a5778..f2ae2f0 100644
-> >>> --- a/drivers/media/platform/qcom/venus/firmware.c
-> >>> +++ b/drivers/media/platform/qcom/venus/firmware.c
-> >>> @@ -22,10 +22,43 @@
-> >>>  #include <linux/sizes.h>
-> >>>  #include <linux/soc/qcom/mdt_loader.h>
-> >>>
-> >>> +#include "core.h"
-> >>>  #include "firmware.h"
-> >>> +#include "hfi_venus_io.h"
-> >>>
-> >>>  #define VENUS_PAS_ID                   9
-> >>>  #define VENUS_FW_MEM_SIZE              (6 * SZ_1M)
-> >>> +#define VENUS_FW_START_ADDR            0x0
-> >>> +
-> >>> +static void venus_reset_cpu(struct venus_core *core)
-> >>> +{
-> >>> +       void __iomem *base = core->base;
-> >>> +
-> >>> +       writel(0, base + WRAPPER_FW_START_ADDR);
-> >>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_FW_END_ADDR);
-> >>> +       writel(0, base + WRAPPER_CPA_START_ADDR);
-> >>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_CPA_END_ADDR);
-> >>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_NONPIX_START_ADDR);
-> >>> +       writel(VENUS_FW_MEM_SIZE, base + WRAPPER_NONPIX_END_ADDR);
-> >>> +       writel(0x0, base + WRAPPER_CPU_CGC_DIS);
-> >>> +       writel(0x0, base + WRAPPER_CPU_CLOCK_CONFIG);
-> >>> +
-> >>> +       /* Bring ARM9 out of reset */
-> >>> +       writel(0, base + WRAPPER_A9SS_SW_RESET);
-> >>> +}
-> >>> +
-> >>> +int venus_set_hw_state(struct venus_core *core, bool resume)
-> >>> +{
-> >>> +       if (!core->no_tz)
-> >>
-> >> This is the kind of double negative statement I was referring do
-> >> above: "if we do not not have TrustZone". Turning it into
-> >>
-> >>     if (core->use_tz)
-> >>
-> >> would save the reader a few neurons. :)
-> >>
-> >>> +               return qcom_scm_set_remote_state(resume, 0);
-> >>> +
-> >>> +       if (resume)
-> >>> +               venus_reset_cpu(core);
-> >>> +       else
-> >>> +               writel(1, core->base + WRAPPER_A9SS_SW_RESET);
-> >>> +
-> >>> +       return 0;
-> >>> +}
-> >>>
-> >>>  int venus_boot(struct device *dev, const char *fwname)
-> >>>  {
-> >>> diff --git a/drivers/media/platform/qcom/venus/firmware.h
-> >>> b/drivers/media/platform/qcom/venus/firmware.h
-> >>> index 428efb5..397570c 100644
-> >>> --- a/drivers/media/platform/qcom/venus/firmware.h
-> >>> +++ b/drivers/media/platform/qcom/venus/firmware.h
-> >>> @@ -18,5 +18,16 @@
-> >>>
-> >>>  int venus_boot(struct device *dev, const char *fwname);
-> >>>  int venus_shutdown(struct device *dev);
-> >>> +int venus_set_hw_state(struct venus_core *core, bool suspend);
-> >>> +
-> >>> +static inline int venus_set_hw_state_suspend(struct venus_core
-> >>> *core)
-> >>> +{
-> >>> +       return venus_set_hw_state(core, false);
-> >>> +}
-> >>> +
-> >>> +static inline int venus_set_hw_state_resume(struct venus_core *core)
-> >>> +{
-> >>> +       return venus_set_hw_state(core, true);
-> >>> +}
-> >>
-> >> I think these two venus_set_hw_state_suspend() and
-> >> venus_set_hw_state_resume() are superfluous, if you want to make the
-> >> state explicit you can also define an enum { SUSPEND, RESUME } to use
-> >> as argument of venus_set_hw_state() and call it directly.
-> >
-> > Infact this was by my request, and I wanted to avoid enum and have the
-> > type of the action in the function name and also avoid one extra
-> > function argument. Of course it is a matter of taste.
-
-That's reasonable as well. I really don't feel strongly about this, so
-please feel free to keep it as it is.
+T24gV2VkLCAxOSBTZXAgMjAxOCBhdCAyMzoyMiwgRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxs
+aUBnbWFpbC5jb20+IHdyb3RlOgo+IE9uIDA5LzE5LzIwMTggMDI6MDIgUE0sIFJhZmHFgiBNacWC
+ZWNraSB3cm90ZToKPiA+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4K
+PiA+Cj4gPiBOb3J0aHN0YXIgaGFzIG11eCBjb250cm9sbGVyIGp1c3QgbGlrZSBOb3J0aHN0YXIg
+UGx1cyBhbmQgTm9ydGhzdGFyMi4KPiA+IEl0J3MgYSBiaXQgZGlmZmVyZW50IHRob3VnaCAoZGlm
+ZmVyZW50IHJlZ2lzdGVycyAmIHBpbnMpIHNvIGl0IHJlcXVpcmVzCj4gPiBpdHMgb3duIGJpbmRp
+bmcuCj4gPgo+ID4gSXQncyBuZWVkZWQgdG8gYWxsb3cgb3RoZXIgYmxvY2sgYmluZGluZ3Mgc3Bl
+Y2lmeSByZXF1aXJlZCBtdXggc2V0dXAuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1p
+xYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvcGluY3RybC9icmNtLG5zLXBpbm11eC50eHQgfCAyOSArKysrKysrKysrKysrKysrKysr
+KysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxu
+cy1waW5tdXgudHh0Cj4gPgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9waW5jdHJsL2JyY20sbnMtcGlubXV4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2JyY20sbnMtcGlubXV4LnR4dAo+ID4gbmV3IGZpbGUg
+bW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMGU5MTM3MjFhZTllCj4gPiAtLS0g
+L2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGlu
+Y3RybC9icmNtLG5zLXBpbm11eC50eHQKPiA+IEBAIC0wLDAgKzEsMjkgQEAKPiA+ICtCcm9hZGNv
+bSBOb3J0aHN0YXIgcGlucyBtdXggY29udHJvbGxlcgo+ID4gKwo+ID4gK1NvbWUgb2YgTm9ydGhz
+dGFyIFNvQ3MncyBwaW5zIGNhbiBiZSB1c2VkIGZvciB2YXJpb3VzIHB1cnBvc2VzIHRoYW5rcyB0
+byB0aGUgbXV4Cj4gPiArY29udHJvbGxlci4gVGhpcyBiaW5kaW5nIGFsbG93cyBkZXNjcmliaW5n
+IG11eCBjb250cm9sbGVyIGFuZCBsaXN0aW5nIGF2YWlsYWJsZQo+ID4gK2Z1bmN0aW9ucy4gVGhl
+eSBjYW4gYmUgcmVmZXJlbmNlZCBsYXRlciBieSBvdGhlciBiaW5kaW5ncyB0byBsZXQgc3lzdGVt
+Cj4gPiArY29uZmlndXJlIGNvbnRyb2xsZXIgY29ycmVjdGx5Lgo+ID4gKwo+ID4gK1JlcXVpcmVk
+IHByb3BlcnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOiBicmNtLG5zLXBpbm11eAo+ID4gKy0gcmVn
+OiBpb21lbSBhZGRyZXNzIHJhbmdlIG9mIENSVSAoQ2VudHJhbCBSZXNvdXJjZSBVbml0KSBwaW4g
+cmVnaXN0ZXJzCj4gPiArLSByZWctbmFtZXM6ICJjcnVfcGluc19jb250cm9sIiAtIHRoZSBvbmx5
+IG5lZWRlZCAmIHN1cHBvcnRlZCByZWcgcmlnaHQgbm93Cj4KPiBUZWNobmljYWxseSB0aGUgcmVn
+aXN0ZXIgcmFuZ2UgdGhhdCB5b3UgY292ZXIgaXMgbmFtZWQgQ1JVX0dQSU9fQ09OVFJPTHgKPiB3
+aXRoIHggYmVpbmcgaW4gWzAtOF0uCgpUaGFua3MhIERvIHlvdSB0aGluawpyZWctbmFtZXM6ICJj
+cnVfZ3Bpb19jb250cm9scyIKd2lsbCBiZSBmaW5lPyBPciBzaG91bGQgSSBrZWVwIGl0IHNpbmd1
+bGFyIGxpa2U6CnJlZy1uYW1lczogImNydV9ncGlvX2NvbnRyb2wiCj8KCi0tIApSYWZhxYIKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
