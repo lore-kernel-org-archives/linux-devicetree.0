@@ -1,91 +1,109 @@
-From: Palmer Dabbelt <palmer@sifive.com>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Thu, 20 Sep 2018 10:52:12 -0700 (PDT)
-Message-ID: <mhng-9d591179-01d4-4a84-a490-8a09d4f3a3d1@palmer-si-x1c4>
-References: <20180914143719.GA27689@guoren-Inspiron-7460>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 02/27] mmc: mmci: internalize dma_inprogress into mmci
+ dma functions
+Date: Thu, 20 Sep 2018 19:56:07 +0200
+Message-ID: <CAPDyKFrwiQv-EFfSrY7TwxXN-AnOsbbPop88GPo8_32hcjBzsg@mail.gmail.com>
+References: <1537268144-21152-1-git-send-email-ludovic.Barre@st.com> <1537268144-21152-3-git-send-email-ludovic.Barre@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180914143719.GA27689@guoren-Inspiron-7460>
+In-Reply-To: <1537268144-21152-3-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ren_guo@c-sky.com
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de, daniel.lezcano@linaro.org, jason@lakedaemon.net, devicetree@vger.kernel.org, andrea.parri@amarulasolutions.com, peterz@infradead.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, thomas.petazzoni@bootlin.com, wbx@uclibc-ng.org, green.hu@gmail.com, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Sep 2018 07:37:20 PDT (-0700), ren_guo@c-sky.com wrote:
-> On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
->> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
->> >
->> > This is the 3th version patchset to add the Linux kernel port for C-SKY(csky).
->> > Thanks to everyone who provided feedback on the previous version.
->> >
->> > This patchset adds architecture support to Linux for C-SKY's 32-bit embedded
->> > CPU cores and the patches are based on linux-4.18.4
->> >
->> > There are two ABI versions with several CPU cores in this patchset:
->> >   ABIv1: ck610 (16-bit instruction, 32-bit data path, VIPT Cache ...)
->> >   ABIv2: ck807 ck810 ck860 (16/32-bit variable length instruction, PIPT Cache,
->> >          SMP ...)
->> >
->> > More information: http://en.c-sky.com
->>
->> This looks good to me overall. I think a good next step would be to get the port
->> included in linux-next, by preparing a git tree with all the patches and asking
->> Stephen Rothwell to include it there. Further comments on the architecture
->> port itself can be done on top of the existing patches. I would suggest you
->> base the git tree on an -rc release (either 4.19-rc1 or 4.19-rc3) and then never
->> rebase again.
-> Nice :) I'll follow the rules.
+On 18 September 2018 at 12:55, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
 >
->>
->> You have included a couple of drivers in the submission: two timer and
->> two irqchip drivers. Please leave those out for the moment, and either have
->> them merged through the respective subsystem  trees, or get an Ack
->> from the maintainers to merge them through your tree.
-> Ok.
+> This patch internalizes the dma_inprogress into mmci dma interfaces.
+> This allows to simplify and prepare the next dma callbacks
+> for mmci host ops. __dma_inprogress is called in mmci_dma_data_error
+> and mmci_dma_finalize.
 >
->>
->> I notice that a lot of the patches have no changeset comments on them.
->> You should fix that and make a habit of describing every single patch
->> with a few sentences, even if it seems obvious to you. Have a look at
->> the changeset descriptions for the nds32 and riscv architectures when
->> they got merged.
-> Ok, I'll fixup them.
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 16 ++++++++++------
+>  drivers/mmc/host/mmci.h |  4 +---
+>  2 files changed, 11 insertions(+), 9 deletions(-)
 >
->>
->> One big question for me is what to do about time_t. Deepa and I are
->> in the process of finalizing the system call ABI for 32-bit architectures
->> with 64-bit time_t, but we are not done yet and it won't be complete
->> for 4.20. If you target 4.21, that could be a chance to make csky the
->> first architecture to only need the 64-bit time_t interface, with the
->> corresponding user space changes.
-> y2038 is very important and csky32 has the issue. But 4.21 is too late for
-> us, we really want to get into kernel.org as soon as possible.
-> We could remove 32-bit time_t in future.
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index bf0bb07..7d22cb9 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -497,6 +497,9 @@ static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
+>
+>  static void mmci_dma_data_error(struct mmci_host *host)
+>  {
+> +       if (!__dma_inprogress(host))
+> +               return;
+> +
+>         dev_err(mmc_dev(host->mmc), "error during DMA transfer!\n");
+>         dmaengine_terminate_all(host->dma_current);
+>         host->dma_in_progress = false;
+> @@ -512,6 +515,9 @@ static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
+>         u32 status;
+>         int i;
+>
+> +       if (!__dma_inprogress(dmae))
+> +               return;
+> +
+>         /* Wait up to 1ms for the DMA to complete */
+>         for (i = 0; ; i++) {
+>                 status = readl(host->base + MMCISTATUS);
+> @@ -903,8 +909,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
+>                 u32 remain, success;
+>
+>                 /* Terminate the DMA transfer */
+> -               if (dma_inprogress(host))
+> -                       mmci_dma_data_error(host);
+> +               mmci_dma_data_error(host);
+>
+>                 /*
+>                  * Calculate how far we are into the transfer.  Note that
+> @@ -942,8 +947,8 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
+>                 dev_err(mmc_dev(host->mmc), "stray MCI_DATABLOCKEND interrupt\n");
+>
+>         if (status & MCI_DATAEND || data->error) {
+> -               if (dma_inprogress(host))
+> -                       mmci_dma_finalize(host, data);
+> +               mmci_dma_finalize(host, data);
+> +
+>                 mmci_stop_data(host);
+>
+>                 if (!data->error)
+> @@ -1050,8 +1055,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>         if ((!sbc && !cmd->data) || cmd->error) {
+>                 if (host->data) {
+>                         /* Terminate the DMA transfer */
+> -                       if (dma_inprogress(host))
+> -                               mmci_dma_data_error(host);
+> +                       mmci_dma_data_error(host);
+>
+>                         mmci_stop_data(host);
+>                 }
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 696a066..f1ec066 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -332,9 +332,7 @@ struct mmci_host {
+>         struct mmci_host_next   next_data;
+>         bool                    dma_in_progress;
+>
+> -#define dma_inprogress(host)   ((host)->dma_in_progress)
+> -#else
+> -#define dma_inprogress(host)   (0)
+> +#define __dma_inprogress(host) ((host)->dma_in_progress)
 
-I don't want to hijack this thread, but in RISC-V land we were hoping to have a 
-user ABI free of 32-bit time_t.  Our 32-bit glibc ABI hasn't been finalized 
-yet, and when I talked to the glibc guys a few weeks ago they were happy to let 
-us wait until 32-bit time_t can be removed before we stabilize the ABI.  We've 
-been maintaining out-of-tree glibc patches for a while now, so I'd really like 
-to get them into the next glibc release.
+Overall the change makes good sense to me, however I don't get why you
+want to rename the macro-function. Please don't.
 
-Mapping out the schedule more explicitly, as I'm terrible with dates:
+>  #endif
+>  };
+>
+> --
+> 2.7.4
+>
 
-* 4.19-rc4 was 2018-09-16
-* 4.19 should be 2018-10-21
-* 4.20 should be 2019-01-13 (skipping 2 weeks for the holidays)
-* 4.21 merge window should close 2019-01-27
-* glibc 2.29 is scheduled for 2019-02-01
-
-That's very tight, but assuming we at least have a prototype of the API so we 
-can get the rv32i glibc patches in much earlier it might be OK.  There was some 
-talk of being able to use some workarounds to do a 32-bit time_t user ABI 
-without the cooresponding kernel ABI, so we could always go down that route to 
-start and then decide to deprecate or not deprecate the 32-bit kernel ABI at 
-the last minute -- not something I'm fond of doing, but an option.
-
-How close to done do you think the 32-bit time_t will be by the end of the 4.20 
-merge window?  If it's close enough to start our glibc push then that might be 
-OK.
+Kind regards
+Uffe
