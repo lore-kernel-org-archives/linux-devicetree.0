@@ -1,54 +1,46 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH] soc: qcom: smd-rpm: Add QCS404 compatible
-Date: Thu, 20 Sep 2018 09:18:13 -0700
-Message-ID: <20180920161813.GE2350@vkoul-mobl>
-References: <20180920014540.14894-1-bjorn.andersson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH 3/4] [media] ad5820: DT new optional field enable-gpios
+Date: Thu, 20 Sep 2018 18:19:11 +0200
+Message-ID: <20180920161912.17063-3-ricardo.ribalda@gmail.com>
+References: <20180920161912.17063-1-ricardo.ribalda@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180920014540.14894-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180920161912.17063-1-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19-09-18, 18:45, Bjorn Andersson wrote:
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Document new enable-gpio field. It can be used to disable the part
+without turning down its regulator.
 
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+---
+ Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> ---
->  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt | 1 +
->  drivers/soc/qcom/smd-rpm.c                                  | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-> index 89e1cb9212f6..ec95705ba692 100644
-> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-> @@ -23,6 +23,7 @@ resources.
->  		    "qcom,rpm-msm8916"
->  		    "qcom,rpm-msm8974"
->  		    "qcom,rpm-msm8998"
-> +		    "qcom,rpm-qcs404"
->  
->  - qcom,smd-channels:
->  	Usage: required
-> diff --git a/drivers/soc/qcom/smd-rpm.c b/drivers/soc/qcom/smd-rpm.c
-> index 93517ed83355..b8e63724a49d 100644
-> --- a/drivers/soc/qcom/smd-rpm.c
-> +++ b/drivers/soc/qcom/smd-rpm.c
-> @@ -227,6 +227,7 @@ static const struct of_device_id qcom_smd_rpm_of_match[] = {
->  	{ .compatible = "qcom,rpm-msm8974" },
->  	{ .compatible = "qcom,rpm-msm8996" },
->  	{ .compatible = "qcom,rpm-msm8998" },
-> +	{ .compatible = "qcom,rpm-qcs404" },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, qcom_smd_rpm_of_match);
-> -- 
-> 2.18.0
-
+diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+index 5940ca11c021..07d577bb37f7 100644
+--- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
++++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+@@ -8,6 +8,11 @@ Required Properties:
+ 
+   - VANA-supply: supply of voltage for VANA pin
+ 
++Optional properties:
++
++   - enable-gpios : GPIO spec for the XSHUTDOWN pin. If specified, it will be
++     asserted when VANA-supply is enabled.
++
+ Example:
+ 
+        ad5820: coil@c {
+@@ -15,5 +20,6 @@ Example:
+                reg = <0x0c>;
+ 
+                VANA-supply = <&vaux4>;
++               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+        };
+ 
 -- 
-~Vinod
+2.18.0
