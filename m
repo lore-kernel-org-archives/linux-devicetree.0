@@ -1,619 +1,332 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v3 2/2] power: supply: Add Spreadtrum SC2731 charger
- support
-Date: Thu, 20 Sep 2018 03:02:29 +0200
-Message-ID: <20180920010228.nk4mencg6q5t3nlu@earth.universe>
-References: <8a8d31119bc723a0012afa8e517015dbba68fee9.1537214465.git.baolin.wang@linaro.org>
- <57bf9920abdcd58b21833105cc7f3a98a3f7d45a.1537214465.git.baolin.wang@linaro.org>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v4] ARM: dts: pxa: add mioa701 board description
+Date: Thu, 20 Sep 2018 09:08:11 +0800
+Message-ID: <201809200950.VPhOWfTn%fengguang.wu@intel.com>
+References: <20180915110206.23110-1-robert.jarzmik@free.fr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dlgnt7vddiditrxq"
+Content-Type: multipart/mixed; boundary="bg08WKrSYDhXBjb5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <57bf9920abdcd58b21833105cc7f3a98a3f7d45a.1537214465.git.baolin.wang@linaro.org>
+In-Reply-To: <20180915110206.23110-1-robert.jarzmik@free.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, yuanjiang.yu@spreadtrum.com, krzk@kernel.org
+Cc: kbuild-all@01.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Marcel Ziswiler <marcel@ziswiler.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
 
---dlgnt7vddiditrxq
+--bg08WKrSYDhXBjb5
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Hi Robert,
 
-On Mon, Sep 17, 2018 at 01:03:31PM -0700, Baolin Wang wrote:
-> This patch adds the SC2731 PMIC switch charger support.
->=20
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
+I love your patch! Yet something to improve:
 
-Thanks, queued.
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on v4.19-rc4 next-20180919]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
--- Sebastian
+url:    https://github.com/0day-ci/linux/commits/Robert-Jarzmik/ARM-dts-pxa-add-mioa701-board-description/20180916-003257
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+config: arm-oxnas_v6_defconfig (attached as .config)
+compiler: arm-linux-gnueabi-gcc (Debian 7.2.0-11) 7.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        GCC_VERSION=7.2.0 make.cross ARCH=arm 
 
-> Changes from v2:
->  - Add reviewed tag from Krzysztof.
->  - Change current unit to uA instead of mA.
->=20
-> Changes from v1:
->  - Remove some redundant head files.
->  - Add one mutex to make sure getting the charger status is correct.
->  - Fix some coding style issues.
->  - Use standard DT properties.
-> ---
->  drivers/power/supply/Kconfig          |   7 +
->  drivers/power/supply/Makefile         |   1 +
->  drivers/power/supply/sc2731_charger.c | 504 ++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 512 insertions(+)
->  create mode 100644 drivers/power/supply/sc2731_charger.c
->=20
-> diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-> index ff6dab0..f27cf07 100644
-> --- a/drivers/power/supply/Kconfig
-> +++ b/drivers/power/supply/Kconfig
-> @@ -645,4 +645,11 @@ config CHARGER_CROS_USBPD
->  	  what is connected to USB PD ports from the EC and converts
->  	  that into power_supply properties.
-> =20
-> +config CHARGER_SC2731
-> +	tristate "Spreadtrum SC2731 charger driver"
-> +	depends on MFD_SC27XX_PMIC || COMPILE_TEST
-> +	help
-> +	 Say Y here to enable support for battery charging with SC2731
-> +	 PMIC chips.
-> +
->  endif # POWER_SUPPLY
-> diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-> index a26b402..767105b 100644
-> --- a/drivers/power/supply/Makefile
-> +++ b/drivers/power/supply/Makefile
-> @@ -85,3 +85,4 @@ obj-$(CONFIG_CHARGER_TPS65217)	+=3D tps65217_charger.o
->  obj-$(CONFIG_AXP288_FUEL_GAUGE) +=3D axp288_fuel_gauge.o
->  obj-$(CONFIG_AXP288_CHARGER)	+=3D axp288_charger.o
->  obj-$(CONFIG_CHARGER_CROS_USBPD)	+=3D cros_usbpd-charger.o
-> +obj-$(CONFIG_CHARGER_SC2731)	+=3D sc2731_charger.o
-> diff --git a/drivers/power/supply/sc2731_charger.c b/drivers/power/supply=
-/sc2731_charger.c
-> new file mode 100644
-> index 0000000..525a820
-> --- /dev/null
-> +++ b/drivers/power/supply/sc2731_charger.c
-> @@ -0,0 +1,504 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Spreadtrum Communications Inc.
-> +
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/power_supply.h>
-> +#include <linux/usb/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/notifier.h>
-> +#include <linux/of.h>
-> +
-> +/* PMIC global registers definition */
-> +#define SC2731_CHARGE_STATUS		0xedc
-> +#define SC2731_CHARGE_FULL		BIT(4)
-> +#define SC2731_MODULE_EN1		0xc0c
-> +#define SC2731_CHARGE_EN		BIT(5)
-> +
-> +/* SC2731 switch charger registers definition */
-> +#define SC2731_CHG_CFG0			0x0
-> +#define SC2731_CHG_CFG1			0x4
-> +#define SC2731_CHG_CFG2			0x8
-> +#define SC2731_CHG_CFG3			0xc
-> +#define SC2731_CHG_CFG4			0x10
-> +#define SC2731_CHG_CFG5			0x28
-> +
-> +/* SC2731_CHG_CFG0 register definition */
-> +#define SC2731_PRECHG_RNG_SHIFT		11
-> +#define SC2731_PRECHG_RNG_MASK		GENMASK(12, 11)
-> +
-> +#define SC2731_TERMINATION_VOL_MASK	GENMASK(2, 1)
-> +#define SC2731_TERMINATION_VOL_SHIFT	1
-> +#define SC2731_TERMINATION_VOL_CAL_MASK	GENMASK(8, 3)
-> +#define SC2731_TERMINATION_VOL_CAL_SHIFT	3
-> +#define SC2731_TERMINATION_CUR_MASK	GENMASK(2, 0)
-> +
-> +#define SC2731_CC_EN			BIT(13)
-> +#define SC2731_CHARGER_PD		BIT(0)
-> +
-> +/* SC2731_CHG_CFG1 register definition */
-> +#define SC2731_CUR_MASK			GENMASK(5, 0)
-> +
-> +/* SC2731_CHG_CFG5 register definition */
-> +#define SC2731_CUR_LIMIT_SHIFT		8
-> +#define SC2731_CUR_LIMIT_MASK		GENMASK(9, 8)
-> +
-> +/* Default current definition (unit is mA) */
-> +#define SC2731_CURRENT_LIMIT_100	100
-> +#define SC2731_CURRENT_LIMIT_500	500
-> +#define SC2731_CURRENT_LIMIT_900	900
-> +#define SC2731_CURRENT_LIMIT_2000	2000
-> +#define SC2731_CURRENT_PRECHG		450
-> +#define SC2731_CURRENT_STEP		50
-> +
-> +struct sc2731_charger_info {
-> +	struct device *dev;
-> +	struct regmap *regmap;
-> +	struct usb_phy *usb_phy;
-> +	struct notifier_block usb_notify;
-> +	struct power_supply *psy_usb;
-> +	struct mutex lock;
-> +	bool charging;
-> +	u32 base;
-> +};
-> +
-> +static void sc2731_charger_stop_charge(struct sc2731_charger_info *info)
-> +{
-> +	regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +			   SC2731_CC_EN, 0);
-> +
-> +	regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +			   SC2731_CHARGER_PD, SC2731_CHARGER_PD);
-> +}
-> +
-> +static int sc2731_charger_start_charge(struct sc2731_charger_info *info)
-> +{
-> +	int ret;
-> +
-> +	/* Enable charger constant current mode */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				 SC2731_CC_EN, SC2731_CC_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Start charging */
-> +	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				  SC2731_CHARGER_PD, 0);
-> +}
-> +
-> +static int sc2731_charger_set_current_limit(struct sc2731_charger_info *=
-info,
-> +					    u32 limit)
-> +{
-> +	u32 val;
-> +
-> +	if (limit <=3D SC2731_CURRENT_LIMIT_100)
-> +		val =3D 0;
-> +	else if (limit <=3D SC2731_CURRENT_LIMIT_500)
-> +		val =3D 3;
-> +	else if (limit <=3D SC2731_CURRENT_LIMIT_900)
-> +		val =3D 2;
-> +	else
-> +		val =3D 1;
-> +
-> +	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG5,
-> +				  SC2731_CUR_LIMIT_MASK,
-> +				  val << SC2731_CUR_LIMIT_SHIFT);
-> +}
-> +
-> +static int sc2731_charger_set_current(struct sc2731_charger_info *info, =
-u32 cur)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (cur > SC2731_CURRENT_LIMIT_2000)
-> +		cur =3D SC2731_CURRENT_LIMIT_2000;
-> +	else if (cur < SC2731_CURRENT_PRECHG)
-> +		cur =3D SC2731_CURRENT_PRECHG;
-> +
-> +	/* Calculate the step value, each step is 50 mA */
-> +	val =3D (cur - SC2731_CURRENT_PRECHG) / SC2731_CURRENT_STEP;
-> +
-> +	/* Set pre-charge current as 450 mA */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				 SC2731_PRECHG_RNG_MASK,
-> +				 0x3 << SC2731_PRECHG_RNG_SHIFT);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG1,
-> +				  SC2731_CUR_MASK, val);
-> +}
-> +
-> +static int sc2731_charger_get_status(struct sc2731_charger_info *info)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(info->regmap, SC2731_CHARGE_STATUS, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val & SC2731_CHARGE_FULL)
-> +		return POWER_SUPPLY_STATUS_FULL;
-> +
-> +	return POWER_SUPPLY_STATUS_CHARGING;
-> +}
-> +
-> +static int sc2731_charger_get_current(struct sc2731_charger_info *info,
-> +				      u32 *cur)
-> +{
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret =3D regmap_read(info->regmap, info->base + SC2731_CHG_CFG1, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val &=3D SC2731_CUR_MASK;
-> +	*cur =3D val * SC2731_CURRENT_STEP + SC2731_CURRENT_PRECHG;
-> +
-> +	return 0;
-> +}
-> +
-> +static int sc2731_charger_get_current_limit(struct sc2731_charger_info *=
-info,
-> +					    u32 *cur)
-> +{
-> +	int ret;
-> +	u32 val;
-> +
-> +	ret =3D regmap_read(info->regmap, info->base + SC2731_CHG_CFG5, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val =3D (val & SC2731_CUR_LIMIT_MASK) >> SC2731_CUR_LIMIT_SHIFT;
-> +
-> +	switch (val) {
-> +	case 0:
-> +		*cur =3D SC2731_CURRENT_LIMIT_100;
-> +		break;
-> +
-> +	case 1:
-> +		*cur =3D SC2731_CURRENT_LIMIT_2000;
-> +		break;
-> +
-> +	case 2:
-> +		*cur =3D SC2731_CURRENT_LIMIT_900;
-> +		break;
-> +
-> +	case 3:
-> +		*cur =3D SC2731_CURRENT_LIMIT_500;
-> +		break;
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int
-> +sc2731_charger_usb_set_property(struct power_supply *psy,
-> +				enum power_supply_property psp,
-> +				const union power_supply_propval *val)
-> +{
-> +	struct sc2731_charger_info *info =3D power_supply_get_drvdata(psy);
-> +	int ret;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	if (!info->charging) {
-> +		mutex_unlock(&info->lock);
-> +		return -ENODEV;
-> +	}
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-> +		ret =3D sc2731_charger_set_current(info, val->intval / 1000);
-> +		if (ret < 0)
-> +			dev_err(info->dev, "set charge current failed\n");
-> +		break;
-> +
-> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-> +		ret =3D sc2731_charger_set_current_limit(info,
-> +						       val->intval / 1000);
-> +		if (ret < 0)
-> +			dev_err(info->dev, "set input current limit failed\n");
-> +		break;
-> +
-> +	default:
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_usb_get_property(struct power_supply *psy,
-> +					   enum power_supply_property psp,
-> +					   union power_supply_propval *val)
-> +{
-> +	struct sc2731_charger_info *info =3D power_supply_get_drvdata(psy);
-> +	int ret =3D 0;
-> +	u32 cur;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_STATUS:
-> +		if (info->charging)
-> +			val->intval =3D sc2731_charger_get_status(info);
-> +		else
-> +			val->intval =3D POWER_SUPPLY_STATUS_NOT_CHARGING;
-> +		break;
-> +
-> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-> +		if (!info->charging) {
-> +			val->intval =3D 0;
-> +		} else {
-> +			ret =3D sc2731_charger_get_current(info, &cur);
-> +			if (ret)
-> +				goto out;
-> +
-> +			val->intval =3D cur * 1000;
-> +		}
-> +		break;
-> +
-> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-> +		if (!info->charging) {
-> +			val->intval =3D 0;
-> +		} else {
-> +			ret =3D sc2731_charger_get_current_limit(info, &cur);
-> +			if (ret)
-> +				goto out;
-> +
-> +			val->intval =3D cur * 1000;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		ret =3D -EINVAL;
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_property_is_writeable(struct power_supply *psy,
-> +						enum power_supply_property psp)
-> +{
-> +	int ret;
-> +
-> +	switch (psp) {
-> +	case POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT:
-> +	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-> +		ret =3D 1;
-> +		break;
-> +
-> +	default:
-> +		ret =3D 0;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static enum power_supply_property sc2731_usb_props[] =3D {
-> +	POWER_SUPPLY_PROP_STATUS,
-> +	POWER_SUPPLY_PROP_CONSTANT_CHARGE_CURRENT,
-> +	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-> +};
-> +
-> +static const struct power_supply_desc sc2731_charger_desc =3D {
-> +	.name			=3D "sc2731_charger",
-> +	.type			=3D POWER_SUPPLY_TYPE_USB,
-> +	.properties		=3D sc2731_usb_props,
-> +	.num_properties		=3D ARRAY_SIZE(sc2731_usb_props),
-> +	.get_property		=3D sc2731_charger_usb_get_property,
-> +	.set_property		=3D sc2731_charger_usb_set_property,
-> +	.property_is_writeable	=3D sc2731_charger_property_is_writeable,
-> +};
-> +
-> +static int sc2731_charger_usb_change(struct notifier_block *nb,
-> +				     unsigned long limit, void *data)
-> +{
-> +	struct sc2731_charger_info *info =3D
-> +		container_of(nb, struct sc2731_charger_info, usb_notify);
-> +	int ret =3D 0;
-> +
-> +	mutex_lock(&info->lock);
-> +
-> +	if (limit > 0) {
-> +		/* set current limitation and start to charge */
-> +		ret =3D sc2731_charger_set_current_limit(info, limit);
-> +		if (ret)
-> +			goto out;
-> +
-> +		ret =3D sc2731_charger_set_current(info, limit);
-> +		if (ret)
-> +			goto out;
-> +
-> +		ret =3D sc2731_charger_start_charge(info);
-> +		if (ret)
-> +			goto out;
-> +
-> +		info->charging =3D true;
-> +	} else {
-> +		/* Stop charging */
-> +		info->charging =3D false;
-> +		sc2731_charger_stop_charge(info);
-> +	}
-> +
-> +out:
-> +	mutex_unlock(&info->lock);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_hw_init(struct sc2731_charger_info *info)
-> +{
-> +	struct power_supply_battery_info bat_info =3D { };
-> +	u32 term_currrent, term_voltage, cur_val, vol_val;
-> +	int ret;
-> +
-> +	/* Enable charger module */
-> +	ret =3D regmap_update_bits(info->regmap, SC2731_MODULE_EN1,
-> +				 SC2731_CHARGE_EN, SC2731_CHARGE_EN);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret =3D power_supply_get_battery_info(info->psy_usb, &bat_info);
-> +	if (ret) {
-> +		dev_warn(info->dev, "no battery information is supplied\n");
-> +
-> +		/*
-> +		 * If no battery information is supplied, we should set
-> +		 * default charge termination current to 120 mA, and default
-> +		 * charge termination voltage to 4.35V.
-> +		 */
-> +		cur_val =3D 0x2;
-> +		vol_val =3D 0x1;
-> +	} else {
-> +		term_currrent =3D bat_info.charge_term_current_ua / 1000;
-> +
-> +		if (term_currrent <=3D 90)
-> +			cur_val =3D 0;
-> +		else if (term_currrent >=3D 265)
-> +			cur_val =3D 0x7;
-> +		else
-> +			cur_val =3D ((term_currrent - 90) / 25) + 1;
-> +
-> +		term_voltage =3D bat_info.constant_charge_voltage_max_uv / 1000;
-> +
-> +		if (term_voltage > 4500)
-> +			term_voltage =3D 4500;
-> +
-> +		if (term_voltage > 4200)
-> +			vol_val =3D (term_voltage - 4200) / 100;
-> +		else
-> +			vol_val =3D 0;
-> +	}
-> +
-> +	/* Set charge termination current */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG2,
-> +				 SC2731_TERMINATION_CUR_MASK, cur_val);
-> +	if (ret)
-> +		goto error;
-> +
-> +	/* Set charge termination voltage */
-> +	ret =3D regmap_update_bits(info->regmap, info->base + SC2731_CHG_CFG0,
-> +				 SC2731_TERMINATION_VOL_MASK |
-> +				 SC2731_TERMINATION_VOL_CAL_MASK,
-> +				 (vol_val << SC2731_TERMINATION_VOL_SHIFT) |
-> +				 (0x6 << SC2731_TERMINATION_VOL_CAL_SHIFT));
-> +	if (ret)
-> +		goto error;
-> +
-> +	return 0;
-> +
-> +error:
-> +	regmap_update_bits(info->regmap, SC2731_MODULE_EN1, SC2731_CHARGE_EN, 0=
-);
-> +	return ret;
-> +}
-> +
-> +static int sc2731_charger_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct sc2731_charger_info *info;
-> +	struct power_supply_config charger_cfg =3D { };
-> +	int ret;
-> +
-> +	info =3D devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> +	if (!info)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&info->lock);
-> +	info->dev =3D &pdev->dev;
-> +
-> +	info->regmap =3D dev_get_regmap(pdev->dev.parent, NULL);
-> +	if (!info->regmap) {
-> +		dev_err(&pdev->dev, "failed to get charger regmap\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret =3D of_property_read_u32(np, "reg", &info->base);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to get register address\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	charger_cfg.drv_data =3D info;
-> +	charger_cfg.of_node =3D np;
-> +	info->psy_usb =3D devm_power_supply_register(&pdev->dev,
-> +						   &sc2731_charger_desc,
-> +						   &charger_cfg);
-> +	if (IS_ERR(info->psy_usb)) {
-> +		dev_err(&pdev->dev, "failed to register power supply\n");
-> +		return PTR_ERR(info->psy_usb);
-> +	}
-> +
-> +	ret =3D sc2731_charger_hw_init(info);
-> +	if (ret)
-> +		return ret;
-> +
-> +	info->usb_phy =3D devm_usb_get_phy_by_phandle(&pdev->dev, "phys", 0);
-> +	if (IS_ERR(info->usb_phy)) {
-> +		dev_err(&pdev->dev, "failed to find USB phy\n");
-> +		return PTR_ERR(info->usb_phy);
-> +	}
-> +
-> +	info->usb_notify.notifier_call =3D sc2731_charger_usb_change;
-> +	ret =3D usb_register_notifier(info->usb_phy, &info->usb_notify);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to register notifier: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int sc2731_charger_remove(struct platform_device *pdev)
-> +{
-> +	struct sc2731_charger_info *info =3D platform_get_drvdata(pdev);
-> +
-> +	usb_unregister_notifier(info->usb_phy, &info->usb_notify);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id sc2731_charger_of_match[] =3D {
-> +	{ .compatible =3D "sprd,sc2731-charger", },
-> +	{ }
-> +};
-> +
-> +static struct platform_driver sc2731_charger_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "sc2731-charger",
-> +		.of_match_table =3D sc2731_charger_of_match,
-> +	},
-> +	.probe =3D sc2731_charger_probe,
-> +	.remove =3D sc2731_charger_remove,
-> +};
-> +
-> +module_platform_driver(sc2731_charger_driver);
-> +
-> +MODULE_DESCRIPTION("Spreadtrum SC2731 Charger Driver");
-> +MODULE_LICENSE("GPL v2");
-> --=20
-> 1.9.1
->=20
+All errors (new ones prefixed by >>):
 
---dlgnt7vddiditrxq
-Content-Type: application/pgp-signature; name="signature.asc"
+>> Error: arch/arm/boot/dts/mioa701.dts:49.10-11 syntax error
+   FATAL ERROR: Unable to parse input tree
 
------BEGIN PGP SIGNATURE-----
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlui8aQACgkQ2O7X88g7
-+pqPdw/+JTnMvwqRFOyreLxwGnRS8bPibLZImnJxLwHpRZPxRBAzwMxNINCdGcR/
-FyOsfFAFvt8rg3EYa9qZls9jTiiMSCmcGTzFZb6tXA5gPeNsiXG2mMHK9IQQvDDO
-nAClq9UVDqq+j3a4HYt0OdF4runUvZeAKYfzxPCORIJT1PyogUW6lqnA4K19DbSg
-WPuIBOXg3jvpPP5jeElA/l23U0qFYymtCzmkf5KH4rprs/PBb5fCazbxaGrDgGYN
-jHjGmujIddDKHvKsdi0C1+cQVrFjU8TlCUehvLwp7slruDFBJMciravdK37GNxGQ
-2gmWj8pmgQ5w3z5PHeaUwNQDGG6ZJqA+UiokvsLCClxFHmIToqIbm8pmGWmuyj98
-QlNaEA+27MiKlAkeY3tkQ+b+cJSn8zEhv0h/QF6wtZb390bTIptxMN6xFg1744Vw
-Yy1OAw3njOhEf+MwyyGlAvblih8VD+uEnI+g0/RW7IIvrUZuk9zFZ3G05OuKOKxE
-3QupEYMGpA0qyyqWu6cSccx6PCNdLL4asSG3u9ydt6ZWnGK1S9Ad64brizu3IMMW
-KQQCCRfB7RsYcSc+XrcB7Zy33vNRocQYAp4tBbEHxdTjXuzeBm/HKS8RI0mjvf6m
-fuvYj8aFth3TZaNqhfCNbjmOzkotila+xk93Av4qUJuas72X2YE=
-=oZsn
------END PGP SIGNATURE-----
+--bg08WKrSYDhXBjb5
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
---dlgnt7vddiditrxq--
+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
+
+--bg08WKrSYDhXBjb5--
