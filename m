@@ -1,45 +1,34 @@
-From: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
-Subject: Re: [PATCH v2 2/4] dt-bindings: net: qcom: Add binding for shared
- mdio bus
-Date: Thu, 20 Sep 2018 01:33:03 +0000
-Message-ID: <a270a096c58041e6846bfc96659ab98c@HXTBJIDCEMVIW02.hxtcorp.net>
-References: <1537174411-34510-1-git-send-email-dongsheng.wang@hxt-semitech.com>
- <1537174411-34510-3-git-send-email-dongsheng.wang@hxt-semitech.com>
- <20180917145028.GC5458@lunn.ch>
- <b01bb33b30164088a9cae59a825acdc9@HXTBJIDCEMVIW02.hxtcorp.net>
- <13018118-9883-4b26-9017-b324d745cc58@gmail.com>
- <71ba0057c5e547c382793be899e3268a@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180918123545.GA29092@lunn.ch>
- <7696bcd8ca594b1da683b437197b4ddf@HXTBJIDCEMVIW02.hxtcorp.net>
- <20180919122521.GA26940@lunn.ch>
- <1226d3d3-e2ba-571d-5b70-b246cbde2fb6@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Timur Tabi <timur@kernel.org>, Andrew Lunn <andrew@lunn.ch>
-Cc: Florian Fainelli <f.fainelli@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "Zheng, Joey" <yu.zheng@hxt-semitech.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH 0/4] Qualcomm QCS404 TLMM pinctrl driver
+Date: Wed, 19 Sep 2018 18:37:08 -0700
+Message-ID: <20180920013712.2361-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018/9/19 22:15, Timur Tabi wrote:
-> On 9/19/18 7:25 AM, Andrew Lunn wrote:
->> ACPI is completely separate and should not affect the DT binding.
->> I've not yet looked at the ACPI changes you added.
-> Just FYI, there is no device tree platform on which the upstream EMAC 
-> driver works.  All of the DT code in the driver is theoretical.  It 
-> worked once on a prototype platform, when I originally wrote the code, 
-> but since then DT support is mostly a guess.
->
-> The focus of any patches for the EMAC should be ACPI, not DT.  If 
-> anything, ACPI support should come first.  No one should be writing or 
-> reviewing DT code before ACPI code.
->
-> The upstream EMAC driver is only known to work on the QDF2400, which is 
-> an ACPI-only chip.  I feel like I've been repeating this too often.
->
-Ok, I just focus on ACPI, and keep DT code no changes.
+This series introduces register accessor functions and a level of indirection
+for these, in order to handle dispersed tiles. It then adds the TLMM binder and
+driver for the QCS404 platform.
 
-Cheers,
-Dongsheng
+Avaneesh Kumar Dwivedi (1):
+  pinctrl: qcom: Add qcs404 pinctrl driver
+
+Bjorn Andersson (3):
+  pinctrl: qcom: Introduce readl/writel accessors
+  pinctrl: qcom: Support dispersed tiles
+  dt-bindings: pinctrl: qcom: Add QCS404 pinctrl binding
+
+ .../bindings/pinctrl/qcom,qcs404-pinctrl.txt  |  195 +++
+ drivers/pinctrl/qcom/Kconfig                  |    8 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c            |  116 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h            |    4 +
+ drivers/pinctrl/qcom/pinctrl-qcs404.c         | 1523 +++++++++++++++++
+ 6 files changed, 1804 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-qcs404.c
+
+-- 
+2.18.0
