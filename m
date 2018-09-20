@@ -1,15 +1,17 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: document Broadcom Northstar pin
- mux controller
-Date: Thu, 20 Sep 2018 06:59:41 +0200
-Message-ID: <CACna6rz13XswdcNqq1JHRAms5LpdRFuOT4RU=n6YTeydTGh5JA@mail.gmail.com>
-References: <20180919210219.21921-1-zajec5@gmail.com>
- <7e381fba-a7bf-f587-7bbf-d6b30d9874c9@gmail.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: [PATCH] arm: dts: pxa3xx: provide correct clk-names property for
+ nand controller node
+Date: Thu, 20 Sep 2018 07:03:06 +0200
+Message-ID: <4099fb7b-5815-33ac-9131-c052631599c6@zonque.org>
+References: <20180624174205.20648-1-daniel@zonque.org>
+ <87po0emxhg.fsf@belgarion.home>
+ <f3e704f5-a5ac-ea4a-65f2-9dc11a67c9f2@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7e381fba-a7bf-f587-7bbf-d6b30d9874c9@gmail.com>
+In-Reply-To: <f3e704f5-a5ac-ea4a-65f2-9dc11a67c9f2@zonque.org>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,43 +21,28 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxOSBTZXAgMjAxOCBhdCAyMzoyMiwgRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxs
-aUBnbWFpbC5jb20+IHdyb3RlOgo+IE9uIDA5LzE5LzIwMTggMDI6MDIgUE0sIFJhZmHFgiBNacWC
-ZWNraSB3cm90ZToKPiA+IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4K
-PiA+Cj4gPiBOb3J0aHN0YXIgaGFzIG11eCBjb250cm9sbGVyIGp1c3QgbGlrZSBOb3J0aHN0YXIg
-UGx1cyBhbmQgTm9ydGhzdGFyMi4KPiA+IEl0J3MgYSBiaXQgZGlmZmVyZW50IHRob3VnaCAoZGlm
-ZmVyZW50IHJlZ2lzdGVycyAmIHBpbnMpIHNvIGl0IHJlcXVpcmVzCj4gPiBpdHMgb3duIGJpbmRp
-bmcuCj4gPgo+ID4gSXQncyBuZWVkZWQgdG8gYWxsb3cgb3RoZXIgYmxvY2sgYmluZGluZ3Mgc3Bl
-Y2lmeSByZXF1aXJlZCBtdXggc2V0dXAuCj4gPgo+ID4gU2lnbmVkLW9mZi1ieTogUmFmYcWCIE1p
-xYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGluY3RybC9icmNtLG5zLXBpbm11eC50eHQgfCAyOSArKysrKysrKysrKysrKysrKysr
-KysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI5IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJjbSxu
-cy1waW5tdXgudHh0Cj4gPgo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9waW5jdHJsL2JyY20sbnMtcGlubXV4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL2JyY20sbnMtcGlubXV4LnR4dAo+ID4gbmV3IGZpbGUg
-bW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uMGU5MTM3MjFhZTllCj4gPiAtLS0g
-L2Rldi9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGlu
-Y3RybC9icmNtLG5zLXBpbm11eC50eHQKPiA+IEBAIC0wLDAgKzEsMjkgQEAKPiA+ICtCcm9hZGNv
-bSBOb3J0aHN0YXIgcGlucyBtdXggY29udHJvbGxlcgo+ID4gKwo+ID4gK1NvbWUgb2YgTm9ydGhz
-dGFyIFNvQ3MncyBwaW5zIGNhbiBiZSB1c2VkIGZvciB2YXJpb3VzIHB1cnBvc2VzIHRoYW5rcyB0
-byB0aGUgbXV4Cj4gPiArY29udHJvbGxlci4gVGhpcyBiaW5kaW5nIGFsbG93cyBkZXNjcmliaW5n
-IG11eCBjb250cm9sbGVyIGFuZCBsaXN0aW5nIGF2YWlsYWJsZQo+ID4gK2Z1bmN0aW9ucy4gVGhl
-eSBjYW4gYmUgcmVmZXJlbmNlZCBsYXRlciBieSBvdGhlciBiaW5kaW5ncyB0byBsZXQgc3lzdGVt
-Cj4gPiArY29uZmlndXJlIGNvbnRyb2xsZXIgY29ycmVjdGx5Lgo+ID4gKwo+ID4gK1JlcXVpcmVk
-IHByb3BlcnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOiBicmNtLG5zLXBpbm11eAo+ID4gKy0gcmVn
-OiBpb21lbSBhZGRyZXNzIHJhbmdlIG9mIENSVSAoQ2VudHJhbCBSZXNvdXJjZSBVbml0KSBwaW4g
-cmVnaXN0ZXJzCj4gPiArLSByZWctbmFtZXM6ICJjcnVfcGluc19jb250cm9sIiAtIHRoZSBvbmx5
-IG5lZWRlZCAmIHN1cHBvcnRlZCByZWcgcmlnaHQgbm93Cj4KPiBUZWNobmljYWxseSB0aGUgcmVn
-aXN0ZXIgcmFuZ2UgdGhhdCB5b3UgY292ZXIgaXMgbmFtZWQgQ1JVX0dQSU9fQ09OVFJPTHgKPiB3
-aXRoIHggYmVpbmcgaW4gWzAtOF0uCgpUaGFua3MhIERvIHlvdSB0aGluawpyZWctbmFtZXM6ICJj
-cnVfZ3Bpb19jb250cm9scyIKd2lsbCBiZSBmaW5lPyBPciBzaG91bGQgSSBrZWVwIGl0IHNpbmd1
-bGFyIGxpa2U6CnJlZy1uYW1lczogImNydV9ncGlvX2NvbnRyb2wiCj8KCi0tIApSYWZhxYIKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
-dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
-ZWwK
+On 19/9/2018 6:20 PM, Daniel Mack wrote:
+> On 25/6/2018 10:18 PM, Robert Jarzmik wrote:
+>> Daniel Mack <daniel@zonque.org> writes:
+>>
+>>> The NAND driver looks for a clock named "core" and falls back to a pdev
+>>> clock that has a wrong rate if not set.
+>>>
+>>> Signed-off-by: Daniel Mack <daniel@zonque.org>
+>> Applied to pxa/dt with a small "line swap", ie. clock-names is one line below
+>> "clocks" line.
+> 
+> This patch got applied twice in mainline, as ce4313f318de and as
+> 267a113cec97. Not sure what went wrong here, but the same property npow
+> occurs twice in the node, which leads to an error during dtb complication.
+
+Ooops, sorry. Forget it, all is good. I've messed up a local branch.
+
+Sorry for the noise. :(
+
+
+Daniel
