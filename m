@@ -1,112 +1,238 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH 0/4] ARM: dts: mvebu: updates and new board
-Date: Thu, 20 Sep 2018 17:56:56 +0200
-Message-ID: <87bm8sjh6f.fsf@bootlin.com>
-References: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V8 1/2] clocksource: add gx6605s SOC system timer
+Date: Thu, 20 Sep 2018 18:06:19 +0200
+Message-ID: <6c31f9b2-d536-1cee-8024-b52eb862fd9d@linaro.org>
+References: <cover.1537412072.git.ren_guo@c-sky.com>
+ <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537412072.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180726040257.22285-1-chris.packham@alliedtelesis.co.nz> (Chris
-        Packham's message of "Thu, 26 Jul 2018 16:02:53 +1200")
+In-Reply-To: <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537412072.git.ren_guo@c-sky.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, jason@lakedaemon.net, andrew@lunn.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On jeu., juil. 26 2018, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
+On 20/09/2018 10:03, Guo Ren wrote:
+> Changelog:
+>  - Add License and Copyright
+>  - Use timer-of framework
+>  - Change name with upstream feedback
+>  - Use clksource_mmio framework
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ---
+>  drivers/clocksource/Kconfig         |   8 ++
+>  drivers/clocksource/Makefile        |   1 +
+>  drivers/clocksource/timer-gx6605s.c | 150 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 159 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-gx6605s.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index a11f4ba..6d0f18d 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -620,4 +620,12 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
+>  
+> +config GX6605S_TIMER
+> +	bool "Gx6605s SOC system timer driver"
+> +	depends on CSKY
+> +	select CLKSRC_MMIO
+> +	select TIMER_OF
+> +	help
+> +	  This option enables support for gx6605s SOC's timer.
+> +
+>  endmenu
 
-> This series updates the armada-xp-98dx3236 SoC and related boards to use the
-> new style dts bindings for nand.
->
-> I've also added a new db-88f6820-amc board which is an Armada-385 based
-> reference board from Marvell's switch team. It's a plugin card for either the
-> db-dxbc2 or db-xc3-24g4 which can be used if you disable the internal CPU on
-> those platforms.
->
-> Chris Packham (4):
->   ARM: dts: mvebu: 98dx3236: Rename nand controller node
->   ARM: dts: mvebu: db-dxbc2: use new style nand binding
->   ARM: dts: mvebu: db-xc3-24g4: use new style nand binding
->   ARM: dts: mvebu: Add device tree for db-88f6820-amc board
+Please make the option not visible as default. There are currently two
+approaches look at MTK_TIMER and SPRD_TIMER.
 
-While applying this series mvebu/dt, I got few warning with "ARM: dts:
-mvebu: 98dx3236: Rename nand controller node".
+Apart the two nits below, the driver looks fine.
 
-I fix them and also use the new partition binding, the diff is the
-following:
+Thanks!
+  -- Daniel
 
-iff --git a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
-index d87614057e3f..dc9ccce1d4a1 100644
---- a/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
-+++ b/arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
-@@ -102,9 +102,14 @@
-                nand-ecc-strength = <4>;
-                nand-ecc-step-size = <512>;
- 
--               partition@user {
--                       reg = <0x00000000 0x40000000>;
--                       label = "user";
-+               partitions {
-+                       compatible = "fixed-partitions";
-+                       #address-cells = <1>;
-+                       #size-cells = <1>;
-+                       partition@0 {
-+                               reg = <0x00000000 0x40000000>;
-+                               label = "user";
-+                       };
-                };
-        };
- };
-@@ -131,13 +136,18 @@
-                spi-max-frequency = <50000000>;
-                m25p,fast-read;
- 
--               partition@u-boot {
--                       reg = <0x00000000 0x00100000>;
--                       label = "u-boot";
--               };
--               partition@u-boot-env {
--                       reg = <0x00100000 0x00040000>;
--                       label = "u-boot-env";
-+               partitions {
-+                       compatible = "fixed-partitions";
-+                       #address-cells = <1>;
-+                       #size-cells = <1>;
-+                       partition@0 {
-+                               reg = <0x00000000 0x00100000>;
-+                               label = "u-boot";
-+                       };
-+                       partition@100000 {
-+                               reg = <0x00100000 0x00040000>;
-+                               label = "u-boot-env";
-+                       };
-                };
-        };
- };
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index db51b24..dc5621d 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -79,3 +79,4 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+>  obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
+> +obj-$(CONFIG_GX6605S_TIMER)		+= timer-gx6605s.o
+> diff --git a/drivers/clocksource/timer-gx6605s.c b/drivers/clocksource/timer-gx6605s.c
+> new file mode 100644
+> index 0000000..10194c9
+> --- /dev/null
+> +++ b/drivers/clocksource/timer-gx6605s.c
+> @@ -0,0 +1,150 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> +
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/sched_clock.h>
+> +
+> +#include "timer-of.h"
+> +
+> +#define CLKSRC_OFFSET	0x40
+> +
+> +#define TIMER_STATUS	0x00
+> +#define TIMER_VALUE	0x04
+> +#define TIMER_CONTRL	0x10
+> +#define TIMER_CONFIG	0x20
+> +#define TIMER_DIV	0x24
+> +#define TIMER_INI	0x28
+> +
+> +#define GX6605S_STATUS_CLR	BIT(0)
+> +#define GX6605S_CONTRL_RST	BIT(0)
+> +#define GX6605S_CONTRL_START	BIT(1)
+> +#define GX6605S_CONFIG_EN	BIT(0)
+> +#define GX6605S_CONFIG_IRQ_EN	BIT(1)
+> +
+> +static irqreturn_t gx6605s_timer_interrupt(int irq, void *dev)
+> +{
+> +	struct clock_event_device *ce = (struct clock_event_device *) dev;
 
-I amended your patch with it, but if you don't agree with it, I can
-still modify it, the branch is not immutable yet.
+nit: no cast is needed.
 
-Thanks,
+> +	void __iomem *base = timer_of_base(to_timer_of(ce));
+> +
+> +	writel_relaxed(GX6605S_STATUS_CLR, base + TIMER_STATUS);
+> +
+> +	ce->event_handler(ce);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int gx6605s_timer_set_oneshot(struct clock_event_device *ce)
+> +{
+> +	void __iomem *base = timer_of_base(to_timer_of(ce));
+> +
+> +	/* reset and stop counter */
+> +	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
+> +
+> +	/* enable with irq and start */
+> +	writel_relaxed(GX6605S_CONFIG_EN | GX6605S_CONFIG_IRQ_EN, base + TIMER_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +static int gx6605s_timer_set_next_event(unsigned long delta, struct clock_event_device *ce)
+> +{
+> +	void __iomem *base = timer_of_base(to_timer_of(ce));
+> +
+> +	/* use reset to pause timer */
+> +	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
+> +
+> +	/* config next timeout value */
+> +	writel_relaxed(ULONG_MAX - delta, base + TIMER_INI);
+> +	writel_relaxed(GX6605S_CONTRL_START, base + TIMER_CONTRL);
+> +
+> +	return 0;
+> +}
+> +
+> +static int gx6605s_timer_shutdown(struct clock_event_device *ce)
+> +{
+> +	void __iomem *base = timer_of_base(to_timer_of(ce));
+> +
+> +	writel_relaxed(0, base + TIMER_CONTRL);
+> +	writel_relaxed(0, base + TIMER_CONFIG);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct timer_of to = {
+> +	.flags = TIMER_OF_IRQ | TIMER_OF_BASE | TIMER_OF_CLOCK,
+> +	.clkevt = {
+> +		.rating			= 300,
+> +		.features		= CLOCK_EVT_FEAT_DYNIRQ |
+> +					  CLOCK_EVT_FEAT_ONESHOT,
+> +		.set_state_shutdown	= gx6605s_timer_shutdown,
+> +		.set_state_oneshot	= gx6605s_timer_set_oneshot,
+> +		.set_next_event		= gx6605s_timer_set_next_event,
+> +		.cpumask		= cpu_possible_mask,
+> +	},
+> +	.of_irq = {
+> +		.handler		= gx6605s_timer_interrupt,
+> +		.flags			= IRQF_TIMER | IRQF_IRQPOLL,
+> +	},
+> +};
+> +
+> +static u64 notrace gx6605s_sched_clock_read(void)
+> +{
+> +	void __iomem *base;
+> +
+> +	base = timer_of_base(&to) + CLKSRC_OFFSET;
+> +
+> +	return (u64) readl_relaxed(base + TIMER_VALUE);
 
-Gregory
+nit: extra space after '(u64)'
 
->
->  arch/arm/boot/dts/Makefile                    |   1 +
->  .../boot/dts/armada-385-db-88f6820-amc.dts    | 184 ++++++++++++++++++
->  arch/arm/boot/dts/armada-xp-98dx3236.dtsi     |   2 +-
->  arch/arm/boot/dts/armada-xp-db-dxbc2.dts      |  18 +-
->  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts |  18 +-
->  5 files changed, 208 insertions(+), 15 deletions(-)
->  create mode 100644 arch/arm/boot/dts/armada-385-db-88f6820-amc.dts
->
-> -- 
-> 2.18.0
->
+> +}
+> +
+> +static void gx6605s_clkevt_init(void __iomem *base)
+> +{
+> +	writel_relaxed(0, base + TIMER_DIV);
+> +	writel_relaxed(0, base + TIMER_CONFIG);
+> +
+> +	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to), 2, ULONG_MAX);
+> +}
+> +
+> +static int gx6605s_clksrc_init(void __iomem *base)
+> +{
+> +	writel_relaxed(0, base + TIMER_DIV);
+> +	writel_relaxed(0, base + TIMER_INI);
+> +
+> +	writel_relaxed(GX6605S_CONTRL_RST, base + TIMER_CONTRL);
+> +
+> +	writel_relaxed(GX6605S_CONFIG_EN, base + TIMER_CONFIG);
+> +
+> +	writel_relaxed(GX6605S_CONTRL_START, base + TIMER_CONTRL);
+> +
+> +	sched_clock_register(gx6605s_sched_clock_read, 32, timer_of_rate(&to));
+> +
+> +	return clocksource_mmio_init(base + TIMER_VALUE, "gx6605s", timer_of_rate(&to),
+> +				     200, 32, clocksource_mmio_readl_up);
+> +}
+> +
+> +static int __init gx6605s_timer_init(struct device_node *np)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * The timer driver is for nationalchip gx6605s SOC and there are two same timer
+> +	 * in gx6605s. We use one for clkevt and another for clksrc.
+> +	 *
+> +	 * The timer is mmio map to access, so we need give mmio addres in dts.
+> +	 *
+> +	 * It provides a 32bit countup timer and interrupt will be caused by count-overflow.
+> +	 * So we need set-next-event by ULONG_MAX - delta in TIMER_INI reg.
+> +	 *
+> +	 * The counter at 0x0  offset is clock event.
+> +	 * The counter at 0x40 offset is clock source.
+> +	 * They are the same in hardware, just different used by driver.
+> +	 */
+> +	ret = timer_of_init(np, &to);
+> +	if (ret)
+> +		return ret;
+> +
+> +	gx6605s_clkevt_init(timer_of_base(&to));
+> +
+> +	return gx6605s_clksrc_init(timer_of_base(&to) + CLKSRC_OFFSET);
+> +}
+> +TIMER_OF_DECLARE(csky_gx6605s_timer, "csky,gx6605s-timer", gx6605s_timer_init);
+> 
+
 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
