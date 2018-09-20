@@ -1,48 +1,51 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [PATCH] arm: dts: pxa3xx: provide correct clk-names property for
- nand controller node
-Date: Thu, 20 Sep 2018 07:03:06 +0200
-Message-ID: <4099fb7b-5815-33ac-9131-c052631599c6@zonque.org>
-References: <20180624174205.20648-1-daniel@zonque.org>
- <87po0emxhg.fsf@belgarion.home>
- <f3e704f5-a5ac-ea4a-65f2-9dc11a67c9f2@zonque.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f3e704f5-a5ac-ea4a-65f2-9dc11a67c9f2@zonque.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V8 1/6] csky/dma: bugfix dma_sync_for_cpu/device
+Date: Thu, 20 Sep 2018 13:39:27 +0800
+Message-ID: <1ccf1bed89758a5a9b57ac2ce6d11ca898a1b9ae.1537417413.git.ren_guo@c-sky.com>
+References: <cover.1537417413.git.ren_guo@c-sky.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1537417413.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1537417413.git.ren_guo@c-sky.com>
+References: <cover.1537417413.git.ren_guo@c-sky.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, robh@kernel.org, sfr@canb.auug.org.au
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arch@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/9/2018 6:20 PM, Daniel Mack wrote:
-> On 25/6/2018 10:18 PM, Robert Jarzmik wrote:
->> Daniel Mack <daniel@zonque.org> writes:
->>
->>> The NAND driver looks for a clock named "core" and falls back to a pdev
->>> clock that has a wrong rate if not set.
->>>
->>> Signed-off-by: Daniel Mack <daniel@zonque.org>
->> Applied to pxa/dt with a small "line swap", ie. clock-names is one line below
->> "clocks" line.
-> 
-> This patch got applied twice in mainline, as ce4313f318de and as
-> 267a113cec97. Not sure what went wrong here, but the same property npow
-> occurs twice in the node, which leads to an error during dtb complication.
+ref: https://lkml.org/lkml/2018/5/18/1068
 
-Ooops, sorry. Forget it, all is good. I've messed up a local branch.
+        map             for_cpu         for_device      unmap
+TO_DEV  writeback       none            writeback       none
+TO_CPU  invalidate      invalidate*     invalidate      invalidate*
+BIDIR   writeback       invalidate      writeback       invalidate
 
-Sorry for the noise. :(
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ arch/csky/mm/dma-mapping.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-
-Daniel
+diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
+index 16c2087..30a2041 100644
+--- a/arch/csky/mm/dma-mapping.c
++++ b/arch/csky/mm/dma-mapping.c
+@@ -217,7 +217,8 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
+ 		break;
+ 	case DMA_FROM_DEVICE:
+ 	case DMA_BIDIRECTIONAL:
+-		BUG();
++		dma_wbinv_range(vaddr + offset, vaddr + offset + size);
++		break;
+ 	default:
+ 		BUG();
+ 	}
+@@ -240,7 +241,7 @@ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
+ 
+ 	switch (dir) {
+ 	case DMA_TO_DEVICE:
+-		BUG();
++		break;
+ 	case DMA_FROM_DEVICE:
+ 	case DMA_BIDIRECTIONAL:
+ 		dma_wbinv_range(vaddr + offset, vaddr + offset + size);
+-- 
+2.7.4
