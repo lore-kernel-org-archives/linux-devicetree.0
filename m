@@ -1,53 +1,91 @@
-From: =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Subject: Re: [PATCH v2 1/3] video: ssd1307fb: Use gpiod_set_value_cansleep()
- for reset
-Date: Thu, 20 Sep 2018 09:47:33 +0200
-Message-ID: <9c7cbfd4-23dc-4729-a7ca-82bbc8f6c1aa@ysoft.com>
-References: <1537363049-48399-1-git-send-email-michal.vokac@ysoft.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v4 2/2] arm64: dts: meson-g12a: add initial g12a s905d2
+ SoC DT support
+Date: Thu, 20 Sep 2018 09:54:35 +0200
+Message-ID: <c16ae8cf-5802-778b-1fd8-494dfb2d8d1b@baylibre.com>
+References: <1537427368-11104-1-git-send-email-jianxin.pan@amlogic.com>
+ <1537427368-11104-3-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537363049-48399-1-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <1537427368-11104-3-git-send-email-jianxin.pan@amlogic.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+To: Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.9.2018 15:17, Michal Vokáč wrote:
-> The reset signal can be produced by GPIO expander that can sleep.
-> In that case the probe function fails. Allow using GPIO expanders for
-> the reset signal by using the non-atomic gpiod_set_value_cansleep()
-> function.
+On 20/09/2018 09:09, Jianxin Pan wrote:
+> Try to add basic DT support for the Amlogic's Meson-G12A S905D2 SoC,
+> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+> Timer, UART. It's capable of booting up into the serial console.
 > 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-
-I forgot to add R-by from Fabio from v1, sorry.
-I made the respin in a hurry and skipped my pre-submission checklist..
-
-Michal
-
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
-> v2 changes: none
+>  arch/arm64/boot/dts/amlogic/Makefile            |   1 +
+>  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts |  22 +++
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi     | 172 ++++++++++++++++++++++++
+>  3 files changed, 195 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
 > 
->   drivers/video/fbdev/ssd1307fb.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-> index ba66c02..e7ae135 100644
-> --- a/drivers/video/fbdev/ssd1307fb.c
-> +++ b/drivers/video/fbdev/ssd1307fb.c
-> @@ -728,9 +728,9 @@ static int ssd1307fb_probe(struct i2c_client *client,
->   
->   	if (par->reset) {
->   		/* Reset the screen */
-> -		gpiod_set_value(par->reset, 0);
-> +		gpiod_set_value_cansleep(par->reset, 0);
->   		udelay(4);
-> -		gpiod_set_value(par->reset, 1);
-> +		gpiod_set_value_cansleep(par->reset, 1);
->   		udelay(4);
->   	}
->   
-> 
+> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+> index a97c0e2..c31f29d6 100644
+> --- a/arch/arm64/boot/dts/amlogic/Makefile
+> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+> @@ -1,5 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
+> +dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nanopi-k2.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-nexbox-a95x.dtb
+>  dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-odroidc2.dtb
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> new file mode 100644
+> index 0000000..d267a37
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
+> @@ -0,0 +1,22 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "meson-g12a.dtsi"
+> +
+> +/ {
+> +	compatible = "amlogic,u200", "amlogic,g12a";
+> +	model = "Amlogic Meson G12A U200 Development Board";
+> +
+> +	aliases {
+> +		serial0 = &uart_AO;
+> +	};
+
+Hi Jianxin,
+
+Please add the /memory and /chosen nodes.
+
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
+
+Thanks,
+Neil
+
+
+> +};
+> +
+> +&uart_AO {
+> +	status = "okay";
+> +};
+> +
+[...]
