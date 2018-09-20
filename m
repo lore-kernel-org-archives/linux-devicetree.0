@@ -1,63 +1,69 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Relicense BCM47081/BCM4709 files to the
- GPL 2.0+ / MIT
-Date: Thu, 20 Sep 2018 13:18:47 +0200
-Message-ID: <20180920111847.25513-1-zajec5@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [V2, 2/5] Documentation: dt-bindings: Document the Synopsys MIPI DPHY Rx bindings
+Date: Thu, 20 Sep 2018 13:16:40 +0200
+Message-ID: <20180920111648.27000-3-lolivei@synopsys.com>
+References: <20180920111648.27000-1-lolivei@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180920111648.27000-1-lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Joao.Pinto@synopsys.com, festevam@gmail.com, Luis Oliveira <Luis.Oliveira@synopsys.com>, Luis Oliveira <luis.oliveira@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Arnd Bergmann <arnd@arndb.de>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Keiichi Watanabe <keiichiw@chromium.org>, Kate Stewart <kstewart@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKVGhpcyBtYXRjaGVzIGxp
-Y2Vuc2luZyB1c2VkIGJ5IG90aGVyIEJDTTUzMDFYIGZpbGVzIGFuZCBpcyBwcmVmZXJyZWQgYXM6
-CjEpIEdQTCAyLjArIG1ha2VzIGl0IGNsZWFybHkgY29tcGF0aWJsZSB3aXRoIExpbnV4IGtlcm5l
-bAoyKSBNSVQgaXMgYWxzbyBwZXJtaXNzaXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKCkJvdGgg
-ZmlsZXMgd2VyZSBmdWxseSBkZXZlbG9wZWQgYnkgbWUuIENvbW1pdHMgdG91Y2hpbmcgdGhlbSB3
-ZXJlIHNpZ25lZApieSBGbG9yaWFuIGFuZCBIYXVrZSBkdWUgdG8gc3VibWl0dGluZyBwcm9jZXNz
-IG9ubHkuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+
-Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwODEuZHRzaSB8IDEzICstLS0tLS0tLS0tLS0K
-IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDkuZHRzaSAgfCAgMyArLS0KIDIgZmlsZXMgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspLCAxNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2Fy
-bS9ib290L2R0cy9iY200NzA4MS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwODEuZHRz
-aQppbmRleCA5ODI5ZDA0NGFhZjQuLmVkMTNhZjAyODUyOCAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvYmNtNDcwODEuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA4MS5k
-dHNpCkBAIC0xLDIwICsxLDkgQEAKKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
-LW9yLWxhdGVyIE9SIE1JVAogLyoKICAqIEJyb2FkY29tIEJDTTQ3MFggLyBCQ001MzAxWCBBUk0g
-cGxhdGZvcm0gY29kZS4KICAqIERUUyBmb3IgQkNNNDcwODEgU29DLgogICoKICAqIENvcHlyaWdo
-dCDCqSAyMDE0IFJhZmHFgiBNacWCZWNraSA8emFqZWM1QGdtYWlsLmNvbT4KLSAqCi0gKiBQZXJt
-aXNzaW9uIHRvIHVzZSwgY29weSwgbW9kaWZ5LCBhbmQvb3IgZGlzdHJpYnV0ZSB0aGlzIHNvZnR3
-YXJlIGZvciBhbnkKLSAqIHB1cnBvc2Ugd2l0aCBvciB3aXRob3V0IGZlZSBpcyBoZXJlYnkgZ3Jh
-bnRlZCwgcHJvdmlkZWQgdGhhdCB0aGUgYWJvdmUKLSAqIGNvcHlyaWdodCBub3RpY2UgYW5kIHRo
-aXMgcGVybWlzc2lvbiBub3RpY2UgYXBwZWFyIGluIGFsbCBjb3BpZXMuCi0gKgotICogVEhFIFNP
-RlRXQVJFIElTIFBST1ZJREVEICJBUyBJUyIgQU5EIFRIRSBBVVRIT1IgRElTQ0xBSU1TIEFMTCBX
-QVJSQU5USUVTIFdJVEgKLSAqIFJFR0FSRCBUTyBUSElTIFNPRlRXQVJFIElOQ0xVRElORyBBTEwg
-SU1QTElFRCBXQVJSQU5USUVTIE9GIE1FUkNIQU5UQUJJTElUWQotICogQU5EIEZJVE5FU1MuIElO
-IE5PIEVWRU5UIFNIQUxMIFRIRSBBVVRIT1IgQkUgTElBQkxFIEZPUiBBTlkgU1BFQ0lBTCwgRElS
-RUNULAotICogSU5ESVJFQ1QsIE9SIENPTlNFUVVFTlRJQUwgREFNQUdFUyBPUiBBTlkgREFNQUdF
-UyBXSEFUU09FVkVSIFJFU1VMVElORyBGUk9NCi0gKiBMT1NTIE9GIFVTRSwgREFUQSBPUiBQUk9G
-SVRTLCBXSEVUSEVSIElOIEFOIEFDVElPTiBPRiBDT05UUkFDVCwgTkVHTElHRU5DRQotICogT1Ig
-T1RIRVIgVE9SVElPVVMgQUNUSU9OLCBBUklTSU5HIE9VVCBPRiBPUiBJTiBDT05ORUNUSU9OIFdJ
-VEggVEhFIFVTRSBPUgotICogUEVSRk9STUFOQ0UgT0YgVEhJUyBTT0ZUV0FSRS4KICAqLwogCiAj
-aW5jbHVkZSAiYmNtNTMwMXguZHRzaSIKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Jj
-bTQ3MDkuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDkuZHRzaQppbmRleCBjNjQ1ZmVh
-MmI3ZjcuLmUxYmI4NjYxOTU1ZiAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcw
-OS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDkuZHRzaQpAQCAtMSw3ICsxLDYg
-QEAKKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4wLW9yLWxhdGVyIE9SIE1JVAog
-LyoKICAqIENvcHlyaWdodCAoQykgMjAxNiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2ku
-cGw+Ci0gKgotICogTGljZW5zZWQgdW5kZXIgdGhlIElTQyBsaWNlbnNlLgogICovCiAKICNpbmNs
-dWRlICJiY200NzA4LmR0c2kiCi0tIAoyLjEzLjcKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Add device-tree bindings documentation for SNPS DesignWare MIPI D-PHY in
+RX mode.
+
+Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+---
+Changelog
+v2:
+- no changes
+
+ .../devicetree/bindings/phy/snps,dphy-rx.txt       | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+
+diff --git a/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+new file mode 100644
+index 0000000..9079f4a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/snps,dphy-rx.txt
+@@ -0,0 +1,36 @@
++Synopsys DesignWare MIPI Rx D-PHY block details
++
++Description
++-----------
++
++The Synopsys MIPI D-PHY controller supports MIPI-DPHY in receiver mode.
++Please refer to phy-bindings.txt for more information.
++
++Required properties:
++- compatible		: Shall be "snps,dphy-rx".
++- #phy-cells		: Must be 1.
++- snps,dphy-frequency	: Output frequency of the D-PHY.
++- snps,dphy-te-len	: Size of the communication interface (8 bits->8 or 12bits->12).
++- reg			: Physical base address and size of the device memory mapped
++		 	  registers;
++
++Optional properties:
++- snps,compat-mode	: Compatibility mode control
++
++The per-board settings:
++- gpios 		: Synopsys testchip used as reference uses this to change setup
++		  	  configurations.
++
++Example:
++
++	mipi_dphy_rx1: dphy@3040 {
++		compatible = "snps,dphy-rx";
++		#phy-cells = <1>;
++		snps,dphy-frequency = <300000>;
++		snps,dphy-te-len = <12>;
++		snps,compat-mode = <1>;
++		reg = < 0x03040 0x20
++			0x08000 0x100
++			0x09000 0x100>;
++	};
++
+-- 
+2.9.3
