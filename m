@@ -1,94 +1,71 @@
 From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v4 1/2] dt-bindings: nand: meson: add Amlogic NAND controller driver
-Date: Thu, 20 Sep 2018 16:50:48 +0800
-Message-ID: <1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1537433449-65213-1-git-send-email-jianxin.pan@amlogic.com>
+Subject: Re: [PATCH v4 2/2] arm64: dts: meson-g12a: add initial g12a s905d2
+ SoC DT support
+Date: Thu, 20 Sep 2018 16:54:10 +0800
+Message-ID: <282176bb-2780-b8f4-5619-4edb24d37469@amlogic.com>
+References: <1537427368-11104-1-git-send-email-jianxin.pan@amlogic.com>
+ <1537427368-11104-3-git-send-email-jianxin.pan@amlogic.com>
+ <c16ae8cf-5802-778b-1fd8-494dfb2d8d1b@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537433449-65213-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <c16ae8cf-5802-778b-1fd8-494dfb2d8d1b@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Jian Hu <jian.hu@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Yang <liang.yang@amlogic.com>
-
-Add Amlogic NAND controller dt-bindings for Meson SoC,
-Current this driver support GXBB/GXL/AXG platform.
-
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
----
- .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-new file mode 100644
-index 0000000..803df2a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-@@ -0,0 +1,60 @@
-+Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-+
-+This file documents the properties in addition to those available in
-+the MTD NAND bindings.
-+
-+Required properties:
-+- compatible : contains one of:
-+  - "amlogic,meson-gxl-nfc"
-+  - "amlogic,meson-axg-nfc"
-+- clocks     :
-+	A list of phandle + clock-specifier pairs for the clocks listed
-+	in clock-names.
-+
-+- clock-names: Should contain the following:
-+	"core" - NFC module gate clock
-+	"device" - device clock from eMMC sub clock controller
-+
-+- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-+				controller port C
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Other properties:
-+see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+
-+Example demonstrate on AXG SoC:
-+
-+	sd_emmc_c_clkc: mmc@7000 {
-+		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
-+		reg = <0x0 0x7000 0x0 0x800>;
-+		status = "okay";
-+	};
-+
-+	nand: nfc@7800 {
-+		compatible = "amlogic,meson-axg-nfc";
-+		reg = <0x0 0x7800 0x0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-+		status = "disabled";
-+
-+		clocks = <&clkc CLKID_SD_EMMC_C>,
-+			<&sd_emmc_c_clkc CLKID_MMC_DIV>;
-+		clock-names = "core", "device";
-+		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
-+
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&nand_pins>;
-+
-+		nand@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			nand-on-flash-bbt;
-+		};
-+	};
--- 
-1.9.1
+On 9/20/2018 3:54 PM, Neil Armstrong wrote:
+> On 20/09/2018 09:09, Jianxin Pan wrote:
+>> Try to add basic DT support for the Amlogic's Meson-G12A S905D2 SoC,
+>> which describe components as follows: Reserve Memory, CPU, GIC, IRQ,
+>> Timer, UART. It's capable of booting up into the serial console.
+>>
+>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+>> Reviewed-by: Jerome Brunet <jbrunet@baylibre.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/Makefile            |   1 +
+>>  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts |  22 +++
+>>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi     | 172 ++++++++++++++++++++++++
+[...]
+>> +#include "meson-g12a.dtsi"
+>> +
+>> +/ {
+>> +	compatible = "amlogic,u200", "amlogic,g12a";
+>> +	model = "Amlogic Meson G12A U200 Development Board";
+>> +
+>> +	aliases {
+>> +		serial0 = &uart_AO;
+>> +	};
+> 
+> Hi Jianxin,
+> 
+> Please add the /memory and /chosen nodes.
+> 
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x40000000>;
+> +	};
+> 
+> Thanks,
+> Neil
+> 
+> 
+Hi Neil
+Thanks for the review! I will add them.
+>> +};
+>> +
+>> +&uart_AO {
+>> +	status = "okay";
+>> +};
+>> +
+> [...]
+> 
+> .
+> 
