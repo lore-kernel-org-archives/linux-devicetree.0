@@ -1,117 +1,47 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [RFC] i2c: qup: Use the interconnect API
-Date: Thu, 20 Sep 2018 11:29:03 -0700
-Message-ID: <20180920182903.19991-1-georgi.djakov@linaro.org>
+From: Arkadiusz Lis <areklis909@gmail.com>
+Subject: emxx_udc device tree bindings
+Date: Thu, 20 Sep 2018 20:35:52 +0200
+Message-ID: <1537468552-2533-1-git-send-email-areklis909@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, wsa@the-dreams.de, linux-i2c@vger.kernel.org, georgi.djakov@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: devicetree@vger.kernel.org
+Cc: devel@driverdev.osuosl.org, gregkh@linuxfoundation.org, linus.walleij@linaro.org, chrisadr@gentoo.org, dan.carpenter@oracle.com
 List-Id: devicetree@vger.kernel.org
 
-The interconnect API provides an interface for consumer drivers to express
-their bandwidth needs in the SoC. This data is aggregated and the on-chip
-interconnect hardware is configured to the appropriate power/performance
-profile.
+Hi all,
+I would like to help getting emxx_udc driver out of staging.
+One of the things to do is to adjust it to using device tree.
+The bindings are not defined yet. I have a blurred idea what properties are needed
+however I've never done it and your support and comments will be really appreciated.
 
-Use the interconnect API to get() the path between the endpoints used for
-data transfers by the I2C QUP and report the needed bandwidth based on the
-i2c mode.
+So, the drivers usually need the 'compatible' property with the manufacturer and device name,
+so it is probably needed here as well.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
+According to Documentation/driver-api/gpio/board.rst,
+to use gpio consumer interface (also on TODO list), '<function>-gpios'
+property will be required. '<function>' is the name that is referenced in the driver
+to obtain the gpio via gpiod_get(). Linus Walleij proposed 'vbus-gpios'.
 
-This patch depends on the interconnect API: https://lkml.org/lkml/2018/8/31/444
+IRQs are also used in this driver: USB_UDC_IRQ_1 and INT_VBUS,
+it seems that 'interrupts' property will also be required.
 
-TODO: Use a macro for converting and rounding to icc units instead of
-converting between kilobits, kilobytes etc. in the consumer drivers.
+Also memory region is mapped in the probe function.
+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+	mmio_base = devm_ioremap_resource(&pdev->dev, r);
 
- drivers/i2c/busses/i2c-qup.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Maybe 'reg' property can be used to describe physical base address and size of register map?
+What are your suggestions?
 
-diff --git a/drivers/i2c/busses/i2c-qup.c b/drivers/i2c/busses/i2c-qup.c
-index c86c3ae1318f..436747a74dc6 100644
---- a/drivers/i2c/busses/i2c-qup.c
-+++ b/drivers/i2c/busses/i2c-qup.c
-@@ -14,6 +14,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/err.h>
- #include <linux/i2c.h>
-+#include <linux/interconnect.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/module.h>
-@@ -280,6 +281,11 @@ struct qup_i2c_dev {
- 	void (*read_rx_fifo)(struct qup_i2c_dev *qup);
- 	/* function to write tags in tx fifo for i2c read transfer */
- 	void (*write_rx_tags)(struct qup_i2c_dev *qup);
-+
-+	/* frequency mode standard */
-+	u32			clk_freq;
-+	/* interconnect path to scale according to bandwidth needs */
-+	struct icc_path		*path;
- };
- 
- static irqreturn_t qup_i2c_interrupt(int irq, void *dev)
-@@ -1657,6 +1663,16 @@ static void qup_i2c_disable_clocks(struct qup_i2c_dev *qup)
- 	clk_disable_unprepare(qup->pclk);
- }
- 
-+static void qup_i2c_enable_icc(struct qup_i2c_dev *qup)
-+{
-+	icc_set(qup->path, 0, qup->clk_freq / 8000);
-+}
-+
-+static void qup_i2c_disable_icc(struct qup_i2c_dev *qup)
-+{
-+	icc_set(qup->path, 0, 0);
-+}
-+
- static const struct acpi_device_id qup_i2c_acpi_match[] = {
- 	{ "QCOM8010"},
- 	{ },
-@@ -1784,6 +1800,10 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 		}
- 		ACPI_COMPANION_SET(&qup->adap.dev, ACPI_COMPANION(qup->dev));
- 	} else {
-+		qup->path = of_icc_get(qup->dev, "i2c-mem");
-+		if (IS_ERR(qup->path))
-+			return PTR_ERR(qup->path);
-+
- 		qup->clk = devm_clk_get(qup->dev, "core");
- 		if (IS_ERR(qup->clk)) {
- 			dev_err(qup->dev, "Could not get core clock\n");
-@@ -1795,6 +1815,8 @@ static int qup_i2c_probe(struct platform_device *pdev)
- 			dev_err(qup->dev, "Could not get iface clock\n");
- 			return PTR_ERR(qup->pclk);
- 		}
-+		qup->clk_freq = clk_freq;
-+		qup_i2c_enable_icc(qup);
- 		qup_i2c_enable_clocks(qup);
- 		src_clk_freq = clk_get_rate(qup->clk);
- 	}
-@@ -1927,6 +1949,7 @@ static int qup_i2c_remove(struct platform_device *pdev)
- 
- 	disable_irq(qup->irq);
- 	qup_i2c_disable_clocks(qup);
-+	icc_put(qup->path);
- 	i2c_del_adapter(&qup->adap);
- 	pm_runtime_disable(qup->dev);
- 	pm_runtime_set_suspended(qup->dev);
-@@ -1939,6 +1962,7 @@ static int qup_i2c_pm_suspend_runtime(struct device *device)
- 	struct qup_i2c_dev *qup = dev_get_drvdata(device);
- 
- 	dev_dbg(device, "pm_runtime: suspending...\n");
-+	qup_i2c_disable_icc(qup);
- 	qup_i2c_disable_clocks(qup);
- 	return 0;
- }
-@@ -1948,6 +1972,7 @@ static int qup_i2c_pm_resume_runtime(struct device *device)
- 	struct qup_i2c_dev *qup = dev_get_drvdata(device);
- 
- 	dev_dbg(device, "pm_runtime: resuming...\n");
-+	qup_i2c_enable_icc(qup);
- 	qup_i2c_enable_clocks(qup);
- 	return 0;
- }
+Thanks for help,
+Arek
