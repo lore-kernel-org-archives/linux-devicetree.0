@@ -1,77 +1,57 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 3/5] drm: rcar-du: Add r8a77470 support
-Date: Fri, 21 Sep 2018 19:08:29 +0100
-Message-ID: <1537553311-8831-4-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
+ management IC
+Date: Fri, 21 Sep 2018 11:12:17 -0700
+Message-ID: <20180921181217.GI20825@sirena.org.uk>
+References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180921172959.GG20825@sirena.org.uk>
+ <20180921180241.GA4358@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="byLs0wutDcxFdwtm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180921180241.GA4358@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add RZ/G1C (a.k.a. r8a77470) support to the R-Car DU driver.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- drivers/gpu/drm/rcar-du/rcar_du_drv.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+--byLs0wutDcxFdwtm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpu/drm/rcar-du/rcar_du_drv.c b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-index 02aee6c..c07d3f1 100644
---- a/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-+++ b/drivers/gpu/drm/rcar-du/rcar_du_drv.c
-@@ -77,6 +77,31 @@ static const struct rcar_du_device_info rzg1_du_r8a7745_info = {
- 	},
- };
- 
-+static const struct rcar_du_device_info rzg1_du_r8a77470_info = {
-+	.gen = 2,
-+	.features = RCAR_DU_FEATURE_CRTC_IRQ_CLOCK
-+		  | RCAR_DU_FEATURE_EXT_CTRL_REGS,
-+	.channels_mask = BIT(1) | BIT(0),
-+	.routes = {
-+		/*
-+		 * R8A77470 has two RGB outputs, one LVDS output, and
-+		 * one analog video output (unsupported)
-+		 */
-+		[RCAR_DU_OUTPUT_DPAD0] = {
-+			.possible_crtcs = BIT(0),
-+			.port = 0,
-+		},
-+		[RCAR_DU_OUTPUT_DPAD1] = {
-+			.possible_crtcs = BIT(1),
-+			.port = 1,
-+		},
-+		[RCAR_DU_OUTPUT_LVDS0] = {
-+			.possible_crtcs = BIT(0) | BIT(1),
-+			.port = 2,
-+		},
-+	},
-+};
-+
- static const struct rcar_du_device_info rcar_du_r8a7779_info = {
- 	.gen = 2,
- 	.features = 0,
-@@ -297,6 +322,7 @@ static const struct rcar_du_device_info rcar_du_r8a77970_info = {
- static const struct of_device_id rcar_du_of_table[] = {
- 	{ .compatible = "renesas,du-r8a7743", .data = &rzg1_du_r8a7743_info },
- 	{ .compatible = "renesas,du-r8a7745", .data = &rzg1_du_r8a7745_info },
-+	{ .compatible = "renesas,du-r8a77470", .data = &rzg1_du_r8a77470_info },
- 	{ .compatible = "renesas,du-r8a7779", .data = &rcar_du_r8a7779_info },
- 	{ .compatible = "renesas,du-r8a7790", .data = &rcar_du_r8a7790_info },
- 	{ .compatible = "renesas,du-r8a7791", .data = &rcar_du_r8a7791_info },
--- 
-2.7.4
+On Fri, Sep 21, 2018 at 11:02:41AM -0700, Lee Jones wrote:
+> On Fri, 21 Sep 2018, Mark Brown wrote:
+
+> > This looks OK to me - Lee, the patch is almost entirely a regulator one,
+> > are you OK with me applying it?
+
+> The diff in rohm-bd718x7.h does not look significant.
+
+> You can apply it so long as you provide me with a PR in order to avoid
+> any potential merge conflicts.  Especially as Linus is out for this
+> release.
+
+Great, thanks.  There's also the MFD DT bindings and another patch later
+on with Acked-for-MFD tags on them, should I convert the tags to acks,
+apply those as well and include them in the pull request?
+
+--byLs0wutDcxFdwtm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlulNH4ACgkQJNaLcl1U
+h9DfCwf/QRitJXFwyEvF50vNqxKDcwssX4NjRuVep4MnngUEVqS0EglOeKChgTVe
+wMCqzduSR6k4t91hxuSSgm/p7PuXDFEDnr2fnhHGWyY1Jsw2AAPDpja67xPguNAx
+6DeBbNlkbKTM8qVoEHYLjm57eZKO9VwH2Y3RJt8xRh3occL+XYVuZRb6U2XpErfr
+P/iH1uHitrBdZMBx5datBKNlTe7Gi1ETpLq1viJ0b2hT+7XgOZy9MZikIzSU9Zgo
++s2sFVJZIurlgyZjD5PpciXsvMZPxWIDBVrnDZ0HVYqQhtot1Dts3XVlHZ3ZhMgz
+/VXk2Emz8TkLq3RMLSqlEtOXsHwHsg==
+=uNGQ
+-----END PGP SIGNATURE-----
+
+--byLs0wutDcxFdwtm--
