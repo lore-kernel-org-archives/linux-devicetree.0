@@ -1,49 +1,110 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH net-next] dt-bindings: net: ravb: Add support for r8a7744
- SoC
-Date: Fri, 21 Sep 2018 15:57:33 +0000
-Message-ID: <OSBPR01MB21036782B7F7938C35D0D859B8120@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
- <922d6b1d-764a-ad2d-6a6c-8d992f3fbe15@cogentembedded.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 1/4] PCI: mediatek: fixup mtk_pcie_find_port logical
+Date: Fri, 21 Sep 2018 17:07:45 +0100
+Message-ID: <20180921160745.GB21644@e107981-ln.cambridge.arm.com>
+References: <1536573023-6720-1-git-send-email-honghui.zhang@mediatek.com>
+ <1536573023-6720-2-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <922d6b1d-764a-ad2d-6a6c-8d992f3fbe15@cogentembedded.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536573023-6720-2-git-send-email-honghui.zhang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: honghui.zhang@mediatek.com
+Cc: marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, ulf.hansson@linaro.org, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VyZ2VpLA0KDQpUaGFua3MgIGZvciB0aGUgZmVlZGJhY2suDQoNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSCBuZXQtbmV4dF0gZHQtYmluZGluZ3M6IG5ldDogcmF2YjogQWRkIHN1cHBvcnQgZm9y
-DQo+IHI4YTc3NDQgU29DDQo+DQo+IEhlbGxvIQ0KPg0KPiBPbiAwOS8yMS8yMDE4IDA1OjI1IFBN
-LCBCaWp1IERhcyB3cm90ZToNCj4NCj4gPiBEb2N1bWVudCBSWi9HMU4gKFI4QTc3NDQpIFNvQyBi
-aW5kaW5ncy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5y
-ZW5lc2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5j
-YXN0cm9AYnAucmVuZXNhcy5jb20+DQo+DQo+IFJldmlld2VkLWJ5OiBTZXJnZWkgU2h0eWx5b3Yg
-PHNlcmdlaS5zaHR5bHlvdkBjb2dlbnRlbWJlZGRlZC5jb20+DQo+DQo+ID4gLS0tDQo+ID4gIERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4dCB8IDEg
-Kw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IGRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3JlbmVzYXMscmF2Yi50
-eHQNCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L3JlbmVzYXMscmF2
-Yi50eHQNCj4gPiBpbmRleCBkYTI0OWI3Li4zNTMwMjU2IDEwMDY0NA0KPiA+IC0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4dA0KPiA+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvcmVuZXNhcyxyYXZiLnR4
-dA0KPiA+IEBAIC02LDYgKzYsNyBAQCBpbnRlcmZhY2UgY29udGFpbnMuDQo+ID4gIFJlcXVpcmVk
-IHByb3BlcnRpZXM6DQo+ID4gIC0gY29tcGF0aWJsZTogTXVzdCBjb250YWluIG9uZSBvciBtb3Jl
-IG9mIHRoZSBmb2xsb3dpbmc6DQo+ID4gICAgICAgIC0gInJlbmVzYXMsZXRoZXJhdmItcjhhNzc0
-MyIgZm9yIHRoZSBSOEE3NzQzIFNvQy4NCj4gPiArICAgICAgLSAicmVuZXNhcyxldGhlcmF2Yi1y
-OGE3NzQ0IiBmb3IgdGhlIFI4QTc3NDQgU29DLg0KPg0KPiAgICBNbW0sIEkgdGhvdWdodCBpdCB3
-YXMgZGVjaWRlZCB0byBnbyB3aXRoIHRoZSBmdWxsIG1vZGVsICNzLCBsaWtlIHdpdGgNCj4gUjhB
-Nzc0NzAgYmVsb3c/DQoNCkZvciBSWi9HMUMgY2FzZSwgdGhlcmUgYXJlIDIgdmFyaWFudHMgMSB3
-aXRoIEhETUkoUjhBNzc0NzApIGFuZCB0aGUgb3RoZXIgd2l0aG91dCBIRE1JKFI4QTc3NDcxKS4N
-CkN1cnJlbnQgc3VwcG9ydCBpcyBmb3IgUjhBNzc0NzAuDQoNCj4gPiAgICAgICAgLSAicmVuZXNh
-cyxldGhlcmF2Yi1yOGE3NzQ1IiBmb3IgdGhlIFI4QTc3NDUgU29DLg0KPiA+ICAgICAgICAtICJy
-ZW5lc2FzLGV0aGVyYXZiLXI4YTc3NDcwIiBmb3IgdGhlIFI4QTc3NDcwIFNvQy4NCj4gPiAgICAg
-ICAgLSAicmVuZXNhcyxldGhlcmF2Yi1yOGE3NzkwIiBmb3IgdGhlIFI4QTc3OTAgU29DLg0KDQpS
-ZWdhcmRzLA0KQmlqdQ0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtl
-cyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNM
-OCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVk
-IE5vLiAwNDU4NjcwOS4NCg==
+On Mon, Sep 10, 2018 at 05:50:20PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> The Mediatek's host controller has two slots, each with it's own control
+> registers. The host driver need to identify which slot was connected
+> in order to access the device's configuration space. There's problem
+> for current host driver to find out which slot was connected to for
+> a given EP device.
+> 
+> Assuming each slot have connect with one EP device as below:
+> 
+>                 host bridge
+>   bus 0 --> __________|_______
+>            |                  |
+>            |                  |
+>          slot 0             slot 1
+>   bus 1 -->|        bus 2 --> |
+>            |                  |
+>          EP 0               EP 1
+> 
+> During PCI enumeration, system software will scan all the PCI device
+> starting from devfn 0. So it will get the proper port for slot0 and
+> slot1 device when using PCI_SLOT(devfn) for match. But it will get
+> the wrong slot for EP1: The devfn will be start from 0 when scanning
+> EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+> for port0's slot value. So the host driver should not using EP's devfn
+> but the slot's devfn(the slot which EP was connected to) for match.
+> 
+> This patch fix the mtk_pcie_find_port's logical by using the slot's
+> devfn for match.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 19 +++++++++++++++++--
+>  1 file changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 861dda6..20b9088 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -337,11 +337,26 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
+>  {
+>  	struct mtk_pcie *pcie = bus->sysdata;
+>  	struct mtk_pcie_port *port;
+> +	struct pci_dev *dev;
+> +	struct pci_bus *pbus;
+>  
+> -	list_for_each_entry(port, &pcie->ports, list)
+> -		if (port->slot == PCI_SLOT(devfn))
+> +	list_for_each_entry(port, &pcie->ports, list) {
+> +		if (!bus->number && port->slot == PCI_SLOT(devfn))
+>  			return port;
+>  
+> +		if (bus->number) {
+> +			pbus = bus;
+> +
+> +			while (pbus->number) {
+> +				dev = pbus->self;
+> +				pbus = dev->bus;
+> +			}
+> +
+> +			if (port->slot == PCI_SLOT(dev->devfn))
+> +				return port;
+> +		}
+> +	}
+
+	/*
+	 * Walk the bus hierarchy to get the devfn value
+	 * of the port in the root bus.
+	 */
+	while (bus && bus->number) {
+		devfn = bus->self->devfn;
+		bus = bus->parent;
+	}
+
+	list_for_each_entry(port, &pcie->ports, list) {
+		if (port->slot == PCI_SLOT(devfn))
+			return port;
+
+	return NULL;
+
+Would it work ? Maybe it is a little easier to parse.
+
+I think this can even be made easier by using struct device_node* as
+comparison (and store it in port->slot instead of the port number), I
+think that the pci_dev representing the port should have the right
+of_node associated with it by core code, so it is just a matter of
+finding the first pci_dev parent with an of_node set and compare it
+against port->slot (that should be converted to a struct device_node*).
+
+This ought to be tested and written but I think that's doable.
+
+Lorenzo
