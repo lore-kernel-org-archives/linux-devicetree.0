@@ -1,75 +1,34 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v2 1/2] dt-bindings: hwmon: Add ina3221 documentation
-Date: Fri, 21 Sep 2018 13:12:51 -0700
-Message-ID: <20180921201252.12875-2-nicoleotsuka@gmail.com>
-References: <20180921201252.12875-1-nicoleotsuka@gmail.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 3/5] spi: pxa2xx: use an enum for type
+Date: Fri, 21 Sep 2018 22:34:03 +0200
+Message-ID: <87d0t64mkk.fsf@belgarion.home>
+References: <20180910115935.163121-1-lkundrak@v3.sk>
+        <20180910115935.163121-4-lkundrak@v3.sk>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921201252.12875-1-nicoleotsuka@gmail.com>
+In-Reply-To: <20180910115935.163121-4-lkundrak@v3.sk> (Lubomir Rintel's
+        message of "Mon, 10 Sep 2018 13:59:33 +0200")
 Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Bjorn Helgaas <bhelgaas@google.com>
 List-Id: devicetree@vger.kernel.org
 
-Texas Instruments INA3221 is a triple-channel shunt and bus
-voltage monitor. This patch adds a DT binding doc for it.
+Lubomir Rintel <lkundrak@v3.sk> writes:
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-Changelog
-v1->v2:
- * Dropped channel name properties
- * Added child node definitions.
- * * Added shunt resistor property in the child node
- * * Added status property to indicate connection status
- * * Changed to use child node name as the label of input source
+> That seems to be the correct type.
+Okay, but what happens here when adev_id->driver_data is a value out of enum
+range ? Does the following assignment make sense ?
+> +		type = (enum pxa_ssp_type)adev_id->driver_data;
 
- .../devicetree/bindings/hwmon/ina3221.txt     | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
+As a side note, could you join for the next throw to the review :
+ - Jarkko Nikula <jarkko.nikula@linux.intel.com>
+ - Mika Westerberg <mika.westerberg@linux.intel.com>
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ina3221.txt b/Documentation/devicetree/bindings/hwmon/ina3221.txt
-new file mode 100644
-index 000000000000..02a2ffbb7c3f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/ina3221.txt
-@@ -0,0 +1,38 @@
-+ina3221 properties
-+
-+1) ina3221 node
-+  Required properties:
-+  - compatible: Must be "ti,ina3221"
-+  - reg: I2C address
-+
-+  = The node contains optional child nodes for three channels =
-+  = Each child node describes the information of input source =
-+
-+  Example:
-+
-+  ina3221@40 {
-+          compatible = "ti,ina3221";
-+          reg = <0x40>;
-+          [ child node definitions... ]
-+  };
-+
-+2) child nodes
-+  The names of child nodes should indicate input source names
-+
-+  Required properties:
-+  - input-id: Must be 1, 2 or 3
-+
-+  Optional properties:
-+  - shunt-resistor: Shunt resistor value in micro-Ohm
-+  - status: Should be "disabled" if no input source
-+
-+  Example:
-+
-+  input1 {
-+          input-id = <0x1>;
-+          status = "disabled";
-+  };
-+  VDD_GPU {
-+          input-id = <0x2>;
-+          shunt-resistor = <5>;
-+  };
+Even if they are Intel, I think they have worked a lot on this driver for Intel
+platforms.
+
+Cheers.
+
 -- 
-2.17.1
+Robert
