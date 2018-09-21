@@ -1,39 +1,38 @@
-Return-Path: <SRS0=YKRD=MJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: PCI: rcar: Add device tree support for r8a7744
-Date: Thu, 27 Sep 2018 13:28:51 +0100
-Message-Id: <1538051331-14860-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 3/5] usb: renesas_usbhs: rcar3: Use OTG mode for R-Car D3
+Date: Fri, 21 Sep 2018 21:26:30 +0900
+Message-Id: <1537532792-20376-4-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1537532792-20376-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1537532792-20376-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add internal PCI bridge support for r8a7744 SoC.  The Renesas RZ/G1N
-(R8A7744) internal PCI bridge is identical to the R-Car Gen2 family.
+Since R-Car D3 can use OTG mode, this patch changes the UGCTRL2
+value to UGCTRL2_USB0SEL_OTG and UGCTRL2_VBUSSEL like other R-Car
+Gen3 SoCs.
 
-This doesn't change the driver, so it does nothing by itself.  But it does
-mean that checkpatch won't complain about a future patch that adds
-"renesas,pci-r8a7744" to a DT, which helps ensure that shipped DTs use
-documented compatibility strings.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
-This patch is tested against linux-next next-20180927
----
- Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/renesas_usbhs/rcar3.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-index 9fe7e12..b94078f 100644
---- a/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-+++ b/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-@@ -7,6 +7,7 @@ OHCI and EHCI controllers.
+diff --git a/drivers/usb/renesas_usbhs/rcar3.c b/drivers/usb/renesas_usbhs/rcar3.c
+index 50e5fb5..aa38204 100644
+--- a/drivers/usb/renesas_usbhs/rcar3.c
++++ b/drivers/usb/renesas_usbhs/rcar3.c
+@@ -77,7 +77,8 @@ static int usbhs_rcar3_power_and_pll_ctrl(struct platform_device *pdev,
  
- Required properties:
- - compatible: "renesas,pci-r8a7743" for the R8A7743 SoC;
-+	      "renesas,pci-r8a7744" for the R8A7744 SoC;
- 	      "renesas,pci-r8a7745" for the R8A7745 SoC;
- 	      "renesas,pci-r8a7790" for the R8A7790 SoC;
- 	      "renesas,pci-r8a7791" for the R8A7791 SoC;
+ 	if (enable) {
+ 		usbhs_write32(priv, UGCTRL, 0);	/* release PLLRESET */
+-		usbhs_rcar3_set_ugctrl2(priv, UGCTRL2_USB0SEL_HSUSB);
++		usbhs_rcar3_set_ugctrl2(priv,
++					UGCTRL2_USB0SEL_OTG | UGCTRL2_VBUSSEL);
+ 
+ 		usbhs_bset(priv, LPSTS, LPSTS_SUSPM, LPSTS_SUSPM);
+ 		do {
 -- 
-2.7.4
+1.9.1
