@@ -1,71 +1,142 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 5/5] drm: bridge: add support for Cadence MHDP DPI/DP
- bridge
-Date: Fri, 21 Sep 2018 10:41:59 +0200
-Message-ID: <1903708.pJTgKoWLiI@phil>
-References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
- <1537455288-20223-6-git-send-email-dkos@cadence.com>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH] arm64: dts: add LX2160AQDS board support
+Date: Fri, 21 Sep 2018 19:47:20 +0530
+Message-ID: <20180921141720.19159-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1537455288-20223-6-git-send-email-dkos@cadence.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, stelford@cadence.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, quentin.schulz@bootlin.com, jartur@cadence.com, ltyrala@cadence.com, linux-rockchip@lists.infradead.org, piotrs@cadence.com, devicetree@vger.kernel.org, jbergsagel@ti.com, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, Quentin Schulz <quentin.schulz@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Sriram Dash <sriram.dash@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFtaWFuLAoKQW0gRG9ubmVyc3RhZywgMjAuIFNlcHRlbWJlciAyMDE4LCAxNjo1NDo0MCBD
-RVNUIHNjaHJpZWIgRGFtaWFuIEtvczoKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5z
-Y2h1bHpAZnJlZS1lbGVjdHJvbnMuY29tPgo+IAo+IFRoaXMgYWRkcyBiYXNpYyBzdXBwb3J0IGZv
-ciBDYWRlbmNlIE1IRFAgRFBJIHRvIERQIGJyaWRnZS4KPiAKPiBCYXNpY2FsbHksIGl0IHRha2Vz
-IGEgRFBJIHN0cmVhbSBhcyBpbnB1dCBhbmQgb3V0cHV0IGl0IGVuY29kZWQgaW4gRFAKPiBmb3Jt
-YXQuIEl0J3MgbWlzc2luZyBwcm9wZXIgSFBELCBIRENQIGFuZCBjdXJyZW50bHkgc3VwcG9ydHMg
-b25seQo+IFNTVCBtb2RlLgo+IAo+IENoYW5nZXMgbWFkZSBpbiB0aGUgbG93IGxldmVsIGRyaXZl
-ciAoY2RuLWRwLXJlZy4qKToKPiAtIG1vdmVkIGl0IHRvIGZyb20gZHJpdmVycy9ncHUvZHJtL3Jv
-Y2tjaGlwIHRvCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NkbnMtbWhkcC1jb21tb24uKgo+
-IC0gZnVuY3Rpb25zIGZvciBzZW5kaW5nL3JlY2VpdmluZyBjb21tYW5kcyBhcmUgbm93IHB1Ymxp
-Ywo+IC0gYWRkZWQgZnVuY3Rpb25zIGZvciByZWFkaW5nIHJlZ2lzdGVycyBhbmQgbGluayB0cmFp
-bmluZwo+ICAgYWRqdXN0bWVudAo+IAo+IENoYW5nZXMgbWFkZSBpbiBSSydzIGRyaXZlciAoY2Ru
-LWRwLWNvcmUuKik6Cj4gLSBNb3ZlZCBhdWRpb19pbmZvIGFuZCBhdWRpb19wZGV2IGZpZWxkcyBm
-cm9tIGNkbl9kcF9kZXZpY2UgdG8KPiAgIGNkbnNfbWhkcF9kZXZpY2Ugc3RydWN0dXJlLgo+IAo+
-IFNpZ25lZC1vZmYtYnk6IFF1ZW50aW4gU2NodWx6IDxxdWVudGluLnNjaHVsekBmcmVlLWVsZWN0
-cm9ucy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogRGFtaWFuIEtvcyA8ZGtvc0BjYWRlbmNlLmNvbT4K
-ClsuLi5dCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZyBi
-L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnCj4gaW5kZXggMGNjYzc2MjE3ZWU0Li4x
-MjliMDUyOWYzZTEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tjb25m
-aWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZwo+IEBAIC0yNyw3ICsy
-Nyw5IEBAIGNvbmZpZyBST0NLQ0hJUF9BTkFMT0dJWF9EUAo+ICAKPiAgY29uZmlnIFJPQ0tDSElQ
-X0NETl9EUAo+ICAgICAgICAgIGJvb2wgIlJvY2tjaGlwIGNkbiBEUCIKPiAtCWRlcGVuZHMgb24g
-RVhUQ09OPXkgfHwgKEVYVENPTj1tICYmIERSTV9ST0NLQ0hJUD1tKQo+ICsJZGVwZW5kcyBvbiBE
-Uk1fUk9DS0NISVA9bQoKU29ycnksIEkgd2Fzbid0IGZhc3QgZW5vdWdoIGluIG15IHJlcGx5IHRv
-IHlvdSBtYWlsIHRvIGNhdGNoIHRoYXQgYmVmb3JlCnlvdXIgdjQsIGJ1dCBJIGRvbid0IHRoaW5r
-IHRoaXMgaXMgbmVjZXNzYXJ5LgpJbnN0ZWFkIEkgZG8gZ3Vlc3MsIHRoZSBzZWxlY3QgYmVsb3cg
-c2hvdWxkIGRvIHRoZSByaWdodCB0aGluZyBieQptYWtpbmcgRVhUQ09OPXkgaWYgRFJNX1JPQ0tD
-SElQPXkuCgpTb21ld2hhdCBjbHVtc2lseSB2ZXJpZmllZCBieSBtYWtpbmcgRVhUQ09OPW0gaW4g
-bXkgZGVmY29uZmlnCmFuZCBzZWVpbmcgZ2V0IGNoYW5nZWQgdG8geSB1cG9uIGJ1aWxkLCB3aGlj
-aCBJIGd1ZXNzIGNvbWVzIGZyb20KYSBkaWZmZXJlbnQgInNlbGVjdCIgaW4gdGhlIGNvbmZpZy4K
-Cgo+ICsJc2VsZWN0IEVYVENPTgo+ICsJc2VsZWN0IERSTV9DRE5TX01IRFAKPiAgICAgICAgICBo
-ZWxwCj4gIAkgIFRoaXMgc2VsZWN0cyBzdXBwb3J0IGZvciBSb2NrY2hpcCBTb0Mgc3BlY2lmaWMg
-ZXh0ZW5zaW9ucwo+ICAJICBmb3IgdGhlIGNkbiBEUCBkcml2ZXIuIElmIHlvdSB3YW50IHRvIGVu
-YWJsZSBEcCBvbgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZp
-bGUgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUKPiBpbmRleCBhMzE0ZTIxMDll
-NzYuLjE2YmE2MWZmY2EzOSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-TWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUKPiBAQCAt
-MywxMyArMywxNSBAQAo+ICAjIE1ha2VmaWxlIGZvciB0aGUgZHJtIGRldmljZSBkcml2ZXIuICBU
-aGlzIGRyaXZlciBwcm92aWRlcyBzdXBwb3J0IGZvciB0aGUKPiAgIyBEaXJlY3QgUmVuZGVyaW5n
-IEluZnJhc3RydWN0dXJlIChEUkkpIGluIFhGcmVlODYgNC4xLjAgYW5kIGhpZ2hlci4KPiAgCj4g
-K2NjZmxhZ3MteSArPSAtSSQoc3JjKS8uLi9icmlkZ2UKCmhtbSwgaW5zdGVhZCBvZiBhZGRpbmcg
-YW4gaW5jbHVkZSBwYXRoLCB0aGUgc2hhcmVkIGhlYWRlciBzaG91bGQgcHJvYmFibHkKanVzdCBs
-aXZlIGluIC9pbmNsdWRlL2RybS9icmlkZ2UvLi4uIGluIHRoZSBrZXJuZWwgc291cmNlPwoKCkhl
-aWtvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+The LX2160A QorIQ Development System (QDS) is a test, evaluation, and
+development platform, supporting QorIQ LX2160A processor.
+
+Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
+---
+
+Notes:
+    This patch is dependent on [1] and [2]
+     [1] https://lore.kernel.org/patchwork/patch/985935/
+     [2] https://lore.kernel.org/patchwork/patch/985938/
+
+ arch/arm64/boot/dts/freescale/Makefile       |  1 +
+ .../boot/dts/freescale/fsl-lx2160a-qds.dts   | 88 ++++++++++++++++++
+ 2 files changed, 89 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 445b72bd5a36..ae80fc5c45f7 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -14,3 +14,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+new file mode 100644
+index 000000000000..5cf2fe279f73
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++//
++// Device Tree file for LX2160AQDS
++//
++// Copyright 2018 NXP
++
++/dts-v1/;
++
++#include "fsl-lx2160a.dtsi"
++
++/ {
++	model = "NXP Layerscape LX2160AQDS";
++	compatible = "fsl,lx2160a-qds", "fsl,lx2160a";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	i2c-mux@77 {
++		compatible = "nxp,pca9547";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x2>;
++
++			power-monitor@40 {
++				compatible = "ti,ina220";
++				reg = <0x40>;
++				shunt-resistor = <500>;
++			};
++
++			power-monitor@41 {
++				compatible = "ti,ina220";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++		};
++
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++
++			temperature-sensor@4c {
++				compatible = "nxp,sa56004";
++				reg = <0x4c>;
++			};
++
++			temperature-sensor@4d {
++				compatible = "nxp,sa56004";
++				reg = <0x4d>;
++			};
++
++			rtc@51 {
++				compatible = "nxp,pcf2129";
++				reg = <0x51>;
++			};
++		};
++	};
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&crypto {
++	status = "okay";
++};
++
+-- 
+2.17.1
