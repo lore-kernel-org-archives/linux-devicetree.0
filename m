@@ -1,57 +1,35 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
- management IC
-Date: Fri, 21 Sep 2018 11:12:17 -0700
-Message-ID: <20180921181217.GI20825@sirena.org.uk>
-References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <20180921172959.GG20825@sirena.org.uk>
- <20180921180241.GA4358@dell>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="byLs0wutDcxFdwtm"
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT] arm64: ARM: dts: exynos: Remove double SD card detect pin inversion on TM2
+Date: Fri, 21 Sep 2018 20:30:14 +0200
+Message-ID: <20180921183014.20236-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180921180241.GA4358@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+The SDHCI standard, MMC host controller bindings and MMC core defines
+card detect pin as active low.  Therefore there is no point to invert it
+twice.
 
---byLs0wutDcxFdwtm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-On Fri, Sep 21, 2018 at 11:02:41AM -0700, Lee Jones wrote:
-> On Fri, 21 Sep 2018, Mark Brown wrote:
-
-> > This looks OK to me - Lee, the patch is almost entirely a regulator one,
-> > are you OK with me applying it?
-
-> The diff in rohm-bd718x7.h does not look significant.
-
-> You can apply it so long as you provide me with a PR in order to avoid
-> any potential merge conflicts.  Especially as Linus is out for this
-> release.
-
-Great, thanks.  There's also the MFD DT bindings and another patch later
-on with Acked-for-MFD tags on them, should I convert the tags to acks,
-apply those as well and include them in the pull request?
-
---byLs0wutDcxFdwtm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlulNH4ACgkQJNaLcl1U
-h9DfCwf/QRitJXFwyEvF50vNqxKDcwssX4NjRuVep4MnngUEVqS0EglOeKChgTVe
-wMCqzduSR6k4t91hxuSSgm/p7PuXDFEDnr2fnhHGWyY1Jsw2AAPDpja67xPguNAx
-6DeBbNlkbKTM8qVoEHYLjm57eZKO9VwH2Y3RJt8xRh3occL+XYVuZRb6U2XpErfr
-P/iH1uHitrBdZMBx5datBKNlTe7Gi1ETpLq1viJ0b2hT+7XgOZy9MZikIzSU9Zgo
-+s2sFVJZIurlgyZjD5PpciXsvMZPxWIDBVrnDZ0HVYqQhtot1Dts3XVlHZ3ZhMgz
-/VXk2Emz8TkLq3RMLSqlEtOXsHwHsg==
-=uNGQ
------END PGP SIGNATURE-----
-
---byLs0wutDcxFdwtm--
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+index a1e3194b7483..86d8ddc3288a 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+@@ -939,8 +939,7 @@
+ 	status = "okay";
+ 	cap-sd-highspeed;
+ 	disable-wp;
+-	cd-gpios = <&gpa2 4 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
+ 	card-detect-delay = <200>;
+ 	samsung,dw-mshc-ciu-div = <3>;
+ 	samsung,dw-mshc-sdr-timing = <0 4>;
+-- 
+2.17.1
