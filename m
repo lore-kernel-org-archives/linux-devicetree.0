@@ -1,64 +1,73 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
-Date: Fri, 21 Sep 2018 07:44:00 -0500
-Message-ID: <50e9aa50-99fb-0a1f-e395-c52bf91e8a7f@ti.com>
-References: <20180911170825.17789-2-dmurphy@ti.com>
- <20180911200530.GA28290@amd> <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com>
- <20180912214938.GA30654@amd> <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com>
- <20180914081822.GA21830@amd> <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com>
- <20180914214220.GA2081@amd> <be2ee681-7ae0-6545-0208-6ae5c1b7affd@gmail.com>
- <5a249ae3-e3f7-8eff-4022-ed982e364326@ti.com>
- <20180920220443.GB27468@xo-6d-61-c0.localdomain>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 2/2] hwmon: ina3221: Get channel names from DT node
+Date: Fri, 21 Sep 2018 05:56:00 -0700
+Message-ID: <75741ce9-80a3-9277-b8e3-2d3c3e003797@roeck-us.net>
+References: <20180921000753.21846-1-nicoleotsuka@gmail.com>
+ <20180921000753.21846-3-nicoleotsuka@gmail.com>
+ <21a6e8f3-c95d-43d0-ca3f-3f91ddfeff07@roeck-us.net>
+ <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
+ <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920220443.GB27468@xo-6d-61-c0.localdomain>
+In-Reply-To: <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pavel
-
-On 09/20/2018 05:04 PM, Pavel Machek wrote:
-> Hi!
+On 09/21/2018 02:18 AM, Nicolin Chen wrote:
+> Hi,
 > 
->>>>> Easy to maintain will be a dedicated LED class driver.
->>>>
->>>> You mean, 3 dedicated LED class drivers and 3 MFD drivers with LED
->>>> parts? We'll need complex driver anyway, and I'd really like to have
->>>> just one.
->>>
->>> In the LED subsystem we can wrap common functionalities
->>> into a library object. MFD driver will be able to reuse it then.
+> On Thu, Sep 20, 2018 at 06:20:38PM -0700, Nicolin Chen wrote:
+>>> So if there are no devicetree entries, the user now gets a sequence of
+>>> "unknown" sensors ? I don't think so. Please keep in mind that there are
+>>> users of this chip who don't have devicetree systems, and other users
+>>> may not want to specify any specific name properties (or they use sensors3.conf
+>>> to do it).
 >>
->> I am currently working on that code now.  I expect a RFC on this this week.
+>> Being enlightened by your comments below, maybe adding a
+>> separate group for channel names by attaching is_visible
+>> to it could be acceptable? Then, name nodes can hide from
+>> those who don't want to specify.
+>   
+>>>> +		/* Log connected channels */
+>>>> +		ina->attr_group[g++] = &ina3221_group[i];
+>>>> +		ina->channel_name[i] = str;
+>>>> +		ina->enable[i] = true;
+>>>
+>>> I also don't see the need for defining the group dynamically. The
+>>> is_visible callback is very well suited for handling optional sysfs
+>>> attributes.
 > 
-> Looking forward to that.
+> I tried is_visible but it looks like it won't be that neat to
+> implement as some attributes of this driver don't really pass
+> the channel index to the store()/show() but some other indexes.
+>
+
+The channel index is not the only means that can be used to determine
+the channel index. Many drivers use the position in the attrs[] array
+to determine the channel index. I don't see why this would not be
+possible here.
+
+> If you are very against the dynamical group, I can drop it to
+> leave the sysfs node as it was.
 > 
-> But you really need acks for the bindings, and since Rob is usually quite slow
-> acking them, it is easiest to use the existing binding... if it is wrong it
-> needs to be fixed, anyway.
-> 
-
-OK I am in the midst of creating the code now. I have the common code done I just need to
-make sure that it scales to other devices in the list.
-
-The bindings will need to be updated to follow the LED bindings binding style.
-
-I am wondering for the non-MFD parts if we should move the bindings to the LED
-directory to make them easier to find.
-
-Dan 
-
-> THanks,
-> 
-> 									Pavel
+> And for the name nodes that I was talking about above, I will
+> add an sysfs store() function so non-DT users can set them,
+> and I also removed the confusing "unknown" default name.
 > 
 
+The label attributes are RO. Please follow the ABI.
 
--- 
-------------------
-Dan Murphy
+temp[1-*]_label Suggested temperature channel label.
+                 Text string
+                 Should only be created if the driver has hints about what
+                 this temperature channel is being used for, and user-space
+                 doesn't. In all other cases, the label is provided by
+                 user-space.
+                 RO
+
+Guenter
