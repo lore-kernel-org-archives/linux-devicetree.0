@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 40/40] arm64: dts: k3-am6: Add Root Complex PCIe dt node
-Date: Fri, 21 Sep 2018 15:51:55 +0530
-Message-ID: <20180921102155.22839-41-kishon@ti.com>
+Subject: [RFC PATCH 17/40] PCI: keystone: Cleanup configuration space access
+Date: Fri, 21 Sep 2018 15:51:32 +0530
+Message-ID: <20180921102155.22839-18-kishon@ti.com>
 References: <20180921102155.22839-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,124 +12,121 @@ To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjo
 Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add Root Complex PCIe dt node.
+Cleanup configuration space access by removing ks_pcie_cfg_setup
+which has an unncessary check of "if (bus == 0)" which will never be the
+case of *_other_conf() and adding macros for configuring the CFG_SETUP
+register required for accessing the configuration space of the device.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 83 ++++++++++++++++++++++++
- arch/arm64/boot/dts/ti/k3-am65.dtsi      |  1 +
- 2 files changed, 84 insertions(+)
+ drivers/pci/controller/dwc/pci-keystone.c | 70 +++++++----------------
+ 1 file changed, 20 insertions(+), 50 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index b08d15fa110e..0a5d74a8eef4 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -14,6 +14,21 @@
- 		#size-cells = <1>;
- 		ranges = <0x0 0x0 0x00100000 0x1c000>;
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index f230344e1f4e..3ead1162235f 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -45,7 +45,13 @@
  
-+		pcie0_mode: pcie-mode@4060 {
-+			compatible = "syscon";
-+			reg = <0x00004060 0x4>;
-+		};
+ /* Application registers */
+ #define CMD_STATUS			0x004
 +
-+		pcie1_mode: pcie-mode@4070 {
-+			compatible = "syscon";
-+			reg = <0x00004070 0x4>;
-+		};
+ #define CFG_SETUP			0x008
++#define CFG_BUS(x)			(((x) & 0xff) << 16)
++#define CFG_DEVICE(x)			(((x) & 0x1f) << 8)
++#define CFG_FUNC(x)			((x) & 0x7)
++#define CFG_TYPE1			BIT(24)
 +
-+		pcie_devid: pcie-devid@210 {
-+			compatible = "syscon";
-+			reg = <0x00000210 0x4>;
-+		};
-+
- 		serdes0_clk: serdes_clk@4080 {
- 			compatible = "syscon";
- 			reg = <0x00004080 0x4>;
-@@ -128,4 +143,72 @@
- 		clock-frequency = <48000000>;
- 		current-speed = <115200>;
- 	};
-+
-+	pcie0_rc: pcie@5500000 {
-+		compatible = "ti,am654-pcie-rc";
-+		reg =  <0x0 0x5500000 0x0 0x1000>, <0x0 0x5501000 0x0 0x1000>, <0x0 0x10000000 0x0 0x2000>, <0x0 0x5506000 0x0 0x1000>;
-+		reg-names = "app", "dbics", "config", "atu";
-+		power-domains = <&k3_pds 120>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x81000000 0 0          0x0 0x10020000 0 0x00010000
-+			  0x82000000 0 0x10030000 0x0 0x10030000 0 0x07FD0000>;
-+		ti,syscon-pcie-id = <&pcie_devid>;
-+		ti,syscon-pcie-mode = <&pcie0_mode>;
-+		bus-range = <0x0 0xff>;
-+		device_type = "pci";
-+		num-lanes = <1>;
-+		num-ob-windows = <16>;
-+		num-viewport = <16>;
-+		interrupts = <GIC_SPI 340 IRQ_TYPE_EDGE_RISING>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie0_intc 0>, /* INT A */
-+				<0 0 0 2 &pcie0_intc 0>, /* INT B */
-+				<0 0 0 3 &pcie0_intc 0>, /* INT C */
-+				<0 0 0 4 &pcie0_intc 0>; /* INT D */
-+		msi-map = <0x0 &gic_its 0x0 0x10000>;
-+		status = "disabled";
-+
-+		pcie0_intc: legacy-interrupt-controller@1 {
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic500>;
-+			interrupts = <GIC_SPI 328 IRQ_TYPE_EDGE_RISING>;
-+		};
-+	};
-+
-+	pcie1_rc: pcie@5600000 {
-+		compatible = "ti,am654-pcie-rc";
-+		reg =  <0x0 0x5600000 0x0 0x1000>, <0x0 0x5601000 0x0 0x1000>, <0x0 0x18000000 0x0 0x2000>, <0x0 0x5606000 0x0 0x1000>;
-+		reg-names = "app", "dbics", "config", "atu";
-+		power-domains = <&k3_pds 121>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		ranges = <0x81000000 0 0          0x0   0x18020000 0 0x00010000
-+			  0x82000000 0 0x18030000 0x0   0x18030000 0 0x07FD0000>;
-+		ti,syscon-pcie-id = <&pcie_devid>;
-+		ti,syscon-pcie-mode = <&pcie1_mode>;
-+		bus-range = <0x0 0xff>;
-+		status = "disabled";
-+		device_type = "pci";
-+		num-lanes = <1>;
-+		num-ob-windows = <16>;
-+		num-viewport = <16>;
-+		interrupts = <GIC_SPI 355 IRQ_TYPE_EDGE_RISING>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie1_intc 0>, /* INT A */
-+				<0 0 0 2 &pcie1_intc 0>, /* INT B */
-+				<0 0 0 3 &pcie1_intc 0>, /* INT C */
-+				<0 0 0 4 &pcie1_intc 0>; /* INT D */
-+		msi-map = <0x0 &gic_its 0x10000 0x10000>;
-+
-+		pcie1_intc: legacy-interrupt-controller@1 {
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic500>;
-+			interrupts = <GIC_SPI 343 IRQ_TYPE_EDGE_RISING>;
-+		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/ti/k3-am65.dtsi b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-index 3d4bf369d030..b87081765894 100644
---- a/arch/arm64/boot/dts/ti/k3-am65.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65.dtsi
-@@ -61,6 +61,7 @@
- 			 <0x00 0x00900000 0x00 0x00900000 0x00 0x00012000>, /* serdes */
- 			 <0x00 0x01000000 0x00 0x01000000 0x00 0x0af02400>, /* Most peripherals */
- 			 <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>, /* MAIN NAVSS */
-+			 <0x00 0x10000000 0x00 0x10000000 0x00 0x10000000>, /* PCIe DAT */
- 			 /* MCUSS Range */
- 			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
- 			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00900100>,
+ #define OB_SIZE				0x030
+ #define CFG_PCIM_WIN_SZ_IDX		3
+ #define CFG_PCIM_WIN_CNT		32
+@@ -261,60 +267,21 @@ static void ks_pcie_setup_rc_app_regs(struct keystone_pcie *ks_pcie)
+ 	ks_pcie_app_writel(ks_pcie, CMD_STATUS, OB_XLAT_EN_VAL | val);
+ }
+ 
+-/**
+- * ks_pcie_cfg_setup() - Set up configuration space address for a device
+- *
+- * @ks_pcie: ptr to keystone_pcie structure
+- * @bus: Bus number the device is residing on
+- * @devfn: device, function number info
+- *
+- * Forms and returns the address of configuration space mapped in PCIESS
+- * address space 0.  Also configures CFG_SETUP for remote configuration space
+- * access.
+- *
+- * The address space has two regions to access configuration - local and remote.
+- * We access local region for bus 0 (as RC is attached on bus 0) and remote
+- * region for others with TYPE 1 access when bus > 1.  As for device on bus = 1,
+- * we will do TYPE 0 access as it will be on our secondary bus (logical).
+- * CFG_SETUP is needed only for remote configuration access.
+- */
+-static void __iomem *ks_pcie_cfg_setup(struct keystone_pcie *ks_pcie, u8 bus,
+-				       unsigned int devfn)
+-{
+-	u8 device = PCI_SLOT(devfn), function = PCI_FUNC(devfn);
+-	struct dw_pcie *pci = ks_pcie->pci;
+-	struct pcie_port *pp = &pci->pp;
+-	u32 regval;
+-
+-	if (bus == 0)
+-		return pci->dbi_base;
+-
+-	regval = (bus << 16) | (device << 8) | function;
+-
+-	/*
+-	 * Since Bus#1 will be a virtual bus, we need to have TYPE0
+-	 * access only.
+-	 * TYPE 1
+-	 */
+-	if (bus != 1)
+-		regval |= BIT(24);
+-
+-	ks_pcie_app_writel(ks_pcie, CFG_SETUP, regval);
+-	return pp->va_cfg0_base;
+-}
+-
+ static int ks_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ 				 unsigned int devfn, int where, int size,
+ 				 u32 *val)
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+-	u8 bus_num = bus->number;
+-	void __iomem *addr;
++	u32 reg;
+ 
+-	addr = ks_pcie_cfg_setup(ks_pcie, bus_num, devfn);
++	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
++		CFG_FUNC(PCI_FUNC(devfn));
++	if (bus->parent->number != pp->root_bus_nr)
++		reg |= CFG_TYPE1;
++	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
+ 
+-	return dw_pcie_read(addr + where, size, val);
++	return dw_pcie_read(pp->va_cfg0_base + where, size, val);
+ }
+ 
+ static int ks_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+@@ -323,12 +290,15 @@ static int ks_pcie_wr_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ {
+ 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+ 	struct keystone_pcie *ks_pcie = to_keystone_pcie(pci);
+-	u8 bus_num = bus->number;
+-	void __iomem *addr;
++	u32 reg;
+ 
+-	addr = ks_pcie_cfg_setup(ks_pcie, bus_num, devfn);
++	reg = CFG_BUS(bus->number) | CFG_DEVICE(PCI_SLOT(devfn)) |
++		CFG_FUNC(PCI_FUNC(devfn));
++	if (bus->parent->number != pp->root_bus_nr)
++		reg |= CFG_TYPE1;
++	ks_pcie_app_writel(ks_pcie, CFG_SETUP, reg);
+ 
+-	return dw_pcie_write(addr + where, size, val);
++	return dw_pcie_write(pp->va_cfg0_base + where, size, val);
+ }
+ 
+ /**
 -- 
 2.17.1
