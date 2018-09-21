@@ -1,76 +1,45 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 20/40] PCI: keystone: Cleanup ks_pcie_link_up()
-Date: Fri, 21 Sep 2018 15:51:35 +0530
-Message-ID: <20180921102155.22839-21-kishon@ti.com>
-References: <20180921102155.22839-1-kishon@ti.com>
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v3 5/5] MAINTAINERS: add maintainers for the NXP FlexSPI driver
+Date: Fri, 21 Sep 2018 15:52:03 +0530
+Message-ID: <1537525323-20730-6-git-send-email-yogeshnarayan.gaur@nxp.com>
+References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
+In-Reply-To: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-ks_pcie_link_up() uses registers from the designware core to get the
-status of the link. Move the register defines to pcie-designware.h
-and cleanup ks_pcie_link_up().
+Add maintainers for the NXP FlexSPI driver
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c    | 10 +++-------
- drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+Changes for v3:
+- None
+Changes for v2:
+- None
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 728b1e0db314..240c39c58b0f 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -38,8 +38,6 @@
+ MAINTAINERS | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9d5eeff..2696898 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10228,6 +10228,12 @@ L:	linux-nfc@lists.01.org (moderated for non-subscribers)
+ S:	Supported
+ F:	drivers/nfc/nxp-nci
  
- /* Application register defines */
- #define LTSSM_EN_VAL		        BIT(0)
--#define LTSSM_STATE_MASK		0x1f
--#define LTSSM_STATE_L0			0x11
- #define DBI_CS2				BIT(5)
- #define OB_XLAT_EN_VAL		        BIT(1)
- 
-@@ -87,9 +85,6 @@
- 
- #define OB_OFFSET_HI(n)			(0x204 + (8 * (n)))
- 
--/* Config space registers */
--#define DEBUG0				0x728
--
- /* PCIE controller device IDs */
- #define PCIE_RC_K2HK		0xb008
- #define PCIE_RC_K2E		0xb009
-@@ -308,8 +303,9 @@ static int ks_pcie_link_up(struct dw_pcie *pci)
- {
- 	u32 val;
- 
--	val = dw_pcie_readl_dbi(pci, DEBUG0);
--	return (val & LTSSM_STATE_MASK) == LTSSM_STATE_L0;
-+	val = dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0);
-+	val &= PORT_LOGIC_LTSSM_STATE_MASK;
-+	return (val == PORT_LOGIC_LTSSM_STATE_L0);
- }
- 
- static void ks_pcie_quirk(struct pci_dev *dev)
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 96126fd8403c..a4d939536faf 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -37,6 +37,10 @@
- #define PORT_LINK_MODE_4_LANES		(0x7 << 16)
- #define PORT_LINK_MODE_8_LANES		(0xf << 16)
- 
-+#define PCIE_PORT_DEBUG0		0x728
-+#define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
-+#define PORT_LOGIC_LTSSM_STATE_L0	0x11
++NXP FSPI DRIVER
++M:	Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
++L:	linux-spi@vger.kernel.org
++S:	Maintained
++F:	drivers/spi/spi-nxp-fspi.c
 +
- #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
- #define PORT_LOGIC_SPEED_CHANGE		(0x1 << 17)
- #define PORT_LOGIC_LINK_WIDTH_MASK	(0x1f << 8)
+ OBJTOOL
+ M:	Josh Poimboeuf <jpoimboe@redhat.com>
+ M:	Peter Zijlstra <peterz@infradead.org>
 -- 
-2.17.1
+2.7.4
