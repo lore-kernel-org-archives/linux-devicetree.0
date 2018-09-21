@@ -1,67 +1,60 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 19/40] PCI: keystone: Cleanup set_dbi_mode and get_dbi_mode
-Date: Fri, 21 Sep 2018 15:51:34 +0530
-Message-ID: <20180921102155.22839-20-kishon@ti.com>
-References: <20180921102155.22839-1-kishon@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 5/9] soc/tegra: pmc: Add initial Tegra194 wake events
+Date: Fri, 21 Sep 2018 12:25:42 +0200
+Message-ID: <20180921102546.12745-6-thierry.reding@gmail.com>
+References: <20180921102546.12745-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
+In-Reply-To: <20180921102546.12745-1-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-No functional change. Use BIT() macro for DBI_CS2 and cleanup
-set_dbimode and get_dbi_mode
+From: Thierry Reding <treding@nvidia.com>
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Tegra194 supports 96 wake events in total. Many of them are never used,
+so only the most common ones (RTC alarm and power key) are currently
+defined.
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/soc/tegra/pmc.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index d5304c4a1eb5..728b1e0db314 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -40,7 +40,7 @@
- #define LTSSM_EN_VAL		        BIT(0)
- #define LTSSM_STATE_MASK		0x1f
- #define LTSSM_STATE_L0			0x11
--#define DBI_CS2_EN_VAL			0x20
-+#define DBI_CS2				BIT(5)
- #define OB_XLAT_EN_VAL		        BIT(1)
+diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+index 42e7deb6de74..efe990985fe6 100644
+--- a/drivers/soc/tegra/pmc.c
++++ b/drivers/soc/tegra/pmc.c
+@@ -54,6 +54,7 @@
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/pinctrl/pinctrl-tegra-io-pad.h>
+ #include <dt-bindings/gpio/tegra186-gpio.h>
++#include <dt-bindings/gpio/tegra194-gpio.h>
  
- /* Application registers */
-@@ -214,11 +214,12 @@ static void ks_pcie_set_dbi_mode(struct keystone_pcie *ks_pcie)
- 	u32 val;
+ #define PMC_CNTRL			0x0
+ #define  PMC_CNTRL_INTR_POLARITY	BIT(17) /* inverts INTR polarity */
+@@ -2426,6 +2427,11 @@ static const struct tegra_io_pad_soc tegra194_io_pads[] = {
+ 	{ .id = TEGRA_IO_PAD_AUDIO_HV, .dpd = 61, .voltage = UINT_MAX },
+ };
  
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	ks_pcie_app_writel(ks_pcie, CMD_STATUS, DBI_CS2_EN_VAL | val);
-+	val |= DBI_CS2;
-+	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
++static const struct tegra_wake_event tegra194_wake_events[] = {
++	TEGRA_WAKE_GPIO("power", 29, 1, TEGRA194_AON_GPIO(EE, 4)),
++	TEGRA_WAKE_IRQ("rtc", 73, 10),
++};
++
+ static const struct tegra_pmc_soc tegra194_pmc_soc = {
+ 	.num_powergates = 0,
+ 	.powergates = NULL,
+@@ -2438,6 +2444,8 @@ static const struct tegra_pmc_soc tegra194_pmc_soc = {
+ 	.regs = &tegra186_pmc_regs,
+ 	.init = NULL,
+ 	.setup_irq_polarity = tegra186_pmc_setup_irq_polarity,
++	.num_wake_events = ARRAY_SIZE(tegra194_wake_events),
++	.wake_events = tegra194_wake_events,
+ };
  
- 	do {
- 		val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	} while (!(val & DBI_CS2_EN_VAL));
-+	} while (!(val & DBI_CS2));
- }
- 
- /**
-@@ -232,11 +233,12 @@ static void ks_pcie_clear_dbi_mode(struct keystone_pcie *ks_pcie)
- 	u32 val;
- 
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	ks_pcie_app_writel(ks_pcie, CMD_STATUS, ~DBI_CS2_EN_VAL & val);
-+	val &= ~DBI_CS2;
-+	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
- 
- 	do {
- 		val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
--	} while (val & DBI_CS2_EN_VAL);
-+	} while (val & DBI_CS2);
- }
- 
- static int ks_pcie_rd_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+ static const struct of_device_id tegra_pmc_match[] = {
 -- 
-2.17.1
+2.19.0
