@@ -1,174 +1,212 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: Re: [PATCH v3 1/5] drivers: pinctrl: qcom: add wakeup capability to
- GPIO
-Date: Fri, 21 Sep 2018 10:08:46 -0600
-Message-ID: <20180921160846.GG17420@codeaurora.org>
-References: <20180904211810.5506-1-ilina@codeaurora.org>
- <20180904211810.5506-2-ilina@codeaurora.org>
- <86k1nfwyqn.wl-marc.zyngier@arm.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 2/4] PCI: mediatek: enable msi after clock enabled
+Date: Fri, 21 Sep 2018 17:46:12 +0100
+Message-ID: <20180921164612.GA27651@e107981-ln.cambridge.arm.com>
+References: <1536573023-6720-1-git-send-email-honghui.zhang@mediatek.com>
+ <1536573023-6720-3-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <86k1nfwyqn.wl-marc.zyngier@arm.com>
+In-Reply-To: <1536573023-6720-3-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
+To: honghui.zhang@mediatek.com
+Cc: marc.zyngier@arm.com, bhelgaas@google.com, matthias.bgg@gmail.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, ryder.lee@mediatek.com, ulf.hansson@linaro.org, hongkun.cao@mediatek.com, youlin.pei@mediatek.com, yong.wu@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, xinping.qian@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21 2018 at 17:11 -0600, Marc Zyngier wrote:
->Hi Lina,
->
->On Tue, 04 Sep 2018 22:18:06 +0100,
->Lina Iyer <ilina@codeaurora.org> wrote:
-[...]
->> +static irqreturn_t wake_irq_gpio_handler(int irq, void *data)
->> +{
->> +	struct irq_data *irqd = data;
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(irqd);
->> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +	const struct msm_pingroup *g;
->> +	unsigned long flags;
->> +	u32 val;
->> +
->> +	if (!irqd_is_level_type(irqd)) {
->> +		g = &pctrl->soc->groups[irqd->hwirq];
->> +		raw_spin_lock_irqsave(&pctrl->lock, flags);
->> +		val = BIT(g->intr_status_bit);
->> +		writel(val, pctrl->regs + g->intr_status_reg);
->
->write_relaxed, please.
->
->> +		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
->> +	}
->
->Overall, this requires some form of documentation (I'll have forgotten
->about the whole thing quickly enough).
->
-Sure, I will address them both.
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int msm_gpio_pdc_pin_request(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
->> +	struct platform_device *pdev = to_platform_device(pctrl->dev);
->> +	const char *pin_name;
->> +	int irq;
->> +	int ret;
->> +
->> +	pin_name = kasprintf(GFP_KERNEL, "gpio%lu", d->hwirq);
->> +	if (!pin_name)
->> +		return -ENOMEM;
->> +
->> +	irq = platform_get_irq_byname(pdev, pin_name);
->> +	if (irq < 0) {
->> +		kfree(pin_name);
->> +		return 0;
->> +	}
->> +
->> +	ret = request_irq(irq, wake_irq_gpio_handler, irqd_get_trigger_type(d),
->> +			  pin_name, d);
->> +	if (ret) {
->> +		pr_warn("GPIO-%lu could not be set up as wakeup", d->hwirq);
->
->This message doesn't correspond to what you're doing here.
->
-Well, I thought the message is most relevant because, we will not be
-able to wake up from this GPIO IRQ. But, I will change it.
+On Mon, Sep 10, 2018 at 05:50:21PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> The clocks was not enabled when enable MSI. This patch fix this
+> issue by calling mtk_pcie_enable_msi in mtk_pcie_startup_port_v2
+> since the clock was all enabled at that time.
+> 
+> The function of mtk_pcie_startup_port_v2's define location is
+> re-arranged to avoid mtk_pcie_enable_msi's forward declaration.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> Reviewed-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 143 +++++++++++++++++----------------
+>  1 file changed, 72 insertions(+), 71 deletions(-)
 
->> +		kfree(pin_name);
->> +		return ret;
->> +	}
->> +
->> +	irq_set_handler_data(d->irq, irq_get_irq_data(irq));
->> +	disable_irq(irq);
->
->Who enables this interrupt?
->
-Suspend/resume code does the swap of enable/disable of PDC IRQ vs GPIO
-IRQ in patch #4.
+Can you read:
 
->There is a gap between request_irq and disable_irq, where you can take
->the interrupt, and not having set the handler data. Horrible things
->will happen in this situation.
->
->A slightly better way of doing that would be:
->
->	// Prevent the interrupt from being enabled on request
->	irq_set_status_flags(d->irq, IRQ_NOAUTOEN);
->	ret = request_irq(...);
->	irq_set_handler(...);
->
->and let the enable_irq() do its thing when it happens (where?).
->
-Oh. This is better. Will amend.
+https://marc.info/?l=linux-pci&m=150905742808166&w=2
 
-Thanks for the review.
+follow it and adapt this patch and the others accordingly please ?
 
--- Lina
+Thanks,
+Lorenzo
 
->> +
->> +	return 0;
->> +}
->> +
->> +static int msm_gpio_pdc_pin_release(struct irq_data *d)
->> +{
->> +	struct irq_data *pdc_irqd = irq_get_handler_data(d->irq);
->> +	const void *name;
->> +
->> +	if (pdc_irqd) {
->> +		irq_set_handler_data(d->irq, NULL);
->> +		name = free_irq(pdc_irqd->irq, d);
->> +		kfree(name);
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int msm_gpio_irq_reqres(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +
->> +	if (gpiochip_lock_as_irq(gc, irqd_to_hwirq(d))) {
->> +		dev_err(gc->parent, "unable to lock HW IRQ %lu for IRQ\n",
->> +			irqd_to_hwirq(d));
->> +		return -EINVAL;
->> +	}
->> +
->> +	return msm_gpio_pdc_pin_request(d);
->> +}
->> +
->> +static void msm_gpio_irq_relres(struct irq_data *d)
->> +{
->> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->> +
->> +	msm_gpio_pdc_pin_release(d);
->> +	gpiochip_unlock_as_irq(gc, irqd_to_hwirq(d));
->> +}
->> +
->>  static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>  {
->>  	struct gpio_chip *chip;
->> @@ -887,6 +983,8 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
->>  	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
->>  	pctrl->irq_chip.irq_set_type = msm_gpio_irq_set_type;
->>  	pctrl->irq_chip.irq_set_wake = msm_gpio_irq_set_wake;
->> +	pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
->> +	pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
->>
->>  	ret = gpiochip_add_data(&pctrl->chip, pctrl);
->>  	if (ret) {
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
->
->Thanks,
->
->	M.
->
->--
->Jazz is not dead, it just smell funny.
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 20b9088..5aba43a 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -398,75 +398,6 @@ static struct pci_ops mtk_pcie_ops_v2 = {
+>  	.write = mtk_pcie_config_write,
+>  };
+>  
+> -static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> -{
+> -	struct mtk_pcie *pcie = port->pcie;
+> -	struct resource *mem = &pcie->mem;
+> -	const struct mtk_pcie_soc *soc = port->pcie->soc;
+> -	u32 val;
+> -	size_t size;
+> -	int err;
+> -
+> -	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
+> -	if (pcie->base) {
+> -		val = readl(pcie->base + PCIE_SYS_CFG_V2);
+> -		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+> -		       PCIE_CSR_ASPM_L1_EN(port->slot);
+> -		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+> -	}
+> -
+> -	/* Assert all reset signals */
+> -	writel(0, port->base + PCIE_RST_CTRL);
+> -
+> -	/*
+> -	 * Enable PCIe link down reset, if link status changed from link up to
+> -	 * link down, this will reset MAC control registers and configuration
+> -	 * space.
+> -	 */
+> -	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+> -
+> -	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+> -	val = readl(port->base + PCIE_RST_CTRL);
+> -	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
+> -	       PCIE_MAC_SRSTB | PCIE_CRSTB;
+> -	writel(val, port->base + PCIE_RST_CTRL);
+> -
+> -	/* Set up vendor ID and class code */
+> -	if (soc->need_fix_class_id) {
+> -		val = PCI_VENDOR_ID_MEDIATEK;
+> -		writew(val, port->base + PCIE_CONF_VEND_ID);
+> -
+> -		val = PCI_CLASS_BRIDGE_HOST;
+> -		writew(val, port->base + PCIE_CONF_CLASS_ID);
+> -	}
+> -
+> -	/* 100ms timeout value should be enough for Gen1/2 training */
+> -	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+> -				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> -				 100 * USEC_PER_MSEC);
+> -	if (err)
+> -		return -ETIMEDOUT;
+> -
+> -	/* Set INTx mask */
+> -	val = readl(port->base + PCIE_INT_MASK);
+> -	val &= ~INTX_MASK;
+> -	writel(val, port->base + PCIE_INT_MASK);
+> -
+> -	/* Set AHB to PCIe translation windows */
+> -	size = mem->end - mem->start;
+> -	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
+> -	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
+> -
+> -	val = upper_32_bits(mem->start);
+> -	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
+> -
+> -	/* Set PCIe to AXI translation memory space.*/
+> -	val = fls(0xffffffff) | WIN_ENABLE;
+> -	writel(val, port->base + PCIE_AXI_WINDOW0);
+> -
+> -	return 0;
+> -}
+> -
+>  static void mtk_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
+>  {
+>  	struct mtk_pcie_port *port = irq_data_get_irq_chip_data(data);
+> @@ -643,8 +574,6 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+>  		ret = mtk_pcie_allocate_msi_domains(port);
+>  		if (ret)
+>  			return ret;
+> -
+> -		mtk_pcie_enable_msi(port);
+>  	}
+>  
+>  	return 0;
+> @@ -711,6 +640,78 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+>  	return 0;
+>  }
+>  
+> +static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> +{
+> +	struct mtk_pcie *pcie = port->pcie;
+> +	struct resource *mem = &pcie->mem;
+> +	const struct mtk_pcie_soc *soc = port->pcie->soc;
+> +	u32 val;
+> +	size_t size;
+> +	int err;
+> +
+> +	/* MT7622 platforms need to enable LTSSM and ASPM from PCIe subsys */
+> +	if (pcie->base) {
+> +		val = readl(pcie->base + PCIE_SYS_CFG_V2);
+> +		val |= PCIE_CSR_LTSSM_EN(port->slot) |
+> +		       PCIE_CSR_ASPM_L1_EN(port->slot);
+> +		writel(val, pcie->base + PCIE_SYS_CFG_V2);
+> +	}
+> +
+> +	/* Assert all reset signals */
+> +	writel(0, port->base + PCIE_RST_CTRL);
+> +
+> +	/*
+> +	 * Enable PCIe link down reset, if link status changed from link up to
+> +	 * link down, this will reset MAC control registers and configuration
+> +	 * space.
+> +	 */
+> +	writel(PCIE_LINKDOWN_RST_EN, port->base + PCIE_RST_CTRL);
+> +
+> +	/* De-assert PHY, PE, PIPE, MAC and configuration reset	*/
+> +	val = readl(port->base + PCIE_RST_CTRL);
+> +	val |= PCIE_PHY_RSTB | PCIE_PERSTB | PCIE_PIPE_SRSTB |
+> +	       PCIE_MAC_SRSTB | PCIE_CRSTB;
+> +	writel(val, port->base + PCIE_RST_CTRL);
+> +
+> +	/* Set up vendor ID and class code */
+> +	if (soc->need_fix_class_id) {
+> +		val = PCI_VENDOR_ID_MEDIATEK;
+> +		writew(val, port->base + PCIE_CONF_VEND_ID);
+> +
+> +		val = PCI_CLASS_BRIDGE_HOST;
+> +		writew(val, port->base + PCIE_CONF_CLASS_ID);
+> +	}
+> +
+> +	/* 100ms timeout value should be enough for Gen1/2 training */
+> +	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
+> +				 !!(val & PCIE_PORT_LINKUP_V2), 20,
+> +				 100 * USEC_PER_MSEC);
+> +	if (err)
+> +		return -ETIMEDOUT;
+> +
+> +	/* Set INTx mask */
+> +	val = readl(port->base + PCIE_INT_MASK);
+> +	val &= ~INTX_MASK;
+> +	writel(val, port->base + PCIE_INT_MASK);
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+> +		mtk_pcie_enable_msi(port);
+> +
+> +	/* Set AHB to PCIe translation windows */
+> +	size = mem->end - mem->start;
+> +	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
+> +	writel(val, port->base + PCIE_AHB_TRANS_BASE0_L);
+> +
+> +	val = upper_32_bits(mem->start);
+> +	writel(val, port->base + PCIE_AHB_TRANS_BASE0_H);
+> +
+> +	/* Set PCIe to AXI translation memory space.*/
+> +	val = fls(0xffffffff) | WIN_ENABLE;
+> +	writel(val, port->base + PCIE_AXI_WINDOW0);
+> +
+> +	return 0;
+> +}
+> +
+>  static void __iomem *mtk_pcie_map_bus(struct pci_bus *bus,
+>  				      unsigned int devfn, int where)
+>  {
+> -- 
+> 2.6.4
+> 
