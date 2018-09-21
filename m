@@ -1,57 +1,39 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5b8e8a7d.1c69fb81.f8a73.b384@mx.google.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RFC 2/6] dt-bindings: introduce System PM bindings for
- Qualcomm SoCs
-References: <1535141188-29731-1-git-send-email-rplsssn@codeaurora.org>
- <1535141188-29731-3-git-send-email-rplsssn@codeaurora.org>
+Return-Path: <SRS0=oGub=MD=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41261 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389545AbeIUX5G (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Sep 2018 19:57:06 -0400
+Date: Fri, 21 Sep 2018 20:07:00 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3] arm64: dts: exynos: add OF graph between USB-PHY and
+ MUIC
+Message-ID: <20180921180700.GA10577@kozik-lap>
+References: <CGME20180921131359eucas1p2fd46913e0a9845bbb6e8260aa9f5c20f@eucas1p2.samsung.com>
+ <20180921131359eucas1p2fd46913e0a9845bbb6e8260aa9f5c20f~WbISmyGpy1936319363eucas1p2i@eucas1p2.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1535141188-29731-3-git-send-email-rplsssn@codeaurora.org>
-Date: Tue, 4 Sep 2018 08:14:16 -0500
-To: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-pm@vger.kernel.org, rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, rafael@kernel.org, drake@endlessm.com, sboyd@kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org
+In-Reply-To: <20180921131359eucas1p2fd46913e0a9845bbb6e8260aa9f5c20f~WbISmyGpy1936319363eucas1p2i@eucas1p2.samsung.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, "open list : DESIGNWARE USB3 DRD IP DRIVER" <linux-usb@vger.kernel.org>, "open list : OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Sat, Aug 25, 2018 at 01:36:24AM +0530, Raju P.L.S.S.S.N wrote:
-> Add device binding documentation for Qualcomm Technology Inc's System PM
-> driver. The driver is used for managing system sleep activities that are
-> required when application processor is going to deepest low power mode.
+On Fri, Sep 21, 2018 at 03:13:55PM +0200, Andrzej Hajda wrote:
+> OF graph describes USB data lanes between USB-PHY and respective MUIC.
+> Since graph is present and DWC driver can use it to get extcon, obsolete
+> extcon property can be removed.
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
 > ---
->  .../devicetree/bindings/soc/qcom/system_pm.txt     | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/system_pm.txt
+> v3:
+>  - removed #address-cells/#size-cells from ports node.
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/system_pm.txt b/Documentation/devicetree/bindings/soc/qcom/system_pm.txt
-> new file mode 100644
-> index 0000000..0915760
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/system_pm.txt
-> @@ -0,0 +1,28 @@
-> +System PM
-> +---------
-> +
-> +System PM device handles the tasks that need to be performed during application
-> +processor deeper low power mode entry for QCOM SoCs which have hardened IP blocks
-> +combinedly called as RPMH (Resource Power Manager Hardened) for shared resource
-> +management. System PM is a client of APPS_RSC. Flushing the buffered requests to
-> +TCSs in RSC and programming the wakeup timer in PDC for timer based wakeup are
-> +handled by this device.
-> +
-> +The bindings for System PM is specified in the RSC section in devicetree.
-> +
-> +Properties:
-> +- compatible:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: must be "qcom,system-pm".
+> Hi Krzysztof,
+> 
+> This is next version of the patch I forgot. I have addressed your comments,
 
-h/w devices have some sort of resources and this has nothing. Looks like 
-you are just using DT to instantiate some sort of virtual driver. Don't 
-do that.
+Thanks, applied.
 
-Rob
+Best regards,
+Krzysztof
