@@ -1,45 +1,100 @@
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v3 5/5] MAINTAINERS: add maintainers for the NXP FlexSPI driver
-Date: Fri, 21 Sep 2018 15:52:03 +0530
-Message-ID: <1537525323-20730-6-git-send-email-yogeshnarayan.gaur@nxp.com>
-References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 21/40] PCI: keystone: Add debug error message for all errors
+Date: Fri, 21 Sep 2018 15:51:36 +0530
+Message-ID: <20180921102155.22839-22-kishon@ti.com>
+References: <20180921102155.22839-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add maintainers for the NXP FlexSPI driver
+commit 025dd3daeda77f61a280da87ae701 ("PCI: keystone: Add error IRQ
+handler") added dev_err() message only for ERR_AXI and ERR_FATAL. Add
+debug error message for ERR_SYS, ERR_NONFATAL, ERR_CORR and ERR_AER here.
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+While at that avoid using ERR_IRQ_STATUS_RAW and use ERR_IRQ_STATUS
+instead.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
-Changes for v3:
-- None
-Changes for v2:
-- None
+ drivers/pci/controller/dwc/pci-keystone.c | 45 +++++++++++++----------
+ 1 file changed, 25 insertions(+), 20 deletions(-)
 
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d5eeff..2696898 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10228,6 +10228,12 @@ L:	linux-nfc@lists.01.org (moderated for non-subscribers)
- S:	Supported
- F:	drivers/nfc/nxp-nci
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 240c39c58b0f..a3dec74da70c 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -74,8 +74,6 @@
+ #define ERR_SYS		BIT(0)	/* System (fatal, non-fatal, or correctable) */
+ #define ERR_IRQ_ALL	(ERR_AER | ERR_AXI | ERR_CORR | \
+ 			 ERR_NONFATAL | ERR_FATAL | ERR_SYS)
+-#define ERR_FATAL_IRQ	(ERR_FATAL | ERR_AXI)
+-#define ERR_IRQ_STATUS_RAW		0x1c0
+ #define ERR_IRQ_STATUS			0x1c4
+ #define ERR_IRQ_ENABLE_SET		0x1c8
+ #define ERR_IRQ_ENABLE_CLR		0x1cc
+@@ -180,23 +178,6 @@ static void ks_pcie_enable_error_irq(struct keystone_pcie *ks_pcie)
+ 	ks_pcie_app_writel(ks_pcie, ERR_IRQ_ENABLE_SET, ERR_IRQ_ALL);
+ }
  
-+NXP FSPI DRIVER
-+M:	Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-+L:	linux-spi@vger.kernel.org
-+S:	Maintained
-+F:	drivers/spi/spi-nxp-fspi.c
+-static irqreturn_t ks_pcie_handle_error_irq(struct keystone_pcie *ks_pcie)
+-{
+-	u32 status;
+-
+-	status = ks_pcie_app_readl(ks_pcie, ERR_IRQ_STATUS_RAW) & ERR_IRQ_ALL;
+-	if (!status)
+-		return IRQ_NONE;
+-
+-	if (status & ERR_FATAL_IRQ)
+-		dev_err(ks_pcie->pci->dev, "fatal error (status %#010x)\n",
+-			status);
+-
+-	/* Ack the IRQ; status bits are RW1C */
+-	ks_pcie_app_writel(ks_pcie, ERR_IRQ_STATUS, status);
+-	return IRQ_HANDLED;
+-}
+-
+ /**
+  * ks_pcie_set_dbi_mode() - Set DBI mode to access overlaid BAR mask
+  * registers
+@@ -636,9 +617,33 @@ static const struct dw_pcie_host_ops ks_pcie_host_ops = {
+ 
+ static irqreturn_t ks_pcie_err_irq_handler(int irq, void *priv)
+ {
++	u32 reg;
+ 	struct keystone_pcie *ks_pcie = priv;
++	struct device *dev = ks_pcie->pci->dev;
+ 
+-	return ks_pcie_handle_error_irq(ks_pcie);
++	reg = ks_pcie_app_readl(ks_pcie, ERR_IRQ_STATUS);
 +
- OBJTOOL
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
- M:	Peter Zijlstra <peterz@infradead.org>
++	if (reg & ERR_SYS)
++		dev_err(dev, "System Error\n");
++
++	if (reg & ERR_FATAL)
++		dev_err(dev, "Fatal Error\n");
++
++	if (reg & ERR_NONFATAL)
++		dev_dbg(dev, "Non Fatal Error\n");
++
++	if (reg & ERR_CORR)
++		dev_dbg(dev, "Correctable Error\n");
++
++	if (reg & ERR_AXI)
++		dev_err(dev, "AXI tag lookup fatal Error\n");
++
++	if (reg & ERR_AER)
++		dev_err(dev, "ECRC Error\n");
++
++	ks_pcie_app_writel(ks_pcie, ERR_IRQ_STATUS, reg);
++
++	return IRQ_HANDLED;
+ }
+ 
+ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
 -- 
-2.7.4
+2.17.1
