@@ -1,35 +1,39 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT] arm64: ARM: dts: exynos: Remove double SD card detect pin inversion on TM2
-Date: Fri, 21 Sep 2018 20:30:14 +0200
-Message-ID: <20180921183014.20236-1-krzk@kernel.org>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI)
+ documentation
+Date: Fri, 21 Sep 2018 18:33:36 +0000
+Message-ID: <1537554816.7736.32.camel@impinj.com>
+References: <20180920224055.164856-1-ryandcase@chromium.org>
+         <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
+         <20180921173903.GH20825@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180921173903.GH20825@sirena.org.uk>
+Content-Language: en-US
+Content-ID: <C29D7D6EAD95904482E44DC37667CDF1@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+To: "swboyd@chromium.org" <swboyd@chromium.org>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "dianders@chromium.org" <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "ryandcase@chromium.org" <ryandcase@chromium.org>, "girishm@codeaurora.org" <girishm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The SDHCI standard, MMC host controller bindings and MMC core defines
-card detect pin as active low.  Therefore there is no point to invert it
-twice.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index a1e3194b7483..86d8ddc3288a 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -939,8 +939,7 @@
- 	status = "okay";
- 	cap-sd-highspeed;
- 	disable-wp;
--	cd-gpios = <&gpa2 4 GPIO_ACTIVE_HIGH>;
--	cd-inverted;
-+	cd-gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
- 	card-detect-delay = <200>;
- 	samsung,dw-mshc-ciu-div = <3>;
- 	samsung,dw-mshc-sdr-timing = <0 4>;
--- 
-2.17.1
+T24gRnJpLCAyMDE4LTA5LTIxIGF0IDEwOjM5IC0wNzAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBGcmksIFNlcCAyMSwgMjAxOCBhdCAxMDozMDo1N0FNIC0wNzAwLCBTdGVwaGVuIEJveWQgd3Jv
+dGU6DQo+ID4gUXVvdGluZyBSeWFuIENhc2UgKDIwMTgtMDktMjAgMTU6NDA6NTQpDQo+ID4gPiAr
+UmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiA+ICstIGNvbXBhdGlibGU6ICBTaG91bGQgY29udGFp
+bjoNCj4gPiA+ICsgICAgICAgICAgICAgICAicWNvbSxzZG04NDUtcXNwaSINCj4gPiBEb2VzIHNv
+bWVvbmUgaGF2ZSBhIG1vcmUgZ2VuZXJpYyBjb21wYXRpYmxlIHN0cmluZyB0aGF0IGNhbiBiZSBh
+ZGRlZA0KPiA+IGhlcmUgdG8gaW5kaWNhdGUgdGhlIHR5cGUgb2YgcXVhZCBTUEkgY29udHJvbGxl
+ciB0aGlzIGlzPyBJIHJlYWxseSBkb3VidA0KPiA+IHRoaXMgaXMgYSBvbmUtb2ZmIGhhcmR3YXJl
+IGJsb2NrIGZvciB0aGUgc3BlY2lmaWMgU0RNODQ1IFNvQy4gDQo+IA0KPiBUaGUgaWRpb20gZm9y
+IERUIGlzIHN1cHBvc2VkIHRvIGJlIHRvIHVzZSBvbmx5IGRldmljZSBzcGVjaWZpYyBuYW1lcw0K
+PiB1bmZvcnR1bmF0ZWx5Lg0KDQpCYXNpY2FsbHkgdGhlICJmaXJzdCIgZGV2aWNlIHRoZSBkcml2
+ZXIgY2FuIGNvbnRyb2wgaGFzIGl0J3Mgc3BlY2lmaWMNCm5hbWUgdXNlZCBhcyB0aGUgZ2VuZXJp
+YyBzdHJpbmcuICBUaGlzIGlzIHVzZWQgaW4gcGxhY2Ugb2Ygc29tZQ0KaW50ZXJuYWwgY29kZW5h
+bWUgZm9yIHRoZSBjb3JlLg0KDQpUaGVuIGEgbmV3ZXIgZGV2aWNlIHdpbGwgaGF2ZSAiZm9vLFhZ
+WjIwMCIsICJmb28sWFlaMTAwIiBhcyBjb21wYXRpYmxlLA0Kd2hlcmUgdGhlIDEwMCB3YXMgdGhl
+IGZpcnN0IGRldmljZSBhbmQgdGhlIDIwMCBpcyBuZXcgb25lLiAgTWF5YmUgdGhlDQpkcml2ZXIg
+Y2FyZXMsIG9yIHdpbGwgY2FyZSwgYWJvdXQgd2hhdCBkZXZpY2UgdGhpcyBvciBtYXliZSBpdCBj
+YW4NCmRyaXZlIHRoZSBkZXZpY2UgZmluZSB3aXRob3V0IG5lZWRpbmcgdG8ga25vdyBtb3JlIHRo
+YW4gdGhlIGdlbmVyaWMuDQoNCg==
