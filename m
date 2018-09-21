@@ -1,65 +1,77 @@
-Return-Path: <SRS0=eRJM=ME=the-dreams.de=wsa@kernel.org>
-Date: Sat, 22 Sep 2018 20:44:43 +0200
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 2/4] pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage switch
-Message-ID: <20180922184443.GD841@kunai>
+Return-Path: <SRS0=c6Dm=MD=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 2/4] pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage switch
+Date: Fri, 21 Sep 2018 12:55:09 +0100
+Message-Id: <1537530911-443-3-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
 References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1537530911-443-3-git-send-email-fabrizio.castro@bp.renesas.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="+B+y8wtTXqdUj1xM"
-Content-Disposition: inline
-In-Reply-To: <1537530911-443-3-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Add SH_PFC_PIN_CFG_IO_VOLTAGE definition for the SDHI2 pins
+capable of switching voltage. Please note that with the
+RZ/G1C only 1 bit of the POC Control Register is used to
+control each interface.
 
---+B+y8wtTXqdUj1xM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+---
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c | 32 +++++++++++++++++++++++++++++++-
+ 1 file changed, 31 insertions(+), 1 deletion(-)
 
-On Fri, Sep 21, 2018 at 12:55:09PM +0100, Fabrizio Castro wrote:
-> Add SH_PFC_PIN_CFG_IO_VOLTAGE definition for the SDHI2 pins
-> capable of switching voltage. Please note that with the
-> RZ/G1C only 1 bit of the POC Control Register is used to
-> control each interface.
->=20
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-
-In general:
-
-Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-> +	if (_bank =3D=3D 4 && _pin >=3D 14 && _pin <=3D 19)
-> +		return 1;
-> +
-> +	return -EINVAL;
-
-I'd like a tad better to bail out on the error case and have the main
-path returning on the good case, but no strong opinion...
-
-
---+B+y8wtTXqdUj1xM
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlumjZoACgkQFA3kzBSg
-KbaayA//eVvTh3L96tCoXR4xHg7QxXNS+Gd+6qSr55sk7nRRj/QGytJ8g6QmTtIX
-IkDccLXqHCOUIoMdWCPzX1+nMndDbOZKk4pZPR5Ymg/RN4MzurEBVTYXV9MBneD5
-8m0Rz7kfeJhKYram7F5vDj9IkhVk+wab8jhbA4Lz8wTJtLD45y5c3sOhdWCe2h5z
-jcgCuE48Kpjp3eJ3NmCynFh0DSb/OOpZMVckxXF3d+2S4g0vDZvZOWQXzLj25VqV
-LBTNUqi1CNTvt5llHGsB+RdOpvB5syzO25QmwgTXKbUQlFEIO91Qa9ab7Wit9nCx
-kLDOISlBpj676j5CW+kMbX+ps4AsC5gemcBTm8uwwlZbuGEPIkK4lG2YoJe2PRum
-OONlK1JajQV6BTiu4uBXRgddyyP1n+hh3icXjD7ny00HzJoTBdtLEZ1c0kn+o/vk
-jMKMG+LLX0zPPCQkI4Fpkx0FGw/Jq8kjnvKsnItdsKpACsry3DhbCMNy2MsiE2CL
-qk/wPht+Urak3OkaXV2GNDxDYBZzRfCOiWan/8mOCMMWNEZSv7s8K35w1w36d5OS
-ewsgeBGAJ+Y0ckVEbSuVoDyF432sHyz9boIIrVEtR5STgMdUMwtbk7jItkEb1A2T
-sTUwWknxoFQZSB2MtoK3qAKI1ZAVgA4pl8pB5ulNmfmxWeg45NI=
-=8Vv8
------END PGP SIGNATURE-----
-
---+B+y8wtTXqdUj1xM--
+diff --git a/drivers/pinctrl/sh-pfc/pfc-r8a77470.c b/drivers/pinctrl/sh-pfc/pfc-r8a77470.c
+index 9d3ed43..a1248e2 100644
+--- a/drivers/pinctrl/sh-pfc/pfc-r8a77470.c
++++ b/drivers/pinctrl/sh-pfc/pfc-r8a77470.c
+@@ -17,7 +17,19 @@
+ 	PORT_GP_1(3, 27, fn, sfx),					\
+ 	PORT_GP_1(3, 28, fn, sfx),					\
+ 	PORT_GP_1(3, 29, fn, sfx),					\
+-	PORT_GP_26(4, fn, sfx),						\
++	PORT_GP_14(4, fn, sfx),						\
++	PORT_GP_CFG_1(4, 14, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
++	PORT_GP_CFG_1(4, 15, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
++	PORT_GP_CFG_1(4, 16, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
++	PORT_GP_CFG_1(4, 17, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
++	PORT_GP_CFG_1(4, 18, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
++	PORT_GP_CFG_1(4, 19, fn, sfx, SH_PFC_PIN_CFG_IO_VOLTAGE),	\
++	PORT_GP_1(4, 20, fn, sfx),					\
++	PORT_GP_1(4, 21, fn, sfx),					\
++	PORT_GP_1(4, 22, fn, sfx),					\
++	PORT_GP_1(4, 23, fn, sfx),					\
++	PORT_GP_1(4, 24, fn, sfx),					\
++	PORT_GP_1(4, 25, fn, sfx),					\
+ 	PORT_GP_32(5, fn, sfx)
+ 
+ enum {
+@@ -2321,9 +2333,27 @@ static const struct pinmux_cfg_reg pinmux_config_regs[] = {
+ 	{ },
+ };
+ 
++static int r8a77470_pin_to_pocctrl(struct sh_pfc *pfc, unsigned int pin,
++				   u32 *pocctrl)
++{
++	unsigned int _bank = pin >> 5;
++	unsigned int _pin = pin & 0x1f;
++	*pocctrl = 0xe60600b0;
++
++	if (_bank == 4 && _pin >= 14 && _pin <= 19)
++		return 1;
++
++	return -EINVAL;
++}
++
++static const struct sh_pfc_soc_operations r8a77470_pinmux_ops = {
++	.pin_to_pocctrl = r8a77470_pin_to_pocctrl,
++};
++
+ #ifdef CONFIG_PINCTRL_PFC_R8A77470
+ const struct sh_pfc_soc_info r8a77470_pinmux_info = {
+ 	.name = "r8a77470_pfc",
++	.ops = &r8a77470_pinmux_ops,
+ 	.unlock_reg = 0xe6060000, /* PMMR */
+ 
+ 	.function = { PINMUX_FUNCTION_BEGIN, PINMUX_FUNCTION_END },
+-- 
+2.7.4
