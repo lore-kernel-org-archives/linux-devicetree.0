@@ -1,40 +1,76 @@
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v3 4/5] arm64: defconfig: enable NXP FlexSPI driver
-Date: Fri, 21 Sep 2018 15:52:02 +0530
-Message-ID: <1537525323-20730-5-git-send-email-yogeshnarayan.gaur@nxp.com>
-References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RFC PATCH 20/40] PCI: keystone: Cleanup ks_pcie_link_up()
+Date: Fri, 21 Sep 2018 15:51:35 +0530
+Message-ID: <20180921102155.22839-21-kishon@ti.com>
+References: <20180921102155.22839-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
+Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable driver support of NXP FlexSPI controller.
+ks_pcie_link_up() uses registers from the designware core to get the
+status of the link. Move the register defines to pcie-designware.h
+and cleanup ks_pcie_link_up().
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
-Changes for v3:
-- None
-Changes for v2:
-- None
+ drivers/pci/controller/dwc/pci-keystone.c    | 10 +++-------
+ drivers/pci/controller/dwc/pcie-designware.h |  4 ++++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 3cfa8ca..75ceddf 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -335,6 +335,7 @@ CONFIG_SPI_QUP=y
- CONFIG_SPI_ROCKCHIP=y
- CONFIG_SPI_S3C64XX=y
- CONFIG_SPI_SPIDEV=m
-+CONFIG_SPI_NXP_FLEXSPI=y
- CONFIG_SPMI=y
- CONFIG_PINCTRL_IPQ8074=y
- CONFIG_PINCTRL_SINGLE=y
+diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
+index 728b1e0db314..240c39c58b0f 100644
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -38,8 +38,6 @@
+ 
+ /* Application register defines */
+ #define LTSSM_EN_VAL		        BIT(0)
+-#define LTSSM_STATE_MASK		0x1f
+-#define LTSSM_STATE_L0			0x11
+ #define DBI_CS2				BIT(5)
+ #define OB_XLAT_EN_VAL		        BIT(1)
+ 
+@@ -87,9 +85,6 @@
+ 
+ #define OB_OFFSET_HI(n)			(0x204 + (8 * (n)))
+ 
+-/* Config space registers */
+-#define DEBUG0				0x728
+-
+ /* PCIE controller device IDs */
+ #define PCIE_RC_K2HK		0xb008
+ #define PCIE_RC_K2E		0xb009
+@@ -308,8 +303,9 @@ static int ks_pcie_link_up(struct dw_pcie *pci)
+ {
+ 	u32 val;
+ 
+-	val = dw_pcie_readl_dbi(pci, DEBUG0);
+-	return (val & LTSSM_STATE_MASK) == LTSSM_STATE_L0;
++	val = dw_pcie_readl_dbi(pci, PCIE_PORT_DEBUG0);
++	val &= PORT_LOGIC_LTSSM_STATE_MASK;
++	return (val == PORT_LOGIC_LTSSM_STATE_L0);
+ }
+ 
+ static void ks_pcie_quirk(struct pci_dev *dev)
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 96126fd8403c..a4d939536faf 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -37,6 +37,10 @@
+ #define PORT_LINK_MODE_4_LANES		(0x7 << 16)
+ #define PORT_LINK_MODE_8_LANES		(0xf << 16)
+ 
++#define PCIE_PORT_DEBUG0		0x728
++#define PORT_LOGIC_LTSSM_STATE_MASK	0x1f
++#define PORT_LOGIC_LTSSM_STATE_L0	0x11
++
+ #define PCIE_LINK_WIDTH_SPEED_CONTROL	0x80C
+ #define PORT_LOGIC_SPEED_CHANGE		(0x1 << 17)
+ #define PORT_LOGIC_LINK_WIDTH_MASK	(0x1f << 8)
 -- 
-2.7.4
+2.17.1
