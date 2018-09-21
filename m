@@ -1,33 +1,37 @@
-Return-Path: <SRS0=HlV8=LZ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH 04/10] dt-bindings: reset: rcar-rst: Document r8a7744 reset module
-Date: Tue, 11 Sep 2018 11:12:45 +0100
-Message-Id: <1536660771-32278-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1536660771-32278-1-git-send-email-biju.das@bp.renesas.com>
-References: <1536660771-32278-1-git-send-email-biju.das@bp.renesas.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=c6Dm=MD=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 0/4] Add SDHI2 support to iwg23s
+Date: Fri, 21 Sep 2018 12:55:07 +0100
+Message-Id: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document bindings for the RZ/G1N (R8A7744) reset module.
+Dear All,
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/reset/renesas,rst.txt | 1 +
- 1 file changed, 1 insertion(+)
+this series adds SDHI2 support to the iwg23s.
+The RZ/G1C (the SoC powering the iwg23s) is slightly different from
+the other R-Car and RZ/G1 devices, in the sense that this device uses
+only one bit of the POC Control Register to control the voltage of the
+entire interface, as opposed to one bit per pin.
+There is a discussion on the ML that is going on about this:
+https://patchwork.kernel.org/patch/10604395/
+and the patches from this series implement "option 2".
 
-diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-index e4fe0ab..d0edd4677 100644
---- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
-+++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-@@ -16,6 +16,7 @@ Required properties:
- 		  - "renesas,<soctype>-rst" for R-Car Gen2 and Gen3, and RZ/G
- 		Examples with soctypes are:
- 		  - "renesas,r8a7743-rst" (RZ/G1M)
-+		  - "renesas,r8a7744-rst" (RZ/G1N)
- 		  - "renesas,r8a7745-rst" (RZ/G1E)
- 		  - "renesas,r8a77470-rst" (RZ/G1C)
- 		  - "renesas,r8a774a1-rst" (RZ/G2M)
+Thanks,
+Fab
+
+Fabrizio Castro (4):
+  dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
+  pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage switch
+  ARM: dts: r8a77470: Add SDHI2 support
+  ARM: dts: iwg23s-sbc: Add uSD card support
+
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt |  1 +
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          | 49 ++++++++++++++++++++++
+ arch/arm/boot/dts/r8a77470.dtsi                    | 15 +++++++
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c              | 32 +++++++++++++-
+ 4 files changed, 96 insertions(+), 1 deletion(-)
+
 -- 
 2.7.4
