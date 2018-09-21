@@ -1,68 +1,32 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 2/7] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Fri, 21 Sep 2018 11:07:21 +0200
-Message-ID: <20180921090721.GB30439@nazgul.tnic>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
- <20180918075522.GC22202@nazgul.tnic>
- <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
- <20180919111553.GA9140@nazgul.tnic>
- <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 0/4] Enable ath10k wcn3990 wifi driver support on sdm845
+Date: Fri, 21 Sep 2018 14:39:03 +0530
+Message-ID: <20180921090907.25937-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <MNARANI@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 19, 2018 at 01:33:58PM +0000, Manish Narani wrote:
-> Apart from this one, I have covered all the comments from the previous review.
+This series enables ath10k wifi driver support for WCN3990 target
+on sdm845 SOC. This series also updates the missing dt binding documentation
+and adds optional iommu property.
 
-Are you sure?
+sdm845 dtsi changes in this series are based on top of
+https://patchwork.kernel.org/cover/10573121/ change.
 
-Let's see. I said:
+Govind Singh (4):
+  dt: bindings: add missing dt properties for WCN3990 wifi node
+  dts: arm64/sdm845: Add WCN3990 WLAN module device node
+  dt: bindings: add bindings for wifi iommu node
+  dts: arm64/sdm845: Enable iommu for WCN3990 wifi module device node
 
-| Kill all that "function pointer" fluff. Here's how I've changed it:
-| 
-| /**
-|  * struct synps_platform_data -  synps platform data structure
-|  * @edac_geterror_info: edac error info
-|  * @edac_get_mtype:     get mtype
-|  * @edac_get_dtype:     get dtype
-|  * @edac_get_eccstate:  get ECC state
-			  ^^^^^^^^^^^^^
-
-This is supposed to denote that this function returns whether ECC
-checking is enabled on the controller or not.
-
-Your patch has:
-
-+ * struct synps_platform_data -  synps platform data structure.
-+ * @geterror_info:     Get error info.
-+ * @get_mtype:         Get mtype.
-+ * @get_dtype:         Get dtype.
-+ * @get_eccstate:      Get eccstate.
-
-So what is "eccstate"? Is it a struct or a variable or ...?
-
-Do you see my point?
-
-I know, it is a small thing but documenting our code properly is
-something which people would be thanking us for. Even you will be
-thanking yourself when you look at this months from now after having
-forgotten it all.
-
-Please check the rest of your additions for similar discrepancies.
-
-Thanks.
+ .../bindings/net/wireless/qcom,ath10k.txt     | 27 ++++++++++++++-----
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |  7 +++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 26 ++++++++++++++++++
+ 3 files changed, 53 insertions(+), 7 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+2.17.0
