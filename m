@@ -1,32 +1,34 @@
-Return-Path: <SRS0=eZkP=MH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: mmc: renesas_sdhi: Add r8a7744 support
-Date: Tue, 25 Sep 2018 18:23:07 +0100
-Message-Id: <1537896187-35013-1-git-send-email-biju.das@bp.renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 4/5] dt-bindings: usb: renesas_usbhs: add bindings for r8a77990
+Date: Fri, 21 Sep 2018 21:26:31 +0900
+Message-Id: <1537532792-20376-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1537532792-20376-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1537532792-20376-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for r8a7744 SoC. Renesas RZ/G1N (R8A7744) SDHI is identical
-to the R-Car Gen2 family.
+This patch adds bindings for r8a77990 (R-Car E3).
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 1 +
+ Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-index 8f3a113..21d671a 100644
---- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-@@ -16,6 +16,7 @@ Required properties:
- 		"renesas,sdhi-r8a73a4" - SDHI IP on R8A73A4 SoC
- 		"renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
- 		"renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
-+		"renesas,sdhi-r8a7744" - SDHI IP on R8A7744 SoC
- 		"renesas,sdhi-r8a7745" - SDHI IP on R8A7745 SoC
- 		"renesas,sdhi-r8a77470" - SDHI IP on R8A77470 SoC
- 		"renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
+diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+index 15fb3b3..a649329 100644
+--- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
++++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
+@@ -14,6 +14,7 @@ Required properties:
+ 	- "renesas,usbhs-r8a7795" for r8a7795 (R-Car H3) compatible device
+ 	- "renesas,usbhs-r8a7796" for r8a7796 (R-Car M3-W) compatible device
+ 	- "renesas,usbhs-r8a77965" for r8a77965 (R-Car M3-N) compatible device
++	- "renesas,usbhs-r8a77990" for r8a77990 (R-Car E3) compatible device
+ 	- "renesas,usbhs-r8a77995" for r8a77995 (R-Car D3) compatible device
+ 	- "renesas,usbhs-r7s72100" for r7s72100 (RZ/A1) compatible device
+ 	- "renesas,rcar-gen2-usbhs" for R-Car Gen2 or RZ/G1 compatible devices
 -- 
-2.7.4
+1.9.1
