@@ -1,11 +1,14 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCh v3 1/4] arm64: add basic Kconfig symbols for i.MX8
-Date: Fri, 21 Sep 2018 14:56:23 +0200
-Message-ID: <20180921125626.21971-1-l.stach@pengutronix.de>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH] ARM: dts: stm32: Fix SPI controller node names
+Date: Fri, 21 Sep 2018 14:56:35 +0200
+Message-ID: <566ec828-f1bb-bbad-b541-5b359879950c@st.com>
+References: <20180913181245.25484-11-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-11-robh@kernel.org>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,46 +18,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add basic Kconfig symbols to make the MXC architecture available
-in the ARM64 world.
+Hi Rob
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
----
-v2: fix "enabled" typo.
-v3: use SoC suboption in Kconfig.platforms instead of drivers/soc
----
- arch/arm64/Kconfig.platforms | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On 09/13/2018 08:12 PM, Rob Herring wrote:
+> SPI controller nodes should be named 'spi' rather than 'ssp'. Fixing the
+> name enables dtc SPI bus checks.
+> 
+> Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please apply to the sub-arch tree. The dtc changes haven't landed, but
+> will for 4.20.
+> 
+>   arch/arm/boot/dts/stm32mp157c.dtsi | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+> index 661be948ab74..0e5a2f89f2d9 100644
+> --- a/arch/arm/boot/dts/stm32mp157c.dtsi
+> +++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+> @@ -947,7 +947,7 @@
+>   			dma-requests = <48>;
+>   		};
+>   
+> -		qspi: qspi@58003000 {
+> +		qspi: spi@58003000 {
+>   			compatible = "st,stm32f469-qspi";
+>   			reg = <0x58003000 0x1000>, <0x70000000 0x10000000>;
+>   			reg-names = "qspi", "qspi_mm";
+> 
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 393d2b524284..210a0145117a 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -139,6 +139,20 @@ config ARCH_MVEBU
- 	   - Armada 7K SoC Family
- 	   - Armada 8K SoC Family
- 
-+config ARCH_MXC
-+	bool "ARMv8 based NXP i.MX SoC family"
-+	help
-+	  This enables support for the ARMv8 based SoCs in the
-+	  NXP i.MX family.
-+
-+config SOC_IMX8MQ
-+	bool "i.MX8MQ support"
-+	depends on ARCH_MXC
-+	select ARM64_ERRATUM_843419
-+	select ARM64_ERRATUM_845719
-+	help
-+	  This enables support for the i.MX8MQ SoC.
-+
- config ARCH_QCOM
- 	bool "Qualcomm Platforms"
- 	select GPIOLIB
--- 
-2.19.0
+After fixup commmit message:
+
+Applied on stm32-next.
+
+Thanks.
+Alex
