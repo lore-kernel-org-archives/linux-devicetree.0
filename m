@@ -1,113 +1,125 @@
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: RE: [PATCH 00/21] SMMU enablement for NXP LS1043A and LS1046A
-Date: Fri, 21 Sep 2018 07:32:12 +0000
-Message-ID: <AM6PR0402MB386413FAA7E9A4E155E452B5EC120@AM6PR0402MB3864.eurprd04.prod.outlook.com>
-References: <20180919123613.15092-1-laurentiu.tudor@nxp.com>
- <7d7646dc-9d0b-013d-75d7-a6cb4453f41f@arm.com>
- <fd8ab351-46aa-f73e-593b-502a57de1975@nxp.com>
- <39211e7a-034b-cdca-f182-1b6f6e5fbc53@arm.com>
- <33eac426-cbb7-f899-5a35-aea28f8e5dc4@nxp.com>
- <CADRPPNTot7U6vARqtrRrw4XqhDQPSXP1QO9ZbGpNQByJPcU37Q@mail.gmail.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 02/27] mmc: mmci: internalize dma_inprogress into mmci
+ dma functions
+Date: Fri, 21 Sep 2018 09:42:24 +0200
+Message-ID: <4a1ab21e-0c0c-8d93-fd9d-1662a2fa642c@st.com>
+References: <1537268144-21152-1-git-send-email-ludovic.Barre@st.com>
+ <1537268144-21152-3-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFrwiQv-EFfSrY7TwxXN-AnOsbbPop88GPo8_32hcjBzsg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNTot7U6vARqtrRrw4XqhDQPSXP1QO9ZbGpNQByJPcU37Q@mail.gmail.com>
+In-Reply-To: <CAPDyKFrwiQv-EFfSrY7TwxXN-AnOsbbPop88GPo8_32hcjBzsg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, Shawn Guo <shawnguo@kernel.org>, David Miller <davem@davemloft.net>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTGkgWWFuZyBbbWFpbHRv
-Omxlb3lhbmcubGlAbnhwLmNvbV0NCj4gU2VudDogVGh1cnNkYXksIFNlcHRlbWJlciAyMCwgMjAx
-OCAxMDowNyBQTQ0KPiANCj4gT24gVGh1LCBTZXAgMjAsIDIwMTggYXQgNTozOSBBTSBMYXVyZW50
-aXUgVHVkb3IgPGxhdXJlbnRpdS50dWRvckBueHAuY29tPg0KPiB3cm90ZToNCj4gPg0KPiA+DQo+
-ID4NCj4gPiBPbiAxOS4wOS4yMDE4IDE3OjM3LCBSb2JpbiBNdXJwaHkgd3JvdGU6DQo+ID4gPiBP
-biAxOS8wOS8xOCAxNToxOCwgTGF1cmVudGl1IFR1ZG9yIHdyb3RlOg0KPiA+ID4+IEhpIFJvYmlu
-LA0KPiA+ID4+DQo+ID4gPj4gT24gMTkuMDkuMjAxOCAxNjoyNSwgUm9iaW4gTXVycGh5IHdyb3Rl
-Og0KPiA+ID4+PiBIaSBMYXVyZW50aXUsDQo+ID4gPj4+DQo+ID4gPj4+IE9uIDE5LzA5LzE4IDEz
-OjM1LCBsYXVyZW50aXUudHVkb3JAbnhwLmNvbSB3cm90ZToNCj4gPiA+Pj4+IEZyb206IExhdXJl
-bnRpdSBUdWRvciA8bGF1cmVudGl1LnR1ZG9yQG54cC5jb20+DQo+ID4gPj4+Pg0KPiA+ID4+Pj4g
-VGhpcyBwYXRjaCBzZXJpZXMgYWRkcyBTTU1VIHN1cHBvcnQgZm9yIE5YUCBMUzEwNDNBIGFuZCBM
-UzEwNDZBDQo+IGNoaXBzDQo+ID4gPj4+PiBhbmQgY29uc2lzdHMgbW9zdGx5IGluIGltcG9ydGFu
-dCBkcml2ZXIgZml4ZXMgYW5kIHRoZSByZXF1aXJlZA0KPiBkZXZpY2UNCj4gPiA+Pj4+IHRyZWUg
-dXBkYXRlcy4gSXQgdG91Y2hlcyBzZXZlcmFsIHN1YnN5c3RlbXMgYW5kIGNvbnNpc3RzIG9mIHRo
-cmVlDQo+IG1haW4NCj4gPiA+Pj4+IHBhcnRzOg0KPiA+ID4+Pj4gICAgLSBjaGFuZ2VzIGluIHNv
-Yy9kcml2ZXJzL2ZzbC9xYm1hbiBkcml2ZXJzIGFkZGluZyBpb21tdSBtYXBwaW5nDQo+IG9mDQo+
-ID4gPj4+PiAgICAgIHJlc2VydmVkIG1lbW9yeSBhcmVhcywgZml4ZXMgYW5kIGRlZmVyZWQgcHJv
-YmUgc3VwcG9ydA0KPiA+ID4+Pj4gICAgLSBjaGFuZ2VzIGluIGRyaXZlcnMvbmV0L2V0aGVybmV0
-L2ZyZWVzY2FsZS9kcGFhX2V0aCBkcml2ZXJzDQo+ID4gPj4+PiAgICAgIGNvbnNpc3RpbmcgaW4g
-bWlzYyBkbWEgbWFwcGluZyByZWxhdGVkIGZpeGVzIGFuZCBwcm9iZQ0KPiBvcmRlcmluZw0KPiA+
-ID4+Pj4gICAgLSBhZGRpdGlvbiBvZiB0aGUgYWN0dWFsIGFybSBzbW11IGRldmljZSB0cmVlIG5v
-ZGUgdG9nZXRoZXIgd2l0aA0KPiA+ID4+Pj4gICAgICB2YXJpb3VzIGFkanVzdG1lbnRzIHRvIHRo
-ZSBkZXZpY2UgdHJlZXMNCj4gPiA+Pj4+DQo+ID4gPj4+PiBQZXJmb3JtYW5jZSBpbXBhY3QNCj4g
-PiA+Pj4+DQo+ID4gPj4+PiAgICAgICBSdW5uaW5nIGlwZXJmIGJlbmNobWFya3MgaW4gYSBiYWNr
-LXRvLWJhY2sgc2V0dXAgKGJvdGggc2lkZXMNCj4gPiA+Pj4+ICAgICAgIGhhdmluZyBzbW11IGVu
-YWJsZWQpIG9uIGEgMTBHQnBzIHBvcnQgc2hvdyBhbiBpbXBvcnRhbnQNCj4gPiA+Pj4+ICAgICAg
-IG5ldHdvcmtpbmcgcGVyZm9ybWFuY2UgZGVncmFkYXRpb24gb2YgYXJvdW5kICU0MCAoOS40OEdi
-cHMNCj4gPiA+Pj4+ICAgICAgIGxpbmVyYXRlIHZzIDUuNDVHYnBzKS4gSWYgeW91IG5lZWQgcGVy
-Zm9ybWFuY2UgYnV0IHdpdGhvdXQNCj4gPiA+Pj4+ICAgICAgIFNNTVUgc3VwcG9ydCB5b3UgY2Fu
-IHVzZSAiaW9tbXUucGFzc3Rocm91Z2g9MSIgdG8gZGlzYWJsZQ0KPiA+ID4+Pj4gICAgICAgU01N
-VS4NCj4gPiA+Pj4+DQo+ID4gPj4+PiBVU0IgaXNzdWUgYW5kIHdvcmthcm91bmQNCj4gPiA+Pj4+
-DQo+ID4gPj4+PiAgICAgICBUaGVyZSdzIGEgcHJvYmxlbSB3aXRoIHRoZSB1c2IgY29udHJvbGxl
-cnMgaW4gdGhlc2UgY2hpcHMNCj4gPiA+Pj4+ICAgICAgIGdlbmVyYXRpbmcgc21hbGxlciwgNDAt
-Yml0IHdpZGUgZG1hIGFkZHJlc3NlcyBpbnN0ZWFkIG9mIHRoZQ0KPiA+ID4+Pj4gNDgtYml0DQo+
-ID4gPj4+PiAgICAgICBzdXBwb3J0ZWQgYXQgdGhlIHNtbXUgaW5wdXQuIFNvIHlvdSBlbmQgdXAg
-aW4gYSBzaXR1YXRpb24NCj4gPiA+Pj4+IHdoZXJlIHRoZQ0KPiA+ID4+Pj4gICAgICAgc21tdSBp
-cyBtYXBwZWQgd2l0aCA0OC1iaXQgYWRkcmVzcyB0cmFuc2xhdGlvbnMsIGJ1dCB0aGUNCj4gZGV2
-aWNlDQo+ID4gPj4+PiAgICAgICBnZW5lcmF0ZXMgdHJhbnNhY3Rpb25zIHdpdGggY2xpcHBlZCA0
-MC1iaXQgYWRkcmVzc2VzLCB0aHVzDQo+IHNtbXUNCj4gPiA+Pj4+ICAgICAgIGNvbnRleHQgZmF1
-bHRzIGFyZSB0cmlnZ2VyZWQuIEkgZW5jb3VudGVyZWQgYSBzaW1pbGFyDQo+ID4gPj4+PiBzaXR1
-YXRpb24gZm9yDQo+ID4gPj4+PiAgICAgICBtbWMgdGhhdCBJICBtYW5hZ2VkIHRvIGZpeCBpbiBz
-b2Z0d2FyZSBbMV0gaG93ZXZlciBmb3IgVVNCIEkNCj4gPiA+Pj4+IGRpZCBub3QNCj4gPiA+Pj4+
-ICAgICAgIGZpbmQgYSBwcm9wZXIgcGxhY2UgaW4gdGhlIGNvZGUgdG8gYWRkIGEgc2ltaWxhciBm
-aXguIFRoZQ0KPiBvbmx5DQo+ID4gPj4+PiAgICAgICB3b3JrYXJvdW5kIEkgZm91bmQgd2FzIHRv
-IGFkZCB0aGlzIGtlcm5lbCBwYXJhbWV0ZXIgd2hpY2gNCj4gPiA+Pj4+IGxpbWl0cyB0aGUNCj4g
-PiA+Pj4+ICAgICAgIHVzYiBkbWEgdG8gMzItYml0IHNpemU6ICJ4aGNpLWhjZC5xdWlya3M9MHg4
-MDAwMDAiLg0KPiA+ID4+Pj4gICAgICAgVGhpcyB3b3JrYXJvdW5kIGlmIGZhciBmcm9tIGlkZWFs
-LCBzbyBhbnkgc3VnZ2VzdGlvbnMgZm9yIGENCj4gY29kZQ0KPiA+ID4+Pj4gICAgICAgYmFzZWQg
-d29ya2Fyb3VuZCBpbiB0aGlzIGFyZWEgd291bGQgYmUgZ3JlYXRseSBhcHByZWNpYXRlZC4NCj4g
-PiA+Pj4NCj4gPiA+Pj4gSWYgeW91IGhhdmUgYSBub21pbmFsbHktNjQtYml0IGRldmljZSB3aXRo
-IGENCj4gPiA+Pj4gbmFycm93ZXItdGhhbi10aGUtbWFpbi1pbnRlcmNvbm5lY3QgbGluayBpbiBm
-cm9udCBvZiBpdCwgdGhhdCBzaG91bGQNCj4gPiA+Pj4gYWxyZWFkeSBiZSBmaXhlZCBpbiA0LjE5
-LXJjIGJ5IGJ1c19kbWFfbWFzayBwaWNraW5nIHVwIERUIGRtYS0NCj4gcmFuZ2VzLA0KPiA+ID4+
-PiBwcm92aWRlZCB0aGUgaW50ZXJjb25uZWN0IGhpZXJhcmNoeSBjYW4gYmUgZGVzY3JpYmVkIGFw
-cHJvcHJpYXRlbHkNCj4gKG9yDQo+ID4gPj4+IGF0IGxlYXN0IG1hc3NhZ2VkIHN1ZmZpY2llbnRs
-eSB0byBzYXRpc2Z5IHRoZSBiaW5kaW5nKSwgZS5nLjoNCj4gPiA+Pj4NCj4gPiA+Pj4gLyB7DQo+
-ID4gPj4+ICAgICAgIC4uLg0KPiA+ID4+Pg0KPiA+ID4+PiAgICAgICBzb2Mgew0KPiA+ID4+PiAg
-ICAgICAgICAgcmFuZ2VzOw0KPiA+ID4+PiAgICAgICAgICAgZG1hLXJhbmdlcyA9IDwwIDAgMTAw
-MDAgMD47DQo+ID4gPj4+DQo+ID4gPj4+ICAgICAgICAgICBkZXZfNDhiaXQgeyAuLi4gfTsNCj4g
-PiA+Pj4NCj4gPiA+Pj4gICAgICAgICAgIHBlcmlwaF9idXMgew0KPiA+ID4+PiAgICAgICAgICAg
-ICAgIHJhbmdlczsNCj4gPiA+Pj4gICAgICAgICAgICAgICBkbWEtcmFuZ2VzID0gPDAgMCAxMDAg
-MD47DQo+ID4gPj4+DQo+ID4gPj4+ICAgICAgICAgICAgICAgZGV2XzQwYml0IHsgLi4uIH07DQo+
-ID4gPj4+ICAgICAgICAgICB9Ow0KPiA+ID4+PiAgICAgICB9Ow0KPiA+ID4+PiB9Ow0KPiA+ID4+
-Pg0KPiA+ID4+PiBhbmQgaWYgdGhhdCBmYWlscyB0byB3b3JrIGFzIGV4cGVjdGVkIChleGNlcHQg
-Zm9yIFBDSSBob3N0cyB3aGVyZQ0KPiA+ID4+PiBoYW5kbGluZyBkbWEtcmFuZ2VzIHByb3Blcmx5
-IHN0aWxsIG5lZWRzIHNvcnRpbmcgb3V0KSwgcGxlYXNlIGRvIGxldA0KPiB1cw0KPiA+ID4+PiBr
-bm93IDspDQo+ID4gPj4+DQo+ID4gPj4NCj4gPiA+PiBKdXN0IHRvIGNvbmZpcm0sIElzIHRoaXMg
-WzFdIHRoZSBjaGFuZ2UgSSB3YXMgc3VwcG9zZWQgdG8gdGVzdD8NCj4gPiA+DQo+ID4gPiBOb3Qg
-cXVpdGUgLSBkbWEtcmFuZ2VzIGlzIG9ubHkgdmFsaWQgZm9yIG5vZGVzIHJlcHJlc2VudGluZyBh
-IGJ1cywgc28NCj4gPiA+IHB1dHRpbmcgaXQgZGlyZWN0bHkgaW4gdGhlIFVTQiBkZXZpY2Ugbm9k
-ZXMgZG9lc24ndCB3b3JrIChGV0lXIHRoYXQncw0KPiA+ID4gd2h5IFBDSSBpcyBicm9rZW4sIGJl
-Y2F1c2UgdGhlIHBhcnNlciBkb2Vzbid0IGV4cGVjdCB0aGUNCj4gPiA+IGJ1cy1hcy1sZWFmLW5v
-ZGUgY2FzZSkuIFRoYXQncyB0ZWggcG9pbnQgb2YgdGhhdCBpbnRlcm1lZGlhdGUgc2ltcGxlLQ0K
-PiBidXMNCj4gPiA+IG5vZGUgcmVwcmVzZW50ZWQgYnkgInBlcmlwaF9idXMiIGluIG15IGV4YW1w
-bGUgKHNvcnJ5LCBJIHNob3VsZCBoYXZlDQo+IHB1dA0KPiA+ID4gY29tcGF0aWJsZXMgaW4gdG8g
-bWFrZSBpdCBjbGVhcmVyKSAtIG9mdGVuIHRoYXQncyBhY3R1YWxseSB0cnVlIHRvDQo+IGxpZmUN
-Cj4gPiA+IChpLmUuICJzb2MiIGlzIHNvbWV0aGluZyBsaWtlIGEgQ0NJIGFuZCAicGVyaXBoX2J1
-cyIgaXMgc29tZXRoaW5nIGxpa2UNCj4gPiA+IGFuIEFYSSBOSUMgZ2x1aW5nIGEgYnVuY2ggb2Yg
-bG93ZXItYmFuZHdpZHRoIERNQSBtYXN0ZXJzIHRvIG9uZSBvZiB0aGUNCj4gPiA+IENDSSBwb3J0
-cykgYnV0IGF0IHdvcnN0IGl0J3MganVzdCBhIG5lY2Vzc2FyeSBldmlsIHRvIG1ha2UgdGhlIGJp
-bmRpbmcNCj4gPiA+IGhhcHB5IChpZiBpdCBsaXRlcmFsbHkgb25seSByZXByZXNlbnRzIHRoZSBw
-b2ludC10by1wb2ludCBsaW5rIGJldHdlZW4NCj4gPiA+IHRoZSBkZXZpY2UgbWFzdGVyIHBvcnQg
-YW5kIGludGVyY29ubmVjdCBzbGF2ZSBwb3J0KS4NCj4gPiA+DQo+ID4NCj4gPiBRdWljayB1cGRh
-dGU6IHNvIEkgYWRqdXN0ZWQgdG8gZGV2aWNlIHRyZWUgYWNjb3JkaW5nIHRvIHlvdXIgZXhhbXBs
-ZSBhbmQNCj4gPiBpdCB3b3JrcyBzbyBub3cgSSBjYW4gZ2V0IHJpZCBvZiB0aGF0IG5hc3R5IGtl
-cm5lbCBhcmcgYmFzZWQgd29ya2Fyb3VuZCwNCj4gPiB5ZXkhIDotKQ0KPiANCj4gR3JlYXQgdGhh
-dCB3ZSBoYXZlIGEgZ2VuZXJpYyBzb2x1dGlvbiBsaWtlIEkgaG9wZWQgZm9yISAgU28geW91IHdp
-bGwNCj4gc3VibWl0IGEgbmV3IHJldmlzaW9uIG9mIHRoZSBzZXJpZXMgdG8gaW5jbHVkZSB0aGVz
-ZSBkdHMgdXBkYXRlcywNCj4gcmlnaHQ/DQo+IA0KDQpZZXMsIEkgYWxyZWFkeSBoYXZlIGl0IHBy
-ZXBhcmVkLiBKdXN0IGRlbGF5aW5nIHRoZSB2MiBmb3IgYSBmZXcgZGF5cyBtYXliZSB0aGVyZSB3
-aWxsIGJlIHNvbWUgbW9yZSBmZWVkYmFjay4NCg0KLS0tDQpCZXN0IFJlZ2FyZHMsIExhdXJlbnRp
-dQ0K
+
+
+On 09/20/2018 07:56 PM, Ulf Hansson wrote:
+> On 18 September 2018 at 12:55, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch internalizes the dma_inprogress into mmci dma interfaces.
+>> This allows to simplify and prepare the next dma callbacks
+>> for mmci host ops. __dma_inprogress is called in mmci_dma_data_error
+>> and mmci_dma_finalize.
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.c | 16 ++++++++++------
+>>   drivers/mmc/host/mmci.h |  4 +---
+>>   2 files changed, 11 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index bf0bb07..7d22cb9 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -497,6 +497,9 @@ static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
+>>
+>>   static void mmci_dma_data_error(struct mmci_host *host)
+>>   {
+>> +       if (!__dma_inprogress(host))
+>> +               return;
+>> +
+>>          dev_err(mmc_dev(host->mmc), "error during DMA transfer!\n");
+>>          dmaengine_terminate_all(host->dma_current);
+>>          host->dma_in_progress = false;
+>> @@ -512,6 +515,9 @@ static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
+>>          u32 status;
+>>          int i;
+>>
+>> +       if (!__dma_inprogress(dmae))
+>> +               return;
+>> +
+>>          /* Wait up to 1ms for the DMA to complete */
+>>          for (i = 0; ; i++) {
+>>                  status = readl(host->base + MMCISTATUS);
+>> @@ -903,8 +909,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
+>>                  u32 remain, success;
+>>
+>>                  /* Terminate the DMA transfer */
+>> -               if (dma_inprogress(host))
+>> -                       mmci_dma_data_error(host);
+>> +               mmci_dma_data_error(host);
+>>
+>>                  /*
+>>                   * Calculate how far we are into the transfer.  Note that
+>> @@ -942,8 +947,8 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
+>>                  dev_err(mmc_dev(host->mmc), "stray MCI_DATABLOCKEND interrupt\n");
+>>
+>>          if (status & MCI_DATAEND || data->error) {
+>> -               if (dma_inprogress(host))
+>> -                       mmci_dma_finalize(host, data);
+>> +               mmci_dma_finalize(host, data);
+>> +
+>>                  mmci_stop_data(host);
+>>
+>>                  if (!data->error)
+>> @@ -1050,8 +1055,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
+>>          if ((!sbc && !cmd->data) || cmd->error) {
+>>                  if (host->data) {
+>>                          /* Terminate the DMA transfer */
+>> -                       if (dma_inprogress(host))
+>> -                               mmci_dma_data_error(host);
+>> +                       mmci_dma_data_error(host);
+>>
+>>                          mmci_stop_data(host);
+>>                  }
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 696a066..f1ec066 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -332,9 +332,7 @@ struct mmci_host {
+>>          struct mmci_host_next   next_data;
+>>          bool                    dma_in_progress;
+>>
+>> -#define dma_inprogress(host)   ((host)->dma_in_progress)
+>> -#else
+>> -#define dma_inprogress(host)   (0)
+>> +#define __dma_inprogress(host) ((host)->dma_in_progress)
+> 
+> Overall the change makes good sense to me, however I don't get why you
+> want to rename the macro-function. Please don't.
+
+Oops it's a mistake, I forgot this patch (I remove this)  .
+I wait the end of review and will resend.
+
+like you proposed in previous review this macros is renamed with
+mmci_dmae_inprogress (in patch 04/14) to has common prefix with 
+structure mmci_dmae_priv, mmci_dmae_next...
+
+> 
+>>   #endif
+>>   };
+>>
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
