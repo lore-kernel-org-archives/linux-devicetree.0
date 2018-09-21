@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 36/40] arm64: dts: k3-am6: Add "socionext,synquacer-pre-its" property to gic_its
-Date: Fri, 21 Sep 2018 15:51:51 +0530
-Message-ID: <20180921102155.22839-37-kishon@ti.com>
+Subject: [RFC PATCH 11/40] dt-bindings: PCI: keystone: Add bindings to get device control module
+Date: Fri, 21 Sep 2018 15:51:26 +0530
+Message-ID: <20180921102155.22839-12-kishon@ti.com>
 References: <20180921102155.22839-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,26 +12,27 @@ To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjo
 Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-GIC_ITS used in AM65x platform has the same configuration as that of
-GIC_ITS used in Socionext SoCs. Add "socionext,synquacer-pre-its"
-property to get PCI MSI working.
+Add bindings to get device control module which has the device id and
+vendor id to be configured in the keystone PCIe controller.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/pci/pci-keystone.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-index adcd6341e40c..2df4acb198bd 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
-@@ -24,6 +24,7 @@
- 		gic_its: gic-its@18200000 {
- 			compatible = "arm,gic-v3-its";
- 			reg = <0x00 0x01820000 0x00 0x10000>;
-+			socionext,synquacer-pre-its = <0x1000000 0x400000>;
- 			msi-controller;
- 			#msi-cells = <1>;
- 		};
+diff --git a/Documentation/devicetree/bindings/pci/pci-keystone.txt b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+index 4dd17de549a7..2030ee0dc4f9 100644
+--- a/Documentation/devicetree/bindings/pci/pci-keystone.txt
++++ b/Documentation/devicetree/bindings/pci/pci-keystone.txt
+@@ -19,6 +19,9 @@ pcie_msi_intc : Interrupt controller device node for MSI IRQ chip
+ 	interrupt-cells: should be set to 1
+ 	interrupts: GIC interrupt lines connected to PCI MSI interrupt lines
+ 
++ti,syscon-pcie-id : phandle to the device control module required to set device
++		    id and vendor id.
++
+  Example:
+ 	pcie_msi_intc: msi-interrupt-controller {
+ 			interrupt-controller;
 -- 
 2.17.1
