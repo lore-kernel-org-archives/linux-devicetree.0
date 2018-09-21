@@ -1,84 +1,42 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: ordering wrong order tmu_cpu on
- Odroid-XU3/4 thermal-zones definition
-Date: Fri, 21 Sep 2018 13:46:09 +0200
-Message-ID: <CAJKOXPdDFm=7wNLt5Nzf-y8TS4u6gmo51Y70bFv_pKdFK42VDQ@mail.gmail.com>
-References: <20180921113329.tha5tfrsvdf7dtws@inc028000032.lancs.ac.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/8] phy: renesas: rcar-gen3-usb2: fix vbus_ctrl for role sysfs
+Date: Fri, 21 Sep 2018 20:53:18 +0900
+Message-ID: <1537530804-19399-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921113329.tha5tfrsvdf7dtws@inc028000032.lancs.ac.uk>
+In-Reply-To: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: willy.mh.wolff.ml@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Sep 2018 at 13:33, Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
->
-> This patch is to open a discussion about wrong order of tmu_cpu.
->
-> It seems that tmu_cpu1 correspond to cpu3, and tmu_cpu3 match cpu1.
-> Note, cpu{0|3} in dtsi correspond to cpu{3|7} in linux and are the big
-> cores.
+This patch fixes and issue that the vbus_ctrl is disabled by
+rcar_gen3_init_from_a_peri_to_a_host(), so a usb host cannot
+supply the vbus.
 
-Hi,
+Note that this condition will exit when the otg irq happens
+even if we don't apply this patch.
 
-I do not understand this sentence. In DTSI, the CPU0-3 are the A7,
-little cores. Defined by exynos5422-cpus.dtsi. What did you mean here?
+Fixes: 9bb86777fb71 ("phy: rcar-gen3-usb2: add sysfs for usb role swap")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> By dependencis from exynos5422-odroidxu3-common.dtsi to
-> exynos5800.dtsi -> exynos5420.dtsi, I guess definitions of tmu_cpuX are
-> incorrect. However, changing the address, reg interrupts or clocks
-> would breack other boards depending on it. As I can't test other boards,
-> I've just overload the reference in the thermal-zones node.
-
-There are 8 CPUs (4 little and 4 big) but only 4 thermal zones for
-CPUs. The mapping of names of CPU nodes and TMU nodes in DTS is not
-direct. These are just indices ... although more important is to map
-the cooling devices to proper TMU. This should be mentioned in DTS as
-this the real problem here.
-
->
-> To reproduce the problem, I provide two scripts:
-> == script_stress:
->
-> for i in 0 10 20 40 80; do
->     echo $i
->     taskset $i stress -t 10 -c 1
-> done;
->
-> == script_read_temp:
->
-> while true; do
->     for i in 0 1 2 3 4; do
->         echo $i
->         cat /sys/devices/virtual/thermal/thermal_zone$i/temp
->     done;
->     sleep 1
->     clear
-> done;
->
-> Signed-off-by: Willy Wolff <willy.mh.wolff@gmail.com>
-> ---
->  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> index 96e281c0a118..4512ffad2785 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-> @@ -135,7 +135,8 @@
->                         };
->                 };
->                 cpu1_thermal: cpu1-thermal {
-> -                       thermal-sensors = <&tmu_cpu1 0>;
-> +                       // thermal-sensors = <&tmu_cpu1 0>;
-
-Do not leave commented lines, there are not needed.
-
-Also your email does not match signed-off-by. You must have something
-wrong with either git setup or mailer (git commit --si will use the
-same address for From and SoB so I guess the mailer...).
-
-Best regards,
-Krzysztof
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 3d57ea1..a6db25c 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -195,7 +195,7 @@ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
+ 	val = readl(usb2_base + USB2_OBINTEN);
+ 	writel(val & ~USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
+ 
+-	rcar_gen3_enable_vbus_ctrl(ch, 0);
++	rcar_gen3_enable_vbus_ctrl(ch, 1);
+ 	rcar_gen3_init_for_host(ch);
+ 
+ 	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
+-- 
+1.9.1
