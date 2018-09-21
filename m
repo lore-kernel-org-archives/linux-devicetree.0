@@ -1,78 +1,49 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2 0/3] Add Amlogic video decoder driver
-Date: Fri, 21 Sep 2018 12:51:51 +0200
-Message-ID: <8b8af340-8bd7-092a-4203-fd01fd0cc5c6@xs4all.nl>
-References: <20180911150938.3844-1-mjourdan@baylibre.com>
- <9c33c57e-2ce2-8752-b851-f85c03a7d761@xs4all.nl>
- <CAMO6nay7u4nMZcND6+g-GJAFsFcGrp_GDKBhVjeXVzpjF0ND4Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv3 0/7] Add support for UHS-I on Exynos5422 odroid boards
+Date: Fri, 21 Sep 2018 12:55:54 +0200
+Message-ID: <CAJKOXPdsAK1_9JRzq7_pVfDwBK6WGkFbYUsbcsujCh31Fzsz6g@mail.gmail.com>
+References: <20180920175826.1284-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMO6nay7u4nMZcND6+g-GJAFsFcGrp_GDKBhVjeXVzpjF0ND4Q@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180920175826.1284-1-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Jourdan <mjourdan@baylibre.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
+To: linux.amoon@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/17/18 18:36, Maxime Jourdan wrote:
-> 2018-09-17 16:51 GMT+02:00 Hans Verkuil <hverkuil@xs4all.nl>:
->> On 09/11/2018 05:09 PM, Maxime Jourdan wrote:
->>>  - Moved the single instance check (returning -EBUSY) to start/stop streaming
->>>  The check was previously in queue_setup but there was no great location to
->>>  clear it except for .close().
->>
->> Actually, you can clear it by called VIDIOC_REQBUFS with count set to 0. That
->> freed all buffers and clears this.
->>
->> Now, the difference between queue_setup and start/stop streaming is that if you
->> do this in queue_setup you'll know early on that the device is busy. It is
->> reasonable to assume that you only allocate buffers when you also want to start
->> streaming, so that it a good place to know this quickly.
->>
->> Whereas with start_streaming you won't know until you call STREAMON, or even later
->> if you start streaming with no buffers queued, since start_streaming won't
->> be called until you have at least 'min_buffers_needed' buffers queued (1 for this
->> driver). So in that case EBUSY won't be returned until the first VIDIOC_QBUF.
->>
->> My preference is to check this in queue_setup, but it is up to you to decide.
->> Just be aware of the difference between the two options.
->>
->> Regards,
->>
->>         Hans
-> 
-> I could for instance keep track of which queue(s) have been called
-> with queue_setup, catch calls to VIDIOC_REQBUFS with count set to 0,
-> and clear the current session once both queues have been reset ?
+On Thu, 20 Sep 2018 at 19:58, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> This is series v3 since my previous patches we incomplete with driver
+> changes missing.
+>
+> These changes add UHS-I tuning for dw_mmc-exynos driver.
+> Some new patches are added to enhance the performace.
 
-I see your point, this is rather awkward. The real problem here is that
-we don't have a 'queue_free' callback. If we'd had that this would be
-a lot easier.
+Patches look like based on some older version of kernel tree (or
+current mainline) and probably they will not apply on my tree. The
+easiest is to base on top of linux-next or, for DTS patches, on my
+next/dt branch.
 
-In any case, I am dropping my objections to doing this in start/stop_streaming.
+Best regards,
+Krzysztof
 
-> You leverage another issue with min_buffers_needed. It's indeed set to
-> 1 but this value is wrong for the CAPTURE queue. The problem is that
-> this value changes depending on the codec and the amount of CAPTURE
-> buffers requested by userspace.
-> Ultimately I want it set to the total amount of CAPTURE buffers,
-> because the hardware needs the full buffer list before starting a
-> decode job.
-> Am I free to change this queue parameter later, or is m2m_queue_init
-> the only place to do it ?
-
-It has to be set before the VIDIOC_STREAMON. After that you cannot
-change it anymore.
-
-But I don't think this is all that relevant, since this is something
-that the job_ready() callback should take care of. min_buffers_needed
-is really for hardware where the DMA engine cannot start unless that
-many buffers are queued. But in that case the DMA runs continuously
-capturing video, whereas here these are jobs and the DMA is only
-started when you can actually execute a job.
-
-Regards,
-
-	Hans
+>
+> Anand Moon (7):
+>   ARM: dts: exynos5422: Added UHS-I bus speed support
+>   ARM: dts: exynos5422: fix regulator min values of LDO13 for Odroid
+>     XU3/XU4
+>   ARM: dts: exynos5422: update maximum frequency for sdcard to 200MHz
+>   ARM: dts: exynos5422: use cd-gpio method to detect sd-card
+>   ARM: dts: exynos5422: use wp-gpio method to detect sd-card
+>   ARM: dts: exynos5422: update maximum frequency for emmc to 200MHz
+>   mmc: dw_mmc-exynos: Add tuning for sdr and ddr timing for USH-I mode
+>
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |  8 +++++++-
+>  arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  1 +
+>  drivers/mmc/host/dw_mmc-exynos.c                   | 11 +++++++++++
+>  3 files changed, 19 insertions(+), 1 deletion(-)
+>
+> --
+> 2.17.1
+>
