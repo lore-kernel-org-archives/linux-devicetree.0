@@ -1,43 +1,57 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 2/7] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Fri, 21 Sep 2018 11:15:32 +0200
-Message-ID: <20180921091532.GC30439@nazgul.tnic>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
- <20180918075522.GC22202@nazgul.tnic>
- <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
- <20180919111553.GA9140@nazgul.tnic>
- <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
- <20180921090721.GB30439@nazgul.tnic>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH 2/2] hwmon: ina3221: Get channel names from DT node
+Date: Fri, 21 Sep 2018 02:18:14 -0700
+Message-ID: <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
+References: <20180921000753.21846-1-nicoleotsuka@gmail.com>
+ <20180921000753.21846-3-nicoleotsuka@gmail.com>
+ <21a6e8f3-c95d-43d0-ca3f-3f91ddfeff07@roeck-us.net>
+ <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180921090721.GB30439@nazgul.tnic>
+In-Reply-To: <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <MNARANI@xilinx.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There's more:
+Hi,
 
-I said:
+On Thu, Sep 20, 2018 at 06:20:38PM -0700, Nicolin Chen wrote:
+> > So if there are no devicetree entries, the user now gets a sequence of
+> > "unknown" sensors ? I don't think so. Please keep in mind that there are
+> > users of this chip who don't have devicetree systems, and other users
+> > may not want to specify any specific name properties (or they use sensors3.conf
+> > to do it).
+> 
+> Being enlightened by your comments below, maybe adding a
+> separate group for channel names by attaching is_visible
+> to it could be acceptable? Then, name nodes can hide from
+> those who don't want to specify.
+ 
+> > > +		/* Log connected channels */
+> > > +		ina->attr_group[g++] = &ina3221_group[i];
+> > > +		ina->channel_name[i] = str;
+> > > +		ina->enable[i] = true;
+> > 
+> > I also don't see the need for defining the group dynamically. The
+> > is_visible callback is very well suited for handling optional sysfs
+> > attributes.
 
-> > @@ -370,12 +398,12 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+I tried is_visible but it looks like it won't be that neat to
+implement as some attributes of this driver don't really pass
+the channel index to the store()/show() but some other indexes.
 
-> That function returns 0 unconditionally. Make it a void in a prepatch.
+If you are very against the dynamical group, I can drop it to
+leave the sysfs node as it was.
 
-But you've lumped this change together with a bunch more. Maybe my
-request wasn't clear so let me rephrase it:
+And for the name nodes that I was talking about above, I will
+add an sysfs store() function so non-DT users can set them,
+and I also removed the confusing "unknown" default name.
 
-That function returns 0 unconditionally. Make it a void in a *separate* prepatch.
+I have been rewriting the DT binding and it should make a lot
+of sense now comparing to this version. Will send v2 tomrrow.
 
-Ok?
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+Thanks
+Nicolin
