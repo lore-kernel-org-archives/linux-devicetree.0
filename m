@@ -1,37 +1,75 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/8] phy: renesas: rcar-gen3-usb2: re-design for all R-Car Gen3 SoCs
-Date: Fri, 21 Sep 2018 20:53:16 +0900
-Message-ID: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 5/8] phy: renesas: rcar-gen3-usb2: unify OBINTEN handling
+Date: Fri, 21 Sep 2018 20:53:21 +0900
+Message-ID: <1537530804-19399-6-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set is based on the linux-phy / next branch (the commit id is
-53706a1168631fa5bf2e6d47de4647ea7e69f270).
+This patch unifies the OBINTEN handling to clean-up the code.
 
-Since all R-Car Gen3 SoCs have dedicated otg pins in fact,
-the previous code was not good to handle it. So, this patch set
-changes the design for all R-Car Gen3 SoCs.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/phy/renesas/phy-rcar-gen3-usb2.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-
-Yoshihiro Shimoda (8):
-  dt-bindings: rcar-gen3-phy-usb2: add no-otg-pins property
-  phy: renesas: rcar-gen3-usb2: fix vbus_ctrl for role sysfs
-  phy: renesas: rcar-gen3-usb2: Rename has_otg_pins to uses_otg_pins
-  phy: renesas: rcar-gen3-usb2: Check a property to use otg pins
-  phy: renesas: rcar-gen3-usb2: unify OBINTEN handling
-  phy: renesas: rcar-gen3-usb2: change a condition "dr_mode"
-  phy: renesas: rcar-gen3-usb2: add conditions for uses_otg_pins ==
-    false
-  phy: renesas: rcar-gen3-usb2: add is_otg_channel to use "role" sysfs
-
- .../devicetree/bindings/phy/rcar-gen3-phy-usb2.txt |  2 +
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           | 80 +++++++++++++---------
- 2 files changed, 48 insertions(+), 34 deletions(-)
-
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+index 856056e..e7eaed9 100644
+--- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+@@ -142,6 +142,18 @@ static void rcar_gen3_enable_vbus_ctrl(struct rcar_gen3_chan *ch, int vbus)
+ 	writel(val, usb2_base + USB2_ADPCTRL);
+ }
+ 
++static void rcar_gen3_control_otg_irq(struct rcar_gen3_chan *ch, int enable)
++{
++	void __iomem *usb2_base = ch->base;
++	u32 val = readl(usb2_base + USB2_OBINTEN);
++
++	if (enable)
++		val |= USB2_OBINT_BITS;
++	else
++		val &= ~USB2_OBINT_BITS;
++	writel(val, usb2_base + USB2_OBINTEN);
++}
++
+ static void rcar_gen3_init_for_host(struct rcar_gen3_chan *ch)
+ {
+ 	rcar_gen3_set_linectrl(ch, 1, 1);
+@@ -187,16 +199,12 @@ static void rcar_gen3_init_for_a_peri(struct rcar_gen3_chan *ch)
+ 
+ static void rcar_gen3_init_from_a_peri_to_a_host(struct rcar_gen3_chan *ch)
+ {
+-	void __iomem *usb2_base = ch->base;
+-	u32 val;
+-
+-	val = readl(usb2_base + USB2_OBINTEN);
+-	writel(val & ~USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
++	rcar_gen3_control_otg_irq(ch, 0);
+ 
+ 	rcar_gen3_enable_vbus_ctrl(ch, 1);
+ 	rcar_gen3_init_for_host(ch);
+ 
+-	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
++	rcar_gen3_control_otg_irq(ch, 1);
+ }
+ 
+ static bool rcar_gen3_check_id(struct rcar_gen3_chan *ch)
+@@ -286,8 +294,7 @@ static void rcar_gen3_init_otg(struct rcar_gen3_chan *ch)
+ 	val = readl(usb2_base + USB2_VBCTRL);
+ 	writel(val | USB2_VBCTRL_DRVVBUSSEL, usb2_base + USB2_VBCTRL);
+ 	writel(USB2_OBINT_BITS, usb2_base + USB2_OBINTSTA);
+-	val = readl(usb2_base + USB2_OBINTEN);
+-	writel(val | USB2_OBINT_BITS, usb2_base + USB2_OBINTEN);
++	rcar_gen3_control_otg_irq(ch, 1);
+ 	val = readl(usb2_base + USB2_ADPCTRL);
+ 	writel(val | USB2_ADPCTRL_IDPULLUP, usb2_base + USB2_ADPCTRL);
+ 	val = readl(usb2_base + USB2_LINECTRL1);
 -- 
 1.9.1
