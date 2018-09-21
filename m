@@ -1,67 +1,54 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
-Date: Fri, 21 Sep 2018 10:40:14 -0700
-Message-ID: <CAD=FV=Wbj+bgdSBeHSFr+nz6fzCMcmQS-D9oyzkR0yVkxiRb8A@mail.gmail.com>
-References: <20180920224055.164856-1-ryandcase@chromium.org> <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH 2/2] hwmon: ina3221: Get channel names from DT node
+Date: Fri, 21 Sep 2018 10:43:54 -0700
+Message-ID: <20180921174353.GA24662@Asurada-Nvidia.nvidia.com>
+References: <20180921000753.21846-1-nicoleotsuka@gmail.com>
+ <20180921000753.21846-3-nicoleotsuka@gmail.com>
+ <21a6e8f3-c95d-43d0-ca3f-3f91ddfeff07@roeck-us.net>
+ <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
+ <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
+ <75741ce9-80a3-9277-b8e3-2d3c3e003797@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <75741ce9-80a3-9277-b8e3-2d3c3e003797@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, ryandcase@chromium.org, boris.brezillon@bootlin.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Sep 21, 2018 at 05:56:00AM -0700, Guenter Roeck wrote:
 
-On Fri, Sep 21, 2018 at 10:31 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Ryan Case (2018-09-20 15:40:54)
-> > diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
-> > new file mode 100644
-> > index 000000000000..ecfb1e2bd520
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
-> > @@ -0,0 +1,36 @@
-> > +Qualcomm Quad Serial Peripheral Interface (QSPI)
-> > +
-> > +The QSPI controller allows SPI protocol communication in single, dual, or quad
-> > +wire transmission modes for read/write access to slaves such as NOR flash.
-> > +
-> > +Required properties:
-> > +- compatible:  Should contain:
-> > +               "qcom,sdm845-qspi"
->
-> Does someone have a more generic compatible string that can be added
-> here to indicate the type of quad SPI controller this is? I really doubt
-> this is a one-off hardware block for the specific SDM845 SoC.
+> > I tried is_visible but it looks like it won't be that neat to
+> > implement as some attributes of this driver don't really pass
+> > the channel index to the store()/show() but some other indexes.
+> > 
+> 
+> The channel index is not the only means that can be used to determine
+> the channel index. Many drivers use the position in the attrs[] array
+> to determine the channel index. I don't see why this would not be
+> possible here.
 
-The compatible string used to be "qcom,qspi-v1".  ...but Rob Herring
-requested [1] "an SoC specific compatible string".  While we could do
-a compatible string like:
+Hmmm, that should simply work...I didn't mean not possible though.
 
-  "qcom,sdm845-qspi", "qcom,qspi-v1".
+> > If you are very against the dynamical group, I can drop it to
+> > leave the sysfs node as it was.
+> > 
+> > And for the name nodes that I was talking about above, I will
+> > add an sysfs store() function so non-DT users can set them,
+> > and I also removed the confusing "unknown" default name.
+> > 
+> 
+> The label attributes are RO. Please follow the ABI.
+> 
+> temp[1-*]_label Suggested temperature channel label.
 
-I'm curious if that buys us anything.  From all my previous experience
-with device tree it is fine to name a compatible string for a
-component based on the first SoC that used it.  If we later find that
-this is also used in an "msm1234" we could always later do the
-compatible string for that device as:
+Thanks a lot for the hint. I looked up the doc and feel that
+this one probably fits my situation more:
+    in[0-*]_label   Suggested voltage channel label.
 
-  "qcom, msm1234-qspi", "qcom,sdm845-qspi"
+Will follow it in my next version.
 
-...and we don't need to try to come up with a generic name.
-Obviously, though, I'll cede to whatever Rob says here though.
-
--Doug
-
-
-[1] http://lkml.kernel.org/r/20180716222721.GA12854@rob-hp-laptop
-
-
->
-> > +- reg:         Should contain the base register location and length.
-> > +- interrupts:  Interrupt number used by the controller.
-> > +- clocks:      Should contain the core and AHB clock.
-> > +- clock-names: Should be "core" for core clock and "iface" for AHB clock.
-> > +
+Thank you
+Nicolin
