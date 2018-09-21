@@ -1,73 +1,114 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] hwmon: ina3221: Get channel names from DT node
-Date: Fri, 21 Sep 2018 05:56:00 -0700
-Message-ID: <75741ce9-80a3-9277-b8e3-2d3c3e003797@roeck-us.net>
-References: <20180921000753.21846-1-nicoleotsuka@gmail.com>
- <20180921000753.21846-3-nicoleotsuka@gmail.com>
- <21a6e8f3-c95d-43d0-ca3f-3f91ddfeff07@roeck-us.net>
- <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
- <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v7 5/7] edac: synopsys: Add EDAC ECC support for ZynqMP
+ DDRC
+Date: Fri, 21 Sep 2018 14:56:13 +0200
+Message-ID: <20180921125527.GE30439@nazgul.tnic>
+References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
+ <1537194305-9243-6-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1537194305-9243-6-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, michal.simek@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/21/2018 02:18 AM, Nicolin Chen wrote:
-> Hi,
+On Mon, Sep 17, 2018 at 07:55:03PM +0530, Manish Narani wrote:
+> Add EDAC ECC support for ZynqMP DDRC IP. The IP supports interrupts for
+> corrected and uncorrected errors. Add interrupt handlers for the same.
 > 
-> On Thu, Sep 20, 2018 at 06:20:38PM -0700, Nicolin Chen wrote:
->>> So if there are no devicetree entries, the user now gets a sequence of
->>> "unknown" sensors ? I don't think so. Please keep in mind that there are
->>> users of this chip who don't have devicetree systems, and other users
->>> may not want to specify any specific name properties (or they use sensors3.conf
->>> to do it).
->>
->> Being enlightened by your comments below, maybe adding a
->> separate group for channel names by attaching is_visible
->> to it could be acceptable? Then, name nodes can hide from
->> those who don't want to specify.
->   
->>>> +		/* Log connected channels */
->>>> +		ina->attr_group[g++] = &ina3221_group[i];
->>>> +		ina->channel_name[i] = str;
->>>> +		ina->enable[i] = true;
->>>
->>> I also don't see the need for defining the group dynamically. The
->>> is_visible callback is very well suited for handling optional sysfs
->>> attributes.
-> 
-> I tried is_visible but it looks like it won't be that neat to
-> implement as some attributes of this driver don't really pass
-> the channel index to the store()/show() but some other indexes.
->
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+> ---
+>  drivers/edac/Kconfig         |   2 +-
+>  drivers/edac/synopsys_edac.c | 304 ++++++++++++++++++++++++++++++++++++++++---
+>  2 files changed, 287 insertions(+), 19 deletions(-)
 
-The channel index is not the only means that can be used to determine
-the channel index. Many drivers use the position in the attrs[] array
-to determine the channel index. I don't see why this would not be
-possible here.
+...
 
-> If you are very against the dynamical group, I can drop it to
-> leave the sysfs node as it was.
-> 
-> And for the name nodes that I was talking about above, I will
-> add an sysfs store() function so non-DT users can set them,
-> and I also removed the confusing "unknown" default name.
-> 
+> @@ -639,7 +878,7 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+>  	struct mem_ctl_info *mci;
+>  	void __iomem *baseaddr;
+>  	struct resource *res;
+> -	int rc;
+> +	int rc, irq;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	baseaddr = devm_ioremap_resource(&pdev->dev, res);
+> @@ -673,6 +912,28 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+>  
+>  	edac_mc_init(mci, pdev);
+>  
+> +	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT) {
 
-The label attributes are RO. Please follow the ABI.
+This whole chunk together with the if, looks like it could be a separate
+function called maybe request_irq() or so.
 
-temp[1-*]_label Suggested temperature channel label.
-                 Text string
-                 Should only be created if the driver has hints about what
-                 this temperature channel is being used for, and user-space
-                 doesn't. In all other cases, the label is provided by
-                 user-space.
-                 RO
+> +		irq = platform_get_irq(pdev, 0);
+> +		if (irq < 0) {
+> +			edac_printk(KERN_ERR, EDAC_MC,
+> +					"No irq %d in DT\n", irq);
 
-Guenter
+Align arguments on opening brace.
+
+Then, here it is "irq"...
+
+> +			rc = irq;
+> +			goto free_edac_mc;
+> +		}
+> +
+> +		rc = devm_request_irq(&pdev->dev, irq,
+> +			synps_edac_intr_handler,
+> +			0, dev_name(&pdev->dev), mci);
+
+Also align on opening brace.
+
+> +		if (rc < 0) {
+> +			edac_printk(KERN_ERR, EDAC_MC, "Failed to request Irq\n");
+
+... here it is "Irq".
+
+I'd say it should be "IRQ" everywhere.
+
+> +			goto free_edac_mc;
+> +		}
+> +
+> +		/* Enable UE/CE Interrupts */
+> +		writel((DDR_QOSUE_MASK | DDR_QOSCE_MASK),
+> +			priv->baseaddr + DDR_QOS_IRQ_EN_OFST);
+> +	}
+> +
+>  	rc = edac_mc_add_mc(mci);
+>  	if (rc) {
+>  		edac_printk(KERN_ERR, EDAC_MC,
+> @@ -684,7 +945,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+>  	 * Start capturing the correctable and uncorrectable errors. A write of
+>  	 * 0 starts the counters.
+>  	 */
+> -	writel(0x0, baseaddr + ECC_CTRL_OFST);
+> +	if (!(priv->p_data->quirks & DDR_ECC_INTR_SUPPORT))
+> +		writel(0x0, baseaddr + ECC_CTRL_OFST);
+>  	return rc;
+>  
+>  free_edac_mc:
+> @@ -702,7 +964,13 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+>  static int synps_edac_mc_remove(struct platform_device *pdev)
+>  {
+>  	struct mem_ctl_info *mci = platform_get_drvdata(pdev);
+> +	struct synps_edac_priv *priv;
+>  
+> +	priv = mci->pvt_info;
+> +	if (priv->p_data->quirks & DDR_ECC_INTR_SUPPORT)
+> +		/* Disable UE/CE Interrupts */
+> +		writel((DDR_QOSUE_MASK | DDR_QOSCE_MASK),
+> +			priv->baseaddr + DDR_QOS_IRQ_DB_OFST);
+
+This could be a disable_irq() function. Makes the code easier to follow.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
