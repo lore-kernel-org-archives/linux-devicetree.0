@@ -1,60 +1,46 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI)
- documentation
-Date: Fri, 21 Sep 2018 11:51:06 -0700
-Message-ID: <20180921185106.GJ20825@sirena.org.uk>
-References: <20180920224055.164856-1-ryandcase@chromium.org>
- <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
- <CAD=FV=Wbj+bgdSBeHSFr+nz6fzCMcmQS-D9oyzkR0yVkxiRb8A@mail.gmail.com>
- <153755522409.119890.5471037050114193@swboyd.mtv.corp.google.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
+ management IC
+Date: Fri, 21 Sep 2018 11:52:58 -0700
+Message-ID: <20180921185258.GC4358@dell>
+References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180921172959.GG20825@sirena.org.uk>
+ <20180921180241.GA4358@dell>
+ <20180921181217.GI20825@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="1ou9v+QBCNysIXaH"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <153755522409.119890.5471037050114193@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180921181217.GI20825@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Doug Anderson <dianders@chromium.org>, ryandcase@chromium.org, boris.brezillon@bootlin.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 21 Sep 2018, Mark Brown wrote:
 
---1ou9v+QBCNysIXaH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Fri, Sep 21, 2018 at 11:02:41AM -0700, Lee Jones wrote:
+> > On Fri, 21 Sep 2018, Mark Brown wrote:
+> 
+> > > This looks OK to me - Lee, the patch is almost entirely a regulator one,
+> > > are you OK with me applying it?
+> 
+> > The diff in rohm-bd718x7.h does not look significant.
+> 
+> > You can apply it so long as you provide me with a PR in order to avoid
+> > any potential merge conflicts.  Especially as Linus is out for this
+> > release.
+> 
+> Great, thanks.  There's also the MFD DT bindings and another patch later
+> on with Acked-for-MFD tags on them, should I convert the tags to acks,
+> apply those as well and include them in the pull request?
 
-On Fri, Sep 21, 2018 at 11:40:24AM -0700, Stephen Boyd wrote:
+Please.
 
-> It seems that everybody has misunderstood my email. Let me try to
-> clarify.
-
-> I'm not saying to replace the sdm845 qspi compatible with a generic one.
-> I'm recommending that a generic one is added in addition to the SoC
-> specific one. That way, we get to put the generic compatible string in
-> the driver and not need to update the driver compatible string array
-> each time a new SoC comes out with a new compatible string.
-
-> If it turns out later that we need to handle some bug in that specific
-> SoC compatible string then we're good to go and we can handle it by
-> matching the more specific SoC version compatible.
-
-Right, the policy is generally not to have these strings at all.  IIRC
-the argument is that they tend to either become unclear as the marketing
-and technology changes.
-
---1ou9v+QBCNysIXaH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlulPZcACgkQJNaLcl1U
-h9C0BQf9Fshy+ezWZkTSrgEQ3NGWsVxbZeRzrShDSv7SKUi6RMolLG49Uir+yHKW
-oKzui9ZctJgJ7gm0eWwC93pv8IRrad7D4OboXV9WhBgbm+2jAZXva3mlPQtC97/2
-VVPeBEnRxD8h3azct5dAM4Tv7t7MA6xD6JDToC8kYuVUJrAqXxPhxH3fhORYZVwk
-xqzqqC4GMzM8UpjzR8v8QloS9F2YVbLuKuKRbXdJpBxrDQIZM/ot4+9g18kfS5z8
-SA9rWix9UzupOnheaCpJfqcn6dYNOv4TgOV+or5H4gxBn9fn3Zxi4wsJMMnkvgNx
-9nKlWL22qdTAaCWSDFdFeyXKR8Cj8g==
-=geHU
------END PGP SIGNATURE-----
-
---1ou9v+QBCNysIXaH--
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
