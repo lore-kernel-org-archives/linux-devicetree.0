@@ -1,458 +1,493 @@
-From: Abel Vesa <abel.vesa@nxp.com>
-Subject: [PATCH v8 1/5] dt-bindings: add binding for i.MX8MQ CCM
-Date: Fri, 21 Sep 2018 15:11:30 +0300
-Message-ID: <1537531894-18499-2-git-send-email-abel.vesa@nxp.com>
-References: <1537531894-18499-1-git-send-email-abel.vesa@nxp.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
+ magnetometer
+Date: Fri, 21 Sep 2018 13:20:12 +0100
+Message-ID: <20180921132012.00007061@huawei.com>
+References: <20180920131340.6699-1-songqiang1304521@gmail.com>
+        <alpine.DEB.2.21.1809201522370.1482@vps.pmeerw.net>
+        <5a4d3868-902c-494e-76e4-4141ff5ec855@electromag.com.au>
+        <20180921112954.GA4639@Eros>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537531894-18499-1-git-send-email-abel.vesa@nxp.com>
+In-Reply-To: <20180921112954.GA4639@Eros>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Dong Aisheng <aisheng.dong@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, Anson Huang <anson.huang@nxp.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: linux-imx@nxp.com, Abel Vesa <abelvesa@linux.com>, Abel Vesa <abel.vesa@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: Phil Reid <preid@electromag.com.au>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+Hi Song,
 
-This adds the binding for the i.MX8MQ Clock Controller Module.
+...
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/clock/imx8mq-clock.txt     |  20 ++
- include/dt-bindings/clock/imx8mq-clock.h           | 395 +++++++++++++++++++++
- 2 files changed, 415 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/imx8mq-clock.txt
- create mode 100644 include/dt-bindings/clock/imx8mq-clock.h
+Please crop emails down to the relevant section when replying.  Lots of scrolling
+for everyone otherwise and sometimes things get missed when doing that.
 
-diff --git a/Documentation/devicetree/bindings/clock/imx8mq-clock.txt b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-new file mode 100644
-index 0000000..52de826
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/imx8mq-clock.txt
-@@ -0,0 +1,20 @@
-+* Clock bindings for NXP i.MX8M Quad
-+
-+Required properties:
-+- compatible: Should be "fsl,imx8mq-ccm"
-+- reg: Address and length of the register set
-+- #clock-cells: Should be <1>
-+- clocks: list of clock specifiers, must contain an entry for each required
-+          entry in clock-names
-+- clock-names: should include the following entries:
-+    - "ckil"
-+    - "osc_25m"
-+    - "osc_27m"
-+    - "clk_ext1"
-+    - "clk_ext2"
-+    - "clk_ext3"
-+    - "clk_ext4"
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx8mq-clock.h
-+for the full list of i.MX8M Quad clock IDs.
-diff --git a/include/dt-bindings/clock/imx8mq-clock.h b/include/dt-bindings/clock/imx8mq-clock.h
-new file mode 100644
-index 0000000..b53be41
---- /dev/null
-+++ b/include/dt-bindings/clock/imx8mq-clock.h
-@@ -0,0 +1,395 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017 NXP
-+ */
-+
-+#ifndef __DT_BINDINGS_CLOCK_IMX8MQ_H
-+#define __DT_BINDINGS_CLOCK_IMX8MQ_H
-+
-+#define IMX8MQ_CLK_DUMMY		0
-+#define IMX8MQ_CLK_32K			1
-+#define IMX8MQ_CLK_25M			2
-+#define IMX8MQ_CLK_27M			3
-+#define IMX8MQ_CLK_EXT1			4
-+#define IMX8MQ_CLK_EXT2			5
-+#define IMX8MQ_CLK_EXT3			6
-+#define IMX8MQ_CLK_EXT4			7
-+
-+/* ANAMIX PLL clocks */
-+/* FRAC PLLs */
-+/* ARM PLL */
-+#define IMX8MQ_ARM_PLL_REF_SEL		8
-+#define IMX8MQ_ARM_PLL_REF_DIV		9
-+#define IMX8MQ_ARM_PLL			10
-+#define IMX8MQ_ARM_PLL_BYPASS		11
-+#define IMX8MQ_ARM_PLL_OUT		12
-+
-+/* GPU PLL */
-+#define IMX8MQ_GPU_PLL_REF_SEL		13
-+#define IMX8MQ_GPU_PLL_REF_DIV		14
-+#define IMX8MQ_GPU_PLL			15
-+#define IMX8MQ_GPU_PLL_BYPASS		16
-+#define IMX8MQ_GPU_PLL_OUT		17
-+
-+/* VPU PLL */
-+#define IMX8MQ_VPU_PLL_REF_SEL		18
-+#define IMX8MQ_VPU_PLL_REF_DIV		19
-+#define IMX8MQ_VPU_PLL			20
-+#define IMX8MQ_VPU_PLL_BYPASS		21
-+#define IMX8MQ_VPU_PLL_OUT		22
-+
-+/* AUDIO PLL1 */
-+#define IMX8MQ_AUDIO_PLL1_REF_SEL	23
-+#define IMX8MQ_AUDIO_PLL1_REF_DIV	24
-+#define IMX8MQ_AUDIO_PLL1		25
-+#define IMX8MQ_AUDIO_PLL1_BYPASS	26
-+#define IMX8MQ_AUDIO_PLL1_OUT		27
-+
-+/* AUDIO PLL2 */
-+#define IMX8MQ_AUDIO_PLL2_REF_SEL	28
-+#define IMX8MQ_AUDIO_PLL2_REF_DIV	29
-+#define IMX8MQ_AUDIO_PLL2		30
-+#define IMX8MQ_AUDIO_PLL2_BYPASS	31
-+#define IMX8MQ_AUDIO_PLL2_OUT		32
-+
-+/* VIDEO PLL1 */
-+#define IMX8MQ_VIDEO_PLL1_REF_SEL	33
-+#define IMX8MQ_VIDEO_PLL1_REF_DIV	34
-+#define IMX8MQ_VIDEO_PLL1		35
-+#define IMX8MQ_VIDEO_PLL1_BYPASS	36
-+#define IMX8MQ_VIDEO_PLL1_OUT		37
-+
-+/* SYS1 PLL */
-+#define IMX8MQ_SYS1_PLL1_REF_SEL	38
-+#define IMX8MQ_SYS1_PLL1_REF_DIV	39
-+#define IMX8MQ_SYS1_PLL1		40
-+#define IMX8MQ_SYS1_PLL1_OUT		41
-+#define IMX8MQ_SYS1_PLL1_OUT_DIV	42
-+#define IMX8MQ_SYS1_PLL2		43
-+#define IMX8MQ_SYS1_PLL2_DIV		44
-+#define IMX8MQ_SYS1_PLL2_OUT		45
-+
-+/* SYS2 PLL */
-+#define IMX8MQ_SYS2_PLL1_REF_SEL	46
-+#define IMX8MQ_SYS2_PLL1_REF_DIV	47
-+#define IMX8MQ_SYS2_PLL1		48
-+#define IMX8MQ_SYS2_PLL1_OUT		49
-+#define IMX8MQ_SYS2_PLL1_OUT_DIV	50
-+#define IMX8MQ_SYS2_PLL2		51
-+#define IMX8MQ_SYS2_PLL2_DIV		52
-+#define IMX8MQ_SYS2_PLL2_OUT		53
-+
-+/* SYS3 PLL */
-+#define IMX8MQ_SYS3_PLL1_REF_SEL	54
-+#define IMX8MQ_SYS3_PLL1_REF_DIV	55
-+#define IMX8MQ_SYS3_PLL1		56
-+#define IMX8MQ_SYS3_PLL1_OUT		57
-+#define IMX8MQ_SYS3_PLL1_OUT_DIV	58
-+#define IMX8MQ_SYS3_PLL2		59
-+#define IMX8MQ_SYS3_PLL2_DIV		60
-+#define IMX8MQ_SYS3_PLL2_OUT		61
-+
-+/* DRAM PLL */
-+#define IMX8MQ_DRAM_PLL1_REF_SEL	62
-+#define IMX8MQ_DRAM_PLL1_REF_DIV	63
-+#define IMX8MQ_DRAM_PLL1		64
-+#define IMX8MQ_DRAM_PLL1_OUT		65
-+#define IMX8MQ_DRAM_PLL1_OUT_DIV	66
-+#define IMX8MQ_DRAM_PLL2		67
-+#define IMX8MQ_DRAM_PLL2_DIV		68
-+#define IMX8MQ_DRAM_PLL2_OUT		69
-+
-+/* SYS PLL DIV */
-+#define IMX8MQ_SYS1_PLL_40M		70
-+#define IMX8MQ_SYS1_PLL_80M		71
-+#define IMX8MQ_SYS1_PLL_100M		72
-+#define IMX8MQ_SYS1_PLL_133M		73
-+#define IMX8MQ_SYS1_PLL_160M		74
-+#define IMX8MQ_SYS1_PLL_200M		75
-+#define IMX8MQ_SYS1_PLL_266M		76
-+#define IMX8MQ_SYS1_PLL_400M		77
-+#define IMX8MQ_SYS1_PLL_800M		78
-+
-+#define IMX8MQ_SYS2_PLL_50M		79
-+#define IMX8MQ_SYS2_PLL_100M		80
-+#define IMX8MQ_SYS2_PLL_125M		81
-+#define IMX8MQ_SYS2_PLL_166M		82
-+#define IMX8MQ_SYS2_PLL_200M		83
-+#define IMX8MQ_SYS2_PLL_250M		84
-+#define IMX8MQ_SYS2_PLL_333M		85
-+#define IMX8MQ_SYS2_PLL_500M		86
-+#define IMX8MQ_SYS2_PLL_1000M		87
-+
-+/* CCM ROOT clocks */
-+/* A53 */
-+#define IMX8MQ_CLK_A53_SRC		88
-+#define IMX8MQ_CLK_A53_CG		89
-+#define IMX8MQ_CLK_A53_DIV		90
-+/* M4 */
-+#define IMX8MQ_CLK_M4_SRC		91
-+#define IMX8MQ_CLK_M4_CG		92
-+#define IMX8MQ_CLK_M4_DIV		93
-+/* VPU */
-+#define IMX8MQ_CLK_VPU_SRC		94
-+#define IMX8MQ_CLK_VPU_CG		95
-+#define IMX8MQ_CLK_VPU_DIV		96
-+/* GPU CORE */
-+#define IMX8MQ_CLK_GPU_CORE_SRC		97
-+#define IMX8MQ_CLK_GPU_CORE_CG		98
-+#define IMX8MQ_CLK_GPU_CORE_DIV		99
-+/* GPU SHADER */
-+#define IMX8MQ_CLK_GPU_SHADER_SRC	100
-+#define IMX8MQ_CLK_GPU_SHADER_CG	101
-+#define IMX8MQ_CLK_GPU_SHADER_DIV	102
-+
-+/* BUS TYPE */
-+/* MAIN AXI */
-+#define IMX8MQ_CLK_MAIN_AXI		103
-+/* ENET AXI */
-+#define IMX8MQ_CLK_ENET_AXI		104
-+/* NAND_USDHC_BUS */
-+#define IMX8MQ_CLK_NAND_USDHC_BUS	105
-+/* VPU BUS */
-+#define IMX8MQ_CLK_VPU_BUS		106
-+/* DISP_AXI */
-+#define IMX8MQ_CLK_DISP_AXI		107
-+/* DISP APB */
-+#define IMX8MQ_CLK_DISP_APB		108
-+/* DISP RTRM */
-+#define IMX8MQ_CLK_DISP_RTRM		109
-+/* USB_BUS */
-+#define IMX8MQ_CLK_USB_BUS		110
-+/* GPU_AXI */
-+#define IMX8MQ_CLK_GPU_AXI		111
-+/* GPU_AHB */
-+#define IMX8MQ_CLK_GPU_AHB		112
-+/* NOC */
-+#define IMX8MQ_CLK_NOC			113
-+/* NOC_APB */
-+#define IMX8MQ_CLK_NOC_APB		115
-+
-+/* AHB */
-+#define IMX8MQ_CLK_AHB			116
-+/* AUDIO AHB */
-+#define IMX8MQ_CLK_AUDIO_AHB		117
-+
-+/* DRAM_ALT */
-+#define IMX8MQ_CLK_DRAM_ALT		118
-+/* DRAM APB */
-+#define IMX8MQ_CLK_DRAM_APB		119
-+/* VPU_G1 */
-+#define IMX8MQ_CLK_VPU_G1		120
-+/* VPU_G2 */
-+#define IMX8MQ_CLK_VPU_G2		121
-+/* DISP_DTRC */
-+#define IMX8MQ_CLK_DISP_DTRC		122
-+/* DISP_DC8000 */
-+#define IMX8MQ_CLK_DISP_DC8000		123
-+/* PCIE_CTRL */
-+#define IMX8MQ_CLK_PCIE1_CTRL		124
-+/* PCIE_PHY */
-+#define IMX8MQ_CLK_PCIE1_PHY		125
-+/* PCIE_AUX */
-+#define IMX8MQ_CLK_PCIE1_AUX		126
-+/* DC_PIXEL */
-+#define IMX8MQ_CLK_DC_PIXEL		127
-+/* LCDIF_PIXEL */
-+#define IMX8MQ_CLK_LCDIF_PIXEL		128
-+/* SAI1~6 */
-+#define IMX8MQ_CLK_SAI1			129
-+
-+#define IMX8MQ_CLK_SAI2			130
-+
-+#define IMX8MQ_CLK_SAI3			131
-+
-+#define IMX8MQ_CLK_SAI4			132
-+
-+#define IMX8MQ_CLK_SAI5			133
-+
-+#define IMX8MQ_CLK_SAI6			134
-+/* SPDIF1 */
-+#define IMX8MQ_CLK_SPDIF1		135
-+/* SPDIF2 */
-+#define IMX8MQ_CLK_SPDIF2		136
-+/* ENET_REF */
-+#define IMX8MQ_CLK_ENET_REF		137
-+/* ENET_TIMER */
-+#define IMX8MQ_CLK_ENET_TIMER		138
-+/* ENET_PHY */
-+#define IMX8MQ_CLK_ENET_PHY_REF		139
-+/* NAND */
-+#define IMX8MQ_CLK_NAND			140
-+/* QSPI */
-+#define IMX8MQ_CLK_QSPI			141
-+/* USDHC1 */
-+#define IMX8MQ_CLK_USDHC1		142
-+/* USDHC2 */
-+#define IMX8MQ_CLK_USDHC2		143
-+/* I2C1 */
-+#define IMX8MQ_CLK_I2C1			144
-+/* I2C2 */
-+#define IMX8MQ_CLK_I2C2			145
-+/* I2C3 */
-+#define IMX8MQ_CLK_I2C3			146
-+/* I2C4 */
-+#define IMX8MQ_CLK_I2C4			147
-+/* UART1 */
-+#define IMX8MQ_CLK_UART1		148
-+/* UART2 */
-+#define IMX8MQ_CLK_UART2		149
-+/* UART3 */
-+#define IMX8MQ_CLK_UART3		150
-+/* UART4 */
-+#define IMX8MQ_CLK_UART4		151
-+/* USB_CORE_REF */
-+#define IMX8MQ_CLK_USB_CORE_REF		152
-+/* USB_PHY_REF */
-+#define IMX8MQ_CLK_USB_PHY_REF		163
-+/* ECSPI1 */
-+#define IMX8MQ_CLK_ECSPI1		164
-+/* ECSPI2 */
-+#define IMX8MQ_CLK_ECSPI2		165
-+/* PWM1 */
-+#define IMX8MQ_CLK_PWM1			166
-+/* PWM2 */
-+#define IMX8MQ_CLK_PWM2			167
-+/* PWM3 */
-+#define IMX8MQ_CLK_PWM3			168
-+/* PWM4 */
-+#define IMX8MQ_CLK_PWM4			169
-+/* GPT1 */
-+#define IMX8MQ_CLK_GPT1			170
-+/* WDOG */
-+#define IMX8MQ_CLK_WDOG			171
-+/* WRCLK */
-+#define IMX8MQ_CLK_WRCLK		172
-+/* DSI_CORE */
-+#define IMX8MQ_CLK_DSI_CORE		173
-+/* DSI_PHY */
-+#define IMX8MQ_CLK_DSI_PHY_REF		174
-+/* DSI_DBI */
-+#define IMX8MQ_CLK_DSI_DBI		175
-+/*DSI_ESC */
-+#define IMX8MQ_CLK_DSI_ESC		176
-+/* CSI1_CORE */
-+#define IMX8MQ_CLK_CSI1_CORE		177
-+/* CSI1_PHY */
-+#define IMX8MQ_CLK_CSI1_PHY_REF		178
-+/* CSI_ESC */
-+#define IMX8MQ_CLK_CSI1_ESC		179
-+/* CSI2_CORE */
-+#define IMX8MQ_CLK_CSI2_CORE		170
-+/* CSI2_PHY */
-+#define IMX8MQ_CLK_CSI2_PHY_REF		181
-+/* CSI2_ESC */
-+#define IMX8MQ_CLK_CSI2_ESC		182
-+/* PCIE2_CTRL */
-+#define IMX8MQ_CLK_PCIE2_CTRL		183
-+/* PCIE2_PHY */
-+#define IMX8MQ_CLK_PCIE2_PHY		184
-+/* PCIE2_AUX */
-+#define IMX8MQ_CLK_PCIE2_AUX		185
-+/* ECSPI3 */
-+#define IMX8MQ_CLK_ECSPI3		186
-+
-+/* CCGR clocks */
-+#define IMX8MQ_CLK_A53_ROOT			187
-+#define IMX8MQ_CLK_DRAM_ROOT			188
-+#define IMX8MQ_CLK_ECSPI1_ROOT			189
-+#define IMX8MQ_CLK_ECSPI2_ROOT			180
-+#define IMX8MQ_CLK_ECSPI3_ROOT			181
-+#define IMX8MQ_CLK_ENET1_ROOT			182
-+#define IMX8MQ_CLK_GPT1_ROOT			193
-+#define IMX8MQ_CLK_I2C1_ROOT			194
-+#define IMX8MQ_CLK_I2C2_ROOT			195
-+#define IMX8MQ_CLK_I2C3_ROOT			196
-+#define IMX8MQ_CLK_I2C4_ROOT			197
-+#define IMX8MQ_CLK_M4_ROOT			198
-+#define IMX8MQ_CLK_PCIE1_ROOT			199
-+#define IMX8MQ_CLK_PCIE2_ROOT			200
-+#define IMX8MQ_CLK_PWM1_ROOT			201
-+#define IMX8MQ_CLK_PWM2_ROOT			202
-+#define IMX8MQ_CLK_PWM3_ROOT			203
-+#define IMX8MQ_CLK_PWM4_ROOT			204
-+#define IMX8MQ_CLK_QSPI_ROOT			205
-+#define IMX8MQ_CLK_SAI1_ROOT			206
-+#define IMX8MQ_CLK_SAI2_ROOT			207
-+#define IMX8MQ_CLK_SAI3_ROOT			208
-+#define IMX8MQ_CLK_SAI4_ROOT			209
-+#define IMX8MQ_CLK_SAI5_ROOT			210
-+#define IMX8MQ_CLK_SAI6_ROOT			212
-+#define IMX8MQ_CLK_UART1_ROOT			213
-+#define IMX8MQ_CLK_UART2_ROOT			214
-+#define IMX8MQ_CLK_UART3_ROOT			215
-+#define IMX8MQ_CLK_UART4_ROOT			216
-+#define IMX8MQ_CLK_USB1_CTRL_ROOT		217
-+#define IMX8MQ_CLK_USB2_CTRL_ROOT		218
-+#define IMX8MQ_CLK_USB1_PHY_ROOT		219
-+#define IMX8MQ_CLK_USB2_PHY_ROOT		220
-+#define IMX8MQ_CLK_USDHC1_ROOT			221
-+#define IMX8MQ_CLK_USDHC2_ROOT			222
-+#define IMX8MQ_CLK_WDOG1_ROOT			223
-+#define IMX8MQ_CLK_WDOG2_ROOT			224
-+#define IMX8MQ_CLK_WDOG3_ROOT			225
-+#define IMX8MQ_CLK_GPU_ROOT			226
-+#define IMX8MQ_CLK_HEVC_ROOT			227
-+#define IMX8MQ_CLK_AVC_ROOT			228
-+#define IMX8MQ_CLK_VP9_ROOT			229
-+#define IMX8MQ_CLK_HEVC_INTER_ROOT		230
-+#define IMX8MQ_CLK_DISP_ROOT			231
-+#define IMX8MQ_CLK_HDMI_ROOT			232
-+#define IMX8MQ_CLK_HDMI_PHY_ROOT		233
-+#define IMX8MQ_CLK_VPU_DEC_ROOT			234
-+#define IMX8MQ_CLK_CSI1_ROOT			235
-+#define IMX8MQ_CLK_CSI2_ROOT			236
-+#define IMX8MQ_CLK_RAWNAND_ROOT			237
-+#define IMX8MQ_CLK_SDMA1_ROOT			238
-+#define IMX8MQ_CLK_SDMA2_ROOT			239
-+#define IMX8MQ_CLK_VPU_G1_ROOT			240
-+#define IMX8MQ_CLK_VPU_G2_ROOT			241
-+
-+/* SCCG PLL GATE */
-+#define IMX8MQ_SYS1_PLL_OUT			232
-+#define IMX8MQ_SYS2_PLL_OUT			243
-+#define IMX8MQ_SYS3_PLL_OUT			244
-+#define IMX8MQ_DRAM_PLL_OUT			245
-+
-+#define IMX8MQ_GPT_3M_CLK			246
-+
-+#define IMX8MQ_CLK_IPG_ROOT			247
-+#define IMX8MQ_CLK_IPG_AUDIO_ROOT		248
-+#define IMX8MQ_CLK_SAI1_IPG			249
-+#define IMX8MQ_CLK_SAI2_IPG			250
-+#define IMX8MQ_CLK_SAI3_IPG			251
-+#define IMX8MQ_CLK_SAI4_IPG			252
-+#define IMX8MQ_CLK_SAI5_IPG			253
-+#define IMX8MQ_CLK_SAI6_IPG			254
-+
-+/* DSI AHB/IPG clocks */
-+/* rxesc clock */
-+#define IMX8MQ_CLK_DSI_AHB			255
-+/* txesc clock */
-+#define IMX8MQ_CLK_DSI_IPG_DIV                  256
-+
-+#define IMX8MQ_CLK_TMU_ROOT			265
-+
-+/* Display root clocks */
-+#define IMX8MQ_CLK_DISP_AXI_ROOT		266
-+#define IMX8MQ_CLK_DISP_APB_ROOT		267
-+#define IMX8MQ_CLK_DISP_RTRM_ROOT		268
-+
-+#define IMX8MQ_CLK_OCOTP_ROOT			269
-+
-+#define IMX8MQ_CLK_DRAM_ALT_ROOT		270
-+#define IMX8MQ_CLK_DRAM_CORE			271
-+
-+#define IMX8MQ_CLK_MU_ROOT			272
-+#define IMX8MQ_VIDEO2_PLL_OUT			273
-+
-+#define IMX8MQ_CLK_CLKO2			274
-+
-+#define IMX8MQ_CLK_NAND_USDHC_BUS_RAWNAND_CLK	275
-+
-+#define IMX8MQ_CLK_END				276
-+#endif /* __DT_BINDINGS_CLOCK_IMX8MQ_H */
--- 
-2.7.4
+> > > > +	if (!buffer)
+> > > > +		goto done;
+> > > > +
+> > > > +	mutex_lock(&data->lock);
+> > > > +	ret = rm3100_wait_measurement(data);
+> > > > +	if (ret < 0) {
+> > > > +		mutex_unlock(&data->lock);
+> > > > +		goto done;
+> > > > +	}
+> > > > +
+> > > > +	for (i = 0; i < 3; i++) {
+> > > > +		ret = regmap_bulk_read(regmap, RM_REG_MX2 + 3 * i,
+> > > > +				buffer + 4 * i, 3);
+> > > > +		if (ret < 0)
+> > > > +			return ret;
+> > > > +	}  
+> > 
+> > Wouldn't it be better to read the 3 axis with one transaction here.
+> > And if required shuffle the data into the iio buffer.
+> > 
+> >   
+> 
+> Hi Phil,
+> 
+> That's surely something will make this code better!
+> 
+> But also, there is something worth discussing,
+> When triggered buffer is triggered here, I should push all the data into
+> userspace, and every time the buffer is enabled, the iio subsystem
+> automatically computes the alignment of my data. This sensor has 3
+> 24bits channels, and my original thought of data alignment should be
+> like this because my machine is 32bits:
+> +----------+----+----+----+----+----+----+
+> | 3b(ytes) | 1b | 3b | 1b | 3b | 1b | 8b |
+> +----------+----+----+----+----+----+----+
+> 3 bytes data and 1 byte for alignment, last 8 bytes for the timestamp.
+> Aligned to 4 bytes. 
+> But the actual layout is like this:
+> +----------+----+----+----+----+----+----+----+
+> | 3b(ytes) | 1b | 3b | 1b | 3b | 1b | 4b | 8b |
+> +----------+----+----+----+----+----+----+----+
+> Soon after I debugged the code of industrial io core I found that in the
+> iio_compute_scanbytes() in industialio-buffer.c, alignment was computed
+> each channel a time, and was aligned with the length of next channel. (eg:
+> In the last case, before the timestamp channel was appended, there are
+> 12 bytes already in the buffer, to align to the timetamp which is 8 
+> bytes, it injected 4 bytes to make it 16, and then append timestamp. )
+> This leads to two questions:
+> 
+> 1. I thought computer systems align their data in the memory for least
+> time access, shouldn't this always align to the bits of architecture,
+> like for a 32bits machine align to 4?? I'm a little confused here.
+> Jonathan must have considered something, Hoping to get some
+> explanations!
+
+A couple of reasons for this:
+
+1. It's much nicer to have the same spacing independent of the architecture
+as it saves having to have userspace code do different things depending on
+what the kernel is running at, which may not be the same as userspace.
+
+2. The size of a memory read is not the only scale that makes sense for
+alignment.  In theory at least you can have fun and games like crossing of
+cacheline boundaries if you do 64 bit access only at 32bits aligned on a
+32 bit platform.  Won't hit all that often with typically 64 byte cachelines
+but it is the sort of subtle effect you get when you don't go with
+'naturally' aligned. (which is what aligning to an elements own size is
+normally called IIRC).
+
+> 
+> 2. In this case I have 4 channels including the timetamp one, and I
+> thought it should be aligned like the first one. But actually it's
+> aligned like the second one, when I was testing the buffer, I got
+> confused, because the in_magn_x_type returned 24/32, 24/32, 24/32
+> and 64/64. If the iio core injected some empty bytes, shouldn't it
+> notify me? Or at least change the timestamp type in scan_bytes to
+> 64/96>>0?? And when I only enabled two of three channels, the data  
+> alignment in the buffer looks like this:
+> +----------+----+----+----+----+
+> | 3b(ytes) | 1b | 3b | 1b | 8b |
+> +----------+----+----+----+----+
+> Notice that 4 bytes have gone due to data of two channels have already
+> aligned to 8 bytes.
+> Hoping to get some answers, I'm very curious and interested about this!
+
+Nope it shouldn't do the 64/96 need to tell you because it uses
+the rules of natural alignment which are easy for userspace to predict.
+So in this second case there is no need to pad so it doesn't - whereas the
+4 bytes are needed in the first case.
+
+We could have explicitly output the offsets and kept things more flexible
+but that would have prevented some general optimizations on the userspace
+side for common cases.  If you are reading a 3 axis accelerometer for
+example with timestamp then you can probably safely prebake optimized handling
+for,
+
+1B (x), 1B (y), 1B(z), 5B(pad), 8B(ts)
+
+2B (x), 2B (y), 2B(z), 2B(pad), 8B(ts)
+
+in reality no one ever goes higher than this because accelerometers aren't
+accurate enough...
+
+If we did anything more complex we'd need to describe to userspace in some
+sense what was happening beyond the static data currently provided (when
+combined with the ordering and enables) and that makes for a complex ABI
+we don't need.
+
+Also we'd have to do unaligned puts of the u64 timestamp in kernel which
+is nasty.
+
+Jonathan
+> 
+> yours,
+> Song Qiang
+> 
+> > > > +	mutex_unlock(&data->lock);
+> > > > +
+> > > > +	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+> > > > +			iio_get_time_ns(indio_dev));
+> > > > +done:
+> > > > +	iio_trigger_notify_done(indio_dev->trig);
+> > > > +
+> > > > +	return IRQ_HANDLED;
+> > > > +}
+> > > > +
+> > > > +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int irq)
+> > > > +{
+> > > > +	struct iio_dev *indio_dev;
+> > > > +	struct rm3100_data *data;
+> > > > +	int tmp;
+> > > > +	int ret;
+> > > > +
+> > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> > > > +	if (!indio_dev)
+> > > > +		return -ENOMEM;
+> > > > +
+> > > > +	data = iio_priv(indio_dev);
+> > > > +	dev_set_drvdata(dev, indio_dev);
+> > > > +	data->dev = dev;
+> > > > +	data->regmap = regmap;
+> > > > +
+> > > > +	mutex_init(&data->lock);
+> > > > +
+> > > > +	indio_dev->dev.parent = dev;
+> > > > +	indio_dev->name = "rm3100";
+> > > > +	indio_dev->info = &rm3100_info;
+> > > > +	indio_dev->channels = rm3100_channels;
+> > > > +	indio_dev->num_channels = ARRAY_SIZE(rm3100_channels);
+> > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > +	indio_dev->available_scan_masks = rm3100_scan_masks;
+> > > > +
+> > > > +	if (!irq)
+> > > > +		data->use_interrupt = false;
+> > > > +	else {
+> > > > +		data->use_interrupt = true;
+> > > > +		ret = devm_request_irq(dev,
+> > > > +			irq,
+> > > > +			rm3100_measurement_irq_handler,
+> > > > +			IRQF_TRIGGER_RISING,
+> > > > +			indio_dev->name,
+> > > > +			data);
+> > > > +		if (ret < 0) {
+> > > > +			dev_err(dev,
+> > > > +			"request irq line failed.");  
+> > > 
+> > > \n
+> > >   
+> > > > +			return -ret;
+> > > > +		}
+> > > > +		init_completion(&data->measuring_done);
+> > > > +	}
+> > > > +
+> > > > +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> > > > +					rm3100_trigger_handler, NULL);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > > > +	/* 3sec more wait time. */
+> > > > +	ret = regmap_read(data->regmap, RM_REG_TMRC, &tmp);  
+> > > 
+> > > check ret
+> > >   
+> > > > +	data->conversion_time = rm3100_samp_rates[tmp-RM_TMRC_OFFSET][2] + 3000;
+> > > > +
+> > > > +	/* Starting all channels' conversion. */
+> > > > +	ret = regmap_write(regmap, RM_REG_CMM,
+> > > > +		RM_CMM_PMX | RM_CMM_PMY | RM_CMM_PMZ | RM_CMM_START);
+> > > > +	if (ret < 0)
+> > > > +		return ret;
+> > > > +
+> > > > +	return devm_iio_device_register(dev, indio_dev);
+> > > > +}
+> > > > +EXPORT_SYMBOL(rm3100_common_probe);
+> > > > +
+> > > > +int rm3100_common_remove(struct device *dev)
+> > > > +{
+> > > > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > > > +	struct rm3100_data *data = iio_priv(indio_dev);
+> > > > +	struct regmap *regmap = data->regmap;
+> > > > +
+> > > > +	regmap_write(regmap, RM_REG_CMM, 0x00);
+> > > > +
+> > > > +	return 0;
+> > > > +}
+> > > > +EXPORT_SYMBOL(rm3100_common_remove);
+> > > > +
+> > > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > > > +MODULE_DESCRIPTION("PNI RM3100 9-axis magnetometer i2c driver");
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > diff --git a/drivers/iio/magnetometer/rm3100-i2c.c b/drivers/iio/magnetometer/rm3100-i2c.c
+> > > > new file mode 100644
+> > > > index 000000000000..b50dc5b1b30b
+> > > > --- /dev/null
+> > > > +++ b/drivers/iio/magnetometer/rm3100-i2c.c
+> > > > @@ -0,0 +1,66 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > +/*
+> > > > + * Support for PNI RM3100 9-axis geomagnetic sensor a i2c bus.
+> > > > + *
+> > > > + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> > > > + *
+> > > > + * User Manual available at
+> > > > + * <https://www.pnicorp.com/download/rm3100-user-manual/>
+> > > > + *
+> > > > + * i2c slave address 0x20 + SA1 << 1 + SA0.
+> > > > + */
+> > > > +
+> > > > +#include <linux/i2c.h>
+> > > > +
+> > > > +#include "rm3100.h"
+> > > > +
+> > > > +static const struct regmap_config rm3100_regmap_config = {
+> > > > +		.reg_bits = 8,
+> > > > +		.val_bits = 8,
+> > > > +
+> > > > +		.rd_table = &rm3100_readable_table,
+> > > > +		.wr_table = &rm3100_writable_table,
+> > > > +		.volatile_table = &rm3100_volatile_table,
+> > > > +
+> > > > +		.cache_type = REGCACHE_RBTREE,
+> > > > +};
+> > > > +
+> > > > +static int rm3100_probe(struct i2c_client *client)
+> > > > +{
+> > > > +	struct regmap *regmap;
+> > > > +
+> > > > +	if (!i2c_check_functionality(client->adapter,
+> > > > +		I2C_FUNC_SMBUS_READ_I2C_BLOCK | I2C_FUNC_SMBUS_BYTE_DATA))
+> > > > +		return -EOPNOTSUPP;
+> > > > +
+> > > > +	regmap =  devm_regmap_init_i2c(client, &rm3100_regmap_config);
+> > > > +	if (IS_ERR(regmap))
+> > > > +		return PTR_ERR(regmap);
+> > > > +
+> > > > +	return rm3100_common_probe(&client->dev, regmap, client->irq);
+> > > > +}
+> > > > +
+> > > > +static int rm3100_remove(struct i2c_client *client)
+> > > > +{
+> > > > +	return rm3100_common_remove(&client->dev);
+> > > > +}
+> > > > +
+> > > > +static const struct of_device_id rm3100_dt_match[] = {
+> > > > +	{ .compatible = "pni,rm3100-i2c", },
+> > > > +	{ }
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, rm3100_dt_match);
+> > > > +
+> > > > +static struct i2c_driver rm3100_driver = {
+> > > > +	.driver = {
+> > > > +		.name = "rm3100-i2c",
+> > > > +		.of_match_table = rm3100_dt_match,
+> > > > +	},
+> > > > +	.probe_new = rm3100_probe,
+> > > > +	.remove = rm3100_remove,
+> > > > +};
+> > > > +module_i2c_driver(rm3100_driver);
+> > > > +
+> > > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > > > +MODULE_DESCRIPTION("PNI RM3100 9-axis magnetometer i2c driver");
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > diff --git a/drivers/iio/magnetometer/rm3100-spi.c b/drivers/iio/magnetometer/rm3100-spi.c
+> > > > new file mode 100644
+> > > > index 000000000000..2c7dd9e3a1a2
+> > > > --- /dev/null
+> > > > +++ b/drivers/iio/magnetometer/rm3100-spi.c
+> > > > @@ -0,0 +1,72 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > +/*
+> > > > + * Support for PNI RM3100 9-axis geomagnetic sensor a spi bus.
+> > > > + *
+> > > > + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> > > > + *
+> > > > + * User Manual available at
+> > > > + * <https://www.pnicorp.com/download/rm3100-user-manual/>
+> > > > + */
+> > > > +
+> > > > +#include <linux/spi/spi.h>
+> > > > +
+> > > > +#include "rm3100.h"
+> > > > +
+> > > > +static const struct regmap_config rm3100_regmap_config = {
+> > > > +		.reg_bits = 8,
+> > > > +		.val_bits = 8,
+> > > > +
+> > > > +		.rd_table = &rm3100_readable_table,
+> > > > +		.wr_table = &rm3100_writable_table,
+> > > > +		.volatile_table = &rm3100_volatile_table,
+> > > > +
+> > > > +		.read_flag_mask = 0x80,
+> > > > +
+> > > > +		.cache_type = REGCACHE_RBTREE,
+> > > > +};
+> > > > +
+> > > > +static int rm3100_probe(struct spi_device *spi)
+> > > > +{
+> > > > +	struct regmap *regmap;
+> > > > +	int ret;
+> > > > +
+> > > > +	/* Actually this device supports both mode 0 and mode 3. */
+> > > > +	spi->mode = SPI_MODE_0;
+> > > > +	/* data rates cannot exceeds 1Mbits. */  
+> > > 
+> > > exceed
+> > >   
+> > > > +	spi->max_speed_hz = 1000000;
+> > > > +	spi->bits_per_word = 8;
+> > > > +	ret = spi_setup(spi);
+> > > > +	if (ret)
+> > > > +		return ret;
+> > > > +
+> > > > +	regmap =  devm_regmap_init_spi(spi, &rm3100_regmap_config);
+> > > > +	if (IS_ERR(regmap))
+> > > > +		return PTR_ERR(regmap);
+> > > > +
+> > > > +	return rm3100_common_probe(&spi->dev, regmap, spi->irq);
+> > > > +}
+> > > > +
+> > > > +static int rm3100_remove(struct spi_device *spi)
+> > > > +{
+> > > > +	return rm3100_common_remove(&spi->dev);
+> > > > +}
+> > > > +
+> > > > +static const struct of_device_id rm3100_dt_match[] = {
+> > > > +	{ .compatible = "pni,rm3100-spi", },
+> > > > +	{ }
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, rm3100_dt_match);
+> > > > +
+> > > > +static struct spi_driver rm3100_driver = {
+> > > > +		.driver = {
+> > > > +				.name = "rm3100-spi",
+> > > > +				.of_match_table = rm3100_dt_match,
+> > > > +		},
+> > > > +		.probe = rm3100_probe,
+> > > > +		.remove = rm3100_remove,
+> > > > +};
+> > > > +module_spi_driver(rm3100_driver);
+> > > > +
+> > > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > > > +MODULE_DESCRIPTION("PNI RM3100 9-axis magnetometer spi driver");
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > diff --git a/drivers/iio/magnetometer/rm3100.h b/drivers/iio/magnetometer/rm3100.h
+> > > > new file mode 100644
+> > > > index 000000000000..5e30bc0f5149
+> > > > --- /dev/null
+> > > > +++ b/drivers/iio/magnetometer/rm3100.h
+> > > > @@ -0,0 +1,90 @@
+> > > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > > > +/*
+> > > > + * Header file for PNI RM3100 driver
+> > > > + *
+> > > > + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> > > > + */
+> > > > +
+> > > > +#ifndef RM3100_CORE_H
+> > > > +#define RM3100_CORE_H
+> > > > +
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/regmap.h>
+> > > > +
+> > > > +#define RM_REG_REV_ID		0x36
+> > > > +
+> > > > +/* Cycle Count Registers MSBs and LSBs. */
+> > > > +#define RM_REG_CCXM		0x04
+> > > > +#define RM_REG_CCXL		0x05
+> > > > +#define RM_REG_CCYM		0x06
+> > > > +#define RM_REG_CCYL		0x07
+> > > > +#define RM_REG_CCZM		0x08
+> > > > +#define RM_REG_CCZL		0x09
+> > > > +
+> > > > +/* Single Measurement Mode register. */
+> > > > +#define RM_REG_POLL		0x00
+> > > > +#define RM_POLL_PMX		BIT(4)
+> > > > +#define RM_POLL_PMY		BIT(5)
+> > > > +#define RM_POLL_PMZ		BIT(6)
+> > > > +
+> > > > +/* Continues Measurement Mode register. */
+> > > > +#define RM_REG_CMM		0x01
+> > > > +#define RM_CMM_START		BIT(0)
+> > > > +#define RM_CMM_DRDM		BIT(2)
+> > > > +#define RM_CMM_PMX		BIT(4)
+> > > > +#define RM_CMM_PMY		BIT(5)
+> > > > +#define RM_CMM_PMZ		BIT(6)
+> > > > +
+> > > > +/* TiMe Rate Configuration register. */
+> > > > +#define RM_REG_TMRC		0x0B
+> > > > +#define RM_TMRC_OFFSET		0x92
+> > > > +
+> > > > +/* Result Status register. */
+> > > > +#define RM_REG_STATUS		0x34
+> > > > +#define RM_STATUS_DRDY		BIT(7)
+> > > > +
+> > > > +/* Measurement result registers. */
+> > > > +#define RM_REG_MX2		0x24
+> > > > +#define RM_REG_MX1		0x25
+> > > > +#define RM_REG_MX0		0x26
+> > > > +#define RM_REG_MY2		0x27
+> > > > +#define RM_REG_MY1		0x28
+> > > > +#define RM_REG_MY0		0x29
+> > > > +#define RM_REG_MZ2		0x2a
+> > > > +#define RM_REG_MZ1		0x2b
+> > > > +#define RM_REG_MZ0		0x2c
+> > > > +
+> > > > +#define RM_REG_HSHAKE		0x35
+> > > > +
+> > > > +#define RM_W_REG_START		RM_REG_POLL
+> > > > +#define RM_W_REG_END		RM_REG_REV_ID
+> > > > +#define RM_R_REG_START		RM_REG_POLL
+> > > > +#define RM_R_REG_END		RM_REG_HSHAKE
+> > > > +#define RM_V_REG_START		RM_REG_MX2
+> > > > +#define RM_V_REG_END		RM_REG_HSHAKE
+> > > > +
+> > > > +/* Built-In Self Test reigister. */
+> > > > +#define RM_REG_BIST		0x33
+> > > > +
+> > > > +struct rm3100_data {
+> > > > +	struct device *dev;
+> > > > +	struct regmap *regmap;
+> > > > +	struct completion measuring_done;
+> > > > +	bool use_interrupt;
+> > > > +
+> > > > +	int conversion_time;
+> > > > +
+> > > > +	/* To protect consistency of every measurement and sampling
+> > > > +	 * frequency change operations.
+> > > > +	 */
+> > > > +	struct mutex lock;
+> > > > +};
+> > > > +
+> > > > +extern const struct regmap_access_table rm3100_readable_table;
+> > > > +extern const struct regmap_access_table rm3100_writable_table;
+> > > > +extern const struct regmap_access_table rm3100_volatile_table;
+> > > > +
+> > > > +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int irq);
+> > > > +int rm3100_common_remove(struct device *dev);
+> > > > +
+> > > > +#endif /* RM3100_CORE_H */
+> > > >   
+> > >   
+> > 
+> > 
+> > -- 
+> > Regards
+> > Phil Reid
+> >   
