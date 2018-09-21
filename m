@@ -1,54 +1,37 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH 2/2] hwmon: ina3221: Get channel names from DT node
-Date: Fri, 21 Sep 2018 10:43:54 -0700
-Message-ID: <20180921174353.GA24662@Asurada-Nvidia.nvidia.com>
-References: <20180921000753.21846-1-nicoleotsuka@gmail.com>
- <20180921000753.21846-3-nicoleotsuka@gmail.com>
- <21a6e8f3-c95d-43d0-ca3f-3f91ddfeff07@roeck-us.net>
- <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
- <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
- <75741ce9-80a3-9277-b8e3-2d3c3e003797@roeck-us.net>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v3 00/16] Another round of tsens cleanups
+Date: Fri, 21 Sep 2018 10:48:45 -0700
+Message-ID: <CAHLCerN0fjPS+3Ydak4tcxqVFzn4sSokYhiG_=2Vi6q_qmEprg@mail.gmail.com>
+References: <cover.1536744310.git.amit.kucheria@linaro.org> <20180920190243.GF19253@hector.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <75741ce9-80a3-9277-b8e3-2d3c3e003797@roeck-us.net>
+In-Reply-To: <20180920190243.GF19253@hector.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, smohanad@codeaurora.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, gregkh@linuxfoundation.org, mchehab+samsung@kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 05:56:00AM -0700, Guenter Roeck wrote:
+On Thu, Sep 20, 2018 at 12:02 PM Andy Gross <andy.gross@linaro.org> wrote:
+>
+> On Wed, Sep 12, 2018 at 03:22:45PM +0530, Amit Kucheria wrote:
+> > This is another series of tsens cleanups before we add interrupt support. This applies on top of 4.19-rc2.
+> >
+> > Patches [1-6] can directly be applied by Eduardo.
+> > Patches [9-16] can directly be applied by Andy.
+>
+> Eduardo,
+>
+> I ACKed the DTS patches for this.  Can you take 9-16 along with the 1-6 through
+> your tree?
+>
 
-> > I tried is_visible but it looks like it won't be that neat to
-> > implement as some attributes of this driver don't really pass
-> > the channel index to the store()/show() but some other indexes.
-> > 
-> 
-> The channel index is not the only means that can be used to determine
-> the channel index. Many drivers use the position in the attrs[] array
-> to determine the channel index. I don't see why this would not be
-> possible here.
+Thanks Andy.
 
-Hmmm, that should simply work...I didn't mean not possible though.
+Eduardo, I've send a fixup patch 07/16. If you like, I can resend the
+entire series
+or you can find the entire series hosted with all tags applied here:
+https://git.linaro.org/people/amit.kucheria/kernel.git/log/?h=up/thermal/tsens-preirq-cleanup-v4
 
-> > If you are very against the dynamical group, I can drop it to
-> > leave the sysfs node as it was.
-> > 
-> > And for the name nodes that I was talking about above, I will
-> > add an sysfs store() function so non-DT users can set them,
-> > and I also removed the confusing "unknown" default name.
-> > 
-> 
-> The label attributes are RO. Please follow the ABI.
-> 
-> temp[1-*]_label Suggested temperature channel label.
-
-Thanks a lot for the hint. I looked up the doc and feel that
-this one probably fits my situation more:
-    in[0-*]_label   Suggested voltage channel label.
-
-Will follow it in my next version.
-
-Thank you
-Nicolin
+Regards,
+Amit
