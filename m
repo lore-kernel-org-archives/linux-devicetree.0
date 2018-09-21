@@ -1,53 +1,77 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCHv3 5/7] ARM: dts: exynos5422: use wp-gpio method to detect sd-card
-Date: Fri, 21 Sep 2018 13:12:06 +0200
-Message-ID: <CAJKOXPdUVjG1xR-q-K98RQpqsWzw-emEv2_3x3CoS+XK8cye2Q@mail.gmail.com>
-References: <20180920175826.1284-1-linux.amoon@gmail.com> <20180920175826.1284-6-linux.amoon@gmail.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V8 1/2] clocksource: add gx6605s SOC system timer
+Date: Fri, 21 Sep 2018 19:24:43 +0800
+Message-ID: <20180921112443.GA17701@guoren>
+References: <cover.1537412072.git.ren_guo@c-sky.com>
+ <4d409a1fdecf1c376e8cc6b55308cd3c522047b0.1537412072.git.ren_guo@c-sky.com>
+ <6c31f9b2-d536-1cee-8024-b52eb862fd9d@linaro.org>
+ <20180920233103.GA8891@guoren-Inspiron-7460>
+ <271900ce-0019-b96d-7833-4ea5ae0721a6@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920175826.1284-6-linux.amoon@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <271900ce-0019-b96d-7833-4ea5ae0721a6@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux.amoon@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: tglx@linutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Sep 2018 at 19:59, Anand Moon <linux.amoon@gmail.com> wrote:
->
-> add the Write Protect GPIO property for sdcard, to fix
-> the warning message during boot time.
-> of_get_named_gpiod_flags: can't parse 'wp-gpios' property of node '/soc/mmc@12220000[0]'
->
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> New patch to this series.
-> If we keep the wp-gpio GPIO_ACTIVE_LOW sdcard boot into RO mode.
-> ---
->  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> index 03fe02ceae66..475c38bbc99e 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> @@ -370,6 +370,7 @@
->         cap-sd-highspeed;
->         max-frequency = <200000000>;
->         cd-gpios = <&gpc2 2 GPIO_ACTIVE_LOW>;
-> +       wp-gpios = <&gpc4 0 GPIO_ACTIVE_HIGH>;
+On Fri, Sep 21, 2018 at 01:57:27AM +0200, Daniel Lezcano wrote:
+> On 21/09/2018 01:31, Guo Ren wrote:
+> > On Thu, Sep 20, 2018 at 06:06:19PM +0200, Daniel Lezcano wrote:
+> >> On 20/09/2018 10:03, Guo Ren wrote:
+> >>> Changelog:
+> >>>  - Add License and Copyright
+> >>>  - Use timer-of framework
+> >>>  - Change name with upstream feedback
+> >>>  - Use clksource_mmio framework
+> >>>
+> >>> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> >>> ---
+> >>>  drivers/clocksource/Kconfig         |   8 ++
+> >>>  drivers/clocksource/Makefile        |   1 +
+> >>>  drivers/clocksource/timer-gx6605s.c | 150 ++++++++++++++++++++++++++++++++++++
+> >>>  3 files changed, 159 insertions(+)
+> >>>  create mode 100644 drivers/clocksource/timer-gx6605s.c
+> >>>
+> >>> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> >>> index a11f4ba..6d0f18d 100644
+> >>> --- a/drivers/clocksource/Kconfig
+> >>> +++ b/drivers/clocksource/Kconfig
+> >>> @@ -620,4 +620,12 @@ config RISCV_TIMER
+> >>>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+> >>>  	  required for all RISC-V systems.
+> >>>  
+> >>> +config GX6605S_TIMER
+> >>> +	bool "Gx6605s SOC system timer driver"
+> >>> +	depends on CSKY
+> >>> +	select CLKSRC_MMIO
+> >>> +	select TIMER_OF
+> >>> +	help
+> >>> +	  This option enables support for gx6605s SOC's timer.
+> >>> +
+> >>>  endmenu
+> >>
+> >> Please make the option not visible as default. There are currently two
+> >> approaches look at MTK_TIMER and SPRD_TIMER.
+> > Em ... (ot sure why COMPILE_TEST?):
+> > 	bool "Gx6605s SOC system timer driver" if COMPILE_TEST
+> > Hmm?
+> 
+> Because by enabling the COMPILE_TEST, you give the opportunity to
+> someone without the hardware to cross-compile test your driver and catch
+> errors very soon before the changes hit your tree.
+> 
+> There are several Continuous Integration loop around running the latest
+> changes in the kernel (kernelci, 01.org, etc ...) and all drivers with
+> this flag are compiled tested.
+> 
+> If the option is not set, the timer is silently selected by your
+> platform's Kconfig only, without giving the opportunity to an non-expert
+> user to unselect the timer leading to, maybe, an unbootable board.
+> 
+I got it, thx for the reply.
 
-Two issues here:
-1. You need also proper pinctrl setting.
-2. On schematics the WP is not connected... so how do you know that it
-is active high? How did you test it? How do you want to test it on
-microSD?
-
-Best regards,
-Krzysztof
-
->         vmmc-supply = <&ldo19_reg>;
->         vqmmc-supply = <&ldo13_reg>;
->         sd-uhs-sdr50;
-> --
-> 2.17.1
->
+Best Regards
+ Guo Ren
