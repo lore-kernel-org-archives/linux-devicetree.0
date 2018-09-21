@@ -1,39 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 3/4] dt-bindings: power: supply: qcom_bms: Add bindings
-Date: Fri, 21 Sep 2018 08:40:43 -0700
-Message-ID: <CACRpkda70HAnnQ6a06E-VZwPUveb-OPDYrKYzm+XFAC1LP+rqw@mail.gmail.com>
-References: <20180407135934.26122-1-ctatlor97@gmail.com> <20180614151435.6471-1-ctatlor97@gmail.com>
- <20180614151435.6471-3-ctatlor97@gmail.com> <20180916121045.aptj6nciwskfg4st@earth.universe>
- <4BBA3F28-A769-4F09-86DC-1E3906C53B26@gmail.com> <20180920165847.6xqzeoqzqkyotshx@earth.universe>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH net-next] dt-bindings: net: ravb: Add support for r8a7744
+ SoC
+Date: Fri, 21 Sep 2018 18:48:42 +0300
+Message-ID: <922d6b1d-764a-ad2d-6a6c-8d992f3fbe15@cogentembedded.com>
+References: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920165847.6xqzeoqzqkyotshx@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.reichel@collabora.com
-Cc: Craig Tatlor <ctatlor97@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
+Content-Language: en-MW
+Sender: netdev-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 9:58 AM Sebastian Reichel
-<sebastian.reichel@collabora.com> wrote:
+Hello!
 
-> I prefer the second binding (with mV -> uV), but I think it becomes
-> messy when temperature is added. What do you think about the
-> following proposal (derived from pinctrl style):
->
-> Proposal C:
->
-> ocv-capacity-table-temperatures = <(-10) 0 10>;
-> ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>, ...;
-> ocv-capacity-table-1 = <4200000 100>, <4185000 95>, <4113000 90>, ...;
-> ocv-capacity-table-2 = <4250000 100>, <4200000 95>, <4185000 90>, ...;
+On 09/21/2018 05:25 PM, Biju Das wrote:
 
-I think this looks very elegant. It's going to be very
-easy and intuitive for people who need to maintain these
-device trees and it will be easy to handle in centralized code
-for all platforms. Even with the microvolt notation.
+> Document RZ/G1N (R8A7744) SoC bindings.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-If possible could we go with this?
+Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Yours,
-Linus Walleij
+> ---
+>  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> index da249b7..3530256 100644
+> --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> @@ -6,6 +6,7 @@ interface contains.
+>  Required properties:
+>  - compatible: Must contain one or more of the following:
+>        - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
+> +      - "renesas,etheravb-r8a7744" for the R8A7744 SoC.
+
+   Mmm, I thought it was decided to go with the full model #s, like with R8A77470 below?
+
+>        - "renesas,etheravb-r8a7745" for the R8A7745 SoC.
+>        - "renesas,etheravb-r8a77470" for the R8A77470 SoC.
+>        - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
+
+MBR, Sergei
