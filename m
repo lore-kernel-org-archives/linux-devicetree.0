@@ -1,130 +1,67 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 12/40] PCI: keystone: Use syscon APIs to get device id from control module
-Date: Fri, 21 Sep 2018 15:51:27 +0530
-Message-ID: <20180921102155.22839-13-kishon@ti.com>
-References: <20180921102155.22839-1-kishon@ti.com>
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v3 0/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+Date: Fri, 21 Sep 2018 15:51:58 +0530
+Message-ID: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Control module registers should be read using syscon APIs.
-pci-keystone.c uses platform_get_resource to get control module registers.
-Fix it here by using syscon APIs to get device id from control module.
+- Add driver for NXP FlexSPI host controller
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pci-keystone.c | 46 +++++++++++++++--------
- 1 file changed, 31 insertions(+), 15 deletions(-)
+ FlexSPI is a flexsible SPI host controller [1], Chapter 30 page 1475,
+ which supports two SPI channels and up to 4 external devices.
+ Each channel supports Single/Dual/Quad/Octal mode data transfer (1/2/4/8 bidirectional data lines)
+ i.e. FlexSPI acts as an interface to external devices, maximum 4, each with up to 8
+ bidirectional data lines.
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index e19ba065ebd5..505e13b1197d 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -15,12 +15,14 @@
- #include <linux/interrupt.h>
- #include <linux/irqdomain.h>
- #include <linux/init.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/msi.h>
- #include <linux/of_irq.h>
- #include <linux/of.h>
- #include <linux/of_pci.h>
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
-+#include <linux/regmap.h>
- #include <linux/resource.h>
- #include <linux/signal.h>
- 
-@@ -28,6 +30,9 @@
- 
- #define DRIVER_NAME	"keystone-pcie"
- 
-+#define PCIE_VENDORID_MASK	0xffff
-+#define PCIE_DEVICEID_SHIFT	16
-+
- /* DEV_STAT_CTRL */
- #define PCIE_CAP_BASE		0x70
- 
-@@ -92,8 +97,6 @@ static void ks_pcie_stop_link(struct dw_pcie *pci);
- struct keystone_pcie {
- 	struct dw_pcie		*pci;
- 	struct	clk		*clk;
--	/* PCI Device ID */
--	u32			device_id;
- 	int			msi_host_irq;
- 	struct			device_node *msi_intc_np;
- 	struct irq_domain	*legacy_irq_domain;
-@@ -588,6 +591,29 @@ static int ks_pcie_fault(unsigned long addr, unsigned int fsr,
- 	return 0;
- }
- 
-+static int __init ks_pcie_init_id(struct keystone_pcie *ks_pcie)
-+{
-+	int ret;
-+	unsigned int id;
-+	struct regmap *devctrl_regs;
-+	struct dw_pcie *pci = ks_pcie->pci;
-+	struct device *dev = pci->dev;
-+	struct device_node *np = dev->of_node;
-+
-+	devctrl_regs = syscon_regmap_lookup_by_phandle(np, "ti,syscon-pcie-id");
-+	if (IS_ERR(devctrl_regs))
-+		return PTR_ERR(devctrl_regs);
-+
-+	ret = regmap_read(devctrl_regs, 0, &id);
-+	if (ret)
-+		return ret;
-+
-+	dw_pcie_writew_dbi(pci, PCI_VENDOR_ID, id & PCIE_VENDORID_MASK);
-+	dw_pcie_writew_dbi(pci, PCI_DEVICE_ID, id >> PCIE_DEVICEID_SHIFT);
-+
-+	return 0;
-+}
-+
- static int __init ks_pcie_host_init(struct pcie_port *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -608,8 +634,9 @@ static int __init ks_pcie_host_init(struct pcie_port *pp)
- 	writew(PCI_IO_RANGE_TYPE_32 | (PCI_IO_RANGE_TYPE_32 << 8),
- 			pci->dbi_base + PCI_IO_BASE);
- 
--	/* update the Vendor ID */
--	writew(ks_pcie->device_id, pci->dbi_base + PCI_DEVICE_ID);
-+	ret = ks_pcie_init_id(ks_pcie);
-+	if (ret < 0)
-+		return ret;
- 
- 	/*
- 	 * PCIe access errors that result into OCP errors are caught by ARM as
-@@ -738,8 +765,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct dw_pcie *pci;
- 	struct keystone_pcie *ks_pcie;
--	struct resource *res;
--	void __iomem *reg_p;
- 	struct phy *phy;
- 	int ret;
- 	int irq;
-@@ -768,15 +793,6 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 			return ret;
- 	}
- 
--	/* index 2 is to read PCI DEVICE_ID */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
--	reg_p = devm_ioremap_resource(dev, res);
--	if (IS_ERR(reg_p))
--		return PTR_ERR(reg_p);
--	ks_pcie->device_id = readl(reg_p) >> 16;
--	devm_iounmap(dev, reg_p);
--	devm_release_mem_region(dev, res->start, resource_size(res));
--
- 	ks_pcie->np = dev->of_node;
- 
- 	irq = platform_get_irq(pdev, 0);
+- Tested this driver with mtd_debug(Erase/Write/Read) utility and JFFS2
+ filesystem mounting and booting on NXP LX2160ARDB[2] and LX2160AQDS targets.
+ LX2160ARDB is having two NOR slave device connected on single bus A
+ i.e. A0 and A1 (CS0 and CS1).
+ LX2160AQDS is having two NOR slave device connected on separate buses
+ one flash on A0 and second on B1 i.e. (CS0 and CS3).
+ Verified this driver on following SPI NOR flashes:
+   Micron, mt35xu512aba[3], [Read - 1 bit mode]
+   Cypress, s25fl512s, [Read - 1/2/4 bit mode]
+
+ Support for octal flash commands and other Octal data transfer related framework
+ changes work is in progress.
+
+[1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=9721
+[3] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=63445
+
+Yogesh Gaur (5):
+  spi: spi-mem: Add driver for NXP FlexSPI controller
+  dt-bindings: spi: add binding file for NXP FlexSPI controller
+  arm64: dts: lx2160a: add FlexSPI node property
+  arm64: defconfig: enable NXP FlexSPI driver
+  MAINTAINERS: add maintainers for the NXP FlexSPI driver
+
+Changes for v3:
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+Changes for v2:
+- Incorporated Boris review comments and drop below patches as per the comments.
+ - Patch 'spi: add slave device size in spi_device struct'
+ - Patch 'spi: add flags for octal I/O data transfer'
+- Incorporated DTS and Binding file review comments of Shawn Guo and Rob Herring.
+
+ .../devicetree/bindings/spi/spi-nxp-fspi.txt       |   42 +
+ MAINTAINERS                                        |    6 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts  |   22 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |   12 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/spi/Kconfig                                |   10 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-nxp-fspi.c                         | 1231 ++++++++++++++++++++
+ 8 files changed, 1324 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+ create mode 100644 drivers/spi/spi-nxp-fspi.c
+
 -- 
-2.17.1
+2.7.4
