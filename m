@@ -1,77 +1,64 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv3 5/7] ARM: dts: exynos5422: use wp-gpio method to detect sd-card
-Date: Fri, 21 Sep 2018 18:01:07 +0530
-Message-ID: <CANAwSgQQgObh-N0CbBM9iNxOGUd2uwoKNFVDBymEALzMtHxOhA@mail.gmail.com>
-References: <20180920175826.1284-1-linux.amoon@gmail.com> <20180920175826.1284-6-linux.amoon@gmail.com>
- <CAJKOXPdUVjG1xR-q-K98RQpqsWzw-emEv2_3x3CoS+XK8cye2Q@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v7 1/6] dt-bindings: ti-lmu: Remove LM3697
+Date: Fri, 21 Sep 2018 07:44:00 -0500
+Message-ID: <50e9aa50-99fb-0a1f-e395-c52bf91e8a7f@ti.com>
+References: <20180911170825.17789-2-dmurphy@ti.com>
+ <20180911200530.GA28290@amd> <85ab3bf4-21d4-dda9-a7c8-5ed68f15c611@ti.com>
+ <20180912214938.GA30654@amd> <7950fa32-c8f9-52bb-06b0-0c1cc93b6bc9@ti.com>
+ <20180914081822.GA21830@amd> <9c14ee7c-f172-bb0c-d9a8-8aeee408f716@gmail.com>
+ <20180914214220.GA2081@amd> <be2ee681-7ae0-6545-0208-6ae5c1b7affd@gmail.com>
+ <5a249ae3-e3f7-8eff-4022-ed982e364326@ti.com>
+ <20180920220443.GB27468@xo-6d-61-c0.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdUVjG1xR-q-K98RQpqsWzw-emEv2_3x3CoS+XK8cye2Q@mail.gmail.com>
+In-Reply-To: <20180920220443.GB27468@xo-6d-61-c0.localdomain>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+Pavel
 
-On Fri, 21 Sep 2018 at 16:42, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Thu, 20 Sep 2018 at 19:59, Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > add the Write Protect GPIO property for sdcard, to fix
-> > the warning message during boot time.
-> > of_get_named_gpiod_flags: can't parse 'wp-gpios' property of node '/soc/mmc@12220000[0]'
-> >
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > New patch to this series.
-> > If we keep the wp-gpio GPIO_ACTIVE_LOW sdcard boot into RO mode.
-> > ---
-> >  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> > index 03fe02ceae66..475c38bbc99e 100644
-> > --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
-> > @@ -370,6 +370,7 @@
-> >         cap-sd-highspeed;
-> >         max-frequency = <200000000>;
-> >         cd-gpios = <&gpc2 2 GPIO_ACTIVE_LOW>;
-> > +       wp-gpios = <&gpc4 0 GPIO_ACTIVE_HIGH>;
->
-> Two issues here:
-> 1. You need also proper pinctrl setting.
+On 09/20/2018 05:04 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>>>> Easy to maintain will be a dedicated LED class driver.
+>>>>
+>>>> You mean, 3 dedicated LED class drivers and 3 MFD drivers with LED
+>>>> parts? We'll need complex driver anyway, and I'd really like to have
+>>>> just one.
+>>>
+>>> In the LED subsystem we can wrap common functionalities
+>>> into a library object. MFD driver will be able to reuse it then.
+>>
+>> I am currently working on that code now.  I expect a RFC on this this week.
+> 
+> Looking forward to that.
+> 
+> But you really need acks for the bindings, and since Rob is usually quite slow
+> acking them, it is easiest to use the existing binding... if it is wrong it
+> needs to be fixed, anyway.
+> 
 
-Thanks for pointing out. Yes proper pinctrl is needed to support this setting.
-probably pinctrl sd2_wp is needed to support this feature.
+OK I am in the midst of creating the code now. I have the common code done I just need to
+make sure that it scales to other devices in the list.
 
-> 2. On schematics the WP is not connected... so how do you know that it
->From XU4_MAIN_REV0.1 schematics page 7 "Micro Socket" their is no
-connection to WP pin.
-but below schematics page "EXYNOS 5422 MMC UFS" it's shows
-XMMC2WP/GPC4_0/EXT_INT13_0.
+The bindings will need to be updated to follow the LED bindings binding style.
 
-> is active high? How did you test it? How do you want to test it on
-> microSD?
+I am wondering for the non-MFD parts if we should move the bindings to the LED
+directory to make them easier to find.
 
-I just tested this with the DTS change to GPIO_ACTIVE_LOW which
-resulted the microSD card booted into RO mode.
-So I set this to GPIO_ACTIVE_HIGH just to avoid warning.
+Dan 
 
-I will study the changes requires and then post proper separate patch
-to support this feature.
+> THanks,
+> 
+> 									Pavel
+> 
 
-Best Regards
--Anand
->
-> Best regards,
-> Krzysztof
->
-> >         vmmc-supply = <&ldo19_reg>;
-> >         vqmmc-supply = <&ldo13_reg>;
-> >         sd-uhs-sdr50;
-> > --
-> > 2.17.1
-> >
+
+-- 
+------------------
+Dan Murphy
