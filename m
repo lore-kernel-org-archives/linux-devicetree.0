@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 23/40] PCI: keystone: Cleanup macros defined in pci-keystone.c
-Date: Fri, 21 Sep 2018 15:51:38 +0530
-Message-ID: <20180921102155.22839-24-kishon@ti.com>
+Subject: [RFC PATCH 24/40] PCI: keystone: Move initializations to appropriate places
+Date: Fri, 21 Sep 2018 15:51:39 +0530
+Message-ID: <20180921102155.22839-25-kishon@ti.com>
 References: <20180921102155.22839-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,88 +12,74 @@ To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjo
 Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-No functional change. Cleanup macros defined in pci-keystone.c
-by removing unused macros, grouping the macros and aligning
-it properly.
+No functional change. Move host specific platform_get_resource to
+ks_add_pcie_port and the common platform_get_resource (applicable
+to both host and endpoint) to probe. This is in preparation for
+adding endpoint support to pci-keystone driver.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/pci/controller/dwc/pci-keystone.c | 41 +++++++++--------------
- 1 file changed, 16 insertions(+), 25 deletions(-)
+ drivers/pci/controller/dwc/pci-keystone.c | 27 +++++++++++++----------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index b1dfaea29530..75d007148804 100644
+index 75d007148804..13e865f82f96 100644
 --- a/drivers/pci/controller/dwc/pci-keystone.c
 +++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -28,21 +28,14 @@
+@@ -646,11 +646,6 @@ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
+ 	struct resource *res;
+ 	int ret;
  
- #include "pcie-designware.h"
- 
--#define DRIVER_NAME	"keystone-pcie"
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbics");
+-	pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
+-	if (IS_ERR(pci->dbi_base))
+-		return PTR_ERR(pci->dbi_base);
 -
- #define PCIE_VENDORID_MASK	0xffff
- #define PCIE_DEVICEID_SHIFT	16
+ 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+ 	pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
+ 	if (IS_ERR(pp->va_cfg0_base))
+@@ -658,13 +653,6 @@ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
  
--/* DEV_STAT_CTRL */
--#define PCIE_CAP_BASE		0x70
+ 	pp->va_cfg1_base = pp->va_cfg0_base;
+ 
+-	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
+-	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
+-	if (IS_ERR(ks_pcie->va_app_base))
+-		return PTR_ERR(ks_pcie->va_app_base);
 -
--/* Application register defines */
--#define LTSSM_EN_VAL		        BIT(0)
--#define DBI_CS2				BIT(5)
--#define OB_XLAT_EN_VAL		        BIT(1)
+-	ks_pcie->app = *res;
 -
- /* Application registers */
- #define CMD_STATUS			0x004
-+#define LTSSM_EN_VAL		        BIT(0)
-+#define OB_XLAT_EN_VAL		        BIT(1)
-+#define DBI_CS2				BIT(5)
+ 	pp->ops = &ks_pcie_host_ops;
+ 	ret = dw_pcie_host_init(pp);
+ 	if (ret) {
+@@ -768,6 +756,8 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	struct dw_pcie *pci;
+ 	struct keystone_pcie *ks_pcie;
+ 	struct device_link **link;
++	struct resource *res;
++	void __iomem *base;
+ 	u32 num_viewport;
+ 	struct phy **phy;
+ 	u32 num_lanes;
+@@ -784,6 +774,19 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
+ 	if (!pci)
+ 		return -ENOMEM;
  
- #define CFG_SETUP			0x008
- #define CFG_BUS(x)			(((x) & 0xff) << 16)
-@@ -65,18 +58,16 @@
- #define IRQ_ENABLE_SET(n)		(0x188 + ((n) << 4))
- #define INTx_EN				BIT(0)
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
++	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(ks_pcie->va_app_base))
++		return PTR_ERR(ks_pcie->va_app_base);
++
++	ks_pcie->app = *res;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbics");
++	base = devm_pci_remap_cfg_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	pci->dbi_base = base;
+ 	pci->dev = dev;
+ 	pci->ops = &ks_pcie_dw_pcie_ops;
  
--/* Error IRQ bits */
--#define ERR_AER		BIT(5)	/* ECRC error */
--#define ERR_AXI		BIT(4)	/* AXI tag lookup fatal error */
--#define ERR_CORR	BIT(3)	/* Correctable error */
--#define ERR_NONFATAL	BIT(2)	/* Non-fatal error */
--#define ERR_FATAL	BIT(1)	/* Fatal error */
--#define ERR_SYS		BIT(0)	/* System (fatal, non-fatal, or correctable) */
--#define ERR_IRQ_ALL	(ERR_AER | ERR_AXI | ERR_CORR | \
--			 ERR_NONFATAL | ERR_FATAL | ERR_SYS)
- #define ERR_IRQ_STATUS			0x1c4
- #define ERR_IRQ_ENABLE_SET		0x1c8
--#define ERR_IRQ_ENABLE_CLR		0x1cc
-+#define ERR_AER				BIT(5)	/* ECRC error */
-+#define ERR_AXI				BIT(4)	/* AXI tag lookup fatal error */
-+#define ERR_CORR			BIT(3)	/* Correctable error */
-+#define ERR_NONFATAL			BIT(2)	/* Non-fatal error */
-+#define ERR_FATAL			BIT(1)	/* Fatal error */
-+#define ERR_SYS				BIT(0)	/* System error */
-+#define ERR_IRQ_ALL			(ERR_AER | ERR_AXI | ERR_CORR | \
-+					 ERR_NONFATAL | ERR_FATAL | ERR_SYS)
- 
- #define OB_OFFSET_INDEX(n)		(0x200 + (8 * (n)))
- #define OB_ENABLEN			BIT(0)
-@@ -84,12 +75,12 @@
- #define OB_OFFSET_HI(n)			(0x204 + (8 * (n)))
- 
- /* PCIE controller device IDs */
--#define PCIE_RC_K2HK		0xb008
--#define PCIE_RC_K2E		0xb009
--#define PCIE_RC_K2L		0xb00a
--#define PCIE_RC_K2G		0xb00b
-+#define PCIE_RC_K2HK			0xb008
-+#define PCIE_RC_K2E			0xb009
-+#define PCIE_RC_K2L			0xb00a
-+#define PCIE_RC_K2G			0xb00b
- 
--#define to_keystone_pcie(x)	dev_get_drvdata((x)->dev)
-+#define to_keystone_pcie(x)		dev_get_drvdata((x)->dev)
- 
- static int ks_pcie_start_link(struct dw_pcie *pci);
- static void ks_pcie_stop_link(struct dw_pcie *pci);
 -- 
 2.17.1
