@@ -1,43 +1,104 @@
-Return-Path: <SRS0=vRyP=LR=linaro.org=linus.walleij@kernel.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 3/4] spi: Add a DT binding for high impedance turnaround
-Date: Mon,  3 Sep 2018 23:50:34 +0200
-Message-Id: <20180903215035.17265-4-linus.walleij@linaro.org>
-In-Reply-To: <20180903215035.17265-1-linus.walleij@linaro.org>
-References: <20180903215035.17265-1-linus.walleij@linaro.org>
-To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Cc: linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org
+Return-Path: <SRS0=oGub=MD=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53616 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725898AbeIUQDB (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 21 Sep 2018 12:03:01 -0400
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] arm64: tegra: I2C on Tegra194 is not compatible with Tegra114
+Date: Fri, 21 Sep 2018 12:14:46 +0200
+Message-Id: <20180921101446.12302-1-thierry.reding@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Some 3WIRE SPI devices require the host to insert a "high
-impedance turnaround" essentially a clock pulse after
-switching the one line from output to input.
+From: Thierry Reding <treding@nvidia.com>
 
-This is needed to support the TPO TPG110 panel to use
-the 3WIRE SPI bindings.
+Tegra194 contains a version of the I2C controller that is no longer
+compatible with the version found in Tegra114.
 
-Cc: devicetree@vger.kernel.org
-Cc: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- Documentation/devicetree/bindings/spi/spi-bus.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index 1f6e86f787ef..ee08be2894eb 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -70,6 +70,10 @@ All slave nodes can contain the following optional properties:
- - spi-cs-high     - Empty property indicating device requires chip select
- 		    active high.
- - spi-3wire       - Empty property indicating device requires 3-wire mode.
-+- spi-3wire-high-impedance-turnaround - Empty property indicating that a
-+		    3wire host need to insert a high impedance turn-around
-+		    clock cycle after turning the one output line into an
-+		    input line.
- - spi-lsb-first   - Empty property indicating device requires LSB first mode.
- - spi-tx-bus-width - The bus width (number of data wires) that is used for MOSI.
- 		    Defaults to 1 if not present.
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index a827e94523ec..96421b089df5 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -468,7 +468,7 @@
+ 		};
+ 
+ 		gen1_i2c: i2c@3160000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x03160000 0x10000>;
+ 			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -493,7 +493,7 @@
+ 		};
+ 
+ 		cam_i2c: i2c@3180000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x03180000 0x10000>;
+ 			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -507,7 +507,7 @@
+ 
+ 		/* shares pads with dpaux1 */
+ 		dp_aux_ch1_i2c: i2c@3190000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x03190000 0x10000>;
+ 			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -521,7 +521,7 @@
+ 
+ 		/* shares pads with dpaux0 */
+ 		dp_aux_ch0_i2c: i2c@31b0000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x031b0000 0x10000>;
+ 			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -534,7 +534,7 @@
+ 		};
+ 
+ 		gen7_i2c: i2c@31c0000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x031c0000 0x10000>;
+ 			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -547,7 +547,7 @@
+ 		};
+ 
+ 		gen9_i2c: i2c@31e0000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x031e0000 0x10000>;
+ 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -614,7 +614,7 @@
+ 		};
+ 
+ 		gen2_i2c: i2c@c240000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x0c240000 0x10000>;
+ 			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
+@@ -627,7 +627,7 @@
+ 		};
+ 
+ 		gen8_i2c: i2c@c250000 {
+-			compatible = "nvidia,tegra194-i2c", "nvidia,tegra114-i2c";
++			compatible = "nvidia,tegra194-i2c";
+ 			reg = <0x0c250000 0x10000>;
+ 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+ 			#address-cells = <1>;
 -- 
-2.17.1
+2.19.0
