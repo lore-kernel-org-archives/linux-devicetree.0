@@ -1,39 +1,56 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/4] Qualcomm QCS404 TLMM pinctrl driver
-Date: Fri, 21 Sep 2018 08:17:13 -0700
-Message-ID: <CACRpkdYxh+cSKPO4JUF2uJZ=xVuNsNHe5eSWjy2N+qibGaDfSA@mail.gmail.com>
-References: <20180920013712.2361-1-bjorn.andersson@linaro.org>
+From: =?UTF-8?Q?Rodrigo_Exterck=C3=B6tter_Tj=C3=A4der?=
+        <rodrigo@tjader.xyz>
+Subject: Re: [PATCH 2/2] arm64: dts: allwinner: Olimex A64-OLinuXino: fix ethernet
+Date: Fri, 21 Sep 2018 12:25:53 -0300
+Message-ID: <CAG7TQgFOuHHmkm-6CDDYJ6KuDqfjNvFjnt8_9BPYfdP=oV57VQ@mail.gmail.com>
+References: <20180919141938.18791-1-rodrigo@tjader.xyz> <20180921142941.5ymp7ksphgboxrwz@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920013712.2361-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180921142941.5ymp7ksphgboxrwz@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: maxime.ripard@bootlin.com
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 19, 2018 at 6:34 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
-
-> This series introduces register accessor functions and a level of indirection
-> for these, in order to handle dispersed tiles. It then adds the TLMM binder and
-> driver for the QCS404 platform.
+On Fri, Sep 21, 2018 at 11:30 AM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+> On Wed, Sep 19, 2018 at 11:19:36AM -0300, Rodrigo Exterck=C3=B6tter Tj=C3=
+=A4der wrote:
+> > Without "allwinner,tx-delay-ps =3D <600>;" on the DTP it can receive pa=
+ckets
+> > but not send.
+> >
+> > Signed-off-by: Rodrigo Exterck=C3=B6tter Tj=C3=A4der <rodrigo@tjader.xy=
+z>
 >
-> Avaneesh Kumar Dwivedi (1):
->   pinctrl: qcom: Add qcs404 pinctrl driver
->
-> Bjorn Andersson (3):
->   pinctrl: qcom: Introduce readl/writel accessors
->   pinctrl: qcom: Support dispersed tiles
->   dt-bindings: pinctrl: qcom: Add QCS404 pinctrl binding
+> Again, that commit log would be nice if it was a bit more
+> explicit. What is a DTP? How did you come up with that value? What is
+> the value used by Allwinner/Olimex, and why did you use another one if
+> you did?
 
-I tested to apply the patches but they don't apply cleanly on my
-pin control devel branch, proably because some other qcom
-pinctrl fuzz.
+Thanks for the feedback.
 
-When resending, it'd be great if you could just rebase it on top
-of whatever is in the pinctrl "devel" branch and it'll likely apply
-cleanly.
+DTP is a typo, it should have been DT for "device tree".
 
-Yours,
-Linus Walleij
+Olimex's provided device tree uses a different driver for ethernet,
+but it has a property named "tx-delay" with value 6 and the range of
+the property is 0-7. On dwmac-sun8i's bindings documentation it says
+allwinner,tx-delay-ps has a range of 0-700 and must be a multiple of
+100, so I tried 600 and it works.
+
+I'm not sure how much of that I should include in the commit log,
+perhaps something like this:
+
+---
+arm64: dts: allwinner: OLinuXino: PHY TX clock delay
+
+The PHY requres a delay on the TX clock, otherwise it is not able to send
+any packets on the interface.
+
+Olimex's device tree uses 6 in a range of 0-7, dwmac-sun8i requires a
+multiple of 100 in the range 0-700.
+
+
+Signed-off-by: Rodrigo Exterck=C3=B6tter Tj=C3=A4der <rodrigo@tjader.xyz>
