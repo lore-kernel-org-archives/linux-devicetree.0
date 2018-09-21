@@ -1,57 +1,41 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH 2/2] hwmon: ina3221: Get channel names from DT node
-Date: Fri, 21 Sep 2018 02:18:14 -0700
-Message-ID: <20180921091813.GA21564@Asurada-Nvidia.nvidia.com>
-References: <20180921000753.21846-1-nicoleotsuka@gmail.com>
- <20180921000753.21846-3-nicoleotsuka@gmail.com>
- <21a6e8f3-c95d-43d0-ca3f-3f91ddfeff07@roeck-us.net>
- <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 11/11] arm: dts: ste-dbx5x0: Update coresight bindings
+ for hardware port
+Date: Fri, 21 Sep 2018 10:24:46 +0100
+Message-ID: <b0f36874-4af2-9537-67d6-639acf19dedf@arm.com>
+References: <20180912135352.19722-1-suzuki.poulose@arm.com>
+ <20180912135352.19722-12-suzuki.poulose@arm.com>
+ <CACRpkdZ8HnbLKMcFcROa1h6+SN9zH_QKE=1LMFiiaNUmTnzV4w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180921012038.GA23354@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <CACRpkdZ8HnbLKMcFcROa1h6+SN9zH_QKE=1LMFiiaNUmTnzV4w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>, mathieu poirier <mathieu.poirier@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Linus,
 
-On Thu, Sep 20, 2018 at 06:20:38PM -0700, Nicolin Chen wrote:
-> > So if there are no devicetree entries, the user now gets a sequence of
-> > "unknown" sensors ? I don't think so. Please keep in mind that there are
-> > users of this chip who don't have devicetree systems, and other users
-> > may not want to specify any specific name properties (or they use sensors3.conf
-> > to do it).
-> 
-> Being enlightened by your comments below, maybe adding a
-> separate group for channel names by attaching is_visible
-> to it could be acceptable? Then, name nodes can hide from
-> those who don't want to specify.
- 
-> > > +		/* Log connected channels */
-> > > +		ina->attr_group[g++] = &ina3221_group[i];
-> > > +		ina->channel_name[i] = str;
-> > > +		ina->enable[i] = true;
-> > 
-> > I also don't see the need for defining the group dynamically. The
-> > is_visible callback is very well suited for handling optional sysfs
-> > attributes.
+On 20/09/18 23:02, Linus Walleij wrote:
+> On Wed, Sep 12, 2018 at 6:54 AM Suzuki K Poulose <suzuki.poulose@arm.com>=
+ wrote:
+>
+>> Switch to the new coresight bindings
+>>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+>
+> Applied to the ux500 tree.
 
-I tried is_visible but it looks like it won't be that neat to
-implement as some attributes of this driver don't really pass
-the channel index to the store()/show() but some other indexes.
+Thanks !
 
-If you are very against the dynamical group, I can drop it to
-leave the sysfs node as it was.
-
-And for the name nodes that I was talking about above, I will
-add an sysfs store() function so non-DT users can set them,
-and I also removed the confusing "unknown" default name.
-
-I have been rewriting the DT binding and it should make a lot
-of sense now comparing to this version. Will send v2 tomrrow.
-
-Thanks
-Nicolin
+Suzuki
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
