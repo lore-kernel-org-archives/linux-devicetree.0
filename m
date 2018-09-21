@@ -1,58 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
- management IC
-Date: Fri, 21 Sep 2018 10:29:59 -0700
-Message-ID: <20180921172959.GG20825@sirena.org.uk>
-References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Fri, 21 Sep 2018 10:30:57 -0700
+Message-ID: <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
+References: <20180920224055.164856-1-ryandcase@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uc35eWnScqDcQrv5"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20180920224055.164856-1-ryandcase@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Doug Anderson <dianders@chromium.org>, linux-arm-msm@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>, Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Quoting Ryan Case (2018-09-20 15:40:54)
+> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt=
+ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+> new file mode 100644
+> index 000000000000..ecfb1e2bd520
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+> @@ -0,0 +1,36 @@
+> +Qualcomm Quad Serial Peripheral Interface (QSPI)
+> +
+> +The QSPI controller allows SPI protocol communication in single, dual, o=
+r quad
+> +wire transmission modes for read/write access to slaves such as NOR flas=
+h.
+> +
+> +Required properties:
+> +- compatible:  Should contain:
+> +               "qcom,sdm845-qspi"
 
---uc35eWnScqDcQrv5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Does someone have a more generic compatible string that can be added
+here to indicate the type of quad SPI controller this is? I really doubt
+this is a one-off hardware block for the specific SDM845 SoC. =
 
-On Fri, Sep 14, 2018 at 11:27:46AM +0300, Matti Vaittinen wrote:
-> BD71847 is reduced version of BD71837. DVS bucks 3 and 4 are
-> removed as is LDO7. Voltage ranges of some regulators are
-> expanded.
->=20
-> Add initial support for BD71847 with BD71837 driver.
->=20
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->  drivers/mfd/rohm-bd718x7.c            |   70 +--
->  drivers/regulator/bd71837-regulator.c | 1055 +++++++++++++++++++++++----=
-------
->  include/linux/mfd/rohm-bd718x7.h      |  271 ++++-----
->  3 files changed, 879 insertions(+), 517 deletions(-)
 
-This looks OK to me - Lee, the patch is almost entirely a regulator one,
-are you OK with me applying it?
-
---uc35eWnScqDcQrv5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlulKpcACgkQJNaLcl1U
-h9Ds+Af+Lj7+qfn9ha/iNYcNJJyfbCS97JSlbC2n5I0h1L/B3wO2ZTUj153Q2vxC
-vrpjpex/2m5i99Xg1a/fIV1y09dM4M8Ets6lLxYmmUeZ/1LRUR80/rsX/UjqS0J6
-+TZZ+PO/vUPNHXW38DfyoEyeG/znETXQQdHrktZWFn4fKgDXZVC2BwePGdOYEynC
-b5AL3auAx62FvwO4m2oW7vSegj2QIBuQbZx8o1C9/YpjwHI1RYCjdY2NBtsHklH0
-/x/uOdmmtUP/8MoAkG7uDZyliJD+rn2QVrUxVOlcpnCvI+8XfAnDO0OjVF/0ijaW
-P5pa+noqz28U+7dSALRdMR1/1237tA==
-=C2rq
------END PGP SIGNATURE-----
-
---uc35eWnScqDcQrv5--
+> +- reg:         Should contain the base register location and length.
+> +- interrupts:  Interrupt number used by the controller.
+> +- clocks:      Should contain the core and AHB clock.
+> +- clock-names: Should be "core" for core clock and "iface" for AHB clock.
+> +
