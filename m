@@ -1,68 +1,71 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v5 0/2] arm64: dts: meson-g12a: Introduce new DT files for
- Meson-G12A SoC
-Date: Fri, 21 Sep 2018 10:38:04 +0200
-Message-ID: <33ef5ede-63f4-c58f-4057-0841f0d2aca5@baylibre.com>
-References: <1537518881-53137-1-git-send-email-jianxin.pan@amlogic.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 5/5] drm: bridge: add support for Cadence MHDP DPI/DP
+ bridge
+Date: Fri, 21 Sep 2018 10:41:59 +0200
+Message-ID: <1903708.pJTgKoWLiI@phil>
+References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
+ <1537455288-20223-6-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537518881-53137-1-git-send-email-jianxin.pan@amlogic.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, Qiufang Dai <qiufang.dai@amlogic.com>, Rob Herring <robh+dt@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1537455288-20223-6-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, stelford@cadence.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, quentin.schulz@bootlin.com, jartur@cadence.com, ltyrala@cadence.com, linux-rockchip@lists.infradead.org, piotrs@cadence.com, devicetree@vger.kernel.org, jbergsagel@ti.com, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, Quentin Schulz <quentin.schulz@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jianxin,
-
-On 21/09/2018 10:34, Jianxin Pan wrote:
-> This attempt will try to add new DT files to support Meson-G12A SoC.
-> 
-> 1) first, Please notice that, in this patch series, the DT node about 16M reserved
-> memory for hwrom is removed, since it's not needed by G12A SoC.
-> 2) second, the pclk for uart_AO need to be fixed once G12A clock_ao driver is
-> merged. In this version, it rely on bootloader to enable the pclk gate which 
-> belong to AO clock domain. Please add clk_ignore_unused to bootargs.
-> 
-> Changes since v4 [3]:
->  - add chosen and memory node
-> 
-> Changes since v3 [2]:
->  - collect Rob's Reviewed-by
->  - test on latest v4.20/integ
-> 
-> Changes since v2 [1]:
->  - reorder subnodes
->  - collect Rob's Reviewed-by
-> 
-> Changes since v1 [0]:
->  - fix signoff typo
->  - order subnodes by addresses when there is one and alphabetically when there is none
-> 
-> 
-> [0] https://lore.kernel.org/lkml/1533802951-49919-2-git-send-email-jianxin.pan@amlogic.com
-> [1] https://lore.kernel.org/lkml/1534160901-22889-1-git-send-email-jianxin.pan@amlogic.com
-> [2] https://lore.kernel.org/lkml/1534243121-33589-1-git-send-email-jianxin.pan@amlogic.com
-> [3] https://lore.kernel.org/lkml/1537427368-11104-1-git-send-email-jianxin.pan@amlogic.com
-> 
-
-For the whole serie :
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-
-Thanks,
-Neil
-
-> Jianxin Pan (2):
->   dt-bindings: arm: amlogic: Add Meson G12A binding
->   arm64: dts: meson-g12a: add initial g12a s905d2 SoC DT support
-> 
->  Documentation/devicetree/bindings/arm/amlogic.txt |   6 +
->  arch/arm64/boot/dts/amlogic/Makefile              |   1 +
->  arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts   |  29 ++++
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi       | 172 ++++++++++++++++++++++
->  4 files changed, 208 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> 
+SGkgRGFtaWFuLAoKQW0gRG9ubmVyc3RhZywgMjAuIFNlcHRlbWJlciAyMDE4LCAxNjo1NDo0MCBD
+RVNUIHNjaHJpZWIgRGFtaWFuIEtvczoKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5z
+Y2h1bHpAZnJlZS1lbGVjdHJvbnMuY29tPgo+IAo+IFRoaXMgYWRkcyBiYXNpYyBzdXBwb3J0IGZv
+ciBDYWRlbmNlIE1IRFAgRFBJIHRvIERQIGJyaWRnZS4KPiAKPiBCYXNpY2FsbHksIGl0IHRha2Vz
+IGEgRFBJIHN0cmVhbSBhcyBpbnB1dCBhbmQgb3V0cHV0IGl0IGVuY29kZWQgaW4gRFAKPiBmb3Jt
+YXQuIEl0J3MgbWlzc2luZyBwcm9wZXIgSFBELCBIRENQIGFuZCBjdXJyZW50bHkgc3VwcG9ydHMg
+b25seQo+IFNTVCBtb2RlLgo+IAo+IENoYW5nZXMgbWFkZSBpbiB0aGUgbG93IGxldmVsIGRyaXZl
+ciAoY2RuLWRwLXJlZy4qKToKPiAtIG1vdmVkIGl0IHRvIGZyb20gZHJpdmVycy9ncHUvZHJtL3Jv
+Y2tjaGlwIHRvCj4gICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NkbnMtbWhkcC1jb21tb24uKgo+
+IC0gZnVuY3Rpb25zIGZvciBzZW5kaW5nL3JlY2VpdmluZyBjb21tYW5kcyBhcmUgbm93IHB1Ymxp
+Ywo+IC0gYWRkZWQgZnVuY3Rpb25zIGZvciByZWFkaW5nIHJlZ2lzdGVycyBhbmQgbGluayB0cmFp
+bmluZwo+ICAgYWRqdXN0bWVudAo+IAo+IENoYW5nZXMgbWFkZSBpbiBSSydzIGRyaXZlciAoY2Ru
+LWRwLWNvcmUuKik6Cj4gLSBNb3ZlZCBhdWRpb19pbmZvIGFuZCBhdWRpb19wZGV2IGZpZWxkcyBm
+cm9tIGNkbl9kcF9kZXZpY2UgdG8KPiAgIGNkbnNfbWhkcF9kZXZpY2Ugc3RydWN0dXJlLgo+IAo+
+IFNpZ25lZC1vZmYtYnk6IFF1ZW50aW4gU2NodWx6IDxxdWVudGluLnNjaHVsekBmcmVlLWVsZWN0
+cm9ucy5jb20+Cj4gU2lnbmVkLW9mZi1ieTogRGFtaWFuIEtvcyA8ZGtvc0BjYWRlbmNlLmNvbT4K
+ClsuLi5dCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZyBi
+L2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9LY29uZmlnCj4gaW5kZXggMGNjYzc2MjE3ZWU0Li4x
+MjliMDUyOWYzZTEgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tjb25m
+aWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZwo+IEBAIC0yNyw3ICsy
+Nyw5IEBAIGNvbmZpZyBST0NLQ0hJUF9BTkFMT0dJWF9EUAo+ICAKPiAgY29uZmlnIFJPQ0tDSElQ
+X0NETl9EUAo+ICAgICAgICAgIGJvb2wgIlJvY2tjaGlwIGNkbiBEUCIKPiAtCWRlcGVuZHMgb24g
+RVhUQ09OPXkgfHwgKEVYVENPTj1tICYmIERSTV9ST0NLQ0hJUD1tKQo+ICsJZGVwZW5kcyBvbiBE
+Uk1fUk9DS0NISVA9bQoKU29ycnksIEkgd2Fzbid0IGZhc3QgZW5vdWdoIGluIG15IHJlcGx5IHRv
+IHlvdSBtYWlsIHRvIGNhdGNoIHRoYXQgYmVmb3JlCnlvdXIgdjQsIGJ1dCBJIGRvbid0IHRoaW5r
+IHRoaXMgaXMgbmVjZXNzYXJ5LgpJbnN0ZWFkIEkgZG8gZ3Vlc3MsIHRoZSBzZWxlY3QgYmVsb3cg
+c2hvdWxkIGRvIHRoZSByaWdodCB0aGluZyBieQptYWtpbmcgRVhUQ09OPXkgaWYgRFJNX1JPQ0tD
+SElQPXkuCgpTb21ld2hhdCBjbHVtc2lseSB2ZXJpZmllZCBieSBtYWtpbmcgRVhUQ09OPW0gaW4g
+bXkgZGVmY29uZmlnCmFuZCBzZWVpbmcgZ2V0IGNoYW5nZWQgdG8geSB1cG9uIGJ1aWxkLCB3aGlj
+aCBJIGd1ZXNzIGNvbWVzIGZyb20KYSBkaWZmZXJlbnQgInNlbGVjdCIgaW4gdGhlIGNvbmZpZy4K
+Cgo+ICsJc2VsZWN0IEVYVENPTgo+ICsJc2VsZWN0IERSTV9DRE5TX01IRFAKPiAgICAgICAgICBo
+ZWxwCj4gIAkgIFRoaXMgc2VsZWN0cyBzdXBwb3J0IGZvciBSb2NrY2hpcCBTb0Mgc3BlY2lmaWMg
+ZXh0ZW5zaW9ucwo+ICAJICBmb3IgdGhlIGNkbiBEUCBkcml2ZXIuIElmIHlvdSB3YW50IHRvIGVu
+YWJsZSBEcCBvbgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZp
+bGUgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUKPiBpbmRleCBhMzE0ZTIxMDll
+NzYuLjE2YmE2MWZmY2EzOSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+TWFrZWZpbGUKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvTWFrZWZpbGUKPiBAQCAt
+MywxMyArMywxNSBAQAo+ICAjIE1ha2VmaWxlIGZvciB0aGUgZHJtIGRldmljZSBkcml2ZXIuICBU
+aGlzIGRyaXZlciBwcm92aWRlcyBzdXBwb3J0IGZvciB0aGUKPiAgIyBEaXJlY3QgUmVuZGVyaW5n
+IEluZnJhc3RydWN0dXJlIChEUkkpIGluIFhGcmVlODYgNC4xLjAgYW5kIGhpZ2hlci4KPiAgCj4g
+K2NjZmxhZ3MteSArPSAtSSQoc3JjKS8uLi9icmlkZ2UKCmhtbSwgaW5zdGVhZCBvZiBhZGRpbmcg
+YW4gaW5jbHVkZSBwYXRoLCB0aGUgc2hhcmVkIGhlYWRlciBzaG91bGQgcHJvYmFibHkKanVzdCBs
+aXZlIGluIC9pbmNsdWRlL2RybS9icmlkZ2UvLi4uIGluIHRoZSBrZXJuZWwgc291cmNlPwoKCkhl
+aWtvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
