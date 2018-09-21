@@ -1,7 +1,7 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 35/40] ARM: dts: keystone-k2e: Use the updated binding to describe PCIe in k2e
-Date: Fri, 21 Sep 2018 15:51:50 +0530
-Message-ID: <20180921102155.22839-36-kishon@ti.com>
+Subject: [RFC PATCH 38/40] arm64: dts: k3-am6: Add mux-controller dt node required for muxing SERDES
+Date: Fri, 21 Sep 2018 15:51:53 +0530
+Message-ID: <20180921102155.22839-39-kishon@ti.com>
 References: <20180921102155.22839-1-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,90 +9,39 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sekhar Nori <nsekhar@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Use the updated binding to describe PCIe in k2e. (The older binding has
-never worked in upstream kernel since serdes driver was never upstreamed).
+Add mux-controller dt node as a child node of scm_conf. This is
+required for muxing SERDES between USB, PCIe and ICSS2 SGMII. While
+at that also add "simple-mfd" compatible string to scm_conf dt node
+so that mux-controller device gets created.
 
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 ---
- arch/arm/boot/dts/keystone-k2e.dtsi | 15 ++++++++-------
- arch/arm/boot/dts/keystone.dtsi     | 18 ++++++++++++++----
- 2 files changed, 22 insertions(+), 11 deletions(-)
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e.dtsi b/arch/arm/boot/dts/keystone-k2e.dtsi
-index 085e7326ea8e..d9945d600c95 100644
---- a/arch/arm/boot/dts/keystone-k2e.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2e.dtsi
-@@ -136,20 +136,21 @@
- 		};
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 957c9125a453..4379c370f6f8 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -7,8 +7,15 @@
  
- 		pcie1: pcie@21020000 {
--			compatible = "ti,keystone-pcie","snps,dw-pcie";
-+			compatible = "ti,keystone-pcie", "snps,dw-pcie";
-+			reg =  <0x21020000 0x1000>, <0x21021000 0x1000>, <0x21022000 0x1000>;
-+			reg-names = "app", "dbics", "config";
- 			clocks = <&clkpcie1>;
--			clock-names = "pcie";
-+			clock-names = "fck";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
--			reg =  <0x21021000 0x2000>, <0x21020000 0x1000>, <0x02620128 4>;
--			ranges = <0x82000000 0 0x60000000 0x60000000
--				  0 0x10000000>;
--
-+			ranges = <0x82000000 0 0x60000000 0x60000000 0 0x10000000>;
-+			ti,syscon-pcie-id = <&pcie_devid>;
-+			ti,syscon-pcie-mode = <&pcie_mode>;
- 			status = "disabled";
- 			device_type = "pci";
- 			num-lanes = <2>;
-+			num-viewport = <32>;
- 			bus-range = <0x00 0xff>;
--
- 			/* error interrupt */
- 			interrupts = <GIC_SPI 385 IRQ_TYPE_EDGE_RISING>;
- 			#interrupt-cells = <1>;
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index c298675a29a5..0245fe854367 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -93,6 +93,16 @@
- 			#size-cells = <1>;
- 			ranges = <0x0 0x02620000 0x1000>;
- 
-+			pcie_devid: pcie-devid@128 {
-+				compatible = "syscon";
-+				reg = <0x00000128 0x4>;
-+			};
+ &cbass_main {
+ 	scm_conf: scm_conf@100000 {
+-		compatible = "syscon";
++		compatible = "syscon", "simple-mfd";
+ 		reg = <0 0x00100000 0 0x1c000>;
 +
-+			pcie_mode: pcie-mode@14c {
-+				compatible = "syscon";
-+				reg = <0x0000014c 0x4>;
-+			};
-+
- 			kirq0: keystone_irq@2a0 {
- 				compatible = "ti,keystone-irq";
- 				reg = <0x2a0 0x4>;
-@@ -297,13 +307,13 @@
++		serdes_mux: mux-controller {
++			compatible = "mmio-mux";
++			#mux-control-cells = <1>;
++			mux-reg-masks = <0x4080 0x3>, /* SERDES0 lane select */
++					<0x4090 0x3>; /* SERDES1 lane select */
++		};
+ 	};
  
- 		pcie0: pcie@21800000 {
- 			compatible = "ti,keystone-pcie", "snps,dw-pcie";
-+			reg =  <0x21800000 0x1000>, <0x21801000 0x1000>, <0x21802000 0x1000>;
-+			reg-names = "app", "dbics", "config";
- 			clocks = <&clkpcie>;
--			clock-names = "pcie";
-+			clock-names = "fck";
- 			#address-cells = <3>;
- 			#size-cells = <2>;
--			reg =  <0x21801000 0x2000>, <0x21800000 0x1000>, <0x02620128 4>;
--			ranges = <0x82000000 0 0x50000000 0x50000000
--				  0 0x10000000>;
-+			ranges = <0x82000000 0 0x50000000 0x50000000 0 0x10000000>;
- 
- 			status = "disabled";
- 			device_type = "pci";
+ 	gic500: interrupt-controller@1800000 {
 -- 
 2.17.1
