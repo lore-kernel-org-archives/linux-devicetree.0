@@ -1,81 +1,43 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
- magnetometer
-Date: Fri, 21 Sep 2018 17:13:18 +0800
-Message-ID: <20180921091318.GA2151@Eros>
-References: <20180920131340.6699-1-songqiang1304521@gmail.com>
- <4633d30b-b493-d70b-dd7b-3f5bc3e16e78@electromag.com.au>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v7 2/7] edac: synps: Add platform specific structures for
+ ddrc controller
+Date: Fri, 21 Sep 2018 11:15:32 +0200
+Message-ID: <20180921091532.GC30439@nazgul.tnic>
+References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
+ <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
+ <20180918075522.GC22202@nazgul.tnic>
+ <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
+ <20180919111553.GA9140@nazgul.tnic>
+ <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
+ <20180921090721.GB30439@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4633d30b-b493-d70b-dd7b-3f5bc3e16e78@electromag.com.au>
+In-Reply-To: <20180921090721.GB30439@nazgul.tnic>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Manish Narani <MNARANI@xilinx.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 10:05:38AM +0800, Phil Reid wrote:
-> On 20/09/2018 9:13 PM, Song Qiang wrote:
-> > PNI RM3100 magnetometer is a high resolution, large signal immunity
-> > magnetometer, composed of 3 single sensors and a processing chip.
-> > PNI is currently not in the vendors list, so this is also adding it.
-> > 
-> 
-> In the subject: Isn't the RM3100 a 3axis mag.
-> The 9axis bit comes when you combine it with an accel / gryo I think.
-> 
-> ... snip
-> 
+There's more:
 
-Hi Phil,
+I said:
 
-That's right!
-The first time I got this sensor I googled it on the internet and the
-abstract of the first webpage told me that it's a 9-axis sensor, and
-it's from its offcial website! I just googled it and saw it's still
-there, but after I entered the website, there isn't anything on the
-webpage about '9-axis', maybe I just saw the old wrong web cache of 
-google. Newer websites do say it's a 3-axis magnetometer sensor, and 
-it only has three channels of data can be read. 3-axis it is.
+> > @@ -370,12 +398,12 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
 
-> > +++ b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
-> > @@ -0,0 +1,57 @@
-> > +* PNI RM3100 9-axis magnetometer sensor
-> > +
-> > +I2C Bus:
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : should be "pni,rm3100-i2c"
-> > +- reg : the I2C address of the magnetometer
-> > +
-> 
-> ... snip
-> 
-> > +SPI Bus:
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : should be "pni,rm3100-spi"
-> > +- reg : address of sensor, usually 0 or 1.
-> > +
-> 
-> Looking at other drivers supporting i2c / spi.
-> They use the same compatible for both.
-> 
-> eg: see iio/accel/adxl345_*.c
-> 
-> and it's binding doc:
-> 
-> Required properties:
->  - compatible : should be "adi,adxl345"
->  - reg : the I2C address or SPI chip select number of the sensor
-> 
+> That function returns 0 unconditionally. Make it a void in a prepatch.
 
-Agreed, since nodes of this sensor should be already on the bus where it
-should be in DT, there's no need for compitable string to identify which
-bus it's on.
+But you've lumped this change together with a bunch more. Maybe my
+request wasn't clear so let me rephrase it:
 
-yours,
-Song Qiang
+That function returns 0 unconditionally. Make it a void in a *separate* prepatch.
+
+Ok?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+ECO tip #101: Trim your mails when you reply.
+--
