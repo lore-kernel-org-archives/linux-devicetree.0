@@ -1,34 +1,44 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 6/7] arm64: zynqmp: Add DDRC node
-Date: Fri, 21 Sep 2018 14:57:01 +0200
-Message-ID: <20180921125701.GF30439@nazgul.tnic>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-7-git-send-email-manish.narani@xilinx.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCh v3 4/4] MAINTAINERS: add i.MX8 DT path to i.MX architecture
+Date: Fri, 21 Sep 2018 14:56:26 +0200
+Message-ID: <20180921125626.21971-4-l.stach@pengutronix.de>
+References: <20180921125626.21971-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537194305-9243-7-git-send-email-manish.narani@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, michal.simek@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180921125626.21971-1-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 07:55:04PM +0530, Manish Narani wrote:
-> Add ddrc memory controller node in dts. The size mentioned in dts is
-> 0x30000, because we need to access DDR_QOS INTR registers located at
-> 0xFD090208 from this driver.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
+Shawn agreed to take patches for the i.MX8 parts through his tree.
 
-Still needs DT folks ACK.
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index a5b256b25905..f080df859941 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1461,6 +1461,7 @@ F:	arch/arm/mach-imx/
+ F:	arch/arm/mach-mxs/
+ F:	arch/arm/boot/dts/imx*
+ F:	arch/arm/configs/imx*_defconfig
++F:	arch/arm64/boot/dts/freescale/imx*
+ F:	drivers/clk/imx/
+ F:	drivers/soc/imx/
+ F:	include/soc/imx/
 -- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
+2.19.0
