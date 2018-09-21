@@ -1,125 +1,104 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V2 02/27] mmc: mmci: internalize dma_inprogress into mmci
- dma functions
-Date: Fri, 21 Sep 2018 09:42:24 +0200
-Message-ID: <4a1ab21e-0c0c-8d93-fd9d-1662a2fa642c@st.com>
-References: <1537268144-21152-1-git-send-email-ludovic.Barre@st.com>
- <1537268144-21152-3-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFrwiQv-EFfSrY7TwxXN-AnOsbbPop88GPo8_32hcjBzsg@mail.gmail.com>
+From: Manasi Navare <manasi.d.navare@intel.com>
+Subject: Re: [PATCH v4 2/5] drm/dp: fix link probing for devices supporting
+ DP 1.4+
+Date: Fri, 21 Sep 2018 00:59:30 -0700
+Message-ID: <20180921075929.GA28323@intel.com>
+References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
+ <1537455288-20223-3-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrwiQv-EFfSrY7TwxXN-AnOsbbPop88GPo8_32hcjBzsg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1537455288-20223-3-git-send-email-dkos@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Damian Kos <dkos@cadence.com>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, quentin.schulz@bootlin.com, jartur@cadence.com, jbergsagel@ti.com, ltyrala@cadence.com, stelford@cadence.com, Quentin Schulz <quentin.schulz@free-electrons.com>, pgaj@
 List-Id: devicetree@vger.kernel.org
 
+Thanks for the patch. Verified with the DP 1.4 spec and looks good to me.
+Also look at the related patch that makes use of the correct extended capabilities:
+
+https://patchwork.freedesktop.org/patch/249400/
+
+Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+
+Manasi
 
 
-On 09/20/2018 07:56 PM, Ulf Hansson wrote:
-> On 18 September 2018 at 12:55, Ludovic Barre <ludovic.Barre@st.com> wrote:
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> This patch internalizes the dma_inprogress into mmci dma interfaces.
->> This allows to simplify and prepare the next dma callbacks
->> for mmci host ops. __dma_inprogress is called in mmci_dma_data_error
->> and mmci_dma_finalize.
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.c | 16 ++++++++++------
->>   drivers/mmc/host/mmci.h |  4 +---
->>   2 files changed, 11 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index bf0bb07..7d22cb9 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -497,6 +497,9 @@ static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
->>
->>   static void mmci_dma_data_error(struct mmci_host *host)
->>   {
->> +       if (!__dma_inprogress(host))
->> +               return;
->> +
->>          dev_err(mmc_dev(host->mmc), "error during DMA transfer!\n");
->>          dmaengine_terminate_all(host->dma_current);
->>          host->dma_in_progress = false;
->> @@ -512,6 +515,9 @@ static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
->>          u32 status;
->>          int i;
->>
->> +       if (!__dma_inprogress(dmae))
->> +               return;
->> +
->>          /* Wait up to 1ms for the DMA to complete */
->>          for (i = 0; ; i++) {
->>                  status = readl(host->base + MMCISTATUS);
->> @@ -903,8 +909,7 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
->>                  u32 remain, success;
->>
->>                  /* Terminate the DMA transfer */
->> -               if (dma_inprogress(host))
->> -                       mmci_dma_data_error(host);
->> +               mmci_dma_data_error(host);
->>
->>                  /*
->>                   * Calculate how far we are into the transfer.  Note that
->> @@ -942,8 +947,8 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
->>                  dev_err(mmc_dev(host->mmc), "stray MCI_DATABLOCKEND interrupt\n");
->>
->>          if (status & MCI_DATAEND || data->error) {
->> -               if (dma_inprogress(host))
->> -                       mmci_dma_finalize(host, data);
->> +               mmci_dma_finalize(host, data);
->> +
->>                  mmci_stop_data(host);
->>
->>                  if (!data->error)
->> @@ -1050,8 +1055,7 @@ mmci_cmd_irq(struct mmci_host *host, struct mmc_command *cmd,
->>          if ((!sbc && !cmd->data) || cmd->error) {
->>                  if (host->data) {
->>                          /* Terminate the DMA transfer */
->> -                       if (dma_inprogress(host))
->> -                               mmci_dma_data_error(host);
->> +                       mmci_dma_data_error(host);
->>
->>                          mmci_stop_data(host);
->>                  }
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index 696a066..f1ec066 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -332,9 +332,7 @@ struct mmci_host {
->>          struct mmci_host_next   next_data;
->>          bool                    dma_in_progress;
->>
->> -#define dma_inprogress(host)   ((host)->dma_in_progress)
->> -#else
->> -#define dma_inprogress(host)   (0)
->> +#define __dma_inprogress(host) ((host)->dma_in_progress)
+On Thu, Sep 20, 2018 at 03:54:37PM +0100, Damian Kos wrote:
+> From: Quentin Schulz <quentin.schulz@free-electrons.com>
 > 
-> Overall the change makes good sense to me, however I don't get why you
-> want to rename the macro-function. Please don't.
-
-Oops it's a mistake, I forgot this patch (I remove this)  .
-I wait the end of review and will resend.
-
-like you proposed in previous review this macros is renamed with
-mmci_dmae_inprogress (in patch 04/14) to has common prefix with 
-structure mmci_dmae_priv, mmci_dmae_next...
-
+> DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
+> DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
+> DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
+> DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
+> DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
+> "true capabilities" of DPRX device.
 > 
->>   #endif
->>   };
->>
->> --
->> 2.7.4
->>
+> Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
+> might falsely return lower capabilities to "avoid interoperability
+> issues with some of the existing DP Source devices that malfunction
+> when they discover the higher capabilities within those three
+> registers.".
 > 
-> Kind regards
-> Uffe
+> Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was reserved
+> and read 0 so it's safe to check against it even if DP revision is
+> <1.4
 > 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Signed-off-by: Damian Kos <dkos@cadence.com>
+> ---
+>  drivers/gpu/drm/drm_dp_helper.c | 30 +++++++++++++++++++++++++++++-
+>  1 file changed, 29 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
+> index 8c6b9fd89f8a..735ebde5c2f0 100644
+> --- a/drivers/gpu/drm/drm_dp_helper.c
+> +++ b/drivers/gpu/drm/drm_dp_helper.c
+> @@ -370,10 +370,38 @@ int drm_dp_link_probe(struct drm_dp_aux *aux, struct drm_dp_link *link)
+>  {
+>  	u8 values[3];
+>  	int err;
+> +	unsigned int addr;
+>  
+>  	memset(link, 0, sizeof(*link));
+>  
+> -	err = drm_dp_dpcd_read(aux, DP_DPCD_REV, values, sizeof(values));
+> +	/*
+> +	 * DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
+> +	 * DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
+> +	 * DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
+> +	 * DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
+> +	 * DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
+> +	 * "true capabilities" of DPRX device.
+> +	 *
+> +	 * Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
+> +	 * might falsely return lower capabilities to "avoid interoperability
+> +	 * issues with some of the existing DP Source devices that malfunction
+> +	 * when they discover the higher capabilities within those three
+> +	 * registers.".
+> +	 *
+> +	 * Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was reserved
+> +	 * and read 0 so it's safe to check against it even if DP revision is
+> +	 * <1.4
+> +	 */
+> +	err = drm_dp_dpcd_readb(aux, DP_TRAINING_AUX_RD_INTERVAL, values);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (values[0] & DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT)
+> +		addr = DP_DP13_DPCD_REV;
+> +	else
+> +		addr = DP_DPCD_REV;
+> +
+> +	err = drm_dp_dpcd_read(aux, addr, values, sizeof(values));
+>  	if (err < 0)
+>  		return err;
+>  
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
