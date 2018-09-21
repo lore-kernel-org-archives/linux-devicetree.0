@@ -1,154 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] [media] imx214: device tree binding
-Date: Fri, 21 Sep 2018 14:08:36 +0300
-Message-ID: <1691180.OMaHrQMLfR@avalon>
-References: <20180921100920.8656-1-ricardo.ribalda@gmail.com> <6279061.hCdAfSGG5i@avalon> <CAPybu_2TyUrUpy1fnFu7bCs6TT0Xot88w=KUhPiAYC+YtjLVVQ@mail.gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv3 5/7] ARM: dts: exynos5422: use wp-gpio method to detect sd-card
+Date: Fri, 21 Sep 2018 13:12:06 +0200
+Message-ID: <CAJKOXPdUVjG1xR-q-K98RQpqsWzw-emEv2_3x3CoS+XK8cye2Q@mail.gmail.com>
+References: <20180920175826.1284-1-linux.amoon@gmail.com> <20180920175826.1284-6-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_2TyUrUpy1fnFu7bCs6TT0Xot88w=KUhPiAYC+YtjLVVQ@mail.gmail.com>
+In-Reply-To: <20180920175826.1284-6-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, devicetree@vger.kernel.org
+To: linux.amoon@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ricardo,
+On Thu, 20 Sep 2018 at 19:59, Anand Moon <linux.amoon@gmail.com> wrote:
+>
+> add the Write Protect GPIO property for sdcard, to fix
+> the warning message during boot time.
+> of_get_named_gpiod_flags: can't parse 'wp-gpios' property of node '/soc/mmc@12220000[0]'
+>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> New patch to this series.
+> If we keep the wp-gpio GPIO_ACTIVE_LOW sdcard boot into RO mode.
+> ---
+>  arch/arm/boot/dts/exynos5422-odroid-core.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> index 03fe02ceae66..475c38bbc99e 100644
+> --- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> +++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+> @@ -370,6 +370,7 @@
+>         cap-sd-highspeed;
+>         max-frequency = <200000000>;
+>         cd-gpios = <&gpc2 2 GPIO_ACTIVE_LOW>;
+> +       wp-gpios = <&gpc4 0 GPIO_ACTIVE_HIGH>;
 
-On Friday, 21 September 2018 14:01:44 EEST Ricardo Ribalda Delgado wrote:
-> On Fri, Sep 21, 2018 at 12:38 PM Laurent Pinchart wrote:
-> > On Friday, 21 September 2018 13:09:19 EEST Ricardo Ribalda Delgado wrote:
-> >> Document bindings for imx214 v4l2 driver.
-> > 
-> > Those are bindings for the IMX214 camera sensor, not for its V4L2 driver.
-> > 
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> >> ---
-> >> 
-> >>  .../devicetree/bindings/media/i2c/imx214.txt  | 51 +++++++++++++++++++
-> >>  1 file changed, 51 insertions(+)
-> >>  create mode 100644
-> >>  Documentation/devicetree/bindings/media/i2c/imx214.txt
-> >> 
-> >> diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt
-> >> b/Documentation/devicetree/bindings/media/i2c/imx214.txt new file mode
-> >> 100644
-> >> index 000000000000..4ff76d96332e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
-> >> @@ -0,0 +1,51 @@
-> >> +* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> >> +
-> >> +The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor
-> >> with +an active array size of 4224H x 3176V. It is programmable through
-> >> I2C
-> >> +interface.
-> > 
-> > s/I2C interface/an I2C interface/
-> > 
-> >> The I2C address can be configured to to 0x1a or 0x10, depending
-> >> on +how is wired.
-> > 
-> > Maybe "depending on how the hardware is wired" ?
-> > 
-> >> +Image data is sent through MIPI CSI-2, which is configured as 4 lanes
-> >> +at 1440 Mbps.
-> > 
-> > Can the sensor use less lanes than 4, or is it fixed ?
-> > 
-> >> +Required Properties:
-> >> +- compatible: value should be "sony,imx214" for imx214 sensor
-> >> +- reg: I2C bus address of the device
-> >> +- enable-gpios: Sensor enable GPIO
-> > 
-> > Maybe "GPIO descriptor for the enable pin" ?
-> > 
-> >> +- vdddo-supply: Chip digital IO regulator (1.8V).
-> >> +- vdda-supply: Chip analog regulator (2.7V).
-> >> +- vddd-supply: Chip digital core regulator (1.12V).
-> >> +- clocks = Reference to the xclk clock.
-> >> +- clock-names = Should be "xclk".
-> > 
-> > If there's a single clock, is the name mandatory ?
-> 
-> The drivers is checking for that name.  I am removing that constrain
-> from the driver and fixing the doc
-> 
-> > > +- clock-frequency = Frequency of the xclk clock. Should be <24000000>;
-> > 
-> > The frequency of the clock can be queried at runtime. If you want to
-> > hardcode a specific frequency in DT, you should use the
-> > assigned-clock-rates property.
-> 
-> With the current register_tables I only support that input clock.
+Two issues here:
+1. You need also proper pinctrl setting.
+2. On schematics the WP is not connected... so how do you know that it
+is active high? How did you test it? How do you want to test it on
+microSD?
 
-That's a software constraint then. You can get the programmed clock rate in 
-the driver and return an error at probe time if it doesn't match what you 
-support. Let's not hardcode it in the bindings.
+Best regards,
+Krzysztof
 
-> >> +Optional Properties:
-> >> +- flash-leds: See ../video-interfaces.txt
-> >> +- lens-focus: See ../video-interfaces.txt
-> >> +
-> >> +The imx274 device node should contain one 'port' child node with
-> >> +an 'endpoint' subnode. For further reading on port node refer to
-> >> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> >> +
-> >> +Example:
-> >> +
-> >> +     camera_rear@1a {
-> >> +             status = "okay";
-> > 
-> > Isn't that the default ?
-> > 
-> >> +             compatible = "sony,imx214";
-> >> +             reg = <0x1a>;
-> >> +             vdddo-supply = <&pm8994_lvs1>;
-> >> +             vddd-supply = <&camera_vddd_1v12>;
-> >> +             vdda-supply = <&pm8994_l17>;
-> >> +             lens-focus = <&ad5820>;
-> >> +             enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-> >> +             clocks = <&mmcc CAMSS_MCLK0_CLK>;
-> >> +             clock-names = "xclk";
-> >> +             clock-frequency = <24000000>;
-> >> +             port {
-> >> +                             imx214_ep: endpoint {
-> > 
-> > Incorrect indentation ?
-> > 
-> >> +                             clock-lanes = <1>;
-> >> +                             data-lanes = <0 2 3 4>;
-> > 
-> > Those properties are not documented. The data-lanes value is peculiar,
-> > does the sensor support lanes remapping ?
-> 
-> I do not believe that the sensor supports lanes remapping
-> 
-> That is the configuration used on the db820c. Sensors with two CSI lanes
-> have:
-> 
->                              clock-lanes = <1>;
->                              data-lanes = <0 2>;
-> 
-> I just extended it to 4 lanes... but I just tried < 1 2 3 4 > and also
-> works fine... so I will fix that.
-
-Let's go for clock-lanes = <0> and data-lanes = <1 2 3 4>; then.
-
-> >> +                             remote-endpoint = <&csiphy0_ep>;
-> >> +                     };
-> >> +             };
-> >> +     };
-> 
-> I am adding all your fixes to my github tree
-> 
-> https://github.com/ribalda/linux/commits/imx214-v3
-> 
-> After people had time to give their reviews I will send v3 to the list
-> (do not want to spam again the list) :P
-
--- 
-Regards,
-
-Laurent Pinchart
+>         vmmc-supply = <&ldo19_reg>;
+>         vqmmc-supply = <&ldo13_reg>;
+>         sd-uhs-sdr50;
+> --
+> 2.17.1
+>
