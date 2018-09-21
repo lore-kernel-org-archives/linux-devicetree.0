@@ -1,69 +1,76 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [RFC PATCH 14/40] PCI: keystone: Use platform_get_resource_byname to get memory resources
-Date: Fri, 21 Sep 2018 15:51:29 +0530
-Message-ID: <20180921102155.22839-15-kishon@ti.com>
-References: <20180921102155.22839-1-kishon@ti.com>
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: Re: [PATCH V2 2/3] dt-bindings: mmc: sdhci-msm: Add entries for
+ passing load values
+Date: Fri, 21 Sep 2018 16:02:06 +0530
+Message-ID: <8f26b82c-b966-11d3-4fb6-0137a0a8cd4a@codeaurora.org>
+References: <1537424558-17989-1-git-send-email-vbadigan@codeaurora.org>
+ <1537424558-17989-3-git-send-email-vbadigan@codeaurora.org>
+ <CAE=gft6w_iV+vm=u=ZKNvDLVTHcAO+AR0A9Yg9etTHW8bJy05w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921102155.22839-1-kishon@ti.com>
+In-Reply-To: <CAE=gft6w_iV+vm=u=ZKNvDLVTHcAO+AR0A9Yg9etTHW8bJy05w@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gustavo.Pimentel@synopsys.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Evan Green <evgreen@chromium.org>
+Cc: adrian.hunter@intel.com, Ulf Hansson <ulf.hansson@linaro.org>, robh+dt@kernel.org, linux-mmc@vger.kernel.org, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayali <sayalil@codeaurora.org>, Doug Anderson <dianders@google.com>, vviswana@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use platform_get_resource_byname() instead of platform_get_resource() which
-uses index to get memory resources. While at that get the memory resource
-defined specifically for configuration space instead of deriving the
-configuration space address from dbics address space. Since pci-keystone
-driver has never worked out of the box in mainline kernel, dt backward
-compatibility is ignored.
+Hi Evan,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pci-keystone.c | 17 +++++++----------
- 1 file changed, 7 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 505e13b1197d..fe522b8c981f 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -49,7 +49,6 @@
- #define OB_SIZE				0x030
- #define CFG_PCIM_WIN_SZ_IDX		3
- #define CFG_PCIM_WIN_CNT		32
--#define SPACE0_REMOTE_CFG_OFFSET	0x1000
- #define OB_OFFSET_INDEX(n)		(0x200 + (8 * n))
- #define OB_OFFSET_HI(n)			(0x204 + (8 * n))
- 
-@@ -677,21 +676,19 @@ static int __init ks_pcie_add_pcie_port(struct keystone_pcie *ks_pcie,
- 	struct resource *res;
- 	int ret;
- 
--	/* Index 0 is the config reg. space address */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbics");
- 	pci->dbi_base = devm_pci_remap_cfg_resource(dev, res);
- 	if (IS_ERR(pci->dbi_base))
- 		return PTR_ERR(pci->dbi_base);
- 
--	/*
--	 * We set these same and is used in pcie rd/wr_other_conf
--	 * functions
--	 */
--	pp->va_cfg0_base = pci->dbi_base + SPACE0_REMOTE_CFG_OFFSET;
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-+	pp->va_cfg0_base = devm_pci_remap_cfg_resource(dev, res);
-+	if (IS_ERR(pp->va_cfg0_base))
-+		return PTR_ERR(pp->va_cfg0_base);
-+
- 	pp->va_cfg1_base = pp->va_cfg0_base;
- 
--	/* Index 1 is the application reg. space address */
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "app");
- 	ks_pcie->va_app_base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(ks_pcie->va_app_base))
- 		return PTR_ERR(ks_pcie->va_app_base);
--- 
-2.17.1
+On 9/21/2018 5:45 AM, Evan Green wrote:
+> On Wed, Sep 19, 2018 at 11:24 PM Veerabhadrarao Badiganti
+> <vbadigan@codeaurora.org> wrote:
+>> From: Vijay Viswanath <vviswana@codeaurora.org>
+>>
+>> The load a particular sdhc controller should request from a regulator
+>> is device specific and hence each device should individually vote for
+>> the required load.
+>>
+>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>> ---
+>>   Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index 502b3b8..3720385 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -26,6 +26,11 @@ Required properties:
+>>          "cal"   - reference clock for RCLK delay calibration (optional)
+>>          "sleep" - sleep clock for RCLK delay calibration (optional)
+>>
+>> +Optional properties:
+>> +- qcom,<supply>-current-level-microamp - specifies load levels for supply during BUS_ON and
+>> +                                       BUS_OFF states in power irq. Should be specified in
+>> +                                       pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
+>> +                                       Units uA.
+>>   Example:
+>>
+>>          sdhc_1: sdhci@f9824900 {
+>> @@ -37,6 +42,7 @@ Example:
+>>
+>>                  vmmc-supply = <&pm8941_l20>;
+>>                  vqmmc-supply = <&pm8941_s3>;
+>> +               qcom,vqmmc-current-level-microamp = <200 22000>;
+>>
+>>                  pinctrl-names = "default";
+>>                  pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
+>> --
+>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+>>
+> Aren't the regulator load levels pretty coarse? Would it be safe to
+> say that pretty much all sd/mmc devices need the high powered mode, or
+> are there really some devices that can get by with LPM all the time?
+> -Evan
+The load levels here are min and max supported by the regulator. To 
+cover all devices
+we do set it to max load. We can't make any assumptions on this,  as 
+peak current may vary
+from device to device.
+
+Thanks,
+Veera
