@@ -1,122 +1,94 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH 11/27] drm/sun4i: Rework DE2 register defines
-Date: Sat, 22 Sep 2018 20:32:30 +0800
-Message-ID: <CAGb2v67jweJ5OdSzKhj302OLbz7DacKmSGMKS536uquzKGZtAQ@mail.gmail.com>
-References: <20180902072643.4917-1-jernej.skrabec@siol.net>
- <20180902072643.4917-12-jernej.skrabec@siol.net>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: Add ina3221 documentation
+Date: Sat, 22 Sep 2018 05:38:37 -0700
+Message-ID: <3c117b80-f671-1e57-6eab-3d9801b4b889@roeck-us.net>
+References: <20180921223216.634-1-nicoleotsuka@gmail.com>
+ <20180921223216.634-2-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180902072643.4917-12-jernej.skrabec@siol.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jernej Skrabec <jernej.skrabec@siol.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Maxime Ripard <maxime.ripard@bootlin.com>, Mike Turquette <mturquette@baylibre.com>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-kernel <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180921223216.634-2-nicoleotsuka@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
+Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBTdW4sIFNlcCAyLCAyMDE4IGF0IDM6MjcgUE0gSmVybmVqIFNrcmFiZWMgPGplcm5l
-ai5za3JhYmVjQHNpb2wubmV0PiB3cm90ZToKPgo+IE1vc3QsIGlmIG5vdCBhbGwsIHJlZ2lzdGVy
-cyBmb3VuZCBpbiBERTIgc3RpbGwgZXhpc3RzIGluIERFMy4gSG93ZXZlciwKPiB1bml0cyBhcmUg
-b24gZGlmZmVyZW50IGJhc2UgYWRkcmVzc2VzLgo+Cj4gVG8gcHJlcGFyZSBmb3IgYWRkaXRpb24g
-b2YgREUzIHN1cHBvcnQsIHJlZ2lzdGVycyBtYWNyb3MgYXJlIHJld29ya2VkIHNvCj4gdGhleSB0
-YWtlIGJhc2UgYWRkcmVzcyBhcyBwYXJhbWV0ZXIuCj4KPiBTaWduZWQtb2ZmLWJ5OiBKZXJuZWog
-U2tyYWJlYyA8amVybmVqLnNrcmFiZWNAc2lvbC5uZXQ+Cj4gW3JlYmFzZWRdCj4gU2lnbmVkLW9m
-Zi1ieTogSWNlbm93eSBaaGVuZyA8aWNlbm93eUBhb3NjLmlvPgoKVGhpcyBwYXRjaCBtb3N0bHkg
-Y2hlY2tzIG91dC4gQnV0IHNlZSBiZWxvdy4KCgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vc3VuNGkvc3VuOGlfbWl4ZXIuaCBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV9taXhl
-ci5oCj4gaW5kZXggNDA2YzQyZTc1MmQ3Li4wMjBiMGEwOTdjODQgMTAwNjQ0Cj4gLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL3N1bjRpL3N1bjhpX21peGVyLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0v
-c3VuNGkvc3VuOGlfbWl4ZXIuaAo+IEBAIC0yOSwyMCArMjksMjQgQEAKPgo+ICAjZGVmaW5lIFNV
-TjhJX01JWEVSX0dMT0JBTF9EQlVGRl9FTkFCTEUgICAgICAgICAgICAgICAgQklUKDApCj4KPiAt
-I2RlZmluZSBTVU44SV9NSVhFUl9CTEVORF9QSVBFX0NUTCAgICAgICAgICAgICAweDEwMDAKPiAt
-I2RlZmluZSBTVU44SV9NSVhFUl9CTEVORF9BVFRSX0ZDT0xPUih4KSAgICAgICAoMHgxMDA0ICsg
-MHgxMCAqICh4KSArIDB4MCkKPiAtI2RlZmluZSBTVU44SV9NSVhFUl9CTEVORF9BVFRSX0lOU0la
-RSh4KSAgICAgICAoMHgxMDA0ICsgMHgxMCAqICh4KSArIDB4NCkKPiAtI2RlZmluZSBTVU44SV9N
-SVhFUl9CTEVORF9BVFRSX0NPT1JEKHgpICAgICAgICAgICAgICAgICgweDEwMDQgKyAweDEwICog
-KHgpICsgMHg4KQo+IC0jZGVmaW5lIFNVTjhJX01JWEVSX0JMRU5EX1JPVVRFICAgICAgICAgICAg
-ICAgICAgICAgICAgMHgxMDgwCj4gLSNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfUFJFTVVMVElQ
-TFkgICAgICAgICAgMHgxMDg0Cj4gLSNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfQktDT0xPUiAg
-ICAgICAgICAgICAgMHgxMDg4Cj4gLSNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfT1VUU0laRSAg
-ICAgICAgICAgICAgMHgxMDhjCj4gLSNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfTU9ERSh4KSAg
-ICAgICAgICAgICAgKDB4MTA5MCArIDB4MDQgKiAoeCkpCj4gLSNkZWZpbmUgU1VOOElfTUlYRVJf
-QkxFTkRfQ0tfQ1RMICAgICAgICAgICAgICAgMHgxMGIwCj4gLSNkZWZpbmUgU1VOOElfTUlYRVJf
-QkxFTkRfQ0tfQ0ZHICAgICAgICAgICAgICAgMHgxMGI0Cj4gLSNkZWZpbmUgU1VOOElfTUlYRVJf
-QkxFTkRfQ0tfTUFYKHgpICAgICAgICAgICAgKDB4MTBjMCArIDB4MDQgKiAoeCkpCj4gLSNkZWZp
-bmUgU1VOOElfTUlYRVJfQkxFTkRfQ0tfTUlOKHgpICAgICAgICAgICAgKDB4MTBlMCArIDB4MDQg
-KiAoeCkpCj4gLSNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfT1VUQ1RMICAgICAgICAgICAgICAg
-MHgxMGZjCj4gKyNkZWZpbmUgREUyX0JMRF9CQVNFICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHgxMDAwCj4gKyNkZWZpbmUgREUyX0NIX0JBU0UgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHgyMDAwCj4gKyNkZWZpbmUgREUyX0NIX1NJWkUgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-MHgxMDAwCj4gKwo+ICsjZGVmaW5lIFNVTjhJX01JWEVSX0JMRU5EX1BJUEVfQ1RMKGJhc2UpICAg
-ICAgICgoYmFzZSkgKyAwKQo+ICsjZGVmaW5lIFNVTjhJX01JWEVSX0JMRU5EX0FUVFJfRkNPTE9S
-KGJhc2UsIHgpICgoYmFzZSkgKyAweDQgKyAweDEwICogKHgpKQo+ICsjZGVmaW5lIFNVTjhJX01J
-WEVSX0JMRU5EX0FUVFJfSU5TSVpFKGJhc2UsIHgpICgoYmFzZSkgKyAweDggKyAweDEwICogKHgp
-KQo+ICsjZGVmaW5lIFNVTjhJX01JWEVSX0JMRU5EX0FUVFJfQ09PUkQoYmFzZSwgeCkgICgoYmFz
-ZSkgKyAweEMgKyAweDEwICogKHgpKQoKTml0OiBVc2UgbG93ZXJjYXNlIGZvciAnMHhDJyB0byBi
-ZSBjb25zaXN0ZW50LgoKPiArI2RlZmluZSBTVU44SV9NSVhFUl9CTEVORF9ST1VURShiYXNlKSAg
-ICAgICAgICAoKGJhc2UpICsgMHg4MCkKPiArI2RlZmluZSBTVU44SV9NSVhFUl9CTEVORF9QUkVN
-VUxUSVBMWShiYXNlKSAgICAoKGJhc2UpICsgMHg4NCkKPiArI2RlZmluZSBTVU44SV9NSVhFUl9C
-TEVORF9CS0NPTE9SKGJhc2UpICAgICAgICAgICAgICAgICgoYmFzZSkgKyAweDg4KQo+ICsjZGVm
-aW5lIFNVTjhJX01JWEVSX0JMRU5EX09VVFNJWkUoYmFzZSkgICAgICAgICAgICAgICAgKChiYXNl
-KSArIDB4OGMpCj4gKyNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfTU9ERShiYXNlLCB4KSAgICAg
-ICAgICAgICAgICAoKGJhc2UpICsgMHg5MCArIDB4MDQgKiAoeCkpCj4gKyNkZWZpbmUgU1VOOElf
-TUlYRVJfQkxFTkRfQ0tfQ1RMKGJhc2UpICAgICAgICAgKChiYXNlKSArIDB4YjApCj4gKyNkZWZp
-bmUgU1VOOElfTUlYRVJfQkxFTkRfQ0tfQ0ZHKGJhc2UpICAgICAgICAgKChiYXNlKSArIDB4YjQp
-Cj4gKyNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfQ0tfTUFYKGJhc2UsIHgpICAgICAgKChiYXNl
-KSArIDB4YzAgKyAweDA0ICogKHgpKQo+ICsjZGVmaW5lIFNVTjhJX01JWEVSX0JMRU5EX0NLX01J
-TihiYXNlLCB4KSAgICAgICgoYmFzZSkgKyAweGUwICsgMHgwNCAqICh4KSkKPiArI2RlZmluZSBT
-VU44SV9NSVhFUl9CTEVORF9PVVRDVEwoYmFzZSkgICAgICAgICAoKGJhc2UpICsgMHhmYykKPgo+
-ICAjZGVmaW5lIFNVTjhJX01JWEVSX0JMRU5EX1BJUEVfQ1RMX0VOX01TSyAgICAgIEdFTk1BU0so
-MTIsIDgpCj4gICNkZWZpbmUgU1VOOElfTUlYRVJfQkxFTkRfUElQRV9DVExfRU4ocGlwZSkgICAg
-QklUKDggKyBwaXBlKQoKWy4uLl0KCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40
-aS9zdW44aV91aV9zY2FsZXIuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV91aV9zY2Fs
-ZXIuYwo+IGluZGV4IDZiYjJhYTE2NGM4ZS4uYzY4ZWFiOGE3NDhmIDEwMDY0NAo+IC0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9zdW40aS9zdW44aV91aV9zY2FsZXIuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9zdW40aS9zdW44aV91aV9zY2FsZXIuYwo+IEBAIC0xMCw2ICsxMCw3IEBACj4gICAqLwo+
-Cj4gICNpbmNsdWRlICJzdW44aV91aV9zY2FsZXIuaCIKPiArI2luY2x1ZGUgInN1bjhpX3ZpX3Nj
-YWxlci5oIgo+Cj4gIHN0YXRpYyBjb25zdCB1MzIgbGFuMmNvZWZmdGFiMTZbMjQwXSA9IHsKPiAg
-ICAgICAgIDB4MDAwMDQwMDAsIDB4MDAwMzNmZmUsIDB4MDAwNjNlZmMsIDB4MDAwYTNiZmIsCj4g
-QEAgLTg4LDYgKzg5LDE0IEBAIHN0YXRpYyBjb25zdCB1MzIgbGFuMmNvZWZmdGFiMTZbMjQwXSA9
-IHsKPiAgICAgICAgIDB4MGIxYzE2MDMsIDB4MGQxYzE1MDIsIDB4MGUxZDE0MDEsIDB4MGYxZDEz
-MDEsCj4gIH07Cj4KPiArc3RhdGljIGlubGluZSB1MzIgc3VuOGlfdWlfc2NhbGVyX2Jhc2Uoc3Ry
-dWN0IHN1bjhpX21peGVyICptaXhlciwgaW50IGNoYW5uZWwpCgpJIHJlY2VudGx5IHNhdyBhIHJl
-dmlldyBjb21tZW50IHN0YXRpbmcgb25lIHNob3VsZCBub3QgaW5saW5lIGZ1bmN0aW9ucwp1bmxl
-c3MgdGhleSBhcmUgZGVmaW5lZCBpbiBoZWFkZXIgZmlsZXMuIE90aGVyd2lzZSB0aGUgZGVjaXNp
-b24gc2hvdWxkCmJlIGxlZnQgdXAgdG8gdGhlIGNvbXBpbGVyLgoKPiArewo+ICsgICAgICAgaW50
-IHZpX251bSA9IG1peGVyLT5jZmctPnZpX251bTsKPiArCj4gKyAgICAgICByZXR1cm4gREUyX1ZJ
-X1NDQUxFUl9CQVNFICsgREUyX1ZJX1NDQUxFUl9TSVpFICogdmlfbnVtICsKPiArICAgICAgICAg
-ICAgICBERTJfVUlfU0NBTEVSX1NJWkUgKiAoY2hhbm5lbCAtIHZpX251bSk7Cj4gK30KPiArCj4g
-IHN0YXRpYyBpbnQgc3VuOGlfdWlfc2NhbGVyX2NvZWZfaW5kZXgodW5zaWduZWQgaW50IHN0ZXAp
-Cj4gIHsKPiAgICAgICAgIHVuc2lnbmVkIGludCBzY2FsZSwgaW50X3BhcnQsIGZsb2F0X3BhcnQ7
-CgpbLi4uXQoKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjhpX3ZpX3Nj
-YWxlci5jIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjhpX3ZpX3NjYWxlci5jCj4gaW5kZXgg
-ZDNmMWFjYjIzNGI3Li44Njk3YWZjMzYwMjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L3N1bjRpL3N1bjhpX3ZpX3NjYWxlci5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1
-bjhpX3ZpX3NjYWxlci5jCj4gQEAgLTgzMyw2ICs4MzMsMTEgQEAgc3RhdGljIGNvbnN0IHUzMiBi
-aWN1YmljNGNvZWZmdGFiMzJbNDgwXSA9IHsKPiAgICAgICAgIDB4MTAxMjExMGQsIDB4MTAxMjEx
-MGQsIDB4MTAxMzExMGMsIDB4MTAxMzExMGMsCj4gIH07Cj4KPiArc3RhdGljIGlubGluZSB1MzIg
-c3VuOGlfdmlfc2NhbGVyX2Jhc2Uoc3RydWN0IHN1bjhpX21peGVyICptaXhlciwgaW50IGNoYW5u
-ZWwpCj4gK3sKPiArICAgICAgIHJldHVybiBERTJfVklfU0NBTEVSX0JBU0UgKyBERTJfVklfU0NB
-TEVSX1NJWkUgKiBjaGFubmVsOwo+ICt9Cj4gKwoKVGhpcyBvbmUgYXMgd2VsbC4KCj4gIHN0YXRp
-YyBpbnQgc3VuOGlfdmlfc2NhbGVyX2NvZWZfaW5kZXgodW5zaWduZWQgaW50IHN0ZXApCj4gIHsK
-PiAgICAgICAgIHVuc2lnbmVkIGludCBzY2FsZSwgaW50X3BhcnQsIGZsb2F0X3BhcnQ7Cj4gQEAg
-LTg1Nyw3ICs4NjIsNyBAQCBzdGF0aWMgaW50IHN1bjhpX3ZpX3NjYWxlcl9jb2VmX2luZGV4KHVu
-c2lnbmVkIGludCBzdGVwKQo+ICAgICAgICAgfQo+ICB9Cj4KPiAtc3RhdGljIHZvaWQgc3VuOGlf
-dmlfc2NhbGVyX3NldF9jb2VmZihzdHJ1Y3QgcmVnbWFwICptYXAsIGludCBsYXllciwKPiArc3Rh
-dGljIHZvaWQgc3VuOGlfdmlfc2NhbGVyX3NldF9jb2VmZihzdHJ1Y3QgcmVnbWFwICptYXAsIHUz
-MiBiYXNlLAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdTMyIGhzdGVw
-LCB1MzIgdnN0ZXAsCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25z
-dCBzdHJ1Y3QgZHJtX2Zvcm1hdF9pbmZvICpmb3JtYXQpCgpUaGlzIGlzIHRoZSBvbmx5IGluc3Rh
-bmNlIHdoZXJlIGEgZnVuY3Rpb24ncyAibGF5ZXIiIHBhcmFtZXRlciB3YXMgY2hhbmdlZAp0byAi
-YmFzZSIuIEl0IHdvdWxkIGJlIG5pY2UgaWYgaXQgd2VyZSBjb25zaXN0ZW50LgoKQ2hlbll1Cl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On 09/21/2018 03:32 PM, Nicolin Chen wrote:
+> Texas Instruments INA3221 is a triple-channel shunt and bus
+> voltage monitor. This patch adds a DT binding doc for it.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+> Changelog
+> v2->v3:
+>   * Added a simple subject in the line 1
+>   * Fixed the shunt resistor value in the example
+> v1->v2:
+>   * Dropped channel name properties
+>   * Added child node definitions.
+>   * * Added shunt resistor property in the child node
+>   * * Added status property to indicate connection status
+>   * * Changed to use child node name as the label of input source
+> 
+>   .../devicetree/bindings/hwmon/ina3221.txt     | 38 +++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ina3221.txt b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+> new file mode 100644
+> index 000000000000..bcfd5b9c697b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+> @@ -0,0 +1,38 @@
+> +Texas Instruments INA3221 Device Tree Bindings
+> +
+> +1) ina3221 node
+> +  Required properties:
+> +  - compatible: Must be "ti,ina3221"
+> +  - reg: I2C address
+> +
+> +  = The node contains optional child nodes for three channels =
+> +  = Each child node describes the information of input source =
+> +
+> +  Example:
+> +
+> +  ina3221@40 {
+> +          compatible = "ti,ina3221";
+> +          reg = <0x40>;
+> +          [ child node definitions... ]
+> +  };
+> +
+> +2) child nodes
+> +  The names of child nodes should indicate input source names
+> +
+> +  Required properties:
+> +  - input-id: Must be 1, 2 or 3
+> +
+> +  Optional properties:
+> +  - shunt-resistor: Shunt resistor value in micro-Ohm
+> +  - status: Should be "disabled" if no input source
+> +
+> +  Example:
+> +
+> +  input1 {
+> +          input-id = <0x1>;
+> +          status = "disabled";
+> +  };
+> +  VDD_GPU {
+> +          input-id = <0x2>;
+> +          shunt-resistor = <5000>;
+> +  };
+> 
+
+Using child nodes is a good idea. However, you are converting the node name into
+the hwmon 'label' attribute which I can not accept. First, it is undocumented,
+second, it effectively creates an undocumented property (if one wants to configure
+the shunt resistor value, one has to configure a child node which is converted
+into a label), and third, it violates the hwmon ABI ('input1' is not a "hint
+about what this voltage channel is being used for").
+
+Guenter
