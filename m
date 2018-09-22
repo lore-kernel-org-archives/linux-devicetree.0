@@ -1,87 +1,53 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 2/6] pstore: Add event tracing support
-Date: Sat, 22 Sep 2018 23:15:53 +0530
-Message-ID: <f4d51d5a-fe1d-8697-6dc0-3ead7dc4ed6d@codeaurora.org>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <CAEXW_YRXQwKvnahv5X1F_Bu_98vMg=w1xpo8PZ+aNT02vBrwwg@mail.gmail.com>
- <e8fdef37-afcd-24b3-1005-e707b73f20b1@codeaurora.org>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: hwmon: Add ina3221 documentation
+Date: Sat, 22 Sep 2018 11:03:48 -0700
+Message-ID: <20180922180348.GA9092@Asurada>
+References: <20180921223216.634-1-nicoleotsuka@gmail.com>
+ <20180921223216.634-2-nicoleotsuka@gmail.com>
+ <3c117b80-f671-1e57-6eab-3d9801b4b889@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e8fdef37-afcd-24b3-1005-e707b73f20b1@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <3c117b80-f671-1e57-6eab-3d9801b4b889@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Fernandes <joel@joelfernandes.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/22/2018 10:07 PM, Sai Prakash Ranjan wrote:
-> On 9/22/2018 2:35 PM, Joel Fernandes wrote:
->> On Sat, Sep 8, 2018 at 4:28 PM Sai Prakash Ranjan
->> <saiprakash.ranjan@codeaurora.org> wrote:
+> >+2) child nodes
+> >+  The names of child nodes should indicate input source names
+> >+
+> >+  Required properties:
+> >+  - input-id: Must be 1, 2 or 3
+> >+
+> >+  Optional properties:
+> >+  - shunt-resistor: Shunt resistor value in micro-Ohm
+> >+  - status: Should be "disabled" if no input source
+> >+
+> >+  Example:
+> >+
+> >+  input1 {
+> >+          input-id = <0x1>;
+> >+          status = "disabled";
+> >+  };
+> >+  VDD_GPU {
+> >+          input-id = <0x2>;
+> >+          shunt-resistor = <5000>;
+> >+  };
+> >
 > 
-> 
->> Also I think this spinlock can be moved further down.
->>
-> 
-> OK. Something like this would suffice?
-> 
-> {{{
-> spin_lock_irqsave(&psinfo->buf_lock, flags);
-> 
-> record.buf = (char *)(seq->buffer);
-> record.size = seq->len;
-> psinfo->write(&record);
-> 
-> spin_unlock_irqrestore(&psinfo->buf_lock, flags);
-> }}}
-> 
-> 
+> Using child nodes is a good idea. However, you are converting the node name into
+> the hwmon 'label' attribute which I can not accept. First, it is undocumented,
+> second, it effectively creates an undocumented property (if one wants to configure
+> the shunt resistor value, one has to configure a child node which is converted
+> into a label), and third, it violates the hwmon ABI ('input1' is not a "hint
+> about what this voltage channel is being used for").
 
-If I move the spinlock further down like above, I get this backtrace:
+Oh. I see the point here now. Then a child name could be just input[123],
+and I will add a separate optional child property to indicate the label.
 
-[    1.367708] console [pstore-1] enabled
-[    1.368874] pstore: Registered ramoops as persistent store backend
-[    1.372637] ramoops: attached 0x100000@0xbff00000, ecc: 0/0
-[    1.389382] WARNING: CPU: 2 PID: 2 at kernel/trace/trace_output.c:289 
-trace_raw_output_prep+0x18/0xa0
-[    1.389416] Modules linked in:
-[    1.397572] CPU: 2 PID: 2 Comm: kthreadd Not tainted 
-4.19.0-rc4-00032-g71e30ed20433-dirty #9
-[    1.409122] pstate: 80000005 (Nzcv daif -PAN -UAO)
-[    1.415804] pc : trace_raw_output_prep+0x18/0xa0
-[    1.420404] lr : trace_raw_output_sched_process_fork+0x1c/0x70
-[    1.425176] sp : ffff00000803bc00
-[    1.430815] x29: ffff00000803bc00 x28: ffff80003ca68d80
-[    1.434204] x27: ffff00000810d000 x26: 0000000000000001
-[    1.439586] x25: 0000000000000000 x24: ffff80000eb05090
-[    1.444881] x23: ffff80003ca68d80 x22: ffff00000803bd58
-[    1.450176] x21: ffff000009e63000 x20: ffff80003cbf8988
-[    1.455470] x19: ffff80000eb04000 x18: ffffffffffffffff
-[    1.460766] x17: 000000000006df2c x16: 0000000000000000
-[    1.466061] x15: ffff000009b496c8 x14: 0000000000000040
-[    1.471356] x13: ffffffffffffffff x12: 0000000000000000
-[    1.476651] x11: ffff80003c49a6a8 x10: 00000000000005d8
-[    1.481947] x9 : ffff80003c89f400 x8 : ffff00000803bc60
-[    1.487242] x7 : 0000000000000034 x6 : 0000000005d97d4a
-[    1.492536] x5 : 00ffffffffffffff x4 : 0000000000000050
-[    1.497831] x3 : 0000000000000056 x2 : ffff000009b657a0
-[    1.503127] x1 : ffff000009b657c0 x0 : ffff80000eb04000
-[    1.508422] Call trace:
-[    1.513716]  trace_raw_output_prep+0x18/0xa0
-[    1.515890]  pstore_event_call+0xbc/0x130
-[    1.520402]  trace_event_buffer_commit+0xf8/0x248
-[    1.524308]  trace_event_raw_event_sched_process_fork+0xc0/0xf8
-[    1.528999]  _do_fork+0x234/0x418
-[    1.534724]  kernel_thread+0x48/0x58
-[    1.538196]  kthreadd+0x178/0x1f0
-[    1.541842]  ret_from_fork+0x10/0x1c
-[    1.545052] ---[ end trace 97d58905d13e7aea ]---
-[    1.560654] s1: supplied by regulator-dummy
-[    1.560714] s1: Bringing 0uV into 375000-375000uV
+Will fix it in next ver.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks
+Nicolin
