@@ -1,379 +1,521 @@
-From: Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 2/6] pstore: Add event tracing support
-Date: Sat, 22 Sep 2018 05:05:23 -0400
-Message-ID: <CAEXW_YRXQwKvnahv5X1F_Bu_98vMg=w1xpo8PZ+aNT02vBrwwg@mail.gmail.com>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
+ magnetometer
+Date: Sat, 22 Sep 2018 17:18:14 +0800
+Message-ID: <20180922091814.GA25150@Eros>
+References: <20180920131340.6699-1-songqiang1304521@gmail.com>
+ <alpine.DEB.2.21.1809201522370.1482@vps.pmeerw.net>
+ <5a4d3868-902c-494e-76e4-4141ff5ec855@electromag.com.au>
+ <20180921112954.GA4639@Eros>
+ <20180921132012.00007061@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Tom Zanussi <tom.zanussi@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Prasad Sodagudi <psodagud@codeaurora.org>, Ingo Molnar <mingo@kernel.org>, tsoni@codeaurora.org, Anton Vorontsov <anton@enomsg.org>, Ingo Molnar <mingo@redhat.com>, Sibi Sankar <sibis@codeaurora.org>, Laura Abbott <labbott@redhat.com>, kernel-team <kernel-team@android.com>, devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Jason Baron <jbaron@akamai.com>, Rob Herring <robh+dt@kernel.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Tony Luck <tony.luck@intel.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jim Cromie <jim.cromie@gmail.com>, Greg Kroah-Hartman <gregkh@>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180921132012.00007061@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jonathan.cameron@huawei.com>
+Cc: Phil Reid <preid@electromag.com.au>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, jic23@kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 8, 2018 at 4:28 PM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
->
-> Currently pstore has function trace support which can be
-> used to get the function call chain with limited data.
-> Event tracing has extra data which is useful to debug wide
-> variety of issues and is heavily used across the kernel.
->
-[...]
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  fs/pstore/Kconfig          |  2 +-
->  fs/pstore/ftrace.c         | 55 ++++++++++++++++++++++++++++++++++++++
->  fs/pstore/inode.c          |  4 +++
->  fs/pstore/ram.c            | 44 +++++++++++++++++++++++++++---
->  include/linux/pstore.h     |  2 ++
->  include/linux/pstore_ram.h |  1 +
->  6 files changed, 104 insertions(+), 4 deletions(-)
->
-> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-> index 503086f7f7c1..6fe087b13a51 100644
-> --- a/fs/pstore/Kconfig
-> +++ b/fs/pstore/Kconfig
-> @@ -126,7 +126,7 @@ config PSTORE_PMSG
->
->  config PSTORE_FTRACE
->         bool "Persistent function tracer"
-> -       depends on PSTORE
-> +       depends on PSTORE && PSTORE!=m
->         depends on FUNCTION_TRACER
->         depends on DEBUG_FS
->         help
-> diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
-> index 06aab07b6bb7..d47dc93ac098 100644
-> --- a/fs/pstore/ftrace.c
-> +++ b/fs/pstore/ftrace.c
-> @@ -24,6 +24,8 @@
->  #include <linux/debugfs.h>
->  #include <linux/err.h>
->  #include <linux/cache.h>
-> +#include <linux/slab.h>
-> +#include <linux/trace_events.h>
->  #include <asm/barrier.h>
->  #include "internal.h"
->
-> @@ -62,6 +64,59 @@ static struct ftrace_ops pstore_ftrace_ops __read_mostly = {
->         .func   = pstore_ftrace_call,
->  };
->
-> +void notrace pstore_event_call(struct trace_event_buffer *fbuffer)
-> +{
-> +       struct trace_iterator *iter;
-> +       struct trace_seq *s;
-> +       struct trace_event_call *event_call;
-> +       struct pstore_record record;
-> +       struct trace_event *event;
-> +       struct seq_buf *seq;
-> +       unsigned long flags;
-> +
-> +       if (!psinfo)
-> +               return;
-> +
-> +       if (unlikely(oops_in_progress))
-> +               return;
-> +
-> +       pstore_record_init(&record, psinfo);
-> +       record.type = PSTORE_TYPE_EVENT;
-> +
-> +       iter = kmalloc(sizeof(*iter), GFP_KERNEL);
-> +       if (!iter)
-> +               return;
-> +
-> +       event_call = fbuffer->trace_file->event_call;
-> +       if (!event_call || !event_call->event.funcs ||
-> +           !event_call->event.funcs->trace)
-> +               goto fail_event;
-> +
-> +       event = &fbuffer->trace_file->event_call->event;
-> +
-> +       spin_lock_irqsave(&psinfo->buf_lock, flags);
+On Fri, Sep 21, 2018 at 01:20:12PM +0100, Jonathan Cameron wrote:
+> Hi Song,
+> 
+> ...
+> 
+> Please crop emails down to the relevant section when replying.  Lots of scrolling
+> for everyone otherwise and sometimes things get missed when doing that.
+> 
 
-Could you just split the pstore space into a per-cpu event buffer like
-we are doing for ftrace-on-pstore? Then you don't need to lock. I fear
-the lock contention will be apparent. The pstore code already has
-plumbing to split the store buffer per CPU.
+Hi Jonathan,
 
-Also I think this spinlock can be moved further down.
+Sorryi for this, won't happen again.
+I was intended to give a simple question, but it reminds me of a lot
+unrelated stuff, next time I'll make it another email.
 
-> +
-> +       trace_seq_init(&iter->seq);
-> +       iter->ent = fbuffer->entry;
-> +       event_call->event.funcs->trace(iter, 0, event);
-> +       trace_seq_putc(&iter->seq, 0);
+> > > > > +	if (!buffer)
+> > > > > +		goto done;
+> > > > > +
+> > > > > +	mutex_lock(&data->lock);
+> > > > > +	ret = rm3100_wait_measurement(data);
+> > > > > +	if (ret < 0) {
+> > > > > +		mutex_unlock(&data->lock);
+> > > > > +		goto done;
+> > > > > +	}
+> > > > > +
+> > > > > +	for (i = 0; i < 3; i++) {
+> > > > > +		ret = regmap_bulk_read(regmap, RM_REG_MX2 + 3 * i,
+> > > > > +				buffer + 4 * i, 3);
+> > > > > +		if (ret < 0)
+> > > > > +			return ret;
+> > > > > +	}  
+> > > 
+> > > Wouldn't it be better to read the 3 axis with one transaction here.
+> > > And if required shuffle the data into the iio buffer.
+> > > 
+> > >   
+> > 
+> > Hi Phil,
+> > 
+> > That's surely something will make this code better!
+> > 
+> > But also, there is something worth discussing,
+> > When triggered buffer is triggered here, I should push all the data into
+> > userspace, and every time the buffer is enabled, the iio subsystem
+> > automatically computes the alignment of my data. This sensor has 3
+> > 24bits channels, and my original thought of data alignment should be
+> > like this because my machine is 32bits:
+> > +----------+----+----+----+----+----+----+
+> > | 3b(ytes) | 1b | 3b | 1b | 3b | 1b | 8b |
+> > +----------+----+----+----+----+----+----+
+> > 3 bytes data and 1 byte for alignment, last 8 bytes for the timestamp.
+> > Aligned to 4 bytes. 
+> > But the actual layout is like this:
+> > +----------+----+----+----+----+----+----+----+
+> > | 3b(ytes) | 1b | 3b | 1b | 3b | 1b | 4b | 8b |
+> > +----------+----+----+----+----+----+----+----+
+> > Soon after I debugged the code of industrial io core I found that in the
+> > iio_compute_scanbytes() in industialio-buffer.c, alignment was computed
+> > each channel a time, and was aligned with the length of next channel. (eg:
+> > In the last case, before the timestamp channel was appended, there are
+> > 12 bytes already in the buffer, to align to the timetamp which is 8 
+> > bytes, it injected 4 bytes to make it 16, and then append timestamp. )
+> > This leads to two questions:
+> > 
+> > 1. I thought computer systems align their data in the memory for least
+> > time access, shouldn't this always align to the bits of architecture,
+> > like for a 32bits machine align to 4?? I'm a little confused here.
+> > Jonathan must have considered something, Hoping to get some
+> > explanations!
+> 
+> A couple of reasons for this:
+> 
+> 1. It's much nicer to have the same spacing independent of the architecture
+> as it saves having to have userspace code do different things depending on
+> what the kernel is running at, which may not be the same as userspace.
+> 
+> 2. The size of a memory read is not the only scale that makes sense for
+> alignment.  In theory at least you can have fun and games like crossing of
+> cacheline boundaries if you do 64 bit access only at 32bits aligned on a
+> 32 bit platform.  Won't hit all that often with typically 64 byte cachelines
+> but it is the sort of subtle effect you get when you don't go with
+> 'naturally' aligned. (which is what aligning to an elements own size is
+> normally called IIRC).
+> 
 
-Would it be possible to store the binary trace record in the pstore
-buffer instead of outputting text? I suspect that will both be faster
-and less space.
+I see, architecture independent surely should be the principle of the
+Linux kernel, this makes sense, I think I should learn more stuff about
+natural alignment. I googled something about it and understand what it
+is, but still find it difficult to fully understand its benefits. I think
+I'll learn more about it after. 
 
-> +
-> +       if (seq->size > psinfo->bufsize)
-> +               seq->size = psinfo->bufsize;
-> +
-> +       s = &iter->seq;
-> +       seq = &s->seq;
-> +
-> +       record.buf = (char *)(seq->buffer);
-> +       record.size = seq->len;
-> +       psinfo->write(&record);
+> > 
+> > 2. In this case I have 4 channels including the timetamp one, and I
+> > thought it should be aligned like the first one. But actually it's
+> > aligned like the second one, when I was testing the buffer, I got
+> > confused, because the in_magn_x_type returned 24/32, 24/32, 24/32
+> > and 64/64. If the iio core injected some empty bytes, shouldn't it
+> > notify me? Or at least change the timestamp type in scan_bytes to
+> > 64/96>>0?? And when I only enabled two of three channels, the data  
+> > alignment in the buffer looks like this:
+> > +----------+----+----+----+----+
+> > | 3b(ytes) | 1b | 3b | 1b | 8b |
+> > +----------+----+----+----+----+
+> > Notice that 4 bytes have gone due to data of two channels have already
+> > aligned to 8 bytes.
+> > Hoping to get some answers, I'm very curious and interested about this!
+> 
+> Nope it shouldn't do the 64/96 need to tell you because it uses
+> the rules of natural alignment which are easy for userspace to predict.
+> So in this second case there is no need to pad so it doesn't - whereas the
+> 4 bytes are needed in the first case.
+> 
+> We could have explicitly output the offsets and kept things more flexible
+> but that would have prevented some general optimizations on the userspace
+> side for common cases.  If you are reading a 3 axis accelerometer for
+> example with timestamp then you can probably safely prebake optimized handling
+> for,
+> 
+> 1B (x), 1B (y), 1B(z), 5B(pad), 8B(ts)
+> 
+> 2B (x), 2B (y), 2B(z), 2B(pad), 8B(ts)
+> 
+> in reality no one ever goes higher than this because accelerometers aren't
+> accurate enough...
+> 
+> If we did anything more complex we'd need to describe to userspace in some
+> sense what was happening beyond the static data currently provided (when
+> combined with the ordering and enables) and that makes for a complex ABI
+> we don't need.
+> 
+> Also we'd have to do unaligned puts of the u64 timestamp in kernel which
+> is nasty.
+> 
+> Jonathan
 
-thanks,
+Yes, you make the point, since natural alignment is a generic rule for a
+lot circumstances, surely it would be easy for userspace to predict. I 
+think libiio should have done these kind stuff, shouldn't be a problem
+for userspace!
+Thanks for the explanation!
 
- - Joel
+yours,
+Song Qiang
 
-> +
-> +       spin_unlock_irqrestore(&psinfo->buf_lock, flags);
-> +
-> +fail_event:
-> +       kfree(iter);
-> +}
-> +
->  static DEFINE_MUTEX(pstore_ftrace_lock);
->  static bool pstore_ftrace_enabled;
->
-> diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
-> index 5fcb845b9fec..f099152abbbd 100644
-> --- a/fs/pstore/inode.c
-> +++ b/fs/pstore/inode.c
-> @@ -345,6 +345,10 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
->                 scnprintf(name, sizeof(name), "console-%s-%llu",
->                           record->psi->name, record->id);
->                 break;
-> +       case PSTORE_TYPE_EVENT:
-> +               scnprintf(name, sizeof(name), "event-%s-%llu",
-> +                         record->psi->name, record->id);
-> +               break;
->         case PSTORE_TYPE_FTRACE:
->                 scnprintf(name, sizeof(name), "ftrace-%s-%llu",
->                           record->psi->name, record->id);
-> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
-> index bbd1e357c23d..f60d41c0309e 100644
-> --- a/fs/pstore/ram.c
-> +++ b/fs/pstore/ram.c
-> @@ -48,6 +48,10 @@ static ulong ramoops_console_size = MIN_MEM_SIZE;
->  module_param_named(console_size, ramoops_console_size, ulong, 0400);
->  MODULE_PARM_DESC(console_size, "size of kernel console log");
->
-> +static ulong ramoops_event_size = MIN_MEM_SIZE;
-> +module_param_named(event_size, ramoops_event_size, ulong, 0400);
-> +MODULE_PARM_DESC(event_size, "size of event log");
-> +
->  static ulong ramoops_ftrace_size = MIN_MEM_SIZE;
->  module_param_named(ftrace_size, ramoops_ftrace_size, ulong, 0400);
->  MODULE_PARM_DESC(ftrace_size, "size of ftrace log");
-> @@ -86,6 +90,7 @@ MODULE_PARM_DESC(ramoops_ecc,
->  struct ramoops_context {
->         struct persistent_ram_zone **dprzs;     /* Oops dump zones */
->         struct persistent_ram_zone *cprz;       /* Console zone */
-> +       struct persistent_ram_zone *eprz;       /* Event zone */
->         struct persistent_ram_zone **fprzs;     /* Ftrace zones */
->         struct persistent_ram_zone *mprz;       /* PMSG zone */
->         phys_addr_t phys_addr;
-> @@ -93,6 +98,7 @@ struct ramoops_context {
->         unsigned int memtype;
->         size_t record_size;
->         size_t console_size;
-> +       size_t event_size;
->         size_t ftrace_size;
->         size_t pmsg_size;
->         int dump_oops;
-> @@ -103,6 +109,7 @@ struct ramoops_context {
->         /* _read_cnt need clear on ramoops_pstore_open */
->         unsigned int dump_read_cnt;
->         unsigned int console_read_cnt;
-> +       unsigned int event_read_cnt;
->         unsigned int max_ftrace_cnt;
->         unsigned int ftrace_read_cnt;
->         unsigned int pmsg_read_cnt;
-> @@ -118,6 +125,7 @@ static int ramoops_pstore_open(struct pstore_info *psi)
->
->         cxt->dump_read_cnt = 0;
->         cxt->console_read_cnt = 0;
-> +       cxt->event_read_cnt = 0;
->         cxt->ftrace_read_cnt = 0;
->         cxt->pmsg_read_cnt = 0;
->         return 0;
-> @@ -277,6 +285,11 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
->                                            1, &record->id, &record->type,
->                                            PSTORE_TYPE_CONSOLE, 0);
->
-> +       if (!prz_ok(prz))
-> +               prz = ramoops_get_next_prz(&cxt->eprz, &cxt->event_read_cnt,
-> +                                          1, &record->id, &record->type,
-> +                                          PSTORE_TYPE_EVENT, 0);
-> +
->         if (!prz_ok(prz))
->                 prz = ramoops_get_next_prz(&cxt->mprz, &cxt->pmsg_read_cnt,
->                                            1, &record->id, &record->type,
-> @@ -385,6 +398,11 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
->                         return -ENOMEM;
->                 persistent_ram_write(cxt->cprz, record->buf, record->size);
->                 return 0;
-> +       } else if (record->type == PSTORE_TYPE_EVENT) {
-> +               if (!cxt->eprz)
-> +                       return -ENOMEM;
-> +               persistent_ram_write(cxt->eprz, record->buf, record->size);
-> +               return 0;
->         } else if (record->type == PSTORE_TYPE_FTRACE) {
->                 int zonenum;
->
-> @@ -475,6 +493,9 @@ static int ramoops_pstore_erase(struct pstore_record *record)
->         case PSTORE_TYPE_CONSOLE:
->                 prz = cxt->cprz;
->                 break;
-> +       case PSTORE_TYPE_EVENT:
-> +               prz = cxt->eprz;
-> +               break;
->         case PSTORE_TYPE_FTRACE:
->                 if (record->id >= cxt->max_ftrace_cnt)
->                         return -EINVAL;
-> @@ -699,6 +720,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
->
->         parse_size("record-size", pdata->record_size);
->         parse_size("console-size", pdata->console_size);
-> +       parse_size("event-size", pdata->event_size);
->         parse_size("ftrace-size", pdata->ftrace_size);
->         parse_size("pmsg-size", pdata->pmsg_size);
->         parse_size("ecc-size", pdata->ecc_info.ecc_size);
-> @@ -747,7 +769,8 @@ static int ramoops_probe(struct platform_device *pdev)
->         }
->
->         if (!pdata->mem_size || (!pdata->record_size && !pdata->console_size &&
-> -                       !pdata->ftrace_size && !pdata->pmsg_size)) {
-> +                       !pdata->event_size && !pdata->ftrace_size &&
-> +                       !pdata->pmsg_size)) {
->                 pr_err("The memory size and the record/console size must be "
->                         "non-zero\n");
->                 goto fail_out;
-> @@ -757,6 +780,8 @@ static int ramoops_probe(struct platform_device *pdev)
->                 pdata->record_size = rounddown_pow_of_two(pdata->record_size);
->         if (pdata->console_size && !is_power_of_2(pdata->console_size))
->                 pdata->console_size = rounddown_pow_of_two(pdata->console_size);
-> +       if (pdata->event_size && !is_power_of_2(pdata->event_size))
-> +               pdata->event_size = rounddown_pow_of_two(pdata->event_size);
->         if (pdata->ftrace_size && !is_power_of_2(pdata->ftrace_size))
->                 pdata->ftrace_size = rounddown_pow_of_two(pdata->ftrace_size);
->         if (pdata->pmsg_size && !is_power_of_2(pdata->pmsg_size))
-> @@ -767,6 +792,7 @@ static int ramoops_probe(struct platform_device *pdev)
->         cxt->memtype = pdata->mem_type;
->         cxt->record_size = pdata->record_size;
->         cxt->console_size = pdata->console_size;
-> +       cxt->event_size = pdata->event_size;
->         cxt->ftrace_size = pdata->ftrace_size;
->         cxt->pmsg_size = pdata->pmsg_size;
->         cxt->dump_oops = pdata->dump_oops;
-> @@ -775,8 +801,8 @@ static int ramoops_probe(struct platform_device *pdev)
->
->         paddr = cxt->phys_addr;
->
-> -       dump_mem_sz = cxt->size - cxt->console_size - cxt->ftrace_size
-> -                       - cxt->pmsg_size;
-> +       dump_mem_sz = cxt->size - cxt->console_size - cxt->event_size
-> +                       - cxt->ftrace_size - cxt->pmsg_size;
->         err = ramoops_init_przs("dump", dev, cxt, &cxt->dprzs, &paddr,
->                                 dump_mem_sz, cxt->record_size,
->                                 &cxt->max_dump_cnt, 0, 0);
-> @@ -788,6 +814,11 @@ static int ramoops_probe(struct platform_device *pdev)
->         if (err)
->                 goto fail_init_cprz;
->
-> +       err = ramoops_init_prz("event", dev, cxt, &cxt->eprz, &paddr,
-> +                              cxt->event_size, 0);
-> +       if (err)
-> +               goto fail_init_eprz;
-> +
->         cxt->max_ftrace_cnt = (cxt->flags & RAMOOPS_FLAG_FTRACE_PER_CPU)
->                                 ? nr_cpu_ids
->                                 : 1;
-> @@ -825,6 +856,8 @@ static int ramoops_probe(struct platform_device *pdev)
->         cxt->pstore.flags = PSTORE_FLAGS_DMESG;
->         if (cxt->console_size)
->                 cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
-> +       if (cxt->event_size)
-> +               cxt->pstore.flags |= PSTORE_FLAGS_EVENT;
->         if (cxt->ftrace_size)
->                 cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
->         if (cxt->pmsg_size)
-> @@ -845,6 +878,7 @@ static int ramoops_probe(struct platform_device *pdev)
->         record_size = pdata->record_size;
->         dump_oops = pdata->dump_oops;
->         ramoops_console_size = pdata->console_size;
-> +       ramoops_event_size = pdata->event_size;
->         ramoops_pmsg_size = pdata->pmsg_size;
->         ramoops_ftrace_size = pdata->ftrace_size;
->
-> @@ -858,6 +892,8 @@ static int ramoops_probe(struct platform_device *pdev)
->         kfree(cxt->pstore.buf);
->  fail_clear:
->         cxt->pstore.bufsize = 0;
-> +       persistent_ram_free(cxt->eprz);
-> +fail_init_eprz:
->         persistent_ram_free(cxt->mprz);
->  fail_init_mprz:
->  fail_init_fprz:
-> @@ -877,6 +913,7 @@ static int ramoops_remove(struct platform_device *pdev)
->         kfree(cxt->pstore.buf);
->         cxt->pstore.bufsize = 0;
->
-> +       persistent_ram_free(cxt->eprz);
->         persistent_ram_free(cxt->mprz);
->         persistent_ram_free(cxt->cprz);
->         ramoops_free_przs(cxt);
-> @@ -916,6 +953,7 @@ static void ramoops_register_dummy(void)
->         dummy_data->mem_type = mem_type;
->         dummy_data->record_size = record_size;
->         dummy_data->console_size = ramoops_console_size;
-> +       dummy_data->event_size = ramoops_event_size;
->         dummy_data->ftrace_size = ramoops_ftrace_size;
->         dummy_data->pmsg_size = ramoops_pmsg_size;
->         dummy_data->dump_oops = dump_oops;
-> diff --git a/include/linux/pstore.h b/include/linux/pstore.h
-> index a15bc4d48752..c31bb9567b4a 100644
-> --- a/include/linux/pstore.h
-> +++ b/include/linux/pstore.h
-> @@ -44,6 +44,7 @@ enum pstore_type_id {
->         PSTORE_TYPE_PPC_COMMON  = 6,
->         PSTORE_TYPE_PMSG        = 7,
->         PSTORE_TYPE_PPC_OPAL    = 8,
-> +       PSTORE_TYPE_EVENT       = 9,
->         PSTORE_TYPE_UNKNOWN     = 255
->  };
->
-> @@ -193,6 +194,7 @@ struct pstore_info {
->  #define PSTORE_FLAGS_CONSOLE   (1 << 1)
->  #define PSTORE_FLAGS_FTRACE    (1 << 2)
->  #define PSTORE_FLAGS_PMSG      (1 << 3)
-> +#define PSTORE_FLAGS_EVENT     (1 << 4)
->
->  extern int pstore_register(struct pstore_info *);
->  extern void pstore_unregister(struct pstore_info *);
-> diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
-> index e6d226464838..f01055c6cc40 100644
-> --- a/include/linux/pstore_ram.h
-> +++ b/include/linux/pstore_ram.h
-> @@ -95,6 +95,7 @@ struct ramoops_platform_data {
->         unsigned int    mem_type;
->         unsigned long   record_size;
->         unsigned long   console_size;
-> +       unsigned long   event_size;
->         unsigned long   ftrace_size;
->         unsigned long   pmsg_size;
->         int             dump_oops;
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+> > 
+> > yours,
+> > Song Qiang
+> > 
+> > > > > +	mutex_unlock(&data->lock);
+> > > > > +
+> > > > > +	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+> > > > > +			iio_get_time_ns(indio_dev));
+> > > > > +done:
+> > > > > +	iio_trigger_notify_done(indio_dev->trig);
+> > > > > +
+> > > > > +	return IRQ_HANDLED;
+> > > > > +}
+> > > > > +
+> > > > > +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int irq)
+> > > > > +{
+> > > > > +	struct iio_dev *indio_dev;
+> > > > > +	struct rm3100_data *data;
+> > > > > +	int tmp;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
+> > > > > +	if (!indio_dev)
+> > > > > +		return -ENOMEM;
+> > > > > +
+> > > > > +	data = iio_priv(indio_dev);
+> > > > > +	dev_set_drvdata(dev, indio_dev);
+> > > > > +	data->dev = dev;
+> > > > > +	data->regmap = regmap;
+> > > > > +
+> > > > > +	mutex_init(&data->lock);
+> > > > > +
+> > > > > +	indio_dev->dev.parent = dev;
+> > > > > +	indio_dev->name = "rm3100";
+> > > > > +	indio_dev->info = &rm3100_info;
+> > > > > +	indio_dev->channels = rm3100_channels;
+> > > > > +	indio_dev->num_channels = ARRAY_SIZE(rm3100_channels);
+> > > > > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > > > > +	indio_dev->available_scan_masks = rm3100_scan_masks;
+> > > > > +
+> > > > > +	if (!irq)
+> > > > > +		data->use_interrupt = false;
+> > > > > +	else {
+> > > > > +		data->use_interrupt = true;
+> > > > > +		ret = devm_request_irq(dev,
+> > > > > +			irq,
+> > > > > +			rm3100_measurement_irq_handler,
+> > > > > +			IRQF_TRIGGER_RISING,
+> > > > > +			indio_dev->name,
+> > > > > +			data);
+> > > > > +		if (ret < 0) {
+> > > > > +			dev_err(dev,
+> > > > > +			"request irq line failed.");  
+> > > > 
+> > > > \n
+> > > >   
+> > > > > +			return -ret;
+> > > > > +		}
+> > > > > +		init_completion(&data->measuring_done);
+> > > > > +	}
+> > > > > +
+> > > > > +	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+> > > > > +					rm3100_trigger_handler, NULL);
+> > > > > +	if (ret < 0)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	/* 3sec more wait time. */
+> > > > > +	ret = regmap_read(data->regmap, RM_REG_TMRC, &tmp);  
+> > > > 
+> > > > check ret
+> > > >   
+> > > > > +	data->conversion_time = rm3100_samp_rates[tmp-RM_TMRC_OFFSET][2] + 3000;
+> > > > > +
+> > > > > +	/* Starting all channels' conversion. */
+> > > > > +	ret = regmap_write(regmap, RM_REG_CMM,
+> > > > > +		RM_CMM_PMX | RM_CMM_PMY | RM_CMM_PMZ | RM_CMM_START);
+> > > > > +	if (ret < 0)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	return devm_iio_device_register(dev, indio_dev);
+> > > > > +}
+> > > > > +EXPORT_SYMBOL(rm3100_common_probe);
+> > > > > +
+> > > > > +int rm3100_common_remove(struct device *dev)
+> > > > > +{
+> > > > > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > > > > +	struct rm3100_data *data = iio_priv(indio_dev);
+> > > > > +	struct regmap *regmap = data->regmap;
+> > > > > +
+> > > > > +	regmap_write(regmap, RM_REG_CMM, 0x00);
+> > > > > +
+> > > > > +	return 0;
+> > > > > +}
+> > > > > +EXPORT_SYMBOL(rm3100_common_remove);
+> > > > > +
+> > > > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > > > > +MODULE_DESCRIPTION("PNI RM3100 9-axis magnetometer i2c driver");
+> > > > > +MODULE_LICENSE("GPL v2");
+> > > > > diff --git a/drivers/iio/magnetometer/rm3100-i2c.c b/drivers/iio/magnetometer/rm3100-i2c.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..b50dc5b1b30b
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/iio/magnetometer/rm3100-i2c.c
+> > > > > @@ -0,0 +1,66 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > > +/*
+> > > > > + * Support for PNI RM3100 9-axis geomagnetic sensor a i2c bus.
+> > > > > + *
+> > > > > + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> > > > > + *
+> > > > > + * User Manual available at
+> > > > > + * <https://www.pnicorp.com/download/rm3100-user-manual/>
+> > > > > + *
+> > > > > + * i2c slave address 0x20 + SA1 << 1 + SA0.
+> > > > > + */
+> > > > > +
+> > > > > +#include <linux/i2c.h>
+> > > > > +
+> > > > > +#include "rm3100.h"
+> > > > > +
+> > > > > +static const struct regmap_config rm3100_regmap_config = {
+> > > > > +		.reg_bits = 8,
+> > > > > +		.val_bits = 8,
+> > > > > +
+> > > > > +		.rd_table = &rm3100_readable_table,
+> > > > > +		.wr_table = &rm3100_writable_table,
+> > > > > +		.volatile_table = &rm3100_volatile_table,
+> > > > > +
+> > > > > +		.cache_type = REGCACHE_RBTREE,
+> > > > > +};
+> > > > > +
+> > > > > +static int rm3100_probe(struct i2c_client *client)
+> > > > > +{
+> > > > > +	struct regmap *regmap;
+> > > > > +
+> > > > > +	if (!i2c_check_functionality(client->adapter,
+> > > > > +		I2C_FUNC_SMBUS_READ_I2C_BLOCK | I2C_FUNC_SMBUS_BYTE_DATA))
+> > > > > +		return -EOPNOTSUPP;
+> > > > > +
+> > > > > +	regmap =  devm_regmap_init_i2c(client, &rm3100_regmap_config);
+> > > > > +	if (IS_ERR(regmap))
+> > > > > +		return PTR_ERR(regmap);
+> > > > > +
+> > > > > +	return rm3100_common_probe(&client->dev, regmap, client->irq);
+> > > > > +}
+> > > > > +
+> > > > > +static int rm3100_remove(struct i2c_client *client)
+> > > > > +{
+> > > > > +	return rm3100_common_remove(&client->dev);
+> > > > > +}
+> > > > > +
+> > > > > +static const struct of_device_id rm3100_dt_match[] = {
+> > > > > +	{ .compatible = "pni,rm3100-i2c", },
+> > > > > +	{ }
+> > > > > +};
+> > > > > +MODULE_DEVICE_TABLE(of, rm3100_dt_match);
+> > > > > +
+> > > > > +static struct i2c_driver rm3100_driver = {
+> > > > > +	.driver = {
+> > > > > +		.name = "rm3100-i2c",
+> > > > > +		.of_match_table = rm3100_dt_match,
+> > > > > +	},
+> > > > > +	.probe_new = rm3100_probe,
+> > > > > +	.remove = rm3100_remove,
+> > > > > +};
+> > > > > +module_i2c_driver(rm3100_driver);
+> > > > > +
+> > > > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > > > > +MODULE_DESCRIPTION("PNI RM3100 9-axis magnetometer i2c driver");
+> > > > > +MODULE_LICENSE("GPL v2");
+> > > > > diff --git a/drivers/iio/magnetometer/rm3100-spi.c b/drivers/iio/magnetometer/rm3100-spi.c
+> > > > > new file mode 100644
+> > > > > index 000000000000..2c7dd9e3a1a2
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/iio/magnetometer/rm3100-spi.c
+> > > > > @@ -0,0 +1,72 @@
+> > > > > +// SPDX-License-Identifier: GPL-2.0+
+> > > > > +/*
+> > > > > + * Support for PNI RM3100 9-axis geomagnetic sensor a spi bus.
+> > > > > + *
+> > > > > + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> > > > > + *
+> > > > > + * User Manual available at
+> > > > > + * <https://www.pnicorp.com/download/rm3100-user-manual/>
+> > > > > + */
+> > > > > +
+> > > > > +#include <linux/spi/spi.h>
+> > > > > +
+> > > > > +#include "rm3100.h"
+> > > > > +
+> > > > > +static const struct regmap_config rm3100_regmap_config = {
+> > > > > +		.reg_bits = 8,
+> > > > > +		.val_bits = 8,
+> > > > > +
+> > > > > +		.rd_table = &rm3100_readable_table,
+> > > > > +		.wr_table = &rm3100_writable_table,
+> > > > > +		.volatile_table = &rm3100_volatile_table,
+> > > > > +
+> > > > > +		.read_flag_mask = 0x80,
+> > > > > +
+> > > > > +		.cache_type = REGCACHE_RBTREE,
+> > > > > +};
+> > > > > +
+> > > > > +static int rm3100_probe(struct spi_device *spi)
+> > > > > +{
+> > > > > +	struct regmap *regmap;
+> > > > > +	int ret;
+> > > > > +
+> > > > > +	/* Actually this device supports both mode 0 and mode 3. */
+> > > > > +	spi->mode = SPI_MODE_0;
+> > > > > +	/* data rates cannot exceeds 1Mbits. */  
+> > > > 
+> > > > exceed
+> > > >   
+> > > > > +	spi->max_speed_hz = 1000000;
+> > > > > +	spi->bits_per_word = 8;
+> > > > > +	ret = spi_setup(spi);
+> > > > > +	if (ret)
+> > > > > +		return ret;
+> > > > > +
+> > > > > +	regmap =  devm_regmap_init_spi(spi, &rm3100_regmap_config);
+> > > > > +	if (IS_ERR(regmap))
+> > > > > +		return PTR_ERR(regmap);
+> > > > > +
+> > > > > +	return rm3100_common_probe(&spi->dev, regmap, spi->irq);
+> > > > > +}
+> > > > > +
+> > > > > +static int rm3100_remove(struct spi_device *spi)
+> > > > > +{
+> > > > > +	return rm3100_common_remove(&spi->dev);
+> > > > > +}
+> > > > > +
+> > > > > +static const struct of_device_id rm3100_dt_match[] = {
+> > > > > +	{ .compatible = "pni,rm3100-spi", },
+> > > > > +	{ }
+> > > > > +};
+> > > > > +MODULE_DEVICE_TABLE(of, rm3100_dt_match);
+> > > > > +
+> > > > > +static struct spi_driver rm3100_driver = {
+> > > > > +		.driver = {
+> > > > > +				.name = "rm3100-spi",
+> > > > > +				.of_match_table = rm3100_dt_match,
+> > > > > +		},
+> > > > > +		.probe = rm3100_probe,
+> > > > > +		.remove = rm3100_remove,
+> > > > > +};
+> > > > > +module_spi_driver(rm3100_driver);
+> > > > > +
+> > > > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > > > > +MODULE_DESCRIPTION("PNI RM3100 9-axis magnetometer spi driver");
+> > > > > +MODULE_LICENSE("GPL v2");
+> > > > > diff --git a/drivers/iio/magnetometer/rm3100.h b/drivers/iio/magnetometer/rm3100.h
+> > > > > new file mode 100644
+> > > > > index 000000000000..5e30bc0f5149
+> > > > > --- /dev/null
+> > > > > +++ b/drivers/iio/magnetometer/rm3100.h
+> > > > > @@ -0,0 +1,90 @@
+> > > > > +/* SPDX-License-Identifier: GPL-2.0+ */
+> > > > > +/*
+> > > > > + * Header file for PNI RM3100 driver
+> > > > > + *
+> > > > > + * Copyright (C) 2018 Song Qiang <songqiang1304521@gmail.com>
+> > > > > + */
+> > > > > +
+> > > > > +#ifndef RM3100_CORE_H
+> > > > > +#define RM3100_CORE_H
+> > > > > +
+> > > > > +#include <linux/module.h>
+> > > > > +#include <linux/regmap.h>
+> > > > > +
+> > > > > +#define RM_REG_REV_ID		0x36
+> > > > > +
+> > > > > +/* Cycle Count Registers MSBs and LSBs. */
+> > > > > +#define RM_REG_CCXM		0x04
+> > > > > +#define RM_REG_CCXL		0x05
+> > > > > +#define RM_REG_CCYM		0x06
+> > > > > +#define RM_REG_CCYL		0x07
+> > > > > +#define RM_REG_CCZM		0x08
+> > > > > +#define RM_REG_CCZL		0x09
+> > > > > +
+> > > > > +/* Single Measurement Mode register. */
+> > > > > +#define RM_REG_POLL		0x00
+> > > > > +#define RM_POLL_PMX		BIT(4)
+> > > > > +#define RM_POLL_PMY		BIT(5)
+> > > > > +#define RM_POLL_PMZ		BIT(6)
+> > > > > +
+> > > > > +/* Continues Measurement Mode register. */
+> > > > > +#define RM_REG_CMM		0x01
+> > > > > +#define RM_CMM_START		BIT(0)
+> > > > > +#define RM_CMM_DRDM		BIT(2)
+> > > > > +#define RM_CMM_PMX		BIT(4)
+> > > > > +#define RM_CMM_PMY		BIT(5)
+> > > > > +#define RM_CMM_PMZ		BIT(6)
+> > > > > +
+> > > > > +/* TiMe Rate Configuration register. */
+> > > > > +#define RM_REG_TMRC		0x0B
+> > > > > +#define RM_TMRC_OFFSET		0x92
+> > > > > +
+> > > > > +/* Result Status register. */
+> > > > > +#define RM_REG_STATUS		0x34
+> > > > > +#define RM_STATUS_DRDY		BIT(7)
+> > > > > +
+> > > > > +/* Measurement result registers. */
+> > > > > +#define RM_REG_MX2		0x24
+> > > > > +#define RM_REG_MX1		0x25
+> > > > > +#define RM_REG_MX0		0x26
+> > > > > +#define RM_REG_MY2		0x27
+> > > > > +#define RM_REG_MY1		0x28
+> > > > > +#define RM_REG_MY0		0x29
+> > > > > +#define RM_REG_MZ2		0x2a
+> > > > > +#define RM_REG_MZ1		0x2b
+> > > > > +#define RM_REG_MZ0		0x2c
+> > > > > +
+> > > > > +#define RM_REG_HSHAKE		0x35
+> > > > > +
+> > > > > +#define RM_W_REG_START		RM_REG_POLL
+> > > > > +#define RM_W_REG_END		RM_REG_REV_ID
+> > > > > +#define RM_R_REG_START		RM_REG_POLL
+> > > > > +#define RM_R_REG_END		RM_REG_HSHAKE
+> > > > > +#define RM_V_REG_START		RM_REG_MX2
+> > > > > +#define RM_V_REG_END		RM_REG_HSHAKE
+> > > > > +
+> > > > > +/* Built-In Self Test reigister. */
+> > > > > +#define RM_REG_BIST		0x33
+> > > > > +
+> > > > > +struct rm3100_data {
+> > > > > +	struct device *dev;
+> > > > > +	struct regmap *regmap;
+> > > > > +	struct completion measuring_done;
+> > > > > +	bool use_interrupt;
+> > > > > +
+> > > > > +	int conversion_time;
+> > > > > +
+> > > > > +	/* To protect consistency of every measurement and sampling
+> > > > > +	 * frequency change operations.
+> > > > > +	 */
+> > > > > +	struct mutex lock;
+> > > > > +};
+> > > > > +
+> > > > > +extern const struct regmap_access_table rm3100_readable_table;
+> > > > > +extern const struct regmap_access_table rm3100_writable_table;
+> > > > > +extern const struct regmap_access_table rm3100_volatile_table;
+> > > > > +
+> > > > > +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int irq);
+> > > > > +int rm3100_common_remove(struct device *dev);
+> > > > > +
+> > > > > +#endif /* RM3100_CORE_H */
+> > > > >   
+> > > >   
+> > > 
+> > > 
+> > > -- 
+> > > Regards
+> > > Phil Reid
+> > >   
+> 
+> 
