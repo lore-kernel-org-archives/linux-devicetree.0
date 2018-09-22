@@ -1,158 +1,379 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND
- controller documentation
-Date: Sat, 22 Sep 2018 10:34:40 +0200
-Message-ID: <20180922103440.12575714@xps13>
-References: <1537199260-7280-1-git-send-email-christophe.kerello@st.com>
-        <1537199260-7280-2-git-send-email-christophe.kerello@st.com>
+From: Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH 2/6] pstore: Add event tracing support
+Date: Sat, 22 Sep 2018 05:05:23 -0400
+Message-ID: <CAEXW_YRXQwKvnahv5X1F_Bu_98vMg=w1xpo8PZ+aNT02vBrwwg@mail.gmail.com>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537199260-7280-2-git-send-email-christophe.kerello@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: christophe.kerello@st.com
-Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Tom Zanussi <tom.zanussi@linux.intel.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vivek Gautam <vivek.gautam@codeaurora.org>, Prasad Sodagudi <psodagud@codeaurora.org>, Ingo Molnar <mingo@kernel.org>, tsoni@codeaurora.org, Anton Vorontsov <anton@enomsg.org>, Ingo Molnar <mingo@redhat.com>, Sibi Sankar <sibis@codeaurora.org>, Laura Abbott <labbott@redhat.com>, kernel-team <kernel-team@android.com>, devicetree@vger.kernel.org, Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, linux-arm-msm@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Jason Baron <jbaron@akamai.com>, Rob Herring <robh+dt@kernel.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Tony Luck <tony.luck@intel.com>, Rajendra Nayak <rnayak@codeaurora.org>, Jim Cromie <jim.cromie@gmail.com>, Greg Kroah-Hartman <gregkh@>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
-
-<christophe.kerello@st.com> wrote on Mon, 17 Sep 2018 17:47:38 +0200:
-
-> From: Christophe Kerello <christophe.kerello@st.com>
-> 
-> This patch adds the documentation of the device tree bindings for the STM32
-> FMC2 NAND controller.
-> 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+On Sat, Sep 8, 2018 at 4:28 PM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Currently pstore has function trace support which can be
+> used to get the function call chain with limited data.
+> Event tracing has extra data which is useful to debug wide
+> variety of issues and is heavily used across the kernel.
+>
+[...]
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
->  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 90 ++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> new file mode 100644
-> index 0000000..93eaf11
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> @@ -0,0 +1,90 @@
-> +STMicroelectronics Flexible Memory Controller 2 (FMC2)
-> +NAND Interface
+>  fs/pstore/Kconfig          |  2 +-
+>  fs/pstore/ftrace.c         | 55 ++++++++++++++++++++++++++++++++++++++
+>  fs/pstore/inode.c          |  4 +++
+>  fs/pstore/ram.c            | 44 +++++++++++++++++++++++++++---
+>  include/linux/pstore.h     |  2 ++
+>  include/linux/pstore_ram.h |  1 +
+>  6 files changed, 104 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+> index 503086f7f7c1..6fe087b13a51 100644
+> --- a/fs/pstore/Kconfig
+> +++ b/fs/pstore/Kconfig
+> @@ -126,7 +126,7 @@ config PSTORE_PMSG
+>
+>  config PSTORE_FTRACE
+>         bool "Persistent function tracer"
+> -       depends on PSTORE
+> +       depends on PSTORE && PSTORE!=m
+>         depends on FUNCTION_TRACER
+>         depends on DEBUG_FS
+>         help
+> diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
+> index 06aab07b6bb7..d47dc93ac098 100644
+> --- a/fs/pstore/ftrace.c
+> +++ b/fs/pstore/ftrace.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/err.h>
+>  #include <linux/cache.h>
+> +#include <linux/slab.h>
+> +#include <linux/trace_events.h>
+>  #include <asm/barrier.h>
+>  #include "internal.h"
+>
+> @@ -62,6 +64,59 @@ static struct ftrace_ops pstore_ftrace_ops __read_mostly = {
+>         .func   = pstore_ftrace_call,
+>  };
+>
+> +void notrace pstore_event_call(struct trace_event_buffer *fbuffer)
+> +{
+> +       struct trace_iterator *iter;
+> +       struct trace_seq *s;
+> +       struct trace_event_call *event_call;
+> +       struct pstore_record record;
+> +       struct trace_event *event;
+> +       struct seq_buf *seq;
+> +       unsigned long flags;
 > +
-> +Required properties:
-> +- compatible: "st,stm32mp15-fmc2"
-
-I think this form is preferred:
-
-"
-- compatible: Should be one of:
-              * st,stm32mp15-fmc2
-"
-
-> +- reg: the first contains the register location and length
-
-the register location and length of...?
-
-> +       the second contains the data common space used for cs0 and length
-> +       the third contains the cmd attribute space used for cs0 and length
-> +       the fourth contains the addr attribute space used for cs0 and length
-> +       the fifth contains the data common space used for cs1 and length
-> +       the sixth contains the cmd attribute space used for cs1 and length
-> +       the seventh contains the addr attribute space used for cs1 and length
-
-Maybe you could simplify a bit with something like:
-
--reg: NAND flash controller memory areas.
-      First region ...
-      Regions 2 to 4 respectively contain the data, command, and
-      address space for CS0.
-      Regions 5 to 7 contain the same areas for CS1.
-
-> +- interrupts: The interrupt number
-> +- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
-> +- clocks: Use common clock framework
+> +       if (!psinfo)
+> +               return;
 > +
-> +Optional properties:
-> +- resets: Reference to a reset controller asserting the FMC controller
-> +- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
-> +- dma-names: Must be "tx", "rx" and "ecc"
+> +       if (unlikely(oops_in_progress))
+> +               return;
 > +
-> +Optional children nodes:
-> +Children nodes represent the available nand chips.
-
-Please s/nand/NAND/ in plain English.
-
+> +       pstore_record_init(&record, psinfo);
+> +       record.type = PSTORE_TYPE_EVENT;
 > +
-> +Optional properties:
-> +- nand-on-flash-bbt: see nand.txt
-> +- nand-ecc-strength: see nand.txt
-> +- nand-ecc-step-size: see nand.txt
-> +- st,fmc2_timings: array of 8 bytes for NAND timings. The meanings of
-> +  these bytes are:
-> +  byte 0 TCLR      : CLE to RE delay in number of AHB clock cycles, only 4 bits
-> +                     are valid. Zero means one clock cycle, 15 means 16 clock
-> +                     cycles.
-> +  byte 1 TAR       : ALE to RE delay, 4 bits are valid. Same format as TCLR.
-> +  byte 2 THIZ      : number of HCLK clock cycles during which the data bus is
-> +                     kept in Hi-Z (tristate) after the start of a write access.
-> +                     Only valid for write transactions. Zero means 1 cycle,
-> +                     255 means 256 cycles.
-> +  byte 3 TWAIT     : number of HCLK clock cycles to assert the command to the
-> +                     NAND flash in response to SMWAITn. Zero means 1 cycle,
-> +                     255 means 256 cycles.
-> +  byte 4 THOLD_MEM : common memory space timing
-> +                     number of HCLK clock cycles to hold the address (and data
-> +                     when writing) after the command deassertion. Zero means
-> +                     1 cycle, 255 means 256 cycles.
-> +  byte 5 TSET_MEM  : common memory space timing
-> +                     number of HCLK clock cycles to assert the address before
-> +                     the command is asserted. Zero means 1 cycle, 255 means 256
-> +                     cycles.
-> +  byte 6 THOLD_ATT : attribute memory space timing
-> +                     number of HCLK clock cycles to hold the address (and data
-> +                     when writing) after the command deassertion. Zero means
-> +                     1 cycle, 255 means 256 cycles.
-> +  byte 7 TSET_ATT  : attribute memory space timing
-> +                     number of HCLK clock cycles to assert the address before
-> +                     the command is asserted. Zero means 1 cycle, 255 means 256
-> +                     cycles.
+> +       iter = kmalloc(sizeof(*iter), GFP_KERNEL);
+> +       if (!iter)
+> +               return;
+> +
+> +       event_call = fbuffer->trace_file->event_call;
+> +       if (!event_call || !event_call->event.funcs ||
+> +           !event_call->event.funcs->trace)
+> +               goto fail_event;
+> +
+> +       event = &fbuffer->trace_file->event_call->event;
+> +
+> +       spin_lock_irqsave(&psinfo->buf_lock, flags);
 
-Let me review the driver but this array of timings is really
-suspicious. I am pretty sure you don't need it in the DT.
+Could you just split the pstore space into a per-cpu event buffer like
+we are doing for ftrace-on-pstore? Then you don't need to lock. I fear
+the lock contention will be apparent. The pstore code already has
+plumbing to split the store buffer per CPU.
+
+Also I think this spinlock can be moved further down.
 
 > +
-> +The following ECC strength and step size are currently supported:
-> + - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (HAMMING)
-> + - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
-> + - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
-> +
-> +Example:
-> +
-> +	fmc2_nand: fmc2_nand@58002000 {
-> +		compatible = "st,stm32mp15-fmc2";
-> +		reg = <0x58002000 0x1000>,
-> +		      <0x80000000 0x1000>,
-> +		      <0x88010000 0x1000>,
-> +		      <0x88020000 0x1000>,
-> +		      <0x81000000 0x1000>,
-> +		      <0x89010000 0x1000>,
-> +		      <0x89020000 0x1000>;
-> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&rcc FMC_K>;
-> +		resets = <&rcc FMC_R>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&fmc2_pins_a>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		nand@0 {
-> +			reg = <0>;
-> +			nand-on-flash-bbt;
-> +			st,fmc2_timings = /bits/ 8 <2 2 1 7 1 0 104 25>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +		};
-> +	};
+> +       trace_seq_init(&iter->seq);
+> +       iter->ent = fbuffer->entry;
+> +       event_call->event.funcs->trace(iter, 0, event);
+> +       trace_seq_putc(&iter->seq, 0);
 
-Thanks,
-Miquèl
+Would it be possible to store the binary trace record in the pstore
+buffer instead of outputting text? I suspect that will both be faster
+and less space.
+
+> +
+> +       if (seq->size > psinfo->bufsize)
+> +               seq->size = psinfo->bufsize;
+> +
+> +       s = &iter->seq;
+> +       seq = &s->seq;
+> +
+> +       record.buf = (char *)(seq->buffer);
+> +       record.size = seq->len;
+> +       psinfo->write(&record);
+
+thanks,
+
+ - Joel
+
+> +
+> +       spin_unlock_irqrestore(&psinfo->buf_lock, flags);
+> +
+> +fail_event:
+> +       kfree(iter);
+> +}
+> +
+>  static DEFINE_MUTEX(pstore_ftrace_lock);
+>  static bool pstore_ftrace_enabled;
+>
+> diff --git a/fs/pstore/inode.c b/fs/pstore/inode.c
+> index 5fcb845b9fec..f099152abbbd 100644
+> --- a/fs/pstore/inode.c
+> +++ b/fs/pstore/inode.c
+> @@ -345,6 +345,10 @@ int pstore_mkfile(struct dentry *root, struct pstore_record *record)
+>                 scnprintf(name, sizeof(name), "console-%s-%llu",
+>                           record->psi->name, record->id);
+>                 break;
+> +       case PSTORE_TYPE_EVENT:
+> +               scnprintf(name, sizeof(name), "event-%s-%llu",
+> +                         record->psi->name, record->id);
+> +               break;
+>         case PSTORE_TYPE_FTRACE:
+>                 scnprintf(name, sizeof(name), "ftrace-%s-%llu",
+>                           record->psi->name, record->id);
+> diff --git a/fs/pstore/ram.c b/fs/pstore/ram.c
+> index bbd1e357c23d..f60d41c0309e 100644
+> --- a/fs/pstore/ram.c
+> +++ b/fs/pstore/ram.c
+> @@ -48,6 +48,10 @@ static ulong ramoops_console_size = MIN_MEM_SIZE;
+>  module_param_named(console_size, ramoops_console_size, ulong, 0400);
+>  MODULE_PARM_DESC(console_size, "size of kernel console log");
+>
+> +static ulong ramoops_event_size = MIN_MEM_SIZE;
+> +module_param_named(event_size, ramoops_event_size, ulong, 0400);
+> +MODULE_PARM_DESC(event_size, "size of event log");
+> +
+>  static ulong ramoops_ftrace_size = MIN_MEM_SIZE;
+>  module_param_named(ftrace_size, ramoops_ftrace_size, ulong, 0400);
+>  MODULE_PARM_DESC(ftrace_size, "size of ftrace log");
+> @@ -86,6 +90,7 @@ MODULE_PARM_DESC(ramoops_ecc,
+>  struct ramoops_context {
+>         struct persistent_ram_zone **dprzs;     /* Oops dump zones */
+>         struct persistent_ram_zone *cprz;       /* Console zone */
+> +       struct persistent_ram_zone *eprz;       /* Event zone */
+>         struct persistent_ram_zone **fprzs;     /* Ftrace zones */
+>         struct persistent_ram_zone *mprz;       /* PMSG zone */
+>         phys_addr_t phys_addr;
+> @@ -93,6 +98,7 @@ struct ramoops_context {
+>         unsigned int memtype;
+>         size_t record_size;
+>         size_t console_size;
+> +       size_t event_size;
+>         size_t ftrace_size;
+>         size_t pmsg_size;
+>         int dump_oops;
+> @@ -103,6 +109,7 @@ struct ramoops_context {
+>         /* _read_cnt need clear on ramoops_pstore_open */
+>         unsigned int dump_read_cnt;
+>         unsigned int console_read_cnt;
+> +       unsigned int event_read_cnt;
+>         unsigned int max_ftrace_cnt;
+>         unsigned int ftrace_read_cnt;
+>         unsigned int pmsg_read_cnt;
+> @@ -118,6 +125,7 @@ static int ramoops_pstore_open(struct pstore_info *psi)
+>
+>         cxt->dump_read_cnt = 0;
+>         cxt->console_read_cnt = 0;
+> +       cxt->event_read_cnt = 0;
+>         cxt->ftrace_read_cnt = 0;
+>         cxt->pmsg_read_cnt = 0;
+>         return 0;
+> @@ -277,6 +285,11 @@ static ssize_t ramoops_pstore_read(struct pstore_record *record)
+>                                            1, &record->id, &record->type,
+>                                            PSTORE_TYPE_CONSOLE, 0);
+>
+> +       if (!prz_ok(prz))
+> +               prz = ramoops_get_next_prz(&cxt->eprz, &cxt->event_read_cnt,
+> +                                          1, &record->id, &record->type,
+> +                                          PSTORE_TYPE_EVENT, 0);
+> +
+>         if (!prz_ok(prz))
+>                 prz = ramoops_get_next_prz(&cxt->mprz, &cxt->pmsg_read_cnt,
+>                                            1, &record->id, &record->type,
+> @@ -385,6 +398,11 @@ static int notrace ramoops_pstore_write(struct pstore_record *record)
+>                         return -ENOMEM;
+>                 persistent_ram_write(cxt->cprz, record->buf, record->size);
+>                 return 0;
+> +       } else if (record->type == PSTORE_TYPE_EVENT) {
+> +               if (!cxt->eprz)
+> +                       return -ENOMEM;
+> +               persistent_ram_write(cxt->eprz, record->buf, record->size);
+> +               return 0;
+>         } else if (record->type == PSTORE_TYPE_FTRACE) {
+>                 int zonenum;
+>
+> @@ -475,6 +493,9 @@ static int ramoops_pstore_erase(struct pstore_record *record)
+>         case PSTORE_TYPE_CONSOLE:
+>                 prz = cxt->cprz;
+>                 break;
+> +       case PSTORE_TYPE_EVENT:
+> +               prz = cxt->eprz;
+> +               break;
+>         case PSTORE_TYPE_FTRACE:
+>                 if (record->id >= cxt->max_ftrace_cnt)
+>                         return -EINVAL;
+> @@ -699,6 +720,7 @@ static int ramoops_parse_dt(struct platform_device *pdev,
+>
+>         parse_size("record-size", pdata->record_size);
+>         parse_size("console-size", pdata->console_size);
+> +       parse_size("event-size", pdata->event_size);
+>         parse_size("ftrace-size", pdata->ftrace_size);
+>         parse_size("pmsg-size", pdata->pmsg_size);
+>         parse_size("ecc-size", pdata->ecc_info.ecc_size);
+> @@ -747,7 +769,8 @@ static int ramoops_probe(struct platform_device *pdev)
+>         }
+>
+>         if (!pdata->mem_size || (!pdata->record_size && !pdata->console_size &&
+> -                       !pdata->ftrace_size && !pdata->pmsg_size)) {
+> +                       !pdata->event_size && !pdata->ftrace_size &&
+> +                       !pdata->pmsg_size)) {
+>                 pr_err("The memory size and the record/console size must be "
+>                         "non-zero\n");
+>                 goto fail_out;
+> @@ -757,6 +780,8 @@ static int ramoops_probe(struct platform_device *pdev)
+>                 pdata->record_size = rounddown_pow_of_two(pdata->record_size);
+>         if (pdata->console_size && !is_power_of_2(pdata->console_size))
+>                 pdata->console_size = rounddown_pow_of_two(pdata->console_size);
+> +       if (pdata->event_size && !is_power_of_2(pdata->event_size))
+> +               pdata->event_size = rounddown_pow_of_two(pdata->event_size);
+>         if (pdata->ftrace_size && !is_power_of_2(pdata->ftrace_size))
+>                 pdata->ftrace_size = rounddown_pow_of_two(pdata->ftrace_size);
+>         if (pdata->pmsg_size && !is_power_of_2(pdata->pmsg_size))
+> @@ -767,6 +792,7 @@ static int ramoops_probe(struct platform_device *pdev)
+>         cxt->memtype = pdata->mem_type;
+>         cxt->record_size = pdata->record_size;
+>         cxt->console_size = pdata->console_size;
+> +       cxt->event_size = pdata->event_size;
+>         cxt->ftrace_size = pdata->ftrace_size;
+>         cxt->pmsg_size = pdata->pmsg_size;
+>         cxt->dump_oops = pdata->dump_oops;
+> @@ -775,8 +801,8 @@ static int ramoops_probe(struct platform_device *pdev)
+>
+>         paddr = cxt->phys_addr;
+>
+> -       dump_mem_sz = cxt->size - cxt->console_size - cxt->ftrace_size
+> -                       - cxt->pmsg_size;
+> +       dump_mem_sz = cxt->size - cxt->console_size - cxt->event_size
+> +                       - cxt->ftrace_size - cxt->pmsg_size;
+>         err = ramoops_init_przs("dump", dev, cxt, &cxt->dprzs, &paddr,
+>                                 dump_mem_sz, cxt->record_size,
+>                                 &cxt->max_dump_cnt, 0, 0);
+> @@ -788,6 +814,11 @@ static int ramoops_probe(struct platform_device *pdev)
+>         if (err)
+>                 goto fail_init_cprz;
+>
+> +       err = ramoops_init_prz("event", dev, cxt, &cxt->eprz, &paddr,
+> +                              cxt->event_size, 0);
+> +       if (err)
+> +               goto fail_init_eprz;
+> +
+>         cxt->max_ftrace_cnt = (cxt->flags & RAMOOPS_FLAG_FTRACE_PER_CPU)
+>                                 ? nr_cpu_ids
+>                                 : 1;
+> @@ -825,6 +856,8 @@ static int ramoops_probe(struct platform_device *pdev)
+>         cxt->pstore.flags = PSTORE_FLAGS_DMESG;
+>         if (cxt->console_size)
+>                 cxt->pstore.flags |= PSTORE_FLAGS_CONSOLE;
+> +       if (cxt->event_size)
+> +               cxt->pstore.flags |= PSTORE_FLAGS_EVENT;
+>         if (cxt->ftrace_size)
+>                 cxt->pstore.flags |= PSTORE_FLAGS_FTRACE;
+>         if (cxt->pmsg_size)
+> @@ -845,6 +878,7 @@ static int ramoops_probe(struct platform_device *pdev)
+>         record_size = pdata->record_size;
+>         dump_oops = pdata->dump_oops;
+>         ramoops_console_size = pdata->console_size;
+> +       ramoops_event_size = pdata->event_size;
+>         ramoops_pmsg_size = pdata->pmsg_size;
+>         ramoops_ftrace_size = pdata->ftrace_size;
+>
+> @@ -858,6 +892,8 @@ static int ramoops_probe(struct platform_device *pdev)
+>         kfree(cxt->pstore.buf);
+>  fail_clear:
+>         cxt->pstore.bufsize = 0;
+> +       persistent_ram_free(cxt->eprz);
+> +fail_init_eprz:
+>         persistent_ram_free(cxt->mprz);
+>  fail_init_mprz:
+>  fail_init_fprz:
+> @@ -877,6 +913,7 @@ static int ramoops_remove(struct platform_device *pdev)
+>         kfree(cxt->pstore.buf);
+>         cxt->pstore.bufsize = 0;
+>
+> +       persistent_ram_free(cxt->eprz);
+>         persistent_ram_free(cxt->mprz);
+>         persistent_ram_free(cxt->cprz);
+>         ramoops_free_przs(cxt);
+> @@ -916,6 +953,7 @@ static void ramoops_register_dummy(void)
+>         dummy_data->mem_type = mem_type;
+>         dummy_data->record_size = record_size;
+>         dummy_data->console_size = ramoops_console_size;
+> +       dummy_data->event_size = ramoops_event_size;
+>         dummy_data->ftrace_size = ramoops_ftrace_size;
+>         dummy_data->pmsg_size = ramoops_pmsg_size;
+>         dummy_data->dump_oops = dump_oops;
+> diff --git a/include/linux/pstore.h b/include/linux/pstore.h
+> index a15bc4d48752..c31bb9567b4a 100644
+> --- a/include/linux/pstore.h
+> +++ b/include/linux/pstore.h
+> @@ -44,6 +44,7 @@ enum pstore_type_id {
+>         PSTORE_TYPE_PPC_COMMON  = 6,
+>         PSTORE_TYPE_PMSG        = 7,
+>         PSTORE_TYPE_PPC_OPAL    = 8,
+> +       PSTORE_TYPE_EVENT       = 9,
+>         PSTORE_TYPE_UNKNOWN     = 255
+>  };
+>
+> @@ -193,6 +194,7 @@ struct pstore_info {
+>  #define PSTORE_FLAGS_CONSOLE   (1 << 1)
+>  #define PSTORE_FLAGS_FTRACE    (1 << 2)
+>  #define PSTORE_FLAGS_PMSG      (1 << 3)
+> +#define PSTORE_FLAGS_EVENT     (1 << 4)
+>
+>  extern int pstore_register(struct pstore_info *);
+>  extern void pstore_unregister(struct pstore_info *);
+> diff --git a/include/linux/pstore_ram.h b/include/linux/pstore_ram.h
+> index e6d226464838..f01055c6cc40 100644
+> --- a/include/linux/pstore_ram.h
+> +++ b/include/linux/pstore_ram.h
+> @@ -95,6 +95,7 @@ struct ramoops_platform_data {
+>         unsigned int    mem_type;
+>         unsigned long   record_size;
+>         unsigned long   console_size;
+> +       unsigned long   event_size;
+>         unsigned long   ftrace_size;
+>         unsigned long   pmsg_size;
+>         int             dump_oops;
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
