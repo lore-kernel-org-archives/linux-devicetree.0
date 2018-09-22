@@ -1,41 +1,91 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v5] iio: proximity: Add driver support for ST's VL53L0X
- ToF ranging sensor.
-Date: Sat, 22 Sep 2018 16:24:37 +0100
-Message-ID: <20180922162437.224e574c@archlinux>
-References: <20180915095752.8116-1-songqiang.1304521@gmail.com>
-        <20180917061933.GA15262@bogus>
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: Re: [PATCH v6 1/2] iio: proximity: Add driver support for ST's
+ VL53L0X ToF ranging sensor.
+Date: Sat, 22 Sep 2018 23:28:04 +0800
+Message-ID: <20180922152621.GA953@Eros>
+References: <20180918082422.13050-1-songqiang1304521@gmail.com>
+ <20180922154658.752f2fbf@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180917061933.GA15262@bogus>
+Content-Disposition: inline
+In-Reply-To: <20180922154658.752f2fbf@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Song Qiang <songqiang1304521@gmail.com>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, himanshujha199640@gmail.com, Song Qiang <songqiang.1304521@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-...
+On Sat, Sep 22, 2018 at 03:46:58PM +0100, Jonathan Cameron wrote:
+> On Tue, 18 Sep 2018 16:24:21 +0800
+> Song Qiang <songqiang1304521@gmail.com> wrote:
+> 
+> > This driver was originally written by ST in 2016 as a misc input device
+> > driver, and hasn't been maintained for a long time. I grabbed some code
+> > from it's API and reformed it into an iio proximity device driver.
+> > This version of driver uses i2c bus to talk to the sensor and
+> > polling for measuring completes, so no irq line is needed.
+> > It can be tested with reading from
+> > /sys/bus/iio/devices/iio:deviceX/in_distance_input
 > > 
-> >  .../bindings/iio/proximity/vl53l0x.txt        |  12 ++
-> >  MAINTAINERS                                   |   7 +  
+> > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+> There are a few bits and bobs in here, but as they are all minor and
+> one at least was me giving you wrong advise, I've fixed it up.
 > 
-> Otherwise,
+> Please check I haven't made a mess of it! 
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-Hi Song,
-
-Please make sure to pick up the various Acks, Reviewed-bys etc for later versions.
-
-I've added this to the version I applied.
-
-Thanks,
-
-Jonathan
+> Applied with changes to the togreg branch of iio.git and pushed out
+> as testing (where it should be visible now) for the autobuilders to
+> play with it.
 > 
-> >  drivers/iio/proximity/Kconfig                 |  11 ++
-> >  drivers/iio/proximity/Makefile                |   2 +
-> >  drivers/iio/proximity/vl53l0x-i2c.c           | 180 ++++++++++++++++++
-> >  5 files changed, 212 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> >  create mode 100644 drivers/iio/proximity/vl53l0x-i2c.c  
+> Thanks,
+> 
+> Jonathan
+> > ---
+
+> > +	indio_dev->name = "vl53l0x";
+> > +	indio_dev->info = &vl53l0x_info;
+> > +	indio_dev->channels = vl53l0x_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(vl53l0x_channels);
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +
+> > +	return devm_iio_device_register(&client->dev, indio_dev);
+> > +}
+> > +
+> > +static const struct of_device_id st_vl53l0x_dt_match[] = {
+> > +	{ .compatible = "st,vl53l0x-i2c", },
+> 
+> Ah, this suffers from the same thing that was picked up in a driver
+> you sent later in the week.  No need to have -i2c in the compatible
+> as this is clear from the bus type.
+> 
+> (I might just fix this up).
+> 
+
+Hi Jonathan,
+
+Sorry for the newbie mistakes you and Himanshu pointed out, I'm just
+writing them down on my little checklist!
+I just checked the code, found that this compatible string was not
+getting corrected in the DT binding doc file, sorry that you have
+to help correct my mistakes, thanks a lot!
+
+yours,
+Song Qiang
+
+> > +	{ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, st_vl53l0x_dt_match);
+> > +
+> > +static struct i2c_driver vl53l0x_driver = {
+> > +	.driver = {
+> > +		.name = "vl53l0x-i2c",
+> > +		.of_match_table = st_vl53l0x_dt_match,
+> > +	},
+> > +	.probe_new = vl53l0x_probe,
+> > +};
+> > +module_i2c_driver(vl53l0x_driver);
+> > +
+> > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
+> > +MODULE_DESCRIPTION("ST vl53l0x ToF ranging sensor driver");
+> > +MODULE_LICENSE("GPL v2");
+> 
