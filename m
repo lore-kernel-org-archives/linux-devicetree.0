@@ -1,143 +1,140 @@
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: [PATCH 3/3] This patch adds wifi to asus tinker board S
-Date: Sat, 22 Sep 2018 18:02:36 +0100
-Message-ID: <20180922170236.8690-4-beagleboard@davidjohnsummers.uk>
-References: <20180922170236.8690-1-beagleboard@davidjohnsummers.uk>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: Re: [PATCH v3 3/5] drivers: pinctrl: msm: enable PDC interrupt only
+ during suspend
+Date: Sat, 22 Sep 2018 11:09:09 -0600
+Message-ID: <20180922170909.GI17420@codeaurora.org>
+References: <20180904211810.5506-1-ilina@codeaurora.org>
+ <20180904211810.5506-4-ilina@codeaurora.org>
+ <868t3twl64.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180922170236.8690-1-beagleboard@davidjohnsummers.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-rockchip@lists.infradead.org, David Summers <beagleboard@davidjohnsummers.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <868t3twl64.wl-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: bjorn.andersson@linaro.org, sboyd@kernel.org, evgreen@chromium.org, linus.walleij@linaro.org, rplsssn@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, rnayak@codeaurora.org, devicetree@vger.kernel.org, andy.gross@linaro.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Now as fair as I understand. the asus tinker board contains a wifi
-So should this patch be added to the tinker board dtsi ?
+On Sat, Sep 22 2018 at 10:29 -0600, Marc Zyngier wrote:
+>Hi Lina,
+>
+>On Tue, 04 Sep 2018 22:18:08 +0100,
+>Lina Iyer <ilina@codeaurora.org> wrote:
+>>
+>> During suspend the system may power down some of the system rails. As a
+>> result, the TLMM hw block may not be operational anymore and wakeup
+>> capable GPIOs will not be detected. The PDC however will be operational
+>> and the GPIOs that are routed to the PDC as IRQs can wake the system up.
+>>
+>> To avoid being interrupted twice (for TLMM and once for PDC IRQ) when a
+>> GPIO trips, use TLMM for active and switch to PDC for suspend. When
+>> entering suspend, disable the TLMM wakeup interrupt and instead enable
+>> the PDC IRQ and revert upon resume.
+>>
+>> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+>> ---
+>> Changes in v3:
+>> 	- Enable PDC-IRQ swap only for edge interrupts
+>> Changes in v2:
+>> 	- Fix PDC IRQ max port, 126 is the max supported in h/w
+>> 	- Use PDC hwirq in bitmap, linux numbers could be large
+>> 	- Setup DISABLE_UNLAZY for both TLMM and PDC IRQs
+>> ---
+[...]
 
-It also far move complex - it adds far more things, so consider
+>> +int __maybe_unused msm_pinctrl_suspend_late(struct device *dev)
+>> +{
+>> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
+>> +	struct irq_data *irqd;
+>> +	unsigned int irq;
+>> +	int i;
+>> +
+>> +	in_suspend = true;
+>> +	for_each_set_bit(i, pctrl->pdc_hwirqs, MAX_PDC_HWIRQ) {
+>> +		irq = irq_find_mapping(pctrl->pdc_irq_domain, i);
+>> +		irqd = irq_get_handler_data(irq);
+>> +		/*
+>> +		 * We don't know if the TLMM will be functional
+>> +		 * or not, during the suspend. If its functional,
+>> +		 * we do not want duplicate interrupts from PDC.
+>> +		 * Hence disable the GPIO IRQ and enable PDC IRQ
+>> +		 * for edge interrupt only.
+>> +		 */
+>> +		if (irqd_is_wakeup_set(irqd) && !irqd_is_level_type(irqd)) {
+>> +			disable_irq_wake(irqd->irq);
+>
+>There is something I don't quite get here. If the PDC is used to wake
+>up the platform, why is the TLMM interrupt configured as a wakeup
+>source the first place? Or is it just to keep things simple and not
+>have to track it in the TLMM driver itself?
+>
+True, it need not be. I could just avoid setting the wakeup on the TLMM
+and just use the PDC interrupt as wakeup.
 
-Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
----
- arch/arm/boot/dts/rk3288-tinker-s.dts | 93 +++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+Also, I am exploring an option that was suggested by Stephen [1] to just
+use the PDC interrupt as a parent of the GPIO IRQ and use a different
+irqchip for the PDC interrupt. I ran into some issue with accessing
+irqchip and irqdata of the PDC interrupt, since the irqchip was not in
+hierarchy with the GPIO's irqchip. I haven't been able to find time to
+resolve the issue that the set_parent_ functions, because of the
+hierarchy.
 
-diff --git a/arch/arm/boot/dts/rk3288-tinker-s.dts b/arch/arm/boot/dts/rk3288-tinker-s.dts
-index bc691e3f9c07..3d91924fd8db 100644
---- a/arch/arm/boot/dts/rk3288-tinker-s.dts
-+++ b/arch/arm/boot/dts/rk3288-tinker-s.dts
-@@ -10,6 +10,95 @@
- / {
- 	model = "Rockchip RK3288 Asus Tinker Board S";
- 	compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
-+
-+	wireless-bluetooth {
-+		compatible = "bluetooth-platdata";
-+		uart_rts_gpios = <&gpio4 19 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default","rts_gpio";
-+		pinctrl-0 = <&uart0_rts>;
-+		pinctrl-1 = <&uart0_gpios>;
-+		BT,reset_gpio    = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-+		BT,wake_gpio     = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-+		BT,wake_host_irq = <&gpio4 31 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	wireless-wlan {
-+		compatible = "wlan-platdata";
-+		rockchip,grf = <&grf>;
-+		wifi_chip_type = "ap6212";
-+		sdio_vref = <1800>;
-+		WIFI,host_wake_irq = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-+		status = "okay";
-+	};
-+
-+	io-domains {
-+		compatible = "rockchip,rk3288-io-voltage-domain";
-+		rockchip,grf = <&grf>;
-+		flash0-supply = <&vcc_flash>;
-+		gpio30-supply = <&vcc_io>;
-+		wifi-supply = <&vcc_18>;
-+		sdcard-supply = <&vccio_sd>;
-+	};
-+
-+	sdio_pwrseq: sdio-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&rk808 1>;
-+		clock-names = "ext_clock";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&chip_enable_h>, <&wifi_enable_h>;
-+
-+		/*
-+		 * On the module itself this is one of these (depending
-+		 * on the actual card populated):
-+		 * - SDIO_RESET_L_WL_REG_ON
-+		 * - PDN (power down when low)
-+		 */
-+		reset-gpios = <&gpio4 28 GPIO_ACTIVE_LOW>, <&gpio4 27 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	vcc_flash: flash-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_flash";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_io>;
-+	};
-+};
-+
-+&pinctrl {
-+	sdio-pwrseq {
-+		wifi_enable_h: wifi-enable-h {
-+			rockchip,pins = <4 28 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+		chip_enable_h: chip-enable-h {
-+			rockchip,pins = <4 27 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
-+	wireless-bluetooth {
-+		uart0_gpios: uart0-gpios {
-+			rockchip,pins = <4 19 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+};
-+
-+&sdio0 {
-+	status = "okay";
-+	clock-frequency = <50000000>;
-+	clock-freq-min-max = <200000 50000000>;
-+	bus-width = <4>;
-+	cap-sd-highspeed;
-+	cap-sdio-irq;
-+	disable-wp;
-+	keep-power-in-suspend;
-+	mmc-pwrseq = <&sdio_pwrseq>;
-+	non-removable;
-+	num-slots = <1>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-+	sd-uhs-sdr104;
-+	supports-sdio;
- };
- 
- &emmc {
-@@ -25,3 +114,7 @@
- 	mmc-ddr-1_8v;
- 	status = "okay";
- };
-+
-+&uart0 {
-+	pinctrl-0 = <&uart0_xfer>, <&uart0_cts>;
-+};
--- 
-David Summers <beagleboard@davididjohnsummers.uk>
+Essentially, we have two different mechanisms for GPIO IRQs based on
+whether they can be woken up by the PDC interrupt.
+
+	GPIO-IRQ --> PDC --> GIC
+
+	GPIO-IRQ --> TLMM SUMMARY --> GIC
+
+Do you think the idea is feasible? It would avoid doing all this
+enable/disable at every suspend and even during idle, when the TLMM
+could be powered off.
+
+
+>> +			disable_irq(irqd->irq);
+>> +			enable_irq(irq);
+>> +		}
+>> +	}
+>
+>Given that you're changing in_suspend and parsing the bitmap,
+>shouldn't take the pdc spinlock?
+>
+Since we are the the only CPU running and suspend/resume (and even idle)
+would be serialized I didn't see a reason for needing a lock.
+
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int __maybe_unused msm_pinctrl_resume_late(struct device *dev)
+>> +{
+>> +	struct msm_pinctrl *pctrl = dev_get_drvdata(dev);
+>> +	struct irq_data *irqd, *pdc_irqd;
+>> +	unsigned int irq;
+>> +	int i;
+>> +
+>> +	for_each_set_bit(i, pctrl->pdc_hwirqs, MAX_PDC_HWIRQ) {
+>> +		irq = irq_find_mapping(pctrl->pdc_irq_domain, i);
+>> +		irqd = irq_get_handler_data(irq);
+>> +		pdc_irqd = irq_get_irq_data(irq);
+>> +		/*
+>> +		 * The TLMM will be operational now, so disable
+>> +		 * the PDC IRQ for edge interrupts only.
+>> +		 */
+>> +		if (irqd_is_wakeup_set(pdc_irqd) &&
+>> +		    !irqd_is_level_type(pdc_irqd)) {
+>> +			disable_irq_nosync(irq);
+>> +			enable_irq_wake(irqd->irq);
+>> +			enable_irq(irqd->irq);
+>> +		}
+>> +	}
+>> +	in_suspend = false;
+>
+>Same remark about the lock.
+>
+
+Thanks,
+Lina
+
+[1]. https://lore.kernel.org/patchwork/patch/975423/
