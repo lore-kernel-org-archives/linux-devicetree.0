@@ -1,55 +1,120 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv4 6/6] mmc: dw_mmc-exynos: Add tuning for sdr and ddr timing for USH-I mode
-Date: Sat, 22 Sep 2018 07:57:32 +0000
-Message-ID: <20180922075732.946-2-linux.amoon@gmail.com>
-References: <20180922075732.946-1-linux.amoon@gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify
+ skipped bytes in OOB
+Date: Sat, 22 Sep 2018 10:11:16 +0200
+Message-ID: <20180922101116.7c9b4767@bbrezillon>
+References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
+        <20180907160822.319047c8@bbrezillon>
+        <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
+        <20180907165348.3e0027ee@bbrezillon>
+        <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
+        <20180922094111.1c2969e8@xps13>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922075732.946-1-linux.amoon@gmail.com>
+In-Reply-To: <20180922094111.1c2969e8@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add tuning for sdr and ddr timing for USH-I mode sdr104/sdr50/ddr50
-for host controller.
+On Sat, 22 Sep 2018 09:41:11 +0200
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Cc: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-No changes from previous patch
----
- drivers/mmc/host/dw_mmc-exynos.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+> Hi Masahiro,
+> 
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Sat, 8 Sep
+> 2018 01:10:25 +0900:
+> 
+> > Hi Boris,
+> > 
+> > 2018-09-07 23:53 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:  
+> > > On Fri, 7 Sep 2018 23:42:53 +0900
+> > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> > >    
+> > >> Hi Boris,
+> > >>
+> > >> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:    
+> > >> > Hi Masahiro,
+> > >> >
+> > >> > On Fri,  7 Sep 2018 19:56:23 +0900
+> > >> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+> > >> >    
+> > >> >> NAND devices need additional data area (OOB) for error correction,
+> > >> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
+> > >> >> first byte in OOB is used for BBM, but the location actually depends
+> > >> >> on chip vendors.  The NAND controller should preserve the precious
+> > >> >> BBM to keep track of bad blocks.
+> > >> >>
+> > >> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
+> > >> >> the number of bytes to skip from the start of OOB.  The ECC engine
+> > >> >> will automatically skip the specified number of bytes when it gets
+> > >> >> access to OOB area.
+> > >> >>
+> > >> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
+> > >> >> firmware and the operating system if you intend to use the NAND
+> > >> >> device across the control hand-off.
+> > >> >>
+> > >> >> In fact, the current denali.c code expects firmware to have already
+> > >> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
+> > >> >>
+> > >> >> If no firmware (or bootloader) has initialized the controller, the
+> > >> >> register value is zero, which is the default after power-on-reset.
+> > >> >>
+> > >> >> In other words, the Linux driver cannot initialize the controller
+> > >> >> by itself.  You cannot support the reset control either because
+> > >> >> resetting the controller will get register values lost.
+> > >> >>
+> > >> >> This commit adds a way to specify it via DT.  If the property
+> > >> >> "denali,oob-skip-bytes" exists, the value will be set to the register.    
+> > >> >
+> > >> > Hm, do we really need to make this config customizable? I mean, either
+> > >> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
+> > >> > must be reserved for the BBM or you have a small-page NAND and the BBM
+> > >> > is at position 4 and 5. Are you sure people configure that differently?
+> > >> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?    
+> > >>
+> > >>
+> > >> As I said in the patch description,
+> > >> I need to use the same SPARE_AREA_SKIP_BYTES value
+> > >> across firmware, boot-loader, Linux, and whatever.
+> > >>
+> > >> I want to set the value to 8 for my platform
+> > >> because the on-chip boot ROM expects 8.
+> > >> I cannot change it since the boot ROM is hard-wired.
+> > >>
+> > >>
+> > >> The boot ROM skips 8 bytes in OOB
+> > >> when it loads images from the on-board NAND device.
+> > >>
+> > >> So, when I update the image from U-Boot or Linux,
+> > >> I need to make sure to set the register to 8.
+> > >>
+> > >> If I update the image with a different value,
+> > >> the Boot ROM fails to boot.
+> > >>
+> > >>
+> > >>
+> > >> When the system has booted from NAND,
+> > >> the register is already set to 8.  It works.
+> > >>
+> > >> However, when the system has booted from eMMC,
+> > >> the register is not initialized by anyone.
+> > >> I am searching for a way to set the register to 8
+> > >> in this case.
 
-diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
-index ab47b018716a..d46c3439b508 100644
---- a/drivers/mmc/host/dw_mmc-exynos.c
-+++ b/drivers/mmc/host/dw_mmc-exynos.c
-@@ -253,6 +253,8 @@ static void dw_mci_exynos_config_hs400(struct dw_mci *host, u32 timing)
- 	if (timing == MMC_TIMING_MMC_HS400) {
- 		dqs |= DATA_STROBE_EN;
- 		strobe = DQS_CTRL_RD_DELAY(strobe, priv->dqs_delay);
-+	} else if (timing == MMC_TIMING_UHS_SDR104) {
-+		dqs &= 0xffffff00;
- 	} else {
- 		dqs &= ~DATA_STROBE_EN;
- 	}
-@@ -312,6 +314,15 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- 		if (ios->bus_width == MMC_BUS_WIDTH_8)
- 			wanted <<= 1;
- 		break;
-+	case MMC_TIMING_UHS_SDR104:
-+	case MMC_TIMING_UHS_SDR50:
-+		clksel = (priv->sdr_timing & 0xfff8ffff) |
-+			(priv->ciu_div << 16);
-+		break;
-+	case MMC_TIMING_UHS_DDR50:
-+		clksel = (priv->ddr_timing & 0xfff8ffff) |
-+			(priv->ciu_div << 16);
-+		break;
- 	default:
- 		clksel = priv->sdr_timing;
- 	}
--- 
-2.17.1
+Maybe there's a solution which does not involve attaching a per-compat
+value or adding a DT prop. If the FW/bootloader has not initialized this
+register the value is 0, right? Why not testing the value and
+assigning it to the default (8) if it's not been initialized by the
+bootloader. That shouldn't break existing platforms since I don't think
+0 is a valid value anyway.
+
+	denali->oob_skip_bytes = ioread32(denali->reg +
+					  SPARE_AREA_SKIP_BYTES);
+	if (!denali->oob_skip_bytes) {
+		denali->oob_skip_bytes = DEFAULT_OOB_SKIP_BYTES;
+		iowrite32(denali->oob_skip_bytes,
+			  denali->reg + SPARE_AREA_SKIP_BYTES);
+	}
