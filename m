@@ -1,101 +1,426 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 1/2] iio: proximity: Add driver support for ST's
- VL53L0X ToF ranging sensor.
-Date: Sat, 22 Sep 2018 16:44:15 +0100
-Message-ID: <20180922164415.67a55cb2@archlinux>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com>
-        <20180922154658.752f2fbf@archlinux>
-        <20180922152621.GA953@Eros>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 21/27] drm/sun4i: Add support for H6 HDMI PHY
+Date: Sat, 22 Sep 2018 23:55:35 +0800
+Message-ID: <CAGb2v66RqR3pGh+1_rnvMQ4LJaSkKmky9D36tdxQS7cyJb6GYA@mail.gmail.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-22-jernej.skrabec@siol.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922152621.GA953@Eros>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBB6MTHOQKGQEV7QWCUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180902072643.4917-22-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 22 Sep 2018 23:28:04 +0800
-Song Qiang <songqiang1304521@gmail.com> wrote:
+On Sun, Sep 2, 2018 at 3:28 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+>
+> H6 has Synopsys DWC HDMI 2.0 TX PHY.
+>
+> mpll settings were calculated from specifications of similar Synopsys
+> HDMI PHY found in i.MX6. Other PHY settings were derived from BSP PHY
+> driver code.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 137 +++++++++++++++++++++++++
+>  1 file changed, 137 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> index ee2bf61cd4d2..2f5499bd35ec 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> @@ -14,6 +14,122 @@
+>   */
+>  #define I2C_ADDR       0x69
+>
+> +static const struct dw_hdmi_mpll_config sun50i_h6_mpll_cfg[] = {
 
-> On Sat, Sep 22, 2018 at 03:46:58PM +0100, Jonathan Cameron wrote:
-> > On Tue, 18 Sep 2018 16:24:21 +0800
-> > Song Qiang <songqiang1304521@gmail.com> wrote:
-> >   
-> > > This driver was originally written by ST in 2016 as a misc input device
-> > > driver, and hasn't been maintained for a long time. I grabbed some code
-> > > from it's API and reformed it into an iio proximity device driver.
-> > > This version of driver uses i2c bus to talk to the sensor and
-> > > polling for measuring completes, so no irq line is needed.
-> > > It can be tested with reading from
-> > > /sys/bus/iio/devices/iio:deviceX/in_distance_input
-> > > 
-> > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>  
-> > There are a few bits and bobs in here, but as they are all minor and
-> > one at least was me giving you wrong advise, I've fixed it up.
-> > 
-> > Please check I haven't made a mess of it! 
-> > 
-> > Applied with changes to the togreg branch of iio.git and pushed out
-> > as testing (where it should be visible now) for the autobuilders to
-> > play with it.
-> > 
-> > Thanks,
-> > 
-> > Jonathan  
-> > > ---  
-> 
-> > > +	indio_dev->name = "vl53l0x";
-> > > +	indio_dev->info = &vl53l0x_info;
-> > > +	indio_dev->channels = vl53l0x_channels;
-> > > +	indio_dev->num_channels = ARRAY_SIZE(vl53l0x_channels);
-> > > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > > +
-> > > +	return devm_iio_device_register(&client->dev, indio_dev);
-> > > +}
-> > > +
-> > > +static const struct of_device_id st_vl53l0x_dt_match[] = {
-> > > +	{ .compatible = "st,vl53l0x-i2c", },  
-> > 
-> > Ah, this suffers from the same thing that was picked up in a driver
-> > you sent later in the week.  No need to have -i2c in the compatible
-> > as this is clear from the bus type.
-> > 
-> > (I might just fix this up).
-> >   
-> 
-> Hi Jonathan,
-> 
-> Sorry for the newbie mistakes you and Himanshu pointed out, I'm just
-> writing them down on my little checklist!
-> I just checked the code, found that this compatible string was not
-> getting corrected in the DT binding doc file, sorry that you have
-> to help correct my mistakes, thanks a lot!
-Fixed up (and this was my mistake - we all make them - that's what review
-is for!)
+How did you choose the pixel clock points for this table? The values
+sort of match up with the BSP.
 
-Thanks,
+> +       {
+> +               30666000, {
+> +                       { 0x00b3, 0x0000 },
+> +                       { 0x2153, 0x0000 },
+> +                       { 0x40f3, 0x0000 },
+> +               },
+> +       },  {
+> +               36800000, {
+> +                       { 0x00b3, 0x0000 },
+> +                       { 0x2153, 0x0000 },
+> +                       { 0x40a2, 0x0001 },
+> +               },
+> +       },  {
+> +               46000000, {
+> +                       { 0x00b3, 0x0000 },
+> +                       { 0x2142, 0x0001 },
+> +                       { 0x40a2, 0x0001 },
+> +               },
+> +       },  {
+> +               61333000, {
+> +                       { 0x0072, 0x0001 },
+> +                       { 0x2142, 0x0001 },
+> +                       { 0x40a2, 0x0001 },
+> +               },
+> +       },  {
+> +               73600000, {
+> +                       { 0x0072, 0x0001 },
+> +                       { 0x2142, 0x0001 },
+> +                       { 0x4061, 0x0002 },
+> +               },
+> +       },  {
+> +               92000000, {
+> +                       { 0x0072, 0x0001 },
+> +                       { 0x2145, 0x0002 },
+> +                       { 0x4061, 0x0002 },
+> +               },
+> +       },  {
+> +               122666000, {
+> +                       { 0x0051, 0x0002 },
+> +                       { 0x2145, 0x0002 },
+> +                       { 0x4061, 0x0002 },
+> +               },
+> +       },  {
+> +               147200000, {
+> +                       { 0x0051, 0x0002 },
+> +                       { 0x2145, 0x0002 },
+> +                       { 0x4064, 0x0003 },
+> +               },
+> +       },  {
+> +               184000000, {
+> +                       { 0x0051, 0x0002 },
+> +                       { 0x214c, 0x0003 },
+> +                       { 0x4064, 0x0003 },
+> +               },
+> +       },  {
+> +               226666000, {
+> +                       { 0x0040, 0x0003 },
+> +                       { 0x214c, 0x0003 },
+> +                       { 0x4064, 0x0003 },
+> +               },
+> +       },  {
+> +               272000000, {
+> +                       { 0x0040, 0x0003 },
+> +                       { 0x214c, 0x0003 },
+> +                       { 0x5a64, 0x0003 },
+> +               },
+> +       },  {
+> +               340000000, {
+> +                       { 0x0040, 0x0003 },
+> +                       { 0x3b4c, 0x0003 },
+> +                       { 0x5a64, 0x0003 },
+> +               },
+> +       },  {
+> +               600000000, {
 
-Jonathan
-> 
-> yours,
-> Song Qiang
-> 
-> > > +	{ }
-> > > +};
-> > > +MODULE_DEVICE_TABLE(of, st_vl53l0x_dt_match);
-> > > +
-> > > +static struct i2c_driver vl53l0x_driver = {
-> > > +	.driver = {
-> > > +		.name = "vl53l0x-i2c",
-> > > +		.of_match_table = st_vl53l0x_dt_match,
-> > > +	},
-> > > +	.probe_new = vl53l0x_probe,
-> > > +};
-> > > +module_i2c_driver(vl53l0x_driver);
-> > > +
-> > > +MODULE_AUTHOR("Song Qiang <songqiang1304521@gmail.com>");
-> > > +MODULE_DESCRIPTION("ST vl53l0x ToF ranging sensor driver");
-> > > +MODULE_LICENSE("GPL v2");  
-> >   
+594000000 is the proper clock rate.
+
+> +                       { 0x1a40, 0x0003 },
+> +                       { 0x3b4c, 0x0003 },
+> +                       { 0x5a64, 0x0003 },
+> +               },
+> +       }, {
+> +               ~0UL, {
+> +                       { 0x0000, 0x0000 },
+> +                       { 0x0000, 0x0000 },
+> +                       { 0x0000, 0x0000 },
+> +               },
+> +       }
+> +};
+> +
+> +static const struct dw_hdmi_curr_ctrl sun50i_h6_cur_ctr[] = {
+
+The BSP sometimes uses different settings depending on the pixel repetition.
+Any ideas about this? I assume it's because the TMDS clock changes as a
+result of pixel repetition, as is the same with different bit depths.
+
+> +       /* pixelclk    bpp8    bpp10   bpp12 */
+> +       { 25175000,  { 0x0000, 0x0000, 0x0000 }, },
+> +       { 27000000,  { 0x0012, 0x0000, 0x0000 }, },
+> +       { 59400000,  { 0x0008, 0x0008, 0x0008 }, },
+> +       { 72000000,  { 0x0008, 0x0008, 0x001b }, },
+> +       { 74250000,  { 0x0013, 0x0013, 0x0013 }, },
+> +       { 90000000,  { 0x0008, 0x001a, 0x001b }, },
+> +       { 118800000, { 0x001b, 0x001a, 0x001b }, },
+> +       { 144000000, { 0x001b, 0x001a, 0x0034 }, },
+> +       { 180000000, { 0x001b, 0x0033, 0x0034 }, },
+> +       { 216000000, { 0x0036, 0x0033, 0x0034 }, },
+> +       { 237600000, { 0x0036, 0x0033, 0x001b }, },
+> +       { 288000000, { 0x0036, 0x001b, 0x001b }, },
+> +       { 297000000, { 0x0019, 0x001b, 0x0019 }, },
+> +       { 330000000, { 0x0036, 0x001b, 0x001b }, },
+> +       { 600000000, { 0x003f, 0x001b, 0x001b }, },
+> +       { ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
+> +};
+> +
+> +static const struct dw_hdmi_phy_config sun50i_h6_phy_config[] = {
+> +       /*pixelclk   symbol   term   vlev*/
+
+I see a slightly different setting for 27000000, and this frequency
+below 74250000
+only, and even different for all three bit depths (not listed here). So:
+
+    { 25175000,  0x8009, 0x0004, 0x0232 },
+    { 27000000,  0x8009, 0x0007, 0x02b0 },
+
+And,
+
+> +       { 74250000,  0x8009, 0x0004, 0x0232},
+> +       { 148500000, 0x8029, 0x0004, 0x0273},
+
+These two don't match what I see in the BSP. BTW, which table did you use?
+phy301 or phy303? The code seems to indicate that model 301 is the one.
+
+> +       { 600000000, 0x8039, 0x0004, 0x014a},
+
+594000000 is the proper pixel clock you're after.
+
+> +       { ~0UL,      0x0000, 0x0000, 0x0000}
+> +};
+> +
+>  static int sun8i_hdmi_phy_config_a83t(struct dw_hdmi *hdmi,
+>                                       struct sun8i_hdmi_phy *phy,
+>                                       unsigned int clk_rate)
+> @@ -290,6 +406,16 @@ static void sun8i_hdmi_phy_unlock(struct sun8i_hdmi_phy *phy)
+>                      SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
+>  }
+>
+> +static void sun50i_hdmi_phy_init_h6(struct sun8i_hdmi_phy *phy)
+> +{
+> +       regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
+> +                          SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN,
+> +                          SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN);
+> +
+> +       regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
+> +                          0xffff0000, 0x80c00000);
+> +}
+> +
+>  static void sun8i_hdmi_phy_init_a83t(struct sun8i_hdmi_phy *phy)
+>  {
+>         sun8i_hdmi_phy_unlock(phy);
+> @@ -423,6 +549,13 @@ static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
+>         .phy_config = &sun8i_hdmi_phy_config_h3,
+>  };
+>
+> +static const struct sun8i_hdmi_phy_variant sun50i_h6_hdmi_phy = {
+> +       .cur_ctr  = sun50i_h6_cur_ctr,
+> +       .mpll_cfg = sun50i_h6_mpll_cfg,
+> +       .phy_cfg  = sun50i_h6_phy_config,
+> +       .phy_init = &sun50i_hdmi_phy_init_h6,
+> +};
+> +
+>  static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
+>         .is_custom_phy = true,
+>         .phy_init = &sun8i_hdmi_phy_init_a83t,
+> @@ -443,6 +576,10 @@ static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
+>                 .compatible = "allwinner,sun50i-a64-hdmi-phy",
+>                 .data = &sun50i_a64_hdmi_phy,
+>         },
+> +       {
+> +               .compatible = "allwinner,sun50i-h6-hdmi-phy",
+> +               .data = &sun50i_h6_hdmi_phy,
+> +       },
+
+Version sort please.
+
+Regards
+ChenYu
+
+>         {
+>                 .compatible = "allwinner,sun8i-a83t-hdmi-phy",
+>                 .data = &sun8i_a83t_hdmi_phy,
+> --
+> 2.18.0
+>
+On Sun, Sep 2, 2018 at 3:28 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+>
+> H6 has Synopsys DWC HDMI 2.0 TX PHY.
+>
+> mpll settings were calculated from specifications of similar Synopsys
+> HDMI PHY found in i.MX6. Other PHY settings were derived from BSP PHY
+> driver code.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 137 +++++++++++++++++++++++++
+>  1 file changed, 137 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> index ee2bf61cd4d2..2f5499bd35ec 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
+> @@ -14,6 +14,122 @@
+>   */
+>  #define I2C_ADDR       0x69
+>
+> +static const struct dw_hdmi_mpll_config sun50i_h6_mpll_cfg[] = {
+> +       {
+> +               30666000, {
+> +                       { 0x00b3, 0x0000 },
+> +                       { 0x2153, 0x0000 },
+> +                       { 0x40f3, 0x0000 },
+> +               },
+> +       },  {
+> +               36800000, {
+> +                       { 0x00b3, 0x0000 },
+> +                       { 0x2153, 0x0000 },
+> +                       { 0x40a2, 0x0001 },
+> +               },
+> +       },  {
+> +               46000000, {
+> +                       { 0x00b3, 0x0000 },
+> +                       { 0x2142, 0x0001 },
+> +                       { 0x40a2, 0x0001 },
+> +               },
+> +       },  {
+> +               61333000, {
+> +                       { 0x0072, 0x0001 },
+> +                       { 0x2142, 0x0001 },
+> +                       { 0x40a2, 0x0001 },
+> +               },
+> +       },  {
+> +               73600000, {
+> +                       { 0x0072, 0x0001 },
+> +                       { 0x2142, 0x0001 },
+> +                       { 0x4061, 0x0002 },
+> +               },
+> +       },  {
+> +               92000000, {
+> +                       { 0x0072, 0x0001 },
+> +                       { 0x2145, 0x0002 },
+> +                       { 0x4061, 0x0002 },
+> +               },
+> +       },  {
+> +               122666000, {
+> +                       { 0x0051, 0x0002 },
+> +                       { 0x2145, 0x0002 },
+> +                       { 0x4061, 0x0002 },
+> +               },
+> +       },  {
+> +               147200000, {
+> +                       { 0x0051, 0x0002 },
+> +                       { 0x2145, 0x0002 },
+> +                       { 0x4064, 0x0003 },
+> +               },
+> +       },  {
+> +               184000000, {
+> +                       { 0x0051, 0x0002 },
+> +                       { 0x214c, 0x0003 },
+> +                       { 0x4064, 0x0003 },
+> +               },
+> +       },  {
+> +               226666000, {
+> +                       { 0x0040, 0x0003 },
+> +                       { 0x214c, 0x0003 },
+> +                       { 0x4064, 0x0003 },
+> +               },
+> +       },  {
+> +               272000000, {
+> +                       { 0x0040, 0x0003 },
+> +                       { 0x214c, 0x0003 },
+> +                       { 0x5a64, 0x0003 },
+> +               },
+> +       },  {
+> +               340000000, {
+> +                       { 0x0040, 0x0003 },
+> +                       { 0x3b4c, 0x0003 },
+> +                       { 0x5a64, 0x0003 },
+> +               },
+> +       },  {
+> +               600000000, {
+> +                       { 0x1a40, 0x0003 },
+> +                       { 0x3b4c, 0x0003 },
+> +                       { 0x5a64, 0x0003 },
+> +               },
+> +       }, {
+> +               ~0UL, {
+> +                       { 0x0000, 0x0000 },
+> +                       { 0x0000, 0x0000 },
+> +                       { 0x0000, 0x0000 },
+> +               },
+> +       }
+> +};
+> +
+> +static const struct dw_hdmi_curr_ctrl sun50i_h6_cur_ctr[] = {
+> +       /* pixelclk    bpp8    bpp10   bpp12 */
+> +       { 25175000,  { 0x0000, 0x0000, 0x0000 }, },
+> +       { 27000000,  { 0x0012, 0x0000, 0x0000 }, },
+> +       { 59400000,  { 0x0008, 0x0008, 0x0008 }, },
+> +       { 72000000,  { 0x0008, 0x0008, 0x001b }, },
+> +       { 74250000,  { 0x0013, 0x0013, 0x0013 }, },
+> +       { 90000000,  { 0x0008, 0x001a, 0x001b }, },
+> +       { 118800000, { 0x001b, 0x001a, 0x001b }, },
+> +       { 144000000, { 0x001b, 0x001a, 0x0034 }, },
+> +       { 180000000, { 0x001b, 0x0033, 0x0034 }, },
+> +       { 216000000, { 0x0036, 0x0033, 0x0034 }, },
+> +       { 237600000, { 0x0036, 0x0033, 0x001b }, },
+> +       { 288000000, { 0x0036, 0x001b, 0x001b }, },
+> +       { 297000000, { 0x0019, 0x001b, 0x0019 }, },
+> +       { 330000000, { 0x0036, 0x001b, 0x001b }, },
+> +       { 600000000, { 0x003f, 0x001b, 0x001b }, },
+> +       { ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
+> +};
+> +
+> +static const struct dw_hdmi_phy_config sun50i_h6_phy_config[] = {
+> +       /*pixelclk   symbol   term   vlev*/
+> +       { 74250000,  0x8009, 0x0004, 0x0232},
+> +       { 148500000, 0x8029, 0x0004, 0x0273},
+> +       { 600000000, 0x8039, 0x0004, 0x014a},
+> +       { ~0UL,      0x0000, 0x0000, 0x0000}
+> +};
+> +
+>  static int sun8i_hdmi_phy_config_a83t(struct dw_hdmi *hdmi,
+>                                       struct sun8i_hdmi_phy *phy,
+>                                       unsigned int clk_rate)
+> @@ -290,6 +406,16 @@ static void sun8i_hdmi_phy_unlock(struct sun8i_hdmi_phy *phy)
+>                      SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
+>  }
+>
+> +static void sun50i_hdmi_phy_init_h6(struct sun8i_hdmi_phy *phy)
+> +{
+> +       regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
+> +                          SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN,
+> +                          SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN);
+> +
+> +       regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
+> +                          0xffff0000, 0x80c00000);
+> +}
+> +
+>  static void sun8i_hdmi_phy_init_a83t(struct sun8i_hdmi_phy *phy)
+>  {
+>         sun8i_hdmi_phy_unlock(phy);
+> @@ -423,6 +549,13 @@ static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
+>         .phy_config = &sun8i_hdmi_phy_config_h3,
+>  };
+>
+> +static const struct sun8i_hdmi_phy_variant sun50i_h6_hdmi_phy = {
+> +       .cur_ctr  = sun50i_h6_cur_ctr,
+> +       .mpll_cfg = sun50i_h6_mpll_cfg,
+> +       .phy_cfg  = sun50i_h6_phy_config,
+> +       .phy_init = &sun50i_hdmi_phy_init_h6,
+> +};
+> +
+>  static const struct sun8i_hdmi_phy_variant sun8i_a83t_hdmi_phy = {
+>         .is_custom_phy = true,
+>         .phy_init = &sun8i_hdmi_phy_init_a83t,
+> @@ -443,6 +576,10 @@ static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
+>                 .compatible = "allwinner,sun50i-a64-hdmi-phy",
+>                 .data = &sun50i_a64_hdmi_phy,
+>         },
+> +       {
+> +               .compatible = "allwinner,sun50i-h6-hdmi-phy",
+> +               .data = &sun50i_h6_hdmi_phy,
+> +       },
+>         {
+>                 .compatible = "allwinner,sun8i-a83t-hdmi-phy",
+>                 .data = &sun8i_a83t_hdmi_phy,
+> --
+> 2.18.0
+>
