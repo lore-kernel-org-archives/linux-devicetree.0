@@ -1,120 +1,158 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify
- skipped bytes in OOB
-Date: Sat, 22 Sep 2018 10:11:16 +0200
-Message-ID: <20180922101116.7c9b4767@bbrezillon>
-References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
-        <20180907160822.319047c8@bbrezillon>
-        <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
-        <20180907165348.3e0027ee@bbrezillon>
-        <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
-        <20180922094111.1c2969e8@xps13>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND
+ controller documentation
+Date: Sat, 22 Sep 2018 10:34:40 +0200
+Message-ID: <20180922103440.12575714@xps13>
+References: <1537199260-7280-1-git-send-email-christophe.kerello@st.com>
+        <1537199260-7280-2-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922094111.1c2969e8@xps13>
+In-Reply-To: <1537199260-7280-2-git-send-email-christophe.kerello@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: christophe.kerello@st.com
+Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 22 Sep 2018 09:41:11 +0200
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+Hi Christophe,
 
-> Hi Masahiro,
+<christophe.kerello@st.com> wrote on Mon, 17 Sep 2018 17:47:38 +0200:
+
+> From: Christophe Kerello <christophe.kerello@st.com>
 > 
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Sat, 8 Sep
-> 2018 01:10:25 +0900:
+> This patch adds the documentation of the device tree bindings for the STM32
+> FMC2 NAND controller.
 > 
-> > Hi Boris,
-> > 
-> > 2018-09-07 23:53 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:  
-> > > On Fri, 7 Sep 2018 23:42:53 +0900
-> > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> > >    
-> > >> Hi Boris,
-> > >>
-> > >> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:    
-> > >> > Hi Masahiro,
-> > >> >
-> > >> > On Fri,  7 Sep 2018 19:56:23 +0900
-> > >> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> > >> >    
-> > >> >> NAND devices need additional data area (OOB) for error correction,
-> > >> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
-> > >> >> first byte in OOB is used for BBM, but the location actually depends
-> > >> >> on chip vendors.  The NAND controller should preserve the precious
-> > >> >> BBM to keep track of bad blocks.
-> > >> >>
-> > >> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
-> > >> >> the number of bytes to skip from the start of OOB.  The ECC engine
-> > >> >> will automatically skip the specified number of bytes when it gets
-> > >> >> access to OOB area.
-> > >> >>
-> > >> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
-> > >> >> firmware and the operating system if you intend to use the NAND
-> > >> >> device across the control hand-off.
-> > >> >>
-> > >> >> In fact, the current denali.c code expects firmware to have already
-> > >> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
-> > >> >>
-> > >> >> If no firmware (or bootloader) has initialized the controller, the
-> > >> >> register value is zero, which is the default after power-on-reset.
-> > >> >>
-> > >> >> In other words, the Linux driver cannot initialize the controller
-> > >> >> by itself.  You cannot support the reset control either because
-> > >> >> resetting the controller will get register values lost.
-> > >> >>
-> > >> >> This commit adds a way to specify it via DT.  If the property
-> > >> >> "denali,oob-skip-bytes" exists, the value will be set to the register.    
-> > >> >
-> > >> > Hm, do we really need to make this config customizable? I mean, either
-> > >> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
-> > >> > must be reserved for the BBM or you have a small-page NAND and the BBM
-> > >> > is at position 4 and 5. Are you sure people configure that differently?
-> > >> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?    
-> > >>
-> > >>
-> > >> As I said in the patch description,
-> > >> I need to use the same SPARE_AREA_SKIP_BYTES value
-> > >> across firmware, boot-loader, Linux, and whatever.
-> > >>
-> > >> I want to set the value to 8 for my platform
-> > >> because the on-chip boot ROM expects 8.
-> > >> I cannot change it since the boot ROM is hard-wired.
-> > >>
-> > >>
-> > >> The boot ROM skips 8 bytes in OOB
-> > >> when it loads images from the on-board NAND device.
-> > >>
-> > >> So, when I update the image from U-Boot or Linux,
-> > >> I need to make sure to set the register to 8.
-> > >>
-> > >> If I update the image with a different value,
-> > >> the Boot ROM fails to boot.
-> > >>
-> > >>
-> > >>
-> > >> When the system has booted from NAND,
-> > >> the register is already set to 8.  It works.
-> > >>
-> > >> However, when the system has booted from eMMC,
-> > >> the register is not initialized by anyone.
-> > >> I am searching for a way to set the register to 8
-> > >> in this case.
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
+>  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 90 ++++++++++++++++++++++
+>  1 file changed, 90 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> new file mode 100644
+> index 0000000..93eaf11
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> @@ -0,0 +1,90 @@
+> +STMicroelectronics Flexible Memory Controller 2 (FMC2)
+> +NAND Interface
+> +
+> +Required properties:
+> +- compatible: "st,stm32mp15-fmc2"
 
-Maybe there's a solution which does not involve attaching a per-compat
-value or adding a DT prop. If the FW/bootloader has not initialized this
-register the value is 0, right? Why not testing the value and
-assigning it to the default (8) if it's not been initialized by the
-bootloader. That shouldn't break existing platforms since I don't think
-0 is a valid value anyway.
+I think this form is preferred:
 
-	denali->oob_skip_bytes = ioread32(denali->reg +
-					  SPARE_AREA_SKIP_BYTES);
-	if (!denali->oob_skip_bytes) {
-		denali->oob_skip_bytes = DEFAULT_OOB_SKIP_BYTES;
-		iowrite32(denali->oob_skip_bytes,
-			  denali->reg + SPARE_AREA_SKIP_BYTES);
-	}
+"
+- compatible: Should be one of:
+              * st,stm32mp15-fmc2
+"
+
+> +- reg: the first contains the register location and length
+
+the register location and length of...?
+
+> +       the second contains the data common space used for cs0 and length
+> +       the third contains the cmd attribute space used for cs0 and length
+> +       the fourth contains the addr attribute space used for cs0 and length
+> +       the fifth contains the data common space used for cs1 and length
+> +       the sixth contains the cmd attribute space used for cs1 and length
+> +       the seventh contains the addr attribute space used for cs1 and length
+
+Maybe you could simplify a bit with something like:
+
+-reg: NAND flash controller memory areas.
+      First region ...
+      Regions 2 to 4 respectively contain the data, command, and
+      address space for CS0.
+      Regions 5 to 7 contain the same areas for CS1.
+
+> +- interrupts: The interrupt number
+> +- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
+> +- clocks: Use common clock framework
+> +
+> +Optional properties:
+> +- resets: Reference to a reset controller asserting the FMC controller
+> +- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
+> +- dma-names: Must be "tx", "rx" and "ecc"
+> +
+> +Optional children nodes:
+> +Children nodes represent the available nand chips.
+
+Please s/nand/NAND/ in plain English.
+
+> +
+> +Optional properties:
+> +- nand-on-flash-bbt: see nand.txt
+> +- nand-ecc-strength: see nand.txt
+> +- nand-ecc-step-size: see nand.txt
+> +- st,fmc2_timings: array of 8 bytes for NAND timings. The meanings of
+> +  these bytes are:
+> +  byte 0 TCLR      : CLE to RE delay in number of AHB clock cycles, only 4 bits
+> +                     are valid. Zero means one clock cycle, 15 means 16 clock
+> +                     cycles.
+> +  byte 1 TAR       : ALE to RE delay, 4 bits are valid. Same format as TCLR.
+> +  byte 2 THIZ      : number of HCLK clock cycles during which the data bus is
+> +                     kept in Hi-Z (tristate) after the start of a write access.
+> +                     Only valid for write transactions. Zero means 1 cycle,
+> +                     255 means 256 cycles.
+> +  byte 3 TWAIT     : number of HCLK clock cycles to assert the command to the
+> +                     NAND flash in response to SMWAITn. Zero means 1 cycle,
+> +                     255 means 256 cycles.
+> +  byte 4 THOLD_MEM : common memory space timing
+> +                     number of HCLK clock cycles to hold the address (and data
+> +                     when writing) after the command deassertion. Zero means
+> +                     1 cycle, 255 means 256 cycles.
+> +  byte 5 TSET_MEM  : common memory space timing
+> +                     number of HCLK clock cycles to assert the address before
+> +                     the command is asserted. Zero means 1 cycle, 255 means 256
+> +                     cycles.
+> +  byte 6 THOLD_ATT : attribute memory space timing
+> +                     number of HCLK clock cycles to hold the address (and data
+> +                     when writing) after the command deassertion. Zero means
+> +                     1 cycle, 255 means 256 cycles.
+> +  byte 7 TSET_ATT  : attribute memory space timing
+> +                     number of HCLK clock cycles to assert the address before
+> +                     the command is asserted. Zero means 1 cycle, 255 means 256
+> +                     cycles.
+
+Let me review the driver but this array of timings is really
+suspicious. I am pretty sure you don't need it in the DT.
+
+> +
+> +The following ECC strength and step size are currently supported:
+> + - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (HAMMING)
+> + - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+> + - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
+> +
+> +Example:
+> +
+> +	fmc2_nand: fmc2_nand@58002000 {
+> +		compatible = "st,stm32mp15-fmc2";
+> +		reg = <0x58002000 0x1000>,
+> +		      <0x80000000 0x1000>,
+> +		      <0x88010000 0x1000>,
+> +		      <0x88020000 0x1000>,
+> +		      <0x81000000 0x1000>,
+> +		      <0x89010000 0x1000>,
+> +		      <0x89020000 0x1000>;
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&rcc FMC_K>;
+> +		resets = <&rcc FMC_R>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&fmc2_pins_a>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		nand@0 {
+> +			reg = <0>;
+> +			nand-on-flash-bbt;
+> +			st,fmc2_timings = /bits/ 8 <2 2 1 7 1 0 104 25>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +		};
+> +	};
+
+Thanks,
+Miquèl
