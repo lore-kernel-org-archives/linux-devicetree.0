@@ -1,91 +1,41 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
-Date: Sat, 22 Sep 2018 16:22:14 +0100
-Message-ID: <20180922162214.68682a71@archlinux>
-References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
-        <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
-        <20180916104526.2c386591@archlinux>
-        <20180918015733.GA19976@r>
+Subject: Re: [PATCH v5] iio: proximity: Add driver support for ST's VL53L0X
+ ToF ranging sensor.
+Date: Sat, 22 Sep 2018 16:24:37 +0100
+Message-ID: <20180922162437.224e574c@archlinux>
+References: <20180915095752.8116-1-songqiang.1304521@gmail.com>
+        <20180917061933.GA15262@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918015733.GA19976@r>
+In-Reply-To: <20180917061933.GA15262@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: r yang <decatf@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Song Qiang <songqiang1304521@gmail.com>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, himanshujha199640@gmail.com, Song Qiang <songqiang.1304521@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Sep 2018 21:57:33 -0400
-r yang <decatf@gmail.com> wrote:
-
-> On Sun, Sep 16, 2018 at 10:45:26AM +0100, Jonathan Cameron wrote:
-> > On Sat, 15 Sep 2018 13:42:14 -0400
-> > ryang <decatf@gmail.com> wrote:
-> >   
-> > > Add device tree support for ROHM BH1750 series ambient light sensors.
-> > > 
-> > > Signed-off-by: ryang <decatf@gmail.com>  
-> > Just to check, how is it picking up on the enum value which is provided
-> > in the i2c_device_id entries?
+...
 > > 
-> > i.e. What is setting id->driver_data in the probe?
-> > There may be something in the i2c core that I'm missing that will do the
-> > association but I don't remember anything trying to do this.
-> > 
-> > Jonathan
-> >  
+> >  .../bindings/iio/proximity/vl53l0x.txt        |  12 ++
+> >  MAINTAINERS                                   |   7 +  
 > 
-> I've looked through it and it is indeed in the i2c core.
-> The i2c core probe function picks the id entry based on the i2c client
-> name.
+> Otherwise,
 > 
-> The i2c client name is assigned based on the device tree compatible
-> string.
-> 
->   of_i2c_register_device()
->     of_i2c_get_board_info()
->       of_modalias_node()
-> 
-> During probe the i2c_device_id is picked by matching the i2c
-> client->name to i2c_device_id->name in the i2c_match_id() function.
-> 
->   i2c_device_probe()
->     driver->probe(client, i2c_match_id(driver->id_table, client));
-> 
-Great!  Thanks for tracking that down.  I'll pick this up once
-you've added the MODULE_DEVICE_TABLE as Tomasz suggested.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Song,
 
+Please make sure to pick up the various Acks, Reviewed-bys etc for later versions.
 
-> I've tested this on device. It's Samsung Galaxy Tab 10.1. It has a
-> BH1721.
+I've added this to the version I applied.
+
+Thanks,
+
+Jonathan
 > 
-> > > ---
-> > >  drivers/iio/light/bh1750.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > > 
-> > > diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> > > index a814828e69f5..50b599abb383 100644
-> > > --- a/drivers/iio/light/bh1750.c
-> > > +++ b/drivers/iio/light/bh1750.c
-> > > @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
-> > >  };
-> > >  MODULE_DEVICE_TABLE(i2c, bh1750_id);
-> > >  
-> > > +static const struct of_device_id bh1750_of_match[] = {
-> > > +	{ .compatible = "rohm,bh1710", },
-> > > +	{ .compatible = "rohm,bh1715", },
-> > > +	{ .compatible = "rohm,bh1721", },
-> > > +	{ .compatible = "rohm,bh1750", },
-> > > +	{ .compatible = "rohm,bh1751", },
-> > > +	{ }
-> > > +};
-> > > +
-> > >  static struct i2c_driver bh1750_driver = {
-> > >  	.driver = {
-> > >  		.name = "bh1750",
-> > > +		.of_match_table = of_match_ptr(bh1750_of_match),
-> > >  		.pm = BH1750_PM_OPS,
-> > >  	},
-> > >  	.probe = bh1750_probe,  
-> >   
+> >  drivers/iio/proximity/Kconfig                 |  11 ++
+> >  drivers/iio/proximity/Makefile                |   2 +
+> >  drivers/iio/proximity/vl53l0x-i2c.c           | 180 ++++++++++++++++++
+> >  5 files changed, 212 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+> >  create mode 100644 drivers/iio/proximity/vl53l0x-i2c.c  
