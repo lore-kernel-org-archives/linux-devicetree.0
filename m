@@ -1,295 +1,85 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
-Date: Sat, 22 Sep 2018 16:05:23 +0100
-Message-ID: <20180922160523.16b399fc@archlinux>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com>
-        <20180918082422.13050-2-songqiang1304521@gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 3/5] ARM: dts: meson8b: add the I2C_A, PWM_C and UART_B pins
+Date: Sat, 22 Sep 2018 17:10:01 +0200
+Message-ID: <20180922151003.4736-4-martin.blumenstingl@googlemail.com>
+References: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918082422.13050-2-songqiang1304521@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, drake@endlessm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Sep 2018 16:24:22 +0800
-Song Qiang <songqiang1304521@gmail.com> wrote:
+These are used for example on the Endless Mini (EC-100):
+- I2C_A is connected to the Realtek RT5640 audio codec
+- PWM_C (GPIODV_9) is connected to a PWM regulator which is used for
+  VCCK (CPU voltage supply)
+- UART_B is connected to the Bluetooth module (of the RTL8723BS SDIO
+  wifi and Bluetooth combo chip)
 
-> The first version of this driver issues a measuring request and polling
-> for a status register in the device for measuring completes.
-> vl53l0x support configuring GPIO1 on it to generate interrupt to
-> indicate that new measurement is ready. This patch adds support for
-> using this mechanisim to reduce cpu cost.
-> 
-> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-Hi Song.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+---
+ arch/arm/boot/dts/meson8b.dtsi | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-Looks correct in principal but a few things to tidy up before
-this is ready to apply.
-
-Also we have an unrelated change in here to check the devices ID.
-That should be in it's own patch.
-
-Thanks,
-
-Jonathan
-> ---
->  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
->  drivers/iio/proximity/vl53l0x-i2c.c           | 135 +++++++++++++++---
->  2 files changed, 129 insertions(+), 20 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> index ab9a9539fec4..40290f8dd70f 100644
-> --- a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> +++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> @@ -4,9 +4,21 @@ Required properties:
->  	- compatible: must be "st,vl53l0x-i2c"
->  	- reg: i2c address where to find the device
->  
-> +Optional properties:
-> +	- interrupts : Interrupt line receiving GPIO1's measuring complete
-> +	  output, supports IRQ_TYPE_EDGE_FALLING only.
-> +
-> +	Refer to interrupt-controller/interrupts.txt for generic
-> +	interrupt client node bindings.
-> +
->  Example:
->  
->  vl53l0x@29 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&vl53l0x_pins>;
-> +
-Please drop this from the example.  This is board specific rather than
-being generally required.
-
->  	compatible = "st,vl53l0x-i2c";
->  	reg = <0x29>;
-> -};
-> +	interrupt-parent = <&gpio3>;
-> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-> +}
-> diff --git a/drivers/iio/proximity/vl53l0x-i2c.c b/drivers/iio/proximity/vl53l0x-i2c.c
-> index 1aad45df8d95..a5cff11f41de 100644
-> --- a/drivers/iio/proximity/vl53l0x-i2c.c
-> +++ b/drivers/iio/proximity/vl53l0x-i2c.c
-> @@ -10,18 +10,21 @@
->   *
->   * Default 7-bit i2c slave address 0x29.
->   *
-> - * TODO: FIFO buffer, continuous mode, interrupts, range selection,
-> - * sensor ID check.
-> + * TODO: FIFO buffer, continuous mode, range selection.
->   */
->  
->  #include <linux/module.h>
->  #include <linux/i2c.h>
->  #include <linux/delay.h>
-> +#include <linux/interrupt.h>
->  
->  #include <linux/iio/iio.h>
->  
-> +#include <stdbool.h>
-> +
->  #define VL_REG_SYSRANGE_START				0x00
->  
-> +/* Mode configuration registers. */
->  #define VL_REG_SYSRANGE_MODE_MASK			GENMASK(3, 0)
->  #define VL_REG_SYSRANGE_MODE_SINGLESHOT			0x00
->  #define VL_REG_SYSRANGE_MODE_START_STOP			BIT(0)
-> @@ -29,14 +32,61 @@
->  #define VL_REG_SYSRANGE_MODE_TIMED			BIT(2)
->  #define VL_REG_SYSRANGE_MODE_HISTOGRAM			BIT(3)
->  
-> +/* Result registers. */
->  #define VL_REG_RESULT_INT_STATUS			0x13
->  #define VL_REG_RESULT_RANGE_STATUS			0x14
->  #define VL_REG_RESULT_RANGE_STATUS_COMPLETE		BIT(0)
->  
-> +/* GPIO function configuration registers. */
-> +#define VL_REG_GPIO_HV_MUX_ACTIVE_GIGH			0x84
-> +#define VL_REG_SYS_INT_CFG_GPIO				0x0A
-> +#define VL_GPIOFUNC_NEW_MEASURE_RDY			BIT(2)
-> +
-> +/* Interrupt configuration registers. */
-> +#define VL_REG_SYS_INT_CLEAR				0x0B
-> +#define VL_REG_RESULT_INT_STATUS			0x13
-> +#define VL_INT_POLARITY_LOW				0x00
-> +#define VL_INT_POLARITY_HIGH				BIT(0)
-> +
-> +/* Should be 0xEE if connection is fine. */
-> +#define VL_REG_MODEL_ID					0xC0
-> +
->  struct vl53l0x_data {
->  	struct i2c_client *client;
-> +	struct completion measuring_done;
-> +	bool use_interrupt;
->  };
->  
-> +static int vl53l0x_clear_interrupt(struct vl53l0x_data *data)
-> +{
-> +	int ret;
-> +	u8 cnt = 0;
-> +
-> +	do {
-> +		/* bit 0 for measuring interrupt, bit 1 for error interrupt.  */
-> +		i2c_smbus_write_byte_data(data->client,
-> +			VL_REG_SYS_INT_CLEAR, 1);
-
-All these i2c comms need checking for errors.  I2c buses aren't always the most
-reliable things.
-
-> +		i2c_smbus_write_byte_data(data->client,
-> +			VL_REG_SYS_INT_CLEAR, 0);
-> +		ret = i2c_smbus_read_byte_data(data->client,
-> +			VL_REG_RESULT_INT_STATUS);
-> +		cnt++;
-> +	} while ((ret & 0x07) && (cnt < 3));
-> +	if (cnt > 2)
-> +		return -ETIMEDOUT;
-> +	else
-> +		return 0;
-> +}
-> +
-> +static irqreturn_t vl53l0x_irq_handler(int irq, void *d)
-> +{
-> +	struct vl53l0x_data *data = d;
-> +
-> +	complete(&data->measuring_done);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  static int vl53l0x_read_proximity(struct vl53l0x_data *data,
->  				  const struct iio_chan_spec *chan,
->  				  int *val)
-> @@ -46,23 +96,31 @@ static int vl53l0x_read_proximity(struct vl53l0x_data *data,
->  	u8 buffer[12];
->  	int ret;
->  
-> -	ret = i2c_smbus_write_byte_data(client, VL_REG_SYSRANGE_START, 1);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	do {
-> -		ret = i2c_smbus_read_byte_data(client,
-> -			VL_REG_RESULT_RANGE_STATUS);
-> -		if (ret < 0)
-> -			return ret;
-> -
-> -		if (ret & VL_REG_RESULT_RANGE_STATUS_COMPLETE)
-> -			break;
-> -
-> -		usleep_range(1000, 5000);
-> -	} while (--tries);
-> -	if (!tries)
-> -		return -ETIMEDOUT;
-> +	if (data->use_interrupt)
-> +		reinit_completion(&data->measuring_done);
-
-This seems a little strange. Should be initialized already on first
-pass for example.  I don't suppose it matters, but feels a bit odd.
-You may need to protect against multiple concurrent readers however...
-
-> +
-> +	i2c_smbus_write_byte_data(client, VL_REG_SYSRANGE_START, 1);
-> +
-> +	/* In usual case the longest valid conversion time is less than 70ms. */
-> +	if (data->use_interrupt) {
-> +		ret = wait_for_completion_timeout(&data->measuring_done,
-> +			msecs_to_jiffies(100));
-> +		if (!ret)
-> +			return -ETIMEDOUT;
-> +		vl53l0x_clear_interrupt(data);
-> +	} else {
-> +		do {
-> +			ret = i2c_smbus_read_byte_data(client,
-> +				VL_REG_RESULT_RANGE_STATUS);
-> +
-> +			if (ret & VL_REG_RESULT_RANGE_STATUS_COMPLETE)
-> +				break;
-> +
-> +			usleep_range(1000, 5000);
-> +		} while (--tries);
-> +		if (!tries)
-> +			return -ETIMEDOUT;
-> +	}
->  
->  	ret = i2c_smbus_read_i2c_block_data(client, VL_REG_RESULT_RANGE_STATUS,
->  		12, buffer);
-> @@ -110,10 +168,21 @@ static const struct iio_info vl53l0x_info = {
->  	.read_raw = vl53l0x_read_raw,
->  };
->  
-> +/* Congigure the GPIO1 pin to generate interrupt for measurement ready,
-Comment syntax + spell check. Configure   For a description like this
-nicer to have it in kernel-doc style as well rather than a freeform comment.
-
-> + * default polarity is level low.
-> + */
-> +static int vl53l0x_config_irq(struct vl53l0x_data *data)
-> +{
-> +	i2c_smbus_write_byte_data(data->client, VL_REG_SYS_INT_CFG_GPIO,
-> +		VL_GPIOFUNC_NEW_MEASURE_RDY);
-
-Error checking on that write_byte?
-
-> +	return vl53l0x_clear_interrupt(data);
-> +}
-> +
->  static int vl53l0x_probe(struct i2c_client *client)
->  {
->  	struct vl53l0x_data *data;
->  	struct iio_dev *indio_dev;
-> +	int ret;
->  
->  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
->  	if (!indio_dev)
-> @@ -134,6 +203,34 @@ static int vl53l0x_probe(struct i2c_client *client)
->  	indio_dev->num_channels = ARRAY_SIZE(vl53l0x_channels);
->  	indio_dev->modes = INDIO_DIRECT_MODE;
->  
-> +	if (!client->irq)
-> +		data->use_interrupt = false;
-> +	else {
-> +		data->use_interrupt = true;
-> +		ret = devm_request_irq(&client->dev,
-> +			client->irq,
-> +			vl53l0x_irq_handler,
-> +			IRQF_TRIGGER_FALLING,
-> +			indio_dev->name,
-> +			data);
-> +		if (ret < 0) {
-> +			dev_err(&client->dev,
-
-Lots of odd alignment in here.  Please tidy up.
-
-> +			"request irq line failed.");
-> +			return -EINVAL;
-> +		}
-> +		vl53l0x_config_irq(data);
-> +		init_completion(&data->measuring_done);
-> +	}
-> +
-> +	/* After checking this, assuming write and read byte operations should
-/*
- * After..
- */
-> +	 *  never fails.
-> +	 */
-> +	ret = i2c_smbus_read_byte_data(client, VL_REG_MODEL_ID);
-> +	if (ret != 0xEE) {
-> +		dev_err(&client->dev, "device not found. ");
-No space after . and \n is normal for a dev_err message.
-
-What does this have to do with interrupt support?
-
-Please break it out as a separate patch.
-
-> +		return -EREMOTEIO;
-> +	}
-> +
->  	return devm_iio_device_register(&client->dev, indio_dev);
->  }
->  
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index f77e419c1c65..4bbbbc6bea83 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -223,6 +223,13 @@
+ 			};
+ 		};
+ 
++		i2c_a_pins: i2c-a {
++			mux {
++				groups = "i2c_sda_a", "i2c_sck_a";
++				function = "i2c_a";
++			};
++		};
++
+ 		sd_b_pins: sd-b {
+ 			mux {
+ 				groups = "sd_d0_b", "sd_d1_b", "sd_d2_b",
+@@ -230,6 +237,29 @@
+ 				function = "sd_b";
+ 			};
+ 		};
++
++		pwm_c1_pins: pwm-c1 {
++			mux {
++				groups = "pwm_c1";
++				function = "pwm_c";
++			};
++		};
++
++		uart_b0_pins: uart-b0 {
++			mux {
++				groups = "uart_tx_b0",
++				       "uart_rx_b0";
++				function = "uart_b";
++			};
++		};
++
++		uart_b0_cts_rts_pins: uart-b0-cts-rts {
++			mux {
++				groups = "uart_cts_b0",
++				       "uart_rts_b0";
++				function = "uart_b";
++			};
++		};
+ 	};
+ };
+ 
+-- 
+2.19.0
