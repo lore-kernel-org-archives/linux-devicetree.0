@@ -1,63 +1,46 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v6 1/2] iio: proximity: Add driver support for ST's
- VL53L0X ToF ranging sensor.
-Date: Sat, 22 Sep 2018 16:12:05 +0100
-Message-ID: <20180922161205.63d3f4cf@archlinux>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com>
-        <20180922154658.752f2fbf@archlinux>
-        <20180922145658.GA4443@himanshu-Vostro-3559>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 1/5] dt-bindings: add vendor prefix for "Endless Mobile,
+ Inc."
+Date: Sat, 22 Sep 2018 17:09:59 +0200
+Message-ID: <20180922151003.4736-2-martin.blumenstingl@googlemail.com>
+References: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922145658.GA4443@himanshu-Vostro-3559>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Himanshu Jha <himanshujha199640@gmail.com>
-Cc: Song Qiang <songqiang1304521@gmail.com>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, drake@endlessm.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 22 Sep 2018 20:26:58 +0530
-Himanshu Jha <himanshujha199640@gmail.com> wrote:
+Endless Mobile, Inc. started selling (small) computers in 2015.
 
-> On Sat, Sep 22, 2018 at 03:46:58PM +0100, Jonathan Cameron wrote:
-> > On Tue, 18 Sep 2018 16:24:21 +0800
-> > Song Qiang <songqiang1304521@gmail.com> wrote:
-> >   
-> > > This driver was originally written by ST in 2016 as a misc input device
-> > > driver, and hasn't been maintained for a long time. I grabbed some code
-> > > from it's API and reformed it into an iio proximity device driver.
-> > > This version of driver uses i2c bus to talk to the sensor and
-> > > polling for measuring completes, so no irq line is needed.
-> > > It can be tested with reading from
-> > > /sys/bus/iio/devices/iio:deviceX/in_distance_input
-> > > 
-> > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>  
-> > There are a few bits and bobs in here, but as they are all minor and
-> > one at least was me giving you wrong advise, I've fixed it up.
-> > 
-> > Please check I haven't made a mess of it! 
-> > 
-> > Applied with changes to the togreg branch of iio.git and pushed out
-> > as testing (where it should be visible now) for the autobuilders to
-> > play with it.  
-> 
-> The SPDX license identifier is inconsistent!
-> 
-> > +// SPDX-License-Identifier: GPL-2.0+  
-> 
-> > +MODULE_LICENSE("GPL v2");  
-> 
-> 216         For 'GNU General Public License (GPL) version 2 only' use:
-> 217           SPDX-License-Identifier: GPL-2.0
-> 218         For 'GNU General Public License (GPL) version 2 or any later version' use:
-> 219           SPDX-License-Identifier: GPL-2.0+
-> 
-> 
-Good spot.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I'll fix that up as well.
-
-I'll assume the MODULE_LICENCE is right for now as it seems likely to have come
-from the original ST code.
-
-Jonathan
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2c3fc512e746..1c63d2c2d48f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -114,6 +114,7 @@ elan	Elan Microelectronic Corp.
+ embest	Shenzhen Embest Technology Co., Ltd.
+ emmicro	EM Microelectronic
+ emtrion	emtrion GmbH
++endless	Endless Mobile, Inc.
+ energymicro	Silicon Laboratories (formerly Energy Micro AS)
+ engicam	Engicam S.r.l.
+ epcos	EPCOS AG
+-- 
+2.19.0
