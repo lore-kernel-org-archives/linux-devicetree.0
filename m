@@ -1,60 +1,119 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 4/5] ARM: dts: meson8b: add the RMII pins
-Date: Sat, 22 Sep 2018 17:10:02 +0200
-Message-ID: <20180922151003.4736-5-martin.blumenstingl@googlemail.com>
-References: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/2] iio: light: bh1750: Add device tree support
+Date: Sat, 22 Sep 2018 16:20:57 +0100
+Message-ID: <20180922162057.0924ede8@archlinux>
+References: <c414a26cdc176d9982f3c609fa39cf245ac939be.1537033044.git.decatf@gmail.com>
+        <387c145949692c0318f90d98426be95c82ea2e58.1537033044.git.decatf@gmail.com>
+        <20180919192238.GA19391@arch>
+        <20180921013721.GA4268@r>
+        <20180921153420.GA11850@arch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, drake@endlessm.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180921153420.GA11850@arch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: r yang <decatf@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some boards use an RMII Ethernet PHY which requires fewer pins than the
-RGMII PHYs. Add a separate eth_rmii_pins node which does not include the
-pins which are only required for RGMII (but not for RMII) PHYs.
+On Fri, 21 Sep 2018 17:34:21 +0200
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm/boot/dts/meson8b.dtsi | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+> On Thu, Sep 20, 2018 at 09:37:21PM -0400, r yang wrote:
+> > On Wed, Sep 19, 2018 at 09:22:39PM +0200, Tomasz Duszynski wrote:  
+> > > Comments inline.
+> > >
+> > > On Sat, Sep 15, 2018 at 01:42:14PM -0400, ryang wrote:  
+> > > > Add device tree support for ROHM BH1750 series ambient light sensors.
+> > > >
+> > > > Signed-off-by: ryang <decatf@gmail.com>
+> > > > ---
+> > > >  drivers/iio/light/bh1750.c | 10 ++++++++++
+> > > >  1 file changed, 10 insertions(+)
+> > > >
+> > > > diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+> > > > index a814828e69f5..50b599abb383 100644
+> > > > --- a/drivers/iio/light/bh1750.c
+> > > > +++ b/drivers/iio/light/bh1750.c
+> > > > @@ -315,9 +315,19 @@ static const struct i2c_device_id bh1750_id[] = {
+> > > >  };
+> > > >  MODULE_DEVICE_TABLE(i2c, bh1750_id);
+> > > >
+> > > > +static const struct of_device_id bh1750_of_match[] = {
+> > > > +	{ .compatible = "rohm,bh1710", },
+> > > > +	{ .compatible = "rohm,bh1715", },
+> > > > +	{ .compatible = "rohm,bh1721", },
+> > > > +	{ .compatible = "rohm,bh1750", },
+> > > > +	{ .compatible = "rohm,bh1751", },
+> > > > +	{ }
+> > > > +};
+> > > > +  
+> > >
+> > > Hmm, I believe this should be exported additionally using
+> > > MODULE_DEVICE_TABLE(of, bh1750_of_match). Otherwise module loading
+> > > will not work as expected.
+> > >
+> > > Moreover, we can do without DT and if you want to avoid
+> > > warning about unused variables you may consider enclosing everything
+> > > with:
+> > >
+> > > #ifdef CONFIG_OF
+> > > ...
+> > > #endif  
 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 4bbbbc6bea83..cd1ca9dda126 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -223,6 +223,21 @@
- 			};
- 		};
- 
-+		eth_rmii_pins: eth-rmii {
-+			mux {
-+				groups = "eth_tx_en",
-+					 "eth_txd1_0",
-+					 "eth_txd0_0",
-+					 "eth_rx_clk",
-+					 "eth_rx_dv",
-+					 "eth_rxd1",
-+					 "eth_rxd0",
-+					 "eth_mdio_en",
-+					 "eth_mdc";
-+				function = "ethernet";
-+			};
-+		};
-+
- 		i2c_a_pins: i2c-a {
- 			mux {
- 				groups = "i2c_sda_a", "i2c_sck_a";
--- 
-2.19.0
+Don't do that.  There is a significant oddity now around this in that
+it is possible to use a magic ACPI device ID to probe via a devicetree
+binding (without CONFIG_OF).  It's seriously odd, but to allow that to
+work we need to not protect things with #ifdef CONFIG_OF.
+
+(and this particular bit of fun strikes me as crazy too, but it's what
+we have!)
+
+https://www.kernel.org/doc/Documentation/acpi/enumeration.txt
+(towards the bottom)
+
+Having MODULE_DEVICE_TABLE is a good addition.
+
+> >
+> > The reason for this DT patch is because I've ported the Samsung Galaxy
+> > Tab 10.1 to the mainline kernel. The device is working on the Tegra
+> > platform with the right DTS file. Some peripherals on this device have
+> > existing drivers such as this one which only need the DT bindings for
+> > it be usuable.
+> >  
+> 
+> Adding support for DT is fine. Just pointed a figner at two things
+> that attracted my attention.
+> 
+> > >  
+> > > >  static struct i2c_driver bh1750_driver = {
+> > > >  	.driver = {
+> > > >  		.name = "bh1750",
+> > > > +		.of_match_table = of_match_ptr(bh1750_of_match),
+> > > >  		.pm = BH1750_PM_OPS,  
+> > >
+> > > I've recently simplified setting pm ops so this would not apply to
+> > > iio/togreg cleanly.
+> > >  
+> >
+> > Does this mean I should wait until that is merged before submitting a V2
+> > patch?
+> >  
+> 
+> No need to wait. I guess you should rebase your work on iio/togreg
+> branch and post v2.
+
+That would be perfect as you are rerolling anyway. Let's me be lazy
+and not do the merge ;)
+
+Thanks,
+
+Jonathan
+
+> 
+> > > >  	},
+> > > >  	.probe = bh1750_probe,
+> > > > --
+> > > > 2.17.1
+> > > >  
