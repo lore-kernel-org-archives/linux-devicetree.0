@@ -1,8 +1,8 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 1/5] dt-bindings: add vendor prefix for "Endless Mobile,
- Inc."
-Date: Sat, 22 Sep 2018 17:09:59 +0200
-Message-ID: <20180922151003.4736-2-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 2/5] dt-bindings: arm: amlogic: Add the Endless Mobile
+ Endless Mini (EC-100)
+Date: Sat, 22 Sep 2018 17:10:00 +0200
+Message-ID: <20180922151003.4736-3-martin.blumenstingl@googlemail.com>
 References: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,25 +22,26 @@ To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
 Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, drake@endlessm.com
 List-Id: devicetree@vger.kernel.org
 
-Endless Mobile, Inc. started selling (small) computers in 2015.
+Add bindings documentation for the Endless Mini (EC-100) from Endless
+Mobile.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 2c3fc512e746..1c63d2c2d48f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -114,6 +114,7 @@ elan	Elan Microelectronic Corp.
- embest	Shenzhen Embest Technology Co., Ltd.
- emmicro	EM Microelectronic
- emtrion	emtrion GmbH
-+endless	Endless Mobile, Inc.
- energymicro	Silicon Laboratories (formerly Energy Micro AS)
- engicam	Engicam S.r.l.
- epcos	EPCOS AG
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index b5c2b5c35766..2c2eee206736 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -63,6 +63,7 @@ Board compatible values (alphabetically, grouped by SoC):
+ 
+   - "minix,neo-x8" (Meson8)
+ 
++  - "endless,ec100" (Meson8b)
+   - "hardkernel,odroid-c1" (Meson8b)
+   - "tronfy,mxq" (Meson8b)
+ 
 -- 
 2.19.0
