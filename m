@@ -1,69 +1,63 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 0/5] Meson8b: add support for the Endless Mini EC-100
-Date: Sat, 22 Sep 2018 17:09:58 +0200
-Message-ID: <20180922151003.4736-1-martin.blumenstingl@googlemail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v6 1/2] iio: proximity: Add driver support for ST's
+ VL53L0X ToF ranging sensor.
+Date: Sat, 22 Sep 2018 16:12:05 +0100
+Message-ID: <20180922161205.63d3f4cf@archlinux>
+References: <20180918082422.13050-1-songqiang1304521@gmail.com>
+        <20180922154658.752f2fbf@archlinux>
+        <20180922145658.GA4443@himanshu-Vostro-3559>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, drake@endlessm.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180922145658.GA4443@himanshu-Vostro-3559>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Himanshu Jha <himanshujha199640@gmail.com>
+Cc: Song Qiang <songqiang1304521@gmail.com>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for the "Endless Mini" grapefruit-sized mini PC
-from Endless Mobile, Inc. The internal name of this device is EC-100
-(this can be found for example in the GPL kernel tree which is based on
-Amlogic's 3.10 kernel: [0]).
+On Sat, 22 Sep 2018 20:26:58 +0530
+Himanshu Jha <himanshujha199640@gmail.com> wrote:
 
-The board is using a Meson8b (S805) SoC with various peripherals.
-The biggest difference compared to boards which are based on Amlogic's
-reference designs is that this board comes with an embedded micro-
-controller called "EC" which makes the system LED pulse during boot
-and allows powering off the board. It also comes with a 10/100 Mbit/s
-Ethernet port and one USB host port.
-There are two variants:
-- 2GB RAM, 32GB storage, 802.11bgn and Bluetooth 4.0
-- 1GB RAM, 24GB storage, neither wifi nor Bluetooth
+> On Sat, Sep 22, 2018 at 03:46:58PM +0100, Jonathan Cameron wrote:
+> > On Tue, 18 Sep 2018 16:24:21 +0800
+> > Song Qiang <songqiang1304521@gmail.com> wrote:
+> >   
+> > > This driver was originally written by ST in 2016 as a misc input device
+> > > driver, and hasn't been maintained for a long time. I grabbed some code
+> > > from it's API and reformed it into an iio proximity device driver.
+> > > This version of driver uses i2c bus to talk to the sensor and
+> > > polling for measuring completes, so no irq line is needed.
+> > > It can be tested with reading from
+> > > /sys/bus/iio/devices/iio:deviceX/in_distance_input
+> > > 
+> > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>  
+> > There are a few bits and bobs in here, but as they are all minor and
+> > one at least was me giving you wrong advise, I've fixed it up.
+> > 
+> > Please check I haven't made a mess of it! 
+> > 
+> > Applied with changes to the togreg branch of iio.git and pushed out
+> > as testing (where it should be visible now) for the autobuilders to
+> > play with it.  
+> 
+> The SPDX license identifier is inconsistent!
+> 
+> > +// SPDX-License-Identifier: GPL-2.0+  
+> 
+> > +MODULE_LICENSE("GPL v2");  
+> 
+> 216         For 'GNU General Public License (GPL) version 2 only' use:
+> 217           SPDX-License-Identifier: GPL-2.0
+> 218         For 'GNU General Public License (GPL) version 2 or any later version' use:
+> 219           SPDX-License-Identifier: GPL-2.0+
+> 
+> 
+Good spot.
 
-This series contains support for the new board as well as supporting
-patches for the new vendor prefix and the pin definitions in
-meson8b.dtsi so various peripherals can be enabled.
+I'll fix that up as well.
 
+I'll assume the MODULE_LICENCE is right for now as it seems likely to have come
+from the original ST code.
 
-Changes since v1 at [1]:
-- added Rob's "Acked-by" to the dt-bindings patches (#1 and #2)
-- changed the compatible string from endless,ec-100 to endless,ec100 to
-  match what is being shipped with the 3.10 based kernel (suggested by
-  Daniel Drake) as well as being consistent with the .dts file naming
-
-
-[0] https://github.com/endlessm/linux-meson/blob/d628bf1242928927a41f7482ba5ef7295e01a9ff/arch/arm/boot/dts/meson8b-ec100.dts
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2018-September/008342.html
-
-Martin Blumenstingl (5):
-  dt-bindings: add vendor prefix for "Endless Mobile, Inc."
-  dt-bindings: arm: amlogic: Add the Endless Mobile Endless Mini
-    (EC-100)
-  ARM: dts: meson8b: add the I2C_A, PWM_C and UART_B pins
-  ARM: dts: meson8b: add the RMII pins
-  ARM: dts: meson8b: Add support for the Endless Mini (EC-100)
-
- .../devicetree/bindings/arm/amlogic.txt       |   1 +
- .../devicetree/bindings/vendor-prefixes.txt   |   1 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/meson8b-ec100.dts           | 248 ++++++++++++++++++
- arch/arm/boot/dts/meson8b.dtsi                |  45 ++++
- 5 files changed, 296 insertions(+)
- create mode 100644 arch/arm/boot/dts/meson8b-ec100.dts
-
--- 
-2.19.0
+Jonathan
