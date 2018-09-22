@@ -1,145 +1,38 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify
- skipped bytes in OOB
-Date: Sat, 22 Sep 2018 09:41:11 +0200
-Message-ID: <20180922094111.1c2969e8@xps13>
-References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
-        <20180907160822.319047c8@bbrezillon>
-        <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
-        <20180907165348.3e0027ee@bbrezillon>
-        <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCHv4 0/6] Add support for UHS-I on Exynos5422 odroid boards
+Date: Sat, 22 Sep 2018 07:52:31 +0000
+Message-ID: <20180922075238.884-1-linux.amoon@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, Dinh Nguyen <dinguyen@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
+This is series v4 since my previous patches were incomplete with driver
+changes missing.
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Sat, 8 Sep
-2018 01:10:25 +0900:
+v4 changes.
+squash cd-gpios and wp-gpio changes into single patch.
+change the subject prefix to "ARM: dts: exynos:"
 
-> Hi Boris,
-> 
-> 2018-09-07 23:53 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
-> > On Fri, 7 Sep 2018 23:42:53 +0900
-> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> >  
-> >> Hi Boris,
-> >>
-> >> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:  
-> >> > Hi Masahiro,
-> >> >
-> >> > On Fri,  7 Sep 2018 19:56:23 +0900
-> >> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
-> >> >  
-> >> >> NAND devices need additional data area (OOB) for error correction,
-> >> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
-> >> >> first byte in OOB is used for BBM, but the location actually depends
-> >> >> on chip vendors.  The NAND controller should preserve the precious
-> >> >> BBM to keep track of bad blocks.
-> >> >>
-> >> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
-> >> >> the number of bytes to skip from the start of OOB.  The ECC engine
-> >> >> will automatically skip the specified number of bytes when it gets
-> >> >> access to OOB area.
-> >> >>
-> >> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
-> >> >> firmware and the operating system if you intend to use the NAND
-> >> >> device across the control hand-off.
-> >> >>
-> >> >> In fact, the current denali.c code expects firmware to have already
-> >> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
-> >> >>
-> >> >> If no firmware (or bootloader) has initialized the controller, the
-> >> >> register value is zero, which is the default after power-on-reset.
-> >> >>
-> >> >> In other words, the Linux driver cannot initialize the controller
-> >> >> by itself.  You cannot support the reset control either because
-> >> >> resetting the controller will get register values lost.
-> >> >>
-> >> >> This commit adds a way to specify it via DT.  If the property
-> >> >> "denali,oob-skip-bytes" exists, the value will be set to the register.  
-> >> >
-> >> > Hm, do we really need to make this config customizable? I mean, either
-> >> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
-> >> > must be reserved for the BBM or you have a small-page NAND and the BBM
-> >> > is at position 4 and 5. Are you sure people configure that differently?
-> >> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?  
-> >>
-> >>
-> >> As I said in the patch description,
-> >> I need to use the same SPARE_AREA_SKIP_BYTES value
-> >> across firmware, boot-loader, Linux, and whatever.
-> >>
-> >> I want to set the value to 8 for my platform
-> >> because the on-chip boot ROM expects 8.
-> >> I cannot change it since the boot ROM is hard-wired.
-> >>
-> >>
-> >> The boot ROM skips 8 bytes in OOB
-> >> when it loads images from the on-board NAND device.
-> >>
-> >> So, when I update the image from U-Boot or Linux,
-> >> I need to make sure to set the register to 8.
-> >>
-> >> If I update the image with a different value,
-> >> the Boot ROM fails to boot.
-> >>
-> >>
-> >>
-> >> When the system has booted from NAND,
-> >> the register is already set to 8.  It works.
-> >>
-> >> However, when the system has booted from eMMC,
-> >> the register is not initialized by anyone.
-> >> I am searching for a way to set the register to 8
-> >> in this case.
-> >>
-> >>
-> >> The boot ROM in SOCFPGA might expect a different value,
-> >> I am not sure.  
-> >
-> > Okay, then why not having a per-compatible value if it's related to the
-> > BootROM? Unless the BootROM is part of the FPGA and can be
-> > reprogrammed.  
-> 
-> FPGA is unrelated here.
-> 
-> Neither the boot ROM nor the Denali core is re-programmable.
-> 
-> 
-> 
-> I hesitate to associate the number of skipped bytes
-> with the compatible string because it is not a parameter
-> of the Denali IP.
-> 
-> 
-> Rather, it is the matter of "how we use the OOB",
-> so I want to leave room for customization like nand-ecc-strength etc.
-> even if the boot ROM happens to expect a particular value.
-> 
-> 
-> If you prefer a per-compatible value, I can do that,
-> but I believe the NAND core and the boot ROM are orthogonal.
-> 
-> 
-> 
-> > I'd really prefer not having a generic property that
-> > allows you to put anything you want.  
-> 
-> 
+These changes add UHS-I tuning for dw_mmc-exynos driver.
 
-While I agree that the number of skipped bytes is not a parameter of
-the Denali IP, I also fear letting the opportunity to the user to use
-random values in the SPARE_AREA_SKIP_BYTES registers (and have to
-support them). I would also prefer a per-compatible value which is not
-a perfect solution neither.
+Rebased on Krzysztof branch next/dt
+[0] git://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git 
 
+Anand Moon (6):
+  ARM: dts: exynos: Added UHS-I bus speed support
+  ARM: dts: exynos: fix regulator min values of LDO13 for Odroid XU3/XU4
+  ARM: dts: exynos: update maximum frequency for sdcard to 200MHz
+  ARM: dts: exynos: Add CD and WP pins to Odroid XU3/XU4 SD card
+  ARM: dts: exynos: update maximum frequency for emmc to 200MHz
+  mmc: dw_mmc-exynos: Add tuning for sdr and ddr timing for USH-I mode
 
-Thanks,
-Miquèl
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi          |  8 ++++++++
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi      | 10 ++++++++--
+ arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi |  1 +
+ drivers/mmc/host/dw_mmc-exynos.c                   | 11 +++++++++++
+ 4 files changed, 28 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
