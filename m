@@ -1,69 +1,128 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Sat, 22 Sep 2018 07:48:14 +0800
-Message-ID: <20180921234813.GA5469@guoren-Inspiron-7460>
-References: <20180914143719.GA27689@guoren-Inspiron-7460>
- <mhng-9d591179-01d4-4a84-a490-8a09d4f3a3d1@palmer-si-x1c4>
- <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 2/6] pstore: Add event tracing support
+Date: Sat, 22 Sep 2018 12:18:56 +0530
+Message-ID: <8cb8851c-ab65-98ba-81ca-ba36957dc852@codeaurora.org>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <20180917193426.41c99fd5@gandalf.local.home>
+ <cb17a8c9-fca1-5492-3255-eab0ea33577c@codeaurora.org>
+ <20180918164434.472294f3@gandalf.local.home>
+ <bad69c36-2600-f0b3-5bfd-c865039ae97f@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com>
+In-Reply-To: <bad69c36-2600-f0b3-5bfd-c865039ae97f@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>, linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Joel Fernandes <joel@joelfernandes.org>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vg
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 10:18:51PM -0700, Arnd Bergmann wrote:
-> On Thu, Sep 20, 2018 at 10:52 AM Palmer Dabbelt <palmer@sifive.com> wrote:
-> >
-> > On Fri, 14 Sep 2018 07:37:20 PDT (-0700), ren_guo@c-sky.com wrote:
-> > > On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
-> > >> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> > I don't want to hijack this thread, but in RISC-V land we were hoping to have a
-> > user ABI free of 32-bit time_t.  Our 32-bit glibc ABI hasn't been finalized
-> > yet, and when I talked to the glibc guys a few weeks ago they were happy to let
-> > us wait until 32-bit time_t can be removed before we stabilize the ABI.  We've
-> > been maintaining out-of-tree glibc patches for a while now, so I'd really like
-> > to get them into the next glibc release.
-> >
-> > Mapping out the schedule more explicitly, as I'm terrible with dates:
-> >
-> > * 4.19-rc4 was 2018-09-16
-> > * 4.19 should be 2018-10-21
-> > * 4.20 should be 2019-01-13 (skipping 2 weeks for the holidays)
-> > * 4.21 merge window should close 2019-01-27
-> > * glibc 2.29 is scheduled for 2019-02-01
-Thx for the schedule info.
-
-> >
-> > That's very tight, but assuming we at least have a prototype of the API so we
-> > can get the rv32i glibc patches in much earlier it might be OK.  There was some
-> > talk of being able to use some workarounds to do a 32-bit time_t user ABI
-> > without the cooresponding kernel ABI, so we could always go down that route to
-> > start and then decide to deprecate or not deprecate the 32-bit kernel ABI at
-> > the last minute -- not something I'm fond of doing, but an option.
-> >
-> > How close to done do you think the 32-bit time_t will be by the end of the 4.20
-> > merge window?  If it's close enough to start our glibc push then that might be
-> > OK.
+On 9/19/2018 2:43 AM, Sai Prakash Ranjan wrote:
+> On 9/19/2018 2:14 AM, Steven Rostedt wrote:
+>> On Tue, 18 Sep 2018 23:22:48 +0530
+>> Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org> wrote:
+>>
+>>> On 9/18/2018 5:04 AM, Steven Rostedt wrote:
+>>>>
+>>>> It looks like pstore_event_call() gets called from a trace event. You
+>>>> can't call kmalloc() from one. One thing is that kmalloc has
+>>>> tracepoints itself. You trace those you just entered an infinite loop.
+>>>>
+>>>
+>>> Ok will remove it in v2. But any alternative way to do this?
+>>
+>> I think I describe it below.
+>>
 > 
-> It will be a bit of a stretch, but it's possible. Most syscalls are
-> done in linux-next,
-> I have a few more pending, and only clock_adjtime is really missing now (I had
-> some earlier patches that I could revive).
-Seems time schedule is OK. If we make csky get into linux-4.20, then csky glibc
-port could remove 32-bit time_t in patchset before glibc 2.29 release.
+> Ok got it, will change and post the 2nd version soon.
+> 
 
-> My plan was to get that all into 4.20, and then have a conversation about the
-> actual syscall table changes in 4.21. If we need it for both csky and rv32,
-> we might just change the generic syscall table that way in 4.21 without
-> changing all the other ones along with them. I don't want to drag things out
-> over too many merge windows though, and my plan was to do all architectures
-> together to simplify the version checks in the libc code to only have to check
-> for a single version.
-Seems that's no problem.
+Hi Steven,
 
-Best Regards
- Guo Ren
+Instead of dummy iterator, can't we have something like below, there 
+won't be any infinite loop if we trace kmalloc in this case. This is 
+same as tp_printk.
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 018cbbefb769..271b0573f44a 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8644,8 +8644,14 @@ void __init early_trace_init(void)
+                         static_key_enable(&tracepoint_printk_key.key);
+         }
+
+-       if (tracepoint_pstore)
+-               static_key_enable(&tracepoint_pstore_key.key);
++       if (tracepoint_pstore) {
++               tracepoint_pstore_iter =
++                       kmalloc(sizeof(*tracepoint_pstore_iter), 
+GFP_KERNEL);
++               if (WARN_ON(!tracepoint_pstore_iter))
++                       tracepoint_pstore = 0;
++               else
++                       static_key_enable(&tracepoint_pstore_key.key);
++       }
+
+         tracer_alloc_buffers();
+  }
+diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
+index f5263b6fb96f..0534546aef6d 100644
+--- a/fs/pstore/ftrace.c
++++ b/fs/pstore/ftrace.c
+@@ -73,7 +73,6 @@ void notrace pstore_event_call(struct 
+trace_event_buffer *fbuffer)
+         struct trace_event *event;
+         struct seq_buf *seq;
+         unsigned long flags;
+-       gfp_t gfpflags;
+
+         if (!psinfo)
+
+         if (!psinfo)
+                 return;
+@@ -81,20 +80,17 @@ void notrace pstore_event_call(struct 
+trace_event_buffer *fbuffer)
+         if (unlikely(oops_in_progress))
+                 return;
+
+-       pstore_record_init(&record, psinfo);
+-       record.type = PSTORE_TYPE_EVENT;
+-
+-       /* Can be called in atomic context */
+-       gfpflags = (in_atomic() || irqs_disabled()) ? GFP_ATOMIC : 
+GFP_KERNEL;
+-
+-       iter = kmalloc(sizeof(*iter), gfpflags);
++       iter = tracepoint_pstore_iter;
+         if (!iter)
+                 return;
+
++       pstore_record_init(&record, psinfo);
++       record.type = PSTORE_TYPE_EVENT;
++
+         event_call = fbuffer->trace_file->event_call;
+         if (!event_call || !event_call->event.funcs ||
+             !event_call->event.funcs->trace)
+-               goto fail_event;
++               return;
+
+         event = &fbuffer->trace_file->event_call->event;
+
+@@ -116,9 +112,6 @@ void notrace pstore_event_call(struct 
+trace_event_buffer *fbuffer)
+         psinfo->write(&record);
+
+         spin_unlock_irqrestore(&psinfo->buf_lock, flags);
+-
+-fail_event:
+-       kfree(iter);
+  }
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
