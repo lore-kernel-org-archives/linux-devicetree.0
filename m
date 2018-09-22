@@ -1,342 +1,403 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/2] hwmon: ina3221: Read channel input source info
- from DT
-Date: Sat, 22 Sep 2018 05:50:26 -0700
-Message-ID: <a7e6c311-eba4-e9b2-df64-9d02882a1dcb@roeck-us.net>
-References: <20180921223216.634-1-nicoleotsuka@gmail.com>
- <20180921223216.634-3-nicoleotsuka@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 12/27] drm/sun4i: Add basic support for DE3
+Date: Sat, 22 Sep 2018 21:19:12 +0800
+Message-ID: <CAGb2v65tt4S-k=AF2AmjQyEkUydzMimB8TT2Uiqmpf6G8qD1Cw@mail.gmail.com>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-13-jernej.skrabec@siol.net>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921223216.634-3-nicoleotsuka@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBYECTHOQKGQE2YZREGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180902072643.4917-13-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 09/21/2018 03:32 PM, Nicolin Chen wrote:
-> From: Nicolin Chen <nicolinc@nvidia.com>
-> 
-> An ina3221 chip has three input ports. Each port is used
-> to measure the voltage and current of its input source.
-> 
-> The DT binding now has defined bindings for their input
-> sources, so the driver should read these information and
-> handle accordingly.
-> 
-> This patch adds a new structure of input source specific
-> information including input source label, shunt resistor
-> value and its connection status. It exposes these labels
-> via sysfs and also disables those channels where there's
-> no input source being connected.
-> 
-
-I see you have decided to just display the disconnected channels.
-This is misleading, and I can not accept it. Please either use the
-is_visible callback to not display those channels at all, or have
-the _input attribute of disabled channels return -ENODATA (see
-'in[0-*]_enable' attribute in the ABI). If you implement the latter,
-I would suggest to also implement the _enable attribute.
-
-As mentioned in patch 1, I can not accept an implicitly mandatory
-label attribute. The property defining the label attribute will
-have to be optional and well defined to ensure that it matches
-the ABI.
-
-One more comment inline below.
-
-Thanks,
-Guenter
-
-> Signed-off-by: Nicolin Chen <nicolinc@nvidia.com>
+On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+>
+> Display Engine 3 is an upgrade of DE2 with new features like support for
+> 10 bit color formats and support for AFBC.
+>
+> Most of DE2 code works with DE3, except some small details.
+>
+> Add support for it.
+>
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > ---
-> Changelog
-> v2->v3:
->   * N/A
-> v1->v2:
->   * Added a structure for input source corresponding to DT bindings
->   * Moved shunt resistor value to the structure
->   * Defined in[123]_label sysfs nodes instead of name[123]_input
->   * Updated probe() function to get information from DT
->   * Updated ina3221 hwmon documentation for the labels
->   * Dropped dynamical group definition to keep all groups as they were
->   * * Will send an incremental patch later apart from this DT binding series
-> 
->   Documentation/hwmon/ina3221 |   1 +
->   drivers/hwmon/ina3221.c     | 126 +++++++++++++++++++++++++++++++++---
->   2 files changed, 117 insertions(+), 10 deletions(-)
-> 
-> diff --git a/Documentation/hwmon/ina3221 b/Documentation/hwmon/ina3221
-> index 0ff74854cb2e..2726038be5bd 100644
-> --- a/Documentation/hwmon/ina3221
-> +++ b/Documentation/hwmon/ina3221
-> @@ -22,6 +22,7 @@ Sysfs entries
->   -------------
->   
->   in[123]_input           Bus voltage(mV) channels
-> +in[123]_label           Voltage channel labels
->   curr[123]_input         Current(mA) measurement channels
->   shunt[123]_resistor     Shunt resistance(uOhm) channels
->   curr[123]_crit          Critical alert current(mA) setting, activates the
-> diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-> index e6b49500c52a..ba470fc53e27 100644
-> --- a/drivers/hwmon/ina3221.c
-> +++ b/drivers/hwmon/ina3221.c
-> @@ -41,6 +41,7 @@
->   #define INA3221_CONFIG_MODE_SHUNT	BIT(1)
->   #define INA3221_CONFIG_MODE_BUS		BIT(2)
->   #define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
-> +#define INA3221_CONFIG_CHx_EN(x)	BIT(14 - (x))
->   
->   #define INA3221_RSHUNT_DEFAULT		10000
->   
-> @@ -86,16 +87,28 @@ static const unsigned int register_channel[] = {
->   	[INA3221_WARN3] = INA3221_CHANNEL3,
->   };
->   
-> +/**
-> + * struct ina3221_input - channel input source specific information
-> + * @label: label of channel input source
-> + * @shunt_resistor: shunt resistor value of channel input source
-> + * @disconnected: connection status of channel input source
+>  drivers/gpu/drm/sun4i/sun8i_csc.c       | 96 +++++++++++++++++++++++--
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c     | 17 ++++-
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h     | 21 +++++-
+>  drivers/gpu/drm/sun4i/sun8i_ui_scaler.c |  8 ++-
+>  drivers/gpu/drm/sun4i/sun8i_ui_scaler.h |  1 +
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c  |  8 +++
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.h  |  2 +
+>  drivers/gpu/drm/sun4i/sun8i_vi_scaler.c | 34 ++++++++-
+>  drivers/gpu/drm/sun4i/sun8i_vi_scaler.h | 23 ++++++
+>  9 files changed, 197 insertions(+), 13 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_csc.c b/drivers/gpu/drm/sun4i/sun8i_csc.c
+> index b14925b40ccf..101901ccf2dc 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_csc.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_csc.c
+> @@ -34,6 +34,34 @@ static const u32 yvu2rgb[] = {
+>         0x000004A8, 0x00000000, 0x00000813, 0xFFFBAC4A,
+>  };
+>
+> +/*
+> + * DE3 has a bit different CSC units. Factors are in two's complement format.
+> + * First three have 17 bits for fractinal part and last two 2 bits. First
+> + * three values in each line are multiplication factor, 4th is difference,
+> + * which is subtracted from the input value before the multiplication and
+> + * last value is constant, which is added at the end.
+> + *
+> + * x' = c00 * (x + d0) + c01 * (y + d1) + c02 * (z + d2) + const0
+> + * y' = c10 * (x + d0) + c11 * (y + d1) + c12 * (z + d2) + const1
+> + * z' = c20 * (x + d0) + c21 * (y + d1) + c22 * (z + d2) + const2
+> + *
+> + * Please note that above formula is true only for Blender CSC. Other DE3 CSC
+> + * units takes only positive value for difference. From what can be deducted
+> + * from BSP driver code, those units probably automatically assume that
+> + * difference has to be subtracted.
 > + */
-> +struct ina3221_input {
-> +	const char *label;
-> +	int shunt_resistor;
-> +	bool disconnected;
+> +static const u32 yuv2rgb_de3[] = {
+> +       0x0002542a, 0x00000000, 0x0003312a, 0xffffffc0, 0x00000000,
+> +       0x0002542a, 0xffff376b, 0xfffe5fc3, 0xfffffe00, 0x00000000,
+> +       0x0002542a, 0x000408d3, 0x00000000, 0xfffffe00, 0x00000000,
 > +};
 > +
->   /**
->    * struct ina3221_data - device specific information
->    * @regmap: Register map of the device
->    * @fields: Register fields of the device
-> - * @shunt_resistors: Array of resistor values per channel
-> + * @inputs: Array of channel input source specific structures
->    */
->   struct ina3221_data {
->   	struct regmap *regmap;
->   	struct regmap_field *fields[F_MAX_FIELDS];
-> -	int shunt_resistors[INA3221_NUM_CHANNELS];
-> +	struct ina3221_input inputs[INA3221_NUM_CHANNELS];
->   };
->   
->   static int ina3221_read_value(struct ina3221_data *ina, unsigned int reg,
-> @@ -131,6 +144,17 @@ static ssize_t ina3221_show_bus_voltage(struct device *dev,
->   	return snprintf(buf, PAGE_SIZE, "%d\n", voltage_mv);
->   }
->   
-> +static ssize_t ina3221_show_label(struct device *dev,
-> +				  struct device_attribute *attr, char *buf)
+> +static const u32 yvu2rgb_de3[] = {
+> +       0x0002542a, 0x0003312a, 0x00000000, 0xffffffc0, 0x00000000,
+> +       0x0002542a, 0xfffe5fc3, 0xffff376b, 0xfffffe00, 0x00000000,
+> +       0x0002542a, 0x00000000, 0x000408d3, 0xfffffe00, 0x00000000,
+> +};
+> +
+>  static void sun8i_csc_set_coefficients(struct regmap *map, u32 base,
+>                                        enum sun8i_csc_mode mode)
+>  {
+> @@ -61,6 +89,38 @@ static void sun8i_csc_set_coefficients(struct regmap *map, u32 base,
+>         }
+>  }
+>
+> +static void sun8i_de3_ccsc_set_coefficients(struct regmap *map, int layer,
+> +                                           enum sun8i_csc_mode mode)
 > +{
-> +	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
-> +	struct ina3221_data *ina = dev_get_drvdata(dev);
-> +	unsigned int channel = sd_attr->index;
-> +	struct ina3221_input *input = &ina->inputs[channel];
+> +       const u32 *table;
+> +       int i, j;
 > +
-> +	return snprintf(buf, PAGE_SIZE, "%s\n", input->label);
-> +}
+> +       switch (mode) {
+> +       case SUN8I_CSC_MODE_YUV2RGB:
+> +               table = yuv2rgb_de3;
+> +               break;
+> +       case SUN8I_CSC_MODE_YVU2RGB:
+> +               table = yvu2rgb_de3;
+> +               break;
+> +       default:
+> +               DRM_WARN("Wrong CSC mode specified.\n");
+> +               return;
+> +       }
 > +
->   static ssize_t ina3221_show_shunt_voltage(struct device *dev,
->   					  struct device_attribute *attr,
->   					  char *buf)
-> @@ -155,7 +179,8 @@ static ssize_t ina3221_show_current(struct device *dev,
->   	struct ina3221_data *ina = dev_get_drvdata(dev);
->   	unsigned int reg = sd_attr->index;
->   	unsigned int channel = register_channel[reg];
-> -	int resistance_uo = ina->shunt_resistors[channel];
-> +	struct ina3221_input *input = &ina->inputs[channel];
-> +	int resistance_uo = input->shunt_resistor;
->   	int val, current_ma, voltage_nv, ret;
->   
->   	ret = ina3221_read_value(ina, reg, &val);
-> @@ -176,7 +201,8 @@ static ssize_t ina3221_set_current(struct device *dev,
->   	struct ina3221_data *ina = dev_get_drvdata(dev);
->   	unsigned int reg = sd_attr->index;
->   	unsigned int channel = register_channel[reg];
-> -	int resistance_uo = ina->shunt_resistors[channel];
-> +	struct ina3221_input *input = &ina->inputs[channel];
-> +	int resistance_uo = input->shunt_resistor;
->   	int val, current_ma, voltage_uv, ret;
->   
->   	ret = kstrtoint(buf, 0, &current_ma);
-> @@ -209,11 +235,9 @@ static ssize_t ina3221_show_shunt(struct device *dev,
->   	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
->   	struct ina3221_data *ina = dev_get_drvdata(dev);
->   	unsigned int channel = sd_attr->index;
-> -	unsigned int resistance_uo;
-> +	struct ina3221_input *input = &ina->inputs[channel];
->   
-> -	resistance_uo = ina->shunt_resistors[channel];
-> -
-> -	return snprintf(buf, PAGE_SIZE, "%d\n", resistance_uo);
-> +	return snprintf(buf, PAGE_SIZE, "%d\n", input->shunt_resistor);
->   }
->   
->   static ssize_t ina3221_set_shunt(struct device *dev,
-> @@ -223,6 +247,7 @@ static ssize_t ina3221_set_shunt(struct device *dev,
->   	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
->   	struct ina3221_data *ina = dev_get_drvdata(dev);
->   	unsigned int channel = sd_attr->index;
-> +	struct ina3221_input *input = &ina->inputs[channel];
->   	int val;
->   	int ret;
->   
-> @@ -232,7 +257,7 @@ static ssize_t ina3221_set_shunt(struct device *dev,
->   
->   	val = clamp_val(val, 1, INT_MAX);
->   
-> -	ina->shunt_resistors[channel] = val;
-> +	input->shunt_resistor = val;
->   
->   	return count;
->   }
-> @@ -261,6 +286,14 @@ static SENSOR_DEVICE_ATTR(in2_input, S_IRUGO,
->   static SENSOR_DEVICE_ATTR(in3_input, S_IRUGO,
->   		ina3221_show_bus_voltage, NULL, INA3221_BUS3);
->   
-> +/* voltage channel label */
-> +static SENSOR_DEVICE_ATTR(in1_label, 0444,
-> +		ina3221_show_label, NULL, INA3221_CHANNEL1);
-> +static SENSOR_DEVICE_ATTR(in2_label, 0444,
-> +		ina3221_show_label, NULL, INA3221_CHANNEL2);
-> +static SENSOR_DEVICE_ATTR(in3_label, 0444,
-> +		ina3221_show_label, NULL, INA3221_CHANNEL3);
-> +
->   /* calculated current */
->   static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO,
->   		ina3221_show_current, NULL, INA3221_SHUNT1);
-> @@ -320,6 +353,7 @@ static SENSOR_DEVICE_ATTR(in6_input, S_IRUGO,
->   static struct attribute *ina3221_attrs[] = {
->   	/* channel 1 */
->   	&sensor_dev_attr_in1_input.dev_attr.attr,
-> +	&sensor_dev_attr_in1_label.dev_attr.attr,
->   	&sensor_dev_attr_curr1_input.dev_attr.attr,
->   	&sensor_dev_attr_shunt1_resistor.dev_attr.attr,
->   	&sensor_dev_attr_curr1_crit.dev_attr.attr,
-> @@ -330,6 +364,7 @@ static struct attribute *ina3221_attrs[] = {
->   
->   	/* channel 2 */
->   	&sensor_dev_attr_in2_input.dev_attr.attr,
-> +	&sensor_dev_attr_in2_label.dev_attr.attr,
->   	&sensor_dev_attr_curr2_input.dev_attr.attr,
->   	&sensor_dev_attr_shunt2_resistor.dev_attr.attr,
->   	&sensor_dev_attr_curr2_crit.dev_attr.attr,
-> @@ -340,6 +375,7 @@ static struct attribute *ina3221_attrs[] = {
->   
->   	/* channel 3 */
->   	&sensor_dev_attr_in3_input.dev_attr.attr,
-> +	&sensor_dev_attr_in3_label.dev_attr.attr,
->   	&sensor_dev_attr_curr3_input.dev_attr.attr,
->   	&sensor_dev_attr_shunt3_resistor.dev_attr.attr,
->   	&sensor_dev_attr_curr3_crit.dev_attr.attr,
-> @@ -370,6 +406,60 @@ static const struct regmap_config ina3221_regmap_config = {
->   	.volatile_table = &ina3221_volatile_table,
->   };
->   
-> +static int ina3221_probe_child_from_dt(struct device *dev,
-> +				       struct device_node *child,
-> +				       struct ina3221_data *ina)
-> +{
-> +	struct ina3221_input *input;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = of_property_read_u32(child, "input-id", &val);
-> +	if (ret) {
-> +		dev_err(dev, "missing input-id property of %s\n", child->name);
-> +		return ret;
-> +	} else if (val < 1 || val > INA3221_NUM_CHANNELS) {
-> +		dev_err(dev, "invalid input-id %d of %s\n", val, child->name);
-> +		return ret;
-> +	}
-> +
-> +	input = &ina->inputs[val - 1];
-> +
-> +	/* Log the disconnected channel input */
-> +	if (!of_device_is_available(child)) {
-> +		input->disconnected = true;
-> +		return 0;
-> +	}
-> +
-> +	/* Log the connected channel input */
-> +	input->label = child->name;
-> +
-> +	/* Overwrite default shunt resistor value optionally */
-> +	if (!of_property_read_u32(child, "shunt-resistor", &val))
-> +		input->shunt_resistor = val;
-> +
-> +	return 0;
-> +}
-> +
-> +static int ina3221_probe_from_dt(struct device *dev, struct ina3221_data *ina)
-> +{
-> +	const struct device_node *np = dev->of_node;
-> +	struct device_node *child;
-> +	int ret;
-> +
-> +	/* Compatible with non-DT platforms */
-> +	if (!np)
-> +		return 0;
-> +
-> +	for_each_child_of_node(np, child) {
-> +		ret = ina3221_probe_child_from_dt(dev, child, ina);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->   static int ina3221_probe(struct i2c_client *client,
->   			 const struct i2c_device_id *id)
->   {
-> @@ -377,6 +467,7 @@ static int ina3221_probe(struct i2c_client *client,
->   	struct ina3221_data *ina;
->   	struct device *hwmon_dev;
->   	int i, ret;
-> +	u16 mask;
->   
->   	ina = devm_kzalloc(dev, sizeof(*ina), GFP_KERNEL);
->   	if (!ina)
-> @@ -399,7 +490,13 @@ static int ina3221_probe(struct i2c_client *client,
->   	}
->   
->   	for (i = 0; i < INA3221_NUM_CHANNELS; i++)
-> -		ina->shunt_resistors[i] = INA3221_RSHUNT_DEFAULT;
-> +		ina->inputs[i].shunt_resistor = INA3221_RSHUNT_DEFAULT;
-> +
-> +	ret = ina3221_probe_from_dt(dev, ina);
-> +	if (ret) {
-> +		dev_err(dev, "Unable to probe from device treee\n");
-> +		return ret;
-> +	}
->   
->   	ret = regmap_field_write(ina->fields[F_RST], true);
->   	if (ret) {
-> @@ -407,6 +504,15 @@ static int ina3221_probe(struct i2c_client *client,
->   		return ret;
->   	}
->   
-> +	/* Disable channels if their inputs are disconnected */
-> +	for (i = 0, mask = 0; i < INA3221_NUM_CHANNELS; i++) {
-> +		if (ina->inputs[i].disconnected)
-> +			mask |= INA3221_CONFIG_CHx_EN(i);
-> +	}
+> +       for (i = 0; i < 3; i++) {
+> +               for (j = 0; j < 3; j++)
+> +                       regmap_write(map,
+> +                                    SUN8I_MIXER_BLEND_CSC_COEFF(DE3_BLD_BASE,
+> +                                                                layer, i, j),
+> +                                    table[i * 5 + j]);
 
-Consequently, you should also _enable_ channels which are not explicitly disabled.
-This can be tricky since you'll have to distinguish non-DT and DT configuration
-and retain the original configuration if no channel configuration data is available
-from devicetree.
+Given that the first three values occupy contiguous addresses,
+you can use regmap_bulk_write() here.
 
-> +	ret = regmap_update_bits(ina->regmap, INA3221_CONFIG, mask, 0);
-> +	if (ret)
-> +		return ret;
+> +               regmap_write(map,
+> +                            SUN8I_MIXER_BLEND_CSC_CONST(DE3_BLD_BASE,
+> +                                                        layer, i),
+> +                            SUN8I_MIXER_BLEND_CSC_CONST_VAL(table[i * 5 + 3],
+> +                                                            table[i * 5 + 4]));
+
+Nit: Using a two-dimension array might make it easier to read.
+
+> +       }
+> +}
 > +
->   	hwmon_dev = devm_hwmon_device_register_with_groups(dev,
->   							   client->name,
->   							   ina, ina3221_groups);
-> 
+>  static void sun8i_csc_enable(struct regmap *map, u32 base, bool enable)
+>  {
+>         u32 val;
+> @@ -73,21 +133,45 @@ static void sun8i_csc_enable(struct regmap *map, u32 base, bool enable)
+>         regmap_update_bits(map, SUN8I_CSC_CTRL(base), SUN8I_CSC_CTRL_EN, val);
+>  }
+>
+> +static void sun8i_de3_ccsc_enable(struct regmap *map, int layer, bool enable)
+> +{
+> +       u32 val, mask;
+> +
+> +       mask = SUN8I_MIXER_BLEND_CSC_CTL_EN(layer);
+> +
+> +       if (enable)
+> +               val = mask;
+> +       else
+> +               val = 0;
+> +
+> +       regmap_update_bits(map, SUN8I_MIXER_BLEND_CSC_CTL(DE3_BLD_BASE),
+> +                          mask, val);
+> +}
+> +
+>  void sun8i_csc_set_ccsc_coefficients(struct sun8i_mixer *mixer, int layer,
+>                                      enum sun8i_csc_mode mode)
+>  {
+> -       u32 base;
+> +       if (!mixer->cfg->is_de3) {
+> +               u32 base;
+
+You could rewrite this as
+
+    if (mixer->cfg->is_de3) {
+               sun8i_de3_ccsc_set_coefficients(mixer->engine.regs,
+                                               layer, mode);
+               return;
+    }
+
+That way you don't need to change the indentation on the existing lines.
+I suppose this is more of a personal preference. The downside is the control
+flow is slightly more complicated.
+
+> -       base = ccsc_base[mixer->cfg->ccsc][layer];
+> +               base = ccsc_base[mixer->cfg->ccsc][layer];
+>
+> -       sun8i_csc_set_coefficients(mixer->engine.regs, base, mode);
+> +               sun8i_csc_set_coefficients(mixer->engine.regs, base, mode);
+> +       } else {
+> +               sun8i_de3_ccsc_set_coefficients(mixer->engine.regs,
+> +                                               layer, mode);
+> +       }
+>  }
+>
+>  void sun8i_csc_enable_ccsc(struct sun8i_mixer *mixer, int layer, bool enable)
+>  {
+> -       u32 base;
+> +       if (!mixer->cfg->is_de3) {
+> +               u32 base;
+>
+> -       base = ccsc_base[mixer->cfg->ccsc][layer];
+> +               base = ccsc_base[mixer->cfg->ccsc][layer];
+>
+> -       sun8i_csc_enable(mixer->engine.regs, base, enable);
+> +               sun8i_csc_enable(mixer->engine.regs, base, enable);
+> +       } else {
+> +               sun8i_de3_ccsc_enable(mixer->engine.regs, layer, enable);
+> +       }
+>  }
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> index 743941a33d88..a9218abf0935 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> @@ -460,8 +460,21 @@ static int sun8i_mixer_bind(struct device *dev, struct device *master,
+>         base = sun8i_blender_base(mixer);
+>
+>         /* Reset the registers */
+> -       for (i = 0x0; i < 0x20000; i += 4)
+> -               regmap_write(mixer->engine.regs, i, 0);
+> +       if (mixer->cfg->is_de3) {
+> +               for (i = 0x0; i < 0x3000; i += 4)
+> +                       regmap_write(mixer->engine.regs, i, 0);
+> +               for (i = 0x20000; i < 0x40000; i += 4)
+> +                       regmap_write(mixer->engine.regs, i, 0);
+> +               for (i = 0x70000; i < 0x88000; i += 4)
+> +                       regmap_write(mixer->engine.regs, i, 0);
+> +               for (i = 0xa0000; i < 0xb0000; i += 4)
+> +                       regmap_write(mixer->engine.regs, i, 0);
+> +               for (i = 0xd0000; i < 0xe0000; i += 4)
+> +                       regmap_write(mixer->engine.regs, i, 0);
+
+Could you use the macros *_BASE and *_SIZE here? That would make
+it more obviously what parts you're clearing.
+
+The last offset, 0xd0000, isn't even defined in the DE3 spec.
+
+> +       } else {
+> +               for (i = 0x0; i < 0x20000; i += 4)
+> +                       regmap_write(mixer->engine.regs, i, 0);
+> +       }
+>
+>         /* Enable the mixer */
+>         regmap_write(mixer->engine.regs, SUN8I_MIXER_GLOBAL_CTL,
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h b/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> index 020b0a097c84..4c9a442bbb44 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> @@ -33,6 +33,10 @@
+>  #define DE2_CH_BASE                            0x2000
+>  #define DE2_CH_SIZE                            0x1000
+>
+> +#define DE3_BLD_BASE                           0x0800
+> +#define DE3_CH_BASE                            0x1000
+> +#define DE3_CH_SIZE                            0x0800
+> +
+>  #define SUN8I_MIXER_BLEND_PIPE_CTL(base)       ((base) + 0)
+>  #define SUN8I_MIXER_BLEND_ATTR_FCOLOR(base, x) ((base) + 0x4 + 0x10 * (x))
+>  #define SUN8I_MIXER_BLEND_ATTR_INSIZE(base, x) ((base) + 0x8 + 0x10 * (x))
+> @@ -47,6 +51,11 @@
+>  #define SUN8I_MIXER_BLEND_CK_MAX(base, x)      ((base) + 0xc0 + 0x04 * (x))
+>  #define SUN8I_MIXER_BLEND_CK_MIN(base, x)      ((base) + 0xe0 + 0x04 * (x))
+>  #define SUN8I_MIXER_BLEND_OUTCTL(base)         ((base) + 0xfc)
+> +#define SUN8I_MIXER_BLEND_CSC_CTL(base)                ((base) + 0x100)
+> +#define SUN8I_MIXER_BLEND_CSC_COEFF(base, layer, x, y) \
+> +       ((base) + 0x110 + (layer) * 0x30 +  (x) * 0x10 + 4 * (y))
+> +#define SUN8I_MIXER_BLEND_CSC_CONST(base, layer, i) \
+> +       ((base) + 0x110 + (layer) * 0x30 +  (i) * 0x10 + 0x0c)
+
+Should these have a DE3 prefix?
+
+>
+>  #define SUN8I_MIXER_BLEND_PIPE_CTL_EN_MSK      GENMASK(12, 8)
+>  #define SUN8I_MIXER_BLEND_PIPE_CTL_EN(pipe)    BIT(8 + pipe)
+> @@ -61,6 +70,9 @@
+>
+>  #define SUN8I_MIXER_BLEND_OUTCTL_INTERLACED    BIT(1)
+>
+> +#define SUN8I_MIXER_BLEND_CSC_CTL_EN(ch)       BIT(ch)
+> +#define SUN8I_MIXER_BLEND_CSC_CONST_VAL(d, c)  (((d) << 16) | ((c) & 0xffff))
+> +
+
+Same here.
+
+>  #define SUN8I_MIXER_FBFMT_ARGB8888     0
+>  #define SUN8I_MIXER_FBFMT_ABGR8888     1
+>  #define SUN8I_MIXER_FBFMT_RGBA8888     2
+
+[...]
+
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> index 46f0237c17bb..3d0ad64178ea 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> @@ -30,6 +30,8 @@
+>  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_RGB_MODE                BIT(15)
+>  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_OFFSET    8
+>  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_MASK      GENMASK(12, 8)
+> +#define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK      GENMASK(31, 24)
+> +#define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(x)                ((x) << 24)
+
+DE3 prefix?
+
+>
+>  struct sun8i_mixer;
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c
+> index 8697afc36023..22e1ed5cd7a4 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c
+> @@ -835,7 +835,10 @@ static const u32 bicubic4coefftab32[480] = {
+>
+>  static inline u32 sun8i_vi_scaler_base(struct sun8i_mixer *mixer, int channel)
+>  {
+> -       return DE2_VI_SCALER_BASE + DE2_VI_SCALER_SIZE * channel;
+> +       if (mixer->cfg->is_de3)
+> +               return DE3_VI_SCALER_BASE + DE3_VI_SCALER_SIZE * channel;
+> +       else
+> +               return DE2_VI_SCALER_BASE + DE2_VI_SCALER_SIZE * channel;
+>  }
+>
+>  static int sun8i_vi_scaler_coef_index(unsigned int step)
+> @@ -951,6 +954,35 @@ void sun8i_vi_scaler_setup(struct sun8i_mixer *mixer, int layer,
+>                 cvphase = vphase;
+>         }
+>
+> +       if (mixer->cfg->is_de3) {
+> +               u32 val;
+> +
+> +               if (format->hsub == 1 && format->vsub == 1)
+> +                       val = SUN8I_SCALER_VSU_SCALE_MODE_UI;
+> +               else
+> +                       val = SUN8I_SCALER_VSU_SCALE_MODE_NORMAL;
+> +
+> +               regmap_write(mixer->engine.regs,
+> +                            SUN8I_SCALER_VSU_SCALE_MODE(base), val);
+
+The remaining settings seem to be related to the edge detection scaling
+method. Since you aren't supporting it, are they necessary?
+
+> +               regmap_write(mixer->engine.regs,
+> +                            SUN8I_SCALER_VSU_DIR_THR(base),
+> +                            SUN8I_SCALER_VSU_SUB_ZERO_DIR_THR(0) |
+> +                            SUN8I_SCALER_VSU_ZERO_DIR_THR(0) |
+> +                            SUN8I_SCALER_VSU_HORZ_DIR_THR(0xff) |
+> +                            SUN8I_SCALER_VSU_VERT_DIR_THR(1));
+> +               regmap_write(mixer->engine.regs,
+> +                            SUN8I_SCALER_VSU_EDGE_THR(base),
+> +                            SUN8I_SCALER_VSU_EDGE_SHIFT(8) |
+> +                            SUN8I_SCALER_VSU_EDGE_OFFSET(0));
+> +               regmap_write(mixer->engine.regs,
+> +                            SUN8I_SCALER_VSU_EDSCL_CTRL(base), 0);
+> +               regmap_write(mixer->engine.regs,
+> +                            SUN8I_SCALER_VSU_ANGLE_THR(base),
+> +                            SUN8I_SCALER_VSU_ANGLE_SHIFT(2) |
+> +                            SUN8I_SCALER_VSU_ANGLE_OFFSET(0));
+> +       }
+> +
+>         regmap_write(mixer->engine.regs,
+>                      SUN8I_SCALER_VSU_OUTSIZE(base), outsize);
+>         regmap_write(mixer->engine.regs,
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h
+> index cd015405f66d..c322f5652481 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h
+> @@ -15,6 +15,9 @@
+>  #define DE2_VI_SCALER_BASE 0x20000
+>  #define DE2_VI_SCALER_SIZE 0x20000
+>
+> +#define DE3_VI_SCALER_BASE 0x20000
+> +#define DE3_VI_SCALER_SIZE 0x08000
+> +
+>  /* this two macros assumes 16 fractional bits which is standard in DRM */
+>  #define SUN8I_VI_SCALER_SCALE_MIN              1
+>  #define SUN8I_VI_SCALER_SCALE_MAX              ((1UL << 20) - 1)
+> @@ -25,6 +28,11 @@
+>  #define SUN8I_VI_SCALER_SIZE(w, h)             (((h) - 1) << 16 | ((w) - 1))
+>
+>  #define SUN8I_SCALER_VSU_CTRL(base)            ((base) + 0x0)
+> +#define SUN8I_SCALER_VSU_SCALE_MODE(base)      ((base) + 0x10)
+> +#define SUN8I_SCALER_VSU_DIR_THR(base)         ((base) + 0x20)
+> +#define SUN8I_SCALER_VSU_EDGE_THR(base)                ((base) + 0x24)
+> +#define SUN8I_SCALER_VSU_EDSCL_CTRL(base)      ((base) + 0x28)
+> +#define SUN8I_SCALER_VSU_ANGLE_THR(base)       ((base) + 0x2c)
+
+DE3 prefix for the new ones please.
+
+>  #define SUN8I_SCALER_VSU_OUTSIZE(base)         ((base) + 0x40)
+>  #define SUN8I_SCALER_VSU_YINSIZE(base)         ((base) + 0x80)
+>  #define SUN8I_SCALER_VSU_YHSTEP(base)          ((base) + 0x88)
+> @@ -46,6 +54,21 @@
+>  #define SUN8I_SCALER_VSU_CTRL_EN               BIT(0)
+>  #define SUN8I_SCALER_VSU_CTRL_COEFF_RDY                BIT(4)
+>
+> +#define SUN8I_SCALER_VSU_SUB_ZERO_DIR_THR(x)   (((x) << 24) & 0xFF)
+> +#define SUN8I_SCALER_VSU_ZERO_DIR_THR(x)       (((x) << 16) & 0xFF)
+> +#define SUN8I_SCALER_VSU_HORZ_DIR_THR(x)       (((x) << 8) & 0xFF)
+> +#define SUN8I_SCALER_VSU_VERT_DIR_THR(x)       ((x) & 0xFF)
+> +
+> +#define SUN8I_SCALER_VSU_SCALE_MODE_UI         0
+> +#define SUN8I_SCALER_VSU_SCALE_MODE_NORMAL     1
+> +#define SUN8I_SCALER_VSU_SCALE_MODE_ED_SCALE   2
+> +
+> +#define SUN8I_SCALER_VSU_EDGE_SHIFT(x)         (((x) << 16) & 0xF)
+> +#define SUN8I_SCALER_VSU_EDGE_OFFSET(x)                ((x) & 0xFF)
+> +
+> +#define SUN8I_SCALER_VSU_ANGLE_SHIFT(x)                (((x) << 16) & 0xF)
+> +#define SUN8I_SCALER_VSU_ANGLE_OFFSET(x)       ((x) & 0xFF)
+> +
+
+Same here.
+
+Regards
+ChenYu
+
+>  void sun8i_vi_scaler_enable(struct sun8i_mixer *mixer, int layer, bool enable);
+>  void sun8i_vi_scaler_setup(struct sun8i_mixer *mixer, int layer,
+>                            u32 src_w, u32 src_h, u32 dst_w, u32 dst_h,
+> --
+> 2.18.0
+>
