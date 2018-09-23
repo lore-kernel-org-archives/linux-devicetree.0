@@ -1,108 +1,99 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Sun, 23 Sep 2018 06:31:14 -0400
-Message-ID: <CAK7LNATkkOiYPj2RLubcgZ_z59Bhz4GkgWqPMbnaHBk7EisXLg@mail.gmail.com>
-References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
- <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
- <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com> <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v8 0/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+Date: Sun, 23 Sep 2018 16:03:11 +0530
+Message-ID: <1537698793-15285-1-git-send-email-tdas@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild <linux-kbuild@vger.ker>
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-2018-09-13 11:51 GMT-04:00 Geert Uytterhoeven <geert@linux-m68k.org>:
-> Hi Yamada-san,
->
-> On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> 2018-09-12 0:40 GMT+09:00 Rob Herring <robh@kernel.org>:
->> > On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
->> >> There is nothing arch specific about building dtb files other than their
->> >> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
->> >> The dependencies and supported targets are all slightly different.
->> >> Also, a cross-compiler for each arch is needed, but really the host
->> >> compiler preprocessor is perfectly fine for building dtbs. Move the
->> >> build rules to a common location and remove the arch specific ones. This
->> >> is done in a single step to avoid warnings about overriding rules.
->> >>
->> >> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
->> >> These pull in several dependencies some of which need a target compiler
->> >> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
->> >> All that is really needed is dtc, so adjust the dependencies to only be
->> >> dtc.
->> >>
->> >> This change enables support 'dtbs_install' on some arches which were
->> >> missing the target.
->> >
->> > [...]
->> >
->> >> @@ -1215,6 +1215,33 @@ kselftest-merge:
->> >>                 $(srctree)/tools/testing/selftests/*/config
->> >>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
->> >>
->> >> +# ---------------------------------------------------------------------------
->> >> +# Devicetree files
->> >> +
->> >> +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
->> >> +dtstree := arch/$(SRCARCH)/boot/dts
->> >> +endif
->> >> +
->> >> +ifdef CONFIG_OF_EARLY_FLATTREE
->> >
->> > This can be true when dtstree is unset. So this line should be this
->> > instead to fix the 0-day reported error:
->> >
->> > ifneq ($(dtstree),)
->> >
->> >> +
->> >> +%.dtb : scripts_dtc
->> >> +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
->> >> +
->> >> +PHONY += dtbs dtbs_install
->> >> +dtbs: scripts_dtc
->> >> +       $(Q)$(MAKE) $(build)=$(dtstree)
->> >> +
->> >> +dtbs_install: dtbs
->> >> +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
->> >> +
->> >> +all: dtbs
->> >> +
->> >> +endif
->>
->>
->> Ah, right.
->> Even x86 can enable OF and OF_UNITTEST.
->>
->>
->>
->> Another solution might be,
->> guard it by 'depends on ARCH_SUPPORTS_OF'.
->>
->>
->>
->> This is actually what ACPI does.
->>
->> menuconfig ACPI
->>         bool "ACPI (Advanced Configuration and Power Interface) Support"
->>         depends on ARCH_SUPPORTS_ACPI
->>          ...
->
-> ACPI is a real platform feature, as it depends on firmware.
->
-> CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
-> even if it has ACPI ;-)
->
+ [v8]
+   * Address comments to update code to take cpufreq_hw phandle and index from
+     the CPU nodes.
+   * Updated the Documentation for the above change in DT.
+   * Updated logic for assigning 'qcom_freq_domain_map' for related CPUs.
+   * Clock input to the HW block is taken from DT which has been updated in
+     code and Device tree documentation.
 
-OK, understood.
+ [v7]
+   * Updated the logic to check for related CPUs.
 
-Thanks!
+ [v6]
+   * Renamed match table 'qcom_cpufreq_hw_match'.
+   * Renamed 'qcom_read_lut' to 'qcom_cpufreq_hw_read_lut'.
+   * Updated the logic to check for related CPUs at the beginning of the
+     'qcom_cpu_resources_init'.
+   * Use devm_ioremap_resource instead of devm_ioremap.
+   * Update the use of of_node_put to handle error conditions.
+   * Use policy->cached_resolved_idx in fast switch callback.
+   * Keep precalculated offsets 'reg_bases'.
+   * XO clock is taken from Device tree.
+   * Update documentation binding for clocks/clock-names.
+   * Minor comments in Kconfig.arm.
+   * Comments to move dev_info to dev_dbg.
 
+ [v5]
+   * Remove mapping different register regions of perf/lut/enable,
+     instead map the entire HW region.
+   * Add reg_offset/cpufreq_qcom_std_offsets to be supplied as device data.
+   * Check of src == 0 during lut read.
+   * Add of_node_put(cpu_np) in qcom_get_related_cpus
+   * Update the qcom_cpu_resources_init for register offset data,
+     and cleanup the related cpus to keep a single copy of CPUfreq.
+   * Replace FW with HW, update Kconfig, rename filename qcom-cpufreq-hw.c
+   * Update the documentation binding to reflect the changes of mapping the
+   * entire HW region.
 
+ [v4]
+   * Fixed console messages as per comments.
+   * Return error from qcom_resources_init()
+     in the cases where failed to get frequency domain.
+   * Rename cpu_dev to cpu_np in qcom_resources_init,
+     qcom_get_related_cpus(). Also use temp variable freq_np in
+     qcom_get_related_cpus().
+   * Update qcom_cpufreq_fw_get() to use the policy data to incoporate
+     the hotplug use case.
+   * Update code to use of fast_switching.
+   * Check for !c->max_cores instead of cpumask_empty in
+     qcom_get_related_cpus().
+   * Update the logic of assigning 'c' to qcom_freq_domain_map[cpu].
 
--- 
-Best Regards
-Masahiro Yamada
+ [v3]
+   * Remove index check from 'qcom_cpufreq_fw_target_index'.
+   * Update the Documentation binding to add the platform specific properties in
+     the CPU nodes, node name "qcom,freq-domain".
+   * Update return value to '0' from -ENODEV from 'qcom_cpufreq_fw_get'.
+   * Update the logic for boost frequency to use local variables instead of
+     cpufreq driver data in 'qcom_read_lut'.
+   * Update the logic in 'qcom_get_related_cpus' to find the related cpus.
+   * Update the reg-names to remove "_base" and also update the binding with the
+     description of these registers.
+   * Update the logic in 'qcom_resources_init' to address the new device tree
+     notation of handling the frequency domain phandles.
+
+ [v2]
+   * Fixed the alignment issues in "qcom_cpufreq_fw_target_index" for dev_err and
+     also for "qcom_cpu_resources_init".
+   * Removed ret = 0 from qcom_get_related_cpus and added to check for
+     cpu_mask_empty to return -ENOENT.
+   * Fixes qcom_cpu_resources_init function
+   * Remove initialization of 'index'
+   * Check for valid 'c'
+   * Removed initialization of 'prev_cc' from 'qcom_read_lut'.
+
+Taniya Das (2):
+  dt-bindings: cpufreq: Introduce QCOM CPUFREQ Firmware bindings
+  cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
+
+ .../bindings/cpufreq/cpufreq-qcom-hw.txt           | 169 ++++++++++
+ drivers/cpufreq/Kconfig.arm                        |  11 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/qcom-cpufreq-hw.c                  | 354 +++++++++++++++++++++
+ 4 files changed, 535 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-qcom-hw.txt
+ create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
