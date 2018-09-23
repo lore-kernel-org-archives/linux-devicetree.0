@@ -1,67 +1,62 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash
- controller driver
-Date: Sun, 23 Sep 2018 13:34:51 +0200
-Message-ID: <20180923133451.78c95cef@xps13>
-References: <1537199260-7280-1-git-send-email-christophe.kerello@st.com>
-        <1537199260-7280-3-git-send-email-christophe.kerello@st.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v4 0/2] Reworked rk3288-tinker-s devicetree
+Date: Sun, 23 Sep 2018 13:38:05 +0200
+Message-ID: <20180923113807.11558-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537199260-7280-3-git-send-email-christophe.kerello@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: christophe.kerello@st.com
-Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
+Hi David,
 
-<christophe.kerello@st.com> wrote on Mon, 17 Sep 2018 17:47:39 +0200:
+I've adpated your patches 1+2 like so and would like to add them this way
+later on. Biggest change is of course making patch 1 solely about moving
+the shared parts to the dtsi and adding the tinker-s.dts including the
+emmc in the second patch.
 
-> From: Christophe Kerello <christophe.kerello@st.com>
-> 
-> The driver adds the support for the STMicroelectronics FMC2 NAND
-> Controller found on STM32MP SOCs.
-> 
-> This patch is based on FMC2 command sequencer.
-> The purpose of the command sequencer is to facilitate the programming
-> and the reading of NAND flash pages with the ECC and to free the CPU
-> of sequencing tasks.
-> It requires one DMA channel for write and two DMA channels for read
-> operations.
-> 
-> Only NAND_ECC_HW mode is actually supported.
-> The driver supports a maximum 8k page size.
-> The following ECC strength and step size are currently supported:
->  - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
->  - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
->  - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended ecc
->    based on HAMMING)
-> 
-> This patch has been tested on Micron MT29F8G08ABACAH4 and
-> MT29F8G16ABACAH4
-> 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> ---
+Apart from that you can also see some previously missing style-related
+fixes. For example patch subject lines are somewhat specific, to allow
+people browsing the git history to realize the core patch contents just
+from the "headline" and also use the "correct" prefixes which vary
+depending on the subsystem your changing.
+
+For future patches you can just do a "git log --oneline arch/arm/boot/dts"
+(change directory depending on location of the change of course), to
+see that arm32 dts use "ARM: dts: $soc-vendor: foo".
 
 
-[...]
+Also providing a commit message describing the individual change
+in a bit more detail is important.
 
-> +/* NAND callbacks setup */
-> +static void stm32_fmc2_nand_callbacks_setup(struct stm32_fmc2 *fmc2)
-> +{
-> +	struct nand_chip *chip = &fmc2->chip;
-> +
-> +	/* Specific callbacks to read/write a page */
-> +	chip->ecc.correct = stm32_fmc2_ham_correct;
-> +	chip->ecc.write_page = stm32_fmc2_sequencer_write_page;
-> +	chip->ecc.read_page = stm32_fmc2_sequencer_read_page;
-> +	chip->ecc.write_page_raw = stm32_fmc2_sequencer_write_page_raw;
-> +	chip->ecc.read_page_raw = stm32_fmc2_sequencer_read_page_raw;
-
-Are you sure all the tests in mtd-utils are successful?
+The wifi patch is a different issue, so I'll reply there.
 
 
-Thanks,
-Miquèl
+Heiko
+
+David Summers (2):
+  ARM: dts: rockchip: move shared tinker-board nodes to a common dtsi
+  ARM: dts: rockchip: add rk3288-based Tinker board S
+
+ .../devicetree/bindings/arm/rockchip.txt      |   4 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/rk3288-tinker-s.dts         |  26 +
+ arch/arm/boot/dts/rk3288-tinker.dts           | 498 +----------------
+ arch/arm/boot/dts/rk3288-tinker.dtsi          | 504 ++++++++++++++++++
+ 5 files changed, 537 insertions(+), 496 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3288-tinker-s.dts
+ create mode 100644 arch/arm/boot/dts/rk3288-tinker.dtsi
+
+-- 
+2.18.0
