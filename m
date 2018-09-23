@@ -1,136 +1,189 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] mtd: rawnand: denali: add DT property to specify skipped
- bytes in OOB
-Date: Sun, 23 Sep 2018 06:38:40 -0400
-Message-ID: <CAK7LNAR0=1zAWkf9c4mYgLrJNmKR=8=mi6idWaaeuN4uHQVjug@mail.gmail.com>
-References: <1536317783-4942-1-git-send-email-yamada.masahiro@socionext.com>
- <20180907160822.319047c8@bbrezillon> <CAK7LNAQJOD3mxwbiOSn5wpDsU23DhZcx9QB_ufFZB8LUnh1KdQ@mail.gmail.com>
- <20180907165348.3e0027ee@bbrezillon> <CAK7LNAT3ZjdW3ENekNJq=26SAh=tXdirmhHyA9qDGnwpXQ6Arg@mail.gmail.com>
- <20180922094111.1c2969e8@xps13> <20180922101116.7c9b4767@bbrezillon>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100
+ 9-axis magnetometer
+Date: Sun, 23 Sep 2018 14:01:15 +0300
+Message-ID: <20180923110115.vjnmfssmeq3i37pf@mwanda>
+References: <20180920131340.6699-1-songqiang1304521@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922101116.7c9b4767@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Dinh Nguyen <dinguyen@kernel.org>, Richard Weinberger <richard@nod.at>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Marek Vasut <marek.vasut@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kbuild-bounces@lists.01.org>
+Content-Disposition: inline
+In-Reply-To: <20180920131340.6699-1-songqiang1304521@gmail.com>
+List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
+List-Archive: <http://lists.01.org/pipermail/kbuild/>
+List-Post: <mailto:kbuild@lists.01.org>
+List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
+List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
+ <mailto:kbuild-request@lists.01.org?subject=subscribe>
+Errors-To: kbuild-bounces@lists.01.org
+Sender: "kbuild" <kbuild-bounces@lists.01.org>
+To: kbuild@01.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>, robh+dt@kernel.org, kbuild-all@01.org, pmeerw@pmeerw.net, knaack.h@gmx.de, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2018-09-22 4:11 GMT-04:00 Boris Brezillon <boris.brezillon@bootlin.com>:
-> On Sat, 22 Sep 2018 09:41:11 +0200
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->
->> Hi Masahiro,
->>
->> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Sat, 8 Sep
->> 2018 01:10:25 +0900:
->>
->> > Hi Boris,
->> >
->> > 2018-09-07 23:53 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
->> > > On Fri, 7 Sep 2018 23:42:53 +0900
->> > > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->> > >
->> > >> Hi Boris,
->> > >>
->> > >> 2018-09-07 23:08 GMT+09:00 Boris Brezillon <boris.brezillon@bootlin.com>:
->> > >> > Hi Masahiro,
->> > >> >
->> > >> > On Fri,  7 Sep 2018 19:56:23 +0900
->> > >> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->> > >> >
->> > >> >> NAND devices need additional data area (OOB) for error correction,
->> > >> >> but it is also used for Bad Block Marker (BBM).  In many cases, the
->> > >> >> first byte in OOB is used for BBM, but the location actually depends
->> > >> >> on chip vendors.  The NAND controller should preserve the precious
->> > >> >> BBM to keep track of bad blocks.
->> > >> >>
->> > >> >> In Denali IP, the SPARE_AREA_SKIP_BYTES register is used to specify
->> > >> >> the number of bytes to skip from the start of OOB.  The ECC engine
->> > >> >> will automatically skip the specified number of bytes when it gets
->> > >> >> access to OOB area.
->> > >> >>
->> > >> >> The same value for SPARE_AREA_SKIP_BYTES should be used between
->> > >> >> firmware and the operating system if you intend to use the NAND
->> > >> >> device across the control hand-off.
->> > >> >>
->> > >> >> In fact, the current denali.c code expects firmware to have already
->> > >> >> set the SPARE_AREA_SKIP_BYTES register, then reads the value out.
->> > >> >>
->> > >> >> If no firmware (or bootloader) has initialized the controller, the
->> > >> >> register value is zero, which is the default after power-on-reset.
->> > >> >>
->> > >> >> In other words, the Linux driver cannot initialize the controller
->> > >> >> by itself.  You cannot support the reset control either because
->> > >> >> resetting the controller will get register values lost.
->> > >> >>
->> > >> >> This commit adds a way to specify it via DT.  If the property
->> > >> >> "denali,oob-skip-bytes" exists, the value will be set to the register.
->> > >> >
->> > >> > Hm, do we really need to make this config customizable? I mean, either
->> > >> > you have a large-page NAND (page > 512 bytes) and the 2 first bytes
->> > >> > must be reserved for the BBM or you have a small-page NAND and the BBM
->> > >> > is at position 4 and 5. Are you sure people configure that differently?
->> > >> > Don't you always have SPARE_AREA_SKIP_BYTES set to 6 or 2?
->> > >>
->> > >>
->> > >> As I said in the patch description,
->> > >> I need to use the same SPARE_AREA_SKIP_BYTES value
->> > >> across firmware, boot-loader, Linux, and whatever.
->> > >>
->> > >> I want to set the value to 8 for my platform
->> > >> because the on-chip boot ROM expects 8.
->> > >> I cannot change it since the boot ROM is hard-wired.
->> > >>
->> > >>
->> > >> The boot ROM skips 8 bytes in OOB
->> > >> when it loads images from the on-board NAND device.
->> > >>
->> > >> So, when I update the image from U-Boot or Linux,
->> > >> I need to make sure to set the register to 8.
->> > >>
->> > >> If I update the image with a different value,
->> > >> the Boot ROM fails to boot.
->> > >>
->> > >>
->> > >>
->> > >> When the system has booted from NAND,
->> > >> the register is already set to 8.  It works.
->> > >>
->> > >> However, when the system has booted from eMMC,
->> > >> the register is not initialized by anyone.
->> > >> I am searching for a way to set the register to 8
->> > >> in this case.
->
-> Maybe there's a solution which does not involve attaching a per-compat
-> value or adding a DT prop. If the FW/bootloader has not initialized this
-> register the value is 0, right? Why not testing the value and
-> assigning it to the default (8) if it's not been initialized by the
-> bootloader. That shouldn't break existing platforms since I don't think
-> 0 is a valid value anyway.
->
->         denali->oob_skip_bytes = ioread32(denali->reg +
->                                           SPARE_AREA_SKIP_BYTES);
->         if (!denali->oob_skip_bytes) {
->                 denali->oob_skip_bytes = DEFAULT_OOB_SKIP_BYTES;
->                 iowrite32(denali->oob_skip_bytes,
->                           denali->reg + SPARE_AREA_SKIP_BYTES);
->         }
->
+Hi Song,
 
+I love your patch! Perhaps something to improve:
 
-I prefer per-compatible values to a fixed default.
+url:    https://github.com/0day-ci/linux/commits/Song-Qiang/iio-magnetometer-Add-support-for-PNI-RM3100-9-axis-magnetometer/20180920-215124
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
 
+smatch warnings:
+drivers/iio/magnetometer/rm3100-core.c:235 rm3100_set_samp_freq() warn: inconsistent returns 'mutex:&data->lock'.
+  Locked on:   line 206
+  Unlocked on: line 194
+drivers/iio/magnetometer/rm3100-core.c:319 rm3100_trigger_handler() warn: inconsistent returns 'mutex:&data->lock'.
+  Locked on:   line 310
+  Unlocked on: line 319
 
-I'd like to set the register to 8 unless set otherwise
-because the boot ROM on my platform (Socionext UniPhier SoCs)
-uses that value.
+# https://github.com/0day-ci/linux/commit/0345472c15bab336397b25a25eb76a9f8586faf0
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 0345472c15bab336397b25a25eb76a9f8586faf0
+vim +235 drivers/iio/magnetometer/rm3100-core.c
 
-Other platforms like Altera SOCFPGA may want to use a different value
-(at least, I do not know what is the preferred value).
+0345472c Song Qiang 2018-09-20  183  
+0345472c Song Qiang 2018-09-20  184  static int rm3100_set_samp_freq(struct rm3100_data *data, int val, int val2)
+0345472c Song Qiang 2018-09-20  185  {
+0345472c Song Qiang 2018-09-20  186  	struct regmap *regmap = data->regmap;
+0345472c Song Qiang 2018-09-20  187  	int cycle_count;
+0345472c Song Qiang 2018-09-20  188  	int ret;
+0345472c Song Qiang 2018-09-20  189  	int i;
+0345472c Song Qiang 2018-09-20  190  
+0345472c Song Qiang 2018-09-20  191  	/* All cycle count registers use the same value. */
+0345472c Song Qiang 2018-09-20  192  	ret = regmap_read(regmap, RM_REG_CCXL, &cycle_count);
+0345472c Song Qiang 2018-09-20  193  	if (cycle_count < 0)
+0345472c Song Qiang 2018-09-20  194  		return cycle_count;
+0345472c Song Qiang 2018-09-20  195  
+0345472c Song Qiang 2018-09-20  196  	for (i = 0; i < RM_SAMP_NUM; i++) {
+0345472c Song Qiang 2018-09-20  197  		if (val == rm3100_samp_rates[i][0] &&
+0345472c Song Qiang 2018-09-20  198  			val2 == rm3100_samp_rates[i][1])
+0345472c Song Qiang 2018-09-20  199  			break;
+0345472c Song Qiang 2018-09-20  200  	}
+0345472c Song Qiang 2018-09-20  201  
+0345472c Song Qiang 2018-09-20  202  	if (i != RM_SAMP_NUM) {
+0345472c Song Qiang 2018-09-20  203  		mutex_lock(&data->lock);
+                                                ^^^^^^^^^^^^^^^^^^^^^^^
+0345472c Song Qiang 2018-09-20  204  		ret = regmap_write(regmap, RM_REG_TMRC, i + RM_TMRC_OFFSET);
+0345472c Song Qiang 2018-09-20  205  		if (ret < 0)
+0345472c Song Qiang 2018-09-20  206  			return ret;
+                                                        ^^^^^^^^^^
+goto unlock;  there are a bunch of these.
 
-
-
--- 
-Best Regards
-Masahiro Yamada
+0345472c Song Qiang 2018-09-20  207  
+0345472c Song Qiang 2018-09-20  208  		/* Checking if cycle count registers need changing. */
+0345472c Song Qiang 2018-09-20  209  		if (val == 600 && cycle_count == 200) {
+0345472c Song Qiang 2018-09-20  210  			for (i = 0; i < 3; i++) {
+0345472c Song Qiang 2018-09-20  211  				regmap_write(regmap, RM_REG_CCXL + 2 * i, 100);
+0345472c Song Qiang 2018-09-20  212  				if (ret < 0)
+0345472c Song Qiang 2018-09-20  213  					return ret;
+0345472c Song Qiang 2018-09-20  214  			}
+0345472c Song Qiang 2018-09-20  215  		} else if (val != 600 && cycle_count == 100) {
+0345472c Song Qiang 2018-09-20  216  			for (i = 0; i < 3; i++) {
+0345472c Song Qiang 2018-09-20  217  				regmap_write(regmap, RM_REG_CCXL + 2 * i, 200);
+0345472c Song Qiang 2018-09-20  218  				if (ret < 0)
+0345472c Song Qiang 2018-09-20  219  					return ret;
+0345472c Song Qiang 2018-09-20  220  			}
+0345472c Song Qiang 2018-09-20  221  		}
+0345472c Song Qiang 2018-09-20  222  		/* Writing TMRC registers requires CMM reset. */
+0345472c Song Qiang 2018-09-20  223  		ret = regmap_write(regmap, RM_REG_CMM, 0);
+0345472c Song Qiang 2018-09-20  224  		if (ret < 0)
+0345472c Song Qiang 2018-09-20  225  			return ret;
+0345472c Song Qiang 2018-09-20  226  		ret = regmap_write(regmap, RM_REG_CMM, RM_CMM_PMX |
+0345472c Song Qiang 2018-09-20  227  			RM_CMM_PMY | RM_CMM_PMZ | RM_CMM_START);
+0345472c Song Qiang 2018-09-20  228  		if (ret < 0)
+0345472c Song Qiang 2018-09-20  229  			return ret;
+0345472c Song Qiang 2018-09-20  230  		mutex_unlock(&data->lock);
+0345472c Song Qiang 2018-09-20  231  
+0345472c Song Qiang 2018-09-20  232  		data->conversion_time = rm3100_samp_rates[i][2] + 3000;
+0345472c Song Qiang 2018-09-20  233  		return 0;
+0345472c Song Qiang 2018-09-20  234  	}
+0345472c Song Qiang 2018-09-20 @235  	return -EINVAL;
+0345472c Song Qiang 2018-09-20  236  }
+0345472c Song Qiang 2018-09-20  237  
+0345472c Song Qiang 2018-09-20  238  static int rm3100_read_raw(struct iio_dev *indio_dev,
+0345472c Song Qiang 2018-09-20  239  			   const struct iio_chan_spec *chan,
+0345472c Song Qiang 2018-09-20  240  			   int *val, int *val2, long mask)
+0345472c Song Qiang 2018-09-20  241  {
+0345472c Song Qiang 2018-09-20  242  	struct rm3100_data *data = iio_priv(indio_dev);
+0345472c Song Qiang 2018-09-20  243  	int ret;
+0345472c Song Qiang 2018-09-20  244  
+0345472c Song Qiang 2018-09-20  245  	switch (mask) {
+0345472c Song Qiang 2018-09-20  246  	case IIO_CHAN_INFO_RAW:
+0345472c Song Qiang 2018-09-20  247  		ret = iio_device_claim_direct_mode(indio_dev);
+0345472c Song Qiang 2018-09-20  248  		if (ret < 0)
+0345472c Song Qiang 2018-09-20  249  			return ret;
+0345472c Song Qiang 2018-09-20  250  		ret = rm3100_read_mag(data, chan->scan_index, val);
+0345472c Song Qiang 2018-09-20  251  		iio_device_release_direct_mode(indio_dev);
+0345472c Song Qiang 2018-09-20  252  
+0345472c Song Qiang 2018-09-20  253  		return ret;
+0345472c Song Qiang 2018-09-20  254  	case IIO_CHAN_INFO_SAMP_FREQ:
+0345472c Song Qiang 2018-09-20  255  		return ret = rm3100_get_samp_freq(data, val, val2);
+0345472c Song Qiang 2018-09-20  256  	default:
+0345472c Song Qiang 2018-09-20  257  		return -EINVAL;
+0345472c Song Qiang 2018-09-20  258  	}
+0345472c Song Qiang 2018-09-20  259  }
+0345472c Song Qiang 2018-09-20  260  
+0345472c Song Qiang 2018-09-20  261  static int rm3100_write_raw(struct iio_dev *indio_dev,
+0345472c Song Qiang 2018-09-20  262  			    struct iio_chan_spec const *chan,
+0345472c Song Qiang 2018-09-20  263  			    int val, int val2, long mask)
+0345472c Song Qiang 2018-09-20  264  {
+0345472c Song Qiang 2018-09-20  265  	struct rm3100_data *data = iio_priv(indio_dev);
+0345472c Song Qiang 2018-09-20  266  	int ret;
+0345472c Song Qiang 2018-09-20  267  
+0345472c Song Qiang 2018-09-20  268  	switch (mask) {
+0345472c Song Qiang 2018-09-20  269  	case IIO_CHAN_INFO_SAMP_FREQ:
+0345472c Song Qiang 2018-09-20  270  		ret = rm3100_set_samp_freq(data, val, val2);
+0345472c Song Qiang 2018-09-20  271  		if (ret < 0)
+0345472c Song Qiang 2018-09-20  272  			return ret;
+0345472c Song Qiang 2018-09-20  273  		return 0;
+0345472c Song Qiang 2018-09-20  274  	default:
+0345472c Song Qiang 2018-09-20  275  		return -EINVAL;
+0345472c Song Qiang 2018-09-20  276  	}
+0345472c Song Qiang 2018-09-20  277  
+0345472c Song Qiang 2018-09-20  278  }
+0345472c Song Qiang 2018-09-20  279  
+0345472c Song Qiang 2018-09-20  280  static const struct iio_info rm3100_info = {
+0345472c Song Qiang 2018-09-20  281  	.read_raw = rm3100_read_raw,
+0345472c Song Qiang 2018-09-20  282  	.write_raw = rm3100_write_raw,
+0345472c Song Qiang 2018-09-20  283  };
+0345472c Song Qiang 2018-09-20  284  
+0345472c Song Qiang 2018-09-20  285  static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+0345472c Song Qiang 2018-09-20  286  {
+0345472c Song Qiang 2018-09-20  287  	struct iio_poll_func *pf = p;
+0345472c Song Qiang 2018-09-20  288  	struct iio_dev *indio_dev = pf->indio_dev;
+0345472c Song Qiang 2018-09-20  289  	struct rm3100_data *data = iio_priv(indio_dev);
+0345472c Song Qiang 2018-09-20  290  	struct regmap *regmap = data->regmap;
+0345472c Song Qiang 2018-09-20  291  	u8 *buffer;
+0345472c Song Qiang 2018-09-20  292  	int ret;
+0345472c Song Qiang 2018-09-20  293  	int i;
+0345472c Song Qiang 2018-09-20  294  
+0345472c Song Qiang 2018-09-20  295  	buffer = devm_kzalloc(data->dev, indio_dev->scan_bytes, GFP_KERNEL);
+0345472c Song Qiang 2018-09-20  296  	if (!buffer)
+0345472c Song Qiang 2018-09-20  297  		goto done;
+0345472c Song Qiang 2018-09-20  298  
+0345472c Song Qiang 2018-09-20  299  	mutex_lock(&data->lock);
+0345472c Song Qiang 2018-09-20  300  	ret = rm3100_wait_measurement(data);
+0345472c Song Qiang 2018-09-20  301  	if (ret < 0) {
+0345472c Song Qiang 2018-09-20  302  		mutex_unlock(&data->lock);
+0345472c Song Qiang 2018-09-20  303  		goto done;
+0345472c Song Qiang 2018-09-20  304  	}
+0345472c Song Qiang 2018-09-20  305  
+0345472c Song Qiang 2018-09-20  306  	for (i = 0; i < 3; i++) {
+0345472c Song Qiang 2018-09-20  307  		ret = regmap_bulk_read(regmap, RM_REG_MX2 + 3 * i,
+0345472c Song Qiang 2018-09-20  308  				buffer + 4 * i, 3);
+0345472c Song Qiang 2018-09-20  309  		if (ret < 0)
+0345472c Song Qiang 2018-09-20  310  			return ret;
+0345472c Song Qiang 2018-09-20  311  	}
+0345472c Song Qiang 2018-09-20  312  	mutex_unlock(&data->lock);
+0345472c Song Qiang 2018-09-20  313  
+0345472c Song Qiang 2018-09-20  314  	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+0345472c Song Qiang 2018-09-20  315  			iio_get_time_ns(indio_dev));
+0345472c Song Qiang 2018-09-20  316  done:
+0345472c Song Qiang 2018-09-20  317  	iio_trigger_notify_done(indio_dev->trig);
+0345472c Song Qiang 2018-09-20  318  
+0345472c Song Qiang 2018-09-20 @319  	return IRQ_HANDLED;
+0345472c Song Qiang 2018-09-20  320  }
+0345472c Song Qiang 2018-09-20  321  
