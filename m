@@ -1,50 +1,53 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v4 2/2] hwmon: ina3221: Read channel input source info
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 2/2] hwmon: ina3221: Read channel input source info
  from DT
-Date: Sat, 22 Sep 2018 22:20:36 -0700
-Message-ID: <20180923052036.GA9960@Asurada>
-References: <20180923041118.8743-1-nicoleotsuka@gmail.com>
- <20180923041118.8743-3-nicoleotsuka@gmail.com>
- <6f179232-9114-f403-ee35-2495cea73318@roeck-us.net>
+Date: Sat, 22 Sep 2018 22:25:42 -0700
+Message-ID: <5c102fee-202e-e5cb-18a0-be08b82dd461@roeck-us.net>
+References: <20180921223216.634-1-nicoleotsuka@gmail.com>
+ <20180921223216.634-3-nicoleotsuka@gmail.com>
+ <a7e6c311-eba4-e9b2-df64-9d02882a1dcb@roeck-us.net>
+ <20180922184650.GB9092@Asurada>
+ <f8e017c4-10dd-2d0d-84df-b05d3ed03bbf@roeck-us.net>
+ <20180923003841.GA10071@Asurada-Nvidia.nvidia.com>
+ <80510b08-0e89-03ce-7d69-fe51f8b6a7b5@roeck-us.net>
+ <20180923033300.GA5736@Asurada>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6f179232-9114-f403-ee35-2495cea73318@roeck-us.net>
+In-Reply-To: <20180923033300.GA5736@Asurada>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
+To: Nicolin Chen <nicoleotsuka@gmail.com>
 Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you for the quick response!
+On 09/22/2018 08:33 PM, Nicolin Chen wrote:
 
-On Sat, Sep 22, 2018 at 10:11:26PM -0700, Guenter Roeck wrote:
-> >+static umode_t ina3221_attr_is_visible(struct kobject *kobj,
-> >+				       struct attribute *attr, int n)
-> >+{
-> >+	const int max_attrs = ARRAY_SIZE(ina3221_attrs) - 1;
-> >+	const int num_attrs = max_attrs / INA3221_NUM_CHANNELS;
-> >+	struct device *dev = kobj_to_dev(kobj);
-> >+	struct ina3221_data *ina = dev_get_drvdata(dev);
-> >+	enum ina3221_channels channel = n / num_attrs;
+>> No. If the chip was configured by the BIOS/ROMMON, it is supposed
+>> to be that way. We can not just override that.
 > 
-> 	int index = n % num_attrs;
+> For this driver, it does soft reset in the probe() so we're
+> sure that all channels are enabled at the moment of calling
+> this regmap_update_bits. So there's no assumption anymore.
 > 
-> >+	struct ina3221_input *input = &ina->inputs[channel];
-> >+	int i;
-> >+
-> >+	/* Hide if channel input source is disconnected */
-> >+	if (input->disconnected)
-> >+		return 0;
-> >+
-> >+	/* Hide label node if label is not provided */
-> 
-> 	if (index == 1 && !input->label)
-> 		return 0;
-> 
-> and drop i, ina3221_label_attrs[], and the loop below.
 
-Will do that in v5.
+Good point.
 
-Thanks
-Nicolin
+> But the case that you mentioned is a good one. It does give
+> me some insight about the use case and the things that will
+> need to be careful when adding in[123]_enable. Just it'd be
+> also possible that BIOS could disable a channel that is not
+> explicitly disabled in the DT -- then the driver should not
+> enable it.
+> 
+
+Not necessarily. Again, we can not assume that everyone has DT
+(or that it and/or the BIOS is correct, for that matter).
+
+Nevertheless, adding the enable attribute is not required at this
+point, so it is ok for me to skip it. Please note that I'll accept
+a patch adding it, though, if it is ever submitted (with a use case).
+
+Thanks,
+Guenter
