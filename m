@@ -1,77 +1,66 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4 1/2] dt-bindings: hwmon: Add ina3221 documentation
-Date: Sat, 22 Sep 2018 23:36:22 -0700
-Message-ID: <fe5c9570-70f8-d54d-509e-fce3733a4145@roeck-us.net>
-References: <20180923041118.8743-1-nicoleotsuka@gmail.com>
- <20180923041118.8743-2-nicoleotsuka@gmail.com>
- <353ccbbd-94c8-72eb-eb98-8a0507431e15@roeck-us.net>
- <20180923053151.GB9960@Asurada>
- <ce76fdf2-2894-96ad-d2f5-b2c25f197ee4@roeck-us.net>
- <20180923060120.GA8872@Asurada-Nvidia.nvidia.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Sun, 23 Sep 2018 15:05:05 +0530
+Message-ID: <3e6b6874-3560-0ea0-6861-9f47f308e089@codeaurora.org>
+References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
+ <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
+ <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
+ <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
+ <153333504360.10763.8964005567051510823@swboyd.mtv.corp.google.com>
+ <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
+ <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
+ <c83e4248-aef2-bb40-8d8e-47d9b2918cc7@codeaurora.org>
+ <153504951102.28926.11593809590549791317@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180923060120.GA8872@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <153504951102.28926.11593809590549791317@swboyd.mtv.corp.google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, skannan@codeaurora.org
+Cc: Evan Green <evgreen@google.com>, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2018 11:01 PM, Nicolin Chen wrote:
-> On Sat, Sep 22, 2018 at 10:45:49PM -0700, Guenter Roeck wrote:
->> On 09/22/2018 10:31 PM, Nicolin Chen wrote:
->>> On Sat, Sep 22, 2018 at 10:19:42PM -0700, Guenter Roeck wrote:
->>>>> +2) child nodes
->>>>> +  Required properties:
->>>>> +  - input-id: Must be 1, 2 or 3
->>>>> +
->>>>> +  Optional properties:
->>>>> +  - input-label: Name of the input source
+Hello Stephen,
 
-Just noticed the "input-" here. Please just use "label".
 
->>>>> +  - shunt-resistor: Shunt resistor value in micro-Ohm
->>>>> +  - status: Should be "disabled" if no input source
->>>>> +
->>>>> +  Example:
->>>>> +
->>>>> +  input1 {
->>>>> +          input-id = <0x1>;
+On 8/24/2018 12:08 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-08-08 03:15:26)
+>>
+>>
+>> On 8/8/2018 11:52 AM, Stephen Boyd wrote:
 >>>>
->>>> We'll have to find a better name for this. Feel free to look up examples in the
->>>> existing devicetree descriptions. The one that seems to be used most of the time
->>>> to indicate a channel index or id is "reg". It should also start with 0 - there
->>>> is no real reason for it to start with 1; it only makes the code more complex.
+>>>> Binding describes hardware controllable by the OS. That's the reality.
+>>>> Let's not add mandatory clock bindings for clocks that the OS can't do
+>>>> anything about.
+>>>>
 >>>
->>> The reason is that the port start from 1 in the datasheet.
+>>> It seems that you believe clks should only be used to turn on/off and
+>>> control rates. That is not the whole truth. Sometimes clks are there
+>>> just to express the clk frequencies that are present in the design so
+>>> that drivers can figure out what to do.
 >>>
 >>
->> Maybe, but for me I'll want to have something that we can reuse for other chips.
->> Having the index start with 0 for one chip and with 1 for another would be
->> confusing. It is bad enough that we have in[0..n] for voltages and temp[1..n]
->> for temperatures. I would not want to see the same in devicetree files,
->> and much less so on a per-device basis. It is also pretty common to start
->> channel numbers with 0 in devicetree files.
+>> Stephen,
+>>
+>> As this clock is not configurable by linux clock drivers and we really
+>> do not care the parent src(as mentioned by Saravana) to generate the
+>> 300MHz, would it be good to define a fixed rate clock so as to express
+>> the HW connectivity & frequency?
+>>
 > 
-> Understood. I search a bit and saw most of "*-id" start from 0,
-> although I cannot be sure whether their Datasheet/RM/schematics
-> are counting from 0 or 1.
-> 
-> And I also found a transposing example:
->      Documentation/devicetree/bindings/serial/mrvl,pxa-ssp.txt
+> As a hack that works great, but why do we need to workaround problems by
+> adding a fixed rate clk to DT for this PLL? The PLL is provided by GCC
+> node so it should be connected to the GCC node.
 > 
 
-You'll always find an example for anything in the kernel. In this case,
-it is for one specific chip. I'll want this to be reusable as template for
-_all_ hardware monitoring chips.
+Please help with review the next patch series which would take the PLL 
+phandle from DT.
 
-Thanks,
-Guenter
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-> Probably should be better to wait for doc maintainers' input.
-> 
-> Thanks
-> Nicolin
-> 
+--
