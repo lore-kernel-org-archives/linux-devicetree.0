@@ -1,58 +1,218 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC
- as unstable
-Date: Sun, 23 Sep 2018 14:46:20 +0100
-Message-ID: <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
-References: <20180830180205.18121-1-krzk@kernel.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: Add support for Liebherr's BK4 device (vf610 based)
+Date: Sun, 23 Sep 2018 11:32:17 -0300
+Message-ID: <CAOMZO5DPnWNJ_UVdE9Lvh05R84seP8VPP=35eEUaor4-pppXGQ@mail.gmail.com>
+References: <20180921152726.31742-1-lukma@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180830180205.18121-1-krzk@kernel.org>
+In-Reply-To: <20180921152726.31742-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, DTML <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Aug 30, 2018 at 7:02 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> Samsung Exynos SoCs and boards related bindings evolved since the initial
-> introduction, but initially the bindings were minimal and a bit incomplete
-> (they never described all the hardware modules available in the SoCs).
-> Since then some significant (not fully compatible) changes have been
-> already committed a few times (like gpio replaced by pinctrl, display ddc,
-> mfc reserved memory, some core clocks added to various hardware modules,
-> added more required nodes).
+On Fri, Sep 21, 2018 at 12:27 PM, Lukasz Majewski <lukma@denx.de> wrote:
+> This commit adds DTS support for BK4 device from Liebherr. It
+> uses vf610 SoC from NXP.
 >
-> On the other side there are no boards which have device tree embedded in
-> the bootloader. Device tree blob is always compiled from the kernel tree
-> and updated together with the kernel image.
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+>  arch/arm/boot/dts/Makefile      |   1 +
+>  arch/arm/boot/dts/vf610-bk4.dts | 504 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 505 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/vf610-bk4.dts
 >
-> Thus to avoid further adding a bunch of workarounds for old/missing
-> bindings, make development of new platforms easier and allow to make
-> cleanup of the existing code and device tree files, lets mark some
-> Samsung Exynos SoC platform bindings as unstable. This means that
-> bindings can may change at any time and users should use the dtb file
-> compiled from the same kernel source tree as the kernel image.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b5bd3de87c33..e6f159895fa9 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -577,6 +577,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+>         ls1021a-twr.dtb
+>  dtb-$(CONFIG_SOC_VF610) += \
+>         vf500-colibri-eval-v3.dtb \
+> +       vf610-bk4.dtb \
+>         vf610-colibri-eval-v3.dtb \
+>         vf610m4-colibri.dtb \
+>         vf610-cosmic.dtb \
+> diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+> new file mode 100644
+> index 000000000000..4ad7e739a0ad
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/vf610-bk4.dts
+> @@ -0,0 +1,504 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright 2018
+> + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> + */
+> +
+> +/dts-v1/;
+> +#include "vf610.dtsi"
+> +
+> +/ {
+> +       model = "Liebherr BK4 controller";
+> +       compatible = "lwn,bk4", "fsl,vf610";
+> +
+> +       chosen {
+> +               bootargs = "console=ttyLP1,115200";
 
-I have to admit that I don't really like this approach, and I missed
-the patch when originally posted (I did notice it in the pull request
-it came in with though).
+You could pass stdout-path instead.
 
-The main concern for me is that with a blanket "everything is always
-unstable" we discard the notion that we should strive for bindings to
-be stable and backwards compatible.
+> +       };
+> +
+> +       memory@80000000 {
+> +               reg = <0x80000000 0x8000000>;
+> +       };
+> +
+> +       audio_ext: mclk_osc {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <24576000>;
+> +       };
 
-Questions that come to mind are:
+This seems to be unused.
 
- - When do they stop being unstable?
- - Is there a way to note in the binding itself that it's still
-unstable with an anticipation of when it will be settled in?
- - Is there a better way to version the bindings to avoid complete
-backwards compatibility?
+> +
+> +       enet_ext: eth_osc {
+> +               compatible = "fixed-clock";
+> +               #clock-cells = <0>;
+> +               clock-frequency = <50000000>;
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_gpio_leds>;
+> +
+> +               /* LED D5 */
+> +               led0: heartbeat {
+> +                       label = "heartbeat";
+> +                       gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
+> +                       default-state = "on";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +       };
+> +
+> +       regulators {
+> +               compatible = "simple-bus";
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +
+> +               reg_3p3v: regulator@0 {
 
-Pointing out a couple of cases where it has been painful to stay
-backwards compatible could also be useful for understanding (even
-though you run the risk of each case being explained away with
-suggestions of how it can be handled).
+Please move all regulators outside of the simple-bus container and use
+this naming convention:
+
+reg_3p3v: regulator-3p3v {
+
+> +&dspi3 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_dspi3>;
+> +       bus-num = <3>;
+> +       status = "okay";
+> +
+> +       spidev3@0 {
+> +               compatible = "fsl,vf610-dspi";
+> +               spi-max-frequency = <30000000>;
+> +               reg = <0>;
+> +               fsl,spi-slave-mode;
+
+Such property does not exist.
+
+I also thought that spidev nodes in dt were not recommended.
+
+> +&iomuxc {
+
+Like Stefan mentioned it is common practice on imx dts files to place
+the iomuxc node as the last one.
 
 
--Olof
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_bk4_common>;
+
+This seems to be not called from any driver.
+
+We usually use a hog group for such purpose.
+
+> +
+> +       pinctrl_bk4_common: commongrp {
+> +               fsl,pins = <
+> +                       /* One_Wire_PSU_EN */
+> +                       VF610_PAD_PTC29__GPIO_102               0x1183
+> +                       /* SPI */
+> +                       VF610_PAD_PTB26__GPIO_96                0x1183
+> +                       VF610_PAD_PTE14__GPIO_119               0x1183
+> +                       VF610_PAD_PTE4__GPIO_109                0x1181
+> +                       /* Feedback_Lines */
+> +                       VF610_PAD_PTC31__GPIO_104               0x1181
+> +                       VF610_PAD_PTA7__GPIO_134                0x1181
+> +                       VF610_PAD_PTD9__GPIO_88         0x1181
+> +                       VF610_PAD_PTE1__GPIO_106                0x1183
+> +                       VF610_PAD_PTB2__GPIO_24         0x1181
+> +                       VF610_PAD_PTB3__GPIO_25         0x1181
+> +                       VF610_PAD_PTB1__GPIO_23         0x1181
+> +                       /* SDHC */
+> +                       VF610_PAD_PTE19__GPIO_124               0x1183
+> +                       VF610_PAD_PTB23__GPIO_93                0x1181
+
+If they are related to SDHC they should be better placed under the sdhc nodes.
+
+
+> +                       /* GPI */
+> +                       VF610_PAD_PTE2__GPIO_107                0x1181
+> +                       VF610_PAD_PTE3__GPIO_108                0x1181
+> +                       VF610_PAD_PTE5__GPIO_110                0x1181
+> +                       VF610_PAD_PTE6__GPIO_111                0x1181
+> +                       /* GPO */
+> +                       VF610_PAD_PTE0__GPIO_105                0x1183
+> +                       VF610_PAD_PTE7__GPIO_112                0x1183
+> +                       /* RS485 */
+> +                       VF610_PAD_PTB8__GPIO_30         0x1183
+> +                       VF610_PAD_PTB9__GPIO_31         0x1183
+> +                       VF610_PAD_PTE8__GPIO_113                0x1183
+> +                       /* MPBUS MPB_EN */
+> +                       VF610_PAD_PTE28__GPIO_133               0x1183
+> +                       /* LEDS */
+> +                       VF610_PAD_PTE15__GPIO_120               0x1183
+> +                       VF610_PAD_PTA12__GPIO_5         0x1183
+> +                       VF610_PAD_PTA16__GPIO_6         0x1183
+> +                       VF610_PAD_PTE9__GPIO_114                0x1183
+> +                       VF610_PAD_PTE20__GPIO_125               0x1183
+> +                       VF610_PAD_PTE23__GPIO_128               0x1183
+> +                       VF610_PAD_PTE16__GPIO_121               0x1183
+> +                       /* MISC */
+> +                       VF610_PAD_PTE10__GPIO_115               0x1183
+> +                       VF610_PAD_PTE11__GPIO_116               0x1183
+> +                       VF610_PAD_PTE17__GPIO_122               0x1183
+> +                       VF610_PAD_PTC30__GPIO_103               0x1183
+> +                       VF610_PAD_PTB0__GPIO_22         0x1181
+> +                       /* RESETINFO */
+> +                       VF610_PAD_PTE26__GPIO_131               0x1183
+> +                       VF610_PAD_PTD6__GPIO_85         0x1181
+> +                       VF610_PAD_PTE27__GPIO_132               0x1181
+> +                       VF610_PAD_PTE13__GPIO_118               0x1181
+> +                       VF610_PAD_PTE21__GPIO_126               0x1181
+> +                       VF610_PAD_PTE22__GPIO_127               0x1181
+> +                       /* EE_5V_EN */
+> +                       VF610_PAD_PTE18__GPIO_123               0x1183
+> +                       /* EE_5V_OC_N */
+> +                       VF610_PAD_PTE25__GPIO_130               0x1181
+
+Seems like a long list of pins without any driver associated.
+
+Please review such list carefully and assign to nodes that have a
+driver associated, such as rs485,LEDS, etc.
+
+> +
+> +&usbphy0 {
+> +       status = "okay";
+> +};
+> +
+> +&usbphy1 {
+> +       status = "okay";
+> +};
+> +
+> +&qspi0 {
+
+This is not placed in alphabetical order.
