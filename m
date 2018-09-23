@@ -1,63 +1,214 @@
 From: Taniya Das <tdas@codeaurora.org>
 Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
  driver
-Date: Sun, 23 Sep 2018 15:05:05 +0530
-Message-ID: <3e6b6874-3560-0ea0-6861-9f47f308e089@codeaurora.org>
+Date: Sun, 23 Sep 2018 15:10:55 +0530
+Message-ID: <8c19c840-292c-a5c4-f3d3-0c6fb14b15fb@codeaurora.org>
 References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
  <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <CAE=gft7_5SZKpU0i9Jbi6UV-eqW8=6Fm7rw4oKVXG6J9Q7_E+g@mail.gmail.com>
- <1ddda4b9e6dcd7ad415235f4d6af2dc7@codeaurora.org>
- <153333504360.10763.8964005567051510823@swboyd.mtv.corp.google.com>
- <4d37a1ee4f2d5b30da3f62cbfca756a8@codeaurora.org>
- <153370933225.220756.12056174025047430491@swboyd.mtv.corp.google.com>
- <c83e4248-aef2-bb40-8d8e-47d9b2918cc7@codeaurora.org>
- <153504951102.28926.11593809590549791317@swboyd.mtv.corp.google.com>
+ <20180829180122.GC10879@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153504951102.28926.11593809590549791317@swboyd.mtv.corp.google.com>
+In-Reply-To: <20180829180122.GC10879@google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, skannan@codeaurora.org
-Cc: Evan Green <evgreen@google.com>, rjw@rjwysocki.net, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, anischal@codeaurora.org, devicetree@vger.kernel.org, robh@kernel.org, amit.kucheria@linaro.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Stephen,
+Hello Matthias,
 
+Thanks for your review comments.
 
-On 8/24/2018 12:08 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-08-08 03:15:26)
->>
->>
->> On 8/8/2018 11:52 AM, Stephen Boyd wrote:
->>>>
->>>> Binding describes hardware controllable by the OS. That's the reality.
->>>> Let's not add mandatory clock bindings for clocks that the OS can't do
->>>> anything about.
->>>>
->>>
->>> It seems that you believe clks should only be used to turn on/off and
->>> control rates. That is not the whole truth. Sometimes clks are there
->>> just to express the clk frequencies that are present in the design so
->>> that drivers can figure out what to do.
->>>
->>
->> Stephen,
->>
->> As this clock is not configurable by linux clock drivers and we really
->> do not care the parent src(as mentioned by Saravana) to generate the
->> 300MHz, would it be good to define a fixed rate clock so as to express
->> the HW connectivity & frequency?
->>
+On 8/29/2018 11:31 PM, Matthias Kaehlcke wrote:
+> Hi Taniya,
 > 
-> As a hack that works great, but why do we need to workaround problems by
-> adding a fixed rate clk to DT for this PLL? The PLL is provided by GCC
-> node so it should be connected to the GCC node.
+> On Tue, Jul 24, 2018 at 04:12:50PM +0530, Taniya Das wrote:
+>> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
+>> for changing the frequency of CPUs. The driver implements the cpufreq
+>> driver interface for this hardware engine.
+>>
+>> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
+>> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+>> ---
+>>   drivers/cpufreq/Kconfig.arm       |  11 ++
+>>   drivers/cpufreq/Makefile          |   1 +
+>>   drivers/cpufreq/qcom-cpufreq-hw.c | 348 ++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 360 insertions(+)
+>>   create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
+>>
+>> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+>> index 0cd8eb7..93a9d72 100644
+>> --- a/drivers/cpufreq/Kconfig.arm
+>> +++ b/drivers/cpufreq/Kconfig.arm
+>> @@ -298,3 +298,14 @@ config ARM_PXA2xx_CPUFREQ
+>>   	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
+>>
+>>   	  If in doubt, say N.
+>> +
+>> +config ARM_QCOM_CPUFREQ_HW
+>> +	bool "QCOM CPUFreq HW driver"
+>> +	depends on ARCH_QCOM
+>> +	help
+>> +	 Support for the CPUFreq HW driver.
+>> +	 Some QCOM chipsets have a HW engine to offload the steps
+>> +	 necessary for changing the frequency of the CPUs. Firmware loaded
+>> +	 in this engine exposes a programming interface to the OS.
+>> +	 The driver implements the cpufreq interface for this HW engine.
+>> +	 Say Y if you want to support CPUFreq HW.
+>> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+>> index c1ffeab..ca48a1d 100644
+>> --- a/drivers/cpufreq/Makefile
+>> +++ b/drivers/cpufreq/Makefile
+>> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
+>>   obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
+>>   obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
+>>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
+>> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
+>>
+>>
+>>   ##################################################################################
+>> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> new file mode 100644
+>> index 0000000..ea8f7d1
+>> --- /dev/null
+>> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+>> @@ -0,0 +1,348 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/cpufreq.h>
+>> +#include <linux/init.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_platform.h>
+>> +
+>> +#define INIT_RATE			300000000UL
+>> +#define LUT_MAX_ENTRIES			40U
+>> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
+>> +#define LUT_ROW_SIZE			32
+>> +
+>> +enum {
+>> +	REG_ENABLE,
+>> +	REG_LUT_TABLE,
+>> +	REG_PERF_STATE,
+>> +
+>> +	REG_ARRAY_SIZE,
+>> +};
+>> +
+>> +struct cpufreq_qcom {
+>> +	struct cpufreq_frequency_table *table;
+>> +	struct device *dev;
+> 
+> 'dev' is not used and can be removed.
 > 
 
-Please help with review the next patch series which would take the PLL 
-phandle from DT.
+Thanks, would remove in the next patch.
+
+>> ...
+>>
+>> +static int qcom_cpu_resources_init(struct platform_device *pdev,
+>> +				   struct device_node *np, unsigned int cpu,
+>> +				   unsigned long xo_rate)
+>> +{
+>> +	struct cpufreq_qcom *c;
+>> +	struct resource res;
+>> +	struct device *dev = &pdev->dev;
+>> +	const u16 *offsets;
+>> +	int ret, i, cpu_first, cpu_r;
+>> +	void __iomem *base;
+>> +
+>> +	if (qcom_freq_domain_map[cpu])
+>> +		return 0;
+>> +
+>> +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+>> +	if (!c)
+>> +		return -ENOMEM;
+>> +
+>> +	offsets = of_device_get_match_data(&pdev->dev);
+>> +	if (!offsets)
+>> +		return -EINVAL;
+>> +
+>> +	if (of_address_to_resource(np, 0, &res))
+>> +		return -ENOMEM;
+>> +
+>> +	base = devm_ioremap_resource(dev, &res);
+>> +	if (!base)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
+>> +		c->reg_bases[i] = base + offsets[i];
+>> +
+>> +	/* HW should be in enabled state to proceed */
+>> +	if (!(readl_relaxed(c->reg_bases[REG_ENABLE]) & 0x1)) {
+>> +		dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	ret = qcom_get_related_cpus(np, &c->related_cpus);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s failed to get related CPUs\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	c->max_cores = cpumask_weight(&c->related_cpus);
+>> +	if (!c->max_cores)
+>> +		return -ENOENT;
+>> +
+>> +	c->xo_rate = xo_rate;
+>> +
+>> +	ret = qcom_cpufreq_hw_read_lut(pdev, c);
+>> +	if (ret) {
+>> +		dev_err(dev, "%s failed to read LUT\n", np->name);
+>> +		return ret;
+>> +	}
+>> +
+>> +	qcom_freq_domain_map[cpu] = c;
+>> +
+>> +	/* Related CPUs */
+>> +	cpu_first = cpumask_first(&c->related_cpus);
+>> +
+>> +	for_each_cpu(cpu_r, &c->related_cpus) {
+>> +		if (cpu_r != cpu_first)
+>> +			qcom_freq_domain_map[cpu_r] =
+>> +				qcom_freq_domain_map[cpu_first];
+>> +	}
+> 
+> The above ten lines could be simplified to:
+> 
+> 	for_each_cpu(cpu_r, &c->related_cpus)
+> 		qcom_freq_domain_map[cpu_r] = c;
+> 
+
+Would clean it up in the next patch.
+
+>> ...
+>>
+>> +static int __init qcom_cpufreq_hw_init(void)
+>> +{
+>> +	return platform_driver_register(&qcom_cpufreq_hw_driver);
+>> +}
+>> +subsys_initcall(qcom_cpufreq_hw_init);
+> 
+> Is subsys_initcall used for a particular reason? It will cause
+> problems when registering cooling devices, since the thermal device
+> class is initialized through an fs_initcall, which are executed
+> later.
+> 
+> Most cpufreq drivers use module_init, device_initcall or
+> late_initcall, can't this driver use one of those?
+> 
+
+We want the CPU to be scaling to the highest frequency at the earliest.
+
+> Cheers
+> 
+> Matthias
+> 
 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
