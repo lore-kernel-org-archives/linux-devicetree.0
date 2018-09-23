@@ -1,33 +1,60 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v3 1/4] staging/vc04_services: Use correct cache line size
-Date: Sun, 23 Sep 2018 17:24:50 +0200 (CEST)
-Message-ID: <1660239654.224490.1537716290663@email.1und1.de>
-References: <1537172544-104852-1-git-send-email-phil@raspberrypi.org>
- <1537172544-104852-2-git-send-email-phil@raspberrypi.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 2/7] dt-bindings: add power-domain header for RK3066 SoCs
+Date: Sun, 23 Sep 2018 17:23:51 +0200
+Message-ID: <20180923152356.30154-3-heiko@sntech.de>
+References: <20180923152356.30154-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1537172544-104852-2-git-send-email-phil@raspberrypi.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180923152356.30154-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Phil Elwell <phil@raspberrypi.org> hat am 17. September 2018 um 10:22 geschrieben:
-> 
-> 
-> Use the compatible string in the DTB to select the correct cache line
-> size for the SoC - 32 for BCM2835, and 64 for BCM2836 and BCM2837.
-> 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Add rk3066 power-domains as described by the TRM.
 
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ include/dt-bindings/power/rk3066-power.h | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 include/dt-bindings/power/rk3066-power.h
+
+diff --git a/include/dt-bindings/power/rk3066-power.h b/include/dt-bindings/power/rk3066-power.h
+new file mode 100644
+index 000000000000..dd9bbd35c274
+--- /dev/null
++++ b/include/dt-bindings/power/rk3066-power.h
+@@ -0,0 +1,21 @@
++#ifndef __DT_BINDINGS_POWER_RK3066_POWER_H__
++#define __DT_BINDINGS_POWER_RK3066_POWER_H__
++
++/* VD_CORE */
++#define RK3066_PD_A9_0		0
++#define RK3066_PD_A9_1		1
++#define RK3066_PD_DBG		4
++#define RK3066_PD_SCU		5
++
++/* VD_LOGIC */
++#define RK3066_PD_VIDEO		6
++#define RK3066_PD_VIO		7
++#define RK3066_PD_GPU		8
++#define RK3066_PD_PERI		9
++#define RK3066_PD_CPU		10
++#define RK3066_PD_ALIVE		11
++
++/* VD_PMU */
++#define RK3066_PD_RTC		12
++
++#endif
+-- 
+2.18.0
