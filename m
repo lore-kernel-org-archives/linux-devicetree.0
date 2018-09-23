@@ -1,119 +1,84 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] of: unittest: Don't dereference args.np after test errors
-Date: Sun, 23 Sep 2018 09:33:32 -0700
-Message-ID: <1537720412-29919-1-git-send-email-linux@roeck-us.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [RFC 1/3 net] lorawan: Add LoRaWAN class module
+Date: Sun, 23 Sep 2018 18:40:25 +0200
+Message-ID: <cebcea44-9db3-5564-574c-038d9af79995@suse.de>
+References: <cover.1535039998.git.starnight@g.ncu.edu.tw>
+ <fc737f3940bbe91341fb15d85ac11931eb56d1fc.1535039998.git.starnight@g.ncu.edu.tw>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <fc737f3940bbe91341fb15d85ac11931eb56d1fc.1535039998.git.starnight@g.ncu.edu.tw>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "contact@snootlab.com" <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, =?UTF-8?Q?Michal_Kube=c4=8dek?= <mkubecek@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-If a devicetree parse function fails, it is quite likely that args.np
-is invalid. Trying to dereference it will then cause the system to crash.
+Hi Jian-Hong,
 
-This was seen when trying to run devicetree unittests on a g3beige
-qemu system. This system has the OF_IMAP_OLDWORLD_MAC flag set in
-of_irq_workarounds and expects an 'old style' structure of irq
-nodes. Trying to parse the test nodes fails and results in the
-following crash.
+[+ Afonso]
 
-OF: /testcase-data/phandle-tests/consumer-b: arguments longer than property
-Unable to handle kernel paging request for data at address 0x00bc616e
-Faulting instruction address: 0xc092437c
-Oops: Kernel access of bad area, sig: 11 [#1]
-BE PREEMPT PowerMac
-Modules linked in:
-CPU: 0 PID: 1 Comm: swapper Not tainted 4.19.0-rc4-yocto-standard+ #1
-NIP:  c092437c LR: c0925098 CTR: c0925088
-REGS: cf8dfb40 TRAP: 0300   Not tainted  (4.19.0-rc4-yocto-standard+)
-MSR:  00001032 <ME,IR,DR,RI>  CR: 82004044  XER: 00000000
-DAR: 00bc616e DSISR: 40000000
-GPR00: c0925098 cf8dfbf0 cf8e0000 c14098c7 c14098c7 c1409c50 00000066 00000002
-GPR08: 00000063 00bc614e c0b483e9 000affff 82004048 00000000 00000008 c0b36d80
-GPR16: c0ac0000 c0b4233c c14098c7 c0b13c14 05ffffff 000affff c0b483e4 c0b00a30
-GPR24: cecfe324 cecfe324 c0acc434 c0ac8420 c1409c50 05ffffff c1409c50 c14098c7
-NIP [c092437c] device_node_gen_full_name+0x30/0x15c
-LR [c0925098] device_node_string+0x190/0x3c8
-Call Trace:
-[cf8dfbf0] [c0733704] of_find_property+0x5c/0x74 (unreliable)
-[cf8dfc30] [c0925098] device_node_string+0x190/0x3c8
-[cf8dfca0] [c092690c] pointer+0x274/0x4d4
-[cf8dfcd0] [c0926e20] vsnprintf+0x2b4/0x5ec
-[cf8dfd30] [c0927170] vscnprintf+0x18/0x48
-[cf8dfd40] [c008eb70] vprintk_store+0x4c/0x22c
-[cf8dfd70] [c008f1c4] vprintk_emit+0x94/0x270
-[cf8dfda0] [c008fb60] printk+0x5c/0x6c
-[cf8dfde0] [c0bd1ec0] of_unittest+0x2670/0x2b48
-[cf8dfe80] [c0004ba8] do_one_initcall+0xac/0x320
-[cf8dfee0] [c0b8975c] kernel_init_freeable+0x328/0x3f0
-[cf8dff30] [c00050c4] kernel_init+0x24/0x118
-[cf8dff40] [c0014278] ret_from_kernel_thread+0x14/0x1c
+Am 23.08.18 um 19:15 schrieb Jian-Hong Pan:
+> LoRaWAN defined by LoRa Alliance(TM) is the MAC layer over LoRa devices.
+> 
+> This patch implements part of Class A end-devices features defined in
+> LoRaWAN(TM) Specification Ver. 1.0.2:
+> 1. End-device receive slot timing
+> 2. Only single channel and single data rate for now
+> 3. Unconfirmed data up/down message types
+> 4. Encryption/decryption for up/down link data messages
+> 
+> It also implements the the functions and maps to Datagram socket for
+> LoRaWAN unconfirmed data messages.
+> 
+> On the other side, it defines the basic interface and operation
+> functions for compatible LoRa device drivers.
+> 
+> Signed-off-by: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+> ---
+>  include/linux/maclorawan/lora.h | 239 +++++++++++
+>  net/maclorawan/Kconfig          |  14 +
+>  net/maclorawan/Makefile         |   2 +
+>  net/maclorawan/lorawan.h        | 219 ++++++++++
+>  net/maclorawan/lrwsec.c         | 237 +++++++++++
+>  net/maclorawan/lrwsec.h         |  57 +++
+>  net/maclorawan/mac.c            | 552 +++++++++++++++++++++++++
+>  net/maclorawan/main.c           | 665 ++++++++++++++++++++++++++++++
+>  net/maclorawan/socket.c         | 700 ++++++++++++++++++++++++++++++++
+>  9 files changed, 2685 insertions(+)
+>  create mode 100644 include/linux/maclorawan/lora.h
 
-To avoid this and similar problems, don't try to dereference args.np
-after devicetree parse failures, and display the name of the parsed node
-instead. With this, we get error messages such as
+Can we use include/linux/lora/lorawan.h for simplicity?
 
-dt-test ### FAIL of_unittest_parse_interrupts():791 index 0 -
-	data error on node /testcase-data/interrupts/interrupts0 rc=-22
+>  create mode 100644 net/maclorawan/Kconfig
+>  create mode 100644 net/maclorawan/Makefile
+>  create mode 100644 net/maclorawan/lorawan.h
+>  create mode 100644 net/maclorawan/lrwsec.c
+>  create mode 100644 net/maclorawan/lrwsec.h
+>  create mode 100644 net/maclorawan/mac.c
+>  create mode 100644 net/maclorawan/main.c
+>  create mode 100644 net/maclorawan/socket.c
 
-This may not display the intended node name, but it is better than a crash.
+This patch is much too large for me to review...
 
-Fixes: 53a42093d96ef ("of: Add device tree selftests")
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
- drivers/of/unittest.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+It also doesn't seem to follow the structure I suggested: 802.15.4 has
+two separate directories, net/ieee802154/ and net/mac802154/. Therefore
+I had suggested net/maclorawan/ only for code that translates from
+ETH_P_LORAWAN to ETH_P_LORA socket buffers, i.e. your soft MAC. Generic
+socket code that applies also to hard MAC drivers I expected to go
+either to net/lora/lorawan/ or better net/lorawan/ or some other clearly
+separate location, with its own Kconfig symbol - any reason not to?
+Consider which parts can be enabled/used independently of each other,
+then you can put them into two (or more?) different patches.
 
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 722537e14848..5942ddce1b9f 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -424,7 +424,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
- 		}
- 
- 		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
--			 i, args.np, rc);
-+			 i, np, rc);
- 	}
- 
- 	/* Check for missing list property */
-@@ -554,8 +554,8 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
- 			passed = false;
- 		}
- 
--		unittest(passed, "index %i - data error on node %s rc=%i\n",
--			 i, args.np->full_name, rc);
-+		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
-+			 i, np, rc);
- 	}
- 
- 	/* Check for missing list property */
-@@ -788,7 +788,7 @@ static void __init of_unittest_parse_interrupts(void)
- 		passed &= (args.args[0] == (i + 1));
- 
- 		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
--			 i, args.np, rc);
-+			 i, np, rc);
- 	}
- 	of_node_put(np);
- 
-@@ -834,7 +834,7 @@ static void __init of_unittest_parse_interrupts(void)
- 			passed = false;
- 		}
- 		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
--			 i, args.np, rc);
-+			 i, np, rc);
- 	}
- 	of_node_put(np);
- }
-@@ -904,7 +904,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
- 		}
- 
- 		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
--			 i, args.np, rc);
-+			 i, np, rc);
- 	}
- 	of_node_put(np);
- }
+Also please use SPDX license identifiers in your headers.
+And please don't put the whole world in To, use CC.
+
+Thanks,
+Andreas
+
 -- 
-2.7.4
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
