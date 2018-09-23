@@ -1,88 +1,58 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/7] soc: rockchip: power-domain: add rk3188 powerdomains
-Date: Sun, 23 Sep 2018 17:23:53 +0200
-Message-ID: <20180923152356.30154-5-heiko@sntech.de>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH v2 3/7] dt-bindings: add compatibles for rk3066/rk3188 power
+ controllers
+Date: Sun, 23 Sep 2018 17:23:52 +0200
+Message-ID: <20180923152356.30154-4-heiko@sntech.de>
 References: <20180923152356.30154-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180923152356.30154-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180923152356.30154-1-heiko@sntech.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rockchip@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, chauveau.julien@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add power-domains found on rk3188 socs.
+Add the compatible values for the power-domain controllers found on
+rk3066 and rk3188.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- drivers/soc/rockchip/pm_domains.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../devicetree/bindings/soc/rockchip/power_domain.txt         | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip/pm_domains.c
-index 6dff8682155f..58bd39cd3369 100644
---- a/drivers/soc/rockchip/pm_domains.c
-+++ b/drivers/soc/rockchip/pm_domains.c
-@@ -22,6 +22,7 @@
- #include <dt-bindings/power/px30-power.h>
- #include <dt-bindings/power/rk3036-power.h>
- #include <dt-bindings/power/rk3128-power.h>
-+#include <dt-bindings/power/rk3188-power.h>
- #include <dt-bindings/power/rk3228-power.h>
- #include <dt-bindings/power/rk3288-power.h>
- #include <dt-bindings/power/rk3328-power.h>
-@@ -745,6 +746,14 @@ static const struct rockchip_domain_info rk3128_pm_domains[] = {
- 	[RK3128_PD_GPU]		= DOMAIN_RK3288(1, 1, 3, false),
- };
- 
-+static const struct rockchip_domain_info rk3188_pm_domains[] = {
-+	[RK3188_PD_GPU]		= DOMAIN(9, 9, 3, 24, 29, false),
-+	[RK3188_PD_VIDEO]	= DOMAIN(8, 8, 4, 23, 28, false),
-+	[RK3188_PD_VIO]		= DOMAIN(7, 7, 5, 22, 27, false),
-+	[RK3188_PD_PERI]	= DOMAIN(6, 6, 2, 25, 30, false),
-+	[RK3188_PD_CPU]		= DOMAIN(5, 5, 1, 26, 31, false),
-+};
-+
- static const struct rockchip_domain_info rk3228_pm_domains[] = {
- 	[RK3228_PD_CORE]	= DOMAIN_RK3036(0, 0, 16, true),
- 	[RK3228_PD_MSCH]	= DOMAIN_RK3036(1, 1, 17, true),
-@@ -857,6 +866,17 @@ static const struct rockchip_pmu_info rk3128_pmu = {
- 	.domain_info = rk3128_pm_domains,
- };
- 
-+static const struct rockchip_pmu_info rk3188_pmu = {
-+	.pwr_offset = 0x08,
-+	.status_offset = 0x0c,
-+	.req_offset = 0x38, /* PMU_MISC_CON1 */
-+	.idle_offset = 0x0c,
-+	.ack_offset = 0x0c,
-+
-+	.num_domains = ARRAY_SIZE(rk3188_pm_domains),
-+	.domain_info = rk3188_pm_domains,
-+};
-+
- static const struct rockchip_pmu_info rk3228_pmu = {
- 	.req_offset = 0x40c,
- 	.idle_offset = 0x488,
-@@ -952,6 +972,10 @@ static const struct of_device_id rockchip_pm_domain_dt_match[] = {
- 		.compatible = "rockchip,rk3128-power-controller",
- 		.data = (void *)&rk3128_pmu,
- 	},
-+	{
-+		.compatible = "rockchip,rk3188-power-controller",
-+		.data = (void *)&rk3188_pmu,
-+	},
- 	{
- 		.compatible = "rockchip,rk3228-power-controller",
- 		.data = (void *)&rk3228_pmu,
+diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+index 5d49d0a2ff29..8304eceb62e4 100644
+--- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
++++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
+@@ -7,7 +7,9 @@ Required properties for power domain controller:
+ - compatible: Should be one of the following.
+ 	"rockchip,px30-power-controller" - for PX30 SoCs.
+ 	"rockchip,rk3036-power-controller" - for RK3036 SoCs.
++	"rockchip,rk3066-power-controller" - for RK3066 SoCs.
+ 	"rockchip,rk3128-power-controller" - for RK3128 SoCs.
++	"rockchip,rk3188-power-controller" - for RK3188 SoCs.
+ 	"rockchip,rk3228-power-controller" - for RK3228 SoCs.
+ 	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
+ 	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
+@@ -23,7 +25,9 @@ Required properties for power domain sub nodes:
+ - reg: index of the power domain, should use macros in:
+ 	"include/dt-bindings/power/px30-power.h" - for PX30 type power domain.
+ 	"include/dt-bindings/power/rk3036-power.h" - for RK3036 type power domain.
++	"include/dt-bindings/power/rk3066-power.h" - for RK3066 type power domain.
+ 	"include/dt-bindings/power/rk3128-power.h" - for RK3128 type power domain.
++	"include/dt-bindings/power/rk3188-power.h" - for RK3188 type power domain.
+ 	"include/dt-bindings/power/rk3228-power.h" - for RK3228 type power domain.
+ 	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
+ 	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
 -- 
 2.18.0
