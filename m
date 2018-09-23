@@ -1,245 +1,108 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Sun, 23 Sep 2018 15:18:20 +0530
-Message-ID: <97b9cde0-b33e-503e-ad29-e3c85adc26c4@codeaurora.org>
-References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
- <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <20180910193016.GG22824@google.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Sun, 23 Sep 2018 06:31:14 -0400
+Message-ID: <CAK7LNATkkOiYPj2RLubcgZ_z59Bhz4GkgWqPMbnaHBk7EisXLg@mail.gmail.com>
+References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
+ <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
+ <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com> <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910193016.GG22824@google.com>
-Content-Language: en-US
+In-Reply-To: <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild <linux-kbuild@vger.ker>
 List-Id: devicetree@vger.kernel.org
 
+2018-09-13 11:51 GMT-04:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+> Hi Yamada-san,
+>
+> On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> 2018-09-12 0:40 GMT+09:00 Rob Herring <robh@kernel.org>:
+>> > On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+>> >> There is nothing arch specific about building dtb files other than their
+>> >> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+>> >> The dependencies and supported targets are all slightly different.
+>> >> Also, a cross-compiler for each arch is needed, but really the host
+>> >> compiler preprocessor is perfectly fine for building dtbs. Move the
+>> >> build rules to a common location and remove the arch specific ones. This
+>> >> is done in a single step to avoid warnings about overriding rules.
+>> >>
+>> >> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+>> >> These pull in several dependencies some of which need a target compiler
+>> >> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+>> >> All that is really needed is dtc, so adjust the dependencies to only be
+>> >> dtc.
+>> >>
+>> >> This change enables support 'dtbs_install' on some arches which were
+>> >> missing the target.
+>> >
+>> > [...]
+>> >
+>> >> @@ -1215,6 +1215,33 @@ kselftest-merge:
+>> >>                 $(srctree)/tools/testing/selftests/*/config
+>> >>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+>> >>
+>> >> +# ---------------------------------------------------------------------------
+>> >> +# Devicetree files
+>> >> +
+>> >> +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+>> >> +dtstree := arch/$(SRCARCH)/boot/dts
+>> >> +endif
+>> >> +
+>> >> +ifdef CONFIG_OF_EARLY_FLATTREE
+>> >
+>> > This can be true when dtstree is unset. So this line should be this
+>> > instead to fix the 0-day reported error:
+>> >
+>> > ifneq ($(dtstree),)
+>> >
+>> >> +
+>> >> +%.dtb : scripts_dtc
+>> >> +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+>> >> +
+>> >> +PHONY += dtbs dtbs_install
+>> >> +dtbs: scripts_dtc
+>> >> +       $(Q)$(MAKE) $(build)=$(dtstree)
+>> >> +
+>> >> +dtbs_install: dtbs
+>> >> +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+>> >> +
+>> >> +all: dtbs
+>> >> +
+>> >> +endif
+>>
+>>
+>> Ah, right.
+>> Even x86 can enable OF and OF_UNITTEST.
+>>
+>>
+>>
+>> Another solution might be,
+>> guard it by 'depends on ARCH_SUPPORTS_OF'.
+>>
+>>
+>>
+>> This is actually what ACPI does.
+>>
+>> menuconfig ACPI
+>>         bool "ACPI (Advanced Configuration and Power Interface) Support"
+>>         depends on ARCH_SUPPORTS_ACPI
+>>          ...
+>
+> ACPI is a real platform feature, as it depends on firmware.
+>
+> CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
+> even if it has ACPI ;-)
+>
+
+OK, understood.
+
+Thanks!
 
 
-On 9/11/2018 1:00 AM, Matthias Kaehlcke wrote:
-> On Tue, Jul 24, 2018 at 04:12:50PM +0530, Taniya Das wrote:
->> The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
->> for changing the frequency of CPUs. The driver implements the cpufreq
->> driver interface for this hardware engine.
->>
->> Signed-off-by: Saravana Kannan <skannan@codeaurora.org>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   drivers/cpufreq/Kconfig.arm       |  11 ++
->>   drivers/cpufreq/Makefile          |   1 +
->>   drivers/cpufreq/qcom-cpufreq-hw.c | 348 ++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 360 insertions(+)
->>   create mode 100644 drivers/cpufreq/qcom-cpufreq-hw.c
->>
->> diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
->> index 0cd8eb7..93a9d72 100644
->> --- a/drivers/cpufreq/Kconfig.arm
->> +++ b/drivers/cpufreq/Kconfig.arm
->> @@ -298,3 +298,14 @@ config ARM_PXA2xx_CPUFREQ
->>   	  This add the CPUFreq driver support for Intel PXA2xx SOCs.
->>
->>   	  If in doubt, say N.
->> +
->> +config ARM_QCOM_CPUFREQ_HW
->> +	bool "QCOM CPUFreq HW driver"
->> +	depends on ARCH_QCOM
->> +	help
->> +	 Support for the CPUFreq HW driver.
->> +	 Some QCOM chipsets have a HW engine to offload the steps
->> +	 necessary for changing the frequency of the CPUs. Firmware loaded
->> +	 in this engine exposes a programming interface to the OS.
->> +	 The driver implements the cpufreq interface for this HW engine.
->> +	 Say Y if you want to support CPUFreq HW.
->> diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
->> index c1ffeab..ca48a1d 100644
->> --- a/drivers/cpufreq/Makefile
->> +++ b/drivers/cpufreq/Makefile
->> @@ -85,6 +85,7 @@ obj-$(CONFIG_ARM_TEGRA124_CPUFREQ)	+= tegra124-cpufreq.o
->>   obj-$(CONFIG_ARM_TEGRA186_CPUFREQ)	+= tegra186-cpufreq.o
->>   obj-$(CONFIG_ARM_TI_CPUFREQ)		+= ti-cpufreq.o
->>   obj-$(CONFIG_ARM_VEXPRESS_SPC_CPUFREQ)	+= vexpress-spc-cpufreq.o
->> +obj-$(CONFIG_ARM_QCOM_CPUFREQ_HW)	+= qcom-cpufreq-hw.o
->>
->>
->>   ##################################################################################
->> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
->> new file mode 100644
->> index 0000000..ea8f7d1
->> --- /dev/null
->> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
->> @@ -0,0 +1,348 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/cpufreq.h>
->> +#include <linux/init.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_platform.h>
->> +
->> +#define INIT_RATE			300000000UL
->> +#define LUT_MAX_ENTRIES			40U
->> +#define CORE_COUNT_VAL(val)		(((val) & (GENMASK(18, 16))) >> 16)
->> +#define LUT_ROW_SIZE			32
->> +
->> +enum {
->> +	REG_ENABLE,
->> +	REG_LUT_TABLE,
->> +	REG_PERF_STATE,
->> +
->> +	REG_ARRAY_SIZE,
->> +};
->> +
->> +struct cpufreq_qcom {
->> +	struct cpufreq_frequency_table *table;
->> +	struct device *dev;
->> +	void __iomem *reg_bases[REG_ARRAY_SIZE];
->> +	cpumask_t related_cpus;
->> +	unsigned int max_cores;
->> +	unsigned long xo_rate;
->> +};
->> +
->> +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
->> +	[REG_ENABLE]		= 0x0,
->> +	[REG_LUT_TABLE]		= 0x110,
->> +	[REG_PERF_STATE]	= 0x920,
->> +};
->> +
->> +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
->> +
->> +static int
->> +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
->> +			     unsigned int index)
->> +{
->> +	struct cpufreq_qcom *c = policy->driver_data;
->> +
->> +	writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
->> +
->> +	return 0;
->> +}
->> +
->> +static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
->> +{
->> +	struct cpufreq_qcom *c;
->> +	struct cpufreq_policy *policy;
->> +	unsigned int index;
->> +
->> +	policy = cpufreq_cpu_get_raw(cpu);
->> +	if (!policy)
->> +		return 0;
->> +
->> +	c = policy->driver_data;
->> +
->> +	index = readl_relaxed(c->reg_bases[REG_PERF_STATE]);
->> +	index = min(index, LUT_MAX_ENTRIES - 1);
->> +
->> +	return policy->freq_table[index].frequency;
->> +}
->> +
->> +static unsigned int
->> +qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
->> +			    unsigned int target_freq)
->> +{
->> +	struct cpufreq_qcom *c = policy->driver_data;
->> +	int index;
->> +
->> +	index = policy->cached_resolved_idx;
->> +	if (index < 0)
->> +		return 0;
->> +
->> +	writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
->> +
->> +	return policy->freq_table[index].frequency;
->> +}
->> +
->> +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->> +{
->> +	struct cpufreq_qcom *c;
->> +
->> +	c = qcom_freq_domain_map[policy->cpu];
->> +	if (!c) {
->> +		pr_err("No scaling support for CPU%d\n", policy->cpu);
->> +		return -ENODEV;
->> +	}
->> +
->> +	cpumask_copy(policy->cpus, &c->related_cpus);
->> +
->> +	policy->fast_switch_possible = true;
->> +	policy->freq_table = c->table;
->> +	policy->driver_data = c;
->> +
->> +	return 0;
->> +}
->> +
->> +static struct freq_attr *qcom_cpufreq_hw_attr[] = {
->> +	&cpufreq_freq_attr_scaling_available_freqs,
->> +	&cpufreq_freq_attr_scaling_boost_freqs,
->> +	NULL
->> +};
->> +
->> +static struct cpufreq_driver cpufreq_qcom_hw_driver = {
->> +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
->> +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
->> +	.verify		= cpufreq_generic_frequency_table_verify,
->> +	.target_index	= qcom_cpufreq_hw_target_index,
->> +	.get		= qcom_cpufreq_hw_get,
->> +	.init		= qcom_cpufreq_hw_cpu_init,
->> +	.fast_switch    = qcom_cpufreq_hw_fast_switch,
->> +	.name		= "qcom-cpufreq-hw",
->> +	.attr		= qcom_cpufreq_hw_attr,
->> +	.boost_enabled	= true,
->> +};
->> +
->> +static int qcom_cpufreq_hw_read_lut(struct platform_device *pdev,
->> +				    struct cpufreq_qcom *c)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	void __iomem *base;
->> +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
->> +
->> +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
->> +				sizeof(*c->table), GFP_KERNEL);
->> +	if (!c->table)
->> +		return -ENOMEM;
->> +
->> +	base = c->reg_bases[REG_LUT_TABLE];
->> +
->> +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
->> +		data = readl_relaxed(base + i * LUT_ROW_SIZE);
->> +		src = (data & GENMASK(31, 30)) >> 30;
->> +		lval = data & GENMASK(7, 0);
->> +		core_count = CORE_COUNT_VAL(data);
->> +
->> +		if (src)
->> +			c->table[i].frequency = c->xo_rate * lval / 1000;
->> +		else
->> +			c->table[i].frequency = INIT_RATE / 1000;
->> +
->> +		cur_freq = c->table[i].frequency;
->> +
->> +		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
->> +			i, c->table[i].frequency, core_count);
->> +
->> +		if (core_count != c->max_cores)
->> +			cur_freq = CPUFREQ_ENTRY_INVALID;
->> +
-> 
-> I noticed that the 'power_allocator' thermal governor currently can't
-> be used with this driver since there is no OPP table with frequency and
-> voltage information. Does the LUT contain information about the
-> voltage or is there another mechanism to retrieve it?
-> 
-
-No, currently there is no way of reading the voltage information.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Best Regards
+Masahiro Yamada
