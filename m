@@ -1,53 +1,56 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3 2/2] hwmon: ina3221: Read channel input source info
- from DT
-Date: Sat, 22 Sep 2018 22:25:42 -0700
-Message-ID: <5c102fee-202e-e5cb-18a0-be08b82dd461@roeck-us.net>
-References: <20180921223216.634-1-nicoleotsuka@gmail.com>
- <20180921223216.634-3-nicoleotsuka@gmail.com>
- <a7e6c311-eba4-e9b2-df64-9d02882a1dcb@roeck-us.net>
- <20180922184650.GB9092@Asurada>
- <f8e017c4-10dd-2d0d-84df-b05d3ed03bbf@roeck-us.net>
- <20180923003841.GA10071@Asurada-Nvidia.nvidia.com>
- <80510b08-0e89-03ce-7d69-fe51f8b6a7b5@roeck-us.net>
- <20180923033300.GA5736@Asurada>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: hwmon: Add ina3221 documentation
+Date: Sat, 22 Sep 2018 22:31:52 -0700
+Message-ID: <20180923053151.GB9960@Asurada>
+References: <20180923041118.8743-1-nicoleotsuka@gmail.com>
+ <20180923041118.8743-2-nicoleotsuka@gmail.com>
+ <353ccbbd-94c8-72eb-eb98-8a0507431e15@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180923033300.GA5736@Asurada>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <353ccbbd-94c8-72eb-eb98-8a0507431e15@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
+To: Guenter Roeck <linux@roeck-us.net>
 Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/22/2018 08:33 PM, Nicolin Chen wrote:
-
->> No. If the chip was configured by the BIOS/ROMMON, it is supposed
->> to be that way. We can not just override that.
+On Sat, Sep 22, 2018 at 10:19:42PM -0700, Guenter Roeck wrote:
+> >+2) child nodes
+> >+  Required properties:
+> >+  - input-id: Must be 1, 2 or 3
+> >+
+> >+  Optional properties:
+> >+  - input-label: Name of the input source
+> >+  - shunt-resistor: Shunt resistor value in micro-Ohm
+> >+  - status: Should be "disabled" if no input source
+> >+
+> >+  Example:
+> >+
+> >+  input1 {
+> >+          input-id = <0x1>;
 > 
-> For this driver, it does soft reset in the probe() so we're
-> sure that all channels are enabled at the moment of calling
-> this regmap_update_bits. So there's no assumption anymore.
+> We'll have to find a better name for this. Feel free to look up examples in the
+> existing devicetree descriptions. The one that seems to be used most of the time
+> to indicate a channel index or id is "reg". It should also start with 0 - there
+> is no real reason for it to start with 1; it only makes the code more complex.
+
+The reason is that the port start from 1 in the datasheet.
+
+I don't mind using reg or count it from 0, will look up to
+see if I can find something solid; otherwise, I'll wait for
+binding doc maintainers' opinions before sending v5.
+
+> >+          status = "disabled";
+> >+  };
+> >+  input2 {
+> >+          input-id = <0x2>;
+> >+          shunt-resistor = <5000>;
 > 
+> I would suggest shunt-resistor-micro-ohms as per
+> Documentation/devicetree/bindings/property-units.txt.
 
-Good point.
+Will change it.
 
-> But the case that you mentioned is a good one. It does give
-> me some insight about the use case and the things that will
-> need to be careful when adding in[123]_enable. Just it'd be
-> also possible that BIOS could disable a channel that is not
-> explicitly disabled in the DT -- then the driver should not
-> enable it.
-> 
-
-Not necessarily. Again, we can not assume that everyone has DT
-(or that it and/or the BIOS is correct, for that matter).
-
-Nevertheless, adding the enable attribute is not required at this
-point, so it is ok for me to skip it. Please note that I'll accept
-a patch adding it, though, if it is ever submitted (with a use case).
-
-Thanks,
-Guenter
+Thank you
+Nicolin
