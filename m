@@ -1,144 +1,62 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
- magnetometer
-Date: Sun, 23 Sep 2018 23:17:22 +0800
-Message-ID: <20180923151722.GA17711@Eros>
-References: <20180920131340.6699-1-songqiang1304521@gmail.com>
- <20180922111409.597126fd@archlinux>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 1/7] dt-bindings: add power-domain header for RK3188 SoCs
+Date: Sun, 23 Sep 2018 17:23:50 +0200
+Message-ID: <20180923152356.30154-2-heiko@sntech.de>
+References: <20180923152356.30154-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180922111409.597126fd@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180923152356.30154-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 22, 2018 at 11:14:09AM +0100, Jonathan Cameron wrote:
-> On Thu, 20 Sep 2018 21:13:40 +0800
-> Song Qiang <songqiang1304521@gmail.com> wrote:
-> 
+Add rk3188 power-domains as described by the TRM.
 
-...
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ include/dt-bindings/power/rk3188-power.h | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 include/dt-bindings/power/rk3188-power.h
 
-> > +const struct regmap_access_table rm3100_volatile_table = {
-> > +		.yes_ranges = rm3100_volatile_ranges,
-> > +		.n_yes_ranges = ARRAY_SIZE(rm3100_volatile_ranges),
-> > +};
-> > +
-> > +static irqreturn_t rm3100_measurement_irq_handler(int irq, void *d)
-> 
-> Silly question: Does the chip have two interrupt lines?  (if so they
-> should be in the binding). If not, then this is the irq handler
-> for everything so why have the measurement in it's name?
-> 
-
-Hi Jonathan
-
-Ah, always some other things need to care, I didn't put enough focus on
-this naming and thought it looks like ok. So I should throw these
-unnecessary information in names away!
-
-> > +{
-> > +	struct rm3100_data *data = d;
-> > +
-> > +	complete(&data->measuring_done);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-
-... 
-
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	/* 3sec more wait time. */
-> > +	ret = regmap_read(data->regmap, RM_REG_TMRC, &tmp);
-> > +	data->conversion_time = rm3100_samp_rates[tmp-RM_TMRC_OFFSET][2] + 3000;
-> > +
-> > +	/* Starting all channels' conversion. */
-> > +	ret = regmap_write(regmap, RM_REG_CMM,
-> > +		RM_CMM_PMX | RM_CMM_PMY | RM_CMM_PMZ | RM_CMM_START);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return devm_iio_device_register(dev, indio_dev);
-> Nope.  Can't do this without having a race condition.   You need
-> to ensure the userspace and in kernel interfaces are removed 'before'.
-> you do that RM_REG_CMM write in remove.
-> 
-> One option is to use devm_add_action to add a custom unwind function
-> to the automatic handling. The other is to not use devm for everything 
-> after the write above and do the device_unregister manually.
-> 
-
-I've already handled some of those problems, and most of them are not a 
-big deal, except this one and the locking problems, about how should I 
-deal with locks properly. I'm already reading the lockdep conventions and
-some articles about it.
-Autobuilder are complaining about my locks, seems like a mess it is!
-
-> > +}
-> > +EXPORT_SYMBOL(rm3100_common_probe);
-> > +
-> > +int rm3100_common_remove(struct device *dev)
-> > +{
-> > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
-> > +	struct rm3100_data *data = iio_priv(indio_dev);
-> > +	struct regmap *regmap = data->regmap;
-> > +
-> > +	regmap_write(regmap, RM_REG_CMM, 0x00);
-> > +
-> > +	return 0;
-> No real point in returning int if you are always going to put 0 in
-> in it.  Should probably check the regmap_write though and output
-> a log message if it fails (as no other way of telling).
-> 
-> > +}
-> > +EXPORT_SYMBOL(rm3100_common_remove);
-> > +
-
-...
-
-> > +struct rm3100_data {
-> > +	struct device *dev;
-> > +	struct regmap *regmap;
-> > +	struct completion measuring_done;
-> > +	bool use_interrupt;
-> > +
-> > +	int conversion_time;
-> > +
-> > +	/* To protect consistency of every measurement and sampling
-> 
-> /*
->  * To protect
->  */
-> (common format to most of the kernel other than those 'crazy' :)
-> people in net and a few other corners.
-> 
-
-Actually, I've been wondering why the perl scripts didn't find this out,
-and not only this one, many other problems like too many indents, 
-parameters in open brackets are not aligned can be detected.
-I don't know perl, but this has drawn my attention. Is there any
-particular reason these problems still can not be detected? or I think
-we can work some patch out! Make reviewing code like mine easier!
-
-yours,
-Song Qiang
-
-> > +	 * frequency change operations.
-> > +	 */
-> > +	struct mutex lock;
-> > +};
-> > +
-> > +extern const struct regmap_access_table rm3100_readable_table;
-> > +extern const struct regmap_access_table rm3100_writable_table;
-> > +extern const struct regmap_access_table rm3100_volatile_table;
-> > +
-> > +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int irq);
-> > +int rm3100_common_remove(struct device *dev);
-> > +
-> > +#endif /* RM3100_CORE_H */
-> 
+diff --git a/include/dt-bindings/power/rk3188-power.h b/include/dt-bindings/power/rk3188-power.h
+new file mode 100644
+index 000000000000..820db55fc4b7
+--- /dev/null
++++ b/include/dt-bindings/power/rk3188-power.h
+@@ -0,0 +1,23 @@
++#ifndef __DT_BINDINGS_POWER_RK3188_POWER_H__
++#define __DT_BINDINGS_POWER_RK3188_POWER_H__
++
++/* VD_CORE */
++#define RK3188_PD_A9_0		0
++#define RK3188_PD_A9_1		1
++#define RK3188_PD_A9_2		2
++#define RK3188_PD_A9_3		3
++#define RK3188_PD_DBG		4
++#define RK3188_PD_SCU		5
++
++/* VD_LOGIC */
++#define RK3188_PD_VIDEO		6
++#define RK3188_PD_VIO		7
++#define RK3188_PD_GPU		8
++#define RK3188_PD_PERI		9
++#define RK3188_PD_CPU		10
++#define RK3188_PD_ALIVE		11
++
++/* VD_PMU */
++#define RK3188_PD_RTC		12
++
++#endif
+-- 
+2.18.0
