@@ -1,11 +1,13 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v4 0/2] Reworked rk3288-tinker-s devicetree
-Date: Sun, 23 Sep 2018 13:38:05 +0200
-Message-ID: <20180923113807.11558-1-heiko@sntech.de>
+Subject: [PATCH v4 2/2] ARM: dts: rockchip: add rk3288-based Tinker board S
+Date: Sun, 23 Sep 2018 13:38:07 +0200
+Message-ID: <20180923113807.11558-3-heiko@sntech.de>
+References: <20180923113807.11558-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180923113807.11558-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
  <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
@@ -19,44 +21,78 @@ To: beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+From: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
 
-I've adpated your patches 1+2 like so and would like to add them this way
-later on. Biggest change is of course making patch 1 solely about moving
-the shared parts to the dtsi and adding the tinker-s.dts including the
-emmc in the second patch.
+Add the actual dts for the tinker board S, which brings its own emmc
+device, not therefore not requiring an sd-card to boot.
 
-Apart from that you can also see some previously missing style-related
-fixes. For example patch subject lines are somewhat specific, to allow
-people browsing the git history to realize the core patch contents just
-from the "headline" and also use the "correct" prefixes which vary
-depending on the subsystem your changing.
-
-For future patches you can just do a "git log --oneline arch/arm/boot/dts"
-(change directory depending on location of the change of course), to
-see that arm32 dts use "ARM: dts: $soc-vendor: foo".
-
-
-Also providing a commit message describing the individual change
-in a bit more detail is important.
-
-The wifi patch is a different issue, so I'll reply there.
-
-
-Heiko
-
-David Summers (2):
-  ARM: dts: rockchip: move shared tinker-board nodes to a common dtsi
-  ARM: dts: rockchip: add rk3288-based Tinker board S
-
- .../devicetree/bindings/arm/rockchip.txt      |   4 +
- arch/arm/boot/dts/Makefile                    |   1 +
- arch/arm/boot/dts/rk3288-tinker-s.dts         |  26 +
- arch/arm/boot/dts/rk3288-tinker.dts           | 498 +----------------
- arch/arm/boot/dts/rk3288-tinker.dtsi          | 504 ++++++++++++++++++
- 5 files changed, 537 insertions(+), 496 deletions(-)
+Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ .../devicetree/bindings/arm/rockchip.txt      |  4 +++
+ arch/arm/boot/dts/Makefile                    |  1 +
+ arch/arm/boot/dts/rk3288-tinker-s.dts         | 26 +++++++++++++++++++
+ 3 files changed, 31 insertions(+)
  create mode 100644 arch/arm/boot/dts/rk3288-tinker-s.dts
- create mode 100644 arch/arm/boot/dts/rk3288-tinker.dtsi
 
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+index 6bb80f2b7c5d..624253fee7d5 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.txt
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -17,6 +17,10 @@ Rockchip platforms device tree bindings
+     Required root node properties:
+       - compatible = "asus,rk3288-tinker", "rockchip,rk3288";
+ 
++- Asus Tinker board S
++    Required root node properties:
++      - compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
++
+ - Kylin RK3036 board:
+     Required root node properties:
+       - compatible = "rockchip,kylin-rk3036", "rockchip,rk3036";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5bd3de87c33..dc86080c60e3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -864,6 +864,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+ 	rk3288-r89.dtb \
+ 	rk3288-rock2-square.dtb \
+ 	rk3288-tinker.dtb \
++	rk3288-tinker-s.dtb \
+ 	rk3288-veyron-brain.dtb \
+ 	rk3288-veyron-jaq.dtb \
+ 	rk3288-veyron-jerry.dtb \
+diff --git a/arch/arm/boot/dts/rk3288-tinker-s.dts b/arch/arm/boot/dts/rk3288-tinker-s.dts
+new file mode 100644
+index 000000000000..37093922b482
+--- /dev/null
++++ b/arch/arm/boot/dts/rk3288-tinker-s.dts
+@@ -0,0 +1,26 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
++ */
++
++/dts-v1/;
++
++#include "rk3288-tinker.dtsi"
++
++/ {
++	model = "Rockchip RK3288 Asus Tinker Board S";
++	compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
++};
++
++&emmc {
++	bus-width = <8>;
++	cap-mmc-highspeed;
++	disable-wp;
++	non-removable;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_clk &emmc_cmd &emmc_pwr &emmc_bus8>;
++	max-frequency = <150000000>;
++	mmc-hs200-1_8v;
++	mmc-ddr-1_8v;
++	status = "okay";
++};
 -- 
 2.18.0
