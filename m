@@ -1,189 +1,67 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100
- 9-axis magnetometer
-Date: Sun, 23 Sep 2018 14:01:15 +0300
-Message-ID: <20180923110115.vjnmfssmeq3i37pf@mwanda>
-References: <20180920131340.6699-1-songqiang1304521@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND flash
+ controller driver
+Date: Sun, 23 Sep 2018 13:34:51 +0200
+Message-ID: <20180923133451.78c95cef@xps13>
+References: <1537199260-7280-1-git-send-email-christophe.kerello@st.com>
+        <1537199260-7280-3-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kbuild-bounces@lists.01.org>
-Content-Disposition: inline
-In-Reply-To: <20180920131340.6699-1-songqiang1304521@gmail.com>
-List-Unsubscribe: <https://lists.01.org/mailman/options/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/kbuild/>
-List-Post: <mailto:kbuild@lists.01.org>
-List-Help: <mailto:kbuild-request@lists.01.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/kbuild>,
- <mailto:kbuild-request@lists.01.org?subject=subscribe>
-Errors-To: kbuild-bounces@lists.01.org
-Sender: "kbuild" <kbuild-bounces@lists.01.org>
-To: kbuild@01.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>, robh+dt@kernel.org, kbuild-all@01.org, pmeerw@pmeerw.net, knaack.h@gmx.de, jic23@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537199260-7280-3-git-send-email-christophe.kerello@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: christophe.kerello@st.com
+Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Song,
+Hi Christophe,
 
-I love your patch! Perhaps something to improve:
+<christophe.kerello@st.com> wrote on Mon, 17 Sep 2018 17:47:39 +0200:
 
-url:    https://github.com/0day-ci/linux/commits/Song-Qiang/iio-magnetometer-Add-support-for-PNI-RM3100-9-axis-magnetometer/20180920-215124
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+> From: Christophe Kerello <christophe.kerello@st.com>
+> 
+> The driver adds the support for the STMicroelectronics FMC2 NAND
+> Controller found on STM32MP SOCs.
+> 
+> This patch is based on FMC2 command sequencer.
+> The purpose of the command sequencer is to facilitate the programming
+> and the reading of NAND flash pages with the ECC and to free the CPU
+> of sequencing tasks.
+> It requires one DMA channel for write and two DMA channels for read
+> operations.
+> 
+> Only NAND_ECC_HW mode is actually supported.
+> The driver supports a maximum 8k page size.
+> The following ECC strength and step size are currently supported:
+>  - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+>  - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+>  - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended ecc
+>    based on HAMMING)
+> 
+> This patch has been tested on Micron MT29F8G08ABACAH4 and
+> MT29F8G16ABACAH4
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+> ---
 
-smatch warnings:
-drivers/iio/magnetometer/rm3100-core.c:235 rm3100_set_samp_freq() warn: inconsistent returns 'mutex:&data->lock'.
-  Locked on:   line 206
-  Unlocked on: line 194
-drivers/iio/magnetometer/rm3100-core.c:319 rm3100_trigger_handler() warn: inconsistent returns 'mutex:&data->lock'.
-  Locked on:   line 310
-  Unlocked on: line 319
 
-# https://github.com/0day-ci/linux/commit/0345472c15bab336397b25a25eb76a9f8586faf0
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 0345472c15bab336397b25a25eb76a9f8586faf0
-vim +235 drivers/iio/magnetometer/rm3100-core.c
+[...]
 
-0345472c Song Qiang 2018-09-20  183  
-0345472c Song Qiang 2018-09-20  184  static int rm3100_set_samp_freq(struct rm3100_data *data, int val, int val2)
-0345472c Song Qiang 2018-09-20  185  {
-0345472c Song Qiang 2018-09-20  186  	struct regmap *regmap = data->regmap;
-0345472c Song Qiang 2018-09-20  187  	int cycle_count;
-0345472c Song Qiang 2018-09-20  188  	int ret;
-0345472c Song Qiang 2018-09-20  189  	int i;
-0345472c Song Qiang 2018-09-20  190  
-0345472c Song Qiang 2018-09-20  191  	/* All cycle count registers use the same value. */
-0345472c Song Qiang 2018-09-20  192  	ret = regmap_read(regmap, RM_REG_CCXL, &cycle_count);
-0345472c Song Qiang 2018-09-20  193  	if (cycle_count < 0)
-0345472c Song Qiang 2018-09-20  194  		return cycle_count;
-0345472c Song Qiang 2018-09-20  195  
-0345472c Song Qiang 2018-09-20  196  	for (i = 0; i < RM_SAMP_NUM; i++) {
-0345472c Song Qiang 2018-09-20  197  		if (val == rm3100_samp_rates[i][0] &&
-0345472c Song Qiang 2018-09-20  198  			val2 == rm3100_samp_rates[i][1])
-0345472c Song Qiang 2018-09-20  199  			break;
-0345472c Song Qiang 2018-09-20  200  	}
-0345472c Song Qiang 2018-09-20  201  
-0345472c Song Qiang 2018-09-20  202  	if (i != RM_SAMP_NUM) {
-0345472c Song Qiang 2018-09-20  203  		mutex_lock(&data->lock);
-                                                ^^^^^^^^^^^^^^^^^^^^^^^
-0345472c Song Qiang 2018-09-20  204  		ret = regmap_write(regmap, RM_REG_TMRC, i + RM_TMRC_OFFSET);
-0345472c Song Qiang 2018-09-20  205  		if (ret < 0)
-0345472c Song Qiang 2018-09-20  206  			return ret;
-                                                        ^^^^^^^^^^
-goto unlock;  there are a bunch of these.
+> +/* NAND callbacks setup */
+> +static void stm32_fmc2_nand_callbacks_setup(struct stm32_fmc2 *fmc2)
+> +{
+> +	struct nand_chip *chip = &fmc2->chip;
+> +
+> +	/* Specific callbacks to read/write a page */
+> +	chip->ecc.correct = stm32_fmc2_ham_correct;
+> +	chip->ecc.write_page = stm32_fmc2_sequencer_write_page;
+> +	chip->ecc.read_page = stm32_fmc2_sequencer_read_page;
+> +	chip->ecc.write_page_raw = stm32_fmc2_sequencer_write_page_raw;
+> +	chip->ecc.read_page_raw = stm32_fmc2_sequencer_read_page_raw;
 
-0345472c Song Qiang 2018-09-20  207  
-0345472c Song Qiang 2018-09-20  208  		/* Checking if cycle count registers need changing. */
-0345472c Song Qiang 2018-09-20  209  		if (val == 600 && cycle_count == 200) {
-0345472c Song Qiang 2018-09-20  210  			for (i = 0; i < 3; i++) {
-0345472c Song Qiang 2018-09-20  211  				regmap_write(regmap, RM_REG_CCXL + 2 * i, 100);
-0345472c Song Qiang 2018-09-20  212  				if (ret < 0)
-0345472c Song Qiang 2018-09-20  213  					return ret;
-0345472c Song Qiang 2018-09-20  214  			}
-0345472c Song Qiang 2018-09-20  215  		} else if (val != 600 && cycle_count == 100) {
-0345472c Song Qiang 2018-09-20  216  			for (i = 0; i < 3; i++) {
-0345472c Song Qiang 2018-09-20  217  				regmap_write(regmap, RM_REG_CCXL + 2 * i, 200);
-0345472c Song Qiang 2018-09-20  218  				if (ret < 0)
-0345472c Song Qiang 2018-09-20  219  					return ret;
-0345472c Song Qiang 2018-09-20  220  			}
-0345472c Song Qiang 2018-09-20  221  		}
-0345472c Song Qiang 2018-09-20  222  		/* Writing TMRC registers requires CMM reset. */
-0345472c Song Qiang 2018-09-20  223  		ret = regmap_write(regmap, RM_REG_CMM, 0);
-0345472c Song Qiang 2018-09-20  224  		if (ret < 0)
-0345472c Song Qiang 2018-09-20  225  			return ret;
-0345472c Song Qiang 2018-09-20  226  		ret = regmap_write(regmap, RM_REG_CMM, RM_CMM_PMX |
-0345472c Song Qiang 2018-09-20  227  			RM_CMM_PMY | RM_CMM_PMZ | RM_CMM_START);
-0345472c Song Qiang 2018-09-20  228  		if (ret < 0)
-0345472c Song Qiang 2018-09-20  229  			return ret;
-0345472c Song Qiang 2018-09-20  230  		mutex_unlock(&data->lock);
-0345472c Song Qiang 2018-09-20  231  
-0345472c Song Qiang 2018-09-20  232  		data->conversion_time = rm3100_samp_rates[i][2] + 3000;
-0345472c Song Qiang 2018-09-20  233  		return 0;
-0345472c Song Qiang 2018-09-20  234  	}
-0345472c Song Qiang 2018-09-20 @235  	return -EINVAL;
-0345472c Song Qiang 2018-09-20  236  }
-0345472c Song Qiang 2018-09-20  237  
-0345472c Song Qiang 2018-09-20  238  static int rm3100_read_raw(struct iio_dev *indio_dev,
-0345472c Song Qiang 2018-09-20  239  			   const struct iio_chan_spec *chan,
-0345472c Song Qiang 2018-09-20  240  			   int *val, int *val2, long mask)
-0345472c Song Qiang 2018-09-20  241  {
-0345472c Song Qiang 2018-09-20  242  	struct rm3100_data *data = iio_priv(indio_dev);
-0345472c Song Qiang 2018-09-20  243  	int ret;
-0345472c Song Qiang 2018-09-20  244  
-0345472c Song Qiang 2018-09-20  245  	switch (mask) {
-0345472c Song Qiang 2018-09-20  246  	case IIO_CHAN_INFO_RAW:
-0345472c Song Qiang 2018-09-20  247  		ret = iio_device_claim_direct_mode(indio_dev);
-0345472c Song Qiang 2018-09-20  248  		if (ret < 0)
-0345472c Song Qiang 2018-09-20  249  			return ret;
-0345472c Song Qiang 2018-09-20  250  		ret = rm3100_read_mag(data, chan->scan_index, val);
-0345472c Song Qiang 2018-09-20  251  		iio_device_release_direct_mode(indio_dev);
-0345472c Song Qiang 2018-09-20  252  
-0345472c Song Qiang 2018-09-20  253  		return ret;
-0345472c Song Qiang 2018-09-20  254  	case IIO_CHAN_INFO_SAMP_FREQ:
-0345472c Song Qiang 2018-09-20  255  		return ret = rm3100_get_samp_freq(data, val, val2);
-0345472c Song Qiang 2018-09-20  256  	default:
-0345472c Song Qiang 2018-09-20  257  		return -EINVAL;
-0345472c Song Qiang 2018-09-20  258  	}
-0345472c Song Qiang 2018-09-20  259  }
-0345472c Song Qiang 2018-09-20  260  
-0345472c Song Qiang 2018-09-20  261  static int rm3100_write_raw(struct iio_dev *indio_dev,
-0345472c Song Qiang 2018-09-20  262  			    struct iio_chan_spec const *chan,
-0345472c Song Qiang 2018-09-20  263  			    int val, int val2, long mask)
-0345472c Song Qiang 2018-09-20  264  {
-0345472c Song Qiang 2018-09-20  265  	struct rm3100_data *data = iio_priv(indio_dev);
-0345472c Song Qiang 2018-09-20  266  	int ret;
-0345472c Song Qiang 2018-09-20  267  
-0345472c Song Qiang 2018-09-20  268  	switch (mask) {
-0345472c Song Qiang 2018-09-20  269  	case IIO_CHAN_INFO_SAMP_FREQ:
-0345472c Song Qiang 2018-09-20  270  		ret = rm3100_set_samp_freq(data, val, val2);
-0345472c Song Qiang 2018-09-20  271  		if (ret < 0)
-0345472c Song Qiang 2018-09-20  272  			return ret;
-0345472c Song Qiang 2018-09-20  273  		return 0;
-0345472c Song Qiang 2018-09-20  274  	default:
-0345472c Song Qiang 2018-09-20  275  		return -EINVAL;
-0345472c Song Qiang 2018-09-20  276  	}
-0345472c Song Qiang 2018-09-20  277  
-0345472c Song Qiang 2018-09-20  278  }
-0345472c Song Qiang 2018-09-20  279  
-0345472c Song Qiang 2018-09-20  280  static const struct iio_info rm3100_info = {
-0345472c Song Qiang 2018-09-20  281  	.read_raw = rm3100_read_raw,
-0345472c Song Qiang 2018-09-20  282  	.write_raw = rm3100_write_raw,
-0345472c Song Qiang 2018-09-20  283  };
-0345472c Song Qiang 2018-09-20  284  
-0345472c Song Qiang 2018-09-20  285  static irqreturn_t rm3100_trigger_handler(int irq, void *p)
-0345472c Song Qiang 2018-09-20  286  {
-0345472c Song Qiang 2018-09-20  287  	struct iio_poll_func *pf = p;
-0345472c Song Qiang 2018-09-20  288  	struct iio_dev *indio_dev = pf->indio_dev;
-0345472c Song Qiang 2018-09-20  289  	struct rm3100_data *data = iio_priv(indio_dev);
-0345472c Song Qiang 2018-09-20  290  	struct regmap *regmap = data->regmap;
-0345472c Song Qiang 2018-09-20  291  	u8 *buffer;
-0345472c Song Qiang 2018-09-20  292  	int ret;
-0345472c Song Qiang 2018-09-20  293  	int i;
-0345472c Song Qiang 2018-09-20  294  
-0345472c Song Qiang 2018-09-20  295  	buffer = devm_kzalloc(data->dev, indio_dev->scan_bytes, GFP_KERNEL);
-0345472c Song Qiang 2018-09-20  296  	if (!buffer)
-0345472c Song Qiang 2018-09-20  297  		goto done;
-0345472c Song Qiang 2018-09-20  298  
-0345472c Song Qiang 2018-09-20  299  	mutex_lock(&data->lock);
-0345472c Song Qiang 2018-09-20  300  	ret = rm3100_wait_measurement(data);
-0345472c Song Qiang 2018-09-20  301  	if (ret < 0) {
-0345472c Song Qiang 2018-09-20  302  		mutex_unlock(&data->lock);
-0345472c Song Qiang 2018-09-20  303  		goto done;
-0345472c Song Qiang 2018-09-20  304  	}
-0345472c Song Qiang 2018-09-20  305  
-0345472c Song Qiang 2018-09-20  306  	for (i = 0; i < 3; i++) {
-0345472c Song Qiang 2018-09-20  307  		ret = regmap_bulk_read(regmap, RM_REG_MX2 + 3 * i,
-0345472c Song Qiang 2018-09-20  308  				buffer + 4 * i, 3);
-0345472c Song Qiang 2018-09-20  309  		if (ret < 0)
-0345472c Song Qiang 2018-09-20  310  			return ret;
-0345472c Song Qiang 2018-09-20  311  	}
-0345472c Song Qiang 2018-09-20  312  	mutex_unlock(&data->lock);
-0345472c Song Qiang 2018-09-20  313  
-0345472c Song Qiang 2018-09-20  314  	iio_push_to_buffers_with_timestamp(indio_dev, buffer,
-0345472c Song Qiang 2018-09-20  315  			iio_get_time_ns(indio_dev));
-0345472c Song Qiang 2018-09-20  316  done:
-0345472c Song Qiang 2018-09-20  317  	iio_trigger_notify_done(indio_dev->trig);
-0345472c Song Qiang 2018-09-20  318  
-0345472c Song Qiang 2018-09-20 @319  	return IRQ_HANDLED;
-0345472c Song Qiang 2018-09-20  320  }
-0345472c Song Qiang 2018-09-20  321  
+Are you sure all the tests in mtd-utils are successful?
+
+
+Thanks,
+Miquèl
