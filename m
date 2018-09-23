@@ -1,259 +1,170 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: [PATCH 2/3] ARM: DTS: AM3517-EVM: Add support for UI board and Audio
-Date: Sun, 23 Sep 2018 10:37:17 -0500
-Message-ID: <20180923153718.15095-2-aford173@gmail.com>
-References: <20180923153718.15095-1-aford173@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180923153718.15095-1-aford173@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: Adam Ford <aford173@gmail.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [RFC 2/3 net] lorawan: Add macro and definition for LoRaWAN class
+ modlue
+Date: Sun, 23 Sep 2018 18:06:03 +0200
+Message-ID: <f74c033a-fadc-fb8c-9469-6e6a32339cd8@suse.de>
+References: <cover.1535039998.git.starnight@g.ncu.edu.tw>
+ <f7ea222671a2bc6fe0a060c4bdb1ebae162d0d91.1535039998.git.starnight@g.ncu.edu.tw>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <f7ea222671a2bc6fe0a060c4bdb1ebae162d0d91.1535039998.git.starnight@g.ncu.edu.tw>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=c3=b6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=c3=b6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "contact@snootlab.com" <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@globalsat.com.tw, Alexander Graf <agraf@suse.de>, =?UTF-8?Q?Michal_Kube=c4=8dek?= <mkubecek@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-The full AM3517-EVM shipped with an add-on board which contained
-two Audio codecs, a GPIO expander with a variety of buttons, and
-some other features.  This patch enables these portions of the UI
-board because they don't directly conflict with existing features.
+Hi Jian-Hong,
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Many thanks and sorry for the delay. This patch mostly looks good and
+should go in before its first uses, so I would like to queue it soon for
+my hardware-MAC module drivers - but some questions below. Also a typo
+in the subject, and we should probably prepend "net: " and I would
+personally not mention the module here as it's a userspace API.
 
-diff --git a/arch/arm/boot/dts/am3517-evm-ui.dtsi b/arch/arm/boot/dts/am3517-evm-ui.dtsi
-new file mode 100644
-index 000000000000..e841918c1c26
---- /dev/null
-+++ b/arch/arm/boot/dts/am3517-evm-ui.dtsi
-@@ -0,0 +1,220 @@
-+/*
-+ * Copyright (C) 2018 Logic PD, Inc - http://www.logicpd.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <dt-bindings/input/input.h>
-+
-+/ {
-+	codec1 {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "tlv320aic23-hifi";
-+
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic In",
-+			"Line", "Line In",
-+			"Line", "Line Out";
-+
-+		simple-audio-card,routing =
-+			"Line Out", "LOUT",
-+			"Line Out", "ROUT",
-+			"LLINEIN", "Line In",
-+			"RLINEIN", "Line In",
-+			"MICIN", "Mic In";
-+
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_master>;
-+		simple-audio-card,frame-master = <&sound_master>;
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&mcbsp1>;
-+		};
-+
-+		sound_master: simple-audio-card,codec {
-+			sound-dai = <&tlv320aic23_1>;
-+			system-clock-frequency = <12000000>;
-+		};
-+	};
-+
-+	codec2 {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "tlv320aic23-hifi";
-+
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic In",
-+			"Line", "Line In",
-+			"Line", "Line Out";
-+
-+		simple-audio-card,routing =
-+			"Line Out", "LOUT",
-+			"Line Out", "ROUT",
-+			"LLINEIN", "Line In",
-+			"RLINEIN", "Line In",
-+			"MICIN", "Mic In";
-+
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_master2>;
-+		simple-audio-card,frame-master = <&sound_master2>;
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&mcbsp2>;
-+		};
-+
-+		sound_master2: simple-audio-card,codec {
-+			sound-dai = <&tlv320aic23_2>;
-+			system-clock-frequency = <12000000>;
-+		};
-+	};
-+
-+	expander-keys {
-+		compatible = "gpio-keys-polled";
-+		poll-interval = <100>;
-+
-+		record {
-+			label = "Record";
-+			/* linux,code = <BTN_0>; */
-+			gpios = <&tca6416_2 15 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		play {
-+			label = "Play";
-+			linux,code = <KEY_PLAY>;
-+			gpios = <&tca6416_2 14 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		Stop {
-+			label = "Stop";
-+			linux,code = <KEY_STOP>;
-+			gpios = <&tca6416_2 13 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		fwd {
-+			label = "FWD";
-+			linux,code = <KEY_FASTFORWARD>;
-+			gpios = <&tca6416_2 12 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		rwd {
-+			label = "RWD";
-+			linux,code = <KEY_REWIND>;
-+			gpios = <&tca6416_2 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		shift {
-+			label = "Shift";
-+			linux,code = <KEY_LEFTSHIFT>;
-+			gpios = <&tca6416_2 10 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		Mode {
-+			label = "Mode";
-+			linux,code = <BTN_MODE>;
-+			gpios = <&tca6416_2 9 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		Menu {
-+			label = "Menu";
-+			linux,code = <KEY_MENU>;
-+			gpios = <&tca6416_2 8 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		Up {
-+			label = "Up";
-+			linux,code = <KEY_UP>;
-+			gpios = <&tca6416_2 7 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		Down {
-+			label = "Down";
-+			linux,code = <KEY_DOWN>;
-+			gpios = <&tca6416_2 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	/* Audio codecs */
-+	tlv320aic23_1: codec@1a {
-+		compatible = "ti,tlv320aic23";
-+		reg = <0x1a>;
-+		#sound-dai-cells= <0>;
-+		status = "okay";
-+	};
-+
-+	tlv320aic23_2: codec@1b {
-+		compatible = "ti,tlv320aic23";
-+		reg = <0x1b>;
-+		#sound-dai-cells= <0>;
-+		status = "okay";
-+	};
-+};
-+
-+&i2c3 {
-+	/* Audio codecs */
-+	tlv320aic23_3: codec@1a {
-+		compatible = "ti,tlv320aic23";
-+		reg = <0x1a>;
-+		#sound-dai-cells= <0>;
-+		status = "okay";
-+	};
-+
-+	/* GPIO Expanders */
-+	tca6416_2: gpio@20 {
-+		compatible = "ti,tca6416";
-+		reg = <0x20>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		vcc-supply = <&vdd_io_reg>;
-+	};
-+
-+	tca6416_3: gpio@21 {
-+		compatible = "ti,tca6416";
-+		reg = <0x21>;
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+		vcc-supply = <&vdd_io_reg>;
-+	};
-+
-+	/* TVP5146 Analog Video decoder input */
-+	tvp5146@5c {
-+		compatible = "ti,tvp5146m2";
-+		reg = <0x5c>;
-+	};
-+};
-+
-+&mcbsp1 {
-+	status = "ok";
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcbsp1_pins>;
-+};
-+
-+&mcbsp2 {
-+	status = "ok";
-+	#sound-dai-cells = <0>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcbsp2_pins>;
-+};
-+
-+&omap3_pmx_core {
-+	mcbsp1_pins: pinmux_mcbsp1_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2190, PIN_OUTPUT | MUX_MODE0)	/* mcbsp1_dx.mcbsp1_dx */
-+			OMAP3_CORE1_IOPAD(0x2192, PIN_INPUT | MUX_MODE0)	/* mcbsp1_dx.mcbsp1_dr */
-+			OMAP3_CORE1_IOPAD(0x2196, PIN_INPUT | MUX_MODE0)	/* mcbsp_clks.mcbsp1_fsx */
-+			OMAP3_CORE1_IOPAD(0x2198, PIN_INPUT | MUX_MODE0)	/* mcbsp1_clkx.mcbsp1_clkx */
-+		>;
-+	};
-+
-+	mcbsp2_pins: pinmux_mcbsp2_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x213c, PIN_INPUT | MUX_MODE0)	/* mcbsp2_fsx.mcbsp2_fsx */
-+			OMAP3_CORE1_IOPAD(0x213e, PIN_INPUT | MUX_MODE0)	/* mcbsp2_clkx.mcbsp2_clkx */
-+			OMAP3_CORE1_IOPAD(0x2140, PIN_INPUT | MUX_MODE0)	/* mcbsp2_dr.mcbsp2.dr */
-+			OMAP3_CORE1_IOPAD(0x2142, PIN_OUTPUT | MUX_MODE0)	/* mcbsp2_dx.mcbsp2_dx */
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/am3517-evm.dts b/arch/arm/boot/dts/am3517-evm.dts
-index 1d158cfda15f..d4d33cd7adad 100644
---- a/arch/arm/boot/dts/am3517-evm.dts
-+++ b/arch/arm/boot/dts/am3517-evm.dts
-@@ -9,6 +9,7 @@
- 
- #include "am3517.dtsi"
- #include "am3517-som.dtsi"
-+#include "am3517-evm-ui.dtsi"
- #include <dt-bindings/input/input.h>
- 
- / {
+Am 23.08.18 um 19:15 schrieb Jian-Hong Pan:
+> This patch add the macro and definition for the implementation of
+> LoRaWAN protocol.
+
+I would fix up the grammar nits in my tree then.
+
+> 
+> Signed-off-by: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+> ---
+>  include/linux/socket.h              | 5 ++++-
+>  include/uapi/linux/if_arp.h         | 1 +
+>  include/uapi/linux/if_ether.h       | 1 +
+>  net/core/dev.c                      | 4 ++--
+>  security/selinux/hooks.c            | 4 +++-
+>  security/selinux/include/classmap.h | 4 +++-
+>  6 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/socket.h b/include/linux/socket.h
+> index aa1e288b1659..e5c8381fd1aa 100644
+> --- a/include/linux/socket.h
+> +++ b/include/linux/socket.h
+> @@ -209,8 +209,9 @@ struct ucred {
+>  				 */
+>  #define AF_XDP		44	/* XDP sockets			*/
+>  #define AF_LORA		45	/* LoRa sockets			*/
+> +#define AF_LORAWAN	46	/* LoRaWAN sockets			*/
+>  
+> -#define AF_MAX		46	/* For now.. */
+> +#define AF_MAX		47	/* For now.. */
+>  
+>  /* Protocol families, same as address families. */
+>  #define PF_UNSPEC	AF_UNSPEC
+> @@ -261,6 +262,7 @@ struct ucred {
+>  #define PF_SMC		AF_SMC
+>  #define PF_XDP		AF_XDP
+>  #define PF_LORA		AF_LORA
+> +#define PF_LORAWAN	AF_LORAWAN
+>  #define PF_MAX		AF_MAX
+>  
+>  /* Maximum queue length specifiable by listen.  */
+> @@ -343,6 +345,7 @@ struct ucred {
+>  #define SOL_KCM		281
+>  #define SOL_TLS		282
+>  #define SOL_XDP		283
+> +#define SOL_LORAWAN	284
+>  
+>  /* IPX options */
+>  #define IPX_TYPE	1
+> diff --git a/include/uapi/linux/if_arp.h b/include/uapi/linux/if_arp.h
+> index 1ed7cb3f2129..2376f7839355 100644
+> --- a/include/uapi/linux/if_arp.h
+> +++ b/include/uapi/linux/if_arp.h
+> @@ -99,6 +99,7 @@
+>  #define ARPHRD_6LOWPAN	825		/* IPv6 over LoWPAN             */
+>  #define ARPHRD_VSOCKMON	826		/* Vsock monitor header		*/
+>  #define ARPHRD_LORA	827		/* LoRa				*/
+> +#define ARPHRD_LORAWAN	828		/* LoRaWAN			*/
+>  
+>  #define ARPHRD_VOID	  0xFFFF	/* Void type, nothing is known */
+>  #define ARPHRD_NONE	  0xFFFE	/* zero header length */
+> diff --git a/include/uapi/linux/if_ether.h b/include/uapi/linux/if_ether.h
+> index 45644dcf5b39..b1ac70d4a377 100644
+> --- a/include/uapi/linux/if_ether.h
+> +++ b/include/uapi/linux/if_ether.h
+> @@ -148,6 +148,7 @@
+>  					 * aggregation protocol
+>  					 */
+>  #define ETH_P_LORA	0x00FA		/* LoRa				*/
+> +#define ETH_P_LORAWAN	0x00FB		/* LoRaWAN			*/
+>  
+>  /*
+>   *	This is an Ethernet frame header.
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index f68122f0ab02..b95ce79ec5a8 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -297,7 +297,7 @@ static const unsigned short netdev_lock_type[] = {
+>  	 ARPHRD_IRDA, ARPHRD_FCPP, ARPHRD_FCAL, ARPHRD_FCPL,
+>  	 ARPHRD_FCFABRIC, ARPHRD_IEEE80211, ARPHRD_IEEE80211_PRISM,
+>  	 ARPHRD_IEEE80211_RADIOTAP, ARPHRD_PHONET, ARPHRD_PHONET_PIPE,
+> -	 ARPHRD_IEEE802154, ARPHRD_VOID, ARPHRD_NONE};
+> +	 ARPHRD_IEEE802154, ARPHRD_LORAWAN, ARPHRD_VOID, ARPHRD_NONE};
+>  
+>  static const char *const netdev_lock_name[] = {
+>  	"_xmit_NETROM", "_xmit_ETHER", "_xmit_EETHER", "_xmit_AX25",
+> @@ -314,7 +314,7 @@ static const char *const netdev_lock_name[] = {
+>  	"_xmit_IRDA", "_xmit_FCPP", "_xmit_FCAL", "_xmit_FCPL",
+>  	"_xmit_FCFABRIC", "_xmit_IEEE80211", "_xmit_IEEE80211_PRISM",
+>  	"_xmit_IEEE80211_RADIOTAP", "_xmit_PHONET", "_xmit_PHONET_PIPE",
+> -	"_xmit_IEEE802154", "_xmit_VOID", "_xmit_NONE"};
+> +	"_xmit_IEEE802154", "_xmit_LORAWAN", "_xmit_VOID", "_xmit_NONE"};
+>  
+>  static struct lock_class_key netdev_xmit_lock_key[ARRAY_SIZE(netdev_lock_type)];
+>  static struct lock_class_key netdev_addr_lock_key[ARRAY_SIZE(netdev_lock_type)];
+
+All your new constants except SOL_LORAWAN are always next to a LoRa one,
+but not in these two arrays. I don't have such changes in my original
+LoRa patch - am I missing such an array extension for ARPHRD_LORA then,
+or what is the criteria for when to add this?
+
+Other changes look fine to me.
+
+Regards,
+Andreas
+
+> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
+> index aaf520a689d8..0da3a1d69cb8 100644
+> --- a/security/selinux/hooks.c
+> +++ b/security/selinux/hooks.c
+> @@ -1477,7 +1477,9 @@ static inline u16 socket_type_to_security_class(int family, int type, int protoc
+>  			return SECCLASS_XDP_SOCKET;
+>  		case PF_LORA:
+>  			return SECCLASS_LORA_SOCKET;
+> -#if PF_MAX > 46
+> +		case PF_LORAWAN:
+> +			return SECCLASS_LORAWAN_SOCKET;
+> +#if PF_MAX > 47
+>  #error New address family defined, please update this function.
+>  #endif
+>  		}
+> diff --git a/security/selinux/include/classmap.h b/security/selinux/include/classmap.h
+> index 060d4bf8385e..fa0151fe6f32 100644
+> --- a/security/selinux/include/classmap.h
+> +++ b/security/selinux/include/classmap.h
+> @@ -244,9 +244,11 @@ struct security_class_mapping secclass_map[] = {
+>  	  { COMMON_SOCK_PERMS, NULL } },
+>  	{ "lora_socket",
+>  	  { COMMON_SOCK_PERMS, NULL } },
+> +	{ "lorawan_socket",
+> +	  { COMMON_SOCK_PERMS, NULL } },
+>  	{ NULL }
+>    };
+>  
+> -#if PF_MAX > 46
+> +#if PF_MAX > 47
+>  #error New address family defined, please update secclass_map.
+>  #endif
+> 
+
+
 -- 
-2.17.1
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
