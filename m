@@ -1,201 +1,56 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 7/7] ARM: dts: rockchip: add rk3066/rk3188 power-domains
-Date: Sun, 23 Sep 2018 17:23:56 +0200
-Message-ID: <20180923152356.30154-8-heiko@sntech.de>
-References: <20180923152356.30154-1-heiko@sntech.de>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 2/6] pstore: Add event tracing support
+Date: Sun, 23 Sep 2018 21:03:04 +0530
+Message-ID: <eb686156-95d2-2468-21be-13bfd97d5a58@codeaurora.org>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
+ <CAEXW_YRXQwKvnahv5X1F_Bu_98vMg=w1xpo8PZ+aNT02vBrwwg@mail.gmail.com>
+ <e8fdef37-afcd-24b3-1005-e707b73f20b1@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180923152356.30154-1-heiko@sntech.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, chauveau.julien@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e8fdef37-afcd-24b3-1005-e707b73f20b1@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joel Fernandes <joel@joelfernandes.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the power-domain nodes to both rk3066 and rk3188 including
-their clocks and qos connections.
+On 9/22/2018 10:07 PM, Sai Prakash Ranjan wrote:
+> On 9/22/2018 2:35 PM, Joel Fernandes wrote:
+>> On Sat, Sep 8, 2018 at 4:28 PM Sai Prakash Ranjan
+>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>>
+>>> +
+>>> +       trace_seq_init(&iter->seq);
+>>> +       iter->ent = fbuffer->entry;
+>>> +       event_call->event.funcs->trace(iter, 0, event);
+>>> +       trace_seq_putc(&iter->seq, 0);
+>>
+>> Would it be possible to store the binary trace record in the pstore
+>> buffer instead of outputting text? I suspect that will both be faster
+>> and less space.
+>>
+> 
+> I will try this and come back.
+> 
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- arch/arm/boot/dts/rk3066a.dtsi | 52 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/rk3188.dtsi  | 51 +++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+)
+Hi Joel,
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 2ab3c4b32003..112d2bf8e998 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3066a-cru.h>
-+#include <dt-bindings/power/rk3066-power.h>
- #include "rk3xxx.dtsi"
- 
- / {
-@@ -595,6 +596,7 @@
- 			  "ppmmu2",
- 			  "pp3",
- 			  "ppmmu3";
-+	power-domains = <&power RK3066_PD_GPU>;
- };
- 
- &i2c0 {
-@@ -643,6 +645,56 @@
- 	dma-names = "rx-tx";
- };
- 
-+&pmu {
-+	power: power-controller {
-+		compatible = "rockchip,rk3066-power-controller";
-+		#power-domain-cells = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pd_vio@RK3066_PD_VIO {
-+			reg = <RK3066_PD_VIO>;
-+			clocks = <&cru ACLK_LCDC0>,
-+				 <&cru ACLK_LCDC1>,
-+				 <&cru DCLK_LCDC0>,
-+				 <&cru DCLK_LCDC1>,
-+				 <&cru HCLK_LCDC0>,
-+				 <&cru HCLK_LCDC1>,
-+				 <&cru SCLK_CIF1>,
-+				 <&cru ACLK_CIF1>,
-+				 <&cru HCLK_CIF1>,
-+				 <&cru SCLK_CIF0>,
-+				 <&cru ACLK_CIF0>,
-+				 <&cru HCLK_CIF0>,
-+				 <&cru ACLK_IPP>,
-+				 <&cru HCLK_IPP>,
-+				 <&cru ACLK_RGA>,
-+				 <&cru HCLK_RGA>;
-+			pm_qos = <&qos_lcdc0>,
-+				 <&qos_lcdc1>,
-+				 <&qos_cif0>,
-+				 <&qos_cif1>,
-+				 <&qos_ipp>,
-+				 <&qos_rga>;
-+		};
-+
-+		pd_video@RK3066_PD_VIDEO {
-+			reg = <RK3066_PD_VIDEO>;
-+			clocks = <&cru ACLK_VDPU>,
-+				 <&cru ACLK_VEPU>,
-+				 <&cru HCLK_VDPU>,
-+				 <&cru HCLK_VEPU>;
-+			pm_qos = <&qos_vpu>;
-+		};
-+
-+		pd_gpu@RK3066_PD_GPU {
-+			reg = <RK3066_PD_GPU>;
-+			clocks = <&cru ACLK_GPU>;
-+			pm_qos = <&qos_gpu>;
-+		};
-+	};
-+};
-+
- &pwm0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pwm0_out>;
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index b6f790973736..7e0dc52630d9 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -7,6 +7,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- #include <dt-bindings/clock/rk3188-cru.h>
-+#include <dt-bindings/power/rk3188-power.h>
- #include "rk3xxx.dtsi"
- 
- / {
-@@ -80,6 +81,7 @@
- 		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_LCDC0>, <&cru DCLK_LCDC0>, <&cru HCLK_LCDC0>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		power-domains = <&power RK3188_PD_VIO>;
- 		resets = <&cru SRST_LCDC0_AXI>, <&cru SRST_LCDC0_AHB>, <&cru SRST_LCDC0_DCLK>;
- 		reset-names = "axi", "ahb", "dclk";
- 		status = "disabled";
-@@ -96,6 +98,7 @@
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&cru ACLK_LCDC1>, <&cru DCLK_LCDC1>, <&cru HCLK_LCDC1>;
- 		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
-+		power-domains = <&power RK3188_PD_VIO>;
- 		resets = <&cru SRST_LCDC1_AXI>, <&cru SRST_LCDC1_AHB>, <&cru SRST_LCDC1_DCLK>;
- 		reset-names = "axi", "ahb", "dclk";
- 		status = "disabled";
-@@ -620,6 +623,7 @@
- 			  "ppmmu2",
- 			  "pp3",
- 			  "ppmmu3";
-+	power-domains = <&power RK3188_PD_GPU>;
- };
- 
- &i2c0 {
-@@ -652,6 +656,53 @@
- 	pinctrl-0 = <&i2c4_xfer>;
- };
- 
-+&pmu {
-+	power: power-controller {
-+		compatible = "rockchip,rk3188-power-controller";
-+		#power-domain-cells = <1>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pd_vio@RK3188_PD_VIO {
-+			reg = <RK3188_PD_VIO>;
-+			clocks = <&cru ACLK_LCDC0>,
-+				 <&cru ACLK_LCDC1>,
-+				 <&cru DCLK_LCDC0>,
-+				 <&cru DCLK_LCDC1>,
-+				 <&cru HCLK_LCDC0>,
-+				 <&cru HCLK_LCDC1>,
-+				 <&cru SCLK_CIF0>,
-+				 <&cru ACLK_CIF0>,
-+				 <&cru HCLK_CIF0>,
-+				 <&cru ACLK_IPP>,
-+				 <&cru HCLK_IPP>,
-+				 <&cru ACLK_RGA>,
-+				 <&cru HCLK_RGA>;
-+			pm_qos = <&qos_lcdc0>,
-+				 <&qos_lcdc1>,
-+				 <&qos_cif0>,
-+				 <&qos_cif1>,
-+				 <&qos_ipp>,
-+				 <&qos_rga>;
-+		};
-+
-+		pd_video@RK3188_PD_VIDEO {
-+			reg = <RK3188_PD_VIDEO>;
-+			clocks = <&cru ACLK_VDPU>,
-+				 <&cru ACLK_VEPU>,
-+				 <&cru HCLK_VDPU>,
-+				 <&cru HCLK_VEPU>;
-+			pm_qos = <&qos_vpu>;
-+		};
-+
-+		pd_gpu@RK3188_PD_GPU {
-+			reg = <RK3188_PD_GPU>;
-+			clocks = <&cru ACLK_GPU>;
-+			pm_qos = <&qos_gpu>;
-+		};
-+	};
-+};
-+
- &pwm0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pwm0_out>;
+I removed trace_seq_putc and there is some improvement seen: 203 MB/s
+
+# dd if=/dev/zero of=/dev/null status=progress
+12207371264 bytes (12 GB, 11 GiB) copied, 60 s, 203 MB/s^C
+24171926+0 records in
+24171926+0 records out
+12376026112 bytes (12 GB, 12 GiB) copied, 60.8282 s, 203 MB/s
+
+This seems good when compared to 190 MB/s seen previously.
+If this is Ok, then I will spin v2 with changes suggested.
+
+Thanks,
+Sai
 -- 
-2.18.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
