@@ -1,8 +1,8 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 3/7] dt-bindings: add compatibles for rk3066/rk3188 power
- controllers
-Date: Sun, 23 Sep 2018 17:23:52 +0200
-Message-ID: <20180923152356.30154-4-heiko@sntech.de>
+Subject: [PATCH v2 6/7] ARM: dts: rockchip: add qos nodes found on rk3066 and
+ rk3188
+Date: Sun, 23 Sep 2018 17:23:55 +0200
+Message-ID: <20180923152356.30154-7-heiko@sntech.de>
 References: <20180923152356.30154-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,37 +22,69 @@ To: linux-rockchip@lists.infradead.org
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, chauveau.julien@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add the compatible values for the power-domain controllers found on
-rk3066 and rk3188.
+QoS nodes keep information about priorites etc on the interconnect
+and loose state when the power-domain gets disabled. Therefore the
+power-domain driver stores the settings of available qos nodes and
+restores them when the power-domain gets enabled again.
+
+So add the qos nodes found on the Cortex-A9 socs from Rockchip, so
+that they can then be connected to the power-domains.
 
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- .../devicetree/bindings/soc/rockchip/power_domain.txt         | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/rk3xxx.dtsi | 40 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-index 5d49d0a2ff29..8304eceb62e4 100644
---- a/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-+++ b/Documentation/devicetree/bindings/soc/rockchip/power_domain.txt
-@@ -7,7 +7,9 @@ Required properties for power domain controller:
- - compatible: Should be one of the following.
- 	"rockchip,px30-power-controller" - for PX30 SoCs.
- 	"rockchip,rk3036-power-controller" - for RK3036 SoCs.
-+	"rockchip,rk3066-power-controller" - for RK3066 SoCs.
- 	"rockchip,rk3128-power-controller" - for RK3128 SoCs.
-+	"rockchip,rk3188-power-controller" - for RK3188 SoCs.
- 	"rockchip,rk3228-power-controller" - for RK3228 SoCs.
- 	"rockchip,rk3288-power-controller" - for RK3288 SoCs.
- 	"rockchip,rk3328-power-controller" - for RK3328 SoCs.
-@@ -23,7 +25,9 @@ Required properties for power domain sub nodes:
- - reg: index of the power domain, should use macros in:
- 	"include/dt-bindings/power/px30-power.h" - for PX30 type power domain.
- 	"include/dt-bindings/power/rk3036-power.h" - for RK3036 type power domain.
-+	"include/dt-bindings/power/rk3066-power.h" - for RK3066 type power domain.
- 	"include/dt-bindings/power/rk3128-power.h" - for RK3128 type power domain.
-+	"include/dt-bindings/power/rk3188-power.h" - for RK3188 type power domain.
- 	"include/dt-bindings/power/rk3228-power.h" - for RK3228 type power domain.
- 	"include/dt-bindings/power/rk3288-power.h" - for RK3288 type power domain.
- 	"include/dt-bindings/power/rk3328-power.h" - for RK3328 type power domain.
+diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
+index d752dc611fd7..97307a405e60 100644
+--- a/arch/arm/boot/dts/rk3xxx.dtsi
++++ b/arch/arm/boot/dts/rk3xxx.dtsi
+@@ -147,6 +147,46 @@
+ 		status = "disabled";
+ 	};
+ 
++	qos_gpu: qos@1012d000 {
++		compatible = "syscon";
++		reg = <0x1012d000 0x20>;
++	};
++
++	qos_vpu: qos@1012e000 {
++		compatible = "syscon";
++		reg = <0x1012e000 0x20>;
++	};
++
++	qos_lcdc0: qos@1012f000 {
++		compatible = "syscon";
++		reg = <0x1012f000 0x20>;
++	};
++
++	qos_cif0: qos@1012f080 {
++		compatible = "syscon";
++		reg = <0x1012f080 0x20>;
++	};
++
++	qos_ipp: qos@1012f100 {
++		compatible = "syscon";
++		reg = <0x1012f100 0x20>;
++	};
++
++	qos_lcdc1: qos@1012f180 {
++		compatible = "syscon";
++		reg = <0x1012f180 0x20>;
++	};
++
++	qos_cif1: qos@1012f200 {
++		compatible = "syscon";
++		reg = <0x1012f200 0x20>;
++	};
++
++	qos_rga: qos@1012f280 {
++		compatible = "syscon";
++		reg = <0x1012f280 0x20>;
++	};
++
+ 	usb_otg: usb@10180000 {
+ 		compatible = "rockchip,rk3066-usb", "snps,dwc2";
+ 		reg = <0x10180000 0x40000>;
 -- 
 2.18.0
