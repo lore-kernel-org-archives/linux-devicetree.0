@@ -1,90 +1,88 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH v2 6/7] ARM: dts: rockchip: add qos nodes found on rk3066 and
- rk3188
-Date: Sun, 23 Sep 2018 17:23:55 +0200
-Message-ID: <20180923152356.30154-7-heiko@sntech.de>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 5/7] soc: rockchip: power-domain: add rk3066 powerdomains
+Date: Sun, 23 Sep 2018 17:23:54 +0200
+Message-ID: <20180923152356.30154-6-heiko@sntech.de>
 References: <20180923152356.30154-1-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180923152356.30154-1-heiko@sntech.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rockchip@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, chauveau.julien@gmail.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20180923152356.30154-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, chauveau.julien-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QoS nodes keep information about priorites etc on the interconnect
-and loose state when the power-domain gets disabled. Therefore the
-power-domain driver stores the settings of available qos nodes and
-restores them when the power-domain gets enabled again.
+Add power-domains found on rk3066 socs.
 
-So add the qos nodes found on the Cortex-A9 socs from Rockchip, so
-that they can then be connected to the power-domains.
-
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3xxx.dtsi | 40 +++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+ drivers/soc/rockchip/pm_domains.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index d752dc611fd7..97307a405e60 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -147,6 +147,46 @@
- 		status = "disabled";
- 	};
+diff --git a/drivers/soc/rockchip/pm_domains.c b/drivers/soc/rockchip/pm_domains.c
+index 58bd39cd3369..4587b27eeb9f 100644
+--- a/drivers/soc/rockchip/pm_domains.c
++++ b/drivers/soc/rockchip/pm_domains.c
+@@ -21,6 +21,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <dt-bindings/power/px30-power.h>
+ #include <dt-bindings/power/rk3036-power.h>
++#include <dt-bindings/power/rk3066-power.h>
+ #include <dt-bindings/power/rk3128-power.h>
+ #include <dt-bindings/power/rk3188-power.h>
+ #include <dt-bindings/power/rk3228-power.h>
+@@ -738,6 +739,14 @@ static const struct rockchip_domain_info rk3036_pm_domains[] = {
+ 	[RK3036_PD_SYS]		= DOMAIN_RK3036(8, 22, 29, false),
+ };
  
-+	qos_gpu: qos@1012d000 {
-+		compatible = "syscon";
-+		reg = <0x1012d000 0x20>;
-+	};
++static const struct rockchip_domain_info rk3066_pm_domains[] = {
++	[RK3066_PD_GPU]		= DOMAIN(9, 9, 3, 24, 29, false),
++	[RK3066_PD_VIDEO]	= DOMAIN(8, 8, 4, 23, 28, false),
++	[RK3066_PD_VIO]		= DOMAIN(7, 7, 5, 22, 27, false),
++	[RK3066_PD_PERI]	= DOMAIN(6, 6, 2, 25, 30, false),
++	[RK3066_PD_CPU]		= DOMAIN(-1, 5, 1, 26, 31, false),
++};
 +
-+	qos_vpu: qos@1012e000 {
-+		compatible = "syscon";
-+		reg = <0x1012e000 0x20>;
-+	};
+ static const struct rockchip_domain_info rk3128_pm_domains[] = {
+ 	[RK3128_PD_CORE]	= DOMAIN_RK3288(0, 0, 4, false),
+ 	[RK3128_PD_MSCH]	= DOMAIN_RK3288(-1, -1, 6, true),
+@@ -855,6 +864,17 @@ static const struct rockchip_pmu_info rk3036_pmu = {
+ 	.domain_info = rk3036_pm_domains,
+ };
+ 
++static const struct rockchip_pmu_info rk3066_pmu = {
++	.pwr_offset = 0x08,
++	.status_offset = 0x0c,
++	.req_offset = 0x38, /* PMU_MISC_CON1 */
++	.idle_offset = 0x0c,
++	.ack_offset = 0x0c,
 +
-+	qos_lcdc0: qos@1012f000 {
-+		compatible = "syscon";
-+		reg = <0x1012f000 0x20>;
-+	};
++	.num_domains = ARRAY_SIZE(rk3066_pm_domains),
++	.domain_info = rk3066_pm_domains,
++};
 +
-+	qos_cif0: qos@1012f080 {
-+		compatible = "syscon";
-+		reg = <0x1012f080 0x20>;
-+	};
-+
-+	qos_ipp: qos@1012f100 {
-+		compatible = "syscon";
-+		reg = <0x1012f100 0x20>;
-+	};
-+
-+	qos_lcdc1: qos@1012f180 {
-+		compatible = "syscon";
-+		reg = <0x1012f180 0x20>;
-+	};
-+
-+	qos_cif1: qos@1012f200 {
-+		compatible = "syscon";
-+		reg = <0x1012f200 0x20>;
-+	};
-+
-+	qos_rga: qos@1012f280 {
-+		compatible = "syscon";
-+		reg = <0x1012f280 0x20>;
-+	};
-+
- 	usb_otg: usb@10180000 {
- 		compatible = "rockchip,rk3066-usb", "snps,dwc2";
- 		reg = <0x10180000 0x40000>;
+ static const struct rockchip_pmu_info rk3128_pmu = {
+ 	.pwr_offset = 0x04,
+ 	.status_offset = 0x08,
+@@ -968,6 +988,10 @@ static const struct of_device_id rockchip_pm_domain_dt_match[] = {
+ 		.compatible = "rockchip,rk3036-power-controller",
+ 		.data = (void *)&rk3036_pmu,
+ 	},
++	{
++		.compatible = "rockchip,rk3066-power-controller",
++		.data = (void *)&rk3066_pmu,
++	},
+ 	{
+ 		.compatible = "rockchip,rk3128-power-controller",
+ 		.data = (void *)&rk3128_pmu,
 -- 
 2.18.0
