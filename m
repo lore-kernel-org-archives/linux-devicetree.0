@@ -1,123 +1,88 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [RESEND PATCH v3 1/2] of: base: Introduce of_alias_get_alias_list()
- to check alias IDs
-Date: Mon, 24 Sep 2018 09:41:03 +0200
-Message-ID: <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com>
-References: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V2 3/3] arm64: dts: broadcom: Add reference to Compute
+ Module IO Board V3
+Date: Mon, 24 Sep 2018 10:17:02 +0200
+Message-ID: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
+References: <1535393148-24163-1-git-send-email-stefan.wahren@i2se.com>
+ <1535393148-24163-4-git-send-email-stefan.wahren@i2se.com>
+ <20180923173940.GE9849@bart.dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180923173940.GE9849@bart.dudau.co.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <liviu@dudau.co.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michal,
+Hi Liviu,
 
-On Thu, Sep 20, 2018 at 1:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
-> The function travels the lookup table to record alias ids for the given
-> device match structures and alias stem.
-> This function will be used by serial drivers to check if requested alias
-> is allocated or free to use.
+[add Arnd and Olof]
+
+
+Am 23.09.2018 um 19:39 schrieb Liviu Dudau:
+> On Mon, Aug 27, 2018 at 08:05:48PM +0200, Stefan Wahren wrote:
+>> This adds a reference to the dts of the Compute Module IO Board V3 in arm,
+>> so we don't need to maintain the content in arm64.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> ---
+>>  arch/arm64/boot/dts/broadcom/Makefile                | 3 ++-
+>>  arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts | 2 ++
+>>  2 files changed, 4 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>>
+>> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+>> index 1193a9e..3d98f5f 100644
+>> --- a/arch/arm64/boot/dts/broadcom/Makefile
+>> +++ b/arch/arm64/boot/dts/broadcom/Makefile
+>> @@ -1,6 +1,7 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>>  dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
+>> -			      bcm2837-rpi-3-b-plus.dtb
+>> +			      bcm2837-rpi-3-b-plus.dtb \
+>> +			      bcm2837-rpi-cm3-io3.dts
+> This should be the .dtb file, not the .dts. At compile time make is not going
+> to complain, because it finds the file, but make dtbs_install will fail.
 >
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> I'm not sure if you want a patch or if you can fix it in your public tree.
 
-I know this has already been applied, it just drew my attention.
+oops, please send a patch (with a fixes tag and Arnd & Olof in CC)
+because this patch has already been pulled for 4.20.
 
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -16,6 +16,7 @@
 >
->  #define pr_fmt(fmt)    "OF: " fmt
 >
-> +#include <linux/bitmap.h>
->  #include <linux/console.h>
->  #include <linux/ctype.h>
->  #include <linux/cpu.h>
-> @@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->  EXPORT_SYMBOL_GPL(of_alias_get_id);
+> Found out while trying to install the dtbs from linux-next 20180920
 >
->  /**
-> + * of_alias_get_alias_list - Get alias list for the given device driver
-> + * @matches:   Array of OF device match structures to search in
-> + * @stem:      Alias stem of the given device_node
-> + * @bitmap:    Bitmap field pointer
-> + * @nbits:     Maximum number of alias ID which can be recorded it bitmap
-
-IDs
-
-> + *
-> + * The function travels the lookup table to record alias ids for the given
-> + * device match structures and alias stem.
-> + *
-> + * Return:     0 or -ENOSYS when !CONFIG_OF
-> + */
-> +int of_alias_get_alias_list(const struct of_device_id *matches,
-> +                            const char *stem, unsigned long *bitmap,
-> +                            unsigned int nbits)
-> +{
-> +       struct alias_prop *app;
-> +
-> +       /* Zero bitmap field to make sure that all the time it is clean */
-> +       bitmap_zero(bitmap, nbits);
-> +
-> +       mutex_lock(&of_mutex);
-> +       pr_debug("%s: Looking for stem: %s\n", __func__, stem);
-> +       list_for_each_entry(app, &aliases_lookup, link) {
-> +               pr_debug("%s: stem: %s, id: %d\n",
-> +                        __func__, app->stem, app->id);
-> +
-> +               if (strcmp(app->stem, stem) != 0) {
-> +                       pr_debug("%s: stem comparison doesn't passed %s\n",
-
-didn't pass?
-
-> +                                __func__, app->stem);
-> +                       continue;
-> +               }
-> +
-> +               if (app->id >= nbits) {
-> +                       pr_debug("%s: ID %d greater then bitmap field %d\n",
-
-than
-%u for unsigned int
-
-> +                               __func__, app->id, nbits);
-> +                       continue;
-
-Shouldn't this return an error, if of_match_node() below would have matched?
-
-> +               }
-> +
-> +               if (of_match_node(matches, app->np)) {
-> +                       pr_debug("%s: Allocated ID %d\n", __func__, app->id);
-> +                       set_bit(app->id, bitmap);
-> +               }
-> +               /* Alias exist but it not compatible with matches */
-
-exists but is npt
-
-> +       }
-> +       mutex_unlock(&of_mutex);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_alias_get_alias_list);
-> +
-> +/**
->   * of_alias_get_highest_id - Get highest alias id for the given stem
->   * @stem:      Alias stem to be examined
->   *
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> Best regards,
+> Liviu
+>
+>>  
+>>  subdir-y	+= northstar2
+>>  subdir-y	+= stingray
+>> diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>> new file mode 100644
+>> index 0000000..b1c4ab2
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
+>> @@ -0,0 +1,2 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +#include "arm/bcm2837-rpi-cm3-io3.dts"
+>> -- 
+>> 2.7.4
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
