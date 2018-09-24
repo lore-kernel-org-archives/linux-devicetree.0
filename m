@@ -1,59 +1,77 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v7 2/7] edac: synps: Add platform specific structures for
- ddrc controller
-Date: Mon, 24 Sep 2018 10:07:33 +0000
-Message-ID: <DM6PR02MB5227B76AD2D71C4EABCA48DCC1170@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
- <20180918075522.GC22202@nazgul.tnic>
- <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
- <20180919111553.GA9140@nazgul.tnic>
- <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
- <20180921090721.GB30439@nazgul.tnic>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 11/20] memory: tegra: Use of_device_get_match_data()
+Date: Mon, 24 Sep 2018 12:13:54 +0200
+Message-ID: <20180924101354.GH21032@ulmo>
+References: <20180924004153.8232-1-digetx@gmail.com>
+ <20180924004153.8232-12-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zq44+AAfm4giZpo5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921090721.GB30439@nazgul.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180924004153.8232-12-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IEJvcmlzbGF2IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5k
-ZV0NCj4gU2VudDogRnJpZGF5LCBTZXB0ZW1iZXIgMjEsIDIwMTggMjozNyBQTQ0KPiBUbzogTWFu
-aXNoIE5hcmFuaSA8TU5BUkFOSUB4aWxpbnguY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3Jn
-OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbWNoZWhhYkBrZXJuZWwub3JnOw0KPiBNaWNoYWwgU2lt
-ZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IGxlb3lhbmcubGlAbnhwLmNvbTsNCj4gc3VkZWVwLmhv
-bGxhQGFybS5jb207IGFtaXQua3VjaGVyaWFAbGluYXJvLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBlZGFj
-QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
-IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMi83XSBlZGFjOiBzeW5wczogQWRkIHBsYXRmb3JtIHNw
-ZWNpZmljIHN0cnVjdHVyZXMgZm9yDQo+IGRkcmMgY29udHJvbGxlcg0KPiANCj4gT24gV2VkLCBT
-ZXAgMTksIDIwMTggYXQgMDE6MzM6NThQTSArMDAwMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToNCj4g
-PiBBcGFydCBmcm9tIHRoaXMgb25lLCBJIGhhdmUgY292ZXJlZCBhbGwgdGhlIGNvbW1lbnRzIGZy
-b20gdGhlIHByZXZpb3VzDQo+IHJldmlldy4NCj4gDQo+IEFyZSB5b3Ugc3VyZT8NCj4gDQo+IExl
-dCdzIHNlZS4gSSBzYWlkOg0KPiANCj4gfCBLaWxsIGFsbCB0aGF0ICJmdW5jdGlvbiBwb2ludGVy
-IiBmbHVmZi4gSGVyZSdzIGhvdyBJJ3ZlIGNoYW5nZWQgaXQ6DQo+IHwNCj4gfCAvKioNCj4gfCAg
-KiBzdHJ1Y3Qgc3lucHNfcGxhdGZvcm1fZGF0YSAtICBzeW5wcyBwbGF0Zm9ybSBkYXRhIHN0cnVj
-dHVyZQ0KPiB8ICAqIEBlZGFjX2dldGVycm9yX2luZm86IGVkYWMgZXJyb3IgaW5mbw0KPiB8ICAq
-IEBlZGFjX2dldF9tdHlwZTogICAgIGdldCBtdHlwZQ0KPiB8ICAqIEBlZGFjX2dldF9kdHlwZTog
-ICAgIGdldCBkdHlwZQ0KPiB8ICAqIEBlZGFjX2dldF9lY2NzdGF0ZTogIGdldCBFQ0Mgc3RhdGUN
-Cj4gCQkJICBeXl5eXl5eXl5eXl5eDQo+IA0KPiBUaGlzIGlzIHN1cHBvc2VkIHRvIGRlbm90ZSB0
-aGF0IHRoaXMgZnVuY3Rpb24gcmV0dXJucyB3aGV0aGVyIEVDQyBjaGVja2luZyBpcw0KPiBlbmFi
-bGVkIG9uIHRoZSBjb250cm9sbGVyIG9yIG5vdC4NCj4gDQo+IFlvdXIgcGF0Y2ggaGFzOg0KPiAN
-Cj4gKyAqIHN0cnVjdCBzeW5wc19wbGF0Zm9ybV9kYXRhIC0gIHN5bnBzIHBsYXRmb3JtIGRhdGEg
-c3RydWN0dXJlLg0KPiArICogQGdldGVycm9yX2luZm86ICAgICBHZXQgZXJyb3IgaW5mby4NCj4g
-KyAqIEBnZXRfbXR5cGU6ICAgICAgICAgR2V0IG10eXBlLg0KPiArICogQGdldF9kdHlwZTogICAg
-ICAgICBHZXQgZHR5cGUuDQo+ICsgKiBAZ2V0X2VjY3N0YXRlOiAgICAgIEdldCBlY2NzdGF0ZS4N
-Cj4gDQo+IFNvIHdoYXQgaXMgImVjY3N0YXRlIj8gSXMgaXQgYSBzdHJ1Y3Qgb3IgYSB2YXJpYWJs
-ZSBvciAuLi4/DQo+IA0KPiBEbyB5b3Ugc2VlIG15IHBvaW50Pw0KPiANCj4gSSBrbm93LCBpdCBp
-cyBhIHNtYWxsIHRoaW5nIGJ1dCBkb2N1bWVudGluZyBvdXIgY29kZSBwcm9wZXJseSBpcyBzb21l
-dGhpbmcNCj4gd2hpY2ggcGVvcGxlIHdvdWxkIGJlIHRoYW5raW5nIHVzIGZvci4gRXZlbiB5b3Ug
-d2lsbCBiZSB0aGFua2luZyB5b3Vyc2VsZiB3aGVuDQo+IHlvdSBsb29rIGF0IHRoaXMgbW9udGhz
-IGZyb20gbm93IGFmdGVyIGhhdmluZyBmb3Jnb3R0ZW4gaXQgYWxsLg0KPiANCj4gUGxlYXNlIGNo
-ZWNrIHRoZSByZXN0IG9mIHlvdXIgYWRkaXRpb25zIGZvciBzaW1pbGFyIGRpc2NyZXBhbmNpZXMu
-DQpPa2F5IHN1cmUuIFdpbGwgYmUgcmVjdGlmaWVkIGluIHY4Lg0KDQpUaGFua3MsDQpNYW5pc2gN
-Cg0K
+
+--zq44+AAfm4giZpo5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Sep 24, 2018 at 03:41:44AM +0300, Dmitry Osipenko wrote:
+> There is no need to match device with the DT node since it was already
+> matched, use of_device_get_match_data() helper to get the match-data.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/memory/tegra/mc.c | 10 ++--------
+>  1 file changed, 2 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+> index 5454ffe5b2e0..cdc33f93cf7c 100644
+> --- a/drivers/memory/tegra/mc.c
+> +++ b/drivers/memory/tegra/mc.c
+> @@ -11,8 +11,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> -#include <linux/of.h>
+> -#include <linux/platform_device.h>
+
+It's better not to remove these two because the code still uses
+functions declared in them. If ever we were going to remove code using
+linux/of_device.h and then remove the linux/of_device.h include, we'd
+break the build and have to reintroduce the includes.
+
+The same would happen if linux/of_device.h were ever to stop including
+linux/platform_device.h or linux/of.h. That may sound unlikely, but it
+has happened in the past with other includes. It can also happen that
+some restructuring takes place in some headers that is not so obvious
+and then things can still start falling apart miles away.
+
+Thierry
+
+--zq44+AAfm4giZpo5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluouOIACgkQ3SOs138+
+s6Gytg/+Ndah+5wwzzGFfwm+SNSWKxw4eueN/zWNhErt5qC9Q7Nli7pqMy4fYrBs
+LTiZd4Xlr/g5UztazLUbbSM0Dl6QFCKZktGlhmf/P5qh/Kaq0dGZm0aHAeaeaoFO
+PnHtGxBrwjf8SOR5XGXnfVrG+yqqh8EXtDWrrn0GoiNkd7Rmg7q9S/f4nc4XVjIZ
+jHe7oiqRce0fmCOui0nGcfDDkQRDlbLCd6EC+jp3XmWIm2Uh9cYi+HljtlTBlM09
+R+tSXfbev4WT1BbqYjGEojXM5MF8/4RkM5zheCKitoJ7laLx9G6cGQKHwNjtD5I9
+byNR9lJDB+G/3WFdk0GgVEQaopN5lRVgSZdm0ESv2qJ8WTWt3Rr8wY/vRf3NA0Mu
++wYC1gIRT/H0Ipil6no6m3kveRc9Rvnw4t/APmM/hkzs4FC596z5s622eqwl7uaj
+xJI7IQfHiOFGQ7zfYk+2l7JQcyD6j6htGQ1kGUkmXcRlZwHNzQ+XIiEBIoRh58RP
+gQlNgBU+wM4ESeFRFmrSzQSh85RWT6PTSs05Ydaqq8LVdLVXc1exbk/+JsSbSVzb
+DuXOifJSkFw2N62kZJ3t7vNqWrfdo5uZuOXOMQ31UAjx1uqSH1S/msQzpEESyR8l
+UQn0zfTjcczs5uvqYUonUhVjESZ3RoqxAohWg+Ru+6DtV6HBEmg=
+=quUM
+-----END PGP SIGNATURE-----
+
+--zq44+AAfm4giZpo5--
