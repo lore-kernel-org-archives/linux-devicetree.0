@@ -1,66 +1,65 @@
-Return-Path: <SRS0=hPEm=MH=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=9I9X=MG=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
+Date: Mon, 24 Sep 2018 18:33:56 +0000
+Message-ID: 
+ <TY1PR01MB1770218E44B1C365EE23299DC0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1537530911-443-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdVY1ty4fGoBg7qxfkRaEBEgBEK5YDgwNryDx_tCUYpiaw@mail.gmail.com> <TY1PR01MB1770218E44B1C365EE23299DC0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB1770218E44B1C365EE23299DC0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 25 Sep 2018 08:47:38 +0200
-Message-ID: <CAMuHMdX1jTwehG_XdsnWXz5HhPK4OYtOkb1BNr75yxZn8u6B6w@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
-Content-Type: text/plain; charset="UTF-8"
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+ <CAMuHMdVY1ty4fGoBg7qxfkRaEBEgBEK5YDgwNryDx_tCUYpiaw@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdVY1ty4fGoBg7qxfkRaEBEgBEK5YDgwNryDx_tCUYpiaw@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Fabrizio,
-
-On Mon, Sep 24, 2018 at 8:34 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> > Subject: Re: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
-> > On Fri, Sep 21, 2018 at 1:55 PM Fabrizio Castro
-> > <fabrizio.castro@bp.renesas.com> wrote:
-> > > Document SDHI support for the RZ/G1C (a.k.a. R8A77470) SoC.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-
-> > > --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> > > +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> > > @@ -17,6 +17,7 @@ Required properties:
-> > >                 "renesas,sdhi-r8a7740" - SDHI IP on R8A7740 SoC
-> > >                 "renesas,sdhi-r8a7743" - SDHI IP on R8A7743 SoC
-> > >                 "renesas,sdhi-r8a7745" - SDHI IP on R8A7745 SoC
-> > > +               "renesas,sdhi-r8a77470" - SDHI IP on R8A77470 SoC
-> > >                 "renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
-> > >                 "renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
-> > >                 "renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
-> >
-> > It seems RZ/G1C has two slighty different types of SD card interfaces:
-> >   1. SDHI0 and SDHI2 use SYS-DMAC,
-> >   2. SDHI1 can also be used as an MMC interface, and has an internal DMAC.
-> >
-> > Do we need to distinguish between them using the compatible value, or
-> > are there other ways?
->
-> The most sensible thing to do here is probably to distinguish between them using
-> the compatible value, we were thinking about using the following for SDHI1:
-> compatible = "renesas,sdhi-mmc-r8a77470", "renesas,rcar-gen3-sdhi";
->
-> What do you guys think?
-
-Oh, so it's identical (or "sufficiently compatible") with the SD card
-interface on R-Car Gen3?
-"renesas,sdhi-mmc-r8a77470" may be a good way to distinguish.
-I'm a bit reluctant to add "renesas,rcar-gen3-sdhi", though.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGVsbG8gR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzRdIGR0LWJpbmRpbmdzOiBt
+bWM6IHJlbmVzYXNfc2RoaTogQWRkIHI4YTc3NDcwIHN1cHBvcnQNCj4NCj4gSGkgRmFicml6aW8s
+DQo+DQo+IE9uIEZyaSwgU2VwIDIxLCAyMDE4IGF0IDE6NTUgUE0gRmFicml6aW8gQ2FzdHJvDQo+
+IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+IERvY3VtZW50IFNE
+SEkgc3VwcG9ydCBmb3IgdGhlIFJaL0cxQyAoYS5rLmEuIFI4QTc3NDcwKSBTb0MuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5l
+c2FzLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMu
+Y29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1j
+L3RtaW9fbW1jLnR4dCB8IDEgKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykN
+Cj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bW1jL3RtaW9fbW1jLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMv
+dG1pb19tbWMudHh0DQo+ID4gaW5kZXggYzQzNDIwMC4uOGYzYTExMyAxMDA2NDQNCj4gPiAtLS0g
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbW1jL3RtaW9fbW1jLnR4dA0KPiA+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tbWMvdG1pb19tbWMudHh0
+DQo+ID4gQEAgLTE3LDYgKzE3LDcgQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgICAgICAg
+ICAgICAgICAgInJlbmVzYXMsc2RoaS1yOGE3NzQwIiAtIFNESEkgSVAgb24gUjhBNzc0MCBTb0MN
+Cj4gPiAgICAgICAgICAgICAgICAgInJlbmVzYXMsc2RoaS1yOGE3NzQzIiAtIFNESEkgSVAgb24g
+UjhBNzc0MyBTb0MNCj4gPiAgICAgICAgICAgICAgICAgInJlbmVzYXMsc2RoaS1yOGE3NzQ1IiAt
+IFNESEkgSVAgb24gUjhBNzc0NSBTb0MNCj4gPiArICAgICAgICAgICAgICAgInJlbmVzYXMsc2Ro
+aS1yOGE3NzQ3MCIgLSBTREhJIElQIG9uIFI4QTc3NDcwIFNvQw0KPiA+ICAgICAgICAgICAgICAg
+ICAicmVuZXNhcyxzZGhpLXI4YTc3NzgiIC0gU0RISSBJUCBvbiBSOEE3Nzc4IFNvQw0KPiA+ICAg
+ICAgICAgICAgICAgICAicmVuZXNhcyxzZGhpLXI4YTc3NzkiIC0gU0RISSBJUCBvbiBSOEE3Nzc5
+IFNvQw0KPiA+ICAgICAgICAgICAgICAgICAicmVuZXNhcyxzZGhpLXI4YTc3OTAiIC0gU0RISSBJ
+UCBvbiBSOEE3NzkwIFNvQw0KPg0KPiBJdCBzZWVtcyBSWi9HMUMgaGFzIHR3byBzbGlnaHR5IGRp
+ZmZlcmVudCB0eXBlcyBvZiBTRCBjYXJkIGludGVyZmFjZXM6DQo+ICAgMS4gU0RISTAgYW5kIFNE
+SEkyIHVzZSBTWVMtRE1BQywNCj4gICAyLiBTREhJMSBjYW4gYWxzbyBiZSB1c2VkIGFzIGFuIE1N
+QyBpbnRlcmZhY2UsIGFuZCBoYXMgYW4gaW50ZXJuYWwgRE1BQy4NCj4NCj4gRG8gd2UgbmVlZCB0
+byBkaXN0aW5ndWlzaCBiZXR3ZWVuIHRoZW0gdXNpbmcgdGhlIGNvbXBhdGlibGUgdmFsdWUsIG9y
+DQo+IGFyZSB0aGVyZSBvdGhlciB3YXlzPw0KDQpUaGUgbW9zdCBzZW5zaWJsZSB0aGluZyB0byBk
+byBoZXJlIGlzIHByb2JhYmx5IHRvIGRpc3Rpbmd1aXNoIGJldHdlZW4gdGhlbSB1c2luZw0KdGhl
+IGNvbXBhdGlibGUgdmFsdWUsIHdlIHdlcmUgdGhpbmtpbmcgYWJvdXQgdXNpbmcgdGhlIGZvbGxv
+d2luZyBmb3IgU0RISTE6DQpjb21wYXRpYmxlID0gInJlbmVzYXMsc2RoaS1tbWMtcjhhNzc0NzAi
+LCAicmVuZXNhcyxyY2FyLWdlbjMtc2RoaSI7DQoNCldoYXQgZG8geW91IGd1eXMgdGhpbms/DQoN
+CkkgaGF2ZSBhIHByb3RvdHlwZSBmb3IgdGhpcyBhbmQgaXQgc2VlbXMgdG8gYmUgd29ya2luZyBm
+aW5lLCBidXQgSSBoYXZlIG9ubHkgcnVuIHNvbWUNCmJhc2ljIGNoZWNrcyBhdCBydW4gdGltZSBv
+biB0aGUgTU1DLCB0aGF0J3Mgd2h5IEkgaGF2ZW4ndCBzZW50IGFueXRoaW5nIGp1c3QgeWV0Lg0K
+DQpUaGFua3MsDQpGYWINCg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRo
+ZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0K
+Pg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBj
+YWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
+dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVu
+ZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2Fk
+LCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGlu
+IEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
