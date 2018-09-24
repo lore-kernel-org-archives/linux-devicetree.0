@@ -1,49 +1,177 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v7 4/7] edac: synopsys: Add macro defines for ZynqMP DDRC
-Date: Mon, 24 Sep 2018 10:29:44 +0000
-Message-ID: <DM6PR02MB5227D961C992C3BB6A4421B7C1170@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-5-git-send-email-manish.narani@xilinx.com>
- <20180924092226.GA20187@zn.tnic>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Songjun Wu <songjun.wu@linux.intel.com>
+Subject: [PATCH 01/14] MIPS: dts: Change upper case to lower case
+Date: Mon, 24 Sep 2018 18:27:50 +0800
+Message-ID: <20180924102803.30263-2-songjun.wu@linux.intel.com>
+References: <20180924102803.30263-1-songjun.wu@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924092226.GA20187@zn.tnic>
-Content-Language: en-US
+In-Reply-To: <20180924102803.30263-1-songjun.wu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, hauke.mehrtens@intel.com
+Cc: Songjun Wu <songjun.wu@linux.intel.com>, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KPiAtLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVd
-DQo+IFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDI0LCAyMDE4IDI6NTIgUE0NCj4gVG86IE1hbmlz
-aCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsg
-bWFyay5ydXRsYW5kQGFybS5jb207IG1jaGVoYWJAa2VybmVsLm9yZzsNCj4gTWljaGFsIFNpbWVr
-IDxtaWNoYWxzQHhpbGlueC5jb20+OyBsZW95YW5nLmxpQG54cC5jb207DQo+IHN1ZGVlcC5ob2xs
-YUBhcm0uY29tOyBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5r
-ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZWRhY0B2
-Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBT
-dWJqZWN0OiBSZTogW1BBVENIIHY3IDQvN10gZWRhYzogc3lub3BzeXM6IEFkZCBtYWNybyBkZWZp
-bmVzIGZvciBaeW5xTVANCj4gRERSQw0KPiANCj4gT24gTW9uLCBTZXAgMTcsIDIwMTggYXQgMDc6
-NTU6MDJQTSArMDUzMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToNCj4gPiBBZGQgbWFjcm8gZGVmaW5l
-cyBmb3IgWnlucU1QIEREUiBjb250cm9sbGVyLiBUaGVzZSBtYWNyb3Mgd2lsbCBiZSB1c2VkDQo+
-ID4gZm9yIFp5cW5NUCBFQ0Mgb3BlcmF0aW9ucy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1h
-bmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJp
-dmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyB8IDE2OA0KPiA+ICsrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE2OCBpbnNlcnRp
-b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMu
-Yw0KPiA+IGIvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyBpbmRleCBlYjQ1OGU1Li42YmY3
-OTU5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMNCj4gPiAr
-KysgYi9kcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jDQo+ID4gQEAgLTk3LDYgKzk3LDE3NCBA
-QA0KPiA+ICAjZGVmaW5lIFNDUlVCX01PREVfTUFTSwkJMHg3DQo+ID4gICNkZWZpbmUgU0NSVUJf
-TU9ERV9TRUNERUQJMHg0DQo+ID4NCj4gPiArLyogRERSIEVDQyBRdWlya3MgKi8NCj4gPiArI2Rl
-ZmluZSBERFJfRUNDX0lOVFJfU1VQUE9SVAkJQklUKDApDQo+ID4gKyNkZWZpbmUgRERSX0VDQ19E
-QVRBX1BPSVNPTl9TVVBQT1JUCUJJVCgxKQ0KPiANCj4gQWxsIHRob3NlIG5ldyBhZGRpdGlvbnMg
-YXJlIG9uZSBjb2x1bW4gZnVydGhlciB0byB0aGUgbGVmdCB0aGFuIHRoZSBvbGQgb25lcy4NCj4g
-V2h5Pw0KPiANCj4gSXMgdGhlcmUgc29tZSBzaWduaWZpY2FuY2UgaGVyZSBvciBjYW4gdGhleSBh
-bGwgYmUgdmVydGljYWxseSBhbGlnbmVkPw0KU2hvdWxkIEkgaW5jcmVhc2UgdGhlIGFsaWdubWVu
-dCBvZiB0aGUgZXhpc3RpbmcgbWFjcm9zIGluIHRoZSAnY29kZSBmb3JtYXR0aW5nJyBwYXRjaGVz
-PyBOZXcgbWFjcm9zIHdpbGwgbmVlZCBhbiBpbmNyZWFzZWQgaW5kZW50YXRpb24uDQoNClRoYW5r
-cywNCk1hbmlzaA0K
+All the upper case in unit-address and hex constants are
+changed to lower case according to the DT conventions.
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
+---
+
+ arch/mips/boot/dts/lantiq/danube.dtsi   | 42 ++++++++++++++++-----------------
+ arch/mips/boot/dts/lantiq/easy50712.dts | 14 +++++------
+ 2 files changed, 28 insertions(+), 28 deletions(-)
+
+diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
+index 2dd950181f8a..510be63c8bdf 100644
+--- a/arch/mips/boot/dts/lantiq/danube.dtsi
++++ b/arch/mips/boot/dts/lantiq/danube.dtsi
+@@ -10,12 +10,12 @@
+ 		};
+ 	};
+ 
+-	biu@1F800000 {
++	biu@1f800000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "lantiq,biu", "simple-bus";
+-		reg = <0x1F800000 0x800000>;
+-		ranges = <0x0 0x1F800000 0x7FFFFF>;
++		reg = <0x1f800000 0x800000>;
++		ranges = <0x0 0x1f800000 0x7fffff>;
+ 
+ 		icu0: icu@80200 {
+ 			#interrupt-cells = <1>;
+@@ -24,18 +24,18 @@
+ 			reg = <0x80200 0x120>;
+ 		};
+ 
+-		watchdog@803F0 {
++		watchdog@803f0 {
+ 			compatible = "lantiq,wdt";
+-			reg = <0x803F0 0x10>;
++			reg = <0x803f0 0x10>;
+ 		};
+ 	};
+ 
+-	sram@1F000000 {
++	sram@1f000000 {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "lantiq,sram";
+-		reg = <0x1F000000 0x800000>;
+-		ranges = <0x0 0x1F000000 0x7FFFFF>;
++		reg = <0x1f000000 0x800000>;
++		ranges = <0x0 0x1f000000 0x7fffff>;
+ 
+ 		eiu0: eiu@101000 {
+ 			#interrupt-cells = <1>;
+@@ -66,41 +66,41 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		compatible = "lantiq,fpi", "simple-bus";
+-		ranges = <0x0 0x10000000 0xEEFFFFF>;
+-		reg = <0x10000000 0xEF00000>;
++		ranges = <0x0 0x10000000 0xeefffff>;
++		reg = <0x10000000 0xef00000>;
+ 
+-		gptu@E100A00 {
++		gptu@e100a00 {
+ 			compatible = "lantiq,gptu-xway";
+-			reg = <0xE100A00 0x100>;
++			reg = <0xe100a00 0x100>;
+ 		};
+ 
+-		serial@E100C00 {
++		serial@e100c00 {
+ 			compatible = "lantiq,asc";
+-			reg = <0xE100C00 0x400>;
++			reg = <0xe100c00 0x400>;
+ 			interrupt-parent = <&icu0>;
+ 			interrupts = <112 113 114>;
+ 		};
+ 
+-		dma0: dma@E104100 {
++		dma0: dma@e104100 {
+ 			compatible = "lantiq,dma-xway";
+-			reg = <0xE104100 0x800>;
++			reg = <0xe104100 0x800>;
+ 		};
+ 
+-		ebu0: ebu@E105300 {
++		ebu0: ebu@e105300 {
+ 			compatible = "lantiq,ebu-xway";
+-			reg = <0xE105300 0x100>;
++			reg = <0xe105300 0x100>;
+ 		};
+ 
+-		pci0: pci@E105400 {
++		pci0: pci@e105400 {
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			#interrupt-cells = <1>;
+ 			compatible = "lantiq,pci-xway";
+ 			bus-range = <0x0 0x0>;
+ 			ranges = <0x2000000 0 0x8000000 0x8000000 0 0x2000000	/* pci memory */
+-				  0x1000000 0 0x00000000 0xAE00000 0 0x200000>; /* io space */
++				  0x1000000 0 0x00000000 0xae00000 0 0x200000>; /* io space */
+ 			reg = <0x7000000 0x8000		/* config space */
+-				0xE105400 0x400>;	/* pci bridge */
++				0xe105400 0x400>;	/* pci bridge */
+ 		};
+ 	};
+ };
+diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
+index c37a33962f28..1ce20b7d05cb 100644
+--- a/arch/mips/boot/dts/lantiq/easy50712.dts
++++ b/arch/mips/boot/dts/lantiq/easy50712.dts
+@@ -52,14 +52,14 @@
+ 			};
+ 		};
+ 
+-		gpio: pinmux@E100B10 {
++		gpio: pinmux@e100b10 {
+ 			compatible = "lantiq,danube-pinctrl";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&state_default>;
+ 
+ 			#gpio-cells = <2>;
+ 			gpio-controller;
+-			reg = <0xE100B10 0xA0>;
++			reg = <0xe100b10 0xa0>;
+ 
+ 			state_default: pinmux {
+ 				stp {
+@@ -82,26 +82,26 @@
+ 			};
+ 		};
+ 
+-		etop@E180000 {
++		etop@e180000 {
+ 			compatible = "lantiq,etop-xway";
+-			reg = <0xE180000 0x40000>;
++			reg = <0xe180000 0x40000>;
+ 			interrupt-parent = <&icu0>;
+ 			interrupts = <73 78>;
+ 			phy-mode = "rmii";
+ 			mac-address = [ 00 11 22 33 44 55 ];
+ 		};
+ 
+-		stp0: stp@E100BB0 {
++		stp0: stp@e100bb0 {
+ 			#gpio-cells = <2>;
+ 			compatible = "lantiq,gpio-stp-xway";
+ 			gpio-controller;
+-			reg = <0xE100BB0 0x40>;
++			reg = <0xe100bb0 0x40>;
+ 
+ 			lantiq,shadow = <0xfff>;
+ 			lantiq,groups = <0x3>;
+ 		};
+ 
+-		pci@E105400 {
++		pci@e105400 {
+ 			lantiq,bus-clock = <33333333>;
+ 			interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
+ 			interrupt-map = <
+-- 
+2.11.0
