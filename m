@@ -1,15 +1,16 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] serial: 8250_uniphier: remove unused "fifo-size"
- property
-Date: Tue, 25 Sep 2018 04:24:34 -0700
-Message-ID: <5baa1af3.1c69fb81.4e5cb.3bca@mx.google.com>
-References: <1537334893-26079-1-git-send-email-yamada.masahiro@socionext.com>
- <1537334893-26079-2-git-send-email-yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] dt-binding: mediatek: Add binding document for
+ MediaTek GMAC
+Date: Mon, 24 Sep 2018 14:07:36 -0700
+Message-ID: <5baa1aea.1c69fb81.cc7c6.3408@mx.google.com>
+References: <1537165763-13112-1-git-send-email-biao.huang@mediatek.com>
+ <1537165763-13112-2-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1537334893-26079-2-git-send-email-yamada.masahiro@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <1537165763-13112-2-git-send-email-biao.huang@mediatek.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,23 +20,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Dai Okamura <okamura.dai@socionext.com>, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Biao Huang <biao.huang@mediatek.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, nelson.chang@mediatek.com, netdev@vger.kernel.org, sean.wang@mediatek.com, liguo.zhang@mediatek.com, linux-kernel@vger.kernel.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Sep 2018 14:28:11 +0900, Masahiro Yamada wrote:
-> The FIFO size of the UART devices is 64 on almost all UniPhier SoCs
-> with the exception Pro4TV SoC (MN2WS0230), which used 128 FIFO size.
-> However, Pro4TV SoC was never upstreamed, and out of production.
+On Mon, Sep 17, 2018 at 02:29:22PM +0800, Biao Huang wrote:
+> The commit adds the device tree binding documentation for the MediaTek
+> GMAC found on Mediatek MT2712.
 > 
-> So, this property has never been used in a useful way.
-> Let's remove old unused code.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Biao Huang <biao.huang@mediatek.com>
 > ---
+>  .../devicetree/bindings/net/mediatek-gmac.txt      |   45 ++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/mediatek-gmac.txt
 > 
->  Documentation/devicetree/bindings/serial/uniphier-uart.txt |  4 ----
->  drivers/tty/serial/8250/8250_uniphier.c                    | 10 +---------
->  2 files changed, 1 insertion(+), 13 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-gmac.txt b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
+> new file mode 100644
+> index 0000000..14876ed
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/mediatek-gmac.txt
+> @@ -0,0 +1,45 @@
+> +MediaTek Gigabit Ethernet controller
+> +=========================================
+> +
+> +The gigabit ethernet controller can be found on MediaTek SoCs.
+> +
+> +* Ethernet controller node
+> +
+> +Required properties:
+> +- compatible: Should be
+> +	"mediatek,mt2712-eth": for MT2712 SoC
+> +- reg: Address and length of the register set for the device
+> +- interrupts: Should contain the MAC interrupts
+> +- interrupt-names: the name of interrupt in the interrupts property. These are
+> +	"macirq": For MT2712 SoC
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Not really necessary to have interrupt-names when there is only 1 irq.
+
+> +- clocks: the clock used by the controller
+> +- clock-names: the names of the clock listed in the clocks property. These are
+> +	"axi", "apb", "mac_ext", "ptp", "ptp_parent", "ptp_top": For MT2712 SoC
+> +- mac-address: See ethernet.txt in the same directory
+> +- power-domains: phandle to the power domain that the ethernet is part of
+> +- phy-mode: See ethernet.txt file in the same directory.
+> +- reset-gpio: gpio number for phy reset.
+
+reset-gpios
+
+> +
+> +Example:
+> +
+> +eth: eth@1101c000 {
+> +		compatible = "mediatek,mt2712-eth";
+> +		reg = <0 0x1101c000 0 0x1200>;
+> +		interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "macirq";
+> +		phy-mode ="rgmii";
+> +		mac-address = [00 55 7b b5 7d f7];
+> +		clock-names = "axi",
+> +			      "apb",
+> +			      "mac_ext",
+> +			      "ptp",
+> +			      "ptp_parent",
+> +			      "ptp_top";
+> +		clocks = <&pericfg CLK_PERI_GMAC>,
+> +			 <&pericfg CLK_PERI_GMAC_PCLK>,
+> +			 <&topckgen CLK_TOP_ETHER_125M_SEL>,
+> +			 <&topckgen CLK_TOP_ETHER_50M_SEL>,
+> +			 <&topckgen CLK_TOP_APLL1_D3>,
+> +			 <&topckgen CLK_TOP_APLL1>;
+> +		reset-gpio = <&pio 87 GPIO_ACTIVE_HIGH>;
+> +	};
+> -- 
+> 1.7.9.5
+> 
