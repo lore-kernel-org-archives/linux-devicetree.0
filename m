@@ -1,578 +1,317 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH v4] remoteproc: qcom: Introduce Non-PAS ADSP PIL driver
-Date: Mon, 24 Sep 2018 16:37:50 +0530
-Message-ID: <1537787270-29630-1-git-send-email-rohitkr@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 19/20] iommu/tegra: gart: Simplify clients-tracking code
+Date: Mon, 24 Sep 2018 13:10:47 +0200
+Message-ID: <20180924111047.GP21032@ulmo>
+References: <20180924004153.8232-1-digetx@gmail.com>
+	<20180924004153.8232-20-digetx@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7454863481491466035=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20180924004153.8232-20-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds Non PAS ADSP PIL driver for Qualcomm
-Technologies Inc SoCs.
-Added initial support for SDM845 with ADSP bootup and
-shutdown operation handled from Application Processor
-SubSystem(APSS).
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
-Changes since v3:
-	Addressed comments posted by Sibi
+--===============7454863481491466035==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="h9WqFG8zn/Mwlkpe"
+Content-Disposition: inline
 
-This patch is dependent on the rpmh powerdomain driver https://lkml.org/lkml/2018/6/27/7
-and renaming of Hexagon v5 PAS driver https://patchwork.kernel.org/patch/10601119/ .
 
- drivers/remoteproc/Kconfig         |  14 ++
- drivers/remoteproc/Makefile        |   1 +
- drivers/remoteproc/qcom_adsp_pil.c | 502 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 517 insertions(+)
- create mode 100644 drivers/remoteproc/qcom_adsp_pil.c
+--h9WqFG8zn/Mwlkpe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-index 8894935..f554669 100644
---- a/drivers/remoteproc/Kconfig
-+++ b/drivers/remoteproc/Kconfig
-@@ -140,6 +140,20 @@ config QCOM_Q6V5_WCSS
- 	  Say y here to support the Qualcomm Peripheral Image Loader for the
- 	  Hexagon V5 based WCSS remote processors.
- 
-+config QCOM_ADSP_PIL
-+	tristate "Qualcomm Technology Inc ADSP Peripheral Image Loader"
-+	depends on OF && ARCH_QCOM
-+	depends on QCOM_SMEM
-+	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
-+	depends on QCOM_SYSMON || QCOM_SYSMON=n
-+	select MFD_SYSCON
-+	select QCOM_MDT_LOADER
-+	select QCOM_Q6V5_COMMON
-+	select QCOM_RPROC_COMMON
-+	help
-+	  Say y here to support the Peripheral Image Loader
-+	  for the Qualcomm Technology Inc. ADSP remote processors.
-+
- config QCOM_SYSMON
- 	tristate "Qualcomm sysmon driver"
- 	depends on RPMSG
-diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-index 050f41a..0e1b89c 100644
---- a/drivers/remoteproc/Makefile
-+++ b/drivers/remoteproc/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
- obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
- obj-$(CONFIG_QCOM_Q6V5_PAS)		+= qcom_q6v5_pas.o
- obj-$(CONFIG_QCOM_Q6V5_WCSS)		+= qcom_q6v5_wcss.o
-+obj-$(CONFIG_QCOM_ADSP_PIL)		+= qcom_adsp_pil.o
- obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
- obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
- qcom_wcnss_pil-y			+= qcom_wcnss.o
-diff --git a/drivers/remoteproc/qcom_adsp_pil.c b/drivers/remoteproc/qcom_adsp_pil.c
-new file mode 100644
-index 0000000..f2f5e56
---- /dev/null
-+++ b/drivers/remoteproc/qcom_adsp_pil.c
-@@ -0,0 +1,502 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Qualcomm Technology Inc. ADSP Peripheral Image Loader for SDM845.
-+ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/firmware.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/remoteproc.h>
-+#include <linux/reset.h>
-+#include <linux/soc/qcom/mdt_loader.h>
-+#include <linux/soc/qcom/smem.h>
-+#include <linux/soc/qcom/smem_state.h>
-+
-+#include "qcom_common.h"
-+#include "qcom_q6v5.h"
-+#include "remoteproc_internal.h"
-+
-+/* time out value */
-+#define ACK_TIMEOUT			1000
-+#define BOOT_FSM_TIMEOUT		10000
-+/* mask values */
-+#define EVB_MASK			GENMASK(27, 4)
-+/*QDSP6SS register offsets*/
-+#define RST_EVB_REG			0x10
-+#define CORE_START_REG			0x400
-+#define BOOT_CMD_REG			0x404
-+#define BOOT_STATUS_REG			0x408
-+#define RET_CFG_REG			0x1C
-+/*TCSR register offsets*/
-+#define LPASS_MASTER_IDLE_REG		0x8
-+#define LPASS_HALTACK_REG		0x4
-+#define LPASS_PWR_ON_REG		0x10
-+#define LPASS_HALTREQ_REG		0x0
-+
-+/* list of clocks required by ADSP PIL */
-+static const char * const adsp_clk_id[] = {
-+	"sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
-+	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
-+};
-+
-+struct adsp_pil_data {
-+	int crash_reason_smem;
-+	const char *firmware_name;
-+
-+	const char *ssr_name;
-+	const char *sysmon_name;
-+	int ssctl_id;
-+};
-+
-+struct qcom_adsp {
-+	struct device *dev;
-+	struct rproc *rproc;
-+
-+	struct qcom_q6v5 q6v5;
-+
-+	struct clk *xo;
-+
-+	int num_clks;
-+	struct clk_bulk_data *clks;
-+
-+	void __iomem *qdsp6ss_base;
-+
-+	struct reset_control *pdc_sync_reset;
-+	struct reset_control *cc_lpass_restart;
-+
-+	struct regmap *halt_map;
-+	unsigned int halt_lpass;
-+
-+	int crash_reason_smem;
-+
-+	struct completion start_done;
-+	struct completion stop_done;
-+
-+	phys_addr_t mem_phys;
-+	phys_addr_t mem_reloc;
-+	void *mem_region;
-+	size_t mem_size;
-+
-+	struct qcom_rproc_glink glink_subdev;
-+	struct qcom_rproc_ssr ssr_subdev;
-+	struct qcom_sysmon *sysmon;
-+};
-+
-+static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
-+{
-+	unsigned long timeout;
-+	unsigned int val;
-+	int ret;
-+
-+	/* Reset the retention logic */
-+	val = readl(adsp->qdsp6ss_base + RET_CFG_REG);
-+	val |= 0x1;
-+	writel(val, adsp->qdsp6ss_base + RET_CFG_REG);
-+
-+	clk_bulk_disable_unprepare(adsp->num_clks, adsp->clks);
-+
-+	/* QDSP6 master port needs to be explicitly halted */
-+	ret = regmap_read(adsp->halt_map,
-+			adsp->halt_lpass + LPASS_PWR_ON_REG, &val);
-+	if (ret || !val)
-+		goto reset;
-+
-+	ret = regmap_read(adsp->halt_map,
-+			adsp->halt_lpass + LPASS_MASTER_IDLE_REG,
-+			&val);
-+	if (ret || val)
-+		goto reset;
-+
-+	regmap_write(adsp->halt_map,
-+			adsp->halt_lpass + LPASS_HALTREQ_REG, 1);
-+
-+	/* Wait for halt ACK from QDSP6 */
-+	timeout = jiffies + msecs_to_jiffies(ACK_TIMEOUT);
-+	for (;;) {
-+		ret = regmap_read(adsp->halt_map,
-+			adsp->halt_lpass + LPASS_HALTACK_REG, &val);
-+		if (ret || val || time_after(jiffies, timeout))
-+			break;
-+
-+		usleep_range(1000, 1100);
-+	}
-+
-+	ret = regmap_read(adsp->halt_map,
-+			adsp->halt_lpass + LPASS_MASTER_IDLE_REG, &val);
-+	if (ret || !val)
-+		dev_err(adsp->dev, "port failed halt\n");
-+
-+reset:
-+	/* Assert the LPASS PDC Reset */
-+	reset_control_assert(adsp->pdc_sync_reset);
-+	/* Place the LPASS processor into reset */
-+	reset_control_assert(adsp->cc_lpass_restart);
-+	/* wait after asserting subsystem restart from AOSS */
-+	usleep_range(200, 300);
-+
-+	/* Clear the halt request for the AXIM and AHBM for Q6 */
-+	regmap_write(adsp->halt_map, adsp->halt_lpass + LPASS_HALTREQ_REG, 0);
-+
-+	/* De-assert the LPASS PDC Reset */
-+	reset_control_deassert(adsp->pdc_sync_reset);
-+	/* Remove the LPASS reset */
-+	reset_control_deassert(adsp->cc_lpass_restart);
-+	/* wait after de-asserting subsystem restart from AOSS */
-+	usleep_range(200, 300);
-+
-+	return 0;
-+}
-+
-+static int adsp_load(struct rproc *rproc, const struct firmware *fw)
-+{
-+	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-+
-+	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-+			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-+			     &adsp->mem_reloc);
-+}
-+
-+static int adsp_start(struct rproc *rproc)
-+{
-+	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-+	int ret;
-+	unsigned int val;
-+
-+	qcom_q6v5_prepare(&adsp->q6v5);
-+
-+	ret = clk_prepare_enable(adsp->xo);
-+	if (ret)
-+		goto disable_irqs;
-+
-+	dev_pm_genpd_set_performance_state(adsp->dev, INT_MAX);
-+	ret = pm_runtime_get_sync(adsp->dev);
-+	if (ret)
-+		goto disable_xo_clk;
-+
-+	ret = clk_bulk_prepare_enable(adsp->num_clks, adsp->clks);
-+	if (ret) {
-+		dev_err(adsp->dev, "adsp clk_enable failed\n");
-+		goto disable_power_domain;
-+	}
-+
-+	/* Program boot address */
-+	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
-+
-+	/* De-assert QDSP6 stop core. QDSP6 will execute after out of reset */
-+	writel(0x1, adsp->qdsp6ss_base + CORE_START_REG);
-+
-+	/* Trigger boot FSM to start QDSP6 */
-+	writel(0x1, adsp->qdsp6ss_base + BOOT_CMD_REG);
-+
-+	/* Wait for core to come out of reset */
-+	ret = readl_poll_timeout(adsp->qdsp6ss_base + BOOT_STATUS_REG,
-+			val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
-+	if (ret) {
-+		dev_err(adsp->dev, "failed to bootup adsp\n");
-+		goto disable_adsp_clks;
-+	}
-+
-+	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5 * HZ));
-+	if (ret == -ETIMEDOUT) {
-+		dev_err(adsp->dev, "start timed out\n");
-+		goto disable_adsp_clks;
-+	}
-+
-+	return 0;
-+
-+disable_adsp_clks:
-+	clk_bulk_disable_unprepare(adsp->num_clks, adsp->clks);
-+disable_power_domain:
-+	dev_pm_genpd_set_performance_state(adsp->dev, 0);
-+	pm_runtime_put(adsp->dev);
-+disable_xo_clk:
-+	clk_disable_unprepare(adsp->xo);
-+disable_irqs:
-+	qcom_q6v5_unprepare(&adsp->q6v5);
-+
-+	return ret;
-+}
-+
-+static void qcom_adsp_pil_handover(struct qcom_q6v5 *q6v5)
-+{
-+	struct qcom_adsp *adsp = container_of(q6v5, struct qcom_adsp, q6v5);
-+
-+	clk_disable_unprepare(adsp->xo);
-+	dev_pm_genpd_set_performance_state(adsp->dev, 0);
-+	pm_runtime_put(adsp->dev);
-+}
-+
-+static int adsp_stop(struct rproc *rproc)
-+{
-+	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-+	int handover;
-+	int ret;
-+
-+	ret = qcom_q6v5_request_stop(&adsp->q6v5);
-+	if (ret == -ETIMEDOUT)
-+		dev_err(adsp->dev, "timed out on wait\n");
-+
-+	ret = qcom_adsp_shutdown(adsp);
-+	if (ret)
-+		dev_err(adsp->dev, "failed to shutdown: %d\n", ret);
-+
-+	handover = qcom_q6v5_unprepare(&adsp->q6v5);
-+	if (handover)
-+		qcom_adsp_pil_handover(&adsp->q6v5);
-+
-+	return ret;
-+}
-+
-+static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-+{
-+	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-+	int offset;
-+
-+	offset = da - adsp->mem_reloc;
-+	if (offset < 0 || offset + len > adsp->mem_size)
-+		return NULL;
-+
-+	return adsp->mem_region + offset;
-+}
-+
-+static const struct rproc_ops adsp_ops = {
-+	.start = adsp_start,
-+	.stop = adsp_stop,
-+	.da_to_va = adsp_da_to_va,
-+	.parse_fw = qcom_register_dump_segments,
-+	.load = adsp_load,
-+};
-+
-+static int adsp_init_clock(struct qcom_adsp *adsp)
-+{
-+	int i, ret;
-+
-+	adsp->xo = devm_clk_get(adsp->dev, "xo");
-+	if (IS_ERR(adsp->xo)) {
-+		ret = PTR_ERR(adsp->xo);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(adsp->dev, "failed to get xo clock");
-+		return ret;
-+	}
-+
-+	adsp->num_clks = ARRAY_SIZE(adsp_clk_id);
-+	adsp->clks = devm_kcalloc(adsp->dev, adsp->num_clks,
-+				sizeof(*adsp->clks), GFP_KERNEL);
-+	if (IS_ERR(adsp->clks)) {
-+		ret = PTR_ERR(adsp->clks);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(adsp->dev, "failed to get adsp clock");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < adsp->num_clks; i++)
-+		adsp->clks[i].id = adsp_clk_id[i];
-+
-+	return devm_clk_bulk_get(adsp->dev, adsp->num_clks, adsp->clks);
-+}
-+
-+static int adsp_init_reset(struct qcom_adsp *adsp)
-+{
-+	adsp->pdc_sync_reset = devm_reset_control_get_exclusive(adsp->dev,
-+			"pdc_sync");
-+	if (IS_ERR(adsp->pdc_sync_reset)) {
-+		dev_err(adsp->dev, "failed to acquire pdc_sync reset\n");
-+		return PTR_ERR(adsp->pdc_sync_reset);
-+	}
-+
-+	adsp->cc_lpass_restart = devm_reset_control_get_exclusive(adsp->dev,
-+			"cc_lpass");
-+	if (IS_ERR(adsp->cc_lpass_restart)) {
-+		dev_err(adsp->dev, "failed to acquire cc_lpass restart\n");
-+		return PTR_ERR(adsp->cc_lpass_restart);
-+	}
-+
-+	return 0;
-+}
-+
-+static int adsp_init_mmio(struct qcom_adsp *adsp,
-+				struct platform_device *pdev)
-+{
-+	struct device_node *syscon;
-+	struct resource *res;
-+	int ret;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	adsp->qdsp6ss_base = devm_ioremap(&pdev->dev, res->start,
-+			resource_size(res));
-+	if (IS_ERR(adsp->qdsp6ss_base)) {
-+		dev_err(adsp->dev, "failed to map QDSP6SS registers\n");
-+		return PTR_ERR(adsp->qdsp6ss_base);
-+	}
-+
-+	syscon = of_parse_phandle(pdev->dev.of_node, "qcom,halt-regs", 0);
-+	if (!syscon) {
-+		dev_err(&pdev->dev, "failed to parse qcom,halt-regs\n");
-+		return -EINVAL;
-+	}
-+
-+	adsp->halt_map = syscon_node_to_regmap(syscon);
-+	of_node_put(syscon);
-+	if (IS_ERR(adsp->halt_map))
-+		return PTR_ERR(adsp->halt_map);
-+
-+	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,halt-regs",
-+			1, &adsp->halt_lpass);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "no offset in syscon\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adsp_alloc_memory_region(struct qcom_adsp *adsp)
-+{
-+	struct device_node *node;
-+	struct resource r;
-+	int ret;
-+
-+	node = of_parse_phandle(adsp->dev->of_node, "memory-region", 0);
-+	if (!node) {
-+		dev_err(adsp->dev, "no memory-region specified\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = of_address_to_resource(node, 0, &r);
-+	if (ret)
-+		return ret;
-+
-+	adsp->mem_phys = adsp->mem_reloc = r.start;
-+	adsp->mem_size = resource_size(&r);
-+	adsp->mem_region = devm_ioremap_wc(adsp->dev,
-+				adsp->mem_phys, adsp->mem_size);
-+	if (!adsp->mem_region) {
-+		dev_err(adsp->dev, "unable to map memory region: %pa+%zx\n",
-+			&r.start, adsp->mem_size);
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int adsp_probe(struct platform_device *pdev)
-+{
-+	const struct adsp_pil_data *desc;
-+	struct qcom_adsp *adsp;
-+	struct rproc *rproc;
-+	int ret;
-+
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	rproc = rproc_alloc(&pdev->dev, pdev->name, &adsp_ops,
-+			    desc->firmware_name, sizeof(*adsp));
-+	if (!rproc) {
-+		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
-+		return -ENOMEM;
-+	}
-+
-+	adsp = (struct qcom_adsp *)rproc->priv;
-+	adsp->dev = &pdev->dev;
-+	adsp->rproc = rproc;
-+	platform_set_drvdata(pdev, adsp);
-+
-+	ret = adsp_alloc_memory_region(adsp);
-+	if (ret)
-+		goto free_rproc;
-+
-+	ret = adsp_init_clock(adsp);
-+	if (ret)
-+		goto free_rproc;
-+
-+	pm_runtime_enable(adsp->dev);
-+
-+	ret = adsp_init_reset(adsp);
-+	if (ret)
-+		goto disable_pm;
-+
-+	ret = adsp_init_mmio(adsp, pdev);
-+	if (ret)
-+		goto disable_pm;
-+
-+	ret = qcom_q6v5_init(&adsp->q6v5, pdev, rproc, desc->crash_reason_smem,
-+			     qcom_adsp_pil_handover);
-+	if (ret)
-+		goto disable_pm;
-+
-+	qcom_add_glink_subdev(rproc, &adsp->glink_subdev);
-+	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
-+	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
-+					      desc->sysmon_name,
-+					      desc->ssctl_id);
-+
-+	ret = rproc_add(rproc);
-+	if (ret)
-+		goto disable_pm;
-+
-+	return 0;
-+
-+disable_pm:
-+	pm_runtime_disable(adsp->dev);
-+free_rproc:
-+	rproc_free(rproc);
-+
-+	return ret;
-+}
-+
-+static int adsp_remove(struct platform_device *pdev)
-+{
-+	struct qcom_adsp *adsp = platform_get_drvdata(pdev);
-+
-+	rproc_del(adsp->rproc);
-+
-+	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
-+	qcom_remove_sysmon_subdev(adsp->sysmon);
-+	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
-+	pm_runtime_disable(adsp->dev);
-+	rproc_free(adsp->rproc);
-+
-+	return 0;
-+}
-+
-+static const struct adsp_pil_data adsp_resource_init = {
-+	.crash_reason_smem = 423,
-+	.firmware_name = "adsp.mdt",
-+	.ssr_name = "lpass",
-+	.sysmon_name = "adsp",
-+	.ssctl_id = 0x14,
-+};
-+
-+static const struct of_device_id adsp_of_match[] = {
-+	{ .compatible = "qcom,sdm845-adsp-pil",
-+	  .data = &adsp_resource_init},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, adsp_of_match);
-+
-+static struct platform_driver adsp_pil_driver = {
-+	.probe = adsp_probe,
-+	.remove = adsp_remove,
-+	.driver = {
-+		.name = "qcom_adsp_pil",
-+		.of_match_table = adsp_of_match,
-+	},
-+};
-+
-+module_platform_driver(adsp_pil_driver);
-+MODULE_DESCRIPTION("QTI SDM845 ADSP Peripheral Image Loader");
-+MODULE_LICENSE("GPL v2");
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+On Mon, Sep 24, 2018 at 03:41:52AM +0300, Dmitry Osipenko wrote:
+> GART is a simple IOMMU provider that has single address space. There is
+> no need to setup global clients list and manage it for tracking of the
+> active domain, hence lot's of code could be safely removed and replaced
+> with a simpler alternative.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/iommu/tegra-gart.c | 157 +++++++++----------------------------
+>  1 file changed, 39 insertions(+), 118 deletions(-)
+>=20
+> diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+> index 306e9644a676..7182445c3b76 100644
+> --- a/drivers/iommu/tegra-gart.c
+> +++ b/drivers/iommu/tegra-gart.c
+> @@ -19,7 +19,6 @@
+> =20
+>  #include <linux/io.h>
+>  #include <linux/iommu.h>
+> -#include <linux/list.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/slab.h>
+> @@ -42,30 +41,20 @@
+>  #define GART_PAGE_MASK						\
+>  	(~(GART_PAGE_SIZE - 1) & ~GART_ENTRY_PHYS_ADDR_VALID)
+> =20
+> -struct gart_client {
+> -	struct device		*dev;
+> -	struct list_head	list;
+> -};
+> -
+>  struct gart_device {
+>  	void __iomem		*regs;
+>  	u32			*savedata;
+>  	u32			page_count;	/* total remappable size */
+>  	dma_addr_t		iovmm_base;	/* offset to vmm_area */
+>  	spinlock_t		pte_lock;	/* for pagetable */
+> -	struct list_head	client;
+> -	spinlock_t		client_lock;	/* for client list */
+> +	spinlock_t		dom_lock;	/* for active domain */
+> +	unsigned int		active_devices;	/* number of active devices */
+>  	struct iommu_domain	*active_domain;	/* current active domain */
+>  	struct device		*dev;
+> =20
+>  	struct iommu_device	iommu;		/* IOMMU Core handle */
+>  };
+> =20
+> -struct gart_domain {
+> -	struct iommu_domain domain;		/* generic domain handle */
+> -	struct gart_device *gart;		/* link to gart device   */
+> -};
+> -
+>  static struct gart_device *gart_handle; /* unique for a system */
+> =20
+>  static bool gart_debug;
+> @@ -73,11 +62,6 @@ static bool gart_debug;
+>  #define GART_PTE(_pfn)						\
+>  	(GART_ENTRY_PHYS_ADDR_VALID | ((_pfn) << PAGE_SHIFT))
+> =20
+> -static struct gart_domain *to_gart_domain(struct iommu_domain *dom)
+> -{
+> -	return container_of(dom, struct gart_domain, domain);
+> -}
+> -
+>  /*
+>   * Any interaction between any block on PPSB and a block on APB or AHB
+>   * must have these read-back to ensure the APB/AHB bus transaction is
+> @@ -166,128 +150,69 @@ static inline bool gart_iova_range_valid(struct ga=
+rt_device *gart,
+>  static int gart_iommu_attach_dev(struct iommu_domain *domain,
+>  				 struct device *dev)
+>  {
+> -	struct gart_domain *gart_domain =3D to_gart_domain(domain);
+>  	struct gart_device *gart =3D gart_handle;
+> -	struct gart_client *client, *c;
+> -	int err =3D 0;
+> -
+> -	client =3D kzalloc(sizeof(*c), GFP_KERNEL);
+> -	if (!client)
+> -		return -ENOMEM;
+> -	client->dev =3D dev;
+> -
+> -	spin_lock(&gart->client_lock);
+> -	list_for_each_entry(c, &gart->client, list) {
+> -		if (c->dev =3D=3D dev) {
+> -			dev_err(gart->dev, "GART: %s is already attached\n",
+> -				dev_name(dev));
+> -			err =3D -EINVAL;
+> -			goto fail;
+> -		}
+> -	}
+> -	if (gart->active_domain && gart->active_domain !=3D domain) {
+> -		dev_err(gart->dev,
+> -			"GART: Only one domain can be active at a time\n");
+> -		err =3D -EINVAL;
+> -		goto fail;
+> -	}
+> -	gart->active_domain =3D domain;
+> -	gart_domain->gart =3D gart;
+> -	list_add(&client->list, &gart->client);
+> -	spin_unlock(&gart->client_lock);
+> -	dev_dbg(gart->dev, "GART: Attached %s\n", dev_name(dev));
+> -	return 0;
+> +	int ret =3D 0;
+> =20
+> -fail:
+> -	kfree(client);
+> -	spin_unlock(&gart->client_lock);
+> -	return err;
+> -}
+> +	spin_lock(&gart->dom_lock);
+> =20
+> -static void __gart_iommu_detach_dev(struct iommu_domain *domain,
+> -				    struct device *dev)
+> -{
+> -	struct gart_domain *gart_domain =3D to_gart_domain(domain);
+> -	struct gart_device *gart =3D gart_domain->gart;
+> -	struct gart_client *c;
+> -
+> -	list_for_each_entry(c, &gart->client, list) {
+> -		if (c->dev =3D=3D dev) {
+> -			list_del(&c->list);
+> -			kfree(c);
+> -			if (list_empty(&gart->client)) {
+> -				gart->active_domain =3D NULL;
+> -				gart_domain->gart =3D NULL;
+> -			}
+> -			dev_dbg(gart->dev, "GART: Detached %s\n",
+> -				dev_name(dev));
+> -			return;
+> -		}
+> +	if (gart->active_domain && gart->active_domain !=3D domain) {
+> +		ret =3D -EBUSY;
+
+This omits the error message and returns -EBUSY instead of -EINVAL. Was
+this intended? For what it's worth, I do agree with the changes, it's
+just that I think you could've made those in the earlier patch that
+introduced them.
+
+But this is all one series and the end result looks fine, so no need to
+be that picky.
+
+> +	} else if (dev->archdata.iommu !=3D domain) {
+> +		dev->archdata.iommu =3D domain;
+> +		gart->active_domain =3D domain;
+> +		gart->active_devices++;
+>  	}
+> =20
+> -	dev_err(gart->dev, "GART: Couldn't find %s to detach\n",
+> -		dev_name(dev));
+> +	spin_unlock(&gart->dom_lock);
+> +
+> +	return ret;
+>  }
+> =20
+>  static void gart_iommu_detach_dev(struct iommu_domain *domain,
+>  				  struct device *dev)
+>  {
+> -	struct gart_domain *gart_domain =3D to_gart_domain(domain);
+> -	struct gart_device *gart =3D gart_domain->gart;
+> +	struct gart_device *gart =3D gart_handle;
+> +
+> +	spin_lock(&gart->dom_lock);
+> =20
+> -	spin_lock(&gart->client_lock);
+> -	__gart_iommu_detach_dev(domain, dev);
+> -	spin_unlock(&gart->client_lock);
+> +	if (dev->archdata.iommu =3D=3D domain) {
+> +		dev->archdata.iommu =3D NULL;
+> +
+> +		if (--gart->active_devices =3D=3D 0)
+> +			gart->active_domain =3D NULL;
+> +	}
+> +
+> +	spin_unlock(&gart->dom_lock);
+>  }
+> =20
+>  static struct iommu_domain *gart_iommu_domain_alloc(unsigned type)
+>  {
+> -	struct gart_domain *gart_domain;
+> -	struct gart_device *gart;
+> +	struct gart_device *gart =3D gart_handle;
+> +	struct iommu_domain *domain;
+> =20
+>  	if (type !=3D IOMMU_DOMAIN_UNMANAGED)
+>  		return NULL;
+> =20
+> -	gart =3D gart_handle;
+> -	if (!gart)
+> -		return NULL;
+> -
+> -	gart_domain =3D kzalloc(sizeof(*gart_domain), GFP_KERNEL);
+> -	if (!gart_domain)
+> -		return NULL;
+> -
+> -	gart_domain->domain.geometry.aperture_start =3D gart->iovmm_base;
+> -	gart_domain->domain.geometry.aperture_end =3D gart->iovmm_base +
+> +	domain =3D kzalloc(sizeof(*domain), GFP_KERNEL);
+> +	if (domain) {
+> +		domain->geometry.aperture_start =3D gart->iovmm_base;
+> +		domain->geometry.aperture_end =3D gart->iovmm_base +
+>  					gart->page_count * GART_PAGE_SIZE - 1;
+> -	gart_domain->domain.geometry.force_aperture =3D true;
+> +		domain->geometry.force_aperture =3D true;
+> +	}
+> =20
+> -	return &gart_domain->domain;
+> +	return domain;
+>  }
+> =20
+>  static void gart_iommu_domain_free(struct iommu_domain *domain)
+>  {
+> -	struct gart_domain *gart_domain =3D to_gart_domain(domain);
+> -	struct gart_device *gart =3D gart_domain->gart;
+> -
+> -	if (gart) {
+> -		spin_lock(&gart->client_lock);
+> -		if (!list_empty(&gart->client)) {
+> -			struct gart_client *c, *tmp;
+> -
+> -			list_for_each_entry_safe(c, tmp, &gart->client, list)
+> -				__gart_iommu_detach_dev(domain, c->dev);
+> -		}
+> -		spin_unlock(&gart->client_lock);
+> -	}
+> -
+> -	kfree(gart_domain);
+> +	kfree(domain);
+>  }
+
+Doesn't this now make it possible to free a potentially active domain?
+
+> =20
+>  static int gart_iommu_map(struct iommu_domain *domain, unsigned long iov=
+a,
+>  			  phys_addr_t pa, size_t bytes, int prot)
+>  {
+> -	struct gart_domain *gart_domain =3D to_gart_domain(domain);
+> -	struct gart_device *gart =3D gart_domain->gart;
+> +	struct gart_device *gart =3D gart_handle;
+
+Hmm... this now introduces more uses of the gart_handle that I hoped we
+could get rid of. I think we could still keep around struct gart_domain
+and just make sure it is unique. The small amounts of casting here seem
+mostly harmless to me, especially since they will be nops, so we end up
+with just one dereference to get at the struct gart_device. I think the
+benefits of not having this global variable around are worth the one
+dereference here.
+
+Thierry
+
+--h9WqFG8zn/Mwlkpe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluoxjcACgkQ3SOs138+
+s6HTWw//e8HTYSGv/C7bxs7HXJw4ZPbBBu+ENfZQtKIWijjpxe7cpKf2aq7cFGTR
+n3loG2bTObd0jPWumWSmYlAiJrdbsmwjkUn3WluWRMn+bAyOduSrPVnY4I3PR1VP
+weY9Eix7Kq8yNHVfRN3cB5a7fnxJE0WZdz5tSuIk7pTbCBw7nvSnZYWKf28TRmPU
+15ia07yzt8if+Ad9RmBKutNqTDhpSpaABBtW/bwV3vvd5h3Y3U9MwGuSKzPMKUd6
+fVsUfZKN6840XzHa9M48nsdmwtHgc6IpuSN+39IBPsXySxCEHW8W+gV2r96YYJZN
+5Yf5Xgr7gUJ+UyqklV04JJvc/R6Ytq3O5tWUMIBqc7hD6aCOF5olOCvhk3feQfIP
+Yh/GqO00XJIguok470nOreuuG9PZjjSuvUKh3MkvY1gB4b+Q5yc8UwYYGLOISJ3h
+OdOfusQYnrZ6iZtCy4GdD1bUbgDAHJOkZrPvp/7czz/6ZKIYX1LQx+KI85SKIoir
+shMqTo+WYUE9SZbqpXbiNzvjIkbgADGTaK7d+MzbK53skEVZu+eadB+uIPic50Yz
+LICPjUNbjTcstbBhirQ0KpAq/LV/DTG27Tt+K+5T9yBFHQuTvr+FMbs67Xx9xTxr
+P25nutaN0pW1xrVxbq2QTB2c3VP4iGMLzEsGrbphJNTkwoBP38c=
+=kdoF
+-----END PGP SIGNATURE-----
+
+--h9WqFG8zn/Mwlkpe--
+
+--===============7454863481491466035==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============7454863481491466035==--
