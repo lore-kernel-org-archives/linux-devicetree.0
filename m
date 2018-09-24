@@ -1,88 +1,340 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH V2 3/3] arm64: dts: broadcom: Add reference to Compute
- Module IO Board V3
-Date: Mon, 24 Sep 2018 10:17:02 +0200
-Message-ID: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
-References: <1535393148-24163-1-git-send-email-stefan.wahren@i2se.com>
- <1535393148-24163-4-git-send-email-stefan.wahren@i2se.com>
- <20180923173940.GE9849@bart.dudau.co.uk>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] ARM: dts: Add support for Liebherr's BK4 device (vf610
+ based)
+Date: Mon, 24 Sep 2018 10:30:45 +0200
+Message-ID: <20180924103045.524c6855@jawa>
+References: <20180921152726.31742-1-lukma@denx.de>
+        <CAOMZO5DPnWNJ_UVdE9Lvh05R84seP8VPP=35eEUaor4-pppXGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180923173940.GE9849@bart.dudau.co.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Liviu Dudau <liviu@dudau.co.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Alexander Graf <agraf@suse.de>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/5BDm3QG0=cl.1V1CQsGjFCa"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAOMZO5DPnWNJ_UVdE9Lvh05R84seP8VPP=35eEUaor4-pppXGQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liviu,
+--Sig_/5BDm3QG0=cl.1V1CQsGjFCa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[add Arnd and Olof]
+Hi Fabio,
+
+Thanks for your review.
+
+> On Fri, Sep 21, 2018 at 12:27 PM, Lukasz Majewski <lukma@denx.de>
+> wrote:
+> > This commit adds DTS support for BK4 device from Liebherr. It
+> > uses vf610 SoC from NXP.
+> >
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > ---
+> >  arch/arm/boot/dts/Makefile      |   1 +
+> >  arch/arm/boot/dts/vf610-bk4.dts | 504
+> > ++++++++++++++++++++++++++++++++++++++++ 2 files changed, 505
+> > insertions(+) create mode 100644 arch/arm/boot/dts/vf610-bk4.dts
+> >
+> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> > index b5bd3de87c33..e6f159895fa9 100644
+> > --- a/arch/arm/boot/dts/Makefile
+> > +++ b/arch/arm/boot/dts/Makefile
+> > @@ -577,6 +577,7 @@ dtb-$(CONFIG_SOC_LS1021A) +=3D \
+> >         ls1021a-twr.dtb
+> >  dtb-$(CONFIG_SOC_VF610) +=3D \
+> >         vf500-colibri-eval-v3.dtb \
+> > +       vf610-bk4.dtb \
+> >         vf610-colibri-eval-v3.dtb \
+> >         vf610m4-colibri.dtb \
+> >         vf610-cosmic.dtb \
+> > diff --git a/arch/arm/boot/dts/vf610-bk4.dts
+> > b/arch/arm/boot/dts/vf610-bk4.dts new file mode 100644
+> > index 000000000000..4ad7e739a0ad
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/vf610-bk4.dts
+> > @@ -0,0 +1,504 @@
+> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> > +/*
+> > + * Copyright 2018
+> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "vf610.dtsi"
+> > +
+> > +/ {
+> > +       model =3D "Liebherr BK4 controller";
+> > +       compatible =3D "lwn,bk4", "fsl,vf610";
+> > +
+> > +       chosen {
+> > +               bootargs =3D "console=3DttyLP1,115200"; =20
+>=20
+> You could pass stdout-path instead.
+
+Ok.
+
+>=20
+> > +       };
+> > +
+> > +       memory@80000000 {
+> > +               reg =3D <0x80000000 0x8000000>;
+> > +       };
+> > +
+> > +       audio_ext: mclk_osc {
+> > +               compatible =3D "fixed-clock";
+> > +               #clock-cells =3D <0>;
+> > +               clock-frequency =3D <24576000>;
+> > +       }; =20
+>=20
+> This seems to be unused.
+
+The audio_ext label is used (referenced) in the "clks".
+
+>=20
+> > +
+> > +       enet_ext: eth_osc {
+> > +               compatible =3D "fixed-clock";
+> > +               #clock-cells =3D <0>;
+> > +               clock-frequency =3D <50000000>;
+> > +       };
+> > +
+> > +       leds {
+> > +               compatible =3D "gpio-leds";
+> > +               pinctrl-names =3D "default";
+> > +               pinctrl-0 =3D <&pinctrl_gpio_leds>;
+> > +
+> > +               /* LED D5 */
+> > +               led0: heartbeat {
+> > +                       label =3D "heartbeat";
+> > +                       gpios =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
+> > +                       default-state =3D "on";
+> > +                       linux,default-trigger =3D "heartbeat";
+> > +               };
+> > +       };
+> > +
+> > +       regulators {
+> > +               compatible =3D "simple-bus";
+> > +               #address-cells =3D <1>;
+> > +               #size-cells =3D <0>;
+> > +
+> > +               reg_3p3v: regulator@0 { =20
+>=20
+> Please move all regulators outside of the simple-bus container and use
+> this naming convention:
+>=20
+> reg_3p3v: regulator-3p3v {
+
+Ok.
+
+>=20
+> > +&dspi3 {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_dspi3>;
+> > +       bus-num =3D <3>;
+> > +       status =3D "okay";
+> > +
+> > +       spidev3@0 {
+> > +               compatible =3D "fsl,vf610-dspi";
+> > +               spi-max-frequency =3D <30000000>;
+> > +               reg =3D <0>;
+> > +               fsl,spi-slave-mode; =20
+>=20
+> Such property does not exist.
+
+It has been added in the other patch sent to ML:
+https://lkml.org/lkml/2018/9/18/792
+
+But till now no comments/reply.
+
+>=20
+> I also thought that spidev nodes in dt were not recommended.
+
+This is a bit "unusual" on BK4, as the spidev driver is the only "user"
+of the SPI subsystem on this board. In other words - the /dev/spidevX.Y
+provided by spidev is solely used for communication.
+
+Hence, I would prefer to make it explicit in the DTS.
+
+>=20
+> > +&iomuxc { =20
+>=20
+> Like Stefan mentioned it is common practice on imx dts files to place
+> the iomuxc node as the last one.
+
+Ok.
+
+>=20
+>=20
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&pinctrl_bk4_common>; =20
+>=20
+> This seems to be not called from any driver.
+
+Yes. This is "base" setup for the board. Those configured pins are
+thereafter used by several user space programs.
+
+>=20
+> We usually use a hog group for such purpose.
+
+I wanted to name it explicit that we do use it for this controller.
+However, no problem to rename it to hog.
+
+>=20
+> > +
+> > +       pinctrl_bk4_common: commongrp {
+> > +               fsl,pins =3D <
+> > +                       /* One_Wire_PSU_EN */
+> > +                       VF610_PAD_PTC29__GPIO_102
+> > 0x1183
+> > +                       /* SPI */
+> > +                       VF610_PAD_PTB26__GPIO_96
+> > 0x1183
+> > +                       VF610_PAD_PTE14__GPIO_119
+> > 0x1183
+> > +                       VF610_PAD_PTE4__GPIO_109
+> > 0x1181
+> > +                       /* Feedback_Lines */
+> > +                       VF610_PAD_PTC31__GPIO_104
+> > 0x1181
+> > +                       VF610_PAD_PTA7__GPIO_134
+> > 0x1181
+> > +                       VF610_PAD_PTD9__GPIO_88         0x1181
+> > +                       VF610_PAD_PTE1__GPIO_106
+> > 0x1183
+> > +                       VF610_PAD_PTB2__GPIO_24         0x1181
+> > +                       VF610_PAD_PTB3__GPIO_25         0x1181
+> > +                       VF610_PAD_PTB1__GPIO_23         0x1181
+> > +                       /* SDHC */
+> > +                       VF610_PAD_PTE19__GPIO_124
+> > 0x1183
+> > +                       VF610_PAD_PTB23__GPIO_93
+> > 0x1181 =20
+>=20
+> If they are related to SDHC they should be better placed under the
+> sdhc nodes.
+>=20
+
+I will double check this.
+
+>=20
+> > +                       /* GPI */
+> > +                       VF610_PAD_PTE2__GPIO_107
+> > 0x1181
+> > +                       VF610_PAD_PTE3__GPIO_108
+> > 0x1181
+> > +                       VF610_PAD_PTE5__GPIO_110
+> > 0x1181
+> > +                       VF610_PAD_PTE6__GPIO_111
+> > 0x1181
+> > +                       /* GPO */
+> > +                       VF610_PAD_PTE0__GPIO_105
+> > 0x1183
+> > +                       VF610_PAD_PTE7__GPIO_112
+> > 0x1183
+> > +                       /* RS485 */
+> > +                       VF610_PAD_PTB8__GPIO_30         0x1183
+> > +                       VF610_PAD_PTB9__GPIO_31         0x1183
+> > +                       VF610_PAD_PTE8__GPIO_113
+> > 0x1183
+> > +                       /* MPBUS MPB_EN */
+> > +                       VF610_PAD_PTE28__GPIO_133
+> > 0x1183
+> > +                       /* LEDS */
+> > +                       VF610_PAD_PTE15__GPIO_120
+> > 0x1183
+> > +                       VF610_PAD_PTA12__GPIO_5         0x1183
+> > +                       VF610_PAD_PTA16__GPIO_6         0x1183
+> > +                       VF610_PAD_PTE9__GPIO_114
+> > 0x1183
+> > +                       VF610_PAD_PTE20__GPIO_125
+> > 0x1183
+> > +                       VF610_PAD_PTE23__GPIO_128
+> > 0x1183
+> > +                       VF610_PAD_PTE16__GPIO_121
+> > 0x1183
+> > +                       /* MISC */
+> > +                       VF610_PAD_PTE10__GPIO_115
+> > 0x1183
+> > +                       VF610_PAD_PTE11__GPIO_116
+> > 0x1183
+> > +                       VF610_PAD_PTE17__GPIO_122
+> > 0x1183
+> > +                       VF610_PAD_PTC30__GPIO_103
+> > 0x1183
+> > +                       VF610_PAD_PTB0__GPIO_22         0x1181
+> > +                       /* RESETINFO */
+> > +                       VF610_PAD_PTE26__GPIO_131
+> > 0x1183
+> > +                       VF610_PAD_PTD6__GPIO_85         0x1181
+> > +                       VF610_PAD_PTE27__GPIO_132
+> > 0x1181
+> > +                       VF610_PAD_PTE13__GPIO_118
+> > 0x1181
+> > +                       VF610_PAD_PTE21__GPIO_126
+> > 0x1181
+> > +                       VF610_PAD_PTE22__GPIO_127
+> > 0x1181
+> > +                       /* EE_5V_EN */
+> > +                       VF610_PAD_PTE18__GPIO_123
+> > 0x1183
+> > +                       /* EE_5V_OC_N */
+> > +                       VF610_PAD_PTE25__GPIO_130
+> > 0x1181 =20
+>=20
+> Seems like a long list of pins without any driver associated.
+
+Not kernel driver associated. The user space code uses those pins
+directly.
+
+>=20
+> Please review such list carefully and assign to nodes that have a
+> driver associated, such as rs485,LEDS, etc.
+
+For example - the user space is not using in-kernel rs485 driver.
+
+But as said above - I will double check this.
+
+>=20
+> > +
+> > +&usbphy0 {
+> > +       status =3D "okay";
+> > +};
+> > +
+> > +&usbphy1 {
+> > +       status =3D "okay";
+> > +};
+> > +
+> > +&qspi0 { =20
+>=20
+> This is not placed in alphabetical order.
+
+Ok.=20
 
 
-Am 23.09.2018 um 19:39 schrieb Liviu Dudau:
-> On Mon, Aug 27, 2018 at 08:05:48PM +0200, Stefan Wahren wrote:
->> This adds a reference to the dts of the Compute Module IO Board V3 in arm,
->> so we don't need to maintain the content in arm64.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>  arch/arm64/boot/dts/broadcom/Makefile                | 3 ++-
->>  arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts | 2 ++
->>  2 files changed, 4 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
->>
->> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
->> index 1193a9e..3d98f5f 100644
->> --- a/arch/arm64/boot/dts/broadcom/Makefile
->> +++ b/arch/arm64/boot/dts/broadcom/Makefile
->> @@ -1,6 +1,7 @@
->>  # SPDX-License-Identifier: GPL-2.0
->>  dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
->> -			      bcm2837-rpi-3-b-plus.dtb
->> +			      bcm2837-rpi-3-b-plus.dtb \
->> +			      bcm2837-rpi-cm3-io3.dts
-> This should be the .dtb file, not the .dts. At compile time make is not going
-> to complain, because it finds the file, but make dtbs_install will fail.
->
-> I'm not sure if you want a patch or if you can fix it in your public tree.
+Best regards,
 
-oops, please send a patch (with a fixes tag and Arnd & Olof in CC)
-because this patch has already been pulled for 4.20.
+Lukasz Majewski
 
->
->
-> Found out while trying to install the dtbs from linux-next 20180920
->
-> Best regards,
-> Liviu
->
->>  
->>  subdir-y	+= northstar2
->>  subdir-y	+= stingray
->> diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
->> new file mode 100644
->> index 0000000..b1c4ab2
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-cm3-io3.dts
->> @@ -0,0 +1,2 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +#include "arm/bcm2837-rpi-cm3-io3.dts"
->> -- 
->> 2.7.4
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/5BDm3QG0=cl.1V1CQsGjFCa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAluooLUACgkQAR8vZIA0
+zr1uEggA16OlvAYKCEfUrftoxqibHeGUSJexXE2VsEx8M6zBQ5eQ5TFhhkJapZpJ
+7Wtn2V8sI/SsBzOaBjFMIkohc2VRLZo9BRIge2QPlLAnUr9tP6JRjTEFO7WwdAmW
+yY9406YInqdZmpAJsW2eJB+LFQvXXhrQ/5FJJ8Wcw+JEqitqcoBQDWOfj2TCTO+f
+taZ5bI7VquojXV1YKcKR7HixcoY8koHyDaw3OcGd+Zta//U2hiOIB6iak5e2/ZEQ
+6XjE1eOoT09kbU3emqUuZkt+sr6esVIMwTNXOalQxEu1BnPmLMKMR9Gukg17Y6/1
+OqgBDkYK8LJ6RKVolyAjDbBb4OqtJg==
+=HSms
+-----END PGP SIGNATURE-----
+
+--Sig_/5BDm3QG0=cl.1V1CQsGjFCa--
