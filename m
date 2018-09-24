@@ -1,66 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 5/5] ARM: shmobile: defconfig: Enable SII902X
-Date: Mon, 24 Sep 2018 11:08:51 +0200
-Message-ID: <20180924090850.krd2cjzf6cyfdfh6@verge.net.au>
-References: <1537553311-8831-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1537553311-8831-6-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v7 4/7] edac: synopsys: Add macro defines for ZynqMP DDRC
+Date: Mon, 24 Sep 2018 11:22:26 +0200
+Message-ID: <20180924092226.GA20187@zn.tnic>
+References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
+ <1537194305-9243-5-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1537553311-8831-6-git-send-email-fabrizio.castro@bp.renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1537194305-9243-5-git-send-email-manish.narani@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manish Narani <manish.narani@xilinx.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, michal.simek@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 07:08:31PM +0100, Fabrizio Castro wrote:
-> The iwg23s board comes with the SiI9022ACNU HDMI transmitter,
-> this patch makes sure the corresponding driver gets built.
+On Mon, Sep 17, 2018 at 07:55:02PM +0530, Manish Narani wrote:
+> Add macro defines for ZynqMP DDR controller. These macros will be used
+> for ZyqnMP ECC operations.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
 > ---
+>  drivers/edac/synopsys_edac.c | 168 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 168 insertions(+)
 > 
-> Hello Simon,
-> 
-> a patch for the multi_v7_defconfig will be sent at a later stage.
+> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+> index eb458e5..6bf7959 100644
+> --- a/drivers/edac/synopsys_edac.c
+> +++ b/drivers/edac/synopsys_edac.c
+> @@ -97,6 +97,174 @@
+>  #define SCRUB_MODE_MASK		0x7
+>  #define SCRUB_MODE_SECDED	0x4
+>  
+> +/* DDR ECC Quirks */
+> +#define DDR_ECC_INTR_SUPPORT		BIT(0)
+> +#define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
 
-Thanks Fabrizio,
+All those new additions are one column further to the left than the old
+ones. Why?
 
-This looks fine to me but I will wait to see if there are other reviews
-before applying.
+Is there some significance here or can they all be vertically aligned?
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+-- 
+Regards/Gruss,
+    Boris.
 
-> 
-> Thanks,
-> Fab
-> 
->  arch/arm/configs/shmobile_defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/shmobile_defconfig b/arch/arm/configs/shmobile_defconfig
-> index d090022..9e5a5ad 100644
-> --- a/arch/arm/configs/shmobile_defconfig
-> +++ b/arch/arm/configs/shmobile_defconfig
-> @@ -142,6 +142,7 @@ CONFIG_DRM=y
->  CONFIG_DRM_RCAR_DU=y
->  CONFIG_DRM_RCAR_LVDS=y
->  CONFIG_DRM_DUMB_VGA_DAC=y
-> +CONFIG_DRM_SII902X=y
->  CONFIG_DRM_I2C_ADV7511=y
->  CONFIG_DRM_I2C_ADV7511_AUDIO=y
->  CONFIG_FB_SH_MOBILE_LCDC=y
-> -- 
-> 2.7.4
-> 
+Good mailing practices for 400: avoid top-posting and trim the reply.
