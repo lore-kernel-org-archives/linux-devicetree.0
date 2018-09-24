@@ -1,96 +1,74 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC
- as unstable
-Date: Mon, 24 Sep 2018 19:16:45 +0200
-Message-ID: <20180924171645.GA10910@kozik-lap>
-References: <20180830180205.18121-1-krzk@kernel.org>
- <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2 NAND
+ controller documentation
+Date: Mon, 24 Sep 2018 19:17:25 +0200
+Message-ID: <20180924191725.2439fd10@bbrezillon>
+References: <1537199260-7280-1-git-send-email-christophe.kerello@st.com>
+        <1537199260-7280-2-git-send-email-christophe.kerello@st.com>
+        <20180922103440.12575714@xps13>
+        <c9925c9c-af40-8044-8dbe-866fbe3a2f99@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
+In-Reply-To: <c9925c9c-af40-8044-8dbe-866fbe3a2f99@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, DTML <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>
+To: Christophe Kerello <christophe.kerello@st.com>
+Cc: Miquel Raynal <miquel.raynal@bootlin.com>, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 23, 2018 at 02:46:20PM +0100, Olof Johansson wrote:
-> On Thu, Aug 30, 2018 at 7:02 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > Samsung Exynos SoCs and boards related bindings evolved since the initial
-> > introduction, but initially the bindings were minimal and a bit incomplete
-> > (they never described all the hardware modules available in the SoCs).
-> > Since then some significant (not fully compatible) changes have been
-> > already committed a few times (like gpio replaced by pinctrl, display ddc,
-> > mfc reserved memory, some core clocks added to various hardware modules,
-> > added more required nodes).
-> >
-> > On the other side there are no boards which have device tree embedded in
-> > the bootloader. Device tree blob is always compiled from the kernel tree
-> > and updated together with the kernel image.
-> >
-> > Thus to avoid further adding a bunch of workarounds for old/missing
-> > bindings, make development of new platforms easier and allow to make
-> > cleanup of the existing code and device tree files, lets mark some
-> > Samsung Exynos SoC platform bindings as unstable. This means that
-> > bindings can may change at any time and users should use the dtb file
-> > compiled from the same kernel source tree as the kernel image.
+Hi Christophe,
+
+On Mon, 24 Sep 2018 18:36:27 +0200
+Christophe Kerello <christophe.kerello@st.com> wrote:
+
+> >> +- st,fmc2_timings: array of 8 bytes for NAND timings. The meanings of
+> >> +  these bytes are:
+> >> +  byte 0 TCLR      : CLE to RE delay in number of AHB clock cycles, only 4 bits
+> >> +                     are valid. Zero means one clock cycle, 15 means 16 clock
+> >> +                     cycles.
+> >> +  byte 1 TAR       : ALE to RE delay, 4 bits are valid. Same format as TCLR.
+> >> +  byte 2 THIZ      : number of HCLK clock cycles during which the data bus is
+> >> +                     kept in Hi-Z (tristate) after the start of a write access.
+> >> +                     Only valid for write transactions. Zero means 1 cycle,
+> >> +                     255 means 256 cycles.
+> >> +  byte 3 TWAIT     : number of HCLK clock cycles to assert the command to the
+> >> +                     NAND flash in response to SMWAITn. Zero means 1 cycle,
+> >> +                     255 means 256 cycles.
+> >> +  byte 4 THOLD_MEM : common memory space timing
+> >> +                     number of HCLK clock cycles to hold the address (and data
+> >> +                     when writing) after the command deassertion. Zero means
+> >> +                     1 cycle, 255 means 256 cycles.
+> >> +  byte 5 TSET_MEM  : common memory space timing
+> >> +                     number of HCLK clock cycles to assert the address before
+> >> +                     the command is asserted. Zero means 1 cycle, 255 means 256
+> >> +                     cycles.
+> >> +  byte 6 THOLD_ATT : attribute memory space timing
+> >> +                     number of HCLK clock cycles to hold the address (and data
+> >> +                     when writing) after the command deassertion. Zero means
+> >> +                     1 cycle, 255 means 256 cycles.
+> >> +  byte 7 TSET_ATT  : attribute memory space timing
+> >> +                     number of HCLK clock cycles to assert the address before
+> >> +                     the command is asserted. Zero means 1 cycle, 255 means 256
+> >> +                     cycles.  
+> > 
+> > Let me review the driver but this array of timings is really
+> > suspicious. I am pretty sure you don't need it in the DT.  
 > 
-> I have to admit that I don't really like this approach, and I missed
-> the patch when originally posted (I did notice it in the pull request
-> it came in with though).
-> 
-> The main concern for me is that with a blanket "everything is always
-> unstable" we discard the notion that we should strive for bindings to
-> be stable and backwards compatible.
+> "st,fmc2-timings" is an optional property that allow the end user to 
+> overwrite the timings calculated by setup_data_interface callback. By 
+> setting this property in the NAND flash memory device tree node, the end 
+> user could have a better throughput. For NON ONFI SLC NAND, timing mode 
+> 0 is often used.
 
-The original idea from Marek was to mark everything unstable. After
-comments from Rob I made it weaker already by changing to specific group
-of compatibles. Accepting their instability does not mean that we will
-be doing this on whenever possible. It just opens the possibility of
-finding some balance in cleanups and development. Sometimes things have
-to be seriously changed (fixed) and implementing workarounds for
-existing ABI might be huge work by itself.
+Exactly the kind of tweaking I'd like to avoid. If the NAND is not ONFI,
+the vendor driver (nand_<manufacturer>.c) can overwrite
+chip->default_onfi_timing_mode, and if the ONFI timings modes are not
+exactly matching the NAND spec and you need the exact timings, then we
+should consider adding a manufacturer hook to let the manufacturer
+driver tweak the timings. In any case, I'm not willing to accept
+timings description in the DT.
 
-IOW, we want stability but not with the costs of huge development
-efforts... because no one else except us cares about the stability.
+Regards,
 
-> 
-> Questions that come to mind are:
-> 
->  - When do they stop being unstable?
-
-They became unstable in a subjective way so I assume that reverse is the
-same, based on consensus and discussions.
-
-I am not sure if a hard time limit is good. There is no timeline for the
-Exynos development, no public roadmaps but rather community and
-partially volountary effort.  Therefore whatever number we set, it might
-be totally not matching reality.
-
->  - Is there a way to note in the binding itself that it's still
-> unstable with an anticipation of when it will be settled in?
-
-Hmm, I see that some existing bindings are being added with "Unstable"
-warning:
-
-	git grep -i unstable Documentation/devicetree/
-
-so there should be no problem for putting there a timeframe.
-
->  - Is there a better way to version the bindings to avoid complete
-> backwards compatibility?
-
-Some architectures are using overlays for handling backward
-compatibility. Anyway it might put additional effort on driver
-development.
-
-> Pointing out a couple of cases where it has been painful to stay
-> backwards compatible could also be useful for understanding (even
-> though you run the risk of each case being explained away with
-> suggestions of how it can be handled).
-> 
-
-
-Best regards,
-Krzysztof
+Boris
