@@ -1,69 +1,53 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v7 5/7] edac: synopsys: Add EDAC ECC support for ZynqMP
- DDRC
-Date: Mon, 24 Sep 2018 10:20:41 +0000
-Message-ID: <DM6PR02MB522717E2B74148A7069FA57EC1170@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-6-git-send-email-manish.narani@xilinx.com>
- <20180921125527.GE30439@nazgul.tnic>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: [PATCH] arm64: dts: broadcom: Use the .dtb name in the rule,
+ rather than .dts
+Date: Mon, 24 Sep 2018 11:22:28 +0100
+Message-ID: <20180924102228.19656-1-liviu@dudau.co.uk>
+References: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921125527.GE30439@nazgul.tnic>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KDQo+IEZyb206IEJvcmlzbGF2
-IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5kZV0NCj4gU2VudDogRnJpZGF5LCBTZXB0ZW1iZXIg
-MjEsIDIwMTggNjoyNiBQTQ0KPiBPbiBNb24sIFNlcCAxNywgMjAxOCBhdCAwNzo1NTowM1BNICsw
-NTMwLCBNYW5pc2ggTmFyYW5pIHdyb3RlOg0KPiA+IEFkZCBFREFDIEVDQyBzdXBwb3J0IGZvciBa
-eW5xTVAgRERSQyBJUC4gVGhlIElQIHN1cHBvcnRzIGludGVycnVwdHMNCj4gPiBmb3IgY29ycmVj
-dGVkIGFuZCB1bmNvcnJlY3RlZCBlcnJvcnMuIEFkZCBpbnRlcnJ1cHQgaGFuZGxlcnMgZm9yIHRo
-ZSBzYW1lLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogTWFuaXNoIE5hcmFuaSA8bWFuaXNoLm5h
-cmFuaUB4aWxpbnguY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL2VkYWMvS2NvbmZpZyAgICAg
-ICAgIHwgICAyICstDQo+ID4gIGRyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMgfCAzMDQNCj4g
-PiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tDQo+ID4gIDIgZmls
-ZXMgY2hhbmdlZCwgMjg3IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQ0KPiANCj4gLi4u
-DQo+ID4gKwlpZiAocHJpdi0+cF9kYXRhLT5xdWlya3MgJiBERFJfRUNDX0lOVFJfU1VQUE9SVCkg
-ew0KPiANCj4gVGhpcyB3aG9sZSBjaHVuayB0b2dldGhlciB3aXRoIHRoZSBpZiwgbG9va3MgbGlr
-ZSBpdCBjb3VsZCBiZSBhIHNlcGFyYXRlIGZ1bmN0aW9uDQo+IGNhbGxlZCBtYXliZSByZXF1ZXN0
-X2lycSgpIG9yIHNvLg0KTWF5IGJlIEkgY2FuIGtlZXAgaXQgbGlrZSBlZGFjX3NldHVwX2lycSgp
-ID8NCg0KPiANCj4gPiArCQlpcnEgPSBwbGF0Zm9ybV9nZXRfaXJxKHBkZXYsIDApOw0KPiA+ICsJ
-CWlmIChpcnEgPCAwKSB7DQo+ID4gKwkJCWVkYWNfcHJpbnRrKEtFUk5fRVJSLCBFREFDX01DLA0K
-PiA+ICsJCQkJCSJObyBpcnEgJWQgaW4gRFRcbiIsIGlycSk7DQo+IA0KPiBBbGlnbiBhcmd1bWVu
-dHMgb24gb3BlbmluZyBicmFjZS4NCk9rYXkNCg0KPiANCj4gVGhlbiwgaGVyZSBpdCBpcyAiaXJx
-Ii4uLg0KPiANCj4gPiArCQkJcmMgPSBpcnE7DQo+ID4gKwkJCWdvdG8gZnJlZV9lZGFjX21jOw0K
-PiA+ICsJCX0NCj4gPiArDQo+ID4gKwkJcmMgPSBkZXZtX3JlcXVlc3RfaXJxKCZwZGV2LT5kZXYs
-IGlycSwNCj4gPiArCQkJc3lucHNfZWRhY19pbnRyX2hhbmRsZXIsDQo+ID4gKwkJCTAsIGRldl9u
-YW1lKCZwZGV2LT5kZXYpLCBtY2kpOw0KPiANCj4gQWxzbyBhbGlnbiBvbiBvcGVuaW5nIGJyYWNl
-Lg0KPiANCj4gPiArCQlpZiAocmMgPCAwKSB7DQo+ID4gKwkJCWVkYWNfcHJpbnRrKEtFUk5fRVJS
-LCBFREFDX01DLCAiRmFpbGVkIHRvIHJlcXVlc3QNCj4gSXJxXG4iKTsNCj4gDQo+IC4uLiBoZXJl
-IGl0IGlzICJJcnEiLg0KPiANCj4gSSdkIHNheSBpdCBzaG91bGQgYmUgIklSUSIgZXZlcnl3aGVy
-ZS4NCk9rYXkNCg0KPiANCj4gPiArCQkJZ290byBmcmVlX2VkYWNfbWM7DQo+ID4gKwkJfQ0KPiA+
-ICsNCj4gPiArCQkvKiBFbmFibGUgVUUvQ0UgSW50ZXJydXB0cyAqLw0KPiA+ICsJCXdyaXRlbCgo
-RERSX1FPU1VFX01BU0sgfCBERFJfUU9TQ0VfTUFTSyksDQo+ID4gKwkJCXByaXYtPmJhc2VhZGRy
-ICsgRERSX1FPU19JUlFfRU5fT0ZTVCk7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICAJcmMgPSBlZGFj
-X21jX2FkZF9tYyhtY2kpOw0KPiA+ICAJaWYgKHJjKSB7DQo+ID4gIAkJZWRhY19wcmludGsoS0VS
-Tl9FUlIsIEVEQUNfTUMsDQo+ID4gQEAgLTY4NCw3ICs5NDUsOCBAQCBzdGF0aWMgaW50IHN5bnBz
-X2VkYWNfbWNfcHJvYmUoc3RydWN0DQo+IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiAgCSAq
-IFN0YXJ0IGNhcHR1cmluZyB0aGUgY29ycmVjdGFibGUgYW5kIHVuY29ycmVjdGFibGUgZXJyb3Jz
-LiBBIHdyaXRlIG9mDQo+ID4gIAkgKiAwIHN0YXJ0cyB0aGUgY291bnRlcnMuDQo+ID4gIAkgKi8N
-Cj4gPiAtCXdyaXRlbCgweDAsIGJhc2VhZGRyICsgRUNDX0NUUkxfT0ZTVCk7DQo+ID4gKwlpZiAo
-IShwcml2LT5wX2RhdGEtPnF1aXJrcyAmIEREUl9FQ0NfSU5UUl9TVVBQT1JUKSkNCj4gPiArCQl3
-cml0ZWwoMHgwLCBiYXNlYWRkciArIEVDQ19DVFJMX09GU1QpOw0KPiA+ICAJcmV0dXJuIHJjOw0K
-PiA+DQo+ID4gIGZyZWVfZWRhY19tYzoNCj4gPiBAQCAtNzAyLDcgKzk2NCwxMyBAQCBzdGF0aWMg
-aW50IHN5bnBzX2VkYWNfbWNfcHJvYmUoc3RydWN0DQo+ID4gcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KSAgc3RhdGljIGludCBzeW5wc19lZGFjX21jX3JlbW92ZShzdHJ1Y3QNCj4gPiBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpICB7DQo+ID4gIAlzdHJ1Y3QgbWVtX2N0bF9pbmZvICptY2kgPSBwbGF0Zm9y
-bV9nZXRfZHJ2ZGF0YShwZGV2KTsNCj4gPiArCXN0cnVjdCBzeW5wc19lZGFjX3ByaXYgKnByaXY7
-DQo+ID4NCj4gPiArCXByaXYgPSBtY2ktPnB2dF9pbmZvOw0KPiA+ICsJaWYgKHByaXYtPnBfZGF0
-YS0+cXVpcmtzICYgRERSX0VDQ19JTlRSX1NVUFBPUlQpDQo+ID4gKwkJLyogRGlzYWJsZSBVRS9D
-RSBJbnRlcnJ1cHRzICovDQo+ID4gKwkJd3JpdGVsKChERFJfUU9TVUVfTUFTSyB8IEREUl9RT1ND
-RV9NQVNLKSwNCj4gPiArCQkJcHJpdi0+YmFzZWFkZHIgKyBERFJfUU9TX0lSUV9EQl9PRlNUKTsN
-Cj4gDQo+IFRoaXMgY291bGQgYmUgYSBkaXNhYmxlX2lycSgpIGZ1bmN0aW9uLiBNYWtlcyB0aGUg
-Y29kZSBlYXNpZXIgdG8gZm9sbG93Lg0KT2theS4gV2lsbCB1cGRhdGUgdGhpcyBpbiB2OC4NCg0K
-VGhhbmtzLA0KTWFuaXNoDQo=
+Commit a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+Module IO Board V3") adds the bcm2837-rpi-cm3-io3.dts file as a target
+in the Makefile, rather than the .dtb name. This will skip the
+generation of the .dtb file at compile time and will fail the dtbs_install
+target.
+
+Fixes: a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+Module IO Board V3")
+
+Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+---
+ arch/arm64/boot/dts/broadcom/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+index 3d98f5f5ab88..667ca989c11b 100644
+--- a/arch/arm64/boot/dts/broadcom/Makefile
++++ b/arch/arm64/boot/dts/broadcom/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
+ 			      bcm2837-rpi-3-b-plus.dtb \
+-			      bcm2837-rpi-cm3-io3.dts
++			      bcm2837-rpi-cm3-io3.dtb
+ 
+ subdir-y	+= northstar2
+ subdir-y	+= stingray
+-- 
+2.18.0
