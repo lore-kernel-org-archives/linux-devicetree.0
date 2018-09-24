@@ -1,68 +1,291 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
-Date: Mon, 24 Sep 2018 07:58:42 +0200
-Message-ID: <e5104bd9-1564-266d-4f27-affa8a9e825d@linaro.org>
-References: <5ba87b02.1c69fb81.1da88.1457SMTPIN_ADDED_MISSING@mx.google.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] remoteproc: qcom: Introduce Non-PAS ADSP PIL
+ driver
+Date: Mon, 24 Sep 2018 12:19:24 +0530
+Message-ID: <79bee282-e8a4-a1e6-56e3-6ea7e20c0233@codeaurora.org>
+References: <1535975560-8200-1-git-send-email-rohitkr@codeaurora.org>
+ <1535975560-8200-3-git-send-email-rohitkr@codeaurora.org>
+ <a93b3178a09584dc0b4bed55ca4816a3@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ba87b02.1c69fb81.1da88.1457SMTPIN_ADDED_MISSING@mx.google.com>
+In-Reply-To: <a93b3178a09584dc0b4bed55ca4816a3@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mathieu Malaterre <malat@debian.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-watchdog@vger.kernel.org, od@zcrc.me, linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/09/2018 07:49, Paul Cercueil wrote:
-> 
-> Le 24 sept. 2018 07:35, Daniel Lezcano <daniel.lezcano@linaro.org> a
-> écrit :
->> 
->> On 24/09/2018 07:24, Paul Cercueil wrote:
->>> Hi Daniel,
->>> 
->>> Le 24 sept. 2018 05:12, Daniel Lezcano
->>> <daniel.lezcano@linaro.org> a écrit :
->>>> 
->>>> On 21/08/2018 19:16, Paul Cercueil wrote:
->>>>> This driver handles the TCU (Timer Counter Unit) present on
->>>>> the Ingenic JZ47xx SoCs, and provides the kernel with a
->>>>> system timer, and optionally with a clocksource and a
->>>>> sched_clock.
->>>>> 
->>>>> It also provides clocks and interrupt handling to client
->>>>> drivers.
->>>> 
->>>> Can you provide a much more complete description of the timer
->>>> in order to make my life easier for the review of this patch?
->>> 
->>> See patch [03/24], it adds a doc file that describes the
->>> hardware.
->> 
->> Thanks, I went through but it is incomplete to understand what the
->> timer do. I will reverse-engineer the code but it would help if you
->> can give the gross approach. Why multiple channels ? mutexes and
->> completion ?
-> 
-> Much of the complexity is because of the multi-purpose nature of the
-> TCU channels. Each one can be used as timer/clocksource, or PWM.
-> 
-> The driver starts by using channels 0 and 1 as system timer and
-> clocksource, respectively, the other ones being unused for now. Then,
-> *if* the PWM driver requests one of the channels in use by the
-> timer/clocksource driver, say channel 0, the timer/clocksource driver
-> will dynamically reassign the system timer to a free channel, from
-> channel 0 to e.g. channel 2. Only in that case the completion/mutex
-> are actually used.
-
-Why do you need to do this? Can't be the channels dedicated and reserved
-for clocksource and clockevent?
+Thanks Sibi for reviewing.
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+On 9/22/2018 1:11 AM, Sibi Sankar wrote:
+> Hi Rohit,
+>
+> On 2018-09-03 17:22, Rohit kumar wrote:
+>> This adds Non PAS ADSP PIL driver for Qualcomm
+>> Technologies Inc SoCs.
+>> Added initial support for SDM845 with ADSP bootup and
+>> shutdown operation handled from Application Processor
+>> SubSystem(APSS).
+>>
+>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>> ---
+> ....
+>> +    select QCOM_MDT_LOADER
+>> +    select QCOM_Q6V5_COMMON
+>> +    select QCOM_RPROC_COMMON
+>> +    help
+>> +      Say y here to support the Peripherial Image Loader
+>
+> replace Peripherial/Peripheral.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+sure
+> ....
+>> +#include <linux/clk.h>
+>> +#include <linux/firmware.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/io.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/iopoll.h>
+>> +#include <linux/pm_domain.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/remoteproc.h>
+>> +#include <linux/soc/qcom/mdt_loader.h>
+>> +#include <linux/soc/qcom/smem.h>
+>> +#include <linux/soc/qcom/smem_state.h>
+>> +
+>
+> The headers should be in alphabetical order.
+>
+
+ok, will do
+> ....
+>> +    struct reset_control *pdc_sync_reset;
+>> +    struct reset_control *cc_lpass_restart;
+>> +
+>> +    struct regmap *halt_map;
+>> +    unsigned int  halt_lpass;
+>
+> remove the double spaces above.
+
+ok
+> ....
+>> +    if (ret || val)
+>> +        goto reset;
+>> +
+>> +    regmap_write(adsp->halt_map,
+>> +            adsp->halt_lpass + LPASS_HALTREQ_REG, 1);
+>> +
+>> +    /*  Wait for halt ACK from QDSP6 */
+>
+> Minor nit, please remove the double spaces in the comment above.
+
+ok
+>
+>> +    timeout = jiffies + msecs_to_jiffies(ACK_TIMEOUT);
+>> +    for (;;) {
+>> +        ret = regmap_read(adsp->halt_map,
+>> +            adsp->halt_lpass + LPASS_HALTACK_REG, &val);
+>> +        if (ret || val || time_after(jiffies, timeout))
+>> +            break;
+>> +
+>> +        udelay(1000);
+>
+> According to Documentation/timers/timers-howto.txt please use 
+> usleep_range()
+> when the delay range is between(10us - 20ms).
+
+okay, will update in next spin.
+>
+>> +    }
+>> +
+>> +    ret = regmap_read(adsp->halt_map,
+>> +            adsp->halt_lpass + LPASS_MASTER_IDLE_REG, &val);
+> ....
+>> +    /* wait after asserting subsystem restart from AOSS */
+>> +    udelay(200);
+>
+> ditto
+
+ok
+>
+>> +
+>> +    /* Clear the halt request for the AXIM and AHBM for Q6 */
+>> +    regmap_write(adsp->halt_map, adsp->halt_lpass + 
+>> LPASS_HALTREQ_REG, 0);
+>> +
+>> +    /* De-assert the LPASS PDC Reset */
+>> +    reset_control_deassert(adsp->pdc_sync_reset);
+>> +    /* Remove the LPASS reset */
+>> +    reset_control_deassert(adsp->cc_lpass_restart);
+>> +    /* wait after de-asserting subsystem restart from AOSS */
+>> +    udelay(200);
+>
+> ditto
+>
+>> +
+>> +    return 0;
+>> +}
+> ....
+>> +static int adsp_start(struct rproc *rproc)
+>> +{
+>> +    struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
+>> +    int ret;
+>> +    unsigned int val;
+>> +
+>> +    qcom_q6v5_prepare(&adsp->q6v5);
+>> +
+>> +    ret = clk_prepare_enable(adsp->xo);
+>> +    if (ret)
+>> +        return ret;
+>
+> please call qcom_q6v5_unprepare on clk_prepare_enable failure to 
+> disable_irqs
+>
+
+sure, will do that
+>> +
+>> +    dev_pm_genpd_set_performance_state(adsp->dev, INT_MAX);
+>> +    ret = pm_runtime_get_sync(adsp->dev);
+>> +    if (ret)
+>> +        goto disable_xo_clk;
+>> +
+> ....
+>> +static int adsp_init_reset(struct qcom_adsp *adsp)
+>> +{
+>> +    adsp->pdc_sync_reset = devm_reset_control_get_exclusive(adsp->dev,
+>> +            "pdc_sync");
+>> +    if (IS_ERR(adsp->pdc_sync_reset)) {
+>> +        dev_err(adsp->dev, "failed to acquire pdc_sync reset\n");
+>> +        return PTR_ERR(adsp->pdc_sync_reset);
+>> +    }
+>
+> Bjorn, should we return EPROBE_DEFER here since PDC global reset 
+> controller can be a module?
+>
+
+devm_reset_control_get_exclusive itself returns EPROBE_DEFER until PDC 
+reset driver is probed.
+return PTR_ERR(adsp->pdc_sync_reset) handles this case.
+
+>> +
+>> +    adsp->cc_lpass_restart = 
+>> devm_reset_control_get_exclusive(adsp->dev,
+>> +            "cc_lpass");
+>> +    if (IS_ERR(adsp->cc_lpass_restart)) {
+>> +        dev_err(adsp->dev, "failed to acquire cc_lpass restart\n");
+>> +        return PTR_ERR(adsp->cc_lpass_restart);
+>> +    }
+>> +
+>> +    return 0;
+> ....
+>> +static int adsp_remove(struct platform_device *pdev)
+>> +{
+>> +    struct qcom_adsp *adsp = platform_get_drvdata(pdev);
+>> +
+>> +    rproc_del(adsp->rproc);
+>> +
+>> +    qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
+>> +    qcom_remove_sysmon_subdev(adsp->sysmon);
+>> +    qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
+>> +    rproc_free(adsp->rproc);
+>> +    pm_runtime_disable(adsp->dev);
+>> +
+>
+> rmmod of the driver resulted in the following kernel panic:
+> having a pm_runtime_disable after rproc_free seems to be the cause of 
+> the kernel panic.
+> Please call pm_runtime_disable before rproc_free.
+>
+
+Thanks for pointing out, will update.
+> do_raw_spin_lock+0x28/0x118
+> __raw_spin_lock_irq+0x30/0x3c
+> __pm_runtime_disable+0x28/0xf4
+> adsp_remove+0x4c/0x5c [qcom_adsp_pil]
+> platform_drv_remove+0x28/0x50
+> device_release_driver_internal+0x124/0x1c8
+> driver_detach+0x44/0x80
+> bus_remove_driver+0x78/0x9c
+> driver_unregister+0x34/0x54
+> platform_driver_unregister+0x1c/0x28
+> cleanup_module+0x14/0x6bc [qcom_adsp_pil]
+> SyS_delete_module+0x1c4/0x214
+>
+>> +    return 0;
+>> +}
+>> +
+>> +static const struct adsp_pil_data adsp_resource_init = {
+>> +    .crash_reason_smem = 423,
+>> +    .firmware_name = "adsp.mdt",
+>> +    .ssr_name = "lpass",
+>> +    .sysmon_name = "adsp",
+>> +    .ssctl_id = 0x14,
+>> +};
+> ....
+>> +module_platform_driver(adsp_pil_driver);
+>> +MODULE_DESCRIPTION("QTi SDM845 ADSP Peripherial Image Loader");
+>
+> replace QTi/QTI and Peripherial/Peripheral.
+>
+ok
+> ....
+> Also I see the following warns on stopping the adsp remoteproc, 
+> couldn't root cause it though:
+
+It should be issue in Q6 drivers. I will check and update q6 drivers. 
+Thanks for reporting.
+
+>  device_del+0x84/0x29c
+>  platform_device_del+0x2c/0x88
+>  platform_device_unregister+0x1c/0x30
+>  of_platform_device_destroy+0x98/0xa8
+>  device_for_each_child+0x54/0xa4
+>  of_platform_depopulate+0x38/0x54
+>  q6asm_remove+0x1c/0x2c
+>  apr_device_remove+0x38/0x70
+>  device_release_driver_internal+0x124/0x1c8
+>  device_release_driver+0x24/0x30
+>  bus_remove_device+0xcc/0xe4
+>  device_del+0x1f8/0x29c
+>  device_unregister+0x1c/0x30
+>  apr_remove_device+0x1c/0x2c
+>  device_for_each_child+0x54/0xa4
+>  apr_remove+0x28/0x34
+>  rpmsg_dev_remove+0x48/0x70
+>  device_release_driver_internal+0x124/0x1c8
+>  device_release_driver+0x24/0x30
+>  bus_remove_device+0xcc/0xe4
+>  device_del+0x1f8/0x29c
+>  device_unregister+0x1c/0x30
+>  qcom_glink_remove_device+0x1c/0x2c
+>  device_for_each_child+0x54/0xa4
+>  qcom_glink_native_remove+0x54/0x15c
+>  qcom_glink_smem_unregister+0x1c/0x30
+>  glink_subdev_stop+0x1c/0x2c [qcom_common]
+>  rproc_stop+0x40/0xc0
+>  rproc_shutdown+0x6c/0xc0
+>  rproc_del+0x28/0xa0
+>  adsp_remove+0x20/0x5c [qcom_adsp_pil]
+>  platform_drv_remove+0x28/0x50
+>  device_release_driver_internal+0x124/0x1c8
+>  driver_detach+0x44/0x80
+>  bus_remove_driver+0x78/0x9c
+>  driver_unregister+0x34/0x54
+>  platform_driver_unregister+0x1c/0x28
+>  cleanup_module+0x14/0x6bc [qcom_adsp_pil]
+>  SyS_delete_module+0x1c4/0x214
+>
+
+Thanks,
+Rohit
