@@ -1,48 +1,34 @@
-Return-Path: <SRS0=3z33=ML=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from idc.ly.ha ([42.51.192.19]:41186 "EHLO a.xvvp.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727359AbeI2KNs (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sat, 29 Sep 2018 06:13:48 -0400
-Received: from mmnnopq (unknown [123.149.112.122])
-        by a.xvvp.cn (Postfix) with ESMTPA id 4D47AF0D9
-        for <devicetree@vger.kernel.org>; Sat, 29 Sep 2018 11:38:36 +0800 (CST)
-Date: Sat, 29 Sep 2018 11:39:16 +0800
-From: "SINO - Perry" <manuchem_sino@sina.com>
-Reply-To: export8@sinotechem.com
-Subject: We will help you to grab your market, PVC resin and other chemicals
-Message-ID: <201809291139162797788@a.sxpd.wang>
+Return-Path: <SRS0=oVJk=MG=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="GB2312"
-Content-Transfer-Encoding: base64
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree <devicetree@vger.kernel.org>
+References: <20180922150252.18754-1-marek.vasut+renesas@gmail.com>
+In-Reply-To: <20180922150252.18754-1-marek.vasut+renesas@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Sep 2018 11:28:51 +0200
+Message-ID: <CAMuHMdVpQobZWGdJ5aBfhNfvspsWVxtH_dgoqW-0b_wFvi6XYw@mail.gmail.com>
+Subject: Re: [PATCH] DT: pci: rcar-pci: document R8A77990 bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, tho.vu.wh@rvc.renesas.com, Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Rob Herring <robh@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-RGVhciBGcmllbmQsIEdvb2QgZGF5IQ0KDQpXaXNoIHlvdSBhIHByb3NwZXJvdXMgYnVzaW5lc3Mh
-DQoNClRoaXMgaXMgU0lOT1RFQyBJTkRVU1RSSUFMIEdST1VQIENPLixMVEQsIGEgbGFyZ2UgZ3Jv
-dXAgY29tcGFueSBpbiBDaGluYSwgd2UgYXJlIGluIHRoZSBidXNpbmVzcyBvZiBDaGxvci1hbGth
-bGkgY2hlbWljYWxzIGFuZCBwbGFzdGljaXplciwgeWVhcnMgb2YgcHJvZHVjdGlvbiBleHBlcmll
-bmNlIG1ha2VzIHVzIHRvIGJlY29tZSBvbmUgb2YgdGhlIGxlYWRpbmcgbWFudWZhY3R1cmVycyBp
-biBDaGluYS4gDQogDQpGb3IgeW91ciBraW5kIHJlZiwgdGhlIGZvbGxvd2luZyBpcyB0aGUgZGV0
-YWlscyBvZiBvdXIgbWFpbiBwcm9kdWN0cywNCiANCkRPUCAtIERpb2N0eWwgUGh0aGFsYXRlIDk5
-LjUlLCBDb2xvcmxlc3Mgb2lseSBsaXF1aWQuDQpBcHBsaWNhdGlvbjogVXNlZCBpbiBQVkMsIFBF
-IGFuZCBjZWxsdWxvc2VyLCBzdWNoIGFzIGZpbG0sIGNhYmxlLCBhcnRpZmljaWFsIGxlYXRoZXIs
-IHBpcGUsIHNoZWV0IG1hdGVyaWFsLCBtb2xkIHBsYXN0aWMgLCBvciB1c2VkIGFzIHNvZnRlbmVy
-IG9mIHJ1YmJlci4NClBhY2thZ2U6IDIwMGtnLyBtZXRhbCBwYWlsLCAxNk1UIHBlciAyMKGvY29u
-dGFpbmVyLCBvciBwYWNraW5nIGFzIHJlcXVpcmVkLg0KIA0KUFZDIFJlc2luLCBXaGl0ZSBwb3dk
-ZXINCjEuIEs3Mi03MTogVXNlZCBpbiBwcm9kdWNpbmcgZWxlY3RyaWNhbCBpbnN1bGF0aW5nIG1h
-dGVyaWFscywgYWdyaWN1bHR1cmFsIGZpbG0sIGRhaWx5LXVzZSBwbGFzdGljIHByb2R1Y3RzLCBl
-dGMuDQoyLiBLNjgtNjY6IFVzZWQgaW4gcHJvZHVjaW5nIHBsYXN0aWMgcGlwZXMsIHBsYXN0aWMg
-d2luZG93cy9kb29ycywgUFZDIGJhciwgaGFyZCB0dWJlIGFuZCBkZWNvcmF0aXZlIG1hdGVyaWFs
-cywgZXRjLg0KUGFja2FnZTogMjUga2cgLyBQUCBiYWcsIDE3TVQgcGVyIDIwJ2NvbnRhaW5lciwg
-b3IgcGFja2luZyBhcyByZXF1aXJlZC4NCg0KIA0KSW4gYWRkaXRpb24sIHdlIGFsc28gaGF2ZSBh
-ZHZhbnRhZ2VzIGluIG90aGVyIHByb2R1Y3RzLCBzdWNoIGFzIERCUCwgRElOUCwgRVNCTywgVGl0
-YW5pdW0gZGlveGlkZSwgQ2F1c3RpYyBzb2RhLg0KIA0KSWYgeW91IHdhbnQgdG8ga25vdyBtb3Jl
-IGRldGFpbHMgb2YgdGhlc2UgcHJvZHVjdHMsIHBsZWFzZSBraW5kbHkgY29udGFjdCB1cyBkaXJl
-Y3RseS4gSG9wZSB3ZSBjYW4gaGF2ZSBnb29kIGNvb3BlcmF0aW9uIGluIHRoZSBuZWFyIGZ1dHVy
-ZS4NCiANCkxvb2tpbmcgZm9yd2FyZCB0byB5b3VyIHJlcGx5Lg0KDQpCZXN0IFJlZ2FyZHMuDQpQ
-ZXJyeSBMZWUNCkV4cG9ydCBNYW5hZ2VyDQpFbWFpbDogZXhwb3J0OEBzaW5vdGVjaGVtLmNvbQ0K
-U2t5cGU6IHBlcnJ5LmxlZTEwDQoNClNJTk9URUMgSU5EVVNUUklBTCBHUk9VUCBDTy4sTFREDQpO
-by4zOCwgRG9uZ2ZlbmcgUmQuLCBaaGVuZ3pob3UgQ2l0eSBQLlIuIENoaW5hIDQ1MDAwMA0KVGVs
-OiAwMDg2IDM3MSA2MDM5MjA1MiAgICAgRmF4OiAwMDg2IDM3MSA2MzcyNjM2OA==
+On Sat, Sep 22, 2018 at 5:02 PM Marek Vasut <marek.vasut@gmail.com> wrote:
+> From: Tho Vu <tho.vu.wh@rvc.renesas.com>
+>
+> Document the R-Car E3 (R8A77990) SoC in the R-Car PCIe bindings.
+>
+> Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
+> Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
