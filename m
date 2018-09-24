@@ -1,23 +1,38 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap3-gta04: add pulldown/up settings for
- twl4030 gpio
-Date: Mon, 24 Sep 2018 15:11:02 -0700
-Message-ID: <20180924221102.GK5662@atomide.com>
-References: <20180924172957.20366-1-andreas@kemnade.info>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH v2 0/4] Qualcomm QCS404 TLMM pinctrl driver
+Date: Mon, 24 Sep 2018 15:17:44 -0700
+Message-ID: <20180924221748.21584-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180924172957.20366-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Andreas Kemnade <andreas@kemnade.info> [180924 10:34]:
-> Pullup and down settings were missing, so add them to avoid
-> floating pins and make headset detection working.
+This series introduces register accessor functions and a level of indirection
+for these, in order to handle dispersed tiles. It then adds the TLMM binder and
+driver for the QCS404 platform.
 
-Applying into omap-for-v4.20/dt thanks.
+Changes since v1:
+- Rebased series on Linus' "devel" branch
+- Dropped leading 0 in node of DT example
 
-Tony
+Avaneesh Kumar Dwivedi (1):
+  pinctrl: qcom: Add qcs404 pinctrl driver
+
+Bjorn Andersson (3):
+  pinctrl: qcom: Introduce readl/writel accessors
+  pinctrl: qcom: Support dispersed tiles
+  dt-bindings: pinctrl: qcom: Add QCS404 pinctrl binding
+
+ .../bindings/pinctrl/qcom,qcs404-pinctrl.txt  |  200 ++
+ drivers/pinctrl/qcom/Kconfig                  |    8 +
+ drivers/pinctrl/qcom/Makefile                 |    1 +
+ drivers/pinctrl/qcom/pinctrl-msm.c            |  116 +-
+ drivers/pinctrl/qcom/pinctrl-msm.h            |    4 +
+ drivers/pinctrl/qcom/pinctrl-qcs404.c         | 1697 +++++++++++++++++
+ 6 files changed, 1983 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,qcs404-pinctrl.txt
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-qcs404.c
+
+-- 
+2.18.0
