@@ -1,65 +1,108 @@
-Return-Path: <SRS0=Rgu5=MH=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-io1-f46.google.com ([209.85.166.46]:38768 "EHLO
-        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726655AbeIYKEb (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Sep 2018 06:04:31 -0400
-Received: by mail-io1-f46.google.com with SMTP id y3-v6so19377471ioc.5
-        for <devicetree@vger.kernel.org>; Mon, 24 Sep 2018 20:59:00 -0700 (PDT)
+Return-Path: <SRS0=4tMU=MG=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-db5eur01on0087.outbound.protection.outlook.com ([104.47.2.87]:27232
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728236AbeIXRZz (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 24 Sep 2018 13:25:55 -0400
+From: =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>
+Subject: [PATCH 2/2] rtc: pcf85063: add support for oscillator capacitor selection
+Date: Mon, 24 Sep 2018 13:23:40 +0200
+Message-Id: <20180924112340.2685-2-urs.fassler@bbv.ch>
+In-Reply-To: <20180924112340.2685-1-urs.fassler@bbv.ch>
+References: <20180924112340.2685-1-urs.fassler@bbv.ch>
 MIME-Version: 1.0
-From: darknighte <darknighte@darknighte.com>
-Date: Mon, 24 Sep 2018 22:58:48 -0500
-Message-ID: <CAKM2CVJovvxXXWvq=oLYu1ksNqxD-Z5WA1GUovwd=acAVo2N8w@mail.gmail.com>
-Subject: Call for speakers for the Devicetree Microconference @ the 2018 LPC
- in Vancouver
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Frank Rowand <frowand.list@gmail.com>
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, lukas.stockmann@siemens.com, pascal.bach@siemens.com, urs.fassler@bbv.ch
 List-ID: <devicetree@vger.kernel.org>
 
-The Devicetree Microconference has been accepted into the 2018 Linux
-Plumbers Conference, which will be held in Vancouver, British
-Columbia, Canada from Tuesday, November 13 through Thursday, November
-15.  If you are interested in speaking, please contact myself, or
-co-leader Frank Rowand (on CC), to request a slot.
+Configure the oscillator capacitor selection if specified.
 
-For more details, here is the LPC announcement :
+Co-developed-by: Lukas Stockmann <lukas.stockmann@siemens.com>
+Signed-off-by: Urs Fässler <urs.fassler@bbv.ch>
+Signed-off-by: Lukas Stockmann <lukas.stockmann@siemens.com>
+Signed-off-by: Pascal Bach <pascal.bach@siemens.com>
+---
+ drivers/rtc/rtc-pcf85063.c | 54 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 50 insertions(+), 4 deletions(-)
 
-We are pleased to announce the the Devicetree Microconference
-has been accepted into the 2018 Linux Plumbers Conference!
-
-Devicetree provides hardware description for many platforms, such
-as Linux [1], U-Boot [2], BSD [3], and Zephyr [4]. Devicetree
-continues to evolve to become more robust and attempt to provide the
-features desired by the varied users.
-
-Some of the overlay related needs are now being addressed by
-U-boot, but there remain use cases for run time overlay management in
-the Linux kernel. Support for run time overlay management in the Linux
-kernel is slowly moving forward, but significant issues remain [5].
-
-Devicetree verification has been an ongoing project for several years,
-with the most recent in person discussion occurring at the Devicetree
-Workshop [6] at Kernel Summit 2017. Progress continues on mail lists,
-and will be an important topic at the microconference.
-
-Other Devicetree related tools, such as the dtc compiler and libfdt [7]
-continue to see active development.
-
-Additional possible issues to be discussed may include potential
-changes to the Flattened Device Tree (FDT) format, reducing the
-Devicetree memory and storage size in the Linux kernel, creating new
-architecture to provide solutions to current problems, updating the
-Devicetree Specification, and using devicetrees in constrained contexts.
-
-LPC [8] will be held in Vancouver, British Columbia, Canada
-from Tuesday, November 13 through Thursday, November 15.
-
-[1] https://elinux.org/Device_Tree_Reference
-[2] https://github.com/lentinj/u-boot/blob/master/doc/README.fdt-control
-[3] https://wiki.freebsd.org/FlattenedDeviceTree
-[4] http://docs.zephyrproject.org/devices/dts/device_tree.html
-[5] https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
-[6] https://elinux.org/Device_tree_future#Kernel_Summit_2017.2C_Devicetree_Workshop
-[7] https://elinux.org/Device_Tree_Reference#dtc_.28upstream_project.29
-[8] https://linuxplumbersconf.org/
+diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+index 283c2335b01b..69ee72f00164 100644
+--- a/drivers/rtc/rtc-pcf85063.c
++++ b/drivers/rtc/rtc-pcf85063.c
+@@ -180,21 +180,67 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
+ 	.set_time	= pcf85063_rtc_set_time
+ };
+ 
++
++#ifdef CONFIG_OF
++static int setup_oscillator_capacitor(struct i2c_client *client, u8 ctrl1)
++{
++	int ret;
++	u32 cap_sel;
++
++	ret = of_property_read_u32(client->dev.of_node, "cap-sel", &cap_sel);
++	if (ret != 0) {
++		/* no capacitor selection defined, but that is ok */
++		return 0;
++	}
++
++	if ((cap_sel & 0xfe) != 0) {
++		dev_err(&client->dev,
++			 "Unsupported cap-sel value %u in dt\n", cap_sel);
++		return -EINVAL;
++	}
++
++	ctrl1 = (ctrl1 & 0xfe) | cap_sel;
++	ret = i2c_smbus_write_byte_data(client, PCF85063_REG_CTRL1, ctrl1);
++
++	if (ret < 0) {
++		dev_err(&client->dev, "set oscillator capacitor failed\n");
++		return -EIO;
++	}
++
++	dev_info(&client->dev,
++		 "set oscillator capacitor selection to %u\n", cap_sel);
++
++	return 0;
++}
++#else
++static int setup_oscillator_capacitor(struct i2c_client *client, u8 ctrl1)
++{
++	return 0;
++}
++#endif
++
+ static int pcf85063_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+ 	struct rtc_device *rtc;
+-	int err;
++	int ret;
++	u8 ctrl1;
+ 
+ 	dev_dbg(&client->dev, "%s\n", __func__);
+ 
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
+ 		return -ENODEV;
+ 
+-	err = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
+-	if (err < 0) {
++	ret = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
++	if (ret < 0) {
+ 		dev_err(&client->dev, "RTC chip is not present\n");
+-		return err;
++		return ret;
++	}
++	ctrl1 = ret;
++
++	ret = setup_oscillator_capacitor(client, ctrl1);
++	if (ret < 0) {
++		return ret;
+ 	}
+ 
+ 	rtc = devm_rtc_device_register(&client->dev,
+-- 
+2.18.0
