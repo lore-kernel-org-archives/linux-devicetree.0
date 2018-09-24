@@ -1,34 +1,68 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: add initial dts support for Rockpro64 board
-Date: Mon, 24 Sep 2018 15:05:13 +0200
-Message-ID: <2222229.AXOL4E5CHo@phil>
-References: <Akash_Gajjar@mentor.com> <1537368206-22058-1-git-send-email-Akash_Gajjar@mentor.com>
+From: "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH] arm64: amd: seattle: Use "spi" as name for SPI controllers
+Date: Mon, 24 Sep 2018 13:09:16 +0000
+Message-ID: <b0721afb-ff52-f348-a481-bc4e8ee0f4a7@amd.com>
+References: <20180924094648.20797-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537368206-22058-1-git-send-email-Akash_Gajjar@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Akash Gajjar <Akash_Gajjar@mentor.com>
-Cc: Deepak_Das@mentor.com, Pragnesh_Patel@mentor.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Levin Du <djw@t-chip.com.cn>, Klaus Goger <klaus.goger@theobroma-systems.com>, Ezequiel Garcia <ezequiel@collabora.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Gleixner <tglx@linutronix.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Matthias Brugger <mbrugger@suse.com>, Shawn Lin <shawn.lin@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180924094648.20797-1-thierry.reding@gmail.com>
+Content-Language: en-US
+Content-ID: <DF341537742B224990C88FE85190868B@namprd12.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, "Singh, Brijesh" <brijesh.singh@amd.com>, "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 19. September 2018, 16:43:18 CEST schrieb Akash Gajjar:
-> This patch basic node support for Rockpro64 board and make it able to bring up.
+On 09/24/2018 04:46 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Peripheral Works
-> - SDIO, Sdcard
-> - USB 2.0, 3.0
-> - Leds
+> Recent versions of DTC contain additional checks for SPI busses and warn
+> about certain common mistakes, such as when an SPI controller has a name
+> other than "spi".
 > 
-> Not working:
-> - USB Type-C
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+
+Looks like the same patch was already submitted:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-September/601706.html
+
+Thanks,
+Tom
+
+> ---
+>  arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
-
-I've looked through the patch and didn't find any bigger issues, so please
-fix the nits Deepak found and submit v3, which I can then apply :-) .
-
-
-Thanks
-Heiko
+> diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> index 125f4deb52fe..b664e7af74eb 100644
+> --- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> +++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+> @@ -107,7 +107,7 @@
+>  			clock-names = "uartclk", "apb_pclk";
+>  		};
+>  
+> -		spi0: ssp@e1020000 {
+> +		spi0: spi@e1020000 {
+>  			status = "disabled";
+>  			compatible = "arm,pl022", "arm,primecell";
+>  			reg = <0 0xe1020000 0 0x1000>;
+> @@ -117,7 +117,7 @@
+>  			clock-names = "apb_pclk";
+>  		};
+>  
+> -		spi1: ssp@e1030000 {
+> +		spi1: spi@e1030000 {
+>  			status = "disabled";
+>  			compatible = "arm,pl022", "arm,primecell";
+>  			reg = <0 0xe1030000 0 0x1000>;
+> 
