@@ -1,34 +1,30 @@
-Return-Path: <SRS0=BnTV=MJ=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH] dt-bindings: timer: ostm: Add R7S9210 support
-Date: Thu, 27 Sep 2018 09:12:58 -0500
-Message-Id: <20180927141258.103071-1-chris.brandt@renesas.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=X0Lk=MG=verge.net.au=horms@kernel.org>
+Date: Mon, 24 Sep 2018 17:32:05 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: pwm: renesas: tpu: fix "compatible" prop
+ description
+Message-ID: <20180924153204.4mym2yuz7upvp6cs@verge.net.au>
+References: <2aaa98bd-475c-08dd-ee34-d41fb960952e@cogentembedded.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2aaa98bd-475c-08dd-ee34-d41fb960952e@cogentembedded.com>
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The R7S9210 belongs to the RZ/A2 SoC series
+On Fri, Sep 21, 2018 at 11:45:24PM +0300, Sergei Shtylyov wrote:
+> The "compatible" property description contradicts even the example given:
+> it only says that there must be a single value while the example has the
+> fallback value too -- which makes much more sense. Moreover, the generic
+> property value is misdocumented as being R-Car (and RZ/G1) specific...
+> 
+> Fixes: 382457e562bb ("pwm: renesas-tpu: Add DT support")
+> Fixes: 3ba111a01822 ("dt-bindings: pwm: renesas-tpu: Document r8a774[35] support")
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> ---
+> This patch is against Linus' repo -- the 'fixes' branch in Thierry Reding's
+> repo is very outdated...
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-FYI: No driver changes were needed
----
- Documentation/devicetree/bindings/timer/renesas,ostm.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-index be3ae0fdf775..81a78f8bcf17 100644
---- a/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-@@ -9,7 +9,8 @@ Channels are independent from each other.
- Required Properties:
- 
-   - compatible: must be one or more of the following:
--    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
-+    - "renesas,r7s72100-ostm" for the R7S72100 (RZ/A1) OSTM
-+    - "renesas,r7s9210-ostm" for the R7S9210 (RZ/A2) OSTM
-     - "renesas,ostm" for any OSTM
- 		This is a fallback for the above renesas,*-ostm entries
- 
--- 
-2.16.1
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
