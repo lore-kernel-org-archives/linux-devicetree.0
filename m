@@ -1,81 +1,59 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 05/20] iommu/tegra: gart: Optimize mapping / unmapping
-	performance
-Date: Mon, 24 Sep 2018 12:07:22 +0200
-Message-ID: <20180924100722.GG21032@ulmo>
-References: <20180924004153.8232-1-digetx@gmail.com>
-	<20180924004153.8232-6-digetx@gmail.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH v7 2/7] edac: synps: Add platform specific structures for
+ ddrc controller
+Date: Mon, 24 Sep 2018 10:07:33 +0000
+Message-ID: <DM6PR02MB5227B76AD2D71C4EABCA48DCC1170@DM6PR02MB5227.namprd02.prod.outlook.com>
+References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
+ <1537194305-9243-3-git-send-email-manish.narani@xilinx.com>
+ <20180918075522.GC22202@nazgul.tnic>
+ <DM6PR02MB5227F5B1B329C903BA64A27CC11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
+ <20180919111553.GA9140@nazgul.tnic>
+ <DM6PR02MB52279753E7FD04587393DC08C11C0@DM6PR02MB5227.namprd02.prod.outlook.com>
+ <20180921090721.GB30439@nazgul.tnic>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5086462325038407650=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180924004153.8232-6-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180921090721.GB30439@nazgul.tnic>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============5086462325038407650==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="RMedoP2+Pr6Rq0N2"
-Content-Disposition: inline
-
-
---RMedoP2+Pr6Rq0N2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 24, 2018 at 03:41:38AM +0300, Dmitry Osipenko wrote:
-> Currently GART writes one page entry at a time. More optimal would be to
-> aggregate the writes and flush BUS buffer in the end, this gives map/unmap
-> 10-40% performance boost (depending on size of mapping) in comparison to
-> flushing after each page entry update.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/iommu/tegra-gart.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-
-10-40% sounds really nice, great stuff:
-
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-
---RMedoP2+Pr6Rq0N2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluot1kACgkQ3SOs138+
-s6GV3RAAp1rhOAm6sQZ32r7t5gQnDun3nb584/yANQ1Tkk/+d6uI4aQOwy09ittA
-NYLbF6UPJLyVA/U2JpOSPu7ZK1trJ3+8gWWdq+33KQv4mb/2xI1wGSEq2OpIs+3D
-hnj5iMP6AHB+EafsNUccvebGmkN1LvAVvK2oPSTDKVtH//0fFdMQqqlWMWKqxtlD
-WtTYKGeMnBwdezhtfS63+83og03QnTb4HLLh8RHZNyJZT7/HpUY5llOQnYy1bae0
-Q/L1jN/NQxekxbe2GtW5pmg6eZa0tW0nnzW2o7yfbB459cxyk8CYta+5JCfd0EEj
-6hBz3akItwNZDQwmLqumDBuaz02LlKDMgan/HWz0ZRxRa2kYqJCKdw10ReU15JWy
-AEWkzzqBVJzVvb1lIXfwl2hpNA2Z+ipkCZ5Atl+ND7C1wPfQQV8ddNblLwgfDYkv
-weopJzt8UwTWhO6TJ7t0HjSNEYpH0mxp7eWh0sYQ2UJaWY+Q25whHJU6tWQu4XWT
-LDHP83dFmjiJ4qkPZvkAjEJUMq7HlEfkDoAzNKM5ps8gjOYrvfaAW7dUy4bPDf6X
-N74+6M9DkgEwSp4yA4+J4/8ZOATDmkPu0MMlJDJe26rFTKLLOcsjr9M7yYrXIeu/
-13FfhXSNXC2V823XNJhLVoP8nQNM1ZRWjlmRqrV4Ka7er+kYwSs=
-=bqRd
------END PGP SIGNATURE-----
-
---RMedoP2+Pr6Rq0N2--
-
---===============5086462325038407650==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5086462325038407650==--
+SGkgQm9yaXMsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KDQo+IC0tLS0tT3JpZ2luYWwg
+TWVzc2FnZS0tLS0tDQo+IEZyb206IEJvcmlzbGF2IFBldGtvdiBbbWFpbHRvOmJwQGFsaWVuOC5k
+ZV0NCj4gU2VudDogRnJpZGF5LCBTZXB0ZW1iZXIgMjEsIDIwMTggMjozNyBQTQ0KPiBUbzogTWFu
+aXNoIE5hcmFuaSA8TU5BUkFOSUB4aWxpbnguY29tPg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3Jn
+OyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgbWNoZWhhYkBrZXJuZWwub3JnOw0KPiBNaWNoYWwgU2lt
+ZWsgPG1pY2hhbHNAeGlsaW54LmNvbT47IGxlb3lhbmcubGlAbnhwLmNvbTsNCj4gc3VkZWVwLmhv
+bGxhQGFybS5jb207IGFtaXQua3VjaGVyaWFAbGluYXJvLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2Vy
+Lmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBlZGFj
+QHZnZXIua2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnDQo+
+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjcgMi83XSBlZGFjOiBzeW5wczogQWRkIHBsYXRmb3JtIHNw
+ZWNpZmljIHN0cnVjdHVyZXMgZm9yDQo+IGRkcmMgY29udHJvbGxlcg0KPiANCj4gT24gV2VkLCBT
+ZXAgMTksIDIwMTggYXQgMDE6MzM6NThQTSArMDAwMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToNCj4g
+PiBBcGFydCBmcm9tIHRoaXMgb25lLCBJIGhhdmUgY292ZXJlZCBhbGwgdGhlIGNvbW1lbnRzIGZy
+b20gdGhlIHByZXZpb3VzDQo+IHJldmlldy4NCj4gDQo+IEFyZSB5b3Ugc3VyZT8NCj4gDQo+IExl
+dCdzIHNlZS4gSSBzYWlkOg0KPiANCj4gfCBLaWxsIGFsbCB0aGF0ICJmdW5jdGlvbiBwb2ludGVy
+IiBmbHVmZi4gSGVyZSdzIGhvdyBJJ3ZlIGNoYW5nZWQgaXQ6DQo+IHwNCj4gfCAvKioNCj4gfCAg
+KiBzdHJ1Y3Qgc3lucHNfcGxhdGZvcm1fZGF0YSAtICBzeW5wcyBwbGF0Zm9ybSBkYXRhIHN0cnVj
+dHVyZQ0KPiB8ICAqIEBlZGFjX2dldGVycm9yX2luZm86IGVkYWMgZXJyb3IgaW5mbw0KPiB8ICAq
+IEBlZGFjX2dldF9tdHlwZTogICAgIGdldCBtdHlwZQ0KPiB8ICAqIEBlZGFjX2dldF9kdHlwZTog
+ICAgIGdldCBkdHlwZQ0KPiB8ICAqIEBlZGFjX2dldF9lY2NzdGF0ZTogIGdldCBFQ0Mgc3RhdGUN
+Cj4gCQkJICBeXl5eXl5eXl5eXl5eDQo+IA0KPiBUaGlzIGlzIHN1cHBvc2VkIHRvIGRlbm90ZSB0
+aGF0IHRoaXMgZnVuY3Rpb24gcmV0dXJucyB3aGV0aGVyIEVDQyBjaGVja2luZyBpcw0KPiBlbmFi
+bGVkIG9uIHRoZSBjb250cm9sbGVyIG9yIG5vdC4NCj4gDQo+IFlvdXIgcGF0Y2ggaGFzOg0KPiAN
+Cj4gKyAqIHN0cnVjdCBzeW5wc19wbGF0Zm9ybV9kYXRhIC0gIHN5bnBzIHBsYXRmb3JtIGRhdGEg
+c3RydWN0dXJlLg0KPiArICogQGdldGVycm9yX2luZm86ICAgICBHZXQgZXJyb3IgaW5mby4NCj4g
+KyAqIEBnZXRfbXR5cGU6ICAgICAgICAgR2V0IG10eXBlLg0KPiArICogQGdldF9kdHlwZTogICAg
+ICAgICBHZXQgZHR5cGUuDQo+ICsgKiBAZ2V0X2VjY3N0YXRlOiAgICAgIEdldCBlY2NzdGF0ZS4N
+Cj4gDQo+IFNvIHdoYXQgaXMgImVjY3N0YXRlIj8gSXMgaXQgYSBzdHJ1Y3Qgb3IgYSB2YXJpYWJs
+ZSBvciAuLi4/DQo+IA0KPiBEbyB5b3Ugc2VlIG15IHBvaW50Pw0KPiANCj4gSSBrbm93LCBpdCBp
+cyBhIHNtYWxsIHRoaW5nIGJ1dCBkb2N1bWVudGluZyBvdXIgY29kZSBwcm9wZXJseSBpcyBzb21l
+dGhpbmcNCj4gd2hpY2ggcGVvcGxlIHdvdWxkIGJlIHRoYW5raW5nIHVzIGZvci4gRXZlbiB5b3Ug
+d2lsbCBiZSB0aGFua2luZyB5b3Vyc2VsZiB3aGVuDQo+IHlvdSBsb29rIGF0IHRoaXMgbW9udGhz
+IGZyb20gbm93IGFmdGVyIGhhdmluZyBmb3Jnb3R0ZW4gaXQgYWxsLg0KPiANCj4gUGxlYXNlIGNo
+ZWNrIHRoZSByZXN0IG9mIHlvdXIgYWRkaXRpb25zIGZvciBzaW1pbGFyIGRpc2NyZXBhbmNpZXMu
+DQpPa2F5IHN1cmUuIFdpbGwgYmUgcmVjdGlmaWVkIGluIHY4Lg0KDQpUaGFua3MsDQpNYW5pc2gN
+Cg0K
