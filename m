@@ -1,87 +1,96 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
-Date: Mon, 24 Sep 2018 10:13:08 -0700
-Message-ID: <CAD=FV=WbiAj4eZqo+BnjesF_3XfbeD1h-s1aEGVETaRTa545iQ@mail.gmail.com>
-References: <20180920224055.164856-1-ryandcase@chromium.org>
- <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
- <CAD=FV=Wbj+bgdSBeHSFr+nz6fzCMcmQS-D9oyzkR0yVkxiRb8A@mail.gmail.com>
- <153755522409.119890.5471037050114193@swboyd.mtv.corp.google.com>
- <20180921185106.GJ20825@sirena.org.uk> <153767430006.119890.17210317555572798122@swboyd.mtv.corp.google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC
+ as unstable
+Date: Mon, 24 Sep 2018 19:16:45 +0200
+Message-ID: <20180924171645.GA10910@kozik-lap>
+References: <20180830180205.18121-1-krzk@kernel.org>
+ <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153767430006.119890.17210317555572798122@swboyd.mtv.corp.google.com>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, boris.brezillon@bootlin.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Olof Johansson <olof@lixom.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, DTML <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Sat, Sep 22, 2018 at 8:45 PM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Mark Brown (2018-09-21 11:51:06)
-> > On Fri, Sep 21, 2018 at 11:40:24AM -0700, Stephen Boyd wrote:
+On Sun, Sep 23, 2018 at 02:46:20PM +0100, Olof Johansson wrote:
+> On Thu, Aug 30, 2018 at 7:02 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > Samsung Exynos SoCs and boards related bindings evolved since the initial
+> > introduction, but initially the bindings were minimal and a bit incomplete
+> > (they never described all the hardware modules available in the SoCs).
+> > Since then some significant (not fully compatible) changes have been
+> > already committed a few times (like gpio replaced by pinctrl, display ddc,
+> > mfc reserved memory, some core clocks added to various hardware modules,
+> > added more required nodes).
 > >
-> > > It seems that everybody has misunderstood my email. Let me try to
-> > > clarify.
+> > On the other side there are no boards which have device tree embedded in
+> > the bootloader. Device tree blob is always compiled from the kernel tree
+> > and updated together with the kernel image.
 > >
-> > > I'm not saying to replace the sdm845 qspi compatible with a generic one.
-> > > I'm recommending that a generic one is added in addition to the SoC
-> > > specific one. That way, we get to put the generic compatible string in
-> > > the driver and not need to update the driver compatible string array
-> > > each time a new SoC comes out with a new compatible string.
-> >
-> > > If it turns out later that we need to handle some bug in that specific
-> > > SoC compatible string then we're good to go and we can handle it by
-> > > matching the more specific SoC version compatible.
-> >
-> > Right, the policy is generally not to have these strings at all.  IIRC
-> > the argument is that they tend to either become unclear as the marketing
-> > and technology changes.
->
-> Where is this policy documented? Is it on the list somewhere or written
-> in Documentation/devicetree/?
+> > Thus to avoid further adding a bunch of workarounds for old/missing
+> > bindings, make development of new platforms easier and allow to make
+> > cleanup of the existing code and device tree files, lets mark some
+> > Samsung Exynos SoC platform bindings as unstable. This means that
+> > bindings can may change at any time and users should use the dtb file
+> > compiled from the same kernel source tree as the kernel image.
+> 
+> I have to admit that I don't really like this approach, and I missed
+> the patch when originally posted (I did notice it in the pull request
+> it came in with though).
+> 
+> The main concern for me is that with a blanket "everything is always
+> unstable" we discard the notion that we should strive for bindings to
+> be stable and backwards compatible.
 
-I don't of it being documented anywhere, but it's what I've been told
-before.  I spent a bit of time to find a specific example but I
-couldn't.  As with a lot of device tree stuff it historically has been
-a bunch of word-of-mouth type stuff.  It does look like people are
-moving towards a more formal spec at
-<https://github.com/devicetree-org/devicetree-specification/> but it
-doesn't include this guideline.
+The original idea from Marek was to mark everything unstable. After
+comments from Rob I made it weaker already by changing to specific group
+of compatibles. Accepting their instability does not mean that we will
+be doing this on whenever possible. It just opens the possibility of
+finding some balance in cleanups and development. Sometimes things have
+to be seriously changed (fixed) and implementing workarounds for
+existing ABI might be huge work by itself.
+
+IOW, we want stability but not with the costs of huge development
+efforts... because no one else except us cares about the stability.
+
+> 
+> Questions that come to mind are:
+> 
+>  - When do they stop being unstable?
+
+They became unstable in a subjective way so I assume that reverse is the
+same, based on consensus and discussions.
+
+I am not sure if a hard time limit is good. There is no timeline for the
+Exynos development, no public roadmaps but rather community and
+partially volountary effort.  Therefore whatever number we set, it might
+be totally not matching reality.
+
+>  - Is there a way to note in the binding itself that it's still
+> unstable with an anticipation of when it will be settled in?
+
+Hmm, I see that some existing bindings are being added with "Unstable"
+warning:
+
+	git grep -i unstable Documentation/devicetree/
+
+so there should be no problem for putting there a timeframe.
+
+>  - Is there a better way to version the bindings to avoid complete
+> backwards compatibility?
+
+Some architectures are using overlays for handling backward
+compatibility. Anyway it might put additional effort on driver
+development.
+
+> Pointing out a couple of cases where it has been painful to stay
+> backwards compatible could also be useful for understanding (even
+> though you run the risk of each case being explained away with
+> suggestions of how it can be handled).
+> 
 
 
-> From my read of Rob's comment in the
-> previous version of this patch, all that was asked was to add another
-> compatible string for the specific SoC.
->
-> I find the approach of picking the first SoC that the driver works on to
-> be obtuse. I don't want to be reading some SoC DTS and see another SoC
-> marketing number in the compatible string because it makes it confusing
-> to explain to someone that yes these different SoCs are related to each
-> other, but no, that SoC isn't this SoC. Sure it all works and everything
-> is technically fine, but my aesthetically pleasing alarms go off and I
-> don't see any particular downside to having two compatibles.
->
-> The upside is that things aren't confusing and drivers don't get
-> continual SoC churn updates because the compatible describes the SoC
-> (qcom,sdm845-qspi) and the programming model (qcom,qspi-v1).
-
-IIUC previous suggestions about just naming it based on the first SoC
-was due to the difficulty of coming up with a good generic name to
-give something.  For instance you definitely wouldn't want to name it
-"qcom-qspi-sdm8xx" because you have no idea what future SoCs will be
-numbered.
-
-In the case here calling it "qcom,qspi-v1" is better than that and if
-Rob gives the thumbs up then I won't object to it.  In general though
-looking at other device tree bindings this doesn't seem like a thing
-commonly done.  Perhaps if we decide it's useful here we should start
-suggesting it everywhere...
-
--Doug
-
-
-
--Doug
+Best regards,
+Krzysztof
