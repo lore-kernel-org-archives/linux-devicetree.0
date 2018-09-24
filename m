@@ -1,83 +1,62 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 18/20] iommu/tegra: gart: Don't detach devices from
-	inactive domains
-Date: Mon, 24 Sep 2018 13:00:47 +0200
-Message-ID: <20180924110047.GO21032@ulmo>
-References: <20180924004153.8232-1-digetx@gmail.com>
-	<20180924004153.8232-19-digetx@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH] arm64: dts: broadcom: Use the .dtb name in the rule,
+ rather than .dts
+Date: Mon, 24 Sep 2018 13:03:41 +0200
+Message-ID: <539eb374-9122-6c09-4c64-80bfa6b7bf89@i2se.com>
+References: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
+ <20180924102228.19656-1-liviu@dudau.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5030204495218449021=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180924004153.8232-19-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180924102228.19656-1-liviu@dudau.co.uk>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Liviu Dudau <liviu@dudau.co.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, arm-soc <arm@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Am 24.09.2018 um 12:22 schrieb Liviu Dudau:
+> Commit a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+> Module IO Board V3") adds the bcm2837-rpi-cm3-io3.dts file as a target
+> in the Makefile, rather than the .dtb name. This will skip the
+> generation of the .dtb file at compile time and will fail the dtbs_install
+> target.
+>
+> Fixes: a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+> Module IO Board V3")
+>
+> Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
 
---===============5030204495218449021==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="DRfr/2Y1Zz/5r+Kb"
-Content-Disposition: inline
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 
+Thanks, i will add a dtbs_install step to my test jobs.
 
---DRfr/2Y1Zz/5r+Kb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+@Arnd @Olof Should this fix for 4.20 go via pull request or can you
+apply it directly to your tree?
 
-On Mon, Sep 24, 2018 at 03:41:51AM +0300, Dmitry Osipenko wrote:
-> There could be unlimited number of allocated domains, but only one domain
-> can be active at a time. Hence devices must be detached only from the
-> active domain.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  drivers/iommu/tegra-gart.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-
-Do we have a mechanism of switching out different domains? I don't think
-we do, so I'm wondering if perhaps a better solution to this would be to
-just refuse to create more than one domain in the first place. That
-would also allow us to get rid of the global variable gart_handle.
-
-Thierry
-
---DRfr/2Y1Zz/5r+Kb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluow98ACgkQ3SOs138+
-s6Fc1A//eebkcR6HVQf/WnOgbAuStAlJEk9PA600bzFQKyZOBrLVfshJnQRCGwNR
-9ct+gem0WVMH623JFPWLxGjfkFOYRqugqA+FgbJ5qFV6fBsTNCDTPDd9ZBpFrMyX
-QO+PhkFySYR6kDTheg2jamSOVutMWuioM+YE878kwiKw+qwo9HkUCTmKPHOoQ/QA
-skckpJzteoYgqi3GGFevE9TgIYrcIfrPLFV1Gd4iZd091RPNQvBOYLwJCeFvo1M1
-S1du/I5jTDd47KAhG2algLrHWq38NlbFekr9zK+bMWX2BA2jPU0cpYJKeUUCC9LM
-UcKWkdAd3iyoSGxvN6JGdmIfb5noY8kGPMG+WO7+PZb9irgVYm2Dx34XuWA14pwz
-YbZhh+XjRdgCx/r0ZhlUdpYZv87KuvM7iXBqXOwAEBl8Z8Ge34ZZgua2KBSClL0A
-4YHJeOt+zE9o2Id+0y7G4v2JwLKjlCw+1bQtesCrCHLz40NUrcb0j1bggrvPkEWz
-jwn44fN1688vLxcxVswewXYBmmiE0WnJn1zZwU4xeukj0EkKMMXLPFt+RcXAnsJc
-toxTZeUYDQyogLV8fK2XFPgafumnhISHt8ZK4nnzRoss6UZIMEtVPkmY/lr5TESY
-RwiiiSFOioiLkD4eTAGAnBltVHypova3LO6ukV8e/W1RfEPINbE=
-=BT9I
------END PGP SIGNATURE-----
-
---DRfr/2Y1Zz/5r+Kb--
-
---===============5030204495218449021==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5030204495218449021==--
+>  arch/arm64/boot/dts/broadcom/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
+> index 3d98f5f5ab88..667ca989c11b 100644
+> --- a/arch/arm64/boot/dts/broadcom/Makefile
+> +++ b/arch/arm64/boot/dts/broadcom/Makefile
+> @@ -1,7 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
+>  			      bcm2837-rpi-3-b-plus.dtb \
+> -			      bcm2837-rpi-cm3-io3.dts
+> +			      bcm2837-rpi-cm3-io3.dtb
+>  
+>  subdir-y	+= northstar2
+>  subdir-y	+= stingray
