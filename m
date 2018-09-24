@@ -1,743 +1,86 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: [PATCH v3 5/6] arm64: dts: add QorIQ LX2160A SoC support
-Date: Mon, 24 Sep 2018 05:39:00 +0530
-Message-ID: <1537747741-6245-6-git-send-email-vabhav.sharma@nxp.com>
-References: <1537747741-6245-1-git-send-email-vabhav.sharma@nxp.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 5/5] drm: bridge: add support for Cadence MHDP DPI/DP
+ bridge
+Date: Mon, 24 Sep 2018 14:28:07 +0200
+Message-ID: <6154358.J9crsCiUTz@phil>
+References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
+ <1903708.pJTgKoWLiI@phil>
+ <CO2PR07MB2551EC0A7DEB61C54A4D6A5FCD170@CO2PR07MB2551.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1537747741-6245-1-git-send-email-vabhav.sharma@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sudeep.holla@arm.com, oss@buserror.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com
-Cc: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, udit.kumar@nxp.com, Priyanka Jain <priyanka.jain@nxp.com>, Zhang Ying-22455 <ying.zhang22455@nxp.com>, linux@armlinux.org.uk, Ramneek Mehresh <ramneek.mehresh@nxp.com>, V.Sethi@nxp.com, Vabhav Sharma <vabhav.sharma@nxp.com>, Nipun Gupta <nipun.gupta@nxp.com>, Sriram Dash <sriram.dash@nxp.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CO2PR07MB2551EC0A7DEB61C54A4D6A5FCD170@CO2PR07MB2551.namprd07.prod.outlook.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>, Artur Jedrysek <jartur@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Piotr Sroka <piotrs@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-LX2160A SoC is based on Layerscape Chassis Generation 3.2 Architecture.
-
-LX2160A features an advanced 16 64-bit ARM v8 CortexA72 processor cores
-in 8 cluster, CCN508, GICv3,two 64-bit DDR4 memory controller, 8 I2C
-controllers, 3 dspi, 2 esdhc,2 USB 3.0, mmu 500, 3 SATA, 4 PL011 SBSA
-UARTs etc.
-
-Signed-off-by: Ramneek Mehresh <ramneek.mehresh@nxp.com>
-Signed-off-by: Zhang Ying-22455 <ying.zhang22455@nxp.com>
-Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
-Signed-off-by: Priyanka Jain <priyanka.jain@nxp.com>
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi | 693 +++++++++++++++++++++++++
- 1 file changed, 693 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-new file mode 100644
-index 0000000..46eea16
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -0,0 +1,693 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+//
-+// Device Tree Include file for Layerscape-LX2160A family SoC.
-+//
-+// Copyright 2018 NXP
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/memreserve/ 0x80000000 0x00010000;
-+
-+/ {
-+	compatible = "fsl,lx2160a";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		// 8 clusters having 2 Cortex-A72 cores each
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x0>;
-+			clocks = <&clockgen 1 0>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster0_l2>;
-+		};
-+
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x1>;
-+			clocks = <&clockgen 1 0>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster0_l2>;
-+		};
-+
-+		cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x100>;
-+			clocks = <&clockgen 1 1>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster1_l2>;
-+		};
-+
-+		cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x101>;
-+			clocks = <&clockgen 1 1>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster1_l2>;
-+		};
-+
-+		cpu@200 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x200>;
-+			clocks = <&clockgen 1 2>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster2_l2>;
-+		};
-+
-+		cpu@201 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x201>;
-+			clocks = <&clockgen 1 2>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster2_l2>;
-+		};
-+
-+		cpu@300 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x300>;
-+			clocks = <&clockgen 1 3>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster3_l2>;
-+		};
-+
-+		cpu@301 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x301>;
-+			clocks = <&clockgen 1 3>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster3_l2>;
-+		};
-+
-+		cpu@400 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x400>;
-+			clocks = <&clockgen 1 4>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster4_l2>;
-+		};
-+
-+		cpu@401 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x401>;
-+			clocks = <&clockgen 1 4>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster4_l2>;
-+		};
-+
-+		cpu@500 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x500>;
-+			clocks = <&clockgen 1 5>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster5_l2>;
-+		};
-+
-+		cpu@501 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x501>;
-+			clocks = <&clockgen 1 5>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster5_l2>;
-+		};
-+
-+		cpu@600 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x600>;
-+			clocks = <&clockgen 1 6>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster6_l2>;
-+		};
-+
-+		cpu@601 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x601>;
-+			clocks = <&clockgen 1 6>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster6_l2>;
-+		};
-+
-+		cpu@700 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x700>;
-+			clocks = <&clockgen 1 7>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster7_l2>;
-+		};
-+
-+		cpu@701 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a72";
-+			reg = <0x701>;
-+			clocks = <&clockgen 1 7>;
-+			d-cache-size = <0x8000>;
-+			d-cache-line-size = <64>;
-+			d-cache-sets = <128>;
-+			i-cache-size = <0xC000>;
-+			i-cache-line-size = <64>;
-+			i-cache-sets = <192>;
-+			next-level-cache = <&cluster7_l2>;
-+		};
-+
-+		cluster0_l2: l2-cache0 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster1_l2: l2-cache1 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster2_l2: l2-cache2 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster3_l2: l2-cache3 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster4_l2: l2-cache4 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster5_l2: l2-cache5 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster6_l2: l2-cache6 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+
-+		cluster7_l2: l2-cache7 {
-+			compatible = "cache";
-+			cache-size = <0x100000>;
-+			cache-line-size = <64>;
-+			cache-sets = <1024>;
-+			cache-level = <2>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@6000000 {
-+		compatible = "arm,gic-v3";
-+		reg = <0x0 0x06000000 0 0x10000>, // GIC Dist
-+			<0x0 0x06200000 0 0x200000>, // GICR (RD_base +
-+						     // SGI_base)
-+			<0x0 0x0c0c0000 0 0x2000>, // GICC
-+			<0x0 0x0c0d0000 0 0x1000>, // GICH
-+			<0x0 0x0c0e0000 0 0x20000>; // GICV
-+		#interrupt-cells = <3>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		interrupt-controller;
-+		interrupts = <1 9 0x4>;
-+
-+		its: gic-its@6020000 {
-+			compatible = "arm,gic-v3-its";
-+			msi-controller;
-+			reg = <0x0 0x6020000 0 0x20000>;
-+		};
-+	};
-+
-+	rstcr: syscon@1e60000 {
-+		compatible = "syscon";
-+		reg = <0x0 0x1e60000 0x0 0x4>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 13 4>,
-+			     <1 14 4>,
-+			     <1 11 4>,
-+			     <1 10 4>;
-+	};
-+
-+	pmu {
-+		compatible = "arm,cortex-a72-pmu";
-+		interrupts = <1 7 0x8>; // PMU PPI, Level low type
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	memory@80000000 {
-+		// DRAM space - 1, size : 2 GB DRAM
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000 0 0x80000000>;
-+	};
-+
-+	ddr1: memory-controller@1080000 {
-+		compatible = "fsl,qoriq-memory-controller";
-+		reg = <0x0 0x1080000 0x0 0x1000>;
-+		interrupts = <0 17 0x4>;
-+		little-endian;
-+	};
-+
-+	ddr2: memory-controller@1090000 {
-+		compatible = "fsl,qoriq-memory-controller";
-+		reg = <0x0 0x1090000 0x0 0x1000>;
-+		interrupts = <0 18 0x4>;
-+		little-endian;
-+	};
-+
-+	sysclk: sysclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+		clock-output-names = "sysclk";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		clockgen: clocking@1300000 {
-+			compatible = "fsl,lx2160a-clockgen";
-+			reg = <0 0x1300000 0 0xa0000>;
-+			#clock-cells = <2>;
-+			clocks = <&sysclk>;
-+		};
-+
-+		crypto: crypto@8000000 {
-+			compatible = "fsl,sec-v5.0", "fsl,sec-v4.0";
-+			fsl,sec-era = <10>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x00 0x8000000 0x100000>;
-+			reg = <0x00 0x8000000 0x0 0x100000>;
-+			interrupts = <GIC_SPI 139 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-coherent;
-+			status = "disabled";
-+
-+			sec_jr0: jr@10000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg        = <0x10000 0x10000>;
-+				interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr1: jr@20000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg        = <0x20000 0x10000>;
-+				interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr2: jr@30000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg        = <0x30000 0x10000>;
-+				interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+
-+			sec_jr3: jr@40000 {
-+				compatible = "fsl,sec-v5.0-job-ring",
-+					     "fsl,sec-v4.0-job-ring";
-+				reg        = <0x40000 0x10000>;
-+				interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		dcfg: dcfg@1e00000 {
-+			compatible = "fsl,lx2160a-dcfg", "syscon";
-+			reg = <0x0 0x1e00000 0x0 0x10000>;
-+			little-endian;
-+		};
-+
-+		gpio0: gpio@2300000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2300000 0x0 0x10000>;
-+			interrupts = <0 36 0x4>; // Level high type
-+			gpio-controller;
-+			little-endian;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio1: gpio@2310000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2310000 0x0 0x10000>;
-+			interrupts = <0 36 0x4>; // Level high type
-+			gpio-controller;
-+			little-endian;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio2: gpio@2320000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2320000 0x0 0x10000>;
-+			interrupts = <0 37 0x4>; // Level high type
-+			gpio-controller;
-+			little-endian;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio3: gpio@2330000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2330000 0x0 0x10000>;
-+			interrupts = <0 37 0x4>; // Level high type
-+			gpio-controller;
-+			little-endian;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+
-+		i2c0: i2c@2000000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2000000 0x0 0x10000>;
-+			interrupts = <0 34 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			fsl-scl-gpio = <&gpio2 15 0>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@2010000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2010000 0x0 0x10000>;
-+			interrupts = <0 34 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@2020000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2020000 0x0 0x10000>;
-+			interrupts = <0 35 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@2030000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2030000 0x0 0x10000>;
-+			interrupts = <0 35 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@2040000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2040000 0x0 0x10000>;
-+			interrupts = <0 74 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			fsl-scl-gpio = <&gpio2 16 0>;
-+			status = "disabled";
-+		};
-+
-+		i2c5: i2c@2050000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2050000 0x0 0x10000>;
-+			interrupts = <0 74 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			status = "disabled";
-+		};
-+
-+		i2c6: i2c@2060000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2060000 0x0 0x10000>;
-+			interrupts = <0 75 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			status = "disabled";
-+		};
-+
-+		i2c7: i2c@2070000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2070000 0x0 0x10000>;
-+			interrupts = <0 75 0x4>; // Level high type
-+			clock-names = "i2c";
-+			clocks = <&clockgen 4 7>;
-+			status = "disabled";
-+		};
-+
-+		uart0: serial@21c0000 {
-+			device_type = "serial";
-+			compatible = "arm,pl011","arm,sbsa-uart";
-+			reg = <0x0 0x21c0000 0x0 0x1000>;
-+			interrupts = <0 32 0x4>;	// Level high type
-+			current-speed = <115200>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@21d0000 {
-+			device_type = "serial";
-+			compatible = "arm,pl011","arm,sbsa-uart";
-+			reg = <0x0 0x21d0000 0x0 0x1000>;
-+			interrupts = <0 33 0x4>;	// Level high type
-+			current-speed = <115200>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@21e0000 {
-+			device_type = "serial";
-+			compatible = "arm,pl011","arm,sbsa-uart";
-+			reg = <0x0 0x21e0000 0x0 0x1000>;
-+			interrupts = <0 72 0x4>;	// Level high type
-+			current-speed = <115200>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@21f0000 {
-+			device_type = "serial";
-+			compatible = "arm,pl011","arm,sbsa-uart";
-+			reg = <0x0 0x21f0000 0x0 0x1000>;
-+			interrupts = <0 73 0x4>;	// Level high type
-+			current-speed = <115200>;
-+			status = "disabled";
-+		};
-+
-+		smmu: iommu@5000000 {
-+			compatible = "arm,mmu-500";
-+			reg = <0 0x5000000 0 0x800000>;
-+			#iommu-cells = <1>;
-+			#global-interrupts = <14>;
-+			interrupts = <0 13 4>, // global secure fault
-+				     <0 14 4>, // combined secure interrupt
-+				     <0 15 4>, // global non-secure fault
-+				     <0 16 4>, // combined non-secure interrupt
-+				// performance counter interrupts 0-9
-+				     <0 211 4>, <0 212 4>,
-+				     <0 213 4>, <0 214 4>,
-+				     <0 215 4>, <0 216 4>,
-+				     <0 217 4>, <0 218 4>,
-+				     <0 219 4>, <0 220 4>,
-+				// per context interrupt, 64 interrupts
-+				     <0 146 4>, <0 147 4>,
-+				     <0 148 4>, <0 149 4>,
-+				     <0 150 4>, <0 151 4>,
-+				     <0 152 4>, <0 153 4>,
-+				     <0 154 4>, <0 155 4>,
-+				     <0 156 4>, <0 157 4>,
-+				     <0 158 4>, <0 159 4>,
-+				     <0 160 4>, <0 161 4>,
-+				     <0 162 4>, <0 163 4>,
-+				     <0 164 4>, <0 165 4>,
-+				     <0 166 4>, <0 167 4>,
-+				     <0 168 4>, <0 169 4>,
-+				     <0 170 4>, <0 171 4>,
-+				     <0 172 4>, <0 173 4>,
-+				     <0 174 4>, <0 175 4>,
-+				     <0 176 4>, <0 177 4>,
-+				     <0 178 4>, <0 179 4>,
-+				     <0 180 4>, <0 181 4>,
-+				     <0 182 4>, <0 183 4>,
-+				     <0 184 4>, <0 185 4>,
-+				     <0 186 4>, <0 187 4>,
-+				     <0 188 4>, <0 189 4>,
-+				     <0 190 4>, <0 191 4>,
-+				     <0 192 4>, <0 193 4>,
-+				     <0 194 4>, <0 195 4>,
-+				     <0 196 4>, <0 197 4>,
-+				     <0 198 4>, <0 199 4>,
-+				     <0 200 4>, <0 201 4>,
-+				     <0 202 4>, <0 203 4>,
-+				     <0 204 4>, <0 205 4>,
-+				     <0 206 4>, <0 207 4>,
-+				     <0 208 4>, <0 209 4>;
-+			dma-coherent;
-+		};
-+
-+		usb0: usb3@3100000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0x3100000 0x0 0x10000>;
-+			interrupts = <0 80 0x4>; // Level high type
-+			dr_mode = "host";
-+			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
-+			status = "disabled";
-+		};
-+
-+		usb1: usb3@3110000 {
-+			compatible = "snps,dwc3";
-+			reg = <0x0 0x3110000 0x0 0x10000>;
-+			interrupts = <0 81 0x4>; // Level high type
-+			dr_mode = "host";
-+			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
-+			status = "disabled";
-+		};
-+
-+		watchdog@23a0000 {
-+			compatible = "arm,sbsa-gwdt";
-+			reg = <0x0 0x23a0000 0 0x1000>,
-+			      <0x0 0x2390000 0 0x1000>;
-+			interrupts = <0 59 4>;
-+			timeout-sec = <30>;
-+		};
-+
-+	};
-+};
--- 
-2.7.4
+SGkgRGFtaWFuLAoKQW0gTW9udGFnLCAyNC4gU2VwdGVtYmVyIDIwMTgsIDEzOjQwOjAzIENFU1Qg
+c2NocmllYiBEYW1pYW4gS29zOgo+ID4gQW0gRG9ubmVyc3RhZywgMjAuIFNlcHRlbWJlciAyMDE4
+LCAxNjo1NDo0MCBDRVNUIHNjaHJpZWIgRGFtaWFuIEtvczoKPiA+ID4gRnJvbTogUXVlbnRpbiBT
+Y2h1bHogPHF1ZW50aW4uc2NodWx6QGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+ID4gCj4gPiA+IFRo
+aXMgYWRkcyBiYXNpYyBzdXBwb3J0IGZvciBDYWRlbmNlIE1IRFAgRFBJIHRvIERQIGJyaWRnZS4K
+PiA+ID4gCj4gPiA+IEJhc2ljYWxseSwgaXQgdGFrZXMgYSBEUEkgc3RyZWFtIGFzIGlucHV0IGFu
+ZCBvdXRwdXQgaXQgZW5jb2RlZCBpbiBEUCAKPiA+ID4gZm9ybWF0LiBJdCdzIG1pc3NpbmcgcHJv
+cGVyIEhQRCwgSERDUCBhbmQgY3VycmVudGx5IHN1cHBvcnRzIG9ubHkgU1NUIAo+ID4gPiBtb2Rl
+Lgo+ID4gPiAKPiA+ID4gQ2hhbmdlcyBtYWRlIGluIHRoZSBsb3cgbGV2ZWwgZHJpdmVyIChjZG4t
+ZHAtcmVnLiopOgo+ID4gPiAtIG1vdmVkIGl0IHRvIGZyb20gZHJpdmVycy9ncHUvZHJtL3JvY2tj
+aGlwIHRvCj4gPiA+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAtY29tbW9uLioK
+PiA+ID4gLSBmdW5jdGlvbnMgZm9yIHNlbmRpbmcvcmVjZWl2aW5nIGNvbW1hbmRzIGFyZSBub3cg
+cHVibGljCj4gPiA+IC0gYWRkZWQgZnVuY3Rpb25zIGZvciByZWFkaW5nIHJlZ2lzdGVycyBhbmQg
+bGluayB0cmFpbmluZwo+ID4gPiAgIGFkanVzdG1lbnQKPiA+ID4gCj4gPiA+IENoYW5nZXMgbWFk
+ZSBpbiBSSydzIGRyaXZlciAoY2RuLWRwLWNvcmUuKik6Cj4gPiA+IC0gTW92ZWQgYXVkaW9faW5m
+byBhbmQgYXVkaW9fcGRldiBmaWVsZHMgZnJvbSBjZG5fZHBfZGV2aWNlIHRvCj4gPiA+ICAgY2Ru
+c19taGRwX2RldmljZSBzdHJ1Y3R1cmUuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBRdWVu
+dGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBEYW1pYW4gS29zIDxka29zQGNhZGVuY2UuY29tPgo+ID4gCj4gPiBbLi4uXQo+
+ID4gCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZyAK
+PiA+ID4gYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZwo+ID4gPiBpbmRleCAwY2Nj
+NzYyMTdlZTQuLjEyOWIwNTI5ZjNlMSAxMDA2NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3JvY2tjaGlwL0tjb25maWcKPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tj
+b25maWcKPiA+ID4gQEAgLTI3LDcgKzI3LDkgQEAgY29uZmlnIFJPQ0tDSElQX0FOQUxPR0lYX0RQ
+Cj4gPiA+ICAKPiA+ID4gIGNvbmZpZyBST0NLQ0hJUF9DRE5fRFAKPiA+ID4gICAgICAgICAgYm9v
+bCAiUm9ja2NoaXAgY2RuIERQIgo+ID4gPiAtCWRlcGVuZHMgb24gRVhUQ09OPXkgfHwgKEVYVENP
+Tj1tICYmIERSTV9ST0NLQ0hJUD1tKQo+ID4gPiArCWRlcGVuZHMgb24gRFJNX1JPQ0tDSElQPW0K
+PiA+IAo+ID4gU29ycnksIEkgd2Fzbid0IGZhc3QgZW5vdWdoIGluIG15IHJlcGx5IHRvIHlvdSBt
+YWlsIHRvIGNhdGNoIHRoYXQgYmVmb3JlIHlvdXIgdjQsIGJ1dCBJIGRvbid0IHRoaW5rIHRoaXMg
+aXMgbmVjZXNzYXJ5Lgo+ID4gSW5zdGVhZCBJIGRvIGd1ZXNzLCB0aGUgc2VsZWN0IGJlbG93IHNo
+b3VsZCBkbyB0aGUgcmlnaHQgdGhpbmcgYnkgbWFraW5nIEVYVENPTj15IGlmIERSTV9ST0NLQ0hJ
+UD15Lgo+ID4gCj4gPiBTb21ld2hhdCBjbHVtc2lseSB2ZXJpZmllZCBieSBtYWtpbmcgRVhUQ09O
+PW0gaW4gbXkgZGVmY29uZmlnIGFuZCBzZWVpbmcgZ2V0IGNoYW5nZWQgdG8geSB1cG9uIGJ1aWxk
+LCB3aGljaCBJIGd1ZXNzIGNvbWVzIGZyb20gYSBkaWZmZXJlbnQgInNlbGVjdCIgaW4gdGhlIGNv
+bmZpZy4KPiA+IAo+IAo+IEkndmUgY2hhbmdlZCBpdCB0bzoKPiAKPiBjb25maWcgUk9DS0NISVBf
+Q0ROX0RQCj4gICAgICAgICBib29sICJSb2NrY2hpcCBjZG4gRFAiCj4gICAgICAgICBkZXBlbmRz
+IG9uIERSTV9ST0NLQ0hJUAo+ICAgICAgICAgc2VsZWN0IEVYVENPTiBpZiBEUk1fUk9DS0NISVA9
+eQo+ICAgICAgICAgc2VsZWN0IERSTV9DRE5TX01IRFAKPiAgICAgICAgIGhlbHAuLi4KPiAKPiBh
+bmQgaXQgc2VlbXMgdGhhdCB0aGVyZSBhcmUgbm8gaXNzdWVzLiBBdCBsZWFzdCBmb3IgbWUuCj4g
+Cj4gUGxlYXNlIGxldCBtZSBrbm93IGlmIHRoYXQncyBPSy4KCm5vcGUsIGp1c3QgZG8gInNlbGVj
+dCBFWFRDT04iIC4gSXQgd29ya3MgbmljZWx5IGFuZCB0aGUgYWJvdmUgd291bGQKbm90IHNlbGVj
+dCBFWFRDT04gYXQgYWxsIGlmIHRoZSB0aGUgcm9ja2NoaXAtZHJtIGRyaXZlciBnZXRzIGJ1aWx0
+IGludG8KdGhlIGtlcm5lbC4KClRvIGJlIHN1cmUgSSBqdXN0IGRpZCBhIGxpdHRsZSBleHBlcmlt
+ZW50IGFuZCBhZGRlZDoKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25m
+aWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKaW5kZXggNGFkODVjMDQ2ZGNkLi42
+NGUyYjA5NmFmZDggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwor
+KysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKQEAgLTE1NCw0ICsxNTQsMTEgQEAg
+c291cmNlICJkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2l0ZS9LY29uZmlnIgogCiBzb3VyY2UgImRy
+aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvS2NvbmZpZyIKIAorY29uZmlnIERSTV9UTVAx
+CisgICAgICAgdHJpc3RhdGUgIm9wdGlvbiB0byBzZWxlY3QiCisKK2NvbmZpZyBEUk1fVE1QMgor
+ICAgICAgIHRyaXN0YXRlICJvcHRpb24gZG9pbmcgdGhlIHNlbGVjdGluZyIKKyAgICAgICBzZWxl
+Y3QgRFJNX1RNUDEKKwoKSWYgSSBzZWxlY3QgRFJNX1RNUDI9bSBhcyBtb2R1bGUgSSBlbmQgdXAg
+d2l0aApDT05GSUdfRFJNX1RNUDE9bQpDT05GSUdfRFJNX1RNUDI9bQppbiB0aGUgZGVmY29uZmln
+IGFuZCB3aXQgRFJNX1RNUDI9eSBpdCBjaGFuZ2VzIHRvCkNPTkZJR19EUk1fVE1QMT15CkNPTkZJ
+R19EUk1fVE1QMj15CgpzbyBhbGwgaXMgd2VsbCB3aXRoIGp1c3QgZG9pbmcgInNlbGVjdCBFWFRD
+T04iIGFib3ZlIGFuZCB3aWxsCnNlbGVjdCB0aGUgY29ycmVjdCAibSIgb3IgInkiIHN0YW5jZSBh
+cyBuZWVkZWQuCgoKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
