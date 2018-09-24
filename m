@@ -1,109 +1,69 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V2 05/27] mmc: mmci: move mmci next cookie to mci host
-Date: Tue, 25 Sep 2018 09:08:11 +0200
-Message-ID: <87fd1322-a8bc-15cc-8f91-3cf19043a2ca@st.com>
-References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com>
- <1537523181-14578-6-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFqhyVrRGRraGQzx9kwRxLtr56Gwc_NKqNqwLvZuM=jM1A@mail.gmail.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH] drm/panel: simple: Add DLC1010GIG panel
+Date: Mon, 24 Sep 2018 17:26:10 +0200
+Message-ID: <20180924152610.25939-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqhyVrRGRraGQzx9kwRxLtr56Gwc_NKqNqwLvZuM=jM1A@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/24/2018 08:46 PM, Ulf Hansson wrote:
-> On 21 September 2018 at 11:45, Ludovic Barre <ludovic.Barre@st.com> wrote:
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> This patch moves next cookie to mmci host structure to
->> share same cookie management between all variants.
-> 
-> I would suggest you to squash this with patch4, as I think it makes
-> more sense to keep these changes together.
-
-ok
-
-> 
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   drivers/mmc/host/mmci.c | 10 ++++------
->>   drivers/mmc/host/mmci.h |  2 ++
->>   2 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index 6de7c8d..43f2a1a 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -418,7 +418,6 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
->>   struct mmci_dmae_next {
->>          struct dma_async_tx_descriptor *desc;
->>          struct dma_chan *chan;
->> -       s32 cookie;
->>   };
->>
->>   struct mmci_dmae_priv {
->> @@ -449,7 +448,7 @@ static int mmci_dma_setup(struct mmci_host *host)
->>                                                       "tx");
->>
->>          /* initialize pre request cookie */
->> -       dmae->next_data.cookie = 1;
->> +       host->next_cookie = 1;
->>
->>          /*
->>           * If only an RX channel is specified, the driver will
->> @@ -716,7 +715,7 @@ static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
->>          struct mmci_dmae_priv *dmae = host->dma_priv;
->>          struct mmci_dmae_next *next = &dmae->next_data;
->>
->> -       WARN_ON(data->host_cookie && data->host_cookie != next->cookie);
->> +       WARN_ON(data->host_cookie && data->host_cookie != host->next_cookie);
->>          WARN_ON(!data->host_cookie && (next->desc || next->chan));
->>
->>          dmae->desc_current = next->desc;
->> @@ -728,9 +727,7 @@ static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
->>   static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
->>   {
->>          struct mmci_host *host = mmc_priv(mmc);
->> -       struct mmci_dmae_priv *dmae = host->dma_priv;
->>          struct mmc_data *data = mrq->data;
->> -       struct mmci_dmae_next *nd = &dmae->next_data;
->>
->>          if (!data)
->>                  return;
->> @@ -741,7 +738,8 @@ static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
->>                  return;
->>
->>          if (!mmci_dma_prep_next(host, data))
->> -               data->host_cookie = ++nd->cookie < 0 ? 1 : nd->cookie;
->> +               data->host_cookie = ++host->next_cookie < 0 ?
->> +                       1 : host->next_cookie;
->>   }
->>
->>   static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index 1e9a45b..5bb1ce2 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -318,5 +318,7 @@ struct mmci_host {
->>          int (*get_rx_fifocnt)(struct mmci_host *h, u32 status, int remain);
->>
->>          void                    *dma_priv;
->> +
->> +       s32                     next_cookie;
->>   };
->>
->> --
->> 2.7.4
->>
-> 
-> Kind regards
-> Uffe
-> 
+QWRkIHN1cHBvcnQgZm9yIHRoZSBETEMgRExDMTAxMEdJRyAxMjgweDgwMCAxMC4xIiBMVkRTIHBh
+bmVsIHRvIHRoZQpzaW1wbGUtcGFuZWwgZHJpdmVyLgoKU2lnbmVkLW9mZi1ieTogTWFyY28gRmVs
+c2NoIDxtLmZlbHNjaEBwZW5ndXRyb25peC5kZT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9kbGMsZGxjMTAxMGdpZy50eHQgfCAxMiArKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvcGFuZWwtc2ltcGxlLmMgICAgICAgICAgfCAzMyArKysrKysrKysrKysrKysrKysrCiAyIGZp
+bGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kbGMsZGxjMTAxMGdpZy50
+eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9wYW5lbC9kbGMsZGxjMTAxMGdpZy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9kbGMsZGxjMTAxMGdpZy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mYmY1ZGNkMTU2NjEKLS0tIC9kZXYvbnVsbAorKysgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9kbGMsZGxjMTAx
+MGdpZy50eHQKQEAgLTAsMCArMSwxMiBAQAorRExDIERpc3BsYXkgQ28uIERMQzEwMTBHSUcgMTAu
+MSIgV1hHQSBURlQgTENEIFBhbmVsCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGli
+bGU6IHNob3VsZCBiZSAiZGxjLGRsYzEwMTBnaWciCistIHBvd2VyLXN1cHBseTogU2VlIHNpbXBs
+ZS1wYW5lbC50eHQKKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gZW5hYmxlLWdwaW9zOiBTZWUg
+c2ltcGxlLXBhbmVsLnR4dAorLSBiYWNrbGlnaHQ6IFNlZSBzaW1wbGUtcGFuZWwudHh0CisKK1Ro
+aXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3
+aGljaCBpcyBzcGVjaWZpZWQKK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3Rvcnku
+CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKaW5kZXggOTc5NjRmN2YyYWNlLi4zYWM2
+MTcwNjYzOTkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUu
+YworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMKQEAgLTk2MSw2ICs5
+NjEsMzYgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBwYW5lbF9kZXNjIGRsY19kbGMwNzAweXpnXzEg
+PSB7CiAJLmJ1c19mb3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjY2Nl8xWDdYM19TUFdHLAogfTsK
+IAorc3RhdGljIGNvbnN0IHN0cnVjdCBkaXNwbGF5X3RpbWluZyBkbGNfZGxjMTAxMGdpZ190aW1p
+bmcgPSB7CisJLnBpeGVsY2xvY2sgPSB7IDY4OTAwMDAwLCA3MTEwMDAwMCwgNzM0MDAwMDAgfSwK
+KwkuaGFjdGl2ZSA9IHsgMTI4MCwgMTI4MCwgMTI4MCB9LAorCS5oZnJvbnRfcG9yY2ggPSB7IDQz
+LCA1MywgNjMgfSwKKwkuaGJhY2tfcG9yY2ggPSB7IDQzLCA1MywgNjMgfSwKKwkuaHN5bmNfbGVu
+ID0geyA0NCwgNTQsIDY0IH0sCisJLnZhY3RpdmUgPSB7IDgwMCwgODAwLCA4MDAgfSwKKwkudmZy
+b250X3BvcmNoID0geyA1LCA4LCAxMSB9LAorCS52YmFja19wb3JjaCA9IHsgNSwgOCwgMTEgfSwK
+KwkudnN5bmNfbGVuID0geyA1LCA3LCAxMSB9LAorCS5mbGFncyA9IERJU1BMQVlfRkxBR1NfREVf
+SElHSCwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgcGFuZWxfZGVzYyBkbGNfZGxjMTAxMGdp
+ZyA9IHsKKwkudGltaW5ncyA9ICZkbGNfZGxjMTAxMGdpZ190aW1pbmcsCisJLm51bV90aW1pbmdz
+ID0gMSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gMjE2LAorCQkuaGVpZ2h0
+ID0gMTM1LAorCX0sCisJLmRlbGF5ID0geworCQkucHJlcGFyZSA9IDYwLAorCQkuZW5hYmxlID0g
+MTUwLAorCQkuZGlzYWJsZSA9IDEwMCwKKwkJLnVucHJlcGFyZSA9IDYwLAorCX0sCisJLmJ1c19m
+b3JtYXQgPSBNRURJQV9CVVNfRk1UX1JHQjg4OF8xWDdYNF9TUFdHLAorfTsKKwogc3RhdGljIGNv
+bnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGVkdF9ldDA1NzA5MGRodV9tb2RlID0gewogCS5j
+bG9jayA9IDI1MTc1LAogCS5oZGlzcGxheSA9IDY0MCwKQEAgLTIzOTAsNiArMjQyMCw5IEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJ
+fSwgewogCQkuY29tcGF0aWJsZSA9ICJkbGMsZGxjMDcwMHl6Zy0xIiwKIAkJLmRhdGEgPSAmZGxj
+X2RsYzA3MDB5emdfMSwKKwl9LCB7CisJCS5jb21wYXRpYmxlID0gImRsYyxkbGMxMDEwZ2lnIiwK
+KwkJLmRhdGEgPSAmZGxjX2RsYzEwMTBnaWcsCiAJfSwgewogCQkuY29tcGF0aWJsZSA9ICJlZHQs
+ZXQwNTcwOTBkaHUiLAogCQkuZGF0YSA9ICZlZHRfZXQwNTcwOTBkaHUsCi0tIAoyLjE5LjAKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
+YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
