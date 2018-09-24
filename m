@@ -1,64 +1,64 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: light: bh1750: Add device tree
- binding documentation
-Date: Mon, 24 Sep 2018 21:08:49 +0100
-Message-ID: <20180924210849.373f765e@archlinux>
+Subject: Re: [PATCH v3 2/2] iio: light: bh1750: Add device tree support
+Date: Mon, 24 Sep 2018 21:10:08 +0100
+Message-ID: <20180924211008.1ef7895c@archlinux>
 References: <20180922205754.6100-1-decatf@gmail.com>
+        <20180922205754.6100-2-decatf@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922205754.6100-1-decatf@gmail.com>
+In-Reply-To: <20180922205754.6100-2-decatf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: ryang <decatf@gmail.com>
 Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 22 Sep 2018 16:57:53 -0400
+On Sat, 22 Sep 2018 16:57:54 -0400
 ryang <decatf@gmail.com> wrote:
 
-> Document device tree bindings for ROHM BH1750 ambient light sensor driver.
+> Add device tree support for ROHM BH1750 series ambient light sensors.
 > 
 > Signed-off-by: ryang <decatf@gmail.com>
-The devicetree maintainers haven't yet had a chance to look at this
-so we may well still get feedback from them.  As I'm not planning on a
-pull request for a few days I'll apply this to the tree I push out
-as testing for the autobuilders to play with.  The advantage if this
-is that isn't a non rebasing tree so I can add acks if they come in
-before I push it out as togreg ready for a pull request.
-
 Applied to the togreg branch of iio.git and pushed out as testing for
 the autobuilders to play with it.
 
 Thanks,
 
 Jonathan
+
 > ---
->  .../devicetree/bindings/iio/light/bh1750.txt   | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/bh1750.txt
+> Changes in v2:
+>      - Export module device table
+> Changes in v3:
+>      - Remove of_match_ptr so that bh1750_of_match is available
+>        without CONFIG_OF.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/bh1750.txt b/Documentation/devicetree/bindings/iio/light/bh1750.txt
-> new file mode 100644
-> index 000000000000..468350cc7af6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/bh1750.txt
-> @@ -0,0 +1,18 @@
-> +ROHM BH1750 - ALS, Ambient light sensor
-> +
-> +Required properties:
-> +
-> +- compatible: Must be one of:
-> +    "rohm,bh1710"
-> +    "rohm,bh1715"
-> +    "rohm,bh1721"
-> +    "rohm,bh1750"
-> +    "rohm,bh1751"
-> +- reg: the I2C address of the sensor
-> +
-> +Example:
-> +
-> +bh1750@23 {
-> +	compatible = "rohm,bh1750";
-> +	reg = <0x23>;
+>  drivers/iio/light/bh1750.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
+> index c3a481452b67..28347df78cff 100644
+> --- a/drivers/iio/light/bh1750.c
+> +++ b/drivers/iio/light/bh1750.c
+> @@ -307,9 +307,20 @@ static const struct i2c_device_id bh1750_id[] = {
+>  };
+>  MODULE_DEVICE_TABLE(i2c, bh1750_id);
+>  
+> +static const struct of_device_id bh1750_of_match[] = {
+> +	{ .compatible = "rohm,bh1710", },
+> +	{ .compatible = "rohm,bh1715", },
+> +	{ .compatible = "rohm,bh1721", },
+> +	{ .compatible = "rohm,bh1750", },
+> +	{ .compatible = "rohm,bh1751", },
+> +	{ }
 > +};
+> +MODULE_DEVICE_TABLE(of, bh1750_of_match);
+> +
+>  static struct i2c_driver bh1750_driver = {
+>  	.driver = {
+>  		.name = "bh1750",
+> +		.of_match_table = bh1750_of_match,
+>  		.pm = &bh1750_pm_ops,
+>  	},
+>  	.probe = bh1750_probe,
