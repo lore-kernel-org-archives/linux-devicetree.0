@@ -1,240 +1,401 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] pinctrl: qcom: Add sdm660 pinctrl driver
-Date: Mon, 24 Sep 2018 11:53:06 -0700
-Message-ID: <20180924185306.GO1367@tuxbook-pro>
-References: <20180812142413.20856-1-ctatlor97@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 04/27] mmc: mmci: introduce dma_priv pointer to mmci_host
+Date: Mon, 24 Sep 2018 20:52:06 +0200
+Message-ID: <CAPDyKFqQNN9X+x=pg9TOArT4-Tx9jNkpM2T+rAxQj-rzHXC0OA@mail.gmail.com>
+References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com> <1537523181-14578-5-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180812142413.20856-1-ctatlor97@gmail.com>
+In-Reply-To: <1537523181-14578-5-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun 12 Aug 07:24 PDT 2018, Craig Tatlor wrote:
-
-> Add initial pinctrl driver to support pin configuration with
-> pinctrl framework for sdm660.
-> Based off CAF implementation.
-> 
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+On 21 September 2018 at 11:45, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch introduces dma_priv pointer to define specific
+> needs for each dma engine. This patch is needed to prepare
+> sdmmc variant with internal dma which not use dmaengine API.
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 > ---
-> 
-> Changes from v1:
->   Adds gpio-ranges property to bindings
-> 
-> 
->  .../bindings/pinctrl/qcom,sdm660-pinctrl.txt  |  202 +++
-
-As the DT binding part of the patch is significant, please split it into
-its own patch.
-
->  drivers/pinctrl/qcom/Kconfig                  |   10 +
->  drivers/pinctrl/qcom/Makefile                 |    1 +
->  drivers/pinctrl/qcom/pinctrl-sdm660.c         | 1451 +++++++++++++++++
->  4 files changed, 1663 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
->  create mode 100644 drivers/pinctrl/qcom/pinctrl-sdm660.c
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm660-pinctrl.txt
-[..]
-> +- function:
-> +	Usage: required
-> +	Value type: <string>
-> +	Definition: Specify the alternative function to be configured for the
-> +		    specified pins. Functions are only valid for gpio pins.
-> +		    Valid values are:
+> change v2:
+> -rename specific dma engine structure to mmci_dmae_next/priv
+> -remove dma prefixe of mmci_dmae_priv fields, rename "current"
+> field to "cur" this avoid build issue with "current" defined
+> in include/asm-generic/current.h
+>
+>  drivers/mmc/host/mmci.c | 155 ++++++++++++++++++++++++++++++------------------
+>  drivers/mmc/host/mmci.h |  18 +-----
+>  2 files changed, 99 insertions(+), 74 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 2f845f3..6de7c8d 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -415,31 +415,57 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
+>   * no custom DMA interfaces are supported.
+>   */
+>  #ifdef CONFIG_DMA_ENGINE
+> +struct mmci_dmae_next {
+> +       struct dma_async_tx_descriptor *desc;
+> +       struct dma_chan *chan;
+> +       s32 cookie;
+> +};
 > +
-> +		    blsp_uart1, blsp_spi1, blsp_i2c1, blsp_uim1, atest_tsens,
-> +		    bimc_dte1, dac_calib0, blsp_spi8, blsp_uart8, blsp_uim8,
-> +		    qdss_cti_trig_out_b, bimc_dte0, dac_calib1, qdss_cti_trig_in_b,
-> +		    dac_calib2, atest_tsens2, atest_usb1, blsp_spi10, blsp_uart10,
-> +		    blsp_uim10, atest_bbrx1, atest_usb13, atest_bbrx0, atest_usb12,
-> +		    mdp_vsync, edp_lcd, blsp_i2c10, atest_gpsadc1, atest_usb11,
-> +		    atest_gpsadc0, edp_hot, atest_usb10, m_voc, dac_gpio, atest_char,
-> +		    cam_mclk, pll_bypassnl, qdss_stm7, blsp_i2c8, qdss_tracedata_b,
-> +		    pll_reset, qdss_stm6, qdss_stm5, qdss_stm4, atest_usb2, cci_i2c,
-> +		    qdss_stm3, dac_calib3, atest_usb23, atest_char3, dac_calib4,
-> +		    qdss_stm2, atest_usb22, atest_char2, qdss_stm1, dac_calib5,
-> +		    atest_usb21, atest_char1, dbg_out, qdss_stm0, dac_calib6,
-> +		    atest_usb20, atest_char0, dac_calib10, qdss_stm10,
-> +		    qdss_cti_trig_in_a, cci_timer4, blsp_spi6, blsp_uart6, blsp_uim6,
-> +		    blsp2_spi, qdss_stm9, qdss_cti_trig_out_a, dac_calib11,
-> +		    qdss_stm8, cci_timer0, qdss_stm13, dac_calib7, cci_timer1,
-> +		    qdss_stm12, dac_calib8, cci_timer2, blsp1_spi, qdss_stm11,
-> +		    dac_calib9, cci_timer3, cci_async, dac_calib12, blsp_i2c6,
-> +		    qdss_tracectl_a, dac_calib13, qdss_traceclk_a, dac_calib14,
-> +		    dac_calib15, hdmi_rcv, dac_calib16, hdmi_cec, pwr_modem,
-> +		    dac_calib17, hdmi_ddc, pwr_nav, dac_calib18, pwr_crypto,
-> +		    dac_calib19, hdmi_hot, dac_calib20, dac_calib21, pci_e0,
-> +		    dac_calib22, dac_calib23, dac_calib24, tsif1_sync, dac_calib25,
-> +		    sd_write, tsif1_error, blsp_spi2, blsp_uart2, blsp_uim2,
-> +		    qdss_cti, blsp_i2c2, blsp_spi3, blsp_uart3, blsp_uim3, blsp_i2c3,
-> +		    uim3, blsp_spi9, blsp_uart9, blsp_uim9, blsp10_spi, blsp_i2c9,
-> +		    blsp_spi7, blsp_uart7, blsp_uim7, qdss_tracedata_a, blsp_i2c7,
-> +		    qua_mi2s, gcc_gp1_clk_a, ssc_irq, uim4, blsp_spi11, blsp_uart11,
-> +		    blsp_uim11, gcc_gp2_clk_a, gcc_gp3_clk_a, blsp_i2c11, cri_trng0,
-> +		    cri_trng1, cri_trng, qdss_stm18, pri_mi2s, qdss_stm17, blsp_spi4,
-> +		    blsp_uart4, blsp_uim4, qdss_stm16, qdss_stm15, blsp_i2c4,
-> +		    qdss_stm14, dac_calib26, spkr_i2s, audio_ref, lpass_slimbus,
-> +		    isense_dbg, tsense_pwm1, tsense_pwm2, btfm_slimbus, ter_mi2s,
-> +		    qdss_stm22, qdss_stm21, qdss_stm20, qdss_stm19, gcc_gp1_clk_b,
-> +		    sec_mi2s, blsp_spi5, blsp_uart5, blsp_uim5, gcc_gp2_clk_b,
-> +		    gcc_gp3_clk_b, blsp_i2c5, blsp_spi12, blsp_uart12, blsp_uim12,
-> +		    qdss_stm25, qdss_stm31, blsp_i2c12, qdss_stm30, qdss_stm29,
-> +		    tsif1_clk, qdss_stm28, tsif1_en, tsif1_data, sdc4_cmd, qdss_stm27,
-> +		    qdss_traceclk_b, tsif2_error, sdc43, vfr_1, qdss_stm26, tsif2_clk,
-> +		    sdc4_clk, qdss_stm24, tsif2_en, sdc42, qdss_stm23, qdss_tracectl_b,
-> +		    sd_card, tsif2_data, sdc41, tsif2_sync, sdc40, mdp_vsync_p_b,
-> +		    ldo_en, mdp_vsync_s_b, ldo_update, blsp11_uart_tx_b, blsp11_uart_rx_b,
-> +		    blsp11_i2c_sda_b, prng_rosc, blsp11_i2c_scl_b, uim2, uim1, uim_batt,
-> +		    pci_e2, pa_indicator, adsp_ext, ddr_bist, qdss_tracedata_11,
-> +		    qdss_tracedata_12, modem_tsync, nav_dr, nav_pps, pci_e1, gsm_tx,
-> +		    qspi_cs, ssbi2, ssbi1, mss_lte, qspi_clk, qspi0, qspi1, qspi2, qspi3,
-> +		    gpio
+> +struct mmci_dmae_priv {
+> +       struct dma_chan *cur;
+> +       struct dma_chan *rx_channel;
+> +       struct dma_chan *tx_channel;
+> +       struct dma_async_tx_descriptor  *desc_current;
+> +       struct mmci_dmae_next next_data;
+> +       bool in_progress;
 
-Please review this list, there are a few items in here that are not
-valid functions in your driver.
-
-[..]
-> +
-> +Example:
-> +
-> +	tlmm: pinctrl@1010000 {
-> +		compatible = "qcom,sdm660-pinctrl";
-> +		reg = <0x1010000 0x300000>;
-> +		interrupts = <0 208 0>;
-
-Replace the 0s in the interrupts specifier.
-
-> +		gpio-controller;
-> +		gpio-ranges = <&tlmm 0 0 114>;
-> +		#gpio-cells = <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +
-> +		uart_console_active: uart_console_active {
-> +			mux {
-> +				pins = "gpio4", "gpio5";
-> +				function = "blsp_uart8";
-> +			};
-> +
-> +			config {
-> +				pins = "gpio4", "gpio5";
-> +				drive-strength = <2>;
-> +				bias-disable;
-> +			};
-> +		};
-
-This example isn't valid. Please update it, or just drop the pinctrl
-state from the example.
-
-> +	};
-> diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
-> index 195492033075..091beadb8a1c 100644
-> --- a/drivers/pinctrl/qcom/Kconfig
-> +++ b/drivers/pinctrl/qcom/Kconfig
-> @@ -147,6 +147,16 @@ config PINCTRL_QCOM_SSBI_PMIC
->           which are using SSBI for communication with SoC. Example PMIC's
->           devices are pm8058 and pm8921.
->  
-> +config PINCTRL_SDM660
-> +       tristate "Qualcomm Technologies Inc SDM660 pin controller driver"
-> +       depends on GPIOLIB && OF
-> +       select PINCTRL_MSM
-> +       help
-> +         This is the pinctrl, pinmux, pinconf and gpiolib driver for the
-> +         Qualcomm Technologies Inc TLMM block found on the Qualcomm
-> +         Technologies Inc SDM660 platform.
-> +
-> +
-
-Extra empty line.
-
->  config PINCTRL_SDM845
->         tristate "Qualcomm Technologies Inc SDM845 pin controller driver"
->         depends on GPIOLIB && OF
-> diff --git a/drivers/pinctrl/qcom/Makefile b/drivers/pinctrl/qcom/Makefile
-> index 0c6f3ddc296d..9b08808a2f1c 100644
-> --- a/drivers/pinctrl/qcom/Makefile
-> +++ b/drivers/pinctrl/qcom/Makefile
-> @@ -19,4 +19,5 @@ obj-$(CONFIG_PINCTRL_QCOM_SPMI_PMIC) += pinctrl-spmi-gpio.o
->  obj-$(CONFIG_PINCTRL_QCOM_SPMI_PMIC) += pinctrl-spmi-mpp.o
->  obj-$(CONFIG_PINCTRL_QCOM_SSBI_PMIC) += pinctrl-ssbi-gpio.o
->  obj-$(CONFIG_PINCTRL_QCOM_SSBI_PMIC) += pinctrl-ssbi-mpp.o
-> +obj-$(CONFIG_PINCTRL_SDM660)   += pinctrl-sdm660.o
->  obj-$(CONFIG_PINCTRL_SDM845) += pinctrl-sdm845.o
-> diff --git a/drivers/pinctrl/qcom/pinctrl-sdm660.c b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-> new file mode 100644
-> index 000000000000..ded56111f168
-> --- /dev/null
-> +++ b/drivers/pinctrl/qcom/pinctrl-sdm660.c
-> @@ -0,0 +1,1451 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2018, Craig Tatlor.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +
-> +#include "pinctrl-msm.h"
-> +
-> +#define NORTH	0x00900000
-> +#define CENTER	0x00500000
-> +#define SOUTH	0x00100000
-
-Please respin this on top of the QCS404 series, where we describe each
-tile explicitly in DT.
-
-The three regions are:
-
-South:  0x03100000 size 0x300000
-Center: 0x03500000 size 0x300000
-North:  0x03900000 size 0x300000
-
-[..]
-> +static const unsigned int sdc1_clk_pins[] = { 114 };
-> +static const unsigned int sdc1_cmd_pins[] = { 115 };
-> +static const unsigned int sdc1_data_pins[] = { 116 };
-> +static const unsigned int sdc2_clk_pins[] = { 117 };
-> +static const unsigned int sdc2_cmd_pins[] = { 118 };
-> +static const unsigned int sdc2_data_pins[] = { 119 };
-> +static const unsigned int sdc1_rclk_pins[] = { 120 };
-
-The numbering of these "fake" pins isn't significant, so please reorder
-sdc1_rclk to follow the other sdc1 pins.
-
-> +
-> +enum sdm660_functions {
-> +	msm_mux_blsp_spi1,
-
-There's no harm in sorting this list, but it makes it easier to read.
-> +
-> +static const struct msm_function sdm660_functions[] = {
-> +	FUNCTION(blsp_spi1),
-
-Ditto.
-
-[..]
-> +static const struct msm_pingroup sdm660_groups[] = {
-[..]
-> +	SDC_QDSD_PINGROUP(sdc1_clk, 0x99a000, 13, 6),
-> +	SDC_QDSD_PINGROUP(sdc1_cmd, 0x99a000, 11, 3),
-> +	SDC_QDSD_PINGROUP(sdc1_data, 0x99a000, 9, 0),
-> +	SDC_QDSD_PINGROUP(sdc2_clk, 0x99b000, 14, 6),
-> +	SDC_QDSD_PINGROUP(sdc2_cmd, 0x99b000, 11, 3),
-> +	SDC_QDSD_PINGROUP(sdc2_data, 0x99b000, 9, 0),
-> +	SDC_QDSD_PINGROUP(sdc1_rclk, 0x99a000, 15, 0),
-
-Move the sdc1_rclk up to the other sdc1 groups.
+I am wondering whether it would make sense to keep the "bool
+in_progress" in the struct mmci_host. I guess it will be used for all
+dma variants anyway!?
 
 > +};
+> +
+> +#define mmci_dmae_inprogress(dmae) ((dmae)->in_progress)
+> +
+>  static int mmci_dma_setup(struct mmci_host *host)
+>  {
+>         const char *rxname, *txname;
+> +       struct mmci_dmae_priv *dmae;
+> +
+> +       dmae = devm_kzalloc(mmc_dev(host->mmc), sizeof(*dmae), GFP_KERNEL);
+> +       if (!dmae)
+> +               return -ENOMEM;
+>
+> -       host->dma_rx_channel = dma_request_slave_channel(mmc_dev(host->mmc), "rx");
+> -       host->dma_tx_channel = dma_request_slave_channel(mmc_dev(host->mmc), "tx");
+> +       host->dma_priv = dmae;
+> +
+> +       dmae->rx_channel = dma_request_slave_channel(mmc_dev(host->mmc),
+> +                                                    "rx");
+> +       dmae->tx_channel = dma_request_slave_channel(mmc_dev(host->mmc),
+> +                                                    "tx");
+>
+>         /* initialize pre request cookie */
+> -       host->next_data.cookie = 1;
+> +       dmae->next_data.cookie = 1;
+>
+>         /*
+>          * If only an RX channel is specified, the driver will
+>          * attempt to use it bidirectionally, however if it is
+>          * is specified but cannot be located, DMA will be disabled.
+>          */
+> -       if (host->dma_rx_channel && !host->dma_tx_channel)
+> -               host->dma_tx_channel = host->dma_rx_channel;
+> +       if (dmae->rx_channel && !dmae->tx_channel)
+> +               dmae->tx_channel = dmae->rx_channel;
+>
+> -       if (host->dma_rx_channel)
+> -               rxname = dma_chan_name(host->dma_rx_channel);
+> +       if (dmae->rx_channel)
+> +               rxname = dma_chan_name(dmae->rx_channel);
+>         else
+>                 rxname = "none";
+>
+> -       if (host->dma_tx_channel)
+> -               txname = dma_chan_name(host->dma_tx_channel);
+> +       if (dmae->tx_channel)
+> +               txname = dma_chan_name(dmae->tx_channel);
+>         else
+>                 txname = "none";
+>
+> @@ -450,15 +476,15 @@ static int mmci_dma_setup(struct mmci_host *host)
+>          * Limit the maximum segment size in any SG entry according to
+>          * the parameters of the DMA engine device.
+>          */
+> -       if (host->dma_tx_channel) {
+> -               struct device *dev = host->dma_tx_channel->device->dev;
+> +       if (dmae->tx_channel) {
+> +               struct device *dev = dmae->tx_channel->device->dev;
+>                 unsigned int max_seg_size = dma_get_max_seg_size(dev);
+>
+>                 if (max_seg_size < host->mmc->max_seg_size)
+>                         host->mmc->max_seg_size = max_seg_size;
+>         }
+> -       if (host->dma_rx_channel) {
+> -               struct device *dev = host->dma_rx_channel->device->dev;
+> +       if (dmae->rx_channel) {
+> +               struct device *dev = dmae->rx_channel->device->dev;
+>                 unsigned int max_seg_size = dma_get_max_seg_size(dev);
+>
+>                 if (max_seg_size < host->mmc->max_seg_size)
+> @@ -477,21 +503,24 @@ static int mmci_dma_setup(struct mmci_host *host)
+>   */
+>  static inline void mmci_dma_release(struct mmci_host *host)
+>  {
+> -       if (host->dma_rx_channel)
+> -               dma_release_channel(host->dma_rx_channel);
+> -       if (host->dma_tx_channel)
+> -               dma_release_channel(host->dma_tx_channel);
+> -       host->dma_rx_channel = host->dma_tx_channel = NULL;
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+> +
+> +       if (dmae->rx_channel)
+> +               dma_release_channel(dmae->rx_channel);
+> +       if (dmae->tx_channel)
+> +               dma_release_channel(dmae->tx_channel);
+> +       dmae->rx_channel = dmae->tx_channel = NULL;
+>  }
+>
+>  static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
+>  {
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct dma_chan *chan;
+>
+>         if (data->flags & MMC_DATA_READ)
+> -               chan = host->dma_rx_channel;
+> +               chan = dmae->rx_channel;
+>         else
+> -               chan = host->dma_tx_channel;
+> +               chan = dmae->tx_channel;
+>
+>         dma_unmap_sg(chan->device->dev, data->sg, data->sg_len,
+>                      mmc_get_dma_dir(data));
+> @@ -499,14 +528,16 @@ static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
+>
+>  static void mmci_dma_data_error(struct mmci_host *host)
+>  {
+> -       if (!dma_inprogress(host))
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+> +
+> +       if (!mmci_dmae_inprogress(dmae))
+>                 return;
+>
+>         dev_err(mmc_dev(host->mmc), "error during DMA transfer!\n");
+> -       dmaengine_terminate_all(host->dma_current);
+> -       host->dma_in_progress = false;
+> -       host->dma_current = NULL;
+> -       host->dma_desc_current = NULL;
+> +       dmaengine_terminate_all(dmae->cur);
+> +       dmae->in_progress = false;
+> +       dmae->cur = NULL;
+> +       dmae->desc_current = NULL;
+>         host->data->host_cookie = 0;
+>
+>         mmci_dma_unmap(host, host->data);
+> @@ -514,10 +545,11 @@ static void mmci_dma_data_error(struct mmci_host *host)
+>
+>  static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
+>  {
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         u32 status;
+>         int i;
+>
+> -       if (!dma_inprogress(host))
+> +       if (!mmci_dmae_inprogress(dmae))
+>                 return;
+>
+>         /* Wait up to 1ms for the DMA to complete */
+> @@ -551,9 +583,9 @@ static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
+>                 mmci_dma_release(host);
+>         }
+>
+> -       host->dma_in_progress = false;
+> -       host->dma_current = NULL;
+> -       host->dma_desc_current = NULL;
+> +       dmae->in_progress = false;
+> +       dmae->cur = NULL;
+> +       dmae->desc_current = NULL;
+>  }
+>
+>  /* prepares DMA channel and DMA descriptor, returns non-zero on failure */
+> @@ -561,6 +593,7 @@ static int __mmci_dma_prep_data(struct mmci_host *host, struct mmc_data *data,
+>                                 struct dma_chan **dma_chan,
+>                                 struct dma_async_tx_descriptor **dma_desc)
+>  {
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct variant_data *variant = host->variant;
+>         struct dma_slave_config conf = {
+>                 .src_addr = host->phybase + MMCIFIFO,
+> @@ -579,10 +612,10 @@ static int __mmci_dma_prep_data(struct mmci_host *host, struct mmc_data *data,
+>
+>         if (data->flags & MMC_DATA_READ) {
+>                 conf.direction = DMA_DEV_TO_MEM;
+> -               chan = host->dma_rx_channel;
+> +               chan = dmae->rx_channel;
+>         } else {
+>                 conf.direction = DMA_MEM_TO_DEV;
+> -               chan = host->dma_tx_channel;
+> +               chan = dmae->tx_channel;
+>         }
+>
+>         /* If there's no DMA channel, fall back to PIO */
+> @@ -622,26 +655,31 @@ static int __mmci_dma_prep_data(struct mmci_host *host, struct mmc_data *data,
+>  static inline int mmci_dma_prep_data(struct mmci_host *host,
+>                                      struct mmc_data *data)
+>  {
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+> +
+>         /* Check if next job is already prepared. */
+> -       if (host->dma_current && host->dma_desc_current)
+> +       if (dmae->cur && dmae->desc_current)
+>                 return 0;
+>
+>         /* No job were prepared thus do it now. */
+> -       return __mmci_dma_prep_data(host, data, &host->dma_current,
+> -                                   &host->dma_desc_current);
+> +       return __mmci_dma_prep_data(host, data, &dmae->cur,
+> +                                   &dmae->desc_current);
+>  }
+>
+>  static inline int mmci_dma_prep_next(struct mmci_host *host,
+>                                      struct mmc_data *data)
+>  {
+> -       struct mmci_host_next *nd = &host->next_data;
+> -       return __mmci_dma_prep_data(host, data, &nd->dma_chan, &nd->dma_desc);
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+> +       struct mmci_dmae_next *nd = &dmae->next_data;
+> +
+> +       return __mmci_dma_prep_data(host, data, &nd->chan, &nd->desc);
+>  }
+>
+>  static int mmci_dma_start_data(struct mmci_host *host, unsigned int datactrl)
+>  {
+> -       int ret;
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct mmc_data *data = host->data;
+> +       int ret;
 
-Regards,
-Bjorn
+Looks like "white space". Anyway, please avoid move the declaration of
+ret, unless needed.
+
+>
+>         ret = mmci_dma_prep_data(host, host->data);
+>         if (ret)
+> @@ -651,9 +689,9 @@ static int mmci_dma_start_data(struct mmci_host *host, unsigned int datactrl)
+>         dev_vdbg(mmc_dev(host->mmc),
+>                  "Submit MMCI DMA job, sglen %d blksz %04x blks %04x flags %08x\n",
+>                  data->sg_len, data->blksz, data->blocks, data->flags);
+> -       host->dma_in_progress = true;
+> -       dmaengine_submit(host->dma_desc_current);
+> -       dma_async_issue_pending(host->dma_current);
+> +       dmae->in_progress = true;
+> +       dmaengine_submit(dmae->desc_current);
+> +       dma_async_issue_pending(dmae->cur);
+>
+>         if (host->variant->qcom_dml)
+>                 dml_start_xfer(host, data);
+> @@ -675,22 +713,24 @@ static int mmci_dma_start_data(struct mmci_host *host, unsigned int datactrl)
+>
+>  static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>  {
+> -       struct mmci_host_next *next = &host->next_data;
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+> +       struct mmci_dmae_next *next = &dmae->next_data;
+>
+>         WARN_ON(data->host_cookie && data->host_cookie != next->cookie);
+> -       WARN_ON(!data->host_cookie && (next->dma_desc || next->dma_chan));
+> +       WARN_ON(!data->host_cookie && (next->desc || next->chan));
+>
+> -       host->dma_desc_current = next->dma_desc;
+> -       host->dma_current = next->dma_chan;
+> -       next->dma_desc = NULL;
+> -       next->dma_chan = NULL;
+> +       dmae->desc_current = next->desc;
+> +       dmae->cur = next->chan;
+> +       next->desc = NULL;
+> +       next->chan = NULL;
+>  }
+>
+>  static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  {
+>         struct mmci_host *host = mmc_priv(mmc);
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct mmc_data *data = mrq->data;
+> -       struct mmci_host_next *nd = &host->next_data;
+> +       struct mmci_dmae_next *nd = &dmae->next_data;
+>
+>         if (!data)
+>                 return;
+> @@ -708,6 +748,7 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>                               int err)
+>  {
+>         struct mmci_host *host = mmc_priv(mmc);
+> +       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct mmc_data *data = mrq->data;
+>
+>         if (!data || !data->host_cookie)
+> @@ -716,24 +757,24 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>         mmci_dma_unmap(host, data);
+>
+>         if (err) {
+> -               struct mmci_host_next *next = &host->next_data;
+> +               struct mmci_dmae_next *next = &dmae->next_data;
+>                 struct dma_chan *chan;
+>                 if (data->flags & MMC_DATA_READ)
+> -                       chan = host->dma_rx_channel;
+> +                       chan = dmae->rx_channel;
+>                 else
+> -                       chan = host->dma_tx_channel;
+> +                       chan = dmae->tx_channel;
+>                 dmaengine_terminate_all(chan);
+>
+> -               if (host->dma_desc_current == next->dma_desc)
+> -                       host->dma_desc_current = NULL;
+> +               if (dmae->desc_current == next->desc)
+> +                       dmae->desc_current = NULL;
+>
+> -               if (host->dma_current == next->dma_chan) {
+> -                       host->dma_in_progress = false;
+> -                       host->dma_current = NULL;
+> +               if (dmae->cur == next->chan) {
+> +                       dmae->in_progress = false;
+> +                       dmae->cur = NULL;
+>                 }
+>
+> -               next->dma_desc = NULL;
+> -               next->dma_chan = NULL;
+> +               next->desc = NULL;
+> +               next->chan = NULL;
+>                 data->host_cookie = 0;
+>         }
+>  }
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 06299ac..1e9a45b 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -276,12 +276,6 @@ struct mmci_host_ops {
+>         int (*dma_setup)(struct mmci_host *host);
+>  };
+>
+> -struct mmci_host_next {
+> -       struct dma_async_tx_descriptor  *dma_desc;
+> -       struct dma_chan                 *dma_chan;
+> -       s32                             cookie;
+> -};
+> -
+>  struct mmci_host {
+>         phys_addr_t             phybase;
+>         void __iomem            *base;
+> @@ -323,16 +317,6 @@ struct mmci_host {
+>         unsigned int            size;
+>         int (*get_rx_fifocnt)(struct mmci_host *h, u32 status, int remain);
+>
+> -#ifdef CONFIG_DMA_ENGINE
+> -       /* DMA stuff */
+> -       struct dma_chan         *dma_current;
+> -       struct dma_chan         *dma_rx_channel;
+> -       struct dma_chan         *dma_tx_channel;
+> -       struct dma_async_tx_descriptor  *dma_desc_current;
+> -       struct mmci_host_next   next_data;
+> -       bool                    dma_in_progress;
+> -
+> -#define dma_inprogress(host)   ((host)->dma_in_progress)
+> -#endif
+> +       void                    *dma_priv;
+>  };
+>
+> --
+> 2.7.4
+>
+
+Kind regards
+Uffe
