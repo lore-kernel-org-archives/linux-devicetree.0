@@ -1,89 +1,57 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Add CD and WP pins to Odroid XU SD
- card
-Date: Mon, 24 Sep 2018 12:04:52 +0200
-Message-ID: <20180924100453eucas1p2cc67bf2cae5c0d0a031c7ce8d1117529~XTfCSQ2rd1041310413eucas1p2S@eucas1p2.samsung.com>
-References: <CGME20180921210332epcas3p423aaeeb84ec3d8a44c5a898949f992e8@epcas3p4.samsung.com>
-        <20180921210321.12404-1-krzk@kernel.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 03/20] iommu/tegra: gart: Ignore devices without IOMMU
+ phandle in DT
+Date: Mon, 24 Sep 2018 12:05:25 +0200
+Message-ID: <20180924100525.GE21032@ulmo>
+References: <20180924004153.8232-1-digetx@gmail.com>
+ <20180924004153.8232-4-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Ns7jmDPpOpCD+GE/"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180921210321.12404-1-krzk@kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180924004153.8232-4-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Anand Moon <linux.amoon@gmail.com>
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 2018-09-21 23:03, Krzysztof Kozlowski wrote:
-> Defining card-detect and write-protect GPIO pins in Odroid XU SD Card
-> does not change anything from functional point of view - dw-mmc driver
-> was reading the state from registers.  Adding cd-gpios and wp-gpios
-> properties changes only internal driver behavior to access the pins
-> directly.
->
-> Add them to DTS only to comprehensively describe the hardware.  Minor
-> benefit is that write-protect pin configuration makes sure that it will
-> be properly pulled up to indicate write access.
->
-> This also removes debug messages:
->      dwmmc_exynos 12220000.mmc: No GPIO consumer cd found
->      dwmmc_exynos 12220000.mmc: No GPIO consumer wp found
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->   arch/arm/boot/dts/exynos5410-odroidxu.dts | 12 +++++++++++-
->   1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> index a2046f5f998c..dae360f29a47 100644
-> --- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> +++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> @@ -525,12 +525,14 @@
->   
->   &mmc_2 {
->   	status = "okay";
-> +	wp-gpios = <&gpm5 0 GPIO_ACTIVE_LOW>;
-> +	cd-gpios = <&gpc2 2 GPIO_ACTIVE_LOW>;
->   	card-detect-delay = <200>;
->   	samsung,dw-mshc-ciu-div = <3>;
->   	samsung,dw-mshc-sdr-timing = <0 4>;
->   	samsung,dw-mshc-ddr-timing = <0 2>;
->   	pinctrl-names = "default";
-> -	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4 &sd2_wp>;
+--Ns7jmDPpOpCD+GE/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-IMHO there is no point adding cd-gpios property if CD line is already 
-assigned to this device via respective pin ctrl entry (as special function).
+On Mon, Sep 24, 2018 at 03:41:36AM +0300, Dmitry Osipenko wrote:
+> GART can't handle all devices, hence ignore devices that aren't related
+> to GART. IOMMU phandle must be explicitly assign to devices in the device
+> tree.
 
-Handling of WP line is even more controversial imho. Ideally the drivers 
-or mmc core should check somehow if WP line is available or not and act 
-respectively. WP line is not available on uSD card connector so there is 
-no point describing it.
+I think technically the GART can indeed handle all devices since it is
+just a physical address region that can be used to remap other physical
+addresses. That's not to say that doing so would be a good idea. So the
+commit message here is slightly confusing, but other than that the idea
+is good, so:
 
->   	bus-width = <4>;
->   	cap-sd-highspeed;
->   	vmmc-supply = <&ldo21_reg>;
-> @@ -573,6 +575,14 @@
->   		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
->   		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
->   	};
-> +
-> +	sd2_wp: sd2-wp {
-> +		samsung,pins = "gpm5-0";
-> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> +		/* Pin is floating so pull it up to disable write-protect */
-> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-> +		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
-> +	};
->   };
->   
->   &pwm {
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+--Ns7jmDPpOpCD+GE/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluotuUACgkQ3SOs138+
+s6FALBAAihy4Koa8dQIhpVPATIDDQsyRjFl4jqvkGh5jHGBULZGdXN8uUyzuMj7/
+5aOiJQ/HgbzR+U/eX/rwOLMQmcr6aLYw2TqwcpwcERhOvDyQNRI8U9PtTIAxcuhO
+DFqTwYCX+aZGy2MCfF+P9hl3MKweAXFCqvj+ckBh1GIGkU5lqYM8r1sgfz/mB/xc
+QDcODaJcIYy/umpDO5ADZK+Q9A6KC/ZGY6xdS4BppKlasG8wKGG6nC0PbiSKhpby
+mjeIRFo2XULhp7/+0Nqj2V5gGDUcu+yRe2lKKMzmELeaIJ7LgxkD3uva4mQ4nxFK
+mx/kuCeSZrvxWiV12whALZ0c2znYamDXzlLHb9orgEsV4zrb6OhBAh5LK733AQ/e
++5FpejQ+Tna8pWVzRDTkvx2GAeYS+EdmDXjZT+OLGVk2DvAPfx1ORFKIGaWrisZQ
+B/yASM3fEXX4/fpQaz6WN6XLUtZu4SWRJR5QIF+E5t6jAPhBVHyaD6ItNGb+Vbpm
+KoEHJfg4eIFwlN5r6aSV/UVS9Ik014fxUu5DtPr3U5+7jLcL6N7/rhYuF1fE01yv
+A1B6bjK9NeCwo4qgUiU+xKHR/2VBw9OaL06qYakzz0K6XADzDbyBYsolqU/TdbMG
+/NI2DduseQE3DzaSuvREtm3fQbJN4s/tbdcTW/VGygIvHL+RTU0=
+=Cw72
+-----END PGP SIGNATURE-----
+
+--Ns7jmDPpOpCD+GE/--
