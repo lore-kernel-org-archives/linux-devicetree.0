@@ -1,8 +1,8 @@
 Return-Path: <SRS0=X0Lk=MG=verge.net.au=horms@kernel.org>
-Date: Mon, 24 Sep 2018 11:16:37 +0200
+Date: Mon, 24 Sep 2018 11:12:51 +0200
 From: Simon Horman <horms@verge.net.au>
 Subject: Re: [PATCH 3/4] ARM: dts: r8a77470: Add SDHI2 support
-Message-ID: <20180924091636.uxaiavvcq5pco3h3@verge.net.au>
+Message-ID: <20180924091250.7cjrubmuzyvvpaed@verge.net.au>
 References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1537530911-443-4-git-send-email-fabrizio.castro@bp.renesas.com>
  <20180922184449.GE841@kunai>
