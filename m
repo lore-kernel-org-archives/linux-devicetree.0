@@ -1,64 +1,30 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v3 2/2] iio: light: bh1750: Add device tree support
-Date: Mon, 24 Sep 2018 21:10:08 +0100
-Message-ID: <20180924211008.1ef7895c@archlinux>
-References: <20180922205754.6100-1-decatf@gmail.com>
-        <20180922205754.6100-2-decatf@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V7 2/2] csky: remove irq_mapping from smp.c.
+Date: Mon, 24 Sep 2018 22:23:14 +0200
+Message-ID: <CAK8P3a2WLCZNZ_A1qPQuEQdxEyLKZj2EY2oHzG+_GTGiWEna7w@mail.gmail.com>
+References: <cover.1537276837.git.ren_guo@c-sky.com> <ec95f397f52b8b5d9191b85d0d907a1a43d2e2c1.1537276837.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180922205754.6100-2-decatf@gmail.com>
+In-Reply-To: <ec95f397f52b8b5d9191b85d0d907a1a43d2e2c1.1537276837.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ryang <decatf@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 22 Sep 2018 16:57:54 -0400
-ryang <decatf@gmail.com> wrote:
+On Tue, Sep 18, 2018 at 3:48 PM Guo Ren <ren_guo@c-sky.com> wrote:
+>
+>  - remove irq_mapping from smp.c to irq-driver
+>  - Add set_ipi_irq_mapping api to irq-driver
+>  - update asm/smp.h
+>
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 
-> Add device tree support for ROHM BH1750 series ambient light sensors.
-> 
-> Signed-off-by: ryang <decatf@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+The patch seems ok to me, but please try to improve the changelog comments.
+Generally speaking, use full English sentences instead of an enumerated list,
+and explain what the change is for rather than what you are doing. The text
+you have here can easily be derived from looking at the code changes,
+but I still don't understand what caused you to change it, and why this
+is better than the previous version.
 
-Thanks,
-
-Jonathan
-
-> ---
-> Changes in v2:
->      - Export module device table
-> Changes in v3:
->      - Remove of_match_ptr so that bh1750_of_match is available
->        without CONFIG_OF.
-> 
->  drivers/iio/light/bh1750.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-> index c3a481452b67..28347df78cff 100644
-> --- a/drivers/iio/light/bh1750.c
-> +++ b/drivers/iio/light/bh1750.c
-> @@ -307,9 +307,20 @@ static const struct i2c_device_id bh1750_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, bh1750_id);
->  
-> +static const struct of_device_id bh1750_of_match[] = {
-> +	{ .compatible = "rohm,bh1710", },
-> +	{ .compatible = "rohm,bh1715", },
-> +	{ .compatible = "rohm,bh1721", },
-> +	{ .compatible = "rohm,bh1750", },
-> +	{ .compatible = "rohm,bh1751", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, bh1750_of_match);
-> +
->  static struct i2c_driver bh1750_driver = {
->  	.driver = {
->  		.name = "bh1750",
-> +		.of_match_table = bh1750_of_match,
->  		.pm = &bh1750_pm_ops,
->  	},
->  	.probe = bh1750_probe,
+       Arnd
