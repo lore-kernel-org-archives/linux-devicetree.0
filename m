@@ -1,71 +1,159 @@
-From: Craig Tatlor <ctatlor97@gmail.com>
-Subject: Re: [PATCH V3 0/4] Changes for SDCC5 version
-Date: Mon, 24 Sep 2018 20:48:22 +0100
-Message-ID: <20180924194412.GA27477@arch>
-References: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
+ magnetometer
+Date: Mon, 24 Sep 2018 21:04:03 +0100
+Message-ID: <20180924210403.674f87ab@archlinux>
+References: <20180920131340.6699-1-songqiang1304521@gmail.com>
+        <20180922111409.597126fd@archlinux>
+        <20180923151722.GA17711@Eros>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
+In-Reply-To: <20180923151722.GA17711@Eros>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vijay Viswanath <vviswana@codeaurora.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-What socs have you tested this on? 
-On sdm660 it seems to crash device
-when writing pwr ctl.
+On Sun, 23 Sep 2018 23:17:22 +0800
+Song Qiang <songqiang1304521@gmail.com> wrote:
 
-On Tue, Jun 19, 2018 at 11:09:17AM +0530, Vijay Viswanath wrote:
-> With SDCC5, the MCI register space got removed and the offset/order of
-> several registers have changed. Based on SDCC version used and the register,
-> we need to pick the base address and offset.
+> On Sat, Sep 22, 2018 at 11:14:09AM +0100, Jonathan Cameron wrote:
+> > On Thu, 20 Sep 2018 21:13:40 +0800
+> > Song Qiang <songqiang1304521@gmail.com> wrote:
+> >   
 > 
-> Depends on patch series: "[PATCH V5 0/2] mmc: sdhci-msm: Configuring IO_PAD support for sdhci-msm"
+> ...
 > 
-> Changes since RFC:
-> 	Dropped voltage regulator changes in sdhci-msm
-> 	Split the "Register changes for sdcc V5" patch
-> 	Instead of checking mci removal for deciding which base addr to use,
-> 	new function pointers are defined for the 2 variants of sdcc: 
-> 		1) MCI present
-> 		2) V5 (mci removed)
-> 	Instead of string comparing with the compatible string from DT file,
-> 	the sdhci_msm_probe will now pick the data associated with the
-> 	compatible entry and use it to load variant specific address offsets
-> 	and msm variant specific read/write ops.
+> > > +const struct regmap_access_table rm3100_volatile_table = {
+> > > +		.yes_ranges = rm3100_volatile_ranges,
+> > > +		.n_yes_ranges = ARRAY_SIZE(rm3100_volatile_ranges),
+> > > +};
+> > > +
+> > > +static irqreturn_t rm3100_measurement_irq_handler(int irq, void *d)  
+> > 
+> > Silly question: Does the chip have two interrupt lines?  (if so they
+> > should be in the binding). If not, then this is the irq handler
+> > for everything so why have the measurement in it's name?
+> >   
 > 
-> Changes since V1:
-> 	Removed unused msm_reab & msm_writeb APIs
-> 	Changed certain register addresses from uppercase to lowercase hex
-> 	letters
-> 	Removed extra lines and spaces
-> 	Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
-> 	one for Documentation and other for the driver changes.
+> Hi Jonathan
+Hi Song.
+
 > 
-> Changes since V2:
-> 	Used lower case for macro function defenitions
-> 	Removed unused function pointers for msm_readb & msm_writeb
+> Ah, always some other things need to care, I didn't put enough focus on
+> this naming and thought it looks like ok. So I should throw these
+> unnecessary information in names away!
 > 
+> > > +{
+> > > +	struct rm3100_data *data = d;
+> > > +
+> > > +	complete(&data->measuring_done);
+> > > +
+> > > +	return IRQ_HANDLED;
+> > > +}  
 > 
-> Sayali Lokhande (3):
->   mmc: sdhci-msm: Define new Register address map
->   Documentation: sdhci-msm: Add new compatible string for SDCC v5
->   mmc: host: Register changes for sdcc V5
+> ... 
 > 
-> Vijay Viswanath (1):
->   mmc: sdhci-msm: Add msm version specific ops and data structures
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	/* 3sec more wait time. */
+> > > +	ret = regmap_read(data->regmap, RM_REG_TMRC, &tmp);
+> > > +	data->conversion_time = rm3100_samp_rates[tmp-RM_TMRC_OFFSET][2] + 3000;
+> > > +
+> > > +	/* Starting all channels' conversion. */
+> > > +	ret = regmap_write(regmap, RM_REG_CMM,
+> > > +		RM_CMM_PMX | RM_CMM_PMY | RM_CMM_PMZ | RM_CMM_START);
+> > > +	if (ret < 0)
+> > > +		return ret;
+> > > +
+> > > +	return devm_iio_device_register(dev, indio_dev);  
+> > Nope.  Can't do this without having a race condition.   You need
+> > to ensure the userspace and in kernel interfaces are removed 'before'.
+> > you do that RM_REG_CMM write in remove.
+> > 
+> > One option is to use devm_add_action to add a custom unwind function
+> > to the automatic handling. The other is to not use devm for everything 
+> > after the write above and do the device_unregister manually.
+> >   
 > 
->  .../devicetree/bindings/mmc/sdhci-msm.txt          |   7 +-
->  drivers/mmc/host/sdhci-msm.c                       | 511 ++++++++++++++++-----
->  2 files changed, 391 insertions(+), 127 deletions(-)
+> I've already handled some of those problems, and most of them are not a 
+> big deal, except this one and the locking problems, about how should I 
+> deal with locks properly. I'm already reading the lockdep conventions and
+> some articles about it.
+> Autobuilder are complaining about my locks, seems like a mess it is!
+
+I suspect it's mostly about error paths with no unlocks in them.
+At least to my eye there isn't any complex locking needed in here.
+
 > 
-> -- 
->  Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > > +}
+> > > +EXPORT_SYMBOL(rm3100_common_probe);
+> > > +
+> > > +int rm3100_common_remove(struct device *dev)
+> > > +{
+> > > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > > +	struct rm3100_data *data = iio_priv(indio_dev);
+> > > +	struct regmap *regmap = data->regmap;
+> > > +
+> > > +	regmap_write(regmap, RM_REG_CMM, 0x00);
+> > > +
+> > > +	return 0;  
+> > No real point in returning int if you are always going to put 0 in
+> > in it.  Should probably check the regmap_write though and output
+> > a log message if it fails (as no other way of telling).
+> >   
+> > > +}
+> > > +EXPORT_SYMBOL(rm3100_common_remove);
+> > > +  
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ...
+> 
+> > > +struct rm3100_data {
+> > > +	struct device *dev;
+> > > +	struct regmap *regmap;
+> > > +	struct completion measuring_done;
+> > > +	bool use_interrupt;
+> > > +
+> > > +	int conversion_time;
+> > > +
+> > > +	/* To protect consistency of every measurement and sampling  
+> > 
+> > /*
+> >  * To protect
+> >  */
+> > (common format to most of the kernel other than those 'crazy' :)
+> > people in net and a few other corners.
+> >   
+> 
+> Actually, I've been wondering why the perl scripts didn't find this out,
+> and not only this one, many other problems like too many indents, 
+> parameters in open brackets are not aligned can be detected.
+> I don't know perl, but this has drawn my attention. Is there any
+> particular reason these problems still can not be detected? or I think
+> we can work some patch out! Make reviewing code like mine easier!
+
+Unfortunately there are enough corners of the kernel with different
+formats, and legacy code that predates there being any conventions at
+all, that checkpatch tends to be 'relaxed' on this stuff these days.
+
+> 
+> yours,
+> Song Qiang
+> 
+> > > +	 * frequency change operations.
+> > > +	 */
+> > > +	struct mutex lock;
+> > > +};
+> > > +
+> > > +extern const struct regmap_access_table rm3100_readable_table;
+> > > +extern const struct regmap_access_table rm3100_writable_table;
+> > > +extern const struct regmap_access_table rm3100_volatile_table;
+> > > +
+> > > +int rm3100_common_probe(struct device *dev, struct regmap *regmap, int irq);
+> > > +int rm3100_common_remove(struct device *dev);
+> > > +
+> > > +#endif /* RM3100_CORE_H */  
+> >   
