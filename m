@@ -1,44 +1,68 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH] ARM: dts: omap3-gta04: add pulldown/up settings for twl4030 gpio
-Date: Mon, 24 Sep 2018 19:29:57 +0200
-Message-ID: <20180924172957.20366-1-andreas@kemnade.info>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] firmware: qcom: scm: Add sdm660 soc compatible
+Date: Mon, 24 Sep 2018 10:43:41 -0700
+Message-ID: <20180924174341.GN1367@tuxbook-pro>
+References: <20180811162453.10930-1-ctatlor97@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180811162453.10930-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
-Cc: Andreas Kemnade <andreas@kemnade.info>
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sricharan R <sricharan@codeaurora.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pullup and down settings were missing, so add them to avoid
-floating pins and make headset detection working.
+On Sat 11 Aug 09:24 PDT 2018, Craig Tatlor wrote:
 
-Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
----
- arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> Add the compatible for SDM660.
+> This does not need clocks to do scm calls
+> 
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
-index 09e45e7ad4bc..6bcb459c1b20 100644
---- a/arch/arm/boot/dts/omap3-gta04.dtsi
-+++ b/arch/arm/boot/dts/omap3-gta04.dtsi
-@@ -657,6 +657,19 @@
- 	status = "disabled";
- };
- 
-+#define BIT(x) (1 << (x))
-+&twl_gpio {
-+	/* pullups: BIT(2) */
-+	ti,pullups = <BIT(2)>;
-+	/*
-+	 * pulldowns:
-+	 * BIT(0),  BIT(1), BIT(6), BIT(7), BIT(8), BIT(13)
-+	 * BIT(15), BIT(16), BIT(17)
-+	 */
-+	ti,pulldowns = <(BIT(0) | BIT(1) | BIT(6) | BIT(7) | BIT(8) |
-+			 BIT(13) | BIT(15) | BIT(16) | BIT(17))>;
-+};
-+
- &twl_keypad {
- 	status = "disabled";
- };
--- 
-2.11.0
+Andy picked my clock-rework patch for the scm driver, so we can now do:
+
+	compatible = "qcom,scm-sdm660", "qcom,scm";
+
+and get the desired result.
+
+
+Please respin your patch without the code update.
+
+Regards,
+Bjorn
+
+> ---
+>  Documentation/devicetree/bindings/firmware/qcom,scm.txt | 1 +
+>  drivers/firmware/qcom_scm.c                             | 3 +++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/qcom,scm.txt b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> index fcf6979c0b6d..499608fcc864 100644
+> --- a/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> +++ b/Documentation/devicetree/bindings/firmware/qcom,scm.txt
+> @@ -11,6 +11,7 @@ Required properties:
+>   * "qcom,scm-msm8660" for MSM8660 platforms
+>   * "qcom,scm-msm8690" for MSM8690 platforms
+>   * "qcom,scm-msm8996" for MSM8996 platforms
+> + * "qcom,scm-sdm660" for SDM660 platforms
+>   * "qcom,scm-ipq4019" for IPQ4019 platforms
+>   * "qcom,scm" for later processors (MSM8916, APQ8084, MSM8974, etc)
+>  - clocks: One to three clocks may be required based on compatible.
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index e778af766fae..ee113ceb5d41 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -603,6 +603,9 @@ static const struct of_device_id qcom_scm_dt_match[] = {
+>  	{ .compatible = "qcom,scm-msm8996",
+>  	  .data = NULL, /* no clocks */
+>  	},
+> +	{ .compatible = "qcom,scm-sdm660",
+> +	  .data = NULL, /* no clocks */
+> +	},
+>  	{ .compatible = "qcom,scm-ipq4019",
+>  	  .data = NULL, /* no clocks */
+>  	},
+> -- 
+> 2.18.0
+> 
