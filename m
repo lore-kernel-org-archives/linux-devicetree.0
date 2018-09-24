@@ -1,36 +1,128 @@
-Return-Path: <SRS0=ucpJ=LP=gmail.com=semtax33@kernel.org>
-From: sim manseop <semtax33@gmail.com>
-Subject: [PATCH v2] dt-bindings: i2c: fix typo in brcm,bcm2835-i2c.txt
-Date: Sat,  1 Sep 2018 15:23:00 +0000
-Message-Id: <20180901152300.1895-1-semtax33@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: robh@kernel.org, sim manseop <semtax33@gmail.com>
+Return-Path: <robherring2@gmail.com>
+Message-ID: <5baa1b01.1c69fb81.f0d8f.30c6@mx.google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
+ magnetometer
+References: <20180920131340.6699-1-songqiang1304521@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180920131340.6699-1-songqiang1304521@gmail.com>
+Date: Mon, 24 Sep 2018 15:23:52 -0700
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo in brcm,bcm2835-i2c.txt between dts unit address and register start address mismatch.
+On Thu, Sep 20, 2018 at 09:13:40PM +0800, Song Qiang wrote:
+> PNI RM3100 magnetometer is a high resolution, large signal immunity
+> magnetometer, composed of 3 single sensors and a processing chip.
+> PNI is currently not in the vendors list, so this is also adding it.
+> 
+> Following functions are available:
+>  - Single-shot measurement from
+>    /sys/bus/iio/devices/iio:deviceX/in_magn_{axis}_raw
+>  - Triggerd buffer measurement.
+>  - Both i2c and spi interface are supported.
+>  - Both interrupt and polling measurement is supported, depands on if
+>    the 'interrupts' in DT is declared.
+> 
+> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+> ---
+>  .../bindings/iio/magnetometer/pni,rm3100.txt  |  57 +++
+>  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
 
-Signed-off-by: manseop sim <semtax33@gmail.com>
+Please split bindings to separate patch.
 
----
-Changes in v2:
-- modify subject
-- modify commit message
----
- Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-index e9de3756752b..ec78f84893ec 100644
---- a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
-@@ -11,7 +11,7 @@ Recommended properties:
- 
- Example:
- 
--i2c@20205000 {
-+i2c@7e205000 {
- 	compatible = "brcm,bcm2835-i2c";
- 	reg = <0x7e205000 0x1000>;
- 	interrupts = <2 21>;
--- 
-2.17.1
+>  MAINTAINERS                                   |  10 +
+>  drivers/iio/magnetometer/Kconfig              |  29 ++
+>  drivers/iio/magnetometer/Makefile             |   4 +
+>  drivers/iio/magnetometer/rm3100-core.c        | 399 ++++++++++++++++++
+>  drivers/iio/magnetometer/rm3100-i2c.c         |  66 +++
+>  drivers/iio/magnetometer/rm3100-spi.c         |  72 ++++
+>  drivers/iio/magnetometer/rm3100.h             |  90 ++++
+>  9 files changed, 728 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+>  create mode 100644 drivers/iio/magnetometer/rm3100-core.c
+>  create mode 100644 drivers/iio/magnetometer/rm3100-i2c.c
+>  create mode 100644 drivers/iio/magnetometer/rm3100-spi.c
+>  create mode 100644 drivers/iio/magnetometer/rm3100.h
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+> new file mode 100644
+> index 000000000000..d0d2063e943f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+> @@ -0,0 +1,57 @@
+> +* PNI RM3100 9-axis magnetometer sensor
+> +
+> +I2C Bus:
+> +
+> +Required properties:
+> +
+> +- compatible : should be "pni,rm3100-i2c"
+> +- reg : the I2C address of the magnetometer
+> +
+> +Optional properties:
+> +
+> +- interrupts: data ready (DRDY) from the chip.
+> +  The interrupts can be triggered on rising edges.
+> +
+> +	Refer to interrupt-controller/interrupts.txt for generic
+> +	interrupt client node bindings.
+> +
+> +- pinctrl-*: pinctrl setup for DRDY line.
+> +
+> +Example:
+> +
+> +rm3100: rm3100@20 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&rm3100_pins>;
+> +
+> +	compatible = "pni,rm3100-i2c";
+> +	reg = <0x20>;
+> +	interrupt-parent = <&gpio0>;
+> +	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+> +};
+> +
+> +SPI Bus:
+> +
+> +Required properties:
+> +
+> +- compatible : should be "pni,rm3100-spi"
+> +- reg : address of sensor, usually 0 or 1.
+> +
+> +Optional properties:
+> +
+> +- interrupts: data ready (DRDY) from the chip.
+> +  The interrupts can be triggered on rising edges.
+> +
+> +	Refer to interrupt-controller/interrupts.txt for generic
+> +	interrupt client node bindings.
+> +
+> +- pinctrl-*: pinctrl setup for DRDY line, depands on archtechture.
+> +
+> +Example:
+> +
+> +rm3100: rm3100@0{
+> +	compatible = "pni,rm3100-spi";
+> +	reg = <0>;
+> +
+> +	interrupt-parent = <&gpio0>;
+> +	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 41f0b97eb933..5bf3395fe9ae 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -288,6 +288,7 @@ pine64	Pine64
+>  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+>  plathome	Plat'Home Co., Ltd.
+>  plda	PLDA
+> +pni     PNI
+
+PNI doesn't stand for something?
+
+>  portwell	Portwell Inc.
+>  poslab	Poslab Technology Co., Ltd.
+>  powervr	PowerVR (deprecated, use img)
