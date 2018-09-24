@@ -1,45 +1,119 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Mon, 24 Sep 2018 10:47:09 +0200
-Message-ID: <CAK8P3a0AVPL3nYF4HTM_jD8-vFn_ScSTnLMUku9vRdbwZQeD4g@mail.gmail.com>
-References: <20180914143719.GA27689@guoren-Inspiron-7460> <mhng-9d591179-01d4-4a84-a490-8a09d4f3a3d1@palmer-si-x1c4>
- <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com> <CAMuHMdVV0QWXCkkL8dq4UMLaANGMHu7ePhQ83FiFDtynpJzbLA@mail.gmail.com>
+From: Yong Wu <yong.wu@mediatek.com>
+Subject: [PATCH v2 00/14] MT8183 IOMMU SUPPORT
+Date: Mon, 24 Sep 2018 16:58:40 +0800
+Message-ID: <1537779534-23575-1-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVV0QWXCkkL8dq4UMLaANGMHu7ePhQ83FiFDtynpJzbLA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Palmer Dabbelt <palmer@sifive.com>, Guo Ren <ren_guo@c-sky.com>, linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, Daniel Kurtz <djkurtz@google.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, yong.wu@mediatek.com, youlin.pei@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2018 at 9:21 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Arnd,
->
-> On Fri, Sep 21, 2018 at 7:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Thu, Sep 20, 2018 at 10:52 AM Palmer Dabbelt <palmer@sifive.com> wrote:
-> > > On Fri, 14 Sep 2018 07:37:20 PDT (-0700), ren_guo@c-sky.com wrote:
-> > > > On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
-> > > >> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> > My plan was to get that all into 4.20, and then have a conversation about the
-> > actual syscall table changes in 4.21. If we need it for both csky and rv32,
-> > we might just change the generic syscall table that way in 4.21 without
-> > changing all the other ones along with them. I don't want to drag things out
-> > over too many merge windows though, and my plan was to do all architectures
-> > together to simplify the version checks in the libc code to only have to check
-> > for a single version.
->
-> What happens with the version checks if it is backported to stable?
+This patchset mainly adds support for mt8183 IOMMU and SMI.
 
-They end up as dead code.
+mt8183 has only one M4U like mt8173 and is also MTK IOMMU gen2 which
+uses ARM Short-Descriptor translation table format.
 
-The way these version checks are done in glibc, we always try the new
-interface first before falling back to the old version, but don't check the
-kernel version at runtime.
+The mt8183 M4U-SMI HW diagram is as below:
 
-The compile-time check optimizes out the fallback if glibc is built for
-a recent-enough minimum kernel version that is guaranteed to have
-the new version.
+                          EMI
+                           |
+                          M4U
+                           |
+                       ----------
+                       |        |
+                   gals0-rx   gals1-rx
+                       |        |
+                       |        |
+                   gals0-tx   gals1-tx
+                       |        |
+                      ------------
+                       SMI Common
+                      ------------
+                           |
+  +-----+-----+--------+-----+-----+-------+-------+
+  |     |     |        |     |     |       |       |
+  |     |  gals-rx  gals-rx  |   gals-rx gals-rx gals-rx
+  |     |     |        |     |     |       |       |
+  |     |     |        |     |     |       |       |
+  |     |  gals-tx  gals-tx  |   gals-tx gals-tx gals-tx
+  |     |     |        |     |     |       |       |
+larb0 larb1  IPU0    IPU1  larb4  larb5  larb6    CCU
+disp  vdec   img     cam    venc   img    cam
 
-      Arnd
+All the connections are HW fixed, SW can NOT adjust it.
+
+Compared with mt8173, we add a GALS(Global Async Local Sync) module
+between SMI-common and M4U, and additional GALS between larb2/3/5/6
+and SMI-common. GALS can help synchronize for the modules in different
+clock frequency, it can be seen as a "asynchronous fifo".
+
+GALS can only help transfer the command/data while it doesn't have
+the configuring register, thus it has the special "smi" clock and it
+doesn't have the "apb" clock. From the diagram above, we add "gals0"
+and "gals1" clocks for smi-common and add a "gals" clock for smi-larb.
+
+>From the diagram above, IPU0/IPU1(Image Processor Unit) and CCU(Camera
+Control Unit) is connected with smi-common directly, we can take them
+as "larb2", "larb3" and "larb7", and their register spaces are
+different with the normal larb.
+
+This patchset is based on v4.19-rc1.
+the patch 1/2/3/4/5/6 add the iommu/smi support for mt8183;
+the patch 7/8/9/10 add mmu1 support;
+the last patches contain some minor changes:
+   -patch 11 fix a issue.
+   -patch 12 improve the code flow(add shutdown).
+   -patch 13 cleanup some smi codes(delete need_larbid).
+   -patch 14 switch to SPDX license.
+this patchset don't contain the dtsi part since it need depend on the
+ccf and power-domain nodes which has not been accepted.
+
+change notes:
+v2: 1) Fix typo in the commit message of dt-binding.
+    2) Change larb2/larb3 to the special larbs.
+    3) Refactor the larb-id remapped array(larbid_remapped), then we
+    don't need add the new function(mtk_iommu_get_larbid).
+    4) Add a new patch for v7s two helpers(paddr_to_iopte and
+    iopte_to_paddr).
+    5) Change some comment for MTK 4GB mode.
+
+v1:
+http://lists.infradead.org/pipermail/linux-mediatek/2018-September/014881.html
+
+Yong Wu (14):
+  dt-bindings: mediatek: Add binding for mt8183 IOMMU and SMI
+  iommu/mediatek: Use a struct as the platform data
+  memory: mtk-smi: Use a general config_port interface
+  iommu/io-pgtable-arm-v7s: Add paddr_to_iopte and iopte_to_paddr
+    helpers
+  iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode
+  iommu/mediatek: Add mt8183 IOMMU support
+  iommu/mediatek: Add mmu1 support
+  memory: mtk-smi: Invoke pm runtime_callback to enable clocks
+  memory: mtk-smi: Use a struct for the platform data for smi-common
+  memory: mtk-smi: Add bus_sel for mt8183
+  iommu/mediatek: Add VLD_PA_RANGE register backup when suspend
+  iommu/mediatek: Add shutdown callback
+  memory: mtk-smi: Get rid of need_larbid
+  iommu/mediatek: Switch to SPDX license identifier
+
+ .../devicetree/bindings/iommu/mediatek,iommu.txt   |  15 +-
+ .../memory-controllers/mediatek,smi-common.txt     |  11 +-
+ .../memory-controllers/mediatek,smi-larb.txt       |   3 +
+ drivers/iommu/io-pgtable-arm-v7s.c                 |  75 ++++--
+ drivers/iommu/io-pgtable.h                         |   7 +-
+ drivers/iommu/mtk_iommu.c                          | 133 ++++++----
+ drivers/iommu/mtk_iommu.h                          |  23 +-
+ drivers/iommu/mtk_iommu_v1.c                       |  10 +-
+ drivers/memory/mtk-smi.c                           | 267 ++++++++++++++-------
+ include/dt-bindings/memory/mt2701-larb-port.h      |  10 +-
+ include/dt-bindings/memory/mt8173-larb-port.h      |  10 +-
+ include/dt-bindings/memory/mt8183-larb-port.h      | 130 ++++++++++
+ include/soc/mediatek/smi.h                         |  10 +-
+ 13 files changed, 492 insertions(+), 212 deletions(-)
+ create mode 100644 include/dt-bindings/memory/mt8183-larb-port.h
+
+-- 
+1.9.1
