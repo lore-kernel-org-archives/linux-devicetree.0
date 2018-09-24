@@ -1,83 +1,144 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] dt-bindings: firmware: coreboot: document board
- variant properties
-Date: Mon, 24 Sep 2018 16:11:31 +0200
-Message-ID: <1660300.IG1gbB27SJ@phil>
-References: <20180822120214.11848-1-heiko@sntech.de>
- <20180822120214.11848-2-heiko@sntech.de> <20180831121836.GA23441@bogus>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 03/27] mmc: mmci: convert dma_setup callback to return
+ an int
+Date: Mon, 24 Sep 2018 16:28:07 +0200
+Message-ID: <CAPDyKFqnN0gg9WsbNPQcodqUXJmFEzMM+ST36s6oEZ2OPoONug@mail.gmail.com>
+References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com> <1537523181-14578-4-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180831121836.GA23441@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537523181-14578-4-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 21 September 2018 at 11:45, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch converts dma_setup callback to return an integer
+> This patch is needed to prepare sdmmc variant with internal dma
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c          | 14 ++++++++++----
+>  drivers/mmc/host/mmci.h          |  2 +-
+>  drivers/mmc/host/mmci_qcom_dml.c |  6 ++++--
+>  3 files changed, 15 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index cbd67bc..2f845f3 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -415,7 +415,7 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
+>   * no custom DMA interfaces are supported.
+>   */
+>  #ifdef CONFIG_DMA_ENGINE
+> -static void mmci_dma_setup(struct mmci_host *host)
+> +static int mmci_dma_setup(struct mmci_host *host)
+>  {
+>         const char *rxname, *txname;
+>
+> @@ -466,7 +466,9 @@ static void mmci_dma_setup(struct mmci_host *host)
+>         }
+>
+>         if (host->ops && host->ops->dma_setup)
+> -               host->ops->dma_setup(host);
+> +               return host->ops->dma_setup(host);
+> +
 
-Am Freitag, 31. August 2018, 14:18:36 CEST schrieb Rob Herring:
-> On Wed, Aug 22, 2018 at 02:02:13PM +0200, Heiko Stuebner wrote:
-> > Since at least 2014 coreboot exports board specific variant ids for
-> > board-revision, used ram-modules and component variants on the same board
-> > into the loaded devicetree.
-> > 
-> > These are set on all devicetree-based Chromebooks since then, so at
-> > least we can make the effort to document these long-used properties.
-> 
-> Long used, but never reviewed, so that doesn't really matter.
-> 
-> > 
-> > A case where these are used is for example to determine the touchscreen
-> > type that is only identifyable via the sku-id when updating its firmware
-> > on the Scarlet tablet from the Gru ChromeOS family.
-> > 
-> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/firmware/coreboot.txt | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/firmware/coreboot.txt b/Documentation/devicetree/bindings/firmware/coreboot.txt
-> > index 4c955703cea8..cfc7623e2577 100644
-> > --- a/Documentation/devicetree/bindings/firmware/coreboot.txt
-> > +++ b/Documentation/devicetree/bindings/firmware/coreboot.txt
-> > @@ -21,6 +21,12 @@ Required properties:
-> >  	0xc0389481 that resides in the topmost 8 bytes of the area.
-> >  	See coreboot's src/include/imd.h for details.
-> >  
-> > +Board variant properties determined via strapping measures (like gpios):
-> > + - board-id: board-specific id indicating the board-revision
-> > + - ram-code: board-specific id identifying the used ram-module
-> > + - sku-id: board-specific id indicating a variant (using different
-> > +           display panels for example)
-> 
-> The appear to be consumed by coreboot, but the purpose of the /firmware 
-> nodes has describing firmware interfaces provided by the platform. 
-> 
-> Not saying we can't put things to configure the firmware there, but it 
-> would be a departure and something we should consider. These properties 
-> aren't really coreboot specific and probably belong at the root node. 
-> Though I think we already discussed a 'board-id' property for QCom (and 
-> ended up with a compatible string approach instead.
+Looks like you need to implement a error handling, instead of just
+returning the error code.
 
-These are not for configuring the firmware. Coreboot is reading the values
-from hardware-strappings, like special gpios and inserts the properties into
-the devicetree for the kernel or userspace to read back if needed.
+> +       return 0;
+>  }
+>
+>  /*
+> @@ -741,8 +743,10 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>  static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>  {
+>  }
+> -static inline void mmci_dma_setup(struct mmci_host *host)
+> +
+> +static inline int mmci_dma_setup(struct mmci_host *host)
+>  {
+> +       return 0;
+>  }
+>
+>  static inline void mmci_dma_release(struct mmci_host *host)
+> @@ -1796,7 +1800,9 @@ static int mmci_probe(struct amba_device *dev,
+>                  amba_rev(dev), (unsigned long long)dev->res.start,
+>                  dev->irq[0], dev->irq[1]);
+>
+> -       mmci_dma_setup(host);
+> +       ret = mmci_dma_setup(host);
+> +       if (ret)
+> +               goto clk_disable;
+>
+>         pm_runtime_set_autosuspend_delay(&dev->dev, 50);
+>         pm_runtime_use_autosuspend(&dev->dev);
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 21aaf9a..06299ac 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -273,7 +273,7 @@ struct variant_data {
+>
+>  /* mmci variant callbacks */
+>  struct mmci_host_ops {
+> -       void (*dma_setup)(struct mmci_host *host);
+> +       int (*dma_setup)(struct mmci_host *host);
+>  };
+>
+>  struct mmci_host_next {
+> diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
+> index be3fab5..1bb59cf 100644
+> --- a/drivers/mmc/host/mmci_qcom_dml.c
+> +++ b/drivers/mmc/host/mmci_qcom_dml.c
+> @@ -119,7 +119,7 @@ static int of_get_dml_pipe_index(struct device_node *np, const char *name)
+>  }
+>
+>  /* Initialize the dml hardware connected to SD Card controller */
+> -static void qcom_dma_setup(struct mmci_host *host)
+> +static int qcom_dma_setup(struct mmci_host *host)
+>  {
+>         u32 config;
+>         void __iomem *base;
+> @@ -131,7 +131,7 @@ static void qcom_dma_setup(struct mmci_host *host)
+>
+>         if (producer_id < 0 || consumer_id < 0) {
+>                 host->variant->qcom_dml = false;
 
-So coreboot loads a devicetree without them from the boot-partition and
-amends that devicetree we these properties.
+It seems like the existing code is an attempt to fallback to use pio
+mode. However, I doubt it works as is.
 
-As indicated above, devices since 2014 do that, so I thought it might make
-sense to document that behaviour.
+> -               return;
+> +               return -EINVAL;
 
+My point is, if you return an error code here, it means that the error
+code becomes propagated and ->probe() will fail.
 
-Heiko
+Ideally, we should be able fall back to pio mode when dma doesn't
+work. I have looped in Srinivas who implemented the qcom dml support,
+let's see if he can explains the intent with the code.
+
+I also volunteer to help out running some tests on the 410c platform,
+however allow me a day or two to do that.
+
+>         }
+>
+>         base = host->base + DML_OFFSET;
+> @@ -175,6 +175,8 @@ static void qcom_dma_setup(struct mmci_host *host)
+>
+>         /* Make sure dml initialization is finished */
+>         mb();
+> +
+> +       return 0;
+>  }
+>
+>  static struct mmci_host_ops qcom_variant_ops = {
+> --
+> 2.7.4
+>
+
+Kind regards
+Uffe
