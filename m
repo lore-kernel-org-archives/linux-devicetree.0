@@ -1,16 +1,16 @@
 From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: [PATCH AUTOSEL 4.14 24/36] net: ethernet: cpsw-phy-sel: prefer
+Subject: [PATCH AUTOSEL 4.18 52/76] net: ethernet: cpsw-phy-sel: prefer
  phandle for phy sel
-Date: Mon, 24 Sep 2018 14:49:07 +0000
-Message-ID: <20180924144851.164533-24-alexander.levin@microsoft.com>
-References: <20180924144851.164533-1-alexander.levin@microsoft.com>
+Date: Mon, 24 Sep 2018 14:48:33 +0000
+Message-ID: <20180924144751.164410-51-alexander.levin@microsoft.com>
+References: <20180924144751.164410-1-alexander.levin@microsoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924144851.164533-1-alexander.levin@microsoft.com>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20180924144751.164410-1-alexander.levin@microsoft.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: stable-owner@vger.kernel.org
 To: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: Tony Lindgren <tony@atomide.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Grygorii Strashko <grygorii.strashko@ti.com>, Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, "David S . Miller" <davem@davemloft.net>, Sasha Levin <Alexander.Levin@microsoft.com>
 List-Id: devicetree@vger.kernel.org
