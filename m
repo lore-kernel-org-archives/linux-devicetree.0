@@ -1,197 +1,187 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v5 07/14] irqchip/irq-mvebu-sei: add new driver for
- Marvell SEI
-Date: Mon, 24 Sep 2018 18:01:33 +0200
-Message-ID: <20180924180133.2ea93762@xps13>
-References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
- <20180830073535.10710-8-miquel.raynal@bootlin.com>
- <86pnx7x5pz.wl-marc.zyngier@arm.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V2 03/27] mmc: mmci: convert dma_setup callback to return
+ an int
+Date: Mon, 24 Sep 2018 18:12:44 +0200
+Message-ID: <15c31e3b-646a-f5db-b45a-3e2f556d9fd5@st.com>
+References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com>
+ <1537523181-14578-4-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFqnN0gg9WsbNPQcodqUXJmFEzMM+ST36s6oEZ2OPoONug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <86pnx7x5pz.wl-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFqnN0gg9WsbNPQcodqUXJmFEzMM+ST36s6oEZ2OPoONug@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCj4gPiArCj4gPiArc3RhdGljIGludCBtdmVidV9zZWlfY3BfZG9tYWluX2FsbG9j
-KHN0cnVjdCBtdmVidV9zZWkgKnNlaSkKPiA+ICt7Cj4gPiArCWludCBod2lycTsKPiA+ICsKPiA+
-ICsJbXV0ZXhfbG9jaygmc2VpLT5jcF9tc2lfbG9jayk7Cj4gPiArCWh3aXJxID0gZmluZF9maXJz
-dF96ZXJvX2JpdChzZWktPmNwX21zaV9iaXRtYXAsCj4gPiArCQkJCSAgICBzZWktPmNhcHMtPmNw
-X3JhbmdlLnNpemUpOwo+ID4gKwlzZXRfYml0KGh3aXJxLCBzZWktPmNwX21zaV9iaXRtYXApOwo+
-ID4gKwltdXRleF91bmxvY2soJnNlaS0+Y3BfbXNpX2xvY2spOwo+ID4gKwo+ID4gKwlyZXR1cm4g
-aHdpcnE7Cj4gPiArfQo+ID4gKwo+ID4gK3N0YXRpYyB2b2lkIG12ZWJ1X3NlaV9jcF9kb21haW5f
-ZnJlZShzdHJ1Y3QgbXZlYnVfc2VpICpzZWksIGludCBod2lycSkKPiA+ICt7Cj4gPiArCW11dGV4
-X2xvY2soJnNlaS0+Y3BfbXNpX2xvY2spOwo+ID4gKwljbGVhcl9iaXQoaHdpcnEsIHNlaS0+Y3Bf
-bXNpX2JpdG1hcCk7Cj4gPiArCW11dGV4X3VubG9jaygmc2VpLT5jcF9tc2lfbG9jayk7Cj4gPiAr
-fQo+ID4gKwo+ID4gK3N0YXRpYyBpbnQgbXZlYnVfc2VpX2lycV9kb21haW5fYWxsb2Moc3RydWN0
-IGlycV9kb21haW4gKmRvbWFpbiwKPiA+ICsJCQkJICAgICAgdW5zaWduZWQgaW50IHZpcnEsIHVu
-c2lnbmVkIGludCBucl9pcnFzLAo+ID4gKwkJCQkgICAgICB2b2lkICphcmdzKQo+ID4gK3sKPiA+
-ICsJc3RydWN0IG12ZWJ1X3NlaSAqc2VpID0gZG9tYWluLT5ob3N0X2RhdGE7Cj4gPiArCXN0cnVj
-dCBpcnFfZndzcGVjICpmd3NwZWMgPSBhcmdzOwo+ID4gKwlpbnQgaHdpcnE7Cj4gPiArCWludCBy
-ZXQ7Cj4gPiArCj4gPiArCS8qIFRoZSBzb2Z0d2FyZSBvbmx5IHN1cHBvcnRzIHNpbmdsZSBhbGxv
-Y2F0aW9ucyBmb3Igbm93ICovCj4gPiArCWlmIChucl9pcnFzICE9IDEpCj4gPiArCQlyZXR1cm4g
-LUVOT1RTVVBQOwo+ID4gKwo+ID4gKwlod2lycSA9IG12ZWJ1X3NlaV9jcF9kb21haW5fYWxsb2Mo
-c2VpKTsKPiA+ICsJaWYgKGh3aXJxIDwgMCkKPiA+ICsJCXJldHVybiAtRU5PU1BDOwo+ID4gKwo+
-ID4gKwlmd3NwZWMtPmZ3bm9kZSA9IGRvbWFpbi0+cGFyZW50LT5md25vZGU7Cj4gPiArCWZ3c3Bl
-Yy0+cGFyYW1fY291bnQgPSAzOwo+ID4gKwlmd3NwZWMtPnBhcmFtWzBdID0gR0lDX1NQSTsKPiA+
-ICsJZndzcGVjLT5wYXJhbVsxXSA9IDA7ICAKPiAKPiBPbiBmaXJzdCBhcHByb3hpbWF0aW9uLCB0
-aGlzIGRlc2VydmVzIGEgZ29vZCBjb21tZW50IGFib3V0IDAKPiByZXByZXNlbnRpbmcgSU5USUQg
-MzIgYXQgdGhlIEdJQyBsZXZlbC4gVGhlbiwgYW5vdGhlciBxdWVzdGlvbiBpcyB3aHkKPiB0aGlz
-IGRvZXNuJ3QgY29tZSBmcm9tIERULiBJIGJldCB0aGF0IGluIHRoZSBmdXR1cmUsIHRoaXMgYmxv
-Y2sgd2lsbAo+IGJlIHJldXNlZCBhbmQgeW91J2xsIGZpbmQgbW9yZSB0aGFuIG9uZSBpcyBhIHNp
-bmdsZSBjaGlwLgoKQWJvdXQgdGhlIDAsIHN1cmUsIGlmIHdlIG1haW50YWluIHRoaXMgY29kZSwg
-SSBzaG91bGQgcHJvYmFibHkgZGVyaXZlCnRoZSB2YWx1ZSBmcm9tIERULgoKPiAKPiBCdXQgdGhl
-IHJlYWwgcXVlc3Rpb24gaXMgd2h5IHlvdSBhcmUgY29uc3RhbnRseSBjYWxsaW5nCj4gaXJxX2Fs
-bG9jX2lycXNfcGFyZW50LiBJIHJlbWVtYmVyIGNvbW1lbnRpbmcgYWJvdXQgdGhpcyBpbiBteSBw
-cmV2aW91cwo+IHJvdW5kIG9mIHJldmlldywgYW5kIEkgc3RpbGwgc2VlIHRoaXMuCgpJIHJlYWxs
-eSB0cmllZCB0byByZW1vdmUgaXQgYnV0IEkgY2xlYXJseSBmYWlsZWQuIFdoZW4gdGhlcmUgaXMK
-bm8gaXJxX2FsbG9jX2lycXNfcGFyZW50KCkgY2FsbCBpbiBtdmVidV9zZWlfaXJxX2RvbWFpbl9h
-bGxvYygpIGl0IGxvb2tzCmxpa2Ugc29tZXRoaW5nIGlzIG1pc3NpbmcgYW5kIEkgZ2V0IGEgb29w
-cyBhdCBwcm9iZSB0aW1lLgoKVGhpcyBpcyB0aGUgb29wczoKClsgICAgMy4xMTIxNDhdIFVuYWJs
-ZSB0byBoYW5kbGUga2VybmVsIE5VTEwgcG9pbnRlciBkZXJlZmVyZW5jZSBhdCB2aXJ0dWFsIGFk
-ZHJlc3MgMDAwMDAwMDAwMDAwMDBlOApbICAgIDMuMTIwOTcwXSBNZW0gYWJvcnQgaW5mbzoKWyAg
-ICAzLjEyMzc3NV0gICBFU1IgPSAweDk2MDAwMDA0ClsgICAgMy4xMjY4NDJdICAgRXhjZXB0aW9u
-IGNsYXNzID0gREFCVCAoY3VycmVudCBFTCksIElMID0gMzIgYml0cwpbICAgIDMuMTMyNzg3XSAg
-IFNFVCA9IDAsIEZuViA9IDAKWyAgICAzLjEzNTg1M10gICBFQSA9IDAsIFMxUFRXID0gMApbICAg
-IDMuMTM5MDA2XSBEYXRhIGFib3J0IGluZm86ClsgICAgMy4xNDE4OTddICAgSVNWID0gMCwgSVNT
-ID0gMHgwMDAwMDAwNApbICAgIDMuMTQ1NzQ5XSAgIENNID0gMCwgV25SID0gMApbICAgIDMuMTQ4
-NzI4XSBbMDAwMDAwMDAwMDAwMDBlOF0gdXNlciBhZGRyZXNzIGJ1dCBhY3RpdmVfbW0gaXMgc3dh
-cHBlcgpbICAgIDMuMTU1MTEwXSBJbnRlcm5hbCBlcnJvcjogT29wczogOTYwMDAwMDQgWyMxXSBQ
-UkVFTVBUIFNNUApbICAgIDMuMTYwNzA1XSBNb2R1bGVzIGxpbmtlZCBpbjoKWyAgICAzLjE2Mzc3
-N10gQ1BVOiAwIFBJRDogMzUgQ29tbToga3dvcmtlci8wOjEgTm90IHRhaW50ZWQgNC4xOS4wLXJj
-MS0wMDAyNC1nMWZmNjA5MDkzZWZkLWRpcnR5ICMxOTMxClsgICAgMy4xNzI4NjFdIEhhcmR3YXJl
-IG5hbWU6IE1hcnZlbGwgQXJtYWRhIDcwNDAgREIgYm9hcmQgKERUKQpbICAgIDMuMTc4NTU2XSBX
-b3JrcXVldWU6IGV2ZW50cyBkZWZlcnJlZF9wcm9iZV93b3JrX2Z1bmMKWyAgICAzLjE4MzcxOV0g
-cHN0YXRlOiA2MDAwMDA4NSAoblpDdiBkYUlmIC1QQU4gLVVBTykKWyAgICAzLjE4ODUzNV0gcGMg
-OiBpcnFfc2V0X2lycWNoaXBfc3RhdGUrMHgxNjAvMHgxYTAKWyAgICAzLjE5MzM0OF0gbHIgOiBp
-cnFfc2V0X2lycWNoaXBfc3RhdGUrMHgxNjAvMHgxYTAKWyAgICAzLjE5ODE1OF0gc3AgOiBmZmZm
-MDAwMDA5ZDAzN2YwClsgICAgMy4yMDE0ODZdIHgyOTogZmZmZjAwMDAwOWQwMzdmMCB4Mjg6IGZm
-ZmYwMDAwMDhlNDlkMjAgClsgICAgMy4yMDY4MjRdIHgyNzogZmZmZjAwMDAwOGU0OWNiMCB4MjY6
-IDAwMDAwMDAwMDAwMDAwMDAgClsgICAgMy4yMTIxNjFdIHgyNTogMDAwMDAwMDAwMDAwMDAwMCB4
-MjQ6IGZmZmYwMDAwMDhhZDI1NzAgClsgICAgMy4yMTc0OThdIHgyMzogZmZmZjgwMDBlOGY4MGMw
-MCB4MjI6IGZmZmYwMDAwMDkzZTkwMDAgClsgICAgMy4yMjI4MzVdIHgyMTogMDAwMDAwMDAwMDAw
-MDAzMyB4MjA6IDAwMDAwMDAwMDAwMDAwMDAgClsgICAgMy4yMjgxNzJdIHgxOTogZmZmZjgwMDBl
-OGJkZjMwMCB4MTg6IGZmZmZmZmZmZmZmZmZmZmYgClsgICAgMy4yMzM1MDldIHgxNzogMDAwMDAw
-MDAwMDAwMDAwMCB4MTY6IDAwMDAwMDAwMDAwMDAwMDAgClsgICAgMy4yMzg4NDZdIHgxNTogZmZm
-ZjAwMDAwOTNlOTZjOCB4MTQ6IGZmZmYwMDAwODk1NDM2YmYgClsgICAgMy4yNDQxODJdIHgxMzog
-ZmZmZjAwMDAwOTU0MzZjZCB4MTI6IGZmZmYwMDAwMDk0MDEwYzggClsgICAgMy4yNDk1MTldIHgx
-MTogZmZmZjAwMDAwOTQwMTAwMCB4MTA6IDAwMDAwMDAwMDVmNWUwZmYgClsgICAgMy4yNTQ4NTZd
-IHg5IDogZmZmZjAwMDAwOWQwMzRmMCB4OCA6IDMyNWIyMDY1NzQ2MTc0NzMgClsgICAgMy4yNjAx
-OTJdIHg3IDogNWY3MDY5Njg2MzcxNzI2OSB4NiA6IGZmZmYwMDAwMDg1Y2QyMzggClsgICAgMy4y
-NjU1MjldIHg1IDogMDAwMDAwMDAwMDAwMDAwMCB4NCA6IDAwMDAwMDAwMDAwMDAwMDAgClsgICAg
-My4yNzA4NjZdIHgzIDogZmZmZmZmZmZmZmZmZmZmZiB4MiA6IDMzN2FjYzRiMGQ3NTI2MDAgClsg
-ICAgMy4yNzYyMDJdIHgxIDogMDAwMDAwMDAwMDAwMDAwMCB4MCA6IDAwMDAwMDAwMDAwMDAwMWMg
-ClsgICAgMy4yODE1NDBdIFByb2Nlc3Mga3dvcmtlci8wOjEgKHBpZDogMzUsIHN0YWNrIGxpbWl0
-ID0gMHgoX19fX3B0cnZhbF9fX18pKQpbICAgIDMuMjg4NTMwXSBDYWxsIHRyYWNlOgpbICAgIDMu
-MjkwOTg3XSAgaXJxX3NldF9pcnFjaGlwX3N0YXRlKzB4MTYwLzB4MWEwClsgICAgMy4yOTU0NTJd
-ICBtdmVidV9pY3VfaXJxX2RvbWFpbl9hbGxvYysweDE4MC8weDIwOApbICAgIDMuMzAwMzUxXSAg
-X19pcnFfZG9tYWluX2FsbG9jX2lycXMrMHgxMzgvMHgyYTAKWyAgICAzLjMwNDk4OF0gIGlycV9j
-cmVhdGVfZndzcGVjX21hcHBpbmcrMHgxNDAvMHgzMjgKWyAgICAzLjMwOTc5OV0gIGlycV9jcmVh
-dGVfb2ZfbWFwcGluZysweDc4LzB4YTAKWyAgICAzLjMxNDA4OV0gIG9mX2lycV9nZXQrMHg4OC8w
-eGY4ClsgICAgMy4zMTc0MTldICBwbGF0Zm9ybV9nZXRfaXJxKzB4MjQvMHgxNzgKWyAgICAzLjMy
-MTM2MF0gIGFybWFkYV90aGVybWFsX3Byb2JlKzB4MTEwLzB4NjY4ClsgICAgMy4zMjU3MzVdICBw
-bGF0Zm9ybV9kcnZfcHJvYmUrMHg1MC8weGIwClsgICAgMy4zMjk3NjNdICByZWFsbHlfcHJvYmUr
-MHgxZmMvMHgyOTAKWyAgICAzLjMzMzQ0MV0gIGRyaXZlcl9wcm9iZV9kZXZpY2UrMHg1OC8weDEw
-MApbICAgIDMuMzM3NjQzXSAgX19kZXZpY2VfYXR0YWNoX2RyaXZlcisweDljLzB4ZjgKWyAgICAz
-LjM0MjAxOV0gIGJ1c19mb3JfZWFjaF9kcnYrMHg3MC8weGM4ClsgICAgMy4zNDU4NzJdICBfX2Rl
-dmljZV9hdHRhY2grMHhlMC8weDE0MApbICAgIDMuMzQ5NzI1XSAgZGV2aWNlX2luaXRpYWxfcHJv
-YmUrMHgxMC8weDE4ClsgICAgMy4zNTM5MjZdICBidXNfcHJvYmVfZGV2aWNlKzB4OTQvMHhhMApb
-ICAgIDMuMzU3Nzc5XSAgZGVmZXJyZWRfcHJvYmVfd29ya19mdW5jKzB4NmMvMHhhMApbICAgIDMu
-MzYyMzMxXSAgcHJvY2Vzc19vbmVfd29yaysweDFkYy8weDMzMApbICAgIDMuMzY2MzU5XSAgd29y
-a2VyX3RocmVhZCsweDIzYy8weDQzMApbICAgIDMuMzcwMTI0XSAga3RocmVhZCsweGY4LzB4MTI4
-ClsgICAgMy4zNzMyODBdICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOApbICAgIDMuMzc2ODcyXSBD
-b2RlOiBhYTE4MDNlMSBhYTFjMDNlMCA1MjgxMTlhMiA5N2ZmZjc2MCAoZjk0MDc2ODApIApbICAg
-IDMuMzgyOTkyXSAtLS1bIGVuZCB0cmFjZSBmNDIzODI5Y2I0YjFjMDZjIF0tLS0KCgpUaGUgZmF1
-bHR5IGluc3RydWN0aW9uIGlzIHRoZSBpZiBzdGF0ZW1lbnQgdGhlcmU6IApodHRwczovL2VsaXhp
-ci5ib290bGluLmNvbS9saW51eC92NC4xOS1yYzUvc291cmNlL2tlcm5lbC9pcnEvbWFuYWdlLmMj
-TDIyNDMKCgpJIGFkZGVkIHRyYWNlcyB0byB1bmRlcnN0YW5kIHdoYXQgaXMgZ29pbmcgb24uIFRo
-ZSBkby13aGlsZSBsb29wIGdldHMKYW4gaXJxX2RhdGEgc3RydWN0dXJlLCBkZXJpdmVzIHRoZSBj
-aGlwIHBvaW50ZXIsIHRoZW4gbG9vayBhdCBpdHMKLT5zZXRfaXJxY2hpcF9zdGF0ZSgpIGNhbGxi
-YWNrLiBJdCBpdCBkb2VzIG5vdCBleGlzdCwgaXQgdHJpZXMgd2l0aCBpdHMKcGFyZW50IGlycV9k
-YXRhLgoKSGVyZSBhcmUgdGhlIHRyYWNlcyB0aGF0IHNob3cgd2h5IHRoZSBvb3BzIGhhcHBlbnMg
-d2hlbgppcnFfYWxsb2NfaXJxc19wYXJlbnQoKSBpcyBub3QgY2FsbGVkOgoKV2l0aCBpcnFfYWxs
-b2NfaXJxc19wYXJlbnQoKSAocnVubmluZyBleGFjdGx5IHdoYXQgSSBzZW50IGluIHRoZSBzZXJp
-ZXMpOgoKWyAgICAyLjk5Mzg4N10gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ0XSBpcnFfZGF0
-YSBwdHI6IDB4ZmZmZjgwMDBlOGY4MGMyOCBbICAgIDMuMDAwNzAzXSBpcnFfc2V0X2lycWNoaXBf
-c3RhdGUgWzIyNDZdICAgY2hpcCBwdHI6IDB4ZmZmZjAwMDAwOTQwMTUzOCAobmFtZTogbm9uZSkK
-WyAgICAzLjAwODQ4MF0gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ5XSAgIHBhcmVudCBpcnFf
-ZGF0YSBwdHIgPyAweGZmZmY4MDAwZThiZGYyMDAKClsgICAgMy4wMjQwNDVdIGlycV9zZXRfaXJx
-Y2hpcF9zdGF0ZSBbMjI0NF0gaXJxX2RhdGEgcHRyOiAweGZmZmY4MDAwZThiZGYyMDAKWyAgICAz
-LjAzMDg2MV0gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ2XSAgIGNoaXAgcHRyOiAweGZmZmYw
-MDAwMDk0MWI2NTggKG5hbWU6IFNFSSBNU0kgY29udHJvbGxlcikKWyAgICAzLjAzOTg1N10gaXJx
-X3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ5XSAgIHBhcmVudCBpcnFfZGF0YSBwdHIgPyAweGZmZmY4
-MDAwZThiZGYyODAKClsgICAgMy4wNTU0MjBdIGlycV9zZXRfaXJxY2hpcF9zdGF0ZSBbMjI0NF0g
-aXJxX2RhdGEgcHRyOiAweGZmZmY4MDAwZThiZGYyODAKWyAgICAzLjA2MjIzNl0gaXJxX3NldF9p
-cnFjaGlwX3N0YXRlIFsyMjQ2XSAgIGNoaXAgcHRyOiAweGZmZmYwMDAwMDk0MWIzZTggKG5hbWU6
-IENQIFNFSSkKWyAgICAzLjA3MDE4NV0gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ5XSAgIHBh
-cmVudCBpcnFfZGF0YSBwdHIgPyAweGZmZmY4MDAwZThiZGYzMDAKClsgICAgMy4wODU3NTBdIGly
-cV9zZXRfaXJxY2hpcF9zdGF0ZSBbMjI0NF0gaXJxX2RhdGEgcHRyOiAweGZmZmY4MDAwZThiZGYz
-MDAKWyAgICAzLjA5MjU2Nl0gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ2XSAgIGNoaXAgcHRy
-OiAweDAwMDAwMDAwMDAwMDAwMDAgKG5hbWU6IChudWxsKSkKWyAgICAzLjEwMDUxNV0gaXJxX3Nl
-dF9pcnFjaGlwX3N0YXRlIFsyMjQ5XSAgIHBhcmVudCBpcnFfZGF0YSBwdHIgPyAweDAwMDAwMDAw
-MDAwMDAwMDAKCldpdGhvdXQgaXJxX2FsbG9jX2lycXNfcGFyZW50KCkgKHNhbWUgY29kZSBiYXNl
-LCB3aXRoIHRoZSBjYWxsIHRvIHRoaXMgZnVuY3Rpb24gY29tbWVudGVkIG91dCk6CgpbICAgIDIu
-OTkyMzY0XSBpcnFfc2V0X2lycWNoaXBfc3RhdGUgWzIyNDRdIGlycV9kYXRhOiAweGZmZmY4MDAw
-ZTdjYjcyMjgKWyAgICAyLjk5OTE4MV0gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ2XSAgIGNo
-aXA6IDB4ZmZmZjAwMDAwOTQwMTUzOCAobmFtZTogbm9uZSkKWyAgICAzLjAwNjk1Nl0gaXJxX3Nl
-dF9pcnFjaGlwX3N0YXRlIFsyMjQ5XSAgIHBhcmVudCBpcnFfZGF0YTogMHhmZmZmODAwMGU5M2E5
-ZTAwCgpbICAgIDMuMDIyNTIwXSBpcnFfc2V0X2lycWNoaXBfc3RhdGUgWzIyNDRdIGlycV9kYXRh
-OiAweGZmZmY4MDAwZTkzYTllMDAKWyAgICAzLjAyOTMzN10gaXJxX3NldF9pcnFjaGlwX3N0YXRl
-IFsyMjQ2XSAgIGNoaXA6IDB4ZmZmZjAwMDAwOTQxYjY1OCAobmFtZTogU0VJIE1TSSBjb250cm9s
-bGVyKQpbICAgIDMuMDM4MzMzXSBpcnFfc2V0X2lycWNoaXBfc3RhdGUgWzIyNDldICAgcGFyZW50
-IGlycV9kYXRhOiAweGZmZmY4MDAwZTkzYTllODAKClsgICAgMy4wNTM4OTZdIGlycV9zZXRfaXJx
-Y2hpcF9zdGF0ZSBbMjI0NF0gaXJxX2RhdGE6IDB4ZmZmZjgwMDBlOTNhOWU4MApbICAgIDMuMDYw
-NzEzXSBpcnFfc2V0X2lycWNoaXBfc3RhdGUgWzIyNDZdICAgY2hpcDogMHhmZmZmMDAwMDA5NDFi
-M2U4IChuYW1lOiBDUCBTRUkpClsgICAgMy4wNjg2NjJdIGlycV9zZXRfaXJxY2hpcF9zdGF0ZSBb
-MjI0OV0gICBwYXJlbnQgaXJxX2RhdGE6IDB4ZmZmZjgwMDBlOTNhOWYwMAoKWyAgICAzLjA4NDIy
-NV0gaXJxX3NldF9pcnFjaGlwX3N0YXRlIFsyMjQ0XSBpcnFfZGF0YTogMHhmZmZmODAwMGU5M2E5
-ZjAwClsgICAgMy4wOTEwNDFdIGlycV9zZXRfaXJxY2hpcF9zdGF0ZSBbMjI0Nl0gICBjaGlwOiAw
-eGZmZmYwMDAwMDkzZWMxNDggKG5hbWU6IEdJQ3YyKQpbICAgIDMuMDk4OTAzXSBpcnFfc2V0X2ly
-cWNoaXBfc3RhdGUgWzIyNDldICAgcGFyZW50IGlycV9kYXRhOiAweDAwMDAwMDAwMDAwMDAwMDAK
-CgpUaGUgZGlmZmVyZW5jZSBpcyB0aGF0IGF0IHRoaXMgc3RhZ2UsIHRoZSBpcnFfZGF0YS0+Y2hp
-cCBwb2ludGVyIG9mIHRoZQpTRUkgY29udHJvbGxlciBfcGFyZW50XyAoaWUuIHRoZSBHSUMncyBj
-aGlwIHBvaW50ZXIpIGlzIG5vdCB2YWxpZC4gSQpkaWdnZWQgYSBsb3QgaW4gdGhpcyBkaXJlY3Rp
-b24gZHVyaW5nIHlvdXIgdmFjYXRpb25zIHRvIGZpbmQgb3V0IHdoYXQgSQptaXNzZWQsIGFuZCBJ
-IGVuZGVkIHVwIGNhbGxpbmcgYmFjayBpcnFfYWxsb2NfaXJxc19wYXJlbnQoKS4KCklmIHlvdSBo
-YXZlIGFuIGlkZWEgb2YgaG93IHRvIGhhbmRsZSB0aGlzIHByb3Blcmx5LCBJIGFtIGFsbCBlYXJz
-IQoKPiAKPiBUaGUgd2hvbGUgU0VJIHRoaW5nIGlzIGEgY2hhaW5lZCBpbnRlcnJ1cHQgY29udHJv
-bGxlciwgYQo+IG11bHRpcGxleGVyLiBUaGUgb3V0cHV0IGludGVycnVwdCBpcyBrbm93biBhdCBw
-cm9iZSB0aW1lLCBhbmQgbmV2ZXIKPiBjaGFuZ2UuIFlvdSBhbHNvIGhhdmUgY29kZSB0byB0aGF0
-IGVmZmVjdCBpbiB0aGUgcHJvYmUgcm91dGluZS4gU28KPiB3aGF0IGlzIHRoaXMgZXhhY3RseT8g
-RGVhZCBjb2RlPwo+IAo+ID4gKwkvKgo+ID4gKwkgKiBBc3N1bWUgZWRnZSByaXNpbmcgZm9yIG5v
-dywgaXQgd2lsbCBiZSBwcm9wZXJseSBzZXQgd2hlbgo+ID4gKwkgKiAtPnNldF90eXBlKCkgaXMg
-Y2FsbGVkCj4gPiArCSAqLwo+ID4gKwlmd3NwZWMtPnBhcmFtWzJdID0gSVJRX1RZUEVfRURHRV9S
-SVNJTkc7Cj4gPiArCXJldCA9IGlycV9kb21haW5fYWxsb2NfaXJxc19wYXJlbnQoZG9tYWluLCB2
-aXJxLCAxLCBmd3NwZWMpOwo+ID4gKwlpZiAocmV0KQo+ID4gKwkJZ290byBmcmVlX2lycTsKPiA+
-ICsKClsuLi5dCgo+ID4gKwo+ID4gK3N0cnVjdCBtdmVidV9zZWlfY2FwcyBtdmVidV9zZWlfYXA4
-MDZfY2FwcyA9IHsKPiA+ICsJLmFwX3JhbmdlID0gewo+ID4gKwkJLmZpcnN0ID0gMCwKPiA+ICsJ
-CS5zaXplID0gMjEsCj4gPiArCX0sCj4gPiArCS5jcF9yYW5nZSA9IHsKPiA+ICsJCS5maXJzdCA9
-IDIxLAo+ID4gKwkJLnNpemUgPSA0MywKPiA+ICsJfSwgIAo+IAo+IEknZCBhcHByZWNpYXRlIHNv
-bWUgc3ltYm9saWMgY29uc3RhbnRzIGluc3RlYWQgb2YgbWFnaWMgbnVtYmVycy4KCkkgY2FuIGRl
-ZmluaXRlbHkgdXNlIHN5bWJvbGljIGNvbnN0YW50cyBidXQgdGhlc2UgbnVtYmVycyBhcmUgYWxy
-ZWFkeQpxdWl0ZSBtZWFuaW5nZnVsLCB0aGUgY29uc3RhbnRzIGNvdWxkIGJlIG5hbWVkOgoKICAg
-IFNFSV9BUDgwNl9GSVJTVF9JTlRfSU5fQVBfUkFOR0UKICAgIFNFSV9BUDgwNl9TSVpFX09GX0FQ
-X1JBTkdFCgo+IAo+ID4gK307Cj4gPiArCj4gPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZp
-Y2VfaWQgbXZlYnVfc2VpX29mX21hdGNoW10gPSB7Cj4gPiArCXsKPiA+ICsJCS5jb21wYXRpYmxl
-ID0gIm1hcnZlbGwsYXA4MDYtc2VpIiwKPiA+ICsJCS5kYXRhID0gJm12ZWJ1X3NlaV9hcDgwNl9j
-YXBzLAo+ID4gKwl9LAo+ID4gKwl7fSwKPiA+ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3Qg
-cGxhdGZvcm1fZHJpdmVyIG12ZWJ1X3NlaV9kcml2ZXIgPSB7Cj4gPiArCS5wcm9iZSAgPSBtdmVi
-dV9zZWlfcHJvYmUsCj4gPiArCS5kcml2ZXIgPSB7Cj4gPiArCQkubmFtZSA9ICJtdmVidS1zZWki
-LAo+ID4gKwkJLm9mX21hdGNoX3RhYmxlID0gbXZlYnVfc2VpX29mX21hdGNoLAo+ID4gKwl9LAo+
-ID4gK307Cj4gPiArYnVpbHRpbl9wbGF0Zm9ybV9kcml2ZXIobXZlYnVfc2VpX2RyaXZlcik7Cj4g
-PiAtLSAKPiA+IDIuMTcuMQo+ID4gICAKPiAKPiBUaGFua3MsCj4gCj4gCU0uCj4gCgoKVGhhbmtz
-LApNaXF1w6hsCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+hi Ulf
+
+On 09/24/2018 04:28 PM, Ulf Hansson wrote:
+> On 21 September 2018 at 11:45, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>> From: Ludovic Barre <ludovic.barre@st.com>
+>>
+>> This patch converts dma_setup callback to return an integer
+>> This patch is needed to prepare sdmmc variant with internal dma
+>>
+>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>> ---
+>>   drivers/mmc/host/mmci.c          | 14 ++++++++++----
+>>   drivers/mmc/host/mmci.h          |  2 +-
+>>   drivers/mmc/host/mmci_qcom_dml.c |  6 ++++--
+>>   3 files changed, 15 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>> index cbd67bc..2f845f3 100644
+>> --- a/drivers/mmc/host/mmci.c
+>> +++ b/drivers/mmc/host/mmci.c
+>> @@ -415,7 +415,7 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
+>>    * no custom DMA interfaces are supported.
+>>    */
+>>   #ifdef CONFIG_DMA_ENGINE
+>> -static void mmci_dma_setup(struct mmci_host *host)
+>> +static int mmci_dma_setup(struct mmci_host *host)
+>>   {
+>>          const char *rxname, *txname;
+>>
+>> @@ -466,7 +466,9 @@ static void mmci_dma_setup(struct mmci_host *host)
+>>          }
+>>
+>>          if (host->ops && host->ops->dma_setup)
+>> -               host->ops->dma_setup(host);
+>> +               return host->ops->dma_setup(host);
+>> +
+> 
+> Looks like you need to implement a error handling, instead of just
+> returning the error code.
+
+yes, today if a dma_setup is defined, we can't fallback to pio mode.
+A use_dma variable (defined in mmci_host) could be setted follow the 
+return code of ops->dma_setup
+
+example:
+
+void mmci_dma_setup(struct mmci_host *host)
+{
+	int err;
+
+	if (!host->ops || !host->ops->dma_setup)
+		return;
+
+	err = host->ops->dma_setup(host);
+	if (err)
+		return;
+	
+	host->use_dma = true;
+	
+	/* initialize pre request cookie */
+	host->next_cookie = 1;
+}
+
+use_dma variable could be check by mmci_host_ops variant functions.
+
+are you agree with this proposal?
+
+> 
+>> +       return 0;
+>>   }
+>>
+>>   /*
+>> @@ -741,8 +743,10 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>>   static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>>   {
+>>   }
+>> -static inline void mmci_dma_setup(struct mmci_host *host)
+>> +
+>> +static inline int mmci_dma_setup(struct mmci_host *host)
+>>   {
+>> +       return 0;
+>>   }
+>>
+>>   static inline void mmci_dma_release(struct mmci_host *host)
+>> @@ -1796,7 +1800,9 @@ static int mmci_probe(struct amba_device *dev,
+>>                   amba_rev(dev), (unsigned long long)dev->res.start,
+>>                   dev->irq[0], dev->irq[1]);
+>>
+>> -       mmci_dma_setup(host);
+>> +       ret = mmci_dma_setup(host);
+>> +       if (ret)
+>> +               goto clk_disable;
+>>
+>>          pm_runtime_set_autosuspend_delay(&dev->dev, 50);
+>>          pm_runtime_use_autosuspend(&dev->dev);
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 21aaf9a..06299ac 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -273,7 +273,7 @@ struct variant_data {
+>>
+>>   /* mmci variant callbacks */
+>>   struct mmci_host_ops {
+>> -       void (*dma_setup)(struct mmci_host *host);
+>> +       int (*dma_setup)(struct mmci_host *host);
+>>   };
+>>
+>>   struct mmci_host_next {
+>> diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
+>> index be3fab5..1bb59cf 100644
+>> --- a/drivers/mmc/host/mmci_qcom_dml.c
+>> +++ b/drivers/mmc/host/mmci_qcom_dml.c
+>> @@ -119,7 +119,7 @@ static int of_get_dml_pipe_index(struct device_node *np, const char *name)
+>>   }
+>>
+>>   /* Initialize the dml hardware connected to SD Card controller */
+>> -static void qcom_dma_setup(struct mmci_host *host)
+>> +static int qcom_dma_setup(struct mmci_host *host)
+>>   {
+>>          u32 config;
+>>          void __iomem *base;
+>> @@ -131,7 +131,7 @@ static void qcom_dma_setup(struct mmci_host *host)
+>>
+>>          if (producer_id < 0 || consumer_id < 0) {
+>>                  host->variant->qcom_dml = false;
+> 
+> It seems like the existing code is an attempt to fallback to use pio
+> mode. However, I doubt it works as is.
+
+oops, I seen that like a variant identification issue, so if it's a
+fallback to pio mode it doesn't work.
+
+> 
+>> -               return;
+>> +               return -EINVAL;
+> 
+> My point is, if you return an error code here, it means that the error
+> code becomes propagated and ->probe() will fail.
+> 
+> Ideally, we should be able fall back to pio mode when dma doesn't
+> work. I have looped in Srinivas who implemented the qcom dml support,
+> let's see if he can explains the intent with the code.
+> 
+> I also volunteer to help out running some tests on the 410c platform,
+> however allow me a day or two to do that.
+
+yes, I would be more reassured
+
+> 
+>>          }
+>>
+>>          base = host->base + DML_OFFSET;
+>> @@ -175,6 +175,8 @@ static void qcom_dma_setup(struct mmci_host *host)
+>>
+>>          /* Make sure dml initialization is finished */
+>>          mb();
+>> +
+>> +       return 0;
+>>   }
+>>
+>>   static struct mmci_host_ops qcom_variant_ops = {
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
