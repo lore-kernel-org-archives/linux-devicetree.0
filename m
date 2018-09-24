@@ -1,51 +1,49 @@
-From: Songjun Wu <songjun.wu@linux.intel.com>
-Subject: [PATCH 14/14] dt-bindings: serial: lantiq: Add optional properties for CCF
-Date: Mon, 24 Sep 2018 18:28:03 +0800
-Message-ID: <20180924102803.30263-15-songjun.wu@linux.intel.com>
-References: <20180924102803.30263-1-songjun.wu@linux.intel.com>
+From: Manish Narani <MNARANI@xilinx.com>
+Subject: RE: [PATCH v7 4/7] edac: synopsys: Add macro defines for ZynqMP DDRC
+Date: Mon, 24 Sep 2018 10:29:44 +0000
+Message-ID: <DM6PR02MB5227D961C992C3BB6A4421B7C1170@DM6PR02MB5227.namprd02.prod.outlook.com>
+References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
+ <1537194305-9243-5-git-send-email-manish.narani@xilinx.com>
+ <20180924092226.GA20187@zn.tnic>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924102803.30263-1-songjun.wu@linux.intel.com>
+In-Reply-To: <20180924092226.GA20187@zn.tnic>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, hauke.mehrtens@intel.com
-Cc: Songjun Wu <songjun.wu@linux.intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, Michal Simek <michals@xilinx.com>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Clocks and clock-names are updated in device tree binding.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
----
-
- Documentation/devicetree/bindings/serial/lantiq_asc.txt | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/lantiq_asc.txt b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-index 3acbd309ab9d..40e81a5818f6 100644
---- a/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-+++ b/Documentation/devicetree/bindings/serial/lantiq_asc.txt
-@@ -6,8 +6,23 @@ Required properties:
- - interrupts: the 3 (tx rx err) interrupt numbers. The interrupt specifier
-   depends on the interrupt-parent interrupt controller.
- 
-+Optional properties:
-+- clocks: Should contain frequency clock and gate clock
-+- clock-names: Should be "freq" and "asc"
-+
- Example:
- 
-+asc0: serial@16600000 {
-+	compatible = "lantiq,asc";
-+	reg = <0x16600000 0x100000>;
-+	interrupt-parent = <&gic>;
-+	interrupts = <GIC_SHARED 103 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SHARED 105 IRQ_TYPE_LEVEL_HIGH>,
-+		<GIC_SHARED 106 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&cgu CLK_SSX4>, <&cgu GCLK_UART>;
-+	clock-names = "freq", "asc";
-+};
-+
- asc1: serial@e100c00 {
- 	compatible = "lantiq,asc";
- 	reg = <0xE100C00 0x400>;
--- 
-2.11.0
+SGkgQm9yaXMsDQoNClRoYW5rcyBmb3IgdGhlIHJldmlldy4NCg0KPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGllbjguZGVd
+DQo+IFNlbnQ6IE1vbmRheSwgU2VwdGVtYmVyIDI0LCAyMDE4IDI6NTIgUE0NCj4gVG86IE1hbmlz
+aCBOYXJhbmkgPE1OQVJBTklAeGlsaW54LmNvbT4NCj4gQ2M6IHJvYmgrZHRAa2VybmVsLm9yZzsg
+bWFyay5ydXRsYW5kQGFybS5jb207IG1jaGVoYWJAa2VybmVsLm9yZzsNCj4gTWljaGFsIFNpbWVr
+IDxtaWNoYWxzQHhpbGlueC5jb20+OyBsZW95YW5nLmxpQG54cC5jb207DQo+IHN1ZGVlcC5ob2xs
+YUBhcm0uY29tOyBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gZWRhY0B2
+Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBT
+dWJqZWN0OiBSZTogW1BBVENIIHY3IDQvN10gZWRhYzogc3lub3BzeXM6IEFkZCBtYWNybyBkZWZp
+bmVzIGZvciBaeW5xTVANCj4gRERSQw0KPiANCj4gT24gTW9uLCBTZXAgMTcsIDIwMTggYXQgMDc6
+NTU6MDJQTSArMDUzMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToNCj4gPiBBZGQgbWFjcm8gZGVmaW5l
+cyBmb3IgWnlucU1QIEREUiBjb250cm9sbGVyLiBUaGVzZSBtYWNyb3Mgd2lsbCBiZSB1c2VkDQo+
+ID4gZm9yIFp5cW5NUCBFQ0Mgb3BlcmF0aW9ucy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IE1h
+bmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJp
+dmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyB8IDE2OA0KPiA+ICsrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE2OCBpbnNlcnRp
+b25zKCspDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMu
+Yw0KPiA+IGIvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyBpbmRleCBlYjQ1OGU1Li42YmY3
+OTU5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMNCj4gPiAr
+KysgYi9kcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jDQo+ID4gQEAgLTk3LDYgKzk3LDE3NCBA
+QA0KPiA+ICAjZGVmaW5lIFNDUlVCX01PREVfTUFTSwkJMHg3DQo+ID4gICNkZWZpbmUgU0NSVUJf
+TU9ERV9TRUNERUQJMHg0DQo+ID4NCj4gPiArLyogRERSIEVDQyBRdWlya3MgKi8NCj4gPiArI2Rl
+ZmluZSBERFJfRUNDX0lOVFJfU1VQUE9SVAkJQklUKDApDQo+ID4gKyNkZWZpbmUgRERSX0VDQ19E
+QVRBX1BPSVNPTl9TVVBQT1JUCUJJVCgxKQ0KPiANCj4gQWxsIHRob3NlIG5ldyBhZGRpdGlvbnMg
+YXJlIG9uZSBjb2x1bW4gZnVydGhlciB0byB0aGUgbGVmdCB0aGFuIHRoZSBvbGQgb25lcy4NCj4g
+V2h5Pw0KPiANCj4gSXMgdGhlcmUgc29tZSBzaWduaWZpY2FuY2UgaGVyZSBvciBjYW4gdGhleSBh
+bGwgYmUgdmVydGljYWxseSBhbGlnbmVkPw0KU2hvdWxkIEkgaW5jcmVhc2UgdGhlIGFsaWdubWVu
+dCBvZiB0aGUgZXhpc3RpbmcgbWFjcm9zIGluIHRoZSAnY29kZSBmb3JtYXR0aW5nJyBwYXRjaGVz
+PyBOZXcgbWFjcm9zIHdpbGwgbmVlZCBhbiBpbmNyZWFzZWQgaW5kZW50YXRpb24uDQoNClRoYW5r
+cywNCk1hbmlzaA0K
