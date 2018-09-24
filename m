@@ -1,98 +1,71 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] regulator: pfuze100-regulator: add coin support
-Date: Mon, 24 Sep 2018 14:21:09 -0500
-Message-ID: <CAHCN7xLEHw4vN8gud+vPkVBX3tSsBM1HTnRCi6fF3VxYiQYfmA@mail.gmail.com>
-References: <20170309141443.20564-1-george.mccollister@gmail.com>
+From: Craig Tatlor <ctatlor97@gmail.com>
+Subject: Re: [PATCH V3 0/4] Changes for SDCC5 version
+Date: Mon, 24 Sep 2018 20:48:22 +0100
+Message-ID: <20180924194412.GA27477@arch>
+References: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170309141443.20564-1-george.mccollister@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: george.mccollister@gmail.com
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
+To: Vijay Viswanath <vviswana@codeaurora.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Mar 9, 2017 at 8:17 AM George McCollister
-<george.mccollister@gmail.com> wrote:
->
-> Add support for PF0200 coin cell/super capacitor charger which works as
-> a current limited voltage source via the LICELL pin. When VIN goes below
-> a certain threshold LICELL is used to provide power for VSNVS which is
-> usually used to hold up secure non-volatile storage and the real-time
-> clock on the SoC.
->
+What socs have you tested this on? 
+On sdm660 it seems to crash device
+when writing pwr ctl.
 
-I know this is patch is an old thread by now, but is there something
-precluding this from being added the pfuze100 as well?
-
-[snip]
-
-I am trying to add:
-
-@@ -324,6 +324,7 @@ static struct pfuze_regulator pfuze100_regulators[] =3D=
- {
-        PFUZE100_VGEN_REG(PFUZE100, VGEN4, PFUZE100_VGEN4VOL, 1800000,
-3300000, 100000),
-        PFUZE100_VGEN_REG(PFUZE100, VGEN5, PFUZE100_VGEN5VOL, 1800000,
-3300000, 100000),
-        PFUZE100_VGEN_REG(PFUZE100, VGEN6, PFUZE100_VGEN6VOL, 1800000,
-3300000, 100000),
-+       PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_c=
-oin),
- };
-
- static struct pfuze_regulator pfuze200_regulators[] =3D {
-@@ -377,6 +378,7 @@ static struct of_regulator_match pfuze100_matches[] =3D=
- {
-        { .name =3D "vgen4",      },
-        { .name =3D "vgen5",      },
-        { .name =3D "vgen6",      },
-+       { .name =3D "coin",       },
- };
-
-but I am getting bulid errors:
-
-drivers/regulator/pfuze100-regulator.c:327:20: error: =E2=80=98PFUZE100_COI=
-N=E2=80=99
-undeclared here (not in a function); did you mean =E2=80=98PFUZE200_COIN=E2=
-=80=99?
-  PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
-                    ^~~~~~~~
-drivers/regulator/pfuze100-regulator.c:240:3: note: in definition of
-macro =E2=80=98PFUZE100_COIN_REG=E2=80=99
-  [_chip ## _ ##  _name] =3D { \
-   ^~~~~
-drivers/regulator/pfuze100-regulator.c:327:20: error: array index in
-initializer not of integer type
-  PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
-                    ^~~~~~~~
-drivers/regulator/pfuze100-regulator.c:240:3: note: in definition of
-macro =E2=80=98PFUZE100_COIN_REG=E2=80=99
-  [_chip ## _ ##  _name] =3D { \
-   ^~~~~
-drivers/regulator/pfuze100-regulator.c:327:20: note: (near
-initialization for =E2=80=98pfuze100_regulators=E2=80=99)
-  PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
-                    ^~~~~~~~
-drivers/regulator/pfuze100-regulator.c:240:3: note: in definition of
-macro =E2=80=98PFUZE100_COIN_REG=E2=80=99
-  [_chip ## _ ##  _name] =3D { \
-   ^~~~~
-
-I am not entirely understanding how the macro is supposed to work.
-Any suggestions?
-
-thanks,
-
-adam
-
-
+On Tue, Jun 19, 2018 at 11:09:17AM +0530, Vijay Viswanath wrote:
+> With SDCC5, the MCI register space got removed and the offset/order of
+> several registers have changed. Based on SDCC version used and the register,
+> we need to pick the base address and offset.
+> 
+> Depends on patch series: "[PATCH V5 0/2] mmc: sdhci-msm: Configuring IO_PAD support for sdhci-msm"
+> 
+> Changes since RFC:
+> 	Dropped voltage regulator changes in sdhci-msm
+> 	Split the "Register changes for sdcc V5" patch
+> 	Instead of checking mci removal for deciding which base addr to use,
+> 	new function pointers are defined for the 2 variants of sdcc: 
+> 		1) MCI present
+> 		2) V5 (mci removed)
+> 	Instead of string comparing with the compatible string from DT file,
+> 	the sdhci_msm_probe will now pick the data associated with the
+> 	compatible entry and use it to load variant specific address offsets
+> 	and msm variant specific read/write ops.
+> 
+> Changes since V1:
+> 	Removed unused msm_reab & msm_writeb APIs
+> 	Changed certain register addresses from uppercase to lowercase hex
+> 	letters
+> 	Removed extra lines and spaces
+> 	Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
+> 	one for Documentation and other for the driver changes.
+> 
+> Changes since V2:
+> 	Used lower case for macro function defenitions
+> 	Removed unused function pointers for msm_readb & msm_writeb
+> 
+> 
+> Sayali Lokhande (3):
+>   mmc: sdhci-msm: Define new Register address map
+>   Documentation: sdhci-msm: Add new compatible string for SDCC v5
+>   mmc: host: Register changes for sdcc V5
+> 
+> Vijay Viswanath (1):
+>   mmc: sdhci-msm: Add msm version specific ops and data structures
+> 
+>  .../devicetree/bindings/mmc/sdhci-msm.txt          |   7 +-
+>  drivers/mmc/host/sdhci-msm.c                       | 511 ++++++++++++++++-----
+>  2 files changed, 391 insertions(+), 127 deletions(-)
+> 
+> -- 
+>  Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc. 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> 
 > --
-> 2.11.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
