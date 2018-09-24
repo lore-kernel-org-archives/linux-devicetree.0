@@ -1,43 +1,98 @@
-From: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 03/20] iommu/tegra: gart: Ignore devices without IOMMU
-	phandle in DT
-Date: Mon, 24 Sep 2018 21:41:21 +0300
-Message-ID: <8b3ece56-fda6-4e74-f69f-1e68b138e973@gmail.com>
-References: <20180924004153.8232-1-digetx@gmail.com>
-	<20180924004153.8232-4-digetx@gmail.com> <20180924100525.GE21032@ulmo>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 05/27] mmc: mmci: move mmci next cookie to mci host
+Date: Mon, 24 Sep 2018 20:46:30 +0200
+Message-ID: <CAPDyKFqhyVrRGRraGQzx9kwRxLtr56Gwc_NKqNqwLvZuM=jM1A@mail.gmail.com>
+References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com> <1537523181-14578-6-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180924100525.GE21032@ulmo>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537523181-14578-6-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 9/24/18 1:05 PM, Thierry Reding wrote:
-> On Mon, Sep 24, 2018 at 03:41:36AM +0300, Dmitry Osipenko wrote:
->> GART can't handle all devices, hence ignore devices that aren't related
->> to GART. IOMMU phandle must be explicitly assign to devices in the device
->> tree.
-> 
-> I think technically the GART can indeed handle all devices since it is
-> just a physical address region that can be used to remap other physical
-> addresses. That's not to say that doing so would be a good idea. So the
-> commit message here is slightly confusing, but other than that the idea
-> is good, so:
-> 
-> Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
+On 21 September 2018 at 11:45, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch moves next cookie to mmci host structure to
+> share same cookie management between all variants.
 
-It shouldn't be able to serve something like SDHCI, though I haven't
-tried to verify that.
+I would suggest you to squash this with patch4, as I think it makes
+more sense to keep these changes together.
+
+>
+> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> ---
+>  drivers/mmc/host/mmci.c | 10 ++++------
+>  drivers/mmc/host/mmci.h |  2 ++
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> index 6de7c8d..43f2a1a 100644
+> --- a/drivers/mmc/host/mmci.c
+> +++ b/drivers/mmc/host/mmci.c
+> @@ -418,7 +418,6 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
+>  struct mmci_dmae_next {
+>         struct dma_async_tx_descriptor *desc;
+>         struct dma_chan *chan;
+> -       s32 cookie;
+>  };
+>
+>  struct mmci_dmae_priv {
+> @@ -449,7 +448,7 @@ static int mmci_dma_setup(struct mmci_host *host)
+>                                                      "tx");
+>
+>         /* initialize pre request cookie */
+> -       dmae->next_data.cookie = 1;
+> +       host->next_cookie = 1;
+>
+>         /*
+>          * If only an RX channel is specified, the driver will
+> @@ -716,7 +715,7 @@ static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>         struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct mmci_dmae_next *next = &dmae->next_data;
+>
+> -       WARN_ON(data->host_cookie && data->host_cookie != next->cookie);
+> +       WARN_ON(data->host_cookie && data->host_cookie != host->next_cookie);
+>         WARN_ON(!data->host_cookie && (next->desc || next->chan));
+>
+>         dmae->desc_current = next->desc;
+> @@ -728,9 +727,7 @@ static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>  static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  {
+>         struct mmci_host *host = mmc_priv(mmc);
+> -       struct mmci_dmae_priv *dmae = host->dma_priv;
+>         struct mmc_data *data = mrq->data;
+> -       struct mmci_dmae_next *nd = &dmae->next_data;
+>
+>         if (!data)
+>                 return;
+> @@ -741,7 +738,8 @@ static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>                 return;
+>
+>         if (!mmci_dma_prep_next(host, data))
+> -               data->host_cookie = ++nd->cookie < 0 ? 1 : nd->cookie;
+> +               data->host_cookie = ++host->next_cookie < 0 ?
+> +                       1 : host->next_cookie;
+>  }
+>
+>  static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 1e9a45b..5bb1ce2 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -318,5 +318,7 @@ struct mmci_host {
+>         int (*get_rx_fifocnt)(struct mmci_host *h, u32 status, int remain);
+>
+>         void                    *dma_priv;
+> +
+> +       s32                     next_cookie;
+>  };
+>
+> --
+> 2.7.4
+>
+
+Kind regards
+Uffe
