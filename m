@@ -1,47 +1,32 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v7 4/7] edac: synopsys: Add macro defines for ZynqMP DDRC
-Date: Mon, 24 Sep 2018 11:22:26 +0200
-Message-ID: <20180924092226.GA20187@zn.tnic>
-References: <1537194305-9243-1-git-send-email-manish.narani@xilinx.com>
- <1537194305-9243-5-git-send-email-manish.narani@xilinx.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH net-next] dt-bindings: net: ravb: Add support for r8a7744 SoC
+Date: Mon, 24 Sep 2018 11:26:36 +0200
+Message-ID: <CAMuHMdWYkL6epJrv+ptP2wn=9wRVCrP8S7Ucfmxu65fysQggSA@mail.gmail.com>
+References: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537194305-9243-5-git-send-email-manish.narani@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, michal.simek@xilinx.com, leoyang.li@nxp.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, netdev <netdev@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 07:55:02PM +0530, Manish Narani wrote:
-> Add macro defines for ZynqMP DDR controller. These macros will be used
-> for ZyqnMP ECC operations.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  drivers/edac/synopsys_edac.c | 168 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 168 insertions(+)
-> 
-> diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-> index eb458e5..6bf7959 100644
-> --- a/drivers/edac/synopsys_edac.c
-> +++ b/drivers/edac/synopsys_edac.c
-> @@ -97,6 +97,174 @@
->  #define SCRUB_MODE_MASK		0x7
->  #define SCRUB_MODE_SECDED	0x4
->  
-> +/* DDR ECC Quirks */
-> +#define DDR_ECC_INTR_SUPPORT		BIT(0)
-> +#define DDR_ECC_DATA_POISON_SUPPORT	BIT(1)
+On Fri, Sep 21, 2018 at 4:32 PM Biju Das <biju.das@bp.renesas.com> wrote:
+> Document RZ/G1N (R8A7744) SoC bindings.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-All those new additions are one column further to the left than the old
-ones. Why?
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Is there some significance here or can they all be vertically aligned?
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Regards/Gruss,
-    Boris.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
