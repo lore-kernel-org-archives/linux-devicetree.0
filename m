@@ -1,87 +1,94 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 12/20] iommu/tegra: gart: Integrate with Memory
-	Controller driver
-Date: Mon, 24 Sep 2018 12:23:22 +0200
-Message-ID: <20180924102322.GI21032@ulmo>
-References: <20180924004153.8232-1-digetx@gmail.com>
-	<20180924004153.8232-13-digetx@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Re-add "syscon" compatible
+Date: Mon, 24 Sep 2018 11:22:30 +0100
+Message-ID: <20180924112230.73e3009b@donnerap.Emea.Arm.com>
+References: <20180917152857.162662-1-andre.przywara@arm.com>
+ <CAGb2v643=V_3DbLeEyXEavSQJsW2KdknpZZLfw4QwCjhfdmVsA@mail.gmail.com>
+ <20180921153522.0413c280@donnerap.Emea.Arm.com>
+ <20180921151625.wkaypyueyi2pguur@flea>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1780108928371750234=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180924004153.8232-13-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180921151625.wkaypyueyi2pguur@flea>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, 21 Sep 2018 17:16:25 +0200
+Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 
---===============1780108928371750234==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="9iyR+p8Z2cn535Lj"
-Content-Disposition: inline
+Hi,
 
+> On Fri, Sep 21, 2018 at 03:35:22PM +0100, Andre Przywara wrote:
+> > The problem is: we broke compatibility with older kernels.  
+> 
+> The problem is that we never said we wouldn't.
+> 
+> We've had this discussion a number of times. You forced the backward
+> compatibility onto us without any warning, and now we have to support
+> it. And it's already a pain. Maybe ARM can fix that problem by just
+> assigning more engineers to that, but that's not something we can do.
 
---9iyR+p8Z2cn535Lj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry, but please leave my employer out of this. As far as Allwinner
+stuff is concerned, I am as volunteer and spare-time as all the other
+developers. I just use my ARM address because this is ARM policy (to
+not hide your identity and contribute to projects under the same
+address, even if this is in your spare time. Strange, I know, but this
+is how it is).
 
-On Mon, Sep 24, 2018 at 03:41:45AM +0300, Dmitry Osipenko wrote:
-> The device-tree binding has been changed. There is no separate GART device
-> anymore, it is squashed into the Memory Controller. Integrate GART module
-> with the MC in a way it is done for the SMMU of Tegra30+.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/iommu/Kconfig      |  1 +
->  drivers/iommu/tegra-gart.c | 98 ++++++++++----------------------------
->  drivers/memory/tegra/mc.c  | 41 ++++++++++++++++
->  include/soc/tegra/mc.h     | 27 +++++++++++
->  4 files changed, 93 insertions(+), 74 deletions(-)
+And please don't claim I am forcing anything. If you look back and into
+/src/linux/Maintainers, I have no power in the Allwinner sphere and
+lost many battles in the past.
+Please be assured that I don't feel too well in this position of
+being the pesky guy pointing out that things broke again, but I try to
+send patches instead of complaints, to offer a solution.
+The idea is to have technical discussions instead of "political"
+ones (whatever that means).
 
-I think this could technically have been two patches, but since they'd
-have a compile-time dependency either way they need to be applied in the
-correct order, so some coordination between IOMMU and Tegra trees is
-going to have to happen anyway and might as well just stick this into a
-single patch.
+Also I was not asking to rewrite everything or turn stuff upside down,
+instead trying to offer an easy solution (it's a one-liner DT patch!)
+for this kind of problem. So far (4.15..4.18) we are actually forwards-
+and backwards compatible, so it's no black magic.
 
-Thierry
+> The fundamental difference is that we're mostly just a bunch of spare
+> time programmers working on this platform, with a partial
+> documentation for the controllers, at best.
+> 
+> You forced me to ask these developpers to work on their weekends and
+> evenings on some crazy corner cases to maintain the backward
+> compatibility. And honestly, both from a technical and human
+> standpoint, I definitely understand if some of them are just leaving
+> and don't want to work on it anymore. I would probably do the same in
+> their position.
+> 
+> And having to ask that for companies like ARM or SUSE just makes it
+> more frustrating to be honest. So there's simply no way you have
+> forward compatibility while I'm there. Or you manage to convince all
+> the ARM maintainers and enforce that compatibility for all the
+> platforms.
 
---9iyR+p8Z2cn535Lj
-Content-Type: application/pgp-signature; name="signature.asc"
+I understand that from your point of view there is no way of investing
+huge efforts in staying forward compatible, but I am not asking for
+that (and by no way forcing this!). Instead this suggestion is a small
+tweak to achieve this.
 
------BEGIN PGP SIGNATURE-----
+So I am sorry if those things frustrate you (which I can understand
+very well), but I believe fixing the DT in a proper way is
+much more user friendly in the long term (actually this issue was
+brought forward by a user[1]).
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluouxoACgkQ3SOs138+
-s6FIqRAAv1YXOG+5wSjtW+2I5DBn924yW8YAZ9x/j72Pf+1bNLaZ+o/zLBl82aHC
-PVVQMLjOCNSoozNRra27knqbUB/bogRvRQQAyjk01LeQzigTtJx3Gp5I1M+kKrzo
-jvDKUm3roJdHvJrAZewWwM5tEe7ODQhZ6dHW3gk9jBDcen8Qc4gacm4wKlb1z4PS
-LctjQf5QiYvhx6iPgW1pWRQG79TpHuG6SS1jHfVaw5fSGUDbco6asxqTLwdj6ZBc
-fI/k0faAW652NxxoQe7aq11yE41bZu+6oYwWGhT7F/ABwJKdDCBH14Bgwz5Fk5pq
-6onUtt42xw1wR9OwjtGv6zlVcZQcsQ7Fn/X2TQ3M/Fu/aY74u/DsLNeeqEZI0xsL
-I1+F4R8WCTmAqAOgdq7TeCJGUJRg43IykYYeJ9U6nXFyUhhpafza9uZXx/1f9OpF
-ntrM6S+nhRCyccytdYxFq6CKES8O6sPd7ER21a8DqkuIwQoe3/KwovTRoQU5fQrh
-0+XTaGTdo6PbWTxkkl7qJNZO+xcqn/ZickKtCZbbIZ334qxd94g7/R1N9VSIGul7
-IGmgngRQzQcEhCzK6JWClfWMBKnvuuflY6S60j+0o3WJiC6yJzo4pgpVDWqxRsc7
-iAyiVGx0VSzjhciA7VsPT5mwntGloKaUjD4kfO0UzuEeyhjgAt0=
-=wIFq
------END PGP SIGNATURE-----
+Cheers,
+Andre.
 
---9iyR+p8Z2cn535Lj--
-
---===============1780108928371750234==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1780108928371750234==--
+[1]
+https://github.com/apritzel/arm-trusted-firmware/issues/10/#issuecomment-421368057
