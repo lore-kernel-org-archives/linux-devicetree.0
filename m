@@ -1,52 +1,49 @@
-Return-Path: <SRS0=9I9X=MG=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 2/4] pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage switch
-Date: Mon, 24 Sep 2018 18:36:50 +0000
-Message-ID: 
- <TY1PR01MB1770FECBBBEE83BC9D356624C0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1537530911-443-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180922184443.GD841@kunai>
- <CAMuHMdXjuJT6=fAkCtJYxu95sMjMsxZgt2ASc-4+DBWAcYOHhQ@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdXjuJT6=fAkCtJYxu95sMjMsxZgt2ASc-4+DBWAcYOHhQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=oVJk=MG=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Wolfram Sang <wsa@the-dreams.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1537530911-443-3-git-send-email-fabrizio.castro@bp.renesas.com> <20180922184443.GD841@kunai>
+In-Reply-To: <20180922184443.GD841@kunai>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Sep 2018 11:51:28 +0200
+Message-ID: <CAMuHMdXjuJT6=fAkCtJYxu95sMjMsxZgt2ASc-4+DBWAcYOHhQ@mail.gmail.com>
+Subject: Re: [PATCH 2/4] pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage switch
+Content-Type: text/plain; charset="UTF-8"
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsIGhlbGxvIFdvbGZyYW0sDQoNClRoYW5rIHlvdSBib3RoIGZvciB5b3VyIGZl
-ZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMi80XSBwaW5jdHJsOiBzaC1wZmM6IHI4
-YTc3NDcwOiBBZGQgU0RISTIgdm9sdGFnZSBzd2l0Y2gNCj4NCj4gT24gU2F0LCBTZXAgMjIsIDIw
-MTggYXQgODo0NCBQTSBXb2xmcmFtIFNhbmcgPHdzYUB0aGUtZHJlYW1zLmRlPiB3cm90ZToNCj4g
-PiBPbiBGcmksIFNlcCAyMSwgMjAxOCBhdCAxMjo1NTowOVBNICswMTAwLCBGYWJyaXppbyBDYXN0
-cm8gd3JvdGU6DQo+ID4gPiBBZGQgU0hfUEZDX1BJTl9DRkdfSU9fVk9MVEFHRSBkZWZpbml0aW9u
-IGZvciB0aGUgU0RISTIgcGlucw0KPiA+ID4gY2FwYWJsZSBvZiBzd2l0Y2hpbmcgdm9sdGFnZS4g
-UGxlYXNlIG5vdGUgdGhhdCB3aXRoIHRoZQ0KPiA+ID4gUlovRzFDIG9ubHkgMSBiaXQgb2YgdGhl
-IFBPQyBDb250cm9sIFJlZ2lzdGVyIGlzIHVzZWQgdG8NCj4gPiA+IGNvbnRyb2wgZWFjaCBpbnRl
-cmZhY2UuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJy
-aXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gPiBSZXZpZXdlZC1ieTogQmlqdSBEYXMg
-PGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+DQo+ID4gSW4gZ2VuZXJhbDoNCj4gPg0KPiA+
-IEFja2VkLWJ5OiBXb2xmcmFtIFNhbmcgPHdzYStyZW5lc2FzQHNhbmctZW5naW5lZXJpbmcuY29t
-Pg0KPiA+DQo+ID4gPiArICAgICBpZiAoX2JhbmsgPT0gNCAmJiBfcGluID49IDE0ICYmIF9waW4g
-PD0gMTkpDQo+ID4gPiArICAgICAgICAgICAgIHJldHVybiAxOw0KPiA+ID4gKw0KPiA+ID4gKyAg
-ICAgcmV0dXJuIC1FSU5WQUw7DQo+ID4NCj4gPiBJJ2QgbGlrZSBhIHRhZCBiZXR0ZXIgdG8gYmFp
-bCBvdXQgb24gdGhlIGVycm9yIGNhc2UgYW5kIGhhdmUgdGhlIG1haW4NCj4gPiBwYXRoIHJldHVy
-bmluZyBvbiB0aGUgZ29vZCBjYXNlLCBidXQgbm8gc3Ryb25nIG9waW5pb24uLi4NCj4NCj4gQW5k
-IHdlIGhhdmUgdGhlc2UgbmljZSBSQ0FSX0dQX1BJTigpIG1hY3JvcyB0byBjaGVjayBwaW4gcmFu
-Z2VzLg0KPiBQbGVhc2UgaGF2ZSBhIGxvb2sgYXQgdGhlIGZsb3cgaW4gZS5nLiByOGE3Nzk1X3Bp
-bl90b19wb2NjdHJsKCkuDQoNCkknbGwgc2VuZCBhIHYyIHRvIGFkZHJlc3MgdGhpcywgdGhhbmsg
-eW91IGZvciBwb2ludGluZyBtZSB0byB0aGUgcmlnaHQgZGlyZWN0aW9uLg0KDQpDaGVlcnMsDQpG
-YWINCg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBv
-ZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPg0KPiBJbiBwZXJz
-b25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBh
-IGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNh
-eSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJv
-bmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5k
-LCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBX
-YWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+On Sat, Sep 22, 2018 at 8:44 PM Wolfram Sang <wsa@the-dreams.de> wrote:
+> On Fri, Sep 21, 2018 at 12:55:09PM +0100, Fabrizio Castro wrote:
+> > Add SH_PFC_PIN_CFG_IO_VOLTAGE definition for the SDHI2 pins
+> > capable of switching voltage. Please note that with the
+> > RZ/G1C only 1 bit of the POC Control Register is used to
+> > control each interface.
+> >
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+>
+> In general:
+>
+> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> > +     if (_bank == 4 && _pin >= 14 && _pin <= 19)
+> > +             return 1;
+> > +
+> > +     return -EINVAL;
+>
+> I'd like a tad better to bail out on the error case and have the main
+> path returning on the good case, but no strong opinion...
+
+And we have these nice RCAR_GP_PIN() macros to check pin ranges.
+Please have a look at the flow in e.g. r8a7795_pin_to_pocctrl().
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
