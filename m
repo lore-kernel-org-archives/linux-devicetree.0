@@ -1,110 +1,87 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 2/4] dts: arm64/sdm845: Add WCN3990 WLAN module device
- node
-Date: Mon, 24 Sep 2018 10:11:49 -0700
-Message-ID: <20180924171147.GA87119@ban.mtv.corp.google.com>
-References: <20180921090907.25937-1-govinds@codeaurora.org>
- <20180921090907.25937-3-govinds@codeaurora.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Mon, 24 Sep 2018 10:13:08 -0700
+Message-ID: <CAD=FV=WbiAj4eZqo+BnjesF_3XfbeD1h-s1aEGVETaRTa545iQ@mail.gmail.com>
+References: <20180920224055.164856-1-ryandcase@chromium.org>
+ <153755105782.119890.8484594239463905156@swboyd.mtv.corp.google.com>
+ <CAD=FV=Wbj+bgdSBeHSFr+nz6fzCMcmQS-D9oyzkR0yVkxiRb8A@mail.gmail.com>
+ <153755522409.119890.5471037050114193@swboyd.mtv.corp.google.com>
+ <20180921185106.GJ20825@sirena.org.uk> <153767430006.119890.17210317555572798122@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180921090907.25937-3-govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <153767430006.119890.17210317555572798122@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, ryandcase@chromium.org, boris.brezillon@bootlin.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Fri, Sep 21, 2018 at 02:39:05PM +0530, Govind Singh wrote:
-> Add device node for the ath10k SNOC platform driver probe
-> and add resources required for WCN3990 on SDM845 soc.
-> 
-> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  7 +++++++
->  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 25 +++++++++++++++++++++++++
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index eedfaf8922e2..4de57f7df93c 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -440,3 +440,10 @@
->  		bias-pull-up;
->  	};
->  };
-> +
-> +&wifi {
+On Sat, Sep 22, 2018 at 8:45 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Mark Brown (2018-09-21 11:51:06)
+> > On Fri, Sep 21, 2018 at 11:40:24AM -0700, Stephen Boyd wrote:
+> >
+> > > It seems that everybody has misunderstood my email. Let me try to
+> > > clarify.
+> >
+> > > I'm not saying to replace the sdm845 qspi compatible with a generic one.
+> > > I'm recommending that a generic one is added in addition to the SoC
+> > > specific one. That way, we get to put the generic compatible string in
+> > > the driver and not need to update the driver compatible string array
+> > > each time a new SoC comes out with a new compatible string.
+> >
+> > > If it turns out later that we need to handle some bug in that specific
+> > > SoC compatible string then we're good to go and we can handle it by
+> > > matching the more specific SoC version compatible.
+> >
+> > Right, the policy is generally not to have these strings at all.  IIRC
+> > the argument is that they tend to either become unclear as the marketing
+> > and technology changes.
+>
+> Where is this policy documented? Is it on the list somewhere or written
+> in Documentation/devicetree/?
 
-As the bots have already told you, you missed adding a 'wifi' label to
-sdm845.dtsi, so this reference doesn't compile.
+I don't of it being documented anywhere, but it's what I've been told
+before.  I spent a bit of time to find a specific example but I
+couldn't.  As with a lot of device tree stuff it historically has been
+a bunch of word-of-mouth type stuff.  It does look like people are
+moving towards a more formal spec at
+<https://github.com/devicetree-org/devicetree-specification/> but it
+doesn't include this guideline.
 
-> +	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
-> +	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
-> +	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
-> +	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index e080072cdfdb..b0b107641e74 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -86,6 +86,11 @@
->  			reg = <0 0x86200000 0 0x2d00000>;
->  			no-map;
->  		};
-> +
-> +		wlan_msa_mem: reserved-memory@96700000 {
-> +			no-map;
-> +			reg = <0 0x96700000 0 0x100000>;
-> +		};
->  	};
->  
->  	cpus {
-> @@ -1200,5 +1205,25 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		qcom,wifi {
 
-That's not a legit node name. Nodes should (a) have a generic name and
-(b) include a unit address when the node contains a 'reg' property. [1]
+> From my read of Rob's comment in the
+> previous version of this patch, all that was asked was to add another
+> compatible string for the specific SoC.
+>
+> I find the approach of picking the first SoC that the driver works on to
+> be obtuse. I don't want to be reading some SoC DTS and see another SoC
+> marketing number in the compatible string because it makes it confusing
+> to explain to someone that yes these different SoCs are related to each
+> other, but no, that SoC isn't this SoC. Sure it all works and everything
+> is technically fine, but my aesthetically pleasing alarms go off and I
+> don't see any particular downside to having two compatibles.
+>
+> The upside is that things aren't confusing and drivers don't get
+> continual SoC churn updates because the compatible describes the SoC
+> (qcom,sdm845-qspi) and the programming model (qcom,qspi-v1).
 
-So, how about 'wifi@18800000'? (And include the 'wifi:' label, since you
-want to refer to it in other files.)
+IIUC previous suggestions about just naming it based on the first SoC
+was due to the difficulty of coming up with a good generic name to
+give something.  For instance you definitely wouldn't want to name it
+"qcom-qspi-sdm8xx" because you have no idea what future SoCs will be
+numbered.
 
-Also, this seems like the kind of device that should remain 'status =
-"disabled"' in the top-level DTSI, and be overridden with 'status =
-"okay"' in the child DTS.
+In the case here calling it "qcom,qspi-v1" is better than that and if
+Rob gives the thumbs up then I won't object to it.  In general though
+looking at other device tree bindings this doesn't seem like a thing
+commonly done.  Perhaps if we decide it's useful here we should start
+suggesting it everywhere...
 
-Brian
+-Doug
 
-[1] See:
-https://elinux.org/Device_Tree_Usage#Node_Names
-https://elinux.org/images/c/cf/Power_ePAPR_APPROVED_v1.1.pdf
 
-> +			compatible = "qcom,wcn3990-wifi";
-> +			reg = <0x18800000 0x800000>;
-> +			reg-names = "membase";
-> +			memory-region = <&wlan_msa_mem>;
-> +			interrupts =
-> +				<0 413 0 /* CE0 */ >,
-> +				<0 414 0 /* CE1 */ >,
-> +				<0 415 0 /* CE2 */ >,
-> +				<0 416 0 /* CE3 */ >,
-> +				<0 417 0 /* CE4 */ >,
-> +				<0 418 0 /* CE5 */ >,
-> +				<0 420 0 /* CE6 */ >,
-> +				<0 421 0 /* CE7 */ >,
-> +				<0 422 0 /* CE8 */ >,
-> +				<0 423 0 /* CE9 */ >,
-> +				<0 424 0 /* CE10 */ >,
-> +				<0 425 0 /* CE11 */ >;
-> +		};
->  	};
->  };
-> -- 
-> 2.17.0
-> 
+
+-Doug
