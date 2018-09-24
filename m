@@ -1,26 +1,45 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5baa1afb.1c69fb81.498e2.432f@mx.google.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] regulators: qcom: Add PMS405 regulators
-References: <20180920014020.14408-1-bjorn.andersson@linaro.org>
+Return-Path: <SRS0=vNml=MG=alien8.de=bp@kernel.org>
+Date: Mon, 24 Sep 2018 12:40:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 0/6] Add Peripheral EDACs to SOCFPGA Stratix10.
+Message-ID: <20180924104002.GC20187@zn.tnic>
+References: <1537385941-11582-1-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20180920014020.14408-1-bjorn.andersson@linaro.org>
-Date: Mon, 24 Sep 2018 15:12:57 -0700
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1537385941-11582-1-git-send-email-thor.thayer@linux.intel.com>
+To: thor.thayer@linux.intel.com
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 19 Sep 2018 18:40:20 -0700, Bjorn Andersson wrote:
-> The PMS405 provdies 5 SMPS regulators and 13 LDOs, add these to the RPM
-> regulator driver.
+On Wed, Sep 19, 2018 at 02:38:55PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../regulator/qcom,smd-rpm-regulator.txt      | 23 ++++++
->  drivers/regulator/qcom_smd-regulator.c        | 77 +++++++++++++++++++
->  2 files changed, 100 insertions(+)
+> This series of patches adds peripheral EDAC support for the SOCFPGA
+> Stratix10. To ease the integration, restructuring of the existing
+> Stratix10 SDRAM EDAC occurred.
+> The Stratix10 peripheral support closely mirrors some of the Arria10
+> peripherals and they can share functions.
 > 
+> Thor Thayer (6):
+>   arm64: dts: stratix10: Additions to EDAC System Manager
+>   EDAC, altera: Combine Stratix10 and Arria10 probe functions
+>   arm64: dts: stratix10: Add SDRAM node
+>   EDAC, altera: Merge Stratix10 into Arria10 SDRAM probe
+>   EDAC, altera: Add Stratix10 peripheral support.
+>   arm64: dts: stratix10: Add peripheral EDAC nodes
+> 
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi |  37 +-
+>  drivers/edac/altera_edac.c                        | 666 +++++++---------------
+>  drivers/edac/altera_edac.h                        |  73 +--
+>  3 files changed, 282 insertions(+), 494 deletions(-)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I love diffstats like those and don't find anything strange in the new
+additions considering that I have no clue about ARM. So once the DT
+stuff has been acked, I'll take this...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
