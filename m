@@ -1,69 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH net-next] dt-bindings: net: ravb: Add support for r8a7744
- SoC
-Date: Mon, 24 Sep 2018 10:45:42 +0200
-Message-ID: <20180924084542.qcvb4uykzqel3uu7@verge.net.au>
-References: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
- <922d6b1d-764a-ad2d-6a6c-8d992f3fbe15@cogentembedded.com>
- <OSBPR01MB21036782B7F7938C35D0D859B8120@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Mon, 24 Sep 2018 10:47:09 +0200
+Message-ID: <CAK8P3a0AVPL3nYF4HTM_jD8-vFn_ScSTnLMUku9vRdbwZQeD4g@mail.gmail.com>
+References: <20180914143719.GA27689@guoren-Inspiron-7460> <mhng-9d591179-01d4-4a84-a490-8a09d4f3a3d1@palmer-si-x1c4>
+ <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com> <CAMuHMdVV0QWXCkkL8dq4UMLaANGMHu7ePhQ83FiFDtynpJzbLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <OSBPR01MB21036782B7F7938C35D0D859B8120@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVV0QWXCkkL8dq4UMLaANGMHu7ePhQ83FiFDtynpJzbLA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Palmer Dabbelt <palmer@sifive.com>, Guo Ren <ren_guo@c-sky.com>, linux-arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, DTML <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 03:57:33PM +0000, Biju Das wrote:
-> Hi Sergei,
-> 
-> Thanks  for the feedback.
-> 
-> > Subject: Re: [PATCH net-next] dt-bindings: net: ravb: Add support for
-> > r8a7744 SoC
-> >
-> > Hello!
-> >
-> > On 09/21/2018 05:25 PM, Biju Das wrote:
-> >
-> > > Document RZ/G1N (R8A7744) SoC bindings.
-> > >
-> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> >
-> > Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> >
-> > > ---
-> > >  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > > index da249b7..3530256 100644
-> > > --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > > +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
-> > > @@ -6,6 +6,7 @@ interface contains.
-> > >  Required properties:
-> > >  - compatible: Must contain one or more of the following:
-> > >        - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
-> > > +      - "renesas,etheravb-r8a7744" for the R8A7744 SoC.
-> >
-> >    Mmm, I thought it was decided to go with the full model #s, like with
-> > R8A77470 below?
-> 
-> For RZ/G1C case, there are 2 variants 1 with HDMI(R8A77470) and the other without HDMI(R8A77471).
-> Current support is for R8A77470.
+On Mon, Sep 24, 2018 at 9:21 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>
+> Hi Arnd,
+>
+> On Fri, Sep 21, 2018 at 7:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Thu, Sep 20, 2018 at 10:52 AM Palmer Dabbelt <palmer@sifive.com> wrote:
+> > > On Fri, 14 Sep 2018 07:37:20 PDT (-0700), ren_guo@c-sky.com wrote:
+> > > > On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
+> > > >> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> > My plan was to get that all into 4.20, and then have a conversation about the
+> > actual syscall table changes in 4.21. If we need it for both csky and rv32,
+> > we might just change the generic syscall table that way in 4.21 without
+> > changing all the other ones along with them. I don't want to drag things out
+> > over too many merge windows though, and my plan was to do all architectures
+> > together to simplify the version checks in the libc code to only have to check
+> > for a single version.
+>
+> What happens with the version checks if it is backported to stable?
 
-r8a7744 is consistent with other bindings for this SoC and my understanding
-is that it is a) sufficient to differentiate this SoC and b) in keeping
-with most other RZ/G1 SoCs (RZ/G1C being the exception).
+They end up as dead code.
 
-In short, this seems fine to me.
+The way these version checks are done in glibc, we always try the new
+interface first before falling back to the old version, but don't check the
+kernel version at runtime.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+The compile-time check optimizes out the fallback if glibc is built for
+a recent-enough minimum kernel version that is guaranteed to have
+the new version.
 
-> > >        - "renesas,etheravb-r8a7745" for the R8A7745 SoC.
-> > >        - "renesas,etheravb-r8a77470" for the R8A77470 SoC.
-> > >        - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
+      Arnd
