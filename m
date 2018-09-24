@@ -1,81 +1,73 @@
-Return-Path: <SRS0=9I9X=MG=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 4/4] ARM: dts: iwg23s-sbc: Add uSD card support
-Date: Mon, 24 Sep 2018 15:09:49 +0000
-Message-ID: 
- <TY1PR01MB1770B98D83C2CC1C602E503DC0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=oVJk=MG=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
 References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1537530911-443-5-git-send-email-fabrizio.castro@bp.renesas.com>
- <20180924091348.gf462j2n7yuf4tif@verge.net.au>
- <TY1PR01MB1770ADB65DD3BDF479C43276C0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdVs+EnPndpPm6cw4oXm4bnwJ15G=ac_f2Xbe_w=i8CBnA@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdVs+EnPndpPm6cw4oXm4bnwJ15G=ac_f2Xbe_w=i8CBnA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+ <20180924091348.gf462j2n7yuf4tif@verge.net.au> <TY1PR01MB1770ADB65DD3BDF479C43276C0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1770ADB65DD3BDF479C43276C0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Sep 2018 12:03:18 +0200
+Message-ID: <CAMuHMdVs+EnPndpPm6cw4oXm4bnwJ15G=ac_f2Xbe_w=i8CBnA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] ARM: dts: iwg23s-sbc: Add uSD card support
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjay4NCg0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIDQvNF0gQVJNOiBkdHM6IGl3ZzIzcy1zYmM6IEFkZCB1U0QgY2FyZCBzdXBw
-b3J0DQo+DQo+IEhpIEZhYnJpemlvLA0KPg0KPiBPbiBNb24sIFNlcCAyNCwgMjAxOCBhdCAxMToz
-MCBBTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4g
-d3JvdGU6DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogU2lt
-b24gSG9ybWFuIDxob3Jtc0B2ZXJnZS5uZXQuYXU+DQo+ID4gPiBTZW50OiAyNCBTZXB0ZW1iZXIg
-MjAxOCAxMDoxNA0KPiA+ID4gVG86IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJw
-LnJlbmVzYXMuY29tPg0KPiA+ID4gQ2M6IFVsZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8u
-b3JnPjsgUm9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZCA8bWFy
-ay5ydXRsYW5kQGFybS5jb20+OyBMYXVyZW50DQo+ID4gPiBQaW5jaGFydCA8bGF1cmVudC5waW5j
-aGFydEBpZGVhc29uYm9hcmQuY29tPjsgR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2Fz
-QGdsaWRlci5iZT47IExpbnVzIFdhbGxlaWoNCj4gPiA+IDxsaW51cy53YWxsZWlqQGxpbmFyby5v
-cmc+OyBXb2xmcmFtIFNhbmcgPHdzYStyZW5lc2FzQHNhbmctZW5naW5lZXJpbmcuY29tPjsgTWFn
-bnVzIERhbW0gPG1hZ251cy5kYW1tQGdtYWlsLmNvbT47DQo+ID4gPiBsaW51eC1tbWNAdmdlci5r
-ZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgtcmVuZXNhcy1zb2NA
-dmdlci5rZXJuZWwub3JnOyBsaW51eC1ncGlvQHZnZXIua2VybmVsLm9yZzsgQ2hyaXMNCj4gPiA+
-IFBhdGVyc29uIDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBCaWp1IERhcyA8YmlqdS5k
-YXNAYnAucmVuZXNhcy5jb20+DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDQvNF0gQVJNOiBk
-dHM6IGl3ZzIzcy1zYmM6IEFkZCB1U0QgY2FyZCBzdXBwb3J0DQo+ID4gPg0KPiA+ID4gT24gRnJp
-LCBTZXAgMjEsIDIwMTggYXQgMTI6NTU6MTFQTSArMDEwMCwgRmFicml6aW8gQ2FzdHJvIHdyb3Rl
-Og0KPiA+ID4gPiBBZGQgdVNEIGNhcmQgc3VwcG9ydCB0byB0aGUgaXdnMjNzIHNpbmdsZSBib2Fy
-ZCBjb21wdXRlciBwb3dlcmVkDQo+ID4gPiA+IGJ5IHRoZSBSWi9HMUMgU29DIChhLmsuYS4gcjhh
-Nzc0NzApLg0KPiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8g
-PGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiA+ID4gUmV2aWV3ZWQtYnk6IEJp
-anUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+IEhl
-bGxvIFNpbW9uLA0KPiA+ID4gPg0KPiA+ID4gPiB0aGlzIHBhdGNoIGNhbiBvbmx5IGJlIHRha2Vu
-IGFmdGVyIHBhdGNoICJwaW5jdHJsOiBzaC1wZmM6IHI4YTc3NDcwOg0KPiA+ID4gPiBBZGQgU0RI
-STIgdm9sdGFnZSBzd2l0Y2giIGZyb20gdGhpcyBzZXJpZXMgYXBwZWFycyBvbiBhIHJlbGVhc2Ug
-Y2FuZGlkYXRlDQo+ID4gPiA+IG9yIGEgcmVsZWFzZS4NCj4gPiA+DQo+ID4gPiBXaGF0IGlzIHRo
-ZSBuYXR1cmUgb2YgdGhhdCBkZXBlbmRlbmN5LiBEb2VzIGFkZGluZyB0aGlzIHBhdGNoIHdpdGhv
-dXQNCj4gPiA+IGl0cyBkZXBlbmRlbmN5IGNhdXNlIGEgcmVncmVzc2lvbj8NCj4gPg0KPiA+IFNp
-bmNlIHRoZSBTREhJMiBwaW5zIGRlZmluaXRpb24gY29udGFpbiAicG93ZXItc291cmNlIiBwcm9w
-ZXJ0eSwgYWRkaW5nIHRoaXMNCj4gPiBwYXRjaCB3aXRob3V0IGl0cyBkZXBlbmRlbmN5IHdpbGwg
-Y2F1c2UgYW4gZXJyb3IgYXQgYm9vdCB1cCBhcyB0aGUga2VybmVsDQo+ID4gd291bGQgYmUgbG9v
-a2luZyBmb3IgZmxhZyBTSF9QRkNfUElOX0NGR19JT19WT0xUQUdFIGZvciBlYWNoIHBpbiBjb250
-YWluZWQNCj4gPiBpbiBzZGhpMl9waW5zIGFuZCBzZGhpMl9waW5zX3VocywgYW5kIHNpbmNlIHRo
-YXQgcGFydGljdWxhciBmbGFnIHdvdWxkIGJlIG1pc3NpbmcNCj4gPiAoYXMgc3VjaCBhIGRlZmlu
-aXRpb24gY29tZXMgZnJvbSBwYXRjaCAicGluY3RybDogc2gtcGZjOiByOGE3NzQ3MDogQWRkIFNE
-SEkyIHZvbHRhZ2UNCj4gPiBzd2l0Y2giKSB0aGUgU0QgY2FyZCB3b3VsZCBub3QgYmUgZnVuY3Rp
-b25hbCwgYnV0IHRoaXMgd29uJ3QgaGF2ZSBhbnkgaW1wYWN0IG9uDQo+ID4gdGhlIHJlc3Qgb2Yg
-dGhlIHN5c3RlbS4NCj4NCj4gQnV0IHRoYXQgd29uJ3QgYmUgYSByZWdyZXNzaW9uLCBhcyBjdXJy
-ZW50bHkgdGhlcmUncyBubyBzdXBwb3J0IGZvcg0KPiBTREhJMiBhbnl3YXksDQo+IHJpZ2h0PyBB
-bGwgcGllY2VzIHdpbGwgc3RhcnQgd29ya2luZyB3aGVuIGJvdGggdGhlIHBpbmN0cmwgYW5kIERU
-UyBzdXBwb3J0IHdpbGwNCj4gYmUgbWVyZ2VkIHRvZ2V0aGVyLg0KDQpFeGFjdGx5LCBpdCB3b24n
-dCBiZSBhIHJlZ3Jlc3Npb24sIHlvdSdkIGp1c3QgZ2V0IHdlaXJkIG1lc3NhZ2VzIGZyb20gdGhl
-IGtlcm5lbCwgdGhhdCdzIGFsbC4NCg0KVGhhbmtzLA0KRmFiDQoNCj4NCj4gVGhpcyBpcyBkaWZm
-ZXJlbnQgZnJvbSB0aGUgY2FzZSB3aGVyZSB5b3UgZmlyc3QgYWRkIGEgZGV2aWNlIG5vZGUgdG8g
-ZW5hYmxlIGENCj4gZGV2aWNlICh3aGljaCBtYWtlcyBpdCB3b3JrKSwgYW5kIGxhdGVyIGFkZCBw
-aW5jdHJsIHByb3BlcnRpZXMgKHdoaWNoIG1heQ0KPiBicmVhayBpdCwgaWYgdGhlIHBpbmN0cmwg
-ZHJpdmVyIGRvZXNuJ3QgaGF2ZSBzdXBwb3J0IGZvciBpdCB5ZXQpLg0KPg0KPiBHcntvZXRqZSxl
-ZXRpbmd9cywNCj4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4g
-R2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAt
-LSBnZWVydEBsaW51eC1tNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdp
-dGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4g
-SSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29t
-ZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBM
-aW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtl
-cyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNM
-OCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVk
-IE5vLiAwNDU4NjcwOS4NCg==
+Hi Fabrizio,
+
+On Mon, Sep 24, 2018 at 11:30 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> > -----Original Message-----
+> > From: Simon Horman <horms@verge.net.au>
+> > Sent: 24 September 2018 10:14
+> > To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Cc: Ulf Hansson <ulf.hansson@linaro.org>; Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>; Laurent
+> > Pinchart <laurent.pinchart@ideasonboard.com>; Geert Uytterhoeven <geert+renesas@glider.be>; Linus Walleij
+> > <linus.walleij@linaro.org>; Wolfram Sang <wsa+renesas@sang-engineering.com>; Magnus Damm <magnus.damm@gmail.com>;
+> > linux-mmc@vger.kernel.org; devicetree@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-gpio@vger.kernel.org; Chris
+> > Paterson <Chris.Paterson2@renesas.com>; Biju Das <biju.das@bp.renesas.com>
+> > Subject: Re: [PATCH 4/4] ARM: dts: iwg23s-sbc: Add uSD card support
+> >
+> > On Fri, Sep 21, 2018 at 12:55:11PM +0100, Fabrizio Castro wrote:
+> > > Add uSD card support to the iwg23s single board computer powered
+> > > by the RZ/G1C SoC (a.k.a. r8a77470).
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > > ---
+> > > Hello Simon,
+> > >
+> > > this patch can only be taken after patch "pinctrl: sh-pfc: r8a77470:
+> > > Add SDHI2 voltage switch" from this series appears on a release candidate
+> > > or a release.
+> >
+> > What is the nature of that dependency. Does adding this patch without
+> > its dependency cause a regression?
+>
+> Since the SDHI2 pins definition contain "power-source" property, adding this
+> patch without its dependency will cause an error at boot up as the kernel
+> would be looking for flag SH_PFC_PIN_CFG_IO_VOLTAGE for each pin contained
+> in sdhi2_pins and sdhi2_pins_uhs, and since that particular flag would be missing
+> (as such a definition comes from patch "pinctrl: sh-pfc: r8a77470: Add SDHI2 voltage
+> switch") the SD card would not be functional, but this won't have any impact on
+> the rest of the system.
+
+But that won't be a regression, as currently there's no support for
+SDHI2 anyway,
+right? All pieces will start working when both the pinctrl and DTS support will
+be merged together.
+
+This is different from the case where you first add a device node to enable a
+device (which makes it work), and later add pinctrl properties (which may
+break it, if the pinctrl driver doesn't have support for it yet).
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
