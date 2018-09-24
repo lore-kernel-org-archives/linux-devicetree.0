@@ -1,55 +1,44 @@
 From: Songjun Wu <songjun.wu@linux.intel.com>
-Subject: [PATCH 02/14] MIPS: dts: Add aliases node for lantiq danube serial
-Date: Mon, 24 Sep 2018 18:27:51 +0800
-Message-ID: <20180924102803.30263-3-songjun.wu@linux.intel.com>
-References: <20180924102803.30263-1-songjun.wu@linux.intel.com>
+Subject: [PATCH 00/14] serial: langtiq: Add CCF suppport
+Date: Mon, 24 Sep 2018 18:27:49 +0800
+Message-ID: <20180924102803.30263-1-songjun.wu@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924102803.30263-1-songjun.wu@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: yixin.zhu@linux.intel.com, chuanhua.lei@linux.intel.com, hauke.mehrtens@intel.com
-Cc: Songjun Wu <songjun.wu@linux.intel.com>, devicetree@vger.kernel.org, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, Philippe Ombredanne <pombredanne@nexb.com>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
+Cc: Songjun Wu <songjun.wu@linux.intel.com>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org, Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Philippe Ombredanne <pombredanne@nexb.com>, Paul Burton <paul.burton@mips.com>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-Previous implementation uses a hard-coded register value to check
-if the current serial entity is the console entity.
-Now the lantiq serial driver uses the aliases for the index of the
-serial port.
-The lantiq danube serial dts are updated with aliases to support this.
+This patch series is for adding common clock framework support
+for langtiq serial driver, mainly includes:
+1) Add common clock framework support.
+2) Modify the dts file according to the DT conventions.
+3) Replace the platform dependent functions with kernel functions
 
-Signed-off-by: Songjun Wu <songjun.wu@linux.intel.com>
----
 
- arch/mips/boot/dts/lantiq/danube.dtsi   | 2 +-
- arch/mips/boot/dts/lantiq/easy50712.dts | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Songjun Wu (14):
+  MIPS: dts: Change upper case to lower case
+  MIPS: dts: Add aliases node for lantiq danube serial
+  serial: lantiq: Get serial id from dts
+  serial: lantiq: Change ltq_w32_mask to asc_update_bits
+  MIPS: lantiq: Unselect SWAP_IO_SPACE when LANTIQ is selected
+  serial: lantiq: Use readl/writel instead of ltq_r32/ltq_w32
+  serial: lantiq: Rename fpiclk to freqclk
+  serial: lantiq: Replace clk_enable/clk_disable with clk generic API
+  serial: lantiq: Add CCF support
+  serial: lantiq: Reorder the head files
+  include: Add lantiq.h in include/linux/
+  serial: lantiq: Replace lantiq_soc.h with lantiq.h
+  serial: lantiq: Change init_lqasc to static declaration
+  dt-bindings: serial: lantiq: Add optional properties for CCF
 
-diff --git a/arch/mips/boot/dts/lantiq/danube.dtsi b/arch/mips/boot/dts/lantiq/danube.dtsi
-index 510be63c8bdf..73746d7577d7 100644
---- a/arch/mips/boot/dts/lantiq/danube.dtsi
-+++ b/arch/mips/boot/dts/lantiq/danube.dtsi
-@@ -74,7 +74,7 @@
- 			reg = <0xe100a00 0x100>;
- 		};
- 
--		serial@e100c00 {
-+		asc1: serial@e100c00 {
- 			compatible = "lantiq,asc";
- 			reg = <0xe100c00 0x400>;
- 			interrupt-parent = <&icu0>;
-diff --git a/arch/mips/boot/dts/lantiq/easy50712.dts b/arch/mips/boot/dts/lantiq/easy50712.dts
-index 1ce20b7d05cb..452860ca1868 100644
---- a/arch/mips/boot/dts/lantiq/easy50712.dts
-+++ b/arch/mips/boot/dts/lantiq/easy50712.dts
-@@ -4,6 +4,10 @@
- /include/ "danube.dtsi"
- 
- / {
-+	aliases {
-+		serial0 = &asc1;
-+	};
-+
- 	chosen {
- 		bootargs = "console=ttyLTQ0,115200 init=/etc/preinit";
- 	};
+ .../devicetree/bindings/serial/lantiq_asc.txt      |  15 +++
+ arch/mips/Kconfig                                  |   1 -
+ arch/mips/boot/dts/lantiq/danube.dtsi              |  42 +++---
+ arch/mips/boot/dts/lantiq/easy50712.dts            |  18 ++-
+ drivers/tty/serial/lantiq.c                        | 145 ++++++++++++---------
+ include/linux/lantiq.h                             |  23 ++++
+ 6 files changed, 155 insertions(+), 89 deletions(-)
+ create mode 100644 include/linux/lantiq.h
+
 -- 
 2.11.0
