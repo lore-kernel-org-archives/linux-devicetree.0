@@ -1,14 +1,14 @@
 From: Sasha Levin <Alexander.Levin@microsoft.com>
-Subject: [PATCH AUTOSEL 3.18 06/13] net: ethernet: cpsw-phy-sel: prefer
- phandle for phy sel
-Date: Mon, 24 Sep 2018 14:50:10 +0000
-Message-ID: <20180924144959.164754-6-alexander.levin@microsoft.com>
-References: <20180924144959.164754-1-alexander.levin@microsoft.com>
+Subject: [PATCH AUTOSEL 4.4 08/18] net: ethernet: cpsw-phy-sel: prefer phandle
+ for phy sel
+Date: Mon, 24 Sep 2018 14:49:49 +0000
+Message-ID: <20180924144942.164688-8-alexander.levin@microsoft.com>
+References: <20180924144942.164688-1-alexander.levin@microsoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924144959.164754-1-alexander.levin@microsoft.com>
+In-Reply-To: <20180924144942.164688-1-alexander.levin@microsoft.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: "stable@vger.kernel.org" <stable@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
@@ -55,10 +55,10 @@ Signed-off-by: Sasha Levin <alexander.levin@microsoft.com>
 
 diff --git a/drivers/net/ethernet/ti/cpsw-phy-sel.c b/drivers/net/ethernet/=
 ti/cpsw-phy-sel.c
-index 0ea78326cc21..21453ca7deff 100644
+index e9cc61e1ec74..241424440b8c 100644
 --- a/drivers/net/ethernet/ti/cpsw-phy-sel.c
 +++ b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-@@ -145,10 +145,13 @@ void cpsw_phy_sel(struct device *dev, phy_interface_t=
+@@ -147,10 +147,13 @@ void cpsw_phy_sel(struct device *dev, phy_interface_t=
  phy_mode, int slave)
  	struct device_node *node;
  	struct cpsw_phy_sel_priv *priv;
