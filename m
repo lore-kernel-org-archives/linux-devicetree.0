@@ -1,340 +1,69 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] ARM: dts: Add support for Liebherr's BK4 device (vf610
- based)
-Date: Mon, 24 Sep 2018 10:30:45 +0200
-Message-ID: <20180924103045.524c6855@jawa>
-References: <20180921152726.31742-1-lukma@denx.de>
-        <CAOMZO5DPnWNJ_UVdE9Lvh05R84seP8VPP=35eEUaor4-pppXGQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH net-next] dt-bindings: net: ravb: Add support for r8a7744
+ SoC
+Date: Mon, 24 Sep 2018 10:45:42 +0200
+Message-ID: <20180924084542.qcvb4uykzqel3uu7@verge.net.au>
+References: <1537539943-24712-1-git-send-email-biju.das@bp.renesas.com>
+ <922d6b1d-764a-ad2d-6a6c-8d992f3fbe15@cogentembedded.com>
+ <OSBPR01MB21036782B7F7938C35D0D859B8120@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/5BDm3QG0=cl.1V1CQsGjFCa"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5DPnWNJ_UVdE9Lvh05R84seP8VPP=35eEUaor4-pppXGQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB21036782B7F7938C35D0D859B8120@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
---Sig_/5BDm3QG0=cl.1V1CQsGjFCa
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi Fabio,
-
-Thanks for your review.
-
-> On Fri, Sep 21, 2018 at 12:27 PM, Lukasz Majewski <lukma@denx.de>
-> wrote:
-> > This commit adds DTS support for BK4 device from Liebherr. It
-> > uses vf610 SoC from NXP.
+On Fri, Sep 21, 2018 at 03:57:33PM +0000, Biju Das wrote:
+> Hi Sergei,
+> 
+> Thanks  for the feedback.
+> 
+> > Subject: Re: [PATCH net-next] dt-bindings: net: ravb: Add support for
+> > r8a7744 SoC
 > >
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > ---
-> >  arch/arm/boot/dts/Makefile      |   1 +
-> >  arch/arm/boot/dts/vf610-bk4.dts | 504
-> > ++++++++++++++++++++++++++++++++++++++++ 2 files changed, 505
-> > insertions(+) create mode 100644 arch/arm/boot/dts/vf610-bk4.dts
+> > Hello!
 > >
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index b5bd3de87c33..e6f159895fa9 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -577,6 +577,7 @@ dtb-$(CONFIG_SOC_LS1021A) +=3D \
-> >         ls1021a-twr.dtb
-> >  dtb-$(CONFIG_SOC_VF610) +=3D \
-> >         vf500-colibri-eval-v3.dtb \
-> > +       vf610-bk4.dtb \
-> >         vf610-colibri-eval-v3.dtb \
-> >         vf610m4-colibri.dtb \
-> >         vf610-cosmic.dtb \
-> > diff --git a/arch/arm/boot/dts/vf610-bk4.dts
-> > b/arch/arm/boot/dts/vf610-bk4.dts new file mode 100644
-> > index 000000000000..4ad7e739a0ad
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/vf610-bk4.dts
-> > @@ -0,0 +1,504 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Copyright 2018
-> > + * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
-> > + */
-> > +
-> > +/dts-v1/;
-> > +#include "vf610.dtsi"
-> > +
-> > +/ {
-> > +       model =3D "Liebherr BK4 controller";
-> > +       compatible =3D "lwn,bk4", "fsl,vf610";
-> > +
-> > +       chosen {
-> > +               bootargs =3D "console=3DttyLP1,115200"; =20
->=20
-> You could pass stdout-path instead.
+> > On 09/21/2018 05:25 PM, Biju Das wrote:
+> >
+> > > Document RZ/G1N (R8A7744) SoC bindings.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >
+> > Reviewed-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> >
+> > > ---
+> > >  Documentation/devicetree/bindings/net/renesas,ravb.txt | 1 +
+> > >  1 file changed, 1 insertion(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > > index da249b7..3530256 100644
+> > > --- a/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > > +++ b/Documentation/devicetree/bindings/net/renesas,ravb.txt
+> > > @@ -6,6 +6,7 @@ interface contains.
+> > >  Required properties:
+> > >  - compatible: Must contain one or more of the following:
+> > >        - "renesas,etheravb-r8a7743" for the R8A7743 SoC.
+> > > +      - "renesas,etheravb-r8a7744" for the R8A7744 SoC.
+> >
+> >    Mmm, I thought it was decided to go with the full model #s, like with
+> > R8A77470 below?
+> 
+> For RZ/G1C case, there are 2 variants 1 with HDMI(R8A77470) and the other without HDMI(R8A77471).
+> Current support is for R8A77470.
 
-Ok.
+r8a7744 is consistent with other bindings for this SoC and my understanding
+is that it is a) sufficient to differentiate this SoC and b) in keeping
+with most other RZ/G1 SoCs (RZ/G1C being the exception).
 
->=20
-> > +       };
-> > +
-> > +       memory@80000000 {
-> > +               reg =3D <0x80000000 0x8000000>;
-> > +       };
-> > +
-> > +       audio_ext: mclk_osc {
-> > +               compatible =3D "fixed-clock";
-> > +               #clock-cells =3D <0>;
-> > +               clock-frequency =3D <24576000>;
-> > +       }; =20
->=20
-> This seems to be unused.
+In short, this seems fine to me.
 
-The audio_ext label is used (referenced) in the "clks".
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
->=20
-> > +
-> > +       enet_ext: eth_osc {
-> > +               compatible =3D "fixed-clock";
-> > +               #clock-cells =3D <0>;
-> > +               clock-frequency =3D <50000000>;
-> > +       };
-> > +
-> > +       leds {
-> > +               compatible =3D "gpio-leds";
-> > +               pinctrl-names =3D "default";
-> > +               pinctrl-0 =3D <&pinctrl_gpio_leds>;
-> > +
-> > +               /* LED D5 */
-> > +               led0: heartbeat {
-> > +                       label =3D "heartbeat";
-> > +                       gpios =3D <&gpio3 21 GPIO_ACTIVE_HIGH>;
-> > +                       default-state =3D "on";
-> > +                       linux,default-trigger =3D "heartbeat";
-> > +               };
-> > +       };
-> > +
-> > +       regulators {
-> > +               compatible =3D "simple-bus";
-> > +               #address-cells =3D <1>;
-> > +               #size-cells =3D <0>;
-> > +
-> > +               reg_3p3v: regulator@0 { =20
->=20
-> Please move all regulators outside of the simple-bus container and use
-> this naming convention:
->=20
-> reg_3p3v: regulator-3p3v {
-
-Ok.
-
->=20
-> > +&dspi3 {
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&pinctrl_dspi3>;
-> > +       bus-num =3D <3>;
-> > +       status =3D "okay";
-> > +
-> > +       spidev3@0 {
-> > +               compatible =3D "fsl,vf610-dspi";
-> > +               spi-max-frequency =3D <30000000>;
-> > +               reg =3D <0>;
-> > +               fsl,spi-slave-mode; =20
->=20
-> Such property does not exist.
-
-It has been added in the other patch sent to ML:
-https://lkml.org/lkml/2018/9/18/792
-
-But till now no comments/reply.
-
->=20
-> I also thought that spidev nodes in dt were not recommended.
-
-This is a bit "unusual" on BK4, as the spidev driver is the only "user"
-of the SPI subsystem on this board. In other words - the /dev/spidevX.Y
-provided by spidev is solely used for communication.
-
-Hence, I would prefer to make it explicit in the DTS.
-
->=20
-> > +&iomuxc { =20
->=20
-> Like Stefan mentioned it is common practice on imx dts files to place
-> the iomuxc node as the last one.
-
-Ok.
-
->=20
->=20
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&pinctrl_bk4_common>; =20
->=20
-> This seems to be not called from any driver.
-
-Yes. This is "base" setup for the board. Those configured pins are
-thereafter used by several user space programs.
-
->=20
-> We usually use a hog group for such purpose.
-
-I wanted to name it explicit that we do use it for this controller.
-However, no problem to rename it to hog.
-
->=20
-> > +
-> > +       pinctrl_bk4_common: commongrp {
-> > +               fsl,pins =3D <
-> > +                       /* One_Wire_PSU_EN */
-> > +                       VF610_PAD_PTC29__GPIO_102
-> > 0x1183
-> > +                       /* SPI */
-> > +                       VF610_PAD_PTB26__GPIO_96
-> > 0x1183
-> > +                       VF610_PAD_PTE14__GPIO_119
-> > 0x1183
-> > +                       VF610_PAD_PTE4__GPIO_109
-> > 0x1181
-> > +                       /* Feedback_Lines */
-> > +                       VF610_PAD_PTC31__GPIO_104
-> > 0x1181
-> > +                       VF610_PAD_PTA7__GPIO_134
-> > 0x1181
-> > +                       VF610_PAD_PTD9__GPIO_88         0x1181
-> > +                       VF610_PAD_PTE1__GPIO_106
-> > 0x1183
-> > +                       VF610_PAD_PTB2__GPIO_24         0x1181
-> > +                       VF610_PAD_PTB3__GPIO_25         0x1181
-> > +                       VF610_PAD_PTB1__GPIO_23         0x1181
-> > +                       /* SDHC */
-> > +                       VF610_PAD_PTE19__GPIO_124
-> > 0x1183
-> > +                       VF610_PAD_PTB23__GPIO_93
-> > 0x1181 =20
->=20
-> If they are related to SDHC they should be better placed under the
-> sdhc nodes.
->=20
-
-I will double check this.
-
->=20
-> > +                       /* GPI */
-> > +                       VF610_PAD_PTE2__GPIO_107
-> > 0x1181
-> > +                       VF610_PAD_PTE3__GPIO_108
-> > 0x1181
-> > +                       VF610_PAD_PTE5__GPIO_110
-> > 0x1181
-> > +                       VF610_PAD_PTE6__GPIO_111
-> > 0x1181
-> > +                       /* GPO */
-> > +                       VF610_PAD_PTE0__GPIO_105
-> > 0x1183
-> > +                       VF610_PAD_PTE7__GPIO_112
-> > 0x1183
-> > +                       /* RS485 */
-> > +                       VF610_PAD_PTB8__GPIO_30         0x1183
-> > +                       VF610_PAD_PTB9__GPIO_31         0x1183
-> > +                       VF610_PAD_PTE8__GPIO_113
-> > 0x1183
-> > +                       /* MPBUS MPB_EN */
-> > +                       VF610_PAD_PTE28__GPIO_133
-> > 0x1183
-> > +                       /* LEDS */
-> > +                       VF610_PAD_PTE15__GPIO_120
-> > 0x1183
-> > +                       VF610_PAD_PTA12__GPIO_5         0x1183
-> > +                       VF610_PAD_PTA16__GPIO_6         0x1183
-> > +                       VF610_PAD_PTE9__GPIO_114
-> > 0x1183
-> > +                       VF610_PAD_PTE20__GPIO_125
-> > 0x1183
-> > +                       VF610_PAD_PTE23__GPIO_128
-> > 0x1183
-> > +                       VF610_PAD_PTE16__GPIO_121
-> > 0x1183
-> > +                       /* MISC */
-> > +                       VF610_PAD_PTE10__GPIO_115
-> > 0x1183
-> > +                       VF610_PAD_PTE11__GPIO_116
-> > 0x1183
-> > +                       VF610_PAD_PTE17__GPIO_122
-> > 0x1183
-> > +                       VF610_PAD_PTC30__GPIO_103
-> > 0x1183
-> > +                       VF610_PAD_PTB0__GPIO_22         0x1181
-> > +                       /* RESETINFO */
-> > +                       VF610_PAD_PTE26__GPIO_131
-> > 0x1183
-> > +                       VF610_PAD_PTD6__GPIO_85         0x1181
-> > +                       VF610_PAD_PTE27__GPIO_132
-> > 0x1181
-> > +                       VF610_PAD_PTE13__GPIO_118
-> > 0x1181
-> > +                       VF610_PAD_PTE21__GPIO_126
-> > 0x1181
-> > +                       VF610_PAD_PTE22__GPIO_127
-> > 0x1181
-> > +                       /* EE_5V_EN */
-> > +                       VF610_PAD_PTE18__GPIO_123
-> > 0x1183
-> > +                       /* EE_5V_OC_N */
-> > +                       VF610_PAD_PTE25__GPIO_130
-> > 0x1181 =20
->=20
-> Seems like a long list of pins without any driver associated.
-
-Not kernel driver associated. The user space code uses those pins
-directly.
-
->=20
-> Please review such list carefully and assign to nodes that have a
-> driver associated, such as rs485,LEDS, etc.
-
-For example - the user space is not using in-kernel rs485 driver.
-
-But as said above - I will double check this.
-
->=20
-> > +
-> > +&usbphy0 {
-> > +       status =3D "okay";
-> > +};
-> > +
-> > +&usbphy1 {
-> > +       status =3D "okay";
-> > +};
-> > +
-> > +&qspi0 { =20
->=20
-> This is not placed in alphabetical order.
-
-Ok.=20
-
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
-
---Sig_/5BDm3QG0=cl.1V1CQsGjFCa
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAluooLUACgkQAR8vZIA0
-zr1uEggA16OlvAYKCEfUrftoxqibHeGUSJexXE2VsEx8M6zBQ5eQ5TFhhkJapZpJ
-7Wtn2V8sI/SsBzOaBjFMIkohc2VRLZo9BRIge2QPlLAnUr9tP6JRjTEFO7WwdAmW
-yY9406YInqdZmpAJsW2eJB+LFQvXXhrQ/5FJJ8Wcw+JEqitqcoBQDWOfj2TCTO+f
-taZ5bI7VquojXV1YKcKR7HixcoY8koHyDaw3OcGd+Zta//U2hiOIB6iak5e2/ZEQ
-6XjE1eOoT09kbU3emqUuZkt+sr6esVIMwTNXOalQxEu1BnPmLMKMR9Gukg17Y6/1
-OqgBDkYK8LJ6RKVolyAjDbBb4OqtJg==
-=HSms
------END PGP SIGNATURE-----
-
---Sig_/5BDm3QG0=cl.1V1CQsGjFCa--
+> > >        - "renesas,etheravb-r8a7745" for the R8A7745 SoC.
+> > >        - "renesas,etheravb-r8a77470" for the R8A77470 SoC.
+> > >        - "renesas,etheravb-r8a7790" for the R8A7790 SoC.
