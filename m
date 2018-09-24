@@ -1,11 +1,10 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 1/2] dt-bindings: pinctrl: document Broadcom Northstar pin
- mux controller
-Date: Mon, 24 Sep 2018 11:26:31 +0200
-Message-ID: <20180924092632.3788-1-zajec5@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] arm64: amd: seattle: Use "spi" as name for SPI controllers
+Date: Mon, 24 Sep 2018 11:46:48 +0200
+Message-ID: <20180924094648.20797-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -16,45 +15,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
+To: Brijesh Singh <brijeshkumar.singh@amd.com>, Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>, Tom Lendacky <thomas.lendacky@amd.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKTm9ydGhzdGFyIGhhcyBt
-dXggY29udHJvbGxlciBqdXN0IGxpa2UgTm9ydGhzdGFyIFBsdXMgYW5kIE5vcnRoc3RhcjIuCkl0
-J3MgYSBiaXQgZGlmZmVyZW50IHRob3VnaCAoZGlmZmVyZW50IHJlZ2lzdGVycyAmIHBpbnMpIHNv
-IGl0IHJlcXVpcmVzCml0cyBvd24gYmluZGluZy4KCkl0J3MgbmVlZGVkIHRvIGFsbG93IG90aGVy
-IGJsb2NrIGJpbmRpbmdzIHNwZWNpZnkgcmVxdWlyZWQgbXV4IHNldHVwLgoKU2lnbmVkLW9mZi1i
-eTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgpSZXZpZXdlZC1ieTogRmxvcmlh
-biBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+Ci0tLQpWMjogVXNlICJjcnVfZ3Bpb19j
-b250cm9sIgogICAgQWRkIG1vcmUgZnVuY3Rpb25zICYgZ3JvdXBzCiAgICBJbmNsdWRlIEZsb3Jp
-YW4ncyBSZXZpZXdlZC1ieQotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwvYnJj
-bSxucy1waW5tdXgudHh0IHwgMzMgKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5n
-ZWQsIDMzIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLG5zLXBpbm11eC50eHQKCmRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLG5zLXBpbm11
-eC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9icmNtLG5z
-LXBpbm11eC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5mNTZi
-NzUxNmRkZTQKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvcGluY3RybC9icmNtLG5zLXBpbm11eC50eHQKQEAgLTAsMCArMSwzMyBAQAorQnJvYWRj
-b20gTm9ydGhzdGFyIHBpbnMgbXV4IGNvbnRyb2xsZXIKKworU29tZSBvZiBOb3J0aHN0YXIgU29D
-cydzIHBpbnMgY2FuIGJlIHVzZWQgZm9yIHZhcmlvdXMgcHVycG9zZXMgdGhhbmtzIHRvIHRoZSBt
-dXgKK2NvbnRyb2xsZXIuIFRoaXMgYmluZGluZyBhbGxvd3MgZGVzY3JpYmluZyBtdXggY29udHJv
-bGxlciBhbmQgbGlzdGluZyBhdmFpbGFibGUKK2Z1bmN0aW9ucy4gVGhleSBjYW4gYmUgcmVmZXJl
-bmNlZCBsYXRlciBieSBvdGhlciBiaW5kaW5ncyB0byBsZXQgc3lzdGVtCitjb25maWd1cmUgY29u
-dHJvbGxlciBjb3JyZWN0bHkuCisKK1JlcXVpcmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6
-IGJyY20sbnMtcGlubXV4CistIHJlZzogaW9tZW0gYWRkcmVzcyByYW5nZSBvZiBDUlUgKENlbnRy
-YWwgUmVzb3VyY2UgVW5pdCkgcGluIHJlZ2lzdGVycworLSByZWctbmFtZXM6ICJjcnVfZ3Bpb19j
-b250cm9sIiAtIHRoZSBvbmx5IG5lZWRlZCAmIHN1cHBvcnRlZCByZWcgcmlnaHQgbm93CisKK0xp
-c3Qgb2Ygc3VwcG9ydGVkIGZ1bmN0aW9ucyBhbmQgdGhlaXIgZ3JvdXBzOgorLSAic3BpIjogInNw
-aV9ncnAiCistICJpMmMiOiAiaTJjX2dycCIKKy0gIm1kaW8iOiAibWRpb19ncnAiCistICJwd20i
-OiAicHdtMF9ncnAiLCAicHdtMV9ncnAiLCAicHdtMl9ncnAiLCAicHdtM19ncnAiCistICJ1YXJ0
-MSI6ICJ1YXJ0MV9ncnAiCisKK0ZvciBkb2N1bWVudGF0aW9uIG9mIHN1Ym5vZGVzIHNlZToKK0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYmluZGluZ3Mu
-dHh0CisKK0V4YW1wbGU6CisJcGluY3RybEAxODAwYzFjMCB7CisJCWNvbXBhdGlibGUgPSAiYnJj
-bSxucy1waW5tdXgiOworCQlyZWcgPSA8MHgxODAwYzFjMCAweDI0PjsKKwkJcmVnLW5hbWVzID0g
-ImNydV9ncGlvX2NvbnRyb2wiOworCisJCXNwaSB7CisJCQlmdW5jdGlvbiA9ICJzcGkiOworCQkJ
-Z3JvdXBzID0gInNwaV9ncnAiOworCQl9OworCX07Ci0tIAoyLjEzLjcKCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+From: Thierry Reding <treding@nvidia.com>
+
+Recent versions of DTC contain additional checks for SPI busses and warn
+about certain common mistakes, such as when an SPI controller has a name
+other than "spi".
+
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+index 125f4deb52fe..b664e7af74eb 100644
+--- a/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
++++ b/arch/arm64/boot/dts/amd/amd-seattle-soc.dtsi
+@@ -107,7 +107,7 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 		};
+ 
+-		spi0: ssp@e1020000 {
++		spi0: spi@e1020000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0 0xe1020000 0 0x1000>;
+@@ -117,7 +117,7 @@
+ 			clock-names = "apb_pclk";
+ 		};
+ 
+-		spi1: ssp@e1030000 {
++		spi1: spi@e1030000 {
+ 			status = "disabled";
+ 			compatible = "arm,pl022", "arm,primecell";
+ 			reg = <0 0xe1030000 0 0x1000>;
+-- 
+2.19.0
