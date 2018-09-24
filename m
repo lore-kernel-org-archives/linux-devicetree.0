@@ -1,42 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
-Date: Mon, 24 Sep 2018 09:21:36 +0200
-Message-ID: <CAMuHMdVV0QWXCkkL8dq4UMLaANGMHu7ePhQ83FiFDtynpJzbLA@mail.gmail.com>
-References: <20180914143719.GA27689@guoren-Inspiron-7460> <mhng-9d591179-01d4-4a84-a490-8a09d4f3a3d1@palmer-si-x1c4>
- <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [RFT] arm64: ARM: dts: exynos: Remove double SD card detect pin
+ inversion on TM2
+Date: Mon, 24 Sep 2018 09:41:01 +0200
+Message-ID: <20180924074103eucas1p1eccd62abcdeca57a95ad406869884a97~XRhczWE3m1304413044eucas1p1F@eucas1p1.samsung.com>
+References: <CGME20180921183024epcas2p3bef08b81273524ec9d7afef4875bb746@epcas2p3.samsung.com>
+        <20180921183014.20236-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com>
+In-Reply-To: <20180921183014.20236-1-krzk@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Palmer Dabbelt <palmer@sifive.com>, Guo Ren <ren_guo@c-sky.com>, Linux-Arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Krzysztof,
 
-On Fri, Sep 21, 2018 at 7:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thu, Sep 20, 2018 at 10:52 AM Palmer Dabbelt <palmer@sifive.com> wrote:
-> > On Fri, 14 Sep 2018 07:37:20 PDT (-0700), ren_guo@c-sky.com wrote:
-> > > On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
-> > >> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> My plan was to get that all into 4.20, and then have a conversation about the
-> actual syscall table changes in 4.21. If we need it for both csky and rv32,
-> we might just change the generic syscall table that way in 4.21 without
-> changing all the other ones along with them. I don't want to drag things out
-> over too many merge windows though, and my plan was to do all architectures
-> together to simplify the version checks in the libc code to only have to check
-> for a single version.
+On 2018-09-21 20:30, Krzysztof Kozlowski wrote:
+> The SDHCI standard, MMC host controller bindings and MMC core defines
+> card detect pin as active low.  Therefore there is no point to invert it
+> twice.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-What happens with the version checks if it is backported to stable?
+Works fine on TM2 and TM2e. However I'm not sure if it makes sense to
+refer to the SDHCI standard, as Exynos5433 has only DWMMC host controllers.
 
-Gr{oetje,eeting}s,
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-                        Geert
+> ---
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 3 +--
+>   1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> index a1e3194b7483..86d8ddc3288a 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> @@ -939,8 +939,7 @@
+>   	status = "okay";
+>   	cap-sd-highspeed;
+>   	disable-wp;
+> -	cd-gpios = <&gpa2 4 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpa2 4 GPIO_ACTIVE_LOW>;
+>   	card-detect-delay = <200>;
+>   	samsung,dw-mshc-ciu-div = <3>;
+>   	samsung,dw-mshc-sdr-timing = <0 4>;
 
+Best regards
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
