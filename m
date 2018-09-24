@@ -1,28 +1,36 @@
-Return-Path: <SRS0=4tMU=MG=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from kirsty.vergenet.net ([202.4.237.240]:54232 "EHLO
-        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729017AbeIXVbK (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 24 Sep 2018 17:31:10 -0400
-Date: Mon, 24 Sep 2018 17:28:23 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 2/2] dt-bindings: watchdog: renesas-wdt: Add support
- for R7S9210
-Message-ID: <20180924152822.odazfytpwjfg6hib@verge.net.au>
+Return-Path: <SRS0=3g/V=MG=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v5 2/2] dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
+Date: Mon, 24 Sep 2018 08:58:16 -0500
+Message-Id: <20180924135816.19474-3-chris.brandt@renesas.com>
+In-Reply-To: <20180924135816.19474-1-chris.brandt@renesas.com>
 References: <20180924135816.19474-1-chris.brandt@renesas.com>
- <20180924135816.19474-3-chris.brandt@renesas.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180924135816.19474-3-chris.brandt@renesas.com>
-Sender: devicetree-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Sep 24, 2018 at 08:58:16AM -0500, Chris Brandt wrote:
-> Document support for RZ/A2
-> 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Document support for RZ/A2
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+---
+v2:
+ * Added Reviewed-by
+---
+ Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+index 9407212a85a8..a9e49da6fa24 100644
+--- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+@@ -20,6 +20,7 @@ Required properties:
+ 	         - "renesas,r8a77990-wdt" (R-Car E3)
+ 	         - "renesas,r8a77995-wdt" (R-Car D3)
+ 	         - "renesas,r7s72100-wdt" (RZ/A1)
++	         - "renesas,r7s9210-wdt"  (RZ/A2)
+ 		The generic compatible string must be:
+ 		 - "renesas,rza-wdt" for RZ/A
+ 		 - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G1
+-- 
+2.16.1
