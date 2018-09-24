@@ -1,77 +1,89 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 02/20] iommu/tegra: gart: Clean up driver probe errors
-	handling
-Date: Mon, 24 Sep 2018 12:02:48 +0200
-Message-ID: <20180924100248.GD21032@ulmo>
-References: <20180924004153.8232-1-digetx@gmail.com>
-	<20180924004153.8232-3-digetx@gmail.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Add CD and WP pins to Odroid XU SD
+ card
+Date: Mon, 24 Sep 2018 12:04:52 +0200
+Message-ID: <20180924100453eucas1p2cc67bf2cae5c0d0a031c7ce8d1117529~XTfCSQ2rd1041310413eucas1p2S@eucas1p2.samsung.com>
+References: <CGME20180921210332epcas3p423aaeeb84ec3d8a44c5a898949f992e8@epcas3p4.samsung.com>
+        <20180921210321.12404-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3729783325731287023=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20180924004153.8232-3-digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180921210321.12404-1-krzk@kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Anand Moon <linux.amoon@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Krzysztof,
 
---===============3729783325731287023==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="+B+y8wtTXqdUj1xM"
-Content-Disposition: inline
-
-
---+B+y8wtTXqdUj1xM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 24, 2018 at 03:41:35AM +0300, Dmitry Osipenko wrote:
-> Properly clean up allocated resources on the drivers probe failure and
-> remove unneeded checks.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 2018-09-21 23:03, Krzysztof Kozlowski wrote:
+> Defining card-detect and write-protect GPIO pins in Odroid XU SD Card
+> does not change anything from functional point of view - dw-mmc driver
+> was reading the state from registers.  Adding cd-gpios and wp-gpios
+> properties changes only internal driver behavior to access the pins
+> directly.
+>
+> Add them to DTS only to comprehensively describe the hardware.  Minor
+> benefit is that write-protect pin configuration makes sure that it will
+> be properly pulled up to indicate write access.
+>
+> This also removes debug messages:
+>      dwmmc_exynos 12220000.mmc: No GPIO consumer cd found
+>      dwmmc_exynos 12220000.mmc: No GPIO consumer wp found
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/iommu/tegra-gart.c | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
+>   arch/arm/boot/dts/exynos5410-odroidxu.dts | 12 +++++++++++-
+>   1 file changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+> index a2046f5f998c..dae360f29a47 100644
+> --- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
+> +++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+> @@ -525,12 +525,14 @@
+>   
+>   &mmc_2 {
+>   	status = "okay";
+> +	wp-gpios = <&gpm5 0 GPIO_ACTIVE_LOW>;
+> +	cd-gpios = <&gpc2 2 GPIO_ACTIVE_LOW>;
+>   	card-detect-delay = <200>;
+>   	samsung,dw-mshc-ciu-div = <3>;
+>   	samsung,dw-mshc-sdr-timing = <0 4>;
+>   	samsung,dw-mshc-ddr-timing = <0 2>;
+>   	pinctrl-names = "default";
+> -	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
+> +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4 &sd2_wp>;
 
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+IMHO there is no point adding cd-gpios property if CD line is already 
+assigned to this device via respective pin ctrl entry (as special function).
 
---+B+y8wtTXqdUj1xM
-Content-Type: application/pgp-signature; name="signature.asc"
+Handling of WP line is even more controversial imho. Ideally the drivers 
+or mmc core should check somehow if WP line is available or not and act 
+respectively. WP line is not available on uSD card connector so there is 
+no point describing it.
 
------BEGIN PGP SIGNATURE-----
+>   	bus-width = <4>;
+>   	cap-sd-highspeed;
+>   	vmmc-supply = <&ldo21_reg>;
+> @@ -573,6 +575,14 @@
+>   		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+>   		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+>   	};
+> +
+> +	sd2_wp: sd2-wp {
+> +		samsung,pins = "gpm5-0";
+> +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
+> +		/* Pin is floating so pull it up to disable write-protect */
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> +		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
+> +	};
+>   };
+>   
+>   &pwm {
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluotkgACgkQ3SOs138+
-s6H+Ig/6AsRUs4KWmrmToJo+c1f02b2It0bq/cQpS4YE4Fb/cuifGolvSB3Afecy
-UPZufETrXZWicqUZRaC7CEwqaHq82IRHi3a8KcbTHGz20fg5TTQN+5eD2RDFTUOX
-jxbYiwUkAI2gjZM/7FnGBKPxf4FWWNcbLozxedgEU+MzISVmqk6nRxB1oMDI6GEA
-vMYnyOTte2LKdZ9AMvzWOSlShZXR1zqtym/F6fs/klhn+bp/E+SQ/09Yq2TDtMNS
-jwdU2dKylUyD56+QpJCZkDQCfe3U7FpSIaPWszpKjDy/pVaV9ww+eIzN+02+wgig
-GMmBDn8BIiZvDwrDxjuuCx6ZdRTAoz0Umx1elhssVozBVO+EloK5wVfFLpprVmSv
-GB/r+pztQzhS2TNnVsFjOKwd0OqTdaHVt5FIFClcZgfKz7m9aeTyaijQeWl9AsRO
-bgl5e5/0WFBNIEB01QaZU0ADhB8C9DI5z70Fxo7tPKst1n9UAliomV+nAdIpZOq6
-qVJjvBHQivUyDIggDkQ7HbT2SBxViCUDfka3GyRXMb/m8zC+9acz0AUl+tHd68eO
-tI+VAI5z0w0O5qYXN2lunhXloiQYGDlLOlTfI1oNXGAi1YRFgImbPMkvy4+mcryx
-WUl03xjUHhV2cHMuvT0l8HC7KRxhQCSF8UjFueKo/pe3Dyeb0jI=
-=wGqS
------END PGP SIGNATURE-----
-
---+B+y8wtTXqdUj1xM--
-
---===============3729783325731287023==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3729783325731287023==--
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
