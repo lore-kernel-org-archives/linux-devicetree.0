@@ -1,33 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: can: rcar_can: Add r8a774a1 support
-Date: Mon, 24 Sep 2018 09:17:36 -0700
-Message-ID: <20180924161736.GA26094@bogus>
-References: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1536576195-11520-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Subject: Re: [PATCH v7 3/6] dt-bindings: leds: Add bindings for lm3697 driver
+Date: Mon, 24 Sep 2018 09:18:44 -0700
+Message-ID: <20180924161844.GA29028@bogus>
+References: <20180911170825.17789-1-dmurphy@ti.com>
+ <20180911170825.17789-4-dmurphy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1536576195-11520-3-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <20180911170825.17789-4-dmurphy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 11:43:14AM +0100, Fabrizio Castro wrote:
-> Document RZ/G2M (r8a774a1) SoC specific bindings.
+On Tue, Sep 11, 2018 at 12:08:22PM -0500, Dan Murphy wrote:
+> Add the device tree bindings for the lm3697
+> LED driver for backlighting and display.
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Signed-off-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
 > ---
-> v1->v2:
-> * dropped "renesas,rzg-gen2-can" and fixed "clocks" property description
->   as per Geert's comments.
 > 
-> This patch applies on top of next-20180910.
+> v7 - Fix compatible from 3967 to 3697, and other comments. - https://lore.kernel.org/patchwork/patch/982550/
 > 
->  Documentation/devicetree/bindings/net/can/rcar_can.txt | 18 +++++++++++++-----
->  1 file changed, 13 insertions(+), 5 deletions(-)
+> v6 - Fix minor issues - https://lore.kernel.org/patchwork/patch/975387/
+> v5 - Fix the comment for the example - https://lore.kernel.org/patchwork/patch/975060/
+> v4 - Removed HVLED definition in favor of HVLED place definition - https://lore.kernel.org/patchwork/patch/974812/
+> v3 - Updated subject with prefered title - https://lore.kernel.org/patchwork/patch/972337/
+> v2 - Fixed subject and patch commit message - https://lore.kernel.org/patchwork/patch/971326/
+> 
+>  .../devicetree/bindings/leds/leds-lm3697.txt  | 86 +++++++++++++++++++
+>  1 file changed, 86 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
 
 Reviewed-by: Rob Herring <robh@kernel.org>
