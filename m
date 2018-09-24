@@ -1,26 +1,30 @@
 From: Matthias Kaehlcke <mka@chromium.org>
 Subject: Re: [PATCH v7 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
  driver
-Date: Mon, 24 Sep 2018 09:44:55 -0700
-Message-ID: <20180924164455.GY22824@google.com>
+Date: Mon, 24 Sep 2018 10:02:00 -0700
+Message-ID: <20180924170200.GZ22824@google.com>
 References: <1532428970-18122-1-git-send-email-tdas@codeaurora.org>
  <1532428970-18122-3-git-send-email-tdas@codeaurora.org>
- <20180910193016.GG22824@google.com>
- <97b9cde0-b33e-503e-ad29-e3c85adc26c4@codeaurora.org>
+ <20180829180122.GC10879@google.com>
+ <8c19c840-292c-a5c4-f3d3-0c6fb14b15fb@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <97b9cde0-b33e-503e-ad29-e3c85adc26c4@codeaurora.org>
+In-Reply-To: <8c19c840-292c-a5c4-f3d3-0c6fb14b15fb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Taniya Das <tdas@codeaurora.org>
 Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Amit Nischal <anischal@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 23, 2018 at 03:18:20PM +0530, Taniya Das wrote:
+On Sun, Sep 23, 2018 at 03:10:55PM +0530, Taniya Das wrote:
+> Hello Matthias,
 > 
+> Thanks for your review comments.
 > 
-> On 9/11/2018 1:00 AM, Matthias Kaehlcke wrote:
+> On 8/29/2018 11:31 PM, Matthias Kaehlcke wrote:
+> > Hi Taniya,
+> > 
 > > On Tue, Jul 24, 2018 at 04:12:50PM +0530, Taniya Das wrote:
 > > > The CPUfreq HW present in some QCOM chipsets offloads the steps necessary
 > > > for changing the frequency of CPUs. The driver implements the cpufreq
@@ -100,150 +104,114 @@ On Sun, Sep 23, 2018 at 03:18:20PM +0530, Taniya Das wrote:
 > > > +struct cpufreq_qcom {
 > > > +	struct cpufreq_frequency_table *table;
 > > > +	struct device *dev;
-> > > +	void __iomem *reg_bases[REG_ARRAY_SIZE];
-> > > +	cpumask_t related_cpus;
-> > > +	unsigned int max_cores;
-> > > +	unsigned long xo_rate;
-> > > +};
-> > > +
-> > > +static const u16 cpufreq_qcom_std_offsets[REG_ARRAY_SIZE] = {
-> > > +	[REG_ENABLE]		= 0x0,
-> > > +	[REG_LUT_TABLE]		= 0x110,
-> > > +	[REG_PERF_STATE]	= 0x920,
-> > > +};
-> > > +
-> > > +static struct cpufreq_qcom *qcom_freq_domain_map[NR_CPUS];
-> > > +
-> > > +static int
-> > > +qcom_cpufreq_hw_target_index(struct cpufreq_policy *policy,
-> > > +			     unsigned int index)
-> > > +{
-> > > +	struct cpufreq_qcom *c = policy->driver_data;
-> > > +
-> > > +	writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > > +static unsigned int qcom_cpufreq_hw_get(unsigned int cpu)
+> > 
+> > 'dev' is not used and can be removed.
+> > 
+> 
+> Thanks, would remove in the next patch.
+> 
+> > > ...
+> > > 
+> > > +static int qcom_cpu_resources_init(struct platform_device *pdev,
+> > > +				   struct device_node *np, unsigned int cpu,
+> > > +				   unsigned long xo_rate)
 > > > +{
 > > > +	struct cpufreq_qcom *c;
-> > > +	struct cpufreq_policy *policy;
-> > > +	unsigned int index;
+> > > +	struct resource res;
+> > > +	struct device *dev = &pdev->dev;
+> > > +	const u16 *offsets;
+> > > +	int ret, i, cpu_first, cpu_r;
+> > > +	void __iomem *base;
 > > > +
-> > > +	policy = cpufreq_cpu_get_raw(cpu);
-> > > +	if (!policy)
+> > > +	if (qcom_freq_domain_map[cpu])
 > > > +		return 0;
 > > > +
-> > > +	c = policy->driver_data;
+> > > +	c = devm_kzalloc(dev, sizeof(*c), GFP_KERNEL);
+> > > +	if (!c)
+> > > +		return -ENOMEM;
 > > > +
-> > > +	index = readl_relaxed(c->reg_bases[REG_PERF_STATE]);
-> > > +	index = min(index, LUT_MAX_ENTRIES - 1);
+> > > +	offsets = of_device_get_match_data(&pdev->dev);
+> > > +	if (!offsets)
+> > > +		return -EINVAL;
 > > > +
-> > > +	return policy->freq_table[index].frequency;
-> > > +}
+> > > +	if (of_address_to_resource(np, 0, &res))
+> > > +		return -ENOMEM;
 > > > +
-> > > +static unsigned int
-> > > +qcom_cpufreq_hw_fast_switch(struct cpufreq_policy *policy,
-> > > +			    unsigned int target_freq)
-> > > +{
-> > > +	struct cpufreq_qcom *c = policy->driver_data;
-> > > +	int index;
+> > > +	base = devm_ioremap_resource(dev, &res);
+> > > +	if (!base)
+> > > +		return -ENOMEM;
 > > > +
-> > > +	index = policy->cached_resolved_idx;
-> > > +	if (index < 0)
-> > > +		return 0;
+> > > +	for (i = REG_ENABLE; i < REG_ARRAY_SIZE; i++)
+> > > +		c->reg_bases[i] = base + offsets[i];
 > > > +
-> > > +	writel_relaxed(index, c->reg_bases[REG_PERF_STATE]);
-> > > +
-> > > +	return policy->freq_table[index].frequency;
-> > > +}
-> > > +
-> > > +static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
-> > > +{
-> > > +	struct cpufreq_qcom *c;
-> > > +
-> > > +	c = qcom_freq_domain_map[policy->cpu];
-> > > +	if (!c) {
-> > > +		pr_err("No scaling support for CPU%d\n", policy->cpu);
+> > > +	/* HW should be in enabled state to proceed */
+> > > +	if (!(readl_relaxed(c->reg_bases[REG_ENABLE]) & 0x1)) {
+> > > +		dev_err(dev, "%s cpufreq hardware not enabled\n", np->name);
 > > > +		return -ENODEV;
 > > > +	}
 > > > +
-> > > +	cpumask_copy(policy->cpus, &c->related_cpus);
+> > > +	ret = qcom_get_related_cpus(np, &c->related_cpus);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "%s failed to get related CPUs\n", np->name);
+> > > +		return ret;
+> > > +	}
 > > > +
-> > > +	policy->fast_switch_possible = true;
-> > > +	policy->freq_table = c->table;
-> > > +	policy->driver_data = c;
+> > > +	c->max_cores = cpumask_weight(&c->related_cpus);
+> > > +	if (!c->max_cores)
+> > > +		return -ENOENT;
 > > > +
-> > > +	return 0;
-> > > +}
+> > > +	c->xo_rate = xo_rate;
 > > > +
-> > > +static struct freq_attr *qcom_cpufreq_hw_attr[] = {
-> > > +	&cpufreq_freq_attr_scaling_available_freqs,
-> > > +	&cpufreq_freq_attr_scaling_boost_freqs,
-> > > +	NULL
-> > > +};
+> > > +	ret = qcom_cpufreq_hw_read_lut(pdev, c);
+> > > +	if (ret) {
+> > > +		dev_err(dev, "%s failed to read LUT\n", np->name);
+> > > +		return ret;
+> > > +	}
 > > > +
-> > > +static struct cpufreq_driver cpufreq_qcom_hw_driver = {
-> > > +	.flags		= CPUFREQ_STICKY | CPUFREQ_NEED_INITIAL_FREQ_CHECK |
-> > > +			  CPUFREQ_HAVE_GOVERNOR_PER_POLICY,
-> > > +	.verify		= cpufreq_generic_frequency_table_verify,
-> > > +	.target_index	= qcom_cpufreq_hw_target_index,
-> > > +	.get		= qcom_cpufreq_hw_get,
-> > > +	.init		= qcom_cpufreq_hw_cpu_init,
-> > > +	.fast_switch    = qcom_cpufreq_hw_fast_switch,
-> > > +	.name		= "qcom-cpufreq-hw",
-> > > +	.attr		= qcom_cpufreq_hw_attr,
-> > > +	.boost_enabled	= true,
-> > > +};
+> > > +	qcom_freq_domain_map[cpu] = c;
 > > > +
-> > > +static int qcom_cpufreq_hw_read_lut(struct platform_device *pdev,
-> > > +				    struct cpufreq_qcom *c)
-> > > +{
-> > > +	struct device *dev = &pdev->dev;
-> > > +	void __iomem *base;
-> > > +	u32 data, src, lval, i, core_count, prev_cc, prev_freq, cur_freq;
+> > > +	/* Related CPUs */
+> > > +	cpu_first = cpumask_first(&c->related_cpus);
 > > > +
-> > > +	c->table = devm_kcalloc(dev, LUT_MAX_ENTRIES + 1,
-> > > +				sizeof(*c->table), GFP_KERNEL);
-> > > +	if (!c->table)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	base = c->reg_bases[REG_LUT_TABLE];
-> > > +
-> > > +	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> > > +		data = readl_relaxed(base + i * LUT_ROW_SIZE);
-> > > +		src = (data & GENMASK(31, 30)) >> 30;
-> > > +		lval = data & GENMASK(7, 0);
-> > > +		core_count = CORE_COUNT_VAL(data);
-> > > +
-> > > +		if (src)
-> > > +			c->table[i].frequency = c->xo_rate * lval / 1000;
-> > > +		else
-> > > +			c->table[i].frequency = INIT_RATE / 1000;
-> > > +
-> > > +		cur_freq = c->table[i].frequency;
-> > > +
-> > > +		dev_dbg(dev, "index=%d freq=%d, core_count %d\n",
-> > > +			i, c->table[i].frequency, core_count);
-> > > +
-> > > +		if (core_count != c->max_cores)
-> > > +			cur_freq = CPUFREQ_ENTRY_INVALID;
-> > > +
+> > > +	for_each_cpu(cpu_r, &c->related_cpus) {
+> > > +		if (cpu_r != cpu_first)
+> > > +			qcom_freq_domain_map[cpu_r] =
+> > > +				qcom_freq_domain_map[cpu_first];
+> > > +	}
 > > 
-> > I noticed that the 'power_allocator' thermal governor currently can't
-> > be used with this driver since there is no OPP table with frequency and
-> > voltage information. Does the LUT contain information about the
-> > voltage or is there another mechanism to retrieve it?
+> > The above ten lines could be simplified to:
+> > 
+> > 	for_each_cpu(cpu_r, &c->related_cpus)
+> > 		qcom_freq_domain_map[cpu_r] = c;
 > > 
 > 
-> No, currently there is no way of reading the voltage information.
+> Would clean it up in the next patch.
+> 
+> > > ...
+> > > 
+> > > +static int __init qcom_cpufreq_hw_init(void)
+> > > +{
+> > > +	return platform_driver_register(&qcom_cpufreq_hw_driver);
+> > > +}
+> > > +subsys_initcall(qcom_cpufreq_hw_init);
+> > 
+> > Is subsys_initcall used for a particular reason? It will cause
+> > problems when registering cooling devices, since the thermal device
+> > class is initialized through an fs_initcall, which are executed
+> > later.
+> > 
+> > Most cpufreq drivers use module_init, device_initcall or
+> > late_initcall, can't this driver use one of those?
+> > 
+> 
+> We want the CPU to be scaling to the highest frequency at the
+> earliest.
 
-That leaves the 'power_allocator' out of question :(
+I guess you also want thermal management for the CPU. With the
+subsys_initcall registration of cooling devices fails, as mentioned in
+my earlier comment. Do you plan to defer the registration of cooling
+devices?
 
-Which thermal governor is/should typically be used on these systems?
-Step wise and user space should work out of the box, however the
-response of step wise could be slow (step by step) and user space
-requires a thermal daemon (and could suffer from latencies). Fair
-share could be an option if the thermal cooling devices are registered
-with a 'weight', which could come from the device tree.
+Cheers
+
+Matthias
