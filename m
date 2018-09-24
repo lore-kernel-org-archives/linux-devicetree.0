@@ -1,79 +1,101 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: dma: uart: add uart dma bindings
-Date: Mon, 24 Sep 2018 15:19:46 -0700
-Message-ID: <5baa1b00.1c69fb81.efde0.46e6@mx.google.com>
-References: <1537425673-18807-1-git-send-email-long.cheng@mediatek.com>
- <1537425673-18807-2-git-send-email-long.cheng@mediatek.com>
+Subject: Re: [PATCH 1/4] dt: bindings: add missing dt properties for WCN3990
+ wifi node
+Date: Mon, 24 Sep 2018 15:51:55 -0700
+Message-ID: <5baa1b0a.1c69fb81.c0b19.4038@mx.google.com>
+References: <20180921090907.25937-1-govinds@codeaurora.org>
+ <20180921090907.25937-2-govinds@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1537425673-18807-2-git-send-email-long.cheng@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Long Cheng <long.cheng@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, YT Shen <yt.shen@mediatek.com>, srv_heupstream@mediatek.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Dan Williams <dan.j.williams@intel.com>, Ed Blake <ed.blake@sondrel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20180921090907.25937-2-govinds@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
+List-Post: <mailto:ath10k@lists.infradead.org>
+List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
+Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
+Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
+To: Govind Singh <govinds@codeaurora.org>
+Cc: andy.gross@linaro.org, devicetree@vger.kernel.org, briannorris@chromium.org, linux-wireless@vger.kernel.org, ath10k@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 02:41:10PM +0800, Long Cheng wrote:
-> add uart dma bindings
+On Fri, Sep 21, 2018 at 02:39:04PM +0530, Govind Singh wrote:
+> Add missing optional properties in WCN3990 wifi node.
 > 
-> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
 > ---
->  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   32 ++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+>  .../bindings/net/wireless/qcom,ath10k.txt     | 22 +++++++++++++------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/8250_mtk_dma.txt b/Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
-> new file mode 100644
-> index 0000000..b140cf4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
-> @@ -0,0 +1,32 @@
-> +* Mediatek UART APDMA Controller
-> +
-> +Required properties:
-> +- compatible should contain:
-> +  * "mediatek,mt2712-uart-dma" for MT2712 compatible APDMA
-> +  * "mediatek,mt6577-uart-dma" for MT6577 and all of the above
-> +
-> +- reg: The base address of the APDMA register bank.
-> +
-> +- interrupts: A single interrupt specifier.
-> +
-> +- clocks : Must contain an entry for each entry in clock-names.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: The APDMA clock for register accesses
-> +
-> +Examples:
-> +
-> +	apdma: dma-controller@11000380 {
-> +		compatible = "mediatek,mt2712-uart-dma";
-> +		reg = <0 0x11000380 0 0x400>;
-> +		interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 64 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 65 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 66 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 67 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 68 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 69 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_AP_DMA>;
-> +		clock-names = "apdma";
-> +		#dma-cells = <1>;
-> +	};
-> \ No newline at end of file
+> diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> index 7fd4e8ce4149..22dea7d83ee8 100644
+> --- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> +++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> @@ -37,12 +37,14 @@ Optional properties:
+>  - clocks: List of clock specifiers, must contain an entry for each required
+>            entry in clock-names.
+>  - clock-names: Should contain the clock names "wifi_wcss_cmd", "wifi_wcss_ref",
+> -               "wifi_wcss_rtc".
+> -- interrupts: List of interrupt lines. Must contain an entry
+> -	      for each entry in the interrupt-names property.
+> +               "wifi_wcss_rtc", "cxo_ref_clk_pin", "smmu_aggre2_noc_clk".
+> +- interrupts: List of interrupt lines. Must contain interrupt-names property
+> +	      per entry for "qcom,ath10k", "qcom,ipq4019-wifi" compatible
+> +	      targets.
 
-Please fix this.
+It would be clearer to list how many interrupts for each set of 
+compatibles.
 
-Otherwise,
+>  - interrupt-names: Must include the entries for MSI interrupt
+>  		   names ("msi0" to "msi15") and legacy interrupt
+> -		   name ("legacy"),
+> +		   name ("legacy") for "qcom,ath10k", "qcom,ipq4019-wifi"
+> +		   compatible targets.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+So no legacy interrupt for wcn3990?
+
+>  - qcom,msi_addr: MSI interrupt address.
+>  - qcom,msi_base: Base value to add before writing MSI data into
+>  		MSI address register.
+> @@ -55,7 +57,8 @@ Optional properties:
+>  - qcom,ath10k-pre-calibration-data : pre calibration data as an array,
+>  				     the length can vary between hw versions.
+>  - <supply-name>-supply: handle to the regulator device tree node
+> -			   optional "supply-name" is "vdd-0.8-cx-mx".
+> +			   optional "supply-name" are "vdd-0.8-cx-mx",
+> +			   "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
+>  
+>  Example (to supply the calibration data alone):
+>  
+> @@ -133,8 +136,10 @@ wifi@18000000 {
+>  		compatible = "qcom,wcn3990-wifi";
+>  		reg = <0x18800000 0x800000>;
+>  		reg-names = "membase";
+> -		clocks = <&clock_gcc clk_aggre2_noc_clk>;
+> -		clock-names = "smmu_aggre2_noc_clk"
+> +		clocks = <&clock_gcc clk_aggre2_noc_clk>,
+> +			 <&clock_gcc clk_rf_clk2_pin>;
+> +		clock-names = "smmu_aggre2_noc_clk",
+> +			      "cxo_ref_clk_pin";
+
+The binding now says there should be 5 clocks...
+
+>  		interrupts =
+>  			   <0 130 0 /* CE0 */ >,
+>  			   <0 131 0 /* CE1 */ >,
+> @@ -149,4 +154,7 @@ wifi@18000000 {
+>  			   <0 140 0 /* CE10 */ >,
+>  			   <0 141 0 /* CE11 */ >;
+>  		vdd-0.8-cx-mx-supply = <&pm8998_l5>;
+> +		vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
+> +		vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
+> +		vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
+>  };
+> -- 
+> 2.17.0
+> 
