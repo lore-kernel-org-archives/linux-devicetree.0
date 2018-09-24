@@ -1,86 +1,49 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 5/5] drm: bridge: add support for Cadence MHDP DPI/DP
- bridge
-Date: Mon, 24 Sep 2018 14:28:07 +0200
-Message-ID: <6154358.J9crsCiUTz@phil>
-References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
- <1903708.pJTgKoWLiI@phil>
- <CO2PR07MB2551EC0A7DEB61C54A4D6A5FCD170@CO2PR07MB2551.namprd07.prod.outlook.com>
+Subject: Re: [PATCH] clk: qcom: Add Global Clock controller (GCC) driver for SDM660
+Date: Mon, 24 Sep 2018 14:44:33 +0200
+Message-ID: <9156720.4hgryJ20kK@phil>
+References: <20180407135934.26122-1-ctatlor97@gmail.com> <69cf26ba-5dae-e84c-2fa8-15699fdd9986@codeaurora.org> <63F4E7C0-6925-4EC0-84B9-75B31AC664E4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CO2PR07MB2551EC0A7DEB61C54A4D6A5FCD170@CO2PR07MB2551.namprd07.prod.outlook.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Damian Kos <dkos@cadence.com>, Artur Jedrysek <jartur@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-rockchip@lists.infradead.org" <linux-rockchip@lists.infradead.org>, David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Piotr Sroka <piotrs@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <63F4E7C0-6925-4EC0-84B9-75B31AC664E4@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: Taniya Das <tdas@codeaurora.org>, linux-arm-msm@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFtaWFuLAoKQW0gTW9udGFnLCAyNC4gU2VwdGVtYmVyIDIwMTgsIDEzOjQwOjAzIENFU1Qg
-c2NocmllYiBEYW1pYW4gS29zOgo+ID4gQW0gRG9ubmVyc3RhZywgMjAuIFNlcHRlbWJlciAyMDE4
-LCAxNjo1NDo0MCBDRVNUIHNjaHJpZWIgRGFtaWFuIEtvczoKPiA+ID4gRnJvbTogUXVlbnRpbiBT
-Y2h1bHogPHF1ZW50aW4uc2NodWx6QGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+ID4gCj4gPiA+IFRo
-aXMgYWRkcyBiYXNpYyBzdXBwb3J0IGZvciBDYWRlbmNlIE1IRFAgRFBJIHRvIERQIGJyaWRnZS4K
-PiA+ID4gCj4gPiA+IEJhc2ljYWxseSwgaXQgdGFrZXMgYSBEUEkgc3RyZWFtIGFzIGlucHV0IGFu
-ZCBvdXRwdXQgaXQgZW5jb2RlZCBpbiBEUCAKPiA+ID4gZm9ybWF0LiBJdCdzIG1pc3NpbmcgcHJv
-cGVyIEhQRCwgSERDUCBhbmQgY3VycmVudGx5IHN1cHBvcnRzIG9ubHkgU1NUIAo+ID4gPiBtb2Rl
-Lgo+ID4gPiAKPiA+ID4gQ2hhbmdlcyBtYWRlIGluIHRoZSBsb3cgbGV2ZWwgZHJpdmVyIChjZG4t
-ZHAtcmVnLiopOgo+ID4gPiAtIG1vdmVkIGl0IHRvIGZyb20gZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwIHRvCj4gPiA+ICAgZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLW1oZHAtY29tbW9uLioK
-PiA+ID4gLSBmdW5jdGlvbnMgZm9yIHNlbmRpbmcvcmVjZWl2aW5nIGNvbW1hbmRzIGFyZSBub3cg
-cHVibGljCj4gPiA+IC0gYWRkZWQgZnVuY3Rpb25zIGZvciByZWFkaW5nIHJlZ2lzdGVycyBhbmQg
-bGluayB0cmFpbmluZwo+ID4gPiAgIGFkanVzdG1lbnQKPiA+ID4gCj4gPiA+IENoYW5nZXMgbWFk
-ZSBpbiBSSydzIGRyaXZlciAoY2RuLWRwLWNvcmUuKik6Cj4gPiA+IC0gTW92ZWQgYXVkaW9faW5m
-byBhbmQgYXVkaW9fcGRldiBmaWVsZHMgZnJvbSBjZG5fZHBfZGV2aWNlIHRvCj4gPiA+ICAgY2Ru
-c19taGRwX2RldmljZSBzdHJ1Y3R1cmUuCj4gPiA+IAo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBRdWVu
-dGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJvbnMuY29tPgo+ID4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBEYW1pYW4gS29zIDxka29zQGNhZGVuY2UuY29tPgo+ID4gCj4gPiBbLi4uXQo+
-ID4gCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZyAK
-PiA+ID4gYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvS2NvbmZpZwo+ID4gPiBpbmRleCAwY2Nj
-NzYyMTdlZTQuLjEyOWIwNTI5ZjNlMSAxMDA2NDQKPiA+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL0tjb25maWcKPiA+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL0tj
-b25maWcKPiA+ID4gQEAgLTI3LDcgKzI3LDkgQEAgY29uZmlnIFJPQ0tDSElQX0FOQUxPR0lYX0RQ
-Cj4gPiA+ICAKPiA+ID4gIGNvbmZpZyBST0NLQ0hJUF9DRE5fRFAKPiA+ID4gICAgICAgICAgYm9v
-bCAiUm9ja2NoaXAgY2RuIERQIgo+ID4gPiAtCWRlcGVuZHMgb24gRVhUQ09OPXkgfHwgKEVYVENP
-Tj1tICYmIERSTV9ST0NLQ0hJUD1tKQo+ID4gPiArCWRlcGVuZHMgb24gRFJNX1JPQ0tDSElQPW0K
-PiA+IAo+ID4gU29ycnksIEkgd2Fzbid0IGZhc3QgZW5vdWdoIGluIG15IHJlcGx5IHRvIHlvdSBt
-YWlsIHRvIGNhdGNoIHRoYXQgYmVmb3JlIHlvdXIgdjQsIGJ1dCBJIGRvbid0IHRoaW5rIHRoaXMg
-aXMgbmVjZXNzYXJ5Lgo+ID4gSW5zdGVhZCBJIGRvIGd1ZXNzLCB0aGUgc2VsZWN0IGJlbG93IHNo
-b3VsZCBkbyB0aGUgcmlnaHQgdGhpbmcgYnkgbWFraW5nIEVYVENPTj15IGlmIERSTV9ST0NLQ0hJ
-UD15Lgo+ID4gCj4gPiBTb21ld2hhdCBjbHVtc2lseSB2ZXJpZmllZCBieSBtYWtpbmcgRVhUQ09O
-PW0gaW4gbXkgZGVmY29uZmlnIGFuZCBzZWVpbmcgZ2V0IGNoYW5nZWQgdG8geSB1cG9uIGJ1aWxk
-LCB3aGljaCBJIGd1ZXNzIGNvbWVzIGZyb20gYSBkaWZmZXJlbnQgInNlbGVjdCIgaW4gdGhlIGNv
-bmZpZy4KPiA+IAo+IAo+IEkndmUgY2hhbmdlZCBpdCB0bzoKPiAKPiBjb25maWcgUk9DS0NISVBf
-Q0ROX0RQCj4gICAgICAgICBib29sICJSb2NrY2hpcCBjZG4gRFAiCj4gICAgICAgICBkZXBlbmRz
-IG9uIERSTV9ST0NLQ0hJUAo+ICAgICAgICAgc2VsZWN0IEVYVENPTiBpZiBEUk1fUk9DS0NISVA9
-eQo+ICAgICAgICAgc2VsZWN0IERSTV9DRE5TX01IRFAKPiAgICAgICAgIGhlbHAuLi4KPiAKPiBh
-bmQgaXQgc2VlbXMgdGhhdCB0aGVyZSBhcmUgbm8gaXNzdWVzLiBBdCBsZWFzdCBmb3IgbWUuCj4g
-Cj4gUGxlYXNlIGxldCBtZSBrbm93IGlmIHRoYXQncyBPSy4KCm5vcGUsIGp1c3QgZG8gInNlbGVj
-dCBFWFRDT04iIC4gSXQgd29ya3MgbmljZWx5IGFuZCB0aGUgYWJvdmUgd291bGQKbm90IHNlbGVj
-dCBFWFRDT04gYXQgYWxsIGlmIHRoZSB0aGUgcm9ja2NoaXAtZHJtIGRyaXZlciBnZXRzIGJ1aWx0
-IGludG8KdGhlIGtlcm5lbC4KClRvIGJlIHN1cmUgSSBqdXN0IGRpZCBhIGxpdHRsZSBleHBlcmlt
-ZW50IGFuZCBhZGRlZDoKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25m
-aWcgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKaW5kZXggNGFkODVjMDQ2ZGNkLi42
-NGUyYjA5NmFmZDggMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9icmlkZ2UvS2NvbmZpZwor
-KysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL0tjb25maWcKQEAgLTE1NCw0ICsxNTQsMTEgQEAg
-c291cmNlICJkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2l0ZS9LY29uZmlnIgogCiBzb3VyY2UgImRy
-aXZlcnMvZ3B1L2RybS9icmlkZ2Uvc3lub3BzeXMvS2NvbmZpZyIKIAorY29uZmlnIERSTV9UTVAx
-CisgICAgICAgdHJpc3RhdGUgIm9wdGlvbiB0byBzZWxlY3QiCisKK2NvbmZpZyBEUk1fVE1QMgor
-ICAgICAgIHRyaXN0YXRlICJvcHRpb24gZG9pbmcgdGhlIHNlbGVjdGluZyIKKyAgICAgICBzZWxl
-Y3QgRFJNX1RNUDEKKwoKSWYgSSBzZWxlY3QgRFJNX1RNUDI9bSBhcyBtb2R1bGUgSSBlbmQgdXAg
-d2l0aApDT05GSUdfRFJNX1RNUDE9bQpDT05GSUdfRFJNX1RNUDI9bQppbiB0aGUgZGVmY29uZmln
-IGFuZCB3aXQgRFJNX1RNUDI9eSBpdCBjaGFuZ2VzIHRvCkNPTkZJR19EUk1fVE1QMT15CkNPTkZJ
-R19EUk1fVE1QMj15CgpzbyBhbGwgaXMgd2VsbCB3aXRoIGp1c3QgZG9pbmcgInNlbGVjdCBFWFRD
-T04iIGFib3ZlIGFuZCB3aWxsCnNlbGVjdCB0aGUgY29ycmVjdCAibSIgb3IgInkiIHN0YW5jZSBh
-cyBuZWVkZWQuCgoKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Hi Craig,
+
+Am Montag, 13. August 2018, 09:45:09 CEST schrieb Craig Tatlor:
+> On 13 August 2018 07:55:34 BST, Taniya Das <tdas@codeaurora.org> wrote:
+> >Hello Craig,
+> >
+> >Could you please correct the authorship and also provide the reference 
+> >to code where this is picked from?
+> Okay, 
+> Got code from here https://github.com/sonyxperiadev/kernel/blob/aosp/LA.UM.6.4.r1/drivers/clk/qcom/gcc-sdm660.c
+> but changed it quite a bit for upstream,
+> Should I change the commit author and add your signed off by and say I did cleanups on my signed off by.
+
+yep, for something this huge it is really the correct way to keep the
+original authorship intact as Taniya did the initial big work, and just
+add you change-description, so something like
+
+---- 8< ------
+Add support for the global clock controller found on SDM660
+based devices. This should allow most non-multimedia device
+drivers to probe and control their clocks.
+Based on CAF implementation.
+
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+[ description of changes ... often seen in these brackets ]
+Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+---- 8< ------
+
+Also, do you plan to continue working on this, as I would be interessted
+in the clock driver for a sdm660-based phone as well.
+
+
+Thanks
+Heiko
