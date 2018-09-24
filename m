@@ -1,236 +1,98 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: sdm630 SoC and Sony Pioneer (Xperia XA2)
- support
-Date: Mon, 24 Sep 2018 12:19:29 -0700
-Message-ID: <20180924191929.GQ1367@tuxbook-pro>
-References: <20180811162549.12312-1-ctatlor97@gmail.com>
+From: Adam Ford <aford173@gmail.com>
+Subject: Re: [PATCH] regulator: pfuze100-regulator: add coin support
+Date: Mon, 24 Sep 2018 14:21:09 -0500
+Message-ID: <CAHCN7xLEHw4vN8gud+vPkVBX3tSsBM1HTnRCi6fF3VxYiQYfmA@mail.gmail.com>
+References: <20170309141443.20564-1-george.mccollister@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180811162549.12312-1-ctatlor97@gmail.com>
+In-Reply-To: <20170309141443.20564-1-george.mccollister@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: george.mccollister@gmail.com
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat 11 Aug 09:25 PDT 2018, Craig Tatlor wrote:
+On Thu, Mar 9, 2017 at 8:17 AM George McCollister
+<george.mccollister@gmail.com> wrote:
+>
+> Add support for PF0200 coin cell/super capacitor charger which works as
+> a current limited voltage source via the LICELL pin. When VIN goes below
+> a certain threshold LICELL is used to provide power for VSNVS which is
+> usually used to hold up secure non-volatile storage and the real-time
+> clock on the SoC.
+>
 
-> Initial device tree support for Qualcomm SDM630 SoC and
-> Sony Pioneer (Xperia XA2).
-> 
-> SDM630 is based off of the SDM660 soc and all SDM660 specific drivers are
-> compatible with it. SDM660 is also based off of MSM8998 so it uses some
-> of its drivers aswell.
+I know this is patch is an old thread by now, but is there something
+precluding this from being added the pfuze100 as well?
 
-Consider adding both sdm630 and sdm660 compatibles to the bindings and
-drivers and use the right one in the dts, in case we find details that
-differs in the future.
+[snip]
 
-> 
-> The device tree is based on the CAF 4.4 kernel tree.
-> 
-> The device can be booted into the initrd with a shell over UART.
-> 
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-pins.dtsi b/arch/arm64/boot/dts/qcom/sdm630-pins.dtsi
-> new file mode 100644
-> index 000000000000..78b79c1076f1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-pins.dtsi
-> @@ -0,0 +1,17 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2018, Craig Tatlor. */
-> +
-> +&tlmm {
-> +	blsp1_uart1_default: blsp1_uart1_default {
-> +		pinmux {
-> +			pins = "gpio0", "gpio1", "gpio2", "gpio3";
-> +			function = "gpio";
+I am trying to add:
 
-Please put these in the sdm630.dtsi directly, rather than spreading the
-pins out in a separate file.
+@@ -324,6 +324,7 @@ static struct pfuze_regulator pfuze100_regulators[] =3D=
+ {
+        PFUZE100_VGEN_REG(PFUZE100, VGEN4, PFUZE100_VGEN4VOL, 1800000,
+3300000, 100000),
+        PFUZE100_VGEN_REG(PFUZE100, VGEN5, PFUZE100_VGEN5VOL, 1800000,
+3300000, 100000),
+        PFUZE100_VGEN_REG(PFUZE100, VGEN6, PFUZE100_VGEN6VOL, 1800000,
+3300000, 100000),
++       PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_c=
+oin),
+ };
 
-> +		};
-> +
-> +		pinconf {
-> +			pins = "gpio0", "gpio1", "gpio2", "gpio3";
-> +			drive-strength = <2>;
-> +			bias-disable;
+ static struct pfuze_regulator pfuze200_regulators[] =3D {
+@@ -377,6 +378,7 @@ static struct of_regulator_match pfuze100_matches[] =3D=
+ {
+        { .name =3D "vgen4",      },
+        { .name =3D "vgen5",      },
+        { .name =3D "vgen6",      },
++       { .name =3D "coin",       },
+ };
 
-Please extend &blsp1_uart1_default in the pioneer dtsi with these
-"electrical properties".
+but I am getting bulid errors:
 
-> +		};
-> +	};
-> +};
-[..]
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630-pioneer.dtsi b/arch/arm64/boot/dts/qcom/sdm630-pioneer.dtsi
-> new file mode 100644
-> index 000000000000..512792c23369
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630-pioneer.dtsi
-> @@ -0,0 +1,22 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2018, Craig Tatlor. */
-> +
-> +#include "sdm630.dtsi"
-> +
-> +/ {
-> +	aliases {
-> +		serial0 = &blsp1_uart1;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +};
-> +
-> +&soc {
-> +	serial@c170000 {
+drivers/regulator/pfuze100-regulator.c:327:20: error: =E2=80=98PFUZE100_COI=
+N=E2=80=99
+undeclared here (not in a function); did you mean =E2=80=98PFUZE200_COIN=E2=
+=80=99?
+  PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
+                    ^~~~~~~~
+drivers/regulator/pfuze100-regulator.c:240:3: note: in definition of
+macro =E2=80=98PFUZE100_COIN_REG=E2=80=99
+  [_chip ## _ ##  _name] =3D { \
+   ^~~~~
+drivers/regulator/pfuze100-regulator.c:327:20: error: array index in
+initializer not of integer type
+  PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
+                    ^~~~~~~~
+drivers/regulator/pfuze100-regulator.c:240:3: note: in definition of
+macro =E2=80=98PFUZE100_COIN_REG=E2=80=99
+  [_chip ## _ ##  _name] =3D { \
+   ^~~~~
+drivers/regulator/pfuze100-regulator.c:327:20: note: (near
+initialization for =E2=80=98pfuze100_regulators=E2=80=99)
+  PFUZE100_COIN_REG(PFUZE100, COIN, PFUZE100_COINVOL, 0x7, pfuze100_coin),
+                    ^~~~~~~~
+drivers/regulator/pfuze100-regulator.c:240:3: note: in definition of
+macro =E2=80=98PFUZE100_COIN_REG=E2=80=99
+  [_chip ## _ ##  _name] =3D { \
+   ^~~~~
 
-Please reference this by &blsp1_uart1, rather than duplicating the
-hierarchy.
+I am not entirely understanding how the macro is supposed to work.
+Any suggestions?
 
-> +		status = "okay";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&blsp1_uart1_default>;
-> +	};
-> +};
-> diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> new file mode 100644
-> index 000000000000..8a544979b7c0
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-> @@ -0,0 +1,383 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2018, Craig Tatlor. */
-> +
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/clock/qcom,gcc-sdm660.h>
-> +
-> +/ {
-> +	model = "Qualcomm Technologies, Inc. SDM630";
+thanks,
 
-We expect the board to always override this, so no need to specify it
-here.
+adam
 
-> +
-> +	interrupt-parent = <&intc>;
-> +
-> +	qcom,msm-id = <318 0x0>;
-> +
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	chosen { };
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		/* We expect the bootloader to fill in the reg */
-> +		reg = <0 0 0 0>;
-> +	};
-> +
-> +
 
-Extra empty line.
-
-> +	cpus {
-[..]
-> +
-> +	timer {
-
-Please sort these nodes by name, except for "soc" which is convenient
-to have last.
-
-> +		compatible = "arm,armv8-timer";
-> +		interrupts = <GIC_PPI 1 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 2 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 3 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_PPI 0 IRQ_TYPE_LEVEL_LOW>;
-> +	};
-[..]
-> +	firmware {
-> +		scm {
-> +			compatible = "qcom,scm-sdm660";
-> +		};
-> +	};
-> +
-> +
-
-Extra empty line.
-
-> +	rpm-glink {
-> +		compatible = "qcom,glink-rpm";
-> +
-> +		interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
-> +
-> +		qcom,rpm-msg-ram = <&rpm_msg_ram>;
-> +
-> +		mboxes = <&apcs_glb 0>;
-
-Remove a few of these extra empty lines and add the rpm_requests channel
-here while you're at it:
-
-		rpm_requests: glink-channel {
-                        compatible = "qcom,rpm-sdm660";
-                        qcom,glink-channels = "rpm_requests";
-                };
-
-> +	};
-> +
-> +	soc: soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0 0 0 0xffffffff>;
-> +		compatible = "simple-bus";
-> +
-> +		intc: interrupt-controller@17a00000 {
-
-Please sort these nodes by base address.
-
-> +			compatible = "arm,gic-v3";
-> +			reg = <0x17a00000 0x10000>,
-> +			      <0x17b00000 0x100000>;
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			interrupt-controller;
-> +			#redistributor-regions = <1>;
-> +			redistributor-stride = <0x0 0x20000>;
-> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +
-> +		gcc: clock-controller@100000 {
-> +			compatible = "qcom,gcc-sdm660";
-> +			#clock-cells = <1>;
-> +			#reset-cells = <1>;
-> +			#power-domain-cells = <1>;
-> +			reg = <0x100000 0x94000>;
-
-Please 0-pad addresses in "reg", makes it easier to sort them as well
-(but keep the @address after the node name unpadded).
-
-> +		};
-> +
-[..]
-> +		rpm_msg_ram: memory@778000 {
-> +			compatible = "qcom,rpm-msg-ram";
-> +			reg = <0x778000 0x7000>;
-> +		};
-> +
-> +		apcs_glb: mailbox@17911000 {
-> +			compatible = "qcom,msm8998-apcs-hmss-global";
-
-Please update the apcs ipc driver with a sdm660 compatible and update
-this.
-
-> +			reg = <0x17911000 0x1000>;
-> +
-> +			#mbox-cells = <1>;
-> +		};
-
-Regards,
-Bjorn
+> --
+> 2.11.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
