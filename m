@@ -1,75 +1,42 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
-Date: Mon, 24 Sep 2018 09:14:26 +0200
-Message-ID: <a9d7366a-7118-9819-4d15-cdc10fa6c41c@linaro.org>
-References: <5ba88a1a.1c69fb81.2ba56.ccdaSMTPIN_ADDED_MISSING@mx.google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH V4 00/27] C-SKY(csky) Linux Kernel Port
+Date: Mon, 24 Sep 2018 09:21:36 +0200
+Message-ID: <CAMuHMdVV0QWXCkkL8dq4UMLaANGMHu7ePhQ83FiFDtynpJzbLA@mail.gmail.com>
+References: <20180914143719.GA27689@guoren-Inspiron-7460> <mhng-9d591179-01d4-4a84-a490-8a09d4f3a3d1@palmer-si-x1c4>
+ <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5ba88a1a.1c69fb81.2ba56.ccdaSMTPIN_ADDED_MISSING@mx.google.com>
-Content-Language: en-US
+In-Reply-To: <CAK8P3a3v0K6G47dAVFtn+XjM3iM7vx6L_RB0mmONBDB9gBNgag@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mathieu Malaterre <malat@debian.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-watchdog@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Palmer Dabbelt <palmer@sifive.com>, Guo Ren <ren_guo@c-sky.com>, Linux-Arch <linux-arch@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, andrea.parri@amarulasolutions.com, Peter Zijlstra <peterz@infradead.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, wbx@uclibc-ng.org, Greentime Hu <green.hu@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On 24/09/2018 08:53, Paul Cercueil wrote:
-> 
-> Le 24 sept. 2018 07:58, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit :
->>
->> On 24/09/2018 07:49, Paul Cercueil wrote: 
->>>
->>> Le 24 sept. 2018 07:35, Daniel Lezcano <daniel.lezcano@linaro.org> a 
->>> écrit : 
->>>>
->>>> On 24/09/2018 07:24, Paul Cercueil wrote: 
->>>>> Hi Daniel, 
->>>>>
->>>>> Le 24 sept. 2018 05:12, Daniel Lezcano 
->>>>> <daniel.lezcano@linaro.org> a écrit : 
->>>>>>
->>>>>> On 21/08/2018 19:16, Paul Cercueil wrote: 
->>>>>>> This driver handles the TCU (Timer Counter Unit) present on 
->>>>>>> the Ingenic JZ47xx SoCs, and provides the kernel with a 
->>>>>>> system timer, and optionally with a clocksource and a 
->>>>>>> sched_clock. 
->>>>>>>
->>>>>>> It also provides clocks and interrupt handling to client 
->>>>>>> drivers. 
->>>>>>
->>>>>> Can you provide a much more complete description of the timer 
->>>>>> in order to make my life easier for the review of this patch? 
->>>>>
->>>>> See patch [03/24], it adds a doc file that describes the 
->>>>> hardware. 
->>>>
->>>> Thanks, I went through but it is incomplete to understand what the 
->>>> timer do. I will reverse-engineer the code but it would help if you 
->>>> can give the gross approach. Why multiple channels ? mutexes and 
->>>> completion ? 
->>>
->>> Much of the complexity is because of the multi-purpose nature of the 
->>> TCU channels. Each one can be used as timer/clocksource, or PWM. 
->>>
->>> The driver starts by using channels 0 and 1 as system timer and 
->>> clocksource, respectively, the other ones being unused for now. Then, 
->>> *if* the PWM driver requests one of the channels in use by the 
->>> timer/clocksource driver, say channel 0, the timer/clocksource driver 
->>> will dynamically reassign the system timer to a free channel, from 
->>> channel 0 to e.g. channel 2. Only in that case the completion/mutex 
->>> are actually used. 
->>
->> Why do you need to do this? Can't be the channels dedicated and reserved 
->> for clocksource and clockevent? 
-> 
-> That's what I had in place (ingenic,timer-channel and ingenic,clocksource-channel DT properties), but Rob didn't want any linux-specific properties in the devicetree binding :(
+Hi Arnd,
 
-Isn't possible to specify the channel to use in the DT? like renesas16 ?
+On Fri, Sep 21, 2018 at 7:19 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Sep 20, 2018 at 10:52 AM Palmer Dabbelt <palmer@sifive.com> wrote:
+> > On Fri, 14 Sep 2018 07:37:20 PDT (-0700), ren_guo@c-sky.com wrote:
+> > > On Wed, Sep 12, 2018 at 04:30:36PM +0200, Arnd Bergmann wrote:
+> > >> On Wed, Sep 12, 2018 at 3:25 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> My plan was to get that all into 4.20, and then have a conversation about the
+> actual syscall table changes in 4.21. If we need it for both csky and rv32,
+> we might just change the generic syscall table that way in 4.21 without
+> changing all the other ones along with them. I don't want to drag things out
+> over too many merge windows though, and my plan was to do all architectures
+> together to simplify the version checks in the libc code to only have to check
+> for a single version.
+
+What happens with the version checks if it is backported to stable?
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
