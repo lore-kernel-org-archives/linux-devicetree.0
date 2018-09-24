@@ -1,63 +1,103 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: RE: [PATCH v2 3/5] drivers: clk-qoriq: Add clockgen support for
- lx2160a
-Date: Mon, 24 Sep 2018 11:56:08 +0000
-Message-ID: <VI1PR04MB4800CA1AFEB6EB7B56680CBBF3170@VI1PR04MB4800.eurprd04.prod.outlook.com>
-References: <1536871075-3732-1-git-send-email-vabhav.sharma@nxp.com>
-         <1536871075-3732-4-git-send-email-vabhav.sharma@nxp.com>
- <4fa10f679ad4b1b619daa521a8641c145cf8537e.camel@buserror.net>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v3 2/2] remoteproc: qcom: Introduce Non-PAS ADSP PIL
+ driver
+Date: Mon, 24 Sep 2018 17:32:21 +0530
+Message-ID: <d1ae539b2d06d9c3185ec4a2b56d1e68@codeaurora.org>
+References: <1535975560-8200-1-git-send-email-rohitkr@codeaurora.org>
+ <1535975560-8200-3-git-send-email-rohitkr@codeaurora.org>
+ <a93b3178a09584dc0b4bed55ca4816a3@codeaurora.org>
+ <79bee282-e8a4-a1e6-56e3-6ea7e20c0233@codeaurora.org>
+ <614ab0e7-b751-4bf9-72f9-33fdd57594ec@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4fa10f679ad4b1b619daa521a8641c145cf8537e.camel@buserror.net>
-Content-Language: en-US
+In-Reply-To: <614ab0e7-b751-4bf9-72f9-33fdd57594ec@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, linux-kernel-owner@vger.kernel.org
-Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Andy Tang <andy.tang@nxp.com>
+To: Rohit Kumar <rohitkr@codeaurora.org>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2NvdHQgV29vZCA8b3Nz
-QGJ1c2Vycm9yLm5ldD4NCj4gU2VudDogU3VuZGF5LCBTZXB0ZW1iZXIgMTYsIDIwMTggMTI6NTQg
-QU0NCj4gVG86IFZhYmhhdiBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhwLmNvbT47IHN1ZGVlcC5o
-b2xsYUBhcm0uY29tOyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFyay5ydXRsYW5kQGFy
-bS5jb207IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnOyBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgc2JveWRAa2Vy
-bmVsLm9yZzsNCj4gcmp3QHJqd3lzb2NraS5uZXQ7IHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnOyBs
-aW51eC1jbGtAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4gcG1Admdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWwtb3duZXJAdmdlci5rZXJuZWwub3JnOw0KPiBjYXRhbGluLm1hcmluYXNAYXJt
-LmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsNCj4gZ3JlZ2toQGxpbnV4Zm91bmRhdGlvbi5vcmc7
-IGFybmRAYXJuZGIuZGU7IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7DQo+IHlhbWFkYS5t
-YXNhaGlyb0Bzb2Npb25leHQuY29tDQo+IENjOiBsaW51eEBhcm1saW51eC5vcmcudWs7IFZhcnVu
-IFNldGhpIDxWLlNldGhpQG54cC5jb20+OyBVZGl0IEt1bWFyDQo+IDx1ZGl0Lmt1bWFyQG54cC5j
-b20+OyBZb2dlc2ggTmFyYXlhbiBHYXVyDQo+IDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT47
-IEFuZHkgVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjIg
-My81XSBkcml2ZXJzOiBjbGstcW9yaXE6IEFkZCBjbG9ja2dlbiBzdXBwb3J0IGZvciBseDIxNjBh
-DQo+IA0KPiBPbiBGcmksIDIwMTgtMDktMTQgYXQgMDI6MDcgKzA1MzAsIFZhYmhhdiBTaGFybWEg
-d3JvdGU6DQo+ID4gRnJvbTogWW9nZXNoIEdhdXIgPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29t
-Pg0KPiA+DQo+ID4gQWRkIGNsb2NrZ2VuIHN1cHBvcnQgZm9yIGx4MjE2MGEuDQo+ID4gQWRkZWQg
-ZW50cnkgZm9yIGNvbXBhdCAnZnNsLGx4MjE2MGEtY2xvY2tnZW4nLg0KPiA+DQo+ID4gU2lnbmVk
-LW9mZi1ieTogVGFuZyBZdWFudGlhbiA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gU2lnbmVkLW9m
-Zi1ieTogWW9nZXNoIEdhdXIgPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPg0KPiA+IFNpZ25l
-ZC1vZmYtYnk6IFZhYmhhdiBTaGFybWEgPHZhYmhhdi5zaGFybWFAbnhwLmNvbT4NCj4gPiBBY2tl
-ZC1ieTogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPg0KPiA+IC0tLQ0KPiA+ICBkcml2
-ZXJzL2Nsay9jbGstcW9yaXEuYyAgICAgICAgIHwgMTQgKysrKysrKysrKysrKy0NCj4gPiAgZHJp
-dmVycy9jcHVmcmVxL3FvcmlxLWNwdWZyZXEuYyB8ICAxICsNCj4gPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCAxNCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9jbGsvY2xrLXFvcmlxLmMgYi9kcml2ZXJzL2Nsay9jbGstcW9yaXEuYyBpbmRleA0K
-PiA+IDNhMTgxMmYuLmU5YWU3MGIgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9jbGsvY2xrLXFv
-cmlxLmMNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9jbGstcW9yaXEuYw0KPiA+IEBAIC03OSw3ICs3
-OSw3IEBAIHN0cnVjdCBjbG9ja2dlbl9jaGlwaW5mbyB7DQo+ID4gIAljb25zdCBzdHJ1Y3QgY2xv
-Y2tnZW5fbXV4aW5mbyAqY211eF9ncm91cHNbMl07DQo+ID4gIAljb25zdCBzdHJ1Y3QgY2xvY2tn
-ZW5fbXV4aW5mbyAqaHdhY2NlbFtOVU1fSFdBQ0NFTF07DQo+ID4gIAl2b2lkICgqaW5pdF9wZXJp
-cGgpKHN0cnVjdCBjbG9ja2dlbiAqY2cpOw0KPiA+IC0JaW50IGNtdXhfdG9fZ3JvdXBbTlVNX0NN
-VVhdOyAvKiAtMSB0ZXJtaW5hdGVzIGlmIGZld2VyIHRoYW4NCj4gPiBOVU1fQ01VWCAqLw0KPiA+
-ICsJaW50IGNtdXhfdG9fZ3JvdXBbTlVNX0NNVVgrMV07IC8qIC0xIHRlcm1pbmF0ZSBpZiBmZXdl
-ciB0bw0KPiA+IE5VTV9DTVVYKzEgKi8NCj4gDQo+IFlvdSBuZWVkIHRvIGFkZCB0aGUgLTEgdGVy
-bWluYXRvciB0byBwNDA4MCwgYW5kIHJlbW92ZSB0aGUgImlmIGZld2VyIg0KPiBjb21tZW50IHNp
-bmNlIHRoZSB3aG9sZSBwb2ludCBvZiB0aGlzIGlzIHRoYXQgZXZlcnkgYXJyYXkgZ2V0cyAtMSB0
-ZXJtaW5hdGVkLg0KT2ssIFVwZGF0ZWQNCj4gDQo+IFdoeSBkaWQgeW91IGNoYW5nZSAidGVybWlu
-YXRlcyIgdG8gInRlcm1pbmF0ZSIgYW5kICJ0aGFuIiB0byAidG8iPw0KPiANCj4gVGhpcyArMSBj
-aGFuZ2Ugc2hvdWxkIGJlIGEgc2VwYXJhdGUgcGF0Y2ggZnJvbSBseDIxNjBhIHN1cHBvcnQuDQpT
-dXJlLCBTZW5kaW5nIGFzIHNlcGFyYXRlIHBhdGNoDQo+IA0KPiAtU2NvdHQNCg0K
+On 2018-09-24 12:38, Rohit Kumar wrote:
+> On 9/24/2018 12:19 PM, Rohit Kumar wrote:
+>> Thanks Sibi for reviewing.
+>> 
+>> 
+>> On 9/22/2018 1:11 AM, Sibi Sankar wrote:
+>>> Hi Rohit,
+>>> 
+>>> On 2018-09-03 17:22, Rohit kumar wrote:
+>>>> This adds Non PAS ADSP PIL driver for Qualcomm
+>>>> Technologies Inc SoCs.
+>>>> Added initial support for SDM845 with ADSP bootup and
+>>>> shutdown operation handled from Application Processor
+>>>> SubSystem(APSS).
+>>>> 
+>>>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>>>> ---
+>>> ....
+> ...
+>>> ....
+>>> Also I see the following warns on stopping the adsp remoteproc, 
+>>> couldn't root cause it though:
+>> 
+>> It should be issue in Q6 drivers. I will check and update q6 drivers. 
+>> Thanks for reporting.
+>> 
+> 
+> Checked this warning. This is a core driver issue fixed with
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/base/core.c?h=next-20180924&id=2ec16150179888b81717d1d3ce84e634f4736af2
+> 
+
+Thanks for pointing this out.
+
+>>>  device_del+0x84/0x29c
+>>>  platform_device_del+0x2c/0x88
+>>>  platform_device_unregister+0x1c/0x30
+>>>  of_platform_device_destroy+0x98/0xa8
+>>>  device_for_each_child+0x54/0xa4
+>>>  of_platform_depopulate+0x38/0x54
+>>>  q6asm_remove+0x1c/0x2c
+>>>  apr_device_remove+0x38/0x70
+>>>  device_release_driver_internal+0x124/0x1c8
+>>>  device_release_driver+0x24/0x30
+>>>  bus_remove_device+0xcc/0xe4
+>>>  device_del+0x1f8/0x29c
+>>>  device_unregister+0x1c/0x30
+>>>  apr_remove_device+0x1c/0x2c
+>>>  device_for_each_child+0x54/0xa4
+>>>  apr_remove+0x28/0x34
+>>>  rpmsg_dev_remove+0x48/0x70
+>>>  device_release_driver_internal+0x124/0x1c8
+>>>  device_release_driver+0x24/0x30
+>>>  bus_remove_device+0xcc/0xe4
+>>>  device_del+0x1f8/0x29c
+>>>  device_unregister+0x1c/0x30
+>>>  qcom_glink_remove_device+0x1c/0x2c
+>>>  device_for_each_child+0x54/0xa4
+>>>  qcom_glink_native_remove+0x54/0x15c
+>>>  qcom_glink_smem_unregister+0x1c/0x30
+>>>  glink_subdev_stop+0x1c/0x2c [qcom_common]
+>>>  rproc_stop+0x40/0xc0
+>>>  rproc_shutdown+0x6c/0xc0
+>>>  rproc_del+0x28/0xa0
+>>>  adsp_remove+0x20/0x5c [qcom_adsp_pil]
+>>>  platform_drv_remove+0x28/0x50
+>>>  device_release_driver_internal+0x124/0x1c8
+>>>  driver_detach+0x44/0x80
+>>>  bus_remove_driver+0x78/0x9c
+>>>  driver_unregister+0x34/0x54
+>>>  platform_driver_unregister+0x1c/0x28
+>>>  cleanup_module+0x14/0x6bc [qcom_adsp_pil]
+>>>  SyS_delete_module+0x1c4/0x214
+>>> 
+>> 
+>> Thanks,
+>> Rohit
+> Thanks
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
