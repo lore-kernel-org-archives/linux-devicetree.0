@@ -1,122 +1,134 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 3/8] dt-bindings: regulator: document stpmic1 pmic
- regulators
-Date: Tue, 25 Sep 2018 16:25:32 -0500
-Message-ID: <20180925212532.GA23630@bogus>
-References: <1536325173-16617-1-git-send-email-p.paillet@st.com>
- <1536325173-16617-4-git-send-email-p.paillet@st.com>
+From: Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH 3/6] tracing: Add tp_pstore cmdline to have tracepoints go
+ to pstore
+Date: Tue, 25 Sep 2018 14:25:34 -0700
+Message-ID: <CAEXW_YRQtJb=3V0RKHSAejfQXKssh5qBp7nmD1OUC-wTyqGDEQ@mail.gmail.com>
+References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org> <f65e9fa6e047b9b14d4f64362f9fe1f89b306050.1536430404.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536325173-16617-4-git-send-email-p.paillet@st.com>
+In-Reply-To: <f65e9fa6e047b9b14d4f64362f9fe1f89b306050.1536430404.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 07, 2018 at 12:59:44PM +0000, Pascal PAILLET-LME wrote:
-> From: pascal paillet <p.paillet@st.com>
-> 
-> The STPMIC1 regulators supply power to the application processor as well as
-> to the external system peripherals such as DDR, Flash memories and system
-> devices.
-> 
-> Signed-off-by: pascal paillet <p.paillet@st.com>
+On Sat, Sep 8, 2018 at 1:28 PM Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Add the kernel command line tp_pstore option that will have
+> tracepoints go to persistent ram buffer as well as to the
+> trace buffer for further debugging. This is similar to tp_printk
+> cmdline option of ftrace.
+>
+> Pstore support for event tracing is already added and we enable
+> logging to pstore only if cmdline is specified.
+>
+> Passing "tp_pstore" will activate logging to pstore. To turn it
+> off, the sysctl /proc/sys/kernel/tracepoint_pstore can have '0'
+> echoed into it. Note, this only works if the cmdline option is
+> used. Echoing 1 into the sysctl file without the cmdline option
+> will have no affect.
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 > ---
-> changes in v2:
-> * the hardware component has been renamed from stpmu1 to stpmic1 !
-> * replace _ with - in properties name
-> * remove deprecated regulator-compatible from the example
-> Rob, the st,mask_reset name is taken from the data-sheet. I have modified the 
-> description. I hope there is no confusion with bit masking know.
-> 
->  .../bindings/regulator/st,stpmic1-regulator.txt    | 68 ++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-> new file mode 100644
-> index 0000000..a3f4762
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
-> @@ -0,0 +1,68 @@
-> +STMicroelectronics STPMIC1 Voltage regulators
+>  .../admin-guide/kernel-parameters.txt         | 21 ++++++++
+>  include/linux/ftrace.h                        |  6 ++-
+>  kernel/sysctl.c                               |  7 +++
+>  kernel/trace/Kconfig                          | 22 +++++++-
+>  kernel/trace/trace.c                          | 51 +++++++++++++++++++
+>  kernel/trace/trace.h                          |  7 +++
+>  6 files changed, 112 insertions(+), 2 deletions(-)
+>
+[...]
+>  config GCOV_PROFILE_FTRACE
+>         bool "Enable GCOV profiling on ftrace subsystem"
+>         depends on GCOV_KERNEL
+> @@ -789,4 +810,3 @@ config GCOV_PROFILE_FTRACE
+>  endif # FTRACE
+>
+>  endif # TRACING_SUPPORT
+> -
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index bf6f1d70484d..018cbbefb769 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -73,6 +73,11 @@ struct trace_iterator *tracepoint_print_iter;
+>  int tracepoint_printk;
+>  static DEFINE_STATIC_KEY_FALSE(tracepoint_printk_key);
+>
+> +/* Pipe tracepoints to pstore */
+> +struct trace_iterator *tracepoint_pstore_iter;
+> +int tracepoint_pstore;
+> +static DEFINE_STATIC_KEY_FALSE(tracepoint_pstore_key);
 > +
-> +Regulator Nodes are optional depending on needs.
+>  /* For tracers that don't implement custom flags */
+>  static struct tracer_opt dummy_tracer_opt[] = {
+>         { }
+> @@ -238,6 +243,14 @@ static int __init set_tracepoint_printk(char *str)
+>  }
+>  __setup("tp_printk", set_tracepoint_printk);
+>
+> +static int __init set_tracepoint_pstore(char *str)
+> +{
+> +       if ((strcmp(str, "=0") != 0 && strcmp(str, "=off") != 0))
+> +               tracepoint_pstore = 1;
+> +       return 1;
+> +}
+> +__setup("tp_pstore", set_tracepoint_pstore);
 > +
-> +Available Regulators in STPMIC1 device are:
-> +  - buck1 for Buck BUCK1
-> +  - buck2 for Buck BUCK2
-> +  - buck3 for Buck BUCK3
-> +  - buck4 for Buck BUCK4
-> +  - ldo1 for LDO LDO1
-> +  - ldo2 for LDO LDO2
-> +  - ldo3 for LDO LDO3
-> +  - ldo4 for LDO LDO4
-> +  - ldo5 for LDO LDO5
-> +  - ldo6 for LDO LDO6
-> +  - vref_ddr for LDO Vref DDR
-> +  - boost for Buck BOOST
-> +  - pwr_sw1 for VBUS_OTG switch
-> +  - pwr_sw2 for SW_OUT switch
+>  unsigned long long ns2usecs(u64 nsec)
+>  {
+>         nsec += 500;
+> @@ -2376,11 +2389,45 @@ int tracepoint_printk_sysctl(struct ctl_table *table, int write,
+>         return ret;
+>  }
+>
+> +static DEFINE_MUTEX(tracepoint_pstore_mutex);
 > +
-> +Switches are fixed voltage regulators with only enable/disable capability.
+> +int tracepoint_pstore_sysctl(struct ctl_table *table, int write,
+> +                            void __user *buffer, size_t *lenp,
+> +                            loff_t *ppos)
+> +{
+> +       int save_tracepoint_pstore;
+> +       int ret;
 > +
-> +Optional properties:
-> +- st,mask-reset: mask reset for this regulator: the regulator configuration
-> +  is maintained during pmic reset.
+> +       mutex_lock(&tracepoint_pstore_mutex);
+> +       save_tracepoint_pstore = tracepoint_pstore;
+> +
+> +       ret = proc_dointvec(table, write, buffer, lenp, ppos);
+> +
+> +       if (!tracepoint_pstore_iter)
+> +               tracepoint_pstore = 0;
+> +
+> +       if (save_tracepoint_pstore == tracepoint_pstore)
+> +               goto out;
+> +
+> +       if (tracepoint_pstore)
+> +               static_key_enable(&tracepoint_pstore_key.key);
+> +       else
+> +               static_key_disable(&tracepoint_pstore_key.key);
+> +
+> + out:
+> +       mutex_unlock(&tracepoint_pstore_mutex);
+> +
+> +       return ret;
+> +}
+> +
+>  void trace_event_buffer_commit(struct trace_event_buffer *fbuffer)
+>  {
+>         if (static_key_false(&tracepoint_printk_key.key))
+>                 output_printk(fbuffer);
+>
+> +       if (static_key_false(&tracepoint_pstore_key.key))
+> +               pstore_event_call(fbuffer);
 
-State this is boolean.
+Can you not find a way to pass the size of the even record here, to
+pstore? Then you can directly allocate and store the binary record in
+pstore itself instead of rendering and storing the text in pstore
+which will be more space (and I think time) efficient. I also think if
+you do this, then you will not need to use the spinlock in the pstore
+(which AIUI is preventing the warning you're seeing in the
+event_call->event.funcs->trace() call).
 
-> +- regulator-pull-down: enable high pull down
-> +  if not specified light pull down is used
-> +- regulator-over-current-protection:
-> +    if set, all regulators are switched off in case of over-current detection
-> +    on this regulator,
-> +    if not set, the driver only sends an over-current event.
-> +- interrupt-parent: phandle to the parent interrupt controller
-
-This is implied. And actually not needed as the parent node is an 
-'interrupt-controller'.
-
-> +- interrupts: index of current limit detection interrupt
-> +- <regulator>-supply: phandle to the parent supply/regulator node
-> +	each regulator supply can be described except vref_ddr.
-> +
-> +Example:
-> +regulators {
-> +	compatible = "st,stpmic1-regulators";
-> +
-> +	ldo6-supply = <&v3v3>;
-> +
-> +	vdd_core: buck1 {
-> +		regulator-name = "vdd_core";
-> +		interrupts = <IT_CURLIM_BUCK1 0>;
-> +		interrupt-parent = <&pmic>;
-> +		st,mask-reset;
-> +		regulator-pull-down;
-> +		regulator-min-microvolt = <700000>;
-> +		regulator-max-microvolt = <1200000>;
-> +	};
-> +
-> +	v3v3: buck4 {
-> +		regulator-name = "v3v3";
-> +		interrupts = <IT_CURLIM_BUCK4 0>;
-> +		interrupt-parent = <&mypmic>;
-
-Different parent from buck1?
-> +
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +	};
-> +
-> +	v1v8: ldo6 {
-> +		regulator-name = "v1v8";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-over-current-protection;
-> +	};
-> +};
-> -- 
-> 1.9.1
+- Joel
