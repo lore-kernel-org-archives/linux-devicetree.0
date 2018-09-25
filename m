@@ -1,36 +1,50 @@
-Return-Path: <SRS0=c6Dm=MD=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 2/4] dt-bindings: i2c: rcar: Document r8a7744 support
-Date: Fri, 21 Sep 2018 18:36:59 +0100
-Message-Id: <1537551421-4259-3-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1537551421-4259-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1537551421-4259-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 25 Sep 2018 13:34:29 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: i2c: fix typo in brcm,bcm2835-i2c.txt
+Message-ID: <20180925183429.GA3550@bogus>
+References: <20180901152300.1895-1-semtax33@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180901152300.1895-1-semtax33@gmail.com>
+To: sim manseop <semtax33@gmail.com>
+Cc: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Biju Das <biju.das@bp.renesas.com>
+On Sat, Sep 01, 2018 at 03:23:00PM +0000, sim manseop wrote:
+> Fix typo in brcm,bcm2835-i2c.txt between dts unit address and register start address mismatch.
 
-Document i2c Device Tree support for RZ/G1N (R8A7744) SoC, which is
-compatible with R-Car Gen2 SoC family.
+Wrap long lines at <75 char.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
+> 
+> Signed-off-by: manseop sim <semtax33@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-index 671e2a1..30c0485 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-@@ -3,6 +3,7 @@ I2C for R-Car platforms
- Required properties:
- - compatible:
- 	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
-+	"renesas,i2c-r8a7744" if the device is a part of a R8A7744 SoC.
- 	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
- 	"renesas,i2c-r8a77470" if the device is a part of a R8A77470 SoC.
- 	"renesas,i2c-r8a774a1" if the device is a part of a R8A774A1 SoC.
--- 
-2.7.4
+As pointed out in other patches, your author and S-o-b names don't 
+match.
+
+> 
+> ---
+> Changes in v2:
+> - modify subject
+> - modify commit message
+> ---
+>  Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+> index e9de3756752b..ec78f84893ec 100644
+> --- a/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+> +++ b/Documentation/devicetree/bindings/i2c/brcm,bcm2835-i2c.txt
+> @@ -11,7 +11,7 @@ Recommended properties:
+>  
+>  Example:
+>  
+> -i2c@20205000 {
+> +i2c@7e205000 {
+>  	compatible = "brcm,bcm2835-i2c";
+>  	reg = <0x7e205000 0x1000>;
+>  	interrupts = <2 21>;
+> -- 
+> 2.17.1
+> 
