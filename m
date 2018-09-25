@@ -1,88 +1,56 @@
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: Re: [PATCH V3 0/4] Changes for SDCC5 version
-Date: Tue, 25 Sep 2018 16:47:26 +0530
-Message-ID: <bcdeaf0c-fb04-67f5-8580-a3f5110bcba5@codeaurora.org>
-References: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
- <20180924194412.GA27477@arch>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v5 2/5] drm/dp: fix link probing for devices supporting DP 1.4+
+Date: Tue, 25 Sep 2018 13:18:42 +0200
+Message-ID: <18095829.BFmvNaydv0@phil>
+References: <1537866837-4408-1-git-send-email-dkos@cadence.com> <1537866837-4408-3-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924194412.GA27477@arch>
-Content-Language: en-US
+In-Reply-To: <1537866837-4408-3-git-send-email-dkos@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>, Vijay Viswanath <vviswana@codeaurora.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
+To: Damian Kos <dkos@cadence.com>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, Quentin Schulz <quentin.schulz@free-electrons.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, ltyrala@cadence.com, rafalc@cadence.com, jartur@cadence.com, piotrs@cadence.com, quentin.schulz@bootlin.com, jbergsagel@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Damian,
 
-On 9/25/2018 1:18 AM, Craig Tatlor wrote:
-> What socs have you tested this on?
-> On sdm660 it seems to crash device
-> when writing pwr ctl.
+Am Dienstag, 25. September 2018, 11:13:32 CEST schrieb Damian Kos:
+> From: Quentin Schulz <quentin.schulz@free-electrons.com>
+> 
+> DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
+> DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
+> DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
+> DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
+> DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
+> "true capabilities" of DPRX device.
+> 
+> Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
+> might falsely return lower capabilities to "avoid interoperability
+> issues with some of the existing DP Source devices that malfunction
+> when they discover the higher capabilities within those three
+> registers.".
+> 
+> Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was reserved
+> and read 0 so it's safe to check against it even if DP revision is
+> <1.4
+> 
+> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> Signed-off-by: Damian Kos <dkos@cadence.com>
 
-Hi
-We have tested this on SDM845.
-SDM660 also has SDCC5 controller, so you would need to define
-"qcom,sdhci-msm-v5" in your platform dt.
-Can you confirm if you have defined this?
+in v4 you received a
+	Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+for this patch. If a patch is largely unchanged from one version to another
+please add these previously received tags to the commit message.
+This prevents people from reviewing needlessly stuff twice ;-) .
 
-BTW, can you please share few details of the platform that you are checking?
-We are not aware of any dev platform based on SDM660. This is just for 
-my info.
+So the above should read
 
-> On Tue, Jun 19, 2018 at 11:09:17AM +0530, Vijay Viswanath wrote:
->> With SDCC5, the MCI register space got removed and the offset/order of
->> several registers have changed. Based on SDCC version used and the register,
->> we need to pick the base address and offset.
->>
->> Depends on patch series: "[PATCH V5 0/2] mmc: sdhci-msm: Configuring IO_PAD support for sdhci-msm"
->>
->> Changes since RFC:
->> 	Dropped voltage regulator changes in sdhci-msm
->> 	Split the "Register changes for sdcc V5" patch
->> 	Instead of checking mci removal for deciding which base addr to use,
->> 	new function pointers are defined for the 2 variants of sdcc:
->> 		1) MCI present
->> 		2) V5 (mci removed)
->> 	Instead of string comparing with the compatible string from DT file,
->> 	the sdhci_msm_probe will now pick the data associated with the
->> 	compatible entry and use it to load variant specific address offsets
->> 	and msm variant specific read/write ops.
->>
->> Changes since V1:
->> 	Removed unused msm_reab & msm_writeb APIs
->> 	Changed certain register addresses from uppercase to lowercase hex
->> 	letters
->> 	Removed extra lines and spaces
->> 	Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
->> 	one for Documentation and other for the driver changes.
->>
->> Changes since V2:
->> 	Used lower case for macro function defenitions
->> 	Removed unused function pointers for msm_readb & msm_writeb
->>
->>
->> Sayali Lokhande (3):
->>    mmc: sdhci-msm: Define new Register address map
->>    Documentation: sdhci-msm: Add new compatible string for SDCC v5
->>    mmc: host: Register changes for sdcc V5
->>
->> Vijay Viswanath (1):
->>    mmc: sdhci-msm: Add msm version specific ops and data structures
->>
->>   .../devicetree/bindings/mmc/sdhci-msm.txt          |   7 +-
->>   drivers/mmc/host/sdhci-msm.c                       | 511 ++++++++++++++++-----
->>   2 files changed, 391 insertions(+), 127 deletions(-)
->>
->> -- 
->>   Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
->> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+----- 8< -----
+Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Signed-off-by: Damian Kos <dkos@cadence.com>
+Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+----- 8< -----
 
-Thanks,
-Veera
+
+Heiko
