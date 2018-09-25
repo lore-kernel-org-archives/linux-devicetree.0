@@ -1,423 +1,103 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy
- core
-Date: Tue, 25 Sep 2018 10:59:24 +0530
-Message-ID: <9bd46b50-03a9-8a47-7751-dad19bac3643@ti.com>
-References: <1535551648-29534-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1535551648-29534-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v16 2/5] iommu/arm-smmu: Invoke pm_runtime
+ during probe, add/remove device
+Date: Tue, 25 Sep 2018 11:26:04 +0530
+Message-ID: <CAFp+6iFvhdSq7upbvsEWgMewhAaaRM91iw9p7qOFPYrUxis0Hg@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-3-vivek.gautam@codeaurora.org>
+ <CAAFQd5B7YR03Jm1upOg2nsaKOb1iDD7-WGo-qx7S8m-nounCvA@mail.gmail.com>
+ <3ccc3690-dc9d-56e7-e2d1-62e73a189bff@codeaurora.org>
+ <CAAFQd5DMDWEeBU=fg6arye3pXnrCqOA4tDtMSGutXk7vSz-EtQ@mail.gmail.com>
+ <CAFp+6iE3+qn6-gpXEzxfoP5yPMARmUcJNn0AZk-kA2AreTLnng@mail.gmail.com>
+ <CAFp+6iHnHj_PkPFBUSTdJTW57K51wLqSEw6VOMKxAVo7O+ms9g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1535551648-29534-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, vivek.gautam@codeaurora.org
-Cc: v.anuragkumar@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAFp+6iHnHj_PkPFBUSTdJTW57K51wLqSEw6VOMKxAVo7O+ms9g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wednesday 29 August 2018 07:37 PM, Anurag Kumar Vulisha wrote:
-> ZynqMP SoC has a Gigabit Transceiver with four lanes. All the high speed
-> peripherals such as USB, SATA, PCIE, Display Port and Ethernet SGMII can
-> rely on any of the four GT lanes for PHY layer. This patch adds driver
-> for that ZynqMP GT core.
-> 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-> ---
->  drivers/phy/Kconfig            |    8 +
->  drivers/phy/Makefile           |    1 +
->  drivers/phy/phy-zynqmp.c       | 1579 ++++++++++++++++++++++++++++++++++++++++
->  include/dt-bindings/phy/phy.h  |    2 +
->  include/linux/phy/phy-zynqmp.h |   52 ++
->  5 files changed, 1642 insertions(+)
->  create mode 100644 drivers/phy/phy-zynqmp.c
->  create mode 100644 include/linux/phy/phy-zynqmp.h
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 5c8d452..14cf3330 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -40,6 +40,14 @@ config PHY_XGENE
->  	help
->  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
->  
-> +config PHY_XILINX_ZYNQMP
-> +	tristate "Xilinx ZynqMP PHY driver"
-> +	depends on ARCH_ZYNQMP
-> +	select GENERIC_PHY
-> +	help
-> +	  Enable this to support ZynqMP High Speed Gigabit Transceiver
-> +	  that is part of ZynqMP SoC.
-> +
->  source "drivers/phy/allwinner/Kconfig"
->  source "drivers/phy/amlogic/Kconfig"
->  source "drivers/phy/broadcom/Kconfig"
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 84e3bd9..f2a8d27 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
->  obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
->  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-> +obj-$(CONFIG_PHY_XILINX_ZYNQMP)		+= phy-zynqmp.o
->  obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
->  obj-$(CONFIG_ARCH_MESON)		+= amlogic/
->  obj-$(CONFIG_LANTIQ)			+= lantiq/
-> diff --git a/drivers/phy/phy-zynqmp.c b/drivers/phy/phy-zynqmp.c
-> new file mode 100644
-> index 0000000..306cedd
-> --- /dev/null
-> +++ b/drivers/phy/phy-zynqmp.c
-> @@ -0,0 +1,1579 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * phy-zynqmp.c - PHY driver for Xilinx ZynqMP GT.
-> + *
-> + * Copyright (C) 2018 Xilinx Inc.
-> + *
-> + * Author: Anurag Kumar Vulisha <anuragku@xilinx.com>
-> + *
-> + * This driver is tested for USB, SATA and Display Port currently.
-> + * Other controllers PCIe and SGMII should also work but that is
-> + * experimental as of now.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/phy/phy-zynqmp.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/delay.h>
-> +#include <dt-bindings/phy/phy.h>
-> +#include <linux/reset.h>
-> +#include <linux/list.h>
-> +#include <linux/slab.h>
-> +
-> +/* Inter Connect Matrix parameters */
-> +#define ICM_CFG0			0x10010
-> +#define ICM_CFG1			0x10014
-> +#define ICM_CFG0_L0_MASK		0x07
-> +#define ICM_CFG0_L1_MASK		0x70
-> +#define ICM_CFG1_L2_MASK		0x07
-> +#define ICM_CFG2_L3_MASK		0x70
-> +#define ICM_CFG_SHIFT			4
-> +
-> +/* Inter Connect Matrix allowed protocols */
-> +#define ICM_PROTOCOL_PD			0x0
-> +#define ICM_PROTOCOL_PCIE		0x1
-> +#define ICM_PROTOCOL_SATA		0x2
-> +#define ICM_PROTOCOL_USB		0x3
-> +#define ICM_PROTOCOL_DP			0x4
-> +#define ICM_PROTOCOL_SGMII		0x5
-> +
-> +/* Test Mode common reset control  parameters */
-> +#define TM_CMN_RST			0x10018
-> +#define TM_CMN_RST_EN			0x1
-> +#define TM_CMN_RST_SET			0x2
-> +#define TM_CMN_RST_MASK			0x3
-> +
-> +/* Refclk selection parameters */
-> +#define PLL_REF_SEL0			0x10000
-> +#define PLL_REF_OFFSET			0x4
-> +#define PLL_FREQ_MASK			0x1F
-> +#define PLL_STATUS_READ_OFFSET		0x4000
-> +#define PLL_STATUS_LOCKED		0x10
-> +
-> +/* PLL SSC step size offsets */
-> +#define L0_L0_REF_CLK_SEL		0x2860
-> +#define L0_PLL_SS_STEPS_0_LSB		0x2368
-> +#define L0_PLL_SS_STEPS_1_MSB		0x236C
-> +#define L0_PLL_SS_STEP_SIZE_0_LSB	0x2370
-> +#define L0_PLL_SS_STEP_SIZE_1		0x2374
-> +#define L0_PLL_SS_STEP_SIZE_2		0x2378
-> +#define L0_PLL_SS_STEP_SIZE_3_MSB	0x237C
-> +#define L0_PLL_STATUS_READ_1		0x23E4
-> +
-> +/* SSC step size parameters */
-> +#define STEP_SIZE_OFFSET		0x4000
-> +#define STEP_SIZE_0_MASK		0xFF
-> +#define STEP_SIZE_1_MASK		0xFF
-> +#define STEP_SIZE_2_MASK		0xFF
-> +#define STEP_SIZE_3_MASK		0x3
-> +#define STEP_SIZE_SHIFT			8
-> +#define FORCE_STEP_SIZE			0x10
-> +#define FORCE_STEPS			0x20
-> +#define STEPS_OFFSET			0x4000
-> +#define STEPS_0_MASK			0xFF
-> +#define STEPS_1_MASK			0x07
-> +
-> +/* BG calibration parameters */
-> +#define BGCAL_REF_SEL			0x10028
-> +#define BGCAL_REF_VALUE			0x0C
-> +
-> +/* Calibration digital logic parameters */
-> +#define L3_TM_CALIB_DIG19		0xEC4C
-> +#define L3_CALIB_DONE_STATUS		0xEF14
-> +#define L3_TM_CALIB_DIG18		0xEC48
-> +#define L3_TM_CALIB_DIG19_NSW		0x07
-> +#define L3_TM_CALIB_DIG18_NSW		0xE0
-> +#define L3_TM_OVERRIDE_NSW_CODE         0x20
-> +#define L3_CALIB_DONE			0x02
-> +#define L3_NSW_SHIFT			5
-> +#define L3_NSW_PIPE_SHIFT		4
-> +#define L3_NSW_CALIB_SHIFT		3
-> +
-> +/* DN Resistor calibration code parameters */
-> +#define L0_TXPMA_ST_3			0x0B0C
-> +#define L0_DN_CALIB_CODE		0x3F
-> +
-> +/* PLL Test Mode register parameters */
-> +#define L0_TM_PLL_DIG_37		0x2094
-> +#define L0_TM_PLL_DIG_37_OFFSET		0x4000
-> +#define L0_TM_COARSE_CODE_LIMIT		0x10
-> +
-> +/* PCS control parameters */
-> +#define L0_TM_DIG_6			0x106C
-> +#define L0_TX_DIG_61			0x00F4
-> +#define L0_TM_DIG_6_OFFSET		0x4000
-> +#define L0_TX_DIG_61_OFFSET		0x4000
-> +#define L0_TM_DIS_DESCRAMBLE_DECODER	0x0F
-> +#define L0_TM_DISABLE_SCRAMBLE_ENCODER	0x0F
-> +
-> +/* TX De-emphasis parameters */
-> +#define L0_TX_ANA_TM_18			0x0048
-> +#define L0_TX_ANA_TM_118		0x01D8
-> +#define L0_TX_ANA_TM_18_OFFSET		0x4000
-> +#define L0_TX_ANA_TM_118_OFFSET		0x4000
-> +#define L0_TX_ANA_TM_118_FORCE_17_0	BIT(0)
-> +
-> +/* PMA control parameters */
-> +#define L0_TXPMD_TM_45			0x0CB4
-> +#define L0_TXPMD_TM_48			0x0CC0
-> +#define L0_TXPMD_TM_45_OFFSET		0x4000
-> +#define L0_TXPMD_TM_48_OFFSET		0x4000
-> +#define L0_TXPMD_TM_45_OVER_DP_MAIN	BIT(0)
-> +#define L0_TXPMD_TM_45_ENABLE_DP_MAIN	BIT(1)
-> +#define L0_TXPMD_TM_45_OVER_DP_POST1	BIT(2)
-> +#define L0_TXPMD_TM_45_ENABLE_DP_POST1	BIT(3)
-> +#define L0_TXPMD_TM_45_OVER_DP_POST2	BIT(4)
-> +#define L0_TXPMD_TM_45_ENABLE_DP_POST2	BIT(5)
-> +
-> +/* Bus width parameters */
-> +#define TX_PROT_BUS_WIDTH		0x10040
-> +#define RX_PROT_BUS_WIDTH		0x10044
-> +#define PROT_BUS_WIDTH_10		0x0
-> +#define PROT_BUS_WIDTH_20		0x1
-> +#define PROT_BUS_WIDTH_40		0x2
-> +#define PROT_BUS_WIDTH_SHIFT		2
-> +
-> +/* Max number of GT lanes */
-> +#define MAX_LANES			4
-> +
-> +/* Max Allowed refclk frequencies */
-> +#define MAX_REFCLK			13
-> +
-> +/* Lane CLK sharing mask */
-> +#define LANE_CLK_SHARE_MASK		0x8F
-> +
-> +/* SIOU SATA control register */
-> +#define SATA_CONTROL_OFFSET		0x0100
-> +
-> +/* Total number of controllers */
-> +#define CONTROLLERS_PER_LANE		5
-> +
-> +/* USB pipe control parameters */
-> +#define PIPE_CLK_OFFSET			0x7c
-> +#define PIPE_POWER_OFFSET		0x80
-> +#define PIPE_CLK_ON			1
-> +#define PIPE_CLK_OFF			0
-> +#define PIPE_POWER_ON			1
-> +#define PIPE_POWER_OFF			0
-> +
-> +/* Protocol Type Pparameters */
-> +#define XPSGTR_TYPE_USB0		0  /* USB controller 0 */
-> +#define XPSGTR_TYPE_USB1		1  /* USB controller 1 */
-> +#define XPSGTR_TYPE_SATA_0		2  /* SATA controller lane 0 */
-> +#define XPSGTR_TYPE_SATA_1		3  /* SATA controller lane 1 */
-> +#define XPSGTR_TYPE_PCIE_0		4  /* PCIe controller lane 0 */
-> +#define XPSGTR_TYPE_PCIE_1		5  /* PCIe controller lane 1 */
-> +#define XPSGTR_TYPE_PCIE_2		6  /* PCIe controller lane 2 */
-> +#define XPSGTR_TYPE_PCIE_3		7  /* PCIe controller lane 3 */
-> +#define XPSGTR_TYPE_DP_0		8  /* Display Port controller lane 0 */
-> +#define XPSGTR_TYPE_DP_1		9  /* Display Port controller lane 1 */
-> +#define XPSGTR_TYPE_SGMII0		10 /* Ethernet SGMII controller 0 */
-> +#define XPSGTR_TYPE_SGMII1		11 /* Ethernet SGMII controller 1 */
-> +#define XPSGTR_TYPE_SGMII2		12 /* Ethernet SGMII controller 2 */
-> +#define XPSGTR_TYPE_SGMII3		13 /* Ethernet SGMII controller 3 */
-> +
-> +/* Timeout values */
-> +#define RST_TIMEOUT_MS			1000
-> +#define TIMEOUT_US			1000
-> +
-> +/*
-> + * This table holds the valid combinations of controllers and
-> + * lanes(Interconnect Matrix).
-> + */
-> +static unsigned int icm_matrix[MAX_LANES][CONTROLLERS_PER_LANE] = {
-> +	{ XPSGTR_TYPE_PCIE_0, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
-> +		XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII0 },
-> +	{ XPSGTR_TYPE_PCIE_1, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB0,
-> +		XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII1 },
-> +	{ XPSGTR_TYPE_PCIE_2, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
-> +		XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII2 },
-> +	{ XPSGTR_TYPE_PCIE_3, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB1,
-> +		XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII3 }
-> +};
-> +
-> +/* Allowed PLL reference clock frequencies */
-> +enum pll_frequencies {
-> +	REF_19_2M = 0,
-> +	REF_20M,
-> +	REF_24M,
-> +	REF_26M,
-> +	REF_27M,
-> +	REF_38_4M,
-> +	REF_40M,
-> +	REF_52M,
-> +	REF_100M,
-> +	REF_108M,
-> +	REF_125M,
-> +	REF_135M,
-> +	REF_150M,
-> +};
-> +
-> +/**
-> + * struct xpsgtr_phy - representation of a lane
-> + * @phy: pointer to the kernel PHY device
-> + * @type: controller which uses this lane
-> + * @lane: lane number
-> + * @protocol: protocol in which the lane operates
-> + * @ref_clk: enum of allowed ref clock rates for this lane PLL
-> + * @pll_lock: PLL status
-> + * @skip_phy_init: skip phy_init() if true
-> + * @data: pointer to hold private data
-> + * @refclk_rate: PLL reference clock frequency
-> + * @share_laneclk: lane number of the clock to be shared
-> + */
-> +struct xpsgtr_phy {
-> +	struct phy *phy;
-> +	u8 type;
-> +	u8 lane;
-> +	u8 protocol;
-> +	enum pll_frequencies ref_clk;
-> +	bool pll_lock;
-> +	bool skip_phy_init;
-> +	void *data;
-> +	u32 refclk_rate;
-> +	u32 share_laneclk;
-> +};
-> +
-> +/**
-> + * struct xpsgtr_ssc - structure to hold SSC settings for a lane
-> + * @refclk_rate: PLL reference clock frequency
-> + * @pll_ref_clk: value to be written to register for corresponding ref clk rate
-> + * @steps: number of steps of SSC (Spread Spectrum Clock)
-> + * @step_size: step size of each step
-> + */
-> +struct xpsgtr_ssc {
-> +	u32 refclk_rate;
-> +	u8  pll_ref_clk;
-> +	u32 steps;
-> +	u32 step_size;
-> +};
-> +
-> +/* lookup table to hold all settings needed for a ref clock frequency */
-> +static struct xpsgtr_ssc ssc_lookup[MAX_REFCLK] = {
-> +	{19200000, 0x05, 608, 264020},
-> +	{20000000, 0x06, 634, 243454},
-> +	{24000000, 0x07, 760, 168973},
-> +	{26000000, 0x08, 824, 143860},
-> +	{27000000, 0x09, 856, 86551},
-> +	{38400000, 0x0A, 1218, 65896},
-> +	{40000000, 0x0B, 634, 243454},
-> +	{52000000, 0x0C, 824, 143860},
-> +	{100000000, 0x0D, 1058, 87533},
-> +	{108000000, 0x0E, 856, 86551},
-> +	{125000000, 0x0F, 992, 119497},
-> +	{135000000, 0x10, 1070, 55393},
-> +	{150000000, 0x11, 792, 187091}
-> +};
-> +
-> +/**
-> + * struct xpsgtr_dev - representation of a ZynMP GT device
-> + * @dev: pointer to device
-> + * @serdes: serdes base address
-> + * @siou: siou base address
-> + * @gtr_mutex: mutex for locking
-> + * @phys: pointer to all the lanes
-> + * @tx_term_fix: fix for GT issue
-> + * @saved_icm_cfg0: stored value of ICM CFG0 register
-> + * @saved_icm_cfg1: stored value of ICM CFG1 register
-> + * @sata_rst: a reset control for SATA
-> + * @dp_rst: a reset control for DP
-> + * @usb0_crst: a reset control for usb0 core
-> + * @usb1_crst: a reset control for usb1 core
-> + * @usb0_hibrst: a reset control for usb0 hibernation module
-> + * @usb1_hibrst: a reset control for usb1 hibernation module
-> + * @usb0_apbrst: a reset control for usb0 apb bus
-> + * @usb1_apbrst: a reset control for usb1 apb bus
-> + * @gem0_rst: a reset control for gem0
-> + * @gem1_rst: a reset control for gem1
-> + * @gem2_rst: a reset control for gem2
-> + * @gem3_rst: a reset control for gem3
-> + */
-> +struct xpsgtr_dev {
-> +	struct device *dev;
-> +	void __iomem *serdes;
-> +	void __iomem *siou;
-> +	struct mutex gtr_mutex; /* mutex for locking */
-> +	struct xpsgtr_phy **phys;
-> +	bool tx_term_fix;
-> +	unsigned int saved_icm_cfg0;
-> +	unsigned int saved_icm_cfg1;
-> +	struct reset_control *sata_rst;
-> +	struct reset_control *dp_rst;
-> +	struct reset_control *usb0_crst;
-> +	struct reset_control *usb1_crst;
-> +	struct reset_control *usb0_hibrst;
-> +	struct reset_control *usb1_hibrst;
-> +	struct reset_control *usb0_apbrst;
-> +	struct reset_control *usb1_apbrst;
-> +	struct reset_control *gem0_rst;
-> +	struct reset_control *gem1_rst;
-> +	struct reset_control *gem2_rst;
-> +	struct reset_control *gem3_rst;
-> +};
-> +
-> +/**
-> + * xpsgtr_override_deemph - override PIPE TX de-emphasis
-> + * @phy: pointer to phy
-> + * @plvl: pre-emphasis level
-> + * @vlvl: voltage swing level
-> + *
-> + * Return: None
-> + */
-> +void xpsgtr_override_deemph(struct phy *phy, u8 plvl, u8 vlvl)
-> +{
-> +	struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
-> +	struct xpsgtr_dev *gtr_dev = gtr_phy->data;
-> +	static u8 pe[4][4] = { { 0x2, 0x2, 0x2, 0x2 },
-> +			       { 0x1, 0x1, 0x1, 0xFF },
-> +			       { 0x0, 0x0, 0xFF, 0xFF },
-> +			       { 0xFF, 0xFF, 0xFF, 0xFF } };
-> +
-> +	writel(pe[plvl][vlvl],
-> +	       gtr_dev->serdes + gtr_phy->lane * L0_TX_ANA_TM_18_OFFSET +
-> +	       L0_TX_ANA_TM_18);
-> +}
-> +EXPORT_SYMBOL_GPL(xpsgtr_override_deemph);
-
-Why can't these be included in one of the phy_ops? Why do you need export
-symbols here and below?
-
-Thanks
-Kishon
+SGkgUm9iaW4sIFdpbGwsCgpPbiBUdWUsIFNlcCAxOCwgMjAxOCBhdCA4OjQxIEFNIFZpdmVrIEdh
+dXRhbQo8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEhpIFJvYmluLAo+
+Cj4gT24gRnJpLCBTZXAgNywgMjAxOCBhdCAzOjUyIFBNIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1
+dGFtQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+Cj4gPiBPbiBGcmksIFNlcCA3LCAyMDE4IGF0
+IDM6MjIgUE0gVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4gd3JvdGU6Cj4gPiA+Cj4g
+PiA+IE9uIEZyaSwgU2VwIDcsIDIwMTggYXQgNjozOCBQTSBWaXZlayBHYXV0YW0gPHZpdmVrLmdh
+dXRhbUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4gPiA+ID4KPiA+ID4gPiBIaSBUb21hc3osCj4g
+PiA+ID4KPiA+ID4gPgo+ID4gPiA+IE9uIDkvNy8yMDE4IDI6NDYgUE0sIFRvbWFzeiBGaWdhIHdy
+b3RlOgo+ID4gPiA+ID4gSGkgVml2ZWssCj4gPiA+ID4gPgo+ID4gPiA+ID4gT24gVGh1LCBBdWcg
+MzAsIDIwMTggYXQgMTE6NDYgUE0gVml2ZWsgR2F1dGFtCj4gPiA+ID4gPiA8dml2ZWsuZ2F1dGFt
+QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+ID4gPiA+PiBGcm9tOiBTcmljaGFyYW4gUiA8c3Jp
+Y2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+ID4gPiA+ID4+Cj4gPiA+ID4gPj4gVGhlIHNtbXUgZGV2
+aWNlIHByb2JlL3JlbW92ZSBhbmQgYWRkL3JlbW92ZSBtYXN0ZXIgZGV2aWNlIGNhbGxiYWNrcwo+
+ID4gPiA+ID4+IGdldHMgY2FsbGVkIHdoZW4gdGhlIHNtbXUgaXMgbm90IGxpbmtlZCB0byBpdHMg
+bWFzdGVyLCB0aGF0IGlzIHdpdGhvdXQKPiA+ID4gPiA+PiB0aGUgY29udGV4dCBvZiB0aGUgbWFz
+dGVyIGRldmljZS4gU28gY2FsbGluZyBydW50aW1lIGFwaXMgaW4gdGhvc2UgcGxhY2VzCj4gPiA+
+ID4gPj4gc2VwYXJhdGVseS4KPiA+ID4gPiA+PiBHbG9iYWwgbG9ja3MgYXJlIGFsc28gaW5pdGlh
+bGl6ZWQgYmVmb3JlIGVuYWJsaW5nIHJ1bnRpbWUgcG0gYXMgdGhlCj4gPiA+ID4gPj4gcnVudGlt
+ZV9yZXN1bWUoKSBjYWxscyBkZXZpY2VfcmVzZXQoKSB3aGljaCBkb2VzIHRsYl9zeW5jX2dsb2Jh
+bCgpCj4gPiA+ID4gPj4gdGhhdCB1bHRpbWF0ZWx5IHJlcXVpcmVzIGxvY2tzIHRvIGJlIGluaXRp
+YWxpemVkLgo+ID4gPiA+ID4+Cj4gPiA+ID4gPj4gU2lnbmVkLW9mZi1ieTogU3JpY2hhcmFuIFIg
+PHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiA+ID4gPiA+PiBbdml2ZWs6IENsZWFudXAgcG0g
+cnVudGltZSBjYWxsc10KPiA+ID4gPiA+PiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZp
+dmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiA+ID4gPiA+PiBSZXZpZXdlZC1ieTogVG9tYXN6
+IEZpZ2EgPHRmaWdhQGNocm9taXVtLm9yZz4KPiA+ID4gPiA+PiBUZXN0ZWQtYnk6IFNyaW5pdmFz
+IEthbmRhZ2F0bGEgPHNyaW5pdmFzLmthbmRhZ2F0bGFAbGluYXJvLm9yZz4KPiA+ID4gPiA+PiAt
+LS0KPiA+ID4gPiA+PiAgIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDg5ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+ID4gPiA+ID4+ICAgMSBmaWxl
+IGNoYW5nZWQsIDgxIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4gPiA+ID4gPiBbc25p
+cF0KPiA+ID4gPiA+PiBAQCAtMjIxNSwxMCArMjI4MSwxNyBAQCBzdGF0aWMgaW50IGFybV9zbW11
+X2RldmljZV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiA+ID4gPiA+PiAg
+ICAgICAgICBpZiAoIWJpdG1hcF9lbXB0eShzbW11LT5jb250ZXh0X21hcCwgQVJNX1NNTVVfTUFY
+X0NCUykpCj4gPiA+ID4gPj4gICAgICAgICAgICAgICAgICBkZXZfZXJyKCZwZGV2LT5kZXYsICJy
+ZW1vdmluZyBkZXZpY2Ugd2l0aCBhY3RpdmUgZG9tYWlucyFcbiIpOwo+ID4gPiA+ID4+Cj4gPiA+
+ID4gPj4gKyAgICAgICBhcm1fc21tdV9ycG1fZ2V0KHNtbXUpOwo+ID4gPiA+ID4+ICAgICAgICAg
+IC8qIFR1cm4gdGhlIHRoaW5nIG9mZiAqLwo+ID4gPiA+ID4+ICAgICAgICAgIHdyaXRlbChzQ1Iw
+X0NMSUVOVFBELCBBUk1fU01NVV9HUjBfTlMoc21tdSkgKyBBUk1fU01NVV9HUjBfc0NSMCk7Cj4g
+PiA+ID4gPj4gKyAgICAgICBhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+ID4gPiA+ID4+ICsKPiA+
+ID4gPiA+PiArICAgICAgIGlmIChwbV9ydW50aW1lX2VuYWJsZWQoc21tdS0+ZGV2KSkKPiA+ID4g
+PiA+PiArICAgICAgICAgICAgICAgcG1fcnVudGltZV9mb3JjZV9zdXNwZW5kKHNtbXUtPmRldik7
+Cj4gPiA+ID4gPj4gKyAgICAgICBlbHNlCj4gPiA+ID4gPj4gKyAgICAgICAgICAgICAgIGNsa19i
+dWxrX2Rpc2FibGUoc21tdS0+bnVtX2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4gPiA+ID4+Cj4gPiA+
+ID4gPj4gLSAgICAgICBjbGtfYnVsa19kaXNhYmxlX3VucHJlcGFyZShzbW11LT5udW1fY2xrcywg
+c21tdS0+Y2xrcyk7Cj4gPiA+ID4gPj4gKyAgICAgICBjbGtfYnVsa191bnByZXBhcmUoc21tdS0+
+bnVtX2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4gPiA+ID4gQXJlbid0IHdlIG1pc3NpbmcgcG1fcnVu
+dGltZV9kaXNhYmxlKCkgaGVyZT8gV2UnbGwgaGF2ZSB0aGUgZW5hYmxlCj4gPiA+ID4gPiBjb3Vu
+dCB1bmJhbGFuY2VkIGlmIHRoZSBkcml2ZXIgaXMgcmVtb3ZlZCBhbmQgcHJvYmVkIGFnYWluLgo+
+ID4gPiA+Cj4gPiA+ID4gcG1fcnVudGltZV9mb3JjZV9zdXNwZW5kKCkgZG9lcyBhIHBtX3J1bnRp
+bWVfZGlzYWJsZSgpIGFsc28gaWYgaSBhbSBub3QKPiA+ID4gPiB3cm9uZy4KPiA+ID4gPiBBbmQs
+IGFzIG1lbnRpb25lZCBpbiBhIHByZXZpb3VzIHRocmVhZCBbMV0sIHdlIHdlcmUgc2VlaW5nIGEg
+d2FybmluZwo+ID4gPiA+IHdoaWNoIHdlIGF2b2lkZWQKPiA+ID4gPiBieSBrZWVwaW5nIGZvcmNl
+X3N1c3BlbmQoKS4KPiA+ID4gPgo+ID4gPiA+IFsxXSBodHRwczovL2xrbWwub3JnL2xrbWwvMjAx
+OC83LzgvMTI0Cj4gPiA+Cj4gPiA+IEkgc2VlLCB0aGFua3MuIEkgZGlkbid0IHJlYWxpemUgdGhh
+dCBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKQo+ID4gPiBhbHJlYWR5IGRpc2FibGVzIHJ1bnRp
+bWUgUE0gaW5kZWVkLiBTb3JyeSBmb3IgdGhlIG5vaXNlLgo+ID4KPiA+IEhpIFRvbWFzeiwKPiA+
+IE5vIHByb2JsZW0uIFRoYW5rcyBmb3IgbG9va2luZyBiYWNrIGF0IGl0Lgo+ID4KPiA+IEhpIFJv
+YmluLAo+ID4gSWYgeW91IGFyZSBmaW5lIHdpdGggdGhpcyBzZXJpZXMsIHRoZW4gY2FuIHlvdSBw
+bGVhc2UgY29uc2lkZXIgZ2l2aW5nCj4gPiBSZXZpZXdlZC1ieSwgc28gdGhhdCB3ZSBhcmUgY2Vy
+dGFpbiB0aGF0IHRoaXMgc2VyaWVzIHdpbGwgZ28gaW4gdGhlIG5leHQgbWVyZ2UKPiA+IHdpbmRv
+dy4KPiA+IFRoYW5rcwo+Cj4gR2VudGxlIHBpbmcuCj4gWW91IGFjayB3aWxsIGJlIHZlcnkgaGVs
+cGZ1bCBpbiBsZXR0aW5nIFdpbGwgcHVsbCB0aGlzIHNlcmllcyBmb3IgNC4yMC4KPiBUaGFua3Mu
+CgpJIHdvdWxkIHJlYWxseSBhcHByZWNpYXRlIGlmIHlvdSBjb3VsZCBwcm92aWRlIHlvdXIgYWNr
+IGZvciB0aGlzIHNlcmllcy4KT3IgaWYgdGhlcmUgYXJlIGFueSBjb25jZXJucywgSSBhbSB3aWxs
+aW5nIHRvIGFkZHJlc3MgdGhlbS4KVGhhbmtzLgoKQmVzdCByZWdhcmRzClZpdmVrCgoKCj4KPiAt
+LQo+IFFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50
+ZXIsIEluYy4gaXMgYSBtZW1iZXIKPiBvZiBDb2RlIEF1cm9yYSBGb3J1bSwgaG9zdGVkIGJ5IFRo
+ZSBMaW51eCBGb3VuZGF0aW9uCgoKCi0tClFVQUxDT01NIElORElBLCBvbiBiZWhhbGYgb2YgUXVh
+bGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIKb2YgQ29kZSBBdXJvcmEg
+Rm9ydW0sIGhvc3RlZCBieSBUaGUgTGludXggRm91bmRhdGlvbgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
+cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
