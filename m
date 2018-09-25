@@ -1,73 +1,72 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v5 2/2] pci: dwc: pci-dra7xx: Enable errata i870 for both EP and RC mode
-Date: Tue, 25 Sep 2018 14:00:24 +0530
-Message-ID: <20180925083024.6960-3-vigneshr@ti.com>
-References: <20180925083024.6960-1-vigneshr@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 0/9] Implement wake event support on Tegra186 and later
+Date: Tue, 25 Sep 2018 10:48:39 +0200
+Message-ID: <CACRpkdbLoz+gSFa292OFNszeS6tNywpBRHyGwL9SK2u5s=UhZw@mail.gmail.com>
+References: <20180921102546.12745-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925083024.6960-1-vigneshr@ti.com>
+In-Reply-To: <20180921102546.12745-1-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: "thierry.reding@gmail.com" <thierry.reding@gmail.com>, ilina@codeaurora.org, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Errata i870 is applicable in both EP and RC mode. Therefore rename
-function dra7xx_pcie_ep_unaligned_memaccess(), that implements errata
-workaround, to dra7xx_pcie_unaligned_memaccess() and call it for both RC
-and EP. Make sure driver probe does not fail in case workaround is not
-applied for RC mode so as to maintain DT backward compatibility.
+Hi Thierry,
 
-Reported-by: Chris Welch <Chris.Welch@viavisolutions.com>
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/pci/controller/dwc/pci-dra7xx.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+thanks for working on the wakeup business!
 
-diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
-index ce9224a36f62..a32d6dde7a57 100644
---- a/drivers/pci/controller/dwc/pci-dra7xx.c
-+++ b/drivers/pci/controller/dwc/pci-dra7xx.c
-@@ -542,7 +542,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
- };
- 
- /*
-- * dra7xx_pcie_ep_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-+ * dra7xx_pcie_unaligned_memaccess: workaround for AM572x/AM571x Errata i870
-  * @dra7xx: the dra7xx device where the workaround should be applied
-  *
-  * Access to the PCIe slave port that are not 32-bit aligned will result
-@@ -552,7 +552,7 @@ static const struct of_device_id of_dra7xx_pcie_match[] = {
-  *
-  * To avoid this issue set PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE to 1.
-  */
--static int dra7xx_pcie_ep_unaligned_memaccess(struct device *dev)
-+static int dra7xx_pcie_unaligned_memaccess(struct device *dev)
- {
- 	int ret;
- 	struct device_node *np = dev->of_node;
-@@ -704,6 +704,11 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 
- 		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
- 				   DEVICE_TYPE_RC);
-+
-+		ret = dra7xx_pcie_unaligned_memaccess(dev);
-+		if (ret)
-+			dev_err(dev, "WA for Errata i870 not applied\n");
-+
- 		ret = dra7xx_add_pcie_port(dra7xx, pdev);
- 		if (ret < 0)
- 			goto err_gpio;
-@@ -717,7 +722,7 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
- 		dra7xx_pcie_writel(dra7xx, PCIECTRL_TI_CONF_DEVICE_TYPE,
- 				   DEVICE_TYPE_EP);
- 
--		ret = dra7xx_pcie_ep_unaligned_memaccess(dev);
-+		ret = dra7xx_pcie_unaligned_memaccess(dev);
- 		if (ret)
- 			goto err_gpio;
- 
--- 
-2.19.0
+This patch gets me a bit confused on our different approaches
+toward wakeups in the kernel, so I included Lina, Marc and Ulf
+to see if we can get some common understanding.
+
+On Fri, Sep 21, 2018 at 12:25 PM Thierry Reding
+<thierry.reding@gmail.com> wrote:
+
+> The following is a set of patches that allow certain interrupts to be
+> used as wakeup sources on Tegra186 and later. To implement this, each
+> of the GPIO controllers' IRQ domain needs to become hierarchical, and
+> parented to the PMC domain. The PMC domain in turn implements a new
+> IRQ domain that is a child to the GIC IRQ domain.
+>
+> The above ensures that the interrupt chip implementation of the PMC is
+> called at the correct time. The ->irq_set_type() and ->irq_set_wake()
+> implementations program the PMC wake registers in a way to enable the
+> given interrupts as wakeup sources.
+>
+> This is based on a suggestion from Thomas Gleixner that resulted from
+> the following thread:
+>
+>         https://lkml.org/lkml/2018/9/13/1042
+
+I am not sure if you are aware about Lina's series
+"Wakeup GPIO support for SDM845 SoC"
+that is now in v3:
+https://patchwork.kernel.org/cover/10587965/
+
+It appears to me, though I am blissfully ignorant of the
+details, that there is a relationship between this patch
+series and the other one.
+
+Your approach is to insert an hiearchical PMC irq controller
+and Lina's approach is to simply put a mechanism on the
+side to inject IRQs into the GIC after sleep (IIUC).
+
+I guess your hierarchy is in response to this mail from tglx:
+https://lkml.org/lkml/2018/9/14/339
+
+So from a birds eye point of view I don't see how the Tegra
+PMC irq controller and Qualcomm's PDC power domain
+controller are conceptually different. Are you doing the same
+thing in two different ways for the same problem space
+here?
+
+Or are these hardwares so very different that they really
+warrant two different approaches to wakeups?
+
+I guess I miss a bit of hardware insight... is the key difference
+that in Qualcomm's PDC the IRQs need to be replayed/injected
+by software while Tegra's PMC will do this in hardware?
+
+Yours,
+Linus Walleij
