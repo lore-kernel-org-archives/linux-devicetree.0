@@ -1,89 +1,266 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5baa1af9.1c69fb81.73ad9.3bd5@mx.google.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: msm-vibrator: new bindings for MSM
- vibrator driver
-References: <20180919150912.8948-1-masneyb@onstation.org>
- <20180919150912.8948-2-masneyb@onstation.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180919150912.8948-2-masneyb@onstation.org>
-Date: Mon, 24 Sep 2018 15:01:11 -0700
-To: Brian Masney <masneyb@onstation.org>
-Cc: thierry.reding@gmail.com, linux-pwm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sebastian.reichel@collabora.co.uk
+Return-Path: <SRS0=7L+n=MH=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv2 5/6] EDAC, altera: Add Stratix10 peripheral support.
+Date: Tue, 25 Sep 2018 08:49:01 -0500
+Message-Id: <1537883342-30180-6-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
+To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Sep 19, 2018 at 11:09:10AM -0400, Brian Masney wrote:
-> This patch adds the device tree bindings for the pwm-msm-vibrator.c
-> driver that supports the vibrator found on various Qualcomm MSM SOCs.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Bindings are for h/w, not some driver.
+Add a new the peripheral ECC error injection algorithm
+for Stratix10 and some Arria10 peripherals.
+Inject a single bit error and upon readback, it will be
+corrected and the SBE IRQ handler will be called.
 
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/pwm/pwm-msm-vibrator.txt         | 38 +++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-msm-vibrator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-msm-vibrator.txt b/Documentation/devicetree/bindings/pwm/pwm-msm-vibrator.txt
-> new file mode 100644
-> index 000000000000..4638a25345f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-msm-vibrator.txt
-> @@ -0,0 +1,38 @@
-> +* PWM driver for the vibrator found on various MSM SOCs.
+Add regmap selection for Stratix10 or Arria10 peripheral
+device memory initialization.
 
-driver?
+Add checks for both Arria10 and Stratix10 to the
+peripheral ECC setup.
 
-> +
-> +Required properties:
-> +
-> +  - compatible: Should be one of
-> +		"qcom,msm8226-pwm-vibrator"
-> +		"qcom,msm8974-pwm-vibrator"
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+v2  No change
+---
+ drivers/edac/altera_edac.c | 129 +++++++++++++++++++++++++++++++++++++++++----
+ drivers/edac/altera_edac.h |  25 +++++++++
+ 2 files changed, 143 insertions(+), 11 deletions(-)
 
-The block only works for a vibrator?
-
-> +  - reg: the base address and length of the IO memory for the registers.
-> +  - #pwm-cells: set to 3.
-> +  - pinctrl-names: set to default.
-> +  - pinctrl-0: phandles pointing to pin configuration nodes. See
-> +               Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +  - clock-names: set to pwm
-> +  - clocks: phandle of the clock used by the PWM module. See
-> +            Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +  - enable-gpios: GPIO that enables the vibrator.
-
-Shouldn't this go in the vibrator node as it is connected to the 
-vibrator.
-
-> +
-> +Optional properties:
-> +
-> +  - vcc-supply: phandle to the regulator that provides power to the sensor.
-> +
-> +Example from a LG Nexus 5 (hammerhead) phone:
-> +
-> +msm_pwm_vibrator_enable: msm_pwm_vibrator@fd8c3450 {
-
-pwm@...
-
-> +	reg = <0xfd8c3450 0x400>;
-> +	compatible = "qcom,msm8974-pwm-vibrator";
-> +	#pwm-cells = <3>;
-> +
-> +	vcc-supply = <&pm8941_l19>;
-> +
-> +	clocks = <&mmcc CAMSS_GP1_CLK>;
-> +	clock-names = "pwm";
-> +
-> +	enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&vibrator_pin>;
-> +};
-> -- 
-> 2.17.1
-> 
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 48b58063a7a3..523ae84a4dd8 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -713,6 +713,16 @@ static const struct file_operations altr_edac_a10_device_inject_fops = {
+ 	.llseek = generic_file_llseek,
+ };
+ 
++static ssize_t altr_edac_a10_device_trig2(struct file *file,
++					  const char __user *user_buf,
++					  size_t count, loff_t *ppos);
++
++static const struct file_operations altr_edac_a10_device_inject2_fops = {
++	.open = simple_open,
++	.write = altr_edac_a10_device_trig2,
++	.llseek = generic_file_llseek,
++};
++
+ static void altr_create_edacdev_dbgfs(struct edac_device_ctl_info *edac_dci,
+ 				      const struct edac_device_prv_data *priv)
+ {
+@@ -994,6 +1004,16 @@ static int __maybe_unused altr_init_memory_port(void __iomem *ioaddr, int port)
+ 	return ret;
+ }
+ 
++static int socfpga_is_a10(void)
++{
++	return of_machine_is_compatible("altr,socfpga-arria10");
++}
++
++static int socfpga_is_s10(void)
++{
++	return of_machine_is_compatible("altr,socfpga-stratix10");
++}
++
+ static __init int __maybe_unused
+ altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
+ 			u32 ecc_ctrl_en_mask, bool dual_port)
+@@ -1008,8 +1028,32 @@ altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
+ 
+ 	/* Get the ECC Manager - parent of the device EDACs */
+ 	np_eccmgr = of_get_parent(np);
+-	ecc_mgr_map = syscon_regmap_lookup_by_phandle(np_eccmgr,
+-						      "altr,sysmgr-syscon");
++
++	if (socfpga_is_a10()) {
++		ecc_mgr_map = syscon_regmap_lookup_by_phandle(np_eccmgr,
++							      "altr,sysmgr-syscon");
++	} else {
++		struct device_node *sysmgr_np;
++		struct resource res;
++		void __iomem *base;
++
++		sysmgr_np = of_parse_phandle(np_eccmgr,
++					     "altr,sysmgr-syscon", 0);
++		if (!sysmgr_np) {
++			edac_printk(KERN_ERR, EDAC_DEVICE,
++				    "Unable to find altr,sysmgr-syscon\n");
++			return -ENODEV;
++		}
++
++		if (of_address_to_resource(sysmgr_np, 0, &res))
++			return -ENOMEM;
++
++		/* Need physical address for SMCC call */
++		base = (void __iomem *)res.start;
++
++		ecc_mgr_map = regmap_init(NULL, NULL, base,
++					  &s10_sdram_regmap_cfg);
++	}
+ 	of_node_put(np_eccmgr);
+ 	if (IS_ERR(ecc_mgr_map)) {
+ 		edac_printk(KERN_ERR, EDAC_DEVICE,
+@@ -1067,11 +1111,6 @@ altr_init_a10_ecc_block(struct device_node *np, u32 irq_mask,
+ 	return ret;
+ }
+ 
+-static int socfpga_is_a10(void)
+-{
+-	return of_machine_is_compatible("altr,socfpga-arria10");
+-}
+-
+ static int validate_parent_available(struct device_node *np);
+ static const struct of_device_id altr_edac_a10_device_of_match[];
+ static int __init __maybe_unused altr_init_a10_ecc_device_type(char *compat)
+@@ -1079,7 +1118,7 @@ static int __init __maybe_unused altr_init_a10_ecc_device_type(char *compat)
+ 	int irq;
+ 	struct device_node *child, *np;
+ 
+-	if (!socfpga_is_a10())
++	if (!socfpga_is_a10() && !socfpga_is_s10())
+ 		return -ENODEV;
+ 
+ 	np = of_find_compatible_node(NULL, NULL,
+@@ -1325,7 +1364,7 @@ static const struct edac_device_prv_data a10_enetecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ };
+ 
+ static int __init socfpga_init_ethernet_ecc(void)
+@@ -1403,7 +1442,7 @@ static const struct edac_device_prv_data a10_usbecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ };
+ 
+ static int __init socfpga_init_usb_ecc(void)
+@@ -1601,7 +1640,7 @@ static int __init socfpga_init_sdmmc_ecc(void)
+ 	int rc = -ENODEV;
+ 	struct device_node *child;
+ 
+-	if (!socfpga_is_a10())
++	if (!socfpga_is_a10() && !socfpga_is_s10())
+ 		return -ENODEV;
+ 
+ 	child = of_find_compatible_node(NULL, NULL, "altr,socfpga-sdmmc-ecc");
+@@ -1685,6 +1724,74 @@ static ssize_t altr_edac_a10_device_trig(struct file *file,
+ 		writel(priv->ue_set_mask, set_addr);
+ 	else
+ 		writel(priv->ce_set_mask, set_addr);
++
++	/* Ensure the interrupt test bits are set */
++	wmb();
++	local_irq_restore(flags);
++
++	return count;
++}
++
++/*
++ * The Stratix10 EDAC Error Injection Functions differ from Arria10
++ * slightly. A few Arria10 peripherals can use this injection function.
++ * Inject the error into the memory and then readback to trigger the IRQ.
++ */
++static ssize_t altr_edac_a10_device_trig2(struct file *file,
++					  const char __user *user_buf,
++					  size_t count, loff_t *ppos)
++{
++	struct edac_device_ctl_info *edac_dci = file->private_data;
++	struct altr_edac_device_dev *drvdata = edac_dci->pvt_info;
++	const struct edac_device_prv_data *priv = drvdata->data;
++	void __iomem *set_addr = (drvdata->base + priv->set_err_ofst);
++	unsigned long flags;
++	u8 trig_type;
++
++	if (!user_buf || get_user(trig_type, user_buf))
++		return -EFAULT;
++
++	local_irq_save(flags);
++	if (trig_type == ALTR_UE_TRIGGER_CHAR) {
++		writel(priv->ue_set_mask, set_addr);
++	} else {
++		/* Setup write of 0 to first 4 bytes */
++		writel(0x0, drvdata->base + ECC_BLK_WDATA0_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
++		/* Setup write of 4 bytes */
++		writel(ECC_WORD_WRITE, drvdata->base + ECC_BLK_DBYTECTRL_OFST);
++		/* Setup Address to 0 */
++		writel(0x0, drvdata->base + ECC_BLK_ADDRESS_OFST);
++		/* Setup accctrl to write & data override */
++		writel(ECC_WRITE_DOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++		/* Setup accctrl to read & ecc override */
++		writel(ECC_READ_EOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++		/* Setup write for single bit change */
++		writel(0x1, drvdata->base + ECC_BLK_WDATA0_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
++		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
++		/* Copy Read ECC to Write ECC */
++		writel(readl(drvdata->base + ECC_BLK_RECC0_OFST),
++		       drvdata->base + ECC_BLK_WECC0_OFST);
++		writel(readl(drvdata->base + ECC_BLK_RECC1_OFST),
++		       drvdata->base + ECC_BLK_WECC1_OFST);
++		/* Setup accctrl to write & ecc override & data override */
++		writel(ECC_WRITE_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++		/* Setup accctrl to read & ecc overwrite & data overwrite */
++		writel(ECC_READ_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		/* Kick it. */
++		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
++	}
++
+ 	/* Ensure the interrupt test bits are set */
+ 	wmb();
+ 	local_irq_restore(flags);
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index e9e3f9b61947..4213cb0bb2a7 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -300,6 +300,31 @@ struct altr_sdram_mc_data {
+ 
+ #define S10_DDR0_IRQ_MASK                 BIT(16)
+ 
++/* Define ECC Block Offsets for peripherals */
++#define ECC_BLK_ADDRESS_OFST              0x40
++#define ECC_BLK_RDATA0_OFST               0x44
++#define ECC_BLK_RDATA1_OFST               0x48
++#define ECC_BLK_RDATA2_OFST               0x4C
++#define ECC_BLK_RDATA3_OFST               0x50
++#define ECC_BLK_WDATA0_OFST               0x54
++#define ECC_BLK_WDATA1_OFST               0x58
++#define ECC_BLK_WDATA2_OFST               0x5C
++#define ECC_BLK_WDATA3_OFST               0x60
++#define ECC_BLK_RECC0_OFST                0x64
++#define ECC_BLK_RECC1_OFST                0x68
++#define ECC_BLK_WECC0_OFST                0x6C
++#define ECC_BLK_WECC1_OFST                0x70
++#define ECC_BLK_DBYTECTRL_OFST            0x74
++#define ECC_BLK_ACCCTRL_OFST              0x78
++#define ECC_BLK_STARTACC_OFST             0x7C
++
++#define ECC_XACT_KICK                     0x10000
++#define ECC_WORD_WRITE                    0xF
++#define ECC_WRITE_DOVR                    0x101
++#define ECC_WRITE_EDOVR                   0x103
++#define ECC_READ_EOVR                     0x2
++#define ECC_READ_EDOVR                    0x3
++
+ struct altr_edac_device_dev;
+ 
+ struct edac_device_prv_data {
+-- 
+2.7.4
