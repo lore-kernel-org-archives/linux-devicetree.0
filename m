@@ -1,15 +1,14 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mediatek: add compatible for mt8183
- pwrap
-Date: Tue, 25 Sep 2018 15:52:12 +0200
-Message-ID: <5f707e40-54fe-b1a9-92e4-f009aa3968ba@gmail.com>
+Subject: Re: [PATCH 3/4] soc: mediatek: add mt8183 pwrap support
+Date: Tue, 25 Sep 2018 15:52:26 +0200
+Message-ID: <bb3ac4fb-a67e-93b0-c409-ead9504de896@gmail.com>
 References: <1537341961-20736-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1537341961-20736-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1537341961-20736-4-git-send-email-hsin-hsiung.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537341961-20736-2-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <1537341961-20736-4-git-send-email-hsin-hsiung.wang@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, robh+dt@kernel.org, mark.rutland@arm.com
@@ -18,28 +17,18 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 19/09/2018 09:25, Hsin-Hsiung Wang wrote:
-> This adds dt-binding documentation of pwrap for Mediatek MT8183 SoC
-> Platform.
+On 19/09/2018 09:26, Hsin-Hsiung Wang wrote:
+> MT6358 is a new power management IC and it is used for
+> mt8183 SoCs. To define mt6358_regs for pmic register
+> mapping and pmic_mt6358 for accessing register.
+> Adding one more interrupt and wdt source.
 > 
 > Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/soc/mediatek/pwrap.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  drivers/soc/mediatek/mtk-pmic-wrap.c | 195 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 191 insertions(+), 4 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> index f9987c3..012fe3f 100644
-> --- a/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/pwrap.txt
-> @@ -23,6 +23,7 @@ Required properties in pwrap device node.
->  	"mediatek,mt7622-pwrap" for MT7622 SoCs
->  	"mediatek,mt8135-pwrap" for MT8135 SoCs
->  	"mediatek,mt8173-pwrap" for MT8173 SoCs
-> +	"mediatek,mt8183-pwrap" for MT8183 SoCs
->  - interrupts: IRQ for pwrap in SOC
->  - reg-names: Must include the following entries:
->    "pwrap": Main registers base
-> 
+
 
 Applied to v4.19-next/soc
 
