@@ -1,85 +1,44 @@
-From: Damian Kos <dkos@cadence.com>
-Subject: [PATCH v5 3/5] drm/dp: make dp_get_lane_status usable from outside of the core
-Date: Tue, 25 Sep 2018 10:13:33 +0100
-Message-ID: <1537866837-4408-4-git-send-email-dkos@cadence.com>
-References: <1537866837-4408-1-git-send-email-dkos@cadence.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V7 2/2] csky: remove irq_mapping from smp.c.
+Date: Tue, 25 Sep 2018 17:17:03 +0800
+Message-ID: <20180925091702.GA6607@guoren>
+References: <cover.1537276837.git.ren_guo@c-sky.com>
+ <ec95f397f52b8b5d9191b85d0d907a1a43d2e2c1.1537276837.git.ren_guo@c-sky.com>
+ <CAK8P3a2WLCZNZ_A1qPQuEQdxEyLKZj2EY2oHzG+_GTGiWEna7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537866837-4408-1-git-send-email-dkos@cadence.com>
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2WLCZNZ_A1qPQuEQdxEyLKZj2EY2oHzG+_GTGiWEna7w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Quentin Schulz <quentin.schulz@free-electrons.com>, Damian Kos <dkos@cadence.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: pgaj@cadence.com, ltyrala@cadence.com, rafalc@cadence.com, jartur@cadence.com, piotrs@cadence.com, quentin.schulz@bootlin.com, jbergsagel@ti.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
+On Mon, Sep 24, 2018 at 10:23:14PM +0200, Arnd Bergmann wrote:
+> On Tue, Sep 18, 2018 at 3:48 PM Guo Ren <ren_guo@c-sky.com> wrote:
+> >
+> >  - remove irq_mapping from smp.c to irq-driver
+> >  - Add set_ipi_irq_mapping api to irq-driver
+> >  - update asm/smp.h
+> >
+> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> 
+> The patch seems ok to me, but please try to improve the changelog comments.
+> Generally speaking, use full English sentences instead of an enumerated list,
+> and explain what the change is for rather than what you are doing. The text
+Ok, I'll improve it.
+> you have here can easily be derived from looking at the code changes,
+> but I still don't understand what caused you to change it, and why this
+> is better than the previous version.
+The changelog comment will change to:
 
-dp_get_lane_status is pretty generic and can be used for other means,
-so let's make it "public".
+There are some feedbacks from irqchip, and we need to adjust "smp.c & smp.h"
+to match the csky_mptimer modification.
+ - Move IPI_IRQ define into drivers/irqchip/csky_mpintc.c, because it's a
+   interrupt controller specific.
+ - Bugfix request_irq with IPI_IRQ, we must use irq_mapping return value not
+   directly use IPI_IRQ. The modification also involves csky_mpintc.
 
-This adds drm_dp_get_lane_status to the header file and add the appropriate
-EXPORT_SYMBOL for it so that it can be used by other drivers, be they compiled
-built-in or as modules.
-
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-Signed-off-by: Damian Kos <dkos@cadence.com>
----
- drivers/gpu/drm/drm_dp_helper.c | 9 +++++----
- include/drm/drm_dp_helper.h     | 2 ++
- 2 files changed, 7 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_helper.c
-index 735ebde5c2f0..169db52f92f5 100644
---- a/drivers/gpu/drm/drm_dp_helper.c
-+++ b/drivers/gpu/drm/drm_dp_helper.c
-@@ -48,14 +48,15 @@ static u8 dp_link_status(const u8 link_status[DP_LINK_STATUS_SIZE], int r)
- 	return link_status[r - DP_LANE0_1_STATUS];
- }
- 
--static u8 dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
--			     int lane)
-+u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE],
-+			  int lane)
- {
- 	int i = DP_LANE0_1_STATUS + (lane >> 1);
- 	int s = (lane & 1) * 4;
- 	u8 l = dp_link_status(link_status, i);
- 	return (l >> s) & 0xf;
- }
-+EXPORT_SYMBOL(drm_dp_get_lane_status);
- 
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count)
-@@ -69,7 +70,7 @@ bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	if ((lane_align & DP_INTERLANE_ALIGN_DONE) == 0)
- 		return false;
- 	for (lane = 0; lane < lane_count; lane++) {
--		lane_status = dp_get_lane_status(link_status, lane);
-+		lane_status = drm_dp_get_lane_status(link_status, lane);
- 		if ((lane_status & DP_CHANNEL_EQ_BITS) != DP_CHANNEL_EQ_BITS)
- 			return false;
- 	}
-@@ -84,7 +85,7 @@ bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 	u8 lane_status;
- 
- 	for (lane = 0; lane < lane_count; lane++) {
--		lane_status = dp_get_lane_status(link_status, lane);
-+		lane_status = drm_dp_get_lane_status(link_status, lane);
- 		if ((lane_status & DP_LANE_CR_DONE) == 0)
- 			return false;
- 	}
-diff --git a/include/drm/drm_dp_helper.h b/include/drm/drm_dp_helper.h
-index 698082a02b97..973d2fda9654 100644
---- a/include/drm/drm_dp_helper.h
-+++ b/include/drm/drm_dp_helper.h
-@@ -952,6 +952,8 @@
- #define DP_MST_LOGICAL_PORT_0 8
- 
- #define DP_LINK_STATUS_SIZE	   6
-+
-+u8 drm_dp_get_lane_status(const u8 link_status[DP_LINK_STATUS_SIZE], int lane);
- bool drm_dp_channel_eq_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
- 			  int lane_count);
- bool drm_dp_clock_recovery_ok(const u8 link_status[DP_LINK_STATUS_SIZE],
--- 
-2.17.1
+Best Regards
+ Guo Ren
