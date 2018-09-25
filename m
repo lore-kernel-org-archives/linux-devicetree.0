@@ -1,76 +1,73 @@
-Return-Path: <SRS0=AfOp=MH=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
-Date: Tue, 25 Sep 2018 13:12:33 +0000
-Message-ID: 
- <TY1PR01MB1770C394068B91ACB1F6E54DC0160@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Return-Path: <SRS0=hPEm=MH=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
 References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1537530911-443-2-git-send-email-fabrizio.castro@bp.renesas.com>
  <CAMuHMdVY1ty4fGoBg7qxfkRaEBEgBEK5YDgwNryDx_tCUYpiaw@mail.gmail.com>
  <TY1PR01MB1770218E44B1C365EE23299DC0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
  <CAMuHMdX1jTwehG_XdsnWXz5HhPK4OYtOkb1BNr75yxZn8u6B6w@mail.gmail.com>
- <20180925074751.m2lwlinpebcun4a7@verge.net.au>
- <CAMuHMdVhdHsKDPuQZzwqkEUuPGYriAOgSRcROrC3DVfkmPix6Q@mail.gmail.com>
- <20180925082216.GA2270@kunai>
- <CAMuHMdXcZMEgjxPLTr9jsb7SvtVP-DLcMk3oa-277tTDYeEm0Q@mail.gmail.com>
+ <20180925074751.m2lwlinpebcun4a7@verge.net.au> <CAMuHMdVhdHsKDPuQZzwqkEUuPGYriAOgSRcROrC3DVfkmPix6Q@mail.gmail.com>
+ <20180925082216.GA2270@kunai> <CAMuHMdXcZMEgjxPLTr9jsb7SvtVP-DLcMk3oa-277tTDYeEm0Q@mail.gmail.com>
  <TY1PR01MB177030FE92BDA0DB5DEB535AC0160@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <CAMuHMdVAiP-49kMhcQPyCT0Wpfkw8hG1e3Hx+WSqwHa77QLPvw@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdVAiP-49kMhcQPyCT0Wpfkw8hG1e3Hx+WSqwHa77QLPvw@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+In-Reply-To: <TY1PR01MB177030FE92BDA0DB5DEB535AC0160@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 25 Sep 2018 15:03:46 +0200
+Message-ID: <CAMuHMdVAiP-49kMhcQPyCT0Wpfkw8hG1e3Hx+WSqwHa77QLPvw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzRdIGR0LWJpbmRpbmdzOiBt
-bWM6IHJlbmVzYXNfc2RoaTogQWRkIHI4YTc3NDcwIHN1cHBvcnQNCj4NCj4gSGkgRmFicml6aW8s
-DQo+DQo+IE9uIFR1ZSwgU2VwIDI1LCAyMDE4IGF0IDI6NDUgUE0gRmFicml6aW8gQ2FzdHJvDQo+
-IDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+IHdyb3RlOg0KPiA+ID4gU3ViamVjdDog
-UmU6IFtQQVRDSCAxLzRdIGR0LWJpbmRpbmdzOiBtbWM6IHJlbmVzYXNfc2RoaTogQWRkIHI4YTc3
-NDcwIHN1cHBvcnQNCj4gPiA+IE9uIFR1ZSwgU2VwIDI1LCAyMDE4IGF0IDEwOjIyIEFNIFdvbGZy
-YW0gU2FuZyA8d3NhQHRoZS1kcmVhbXMuZGU+IHdyb3RlOg0KPiA+ID4gPiA+ID4gUGVyaGFwcyBz
-dGF0aW5nIHRoZSBvYnZpb3VzOiB0aGlzIGZlZWxzIGEgbG90IGxpa2UgdGhlIHByb2JsZW0gd2Ug
-dGhvdWdodA0KPiA+ID4gPiA+ID4gd2UgaGFkIHdpdGggZGlmZmVyZW50IEdlbi0zIFNvQ3MvRVMg
-dmVyc2lvbnMuIEFuZCBpbiB0aGF0IGNhc2Ugd2UgZGVjaWRlZA0KPiA+ID4gPiA+ID4gYWdhaW5z
-dCB1c2luZyBjb21wYXQgc3RyaW5ncyB0byBkaWZmZXJlbnRpYXRlLiBUaGUgbWFpbiBkaWZmZXJl
-bmNlIGhlcmUNCj4gPiA+ID4gPiA+IHNlZW1zIHRvIGJlIHRoYXQgd2UgbmVlZCB0byBkaWZmZXJl
-bnRpYXRlIGJldHdlZW4gZGlmZmVyZW50IHBvcnRzIG9uIHRoZQ0KPiA+ID4gPiA+ID4gc2FtZSBT
-b0MuDQo+ID4gPiA+DQo+ID4gPiA+IFllcywgSSBhZ3JlZS4gT3VyIHNvIGZhciBhZ3JlZWQgc29s
-dXRpb24gZGlkbid0IHRha2UgaW50byBhY2NvdW50IHRoYXQNCj4gPiA+ID4gdGhlcmUgYXJlIGRp
-ZmZlcmVudCBTREhJIHZlcnNpb25zIG9uIHRoZSBzYW1lIFNvQy4gQWRkaW5nIGEgY29tcGF0aWJs
-ZQ0KPiA+ID4gPiBtaWdodCBiZSB0aGUgZWFzaWVzdCBzb2x1dGlvbiwgYnV0IHRoZW4gd2UgaGF2
-ZSBhIG1peCBvZiBjb21wYXRpYmxlcywNCj4gPiA+ID4gc29jX2RldmljZV9tYXRjaCwgYW5kIGV2
-ZW4gdmVyc2lvbiByZWdpc3RlciAoZGVlcGVyIGluIHRoZSBkcml2ZXIpLiBNeQ0KPiA+ID4gPiBn
-dXQgZmVlbGluZyBpcyB3ZSBzaG91bGQgdGFrZSB0aGUgdGltZSB0byByZXRoaW5rIGFsbCB0aGlz
-Pw0KPiA+ID4gPg0KPiA+ID4gPiA+IFNvIGVpdGhlcg0KPiA+ID4gPiA+ICAgYSkgU0RISTAvMiB2
-cy4gU0RISTEgYXJlIGRpZmZlcmVudCwgZGVzZXJ2aW5nIGRpZmZlcmVudCBjb21wYXRpYmxlIHZh
-bHVlcywgb3INCj4gPiA+ID4gPiAgIGIpIFNESEkwLzEvMiBhcmUgaWRlbnRpY2FsLCBidXQgU0RI
-STEgaXMgd2lyZWQgZGlmZmVyZW50LCBkZXNlcnZpbmcgdGhlIHNhbWUNCj4gPiA+ID4gPiAgICAg
-IGNvbXBhdGlibGUgdmFsdWUsIGJ1dCBvbmUgb3IgbW9yZSBhZGRpdGlvbmFsIHByb3BlcnRpZXMg
-ZGVzY3JpYmluZyB0aGUNCj4gPiA+ID4gPiAgICAgIGRpZmZlcmVudCB3aXJpbmcuDQo+ID4gPiA+
-DQo+ID4gPiA+IEFjdHVhbGx5LCBTREhJMiBzZWVtcyBkaWZmZXJlbnQsIHRvby4gSXQgZG9lc24n
-dCBzdXBwb3J0IFNEUjEwNC4gSSBkb24ndA0KPiA+ID4gPiBoYXZlIHRoZSBTREhJIHNwZWNpZmlj
-IGRvY3MsIGJ1dCBmcm9tIHRoZSBtYWluIGRvY3MsIGFsbCBTREhJIGluc3RhbmNlcw0KPiA+ID4g
-PiBhcmUgZGlmZmVyZW50Lg0KPiA+ID4NCj4gPiA+IEkgZm9yZ290IGFib3V0IHRoZSB2ZXJzaW9u
-IHJlZ2lzdGVyLg0KPiA+ID4NCj4gPiA+IEZhYnJpemlvOiBjYW4geW91IHBsZWFzZSBjaGVjayB3
-aGF0IHRoZSAzIGluc3RhbmNlcyByZXBvcnQgaW4gdGhlaXIgdmVyc2lvbg0KPiA+ID4gcmVnaXN0
-ZXJzPyBUaGFua3MhDQo+ID4NCj4gPiBTREhJMDogMHhjYzBkDQo+ID4gU0RISTE6IDB4Y2MxMA0K
-PiA+IFNESEkyOiAweGNjMGQNCj4NCj4gVGhhbmsgeW91LiBTbyBTREhJMSBkaWZmZXJzIGZyb20g
-U0RIMC8yLg0KPiBTREhJMiBwcm9iYWJseSBkb2Vzbid0IHN1cHBvcnQgU0RSMTA0IGJlY2F1c2Ug
-aXRzIHBhcmVudCBjbG9jayBpcyBhIGRpdjYNCj4gY2xvY2ssIHdoaWxlIHRoZSBvdGhlcnMgaGF2
-ZSBTRENLQ1IgcGFyZW50cy4NCj4NCj4gUGx1cyB3ZSBkb24ndCBkZXNjcmliZSB0aGUgcmVsYXRp
-b24gdG8gdGhlIFNESCBjbG9jayB5ZXQuDQoNCkkgYW0gbG9va2luZyBpbnRvIHRoZSByZW1haW5p
-bmcgU0RISSBpbnRlcmZhY2VzIG5vdywgaG93IGRvIHlvdSB3YW50IG1lIHRvIGhhbmRsZSBTREhJ
-MT8NCg0KVGhhbmtzLA0KRmFiDQoNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAt
-LSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5v
-cmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUs
-IEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJu
-YWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQoN
-ClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQg
-Um9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJl
-ZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
+Hi Fabrizio,
+
+On Tue, Sep 25, 2018 at 2:45 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> > Subject: Re: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
+> > On Tue, Sep 25, 2018 at 10:22 AM Wolfram Sang <wsa@the-dreams.de> wrote:
+> > > > > Perhaps stating the obvious: this feels a lot like the problem we thought
+> > > > > we had with different Gen-3 SoCs/ES versions. And in that case we decided
+> > > > > against using compat strings to differentiate. The main difference here
+> > > > > seems to be that we need to differentiate between different ports on the
+> > > > > same SoC.
+> > >
+> > > Yes, I agree. Our so far agreed solution didn't take into account that
+> > > there are different SDHI versions on the same SoC. Adding a compatible
+> > > might be the easiest solution, but then we have a mix of compatibles,
+> > > soc_device_match, and even version register (deeper in the driver). My
+> > > gut feeling is we should take the time to rethink all this?
+> > >
+> > > > So either
+> > > >   a) SDHI0/2 vs. SDHI1 are different, deserving different compatible values, or
+> > > >   b) SDHI0/1/2 are identical, but SDHI1 is wired different, deserving the same
+> > > >      compatible value, but one or more additional properties describing the
+> > > >      different wiring.
+> > >
+> > > Actually, SDHI2 seems different, too. It doesn't support SDR104. I don't
+> > > have the SDHI specific docs, but from the main docs, all SDHI instances
+> > > are different.
+> >
+> > I forgot about the version register.
+> >
+> > Fabrizio: can you please check what the 3 instances report in their version
+> > registers? Thanks!
+>
+> SDHI0: 0xcc0d
+> SDHI1: 0xcc10
+> SDHI2: 0xcc0d
+
+Thank you. So SDHI1 differs from SDH0/2.
+SDHI2 probably doesn't support SDR104 because its parent clock is a div6
+clock, while the others have SDCKCR parents.
+
+Plus we don't describe the relation to the SDH clock yet.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
