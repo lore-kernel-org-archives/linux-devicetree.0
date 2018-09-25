@@ -1,15 +1,14 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: clk: hisilicon: Add bindings for Hi3670
- clk
-Date: Tue, 25 Sep 2018 04:24:56 -0700
-Message-ID: <5baa1b09.1c69fb81.623e5.51ea@mx.google.com>
-References: <20180921060103.21370-1-manivannan.sadhasivam@linaro.org>
- <20180921060103.21370-2-manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 3/3] serial: 8250_uniphier: add auto-flow-control support
+Date: Tue, 25 Sep 2018 04:24:35 -0700
+Message-ID: <5baa1af4.1c69fb81.52980.4bc3@mx.google.com>
+References: <1537334893-26079-1-git-send-email-yamada.masahiro@socionext.com>
+ <1537334893-26079-4-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180921060103.21370-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1537334893-26079-4-git-send-email-yamada.masahiro@socionext.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,19 +18,21 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, xuwei5@hisilicon.com, robh+dt@kernel.org, amit.kucheria@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Dai Okamura <okamura.dai@socionext.com>, devicetree@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Sep 2018 23:01:00 -0700, Manivannan Sadhasivam wrote:
-> Add devicetree bindings for HiSilicon Hi3670 clock controller.
+On Wed, 19 Sep 2018 14:28:13 +0900, Masahiro Yamada wrote:
+> From: Dai Okamura <okamura.dai@socionext.com>
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Add selective auto-flow-control support for UniPhier serial driver.
+> 
+> Signed-off-by: Dai Okamura <okamura.dai@socionext.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  .../bindings/clock/hi3670-clock.txt           |  43 +++
->  include/dt-bindings/clock/hi3670-clock.h      | 348 ++++++++++++++++++
->  2 files changed, 391 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/hi3670-clock.txt
->  create mode 100644 include/dt-bindings/clock/hi3670-clock.h
+> 
+>  Documentation/devicetree/bindings/serial/uniphier-uart.txt | 3 +++
+>  drivers/tty/serial/8250/8250_uniphier.c                    | 3 +++
+>  2 files changed, 6 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
