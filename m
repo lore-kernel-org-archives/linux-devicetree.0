@@ -1,84 +1,45 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH] arm64: amlogic: Rename spi pinmux group
-Date: Tue, 25 Sep 2018 15:53:30 +0200
-Message-ID: <cf080df1-ee10-cfa8-9bc1-d5b77415990e@baylibre.com>
-References: <20180924094523.20573-1-thierry.reding@gmail.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 1/5] ASoC: dt-bindings: add max98088 audio codec
+Date: Tue, 25 Sep 2018 16:23:48 +0200
+Message-ID: <20180925142352.24106-2-m.felsch@pengutronix.de>
+References: <20180925142352.24106-1-m.felsch@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180924094523.20573-1-thierry.reding@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180925142352.24106-1-m.felsch@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 24/09/2018 11:45, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> The name "spi" is reserved for nodes representing an SPI controller.
-> Rename the "spi" pinmux group to "spi-miso" to avoid the issue and for
-> consistency with other pinmux groups.
-> 
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
-> Rob,
-> 
-> do you think perhaps DTC is being a little too strict here? Seems to me
-> like the check could be limited to nodes that have a name and a unit
-> address, the assumption being that an SPI controller would always have
-> some sort of register space that requires a reg property and therefore
-> also a unit address.
-> 
-> Thierry
-> 
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-
-Rob has already submitted similar fix and was merged by kevin.
-
-Neil
-
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> index 98cbba6809ca..3cd4475ca027 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-> @@ -390,7 +390,7 @@
->  			};
->  		};
->  
-> -		spi_pins: spi {
-> +		spi_pins: spi-miso {
-
-The name "spi-miso" is wrong since it also has spi-mosi...
-
->  			mux {
->  				groups = "spi_miso",
->  					"spi_mosi",
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> index c87a80e9bcc6..911fd3412788 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-> @@ -337,7 +337,7 @@
->  			};
->  		};
->  
-> -		spi_pins: spi {
-> +		spi_pins: spi-miso {
->  			mux {
->  				groups = "spi_miso",
->  					"spi_mosi",
-> 
+RnJvbTogQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPgoKVGhpcyBwYXRjaCBhZGRz
+IHRoZSBiaW5kaW5ncyBmb3IgbWF4aW0gbWF4OTgwODgvOSBhdWRpbyBjb2RlYy4KClNpZ25lZC1v
+ZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT4KW20uZmVsc2NoQHBlbmd1
+dHJvbml4LmRlOiBhZGFwdCBjb21taXQgbWVzc2FnZV0KW20uZmVsc2NoQHBlbmd1dHJvbml4LmRl
+OiBhZGFwdCBmb3JtYXR0aW5nXQpTaWduZWQtb2ZmLWJ5OiBNYXJjbyBGZWxzY2ggPG0uZmVsc2No
+QHBlbmd1dHJvbml4LmRlPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL21heGlt
+LG1heDk4MDg4LnR4dCAgfCAxNSArKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNSBp
+bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3NvdW5kL21heGltLG1heDk4MDg4LnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9tYXhpbSxtYXg5ODA4OC50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvbWF4aW0sbWF4OTgwODgudHh0Cm5l
+dyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYTc5YWQ1YzdhZjg4Ci0tLSAv
+ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL21h
+eGltLG1heDk4MDg4LnR4dApAQCAtMCwwICsxLDE1IEBACitNQVg5ODA4OCBhdWRpbyBDT0RFQwor
+CitUaGlzIGRldmljZSBzdXBwb3J0cyBJMkMgb25seS4KKworUmVxdWlyZWQgcHJvcGVydGllczoK
+KworLSBjb21wYXRpYmxlOiAibWF4aW0sbWF4OTgwODgiIG9yICJtYXhpbSxtYXg5ODA4OSIuCist
+IHJlZzogVGhlIEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UuCisKK0V4YW1wbGU6CisKK21heDk4
+MDg5OiBjb2RlY0AxMCB7CisJY29tcGF0aWJsZSA9ICJtYXhpbSxtYXg5ODA4OSI7CisJcmVnID0g
+PDB4MTA+OworfTsKLS0gCjIuMTkuMAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWlsaW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXBy
+b2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2EtcHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9hbHNhLWRldmVsCg==
