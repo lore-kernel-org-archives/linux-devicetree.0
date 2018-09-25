@@ -1,68 +1,77 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH] arm64: dts: broadcom: Use the .dtb name in the rule,
- rather than .dts
-Date: Tue, 25 Sep 2018 22:33:36 +0200 (CEST)
-Message-ID: <1480797531.286958.1537907616382@email.1und1.de>
-References: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
- <20180924102228.19656-1-liviu@dudau.co.uk>
- <539eb374-9122-6c09-4c64-80bfa6b7bf89@i2se.com>
- <1c0db58a-5bc2-8de3-f70d-725a29376513@gmail.com>
- <20180925185133.jdom5tvs6zklntr7@localhost>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: add UniPhier PCIe host
+ controller description
+Date: Tue, 25 Sep 2018 15:55:02 -0500
+Message-ID: <20180925205502.GA12949@bogus>
+References: <1536226832-5089-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1536226832-5089-2-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20180925185133.jdom5tvs6zklntr7@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Rob Herring <robh+dt@kernel.org>, Eric Anholt <eric@anholt.net>, arm-soc <arm@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1536226832-5089-2-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Cj4gT2xvZiBKb2hhbnNzb24gPG9sb2ZAbGl4b20ubmV0PiBoYXQgYW0gMjUuIFNlcHRlbWJlciAy
-MDE4IHVtIDIwOjUxIGdlc2NocmllYmVuOgo+IAo+IAo+IE9uIFR1ZSwgU2VwIDI1LCAyMDE4IGF0
-IDExOjE3OjUyQU0gLTA3MDAsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4gPiBPbiAwOS8yNC8y
-MDE4IDA0OjAzIEFNLCBTdGVmYW4gV2FocmVuIHdyb3RlOgo+ID4gPiBBbSAyNC4wOS4yMDE4IHVt
-IDEyOjIyIHNjaHJpZWIgTGl2aXUgRHVkYXU6Cj4gPiA+PiBDb21taXQgYTdlYjI2MzkyYjg5MyAo
-ImFybTY0OiBkdHM6IGJyb2FkY29tOiBBZGQgcmVmZXJlbmNlIHRvIENvbXB1dGUKPiA+ID4+IE1v
-ZHVsZSBJTyBCb2FyZCBWMyIpIGFkZHMgdGhlIGJjbTI4MzctcnBpLWNtMy1pbzMuZHRzIGZpbGUg
-YXMgYSB0YXJnZXQKPiA+ID4+IGluIHRoZSBNYWtlZmlsZSwgcmF0aGVyIHRoYW4gdGhlIC5kdGIg
-bmFtZS4gVGhpcyB3aWxsIHNraXAgdGhlCj4gPiA+PiBnZW5lcmF0aW9uIG9mIHRoZSAuZHRiIGZp
-bGUgYXQgY29tcGlsZSB0aW1lIGFuZCB3aWxsIGZhaWwgdGhlIGR0YnNfaW5zdGFsbAo+ID4gPj4g
-dGFyZ2V0Lgo+ID4gPj4KPiA+ID4+IEZpeGVzOiBhN2ViMjYzOTJiODkzICgiYXJtNjQ6IGR0czog
-YnJvYWRjb206IEFkZCByZWZlcmVuY2UgdG8gQ29tcHV0ZQo+ID4gPj4gTW9kdWxlIElPIEJvYXJk
-IFYzIikKPiA+ID4+Cj4gPiA+PiBTaWduZWQtb2ZmLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXVAZHVk
-YXUuY28udWs+Cj4gPiA+IAo+ID4gPiBBY2tlZC1ieTogU3RlZmFuIFdhaHJlbiA8c3RlZmFuLndh
-aHJlbkBpMnNlLmNvbT4KPiA+ID4gCj4gPiA+IFRoYW5rcywgaSB3aWxsIGFkZCBhIGR0YnNfaW5z
-dGFsbCBzdGVwIHRvIG15IHRlc3Qgam9icy4KPiA+IAo+ID4gU2FtZSBoZXJlLgo+IAo+IEkgZG8g
-YnV0IEkgZG9uJ3Qgc2VlbSB0byBjYXRjaCBhbnkgZXJyb3JzIGZyb20gaXQuIDotLwoKU3RyYW5n
-ZSwgaSdtIGdldCBnZXR0aW5nIHRoaXM6CgpzY3JpcHRzL01ha2VmaWxlLmR0Ymluc3Q6MzE6IFRh
-cmdldCDigJ5iY20yODM3LXJwaS1jbTMtaW8zLmR0c+KAnCBwYXNzdCBuaWNodCB6dW0gWmllbC1N
-dXN0ZXIKICBJTlNUQUxMIGFyY2gvYXJtNjQvYm9vdC9kdHMvYnJvYWRjb20vYmNtMjgzNy1ycGkt
-My1iLXBsdXMuZHRiCiAgSU5TVEFMTCBhcmNoL2FybTY0L2Jvb3QvZHRzL2Jyb2FkY29tL2JjbTI4
-MzctcnBpLTMtYi5kdGIKICBJTlNUQUxMIApjcDogRmVobGVuZGVyIFppZWxkYXRlaeKAkE9wZXJh
-bmQgaGludGVyICcvdG1wL2Jyb2FkY29tJwrigJ5jcCAtLWhlbHDigJwgbGllZmVydCB3ZWl0ZXJl
-IEluZm9ybWF0aW9uZW4uCnNjcmlwdHMvTWFrZWZpbGUuZHRiaW5zdDozMjogZGllIFJlZ2VsIGbD
-vHIgWmllbCDigJ5iY20yODM3LXJwaS1jbTMtaW8zLmR0c+KAnCBzY2hlaXRlcnRlCm1ha2VbMl06
-ICoqKiBbYmNtMjgzNy1ycGktY20zLWlvMy5kdHNdIEZlaGxlciAxCnNjcmlwdHMvTWFrZWZpbGUu
-ZHRiaW5zdDozNTogZGllIFJlZ2VsIGbDvHIgWmllbCDigJ5icm9hZGNvbeKAnCBzY2hlaXRlcnRl
-Cm1ha2VbMV06ICoqKiBbYnJvYWRjb21dIEZlaGxlciAyCmFyY2gvYXJtNjQvTWFrZWZpbGU6MTM5
-OiBkaWUgUmVnZWwgZsO8ciBaaWVsIOKAnmR0YnNfaW5zdGFsbOKAnCBzY2hlaXRlcnRlCm1ha2U6
-ICoqKiBbZHRic19pbnN0YWxsXSBGZWhsZXIgMgoKPiAKPiA+ID4gQEFybmQgQE9sb2YgU2hvdWxk
-IHRoaXMgZml4IGZvciA0LjIwIGdvIHZpYSBwdWxsIHJlcXVlc3Qgb3IgY2FuIHlvdQo+ID4gPiBh
-cHBseSBpdCBkaXJlY3RseSB0byB5b3VyIHRyZWU/Cj4gPiAKPiA+IFRoYXQgd291bGQgYmUgbXkg
-cHJlZmVyZW5jZSBoZXJlIGFzIHdlbGwuCj4gCj4gQXBwbGllZCB0byBuZXh0L2R0IG5vdy4gVGhh
-bmtzIQoKVGhhbmtzCgo+IAo+IAo+IC1PbG9mCj4gCj4gCj4gX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
-dAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Sep 06, 2018 at 06:40:31PM +0900, Kunihiko Hayashi wrote:
+> Add DT bindings for PCIe controller implemented in UniPhier SoCs when
+> configured in Root Complex (host) mode. This controller is based on
+> the DesignWare PCIe core.
+> 
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../devicetree/bindings/pci/uniphier-pcie.txt      | 78 ++++++++++++++++++++++
+>  1 file changed, 78 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/uniphier-pcie.txt b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> new file mode 100644
+> index 0000000..a34e167
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/uniphier-pcie.txt
+> @@ -0,0 +1,78 @@
+> +Socionext UniPhier PCIe host controller bindings
+> +
+> +This describes the devicetree bindings for PCIe host controller implemented
+> +on Socionext UniPhier SoCs.
+> +
+> +UniPhier PCIe host controller is based on the Synopsys DesignWare PCI core.
+> +It shares common functions with the PCIe DesignWare core driver and inherits
+> +common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pcie.txt.
+> +
+> +Required properties:
+> +- compatible: Should be "socionext,uniphier-pcie".
+> +- reg: Specifies offset and length of the register set for the device.
+> +	According to the reg-names, appropriate register sets are required.
+> +- reg-names: Must include the following entries:
+> +    "dbi"    - controller configuration registers
+> +    "link"   - SoC-specific glue layer registers
+> +    "config" - PCIe configuration space
+> +- clocks: A phandle to the clock gate for PCIe glue layer including
+> +	the host controller.
+> +- resets: A phandle to the reset line for PCIe glue layer including
+> +	the host controller.
+> +- interrupts: A list of interrupt specifiers. According to the
+> +	interrupt-names, appropriate interrupts are required.
+> +- interrupt-names: Must include the following entries:
+> +    "dma"    - DMA interrupt
+> +    "msi"    - MSI interrupt
+> +    "intx"   - Legacy INTA/B/C/D interrupt
+> +
+> +Optional properties:
+> +- phys: A phandle to generic PCIe PHY. According to the phy-names, appropriate
+> +	phys are required.
+> +- phy-names: Must be "pcie-phy".
+> +
+> +Required sub-node:
+> +- interrupt-controller: Specifies interrupt controller for legacy PCI
+> +	interrupts. The node name isn't important.
+
+No, it is important.
+
+With that sentence removed,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
