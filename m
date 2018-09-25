@@ -1,118 +1,58 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH V5 17/30] csky: Misc headers
-Date: Tue, 25 Sep 2018 12:45:41 +0200
-Message-ID: <20180925104541.GA27311@hirez.programming.kicks-ass.net>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <5ae1990e1863fe2293bba1e5ec0408892a9a7f0c.1537789737.git.ren_guo@c-sky.com>
- <20180925100803.GA6891@andrea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH ARM-next] ARM: dts: qcom-msm8974: change invalid flag IRQ NONE to valid value
+Date: Tue, 25 Sep 2018 06:46:51 -0400
+Message-ID: <20180925104651.16596-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180925100803.GA6891@andrea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Parri <andrea.parri@amarulasolutions.com>
-Cc: Guo Ren <ren_guo@c-sky.com>, akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, palmer@sifive.com
+To: andy.gross@linaro.org, linux-arm-msm@vger.kernel.org
+Cc: david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, frank.rowand@sony.com, masneyb@onstation.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 12:08:03PM +0200, Andrea Parri wrote:
-> Hi Guo,
-> 
-> > +/*
-> > + * set_bit - Atomically set a bit in memory
-> > + * @nr: the bit to set
-> > + * @addr: the address to start counting from
-> > + *
-> > + * This function is atomic and may not be reordered.  See __set_bit()
-> > + * if you do not require the atomic guarantees.
-> > + *
-> > + * Note: there are no guarantees that this function will not be reordered
-> > + * on non x86 architectures, so if you are writing portable code,
-> > + * make sure not to rely on its reordering guarantees.
-> > + *
-> > + * Note that @nr may be almost arbitrarily large; this function is not
-> > + * restricted to acting on a single-word quantity.
-> > + */
-> > +static inline void set_bit(int nr, volatile unsigned long *addr)
-> > +{
-> > +	unsigned long mask = BIT_MASK(nr);
-> > +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
-> > +	unsigned long tmp;
-> > +
-> > +	/* *p  |= mask; */
-> > +	smp_mb();
-> > +	asm volatile (
-> > +		"1:	ldex.w		%0, (%2)	\n"
-> > +		"	or32		%0, %0, %1	\n"
-> > +		"	stex.w		%0, (%2)	\n"
-> > +		"	bez		%0, 1b		\n"
-> > +		: "=&r"(tmp)
-> > +		: "r"(mask), "r"(p)
-> > +		: "memory");
-> > +	smp_mb();
-> > +}
-> > +
-> > +/**
-> > + * clear_bit - Clears a bit in memory
-> > + * @nr: Bit to clear
-> > + * @addr: Address to start counting from
-> > + *
-> > + * clear_bit() is atomic and may not be reordered.  However, it does
-> > + * not contain a memory barrier, so if it is used for locking purposes,
-> > + * you should call smp_mb__before_atomic() and/or smp_mb__after_atomic()
-> > + * in order to ensure changes are visible on other processors.
-> > + */
-> > +static inline void clear_bit(int nr, volatile unsigned long *addr)
-> > +{
-> > +	unsigned long mask = BIT_MASK(nr);
-> > +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
-> > +	unsigned long tmp;
-> > +
-> > +	/* *p &= ~mask; */
-> > +	mask = ~mask;
-> > +	smp_mb();
-> > +	asm volatile (
-> > +		"1:	ldex.w		%0, (%2)	\n"
-> > +		"	and32		%0, %0, %1	\n"
-> > +		"	stex.w		%0, (%2)	\n"
-> > +		"	bez		%0, 1b		\n"
-> > +		: "=&r"(tmp)
-> > +		: "r"(mask), "r"(p)
-> > +		: "memory");
-> > +	smp_mb();
-> > +}
-> > +
-> > +/**
-> > + * change_bit - Toggle a bit in memory
-> > + * @nr: Bit to change
-> > + * @addr: Address to start counting from
-> > + *
-> > + * change_bit() is atomic and may not be reordered. It may be
-> > + * reordered on other architectures than x86.
-> > + * Note that @nr may be almost arbitrarily large; this function is not
-> > + * restricted to acting on a single-word quantity.
-> > + */
-> > +static inline void change_bit(int nr, volatile unsigned long *addr)
-> > +{
-> > +	unsigned long mask = BIT_MASK(nr);
-> > +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
-> > +	unsigned long tmp;
-> > +
-> > +	/* *p ^= mask; */
-> > +	smp_mb();
-> > +	asm volatile (
-> > +		"1:	ldex.w		%0, (%2)	\n"
-> > +		"	xor32		%0, %0, %1	\n"
-> > +		"	stex.w		%0, (%2)	\n"
-> > +		"	bez		%0, 1b		\n"
-> > +		: "=&r"(tmp)
-> > +		: "r"(mask), "r"(p)
-> > +		: "memory");
-> > +	smp_mb();
-> > +}
-> 
-> The {set,clear,change}_bit() operations don't have to be ordered: you
-> might want to remove the above smp_mb()s (and adjust the comments).
+The following commits used IRQ_TYPE_NONE since that matched what was
+already in the file and I do not have access to the datasheets for
+these devices. After these patches were submitted, commit dcf145011400
+("ARM: dts: qcom-msm8974: change invalid flag IRQ NONE to valid value")
+changed all of these values to IRQ_TYPE_LEVEL_HIGH. This patch corrects
+the IRQ type for these two commits:
 
-Better yet, you can entirely delete all that and use
-asm-generic/bitops/atomic.h instead.
+commit bd9392507588 ("ARM: dts: qcom: msm8974-hammerhead: add device
+tree bindings for ALS / proximity")
+
+commit fe8d81fe7d9a ("ARM: dts: qcom: msm8974-hammerhead: add device
+tree bindings for mpu6515") 
+
+Prior to these patches, I was having issues with the bmp280 sensor
+returning temperature / pressure skipped errors, however these errors
+have gone away with these patches.
+
+Patches were tested on a LG Nexus 5 (hammerhead) phone.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+ arch/arm/boot/dts/qcom-msm8974.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+index 84e1fee1bf1a..a808973f9dc7 100644
+--- a/arch/arm/boot/dts/qcom-msm8974.dtsi
++++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+@@ -719,7 +719,7 @@
+ 			status = "disabled";
+ 			compatible = "qcom,i2c-qup-v2.1.1";
+ 			reg = <0xf9925000 0x1000>;
+-			interrupts = <0 97 IRQ_TYPE_NONE>;
++			interrupts = <0 97 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
+ 			clock-names = "core", "iface";
+ 			#address-cells = <1>;
+@@ -754,7 +754,7 @@
+ 			status = "disabled";
+ 			compatible = "qcom,i2c-qup-v2.1.1";
+ 			reg = <0xf9968000 0x1000>;
+-			interrupts = <0 106 IRQ_TYPE_NONE>;
++			interrupts = <0 106 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
+ 			clock-names = "core", "iface";
+ 			#address-cells = <1>;
+-- 
+2.17.1
