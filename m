@@ -1,94 +1,115 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 18/20] iommu/tegra: gart: Don't detach devices from
-	inactive domains
-Date: Tue, 25 Sep 2018 12:04:24 +0200
-Message-ID: <20180925100424.GG7097@ulmo>
-References: <20180924004153.8232-1-digetx@gmail.com>
-	<20180924004153.8232-19-digetx@gmail.com>
-	<20180924110047.GO21032@ulmo>
-	<8be80297-3b13-ece6-a5bf-873cc7877989@gmail.com>
+From: Andrea Parri <andrea.parri@amarulasolutions.com>
+Subject: Re: [PATCH V5 17/30] csky: Misc headers
+Date: Tue, 25 Sep 2018 12:08:03 +0200
+Message-ID: <20180925100803.GA6891@andrea>
+References: <cover.1537789736.git.ren_guo@c-sky.com>
+ <5ae1990e1863fe2293bba1e5ec0408892a9a7f0c.1537789737.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7981440858561931730=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <8be80297-3b13-ece6-a5bf-873cc7877989-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5ae1990e1863fe2293bba1e5ec0408892a9a7f0c.1537789737.git.ren_guo@c-sky.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Guo,
 
---===============7981440858561931730==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UTZ8bGhNySVQ9LYl"
-Content-Disposition: inline
+> +/*
+> + * set_bit - Atomically set a bit in memory
+> + * @nr: the bit to set
+> + * @addr: the address to start counting from
+> + *
+> + * This function is atomic and may not be reordered.  See __set_bit()
+> + * if you do not require the atomic guarantees.
+> + *
+> + * Note: there are no guarantees that this function will not be reordered
+> + * on non x86 architectures, so if you are writing portable code,
+> + * make sure not to rely on its reordering guarantees.
+> + *
+> + * Note that @nr may be almost arbitrarily large; this function is not
+> + * restricted to acting on a single-word quantity.
+> + */
+> +static inline void set_bit(int nr, volatile unsigned long *addr)
+> +{
+> +	unsigned long mask = BIT_MASK(nr);
+> +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+> +	unsigned long tmp;
+> +
+> +	/* *p  |= mask; */
+> +	smp_mb();
+> +	asm volatile (
+> +		"1:	ldex.w		%0, (%2)	\n"
+> +		"	or32		%0, %0, %1	\n"
+> +		"	stex.w		%0, (%2)	\n"
+> +		"	bez		%0, 1b		\n"
+> +		: "=&r"(tmp)
+> +		: "r"(mask), "r"(p)
+> +		: "memory");
+> +	smp_mb();
+> +}
+> +
+> +/**
+> + * clear_bit - Clears a bit in memory
+> + * @nr: Bit to clear
+> + * @addr: Address to start counting from
+> + *
+> + * clear_bit() is atomic and may not be reordered.  However, it does
+> + * not contain a memory barrier, so if it is used for locking purposes,
+> + * you should call smp_mb__before_atomic() and/or smp_mb__after_atomic()
+> + * in order to ensure changes are visible on other processors.
+> + */
+> +static inline void clear_bit(int nr, volatile unsigned long *addr)
+> +{
+> +	unsigned long mask = BIT_MASK(nr);
+> +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+> +	unsigned long tmp;
+> +
+> +	/* *p &= ~mask; */
+> +	mask = ~mask;
+> +	smp_mb();
+> +	asm volatile (
+> +		"1:	ldex.w		%0, (%2)	\n"
+> +		"	and32		%0, %0, %1	\n"
+> +		"	stex.w		%0, (%2)	\n"
+> +		"	bez		%0, 1b		\n"
+> +		: "=&r"(tmp)
+> +		: "r"(mask), "r"(p)
+> +		: "memory");
+> +	smp_mb();
+> +}
+> +
+> +/**
+> + * change_bit - Toggle a bit in memory
+> + * @nr: Bit to change
+> + * @addr: Address to start counting from
+> + *
+> + * change_bit() is atomic and may not be reordered. It may be
+> + * reordered on other architectures than x86.
+> + * Note that @nr may be almost arbitrarily large; this function is not
+> + * restricted to acting on a single-word quantity.
+> + */
+> +static inline void change_bit(int nr, volatile unsigned long *addr)
+> +{
+> +	unsigned long mask = BIT_MASK(nr);
+> +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+> +	unsigned long tmp;
+> +
+> +	/* *p ^= mask; */
+> +	smp_mb();
+> +	asm volatile (
+> +		"1:	ldex.w		%0, (%2)	\n"
+> +		"	xor32		%0, %0, %1	\n"
+> +		"	stex.w		%0, (%2)	\n"
+> +		"	bez		%0, 1b		\n"
+> +		: "=&r"(tmp)
+> +		: "r"(mask), "r"(p)
+> +		: "memory");
+> +	smp_mb();
+> +}
 
+The {set,clear,change}_bit() operations don't have to be ordered: you
+might want to remove the above smp_mb()s (and adjust the comments).
 
---UTZ8bGhNySVQ9LYl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 24, 2018 at 09:05:48PM +0300, Dmitry Osipenko wrote:
-> On 9/24/18 2:00 PM, Thierry Reding wrote:
-> > On Mon, Sep 24, 2018 at 03:41:51AM +0300, Dmitry Osipenko wrote:
-> >> There could be unlimited number of allocated domains, but only one dom=
-ain
-> >> can be active at a time. Hence devices must be detached only from the
-> >> active domain.
-> >>
-> >> Signed-off-by: Dmitry Osipenko <digetx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> ---
-> >>  drivers/iommu/tegra-gart.c | 8 +++++---
-> >>  1 file changed, 5 insertions(+), 3 deletions(-)
-> >=20
-> > Do we have a mechanism of switching out different domains? I don't think
-> > we do, so I'm wondering if perhaps a better solution to this would be to
-> > just refuse to create more than one domain in the first place. That
-> > would also allow us to get rid of the global variable gart_handle.
->=20
-> That's what was done in v1, Robin Murphy suggested that it will be
-> better not to restrict allocation of unpopulated domains. It is
-> mentioned in the changelog, see comment to v2 changes.
-
-Okay, fine.
-
-Thierry
-
---UTZ8bGhNySVQ9LYl
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluqCCcACgkQ3SOs138+
-s6EcWRAAi1a6EdXZRPBtfZIPPFrJWw0mFbyhRhoBMtgV6Un7CUmgM6G8GBHgMfUk
-1ZOEZeXCAQPBL7UonpE3DgOqE27JmX8UuevI7ZiyEQH/7ZHaNN3F35GGbN5R8oSZ
-vIFFKGrdx6gWWCfGzDy9vsJ4BasUt28weT6/dHDKLiW7Og8RWICssRmo71oUMyJb
-cwA09L4Yf99YbwYcB+YhsYLmcdolfWWoeh7fZO/6xsBnZg6n1YlKsXLKPqzOCl4u
-GJ68y6RrwdqRoi7EjxQQvN7RALttAJTEQFctlWijqYlZw73lymgQeDBgWoLJmrzn
-tabDCEw5Ut7HsF33lfsPuONHYLUdHy4OnGfjvXrVfHEsRdmUxYtlx/tMAgyr+/N1
-hLTk0lVEFr70qXLLXHKy1CvzDj7SwHKnbVjFdIGtW0+2VddBfPT5KCeDyctnQoW9
-osyz22j64i+QQDfXRRLqk+ov8S1meF+cFZi6X5RUuJAsC3Ix9HVQKc2A0ep1NPlN
-8CMU5xysmcg6a0QHFDPP95G25bYOTTNOSi4bZNjLmqnt5xbtQCqfiwvocJ0f2pyV
-kiI+IPyJb3kb+fl4/7RU0MEZho/rS+uPXVkNJkWNHe+Px37dJe4PhSOG8DEZCwKO
-vq4tEQsrwuDw8BMQLjczDykDmNL/M0xbhXe7Jvn8FOpD9iZkSAo=
-=ph6I
------END PGP SIGNATURE-----
-
---UTZ8bGhNySVQ9LYl--
-
---===============7981440858561931730==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7981440858561931730==--
+  Andrea
