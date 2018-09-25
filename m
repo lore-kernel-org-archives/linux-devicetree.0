@@ -1,39 +1,44 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 37/37] ARM: tegra: colibri_t20: add eval board device
- tree
-Date: Tue, 25 Sep 2018 14:06:54 -0500
-Message-ID: <20180925190654.GA11832@bogus>
-References: <20180902100906.25792-1-marcel@ziswiler.com>
- <20180902100906.25792-38-marcel@ziswiler.com>
+Subject: Re: [PATCH v2 01/03] dt-bindings: clock: Add Clock Management Unit
+ for Actions Semi S500 SoC
+Date: Tue, 25 Sep 2018 14:10:47 -0500
+Message-ID: <20180925191047.GA14410@bogus>
+References: <CADHB5bBkyE90LVrWjt0ziU+oe=4sc8G_513VGECc++6xQ2ACdA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180902100906.25792-38-marcel@ziswiler.com>
+In-Reply-To: <CADHB5bBkyE90LVrWjt0ziU+oe=4sc8G_513VGECc++6xQ2ACdA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Ziswiler <marcel@ziswiler.com>
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>, Mikko Perttunen <mperttunen@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Mark Rutland <mark.rutland@arm.com>
+To: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Guilherme =?iso-8859-1?B?Ry4gU2lt9WVz?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 02, 2018 at 12:09:06PM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On Tue, Sep 04, 2018 at 12:36:36PM -0300, Edgar Bernardi Righi wrote:
+> Add Clock Management Unit for Actions Semi S500 SoC. Dt-Bindings
+> constants added.
+> Tested on a Lemaker Guitar board.
 > 
-> Add an evaluation board device tree more in-line with all our other
-> device trees.
+> Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
 > 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-> 
-> ---
+> diff --git a/include/dt-bindings/clock/actions,s500-cmu.h
+> b/include/dt-bindings/clock/actions,s500-cmu.h
+> new file mode 100644
+> index 000000000000..34e5849ffcf1
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/actions,s500-cmu.h
+> @@ -0,0 +1,78 @@
+> +// SPDX-License-Identifier: GPL-2.0+
 
-> +	panel: panel {
-> +		/*
-> +		 * edt,et057090dhu: EDT 5.7" LCD TFT
-> +		 * edt,et070080dh6: EDT 7.0" LCD TFT
-> +		 */
-> +		compatible = "edt,et057090dhu", "simple-panel";
+Headers should be /* */ style comments.
 
-'simple-panel' is not valid.
+Otherwise,
 
-> +		backlight = <&backlight>;
-> +		power-supply = <&reg_3v3>;
-> +	};
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +//
+> +// Device Tree binding constants for Actions Semi S500 Clock Management Unit
+> +//
+> +// Copyright (c) 2014 Actions Semi Inc.
+> +// Copyright (c) 2018 Linaro Ltd.
+> +// Copyright (c) 2018 LSI-TEC - Caninos Loucos
