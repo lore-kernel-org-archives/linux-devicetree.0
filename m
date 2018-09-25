@@ -1,91 +1,47 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH] remoteproc: qcom: pas: Add QCS404 remoteprocs
-Date: Tue, 25 Sep 2018 15:48:46 +0530
-Message-ID: <f0887494a9957496399046bac9b1fa32@codeaurora.org>
-References: <20180920172237.30965-1-bjorn.andersson@linaro.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
+ driver bindings
+Date: Tue, 25 Sep 2018 15:55:05 +0530
+Message-ID: <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org>
+References: <20180627045234.27403-1-rnayak@codeaurora.org>
+ <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20180703223554.GA32313@rob-hp-laptop>
+ <20180704055757.4li26b6poxllmh2k@vireshk-i7>
+ <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org>
+ <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920172237.30965-1-bjorn.andersson@linaro.org>
+In-Reply-To: <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+Hi Rob,
 
-On 2018-09-20 22:52, Bjorn Andersson wrote:
-> From: Govind Singh <govinds@codeaurora.org>
+[]...
+>>>>> +   rpmhpd_opp_table: opp-table {
+>>>>> +           compatible = "operating-points-v2-qcom-level";
+>>>>> +
+>>>>> +           rpmhpd_opp_ret: opp1 {
+>>>>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+>>>>> +           };
+>>>>
+>>>> I don't see the point in using the OPP binding here when you aren't
+>>>> using *any* of the properties from it.
+>>>
+>>> Yeah, that's the case for now. But there are cases (as Stephen
+>>> mentioned earlier [1]) where the voltage values (and maybe other
+>>> values like current, etc) would be known and filled in DT. And that's
+>>> why we all agreed to use OPP tables for PM domains as well, as these
+>>> are really "operating performance points" of these PM domains.
+>>
+>> Rob, are you fine with these bindings then?
 > 
-> Add compatibles for the three PAS based remote processors found in
-> QCS404.
-> 
-> Signed-off-by: Govind Singh <govinds@codeaurora.org>
-> [bjorn: Added adsp and cdsp to the patch]
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  3 +++
->  drivers/remoteproc/qcom_adsp_pil.c                   | 12 ++++++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> index b7d058228185..9c0cff3a5ed8 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> @@ -10,6 +10,9 @@ on the Qualcomm ADSP Hexagon core.
->  		    "qcom,msm8974-adsp-pil"
->  		    "qcom,msm8996-adsp-pil"
->  		    "qcom,msm8996-slpi-pil"
-> +		    "qcom,qcs404-adsp-pas"
-> +		    "qcom,qcs404-cdsp-pas"
-> +		    "qcom,qcs404-wcss-pas"
->  		    "qcom,sdm845-adsp-pas"
->  		    "qcom,sdm845-cdsp-pas"
-> 
-> diff --git a/drivers/remoteproc/qcom_adsp_pil.c
-> b/drivers/remoteproc/qcom_adsp_pil.c
-> index da2254ea1135..fcbb816a9698 100644
-> --- a/drivers/remoteproc/qcom_adsp_pil.c
-> +++ b/drivers/remoteproc/qcom_adsp_pil.c
-> @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init 
-> = {
->  		.ssctl_id = 0x16,
->  };
-> 
-> +static const struct adsp_data wcss_resource_init = {
-> +	.crash_reason_smem = 421,
-> +	.firmware_name = "wcnss.mdt",
-> +	.pas_id = 6,
-> +	.ssr_name = "mpss",
-> +	.sysmon_name = "wlan",
+> Okay, my only thought is whether we should just use 'reg' here, or do
+> we need 'level' for anything else and should make it common?
 
-Shouldn't the sysmon name be "wcnss" instead of "wlan"?
-
-> +	.ssctl_id = 0x12,
-> +};
-> +
->  static const struct of_device_id adsp_of_match[] = {
->  	{ .compatible = "qcom,msm8974-adsp-pil", .data = 
-> &adsp_resource_init},
->  	{ .compatible = "qcom,msm8996-adsp-pil", .data = 
-> &adsp_resource_init},
->  	{ .compatible = "qcom,msm8996-slpi-pil", .data = 
-> &slpi_resource_init},
-> +	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init 
-> },
-> +	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init 
-> },
-> +	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init 
-> },
->  	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
->  	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
->  	{ },
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+I am not quite sure I understood what you are suggesting here :(
