@@ -1,117 +1,148 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/3] soc: mediatek: pwrap: add mt6357 driver for mt6765
- SoCs
-Date: Tue, 25 Sep 2018 17:39:29 +0200
-Message-ID: <1fd800c0-9e7c-9533-6724-55cd8eee9964@gmail.com>
-References: <1536064314-31967-1-git-send-email-argus.lin@mediatek.com>
- <1536064314-31967-4-git-send-email-argus.lin@mediatek.com>
+From: Craig <ctatlor97@gmail.com>
+Subject: Re: [PATCH V3 0/4] Changes for SDCC5 version
+Date: Tue, 25 Sep 2018 16:39:33 +0100
+Message-ID: <C01C1C07-13FA-4693-9493-2FAEE9153577@gmail.com>
+References: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org> <20180924194412.GA27477@arch> <bcdeaf0c-fb04-67f5-8580-a3f5110bcba5@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1536064314-31967-4-git-send-email-argus.lin@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <bcdeaf0c-fb04-67f5-8580-a3f5110bcba5@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Argus Lin <argus.lin@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Chenglin Xu <chenglin.xu@mediatek.com>, Sean Wang <sean.wang@mediatek.com>, wsd_upstream@mediatek.com, henryc.chen@mediatek.com, flora.fu@mediatek.com, Chen Zhong <chen.zhong@mediatek.com>, Christophe Jaillet <christophe.jaillet@wanadoo.fr>, "shailendra.v" <shailendra.v@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Vijay Viswanath <vviswana@codeaurora.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, bjorn.andersson@linaro.org, riteshh@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 04/09/2018 14:31, Argus Lin wrote:
-> MT6357 is a new power management IC and it is used for mt6765 SoCs.
-> To define mt6357_regs for pmic register mapping and pmic_mt6357
-> for accessing register.
-> 
-> Signed-off-by: Argus Lin <argus.lin@mediatek.com>
+On 25 September 2018 12:17:26 BST, Veerabhadrarao Badiganti <vbadigan@code=
+aurora=2Eorg> wrote:
+>
+>On 9/25/2018 1:18 AM, Craig Tatlor wrote:
+>> What socs have you tested this on?
+>> On sdm660 it seems to crash device
+>> when writing pwr ctl=2E
+>
+>Hi
+>We have tested this on SDM845=2E
+>SDM660 also has SDCC5 controller, so you would need to define
+>"qcom,sdhci-msm-v5" in your platform dt=2E
+>Can you confirm if you have defined this?
+>
+Hi,
+Yes my DT entry is as follows
 
-Needed some handwork to get it applied, please check that no bug slipped in.
+        sdhc_1: sdhci@f9824900 {                                          =
+                       =20
+                compatible =3D "qcom,sdhci-msm-v5";                       =
+                         =20
+                reg =3D <0xc0c4000 0x1000>, <0xc0c5000 0x1000>;           =
+                         =20
+                interrupts =3D <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;         =
+                         =20
+                interrupt-names =3D "pwr_irq";                            =
+                         =20
+                                                                          =
+                       =20
+                bus-width =3D <8>;                                        =
+                         =20
+                non-removable;                                            =
+                       =20
+                                                                          =
+                       =20
+                vmmc-supply =3D <&pm660l_l4>;                             =
+                         =20
+                vqmmc-supply =3D <&pm660_l8>;                             =
+                         =20
+                                                                          =
+                       =20
+                pinctrl-names =3D "default";                              =
+                         =20
+                pinctrl-0 =3D <&sdc1_clk &sdc1_cmd &sdc1_data &sdc1_rclk>;=
+                         =20
+                                                                          =
+                       =20
+                clocks =3D <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_=
+CLK>;                    =20
+                clock-names =3D "core", "iface";                          =
+                         =20
+        };         =20
 
-Applied to v4.19-ext/soc
+>BTW, can you please share few details of the platform that you are
+>checking?
+>We are not aware of any dev platform based on SDM660=2E This is just for=
+=20
+>my info
 
-Thanks a lot.
+I'm checking on the sony xperia xa2 (pioneer) smartphone=2E
+>
+>> On Tue, Jun 19, 2018 at 11:09:17AM +0530, Vijay Viswanath wrote:
+>>> With SDCC5, the MCI register space got removed and the offset/order
+>of
+>>> several registers have changed=2E Based on SDCC version used and the
+>register,
+>>> we need to pick the base address and offset=2E
+>>>
+>>> Depends on patch series: "[PATCH V5 0/2] mmc: sdhci-msm: Configuring
+>IO_PAD support for sdhci-msm"
+>>>
+>>> Changes since RFC:
+>>> 	Dropped voltage regulator changes in sdhci-msm
+>>> 	Split the "Register changes for sdcc V5" patch
+>>> 	Instead of checking mci removal for deciding which base addr to
+>use,
+>>> 	new function pointers are defined for the 2 variants of sdcc:
+>>> 		1) MCI present
+>>> 		2) V5 (mci removed)
+>>> 	Instead of string comparing with the compatible string from DT
+>file,
+>>> 	the sdhci_msm_probe will now pick the data associated with the
+>>> 	compatible entry and use it to load variant specific address
+>offsets
+>>> 	and msm variant specific read/write ops=2E
+>>>
+>>> Changes since V1:
+>>> 	Removed unused msm_reab & msm_writeb APIs
+>>> 	Changed certain register addresses from uppercase to lowercase hex
+>>> 	letters
+>>> 	Removed extra lines and spaces
+>>> 	Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
+>>> 	one for Documentation and other for the driver changes=2E
+>>>
+>>> Changes since V2:
+>>> 	Used lower case for macro function defenitions
+>>> 	Removed unused function pointers for msm_readb & msm_writeb
+>>>
+>>>
+>>> Sayali Lokhande (3):
+>>>    mmc: sdhci-msm: Define new Register address map
+>>>    Documentation: sdhci-msm: Add new compatible string for SDCC v5
+>>>    mmc: host: Register changes for sdcc V5
+>>>
+>>> Vijay Viswanath (1):
+>>>    mmc: sdhci-msm: Add msm version specific ops and data structures
+>>>
+>>>   =2E=2E=2E/devicetree/bindings/mmc/sdhci-msm=2Etxt          |   7 +-
+>>>   drivers/mmc/host/sdhci-msm=2Ec                       | 511
+>++++++++++++++++-----
+>>>   2 files changed, 391 insertions(+), 127 deletions(-)
+>>>
+>>> --=20
+>>>   Qualcomm India Private Limited, on behalf of Qualcomm Innovation
+>Center, Inc=2E
+>>> Qualcomm Innovation Center, Inc=2E is a member of Code Aurora Forum, a
+>Linux Foundation Collaborative Project=2E
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe
+>linux-arm-msm" in
+>>> the body of a message to majordomo@vger=2Ekernel=2Eorg
+>>> More majordomo info at  http://vger=2Ekernel=2Eorg/majordomo-info=2Eht=
+ml
+>
+>Thanks,
+>Veera
 
-> ---
->  drivers/soc/mediatek/mtk-pmic-wrap.c | 35 ++++++++++++++++++++++++++++++++---
->  1 file changed, 32 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> index ddaeace..2b2cee1 100644
-> --- a/drivers/soc/mediatek/mtk-pmic-wrap.c
-> +++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
-> @@ -161,6 +161,21 @@ enum dew_regs {
->  	[PWRAP_DEW_RDDMY_NO] =		0x030C,
->  };
->  
-> +static const u32 mt6357_regs[] = {
-> +	[PWRAP_DEW_DIO_EN] =		0x040A,
-> +	[PWRAP_DEW_READ_TEST] =		0x040C,
-> +	[PWRAP_DEW_WRITE_TEST] =	0x040E,
-> +	[PWRAP_DEW_CRC_EN] =		0x0412,
-> +	[PWRAP_DEW_CRC_VAL] =		0x0414,
-> +	[PWRAP_DEW_CIPHER_KEY_SEL] =	0x0418,
-> +	[PWRAP_DEW_CIPHER_IV_SEL] =	0x041A,
-> +	[PWRAP_DEW_CIPHER_EN] =		0x041C,
-> +	[PWRAP_DEW_CIPHER_RDY] =	0x041E,
-> +	[PWRAP_DEW_CIPHER_MODE] =	0x0420,
-> +	[PWRAP_DEW_CIPHER_SWRST] =	0x0422,
-> +	[PWRAP_DEW_RDDMY_NO] =		0x0424,
-> +};
-> +
->  enum pwrap_regs {
->  	PWRAP_MUX_SEL,
->  	PWRAP_WRAP_EN,
-> @@ -716,6 +731,7 @@ enum pwrap_regs {
->  enum pmic_type {
->  	PMIC_MT6323,
->  	PMIC_MT6351,
-> +	PMIC_MT6357,
->  	PMIC_MT6380,
->  	PMIC_MT6397,
->  };
-> @@ -1175,6 +1191,7 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
->  		break;
->  	case PMIC_MT6323:
->  	case PMIC_MT6351:
-> +	case PMIC_MT6357:
->  		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_EN],
->  			    0x1);
->  		break;
-> @@ -1460,11 +1477,26 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
->  	.pwrap_write = pwrap_write16,
->  };
->  
-> +static const struct pwrap_slv_type pmic_mt6357 = {
-> +	.dew_regs = mt6357_regs,
-> +	.type = PMIC_MT6357,
-> +	.regmap = &pwrap_regmap_config16,
-> +	.caps = 0,
-> +	.pwrap_read = pwrap_read16,
-> +	.pwrap_write = pwrap_write16,
-> +};
-> +
->  static const struct of_device_id of_slave_match_tbl[] = {
->  	{
->  		.compatible = "mediatek,mt6323",
->  		.data = &pmic_mt6323,
->  	}, {
-> +		.compatible = "mediatek,mt6351",
-> +		.data = &pmic_mt6351,
-> +	}, {
-> +		.compatible = "mediatek,mt6357",
-> +		.data = &pmic_mt6357,
-> +	}, {
->  		/* The MT6380 PMIC only implements a regulator, so we bind it
->  		 * directly instead of using a MFD.
->  		 */
-> @@ -1474,9 +1506,6 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
->  		.compatible = "mediatek,mt6397",
->  		.data = &pmic_mt6397,
->  	}, {
-> -		.compatible = "mediatek,mt6351",
-> -		.data = &pmic_mt6351,
-> -	}, {
->  		/* sentinel */
->  	}
->  };
-> 
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
