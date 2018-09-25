@@ -1,50 +1,29 @@
-Return-Path: <SRS0=oCC0=MH=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 0/3] Add GPIO brownout detection support
-Date: Tue, 25 Sep 2018 11:42:27 +0200
-Message-Id: <20180925094230.32679-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=Rgu5=MH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from nl103.nixwebsolutions.com ([185.216.140.103]:53002 "EHLO
+        turbosaw.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726131AbeIYW6z (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Sep 2018 18:58:55 -0400
+Subject: Editing for 2
+Message-ID: <756fe484d4e7c4663371d0e962301645@oklahomacitytrees.com>
+Date: Tue, 25 Sep 2018 13:28:09 +0200
+From: "Heather" <dteinteserpafnloz@verizon.net>
+Reply-To: tavlanten@aliyun.com
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-To: dmitry.torokhov@gmail.com, broonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, kernel@pengutronix.de
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Want editing for your photos? We can help you for this.
 
-this small series adds a generic gpio-based brownout detection driver to
-inform the userspace that something went wrong.
+We can do cutting out and retouching for your ecommerce photos, jewelry
+photos retouching,
+portrait photos or wedding photos.
 
-Additional there is a optional support to release devices from their
-drivers, because there are board power designs which cut of external
-devices supply immediately and keep the host (SoC) alive for a few
-seconds to switch into a safe state. Due to the hard power cut some
-external devices throw interrupts and depending of the amount of
-external devices these interrupts will flood the host. The driver
-unloads all specified devices from their drivers so the interrupts are
-ignored. At the moment only spi and i2c devices are supported.
+Turnaround time is fast
 
-I've tested the driver on a customer arm based board, but other testers
-are welcome. Maybe there are problems unloading device drivers which have a
-incorrect .remove() or devm_alloc() order. Then these drivers must be
-fixed.
+Send us one photo, we wil do testing for you.
 
-Regards,
-Marco
-
-Marco Felsch (3):
-  spi: switch to SPDX license identifier
-  spi: make OF helper available for others
-  Input: add generic gpio brownout driver
-
- .../bindings/input/gpio-brownout.txt          |  36 ++++
- drivers/input/misc/Kconfig                    |  12 ++
- drivers/input/misc/Makefile                   |   1 +
- drivers/input/misc/gpio-brownout.c            | 166 ++++++++++++++++++
- drivers/spi/spi.c                             |  18 +-
- include/linux/spi/spi.h                       |  30 ++--
- 6 files changed, 239 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/gpio-brownout.txt
- create mode 100644 drivers/input/misc/gpio-brownout.c
-
--- 
-2.19.0
+Thanks,
+Heather
