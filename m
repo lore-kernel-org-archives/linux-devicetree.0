@@ -1,19 +1,19 @@
 MIME-Version: 1.0
-Date: Tue, 25 Sep 2018 09:45:12 -0500
+Date: Tue, 25 Sep 2018 09:37:59 -0500
 References: <1536955389-30442-1-git-send-email-pdeschrijver@nvidia.com>
 	<1536955389-30442-15-git-send-email-pdeschrijver@nvidia.com>
 	<5baa1ae9.1c69fb81.1ab9.1805@mx.google.com>
-	<20180925130329.GK7636@tbergstrom-lnx.Nvidia.com>
-In-Reply-To: <20180925130329.GK7636@tbergstrom-lnx.Nvidia.com>
-Message-ID: <CAL_JsqJjbCDk5HU8-ox=2hr7yBcaj5kv-V521CieGC7SJQu_HA@mail.gmail.com>
+	<20180925121107.GJ7636@tbergstrom-lnx.Nvidia.com>
+In-Reply-To: <20180925121107.GJ7636@tbergstrom-lnx.Nvidia.com>
+Message-ID: <CAL_JsqLY93P52idTiD2b_WwgTc2+s9A24+TdUEQsUeaUDwGK7A@mail.gmail.com>
 Subject: Re: [RFC 14/14] dt-bindings: tegra: Add Tegra210 EMC binding
 From: Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: vkuruturi@nvidia.com, linux-clk <linux-clk@vger.kernel.org>, linux-tegra@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, daniel@octaforge.org, Andre Heider <a.heider@gmail.com>, swtcr0@gmail.com
+Cc: vkuruturi@nvidia.com, linux-tegra@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, daniel@octaforge.org, Andre Heider <a.heider@gmail.com>, swtcr0@gmail.com, linux-clk <linux-clk@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Sep 25, 2018 at 8:03 AM Peter De Schrijver
+On Tue, Sep 25, 2018 at 7:11 AM Peter De Schrijver
 <pdeschrijver@nvidia.com> wrote:
 >
 > On Mon, Sep 24, 2018 at 02:04:24PM -0700, Rob Herring wrote:
@@ -43,6 +43,15 @@ On Tue, Sep 25, 2018 at 8:03 AM Peter De Schrijver
 > >
 > > Huh? What is this block then?
 > >
+>
+> This is the EMC. The EMC handles the interface with the external DRAM chips.
+> The MC aggregates and schedules requests to the EMC. It also handles address
+> translation. See figure 33 of the TRM.
+
+Sorry, but I hardly have time to go read TRM's for every binding.
+
+Just explain what the MC is here and remove 'driver'.
+
 > > > +- clocks : phandles of the possible source clocks
 > > > +- clock-names : names of the possible source clocks
 > > > +
@@ -65,6 +74,9 @@ On Tue, Sep 25, 2018 at 8:03 AM Peter De Schrijver
 > >
 > > Which emc-table nodes, the child or grand-child nodes?
 > >
+>
+> The child "emc-table" node.
+>
 > > > +- compatible  "nvidia,tegra21-emc-table", "nvidia,tegra210-emc-table"
 > >
 > > > +- nvidia,revision : revision of the parameter set used for this node. All
@@ -77,6 +89,9 @@ On Tue, Sep 25, 2018 at 8:03 AM Peter De Schrijver
 > > Is this memory timings/settings or OPPs? We have a binding for OPPs
 > > already.
 > >
+>
+> This is memory timings.
+>
 > > > +- nvidia,src-sel-reg : value of EMC CAR register to be used for this OPP
 > > > +- nvidia,needs-training : 1 if the OPP needs training at boot, 0 otherwise
 > > > +- nvidia,trained : 1 if initial training has been done by firmware, 0 otherwise
@@ -90,15 +105,16 @@ On Tue, Sep 25, 2018 at 8:03 AM Peter De Schrijver
 > > timings, is there really value to defining a property for each setting?
 > > Perhaps you should just define your own format and either make it a
 > > separate firmware file or include that file in the dtb.
-> >
 >
-> The problem with moving to a binary blob is that it will break compatibility
-> with existing devices (eg. Jetson TX1 and shield TV) because their bootloaders
-> rely on the existing format.
+> If it's a binary structure, how would this be passed given the bootloader has
+> to fill in the training information?
 
-Good to know, but not really my problem that bindings shipped without
-review. While this is self-contained and doesn't have any sort of
-common binding which could be used instead, can you say that about
-*everything* the bootloader depends on.
+Perhaps training data makes sense to keep as DT properties, but it is
+not all training data, right? Things like a list of register
+initialization values do not sound like training data.
+
+I assume the the training data is read back from the h/w, can't the
+kernel just do that itself? Or the data is lost after init is
+complete?
 
 Rob
