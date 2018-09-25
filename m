@@ -1,36 +1,65 @@
-Return-Path: <SRS0=3g/V=MG=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v5 2/2] dt-bindings: watchdog: renesas-wdt: Add support for R7S9210
-Date: Mon, 24 Sep 2018 08:58:16 -0500
-Message-Id: <20180924135816.19474-3-chris.brandt@renesas.com>
-In-Reply-To: <20180924135816.19474-1-chris.brandt@renesas.com>
-References: <20180924135816.19474-1-chris.brandt@renesas.com>
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=Rgu5=MH=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-io1-f46.google.com ([209.85.166.46]:38768 "EHLO
+        mail-io1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbeIYKEb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 25 Sep 2018 06:04:31 -0400
+Received: by mail-io1-f46.google.com with SMTP id y3-v6so19377471ioc.5
+        for <devicetree@vger.kernel.org>; Mon, 24 Sep 2018 20:59:00 -0700 (PDT)
+MIME-Version: 1.0
+From: darknighte <darknighte@darknighte.com>
+Date: Mon, 24 Sep 2018 22:58:48 -0500
+Message-ID: <CAKM2CVJovvxXXWvq=oLYu1ksNqxD-Z5WA1GUovwd=acAVo2N8w@mail.gmail.com>
+Subject: Call for speakers for the Devicetree Microconference @ the 2018 LPC
+ in Vancouver
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Frank Rowand <frowand.list@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document support for RZ/A2
+The Devicetree Microconference has been accepted into the 2018 Linux
+Plumbers Conference, which will be held in Vancouver, British
+Columbia, Canada from Tuesday, November 13 through Thursday, November
+15.  If you are interested in speaking, please contact myself, or
+co-leader Frank Rowand (on CC), to request a slot.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
-v2:
- * Added Reviewed-by
----
- Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
- 1 file changed, 1 insertion(+)
+For more details, here is the LPC announcement :
 
-diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-index 9407212a85a8..a9e49da6fa24 100644
---- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-+++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-@@ -20,6 +20,7 @@ Required properties:
- 	         - "renesas,r8a77990-wdt" (R-Car E3)
- 	         - "renesas,r8a77995-wdt" (R-Car D3)
- 	         - "renesas,r7s72100-wdt" (RZ/A1)
-+	         - "renesas,r7s9210-wdt"  (RZ/A2)
- 		The generic compatible string must be:
- 		 - "renesas,rza-wdt" for RZ/A
- 		 - "renesas,rcar-gen2-wdt" for R-Car Gen2 and RZ/G1
--- 
-2.16.1
+We are pleased to announce the the Devicetree Microconference
+has been accepted into the 2018 Linux Plumbers Conference!
+
+Devicetree provides hardware description for many platforms, such
+as Linux [1], U-Boot [2], BSD [3], and Zephyr [4]. Devicetree
+continues to evolve to become more robust and attempt to provide the
+features desired by the varied users.
+
+Some of the overlay related needs are now being addressed by
+U-boot, but there remain use cases for run time overlay management in
+the Linux kernel. Support for run time overlay management in the Linux
+kernel is slowly moving forward, but significant issues remain [5].
+
+Devicetree verification has been an ongoing project for several years,
+with the most recent in person discussion occurring at the Devicetree
+Workshop [6] at Kernel Summit 2017. Progress continues on mail lists,
+and will be an important topic at the microconference.
+
+Other Devicetree related tools, such as the dtc compiler and libfdt [7]
+continue to see active development.
+
+Additional possible issues to be discussed may include potential
+changes to the Flattened Device Tree (FDT) format, reducing the
+Devicetree memory and storage size in the Linux kernel, creating new
+architecture to provide solutions to current problems, updating the
+Devicetree Specification, and using devicetrees in constrained contexts.
+
+LPC [8] will be held in Vancouver, British Columbia, Canada
+from Tuesday, November 13 through Thursday, November 15.
+
+[1] https://elinux.org/Device_Tree_Reference
+[2] https://github.com/lentinj/u-boot/blob/master/doc/README.fdt-control
+[3] https://wiki.freebsd.org/FlattenedDeviceTree
+[4] http://docs.zephyrproject.org/devices/dts/device_tree.html
+[5] https://elinux.org/Frank%27s_Evolving_Overlay_Thoughts
+[6] https://elinux.org/Device_tree_future#Kernel_Summit_2017.2C_Devicetree_Workshop
+[7] https://elinux.org/Device_Tree_Reference#dtc_.28upstream_project.29
+[8] https://linuxplumbersconf.org/
