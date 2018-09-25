@@ -1,61 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V7 1/2] csky/dma: bugfix dma_sync_for_cpu/device
-Date: Tue, 25 Sep 2018 11:59:48 +0200
-Message-ID: <CAK8P3a1bv_Kx5Jo3UOyC9y0fmrH1i2+HB3_=H7pkBfBxBH-nXA@mail.gmail.com>
-References: <cover.1537276837.git.ren_guo@c-sky.com> <1ccf1bed89758a5a9b57ac2ce6d11ca898a1b9ae.1537276837.git.ren_guo@c-sky.com>
- <CAK8P3a0RDiP_R8+Lo9-nwiRS3k1NrtcsCFLi0Ww0TJGoAdb3iQ@mail.gmail.com> <20180925094601.GA2102@guoren>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 11/20] memory: tegra: Use of_device_get_match_data()
+Date: Tue, 25 Sep 2018 12:00:46 +0200
+Message-ID: <20180925100046.GD7097@ulmo>
+References: <20180924004153.8232-1-digetx@gmail.com>
+ <20180924004153.8232-12-digetx@gmail.com>
+ <20180924101354.GH21032@ulmo>
+ <dcf439a0-249c-ff9f-292d-c807a736672a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="BI5RvnYi6R4T2M87"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925094601.GA2102@guoren>
+Content-Disposition: inline
+In-Reply-To: <dcf439a0-249c-ff9f-292d-c807a736672a@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, Greentime Hu <green.hu@gmail.com>
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 11:46 AM Guo Ren <ren_guo@c-sky.com> wrote:
->
-> On Mon, Sep 24, 2018 at 10:38:04PM +0200, Arnd Bergmann wrote:
-> > On Tue, Sep 18, 2018 at 3:48 PM Guo Ren <ren_guo@c-sky.com> wrote:
-> > >
-> > > ref: https://lkml.org/lkml/2018/5/18/1068
-> > >
-> > >         map             for_cpu         for_device      unmap
-> > > TO_DEV  writeback       none            writeback       none
-> > > TO_CPU  invalidate      invalidate*     invalidate      invalidate*
-> > > BIDIR   writeback       invalidate      writeback       invalidate
-> > >
-> > > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> >
-> > Same comment as for the other patch: Explain why the original
-> > version is wrong first. When giving a reference to some other
-> > discussion, use the "Link" tag above your Signed-off-by line.
-> > To point to a discussion on lkml, lore.kernel.org is the
-> > recommended archive, so it would become
-> >
-> > Link: https://lore.kernel.org/lkml/20180518215548.GH17671@n2100.armlinux.org.uk/
-> Ok, I'll improve the comment:
->
-> Fixup dma_mapping error in linux-4.19-rc3, and we must implement all
-> DMA_TO_DEVICE/FROM_DEVICE/BIDIRECTIONAL for both sync_dma_for_device/cpu.
-> The implementation of arch should follow the following rules:
->
-> ...
 
-That seems ok, but it's better to start with a description of the problem
-rather than the 'Fixup dma_mapping error in linux-4.19-rc3' part.
-I would write this like:
+--BI5RvnYi6R4T2M87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-| The arch_sync_dma_for_cpu()/arch_sync_dma_for_device()
-| implementation is broken for some combinations that end up
-| in a BUG() instead of performing the necessary flushes.
-|
-| The implementation of arch should follow the following rules:
-| ...
+On Mon, Sep 24, 2018 at 09:39:43PM +0300, Dmitry Osipenko wrote:
+> On 9/24/18 1:13 PM, Thierry Reding wrote:
+> > On Mon, Sep 24, 2018 at 03:41:44AM +0300, Dmitry Osipenko wrote:
+> >> There is no need to match device with the DT node since it was already
+> >> matched, use of_device_get_match_data() helper to get the match-data.
+> >>
+> >> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >> ---
+> >>  drivers/memory/tegra/mc.c | 10 ++--------
+> >>  1 file changed, 2 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+> >> index 5454ffe5b2e0..cdc33f93cf7c 100644
+> >> --- a/drivers/memory/tegra/mc.c
+> >> +++ b/drivers/memory/tegra/mc.c
+> >> @@ -11,8 +11,7 @@
+> >>  #include <linux/interrupt.h>
+> >>  #include <linux/kernel.h>
+> >>  #include <linux/module.h>
+> >> -#include <linux/of.h>
+> >> -#include <linux/platform_device.h>
+> >=20
+> > It's better not to remove these two because the code still uses
+> > functions declared in them. If ever we were going to remove code using
+> > linux/of_device.h and then remove the linux/of_device.h include, we'd
+> > break the build and have to reintroduce the includes.
+>=20
+> That doesn't sound like a good argument. You're way too picky here ;)
+>=20
+> > The same would happen if linux/of_device.h were ever to stop including
+> > linux/platform_device.h or linux/of.h. That may sound unlikely, but it
+> > has happened in the past with other includes. It can also happen that
+> > some restructuring takes place in some headers that is not so obvious
+> > and then things can still start falling apart miles away.
+>=20
+> Restructuring will be somebody else problem. Not sure that we really
+> should care about it, I think it is unnecessary. But since you're
+> insisting..
 
-The imperative 'Fix up dma_mapping error ...' is what belongs
-into the subject line, and is ideally revisited at the end of the
-changelog comment if you want to add more detail about what
-you do.
+It's actually a very common argument and I've seen patches in the past
+that add includes just for the purpose of making sure the right
+definitions get pulled in. This happens quite frequently as a preamble
+to some major rework of some header files that would otherwise cause a
+lot of breakage.
 
-       Arnd
+So I think it's best to be proactive about this and make sure we
+explicitly pull in all the necessary headers in the first place,
+irrespective of whether or not they may already get pulled in indirectly
+by some other headers.
+
+Thierry
+
+--BI5RvnYi6R4T2M87
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluqB04ACgkQ3SOs138+
+s6Hyvg/9EeBObbdVirXsYp8DQaJ68XjG9k0VkZdp036X0ww9pWj9Kr+9A/6dVfBI
+SlK/+mFR5/RAHF/b/STNONtdu1TJV+TeeAuaZLfvIsS/KRoTXLpT4eC1kaFAGoun
+AH6rC68fNOSZoEmJbfSuAAbEhDLtNV4ITsW7ySwNB2Jn+TFAh3r/yd8WST769wY1
+ZULruEX1spgzlK8+ksF0lW4YDIRsb/MdlXgFC02nU4BpnlgaaUDXM16SsTnmVRQs
+jYC0WhFIXW+d9rebYDVdky/qQ7Eg5FtGDYXj6KBTGYVYenbB1HmXDm87rFUylIse
+mHZkZ3IzIVIOCcERDIc22gL6V78BViU0wfhtmGzpL+YK3BqWJ4TuDYuVuBz5AdGm
+NC7p4B+vNu7xULJpKrNgI1oGFmqE+NfyThmNMCoEEAbJ2ZRDrlTiPn6dQrM09irj
+NhY7/aCX8XSF8L25GCmZ3KOOlq+/kJdol6or76ON1hKdplvUxWsh2v6XwBOelM7C
+UhjbSvBZyTtUoWlly0dEB91Xrqbr4w4WH+Nu/Z2AQU/ue6itkTrwZK2RHF7uiBUI
+9X8hu8hO7ZCHgY9k1k/3Wl3S9eJ6lyJ5NI7JpqQ+dVX94H90cO+/+/bRczTLPQNI
+MBPx6I/hweSJ99xPdwgwIW1Uy2ce6VVFBclZI3LCpicXcgYKmyM=
+=YEyv
+-----END PGP SIGNATURE-----
+
+--BI5RvnYi6R4T2M87--
