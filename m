@@ -1,30 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 5/5] dt-bindings: media: Document bindings for venus
- firmware device
-Date: Tue, 25 Sep 2018 10:24:15 -0500
-Message-ID: <20180925152415.GB21227@bogus>
-References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
- <1537314192-26892-6-git-send-email-vgarodia@codeaurora.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: ufs: Add bindings for Cadence UFS
+Date: Tue, 25 Sep 2018 10:25:49 -0500
+Message-ID: <20180925152549.GA26019@bogus>
+References: <9429A347-939A-44C6-BDBE-A892F5BCBD47@global.cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1537314192-26892-6-git-send-email-vgarodia@codeaurora.org>
+In-Reply-To: <9429A347-939A-44C6-BDBE-A892F5BCBD47@global.cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>
-Cc: stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: Janek Kotas <jank@cadence.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "vinholikatti@gmail.com" <vinholikatti@gmail.com>, "jejb@linux.vnet.ibm.com" <jejb@linux.vnet.ibm.com>, "martin.petersen@oracle.com" <martin.petersen@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 19, 2018 at 05:13:12AM +0530, Vikash Garodia wrote:
-> Add devicetree binding documentation for firmware loader for video
-> hardware running on qualcomm chip.
+On Thu, Sep 20, 2018 at 01:08:22PM +0000, Janek Kotas wrote:
+> This patch adds a DT binding documentation for
+> Cadence UFS Host Controller.
 > 
-> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+> Signed-off-by: Jan Kotas <jank@cadence.com>
 > ---
->  Documentation/devicetree/bindings/media/qcom,venus.txt | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/ufs/cdns,ufshc.txt         | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ufs/cdns,ufshc.txt
 
-Something change in this? If not, then please add acks/reviewed-bys when 
-posting new versions.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
