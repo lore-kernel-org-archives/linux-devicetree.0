@@ -1,65 +1,147 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA
- Tegra20/30
-Date: Tue, 25 Sep 2018 20:29:24 +0300
-Message-ID: <074a169d-294b-ad4b-ddbd-6db742278f2a@gmail.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-2-digetx@gmail.com> <20180925165810.GA32430@bogus>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [RFC PATCH] soc: qcom: rmtfs_mem: Control remoteproc from
+ rmtfs_mem
+Date: Tue, 25 Sep 2018 10:29:50 -0700
+Message-ID: <20180925172943.GA118699@ban.mtv.corp.google.com>
+References: <20180925080607.30565-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925165810.GA32430@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180925080607.30565-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/25/18 7:58 PM, Rob Herring wrote:
-> On Thu, Aug 30, 2018 at 10:43:52PM +0300, Dmitry Osipenko wrote:
->> Add device-tree binding that describes CPU frequency-scaling hardware
->> found on NVIDIA Tegra20/30 SoC's.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
->>  1 file changed, 38 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>
->> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->> new file mode 100644
->> index 000000000000..2c51f676e958
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->> @@ -0,0 +1,38 @@
->> +Binding for NVIDIA Tegra20 CPUFreq
->> +==================================
->> +
->> +Required properties:
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +  See ../clocks/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +  - pll_x: main-parent for CPU clock, must be the first entry
->> +  - backup: intermediate-parent for CPU clock
->> +  - cpu: the CPU clock
+Hi Bjorn,
+
+On Tue, Sep 25, 2018 at 01:06:07AM -0700, Bjorn Andersson wrote:
+> rmtfs_mem provides access to physical storage and is crucial for the
+> operation of the Qualcomm modem subsystem.
 > 
-> The Cortex A9 has CLK, PERIPHCLK, and PERIPHCLKEN clocks and only CLK 
-> is used for the cpu core. You can't just define your own clocks that 
-> you happen to want access to.
+> The rmtfs_mem implementation must be available before the modem
+> subsystem is booted and a solution where the modem remoteproc will
+> verify that the rmtfs_mem is available has been discussed in the past.
+> But this would not handle the case where the rmtfs_mem provider is
+> restarted, which would cause fatal loss of access to the storage device
+> for the modem.
 > 
-> Otherwise, you're not defining anything new here, so a binding document 
-> isn't required.
+> The suggestion is therefor to link the rmtfs_mem to its associated
+> remote processor instance and control it based on the availability of
+> the rmtfs_mem implementation.
 
-PERIPHCLK is a different thing. Here we are defining the CPU clock and
-its *parent* sources, the PLLX (main) and backup (intermediate clock
-that is used while PLLX changes its rate). These are not some random
-clocks "that you happen to want access to", they are essential for the
-Tegra CPUFreq driver, CPU is running off them.
+But what does "availability" mean? If I'm reading your rmtfs daemon
+properly, "availability" should mean that the daemon is up and has
+registered a RMTFS_QMI_SERVICE. But in this patch, you're keying off of
+the open() call, which sounds like you're introducing a race condition
+-- we might have open()ed the RMTFS memory but we're not actually
+completely ready to service requests.
 
-I assume that PERIPHCLK and other clocks are derived from the "CPU"
-clock and their configuration is hardwired. Probably Peter knows how
-it's implemented in HW.
+So rather than looking for open(), I think somebody needs to be looking
+for the appearance and disappearance of the RMTFS_QMI_SERVICE. (Looking
+for disappearance would resolve the daemon restart issue, no?) That
+"somebody" could be the remoteproc driver I suppose (qmi_add_lookup()?),
+or...couldn't it just be the modem itself? Do you actually need to
+restart the entire modem when the RMTFS service goes away, or do you
+just need to pause storage activity?
 
-I'm now working on v2 that will include more Tegra-specific stuff in the
-binding, like custom "opp-supported-hw" property and probably some more.
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> The currently implemented workaround in the Linaro QCOMLT releases is to
+> blacklist the qcom_q6v5_pil kernel module and load this explicitly after rmtfs
+> has been started.
+> 
+> With this patch the modem module can be loaded automatically by the
+> platform_bus and will only be booted as the rmtfs becomes available. Performing
+> actions such as upgrading (and restarting) the rmtfs service will cause the
+> modem to automatically restart and hence continue to function after the
+> upgrade.
+> 
+>  .../reserved-memory/qcom,rmtfs-mem.txt        |  7 ++++++
+>  drivers/remoteproc/qcom_q6v5_pil.c            |  1 +
+>  drivers/soc/qcom/Kconfig                      |  1 +
+>  drivers/soc/qcom/rmtfs_mem.c                  | 23 ++++++++++++++++++-
+>  4 files changed, 31 insertions(+), 1 deletion(-)
+> 
+...
+> diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
+> index 8a3678c2e83c..8b08be310397 100644
+> --- a/drivers/soc/qcom/rmtfs_mem.c
+> +++ b/drivers/soc/qcom/rmtfs_mem.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/of.h>
+>  #include <linux/of_reserved_mem.h>
+> +#include <linux/remoteproc.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/slab.h>
+>  #include <linux/uaccess.h>
+> @@ -39,6 +40,8 @@ struct qcom_rmtfs_mem {
+>  	unsigned int client_id;
+>  
+>  	unsigned int perms;
+> +
+> +	struct rproc *rproc;
+>  };
+>  
+>  static ssize_t qcom_rmtfs_mem_show(struct device *dev,
+> @@ -80,11 +83,18 @@ static int qcom_rmtfs_mem_open(struct inode *inode, struct file *filp)
+>  	struct qcom_rmtfs_mem *rmtfs_mem = container_of(inode->i_cdev,
+>  							struct qcom_rmtfs_mem,
+>  							cdev);
+> +	int ret = 0;
+>  
+>  	get_device(&rmtfs_mem->dev);
+>  	filp->private_data = rmtfs_mem;
+>  
+> -	return 0;
+> +	if (rmtfs_mem->rproc) {
+> +		ret = rproc_boot(rmtfs_mem->rproc);
+> +		if (ret)
+> +			put_device(&rmtfs_mem->dev);
+> +	}
+> +
+> +	return ret;
+>  }
+>  static ssize_t qcom_rmtfs_mem_read(struct file *filp,
+>  			      char __user *buf, size_t count, loff_t *f_pos)
+> @@ -127,6 +137,9 @@ static int qcom_rmtfs_mem_release(struct inode *inode, struct file *filp)
+>  {
+>  	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
+>  
+> +	if (rmtfs_mem->rproc)
+> +		rproc_shutdown(rmtfs_mem->rproc);
+> +
+>  	put_device(&rmtfs_mem->dev);
+>  
+>  	return 0;
+> @@ -156,6 +169,7 @@ static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
+>  	struct qcom_scm_vmperm perms[2];
+>  	struct reserved_mem *rmem;
+>  	struct qcom_rmtfs_mem *rmtfs_mem;
+> +	phandle rproc_phandle;
+>  	u32 client_id;
+>  	u32 vmid;
+>  	int ret;
+> @@ -181,6 +195,13 @@ static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
+>  	rmtfs_mem->client_id = client_id;
+>  	rmtfs_mem->size = rmem->size;
+>  
+> +	ret = of_property_read_u32(node, "rproc", &rproc_phandle);
+> +	if (!ret) {
+> +		rmtfs_mem->rproc = rproc_get_by_phandle(rproc_phandle);
+
+You're doing an rproc_get(), so you need to do a rproc_put() in
+remove().
+
+Brian
+
+> +		if (!rmtfs_mem->rproc)
+> +			return -EPROBE_DEFER;
+> +	}
+> +
+>  	device_initialize(&rmtfs_mem->dev);
+>  	rmtfs_mem->dev.parent = &pdev->dev;
+>  	rmtfs_mem->dev.groups = qcom_rmtfs_mem_groups;
