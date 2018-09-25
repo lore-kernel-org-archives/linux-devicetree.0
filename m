@@ -1,73 +1,63 @@
-Return-Path: <SRS0=hPEm=MH=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=AfOp=MH=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
+Date: Tue, 25 Sep 2018 12:45:47 +0000
+Message-ID: 
+ <TY1PR01MB177030FE92BDA0DB5DEB535AC0160@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1537530911-443-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1537530911-443-2-git-send-email-fabrizio.castro@bp.renesas.com>
  <CAMuHMdVY1ty4fGoBg7qxfkRaEBEgBEK5YDgwNryDx_tCUYpiaw@mail.gmail.com>
  <TY1PR01MB1770218E44B1C365EE23299DC0170@TY1PR01MB1770.jpnprd01.prod.outlook.com>
  <CAMuHMdX1jTwehG_XdsnWXz5HhPK4OYtOkb1BNr75yxZn8u6B6w@mail.gmail.com>
- <20180925074751.m2lwlinpebcun4a7@verge.net.au> <CAMuHMdVhdHsKDPuQZzwqkEUuPGYriAOgSRcROrC3DVfkmPix6Q@mail.gmail.com>
- <20180925082216.GA2270@kunai> <CAMuHMdXcZMEgjxPLTr9jsb7SvtVP-DLcMk3oa-277tTDYeEm0Q@mail.gmail.com>
- <TY1PR01MB177030FE92BDA0DB5DEB535AC0160@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-In-Reply-To: <TY1PR01MB177030FE92BDA0DB5DEB535AC0160@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 25 Sep 2018 15:03:46 +0200
-Message-ID: <CAMuHMdVAiP-49kMhcQPyCT0Wpfkw8hG1e3Hx+WSqwHa77QLPvw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
-Content-Type: text/plain; charset="UTF-8"
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Simon Horman <horms@verge.net.au>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+ <20180925074751.m2lwlinpebcun4a7@verge.net.au>
+ <CAMuHMdVhdHsKDPuQZzwqkEUuPGYriAOgSRcROrC3DVfkmPix6Q@mail.gmail.com>
+ <20180925082216.GA2270@kunai>
+ <CAMuHMdXcZMEgjxPLTr9jsb7SvtVP-DLcMk3oa-277tTDYeEm0Q@mail.gmail.com>
+In-Reply-To: 
+ <CAMuHMdXcZMEgjxPLTr9jsb7SvtVP-DLcMk3oa-277tTDYeEm0Q@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Wolfram Sang <wsa@the-dreams.de>
+Cc: Simon Horman <horms@verge.net.au>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Magnus Damm <magnus.damm@gmail.com>, Linux MMC List <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Linux-Renesas" <linux-renesas-soc@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Fabrizio,
-
-On Tue, Sep 25, 2018 at 2:45 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> > Subject: Re: [PATCH 1/4] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
-> > On Tue, Sep 25, 2018 at 10:22 AM Wolfram Sang <wsa@the-dreams.de> wrote:
-> > > > > Perhaps stating the obvious: this feels a lot like the problem we thought
-> > > > > we had with different Gen-3 SoCs/ES versions. And in that case we decided
-> > > > > against using compat strings to differentiate. The main difference here
-> > > > > seems to be that we need to differentiate between different ports on the
-> > > > > same SoC.
-> > >
-> > > Yes, I agree. Our so far agreed solution didn't take into account that
-> > > there are different SDHI versions on the same SoC. Adding a compatible
-> > > might be the easiest solution, but then we have a mix of compatibles,
-> > > soc_device_match, and even version register (deeper in the driver). My
-> > > gut feeling is we should take the time to rethink all this?
-> > >
-> > > > So either
-> > > >   a) SDHI0/2 vs. SDHI1 are different, deserving different compatible values, or
-> > > >   b) SDHI0/1/2 are identical, but SDHI1 is wired different, deserving the same
-> > > >      compatible value, but one or more additional properties describing the
-> > > >      different wiring.
-> > >
-> > > Actually, SDHI2 seems different, too. It doesn't support SDR104. I don't
-> > > have the SDHI specific docs, but from the main docs, all SDHI instances
-> > > are different.
-> >
-> > I forgot about the version register.
-> >
-> > Fabrizio: can you please check what the 3 instances report in their version
-> > registers? Thanks!
->
-> SDHI0: 0xcc0d
-> SDHI1: 0xcc10
-> SDHI2: 0xcc0d
-
-Thank you. So SDHI1 differs from SDH0/2.
-SDHI2 probably doesn't support SDR104 because its parent clock is a div6
-clock, while the others have SDCKCR parents.
-
-Plus we don't describe the relation to the SDH clock yet.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+SGkgR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzRdIGR0LWJpbmRpbmdzOiBtbWM6
+IHJlbmVzYXNfc2RoaTogQWRkIHI4YTc3NDcwIHN1cHBvcnQNCj4NCj4gSGkgV29sZnJhbSwNCj4N
+Cj4gT24gVHVlLCBTZXAgMjUsIDIwMTggYXQgMTA6MjIgQU0gV29sZnJhbSBTYW5nIDx3c2FAdGhl
+LWRyZWFtcy5kZT4gd3JvdGU6DQo+ID4gPiA+IFBlcmhhcHMgc3RhdGluZyB0aGUgb2J2aW91czog
+dGhpcyBmZWVscyBhIGxvdCBsaWtlIHRoZSBwcm9ibGVtIHdlIHRob3VnaHQNCj4gPiA+ID4gd2Ug
+aGFkIHdpdGggZGlmZmVyZW50IEdlbi0zIFNvQ3MvRVMgdmVyc2lvbnMuIEFuZCBpbiB0aGF0IGNh
+c2Ugd2UgZGVjaWRlZA0KPiA+ID4gPiBhZ2FpbnN0IHVzaW5nIGNvbXBhdCBzdHJpbmdzIHRvIGRp
+ZmZlcmVudGlhdGUuIFRoZSBtYWluIGRpZmZlcmVuY2UgaGVyZQ0KPiA+ID4gPiBzZWVtcyB0byBi
+ZSB0aGF0IHdlIG5lZWQgdG8gZGlmZmVyZW50aWF0ZSBiZXR3ZWVuIGRpZmZlcmVudCBwb3J0cyBv
+biB0aGUNCj4gPiA+ID4gc2FtZSBTb0MuDQo+ID4NCj4gPiBZZXMsIEkgYWdyZWUuIE91ciBzbyBm
+YXIgYWdyZWVkIHNvbHV0aW9uIGRpZG4ndCB0YWtlIGludG8gYWNjb3VudCB0aGF0DQo+ID4gdGhl
+cmUgYXJlIGRpZmZlcmVudCBTREhJIHZlcnNpb25zIG9uIHRoZSBzYW1lIFNvQy4gQWRkaW5nIGEg
+Y29tcGF0aWJsZQ0KPiA+IG1pZ2h0IGJlIHRoZSBlYXNpZXN0IHNvbHV0aW9uLCBidXQgdGhlbiB3
+ZSBoYXZlIGEgbWl4IG9mIGNvbXBhdGlibGVzLA0KPiA+IHNvY19kZXZpY2VfbWF0Y2gsIGFuZCBl
+dmVuIHZlcnNpb24gcmVnaXN0ZXIgKGRlZXBlciBpbiB0aGUgZHJpdmVyKS4gTXkNCj4gPiBndXQg
+ZmVlbGluZyBpcyB3ZSBzaG91bGQgdGFrZSB0aGUgdGltZSB0byByZXRoaW5rIGFsbCB0aGlzPw0K
+PiA+DQo+ID4gPiBTbyBlaXRoZXINCj4gPiA+ICAgYSkgU0RISTAvMiB2cy4gU0RISTEgYXJlIGRp
+ZmZlcmVudCwgZGVzZXJ2aW5nIGRpZmZlcmVudCBjb21wYXRpYmxlIHZhbHVlcywgb3INCj4gPiA+
+ICAgYikgU0RISTAvMS8yIGFyZSBpZGVudGljYWwsIGJ1dCBTREhJMSBpcyB3aXJlZCBkaWZmZXJl
+bnQsIGRlc2VydmluZyB0aGUgc2FtZQ0KPiA+ID4gICAgICBjb21wYXRpYmxlIHZhbHVlLCBidXQg
+b25lIG9yIG1vcmUgYWRkaXRpb25hbCBwcm9wZXJ0aWVzIGRlc2NyaWJpbmcgdGhlDQo+ID4gPiAg
+ICAgIGRpZmZlcmVudCB3aXJpbmcuDQo+ID4NCj4gPiBBY3R1YWxseSwgU0RISTIgc2VlbXMgZGlm
+ZmVyZW50LCB0b28uIEl0IGRvZXNuJ3Qgc3VwcG9ydCBTRFIxMDQuIEkgZG9uJ3QNCj4gPiBoYXZl
+IHRoZSBTREhJIHNwZWNpZmljIGRvY3MsIGJ1dCBmcm9tIHRoZSBtYWluIGRvY3MsIGFsbCBTREhJ
+IGluc3RhbmNlcw0KPiA+IGFyZSBkaWZmZXJlbnQuDQo+DQo+IEkgZm9yZ290IGFib3V0IHRoZSB2
+ZXJzaW9uIHJlZ2lzdGVyLg0KPg0KPiBGYWJyaXppbzogY2FuIHlvdSBwbGVhc2UgY2hlY2sgd2hh
+dCB0aGUgMyBpbnN0YW5jZXMgcmVwb3J0IGluIHRoZWlyIHZlcnNpb24NCj4gcmVnaXN0ZXJzPyBU
+aGFua3MhDQoNClNESEkwOiAweGNjMGQNClNESEkxOiAweGNjMTANClNESEkyOiAweGNjMGQNCg0K
+Q2hlZXJzLA0KRmFiDQoNCj4NCj4gR3J7b2V0amUsZWV0aW5nfXMsDQo+DQo+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIEdlZXJ0DQo+DQo+IC0tDQo+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVy
+ZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0gZ2VlcnRAbGludXgtbTY4ay5vcmcNCj4N
+Cj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRlY2huaWNhbCBwZW9wbGUsIEkgY2Fs
+bCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3Rz
+IEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGluZyBsaWtlIHRoYXQuDQo+ICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMgVG9ydmFsZHMNCg0KDQoNClJlbmVz
+YXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxsYm9hcmQgUm9hZCwg
+Qm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVnaXN0ZXJlZCBpbiBF
+bmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo=
