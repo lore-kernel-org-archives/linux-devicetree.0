@@ -1,31 +1,53 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v9 5/8] interconnect: qcom: Add RPM communication
-Date: Tue, 25 Sep 2018 13:17:35 -0500
-Message-ID: <20180925181735.GA28385@bogus>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-6-georgi.djakov@linaro.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] arm64: dts: broadcom: Use the .dtb name in the rule,
+ rather than .dts
+Date: Tue, 25 Sep 2018 11:17:52 -0700
+Message-ID: <1c0db58a-5bc2-8de3-f70d-725a29376513@gmail.com>
+References: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
+ <20180924102228.19656-1-liviu@dudau.co.uk>
+ <539eb374-9122-6c09-4c64-80bfa6b7bf89@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180831140151.13972-6-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <539eb374-9122-6c09-4c64-80bfa6b7bf89@i2se.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Liviu Dudau <liviu@dudau.co.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, arm-soc <arm@kernel.org>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Aug 31, 2018 at 05:01:48PM +0300, Georgi Djakov wrote:
-> On some Qualcomm SoCs, there is a remote processor, which controls some of
-> the Network-On-Chip interconnect resources. Other CPUs express their needs
-> by communicating with this processor. Add a driver to handle communication
-> with this remote processor.
+On 09/24/2018 04:03 AM, Stefan Wahren wrote:
+> Am 24.09.2018 um 12:22 schrieb Liviu Dudau:
+>> Commit a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+>> Module IO Board V3") adds the bcm2837-rpi-cm3-io3.dts file as a target
+>> in the Makefile, rather than the .dtb name. This will skip the
+>> generation of the .dtb file at compile time and will fail the dtbs_install
+>> target.
+>>
+>> Fixes: a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+>> Module IO Board V3")
+>>
+>> Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+> 
+> Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+> 
+> Thanks, i will add a dtbs_install step to my test jobs.
 
-I don't think you should have a binding nor a separate driver for this. 
-It's not actually an interconnect provider, so it doesn't belong in 
-bindings/interconnect. And it just looks like abuse of DT to instantiate 
-some driver.
+Same here.
 
-All the driver amounts to is a 1 function wrapper for RPM_KEY_BW 
-messages. Can't this be part of the parent?
+> 
+> @Arnd @Olof Should this fix for 4.20 go via pull request or can you
+> apply it directly to your tree?
 
-Rob
+That would be my preference here as well.
+-- 
+Florian
