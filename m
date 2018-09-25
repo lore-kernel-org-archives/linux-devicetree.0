@@ -1,115 +1,86 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v4 09/20] memory: tegra: Adapt to Tegra20 device-tree
- binding changes
-Date: Tue, 25 Sep 2018 15:16:41 +0300
-Message-ID: <3bf4cd84-3d67-e7eb-7786-bbe952ad4075@gmail.com>
-References: <20180924004153.8232-1-digetx@gmail.com>
- <20180924004153.8232-10-digetx@gmail.com> <20180924100205.GB21032@ulmo>
- <bca7c87a-5f86-4a98-bb6b-411c641a0e80@gmail.com>
+From: Jonathan Cameron <jonathan.cameron@huawei.com>
+Subject: Re: [PATCH 1/2] iio: magnetometer: Add DT support for PNI RM3100
+Date: Tue, 25 Sep 2018 14:05:30 +0100
+Message-ID: <20180925140530.00005fa3@huawei.com>
+References: <20180925031724.21399-1-songqiang1304521@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <bca7c87a-5f86-4a98-bb6b-411c641a0e80@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180925031724.21399-1-songqiang1304521@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, preid@electromag.com.au, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/24/18 4:22 PM, Dmitry Osipenko wrote:
-> On 9/24/18 1:02 PM, Thierry Reding wrote:
->> On Mon, Sep 24, 2018 at 03:41:42AM +0300, Dmitry Osipenko wrote:
->>> The tegra20-mc device-tree binding has been changed, GART has been
->>> squashed into Memory Controller and now the clock property is mandatory
->>> for Tegra20, the DT compatible has been changed as well. Adapt driver to
->>> the DT changes.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>   drivers/memory/tegra/mc.c | 21 ++++++++-------------
->>>   drivers/memory/tegra/mc.h |  6 ------
->>>   include/soc/tegra/mc.h    |  2 +-
->>>   3 files changed, 9 insertions(+), 20 deletions(-)
->>>
->>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
->>> index e56862495f36..1b4ceefd82f9 100644
->>> --- a/drivers/memory/tegra/mc.c
->>> +++ b/drivers/memory/tegra/mc.c
->>> @@ -51,7 +51,7 @@
->>>     static const struct of_device_id tegra_mc_of_match[] = {
->>>   #ifdef CONFIG_ARCH_TEGRA_2x_SOC
->>> -    { .compatible = "nvidia,tegra20-mc", .data = &tegra20_mc_soc },
->>> +    { .compatible = "nvidia,tegra20-mc-gart", .data =
->>> &tegra20_mc_soc },
->>
->> Technically we now regress because we no longer support the older device
->> tree bindings. I know that it doesn't really matter because this driver
->> doesn't really do much interesting yet other than reporting memory
->> access violations, but if that's enough to warrant a change of the
->> compatible string, then I think we also need to preserve compatibility
->> in the code.
->>
->> That said, I think compatibility would be easier to preserve if we stuck
->> with the old compatible string and used a "reg-names" property to
->> specify which version of the binding we're referring to.
->>
->> For example, we could have:
->>
->>     memory-controller@7000f000 {
->>         compatible = "nvidia,tegra20-mc";
->>         reg = <0x7000f000 0x024
->>                0x7000f03c 0x3c4>;
->>         ...
->>     };
->>
->> for the old binding and:
->>
->>     memory-controller@7000f000 {
->>         compatible = "nvidia,tegra20-mc";
->>         reg = <0x7000f000 0x00000400>,
->>               <0x58000000 0x02000000>;
->>         reg-names = "mc", "gart";
->>         ...
->>     };
->>
->> for the new binding. The driver can then easily check for the existence
->> of the reg-names property and take the legacy or new code paths.
+On Tue, 25 Sep 2018 11:17:23 +0800
+Song Qiang <songqiang1304521@gmail.com> wrote:
+
+> PNI RM3100 is a high resolution, large signal immunity magnetometer,
+> composed of 3 single sensors and a processing chip with MagI2C Interface.
+> PNI is not in the vendors' list, so this patch is also adding it.
 > 
-> There is no problem with keeping compatibility for newer kernels with
-> the older binding, it just not worth the effort. The real problem is
-> keeping compatibility of older kernels with the new binding, the older
-> kernels won't care about the reg-names and will treat GART registers as
-> the second registers bank of the Memory Controller. Unfortunately I
-> don't see how your suggestion is supposed to help with the problem.
+> Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+Hi Song,
 
-I've another variant. What about to drop the GART registers from the
-binding? The range is always fixed and there is no good reason to
-artificially change it. I recall that in the past you didn't like the
-patch that made the GART's aperture size fixed, saying that some
-imaginary person may want to change it via DT. It's still not a very
-good argument to me, I can't see a good reason why anyone may want to
-change the aperture size.
+Please clearly mark the title of the patch with V2.
+[PATCH 1/2 V2] ...
 
-The new binding will look like this (just like T30+ binding, only
-iommu-cells number differ):
+(or I'm also happy with a cover letter that does the same though other
+maintainers ask for every patch to be marked v2).
 
-     memory-controller@7000f000 {
-         compatible = "nvidia,tegra20-mc";
-         reg = <0x7000f000 0x00000400>;
-         clocks = <&tegra_car TEGRA20_CLK_MC>;
-         clock-names = "mc";
+This makes it easy to quickly short the versions and check we are
+looking at the latest.
+> ---
+> Changes in v2:
+>         - Remove bus specific part in compatible string.
+> 
+>  .../bindings/iio/magnetometer/pni,rm3100.txt  | 20 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>  2 files changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+> new file mode 100644
+> index 000000000000..4677690fc5d0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+> @@ -0,0 +1,20 @@
+> +* PNI RM3100 3-axis magnetometer sensor
+> +
+> +Required properties:
+> +
+> +- compatible : should be "pni,rm3100"
+> +- reg : the I2C address or SPI chip select number of the sensor.
+> +
+> +Optional properties:
+> +
+> +- interrupts: data ready (DRDY) from the chip.
+> +  The interrupts can be triggered on rising edges.
+> +
+> +Example:
+> +
+> +rm3100: rm3100@20 {
+> +	compatible = "pni,rm3100";
+> +	reg = <0x20>;
+> +	interrupt-parent = <&gpio0>;
+> +	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
+> +};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 41f0b97eb933..5bf3395fe9ae 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -288,6 +288,7 @@ pine64	Pine64
+>  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+>  plathome	Plat'Home Co., Ltd.
+>  plda	PLDA
+> +pni     PNI
 
-         interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+A quick scan around their website suggests they are actually
+"PNI Sensor Corporation"
+I'm not sure how fussy we are on naming in here but probable best to be as specific
+as possible.
 
-         #reset-cells = <1>;
-         #iommu-cells = <0>;
-     };
-
-That way older kernel will continue to work with the new binding because
-of the miss of the second registers range and new kernels may keep
-supporting the old binding. Though I don't think that keeping support of
-the old binding really worth the churning. Thoughts?
-
-Note that new kernels will require the "mc" clock and hence the old
-binding will be rejected because it doesn't have that clock.
+>  portwell	Portwell Inc.
+>  poslab	Poslab Technology Co., Ltd.
+>  powervr	PowerVR (deprecated, use img)
