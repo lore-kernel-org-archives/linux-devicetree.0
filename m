@@ -1,33 +1,70 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 2/4] soc: mediatek: use group of bits for pwrap capability
-Date: Tue, 25 Sep 2018 15:53:19 +0200
-Message-ID: <afdd9f28-1c54-e936-e54e-0cc05526585c@gmail.com>
-References: <1537341961-20736-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1537341961-20736-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v4 11/20] memory: tegra: Use of_device_get_match_data()
+Date: Tue, 25 Sep 2018 16:53:26 +0300
+Message-ID: <f12b82d6-0fc9-443e-f68b-be63265c8354@gmail.com>
+References: <20180924004153.8232-1-digetx@gmail.com>
+ <20180924004153.8232-12-digetx@gmail.com> <20180924101354.GH21032@ulmo>
+ <dcf439a0-249c-ff9f-292d-c807a736672a@gmail.com> <20180925100046.GD7097@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537341961-20736-3-git-send-email-hsin-hsiung.wang@mediatek.com>
+In-Reply-To: <20180925100046.GD7097@ulmo>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: argus.lin@mediatek.com, sean.wang@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, chenglin.xu@mediatek.com, chen.zhong@mediatek.com, srv_heupstream@mediatek.com
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 19/09/2018 09:25, Hsin-Hsiung Wang wrote:
-> Use group of bits for pwrap capability instead of
-> elements of structure.
-> This patch is preparing for adding mt8183 pwrap support.
+On 9/25/18 1:00 PM, Thierry Reding wrote:
+> On Mon, Sep 24, 2018 at 09:39:43PM +0300, Dmitry Osipenko wrote:
+>> On 9/24/18 1:13 PM, Thierry Reding wrote:
+>>> On Mon, Sep 24, 2018 at 03:41:44AM +0300, Dmitry Osipenko wrote:
+>>>> There is no need to match device with the DT node since it was already
+>>>> matched, use of_device_get_match_data() helper to get the match-data.
+>>>>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/memory/tegra/mc.c | 10 ++--------
+>>>>  1 file changed, 2 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+>>>> index 5454ffe5b2e0..cdc33f93cf7c 100644
+>>>> --- a/drivers/memory/tegra/mc.c
+>>>> +++ b/drivers/memory/tegra/mc.c
+>>>> @@ -11,8 +11,7 @@
+>>>>  #include <linux/interrupt.h>
+>>>>  #include <linux/kernel.h>
+>>>>  #include <linux/module.h>
+>>>> -#include <linux/of.h>
+>>>> -#include <linux/platform_device.h>
+>>>
+>>> It's better not to remove these two because the code still uses
+>>> functions declared in them. If ever we were going to remove code using
+>>> linux/of_device.h and then remove the linux/of_device.h include, we'd
+>>> break the build and have to reintroduce the includes.
+>>
+>> That doesn't sound like a good argument. You're way too picky here ;)
+>>
+>>> The same would happen if linux/of_device.h were ever to stop including
+>>> linux/platform_device.h or linux/of.h. That may sound unlikely, but it
+>>> has happened in the past with other includes. It can also happen that
+>>> some restructuring takes place in some headers that is not so obvious
+>>> and then things can still start falling apart miles away.
+>>
+>> Restructuring will be somebody else problem. Not sure that we really
+>> should care about it, I think it is unnecessary. But since you're
+>> insisting..
 > 
-> Signed-off-by: Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>
+> It's actually a very common argument and I've seen patches in the past
+> that add includes just for the purpose of making sure the right
+> definitions get pulled in. This happens quite frequently as a preamble
+> to some major rework of some header files that would otherwise cause a
+> lot of breakage.
+> 
+> So I think it's best to be proactive about this and make sure we
+> explicitly pull in all the necessary headers in the first place,
+> irrespective of whether or not they may already get pulled in indirectly
+> by some other headers.
 
-I split this patch in two, one for the ordering of the SoCs and PMIC numbers and
-the second one for adding the CAPs.
-Please have a look if I didn't screw up :)
-
-Applied to v4.19-next/soc
-
-Thanks!
+Ok
