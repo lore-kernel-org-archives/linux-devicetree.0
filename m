@@ -1,15 +1,14 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 2/5] arm: dts: mt7623: update subsystem clock controller
- device nodes
-Date: Tue, 25 Sep 2018 17:46:49 +0200
-Message-ID: <64b5187f-8a4d-b94e-8a3b-f1e19538697a@gmail.com>
+Subject: Re: [PATCH 3/5] arm: dts: mt7623: add iommu/smi device nodes
+Date: Tue, 25 Sep 2018 17:47:10 +0200
+Message-ID: <de407ddd-d423-288b-02d1-5b75381b6417@gmail.com>
 References: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536141302.git.ryder.lee@mediatek.com>
- <6cc820db27996d8fd3094df10abbba1a2008907a.1536141302.git.ryder.lee@mediatek.com>
+ <2d9d216adb779bac6f5515b39cfeaed8b4b61878.1536141302.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6cc820db27996d8fd3094df10abbba1a2008907a.1536141302.git.ryder.lee@mediatek.com>
+In-Reply-To: <2d9d216adb779bac6f5515b39cfeaed8b4b61878.1536141302.git.ryder.lee@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Ryder Lee <ryder.lee@mediatek.com>
@@ -19,74 +18,119 @@ List-Id: devicetree@vger.kernel.org
 
 
 On 05/09/2018 12:22, Ryder Lee wrote:
-> Update MT7623 subsystem clock controllers, inlcuding mmsys, imgsys,
-> vdecsys, g3dsys and bdpsys.
+> Add iommu/smi device nodes for MT7623.
 > 
 > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 
 Applied to v4.19-next/dts32
 
 > ---
->  arch/arm/boot/dts/mt7623.dtsi | 41 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
+>  arch/arm/boot/dts/mt7623.dtsi | 59 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
 > 
 > diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index 8c43bd0..b7ccf8b 100644
+> index b7ccf8b..a46987b 100644
 > --- a/arch/arm/boot/dts/mt7623.dtsi
 > +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -692,6 +692,39 @@
->  		status = "disabled";
+> @@ -13,6 +13,7 @@
+>  #include <dt-bindings/power/mt2701-power.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/phy/phy.h>
+> +#include <dt-bindings/memory/mt2701-larb-port.h>
+>  #include <dt-bindings/reset/mt2701-resets.h>
+>  #include <dt-bindings/thermal/thermal.h>
+>  
+> @@ -286,6 +287,17 @@
+>  		clock-names = "system-clk", "rtc-clk";
 >  	};
 >  
-> +	g3dsys: syscon@13000000 {
-> +		compatible = "mediatek,mt7623-g3dsys",
-> +			     "mediatek,mt2701-g3dsys",
-> +			     "syscon";
-> +		reg = <0 0x13000000 0 0x200>;
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
+> +	smi_common: smi@1000c000 {
+> +		compatible = "mediatek,mt7623-smi-common",
+> +			     "mediatek,mt2701-smi-common";
+> +		reg = <0 0x1000c000 0 0x1000>;
+> +		clocks = <&infracfg CLK_INFRA_SMI>,
+> +			 <&mmsys CLK_MM_SMI_COMMON>,
+> +			 <&infracfg CLK_INFRA_SMI>;
+> +		clock-names = "apb", "smi", "async";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
 > +	};
 > +
-> +	mmsys: syscon@14000000 {
-> +		compatible = "mediatek,mt7623-mmsys",
-> +			     "mediatek,mt2701-mmsys",
-> +			     "syscon";
-> +		reg = <0 0x14000000 0 0x1000>;
-> +		#clock-cells = <1>;
+>  	pwrap: pwrap@1000d000 {
+>  		compatible = "mediatek,mt7623-pwrap",
+>  			     "mediatek,mt2701-pwrap";
+> @@ -317,6 +329,17 @@
+>  		reg = <0 0x10200100 0 0x1c>;
+>  	};
+>  
+> +	iommu: mmsys_iommu@10205000 {
+> +		compatible = "mediatek,mt7623-m4u",
+> +			     "mediatek,mt2701-m4u";
+> +		reg = <0 0x10205000 0 0x1000>;
+> +		interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&infracfg CLK_INFRA_M4U>;
+> +		clock-names = "bclk";
+> +		mediatek,larbs = <&larb0 &larb1 &larb2>;
+> +		#iommu-cells = <1>;
 > +	};
 > +
-> +	imgsys: syscon@15000000 {
-> +		compatible = "mediatek,mt7623-imgsys",
-> +			     "mediatek,mt2701-imgsys",
-> +			     "syscon";
-> +		reg = <0 0x15000000 0 0x1000>;
-> +		#clock-cells = <1>;
+>  	efuse: efuse@10206000 {
+>  		compatible = "mediatek,mt7623-efuse",
+>  			     "mediatek,mt8173-efuse";
+> @@ -709,6 +732,18 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	larb0: larb@14010000 {
+> +		compatible = "mediatek,mt7623-smi-larb",
+> +			     "mediatek,mt2701-smi-larb";
+> +		reg = <0 0x14010000 0 0x1000>;
+> +		mediatek,smi = <&smi_common>;
+> +		mediatek,larb-id = <0>;
+> +		clocks = <&mmsys CLK_MM_SMI_LARB0>,
+> +			 <&mmsys CLK_MM_SMI_LARB0>;
+> +		clock-names = "apb", "smi";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
 > +	};
 > +
-> +	vdecsys: syscon@16000000 {
-> +		compatible = "mediatek,mt7623-vdecsys",
-> +			     "mediatek,mt2701-vdecsys",
-> +			     "syscon";
-> +		reg = <0 0x16000000 0 0x1000>;
-> +		#clock-cells = <1>;
+>  	imgsys: syscon@15000000 {
+>  		compatible = "mediatek,mt7623-imgsys",
+>  			     "mediatek,mt2701-imgsys",
+> @@ -717,6 +752,18 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	larb2: larb@15001000 {
+> +		compatible = "mediatek,mt7623-smi-larb",
+> +			     "mediatek,mt2701-smi-larb";
+> +		reg = <0 0x15001000 0 0x1000>;
+> +		mediatek,smi = <&smi_common>;
+> +		mediatek,larb-id = <2>;
+> +		clocks = <&imgsys CLK_IMG_SMI_COMM>,
+> +			 <&imgsys CLK_IMG_SMI_COMM>;
+> +		clock-names = "apb", "smi";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+> +	};
+> +
+>  	vdecsys: syscon@16000000 {
+>  		compatible = "mediatek,mt7623-vdecsys",
+>  			     "mediatek,mt2701-vdecsys",
+> @@ -725,6 +772,18 @@
+>  		#clock-cells = <1>;
+>  	};
+>  
+> +	larb1: larb@16010000 {
+> +		compatible = "mediatek,mt7623-smi-larb",
+> +			     "mediatek,mt2701-smi-larb";
+> +		reg = <0 0x16010000 0 0x1000>;
+> +		mediatek,smi = <&smi_common>;
+> +		mediatek,larb-id = <1>;
+> +		clocks = <&vdecsys CLK_VDEC_CKGEN>,
+> +			 <&vdecsys CLK_VDEC_LARB>;
+> +		clock-names = "apb", "smi";
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_VDEC>;
 > +	};
 > +
 >  	hifsys: syscon@1a000000 {
 >  		compatible = "mediatek,mt7623-hifsys",
 >  			     "mediatek,mt2701-hifsys",
-> @@ -946,6 +979,14 @@
->  		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
->  		status = "disabled";
->  	};
-> +
-> +	bdpsys: syscon@1c000000 {
-> +		compatible = "mediatek,mt7623-bdpsys",
-> +			     "mediatek,mt2701-bdpsys",
-> +			     "syscon";
-> +		reg = <0 0x1c000000 0 0x1000>;
-> +		#clock-cells = <1>;
-> +	};
->  };
->  
->  &pio {
 > 
