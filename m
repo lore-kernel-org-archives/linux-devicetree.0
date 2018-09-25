@@ -1,45 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/5] pinctrl: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Tue, 25 Sep 2018 15:20:48 -0500
-Message-ID: <20180925202048.GA6227@bogus>
-References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
- <20180905104120.17252-4-ckeepax@opensource.cirrus.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH] arm64: dts: broadcom: Use the .dtb name in the rule,
+ rather than .dts
+Date: Tue, 25 Sep 2018 11:51:33 -0700
+Message-ID: <20180925185133.jdom5tvs6zklntr7@localhost>
+References: <b42d2e57-8bcd-0d6a-7a4d-aeefedcdd5f3@i2se.com>
+ <20180924102228.19656-1-liviu@dudau.co.uk>
+ <539eb374-9122-6c09-4c64-80bfa6b7bf89@i2se.com>
+ <1c0db58a-5bc2-8de3-f70d-725a29376513@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180905104120.17252-4-ckeepax@opensource.cirrus.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
+In-Reply-To: <1c0db58a-5bc2-8de3-f70d-725a29376513@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, arm-soc <arm@kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2018 at 11:41:19AM +0100, Charles Keepax wrote:
-> From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+On Tue, Sep 25, 2018 at 11:17:52AM -0700, Florian Fainelli wrote:
+> On 09/24/2018 04:03 AM, Stefan Wahren wrote:
+> > Am 24.09.2018 um 12:22 schrieb Liviu Dudau:
+> >> Commit a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+> >> Module IO Board V3") adds the bcm2837-rpi-cm3-io3.dts file as a target
+> >> in the Makefile, rather than the .dtb name. This will skip the
+> >> generation of the .dtb file at compile time and will fail the dtbs_install
+> >> target.
+> >>
+> >> Fixes: a7eb26392b893 ("arm64: dts: broadcom: Add reference to Compute
+> >> Module IO Board V3")
+> >>
+> >> Signed-off-by: Liviu Dudau <liviu@dudau.co.uk>
+> > 
+> > Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+> > 
+> > Thanks, i will add a dtbs_install step to my test jobs.
 > 
-> Lochnagar is an evaluation and development board for Cirrus
-> Logic Smart CODEC and Amp devices. It allows the connection of
-> most Cirrus Logic devices on mini-cards, as well as allowing
-> connection of various application processor systems to provide a
-> full evaluation platform.
+> Same here.
+
+I do but I don't seem to catch any errors from it. :-/
+
+> > @Arnd @Olof Should this fix for 4.20 go via pull request or can you
+> > apply it directly to your tree?
 > 
-> Lochnagar provides many pins which can generally be used for an
-> audio function such as an AIF or a PDM interface, but also as
-> GPIOs.
-> 
-> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> ---
->  drivers/pinctrl/cirrus/Kconfig             |   10 +
->  drivers/pinctrl/cirrus/Makefile            |    2 +
->  drivers/pinctrl/cirrus/pinctrl-lochnagar.c | 1161 ++++++++++++++++++++++++++++
->  drivers/pinctrl/cirrus/pinctrl-lochnagar.h |  115 +++
+> That would be my preference here as well.
 
->  include/dt-bindings/pinctrl/lochnagar.h    |  135 ++++
+Applied to next/dt now. Thanks!
 
-This belongs with the binding patch.
 
->  5 files changed, 1423 insertions(+)
->  create mode 100644 drivers/pinctrl/cirrus/pinctrl-lochnagar.c
->  create mode 100644 drivers/pinctrl/cirrus/pinctrl-lochnagar.h
->  create mode 100644 include/dt-bindings/pinctrl/lochnagar.h
+-Olof
