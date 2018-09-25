@@ -1,128 +1,44 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 1/5] arm64: dts: mt7622: add timer, CCI-400 and PMU
- nodes
-Date: Tue, 25 Sep 2018 17:10:02 +0200
-Message-ID: <5cd2bf92-251d-7a48-5bb0-95060d6ccb51@gmail.com>
-References: <7d3ce6a89ffeb221dc3197b763521582bf300577.1534607107.git.ryder.lee@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: arc vendor prefix
+Date: Tue, 25 Sep 2018 10:23:08 -0500
+Message-ID: <20180925152308.GA21227@bogus>
+References: <527da392-9629-792b-08cc-970ffc8173ee@gmail.com>
+ <20180920130952.7eb8e45c@alans-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7d3ce6a89ffeb221dc3197b763521582bf300577.1534607107.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180920130952.7eb8e45c@alans-desktop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
+Cc: Brian Dodge <bdodge09@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Whole series pushed to v4.19-next/dts64
+On Thu, Sep 20, 2018 at 01:09:52PM +0100, Alan Cox wrote:
+> On Tue, 18 Sep 2018 21:05:20 -0400
+> Brian Dodge <bdodge09@gmail.com> wrote:
+> 
+> > Hi,
+> > 
+> > In the linux kernel commit 91ab076e3a2f092254fe5231bbfa92b37fd52e38 the 
+> > vendor prefix "arctic" was added to vendor-prefixes.txt.
+> > 
+> > The original change I authored used "arc" not "arctic", and the device 
+> > tree bindings were added assuming that prefix in commit 
+> > ce9d22573d85341c987f997461ac712e4dbe47b1
+> > 
+> > Perhaps odeju changed the name to arctic in the patch after I created it 
+> > and before it was approved.
+> > 
+> > This pairing isn't really compatible is it?  Either the prefix should be 
+> > reverted to "arc" or the bindings (and driver source) changed to use 
+> > "arctic", as in "arctic,arc2c0608" vs. "arc,arc2c0608"
+> 
+> ARC is a Synopsys registered trademark for the ARC processor line. I'm not
+> sure what the right answer is but I think it might be better to keep to
+> arctic to avoid confusion with arc based products.
 
-Thanks!
+Agreed.
 
-On 18/08/2018 18:02, Ryder Lee wrote:
-> Add device tree entries for timer, ARM CCI-400 and its PMU.
-> Otherwise, we add a cortex-a53-pmu node to enable hw perfevents.
-> 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> ---
-> change since v1:
-> - add a pmu node.
-> ---
->  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 55 ++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> index de2c47bd..d297100 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -79,6 +79,7 @@
->  			#cooling-cells = <2>;
->  			enable-method = "psci";
->  			clock-frequency = <1300000000>;
-> +			cci-control-port = <&cci_control2>;
->  		};
->  
->  		cpu1: cpu@1 {
-> @@ -92,6 +93,7 @@
->  			#cooling-cells = <2>;
->  			enable-method = "psci";
->  			clock-frequency = <1300000000>;
-> +			cci-control-port = <&cci_control2>;
->  		};
->  	};
->  
-> @@ -113,6 +115,13 @@
->  		method      = "smc";
->  	};
->  
-> +	pmu {
-> +		compatible = "arm,cortex-a53-pmu";
-> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
-> +		interrupt-affinity = <&cpu0>, <&cpu1>;
-> +	};
-> +
->  	reserved-memory {
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> @@ -218,6 +227,16 @@
->  		#reset-cells = <1>;
->  	};
->  
-> +        timer: timer@10004000 {
-> +                compatible = "mediatek,mt7622-timer",
-> +                             "mediatek,mt6577-timer";
-> +                reg = <0 0x10004000 0 0x80>;
-> +                interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> +                clocks = <&infracfg CLK_INFRA_APXGPT_PD>,
-> +                         <&topckgen CLK_TOP_RTC>;
-> +                clock-names = "system-clk", "rtc-clk";
-> +        };
-> +
->  	scpsys: scpsys@10006000 {
->  		compatible = "mediatek,mt7622-scpsys",
->  			     "syscon";
-> @@ -325,6 +344,42 @@
->  		      <0 0x10360000 0 0x2000>;
->  	};
->  
-> +	cci: cci@10390000 {
-> +		compatible = "arm,cci-400";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		reg = <0 0x10390000 0 0x1000>;
-> +		ranges = <0 0 0x10390000 0x10000>;
-> +
-> +		cci_control0: slave-if@1000 {
-> +			compatible = "arm,cci-400-ctrl-if";
-> +			interface-type = "ace-lite";
-> +			reg = <0x1000 0x1000>;
-> +		};
-> +
-> +		cci_control1: slave-if@4000 {
-> +			compatible = "arm,cci-400-ctrl-if";
-> +			interface-type = "ace";
-> +			reg = <0x4000 0x1000>;
-> +		};
-> +
-> +		cci_control2: slave-if@5000 {
-> +			compatible = "arm,cci-400-ctrl-if";
-> +			interface-type = "ace";
-> +			reg = <0x5000 0x1000>;
-> +		};
-> +
-> +		pmu@9000 {
-> +			compatible = "arm,cci-400-pmu,r1";
-> +			reg = <0x9000 0x5000>;
-> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-> +	};
-> +
->  	auxadc: adc@11001000 {
->  		compatible = "mediatek,mt7622-auxadc";
->  		reg = <0 0x11001000 0 0x1000>;
-> 
+Rob
