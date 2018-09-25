@@ -1,39 +1,42 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v5 0/2] Add an initial DT binding doc for ina3221
-Date: Tue, 25 Sep 2018 15:59:28 -0700
-Message-ID: <20180925225930.31886-1-nicoleotsuka@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] remoteproc: qcom: pas: Add QCS404 remoteprocs
+Date: Tue, 25 Sep 2018 16:35:50 -0700
+Message-ID: <20180925233550.GB27436@tuxbook-pro>
+References: <20180920172237.30965-1-bjorn.andersson@linaro.org>
+ <f0887494a9957496399046bac9b1fa32@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f0887494a9957496399046bac9b1fa32@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds a initial DT binding doc for ina3221. It defines
-a child node to describe the input source of each ina3221 channel.
-Then it changes the driver to handle the information properly.
+On Tue 25 Sep 03:18 PDT 2018, Sibi Sankar wrote:
+> On 2018-09-20 22:52, Bjorn Andersson wrote:
+> > diff --git a/drivers/remoteproc/qcom_adsp_pil.c
+> > b/drivers/remoteproc/qcom_adsp_pil.c
+> > index da2254ea1135..fcbb816a9698 100644
+> > --- a/drivers/remoteproc/qcom_adsp_pil.c
+> > +++ b/drivers/remoteproc/qcom_adsp_pil.c
+> > @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init =
+> > {
+> >  		.ssctl_id = 0x16,
+> >  };
+> > 
+> > +static const struct adsp_data wcss_resource_init = {
+> > +	.crash_reason_smem = 421,
+> > +	.firmware_name = "wcnss.mdt",
+> > +	.pas_id = 6,
+> > +	.ssr_name = "mpss",
+> > +	.sysmon_name = "wlan",
+> 
+> Shouldn't the sysmon name be "wcnss" instead of "wlan"?
+> 
 
-Changelog
-v4->v5:
- * Changed two property names of child node (PATCH-1)
- * Changed the driver accordingly and simplified is_visible (PATCH-2)
-v3->v4:
- * Fixed one place in child DT node bindings (PATCH-1)
- * Changed the driver accordingly and added is_visible (PATCH-2)
-v2->v3:
- * Fixed two places in DT bindings (PATCH-1)
-v1->v2:
- * Redefined DT bindings (detail in PATCH-1)
- * Changed the driver code accordingly (detail in PATCH-2)
+I derived this from the downstream kernel, perhaps I got it wrong?
 
-Nicolin Chen (2):
-  dt-bindings: hwmon: Add ina3221 documentation
-  hwmon: ina3221: Read channel input source info from DT
-
- .../devicetree/bindings/hwmon/ina3221.txt     |  49 ++++++
- Documentation/hwmon/ina3221                   |   1 +
- drivers/hwmon/ina3221.c                       | 161 ++++++++++++++++--
- 3 files changed, 197 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
-
--- 
-2.17.1
+Regards,
+Bjorn
