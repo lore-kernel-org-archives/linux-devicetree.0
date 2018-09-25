@@ -1,196 +1,372 @@
-Return-Path: <SRS0=3g/V=MG=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v5 1/2] watchdog: rza_wdt: Support longer timeouts
-Date: Mon, 24 Sep 2018 08:58:15 -0500
-Message-Id: <20180924135816.19474-2-chris.brandt@renesas.com>
-In-Reply-To: <20180924135816.19474-1-chris.brandt@renesas.com>
-References: <20180924135816.19474-1-chris.brandt@renesas.com>
-To: Guenter Roeck <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=7L+n=MH=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv2 2/6] EDAC, altera: Combine Stratix10 and Arria10 probe functions
+Date: Tue, 25 Sep 2018 08:48:58 -0500
+Message-Id: <1537883342-30180-3-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
+To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/A2 watchdog timer extends the clock source options in order to
-allow for longer timeouts.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
----
-v5:
- * Added type casting as pointed out by kbuild test robot
- * Added Reviewed-by
-v4:
- * Documented CKS_3BIT/CKS_4BIT better
- * Changed 16384 and 4194304 into #define
- * Removed rza_wdt.timeout
- * Removed extra ( ) from DIV_ROUND_UP
- * Removed check for counter value > 256
- * Added set_timeout function
- * Removed checking for new timeout value in ping function
- * Removed unneeded 'else' case when checking .data in probe
-v3:
- * Removed + 1 from DIV_ROUND_UP line
- * resetting to 0 if time to big did not make as much sense are resetting
-   to 256
-v2:
-* use DIV_ROUND_UP
-* use %u for pr_debug
-* use of_match data to determine the size of CKS register
----
- drivers/watchdog/rza_wdt.c | 88 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 70 insertions(+), 18 deletions(-)
+On Stratix10, the ECC offsets are similar to the existing
+Arria10 functions and this can be leveraged to simplify
+the EDAC driver as follows:
 
-diff --git a/drivers/watchdog/rza_wdt.c b/drivers/watchdog/rza_wdt.c
-index e618218d2374..920fd4b31f29 100644
---- a/drivers/watchdog/rza_wdt.c
-+++ b/drivers/watchdog/rza_wdt.c
-@@ -14,6 +14,7 @@
- #include <linux/delay.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/watchdog.h>
- 
-@@ -34,12 +35,45 @@
- #define WRCSR_RSTE		BIT(6)
- #define WRCSR_CLEAR_WOVF	0xA500	/* special value */
- 
-+/* The maximum CKS register setting value to get the longest timeout */
-+#define CKS_3BIT		0x7
-+#define CKS_4BIT		0xF
-+
-+#define DIVIDER_3BIT		16384	/* Clock divider when CKS = 0x7 */
-+#define DIVIDER_4BIT		4194304	/* Clock divider when CKS = 0xF */
-+
- struct rza_wdt {
- 	struct watchdog_device wdev;
- 	void __iomem *base;
- 	struct clk *clk;
-+	u8 count;
-+	u8 cks;
+1. Fold Stratix10 specifics into Arria10 structures and
+functions.
+2. Implement the Stratix10 System Manager register accesses
+using a custom regmap to allow use with the Arria10 System
+Manager regmaps.
+3. Stratix10 double bit errors are implemented as SError
+instead of interrupts so use a panic notifier.
+
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+v2  No changes
+---
+ drivers/edac/altera_edac.c | 263 +++++++++++++++------------------------------
+ drivers/edac/altera_edac.h |  10 +-
+ 2 files changed, 90 insertions(+), 183 deletions(-)
+
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 5762c3c383f2..e2b66a20d064 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -2146,6 +2146,35 @@ static const struct irq_domain_ops a10_eccmgr_ic_ops = {
+ 	.xlate = irq_domain_xlate_twocell,
  };
  
-+static void rza_wdt_calc_timeout(struct rza_wdt *priv, int timeout)
++/************** Stratix 10 EDAC Double Bit Error Handler ************/
++#define to_a10edac(p, m) container_of(p, struct altr_arria10_edac, m)
++
++/*
++ * The double bit error is handled through SError which is fatal. This is
++ * called as a panic notifier to printout ECC error info as part of the panic.
++ */
++static int s10_edac_dberr_handler(struct notifier_block *this,
++				  unsigned long event, void *ptr)
 +{
-+	unsigned long rate = clk_get_rate(priv->clk);
-+	unsigned int ticks;
++	struct altr_arria10_edac *edac = to_a10edac(this, panic_notifier);
++	int err_addr, dberror;
 +
-+	if (priv->cks == CKS_4BIT) {
-+		ticks = DIV_ROUND_UP(timeout * rate, DIVIDER_4BIT);
++	regmap_read(edac->ecc_mgr_map, S10_SYSMGR_ECC_INTSTAT_DERR_OFST,
++		    &dberror);
++	regmap_write(edac->ecc_mgr_map, S10_SYSMGR_UE_VAL_OFST, dberror);
++	if (dberror & S10_DDR0_IRQ_MASK) {
++		regmap_read(edac->ecc_mgr_map, S10_DERRADDR_OFST, &err_addr);
++		regmap_write(edac->ecc_mgr_map, S10_SYSMGR_UE_ADDR_OFST,
++			     err_addr);
++		edac_printk(KERN_ERR, EDAC_MC,
++			    "EDAC: [Uncorrectable errors @ 0x%08X]\n\n",
++			    err_addr);
++	}
 +
-+		/*
-+		 * Since max_timeout was set in probe, we know that the timeout
-+		 * value passed will never calculate to a tick value greater
-+		 * than 256.
-+		 */
-+		priv->count = 256 - ticks;
++	return NOTIFY_DONE;
++}
 +
++/****************** Arria 10 EDAC Probe Function *********************/
+ static int altr_edac_a10_probe(struct platform_device *pdev)
+ {
+ 	struct altr_arria10_edac *edac;
+@@ -2159,8 +2188,33 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, edac);
+ 	INIT_LIST_HEAD(&edac->a10_ecc_devices);
+ 
+-	edac->ecc_mgr_map = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
++	if (socfpga_is_a10()) {
++		edac->ecc_mgr_map =
++			syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
+ 							"altr,sysmgr-syscon");
 +	} else {
-+		/* Start timer with longest timeout */
-+		priv->count = 0;
++		struct device_node *sysmgr_np;
++		struct resource res;
++		void __iomem *base;
++
++		sysmgr_np = of_parse_phandle(pdev->dev.of_node,
++					     "altr,sysmgr-syscon", 0);
++		if (!sysmgr_np) {
++			edac_printk(KERN_ERR, EDAC_DEVICE,
++				    "Unable to find altr,sysmgr-syscon\n");
++			return -ENODEV;
++		}
++
++		if (of_address_to_resource(sysmgr_np, 0, &res))
++			return -ENOMEM;
++
++		/* Need physical address for SMCC call */
++		base = (void __iomem *)res.start;
++
++		edac->ecc_mgr_map = devm_regmap_init(&pdev->dev, NULL, base,
++						     &s10_sdram_regmap_cfg);
 +	}
 +
-+	pr_debug("%s: timeout set to %u (WTCNT=%d)\n", __func__,
-+		 timeout, priv->count);
-+}
+ 	if (IS_ERR(edac->ecc_mgr_map)) {
+ 		edac_printk(KERN_ERR, EDAC_DEVICE,
+ 			    "Unable to get syscon altr,sysmgr-syscon\n");
+@@ -2187,14 +2241,38 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+ 					 altr_edac_a10_irq_handler,
+ 					 edac);
+ 
+-	edac->db_irq = platform_get_irq(pdev, 1);
+-	if (edac->db_irq < 0) {
+-		dev_err(&pdev->dev, "No DBERR IRQ resource\n");
+-		return edac->db_irq;
++	if (socfpga_is_a10()) {
++		edac->db_irq = platform_get_irq(pdev, 1);
++		if (edac->db_irq < 0) {
++			dev_err(&pdev->dev, "No DBERR IRQ resource\n");
++			return edac->db_irq;
++		}
++		irq_set_chained_handler_and_data(edac->db_irq,
++						 altr_edac_a10_irq_handler,
++						 edac);
++	} else {
++		int dberror, err_addr;
 +
- static int rza_wdt_start(struct watchdog_device *wdev)
- {
- 	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
-@@ -51,13 +85,12 @@ static int rza_wdt_start(struct watchdog_device *wdev)
- 	readb(priv->base + WRCSR);
- 	writew(WRCSR_CLEAR_WOVF, priv->base + WRCSR);
- 
--	/*
--	 * Start timer with slowest clock source and reset option enabled.
--	 */
-+	rza_wdt_calc_timeout(priv, wdev->timeout);
++		edac->panic_notifier.notifier_call = s10_edac_dberr_handler;
++		atomic_notifier_chain_register(&panic_notifier_list,
++					       &edac->panic_notifier);
 +
- 	writew(WRCSR_MAGIC | WRCSR_RSTE, priv->base + WRCSR);
--	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
--	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME | WTSCR_CKS(7),
--	       priv->base + WTCSR);
-+	writew(WTCNT_MAGIC | priv->count, priv->base + WTCNT);
-+	writew(WTCSR_MAGIC | WTSCR_WT | WTSCR_TME |
-+	       WTSCR_CKS(priv->cks), priv->base + WTCSR);
- 
- 	return 0;
- }
-@@ -75,8 +108,17 @@ static int rza_wdt_ping(struct watchdog_device *wdev)
- {
- 	struct rza_wdt *priv = watchdog_get_drvdata(wdev);
- 
--	writew(WTCNT_MAGIC | 0, priv->base + WTCNT);
-+	writew(WTCNT_MAGIC | priv->count, priv->base + WTCNT);
- 
-+	pr_debug("%s: timeout = %u\n", __func__, wdev->timeout);
-+
-+	return 0;
-+}
-+
-+static int rza_set_timeout(struct watchdog_device *wdev, unsigned int timeout)
-+{
-+	wdev->timeout = timeout;
-+	rza_wdt_start(wdev);
- 	return 0;
- }
- 
-@@ -121,6 +163,7 @@ static const struct watchdog_ops rza_wdt_ops = {
- 	.start = rza_wdt_start,
- 	.stop = rza_wdt_stop,
- 	.ping = rza_wdt_ping,
-+	.set_timeout = rza_set_timeout,
- 	.restart = rza_wdt_restart,
- };
- 
-@@ -150,20 +193,28 @@ static int rza_wdt_probe(struct platform_device *pdev)
- 		return -ENOENT;
++		/* Printout a message if uncorrectable error previously. */
++		regmap_read(edac->ecc_mgr_map, S10_SYSMGR_UE_VAL_OFST,
++			    &dberror);
++		if (dberror) {
++			regmap_read(edac->ecc_mgr_map, S10_SYSMGR_UE_ADDR_OFST,
++				    &err_addr);
++			edac_printk(KERN_ERR, EDAC_DEVICE,
++				    "Previous Boot UE detected[0x%X] @ 0x%X\n",
++				    dberror, err_addr);
++			/* Reset the sticky registers */
++			regmap_write(edac->ecc_mgr_map,
++				     S10_SYSMGR_UE_VAL_OFST, 0);
++			regmap_write(edac->ecc_mgr_map,
++				     S10_SYSMGR_UE_ADDR_OFST, 0);
++		}
  	}
+-	irq_set_chained_handler_and_data(edac->db_irq,
+-					 altr_edac_a10_irq_handler,
+-					 edac);
  
--	/* Assume slowest clock rate possible (CKS=7) */
--	rate /= 16384;
--
- 	priv->wdev.info = &rza_wdt_ident,
- 	priv->wdev.ops = &rza_wdt_ops,
- 	priv->wdev.parent = &pdev->dev;
+ 	for_each_child_of_node(pdev->dev.of_node, child) {
+ 		if (!of_device_is_available(child))
+@@ -2211,7 +2289,8 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
  
--	/*
--	 * Since the max possible timeout of our 8-bit count register is less
--	 * than a second, we must use max_hw_heartbeat_ms.
--	 */
--	priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
--	dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
--		 priv->wdev.max_hw_heartbeat_ms);
-+	priv->cks = (u8)(uintptr_t)of_device_get_match_data(&pdev->dev);
-+	if (priv->cks == CKS_4BIT) {
-+		/* Assume slowest clock rate possible (CKS=0xF) */
-+		priv->wdev.max_timeout = (DIVIDER_4BIT * U8_MAX) / rate;
-+
-+	} else if (priv->cks == CKS_3BIT) {
-+		/* Assume slowest clock rate possible (CKS=7) */
-+		rate /= DIVIDER_3BIT;
-+
-+		/*
-+		 * Since the max possible timeout of our 8-bit count
-+		 * register is less than a second, we must use
-+		 * max_hw_heartbeat_ms.
-+		 */
-+		priv->wdev.max_hw_heartbeat_ms = (1000 * U8_MAX) / rate;
-+		dev_dbg(&pdev->dev, "max hw timeout of %dms\n",
-+			 priv->wdev.max_hw_heartbeat_ms);
-+	}
+ 			altr_edac_a10_device_add(edac, child);
  
- 	priv->wdev.min_timeout = 1;
- 	priv->wdev.timeout = DEFAULT_TIMEOUT;
-@@ -179,7 +230,8 @@ static int rza_wdt_probe(struct platform_device *pdev)
- }
+-		else if (of_device_is_compatible(child, "altr,sdram-edac-a10"))
++		else if ((of_device_is_compatible(child, "altr,sdram-edac-a10")) ||
++			 (of_device_is_compatible(child, "altr,sdram-edac-s10")))
+ 			of_platform_populate(pdev->dev.of_node,
+ 					     altr_sdram_ctrl_of_match,
+ 					     NULL, &pdev->dev);
+@@ -2222,6 +2301,7 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
  
- static const struct of_device_id rza_wdt_of_match[] = {
--	{ .compatible = "renesas,rza-wdt", },
-+	{ .compatible = "renesas,r7s9210-wdt",	.data = (void *)CKS_4BIT, },
-+	{ .compatible = "renesas,rza-wdt",	.data = (void *)CKS_3BIT, },
- 	{ /* sentinel */ }
+ static const struct of_device_id altr_edac_a10_of_match[] = {
+ 	{ .compatible = "altr,socfpga-a10-ecc-manager" },
++	{ .compatible = "altr,socfpga-s10-ecc-manager" },
+ 	{},
  };
- MODULE_DEVICE_TABLE(of, rza_wdt_of_match);
+ MODULE_DEVICE_TABLE(of, altr_edac_a10_of_match);
+@@ -2235,171 +2315,6 @@ static struct platform_driver altr_edac_a10_driver = {
+ };
+ module_platform_driver(altr_edac_a10_driver);
+ 
+-/************** Stratix 10 EDAC Device Controller Functions> ************/
+-
+-#define to_s10edac(p, m) container_of(p, struct altr_stratix10_edac, m)
+-
+-/*
+- * The double bit error is handled through SError which is fatal. This is
+- * called as a panic notifier to printout ECC error info as part of the panic.
+- */
+-static int s10_edac_dberr_handler(struct notifier_block *this,
+-				  unsigned long event, void *ptr)
+-{
+-	struct altr_stratix10_edac *edac = to_s10edac(this, panic_notifier);
+-	int err_addr, dberror;
+-
+-	s10_protected_reg_read(edac, S10_SYSMGR_ECC_INTSTAT_DERR_OFST,
+-			       &dberror);
+-	/* Remember the UE Errors for a reboot */
+-	s10_protected_reg_write(edac, S10_SYSMGR_UE_VAL_OFST, dberror);
+-	if (dberror & S10_DDR0_IRQ_MASK) {
+-		s10_protected_reg_read(edac, S10_DERRADDR_OFST, &err_addr);
+-		/* Remember the UE Error address */
+-		s10_protected_reg_write(edac, S10_SYSMGR_UE_ADDR_OFST,
+-					err_addr);
+-		edac_printk(KERN_ERR, EDAC_MC,
+-			    "EDAC: [Uncorrectable errors @ 0x%08X]\n\n",
+-			    err_addr);
+-	}
+-
+-	return NOTIFY_DONE;
+-}
+-
+-static void altr_edac_s10_irq_handler(struct irq_desc *desc)
+-{
+-	struct altr_stratix10_edac *edac = irq_desc_get_handler_data(desc);
+-	struct irq_chip *chip = irq_desc_get_chip(desc);
+-	int irq = irq_desc_get_irq(desc);
+-	int bit, sm_offset, irq_status;
+-
+-	sm_offset = S10_SYSMGR_ECC_INTSTAT_SERR_OFST;
+-
+-	chained_irq_enter(chip, desc);
+-
+-	s10_protected_reg_read(NULL, sm_offset, &irq_status);
+-
+-	for_each_set_bit(bit, (unsigned long *)&irq_status, 32) {
+-		irq = irq_linear_revmap(edac->domain, bit);
+-		if (irq)
+-			generic_handle_irq(irq);
+-	}
+-
+-	chained_irq_exit(chip, desc);
+-}
+-
+-static void s10_eccmgr_irq_mask(struct irq_data *d)
+-{
+-	struct altr_stratix10_edac *edac = irq_data_get_irq_chip_data(d);
+-
+-	s10_protected_reg_write(edac, S10_SYSMGR_ECC_INTMASK_SET_OFST,
+-				BIT(d->hwirq));
+-}
+-
+-static void s10_eccmgr_irq_unmask(struct irq_data *d)
+-{
+-	struct altr_stratix10_edac *edac = irq_data_get_irq_chip_data(d);
+-
+-	s10_protected_reg_write(edac, S10_SYSMGR_ECC_INTMASK_CLR_OFST,
+-				BIT(d->hwirq));
+-}
+-
+-static int s10_eccmgr_irqdomain_map(struct irq_domain *d, unsigned int irq,
+-				    irq_hw_number_t hwirq)
+-{
+-	struct altr_stratix10_edac *edac = d->host_data;
+-
+-	irq_set_chip_and_handler(irq, &edac->irq_chip, handle_simple_irq);
+-	irq_set_chip_data(irq, edac);
+-	irq_set_noprobe(irq);
+-
+-	return 0;
+-}
+-
+-static const struct irq_domain_ops s10_eccmgr_ic_ops = {
+-	.map = s10_eccmgr_irqdomain_map,
+-	.xlate = irq_domain_xlate_twocell,
+-};
+-
+-static int altr_edac_s10_probe(struct platform_device *pdev)
+-{
+-	struct altr_stratix10_edac *edac;
+-	struct device_node *child;
+-	int dberror, err_addr;
+-
+-	edac = devm_kzalloc(&pdev->dev, sizeof(*edac), GFP_KERNEL);
+-	if (!edac)
+-		return -ENOMEM;
+-
+-	edac->dev = &pdev->dev;
+-	platform_set_drvdata(pdev, edac);
+-	INIT_LIST_HEAD(&edac->s10_ecc_devices);
+-
+-	edac->irq_chip.name = pdev->dev.of_node->name;
+-	edac->irq_chip.irq_mask = s10_eccmgr_irq_mask;
+-	edac->irq_chip.irq_unmask = s10_eccmgr_irq_unmask;
+-	edac->domain = irq_domain_add_linear(pdev->dev.of_node, 64,
+-					     &s10_eccmgr_ic_ops, edac);
+-	if (!edac->domain) {
+-		dev_err(&pdev->dev, "Error adding IRQ domain\n");
+-		return -ENOMEM;
+-	}
+-
+-	edac->sb_irq = platform_get_irq(pdev, 0);
+-	if (edac->sb_irq < 0) {
+-		dev_err(&pdev->dev, "No SBERR IRQ resource\n");
+-		return edac->sb_irq;
+-	}
+-
+-	irq_set_chained_handler_and_data(edac->sb_irq,
+-					 altr_edac_s10_irq_handler,
+-					 edac);
+-
+-	edac->panic_notifier.notifier_call = s10_edac_dberr_handler;
+-	atomic_notifier_chain_register(&panic_notifier_list,
+-				       &edac->panic_notifier);
+-
+-	/* Printout a message if uncorrectable error previously. */
+-	s10_protected_reg_read(edac, S10_SYSMGR_UE_VAL_OFST, &dberror);
+-	if (dberror) {
+-		s10_protected_reg_read(edac, S10_SYSMGR_UE_ADDR_OFST,
+-				       &err_addr);
+-		edac_printk(KERN_ERR, EDAC_DEVICE,
+-			    "Previous Boot UE detected[0x%X] @ 0x%X\n",
+-			    dberror, err_addr);
+-		/* Reset the sticky registers */
+-		s10_protected_reg_write(edac, S10_SYSMGR_UE_VAL_OFST, 0);
+-		s10_protected_reg_write(edac, S10_SYSMGR_UE_ADDR_OFST, 0);
+-	}
+-
+-	for_each_child_of_node(pdev->dev.of_node, child) {
+-		if (!of_device_is_available(child))
+-			continue;
+-
+-		if (of_device_is_compatible(child, "altr,sdram-edac-s10"))
+-			of_platform_populate(pdev->dev.of_node,
+-					     altr_sdram_ctrl_of_match,
+-					     NULL, &pdev->dev);
+-	}
+-
+-	return 0;
+-}
+-
+-static const struct of_device_id altr_edac_s10_of_match[] = {
+-	{ .compatible = "altr,socfpga-s10-ecc-manager" },
+-	{},
+-};
+-MODULE_DEVICE_TABLE(of, altr_edac_s10_of_match);
+-
+-static struct platform_driver altr_edac_s10_driver = {
+-	.probe =  altr_edac_s10_probe,
+-	.driver = {
+-		.name = "socfpga_s10_ecc_manager",
+-		.of_match_table = altr_edac_s10_of_match,
+-	},
+-};
+-module_platform_driver(altr_edac_s10_driver);
+-
+ MODULE_LICENSE("GPL v2");
+ MODULE_AUTHOR("Thor Thayer");
+ MODULE_DESCRIPTION("EDAC Driver for Altera Memories");
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index 81f0554e09de..d925c4cee01b 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -370,6 +370,7 @@ struct altr_arria10_edac {
+ 	struct irq_domain	*domain;
+ 	struct irq_chip		irq_chip;
+ 	struct list_head	a10_ecc_devices;
++	struct notifier_block	panic_notifier;
+ };
+ 
+ /*
+@@ -437,13 +438,4 @@ struct altr_arria10_edac {
+ #define INTEL_SIP_SMC_REG_WRITE \
+ 	INTEL_SIP_SMC_FAST_CALL_VAL(INTEL_SIP_SMC_FUNCID_REG_WRITE)
+ 
+-struct altr_stratix10_edac {
+-	struct device		*dev;
+-	int sb_irq;
+-	struct irq_domain	*domain;
+-	struct irq_chip		irq_chip;
+-	struct list_head	s10_ecc_devices;
+-	struct notifier_block	panic_notifier;
+-};
+-
+ #endif	/* #ifndef _ALTERA_EDAC_H */
 -- 
-2.16.1
+2.7.4
