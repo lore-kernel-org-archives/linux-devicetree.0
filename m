@@ -1,103 +1,88 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
-Date: Tue, 25 Sep 2018 09:24:07 +0200
-Message-ID: <20180925072407.GA6999@hirez.programming.kicks-ass.net>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 4/8] phy: renesas: rcar-gen3-usb2: Check a property to
+ use otg pins
+Date: Tue, 25 Sep 2018 09:25:29 +0200
+Message-ID: <20180925072528.zginn24mkg5ggvxh@verge.net.au>
+References: <1537530804-19399-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1537530804-19399-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
+In-Reply-To: <1537530804-19399-5-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2018 at 10:36:22PM +0800, Guo Ren wrote:
-> diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
-> new file mode 100644
-> index 0000000..f0de49c
-> --- /dev/null
-> +++ b/arch/csky/abiv1/inc/abi/cacheflush.h
-> @@ -0,0 +1,43 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#ifndef __ABI_CSKY_CACHEFLUSH_H
-> +#define __ABI_CSKY_CACHEFLUSH_H
-> +
-> +#include <linux/compiler.h>
-> +#include <asm/string.h>
-> +#include <asm/cache.h>
-> +
-> +#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
-> +extern void flush_dcache_page(struct page *);
-> +
-> +#define flush_cache_mm(mm)		cache_wbinv_all()
-> +#define flush_cache_page(vma,page,pfn)	cache_wbinv_all()
-> +#define flush_cache_dup_mm(mm)		cache_wbinv_all()
-> +
-> +#define flush_cache_range(mm,start,end)	cache_wbinv_range(start, end)
-                             ^^^ should be vma
+On Fri, Sep 21, 2018 at 08:53:20PM +0900, Yoshihiro Shimoda wrote:
+> Since All R-Car Gen3 SoCs have dedicated otg pins actually but
+> some boards don't use the otg pins (e.g. R-Car D3 Draak and R-Car E3
+> Ebisu), the driver should not choose SoC model base by using
+> rcar_gen3_phy_usb2_match_table's data. So, this patch checks a
+> "renesas,no-otg-pins" property to set the "uses_otg_pins".
+> 
+> Note that since r8a77995-draak.dts and r8a77990-ebisu.dts don't have
+> 'dr_mode = "otg";' for now, if we apply this patch, no behavior
+> changes (the value of "uses_otg_pins" is false).
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
-> +#endif /* __ABI_CSKY_CACHEFLUSH_H */
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-
-> diff --git a/arch/csky/abiv1/inc/abi/tlb.h b/arch/csky/abiv1/inc/abi/tlb.h
-> new file mode 100644
-> index 0000000..6d461f3
-> --- /dev/null
-> +++ b/arch/csky/abiv1/inc/abi/tlb.h
-> @@ -0,0 +1,12 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#ifndef __ABI_CSKY_TLB_H
-> +#define __ABI_CSKY_TLB_H
-> +
-> +#define tlb_start_vma(tlb, vma) \
-> +	do { \
-> +		if (!tlb->fullmm) \
-> +			cache_wbinv_all(); \
-> +	}  while (0)
-> +#endif /* __ABI_CSKY_TLB_H */
-
-That should be:
-
-	if (!tlb->fullmm)
-		flush_cache_range(vma, vma->vm_start, vma->vm_end);
-
-Because as per the whole abiv1 vs abiv2, you don't need write back
-invalidation for v2 at all, also, you only need to invalidate the vma
-range, no reason to shoot everything down.
-
-Also, I'll be shortly removing this:
-
-  https://lkml.kernel.org/r/20180913092812.071989585@infradead.org
-
-> diff --git a/arch/csky/abiv2/inc/abi/cacheflush.h b/arch/csky/abiv2/inc/abi/cacheflush.h
-> new file mode 100644
-> index 0000000..756beb7
-> --- /dev/null
-> +++ b/arch/csky/abiv2/inc/abi/cacheflush.h
-> @@ -0,0 +1,40 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +#ifndef __ABI_CSKY_CACHEFLUSH_H
-> +#define __ABI_CSKY_CACHEFLUSH_H
-> +
-> +/* Keep includes the same across arches.  */
-> +#include <linux/mm.h>
-> +
-> +/*
-> + * The cache doesn't need to be flushed when TLB entries change when
-> + * the cache is mapped to physical memory, not virtual memory
-> + */
-> +#define flush_cache_all()			do { } while (0)
-> +#define flush_cache_mm(mm)			do { } while (0)
-> +#define flush_cache_dup_mm(mm)			do { } while (0)
-> +#define flush_cache_range(vma, start, end)	do { } while (0)
-                             ^^^ like here..
-
-> +#endif /* __ABI_CSKY_TLB_H */
+> ---
+>  drivers/phy/renesas/phy-rcar-gen3-usb2.c | 24 ++++++------------------
+>  1 file changed, 6 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> index d69317e..856056e 100644
+> --- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> +++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
+> @@ -78,8 +78,6 @@
+>  #define USB2_ADPCTRL_IDPULLUP		BIT(5)	/* 1 = ID sampling is enabled */
+>  #define USB2_ADPCTRL_DRVVBUS		BIT(4)
+>  
+> -#define RCAR_GEN3_PHY_HAS_DEDICATED_PINS	1
+> -
+>  struct rcar_gen3_chan {
+>  	void __iomem *base;
+>  	struct extcon_dev *extcon;
+> @@ -385,21 +383,10 @@ static irqreturn_t rcar_gen3_phy_usb2_irq(int irq, void *_ch)
+>  }
+>  
+>  static const struct of_device_id rcar_gen3_phy_usb2_match_table[] = {
+> -	{
+> -		.compatible = "renesas,usb2-phy-r8a7795",
+> -		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
+> -	},
+> -	{
+> -		.compatible = "renesas,usb2-phy-r8a7796",
+> -		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
+> -	},
+> -	{
+> -		.compatible = "renesas,usb2-phy-r8a77965",
+> -		.data = (void *)RCAR_GEN3_PHY_HAS_DEDICATED_PINS,
+> -	},
+> -	{
+> -		.compatible = "renesas,rcar-gen3-usb2-phy",
+> -	},
+> +	{ .compatible = "renesas,usb2-phy-r8a7795" },
+> +	{ .compatible = "renesas,usb2-phy-r8a7796" },
+> +	{ .compatible = "renesas,usb2-phy-r8a77965" },
+> +	{ .compatible = "renesas,rcar-gen3-usb2-phy" },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, rcar_gen3_phy_usb2_match_table);
+> @@ -445,7 +432,8 @@ static int rcar_gen3_phy_usb2_probe(struct platform_device *pdev)
+>  	if (of_usb_get_dr_mode_by_phy(dev->of_node, 0) == USB_DR_MODE_OTG) {
+>  		int ret;
+>  
+> -		channel->uses_otg_pins = (uintptr_t)of_device_get_match_data(dev);
+> +		channel->uses_otg_pins = !of_property_read_bool(dev->of_node,
+> +							"renesas,no-otg-pins");
+>  		channel->extcon = devm_extcon_dev_allocate(dev,
+>  							rcar_gen3_phy_cable);
+>  		if (IS_ERR(channel->extcon))
+> -- 
+> 1.9.1
+> 
