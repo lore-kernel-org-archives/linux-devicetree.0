@@ -1,44 +1,101 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 01/03] dt-bindings: clock: Add Clock Management Unit
- for Actions Semi S500 SoC
-Date: Tue, 25 Sep 2018 14:10:47 -0500
-Message-ID: <20180925191047.GA14410@bogus>
-References: <CADHB5bBkyE90LVrWjt0ziU+oe=4sc8G_513VGECc++6xQ2ACdA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Documentation for qcom,eud
+Date: Tue, 25 Sep 2018 14:25:07 -0500
+Message-ID: <20180925192507.GA19360@bogus>
+References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
+ <1536096853-30473-2-git-send-email-pheragu@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CADHB5bBkyE90LVrWjt0ziU+oe=4sc8G_513VGECc++6xQ2ACdA@mail.gmail.com>
+In-Reply-To: <1536096853-30473-2-git-send-email-pheragu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux@armlinux.org.uk, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Guilherme =?iso-8859-1?B?Ry4gU2lt9WVz?= <guilherme.simoes@lsitec.org.br>, Jon maddog Hall <jon.maddog.hall@gmail.com>, mkzuffo@lsi.usp.br, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, sboyd@kernel.org, mark.rutland@arm.com, linux@cubietech.com, support@cubietech.com, catalin.marinas@arm.com, Michael Turquette <mturquette@baylibre.com>, will.deacon@arm.com, thomas liau <thomas.liau@actions-semi.com>, darren@cubietech.com, jeff.chen@actions-semi.com, pn@denx.de, mp-cs@actions-semi.com, Laisa
+To: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, rnayak@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04, 2018 at 12:36:36PM -0300, Edgar Bernardi Righi wrote:
-> Add Clock Management Unit for Actions Semi S500 SoC. Dt-Bindings
-> constants added.
-> Tested on a Lemaker Guitar board.
+On Tue, Sep 04, 2018 at 02:34:12PM -0700, Prakruthi Deepak Heragu wrote:
+> Documentation for Embedded USB Debugger (EUD) device tree bindings.
 > 
-> Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
+> ---
+>  .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 41 ++++++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
 > 
-> diff --git a/include/dt-bindings/clock/actions,s500-cmu.h
-> b/include/dt-bindings/clock/actions,s500-cmu.h
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
 > new file mode 100644
-> index 000000000000..34e5849ffcf1
+> index 0000000..a03021a
 > --- /dev/null
-> +++ b/include/dt-bindings/clock/actions,s500-cmu.h
-> @@ -0,0 +1,78 @@
-> +// SPDX-License-Identifier: GPL-2.0+
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
+> @@ -0,0 +1,41 @@
+> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
+> +
+> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
+> +on chip to support the USB-based debug and trace capabilities.
 
-Headers should be /* */ style comments.
+Is it just for debug and normally bypassed? 
 
-Otherwise,
+> +
+> +Required properties:
+> +
+> + - compatible:  Should be "qcom,msm-eud"
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Needs to be SoC specific (though a fallback is fine).
 
-> +//
-> +// Device Tree binding constants for Actions Semi S500 Clock Management Unit
-> +//
-> +// Copyright (c) 2014 Actions Semi Inc.
-> +// Copyright (c) 2018 Linaro Ltd.
-> +// Copyright (c) 2018 LSI-TEC - Caninos Loucos
+> + - interrupts:  Interrupt number
+> + - reg: Should be address and size of EUD register space
+> +
+> +Driver notifies clients for VBUS attach/detach and charger enable/disable
+
+Bindings are for h/w blocks, not drivers.
+
+> +events. The link between client and EUD is established via a directed
+> +graph. EUD driver has one endpoint of the graph link mentioning EUD as an
+> +output link and clients registered for these notifications from the EUD
+> +should have the other endpoint of the graph link as an input link. 
+
+OF graph is for describing data flows (i.e. h/w connections), not 
+clients wanting some event.
+
+> Each of
+> +these endpoints should contain a 'remote-endpoint' phandle property that
+> +points to the corresponding endpoint in the port of the remote device.
+
+You don't need to describe how the graph binding works. Just what the 
+port assignments are.
+
+I worry this is going to collide with using the graph binding for USB 
+connectors.
+
+> +
+> +An example for EUD device node:
+> +
+> +	eud: qcom,msm-eud@88e0000 {
+> +		compatible = "qcom,msm-eud";
+> +		interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
+> +		reg = <0x88e0000 0x4000>;
+> +		port {
+> +                	eud_output: endpoint {
+> +                        	remote-endpoint = <&usb3_input>;
+> +                        };
+> +        	};
+> +	};
+> +
+> +An example for EUD client:
+
+What are possible clients? Could we want to switch clients at runtime?
+
+> +
+> +	usb3 {
+> +		port {
+> +                	usb3_input: endpoint {
+> +                        	remote-endpoint = <&eud_output>;
+> +                        };
+> +        	};
+> +	};
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
