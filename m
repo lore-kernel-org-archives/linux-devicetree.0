@@ -1,84 +1,97 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA
- Tegra20/30
-Date: Wed, 26 Sep 2018 00:57:57 +0300
-Message-ID: <2f060ecc-44a2-9a8f-459e-5ae21990b65e@gmail.com>
-References: <20180830194356.14059-1-digetx@gmail.com>
- <20180830194356.14059-2-digetx@gmail.com> <20180925165810.GA32430@bogus>
- <074a169d-294b-ad4b-ddbd-6db742278f2a@gmail.com>
- <CAL_JsqLf+_Q8ZQAo=k8yQ4XKMccUHpm8WsQ3z_Q-PMY6gbQbbA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH v5 1/2] dt-bindings: hwmon: Add ina3221 documentation
+Date: Tue, 25 Sep 2018 15:59:29 -0700
+Message-ID: <20180925225930.31886-2-nicoleotsuka@gmail.com>
+References: <20180925225930.31886-1-nicoleotsuka@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLf+_Q8ZQAo=k8yQ4XKMccUHpm8WsQ3z_Q-PMY6gbQbbA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20180925225930.31886-1-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
+Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/25/18 10:36 PM, Rob Herring wrote:
-> On Tue, Sep 25, 2018 at 12:29 PM Dmitry Osipenko <digetx@gmail.com> wrote:
->>
->> On 9/25/18 7:58 PM, Rob Herring wrote:
->>> On Thu, Aug 30, 2018 at 10:43:52PM +0300, Dmitry Osipenko wrote:
->>>> Add device-tree binding that describes CPU frequency-scaling hardware
->>>> found on NVIDIA Tegra20/30 SoC's.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
->>>>  1 file changed, 38 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>> new file mode 100644
->>>> index 000000000000..2c51f676e958
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
->>>> @@ -0,0 +1,38 @@
->>>> +Binding for NVIDIA Tegra20 CPUFreq
->>>> +==================================
->>>> +
->>>> +Required properties:
->>>> +- clocks: Must contain an entry for each entry in clock-names.
->>>> +  See ../clocks/clock-bindings.txt for details.
->>>> +- clock-names: Must include the following entries:
->>>> +  - pll_x: main-parent for CPU clock, must be the first entry
->>>> +  - backup: intermediate-parent for CPU clock
->>>> +  - cpu: the CPU clock
->>>
->>> The Cortex A9 has CLK, PERIPHCLK, and PERIPHCLKEN clocks and only CLK
->>> is used for the cpu core. You can't just define your own clocks that
->>> you happen to want access to.
->>>
->>> Otherwise, you're not defining anything new here, so a binding document
->>> isn't required.
->>
->> PERIPHCLK is a different thing.
-> 
-> Right, that's what I meant. Only CLK is used.
-> 
->> Here we are defining the CPU clock and
->> its *parent* sources, the PLLX (main) and backup (intermediate clock
->> that is used while PLLX changes its rate). These are not some random
->> clocks "that you happen to want access to", they are essential for the
->> Tegra CPUFreq driver, CPU is running off them.
-> 
-> assigned-clocks is generally how we get parent clocks in this
-> situation. "clocks" is for what physical clocks are attached to a
-> given block. ARM very clearly documents the clocks for their IP
-> blocks.
+Texas Instruments INA3221 is a triple-channel shunt and bus
+voltage monitor. This patch adds a DT binding doc for it.
 
-Okay, seems I see now what you're meaning. The PLLX is specifically
-dedicated to CPU HW on Tegra, so it shouldn't be questioning to put it
-within the CPU node, unlike the backup.
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+Changelog
+v4->v5:
+ * Replaced "input-id" with "reg" and added address-cells and size-cells
+ * Replaced "input-label" with "label"
+ * Replaced "shunt-resistor" with "shunt-resistor-micro-ohms"
+v3->v4:
+ * Removed the attempt of putting labels in the node names
+ * Added a new optional label property in the child node
+ * Updated examples accordingly
+v2->v3:
+ * Added a simple subject in the line 1
+ * Fixed the shunt resistor value in the example
+v1->v2:
+ * Dropped channel name properties
+ * Added child node definitions.
+ * * Added shunt resistor property in the child node
+ * * Added status property to indicate connection status
+ * * Changed to use child node name as the label of input source
 
-The assigned-clocks are about static clocks configuration, that is
-exactly opposite to what is needed. I'm not sure what you are trying to
-convey.. we don't need to get the parent clock, but set it.
+ .../devicetree/bindings/hwmon/ina3221.txt     | 49 +++++++++++++++++++
+ 1 file changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
 
-How the backup/intermediate clock should be represented then? It is a
-part of HW description which potentially may vary depending on the board
-configuration.
+diff --git a/Documentation/devicetree/bindings/hwmon/ina3221.txt b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+new file mode 100644
+index 000000000000..e17a897f4803
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+@@ -0,0 +1,49 @@
++Texas Instruments INA3221 Device Tree Bindings
++
++1) ina3221 node
++  Required properties:
++  - compatible: Must be "ti,ina3221"
++  - reg: I2C address
++
++  Optional properties:
++  = The node contains optional child nodes for three channels =
++  = Each child node describes the information of input source =
++
++  - #address-cells: Required only if a child node is present. Must be 1.
++  - #size-cells: Required only if a child node is present. Must be 0.
++
++  Example:
++
++  ina3221@40 {
++          compatible = "ti,ina3221";
++          reg = <0x40>;
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          [ child node definitions... ]
++  };
++
++2) child nodes
++  Required properties:
++  - reg: Must be 0, 1 or 2, corresponding to IN1, IN2 or IN3 port of INA3221
++
++  Optional properties:
++  - label: Name of the input source
++  - shunt-resistor-micro-ohms: Shunt resistor value in micro-Ohm
++  - status: Should be "disabled" if no input source
++
++  Example:
++
++  input@0 {
++          reg = <0x0>;
++          status = "disabled";
++  };
++  input@1 {
++          reg = <0x1>;
++          shunt-resistor-micro-ohms = <5000>;
++  };
++  input@2 {
++          reg = <0x2>;
++          label = "VDD_5V";
++          shunt-resistor-micro-ohms = <5000>;
++  };
+-- 
+2.17.1
