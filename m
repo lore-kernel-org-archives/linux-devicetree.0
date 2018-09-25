@@ -1,67 +1,90 @@
-From: Joel Fernandes <joelaf@google.com>
-Subject: Re: [PATCH 2/6] pstore: Add event tracing support
-Date: Tue, 25 Sep 2018 13:39:29 -0700
-Message-ID: <CAJWu+oorTRschpgLODgVv50S57U6Su9SM57WVrVKiQBSXEVC9w@mail.gmail.com>
-References: <cover.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <b9b60ff2864a17fb05481aa33f90114ab051d6ce.1536430404.git.saiprakash.ranjan@codeaurora.org>
- <CAEXW_YRXQwKvnahv5X1F_Bu_98vMg=w1xpo8PZ+aNT02vBrwwg@mail.gmail.com>
- <e8fdef37-afcd-24b3-1005-e707b73f20b1@codeaurora.org> <eb686156-95d2-2468-21be-13bfd97d5a58@codeaurora.org>
- <CAJWu+ooTi+9Hp6xWpje-zoFOdRpZPLMvTzTDEk8Vf-y4TicvUw@mail.gmail.com>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: msm-vibrator: new bindings for MSM
+ vibrator driver
+Date: Tue, 25 Sep 2018 16:40:02 -0400
+Message-ID: <20180925204002.upoxfm5udmepgz4e@232b6f9c30d0>
+References: <20180919150912.8948-1-masneyb@onstation.org>
+ <20180919150912.8948-2-masneyb@onstation.org>
+ <5baa1af9.1c69fb81.73ad9.3bd5@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJWu+ooTi+9Hp6xWpje-zoFOdRpZPLMvTzTDEk8Vf-y4TicvUw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <5baa1af9.1c69fb81.73ad9.3bd5@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Joel Fernandes <joel@joelfernandes.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Colin Cross <ccross@android.com>, Jason Baron <jbaron@akamai.com>, Tony Luck <tony.luck@intel.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Joe Perches <joe@perches.com>, Jim Cromie <jim.cromie@gmail.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, moderated list:ARM64 PORT (AARCH64 AR
+To: Rob Herring <robh@kernel.org>
+Cc: thierry.reding@gmail.com, linux-pwm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sebastian.reichel@collabora.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 1:37 PM, Joel Fernandes <joelaf@google.com> wrote:
-> On Sun, Sep 23, 2018 at 8:33 AM, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
->> On 9/22/2018 10:07 PM, Sai Prakash Ranjan wrote:
->>>
->>> On 9/22/2018 2:35 PM, Joel Fernandes wrote:
->>>>
->>>> On Sat, Sep 8, 2018 at 4:28 PM Sai Prakash Ranjan
->>>> <saiprakash.ranjan@codeaurora.org> wrote:
->>>>>
->>>>>
->>>>> +
->>>>> +       trace_seq_init(&iter->seq);
->>>>> +       iter->ent = fbuffer->entry;
->>>>> +       event_call->event.funcs->trace(iter, 0, event);
->>>>> +       trace_seq_putc(&iter->seq, 0);
->>>>
->>>>
->>>> Would it be possible to store the binary trace record in the pstore
->>>> buffer instead of outputting text? I suspect that will both be faster
->>>> and less space.
->>>>
->>>
->>> I will try this and come back.
->>>
->>
->> Hi Joel,
->>
->> I removed trace_seq_putc and there is some improvement seen: 203 MB/s
->>
->> # dd if=/dev/zero of=/dev/null status=progress
->> 12207371264 bytes (12 GB, 11 GiB) copied, 60 s, 203 MB/s^C
->> 24171926+0 records in
->> 24171926+0 records out
->> 12376026112 bytes (12 GB, 12 GiB) copied, 60.8282 s, 203 MB/s
->>
->> This seems good when compared to 190 MB/s seen previously.
->> If this is Ok, then I will spin v2 with changes suggested.
->
-> Sorry for slow reply, yes that sounds good and a worthwhile perf improvement.
->
+Hi Rob,
 
-Well so I think you should still not use spinlock to synchronize and
-split the buffer. You could expand pstore_record to have a ts field or
-introduce a new API like ->write_percpu instead of write, or
-something. But I strongly feel you should lock. For ftrace function
-trace, the perf reduction with locking was dramatic.
+On Mon, Sep 24, 2018 at 03:01:11PM -0700, Rob Herring wrote:
+> On Wed, Sep 19, 2018 at 11:09:10AM -0400, Brian Masney wrote:
+> > This patch adds the device tree bindings for the pwm-msm-vibrator.c
+> > driver that supports the vibrator found on various Qualcomm MSM SOCs.
+> 
+> Bindings are for h/w, not some driver.
 
-- Joel
+OK, I will fix this and the other references in v2.
+
+> > +Required properties:
+> > +
+> > +  - compatible: Should be one of
+> > +		"qcom,msm8226-pwm-vibrator"
+> > +		"qcom,msm8974-pwm-vibrator"
+> 
+> The block only works for a vibrator?
+
+Yes.
+
+I cannot find a publicly-available datasheet for the MSM8974 to see if
+there are other uses for this particular PWM available. The only thing
+that I have to work with right now is the downstream Android sources at
+https://android.googlesource.com/kernel/msm/+/android-msm-lenok-3.10-lollipop-wear-release/drivers/misc/msm_pwm_vibrator.c.
+
+> > +  - reg: the base address and length of the IO memory for the registers.
+> > +  - #pwm-cells: set to 3.
+> > +  - pinctrl-names: set to default.
+> > +  - pinctrl-0: phandles pointing to pin configuration nodes. See
+> > +               Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> > +  - clock-names: set to pwm
+> > +  - clocks: phandle of the clock used by the PWM module. See
+> > +            Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +  - enable-gpios: GPIO that enables the vibrator.
+> 
+> Shouldn't this go in the vibrator node as it is connected to the 
+> vibrator.
+
+This should be labeled "GPIO that enables the PWM".
+
+Brian
+
+
+> > +
+> > +Optional properties:
+> > +
+> > +  - vcc-supply: phandle to the regulator that provides power to the sensor.
+> > +
+> > +Example from a LG Nexus 5 (hammerhead) phone:
+> > +
+> > +msm_pwm_vibrator_enable: msm_pwm_vibrator@fd8c3450 {
+> 
+> pwm@...
+> 
+> > +	reg = <0xfd8c3450 0x400>;
+> > +	compatible = "qcom,msm8974-pwm-vibrator";
+> > +	#pwm-cells = <3>;
+> > +
+> > +	vcc-supply = <&pm8941_l19>;
+> > +
+> > +	clocks = <&mmcc CAMSS_GP1_CLK>;
+> > +	clock-names = "pwm";
+> > +
+> > +	enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
+> > +
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&vibrator_pin>;
+> > +};
+> > -- 
+> > 2.17.1
+> > 
