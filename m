@@ -1,70 +1,84 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v4 11/20] memory: tegra: Use of_device_get_match_data()
-Date: Tue, 25 Sep 2018 16:53:26 +0300
-Message-ID: <f12b82d6-0fc9-443e-f68b-be63265c8354@gmail.com>
-References: <20180924004153.8232-1-digetx@gmail.com>
- <20180924004153.8232-12-digetx@gmail.com> <20180924101354.GH21032@ulmo>
- <dcf439a0-249c-ff9f-292d-c807a736672a@gmail.com> <20180925100046.GD7097@ulmo>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] arm64: amlogic: Rename spi pinmux group
+Date: Tue, 25 Sep 2018 15:53:30 +0200
+Message-ID: <cf080df1-ee10-cfa8-9bc1-d5b77415990e@baylibre.com>
+References: <20180924094523.20573-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925100046.GD7097@ulmo>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180924094523.20573-1-thierry.reding@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9/25/18 1:00 PM, Thierry Reding wrote:
-> On Mon, Sep 24, 2018 at 09:39:43PM +0300, Dmitry Osipenko wrote:
->> On 9/24/18 1:13 PM, Thierry Reding wrote:
->>> On Mon, Sep 24, 2018 at 03:41:44AM +0300, Dmitry Osipenko wrote:
->>>> There is no need to match device with the DT node since it was already
->>>> matched, use of_device_get_match_data() helper to get the match-data.
->>>>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/memory/tegra/mc.c | 10 ++--------
->>>>  1 file changed, 2 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
->>>> index 5454ffe5b2e0..cdc33f93cf7c 100644
->>>> --- a/drivers/memory/tegra/mc.c
->>>> +++ b/drivers/memory/tegra/mc.c
->>>> @@ -11,8 +11,7 @@
->>>>  #include <linux/interrupt.h>
->>>>  #include <linux/kernel.h>
->>>>  #include <linux/module.h>
->>>> -#include <linux/of.h>
->>>> -#include <linux/platform_device.h>
->>>
->>> It's better not to remove these two because the code still uses
->>> functions declared in them. If ever we were going to remove code using
->>> linux/of_device.h and then remove the linux/of_device.h include, we'd
->>> break the build and have to reintroduce the includes.
->>
->> That doesn't sound like a good argument. You're way too picky here ;)
->>
->>> The same would happen if linux/of_device.h were ever to stop including
->>> linux/platform_device.h or linux/of.h. That may sound unlikely, but it
->>> has happened in the past with other includes. It can also happen that
->>> some restructuring takes place in some headers that is not so obvious
->>> and then things can still start falling apart miles away.
->>
->> Restructuring will be somebody else problem. Not sure that we really
->> should care about it, I think it is unnecessary. But since you're
->> insisting..
-> 
-> It's actually a very common argument and I've seen patches in the past
-> that add includes just for the purpose of making sure the right
-> definitions get pulled in. This happens quite frequently as a preamble
-> to some major rework of some header files that would otherwise cause a
-> lot of breakage.
-> 
-> So I think it's best to be proactive about this and make sure we
-> explicitly pull in all the necessary headers in the first place,
-> irrespective of whether or not they may already get pulled in indirectly
-> by some other headers.
+Hi,
 
-Ok
+On 24/09/2018 11:45, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> The name "spi" is reserved for nodes representing an SPI controller.
+> Rename the "spi" pinmux group to "spi-miso" to avoid the issue and for
+> consistency with other pinmux groups.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Rob,
+> 
+> do you think perhaps DTC is being a little too strict here? Seems to me
+> like the check could be limited to nodes that have a name and a unit
+> address, the assumption being that an SPI controller would always have
+> some sort of register space that requires a reg property and therefore
+> also a unit address.
+> 
+> Thierry
+> 
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 2 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+
+Rob has already submitted similar fix and was merged by kevin.
+
+Neil
+
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> index 98cbba6809ca..3cd4475ca027 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
+> @@ -390,7 +390,7 @@
+>  			};
+>  		};
+>  
+> -		spi_pins: spi {
+> +		spi_pins: spi-miso {
+
+The name "spi-miso" is wrong since it also has spi-mosi...
+
+>  			mux {
+>  				groups = "spi_miso",
+>  					"spi_mosi",
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> index c87a80e9bcc6..911fd3412788 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
+> @@ -337,7 +337,7 @@
+>  			};
+>  		};
+>  
+> -		spi_pins: spi {
+> +		spi_pins: spi-miso {
+>  			mux {
+>  				groups = "spi_miso",
+>  					"spi_mosi",
+> 
