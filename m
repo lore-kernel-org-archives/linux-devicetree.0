@@ -1,67 +1,60 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH 2/2] iio: magnetometer: Add driver support for PNI RM3100
-Date: Tue, 25 Sep 2018 22:36:54 +0800
-Message-ID: <57d8a9d6-c402-068e-0a21-bbd6c20a7816@electromag.com.au>
-References: <20180925031724.21399-1-songqiang1304521@gmail.com>
- <20180925031724.21399-2-songqiang1304521@gmail.com>
- <20180925143054.00007fcb@huawei.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+Date: Tue, 25 Sep 2018 07:40:21 -0700
+Message-ID: <20180925144021.GN5662@atomide.com>
+References: <20180925000545.22931-1-tony@atomide.com>
+ <e9afe736-c2f0-6182-afd0-08279e09a35e@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925143054.00007fcb@huawei.com>
-Content-Language: en-AU
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jonathan.cameron@huawei.com>, Song Qiang <songqiang1304521@gmail.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <e9afe736-c2f0-6182-afd0-08279e09a35e@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/09/2018 9:30 PM, Jonathan Cameron wrote:
->> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
->> +{
->> +	struct iio_poll_func *pf = p;
->> +	struct iio_dev *indio_dev = pf->indio_dev;
->> +	struct rm3100_data *data = iio_priv(indio_dev);
->> +	struct regmap *regmap = data->regmap;
->> +	u8 buffer[9];
->> +	int ret;
->> +	int i;
->> +
->> +	mutex_lock(&data->lock);
->> +	ret = rm3100_wait_measurement(data);
->> +	if (ret < 0) {
->> +		mutex_unlock(&data->lock);
->> +		goto done;
->> +	}
->> +
->> +	ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, sizeof(buffer));
->> +	mutex_unlock(&data->lock);
->> +	if (ret < 0)
->> +		goto done;
->> +
->> +	/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. x for padding. */
->> +	for (i = 0; i < 3; i++)
->> +		memcpy(data->buffer + i * 4, buffer + i * 3, 3);
-> Firstly X doesn't need copying.
-> Secondly the copy of Y actually overwrites the value of Z
-> XXXYYYZZZxxx
-> XXXxYYYZZxxx
-> XXXxYYYxYZZx
+* Keerthy <j-keerthy@ti.com> [180925 05:18]:
+> I tried Branch [1] above. AM335x-boneblack is doing all good with ds0.
+> AM437x-gp the following is happening:
 > 
-> I think...
+> https://pastebin.ubuntu.com/p/fmZNYgJ9Sp/
 > 
->> +
->> +	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
->> +			iio_get_time_ns(indio_dev));
+> There seems to be a timeout due to which resume is not immediate i see
+> 1-2s delay and i see i2c timeout.
+> 
+> [  402.247271] omap_i2c 4802a000.i2c: controller timed out
+> [  402.247441] pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34
+> : -110
+> [  402.247486] pixcir_ts 1-005c: Failed to disable interrupt generation:
+> -110
+> [  402.247522] pixcir_ts 1-005c: Failed to stop
+> [  402.247607] dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
+> [pixcir_i2c_ts] returns -110
+> 
+> so pixcir_i2c_ts_resume is retuning -110 which is timeout error code.
+> 
+> I did some touch screen testing after DS0 resume seems to be working.
+> Everything is in pastebin link provided above.
 
-memcpy target is a different buffer so should be ok.
+Thanks for testing. Hmm no idea what might be going on with
+the pixcir. I have edt-ft5x06 on the am437x-sk-evm and that
+behaves just fine for suspend and resume. Both are on i2c1,
+pixcir calls pixcir_start/stop from suspend and resume while
+edt-ft5x06 does not reconfigure anything.
 
-But that raises the question of does it need to be?
-'buffer' could be 12 bytes long and just shuffle Z then Y.
-Do the unused bytes need to be zeroed? or does libiio mask them anyway?
+I'll try read some edt-ft5x06 register values on suspend
+and resume, let's see if that makes it reproducable here.
 
+Regards,
 
-
--- 
-Regards
-Phil Reid
+Tony
