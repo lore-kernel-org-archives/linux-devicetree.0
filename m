@@ -1,21 +1,23 @@
-From: Frank Rowand <frowand.list@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
 Subject: Re: [PATCH] of: unittest: Don't dereference args.np after test errors
-Date: Mon, 24 Sep 2018 21:29:21 -0700
-Message-ID: <b846194e-d50c-e152-2f1d-f5d444ade8f8@gmail.com>
+Date: Mon, 24 Sep 2018 21:39:40 -0700
+Message-ID: <ad3b8421-fc73-f4da-a44c-1e47a9d71463@roeck-us.net>
 References: <1537720412-29919-1-git-send-email-linux@roeck-us.net>
  <837495de-36b9-3bff-e3da-9ee79b9ef125@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <837495de-36b9-3bff-e3da-9ee79b9ef125@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>
+To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/24/18 21:19, Frank Rowand wrote:
+Hi Frank,
+
+On 09/24/2018 09:19 PM, Frank Rowand wrote:
 > Hi Guenter,
 > 
 > On 09/23/18 09:33, Guenter Roeck wrote:
@@ -89,14 +91,13 @@ On 09/24/18 21:19, Frank Rowand wrote:
 > do the tests.  The fix then is to not do those tests.  For example,
 > at the top of of_unittest_parse_phandle_with_args(), simply do:
 > 
->         if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
->                 return;
+>          if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
+>                  return;
+> 
 
-I forgot to mention another rationale for this approach.  This will result
-in the number of failed tests to remain at zero.
-
--Frank
-
+I thought about submitting that as second patch, but wanted to wait
+for feedback before doing that. I'll be more than happy to drop this
+patch and replace it with the above.
 
 > I did not look to see whether the other test areas you found can be
 > as easily avoided, without avoiding tests that are still valid when
@@ -111,6 +112,16 @@ in the number of failed tests to remain at zero.
 > not be blindly using the contents of args when an error occurred.  I'll
 > also put fixing that on my todo list.
 > 
+
+That was the intent of this patch, but I'll be happy to leave it up to you
+to find a better solution. I did not check if there are situations where
+args.np is still usable, or if it makes a difference if args.np is
+preinitialized with NULL, so it might well be that a better fix is
+possible.
+
+Thanks,
+Guenter
+
 > -Frank
 > 
 > 
@@ -119,60 +130,60 @@ in the number of failed tests to remain at zero.
 >> Fixes: 53a42093d96ef ("of: Add device tree selftests")
 >> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 >> ---
->>  drivers/of/unittest.c | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>   drivers/of/unittest.c | 12 ++++++------
+>>   1 file changed, 6 insertions(+), 6 deletions(-)
 >>
 >> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
 >> index 722537e14848..5942ddce1b9f 100644
 >> --- a/drivers/of/unittest.c
 >> +++ b/drivers/of/unittest.c
 >> @@ -424,7 +424,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
->>  		}
->>  
->>  		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
+>>   		}
+>>   
+>>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
 >> -			 i, args.np, rc);
 >> +			 i, np, rc);
->>  	}
->>  
->>  	/* Check for missing list property */
+>>   	}
+>>   
+>>   	/* Check for missing list property */
 >> @@ -554,8 +554,8 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
->>  			passed = false;
->>  		}
->>  
+>>   			passed = false;
+>>   		}
+>>   
 >> -		unittest(passed, "index %i - data error on node %s rc=%i\n",
 >> -			 i, args.np->full_name, rc);
 >> +		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
 >> +			 i, np, rc);
->>  	}
->>  
->>  	/* Check for missing list property */
+>>   	}
+>>   
+>>   	/* Check for missing list property */
 >> @@ -788,7 +788,7 @@ static void __init of_unittest_parse_interrupts(void)
->>  		passed &= (args.args[0] == (i + 1));
->>  
->>  		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
+>>   		passed &= (args.args[0] == (i + 1));
+>>   
+>>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
 >> -			 i, args.np, rc);
 >> +			 i, np, rc);
->>  	}
->>  	of_node_put(np);
->>  
+>>   	}
+>>   	of_node_put(np);
+>>   
 >> @@ -834,7 +834,7 @@ static void __init of_unittest_parse_interrupts(void)
->>  			passed = false;
->>  		}
->>  		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
+>>   			passed = false;
+>>   		}
+>>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
 >> -			 i, args.np, rc);
 >> +			 i, np, rc);
->>  	}
->>  	of_node_put(np);
->>  }
+>>   	}
+>>   	of_node_put(np);
+>>   }
 >> @@ -904,7 +904,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
->>  		}
->>  
->>  		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
+>>   		}
+>>   
+>>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
 >> -			 i, args.np, rc);
 >> +			 i, np, rc);
->>  	}
->>  	of_node_put(np);
->>  }
+>>   	}
+>>   	of_node_put(np);
+>>   }
 >>
 > 
 > 
