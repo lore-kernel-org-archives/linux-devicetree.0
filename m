@@ -1,33 +1,45 @@
-Return-Path: <SRS0=YKRD=MJ=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: usb: renesas_usbhs: Add support for r8a7744
-Date: Thu, 27 Sep 2018 14:01:16 +0100
-Message-Id: <1538053276-4200-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=7L+n=MH=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv2 1/6] arm64: dts: stratix10: Additions to EDAC System Manager
+Date: Tue, 25 Sep 2018 08:48:57 -0500
+Message-Id: <1537883342-30180-2-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
+To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document support for RZ/G1N (R8A7744) SoC.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-This patch is tested against linux-next next-20180927 and usb-next
----
- Documentation/devicetree/bindings/usb/renesas_usbhs.txt | 1 +
- 1 file changed, 1 insertion(+)
+Add the phandle, address, size and ranges to the
+Stratix10 System Manager node to match the existing
+Arria10 EDAC implementation.
 
-diff --git a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-index 15fb3b3..a5dbdb5 100644
---- a/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-+++ b/Documentation/devicetree/bindings/usb/renesas_usbhs.txt
-@@ -4,6 +4,7 @@ Required properties:
-   - compatible: Must contain one or more of the following:
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+---
+v2  No change
+---
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index d033da401c26..78b4b06e8935 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -469,9 +469,13 @@
  
- 	- "renesas,usbhs-r8a7743" for r8a7743 (RZ/G1M) compatible device
-+	- "renesas,usbhs-r8a7744" for r8a7744 (RZ/G1N) compatible device
- 	- "renesas,usbhs-r8a7745" for r8a7745 (RZ/G1E) compatible device
- 	- "renesas,usbhs-r8a774a1" for r8a774a1 (RZ/G2M) compatible device
- 	- "renesas,usbhs-r8a7790" for r8a7790 (R-Car H2) compatible device
+ 		eccmgr {
+ 			compatible = "altr,socfpga-s10-ecc-manager";
++			altr,sysmgr-syscon = <&sysmgr>;
++			#address-cells = <1>;
++			#size-cells = <1>;
+ 			interrupts = <0 15 4>, <0 95 4>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
++			ranges;
+ 
+ 			sdramedac {
+ 				compatible = "altr,sdram-edac-s10";
 -- 
 2.7.4
