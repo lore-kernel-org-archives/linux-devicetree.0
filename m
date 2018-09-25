@@ -1,45 +1,44 @@
-Return-Path: <SRS0=7L+n=MH=linux.intel.com=thor.thayer@kernel.org>
-From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 1/6] arm64: dts: stratix10: Additions to EDAC System Manager
-Date: Tue, 25 Sep 2018 08:48:57 -0500
-Message-Id: <1537883342-30180-2-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1537883342-30180-1-git-send-email-thor.thayer@linux.intel.com>
-To: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de, mchehab@kernel.org
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+Return-Path: <robherring2@gmail.com>
+Date: Tue, 25 Sep 2018 10:20:24 -0500
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/9] partial revert of "[media] tvp5150: add HW input
+ connectors support"
+Message-ID: <20180925152024.GA18900@bogus>
+References: <20180918131453.21031-1-m.felsch@pengutronix.de>
+ <20180918131453.21031-2-m.felsch@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180918131453.21031-2-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mchehab@kernel.org, mark.rutland@arm.com, kernel@pengutronix.de, devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, afshin.nasser@gmail.com, linux-media@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On Tue, Sep 18, 2018 at 03:14:45PM +0200, Marco Felsch wrote:
+> From: Javier Martinez Canillas <javierm@redhat.com>
+> 
+> Commit f7b4b54e6364 ("[media] tvp5150: add HW input connectors support")
+> added input signals support for the tvp5150, but the approach was found
+> to be incorrect so the corresponding DT binding commit 82c2ffeb217a
+> ("[media] tvp5150: document input connectors DT bindings") was reverted.
+> 
+> This left the driver with an undocumented (and wrong) DT parsing logic,
+> so lets get rid of this code as well until the input connectors support
+> is implemented properly.
+> 
+> It's a partial revert due other patches added on top of mentioned commit
+> not allowing the commit to be reverted cleanly anymore. But all the code
+> related to the DT parsing logic and input entities creation are removed.
+> 
+> Suggested-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> [m.felsch@pengutronix.de: rm TVP5150_INPUT_NUM define]
+> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  drivers/media/i2c/tvp5150.c         | 141 ----------------------------
+>  include/dt-bindings/media/tvp5150.h |   2 -
+>  2 files changed, 143 deletions(-)
 
-Add the phandle, address, size and ranges to the
-Stratix10 System Manager node to match the existing
-Arria10 EDAC implementation.
-
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Acked-by: Dinh Nguyen <dinguyen@kernel.org>
----
-v2  No change
----
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index d033da401c26..78b4b06e8935 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -469,9 +469,13 @@
- 
- 		eccmgr {
- 			compatible = "altr,socfpga-s10-ecc-manager";
-+			altr,sysmgr-syscon = <&sysmgr>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
- 			interrupts = <0 15 4>, <0 95 4>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
-+			ranges;
- 
- 			sdramedac {
- 				compatible = "altr,sdram-edac-s10";
--- 
-2.7.4
+Acked-by: Rob Herring <robh@kernel.org>
