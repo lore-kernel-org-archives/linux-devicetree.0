@@ -1,101 +1,152 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Documentation for qcom,eud
-Date: Tue, 25 Sep 2018 14:25:07 -0500
-Message-ID: <20180925192507.GA19360@bogus>
-References: <1536096853-30473-1-git-send-email-pheragu@codeaurora.org>
- <1536096853-30473-2-git-send-email-pheragu@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Eddie James <eajames@linux.ibm.com>
+Subject: [PATCH v3 0/2] media: platform: Add Aspeed Video Engine Driver
+Date: Tue, 25 Sep 2018 14:27:07 -0500
+Message-ID: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1536096853-30473-2-git-send-email-pheragu@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ckadabi@codeaurora.org, tsoni@codeaurora.org, rnayak@codeaurora.org, bryanh@codeaurora.org, psodagud@codeaurora.org, Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, linux-media@vger.kernel.org, mchehab@kernel.org, joel@jms.id.au, hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 04, 2018 at 02:34:12PM -0700, Prakruthi Deepak Heragu wrote:
-> Documentation for Embedded USB Debugger (EUD) device tree bindings.
-> 
-> Signed-off-by: Satya Durga Srinivasu Prabhala <satyap@codeaurora.org>
-> Signed-off-by: Prakruthi Deepak Heragu <pheragu@codeaurora.org>
-> ---
->  .../devicetree/bindings/soc/qcom/qcom,msm-eud.txt  | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
-> new file mode 100644
-> index 0000000..a03021a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,msm-eud.txt
-> @@ -0,0 +1,41 @@
-> +* Qualcomm Technologies Inc Embedded USB Debugger (EUD)
-> +
-> +The EUD (Embedded USB Debugger) is a mini-USB hub implemented
-> +on chip to support the USB-based debug and trace capabilities.
+The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+can capture and compress video data from digital or analog sources. With
+the Aspeed chip acting as a service processor, the Video Engine can
+capture the host processor graphics output.
 
-Is it just for debug and normally bypassed? 
+This series adds a V4L2 driver for the VE, providing the usual V4L2 streaming
+interface by way of videobuf2. Each frame, the driver triggers the hardware to
+capture the host graphics output and compress it to JPEG format.
 
-> +
-> +Required properties:
-> +
-> + - compatible:  Should be "qcom,msm-eud"
+I was unable to cross compile v4l2-compliance for ARM with our OpenBMC
+toolchain. Although bootstrap, configure, and make were successful, no binaries
+were generated... I was able to build v4l-utils 1.12.3 from the OpenEmbedded
+project, with the output below:
 
-Needs to be SoC specific (though a fallback is fine).
+v4l2-compliance SHA   : not available
 
-> + - interrupts:  Interrupt number
-> + - reg: Should be address and size of EUD register space
-> +
-> +Driver notifies clients for VBUS attach/detach and charger enable/disable
+Driver Info:
+	Driver name   : aspeed-video
+	Card type     : Aspeed Video Engine
+	Bus info      : platform:aspeed-video
+	Driver version: 4.18.8
+	Capabilities  : 0x85200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
+		Device Capabilities
+	Device Caps   : 0x05200001
+		Video Capture
+		Read/Write
+		Streaming
+		Extended Pix Format
 
-Bindings are for h/w blocks, not drivers.
+Compliance test for device /dev/video0 (not using libv4l2):
 
-> +events. The link between client and EUD is established via a directed
-> +graph. EUD driver has one endpoint of the graph link mentioning EUD as an
-> +output link and clients registered for these notifications from the EUD
-> +should have the other endpoint of the graph link as an input link. 
+Required ioctls:
+	test VIDIOC_QUERYCAP: OK
 
-OF graph is for describing data flows (i.e. h/w connections), not 
-clients wanting some event.
+Allow for multiple opens:
+	test second video open: OK
+	test VIDIOC_QUERYCAP: OK
+	test VIDIOC_G/S_PRIORITY: OK
+	test for unlimited opens: OK
 
-> Each of
-> +these endpoints should contain a 'remote-endpoint' phandle property that
-> +points to the corresponding endpoint in the port of the remote device.
+Debug ioctls:
+	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+	test VIDIOC_LOG_STATUS: OK (Not Supported)
 
-You don't need to describe how the graph binding works. Just what the 
-port assignments are.
+Input ioctls:
+	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+	test VIDIOC_G/S/ENUMINPUT: OK
+	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+	Inputs: 1 Audio Inputs: 0 Tuners: 0
 
-I worry this is going to collide with using the graph binding for USB 
-connectors.
+Output ioctls:
+	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+	Outputs: 0 Audio Outputs: 0 Modulators: 0
 
-> +
-> +An example for EUD device node:
-> +
-> +	eud: qcom,msm-eud@88e0000 {
-> +		compatible = "qcom,msm-eud";
-> +		interrupts = <GIC_SPI 492 IRQ_TYPE_LEVEL_HIGH>;
-> +		reg = <0x88e0000 0x4000>;
-> +		port {
-> +                	eud_output: endpoint {
-> +                        	remote-endpoint = <&usb3_input>;
-> +                        };
-> +        	};
-> +	};
-> +
-> +An example for EUD client:
+Input/Output configuration ioctls:
+	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK
+	test VIDIOC_DV_TIMINGS_CAP: OK
+	test VIDIOC_G/S_EDID: OK
 
-What are possible clients? Could we want to switch clients at runtime?
+Test input 0:
 
-> +
-> +	usb3 {
-> +		port {
-> +                	usb3_input: endpoint {
-> +                        	remote-endpoint = <&eud_output>;
-> +                        };
-> +        	};
-> +	};
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+	Control ioctls:
+		test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+		test VIDIOC_QUERYCTRL: OK
+		test VIDIOC_G/S_CTRL: OK
+		test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+		warn: ../../../v4l-utils-1.12.3/utils/v4l2-compliance/v4l2-test-controls.cpp(811): V4L2_CID_DV_RX_POWER_PRESENT not found for input 0
+		test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+		test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+		Standard Controls: 3 Private Controls: 0
+
+	Format ioctls:
+		test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+		test VIDIOC_G/S_PARM: OK
+		test VIDIOC_G_FBUF: OK (Not Supported)
+		test VIDIOC_G_FMT: OK
+		test VIDIOC_TRY_FMT: OK
+		test VIDIOC_S_FMT: OK
+		test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+		test Cropping: OK (Not Supported)
+		test Composing: OK (Not Supported)
+		test Scaling: OK (Not Supported)
+
+	Codec ioctls:
+		test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+		test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+		test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+	Buffer ioctls:
+		test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+		test VIDIOC_EXPBUF: OK (Not Supported)
+
+Test input 0:
+
+Streaming ioctls:
+	test read/write: OK
+	test MMAP: OK                                     
+	test USERPTR: OK (Not Supported)
+	test DMABUF: OK (Not Supported)
+
+
+Total: 47, Succeeded: 47, Failed: 0, Warnings: 1
+
+Changes since v2:
+ - Switch to streaming interface. This involved a lot of changes.
+ - Rework memory allocation due to using videobuf2 buffers, but also only
+   allocate the necessary size of source buffer rather than the max size
+
+Changes since v1:
+ - Removed le32_to_cpu calls for JPEG header data
+ - Reworked v4l2 ioctls to be compliant.
+ - Added JPEG controls
+ - Updated devicetree docs according to Rob's suggestions.
+ - Added myself to MAINTAINERS
+
+Eddie James (2):
+  dt-bindings: media: Add Aspeed Video Engine binding documentation
+  media: platform: Add Aspeed Video Engine driver
+
+ .../devicetree/bindings/media/aspeed-video.txt     |   26 +
+ MAINTAINERS                                        |    8 +
+ drivers/media/platform/Kconfig                     |    8 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/aspeed-video.c              | 1645 ++++++++++++++++++++
+ 5 files changed, 1688 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+ create mode 100644 drivers/media/platform/aspeed-video.c
+
+-- 
+1.8.3.1
