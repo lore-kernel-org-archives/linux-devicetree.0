@@ -1,205 +1,178 @@
-From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH 1/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy
- core
-Date: Tue, 25 Sep 2018 10:55:26 +0000
-Message-ID: <BN3PR0201MB0993786B28317033A1C9A93DA7160@BN3PR0201MB0993.namprd02.prod.outlook.com>
-References: <1535551648-29534-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1535551648-29534-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <9bd46b50-03a9-8a47-7751-dad19bac3643@ti.com>
- <DM2PR0201MB1008E9A7C9A952C8F0461E4FA7160@DM2PR0201MB1008.namprd02.prod.outlook.com>
- <9ef79e7a-b8fd-3497-95d4-8af5a0c68426@codeaurora.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 6/9] gpio: Add support for hierarchical IRQ domains
+Date: Tue, 25 Sep 2018 13:17:16 +0200
+Message-ID: <20180925111716.GA7925@ulmo>
+References: <20180921102546.12745-1-thierry.reding@gmail.com>
+ <20180921102546.12745-7-thierry.reding@gmail.com>
+ <CACRpkdYnrf7FknvnZyFSgfT5aCrcWT4hxSnQo0UqxYfR6Fkqwg@mail.gmail.com>
+ <20180925093315.GB7097@ulmo>
+ <CACRpkdbOpVPB5MqgCyF5x_ENzLscz5oYEstYqwVceqeKZq2w5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ef79e7a-b8fd-3497-95d4-8af5a0c68426@codeaurora.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CACRpkdbOpVPB5MqgCyF5x_ENzLscz5oYEstYqwVceqeKZq2w5g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, Michal Simek <michals@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>
-Cc: "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ajay Yugalkishore Pandey <APANDEY@xilinx.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SEkgVml2ZWssDQoNCj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPkZyb206IFZpdmVrIEdh
-dXRhbSBbbWFpbHRvOnZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZ10NCj5TZW50OiBUdWVzZGF5
-LCBTZXB0ZW1iZXIgMjUsIDIwMTggMzo0NCBQTQ0KPlRvOiBBbnVyYWcgS3VtYXIgVnVsaXNoYSA8
-YW51cmFna3VAeGlsaW54LmNvbT47IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkNCj48a2lzaG9uQHRp
-LmNvbT47IE1pY2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgcm9iaCtkdEBrZXJuZWwu
-b3JnOw0KPm1hcmsucnV0bGFuZEBhcm0uY29tDQo+Q2M6IHYuYW51cmFna3VtYXJAZ21haWwuY29t
-OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+a2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBBamF5IFl1Z2Fsa2lz
-aG9yZSBQYW5kZXkNCj48QVBBTkRFWUB4aWxpbnguY29tPg0KPlN1YmplY3Q6IFJlOiBbUEFUQ0gg
-MS8yXSBwaHk6IHp5bnFtcDogQWRkIHBoeSBkcml2ZXIgZm9yIHhpbGlueCB6eW5xbXAgcGh5IGNv
-cmUNCj4NCj4NCj4NCj5PbiA5LzI1LzIwMTggMTI6NTcgUE0sIEFudXJhZyBLdW1hciBWdWxpc2hh
-IHdyb3RlOg0KPj4gSEkgS2lzaG9uLA0KPj4NCj4+IFRoYW5rcyBhIGxvdCBmb3Igc3BlbmRpbmcg
-eW91ciB0aW1lIGluIHJldmlld2luZyB0aGlzIHBhdGNoLiBQbGVhc2UNCj4+IGZpbmQgbXkgY29t
-bWVudHMgaW5saW5lDQo+Pg0KPj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+Pj4gRnJv
-bTogS2lzaG9uIFZpamF5IEFicmFoYW0gSSBbbWFpbHRvOmtpc2hvbkB0aS5jb21dDQo+Pj4gU2Vu
-dDogVHVlc2RheSwgU2VwdGVtYmVyIDI1LCAyMDE4IDEwOjU5IEFNDQo+Pj4gVG86IEFudXJhZyBL
-dW1hciBWdWxpc2hhIDxhbnVyYWdrdUB4aWxpbnguY29tPjsgTWljaGFsIFNpbWVrDQo+Pj4gPG1p
-Y2hhbHNAeGlsaW54LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5j
-b207DQo+Pj4gdml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnDQo+Pj4gQ2M6IHYuYW51cmFna3Vt
-YXJAZ21haWwuY29tOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0tDQo+
-Pj4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
-DQo+Pj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzJdIHBoeTogenlucW1wOiBBZGQgcGh5IGRyaXZl
-ciBmb3IgeGlsaW54IHp5bnFtcCBwaHkgY29yZQ0KPj4+DQo+Pj4gSGksDQo+Pj4NCj4+PiBPbiBX
-ZWRuZXNkYXkgMjkgQXVndXN0IDIwMTggMDc6MzcgUE0sIEFudXJhZyBLdW1hciBWdWxpc2hhIHdy
-b3RlOg0KPj4+PiBaeW5xTVAgU29DIGhhcyBhIEdpZ2FiaXQgVHJhbnNjZWl2ZXIgd2l0aCBmb3Vy
-IGxhbmVzLiBBbGwgdGhlIGhpZ2gNCj4+Pj4gc3BlZWQgcGVyaXBoZXJhbHMgc3VjaCBhcyBVU0Is
-IFNBVEEsIFBDSUUsIERpc3BsYXkgUG9ydCBhbmQgRXRoZXJuZXQNCj4+Pj4gU0dNSUkgY2FuIHJl
-bHkgb24gYW55IG9mIHRoZSBmb3VyIEdUIGxhbmVzIGZvciBQSFkgbGF5ZXIuIFRoaXMgcGF0Y2gN
-Cj4+Pj4gYWRkcyBkcml2ZXIgZm9yIHRoYXQgWnlucU1QIEdUIGNvcmUuDQo+Pj4+DQo+Pj4+IFNp
-Z25lZC1vZmYtYnk6IEFudXJhZyBLdW1hciBWdWxpc2hhIDxhbnVyYWcua3VtYXIudnVsaXNoYUB4
-aWxpbnguY29tPg0KPj4+PiAtLS0NCj4+Pj4gICBkcml2ZXJzL3BoeS9LY29uZmlnICAgICAgICAg
-ICAgfCAgICA4ICsNCj4+Pj4gICBkcml2ZXJzL3BoeS9NYWtlZmlsZSAgICAgICAgICAgfCAgICAx
-ICsNCj4+Pj4gICBkcml2ZXJzL3BoeS9waHktenlucW1wLmMgICAgICAgfCAxNTc5DQo+Pj4gKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPj4+PiAgIGluY2x1ZGUvZHQt
-YmluZGluZ3MvcGh5L3BoeS5oICB8ICAgIDIgKw0KPj4+PiAgIGluY2x1ZGUvbGludXgvcGh5L3Bo
-eS16eW5xbXAuaCB8ICAgNTIgKysNCj4+Pj4gICA1IGZpbGVzIGNoYW5nZWQsIDE2NDIgaW5zZXJ0
-aW9ucygrKQ0KPj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3BoeS9waHktenlucW1w
-LmMgIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPj4+PiBpbmNsdWRlL2xpbnV4L3BoeS9waHktenlucW1w
-LmgNCj4+Pj4NCj4+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L0tjb25maWcgYi9kcml2ZXJz
-L3BoeS9LY29uZmlnIGluZGV4DQo+Pj4+IDVjOGQ0NTIuLjE0Y2YzMzMwIDEwMDY0NA0KPj4+PiAt
-LS0gYS9kcml2ZXJzL3BoeS9LY29uZmlnDQo+Pj4+ICsrKyBiL2RyaXZlcnMvcGh5L0tjb25maWcN
-Cj4+Pj4gQEAgLTQwLDYgKzQwLDE0IEBAIGNvbmZpZyBQSFlfWEdFTkUNCj4+Pj4gICAJaGVscA0K
-Pj4+PiAgIAkgIFRoaXMgb3B0aW9uIGVuYWJsZXMgc3VwcG9ydCBmb3IgQVBNIFgtR2VuZSBTb0Mg
-bXVsdGktcHVycG9zZSBQSFkuDQo+Pj4+DQo+Pj4+ICtjb25maWcgUEhZX1hJTElOWF9aWU5RTVAN
-Cj4+Pj4gKwl0cmlzdGF0ZSAiWGlsaW54IFp5bnFNUCBQSFkgZHJpdmVyIg0KPj4+PiArCWRlcGVu
-ZHMgb24gQVJDSF9aWU5RTVANCj4+Pj4gKwlzZWxlY3QgR0VORVJJQ19QSFkNCj4+Pj4gKwloZWxw
-DQo+Pj4+ICsJICBFbmFibGUgdGhpcyB0byBzdXBwb3J0IFp5bnFNUCBIaWdoIFNwZWVkIEdpZ2Fi
-aXQgVHJhbnNjZWl2ZXINCj4+Pj4gKwkgIHRoYXQgaXMgcGFydCBvZiBaeW5xTVAgU29DLg0KPj4+
-PiArDQo+Pj4+ICAgc291cmNlICJkcml2ZXJzL3BoeS9hbGx3aW5uZXIvS2NvbmZpZyINCj4+Pj4g
-ICBzb3VyY2UgImRyaXZlcnMvcGh5L2FtbG9naWMvS2NvbmZpZyINCj4+Pj4gICBzb3VyY2UgImRy
-aXZlcnMvcGh5L2Jyb2FkY29tL0tjb25maWciDQo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3Bo
-eS9NYWtlZmlsZSBiL2RyaXZlcnMvcGh5L01ha2VmaWxlIGluZGV4DQo+Pj4+IDg0ZTNiZDkuLmYy
-YThkMjcgMTAwNjQ0DQo+Pj4+IC0tLSBhL2RyaXZlcnMvcGh5L01ha2VmaWxlDQo+Pj4+ICsrKyBi
-L2RyaXZlcnMvcGh5L01ha2VmaWxlDQo+Pj4+IEBAIC03LDYgKzcsNyBAQCBvYmotJChDT05GSUdf
-R0VORVJJQ19QSFkpCQkrPSBwaHktY29yZS5vDQo+Pj4+ICAgb2JqLSQoQ09ORklHX1BIWV9MUEMx
-OFhYX1VTQl9PVEcpCSs9IHBoeS1scGMxOHh4LXVzYi1vdGcubw0KPj4+PiAgIG9iai0kKENPTkZJ
-R19QSFlfWEdFTkUpCQkJKz0gcGh5LXhnZW5lLm8NCj4+Pj4gICBvYmotJChDT05GSUdfUEhZX1BJ
-U1RBQ0hJT19VU0IpCQkrPSBwaHktcGlzdGFjaGlvLXVzYi5vDQo+Pj4+ICtvYmotJChDT05GSUdf
-UEhZX1hJTElOWF9aWU5RTVApCQkrPSBwaHktenlucW1wLm8NCj4+Pj4gICBvYmotJChDT05GSUdf
-QVJDSF9TVU5YSSkJCSs9IGFsbHdpbm5lci8NCj4+Pj4gICBvYmotJChDT05GSUdfQVJDSF9NRVNP
-TikJCSs9IGFtbG9naWMvDQo+Pj4+ICAgb2JqLSQoQ09ORklHX0xBTlRJUSkJCQkrPSBsYW50aXEv
-DQo+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9waHktenlucW1wLmMgYi9kcml2ZXJzL3Bo
-eS9waHktenlucW1wLmMgbmV3DQo+Pj4+IGZpbGUgbW9kZSAxMDA2NDQgaW5kZXggMDAwMDAwMC4u
-MzA2Y2VkZA0KPj4+PiAtLS0gL2Rldi9udWxsDQo+Pj4+ICsrKyBiL2RyaXZlcnMvcGh5L3BoeS16
-eW5xbXAuYw0KPj4+PiBAQCAtMCwwICsxLDE1NzkgQEANCj4+Pj4gKy8vIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiBHUEwtMi4wDQo+Pj4+ICsvKg0KPj4+PiArICogcGh5LXp5bnFtcC5jIC0gUEhZ
-IGRyaXZlciBmb3IgWGlsaW54IFp5bnFNUCBHVC4NCj4+Pj4gKyAqDQo+Pj4+ICsgKiBDb3B5cmln
-aHQgKEMpIDIwMTggWGlsaW54IEluYy4NCj4+Pj4gKyAqDQo+Pj4+ICsgKiBBdXRob3I6IEFudXJh
-ZyBLdW1hciBWdWxpc2hhIDxhbnVyYWdrdUB4aWxpbnguY29tPg0KPj4+PiArICoNCj4+Pj4gKyAq
-IFRoaXMgZHJpdmVyIGlzIHRlc3RlZCBmb3IgVVNCLCBTQVRBIGFuZCBEaXNwbGF5IFBvcnQgY3Vy
-cmVudGx5Lg0KPj4+PiArICogT3RoZXIgY29udHJvbGxlcnMgUENJZSBhbmQgU0dNSUkgc2hvdWxk
-IGFsc28gd29yayBidXQgdGhhdCBpcw0KPj4+PiArICogZXhwZXJpbWVudGFsIGFzIG9mIG5vdy4N
-Cj4+Pj4gKyAqLw0KPj4+PiArDQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+DQo+Pj4+ICsj
-aW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9pby5oPg0KPj4+
-PiArI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPj4+PiArI2luY2x1ZGUgPGxpbnV4L21vZHVs
-ZS5oPg0KPj4+PiArI2luY2x1ZGUgPGxpbnV4L29mLmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgv
-b2ZfcGxhdGZvcm0uaD4NCj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9vZl9hZGRyZXNzLmg+DQo+Pj4+
-ICsjaW5jbHVkZSA8bGludXgvcGh5L3BoeS5oPg0KPj4+PiArI2luY2x1ZGUgPGxpbnV4L3BoeS9w
-aHktenlucW1wLmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+
-Pj4+ICsjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCj4+Pj4gKyNpbmNsdWRlIDxkdC1iaW5kaW5n
-cy9waHkvcGh5Lmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvcmVzZXQuaD4NCj4+Pj4gKyNpbmNs
-dWRlIDxsaW51eC9saXN0Lmg+DQo+Pj4+ICsjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KPj4+PiAr
-LyogVG90YWwgbnVtYmVyIG9mIGNvbnRyb2xsZXJzICovDQo+Pj4+ICsjZGVmaW5lIENPTlRST0xM
-RVJTX1BFUl9MQU5FCQk1DQo+Pj4+ICsNCj4+Pj4gKy8qIFVTQiBwaXBlIGNvbnRyb2wgcGFyYW1l
-dGVycyAqLw0KPj4+PiArI2RlZmluZSBQSVBFX0NMS19PRkZTRVQJCQkweDdjDQo+Pj4+ICsjZGVm
-aW5lIFBJUEVfUE9XRVJfT0ZGU0VUCQkweDgwDQo+Pj4+ICsjZGVmaW5lIFBJUEVfQ0xLX09OCQkJ
-MQ0KPj4+PiArI2RlZmluZSBQSVBFX0NMS19PRkYJCQkwDQo+Pj4+ICsjZGVmaW5lIFBJUEVfUE9X
-RVJfT04JCQkxDQo+Pj4+ICsjZGVmaW5lIFBJUEVfUE9XRVJfT0ZGCQkJMA0KPj4+PiArDQo+Pj4+
-ICsNCj4+Pj4gKy8qKg0KPj4+PiArICogc3RydWN0IHhwc2d0cl9zc2MgLSBzdHJ1Y3R1cmUgdG8g
-aG9sZCBTU0Mgc2V0dGluZ3MgZm9yIGEgbGFuZQ0KPj4+PiArICogQHJlZmNsa19yYXRlOiBQTEwg
-cmVmZXJlbmNlIGNsb2NrIGZyZXF1ZW5jeQ0KPj4+PiArICogQHBsbF9yZWZfY2xrOiB2YWx1ZSB0
-byBiZSB3cml0dGVuIHRvIHJlZ2lzdGVyIGZvciBjb3JyZXNwb25kaW5nDQo+Pj4+ICtyZWYgY2xr
-IHJhdGUNCj4+Pj4gKyAqIEBzdGVwczogbnVtYmVyIG9mIHN0ZXBzIG9mIFNTQyAoU3ByZWFkIFNw
-ZWN0cnVtIENsb2NrKQ0KPj4+PiArICogQHN0ZXBfc2l6ZTogc3RlcCBzaXplIG9mIGVhY2ggc3Rl
-cCAgKi8gc3RydWN0IHhwc2d0cl9zc2Mgew0KPj4+PiArCXUzMiByZWZjbGtfcmF0ZTsNCj4+Pj4g
-Kwl1OCAgcGxsX3JlZl9jbGs7DQo+Pj4+ICsJdTMyIHN0ZXBzOw0KPj4+PiArCXUzMiBzdGVwX3Np
-emU7DQo+Pj4+ICt9Ow0KPj4+PiArDQo+Pj4+ICsvKiBsb29rdXAgdGFibGUgdG8gaG9sZCBhbGwg
-c2V0dGluZ3MgbmVlZGVkIGZvciBhIHJlZiBjbG9jayBmcmVxdWVuY3kNCj4+Pj4gKyovIHN0YXRp
-YyBzdHJ1Y3QgeHBzZ3RyX3NzYyBzc2NfbG9va3VwW01BWF9SRUZDTEtdID0gew0KPj4+PiArCXsx
-OTIwMDAwMCwgMHgwNSwgNjA4LCAyNjQwMjB9LA0KPj4+PiArCXsyMDAwMDAwMCwgMHgwNiwgNjM0
-LCAyNDM0NTR9LA0KPj4+PiArCXsyNDAwMDAwMCwgMHgwNywgNzYwLCAxNjg5NzN9LA0KPj4+PiAr
-CXsyNjAwMDAwMCwgMHgwOCwgODI0LCAxNDM4NjB9LA0KPj4+PiArCXsyNzAwMDAwMCwgMHgwOSwg
-ODU2LCA4NjU1MX0sDQo+Pj4+ICsJezM4NDAwMDAwLCAweDBBLCAxMjE4LCA2NTg5Nn0sDQo+Pj4+
-ICsJezQwMDAwMDAwLCAweDBCLCA2MzQsIDI0MzQ1NH0sDQo+Pj4+ICsJezUyMDAwMDAwLCAweDBD
-LCA4MjQsIDE0Mzg2MH0sDQo+Pj4+ICsJezEwMDAwMDAwMCwgMHgwRCwgMTA1OCwgODc1MzN9LA0K
-Pj4+PiArCXsxMDgwMDAwMDAsIDB4MEUsIDg1NiwgODY1NTF9LA0KPj4+PiArCXsxMjUwMDAwMDAs
-IDB4MEYsIDk5MiwgMTE5NDk3fSwNCj4+Pj4gKwl7MTM1MDAwMDAwLCAweDEwLCAxMDcwLCA1NTM5
-M30sDQo+Pj4+ICsJezE1MDAwMDAwMCwgMHgxMSwgNzkyLCAxODcwOTF9DQo+Pj4+ICt9Ow0KPj4+
-PiArDQo+Pj4+ICsvKioNCj4+Pj4gKyAqIHN0cnVjdCB4cHNndHJfZGV2IC0gcmVwcmVzZW50YXRp
-b24gb2YgYSBaeW5NUCBHVCBkZXZpY2UNCj4+Pj4gKyAqIEBkZXY6IHBvaW50ZXIgdG8gZGV2aWNl
-DQo+Pj4+ICsgKiBAc2VyZGVzOiBzZXJkZXMgYmFzZSBhZGRyZXNzDQo+Pj4+ICsgKiBAc2lvdTog
-c2lvdSBiYXNlIGFkZHJlc3MNCj4+Pj4gKyAqIEBndHJfbXV0ZXg6IG11dGV4IGZvciBsb2NraW5n
-DQo+Pj4+ICsgKiBAcGh5czogcG9pbnRlciB0byBhbGwgdGhlIGxhbmVzDQo+Pj4+ICsgKiBAdHhf
-dGVybV9maXg6IGZpeCBmb3IgR1QgaXNzdWUNCj4+Pj4gKyAqIEBzYXZlZF9pY21fY2ZnMDogc3Rv
-cmVkIHZhbHVlIG9mIElDTSBDRkcwIHJlZ2lzdGVyDQo+Pj4+ICsgKiBAc2F2ZWRfaWNtX2NmZzE6
-IHN0b3JlZCB2YWx1ZSBvZiBJQ00gQ0ZHMSByZWdpc3Rlcg0KPj4+PiArICogQHNhdGFfcnN0OiBh
-IHJlc2V0IGNvbnRyb2wgZm9yIFNBVEENCj4+Pj4gKyAqIEBkcF9yc3Q6IGEgcmVzZXQgY29udHJv
-bCBmb3IgRFANCj4+Pj4gKyAqIEB1c2IwX2Nyc3Q6IGEgcmVzZXQgY29udHJvbCBmb3IgdXNiMCBj
-b3JlDQo+Pj4+ICsgKiBAdXNiMV9jcnN0OiBhIHJlc2V0IGNvbnRyb2wgZm9yIHVzYjEgY29yZQ0K
-Pj4+PiArICogQHVzYjBfaGlicnN0OiBhIHJlc2V0IGNvbnRyb2wgZm9yIHVzYjAgaGliZXJuYXRp
-b24gbW9kdWxlDQo+Pj4+ICsgKiBAdXNiMV9oaWJyc3Q6IGEgcmVzZXQgY29udHJvbCBmb3IgdXNi
-MSBoaWJlcm5hdGlvbiBtb2R1bGUNCj4+Pj4gKyAqIEB1c2IwX2FwYnJzdDogYSByZXNldCBjb250
-cm9sIGZvciB1c2IwIGFwYiBidXMNCj4+Pj4gKyAqIEB1c2IxX2FwYnJzdDogYSByZXNldCBjb250
-cm9sIGZvciB1c2IxIGFwYiBidXMNCj4+Pj4gKyAqIEBnZW0wX3JzdDogYSByZXNldCBjb250cm9s
-IGZvciBnZW0wDQo+Pj4+ICsgKiBAZ2VtMV9yc3Q6IGEgcmVzZXQgY29udHJvbCBmb3IgZ2VtMQ0K
-Pj4+PiArICogQGdlbTJfcnN0OiBhIHJlc2V0IGNvbnRyb2wgZm9yIGdlbTINCj4+Pj4gKyAqIEBn
-ZW0zX3JzdDogYSByZXNldCBjb250cm9sIGZvciBnZW0zICAqLyBzdHJ1Y3QgeHBzZ3RyX2RldiB7
-DQo+Pj4+ICsJc3RydWN0IGRldmljZSAqZGV2Ow0KPj4+PiArCXZvaWQgX19pb21lbSAqc2VyZGVz
-Ow0KPj4+PiArCXZvaWQgX19pb21lbSAqc2lvdTsNCj4+Pj4gKwlzdHJ1Y3QgbXV0ZXggZ3RyX211
-dGV4OyAvKiBtdXRleCBmb3IgbG9ja2luZyAqLw0KPj4+PiArCXN0cnVjdCB4cHNndHJfcGh5ICoq
-cGh5czsNCj4+Pj4gKwlib29sIHR4X3Rlcm1fZml4Ow0KPj4+PiArCXVuc2lnbmVkIGludCBzYXZl
-ZF9pY21fY2ZnMDsNCj4+Pj4gKwl1bnNpZ25lZCBpbnQgc2F2ZWRfaWNtX2NmZzE7DQo+Pj4+ICsJ
-c3RydWN0IHJlc2V0X2NvbnRyb2wgKnNhdGFfcnN0Ow0KPj4+PiArCXN0cnVjdCByZXNldF9jb250
-cm9sICpkcF9yc3Q7DQo+Pj4+ICsJc3RydWN0IHJlc2V0X2NvbnRyb2wgKnVzYjBfY3JzdDsNCj4+
-Pj4gKwlzdHJ1Y3QgcmVzZXRfY29udHJvbCAqdXNiMV9jcnN0Ow0KPj4+PiArCXN0cnVjdCByZXNl
-dF9jb250cm9sICp1c2IwX2hpYnJzdDsNCj4+Pj4gKwlzdHJ1Y3QgcmVzZXRfY29udHJvbCAqdXNi
-MV9oaWJyc3Q7DQo+Pj4+ICsJc3RydWN0IHJlc2V0X2NvbnRyb2wgKnVzYjBfYXBicnN0Ow0KPj4+
-PiArCXN0cnVjdCByZXNldF9jb250cm9sICp1c2IxX2FwYnJzdDsNCj4+Pj4gKwlzdHJ1Y3QgcmVz
-ZXRfY29udHJvbCAqZ2VtMF9yc3Q7DQo+Pj4+ICsJc3RydWN0IHJlc2V0X2NvbnRyb2wgKmdlbTFf
-cnN0Ow0KPj4+PiArCXN0cnVjdCByZXNldF9jb250cm9sICpnZW0yX3JzdDsNCj4+Pj4gKwlzdHJ1
-Y3QgcmVzZXRfY29udHJvbCAqZ2VtM19yc3Q7DQo+Pj4+ICt9Ow0KPj4+PiArDQo+Pj4+ICsvKioN
-Cj4+Pj4gKyAqIHhwc2d0cl9vdmVycmlkZV9kZWVtcGggLSBvdmVycmlkZSBQSVBFIFRYIGRlLWVt
-cGhhc2lzDQo+Pj4+ICsgKiBAcGh5OiBwb2ludGVyIHRvIHBoeQ0KPj4+PiArICogQHBsdmw6IHBy
-ZS1lbXBoYXNpcyBsZXZlbA0KPj4+PiArICogQHZsdmw6IHZvbHRhZ2Ugc3dpbmcgbGV2ZWwNCj4+
-Pj4gKyAqDQo+Pj4+ICsgKiBSZXR1cm46IE5vbmUNCj4+Pj4gKyAqLw0KPj4+PiArdm9pZCB4cHNn
-dHJfb3ZlcnJpZGVfZGVlbXBoKHN0cnVjdCBwaHkgKnBoeSwgdTggcGx2bCwgdTggdmx2bCkgew0K
-Pj4+PiArCXN0cnVjdCB4cHNndHJfcGh5ICpndHJfcGh5ID0gcGh5X2dldF9kcnZkYXRhKHBoeSk7
-DQo+Pj4+ICsJc3RydWN0IHhwc2d0cl9kZXYgKmd0cl9kZXYgPSBndHJfcGh5LT5kYXRhOw0KPj4+
-PiArCXN0YXRpYyB1OCBwZVs0XVs0XSA9IHsgeyAweDIsIDB4MiwgMHgyLCAweDIgfSwNCj4+Pj4g
-KwkJCSAgICAgICB7IDB4MSwgMHgxLCAweDEsIDB4RkYgfSwNCj4+Pj4gKwkJCSAgICAgICB7IDB4
-MCwgMHgwLCAweEZGLCAweEZGIH0sDQo+Pj4+ICsJCQkgICAgICAgeyAweEZGLCAweEZGLCAweEZG
-LCAweEZGIH0gfTsNCj4+Pj4gKw0KPj4+PiArCXdyaXRlbChwZVtwbHZsXVt2bHZsXSwNCj4+Pj4g
-KwkgICAgICAgZ3RyX2Rldi0+c2VyZGVzICsgZ3RyX3BoeS0+bGFuZSAqIEwwX1RYX0FOQV9UTV8x
-OF9PRkZTRVQgKw0KPj4+PiArCSAgICAgICBMMF9UWF9BTkFfVE1fMTgpOw0KPj4+PiArfQ0KPj4+
-PiArRVhQT1JUX1NZTUJPTF9HUEwoeHBzZ3RyX292ZXJyaWRlX2RlZW1waCk7DQo+Pj4gV2h5IGNh
-bid0IHRoZXNlIGJlIGluY2x1ZGVkIGluIG9uZSBvZiB0aGUgcGh5X29wcz8gV2h5IGRvIHlvdSBu
-ZWVkIGV4cG9ydA0KPnN5bWJvbHMNCj4+PiBoZXJlIGFuZCBiZWxvdz8NCj4+Pg0KPj4gRGlzcGxh
-eSBQb3J0IGhhcyBhIEhQRCAoSG90IFBsdWcgRGV0ZWN0KSBmZWF0dXJlIHdoZXJlIGFueSBEUCBT
-aW5rIERldmljZSBjYW4gYmUNCj5jb25uZWN0ZWQNCj4+IGF0IHJ1bnRpbWUgYW5kIERQQ0QgKERp
-c3BsYXkgUG9ydCBDb250cm9sIERhdGEpIHdvdWxkIGJlIHJlYWQgYnkgdGhlIERQIGRyaXZlciB0
-bw0KPmRldGVybWluZQ0KPj4gd2hldGhlciB0aGUgbGluayB0cmFpbmluZyBoYXBwZW5lZCBwcm9w
-ZXJseSBvciBub3QuIElmIGxpbmsgdHJhaW5pbmcgZmFpbHMsIHRoZSBEUCBkcml2ZXINCj5uZWVk
-cw0KPj4gdG8gdXBkYXRlIHRoZSBWb2x0YWdlIFN3aW5nICYgRGUtZW1waGFzaXMgdmFsdWVzIGF0
-IHJ1bnRpbWUgaW4gdGhlIHBoeSAgYmFzZWQgb24NCj50aGUgdmFsdWVzDQo+PiByZWFkIGluIERQ
-Q0QgYW5kIHJlc3RhcnQgdGhlIGxpbmsgdHJhaW5pbmcgc2VxdWVuY2UuIEJlY2F1c2Ugb2YgdGhp
-cyByZWFzb24gd2UgYXJlDQo+ZXhwb3J0aW5nIHRoZXNlDQo+PiBmdW5jdGlvbnMgc28gdGhhdCB0
-aGUgRFAgZHJpdmVyIGNhbiB1c2UgdGhlbSB3aGVuIHJlcXVpcmVkLg0KPg0KPkNhbid0IHRoaXMg
-YmUgYWRkZWQgdG8gcGh5X2NhbGlicmF0ZSgpIHNvIHRoYXQgeW91IGNhbiBjYWxsIGNhbGlicmF0
-ZQ0KPmV2ZXJ5dGltZSB5b3Ugd2FudCB0bw0KPmNoYW5nZSB0aGUgcGh5IGNvbmZpZ3VyYXRpb24g
-YmFzZWQgb24gRFBDRCBjb25maWc/DQo+DQoNClRoYW5rcyBmb3IgeW91ciByZXBseS4gIERQIGRy
-aXZlciByZWFkcyB0aGUgRFBDRCBhbmQgcGFzc2VzIHRoZSBWUy9ERSB2YWx1ZXMNCmFzIHRoZSBh
-cmd1bWVudCB0byBwaHktenlucW1wIGRyaXZlci4gVGhlIHBoeS16eW5xbXAgZHJpdmVyIHdpbGwg
-ZG8gdGhlDQpyZXF1aXJlZCByZWdpc3RlciB1cGRhdGVzIGJhc2VkIG9uIHRoZSBwYXNzZWQgVlMv
-REUgdmFsdWVzLiBUaGVyZSBhcmUgdHdvDQpmdW5jdGlvbnMgeHBzZ3RyX292ZXJyaWRlX2RlZW1w
-aCgpIGFuZCB4cHNndHJfbWFyZ2luaW5nX2ZhY3RvciAoKSB3aGljaCB3aWxsDQpiZSB1c2VkIGJ5
-IERQIGRyaXZlciB3aGVuIHJlcXVpcmVkLiBTaW5jZSB0aGVyZSBpcyBkZXBlbmRlbmN5IG9uIHRo
-ZSB2YWx1ZXMNCnRoYXQgbmVlZHMgdG8gYmUgcGFzc2VkIGJ5IERQIGRyaXZlciwgSSB0aGluayBw
-aHlfY2FsaWJyYXRlKCkgYWxvbmUgbWF5IG5vdA0Kc29sdmUgdGhlIHB1cnBvc2UuIFVzaW5nIHBo
-eSBwbGF0Zm9ybSBkYXRhIGZvciBzZW5kaW5nIHRoZSBWUy9ERSB2YWx1ZXMNCmZyb20gRFAgZHJp
-dmVyIG1heSBkbyB0aGUgaGFjaywgYnV0IGluY3JlYXNlcyB0aGUgY29tcGxleGl0eSBhbmQgcmVk
-dWNlcw0KcmVhZGFiaWxpdHkuIFNvLCBJIHRoaW5rIHRoZSBjdXJyZW50IGV4cG9ydGluZyBpbXBs
-ZW1lbnRhdGlvbiBpcyBzaW1wbGUgYW5kIGZpdHMNCm15IHJlcXVpcmVtZW50LiBQbGVhc2UgY29y
-cmVjdCBtZSAsIGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgd3JvbmcuDQoJDQpUaGFua3MsDQpBbnVy
-YWcgS3VtYXIgVnVsaXNoYQ0KDQo=
+
+--yrj/dFKFPuw6o+aM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Sep 25, 2018 at 12:33:54PM +0200, Linus Walleij wrote:
+> On Tue, Sep 25, 2018 at 11:33 AM Thierry Reding
+> <thierry.reding@gmail.com> wrote:
+> > On Tue, Sep 25, 2018 at 10:11:06AM +0200, Linus Walleij wrote:
+>=20
+> > > While I think it is really important that we start supporting hierarc=
+hical
+> > > irqdomains in the gpiolib core, I want a more complete approach,
+> > > so that drivers that need hierarchical handling of irqdomains
+> > > can get the same support from gpiolib as they get for simple
+> > > domains.
+> (...)
+> > > I can't see if you need to pull more stuff into the core to accomplish
+> > > that, but I think in essence the core gpiolib needs to be more helpful
+> > > with hierarchies.
+> >
+> > This is not as trivial as it sounds. I think we could probably provide a
+> > simple helper in the core that may work for the majority of GPIO
+> > controllers, and would be similar to irq_domain_xlate_twocell(). The
+> > problem is that ->gpio_to_irq() effectively needs to convert the offset
+> > of the pin in the GPIO controller to an IRQ specifier. If the IRQ domain
+> > can use irq_domain_xlate_twocell(), that should be easy, but if it does
+> > not, then we likely need a custom implementation as well.
+>=20
+> This sounds a lot like the "gpio-ranges" we have in the
+> gpiochip DT bindings, mapping gpio offsets to pin offsets.
+>=20
+> I assume that we could just introduce a cross-mapping
+> array from IRQ to IRQ in struct gpio_irq_chip for the
+> hierarchical irqchip? Is it any
+> more complicated than an array of [(int, int)] tuples?
+>=20
+> I guess this is what you have in mind for twocell?
+
+For twocell I think it would be even easier, because the IRQ specifier
+can just be reconstructed from (offset, irq_type). That's all the simple
+two-cell does, right? It's a 1:1 mapping of specifier to GPIO offset to
+IRQ offset.
+
+> > For example, as you may remember, the Tegra186 GPIO controller is
+> > somewhat quirky in that it has a number of banks, each of which can have
+> > any number of pins up to 8. However, in order to prevent users from
+> > attempting to use one of the non-existent GPIOs, we resorted to
+> > compacting the GPIO number space so that the GPIO specifier uses
+> > basically a (bank, pin) pair that is converted into a GPIO offset. The
+> > same is done for interrupt specifiers.
+>=20
+> I guess this stuff is what you refer to?
+>=20
+> #define TEGRA_MAIN_GPIO_PORT(port, base, count, controller)     \
+>         [TEGRA_MAIN_GPIO_PORT_##port] =3D {                       \
+>                 .name =3D #port,                                  \
+>                 .offset =3D base,                                 \
+>                 .pins =3D count,                                  \
+>                 .irq =3D controller,                              \
+>         }
+>=20
+> static const struct tegra_gpio_port tegra186_main_ports[] =3D {
+>         TEGRA_MAIN_GPIO_PORT( A, 0x2000, 7, 2),
+>         TEGRA_MAIN_GPIO_PORT( B, 0x3000, 7, 3),
+>         TEGRA_MAIN_GPIO_PORT( C, 0x3200, 7, 3),
+>         TEGRA_MAIN_GPIO_PORT( D, 0x3400, 6, 3),
+> (...)
+>=20
+> Maybe things have changed slightly.
+>=20
+> As I see it there are some ways to go about this:
+>=20
+> 1. Create one gpiochip per bank and just register the number of
+> GPIOs actually accessible per bank offset from 0. This works
+> if one does not insist on having one gpiochip covering all pins,
+> and as long as all usable pins are stacked from offset 0..n.
+> (Tegra186 doesn't do this, it is registering one chip for all.)
+>=20
+> 2. If the above cannot be met, register enough pins to cover all
+> (e.g. 32 pins for a 32bit GPIO register) then mask off the
+> unused pins in .valid_mask in the gpio_chip. This was fairly
+> recently introduced to add ACPI support for Qualcomm, as
+> there were valid, but unusable GPIO offsets, but it can be
+> used to cut arbitrary holes in any range of offsets.
+>=20
+> 3. Some driver-specific way. Which seems to be what Tegra186
+> is doing.
+>=20
+> Would you consider to move over to using method (2) to
+> get a more linear numberspace? I.e. register 8 GPIOs/IRQs
+> per port/bank and then just mask off the invalid ones?
+> .valid_mask in gpio_chip can be used for the GPIOs and
+> .valid_mask in the gpio_irq_chip can be used for IRQs.
+>=20
+> Or do you think it is nonelegant?
+
+This is all pretty much the same discussion that I remember we had
+earlier this year. Nothing's changed so far.
+
+Back at the time I had pointed out that we'd be wasting a lot of memory
+by registering 8 GPIOs/IRQs per bank, because on average only about 60-
+75% of the GPIOs are actually used. In addition we waste processing
+resources by having to check the GPIO offset against the valid mask
+every time we want to access a GPIO.
+
+I think that's inelegant, but from the rest of what you're saying you
+don't see it that way.
+
+> > Since there is no 1:1 relationship between the value in the specifier
+> > and the GPIO offset, we can't use irq_domain_xlate_twocell().
+>=20
+> Am I right that if you switch to method (2) above this is solved
+> and we get rid of the custom tegra186 xlate function =3D=3D big win?
+>=20
+> > I think we can probably just implement the simple two-cell version in
+> > gpiochip_to_irq() directly and leave it up to drivers that require
+> > something more to override ->to_irq().
+>=20
+> And if what I assume (in my naive thinking) you can do with
+> .valid_mask is correct, then you can convert tegra186 to use
+> common twocell translation.
+>=20
+> Sorry for being a pest, I just have a feeling we are reinventing
+> wheels here, I really want to pull as many fringe cases as
+> possible into gpiolib if I can so the maintenance gets
+> simpler.
+
+Like I said, we had this very discussion a couple of months ago, and I
+don't think I want to go through all of it again. I think, yes, I could
+make Tegra186 work with .valid_mask, even if I consider it wasteful. So
+if that's what you want, I'll go rewrite the driver so we'll never have
+to repeat this again.
+
+Thierry
+
+--yrj/dFKFPuw6o+aM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluqGToACgkQ3SOs138+
+s6ERHw//XDTW9nxwCPEzsbYFKRwbfu9e7mm8/PI/iu5Gxu1K+4SMa9F++wDJ7OB/
+/NoUJU3+dzs+Gft0BqtuTuNzaLXh/J7uTo8KOmUM321oG5zsg/iYbfNDmLgTBVlP
+1gDymYvzoKgqhpEoj7dFpLk7UINeJ74mYRJGqdHIqJ2nh9MN+GLM9m/Lbi4mbv42
+g3w9/Muuv4U3tVrT1pEiBfDyTCmHwKzqP+Vj7i+t8Z2xoyR3PJBYKK4EXO4d40u7
+NnrWmudrzDnchj41GG5Ufpe/VwLtqmsiAfCXIZBMWItFDpTosc8E+6/l1Loq6YvQ
+MJd+ASxp0qteKmWXwaJPGfM4X9zT4YmM6w+hCc6thAZ+UtOCnnFAHioEobYwvODw
+0taQFrNh/iLtpX29Zrwyl1vArG9yKPtFJBD6xT3O2fU3ZVAQPZyp2kvQ62xwVToT
+1620TgkIR1OoSobvUPBsVNZetoaENV3UaRULb+Vf/yfGFHC/vmTKXIwZk1m7ELvc
+mhZH1bQFg9TAcBqt8jva5Yz0yKAoYA8wiMcMCrb2oIi80iH3wDROxaBbGH3intiV
+ju7F1tH7PHlbLbMwxfNqx96BFnsYJ6H3vP+aqohpJdgqmMKUAbnBkbuBNa8toeeQ
+vFULXxlIhIFuuD4Hfw4a3gP1BpCOQT+Nzhnq7sUf1nPA+pRKK2o=
+=+PDr
+-----END PGP SIGNATURE-----
+
+--yrj/dFKFPuw6o+aM--
