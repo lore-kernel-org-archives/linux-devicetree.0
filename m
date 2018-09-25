@@ -1,133 +1,115 @@
-From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] dts: arm64/sdm845: Add WCN3990 WLAN module device
- node
-Date: Tue, 25 Sep 2018 17:45:00 +0530
-Message-ID: <d1b1ed01aef5b2f9866b4bd654ae327a@codeaurora.org>
-References: <20180921090907.25937-1-govinds@codeaurora.org>
- <20180921090907.25937-3-govinds@codeaurora.org>
- <20180924171147.GA87119@ban.mtv.corp.google.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v4 09/20] memory: tegra: Adapt to Tegra20 device-tree
+ binding changes
+Date: Tue, 25 Sep 2018 15:16:41 +0300
+Message-ID: <3bf4cd84-3d67-e7eb-7786-bbe952ad4075@gmail.com>
+References: <20180924004153.8232-1-digetx@gmail.com>
+ <20180924004153.8232-10-digetx@gmail.com> <20180924100205.GB21032@ulmo>
+ <bca7c87a-5f86-4a98-bb6b-411c641a0e80@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20180924171147.GA87119-1WoqFLEneaORBCj4nEdE8WJtCfot02Oa@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <bca7c87a-5f86-4a98-bb6b-411c641a0e80@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+On 9/24/18 4:22 PM, Dmitry Osipenko wrote:
+> On 9/24/18 1:02 PM, Thierry Reding wrote:
+>> On Mon, Sep 24, 2018 at 03:41:42AM +0300, Dmitry Osipenko wrote:
+>>> The tegra20-mc device-tree binding has been changed, GART has been
+>>> squashed into Memory Controller and now the clock property is mandatory
+>>> for Tegra20, the DT compatible has been changed as well. Adapt driver to
+>>> the DT changes.
+>>>
+>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>> ---
+>>>   drivers/memory/tegra/mc.c | 21 ++++++++-------------
+>>>   drivers/memory/tegra/mc.h |  6 ------
+>>>   include/soc/tegra/mc.h    |  2 +-
+>>>   3 files changed, 9 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+>>> index e56862495f36..1b4ceefd82f9 100644
+>>> --- a/drivers/memory/tegra/mc.c
+>>> +++ b/drivers/memory/tegra/mc.c
+>>> @@ -51,7 +51,7 @@
+>>>     static const struct of_device_id tegra_mc_of_match[] = {
+>>>   #ifdef CONFIG_ARCH_TEGRA_2x_SOC
+>>> -    { .compatible = "nvidia,tegra20-mc", .data = &tegra20_mc_soc },
+>>> +    { .compatible = "nvidia,tegra20-mc-gart", .data =
+>>> &tegra20_mc_soc },
+>>
+>> Technically we now regress because we no longer support the older device
+>> tree bindings. I know that it doesn't really matter because this driver
+>> doesn't really do much interesting yet other than reporting memory
+>> access violations, but if that's enough to warrant a change of the
+>> compatible string, then I think we also need to preserve compatibility
+>> in the code.
+>>
+>> That said, I think compatibility would be easier to preserve if we stuck
+>> with the old compatible string and used a "reg-names" property to
+>> specify which version of the binding we're referring to.
+>>
+>> For example, we could have:
+>>
+>>     memory-controller@7000f000 {
+>>         compatible = "nvidia,tegra20-mc";
+>>         reg = <0x7000f000 0x024
+>>                0x7000f03c 0x3c4>;
+>>         ...
+>>     };
+>>
+>> for the old binding and:
+>>
+>>     memory-controller@7000f000 {
+>>         compatible = "nvidia,tegra20-mc";
+>>         reg = <0x7000f000 0x00000400>,
+>>               <0x58000000 0x02000000>;
+>>         reg-names = "mc", "gart";
+>>         ...
+>>     };
+>>
+>> for the new binding. The driver can then easily check for the existence
+>> of the reg-names property and take the legacy or new code paths.
+> 
+> There is no problem with keeping compatibility for newer kernels with
+> the older binding, it just not worth the effort. The real problem is
+> keeping compatibility of older kernels with the new binding, the older
+> kernels won't care about the reg-names and will treat GART registers as
+> the second registers bank of the Memory Controller. Unfortunately I
+> don't see how your suggestion is supposed to help with the problem.
 
-On 2018-09-24 22:41, Brian Norris wrote:
-> Hi,
-> 
-> On Fri, Sep 21, 2018 at 02:39:05PM +0530, Govind Singh wrote:
->> Add device node for the ath10k SNOC platform driver probe
->> and add resources required for WCN3990 on SDM845 soc.
->> 
->> Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  7 +++++++
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 25 
->> +++++++++++++++++++++++++
->>  2 files changed, 32 insertions(+)
->> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts 
->> b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->> index eedfaf8922e2..4de57f7df93c 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
->> @@ -440,3 +440,10 @@
->>  		bias-pull-up;
->>  	};
->>  };
->> +
->> +&wifi {
-> 
-> As the bots have already told you, you missed adding a 'wifi' label to
-> sdm845.dtsi, so this reference doesn't compile.
-> 
+I've another variant. What about to drop the GART registers from the
+binding? The range is always fixed and there is no good reason to
+artificially change it. I recall that in the past you didn't like the
+patch that made the GART's aperture size fixed, saying that some
+imaginary person may want to change it via DT. It's still not a very
+good argument to me, I can't see a good reason why anyone may want to
+change the aperture size.
 
-Yes, I will correct this in next revision.
+The new binding will look like this (just like T30+ binding, only
+iommu-cells number differ):
 
->> +	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
->> +	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
->> +	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
->> +	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
->> +};
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index e080072cdfdb..b0b107641e74 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -86,6 +86,11 @@
->>  			reg = <0 0x86200000 0 0x2d00000>;
->>  			no-map;
->>  		};
->> +
->> +		wlan_msa_mem: reserved-memory@96700000 {
->> +			no-map;
->> +			reg = <0 0x96700000 0 0x100000>;
->> +		};
->>  	};
->> 
->>  	cpus {
->> @@ -1200,5 +1205,25 @@
->>  				status = "disabled";
->>  			};
->>  		};
->> +
->> +		qcom,wifi {
-> 
-> That's not a legit node name. Nodes should (a) have a generic name and
-> (b) include a unit address when the node contains a 'reg' property. [1]
-> 
-> So, how about 'wifi@18800000'? (And include the 'wifi:' label, since 
-> you
-> want to refer to it in other files.)
-> 
+     memory-controller@7000f000 {
+         compatible = "nvidia,tegra20-mc";
+         reg = <0x7000f000 0x00000400>;
+         clocks = <&tegra_car TEGRA20_CLK_MC>;
+         clock-names = "mc";
 
-I am fine with 'wifi@18800000'.
+         interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
 
-> Also, this seems like the kind of device that should remain 'status =
-> "disabled"' in the top-level DTSI, and be overridden with 'status =
-> "okay"' in the child DTS.
-> 
+         #reset-cells = <1>;
+         #iommu-cells = <0>;
+     };
 
-Sure, i will populate  'status = "disabled"' in next revision, which can 
-be enabled from child dtsi
-as part of separate change.
+That way older kernel will continue to work with the new binding because
+of the miss of the second registers range and new kernels may keep
+supporting the old binding. Though I don't think that keeping support of
+the old binding really worth the churning. Thoughts?
 
-> Brian
-> 
-> [1] See:
-> https://elinux.org/Device_Tree_Usage#Node_Names
-> https://elinux.org/images/c/cf/Power_ePAPR_APPROVED_v1.1.pdf
-> 
->> +			compatible = "qcom,wcn3990-wifi";
->> +			reg = <0x18800000 0x800000>;
->> +			reg-names = "membase";
->> +			memory-region = <&wlan_msa_mem>;
->> +			interrupts =
->> +				<0 413 0 /* CE0 */ >,
->> +				<0 414 0 /* CE1 */ >,
->> +				<0 415 0 /* CE2 */ >,
->> +				<0 416 0 /* CE3 */ >,
->> +				<0 417 0 /* CE4 */ >,
->> +				<0 418 0 /* CE5 */ >,
->> +				<0 420 0 /* CE6 */ >,
->> +				<0 421 0 /* CE7 */ >,
->> +				<0 422 0 /* CE8 */ >,
->> +				<0 423 0 /* CE9 */ >,
->> +				<0 424 0 /* CE10 */ >,
->> +				<0 425 0 /* CE11 */ >;
->> +		};
->>  	};
->>  };
->> --
->> 2.17.0
->> 
-
-Thanks,
-Govind
+Note that new kernels will require the "mc" clock and hence the old
+binding will be rejected because it doesn't have that clock.
