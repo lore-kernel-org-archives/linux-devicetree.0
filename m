@@ -1,49 +1,128 @@
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH 1/2] dt-bindings: mmc: sdhci-msm: Add flag for restoring dll
-Date: Tue, 25 Sep 2018 20:34:34 +0530
-Message-ID: <1537887875-29494-2-git-send-email-vbadigan@codeaurora.org>
-References: <1537887875-29494-1-git-send-email-vbadigan@codeaurora.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 1/5] arm64: dts: mt7622: add timer, CCI-400 and PMU
+ nodes
+Date: Tue, 25 Sep 2018 17:10:02 +0200
+Message-ID: <5cd2bf92-251d-7a48-5bb0-95060d6ccb51@gmail.com>
+References: <7d3ce6a89ffeb221dc3197b763521582bf300577.1534607107.git.ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537887875-29494-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <7d3ce6a89ffeb221dc3197b763521582bf300577.1534607107.git.ryder.lee@mediatek.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org
-Cc: asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, evgreen@chromium.org, dianders@google.com, Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:MULTIMEDIA CARD MMC, SECURE
-        DIGITAL SD AND..." <linux-mmc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Ryder Lee <ryder.lee@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The dll settings of SDHC controller needs to be restored whenever
-controller clocks are gated. This restoration is needed only on
-few SDHCI-MSM controllers. This dt flag indicates whether dll
-restoration is needed or not.
+Whole series pushed to v4.19-next/dts64
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks!
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 3720385..207ce36 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -31,6 +31,8 @@ Optional properties:
- 					BUS_OFF states in power irq. Should be specified in
- 					pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
- 					Units uA.
-+- qcom,restore-dll-config - Flag indicates that restoration of dll config after clock gating
-+			    is needed on given platform. This wouldn't be needed for every MSM.
- Example:
- 
- 	sdhc_1: sdhci@f9824900 {
-@@ -49,6 +51,8 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+
-+		qcom,restore-dll-config;
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+On 18/08/2018 18:02, Ryder Lee wrote:
+> Add device tree entries for timer, ARM CCI-400 and its PMU.
+> Otherwise, we add a cortex-a53-pmu node to enable hw perfevents.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> change since v1:
+> - add a pmu node.
+> ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 55 ++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index de2c47bd..d297100 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -79,6 +79,7 @@
+>  			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			clock-frequency = <1300000000>;
+> +			cci-control-port = <&cci_control2>;
+>  		};
+>  
+>  		cpu1: cpu@1 {
+> @@ -92,6 +93,7 @@
+>  			#cooling-cells = <2>;
+>  			enable-method = "psci";
+>  			clock-frequency = <1300000000>;
+> +			cci-control-port = <&cci_control2>;
+>  		};
+>  	};
+>  
+> @@ -113,6 +115,13 @@
+>  		method      = "smc";
+>  	};
+>  
+> +	pmu {
+> +		compatible = "arm,cortex-a53-pmu";
+> +		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
+> +			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-affinity = <&cpu0>, <&cpu1>;
+> +	};
+> +
+>  	reserved-memory {
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+> @@ -218,6 +227,16 @@
+>  		#reset-cells = <1>;
+>  	};
+>  
+> +        timer: timer@10004000 {
+> +                compatible = "mediatek,mt7622-timer",
+> +                             "mediatek,mt6577-timer";
+> +                reg = <0 0x10004000 0 0x80>;
+> +                interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
+> +                clocks = <&infracfg CLK_INFRA_APXGPT_PD>,
+> +                         <&topckgen CLK_TOP_RTC>;
+> +                clock-names = "system-clk", "rtc-clk";
+> +        };
+> +
+>  	scpsys: scpsys@10006000 {
+>  		compatible = "mediatek,mt7622-scpsys",
+>  			     "syscon";
+> @@ -325,6 +344,42 @@
+>  		      <0 0x10360000 0 0x2000>;
+>  	};
+>  
+> +	cci: cci@10390000 {
+> +		compatible = "arm,cci-400";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0 0x10390000 0 0x1000>;
+> +		ranges = <0 0 0x10390000 0x10000>;
+> +
+> +		cci_control0: slave-if@1000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace-lite";
+> +			reg = <0x1000 0x1000>;
+> +		};
+> +
+> +		cci_control1: slave-if@4000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace";
+> +			reg = <0x4000 0x1000>;
+> +		};
+> +
+> +		cci_control2: slave-if@5000 {
+> +			compatible = "arm,cci-400-ctrl-if";
+> +			interface-type = "ace";
+> +			reg = <0x5000 0x1000>;
+> +		};
+> +
+> +		pmu@9000 {
+> +			compatible = "arm,cci-400-pmu,r1";
+> +			reg = <0x9000 0x5000>;
+> +			interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +	};
+> +
+>  	auxadc: adc@11001000 {
+>  		compatible = "mediatek,mt7622-auxadc";
+>  		reg = <0 0x11001000 0 0x1000>;
+> 
