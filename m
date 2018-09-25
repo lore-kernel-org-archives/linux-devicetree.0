@@ -1,80 +1,47 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850-lego-ev3: slow down A/DC as much as
- possible
-Date: Tue, 25 Sep 2018 11:34:32 +0530
-Message-ID: <a6e9c7ce-8fc8-0ee2-2d3a-24c33b67bdcc@ti.com>
-References: <20180924013146.18121-1-david@lechnology.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/9] AHCI and SATA PHY support for BCM63138
+Date: Tue, 25 Sep 2018 11:49:59 +0530
+Message-ID: <fa91f7eb-3405-4607-9391-f043b73e7af6@ti.com>
+References: <20180920191646.18198-1-f.fainelli@gmail.com>
+ <7b6e1671-8efe-20d2-d3a2-51a521ce7f22@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180924013146.18121-1-david@lechnology.com>
+In-Reply-To: <7b6e1671-8efe-20d2-d3a2-51a521ce7f22@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Kevin Hilman <khilman@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Al Cooper <alcooperx@gmail.com>, Ray Jui <ray.jui@broadcom.com>, Tejun Heo <tj@kernel.org>, Fengguang Wu <fengguang.wu@intel.com>, Arnd Bergmann <arnd@arndb.de>, "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
 
-On Monday 24 September 2018 07:01 AM, David Lechner wrote:
-> Due to the electrical design of the A/DC circuits on LEGO MINDSTORMS EV3,
-> if we are reading analog values as fast as possible (i.e. using DMA to
-> service the SPI) the A/DC chip will read incorrect values - as much as
-> 0.1V off when the SPI is running at 10MHz. (This has to do with the
-> capacitor charge time when channels are muxed in the A/DC.)
 
-So you believe this is an issue with the board design rather than the
-limitation of the ADC chip itself? Because if its the later, the fix
-should be in the driver instead.
+On Friday 21 September 2018 12:49 AM, Florian Fainelli wrote:
+> On 09/20/2018 12:16 PM, Florian Fainelli wrote:
+>> Hi Kishon, Tejun,
+>>
+>> This patch series adds support for the SATA AHCI and PHY found on the
+>> ARM-basd BCM63138 DSL SoCs.
+>>
+>> It would probably make sense for patches 1-3 to go through Kishon's
+>> tree, patches 4-7 through Tejun's tree, and I would be merging the last
+>> two patches through the Broadcom ARM-SoC tree.
+>>
+>> Let me know if this is not a workable plan, thank you very much!
+> 
+> Looks like I had left patches with the incorrect subject, please
+> disregard the following patches:
+> 
+> [PATCH 2/9] phy: broadcom: allow PHY_BRCM_SATA driver to be built for
+> DSL SoCs
+> [PATCH 5/9] ata: sata_brcmstb: Allow optional reset controller to be used
+> [PATCH 6/9] ata: ahci_brcmstb: Match 63138 compatible strings
+> 
+> since they have incorrect/inconsistent titles, the other patches are
+> fine though. Sorry about that.
 
-> 
-> This patch slows down the SPI as much as possible (if CPU is at 456MHz,
-> SPI runs at 1/2 of that, so 228MHz and has a max prescalar of 256, so
-> we could get ~891kHz, but we're just rounding it to 1MHz). We also use
-> the max allowable value for WDELAY to slow things down even more.
-> 
-> These changes reduce the error of the analog values to about 5mV, which
-> is tolerable.
-> 
-> Commits a3762b13a596 ("spi: spi-davinci: Add support for SPI_CS_WORD")
-> and e2540da86ef8 ("iio: adc: ti-ads7950: use SPI_CS_WORD to reduce
-> CPU usage") introduce changes that allow DMA transfers to be used, so
-> this slow down is needed now.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
-> 
-> FYI, this patch doesn't strictly depend on the other two mentioned. In fact, it
-> would better if it got merged before them, but the consequences are minimal, so
-> it doesn't seem worth it to me to try coordinating merges here.
-> 
-> Both of these patches mentioned have been picked up in the respective
-> subsystems.
+merged the first 3 patches to linux-phy tree.
 
-Is this needed for the -rc cycle or can wait for v4.20?
-
-Thanks,
-Sekhar
-
-> 
->  arch/arm/boot/dts/da850-lego-ev3.dts | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
-> index c4729d0e6c19..66fcadf0ba91 100644
-> --- a/arch/arm/boot/dts/da850-lego-ev3.dts
-> +++ b/arch/arm/boot/dts/da850-lego-ev3.dts
-> @@ -352,7 +352,8 @@
->  		compatible = "ti,ads7957";
->  		reg = <3>;
->  		#io-channel-cells = <1>;
-> -		spi-max-frequency = <10000000>;
-> +		spi-max-frequency = <1000000>;
-> +		ti,spi-wdelay = <63>;
->  		vref-supply = <&adc_ref>;
->  	};
->  };
-> -- 
-> 2.17.1
-> 
+Thanks
+Kishon
