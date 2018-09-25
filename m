@@ -1,57 +1,24 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: mmc: sdhci-msm: Add flag for restoring dll
-Date: Tue, 25 Sep 2018 10:38:23 -0700
-Message-ID: <CAE=gft6Bxtdev+1Zo58LHNaYkB5MTfUZx8eFayvuixVJFWMw_Q@mail.gmail.com>
-References: <1537887875-29494-1-git-send-email-vbadigan@codeaurora.org> <1537887875-29494-2-git-send-email-vbadigan@codeaurora.org>
+From: =?UTF-8?Q?Rodrigo_Exterck=C3=B6tter_Tj=C3=A4der?=
+        <rodrigo@tjader.xyz>
+Subject: Re: [PATCH 1/2] arm64: dts: allwinner: Olimex A64-OLinuXino: enable eMMC.
+Date: Tue, 25 Sep 2018 14:47:59 -0300
+Message-ID: <CAG7TQgFTsR4pf4jAcWMFoOmiP7AXYqjts60RP2kuJGU44AcQJQ@mail.gmail.com>
+References: <20180919141815.18737-1-rodrigo@tjader.xyz> <20180921142811.h5jraemk565alh3i@flea>
+ <CAG7TQgE_KU_cK_4E+NG8Qcw-QB2=C6YoqBYR2svmWxywFyySCw@mail.gmail.com> <20180925090139.qbu6tqav5oth7zkw@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537887875-29494-2-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <20180925090139.qbu6tqav5oth7zkw@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vbadigan@codeaurora.org
-Cc: adrian.hunter@intel.com, Ulf Hansson <ulf.hansson@linaro.org>, robh+dt@kernel.org, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayali <sayalil@codeaurora.org>, Doug Anderson <dianders@google.com>, mark.rutland@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: maxime.ripard@bootlin.com
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 8:05 AM Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> The dll settings of SDHC controller needs to be restored whenever
-> controller clocks are gated. This restoration is needed only on
-> few SDHCI-MSM controllers. This dt flag indicates whether dll
-> restoration is needed or not.
->
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> index 3720385..207ce36 100644
-> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-> @@ -31,6 +31,8 @@ Optional properties:
->                                         BUS_OFF states in power irq. Should be specified in
->                                         pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
->                                         Units uA.
-> +- qcom,restore-dll-config - Flag indicates that restoration of dll config after clock gating
-> +                           is needed on given platform. This wouldn't be needed for every MSM.
->  Example:
->
->         sdhc_1: sdhci@f9824900 {
-> @@ -49,6 +51,8 @@ Example:
->
->                 clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
->                 clock-names = "core", "iface";
-> +
-> +               qcom,restore-dll-config;
+On Tue, Sep 25, 2018 at 6:01 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> We can't really do that, unfortunately. If the device tree name was to
+> change for a given board, we'd break all the build systems, boot
+> scripts and distros out there.
 
-Hi Veera,
-I'm not sure this is the best approach. It might be better to key this
-behavior off of the compatible string. Actually I'm noticing now that
-the binding for this device doesn't include an SoC-specific compatible
-string, which I think is now the preferred way (eg
-"qcom,sdm845-sdhci", "qcom,sdhci-msm-v5"). I think we should add that
-to sdhci-msm.txt, then use the compatible string to enable this
-behavior you're adding now.
-
--Evan
+What if we keep the device tree for the version without WiFi and eMMC
+with the current name and create new device trees for the other two
+versions?
