@@ -1,79 +1,150 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/2] arm64: dts: allwinner: Olimex A64-OLinuXino: enable
- eMMC.
-Date: Tue, 25 Sep 2018 11:01:39 +0200
-Message-ID: <20180925090139.qbu6tqav5oth7zkw@flea>
-References: <20180919141815.18737-1-rodrigo@tjader.xyz>
- <20180921142811.h5jraemk565alh3i@flea>
- <CAG7TQgE_KU_cK_4E+NG8Qcw-QB2=C6YoqBYR2svmWxywFyySCw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="aqeztt7u4ouiaxaq"
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 08/14] ARM64: dts: hisilicon: Add tsensor interrupt name
+Date: Tue, 25 Sep 2018 11:03:06 +0200
+Message-ID: <1537866192-12320-9-git-send-email-daniel.lezcano@linaro.org>
+References: <1537866192-12320-1-git-send-email-daniel.lezcano@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAG7TQgE_KU_cK_4E+NG8Qcw-QB2=C6YoqBYR2svmWxywFyySCw@mail.gmail.com>
+In-Reply-To: <1537866192-12320-1-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rodrigo =?utf-8?B?RXh0ZXJja8O2dHRlciBUasOkZGVy?= <rodrigo@tjader.xyz>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: edubezval@gmail.com
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, daniel.lezcano@linaro.org, leo.yan@linaro.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/HISILICON SOC
+        SUPPORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Add the interrupt names for the sensors, so the code can rely on them
+instead of dealing with index which are prone to error.
 
---aqeztt7u4ouiaxaq
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The name comes from the Hisilicon documentation found on internet.
 
-On Fri, Sep 21, 2018 at 11:54:07AM -0300, Rodrigo Exterck=F6tter Tj=E4der w=
-rote:
-> On Fri, Sep 21, 2018 at 11:28 AM Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
-> > Expanding a bit more that commit log would be helpful. What is the
-> > eMMC connected to that board? Do all versions have it? Which modes are
-> > supposed to be supported, and which one have been tested?
->=20
-> The terseness of the commit message was already pointed out to me on
-> #linux-sunxi. I was waiting for more comments before sending a v2.
->=20
-> But you do touch on something I also realized: there are actually
-> three versions of the A64-OLinuXino. In fact only one of them has the
-> WiFi board, which is already enabled in the current device tree.
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../bindings/thermal/hisilicon-thermal.txt         |  3 ++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi          | 63 +++++++++++-----------
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi          |  1 +
+ 3 files changed, 36 insertions(+), 31 deletions(-)
 
-Sigh, ok..
-
-> Wouldn't it be better to split it into three separate device trees? I
-> have made a patch that does that[1], if you think that is a good
-> approach I can submit that as a patch and then later submit a patch on
-> top of that to enable the eMMC only on the two boards that have it.
-
-We can't really do that, unfortunately. If the device tree name was to
-change for a given board, we'd break all the build systems, boot
-scripts and distros out there.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---aqeztt7u4ouiaxaq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlup+XIACgkQ0rTAlCFN
-r3SLiw/+K4ibF+4iC+OKUEHrrOcL92136pHr1RpVr6ywdc47aYPkbZiavMblFWb5
-T22x5Fwp5PMvG/ehp60A8RhAr6qxBZNr+TA6Pk4oYpr1WZpY0VALFnyAFPK/WqAL
-6DM9pCAxpsF0CiTIxcpK9K8GPdF1GxjG5V1Q3K+NCPgqkmEVDzt3OJFcqGBTBCfw
-EdaBmTwrgT0ry+kYTuv+hUvD+F0iuzTtYBHtdWxaoRm7g6fXnRSKhlGTIYDvcLxX
-Sv8mbZvX69bFphj1jvrj/LZNd/1PHdVzf62n+BmjqsPl4wnrU+BDxUivErurXeze
-nk1SeOSHsWUkSNqnAt8x2AkhW1M1/nm76tmzNYsob7BKHtHORuggM7eg0clUtOwV
-EmK6F7v4mKNcDX9iN+vUUVIkiFSAatJyJry6kju4NBQJjLd70kWwoogVSy6K6xne
-4lI910AW/VovzBwd4DvXJ5t0lczZGmB9wuJqTAbr9zflY8pbeDwxp34Bi9wEh9zi
-NRVpGjfIpmVVPGlWtuv2yicbtc9d5/Sri1mklT/PdMpelRM2sVDnfQIIvuanIGRz
-2W0wyQP1CROIGRDaFhVMnp2BiRA46bu0NFK2g31SX4HoPg3r3Xz2d3lXqEphxY/n
-DiSuw8krBpULRuRipoQ1YKZSMX3P+dwinWDK0gZLbpVhvM+m4vo=
-=VKy6
------END PGP SIGNATURE-----
-
---aqeztt7u4ouiaxaq--
+diff --git a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+index cef716a..3edfae3 100644
+--- a/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/hisilicon-thermal.txt
+@@ -7,6 +7,7 @@
+   region.
+ - interrupt: The interrupt number to the cpu. Defines the interrupt used
+   by /SOCTHERM/tsensor.
++- interrupt-names: The interrupt names for the different sensors
+ - clock-names: Input clock name, should be 'thermal_clk'.
+ - clocks: phandles for clock specified in "clock-names" property.
+ - #thermal-sensor-cells: Should be 1. See ./thermal.txt for a description.
+@@ -18,6 +19,7 @@ for Hi6220:
+ 		compatible = "hisilicon,tsensor";
+ 		reg = <0x0 0xf7030700 0x0 0x1000>;
+ 		interrupts = <0 7 0x4>;
++		interrupt-names = "tsensor_intr";
+ 		clocks = <&sys_ctrl HI6220_TSENSOR_CLK>;
+ 		clock-names = "thermal_clk";
+ 		#thermal-sensor-cells = <1>;
+@@ -28,5 +30,6 @@ for Hi3660:
+ 		compatible = "hisilicon,hi3660-tsensor";
+ 		reg = <0x0 0xfff30000 0x0 0x1000>;
+ 		interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-names = "tsensor_a73";
+ 		#thermal-sensor-cells = <1>;
+ 	};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index f432b0a..bf8a479 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -1081,46 +1081,47 @@
+ 			compatible = "hisilicon,hi3660-tsensor";
+ 			reg = <0x0 0xfff30000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "tsensor_a73";
+ 			#thermal-sensor-cells = <1>;
+ 		};
+ 
+-		thermal-zones {
++                thermal-zones {
+ 
+-			cls0: cls0 {
+-				polling-delay = <1000>;
+-				polling-delay-passive = <100>;
+-				sustainable-power = <4500>;
++                        cls0: cls0 {
++                                polling-delay = <1000>;
++                                polling-delay-passive = <100>;
++                                sustainable-power = <4500>;
+ 
+-				/* sensor ID */
+-				thermal-sensors = <&tsensor 1>;
++                                /* sensor ID */
++                                thermal-sensors = <&tsensor 1>;
+ 
+-				trips {
+-					threshold: trip-point@0 {
+-						temperature = <65000>;
+-						hysteresis = <1000>;
+-						type = "passive";
+-					};
++                                trips {
++                                        threshold: trip-point@0 {
++                                                temperature = <65000>;
++                                                hysteresis = <1000>;
++                                                type = "passive";
++                                        };
+ 
+-					target: trip-point@1 {
+-						temperature = <75000>;
+-						hysteresis = <1000>;
+-						type = "passive";
+-					};
+-				};
++                                        target: trip-point@1 {
++                                                temperature = <75000>;
++                                                hysteresis = <1000>;
++                                                type = "passive";
++                                        };
++                                };
+ 
+-				cooling-maps {
++                                cooling-maps {
+ 					map0 {
+-						trip = <&target>;
+-						contribution = <1024>;
+-						cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-					};
++                                                trip = <&target>;
++                                                contribution = <1024>;
++                                                cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++                                        };
+ 					map1 {
+-						trip = <&target>;
+-						contribution = <512>;
+-						cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+-					};
+-				};
+-			};
+-		};
++                                                trip = <&target>;
++                                                contribution = <512>;
++                                                cooling-device = <&cpu4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
++                                        };
++                                };
++                        };
++                };
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index 247024d..9eae986 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -841,6 +841,7 @@
+ 			compatible = "hisilicon,tsensor";
+ 			reg = <0x0 0xf7030700 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "tsensor_intr";
+ 			clocks = <&sys_ctrl 22>;
+ 			clock-names = "thermal_clk";
+ 			#thermal-sensor-cells = <1>;
+-- 
+2.7.4
