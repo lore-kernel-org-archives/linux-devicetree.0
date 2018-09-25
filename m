@@ -1,54 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-binding: arm/cpus.txt: fix
- dynamic-power-coefficient unit
-Date: Tue, 25 Sep 2018 11:44:41 -0500
-Message-ID: <20180925164441.GA21659@bogus>
-References: <1535526518-29022-1-git-send-email-vincent.guittot@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: gta04: add serial console wakeup irq
+Date: Tue, 25 Sep 2018 09:48:33 -0700
+Message-ID: <20180925164833.GP5662@atomide.com>
+References: <20180923150719.8211-1-andreas@kemnade.info>
+ <20180924220345.GG5662@atomide.com>
+ <20180925072550.424e82e7@kemnade.info>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1535526518-29022-1-git-send-email-vincent.guittot@linaro.org>
+In-Reply-To: <20180925072550.424e82e7@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, punit.agrawal@arm.com, edubezval@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Aug 29, 2018 at 09:08:38AM +0200, Vincent Guittot wrote:
-> The unit of dynamic-power-coefficient is described as mW/MHz/uV^2 whereas
-> its usage in the code assumes that unit is uW/MHz/V^2
+* Andreas Kemnade <andreas@kemnade.info> [180925 05:32]:
+> Hi Tony,
 > 
-> In drivers/thermal/cpu_cooling.c, the code is :
+> On Mon, 24 Sep 2018 15:03:45 -0700
+> Tony Lindgren <tony@atomide.com> wrote:
 > 
-> power = (u64)capacitance * freq_mhz * voltage_mv * voltage_mv;
-> do_div(power, 1000000000);
-> 
-> which can be summarized as :
-> power (mW) = capacitance * freq_mhz/1000 * (voltage_mv/1000)^2
-> or
-> power (mW) = (capacitance * freq_mhz * (voltage_mv/1000)^2) / 1000
-> then
-> power (mW) = power (uW) / 1000
-> so
-> power (uW) = capacitance * freq_mhz * (voltage_mv/1000)^2
-> 
-> Furthermore, if we test basic values like :
-> voltage_mv = 1000mV = 1V
-> freq_mhz = 1000Mhz
-> 
-> The minimum possible power, when dynamic-power-coefficient equals 1, will
-> be with current unit:
-> min power = 1 * 1000  * (1000000)^2 = 10^15 mW
-> which is not realistic
-> 
-> With the unit used by the code, the min power is
-> min power =  1 * 1000 * 1^2 = 1000uW = 1mW which is far more realistic
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > * Andreas Kemnade <andreas@kemnade.info> [180923 08:12]:
+> > > This enables the possibility to have more aggressive runtime pm
+> > > by providing proper wakeup irq for the serial console.  
+> > 
+> > Thanks applying to omap-for-v4.20/dt.
+> > 
+> > FYI, you can now grep wake /proc/interrupts and see the
+> > wakeirq counts increase when they trigger. Might be handy
+> > for debugging PM stuff.
+> > 
+> thanks for that information, you also had a patch for checking
+> pm which was explicitely marked as not-to-merge. Is there
+> any up-to-date version of it?
 
-Applied, thanks.
+It's still the same so no updates to it.
 
-Rob
+> Well, for debugging I check first average currents via bq27000
+> attached to omap_hdq. omap_hdq gets stuck after first transaction
+> after idling uarts which does not happen when CM_AUTOIDLE1_CORE.AUTO_HDQ
+> is cleared. Reloading the omap_hdq module to try to fix things
+> makes w1 really freak out (patch already sent for that).
+> Well, will do some rtfm and hopefully come back with a patch.
+> afaicr there was something special...
+
+Hmm sounds like drivers/w1/masters/omap_hdq.c needs to implement
+PM runtime calls, it's probably just enabled because of only
+needing the interconnect fck that the uart happens to keep
+enabled.
+
+> The result are power management problem in /dev/brain ;-)
+
+:)
+
+Tony
