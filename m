@@ -1,105 +1,67 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/2 v3] drm/panel: Augment the TPO TPG110 bindings
-Date: Tue, 25 Sep 2018 16:35:58 +0200
-Message-ID: <20180925143559.19934-1-linus.walleij@linaro.org>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH 2/2] iio: magnetometer: Add driver support for PNI RM3100
+Date: Tue, 25 Sep 2018 22:36:54 +0800
+Message-ID: <57d8a9d6-c402-068e-0a21-bbd6c20a7816@electromag.com.au>
+References: <20180925031724.21399-1-songqiang1304521@gmail.com>
+ <20180925031724.21399-2-songqiang1304521@gmail.com>
+ <20180925143054.00007fcb@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180925143054.00007fcb@huawei.com>
+Content-Language: en-AU
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jonathan.cameron@huawei.com>, Song Qiang <songqiang1304521@gmail.com>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRQTyBUUEcxMTAgYmluZGluZ3Mgd2VyZSB1c2luZyB0aGUgRFBJIGJpbmRpbmdzIChwb3B1
-bGFyCmluIHRoZSBmYmRldiBzdWJzeXN0ZW0pIGJ1dCB0aGlzIG1pc3NlcyB0aGUgZmluZXIgcG9p
-bnRzCmxlYXJuZWQgaW4gdGhlIERSTSBzdWJzeXN0ZW0uCgpXZSBuZWVkIHRvIGF1Z21lbnQgdGhl
-IGJpbmRpbmdzIGZvciBwcm9wZXIgRFJNIGludGVncmF0aW9uOgp0aGUgdGltaW5ncyBhcmUgZXhw
-cmVzc2VkIGJ5IHRoZSBoYXJkd2FyZSwgbm90IHB1dCBpbnRvIHRoZQpkZXZpY2UgdHJlZS4gSS5l
-LiB0aGlzIGhhcmR3YXJlIGlzIHNlbGYtZGVzY3JpYmluZyBhbmQgY2FuCnJlcG9ydCB0aGUgcmVz
-b2x1dGlvbnMgYW5kIHRpbWluZ3MgbmVlZGVkLiBJdCBzaG91bGQgbm90CmJlIGRlc2NyaWJlZCBp
-biB0aGUgZGV2aWNlIHRyZWUuCgpGdXJ0aGVyIHRoZSBkZXZpY2Ugd2FzIGluY29ycmVjdGx5IG1v
-ZGVsZWQgd2l0aCBHUElPIGxpbmVzCmluc3RlYWQgb2YgYW4gU1BJIGNoaWxkLCBldmVuIHRob3Vn
-aCB0aGUgZGV2aWNlIHdhcyB1c2luZwpTUEkuCgpObyBrbm93biBkZXBsb3ltZW50cyBvZiB0aGUg
-ZGV2aWNlIHVzaW5nIGRldmljZSB0cmVlCmV4aXN0LCBzbyBpdCBzaG91bGQgYmUgZmluZSB0byBh
-dWdtZW50IHRoZSBiaW5kaW5ncy4KCkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpTaWdu
-ZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ci0tLQpD
-aGFuZ2VMb2cgdjItPnYzOgotIFJld3JpdGUgdG8gcmVmbGVjdCB0aGUgZmFjdCB0aGF0IHRoZSBk
-aXNwbGF5IHNob3VsZCBiZQogIGFuIFNQSSBjaGlsZCBkZXZpY2UgdXNpbmcgM1dJUkUgU1BJLgpD
-aGFuZ2VMb2cgdjEtPnYyOgotIEV4cGFuZCBzb21lIHNlY3Rpb25zIHRvIG1ha2UgaXQgY2xlYXIg
-d2hhdCBraW5kIG9mIGRldmljZQogIHRoaXMgaXMgYW5kIHRoYXQgdGhlIHNlcmlhbCBwcm90b2Nv
-bCBpdCB1c2VzIGlzIG5vdAogIEkyQy4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC90
-cG8sdHBnMTEwLnR4dCAgICAgfCA4MyArKysrKysrKysrKystLS0tLS0tCiAxIGZpbGUgY2hhbmdl
-ZCwgNTQgaW5zZXJ0aW9ucygrKSwgMjkgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBvLHRwZzExMC50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC90cG8sdHBn
-MTEwLnR4dAppbmRleCBmNWUzYzZmMjA5NWEuLjRiOTBhMDkyOWE0NiAxMDA2NDQKLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvdHBvLHRwZzExMC50
-eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-dHBvLHRwZzExMC50eHQKQEAgLTEsNDcgKzEsNzIgQEAKIFRQTyBUUEcxMTAgUGFuZWwKID09PT09
-PT09PT09PT09PT0KIAotVGhpcyBiaW5kaW5nIGJ1aWxkcyBvbiB0aGUgRFBJIGJpbmRpbmdzLCBh
-ZGRpbmcgYSBmZXcgcHJvcGVydGllcwotYXMgYSBzdXBlcnNldCBvZiBhIERQSS4gU2VlIHBhbmVs
-LWRwaS50eHQgZm9yIHRoZSByZXF1aXJlZCBEUEkKLWJpbmRpbmdzLgorVGhpcyBwYW5lbCBkcml2
-ZXIgaXMgYSBjb21wb25lbnQgdGhhdCBhY3RzIGFzIGFuIGludGVybWVkaWFyeQorYmV0d2VlbiBh
-biBSR0Igb3V0cHV0IGFuZCBhIHZhcmlldHkgb2YgcGFuZWxzLiBUaGUgcGFuZWwKK2RyaXZlciBp
-cyBzdHJhcHBlZCB1cCBpbiBlbGVjdHJvbmljcyB0byB0aGUgZGVzaXJlZCByZXNvbHV0aW9uCith
-bmQgb3RoZXIgcHJvcGVydGllcywgYW5kIGhhcyBhIGNvbnRyb2wgaW50ZXJmYWNlIG92ZXIgM1dJ
-UkUKK1NQSS4gQnkgdGFsa2luZyB0byB0aGUgVFBHMTEwIG92ZXIgU1BJLCB0aGUgc3RyYXBwZWQg
-cHJvcGVydGllcworY2FuIGJlIGRpc2NvdmVyZWQgYW5kIHRoZSBoYXJkd2FyZSBpcyB0aGVyZWZv
-cmUgbW9zdGx5CitzZWxmLWRlc2NyaWJpbmcuCisKKyAgICAgICArLS0tLS0tLS0rCitTUEkgLT4g
-fCAgVFBPICAgfCAtPiBwaHlzaWNhbCBkaXNwbGF5CitSR0IgLT4gfCBUUEcxMTAgfAorICAgICAg
-ICstLS0tLS0tLSsKKworSWYgc29tZSBlbGVjdHJpY2FsIHN0cmFwIG9yIGFsdGVybmF0ZSByZXNv
-bHV0aW9uIGlzIGRlc2lyZWQsCit0aGlzIGNhbiBiZSBzZXQgdXAgYnkgdGFraW5nIHNvZnR3YXJl
-IGNvbnRyb2wgb2YgdGhlIGRpc3BsYXkKK292ZXIgdGhlIFNQSSBpbnRlcmZhY2UuIFRoZSBpbnRl
-cmZhY2UgY2FuIGFsc28gYWRqdXN0Citmb3IgcHJvcGVydGllcyBvZiB0aGUgZGlzcGxheSBzdWNo
-IGFzIGdhbW1hIGNvcnJlY3Rpb24gYW5kCitjZXJ0YWluIGVsZWN0cmljYWwgZHJpdmluZyBsZXZl
-bHMuCisKK1RoZSBUUEcxMTAgZG9lcyBub3Qga25vdyB0aGUgcGh5c2ljYWwgZGltZW5zaW9ucyBv
-ZiB0aGUgcGFuZWwKK2Nvbm5lY3RlZCwgc28gdGhpcyBuZWVkcyB0byBiZSBzcGVjaWZpZWQgaW4g
-dGhlIGRldmljZSB0cmVlLgorCitJdCByZXF1aXJlcyBhIEdQSU8gbGluZSBmb3IgY29udHJvbCBv
-ZiBpdHMgcmVzZXQgbGluZS4KKworVGhlIHNlcmlhbCBwcm90b2NvbCBoYXMgbGluZSBuYW1lcyB0
-aGF0IHJlc2VtYmxlIEkyQyBidXQgdGhlCitwcm90b2NvbCBpcyBub3QgSTJDIGJ1dCAzV0lSRSBT
-UEkuCiAKIFJlcXVpcmVkIHByb3BlcnRpZXM6Ci0tIGNvbXBhdGlibGUgOiAidHBvLHRwZzExMCIK
-Ky0gY29tcGF0aWJsZSA6IG9uZSBvZjoKKyAgInN0ZSxub21hZGlrLW5oazE1LWRpc3BsYXkiLCAi
-dHBvLHRwZzExMCIKKyAgInRwbyx0cGcxMTAiCiAtIGdyZXN0Yi1ncGlvcyA6IHBhbmVsIHJlc2V0
-IEdQSU8KLS0gc2Nlbi1ncGlvcyA6IHNlcmlhbCBjb250cm9sIGVuYWJsZSBHUElPCi0tIHNjbC1n
-cGlvcyA6IHNlcmlhbCBjb250cm9sIGNsb2NrIGxpbmUgR1BJTwotLSBzZGEtZ3Bpb3MgOiBzZXJp
-YWwgY29udHJvbCBkYXRhIGxpbmUgR1BJTworLSB3aWR0aC1tbSA6IHNlZSBkaXNwbGF5L3BhbmVs
-L3BhbmVsLWNvbW1vbi50eHQKKy0gaGVpZ2h0LW1tIDogc2VlIGRpc3BsYXkvcGFuZWwvcGFuZWwt
-Y29tbW9uLnR4dAorCitUaGUgZGV2aWNlIG5lZWRzIHRvIGJlIGEgY2hpbGQgb2YgYW4gU1BJIGJ1
-cywgc2VlCitzcGkvc3BpLWJ1cy50eHQuIFRoZSBTUEkgY2hpbGQgbXVzdCBzZXQgdGhlIGZvbGxv
-d2luZworcHJvcGVydGllczoKKy0gc3BpLTN3aXJlCistIHNwaS0zd2lyZS1oaWdoLWltcGVkYW5j
-ZS10dXJuYXJvdW5kCistIHNwaS1tYXgtZnJlcXVlbmN5ID0gPDMwMDAwMDA+OworYXMgdGhlc2Ug
-YXJlIGNoYXJhY3RlcmlzdGljcyBvZiB0aGlzIGRldmljZS4KIAotUmVxdWlyZWQgbm9kZXM6Ci0t
-IFZpZGVvIHBvcnQgZm9yIERQSSBpbnB1dCwgc2VlIHBhbmVsLWRwaS50eHQKLS0gUGFuZWwgdGlt
-aW5nIGZvciBEUEkgc2V0dXAsIHNlZSBwYW5lbC1kcGkudHh0CitUaGUgZGV2aWNlIG5vZGUgY2Fu
-IGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxkCisnZW5kcG9pbnQn
-IG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3MgZGVmaW5lZCBpbgorbWVkaWEvdmlkZW8t
-aW50ZXJmYWNlcy50eHQuIFRoaXMgbm9kZSBzaG91bGQgZGVzY3JpYmUgcGFuZWwncyB2aWRlbyBi
-dXMuCiAKIEV4YW1wbGUKIC0tLS0tLS0KIAotcGFuZWwgewotCWNvbXBhdGlibGUgPSAidHBvLHRw
-ZzExMCIsICJwYW5lbC1kcGkiOwotCWdyZXN0Yi1ncGlvcyA9IDwmc3RtcGVfZ3BpbzQ0IDUgR1BJ
-T19BQ1RJVkVfTE9XPjsKLQlzY2VuLWdwaW9zID0gPCZncGlvMCA2IEdQSU9fQUNUSVZFX0xPVz47
-Ci0Jc2NsLWdwaW9zID0gPCZncGlvMCA1IEdQSU9fQUNUSVZFX0hJR0g+OwotCXNkYS1ncGlvcyA9
-IDwmZ3BpbzAgNCBHUElPX0FDVElWRV9ISUdIPjsKK3BhbmVsOiBkaXNwbGF5QDAgeworCWNvbXBh
-dGlibGUgPSAidHBvLHRwZzExMCI7CisJcmVnID0gPDA+OworCXNwaS0zd2lyZTsKKwlzcGktM3dp
-cmUtaGlnaC1pbXBlZGFuY2UtdHVybmFyb3VuZDsKKwkvKiAzMjAgbnMgbWluIHBlcmlvZCB+PSAz
-IE1IeiAqLworCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDMwMDAwMDA+OworCS8qIFdpZHRoIGFuZCBo
-ZWlnaHQgZnJvbSBkYXRhIHNoZWV0ICovCisJd2lkdGgtbW0gPSA8MTE2PjsKKwloZWlnaHQtbW0g
-PSA8ODc+OworCWdyZXN0Yi1ncGlvcyA9IDwmZm9vX2dwaW8gNSBHUElPX0FDVElWRV9MT1c+Owog
-CWJhY2tsaWdodCA9IDwmYmw+OwogCiAJcG9ydCB7CiAJCW5vbWFkaWtfY2xjZF9wYW5lbDogZW5k
-cG9pbnQgewotCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZub21hZGlrX2NsY2RfcGFkcz47CisJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JmZvbz47CiAJCX07CiAJfTsKLQotCXBhbmVsLXRpbWluZyB7Ci0J
-CWNsb2NrLWZyZXF1ZW5jeSA9IDwzMzIwMDAwMD47Ci0JCWhhY3RpdmUgPSA8ODAwPjsKLQkJaGJh
-Y2stcG9yY2ggPSA8MjE2PjsKLQkJaGZyb250LXBvcmNoID0gPDQwPjsKLQkJaHN5bmMtbGVuID0g
-PDE+OwotCQl2YWN0aXZlID0gPDQ4MD47Ci0JCXZiYWNrLXBvcmNoID0gPDM1PjsKLQkJdmZyb250
-LXBvcmNoID0gPDEwPjsKLQkJdnN5bmMtbGVuID0gPDE+OwotCX07CiB9OwotLSAKMi4xNy4xCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On 25/09/2018 9:30 PM, Jonathan Cameron wrote:
+>> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+>> +{
+>> +	struct iio_poll_func *pf = p;
+>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>> +	struct rm3100_data *data = iio_priv(indio_dev);
+>> +	struct regmap *regmap = data->regmap;
+>> +	u8 buffer[9];
+>> +	int ret;
+>> +	int i;
+>> +
+>> +	mutex_lock(&data->lock);
+>> +	ret = rm3100_wait_measurement(data);
+>> +	if (ret < 0) {
+>> +		mutex_unlock(&data->lock);
+>> +		goto done;
+>> +	}
+>> +
+>> +	ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, sizeof(buffer));
+>> +	mutex_unlock(&data->lock);
+>> +	if (ret < 0)
+>> +		goto done;
+>> +
+>> +	/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. x for padding. */
+>> +	for (i = 0; i < 3; i++)
+>> +		memcpy(data->buffer + i * 4, buffer + i * 3, 3);
+> Firstly X doesn't need copying.
+> Secondly the copy of Y actually overwrites the value of Z
+> XXXYYYZZZxxx
+> XXXxYYYZZxxx
+> XXXxYYYxYZZx
+> 
+> I think...
+> 
+>> +
+>> +	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+>> +			iio_get_time_ns(indio_dev));
+
+memcpy target is a different buffer so should be ok.
+
+But that raises the question of does it need to be?
+'buffer' could be 12 bytes long and just shuffle Z then Y.
+Do the unused bytes need to be zeroed? or does libiio mask them anyway?
+
+
+
+-- 
+Regards
+Phil Reid
