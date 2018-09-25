@@ -1,53 +1,87 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
- driver bindings
-Date: Tue, 25 Sep 2018 14:43:10 -0500
-Message-ID: <CAL_JsqJQypZbeZRa2u2+nM96p0ZHMHgDSpMbXqZx6zn+OiZSrw@mail.gmail.com>
-References: <20180627045234.27403-1-rnayak@codeaurora.org> <20180627045234.27403-3-rnayak@codeaurora.org>
- <20180703223554.GA32313@rob-hp-laptop> <20180704055757.4li26b6poxllmh2k@vireshk-i7>
- <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org> <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
- <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
+Date: Tue, 25 Sep 2018 22:12:28 +0200
+Message-ID: <346cb95c-f9ce-f19b-30f3-75e9fb379290@linaro.org>
+References: <5baa3fa9.1c69fb81.4c7b7.19fdSMTPIN_ADDED_MISSING@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org>
+In-Reply-To: <5baa3fa9.1c69fb81.4c7b7.19fdSMTPIN_ADDED_MISSING@mx.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Mathieu Malaterre <malat@debian.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-watchdog@vger.kernel.org, od@zcrc.me, linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 5:25 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> Hi Rob,
->
-> []...
-> >>>>> +   rpmhpd_opp_table: opp-table {
-> >>>>> +           compatible = "operating-points-v2-qcom-level";
-> >>>>> +
-> >>>>> +           rpmhpd_opp_ret: opp1 {
-> >>>>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> >>>>> +           };
-> >>>>
-> >>>> I don't see the point in using the OPP binding here when you aren't
-> >>>> using *any* of the properties from it.
-> >>>
-> >>> Yeah, that's the case for now. But there are cases (as Stephen
-> >>> mentioned earlier [1]) where the voltage values (and maybe other
-> >>> values like current, etc) would be known and filled in DT. And that's
-> >>> why we all agreed to use OPP tables for PM domains as well, as these
-> >>> are really "operating performance points" of these PM domains.
-> >>
-> >> Rob, are you fine with these bindings then?
-> >
-> > Okay, my only thought is whether we should just use 'reg' here, or do
-> > we need 'level' for anything else and should make it common?
->
-> I am not quite sure I understood what you are suggesting here :(
+On 25/09/2018 15:38, Paul Cercueil wrote:
+> 
+> Le 24 sept. 2018 9:14 AM, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit :
+>>
+>> On 24/09/2018 08:53, Paul Cercueil wrote: 
+>>>
+>>> Le 24 sept. 2018 07:58, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit : 
+>>>>
+>>>> On 24/09/2018 07:49, Paul Cercueil wrote: 
+>>>>>
+>>>>> Le 24 sept. 2018 07:35, Daniel Lezcano <daniel.lezcano@linaro.org> a 
+>>>>> écrit : 
+>>>>>>
+>>>>>> On 24/09/2018 07:24, Paul Cercueil wrote: 
+>>>>>>> Hi Daniel, 
+>>>>>>>
+>>>>>>> Le 24 sept. 2018 05:12, Daniel Lezcano 
+>>>>>>> <daniel.lezcano@linaro.org> a écrit : 
+>>>>>>>>
+>>>>>>>> On 21/08/2018 19:16, Paul Cercueil wrote: 
+>>>>>>>>> This driver handles the TCU (Timer Counter Unit) present on 
+>>>>>>>>> the Ingenic JZ47xx SoCs, and provides the kernel with a 
+>>>>>>>>> system timer, and optionally with a clocksource and a 
+>>>>>>>>> sched_clock. 
+>>>>>>>>>
+>>>>>>>>> It also provides clocks and interrupt handling to client 
+>>>>>>>>> drivers. 
+>>>>>>>>
+>>>>>>>> Can you provide a much more complete description of the timer 
+>>>>>>>> in order to make my life easier for the review of this patch? 
+>>>>>>>
+>>>>>>> See patch [03/24], it adds a doc file that describes the 
+>>>>>>> hardware. 
+>>>>>>
+>>>>>> Thanks, I went through but it is incomplete to understand what the 
+>>>>>> timer do. I will reverse-engineer the code but it would help if you 
+>>>>>> can give the gross approach. Why multiple channels ? mutexes and 
+>>>>>> completion ? 
+>>>>>
+>>>>> Much of the complexity is because of the multi-purpose nature of the 
+>>>>> TCU channels. Each one can be used as timer/clocksource, or PWM. 
+>>>>>
+>>>>> The driver starts by using channels 0 and 1 as system timer and 
+>>>>> clocksource, respectively, the other ones being unused for now. Then, 
+>>>>> *if* the PWM driver requests one of the channels in use by the 
+>>>>> timer/clocksource driver, say channel 0, the timer/clocksource driver 
+>>>>> will dynamically reassign the system timer to a free channel, from 
+>>>>> channel 0 to e.g. channel 2. Only in that case the completion/mutex 
+>>>>> are actually used. 
+>>>>
+>>>> Why do you need to do this? Can't be the channels dedicated and reserved 
+>>>> for clocksource and clockevent? 
+>>>
+>>> That's what I had in place (ingenic,timer-channel and ingenic,clocksource-channel DT properties), but Rob didn't want any linux-specific properties in the devicetree binding :( 
+>>
+>> Isn't possible to specify the channel to use in the DT? like renesas16 ? 
+> 
+> That's what I did in V6 (and before), but Rob did not want me to add properties for Linux-specific concepts such as clocksource.
 
-You could use the  'reg' property instead of 'qcom,level'. Any reason
-not to do that?
+Hmm, I remember something like that, yes but I did a delete of the
+previous version when you posted the v7. Can you give a pointer to its
+answer ?
 
-Alternatively, would 'level' be something useful in other situations
-and should not be QCom specific?
 
-Rob
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
