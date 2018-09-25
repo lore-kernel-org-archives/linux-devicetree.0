@@ -1,44 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: arc vendor prefix
-Date: Tue, 25 Sep 2018 10:23:08 -0500
-Message-ID: <20180925152308.GA21227@bogus>
-References: <527da392-9629-792b-08cc-970ffc8173ee@gmail.com>
- <20180920130952.7eb8e45c@alans-desktop>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH] ARM: dts: da850-lego-ev3: slow down A/DC as much as
+ possible
+Date: Tue, 25 Sep 2018 10:23:40 -0500
+Message-ID: <fda2606b-3c7b-539a-ae07-4d9b57c34335@lechnology.com>
+References: <20180924013146.18121-1-david@lechnology.com>
+ <a6e9c7ce-8fc8-0ee2-2d3a-24c33b67bdcc@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180920130952.7eb8e45c@alans-desktop>
+In-Reply-To: <a6e9c7ce-8fc8-0ee2-2d3a-24c33b67bdcc@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Cox <gnomes@lxorguk.ukuu.org.uk>
-Cc: Brian Dodge <bdodge09@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Kevin Hilman <khilman@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 20, 2018 at 01:09:52PM +0100, Alan Cox wrote:
-> On Tue, 18 Sep 2018 21:05:20 -0400
-> Brian Dodge <bdodge09@gmail.com> wrote:
-> 
-> > Hi,
-> > 
-> > In the linux kernel commit 91ab076e3a2f092254fe5231bbfa92b37fd52e38 the 
-> > vendor prefix "arctic" was added to vendor-prefixes.txt.
-> > 
-> > The original change I authored used "arc" not "arctic", and the device 
-> > tree bindings were added assuming that prefix in commit 
-> > ce9d22573d85341c987f997461ac712e4dbe47b1
-> > 
-> > Perhaps odeju changed the name to arctic in the patch after I created it 
-> > and before it was approved.
-> > 
-> > This pairing isn't really compatible is it?  Either the prefix should be 
-> > reverted to "arc" or the bindings (and driver source) changed to use 
-> > "arctic", as in "arctic,arc2c0608" vs. "arc,arc2c0608"
-> 
-> ARC is a Synopsys registered trademark for the ARC processor line. I'm not
-> sure what the right answer is but I think it might be better to keep to
-> arctic to avoid confusion with arc based products.
 
-Agreed.
 
-Rob
+On 9/25/18 1:04 AM, Sekhar Nori wrote:
+> Hi David,
+> 
+> On Monday 24 September 2018 07:01 AM, David Lechner wrote:
+>> Due to the electrical design of the A/DC circuits on LEGO MINDSTORMS EV3,
+>> if we are reading analog values as fast as possible (i.e. using DMA to
+>> service the SPI) the A/DC chip will read incorrect values - as much as
+>> 0.1V off when the SPI is running at 10MHz. (This has to do with the
+>> capacitor charge time when channels are muxed in the A/DC.)
+> 
+> So you believe this is an issue with the board design rather than the
+> limitation of the ADC chip itself? Because if its the later, the fix
+> should be in the driver instead.
+
+It is the board design. There are external 4.7k series resistors that 
+make the RC charge time so long.
+
+> 
+>>
+>> Both of these patches mentioned have been picked up in the respective
+>> subsystems.
+> 
+> Is this needed for the -rc cycle or can wait for v4.20?
+
+v4.20
