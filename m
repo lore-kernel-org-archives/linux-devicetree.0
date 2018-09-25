@@ -1,34 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v2 2/3] dt-bindings: fpga: Add bindings for ZynqMP
- fpga driver
-Date: Tue, 25 Sep 2018 15:17:20 -0500
-Message-ID: <20180925201720.GA32354@bogus>
-References: <20180905072448.12488-1-nava.manne@xilinx.com>
- <20180905072448.12488-3-nava.manne@xilinx.com>
+Subject: Re: [PATCH 4/5] pinctrl: lochnagar: Add support for the Cirrus Logic
+ Lochnagar
+Date: Tue, 25 Sep 2018 15:20:48 -0500
+Message-ID: <20180925202048.GA6227@bogus>
+References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
+ <20180905104120.17252-4-ckeepax@opensource.cirrus.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180905072448.12488-3-nava.manne@xilinx.com>
+In-Reply-To: <20180905104120.17252-4-ckeepax@opensource.cirrus.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nava kishore Manne <nava.manne@xilinx.com>
-Cc: mark.rutland@arm.com, michal.simek@xilinx.com, atull@kernel.org, mdf@kernel.org, jollys@xilinx.com, sboyd@kernel.org, rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, chinnikishore369@gmail.com
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: lee.jones@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, broonie@kernel.org, linus.walleij@linaro.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 05, 2018 at 12:54:47PM +0530, Nava kishore Manne wrote:
-> Add documentation to describe Xilinx ZynqMP fpga driver
-> bindings.
+On Wed, Sep 05, 2018 at 11:41:19AM +0100, Charles Keepax wrote:
+> From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 > 
-> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> Lochnagar is an evaluation and development board for Cirrus
+> Logic Smart CODEC and Amp devices. It allows the connection of
+> most Cirrus Logic devices on mini-cards, as well as allowing
+> connection of various application processor systems to provide a
+> full evaluation platform.
+> 
+> Lochnagar provides many pins which can generally be used for an
+> audio function such as an AIF or a PDM interface, but also as
+> GPIOs.
+> 
+> Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
 > ---
-> Changes for v2:
->                 -Moved pcap node as a child to firwmare
->                  node as suggested by Rob.
+>  drivers/pinctrl/cirrus/Kconfig             |   10 +
+>  drivers/pinctrl/cirrus/Makefile            |    2 +
+>  drivers/pinctrl/cirrus/pinctrl-lochnagar.c | 1161 ++++++++++++++++++++++++++++
+>  drivers/pinctrl/cirrus/pinctrl-lochnagar.h |  115 +++
 
-Sorry, but I wasn't thinking that you already have a node defined under 
-/firmware. There's no reason to have this pcap node as a child of it. 
-The existing node can instantiate multiple providers including this and 
-reset provider.
+>  include/dt-bindings/pinctrl/lochnagar.h    |  135 ++++
 
->  .../firmware/xilinx/xlnx,zynqmp-firmware.txt        | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+This belongs with the binding patch.
+
+>  5 files changed, 1423 insertions(+)
+>  create mode 100644 drivers/pinctrl/cirrus/pinctrl-lochnagar.c
+>  create mode 100644 drivers/pinctrl/cirrus/pinctrl-lochnagar.h
+>  create mode 100644 include/dt-bindings/pinctrl/lochnagar.h
