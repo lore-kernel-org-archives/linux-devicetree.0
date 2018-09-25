@@ -1,90 +1,65 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/5] ASoC: max98088: Add master clock
-	handling
-Date: Tue, 25 Sep 2018 10:17:42 -0700
-Message-ID: <20180925171742.GR20825@sirena.org.uk>
-References: <20180925142352.24106-1-m.felsch@pengutronix.de>
- <20180925142352.24106-5-m.felsch@pengutronix.de>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA
+ Tegra20/30
+Date: Tue, 25 Sep 2018 20:29:24 +0300
+Message-ID: <074a169d-294b-ad4b-ddbd-6db742278f2a@gmail.com>
+References: <20180830194356.14059-1-digetx@gmail.com>
+ <20180830194356.14059-2-digetx@gmail.com> <20180925165810.GA32430@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7561775081676585360=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20180925142352.24106-5-m.felsch@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, robh+dt@kernel.org, kernel@pengutronix.de, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Tushar Behera <tushar.behera@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180925165810.GA32430@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 9/25/18 7:58 PM, Rob Herring wrote:
+> On Thu, Aug 30, 2018 at 10:43:52PM +0300, Dmitry Osipenko wrote:
+>> Add device-tree binding that describes CPU frequency-scaling hardware
+>> found on NVIDIA Tegra20/30 SoC's.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>> new file mode 100644
+>> index 000000000000..2c51f676e958
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+>> @@ -0,0 +1,38 @@
+>> +Binding for NVIDIA Tegra20 CPUFreq
+>> +==================================
+>> +
+>> +Required properties:
+>> +- clocks: Must contain an entry for each entry in clock-names.
+>> +  See ../clocks/clock-bindings.txt for details.
+>> +- clock-names: Must include the following entries:
+>> +  - pll_x: main-parent for CPU clock, must be the first entry
+>> +  - backup: intermediate-parent for CPU clock
+>> +  - cpu: the CPU clock
+> 
+> The Cortex A9 has CLK, PERIPHCLK, and PERIPHCLKEN clocks and only CLK 
+> is used for the cpu core. You can't just define your own clocks that 
+> you happen to want access to.
+> 
+> Otherwise, you're not defining anything new here, so a binding document 
+> isn't required.
 
---===============7561775081676585360==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4ECF1u7dKBoUGhe3"
-Content-Disposition: inline
+PERIPHCLK is a different thing. Here we are defining the CPU clock and
+its *parent* sources, the PLLX (main) and backup (intermediate clock
+that is used while PLLX changes its rate). These are not some random
+clocks "that you happen to want access to", they are essential for the
+Tegra CPUFreq driver, CPU is running off them.
 
+I assume that PERIPHCLK and other clocks are derived from the "CPU"
+clock and their configuration is hardwired. Probably Peter knows how
+it's implemented in HW.
 
---4ECF1u7dKBoUGhe3
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Sep 25, 2018 at 04:23:51PM +0200, Marco Felsch wrote:
-> From: Andreas F=E4rber <afaerber@suse.de>
->=20
-> If master clock is provided through device tree, then update
-> the master clock frequency during set_sysclk.
-
-This changelog suggests that the clock is optional...
-
-> +	if (!IS_ERR(max98088->mclk)) {
-> +		freq =3D clk_round_rate(max98088->mclk, freq);
-> +		clk_set_rate(max98088->mclk, freq);
-> +	}
-
-=2E..as does much of the code (note BTw that this ignores errors setting
-the clock)...
-
-> +	max98088->mclk =3D devm_clk_get(&i2c->dev, "mclk");
-> +	if (IS_ERR(max98088->mclk)) {
-> +		if (PTR_ERR(max98088->mclk) =3D=3D -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		dev_err(&i2c->dev, "Invalid MCLK\n");
-> +		return -EINVAL;
-> +	}
-> +
-
-=2E..but the probe function makes it mandatory (and also throws away the
-error code from clk_get() if it's not -EPROBE_DEFER).  Is this the best
-choice?  It seems inconsistent anyway.
-
---4ECF1u7dKBoUGhe3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluqbbIACgkQJNaLcl1U
-h9A7Cgf9HkpNDssCKNN1+YTvbfJBBBD8AJ4uBE75FPYe2WlviwNiXbyWpwejClYf
-8ofteB7IwaG/lm6nHRKDHX+jvtSPkrecaqZk+Hx7Um+PXRtGGumePva+LQ3UPtda
-+O6z/x4Xp/UV3ZYRY0SqZiCT6BXtq4LW2dt2v4LD0J1NY7cDZhIFoz8DQf3OQUzP
-CEZy5JCnBi51tZvO9XOJC9R3ONv5W7masBOO2E2Dm2Z4RBevaweS6gqkfCOh+1lD
-ye/mhT7F7uxvrupVxUwyzJwCpN20hB6VxgFLsZzkbHLB6KoUDgaC1193mlK2yIGy
-4vhnqrMLIW0aUyhv7tZTiRYcPmnHaA==
-=1tlo
------END PGP SIGNATURE-----
-
---4ECF1u7dKBoUGhe3--
-
---===============7561775081676585360==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============7561775081676585360==--
+I'm now working on v2 that will include more Tegra-specific stuff in the
+binding, like custom "opp-supported-hw" property and probably some more.
