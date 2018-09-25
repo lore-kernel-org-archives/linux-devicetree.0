@@ -1,189 +1,99 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH] of: unittest: Don't dereference args.np after test errors
-Date: Mon, 24 Sep 2018 21:39:40 -0700
-Message-ID: <ad3b8421-fc73-f4da-a44c-1e47a9d71463@roeck-us.net>
-References: <1537720412-29919-1-git-send-email-linux@roeck-us.net>
- <837495de-36b9-3bff-e3da-9ee79b9ef125@gmail.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+Date: Tue, 25 Sep 2018 10:44:11 +0530
+Message-ID: <e9afe736-c2f0-6182-afd0-08279e09a35e@ti.com>
+References: <20180925000545.22931-1-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <837495de-36b9-3bff-e3da-9ee79b9ef125@gmail.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180925000545.22931-1-tony@atomide.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc: Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org, Dave Gerlach <d-gerlach@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
 
-On 09/24/2018 09:19 PM, Frank Rowand wrote:
-> Hi Guenter,
-> 
-> On 09/23/18 09:33, Guenter Roeck wrote:
->> If a devicetree parse function fails, it is quite likely that args.np
->> is invalid. Trying to dereference it will then cause the system to crash.
->>
->> This was seen when trying to run devicetree unittests on a g3beige
->> qemu system. This system has the OF_IMAP_OLDWORLD_MAC flag set in
->> of_irq_workarounds and expects an 'old style' structure of irq
->> nodes. Trying to parse the test nodes fails and results in the
->> following crash.
->>
->> OF: /testcase-data/phandle-tests/consumer-b: arguments longer than property
->> Unable to handle kernel paging request for data at address 0x00bc616e
->> Faulting instruction address: 0xc092437c
->> Oops: Kernel access of bad area, sig: 11 [#1]
->> BE PREEMPT PowerMac
->> Modules linked in:
->> CPU: 0 PID: 1 Comm: swapper Not tainted 4.19.0-rc4-yocto-standard+ #1
->> NIP:  c092437c LR: c0925098 CTR: c0925088
->> REGS: cf8dfb40 TRAP: 0300   Not tainted  (4.19.0-rc4-yocto-standard+)
->> MSR:  00001032 <ME,IR,DR,RI>  CR: 82004044  XER: 00000000
->> DAR: 00bc616e DSISR: 40000000
->> GPR00: c0925098 cf8dfbf0 cf8e0000 c14098c7 c14098c7 c1409c50 00000066 00000002
->> GPR08: 00000063 00bc614e c0b483e9 000affff 82004048 00000000 00000008 c0b36d80
->> GPR16: c0ac0000 c0b4233c c14098c7 c0b13c14 05ffffff 000affff c0b483e4 c0b00a30
->> GPR24: cecfe324 cecfe324 c0acc434 c0ac8420 c1409c50 05ffffff c1409c50 c14098c7
->> NIP [c092437c] device_node_gen_full_name+0x30/0x15c
->> LR [c0925098] device_node_string+0x190/0x3c8
->> Call Trace:
->> [cf8dfbf0] [c0733704] of_find_property+0x5c/0x74 (unreliable)
->> [cf8dfc30] [c0925098] device_node_string+0x190/0x3c8
->> [cf8dfca0] [c092690c] pointer+0x274/0x4d4
->> [cf8dfcd0] [c0926e20] vsnprintf+0x2b4/0x5ec
->> [cf8dfd30] [c0927170] vscnprintf+0x18/0x48
->> [cf8dfd40] [c008eb70] vprintk_store+0x4c/0x22c
->> [cf8dfd70] [c008f1c4] vprintk_emit+0x94/0x270
->> [cf8dfda0] [c008fb60] printk+0x5c/0x6c
->> [cf8dfde0] [c0bd1ec0] of_unittest+0x2670/0x2b48
->> [cf8dfe80] [c0004ba8] do_one_initcall+0xac/0x320
->> [cf8dfee0] [c0b8975c] kernel_init_freeable+0x328/0x3f0
->> [cf8dff30] [c00050c4] kernel_init+0x24/0x118
->> [cf8dff40] [c0014278] ret_from_kernel_thread+0x14/0x1c
->>
->> To avoid this and similar problems, don't try to dereference args.np
->> after devicetree parse failures, and display the name of the parsed node
->> instead. With this, we get error messages such as
->>
->> dt-test ### FAIL of_unittest_parse_interrupts():791 index 0 -
->> 	data error on node /testcase-data/interrupts/interrupts0 rc=-22
->>
->> This may not display the intended node name, but it is better than a crash.
-> 
-> Thanks for finding and debugging the root cause of the problem.
-> 
-> As the patch comment notes, the changes do not fix the root cause, but
-> instead avoid the crash.  I'd like to deal with the root cause instead.
-> 
-> I've never encountered OF_IMAP_OLDWORLD_MAC and need to dig deeper to
-> understand exactly how having it set leads to the error returns from
-> of_parse_phandle_with_args().  Thus my off-the-top-of-my-head first
-> observation is likely to be incorrect.  But I'd like to point out
-> what I suspect is likely to be a more useful direction for the fix.
-> 
-> I'll use a bit of artful logic to claim that the root cause is that
-> of_parse_phandle_with_args() does not behave as unittests expect when
-> OF_IMAP_OLDWORLD_MAC is set.
-> 
-> If the of_parse_phandle_with_args() calls are not going to perform the
-> test that unittest expects to be performing, then it is pointless to
-> do the tests.  The fix then is to not do those tests.  For example,
-> at the top of of_unittest_parse_phandle_with_args(), simply do:
-> 
->          if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
->                  return;
-> 
 
-I thought about submitting that as second patch, but wanted to wait
-for feedback before doing that. I'll be more than happy to drop this
-patch and replace it with the above.
+On Tuesday 25 September 2018 05:35 AM, Tony Lindgren wrote:
+> Hi all,
+> 
+> Here are four patches to make am437x and am335x l4 devices to probe with
+> ti-sysc driver similar to what we've already done for omap4. The related
+> legacy hwmod platform data will be removed few merge cycles later.
+> 
+> There are still dependencies to Tero's clkctrl changes and for ti-sysc
+> drivers changes. So these patches are based on on v4.19-rc3 merged with
+> my omap-for-v4.20/dt branch plus the following additional series of
+> patches:
+> 
+> [PATCH 00/11] clk: ti: clkctrl data split based on clkdm boundaries
+> [PATCH 0/3] ARM: dts: am3/am4/dra7 clkctrl data conversion
+> [PATCH 0/4] TI sysc driver updates for am335x and am437x
+> 
+> v4.19-rc3 is needed for commit 18eb8aea7fb2 ("net: ethernet:
+> cpsw-phy-sel: prefer phandle for phy sel") and omap-for-v4.20/dt
+> is needed to avoid conflicts with clean-up.
+> 
+> I've also pushed out a temporary testing branch for people to test
+> as omap-for-v4.20/dt-ti-sysc-tmp-testing [0][1].
+> 
+> Regards,
+> 
+> Tony
+> 
+> [0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v4.20/dt-ti-sysc-tmp-testing
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v4.20/dt-ti-sysc-tmp-testing
 
-> I did not look to see whether the other test areas you found can be
-> as easily avoided, without avoiding tests that are still valid when
-> OF_IMAP_OLDWORLD_MAC is set, but I am hoping so.
-> 
-> While looking at the patch, I noticed that the current
-> of_unittest_parse_phandle_with_args() also does not call of_node_put()
-> in the cases where of_count_phandle_with_args() does not return an
-> error.  I'll add fixing that to my todo list.
-> 
-> And as you pointed out, of_unittest_parse_phandle_with_args() should
-> not be blindly using the contents of args when an error occurred.  I'll
-> also put fixing that on my todo list.
-> 
+Hi Tony,
 
-That was the intent of this patch, but I'll be happy to leave it up to you
-to find a better solution. I did not check if there are situations where
-args.np is still usable, or if it makes a difference if args.np is
-preinitialized with NULL, so it might well be that a better fix is
-possible.
+I tried Branch [1] above. AM335x-boneblack is doing all good with ds0.
+AM437x-gp the following is happening:
 
-Thanks,
-Guenter
+https://pastebin.ubuntu.com/p/fmZNYgJ9Sp/
 
-> -Frank
+There seems to be a timeout due to which resume is not immediate i see
+1-2s delay and i see i2c timeout.
+
+[  402.247271] omap_i2c 4802a000.i2c: controller timed out
+[  402.247441] pixcir_ts 1-005c: pixcir_int_enable: can't read reg 0x34
+: -110
+[  402.247486] pixcir_ts 1-005c: Failed to disable interrupt generation:
+-110
+[  402.247522] pixcir_ts 1-005c: Failed to stop
+[  402.247607] dpm_run_callback(): pixcir_i2c_ts_resume+0x0/0x98
+[pixcir_i2c_ts] returns -110
+
+so pixcir_i2c_ts_resume is retuning -110 which is timeout error code.
+
+I did some touch screen testing after DS0 resume seems to be working.
+Everything is in pastebin link provided above.
+
+Regards,
+Keerthy
 > 
 > 
+> Tony Lindgren (4):
+>   ARM: dts: am437x: Add l4 interconnect hierarchy and ti-sysc data
+>   ARM: dts: am437x: Move l4 child devices to probe them with ti-sysc
+>   ARM: dts: am335x: Add l4 interconnect hierarchy and ti-sysc data
+>   ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc
 > 
->>
->> Fixes: 53a42093d96ef ("of: Add device tree selftests")
->> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->> ---
->>   drivers/of/unittest.c | 12 ++++++------
->>   1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
->> index 722537e14848..5942ddce1b9f 100644
->> --- a/drivers/of/unittest.c
->> +++ b/drivers/of/unittest.c
->> @@ -424,7 +424,7 @@ static void __init of_unittest_parse_phandle_with_args(void)
->>   		}
->>   
->>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
->> -			 i, args.np, rc);
->> +			 i, np, rc);
->>   	}
->>   
->>   	/* Check for missing list property */
->> @@ -554,8 +554,8 @@ static void __init of_unittest_parse_phandle_with_args_map(void)
->>   			passed = false;
->>   		}
->>   
->> -		unittest(passed, "index %i - data error on node %s rc=%i\n",
->> -			 i, args.np->full_name, rc);
->> +		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
->> +			 i, np, rc);
->>   	}
->>   
->>   	/* Check for missing list property */
->> @@ -788,7 +788,7 @@ static void __init of_unittest_parse_interrupts(void)
->>   		passed &= (args.args[0] == (i + 1));
->>   
->>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
->> -			 i, args.np, rc);
->> +			 i, np, rc);
->>   	}
->>   	of_node_put(np);
->>   
->> @@ -834,7 +834,7 @@ static void __init of_unittest_parse_interrupts(void)
->>   			passed = false;
->>   		}
->>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
->> -			 i, args.np, rc);
->> +			 i, np, rc);
->>   	}
->>   	of_node_put(np);
->>   }
->> @@ -904,7 +904,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
->>   		}
->>   
->>   		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
->> -			 i, args.np, rc);
->> +			 i, np, rc);
->>   	}
->>   	of_node_put(np);
->>   }
->>
-> 
+>  arch/arm/boot/dts/am335x-shc.dts |    2 +-
+>  arch/arm/boot/dts/am33xx-l4.dtsi | 2132 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/am33xx.dtsi    |  623 +-------
+>  arch/arm/boot/dts/am4372.dtsi    |  876 +----------
+>  arch/arm/boot/dts/am437x-l4.dtsi | 2499 ++++++++++++++++++++++++++++++
+>  5 files changed, 4651 insertions(+), 1481 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/am33xx-l4.dtsi
+>  create mode 100644 arch/arm/boot/dts/am437x-l4.dtsi
 > 
