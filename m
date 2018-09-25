@@ -1,48 +1,68 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2] dt-bindings: pinctrl: qcom-pmic-gpio: Add pms405 support
-Date: Mon, 24 Sep 2018 17:06:56 -0700
-Message-ID: <20180925000656.23869-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+Date: Mon, 24 Sep 2018 17:05:41 -0700
+Message-ID: <20180925000545.22931-1-tony@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
+Hi all,
 
-Add support for the PMS405 GPIO support to the Qualcomm PMIC GPIO
-binding.
+Here are four patches to make am437x and am335x l4 devices to probe with
+ti-sysc driver similar to what we've already done for omap4. The related
+legacy hwmod platform data will be removed few merge cycles later.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+There are still dependencies to Tero's clkctrl changes and for ti-sysc
+drivers changes. So these patches are based on on v4.19-rc3 merged with
+my omap-for-v4.20/dt branch plus the following additional series of
+patches:
 
-Changes since v1:
-- Dropped unnecessary driver update
-- Updated subject
+[PATCH 00/11] clk: ti: clkctrl data split based on clkdm boundaries
+[PATCH 0/3] ARM: dts: am3/am4/dra7 clkctrl data conversion
+[PATCH 0/4] TI sysc driver updates for am335x and am437x
 
- Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 2 ++
- 1 file changed, 2 insertions(+)
+v4.19-rc3 is needed for commit 18eb8aea7fb2 ("net: ethernet:
+cpsw-phy-sel: prefer phandle for phy sel") and omap-for-v4.20/dt
+is needed to avoid conflicts with clean-up.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-index ffd4345415f3..ab4000eab07d 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt
-@@ -19,6 +19,7 @@ PMIC's from Qualcomm.
- 		    "qcom,pm8998-gpio"
- 		    "qcom,pma8084-gpio"
- 		    "qcom,pmi8994-gpio"
-+		    "qcom,pms405-gpio"
- 
- 		    And must contain either "qcom,spmi-gpio" or "qcom,ssbi-gpio"
- 		    if the device is on an spmi bus or an ssbi bus respectively
-@@ -91,6 +92,7 @@ to specify in a pin configuration subnode:
- 		    gpio1-gpio26 for pm8998
- 		    gpio1-gpio22 for pma8084
- 		    gpio1-gpio10 for pmi8994
-+		    gpio1-gpio11 for pms405
- 
- - function:
- 	Usage: required
+I've also pushed out a temporary testing branch for people to test
+as omap-for-v4.20/dt-ti-sysc-tmp-testing [0][1].
+
+Regards,
+
+Tony
+
+[0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v4.20/dt-ti-sysc-tmp-testing
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v4.20/dt-ti-sysc-tmp-testing
+
+
+Tony Lindgren (4):
+  ARM: dts: am437x: Add l4 interconnect hierarchy and ti-sysc data
+  ARM: dts: am437x: Move l4 child devices to probe them with ti-sysc
+  ARM: dts: am335x: Add l4 interconnect hierarchy and ti-sysc data
+  ARM: dts: am335x: Move l4 child devices to probe them with ti-sysc
+
+ arch/arm/boot/dts/am335x-shc.dts |    2 +-
+ arch/arm/boot/dts/am33xx-l4.dtsi | 2132 +++++++++++++++++++++++++
+ arch/arm/boot/dts/am33xx.dtsi    |  623 +-------
+ arch/arm/boot/dts/am4372.dtsi    |  876 +----------
+ arch/arm/boot/dts/am437x-l4.dtsi | 2499 ++++++++++++++++++++++++++++++
+ 5 files changed, 4651 insertions(+), 1481 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am33xx-l4.dtsi
+ create mode 100644 arch/arm/boot/dts/am437x-l4.dtsi
+
 -- 
-2.18.0
+2.19.0
