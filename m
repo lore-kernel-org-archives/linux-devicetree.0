@@ -1,89 +1,156 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/3] dt-bindings: spi: Provide bindings for fsl dspi
- working in slave mode
-Date: Wed, 26 Sep 2018 17:37:10 +0200
-Message-ID: <CAMuHMdWWYvhGX+SmG+WuLJZAX6PdCSd0hzNqiNB1r_A+B6tbSA@mail.gmail.com>
-References: <20180918093437.26799-1-lukma@denx.de> <20180918093437.26799-2-lukma@denx.de>
- <5baa1aee.1c69fb81.cc7c6.340b@mx.google.com> <20180926163212.17646e43@jawa>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v16 2/5] iommu/arm-smmu: Invoke pm_runtime
+ during probe, add/remove device
+Date: Wed, 26 Sep 2018 16:42:55 +0100
+Message-ID: <763bc179-759a-cfda-e485-cf619ab5faec@arm.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-3-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926163212.17646e43@jawa>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lukma@denx.de
-Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180830144541.17740-3-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lukasz,
-
-On Wed, Sep 26, 2018 at 4:33 PM Lukasz Majewski <lukma@denx.de> wrote:
-> > On Tue, Sep 18, 2018 at 11:34:35AM +0200, Lukasz Majewski wrote:
-> > > This commit provides the description of new property:
-> > > "fsl,spi-slave-mode" which enables support for DSPI driver working
-> > > in slave mode.
-> > >
-> > > As the new compatible shall be used with SPI bus equipped with
-> > > master device a new "spidev" based node has been introduced to
-> > > avoid confusion.
-> > >
-> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> > > ---
-> > >  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-> > > b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt index
-> > > 18eeafe359d8..b30af19a2bc5 100644 ---
-> > > a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt +++
-> > > b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt @@ -26,6
-> > > +26,7 @@ Optional SPI properties for slave nodes:
-> > >  - fsl,spi-sck-cs-delay: a delay in nanoseconds between stopping
-> > > the clock signal and deactivating chip select, at the end of a
-> > > transfer.
-> > >  - bus-num : the slave chip chipselect signal number.
-> > > +- fsl,spi-slave-mode: if present, controller runs in slave mode.
-> >
-> > There's a standard property for this.
->
-> I've just realised that there is "spi-slave" property in the
-> Documentation/devicetree/bindings/spi/spi-bus.txt
->
-> I will convert the code to use it.
->
-> >
-> > >
-> > >  Example:
-> > >
-> > > @@ -56,6 +57,13 @@ dspi0@4002c000 {
-> > >             fsl,spi-cs-sck-delay = <100>;
-> > >             fsl,spi-sck-cs-delay = <50>;
-> > >     };
-> > > +
-> > > +   spidev3@1 {
-> > > +           compatible = "fsl,vf610-dspi";
-> > > +           spi-max-frequency = <30000000>;
-> > > +           reg = <1>;
-> > > +           fsl,spi-slave-mode;
-> >
-> > This doesn't look right for how slave mode is described.
->
-> You mean that I shall replace fsl,spi-slave-mode; with "spi-slave" ?
->
-> Or is there any other issue with this code?
-
-According to Documentation/devicetree/bindings/spi/spi-bus.txt:
-  1. "spi-slave" should be a property of the controller node, not of the
-     slave node,
-  2. the slave node should be called "slave", without unit address, and
-     without "reg" property.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+T24gMzAvMDgvMTggMTU6NDUsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiBGcm9tOiBTcmljaGFyYW4g
+UiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+IAo+IFRoZSBzbW11IGRldmljZSBwcm9iZS9y
+ZW1vdmUgYW5kIGFkZC9yZW1vdmUgbWFzdGVyIGRldmljZSBjYWxsYmFja3MKPiBnZXRzIGNhbGxl
+ZCB3aGVuIHRoZSBzbW11IGlzIG5vdCBsaW5rZWQgdG8gaXRzIG1hc3RlciwgdGhhdCBpcyB3aXRo
+b3V0Cj4gdGhlIGNvbnRleHQgb2YgdGhlIG1hc3RlciBkZXZpY2UuIFNvIGNhbGxpbmcgcnVudGlt
+ZSBhcGlzIGluIHRob3NlIHBsYWNlcwo+IHNlcGFyYXRlbHkuCj4gR2xvYmFsIGxvY2tzIGFyZSBh
+bHNvIGluaXRpYWxpemVkIGJlZm9yZSBlbmFibGluZyBydW50aW1lIHBtIGFzIHRoZQo+IHJ1bnRp
+bWVfcmVzdW1lKCkgY2FsbHMgZGV2aWNlX3Jlc2V0KCkgd2hpY2ggZG9lcyB0bGJfc3luY19nbG9i
+YWwoKQo+IHRoYXQgdWx0aW1hdGVseSByZXF1aXJlcyBsb2NrcyB0byBiZSBpbml0aWFsaXplZC4K
+ClRvIHRoZSBiZXN0IG9mIG15IGtub3dsZWRnZSBpbiB0aGlzIHN0dWZmICh3aGljaCBpcyBzdGls
+bCBub3QgcXVpdGUgCmVub3VnaCB0byBiZSAqdHJ1bHkqIGNvbmZpZGVudC4uLiksCgpSZXZpZXdl
+ZC1ieTogUm9iaW4gTXVycGh5IDxyb2Jpbi5tdXJwaHlAYXJtLmNvbT4KCj4gU2lnbmVkLW9mZi1i
+eTogU3JpY2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiBbdml2ZWs6IENsZWFu
+dXAgcG0gcnVudGltZSBjYWxsc10KPiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVr
+LmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiBSZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdh
+QGNocm9taXVtLm9yZz4KPiBUZXN0ZWQtYnk6IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5pdmFz
+LmthbmRhZ2F0bGFAbGluYXJvLm9yZz4KPiAtLS0KPiAgIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUu
+YyB8IDg5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+
+ICAgMSBmaWxlIGNoYW5nZWQsIDgxIGluc2VydGlvbnMoKyksIDggZGVsZXRpb25zKC0pCj4gCj4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyBiL2RyaXZlcnMvaW9tbXUvYXJt
+LXNtbXUuYwo+IGluZGV4IGQ5MDBlMDA3YzNjOS4uMWJmNTQyMDEwYmU3IDEwMDY0NAo+IC0tLSBh
+L2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYwo+ICsrKyBiL2RyaXZlcnMvaW9tbXUvYXJtLXNtbXUu
+Ywo+IEBAIC0yNjgsNiArMjY4LDIwIEBAIHN0YXRpYyBzdHJ1Y3QgYXJtX3NtbXVfb3B0aW9uX3By
+b3AgYXJtX3NtbXVfb3B0aW9uc1tdID0gewo+ICAgCXsgMCwgTlVMTH0sCj4gICB9Owo+ICAgCj4g
+K3N0YXRpYyBpbmxpbmUgaW50IGFybV9zbW11X3JwbV9nZXQoc3RydWN0IGFybV9zbW11X2Rldmlj
+ZSAqc21tdSkKPiArewo+ICsJaWYgKHBtX3J1bnRpbWVfZW5hYmxlZChzbW11LT5kZXYpKQo+ICsJ
+CXJldHVybiBwbV9ydW50aW1lX2dldF9zeW5jKHNtbXUtPmRldik7Cj4gKwo+ICsJcmV0dXJuIDA7
+Cj4gK30KPiArCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCBhcm1fc21tdV9ycG1fcHV0KHN0cnVjdCBh
+cm1fc21tdV9kZXZpY2UgKnNtbXUpCj4gK3sKPiArCWlmIChwbV9ydW50aW1lX2VuYWJsZWQoc21t
+dS0+ZGV2KSkKPiArCQlwbV9ydW50aW1lX3B1dChzbW11LT5kZXYpOwo+ICt9Cj4gKwo+ICAgc3Rh
+dGljIHN0cnVjdCBhcm1fc21tdV9kb21haW4gKnRvX3NtbXVfZG9tYWluKHN0cnVjdCBpb21tdV9k
+b21haW4gKmRvbSkKPiAgIHsKPiAgIAlyZXR1cm4gY29udGFpbmVyX29mKGRvbSwgc3RydWN0IGFy
+bV9zbW11X2RvbWFpbiwgZG9tYWluKTsKPiBAQCAtOTEzLDExICs5MjcsMTUgQEAgc3RhdGljIHZv
+aWQgYXJtX3NtbXVfZGVzdHJveV9kb21haW5fY29udGV4dChzdHJ1Y3QgaW9tbXVfZG9tYWluICpk
+b21haW4pCj4gICAJc3RydWN0IGFybV9zbW11X2RvbWFpbiAqc21tdV9kb21haW4gPSB0b19zbW11
+X2RvbWFpbihkb21haW4pOwo+ICAgCXN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUgPSBzbW11
+X2RvbWFpbi0+c21tdTsKPiAgIAlzdHJ1Y3QgYXJtX3NtbXVfY2ZnICpjZmcgPSAmc21tdV9kb21h
+aW4tPmNmZzsKPiAtCWludCBpcnE7Cj4gKwlpbnQgcmV0LCBpcnE7Cj4gICAKPiAgIAlpZiAoIXNt
+bXUgfHwgZG9tYWluLT50eXBlID09IElPTU1VX0RPTUFJTl9JREVOVElUWSkKPiAgIAkJcmV0dXJu
+Owo+ICAgCj4gKwlyZXQgPSBhcm1fc21tdV9ycG1fZ2V0KHNtbXUpOwo+ICsJaWYgKHJldCA8IDAp
+Cj4gKwkJcmV0dXJuOwo+ICsKPiAgIAkvKgo+ICAgCSAqIERpc2FibGUgdGhlIGNvbnRleHQgYmFu
+ayBhbmQgZnJlZSB0aGUgcGFnZSB0YWJsZXMgYmVmb3JlIGZyZWVpbmcKPiAgIAkgKiBpdC4KPiBA
+QCAtOTMyLDYgKzk1MCw4IEBAIHN0YXRpYyB2b2lkIGFybV9zbW11X2Rlc3Ryb3lfZG9tYWluX2Nv
+bnRleHQoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluKQo+ICAgCj4gICAJZnJlZV9pb19wZ3Rh
+YmxlX29wcyhzbW11X2RvbWFpbi0+cGd0Ymxfb3BzKTsKPiAgIAlfX2FybV9zbW11X2ZyZWVfYml0
+bWFwKHNtbXUtPmNvbnRleHRfbWFwLCBjZmctPmNibmR4KTsKPiArCj4gKwlhcm1fc21tdV9ycG1f
+cHV0KHNtbXUpOwo+ICAgfQo+ICAgCj4gICBzdGF0aWMgc3RydWN0IGlvbW11X2RvbWFpbiAqYXJt
+X3NtbXVfZG9tYWluX2FsbG9jKHVuc2lnbmVkIHR5cGUpCj4gQEAgLTEyMTMsMTAgKzEyMzMsMTUg
+QEAgc3RhdGljIGludCBhcm1fc21tdV9hdHRhY2hfZGV2KHN0cnVjdCBpb21tdV9kb21haW4gKmRv
+bWFpbiwgc3RydWN0IGRldmljZSAqZGV2KQo+ICAgCQlyZXR1cm4gLUVOT0RFVjsKPiAgIAo+ICAg
+CXNtbXUgPSBmd3NwZWNfc21tdShmd3NwZWMpOwo+ICsKPiArCXJldCA9IGFybV9zbW11X3JwbV9n
+ZXQoc21tdSk7Cj4gKwlpZiAocmV0IDwgMCkKPiArCQlyZXR1cm4gcmV0Owo+ICsKPiAgIAkvKiBF
+bnN1cmUgdGhhdCB0aGUgZG9tYWluIGlzIGZpbmFsaXNlZCAqLwo+ICAgCXJldCA9IGFybV9zbW11
+X2luaXRfZG9tYWluX2NvbnRleHQoZG9tYWluLCBzbW11KTsKPiAgIAlpZiAocmV0IDwgMCkKPiAt
+CQlyZXR1cm4gcmV0Owo+ICsJCWdvdG8gcnBtX3B1dDsKPiAgIAo+ICAgCS8qCj4gICAJICogU2Fu
+aXR5IGNoZWNrIHRoZSBkb21haW4uIFdlIGRvbid0IHN1cHBvcnQgZG9tYWlucyBhY3Jvc3MKPiBA
+QCAtMTIyNiwzMyArMTI1MSw1MCBAQCBzdGF0aWMgaW50IGFybV9zbW11X2F0dGFjaF9kZXYoc3Ry
+dWN0IGlvbW11X2RvbWFpbiAqZG9tYWluLCBzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gICAJCWRldl9l
+cnIoZGV2LAo+ICAgCQkJImNhbm5vdCBhdHRhY2ggdG8gU01NVSAlcyB3aGlsc3QgYWxyZWFkeSBh
+dHRhY2hlZCB0byBkb21haW4gb24gU01NVSAlc1xuIiwKPiAgIAkJCWRldl9uYW1lKHNtbXVfZG9t
+YWluLT5zbW11LT5kZXYpLCBkZXZfbmFtZShzbW11LT5kZXYpKTsKPiAtCQlyZXR1cm4gLUVJTlZB
+TDsKPiArCQlyZXQgPSAtRUlOVkFMOwo+ICsJCWdvdG8gcnBtX3B1dDsKPiAgIAl9Cj4gICAKPiAg
+IAkvKiBMb29rcyBvaywgc28gYWRkIHRoZSBkZXZpY2UgdG8gdGhlIGRvbWFpbiAqLwo+IC0JcmV0
+dXJuIGFybV9zbW11X2RvbWFpbl9hZGRfbWFzdGVyKHNtbXVfZG9tYWluLCBmd3NwZWMpOwo+ICsJ
+cmV0ID0gYXJtX3NtbXVfZG9tYWluX2FkZF9tYXN0ZXIoc21tdV9kb21haW4sIGZ3c3BlYyk7Cj4g
+Kwo+ICtycG1fcHV0Ogo+ICsJYXJtX3NtbXVfcnBtX3B1dChzbW11KTsKPiArCXJldHVybiByZXQ7
+Cj4gICB9Cj4gICAKPiAgIHN0YXRpYyBpbnQgYXJtX3NtbXVfbWFwKHN0cnVjdCBpb21tdV9kb21h
+aW4gKmRvbWFpbiwgdW5zaWduZWQgbG9uZyBpb3ZhLAo+ICAgCQkJcGh5c19hZGRyX3QgcGFkZHIs
+IHNpemVfdCBzaXplLCBpbnQgcHJvdCkKPiAgIHsKPiAgIAlzdHJ1Y3QgaW9fcGd0YWJsZV9vcHMg
+Km9wcyA9IHRvX3NtbXVfZG9tYWluKGRvbWFpbiktPnBndGJsX29wczsKPiArCXN0cnVjdCBhcm1f
+c21tdV9kZXZpY2UgKnNtbXUgPSB0b19zbW11X2RvbWFpbihkb21haW4pLT5zbW11Owo+ICsJaW50
+IHJldDsKPiAgIAo+ICAgCWlmICghb3BzKQo+ICAgCQlyZXR1cm4gLUVOT0RFVjsKPiAgIAo+IC0J
+cmV0dXJuIG9wcy0+bWFwKG9wcywgaW92YSwgcGFkZHIsIHNpemUsIHByb3QpOwo+ICsJYXJtX3Nt
+bXVfcnBtX2dldChzbW11KTsKPiArCXJldCA9IG9wcy0+bWFwKG9wcywgaW92YSwgcGFkZHIsIHNp
+emUsIHByb3QpOwo+ICsJYXJtX3NtbXVfcnBtX3B1dChzbW11KTsKPiArCj4gKwlyZXR1cm4gcmV0
+Owo+ICAgfQo+ICAgCj4gICBzdGF0aWMgc2l6ZV90IGFybV9zbW11X3VubWFwKHN0cnVjdCBpb21t
+dV9kb21haW4gKmRvbWFpbiwgdW5zaWduZWQgbG9uZyBpb3ZhLAo+ICAgCQkJICAgICBzaXplX3Qg
+c2l6ZSkKPiAgIHsKPiAgIAlzdHJ1Y3QgaW9fcGd0YWJsZV9vcHMgKm9wcyA9IHRvX3NtbXVfZG9t
+YWluKGRvbWFpbiktPnBndGJsX29wczsKPiArCXN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUg
+PSB0b19zbW11X2RvbWFpbihkb21haW4pLT5zbW11Owo+ICsJc2l6ZV90IHJldDsKPiAgIAo+ICAg
+CWlmICghb3BzKQo+ICAgCQlyZXR1cm4gMDsKPiAgIAo+IC0JcmV0dXJuIG9wcy0+dW5tYXAob3Bz
+LCBpb3ZhLCBzaXplKTsKPiArCWFybV9zbW11X3JwbV9nZXQoc21tdSk7Cj4gKwlyZXQgPSBvcHMt
+PnVubWFwKG9wcywgaW92YSwgc2l6ZSk7Cj4gKwlhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+ICsK
+PiArCXJldHVybiByZXQ7Cj4gICB9Cj4gICAKPiAgIHN0YXRpYyB2b2lkIGFybV9zbW11X2lvdGxi
+X3N5bmMoc3RydWN0IGlvbW11X2RvbWFpbiAqZG9tYWluKQo+IEBAIC0xNDA3LDcgKzE0NDksMTMg
+QEAgc3RhdGljIGludCBhcm1fc21tdV9hZGRfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldikKPiAg
+IAl3aGlsZSAoaS0tKQo+ICAgCQljZmctPnNtZW5keFtpXSA9IElOVkFMSURfU01FTkRYOwo+ICAg
+Cj4gKwlyZXQgPSBhcm1fc21tdV9ycG1fZ2V0KHNtbXUpOwo+ICsJaWYgKHJldCA8IDApCj4gKwkJ
+Z290byBvdXRfY2ZnX2ZyZWU7Cj4gKwo+ICAgCXJldCA9IGFybV9zbW11X21hc3Rlcl9hbGxvY19z
+bWVzKGRldik7Cj4gKwlhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+ICsKPiAgIAlpZiAocmV0KQo+
+ICAgCQlnb3RvIG91dF9jZmdfZnJlZTsKPiAgIAo+IEBAIC0xNDI3LDcgKzE0NzUsNyBAQCBzdGF0
+aWMgdm9pZCBhcm1fc21tdV9yZW1vdmVfZGV2aWNlKHN0cnVjdCBkZXZpY2UgKmRldikKPiAgIAlz
+dHJ1Y3QgaW9tbXVfZndzcGVjICpmd3NwZWMgPSBkZXYtPmlvbW11X2Z3c3BlYzsKPiAgIAlzdHJ1
+Y3QgYXJtX3NtbXVfbWFzdGVyX2NmZyAqY2ZnOwo+ICAgCXN0cnVjdCBhcm1fc21tdV9kZXZpY2Ug
+KnNtbXU7Cj4gLQo+ICsJaW50IHJldDsKPiAgIAo+ICAgCWlmICghZndzcGVjIHx8IGZ3c3BlYy0+
+b3BzICE9ICZhcm1fc21tdV9vcHMpCj4gICAJCXJldHVybjsKPiBAQCAtMTQzNSw4ICsxNDgzLDE1
+IEBAIHN0YXRpYyB2b2lkIGFybV9zbW11X3JlbW92ZV9kZXZpY2Uoc3RydWN0IGRldmljZSAqZGV2
+KQo+ICAgCWNmZyAgPSBmd3NwZWMtPmlvbW11X3ByaXY7Cj4gICAJc21tdSA9IGNmZy0+c21tdTsK
+PiAgIAo+ICsJcmV0ID0gYXJtX3NtbXVfcnBtX2dldChzbW11KTsKPiArCWlmIChyZXQgPCAwKQo+
+ICsJCXJldHVybjsKPiArCj4gICAJaW9tbXVfZGV2aWNlX3VubGluaygmc21tdS0+aW9tbXUsIGRl
+dik7Cj4gICAJYXJtX3NtbXVfbWFzdGVyX2ZyZWVfc21lcyhmd3NwZWMpOwo+ICsKPiArCWFybV9z
+bW11X3JwbV9wdXQoc21tdSk7Cj4gKwo+ICAgCWlvbW11X2dyb3VwX3JlbW92ZV9kZXZpY2UoZGV2
+KTsKPiAgIAlrZnJlZShmd3NwZWMtPmlvbW11X3ByaXYpOwo+ICAgCWlvbW11X2Z3c3BlY19mcmVl
+KGRldik7Cj4gQEAgLTIxODAsNiArMjIzNSwxNyBAQCBzdGF0aWMgaW50IGFybV9zbW11X2Rldmlj
+ZV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ICAgCWFybV9zbW11X2Rldmlj
+ZV9yZXNldChzbW11KTsKPiAgIAlhcm1fc21tdV90ZXN0X3Ntcl9tYXNrcyhzbW11KTsKPiAgIAo+
+ICsJLyoKPiArCSAqIFdlIHdhbnQgdG8gYXZvaWQgdG91Y2hpbmcgZGV2LT5wb3dlci5sb2NrIGlu
+IGZhc3RwYXRocyB1bmxlc3MKPiArCSAqIGl0J3MgcmVhbGx5IGdvaW5nIHRvIGRvIHNvbWV0aGlu
+ZyB1c2VmdWwgLSBwbV9ydW50aW1lX2VuYWJsZWQoKQo+ICsJICogY2FuIHNlcnZlIGFzIGFuIGlk
+ZWFsIHByb3h5IGZvciB0aGF0IGRlY2lzaW9uLiBTbywgY29uZGl0aW9uYWxseQo+ICsJICogZW5h
+YmxlIHBtX3J1bnRpbWUuCj4gKwkgKi8KPiArCWlmIChkZXYtPnBtX2RvbWFpbikgewo+ICsJCXBt
+X3J1bnRpbWVfc2V0X2FjdGl2ZShkZXYpOwo+ICsJCXBtX3J1bnRpbWVfZW5hYmxlKGRldik7Cj4g
+Kwl9Cj4gKwo+ICAgCS8qCj4gICAJICogRm9yIEFDUEkgYW5kIGdlbmVyaWMgRFQgYmluZGluZ3Ms
+IGFuIFNNTVUgd2lsbCBiZSBwcm9iZWQgYmVmb3JlCj4gICAJICogYW55IGRldmljZSB3aGljaCBt
+aWdodCBuZWVkIGl0LCBzbyB3ZSB3YW50IHRoZSBidXMgb3BzIGluIHBsYWNlCj4gQEAgLTIyMTUs
+MTAgKzIyODEsMTcgQEAgc3RhdGljIGludCBhcm1fc21tdV9kZXZpY2VfcmVtb3ZlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gICAJaWYgKCFiaXRtYXBfZW1wdHkoc21tdS0+Y29udGV4
+dF9tYXAsIEFSTV9TTU1VX01BWF9DQlMpKQo+ICAgCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJyZW1v
+dmluZyBkZXZpY2Ugd2l0aCBhY3RpdmUgZG9tYWlucyFcbiIpOwo+ICAgCj4gKwlhcm1fc21tdV9y
+cG1fZ2V0KHNtbXUpOwo+ICAgCS8qIFR1cm4gdGhlIHRoaW5nIG9mZiAqLwo+ICAgCXdyaXRlbChz
+Q1IwX0NMSUVOVFBELCBBUk1fU01NVV9HUjBfTlMoc21tdSkgKyBBUk1fU01NVV9HUjBfc0NSMCk7
+Cj4gKwlhcm1fc21tdV9ycG1fcHV0KHNtbXUpOwo+ICsKPiArCWlmIChwbV9ydW50aW1lX2VuYWJs
+ZWQoc21tdS0+ZGV2KSkKPiArCQlwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoc21tdS0+ZGV2KTsK
+PiArCWVsc2UKPiArCQljbGtfYnVsa19kaXNhYmxlKHNtbXUtPm51bV9jbGtzLCBzbW11LT5jbGtz
+KTsKPiAgIAo+IC0JY2xrX2J1bGtfZGlzYWJsZV91bnByZXBhcmUoc21tdS0+bnVtX2Nsa3MsIHNt
+bXUtPmNsa3MpOwo+ICsJY2xrX2J1bGtfdW5wcmVwYXJlKHNtbXUtPm51bV9jbGtzLCBzbW11LT5j
+bGtzKTsKPiAgIAo+ICAgCXJldHVybiAwOwo+ICAgfQo+IApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
+b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
