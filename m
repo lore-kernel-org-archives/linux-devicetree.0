@@ -1,165 +1,112 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [alsa-devel] [PATCH v4 14/14] ASoC: qcom: common: move
- be_hw_fixup to common
-Date: Wed, 26 Sep 2018 11:56:25 +0100
-Message-ID: <1f89b5e9-a123-02f4-b8e8-ebcc89bbc99c@linaro.org>
-References: <20180917005727.32728-1-srinivas.kandagatla@linaro.org>
- <20180917005727.32728-15-srinivas.kandagatla@linaro.org>
- <500df2e4-6593-5537-ca08-b20a9b601c47@codeaurora.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RESEND PATCH v3 1/2] of: base: Introduce
+ of_alias_get_alias_list() to check alias IDs
+Date: Wed, 26 Sep 2018 13:01:02 +0200
+Message-ID: <d27b381e-f091-91dc-cffe-27789583f949@xilinx.com>
+References: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
+ <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <500df2e4-6593-5537-ca08-b20a9b601c47@codeaurora.org>
+In-Reply-To: <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit Kumar <rohitkr@codeaurora.org>, lee.jones@linaro.org, robh+dt@kernel.org, broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, vkoul@kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 19/09/18 06:49, Rohit Kumar wrote:
-> Hello Srinivas,
+On 24.9.2018 09:41, Geert Uytterhoeven wrote:
+> Hi Michal,
 > 
-> 
-> We will add support for vi feedback usecase in sdm845 machine driver 
-> where we have to support 4 channel tx data for a particular backend. We 
-> should probably keep be_hw_params_fixup in respective machine driver for 
-> now to support such requirement.
-> 
-I agree, we can drop this patch!
-
-thanks,
-srini
-> 
-> Thanks,
-> 
-> Rohit
-> 
-> 
-> On 9/17/2018 6:27 AM, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> On Thu, Sep 20, 2018 at 1:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
+>> The function travels the lookup table to record alias ids for the given
+>> device match structures and alias stem.
+>> This function will be used by serial drivers to check if requested alias
+>> is allocated or free to use.
 >>
->> be_hw_fixup for qdsp is common across mutiple qcom machine drivers,
->> so move it to common file and remove the redundant code.
+>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+> I know this has already been applied, it just drew my attention.
+> 
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -16,6 +16,7 @@
 >>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   sound/soc/qcom/apq8096.c | 15 ---------------
->>   sound/soc/qcom/common.c  | 17 +++++++++++++++++
->>   sound/soc/qcom/sdm845.c  | 22 ++--------------------
->>   3 files changed, 19 insertions(+), 35 deletions(-)
+>>  #define pr_fmt(fmt)    "OF: " fmt
 >>
->> diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
->> index daad43f..9cb26aee 100644
->> --- a/sound/soc/qcom/apq8096.c
->> +++ b/sound/soc/qcom/apq8096.c
->> @@ -20,20 +20,6 @@ struct apq8096_card_data {
->>       bool jack_setup;
->>   };
->> -static int apq8096_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
->> -                      struct snd_pcm_hw_params *params)
->> -{
->> -    struct snd_interval *rate = hw_param_interval(params,
->> -                    SNDRV_PCM_HW_PARAM_RATE);
->> -    struct snd_interval *channels = hw_param_interval(params,
->> -                    SNDRV_PCM_HW_PARAM_CHANNELS);
->> -
->> -    rate->min = rate->max = 48000;
->> -    channels->min = channels->max = 2;
->> -
->> -    return 0;
->> -}
->> -
->>   static int msm_snd_hw_params(struct snd_pcm_substream *substream,
->>                    struct snd_pcm_hw_params *params)
->>   {
->> @@ -139,7 +125,6 @@ static void apq8096_add_be_ops(struct snd_soc_card 
->> *card)
->>       for (i = 0; i < num_links; i++) {
->>           if (link->no_pcm == 1) {
->> -            link->be_hw_params_fixup = apq8096_be_hw_params_fixup;
->>               link->init = apq8096_init;
->>               link->ops = &apq8096_ops;
->>           }
->> diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
->> index eb1b9da..ce8e759 100644
->> --- a/sound/soc/qcom/common.c
->> +++ b/sound/soc/qcom/common.c
->> @@ -3,8 +3,24 @@
->>   // Copyright (c) 2018, The Linux Foundation. All rights reserved.
->>   #include <linux/module.h>
->> +#include <sound/pcm_params.h>
->>   #include "common.h"
->> +static int qcom_snd_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
->> +                       struct snd_pcm_hw_params *params)
+>> +#include <linux/bitmap.h>
+>>  #include <linux/console.h>
+>>  #include <linux/ctype.h>
+>>  #include <linux/cpu.h>
+>> @@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+>>
+>>  /**
+>> + * of_alias_get_alias_list - Get alias list for the given device driver
+>> + * @matches:   Array of OF device match structures to search in
+>> + * @stem:      Alias stem of the given device_node
+>> + * @bitmap:    Bitmap field pointer
+>> + * @nbits:     Maximum number of alias ID which can be recorded it bitmap
+> 
+> IDs
+> 
+>> + *
+>> + * The function travels the lookup table to record alias ids for the given
+>> + * device match structures and alias stem.
+>> + *
+>> + * Return:     0 or -ENOSYS when !CONFIG_OF
+>> + */
+>> +int of_alias_get_alias_list(const struct of_device_id *matches,
+>> +                            const char *stem, unsigned long *bitmap,
+>> +                            unsigned int nbits)
 >> +{
->> +    struct snd_interval *rate = hw_param_interval(params,
->> +                    SNDRV_PCM_HW_PARAM_RATE);
->> +    struct snd_interval *channels = hw_param_interval(params,
->> +                    SNDRV_PCM_HW_PARAM_CHANNELS);
+>> +       struct alias_prop *app;
 >> +
->> +    rate->min = rate->max = 48000;
->> +    channels->min = channels->max = 2;
->> +    params_set_format(params, SNDRV_PCM_FORMAT_S16_LE);
+>> +       /* Zero bitmap field to make sure that all the time it is clean */
+>> +       bitmap_zero(bitmap, nbits);
 >> +
->> +    return 0;
->> +}
+>> +       mutex_lock(&of_mutex);
+>> +       pr_debug("%s: Looking for stem: %s\n", __func__, stem);
+>> +       list_for_each_entry(app, &aliases_lookup, link) {
+>> +               pr_debug("%s: stem: %s, id: %d\n",
+>> +                        __func__, app->stem, app->id);
 >> +
->>   int qcom_snd_parse_of(struct snd_soc_card *card)
->>   {
->>       struct device_node *np;
->> @@ -79,6 +95,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
->>               }
->>               link->no_pcm = 1;
->>               link->ignore_pmdown_time = 1;
->> +            link->be_hw_params_fixup = qcom_snd_be_hw_params_fixup;
->>           } else {
->>               link->platform_of_node = link->cpu_of_node;
->>               link->codec_dai_name = "snd-soc-dummy-dai";
->> diff --git a/sound/soc/qcom/sdm845.c b/sound/soc/qcom/sdm845.c
->> index 2a781d8..87e150c 100644
->> --- a/sound/soc/qcom/sdm845.c
->> +++ b/sound/soc/qcom/sdm845.c
->> @@ -11,7 +11,6 @@
->>   #include "common.h"
->>   #include "qdsp6/q6afe.h"
->> -#define DEFAULT_SAMPLE_RATE_48K        48000
->>   #define DEFAULT_MCLK_RATE        24576000
->>   #define DEFAULT_BCLK_RATE        12288000
->> @@ -177,32 +176,15 @@ static struct snd_soc_ops sdm845_be_ops = {
->>       .shutdown = sdm845_snd_shutdown,
->>   };
->> -static int sdm845_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
->> -                struct snd_pcm_hw_params *params)
->> -{
->> -    struct snd_interval *rate = hw_param_interval(params,
->> -                    SNDRV_PCM_HW_PARAM_RATE);
->> -    struct snd_interval *channels = hw_param_interval(params,
->> -                    SNDRV_PCM_HW_PARAM_CHANNELS);
->> -    struct snd_mask *fmt = hw_param_mask(params, 
->> SNDRV_PCM_HW_PARAM_FORMAT);
->> -
->> -    rate->min = rate->max = DEFAULT_SAMPLE_RATE_48K;
->> -    channels->min = channels->max = 2;
->> -    snd_mask_set_format(fmt, SNDRV_PCM_FORMAT_S16_LE);
->> -
->> -    return 0;
->> -}
->> -
->>   static void sdm845_add_be_ops(struct snd_soc_card *card)
->>   {
->>       struct snd_soc_dai_link *link = card->dai_link;
->>       int i, num_links = card->num_links;
->>       for (i = 0; i < num_links; i++) {
->> -        if (link->no_pcm == 1) {
->> +        if (link->no_pcm == 1)
->>               link->ops = &sdm845_be_ops;
->> -            link->be_hw_params_fixup = sdm845_be_hw_params_fixup;
->> -        }
->> +
->>           link++;
->>       }
->>   }
+>> +               if (strcmp(app->stem, stem) != 0) {
+>> +                       pr_debug("%s: stem comparison doesn't passed %s\n",
 > 
+> didn't pass?
+> 
+>> +                                __func__, app->stem);
+>> +                       continue;
+>> +               }
+>> +
+>> +               if (app->id >= nbits) {
+>> +                       pr_debug("%s: ID %d greater then bitmap field %d\n",
+> 
+> than
+> %u for unsigned int
+
+I won't fix this now because this can be done together with one change
+described below.
+
+> 
+>> +                               __func__, app->id, nbits);
+>> +                       continue;
+> 
+> Shouldn't this return an error, if of_match_node() below would have matched?
+
+IIRC Above check is for "serial" name.
+This one is for getting XX number from alias "serialXX".
+And below is checking compatible string.
+
+You are calling this function from uartps with 32 lines limit and there
+is serial33 alias poiting to uartlite (for example) then you don't want
+to break this call for that.
+
+What can be done is that compatible string is checked first and if this
+passed then ids are check and error can be returned or bit sets.
+
+Thanks,
+Michal
