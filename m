@@ -1,64 +1,67 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
-Date: Wed, 26 Sep 2018 18:03:16 +0300
-Message-ID: <0fd425c0-733b-825e-69ad-96294e5c911a@linaro.org>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-3-georgi.djakov@linaro.org>
- <20180925180215.GA12435@bogus>
- <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
- <20180926144830.GB25838@e107155-lin>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2] ARM: tegra: tegra20: Fix mixed tabs-spaces indentation
+Date: Wed, 26 Sep 2018 17:08:28 +0200
+Message-ID: <20180926150828.GI12980@ulmo>
+References: <20180830172153.20653-1-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fmvA4kSBHQVZhkR6"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926144830.GB25838@e107155-lin>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180830172153.20653-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Marcel Ziswiler <marcel.ziswiler@toradex.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sudeep,
 
-On 09/26/2018 05:48 PM, Sudeep Holla wrote:
-> On Wed, Sep 26, 2018 at 05:42:15PM +0300, Georgi Djakov wrote:
->> Hi Rob,
->>
->> Thanks for the comments!
->>
->> On 09/25/2018 09:02 PM, Rob Herring wrote:
->>> On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
->>>> This binding is intended to represent the relations between the interconnect
->>>> controllers (providers) and consumer device nodes. It will allow creating links
->>>> between consumers and interconnect paths (exposed by interconnect providers).
->>>
->>> As I mentioned in person, I want to see other SoC families using this 
->>> before accepting. They don't have to be ready for upstream, but WIP 
->>> patches or even just a "yes, this works for us and we're going to use 
->>> this binding on X".
->>
->> Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
->> currently using this binding, there is ongoing work from at least two
->> other vendors that would be using this same binding. I will check on
->> what is their progress so far.
->>
->>> Also, I think the QCom GPU use of this should be fully sorted out. Or 
->>> more generically how this fits into OPP binding which seems to be never 
->>> ending extended...
->>
->> I see this as a further step. It could be OPP binding which include
->> bandwidth values or some separate DT property. Jordan has already
->> proposed something, do you have any initial comments on that?
-> 
-> I am curious as how this fits into new systems which have firmware driven
-> CPUFreq and other DVFS. I would like to avoid using this in such systems
-> and leave it upto the firmware to scale the bus/interconnect based on the
-> other components that are connected to it and active.
+--fmvA4kSBHQVZhkR6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This can be used with firmware driven systems too. In this case the
-interconnect platform driver will not manage the interconnects directly,
-but will collect data and provide hints to the firmware. Then the
-firmware can take into account these hints and do the scaling.
+On Thu, Aug 30, 2018 at 07:21:53PM +0200, Krzysztof Kozlowski wrote:
+> Fix indentation and alignment when spaces were used instead of tabs.
+> This fixes checkpatch errors like:
+>=20
+>     ERROR: code indent should use tabs where possible
+>     #306: FILE: arch/arm/boot/dts/tegra20-paz00.dts:306:
+>     +^I^I         <&tegra_car TEGRA20_CLK_PLL_P_OUT3>;$
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+>=20
+> ---
+>=20
+> Changes since v1:
+> 1. Add Marcel's ack.
+> ---
+>  arch/arm/boot/dts/tegra20-colibri.dtsi | 2 +-
+>  arch/arm/boot/dts/tegra20-paz00.dts    | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks,
-Georgi
+Applied, thanks.
+
+Thierry
+
+--fmvA4kSBHQVZhkR6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluroOwACgkQ3SOs138+
+s6H7ZRAAs/BNgDpG8YDi1HtViiLhc7rFDXqg0c8zCwStL+3kmp1jLlcaL6w+6ce0
+g/+CnvXt+VeNBxgoMGMip4GIDH7usOqKkpzbdl8H2xPzDKIQTX2cwbu+LhP0N6zK
+I1D9rdDANwWVwdoGbT0Be7mlSqQQ+wNggCOH0Yq1zr0CrJAu98R97uMHAE2gbtGd
+20OkTLhgNHXWjfBoPrO/PYOqu+AiAcDDsqf5LSnPPET+4/pvSWSdXbjvKSvePdh7
+jBxDma9trLzUG0Mm9d4AFe9bv0ycYrYMKekyqViHj3uEpoFcFCnH4CR/e0jfBPBR
+r5Voo5lZI7knwwLhpRCWGojJAqC8+iqwNutzNYBZaboM+oI75v7iGZYuMls1v2FG
+5DpNGnW8kg4qGx8Ri4d5jM75kguZWnYa/Bkl/Y9s8zobxQuUhGfi1pWMYS+P+JDp
+19F0QhOZPQEqxP9IhSP7G+Tp4B6cBs4zOzHpN/5o4ebmGwI8GeiSskib/Wd6BaA3
+iNQ62JcmIFU+Rz2kltWc8fP54N8J1cp1wkqgPDo6bJQBLQLgW9Hb3AGLsQQvsaGW
+ISBgIsMgJFJ7hp9vdl9R4SuqnXYYbsiitnj2TwUH2Ia8hJuH+YBme/49koaU/Msh
+Bx5RXTX66Hzd1ZlEfTrEAHWgHgT1W4ysuAS49b61HHJRtKG3SzU=
+=gOMv
+-----END PGP SIGNATURE-----
+
+--fmvA4kSBHQVZhkR6--
