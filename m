@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v2 17/22] arm64: dts: ls1043a: add smmu node
-Date: Wed, 26 Sep 2018 16:22:42 +0300
-Message-ID: <20180926132247.10971-18-laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 19/22] arm64: dts: ls104x: add missing dma ranges property
+Date: Wed, 26 Sep 2018 16:22:44 +0300
+Message-ID: <20180926132247.10971-20-laurentiu.tudor@nxp.com>
 References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
@@ -12,65 +12,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-This allows for the SMMU device to be probed by the SMMU kernel driver.
+These chips have a 48-bit address size so make sure that the dma-ranges
+reflects this. Otherwise the linux kernel's dma sub-system will set
+the default dma masks to full 64-bit, badly breaking dmas.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 7881e3d81a9a..7eea2bace171 100644
+index 1f9b385007a8..0e8fc8f29997 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -222,6 +222,48 @@
- 			clocks = <&sysclk>;
- 		};
+@@ -214,6 +214,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
++		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
  
-+		mmu: iommu@9000000 {
-+			compatible = "arm,mmu-500";
-+			reg = <0 0x9000000 0 0x400000>;
-+			dma-coherent;
-+			#global-interrupts = <2>;
-+			#iommu-cells = <1>;
-+			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+
- 		scfg: scfg@1570000 {
- 			compatible = "fsl,ls1043a-scfg", "syscon";
- 			reg = <0x0 0x1570000 0x0 0x10000>;
+ 		clockgen: clocking@1ee1000 {
+ 			compatible = "fsl,ls1043a-clockgen";
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+index 22bf3975492a..29b07bdd4207 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
+@@ -187,6 +187,7 @@
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		ranges;
++		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+ 
+ 		ddr: memory-controller@1080000 {
+ 			compatible = "fsl,qoriq-memory-controller";
 -- 
 2.17.1
