@@ -1,87 +1,81 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v16 4/5] dt-bindings: arm-smmu: Add bindings
- for qcom, smmu-v2
-Date: Wed, 26 Sep 2018 16:46:56 +0100
-Message-ID: <52cc5a5e-d497-ad24-8dd2-3455707a3eef@arm.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
- <20180830144541.17740-5-vivek.gautam@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/5] dt-binding: rtci-pcf8523: add quartz_load property
+Date: Wed, 26 Sep 2018 10:47:08 -0500
+Message-ID: <20180926154708.GA3264@bogus>
+References: <20180822183555.GA24084@ravnborg.org>
+ <20180907193508.24974-2-sam@ravnborg.org>
+ <20180913190516.GG14988@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180830144541.17740-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180913190516.GG14988@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAvMDgvMTggMTU6NDUsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiBBZGQgYmluZGluZ3MgZG9j
-IGZvciBRY29tJ3Mgc21tdS12MiBpbXBsZW1lbnRhdGlvbi4KClJldmlld2VkLWJ5OiBSb2JpbiBN
-dXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPgoKPiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0
-YW0gPHZpdmVrLmdhdXRhbUBjb2RlYXVyb3JhLm9yZz4KPiBSZXZpZXdlZC1ieTogVG9tYXN6IEZp
-Z2EgPHRmaWdhQGNocm9taXVtLm9yZz4KPiBUZXN0ZWQtYnk6IFNyaW5pdmFzIEthbmRhZ2F0bGEg
-PHNyaW5pdmFzLmthbmRhZ2F0bGFAbGluYXJvLm9yZz4KPiAtLS0KPiAgIC4uLi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dCAgICAgICAgIHwgMzkgKysrKysrKysrKysrKysr
-KysrKysrKwo+ICAgMSBmaWxlIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0t
-Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4
-dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQK
-PiBpbmRleCA4YTZmZmNlMTJhZjUuLmE2NTA0YjM3Y2MyMSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9tbXUvYXJtLHNtbXUudHh0Cj4gKysrIGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dAo+IEBAIC0x
-NywxMCArMTcsMTYgQEAgY29uZGl0aW9ucy4KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICJh
-cm0sbW11LTQwMSIKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICJhcm0sbW11LTUwMCIKPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICJjYXZpdW0sc21tdS12MiIKPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgInFjb20sc21tdS12MiIKPiAgIAo+ICAgICAgICAgICAgICAgICAgICAgZGVw
-ZW5kaW5nIG9uIHRoZSBwYXJ0aWN1bGFyIGltcGxlbWVudGF0aW9uIGFuZC9vciB0aGUKPiAgICAg
-ICAgICAgICAgICAgICAgIHZlcnNpb24gb2YgdGhlIGFyY2hpdGVjdHVyZSBpbXBsZW1lbnRlZC4K
-PiAgIAo+ICsgICAgICAgICAgICAgICAgICBRY29tIFNvQ3MgbXVzdCBjb250YWluLCBhcyBiZWxv
-dywgU29DLXNwZWNpZmljIGNvbXBhdGlibGVzCj4gKyAgICAgICAgICAgICAgICAgIGFsb25nIHdp
-dGggInFjb20sc21tdS12MiI6Cj4gKyAgICAgICAgICAgICAgICAgICJxY29tLG1zbTg5OTYtc21t
-dS12MiIsICJxY29tLHNtbXUtdjIiLAo+ICsgICAgICAgICAgICAgICAgICAicWNvbSxzZG04NDUt
-c21tdS12MiIsICJxY29tLHNtbXUtdjIiLgo+ICsKPiAgIC0gcmVnICAgICAgICAgICA6IEJhc2Ug
-YWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgU01NVS4KPiAgIAo+ICAgLSAjZ2xvYmFsLWludGVycnVw
-dHMgOiBUaGUgbnVtYmVyIG9mIGdsb2JhbCBpbnRlcnJ1cHRzIGV4cG9zZWQgYnkgdGhlCj4gQEAg
-LTcxLDYgKzc3LDIyIEBAIGNvbmRpdGlvbnMuCj4gICAgICAgICAgICAgICAgICAgICBvciB1c2lu
-ZyBzdHJlYW0gbWF0Y2hpbmcgd2l0aCAjaW9tbXUtY2VsbHMgPSA8Mj4sIGFuZAo+ICAgICAgICAg
-ICAgICAgICAgICAgbWF5IGJlIGlnbm9yZWQgaWYgcHJlc2VudCBpbiBzdWNoIGNhc2VzLgo+ICAg
-Cj4gKy0gY2xvY2stbmFtZXM6ICAgIExpc3Qgb2YgdGhlIG5hbWVzIG9mIGNsb2NrcyBpbnB1dCB0
-byB0aGUgZGV2aWNlLiBUaGUKPiArICAgICAgICAgICAgICAgICAgcmVxdWlyZWQgbGlzdCBkZXBl
-bmRzIG9uIHBhcnRpY3VsYXIgaW1wbGVtZW50YXRpb24gYW5kCj4gKyAgICAgICAgICAgICAgICAg
-IGlzIGFzIGZvbGxvd3M6Cj4gKyAgICAgICAgICAgICAgICAgIC0gZm9yICJxY29tLHNtbXUtdjIi
-Ogo+ICsgICAgICAgICAgICAgICAgICAgIC0gImJ1cyI6IGNsb2NrIHJlcXVpcmVkIGZvciBkb3du
-c3RyZWFtIGJ1cyBhY2Nlc3MgYW5kCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9y
-IHRoZSBzbW11IHB0dywKPiArICAgICAgICAgICAgICAgICAgICAtICJpZmFjZSI6IGNsb2NrIHJl
-cXVpcmVkIHRvIGFjY2VzcyBzbW11J3MgcmVnaXN0ZXJzCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB0aHJvdWdoIHRoZSBUQ1UncyBwcm9ncmFtbWluZyBpbnRlcmZhY2UuCj4gKyAg
-ICAgICAgICAgICAgICAgIC0gdW5zcGVjaWZpZWQgZm9yIG90aGVyIGltcGxlbWVudGF0aW9ucy4K
-PiArCj4gKy0gY2xvY2tzOiAgICAgICAgIFNwZWNpZmllcnMgZm9yIGFsbCBjbG9ja3MgbGlzdGVk
-IGluIHRoZSBjbG9jay1uYW1lcyBwcm9wZXJ0eSwKPiArICAgICAgICAgICAgICAgICAgYXMgcGVy
-IGdlbmVyaWMgY2xvY2sgYmluZGluZ3MuCj4gKwo+ICstIHBvd2VyLWRvbWFpbnM6ICBTcGVjaWZp
-ZXJzIGZvciBwb3dlciBkb21haW5zIHJlcXVpcmVkIHRvIGJlIHBvd2VyZWQgb24gZm9yCj4gKyAg
-ICAgICAgICAgICAgICAgIHRoZSBTTU1VIHRvIG9wZXJhdGUsIGFzIHBlciBnZW5lcmljIHBvd2Vy
-IGRvbWFpbiBiaW5kaW5ncy4KPiArCj4gICAqKiBEZXByZWNhdGVkIHByb3BlcnRpZXM6Cj4gICAK
-PiAgIC0gbW11LW1hc3RlcnMgKGRlcHJlY2F0ZWQgaW4gZmF2b3VyIG9mIHRoZSBnZW5lcmljICJp
-b21tdXMiIGJpbmRpbmcpIDoKPiBAQCAtMTM3LDMgKzE1OSwyMCBAQCBjb25kaXRpb25zLgo+ICAg
-ICAgICAgICAgICAgICAgIGlvbW11LW1hcCA9IDwwICZzbW11MyAwIDB4NDAwPjsKPiAgICAgICAg
-ICAgICAgICAgICAuLi4KPiAgICAgICAgICAgfTsKPiArCj4gKwkvKiBRY29tJ3MgYXJtLHNtbXUt
-djIgaW1wbGVtZW50YXRpb24gKi8KPiArCXNtbXU0OiBpb21tdUBkMDAwMDAgewo+ICsJCWNvbXBh
-dGlibGUgPSAicWNvbSxtc204OTk2LXNtbXUtdjIiLCAicWNvbSxzbW11LXYyIjsKPiArCQlyZWcg
-PSA8MHhkMDAwMDAgMHgxMDAwMD47Cj4gKwo+ICsJCSNnbG9iYWwtaW50ZXJydXB0cyA9IDwxPjsK
-PiArCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgNzMgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJ
-CSAgICAgPEdJQ19TUEkgMzIwIElSUV9UWVBFX0xFVkVMX0hJR0g+LAo+ICsJCQkgICAgIDxHSUNf
-U1BJIDMyMSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiArCQkjaW9tbXUtY2VsbHMgPSA8MT47Cj4g
-KwkJcG93ZXItZG9tYWlucyA9IDwmbW1jYyBNRFNTX0dEU0M+Owo+ICsKPiArCQljbG9ja3MgPSA8
-Jm1tY2MgU01NVV9NRFBfQVhJX0NMSz4sCj4gKwkJCSA8Jm1tY2MgU01NVV9NRFBfQUhCX0NMSz47
-Cj4gKwkJY2xvY2stbmFtZXMgPSAiYnVzIiwgImlmYWNlIjsKPiArCX07Cj4gCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
-c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Thu, Sep 13, 2018 at 09:05:16PM +0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> You can remove 'rtci-' from the subject.
+> 
+> On 07/09/2018 21:35:04+0200, Sam Ravnborg wrote:
+> > From: Søren Andersen <san@skov.dk>
+> > 
+> > The NXP pcf8523 supports two different quartz loads.
+> > - 7 pF (default)
+> > - 12.5 pF (minimum power consumption)
+> > 
+> > The pcf8523 needs to know the size of the quartz load,
+> > otherwise the the RTC will have a bad precision.
+> > 
+> > The default for the rtc (after power-on) is 7 pF.
+> > Add a property that tells if the external capacitor is 12.5 pF.
+> > 
+> > Signed-off-by: Søren Andersen <san@skov.dk>
+> > Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> > Cc: Alessandro Zummo <a.zummo@towertech.it>
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > ---
+> >  Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 19 +++++++++++++++++++
+> >  Documentation/devicetree/bindings/trivial-devices.txt |  1 -
+> >  2 files changed, 19 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > new file mode 100644
+> > index 000000000000..7c5e93f5077c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
+> > @@ -0,0 +1,19 @@
+> > +* NXP PCF8523 Real Time Clock
+> > +
+> > +NXP PCF8523 Real Time Clock
+> > +
+> > +Required properties:
+> > +- compatible: Should contain "nxp,pcf8523".
+> > +- reg: I2C address for chip.
+> > +
+> > +Optional property:
+> > +- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
+> > +  which differ from the default value of 7 pF
+> > +
+> 
+> The boolean properties usually don't work well for RTCs because people
+> usually want to keep any previous configuration that may have been done
+> at the factory or in the bootloader so I would use:
+> 
+> nxp,quartz_load_fF and this would be either 7000 or 12500.
+
+Use '-' rather than '_'.
+
+There's already a defined unit suffix of '-picofarads'. If you need 
+'-femtofarads', then please add to property-units.txt. Though I'd prefer 
+not as wouldn't a value of 12 (or 13) be close enough for the needs 
+here?
+
+Rob
