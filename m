@@ -1,7 +1,7 @@
 From: Al Cooper <alcooperx@gmail.com>
-Subject: [PATCH 3/5] usb: host: Add EHCI driver for Broadcom STB SoCs
-Date: Wed, 26 Sep 2018 18:20:12 -0400
-Message-ID: <1538000414-24873-4-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH 5/5] usb: host: Enable building of new Broadcom STB USB drivers
+Date: Wed, 26 Sep 2018 18:20:14 -0400
+Message-ID: <1538000414-24873-6-git-send-email-alcooperx@gmail.com>
 References: <1538000414-24873-1-git-send-email-alcooperx@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1538000414-24873-1-git-send-email-alcooperx@gmail.com>
@@ -10,335 +10,85 @@ To: linux-kernel@vger.kernel.org
 Cc: Al Cooper <alcooperx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman <mathias.nyman@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Jianguo Sun <sunjianguo1@huawei.com>, James Hogan <jhogan@kernel.org>, Alban Bedel <albeu@free.fr>, Lu Baolu <baolu.lu@linux.intel.com>, Avi Fishman <avifishman70@gmail.com>, Alex Elder <elder@linaro.org>, Hans de Goede <hdegoede@redhat.com>, linux-usb@vger.kernel.org, dev
 List-Id: devicetree@vger.kernel.org
 
-This driver enables USB EHCI on Broadcom ARM and MIPS STB SoCs.
-The drivers depend on a matching "brcm,brcmstb-usb-phy"
-Broadcom STB USB Phy driver.
-
-The standard platform driver can't be used because of differences
-in PHY and Clock handling. The standard PHY handling in hcd.c will
-do a phy_exit/phy_init on suspend/resume and this will end up
-shutting down the PHYs to the point that the host controller
-registers are no longer accessible and will cause suspend to crash.
-The clocks specified in device tree for these drivers are not
-available in mainline so instead of returning EPROBE_DEFER when
-the specified clock is not found and eventually failing probe,
-the clock pointer is set to NULL which disables all clock handling.
+Changes to Makefile and Kconfig to enable building of the new
+Broadcom STB OHCI, EHCI and XHCI drivers. Also update MAINTAINERS.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/usb/host/ehci-brcm.c | 304 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 304 insertions(+)
- create mode 100644 drivers/usb/host/ehci-brcm.c
+ MAINTAINERS               |  9 +++++++++
+ drivers/usb/host/Kconfig  | 27 +++++++++++++++++++++++++++
+ drivers/usb/host/Makefile |  7 +++++++
+ 3 files changed, 43 insertions(+)
 
-diff --git a/drivers/usb/host/ehci-brcm.c b/drivers/usb/host/ehci-brcm.c
-new file mode 100644
-index 000000000000..6bee4e0e2cbb
---- /dev/null
-+++ b/drivers/usb/host/ehci-brcm.c
-@@ -0,0 +1,304 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2018, Broadcom */
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 02a39617ec82..9b8e7caad2ba 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3007,6 +3007,15 @@ S:	Supported
+ F:	drivers/gpio/gpio-brcmstb.c
+ F:	Documentation/devicetree/bindings/gpio/brcm,brcmstb-gpio.txt
+ 
++BROADCOM BRCMSTB USB XHCI, EHCI and OHCI DRIVERS
++M:	Al Cooper <alcooperx@gmail.com>
++L:	linux-usb@vger.kernel.org
++L:	bcm-kernel-feedback-list@broadcom.com
++S:	Maintained
++F:	drivers/usb/host/xhci-brcm.c
++F:	drivers/usb/host/ehci-brcm.c
++F:	drivers/usb/host/ohci-brcm.c
 +
-+#include <linux/acpi.h>
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb.h>
-+#include <linux/usb/hcd.h>
+ BROADCOM BRCMSTB USB2 and USB3 PHY DRIVER
+ M:	Al Cooper <alcooperx@gmail.com>
+ L:	linux-kernel@vger.kernel.org
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 1a4ea98cac2a..1693a5076980 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -798,3 +798,30 @@ config USB_HCD_TEST_MODE
+ 	  This option is of interest only to developers who need to validate
+ 	  their USB hardware designs.  It is not needed for normal use.  If
+ 	  unsure, say N.
 +
-+#include "ehci.h"
++config USB_OHCI_BRCM
++       tristate
 +
-+#define BRCM_DRIVER_DESC "EHCI Broadcom STB driver"
++config USB_EHCI_BRCM
++       tristate
 +
-+#define hcd_to_ehci_priv(h) ((struct brcm_priv *)hcd_to_ehci(h)->priv)
++config USB_XHCI_BRCM
++       tristate
 +
-+struct brcm_priv {
-+	struct clk *clk;
-+	struct phy *phy;
-+};
++config BRCM_USB_PHY
++       tristate
 +
-+static const char brcm_hcd_name[] = "ehci-brcm";
++config USB_BRCM
++	tristate "Broadcom STB USB support"
++	depends on ARCH_BRCMSTB
++	select USB_OHCI_BRCM if USB_OHCI_HCD
++	select USB_EHCI_BRCM if USB_EHCI_HCD
++	select USB_XHCI_BRCM if USB_XHCI_HCD
++	select BRCM_USB_PHY if USB_OHCI_HCD || USB_EHCI_HCD || USB_XHCI_HCD
++	select GENERIC_PHY if BRCM_USB_PHY
++	default ARCH_BRCMSTB
++	help
++	  Say Y to enable the drivers for the onchip USB controllers.
 +
-+static int (*org_hub_control)(struct usb_hcd *hcd,
-+			u16 typeReq, u16 wValue, u16 wIndex,
-+			char *buf, u16 wLength);
++	  If your chipset supports power management, disabling this driver
++	  will keep the device permanently powered down.
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index e6235269c151..13e4f45a3a1d 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -91,3 +91,10 @@ obj-$(CONFIG_USB_HCD_BCMA)	+= bcma-hcd.o
+ obj-$(CONFIG_USB_HCD_SSB)	+= ssb-hcd.o
+ obj-$(CONFIG_USB_FOTG210_HCD)	+= fotg210-hcd.o
+ obj-$(CONFIG_USB_MAX3421_HCD)	+= max3421-hcd.o
 +
-+/* ehci_brcm_wait_for_sof
-+ * Wait for start of next microframe, then wait extra delay microseconds
-+ */
-+static inline void ehci_brcm_wait_for_sof(struct ehci_hcd *ehci, u32 delay)
-+{
-+	int frame_idx = ehci_readl(ehci, &ehci->regs->frame_index);
-+
-+	while (frame_idx == ehci_readl(ehci, &ehci->regs->frame_index))
-+		;
-+	udelay(delay);
-+}
-+
-+/*
-+ * ehci_brcm_hub_control
-+ * Intercept echi-hcd request to complete RESUME and align it to the start
-+ * of the next microframe.
-+ * If RESUME is complete too late in the microframe, host controller
-+ * detects babble on suspended port and resets the port afterwards.
-+ * This s/w workaround allows to avoid this problem.
-+ * See SWLINUX-1909 for more details
-+ */
-+static int ehci_brcm_hub_control(
-+	struct usb_hcd	*hcd,
-+	u16		typeReq,
-+	u16		wValue,
-+	u16		wIndex,
-+	char		*buf,
-+	u16		wLength)
-+{
-+	struct ehci_hcd	*ehci = hcd_to_ehci(hcd);
-+	int		ports = HCS_N_PORTS(ehci->hcs_params);
-+	u32 __iomem	*status_reg = &ehci->regs->port_status[
-+				(wIndex & 0xff) - 1];
-+	unsigned long flags;
-+	int retval, irq_disabled = 0;
-+
-+	/*
-+	 * RESUME is cleared when GetPortStatus() is called 20ms after start
-+	 * of RESUME
-+	 */
-+	if ((typeReq == GetPortStatus) &&
-+	    (wIndex && wIndex <= ports) &&
-+	    ehci->reset_done[wIndex-1] &&
-+	    time_after_eq(jiffies, ehci->reset_done[wIndex-1]) &&
-+	    (ehci_readl(ehci, status_reg) & PORT_RESUME)) {
-+
-+		/*
-+		 * to make sure we are not interrupted until RESUME bit
-+		 * is cleared, disable interrupts on current CPU
-+		 */
-+		ehci_dbg(ehci, "SOF alignment workaround\n");
-+		irq_disabled = 1;
-+		local_irq_save(flags);
-+		ehci_brcm_wait_for_sof(ehci, 5);
-+	}
-+	retval = (*org_hub_control)(hcd, typeReq, wValue, wIndex, buf, wLength);
-+	if (irq_disabled)
-+		local_irq_restore(flags);
-+	return retval;
-+}
-+
-+static int ehci_brcm_reset(struct usb_hcd *hcd)
-+{
-+	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
-+
-+	ehci->big_endian_mmio = 1;
-+
-+	ehci->caps = (struct ehci_caps *) hcd->regs;
-+	ehci->regs = (struct ehci_regs *) (hcd->regs +
-+		HC_LENGTH(ehci, ehci_readl(ehci, &ehci->caps->hc_capbase)));
-+
-+	/* This fixes the lockup during reboot due to prior interrupts */
-+	ehci_writel(ehci, CMD_RESET, &ehci->regs->command);
-+	mdelay(10);
-+
-+	/*
-+	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
-+	 *   bus usage
-+	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00 @ 0x90
-+	 */
-+	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
-+	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
-+
-+	return ehci_setup(hcd);
-+}
-+
-+static struct hc_driver __read_mostly ehci_brcm_hc_driver;
-+
-+static const struct ehci_driver_overrides brcm_overrides __initconst = {
-+
-+	.reset =	ehci_brcm_reset,
-+	.extra_priv_size = sizeof(struct brcm_priv),
-+};
-+
-+static int ehci_brcm_probe(struct platform_device *pdev)
-+{
-+	struct usb_hcd *hcd;
-+	struct resource *res_mem;
-+	struct brcm_priv *priv;
-+	int irq;
-+	int err;
-+
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-+	if (err)
-+		return err;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "no irq provided");
-+		return irq;
-+	}
-+
-+	/* Hook the hub control routine to work around a bug */
-+	if (org_hub_control == NULL)
-+		org_hub_control = ehci_brcm_hc_driver.hub_control;
-+	ehci_brcm_hc_driver.hub_control = ehci_brcm_hub_control;
-+
-+	/* initialize hcd */
-+	hcd = usb_create_hcd(&ehci_brcm_hc_driver,
-+			&pdev->dev, dev_name(&pdev->dev));
-+	if (!hcd)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, hcd);
-+	priv = hcd_to_ehci_priv(hcd);
-+
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
-+		priv->clk = NULL;
-+	}
-+	err = clk_prepare_enable(priv->clk);
-+	if (err)
-+		goto err_hcd;
-+
-+	priv->phy = devm_of_phy_get_by_index(&pdev->dev, pdev->dev.of_node, 0);
-+	if (IS_ERR(priv->phy)) {
-+		dev_err(&pdev->dev, "USB Phy not found.\n");
-+		err = PTR_ERR(priv->phy);
-+		goto err_clk;
-+	}
-+	phy_init(priv->phy);
-+
-+	res_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	hcd->regs = devm_ioremap_resource(&pdev->dev, res_mem);
-+	if (IS_ERR(hcd->regs)) {
-+		err = PTR_ERR(hcd->regs);
-+		goto err_phy;
-+	}
-+	hcd->rsrc_start = res_mem->start;
-+	hcd->rsrc_len = resource_size(res_mem);
-+	hcd->skip_phy_initialization = 1;
-+	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
-+	if (err)
-+		goto err_phy;
-+
-+	device_wakeup_enable(hcd->self.controller);
-+	device_enable_async_suspend(hcd->self.controller);
-+	platform_set_drvdata(pdev, hcd);
-+
-+	return err;
-+
-+err_phy:
-+	phy_exit(priv->phy);
-+err_clk:
-+	clk_disable_unprepare(priv->clk);
-+err_hcd:
-+	usb_put_hcd(hcd);
-+
-+	return err;
-+}
-+
-+static int ehci_brcm_remove(struct platform_device *dev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(dev);
-+	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
-+
-+	usb_remove_hcd(hcd);
-+	phy_exit(priv->phy);
-+	clk_disable_unprepare(priv->clk);
-+	usb_put_hcd(hcd);
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+
-+static int ehci_brcm_suspend(struct device *dev)
-+{
-+	int ret;
-+	struct usb_hcd *hcd = dev_get_drvdata(dev);
-+	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
-+	bool do_wakeup = device_may_wakeup(dev);
-+
-+	ret = ehci_suspend(hcd, do_wakeup);
-+	clk_disable_unprepare(priv->clk);
-+	return ret;
-+}
-+
-+static int ehci_brcm_resume(struct device *dev)
-+{
-+	struct usb_hcd *hcd = dev_get_drvdata(dev);
-+	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
-+	struct brcm_priv *priv = hcd_to_ehci_priv(hcd);
-+	int err;
-+
-+	err = clk_prepare_enable(priv->clk);
-+	if (err)
-+		return err;
-+	/*
-+	 * SWLINUX-1705: Avoid OUT packet underflows during high memory
-+	 *   bus usage
-+	 * port_status[0x0f] = Broadcom-proprietary USB_EHCI_INSNREG00
-+	 * @ 0x90
-+	 */
-+	ehci_writel(ehci, 0x00800040, &ehci->regs->port_status[0x10]);
-+	ehci_writel(ehci, 0x00000001, &ehci->regs->port_status[0x12]);
-+
-+	ehci_resume(hcd, false);
-+	return 0;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(ehci_brcm_pm_ops, ehci_brcm_suspend,
-+		ehci_brcm_resume);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id brcm_ehci_of_match[] = {
-+	{ .compatible = "brcm,ehci-brcm-v2", },
-+	{}
-+};
-+
-+MODULE_DEVICE_TABLE(of, brcm_ehci_of_match);
-+#endif /* CONFIG_OF */
-+
-+static struct platform_driver ehci_brcm_driver = {
-+	.probe		= ehci_brcm_probe,
-+	.remove		= ehci_brcm_remove,
-+	.shutdown	= usb_hcd_platform_shutdown,
-+	.driver		= {
-+		.owner	= THIS_MODULE,
-+		.name	= "ehci-brcm",
-+		.pm	= &ehci_brcm_pm_ops,
-+		.of_match_table = of_match_ptr(brcm_ehci_of_match),
-+	}
-+};
-+
-+static int __init ehci_brcm_init(void)
-+{
-+	if (usb_disabled())
-+		return -ENODEV;
-+
-+	pr_info("%s: " BRCM_DRIVER_DESC "\n", brcm_hcd_name);
-+
-+	ehci_init_driver(&ehci_brcm_hc_driver, &brcm_overrides);
-+	return platform_driver_register(&ehci_brcm_driver);
-+}
-+module_init(ehci_brcm_init);
-+
-+static void __exit ehci_brcm_exit(void)
-+{
-+	platform_driver_unregister(&ehci_brcm_driver);
-+}
-+module_exit(ehci_brcm_exit);
-+
-+MODULE_ALIAS("platform:ehci-brcm");
-+MODULE_DESCRIPTION(BRCM_DRIVER_DESC);
-+MODULE_AUTHOR("Al Cooper");
-+MODULE_LICENSE("GPL");
++# The order is important here because it controls the order that
++# the drivers will be initialized and we always need to init
++# the drivers in the order XHCI, EHCI and OHCI.
++obj-$(CONFIG_USB_XHCI_BRCM)	+= xhci-brcm.o
++obj-$(CONFIG_USB_EHCI_BRCM)	+= ehci-brcm.o
++obj-$(CONFIG_USB_OHCI_BRCM)	+= ohci-brcm.o
 -- 
 1.9.0.138.g2de3478
