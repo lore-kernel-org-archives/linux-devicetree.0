@@ -1,76 +1,103 @@
-From: Frieder Schrempf <frieder.schrempf@exceet.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Enable SPI NOR flash on Rock64
-Date: Wed, 26 Sep 2018 09:10:17 +0200
-Message-ID: <7ecb43c3-1693-005b-b547-03ca361bd843@exceet.de>
-References: <20180926045357.20722-1-wens@csie.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/2] GPIO: add single-register GPIO via CREG driver
+Date: Wed, 26 Sep 2018 09:18:21 +0200
+Message-ID: <CACRpkdawC77DMggf1ye1=tXUDbzBqWfw9=OVV5w49Aip6cKGug@mail.gmail.com>
+References: <20180911150925.19460-1-Eugeniy.Paltsev@synopsys.com> <20180911150925.19460-2-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926045357.20722-1-wens@csie.org>
-Content-Language: en-US
+In-Reply-To: <20180911150925.19460-2-Eugeniy.Paltsev@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, linux-rockchip@lists.infradead.org, Mark Brown <broonie@kernel.org>, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Eugeniy.Paltsev@synopsys.com
+Cc: "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26.09.2018 06:53, Chen-Yu Tsai wrote:
-> The Pine64 Rock64 board comes with a GigaDevice GD25Q128CSIG
-> or GD25Q127CSIG chip, which is a 128 Mbit SPI NOR flash chip
-> that supports the JEDEC read-ID command.
-> 
-> This patch enables the SPI controller and adds a device node
-> for the flash chip using the generic "jedec,spi-nor" comaptible.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Hi Eugeniy,
+
+sorry for the delay, the driver is different from what I'm
+used to so I needed focuses attention and it took some time.
+
+On Tue, Sep 11, 2018 at 5:09 PM Eugeniy Paltsev
+<Eugeniy.Paltsev@synopsys.com> wrote:
+
+> Add single-register MMIO GPIO driver for complex cases where
+> only several fields in register belong to GPIO lines and each GPIO
+> line owns a field with different length and on/off value.
+>
+> Such CREG GPIOs are used in Synopsys AXS10x and HSDK boards.
+>
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 > ---
-> 
-> This was working on linux-next 20180910, but now fails on linux-next
-> 20180925, with the following error messages:
-> 
->      m25p80 spi0.0: error -22 reading 9f
->      m25p80: probe of spi0.0 failed with error -2
-> 
-> Reverting the spi/for-next branch makes it work again:
-> 
->      m25p80 spi0.0: gd25q128 (16384 Kbytes)
-> 
-> Not sure what's up.
+> Changes v2->v3:
+>  * Move parameters into a lookup table instead of device tree.
+>  * Use the ngpios attribute for instead of snps,ngpios.
 
-The reason is probably an issue that was introduced here: [1], and it 
-was fixed here: [2].
+This is looking good! Just a few small things I want you to fix
+(we can certainly queue this for the next kernel):
 
-[1] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi?id=380583227c0c7f52383b0cd5c0e2de93ed31d553
-[2] 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/drivers/spi?id=4c53f98555fdbf1cc291cab8ffa5e1507a4f25d9
+> +#include <linux/of.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/of_gpio.h>
 
-> 
-> ---
->   arch/arm64/boot/dts/rockchip/rk3328-rock64.dts | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> index 9ee4f57557f3..2170cf63845e 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-> @@ -290,6 +290,18 @@
->   	};
->   };
->   
-> +&spi0 {
-> +	status = "okay";
+Replace this with:
+#include <linux/gpio/driver.h>
+
+Drivers should only need to include that file. (Also move away from
+mm_gpio_chip as per below.)
+
+> +#include "gpiolib.h"
+
+Why?
+
+> +struct creg_gpio {
+> +       struct of_mm_gpio_chip mmchip;
+
+I would prefer to move away from using this. Just create a regular driver
+please. Just struct gpio_chip and add a member
+void __iomem *base; instead of referring to mmchip.regs.
+
+In fact I want to rewrite all mm_gpio_chips but I just haven't had time.
+
+> +static void creg_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+
+Please rename the variable "gpio" to "offset".
+
+This is clearer because "gpio" becomes quite ambigous.
+
+> +static int creg_gpio_get_direction(struct gpio_chip *gc, unsigned int offset)
+> +{
+> +       return 0; /* output */
+> +}
+
+I think with the recent code changes in gpiolib you do not need to define
+this function at all.
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=devel&id=ae9847f48a4b4bff0335da20be63ac84d94eb54c
+
+> +static int creg_gpio_xlate(struct gpio_chip *gc,
+> +                          const struct of_phandle_args *gpiospec, u32 *flags)
+> +{
+> +       if (gpiospec->args_count != 1) {
+> +               dev_err(&gc->gpiodev->dev, "invalid args_count: %d\n",
+> +                       gpiospec->args_count);
+> +               return -EINVAL;
+> +       }
 > +
-> +	spiflash@0 {
-> +		compatible = "jedec,spi-nor";
-> +		reg = <0>;
+> +       if (gpiospec->args[0] >= gc->ngpio) {
+> +               dev_err(&gc->gpiodev->dev, "gpio number is too big: %d\n",
+> +                       gpiospec->args[0]);
+> +               return -EINVAL;
+> +       }
 > +
-> +		/* maximum speed for Rockchip SPI */
-> +		spi-max-frequency = <50000000>;
-> +	};
-> +};
-> +
->   &tsadc {
->   	rockchip,hw-tshut-mode = <0>;
->   	rockchip,hw-tshut-polarity = <0>;
-> 
+> +       return gpiospec->args[0];
+> +}
+
+Another reason to not use mm_gpio_chip: just rely on standard twocell
+translation and you can delete this.
+
+> +       /* Check that we suit in 32 bit register */
+
+s/suit/fit
+
+Yours,
+Linus Walleij
