@@ -1,141 +1,67 @@
-Return-Path: <SRS0=jZeC=MC=gmail.com=ricardo.ribalda@kernel.org>
+Return-Path: <SRS0=yNRt=MI=crapouillou.net=paul@kernel.org>
+Message-Id: <5bab3026.1c69fb81.d621a.8b3fSMTPIN_ADDED_MISSING@mx.google.com>
+Date: Wed, 26 Sep 2018 08:01:03 +0200
+Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
+From: Paul Cercueil <paul@crapouillou.net>
 MIME-Version: 1.0
-References: <20180820063953.6866-1-vkoul@kernel.org> <20180820063953.6866-3-vkoul@kernel.org>
- <153509585617.28926.14526626631390463379@swboyd.mtv.corp.google.com>
- <20180824101635.GO2388@vkoul-mobl> <153539758798.129321.2300393649173468216@swboyd.mtv.corp.google.com>
- <20180828033851.GA2388@vkoul-mobl>
-In-Reply-To: <20180828033851.GA2388@vkoul-mobl>
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Date: Thu, 20 Sep 2018 21:39:41 +0200
-Message-ID: <CAPybu_0Patmox+1rd19mD03qfSbhNzR+6gmaJwsmhu650s36fA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] i2c: Add Qualcomm CCI I2C driver
-Content-Type: text/plain; charset="UTF-8"
-To: Vinod Koul <vkoul@kernel.org>
-Cc: swboyd@chromium.org, wsa+renesas@sang-engineering.com, linux-i2c@vger.kernel.org, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Todor Tomov <todor.tomov@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Mathieu Malaterre <malat@debian.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-watchdog@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi
-
-Sorry to enter the discussion this late.
-
-I have been using this driver with release/qcomlt-4.14 on a db820c and
-if I try to use the i2c bus before camss is running I get a Timeout
-error and the bus is unusable after that. I have sent a patch that
-fixes this issue, in case you want to merge it/add it before this
-driver goes upstream.
-
-Is there a way to use the i2c bus without using the camera?
-
-Cheers
-
-On Tue, Aug 28, 2018 at 5:39 AM Vinod <vkoul@kernel.org> wrote:
->
-> On 27-08-18, 12:19, Stephen Boyd wrote:
-> > Quoting Vinod (2018-08-24 03:16:35)
-> > > On 24-08-18, 00:30, Stephen Boyd wrote:
-> > > > Quoting Vinod Koul (2018-08-19 23:39:53)
->
-> > > > > +static int cci_i2c_write(struct cci *cci, u16 master,
-> > > > > +                        u16 addr, u8 *buf, u16 len)
-> > > > > +{
-> > > > > +       u8 queue = QUEUE_0;
-> > > > > +       u8 load[12] = { 0 };
-> > > > > +       int i = 0, j, ret;
-> > > > > +       u32 val;
-> > > > > +
-> > > > > +       /*
-> > > > > +        * Call validate queue to make sure queue is empty before starting.
-> > > > > +        * This is to avoid overflow / underflow of queue.
-> > > > > +        */
-> > > > > +       ret = cci_validate_queue(cci, master, queue);
-> > > > > +       if (ret < 0)
-> > > > > +               return ret;
-> > > > > +
-> > > > > +       val = CCI_I2C_SET_PARAM | (addr & 0x7f) << 4;
-> > > > > +       writel(val, cci->base + CCI_I2C_Mm_Qn_LOAD_DATA(master, queue));
-> > > > > +
-> > > > > +       load[i++] = CCI_I2C_WRITE | len << 4;
-> > > >
-> > > > Can 'len' really be 16 bits? Because this assignment truncates that very
-> > > > quickly.
-> > >
-> > > Yes, this is passed from i2c_msg->len which is 16 bytes. But here it
-> > > doesn't support so it is truncated here
-> > >
-> > > >
-> > > > > +
-> > > > > +       for (j = 0; j < len; j++)
-> > > >
-> > > > Well I guess len can be at most '11', so maybe the type should be u8
-> > > > instead?
-> > >
-> > > I can use a local variable and cast to it, but am not sure that helps!
-> >
-> > Maybe just a comment indicating that max len is 11?
->
-> Sure, will add
->
-> > > > > +               return PTR_ERR(cci->base);
-> > > > > +       }
-> > > > > +
-> > > > > +       /* Interrupt */
-> > > > > +
-> > > > > +       ret = platform_get_irq(pdev, 0);
-> > > > > +       if (ret < 0) {
-> > > > > +               dev_err(dev, "missing IRQ: %d\n", ret);
-> > > > > +               return ret;
-> > > > > +       }
-> > > > > +       cci->irq = ret;
-> > > > > +
-> > > > > +       ret = devm_request_irq(dev, cci->irq, cci_isr,
-> > > > > +                              IRQF_TRIGGER_RISING, dev_name(dev), cci);
-> > > > > +       if (ret < 0) {
-> > > > > +               dev_err(dev, "request_irq failed, ret: %d\n", ret);
-> > > > > +               return ret;
-> > > > > +       }
-> > > > > +
-> > > > > +       disable_irq(cci->irq);
-> > > >
-> > > > Why? Is the irq always triggering or something?
-> > >
-> > > I supposed Todor didn't want to enable IRQ until everything is set.
-> > > I could move this block before adding i2c adapter.
-> >
-> > But does it actually matter? The interrupt is "enabled" from request to
-> > this function call so it's still possible to trigger. I'd just remove
-> > the irq disabling unless it actually matters.
->
-> Agreed, will do that
->
-> > > > > +static const struct cci_data cci_8916_data = {
-> > > > > +       .num_masters = 1,
-> > > > > +       .queue_size = { 64, 16 },
-> > > > > +       .quirks = {
-> > > > > +               .max_write_len = 10,
-> > > > > +               .max_read_len = 12,
-> > > > > +       },
-> > > > > +       .res = {
-> > > > > +               .clock = {
-> > > > > +                       "camss_top_ahb",
-> > > > > +                       "cci_ahb",
-> > > > > +                       "camss_ahb",
-> > > > > +                       "cci"
-> > > >
-> > > > I guess this is another design where you just want to "get all the clks"
-> > > > and not care about what they are?
-> > >
-> > > Yes that is how this seems to be
-> >
-> > Ok. I'm going to merge the "get all the clks" API soon. Maybe you can
-> > use that here.
->
-> Sure, once merged I will send a patch for this driver, which I guess
-> would be after next merge window..
->
-> --
-> ~Vinod
-
-
-
--- 
-Ricardo Ribalda
+CkxlIDI1IHNlcHQuIDIwMTggMTA6MTIgUE0sIERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6Y2Fu
+b0BsaW5hcm8ub3JnPiBhIMOpY3JpdCA6Cj4KPiBPbiAyNS8wOS8yMDE4IDE1OjM4LCBQYXVsIENl
+cmN1ZWlsIHdyb3RlOiAKPiA+IAo+ID4gTGUgMjQgc2VwdC4gMjAxOCA5OjE0IEFNLCBEYW5pZWwg
+TGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4gYSDDqWNyaXQgOiAKPiA+PiAKPiA+
+PiBPbiAyNC8wOS8yMDE4IDA4OjUzLCBQYXVsIENlcmN1ZWlsIHdyb3RlOiAKPiA+Pj4gCj4gPj4+
+IExlIDI0IHNlcHQuIDIwMTggMDc6NTgsIERhbmllbCBMZXpjYW5vIDxkYW5pZWwubGV6Y2Fub0Bs
+aW5hcm8ub3JnPiBhIMOpY3JpdCA6IAo+ID4+Pj4gCj4gPj4+PiBPbiAyNC8wOS8yMDE4IDA3OjQ5
+LCBQYXVsIENlcmN1ZWlsIHdyb3RlOiAKPiA+Pj4+PiAKPiA+Pj4+PiBMZSAyNCBzZXB0LiAyMDE4
+IDA3OjM1LCBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4gYSAKPiA+
+Pj4+PiDDqWNyaXQgOiAKPiA+Pj4+Pj4gCj4gPj4+Pj4+IE9uIDI0LzA5LzIwMTggMDc6MjQsIFBh
+dWwgQ2VyY3VlaWwgd3JvdGU6IAo+ID4+Pj4+Pj4gSGkgRGFuaWVsLCAKPiA+Pj4+Pj4+IAo+ID4+
+Pj4+Pj4gTGUgMjQgc2VwdC4gMjAxOCAwNToxMiwgRGFuaWVsIExlemNhbm8gCj4gPj4+Pj4+PiA8
+ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4gYSDDqWNyaXQgOiAKPiA+Pj4+Pj4+PiAKPiA+Pj4+
+Pj4+PiBPbiAyMS8wOC8yMDE4IDE5OjE2LCBQYXVsIENlcmN1ZWlsIHdyb3RlOiAKPiA+Pj4+Pj4+
+Pj4gVGhpcyBkcml2ZXIgaGFuZGxlcyB0aGUgVENVIChUaW1lciBDb3VudGVyIFVuaXQpIHByZXNl
+bnQgb24gCj4gPj4+Pj4+Pj4+IHRoZSBJbmdlbmljIEpaNDd4eCBTb0NzLCBhbmQgcHJvdmlkZXMg
+dGhlIGtlcm5lbCB3aXRoIGEgCj4gPj4+Pj4+Pj4+IHN5c3RlbSB0aW1lciwgYW5kIG9wdGlvbmFs
+bHkgd2l0aCBhIGNsb2Nrc291cmNlIGFuZCBhIAo+ID4+Pj4+Pj4+PiBzY2hlZF9jbG9jay4gCj4g
+Pj4+Pj4+Pj4+IAo+ID4+Pj4+Pj4+PiBJdCBhbHNvIHByb3ZpZGVzIGNsb2NrcyBhbmQgaW50ZXJy
+dXB0IGhhbmRsaW5nIHRvIGNsaWVudCAKPiA+Pj4+Pj4+Pj4gZHJpdmVycy4gCj4gPj4+Pj4+Pj4g
+Cj4gPj4+Pj4+Pj4gQ2FuIHlvdSBwcm92aWRlIGEgbXVjaCBtb3JlIGNvbXBsZXRlIGRlc2NyaXB0
+aW9uIG9mIHRoZSB0aW1lciAKPiA+Pj4+Pj4+PiBpbiBvcmRlciB0byBtYWtlIG15IGxpZmUgZWFz
+aWVyIGZvciB0aGUgcmV2aWV3IG9mIHRoaXMgcGF0Y2g/IAo+ID4+Pj4+Pj4gCj4gPj4+Pj4+PiBT
+ZWUgcGF0Y2ggWzAzLzI0XSwgaXQgYWRkcyBhIGRvYyBmaWxlIHRoYXQgZGVzY3JpYmVzIHRoZSAK
+PiA+Pj4+Pj4+IGhhcmR3YXJlLiAKPiA+Pj4+Pj4gCj4gPj4+Pj4+IFRoYW5rcywgSSB3ZW50IHRo
+cm91Z2ggYnV0IGl0IGlzIGluY29tcGxldGUgdG8gdW5kZXJzdGFuZCB3aGF0IHRoZSAKPiA+Pj4+
+Pj4gdGltZXIgZG8uIEkgd2lsbCByZXZlcnNlLWVuZ2luZWVyIHRoZSBjb2RlIGJ1dCBpdCB3b3Vs
+ZCBoZWxwIGlmIHlvdSAKPiA+Pj4+Pj4gY2FuIGdpdmUgdGhlIGdyb3NzIGFwcHJvYWNoLiBXaHkg
+bXVsdGlwbGUgY2hhbm5lbHMgPyBtdXRleGVzIGFuZCAKPiA+Pj4+Pj4gY29tcGxldGlvbiA/IAo+
+ID4+Pj4+IAo+ID4+Pj4+IE11Y2ggb2YgdGhlIGNvbXBsZXhpdHkgaXMgYmVjYXVzZSBvZiB0aGUg
+bXVsdGktcHVycG9zZSBuYXR1cmUgb2YgdGhlIAo+ID4+Pj4+IFRDVSBjaGFubmVscy4gRWFjaCBv
+bmUgY2FuIGJlIHVzZWQgYXMgdGltZXIvY2xvY2tzb3VyY2UsIG9yIFBXTS4gCj4gPj4+Pj4gCj4g
+Pj4+Pj4gVGhlIGRyaXZlciBzdGFydHMgYnkgdXNpbmcgY2hhbm5lbHMgMCBhbmQgMSBhcyBzeXN0
+ZW0gdGltZXIgYW5kIAo+ID4+Pj4+IGNsb2Nrc291cmNlLCByZXNwZWN0aXZlbHksIHRoZSBvdGhl
+ciBvbmVzIGJlaW5nIHVudXNlZCBmb3Igbm93LiBUaGVuLCAKPiA+Pj4+PiAqaWYqIHRoZSBQV00g
+ZHJpdmVyIHJlcXVlc3RzIG9uZSBvZiB0aGUgY2hhbm5lbHMgaW4gdXNlIGJ5IHRoZSAKPiA+Pj4+
+PiB0aW1lci9jbG9ja3NvdXJjZSBkcml2ZXIsIHNheSBjaGFubmVsIDAsIHRoZSB0aW1lci9jbG9j
+a3NvdXJjZSBkcml2ZXIgCj4gPj4+Pj4gd2lsbCBkeW5hbWljYWxseSByZWFzc2lnbiB0aGUgc3lz
+dGVtIHRpbWVyIHRvIGEgZnJlZSBjaGFubmVsLCBmcm9tIAo+ID4+Pj4+IGNoYW5uZWwgMCB0byBl
+LmcuIGNoYW5uZWwgMi4gT25seSBpbiB0aGF0IGNhc2UgdGhlIGNvbXBsZXRpb24vbXV0ZXggCj4g
+Pj4+Pj4gYXJlIGFjdHVhbGx5IHVzZWQuIAo+ID4+Pj4gCj4gPj4+PiBXaHkgZG8geW91IG5lZWQg
+dG8gZG8gdGhpcz8gQ2FuJ3QgYmUgdGhlIGNoYW5uZWxzIGRlZGljYXRlZCBhbmQgcmVzZXJ2ZWQg
+Cj4gPj4+PiBmb3IgY2xvY2tzb3VyY2UgYW5kIGNsb2NrZXZlbnQ/IAo+ID4+PiAKPiA+Pj4gVGhh
+dCdzIHdoYXQgSSBoYWQgaW4gcGxhY2UgKGluZ2VuaWMsdGltZXItY2hhbm5lbCBhbmQgaW5nZW5p
+YyxjbG9ja3NvdXJjZS1jaGFubmVsIERUIHByb3BlcnRpZXMpLCBidXQgUm9iIGRpZG4ndCB3YW50
+IGFueSBsaW51eC1zcGVjaWZpYyBwcm9wZXJ0aWVzIGluIHRoZSBkZXZpY2V0cmVlIGJpbmRpbmcg
+OiggCj4gPj4gCj4gPj4gSXNuJ3QgcG9zc2libGUgdG8gc3BlY2lmeSB0aGUgY2hhbm5lbCB0byB1
+c2UgaW4gdGhlIERUPyBsaWtlIHJlbmVzYXMxNiA/IAo+ID4gCj4gPiBUaGF0J3Mgd2hhdCBJIGRp
+ZCBpbiBWNiAoYW5kIGJlZm9yZSksIGJ1dCBSb2IgZGlkIG5vdCB3YW50IG1lIHRvIGFkZCBwcm9w
+ZXJ0aWVzIGZvciBMaW51eC1zcGVjaWZpYyBjb25jZXB0cyBzdWNoIGFzIGNsb2Nrc291cmNlLiAK
+Pgo+IEhtbSwgSSByZW1lbWJlciBzb21ldGhpbmcgbGlrZSB0aGF0LCB5ZXMgYnV0IEkgZGlkIGEg
+ZGVsZXRlIG9mIHRoZSAKPiBwcmV2aW91cyB2ZXJzaW9uIHdoZW4geW91IHBvc3RlZCB0aGUgdjcu
+IENhbiB5b3UgZ2l2ZSBhIHBvaW50ZXIgdG8gaXRzIAo+IGFuc3dlciA/IAoKWWVzLCB0aGlzIHdh
+cyBoaXMgYW5zd2VyOgpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOC83LzI1LzUwOAoKVGhlbiBt
+aW5lOgpodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOC83LzMwLzg4MwoKLVBhdWw=
