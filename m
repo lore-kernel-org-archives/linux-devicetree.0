@@ -1,254 +1,150 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 2/4] power: supply: core: Introduce properties to
- present the battery OCV table
-Date: Wed, 26 Sep 2018 15:51:50 +0200
-Message-ID: <20180926135150.fla2r4ilfco3atws@earth.universe>
-References: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
- <b78ff03ecd251b63430f05b505e02b19e196364e.1537930252.git.baolin.wang@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC
+ as unstable
+Date: Wed, 26 Sep 2018 09:04:36 -0500
+Message-ID: <CAL_JsqKvGRxY_BB+jEVZqevpCEj8cbebRubjjz4Svd+ef+J9Pg@mail.gmail.com>
+References: <20180830180205.18121-1-krzk@kernel.org> <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
+ <20180924171645.GA10910@kozik-lap> <20180926035522.v5flr36nl5ftayi4@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="75thj6og2rjp7i7z"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b78ff03ecd251b63430f05b505e02b19e196364e.1537930252.git.baolin.wang@linaro.org>
+In-Reply-To: <20180926035522.v5flr36nl5ftayi4@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 25, 2018 at 10:55 PM Olof Johansson <olof@lixom.net> wrote:
+>
+> On Mon, Sep 24, 2018 at 07:16:45PM +0200, Krzysztof Kozlowski wrote:
+> > On Sun, Sep 23, 2018 at 02:46:20PM +0100, Olof Johansson wrote:
+> > > On Thu, Aug 30, 2018 at 7:02 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > > Samsung Exynos SoCs and boards related bindings evolved since the initial
+> > > > introduction, but initially the bindings were minimal and a bit incomplete
+> > > > (they never described all the hardware modules available in the SoCs).
+> > > > Since then some significant (not fully compatible) changes have been
+> > > > already committed a few times (like gpio replaced by pinctrl, display ddc,
+> > > > mfc reserved memory, some core clocks added to various hardware modules,
+> > > > added more required nodes).
+> > > >
+> > > > On the other side there are no boards which have device tree embedded in
+> > > > the bootloader. Device tree blob is always compiled from the kernel tree
+> > > > and updated together with the kernel image.
+> > > >
+> > > > Thus to avoid further adding a bunch of workarounds for old/missing
+> > > > bindings, make development of new platforms easier and allow to make
+> > > > cleanup of the existing code and device tree files, lets mark some
+> > > > Samsung Exynos SoC platform bindings as unstable. This means that
+> > > > bindings can may change at any time and users should use the dtb file
+> > > > compiled from the same kernel source tree as the kernel image.
+> > >
+> > > I have to admit that I don't really like this approach, and I missed
+> > > the patch when originally posted (I did notice it in the pull request
+> > > it came in with though).
+> > >
+> > > The main concern for me is that with a blanket "everything is always
+> > > unstable" we discard the notion that we should strive for bindings to
+> > > be stable and backwards compatible.
+> >
+> > The original idea from Marek was to mark everything unstable. After
+> > comments from Rob I made it weaker already by changing to specific group
+> > of compatibles. Accepting their instability does not mean that we will
+> > be doing this on whenever possible. It just opens the possibility of
+> > finding some balance in cleanups and development. Sometimes things have
+> > to be seriously changed (fixed) and implementing workarounds for
+> > existing ABI might be huge work by itself.
+> >
+> > IOW, we want stability but not with the costs of huge development
+> > efforts... because no one else except us cares about the stability.
+>
+> I think it's really problematic to retroactively mark a binding as unstable.
+> The best way to do it is probably at the time of introduction if you anticipate
+> it needing adjustments down the road (i.e. if it's for a complex IP block).
+>
+> For major overhauls, it might be worth updating to a new binding instead (by
+> appending a suffix to the name or similar, and documenting that).
+>
+> > > Questions that come to mind are:
+> > >
+> > >  - When do they stop being unstable?
 
---75thj6og2rjp7i7z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's my biggest issue with marking things unstable. They will never
+get promoted. There's no carrot and I don't want to be the stick.
 
-Hi,
+> > They became unstable in a subjective way so I assume that reverse is the
+> > same, based on consensus and discussions.
+> >
+> > I am not sure if a hard time limit is good. There is no timeline for the
+> > Exynos development, no public roadmaps but rather community and
+> > partially volountary effort.  Therefore whatever number we set, it might
+> > be totally not matching reality.
+>
+> I think that sets up for a pretty bad experience for some downstream users.
 
-On Wed, Sep 26, 2018 at 10:59:12AM +0800, Baolin Wang wrote:
-> Some battery driver will use the open circuit voltage (OCV) value to look
-> up the corresponding battery capacity percent in one certain degree Celsi=
-us.
-> Thus this patch provides some battery properties to present the OCV table
-> temperatures and OCV capacity table values.
->=20
-> Suggested-by: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v1:
->  - New patch in v2.
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   |   14 +++++
->  drivers/power/supply/power_supply_core.c           |   63 ++++++++++++++=
-+++++-
->  include/linux/power_supply.h                       |   11 ++++
->  3 files changed, 87 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b=
-/Documentation/devicetree/bindings/power/supply/battery.txt
-> index 25b9d2e..ac2b303 100644
-> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -23,6 +23,16 @@ Optional Properties:
->   - constant-charge-current-max-microamp: maximum constant input current
->   - constant-charge-voltage-max-microvolt: maximum constant input voltage
->   - internal-resistance-micro-ohms: battery internal resistance
-> + - ocv-capacity-table-0: An array providing the battery capacity percent
-> +   with corresponding open circuit voltage (OCV) of the battery, which
-> +   is used to look up battery capacity according to current OCV value.
-> + - ocv-capacity-table-1: Same as ocv-capacity-table-0
-> + ......
-> + - ocv-capacity-table-n: Same as ocv-capacity-table-0
-> + - ocv-capacity-table-temperatures: An array containing the temperature
-> +   in degree Celsius, for each of the battery capacity lookup table.
-> +   The first temperature value specifies the OCV table 0, and the second
-> +   temperature value specifies the OCV table 1, and so on.
-> =20
->  Battery properties are named, where possible, for the corresponding
->  elements in enum power_supply_property, defined in
-> @@ -44,6 +54,10 @@ Example:
->  		constant-charge-current-max-microamp =3D <900000>;
->  		constant-charge-voltage-max-microvolt =3D <4200000>;
->  		internal-resistance-micro-ohms =3D <250000>;
-> +		ocv-capacity-table-temperatures =3D <(-10) 0 10>;
-> +		ocv-capacity-table-0 =3D <4185000 100>, <4113000 95>, <4066000 90>, ..=
-=2E;
-> +		ocv-capacity-table-1 =3D <4200000 100>, <4185000 95>, <4113000 90>, ..=
-=2E;
-> +		ocv-capacity-table-2 =3D <4250000 100>, <4200000 95>, <4185000 90>, ..=
-=2E;
->  	};
-> =20
->  	charger: charger@11 {
-> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
-ply/power_supply_core.c
-> index 9f3452f..151ff03 100644
-> --- a/drivers/power/supply/power_supply_core.c
-> +++ b/drivers/power/supply/power_supply_core.c
-> @@ -570,7 +570,7 @@ int power_supply_get_battery_info(struct power_supply=
- *psy,
->  {
->  	struct device_node *battery_np;
->  	const char *value;
-> -	int err;
-> +	int err, len, index;
-> =20
->  	info->energy_full_design_uwh         =3D -EINVAL;
->  	info->charge_full_design_uah         =3D -EINVAL;
-> @@ -581,6 +581,12 @@ int power_supply_get_battery_info(struct power_suppl=
-y *psy,
->  	info->constant_charge_voltage_max_uv =3D -EINVAL;
->  	info->internal_resistance_uohm       =3D -EINVAL;
-> =20
-> +	for (index =3D 0; index < POWER_SUPPLY_OCV_TEMP_MAX; index++) {
-> +		info->ocv_table[index]       =3D NULL;
-> +		info->ocv_temp[index]        =3D -EINVAL;
-> +		info->ocv_table_size[index]  =3D -EINVAL;
-> +	}
-> +
->  	if (!psy->of_node) {
->  		dev_warn(&psy->dev, "%s currently only supports devicetree\n",
->  			 __func__);
-> @@ -620,10 +626,65 @@ int power_supply_get_battery_info(struct power_supp=
-ly *psy,
->  	of_property_read_u32(battery_np, "internal-resistance-micro-ohms",
->  			     &info->internal_resistance_uohm);
-> =20
-> +	len =3D of_property_count_u32_elems(battery_np,
-> +					  "ocv-capacity-table-temperatures");
-> +	if (len < 0 && len !=3D -EINVAL) {
-> +		return len;
-> +	} else if (len > POWER_SUPPLY_OCV_TEMP_MAX) {
-> +		dev_err(&psy->dev, "Too many temperature values\n");
-> +		return -EINVAL;
-> +	} else if (len > 0) {
-> +		of_property_read_u32_array(battery_np,
-> +					   "ocv-capacity-table-temperatures",
-> +					   info->ocv_temp, len);
-> +	}
-> +
-> +	for (index =3D 0; index < len; index++) {
-> +		struct power_supply_battery_ocv_table *table;
-> +		char *propname;
-> +		const __be32 *list;
-> +		int i, tab_len, size;
-> +
-> +		propname =3D kasprintf(GFP_KERNEL, "ocv-capacity-table-%d", index);
-> +		list =3D of_get_property(battery_np, propname, &size);
-> +		kfree(propname);
-> +		if (!list || !size) {
-> +			dev_err(&psy->dev, "failed to get ocv capacity table\n");
+Yes, but it's the platform maintainers that should get yelled at if users care.
 
-I think it's better to replace "ocv capacity table" with %s / propname.
+There's some discussion about stable/unstable DTs for EBBR[1]. The
+current thought is to have an EBBR property in the DT. That would
+serve as a tag that the platform DT is considered stable and something
+the distros can support and rely on us not breaking.
 
-> +			power_supply_put_battery_info(psy, info);
-> +			return -EINVAL;
-> +		}
-> +
-> +		tab_len =3D size / sizeof(*table);
+> The main problem with unstable bindings is if you have a platform that you
+> haven't (yet) upstreamed the devicetrees for. Moving around base kernel
+> versions in those cases can be really awkward.
+>
+> "Just upstream your devicetrees" is one counter-argument, but it's not always
+> that easy -- it might be unreleased products or just some experimental
+> platforms that might even be tracking fairly close to mainline during whatever
+> development is ongoing.
+>
+> > >  - Is there a way to note in the binding itself that it's still
+> > > unstable with an anticipation of when it will be settled in?
+> >
+> > Hmm, I see that some existing bindings are being added with "Unstable"
+> > warning:
+> >
+> >       git grep -i unstable Documentation/devicetree/
+> >
+> > so there should be no problem for putting there a timeframe.
+>
+> Yeah, adding them with unstable up front is a good way to do it (and then
+> remove that warning once things have settled down).
 
-I think this should be
+The real question is how many have gone from unstable to stable. My guess is 0.
 
-tab_len =3D size / (2 * sizeof(__be32));
+My preference is the default is stable (semi-stable?), but changes
+that break compatibility must be documented doing so and it is up to
+the platform maintainers. I don't want to see "unstable" as license to
+just put anything in and have a constant churn. Extending a binding
+one property at a time does not result in a good design. Then mark
+platforms stable meaning no compatibility breaks and distros can count
+on the stability. We could improve the documenting part as often
+submitters aren't aware of the issue. I'd like to see kernel-ci do
+boot tests with kernel N and DT N-1 (and perhaps N+1(-next)).
 
-which decouples DT memory layout from kernel memory layout.
+> > >  - Is there a better way to version the bindings to avoid complete
+> > > backwards compatibility?
+> >
+> > Some architectures are using overlays for handling backward
+> > compatibility. Anyway it might put additional effort on driver
+> > development.
+>
+> In some cases it's pretty easy to stay backwards compatible by making sure
+> that things like missing properties have the same defaults as they used to
+> before the properties became mandatory.
+>
+> For complex subsystems it might be a different story, but that's also where it
+> _might_ be worth looking at a new revision of the binding instead, this time
+> maybe closer to a permanent one.
 
-> +		info->ocv_table_size[index] =3D tab_len;
-> +
-> +		table =3D info->ocv_table[index] =3D devm_kzalloc(&psy->dev,
-> +						tab_len * sizeof(*table),
-> +						GFP_KERNEL);
-> +		if (!info->ocv_table[index]) {
-> +			power_supply_put_battery_info(psy, info);
-> +			return -ENOMEM;
-> +		}
-> +
-> +		for (i =3D 0; i < tab_len; i++) {
-> +			table[i].ocv =3D be32_to_cpu(*list++);
-> +			table[i].capacity =3D be32_to_cpu(*list++);
-> +		}
-> +	}
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(power_supply_get_battery_info);
-> =20
-> +void power_supply_put_battery_info(struct power_supply *psy,
-> +				   struct power_supply_battery_info *info)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < POWER_SUPPLY_OCV_TEMP_MAX; i++)
-> +		kfree(info->ocv_table[i]);
-> +}
-> +EXPORT_SYMBOL_GPL(power_supply_put_battery_info);
-> +
->  int power_supply_get_property(struct power_supply *psy,
->  			    enum power_supply_property psp,
->  			    union power_supply_propval *val)
-> diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-> index 019452d..b0a2768 100644
-> --- a/include/linux/power_supply.h
-> +++ b/include/linux/power_supply.h
-> @@ -309,6 +309,12 @@ struct power_supply_info {
->  	int use_for_apm;
->  };
-> =20
-> +struct power_supply_battery_ocv_table {
-> +	int ocv;	/* microVolts */
-> +	int capacity;	/* percent */
-> +};
-> +
-> +#define POWER_SUPPLY_OCV_TEMP_MAX 20
->  /*
->   * This is the recommended struct to manage static battery parameters,
->   * populated by power_supply_get_battery_info(). Most platform drivers s=
-hould
-> @@ -327,6 +333,9 @@ struct power_supply_battery_info {
->  	int constant_charge_current_max_ua; /* microAmps */
->  	int constant_charge_voltage_max_uv; /* microVolts */
->  	int internal_resistance_uohm;       /* microOhms */
-> +	int ocv_temp[POWER_SUPPLY_OCV_TEMP_MAX];  /* celsius */
-> +	struct power_supply_battery_ocv_table *ocv_table[POWER_SUPPLY_OCV_TEMP_=
-MAX];
-> +	int ocv_table_size[POWER_SUPPLY_OCV_TEMP_MAX];
->  };
-> =20
->  extern struct atomic_notifier_head power_supply_notifier;
-> @@ -350,6 +359,8 @@ extern struct power_supply *devm_power_supply_get_by_=
-phandle(
-> =20
->  extern int power_supply_get_battery_info(struct power_supply *psy,
->  					 struct power_supply_battery_info *info);
-> +extern void power_supply_put_battery_info(struct power_supply *psy,
-> +					  struct power_supply_battery_info *info);
->  extern void power_supply_changed(struct power_supply *psy);
->  extern int power_supply_am_i_supplied(struct power_supply *psy);
->  extern int power_supply_set_input_current_limit_from_supplier(
+The distros (SUSE, at least) also care about forwards compatibility
+which is harder. A common example is a platform that changes from a
+bunch of fixed clocks to actual clock binding and driver. Older
+kernels will be missing the clock driver the newer dtb needs. And this
+case isn't even unstable bindings, it is moving from one stable
+binding to another. I have some ideas on how to handle that one, but
+there's probably other examples.
 
-Looks good to me. Technically this can result in existing users of
-power_supply_get_battery_info leaking memory, if they have an OCV
-table in DT.
+Rob
 
--- Sebastian
-
---75thj6og2rjp7i7z
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlurjusACgkQ2O7X88g7
-+poS+w/+KXo2vY47qj5s6fq95tMy7cI2512rUl003mIxeRLZiME9MaUCoHpP5RKp
-PwobOfxmZfx7/QiRBmZsB0NPpUvZK8lUsxzgTta1RFrzCJbawDW0cWzehZW4QfkE
-KPOTZNf9ICYDoQ5CPe7/pR73yYceTO8xPNryQR2ldONgUpNZL0j57CTOyPH4ijXk
-aKaHVLCfmTF+U3MThp3385t9QPFAB8gjHNT7EDOYC44s+25zZcJzumKYAZJhY6b9
-uuTH8ViGaJUDUde2kwx+ZDs0vzt6YXbEXaeECAR3olSkfMoIxhvYmJwZ78yno954
-h5SY8ndADUcgGhZAihjCVvdeFiBQov5vR3Nn2nzkRYjMg4FCLM0pBx4aoki7pm8Z
-gYzeJd3XZ+DmS/rdSGGGN5sJhAdfYYv1JUh7JzTofietWo9/I/sTRQOagcsDSkmE
-ZZ2rPmnGYTIwsGTLAmSzCGyqeVFrGuoCMjQPSVH8uXQ7tL3ur/S/gOZodYhG3W4r
-pLnpid+fRgznPWwL23HXVUR8dsKSZemNPC6j8gVj0OmnXDXnmGF+igQCP6bBN3qH
-MOjEZOjIVaZ+nt08eDfrwZ64yydxluOneq7ufN4d0i38iuCeYUsC+qSqCwrZky5l
-hF84gBqOL9h6cG+kVfoBUBRzgBluG2/Tk4bgU53uEARzVA9133k=
-=DReh
------END PGP SIGNATURE-----
-
---75thj6og2rjp7i7z--
+[1] https://github.com/ARM-software/ebbr
