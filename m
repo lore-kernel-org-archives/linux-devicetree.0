@@ -1,97 +1,162 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Add CD and WP pins to Odroid XU SD card
-Date: Wed, 26 Sep 2018 18:13:02 +0200
-Message-ID: <20180926161302.GA10041@kozik-lap>
-References: <CGME20180921210332epcas3p423aaeeb84ec3d8a44c5a898949f992e8@epcas3p4.samsung.com>
- <20180921210321.12404-1-krzk@kernel.org>
- <20180924100453eucas1p2cc67bf2cae5c0d0a031c7ce8d1117529~XTfCSQ2rd1041310413eucas1p2S@eucas1p2.samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+Date: Wed, 26 Sep 2018 09:23:03 -0700
+Message-ID: <20180926162303.GU5662@atomide.com>
+References: <20180925000545.22931-1-tony@atomide.com>
+ <e9afe736-c2f0-6182-afd0-08279e09a35e@ti.com>
+ <20180925144021.GN5662@atomide.com>
+ <20180925175537.GQ5662@atomide.com>
+ <d98aa7c1-5131-34c5-51e5-c7ef57cbc31e@ti.com>
+ <20180926155911.GT5662@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180924100453eucas1p2cc67bf2cae5c0d0a031c7ce8d1117529~XTfCSQ2rd1041310413eucas1p2S@eucas1p2.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Anand Moon <linux.amoon@gmail.com>
+In-Reply-To: <20180926155911.GT5662@atomide.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2018 at 12:04:52PM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
+* Tony Lindgren <tony@atomide.com> [180926 16:04]:
+> * Keerthy <j-keerthy@ti.com> [180926 04:12]:
+> > So the below patch is solving the problem only for the first iteration
+> > but i see the problem recurring from second iteration of suspend.
+> > 
+> > I tried the above cycle multiple times on am437x-gp-evm. I believe
+> > we are one step closer still not completely fixed.
 > 
-> On 2018-09-21 23:03, Krzysztof Kozlowski wrote:
-> > Defining card-detect and write-protect GPIO pins in Odroid XU SD Card
-> > does not change anything from functional point of view - dw-mmc driver
-> > was reading the state from registers.  Adding cd-gpios and wp-gpios
-> > properties changes only internal driver behavior to access the pins
-> > directly.
-> >
-> > Add them to DTS only to comprehensively describe the hardware.  Minor
-> > benefit is that write-protect pin configuration makes sure that it will
-> > be properly pulled up to indicate write access.
-> >
-> > This also removes debug messages:
-> >      dwmmc_exynos 12220000.mmc: No GPIO consumer cd found
-> >      dwmmc_exynos 12220000.mmc: No GPIO consumer wp found
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >   arch/arm/boot/dts/exynos5410-odroidxu.dts | 12 +++++++++++-
-> >   1 file changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> > index a2046f5f998c..dae360f29a47 100644
-> > --- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> > +++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
-> > @@ -525,12 +525,14 @@
-> >   
-> >   &mmc_2 {
-> >   	status = "okay";
-> > +	wp-gpios = <&gpm5 0 GPIO_ACTIVE_LOW>;
-> > +	cd-gpios = <&gpc2 2 GPIO_ACTIVE_LOW>;
-> >   	card-detect-delay = <200>;
-> >   	samsung,dw-mshc-ciu-div = <3>;
-> >   	samsung,dw-mshc-sdr-timing = <0 4>;
-> >   	samsung,dw-mshc-ddr-timing = <0 2>;
-> >   	pinctrl-names = "default";
-> > -	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
-> > +	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4 &sd2_wp>;
-> 
-> IMHO there is no point adding cd-gpios property if CD line is already 
-> assigned to this device via respective pin ctrl entry (as special function).
-> 
-> Handling of WP line is even more controversial imho. Ideally the drivers 
-> or mmc core should check somehow if WP line is available or not and act 
-> respectively. WP line is not available on uSD card connector so there is 
-> no point describing it.
+> OK thanks, that's interesting, I'll take a look. Good to hear
+> that is the reason for pixcir issues though :)
 
-Thanks for comments. In that case I'll add only the pin configuration to
-be sure that pin stays pulled up.
+Heh ooops the previous i2c-omap patch I posted does unpaired
+runtime_pm calls.. The put must be left out omap_i2c_resume().
 
-Best regards,
-Krzysztof
+Below is a better patch, seems to work for me multiple times
+now.
 
-> 
-> >   	bus-width = <4>;
-> >   	cap-sd-highspeed;
-> >   	vmmc-supply = <&ldo21_reg>;
-> > @@ -573,6 +575,14 @@
-> >   		samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
-> >   		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
-> >   	};
-> > +
-> > +	sd2_wp: sd2-wp {
-> > +		samsung,pins = "gpm5-0";
-> > +		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
-> > +		/* Pin is floating so pull it up to disable write-protect */
-> > +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
-> > +		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
-> > +	};
-> >   };
-> >   
-> >   &pwm {
-> 
-> Best regards
-> -- 
-> Marek Szyprowski, PhD
-> Samsung R&D Institute Poland
-> 
+Regards,
+
+Tony
+
+8< ---------------------------
+diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+--- a/drivers/i2c/busses/i2c-omap.c
++++ b/drivers/i2c/busses/i2c-omap.c
+@@ -208,6 +208,8 @@ struct omap_i2c_dev {
+ 						 * if set, should be trsh+1
+ 						 */
+ 	u32			rev;
++	unsigned int		is_suspended:1;
++	unsigned int		needs_resume:1;
+ 	unsigned		b_hw:1;		/* bad h/w fixes */
+ 	unsigned		bb_valid:1;	/* true when BB-bit reflects
+ 						 * the I2C bus state
+@@ -1498,8 +1500,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int omap_i2c_runtime_suspend(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+ 
+@@ -1521,11 +1522,12 @@ static int omap_i2c_runtime_suspend(struct device *dev)
+ 	}
+ 
+ 	pinctrl_pm_select_sleep_state(dev);
++	omap->is_suspended = true;
+ 
+ 	return 0;
+ }
+ 
+-static int omap_i2c_runtime_resume(struct device *dev)
++static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
+ {
+ 	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+ 
+@@ -1535,6 +1537,51 @@ static int omap_i2c_runtime_resume(struct device *dev)
+ 		return 0;
+ 
+ 	__omap_i2c_init(omap);
++	omap->is_suspended = false;
++
++	return 0;
++}
++
++static int __maybe_unused omap_i2c_suspend(struct device *dev)
++{
++	struct omap_i2c_dev *ddata = dev_get_drvdata(dev);
++	int error;
++
++	/* Is device still enabled because of autosuspend? */
++	if (ddata->is_suspended)
++		return 0;
++
++	/* Paired with call in omap_i2c_resume() */
++	error = pm_runtime_put_sync_suspend(dev);
++	if (error < 0) {
++		dev_err(dev, "%s failed: %i\n", __func__, error);
++
++		return error;
++	}
++
++	ddata->needs_resume = true;
++
++	return 0;
++}
++
++static int __maybe_unused omap_i2c_resume(struct device *dev)
++{
++	struct omap_i2c_dev *ddata = dev_get_drvdata(dev);
++	int error;
++
++	if (!ddata->needs_resume)
++		return 0;
++
++	/* Paired with call in omap_i2c_suspend() */
++	error = pm_runtime_get_sync(dev);
++	if (error < 0) {
++		dev_err(dev, "%s failed: %i\n", __func__, error);
++		pm_runtime_put_noidle(dev);
++
++		return error;
++	}
++
++	ddata->needs_resume = false;
+ 
+ 	return 0;
+ }
+@@ -1542,18 +1589,15 @@ static int omap_i2c_runtime_resume(struct device *dev)
+ static const struct dev_pm_ops omap_i2c_pm_ops = {
+ 	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
+ 			   omap_i2c_runtime_resume, NULL)
++	SET_SYSTEM_SLEEP_PM_OPS(omap_i2c_suspend, omap_i2c_resume)
+ };
+-#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
+-#else
+-#define OMAP_I2C_PM_OPS NULL
+-#endif /* CONFIG_PM */
+ 
+ static struct platform_driver omap_i2c_driver = {
+ 	.probe		= omap_i2c_probe,
+ 	.remove		= omap_i2c_remove,
+ 	.driver		= {
+ 		.name	= "omap_i2c",
+-		.pm	= OMAP_I2C_PM_OPS,
++		.pm	= &omap_i2c_pm_ops,
+ 		.of_match_table = of_match_ptr(omap_i2c_of_match),
+ 	},
+ };
+-- 
+2.19.0
