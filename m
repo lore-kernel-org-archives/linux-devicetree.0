@@ -1,43 +1,42 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3] arm64: dts: rockchip: add initial dts support for Rockpro64
-Date: Wed, 26 Sep 2018 13:35:15 +0200
-Message-ID: <6748636.LqZcXZ9sFQ@phil>
-References: <Akash_Gajjar@mentor.com> <1537943105-21247-1-git-send-email-Akash_Gajjar@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] ARM: dts: Use mmc@ instead sdhci@
+Date: Wed, 26 Sep 2018 13:38:07 +0200
+Message-ID: <84c0bf4f601d9bb30d8caeafa7df3c081009c971.1537961882.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537943105-21247-1-git-send-email-Akash_Gajjar@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Akash Gajjar <Akash_Gajjar@mentor.com>
-Cc: Deepak_das@mentor.com, Pragnesh_patel@mentor.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Levin Du <djw@t-chip.com.cn>, Klaus Goger <klaus.goger@theobroma-systems.com>, Ezequiel Garcia <ezequiel@collabora.com>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Pierre-Hugues Husson <phh@phh.me>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 26. September 2018, 08:24:57 CEST schrieb Akash Gajjar:
-> Rockpro64 is a rockchip RK3399 based board from pine64.org.
-> This patch adds basic device node support for Rockpro64 board and make it able
-> to bring up.
-> 
-> Peripheral Works
-> - Sdcard
-> - USB 2.0, 3.0
-> - Leds
-> - Ethernet
-> - Debug console
-> 
-> Not working:
-> - USB Type-C
-> 
-> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+mmc name is recommended based on devicetree specification.
 
-applied for 4.20.
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-For future patches, please keep in mind to transfer received tags from
-one version to the next. v2 received a "Reviewed-by" from Rob, so ideally
-it should have been included below your Signed-off in v3.
+ arch/arm/boot/dts/zynq-7000.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I've picked that tag myself from v2, so no need to do anything now,
-just for the next time ;-)
-
-Thanks
-Heiko
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index e22507e23303..ca6425ad794c 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -219,7 +219,7 @@
+ 			#size-cells = <0>;
+ 		};
+ 
+-		sdhci0: sdhci@e0100000 {
++		sdhci0: mmc@e0100000 {
+ 			compatible = "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			clock-names = "clk_xin", "clk_ahb";
+@@ -229,7 +229,7 @@
+ 			reg = <0xe0100000 0x1000>;
+ 		};
+ 
+-		sdhci1: sdhci@e0101000 {
++		sdhci1: mmc@e0101000 {
+ 			compatible = "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			clock-names = "clk_xin", "clk_ahb";
+-- 
+1.9.1
