@@ -1,32 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: clock: Introduce QCOM LPASS clock
- bindings
-Date: Wed, 26 Sep 2018 17:47:42 -0500
-Message-ID: <20180926224742.GA9096@bogus>
-References: <1537266338-18661-1-git-send-email-tdas@codeaurora.org>
- <1537266338-18661-2-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH V4 1/4] dt-bindings: soc: qcom: Remove SPI controller
+ maximum frequency binding
+Date: Wed, 26 Sep 2018 17:51:08 -0500
+Message-ID: <20180926225108.GA13931@bogus>
+References: <1537294047-12093-1-git-send-email-dkota@codeaurora.org>
+ <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1537266338-18661-2-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <1537294047-12093-2-git-send-email-dkota@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
+Cc: swboyd@chromium.org, dianders@chromium.org, broonie@kernel.org, mka@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, Dilip Kota <dkota@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Sep 2018 15:55:37 +0530, Taniya Das wrote:
-> Add device tree bindings for Low Power Audio subsystem clock controller for
-> Qualcomm Technology Inc's SDM845 SoCs.
+On Tue, 18 Sep 2018 23:37:23 +0530, Dilip Kota wrote:
+> SPI controller driver should maintain the maximum frequency
+> of the controller instead of relying on device tree bindings.
+> Because maximum frequency is specific property of SPI
+> controller.
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Signed-off-by: Dilip Kota <dkota@codeaurora.org>
 > ---
->  .../devicetree/bindings/clock/qcom,gcc.txt         |  2 ++
->  .../devicetree/bindings/clock/qcom,lpasscc.txt     | 35 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  2 ++
->  include/dt-bindings/clock/qcom,lpass-sdm845.h      | 16 ++++++++++
->  4 files changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
->  create mode 100644 include/dt-bindings/clock/qcom,lpass-sdm845.h
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 --
+>  1 file changed, 2 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
