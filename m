@@ -1,126 +1,189 @@
-From: Jordan Crouse <jcrouse@codeaurora.org>
-Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
-Date: Wed, 26 Sep 2018 08:34:33 -0600
-Message-ID: <20180926143432.GH10761@jcrouse-lnx.qualcomm.com>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-3-georgi.djakov@linaro.org>
- <20180925180215.GA12435@bogus>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCh v3 3/4] arm64: add support for i.MX8M EVK board
+Date: Wed, 26 Sep 2018 14:29:05 +0000
+Message-ID: <AM0PR04MB42114C0C434A90BBC091701B80150@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180921125626.21971-1-l.stach@pengutronix.de>
+ <20180921125626.21971-3-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180925180215.GA12435@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, robdclark@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180921125626.21971-3-l.stach@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 01:02:15PM -0500, Rob Herring wrote:
-> On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
-> > This binding is intended to represent the relations between the interconnect
-> > controllers (providers) and consumer device nodes. It will allow creating links
-> > between consumers and interconnect paths (exposed by interconnect providers).
+> -----Original Message-----
+> From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> Sent: Friday, September 21, 2018 8:56 PM
+> To: Shawn Guo <shawnguo@kernel.org>; Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>; Catalin Marinas
+> <catalin.marinas@arm.com>; Will Deacon <will.deacon@arm.com>;
+> Pengutronix Kernel Team <kernel@pengutronix.de>; Fabio Estevam
+> <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> patchwork-lst@pengutronix.de; Abel Vesa <abel.vesa@nxp.com>
+> Subject: [PATCh v3 3/4] arm64: add support for i.MX8M EVK board
 > 
-> As I mentioned in person, I want to see other SoC families using this 
-> before accepting. They don't have to be ready for upstream, but WIP 
-> patches or even just a "yes, this works for us and we're going to use 
-> this binding on X".
+> This is the evaluation kit board for the i.MX8M. The current level of support
+> yields a working console and is able to boot userspace from SD card or
+> Network.
 > 
-> Also, I think the QCom GPU use of this should be fully sorted out. Or 
-> more generically how this fits into OPP binding which seems to be never 
-> ending extended...
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com> (v1)
+> Tested-by: Tested-by: Baruch Siach <baruch@tkos.co.il> (v1)
 
-This is a discussion I wouldn't mind having now.  To jog memories, this is what
-I posted a few weeks ago:
 
-https://patchwork.freedesktop.org/patch/246117/
+[...]
 
-This seems like the easiest way to me to tie the frequency and the bandwidth
-quota together for GPU devfreq scaling but I'm not married to the format and
-I'll happily go a few rounds on the bikeshed if we can get something we can
-be happy with.
+> +&iomuxc {
+> +	pinctrl_fec1: fec1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC			0x3
+> +			MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO		0x23
+> +			MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1		0x1f
+> +			MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0		0x1f
+> +			MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3		0x91
+> +			MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2		0x91
+> +			MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1		0x91
+> +			MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0		0x91
+> +			MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC		0x1f
+> +			MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC		0x91
+> +			MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
+> +			MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
+> +			MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9		0x19
+> +		>;
+> +	};
+> +
+> +
 
-Jordan
+One more unnecessary blank line.
 
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > ---
-> >  .../bindings/interconnect/interconnect.txt    | 60 +++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > new file mode 100644
-> > index 000000000000..5cb7d3c8d44d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
-> > @@ -0,0 +1,60 @@
-> > +Interconnect Provider Device Tree Bindings
-> > +=========================================
-> > +
-> > +The purpose of this document is to define a common set of generic interconnect
-> > +providers/consumers properties.
-> > +
-> > +
-> > += interconnect providers =
-> > +
-> > +The interconnect provider binding is intended to represent the interconnect
-> > +controllers in the system. Each provider registers a set of interconnect
-> > +nodes, which expose the interconnect related capabilities of the interconnect
-> > +to consumer drivers. These capabilities can be throughput, latency, priority
-> > +etc. The consumer drivers set constraints on interconnect path (or endpoints)
-> > +depending on the use case. Interconnect providers can also be interconnect
-> > +consumers, such as in the case where two network-on-chip fabrics interface
-> > +directly
-> 
-> missing '.'
-> 
-> > +
-> > +Required properties:
-> > +- compatible : contains the interconnect provider compatible string
-> > +- #interconnect-cells : number of cells in a interconnect specifier needed to
-> > +			encode the interconnect node id
-> > +
-> > +Example:
-> > +
-> > +		snoc: snoc@580000 {
-> > +			compatible = "qcom,msm8916-snoc";
-> > +			#interconnect-cells = <1>;
-> > +			reg = <0x580000 0x14000>;
-> > +			clock-names = "bus_clk", "bus_a_clk";
-> > +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
-> > +				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
-> > +		};
-> > +
-> > +
-> > += interconnect consumers =
-> > +
-> > +The interconnect consumers are device nodes which dynamically express their
-> > +bandwidth requirements along interconnect paths they are connected to. There
-> > +can be multiple interconnect providers on a SoC and the consumer may consume
-> > +multiple paths from different providers depending on use case and the
-> > +components it has to interact with.
-> > +
-> > +Required properties:
-> > +interconnects : Pairs of phandles and interconnect provider specifier to denote
-> > +	        the edge source and destination ports of the interconnect path.
-> > +
-> > +Optional properties:
-> > +interconnect-names : List of interconnect path name strings sorted in the same
-> > +		     order as the interconnects property. Consumers drivers will use
-> > +		     interconnect-names to match interconnect paths with interconnect
-> > +		     specifiers.
-> 
-> specifier pairs.
-> 
-> > +
-> > +Example:
-> > +
-> > +	sdhci@7864000 {
-> > +		...
-> > +		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
-> > +		interconnect-names = "ddr";
-> > +	};
+Otherwise:
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Regards
+Dong Aisheng
+
+> +	pinctrl_i2c1: i2c1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
+> +			MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA
+> 	0x4000007f
+> +		>;
+> +	};
+> +
+> +	pinctrl_reg_usdhc2: regusdhc2grpgpio {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_RESET_B_GPIO2_IO19		0x41
+> +		>;
+> +	};
+> +
+> +	pinctrl_uart1: uart1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
+> +			MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
+> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
+> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_100mhz: usdhc1-100grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
+> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
+> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc1_200mhz: usdhc1-200grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
+> +			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
+> +			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
+> +			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
+> +			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2: usdhc2grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
+> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
+> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
+> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_100mhz: usdhc2-100grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
+> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
+> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
+> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+> +		>;
+> +	};
+> +
+> +	pinctrl_usdhc2_200mhz: usdhc2-200grp {
+> +		fsl,pins = <
+> +			MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
+> +			MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
+> +			MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
+> +			MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
+> +		>;
+> +	};
+> +};
+> --
+> 2.19.0
