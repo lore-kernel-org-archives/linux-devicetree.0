@@ -1,41 +1,48 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: crypto: hip07-sec, drop incorrect commas
-Date: Wed, 26 Sep 2018 15:36:31 -0500
-Message-ID: <20180926203631.GA30812@bogus>
-References: <20180912160718.3324-2-Jonathan.Cameron@huawei.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH v1 1/5] dt-binding: rtci-pcf8523: add quartz_load property
+Date: Wed, 26 Sep 2018 22:42:52 +0200
+Message-ID: <20180926204252.GA8654@ravnborg.org>
+References: <20180822183555.GA24084@ravnborg.org>
+ <20180907193508.24974-2-sam@ravnborg.org>
+ <20180913190516.GG14988@piout.net>
+ <20180926154708.GA3264@bogus>
+ <20180926185121.GF16644@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180912160718.3324-2-Jonathan.Cameron@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, xuwei <xuwei5@huawei.com>
+In-Reply-To: <20180926185121.GF16644@piout.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2018 at 05:07:17PM +0100, Jonathan Cameron wrote:
-> There should not be a comma in the address used for the instance
-> so drop them.
+On Wed, Sep 26, 2018 at 08:51:21PM +0200, Alexandre Belloni wrote:
+> On 26/09/2018 10:47:08-0500, Rob Herring wrote:
+> > > > +Optional property:
+> > > > +- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
+> > > > +  which differ from the default value of 7 pF
+> > > > +
+> > > 
+> > > The boolean properties usually don't work well for RTCs because people
+> > > usually want to keep any previous configuration that may have been done
+> > > at the factory or in the bootloader so I would use:
+> > > 
+> > > nxp,quartz_load_fF and this would be either 7000 or 12500.
+> > 
+> > Use '-' rather than '_'.
+> > 
+> > There's already a defined unit suffix of '-picofarads'. If you need 
+> > '-femtofarads', then please add to property-units.txt. Though I'd prefer 
+> > not as wouldn't a value of 12 (or 13) be close enough for the needs 
+> > here?
+> > 
 > 
-> This is a left over from a review of the final version before
-> Herbert Xu picked the series up.
-> 
-> Reported-by: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> Fixes: 8f026dc887fe ("dt-bindings: Add bidnings for Hisilicon SEC crypto accelerators")
-> ---
->  .../devicetree/bindings/crypto/hisilicon,hip07-sec.txt          | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> For that particular RTC, yes but the isl1208 has 0.5pF steps and the
+> x1205 has 0.25pf steps. I'd prefer having a single generic property for
+> all the RTCs: quartz-load-femtofarads.
 
-Applied. The dts change can go thru arm-soc.
+I will change to use this, and update property-units.txt too, when I get
+back to the patch set in a week or so.
 
-Rob
+	Sam
