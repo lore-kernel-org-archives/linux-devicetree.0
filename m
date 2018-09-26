@@ -1,134 +1,326 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: power: Add Spreadtrum SC27XX fuel
- gauge unit documentation
-Date: Wed, 26 Sep 2018 16:14:08 +0200
-Message-ID: <20180926141408.dumlwnjmbue4nkjm@earth.universe>
-References: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
- <b4b36b7b54cc227e6e7f14c314b4617863a205f5.1537930252.git.baolin.wang@linaro.org>
+From: "A.s. Dong" <aisheng.dong@nxp.com>
+Subject: RE: [PATCh v3 2/4] arm64: add basic DTS for i.MX8MQ
+Date: Wed, 26 Sep 2018 14:19:25 +0000
+Message-ID: <AM0PR04MB4211872231A83025EAFE793E80150@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20180921125626.21971-1-l.stach@pengutronix.de>
+ <20180921125626.21971-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="f23zl5vcp3oae2xk"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b4b36b7b54cc227e6e7f14c314b4617863a205f5.1537930252.git.baolin.wang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org, ctatlor97@gmail.com, linus.walleij@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180921125626.21971-2-l.stach@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "patchwork-lst@pengutronix.de" <patchwork-lst@pengutronix.de>, dl-linux-imx <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+[...]
 
---f23zl5vcp3oae2xk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+A few minor comments, 
+see below:
 
-Hi,
-
-On Wed, Sep 26, 2018 at 10:59:13AM +0800, Baolin Wang wrote:
-> This patch adds the binding documentation for Spreadtrum SC27XX series PM=
-ICs
-> fuel gauge unit device, which is used to calculate the battery capacity.
->=20
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-
-Looks good to me.
-
--- Sebastian
-
-> Changes from v1:
->  - Renamed GPIO property.
->  - Use standand battery properties instead of 'sprd,inner-resist' and
->    'sprd,ocv-cap-table'.
->  - Remove battery node's description.
-> ---
->  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   52 ++++++++++++++=
-++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx=
--fg.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt=
- b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
 > new file mode 100644
-> index 0000000..b161468
+> index 000000000000..4f841d84ca8e
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> @@ -0,0 +1,52 @@
-> +Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+> @@ -0,0 +1,395 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright 2017 NXP
+> + * Copyright (C) 2017-2018 Pengutronix, Lucas Stach
+> <kernel@pengutronix.de>
+> + */
 > +
-> +Required properties:
-> +- compatible: Should be one of the following:
-> +  "sprd,sc2720-fgu",
-> +  "sprd,sc2721-fgu",
-> +  "sprd,sc2723-fgu",
-> +  "sprd,sc2730-fgu",
-> +  "sprd,sc2731-fgu".
-> +- reg: The address offset of fuel gauge unit.
-> +- battery-detect-gpios: GPIO for battery detection.
-> +- io-channels: Specify the IIO ADC channel to get temperature.
-> +- io-channel-names: Should be "bat-temp".
-> +- monitored-battery: Phandle of battery characteristics devicetree node.
-> +  See Documentation/devicetree/bindings/power/supply/battery.txt
+> +#include <dt-bindings/clock/imx8mq-clock.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "imx8mq-pinfunc.h"
 > +
-> +Example:
+> +/* first 128 KiB of memory are owned by ATF */
+> +/memreserve/ 0x40000000 0x00020000;
 > +
-> +	bat: battery {
-> +		compatible =3D "simple-battery";
-> +		charge-full-design-microamp-hours =3D <1900000>;
-> +		constant-charge-voltage-max-microvolt =3D <4350000>;
-> +		ocv-capacity-table-temperatures =3D <20>;
-> +		ocv-capacity-table-0 =3D <4185000 100>, <4113000 95>, <4066000 90>,
-> +					<4022000 85>, <3983000 80>, <3949000 75>,
-> +					<3917000 70>, <3889000 65>, <3864000 60>,
-> +					<3835000 55>, <3805000 50>, <3787000 45>,
-> +					<3777000 40>, <3773000 35>, <3770000 30>,
-> +					<3765000 25>, <3752000 20>, <3724000 15>,
-> +					<3680000 10>, <3605000 5>, <3400000 0>;
-> +		......
+> +/ {
+> +	/* This should really be the GPC, but we need a driver for this first */
+> +	interrupt-parent = <&gic>;
+> +
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	aliases {
+> +		i2c0 = &i2c1;
+> +		i2c1 = &i2c2;
+> +		i2c2 = &i2c3;
+> +		i2c3 = &i2c4;
+> +		serial0 = &uart1;
+> +		serial1 = &uart2;
+> +		serial2 = &uart3;
+> +		serial3 = &uart4;
 > +	};
 > +
-> +	sc2731_pmic: pmic@0 {
-> +		compatible =3D "sprd,sc2731";
-> +		reg =3D <0>;
-> +		spi-max-frequency =3D <26000000>;
-> +		interrupts =3D <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <2>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
+> +	ckil: clk-ckil {
+
+s/clk/clock
+
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <32768>;
+> +		clock-output-names = "ckil";
+> +	};
 > +
-> +		fgu@a00 {
-> +			compatible =3D "sprd,sc2731-fgu";
-> +			reg =3D <0xa00>;
-> +			battery-detect-gpios =3D <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
-> +			io-channels =3D <&pmic_adc 5>;
-> +			io-channel-names =3D "bat-temp";
-> +			monitored-battery =3D <&bat>;
+> +	osc_25m: clk-osc-25m {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +		clock-output-names = "osc_25m";
+> +	};
+> +
+> +	osc_27m: clk-osc-27m {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <27000000>;
+> +		clock-output-names = "osc_27m";
+> +	};
+> +
+> +	clk_ext1: clk-ext1 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <133000000>;
+> +		clock-output-names = "clk_ext1";
+> +	};
+> +
+> +	clk_ext2: clk-ext2 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <133000000>;
+> +		clock-output-names = "clk_ext2";
+> +	};
+> +
+> +	clk_ext3: clk-ext3 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <133000000>;
+> +		clock-output-names = "clk_ext3";
+> +	};
+> +
+> +	clk_ext4: clk-ext4 {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency= <133000000>;
+> +		clock-output-names = "clk_ext4";
+> +	};
+
+[...]
+
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		A53_0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x0>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+> +		};
+> +
+> +		A53_1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x1>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+> +		};
+> +
+> +		A53_2: cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x2>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+> +		};
+> +
+> +		A53_3: cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53";
+> +			reg = <0x3>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&A53_L2>;
+> +		};
+> +
+> +		A53_L2: l2-cache0 {
+> +			compatible = "cache";
 > +		};
 > +	};
-> --=20
-> 1.7.9.5
->=20
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+> +		method = "smc";
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_LOW>, /* Physical Secure
+> */
+> +		             <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>, /* Physical
+> Non-Secure */
+> +		             <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>, /* Virtual */
+> +		             <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>; /* Hypervisor */
+> +		interrupt-parent = <&gic>;
+> +		arm,no-tick-in-suspend;
+> +	};
+> +
+> +	peripherals@0 {
 
---f23zl5vcp3oae2xk
-Content-Type: application/pgp-signature; name="signature.asc"
+Not sure whether we really need the extra reg address?
 
------BEGIN PGP SIGNATURE-----
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x0 0x3e000000>;
+> +
+> +		bus@30000000 { /* AIPS1 */
+> +			compatible = "fsl,imx8mq-aips-bus", "simple-bus";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges = <0x30000000 0x30000000 0x400000>;
+> +
+> +			gpio1: gpio@30200000 {
+> +				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+> +				reg = <0x30200000 0x10000>;
+> +				interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+> +				             <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlurlCsACgkQ2O7X88g7
-+pq5hw/9Fppud7JlWswYwKy8iOl9ahWFL+Ox5Rb4Eld97X30hAWQxTDhmjjYOmdy
-a1758rB+wSH7iCl7j9yhWck/iJ3bFVNNRBeXtlFJ1USU5r7No23cshCgR0BKBbUa
-w8MSvR8ayP1gKiSy3CEA8wC+n6mNNeLkeXrvu4Bqhb3SIwdo1kTmIvUgsnwqRfFv
-wVcMRuPqcO47pVxlwX8xPz226GhNx+KnUvQGx+JDk2u0xke5FcvI6QA4k7V30Ryi
-vL9QVG8pGFdOxwEfYv1F5F8Ucpu3KOyslEG1ih5rXY13AYPD57gRVkLJ4aVQoagp
-oCI1Y21kSrPZxvvjAyY7DcUukL/cVUhVz/zTZc4FEmYMP3yogcc9t4jieP+As4SE
-iCcrSCBP59ejkoHfqz8eVOl4ubbfFlRcBKH8J9K8Wx78fn7l1J2B8o4wkVC25dHu
-adZtZug7UDiuJkg5ydMHy7xXySQwVmlBNeZ4x7uPO8y144M23D05l4hB9192QoeH
-ZpO58Cky2F8Hik9idIhVL4HVbdmbrDofj8BQbPV8GPeoxruit67rvr2BGF/3HJg0
-G+M3jWLVxu3RxVSkmYJ8MV21hmGJ9v57a0u9VGSwk1yYTGFkdbNJ3TVSPjC75GMz
-KVHUZVYf02uKKuX2XKjdpARhppV2TVRjYgNQC3apCHVpL1pgzqU=
-=THfg
------END PGP SIGNATURE-----
+There seems to be a code indent issue here and many other places.
 
---f23zl5vcp3oae2xk--
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +			};
+> +
+> +			gpio2: gpio@30210000 {
+> +				compatible = "fsl,imx8mq-gpio", "fsl,imx35-gpio";
+> +				reg = <0x30210000 0x10000>;
+> +				interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>,
+> +				        <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+
+[...]
+
+> +
+> +			iomuxc: iomuxc@30330000 {
+> +				compatible = "fsl,imx8mq-iomuxc";
+> +				reg = <0x30330000 0x10000>;
+> +			};
+> +
+> +			gpr: iomuxc-gpr@30340000 {
+
+iomuxc_gpr: syscon@30340000
+
+> +				compatible = "fsl,imx8mq-iomuxc-gpr", "syscon";
+> +				reg = <0x30340000 0x10000>;
+> +			};
+> +
+> +			anatop: anatop@30360000 {
+
+anatop: syscon@...
+
+> +				compatible = "fsl,imx8mq-anatop", "syscon";
+> +				reg = <0x30360000 0x10000>;
+> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+> +			};
+> +
+> +			clk: clock-controller@30380000 {
+> +				compatible = "fsl,imx8mq-ccm";
+> +				reg = <0x30380000 0x10000>;
+> +				interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>,
+> +				             <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+
+[...]
+
+> +			usdhc1: usdhc@30b40000 {
+
+s/usdhc/mmc
+
+> +				compatible = "fsl,imx8mq-usdhc",
+> +				             "fsl,imx7d-usdhc";
+> +				reg = <0x30b40000 0x10000>;
+> +				interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_DUMMY>,
+> +				         <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+> +				         <&clk IMX8MQ_CLK_USDHC1_ROOT>;
+> +				clock-names = "ipg", "ahb", "per";
+> +				fsl,tuning-start-tap = <20>;
+> +				fsl,tuning-step = <2>;
+> +				bus-width = <4>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usdhc2: usdhc@30b50000 {
+> +				compatible = "fsl,imx8mq-usdhc",
+> +				             "fsl,imx7d-usdhc";
+> +				reg = <0x30b50000 0x10000>;
+> +				interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_DUMMY>,
+> +				         <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
+> +				         <&clk IMX8MQ_CLK_USDHC2_ROOT>;
+> +				clock-names = "ipg", "ahb", "per";
+> +				fsl,tuning-start-tap = <20>;
+> +				fsl,tuning-step = <2>;
+> +				bus-width = <4>;
+> +				status = "disabled";
+> +			};
+> +
+
+Otherwise:
+Reviewed-by: Dong Aisheng <Aisheng.dong@nxp.com>
+
+Regards
+Dong Aisheng
+
+> +			fec1: ethernet@30be0000 {
+> +				compatible = "fsl,imx8mq-fec", "fsl,imx6sx-fec";
+> +				reg = <0x30be0000 0x10000>;
+> +				interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
+> +				             <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
+> +				             <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk IMX8MQ_CLK_ENET1_ROOT>,
+> +				         <&clk IMX8MQ_CLK_ENET1_ROOT>,
+> +				         <&clk IMX8MQ_CLK_ENET_TIMER>,
+> +				         <&clk IMX8MQ_CLK_ENET_REF>,
+> +				         <&clk IMX8MQ_CLK_ENET_PHY_REF>;
+> +				clock-names = "ipg", "ahb", "ptp",
+> +				              "enet_clk_ref", "enet_out";
+> +				fsl,num-tx-queues = <3>;
+> +				fsl,num-rx-queues = <3>;
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		gic: interrupt-controller@38800000 {
+> +			compatible = "arm,gic-v3";
+> +			reg = <0x38800000 0x10000>,	/* GIC Dist */
+> +			      <0x38880000 0xc0000>,	/* GICR */
+> +			      <0x31000000 0x2000>,	/* GICC */
+> +			      <0x31010000 0x2000>,	/* GICV */
+> +			      <0x31020000 0x2000>;	/* GICH */
+> +			#interrupt-cells = <3>;
+> +			interrupt-controller;
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-parent = <&gic>;
+> +		};
+> +	};
+> +};
+> --
+> 2.19.0
