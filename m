@@ -1,126 +1,123 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC
- as unstable
-Date: Tue, 25 Sep 2018 20:55:22 -0700
-Message-ID: <20180926035522.v5flr36nl5ftayi4@localhost>
-References: <20180830180205.18121-1-krzk@kernel.org>
- <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
- <20180924171645.GA10910@kozik-lap>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v2] of: unittest: Disable interrupt node tests for old world MAC systems
+Date: Tue, 25 Sep 2018 21:06:24 -0700
+Message-ID: <1537934784-19819-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180924171645.GA10910@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, DTML <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2018 at 07:16:45PM +0200, Krzysztof Kozlowski wrote:
-> On Sun, Sep 23, 2018 at 02:46:20PM +0100, Olof Johansson wrote:
-> > On Thu, Aug 30, 2018 at 7:02 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> > > Samsung Exynos SoCs and boards related bindings evolved since the initial
-> > > introduction, but initially the bindings were minimal and a bit incomplete
-> > > (they never described all the hardware modules available in the SoCs).
-> > > Since then some significant (not fully compatible) changes have been
-> > > already committed a few times (like gpio replaced by pinctrl, display ddc,
-> > > mfc reserved memory, some core clocks added to various hardware modules,
-> > > added more required nodes).
-> > >
-> > > On the other side there are no boards which have device tree embedded in
-> > > the bootloader. Device tree blob is always compiled from the kernel tree
-> > > and updated together with the kernel image.
-> > >
-> > > Thus to avoid further adding a bunch of workarounds for old/missing
-> > > bindings, make development of new platforms easier and allow to make
-> > > cleanup of the existing code and device tree files, lets mark some
-> > > Samsung Exynos SoC platform bindings as unstable. This means that
-> > > bindings can may change at any time and users should use the dtb file
-> > > compiled from the same kernel source tree as the kernel image.
-> > 
-> > I have to admit that I don't really like this approach, and I missed
-> > the patch when originally posted (I did notice it in the pull request
-> > it came in with though).
-> > 
-> > The main concern for me is that with a blanket "everything is always
-> > unstable" we discard the notion that we should strive for bindings to
-> > be stable and backwards compatible.
-> 
-> The original idea from Marek was to mark everything unstable. After
-> comments from Rob I made it weaker already by changing to specific group
-> of compatibles. Accepting their instability does not mean that we will
-> be doing this on whenever possible. It just opens the possibility of
-> finding some balance in cleanups and development. Sometimes things have
-> to be seriously changed (fixed) and implementing workarounds for
-> existing ABI might be huge work by itself.
-> 
-> IOW, we want stability but not with the costs of huge development
-> efforts... because no one else except us cares about the stability.
+On systems with OF_IMAP_OLDWORLD_MAC set in of_irq_workarounds, the
+devicetree interrupt parsing code is different, causing unit tests of
+devicetree interrupt nodes to fail. Due to a bug in unittest code, which
+tries to dereference an uninitialized pointer, this results in a crash.
 
-I think it's really problematic to retroactively mark a binding as unstable.
-The best way to do it is probably at the time of introduction if you anticipate
-it needing adjustments down the road (i.e. if it's for a complex IP block).
+OF: /testcase-data/phandle-tests/consumer-a: arguments longer than property
+Unable to handle kernel paging request for data at address 0x00bc616e
+Faulting instruction address: 0xc08e9468
+Oops: Kernel access of bad area, sig: 11 [#1]
+BE PREEMPT PowerMac
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper Not tainted 4.14.72-rc1-yocto-standard+ #1
+task: cf8e0000 task.stack: cf8da000
+NIP:  c08e9468 LR: c08ea5bc CTR: c08ea5ac
+REGS: cf8dbb50 TRAP: 0300   Not tainted  (4.14.72-rc1-yocto-standard+)
+MSR:  00001032 <ME,IR,DR,RI>  CR: 82004044  XER: 00000000
+DAR: 00bc616e DSISR: 40000000
+GPR00: c08ea5bc cf8dbc00 cf8e0000 c13ca517 c13ca517 c13ca8a0 00000066 00000002
+GPR08: 00000063 00bc614e c0b05865 000affff 82004048 00000000 c00047f0 00000000
+GPR16: c0a80000 c0a9cc34 c13ca517 c0ad1134 05ffffff 000affff c0b05860 c0abeef8
+GPR24: cecec278 cecec278 c0a8c4d0 c0a885e0 c13ca8a0 05ffffff c13ca8a0 c13ca517
 
-For major overhauls, it might be worth updating to a new binding instead (by
-appending a suffix to the name or similar, and documenting that).
+NIP [c08e9468] device_node_gen_full_name+0x30/0x15c
+LR [c08ea5bc] device_node_string+0x190/0x3c8
+Call Trace:
+[cf8dbc00] [c007f670] trace_hardirqs_on_caller+0x118/0x1fc (unreliable)
+[cf8dbc40] [c08ea5bc] device_node_string+0x190/0x3c8
+[cf8dbcb0] [c08eb794] pointer+0x25c/0x4d0
+[cf8dbd00] [c08ebcbc] vsnprintf+0x2b4/0x5ec
+[cf8dbd60] [c08ec00c] vscnprintf+0x18/0x48
+[cf8dbd70] [c008e268] vprintk_store+0x4c/0x22c
+[cf8dbda0] [c008ecac] vprintk_emit+0x94/0x130
+[cf8dbdd0] [c008ff54] printk+0x5c/0x6c
+[cf8dbe10] [c0b8ddd4] of_unittest+0x2220/0x26f8
+[cf8dbea0] [c0004434] do_one_initcall+0x4c/0x184
+[cf8dbf00] [c0b4534c] kernel_init_freeable+0x13c/0x1d8
+[cf8dbf30] [c0004814] kernel_init+0x24/0x118
+[cf8dbf40] [c0013398] ret_from_kernel_thread+0x5c/0x64
 
-> > Questions that come to mind are:
-> > 
-> >  - When do they stop being unstable?
-> 
-> They became unstable in a subjective way so I assume that reverse is the
-> same, based on consensus and discussions.
-> 
-> I am not sure if a hard time limit is good. There is no timeline for the
-> Exynos development, no public roadmaps but rather community and
-> partially volountary effort.  Therefore whatever number we set, it might
-> be totally not matching reality.
+The problem was observed when running a qemu test for the g3beige machine
+with devicetree unittests enabled.
 
-I think that sets up for a pretty bad experience for some downstream users.
+Disable interrupt node tests on affected systems to avoid both false
+unittest failures and the crash.
 
-The main problem with unstable bindings is if you have a platform that you
-haven't (yet) upstreamed the devicetrees for. Moving around base kernel
-versions in those cases can be really awkward.
+With this patch in place, unittest on the affected system passes with
+the following message.
 
-"Just upstream your devicetrees" is one counter-argument, but it's not always
-that easy -- it might be unreleased products or just some experimental
-platforms that might even be tracking fairly close to mainline during whatever
-development is ongoing.
+	dt-test ### end of unittest - 144 passed, 0 failed
 
-> >  - Is there a way to note in the binding itself that it's still
-> > unstable with an anticipation of when it will be settled in?
-> 
-> Hmm, I see that some existing bindings are being added with "Unstable"
-> warning:
-> 
-> 	git grep -i unstable Documentation/devicetree/
-> 
-> so there should be no problem for putting there a timeframe.
+Fixes: 53a42093d96ef ("of: Add device tree selftests")
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+v2: Do not use goto to skip tests.
+    Provide test log in commit message.
 
-Yeah, adding them with unstable up front is a good way to do it (and then
-remove that warning once things have settled down).
+ drivers/of/unittest.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
-> >  - Is there a better way to version the bindings to avoid complete
-> > backwards compatibility?
-> 
-> Some architectures are using overlays for handling backward
-> compatibility. Anyway it might put additional effort on driver
-> development.
-
-In some cases it's pretty easy to stay backwards compatible by making sure
-that things like missing properties have the same defaults as they used to
-before the properties became mandatory.
-
-For complex subsystems it might be a different story, but that's also where it
-_might_ be worth looking at a new revision of the binding instead, this time
-maybe closer to a permanent one.
-
-> > Pointing out a couple of cases where it has been painful to stay
-> > backwards compatible could also be useful for understanding (even
-> > though you run the risk of each case being explained away with
-> > suggestions of how it can be handled).
-
-Marek, do you have any good examples here? Could still be useful.
-
-
--Olof
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 722537e14848..41b49716ac75 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -771,6 +771,9 @@ static void __init of_unittest_parse_interrupts(void)
+ 	struct of_phandle_args args;
+ 	int i, rc;
+ 
++	if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
++		return;
++
+ 	np = of_find_node_by_path("/testcase-data/interrupts/interrupts0");
+ 	if (!np) {
+ 		pr_err("missing testcase data\n");
+@@ -845,6 +848,9 @@ static void __init of_unittest_parse_interrupts_extended(void)
+ 	struct of_phandle_args args;
+ 	int i, rc;
+ 
++	if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
++		return;
++
+ 	np = of_find_node_by_path("/testcase-data/interrupts/interrupts-extended0");
+ 	if (!np) {
+ 		pr_err("missing testcase data\n");
+@@ -1001,15 +1007,19 @@ static void __init of_unittest_platform_populate(void)
+ 	pdev = of_find_device_by_node(np);
+ 	unittest(pdev, "device 1 creation failed\n");
+ 
+-	irq = platform_get_irq(pdev, 0);
+-	unittest(irq == -EPROBE_DEFER, "device deferred probe failed - %d\n", irq);
++	if (!(of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)) {
++		irq = platform_get_irq(pdev, 0);
++		unittest(irq == -EPROBE_DEFER,
++			 "device deferred probe failed - %d\n", irq);
+ 
+-	/* Test that a parsing failure does not return -EPROBE_DEFER */
+-	np = of_find_node_by_path("/testcase-data/testcase-device2");
+-	pdev = of_find_device_by_node(np);
+-	unittest(pdev, "device 2 creation failed\n");
+-	irq = platform_get_irq(pdev, 0);
+-	unittest(irq < 0 && irq != -EPROBE_DEFER, "device parsing error failed - %d\n", irq);
++		/* Test that a parsing failure does not return -EPROBE_DEFER */
++		np = of_find_node_by_path("/testcase-data/testcase-device2");
++		pdev = of_find_device_by_node(np);
++		unittest(pdev, "device 2 creation failed\n");
++		irq = platform_get_irq(pdev, 0);
++		unittest(irq < 0 && irq != -EPROBE_DEFER,
++			 "device parsing error failed - %d\n", irq);
++	}
+ 
+ 	np = of_find_node_by_path("/testcase-data/platform-tests");
+ 	unittest(np, "No testcase data in device tree\n");
+-- 
+2.7.4
