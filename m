@@ -1,44 +1,58 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
-Date: Wed, 26 Sep 2018 13:38:08 +0300
-Message-ID: <1568838.d8CnAYTeDB@avalon>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com> <7197338.mhOH8fQaEM@avalon> <20180926103547.5ubb6xjkl7xngmfg@flea>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner
+ V3s Camera Sensor Interface (CSI)
+Date: Wed, 26 Sep 2018 12:40:53 +0200
+Message-ID: <20180926104053.ijhmvvsbju36j4d3@flea>
+References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
+ <7197338.mhOH8fQaEM@avalon>
+ <20180926103547.5ubb6xjkl7xngmfg@flea>
+ <1568838.d8CnAYTeDB@avalon>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926103547.5ubb6xjkl7xngmfg@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "\"David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infra
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQWEVXOQKGQE7J377CI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1568838.d8CnAYTeDB@avalon>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "\"David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On Wednesday, 26 September 2018 13:35:47 EEST maxime.ripard@bootlin.com wrote:
-> On Wed, Sep 26, 2018 at 01:19:34PM +0300, Laurent Pinchart wrote:
-> > > +Endpoint node properties for CSI1
-> > > +---------------------------------
-> > 
-> > Should you list the CSI0 properties as well ? As the driver in patch 2/2
-> > doesn't support the CSI-2 interface I assume you have left out CSI0 for
-> > now, but it should still be listed in the bindings. I'm fine with fixing
-> > this as a follow-up patch to avoid missing the v4.20 merge window, but if
-> > you end up resubmitting the series, could you please address the problem
-> > ?
+On Wed, Sep 26, 2018 at 01:38:08PM +0300, Laurent Pinchart wrote:
+> Hi Maxime,
 > 
-> That driver is not available, and the documentation isn't either, so
-> there's no easy way to tell which properties are going to be needed
-> before doing the actual work of reverse engineering it and writing a
-> driver for it. Unfortunately...
+> On Wednesday, 26 September 2018 13:35:47 EEST maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org wrote:
+> > On Wed, Sep 26, 2018 at 01:19:34PM +0300, Laurent Pinchart wrote:
+> > > > +Endpoint node properties for CSI1
+> > > > +---------------------------------
+> > > 
+> > > Should you list the CSI0 properties as well ? As the driver in patch 2/2
+> > > doesn't support the CSI-2 interface I assume you have left out CSI0 for
+> > > now, but it should still be listed in the bindings. I'm fine with fixing
+> > > this as a follow-up patch to avoid missing the v4.20 merge window, but if
+> > > you end up resubmitting the series, could you please address the problem
+> > > ?
+> > 
+> > That driver is not available, and the documentation isn't either, so
+> > there's no easy way to tell which properties are going to be needed
+> > before doing the actual work of reverse engineering it and writing a
+> > driver for it. Unfortunately...
+> 
+> While DT bindings should be independent from driver implementations, I agree 
+> it's difficult to develop good bindings without hardware documentation and 
+> without at least one working driver implementation.
+> 
+> How about just explicitly stating that these bindings don't support CSI0 yet ?
 
-While DT bindings should be independent from driver implementations, I agree 
-it's difficult to develop good bindings without hardware documentation and 
-without at least one working driver implementation.
-
-How about just explicitly stating that these bindings don't support CSI0 yet ?
+Yep, that would work
 
 -- 
-Regards,
-
-Laurent Pinchart
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
