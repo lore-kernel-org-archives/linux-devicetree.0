@@ -1,69 +1,89 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v16 5/5] iommu/arm-smmu: Add support for
- qcom, smmu-v2 variant
-Date: Wed, 26 Sep 2018 16:59:09 +0100
-Message-ID: <80f7a7df-9a6d-9de3-4c7c-261d96fb04e4@arm.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
- <20180830144541.17740-6-vivek.gautam@codeaurora.org>
+From: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+Subject: Re: [RFC 1/3 net] lorawan: Add LoRaWAN class module
+Date: Wed, 26 Sep 2018 23:52:50 +0800
+Message-ID: <CAC=mGzjFHJi1VHKCXa-dM5XBsbXo_s1QqpPdbLF0+3BdhVMR2Q@mail.gmail.com>
+References: <cover.1535039998.git.starnight@g.ncu.edu.tw> <fc737f3940bbe91341fb15d85ac11931eb56d1fc.1535039998.git.starnight@g.ncu.edu.tw>
+ <cebcea44-9db3-5564-574c-038d9af79995@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20180830144541.17740-6-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-GB
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <cebcea44-9db3-5564-574c-038d9af79995@suse.de>
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: netdev@vger.kernel.org, "<linux-arm-kernel@lists.infradead.org\\" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org>," <linux-kernel@vger.kernel.org>, Jiri Pirko <jiri@resnulli.us>, Marcel Holtmann <marcel@holtmann.org>, "David S. Miller" <davem@davemloft.net>, Matthias Brugger <mbrugger@suse.com>, Janus Piwek <jpiwek@arroweurope.com>, =?UTF-8?Q?Michael_R=C3=B6der?= <michael.roeder@avnet.eu>, Dollar Chen <dollar.chen@wtmec.com>, Ken Yu <ken.yu@rakwireless.com>, =?UTF-8?Q?Konstantin_B=C3=B6hm?= <konstantin.boehm@ancud.de>, Jan Jongboom <jan.jongboom@arm.com>, Jon Ortego <Jon.Ortego@imst.de>, "linux-kernel@vger.kernel.org>," <contact@snootlab.com>, Ben Whitten <ben.whitten@lairdtech.com>, Brian Ray <brian.ray@link-labs.com>, lora@g
 List-Id: devicetree@vger.kernel.org
 
-T24gMzAvMDgvMTggMTU6NDUsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiBxY29tLHNtbXUtdjIgaXMg
-YW4gYXJtLHNtbXUtdjIgaW1wbGVtZW50YXRpb24gd2l0aCBzcGVjaWZpYwo+IGNsb2NrIGFuZCBw
-b3dlciByZXF1aXJlbWVudHMuCj4gT24gbXNtODk5NiwgbXVsdGlwbGUgY29yZXMsIHZpei4gbWRz
-cywgdmlkZW8sIGV0Yy4gdXNlIHRoaXMKPiBzbW11LiBPbiBzZG04NDUsIHRoaXMgc21tdSBpcyB1
-c2VkIHdpdGggZ3B1Lgo+IEFkZCBiaW5kaW5ncyBmb3IgdGhlIHNhbWUuCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4gUmV2aWV3
-ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFRvbWFz
-eiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4gVGVzdGVkLWJ5OiBTcmluaXZhcyBLYW5kYWdh
-dGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+Cj4gLS0tCj4gICBkcml2ZXJzL2lv
-bW11L2FybS1zbW11LmMgfCAxMyArKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hhbmdlZCwgMTMg
-aW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMg
-Yi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiBpbmRleCAxNjZjOGM2ZGEyNGYuLjQxMWU1YWM1
-N2M2NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiArKysgYi9kcml2
-ZXJzL2lvbW11L2FybS1zbW11LmMKPiBAQCAtMTE5LDYgKzExOSw3IEBAIGVudW0gYXJtX3NtbXVf
-aW1wbGVtZW50YXRpb24gewo+ICAgCUdFTkVSSUNfU01NVSwKPiAgIAlBUk1fTU1VNTAwLAo+ICAg
-CUNBVklVTV9TTU1VVjIsCj4gKwlRQ09NX1NNTVVWMiwKCkhtbSwgaXQgc2VlbXMgd2UgZG9uJ3Qg
-YWN0dWFsbHkgbmVlZCB0aGlzIHJpZ2h0IG5vdywgYnV0IG1heWJlIHRoYXQganVzdCAKbWVhbnMg
-dGhlcmUncyBtb3JlIGltcC1kZWYgcmVnaXN0ZXJzIGFuZC9vciBlcnJhdGEgdG8gY29tZSA7KQoK
-RWl0aGVyIHdheSBJIGd1ZXNzIHRoZXJlJ3Mgbm8gcmVhbCBoYXJtIGluIGhhdmluZyBpdC4KClJl
-dmlld2VkLWJ5OiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPgoKPiAgIH07Cj4g
-ICAKPiAgIHN0cnVjdCBhcm1fc21tdV9zMmNyIHsKPiBAQCAtMTk3MCw2ICsxOTcxLDE3IEBAIEFS
-TV9TTU1VX01BVENIX0RBVEEoYXJtX21tdTQwMSwgQVJNX1NNTVVfVjFfNjRLLCBHRU5FUklDX1NN
-TVUpOwo+ICAgQVJNX1NNTVVfTUFUQ0hfREFUQShhcm1fbW11NTAwLCBBUk1fU01NVV9WMiwgQVJN
-X01NVTUwMCk7Cj4gICBBUk1fU01NVV9NQVRDSF9EQVRBKGNhdml1bV9zbW11djIsIEFSTV9TTU1V
-X1YyLCBDQVZJVU1fU01NVVYyKTsKPiAgIAo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHFj
-b21fc21tdXYyX2Nsa3NbXSA9IHsKPiArCSJidXMiLCAiaWZhY2UiLAo+ICt9Owo+ICsKPiArc3Rh
-dGljIGNvbnN0IHN0cnVjdCBhcm1fc21tdV9tYXRjaF9kYXRhIHFjb21fc21tdXYyID0gewo+ICsJ
-LnZlcnNpb24gPSBBUk1fU01NVV9WMiwKPiArCS5tb2RlbCA9IFFDT01fU01NVVYyLAo+ICsJLmNs
-a3MgPSBxY29tX3NtbXV2Ml9jbGtzLAo+ICsJLm51bV9jbGtzID0gQVJSQVlfU0laRShxY29tX3Nt
-bXV2Ml9jbGtzKSwKPiArfTsKPiArCj4gICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
-ZCBhcm1fc21tdV9vZl9tYXRjaFtdID0gewo+ICAgCXsgLmNvbXBhdGlibGUgPSAiYXJtLHNtbXUt
-djEiLCAuZGF0YSA9ICZzbW11X2dlbmVyaWNfdjEgfSwKPiAgIAl7IC5jb21wYXRpYmxlID0gImFy
-bSxzbW11LXYyIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3YyIH0sCj4gQEAgLTE5NzcsNiArMTk4
-OSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFybV9zbW11X29mX21hdGNo
-W10gPSB7Cj4gICAJeyAuY29tcGF0aWJsZSA9ICJhcm0sbW11LTQwMSIsIC5kYXRhID0gJmFybV9t
-bXU0MDEgfSwKPiAgIAl7IC5jb21wYXRpYmxlID0gImFybSxtbXUtNTAwIiwgLmRhdGEgPSAmYXJt
-X21tdTUwMCB9LAo+ICAgCXsgLmNvbXBhdGlibGUgPSAiY2F2aXVtLHNtbXUtdjIiLCAuZGF0YSA9
-ICZjYXZpdW1fc21tdXYyIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInFjb20sc21tdS12MiIsIC5k
-YXRhID0gJnFjb21fc21tdXYyIH0sCj4gICAJeyB9LAo+ICAgfTsKPiAgIE1PRFVMRV9ERVZJQ0Vf
-VEFCTEUob2YsIGFybV9zbW11X29mX21hdGNoKTsKPiAKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Andreas F=C3=A4rber <afaerber@suse.de> =E6=96=BC 2018=E5=B9=B49=E6=9C=8824=
+=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=8812:40=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> Hi Jian-Hong,
+>
+> [+ Afonso]
+>
+> Am 23.08.18 um 19:15 schrieb Jian-Hong Pan:
+> > LoRaWAN defined by LoRa Alliance(TM) is the MAC layer over LoRa devices=
+.
+> >
+> > This patch implements part of Class A end-devices features defined in
+> > LoRaWAN(TM) Specification Ver. 1.0.2:
+> > 1. End-device receive slot timing
+> > 2. Only single channel and single data rate for now
+> > 3. Unconfirmed data up/down message types
+> > 4. Encryption/decryption for up/down link data messages
+> >
+> > It also implements the the functions and maps to Datagram socket for
+> > LoRaWAN unconfirmed data messages.
+> >
+> > On the other side, it defines the basic interface and operation
+> > functions for compatible LoRa device drivers.
+> >
+> > Signed-off-by: Jian-Hong Pan <starnight@g.ncu.edu.tw>
+> > ---
+> >  include/linux/maclorawan/lora.h | 239 +++++++++++
+> >  net/maclorawan/Kconfig          |  14 +
+> >  net/maclorawan/Makefile         |   2 +
+> >  net/maclorawan/lorawan.h        | 219 ++++++++++
+> >  net/maclorawan/lrwsec.c         | 237 +++++++++++
+> >  net/maclorawan/lrwsec.h         |  57 +++
+> >  net/maclorawan/mac.c            | 552 +++++++++++++++++++++++++
+> >  net/maclorawan/main.c           | 665 ++++++++++++++++++++++++++++++
+> >  net/maclorawan/socket.c         | 700 ++++++++++++++++++++++++++++++++
+> >  9 files changed, 2685 insertions(+)
+> >  create mode 100644 include/linux/maclorawan/lora.h
+>
+> Can we use include/linux/lora/lorawan.h for simplicity?
+
+Technically, yes
+
+> >  create mode 100644 net/maclorawan/Kconfig
+> >  create mode 100644 net/maclorawan/Makefile
+> >  create mode 100644 net/maclorawan/lorawan.h
+> >  create mode 100644 net/maclorawan/lrwsec.c
+> >  create mode 100644 net/maclorawan/lrwsec.h
+> >  create mode 100644 net/maclorawan/mac.c
+> >  create mode 100644 net/maclorawan/main.c
+> >  create mode 100644 net/maclorawan/socket.c
+>
+> This patch is much too large for me to review...
+>
+> It also doesn't seem to follow the structure I suggested: 802.15.4 has
+> two separate directories, net/ieee802154/ and net/mac802154/. Therefore
+> I had suggested net/maclorawan/ only for code that translates from
+> ETH_P_LORAWAN to ETH_P_LORA socket buffers, i.e. your soft MAC. Generic
+> socket code that applies also to hard MAC drivers I expected to go
+> either to net/lora/lorawan/ or better net/lorawan/ or some other clearly
+> separate location, with its own Kconfig symbol - any reason not to?
+> Consider which parts can be enabled/used independently of each other,
+> then you can put them into two (or more?) different patches.
+
+Maybe I misunderstood before.  Besides, the header files need to be
+split for different paths or folders.
+Anyway, I will try to separate it into parts in version 2 patches.
+
+> Also please use SPDX license identifiers in your headers.
+> And please don't put the whole world in To, use CC.
+
+Regards,
+Jian-Hong Pan
