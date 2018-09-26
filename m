@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v2 15/22] dpaa_eth: fix SG frame cleanup
-Date: Wed, 26 Sep 2018 16:22:40 +0300
-Message-ID: <20180926132247.10971-16-laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 17/22] arm64: dts: ls1043a: add smmu node
+Date: Wed, 26 Sep 2018 16:22:42 +0300
+Message-ID: <20180926132247.10971-18-laurentiu.tudor@nxp.com>
 References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
@@ -12,27 +12,65 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Fix issue with the entry indexing in the sg frame cleanup code being
-off-by-1. This problem showed up when doing some basic iperf tests and
-manifested in traffic coming to a halt.
+This allows for the SMMU device to be probed by the SMMU kernel driver.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-index 8db861f281a0..605f06f0def8 100644
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -1663,7 +1663,7 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
- 				 qm_sg_entry_get_len(&sgt[0]), dma_dir);
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 7881e3d81a9a..7eea2bace171 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -222,6 +222,48 @@
+ 			clocks = <&sysclk>;
+ 		};
  
- 		/* remaining pages were mapped with skb_frag_dma_map() */
--		for (i = 1; i < nr_frags; i++) {
-+		for (i = 1; i <= nr_frags; i++) {
- 			WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
- 
- 			dma_unmap_page(dev, qm_sg_addr(&sgt[i]),
++		mmu: iommu@9000000 {
++			compatible = "arm,mmu-500";
++			reg = <0 0x9000000 0 0x400000>;
++			dma-coherent;
++			#global-interrupts = <2>;
++			#iommu-cells = <1>;
++			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		scfg: scfg@1570000 {
+ 			compatible = "fsl,ls1043a-scfg", "syscon";
+ 			reg = <0x0 0x1570000 0x0 0x10000>;
 -- 
 2.17.1
