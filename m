@@ -1,127 +1,59 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
-Date: Wed, 26 Sep 2018 17:42:15 +0300
-Message-ID: <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-3-georgi.djakov@linaro.org>
- <20180925180215.GA12435@bogus>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 1/2] dt-bindings: i2c-omap: Add new compatible for AM654
+ SoCs
+Date: Wed, 26 Sep 2018 16:44:50 +0200
+Message-ID: <c3421929-1c40-513a-5c14-73e132a11d0f@axentia.se>
+References: <20180926115751.20421-1-vigneshr@ti.com>
+ <20180926115751.20421-2-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925180215.GA12435@bogus>
+In-Reply-To: <20180926115751.20421-2-vigneshr@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-Thanks for the comments!
-
-On 09/25/2018 09:02 PM, Rob Herring wrote:
-> On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
->> This binding is intended to represent the relations between the interconnect
->> controllers (providers) and consumer device nodes. It will allow creating links
->> between consumers and interconnect paths (exposed by interconnect providers).
+On 2018-09-26 13:57, Vignesh R wrote:
+> AM654 SoCs have similar I2C IP as OMAP SoCs. Add new compatible to
+> handle AM654 SoCs.
 > 
-> As I mentioned in person, I want to see other SoC families using this 
-> before accepting. They don't have to be ready for upstream, but WIP 
-> patches or even just a "yes, this works for us and we're going to use 
-> this binding on X".
-
-Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
-currently using this binding, there is ongoing work from at least two
-other vendors that would be using this same binding. I will check on
-what is their progress so far.
-
-> Also, I think the QCom GPU use of this should be fully sorted out. Or 
-> more generically how this fits into OPP binding which seems to be never 
-> ending extended...
-
-I see this as a further step. It could be OPP binding which include
-bandwidth values or some separate DT property. Jordan has already
-proposed something, do you have any initial comments on that?
-
-BR,
-Georgi
-
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>  .../bindings/interconnect/interconnect.txt    | 60 +++++++++++++++++++
->>  1 file changed, 60 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
->>
->> diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
->> new file mode 100644
->> index 000000000000..5cb7d3c8d44d
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
->> @@ -0,0 +1,60 @@
->> +Interconnect Provider Device Tree Bindings
->> +=========================================
->> +
->> +The purpose of this document is to define a common set of generic interconnect
->> +providers/consumers properties.
->> +
->> +
->> += interconnect providers =
->> +
->> +The interconnect provider binding is intended to represent the interconnect
->> +controllers in the system. Each provider registers a set of interconnect
->> +nodes, which expose the interconnect related capabilities of the interconnect
->> +to consumer drivers. These capabilities can be throughput, latency, priority
->> +etc. The consumer drivers set constraints on interconnect path (or endpoints)
->> +depending on the use case. Interconnect providers can also be interconnect
->> +consumers, such as in the case where two network-on-chip fabrics interface
->> +directly
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-omap.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> missing '.'
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-omap.txt b/Documentation/devicetree/bindings/i2c/i2c-omap.txt
+> index 7e49839d4124..11ce869d682d 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-omap.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-omap.txt
+> @@ -2,7 +2,8 @@ I2C for OMAP platforms
+>  
+>  Required properties :
+>  - compatible : Must be "ti,omap2420-i2c", "ti,omap2430-i2c", "ti,omap3-i2c"
+> -  or "ti,omap4-i2c"
+> +  or "ti,omap4-i2c" for OMAP2+ SoCs
+> +- compatible : Must "ti,am654-i2c", "ti,omap4-i2c" for AM654 SoCs
+                      ^
+                     be
+
+Also, it looks bad with two 'compatible' entries in the properties list.
+I think the trend is to list one valid compatible (plus fallbacks)
+per line. So, you should consider reformatting, possibly like so:
+
+- compatible : Must be one of
+	"ti,omap2420-i2c"
+	"ti,omap2430-i2c"
+	"ti,omap3-i2c"
+        "ti,omap4-i2c"
+	"ti,am654-i2c", "ti,omap4-i2c"
+
+Cheers,
+Peter
+
+>  - ti,hwmods : Must be "i2c<n>", n being the instance number (1-based)
+>  - #address-cells = <1>;
+>  - #size-cells = <0>;
 > 
->> +
->> +Required properties:
->> +- compatible : contains the interconnect provider compatible string
->> +- #interconnect-cells : number of cells in a interconnect specifier needed to
->> +			encode the interconnect node id
->> +
->> +Example:
->> +
->> +		snoc: snoc@580000 {
->> +			compatible = "qcom,msm8916-snoc";
->> +			#interconnect-cells = <1>;
->> +			reg = <0x580000 0x14000>;
->> +			clock-names = "bus_clk", "bus_a_clk";
->> +			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
->> +				 <&rpmcc RPM_SMD_SNOC_A_CLK>;
->> +		};
->> +
->> +
->> += interconnect consumers =
->> +
->> +The interconnect consumers are device nodes which dynamically express their
->> +bandwidth requirements along interconnect paths they are connected to. There
->> +can be multiple interconnect providers on a SoC and the consumer may consume
->> +multiple paths from different providers depending on use case and the
->> +components it has to interact with.
->> +
->> +Required properties:
->> +interconnects : Pairs of phandles and interconnect provider specifier to denote
->> +	        the edge source and destination ports of the interconnect path.
->> +
->> +Optional properties:
->> +interconnect-names : List of interconnect path name strings sorted in the same
->> +		     order as the interconnects property. Consumers drivers will use
->> +		     interconnect-names to match interconnect paths with interconnect
->> +		     specifiers.
-> 
-> specifier pairs.
-> 
->> +
->> +Example:
->> +
->> +	sdhci@7864000 {
->> +		...
->> +		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
->> +		interconnect-names = "ddr";
->> +	};
