@@ -1,75 +1,69 @@
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH 4/5] ASoC: max98088: Add master clock
-	handling
-Date: Wed, 26 Sep 2018 12:00:30 +0200
-Message-ID: <20180926100030.tzn6hx6qqbjseopw@pengutronix.de>
-References: <20180925142352.24106-1-m.felsch@pengutronix.de>
- <20180925142352.24106-5-m.felsch@pengutronix.de>
- <20180925171742.GR20825@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Re-add "syscon" compatible
+Date: Wed, 26 Sep 2018 11:52:02 +0200
+Message-ID: <20180926095202.tdibor3x7fsn6afz@flea>
+References: <20180917152857.162662-1-andre.przywara@arm.com>
+ <CAGb2v643=V_3DbLeEyXEavSQJsW2KdknpZZLfw4QwCjhfdmVsA@mail.gmail.com>
+ <20180921153522.0413c280@donnerap.Emea.Arm.com>
+ <20180921151625.wkaypyueyi2pguur@flea>
+ <20180924112230.73e3009b@donnerap.Emea.Arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180925171742.GR20825@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, robh+dt@kernel.org, kernel@pengutronix.de, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Tushar Behera <tushar.behera@linaro.org>
+In-Reply-To: <20180924112230.73e3009b@donnerap.Emea.Arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Sep 24, 2018 at 11:22:30AM +0100, Andre Przywara wrote:
+> > The fundamental difference is that we're mostly just a bunch of spare
+> > time programmers working on this platform, with a partial
+> > documentation for the controllers, at best.
+> > 
+> > You forced me to ask these developpers to work on their weekends and
+> > evenings on some crazy corner cases to maintain the backward
+> > compatibility. And honestly, both from a technical and human
+> > standpoint, I definitely understand if some of them are just leaving
+> > and don't want to work on it anymore. I would probably do the same in
+> > their position.
+> > 
+> > And having to ask that for companies like ARM or SUSE just makes it
+> > more frustrating to be honest. So there's simply no way you have
+> > forward compatibility while I'm there. Or you manage to convince all
+> > the ARM maintainers and enforce that compatibility for all the
+> > platforms.
+> 
+> I understand that from your point of view there is no way of investing
+> huge efforts in staying forward compatible, but I am not asking for
+> that (and by no way forcing this!). Instead this suggestion is a small
+> tweak to achieve this.
 
-thanks for review.
+We're trying to remain compatible but if there's any technical reason,
+then we won't be. I don't want anyone to assume we will, and to rely
+on the fact that we are actually guaranteeing this.
 
-On 18-09-25 10:17, Mark Brown wrote:
-> On Tue, Sep 25, 2018 at 04:23:51PM +0200, Marco Felsch wrote:
-> > From: Andreas F=E4rber <afaerber@suse.de>
-> > =
+> So I am sorry if those things frustrate you (which I can understand
+> very well), but I believe fixing the DT in a proper way is
+> much more user friendly in the long term (actually this issue was
+> brought forward by a user[1]).
 
-> > If master clock is provided through device tree, then update
-> > the master clock frequency during set_sysclk.
-> =
+Given the current state of the industry, I don't really see how the DT
+can allow you to do what you are trying to achieve.
 
-> This changelog suggests that the clock is optional...
+Maxime
 
-Your are right, it was my fail to make it not optional.
-> =
-
-> > +	if (!IS_ERR(max98088->mclk)) {
-> > +		freq =3D clk_round_rate(max98088->mclk, freq);
-> > +		clk_set_rate(max98088->mclk, freq);
-> > +	}
-> =
-
-> ...as does much of the code (note BTw that this ignores errors setting
-> the clock)...
-> =
-
-> > +	max98088->mclk =3D devm_clk_get(&i2c->dev, "mclk");
-> > +	if (IS_ERR(max98088->mclk)) {
-> > +		if (PTR_ERR(max98088->mclk) =3D=3D -EPROBE_DEFER)
-> > +			return -EPROBE_DEFER;
-> > +		dev_err(&i2c->dev, "Invalid MCLK\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> =
-
-> ...but the probe function makes it mandatory (and also throws away the
-> error code from clk_get() if it's not -EPROBE_DEFER).  Is this the best
-> choice?  It seems inconsistent anyway.
-
-One question, should it optional or not? If not I will fix it to return
-the clk_get error else I will drop it. It shouldn't be optional In my
-point of view, since it is needed by the chip.
-
-Regards,
-Marco
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
