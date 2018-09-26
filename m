@@ -1,42 +1,29 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] ARM: dts: Use mmc@ instead sdhci@
-Date: Wed, 26 Sep 2018 13:38:07 +0200
-Message-ID: <84c0bf4f601d9bb30d8caeafa7df3c081009c971.1537961882.git.michal.simek@xilinx.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH] arm64: dts: rockchip: Enable SPI NOR flash on Rock64
+Date: Wed, 26 Sep 2018 13:38:53 +0200
+Message-ID: <2872521.VFYVRVU0oA@phil>
+References: <20180926045357.20722-1-wens@csie.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180926045357.20722-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-mmc name is recommended based on devicetree specification.
+Am Mittwoch, 26. September 2018, 06:53:57 CEST schrieb Chen-Yu Tsai:
+> The Pine64 Rock64 board comes with a GigaDevice GD25Q128CSIG
+> or GD25Q127CSIG chip, which is a 128 Mbit SPI NOR flash chip
+> that supports the JEDEC read-ID command.
+> 
+> This patch enables the SPI controller and adds a device node
+> for the flash chip using the generic "jedec,spi-nor" comaptible.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+applied for 4.20
 
- arch/arm/boot/dts/zynq-7000.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index e22507e23303..ca6425ad794c 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -219,7 +219,7 @@
- 			#size-cells = <0>;
- 		};
- 
--		sdhci0: sdhci@e0100000 {
-+		sdhci0: mmc@e0100000 {
- 			compatible = "arasan,sdhci-8.9a";
- 			status = "disabled";
- 			clock-names = "clk_xin", "clk_ahb";
-@@ -229,7 +229,7 @@
- 			reg = <0xe0100000 0x1000>;
- 		};
- 
--		sdhci1: sdhci@e0101000 {
-+		sdhci1: mmc@e0101000 {
- 			compatible = "arasan,sdhci-8.9a";
- 			status = "disabled";
- 			clock-names = "clk_xin", "clk_ahb";
--- 
-1.9.1
+Thanks
+Heiko
