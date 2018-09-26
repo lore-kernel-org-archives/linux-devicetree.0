@@ -1,57 +1,54 @@
-Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH 2/4] media: v4l2-core: add pixel clock max frequency parallel port property
-Date: Thu, 27 Sep 2018 16:46:05 +0200
-Message-ID: <1538059567-8381-3-git-send-email-hugues.fruchet@st.com>
-In-Reply-To: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
-References: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
+Return-Path: <SRS0=waES=MI=linaro.org=ulf.hansson@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
+In-Reply-To: <1537896444-42418-1-git-send-email-biju.das@bp.renesas.com>
+References: <1537896444-42418-1-git-send-email-biju.das@bp.renesas.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Thu, 27 Sep 2018 01:49:12 +0200
+Message-ID: <CAPDyKFpZHfi-hZxU=6n9wj=msXsS4obxo12OZpWg9mdDPbmkQQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: mmc: sh_mmcif: Document r8a7744 DT bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add pclk-max-frequency property in parallel port endpoint in order
-to inform sensor of the maximum pixel clock frequency admissible
-by camera interface that is connected on.
+On 25 September 2018 at 19:27, Biju Das <biju.das@bp.renesas.com> wrote:
+> Add support for r8a7744 SoC. Renesas RZ/G1N (R8A7744) MMCIF is identical
+> to the R-Car Gen2 family.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/v4l2-core/v4l2-fwnode.c | 3 +++
- include/media/v4l2-fwnode.h           | 2 ++
- 2 files changed, 5 insertions(+)
+Applied for next, thanks!
 
-diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
-index 169bdbb..505338e 100644
---- a/drivers/media/v4l2-core/v4l2-fwnode.c
-+++ b/drivers/media/v4l2-core/v4l2-fwnode.c
-@@ -158,6 +158,9 @@ static void v4l2_fwnode_endpoint_parse_parallel_bus(
- 		flags |= v ? V4L2_MBUS_DATA_ENABLE_HIGH :
- 			V4L2_MBUS_DATA_ENABLE_LOW;
- 
-+	if (!fwnode_property_read_u32(fwnode, "pclk-max-frequency", &v))
-+		bus->pclk_max_frequency = v;
-+
- 	bus->flags = flags;
- 
- }
-diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
-index 9cccab6..946b48d 100644
---- a/include/media/v4l2-fwnode.h
-+++ b/include/media/v4l2-fwnode.h
-@@ -52,11 +52,13 @@ struct v4l2_fwnode_bus_mipi_csi2 {
-  * @flags: media bus (V4L2_MBUS_*) flags
-  * @bus_width: bus width in bits
-  * @data_shift: data shift in bits
-+ * @max_pclk_frequency: maximum pixel clock in hertz
-  */
- struct v4l2_fwnode_bus_parallel {
- 	unsigned int flags;
- 	unsigned char bus_width;
- 	unsigned char data_shift;
-+	unsigned int pclk_max_frequency;
- };
- 
- /**
--- 
-2.7.4
+Kind regards
+Uffe
+
+> ---
+>  Documentation/devicetree/bindings/mmc/renesas,mmcif.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> index 5ff1e12..c064af5 100644
+> --- a/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> +++ b/Documentation/devicetree/bindings/mmc/renesas,mmcif.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>         - "renesas,mmcif-r8a73a4" for the MMCIF found in r8a73a4 SoCs
+>         - "renesas,mmcif-r8a7740" for the MMCIF found in r8a7740 SoCs
+>         - "renesas,mmcif-r8a7743" for the MMCIF found in r8a7743 SoCs
+> +       - "renesas,mmcif-r8a7744" for the MMCIF found in r8a7744 SoCs
+>         - "renesas,mmcif-r8a7745" for the MMCIF found in r8a7745 SoCs
+>         - "renesas,mmcif-r8a7778" for the MMCIF found in r8a7778 SoCs
+>         - "renesas,mmcif-r8a7790" for the MMCIF found in r8a7790 SoCs
+> @@ -23,7 +24,8 @@ Required properties:
+>  - interrupts: Some SoCs have only 1 shared interrupt, while others have either
+>    2 or 3 individual interrupts (error, int, card detect). Below is the number
+>    of interrupts for each SoC:
+> -    1: r8a73a4, r8a7743, r8a7745, r8a7778, r8a7790, r8a7791, r8a7793, r8a7794
+> +    1: r8a73a4, r8a7743, r8a7744, r8a7745, r8a7778, r8a7790, r8a7791, r8a7793,
+> +       r8a7794
+>      2: r8a7740, sh73a0
+>      3: r7s72100
+>
+> --
+> 2.7.4
+>
