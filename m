@@ -1,129 +1,126 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5 1/2] dt-bindings: hwmon: Add ina3221 documentation
-Date: Tue, 25 Sep 2018 20:40:59 -0700
-Message-ID: <7896d6d6-c7c0-b462-3150-5ceff906bae0@roeck-us.net>
-References: <20180925225930.31886-1-nicoleotsuka@gmail.com>
- <20180925225930.31886-2-nicoleotsuka@gmail.com>
- <4f16baf7-b1bc-c7d2-3dd9-ed10b78d59b6@roeck-us.net>
- <20180926030857.GA458@Asurada-Nvidia.nvidia.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v3] dt-bindings: arm: Explicitly mark Samsung Exynos SoC
+ as unstable
+Date: Tue, 25 Sep 2018 20:55:22 -0700
+Message-ID: <20180926035522.v5flr36nl5ftayi4@localhost>
+References: <20180830180205.18121-1-krzk@kernel.org>
+ <CAOesGMgE6QaasvHi7E55Z4U1Pp0+8QYW2eRLMsExebZ999_UHA@mail.gmail.com>
+ <20180924171645.GA10910@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926030857.GA458@Asurada-Nvidia.nvidia.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180924171645.GA10910@kozik-lap>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, DTML <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2018 08:08 PM, Nicolin Chen wrote:
-> Hello Guenter,
+On Mon, Sep 24, 2018 at 07:16:45PM +0200, Krzysztof Kozlowski wrote:
+> On Sun, Sep 23, 2018 at 02:46:20PM +0100, Olof Johansson wrote:
+> > On Thu, Aug 30, 2018 at 7:02 PM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> > > Samsung Exynos SoCs and boards related bindings evolved since the initial
+> > > introduction, but initially the bindings were minimal and a bit incomplete
+> > > (they never described all the hardware modules available in the SoCs).
+> > > Since then some significant (not fully compatible) changes have been
+> > > already committed a few times (like gpio replaced by pinctrl, display ddc,
+> > > mfc reserved memory, some core clocks added to various hardware modules,
+> > > added more required nodes).
+> > >
+> > > On the other side there are no boards which have device tree embedded in
+> > > the bootloader. Device tree blob is always compiled from the kernel tree
+> > > and updated together with the kernel image.
+> > >
+> > > Thus to avoid further adding a bunch of workarounds for old/missing
+> > > bindings, make development of new platforms easier and allow to make
+> > > cleanup of the existing code and device tree files, lets mark some
+> > > Samsung Exynos SoC platform bindings as unstable. This means that
+> > > bindings can may change at any time and users should use the dtb file
+> > > compiled from the same kernel source tree as the kernel image.
+> > 
+> > I have to admit that I don't really like this approach, and I missed
+> > the patch when originally posted (I did notice it in the pull request
+> > it came in with though).
+> > 
+> > The main concern for me is that with a blanket "everything is always
+> > unstable" we discard the notion that we should strive for bindings to
+> > be stable and backwards compatible.
 > 
-> On Tue, Sep 25, 2018 at 06:52:29PM -0700, Guenter Roeck wrote:
+> The original idea from Marek was to mark everything unstable. After
+> comments from Rob I made it weaker already by changing to specific group
+> of compatibles. Accepting their instability does not mean that we will
+> be doing this on whenever possible. It just opens the possibility of
+> finding some balance in cleanups and development. Sometimes things have
+> to be seriously changed (fixed) and implementing workarounds for
+> existing ABI might be huge work by itself.
 > 
->>> +2) child nodes
->>> +  Required properties:
->>> +  - reg: Must be 0, 1 or 2, corresponding to IN1, IN2 or IN3 port of INA3221
->>> +
->>> +  Optional properties:
->>> +  - label: Name of the input source
->>> +  - shunt-resistor-micro-ohms: Shunt resistor value in micro-Ohm
->>> +  - status: Should be "disabled" if no input source
->>> +
->>> +  Example:
->>> +
->>> +  input@0 {
->>> +          reg = <0x0>;
->>> +          status = "disabled";
->>
->> I kind of feel embarrassed that I asked for the reg change ... especially while
->> saying at the same time that I would like to see this work for other chips
->> as well.
+> IOW, we want stability but not with the costs of huge development
+> efforts... because no one else except us cares about the stability.
+
+I think it's really problematic to retroactively mark a binding as unstable.
+The best way to do it is probably at the time of introduction if you anticipate
+it needing adjustments down the road (i.e. if it's for a complex IP block).
+
+For major overhauls, it might be worth updating to a new binding instead (by
+appending a suffix to the name or similar, and documenting that).
+
+> > Questions that come to mind are:
+> > 
+> >  - When do they stop being unstable?
 > 
-> Well, though I didn't mention it, yet I changed it to "reg" is more
-> likely an agreement than a compromise: I searched in the mail list
-> and then found this mail (a year ago though):
->      https://www.spinics.net/lists/kernel/msg2455439.html
+> They became unstable in a subjective way so I assume that reverse is the
+> same, based on consensus and discussions.
 > 
-> I feel it very similar to my case. So rather than betting Rob won't
-> tell me the same, changing to "reg" may reduce a turnaround time :)
+> I am not sure if a hard time limit is good. There is no timeline for the
+> Exynos development, no public roadmaps but rather community and
+> partially volountary effort.  Therefore whatever number we set, it might
+> be totally not matching reality.
+
+I think that sets up for a pretty bad experience for some downstream users.
+
+The main problem with unstable bindings is if you have a platform that you
+haven't (yet) upstreamed the devicetrees for. Moving around base kernel
+versions in those cases can be really awkward.
+
+"Just upstream your devicetrees" is one counter-argument, but it's not always
+that easy -- it might be unreleased products or just some experimental
+platforms that might even be tracking fairly close to mainline during whatever
+development is ongoing.
+
+> >  - Is there a way to note in the binding itself that it's still
+> > unstable with an anticipation of when it will be settled in?
 > 
->> Other chips have different kinds of sensors. Voltage, current, power, temperature,
->> and others. Whatever we come up with should support that.
->>
->> I see two possibilities right now. We can stick with reg and add a "type" property,
->> or we can make the index something like
->> 	{voltage,current,power,temperature,humidity}-{id,index}
+> Hmm, I see that some existing bindings are being added with "Unstable"
+> warning:
 > 
-> One small concern is a case of being multi-type. For example, I saw
-> ina2xx driver having voltage, current and power at the same time...
+> 	git grep -i unstable Documentation/devicetree/
 > 
-Yes, with that we would have something like
+> so there should be no problem for putting there a timeframe.
 
-	voltage@0 {
-		type = "voltage";
-		reg = <0>;
-	};
-	current@0 {
-		type = "current";
-		reg = <0>;
-	};
-	...
+Yeah, adding them with unstable up front is a good way to do it (and then
+remove that warning once things have settled down).
 
-or
-
-	voltage@0 {
-		voltage-id = <0>;
-	};
-	current@0 {
-		current-id = <0>;
-	};
-	...
-
->> I personally prefer "type", but I don't really have a strong opinion.
->> What do you think ?
+> >  - Is there a better way to version the bindings to avoid complete
+> > backwards compatibility?
 > 
-> I also like this over "reg" -- "reg" requires two extra properties,
-> and itself sounds slightly unnatural to me for situations like this
-> one where we don't use it as a register address, although I know it
-> is convenient and common to use.
-> 
+> Some architectures are using overlays for handling backward
+> compatibility. Anyway it might put additional effort on driver
+> development.
 
-With "type", we would still need two properties.
+In some cases it's pretty easy to stay backwards compatible by making sure
+that things like missing properties have the same defaults as they used to
+before the properties became mandatory.
 
-	reg = <0>;
-	type = "voltage";
+For complex subsystems it might be a different story, but that's also where it
+_might_ be worth looking at a new revision of the binding instead, this time
+maybe closer to a permanent one.
 
-and type could be optional or not required for a chip only supporting
-a single sensor type (like the ina3221).
+> > Pointing out a couple of cases where it has been painful to stay
+> > backwards compatible could also be useful for understanding (even
+> > though you run the risk of each case being explained away with
+> > suggestions of how it can be handled).
 
-This would be equivalent to, say,
-	voltage-index = <0>;
-when using a single property.
+Marek, do you have any good examples here? Could still be useful.
 
-With the "reg" approach, we would be ok for now - however, I would like
-to get feedback from Rob if introducing a "type" property will be
-acceptable when the time comes to do so.
 
->> Or maybe we should really wait for feedback from Rob.
-> 
-> Personally I don't mind it all to change the doc and code and then
-> send a v6. But eventually we'll still need the final Acked-by from
-> Rob right? Then I guess it's the only option.
-> 
-
-Yes. At this point I'd rather have input from Rob than moving forward
-with v6.
-
-> By the way, I have two ina3221 hwmon patches that rebase upon this
-> binding series. And I'd like to send them out to go through review
-> first, but I am not sure if you'd be okay for it -- I don't really
-> like to change their rebase order as it might mess up something.
-> 
-Are those bug fixes or further enhancements ? For enhancements,
-it is your call when to send them; I am fine either way. If they are
-bug fixes, they should come first so we can apply them to -stable.
-
-Thanks,
-Guenter
+-Olof
