@@ -1,44 +1,40 @@
-Return-Path: <SRS0=wvMN=L3=gmail.com=semtax33@kernel.org>
-From: sim manseop <semtax33@gmail.com>
-Subject: [PATCH v4 2/2] dt-bindings: i2c: Fix SMBus typo
-Date: Thu, 13 Sep 2018 10:45:36 +0000
-Message-Id: <20180913104536.2375-1-semtax33@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: robh@kernel.org, sim manseop <semtax33@gmail.com>
+MIME-Version: 1.0
+Date: Wed, 26 Sep 2018 15:54:42 -0500
+References: <20180921163156.GB7393@puremoods>
+In-Reply-To: <20180921163156.GB7393@puremoods>
+Message-ID: <CAL_JsqKR6EY3jKEMYpRasT9CZfCOQ+wCabYj8M9ERTbN1P_EAg@mail.gmail.com>
+Subject: Fwd: [kernel.org users] Adding other vger lists to lore.kernel.org archival
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: devicetree@vger.kernel.org, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo 'SMbus' to 'SMBus'
+I would like to see the DT and DTC lists added to lore, but my archive
+of them is not complete. If someone has a complete archive, I'd love
+some help to add them.
 
-Signed-off-by: sim manseop <semtax33@gmail.com>
+BTW, we switched to vger in July 2013.
 
----
-Changes in v4:
-- modifing Signed-off-by name
+Rob
 
----
-Changes in v3:
-- modifing subject
+---------- Forwarded message ---------
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Date: Fri, Sep 21, 2018 at 11:32 AM
+Subject: [kernel.org users] Adding other vger lists to lore.kernel.org archival
+To: <users@linux.kernel.org>
 
----
-Changes in v2:
-- modifing subject
-- changed commit message
----
- Documentation/devicetree/bindings/i2c/i2c.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
-index 11263982470e..44efafdfd7f5 100644
---- a/Documentation/devicetree/bindings/i2c/i2c.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c.txt
-@@ -84,7 +84,7 @@ Binding may contain optional "interrupts" property, describing interrupts
- used by the device. I2C core will assign "irq" interrupt (or the very first
- interrupt if not using interrupt names) as primary interrupt for the slave.
- 
--Alternatively, devices supporting SMbus Host Notify, and connected to
-+Alternatively, devices supporting SMBus Host Notify, and connected to
- adapters that support this feature, may use "host-notify" property. I2C
- core will create a virtual interrupt for Host Notify and assign it as
- primary interrupt for the slave.
--- 
-2.17.1
+Hi, all:
+
+We're now accepting requests to archive other vger.kernel.org lists on
+lore, as we have just done with linux-pci:
+
+https://lore.kernel.org/linux-pci
+
+The prerequisite for adding a list is collecting best-effort mail
+archives -- the process is described on the following wiki page:
+
+https://korg.wiki.kernel.org/userdoc/lore
+
+Best regards,
+Konstantin
