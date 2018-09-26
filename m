@@ -1,54 +1,64 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 1/5] PM / Domains: Export symbol for
- genpd_dev_pm_attach_by_name
-Date: Wed, 26 Sep 2018 16:02:07 +0100
-Message-ID: <afd04dd4-4199-9bb8-1b21-11444bb1773a@nvidia.com>
-References: <1537964858-30332-1-git-send-email-jonathanh@nvidia.com>
- <1537964858-30332-2-git-send-email-jonathanh@nvidia.com>
- <CAPDyKFrtw1aYg5QbgRi_jp-xd0VLNeRYhb4HvX4P3AfGjgO0VA@mail.gmail.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
+Date: Wed, 26 Sep 2018 18:03:16 +0300
+Message-ID: <0fd425c0-733b-825e-69ad-96294e5c911a@linaro.org>
+References: <20180831140151.13972-1-georgi.djakov@linaro.org>
+ <20180831140151.13972-3-georgi.djakov@linaro.org>
+ <20180925180215.GA12435@bogus>
+ <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
+ <20180926144830.GB25838@e107155-lin>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrtw1aYg5QbgRi_jp-xd0VLNeRYhb4HvX4P3AfGjgO0VA@mail.gmail.com>
+In-Reply-To: <20180926144830.GB25838@e107155-lin>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Thierry Reding <thierry.reding@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Sudeep,
 
-On 26/09/18 15:09, Ulf Hansson wrote:
-> On 26 September 2018 at 14:27, Jon Hunter <jonathanh@nvidia.com> wrote:
->> Export the symbol for genpd_dev_pm_attach_by_name() so that drivers
->> built as modules can call this function.
+On 09/26/2018 05:48 PM, Sudeep Holla wrote:
+> On Wed, Sep 26, 2018 at 05:42:15PM +0300, Georgi Djakov wrote:
+>> Hi Rob,
 >>
->> Signed-off-by: Jon Hunter <jonathanh@nvidia.com>
->> ---
->>  drivers/base/power/domain.c | 1 +
->>  1 file changed, 1 insertion(+)
+>> Thanks for the comments!
 >>
->> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
->> index 4b5714199490..b2bbe0d848d2 100644
->> --- a/drivers/base/power/domain.c
->> +++ b/drivers/base/power/domain.c
->> @@ -2397,6 +2397,7 @@ struct device *genpd_dev_pm_attach_by_name(struct device *dev, char *name)
+>> On 09/25/2018 09:02 PM, Rob Herring wrote:
+>>> On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
+>>>> This binding is intended to represent the relations between the interconnect
+>>>> controllers (providers) and consumer device nodes. It will allow creating links
+>>>> between consumers and interconnect paths (exposed by interconnect providers).
+>>>
+>>> As I mentioned in person, I want to see other SoC families using this 
+>>> before accepting. They don't have to be ready for upstream, but WIP 
+>>> patches or even just a "yes, this works for us and we're going to use 
+>>> this binding on X".
 >>
->>         return genpd_dev_pm_attach_by_id(dev, index);
->>  }
->> +EXPORT_SYMBOL_GPL(genpd_dev_pm_attach_by_name);
+>> Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
+>> currently using this binding, there is ongoing work from at least two
+>> other vendors that would be using this same binding. I will check on
+>> what is their progress so far.
+>>
+>>> Also, I think the QCom GPU use of this should be fully sorted out. Or 
+>>> more generically how this fits into OPP binding which seems to be never 
+>>> ending extended...
+>>
+>> I see this as a further step. It could be OPP binding which include
+>> bandwidth values or some separate DT property. Jordan has already
+>> proposed something, do you have any initial comments on that?
 > 
-> Driver's shouldn't be calling this function, but instead use
-> dev_pm_domain_attach_by_name().
-> 
-> Is there any problem with that?
+> I am curious as how this fits into new systems which have firmware driven
+> CPUFreq and other DVFS. I would like to avoid using this in such systems
+> and leave it upto the firmware to scale the bus/interconnect based on the
+> other components that are connected to it and active.
 
-No not at all. Yes that works, sorry it had been a while since I looked
-at this and managed to balls it up. OK, I will drop this and correct the
-API used by the driver.
+This can be used with firmware driven systems too. In this case the
+interconnect platform driver will not manage the interconnects directly,
+but will collect data and provide hints to the firmware. Then the
+firmware can take into account these hints and do the scaling.
 
-Cheers!
-Jon
-
--- 
-nvpublic
+Thanks,
+Georgi
