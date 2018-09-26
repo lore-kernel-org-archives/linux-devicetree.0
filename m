@@ -1,69 +1,119 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Re-add "syscon" compatible
-Date: Wed, 26 Sep 2018 11:52:02 +0200
-Message-ID: <20180926095202.tdibor3x7fsn6afz@flea>
-References: <20180917152857.162662-1-andre.przywara@arm.com>
- <CAGb2v643=V_3DbLeEyXEavSQJsW2KdknpZZLfw4QwCjhfdmVsA@mail.gmail.com>
- <20180921153522.0413c280@donnerap.Emea.Arm.com>
- <20180921151625.wkaypyueyi2pguur@flea>
- <20180924112230.73e3009b@donnerap.Emea.Arm.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
+Date: Wed, 26 Sep 2018 13:19:34 +0300
+Message-ID: <7197338.mhOH8fQaEM@avalon>
+References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20180924112230.73e3009b@donnerap.Emea.Arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andre Przywara <andre.przywara@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <rob.herring@linaro.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Corentin Labbe <clabbe@baylibre.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Deng <yong.deng@magewell.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "\"David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 24, 2018 at 11:22:30AM +0100, Andre Przywara wrote:
-> > The fundamental difference is that we're mostly just a bunch of spare
-> > time programmers working on this platform, with a partial
-> > documentation for the controllers, at best.
-> > 
-> > You forced me to ask these developpers to work on their weekends and
-> > evenings on some crazy corner cases to maintain the backward
-> > compatibility. And honestly, both from a technical and human
-> > standpoint, I definitely understand if some of them are just leaving
-> > and don't want to work on it anymore. I would probably do the same in
-> > their position.
-> > 
-> > And having to ask that for companies like ARM or SUSE just makes it
-> > more frustrating to be honest. So there's simply no way you have
-> > forward compatibility while I'm there. Or you manage to convince all
-> > the ARM maintainers and enforce that compatibility for all the
-> > platforms.
+Hi Yong,
+
+Thank you for the patch.
+
+On Wednesday, 26 September 2018 11:40:04 EEST Yong Deng wrote:
+> Add binding documentation for Allwinner V3s CSI.
 > 
-> I understand that from your point of view there is no way of investing
-> huge efforts in staying forward compatible, but I am not asking for
-> that (and by no way forcing this!). Instead this suggestion is a small
-> tweak to achieve this.
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Yong Deng <yong.deng@magewell.com>
+> ---
+>  .../devicetree/bindings/media/sun6i-csi.txt        | 59 +++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
+> 100644
+> index 000000000000..2ff47a9507a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
+> @@ -0,0 +1,59 @@
+> +Allwinner V3s Camera Sensor Interface
+> +-------------------------------------
+> +
+> +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+> +interface and CSI1 is used for parallel interface.
+> +
+> +Required properties:
+> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
+> +  - reg: base address and size of the memory-mapped region.
+> +  - interrupts: interrupt associated to this IP
+> +  - clocks: phandles to the clocks feeding the CSI
+> +    * bus: the CSI interface clock
+> +    * mod: the CSI module clock
+> +    * ram: the CSI DRAM clock
+> +  - clock-names: the clock names mentioned above
+> +  - resets: phandles to the reset line driving the CSI
+> +
+> +Each CSI node should contain one 'port' child node with one child
+> 'endpoint' +node, according to the bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt. As mentioned
+> +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel
+> or
+> +Bt656 for CSI1.
 
-We're trying to remain compatible but if there's any technical reason,
-then we won't be. I don't want anyone to assume we will, and to rely
-on the fact that we are actually guaranteeing this.
+Nitpicking, BT.656 is parallel as well. We should use BT.601 instead of 
+parallel, to differentiate between embedded sync and external sync. This is a 
+problem in Documentation/devicetree/bindings/media/video-interfaces.txt in the 
+first place, so I won't ask you to modify these bindings. I'll try to submit a 
+patch for video-interfaces.txt.
 
-> So I am sorry if those things frustrate you (which I can understand
-> very well), but I believe fixing the DT in a proper way is
-> much more user friendly in the long term (actually this issue was
-> brought forward by a user[1]).
+> +Endpoint node properties for CSI1
+> +---------------------------------
 
-Given the current state of the industry, I don't really see how the DT
-can allow you to do what you are trying to achieve.
+Should you list the CSI0 properties as well ? As the driver in patch 2/2 
+doesn't support the CSI-2 interface I assume you have left out CSI0 for now, 
+but it should still be listed in the bindings. I'm fine with fixing this as a 
+follow-up patch to avoid missing the v4.20 merge window, but if you end up 
+resubmitting the series, could you please address the problem ?
 
-Maxime
+With this fixed,
+
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+> +- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
+> +			   node
+> +- bus-width:		: (required) must be 8, 10, 12 or 16
+> +- pclk-sample		: (optional) (default: sample on falling edge)
+> +- hsync-active		: (only required for parallel)
+> +- vsync-active		: (only required for parallel)
+>
+> +Example:
+> +
+> +csi1: csi@1cb4000 {
+> +	compatible = "allwinner,sun8i-v3s-csi";
+> +	reg = <0x01cb4000 0x1000>;
+> +	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&ccu CLK_BUS_CSI>,
+> +		 <&ccu CLK_CSI1_SCLK>,
+> +		 <&ccu CLK_DRAM_CSI>;
+> +	clock-names = "bus", "mod", "ram";
+> +	resets = <&ccu RST_BUS_CSI>;
+> +
+> +	port {
+> +		/* Parallel bus endpoint */
+> +		csi1_ep: endpoint {
+> +			remote-endpoint = <&adv7611_ep>;
+> +			bus-width = <16>;
+> +
+> +			/* If hsync-active/vsync-active are missing,
+> +			   embedded BT.656 sync is used */
+> +			hsync-active = <0>; /* Active low */
+> +			vsync-active = <0>; /* Active low */
+> +			pclk-sample = <1>;  /* Rising */
+> +		};
+> +	};
+> +};
 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+
+Laurent Pinchart
