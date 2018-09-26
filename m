@@ -1,40 +1,44 @@
-Return-Path: <SRS0=Rhmc=MI=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
-References: <1537950104-18330-1-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1537950104-18330-1-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 26 Sep 2018 13:37:59 +0200
-Message-ID: <CAMuHMdUPkbVs3UxqrP63Fx=25XvKCB=U5qy5TETydHT3=zi-tQ@mail.gmail.com>
-Subject: Re: [PATCH] ARM: shmobile: Document iWave RZ/G1N SOM
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=4Bew=MI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from relmlor3.renesas.com ([210.160.252.173]:11878 "EHLO
+        relmlie2.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726436AbeIZOke (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Sep 2018 10:40:34 -0400
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH] ARM: shmobile: Document iWave RZ/G1N SOM
+Date: Wed, 26 Sep 2018 09:21:44 +0100
+Message-Id: <1537950104-18330-1-git-send-email-biju.das@bp.renesas.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Sep 26, 2018 at 10:28 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> Document the iW-RainboW-G20M-RZ/G1N Qseven device tree bindings,
-> listing it as a supported system on module.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Document the iW-RainboW-G20M-RZ/G1N Qseven device tree bindings,
+listing it as a supported system on module.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+---
+iWave uses the same "iW-RainboW-G20M-Qseven" name for both
+iWave-RZ/G1N and iWave-RZ/G1M Q7 SOM. Details can be found
+in the below link
+https://www.iwavesystems.com/rz-g1m-qseven-module.html
+---
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> ---
-> iWave uses the same "iW-RainboW-G20M-Qseven" name for both
-> iWave-RZ/G1N and iWave-RZ/G1M Q7 SOM. Details can be found
-> in the below link
-> https://www.iwavesystems.com/rz-g1m-qseven-module.html
-
-Makes perfect sense, as the SoCs are pin-compatible.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index f5e0f82..4cfb567 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -101,6 +101,8 @@ Boards:
+     compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743"
+   - iWave Systems RZ/G1M Qseven System On Module (iW-RainboW-G20M-Qseven)
+     compatible = "iwave,g20m", "renesas,r8a7743"
++  - iWave Systems RZ/G1N Qseven System On Module (iW-RainboW-G20M-Qseven)
++    compatible = "iwave,g20m", "renesas,r8a7744"
+   - Kingfisher (SBEV-RCAR-KF-M03)
+     compatible = "shimafuji,kingfisher"
+   - Koelsch (RTP0RC7791SEB00010S)
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.7.4
