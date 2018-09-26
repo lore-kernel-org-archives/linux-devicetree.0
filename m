@@ -1,165 +1,63 @@
-From: Song Qiang <songqiang1304521@gmail.com>
-Subject: Re: [PATCH 2/2] iio: magnetometer: Add driver support for PNI RM3100
-Date: Wed, 26 Sep 2018 16:09:45 +0800
-Message-ID: <20180926080752.GA12183@Eros>
-References: <20180925031724.21399-1-songqiang1304521@gmail.com>
- <20180925031724.21399-2-songqiang1304521@gmail.com>
- <20180925143054.00007fcb@huawei.com>
- <57d8a9d6-c402-068e-0a21-bbd6c20a7816@electromag.com.au>
- <20180926014951.GA7094@Eros>
- <4de691f2-dbc9-6124-efa6-66f2dd7e0f2b@electromag.com.au>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 1/4] power: supply: core: Introduce one property to
+ present the battery internal resistance
+Date: Wed, 26 Sep 2018 16:30:39 +0800
+Message-ID: <CAMz4ku+H5Z_W5rE0b3GDz2E0YSZshEerufZ41yeh_E5omD6KLA@mail.gmail.com>
+References: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
+ <CACRpkdY3YsXsJy0OwGYLuB+x32hbkAHum4w5KQTCGoi-OXt-QA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4de691f2-dbc9-6124-efa6-66f2dd7e0f2b@electromag.com.au>
+In-Reply-To: <CACRpkdY3YsXsJy0OwGYLuB+x32hbkAHum4w5KQTCGoi-OXt-QA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2018 at 10:30:34AM +0800, Phil Reid wrote:
-> On 26/09/2018 9:49 AM, Song Qiang wrote:
-> > On Tue, Sep 25, 2018 at 10:36:54PM +0800, Phil Reid wrote:
-> > > On 25/09/2018 9:30 PM, Jonathan Cameron wrote:
-> > > > > +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
-> > > > > +{
-> > > > > +	struct iio_poll_func *pf = p;
-> > > > > +	struct iio_dev *indio_dev = pf->indio_dev;
-> > > > > +	struct rm3100_data *data = iio_priv(indio_dev);
-> > > > > +	struct regmap *regmap = data->regmap;
-> > > > > +	u8 buffer[9];
-> > > > > +	int ret;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	mutex_lock(&data->lock);
-> > > > > +	ret = rm3100_wait_measurement(data);
-> > > > > +	if (ret < 0) {
-> > > > > +		mutex_unlock(&data->lock);
-> > > > > +		goto done;
-> > > > > +	}
-> > > > > +
-> > > > > +	ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, sizeof(buffer));
-> > > > > +	mutex_unlock(&data->lock);
-> > > > > +	if (ret < 0)
-> > > > > +		goto done;
-> > > > > +
-> > > > > +	/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. x for padding. */
-> > > > > +	for (i = 0; i < 3; i++)
-> > > > > +		memcpy(data->buffer + i * 4, buffer + i * 3, 3);
-> > > > Firstly X doesn't need copying.
-> > > > Secondly the copy of Y actually overwrites the value of Z
-> > > > XXXYYYZZZxxx
-> > > > XXXxYYYZZxxx
-> > > > XXXxYYYxYZZx
-> > > > 
-> > > > I think...
-> > > > 
-> > > > > +
-> > > > > +	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
-> > > > > +			iio_get_time_ns(indio_dev));
-> > > 
-> > > memcpy target is a different buffer so should be ok.
-> > > 
-> > > But that raises the question of does it need to be?
-> > > 'buffer' could be 12 bytes long and just shuffle Z then Y.
-> > > Do the unused bytes need to be zeroed? or does libiio mask them anyway?
-> > > 
-> > > 
-> > > 
-> > > -- 
-> > > Regards
-> > > Phil Reid
-> > 
-> > Hi Phil,
-> > 
-> > This is interesting, last patch I submitted uses three transactions and
-> > shuffles X, Y and Z respectively. You said it should be better to use one
-> > transactions, I thought it makes point, and one transaction may reduce
-> > IO pressure of the i2c bus. :)
-> > And that's not necessary for unused bytes to be zero. I'm not familiar
-> > with libiio, actually just been studying it, can't say anything about
-> > it.
-> > 
-> > yours,
-> > Song Qiang
-> > 
-> > 
-> G'day Song,
-> 
-> yes the one transaction suggestion was to reduce pressure on the bus.
-> I think also with 3 calls you can up up with other devices taking over
-> the i2c / spi bus in between.
-> 
-> We've got a devkit for this part, but haven't got to wiring it up to our system as yet.
-> We're looking at using the i2c interface which could push things at max samplerate, so yes I'm
-> keen to see bus pressure reduced as much as possible.
-> 
-> I was thinking something like the following:
-> 
-> u8 buffer[12];
-> regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, 9);
-> 
-> buffer[10] = buffer[8]; // or memcpy or some other fancy shuffle code.
-> buffer[9]  = buffer[7];
-> buffer[8]  = buffer[6];
-> 
-> buffer[6]  = buffer[5];
-> buffer[5]  = buffer[4];
-> buffer[4]  = buffer[3];
-> 
-> iio_push_to_buffers_with_timestamp(indio_dev, buffer, iio_get_time_ns(indio_dev));
-> 
-> but I'm unsure if this would be needed:
-> buffer[7] = 0
-> buffer[3] = 0
-> 
-> What you've got does the job I think.
-> 
-> I haven't dug into the datasheet in great detail, and my iio knownledge is limited.
-> Are you sure the RM3100_CHANNEL scantype endianness is IIO_LE.
-> rm3100_read_mag looks to be doing big endian conversion and the datasheet agrees with that.
-> 
-> 
-> -- 
-> Regards
-> Phil Reid
-> 
+Hi Linus,
 
-Hi Phil,
+On 26 September 2018 at 16:00, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Sep 26, 2018 at 4:59 AM Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+>> Introduce one property to present the battery internal resistance for battery
+>> information.
+>>
+>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+>> ---
+>> Changes from v1:
+>>  - New patch in v2.
+>
+> I'm a bit confused by the physics in this patch.
+>
+> The internal resistance of a battery is not a constant in its life cycle,
+> this varies over the age of the battery, and the reason I thing is
+> chemical residuals accumulating on the anode and cathode inside
+> the battery and the energy storage medium aging. (Plus/minus my
+> ignorance about how batteries actually work.)
 
-You're absolutely right!
-This should be big endian, I think I probably just want something there
-when I was writing this code, planned to change it later, but apparently
-I've forgotten it...
+Yes, you are right. The internal resistance can be affected by
+temperature or battery age or other factors. But our solution just
+uses one constant internal resistance to calculate OCV value to look
+up the capacity table when system boots on, in this case we do not
+need one more accuracy OCV, since we will calculate the battery
+capacity in future. So we just introduce one estimation constant
+internal resistance.
 
-AFAIK, filling places we do not need with 0 is not needed, we just
-extract valid data from valid bit field(24 here).
+>
+> AFAIK the fact that the internal resistance varies is of high
+> importance for people developing algorithms of battery capacity
+> and longevity. Such that some (hardware) capacity monitors go
+> to great lengths to measure with high precision the current
+> internal resistance of the battery for their algorithms.
+>
+> Sorry for making things more complex, but should it be named
+> "factory-internal-resistance-micro-ohms" or
+> "typical-internal-resistance-micro-ohms"?
 
-Both one transaction and three transactions way have their point, but
-this is a OS, probably the spiltted one is better, I need some real
-thinking about this...
+I am fine with this change. If Sebastian also agree with this change,
+I will fix.
+Thanks for your reviewing and comments.
 
-I could have use the same buffer to read from the sensor and send it to
-userspace like this:
-
-int i = 0;
-ret = regmap_bulk_read(regmap, RM3100_REG_MX2, 9);
-if(ret)
-	...
-/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. */
-for (i = 0; i < 2; i++)
-	memcpy(buffer + (2 - i) * 4, buffer + (2 - i) * 3), 3);
-
-This code snippet will use the same buffer, actually that's what I was
-using the first time. Jonathan must thinks so, from what he commented,
-he assumed I was using the same buffer, also what you want.
-But I changed this due to Peter's comment, maybe not a big deal, he
-suggests to use sizeof(buffer), this makes me use an additional size 9
-buffer. I thought this doesn't matter too much, just some additional
-space from the stack, but now I think maybe less memory using would be
-better...
-After all, this length 9 seems like never shouldn't be changed...
-
-yours,
-Song Qiang
+-- 
+Baolin Wang
+Best Regards
