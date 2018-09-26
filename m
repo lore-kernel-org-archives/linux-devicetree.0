@@ -1,82 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
-Date: Wed, 26 Sep 2018 17:46:18 -0500
-Message-ID: <20180926224618.GA32126@bogus>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com>
- <20180918082422.13050-2-songqiang1304521@gmail.com>
- <20180922160523.16b399fc@archlinux>
+Subject: Re: [PATCH v5 1/2] dt-bindings: clock: Introduce QCOM LPASS clock
+ bindings
+Date: Wed, 26 Sep 2018 17:47:42 -0500
+Message-ID: <20180926224742.GA9096@bogus>
+References: <1537266338-18661-1-git-send-email-tdas@codeaurora.org>
+ <1537266338-18661-2-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180922160523.16b399fc@archlinux>
+In-Reply-To: <1537266338-18661-2-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Song Qiang <songqiang1304521@gmail.com>, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, matt.ranostay@konsulko.com, tglx@linutronix.de, ak@it-klinger.de, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 22, 2018 at 04:05:23PM +0100, Jonathan Cameron wrote:
-> On Tue, 18 Sep 2018 16:24:22 +0800
-> Song Qiang <songqiang1304521@gmail.com> wrote:
+On Tue, 18 Sep 2018 15:55:37 +0530, Taniya Das wrote:
+> Add device tree bindings for Low Power Audio subsystem clock controller for
+> Qualcomm Technology Inc's SDM845 SoCs.
 > 
-> > The first version of this driver issues a measuring request and polling
-> > for a status register in the device for measuring completes.
-> > vl53l0x support configuring GPIO1 on it to generate interrupt to
-> > indicate that new measurement is ready. This patch adds support for
-> > using this mechanisim to reduce cpu cost.
-> > 
-> > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-> Hi Song.
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gcc.txt         |  2 ++
+>  .../devicetree/bindings/clock/qcom,lpasscc.txt     | 35 ++++++++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  2 ++
+>  include/dt-bindings/clock/qcom,lpass-sdm845.h      | 16 ++++++++++
+>  4 files changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
+>  create mode 100644 include/dt-bindings/clock/qcom,lpass-sdm845.h
 > 
-> Looks correct in principal but a few things to tidy up before
-> this is ready to apply.
-> 
-> Also we have an unrelated change in here to check the devices ID.
-> That should be in it's own patch.
-> 
-> Thanks,
-> 
-> Jonathan
-> > ---
-> >  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
 
-This should have been split with the complete binding in one patch 
-rather than piecemeal driver feature by feature.
-
-> >  drivers/iio/proximity/vl53l0x-i2c.c           | 135 +++++++++++++++---
-> >  2 files changed, 129 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> > index ab9a9539fec4..40290f8dd70f 100644
-> > --- a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> > +++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
-> > @@ -4,9 +4,21 @@ Required properties:
-> >  	- compatible: must be "st,vl53l0x-i2c"
-
-Is there more than one interface on this device, such as SPI? If not, 
-then '-i2c' should be dropped.
-
-> >  	- reg: i2c address where to find the device
-> >  
-> > +Optional properties:
-> > +	- interrupts : Interrupt line receiving GPIO1's measuring complete
-> > +	  output, supports IRQ_TYPE_EDGE_FALLING only.
-> > +
-> > +	Refer to interrupt-controller/interrupts.txt for generic
-> > +	interrupt client node bindings.
-> > +
-> >  Example:
-> >  
-> >  vl53l0x@29 {
-> > +	pinctrl-names = "default";
-> > +	pinctrl-0 = <&vl53l0x_pins>;
-> > +
-> Please drop this from the example.  This is board specific rather than
-> being generally required.
-> 
-> >  	compatible = "st,vl53l0x-i2c";
-> >  	reg = <0x29>;
-> > -};
-> > +	interrupt-parent = <&gpio3>;
-> > +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-> > +}
+Reviewed-by: Rob Herring <robh@kernel.org>
