@@ -1,75 +1,89 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH] of: base: Fix english spelling in
- of_alias_get_alias_list()
-Date: Wed, 26 Sep 2018 08:34:12 -0700
-Message-ID: <dfd94b86-0a71-a2c4-449d-7f06ff3ae30e@infradead.org>
-References: <b64be28f7705a91fcb84b9c59ca830e057c71d96.1537959997.git.michal.simek@xilinx.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] dt-bindings: spi: Provide bindings for fsl dspi
+ working in slave mode
+Date: Wed, 26 Sep 2018 17:37:10 +0200
+Message-ID: <CAMuHMdWWYvhGX+SmG+WuLJZAX6PdCSd0hzNqiNB1r_A+B6tbSA@mail.gmail.com>
+References: <20180918093437.26799-1-lukma@denx.de> <20180918093437.26799-2-lukma@denx.de>
+ <5baa1aee.1c69fb81.cc7c6.340b@mx.google.com> <20180926163212.17646e43@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b64be28f7705a91fcb84b9c59ca830e057c71d96.1537959997.git.michal.simek@xilinx.com>
-Content-Language: en-US
+In-Reply-To: <20180926163212.17646e43@jawa>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu, gregkh@linuxfoundation.org, geert@linux-m68k.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: lukma@denx.de
+Cc: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi <linux-spi@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9/26/18 4:06 AM, Michal Simek wrote:
-> Fix english spelling in of_alias_get_alias_list().
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> ---
-> 
-> Greg: Please apply it on the top of tty-next because patch is going via
-> your tree.
+Hi Lukasz,
 
-Maybe a few more fixes first...
+On Wed, Sep 26, 2018 at 4:33 PM Lukasz Majewski <lukma@denx.de> wrote:
+> > On Tue, Sep 18, 2018 at 11:34:35AM +0200, Lukasz Majewski wrote:
+> > > This commit provides the description of new property:
+> > > "fsl,spi-slave-mode" which enables support for DSPI driver working
+> > > in slave mode.
+> > >
+> > > As the new compatible shall be used with SPI bus equipped with
+> > > master device a new "spidev" based node has been introduced to
+> > > avoid confusion.
+> > >
+> > > Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> > > ---
+> > >  Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+> > > b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt index
+> > > 18eeafe359d8..b30af19a2bc5 100644 ---
+> > > a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt +++
+> > > b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt @@ -26,6
+> > > +26,7 @@ Optional SPI properties for slave nodes:
+> > >  - fsl,spi-sck-cs-delay: a delay in nanoseconds between stopping
+> > > the clock signal and deactivating chip select, at the end of a
+> > > transfer.
+> > >  - bus-num : the slave chip chipselect signal number.
+> > > +- fsl,spi-slave-mode: if present, controller runs in slave mode.
+> >
+> > There's a standard property for this.
+>
+> I've just realised that there is "spi-slave" property in the
+> Documentation/devicetree/bindings/spi/spi-bus.txt
+>
+> I will convert the code to use it.
+>
+> >
+> > >
+> > >  Example:
+> > >
+> > > @@ -56,6 +57,13 @@ dspi0@4002c000 {
+> > >             fsl,spi-cs-sck-delay = <100>;
+> > >             fsl,spi-sck-cs-delay = <50>;
+> > >     };
+> > > +
+> > > +   spidev3@1 {
+> > > +           compatible = "fsl,vf610-dspi";
+> > > +           spi-max-frequency = <30000000>;
+> > > +           reg = <1>;
+> > > +           fsl,spi-slave-mode;
+> >
+> > This doesn't look right for how slave mode is described.
+>
+> You mean that I shall replace fsl,spi-slave-mode; with "spi-slave" ?
+>
+> Or is there any other issue with this code?
 
-> ---
->  drivers/of/base.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 33011b88ed3f..ffcbb2963ba2 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1948,7 +1948,7 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->   * @matches:	Array of OF device match structures to search in
->   * @stem:	Alias stem of the given device_node
->   * @bitmap:	Bitmap field pointer
-> - * @nbits:	Maximum number of alias ID which can be recorded it bitmap
-> + * @nbits:	Maximum number of alias IDs which can be recorded it bitmap
+According to Documentation/devicetree/bindings/spi/spi-bus.txt:
+  1. "spi-slave" should be a property of the controller node, not of the
+     slave node,
+  2. the slave node should be called "slave", without unit address, and
+     without "reg" property.
 
-s/it/in/
+Gr{oetje,eeting}s,
 
->   *
->   * The function travels the lookup table to record alias ids for the given
->   * device match structures and alias stem.
-> @@ -1971,7 +1971,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
->  			 __func__, app->stem, app->id);
->  
->  		if (strcmp(app->stem, stem) != 0) {
-> -			pr_debug("%s: stem comparison doesn't passed %s\n",
-> +			pr_debug("%s: stem comparison didn't pass %s\n",
->  				 __func__, app->stem);
->  			continue;
->  		}
-> @@ -1986,7 +1986,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
->  			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
->  			set_bit(app->id, bitmap);
->  		}
-> -		/* Alias exist but it not compatible with matches */
-> +		/* Alias exists but it not compatible with matches */
+                        Geert
 
-s/it/is/
-
->  	}
->  	mutex_unlock(&of_mutex);
->  
-> 
-
-thanks,
 -- 
-~Randy
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
