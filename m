@@ -1,28 +1,34 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: Document the Synopsys GPIO via CREG bindings
-Date: Wed, 26 Sep 2018 09:19:30 +0200
-Message-ID: <CACRpkdYVyK3p639OeHmh17Ni3T+h1YaMYd=GqJ+aR6PexFU1kQ@mail.gmail.com>
-References: <20180911150925.19460-1-Eugeniy.Paltsev@synopsys.com> <20180911150925.19460-3-Eugeniy.Paltsev@synopsys.com>
+Subject: Re: [PATCH v2] dt-bindings: pinctrl: qcom-pmic-gpio: Add pms405 support
+Date: Wed, 26 Sep 2018 09:29:36 +0200
+Message-ID: <CACRpkdb=xvwcQiDVr5cQf3sk6ONwHZwB0KoHXWVEvKJMTEp3FQ@mail.gmail.com>
+References: <20180925000656.23869-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180911150925.19460-3-Eugeniy.Paltsev@synopsys.com>
+In-Reply-To: <20180925000656.23869-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eugeniy.Paltsev@synopsys.com
-Cc: "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Boyd <sboyd@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 11, 2018 at 5:09 PM Eugeniy Paltsev
-<Eugeniy.Paltsev@synopsys.com> wrote:
+On Tue, Sep 25, 2018 at 2:04 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 
-> This patch adds documentation of device tree bindings for the Synopsys
-> GPIO via CREG driver.
+> From: Vinod Koul <vkoul@kernel.org>
 >
-> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+> Add support for the PMS405 GPIO support to the Qualcomm PMIC GPIO
+> binding.
+>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>
+> Changes since v1:
+> - Dropped unnecessary driver update
+> - Updated subject
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-This is fine, just waiting for the final version of the driver.
+Patch applied, as completely uncontroversial.
 
 Yours,
 Linus Walleij
