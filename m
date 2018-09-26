@@ -1,523 +1,69 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v23 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Wed, 26 Sep 2018 17:53:41 +0200
-Message-ID: <ca12e8ab-e3d1-1cf0-8fe9-756d57bd5a3a@gmail.com>
-References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
- <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v16 5/5] iommu/arm-smmu: Add support for
+ qcom, smmu-v2 variant
+Date: Wed, 26 Sep 2018 16:59:09 +0100
+Message-ID: <80f7a7df-9a6d-9de3-4c7c-261d96fb04e4@arm.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-6-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Houlong Wei <houlong.wei@mediatek.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, HS Liao <hs.liao@mediatek.com>, ginny.chen@mediatek.com, enzhu.wang@mediatek.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180830144541.17740-6-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-GB
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25/07/2018 03:26, Houlong Wei wrote:
-> Add Mediatek CMDQ helper to create CMDQ packet and assemble GCE op code.
-> 
-> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
-> Signed-off-by: HS Liao <hs.liao@mediatek.com>
-> ---
->  drivers/soc/mediatek/Kconfig           |   12 ++
->  drivers/soc/mediatek/Makefile          |    1 +
->  drivers/soc/mediatek/mtk-cmdq-helper.c |  291 ++++++++++++++++++++++++++++++++
->  include/linux/soc/mediatek/mtk-cmdq.h  |  135 +++++++++++++++
->  4 files changed, 439 insertions(+)
->  create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
->  create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
-> 
-> diff --git a/drivers/soc/mediatek/Kconfig b/drivers/soc/mediatek/Kconfig
-> index a7d0667..17bd759 100644
-> --- a/drivers/soc/mediatek/Kconfig
-> +++ b/drivers/soc/mediatek/Kconfig
-> @@ -4,6 +4,18 @@
->  menu "MediaTek SoC drivers"
->  	depends on ARCH_MEDIATEK || COMPILE_TEST
->  
-> +config MTK_CMDQ
-> +	tristate "MediaTek CMDQ Support"
-> +	depends on ARCH_MEDIATEK || COMPILE_TEST
-> +	select MAILBOX
-> +	select MTK_CMDQ_MBOX
-> +	select MTK_INFRACFG
-> +	help
-> +	  Say yes here to add support for the MediaTek Command Queue (CMDQ)
-> +	  driver. The CMDQ is used to help read/write registers with critical
-> +	  time limitation, such as updating display configuration during the
-> +	  vblank.
-> +
->  config MTK_INFRACFG
->  	bool "MediaTek INFRACFG Support"
->  	select REGMAP
-> diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
-> index 12998b0..64ce5ee 100644
-> --- a/drivers/soc/mediatek/Makefile
-> +++ b/drivers/soc/mediatek/Makefile
-> @@ -1,3 +1,4 @@
-> +obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
->  obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
->  obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
->  obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
-> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> new file mode 100644
-> index 0000000..e4dbb7e
-> --- /dev/null
-> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
-> @@ -0,0 +1,291 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (c) 2018 MediaTek Inc.
-> +
-> +#include <linux/completion.h>
-> +#include <linux/errno.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/soc/mediatek/mtk-cmdq.h>
-> +
-> +#define CMDQ_ARG_A_WRITE_MASK	0xffff
-> +#define CMDQ_WRITE_ENABLE_MASK	BIT(0)
-> +#define CMDQ_EOC_IRQ_EN		BIT(0)
-> +#define CMDQ_EOC_CMD		((u64)((CMDQ_CODE_EOC << CMDQ_OP_CODE_SHIFT)) \
-> +				<< 32 | CMDQ_EOC_IRQ_EN)
-> +
-> +static void cmdq_client_timeout(struct timer_list *t)
-> +{
-> +	struct cmdq_client *client = from_timer(client, t, timer);
-> +
-> +	dev_err(client->client.dev, "cmdq timeout!\n");
-> +}
-> +
-> +struct cmdq_client *cmdq_mbox_create(struct device *dev, int index, u32 timeout)
-> +{
-> +	struct cmdq_client *client;
-> +
-> +	client = kzalloc(sizeof(*client), GFP_KERNEL);
-> +	if (!client)
-> +		return (struct cmdq_client *)-ENOMEM;
-> +
-> +	client->timeout_ms = timeout;
-> +	if (timeout != CMDQ_NO_TIMEOUT) {
-> +		spin_lock_init(&client->lock);
-> +		timer_setup(&client->timer, cmdq_client_timeout, 0);
-> +	}
-> +	client->pkt_cnt = 0;
-> +	client->client.dev = dev;
-> +	client->client.tx_block = false;
-> +	client->chan = mbox_request_channel(&client->client, index);
-> +
-> +	if (IS_ERR(client->chan)) {
-> +		long err = 0;
-> +
-> +		dev_err(dev, "failed to request channel\n");
-> +		err = PTR_ERR(client->chan);
-> +		kfree(client);
-> +
-> +		return (struct cmdq_client *)err;
-
-Can't we use
-return ERR_PTR(err);
-here?
-
-> +	}
-> +
-> +	return client;
-> +}
-> +EXPORT_SYMBOL(cmdq_mbox_create);
-> +
-> +void cmdq_mbox_destroy(struct cmdq_client *client)
-> +{
-> +	if (client->timeout_ms != CMDQ_NO_TIMEOUT) {
-> +		spin_lock(&client->lock);
-> +		del_timer_sync(&client->timer);
-> +		spin_unlock(&client->lock);
-> +	}
-> +	mbox_free_channel(client->chan);
-> +	kfree(client);
-> +}
-> +EXPORT_SYMBOL(cmdq_mbox_destroy);
-> +
-> +int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt **pkt_ptr,
-> +		    size_t size)
-
-I suppose you are not returning the allocated cmdq_pkt to avoid checks for
-IS_ERR() logic in the consumer of this API. Am I correct?
-Do we really need a pointer to a pointer here? Can't we just use a struct
-cmdq_pkt *pkt as argument? That would make things easier.
-
-> +{
-> +	struct cmdq_pkt *pkt;
-> +	struct device *dev;
-> +	dma_addr_t dma_addr;
-> +
-> +	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
-> +	if (!pkt)
-> +		return -ENOMEM;
-> +	pkt->va_base = kzalloc(size, GFP_KERNEL);
-> +	if (!pkt->va_base) {
-> +		kfree(pkt);
-> +		return -ENOMEM;
-> +	}
-> +	pkt->buf_size = size;
-> +	pkt->cl = (void *)client;
-> +
-> +	dev = client->chan->mbox->dev;
-> +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->buf_size,
-> +		DMA_TO_DEVICE);
-> +	if (dma_mapping_error(dev, dma_addr)) {
-> +		dev_err(dev, "dma map failed, size=%u\n", (u32)(u64)size);
-> +		kfree(pkt->va_base);
-> +		kfree(pkt);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	pkt->pa_base = dma_addr;
-> +	*pkt_ptr = pkt;
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_create);
-> +
-> +void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
-> +{
-> +	struct cmdq_client *client = (struct cmdq_client *)pkt->cl;
-> +
-> +	dma_unmap_single(client->chan->mbox->dev, pkt->pa_base, pkt->buf_size,
-> +			 DMA_TO_DEVICE);
-> +	kfree(pkt->va_base);
-> +	kfree(pkt);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_destroy);
-> +
-> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> +				   u32 arg_a, u32 arg_b)
-> +{
-> +	u64 *cmd_ptr;
-> +
-> +	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
-> +		pkt->cmd_buf_size += CMDQ_INST_SIZE;
-
-Why do we update the cmd_buf_size here?
-
-> +		return -ENOMEM;
-> +	}
-> +	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
-> +	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
-> +	pkt->cmd_buf_size += CMDQ_INST_SIZE;
-> +
-> +	return 0;
-> +}
-> +
-> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
-> +{
-> +	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
-> +		    (subsys << CMDQ_SUBSYS_SHIFT);
-> +
-> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_write);
-> +
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
-> +			u32 subsys, u32 offset, u32 mask)
-> +{
-> +	u32 offset_mask = offset;
-> +	int err;
-> +
-> +	if (mask != 0xffffffff) {
-> +		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
-> +		WARN_ON(err < 0);
-> +		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
-> +	}
-> +
-> +	return cmdq_pkt_write(pkt, value, subsys, offset_mask);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_write_mask);
-> +
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
-> +{
-> +	u32 arg_b;
-> +
-> +	if (event >= CMDQ_MAX_EVENT)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * WFE arg_b
-> +	 * bit 0-11: wait value
-> +	 * bit 15: 1 - wait, 0 - no wait
-> +	 * bit 16-27: update value
-> +	 * bit 31: 1 - update, 0 - no update
-> +	 */
-> +	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
-> +
-> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_wfe);
-> +
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
-> +{
-> +	if (event >= CMDQ_MAX_EVENT)
-> +		return -EINVAL;
-> +
-> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
-> +				       CMDQ_WFE_UPDATE);
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_clear_event);
-> +
-> +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
-> +{
-> +	int err;
-> +
-> +	/* insert EOC and generate IRQ for each command iteration */
-> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
-> +	WARN_ON(err < 0);
-> +
-> +	/* JUMP to end */
-> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
-> +	WARN_ON(err < 0);
-> +
-> +	return err;
-> +}
-> +
-> +static void cmdq_pkt_flush_async_cb(struct cmdq_cb_data data)
-> +{
-> +	struct cmdq_pkt *pkt = (struct cmdq_pkt *)data.data;
-> +	struct cmdq_task_cb *cb = &pkt->cb;
-> +	struct cmdq_client *client = (struct cmdq_client *)pkt->cl;
-> +
-> +	if (client->timeout_ms != CMDQ_NO_TIMEOUT) {
-> +		unsigned long flags = 0;
-> +
-> +		spin_lock_irqsave(&client->lock, flags);
-> +		if (--client->pkt_cnt == 0)
-> +			del_timer(&client->timer);
-> +		else
-> +			mod_timer(&client->timer, jiffies +
-> +				  msecs_to_jiffies(client->timeout_ms));
-> +		spin_unlock_irqrestore(&client->lock, flags);
-> +	}> +
-> +	dma_sync_single_for_cpu(client->chan->mbox->dev, pkt->pa_base,
-> +				pkt->cmd_buf_size, DMA_TO_DEVICE);
-> +	if (cb->cb) {
-> +		data.data = cb->data;
-> +		cb->cb(data);
-> +	}
-> +}
-> +
-> +int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
-> +			 void *data)
-> +{
-> +	int err;
-> +	unsigned long flags = 0;
-> +	struct cmdq_client *client = (struct cmdq_client *)pkt->cl;
-> +
-> +	err = cmdq_pkt_finalize(pkt);
-> +	if (err < 0)
-> +		return err;
-> +
-> +	pkt->cb.cb = cb;
-> +	pkt->cb.data = data;
-> +	pkt->async_cb.cb = cmdq_pkt_flush_async_cb;
-> +	pkt->async_cb.data = pkt;
-> +
-> +	dma_sync_single_for_device(client->chan->mbox->dev, pkt->pa_base,
-> +				   pkt->cmd_buf_size, DMA_TO_DEVICE);
-> +
-> +	if (client->timeout_ms != CMDQ_NO_TIMEOUT) {
-> +		spin_lock_irqsave(&client->lock, flags);
-> +		if (client->pkt_cnt++ == 0)
-> +			mod_timer(&client->timer, jiffies +
-> +				  msecs_to_jiffies(client->timeout_ms));
-> +		spin_unlock_irqrestore(&client->lock, flags);
-> +	}
-> +
-> +	mbox_send_message(client->chan, pkt);
-> +	/* We can send next packet immediately, so just call txdone. */
-> +	mbox_client_txdone(client->chan, 0);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_flush_async);
-> +
-> +struct cmdq_flush_completion {
-> +	struct completion cmplt;
-> +	bool err;
-> +};
-> +
-> +static void cmdq_pkt_flush_cb(struct cmdq_cb_data data)
-> +{
-> +	struct cmdq_flush_completion *cmplt;
-> +
-> +	cmplt = (struct cmdq_flush_completion *)data.data;
-> +	if (data.sta != CMDQ_CB_NORMAL)
-> +		cmplt->err = true;
-> +	else
-> +		cmplt->err = false;
-> +	complete(&cmplt->cmplt);
-> +}
-> +
-> +int cmdq_pkt_flush(struct cmdq_pkt *pkt)
-> +{
-> +	struct cmdq_flush_completion cmplt;
-> +	int err;
-> +
-> +	init_completion(&cmplt.cmplt);
-> +	err = cmdq_pkt_flush_async(pkt, cmdq_pkt_flush_cb, &cmplt);
-> +	if (err < 0)
-> +		return err;
-> +	wait_for_completion(&cmplt.cmplt);
-> +
-> +	return cmplt.err ? -EFAULT : 0;
-> +}
-> +EXPORT_SYMBOL(cmdq_pkt_flush);
-> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
-> new file mode 100644
-> index 0000000..fc84fe4
-> --- /dev/null
-> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
-> @@ -0,0 +1,135 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018 MediaTek Inc.
-> + *
-> + */
-> +
-> +#ifndef __MTK_CMDQ_H__
-> +#define __MTK_CMDQ_H__
-> +
-> +#include <linux/mailbox_client.h>
-> +#include <linux/mailbox/mtk-cmdq-mailbox.h>
-> +#include <linux/timer.h>
-> +
-> +#define CMDQ_NO_TIMEOUT		0xffffffffu
-> +
-> +/** cmdq event maximum */
-> +#define CMDQ_MAX_EVENT				0x3ff
-> +
-> +struct cmdq_pkt;
-> +
-> +struct cmdq_client {
-> +	spinlock_t lock;
-> +	u32 pkt_cnt;
-> +	struct mbox_client client;
-> +	struct mbox_chan *chan;
-> +	struct timer_list timer;
-> +	u32 timeout_ms; /* in unit of microsecond */
-> +};
-> +
-> +/**
-> + * cmdq_mbox_create() - create CMDQ mailbox client and channel
-> + * @dev:	device of CMDQ mailbox client
-> + * @index:	index of CMDQ mailbox channel
-> + * @timeout:	timeout of a pkt execution by GCE, in unit of microsecond, set
-> + *		CMDQ_NO_TIMEOUT if a timer is not used.
-> + *
-> + * Return: CMDQ mailbox client pointer
-> + */
-> +struct cmdq_client *cmdq_mbox_create(struct device *dev, int index,
-> +				     u32 timeout);
-> +
-> +/**
-> + * cmdq_mbox_destroy() - destroy CMDQ mailbox client and channel
-> + * @client:	the CMDQ mailbox client
-> + */
-> +void cmdq_mbox_destroy(struct cmdq_client *client);
-> +
-> +/**
-> + * cmdq_pkt_create() - create a CMDQ packet
-> + * @client:	the CMDQ mailbox client
-> + * @pkt_ptr:	CMDQ packet pointer to retrieve cmdq_pkt
-> + * @size:	CMDQ buffer size
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + */
-> +int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt **pkt_ptr,
-> +		    size_t size);
-> +
-> +/**
-> + * cmdq_pkt_destroy() - destroy the CMDQ packet
-> + * @pkt:	the CMDQ packet
-> + */
-> +void cmdq_pkt_destroy(struct cmdq_pkt *pkt);
-> +
-> +/**
-> + * cmdq_pkt_write() - append write command to the CMDQ packet
-> + * @pkt:	the CMDQ packet
-> + * @value:	the specified target register value
-> + * @subsys:	the CMDQ sub system code
-> + * @offset:	register offset from CMDQ sub system
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + */
-> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset);
-> +
-> +/**
-> + * cmdq_pkt_write_mask() - append write command with mask to the CMDQ packet
-> + * @pkt:	the CMDQ packet
-> + * @value:	the specified target register value
-> + * @subsys:	the CMDQ sub system code
-> + * @offset:	register offset from CMDQ sub system
-> + * @mask:	the specified target register mask
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + */
-> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
-> +			u32 subsys, u32 offset, u32 mask);
-> +
-> +/**
-> + * cmdq_pkt_wfe() - append wait for event command to the CMDQ packet
-> + * @pkt:	the CMDQ packet
-> + * @event:	the desired event type to "wait and CLEAR"
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + */
-> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event);
-> +
-> +/**
-> + * cmdq_pkt_clear_event() - append clear event command to the CMDQ packet
-> + * @pkt:	the CMDQ packet
-> + * @event:	the desired event to be cleared
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + */
-> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event);
-> +
-> +/**
-> + * cmdq_pkt_flush() - trigger CMDQ to execute the CMDQ packet
-> + * @pkt:	the CMDQ packet
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Trigger CMDQ to execute the CMDQ packet. Note that this is a
-> + * synchronous flush function. When the function returned, the recorded
-> + * commands have been done.
-> + */
-> +int cmdq_pkt_flush(struct cmdq_pkt *pkt);
-> +
-> +/**
-> + * cmdq_pkt_flush_async() - trigger CMDQ to asynchronously execute the CMDQ
-> + *                          packet and call back at the end of done packet
-> + * @pkt:	the CMDQ packet
-> + * @cb:		called at the end of done packet
-> + * @data:	this data will pass back to cb
-> + *
-> + * Return: 0 for success; else the error code is returned
-> + *
-> + * Trigger CMDQ to asynchronously execute the CMDQ packet and call back
-> + * at the end of done packet. Note that this is an ASYNC function. When the
-> + * function returned, it may or may not be finished.
-> + */
-> +int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
-> +			 void *data);
-> +
-
-bikeshadding alarm:
-can we order the functions in the include file the same way we do in the c file?
-
-Apart from the few comments, the driver looks fine to me.
-
-Regards,
-Matthias
+T24gMzAvMDgvMTggMTU6NDUsIFZpdmVrIEdhdXRhbSB3cm90ZToKPiBxY29tLHNtbXUtdjIgaXMg
+YW4gYXJtLHNtbXUtdjIgaW1wbGVtZW50YXRpb24gd2l0aCBzcGVjaWZpYwo+IGNsb2NrIGFuZCBw
+b3dlciByZXF1aXJlbWVudHMuCj4gT24gbXNtODk5NiwgbXVsdGlwbGUgY29yZXMsIHZpei4gbWRz
+cywgdmlkZW8sIGV0Yy4gdXNlIHRoaXMKPiBzbW11LiBPbiBzZG04NDUsIHRoaXMgc21tdSBpcyB1
+c2VkIHdpdGggZ3B1Lgo+IEFkZCBiaW5kaW5ncyBmb3IgdGhlIHNhbWUuCj4gCj4gU2lnbmVkLW9m
+Zi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4gUmV2aWV3
+ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cj4gUmV2aWV3ZWQtYnk6IFRvbWFz
+eiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4gVGVzdGVkLWJ5OiBTcmluaXZhcyBLYW5kYWdh
+dGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+Cj4gLS0tCj4gICBkcml2ZXJzL2lv
+bW11L2FybS1zbW11LmMgfCAxMyArKysrKysrKysrKysrCj4gICAxIGZpbGUgY2hhbmdlZCwgMTMg
+aW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMg
+Yi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiBpbmRleCAxNjZjOGM2ZGEyNGYuLjQxMWU1YWM1
+N2M2NCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPiArKysgYi9kcml2
+ZXJzL2lvbW11L2FybS1zbW11LmMKPiBAQCAtMTE5LDYgKzExOSw3IEBAIGVudW0gYXJtX3NtbXVf
+aW1wbGVtZW50YXRpb24gewo+ICAgCUdFTkVSSUNfU01NVSwKPiAgIAlBUk1fTU1VNTAwLAo+ICAg
+CUNBVklVTV9TTU1VVjIsCj4gKwlRQ09NX1NNTVVWMiwKCkhtbSwgaXQgc2VlbXMgd2UgZG9uJ3Qg
+YWN0dWFsbHkgbmVlZCB0aGlzIHJpZ2h0IG5vdywgYnV0IG1heWJlIHRoYXQganVzdCAKbWVhbnMg
+dGhlcmUncyBtb3JlIGltcC1kZWYgcmVnaXN0ZXJzIGFuZC9vciBlcnJhdGEgdG8gY29tZSA7KQoK
+RWl0aGVyIHdheSBJIGd1ZXNzIHRoZXJlJ3Mgbm8gcmVhbCBoYXJtIGluIGhhdmluZyBpdC4KClJl
+dmlld2VkLWJ5OiBSb2JpbiBNdXJwaHkgPHJvYmluLm11cnBoeUBhcm0uY29tPgoKPiAgIH07Cj4g
+ICAKPiAgIHN0cnVjdCBhcm1fc21tdV9zMmNyIHsKPiBAQCAtMTk3MCw2ICsxOTcxLDE3IEBAIEFS
+TV9TTU1VX01BVENIX0RBVEEoYXJtX21tdTQwMSwgQVJNX1NNTVVfVjFfNjRLLCBHRU5FUklDX1NN
+TVUpOwo+ICAgQVJNX1NNTVVfTUFUQ0hfREFUQShhcm1fbW11NTAwLCBBUk1fU01NVV9WMiwgQVJN
+X01NVTUwMCk7Cj4gICBBUk1fU01NVV9NQVRDSF9EQVRBKGNhdml1bV9zbW11djIsIEFSTV9TTU1V
+X1YyLCBDQVZJVU1fU01NVVYyKTsKPiAgIAo+ICtzdGF0aWMgY29uc3QgY2hhciAqIGNvbnN0IHFj
+b21fc21tdXYyX2Nsa3NbXSA9IHsKPiArCSJidXMiLCAiaWZhY2UiLAo+ICt9Owo+ICsKPiArc3Rh
+dGljIGNvbnN0IHN0cnVjdCBhcm1fc21tdV9tYXRjaF9kYXRhIHFjb21fc21tdXYyID0gewo+ICsJ
+LnZlcnNpb24gPSBBUk1fU01NVV9WMiwKPiArCS5tb2RlbCA9IFFDT01fU01NVVYyLAo+ICsJLmNs
+a3MgPSBxY29tX3NtbXV2Ml9jbGtzLAo+ICsJLm51bV9jbGtzID0gQVJSQVlfU0laRShxY29tX3Nt
+bXV2Ml9jbGtzKSwKPiArfTsKPiArCj4gICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9p
+ZCBhcm1fc21tdV9vZl9tYXRjaFtdID0gewo+ICAgCXsgLmNvbXBhdGlibGUgPSAiYXJtLHNtbXUt
+djEiLCAuZGF0YSA9ICZzbW11X2dlbmVyaWNfdjEgfSwKPiAgIAl7IC5jb21wYXRpYmxlID0gImFy
+bSxzbW11LXYyIiwgLmRhdGEgPSAmc21tdV9nZW5lcmljX3YyIH0sCj4gQEAgLTE5NzcsNiArMTk4
+OSw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGFybV9zbW11X29mX21hdGNo
+W10gPSB7Cj4gICAJeyAuY29tcGF0aWJsZSA9ICJhcm0sbW11LTQwMSIsIC5kYXRhID0gJmFybV9t
+bXU0MDEgfSwKPiAgIAl7IC5jb21wYXRpYmxlID0gImFybSxtbXUtNTAwIiwgLmRhdGEgPSAmYXJt
+X21tdTUwMCB9LAo+ICAgCXsgLmNvbXBhdGlibGUgPSAiY2F2aXVtLHNtbXUtdjIiLCAuZGF0YSA9
+ICZjYXZpdW1fc21tdXYyIH0sCj4gKwl7IC5jb21wYXRpYmxlID0gInFjb20sc21tdS12MiIsIC5k
+YXRhID0gJnFjb21fc21tdXYyIH0sCj4gICAJeyB9LAo+ICAgfTsKPiAgIE1PRFVMRV9ERVZJQ0Vf
+VEFCTEUob2YsIGFybV9zbW11X29mX21hdGNoKTsKPiAKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
