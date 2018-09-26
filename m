@@ -1,44 +1,62 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
-Date: Wed, 26 Sep 2018 15:23:28 -0700
-Message-ID: <CAD=FV=VNe8BjTx9AXx01tpPk5+dUEwOqU12H3r9_H40Asgte2A@mail.gmail.com>
-References: <20180926205204.184898-1-ryandcase@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] spis: mediatek: add bindings for Mediatek MT2712
+ soc platform
+Date: Wed, 26 Sep 2018 17:33:18 -0500
+Message-ID: <20180926223318.GA18703@bogus>
+References: <1537150762-7072-1-git-send-email-leilk.liu@mediatek.com>
+ <1537150762-7072-2-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926205204.184898-1-ryandcase@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ryandcase@chromium.org
-Cc: Mark Brown <broonie@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Stephen Boyd <swboyd@chromium.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>, boris.brezillon@bootlin.com, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1537150762-7072-2-git-send-email-leilk.liu@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, yt.shen@mediatek.com, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Sep 26, 2018 at 1:54 PM Ryan Case <ryandcase@chromium.org> wrote:
->
-> From: Girish Mahadevan <girishm@codeaurora.org>
->
-> Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
->
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> Signed-off-by: Ryan Case <ryandcase@chromium.org>
+On Mon, Sep 17, 2018 at 10:19:20AM +0800, Leilk Liu wrote:
+> This patch adds a DT binding documentation for the MT2712 soc.
+> 
+> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
 > ---
->
-> Changes in v3:
-> - Added generic compatible string in addition to specific SoC
->
-> Changes in v2:
-> - Added commit text
-> - Removed invalid property
-> - Updated example to match sdm845 with attached spi-nor
->
->  .../bindings/spi/qcom,spi-qcom-qspi.txt       | 36 +++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+>  .../devicetree/bindings/spi/spi-slave-mt27xx.txt   |   32 ++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+> new file mode 100644
+> index 0000000..09cb2c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+> @@ -0,0 +1,32 @@
+> +Binding for MTK SPI Slave controller
+> +
+> +Required properties:
+> +- compatible: should be one of the following.
+> +    - mediatek,mt2712-spi-slave: for mt2712 platforms
+> +- reg: Address and length of the register set for the device.
+> +- interrupts: Should contain spi interrupt.
+> +- clocks: phandles to input clocks.
+> +  It's clock gate, and should be <&infracfg CLK_INFRA_AO_SPI1>.
+> +- clock-names: should be "spi" for the clock gate.
+> +
+> +Optional properties:
+> +- assigned-clocks: it's mux clock, should be <&topckgen CLK_TOP_SPISLV_SEL>.
+> +- assigned-clock-parents: parent of mux clock.
+> +  It's PLL, and should be on of the following.
 
-This looks good to me and change in v3 to add the SoC-specific string
-in addition to the more generic string identifying the IP block
-version matches my understanding of the correct things to do (as
-discussed in the v2 patch).
+s/on/one/
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+With that fixed,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
