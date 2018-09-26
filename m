@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v2 08/22] soc/fsl/qbman_portals: add APIs to retrieve the probing status
-Date: Wed, 26 Sep 2018 16:22:33 +0300
-Message-ID: <20180926132247.10971-9-laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 12/22] dpaa_eth: base dma mappings on the fman rx port
+Date: Wed, 26 Sep 2018 16:22:37 +0300
+Message-ID: <20180926132247.10971-13-laurentiu.tudor@nxp.com>
 References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
@@ -12,146 +12,61 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-Add a couple of new APIs to check the probing status of the required
-cpu bound qman and bman portals:
- 'int bman_portals_probed()' and 'int qman_portals_probed()'.
-They return the following values.
- *  1 if qman/bman portals were all probed correctly
- *  0 if qman/bman portals were not yet probed
- * -1 if probing of qman/bman portals failed
-Drivers that use qman/bman portal driver services are required to use
-these APIs before calling any functions exported by these drivers or
-otherwise they will crash the kernel.
-First user will be the dpaa1 ethernet driver, coming in a subsequent
-patch.
+The dma transactions initiator is the rx fman port so that's the device
+that the dma mappings should be done. Previously the mappings were done
+through the MAC device which makes no sense because it's neither dma-able
+nor connected in any way to smmu.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- drivers/soc/fsl/qbman/bman_portal.c | 10 ++++++++++
- drivers/soc/fsl/qbman/qman_portal.c | 10 ++++++++++
- include/soc/fsl/bman.h              |  8 ++++++++
- include/soc/fsl/qman.h              |  9 +++++++++
- 4 files changed, 37 insertions(+)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
-index f9edd28894fd..8048d35de8a2 100644
---- a/drivers/soc/fsl/qbman/bman_portal.c
-+++ b/drivers/soc/fsl/qbman/bman_portal.c
-@@ -32,6 +32,7 @@
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index 6ca3fdbef580..ac9e50c8a556 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2796,8 +2796,15 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
  
- static struct bman_portal *affine_bportals[NR_CPUS];
- static struct cpumask portal_cpus;
-+static int __bman_portals_probed;
- /* protect bman global registers and global data shared among portals */
- static DEFINE_SPINLOCK(bman_lock);
++	mac_dev = dpaa_mac_dev_get(pdev);
++	if (IS_ERR(mac_dev)) {
++		dev_err(&pdev->dev, "dpaa_mac_dev_get() failed\n");
++		err = PTR_ERR(mac_dev);
++		goto probe_err;
++	}
++
+ 	/* device used for DMA mapping */
+-	dev = pdev->dev.parent;
++	dev = fman_port_get_device(mac_dev->port[RX]);
+ 	err = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(40));
+ 	if (err) {
+ 		dev_err(dev, "dma_coerce_mask_and_coherent() failed\n");
+@@ -2822,13 +2829,6 @@ static int dpaa_eth_probe(struct platform_device *pdev)
  
-@@ -85,6 +86,12 @@ static int bman_online_cpu(unsigned int cpu)
- 	return 0;
+ 	priv->msg_enable = netif_msg_init(debug, DPAA_MSG_DEFAULT);
+ 
+-	mac_dev = dpaa_mac_dev_get(pdev);
+-	if (IS_ERR(mac_dev)) {
+-		dev_err(dev, "dpaa_mac_dev_get() failed\n");
+-		err = PTR_ERR(mac_dev);
+-		goto free_netdev;
+-	}
+-
+ 	/* If fsl_fm_max_frm is set to a higher value than the all-common 1500,
+ 	 * we choose conservatively and let the user explicitly set a higher
+ 	 * MTU via ifconfig. Otherwise, the user may end up with different MTUs
+@@ -2964,9 +2964,9 @@ static int dpaa_eth_probe(struct platform_device *pdev)
+ 	qman_release_cgrid(priv->cgr_data.cgr.cgrid);
+ free_dpaa_bps:
+ 	dpaa_bps_free(priv);
+-free_netdev:
+ 	dev_set_drvdata(dev, NULL);
+ 	free_netdev(net_dev);
++probe_err:
+ 
+ 	return err;
  }
- 
-+int bman_portals_probed(void)
-+{
-+	return __bman_portals_probed;
-+}
-+EXPORT_SYMBOL_GPL(bman_portals_probed);
-+
- static int bman_portal_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -148,6 +155,7 @@ static int bman_portal_probe(struct platform_device *pdev)
- 	spin_lock(&bman_lock);
- 	cpu = cpumask_next_zero(-1, &portal_cpus);
- 	if (cpu >= nr_cpu_ids) {
-+		__bman_portals_probed = 1;
- 		/* unassigned portal, skip init */
- 		spin_unlock(&bman_lock);
- 		return 0;
-@@ -173,6 +181,8 @@ static int bman_portal_probe(struct platform_device *pdev)
- err_ioremap2:
- 	memunmap(pcfg->addr_virt_ce);
- err_ioremap1:
-+	 __bman_portals_probed = 1;
-+
- 	return -ENXIO;
- }
- 
-diff --git a/drivers/soc/fsl/qbman/qman_portal.c b/drivers/soc/fsl/qbman/qman_portal.c
-index eef93cab84f1..1b2fc981c269 100644
---- a/drivers/soc/fsl/qbman/qman_portal.c
-+++ b/drivers/soc/fsl/qbman/qman_portal.c
-@@ -39,6 +39,7 @@ EXPORT_SYMBOL(qman_dma_portal);
- #define CONFIG_FSL_DPA_PIRQ_FAST  1
- 
- static struct cpumask portal_cpus;
-+static int __qman_portals_probed;
- /* protect qman global registers and global data shared among portals */
- static DEFINE_SPINLOCK(qman_lock);
- 
-@@ -219,6 +220,12 @@ static int qman_online_cpu(unsigned int cpu)
- 	return 0;
- }
- 
-+int qman_portals_probed(void)
-+{
-+	return __qman_portals_probed;
-+}
-+EXPORT_SYMBOL_GPL(qman_portals_probed);
-+
- static int qman_portal_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -306,6 +313,7 @@ static int qman_portal_probe(struct platform_device *pdev)
- 	spin_lock(&qman_lock);
- 	cpu = cpumask_next_zero(-1, &portal_cpus);
- 	if (cpu >= nr_cpu_ids) {
-+		__qman_portals_probed = 1;
- 		/* unassigned portal, skip init */
- 		spin_unlock(&qman_lock);
- 		return 0;
-@@ -336,6 +344,8 @@ static int qman_portal_probe(struct platform_device *pdev)
- err_ioremap2:
- 	memunmap(pcfg->addr_virt_ce);
- err_ioremap1:
-+	__qman_portals_probed = -1;
-+
- 	return -ENXIO;
- }
- 
-diff --git a/include/soc/fsl/bman.h b/include/soc/fsl/bman.h
-index 5b99cb2ea5ef..173e4049d963 100644
---- a/include/soc/fsl/bman.h
-+++ b/include/soc/fsl/bman.h
-@@ -133,5 +133,13 @@ int bman_acquire(struct bman_pool *pool, struct bm_buffer *bufs, u8 num);
-  * failed to probe or 0 if the bman driver did not probed yet.
-  */
- int bman_is_probed(void);
-+/**
-+ * bman_portals_probed - Check if all cpu bound bman portals are probed
-+ *
-+ * Returns 1 if all the required cpu bound bman portals successfully probed,
-+ * -1 if probe errors appeared or 0 if the bman portals did not yet finished
-+ * probing.
-+ */
-+int bman_portals_probed(void);
- 
- #endif	/* __FSL_BMAN_H */
-diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
-index 597783b8a3a0..7732e48081eb 100644
---- a/include/soc/fsl/qman.h
-+++ b/include/soc/fsl/qman.h
-@@ -1194,4 +1194,13 @@ int qman_release_cgrid(u32 id);
-  */
- int qman_is_probed(void);
- 
-+/**
-+ * qman_portals_probed - Check if all cpu bound qman portals are probed
-+ *
-+ * Returns 1 if all the required cpu bound qman portals successfully probed,
-+ * -1 if probe errors appeared or 0 if the qman portals did not yet finished
-+ * probing.
-+ */
-+int qman_portals_probed(void);
-+
- #endif	/* __FSL_QMAN_H */
 -- 
 2.17.1
