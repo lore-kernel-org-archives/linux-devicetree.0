@@ -1,29 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mrvl,mmp-timer: add clock
-Date: Wed, 26 Sep 2018 17:51:50 -0500
-Message-ID: <20180926225150.GA15157@bogus>
-References: <20180918205455.25464-1-lkundrak@v3.sk>
- <20180918205455.25464-2-lkundrak@v3.sk>
+Subject: Re: [PATCH V2 3/4] dt-bindings: arm: add compatible for i.MX6ULZ
+ 14x14 EVK board
+Date: Wed, 26 Sep 2018 17:55:43 -0500
+Message-ID: <20180926225543.GA20330@bogus>
+References: <1537337088-28819-1-git-send-email-Anson.Huang@nxp.com>
+ <1537337088-28819-4-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180918205455.25464-2-lkundrak@v3.sk>
+In-Reply-To: <1537337088-28819-4-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Russell King <linux@armlinux.org.uk>, Lubomir Rintel <lkundrak@v3.sk>
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mturquette@baylibre.com, sboyd@kernel.org, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Sep 2018 22:54:52 +0200, Lubomir Rintel wrote:
-> The timer needs the timer clock to be enabled, otherwise it stops
-> ticking.
+On Wed, 19 Sep 2018 14:04:47 +0800, Anson Huang wrote:
+> This patch adds compatible for i.MX6ULZ 14x14 EVK board.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
-> Changes since v1:
-> - Made the clock optional, to keep compatibility with DTs without it
-> 
->  Documentation/devicetree/bindings/timer/mrvl,mmp-timer.txt | 4 ++++
+>  Documentation/devicetree/bindings/arm/fsl.txt | 4 ++++
 >  1 file changed, 4 insertions(+)
 > 
 
