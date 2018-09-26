@@ -1,98 +1,47 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v7 05/24] clocksource: Add a new timer-ingenic driver
-Date: Wed, 26 Sep 2018 10:05:13 +0200
-Message-ID: <5af26854-0752-312b-6148-3ffa9abb2570@linaro.org>
-References: <5bab3024.1c69fb81.b6a71.9c38SMTPIN_ADDED_MISSING@mx.google.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 4/4] power: supply: Add Spreadtrum SC27XX fuel gauge
+ unit driver
+Date: Wed, 26 Sep 2018 10:09:20 +0200
+Message-ID: <CACRpkdYxV1OBrr6e29OTzE5QCTgt+-2yJGEuYtNM_Mw=41PSyg@mail.gmail.com>
+References: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
+ <707ebff8a188d41de374314414c8bfd927183d33.1537930252.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5bab3024.1c69fb81.b6a71.9c38SMTPIN_ADDED_MISSING@mx.google.com>
-Content-Language: en-US
+In-Reply-To: <707ebff8a188d41de374314414c8bfd927183d33.1537930252.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Mathieu Malaterre <malat@debian.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, linux-doc@vger.kernel.org, linux-watchdog@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, od@zcrc.me, linux-mips@linux-mips.org, Paul Burton <paul.burton@mips.com>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/2018 08:01, Paul Cercueil wrote:
-> 
-> Le 25 sept. 2018 10:12 PM, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit :
->>
->> On 25/09/2018 15:38, Paul Cercueil wrote: 
->>>
->>> Le 24 sept. 2018 9:14 AM, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit : 
->>>>
->>>> On 24/09/2018 08:53, Paul Cercueil wrote: 
->>>>>
->>>>> Le 24 sept. 2018 07:58, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit : 
->>>>>>
->>>>>> On 24/09/2018 07:49, Paul Cercueil wrote: 
->>>>>>>
->>>>>>> Le 24 sept. 2018 07:35, Daniel Lezcano <daniel.lezcano@linaro.org> a 
->>>>>>> écrit : 
->>>>>>>>
->>>>>>>> On 24/09/2018 07:24, Paul Cercueil wrote: 
->>>>>>>>> Hi Daniel, 
->>>>>>>>>
->>>>>>>>> Le 24 sept. 2018 05:12, Daniel Lezcano 
->>>>>>>>> <daniel.lezcano@linaro.org> a écrit : 
->>>>>>>>>>
->>>>>>>>>> On 21/08/2018 19:16, Paul Cercueil wrote: 
->>>>>>>>>>> This driver handles the TCU (Timer Counter Unit) present on 
->>>>>>>>>>> the Ingenic JZ47xx SoCs, and provides the kernel with a 
->>>>>>>>>>> system timer, and optionally with a clocksource and a 
->>>>>>>>>>> sched_clock. 
->>>>>>>>>>>
->>>>>>>>>>> It also provides clocks and interrupt handling to client 
->>>>>>>>>>> drivers. 
->>>>>>>>>>
->>>>>>>>>> Can you provide a much more complete description of the timer 
->>>>>>>>>> in order to make my life easier for the review of this patch? 
->>>>>>>>>
->>>>>>>>> See patch [03/24], it adds a doc file that describes the 
->>>>>>>>> hardware. 
->>>>>>>>
->>>>>>>> Thanks, I went through but it is incomplete to understand what the 
->>>>>>>> timer do. I will reverse-engineer the code but it would help if you 
->>>>>>>> can give the gross approach. Why multiple channels ? mutexes and 
->>>>>>>> completion ? 
->>>>>>>
->>>>>>> Much of the complexity is because of the multi-purpose nature of the 
->>>>>>> TCU channels. Each one can be used as timer/clocksource, or PWM. 
->>>>>>>
->>>>>>> The driver starts by using channels 0 and 1 as system timer and 
->>>>>>> clocksource, respectively, the other ones being unused for now. Then, 
->>>>>>> *if* the PWM driver requests one of the channels in use by the 
->>>>>>> timer/clocksource driver, say channel 0, the timer/clocksource driver 
->>>>>>> will dynamically reassign the system timer to a free channel, from 
->>>>>>> channel 0 to e.g. channel 2. Only in that case the completion/mutex 
->>>>>>> are actually used. 
->>>>>>
->>>>>> Why do you need to do this? Can't be the channels dedicated and reserved 
->>>>>> for clocksource and clockevent? 
->>>>>
->>>>> That's what I had in place (ingenic,timer-channel and ingenic,clocksource-channel DT properties), but Rob didn't want any linux-specific properties in the devicetree binding :( 
->>>>
->>>> Isn't possible to specify the channel to use in the DT? like renesas16 ? 
->>>
->>> That's what I did in V6 (and before), but Rob did not want me to add properties for Linux-specific concepts such as clocksource. 
->>
->> Hmm, I remember something like that, yes but I did a delete of the 
->> previous version when you posted the v7. Can you give a pointer to its 
->> answer ? 
-> 
-> Yes, this was his answer:
-> https://lkml.org/lkml/2018/7/25/508
-> 
-> Then mine:
-> https://lkml.org/lkml/2018/7/30/883
+On Wed, Sep 26, 2018 at 5:00 AM Baolin Wang <baolin.wang@linaro.org> wrote:
 
-Thanks !
+> This patch adds the Spreadtrum SC27XX serial PMICs fuel gauge support,
+> which is used to calculate the battery capacity.
+>
+> Original-by: Yuanjiang Yu <yuanjiang.yu@unisoc.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes from v1:
+>  - Use battery standard properties to get internal resistance and ocv table.
+>  - Change devm_gpiod_get_optional() to devm_gpiod_get().
+>  - Add power_supply_changed() when detecting battery present change.
+>  - Return micro volts for sc27xx_fgu_get_vbat_ocv().
 
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+I see that you need to have the internal resistance as parameter to
+this equation so it needs to come in. (I guess as factor/typical
+internal resistance as suggested.)
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+IIUC this reliance on an uncertain internal resistance is the reason
+why fuel gauges / coloumb counters are seen as crude ways to
+estimate battery capacity, and their accuracy and reliability worsen
+over the lifetime of the battery, and this is why safety-critical devices
+include ways to measure the internal resistance as well.
+
+But the hardware is as it is, and probably for some good reasons,
+like cost.
+
+Yours,
+Linus Walleij
