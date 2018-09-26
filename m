@@ -1,84 +1,46 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net] dt-bindings: net: add support for Microchip KSZ9131
- Ethernet PHY
-Date: Wed, 26 Sep 2018 11:33:29 -0700
-Message-ID: <87d34a1b-5188-2999-bffe-fe377bc6ad3f@gmail.com>
-References: <1537985783-22724-1-git-send-email-yuiko.oshino@microchip.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v1 1/5] dt-binding: rtci-pcf8523: add quartz_load property
+Date: Wed, 26 Sep 2018 20:51:21 +0200
+Message-ID: <20180926185121.GF16644@piout.net>
+References: <20180822183555.GA24084@ravnborg.org>
+ <20180907193508.24974-2-sam@ravnborg.org>
+ <20180913190516.GG14988@piout.net>
+ <20180926154708.GA3264@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537985783-22724-1-git-send-email-yuiko.oshino@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180926154708.GA3264@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yuiko Oshino <yuiko.oshino@microchip.com>, davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, andrew@lunn.ch, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
+To: Rob Herring <robh@kernel.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>, Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
-On 09/26/2018 11:16 AM, Yuiko Oshino wrote:
-> Add support for Microchip Technology KSZ9131 10/100/1000 Ethernet phy
-
-Capitalize PHY here.
-
-Targeting the "net" tree which is for bugfixes is not appropriate here
-since this is adding support for a new PHY model.
-
-The binding looks reasonable though:
-
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
+On 26/09/2018 10:47:08-0500, Rob Herring wrote:
+> > > +Optional property:
+> > > +- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
+> > > +  which differ from the default value of 7 pF
+> > > +
+> > 
+> > The boolean properties usually don't work well for RTCs because people
+> > usually want to keep any previous configuration that may have been done
+> > at the factory or in the bootloader so I would use:
+> > 
+> > nxp,quartz_load_fF and this would be either 7000 or 12500.
 > 
-> Signed-off-by: Yuiko Oshino <yuiko.oshino@microchip.com>
-> ---
->  .../devicetree/bindings/net/micrel-ksz90x1.txt     | 29 +++++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
+> Use '-' rather than '_'.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> index e22d8cf..d23d14a 100644
-> --- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> +++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
-> @@ -1,4 +1,4 @@
-> -Micrel KSZ9021/KSZ9031 Gigabit Ethernet PHY
-> +Micrel/Microchip KSZ9021/KSZ9031/KSZ9131 Gigabit Ethernet PHY
->  
->  Some boards require special tuning values, particularly when it comes
->  to clock delays. You can specify clock delay values in the PHY OF
-> @@ -64,6 +64,33 @@ KSZ9031:
->          Attention: The link partner must be configurable as slave otherwise
->          no link will be established.
->  
-> +KSZ9131:
-> +
-> +  All skew control options are specified in picoseconds. The minimum
-> +  value is 0, and the maximum is property-dependent. The increment
-> +  step is 100ps. The default value is the neutral setting, so setting
-> +  rxc-skew-ps=<0> actually results in -700 picoseconds adjustment.
-> +
-> +  Optional properties:
-> +
-> +    Maximum value of 2400, default value 700:
-> +
-> +      - rxc-skew-ps : Skew control of RX clock pad
-> +      - txc-skew-ps : Skew control of TX clock pad
-> +
-> +    Maximum value of 1500, default value 700:
-> +
-> +      - rxdv-skew-ps : Skew control of RX CTL pad
-> +      - txen-skew-ps : Skew control of TX CTL pad
-> +      - rxd0-skew-ps : Skew control of RX data 0 pad
-> +      - rxd1-skew-ps : Skew control of RX data 1 pad
-> +      - rxd2-skew-ps : Skew control of RX data 2 pad
-> +      - rxd3-skew-ps : Skew control of RX data 3 pad
-> +      - txd0-skew-ps : Skew control of TX data 0 pad
-> +      - txd1-skew-ps : Skew control of TX data 1 pad
-> +      - txd2-skew-ps : Skew control of TX data 2 pad
-> +      - txd3-skew-ps : Skew control of TX data 3 pad
-> +
->  Examples:
->  
->  	mdio {
+> There's already a defined unit suffix of '-picofarads'. If you need 
+> '-femtofarads', then please add to property-units.txt. Though I'd prefer 
+> not as wouldn't a value of 12 (or 13) be close enough for the needs 
+> here?
 > 
 
+For that particular RTC, yes but the isl1208 has 0.5pF steps and the
+x1205 has 0.25pf steps. I'd prefer having a single generic property for
+all the RTCs: quartz-load-femtofarads.
 
 -- 
-Florian
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
