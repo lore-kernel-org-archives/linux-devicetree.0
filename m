@@ -1,28 +1,125 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 07/11] arm: dts: imx7: Update coresight binding for
- hardware ports
-Date: Wed, 26 Sep 2018 10:24:42 +0800
-Message-ID: <20180926022440.GC22238@dragon>
-References: <20180912135352.19722-1-suzuki.poulose@arm.com>
- <20180912135352.19722-8-suzuki.poulose@arm.com>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH 2/2] iio: magnetometer: Add driver support for PNI RM3100
+Date: Wed, 26 Sep 2018 10:30:34 +0800
+Message-ID: <4de691f2-dbc9-6124-efa6-66f2dd7e0f2b@electromag.com.au>
+References: <20180925031724.21399-1-songqiang1304521@gmail.com>
+ <20180925031724.21399-2-songqiang1304521@gmail.com>
+ <20180925143054.00007fcb@huawei.com>
+ <57d8a9d6-c402-068e-0a21-bbd6c20a7816@electromag.com.au>
+ <20180926014951.GA7094@Eros>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180912135352.19722-8-suzuki.poulose@arm.com>
+In-Reply-To: <20180926014951.GA7094@Eros>
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, mathieu.poirier@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, coresight@lists.linaro.org, leo.yan@linaro.org, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Song Qiang <songqiang1304521@gmail.com>
+Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 12, 2018 at 02:53:48PM +0100, Suzuki K Poulose wrote:
-> Switch to the updated coresight bindings.
+On 26/09/2018 9:49 AM, Song Qiang wrote:
+> On Tue, Sep 25, 2018 at 10:36:54PM +0800, Phil Reid wrote:
+>> On 25/09/2018 9:30 PM, Jonathan Cameron wrote:
+>>>> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
+>>>> +{
+>>>> +	struct iio_poll_func *pf = p;
+>>>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>>>> +	struct rm3100_data *data = iio_priv(indio_dev);
+>>>> +	struct regmap *regmap = data->regmap;
+>>>> +	u8 buffer[9];
+>>>> +	int ret;
+>>>> +	int i;
+>>>> +
+>>>> +	mutex_lock(&data->lock);
+>>>> +	ret = rm3100_wait_measurement(data);
+>>>> +	if (ret < 0) {
+>>>> +		mutex_unlock(&data->lock);
+>>>> +		goto done;
+>>>> +	}
+>>>> +
+>>>> +	ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, sizeof(buffer));
+>>>> +	mutex_unlock(&data->lock);
+>>>> +	if (ret < 0)
+>>>> +		goto done;
+>>>> +
+>>>> +	/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. x for padding. */
+>>>> +	for (i = 0; i < 3; i++)
+>>>> +		memcpy(data->buffer + i * 4, buffer + i * 3, 3);
+>>> Firstly X doesn't need copying.
+>>> Secondly the copy of Y actually overwrites the value of Z
+>>> XXXYYYZZZxxx
+>>> XXXxYYYZZxxx
+>>> XXXxYYYxYZZx
+>>>
+>>> I think...
+>>>
+>>>> +
+>>>> +	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
+>>>> +			iio_get_time_ns(indio_dev));
+>>
+>> memcpy target is a different buffer so should be ok.
+>>
+>> But that raises the question of does it need to be?
+>> 'buffer' could be 12 bytes long and just shuffle Z then Y.
+>> Do the unused bytes need to be zeroed? or does libiio mask them anyway?
+>>
+>>
+>>
+>> -- 
+>> Regards
+>> Phil Reid
 > 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Hi Phil,
+> 
+> This is interesting, last patch I submitted uses three transactions and
+> shuffles X, Y and Z respectively. You said it should be better to use one
+> transactions, I thought it makes point, and one transaction may reduce
+> IO pressure of the i2c bus. :)
+> And that's not necessary for unused bytes to be zero. I'm not familiar
+> with libiio, actually just been studying it, can't say anything about
+> it.
+> 
+> yours,
+> Song Qiang
+> 
+> 
+G'day Song,
 
-Applied, thanks.
+yes the one transaction suggestion was to reduce pressure on the bus.
+I think also with 3 calls you can up up with other devices taking over
+the i2c / spi bus in between.
+
+We've got a devkit for this part, but haven't got to wiring it up to our system as yet.
+We're looking at using the i2c interface which could push things at max samplerate, so yes I'm
+keen to see bus pressure reduced as much as possible.
+
+I was thinking something like the following:
+
+u8 buffer[12];
+regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, 9);
+
+buffer[10] = buffer[8]; // or memcpy or some other fancy shuffle code.
+buffer[9]  = buffer[7];
+buffer[8]  = buffer[6];
+
+buffer[6]  = buffer[5];
+buffer[5]  = buffer[4];
+buffer[4]  = buffer[3];
+
+iio_push_to_buffers_with_timestamp(indio_dev, buffer, iio_get_time_ns(indio_dev));
+
+but I'm unsure if this would be needed:
+buffer[7] = 0
+buffer[3] = 0
+
+What you've got does the job I think.
+
+I haven't dug into the datasheet in great detail, and my iio knownledge is limited.
+Are you sure the RM3100_CHANNEL scantype endianness is IIO_LE.
+rm3100_read_mag looks to be doing big endian conversion and the datasheet agrees with that.
+
+
+-- 
+Regards
+Phil Reid
