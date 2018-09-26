@@ -1,19 +1,20 @@
-Return-Path: <SRS0=Al83=MI=verge.net.au=horms@kernel.org>
-Date: Wed, 26 Sep 2018 10:57:43 +0200
-From: Simon Horman <horms@verge.net.au>
+Return-Path: <SRS0=HD/j=MI=linaro.org=daniel.lezcano@kernel.org>
 Subject: Re: [PATCH] dt-bindings: thermal: rcar: Add device tree support for
  r8a7744
-Message-ID: <20180926085743.7xpvdqfx7gnjcf3u@verge.net.au>
 References: <1537894864-61987-1-git-send-email-biju.das@bp.renesas.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <7ddaa4e9-e604-55fb-46fc-33c0d3351a50@linaro.org>
+Date: Wed, 26 Sep 2018 05:05:08 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <1537894864-61987-1-git-send-email-biju.das@bp.renesas.com>
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Sep 25, 2018 at 06:01:04PM +0100, Biju Das wrote:
+On 25/09/2018 19:01, Biju Das wrote:
 > Add thermal sensor support for r8a7744 SoC. The Renesas RZ/G1N
 > (r8a7744) thermal sensor module is identical to the R-Car Gen2 family.
 > 
@@ -23,4 +24,30 @@ On Tue, Sep 25, 2018 at 06:01:04PM +0100, Biju Das wrote:
 > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+
+> ---
+>  Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> index 67c563f..01d30a97 100644
+> --- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> +++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  			  Examples with soctypes are:
+>  			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
+>  			    - "renesas,thermal-r8a7743" (RZ/G1M)
+> +			    - "renesas,thermal-r8a7744" (RZ/G1N)
+>  			    - "renesas,thermal-r8a7779" (R-Car H1)
+>  			    - "renesas,thermal-r8a7790" (R-Car H2)
+>  			    - "renesas,thermal-r8a7791" (R-Car M2-W)
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
