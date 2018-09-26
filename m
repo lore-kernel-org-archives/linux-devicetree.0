@@ -1,42 +1,37 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] arm64: dts: Use mmc@ instead sdhci@
-Date: Wed, 26 Sep 2018 13:39:39 +0200
-Message-ID: <59fd089c075740303d81e4a3475598dfd48e5026.1537961975.git.michal.simek@xilinx.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 2/2] i2c: busses: Kconfig: Enable I2C_OMAP for ARCH_K3
+Date: Wed, 26 Sep 2018 17:27:51 +0530
+Message-ID: <20180926115751.20421-3-vigneshr@ti.com>
+References: <20180926115751.20421-1-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180926115751.20421-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu
-Cc: devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Vignesh R <vigneshr@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-mmc name is recommended based on devicetree specification.
+Allow I2C_OMAP to be built for K3 platforms.
 
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Vignesh R <vigneshr@ti.com>
 ---
+ drivers/i2c/busses/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-index 29ce23422acf..dacabde6ff7e 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
-@@ -484,7 +484,7 @@
- 			interrupts = <0 133 4>;
- 		};
+diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+index 451d4ae50e66..ac4b09642f63 100644
+--- a/drivers/i2c/busses/Kconfig
++++ b/drivers/i2c/busses/Kconfig
+@@ -751,7 +751,7 @@ config I2C_OCORES
  
--		sdhci0: sdhci@ff160000 {
-+		sdhci0: mmc@ff160000 {
- 			compatible = "arasan,sdhci-8.9a";
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
-@@ -493,7 +493,7 @@
- 			clock-names = "clk_xin", "clk_ahb";
- 		};
- 
--		sdhci1: sdhci@ff170000 {
-+		sdhci1: mmc@ff170000 {
- 			compatible = "arasan,sdhci-8.9a";
- 			status = "disabled";
- 			interrupt-parent = <&gic>;
+ config I2C_OMAP
+ 	tristate "OMAP I2C adapter"
+-	depends on ARCH_OMAP
++	depends on ARCH_OMAP || ARCH_K3
+ 	default y if MACH_OMAP_H3 || MACH_OMAP_OSK
+ 	help
+ 	  If you say yes to this option, support will be included for the
 -- 
-1.9.1
+2.19.0
