@@ -1,104 +1,66 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v2 1/4] power: supply: core: Introduce one property to
- present the battery internal resistance
-Date: Wed, 26 Sep 2018 14:45:10 +0200
-Message-ID: <20180926124510.2ewnaw3jyzm3qkbm@earth.universe>
-References: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
- <CACRpkdY3YsXsJy0OwGYLuB+x32hbkAHum4w5KQTCGoi-OXt-QA@mail.gmail.com>
- <CAMz4ku+H5Z_W5rE0b3GDz2E0YSZshEerufZ41yeh_E5omD6KLA@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [RFC PATCH 0/9] TI LMU and Dedicated LED drivers
+Date: Wed, 26 Sep 2018 08:09:12 -0500
+Message-ID: <20180926130921.12329-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5sdzrxlcfxsqscbx"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMz4ku+H5Z_W5rE0b3GDz2E0YSZshEerufZ41yeh_E5omD6KLA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+All
 
---5sdzrxlcfxsqscbx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is an attempt to create a common TI LMU code base that can be leveraged
+by dedicate LED drivers.
 
-Hi,
+This code is by no means complete as I am looking for comments on the
+implementation and demonstrating the advantage of adding unique features within
+a dedicated LED driver while using common code to perform common features.
 
-On Wed, Sep 26, 2018 at 04:30:39PM +0800, Baolin Wang wrote:
-> Hi Linus,
->=20
-> On 26 September 2018 at 16:00, Linus Walleij <linus.walleij@linaro.org> w=
-rote:
-> > On Wed, Sep 26, 2018 at 4:59 AM Baolin Wang <baolin.wang@linaro.org> wr=
-ote:
-> >
-> >> Introduce one property to present the battery internal resistance for =
-battery
-> >> information.
-> >>
-> >> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> >> ---
-> >> Changes from v1:
-> >>  - New patch in v2.
-> >
-> > I'm a bit confused by the physics in this patch.
-> >
-> > The internal resistance of a battery is not a constant in its life cycl=
-e,
-> > this varies over the age of the battery, and the reason I thing is
-> > chemical residuals accumulating on the anode and cathode inside
-> > the battery and the energy storage medium aging. (Plus/minus my
-> > ignorance about how batteries actually work.)
->=20
-> Yes, you are right. The internal resistance can be affected by
-> temperature or battery age or other factors. But our solution just
-> uses one constant internal resistance to calculate OCV value to look
-> up the capacity table when system boots on, in this case we do not
-> need one more accuracy OCV, since we will calculate the battery
-> capacity in future. So we just introduce one estimation constant
-> internal resistance.
->=20
-> >
-> > AFAIK the fact that the internal resistance varies is of high
-> > importance for people developing algorithms of battery capacity
-> > and longevity. Such that some (hardware) capacity monitors go
-> > to great lengths to measure with high precision the current
-> > internal resistance of the battery for their algorithms.
-> >
-> > Sorry for making things more complex, but should it be named
-> > "factory-internal-resistance-micro-ohms" or
-> > "typical-internal-resistance-micro-ohms"?
->=20
-> I am fine with this change. If Sebastian also agree with this change,
-> I will fix. Thanks for your reviewing and comments.
+Assuming that the implementation can be used the code will be debugged and the
+DT bindings and TI-lmu code will be scrubbed.
 
-Ack.
+Dan
 
-FWIW for proper battery status you need to collect battery specific
-statistics, that is the reason fuel gauge chip providers recommend to
-combine the chip with the battery cells into a "smart battery".
+Dan Murphy (8):
+  dt-bindings: ti-lmu: Remove LM3697
+  mfd: ti-lmu: Remove support for LM3697
+  dt-bindings: leds: Add bindings for lm3697 driver
+  leds: lm3697: Introduce the lm3697 driver
+  dt-bindings: leds: Add support for the LM3633
+  leds: lm3633: Introduce the lm3633 driver
+  dt-bindings: leds: Add the LM3632 LED dt binding
+  leds: lm3632: Introduce the TI LM3632 driver
 
--- Sebastian
+Pavel Machek (1):
+  leds: add TI LMU backlight driver
 
---5sdzrxlcfxsqscbx
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../devicetree/bindings/leds/leds-lm3632.txt  |  53 ++
+ .../devicetree/bindings/leds/leds-lm3633.txt  |  69 +++
+ .../devicetree/bindings/leds/leds-lm3697.txt  |  98 ++++
+ .../devicetree/bindings/mfd/ti-lmu.txt        |  26 +-
+ drivers/leds/Kconfig                          |  29 +
+ drivers/leds/Makefile                         |   4 +
+ drivers/leds/leds-lm3632.c                    | 547 ++++++++++++++++++
+ drivers/leds/leds-lm3633.c                    | 430 ++++++++++++++
+ drivers/leds/leds-lm3697.c                    | 389 +++++++++++++
+ drivers/leds/ti-lmu-led-common.c              | 175 ++++++
+ drivers/leds/ti-lmu-led-common.h              |  43 ++
+ drivers/mfd/Kconfig                           |   2 +-
+ drivers/mfd/ti-lmu.c                          |  17 -
+ include/linux/mfd/ti-lmu-register.h           |  44 --
+ include/linux/mfd/ti-lmu.h                    |   1 -
+ 15 files changed, 1839 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3632.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3633.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lm3697.txt
+ create mode 100644 drivers/leds/leds-lm3632.c
+ create mode 100644 drivers/leds/leds-lm3633.c
+ create mode 100644 drivers/leds/leds-lm3697.c
+ create mode 100644 drivers/leds/ti-lmu-led-common.c
+ create mode 100644 drivers/leds/ti-lmu-led-common.h
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlurf1MACgkQ2O7X88g7
-+prdag/9HpJdthcFfUo/R15YTEMK4hm97zOgcj0ea5Ouhl9/h6C8Zwwgj4FdJQmG
-IyEw1h2jgd/t8mFKieQ9lAg0PxZPx4Jon63JpNQZcZZ9lXk1JsvJo7X36aAQyhgN
-pS6nB9aR+TW58FefD4C6CTKo+RMLrQqaQA7GrBXcPE06NrLAIcTCgk/ozjjjfOLF
-HkBGOzFcGgwVBbHv79RQJ1b3vQ1Olb8fKaekEb6Q99LK0lvTpStiBbAlO2u7WcJF
-RQdZ+zapIokl4vcRhMPtYasedCzlkBCbGdc3/PxMMN4UJwdUDEj8iNUFaKC1ELE7
-zM2I4DdNsMMh7kj9ForxMfS4SbrII4PuyZL2j//BtV/Wkss61kwfzPBSgHP8dL5c
-xx+aLelWITWQgq3JipRMmXyNPKHRtHO3hiCHyD+vexAGK9uVwrJv6hw1VZkrw4tK
-9znek1s3hu30A/AmxK2CC7u1rHKRUGrf0n3FUDv1PvJC27PW7fZCL0agyuEVkJJB
-qaHDIUIhmW56ZvdzdnEuXmGIuD4pxzRz2VIoyHtdq1igvolhuDAJ4mjTMNgTPbN1
-U46SIDueinYiDrRpMTAcvWTTz75DJEFkNwIEhBAkhY442Ox0UA+4xuYZbJ6J+4Ch
-tNxRmPgu1bMr4CmvXFcFlrVlYySXVkvAHqt87zj52dVLvGN9ils=
-=gnFq
------END PGP SIGNATURE-----
-
---5sdzrxlcfxsqscbx--
+-- 
+2.19.0
