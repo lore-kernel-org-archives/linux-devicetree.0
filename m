@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v2 20/22] arm64: dts: ls104x: add iommu-map to pci controllers
-Date: Wed, 26 Sep 2018 16:22:45 +0300
-Message-ID: <20180926132247.10971-21-laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 18/22] arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
+Date: Wed, 26 Sep 2018 16:22:43 +0300
+Message-ID: <20180926132247.10971-19-laurentiu.tudor@nxp.com>
 References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
@@ -12,71 +12,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-The pci controllers are also behind the smmu so add the iommu-map
-property to reflect this. The bootloader needs to patch the stream id
-ranges to some sane values.
+The StreamID entering the SMMU is actually a concatenation of the
+SMMU TBU ID and the ICID configured in software.
+Since the TBU ID is internal to the SoC and since we want that the
+actual the ICID configured in software to enter the SMMU witout any
+additional set bits, mask out the TBU ID bits and leave only the
+relevant ICID bits to enter SMMU.
 
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 3 +++
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
- 2 files changed, 6 insertions(+)
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 0e8fc8f29997..ccadc40a36f4 100644
+index 7eea2bace171..1f9b385007a8 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -716,6 +716,7 @@
- 			#size-cells = <2>;
- 			device_type = "pci";
+@@ -226,6 +226,7 @@
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x9000000 0 0x400000>;
  			dma-coherent;
-+			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <4>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -741,6 +742,7 @@
- 			#size-cells = <2>;
- 			device_type = "pci";
- 			dma-coherent;
-+			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <2>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -766,6 +768,7 @@
- 			#size-cells = <2>;
- 			device_type = "pci";
- 			dma-coherent;
-+			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <2>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   /* downstream I/O */
++			stream-match-mask = <0x7f00>;
+ 			#global-interrupts = <2>;
+ 			#iommu-cells = <1>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 29b07bdd4207..a12d33362554 100644
+index 07a853a0aeaa..22bf3975492a 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -685,6 +685,7 @@
- 			#size-cells = <2>;
- 			device_type = "pci";
+@@ -232,6 +232,7 @@
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x9000000 0 0x400000>;
  			dma-coherent;
-+			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <4>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -710,6 +711,7 @@
- 			#size-cells = <2>;
- 			device_type = "pci";
- 			dma-coherent;
-+			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <2>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
-@@ -735,6 +737,7 @@
- 			#size-cells = <2>;
- 			device_type = "pci";
- 			dma-coherent;
-+			iommu-map = <0 &mmu 0 1>;
- 			num-lanes = <2>;
- 			bus-range = <0x0 0xff>;
- 			ranges = <0x81000000 0x0 0x00000000 0x50 0x00010000 0x0 0x00010000   /* downstream I/O */
++			stream-match-mask = <0x7f00>;
+ 			#global-interrupts = <2>;
+ 			#iommu-cells = <1>;
+ 			interrupts = <GIC_SPI 142 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 2.17.1
