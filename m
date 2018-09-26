@@ -1,29 +1,42 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH] arm64: dts: rockchip: Enable SPI NOR flash on Rock64
-Date: Wed, 26 Sep 2018 13:38:53 +0200
-Message-ID: <2872521.VFYVRVU0oA@phil>
-References: <20180926045357.20722-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH] arm64: dts: Use mmc@ instead sdhci@
+Date: Wed, 26 Sep 2018 13:39:39 +0200
+Message-ID: <59fd089c075740303d81e4a3475598dfd48e5026.1537961975.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926045357.20722-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu
+Cc: devicetree@vger.kernel.org, Olof Johansson <olof@lixom.net>, Sudeep Holla <sudeep.holla@arm.com>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 26. September 2018, 06:53:57 CEST schrieb Chen-Yu Tsai:
-> The Pine64 Rock64 board comes with a GigaDevice GD25Q128CSIG
-> or GD25Q127CSIG chip, which is a 128 Mbit SPI NOR flash chip
-> that supports the JEDEC read-ID command.
-> 
-> This patch enables the SPI controller and adds a device node
-> for the flash chip using the generic "jedec,spi-nor" comaptible.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+mmc name is recommended based on devicetree specification.
 
-applied for 4.20
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+---
 
-Thanks
-Heiko
+ arch/arm64/boot/dts/xilinx/zynqmp.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+index 29ce23422acf..dacabde6ff7e 100644
+--- a/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
++++ b/arch/arm64/boot/dts/xilinx/zynqmp.dtsi
+@@ -484,7 +484,7 @@
+ 			interrupts = <0 133 4>;
+ 		};
+ 
+-		sdhci0: sdhci@ff160000 {
++		sdhci0: mmc@ff160000 {
+ 			compatible = "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+@@ -493,7 +493,7 @@
+ 			clock-names = "clk_xin", "clk_ahb";
+ 		};
+ 
+-		sdhci1: sdhci@ff170000 {
++		sdhci1: mmc@ff170000 {
+ 			compatible = "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			interrupt-parent = <&gic>;
+-- 
+1.9.1
