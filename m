@@ -1,46 +1,45 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v9 3/5] venus: firmware: register separate platform_device
- for firmware loader
-Date: Wed, 26 Sep 2018 10:51:08 +0300
-Message-ID: <b1753857-70d9-c909-26b6-2b5ff3468bd9@linaro.org>
-References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
- <1537314192-26892-4-git-send-email-vgarodia@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/4] power: supply: core: Introduce one property to
+ present the battery internal resistance
+Date: Wed, 26 Sep 2018 10:00:33 +0200
+Message-ID: <CACRpkdY3YsXsJy0OwGYLuB+x32hbkAHum4w5KQTCGoi-OXt-QA@mail.gmail.com>
+References: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537314192-26892-4-git-send-email-vgarodia@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <358665e3f4f9ec105dc2f8a2dc6dd98dbe761fae.1537930252.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vikash Garodia <vgarodia@codeaurora.org>, stanimir.varbanov@linaro.org, hverkuil@xs4all.nl, mchehab@kernel.org, robh@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, arnd@arndb.de, bjorn.andersson@linaro.org
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, acourbot@chromium.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikash,
+On Wed, Sep 26, 2018 at 4:59 AM Baolin Wang <baolin.wang@linaro.org> wrote:
 
-On 09/19/2018 02:43 AM, Vikash Garodia wrote:
-> From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> 
-> This registers a firmware platform_device and associate it with
-> video-firmware DT subnode. Then calls dma configure to initialize
-> dma and iommu.
-
-Please replace the description with something like this:
-
-This registers a firmware platform_device and associates it with
-video-firmware DT subnode, by that way we are able to parse iommu
-configuration.
-
-> 
-> Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+> Introduce one property to present the battery internal resistance for battery
+> information.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  drivers/media/platform/qcom/venus/core.c     | 14 +++++---
->  drivers/media/platform/qcom/venus/core.h     |  3 ++
->  drivers/media/platform/qcom/venus/firmware.c | 54 ++++++++++++++++++++++++++++
->  drivers/media/platform/qcom/venus/firmware.h |  2 ++
->  4 files changed, 69 insertions(+), 4 deletions(-)
-> 
+> Changes from v1:
+>  - New patch in v2.
 
--- 
-regards,
-Stan
+I'm a bit confused by the physics in this patch.
+
+The internal resistance of a battery is not a constant in its life cycle,
+this varies over the age of the battery, and the reason I thing is
+chemical residuals accumulating on the anode and cathode inside
+the battery and the energy storage medium aging. (Plus/minus my
+ignorance about how batteries actually work.)
+
+AFAIK the fact that the internal resistance varies is of high
+importance for people developing algorithms of battery capacity
+and longevity. Such that some (hardware) capacity monitors go
+to great lengths to measure with high precision the current
+internal resistance of the battery for their algorithms.
+
+Sorry for making things more complex, but should it be named
+"factory-internal-resistance-micro-ohms" or
+"typical-internal-resistance-micro-ohms"?
+
+Yours,
+Linus Walleij
