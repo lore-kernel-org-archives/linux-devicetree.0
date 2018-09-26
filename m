@@ -1,46 +1,55 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v1 1/5] dt-binding: rtci-pcf8523: add quartz_load property
-Date: Wed, 26 Sep 2018 20:51:21 +0200
-Message-ID: <20180926185121.GF16644@piout.net>
-References: <20180822183555.GA24084@ravnborg.org>
- <20180907193508.24974-2-sam@ravnborg.org>
- <20180913190516.GG14988@piout.net>
- <20180926154708.GA3264@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v2] ARM: dts: exynos: Add pin configuration for SD write protect on Odroid XU
+Date: Wed, 26 Sep 2018 21:02:48 +0200
+Message-ID: <20180926190248.6369-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180926154708.GA3264@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sam Ravnborg <sam@ravnborg.org>, Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Anand Moon <linux.amoon@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/2018 10:47:08-0500, Rob Herring wrote:
-> > > +Optional property:
-> > > +- nxp,quartz_load_12.5pF: The capacitive load on the quartz is 12.5 pF,
-> > > +  which differ from the default value of 7 pF
-> > > +
-> > 
-> > The boolean properties usually don't work well for RTCs because people
-> > usually want to keep any previous configuration that may have been done
-> > at the factory or in the bootloader so I would use:
-> > 
-> > nxp,quartz_load_fF and this would be either 7000 or 12500.
-> 
-> Use '-' rather than '_'.
-> 
-> There's already a defined unit suffix of '-picofarads'. If you need 
-> '-femtofarads', then please add to property-units.txt. Though I'd prefer 
-> not as wouldn't a value of 12 (or 13) be close enough for the needs 
-> here?
-> 
+Add SD card write-protect pin configuration to be sure that it will be
+properly pulled down to indicate write access.
 
-For that particular RTC, yes but the isl1208 has 0.5pF steps and the
-x1205 has 0.25pf steps. I'd prefer having a single generic property for
-all the RTCs: quartz-load-femtofarads.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
+---
+
+Changes since v1:
+1. Remove cd-gpios and wp-gpios leaving only WP pin configuration (after
+   Marek Szyprowski feedback).
+2. Pull pin down.
+---
+ arch/arm/boot/dts/exynos5410-odroidxu.dts | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/exynos5410-odroidxu.dts b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+index a2046f5f998c..434a7591ff63 100644
+--- a/arch/arm/boot/dts/exynos5410-odroidxu.dts
++++ b/arch/arm/boot/dts/exynos5410-odroidxu.dts
+@@ -530,7 +530,7 @@
+ 	samsung,dw-mshc-sdr-timing = <0 4>;
+ 	samsung,dw-mshc-ddr-timing = <0 2>;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4>;
++	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus1 &sd2_bus4 &sd2_wp>;
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+ 	vmmc-supply = <&ldo21_reg>;
+@@ -545,6 +545,14 @@
+ 		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+ 	};
+ 
++	sd2_wp: sd2-wp {
++		samsung,pins = "gpm5-0";
++		samsung,pin-function = <EXYNOS_PIN_FUNC_2>;
++		/* Pin is floating so be sure to disable write-protect */
++		samsung,pin-pud = <EXYNOS_PIN_PULL_DOWN>;
++		samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV4>;
++	};
++
+ 	pmic_dvs_3: pmic-dvs-3 {
+ 		samsung,pins = "gpx0-0";
+ 		samsung,pin-function = <EXYNOS_PIN_FUNC_OUTPUT>;
 -- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.17.1
