@@ -1,125 +1,166 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH 2/2] iio: magnetometer: Add driver support for PNI RM3100
-Date: Wed, 26 Sep 2018 10:30:34 +0800
-Message-ID: <4de691f2-dbc9-6124-efa6-66f2dd7e0f2b@electromag.com.au>
-References: <20180925031724.21399-1-songqiang1304521@gmail.com>
- <20180925031724.21399-2-songqiang1304521@gmail.com>
- <20180925143054.00007fcb@huawei.com>
- <57d8a9d6-c402-068e-0a21-bbd6c20a7816@electromag.com.au>
- <20180926014951.GA7094@Eros>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [Resend PATCH 5/5] arm: dts: mt7623: add display subsystem
+ related device nodes
+Date: Wed, 26 Sep 2018 10:38:18 +0800
+Message-ID: <1537929498.32631.16.camel@mtkswgap22>
+References: <84011aa94dd7be9239b7a2f944dd30fc70568fbb.1536155449.git.ryder.lee@mediatek.com>
+         <7105c341de3525761ad4067ca57c641c7097f773.1536155449.git.ryder.lee@mediatek.com>
+         <1537925879.20118.3.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926014951.GA7094@Eros>
-Content-Language: en-AU
+In-Reply-To: <1537925879.20118.3.camel@mtksdaap41>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Song Qiang <songqiang1304521@gmail.com>
-Cc: Jonathan Cameron <jonathan.cameron@huawei.com>, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: CK Hu <ck.hu@mediatek.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Sean Wang <sean.wang@mediatek.com>, Roy Luo <cheng-hao.luo@mediatek.com>, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, chunhui dai <chunhui.dai@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/09/2018 9:49 AM, Song Qiang wrote:
-> On Tue, Sep 25, 2018 at 10:36:54PM +0800, Phil Reid wrote:
->> On 25/09/2018 9:30 PM, Jonathan Cameron wrote:
->>>> +static irqreturn_t rm3100_trigger_handler(int irq, void *p)
->>>> +{
->>>> +	struct iio_poll_func *pf = p;
->>>> +	struct iio_dev *indio_dev = pf->indio_dev;
->>>> +	struct rm3100_data *data = iio_priv(indio_dev);
->>>> +	struct regmap *regmap = data->regmap;
->>>> +	u8 buffer[9];
->>>> +	int ret;
->>>> +	int i;
->>>> +
->>>> +	mutex_lock(&data->lock);
->>>> +	ret = rm3100_wait_measurement(data);
->>>> +	if (ret < 0) {
->>>> +		mutex_unlock(&data->lock);
->>>> +		goto done;
->>>> +	}
->>>> +
->>>> +	ret = regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, sizeof(buffer));
->>>> +	mutex_unlock(&data->lock);
->>>> +	if (ret < 0)
->>>> +		goto done;
->>>> +
->>>> +	/* Convert XXXYYYZZZxxx to XXXxYYYxZZZx. x for padding. */
->>>> +	for (i = 0; i < 3; i++)
->>>> +		memcpy(data->buffer + i * 4, buffer + i * 3, 3);
->>> Firstly X doesn't need copying.
->>> Secondly the copy of Y actually overwrites the value of Z
->>> XXXYYYZZZxxx
->>> XXXxYYYZZxxx
->>> XXXxYYYxYZZx
->>>
->>> I think...
->>>
->>>> +
->>>> +	iio_push_to_buffers_with_timestamp(indio_dev, data->buffer,
->>>> +			iio_get_time_ns(indio_dev));
->>
->> memcpy target is a different buffer so should be ok.
->>
->> But that raises the question of does it need to be?
->> 'buffer' could be 12 bytes long and just shuffle Z then Y.
->> Do the unused bytes need to be zeroed? or does libiio mask them anyway?
->>
->>
->>
->> -- 
->> Regards
->> Phil Reid
+On Wed, 2018-09-26 at 09:37 +0800, CK Hu wrote:
+> Hi, Ryder:
 > 
-> Hi Phil,
+> On Wed, 2018-09-05 at 22:09 +0800, Ryder Lee wrote:
+> > Add display subsystem related device nodes for MT7623.
+> > 
+> > Cc: CK Hu <ck.hu@mediatek.com>
+> > Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+> > Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> > I forgot to sort nodes in my previous mail. Sorry for the inconvenience.
+> > 
+> > This patch depends on the series: https://lkml.org/lkml/2018/9/5/223
+> > 
+> > @Matthias,
+> > I know you're working on broken MMSYS - just want to ask whether it's possible
+> > to let the patch to go to your tree (if others are okay with it), and send a
+> > fixup one for MT7623 MMSYS later?
+> > ---
+> >  arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  83 ++++++++++++
+> >  arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  83 ++++++++++++
+> >  3 files changed, 343 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> > index d01bdee..fdf9078 100644
+> > --- a/arch/arm/boot/dts/mt7623.dtsi
+> > +++ b/arch/arm/boot/dts/mt7623.dtsi
+> > @@ -23,6 +23,11 @@
+> >  	#address-cells = <2>;
+> >  	#size-cells = <2>;
+> >  
+> > +	aliases {
+> > +		rdma0 = &rdma0;
+> > +		rdma1 = &rdma1;
+> > +	};
+> > +
+> >  	cpu_opp_table: opp-table {
+> >  		compatible = "operating-points-v2";
+> >  		opp-shared;
+> > @@ -311,6 +316,25 @@
+> >  		clock-names = "spi", "wrap";
+> >  	};
+> >  
+> > +	mipi_tx0: mipi-dphy@10010000 {
+> > +		compatible = "mediatek,mt7623-mipi-tx",
+> > +			     "mediatek,mt2701-mipi-tx";
+> > +		reg = <0 0x10010000 0 0x90>;
+> > +		clocks = <&clk26m>;
+> > +		clock-output-names = "mipi_tx0_pll";
+> > +		#clock-cells = <0>;
+> > +		#phy-cells = <0>;
+> > +	};
+> > +
+> > +	cec: cec@10012000 {
+> > +		compatible = "mediatek,mt7623-cec",
+> > +			     "mediatek,mt8173-cec";
+> > +		reg = <0 0x10012000 0 0xbc>;
+> > +		interrupts = <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&infracfg CLK_INFRA_CEC>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> >  	cir: cir@10013000 {
+> >  		compatible = "mediatek,mt7623-cir";
+> >  		reg = <0 0x10013000 0 0x1000>;
+> > @@ -359,6 +383,18 @@
+> >  		#clock-cells = <1>;
+> >  	};
+> >  
+> > +	hdmi_phy: phy@10209100 {
+> > +		compatible = "mediatek,mt7623-hdmi-phy",
+> > +			     "mediatek,mt2701-hdmi-phy";
+> > +		reg = <0 0x10209100 0 0x24>;
+> > +		clocks = <&apmixedsys CLK_APMIXED_HDMI_REF>;
+> > +		clock-names = "pll_ref";
+> > +		clock-output-names = "hdmitx_dig_cts";
+> > +		#clock-cells = <0>;
+> > +		#phy-cells = <0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> >  	rng: rng@1020f000 {
+> >  		compatible = "mediatek,mt7623-rng";
+> >  		reg = <0 0x1020f000 0 0x1000>;
+> > @@ -558,6 +594,16 @@
+> >  		status = "disabled";
+> >  	};
+> >  
+> > +	hdmiddc0: i2c@11013000 {
+> > +		compatible = "mediatek,mt7623-hdmi-ddc",
+> > +			     "mediatek,mt8173-hdmi-ddc";
+> > +		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
+> > +		reg = <0 0x11013000 0 0x1C>;
+> > +		clocks = <&pericfg CLK_PERI_I2C3>;
+> > +		clock-names = "ddc-i2c";
+> > +		status = "disabled";
+> > +	};
+> > +
+> >  	nor_flash: spi@11014000 {
+> >  		compatible = "mediatek,mt7623-nor",
+> >  			     "mediatek,mt8173-nor";
+> > @@ -732,6 +778,84 @@
+> >  		#clock-cells = <1>;
+> >  	};
+> >  
+> > +	display_components: dispsys@14000000 {
+> > +		compatible = "mediatek,mt7623-mmsys",
 > 
-> This is interesting, last patch I submitted uses three transactions and
-> shuffles X, Y and Z respectively. You said it should be better to use one
-> transactions, I thought it makes point, and one transaction may reduce
-> IO pressure of the i2c bus. :)
-> And that's not necessary for unused bytes to be zero. I'm not familiar
-> with libiio, actually just been studying it, can't say anything about
-> it.
+> Checkpatch warning:
 > 
-> yours,
-> Song Qiang
+> WARNING: DT compatible string "mediatek,mt7623-mmsys" appears
+> un-documented -- check ./Documentation/devicetree/bindings/
+> #101: FILE: arch/arm/boot/dts/mt7623.dtsi:782:
+> +               compatible = "mediatek,mt7623-mmsys",
 > 
 > 
-G'day Song,
+> > +			     "mediatek,mt2701-mmsys";
+> > +		reg = <0 0x14000000 0 0x1000>;
+> > +		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
+> > +	};
+> > +
+> > +	ovl@14007000 {
+> > +		compatible = "mediatek,mt7623-disp-ovl",
+> 
+> I think this is also un-documented, but I don't know why checkpatch does
+> not show any warning.
+> 
+> Regards,
+> CK
+> > +			     "mediatek,mt2701-disp-ovl";
+> > +		reg = <0 0x14007000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&mmsys CLK_MM_DISP_OVL>;
+> > +		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
+> > +		mediatek,larb = <&larb0>;
+> > +	};
+> > +
 
-yes the one transaction suggestion was to reduce pressure on the bus.
-I think also with 3 calls you can up up with other devices taking over
-the i2c / spi bus in between.
+I fallback to use the MT2701's compatible string here and there, but I
+could add a new one for MT7623.
 
-We've got a devkit for this part, but haven't got to wiring it up to our system as yet.
-We're looking at using the i2c interface which could push things at max samplerate, so yes I'm
-keen to see bus pressure reduced as much as possible.
+BTW, I've had this question for a long time - should I add a new
+compatible for the very same IPs, or could we just use the old one in
+DTS?
 
-I was thinking something like the following:
-
-u8 buffer[12];
-regmap_bulk_read(regmap, RM3100_REG_MX2, buffer, 9);
-
-buffer[10] = buffer[8]; // or memcpy or some other fancy shuffle code.
-buffer[9]  = buffer[7];
-buffer[8]  = buffer[6];
-
-buffer[6]  = buffer[5];
-buffer[5]  = buffer[4];
-buffer[4]  = buffer[3];
-
-iio_push_to_buffers_with_timestamp(indio_dev, buffer, iio_get_time_ns(indio_dev));
-
-but I'm unsure if this would be needed:
-buffer[7] = 0
-buffer[3] = 0
-
-What you've got does the job I think.
-
-I haven't dug into the datasheet in great detail, and my iio knownledge is limited.
-Are you sure the RM3100_CHANNEL scantype endianness is IIO_LE.
-rm3100_read_mag looks to be doing big endian conversion and the datasheet agrees with that.
-
-
--- 
-Regards
-Phil Reid
+Ryder
