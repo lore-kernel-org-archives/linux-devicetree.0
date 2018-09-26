@@ -1,36 +1,23 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] arm64: dts: fsl: Fix I2C and SPI bus warnings
-Date: Wed, 26 Sep 2018 17:09:18 +0800
-Message-ID: <20180926090916.GC26692@dragon>
-References: <20180913181245.25484-19-robh@kernel.org>
+Subject: Re: [PATCH 1/2] ARM: dts: imx6ul: use nvmem-cells for cpu speed
+ grading
+Date: Wed, 26 Sep 2018 17:15:35 +0800
+Message-ID: <20180926091533.GD26692@dragon>
+References: <1536893962-11200-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180913181245.25484-19-robh@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Li Yang <leoyang.li@nxp.com>
+In-Reply-To: <1536893962-11200-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <Anson.Huang@nxp.com>
+Cc: s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Linux-imx@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 13, 2018 at 01:12:43PM -0500, Rob Herring wrote:
-> dtc has new checks for I2C and SPI buses. Fix the SPI bus node names
-> and warnings in unit-addresses.
+On Fri, Sep 14, 2018 at 10:59:21AM +0800, Anson Huang wrote:
+> On i.MX6UL, accessing OCOTP directly is wrong because the ocotp clock
+> needs to be enabled first, so use the nvmem-cells binding instead.
 > 
-> arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: Warning (i2c_bus_reg): /soc/i2c@2180000/eeprom@57: I2C bus unit address format error, expected "53"
-> arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dtb: Warning (i2c_bus_reg): /soc/i2c@2180000/eeprom@56: I2C bus unit address format error, expected "52"
-> 
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Li Yang <leoyang.li@nxp.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Applied, thanks.
+Applied this one, thanks.
