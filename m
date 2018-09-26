@@ -1,56 +1,43 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: [PATCH] of: base: Fix english spelling in of_alias_get_alias_list()
-Date: Wed, 26 Sep 2018 13:06:39 +0200
-Message-ID: <b64be28f7705a91fcb84b9c59ca830e057c71d96.1537959997.git.michal.simek@xilinx.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v3] arm64: dts: rockchip: add initial dts support for Rockpro64
+Date: Wed, 26 Sep 2018 13:35:15 +0200
+Message-ID: <6748636.LqZcXZ9sFQ@phil>
+References: <Akash_Gajjar@mentor.com> <1537943105-21247-1-git-send-email-Akash_Gajjar@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537943105-21247-1-git-send-email-Akash_Gajjar@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, monstr@monstr.eu, gregkh@linuxfoundation.org, geert@linux-m68k.org
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Akash Gajjar <Akash_Gajjar@mentor.com>
+Cc: Deepak_das@mentor.com, Pragnesh_patel@mentor.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Levin Du <djw@t-chip.com.cn>, Klaus Goger <klaus.goger@theobroma-systems.com>, Ezequiel Garcia <ezequiel@collabora.com>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Pierre-Hugues Husson <phh@phh.me>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Fix english spelling in of_alias_get_alias_list().
+Am Mittwoch, 26. September 2018, 08:24:57 CEST schrieb Akash Gajjar:
+> Rockpro64 is a rockchip RK3399 based board from pine64.org.
+> This patch adds basic device node support for Rockpro64 board and make it able
+> to bring up.
+> 
+> Peripheral Works
+> - Sdcard
+> - USB 2.0, 3.0
+> - Leds
+> - Ethernet
+> - Debug console
+> 
+> Not working:
+> - USB Type-C
+> 
+> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
 
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
----
+applied for 4.20.
 
-Greg: Please apply it on the top of tty-next because patch is going via
-your tree.
+For future patches, please keep in mind to transfer received tags from
+one version to the next. v2 received a "Reviewed-by" from Rob, so ideally
+it should have been included below your Signed-off in v3.
 
----
- drivers/of/base.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+I've picked that tag myself from v2, so no need to do anything now,
+just for the next time ;-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 33011b88ed3f..ffcbb2963ba2 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1948,7 +1948,7 @@ int of_alias_get_id(struct device_node *np, const char *stem)
-  * @matches:	Array of OF device match structures to search in
-  * @stem:	Alias stem of the given device_node
-  * @bitmap:	Bitmap field pointer
-- * @nbits:	Maximum number of alias ID which can be recorded it bitmap
-+ * @nbits:	Maximum number of alias IDs which can be recorded it bitmap
-  *
-  * The function travels the lookup table to record alias ids for the given
-  * device match structures and alias stem.
-@@ -1971,7 +1971,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
- 			 __func__, app->stem, app->id);
- 
- 		if (strcmp(app->stem, stem) != 0) {
--			pr_debug("%s: stem comparison doesn't passed %s\n",
-+			pr_debug("%s: stem comparison didn't pass %s\n",
- 				 __func__, app->stem);
- 			continue;
- 		}
-@@ -1986,7 +1986,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
- 			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
- 			set_bit(app->id, bitmap);
- 		}
--		/* Alias exist but it not compatible with matches */
-+		/* Alias exists but it not compatible with matches */
- 	}
- 	mutex_unlock(&of_mutex);
- 
--- 
-1.9.1
+Thanks
+Heiko
