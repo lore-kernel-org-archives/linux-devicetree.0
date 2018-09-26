@@ -1,63 +1,71 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm64: dts: rockchip: add missing address and size
- cells for rk3399 mipi dsi
-Date: Wed, 26 Sep 2018 14:18:20 +0200
-Message-ID: <5343343.YmWWhNScNg@phil>
-References: <20180822120214.11848-1-heiko@sntech.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/5] ASoC: max98088: Add master clock
+	handling
+Date: Wed, 26 Sep 2018 13:22:49 +0100
+Message-ID: <20180926122249.GV20825@sirena.org.uk>
+References: <20180925142352.24106-1-m.felsch@pengutronix.de>
+ <20180925142352.24106-5-m.felsch@pengutronix.de>
+ <20180925171742.GR20825@sirena.org.uk>
+ <20180926100030.tzn6hx6qqbjseopw@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180822120214.11848-1-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, amstan-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3303434797260848695=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20180926100030.tzn6hx6qqbjseopw@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, robh+dt@kernel.org, kernel@pengutronix.de, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 22. August 2018, 14:02:12 CEST schrieb Heiko Stuebner:
-> DSI controllers are also the hosts of their dsi bus and therefore contain
-> nodes describing the attached panels with their reg properties containing
-> the virtual ids.
-> 
-> The dsi controller nodes on rk3399 lacked the #address-cells and #size-cells
-> for these subnodes, so add them.
-> 
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-applied the easy one for 4.20
+--===============3303434797260848695==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="1J4USyVh4Jt5OGCL"
+Content-Disposition: inline
 
-> ---
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> index c88e603396f6..4ac7bf547916 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1720,6 +1720,8 @@
->  		resets = <&cru SRST_P_MIPI_DSI0>;
->  		reset-names = "apb";
->  		rockchip,grf = <&grf>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  		status = "disabled";
->  
->  		ports {
-> @@ -1754,6 +1756,8 @@
->  		resets = <&cru SRST_P_MIPI_DSI1>;
->  		reset-names = "apb";
->  		rockchip,grf = <&grf>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
->  		status = "disabled";
->  
->  		ports {
-> 
+
+--1J4USyVh4Jt5OGCL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Sep 26, 2018 at 12:00:30PM +0200, Marco Felsch wrote:
+
+> One question, should it optional or not? If not I will fix it to return
+> the clk_get error else I will drop it. It shouldn't be optional In my
+> point of view, since it is needed by the chip.
+
+Optional seems safer, requiring the clock isn't going to work so well on
+ACPI systems.
+
+--1J4USyVh4Jt5OGCL
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlurehgACgkQJNaLcl1U
+h9CKLwf9EU8PsDpFMELxyTDZQ0wqN9oXm+nJSNyrslCrgH50cCr9WkxwxhR0vPQY
+Fp1Zvb8A5drNmvj9LCzGu9Cf9mOCItKlHpmCGRQC1q3Jx+r8cBkC08Z8rSRjD93b
+VvpsAd+noQCPLxXllsPoNMP5N9VYRibbqWzRZDHcI6CjWkSU7aY0CFOwdQJm/iul
+6ZkWKbkfh+6RYdsEmtDLKEkga5oLekekeLE2KrhZHFt27HAMRvuZCt3osKCFwWdc
+pFwdjRc5SdsFybxJJ105dPqnF138vuv5TIU9HnuDE/jJD2v9naftzIW1YClNvp3G
+lJlr+IXKSx503p8vqG13fx9ErZWmDA==
+=2dX2
+-----END PGP SIGNATURE-----
+
+--1J4USyVh4Jt5OGCL--
+
+--===============3303434797260848695==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3303434797260848695==--
