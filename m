@@ -1,40 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/2] phy: zynqmp: Add dt bindings for ZynqMP phy
-Date: Wed, 26 Sep 2018 15:59:02 -0500
-Message-ID: <20180926205902.GA28877@bogus>
-References: <1536769366-31398-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1536769366-31398-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Subject: Re: [PATCH v2 5/8] dt-bindings: display: add data-enable polarity
+ property
+Date: Wed, 26 Sep 2018 16:01:00 -0500
+Message-ID: <20180926210100.GA31471@bogus>
+References: <20180912183222.25414-1-stefan@agner.ch>
+ <20180912183222.25414-6-stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1536769366-31398-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+In-Reply-To: <20180912183222.25414-6-stefan@agner.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, vivek.gautam@codeaurora.org, kishon@ti.com, v.anuragkumar@gmail.com, APANDEY@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+Cc: linus.walleij@linaro.org, Laurent.pinchart@ideasonboard.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de, p.zabel@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, architt@codeaurora.org, a.hajda@samsung.com, gustavo@padovan.org, maarten.lankhorst@linux.intel.com, sean@poorly.run, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Sep 2018 21:52:45 +0530, Anurag Kumar Vulisha wrote:
-> This patch adds the document describing dt bindings for ZynqMP
-> phy. ZynqMP SOC has a High Speed Processing System Gigabit
-> Transceiver which provides PHY capabilties to USB, SATA,
-> PCIE, Display Port and Ehernet SGMII controllers.
+On Wed, 12 Sep 2018 11:32:19 -0700, Stefan Agner wrote:
+> Allow to specify the data-enable polarity required by a dumb VGA
+> DAC converting parallel RGB to VGA.
 > 
-> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
 > ---
->  Changes in v4:
-> 	1. Fixed the changes in phy-zynqmp.txt as suggested by "Rob Herring"
-> 	2. Moved changes from include/dt-bindings/phy/phy.h into Patch 2 to 1
-> 
->  Changes in v3:
-> 	1. Corrected the Documentation as suggested by "Vivek Gautam"
-> 
->  Changes in v2:
-> 	1. None
-> ---
->  .../devicetree/bindings/phy/phy-zynqmp.txt         | 109 +++++++++++++++++++++
->  include/dt-bindings/phy/phy.h                      |   2 +
->  2 files changed, 111 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+>  .../devicetree/bindings/display/bridge/dumb-vga-dac.txt         | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
