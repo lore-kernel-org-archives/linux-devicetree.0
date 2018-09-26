@@ -1,119 +1,57 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
-Date: Wed, 26 Sep 2018 13:19:34 +0300
-Message-ID: <7197338.mhOH8fQaEM@avalon>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v2 0/5] ASoC: qdsp6: add compress offload
+	support
+Date: Wed, 26 Sep 2018 11:23:44 +0100
+Message-ID: <20180926102349.23481-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Deng <yong.deng@magewell.com>
-Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "\"David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@list
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, bgoswami@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, linux-kernel@vger.kernel.org, vkoul@kernel.org, rohitkr@codeaurora.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Yong,
+This patchset adds support to very basic MP3 playback compress offload
+support via QDSP ASM module.
 
-Thank you for the patch.
+Tested this patchset on DB410c with APQ8016 and DB820c with APQ8096 using
+tinycompress library.
 
-On Wednesday, 26 September 2018 11:40:04 EEST Yong Deng wrote:
-> Add binding documentation for Allwinner V3s CSI.
-> 
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Yong Deng <yong.deng@magewell.com>
-> ---
->  .../devicetree/bindings/media/sun6i-csi.txt        | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
-> 100644
-> index 000000000000..2ff47a9507a6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> @@ -0,0 +1,59 @@
-> +Allwinner V3s Camera Sensor Interface
-> +-------------------------------------
-> +
-> +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> +interface and CSI1 is used for parallel interface.
-> +
-> +Required properties:
-> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> +  - reg: base address and size of the memory-mapped region.
-> +  - interrupts: interrupt associated to this IP
-> +  - clocks: phandles to the clocks feeding the CSI
-> +    * bus: the CSI interface clock
-> +    * mod: the CSI module clock
-> +    * ram: the CSI DRAM clock
-> +  - clock-names: the clock names mentioned above
-> +  - resets: phandles to the reset line driving the CSI
-> +
-> +Each CSI node should contain one 'port' child node with one child
-> 'endpoint' +node, according to the bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt. As mentioned
-> +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel
-> or
-> +Bt656 for CSI1.
+Adding other codec support should be trivial w.r.t qdsp6 side, however
+there are other dependencies like compress UAPI header changes and
+FastRPC which are being worked in parallel. Once ready will post them!
 
-Nitpicking, BT.656 is parallel as well. We should use BT.601 instead of 
-parallel, to differentiate between embedded sync and external sync. This is a 
-problem in Documentation/devicetree/bindings/media/video-interfaces.txt in the 
-first place, so I won't ask you to modify these bindings. I'll try to submit a 
-patch for video-interfaces.txt.
+thanks,
+srini
 
-> +Endpoint node properties for CSI1
-> +---------------------------------
+Changes since v1 (https://patchwork.kernel.org/cover/10585805/)
+- added support to snd_compr_set_runtime_buffer()
+- make use of generic copy function
+- few trivial cleanups suggested by Vinod Koul
 
-Should you list the CSI0 properties as well ? As the driver in patch 2/2 
-doesn't support the CSI-2 interface I assume you have left out CSI0 for now, 
-but it should still be listed in the bindings. I'm fine with fixing this as a 
-follow-up patch to avoid missing the v4.20 merge window, but if you end up 
-resubmitting the series, could you please address the problem ?
+Srinivas Kandagatla (5):
+  ALSA: soc-compress: add support to snd_compr_set_runtime_buffer()
+  ALSA: compress: make use of runtime buffer for copy
+  ASoC: q6asm-dai: dt-bindings: Add support to compress dais
+  ASoC: qdsp6: q6asm: add support to MP3 format
+  ASoC: qdsp6: q6asm-dai: Add support to compress offload
 
-With this fixed,
-
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> +- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
-> +			   node
-> +- bus-width:		: (required) must be 8, 10, 12 or 16
-> +- pclk-sample		: (optional) (default: sample on falling edge)
-> +- hsync-active		: (only required for parallel)
-> +- vsync-active		: (only required for parallel)
->
-> +Example:
-> +
-> +csi1: csi@1cb4000 {
-> +	compatible = "allwinner,sun8i-v3s-csi";
-> +	reg = <0x01cb4000 0x1000>;
-> +	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&ccu CLK_BUS_CSI>,
-> +		 <&ccu CLK_CSI1_SCLK>,
-> +		 <&ccu CLK_DRAM_CSI>;
-> +	clock-names = "bus", "mod", "ram";
-> +	resets = <&ccu RST_BUS_CSI>;
-> +
-> +	port {
-> +		/* Parallel bus endpoint */
-> +		csi1_ep: endpoint {
-> +			remote-endpoint = <&adv7611_ep>;
-> +			bus-width = <16>;
-> +
-> +			/* If hsync-active/vsync-active are missing,
-> +			   embedded BT.656 sync is used */
-> +			hsync-active = <0>; /* Active low */
-> +			vsync-active = <0>; /* Active low */
-> +			pclk-sample = <1>;  /* Rising */
-> +		};
-> +	};
-> +};
+ .../devicetree/bindings/sound/qcom,q6asm.txt  |  27 ++
+ include/sound/compress_driver.h               |  19 +
+ sound/core/compress_offload.c                 |  18 +-
+ sound/soc/qcom/Kconfig                        |   1 +
+ sound/soc/qcom/qdsp6/q6asm-dai.c              | 377 +++++++++++++++++-
+ sound/soc/qcom/qdsp6/q6asm.c                  |   5 +
+ 6 files changed, 443 insertions(+), 4 deletions(-)
 
 -- 
-Regards,
-
-Laurent Pinchart
+2.19.0
