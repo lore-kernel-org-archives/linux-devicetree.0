@@ -1,7 +1,7 @@
 From: laurentiu.tudor@nxp.com
-Subject: [PATCH v2 19/22] arm64: dts: ls104x: add missing dma ranges property
-Date: Wed, 26 Sep 2018 16:22:44 +0300
-Message-ID: <20180926132247.10971-20-laurentiu.tudor@nxp.com>
+Subject: [PATCH v2 22/22] arm64: dts: ls104x: use a pseudo-bus to constrain usb dma size
+Date: Wed, 26 Sep 2018 16:22:47 +0300
+Message-ID: <20180926132247.10971-23-laurentiu.tudor@nxp.com>
 References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
@@ -12,39 +12,158 @@ List-Id: devicetree@vger.kernel.org
 
 From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-These chips have a 48-bit address size so make sure that the dma-ranges
-reflects this. Otherwise the linux kernel's dma sub-system will set
-the default dma masks to full 64-bit, badly breaking dmas.
+Wrap the usb controllers in an intermediate simple-bus and use it to
+constrain the dma address size of these usb controllers to the 40 bits
+that they generate toward the interconnect.
+This is required because the SoC uses 48 bits address sizes and this
+mismatch would lead to smmu context faults because the usb generates
+40-bit addresses while the smmu page tables are populated with 48-bit
+wide addresses.
 
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 1 +
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 +
- 2 files changed, 2 insertions(+)
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 58 +++++++++++--------
+ .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 58 +++++++++++--------
+ 2 files changed, 66 insertions(+), 50 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 1f9b385007a8..0e8fc8f29997 100644
+index 9fb3ac0fa87c..44a1964e560b 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -214,6 +214,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+@@ -647,31 +647,39 @@
+ 				 <&clockgen 4 0>;
+ 		};
  
- 		clockgen: clocking@1ee1000 {
- 			compatible = "fsl,ls1043a-clockgen";
+-		usb0: usb3@2f00000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x0 0x2f00000 0x0 0x10000>;
+-			interrupts = <0 60 0x4>;
+-			dr_mode = "host";
+-			snps,quirk-frame-length-adjustment = <0x20>;
+-			snps,dis_rxdet_inp3_quirk;
+-		};
+-
+-		usb1: usb3@3000000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x0 0x3000000 0x0 0x10000>;
+-			interrupts = <0 61 0x4>;
+-			dr_mode = "host";
+-			snps,quirk-frame-length-adjustment = <0x20>;
+-			snps,dis_rxdet_inp3_quirk;
+-		};
+-
+-		usb2: usb3@3100000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x0 0x3100000 0x0 0x10000>;
+-			interrupts = <0 63 0x4>;
+-			dr_mode = "host";
+-			snps,quirk-frame-length-adjustment = <0x20>;
+-			snps,dis_rxdet_inp3_quirk;
++		usb_aux_bus: usb_aux_bus {
++			#address-cells = <2>;
++			#size-cells = <2>;
++			compatible = "simple-bus";
++			ranges;
++			dma-ranges = <0x0 0x0 0x0 0x0 0x100 0x00000000>;
++
++			usb0: usb3@2f00000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x2f00000 0x0 0x10000>;
++				interrupts = <0 60 0x4>;
++				dr_mode = "host";
++				snps,quirk-frame-length-adjustment = <0x20>;
++				snps,dis_rxdet_inp3_quirk;
++			};
++
++			usb1: usb3@3000000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x3000000 0x0 0x10000>;
++				interrupts = <0 61 0x4>;
++				dr_mode = "host";
++				snps,quirk-frame-length-adjustment = <0x20>;
++				snps,dis_rxdet_inp3_quirk;
++			};
++
++			usb2: usb3@3100000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x3100000 0x0 0x10000>;
++				interrupts = <0 63 0x4>;
++				dr_mode = "host";
++				snps,quirk-frame-length-adjustment = <0x20>;
++				snps,dis_rxdet_inp3_quirk;
++			};
+ 		};
+ 
+ 		sata: sata@3200000 {
 diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 22bf3975492a..29b07bdd4207 100644
+index f19cf6087235..edee071aaefd 100644
 --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
 +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -187,6 +187,7 @@
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges;
-+		dma-ranges = <0x0 0x0 0x0 0x0 0x10000 0x00000000>;
+@@ -608,31 +608,39 @@
+ 				 <&clockgen 4 1>;
+ 		};
  
- 		ddr: memory-controller@1080000 {
- 			compatible = "fsl,qoriq-memory-controller";
+-		usb0: usb@2f00000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x0 0x2f00000 0x0 0x10000>;
+-			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+-			dr_mode = "host";
+-			snps,quirk-frame-length-adjustment = <0x20>;
+-			snps,dis_rxdet_inp3_quirk;
+-		};
+-
+-		usb1: usb@3000000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x0 0x3000000 0x0 0x10000>;
+-			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+-			dr_mode = "host";
+-			snps,quirk-frame-length-adjustment = <0x20>;
+-			snps,dis_rxdet_inp3_quirk;
+-		};
+-
+-		usb2: usb@3100000 {
+-			compatible = "snps,dwc3";
+-			reg = <0x0 0x3100000 0x0 0x10000>;
+-			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+-			dr_mode = "host";
+-			snps,quirk-frame-length-adjustment = <0x20>;
+-			snps,dis_rxdet_inp3_quirk;
++		usb_aux_bus: usb_aux_bus {
++			#address-cells = <2>;
++			#size-cells = <2>;
++			compatible = "simple-bus";
++			ranges;
++			dma-ranges = <0x0 0x0 0x0 0x0 0x100 0x00000000>;
++
++			usb0: usb@2f00000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x2f00000 0x0 0x10000>;
++				interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				snps,quirk-frame-length-adjustment = <0x20>;
++				snps,dis_rxdet_inp3_quirk;
++			};
++
++			usb1: usb@3000000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x3000000 0x0 0x10000>;
++				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				snps,quirk-frame-length-adjustment = <0x20>;
++				snps,dis_rxdet_inp3_quirk;
++			};
++
++			usb2: usb@3100000 {
++				compatible = "snps,dwc3";
++				reg = <0x0 0x3100000 0x0 0x10000>;
++				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
++				dr_mode = "host";
++				snps,quirk-frame-length-adjustment = <0x20>;
++				snps,dis_rxdet_inp3_quirk;
++			};
+ 		};
+ 
+ 		sata: sata@3200000 {
 -- 
 2.17.1
