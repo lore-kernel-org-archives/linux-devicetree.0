@@ -1,42 +1,51 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] remoteproc: qcom: pas: Add QCS404 remoteprocs
-Date: Tue, 25 Sep 2018 16:35:50 -0700
-Message-ID: <20180925233550.GB27436@tuxbook-pro>
-References: <20180920172237.30965-1-bjorn.andersson@linaro.org>
- <f0887494a9957496399046bac9b1fa32@codeaurora.org>
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: Re: [PATCH] iio: magnetometer: Add support for PNI RM3100 9-axis
+ magnetometer
+Date: Wed, 26 Sep 2018 08:34:02 +0800
+Message-ID: <20180926003402.GA6020@Eros>
+References: <20180920131340.6699-1-songqiang1304521@gmail.com>
+ <5baa1b01.1c69fb81.f0d8f.30c6@mx.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <f0887494a9957496399046bac9b1fa32@codeaurora.org>
+In-Reply-To: <5baa1b01.1c69fb81.f0d8f.30c6@mx.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 25 Sep 03:18 PDT 2018, Sibi Sankar wrote:
-> On 2018-09-20 22:52, Bjorn Andersson wrote:
-> > diff --git a/drivers/remoteproc/qcom_adsp_pil.c
-> > b/drivers/remoteproc/qcom_adsp_pil.c
-> > index da2254ea1135..fcbb816a9698 100644
-> > --- a/drivers/remoteproc/qcom_adsp_pil.c
-> > +++ b/drivers/remoteproc/qcom_adsp_pil.c
-> > @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init =
-> > {
-> >  		.ssctl_id = 0x16,
-> >  };
+On Mon, Sep 24, 2018 at 03:23:52PM -0700, Rob Herring wrote:
+> On Thu, Sep 20, 2018 at 09:13:40PM +0800, Song Qiang wrote:
+> > PNI RM3100 magnetometer is a high resolution, large signal immunity
+> > magnetometer, composed of 3 single sensors and a processing chip.
+> > PNI is currently not in the vendors list, so this is also adding it.
 > > 
-> > +static const struct adsp_data wcss_resource_init = {
-> > +	.crash_reason_smem = 421,
-> > +	.firmware_name = "wcnss.mdt",
-> > +	.pas_id = 6,
-> > +	.ssr_name = "mpss",
-> > +	.sysmon_name = "wlan",
+
+...
+
+> > diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > index 41f0b97eb933..5bf3395fe9ae 100644
+> > --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> > @@ -288,6 +288,7 @@ pine64	Pine64
+> >  pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+> >  plathome	Plat'Home Co., Ltd.
+> >  plda	PLDA
+> > +pni     PNI
 > 
-> Shouldn't the sysmon name be "wcnss" instead of "wlan"?
+> PNI doesn't stand for something?
 > 
 
-I derived this from the downstream kernel, perhaps I got it wrong?
+Hi Rob,
 
-Regards,
-Bjorn
+PNI should be 'PNI Sensor Corporation'. I saw that PLDA above mine and
+thought I should write down its abbreviation, which apparently is wrong.
+
+yours,
+Song Qiang
+
+> >  portwell	Portwell Inc.
+> >  poslab	Poslab Technology Co., Ltd.
+> >  powervr	PowerVR (deprecated, use img)
+> 
