@@ -1,133 +1,136 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH] ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees
-Date: Wed, 26 Sep 2018 21:23:39 +0800
-Message-ID: <20180926132339.24737-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: laurentiu.tudor@nxp.com
+Subject: [PATCH v2 14/22] dpaa_eth: fix iova handling for sg frames
+Date: Wed, 26 Sep 2018 16:22:39 +0300
+Message-ID: <20180926132247.10971-15-laurentiu.tudor@nxp.com>
+References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: roy.pledge@nxp.com, madalin.bucur@nxp.com, davem@davemloft.net, shawnguo@kernel.org, leoyang.li@nxp.com, robin.murphy@arm.com, bharat.bhushan@nxp.com, Laurentiu Tudor <laurentiu.tudor@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Bananapi released an updated revision of the H3/H5 based Bananapi M2+.
-Version 1.2 enables voltage control for the CPU's regulator by using
-a GPIO line to toggle a MOSFET that can change the effective resistance
-value in the regulator's feedback network.
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 
-This patch adds a common .dtsi file for this new revision, which
-includes the original common sunxi-bananapi-m2-plus.dtsi file, and
-adds the GPIO-controlled regulator and a cpu-supply reference. H3
-and H5 variant dts files are added as well.
+The driver relies on the no longer valid assumption that dma addresses
+(iovas) are identical to physical addressees and uses phys_to_virt() to
+make iova -> vaddr conversions. Fix this also for scatter-gather frames
+using the iova -> phys conversion function added in the previous patch.
+While at it, clean-up a redundant dpaa_bpid2pool() and pass the bp
+as parameter.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 ---
- arch/arm/boot/dts/Makefile                    |  1 +
- .../dts/sun8i-h3-bananapi-m2-plus-v1.2.dts    | 13 ++++++++
- .../boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi | 31 +++++++++++++++++++
- arch/arm64/boot/dts/allwinner/Makefile        |  1 +
- .../sun50i-h5-bananapi-m2-plus-v1.2.dts       | 11 +++++++
- 5 files changed, 57 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus-v1.2.dts
- create mode 100644 arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
+ .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 41 +++++++++++--------
+ 1 file changed, 24 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 92dc4f05cf23..2a1a8c6625ad 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1033,6 +1033,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h2-plus-orangepi-r1.dtb \
- 	sun8i-h2-plus-orangepi-zero.dtb \
- 	sun8i-h3-bananapi-m2-plus.dtb \
-+	sun8i-h3-bananapi-m2-plus-v1.2.dtb \
- 	sun8i-h3-beelink-x2.dtb \
- 	sun8i-h3-libretech-all-h3-cc.dtb \
- 	sun8i-h3-nanopi-m1.dtb	\
-diff --git a/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus-v1.2.dts b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus-v1.2.dts
-new file mode 100644
-index 000000000000..fc4a8c3d084d
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus-v1.2.dts
-@@ -0,0 +1,13 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-+ */
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index e9e081c3f8cc..8db861f281a0 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -1646,14 +1646,17 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+ 
+ 	if (unlikely(qm_fd_get_format(fd) == qm_fd_sg)) {
+ 		nr_frags = skb_shinfo(skb)->nr_frags;
+-		dma_unmap_single(dev, addr,
+-				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
+-				 dma_dir);
+ 
+ 		/* The sgt buffer has been allocated with netdev_alloc_frag(),
+ 		 * it's from lowmem.
+ 		 */
+-		sgt = phys_to_virt(addr + qm_fd_get_offset(fd));
++		sgt = phys_to_virt(dpaa_iova_to_phys(dev,
++						     addr +
++						     qm_fd_get_offset(fd)));
 +
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-bananapi-m2-plus-v1.2.dtsi"
-+
-+/ {
-+	model = "Banana Pi BPI-M2-Plus v1.2 H3";
-+	compatible = "bananapi,bpi-m2-plus-v1.2", "allwinner,sun8i-h3";
-+};
-diff --git a/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-new file mode 100644
-index 000000000000..53edd1faee99
---- /dev/null
-+++ b/arch/arm/boot/dts/sunxi-bananapi-m2-plus-v1.2.dtsi
-@@ -0,0 +1,31 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-+ */
-+
-+#include "sunxi-bananapi-m2-plus.dtsi"
-+
-+/ {
-+	/*
-+	 * Bananapi M2+ v1.2 uses a GPIO line to change the effective
-+	 * resistance on the CPU regulator's feedback pin.
-+	 */
-+	reg_vdd_cpux: vdd-cpux {
-+		compatible = "regulator-gpio";
-+		regulator-name = "vdd-cpux";
-+		regulator-type = "voltage";
-+		regulator-boot-on;
-+		regulator-always-on;
-+		regulator-min-microvolt = <1100000>;
-+		regulator-max-microvolt = <1300000>;
-+		regulator-ramp-delay = <50>; /* 4ms */
-+		gpios = <&r_pio 0 1 GPIO_ACTIVE_HIGH>; /* PL1 */
-+		gpios-states = <0x1>;
-+		states = <1100000 0x0
-+			  1300000 0x1>;
-+	};
-+};
-+
-+&cpu0 {
-+	cpu-supply = <&reg_vdd_cpux>;
-+};
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 27de09abf712..8d4f97f279e0 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pinebook.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-teres-i.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-bananapi-m2-plus-v1.2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-libretech-all-h3-cc.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo-plus2.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-new file mode 100644
-index 000000000000..2e2b14c0ae75
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-bananapi-m2-plus-v1.2.dts
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+// Copyright (C) 2018 Chen-Yu Tsai <wens@csie.org>
-+
-+/dts-v1/;
-+#include "sun50i-h5.dtsi"
-+#include <arm/sunxi-bananapi-m2-plus-v1.2.dtsi>
-+
-+/ {
-+	model = "Banana Pi BPI-M2-Plus v1.2 H5";
-+	compatible = "bananapi,bpi-m2-plus-v1.2", "allwinner,sun50i-h5";
-+};
++		dma_unmap_single(dev, addr,
++				 qm_fd_get_offset(fd) + DPAA_SGT_SIZE,
++				 dma_dir);
+ 
+ 		/* sgt[0] is from lowmem, was dma_map_single()-ed */
+ 		dma_unmap_single(dev, qm_sg_addr(&sgt[0]),
+@@ -1668,7 +1671,7 @@ static struct sk_buff *dpaa_cleanup_tx_fd(const struct dpaa_priv *priv,
+ 		}
+ 
+ 		/* Free the page frag that we allocated on Tx */
+-		skb_free_frag(phys_to_virt(addr));
++		skb_free_frag(skbh);
+ 	} else {
+ 		dma_unmap_single(dev, addr,
+ 				 skb_tail_pointer(skb) - (u8 *)skbh, dma_dir);
+@@ -1729,14 +1732,14 @@ static struct sk_buff *contig_fd_to_skb(const struct dpaa_priv *priv,
+  * The page fragment holding the S/G Table is recycled here.
+  */
+ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+-				    const struct qm_fd *fd)
++				    const struct qm_fd *fd,
++				    struct dpaa_bp *dpaa_bp,
++				    void *vaddr)
+ {
+ 	ssize_t fd_off = qm_fd_get_offset(fd);
+-	dma_addr_t addr = qm_fd_addr(fd);
+ 	const struct qm_sg_entry *sgt;
+ 	struct page *page, *head_page;
+-	struct dpaa_bp *dpaa_bp;
+-	void *vaddr, *sg_vaddr;
++	void *sg_vaddr;
+ 	int frag_off, frag_len;
+ 	struct sk_buff *skb;
+ 	dma_addr_t sg_addr;
+@@ -1745,7 +1748,6 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+ 	int *count_ptr;
+ 	int i;
+ 
+-	vaddr = phys_to_virt(addr);
+ 	WARN_ON(!IS_ALIGNED((unsigned long)vaddr, SMP_CACHE_BYTES));
+ 
+ 	/* Iterate through the SGT entries and add data buffers to the skb */
+@@ -1756,14 +1758,18 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+ 		WARN_ON(qm_sg_entry_is_ext(&sgt[i]));
+ 
+ 		sg_addr = qm_sg_addr(&sgt[i]);
+-		sg_vaddr = phys_to_virt(sg_addr);
+-		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
+-				    SMP_CACHE_BYTES));
+ 
+ 		/* We may use multiple Rx pools */
+ 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
+-		if (!dpaa_bp)
++		if (!dpaa_bp) {
++			pr_info("%s: fail to get dpaa_bp for sg bpid %d\n",
++				__func__, sgt[i].bpid);
+ 			goto free_buffers;
++		}
++		sg_vaddr = phys_to_virt(dpaa_iova_to_phys(dpaa_bp->dev,
++							  sg_addr));
++		WARN_ON(!IS_ALIGNED((unsigned long)sg_vaddr,
++				    SMP_CACHE_BYTES));
+ 
+ 		count_ptr = this_cpu_ptr(dpaa_bp->percpu_count);
+ 		dma_unmap_single(dpaa_bp->dev, sg_addr, dpaa_bp->size,
+@@ -1835,10 +1841,11 @@ static struct sk_buff *sg_fd_to_skb(const struct dpaa_priv *priv,
+ 	/* free all the SG entries */
+ 	for (i = 0; i < DPAA_SGT_MAX_ENTRIES ; i++) {
+ 		sg_addr = qm_sg_addr(&sgt[i]);
+-		sg_vaddr = phys_to_virt(sg_addr);
+-		skb_free_frag(sg_vaddr);
+ 		dpaa_bp = dpaa_bpid2pool(sgt[i].bpid);
+ 		if (dpaa_bp) {
++			sg_addr = dpaa_iova_to_phys(dpaa_bp->dev, sg_addr);
++			sg_vaddr = phys_to_virt(sg_addr);
++			skb_free_frag(sg_vaddr);
+ 			count_ptr = this_cpu_ptr(dpaa_bp->percpu_count);
+ 			(*count_ptr)--;
+ 		}
+@@ -2324,7 +2331,7 @@ static enum qman_cb_dqrr_result rx_default_dqrr(struct qman_portal *portal,
+ 	if (likely(fd_format == qm_fd_contig))
+ 		skb = contig_fd_to_skb(priv, fd, dpaa_bp, vaddr);
+ 	else
+-		skb = sg_fd_to_skb(priv, fd);
++		skb = sg_fd_to_skb(priv, fd, dpaa_bp, vaddr);
+ 	if (!skb)
+ 		return qman_cb_dqrr_consume;
+ 
 -- 
-2.19.0
+2.17.1
