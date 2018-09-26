@@ -1,54 +1,59 @@
-Return-Path: <SRS0=5vdW=MI=renesas.com=Chris.Paterson2@kernel.org>
-From: Chris Paterson <Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH] ARM: dts: iwg20d-q7-dbcm-ca: Improve model string
-Date: Wed, 26 Sep 2018 11:54:36 +0000
-Message-ID: 
- <TYAPR01MB2285EFCBFF6ACFF0CC2A8211B7150@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-References: <1537956082-17542-1-git-send-email-chris.paterson2@renesas.com>
- <CAMuHMdXQSwp_rVPADG8BWPj8BJCPZXLF7hkt6wgDPjUf4QM6mg@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdXQSwp_rVPADG8BWPj8BJCPZXLF7hkt6wgDPjUf4QM6mg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=Rhmc=MI=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+References: <1537956082-17542-1-git-send-email-chris.paterson2@renesas.com>
+In-Reply-To: <1537956082-17542-1-git-send-email-chris.paterson2@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 26 Sep 2018 13:41:14 +0200
+Message-ID: <CAMuHMdXQSwp_rVPADG8BWPj8BJCPZXLF7hkt6wgDPjUf4QM6mg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: iwg20d-q7-dbcm-ca: Improve model string
+Content-Type: text/plain; charset="UTF-8"
+To: Chris Paterson <chris.paterson2@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsDQoNCj4gRnJvbTogZGV2aWNldHJlZS1vd25lckB2Z2VyLmtlcm5lbC5vcmcg
-PGRldmljZXRyZWUtDQo+IG93bmVyQHZnZXIua2VybmVsLm9yZz4gT24gQmVoYWxmIE9mIEdlZXJ0
-IFV5dHRlcmhvZXZlbg0KPiBTZW50OiAyNiBTZXB0ZW1iZXIgMjAxOCAxMjo0MQ0KPiANCj4gSGkg
-Q2hyaXMsDQo+IA0KPiBPbiBXZWQsIFNlcCAyNiwgMjAxOCBhdCAxMjowMSBQTSBDaHJpcyBQYXRl
-cnNvbg0KPiA8Y2hyaXMucGF0ZXJzb24yQHJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBVcGRhdGUg
-dGhlIG1vZGVsIHN0cmluZyBmb3IgdGhpcyBwbGF0Zm9ybSBjb25maWd1cmF0aW9uIGFuZCBmaXgg
-dGhlDQo+ID4gZ3JhbW1hciBhdCB0aGUgc2FtZSB0aW1lLg0KPiA+DQo+ID4gVGhpcyBicmluZ3Mg
-dGhlIHN5bnRheCBpbiBsaW5lIHdpdGggdGhlIFJaL0cxRSBpV2F2ZSBib2FyZC4NCj4gPg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IENocmlzIFBhdGVyc29uIDxjaHJpcy5wYXRlcnNvbjJAcmVuZXNhcy5j
-b20+DQo+ID4gLS0tDQo+ID4gUGVyaGFwcyB0aGlzIHBhdGNoIGlzbid0IHJlYWxseSBuZWVkZWQs
-IGJ1dCB0aGUgY3VycmVudCBzdHJpbmcgYW5ub3lzIG1lLg0KPiA+DQo+ID4gUGF0Y2ggYXBwbGll
-cyBjbGVhbmx5IHRvIHJlbmVzYXMtZGV2ZWwtMjAxODA5MjUtdjQuMTktcmM1Lg0KPiA+IC0tLQ0K
-PiA+ICBhcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLWl3ZzIwZC1xNy1kYmNtLWNhLmR0cyB8IDIg
-Ky0NCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0My1pd2cyMGQtcTct
-ZGJjbS1jYS5kdHMNCj4gPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMtaXdnMjBkLXE3LWRi
-Y20tY2EuZHRzDQo+ID4gaW5kZXggMGQwMDZhZWE5OWRhMWI0MC4uNjgxMWRkYzRhZjY0NjBjZSAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLWl3ZzIwZC1xNy1kYmNt
-LWNhLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMtaXdnMjBkLXE3LWRi
-Y20tY2EuZHRzDQo+ID4gQEAgLTExLDcgKzExLDcgQEANCj4gPiAgI2luY2x1ZGUgIml3ZzIwZC1x
-Ny1kYmNtLWNhLmR0c2kiDQo+ID4NCj4gPiAgLyB7DQo+ID4gLSAgICAgICBtb2RlbCA9ICJpVy1S
-YWluYm9XLUcyMEQtUTcgUlovRzFNIGJhc2VkIHBsdXMgY2FtZXJhIGRhdWdodGVyDQo+IGJvYXJk
-IjsNCj4gPiArICAgICAgIG1vZGVsID0gImlXYXZlIFJhaW5ib1ctRzIwRC1RNyBSWi9HMU0gYmFz
-ZWQgYm9hcmQgd2l0aCBjYW1lcmENCj4gPiArIGFkZC1vbiI7DQo+ID4gICAgICAgICBjb21wYXRp
-YmxlID0gIml3YXZlLGcyMGQiLCAiaXdhdmUsZzIwbSIsICJyZW5lc2FzLHI4YTc3NDMiOw0KPiA+
-IH07DQo+IA0KPiBQZXJoYXBzIHlvdSB3YW50IHRvIGhhcm1vbml6ZSB0aGUgb3RoZXIgZGlmZmVy
-ZW5jZXMsIHRvbz8NCj4gICAtICJpV2F2ZSIgdnMuICJpV2F2ZSBTeXN0ZW1zIiwNCj4gICAtICJR
-NyIgdnMuICJRc2V2ZW4iLA0KPiAgIC0gImlXLVJhaW5ib3ciIHZzLiAiUmFpbmJvdyIuDQoNClBy
-b2JhYmx5IG5vdCBhIGJhZCBpZGVhLi4uDQoNCkNocmlzDQoNCj4gDQo+IEdye29ldGplLGVldGlu
-Z31zLA0KPiANCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4gDQo+IC0tDQo+IEdl
-ZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlhMzIgLS0g
-Z2VlcnRAbGludXgtDQo+IG02OGsub3JnDQo+IA0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25z
-IHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdo
-ZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Ig
-c29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAt
-LSBMaW51cyBUb3J2YWxkcw0K
+Hi Chris,
+
+On Wed, Sep 26, 2018 at 12:01 PM Chris Paterson
+<chris.paterson2@renesas.com> wrote:
+> Update the model string for this platform configuration and fix the
+> grammar at the same time.
+>
+> This brings the syntax in line with the RZ/G1E iWave board.
+>
+> Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> ---
+> Perhaps this patch isn't really needed, but the current string annoys me.
+>
+> Patch applies cleanly to renesas-devel-20180925-v4.19-rc5.
+> ---
+>  arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts b/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts
+> index 0d006aea99da1b40..6811ddc4af6460ce 100644
+> --- a/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts
+> +++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7-dbcm-ca.dts
+> @@ -11,7 +11,7 @@
+>  #include "iwg20d-q7-dbcm-ca.dtsi"
+>
+>  / {
+> -       model = "iW-RainboW-G20D-Q7 RZ/G1M based plus camera daughter board";
+> +       model = "iWave RainboW-G20D-Q7 RZ/G1M based board with camera add-on";
+>         compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743";
+>  };
+
+Perhaps you want to harmonize the other differences, too?
+  - "iWave" vs. "iWave Systems",
+  - "Q7" vs. "Qseven",
+  - "iW-Rainbow" vs. "Rainbow".
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
