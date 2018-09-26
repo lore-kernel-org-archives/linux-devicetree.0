@@ -1,34 +1,53 @@
-Return-Path: <SRS0=Rtep=LY=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/2] dt-bindings: reset: rcar-rst: Document r8a774c0 rst
-Date: Mon, 10 Sep 2018 16:09:40 +0100
-Message-Id: <1536592181-25649-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1536592181-25649-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1536592181-25649-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=4Bew=MI=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mx01.hxt-semitech.com ([223.203.96.7]:55778 "EHLO
+        barracuda.hxt-semitech.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726321AbeIZIL7 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Wed, 26 Sep 2018 04:11:59 -0400
+From: "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
+Subject: Re: [PATCH] dt-bindings: net/ibm: fix spelling issue
+Date: Wed, 26 Sep 2018 02:01:13 +0000
+Message-ID: <94f258b7fe784c1f972bd0defbd8fd8a@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <1536557703-19637-1-git-send-email-dongsheng.wang@hxt-semitech.com>
+ <5baa1ae7.1c69fb81.5f2da.32e4@mx.google.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document bindings for the RZ/G2E (a.k.a. R8A774C0) reset
-module.
+On 2018/9/25 19:24, Rob Herring wrote:
+> On Mon, Sep 10, 2018 at 01:35:03PM +0800, Wang Dongsheng wrote:
+>> Fix a word spelling issue.
+>>
+>> Signed-off-by: Wang Dongsheng <dongsheng.wang@hxt-semitech.com>
+>> ---
+>>  Documentation/devicetree/bindings/net/ibm,emac.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ibm,emac.txt b/Documentation/devicetree/bindings/net/ibm,emac.txt
+>> index c0c14aa3f97c..fd76d9bf4a3a 100644
+>> --- a/Documentation/devicetree/bindings/net/ibm,emac.txt
+>> +++ b/Documentation/devicetree/bindings/net/ibm,emac.txt
+>> @@ -45,7 +45,7 @@
+>>  			  Supported values are: "mii", "rmii", "smii", "rgmii",
+>>  			  "tbi", "gmii", rtbi", "sgmii".
+>>  			  For Axon on CAB, it is "rgmii"
+>> -    - mdio-device       : 1 cell, required iff using shared MDIO registers
+>> +    - mdio-device       : 1 cell, required if using shared MDIO registers
+> I think 'iff' is short for 'if and only if'
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/reset/renesas,rst.txt | 1 +
- 1 file changed, 1 insertion(+)
+Thanks! :-)
 
-diff --git a/Documentation/devicetree/bindings/reset/renesas,rst.txt b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-index e4fe0ab..25e6db5 100644
---- a/Documentation/devicetree/bindings/reset/renesas,rst.txt
-+++ b/Documentation/devicetree/bindings/reset/renesas,rst.txt
-@@ -19,6 +19,7 @@ Required properties:
- 		  - "renesas,r8a7745-rst" (RZ/G1E)
- 		  - "renesas,r8a77470-rst" (RZ/G1C)
- 		  - "renesas,r8a774a1-rst" (RZ/G2M)
-+		  - "renesas,r8a774c0-rst" (RZ/G2E)
- 		  - "renesas,r8a7778-reset-wdt" (R-Car M1A)
- 		  - "renesas,r8a7779-reset-wdt" (R-Car H1)
- 		  - "renesas,r8a7790-rst" (R-Car H2)
--- 
-2.7.4
+Cheers,
+Dongsheng
+
+>>  			  (440EP).  phandle of the EMAC to use to drive the
+>>  			  MDIO lines for the PHY used by this EMAC.
+>>      - zmii-device       : 1 cell, required iff connected to a ZMII.  phandle of
+> But if not, there's one here too.
+>
+>
