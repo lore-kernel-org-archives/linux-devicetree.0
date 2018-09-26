@@ -1,93 +1,37 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v3 8/8] dt-binding: mtd: Document gpio-addr-flash
-Date: Wed, 26 Sep 2018 08:39:34 +0200
-Message-ID: <20180926063934.9229-1-ricardo.ribalda@gmail.com>
-References: <20180925204813.GA6450@bogus>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/2] pinctrl: qcom: Add sdm660 pinctrl driver
+Date: Wed, 26 Sep 2018 08:57:41 +0200
+Message-ID: <CACRpkda4SuPVz8Awg6OhhanmZKEs4URw3WBMv0Fa8iJa2MD-KA@mail.gmail.com>
+References: <20180812142413.20856-1-ctatlor97@gmail.com> <20180925173801.3835-1-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925204813.GA6450@bogus>
+In-Reply-To: <20180925173801.3835-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, neeraju@codeaurora.org, vabbar@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for gpio-addr-flash. This binding allow creating
-flash devices that are paged using GPIOs.
+On Tue, Sep 25, 2018 at 7:38 PM Craig Tatlor <ctatlor97@gmail.com> wrote:
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
----
+> From: Neeraj Upadhyay <neeraju@codeaurora.org>
+>
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for sdm660.
+> Based off CAF implementation.
+>
+> Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+> Co-Developed-by: Venkatesh Yadav Abbarapu <vabbar@codeaurora.org>
+> Signed-off-by: Venkatesh Yadav Abbarapu <vabbar@codeaurora.org>
+> [craig: minor updates for upstreaming, updated tile handling]
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
 
-Changelog v3: 
+Co-Developed-by? That was innovative.
 
-- Changes suggested by Rob Herring (Thanks!)
-  - Add gpio description
-  - Improve partition
+Anyways, since there is also a signoff all is fine.
 
- .../bindings/mtd/gpio-addr-flash.txt          | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+Patch applied with Bj=C3=B6rn's ACK.
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
-new file mode 100644
-index 000000000000..5006a26e1753
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
-@@ -0,0 +1,54 @@
-+Memory Mapped flash with some address lines addressed using GPIOs
-+
-+Handle the case where a flash device is mostly addressed using physical
-+line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
-+to a 2MiB memory range and use the GPIOs to select a particular range.
-+
-+ - compatible : "cfi-gpio-addr-flash"
-+ - reg : Address range of the mtd chip that is memory mapped, this is,
-+   on the previous example 2MiB.
-+ - bank-width : Width (in bytes) of the bank.  Equal to the
-+   device width times the number of interleaved chips.
-+ - gpios: List of GPIO specifiers that will be used to address the MSBs address
-+   lines. The order goes from LSB to MSB.
-+ - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
-+   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
-+ - #address-cells, #size-cells : Must be present if the device has
-+   sub-nodes representing partitions (see below).  In this case
-+   both #address-cells and #size-cells must be equal to 1.
-+
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. Check partition.txt for more details.
-+
-+Example:
-+
-+	flash@300000 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "cfi-gpio-addr-flash";
-+		bank-width = <2>;
-+		reg = < 0x00300000 0x00200000 >;
-+		gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				reg = < 0x0 0x200000 >;
-+				label = "Golden Bitstream";
-+			};
-+			partition@200000 {
-+				reg = < 0x200000 0x200000 >;
-+				label = "User Bitstream";
-+			};
-+			partition@400000 {
-+				reg = < 0x400000 0x200000 >;
-+				label = "V4L Controls";
-+			};
-+			partition@600000 {
-+				reg = < 0x600000 0x200000 >;
-+				label = "Production Data";
-+			};
-+		}
-+	} ;
--- 
-2.19.0
+Yours,
+Linus Walleij
