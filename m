@@ -1,61 +1,75 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [RFC PATCH 1/9] leds: add TI LMU backlight driver
-Date: Wed, 26 Sep 2018 10:30:56 -0500
-Message-ID: <ee0185f0-1fc9-9176-2236-836ca0ac6f41@ti.com>
-References: <20180926130921.12329-1-dmurphy@ti.com>
- <20180926130921.12329-2-dmurphy@ti.com> <20180926150145.GS5662@atomide.com>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] of: base: Fix english spelling in
+ of_alias_get_alias_list()
+Date: Wed, 26 Sep 2018 08:34:12 -0700
+Message-ID: <dfd94b86-0a71-a2c4-449d-7f06ff3ae30e@infradead.org>
+References: <b64be28f7705a91fcb84b9c59ca830e057c71d96.1537959997.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926150145.GS5662@atomide.com>
+In-Reply-To: <b64be28f7705a91fcb84b9c59ca830e057c71d96.1537959997.git.michal.simek@xilinx.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org, monstr@monstr.eu, gregkh@linuxfoundation.org, geert@linux-m68k.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Tony
-
-On 09/26/2018 10:01 AM, Tony Lindgren wrote:
-> * Dan Murphy <dmurphy@ti.com> [180926 13:14]:
->> --- /dev/null
->> +++ b/drivers/leds/ti-lmu-led-common.c
->> +static int ti_lmu_common_enable(struct ti_lmu_bank *lmu_bank, bool enable)
->> +{
->> +	struct regmap *regmap = lmu_bank->regmap;
->> +	unsigned long enable_time = lmu_bank->enable_usec;
->> +	u8 reg = lmu_bank->enable_reg;
->> +	u8 mask = BIT(lmu_bank->bank_id);
->> +	u8 val = (enable == true) ? mask : 0;
->> +	int ret;
->> +
->> +	return 0;
+On 9/26/18 4:06 AM, Michal Simek wrote:
+> Fix english spelling in of_alias_get_alias_list().
 > 
-> Hmm this early return probably needs to be left out on real hardawre?
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+> 
+> Greg: Please apply it on the top of tty-next because patch is going via
+> your tree.
+
+Maybe a few more fixes first...
+
+> ---
+>  drivers/of/base.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 33011b88ed3f..ffcbb2963ba2 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1948,7 +1948,7 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>   * @matches:	Array of OF device match structures to search in
+>   * @stem:	Alias stem of the given device_node
+>   * @bitmap:	Bitmap field pointer
+> - * @nbits:	Maximum number of alias ID which can be recorded it bitmap
+> + * @nbits:	Maximum number of alias IDs which can be recorded it bitmap
+
+s/it/in/
+
+>   *
+>   * The function travels the lookup table to record alias ids for the given
+>   * device match structures and alias stem.
+> @@ -1971,7 +1971,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
+>  			 __func__, app->stem, app->id);
+>  
+>  		if (strcmp(app->stem, stem) != 0) {
+> -			pr_debug("%s: stem comparison doesn't passed %s\n",
+> +			pr_debug("%s: stem comparison didn't pass %s\n",
+>  				 __func__, app->stem);
+>  			continue;
+>  		}
+> @@ -1986,7 +1986,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
+>  			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
+>  			set_bit(app->id, bitmap);
+>  		}
+> -		/* Alias exist but it not compatible with matches */
+> +		/* Alias exists but it not compatible with matches */
+
+s/it/is/
+
+>  	}
+>  	mutex_unlock(&of_mutex);
+>  
 > 
 
-Yes it does.  I have not debugged or completed this function yet.
-
->> +	if (!reg)
->> +		return -EINVAL;
->> +
->> +	ret = regmap_update_bits(regmap, reg, mask, val);
->> +	if (ret)
->> +		return ret;
->> +
->> +	if (enable_time > 0)
->> +		usleep_range(enable_time, enable_time + 100);
->> +
->> +	return 0;
->> +}
-> 
-> Regards,
-> 
-> Tony
-> 
-
-
+thanks,
 -- 
-------------------
-Dan Murphy
+~Randy
