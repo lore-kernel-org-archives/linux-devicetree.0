@@ -1,28 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/7] dt-bindings: pinctrl: document the STMFX pinctrl
- bindings
-Date: Wed, 26 Sep 2018 17:59:14 -0500
-Message-ID: <20180926225914.GA24913@bogus>
-References: <1537363669-25991-1-git-send-email-amelie.delaunay@st.com>
- <1537363669-25991-4-git-send-email-amelie.delaunay@st.com>
+Subject: Re: [PATCH v2 1/2] ARM: dt-bindings: Add vendor prefix for Facebook
+Date: Wed, 26 Sep 2018 18:00:26 -0500
+Message-ID: <20180926230026.GA26508@bogus>
+References: <20180919164712.4030353-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1537363669-25991-4-git-send-email-amelie.delaunay@st.com>
+In-Reply-To: <20180919164712.4030353-1-vijaykhemka@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Sep 2018 15:27:45 +0200, Amelie Delaunay wrote:
-> This patch adds documentation of device tree bindings for the
-> STMicroelectronics Multi-Function eXpander (STMFX) GPIO expander.
+On Wed, 19 Sep 2018 09:47:10 -0700, Vijay Khemka wrote:
+> Initial introduction of Facebook TiogaPass family equipped with
+> Aspeed 2500 BMC SoC. TiogaPass is a x86 server development kit
+> with a ASPEED ast2500 BMC manufactured by Facebook.
 > 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> This adds an entry of Facebook in Documentation for vendor prefix
+> 
+> Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 > ---
->  .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
