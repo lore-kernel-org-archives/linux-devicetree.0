@@ -1,133 +1,122 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v23 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Thu, 27 Sep 2018 09:50:48 +0200
-Message-ID: <3773f620-e135-578d-5307-08483436f4c2@gmail.com>
-References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
- <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
- <ca12e8ab-e3d1-1cf0-8fe9-756d57bd5a3a@gmail.com>
- <1538013431.17514.31.camel@mhfsdcap03>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [RESEND PATCH v3 1/2] of: base: Introduce
+ of_alias_get_alias_list() to check alias IDs
+Date: Thu, 27 Sep 2018 09:22:55 +0200
+Message-ID: <56c81d1a-e2f8-067e-4908-686cd83d478c@xilinx.com>
+References: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
+ <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com>
+ <d27b381e-f091-91dc-cffe-27789583f949@xilinx.com>
+ <CAMuHMdW4H6pjpijU2SX1Z=1Ld7CbBnTtFVwp3gac9toQc4iGpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538013431.17514.31.camel@mhfsdcap03>
+In-Reply-To: <CAMuHMdW4H6pjpijU2SX1Z=1Ld7CbBnTtFVwp3gac9toQc4iGpg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: houlong wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>, =?UTF-8?B?QmliYnkgSHNpZWggKOisnea/n+mBoCk=?= <Bibby.Hsieh@mediatek.com>, =?UTF-8?B?WVQgU2hlbiAo5rKI5bKz6ZyGK
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 27/09/2018 03:57, houlong wei wrote:
-[...]
->>> +	}
->>> +
->>> +	return client;
->>> +}
->>> +EXPORT_SYMBOL(cmdq_mbox_create);
->>> +
->>> +void cmdq_mbox_destroy(struct cmdq_client *client)
->>> +{
->>> +	if (client->timeout_ms != CMDQ_NO_TIMEOUT) {
->>> +		spin_lock(&client->lock);
->>> +		del_timer_sync(&client->timer);
->>> +		spin_unlock(&client->lock);
->>> +	}
->>> +	mbox_free_channel(client->chan);
->>> +	kfree(client);
->>> +}
->>> +EXPORT_SYMBOL(cmdq_mbox_destroy);
->>> +
->>> +int cmdq_pkt_create(struct cmdq_client *client, struct cmdq_pkt **pkt_ptr,
->>> +		    size_t size)
+On 27.9.2018 09:19, Geert Uytterhoeven wrote:
+> Hi Michal,
+> 
+> On Wed, Sep 26, 2018 at 1:01 PM Michal Simek <michal.simek@xilinx.com> wrote:
+>> On 24.9.2018 09:41, Geert Uytterhoeven wrote:
+>>> On Thu, Sep 20, 2018 at 1:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
+>>>> The function travels the lookup table to record alias ids for the given
+>>>> device match structures and alias stem.
+>>>> This function will be used by serial drivers to check if requested alias
+>>>> is allocated or free to use.
+>>>>
+>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+>>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>>
+>>> I know this has already been applied, it just drew my attention.
+>>>
+>>>> --- a/drivers/of/base.c
+>>>> +++ b/drivers/of/base.c
+>>>> @@ -16,6 +16,7 @@
+>>>>
+>>>>  #define pr_fmt(fmt)    "OF: " fmt
+>>>>
+>>>> +#include <linux/bitmap.h>
+>>>>  #include <linux/console.h>
+>>>>  #include <linux/ctype.h>
+>>>>  #include <linux/cpu.h>
+>>>> @@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+>>>>
+>>>>  /**
+>>>> + * of_alias_get_alias_list - Get alias list for the given device driver
+>>>> + * @matches:   Array of OF device match structures to search in
+>>>> + * @stem:      Alias stem of the given device_node
+>>>> + * @bitmap:    Bitmap field pointer
+>>>> + * @nbits:     Maximum number of alias ID which can be recorded it bitmap
+>>>
+>>> IDs
+>>>
+>>>> + *
+>>>> + * The function travels the lookup table to record alias ids for the given
+>>>> + * device match structures and alias stem.
+>>>> + *
+>>>> + * Return:     0 or -ENOSYS when !CONFIG_OF
+>>>> + */
+>>>> +int of_alias_get_alias_list(const struct of_device_id *matches,
+>>>> +                            const char *stem, unsigned long *bitmap,
+>>>> +                            unsigned int nbits)
+>>>> +{
+>>>> +       struct alias_prop *app;
+>>>> +
+>>>> +       /* Zero bitmap field to make sure that all the time it is clean */
+>>>> +       bitmap_zero(bitmap, nbits);
+>>>> +
+>>>> +       mutex_lock(&of_mutex);
+>>>> +       pr_debug("%s: Looking for stem: %s\n", __func__, stem);
+>>>> +       list_for_each_entry(app, &aliases_lookup, link) {
+>>>> +               pr_debug("%s: stem: %s, id: %d\n",
+>>>> +                        __func__, app->stem, app->id);
+>>>> +
+>>>> +               if (strcmp(app->stem, stem) != 0) {
+>>>> +                       pr_debug("%s: stem comparison doesn't passed %s\n",
+>>>
+>>> didn't pass?
+>>>
+>>>> +                                __func__, app->stem);
+>>>> +                       continue;
+>>>> +               }
+>>>> +
+>>>> +               if (app->id >= nbits) {
+>>>> +                       pr_debug("%s: ID %d greater then bitmap field %d\n",
+>>>
+>>> than
+>>> %u for unsigned int
 >>
->> I suppose you are not returning the allocated cmdq_pkt to avoid checks for
->> IS_ERR() logic in the consumer of this API. Am I correct?
->> Do we really need a pointer to a pointer here? Can't we just use a struct
->> cmdq_pkt *pkt as argument? That would make things easier.
-> 
-> Do you mean we change the argument 'struct cmdq_pkt **pkt_ptr' to
-> 'struct cmdq_pkt *pkt', and the consumer allocate a struct cmdq_pkt
-> *pkt, then pass pkt as argument of this API?
-> If yes, the consumer still need to check the return value of this API.
-> For the current implementation, the consumer doesn't need check
-> IS_ERR(*pkt_ptr) if the return value equals to 0.
-> 
-> Since the consumer has to check the return value of this API once, to
-> make it simpler, I shall change the prototype to 
-> 'struct cmdq_pkt *cmdq_pkt_create(struct cmdq_client *client, size_t
-> size)' and change its implementation.
-> 
-
-Exactly that's what I proposed. Sorry for not explaining myself :)
-
+>> I won't fix this now because this can be done together with one change
+>> described below.
 >>
->>> +{
->>> +	struct cmdq_pkt *pkt;
->>> +	struct device *dev;
->>> +	dma_addr_t dma_addr;
->>> +
->>> +	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
->>> +	if (!pkt)
->>> +		return -ENOMEM;
->>> +	pkt->va_base = kzalloc(size, GFP_KERNEL);
->>> +	if (!pkt->va_base) {
->>> +		kfree(pkt);
->>> +		return -ENOMEM;
->>> +	}
->>> +	pkt->buf_size = size;
->>> +	pkt->cl = (void *)client;
->>> +
->>> +	dev = client->chan->mbox->dev;
->>> +	dma_addr = dma_map_single(dev, pkt->va_base, pkt->buf_size,
->>> +		DMA_TO_DEVICE);
->>> +	if (dma_mapping_error(dev, dma_addr)) {
->>> +		dev_err(dev, "dma map failed, size=%u\n", (u32)(u64)size);
->>> +		kfree(pkt->va_base);
->>> +		kfree(pkt);
->>> +		return -ENOMEM;
->>> +	}
->>> +
->>> +	pkt->pa_base = dma_addr;
->>> +	*pkt_ptr = pkt;
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL(cmdq_pkt_create);
->>> +
->>> +void cmdq_pkt_destroy(struct cmdq_pkt *pkt)
->>> +{
->>> +	struct cmdq_client *client = (struct cmdq_client *)pkt->cl;
->>> +
->>> +	dma_unmap_single(client->chan->mbox->dev, pkt->pa_base, pkt->buf_size,
->>> +			 DMA_TO_DEVICE);
->>> +	kfree(pkt->va_base);
->>> +	kfree(pkt);
->>> +}
->>> +EXPORT_SYMBOL(cmdq_pkt_destroy);
->>> +
->>> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->>> +				   u32 arg_a, u32 arg_b)
->>> +{
->>> +	u64 *cmd_ptr;
->>> +
->>> +	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->>> +		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>>>
+>>>> +                               __func__, app->id, nbits);
+>>>> +                       continue;
+>>>
+>>> Shouldn't this return an error, if of_match_node() below would have matched?
 >>
->> Why do we update the cmd_buf_size here?
+>> IIRC Above check is for "serial" name.
+>> This one is for getting XX number from alias "serialXX".
+>> And below is checking compatible string.
+>>
+>> You are calling this function from uartps with 32 lines limit and there
+>> is serial33 alias poiting to uartlite (for example) then you don't want
+>> to break this call for that.
+>>
+>> What can be done is that compatible string is checked first and if this
+>> passed then ids are check and error can be returned or bit sets.
 > 
-> Because in developing phase of consumer driver, the consumer has to know
-> the real command buffer size after adding command failure. Then the
-> consumer will increase the size and run the cmdq flow (cmdq_pkt_create,
-> cmdq_pkt_write/wfe...) again. Finally, the consumer get the real size
-> and fix it.
-> 
+> That's what I meant: currently any serialN with N >= nbits is ignored, even
+> if the alias applies to the driver that called the function.
 
-But the consumer should know the size it needs for it's buffer and if not it
-should be able to decide on it's own how much space it needs. If he get's a
--ENOMEM he implicitly knows that he has to increase the buf_size. Now the size
-depends on how many command he has pending and wasn't able to write to the cmdq_pkt.
+ok. Let me create a patch and check compatible string first and then
+setup bit or fail if N >= nbits.
 
-Regards,
-Matthias
+Thanks,
+Michal
