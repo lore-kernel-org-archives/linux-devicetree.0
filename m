@@ -1,42 +1,44 @@
-Return-Path: <SRS0=S5jw=ME=gmail.com=marek.vasut@kernel.org>
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: [PATCH] DT: pci: rcar-pci: document R8A77990 bindings
-Date: Sat, 22 Sep 2018 17:02:52 +0200
-Message-Id: <20180922150252.18754-1-marek.vasut+renesas@gmail.com>
-To: devicetree@vger.kernel.org
-Cc: linux-pci@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>, Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Phil Edworthy <phil.edworthy@renesas.com>, Rob Herring <robh@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=BnTV=MJ=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2] dt-bindings: spi: rspi: Add R7S9210 support
+Date: Thu, 27 Sep 2018 09:35:19 -0500
+Message-Id: <20180927143519.104631-1-chris.brandt@renesas.com>
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Tho Vu <tho.vu.wh@rvc.renesas.com>
+Add support for RZ/A2
 
-Document the R-Car E3 (R8A77990) SoC in the R-Car PCIe bindings.
-
-Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
-Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-renesas-soc@vger.kernel.org
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
- 1 file changed, 1 insertion(+)
+v2:
+ * Made instructions more generic for RZ/A devices
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-index a5f7fc62d10e..5f2f9e380efb 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -9,6 +9,7 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
- 	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
- 	    "renesas,pcie-r8a7796" for the R8A7796 SoC;
- 	    "renesas,pcie-r8a77980" for the R8A77980 SoC;
-+	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
- 	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
- 				     RZ/G1 compatible device.
- 	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+FYI: No driver changes were needed
+---
+ Documentation/devicetree/bindings/spi/spi-rspi.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+index 96fd58548f69..dd5c36a0b9ac 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -3,7 +3,7 @@ Device tree configuration for Renesas RSPI/QSPI driver
+ Required properties:
+ - compatible       : For Renesas Serial Peripheral Interface on legacy SH:
+ 		     "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
+-		     For Renesas Serial Peripheral Interface on RZ/A1H:
++		     For Renesas Serial Peripheral Interface on RZ/A:
+ 		     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
+ 		     For Quad Serial Peripheral Interface on R-Car Gen2 and
+ 		     RZ/G1 devices:
+@@ -11,6 +11,7 @@ Required properties:
+ 		     Examples with soctypes are:
+ 		        - "renesas,rspi-sh7757" (SH)
+ 			- "renesas,rspi-r7s72100" (RZ/A1H)
++			- "renesas,rspi-r7s9210" (RZ/A2)
+ 			- "renesas,qspi-r8a7743" (RZ/G1M)
+ 			- "renesas,qspi-r8a7745" (RZ/G1E)
+ 			- "renesas,qspi-r8a7790" (R-Car H2)
 -- 
-2.18.0
+2.16.1
