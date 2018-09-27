@@ -1,154 +1,79 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] reset: Exclusive resets must be dedicated to a single hardware block
-Date: Thu, 27 Sep 2018 20:00:38 +0200
-Message-ID: <20180927180038.24599-1-geert+renesas@glider.be>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: Add binding document for SR
+ thermal
+Date: Thu, 27 Sep 2018 11:00:33 -0700
+Message-ID: <f20afabc-e712-8f35-8dd6-d42b9a0131f0@broadcom.com>
+References: <1538062603-7490-1-git-send-email-srinath.mannam@broadcom.com>
+ <1538062603-7490-2-git-send-email-srinath.mannam@broadcom.com>
+ <20180927172758.GA17761@bogus>
+ <b1099893-f704-8ca6-a945-2711d6945a0f@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b1099893-f704-8ca6-a945-2711d6945a0f@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Eric Auger <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-In some SoCs multiple hardware blocks may share a reset control.
-The reset control API for shared resets will only assert such a reset
-when the drivers for all hardware blocks agree.
-The exclusive reset control API still allows to assert such a reset, but
-that impacts all other hardware blocks sharing the reset.
 
-While the kernel doc comments clearly state that the API for shared
-resets applies to reset controls which are shared between hardware
-blocks, the exact meaning of exclusive resets is not documented.
-Fix the semantic ambiguity with respect to exclusive access vs.
-exclusive reset lines by:
-  1. Clarifying that exclusive resets really are intended for use with
-     reset controls which are dedicated to a single hardware block,
-  2. Ensuring that obtaining an exclusive reset control will fail if the
-     reset is shared by multiple hardware blocks, for both DT-based and
-     lookup-based reset controls.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-This is v2 of "[RFC] reset: Add support for dedicated reset controls":
-  - Fix wrong variable in __reset_is_dedicated() loop,
-  - Add missing of_node_put() in __of_reset_is_dedicated(),
-  - Document that exclusive reset controls imply they are dedicated to a
-    single hardware block,
-  - Drop new dedicated flag and new API reset_control_get_dedicated(),
-    as exclusive already implies dedicated,
-  - Rename {__of_,}reset_is_dedicated() to {__of_,}reset_is_exclusive(),
-  - Reword description.
-
-Note: Exclusive lookup-based reset controls were not tested.
----
- drivers/reset/core.c  | 58 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/reset.h |  5 +++-
- 2 files changed, 62 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index 225e34c56b94a2e3..2f5b61226c7964eb 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -459,6 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
- 	kref_put(&rstc->refcnt, __reset_control_release);
- }
- 
-+static bool __of_reset_is_exclusive(const struct device_node *node,
-+				    const struct of_phandle_args args)
-+{
-+	struct of_phandle_args args2;
-+	struct device_node *node2;
-+	int index, ret;
-+	bool eq;
-+
-+	for_each_node_with_property(node2, "resets") {
-+		if (node == node2)
-+			continue;
-+
-+		for (index = 0; ; index++) {
-+			ret = of_parse_phandle_with_args(node2, "resets",
-+							 "#reset-cells", index,
-+							 &args2);
-+			if (ret)
-+				break;
-+
-+			eq = (args2.np == args.np &&
-+			      args2.args_count == args.args_count &&
-+			      !memcmp(args2.args, args.args,
-+				      args.args_count * sizeof(args.args[0])));
-+			of_node_put(args2.np);
-+			if (eq)
-+				return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
- struct reset_control *__of_reset_control_get(struct device_node *node,
- 				     const char *id, int index, bool shared,
- 				     bool optional)
-@@ -514,6 +546,11 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
- 		return ERR_PTR(rstc_id);
- 	}
- 
-+	if (!shared && !__of_reset_is_exclusive(node, args)) {
-+		mutex_unlock(&reset_list_mutex);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
- 	/* reset_list_mutex also protects the rcdev's reset_control list */
- 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
- 
-@@ -541,6 +578,22 @@ __reset_controller_by_name(const char *name)
- 	return NULL;
- }
- 
-+static bool __reset_is_exclusive(const struct reset_control_lookup *lookup)
-+{
-+	const struct reset_control_lookup *lookup2;
-+
-+	list_for_each_entry(lookup2, &reset_lookup_list, list) {
-+		if (lookup2 == lookup)
-+			continue;
-+
-+		if (lookup2->provider == lookup->provider &&
-+		    lookup2->index == lookup->index)
-+			return false;
-+	}
-+
-+	return true;
-+}
-+
- static struct reset_control *
- __reset_control_get_from_lookup(struct device *dev, const char *con_id,
- 				bool shared, bool optional)
-@@ -562,6 +615,11 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
- 		if ((!con_id && !lookup->con_id) ||
- 		    ((con_id && lookup->con_id) &&
- 		     !strcmp(con_id, lookup->con_id))) {
-+			if (!shared && !__reset_is_exclusive(lookup)) {
-+				mutex_unlock(&reset_lookup_mutex);
-+				return ERR_PTR(-EINVAL);
-+			}
-+
- 			mutex_lock(&reset_list_mutex);
- 			rcdev = __reset_controller_by_name(lookup->provider);
- 			if (!rcdev) {
-diff --git a/include/linux/reset.h b/include/linux/reset.h
-index 29af6d6b2f4b8103..5881d2594761e48f 100644
---- a/include/linux/reset.h
-+++ b/include/linux/reset.h
-@@ -116,8 +116,11 @@ static inline int device_reset_optional(struct device *dev)
-  * @id: reset line name
-  *
-  * Returns a struct reset_control or IS_ERR() condition containing errno.
-- * If this function is called more than once for the same reset_control it will
-+ * If this function is called more than once for the same reset control it will
-  * return -EBUSY.
-+ * This function is intended for use with reset controls which are dedicated
-+ * to a single hardware block.  If called for a reset control shared among
-+ * multiple hardware blocks, it will return -EINVAL.
-  *
-  * See reset_control_get_shared for details on shared references to
-  * reset-controls.
--- 
-2.17.1
+On 18-09-27 10:31 AM, Florian Fainelli wrote:
+> On 09/27/2018 10:27 AM, Rob Herring wrote:
+>> On Thu, Sep 27, 2018 at 09:06:41PM +0530, Srinath Mannam wrote:
+>>> From: Pramod Kumar <pramod.kumar@broadcom.com>
+>>>
+>>> Add binding document for supported thermal implementation
+>>> in Stingray.
+>>>
+>>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+>>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>> ---
+>>>   .../bindings/thermal/brcm,sr-thermal.txt           | 25 ++++++++++++++++++++++
+>>>   1 file changed, 25 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>> new file mode 100644
+>>> index 0000000..717617b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+>>> @@ -0,0 +1,25 @@
+>>> +* Broadcom Stingray Thermal
+>>> +
+>>> +This binding describes thermal sensors that is part of Stingray SoCs.
+>>> +
+>>> +Required properties:
+>>> +- compatible : Must be "brcm,sr-thermal"
+>>> +- reg : memory where tmon data will be available.
+>>> +- brcm,tmon-mask: A one cell bit mask of valid TMON sources.
+>>> +                  Each bit represents single TMON source.
+>>> +- brcm,max-crit-temp: Maximum supported critical temperature.
+>> We already have a defined binding for setting trip points.
+> Indeed, and if you have multiple TMONs, they would in premise possibly
+> each have a different critical trip point.
+Which may be a good reason to go back to our original bindings which 
+were generic and had each sensor in its own node?
+>>> +
+>>> +Example:
+>>> +	tmons {
+>>> +		compatible = "simple-bus";
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <1>;
+>>> +		ranges = <0x0 0x0 0x8f100000 0x100>;
+>>> +
+>>> +		tmon: thermal@0 {
+>>> +			compatible = "brcm,sr-thermal";
+>>> +			reg = <0 0x40>;
+>>> +			brcm,tmon-mask = <0x3f>;
+>>> +			brcm,max-crit-temp = <105000>;
+>>> +		};
+>>> +	};
+>>> -- 
+>>> 2.7.4
+>>>
+>
