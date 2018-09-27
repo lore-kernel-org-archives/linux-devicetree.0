@@ -1,45 +1,64 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] ASoC: rsnd: Add r8a7744 support
-Date: Thu, 27 Sep 2018 14:51:25 +0100
-Message-ID: <1538056285-18621-1-git-send-email-biju.das@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Liam Girdwood <lgirdwood@gmail.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Mark Brown <broonie@kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: [PATCH v6 0/3] Renesas R9A06G032 PINCTRL Driver
+Date: Thu, 27 Sep 2018 14:59:19 +0100
+Message-ID: <20180927135922.12015-1-phil.edworthy@renesas.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Jacopo Mondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G1N (R8A7744) SoC bindings.
+This implements the pinctrl driver for the RZ/N1 family of devices, including
+the R9A06G032 (RZ/N1D) device.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-This patch is tested against linux-next next-20180927.
----
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 1 +
- 1 file changed, 1 insertion(+)
+This series was originally written by Michel Pollet whilst at Renesas, and I
+have taken over this work.
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index f4688c5..d92b705 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -343,6 +343,7 @@ Required properties:
- 				  "renesas,rcar_sound-gen3" if generation3 (or RZ/G2)
- 				  Examples with soctypes are:
- 				    - "renesas,rcar_sound-r8a7743" (RZ/G1M)
-+				    - "renesas,rcar_sound-r8a7744" (RZ/G1N)
- 				    - "renesas,rcar_sound-r8a7745" (RZ/G1E)
- 				    - "renesas,rcar_sound-r8a774a1" (RZ/G2M)
- 				    - "renesas,rcar_sound-r8a7778" (R-Car M1A)
+Main changes:
+v6:
+ - Instead of combining the pin nr and func into a single element, use
+   a pair of 8-bit elements.
+ - Simplified how the MDIO function is calculated
+
+v5:
+ - Address Jacopo's further comments
+ - Address Geert's comments
+
+v4:
+ - Address Jacopo's comments
+ - Add alternative way to use the pinmux prop.
+ - Remove mention of gpios.
+ - Implement pin_config_group_get()
+ - Fix function to get pin configs, i.e. return -EINVAL when disabled.
+
+v3:
+ - Use standard DT props instead of proprietary ones.
+ - Replace virtual pins used for MDIO muxing with extra funcs.
+ - Use pinctrl_utils funcs to handle the maps.
+ - Remove the dbg functions to keep things simple.
+ - Change the way the functions are defined so it is easy to check
+   against the hardware numbering.
+
+v2:
+ - Change to generic rzn1 family driver, instead of device specific.
+ - Review comments fixed.
+ - Fix error handling during probe
+
+Phil Edworthy (3):
+  dt-bindings: pinctrl: renesas,rzn1-pinctrl: documentation
+  pinctrl: renesas: Renesas RZ/N1 pinctrl driver
+  ARM: dts: r9a06g032: Add pinctrl node
+
+ .../bindings/pinctrl/renesas,rzn1-pinctrl.txt | 155 +++
+ arch/arm/boot/dts/r9a06g032.dtsi              |   8 +
+ drivers/pinctrl/Kconfig                       |  10 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-rzn1.c                | 941 ++++++++++++++++++
+ include/dt-bindings/pinctrl/rzn1-pinctrl.h    | 135 +++
+ 6 files changed, 1250 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.txt
+ create mode 100644 drivers/pinctrl/pinctrl-rzn1.c
+ create mode 100644 include/dt-bindings/pinctrl/rzn1-pinctrl.h
+
 -- 
-2.7.4
+2.17.1
