@@ -1,30 +1,58 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v6 1/2] dt-bindings: hwmon: Add ina3221 documentation
-Date: Thu, 27 Sep 2018 15:38:44 -0500
-Message-ID: <CAL_JsqLcuJyjHFzW7-p4HAZq3g5tGAo0wT8f5ZT_KYWV5X5+5A@mail.gmail.com>
-References: <20180927194910.18464-1-nicoleotsuka@gmail.com> <20180927194910.18464-2-nicoleotsuka@gmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: [PATCH v2 07/22] soc/fsl/bman_portals: defer probe after bman's probe
+Date: Thu, 27 Sep 2018 15:40:02 -0500
+Message-ID: <CADRPPNQyp=zC7Bo441gRQL61GMNdL-EMo4BA_NYV+CErOaM6tg@mail.gmail.com>
+References: <20180926132247.10971-1-laurentiu.tudor@nxp.com> <20180926132247.10971-8-laurentiu.tudor@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927194910.18464-2-nicoleotsuka@gmail.com>
+In-Reply-To: <20180926132247.10971-8-laurentiu.tudor@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew F. Davis" <afd@ti.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Roy Pledge <roy.pledge@nxp.com>, madalin.bucur@nxp.com, David Miller <davem@davemloft.net>, Shawn Guo <shawnguo@kernel.org>, robin.murphy@arm.com, bharat.bhushan@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 2:49 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
+On Wed, Sep 26, 2018 at 8:26 AM <laurentiu.tudor@nxp.com> wrote:
 >
-> Texas Instruments INA3221 is a triple-channel shunt and bus
-> voltage monitor. This patch adds a DT binding doc for it.
+> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
 >
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> A crash in bman portal probing could not be triggered (as is the case
+> with qman portals) but it does make calls [1] into the bman driver so
+> lets make sure the bman portal probing happens after bman's.
+>
+> [1]  bman_p_irqsource_add() (in bman) called by:
+>        init_pcfg() called by:
+>          bman_portal_probe()
+>
+> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+
+As this is part of a bug fix for v4.19, applied on soc/fsl for fix.
+
 > ---
-> Changelog
-> v5->v6:
->  * Removed status property as no need to explicitly list it.
->  * Combined all examples into a complete one.
-
-Sorry, I meant combine the parent and child nodes into one. Showing 3
-children is perfectly fine as the device has 3 channels.
-
-Rob
+>  drivers/soc/fsl/qbman/bman_portal.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+> index 2f71f7df3465..f9edd28894fd 100644
+> --- a/drivers/soc/fsl/qbman/bman_portal.c
+> +++ b/drivers/soc/fsl/qbman/bman_portal.c
+> @@ -91,7 +91,15 @@ static int bman_portal_probe(struct platform_device *pdev)
+>         struct device_node *node = dev->of_node;
+>         struct bm_portal_config *pcfg;
+>         struct resource *addr_phys[2];
+> -       int irq, cpu;
+> +       int irq, cpu, err;
+> +
+> +       err = bman_is_probed();
+> +       if (!err)
+> +               return -EPROBE_DEFER;
+> +       if (err < 0) {
+> +               dev_err(&pdev->dev, "failing probe due to bman probe error\n");
+> +               return -ENODEV;
+> +       }
+>
+>         pcfg = devm_kmalloc(dev, sizeof(*pcfg), GFP_KERNEL);
+>         if (!pcfg)
+> --
+> 2.17.1
+>
