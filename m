@@ -1,46 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCh v3 2/4] arm64: add basic DTS for i.MX8MQ
-Date: Thu, 27 Sep 2018 14:14:50 -0500
-Message-ID: <20180927191450.GA32039@bogus>
-References: <20180921125626.21971-1-l.stach@pengutronix.de>
- <20180921125626.21971-2-l.stach@pengutronix.de>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 net-next 2/2] dt-bindings: net: add support for
+ Microchip KSZ9131 Ethernet PHY
+Date: Thu, 27 Sep 2018 21:45:50 +0200
+Message-ID: <20180927194550.GL12979@lunn.ch>
+References: <1538079415-6260-1-git-send-email-yuiko.oshino@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180921125626.21971-2-l.stach@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1538079415-6260-1-git-send-email-yuiko.oshino@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yuiko Oshino <yuiko.oshino@microchip.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org, f.fainelli@gmail.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 02:56:24PM +0200, Lucas Stach wrote:
-> This adds the basic DTS for the i.MX8MQ.
-> For now only the following peripherals are supported:
-> - IOMUXC (pin controller)
-> - CCM (clock controller)
-> - GPIO
-> - UART
-> - uSDHC (SD/eMMC controller)
-> - FEC (ethernet controller)
-> - i2c
+On Thu, Sep 27, 2018 at 04:16:55PM -0400, Yuiko Oshino wrote:
+> Add support for Microchip Technology KSZ9131 10/100/1000 Ethernet PHY
 > 
-> +#define MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0                                 0x0A8 0x310 0x000 0x0 0x0
-> +#define MX8MQ_IOMUXC_SD1_DATA0_GPIO2_IO2                                    0x0A8 0x31  0x000 0x5 0x0
+> Signed-off-by: Yuiko Oshino <yuiko.oshino@microchip.com>
+> ---
+>  .../devicetree/bindings/net/micrel-ksz90x1.txt     | 29 +++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+> index e22d8cf..d23d14a 100644
+> --- a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+> +++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+> @@ -1,4 +1,4 @@
+> -Micrel KSZ9021/KSZ9031 Gigabit Ethernet PHY
+> +Micrel/Microchip KSZ9021/KSZ9031/KSZ9131 Gigabit Ethernet PHY
+>  
+>  Some boards require special tuning values, particularly when it comes
+>  to clock delays. You can specify clock delay values in the PHY OF
+> @@ -64,6 +64,33 @@ KSZ9031:
+>          Attention: The link partner must be configurable as slave otherwise
+>          no link will be established.
+>  
+> +KSZ9131:
+> +
+> +  All skew control options are specified in picoseconds. The minimum
+> +  value is 0, and the maximum is property-dependent. The increment
+> +  step is 100ps. The default value is the neutral setting, so setting
+> +  rxc-skew-ps=<0> actually results in -700 picoseconds adjustment.
 
-The 0x31 looks suspicious.
+We also have:
 
-And checkpatch isn't happy about the spaces instead of tabs.
+KSZ9021:
 
-Rob
+  All skew control options are specified in picoseconds. The minimum
+  value is 0, the maximum value is 3000, and it is incremented by 200ps
+  steps.
 
-> +#define MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1                                 0x0AC 0x314 0x000 0x0 0x0
+and
+
+KSZ9031:
+
+  All skew control options are specified in picoseconds. The minimum
+  value is 0, and the maximum is property-dependent. The increment
+  step is 60ps. The default value is the neutral setting, so setting
+  rxc-skew-ps=<0> actually results in -900 picoseconds adjustment.
+
+So this is the third meaning of 0.
+
+How about making 0 mean 0. Have the range being -700 to 1800 and -700
+to 800? KSZ9031 and KSZ9131 then use the same meaning of 0, with 0
+actually meaning 0!
+
+   Andrew
