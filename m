@@ -1,83 +1,98 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: Re: [PATCH v2] dt-bindings: input: pwm-vibrator: correct pwms in
- example
-Date: Thu, 27 Sep 2018 08:45:39 +0200
-Message-ID: <20180927064538.i2omgznbtc473azt@earth.universe>
-References: <20180927004858.32529-1-masneyb@onstation.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v16 5/5] iommu/arm-smmu: Add support for qcom,smmu-v2 variant
+Date: Thu, 27 Sep 2018 12:25:43 +0530
+Message-ID: <CAFp+6iGrvVL-tbD=Mx3NV2BqRQo=7f5qh8raaYNT-oFEav+2Ug@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-6-vivek.gautam@codeaurora.org> <80f7a7df-9a6d-9de3-4c7c-261d96fb04e4@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ltl6bamnt433u7ig"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927004858.32529-1-masneyb@onstation.org>
+In-Reply-To: <80f7a7df-9a6d-9de3-4c7c-261d96fb04e4@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: robh@kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: Joerg Roedel <joro@8bytes.org>, robh+dt <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM <linux-pm@vger.kernel.org>, sboyd@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, alex.williamson@redhat.com, linux-arm-msm <linux-arm-msm@vger.kernel.org>, freedreno <freedreno@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Robin,
 
---ltl6bamnt433u7ig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, Sep 26, 2018 at 08:48:58PM -0400, Brian Masney wrote:
-> In the example for the pwm-vibrator bindings, pwm8 is the direction pin,
-> and pwm9 is the enable pin. The pwms on the vibrator node has these two
-> values swapped so this patch corrects it.
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
+On Wed, Sep 26, 2018 at 9:29 PM Robin Murphy <robin.murphy@arm.com> wrote:
 >
-> Changes since v1:
-> - Swapped the pwms values instead of the pwm-names values since enable
->   is required and direction is optional. Based on feedback from
->   Rob Herring.
->=20
->  Documentation/devicetree/bindings/input/pwm-vibrator.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/pwm-vibrator.txt b/D=
-ocumentation/devicetree/bindings/input/pwm-vibrator.txt
-> index 09145d18491d..88c775a3fe21 100644
-> --- a/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-> +++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-> @@ -58,8 +58,8 @@ Example from Motorola Droid 4:
-> =20
->  	vibrator {
->  		compatible =3D "pwm-vibrator";
-> -		pwms =3D <&pwm8 0 1000000000 0>,
-> -		       <&pwm9 0 1000000000 0>;
-> +		pwms =3D <&pwm9 0 1000000000 0>,
-> +                       <&pwm8 0 1000000000 0>;
->  		pwm-names =3D "enable", "direction";
->  		direction-duty-cycle-ns =3D <1000000000>;
->  	};
+> On 30/08/18 15:45, Vivek Gautam wrote:
+> > qcom,smmu-v2 is an arm,smmu-v2 implementation with specific
+> > clock and power requirements.
+> > On msm8996, multiple cores, viz. mdss, video, etc. use this
+> > smmu. On sdm845, this smmu is used with gpu.
+> > Add bindings for the same.
+> >
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> > Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > ---
+> >   drivers/iommu/arm-smmu.c | 13 +++++++++++++
+> >   1 file changed, 13 insertions(+)
+> >
+> > diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> > index 166c8c6da24f..411e5ac57c64 100644
+> > --- a/drivers/iommu/arm-smmu.c
+> > +++ b/drivers/iommu/arm-smmu.c
+> > @@ -119,6 +119,7 @@ enum arm_smmu_implementation {
+> >       GENERIC_SMMU,
+> >       ARM_MMU500,
+> >       CAVIUM_SMMUV2,
+> > +     QCOM_SMMUV2,
+>
+> Hmm, it seems we don't actually need this right now, but maybe that just
+> means there's more imp-def registers and/or errata to come ;)
+>
+> Either way I guess there's no real harm in having it.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Thanks for the review.
 
- -- Sebastian
+Best regards
+Vivek
 
---ltl6bamnt433u7ig
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>
+> >   };
+> >
+> >   struct arm_smmu_s2cr {
+> > @@ -1970,6 +1971,17 @@ ARM_SMMU_MATCH_DATA(arm_mmu401, ARM_SMMU_V1_64K, GENERIC_SMMU);
+> >   ARM_SMMU_MATCH_DATA(arm_mmu500, ARM_SMMU_V2, ARM_MMU500);
+> >   ARM_SMMU_MATCH_DATA(cavium_smmuv2, ARM_SMMU_V2, CAVIUM_SMMUV2);
+> >
+> > +static const char * const qcom_smmuv2_clks[] = {
+> > +     "bus", "iface",
+> > +};
+> > +
+> > +static const struct arm_smmu_match_data qcom_smmuv2 = {
+> > +     .version = ARM_SMMU_V2,
+> > +     .model = QCOM_SMMUV2,
+> > +     .clks = qcom_smmuv2_clks,
+> > +     .num_clks = ARRAY_SIZE(qcom_smmuv2_clks),
+> > +};
+> > +
+> >   static const struct of_device_id arm_smmu_of_match[] = {
+> >       { .compatible = "arm,smmu-v1", .data = &smmu_generic_v1 },
+> >       { .compatible = "arm,smmu-v2", .data = &smmu_generic_v2 },
+> > @@ -1977,6 +1989,7 @@ static const struct of_device_id arm_smmu_of_match[] = {
+> >       { .compatible = "arm,mmu-401", .data = &arm_mmu401 },
+> >       { .compatible = "arm,mmu-500", .data = &arm_mmu500 },
+> >       { .compatible = "cavium,smmu-v2", .data = &cavium_smmuv2 },
+> > +     { .compatible = "qcom,smmu-v2", .data = &qcom_smmuv2 },
+> >       { },
+> >   };
+> >   MODULE_DEVICE_TABLE(of, arm_smmu_of_match);
+> >
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
------BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlusfJIACgkQ2O7X88g7
-+prMEQ//V1+b8d+LMKId888ISnvHlOyKkQUYNw01wVPPnL5Mq6L36GRyxHYVIeNM
-Fh3wJ1bJgvFBteUcnmf0sIZGVtHY2UYLjMWeq/21HLho33LH0SxNADAnjsFXKpfB
-binP67E7Q50NXPPCJqoNUIGWAY0pcMY1lZG2gQpgpxSNOQErcw6K+Y2xToUvAaz1
-+vhhaxiv/f69Jm4+7+w8IMpTliwvflAyOaFp3QOJjoFppSNKlO/fS6owdtTtoou1
-n6twlYbOUKKL+gO1YHMbpZdBEhCmk/nmk6r5jewJ2WuvcS95SF5Pl3Gv5xTZII3W
-Hj/omVkY1QA454Ch1SzjIIQCEVmtN2P+X8J6evI1BubisVAqiWwZJYjPnjDgRzNm
-f5ZQGPBxuPs+yzdU2YksXaZoqI+GO155H2jkYO6me90W06gyVHdma9ip7e0o0F+W
-Mta91zYwI3s02wbs4lltoop5Co5Z1CqZt+LDqIKcnJxafJPOk+4+D4+4G9MjKDh8
-1bXRNc5vpV4bgrT+OL05LnLVGLT4s6zMIPTi9HvV0WQjBnXTdi1W49Pbak5+SiJ2
-BXOAvbffPW7/C+Q6QBWGPVxqGJnb2KkE5tAT4bBagF5k3DswCov+tUxI3mQD3gop
-1dbOuUL1g7HgGvCZNl1raaQqICM+tJa+z6l4/sujFEs3GWCedIw=
-=JKan
------END PGP SIGNATURE-----
 
---ltl6bamnt433u7ig--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
