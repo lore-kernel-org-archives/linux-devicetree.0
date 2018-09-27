@@ -1,129 +1,51 @@
-Return-Path: <robherring2@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: Introduce QCOM LPASS clock
- bindings
-Message-ID: <20180917031811.GA11141@bogus>
-References: <1536685206-12239-1-git-send-email-tdas@codeaurora.org>
- <1536685206-12239-2-git-send-email-tdas@codeaurora.org>
+Return-Path: <SRS0=yXvz=MJ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:57538 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727265AbeI1D0R (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 27 Sep 2018 23:26:17 -0400
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 1/4] bus: ti-sysc: Detect timer and gpio on dra7
+Date: Thu, 27 Sep 2018 14:05:39 -0700
+Message-Id: <20180927210542.69703-2-tony@atomide.com>
+In-Reply-To: <20180927210542.69703-1-tony@atomide.com>
+References: <20180927210542.69703-1-tony@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1536685206-12239-2-git-send-email-tdas@codeaurora.org>
-Date: Sun, 16 Sep 2018 22:18:14 -0500
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Sender: devicetree-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Sep 11, 2018 at 10:30:05PM +0530, Taniya Das wrote:
-> Add device tree bindings for Low Power Audio subsystem clock controller for
-> Qualcomm Technology Inc's SDM845 SoCs.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,gcc.txt         |  2 ++
->  .../devicetree/bindings/clock/qcom,lpasscc.txt     | 31 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sdm845.h        |  2 ++
->  include/dt-bindings/clock/qcom,lpass-sdm845.h      | 16 +++++++++++
->  4 files changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
->  create mode 100644 include/dt-bindings/clock/qcom,lpass-sdm845.h
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> index 664ea1f..b3ff6e8 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> @@ -32,6 +32,8 @@ be part of GCC and hence the TSENS properties can also be
->  part of the GCC/clock-controller node.
->  For more details on the TSENS properties please refer
->  Documentation/devicetree/bindings/thermal/qcom-tsens.txt
-> +- qcom,lpass-protected : Indicate that the LPASS clock branches within GCC are
-> +			 unusable due to firmware access control restrictions.
->  
->  Example:
->  	clock-controller@900000 {
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,lpasscc.txt b/Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
-> new file mode 100644
-> index 0000000..d312957
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,lpasscc.txt
-> @@ -0,0 +1,31 @@
-> +Qualcomm LPASS Clock Controller Binding
-> +-----------------------------------------------
-> +
-> +Required properties :
-> +- compatible		: shall contain "qcom,sdm845-lpasscc"
-> +- #clock-cells		: from common clock binding, shall contain 1.
-> +- reg			: shall contain base register address and size,
-> +			  in the order
-> +			Index-0 maps to LPASS_CC register region
-> +			Index-1 maps to LPASS_QDSP6SS register region
-> +
-> +Optional properties :
-> +- reg-names	: register names of LPASS domain
-> +		 "lpass_cc", "lpass_qdsp6ss".
+We need to detect timer and gpio on dra7 because of the
+SYSC_QUIRK_LEGACY_IDLE flag for suspend and resume.
 
-"cc" and "qdsp6ss" is sufficient.
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+---
+ drivers/bus/ti-sysc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> +
-> +Example:
-> +
-> +The below node has to be defined in the cases where the LPASS peripheral loader
-> +would bring the subsystem out of reset.
-> +
-> +	lpasscc: clock-controller {
-
-Needs a unit-address.
-
-> +		compatible = "qcom,sdm845-lpasscc";
-> +		reg = <0x17014000 0x1f004>, <0x17300000 0x200>;
-> +		reg-names = "lpass_cc", "lpass_qdsp6ss";
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	gcc: clock-controller@100000 {
-
-This needs a reg property. 
-
-> +		compatible = "qcom,gcc-sdm845";
-> +		qcom,lpass-protected;
-> +	};
-
-> diff --git a/include/dt-bindings/clock/qcom,gcc-sdm845.h b/include/dt-bindings/clock/qcom,gcc-sdm845.h
-> index b8eae5a..968fa65 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-sdm845.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-sdm845.h
-> @@ -197,6 +197,8 @@
->  #define GCC_QSPI_CORE_CLK_SRC					187
->  #define GCC_QSPI_CORE_CLK					188
->  #define GCC_QSPI_CNOC_PERIPH_AHB_CLK				189
-> +#define GCC_LPASS_Q6_AXI_CLK					190
-> +#define GCC_LPASS_SWAY_CLK					191
->  
->  /* GCC Resets */
->  #define GCC_MMSS_BCR						0
-> diff --git a/include/dt-bindings/clock/qcom,lpass-sdm845.h b/include/dt-bindings/clock/qcom,lpass-sdm845.h
-> new file mode 100644
-> index 0000000..015968e
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/qcom,lpass-sdm845.h
-> @@ -0,0 +1,16 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLK_SDM_LPASS_SDM845_H
-> +#define _DT_BINDINGS_CLK_SDM_LPASS_SDM845_H
-> +
-> +#define LPASS_AUDIO_WRAPPER_AON_CLK			0
-> +#define LPASS_Q6SS_AHBM_AON_CLK				1
-> +#define LPASS_Q6SS_AHBS_AON_CLK				2
-> +#define LPASS_QDSP6SS_XO_CLK				3
-> +#define LPASS_QDSP6SS_SLEEP_CLK				4
-> +#define LPASS_QDSP6SS_CORE_CLK				5
-> +
-> +#endif
-> -- 
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -869,7 +869,7 @@ struct sysc_revision_quirk {
+ 
+ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	/* These drivers need to be fixed to not use pm_runtime_irq_safe() */
+-	SYSC_QUIRK("gpio", 0, 0, 0x10, 0x114, 0x50600801, 0xffff0fff,
++	SYSC_QUIRK("gpio", 0, 0, 0x10, 0x114, 0x50600801, 0xffff00ff,
+ 		   SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_OPT_CLKS_IN_RESET),
+ 	SYSC_QUIRK("mmu", 0, 0, 0x10, 0x14, 0x00000020, 0xffffffff,
+ 		   SYSC_QUIRK_LEGACY_IDLE),
+@@ -884,7 +884,9 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+ 	SYSC_QUIRK("timer", 0, 0, 0x10, 0x14, 0x00000015, 0xffffffff,
+ 		   SYSC_QUIRK_LEGACY_IDLE),
+ 	/* Some timers on omap4 and later */
+-	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffffffff,
++	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x50002100, 0xffffffff,
++		   SYSC_QUIRK_LEGACY_IDLE),
++	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffff00ff,
+ 		   SYSC_QUIRK_LEGACY_IDLE),
+ 	SYSC_QUIRK("uart", 0, 0x50, 0x54, 0x58, 0x00000052, 0xffffffff,
+ 		   SYSC_QUIRK_LEGACY_IDLE),
+-- 
+2.19.0
