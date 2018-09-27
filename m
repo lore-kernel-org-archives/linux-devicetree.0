@@ -1,79 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] of: unittest: Disable interrupt node tests for old
- world MAC systems
-Date: Thu, 27 Sep 2018 09:27:30 -0500
-Message-ID: <20180927142730.GA27916@bogus>
-References: <1537934784-19819-1-git-send-email-linux@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V6 02/33] csky: defconfig
+Date: Thu, 27 Sep 2018 22:47:39 +0800
+Message-ID: <bd032dd6ed9c1652e747b4f6f164fbbeb4c64265.1538058840.git.ren_guo@c-sky.com>
+References: <cover.1538058840.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537934784-19819-1-git-send-email-linux@roeck-us.net>
+In-Reply-To: <cover.1538058840.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1538058840.git.ren_guo@c-sky.com>
+References: <cover.1538058840.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 09:06:24PM -0700, Guenter Roeck wrote:
-> On systems with OF_IMAP_OLDWORLD_MAC set in of_irq_workarounds, the
-> devicetree interrupt parsing code is different, causing unit tests of
-> devicetree interrupt nodes to fail. Due to a bug in unittest code, which
-> tries to dereference an uninitialized pointer, this results in a crash.
-> 
-> OF: /testcase-data/phandle-tests/consumer-a: arguments longer than property
-> Unable to handle kernel paging request for data at address 0x00bc616e
-> Faulting instruction address: 0xc08e9468
-> Oops: Kernel access of bad area, sig: 11 [#1]
-> BE PREEMPT PowerMac
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper Not tainted 4.14.72-rc1-yocto-standard+ #1
-> task: cf8e0000 task.stack: cf8da000
-> NIP:  c08e9468 LR: c08ea5bc CTR: c08ea5ac
-> REGS: cf8dbb50 TRAP: 0300   Not tainted  (4.14.72-rc1-yocto-standard+)
-> MSR:  00001032 <ME,IR,DR,RI>  CR: 82004044  XER: 00000000
-> DAR: 00bc616e DSISR: 40000000
-> GPR00: c08ea5bc cf8dbc00 cf8e0000 c13ca517 c13ca517 c13ca8a0 00000066 00000002
-> GPR08: 00000063 00bc614e c0b05865 000affff 82004048 00000000 c00047f0 00000000
-> GPR16: c0a80000 c0a9cc34 c13ca517 c0ad1134 05ffffff 000affff c0b05860 c0abeef8
-> GPR24: cecec278 cecec278 c0a8c4d0 c0a885e0 c13ca8a0 05ffffff c13ca8a0 c13ca517
-> 
-> NIP [c08e9468] device_node_gen_full_name+0x30/0x15c
-> LR [c08ea5bc] device_node_string+0x190/0x3c8
-> Call Trace:
-> [cf8dbc00] [c007f670] trace_hardirqs_on_caller+0x118/0x1fc (unreliable)
-> [cf8dbc40] [c08ea5bc] device_node_string+0x190/0x3c8
-> [cf8dbcb0] [c08eb794] pointer+0x25c/0x4d0
-> [cf8dbd00] [c08ebcbc] vsnprintf+0x2b4/0x5ec
-> [cf8dbd60] [c08ec00c] vscnprintf+0x18/0x48
-> [cf8dbd70] [c008e268] vprintk_store+0x4c/0x22c
-> [cf8dbda0] [c008ecac] vprintk_emit+0x94/0x130
-> [cf8dbdd0] [c008ff54] printk+0x5c/0x6c
-> [cf8dbe10] [c0b8ddd4] of_unittest+0x2220/0x26f8
-> [cf8dbea0] [c0004434] do_one_initcall+0x4c/0x184
-> [cf8dbf00] [c0b4534c] kernel_init_freeable+0x13c/0x1d8
-> [cf8dbf30] [c0004814] kernel_init+0x24/0x118
-> [cf8dbf40] [c0013398] ret_from_kernel_thread+0x5c/0x64
-> 
-> The problem was observed when running a qemu test for the g3beige machine
-> with devicetree unittests enabled.
-> 
-> Disable interrupt node tests on affected systems to avoid both false
-> unittest failures and the crash.
-> 
-> With this patch in place, unittest on the affected system passes with
-> the following message.
-> 
-> 	dt-test ### end of unittest - 144 passed, 0 failed
-> 
-> Fixes: 53a42093d96ef ("of: Add device tree selftests")
-> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> ---
-> v2: Do not use goto to skip tests.
->     Provide test log in commit message.
-> 
->  drivers/of/unittest.c | 26 ++++++++++++++++++--------
->  1 file changed, 18 insertions(+), 8 deletions(-)
+This patch adds csky defconfig.
 
-Applied.
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ arch/csky/configs/defconfig | 61 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 arch/csky/configs/defconfig
 
-Rob
+diff --git a/arch/csky/configs/defconfig b/arch/csky/configs/defconfig
+new file mode 100644
+index 0000000..7ef4289
+--- /dev/null
++++ b/arch/csky/configs/defconfig
+@@ -0,0 +1,61 @@
++# CONFIG_LOCALVERSION_AUTO is not set
++CONFIG_DEFAULT_HOSTNAME="csky"
++# CONFIG_SWAP is not set
++CONFIG_SYSVIPC=y
++CONFIG_POSIX_MQUEUE=y
++CONFIG_AUDIT=y
++CONFIG_NO_HZ_IDLE=y
++CONFIG_HIGH_RES_TIMERS=y
++CONFIG_BSD_PROCESS_ACCT=y
++CONFIG_BSD_PROCESS_ACCT_V3=y
++CONFIG_MODULES=y
++CONFIG_MODULE_UNLOAD=y
++CONFIG_DEFAULT_DEADLINE=y
++CONFIG_CPU_CK807=y
++CONFIG_CPU_HAS_FPU=y
++CONFIG_NET=y
++CONFIG_PACKET=y
++CONFIG_UNIX=y
++CONFIG_INET=y
++CONFIG_DEVTMPFS=y
++CONFIG_DEVTMPFS_MOUNT=y
++CONFIG_BLK_DEV_LOOP=y
++CONFIG_BLK_DEV_RAM=y
++CONFIG_BLK_DEV_RAM_SIZE=65536
++CONFIG_VT_HW_CONSOLE_BINDING=y
++CONFIG_SERIAL_NONSTANDARD=y
++CONFIG_SERIAL_8250=y
++CONFIG_SERIAL_8250_CONSOLE=y
++CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_TTY_PRINTK=y
++# CONFIG_VGA_CONSOLE is not set
++CONFIG_CSKY_MPTIMER=y
++CONFIG_GX6605S_TIMER=y
++CONFIG_PM_DEVFREQ=y
++CONFIG_DEVFREQ_GOV_SIMPLE_ONDEMAND=y
++CONFIG_DEVFREQ_GOV_PERFORMANCE=y
++CONFIG_DEVFREQ_GOV_POWERSAVE=y
++CONFIG_DEVFREQ_GOV_USERSPACE=y
++CONFIG_GENERIC_PHY=y
++CONFIG_EXT4_FS=y
++CONFIG_FANOTIFY=y
++CONFIG_QUOTA=y
++CONFIG_FSCACHE=m
++CONFIG_FSCACHE_STATS=y
++CONFIG_CACHEFILES=m
++CONFIG_MSDOS_FS=y
++CONFIG_VFAT_FS=y
++CONFIG_FAT_DEFAULT_UTF8=y
++CONFIG_NTFS_FS=y
++CONFIG_PROC_KCORE=y
++CONFIG_PROC_CHILDREN=y
++CONFIG_TMPFS=y
++CONFIG_TMPFS_POSIX_ACL=y
++CONFIG_CONFIGFS_FS=y
++CONFIG_CRAMFS=y
++CONFIG_ROMFS_FS=y
++CONFIG_NFS_FS=y
++CONFIG_PRINTK_TIME=y
++CONFIG_DEBUG_INFO=y
++CONFIG_DEBUG_FS=y
++CONFIG_MAGIC_SYSRQ=y
+-- 
+2.7.4
