@@ -1,29 +1,45 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/8] drivers: of: ifdef out cmdline section
-Date: Thu, 27 Sep 2018 16:07:12 -0500
-Message-ID: <CAL_JsqLtwy_odfY+7-Braa1vJFPxF-+P+UcEFNSJaQGFhd9qig@mail.gmail.com>
-References: <1538067327-5785-1-git-send-email-maksym.kokhan@globallogic.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] arm64: dts: qcom: pm8998: Use ADC temperature to temp-alarm node
+Date: Thu, 27 Sep 2018 14:22:53 -0700
+Message-ID: <20180927212253.177200-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538067327-5785-1-git-send-email-maksym.kokhan@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maksym.kokhan@globallogic.com
-Cc: Frank Rowand <frowand.list@gmail.com>, Daniel Walker <dwalker@fifo99.com>, Daniel Walker <danielwa@cisco.com>, aborduno@cisco.com, rbilovol@cisco.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 11:55 AM Maksym Kokhan
-<maksym.kokhan@globallogic.com> wrote:
->
-> From: Daniel Walker <danielwa@cisco.com>
->
-> It looks like there's some seepage of cmdline stuff into
-> the generic device tree code. This conflicts with the
-> generic cmdline implementation so I remove it in the case
-> when that's enabled.
+The temperature information from the temp-alarm block itself is very
+coarse ("temperature is above/below trip points"). Provide the driver
+with the die temperature channel of the ADC on the PMIC for more precise
+readings.
 
-What's preventing removing this or simplifying the DT code to just be
-"give me the cmdline data from DT" and the common code deals with all
-the combinations of config options.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+- based on agross/for-next (7a002fe0179c "Merge branch
+  'defconfig-for-4.20' into all-for-4.20-redo"))
+- depends on e13d757279bb ("iio: adc: Add QCOM SPMI PMIC5 ADC driver")
+  from IIO pull request:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git tags/iio-for-4.20a
+- to work properly https://patchwork.kernel.org/patch/10594491/ is
+  needed
+---
+ arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+index 048f19fa0150..fab5a826fb01 100644
+--- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+@@ -58,6 +58,8 @@
+ 			compatible = "qcom,spmi-temp-alarm";
+ 			reg = <0x2400>;
+ 			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
++			io-channels = <&pm8998_adc ADC5_DIE_TEMP>;
++			io-channel-names = "thermal";
+ 			#thermal-sensor-cells = <0>;
+ 		};
+ 
+-- 
+2.19.0.605.g01d371f741-goog
