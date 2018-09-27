@@ -1,79 +1,105 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: Add binding document for SR
- thermal
-Date: Thu, 27 Sep 2018 11:00:33 -0700
-Message-ID: <f20afabc-e712-8f35-8dd6-d42b9a0131f0@broadcom.com>
-References: <1538062603-7490-1-git-send-email-srinath.mannam@broadcom.com>
- <1538062603-7490-2-git-send-email-srinath.mannam@broadcom.com>
- <20180927172758.GA17761@bogus>
- <b1099893-f704-8ca6-a945-2711d6945a0f@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] dt-bindings: nand: meson: add Amlogic NAND
+ controller driver
+Date: Thu, 27 Sep 2018 13:16:53 -0500
+Message-ID: <20180927181653.GA22153@bogus>
+References: <1537433449-65213-1-git-send-email-jianxin.pan@amlogic.com>
+ <1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b1099893-f704-8ca6-a945-2711d6945a0f@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>, Srinath Mannam <srinath.mannam@broadcom.com>
-Cc: daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
+To: Jianxin Pan <jianxin.pan@amlogic.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Liang Yang <liang.yang@amlogic.com>, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 20, 2018 at 04:50:48PM +0800, Jianxin Pan wrote:
+> From: Liang Yang <liang.yang@amlogic.com>
+> 
+> Add Amlogic NAND controller dt-bindings for Meson SoC,
+> Current this driver support GXBB/GXL/AXG platform.
+> 
+> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
+> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+> ---
+>  .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
+>  1 file changed, 60 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+> new file mode 100644
+> index 0000000..803df2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+> @@ -0,0 +1,60 @@
+> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
+> +
+> +This file documents the properties in addition to those available in
+> +the MTD NAND bindings.
+> +
+> +Required properties:
+> +- compatible : contains one of:
+> +  - "amlogic,meson-gxl-nfc"
+> +  - "amlogic,meson-axg-nfc"
+> +- clocks     :
+> +	A list of phandle + clock-specifier pairs for the clocks listed
+> +	in clock-names.
+> +
+> +- clock-names: Should contain the following:
+> +	"core" - NFC module gate clock
+> +	"device" - device clock from eMMC sub clock controller
+> +
+> +- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
+> +				controller port C
+> +
+> +Optional children nodes:
+> +Children nodes represent the available nand chips.
+> +
+> +Other properties:
+> +see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
+> +
+> +Example demonstrate on AXG SoC:
+> +
+> +	sd_emmc_c_clkc: mmc@7000 {
+> +		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
+> +		reg = <0x0 0x7000 0x0 0x800>;
+> +		status = "okay";
+> +	};
+> +
+> +	nand: nfc@7800 {
 
+nand-controller@7800
 
-On 18-09-27 10:31 AM, Florian Fainelli wrote:
-> On 09/27/2018 10:27 AM, Rob Herring wrote:
->> On Thu, Sep 27, 2018 at 09:06:41PM +0530, Srinath Mannam wrote:
->>> From: Pramod Kumar <pramod.kumar@broadcom.com>
->>>
->>> Add binding document for supported thermal implementation
->>> in Stingray.
->>>
->>> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
->>> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
->>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>> ---
->>>   .../bindings/thermal/brcm,sr-thermal.txt           | 25 ++++++++++++++++++++++
->>>   1 file changed, 25 insertions(+)
->>>   create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>> new file mode 100644
->>> index 0000000..717617b
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>> @@ -0,0 +1,25 @@
->>> +* Broadcom Stingray Thermal
->>> +
->>> +This binding describes thermal sensors that is part of Stingray SoCs.
->>> +
->>> +Required properties:
->>> +- compatible : Must be "brcm,sr-thermal"
->>> +- reg : memory where tmon data will be available.
->>> +- brcm,tmon-mask: A one cell bit mask of valid TMON sources.
->>> +                  Each bit represents single TMON source.
->>> +- brcm,max-crit-temp: Maximum supported critical temperature.
->> We already have a defined binding for setting trip points.
-> Indeed, and if you have multiple TMONs, they would in premise possibly
-> each have a different critical trip point.
-Which may be a good reason to go back to our original bindings which 
-were generic and had each sensor in its own node?
->>> +
->>> +Example:
->>> +	tmons {
->>> +		compatible = "simple-bus";
->>> +		#address-cells = <1>;
->>> +		#size-cells = <1>;
->>> +		ranges = <0x0 0x0 0x8f100000 0x100>;
->>> +
->>> +		tmon: thermal@0 {
->>> +			compatible = "brcm,sr-thermal";
->>> +			reg = <0 0x40>;
->>> +			brcm,tmon-mask = <0x3f>;
->>> +			brcm,max-crit-temp = <105000>;
->>> +		};
->>> +	};
->>> -- 
->>> 2.7.4
->>>
->
+> +		compatible = "amlogic,meson-axg-nfc";
+> +		reg = <0x0 0x7800 0x0 0x100>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
+> +		status = "disabled";
+> +
+> +		clocks = <&clkc CLKID_SD_EMMC_C>,
+> +			<&sd_emmc_c_clkc CLKID_MMC_DIV>;
+> +		clock-names = "core", "device";
+> +		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
+> +
+> +		status = "okay";
+
+Don't show status in examples, plus you have it twice.
+
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&nand_pins>;
+> +
+> +		nand@0 {
+> +			reg = <0>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			nand-on-flash-bbt;
+> +		};
+> +	};
+> -- 
+> 1.9.1
+> 
