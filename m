@@ -1,27 +1,122 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
-Date: Wed, 26 Sep 2018 22:22:20 -0700
-Message-ID: <153802574048.119890.3343861516349497753@swboyd.mtv.corp.google.com>
-References: <20180926205204.184898-1-ryandcase@chromium.org>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
+Date: Thu, 27 Sep 2018 13:27:38 +0800
+Message-ID: <20180927052737.GA28407@guoren>
+References: <cover.1537789736.git.ren_guo@c-sky.com>
+ <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
+ <20180925072407.GA6999@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926205204.184898-1-ryandcase@chromium.org>
+Content-Disposition: inline
+In-Reply-To: <20180925072407.GA6999@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Trent Piepho <tpiepho@impinj.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Girish Mahadevan <girishm@codeaurora.org>, Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Ryan Case (2018-09-26 13:52:03)
-> From: Girish Mahadevan <girishm@codeaurora.org>
-> =
+On Tue, Sep 25, 2018 at 09:24:07AM +0200, Peter Zijlstra wrote:
+> On Mon, Sep 24, 2018 at 10:36:22PM +0800, Guo Ren wrote:
+> > diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
+> > new file mode 100644
+> > index 0000000..f0de49c
+> > --- /dev/null
+> > +++ b/arch/csky/abiv1/inc/abi/cacheflush.h
+> > @@ -0,0 +1,43 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> > +
+> > +#ifndef __ABI_CSKY_CACHEFLUSH_H
+> > +#define __ABI_CSKY_CACHEFLUSH_H
+> > +
+> > +#include <linux/compiler.h>
+> > +#include <asm/string.h>
+> > +#include <asm/cache.h>
+> > +
+> > +#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
+> > +extern void flush_dcache_page(struct page *);
+> > +
+> > +#define flush_cache_mm(mm)		cache_wbinv_all()
+> > +#define flush_cache_page(vma,page,pfn)	cache_wbinv_all()
+> > +#define flush_cache_dup_mm(mm)		cache_wbinv_all()
+> > +
+> > +#define flush_cache_range(mm,start,end)	cache_wbinv_range(start, end)
+>                              ^^^ should be vma
+Yes, I'll change it to:
+#define flush_cache_range(mm,start,end)	cache_wbinv_all()
 
-> Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
-> =
+I'll improve it later after test.
 
-> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
-> Signed-off-by: Ryan Case <ryandcase@chromium.org>
-> ---
+> 
+> > +#endif /* __ABI_CSKY_CACHEFLUSH_H */
+> 
+> 
+> > diff --git a/arch/csky/abiv1/inc/abi/tlb.h b/arch/csky/abiv1/inc/abi/tlb.h
+> > new file mode 100644
+> > index 0000000..6d461f3
+> > --- /dev/null
+> > +++ b/arch/csky/abiv1/inc/abi/tlb.h
+> > @@ -0,0 +1,12 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> > +
+> > +#ifndef __ABI_CSKY_TLB_H
+> > +#define __ABI_CSKY_TLB_H
+> > +
+> > +#define tlb_start_vma(tlb, vma) \
+> > +	do { \
+> > +		if (!tlb->fullmm) \
+> > +			cache_wbinv_all(); \
+> > +	}  while (0)
+> > +#endif /* __ABI_CSKY_TLB_H */
+> 
+> That should be:
+> 
+> 	if (!tlb->fullmm)
+> 		flush_cache_range(vma, vma->vm_start, vma->vm_end);
+> 
+> Because as per the whole abiv1 vs abiv2, you don't need write back
+> invalidation for v2 at all, also, you only need to invalidate the vma
+> range, no reason to shoot everything down.
+> 
+> Also, I'll be shortly removing this:
+> 
+>   https://lkml.kernel.org/r/20180913092812.071989585@infradead.org
+Ok, I'll follow the rules.
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> 
+> > diff --git a/arch/csky/abiv2/inc/abi/cacheflush.h b/arch/csky/abiv2/inc/abi/cacheflush.h
+> > new file mode 100644
+> > index 0000000..756beb7
+> > --- /dev/null
+> > +++ b/arch/csky/abiv2/inc/abi/cacheflush.h
+> > @@ -0,0 +1,40 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +
+> > +#ifndef __ABI_CSKY_CACHEFLUSH_H
+> > +#define __ABI_CSKY_CACHEFLUSH_H
+> > +
+> > +/* Keep includes the same across arches.  */
+> > +#include <linux/mm.h>
+> > +
+> > +/*
+> > + * The cache doesn't need to be flushed when TLB entries change when
+> > + * the cache is mapped to physical memory, not virtual memory
+> > + */
+> > +#define flush_cache_all()			do { } while (0)
+> > +#define flush_cache_mm(mm)			do { } while (0)
+> > +#define flush_cache_dup_mm(mm)			do { } while (0)
+> > +#define flush_cache_range(vma, start, end)	do { } while (0)
+>                              ^^^ like here..
+#define flush_cache_range(vma, start, end) \
+	do { \
+		if (vma->vm_flags & VM_EXEC) \
+			icache_inv_all(); \
+	}
+
+Hmm ?
+
+I'll improve it later after test.
+
+Best Regards
+ Guo Ren
