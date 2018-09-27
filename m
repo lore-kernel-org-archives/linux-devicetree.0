@@ -1,113 +1,125 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 12/12] arm64: dts: allwinner: bananapi-m64:
- Bananapi S070WV20-CT16 DSI panel
-Date: Thu, 27 Sep 2018 17:18:50 +0530
-Message-ID: <20180927114850.24565-13-jagan@amarulasolutions.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [RESEND PATCHv2 1/2] ARM: dts: ti: add support for building Texas
+ Instruments specific overlays
+Date: Thu, 27 Sep 2018 14:49:04 +0300
+Message-ID: <3ceff403-4e9b-1c18-3023-552856b8de4f@ti.com>
+References: <1535722107-13767-1-git-send-email-t-kristo@ti.com>
+ <1536049651-10206-1-git-send-email-t-kristo@ti.com>
+ <1536049651-10206-2-git-send-email-t-kristo@ti.com>
+ <ac8227f4-4be3-df90-e2b9-6994b8b62592@gmail.com>
+ <CAMuHMdUeTjR6cDuYj_5mwHK8dexn4fXxX1yMHDhdOxHhh3d5-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBEMIWPOQKGQEPRAFJJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180927114850.24565-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAMuHMdUeTjR6cDuYj_5mwHK8dexn4fXxX1yMHDhdOxHhh3d5-w@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN
+ FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, ext Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add support for Bananapi S070WV20-CT16 DSI panel to
-BPI-M64 board.
+Hey,
 
-DSI panel connected via board DSI port with,
-- DC1SW as AVDD supply
-- DCDC1 as DVDD supply
-- PD6 gpio for reset pin
-- PD5 gpio for backlight enable pin
-- PD7 gpio for backlight vdd supply
+I think this topic has went stale, but I believe I figured out a way to 
+work with overlays at the moment.
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 42 +++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Basically involves couple of steps:
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index ef1c90401bb2..c0be949be68d 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -45,6 +45,7 @@
- #include "sun50i-a64.dtsi"
- 
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "BananaPi-M64";
-@@ -56,6 +57,24 @@
- 		serial1 = &uart1;
- 	};
- 
-+	vdd_bl: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "bl-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* PD7 */
-+		enable-active-high;
-+	};
-+
-+	backlight_dsi: backlight-dsi {
-+		compatible = "pwm-backlight";
-+		pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 5 GPIO_ACTIVE_HIGH>; /* PD5 */
-+		power-supply = <&vdd_bl>;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -101,6 +120,23 @@
- 	status = "okay";
- };
- 
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "bananapi,s070wv20-ct16-dsi";
-+		reg = <0>;
-+		avdd-supply = <&reg_dc1sw>;
-+		dvdd-supply = <&reg_dldo1>;
-+		reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
-+		backlight = <&backlight_dsi>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -193,6 +229,12 @@
- 	status = "okay";
- };
- 
-+&r_pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&r_pwm_pin>;
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
--- 
-2.18.0.321.gffc6fa0e3
+1) Save the overlay source files under existing file folders, and use 
+the same .dts file type for them as for typical DT source files.
+2) Use "make DTC_FLAGS=-@ dtbs" to compile everything, or some variant 
+of this (if want to compile single file for example.) Basically need to 
+add that DTC_FLAGS build flag only.
+
+So, the question is, is this acceptable approach? Can we start posting 
+overlay files for upstream to pick up, with the /plugin/ directive 
+within the files, and use .dts as their file type?
+
+All the patches I posted so far just attempted to make the system more 
+maintainable (read: more readable for human beings, with the .dt*o file 
+types, separated folders for the DTC_FLAGS and everything), but it seems 
+it should be possible to live without any of that.
+
+-Tero
+
+On 07/09/18 00:36, Geert Uytterhoeven wrote:
+> Hi Frank,
+> 
+> On Wed, Sep 5, 2018 at 10:54 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 09/04/18 01:27, Tero Kristo wrote:
+>>> Add support for TI specific DT subdir, along with support for building
+>>> DT overlays. Right now, no DT files are specified in this directory,
+>>> those are to be added later.
+>>>
+>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> 
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/ti/Makefile
+>>> @@ -0,0 +1,9 @@
+>>> +# SPDX-License-Identifier: GPL-2.0
+>>> +#
+>>> +# Make file to build device tree binaries for boards based on
+>>> +# Texas Instruments Inc processors
+>>> +#
+>>> +# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
+>>> +#
+>>> +
+>>> +DTC_FLAGS += -@
+>>>
+>>
+>> I will nack any attempt to unconditionally compile a devicetree file with the
+>> -@ flag (which adds symbols to the resulting .dtb).  The resulting overhead
+>> is not acceptable.
+>>
+>> Adding the symbols must be under the control of the person either creating
+>> or using the .dtb.  The way to provide that control is the challenging part.
+>>
+>> One way would be to configure the compile option via kbuild configuration.
+>> There is opposition to this approach because it makes the .dtb dependent
+>> on the Linux kernel configuration.  So suggestions of an alternative
+>> mechanism would be welcome.
+> 
+> IMHO that would be quite a "soft" dependency: it's just about adding symbols
+> or not. No real dependency on Linux or kernel features.
+> 
+>> Another _possible_ solution would be to add a dtc_strip tool to the dtc
+>> project.  dtc_strip would remove the symbol information from a .dtb,
+>> in a manner that is analogous to strip removing debug information from
+>> a program file.
+> 
+> Removing unwanted symbols is indeed easier than adding them to an
+> existing DTB.
+> 
+>> One aspect of unconditionally building a .dtb with symbols, then
+>> optionally removing the symbols with dtc_strip is that it seems
+>> like a backwards process.  For example, we don't build the kernel
+>> with debug symbols then strip the symbols out when we don't want
+>> them.  I'll have to mull this over if the dtc_strip method sounds
+>> like a good approach to other people.
+> 
+> That's not a fair comparison: DTB symbols are not debug information,
+> but an ABI. It's more akin to exporting kernel symbols to (possible
+> out-of-tree) kernel modules, which is controlled by CONFIG_MODULES.
+> 
+> So a Kconfig symbol to enable it, and a dtc_strip for removing them,
+> makes most sense to me.
+> 
+> BTW, we do run strip on vmlinux ;-)
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+> 
+
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
