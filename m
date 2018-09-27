@@ -1,7 +1,7 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v3 5/7] ARM: dts: stm32: add STMFX support on stm32746g-eval
-Date: Thu, 27 Sep 2018 13:40:02 +0200
-Message-ID: <1538048404-9041-6-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH v3 7/7] ARM: dts: stm32: add orange and blue leds on stm32746g-eval
+Date: Thu, 27 Sep 2018 13:40:04 +0200
+Message-ID: <1538048404-9041-8-git-send-email-amelie.delaunay@st.com>
 References: <1538048404-9041-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,49 +12,34 @@ To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, 
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for STMicroelectronics Multi-Function eXpander
-(STMFX) on stm32746g-eval. It is connected on i2c1.
+Orange (LD2) and blue (LD4) leds on stm32746g-eval are connected on
+STMFX gpio expander, offset 17 and 19.
 
 Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- arch/arm/boot/dts/stm32746g-eval.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/arm/boot/dts/stm32746g-eval.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
-index 8c081ea..203faf0 100644
+index b86ad83..a5fa73f 100644
 --- a/arch/arm/boot/dts/stm32746g-eval.dts
 +++ b/arch/arm/boot/dts/stm32746g-eval.dts
-@@ -44,6 +44,7 @@
- #include "stm32f746.dtsi"
- #include "stm32f746-pinctrl.dtsi"
- #include <dt-bindings/input/input.h>
-+#include <dt-bindings/interrupt-controller/irq.h>
- 
- / {
- 	model = "STMicroelectronics STM32746g-EVAL board";
-@@ -114,6 +115,22 @@
- 	i2c-scl-rising-time-ns = <185>;
- 	i2c-scl-falling-time-ns = <20>;
- 	status = "okay";
-+
-+	stmfx: stmfx@42 {
-+		compatible = "st,stmfx-0300";
-+		reg = <0x42>;
-+		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-parent = <&gpioi>;
-+
-+		stmfx_pinctrl: stmfx-pin-controller {
-+			compatible = "st,stmfx-0300-pinctrl";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
+@@ -69,9 +69,15 @@
+ 			gpios = <&gpiof 10 1>;
+ 			linux,default-trigger = "heartbeat";
+ 		};
++		orange {
++			gpios = <&stmfx_pinctrl 17 1>;
 +		};
-+	};
- };
+ 		red {
+ 			gpios = <&gpiob 7 1>;
+ 		};
++		blue {
++			gpios = <&stmfx_pinctrl 19 1>;
++		};
+ 	};
  
- &rtc {
+ 	gpio_keys {
 -- 
 2.7.4
