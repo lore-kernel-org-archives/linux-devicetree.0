@@ -1,80 +1,57 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 04/12] drm/sun4i: sun6i_mipi_dsi: Enable
- missing DSI bus clock
-Date: Thu, 27 Sep 2018 20:42:53 +0800
-Message-ID: <CAGb2v66No3-AODYCCGifBrm9uvPjaNdR2W5MDQdazRAPomT9CQ@mail.gmail.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com> <20180927114850.24565-5-jagan@amarulasolutions.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: Re: [PATCH 0/5] Add CDTech 4.3" and 7" to panel-simple
+Date: Thu, 27 Sep 2018 15:08:32 +0200
+Message-ID: <88156978-a46e-7879-239f-0df289658641@micronovasrl.com>
+References: <20180730231117.5631-1-giulio.benetti@micronovasrl.com>
+ <20180927115938.GD29102@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBW5AWPOQKGQEAKJJPLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180927114850.24565-5-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180927115938.GD29102@ulmo>
+Content-Language: it
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Thierry,
 
-On Thu, Sep 27, 2018 at 7:49 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
->
-> DSI bus_clk is already available in sun6i_dsi but missed to
-> get the clk and process for enable/disable.
->
-> This patch add support for it.
->
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 8e9c76febca2..156b371243c6 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -1004,6 +1004,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->                 return PTR_ERR(dsi->reset);
->         }
->
-> +       dsi->bus_clk = devm_clk_get(dev, "bus");
-> +       if (IS_ERR(dsi->bus_clk)) {
-> +               dev_err(dev, "Couldn't get the DSI bus clock\n");
-> +               return PTR_ERR(dsi->bus_clk);
-> +       }
-> +
+Il 27/09/2018 13:59, Thierry Reding ha scritto:
+> On Tue, Jul 31, 2018 at 01:11:12AM +0200, Giulio Benetti wrote:
+>> Add CDTech 4.3" S043WQ26H-CT7 support
+>> Add CDTech 7" S070WV95-CT16 support
+>>
+>> Giulio Benetti (5):
+>>    dt-bindings: Add vendor prefix for CDTech(H.K.) Electronics Limited
+>>    drm/panel: add panel CDTech S070WV95-CT16 to panel-simple
+>>    dt-bindings: Add CDTech S070WV95-CT16 panel bindings
+>>    drm/panel: add panel CDTech S043WQ26H-CT7 to panel-simple
+>>    dt-bindings: Add CDTech S043WQ26H-CT7 panel bindings
+>>
+>>   .../display/panel/cdtech,s043wq26h-ct7.txt    | 12 ++++
+>>   .../display/panel/cdtech,s070wv95-ct16.txt    | 12 ++++
+>>   .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>>   drivers/gpu/drm/panel/panel-simple.c          | 55 +++++++++++++++++++
+>>   4 files changed, 80 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/display/panel/cdtech,s043wq26h-ct7.txt
+>>   create mode 100644 Documentation/devicetree/bindings/display/panel/cdtech,s070wv95-ct16.txt
+> 
+> All applied, thanks. One small note, though: in the future please send
+> DT bindings patches before the driver patches. This is important because
+> checkpatch, which is run as pre-commit script, warns about undocumented
+> compatible strings if you send driver changes before the bindings.
 
-The DSI driver uses devm_regmap_init_mmio_clk, which enables the
-clock behind the scenes when regmap access needs it enabled.
+Ok, thanks for both applying and pointing me this important detail.
 
-Did you have any issues without this patch?
+-- 
+Giulio Benetti
+CTO
 
-ChenYu
-
->         if (dsi->variant->has_mod_clk) {
->                 dsi->mod_clk = devm_clk_get(dev, "mod");
->                 if (IS_ERR(dsi->mod_clk)) {
-> @@ -1012,6 +1018,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
->                 }
->         }
->
-> +       clk_prepare_enable(dsi->bus_clk);
->         /*
->          * In order to operate properly, that clock seems to be always
->          * set to 297MHz.
-> @@ -1065,6 +1072,7 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
->         sun6i_dphy_remove(dsi);
->         if (dsi->variant->has_mod_clk)
->                 clk_rate_exclusive_put(dsi->mod_clk);
-> +       clk_disable_unprepare(dsi->bus_clk);
->
->         return 0;
->  }
-> --
-> 2.18.0.321.gffc6fa0e3
->
+MICRONOVA SRL
+Sede: Via A. Niedda 3 - 35010 Vigonza (PD)
+Tel. 049/8931563 - Fax 049/8931346
+Cod.Fiscale - P.IVA 02663420285
+Capitale Sociale € 26.000 i.v.
+Iscritta al Reg. Imprese di Padova N. 02663420285
+Numero R.E.A. 258642
