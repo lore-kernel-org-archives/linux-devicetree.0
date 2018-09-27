@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [RESEND PATCH v2 2/3] video: ssd1307fb: Do not hard code active-low reset sequence
-Date: Thu, 27 Sep 2018 11:24:40 +0200
-Message-ID: <1538040281-21319-2-git-send-email-michal.vokac@ysoft.com>
+Subject: [RESEND PATCH v2 3/3] ARM: dts: imx28-cfa10036: Fix the reset gpio signal polarity
+Date: Thu, 27 Sep 2018 11:24:41 +0200
+Message-ID: <1538040281-21319-3-git-send-email-michal.vokac@ysoft.com>
 References: <1538040281-21319-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,37 +13,36 @@ To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@ke
 Cc: Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-The SSD130x OLED display reset signal is active low. Now the reset
-sequence is implemented in such a way that users are forced to
-define reset-gpios as GPIO_ACTIVE_HIGH in DT to make the reset work.
-
-Do not hard code the active-low sequence into the driver but instead
-allow the user to specify the gpio as GPIO_ACTIVE_LOW to reflect
-the real world.
+The reset signal of the SSD1306 OLED display is actually active-low.
+Adapt the DT to reflect the real world.
 
 Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 ---
-v2 changes: Split the DT changes into separate patch.
+v2 changes: New patch in the series
 
- drivers/video/fbdev/ssd1307fb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx28-cfa10036.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
-index e7ae135..7b5bc42 100644
---- a/drivers/video/fbdev/ssd1307fb.c
-+++ b/drivers/video/fbdev/ssd1307fb.c
-@@ -728,10 +728,10 @@ static int ssd1307fb_probe(struct i2c_client *client,
+diff --git a/arch/arm/boot/dts/imx28-cfa10036.dts b/arch/arm/boot/dts/imx28-cfa10036.dts
+index e54f5ab..be3406e 100644
+--- a/arch/arm/boot/dts/imx28-cfa10036.dts
++++ b/arch/arm/boot/dts/imx28-cfa10036.dts
+@@ -11,6 +11,7 @@
  
- 	if (par->reset) {
- 		/* Reset the screen */
--		gpiod_set_value_cansleep(par->reset, 0);
--		udelay(4);
- 		gpiod_set_value_cansleep(par->reset, 1);
- 		udelay(4);
-+		gpiod_set_value_cansleep(par->reset, 0);
-+		udelay(4);
- 	}
+ /dts-v1/;
+ #include "imx28.dtsi"
++#include <dt-bindings/gpio/gpio.h>
  
- 	if (par->vbat_reg) {
+ / {
+ 	model = "Crystalfontz CFA-10036 Board";
+@@ -95,7 +96,7 @@
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&ssd1306_cfa10036>;
+ 					reg = <0x3c>;
+-					reset-gpios = <&gpio2 7 0>;
++					reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
+ 					solomon,height = <32>;
+ 					solomon,width = <128>;
+ 					solomon,page-offset = <0>;
 -- 
 2.1.4
