@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 03/12] dt-bindings: sun6i-dsi: Add compatible
- for A64 MIPI DSI
-Date: Thu, 27 Sep 2018 17:18:41 +0530
-Message-ID: <20180927114850.24565-4-jagan@amarulasolutions.com>
+Subject: [PATCH 04/12] drm/sun4i: sun6i_mipi_dsi: Enable missing
+ DSI bus clock
+Date: Thu, 27 Sep 2018 17:18:42 +0530
+Message-ID: <20180927114850.24565-5-jagan@amarulasolutions.com>
 References: <20180927114850.24565-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBUMHWPOQKGQEYCQ5W6I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBWEHWPOQKGQE4P3WXQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180927114850.24565-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,25 +20,48 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The MIPI DSI controller on Allwinner A64 is similar to
-Allwinner A31 without support of DSI mod clock.
+DSI bus_clk is already available in sun6i_dsi but missed to
+get the clk and process for enable/disable.
+
+This patch add support for it.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 6a6cf5de08b0..9fa6e7a758ad 100644
---- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-+++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -12,6 +12,7 @@ The DSI Encoder generates the DSI signal from the TCON's.
- Required properties:
-   - compatible: value must be one of:
-     * allwinner,sun6i-a31-mipi-dsi
-+    * allwinner,sun50i-a64-mipi-dsi
-   - reg: base address and size of memory-mapped region
-   - interrupts: interrupt associated to this IP
-   - clocks: phandles to the clocks feeding the DSI encoder
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 8e9c76febca2..156b371243c6 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -1004,6 +1004,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dsi->reset);
+ 	}
+ 
++	dsi->bus_clk = devm_clk_get(dev, "bus");
++	if (IS_ERR(dsi->bus_clk)) {
++		dev_err(dev, "Couldn't get the DSI bus clock\n");
++		return PTR_ERR(dsi->bus_clk);
++	}
++
+ 	if (dsi->variant->has_mod_clk) {
+ 		dsi->mod_clk = devm_clk_get(dev, "mod");
+ 		if (IS_ERR(dsi->mod_clk)) {
+@@ -1012,6 +1018,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		}
+ 	}
+ 
++	clk_prepare_enable(dsi->bus_clk);
+ 	/*
+ 	 * In order to operate properly, that clock seems to be always
+ 	 * set to 297MHz.
+@@ -1065,6 +1072,7 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+ 	sun6i_dphy_remove(dsi);
+ 	if (dsi->variant->has_mod_clk)
+ 		clk_rate_exclusive_put(dsi->mod_clk);
++	clk_disable_unprepare(dsi->bus_clk);
+ 
+ 	return 0;
+ }
 -- 
 2.18.0.321.gffc6fa0e3
