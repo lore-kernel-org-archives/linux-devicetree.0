@@ -1,100 +1,83 @@
-From: Alan Douglas <adouglas@cadence.com>
-Subject: RE: [RFC PATCH v2 1/2] dt-bindings: phy: Document cadence Sierra PHY
- bindings
-Date: Thu, 27 Sep 2018 10:32:12 +0000
-Message-ID: <MWHPR07MB3502ADDB075E158C486B15E6D8140@MWHPR07MB3502.namprd07.prod.outlook.com>
-References: <1536244949-25892-1-git-send-email-adouglas@cadence.com>
- <20180925210154.GA21444@bogus>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v2 0/3] Add can support to RZ/G2M
+Date: Thu, 27 Sep 2018 12:45:01 +0200
+Message-ID: <cf75b506-f63c-0689-900f-6bfb11caff30@pengutronix.de>
+References: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="m0iQ2IPV8OBaGyAPQoOUNmfhIgqQ66gYg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925210154.GA21444@bogus>
-Content-Language: en-US
+In-Reply-To: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "kishon@ti.com" <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjUgU2VwdGVtYmVyIDIwMTggMjI6MDIsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUaHUs
-IFNlcCAwNiwgMjAxOCBhdCAwMzo0MjoyOVBNICswMTAwLCBBbGFuIERvdWdsYXMgd3JvdGU6DQo+
-ID4gQWRkIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgU2llcnJhIFBIWS4gIFRoZSBQSFkg
-c3VwcG9ydHMNCj4gPiBhIG51bWJlciBvZiBkaWZmZXJlbnQgcHJvdG9jb2xzLCBpbmNsdWRpbmcg
-UENJZSBhbmQgVVNCLg0KPiA+DQo+ID4gVGhlIFBIWSBsYW5lcyBtYXkgYmUgY29uZmlndXJlZCBh
-cyBzaW5nbGUgb3IgbXVsdGktbGFuZSBsaW5rcy4NCj4gPiBFYWNoIGxpbmsgaXMgdHJlYXRlZCBh
-cyBhIHNlcGFyYXRlIHN1Ym5vZGUuICBGb3IgZXhhbXBsZSwgaWYNCj4gPiB0aGVyZSBhcmUgNCBs
-YW5lcyBpbiB0b3RhbCB0aGUgZmlyc3QgMiBtYXkgYmUgY29uZmlndXJlZCBhcw0KPiA+IGEgbXVs
-dGktbGFuZSBQQ0llIGxpbmsgd2hpbGUgdGhlIG90aGVyIHR3byBhcmUgc2luZ2xlIGxhbmUNCj4g
-PiBVU0IgbGlua3MsIGFuZCBpbiB0aGlzIGNhc2UgdGhlcmUgd291bGQgYmUgMyBzdWJub2Rlcy4N
-Cj4gPg0KPiA+IFRoZXJlIGFyZSB0d28gcmVzZXRzIGZvciB0aGUgUEhZIGJsb2NrLCBhbmQgYWRk
-aXRpb25hbCByZXNldHMsDQo+ID4gb25lIGZvciBlYWNoIGxhbmUuICBGb3IgbXVsdGktbGFuZSBs
-aW5rcywgb25seSB0aGUgcmVzZXQgZm9yDQo+ID4gdGhlIG1hc3RlciBsYW5lIGlzIHJlcXVpcmVk
-LCB0aGUgcmVzZXRzIG9uIG90aGVyIGxhbmVzIGhhdmUgbm8NCj4gPiBlZmZlY3QuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBBbGFuIERvdWdsYXMgPGFkb3VnbGFzQGNhZGVuY2UuY29tPg0KPiA+
-IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEtcGh5LnR4
-dCAgICB8IDY1ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY1
-IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEtcGh5LnR4dA0KPiA+DQo+ID4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEt
-cGh5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVy
-cmEtDQo+IHBoeS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAw
-MDAuLjk0YThhN2YNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9jZG5zLXNpZXJyYS1waHkudHh0DQo+ID4gQEAgLTAsMCAr
-MSw2NSBAQA0KPiA+ICtDYWRlbmNlIFNpZXJyYSBQSFkNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJs
-ZToJY2RucyxzaWVycmEtcGh5LXQwDQo+ID4gKy0gY2xvY2tzOglNdXN0IGNvbnRhaW4gYW4gZW50
-cnkgaW4gY2xvY2stbmFtZXMuDQo+ID4gKwkJU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50
-eHQgZm9yIGRldGFpbHMuDQo+ID4gKy0gY2xvY2stbmFtZXM6CU11c3QgYmUgInBoeV9jbGsiDQo+
-ID4gKy0gcmVzZXRzOglNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggaW4gcmVzZXQtbmFt
-ZXMuDQo+ID4gKwkJU2VlIC4uL3Jlc2V0L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4NCj4gPiArLSBy
-ZXNldC1uYW1lczoJTXVzdCBpbmNsdWRlICJzaWVycmFfcmVzZXQiIGFuZCAic2llcnJhX2FwYiIg
-YW5kIG9uZSBmb3IgZWFjaA0KPiA+ICsJCXN1Yi1ub2RlLg0KPiA+ICsJCSJzaWVycmFfcmVzZXQi
-IG11c3QgY29udHJvbCB0aGUgcmVzZXQgbGluZSB0byB0aGUgUEhZLg0KPiA+ICsJCSJzaWVycmFf
-YXBiIiBtdXN0IGNvbnRyb2wgdGhlIHJlc2V0IGxpbmUgdG8gdGhlIEFQQiBQSFkNCj4gPiArCQlp
-bnRlcmZhY2UuDQo+ID4gKwkJUmVzZXRzIGZvciBlYWNoIHN1Ym5vZGUgbXVzdCBjb250cm9sIHRo
-ZSBtYXN0ZXIgbGFuZSBmb3IgdGhlDQo+ID4gKwkJc3Vibm9kZSBsYW5lIGdyb3VwLg0KPiANCj4g
-V2hhdCBhcmUgdGhlIG5hbWVzPw0KPiANCkknbGwgdXBkYXRlIHRoaXMgdG8gdXNlIHRoZSBmdWxs
-IG5hbWUgb2YgdGhlIHN1Ym5vZGUsIGUuZy4gZm9yIHN1Ym5vZGVzOg0KICBwY2llMF9waHkwOiBw
-Y2llLXBoeUAwDQogIHBjaWUwX3BoeTE6IHBjaWUtcGh5QDINCnRoZW4gdGhlIHJlc2V0IG5hbWVz
-IHdvdWxkIGJlOiAicGNpZS1waHlAMCIgYW5kICJwY2llLXBoeUAyIg0KDQo+ID4gKy0gcmVnOgkJ
-cmVnaXN0ZXIgcmFuZ2UgZm9yIHRoZSBQSFkuDQo+ID4gKy0gcmVnLW5hbWVzOglNdXN0IGJlICJy
-ZWciLg0KPiANCj4gS2luZCBvZiBwb2ludGxlc3Mgd2l0aCBvbmx5IDEuDQo+IA0KSSB3aWxsIHJl
-bW92ZSByZWctbmFtZXMuDQoNCj4gPiArLSAjYWRkcmVzcy1jZWxsczogU2hvdWxkIGJlIDENCj4g
-PiArLSAjc2l6ZS1jZWxsczoJU2hvdWxkIGJlIDANCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3Bl
-cnRpZXM6DQo+ID4gKy0gY2RucyxhdXRvY29uZjoJSWYgcHJlc2VudCwgaW5kaWNhdGVzIHRoYXQg
-dGhlIFBIWSByZWdpc3RlcnMgd2lsbA0KPiA+ICsJCQliZSBjb25maWd1cmVkIGJ5IGhhcmR3YXJl
-LiAgSWYgbm90IHByZXNlbnQsIGFsbA0KPiA+ICsJCQlzdWItbm9kZSBvcHRpb25hbCBwcm9wZXJ0
-aWVzIG11c3QgYmUgcHJvdmlkZWQuDQo+IA0KPiBib29sZWFuPw0KWWVzLCB3aWxsIHVwZGF0ZSB0
-aGUgZGVzY3JpcHRpb24NCg0KPiANCj4gPiArDQo+ID4gK1N1Yi1ub2RlczoNCj4gPiArICBFYWNo
-IGdyb3VwIG9mIFBIWSBsYW5lcyB3aXRoIGEgc2luZ2xlIG1hc3RlciBsYW5lIHNob3VsZCBiZSBy
-ZXByZXNlbnRlZCBhcw0KPiA+ICsgIGEgc3ViLW5vZGUuIE5vdGUgdGhhdCB0aGUgYWN0dWFsIGNv
-bmZpZ3VyYXRpb24gb2YgZWFjaCBsYW5lIGlzIGRldGVybWluZWQgYnkNCj4gPiArICBoYXJkd2Fy
-ZSBzdHJhcHBpbmcsIGFuZCBtdXN0IG1hdGNoIHRoZSBjb25maWd1cmF0aW9uIHNwZWNpZmllZCBo
-ZXJlLg0KPiA+ICsNCj4gPiArU3ViLW5vZGUgcmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSAj
-cGh5LWNlbGxzOglHZW5lcmljIFBIWSBiaW5kaW5nOyBtdXN0IGJlIDAuDQo+ID4gKw0KPiA+ICtT
-dWItbm9kZSBvcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIHJlZzoJCQlUaGUgbWFzdGVyIGxh
-bmUgbnVtYmVyLg0KPiA+ICstIGNkbnMsbnVtLWxhbmVzOglOdW1iZXIgb2YgbGFuZXMgaW4gdGhp
-cyBncm91cC4gIEZyb20gMSB0byA0Lg0KPiA+ICstIGNkbnMscGh5LXR5cGU6CUNhbiBiZSBQSFlf
-VFlQRV9QQ0lFIG9yIFBIWV9UWVBFX1VTQjMsIGRlcGVuZGluZyBvbg0KPiA+ICsJCQljb25maWd1
-cmF0aW9uIG9mIGxhbmVzLg0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArCXBjaWVfcGh5NDog
-cGNpZS1waHk0QGZkMjQwMDAwIHsNCj4gDQo+IHBjaWUtcGh5QGZkMjQwMDAwDQo+IA0KSSdsbCBj
-aGFuZ2UgYXMgc3VnZ2VzdGVkLg0KDQo+ID4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLHNpZXJyYS1w
-aHktdDAiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmZDI0MDAwMCAweDAgMHg0MDAwMD47DQo+ID4g
-KwkJcmVnLW5hbWVzID0gInJlZyI7DQo+ID4gKwkJcmVzZXRzID0gPCZwaHlyc3QgMD4sIDwmcGh5
-cnN0IDE+LDwmcGh5cnN0IDI+LDwmcGh5cnN0IDQ+Ow0KPiA+ICsJCXJlc2V0LW5hbWVzID0gInNp
-ZXJyYV9yZXNldCIsInNpZXJyYV9hcGIiLCJwY2llX3BoeTAiLHBjaWVfcGh5MTsNCj4gDQo+IHNw
-YWNlcyBhbmQgcXVvdGVzIG1pc3NpbmcuDQo+IA0KSSdsbCByZWZvcm1hdC4NCg0KPiA+ICsJCWNs
-b2NrcyA9IDwmcGh5Y2xvY2s+Ow0KPiA+ICsJCWNsb2NrLW5hbWVzID0gInBoeV9jbGsiOw0KPiA+
-ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+
-ICsJCXBjaWUwX3BoeTA6IHBjaWUtcGh5MEAwIHsNCj4gDQo+IHBjaWUtcGh5QDANCj4gDQpJJ2xs
-IGNoYW5nZSBhcyBzdWdnZXN0ZWQuDQoNCj4gPiArCQkJCXJlZyA9IDwwPjsNCj4gPiArCQkJCWNk
-bnMsbnVtLWxhbmVzID0gPDI+Ow0KPiA+ICsJCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArCQkJ
-CWNkbnMscGh5LXR5cGUgPSA8UEhZX1RZUEVfUENJRT47DQo+ID4gKwkJfTsNCj4gPiArCQlwY2ll
-MF9waHkxOiBwY2llLXBoeTFAMCB7DQo+IA0KPiBwY2llLXBoeUAyDQo+IA0KPiBPciByZWcgc2hv
-dWxkIGJlIDE/DQo+IA0KcmVnIGlzIHRoZSBtYXN0ZXIgbGFuZSBudW1iZXIsIGFuZCBpbiB0aGlz
-IGNhc2UgbXVzdCBiZSAyIG9yIGhpZ2hlciwNCnNpbmNlIHRoZSBzdWJub2RlIHdpdGggbWFzdGVy
-IGxhbmUgbnVtYmVyIDAgaGFzIDIgbGFuZXMuDQpJJ2xsIGNoYW5nZSB0byBwY2llLXBoeUAyLCBh
-bmQgYWRkIGFuIGV4cGxhbmF0aW9uLg0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudHMNCg0KPiA+
-ICsJCQkJcmVnID0gPDI+Ow0KPiA+ICsJCQkJY2RucyxudW0tbGFuZXMgPSA8MT47DQo+ID4gKwkJ
-CQkjcGh5LWNlbGxzID0gPDA+Ow0KPiA+ICsJCQkJY2RucyxwaHktdHlwZSA9IDxQSFlfVFlQRV9Q
-Q0lFPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAtLQ0KPiA+IDEuOS4wDQo+ID4NCg==
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--m0iQ2IPV8OBaGyAPQoOUNmfhIgqQ66gYg
+Content-Type: multipart/mixed; boundary="us9iOL7kiYRQy0r1oTb9vTZJ0sFVXFgpH";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+ Wolfgang Grandegger <wg@grandegger.com>, Rob Herring <robh+dt@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+ Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>,
+ Chris Paterson <Chris.Paterson2@renesas.com>, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Biju Das <biju.das@bp.renesas.com>
+Message-ID: <cf75b506-f63c-0689-900f-6bfb11caff30@pengutronix.de>
+Subject: Re: [PATCH v2 0/3] Add can support to RZ/G2M
+References: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
+
+--us9iOL7kiYRQy0r1oTb9vTZJ0sFVXFgpH
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+
+On 09/10/2018 12:43 PM, Fabrizio Castro wrote:
+> Dear All,
+>=20
+> this series contains all that's necessary to add CAN support
+> for RZ/G2M (a.k.a. r8a774a1).
+>=20
+> v1-v2:
+> * applied Geert's comments
+
+Added 1/3 and 2/3 to linux-can.
+
+Tnx.
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--us9iOL7kiYRQy0r1oTb9vTZJ0sFVXFgpH--
+
+--m0iQ2IPV8OBaGyAPQoOUNmfhIgqQ66gYg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEENrCndlB/VnAEWuH5k9IU1zQoZfEFAlustK0ACgkQk9IU1zQo
+ZfGiXwgAysK8Givh2HTxAHe03Sn2ivUgDrR5z0fNERlaYvXUm1mD2x1+4ZNSOqSH
+z4XORv1mNOhuOwTnNdVUxQWnIsslnWFpN77OHOEakNJ3JBkWI4G4zNQYjjYbvfes
+688KUDYs5GdM5k1Bo9Wl7kyrDFZRUYUFLPAqeFaOx6vtBcHCCvNWXLFWCZ9MaU89
+yoMFPK9VaF6lj57XkFQh6M9bMdvHNuMpJyqjBptNl8CdPfUEyckznLodM11mqndy
+LGrrt1JER35n/tu7DYOfzjgSaaSq+wYFUjshrjTdq/6RKuyVlZ/I8+XXJwzs7FpQ
+25bnt1pj3RKT+HshbEGwxH6Fti8spA==
+=t7Pr
+-----END PGP SIGNATURE-----
+
+--m0iQ2IPV8OBaGyAPQoOUNmfhIgqQ66gYg--
