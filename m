@@ -1,40 +1,55 @@
+Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH 4/4] media: ov5640: reduce rate according to maximum pixel clock frequency
+Date: Thu, 27 Sep 2018 16:46:07 +0200
+Message-ID: <1538059567-8381-5-git-send-email-hugues.fruchet@st.com>
+In-Reply-To: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
+References: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-Date: Wed, 26 Sep 2018 15:54:42 -0500
-References: <20180921163156.GB7393@puremoods>
-In-Reply-To: <20180921163156.GB7393@puremoods>
-Message-ID: <CAL_JsqKR6EY3jKEMYpRasT9CZfCOQ+wCabYj8M9ERTbN1P_EAg@mail.gmail.com>
-Subject: Fwd: [kernel.org users] Adding other vger lists to lore.kernel.org archival
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: devicetree@vger.kernel.org, Devicetree Compiler <devicetree-compiler@vger.kernel.org>
+Content-Type: text/plain
+To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
 List-ID: <devicetree@vger.kernel.org>
 
-I would like to see the DT and DTC lists added to lore, but my archive
-of them is not complete. If someone has a complete archive, I'd love
-some help to add them.
+Reduce parallel port rate according to maximum pixel clock frequency
+admissible by camera interface.
+This allows to support any resolutions/framerate requests by decreasing
+the framerate according to maximum camera interface capabilities.
 
-BTW, we switched to vger in July 2013.
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+ drivers/media/i2c/ov5640.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Rob
-
----------- Forwarded message ---------
-From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
-Date: Fri, Sep 21, 2018 at 11:32 AM
-Subject: [kernel.org users] Adding other vger lists to lore.kernel.org archival
-To: <users@linux.kernel.org>
-
-
-Hi, all:
-
-We're now accepting requests to archive other vger.kernel.org lists on
-lore, as we have just done with linux-pci:
-
-https://lore.kernel.org/linux-pci
-
-The prerequisite for adding a list is collecting best-effort mail
-archives -- the process is described on the following wiki page:
-
-https://korg.wiki.kernel.org/userdoc/lore
-
-Best regards,
-Konstantin
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index da4d754..9f3c32e 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -918,6 +918,8 @@ static int ov5640_set_dvp_pclk(struct ov5640_dev *sensor,
+ {
+ 	u8 prediv, mult, sysdiv, pll_rdiv, bit_div, pclk_div;
+ 	int ret;
++	struct i2c_client *client = sensor->i2c_client;
++	unsigned int pclk_freq, max_pclk_freq;
+ 	/*
+ 	 * FIXME, value of PCLK divider deduced from
+ 	 * mode registers hardcoded sequence and tests
+@@ -941,6 +943,16 @@ static int ov5640_set_dvp_pclk(struct ov5640_dev *sensor,
+ 	if (ret)
+ 		return ret;
+ 
++	pclk_freq = rate / dvp_pclk_divider;
++	max_pclk_freq = sensor->ep.bus.parallel.pclk_max_frequency;
++
++	/* clip rate according to optional maximum pixel clock limit */
++	if (max_pclk_freq && pclk_freq > max_pclk_freq) {
++		rate = max_pclk_freq * dvp_pclk_divider;
++		dev_dbg(&client->dev, "DVP pixel clock too high (%d > %d Hz), reducing rate...\n",
++			pclk_freq, max_pclk_freq);
++	}
++
+ 	ov5640_calc_pclk(sensor, rate, &prediv, &mult, &sysdiv, &pll_rdiv,
+ 			 &bit_div, &pclk_div);
+ 
+-- 
+2.7.4
