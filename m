@@ -1,71 +1,51 @@
-Return-Path: <robherring2@gmail.com>
-Message-ID: <5b9f3f61.1c69fb81.f4e64.f592@mx.google.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] mfd: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-References: <20180905104120.17252-1-ckeepax@opensource.cirrus.com>
- <CACRpkdakAAAFKfRFeB_8kUCyGts_7sojVwyexe4aL4QQo2CcGg@mail.gmail.com>
- <20180906144834.GD1653@imbe.wolfsonmicro.main>
+Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH 0/4] OV5640: reduce rate according to maximum pixel clock
+Date: Thu, 27 Sep 2018 16:46:03 +0200
+Message-ID: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20180906144834.GD1653@imbe.wolfsonmicro.main>
-Date: Sun, 16 Sep 2018 18:11:08 -0500
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
+Content-Type: text/plain
+To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Sep 06, 2018 at 03:48:34PM +0100, Charles Keepax wrote:
-> On Thu, Sep 06, 2018 at 03:46:12PM +0200, Linus Walleij wrote:
-> > On Wed, Sep 5, 2018 at 12:41 PM Charles Keepax
-> > <ckeepax@opensource.cirrus.com> wrote:
-> > 
-> > > From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > >
-> > > Lochnagar is an evaluation and development board for Cirrus
-> > > Logic Smart CODEC and Amp devices. It allows the connection of
-> > > most Cirrus Logic devices on mini-cards, as well as allowing
-> > > connection of various application processor systems to provide a
-> > > full evaluation platform.  Audio system topology, clocking and
-> > > power can all be controlled through the Lochnagar, allowing the
-> > > device under test to be used in a variety of possible use cases.
-> > >
-> > > As the Lochnagar is a fairly complex device this MFD driver
-> > > allows the drivers for the various features to be bound
-> > > in. Initially clocking, regulator and pinctrl will be added as
-> > > these are necessary to configure the system. But in time at least
-> > > audio and voltage/current monitoring will also be added.
-> > >
-> > > Signed-off-by: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-> > 
-> > It's a bit confusing, maybe you can clear it up:
-> > it appears to be an I2C device, so when you say this is a
-> > "development board" is there something like a board
-> > controller that is accessed over I2C and this is what the
-> > driver really probes to, not the board per se?
-> > 
-> > I guess jamming this card into the I2C slot of any other
-> > system (would work fine with a 96Boards LS connector
-> > as it seems, actually)  also involves connecting some
-> > I2S or similar on the side for high-datarate traffic?
-> > 
-> > This driver seems to only concern itself with the I2C
-> > board controller per se, not the board is that right?
-> > 
-> 
-> Yeah I have poorly phrased that, these patches are very much
-> just dealing with the board controller chip.
+This patch serie aims to reduce parallel port rate according to maximum pixel
+clock frequency admissible by camera interface in front of the sensor.
+This allows to support any resolutions/framerate requests by decreasing
+the framerate according to maximum camera interface capabilities.
+This allows typically to enable 5Mp YUV/RGB frame capture even if 15fps
+framerate could not be reached by platform.
 
-How would the codec I2C connect to the host? Is there one I2C bus or 
-2? The binding looks mostly fine to me, but I think we need to 
-understand that part.
+This work is based on OV5640 Maxime Ripard's runtime clock computing serie [1]
+which allows to adapt the clock tree registers according to maximum pixel
+clock.
 
-> 
-> You could connect just the I2C to something like the 96Boards LS
-> connector, and control all the functionality accessed by this
-> driver. Although if you want to send audio between your 96Boards
-> device and the Lochnagar you would need to connect up some I2S as
-> well.
-> 
-> Thanks,
-> Charles
+Then the first patch adds handling of pclk divider registers
+DVP_PCLK_DIVIDER (0x3824) and VFIFO_CTRL0C (0x460c) in order to
+correlate the rate to the effective pixel clock output on parallel interface.
+
+A new devicetree property "pclk-max-frequency" is introduced in order
+to inform sensor of the camera interface maximum admissible pixel clock.
+This new devicetree property handling is added to V4L2 core.
+
+Then OV5640 ov5640_set_dvp_pclk() is modified to clip rate according
+to optional maximum pixel clock property.
+
+References:
+  [1] [PATCH v3 00/12] media: ov5640: Misc cleanup and improvements https://www.mail-archive.com/linux-media@vger.kernel.org/msg131655.html
+
+Hugues Fruchet (4):
+  media: ov5640: move parallel port pixel clock divider out of registers
+    set
+  media: v4l2-core: add pixel clock max frequency parallel port property
+  media: dt-bindings: media: Document pclk-max-frequency property
+  media: ov5640: reduce rate according to maximum pixel clock frequency
+
+ .../devicetree/bindings/media/video-interfaces.txt |  2 +
+ drivers/media/i2c/ov5640.c                         | 78 ++++++++++++++++------
+ drivers/media/v4l2-core/v4l2-fwnode.c              |  3 +
+ include/media/v4l2-fwnode.h                        |  2 +
+ 4 files changed, 65 insertions(+), 20 deletions(-)
+
+-- 
+2.7.4
