@@ -1,85 +1,84 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH 0/8] add generic builtin command line
-Date: Thu, 27 Sep 2018 19:05:44 +0200
-Message-ID: <CAKv+Gu-AxtOO04iwPSri12tkb9NRugXV9E2LGrfJT-LJjf4_ow@mail.gmail.com>
-References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 08/12] drm/sun4i: sun6i_mipi_dsi: Refactor vertical video
+ start delay
+Date: Thu, 27 Sep 2018 19:14:51 +0200
+Message-ID: <20180927171451.7iqt2nt2log5qojf@flea>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-9-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+Content-Disposition: inline
+In-Reply-To: <20180927114850.24565-9-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maksym Kokhan <maksym.kokhan@globallogic.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, the arch/x86 maintainers <x86@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <dwalker@fifo99.com>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On 27 September 2018 at 18:55, Maksym Kokhan
-<maksym.kokhan@globallogic.com> wrote:
-> There were series of patches [1] for 4.3.0-rc3, that allowed
-> architectures to use a generic builtin command line. I have rebased
-> these patches on kernel 4.19.0-rc4.
->
+On Thu, Sep 27, 2018 at 05:18:46PM +0530, Jagan Teki wrote:
+> Accordingly to BPI-M64-bsp DE DSI code Video start delay
+> can be computed by subtracting total vertical timing with
+> front porch timing and with adding 1 delay line for TCON.
 
-Could you please elaborate on the purpose of this series? Is it simply
-to align between architectures? Does it solve an actual problem?
+This is what the current code is doing as well.
 
-> Things, modified in comparison with original patches:
-> * There was some bug for mips, in the case when CONFIG_CMDLINE_PREPEND
-> and CONFIG_CMDLINE_APPEND are empty and CMDLINE_OVERRIDE is not set,
-> command line from bootloader was ignored, so I fixed it, modifying
-> patch "add generic builtin command line".
+> This patch simply add the start_delay logic from BPI-M64-bsp,
+> w/o this new computation, the DSI on A64 encounter vblank time out.
+> 
+> [CRTC:36:crtc-0] vblank wait timed out
 >
-> * Implemented new patch to resolve conflict with new kernel, which
-> modify EFI stub code. Unfortunately, I don't have capability to test
-> this modification on real arm board with EFI.
->
-> * Removed new realisation of mips builtin command line, which was
-> created after 4.3.0-rc3.
->
-> * Kernel 4.3.0-rc3 with original patches could not be compiled for
-> powerpc due to prom_init.c checking by prom_init_check.sh. So I added
-> strlcat (which is used by cmdline_add_builtin macro) to
-> prom_init_check.sh whitelist.
->
-> Patches have been tested in QEMU for x86, arm (little-endian), arm64
-> (little-endian), mips (little-endian, 32-bit) and powerpc
-> (big-endian, 64-bit), everything works perfectly. Also it was tested
-> on linux-next (next-20180924 tag) for all listed above architectures.
->
-> [1] : https://lore.kernel.org/patchwork/patch/604992/
->
-> Daniel Walker (7):
->   add generic builtin command line
->   drivers: of: ifdef out cmdline section
->   x86: convert to generic builtin command line
->   arm: convert to generic builtin command line
->   arm64: convert to generic builtin command line
->   mips: convert to generic builtin command line
->   powerpc: convert to generic builtin command line
->
-> Maksym Kokhan (1):
->   efi: modify EFI stub code for arm/arm64
->
->  arch/arm/Kconfig                        | 38 +-----------------
->  arch/arm/kernel/atags_parse.c           | 14 ++-----
->  arch/arm/kernel/devtree.c               |  2 +
->  arch/arm64/Kconfig                      | 17 +-------
->  arch/arm64/kernel/setup.c               |  3 ++
->  arch/mips/Kconfig                       | 24 +----------
->  arch/mips/Kconfig.debug                 | 47 ----------------------
->  arch/mips/kernel/setup.c                | 41 ++-----------------
->  arch/powerpc/Kconfig                    | 23 +----------
->  arch/powerpc/kernel/prom.c              |  4 ++
->  arch/powerpc/kernel/prom_init.c         |  8 ++--
->  arch/powerpc/kernel/prom_init_check.sh  |  2 +-
->  arch/x86/Kconfig                        | 44 +--------------------
->  arch/x86/kernel/setup.c                 | 19 ++-------
->  drivers/firmware/efi/libstub/arm-stub.c | 10 ++---
->  drivers/of/fdt.c                        |  2 +-
->  include/linux/cmdline.h                 | 70 +++++++++++++++++++++++++++++++++
->  init/Kconfig                            | 68 ++++++++++++++++++++++++++++++++
->  18 files changed, 173 insertions(+), 263 deletions(-)
->  create mode 100644 include/linux/cmdline.h
->
-> --
-> 2.7.4
->
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
+>  1 file changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> index 9918fdb990ff..217db74c6dc3 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -358,7 +358,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+>  static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+>  					   struct drm_display_mode *mode)
+>  {
+> -	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
+> +	u32 vfp = mode->vsync_start - mode->vdisplay;
+
+Again, this is wrong and contrary to what your commit log is saying.
+
+The Allwinner code has:
+
+u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+u32 dsi_start_delay = panel->lcd_vt - vfp + 1;
+
+So, essentially:
+
+vtotal - (vtotal - vdisplay - back porch) + 1
+
+The backporch is hsync_total - hsync_end, so we end up, removing the
+addition / removal of vtotal, with:
+
+vdisplay - (vsync_total - vsync_end) + 1
+
+The formula used there looks indeed different, but unlike what you
+were saying.
+
+> +	u32 start_delay;
+> +
+> +	start_delay = mode->vtotal - vfp + 1;
+> +	if (start_delay > mode->vtotal)
+> +		start_delay -= mode->vtotal;
+> +
+> +	if (!start_delay)
+> +		start_delay = 1;
+> +
+
+I guess that it's actually the clamping that fixes thing. It should be
+mentionned in your commit log.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
