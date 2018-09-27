@@ -1,7 +1,7 @@
 From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: [PATCH v4 1/3] dt-bindings: thermal: Add binding document for SR thermal
-Date: Thu, 27 Sep 2018 21:06:41 +0530
-Message-ID: <1538062603-7490-2-git-send-email-srinath.mannam@broadcom.com>
+Subject: [PATCH v4 2/3] arm64: dts: stingray: Add Stingray Thermal DT support.
+Date: Thu, 27 Sep 2018 21:06:42 +0530
+Message-ID: <1538062603-7490-3-git-send-email-srinath.mannam@broadcom.com>
 References: <1538062603-7490-1-git-send-email-srinath.mannam@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1538062603-7490-1-git-send-email-srinath.mannam@broadcom.com>
@@ -12,36 +12,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Pramod Kumar <pramod.kumar@broadcom.com>
 
-Add binding document for supported thermal implementation
-in Stingray.
+Add DT nodes for thermal zones memory base address
+to read temperature.
 
 Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
 Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
 Reviewed-by: Ray Jui <ray.jui@broadcom.com>
 Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 ---
- .../bindings/thermal/brcm,sr-thermal.txt           | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+ arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-new file mode 100644
-index 0000000..717617b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-@@ -0,0 +1,25 @@
-+* Broadcom Stingray Thermal
+diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+index e283480..a30985c 100644
+--- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
++++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
+@@ -612,4 +612,18 @@
+ 			status = "disabled";
+ 		};
+ 	};
 +
-+This binding describes thermal sensors that is part of Stingray SoCs.
-+
-+Required properties:
-+- compatible : Must be "brcm,sr-thermal"
-+- reg : memory where tmon data will be available.
-+- brcm,tmon-mask: A one cell bit mask of valid TMON sources.
-+                  Each bit represents single TMON source.
-+- brcm,max-crit-temp: Maximum supported critical temperature.
-+
-+Example:
 +	tmons {
 +		compatible = "simple-bus";
 +		#address-cells = <1>;
@@ -50,10 +40,11 @@ index 0000000..717617b
 +
 +		tmon: thermal@0 {
 +			compatible = "brcm,sr-thermal";
-+			reg = <0 0x40>;
++			reg = <0x0 0x40>;
 +			brcm,tmon-mask = <0x3f>;
 +			brcm,max-crit-temp = <105000>;
 +		};
 +	};
+ };
 -- 
 2.7.4
