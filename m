@@ -1,100 +1,194 @@
-Return-Path: <SRS0=x/N+=MJ=sirena.org.uk=broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: switch to SPDX license identifier" to the spi tree
-In-Reply-To: <20180925094230.32679-2-m.felsch@pengutronix.de>
-Message-Id: <20180927224018.67465440078@finisterre.ee.mobilebroadband>
-Date: Thu, 27 Sep 2018 23:40:18 +0100 (BST)
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: Mark Brown <broonie@kernel.org>, dmitry.torokhov@gmail.combroonie@kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, kernel@pengutronix.delinux-spi@vger.kernel.org
+Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
+From: Hugues Fruchet <hugues.fruchet@st.com>
+Subject: [PATCH 1/4] media: ov5640: move parallel port pixel clock divider out of registers set
+Date: Thu, 27 Sep 2018 16:46:04 +0200
+Message-ID: <1538059567-8381-2-git-send-email-hugues.fruchet@st.com>
+In-Reply-To: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
+References: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch
+Set DVP_PCLK_DIVIDER (0x3824) and VFIFO_CTRL0C (0x460c) registers
+in ov5640_set_dvp_pclk() according to mode selected.
 
-   spi: switch to SPDX license identifier
-
-has been applied to the spi tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From b445bfcb9081ae90fec90b828f3aacc565776901 Mon Sep 17 00:00:00 2001
-From: Marco Felsch <m.felsch@pengutronix.de>
-Date: Tue, 25 Sep 2018 11:42:28 +0200
-Subject: [PATCH] spi: switch to SPDX license identifier
-
-Use the appropriate SPDX license identifier and drop the previous
-license text.
-
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- drivers/spi/spi.c       | 11 +----------
- include/linux/spi/spi.h | 13 ++-----------
- 2 files changed, 3 insertions(+), 21 deletions(-)
+ drivers/media/i2c/ov5640.c | 66 ++++++++++++++++++++++++++++++++--------------
+ 1 file changed, 46 insertions(+), 20 deletions(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index a358acdd98d3..2cfc3df821f6 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1,18 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
- /*
-  * SPI init/core code
-  *
-  * Copyright (C) 2005 David Brownell
-  * Copyright (C) 2008 Secret Lab Technologies Ltd.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+index 1a64bb6..da4d754 100644
+--- a/drivers/media/i2c/ov5640.c
++++ b/drivers/media/i2c/ov5640.c
+@@ -66,6 +66,7 @@
+ #define OV5640_REG_TIMING_VTS		0x380e
+ #define OV5640_REG_TIMING_TC_REG20	0x3820
+ #define OV5640_REG_TIMING_TC_REG21	0x3821
++#define OV5640_REG_DVP_PCLK_DIVIDER	0x3824
+ #define OV5640_REG_AEC_CTRL00		0x3a00
+ #define OV5640_REG_AEC_B50_STEP		0x3a08
+ #define OV5640_REG_AEC_B60_STEP		0x3a0a
+@@ -82,6 +83,7 @@
+ #define OV5640_REG_SIGMADELTA_CTRL0C	0x3c0c
+ #define OV5640_REG_FRAME_CTRL01		0x4202
+ #define OV5640_REG_FORMAT_CONTROL00	0x4300
++#define OV5640_REG_VFIFO_CTRL0C		0x460C
+ #define OV5640_REG_POLARITY_CTRL00	0x4740
+ #define OV5640_REG_MIPI_CTRL00		0x4800
+ #define OV5640_REG_DEBUG_MODE		0x4814
+@@ -355,8 +357,8 @@ static const struct reg_value ov5640_setting_VGA_640_480[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0xa3, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0xa3, 0, 0},
+ };
  
- #include <linux/kernel.h>
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 7bb36145e2ba..f08824ea1968 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -1,15 +1,6 @@
--/*
-- * Copyright (C) 2005 David Brownell
-+/* SPDX-License-Identifier: GPL-2.0-or-later
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-+ * Copyright (C) 2005 David Brownell
-  */
+ static const struct reg_value ov5640_setting_XGA_1024_768[] = {
+@@ -374,8 +376,8 @@ static const struct reg_value ov5640_setting_XGA_1024_768[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0xa3, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0xa3, 0, 0},
+ };
  
- #ifndef __LINUX_SPI_H
+ static const struct reg_value ov5640_setting_QVGA_320_240[] = {
+@@ -393,8 +395,8 @@ static const struct reg_value ov5640_setting_QVGA_320_240[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0xa3, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0xa3, 0, 0},
+ };
+ 
+ static const struct reg_value ov5640_setting_QCIF_176_144[] = {
+@@ -412,8 +414,8 @@ static const struct reg_value ov5640_setting_QCIF_176_144[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0xa3, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0xa3, 0, 0},
+ };
+ 
+ static const struct reg_value ov5640_setting_NTSC_720_480[] = {
+@@ -431,8 +433,8 @@ static const struct reg_value ov5640_setting_NTSC_720_480[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0xa3, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0xa3, 0, 0},
+ };
+ 
+ static const struct reg_value ov5640_setting_PAL_720_576[] = {
+@@ -450,8 +452,8 @@ static const struct reg_value ov5640_setting_PAL_720_576[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0xa3, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0xa3, 0, 0},
+ };
+ 
+ static const struct reg_value ov5640_setting_720P_1280_720[] = {
+@@ -469,8 +471,8 @@ static const struct reg_value ov5640_setting_720P_1280_720[] = {
+ 	{0x3a0a, 0x01, 0, 0}, {0x3a0b, 0x72, 0, 0}, {0x3a0e, 0x01, 0, 0},
+ 	{0x3a0d, 0x02, 0, 0}, {0x3a14, 0x02, 0, 0}, {0x3a15, 0xe4, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x02, 0, 0}, {0x4713, 0x02, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x37, 0, 0}, {0x460c, 0x20, 0, 0},
+-	{0x3824, 0x04, 0, 0}, {0x5001, 0x83, 0, 0},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x37, 0, 0},
++	{0x5001, 0x83, 0, 0},
+ };
+ 
+ static const struct reg_value ov5640_setting_1080P_1920_1080[] = {
+@@ -490,7 +492,7 @@ static const struct reg_value ov5640_setting_1080P_1920_1080[] = {
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x06, 0, 0}, {0x4713, 0x03, 0, 0},
+ 	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0x83, 0, 0},
++	{0x5001, 0x83, 0, 0},
+ 	{0x3c07, 0x07, 0, 0}, {0x3c08, 0x00, 0, 0},
+ 	{0x3c09, 0x1c, 0, 0}, {0x3c0a, 0x9c, 0, 0}, {0x3c0b, 0x40, 0, 0},
+ 	{0x3800, 0x01, 0, 0}, {0x3801, 0x50, 0, 0}, {0x3802, 0x01, 0, 0},
+@@ -501,7 +503,7 @@ static const struct reg_value ov5640_setting_1080P_1920_1080[] = {
+ 	{0x3a09, 0x50, 0, 0}, {0x3a0a, 0x01, 0, 0}, {0x3a0b, 0x18, 0, 0},
+ 	{0x3a0e, 0x03, 0, 0}, {0x3a0d, 0x04, 0, 0}, {0x3a14, 0x04, 0, 0},
+ 	{0x3a15, 0x60, 0, 0}, {0x4713, 0x02, 0, 0}, {0x4407, 0x04, 0, 0},
+-	{0x460b, 0x37, 0, 0}, {0x460c, 0x20, 0, 0}, {0x3824, 0x04, 0, 0},
++	{0x460b, 0x37, 0, 0},
+ 	{0x4005, 0x1a, 0, 0}, {0x3008, 0x02, 0, 0}, {0x3503, 0, 0, 0},
+ };
+ 
+@@ -520,8 +522,8 @@ static const struct reg_value ov5640_setting_QSXGA_2592_1944[] = {
+ 	{0x3a0a, 0x00, 0, 0}, {0x3a0b, 0xf6, 0, 0}, {0x3a0e, 0x03, 0, 0},
+ 	{0x3a0d, 0x04, 0, 0}, {0x3a14, 0x03, 0, 0}, {0x3a15, 0xd8, 0, 0},
+ 	{0x4001, 0x02, 0, 0}, {0x4004, 0x06, 0, 0}, {0x4713, 0x03, 0, 0},
+-	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0}, {0x460c, 0x22, 0, 0},
+-	{0x3824, 0x02, 0, 0}, {0x5001, 0x83, 0, 70},
++	{0x4407, 0x04, 0, 0}, {0x460b, 0x35, 0, 0},
++	{0x5001, 0x83, 0, 70},
+ };
+ 
+ /* power-on sensor init reg table */
+@@ -910,10 +912,34 @@ static unsigned long ov5640_calc_pclk(struct ov5640_dev *sensor,
+ 	return _rate / *pll_rdiv / *bit_div / *pclk_div;
+ }
+ 
+-static int ov5640_set_dvp_pclk(struct ov5640_dev *sensor, unsigned long rate)
++static int ov5640_set_dvp_pclk(struct ov5640_dev *sensor,
++			       const struct ov5640_mode_info *mode,
++			       unsigned long rate)
+ {
+ 	u8 prediv, mult, sysdiv, pll_rdiv, bit_div, pclk_div;
+ 	int ret;
++	/*
++	 * FIXME, value of PCLK divider deduced from
++	 * mode registers hardcoded sequence and tests
++	 */
++	u8 dvp_pclk_divider = mode->hact < 1024 ? 2 : 1;
++
++	/*
++	 * VIFO CTRL0C:
++	 * - [1]:	PCLK manual enable (0: control by auto-mode,
++	 *		1: manual control by OV5640_REG_DVP_PCLK_DIVIDER)
++	 *
++	 * Always enable PCLK manual control.
++	 */
++	ret = ov5640_mod_reg(sensor, OV5640_REG_VFIFO_CTRL0C,
++			     BIT(1), BIT(1));
++	if (ret)
++		return ret;
++
++	ret = ov5640_write_reg(sensor, OV5640_REG_DVP_PCLK_DIVIDER,
++			       dvp_pclk_divider);
++	if (ret)
++		return ret;
+ 
+ 	ov5640_calc_pclk(sensor, rate, &prediv, &mult, &sysdiv, &pll_rdiv,
+ 			 &bit_div, &pclk_div);
+@@ -1699,7 +1725,7 @@ static int ov5640_set_mode(struct ov5640_dev *sensor)
+ 		ret = ov5640_set_mipi_pclk(sensor, rate);
+ 	} else {
+ 		rate = rate / sensor->ep.bus.parallel.bus_width;
+-		ret = ov5640_set_dvp_pclk(sensor, rate);
++		ret = ov5640_set_dvp_pclk(sensor, mode, rate);
+ 	}
+ 
+ 	if (ret < 0)
 -- 
-2.19.0
+2.7.4
