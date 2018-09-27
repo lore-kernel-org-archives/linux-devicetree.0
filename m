@@ -1,65 +1,51 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC PATCH 7/9] leds: lm3633: Introduce the lm3633 driver
-Date: Thu, 27 Sep 2018 23:47:52 +0200
-Message-ID: <20180927214752.GG17346@amd>
-References: <20180926130921.12329-1-dmurphy@ti.com>
- <20180926130921.12329-8-dmurphy@ti.com>
- <20180926223612.GA32286@amd>
- <7da01c06-f0f1-9022-54ec-f851d01f86ee@ti.com>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH 2/3] dt-bindings: firmware: coreboot: document board
+ variant properties
+Date: Thu, 27 Sep 2018 14:48:51 -0700
+Message-ID: <CA+ASDXMMyz+uva9++kih+t9k2W+hFtA5E-Fmd8b_TwrY2N0LFg@mail.gmail.com>
+References: <20180822120214.11848-1-heiko@sntech.de>
+ <20180822120214.11848-2-heiko@sntech.de>
+ <20180831121836.GA23441@bogus> <1660300.IG1gbB27SJ@phil>
+ <20180925163927.GA23163@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0z5c7mBtSy1wdr4F"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7da01c06-f0f1-9022-54ec-f851d01f86ee@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180925163927.GA23163@bogus>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandru M Stan <amstan@chromium.org>, Doug Anderson <dianders@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-arm-kernel@lists.infradead.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Sep 25, 2018 at 9:39 AM Rob Herring <robh@kernel.org> wrote:
+> Reading strapping values and putting into DT seems like a perfectly
+> reasonable thing to do (I'm assuming the pins get initialized to their
+> function and reading them later is not possible), but that has nothing
+> to do coreboot really. We don't put things u-boot touches under a u-boot
+> node. These should go at the top-level IMO.
 
---0z5c7mBtSy1wdr4F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Where, exactly? Do you have a suggested property name?
 
-Hi!
+Regarding compatible-based approach (from prior email): we do heavily
+use the top-level 'compatible' property too for a similar purpose, but
+sometimes there's a useful difference between "I booted with DTB
+<foo>, which is compatible with revision X, Y, Z, ..." and "the exact
+revision I booted is N". So the properties are definitely useful.
 
-> > Duplicate.
-> >=20
-> > Can we get some more sharing? One way would be to have struct with
-> > all the constants (instead of #defines) use that...?
->=20
-> I will look at the adding common constants to but they should be common a=
-cross
-> more then just 2 devices.  As you can see the LM3632 code is quite differ=
-ent
-> when you add in the flash/torch support.
+> And maybe it is compelling to just take them having been in use for some
+> time on widely deploying devices, but that's not really good precedence.
 
-LM3632 is indeed different, I see.
+Well, we ain't changing the old firmware. Coming up with a new name
+can work, and we can modify new firmware to start doing both. But it'd
+still probably be wise to note what's actively in-use, especially if
+it's not substantively different than what we settle on.
 
-On the other hand, I'd really like to see the code shared, even if it
-is just for 2 devices. (I believe that family is big enough that we'll
-likely see more sharing in future).
-
-Thanks,
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---0z5c7mBtSy1wdr4F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlutUAgACgkQMOfwapXb+vJLFQCeL4YKXfqkDl+7md+fsLrHBgwp
-YOUAn1r4iDOnflyNQ8BWi2AF31Apg1XE
-=0NJ2
------END PGP SIGNATURE-----
-
---0z5c7mBtSy1wdr4F--
+Brian
