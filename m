@@ -1,90 +1,38 @@
 From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH i2c-next v3 2/3] i2c: aspeed: Add 'aspeed,timeout' DT
- property reading code
-Date: Thu, 27 Sep 2018 07:11:59 +0400
-Message-ID: <CACPK8XcKms88EcpT3soE6wLyAmvyiLfVkNeOQT0FgmY4eZoDrw@mail.gmail.com>
-References: <20180926215842.23125-1-jae.hyun.yoo@linux.intel.com> <20180926215842.23125-3-jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v2 1/2] ARM: dt-bindings: Add vendor prefix for Facebook
+Date: Thu, 27 Sep 2018 07:14:39 +0400
+Message-ID: <CACPK8XctuiN8yphXFUmwXnpphb5LP2i8Cje_HAdsBwMWSvpsdA@mail.gmail.com>
+References: <20180919164712.4030353-1-vijaykhemka@fb.com> <20180926230026.GA26508@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926215842.23125-3-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <20180926230026.GA26508@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jarkko.nikula@linux.intel.com, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: vijaykhemka@fb.com, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 27 Sep 2018 at 01:58, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
+On Thu, 27 Sep 2018 at 03:01, Rob Herring <robh@kernel.org> wrote:
 >
-> This commit adds reading code of the 'aspeed,timeout' DT property
-> to set 'timeout' value in adapter configuration. This value still
-> case be configured through an I2C_TIMEOUT ioctl on cdev too.
+> On Wed, 19 Sep 2018 09:47:10 -0700, Vijay Khemka wrote:
+> > Initial introduction of Facebook TiogaPass family equipped with
+> > Aspeed 2500 BMC SoC. TiogaPass is a x86 server development kit
+> > with a ASPEED ast2500 BMC manufactured by Facebook.
+> >
+> > This adds an entry of Facebook in Documentation for vendor prefix
+> >
+> > Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
+> > ---
+> >  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
 >
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> ---
->  drivers/i2c/busses/i2c-aspeed.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-> index 8dc9161ced38..0d934ce0c028 100644
-> --- a/drivers/i2c/busses/i2c-aspeed.c
-> +++ b/drivers/i2c/busses/i2c-aspeed.c
-> @@ -115,6 +115,9 @@
->  /* 0x18 : I2CD Slave Device Address Register   */
->  #define ASPEED_I2CD_DEV_ADDR_MASK                      GENMASK(6, 0)
->
-> +/* Timeout */
-> +#define ASPEED_I2C_BUS_TIMEOUT_US_DEFAULT              (5 * 1000 * 1000)
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-The 5 seconds time out is way too long. On a system that doesn't have
-functional i2c, this holds up boot for a long time as most i2c client
-drivers try to initialise their device and fail. I realise you're not
-changing the value, but we should pick a better default. 1 second?
-Half a second?
-
-> +
->  enum aspeed_i2c_master_state {
->         ASPEED_I2C_MASTER_INACTIVE,
->         ASPEED_I2C_MASTER_START,
-> @@ -885,6 +888,7 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
->         struct clk *parent_clk;
->         struct resource *res;
->         int irq, ret;
-> +       u32 timeout_us;
->
->         bus = devm_kzalloc(&pdev->dev, sizeof(*bus), GFP_KERNEL);
->         if (!bus)
-> @@ -918,6 +922,11 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
->                 bus->bus_frequency = 100000;
->         }
->
-> +       ret = of_property_read_u32(pdev->dev.of_node, "aspeed,timeout",
-> +                                  &timeout_us);
-
-Can we make this binding generic? It's not specific to aspeed's
-hardware. Getting the value could even part of the i2c core.
-
-I read the previous thread with Wolfram. I think this would still fit
-with what Wolfram suggested, but please forgive my jetlagged brain if
-I've missed something.
+Rob, can you take this through the dt tree? I've already merged
+Vijay's device tree through the arm soc tree, and don't plan on
+sending another pull req for 4.20 at this stage.
 
 Cheers,
 
 Joel
-> +       if (ret)
-> +               timeout_us = ASPEED_I2C_BUS_TIMEOUT_US_DEFAULT;
-> +
->         match = of_match_node(aspeed_i2c_bus_of_table, pdev->dev.of_node);
->         if (!match)
->                 bus->get_clk_reg_val = aspeed_i2c_24xx_get_clk_reg_val;
-> @@ -930,7 +939,7 @@ static int aspeed_i2c_probe_bus(struct platform_device *pdev)
->         init_completion(&bus->cmd_complete);
->         bus->adap.owner = THIS_MODULE;
->         bus->adap.retries = 0;
-> -       bus->adap.timeout = 5 * HZ;
-> +       bus->adap.timeout = usecs_to_jiffies(timeout_us);
->         bus->adap.algo = &aspeed_i2c_algo;
->         bus->adap.dev.parent = &pdev->dev;
->         bus->adap.dev.of_node = pdev->dev.of_node;
-> --
-> 2.19.0
->
