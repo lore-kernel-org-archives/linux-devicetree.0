@@ -1,51 +1,140 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCHv4 4/6] ARM: dts: exynos: Add CD and WP pins to Odroid
- XU3/XU4 SD card
-Date: Thu, 27 Sep 2018 09:15:11 +0530
-Message-ID: <CANAwSgSPkKL3jaHHSkEhgocKT_Sq4zg3Z=+7d5889ttpnNPHDA@mail.gmail.com>
-References: <20180922075238.884-1-linux.amoon@gmail.com> <20180922075238.884-6-linux.amoon@gmail.com>
- <20180926190639.GA6461@kozik-lap>
+From: Keerthy <j-keerthy@ti.com>
+Subject: Re: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+Date: Thu, 27 Sep 2018 10:25:52 +0530
+Message-ID: <305bf1c3-915d-dac1-95e4-4d32621247e1@ti.com>
+References: <20180925000545.22931-1-tony@atomide.com>
+ <e9afe736-c2f0-6182-afd0-08279e09a35e@ti.com>
+ <20180925144021.GN5662@atomide.com> <20180925175537.GQ5662@atomide.com>
+ <d98aa7c1-5131-34c5-51e5-c7ef57cbc31e@ti.com>
+ <20180926155911.GT5662@atomide.com> <20180926162303.GU5662@atomide.com>
+ <cfc3f1db-9468-ed92-a673-882b51b4dec8@ti.com>
+ <20180926233111.GY5662@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926190639.GA6461@kozik-lap>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180926233111.GY5662@atomide.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tony Lindgren <tony@atomide.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-On Thu, 27 Sep 2018 at 00:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> On Sat, Sep 22, 2018 at 07:52:36AM +0000, Anand Moon wrote:
-> > Add the card-detect and write-protect GPIO pins for OdroidXU3/XU4
-> > SD card by adding pinctrl setting for wp-gpio pin and set it to
-> > active low.
-> >
-> > This also removes debug messages:
-> >     dwmmc_exynos 12220000.mmc: No GPIO consumer cd found
-> >     dwmmc_exynos 12220000.mmc: No GPIO consumer wp found
-> >
-> > Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Fix the commit message and squash it with cd-gpios and wp-gpio
-> > patches into single patch as suggested by Krzysztof.
->
-> As Marek pointed to my Odroid XU patch, there is no point of adding
-> cd-gpios and wp-gpios properties.
->
-> Adding pin configuration for wp pin is also not needed. Reset values are
-> working properly. However there might be meaning of adding it just in
-> case - if bootloader decided to touch it...
->
-> Best regards,
-> Krzysztof
->
 
-Do I need to send the all the patches again or just resend this as per
-your patch for Odroid XU.
-with dropping the cd-gpios and wp-gpios changes.
 
-Best Regards
--Anand
+On Thursday 27 September 2018 05:01 AM, Tony Lindgren wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [180926 21:41]:
+>> On 09/26/2018 11:23 AM, Tony Lindgren wrote:
+>>> +static int __maybe_unused omap_i2c_suspend(struct device *dev)
+>>> +{
+>>> +	struct omap_i2c_dev *ddata = dev_get_drvdata(dev);
+>>> +	int error;
+>>> +
+>>> +	/* Is device still enabled because of autosuspend? */
+>>> +	if (ddata->is_suspended)
+>>> +		return 0;
+>>
+>> Sry, but you can't do this. There is no sync between suspend and PM runtime.
+>>
+>>
+>>> +
+>>> +	/* Paired with call in omap_i2c_resume() */
+>>> +	error = pm_runtime_put_sync_suspend(dev);
+>>
+>> This is nop!!! More over, in general you can't predict how many times pm_runtime_get was called and
+>> what's the current value of usage_count.
+> 
+> Hmm yeah that's a good point.
+> 
+>> To make things work the pm_runtime_force_xx() have to be used, or
+>> like with omap_device, platform/bus code have to handle device state
+>> at suspend_no_irq stage.
+> 
+> OK. So looks like the other i2c bus drivers have already solved it
+> with simply SET_NOIRQ_SYSTEM_SLEEP_PM_OPS which is along the lines
+> you're suggesting.
+> 
+> The following works for me, does it look OK to you?
+
+This works pretty well with DS0 on am437x-gp-evm. Tested rtc wakeup,
+wakeup using uart and touch. All of the work well.
+
+https://pastebin.ubuntu.com/p/RJhJJKhJHX/
+
+Also tested on beaglebone black DS0 works fine. Although there seems to
+be an additional warning which was not seen before:
+
+"l4-wkup-clkctrl:0008:0: failed to disable"
+
+log: https://pastebin.ubuntu.com/p/Ns2WRdVkXS/
+
+Also the above warning is present without/with this patch on [0].
+No such warnings on am4 though.
+
+[0]
+https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v4.20/dt-ti-sysc-tmp-testing
+
+Regards,
+Keerthy
+
+> 
+> Regards,
+> 
+> Tony
+> 
+> 8< ---------------------
+> diff --git a/drivers/i2c/busses/i2c-omap.c b/drivers/i2c/busses/i2c-omap.c
+> --- a/drivers/i2c/busses/i2c-omap.c
+> +++ b/drivers/i2c/busses/i2c-omap.c
+> @@ -1498,8 +1498,7 @@ static int omap_i2c_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_PM
+> -static int omap_i2c_runtime_suspend(struct device *dev)
+> +static int __maybe_unused omap_i2c_runtime_suspend(struct device *dev)
+>  {
+>  	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+>  
+> @@ -1525,7 +1524,7 @@ static int omap_i2c_runtime_suspend(struct device *dev)
+>  	return 0;
+>  }
+>  
+> -static int omap_i2c_runtime_resume(struct device *dev)
+> +static int __maybe_unused omap_i2c_runtime_resume(struct device *dev)
+>  {
+>  	struct omap_i2c_dev *omap = dev_get_drvdata(dev);
+>  
+> @@ -1540,20 +1539,18 @@ static int omap_i2c_runtime_resume(struct device *dev)
+>  }
+>  
+>  static const struct dev_pm_ops omap_i2c_pm_ops = {
+> +	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> +				      pm_runtime_force_resume)
+>  	SET_RUNTIME_PM_OPS(omap_i2c_runtime_suspend,
+>  			   omap_i2c_runtime_resume, NULL)
+>  };
+> -#define OMAP_I2C_PM_OPS (&omap_i2c_pm_ops)
+> -#else
+> -#define OMAP_I2C_PM_OPS NULL
+> -#endif /* CONFIG_PM */
+>  
+>  static struct platform_driver omap_i2c_driver = {
+>  	.probe		= omap_i2c_probe,
+>  	.remove		= omap_i2c_remove,
+>  	.driver		= {
+>  		.name	= "omap_i2c",
+> -		.pm	= OMAP_I2C_PM_OPS,
+> +		.pm	= &omap_i2c_pm_ops,
+>  		.of_match_table = of_match_ptr(omap_i2c_of_match),
+>  	},
+>  };
+> 
