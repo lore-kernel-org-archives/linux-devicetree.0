@@ -1,59 +1,89 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 06/12] drm/sun4i: sun6i_mipi_dsi: Fix VBP
- size calculation
-Date: Thu, 27 Sep 2018 21:50:34 +0530
-Message-ID: <CAMty3ZABx9Fod5W_T7JciZEsn7jGvuM-LsBFATdA=hQ2CVwELw@mail.gmail.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-7-jagan@amarulasolutions.com> <20180927152126.vovnvwmqdfpuxgdm@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pinctrl: renesas,rzn1-pinctrl:
+ documentation
+Date: Thu, 27 Sep 2018 11:25:36 -0500
+Message-ID: <20180927162536.GA16329@bogus>
+References: <20180927135922.12015-1-phil.edworthy@renesas.com>
+ <20180927135922.12015-2-phil.edworthy@renesas.com>
+ <CAMuHMdV1n9KgU+6LxY3_jHTqgL1gKs+54yY0qjnwBeQX7UdOSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBX4GWTOQKGQEJF3TKPI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180927152126.vovnvwmqdfpuxgdm@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV1n9KgU+6LxY3_jHTqgL1gKs+54yY0qjnwBeQX7UdOSg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Phil Edworthy <phil.edworthy@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, Jacopo Mondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 8:51 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Thu, Sep 27, 2018 at 05:18:44PM +0530, Jagan Teki wrote:
-> > According to horizontal and vertical timings are defined
-> > per the diagram from include/drm/drm_modes.h
+On Thu, Sep 27, 2018 at 05:15:54PM +0200, Geert Uytterhoeven wrote:
+> On Thu, Sep 27, 2018 at 3:59 PM Phil Edworthy <phil.edworthy@renesas.com> wrote:
+> > The Renesas RZ/N1 device family PINCTRL node description.
 > >
-> > Back porch = [hv]total - [hv]sync_end
+> > Based on a patch originally written by Michel Pollet at Renesas.
 > >
-> > So, update SUN6I_DSI_BASIC_SIZE0_VBP calculation as
-> > mode->vtotal - mode->vsync_end
-> >
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
+> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 > > ---
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 1c7e42015645..599284971ab6 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -526,8 +526,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> >       regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE0_REG,
-> >                    SUN6I_DSI_BASIC_SIZE0_VSA(mode->vsync_end -
-> >                                              mode->vsync_start) |
-> > -                  SUN6I_DSI_BASIC_SIZE0_VBP(mode->vsync_start -
-> > -                                            mode->vdisplay));
-> > +                  SUN6I_DSI_BASIC_SIZE0_VBP(mode->vtotal -
-> > +                                            mode->vsync_end));
->
-> Is it purely theoretical, or did you find some source that back that?
+> > v6:
+> >  - Instead of combining the pin nr and func into a single element, use
+> >    a pair of 8-bit elements.
+> 
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.txt
+> 
+> > +- Pin multiplexing sub-nodes:
+> > +  A pin multiplexing sub-node describes how to configure a set of
+> > +  (or a single) pin in some desired alternate function mode.
+> > +  A single sub-node may define several pin configurations.
+> > +  Please refer to pinctrl-bindings.txt to get to know more on generic
+> > +  pin properties usage.
+> > +
+> > +  The allowed generic formats for a pin multiplexing sub-node are the
+> > +  following ones:
+> > +
+> > +  node-1 {
+> > +      pinmux = /bits/ 8 <PIN_NR MUX_FUNC>, <PIN_NR MUX_FUNC>, ... ;
+> > +      GENERIC_PINCONFIG;
+> > +  };
+> 
+> and
+> 
+> > +  Example:
+> > +  A serial communication interface with a TX output pin and an RX input pin.
+> > +
+> > +  &pinctrl {
+> > +       pins_uart0: pins_uart0 {
+> > +               pinmux = /bits/ 8 <
+> > +                       103 RZN1_FUNC_UART0_I   /* UART0_TXD */
+> > +                       104 RZN1_FUNC_UART0_I   /* UART0_RXD */
+> > +               >;
+> > +       };
+> > +  };
+> 
+> So the above is in response to Rob's comment on v4:
+> 
+> | > +#define RZN1_MUX(_gpio, _func) \
+> | > +       (((RZN1_FUNC_##_func) << 8) | (_gpio))
+> |
+> | I'm not a fan of token pasting and it also goes against kernel style.
+> | If every other Renesas platform is doing this, then fine. Otherwise,
+> | you can express it in pretty much the same (source) space:
+> |
+> | pinmux = <RZN1_MUX_UART0_I 104>;
+> |
+> | Yes, this is 2 cells instead of 1, but if you care about space, you
+> | can use 8 or 16 bit size.
+> 
+> I'm not so much impressed by the "/bits/ 8" part.
+> No other pinctrl bindings uses this.
+> We do have RZA1_PINMUX() and STM32_PINMUX() macros.
 
-VSA is done as per that, sync_end - sync start would give sync time.
-VBP also done in BPI-M64-bsp[1] which results back porch existing code
-results fron porch.
+Yes, but those aren't doing token pasting which was my complaint here.
 
-[1] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L955
+> Rob: Is this really what you intended?
+
+Do whatever is most consistant. If you want a macro to shift fields, 
+then fine.
+
+Rob
