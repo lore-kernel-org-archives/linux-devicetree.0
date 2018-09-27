@@ -1,45 +1,59 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 net-next 0/2] Add support for Microchip Technology
- KSZ9131 10/100/1000 Ethernet PHY
-Date: Thu, 27 Sep 2018 12:28:31 -0700
-Message-ID: <7c84dfed-6864-7b25-38d1-9bed1cfea0bc@gmail.com>
-References: <1538079344-6152-1-git-send-email-yuiko.oshino@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: light: bh1750: Add device tree
+ binding documentation
+Date: Thu, 27 Sep 2018 14:31:37 -0500
+Message-ID: <20180927193137.GA14849@bogus>
+References: <20180922210539.6670-1-decatf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538079344-6152-1-git-send-email-yuiko.oshino@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180922210539.6670-1-decatf@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yuiko Oshino <yuiko.oshino@microchip.com>, davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
+To: ryang <decatf@gmail.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2018 01:15 PM, Yuiko Oshino wrote:
-> This is the initial driver for Microchip KSZ9131 10/100/1000 Ethernet PHY
+On Sat, Sep 22, 2018 at 05:05:38PM -0400, ryang wrote:
+> Document device tree bindings for ROHM BH1750 ambient light sensor driver.
 > 
-> v2:
-> - Creating a series from two related patches.
-
-When people give you Acked-by or Reviewed-by tags in prior versions, it
-is usually a good  practice to add them to your next version of the
-patch submission. Also, your patches 1 and 2 did not show up as as reply
-to this cover letter, while they should, please fix this if you ever
-need to submit new patches in the future.
-
-Thank you!
-
+> Signed-off-by: ryang <decatf@gmail.com>
+> ---
+>  .../devicetree/bindings/iio/light/bh1750.txt   | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/bh1750.txt
 > 
-> Yuiko Oshino (2):
->   net: phy: micrel: add Microchip KSZ9131 inital driver
->   dt-bindings: net: add support for Microchip KSZ9131 Ethernet PHY
-> 
->  .../devicetree/bindings/net/micrel-ksz90x1.txt     | 29 +++++++++++++++++++-
->  drivers/net/phy/micrel.c                           | 32 ++++++++++++++++++++--
->  include/linux/micrel_phy.h                         |  1 +
->  3 files changed, 58 insertions(+), 4 deletions(-)
-> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/bh1750.txt b/Documentation/devicetree/bindings/iio/light/bh1750.txt
+> new file mode 100644
+> index 000000000000..468350cc7af6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/bh1750.txt
+> @@ -0,0 +1,18 @@
+> +ROHM BH1750 - ALS, Ambient light sensor
+> +
+> +Required properties:
+> +
+> +- compatible: Must be one of:
+> +    "rohm,bh1710"
+> +    "rohm,bh1715"
+> +    "rohm,bh1721"
+> +    "rohm,bh1750"
+> +    "rohm,bh1751"
+> +- reg: the I2C address of the sensor
+> +
+> +Example:
+> +
+> +bh1750@23 {
 
+light-sensor@23
 
--- 
-Florian
+Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +	compatible = "rohm,bh1750";
+> +	reg = <0x23>;
+> +};
+> -- 
+> 2.17.1
+> 
