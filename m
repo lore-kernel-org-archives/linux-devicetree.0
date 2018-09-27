@@ -1,45 +1,52 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] arm64: dts: qcom: pm8998: Use ADC temperature to temp-alarm node
-Date: Thu, 27 Sep 2018 14:22:53 -0700
-Message-ID: <20180927212253.177200-1-mka@chromium.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c-next v3 1/3] dt-bindings: i2c: aspeed: Add 'timeout'
+ property as an optional property
+Date: Thu, 27 Sep 2018 14:35:52 -0700
+Message-ID: <c045aceb-80e4-4f9f-7ff2-c30172f04b3e@linux.intel.com>
+References: <20180926215842.23125-1-jae.hyun.yoo@linux.intel.com>
+ <20180926215842.23125-2-jae.hyun.yoo@linux.intel.com>
+ <20180927205610.GA29022@bogus>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180927205610.GA29022@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-The temperature information from the temp-alarm block itself is very
-coarse ("temperature is above/below trip points"). Provide the driver
-with the die temperature channel of the ADC on the PMIC for more precise
-readings.
+Hi Rob,
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-- based on agross/for-next (7a002fe0179c "Merge branch
-  'defconfig-for-4.20' into all-for-4.20-redo"))
-- depends on e13d757279bb ("iio: adc: Add QCOM SPMI PMIC5 ADC driver")
-  from IIO pull request:
-  git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git tags/iio-for-4.20a
-- to work properly https://patchwork.kernel.org/patch/10594491/ is
-  needed
----
- arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+On 9/27/2018 1:56 PM, Rob Herring wrote:
+> On Wed, Sep 26, 2018 at 02:58:40PM -0700, Jae Hyun Yoo wrote:
+>> This commit adds 'aspeed,timeout' property as an optional property
+>> which can be used for setting 'timeout' value of
+>> 'struct i2c_adapter'. With this patch, the timeout value can be
+>> set through an I2C_TIMEOUT ioctl on cdev, or through this optional
+>> DT property.
+> 
+> Isn't controlling this from userspace or relying on a default
+> sufficient?  I can't see this needing to be highly tuned for each
+> platform.
+> 
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-index 048f19fa0150..fab5a826fb01 100644
---- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-@@ -58,6 +58,8 @@
- 			compatible = "qcom,spmi-temp-alarm";
- 			reg = <0x2400>;
- 			interrupts = <0x0 0x24 0x0 IRQ_TYPE_EDGE_RISING>;
-+			io-channels = <&pm8998_adc ADC5_DIE_TEMP>;
-+			io-channel-names = "thermal";
- 			#thermal-sensor-cells = <0>;
- 		};
- 
--- 
-2.19.0.605.g01d371f741-goog
+It can be controlled using an ioctl command on an I2C cdev from
+userspace if CONFIG_I2C_CHARDEV is enabled. A couple of I2C drivers use
+their own specific default value for it but in general the common
+default value (1 second) which is set by i2c core is sufficient.
+But it still needs to be tuned for specific cases based on attached
+devices' characteristic, on packet length, on bus speed and on etc.
+Specifically in Aspeed I2C driver for BMC, it should be tuned
+to support multi-master use cases properly, and it needs a device tree
+property to apply this timeout value from the probing time of the
+module.
+
+> However, if we do have a property, it should be common.
+> 
+
+Okay, I'll change it to 'timeout'.
+
+Thanks a lot,
+Jae
