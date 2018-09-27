@@ -1,125 +1,95 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [RESEND PATCHv2 1/2] ARM: dts: ti: add support for building Texas
- Instruments specific overlays
-Date: Thu, 27 Sep 2018 14:49:04 +0300
-Message-ID: <3ceff403-4e9b-1c18-3023-552856b8de4f@ti.com>
-References: <1535722107-13767-1-git-send-email-t-kristo@ti.com>
- <1536049651-10206-1-git-send-email-t-kristo@ti.com>
- <1536049651-10206-2-git-send-email-t-kristo@ti.com>
- <ac8227f4-4be3-df90-e2b9-6994b8b62592@gmail.com>
- <CAMuHMdUeTjR6cDuYj_5mwHK8dexn4fXxX1yMHDhdOxHhh3d5-w@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 0/5] Add CDTech 4.3" and 7" to panel-simple
+Date: Thu, 27 Sep 2018 13:59:38 +0200
+Message-ID: <20180927115938.GD29102@ulmo>
+References: <20180730231117.5631-1-giulio.benetti@micronovasrl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAMuHMdUeTjR6cDuYj_5mwHK8dexn4fXxX1yMHDhdOxHhh3d5-w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN
- FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, ext Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============0329529307=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20180730231117.5631-1-giulio.benetti@micronovasrl.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Giulio Benetti <giulio.benetti@micronovasrl.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey,
 
-I think this topic has went stale, but I believe I figured out a way to 
-work with overlays at the moment.
+--===============0329529307==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="J5MfuwkIyy7RmF4Q"
+Content-Disposition: inline
 
-Basically involves couple of steps:
 
-1) Save the overlay source files under existing file folders, and use 
-the same .dts file type for them as for typical DT source files.
-2) Use "make DTC_FLAGS=-@ dtbs" to compile everything, or some variant 
-of this (if want to compile single file for example.) Basically need to 
-add that DTC_FLAGS build flag only.
+--J5MfuwkIyy7RmF4Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So, the question is, is this acceptable approach? Can we start posting 
-overlay files for upstream to pick up, with the /plugin/ directive 
-within the files, and use .dts as their file type?
+On Tue, Jul 31, 2018 at 01:11:12AM +0200, Giulio Benetti wrote:
+> Add CDTech 4.3" S043WQ26H-CT7 support
+> Add CDTech 7" S070WV95-CT16 support
+>=20
+> Giulio Benetti (5):
+>   dt-bindings: Add vendor prefix for CDTech(H.K.) Electronics Limited
+>   drm/panel: add panel CDTech S070WV95-CT16 to panel-simple
+>   dt-bindings: Add CDTech S070WV95-CT16 panel bindings
+>   drm/panel: add panel CDTech S043WQ26H-CT7 to panel-simple
+>   dt-bindings: Add CDTech S043WQ26H-CT7 panel bindings
+>=20
+>  .../display/panel/cdtech,s043wq26h-ct7.txt    | 12 ++++
+>  .../display/panel/cdtech,s070wv95-ct16.txt    | 12 ++++
+>  .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+>  drivers/gpu/drm/panel/panel-simple.c          | 55 +++++++++++++++++++
+>  4 files changed, 80 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/cdtec=
+h,s043wq26h-ct7.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/cdtec=
+h,s070wv95-ct16.txt
 
-All the patches I posted so far just attempted to make the system more 
-maintainable (read: more readable for human beings, with the .dt*o file 
-types, separated folders for the DTC_FLAGS and everything), but it seems 
-it should be possible to live without any of that.
+All applied, thanks. One small note, though: in the future please send
+DT bindings patches before the driver patches. This is important because
+checkpatch, which is run as pre-commit script, warns about undocumented
+compatible strings if you send driver changes before the bindings.
 
--Tero
+Thierry
 
-On 07/09/18 00:36, Geert Uytterhoeven wrote:
-> Hi Frank,
-> 
-> On Wed, Sep 5, 2018 at 10:54 PM Frank Rowand <frowand.list@gmail.com> wrote:
->> On 09/04/18 01:27, Tero Kristo wrote:
->>> Add support for TI specific DT subdir, along with support for building
->>> DT overlays. Right now, no DT files are specified in this directory,
->>> those are to be added later.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> 
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/ti/Makefile
->>> @@ -0,0 +1,9 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +#
->>> +# Make file to build device tree binaries for boards based on
->>> +# Texas Instruments Inc processors
->>> +#
->>> +# Copyright (C) 2016-2018 Texas Instruments Incorporated - http://www.ti.com/
->>> +#
->>> +
->>> +DTC_FLAGS += -@
->>>
->>
->> I will nack any attempt to unconditionally compile a devicetree file with the
->> -@ flag (which adds symbols to the resulting .dtb).  The resulting overhead
->> is not acceptable.
->>
->> Adding the symbols must be under the control of the person either creating
->> or using the .dtb.  The way to provide that control is the challenging part.
->>
->> One way would be to configure the compile option via kbuild configuration.
->> There is opposition to this approach because it makes the .dtb dependent
->> on the Linux kernel configuration.  So suggestions of an alternative
->> mechanism would be welcome.
-> 
-> IMHO that would be quite a "soft" dependency: it's just about adding symbols
-> or not. No real dependency on Linux or kernel features.
-> 
->> Another _possible_ solution would be to add a dtc_strip tool to the dtc
->> project.  dtc_strip would remove the symbol information from a .dtb,
->> in a manner that is analogous to strip removing debug information from
->> a program file.
-> 
-> Removing unwanted symbols is indeed easier than adding them to an
-> existing DTB.
-> 
->> One aspect of unconditionally building a .dtb with symbols, then
->> optionally removing the symbols with dtc_strip is that it seems
->> like a backwards process.  For example, we don't build the kernel
->> with debug symbols then strip the symbols out when we don't want
->> them.  I'll have to mull this over if the dtc_strip method sounds
->> like a good approach to other people.
-> 
-> That's not a fair comparison: DTB symbols are not debug information,
-> but an ABI. It's more akin to exporting kernel symbols to (possible
-> out-of-tree) kernel modules, which is controlled by CONFIG_MODULES.
-> 
-> So a Kconfig symbol to enable it, and a dtc_strip for removing them,
-> makes most sense to me.
-> 
-> BTW, we do run strip on vmlinux ;-)
-> 
-> Gr{oetje,eeting}s,
-> 
->                          Geert
-> 
+--J5MfuwkIyy7RmF4Q
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlusxioACgkQ3SOs138+
+s6G+3A//Rv1xogsu+FndDFsCZnsmRV87aTiT4UtqNC3Ms+u+7dmEsGAsyzo/SE6r
+zz4iLR4zuxVC4v7I++AEQYjRC2TFyn00AiE0cnXIxmimr89IfZ4VDD6r/Z4Urqgm
+eQwWKnjLsmf2/zswtJjha8ir73HC+JFUotSHs6JP3cUdtYFk+Dj8PNdFS7j4yPXt
+qtNG6YCwVvhYl7hCEUTKEIHxsNsifKilYQEUyuN4YIu16/cfUiXzWorJ8eOV0D17
+NoZepmaBIJfwgUdi/veaFuOMJJAmYHiUVVyFQFYaE9ZGsormcUG/0PMdOuikgUtI
+gK6I0uNxOmS9kGoS9qNFvby1rS6FB/ovOymMj3oGOp2b79q+62nZdQHGzQqgiW16
+JuVH+/qtBTxMc7CkS1wtdOqw0GEhN5JCF+vE6we9Fhi2YQTw2flANYC5S9UpVDYB
+oG5iDyMARg0LbHK+oTe/JD5SbQi53ANRFPHHKz/KheR3fiev6OcNHvDChl4mClfX
+jnmCuhcziQOAilrRDqG1DbwRteIHuva5ey8o3dNAn76V4tYkxZJFd7HZVJHKYAeL
+KD6kmAqOt8UilFtdz5U08VlEHYT897koBp5iDVm0J//ko+g+W1a1HA9zOgBFL2yZ
+TVtXcHq0EiNsxahpvi9WwuteRt9GQZqBLtik8ugxYRm6wq7FGIo=
+=zW8W
+-----END PGP SIGNATURE-----
+
+--J5MfuwkIyy7RmF4Q--
+
+--===============0329529307==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0329529307==--
