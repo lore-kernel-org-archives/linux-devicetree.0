@@ -1,89 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/3] dt-bindings: pinctrl: renesas,rzn1-pinctrl:
- documentation
-Date: Thu, 27 Sep 2018 11:25:36 -0500
-Message-ID: <20180927162536.GA16329@bogus>
-References: <20180927135922.12015-1-phil.edworthy@renesas.com>
- <20180927135922.12015-2-phil.edworthy@renesas.com>
- <CAMuHMdV1n9KgU+6LxY3_jHTqgL1gKs+54yY0qjnwBeQX7UdOSg@mail.gmail.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: Re: [PATCH 04/12] drm/sun4i: sun6i_mipi_dsi: Enable
+ missing DSI bus clock
+Date: Thu, 27 Sep 2018 21:56:32 +0530
+Message-ID: <CAMty3ZAsF=uSJqj2L9ZS8N3CqcSUPzFSdtH8WtZPTg3m-K8COQ@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-5-jagan@amarulasolutions.com> <CAGb2v66No3-AODYCCGifBrm9uvPjaNdR2W5MDQdazRAPomT9CQ@mail.gmail.com>
+ <CAMty3ZBUQKVLJsmkU=hjaO_O5bhetDfAh9-7iLkUqOznVc0KyA@mail.gmail.com> <CAGb2v67pKgORe7uo6r6F+xaVi=Q-p6_DKotZJD7P=46Z=4RhEA@mail.gmail.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV1n9KgU+6LxY3_jHTqgL1gKs+54yY0qjnwBeQX7UdOSg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mark Rutland <mark.rutland@arm.com>, Jacopo Mondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBREJWTOQKGQEPWJAAFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v67pKgORe7uo6r6F+xaVi=Q-p6_DKotZJD7P=46Z=4RhEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 05:15:54PM +0200, Geert Uytterhoeven wrote:
-> On Thu, Sep 27, 2018 at 3:59 PM Phil Edworthy <phil.edworthy@renesas.com> wrote:
-> > The Renesas RZ/N1 device family PINCTRL node description.
+On Thu, Sep 27, 2018 at 7:47 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>
+> On Thu, Sep 27, 2018 at 9:44 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
 > >
-> > Based on a patch originally written by Michel Pollet at Renesas.
+> > On Thu, Sep 27, 2018 at 6:13 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > On Thu, Sep 27, 2018 at 7:49 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > > >
+> > > > DSI bus_clk is already available in sun6i_dsi but missed to
+> > > > get the clk and process for enable/disable.
+> > > >
+> > > > This patch add support for it.
+> > > >
+> > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > ---
+> > > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 ++++++++
+> > > >  1 file changed, 8 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > index 8e9c76febca2..156b371243c6 100644
+> > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > > @@ -1004,6 +1004,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+> > > >                 return PTR_ERR(dsi->reset);
+> > > >         }
+> > > >
+> > > > +       dsi->bus_clk = devm_clk_get(dev, "bus");
+> > > > +       if (IS_ERR(dsi->bus_clk)) {
+> > > > +               dev_err(dev, "Couldn't get the DSI bus clock\n");
+> > > > +               return PTR_ERR(dsi->bus_clk);
+> > > > +       }
+> > > > +
+> > >
+> > > The DSI driver uses devm_regmap_init_mmio_clk, which enables the
+> > > clock behind the scenes when regmap access needs it enabled.
+> > >
+> > > Did you have any issues without this patch?
 > >
-> > Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> > Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> > v6:
-> >  - Instead of combining the pin nr and func into a single element, use
-> >    a pair of 8-bit elements.
-> 
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzn1-pinctrl.txt
-> 
-> > +- Pin multiplexing sub-nodes:
-> > +  A pin multiplexing sub-node describes how to configure a set of
-> > +  (or a single) pin in some desired alternate function mode.
-> > +  A single sub-node may define several pin configurations.
-> > +  Please refer to pinctrl-bindings.txt to get to know more on generic
-> > +  pin properties usage.
-> > +
-> > +  The allowed generic formats for a pin multiplexing sub-node are the
-> > +  following ones:
-> > +
-> > +  node-1 {
-> > +      pinmux = /bits/ 8 <PIN_NR MUX_FUNC>, <PIN_NR MUX_FUNC>, ... ;
-> > +      GENERIC_PINCONFIG;
-> > +  };
-> 
-> and
-> 
-> > +  Example:
-> > +  A serial communication interface with a TX output pin and an RX input pin.
-> > +
-> > +  &pinctrl {
-> > +       pins_uart0: pins_uart0 {
-> > +               pinmux = /bits/ 8 <
-> > +                       103 RZN1_FUNC_UART0_I   /* UART0_TXD */
-> > +                       104 RZN1_FUNC_UART0_I   /* UART0_RXD */
-> > +               >;
-> > +       };
-> > +  };
-> 
-> So the above is in response to Rob's comment on v4:
-> 
-> | > +#define RZN1_MUX(_gpio, _func) \
-> | > +       (((RZN1_FUNC_##_func) << 8) | (_gpio))
-> |
-> | I'm not a fan of token pasting and it also goes against kernel style.
-> | If every other Renesas platform is doing this, then fine. Otherwise,
-> | you can express it in pretty much the same (source) space:
-> |
-> | pinmux = <RZN1_MUX_UART0_I 104>;
-> |
-> | Yes, this is 2 cells instead of 1, but if you care about space, you
-> | can use 8 or 16 bit size.
-> 
-> I'm not so much impressed by the "/bits/ 8" part.
-> No other pinctrl bindings uses this.
-> We do have RZA1_PINMUX() and STM32_PINMUX() macros.
+> > I'm unable to read register values via devmem, I see all 0's for all
+> > dsi reg space.
+>
+> Well that is to be expected given how mmio with clk regmap works.
+> Did you encounter any other problems besides this?
 
-Yes, but those aren't doing token pasting which was my complaint here.
+no
 
-> Rob: Is this really what you intended?
+>
+> FYI you can dump regmap contents using /sys/kernel/debug/regmap/*/registers
 
-Do whatever is most consistant. If you want a macro to shift fields, 
-then fine.
-
-Rob
+Thanks, but ccu not using regmap I believe so can't see bus enabled
+bit set via devmap
+# devmem 0x01C20060
+0x33800000
