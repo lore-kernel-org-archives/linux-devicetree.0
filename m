@@ -1,106 +1,157 @@
-From: Madalin-cristian Bucur <madalin.bucur@nxp.com>
-Subject: RE: [PATCH v2 00/22] SMMU enablement for NXP LS1043A and LS1046A
-Date: Thu, 27 Sep 2018 13:39:33 +0000
-Message-ID: <AM6PR04MB400811E9B5AD3DD1646D1B9CEC140@AM6PR04MB4008.eurprd04.prod.outlook.com>
-References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/9] powerpc: build .dtb files in dts directory
+Date: Thu, 27 Sep 2018 08:39:28 -0500
+Message-ID: <CAL_JsqLTs3rdyOD51cpPxhCG-ZZ4sA5_=+h6x+xfc=f1xwed-Q@mail.gmail.com>
+References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20180910150403.19476-2-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurentiu Tudor <laurentiu.tudor@nxp.com>, "davem@davemloft.net" <davem@davemloft.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roy Pledge <roy.pledge@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>, Bharat Bhushan <bharat.bhushan@nxp.com>
+To: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: laurentiu.tudor@nxp.com [mailto:laurentiu.tudor@nxp.com]
-> Sent: Wednesday, September 26, 2018 4:22 PM
-> To: devicetree@vger.kernel.org; netdev@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Cc: Roy Pledge <roy.pledge@nxp.com>; Madalin-cristian Bucur
-> <madalin.bucur@nxp.com>; davem@davemloft.net; shawnguo@kernel.org; Leo Li
-> <leoyang.li@nxp.com>; robin.murphy@arm.com; Bharat Bhushan
-> <bharat.bhushan@nxp.com>; Laurentiu Tudor <laurentiu.tudor@nxp.com>
-> Subject: [PATCH v2 00/22] SMMU enablement for NXP LS1043A and LS1046A
->=20
-> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->=20
-> This patch series adds SMMU support for NXP LS1043A and LS1046A chips
-> and consists mostly in important driver fixes and the required device
-> tree updates. It touches several subsystems and consists of three main
-> parts:
->  - changes in soc/drivers/fsl/qbman drivers adding iommu mapping of
->    reserved memory areas, fixes and defered probe support
->  - changes in drivers/net/ethernet/freescale/dpaa_eth drivers
->    consisting in misc dma mapping related fixes and probe ordering
->  - addition of the actual arm smmu device tree node together with
->    various adjustments to the device trees
->=20
-> Performance impact
->=20
->     Running iperf benchmarks in a back-to-back setup (both sides
->     having smmu enabled) on a 10GBps port show an important
->     networking performance degradation of around 40% (9.48Gbps
->     linerate vs 5.45Gbps) and around 30%-35% with iommu.strict=3D1.
->     If you need performance but without SMMU support you can use
->     "iommu.passthrough=3D1" to disable SMMU.
->=20
-> The patch set is based on net-next so, if generally agreed, I'd suggest
-> to get the patches through the netdev tree after getting all the Acks.
->=20
-> Changes in v2:
->  - dropped confusing comments in smmu interrupt property (Robin)
->  - add an intermediate simple-bus for usb to fix dma size issue (Robin)
->  - use defines instead of numbers in smmu interrupt definition
->  - drop redundant double iommu_get_domain_for_dev() call in few qbman
->    patches
->=20
-> Laurentiu Tudor (22):
->   soc/fsl/qman: fixup liodns only on ppc targets
->   soc/fsl/bman: map FBPR area in the iommu
->   soc/fsl/qman: map FQD and PFDR areas in the iommu
->   soc/fsl/qman-portal: map CENA area in the iommu
->   soc/fsl/qbman: add APIs to retrieve the probing status
->   soc/fsl/qman_portals: defer probe after qman's probe
->   soc/fsl/bman_portals: defer probe after bman's probe
->   soc/fsl/qbman_portals: add APIs to retrieve the probing status
->   fsl/fman: backup and restore ICID registers
->   fsl/fman: add API to get the device behind a fman port
->   dpaa_eth: defer probing after qbman
->   dpaa_eth: base dma mappings on the fman rx port
->   dpaa_eth: fix iova handling for contiguous frames
->   dpaa_eth: fix iova handling for sg frames
->   dpaa_eth: fix SG frame cleanup
->   arm64: dts: ls1046a: add smmu node
->   arm64: dts: ls1043a: add smmu node
->   arm64: dts: ls104xa: set mask to drop TBU ID from StreamID
->   arm64: dts: ls104x: add missing dma ranges property
->   arm64: dts: ls104x: add iommu-map to pci controllers
->   arm64: dts: ls104x: make dma-coherent global to the SoC
->   arm64: dts: ls104x: use a pseudo-bus to constrain usb dma size
->=20
->  .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 106 ++++++++++----
->  .../arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 102 ++++++++++---
->  .../net/ethernet/freescale/dpaa/dpaa_eth.c    | 136 ++++++++++++------
->  drivers/net/ethernet/freescale/fman/fman.c    |  35 ++++-
->  drivers/net/ethernet/freescale/fman/fman.h    |   4 +
->  .../net/ethernet/freescale/fman/fman_port.c   |  14 ++
->  .../net/ethernet/freescale/fman/fman_port.h   |   2 +
->  drivers/soc/fsl/qbman/bman_ccsr.c             |  22 +++
->  drivers/soc/fsl/qbman/bman_portal.c           |  20 ++-
->  drivers/soc/fsl/qbman/qman_ccsr.c             |  28 ++++
->  drivers/soc/fsl/qbman/qman_portal.c           |  35 +++++
->  include/soc/fsl/bman.h                        |  16 +++
->  include/soc/fsl/qman.h                        |  17 +++
->  13 files changed, 438 insertions(+), 99 deletions(-)
->=20
+On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+>
+> Align powerpc with other architectures which build the dtb files in the
+> same directory as the dts files. This is also in line with most other
+> build targets which are located in the same directory as the source.
+> This move will help enable the 'dtbs' target which builds all the dtbs
+> regardless of kernel config.
+>
+> This transition could break some scripts if they expect dtb files in the
+> old location.
+>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v3:
+>  - Remove duplicate mpc5200 dtbs from image-y targets. The dtb target already
+>    comes from the cuImage.<platform> target.
+
+Do the PPC folks have any comments on this?
+
+Rob
+
+>
+>  arch/powerpc/Makefile          |  2 +-
+>  arch/powerpc/boot/Makefile     | 55 ++++++++++++++++------------------
+>  arch/powerpc/boot/dts/Makefile |  1 +
+>  3 files changed, 28 insertions(+), 30 deletions(-)
+>  create mode 100644 arch/powerpc/boot/dts/Makefile
+>
+> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
+> index 11a1acba164a..53ea887eb34e 100644
+> --- a/arch/powerpc/Makefile
+> +++ b/arch/powerpc/Makefile
+> @@ -294,7 +294,7 @@ bootwrapper_install:
+>         $(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
+>
+>  %.dtb: scripts
+> -       $(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
+> +       $(Q)$(MAKE) $(build)=$(boot)/dts $(patsubst %,$(boot)/dts/%,$@)
+>
+>  # Used to create 'merged defconfigs'
+>  # To use it $(call) it with the first argument as the base defconfig
+> diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
+> index 0fb96c26136f..bca5c23767df 100644
+> --- a/arch/powerpc/boot/Makefile
+> +++ b/arch/powerpc/boot/Makefile
+> @@ -304,9 +304,9 @@ image-$(CONFIG_PPC_ADDER875)                += cuImage.adder875-uboot \
+>                                            dtbImage.adder875-redboot
+>
+>  # Board ports in arch/powerpc/platform/52xx/Kconfig
+> -image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200 lite5200.dtb
+> -image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200b lite5200b.dtb
+> -image-$(CONFIG_PPC_MEDIA5200)          += cuImage.media5200 media5200.dtb
+> +image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200
+> +image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200b
+> +image-$(CONFIG_PPC_MEDIA5200)          += cuImage.media5200
+>
+>  # Board ports in arch/powerpc/platform/82xx/Kconfig
+>  image-$(CONFIG_MPC8272_ADS)            += cuImage.mpc8272ads
+> @@ -381,11 +381,11 @@ $(addprefix $(obj)/, $(sort $(filter zImage.%, $(image-y)))): vmlinux $(wrapperb
+>         $(call if_changed,wrap,$(subst $(obj)/zImage.,,$@))
+>
+>  # dtbImage% - a dtbImage is a zImage with an embedded device tree blob
+> -$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
+> -       $(call if_changed,wrap,$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+> +$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
+> +       $(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+>
+> -$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
+> -       $(call if_changed,wrap,$*,,$(obj)/$*.dtb)
+> +$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
+> +       $(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb)
+>
+>  # This cannot be in the root of $(src) as the zImage rule always adds a $(obj)
+>  # prefix
+> @@ -395,36 +395,33 @@ $(obj)/vmlinux.strip: vmlinux
+>  $(obj)/uImage: vmlinux $(wrapperbits) FORCE
+>         $(call if_changed,wrap,uboot)
+>
+> -$(obj)/uImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+> +$(obj)/uImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+>
+> -$(obj)/uImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb)
+> +$(obj)/uImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb)
+>
+> -$(obj)/cuImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+> +$(obj)/cuImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+>
+> -$(obj)/cuImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb)
+> +$(obj)/cuImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb)
+>
+> -$(obj)/simpleImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+> +$(obj)/simpleImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+>
+> -$(obj)/simpleImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb)
+> +$(obj)/simpleImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb)
+>
+> -$(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
+> +$(obj)/treeImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
+>
+> -$(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
+> -       $(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
+> +$(obj)/treeImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
+> +       $(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb)
+>
+> -# Rule to build device tree blobs
+> -$(obj)/%.dtb: $(src)/dts/%.dts FORCE
+> -       $(call if_changed_dep,dtc)
+> -
+> -$(obj)/%.dtb: $(src)/dts/fsl/%.dts FORCE
+> -       $(call if_changed_dep,dtc)
+> +# Needed for the above targets to work with dts/fsl/ files
+> +$(obj)/dts/%.dtb: $(obj)/dts/fsl/%.dtb
+> +       @cp $< $@
+>
+>  # If there isn't a platform selected then just strip the vmlinux.
+>  ifeq (,$(image-y))
+> diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
+> new file mode 100644
+> index 000000000000..f66554cd5c45
+> --- /dev/null
+> +++ b/arch/powerpc/boot/dts/Makefile
+> @@ -0,0 +1 @@
+> +# SPDX-License-Identifier: GPL-2.0
 > --
 > 2.17.1
-
-For the fsl/fman and dpaa_eth:
-
-Acked-by: Madalin Bucur <madalin.bucur@nxp.com>
-
-Thank you
