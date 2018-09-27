@@ -1,157 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/9] powerpc: build .dtb files in dts directory
-Date: Thu, 27 Sep 2018 08:39:28 -0500
-Message-ID: <CAL_JsqLTs3rdyOD51cpPxhCG-ZZ4sA5_=+h6x+xfc=f1xwed-Q@mail.gmail.com>
-References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-2-robh@kernel.org>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 04/12] drm/sun4i: sun6i_mipi_dsi: Enable
+ missing DSI bus clock
+Date: Thu, 27 Sep 2018 19:14:23 +0530
+Message-ID: <CAMty3ZBUQKVLJsmkU=hjaO_O5bhetDfAh9-7iLkUqOznVc0KyA@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-5-jagan@amarulasolutions.com> <CAGb2v66No3-AODYCCGifBrm9uvPjaNdR2W5MDQdazRAPomT9CQ@mail.gmail.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910150403.19476-2-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBRF5WPOQKGQE2PRIFGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66No3-AODYCCGifBrm9uvPjaNdR2W5MDQdazRAPomT9CQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+On Thu, Sep 27, 2018 at 6:13 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
 >
-> Align powerpc with other architectures which build the dtb files in the
-> same directory as the dts files. This is also in line with most other
-> build targets which are located in the same directory as the source.
-> This move will help enable the 'dtbs' target which builds all the dtbs
-> regardless of kernel config.
+> Hi,
 >
-> This transition could break some scripts if they expect dtb files in the
-> old location.
+> On Thu, Sep 27, 2018 at 7:49 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> >
+> > DSI bus_clk is already available in sun6i_dsi but missed to
+> > get the clk and process for enable/disable.
+> >
+> > This patch add support for it.
+> >
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > index 8e9c76febca2..156b371243c6 100644
+> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > @@ -1004,6 +1004,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+> >                 return PTR_ERR(dsi->reset);
+> >         }
+> >
+> > +       dsi->bus_clk = devm_clk_get(dev, "bus");
+> > +       if (IS_ERR(dsi->bus_clk)) {
+> > +               dev_err(dev, "Couldn't get the DSI bus clock\n");
+> > +               return PTR_ERR(dsi->bus_clk);
+> > +       }
+> > +
 >
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
-> v3:
->  - Remove duplicate mpc5200 dtbs from image-y targets. The dtb target already
->    comes from the cuImage.<platform> target.
+> The DSI driver uses devm_regmap_init_mmio_clk, which enables the
+> clock behind the scenes when regmap access needs it enabled.
+>
+> Did you have any issues without this patch?
 
-Do the PPC folks have any comments on this?
-
-Rob
-
->
->  arch/powerpc/Makefile          |  2 +-
->  arch/powerpc/boot/Makefile     | 55 ++++++++++++++++------------------
->  arch/powerpc/boot/dts/Makefile |  1 +
->  3 files changed, 28 insertions(+), 30 deletions(-)
->  create mode 100644 arch/powerpc/boot/dts/Makefile
->
-> diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-> index 11a1acba164a..53ea887eb34e 100644
-> --- a/arch/powerpc/Makefile
-> +++ b/arch/powerpc/Makefile
-> @@ -294,7 +294,7 @@ bootwrapper_install:
->         $(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
->
->  %.dtb: scripts
-> -       $(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
-> +       $(Q)$(MAKE) $(build)=$(boot)/dts $(patsubst %,$(boot)/dts/%,$@)
->
->  # Used to create 'merged defconfigs'
->  # To use it $(call) it with the first argument as the base defconfig
-> diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-> index 0fb96c26136f..bca5c23767df 100644
-> --- a/arch/powerpc/boot/Makefile
-> +++ b/arch/powerpc/boot/Makefile
-> @@ -304,9 +304,9 @@ image-$(CONFIG_PPC_ADDER875)                += cuImage.adder875-uboot \
->                                            dtbImage.adder875-redboot
->
->  # Board ports in arch/powerpc/platform/52xx/Kconfig
-> -image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200 lite5200.dtb
-> -image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200b lite5200b.dtb
-> -image-$(CONFIG_PPC_MEDIA5200)          += cuImage.media5200 media5200.dtb
-> +image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200
-> +image-$(CONFIG_PPC_LITE5200)           += cuImage.lite5200b
-> +image-$(CONFIG_PPC_MEDIA5200)          += cuImage.media5200
->
->  # Board ports in arch/powerpc/platform/82xx/Kconfig
->  image-$(CONFIG_MPC8272_ADS)            += cuImage.mpc8272ads
-> @@ -381,11 +381,11 @@ $(addprefix $(obj)/, $(sort $(filter zImage.%, $(image-y)))): vmlinux $(wrapperb
->         $(call if_changed,wrap,$(subst $(obj)/zImage.,,$@))
->
->  # dtbImage% - a dtbImage is a zImage with an embedded device tree blob
-> -$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
-> -       $(call if_changed,wrap,$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-> +$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
-> +       $(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
->
-> -$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
-> -       $(call if_changed,wrap,$*,,$(obj)/$*.dtb)
-> +$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
-> +       $(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb)
->
->  # This cannot be in the root of $(src) as the zImage rule always adds a $(obj)
->  # prefix
-> @@ -395,36 +395,33 @@ $(obj)/vmlinux.strip: vmlinux
->  $(obj)/uImage: vmlinux $(wrapperbits) FORCE
->         $(call if_changed,wrap,uboot)
->
-> -$(obj)/uImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-> +$(obj)/uImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
->
-> -$(obj)/uImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb)
-> +$(obj)/uImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb)
->
-> -$(obj)/cuImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-> +$(obj)/cuImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
->
-> -$(obj)/cuImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb)
-> +$(obj)/cuImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb)
->
-> -$(obj)/simpleImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-> +$(obj)/simpleImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
->
-> -$(obj)/simpleImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb)
-> +$(obj)/simpleImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb)
->
-> -$(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-> +$(obj)/treeImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
->
-> -$(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
-> -       $(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
-> +$(obj)/treeImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-> +       $(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb)
->
-> -# Rule to build device tree blobs
-> -$(obj)/%.dtb: $(src)/dts/%.dts FORCE
-> -       $(call if_changed_dep,dtc)
-> -
-> -$(obj)/%.dtb: $(src)/dts/fsl/%.dts FORCE
-> -       $(call if_changed_dep,dtc)
-> +# Needed for the above targets to work with dts/fsl/ files
-> +$(obj)/dts/%.dtb: $(obj)/dts/fsl/%.dtb
-> +       @cp $< $@
->
->  # If there isn't a platform selected then just strip the vmlinux.
->  ifeq (,$(image-y))
-> diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
-> new file mode 100644
-> index 000000000000..f66554cd5c45
-> --- /dev/null
-> +++ b/arch/powerpc/boot/dts/Makefile
-> @@ -0,0 +1 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> --
-> 2.17.1
+I'm unable to read register values via devmem, I see all 0's for all
+dsi reg space.
