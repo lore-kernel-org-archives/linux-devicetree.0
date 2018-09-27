@@ -1,84 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 23/30] dt-bindings: interrupt-controller: C-SKY SMP
- intc
-Date: Thu, 27 Sep 2018 11:50:44 -0500
-Message-ID: <20180927165044.GA30320@bogus>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <57888913907d6c22b23425ed9d4e5a79be5b2eff.1537789737.git.ren_guo@c-sky.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Maksym Kokhan <maksym.kokhan@globallogic.com>
+Subject: [PATCH 0/8] add generic builtin command line
+Date: Thu, 27 Sep 2018 19:55:08 +0300
+Message-ID: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <57888913907d6c22b23425ed9d4e5a79be5b2eff.1537789737.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, palmer@sifive.com
+To: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: Daniel Walker <dwalker@fifo99.com>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbilovol@cisco.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-efi@vger.kernel.org, linux-mips@linux-mips.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 07:39:26AM +0800, Guo Ren wrote:
->  - Dt-bindings doc about C-SKY Multi-processors interrupt controller.
-> 
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> ---
->  .../bindings/interrupt-controller/csky,mpintc.txt  | 40 ++++++++++++++++++++++
->  1 file changed, 40 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> new file mode 100644
-> index 0000000..9cdad74
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> @@ -0,0 +1,40 @@
-> +===========================================
-> +C-SKY Multi-processors Interrupt Controller
-> +===========================================
-> +
-> +C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
-> +SMP soc, and it also could be used in non-SMP system.
-> +
-> +Interrupt number definition:
-> +
-> +  0-15  : software irq, and we use 15 as our IPI_IRQ.
-> + 16-31  : private  irq, and we use 16 as the co-processor timer.
-> + 31-1024: common irq for soc ip.
-> +
-> +=============================
-> +intc node bindings definition
-> +=============================
-> +
-> +	Description: Describes SMP interrupt controller
-> +
-> +	PROPERTIES
-> +
-> +	- compatible
-> +		Usage: required
-> +		Value type: <string>
-> +		Definition: must be "csky,mpintc"
+There were series of patches [1] for 4.3.0-rc3, that allowed
+architectures to use a generic builtin command line. I have rebased
+these patches on kernel 4.19.0-rc4.
 
-Only 1 version?
+Things, modified in comparison with original patches:                            
+* There was some bug for mips, in the case when CONFIG_CMDLINE_PREPEND
+and CONFIG_CMDLINE_APPEND are empty and CMDLINE_OVERRIDE is not set,
+command line from bootloader was ignored, so I fixed it, modifying
+patch "add generic builtin command line".
 
-This is fine for a fallback, but you should have an SoC specific 
-compatible too in case there are any SoC specific errata/quirks.
+* Implemented new patch to resolve conflict with new kernel, which
+modify EFI stub code. Unfortunately, I don't have capability to test
+this modification on real arm board with EFI.
 
-> +	- interrupt-cells
+* Removed new realisation of mips builtin command line, which was
+created after 4.3.0-rc3.
 
-Should be: #interrupt-cells
+* Kernel 4.3.0-rc3 with original patches could not be compiled for
+powerpc due to prom_init.c checking by prom_init_check.sh. So I added
+strlcat (which is used by cmdline_add_builtin macro) to
+prom_init_check.sh whitelist.
 
-> +		Usage: required
-> +		Value type: <u32>
-> +		Definition: must be <1>
-> +	- interrupt-controller:
-> +		Usage: required
-> +
-> +Examples:
-> +---------
-> +
-> +	intc: interrupt-controller {
-> +		compatible = "csky,mpintc";
-> +		#interrupt-cells = <1>;
-> +		interrupt-controller;
-> +	};
-> -- 
-> 2.7.4
-> 
+Patches have been tested in QEMU for x86, arm (little-endian), arm64
+(little-endian), mips (little-endian, 32-bit) and powerpc
+(big-endian, 64-bit), everything works perfectly. Also it was tested
+on linux-next (next-20180924 tag) for all listed above architectures.
+
+[1] : https://lore.kernel.org/patchwork/patch/604992/
+
+Daniel Walker (7):
+  add generic builtin command line
+  drivers: of: ifdef out cmdline section
+  x86: convert to generic builtin command line
+  arm: convert to generic builtin command line
+  arm64: convert to generic builtin command line
+  mips: convert to generic builtin command line
+  powerpc: convert to generic builtin command line
+
+Maksym Kokhan (1):
+  efi: modify EFI stub code for arm/arm64
+
+ arch/arm/Kconfig                        | 38 +-----------------
+ arch/arm/kernel/atags_parse.c           | 14 ++-----
+ arch/arm/kernel/devtree.c               |  2 +
+ arch/arm64/Kconfig                      | 17 +-------
+ arch/arm64/kernel/setup.c               |  3 ++
+ arch/mips/Kconfig                       | 24 +----------
+ arch/mips/Kconfig.debug                 | 47 ----------------------
+ arch/mips/kernel/setup.c                | 41 ++-----------------
+ arch/powerpc/Kconfig                    | 23 +----------
+ arch/powerpc/kernel/prom.c              |  4 ++
+ arch/powerpc/kernel/prom_init.c         |  8 ++--
+ arch/powerpc/kernel/prom_init_check.sh  |  2 +-
+ arch/x86/Kconfig                        | 44 +--------------------
+ arch/x86/kernel/setup.c                 | 19 ++-------
+ drivers/firmware/efi/libstub/arm-stub.c | 10 ++---
+ drivers/of/fdt.c                        |  2 +-
+ include/linux/cmdline.h                 | 70 +++++++++++++++++++++++++++++++++
+ init/Kconfig                            | 68 ++++++++++++++++++++++++++++++++
+ 18 files changed, 173 insertions(+), 263 deletions(-)
+ create mode 100644 include/linux/cmdline.h
+
+-- 
+2.7.4
