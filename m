@@ -1,68 +1,69 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 05/12] drm/sun4i: sun6i_mipi_dsi: Add DSI
- Generic short write 2 param transfer
-Date: Thu, 27 Sep 2018 19:18:31 +0200
-Message-ID: <20180927171831.2nfybgn2xmc4vrgt@flea>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-6-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: Add binding document for SR
+ thermal
+Date: Thu, 27 Sep 2018 12:27:58 -0500
+Message-ID: <20180927172758.GA17761@bogus>
+References: <1538062603-7490-1-git-send-email-srinath.mannam@broadcom.com>
+ <1538062603-7490-2-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB2NBWTOQKGQEQXEILBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180927114850.24565-6-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1538062603-7490-2-git-send-email-srinath.mannam@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinath Mannam <srinath.mannam@broadcom.com>
+Cc: daniel.lezcano@linaro.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 05:18:43PM +0530, Jagan Teki wrote:
-> Short transfer write support for DCS and Generic transfer types
-> share similar way to process command sequence in DSI block so
-> add generic write 2 param transfer type macro so-that the panels
-> which are requesting similar transfer type may process properly.
+On Thu, Sep 27, 2018 at 09:06:41PM +0530, Srinath Mannam wrote:
+> From: Pramod Kumar <pramod.kumar@broadcom.com>
 > 
-> Also added error check for unsupporting transfer types this make
-> debugging easy for new transfer types.
+> Add binding document for supported thermal implementation
+> in Stingray.
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 > ---
->  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../bindings/thermal/brcm,sr-thermal.txt           | 25 ++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
 > 
-> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> index 156b371243c6..1c7e42015645 100644
-> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> @@ -869,6 +869,7 @@ static ssize_t sun6i_dsi_transfer(struct mipi_dsi_host *host,
->  		     SUN6I_DSI_CMD_CTL_TX_FLAG);
->  
->  	switch (msg->type) {
-> +	case MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM:
->  	case MIPI_DSI_DCS_SHORT_WRITE:
->  	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
+> diff --git a/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> new file mode 100644
+> index 0000000..717617b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> @@ -0,0 +1,25 @@
+> +* Broadcom Stingray Thermal
+> +
+> +This binding describes thermal sensors that is part of Stingray SoCs.
+> +
+> +Required properties:
+> +- compatible : Must be "brcm,sr-thermal"
+> +- reg : memory where tmon data will be available.
+> +- brcm,tmon-mask: A one cell bit mask of valid TMON sources.
+> +                  Each bit represents single TMON source.
+> +- brcm,max-crit-temp: Maximum supported critical temperature.
 
-You should order them by alphabetical order.
+We already have a defined binding for setting trip points. 
 
->  		ret = sun6i_dsi_dcs_write_short(dsi, msg);
-> @@ -885,6 +886,8 @@ static ssize_t sun6i_dsi_transfer(struct mipi_dsi_host *host,
->  		}
->  
->  	default:
-> +		dev_err(dsi->dev, "unsupported message type 0x%02x\n",
-> +			msg->type);
-
-And this isn't an error check.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +
+> +Example:
+> +	tmons {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x8f100000 0x100>;
+> +
+> +		tmon: thermal@0 {
+> +			compatible = "brcm,sr-thermal";
+> +			reg = <0 0x40>;
+> +			brcm,tmon-mask = <0x3f>;
+> +			brcm,max-crit-temp = <105000>;
+> +		};
+> +	};
+> -- 
+> 2.7.4
+> 
