@@ -1,28 +1,52 @@
-From: Li Yang <leoyang.li@nxp.com>
-Subject: drivers binding to device node with multiple compatible strings
-Date: Thu, 27 Sep 2018 17:25:42 -0500
-Message-ID: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH] dt-bindings: misc: bk4: Add device tree binding for Liebherr's BK4 SPI bus
+Date: Fri, 28 Sep 2018 00:26:55 +0200
+Message-ID: <20180927222655.24482-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob and Grant,
+Add Device Tree binding document for Liebherr's BK4 external SPI bus.
 
-Various device tree specs are recommending to include all the
-potential compatible strings in the device node, with the order from
-most specific to most general.  But it looks like Linux kernel doesn't
-provide a way to bind the device to the most specific driver, however,
-the first registered compatible driver will be bound.
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+ Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/lwn-bk4.txt
 
-As more and more generic drivers are added to the Linux kernel, they
-are competing with the more specific vendor drivers and causes problem
-when both are built into the kernel.  I'm wondering if there is a
-generic solution (or in plan) to make the most specific driver bound
-to the device.   Or we have to disable the more general driver or
-remove the more general compatible string from the device tree?
-
-Regards,
-Leo
+diff --git a/Documentation/devicetree/bindings/misc/lwn-bk4.txt b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
+new file mode 100644
+index 000000000000..d6a8c188c087
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
+@@ -0,0 +1,26 @@
++* Liebherr's BK4 controller external SPI
++
++A device which handles data acquisition from compatible industrial
++peripherals.
++The SPI is used for data and management purposes in both master and
++slave modes.
++
++Required properties:
++
++- compatible : Should be "lwn,bk4"
++
++Required SPI properties:
++
++- reg : Should be address of the device chip select within
++  the controller.
++
++- spi-max-frequency : Maximum SPI clocking speed of device in Hz, should be
++  30MHz at most for the Liebherr's BK4 external bus.
++
++Example:
++
++spidev0: spi@0 {
++	compatible = "lwn,bk4";
++	spi-max-frequency = <30000000>;
++	reg = <0>;
++};
+-- 
+2.11.0
