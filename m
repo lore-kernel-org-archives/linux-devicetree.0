@@ -1,55 +1,71 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PATCHv5 6/6] mmc: dw_mmc-exynos: Add tuning for sdr and ddr timing for USH-I mode
-Date: Thu, 27 Sep 2018 14:07:38 +0000
-Message-ID: <20180927140738.1006-7-linux.amoon@gmail.com>
-References: <20180927140738.1006-1-linux.amoon@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927140738.1006-1-linux.amoon@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 04/12] drm/sun4i: sun6i_mipi_dsi: Enable
+ missing DSI bus clock
+Date: Thu, 27 Sep 2018 22:16:56 +0800
+Message-ID: <CAGb2v67pKgORe7uo6r6F+xaVi=Q-p6_DKotZJD7P=46Z=4RhEA@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-5-jagan@amarulasolutions.com> <CAGb2v66No3-AODYCCGifBrm9uvPjaNdR2W5MDQdazRAPomT9CQ@mail.gmail.com>
+ <CAMty3ZBUQKVLJsmkU=hjaO_O5bhetDfAh9-7iLkUqOznVc0KyA@mail.gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZ6MWPOQKGQECZ3VXQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZBUQKVLJsmkU=hjaO_O5bhetDfAh9-7iLkUqOznVc0KyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add tuning for sdr and ddr timing for USH-I mode sdr104/sdr50/ddr50
-for host controller.
+On Thu, Sep 27, 2018 at 9:44 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Thu, Sep 27, 2018 at 6:13 PM Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> >
+> > Hi,
+> >
+> > On Thu, Sep 27, 2018 at 7:49 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> > >
+> > > DSI bus_clk is already available in sun6i_dsi but missed to
+> > > get the clk and process for enable/disable.
+> > >
+> > > This patch add support for it.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > index 8e9c76febca2..156b371243c6 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -1004,6 +1004,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+> > >                 return PTR_ERR(dsi->reset);
+> > >         }
+> > >
+> > > +       dsi->bus_clk = devm_clk_get(dev, "bus");
+> > > +       if (IS_ERR(dsi->bus_clk)) {
+> > > +               dev_err(dev, "Couldn't get the DSI bus clock\n");
+> > > +               return PTR_ERR(dsi->bus_clk);
+> > > +       }
+> > > +
+> >
+> > The DSI driver uses devm_regmap_init_mmio_clk, which enables the
+> > clock behind the scenes when regmap access needs it enabled.
+> >
+> > Did you have any issues without this patch?
+>
+> I'm unable to read register values via devmem, I see all 0's for all
+> dsi reg space.
 
-Cc: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-No changes from previous patch
----
- drivers/mmc/host/dw_mmc-exynos.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Well that is to be expected given how mmio with clk regmap works.
+Did you encounter any other problems besides this?
 
-diff --git a/drivers/mmc/host/dw_mmc-exynos.c b/drivers/mmc/host/dw_mmc-exynos.c
-index ab47b018716a..d46c3439b508 100644
---- a/drivers/mmc/host/dw_mmc-exynos.c
-+++ b/drivers/mmc/host/dw_mmc-exynos.c
-@@ -253,6 +253,8 @@ static void dw_mci_exynos_config_hs400(struct dw_mci *host, u32 timing)
- 	if (timing == MMC_TIMING_MMC_HS400) {
- 		dqs |= DATA_STROBE_EN;
- 		strobe = DQS_CTRL_RD_DELAY(strobe, priv->dqs_delay);
-+	} else if (timing == MMC_TIMING_UHS_SDR104) {
-+		dqs &= 0xffffff00;
- 	} else {
- 		dqs &= ~DATA_STROBE_EN;
- 	}
-@@ -312,6 +314,15 @@ static void dw_mci_exynos_set_ios(struct dw_mci *host, struct mmc_ios *ios)
- 		if (ios->bus_width == MMC_BUS_WIDTH_8)
- 			wanted <<= 1;
- 		break;
-+	case MMC_TIMING_UHS_SDR104:
-+	case MMC_TIMING_UHS_SDR50:
-+		clksel = (priv->sdr_timing & 0xfff8ffff) |
-+			(priv->ciu_div << 16);
-+		break;
-+	case MMC_TIMING_UHS_DDR50:
-+		clksel = (priv->ddr_timing & 0xfff8ffff) |
-+			(priv->ciu_div << 16);
-+		break;
- 	default:
- 		clksel = priv->sdr_timing;
- 	}
--- 
-2.17.1
+FYI you can dump regmap contents using /sys/kernel/debug/regmap/*/registers
+
+ChenYu
