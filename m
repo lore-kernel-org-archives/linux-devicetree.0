@@ -1,101 +1,122 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
-Date: Thu, 27 Sep 2018 09:08:59 +0200
-Message-ID: <20180927070859.GC5254@hirez.programming.kicks-ass.net>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
- <20180925072407.GA6999@hirez.programming.kicks-ass.net>
- <20180927052737.GA28407@guoren>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RESEND PATCH v3 1/2] of: base: Introduce of_alias_get_alias_list()
+ to check alias IDs
+Date: Thu, 27 Sep 2018 09:19:46 +0200
+Message-ID: <CAMuHMdW4H6pjpijU2SX1Z=1Ld7CbBnTtFVwp3gac9toQc4iGpg@mail.gmail.com>
+References: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
+ <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com> <d27b381e-f091-91dc-cffe-27789583f949@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927052737.GA28407@guoren>
+In-Reply-To: <d27b381e-f091-91dc-cffe-27789583f949@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 01:27:38PM +0800, Guo Ren wrote:
-> On Tue, Sep 25, 2018 at 09:24:07AM +0200, Peter Zijlstra wrote:
-> > On Mon, Sep 24, 2018 at 10:36:22PM +0800, Guo Ren wrote:
-> > > diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
-> > > new file mode 100644
-> > > index 0000000..f0de49c
-> > > --- /dev/null
-> > > +++ b/arch/csky/abiv1/inc/abi/cacheflush.h
+Hi Michal,
 
-> > > +#define flush_cache_range(mm,start,end)	cache_wbinv_range(start, end)
-> >                              ^^^ should be vma
-> Yes, I'll change it to:
-> #define flush_cache_range(mm,start,end)	cache_wbinv_all()
-> 
-> I'll improve it later after test.
+On Wed, Sep 26, 2018 at 1:01 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> On 24.9.2018 09:41, Geert Uytterhoeven wrote:
+> > On Thu, Sep 20, 2018 at 1:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
+> >> The function travels the lookup table to record alias ids for the given
+> >> device match structures and alias stem.
+> >> This function will be used by serial drivers to check if requested alias
+> >> is allocated or free to use.
+> >>
+> >> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> >> Reviewed-by: Rob Herring <robh@kernel.org>
+> >
+> > I know this has already been applied, it just drew my attention.
+> >
+> >> --- a/drivers/of/base.c
+> >> +++ b/drivers/of/base.c
+> >> @@ -16,6 +16,7 @@
+> >>
+> >>  #define pr_fmt(fmt)    "OF: " fmt
+> >>
+> >> +#include <linux/bitmap.h>
+> >>  #include <linux/console.h>
+> >>  #include <linux/ctype.h>
+> >>  #include <linux/cpu.h>
+> >> @@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+> >>  EXPORT_SYMBOL_GPL(of_alias_get_id);
+> >>
+> >>  /**
+> >> + * of_alias_get_alias_list - Get alias list for the given device driver
+> >> + * @matches:   Array of OF device match structures to search in
+> >> + * @stem:      Alias stem of the given device_node
+> >> + * @bitmap:    Bitmap field pointer
+> >> + * @nbits:     Maximum number of alias ID which can be recorded it bitmap
+> >
+> > IDs
+> >
+> >> + *
+> >> + * The function travels the lookup table to record alias ids for the given
+> >> + * device match structures and alias stem.
+> >> + *
+> >> + * Return:     0 or -ENOSYS when !CONFIG_OF
+> >> + */
+> >> +int of_alias_get_alias_list(const struct of_device_id *matches,
+> >> +                            const char *stem, unsigned long *bitmap,
+> >> +                            unsigned int nbits)
+> >> +{
+> >> +       struct alias_prop *app;
+> >> +
+> >> +       /* Zero bitmap field to make sure that all the time it is clean */
+> >> +       bitmap_zero(bitmap, nbits);
+> >> +
+> >> +       mutex_lock(&of_mutex);
+> >> +       pr_debug("%s: Looking for stem: %s\n", __func__, stem);
+> >> +       list_for_each_entry(app, &aliases_lookup, link) {
+> >> +               pr_debug("%s: stem: %s, id: %d\n",
+> >> +                        __func__, app->stem, app->id);
+> >> +
+> >> +               if (strcmp(app->stem, stem) != 0) {
+> >> +                       pr_debug("%s: stem comparison doesn't passed %s\n",
+> >
+> > didn't pass?
+> >
+> >> +                                __func__, app->stem);
+> >> +                       continue;
+> >> +               }
+> >> +
+> >> +               if (app->id >= nbits) {
+> >> +                       pr_debug("%s: ID %d greater then bitmap field %d\n",
+> >
+> > than
+> > %u for unsigned int
+>
+> I won't fix this now because this can be done together with one change
+> described below.
+>
+> >
+> >> +                               __func__, app->id, nbits);
+> >> +                       continue;
+> >
+> > Shouldn't this return an error, if of_match_node() below would have matched?
+>
+> IIRC Above check is for "serial" name.
+> This one is for getting XX number from alias "serialXX".
+> And below is checking compatible string.
+>
+> You are calling this function from uartps with 32 lines limit and there
+> is serial33 alias poiting to uartlite (for example) then you don't want
+> to break this call for that.
+>
+> What can be done is that compatible string is checked first and if this
+> passed then ids are check and error can be returned or bit sets.
 
-That's not what I meant; I meant you need something like:
+That's what I meant: currently any serialN with N >= nbits is ignored, even
+if the alias applies to the driver that called the function.
 
-#define flush_cache_range(vma, start, end) cache_wbinv_range(start, end) 
+Gr{oetje,eeting}s,
 
-The first argument is a vma, not an mm.
+                        Geert
 
-> > > +#endif /* __ABI_CSKY_CACHEFLUSH_H */
-> > 
-> > 
-> > > diff --git a/arch/csky/abiv1/inc/abi/tlb.h b/arch/csky/abiv1/inc/abi/tlb.h
-> > > new file mode 100644
-> > > index 0000000..6d461f3
-> > > --- /dev/null
-> > > +++ b/arch/csky/abiv1/inc/abi/tlb.h
-> > > @@ -0,0 +1,12 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> > > +
-> > > +#ifndef __ABI_CSKY_TLB_H
-> > > +#define __ABI_CSKY_TLB_H
-> > > +
-> > > +#define tlb_start_vma(tlb, vma) \
-> > > +	do { \
-> > > +		if (!tlb->fullmm) \
-> > > +			cache_wbinv_all(); \
-> > > +	}  while (0)
-> > > +#endif /* __ABI_CSKY_TLB_H */
-> > 
-> > That should be:
-> > 
-> > 	if (!tlb->fullmm)
-> > 		flush_cache_range(vma, vma->vm_start, vma->vm_end);
-> > 
-> > Because as per the whole abiv1 vs abiv2, you don't need write back
-> > invalidation for v2 at all, also, you only need to invalidate the vma
-> > range, no reason to shoot everything down.
-> > 
-> > Also, I'll be shortly removing this:
-> > 
-> >   https://lkml.kernel.org/r/20180913092812.071989585@infradead.org
-> Ok, I'll follow the rules.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-> > > diff --git a/arch/csky/abiv2/inc/abi/cacheflush.h b/arch/csky/abiv2/inc/abi/cacheflush.h
-> > > new file mode 100644
-> > > index 0000000..756beb7
-> > > --- /dev/null
-> > > +++ b/arch/csky/abiv2/inc/abi/cacheflush.h
-> > > @@ -0,0 +1,40 @@
-
-> > > +#define flush_cache_range(vma, start, end)	do { } while (0)
-> >                              ^^^ like here..
-> #define flush_cache_range(vma, start, end) \
-> 	do { \
-> 		if (vma->vm_flags & VM_EXEC) \
-> 			icache_inv_all(); \
-> 	}
-> 
-> Hmm ?
-> 
-
-For v2, which IIUC is PIPT (as opposed to v1 which is VIPT), what you
-had was correct.
-
-I was merely pointing out that the flush_cache_range() definition was
-inconsitent between v1 and v2; v1 using @mm and v2 using @vma for the
-first argument.
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
