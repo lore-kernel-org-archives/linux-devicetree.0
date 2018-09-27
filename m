@@ -1,81 +1,154 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 07/12] drm/sun4i: sun6i_mipi_dsi: Fix TCON
- DRQ set bits
-Date: Thu, 27 Sep 2018 23:15:50 +0530
-Message-ID: <CAMty3ZDUxqokipNqnn6c618pebdVBWc8Pfzaz+4+SYqR42Yerg@mail.gmail.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-8-jagan@amarulasolutions.com> <20180927165853.dpluekbqzat663q7@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBWNOWTOQKGQEICXIXZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180927165853.dpluekbqzat663q7@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] reset: Exclusive resets must be dedicated to a single hardware block
+Date: Thu, 27 Sep 2018 20:00:38 +0200
+Message-ID: <20180927180038.24599-1-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Eric Auger <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 10:28 PM Maxime Ripard
-<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Thu, Sep 27, 2018 at 05:18:45PM +0530, Jagan Teki wrote:
-> > TCON DRQ set bits for non-burst DSI mode can computed via
-> > horizontal front porch instead of front porch + sync timings.
-> >
-> > Since there no documentation for TCON_DRQ_REG(0x7c) register
-> > this change is taken as reference from BPI-M64-bsp.
->
-> Detailing more what the issue is would be great.
->
-> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > index 599284971ab6..9918fdb990ff 100644
-> > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > @@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
-> >       struct mipi_dsi_device *device = dsi->device;
-> >       u32 val = 0;
->
-> The computation here is in the A64 driver:
->
-> if ((panel->lcd_ht - panel->lcd_x - panel->lcd_hbp) < 21) {
->         dsi_dev[sel]->dsi_tcon_drq.bits.drq_mode = 0;
-> } else {
->         dsi_dev[sel]->dsi_tcon_drq.bits.drq_set =
->                 (panel->lcd_ht-panel->lcd_x-panel->lcd_hbp-20) *
->                 dsi_pixel_bits[panel->lcd_dsi_format]/(8*4);
-> }
->
-> It is testing that the sync + front porch is smaller than 21, and
-> otherwise sets the drq.
->
-> > -     if ((mode->hsync_end - mode->hdisplay) > 20) {
->
-> My code here is testing that the difference between hsync_end and
-> hdisplay is superior to 20, and sets the DRQ if true. The condition is
-> reversed, but otherwise, that difference is the front porch plus the
-> sync length.
+In some SoCs multiple hardware blocks may share a reset control.
+The reset control API for shared resets will only assert such a reset
+when the drivers for all hardware blocks agree.
+The exclusive reset control API still allows to assert such a reset, but
+that impacts all other hardware blocks sharing the reset.
 
-True, I understand this, but does drq setting here is specific to SoC?
-I thought of finding DRQ in A31 BSP but I couldn't find the code. do
-you have bsp somewhere in github?
+While the kernel doc comments clearly state that the API for shared
+resets applies to reset controls which are shared between hardware
+blocks, the exact meaning of exclusive resets is not documented.
+Fix the semantic ambiguity with respect to exclusive access vs.
+exclusive reset lines by:
+  1. Clarifying that exclusive resets really are intended for use with
+     reset controls which are dedicated to a single hardware block,
+  2. Ensuring that obtaining an exclusive reset control will fail if the
+     reset is shared by multiple hardware blocks, for both DT-based and
+     lookup-based reset controls.
 
->
-> > +     if ((mode->hsync_start - mode->hdisplay) > 20) {
->
-> However, you are testing for just the front porch, unlike what your
-> commit log is saying, and unlike what allwinner's code is saying. So
-> this deserves some explanation.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+This is v2 of "[RFC] reset: Add support for dedicated reset controls":
+  - Fix wrong variable in __reset_is_dedicated() loop,
+  - Add missing of_node_put() in __of_reset_is_dedicated(),
+  - Document that exclusive reset controls imply they are dedicated to a
+    single hardware block,
+  - Drop new dedicated flag and new API reset_control_get_dedicated(),
+    as exclusive already implies dedicated,
+  - Rename {__of_,}reset_is_dedicated() to {__of_,}reset_is_exclusive(),
+  - Reword description.
 
-but A64 is doing this, do you think it's completely A64 specific or
-testing panel with front porch drq?
+Note: Exclusive lookup-based reset controls were not tested.
+---
+ drivers/reset/core.c  | 58 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/reset.h |  5 +++-
+ 2 files changed, 62 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 225e34c56b94a2e3..2f5b61226c7964eb 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -459,6 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
+ 	kref_put(&rstc->refcnt, __reset_control_release);
+ }
+ 
++static bool __of_reset_is_exclusive(const struct device_node *node,
++				    const struct of_phandle_args args)
++{
++	struct of_phandle_args args2;
++	struct device_node *node2;
++	int index, ret;
++	bool eq;
++
++	for_each_node_with_property(node2, "resets") {
++		if (node == node2)
++			continue;
++
++		for (index = 0; ; index++) {
++			ret = of_parse_phandle_with_args(node2, "resets",
++							 "#reset-cells", index,
++							 &args2);
++			if (ret)
++				break;
++
++			eq = (args2.np == args.np &&
++			      args2.args_count == args.args_count &&
++			      !memcmp(args2.args, args.args,
++				      args.args_count * sizeof(args.args[0])));
++			of_node_put(args2.np);
++			if (eq)
++				return false;
++		}
++	}
++
++	return true;
++}
++
+ struct reset_control *__of_reset_control_get(struct device_node *node,
+ 				     const char *id, int index, bool shared,
+ 				     bool optional)
+@@ -514,6 +546,11 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+ 		return ERR_PTR(rstc_id);
+ 	}
+ 
++	if (!shared && !__of_reset_is_exclusive(node, args)) {
++		mutex_unlock(&reset_list_mutex);
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	/* reset_list_mutex also protects the rcdev's reset_control list */
+ 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
+ 
+@@ -541,6 +578,22 @@ __reset_controller_by_name(const char *name)
+ 	return NULL;
+ }
+ 
++static bool __reset_is_exclusive(const struct reset_control_lookup *lookup)
++{
++	const struct reset_control_lookup *lookup2;
++
++	list_for_each_entry(lookup2, &reset_lookup_list, list) {
++		if (lookup2 == lookup)
++			continue;
++
++		if (lookup2->provider == lookup->provider &&
++		    lookup2->index == lookup->index)
++			return false;
++	}
++
++	return true;
++}
++
+ static struct reset_control *
+ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+ 				bool shared, bool optional)
+@@ -562,6 +615,11 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+ 		if ((!con_id && !lookup->con_id) ||
+ 		    ((con_id && lookup->con_id) &&
+ 		     !strcmp(con_id, lookup->con_id))) {
++			if (!shared && !__reset_is_exclusive(lookup)) {
++				mutex_unlock(&reset_lookup_mutex);
++				return ERR_PTR(-EINVAL);
++			}
++
+ 			mutex_lock(&reset_list_mutex);
+ 			rcdev = __reset_controller_by_name(lookup->provider);
+ 			if (!rcdev) {
+diff --git a/include/linux/reset.h b/include/linux/reset.h
+index 29af6d6b2f4b8103..5881d2594761e48f 100644
+--- a/include/linux/reset.h
++++ b/include/linux/reset.h
+@@ -116,8 +116,11 @@ static inline int device_reset_optional(struct device *dev)
+  * @id: reset line name
+  *
+  * Returns a struct reset_control or IS_ERR() condition containing errno.
+- * If this function is called more than once for the same reset_control it will
++ * If this function is called more than once for the same reset control it will
+  * return -EBUSY.
++ * This function is intended for use with reset controls which are dedicated
++ * to a single hardware block.  If called for a reset control shared among
++ * multiple hardware blocks, it will return -EINVAL.
+  *
+  * See reset_control_get_shared for details on shared references to
+  * reset-controls.
+-- 
+2.17.1
