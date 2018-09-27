@@ -1,57 +1,41 @@
-From: lei liu <leilk.liu@mediatek.com>
-Subject: Re: [PATCH v3 1/3] spis: mediatek: add bindings for Mediatek MT2712
- soc platform
-Date: Thu, 27 Sep 2018 09:12:12 +0800
-Message-ID: <1538010732.27607.25.camel@mhfsdcap03>
-References: <1537150762-7072-1-git-send-email-leilk.liu@mediatek.com>
-         <1537150762-7072-2-git-send-email-leilk.liu@mediatek.com>
-         <20180926223318.GA18703@bogus>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v2] of: __of_update_property_sysfs only call
+ __of_sysfs_remove_bin_file if of_node_is_attached
+Date: Wed, 26 Sep 2018 18:35:56 -0700
+Message-ID: <a3374cea-32b7-92e8-21a3-8bc14ed5ee2e@gmail.com>
+References: <AM6PR04MB52394FDB1266388BCE1374E3FC030@AM6PR04MB5239.eurprd04.prod.outlook.com>
+ <c0bcc2c1-3058-db4d-ca4d-4e56c502891b@gmail.com>
+ <DB7PR04MB5243B6ADEBCB4B53B5A161F8FC050@DB7PR04MB5243.eurprd04.prod.outlook.com>
+ <CAL_JsqKc1-Rz6iBJ_dpDrEDoFRpTaLR+1voXdTgiJjjG65druA@mail.gmail.com>
+ <DB7PR04MB52433D93A8536DC7F71E169AFC1A0@DB7PR04MB5243.eurprd04.prod.outlook.com>
+ <20180926210537.GA3143@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926223318.GA18703@bogus>
+In-Reply-To: <20180926210537.GA3143@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
+To: Rob Herring <robh@kernel.org>, Andre Kalb <Andre.Kalb@sma.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-09-26 at 17:33 -0500, Rob Herring wrote:
-> On Mon, Sep 17, 2018 at 10:19:20AM +0800, Leilk Liu wrote:
-> > This patch adds a DT binding documentation for the MT2712 soc.
-> > 
-> > Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/spi/spi-slave-mt27xx.txt   |   32 ++++++++++++++++++++
-> >  1 file changed, 32 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
-> > new file mode 100644
-> > index 0000000..09cb2c4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
-> > @@ -0,0 +1,32 @@
-> > +Binding for MTK SPI Slave controller
-> > +
-> > +Required properties:
-> > +- compatible: should be one of the following.
-> > +    - mediatek,mt2712-spi-slave: for mt2712 platforms
-> > +- reg: Address and length of the register set for the device.
-> > +- interrupts: Should contain spi interrupt.
-> > +- clocks: phandles to input clocks.
-> > +  It's clock gate, and should be <&infracfg CLK_INFRA_AO_SPI1>.
-> > +- clock-names: should be "spi" for the clock gate.
-> > +
-> > +Optional properties:
-> > +- assigned-clocks: it's mux clock, should be <&topckgen CLK_TOP_SPISLV_SEL>.
-> > +- assigned-clock-parents: parent of mux clock.
-> > +  It's PLL, and should be on of the following.
+On 09/26/18 14:05, Rob Herring wrote:
+> On Thu, Sep 13, 2018 at 03:21:27PM +0000, Andre Kalb wrote:
+>> Hi Rob,
+>>
+>> I have used an other hardware to check the patch. I hope it doesn’t matter. I added few lines at the untitest.c. All existing unittest use an attached sysfs, therefore the bug isn't detectable.
 > 
-> s/on/one/
+> Okay, can you resend both patches in one series rather than pasted in 
+> here.
 > 
-> With that fixed,
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Rob
 
-Yes, it's a mistake, I'll fix it, thanks
+I don't understand the need for the patch to __of_update_property_sysfs()
+in the context of the current mainline Linux kernel.
+
+As far as I know, there are no callers of of_update_property() against
+a tree that is detached.  As such, the patch is adding complexity
+without adding any functionality.
+
+-Frank
