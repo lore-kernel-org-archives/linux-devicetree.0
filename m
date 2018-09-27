@@ -1,41 +1,53 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v2] dt-bindings: input: pwm-vibrator: correct pwms in example
-Date: Wed, 26 Sep 2018 20:48:58 -0400
-Message-ID: <20180927004858.32529-1-masneyb@onstation.org>
+From: Yong <yong.deng@magewell.com>
+Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera
+ Sensor Interface (CSI)
+Date: Thu, 27 Sep 2018 08:59:23 +0800
+Message-ID: <20180927085923.cf24d7e2fba7f38637aff7c4@magewell.com>
+References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
+        <7197338.mhOH8fQaEM@avalon>
+        <20180926103547.5ubb6xjkl7xngmfg@flea>
+        <1568838.d8CnAYTeDB@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1568838.d8CnAYTeDB@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sebastian.reichel@collabora.co.uk, mark.rutland@arm.com
-Cc: masneyb@onstation.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: maxime.ripard@bootlin.com, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.orgl
 List-Id: devicetree@vger.kernel.org
 
-In the example for the pwm-vibrator bindings, pwm8 is the direction pin,
-and pwm9 is the enable pin. The pwms on the vibrator node has these two
-values swapped so this patch corrects it.
+Hi,
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-Changes since v1:
-- Swapped the pwms values instead of the pwm-names values since enable
-  is required and direction is optional. Based on feedback from
-  Rob Herring.
+On Wed, 26 Sep 2018 13:38:08 +0300
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote:
 
- Documentation/devicetree/bindings/input/pwm-vibrator.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi Maxime,
+> 
+> On Wednesday, 26 September 2018 13:35:47 EEST maxime.ripard@bootlin.com wrote:
+> > On Wed, Sep 26, 2018 at 01:19:34PM +0300, Laurent Pinchart wrote:
+> > > > +Endpoint node properties for CSI1
+> > > > +---------------------------------
+> > > 
+> > > Should you list the CSI0 properties as well ? As the driver in patch 2/2
+> > > doesn't support the CSI-2 interface I assume you have left out CSI0 for
+> > > now, but it should still be listed in the bindings. I'm fine with fixing
+> > > this as a follow-up patch to avoid missing the v4.20 merge window, but if
+> > > you end up resubmitting the series, could you please address the problem
+> > > ?
+> > 
+> > That driver is not available, and the documentation isn't either, so
+> > there's no easy way to tell which properties are going to be needed
+> > before doing the actual work of reverse engineering it and writing a
+> > driver for it. Unfortunately...
+> 
+> While DT bindings should be independent from driver implementations, I agree 
+> it's difficult to develop good bindings without hardware documentation and 
+> without at least one working driver implementation.
+> 
+> How about just explicitly stating that these bindings don't support CSI0 yet ?
 
-diff --git a/Documentation/devicetree/bindings/input/pwm-vibrator.txt b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-index 09145d18491d..88c775a3fe21 100644
---- a/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-+++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
-@@ -58,8 +58,8 @@ Example from Motorola Droid 4:
- 
- 	vibrator {
- 		compatible = "pwm-vibrator";
--		pwms = <&pwm8 0 1000000000 0>,
--		       <&pwm9 0 1000000000 0>;
-+		pwms = <&pwm9 0 1000000000 0>,
-+                       <&pwm8 0 1000000000 0>;
- 		pwm-names = "enable", "direction";
- 		direction-duty-cycle-ns = <1000000000>;
- 	};
--- 
-2.17.1
+OK.
+
+Thanks,
+Yong
