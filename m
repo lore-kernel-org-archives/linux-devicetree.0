@@ -1,40 +1,35 @@
-From: Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
-Date: Thu, 27 Sep 2018 11:01:34 +0200
-Message-ID: <20180927090134.GG5254@hirez.programming.kicks-ass.net>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
- <20180925072407.GA6999@hirez.programming.kicks-ass.net>
- <20180927052737.GA28407@guoren>
- <20180927070859.GC5254@hirez.programming.kicks-ass.net>
- <20180927081138.GA308@guoren>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/5] usb: host: Add OHCI driver for Broadcom STB SoCs
+Date: Thu, 27 Sep 2018 11:08:39 +0200
+Message-ID: <CAK8P3a0rN=E7vnK3Ri8srXBDT7cdsVj-n=G6VGBROc0o8vrcpw@mail.gmail.com>
+References: <1538000414-24873-1-git-send-email-alcooperx@gmail.com> <1538000414-24873-3-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927081138.GA308@guoren>
+In-Reply-To: <1538000414-24873-3-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
+To: Al Cooper <alcooperx@gmail.com>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman <mathias.nyman@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, David Miller <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Dmitry Osipenko <digetx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, sunjianguo1@huawei.com, James Hogan <jhogan@kernel.org>, Alban Bedel <albeu@free.fr>, Lu Baolu <baolu.lu@linux.intel.com>, Avi Fishman <avifishman70@gmail.com>, Alex Elder <elder@linaro.org>, Hans de Goede <hdegoede@redhat.com>, USB list <linux-usb@vger.kernel.org>, DTML <devicetree@vger.kernel.>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 04:11:42PM +0800, Guo Ren wrote:
-> On Thu, Sep 27, 2018 at 09:08:59AM +0200, Peter Zijlstra wrote:
+On Thu, Sep 27, 2018 at 12:20 AM Al Cooper <alcooperx@gmail.com> wrote:
+>
+> This driver enables USB OHCI on Broadcom ARM and MIPS STB SoCs.
+> The drivers depend on a matching "brcm,brcmstb-usb-phy"
+> Broadcom STB USB Phy driver.
+>
+> The standard platform driver can't be used because of differences
+> in PHY and Clock handling. The standard PHY handling in hcd.c will
+> do a phy_exit/phy_init on suspend/resume and this will end up
+> shutting down the PHYs to the point that the host controller
+> registers are no longer accessible and will cause suspend to crash.
+> The clocks specified in device tree for these drivers are not
+> available in mainline so instead of returning EPROBE_DEFER when
+> the specified clock is not found and eventually failing probe,
+> the clock pointer is set to NULL which disables all clock handling.
 
-> > That's not what I meant; I meant you need something like:
-> > 
-> > #define flush_cache_range(vma, start, end) cache_wbinv_range(start, end)
-> If you remove the tlb_start_vma in my tlb.h, I want to use cache_wbinv_all() is
-> more safe. And I'll improve it in future.
-> 
-> My cache_wbinv_range(start, end) won't care vma->mm's asid and they just use current
-> asid in mmu reg. If current_mm != vma->mm, then flush_cache_range will be broken.
-> Perhaps, I need improve flush_cache_range first ...
+Both of these sound like fairly minor differences, I wonder if the
+generic code could be adapted to have a special case for these
+rather than duplicating it.
 
-Ah, ok. In that case I'll leave it to you to either use
-cache_wbinv_all() or improve the range flush. My only request would to
-stick on a comment to explain the reason you're not using
-cache_wbinv_range() if you choose to use cache_wbinv_all() for
-flush_cache_range().
-
-Thanks!
+        Arnd
