@@ -1,63 +1,60 @@
 From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v3 0/7] Introduce STMFX I2C Multi-Function eXpander
-Date: Thu, 27 Sep 2018 13:39:57 +0200
-Message-ID: <1538048404-9041-1-git-send-email-amelie.delaunay@st.com>
+Subject: [PATCH v3 5/7] ARM: dts: stm32: add STMFX support on stm32746g-eval
+Date: Thu, 27 Sep 2018 13:40:02 +0200
+Message-ID: <1538048404-9041-6-git-send-email-amelie.delaunay@st.com>
+References: <1538048404-9041-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538048404-9041-1-git-send-email-amelie.delaunay@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for STMicroelectronics Multi-Function eXpander
-(STMFX), used on some STM32 discovery and evaluation boards.
+This patch adds support for STMicroelectronics Multi-Function eXpander
+(STMFX) on stm32746g-eval. It is connected on i2c1.
 
-STMFX is an STM32L152 slave controller whose firmware embeds the following
-features:
-- I/O expander (16 GPIOs + 8 extra if the other features are not enabled),
-- resistive touchscreen controller,
-- IDD measurement.
-
-I2C stuff and chip initialization is based on an MFD parent driver, which
-registers a pinctrl MFD child.
-
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
-Changes in v3:
-- fix MFD interrupt bindings
-- fix drivers/mfd/stmfx.c:103:8: warning: 'mask' may be used uninitialized
-  in this function
-Changes in v2:
-- move to MFD parent driver for i2c stuff and chip initialization
-- improve regmap configuration
-- take advantage of the use of gpio-ranges
+ arch/arm/boot/dts/stm32746g-eval.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-
-Amelie Delaunay (7):
-  dt-bindings: mfd: Add ST Multi-Function eXpander (STMFX) core bindings
-  mfd: Add ST Multi-Function eXpander (STMFX) core driver
-  dt-bindings: pinctrl: document the STMFX pinctrl bindings
-  pinctrl: Add STMFX GPIO expander Pinctrl/GPIO driver
-  ARM: dts: stm32: add STMFX support on stm32746g-eval
-  ARM: dts: stm32: add joystick support on stm32746g-eval
-  ARM: dts: stm32: add orange and blue leds on stm32746g-eval
-
- Documentation/devicetree/bindings/mfd/stmfx.txt    |  28 +
- .../devicetree/bindings/pinctrl/pinctrl-stmfx.txt  | 116 +++
- arch/arm/boot/dts/stm32746g-eval.dts               |  66 ++
- drivers/mfd/Kconfig                                |  14 +
- drivers/mfd/Makefile                               |   2 +-
- drivers/mfd/stmfx.c                                | 626 ++++++++++++++++
- drivers/pinctrl/Kconfig                            |  12 +
- drivers/pinctrl/Makefile                           |   1 +
- drivers/pinctrl/pinctrl-stmfx.c                    | 821 +++++++++++++++++++++
- include/linux/mfd/stmfx.h                          |  27 +
- 10 files changed, 1712 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/stmfx.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-stmfx.txt
- create mode 100644 drivers/mfd/stmfx.c
- create mode 100644 drivers/pinctrl/pinctrl-stmfx.c
- create mode 100644 include/linux/mfd/stmfx.h
-
+diff --git a/arch/arm/boot/dts/stm32746g-eval.dts b/arch/arm/boot/dts/stm32746g-eval.dts
+index 8c081ea..203faf0 100644
+--- a/arch/arm/boot/dts/stm32746g-eval.dts
++++ b/arch/arm/boot/dts/stm32746g-eval.dts
+@@ -44,6 +44,7 @@
+ #include "stm32f746.dtsi"
+ #include "stm32f746-pinctrl.dtsi"
+ #include <dt-bindings/input/input.h>
++#include <dt-bindings/interrupt-controller/irq.h>
+ 
+ / {
+ 	model = "STMicroelectronics STM32746g-EVAL board";
+@@ -114,6 +115,22 @@
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
+ 	status = "okay";
++
++	stmfx: stmfx@42 {
++		compatible = "st,stmfx-0300";
++		reg = <0x42>;
++		interrupts = <8 IRQ_TYPE_EDGE_RISING>;
++		interrupt-parent = <&gpioi>;
++
++		stmfx_pinctrl: stmfx-pin-controller {
++			compatible = "st,stmfx-0300-pinctrl";
++			gpio-controller;
++			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			gpio-ranges = <&stmfx_pinctrl 0 0 24>;
++		};
++	};
+ };
+ 
+ &rtc {
 -- 
 2.7.4
