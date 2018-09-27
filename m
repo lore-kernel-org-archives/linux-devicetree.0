@@ -1,67 +1,100 @@
-From: houlong wei <houlong.wei@mediatek.com>
-Subject: Re: [PATCH v23 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Thu, 27 Sep 2018 18:30:46 +0800
-Message-ID: <1538044246.17514.51.camel@mhfsdcap03>
-References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
-         <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
-         <ca12e8ab-e3d1-1cf0-8fe9-756d57bd5a3a@gmail.com>
-         <1538013431.17514.31.camel@mhfsdcap03>
-         <3773f620-e135-578d-5307-08483436f4c2@gmail.com>
+From: Alan Douglas <adouglas@cadence.com>
+Subject: RE: [RFC PATCH v2 1/2] dt-bindings: phy: Document cadence Sierra PHY
+ bindings
+Date: Thu, 27 Sep 2018 10:32:12 +0000
+Message-ID: <MWHPR07MB3502ADDB075E158C486B15E6D8140@MWHPR07MB3502.namprd07.prod.outlook.com>
+References: <1536244949-25892-1-git-send-email-adouglas@cadence.com>
+ <20180925210154.GA21444@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3773f620-e135-578d-5307-08483436f4c2@gmail.com>
+In-Reply-To: <20180925210154.GA21444@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "kishon@ti.com" <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-09-27 at 15:50 +0800, Matthias Brugger wrote:
-> 
-> On 27/09/2018 03:57, houlong wei wrote:
-[...]
-> >>> +
-> >>> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
-> >>> +				   u32 arg_a, u32 arg_b)
-> >>> +{
-> >>> +	u64 *cmd_ptr;
-> >>> +
-> >>> +	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
-> >>> +		pkt->cmd_buf_size += CMDQ_INST_SIZE;
-> >>
-> >> Why do we update the cmd_buf_size here?
-> > 
-> > Because in developing phase of consumer driver, the consumer has to know
-> > the real command buffer size after adding command failure. Then the
-> > consumer will increase the size and run the cmdq flow (cmdq_pkt_create,
-> > cmdq_pkt_write/wfe...) again. Finally, the consumer get the real size
-> > and fix it.
-> > 
-> 
-> But the consumer should know the size it needs for it's buffer and if not it
-> should be able to decide on it's own how much space it needs. If he get's a
-> -ENOMEM he implicitly knows that he has to increase the buf_size. Now the size
-> depends on how many command he has pending and wasn't able to write to the cmdq_pkt.
-> 
-> Regards,
-> Matthias
-
-The consumer doesn't know how to calculate the command buffer size that
-he needs.
-When the consumer driver is developing, he could ignore the return value
-of cmdq_pkt_write and other command appending functions.
-He can print the pkt->cmdq_buf_size after cmdq_pkt_flush() or
-cmdq_pkt_flush_async() failure. Now he can get the buffer size he needs.
-
-I copy your another comment here, so I can reply in one mail.
->>If we want to write out a warning to the kernel log, then we should
->>but that in the if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE
->>pkt->buf_size)) from cmdq_pkt_append_command to make it consistent
->>between cmdq_pkt_write, cmdq_pkt_write_mask and cmdq_pkt_finalize.
-
-Thanks, I will move WARN_ON() into cmdq_pkt_append_command() before
-returning -ENOMEM.
-
-After your confirmation of the comments above, I will re-send a new
-patch.
+T24gMjUgU2VwdGVtYmVyIDIwMTggMjI6MDIsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUaHUs
+IFNlcCAwNiwgMjAxOCBhdCAwMzo0MjoyOVBNICswMTAwLCBBbGFuIERvdWdsYXMgd3JvdGU6DQo+
+ID4gQWRkIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgU2llcnJhIFBIWS4gIFRoZSBQSFkg
+c3VwcG9ydHMNCj4gPiBhIG51bWJlciBvZiBkaWZmZXJlbnQgcHJvdG9jb2xzLCBpbmNsdWRpbmcg
+UENJZSBhbmQgVVNCLg0KPiA+DQo+ID4gVGhlIFBIWSBsYW5lcyBtYXkgYmUgY29uZmlndXJlZCBh
+cyBzaW5nbGUgb3IgbXVsdGktbGFuZSBsaW5rcy4NCj4gPiBFYWNoIGxpbmsgaXMgdHJlYXRlZCBh
+cyBhIHNlcGFyYXRlIHN1Ym5vZGUuICBGb3IgZXhhbXBsZSwgaWYNCj4gPiB0aGVyZSBhcmUgNCBs
+YW5lcyBpbiB0b3RhbCB0aGUgZmlyc3QgMiBtYXkgYmUgY29uZmlndXJlZCBhcw0KPiA+IGEgbXVs
+dGktbGFuZSBQQ0llIGxpbmsgd2hpbGUgdGhlIG90aGVyIHR3byBhcmUgc2luZ2xlIGxhbmUNCj4g
+PiBVU0IgbGlua3MsIGFuZCBpbiB0aGlzIGNhc2UgdGhlcmUgd291bGQgYmUgMyBzdWJub2Rlcy4N
+Cj4gPg0KPiA+IFRoZXJlIGFyZSB0d28gcmVzZXRzIGZvciB0aGUgUEhZIGJsb2NrLCBhbmQgYWRk
+aXRpb25hbCByZXNldHMsDQo+ID4gb25lIGZvciBlYWNoIGxhbmUuICBGb3IgbXVsdGktbGFuZSBs
+aW5rcywgb25seSB0aGUgcmVzZXQgZm9yDQo+ID4gdGhlIG1hc3RlciBsYW5lIGlzIHJlcXVpcmVk
+LCB0aGUgcmVzZXRzIG9uIG90aGVyIGxhbmVzIGhhdmUgbm8NCj4gPiBlZmZlY3QuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBBbGFuIERvdWdsYXMgPGFkb3VnbGFzQGNhZGVuY2UuY29tPg0KPiA+
+IC0tLQ0KPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEtcGh5LnR4
+dCAgICB8IDY1ICsrKysrKysrKysrKysrKysrKysrKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDY1
+IGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEtcGh5LnR4dA0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVycmEt
+cGh5LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvY2Rucy1zaWVy
+cmEtDQo+IHBoeS50eHQNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAw
+MDAuLjk0YThhN2YNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9jZG5zLXNpZXJyYS1waHkudHh0DQo+ID4gQEAgLTAsMCAr
+MSw2NSBAQA0KPiA+ICtDYWRlbmNlIFNpZXJyYSBQSFkNCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0NCj4gPiArDQo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4gKy0gY29tcGF0aWJs
+ZToJY2RucyxzaWVycmEtcGh5LXQwDQo+ID4gKy0gY2xvY2tzOglNdXN0IGNvbnRhaW4gYW4gZW50
+cnkgaW4gY2xvY2stbmFtZXMuDQo+ID4gKwkJU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50
+eHQgZm9yIGRldGFpbHMuDQo+ID4gKy0gY2xvY2stbmFtZXM6CU11c3QgYmUgInBoeV9jbGsiDQo+
+ID4gKy0gcmVzZXRzOglNdXN0IGNvbnRhaW4gYW4gZW50cnkgZm9yIGVhY2ggaW4gcmVzZXQtbmFt
+ZXMuDQo+ID4gKwkJU2VlIC4uL3Jlc2V0L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4NCj4gPiArLSBy
+ZXNldC1uYW1lczoJTXVzdCBpbmNsdWRlICJzaWVycmFfcmVzZXQiIGFuZCAic2llcnJhX2FwYiIg
+YW5kIG9uZSBmb3IgZWFjaA0KPiA+ICsJCXN1Yi1ub2RlLg0KPiA+ICsJCSJzaWVycmFfcmVzZXQi
+IG11c3QgY29udHJvbCB0aGUgcmVzZXQgbGluZSB0byB0aGUgUEhZLg0KPiA+ICsJCSJzaWVycmFf
+YXBiIiBtdXN0IGNvbnRyb2wgdGhlIHJlc2V0IGxpbmUgdG8gdGhlIEFQQiBQSFkNCj4gPiArCQlp
+bnRlcmZhY2UuDQo+ID4gKwkJUmVzZXRzIGZvciBlYWNoIHN1Ym5vZGUgbXVzdCBjb250cm9sIHRo
+ZSBtYXN0ZXIgbGFuZSBmb3IgdGhlDQo+ID4gKwkJc3Vibm9kZSBsYW5lIGdyb3VwLg0KPiANCj4g
+V2hhdCBhcmUgdGhlIG5hbWVzPw0KPiANCkknbGwgdXBkYXRlIHRoaXMgdG8gdXNlIHRoZSBmdWxs
+IG5hbWUgb2YgdGhlIHN1Ym5vZGUsIGUuZy4gZm9yIHN1Ym5vZGVzOg0KICBwY2llMF9waHkwOiBw
+Y2llLXBoeUAwDQogIHBjaWUwX3BoeTE6IHBjaWUtcGh5QDINCnRoZW4gdGhlIHJlc2V0IG5hbWVz
+IHdvdWxkIGJlOiAicGNpZS1waHlAMCIgYW5kICJwY2llLXBoeUAyIg0KDQo+ID4gKy0gcmVnOgkJ
+cmVnaXN0ZXIgcmFuZ2UgZm9yIHRoZSBQSFkuDQo+ID4gKy0gcmVnLW5hbWVzOglNdXN0IGJlICJy
+ZWciLg0KPiANCj4gS2luZCBvZiBwb2ludGxlc3Mgd2l0aCBvbmx5IDEuDQo+IA0KSSB3aWxsIHJl
+bW92ZSByZWctbmFtZXMuDQoNCj4gPiArLSAjYWRkcmVzcy1jZWxsczogU2hvdWxkIGJlIDENCj4g
+PiArLSAjc2l6ZS1jZWxsczoJU2hvdWxkIGJlIDANCj4gPiArDQo+ID4gK09wdGlvbmFsIHByb3Bl
+cnRpZXM6DQo+ID4gKy0gY2RucyxhdXRvY29uZjoJSWYgcHJlc2VudCwgaW5kaWNhdGVzIHRoYXQg
+dGhlIFBIWSByZWdpc3RlcnMgd2lsbA0KPiA+ICsJCQliZSBjb25maWd1cmVkIGJ5IGhhcmR3YXJl
+LiAgSWYgbm90IHByZXNlbnQsIGFsbA0KPiA+ICsJCQlzdWItbm9kZSBvcHRpb25hbCBwcm9wZXJ0
+aWVzIG11c3QgYmUgcHJvdmlkZWQuDQo+IA0KPiBib29sZWFuPw0KWWVzLCB3aWxsIHVwZGF0ZSB0
+aGUgZGVzY3JpcHRpb24NCg0KPiANCj4gPiArDQo+ID4gK1N1Yi1ub2RlczoNCj4gPiArICBFYWNo
+IGdyb3VwIG9mIFBIWSBsYW5lcyB3aXRoIGEgc2luZ2xlIG1hc3RlciBsYW5lIHNob3VsZCBiZSBy
+ZXByZXNlbnRlZCBhcw0KPiA+ICsgIGEgc3ViLW5vZGUuIE5vdGUgdGhhdCB0aGUgYWN0dWFsIGNv
+bmZpZ3VyYXRpb24gb2YgZWFjaCBsYW5lIGlzIGRldGVybWluZWQgYnkNCj4gPiArICBoYXJkd2Fy
+ZSBzdHJhcHBpbmcsIGFuZCBtdXN0IG1hdGNoIHRoZSBjb25maWd1cmF0aW9uIHNwZWNpZmllZCBo
+ZXJlLg0KPiA+ICsNCj4gPiArU3ViLW5vZGUgcmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiArLSAj
+cGh5LWNlbGxzOglHZW5lcmljIFBIWSBiaW5kaW5nOyBtdXN0IGJlIDAuDQo+ID4gKw0KPiA+ICtT
+dWItbm9kZSBvcHRpb25hbCBwcm9wZXJ0aWVzOg0KPiA+ICstIHJlZzoJCQlUaGUgbWFzdGVyIGxh
+bmUgbnVtYmVyLg0KPiA+ICstIGNkbnMsbnVtLWxhbmVzOglOdW1iZXIgb2YgbGFuZXMgaW4gdGhp
+cyBncm91cC4gIEZyb20gMSB0byA0Lg0KPiA+ICstIGNkbnMscGh5LXR5cGU6CUNhbiBiZSBQSFlf
+VFlQRV9QQ0lFIG9yIFBIWV9UWVBFX1VTQjMsIGRlcGVuZGluZyBvbg0KPiA+ICsJCQljb25maWd1
+cmF0aW9uIG9mIGxhbmVzLg0KPiA+ICsNCj4gPiArRXhhbXBsZToNCj4gPiArCXBjaWVfcGh5NDog
+cGNpZS1waHk0QGZkMjQwMDAwIHsNCj4gDQo+IHBjaWUtcGh5QGZkMjQwMDAwDQo+IA0KSSdsbCBj
+aGFuZ2UgYXMgc3VnZ2VzdGVkLg0KDQo+ID4gKwkJY29tcGF0aWJsZSA9ICJjZG5zLHNpZXJyYS1w
+aHktdDAiOw0KPiA+ICsJCXJlZyA9IDwweDAgMHhmZDI0MDAwMCAweDAgMHg0MDAwMD47DQo+ID4g
+KwkJcmVnLW5hbWVzID0gInJlZyI7DQo+ID4gKwkJcmVzZXRzID0gPCZwaHlyc3QgMD4sIDwmcGh5
+cnN0IDE+LDwmcGh5cnN0IDI+LDwmcGh5cnN0IDQ+Ow0KPiA+ICsJCXJlc2V0LW5hbWVzID0gInNp
+ZXJyYV9yZXNldCIsInNpZXJyYV9hcGIiLCJwY2llX3BoeTAiLHBjaWVfcGh5MTsNCj4gDQo+IHNw
+YWNlcyBhbmQgcXVvdGVzIG1pc3NpbmcuDQo+IA0KSSdsbCByZWZvcm1hdC4NCg0KPiA+ICsJCWNs
+b2NrcyA9IDwmcGh5Y2xvY2s+Ow0KPiA+ICsJCWNsb2NrLW5hbWVzID0gInBoeV9jbGsiOw0KPiA+
+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICsJCSNzaXplLWNlbGxzID0gPDA+Ow0KPiA+
+ICsJCXBjaWUwX3BoeTA6IHBjaWUtcGh5MEAwIHsNCj4gDQo+IHBjaWUtcGh5QDANCj4gDQpJJ2xs
+IGNoYW5nZSBhcyBzdWdnZXN0ZWQuDQoNCj4gPiArCQkJCXJlZyA9IDwwPjsNCj4gPiArCQkJCWNk
+bnMsbnVtLWxhbmVzID0gPDI+Ow0KPiA+ICsJCQkJI3BoeS1jZWxscyA9IDwwPjsNCj4gPiArCQkJ
+CWNkbnMscGh5LXR5cGUgPSA8UEhZX1RZUEVfUENJRT47DQo+ID4gKwkJfTsNCj4gPiArCQlwY2ll
+MF9waHkxOiBwY2llLXBoeTFAMCB7DQo+IA0KPiBwY2llLXBoeUAyDQo+IA0KPiBPciByZWcgc2hv
+dWxkIGJlIDE/DQo+IA0KcmVnIGlzIHRoZSBtYXN0ZXIgbGFuZSBudW1iZXIsIGFuZCBpbiB0aGlz
+IGNhc2UgbXVzdCBiZSAyIG9yIGhpZ2hlciwNCnNpbmNlIHRoZSBzdWJub2RlIHdpdGggbWFzdGVy
+IGxhbmUgbnVtYmVyIDAgaGFzIDIgbGFuZXMuDQpJJ2xsIGNoYW5nZSB0byBwY2llLXBoeUAyLCBh
+bmQgYWRkIGFuIGV4cGxhbmF0aW9uLg0KDQpUaGFua3MgZm9yIHlvdXIgY29tbWVudHMNCg0KPiA+
+ICsJCQkJcmVnID0gPDI+Ow0KPiA+ICsJCQkJY2RucyxudW0tbGFuZXMgPSA8MT47DQo+ID4gKwkJ
+CQkjcGh5LWNlbGxzID0gPDA+Ow0KPiA+ICsJCQkJY2RucyxwaHktdHlwZSA9IDxQSFlfVFlQRV9Q
+Q0lFPjsNCj4gPiArCQl9Ow0KPiA+ICsNCj4gPiAtLQ0KPiA+IDEuOS4wDQo+ID4NCg==
