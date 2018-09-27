@@ -1,30 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 4/5] dt-bindings: drm/bridge: Document Cadence MHDP
- bridge bindings
-Date: Thu, 27 Sep 2018 12:38:21 -0500
-Message-ID: <20180927173821.GA7422@bogus>
-References: <1537866837-4408-1-git-send-email-dkos@cadence.com>
- <1537866837-4408-5-git-send-email-dkos@cadence.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c-next v3 2/3] i2c: aspeed: Add 'aspeed,timeout' DT
+ property reading code
+Date: Thu, 27 Sep 2018 10:41:16 -0700
+Message-ID: <37ae7a11-44b6-88e5-0f4d-c97c70334ad4@linux.intel.com>
+References: <20180926215842.23125-1-jae.hyun.yoo@linux.intel.com>
+ <20180926215842.23125-3-jae.hyun.yoo@linux.intel.com>
+ <CACPK8XcKms88EcpT3soE6wLyAmvyiLfVkNeOQT0FgmY4eZoDrw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537866837-4408-5-git-send-email-dkos@cadence.com>
+In-Reply-To: <CACPK8XcKms88EcpT3soE6wLyAmvyiLfVkNeOQT0FgmY4eZoDrw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Quentin Schulz <quentin.schulz@free-electrons.com>, Damian Kos <dkos@cadence.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, pgaj@cadence.com, ltyrala@cadence.com, rafalc@cadence.com, jartur@cadence.com, piotrs@cadence.com, quentin.schulz@boot
+To: Joel Stanley <joel@jms.id.au>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, devicetree <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-aspeed@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, jarkko.nikula@linux.intel.com, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Sep 2018 10:13:34 +0100, Damian Kos wrote:
-> From: Quentin Schulz <quentin.schulz@free-electrons.com>
+Hi Joel,
+
+On 9/26/2018 8:11 PM, Joel Stanley wrote:
+> On Thu, 27 Sep 2018 at 01:58, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
+>>
+>> +/* Timeout */
+>> +#define ASPEED_I2C_BUS_TIMEOUT_US_DEFAULT              (5 * 1000 * 1000)
 > 
-> Document the bindings used for the Cadence MHDP DPI/DP bridge.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> Signed-off-by: Damian Kos <dkos@cadence.com>
-> ---
->  .../bindings/display/bridge/cdns,mhdp.txt     | 43 +++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,mhdp.txt
+> The 5 seconds time out is way too long. On a system that doesn't have
+> functional i2c, this holds up boot for a long time as most i2c client
+> drivers try to initialise their device and fail. I realise you're not
+> changing the value, but we should pick a better default. 1 second?
+> Half a second?
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I agree with you. We could probably use 1 second as default which can
+cover the most of general cases. If so, we don't need to make the
+default setting in this driver because i2c-core-base will default
+adap->timeout to 1 second if the value is 0 when a driver registers an
+adapter. Will fix this code.
+
+>>
+>> +       ret = of_property_read_u32(pdev->dev.of_node, "aspeed,timeout",
+>> +                                  &timeout_us);
+> 
+> Can we make this binding generic? It's not specific to aspeed's
+> hardware. Getting the value could even part of the i2c core.
+> 
+> I read the previous thread with Wolfram. I think this would still fit
+> with what Wolfram suggested, but please forgive my jetlagged brain if
+> I've missed something.
+> 
+
+It followed the way of the existing i2c-mpc driver uses 'fsl,timeout'
+for the same purpose. Though, I also want to make it as a generic as you
+suggested like 'timeout' in milliseconds unit, not in microseconds unit.
+If making it a generic property is acceptable, I'll fix it too.
+
+Wolfram, can you please share your thought on it?
+
+Thanks,
+Jae
