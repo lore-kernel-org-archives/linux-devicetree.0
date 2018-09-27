@@ -1,80 +1,43 @@
-From: ebiederm@xmission.com (Eric W. Biederman)
-Subject: Re: [PATCH V6 08/33] csky: Process management and Signal
-Date: Thu, 27 Sep 2018 21:50:43 +0200
-Message-ID: <87h8iaoh2k.fsf@xmission.com>
-References: <cover.1538058840.git.ren_guo@c-sky.com>
-        <cover.1538058840.git.ren_guo@c-sky.com>
-        <a51eb26bd9442a3e4d09e9785ae5ccaf2555a534.1538058840.git.ren_guo@c-sky.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] clk: qcom: Add Global Clock controller (GCC) driver
+ for SDM660
+Date: Thu, 27 Sep 2018 14:51:34 -0500
+Message-ID: <20180927195134.GA19806@bogus>
+References: <20180810202123.29238-1-ctatlor97@gmail.com>
+ <20180925173603.2274-1-ctatlor97@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a51eb26bd9442a3e4d09e9785ae5ccaf2555a534.1538058840.git.ren_guo@c-sky.com>
-        (Guo Ren's message of "Thu, 27 Sep 2018 22:47:45 +0800")
+Content-Disposition: inline
+In-Reply-To: <20180925173603.2274-1-ctatlor97@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Guo Ren <ren_guo@c-sky.com> writes:
+On Tue, Sep 25, 2018 at 06:35:58PM +0100, Craig Tatlor wrote:
+> From: Taniya Das <tdas@codeaurora.org>
+> 
+> Add support for the global clock controller found on SDM660
+> based devices. This should allow most non-multimedia device
+> drivers to probe and control their clocks.
+> Based on CAF implementation.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> [craig: rename parents to fit upstream, and other cleanups]
+> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> ---
+> Changes from V1:
+>     Change authorship
+>     Add sdm630 compatible
+>  .../devicetree/bindings/clock/qcom,gcc.txt    |    1 +
 
-> --- /dev/null
-> +++ b/arch/csky/abiv2/fpu.c
-> +void fpu_fpe(struct pt_regs * regs)
-> +{
-> +	int sig;
-> +	unsigned int fesr;
-> +	siginfo_t info;
-> +
-> +	fesr = mfcr("cr<2, 2>");
-> +
-> +	if(fesr & FPE_ILLE){
-> +		info.si_code = ILL_ILLOPC;
-> +		sig = SIGILL;
-> +	}
-> +	else if(fesr & FPE_IDC){
-> +		info.si_code = ILL_ILLOPN;
-> +		sig = SIGILL;
-> +	}
-> +	else if(fesr & FPE_FEC){
-> +		sig = SIGFPE;
-> +		if(fesr & FPE_IOC){
-> +			info.si_code = FPE_FLTINV;
-> +		}
-> +		else if(fesr & FPE_DZC){
-> +			info.si_code = FPE_FLTDIV;
-> +		}
-> +		else if(fesr & FPE_UFC){
-> +			info.si_code = FPE_FLTUND;
-> +		}
-> +		else if(fesr & FPE_OFC){
-> +			info.si_code = FPE_FLTOVF;
-> +		}
-> +		else if(fesr & FPE_IXC){
-> +			info.si_code = FPE_FLTRES;
-> +		}
-> +		else {
-> +			info.si_code = NSIGFPE;
-> +		}
-> +	}
-> +	else {
-> +		info.si_code = NSIGFPE;
-> +		sig = SIGFPE;
-> +	}
-> +	info.si_signo = SIGFPE;
-> +	info.si_errno = 0;
-> +	info.si_addr = (void *)regs->pc;
-> +	force_sig_info(sig, &info, current);
-> +}
+Acked-by: Rob Herring <robh@kernel.org>
 
-
-This use of sending a signal is buggy.  It results in undefined values
-being copied to userspace.
-
-Userspace should never be sent NSIGXXX as a si_code.  You can use
-FPE_FLTUNK for this default case.
-
-In new code please use force_sig_fault instead of force_sig_info in new
-code.  That saves you the trouble of messing with struct siginfo.
-
-Thank you very much,
-Eric Biederman
+>  drivers/clk/qcom/Kconfig                      |    9 +
+>  drivers/clk/qcom/Makefile                     |    1 +
+>  drivers/clk/qcom/gcc-sdm660.c                 | 2480 +++++++++++++++++
+>  include/dt-bindings/clock/qcom,gcc-sdm660.h   |  159 ++
+>  5 files changed, 2650 insertions(+)
+>  create mode 100644 drivers/clk/qcom/gcc-sdm660.c
+>  create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm660.h
