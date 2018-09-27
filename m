@@ -1,43 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] clk: qcom: Add Global Clock controller (GCC) driver
- for SDM660
-Date: Thu, 27 Sep 2018 14:51:34 -0500
-Message-ID: <20180927195134.GA19806@bogus>
-References: <20180810202123.29238-1-ctatlor97@gmail.com>
- <20180925173603.2274-1-ctatlor97@gmail.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Aspeed Video Engine
+ binding documentation
+Date: Thu, 27 Sep 2018 14:54:49 -0500
+Message-ID: <20180927195449.GA25789@bogus>
+References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
+ <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180925173603.2274-1-ctatlor97@gmail.com>
+In-Reply-To: <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, linux-media@vger.kernel.org, mchehab@kernel.org, joel@jms.id.au, hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 06:35:58PM +0100, Craig Tatlor wrote:
-> From: Taniya Das <tdas@codeaurora.org>
+On Tue, 25 Sep 2018 14:27:08 -0500, Eddie James wrote:
+> Document the bindings.
 > 
-> Add support for the global clock controller found on SDM660
-> based devices. This should allow most non-multimedia device
-> drivers to probe and control their clocks.
-> Based on CAF implementation.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> [craig: rename parents to fit upstream, and other cleanups]
-> Signed-off-by: Craig Tatlor <ctatlor97@gmail.com>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 > ---
-> Changes from V1:
->     Change authorship
->     Add sdm630 compatible
->  .../devicetree/bindings/clock/qcom,gcc.txt    |    1 +
+>  .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+> 
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/clk/qcom/Kconfig                      |    9 +
->  drivers/clk/qcom/Makefile                     |    1 +
->  drivers/clk/qcom/gcc-sdm660.c                 | 2480 +++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-sdm660.h   |  159 ++
->  5 files changed, 2650 insertions(+)
->  create mode 100644 drivers/clk/qcom/gcc-sdm660.c
->  create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm660.h
+Reviewed-by: Rob Herring <robh@kernel.org>
