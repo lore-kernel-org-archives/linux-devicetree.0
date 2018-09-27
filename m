@@ -1,37 +1,50 @@
-From: Daniel Walker <danielwa@cisco.com>
-Subject: Re: [PATCH 0/8] add generic builtin command line
-Date: Thu, 27 Sep 2018 11:08:51 -0700
-Message-ID: <3320a561-2287-63f7-2162-84a639a22a8a@cisco.com>
-References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
- <CAKv+Gu-AxtOO04iwPSri12tkb9NRugXV9E2LGrfJT-LJjf4_ow@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 3/7] [media] ad5820: DT new optional field enable-gpios
+Date: Thu, 27 Sep 2018 13:23:11 -0500
+Message-ID: <20180927182311.GA27227@bogus>
+References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
+ <20180920204751.29117-3-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKv+Gu-AxtOO04iwPSri12tkb9NRugXV9E2LGrfJT-LJjf4_ow@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180920204751.29117-3-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Maksym Kokhan <maksym.kokhan@globallogic.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, the arch/x86 maintainers <x86@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <dwalker@fifo99.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbilovol@cisco.com>
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/27/2018 10:05 AM, Ard Biesheuvel wrote:
-> On 27 September 2018 at 18:55, Maksym Kokhan
-> <maksym.kokhan@globallogic.com> wrote:
->> There were series of patches [1] for 4.3.0-rc3, that allowed
->> architectures to use a generic builtin command line. I have rebased
->> these patches on kernel 4.19.0-rc4.
->>
+On Thu, Sep 20, 2018 at 10:47:47PM +0200, Ricardo Ribalda Delgado wrote:
+> Document new enable-gpio field. It can be used to disable the part
+
+enable-gpios
+
+> without turning down its regulator.
 > 
-> Could you please elaborate on the purpose of this series? Is it simply
-> to align between architectures? Does it solve an actual problem?
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> index 5940ca11c021..9ccd96d3d5f0 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> @@ -8,6 +8,12 @@ Required Properties:
+>  
+>    - VANA-supply: supply of voltage for VANA pin
+>  
+> +Optional properties:
+> +
+> +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the polarity of
+> +the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the enable
+> +GPIO deasserts the XSHUTDOWN signal and vice versa).
 
-1) It removed a lot of code duplication between architecture
+shutdown-gpios is also standard and seems like it would make more sense 
+here. Yes, it is a bit redundant to have both, but things just evolved 
+that way and we don't want to totally abandon the hardware names (just 
+all the variants).
 
-2) At Cisco we have issues where our bootloaders having default boot 
-arguments. Some platforms we can't update the boot loader and it's 
-helpful to be able to have boot arguments which are prepended to the 
-bootloader arguments , and some parameters which are appended. These 
-changes allow that.
-
-Daniel
+Rob
