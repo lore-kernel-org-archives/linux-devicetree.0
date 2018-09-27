@@ -1,26 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 7/7] [media] ad5820: DT new compatible devices
-Date: Thu, 27 Sep 2018 13:23:38 -0500
-Message-ID: <20180927182338.GA1094@bogus>
-References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
- <20180920204751.29117-7-ricardo.ribalda@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] ARM: dts: rockchip: add rk3288-based Tinker board S
+Date: Thu, 27 Sep 2018 13:24:13 -0500
+Message-ID: <20180927182413.GA1990@bogus>
+References: <20180923113807.11558-1-heiko@sntech.de>
+ <20180923113807.11558-3-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180920204751.29117-7-ricardo.ribalda@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
+In-Reply-To: <20180923113807.11558-3-heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Sep 2018 22:47:51 +0200, Ricardo Ribalda Delgado wrote:
-> Document new compatible devices.
+On Sun, 23 Sep 2018 13:38:07 +0200, Heiko Stuebner wrote:
+> From: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
 > 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> Add the actual dts for the tinker board S, which brings its own emmc
+> device, not therefore not requiring an sd-card to boot.
+> 
+> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/arm/rockchip.txt      |  4 +++
+>  arch/arm/boot/dts/Makefile                    |  1 +
+>  arch/arm/boot/dts/rk3288-tinker-s.dts         | 26 +++++++++++++++++++
+>  3 files changed, 31 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/rk3288-tinker-s.dts
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
