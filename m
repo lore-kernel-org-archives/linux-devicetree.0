@@ -1,229 +1,85 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RESEND] dt-bindings: clock: samsung: Add SPDX license identifiers
-Date: Thu, 27 Sep 2018 19:03:47 +0200
-Message-ID: <20180927170347.12909-1-krzk@kernel.org>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH 0/8] add generic builtin command line
+Date: Thu, 27 Sep 2018 19:05:44 +0200
+Message-ID: <CAKv+Gu-AxtOO04iwPSri12tkb9NRugXV9E2LGrfJT-LJjf4_ow@mail.gmail.com>
+References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Maksym Kokhan <maksym.kokhan@globallogic.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, the arch/x86 maintainers <x86@kernel.org>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <dwalker@fifo99.com>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Replace GPL license statements with SPDX license identifiers (GPL-2.0).
+On 27 September 2018 at 18:55, Maksym Kokhan
+<maksym.kokhan@globallogic.com> wrote:
+> There were series of patches [1] for 4.3.0-rc3, that allowed
+> architectures to use a generic builtin command line. I have rebased
+> these patches on kernel 4.19.0-rc4.
+>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- include/dt-bindings/clock/exynos3250.h     | 5 +----
- include/dt-bindings/clock/exynos4.h        | 7 ++-----
- include/dt-bindings/clock/exynos5250.h     | 7 ++-----
- include/dt-bindings/clock/exynos5260-clk.h | 7 ++-----
- include/dt-bindings/clock/exynos5410.h     | 7 ++-----
- include/dt-bindings/clock/exynos5420.h     | 7 ++-----
- include/dt-bindings/clock/exynos5433.h     | 5 +----
- include/dt-bindings/clock/exynos7-clk.h    | 7 ++-----
- include/dt-bindings/clock/s3c2410.h        | 5 +----
- include/dt-bindings/clock/s3c2412.h        | 5 +----
- include/dt-bindings/clock/s3c2443.h        | 5 +----
- 11 files changed, 17 insertions(+), 50 deletions(-)
+Could you please elaborate on the purpose of this series? Is it simply
+to align between architectures? Does it solve an actual problem?
 
-diff --git a/include/dt-bindings/clock/exynos3250.h b/include/dt-bindings/clock/exynos3250.h
-index c796ff02ceeb..fe8214017b46 100644
---- a/include/dt-bindings/clock/exynos3250.h
-+++ b/include/dt-bindings/clock/exynos3250.h
-@@ -1,11 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  * 	Author: Tomasz Figa <t.figa@samsung.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants for Samsung Exynos3250 clock controllers.
-  */
- 
-diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
-index f59ea85d77bd..a0439ce8e8d3 100644
---- a/include/dt-bindings/clock/exynos4.h
-+++ b/include/dt-bindings/clock/exynos4.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  * Author: Andrzej Hajda <a.hajda@samsung.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants for Exynos4 clock controller.
--*/
-+ */
- 
- #ifndef _DT_BINDINGS_CLOCK_EXYNOS_4_H
- #define _DT_BINDINGS_CLOCK_EXYNOS_4_H
-diff --git a/include/dt-bindings/clock/exynos5250.h b/include/dt-bindings/clock/exynos5250.h
-index 15508adcdfde..bc8a3c53a54b 100644
---- a/include/dt-bindings/clock/exynos5250.h
-+++ b/include/dt-bindings/clock/exynos5250.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  * Author: Andrzej Hajda <a.hajda@samsung.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants for Exynos5250 clock controller.
--*/
-+ */
- 
- #ifndef _DT_BINDINGS_CLOCK_EXYNOS_5250_H
- #define _DT_BINDINGS_CLOCK_EXYNOS_5250_H
-diff --git a/include/dt-bindings/clock/exynos5260-clk.h b/include/dt-bindings/clock/exynos5260-clk.h
-index a4bac9a1764f..98a58cbd81b2 100644
---- a/include/dt-bindings/clock/exynos5260-clk.h
-+++ b/include/dt-bindings/clock/exynos5260-clk.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  * Author: Rahul Sharma <rahul.sharma@samsung.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Provides Constants for Exynos5260 clocks.
--*/
-+ */
- 
- #ifndef _DT_BINDINGS_CLK_EXYNOS5260_H
- #define _DT_BINDINGS_CLK_EXYNOS5260_H
-diff --git a/include/dt-bindings/clock/exynos5410.h b/include/dt-bindings/clock/exynos5410.h
-index 6cb4e90f81fc..f179eabbcdb7 100644
---- a/include/dt-bindings/clock/exynos5410.h
-+++ b/include/dt-bindings/clock/exynos5410.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  * Copyright (c) 2016 Krzysztof Kozlowski
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants for Exynos5421 clock controller.
--*/
-+ */
- 
- #ifndef _DT_BINDINGS_CLOCK_EXYNOS_5410_H
- #define _DT_BINDINGS_CLOCK_EXYNOS_5410_H
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-index 2740ae0424a9..355f469943f1 100644
---- a/include/dt-bindings/clock/exynos5420.h
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -1,13 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-  * Author: Andrzej Hajda <a.hajda@samsung.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants for Exynos5420 clock controller.
--*/
-+ */
- 
- #ifndef _DT_BINDINGS_CLOCK_EXYNOS_5420_H
- #define _DT_BINDINGS_CLOCK_EXYNOS_5420_H
-diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
-index be39d23e6a32..98bd85ce1e45 100644
---- a/include/dt-bindings/clock/exynos5433.h
-+++ b/include/dt-bindings/clock/exynos5433.h
-@@ -1,10 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  * Author: Chanwoo Choi <cw00.choi@samsung.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- #ifndef _DT_BINDINGS_CLOCK_EXYNOS5433_H
-diff --git a/include/dt-bindings/clock/exynos7-clk.h b/include/dt-bindings/clock/exynos7-clk.h
-index 10c558611085..fce33c7050c8 100644
---- a/include/dt-bindings/clock/exynos7-clk.h
-+++ b/include/dt-bindings/clock/exynos7-clk.h
-@@ -1,11 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-  * Author: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
--*/
-+ */
- 
- #ifndef _DT_BINDINGS_CLOCK_EXYNOS7_H
- #define _DT_BINDINGS_CLOCK_EXYNOS7_H
-diff --git a/include/dt-bindings/clock/s3c2410.h b/include/dt-bindings/clock/s3c2410.h
-index 352a7673fc69..0fb65c3f2f59 100644
---- a/include/dt-bindings/clock/s3c2410.h
-+++ b/include/dt-bindings/clock/s3c2410.h
-@@ -1,10 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants clock controllers of Samsung S3C2410 and later.
-  */
- 
-diff --git a/include/dt-bindings/clock/s3c2412.h b/include/dt-bindings/clock/s3c2412.h
-index aac1dcfda81c..b4656156cc0f 100644
---- a/include/dt-bindings/clock/s3c2412.h
-+++ b/include/dt-bindings/clock/s3c2412.h
-@@ -1,10 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants clock controllers of Samsung S3C2412.
-  */
- 
-diff --git a/include/dt-bindings/clock/s3c2443.h b/include/dt-bindings/clock/s3c2443.h
-index f3ba68a25ecb..a9d2f105d536 100644
---- a/include/dt-bindings/clock/s3c2443.h
-+++ b/include/dt-bindings/clock/s3c2443.h
-@@ -1,10 +1,7 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (c) 2013 Heiko Stuebner <heiko@sntech.de>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Device Tree binding constants clock controllers of Samsung S3C2443 and later.
-  */
- 
--- 
-2.17.1
+> Things, modified in comparison with original patches:
+> * There was some bug for mips, in the case when CONFIG_CMDLINE_PREPEND
+> and CONFIG_CMDLINE_APPEND are empty and CMDLINE_OVERRIDE is not set,
+> command line from bootloader was ignored, so I fixed it, modifying
+> patch "add generic builtin command line".
+>
+> * Implemented new patch to resolve conflict with new kernel, which
+> modify EFI stub code. Unfortunately, I don't have capability to test
+> this modification on real arm board with EFI.
+>
+> * Removed new realisation of mips builtin command line, which was
+> created after 4.3.0-rc3.
+>
+> * Kernel 4.3.0-rc3 with original patches could not be compiled for
+> powerpc due to prom_init.c checking by prom_init_check.sh. So I added
+> strlcat (which is used by cmdline_add_builtin macro) to
+> prom_init_check.sh whitelist.
+>
+> Patches have been tested in QEMU for x86, arm (little-endian), arm64
+> (little-endian), mips (little-endian, 32-bit) and powerpc
+> (big-endian, 64-bit), everything works perfectly. Also it was tested
+> on linux-next (next-20180924 tag) for all listed above architectures.
+>
+> [1] : https://lore.kernel.org/patchwork/patch/604992/
+>
+> Daniel Walker (7):
+>   add generic builtin command line
+>   drivers: of: ifdef out cmdline section
+>   x86: convert to generic builtin command line
+>   arm: convert to generic builtin command line
+>   arm64: convert to generic builtin command line
+>   mips: convert to generic builtin command line
+>   powerpc: convert to generic builtin command line
+>
+> Maksym Kokhan (1):
+>   efi: modify EFI stub code for arm/arm64
+>
+>  arch/arm/Kconfig                        | 38 +-----------------
+>  arch/arm/kernel/atags_parse.c           | 14 ++-----
+>  arch/arm/kernel/devtree.c               |  2 +
+>  arch/arm64/Kconfig                      | 17 +-------
+>  arch/arm64/kernel/setup.c               |  3 ++
+>  arch/mips/Kconfig                       | 24 +----------
+>  arch/mips/Kconfig.debug                 | 47 ----------------------
+>  arch/mips/kernel/setup.c                | 41 ++-----------------
+>  arch/powerpc/Kconfig                    | 23 +----------
+>  arch/powerpc/kernel/prom.c              |  4 ++
+>  arch/powerpc/kernel/prom_init.c         |  8 ++--
+>  arch/powerpc/kernel/prom_init_check.sh  |  2 +-
+>  arch/x86/Kconfig                        | 44 +--------------------
+>  arch/x86/kernel/setup.c                 | 19 ++-------
+>  drivers/firmware/efi/libstub/arm-stub.c | 10 ++---
+>  drivers/of/fdt.c                        |  2 +-
+>  include/linux/cmdline.h                 | 70 +++++++++++++++++++++++++++++++++
+>  init/Kconfig                            | 68 ++++++++++++++++++++++++++++++++
+>  18 files changed, 173 insertions(+), 263 deletions(-)
+>  create mode 100644 include/linux/cmdline.h
+>
+> --
+> 2.7.4
+>
