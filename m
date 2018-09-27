@@ -1,91 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/5] dt-bindings: spi: add binding file for NXP
- FlexSPI controller
-Date: Thu, 27 Sep 2018 14:10:00 -0500
-Message-ID: <20180927191000.GA18549@bogus>
-References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1537525323-20730-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+Subject: Re: [RFC PATCH v3 2/3] dt-bindings: fpga: Add bindings for ZynqMP
+ nvmem driver
+Date: Thu, 27 Sep 2018 14:21:04 -0500
+Message-ID: <20180927192104.GA7898@bogus>
+References: <20180922134149.5693-1-nava.manne@xilinx.com>
+ <20180922134149.5693-3-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1537525323-20730-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+In-Reply-To: <20180922134149.5693-3-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
+To: Nava kishore Manne <nava.manne@xilinx.com>
+Cc: mark.rutland@arm.com, michal.simek@xilinx.com, srinivas.kandagatla@linaro.org, jollys@xilinx.com, rajanv@xilinx.com, sboyd@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 03:52:00PM +0530, Yogesh Gaur wrote:
-> Add binding file for NXP FlexSPI controller
+On Sat, Sep 22, 2018 at 07:11:48PM +0530, Nava kishore Manne wrote:
+> Add documentation to describe Xilinx ZynqMP nvmem driver
+> bindings.
 > 
-> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 > ---
 > Changes for v3:
-> - None
+> 		-None.
 > Changes for v2:
-> - Incorporated Rob review comments.
+>                 -Moved nvmem_firmware node as a child to
+>                  firwmare node.
 > 
->  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> new file mode 100644
-> index 0000000..94b5203
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
-> @@ -0,0 +1,42 @@
-> +* NXP Flex Serial Peripheral Interface (FSPI)
-> +
-> +Required properties:
-> +  - compatible : Should be "nxp,lx2160a-fspi"
-> +  - reg :        First contains the register location and length,
-> +                 Second contains the memory mapping address and length
-> +  - reg-names :  Should contain the resource reg names:
-> +	         - fspi_base: configuration register address space
-> +                 - fspi_mmap: memory mapped address space
-> +  - interrupts : Should contain the interrupt for the device
-> +
-> +Optional properties:
-> +  - big-endian : See common-properties.txt.
-> +
-> +Required SPI slave node properties:
-> +  - reg :        There are two buses (A and B) with two chip selects each.
-> +                 This encodes to which bus and CS the flash is connected:
-> +                 - <0>: Bus A, CS 0
-> +                 - <1>: Bus A, CS 1
-> +                 - <2>: Bus B, CS 0
-> +                 - <3>: Bus B, CS 1
-> +
-> +Example showing the usage of two SPI NOR slave devices on bus A:
-> +
-> +fspi@0: flexspi@20c0000 {
+>  .../firmware/xilinx/xlnx,zynqmp-firmware.txt  | 35 +++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 
-Use standard node names.
+There are various components of the zynqmp firmware bindings being sent 
+separately. I cannot review it piece by piece. So please the firmware 
+bindings as a complete set. Really, I mainly need to see a complete 
+example.
 
-spi@...
-
-> +	compatible = "nxp,lx2160a-fspi";
-> +	reg = <0x0 0x20c0000 0x0 0x10000>, <0x0 0x20000000 0x0 0x10000000>;
-> +	reg-names = "fspi_base", "fspi_mmap";
-> +	interrupts = <0 25 0x4>; /* Level high type */
-> +	clocks = <&clockgen 4 3>, <&clockgen 4 3>;
-> +	clock-names = "fspi_en", "fspi";
-> +
-> +	flash@0: mt35xu512aba@0 {
-
-You've got the label and node name reversed. Drop the '@' in the label. 
-That should be reserved for node names.
-
-> +		reg = <0>;
-> +		....
-> +	};
-> +
-> +	flash@1: mt35xu512aba@1 {
-> +		reg = <1>;
-> +		....
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+Rob
