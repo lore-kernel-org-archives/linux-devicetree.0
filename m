@@ -1,79 +1,41 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v2 3/3] ARM: dts: qcom: msm8974-hammerhead: add device tree bindings for vibrator
-Date: Wed, 26 Sep 2018 19:51:12 -0400
-Message-ID: <20180926235112.25710-4-masneyb@onstation.org>
-References: <20180926235112.25710-1-masneyb@onstation.org>
+Subject: [PATCH v2] dt-bindings: input: pwm-vibrator: correct pwms in example
+Date: Wed, 26 Sep 2018 20:48:58 -0400
+Message-ID: <20180927004858.32529-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926235112.25710-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, linux-pwm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: masneyb@onstation.org, jonathan@marek.ca, ctatlor97@gmail.com
+To: robh@kernel.org, dmitry.torokhov@gmail.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sebastian.reichel@collabora.co.uk, mark.rutland@arm.com
+Cc: masneyb@onstation.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device device tree bindings for the vibrator found on
-the LG Nexus 5 (hammerhead) phone.
+In the example for the pwm-vibrator bindings, pwm8 is the direction pin,
+and pwm9 is the enable pin. The pwms on the vibrator node has these two
+values swapped so this patch corrects it.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- .../qcom-msm8974-lge-nexus5-hammerhead.dts    | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Changes since v1:
+- Swapped the pwms values instead of the pwm-names values since enable
+  is required and direction is optional. Based on feedback from
+  Rob Herring.
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index ed8f064d0895..e67d61f25a96 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -5,6 +5,7 @@
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+ Documentation/devicetree/bindings/input/pwm-vibrator.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/pwm-vibrator.txt b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
+index 09145d18491d..88c775a3fe21 100644
+--- a/Documentation/devicetree/bindings/input/pwm-vibrator.txt
++++ b/Documentation/devicetree/bindings/input/pwm-vibrator.txt
+@@ -58,8 +58,8 @@ Example from Motorola Droid 4:
  
- / {
- 	model = "LGE MSM 8974 HAMMERHEAD";
-@@ -268,6 +269,44 @@
- 				input-enable;
- 			};
- 		};
-+
-+		vibrator_pin: vibrator {
-+			pwm {
-+				pins = "gpio27";
-+				function = "gp1_clk";
-+
-+				drive-strength = <6>;
-+				bias-disable;
-+			};
-+
-+			enable {
-+				pins = "gpio60";
-+				function = "gpio";
-+			};
-+		};
-+	};
-+
-+	msm_pwm_vibrator_enable: pwm@fd8c3450 {
-+		compatible = "qcom,msm8974-pwm-vibrator";
-+		reg = <0xfd8c3450 0x400>;
-+		#pwm-cells = <3>;
-+
-+		vcc-supply = <&pm8941_l19>;
-+
-+		clocks = <&mmcc CAMSS_GP1_CLK>;
-+		clock-names = "pwm";
-+
-+		enable-gpios = <&msmgpio 60 GPIO_ACTIVE_HIGH>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vibrator_pin>;
-+	};
-+
-+	vibrator {
-+		compatible = "pwm-vibrator";
-+
-+		pwms = <&msm_pwm_vibrator_enable 0 1000000000 0>;
-+		pwm-names = "enable";
+ 	vibrator {
+ 		compatible = "pwm-vibrator";
+-		pwms = <&pwm8 0 1000000000 0>,
+-		       <&pwm9 0 1000000000 0>;
++		pwms = <&pwm9 0 1000000000 0>,
++                       <&pwm8 0 1000000000 0>;
+ 		pwm-names = "enable", "direction";
+ 		direction-duty-cycle-ns = <1000000000>;
  	};
- 
- 	sdhci@f9824900 {
 -- 
 2.17.1
