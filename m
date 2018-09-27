@@ -1,53 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH i2c-next v3 1/3] dt-bindings: i2c: aspeed: Add 'timeout'
- property as an optional property
-Date: Thu, 27 Sep 2018 15:56:10 -0500
-Message-ID: <20180927205610.GA29022@bogus>
-References: <20180926215842.23125-1-jae.hyun.yoo@linux.intel.com>
- <20180926215842.23125-2-jae.hyun.yoo@linux.intel.com>
+From: Vivek Unune <npcomplete13@gmail.com>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Relicense BCM47094 file to the GPL
+ 2.0+ / MIT
+Date: Thu, 27 Sep 2018 16:59:51 -0400
+Message-ID: <CAChtp753sZzQY8Jbsie2eW-j0cfM227AehcRf67puYAUCvELZw@mail.gmail.com>
+References: <20180920112019.25622-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180926215842.23125-2-jae.hyun.yoo@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180920112019.25622-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, rafal@milecki.pl, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2018 at 02:58:40PM -0700, Jae Hyun Yoo wrote:
-> This commit adds 'aspeed,timeout' property as an optional property
-> which can be used for setting 'timeout' value of
-> 'struct i2c_adapter'. With this patch, the timeout value can be
-> set through an I2C_TIMEOUT ioctl on cdev, or through this optional
-> DT property.
-
-Isn't controlling this from userspace or relying on a default 
-sufficient?  I can't see this needing to be highly tuned for each 
-platform.
-
-However, if we do have a property, it should be common.
-
-> 
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> index 8fbd8633a387..d6965b360fbc 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-> @@ -17,6 +17,9 @@ Optional Properties:
->  		  specified
->  - multi-master	: states that there is another master active on this bus.
->  
-> +- aspeed,timeout : I2C bus timeout in microseconds defaults to 5 seconds when
-> +		   not specified.
-> +
->  Example:
->  
->  i2c {
-> -- 
-> 2.19.0
-> 
+QWNrZWQtYnkgVml2ZWsgVW51bmUKCgpPbiBUaHUsIFNlcCAyMCwgMjAxOCBhdCA3OjIwIEFNIFJh
+ZmHFgiBNacWCZWNraSA8emFqZWM1QGdtYWlsLmNvbT4gd3JvdGU6Cj4KPiBGcm9tOiBSYWZhxYIg
+TWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4KPiBUaGlzIG1hdGNoZXMgbGljZW5zaW5nIHVz
+ZWQgYnkgb3RoZXIgQkNNNTMwMVggZmlsZXMgYW5kIGlzIHByZWZlcnJlZCBhczoKPiAxKSBHUEwg
+Mi4wKyBtYWtlcyBpdCBjbGVhcmx5IGNvbXBhdGlibGUgd2l0aCBMaW51eCBrZXJuZWwKPiAyKSBN
+SVQgaXMgYWxzbyBwZXJtaXNzaXZlIGJ1dCBwcmVmZXJyZWQgb3ZlciBJU0MKPgo+IFRoaXMgZmls
+ZSBoYXMgYmVlbiBkZXZlbG9wZWQgYnkgbWUgJiBvbmNlIG1vZGlmaWVkIGJ5IFZpdmVrLgo+Cj4g
+U2lnbmVkLW9mZi1ieTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgo+IC0tLQo+
+IFZpdmVrOiB5b3UgaGF2ZSB0b3VjaGVkIHRoaXMgZmlsZSBpbiB0aGUgY29tbWl0IDM3ZjYxMzBl
+YzM5ZiAoIkFSTTogZHRzOgo+IEJDTTUzMDFYOiBNYWtlIFVTQiAzLjAgUEhZIHVzZSBNRElPIFBI
+WSBkcml2ZXIiKS4KPgo+IElmIHlvdSBhcmUgT0sgd2l0aCB0aGlzIHJlbGljZW5zaW5nLCBjYW4g
+eW91IHJlcGx5IHdpdGgKPiBBY2tlZC1ieQo+IHdpdGggeW91ciBuYW1lLCBwbGVhc2U/Cj4gLS0t
+Cj4gIGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LmR0c2kgfCAzICstLQo+ICAxIGZpbGUgY2hh
+bmdlZCwgMSBpbnNlcnRpb24oKyksIDIgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvYXJj
+aC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0
+LmR0c2kKPiBpbmRleCBmN2MzZTI3NGIzNTQuLmNkYzVmZjU5M2FkYiAxMDA2NDQKPiAtLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9iY200NzA5NC5kdHNpCj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+YmNtNDcwOTQuZHRzaQo+IEBAIC0xLDcgKzEsNiBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogR1BMLTIuMC1vci1sYXRlciBPUiBNSVQKPiAgLyoKPiAgICogQ29weXJpZ2h0IChDKSAy
+MDE2IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAtICoKPiAtICogTGljZW5z
+ZWQgdW5kZXIgdGhlIElTQyBsaWNlbnNlLgo+ICAgKi8KPgo+ICAjaW5jbHVkZSAiYmNtNDcwOC5k
+dHNpIgo+IC0tCj4gMi4xMy43Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
+ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
