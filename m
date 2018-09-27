@@ -1,41 +1,55 @@
-From: Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: Re: [PATCH 4/5] usb: host: Add XHCI driver for Broadcom STB SoCs
-Date: Thu, 27 Sep 2018 08:57:09 +0300
-Message-ID: <87a7o3scsq.fsf@linux.intel.com>
-References: <1538000414-24873-1-git-send-email-alcooperx@gmail.com> <1538000414-24873-5-git-send-email-alcooperx@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCHv4 4/6] ARM: dts: exynos: Add CD and WP pins to Odroid
+ XU3/XU4 SD card
+Date: Thu, 27 Sep 2018 08:28:22 +0200
+Message-ID: <CAJKOXPeRauojpS9kEbQK8k+BQLSGEHEVsAwi406tW3zN2RzPWQ@mail.gmail.com>
+References: <20180922075238.884-1-linux.amoon@gmail.com> <20180922075238.884-6-linux.amoon@gmail.com>
+ <20180926190639.GA6461@kozik-lap> <CANAwSgSPkKL3jaHHSkEhgocKT_Sq4zg3Z=+7d5889ttpnNPHDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538000414-24873-5-git-send-email-alcooperx@gmail.com>
+In-Reply-To: <CANAwSgSPkKL3jaHHSkEhgocKT_Sq4zg3Z=+7d5889ttpnNPHDA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Al Cooper <alcooperx@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman <mathias.nyman@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Jianguo Sun <sunjianguo1@huawei.com>, James Hogan <jhogan@kernel.org>, Alban Bedel <albeu@free.fr>, Lu Baolu <baolu.lu@linux.intel.com>, Avi Fishman <avifishman70@gmail.com>, Alex Elder <elder@linaro.org>, Hans de Goede <hdegoede@redhat.com>, linux-usb@vger.kernel.org, dev
+To: linux.amoon@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, kgene@kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-Al Cooper <alcooperx@gmail.com> writes:
-
-> This driver enables USB XHCI on Broadcom ARM STB SoCs.
-> The drivers depend on a matching "brcm,brcmstb-usb-phy"
-> Broadcom STB USB Phy driver.
+On Thu, 27 Sep 2018 at 05:45, Anand Moon <linux.amoon@gmail.com> wrote:
 >
-> The standard platform driver can't be used because of differences
-> in PHY and Clock handling. The standard PHY handling in hcd.c will
-> do a phy_exit/phy_init on suspend/resume and this will end up
-> shutting down the PHYs to the point that the host controller
-> registers are no longer accessible and will cause suspend to crash.
-> The clocks specified in device tree for these drivers are not
-> available in mainline so instead of returning EPROBE_DEFER when
-> the specified clock is not found and eventually failing probe,
-> the clock pointer is set to NULL which disables all clock handling.
+> Hi Krzysztof,
+> On Thu, 27 Sep 2018 at 00:36, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Sat, Sep 22, 2018 at 07:52:36AM +0000, Anand Moon wrote:
+> > > Add the card-detect and write-protect GPIO pins for OdroidXU3/XU4
+> > > SD card by adding pinctrl setting for wp-gpio pin and set it to
+> > > active low.
+> > >
+> > > This also removes debug messages:
+> > >     dwmmc_exynos 12220000.mmc: No GPIO consumer cd found
+> > >     dwmmc_exynos 12220000.mmc: No GPIO consumer wp found
+> > >
+> > > Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > > Fix the commit message and squash it with cd-gpios and wp-gpio
+> > > patches into single patch as suggested by Krzysztof.
+> >
+> > As Marek pointed to my Odroid XU patch, there is no point of adding
+> > cd-gpios and wp-gpios properties.
+> >
+> > Adding pin configuration for wp pin is also not needed. Reset values are
+> > working properly. However there might be meaning of adding it just in
+> > case - if bootloader decided to touch it...
+> >
+> > Best regards,
+> > Krzysztof
+> >
 >
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> ---
->  drivers/usb/host/xhci-brcm.c | 294 +++++++++++++++++++++++++++++++++++++++++++
+> Do I need to send the all the patches again or just resend this as per
+> your patch for Odroid XU.
+> with dropping the cd-gpios and wp-gpios changes.
 
-this looks a lot like xhci-plat.c, why don't you use that instead?
+I am fine with both (resend all or only this).
 
-- 
-balbi
+Best regards,
+Krzysztof
