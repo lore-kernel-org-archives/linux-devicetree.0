@@ -1,66 +1,91 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2] remoteproc: qcom: pas: Add QCS404 remoteprocs
-Date: Thu, 27 Sep 2018 12:03:46 -0700
-Message-ID: <20180927190346.2984-1-bjorn.andersson@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/5] dt-bindings: spi: add binding file for NXP
+ FlexSPI controller
+Date: Thu, 27 Sep 2018 14:10:00 -0500
+Message-ID: <20180927191000.GA18549@bogus>
+References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1537525323-20730-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1537525323-20730-3-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
+To: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Cc: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add compatibles for the three PAS based remote processors found in
-QCS404.
+On Fri, Sep 21, 2018 at 03:52:00PM +0530, Yogesh Gaur wrote:
+> Add binding file for NXP FlexSPI controller
+> 
+> Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> ---
+> Changes for v3:
+> - None
+> Changes for v2:
+> - Incorporated Rob review comments.
+> 
+>  .../devicetree/bindings/spi/spi-nxp-fspi.txt       | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> new file mode 100644
+> index 0000000..94b5203
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+> @@ -0,0 +1,42 @@
+> +* NXP Flex Serial Peripheral Interface (FSPI)
+> +
+> +Required properties:
+> +  - compatible : Should be "nxp,lx2160a-fspi"
+> +  - reg :        First contains the register location and length,
+> +                 Second contains the memory mapping address and length
+> +  - reg-names :  Should contain the resource reg names:
+> +	         - fspi_base: configuration register address space
+> +                 - fspi_mmap: memory mapped address space
+> +  - interrupts : Should contain the interrupt for the device
+> +
+> +Optional properties:
+> +  - big-endian : See common-properties.txt.
+> +
+> +Required SPI slave node properties:
+> +  - reg :        There are two buses (A and B) with two chip selects each.
+> +                 This encodes to which bus and CS the flash is connected:
+> +                 - <0>: Bus A, CS 0
+> +                 - <1>: Bus A, CS 1
+> +                 - <2>: Bus B, CS 0
+> +                 - <3>: Bus B, CS 1
+> +
+> +Example showing the usage of two SPI NOR slave devices on bus A:
+> +
+> +fspi@0: flexspi@20c0000 {
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+Use standard node names.
 
-Changes since v1:
-- Fixed incorrect sysmon_name, as pointed out by Sibi.
+spi@...
 
- .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  3 +++
- drivers/remoteproc/qcom_adsp_pil.c                   | 12 ++++++++++++
- 2 files changed, 15 insertions(+)
+> +	compatible = "nxp,lx2160a-fspi";
+> +	reg = <0x0 0x20c0000 0x0 0x10000>, <0x0 0x20000000 0x0 0x10000000>;
+> +	reg-names = "fspi_base", "fspi_mmap";
+> +	interrupts = <0 25 0x4>; /* Level high type */
+> +	clocks = <&clockgen 4 3>, <&clockgen 4 3>;
+> +	clock-names = "fspi_en", "fspi";
+> +
+> +	flash@0: mt35xu512aba@0 {
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-index b7d058228185..9c0cff3a5ed8 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-@@ -10,6 +10,9 @@ on the Qualcomm ADSP Hexagon core.
- 		    "qcom,msm8974-adsp-pil"
- 		    "qcom,msm8996-adsp-pil"
- 		    "qcom,msm8996-slpi-pil"
-+		    "qcom,qcs404-adsp-pas"
-+		    "qcom,qcs404-cdsp-pas"
-+		    "qcom,qcs404-wcss-pas"
- 		    "qcom,sdm845-adsp-pas"
- 		    "qcom,sdm845-cdsp-pas"
- 
-diff --git a/drivers/remoteproc/qcom_adsp_pil.c b/drivers/remoteproc/qcom_adsp_pil.c
-index da2254ea1135..d5e58235e83a 100644
---- a/drivers/remoteproc/qcom_adsp_pil.c
-+++ b/drivers/remoteproc/qcom_adsp_pil.c
-@@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init = {
- 		.ssctl_id = 0x16,
- };
- 
-+static const struct adsp_data wcss_resource_init = {
-+	.crash_reason_smem = 421,
-+	.firmware_name = "wcnss.mdt",
-+	.pas_id = 6,
-+	.ssr_name = "mpss",
-+	.sysmon_name = "wcnss",
-+	.ssctl_id = 0x12,
-+};
-+
- static const struct of_device_id adsp_of_match[] = {
- 	{ .compatible = "qcom,msm8974-adsp-pil", .data = &adsp_resource_init},
- 	{ .compatible = "qcom,msm8996-adsp-pil", .data = &adsp_resource_init},
- 	{ .compatible = "qcom,msm8996-slpi-pil", .data = &slpi_resource_init},
-+	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init },
-+	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init },
-+	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init },
- 	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
- 	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
- 	{ },
--- 
-2.18.0
+You've got the label and node name reversed. Drop the '@' in the label. 
+That should be reserved for node names.
+
+> +		reg = <0>;
+> +		....
+> +	};
+> +
+> +	flash@1: mt35xu512aba@1 {
+> +		reg = <1>;
+> +		....
+> +	};
+> +};
+> -- 
+> 2.7.4
+> 
