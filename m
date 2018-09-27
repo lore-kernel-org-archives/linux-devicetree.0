@@ -1,122 +1,127 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RESEND PATCH v3 1/2] of: base: Introduce
- of_alias_get_alias_list() to check alias IDs
-Date: Thu, 27 Sep 2018 09:22:55 +0200
-Message-ID: <56c81d1a-e2f8-067e-4908-686cd83d478c@xilinx.com>
-References: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
- <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com>
- <d27b381e-f091-91dc-cffe-27789583f949@xilinx.com>
- <CAMuHMdW4H6pjpijU2SX1Z=1Ld7CbBnTtFVwp3gac9toQc4iGpg@mail.gmail.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v23 4/4] soc: mediatek: Add Mediatek CMDQ helper
+Date: Thu, 27 Sep 2018 09:55:00 +0200
+Message-ID: <23d76d03-c0e9-cd83-f9a8-f5efa0c72938@gmail.com>
+References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
+ <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
+ <1534297570.21668.3.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW4H6pjpijU2SX1Z=1Ld7CbBnTtFVwp3gac9toQc4iGpg@mail.gmail.com>
+In-Reply-To: <1534297570.21668.3.camel@mhfsdcap03>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: houlong wei <houlong.wei@mediatek.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>, =?UTF-8?B?QmliYnkgSHNpZWggKOisnea/n+mBoCk=?= <Bibby.Hsieh@mediatek.com>, =?UTF-8?B?WVQgU2hlbiAo5rKI5bKz6ZyGK
 List-Id: devicetree@vger.kernel.org
 
-On 27.9.2018 09:19, Geert Uytterhoeven wrote:
-> Hi Michal,
-> 
-> On Wed, Sep 26, 2018 at 1:01 PM Michal Simek <michal.simek@xilinx.com> wrote:
->> On 24.9.2018 09:41, Geert Uytterhoeven wrote:
->>> On Thu, Sep 20, 2018 at 1:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
->>>> The function travels the lookup table to record alias ids for the given
->>>> device match structures and alias stem.
->>>> This function will be used by serial drivers to check if requested alias
->>>> is allocated or free to use.
->>>>
->>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>
->>> I know this has already been applied, it just drew my attention.
->>>
->>>> --- a/drivers/of/base.c
->>>> +++ b/drivers/of/base.c
->>>> @@ -16,6 +16,7 @@
->>>>
->>>>  #define pr_fmt(fmt)    "OF: " fmt
->>>>
->>>> +#include <linux/bitmap.h>
->>>>  #include <linux/console.h>
->>>>  #include <linux/ctype.h>
->>>>  #include <linux/cpu.h>
->>>> @@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
->>>>
->>>>  /**
->>>> + * of_alias_get_alias_list - Get alias list for the given device driver
->>>> + * @matches:   Array of OF device match structures to search in
->>>> + * @stem:      Alias stem of the given device_node
->>>> + * @bitmap:    Bitmap field pointer
->>>> + * @nbits:     Maximum number of alias ID which can be recorded it bitmap
->>>
->>> IDs
->>>
->>>> + *
->>>> + * The function travels the lookup table to record alias ids for the given
->>>> + * device match structures and alias stem.
->>>> + *
->>>> + * Return:     0 or -ENOSYS when !CONFIG_OF
->>>> + */
->>>> +int of_alias_get_alias_list(const struct of_device_id *matches,
->>>> +                            const char *stem, unsigned long *bitmap,
->>>> +                            unsigned int nbits)
->>>> +{
->>>> +       struct alias_prop *app;
->>>> +
->>>> +       /* Zero bitmap field to make sure that all the time it is clean */
->>>> +       bitmap_zero(bitmap, nbits);
->>>> +
->>>> +       mutex_lock(&of_mutex);
->>>> +       pr_debug("%s: Looking for stem: %s\n", __func__, stem);
->>>> +       list_for_each_entry(app, &aliases_lookup, link) {
->>>> +               pr_debug("%s: stem: %s, id: %d\n",
->>>> +                        __func__, app->stem, app->id);
->>>> +
->>>> +               if (strcmp(app->stem, stem) != 0) {
->>>> +                       pr_debug("%s: stem comparison doesn't passed %s\n",
->>>
->>> didn't pass?
->>>
->>>> +                                __func__, app->stem);
->>>> +                       continue;
->>>> +               }
->>>> +
->>>> +               if (app->id >= nbits) {
->>>> +                       pr_debug("%s: ID %d greater then bitmap field %d\n",
->>>
->>> than
->>> %u for unsigned int
->>
->> I won't fix this now because this can be done together with one change
->> described below.
->>
->>>
->>>> +                               __func__, app->id, nbits);
->>>> +                       continue;
->>>
->>> Shouldn't this return an error, if of_match_node() below would have matched?
->>
->> IIRC Above check is for "serial" name.
->> This one is for getting XX number from alias "serialXX".
->> And below is checking compatible string.
->>
->> You are calling this function from uartps with 32 lines limit and there
->> is serial33 alias poiting to uartlite (for example) then you don't want
->> to break this call for that.
->>
->> What can be done is that compatible string is checked first and if this
->> passed then ids are check and error can be returned or bit sets.
-> 
-> That's what I meant: currently any serialN with N >= nbits is ignored, even
-> if the alias applies to the driver that called the function.
 
-ok. Let me create a patch and check compatible string first and then
-setup bit or fail if N >= nbits.
 
-Thanks,
-Michal
+On 15/08/2018 03:46, houlong wei wrote:
+[...]
+>> +
+>> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+>> +				   u32 arg_a, u32 arg_b)
+>> +{
+>> +	u64 *cmd_ptr;
+>> +
+>> +	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+>> +		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>> +		return -ENOMEM;
+>> +	}
+>> +	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+>> +	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+>> +	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
+>> +{
+>> +	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
+>> +		    (subsys << CMDQ_SUBSYS_SHIFT);
+>> +
+>> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
+>> +}
+>> +EXPORT_SYMBOL(cmdq_pkt_write);
+>> +
+>> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
+>> +			u32 subsys, u32 offset, u32 mask)
+>> +{
+>> +	u32 offset_mask = offset;
+>> +	int err;
+>> +
+>> +	if (mask != 0xffffffff) {
+>> +		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+>> +		WARN_ON(err < 0);
+
+If we want to write out a warning to the kernel log, then we should but that in
+the if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) from
+cmdq_pkt_append_command to make it consistent between cmdq_pkt_write,
+cmdq_pkt_write_mask and cmdq_pkt_finalize
+
+Sorry, just saw this right now.
+
+>> +		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>> +	}
+>> +
+>> +	return cmdq_pkt_write(pkt, value, subsys, offset_mask);
+>> +}
+>> +EXPORT_SYMBOL(cmdq_pkt_write_mask);
+>> +
+>> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
+>> +{
+>> +	u32 arg_b;
+>> +
+>> +	if (event >= CMDQ_MAX_EVENT)
+>> +		return -EINVAL;
+>> +
+>> +	/*
+>> +	 * WFE arg_b
+>> +	 * bit 0-11: wait value
+>> +	 * bit 15: 1 - wait, 0 - no wait
+>> +	 * bit 16-27: update value
+>> +	 * bit 31: 1 - update, 0 - no update
+>> +	 */
+>> +	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
+>> +
+>> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
+>> +}
+>> +EXPORT_SYMBOL(cmdq_pkt_wfe);
+>> +
+>> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
+>> +{
+>> +	if (event >= CMDQ_MAX_EVENT)
+>> +		return -EINVAL;
+>> +
+>> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
+>> +				       CMDQ_WFE_UPDATE);
+>> +}
+>> +EXPORT_SYMBOL(cmdq_pkt_clear_event);
+>> +
+>> +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>> +{
+>> +	int err;
+>> +
+>> +	/* insert EOC and generate IRQ for each command iteration */
+>> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+>> +	WARN_ON(err < 0);
+
+Should move into cmdq_pkt_append_command
+
+>> +
+>> +	/* JUMP to end */
+>> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+>> +	WARN_ON(err < 0);
+
+same here.
+
+>> +
+>> +	return err;
+>> +}
+>> +
+[...]
+
+Regards,
+Matthias
