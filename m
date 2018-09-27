@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 08/12] drm/sun4i: sun6i_mipi_dsi: Refactor vertical video start delay
-Date: Thu, 27 Sep 2018 17:18:46 +0530
-Message-ID: <20180927114850.24565-9-jagan@amarulasolutions.com>
+Subject: [PATCH 09/12] dt-bindings: panel: Add Bananapi S070WV20-CT16 MIPI-DSI panel bindings
+Date: Thu, 27 Sep 2018 17:18:47 +0530
+Message-ID: <20180927114850.24565-10-jagan@amarulasolutions.com>
 References: <20180927114850.24565-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,42 +12,42 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.or
 Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Accordingly to BPI-M64-bsp DE DSI code Video start delay
-can be computed by subtracting total vertical timing with
-front porch timing and with adding 1 delay line for TCON.
-
-This patch simply add the start_delay logic from BPI-M64-bsp,
-w/o this new computation, the DSI on A64 encounter vblank time out.
-
-[CRTC:36:crtc-0] vblank wait timed out
+Bananapi S070WV20-CT16 is 800x480, 4-lane MIPI-DSI panel, the
+same panel PCB comes with parallel RBG which is supported via
+panel-simple with "bananapi,s070wv20-ct16" compatible.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ .../panel/bananapi,s070wv20-ct16-dsi.txt      | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 9918fdb990ff..217db74c6dc3 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -358,7 +358,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
- static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- 					   struct drm_display_mode *mode)
- {
--	return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
-+	u32 vfp = mode->vsync_start - mode->vdisplay;
-+	u32 start_delay;
+diff --git a/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
+new file mode 100644
+index 000000000000..c477163f7999
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16-dsi.txt
+@@ -0,0 +1,21 @@
++Bananapi S070WV20 CT16 MIPI-DSI panel
 +
-+	start_delay = mode->vtotal - vfp + 1;
-+	if (start_delay > mode->vtotal)
-+		start_delay -= mode->vtotal;
++Required properties:
++- compatible: must be "bananapi,s070wv20-ct16-dsi"
++- reg: DSI virtual channel used by that screen
++- avdd-supply: analog regulator dc1 switch
++- dvdd-supply: 3v3 digital regulator
++- reset-gpios: a GPIO phandle for the reset pin
 +
-+	if (!start_delay)
-+		start_delay = 1;
++Optional properties:
++- backlight: phandle for the backlight control.
 +
-+	return start_delay;
- }
- 
- static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
++Example:
++panel@0 {
++	compatible = "bananapi,s070wv20-ct16-dsi";
++	reg = <0>;
++	avdd-supply = <&reg_dc1sw>;
++	dvdd-supply = <&reg_dldo1>;
++	reset-gpios = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
++	backlight = <&backlight_dsi>;
++};
 -- 
 2.18.0.321.gffc6fa0e3
