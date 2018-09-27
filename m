@@ -1,86 +1,80 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] drm/panel: simple: Add DLC1010GIG panel
-Date: Thu, 27 Sep 2018 14:28:48 +0200
-Message-ID: <20180927122848.GJ29102@ulmo>
-References: <20180924152610.25939-1-m.felsch@pengutronix.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 04/12] drm/sun4i: sun6i_mipi_dsi: Enable
+ missing DSI bus clock
+Date: Thu, 27 Sep 2018 20:42:53 +0800
+Message-ID: <CAGb2v66No3-AODYCCGifBrm9uvPjaNdR2W5MDQdazRAPomT9CQ@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com> <20180927114850.24565-5-jagan@amarulasolutions.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0242951914=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180924152610.25939-1-m.felsch@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, robh+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBW5AWPOQKGQEAKJJPLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180927114850.24565-5-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============0242951914==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="CxDuMX1Cv2n9FQfo"
-Content-Disposition: inline
-
-
---CxDuMX1Cv2n9FQfo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Sep 24, 2018 at 05:26:10PM +0200, Marco Felsch wrote:
-> Add support for the DLC DLC1010GIG 1280x800 10.1" LVDS panel to the
-> simple-panel driver.
->=20
-> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+On Thu, Sep 27, 2018 at 7:49 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> DSI bus_clk is already available in sun6i_dsi but missed to
+> get the clk and process for enable/disable.
+>
+> This patch add support for it.
+>
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > ---
->  .../bindings/display/panel/dlc,dlc1010gig.txt | 12 +++++++
->  drivers/gpu/drm/panel/panel-simple.c          | 33 +++++++++++++++++++
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/dlc,d=
-lc1010gig.txt
+>  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> index 8e9c76febca2..156b371243c6 100644
+> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> @@ -1004,6 +1004,12 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+>                 return PTR_ERR(dsi->reset);
+>         }
+>
+> +       dsi->bus_clk = devm_clk_get(dev, "bus");
+> +       if (IS_ERR(dsi->bus_clk)) {
+> +               dev_err(dev, "Couldn't get the DSI bus clock\n");
+> +               return PTR_ERR(dsi->bus_clk);
+> +       }
+> +
 
-checkpatch complains about some minor issues. I've addressed most of
-them while applying, but next time, please make sure to run checkpatch
-and addressing the issues that it flags before sending.
+The DSI driver uses devm_regmap_init_mmio_clk, which enables the
+clock behind the scenes when regmap access needs it enabled.
 
-Thanks,
-Thierry
+Did you have any issues without this patch?
 
---CxDuMX1Cv2n9FQfo
-Content-Type: application/pgp-signature; name="signature.asc"
+ChenYu
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAluszQAACgkQ3SOs138+
-s6EzpA//cABgFo8FMwkp06piKd5Zx1LpTIcUdGQTo62sXS1JHUddxK+rk4MQpi72
-VBwjlB9n7thbImfjaDEqsndzsf1wPLCH+/vMEtgP/q7bgpd3ZCltvgCevj0o8ANy
-aXrkqW7PrTm+CRivBjdzO7ivA3RHEggC7sZoaKgvP1OGNx/etBd10H0LyX+a/9Vq
-pS5bl3Bq85PMq9lNB+oc9xAT3nqV+orRlE3dRaDYUmkCdoe3uFNQWikBsDRBsj6f
-PkmXZUbbZOnaq8VZJv8EZogHaxpMrsDaDE45HK102R0m2Nm4q2gZn14nfuYOhvVI
-0UPws6cDkhQsLXB00KYxpMmeblXBJFbvwg2oajp/JEwKm4u/OfStdgny9dyF1EX5
-M2bM3lsXe10YWjnjyhtpoqbmggoKuvnK67gGWpUpdG9qEFfUipN9ZKT/BGAqg5x0
-wTnZQ5l9G32r7OWfJxnIXeUI/wmT5TXijKK5AEFbxrFgnnD8+BA2LyEoDeh2jGag
-u2B32HablgZfPqO7eLMfmR3qDYcKF9oFLzxifdudxVPsPVg5Z/aXaYJrl3fPkKWv
-Y+QOJutSVLkVRYx+V4X5SKOvrbdLquPT8HoGOLuOZt22amYbxOHw4XQRXd3ZbBDr
-8Cw2AO6JFh/cI9CBWLl2nol4b8bqXjqVMqW867f37AGZtFpoLyc=
-=2O/n
------END PGP SIGNATURE-----
-
---CxDuMX1Cv2n9FQfo--
-
---===============0242951914==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0242951914==--
+>         if (dsi->variant->has_mod_clk) {
+>                 dsi->mod_clk = devm_clk_get(dev, "mod");
+>                 if (IS_ERR(dsi->mod_clk)) {
+> @@ -1012,6 +1018,7 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+>                 }
+>         }
+>
+> +       clk_prepare_enable(dsi->bus_clk);
+>         /*
+>          * In order to operate properly, that clock seems to be always
+>          * set to 297MHz.
+> @@ -1065,6 +1072,7 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+>         sun6i_dphy_remove(dsi);
+>         if (dsi->variant->has_mod_clk)
+>                 clk_rate_exclusive_put(dsi->mod_clk);
+> +       clk_disable_unprepare(dsi->bus_clk);
+>
+>         return 0;
+>  }
+> --
+> 2.18.0.321.gffc6fa0e3
+>
