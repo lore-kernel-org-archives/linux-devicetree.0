@@ -1,27 +1,50 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Aspeed Video Engine
- binding documentation
-Date: Thu, 27 Sep 2018 14:54:49 -0500
-Message-ID: <20180927195449.GA25789@bogus>
-References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
- <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
+Subject: Re: [PATCH 1/2 v3] drm/panel: Augment the TPO TPG110 bindings
+Date: Thu, 27 Sep 2018 14:49:09 -0500
+Message-ID: <20180927194909.GA18349@bogus>
+References: <20180925143559.19934-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, linux-media@vger.kernel.org, mchehab@kernel.org, joel@jms.id.au, hverkuil@xs4all.nl, Eddie James <eajames@linux.ibm.com>
+In-Reply-To: <20180925143559.19934-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 25 Sep 2018 14:27:08 -0500, Eddie James wrote:
-> Document the bindings.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-> ---
->  .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
-> 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+T24gVHVlLCAyNSBTZXAgMjAxOCAxNjozNTo1OCArMDIwMCwgTGludXMgV2FsbGVpaiB3cm90ZToK
+PiBUaGUgVFBPIFRQRzExMCBiaW5kaW5ncyB3ZXJlIHVzaW5nIHRoZSBEUEkgYmluZGluZ3MgKHBv
+cHVsYXIKPiBpbiB0aGUgZmJkZXYgc3Vic3lzdGVtKSBidXQgdGhpcyBtaXNzZXMgdGhlIGZpbmVy
+IHBvaW50cwo+IGxlYXJuZWQgaW4gdGhlIERSTSBzdWJzeXN0ZW0uCj4gCj4gV2UgbmVlZCB0byBh
+dWdtZW50IHRoZSBiaW5kaW5ncyBmb3IgcHJvcGVyIERSTSBpbnRlZ3JhdGlvbjoKPiB0aGUgdGlt
+aW5ncyBhcmUgZXhwcmVzc2VkIGJ5IHRoZSBoYXJkd2FyZSwgbm90IHB1dCBpbnRvIHRoZQo+IGRl
+dmljZSB0cmVlLiBJLmUuIHRoaXMgaGFyZHdhcmUgaXMgc2VsZi1kZXNjcmliaW5nIGFuZCBjYW4K
+PiByZXBvcnQgdGhlIHJlc29sdXRpb25zIGFuZCB0aW1pbmdzIG5lZWRlZC4gSXQgc2hvdWxkIG5v
+dAo+IGJlIGRlc2NyaWJlZCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4gCj4gRnVydGhlciB0aGUgZGV2
+aWNlIHdhcyBpbmNvcnJlY3RseSBtb2RlbGVkIHdpdGggR1BJTyBsaW5lcwo+IGluc3RlYWQgb2Yg
+YW4gU1BJIGNoaWxkLCBldmVuIHRob3VnaCB0aGUgZGV2aWNlIHdhcyB1c2luZwo+IFNQSS4KPiAK
+PiBObyBrbm93biBkZXBsb3ltZW50cyBvZiB0aGUgZGV2aWNlIHVzaW5nIGRldmljZSB0cmVlCj4g
+ZXhpc3QsIHNvIGl0IHNob3VsZCBiZSBmaW5lIHRvIGF1Z21lbnQgdGhlIGJpbmRpbmdzLgo+IAo+
+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdh
+bGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KPiAtLS0KPiBDaGFuZ2VMb2cgdjItPnYz
+Ogo+IC0gUmV3cml0ZSB0byByZWZsZWN0IHRoZSBmYWN0IHRoYXQgdGhlIGRpc3BsYXkgc2hvdWxk
+IGJlCj4gICBhbiBTUEkgY2hpbGQgZGV2aWNlIHVzaW5nIDNXSVJFIFNQSS4KPiBDaGFuZ2VMb2cg
+djEtPnYyOgo+IC0gRXhwYW5kIHNvbWUgc2VjdGlvbnMgdG8gbWFrZSBpdCBjbGVhciB3aGF0IGtp
+bmQgb2YgZGV2aWNlCj4gICB0aGlzIGlzIGFuZCB0aGF0IHRoZSBzZXJpYWwgcHJvdG9jb2wgaXQg
+dXNlcyBpcyBub3QKPiAgIEkyQy4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+dHBvLHRwZzExMC50eHQgICAgIHwgODMgKysrKysrKysrKysrLS0tLS0tLQo+ICAxIGZpbGUgY2hh
+bmdlZCwgNTQgaW5zZXJ0aW9ucygrKSwgMjkgZGVsZXRpb25zKC0pCj4gCgpSZXZpZXdlZC1ieTog
+Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
