@@ -1,37 +1,92 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: hwmon: Add ina3221 documentation
-Date: Thu, 27 Sep 2018 13:44:07 -0700
-Message-ID: <20180927204407.GB20923@Asurada-Nvidia.nvidia.com>
-References: <20180927194910.18464-1-nicoleotsuka@gmail.com>
- <20180927194910.18464-2-nicoleotsuka@gmail.com>
- <CAL_JsqLcuJyjHFzW7-p4HAZq3g5tGAo0wT8f5ZT_KYWV5X5+5A@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI)
+ documentation
+Date: Thu, 27 Sep 2018 15:46:24 -0500
+Message-ID: <20180927204624.GA7072@bogus>
+References: <20180926205204.184898-1-ryandcase@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqLcuJyjHFzW7-p4HAZq3g5tGAo0wT8f5ZT_KYWV5X5+5A@mail.gmail.com>
+In-Reply-To: <20180926205204.184898-1-ryandcase@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, "Andrew F. Davis" <afd@ti.com>, Linux HWMON List <linux-hwmon@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
+To: Ryan Case <ryandcase@chromium.org>
+Cc: Mark Brown <broonie@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Trent Piepho <tpiepho@impinj.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 03:38:44PM -0500, Rob Herring wrote:
-> On Thu, Sep 27, 2018 at 2:49 PM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
-> >
-> > Texas Instruments INA3221 is a triple-channel shunt and bus
-> > voltage monitor. This patch adds a DT binding doc for it.
-> >
-> > Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> > ---
-> > Changelog
-> > v5->v6:
-> >  * Removed status property as no need to explicitly list it.
-> >  * Combined all examples into a complete one.
+On Wed, Sep 26, 2018 at 01:52:03PM -0700, Ryan Case wrote:
+> From: Girish Mahadevan <girishm@codeaurora.org>
 > 
-> Sorry, I meant combine the parent and child nodes into one. Showing 3
-> children is perfectly fine as the device has 3 channels.
+> Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
+> 
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> Signed-off-by: Ryan Case <ryandcase@chromium.org>
+> ---
+> 
+> Changes in v3:
+> - Added generic compatible string in addition to specific SoC
+> 
+> Changes in v2:
+> - Added commit text
+> - Removed invalid property
+> - Updated example to match sdm845 with attached spi-nor
+> 
+>  .../bindings/spi/qcom,spi-qcom-qspi.txt       | 36 +++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+> new file mode 100644
+> index 000000000000..e13f5bb314ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+> @@ -0,0 +1,36 @@
+> +Qualcomm Quad Serial Peripheral Interface (QSPI)
+> +
+> +The QSPI controller allows SPI protocol communication in single, dual, or quad
+> +wire transmission modes for read/write access to slaves such as NOR flash.
+> +
+> +Required properties:
+> +- compatible:	An SoC specific identifier followed by "qcom,qspi-v1", such as
+> +		"qcom,sdm845-qspi", "qcom,qspi-v1"
+> +- reg:		Should contain the base register location and length.
+> +- interrupts:	Interrupt number used by the controller.
+> +- clocks:	Should contain the core and AHB clock.
+> +- clock-names:	Should be "core" for core clock and "iface" for AHB clock.
+> +
+> +SPI slave nodes must be children of the SPI master node and can contain
+> +properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
+> +
+> +Example:
+> +
+> +	qspi: qspi@88df000 {
 
-Sending v7.
+spi@...
 
-Thanks
-Nicolin
+> +		compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
+> +		reg = <0x88df000 0x600>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
+> +		clock-names = "iface", "core";
+> +		clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> +			 <&gcc GCC_QSPI_CORE_CLK>;
+> +
+> +		device@0 {
+
+flash@0
+
+With that,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
+
+> +			compatible = "jedec,spi-nor";
+> +			reg = <0>;
+> +			spi-max-frequency = <25000000>;
+> +			spi-tx-bus-width = <2>;
+> +			spi-rx-bus-width = <2>;
+> +		};
+> +	};
+> -- 
+> 2.19.0.605.g01d371f741-goog
+> 
