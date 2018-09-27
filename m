@@ -1,59 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: iio: light: bh1750: Add device tree
- binding documentation
-Date: Thu, 27 Sep 2018 14:31:37 -0500
-Message-ID: <20180927193137.GA14849@bogus>
-References: <20180922210539.6670-1-decatf@gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: arm64: add compatible for LX2160A
+Date: Thu, 27 Sep 2018 14:32:40 -0500
+Message-ID: <20180927193240.GA29253@bogus>
+References: <1537747741-6245-1-git-send-email-vabhav.sharma@nxp.com>
+ <1537747741-6245-2-git-send-email-vabhav.sharma@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180922210539.6670-1-decatf@gmail.com>
+In-Reply-To: <1537747741-6245-2-git-send-email-vabhav.sharma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ryang <decatf@gmail.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: sudeep.holla@arm.com, oss@buserror.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com, udit.kumar@nxp.com, linux@armlinux.org.uk, Vabhav Sharma <vabhav.sharma@nxp.com>, V.Sethi@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 22, 2018 at 05:05:38PM -0400, ryang wrote:
-> Document device tree bindings for ROHM BH1750 ambient light sensor driver.
+On Mon, 24 Sep 2018 05:38:56 +0530, Vabhav Sharma wrote:
+> Add compatible for LX2160A SoC,QDS and RDB board
 > 
-> Signed-off-by: ryang <decatf@gmail.com>
+> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
 > ---
->  .../devicetree/bindings/iio/light/bh1750.txt   | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/bh1750.txt
+>  Documentation/devicetree/bindings/arm/fsl.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/bh1750.txt b/Documentation/devicetree/bindings/iio/light/bh1750.txt
-> new file mode 100644
-> index 000000000000..468350cc7af6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/bh1750.txt
-> @@ -0,0 +1,18 @@
-> +ROHM BH1750 - ALS, Ambient light sensor
-> +
-> +Required properties:
-> +
-> +- compatible: Must be one of:
-> +    "rohm,bh1710"
-> +    "rohm,bh1715"
-> +    "rohm,bh1721"
-> +    "rohm,bh1750"
-> +    "rohm,bh1751"
-> +- reg: the I2C address of the sensor
-> +
-> +Example:
-> +
-> +bh1750@23 {
-
-light-sensor@23
-
-Otherwise,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +	compatible = "rohm,bh1750";
-> +	reg = <0x23>;
-> +};
-> -- 
-> 2.17.1
-> 
