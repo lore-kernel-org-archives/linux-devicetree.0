@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH 01/12] clk: sunxi-ng: a64: Fix gate bit of DSI DPHY
-Date: Thu, 27 Sep 2018 17:18:39 +0530
-Message-ID: <20180927114850.24565-2-jagan@amarulasolutions.com>
+Subject: [PATCH 02/12] drm/sun4i: sun6i_mipi_dsi: Add Allwinner A64 MIPI DSI support
+Date: Thu, 27 Sep 2018 17:18:40 +0530
+Message-ID: <20180927114850.24565-3-jagan@amarulasolutions.com>
 References: <20180927114850.24565-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,26 +12,154 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.or
 Cc: Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-DSI DPHY gate bit on MIPI DSI clock register is bit 15
-not bit 30.
+The MIPI DSI controller on Allwinner A64 is similar to
+Allwinner A31 without support of DSI mod clock(CLK_DSI_SCLK)
+
+So, alter has_mod_clk bool via driver data for respective
+SoC's compatible.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/clk/sunxi-ng/ccu-sun50i-a64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 47 ++++++++++++++++++++------
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h |  5 +++
+ 2 files changed, 41 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-index 5f80eb018014..b639e79641df 100644
---- a/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun50i-a64.c
-@@ -581,7 +581,7 @@ static const char * const dsi_dphy_parents[] = { "pll-video0", "pll-periph0" };
- static const u8 dsi_dphy_table[] = { 0, 2, };
- static SUNXI_CCU_M_WITH_MUX_TABLE_GATE(dsi_dphy_clk, "dsi-dphy",
- 				       dsi_dphy_parents, dsi_dphy_table,
--				       0x168, 0, 4, 8, 2, BIT(31), CLK_SET_RATE_PARENT);
-+				       0x168, 0, 4, 8, 2, BIT(15), CLK_SET_RATE_PARENT);
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index e3b34a345546..8e9c76febca2 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -10,6 +10,7 @@
+ #include <linux/component.h>
+ #include <linux/crc-ccitt.h>
+ #include <linux/of_address.h>
++#include <linux/of_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+ #include <linux/reset.h>
+@@ -981,6 +982,8 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 	dsi->host.ops = &sun6i_dsi_host_ops;
+ 	dsi->host.dev = dev;
  
- static SUNXI_CCU_M_WITH_GATE(gpu_clk, "gpu", "pll-gpu",
- 			     0x1a0, 0, 3, BIT(31), CLK_SET_RATE_PARENT);
++	dsi->variant = of_device_get_match_data(dev);
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(base)) {
+@@ -1001,17 +1004,20 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 		return PTR_ERR(dsi->reset);
+ 	}
+ 
+-	dsi->mod_clk = devm_clk_get(dev, "mod");
+-	if (IS_ERR(dsi->mod_clk)) {
+-		dev_err(dev, "Couldn't get the DSI mod clock\n");
+-		return PTR_ERR(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk) {
++		dsi->mod_clk = devm_clk_get(dev, "mod");
++		if (IS_ERR(dsi->mod_clk)) {
++			dev_err(dev, "Couldn't get the DSI mod clock\n");
++			return PTR_ERR(dsi->mod_clk);
++		}
+ 	}
+ 
+ 	/*
+ 	 * In order to operate properly, that clock seems to be always
+ 	 * set to 297MHz.
+ 	 */
+-	clk_set_rate_exclusive(dsi->mod_clk, 297000000);
++	if (dsi->variant->has_mod_clk)
++		clk_set_rate_exclusive(dsi->mod_clk, 297000000);
+ 
+ 	dphy_node = of_parse_phandle(dev->of_node, "phys", 0);
+ 	ret = sun6i_dphy_probe(dsi, dphy_node);
+@@ -1043,7 +1049,8 @@ static int sun6i_dsi_probe(struct platform_device *pdev)
+ 	pm_runtime_disable(dev);
+ 	sun6i_dphy_remove(dsi);
+ err_unprotect_clk:
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 	return ret;
+ }
+ 
+@@ -1056,7 +1063,8 @@ static int sun6i_dsi_remove(struct platform_device *pdev)
+ 	mipi_dsi_host_unregister(&dsi->host);
+ 	pm_runtime_disable(dev);
+ 	sun6i_dphy_remove(dsi);
+-	clk_rate_exclusive_put(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_rate_exclusive_put(dsi->mod_clk);
+ 
+ 	return 0;
+ }
+@@ -1066,7 +1074,8 @@ static int __maybe_unused sun6i_dsi_runtime_resume(struct device *dev)
+ 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
+ 
+ 	reset_control_deassert(dsi->reset);
+-	clk_prepare_enable(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_prepare_enable(dsi->mod_clk);
+ 
+ 	/*
+ 	 * Enable the DSI block.
+@@ -1094,7 +1103,8 @@ static int __maybe_unused sun6i_dsi_runtime_suspend(struct device *dev)
+ {
+ 	struct sun6i_dsi *dsi = dev_get_drvdata(dev);
+ 
+-	clk_disable_unprepare(dsi->mod_clk);
++	if (dsi->variant->has_mod_clk)
++		clk_disable_unprepare(dsi->mod_clk);
+ 	reset_control_assert(dsi->reset);
+ 
+ 	return 0;
+@@ -1106,9 +1116,24 @@ static const struct dev_pm_ops sun6i_dsi_pm_ops = {
+ 			   NULL)
+ };
+ 
++static const struct sun6i_dsi_variant sun6i_a31_dsi = {
++	.has_mod_clk = true,
++};
++
++static const struct sun6i_dsi_variant sun50i_a64_dsi = {
++	.has_mod_clk = false,
++};
++
+ static const struct of_device_id sun6i_dsi_of_table[] = {
+-	{ .compatible = "allwinner,sun6i-a31-mipi-dsi" },
+-	{ }
++	{
++		.compatible = "allwinner,sun6i-a31-mipi-dsi",
++		.data = &sun6i_a31_dsi,
++	},
++	{
++		.compatible = "allwinner,sun50i-a64-mipi-dsi",
++		.data = &sun50i_a64_dsi,
++	},
++	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, sun6i_dsi_of_table);
+ 
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+index dbbc5b3ecbda..597b62227019 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.h
+@@ -20,6 +20,10 @@ struct sun6i_dphy {
+ 	struct reset_control	*reset;
+ };
+ 
++struct sun6i_dsi_variant {
++	bool			has_mod_clk;
++};
++
+ struct sun6i_dsi {
+ 	struct drm_connector	connector;
+ 	struct drm_encoder	encoder;
+@@ -35,6 +39,7 @@ struct sun6i_dsi {
+ 	struct sun4i_drv	*drv;
+ 	struct mipi_dsi_device	*device;
+ 	struct drm_panel	*panel;
++	const struct sun6i_dsi_variant	*variant;
+ };
+ 
+ static inline struct sun6i_dsi *host_to_sun6i_dsi(struct mipi_dsi_host *host)
 -- 
 2.18.0.321.gffc6fa0e3
