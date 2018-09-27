@@ -1,51 +1,73 @@
-Return-Path: <SRS0=yXvz=MJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57538 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbeI1D0R (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Sep 2018 23:26:17 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 1/4] bus: ti-sysc: Detect timer and gpio on dra7
-Date: Thu, 27 Sep 2018 14:05:39 -0700
-Message-Id: <20180927210542.69703-2-tony@atomide.com>
-In-Reply-To: <20180927210542.69703-1-tony@atomide.com>
-References: <20180927210542.69703-1-tony@atomide.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
+Return-Path: <SRS0=x/N+=MJ=sirena.org.uk=broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: spi: rspi: Add R7S9210 support" to the spi tree
+In-Reply-To: <20180927143519.104631-1-chris.brandt@renesas.com>
+Message-Id: <20180927224026.F2F12440078@finisterre.ee.mobilebroadband>
+Date: Thu, 27 Sep 2018 23:40:26 +0100 (BST)
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>linux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-We need to detect timer and gpio on dra7 because of the
-SYSC_QUIRK_LEGACY_IDLE flag for suspend and resume.
+The patch
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+   dt-bindings: spi: rspi: Add R7S9210 support
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 73569a50959e4ec63bcf05839a030e799a350de1 Mon Sep 17 00:00:00 2001
+From: Chris Brandt <chris.brandt@renesas.com>
+Date: Thu, 27 Sep 2018 09:35:19 -0500
+Subject: [PATCH] dt-bindings: spi: rspi: Add R7S9210 support
+
+Add support for RZ/A2
+
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-rspi.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -869,7 +869,7 @@ struct sysc_revision_quirk {
- 
- static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	/* These drivers need to be fixed to not use pm_runtime_irq_safe() */
--	SYSC_QUIRK("gpio", 0, 0, 0x10, 0x114, 0x50600801, 0xffff0fff,
-+	SYSC_QUIRK("gpio", 0, 0, 0x10, 0x114, 0x50600801, 0xffff00ff,
- 		   SYSC_QUIRK_LEGACY_IDLE | SYSC_QUIRK_OPT_CLKS_IN_RESET),
- 	SYSC_QUIRK("mmu", 0, 0, 0x10, 0x14, 0x00000020, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
-@@ -884,7 +884,9 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("timer", 0, 0, 0x10, 0x14, 0x00000015, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	/* Some timers on omap4 and later */
--	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffffffff,
-+	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x50002100, 0xffffffff,
-+		   SYSC_QUIRK_LEGACY_IDLE),
-+	SYSC_QUIRK("timer", 0, 0, 0x10, -1, 0x4fff1301, 0xffff00ff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
- 	SYSC_QUIRK("uart", 0, 0x50, 0x54, 0x58, 0x00000052, 0xffffffff,
- 		   SYSC_QUIRK_LEGACY_IDLE),
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+index 96fd58548f69..dd5c36a0b9ac 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -3,7 +3,7 @@ Device tree configuration for Renesas RSPI/QSPI driver
+ Required properties:
+ - compatible       : For Renesas Serial Peripheral Interface on legacy SH:
+ 		     "renesas,rspi-<soctype>", "renesas,rspi" as fallback.
+-		     For Renesas Serial Peripheral Interface on RZ/A1H:
++		     For Renesas Serial Peripheral Interface on RZ/A:
+ 		     "renesas,rspi-<soctype>", "renesas,rspi-rz" as fallback.
+ 		     For Quad Serial Peripheral Interface on R-Car Gen2 and
+ 		     RZ/G1 devices:
+@@ -11,6 +11,7 @@ Required properties:
+ 		     Examples with soctypes are:
+ 		        - "renesas,rspi-sh7757" (SH)
+ 			- "renesas,rspi-r7s72100" (RZ/A1H)
++			- "renesas,rspi-r7s9210" (RZ/A2)
+ 			- "renesas,qspi-r8a7743" (RZ/G1M)
+ 			- "renesas,qspi-r8a7745" (RZ/G1E)
+ 			- "renesas,qspi-r8a7790" (R-Car H2)
 -- 
 2.19.0
