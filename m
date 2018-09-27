@@ -1,87 +1,263 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
-Date: Thu, 27 Sep 2018 16:11:42 +0800
-Message-ID: <20180927081138.GA308@guoren>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
- <20180925072407.GA6999@hirez.programming.kicks-ass.net>
- <20180927052737.GA28407@guoren>
- <20180927070859.GC5254@hirez.programming.kicks-ass.net>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCH v2 05/11] arm64: dts: msm8916: Update coresight bindings
+ for hardware ports
+Date: Thu, 27 Sep 2018 09:18:06 +0100
+Message-ID: <8ada229a-49ca-95ff-dc31-df459aaa7196@arm.com>
+References: <20180912135352.19722-1-suzuki.poulose@arm.com>
+ <20180912135352.19722-6-suzuki.poulose@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927070859.GC5254@hirez.programming.kicks-ass.net>
+In-Reply-To: <20180912135352.19722-6-suzuki.poulose@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
+To: linux-arm-kernel@lists.infradead.org, Andy Gross <andy.gross@linaro.org>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh@kernel.org, frowand.list@gmail.com, coresight@lists.linaro.org, leo.yan@linaro.org, David Brown <david.brown@linaro.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 09:08:59AM +0200, Peter Zijlstra wrote:
-> On Thu, Sep 27, 2018 at 01:27:38PM +0800, Guo Ren wrote:
-> > On Tue, Sep 25, 2018 at 09:24:07AM +0200, Peter Zijlstra wrote:
-> > > On Mon, Sep 24, 2018 at 10:36:22PM +0800, Guo Ren wrote:
-> > > > diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
-> > > > new file mode 100644
-> > > > index 0000000..f0de49c
-> > > > --- /dev/null
-> > > > +++ b/arch/csky/abiv1/inc/abi/cacheflush.h
-> 
-> > > > +#define flush_cache_range(mm,start,end)	cache_wbinv_range(start, end)
-> > >                              ^^^ should be vma
-> > Yes, I'll change it to:
-> > #define flush_cache_range(mm,start,end)	cache_wbinv_all()
-> > 
-> > I'll improve it later after test.
-> 
-> That's not what I meant; I meant you need something like:
-> 
-> #define flush_cache_range(vma, start, end) cache_wbinv_range(start, end)
-If you remove the tlb_start_vma in my tlb.h, I want to use cache_wbinv_all() is
-more safe. And I'll improve it in future.
+Hi Andy
 
-My cache_wbinv_range(start, end) won't care vma->mm's asid and they just use current
-asid in mmu reg. If current_mm != vma->mm, then flush_cache_range will be broken.
-Perhaps, I need improve flush_cache_range first ...
+On 09/12/2018 02:53 PM, Suzuki K Poulose wrote:
+> Switch to updated coresight bindings for hw ports
+> 
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+> Changes since v1:
+>   - Fixed TPIU port direction
+>   - Use better subject tag for the patch
+> ---
 
-> 
-> The first argument is a vma, not an mm.
-Yes, vma! My fault :-P
 
-> > > Also, I'll be shortly removing this:
-> > > 
-> > >   https://lkml.kernel.org/r/20180913092812.071989585@infradead.org
-> > Ok, I'll follow the rules.
-> 
-> 
-> > > > diff --git a/arch/csky/abiv2/inc/abi/cacheflush.h b/arch/csky/abiv2/inc/abi/cacheflush.h
-> > > > new file mode 100644
-> > > > index 0000000..756beb7
-> > > > --- /dev/null
-> > > > +++ b/arch/csky/abiv2/inc/abi/cacheflush.h
-> > > > @@ -0,0 +1,40 @@
-> 
-> > > > +#define flush_cache_range(vma, start, end)	do { } while (0)
-> > >                              ^^^ like here..
-> > #define flush_cache_range(vma, start, end) \
-> > 	do { \
-> > 		if (vma->vm_flags & VM_EXEC) \
-> > 			icache_inv_all(); \
-> > 	}
-> > 
-> > Hmm ?
-> > 
-> 
-> For v2, which IIUC is PIPT (as opposed to v1 which is VIPT), what you
-> had was correct.
-I'll improve icache_inv_all() with flush_range() in future.
+Please could you pull this and the patch for ARM (Patch 9/11)  ?
 
-> 
-> I was merely pointing out that the flush_cache_range() definition was
-> inconsitent between v1 and v2; v1 using @mm and v2 using @vma for the
-> first argument.
-Must be vma, you are right. And I know it's a vma in mind, but fault in
-code. Thx for your review.
+Suzuki
 
-Best Regards
- Guo Ren
+
+
+>   arch/arm64/boot/dts/qcom/msm8916.dtsi | 95 ++++++++++++++-------------
+>   1 file changed, 51 insertions(+), 44 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index 7b32b8990d62..fe375a9c218e 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -1099,10 +1099,11 @@
+>   			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>   			clock-names = "apb_pclk", "atclk";
+>   
+> -			port {
+> -				tpiu_in: endpoint {
+> -					slave-mode;
+> -					remote-endpoint = <&replicator_out1>;
+> +			in-ports {
+> +				port {
+> +					tpiu_in: endpoint {
+> +						remote-endpoint = <&replicator_out1>;
+> +					};
+>   				};
+>   			};
+>   		};
+> @@ -1114,7 +1115,7 @@
+>   			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>   			clock-names = "apb_pclk", "atclk";
+>   
+> -			ports {
+> +			in-ports {
+>   				#address-cells = <1>;
+>   				#size-cells = <0>;
+>   
+> @@ -1132,12 +1133,13 @@
+>   				port@4 {
+>   					reg = <4>;
+>   					funnel0_in4: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&funnel1_out>;
+>   					};
+>   				};
+> -				port@8 {
+> -					reg = <0>;
+> +			};
+> +
+> +			out-ports {
+> +				port {
+>   					funnel0_out: endpoint {
+>   						remote-endpoint = <&etf_in>;
+>   					};
+> @@ -1152,7 +1154,7 @@
+>   			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>   			clock-names = "apb_pclk", "atclk";
+>   
+> -			ports {
+> +			out-ports {
+>   				#address-cells = <1>;
+>   				#size-cells = <0>;
+>   
+> @@ -1168,10 +1170,11 @@
+>   						remote-endpoint = <&tpiu_in>;
+>   					};
+>   				};
+> -				port@2 {
+> -					reg = <0>;
+> +			};
+> +
+> +			in-ports {
+> +				port {
+>   					replicator_in: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&etf_out>;
+>   					};
+>   				};
+> @@ -1185,19 +1188,16 @@
+>   			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>   			clock-names = "apb_pclk", "atclk";
+>   
+> -			ports {
+> -				#address-cells = <1>;
+> -				#size-cells = <0>;
+> -
+> -				port@0 {
+> -					reg = <0>;
+> +			in-ports {
+> +				port {
+>   					etf_in: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&funnel0_out>;
+>   					};
+>   				};
+> -				port@1 {
+> -					reg = <0>;
+> +			};
+> +
+> +			out-ports {
+> +				port {
+>   					etf_out: endpoint {
+>   						remote-endpoint = <&replicator_in>;
+>   					};
+> @@ -1212,10 +1212,11 @@
+>   			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>   			clock-names = "apb_pclk", "atclk";
+>   
+> -			port {
+> -				etr_in: endpoint {
+> -					slave-mode;
+> -					remote-endpoint = <&replicator_out0>;
+> +			in-ports {
+> +				port {
+> +					etr_in: endpoint {
+> +						remote-endpoint = <&replicator_out0>;
+> +					};
+>   				};
+>   			};
+>   		};
+> @@ -1227,40 +1228,38 @@
+>   			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
+>   			clock-names = "apb_pclk", "atclk";
+>   
+> -			ports {
+> +			in-ports {
+>   				#address-cells = <1>;
+>   				#size-cells = <0>;
+>   
+>   				port@0 {
+>   					reg = <0>;
+>   					funnel1_in0: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&etm0_out>;
+>   					};
+>   				};
+>   				port@1 {
+>   					reg = <1>;
+>   					funnel1_in1: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&etm1_out>;
+>   					};
+>   				};
+>   				port@2 {
+>   					reg = <2>;
+>   					funnel1_in2: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&etm2_out>;
+>   					};
+>   				};
+>   				port@3 {
+>   					reg = <3>;
+>   					funnel1_in3: endpoint {
+> -						slave-mode;
+>   						remote-endpoint = <&etm3_out>;
+>   					};
+>   				};
+> -				port@4 {
+> -					reg = <0>;
+> +			};
+> +
+> +			out-ports {
+> +				port {
+>   					funnel1_out: endpoint {
+>   						remote-endpoint = <&funnel0_in4>;
+>   					};
+> @@ -1309,9 +1308,11 @@
+>   
+>   			cpu = <&CPU0>;
+>   
+> -			port {
+> -				etm0_out: endpoint {
+> -				remote-endpoint = <&funnel1_in0>;
+> +			out-ports {
+> +				port {
+> +					etm0_out: endpoint {
+> +						remote-endpoint = <&funnel1_in0>;
+> +					};
+>   				};
+>   			};
+>   		};
+> @@ -1325,9 +1326,11 @@
+>   
+>   			cpu = <&CPU1>;
+>   
+> -			port {
+> -				etm1_out: endpoint {
+> -					remote-endpoint = <&funnel1_in1>;
+> +			out-ports {
+> +				port {
+> +					etm1_out: endpoint {
+> +						remote-endpoint = <&funnel1_in1>;
+> +					};
+>   				};
+>   			};
+>   		};
+> @@ -1341,9 +1344,11 @@
+>   
+>   			cpu = <&CPU2>;
+>   
+> -			port {
+> -				etm2_out: endpoint {
+> -					remote-endpoint = <&funnel1_in2>;
+> +			out-ports {
+> +				port {
+> +					etm2_out: endpoint {
+> +						remote-endpoint = <&funnel1_in2>;
+> +					};
+>   				};
+>   			};
+>   		};
+> @@ -1357,9 +1362,11 @@
+>   
+>   			cpu = <&CPU3>;
+>   
+> -			port {
+> -				etm3_out: endpoint {
+> -					remote-endpoint = <&funnel1_in3>;
+> +			out-ports {
+> +				port {
+> +					etm3_out: endpoint {
+> +						remote-endpoint = <&funnel1_in3>;
+> +					};
+>   				};
+>   			};
+>   		};
+> 
