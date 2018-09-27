@@ -1,50 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2 v3] drm/panel: Augment the TPO TPG110 bindings
-Date: Thu, 27 Sep 2018 14:49:09 -0500
-Message-ID: <20180927194909.GA18349@bogus>
-References: <20180925143559.19934-1-linus.walleij@linaro.org>
+Subject: Re: [PATCH v3] arm64: dts: rockchip: add initial dts support for
+ Rockpro64
+Date: Thu, 27 Sep 2018 15:02:51 -0500
+Message-ID: <20180927200251.GA4060@bogus>
+References: <Akash_Gajjar@mentor.com>
+ <1537943105-21247-1-git-send-email-Akash_Gajjar@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180925143559.19934-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+In-Reply-To: <1537943105-21247-1-git-send-email-Akash_Gajjar@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Akash Gajjar <Akash_Gajjar@mentor.com>
+Cc: heiko@sntech.de, Deepak_das@mentor.com, Pragnesh_patel@mentor.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Levin Du <djw@t-chip.com.cn>, Klaus Goger <klaus.goger@theobroma-systems.com>, Ezequiel Garcia <ezequiel@collabora.com>, Arnd Bergmann <arnd@arndb.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, Philippe Ombredanne <pombredanne@nexb.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Shohei Maruyama <cheat.sc.linux@outlook.com>, Pierre-Hugues Husson <phh@phh.me>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Shawn Lin <shawn.lin@rock-chips.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyNSBTZXAgMjAxOCAxNjozNTo1OCArMDIwMCwgTGludXMgV2FsbGVpaiB3cm90ZToK
-PiBUaGUgVFBPIFRQRzExMCBiaW5kaW5ncyB3ZXJlIHVzaW5nIHRoZSBEUEkgYmluZGluZ3MgKHBv
-cHVsYXIKPiBpbiB0aGUgZmJkZXYgc3Vic3lzdGVtKSBidXQgdGhpcyBtaXNzZXMgdGhlIGZpbmVy
-IHBvaW50cwo+IGxlYXJuZWQgaW4gdGhlIERSTSBzdWJzeXN0ZW0uCj4gCj4gV2UgbmVlZCB0byBh
-dWdtZW50IHRoZSBiaW5kaW5ncyBmb3IgcHJvcGVyIERSTSBpbnRlZ3JhdGlvbjoKPiB0aGUgdGlt
-aW5ncyBhcmUgZXhwcmVzc2VkIGJ5IHRoZSBoYXJkd2FyZSwgbm90IHB1dCBpbnRvIHRoZQo+IGRl
-dmljZSB0cmVlLiBJLmUuIHRoaXMgaGFyZHdhcmUgaXMgc2VsZi1kZXNjcmliaW5nIGFuZCBjYW4K
-PiByZXBvcnQgdGhlIHJlc29sdXRpb25zIGFuZCB0aW1pbmdzIG5lZWRlZC4gSXQgc2hvdWxkIG5v
-dAo+IGJlIGRlc2NyaWJlZCBpbiB0aGUgZGV2aWNlIHRyZWUuCj4gCj4gRnVydGhlciB0aGUgZGV2
-aWNlIHdhcyBpbmNvcnJlY3RseSBtb2RlbGVkIHdpdGggR1BJTyBsaW5lcwo+IGluc3RlYWQgb2Yg
-YW4gU1BJIGNoaWxkLCBldmVuIHRob3VnaCB0aGUgZGV2aWNlIHdhcyB1c2luZwo+IFNQSS4KPiAK
-PiBObyBrbm93biBkZXBsb3ltZW50cyBvZiB0aGUgZGV2aWNlIHVzaW5nIGRldmljZSB0cmVlCj4g
-ZXhpc3QsIHNvIGl0IHNob3VsZCBiZSBmaW5lIHRvIGF1Z21lbnQgdGhlIGJpbmRpbmdzLgo+IAo+
-IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IFNpZ25lZC1vZmYtYnk6IExpbnVzIFdh
-bGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4KPiAtLS0KPiBDaGFuZ2VMb2cgdjItPnYz
-Ogo+IC0gUmV3cml0ZSB0byByZWZsZWN0IHRoZSBmYWN0IHRoYXQgdGhlIGRpc3BsYXkgc2hvdWxk
-IGJlCj4gICBhbiBTUEkgY2hpbGQgZGV2aWNlIHVzaW5nIDNXSVJFIFNQSS4KPiBDaGFuZ2VMb2cg
-djEtPnYyOgo+IC0gRXhwYW5kIHNvbWUgc2VjdGlvbnMgdG8gbWFrZSBpdCBjbGVhciB3aGF0IGtp
-bmQgb2YgZGV2aWNlCj4gICB0aGlzIGlzIGFuZCB0aGF0IHRoZSBzZXJpYWwgcHJvdG9jb2wgaXQg
-dXNlcyBpcyBub3QKPiAgIEkyQy4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-dHBvLHRwZzExMC50eHQgICAgIHwgODMgKysrKysrKysrKysrLS0tLS0tLQo+ICAxIGZpbGUgY2hh
-bmdlZCwgNTQgaW5zZXJ0aW9ucygrKSwgMjkgZGVsZXRpb25zKC0pCj4gCgpSZXZpZXdlZC1ieTog
-Um9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, 26 Sep 2018 11:54:57 +0530, Akash Gajjar wrote:
+> Rockpro64 is a rockchip RK3399 based board from pine64.org.
+> This patch adds basic device node support for Rockpro64 board and make it able
+> to bring up.
+> 
+> Peripheral Works
+> - Sdcard
+> - USB 2.0, 3.0
+> - Leds
+> - Ethernet
+> - Debug console
+> 
+> Not working:
+> - USB Type-C
+> 
+> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+> ---
+> changes for v2
+> - Added support for usb 2.0, 3.0
+> - Added fusb302 node and its regulator support
+> - Cleanup pinctrl node
+> - Remove backlight, pcie, sound codec node inherited from firefly-rk3399 dts
+> changes for v3
+> - Added copyright properly
+> - Typo correction in commit message
+> 
+>  Documentation/devicetree/bindings/arm/rockchip.txt |   4 +
+>  arch/arm64/boot/dts/rockchip/Makefile              |   1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts  | 692 +++++++++++++++++++++
+>  3 files changed, 697 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
