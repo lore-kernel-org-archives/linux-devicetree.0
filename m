@@ -1,34 +1,54 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: can: rcar_can: Add r8a7744 support
-Date: Thu, 27 Sep 2018 13:08:48 +0100
-Message-ID: <1538050128-47356-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] drm/panel: simple: Add support for
+ Banana Pi 7" S070WV20-CT16 panel
+Date: Thu, 27 Sep 2018 14:22:01 +0200
+Message-ID: <20180927122201.GH29102@ulmo>
+References: <20180907041948.19913-1-wens@csie.org>
+ <20180907041948.19913-5-wens@csie.org>
+Reply-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="9jHkwA2TBA/ec6v+"
+Return-path: <linux-sunxi+bncBDTKFPPJUEHRB3EWWPOQKGQE2I66VRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180907041948.19913-5-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G1N (r8a7744) SoC specific bindings.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-This patch is tested against linux-next next-20180927
----
- Documentation/devicetree/bindings/net/can/rcar_can.txt | 1 +
- 1 file changed, 1 insertion(+)
+--9jHkwA2TBA/ec6v+
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_can.txt b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-index 94a7f33..cc43728 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_can.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_can.txt
-@@ -3,6 +3,7 @@ Renesas R-Car CAN controller Device Tree Bindings
- 
- Required properties:
- - compatible: "renesas,can-r8a7743" if CAN controller is a part of R8A7743 SoC.
-+	      "renesas,can-r8a7744" if CAN controller is a part of R8A7744 SoC.
- 	      "renesas,can-r8a7745" if CAN controller is a part of R8A7745 SoC.
- 	      "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
- 	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
--- 
-2.7.4
+On Fri, Sep 07, 2018 at 12:19:46PM +0800, Chen-Yu Tsai wrote:
+> This panel is marketed as Banana Pi 7" LCD display. On the back is
+> a sticker denoting the model name S070WV20-CT16.
+> 
+> This is a 7" 800x480 panel connected through a 24-bit RGB interface.
+> However the panel only does 262k colors.
+> 
+> Depending on the variant, the PCB attached to the panel module either
+> supports DSI, or DSI + 24-bit RGB. DSI is converted to 24-bit RGB via
+> an onboard ICN6211 MIPI DSI - RGB bridge chip, then fed to the panel
+> itself.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  .../display/panel/bananapi,s070wv20-ct16.txt  | 12 +++++++++
+>  drivers/gpu/drm/panel/panel-simple.c          | 25 +++++++++++++++++++
+>  2 files changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/bananapi,s070wv20-ct16.txt
+
+Next time, please make the bindings and driver changes separate patches.
+
+Applied, thanks.
+Thierry
+--9jHkwA2TBA/ec6v+--
