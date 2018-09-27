@@ -1,127 +1,87 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v23 4/4] soc: mediatek: Add Mediatek CMDQ helper
-Date: Thu, 27 Sep 2018 09:55:00 +0200
-Message-ID: <23d76d03-c0e9-cd83-f9a8-f5efa0c72938@gmail.com>
-References: <1532482002-11164-1-git-send-email-houlong.wei@mediatek.com>
- <1532482002-11164-5-git-send-email-houlong.wei@mediatek.com>
- <1534297570.21668.3.camel@mhfsdcap03>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
+Date: Thu, 27 Sep 2018 16:11:42 +0800
+Message-ID: <20180927081138.GA308@guoren>
+References: <cover.1537789736.git.ren_guo@c-sky.com>
+ <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
+ <20180925072407.GA6999@hirez.programming.kicks-ass.net>
+ <20180927052737.GA28407@guoren>
+ <20180927070859.GC5254@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1534297570.21668.3.camel@mhfsdcap03>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180927070859.GC5254@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: houlong wei <houlong.wei@mediatek.com>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, =?UTF-8?B?Q0sgSHUgKOiDoeS/iuWFiSk=?= <ck.hu@mediatek.com>, =?UTF-8?B?QmliYnkgSHNpZWggKOisnea/n+mBoCk=?= <Bibby.Hsieh@mediatek.com>, =?UTF-8?B?WVQgU2hlbiAo5rKI5bKz6ZyGK
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 27, 2018 at 09:08:59AM +0200, Peter Zijlstra wrote:
+> On Thu, Sep 27, 2018 at 01:27:38PM +0800, Guo Ren wrote:
+> > On Tue, Sep 25, 2018 at 09:24:07AM +0200, Peter Zijlstra wrote:
+> > > On Mon, Sep 24, 2018 at 10:36:22PM +0800, Guo Ren wrote:
+> > > > diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
+> > > > new file mode 100644
+> > > > index 0000000..f0de49c
+> > > > --- /dev/null
+> > > > +++ b/arch/csky/abiv1/inc/abi/cacheflush.h
+> 
+> > > > +#define flush_cache_range(mm,start,end)	cache_wbinv_range(start, end)
+> > >                              ^^^ should be vma
+> > Yes, I'll change it to:
+> > #define flush_cache_range(mm,start,end)	cache_wbinv_all()
+> > 
+> > I'll improve it later after test.
+> 
+> That's not what I meant; I meant you need something like:
+> 
+> #define flush_cache_range(vma, start, end) cache_wbinv_range(start, end)
+If you remove the tlb_start_vma in my tlb.h, I want to use cache_wbinv_all() is
+more safe. And I'll improve it in future.
 
+My cache_wbinv_range(start, end) won't care vma->mm's asid and they just use current
+asid in mmu reg. If current_mm != vma->mm, then flush_cache_range will be broken.
+Perhaps, I need improve flush_cache_range first ...
 
-On 15/08/2018 03:46, houlong wei wrote:
-[...]
->> +
->> +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
->> +				   u32 arg_a, u32 arg_b)
->> +{
->> +	u64 *cmd_ptr;
->> +
->> +	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
->> +		pkt->cmd_buf_size += CMDQ_INST_SIZE;
->> +		return -ENOMEM;
->> +	}
->> +	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
->> +	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
->> +	pkt->cmd_buf_size += CMDQ_INST_SIZE;
->> +
->> +	return 0;
->> +}
->> +
->> +int cmdq_pkt_write(struct cmdq_pkt *pkt, u32 value, u32 subsys, u32 offset)
->> +{
->> +	u32 arg_a = (offset & CMDQ_ARG_A_WRITE_MASK) |
->> +		    (subsys << CMDQ_SUBSYS_SHIFT);
->> +
->> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WRITE, arg_a, value);
->> +}
->> +EXPORT_SYMBOL(cmdq_pkt_write);
->> +
->> +int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u32 value,
->> +			u32 subsys, u32 offset, u32 mask)
->> +{
->> +	u32 offset_mask = offset;
->> +	int err;
->> +
->> +	if (mask != 0xffffffff) {
->> +		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
->> +		WARN_ON(err < 0);
+> 
+> The first argument is a vma, not an mm.
+Yes, vma! My fault :-P
 
-If we want to write out a warning to the kernel log, then we should but that in
-the if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) from
-cmdq_pkt_append_command to make it consistent between cmdq_pkt_write,
-cmdq_pkt_write_mask and cmdq_pkt_finalize
+> > > Also, I'll be shortly removing this:
+> > > 
+> > >   https://lkml.kernel.org/r/20180913092812.071989585@infradead.org
+> > Ok, I'll follow the rules.
+> 
+> 
+> > > > diff --git a/arch/csky/abiv2/inc/abi/cacheflush.h b/arch/csky/abiv2/inc/abi/cacheflush.h
+> > > > new file mode 100644
+> > > > index 0000000..756beb7
+> > > > --- /dev/null
+> > > > +++ b/arch/csky/abiv2/inc/abi/cacheflush.h
+> > > > @@ -0,0 +1,40 @@
+> 
+> > > > +#define flush_cache_range(vma, start, end)	do { } while (0)
+> > >                              ^^^ like here..
+> > #define flush_cache_range(vma, start, end) \
+> > 	do { \
+> > 		if (vma->vm_flags & VM_EXEC) \
+> > 			icache_inv_all(); \
+> > 	}
+> > 
+> > Hmm ?
+> > 
+> 
+> For v2, which IIUC is PIPT (as opposed to v1 which is VIPT), what you
+> had was correct.
+I'll improve icache_inv_all() with flush_range() in future.
 
-Sorry, just saw this right now.
+> 
+> I was merely pointing out that the flush_cache_range() definition was
+> inconsitent between v1 and v2; v1 using @mm and v2 using @vma for the
+> first argument.
+Must be vma, you are right. And I know it's a vma in mind, but fault in
+code. Thx for your review.
 
->> +		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
->> +	}
->> +
->> +	return cmdq_pkt_write(pkt, value, subsys, offset_mask);
->> +}
->> +EXPORT_SYMBOL(cmdq_pkt_write_mask);
->> +
->> +int cmdq_pkt_wfe(struct cmdq_pkt *pkt, u32 event)
->> +{
->> +	u32 arg_b;
->> +
->> +	if (event >= CMDQ_MAX_EVENT)
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * WFE arg_b
->> +	 * bit 0-11: wait value
->> +	 * bit 15: 1 - wait, 0 - no wait
->> +	 * bit 16-27: update value
->> +	 * bit 31: 1 - update, 0 - no update
->> +	 */
->> +	arg_b = CMDQ_WFE_UPDATE | CMDQ_WFE_WAIT | CMDQ_WFE_WAIT_VALUE;
->> +
->> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event, arg_b);
->> +}
->> +EXPORT_SYMBOL(cmdq_pkt_wfe);
->> +
->> +int cmdq_pkt_clear_event(struct cmdq_pkt *pkt, u32 event)
->> +{
->> +	if (event >= CMDQ_MAX_EVENT)
->> +		return -EINVAL;
->> +
->> +	return cmdq_pkt_append_command(pkt, CMDQ_CODE_WFE, event,
->> +				       CMDQ_WFE_UPDATE);
->> +}
->> +EXPORT_SYMBOL(cmdq_pkt_clear_event);
->> +
->> +static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
->> +{
->> +	int err;
->> +
->> +	/* insert EOC and generate IRQ for each command iteration */
->> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
->> +	WARN_ON(err < 0);
-
-Should move into cmdq_pkt_append_command
-
->> +
->> +	/* JUMP to end */
->> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
->> +	WARN_ON(err < 0);
-
-same here.
-
->> +
->> +	return err;
->> +}
->> +
-[...]
-
-Regards,
-Matthias
+Best Regards
+ Guo Ren
