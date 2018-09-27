@@ -1,12 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH 06/12] drm/sun4i: sun6i_mipi_dsi: Fix VBP size calculation
-Date: Thu, 27 Sep 2018 17:18:44 +0530
-Message-ID: <20180927114850.24565-7-jagan@amarulasolutions.com>
+Subject: [PATCH 07/12] drm/sun4i: sun6i_mipi_dsi: Fix TCON DRQ
+ set bits
+Date: Thu, 27 Sep 2018 17:18:45 +0530
+Message-ID: <20180927114850.24565-8-jagan@amarulasolutions.com>
 References: <20180927114850.24565-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBZMHWPOQKGQEXY255FI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB3EHWPOQKGQEJP3GC5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20180927114850.24565-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,13 +20,11 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-According to horizontal and vertical timings are defined
-per the diagram from include/drm/drm_modes.h
+TCON DRQ set bits for non-burst DSI mode can computed via
+horizontal front porch instead of front porch + sync timings.
 
-Back porch = [hv]total - [hv]sync_end
-
-So, update SUN6I_DSI_BASIC_SIZE0_VBP calculation as
-mode->vtotal - mode->vsync_end
+Since there no documentation for TCON_DRQ_REG(0x7c) register
+this change is taken as reference from BPI-M64-bsp.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
@@ -33,19 +32,20 @@ Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.o
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 1c7e42015645..599284971ab6 100644
+index 599284971ab6..9918fdb990ff 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -526,8 +526,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE0_REG,
- 		     SUN6I_DSI_BASIC_SIZE0_VSA(mode->vsync_end -
- 					       mode->vsync_start) |
--		     SUN6I_DSI_BASIC_SIZE0_VBP(mode->vsync_start -
--					       mode->vdisplay));
-+		     SUN6I_DSI_BASIC_SIZE0_VBP(mode->vtotal -
-+					       mode->vsync_end));
+@@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 	struct mipi_dsi_device *device = dsi->device;
+ 	u32 val = 0;
  
- 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE1_REG,
- 		     SUN6I_DSI_BASIC_SIZE1_VACT(mode->vdisplay) |
+-	if ((mode->hsync_end - mode->hdisplay) > 20) {
++	if ((mode->hsync_start - mode->hdisplay) > 20) {
+ 		/* Maaaaaagic */
+-		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
++		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
+ 
+ 		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+ 		drq /= 32;
 -- 
 2.18.0.321.gffc6fa0e3
