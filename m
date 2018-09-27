@@ -1,42 +1,127 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH] arm64: dts: k3-am65-wakeup: Fix wakeup_uart reg address
-Date: Thu, 27 Sep 2018 10:31:46 +0530
-Message-ID: <20180927050146.17847-1-vigneshr@ti.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 17/30] csky: Misc headers
+Date: Thu, 27 Sep 2018 13:07:42 +0800
+Message-ID: <20180927050739.GA27703@guoren>
+References: <cover.1537789736.git.ren_guo@c-sky.com>
+ <5ae1990e1863fe2293bba1e5ec0408892a9a7f0c.1537789737.git.ren_guo@c-sky.com>
+ <20180925100803.GA6891@andrea>
+ <20180925104541.GA27311@hirez.programming.kicks-ass.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180925104541.GA27311@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrea Parri <andrea.parri@amarulasolutions.com>, akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-cbass_wakeup interconnect which is the parent of wakeup_uart node
-defines address-cells=1 and size-cells=1, therefore fix up reg property
-of wakeup_uart node accordingly. Otherwise, this UART instance fails to
-probe if enabled.
+On Tue, Sep 25, 2018 at 12:45:41PM +0200, Peter Zijlstra wrote:
+> On Tue, Sep 25, 2018 at 12:08:03PM +0200, Andrea Parri wrote:
+> > Hi Guo,
+> > 
+> > > +/*
+> > > + * set_bit - Atomically set a bit in memory
+> > > + * @nr: the bit to set
+> > > + * @addr: the address to start counting from
+> > > + *
+> > > + * This function is atomic and may not be reordered.  See __set_bit()
+> > > + * if you do not require the atomic guarantees.
+> > > + *
+> > > + * Note: there are no guarantees that this function will not be reordered
+> > > + * on non x86 architectures, so if you are writing portable code,
+> > > + * make sure not to rely on its reordering guarantees.
+> > > + *
+> > > + * Note that @nr may be almost arbitrarily large; this function is not
+> > > + * restricted to acting on a single-word quantity.
+> > > + */
+> > > +static inline void set_bit(int nr, volatile unsigned long *addr)
+> > > +{
+> > > +	unsigned long mask = BIT_MASK(nr);
+> > > +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+> > > +	unsigned long tmp;
+> > > +
+> > > +	/* *p  |= mask; */
+> > > +	smp_mb();
+> > > +	asm volatile (
+> > > +		"1:	ldex.w		%0, (%2)	\n"
+> > > +		"	or32		%0, %0, %1	\n"
+> > > +		"	stex.w		%0, (%2)	\n"
+> > > +		"	bez		%0, 1b		\n"
+> > > +		: "=&r"(tmp)
+> > > +		: "r"(mask), "r"(p)
+> > > +		: "memory");
+> > > +	smp_mb();
+> > > +}
+> > > +
+> > > +/**
+> > > + * clear_bit - Clears a bit in memory
+> > > + * @nr: Bit to clear
+> > > + * @addr: Address to start counting from
+> > > + *
+> > > + * clear_bit() is atomic and may not be reordered.  However, it does
+> > > + * not contain a memory barrier, so if it is used for locking purposes,
+> > > + * you should call smp_mb__before_atomic() and/or smp_mb__after_atomic()
+> > > + * in order to ensure changes are visible on other processors.
+> > > + */
+> > > +static inline void clear_bit(int nr, volatile unsigned long *addr)
+> > > +{
+> > > +	unsigned long mask = BIT_MASK(nr);
+> > > +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+> > > +	unsigned long tmp;
+> > > +
+> > > +	/* *p &= ~mask; */
+> > > +	mask = ~mask;
+> > > +	smp_mb();
+> > > +	asm volatile (
+> > > +		"1:	ldex.w		%0, (%2)	\n"
+> > > +		"	and32		%0, %0, %1	\n"
+> > > +		"	stex.w		%0, (%2)	\n"
+> > > +		"	bez		%0, 1b		\n"
+> > > +		: "=&r"(tmp)
+> > > +		: "r"(mask), "r"(p)
+> > > +		: "memory");
+> > > +	smp_mb();
+> > > +}
+> > > +
+> > > +/**
+> > > + * change_bit - Toggle a bit in memory
+> > > + * @nr: Bit to change
+> > > + * @addr: Address to start counting from
+> > > + *
+> > > + * change_bit() is atomic and may not be reordered. It may be
+> > > + * reordered on other architectures than x86.
+> > > + * Note that @nr may be almost arbitrarily large; this function is not
+> > > + * restricted to acting on a single-word quantity.
+> > > + */
+> > > +static inline void change_bit(int nr, volatile unsigned long *addr)
+> > > +{
+> > > +	unsigned long mask = BIT_MASK(nr);
+> > > +	unsigned long *p = ((unsigned long *)addr) + BIT_WORD(nr);
+> > > +	unsigned long tmp;
+> > > +
+> > > +	/* *p ^= mask; */
+> > > +	smp_mb();
+> > > +	asm volatile (
+> > > +		"1:	ldex.w		%0, (%2)	\n"
+> > > +		"	xor32		%0, %0, %1	\n"
+> > > +		"	stex.w		%0, (%2)	\n"
+> > > +		"	bez		%0, 1b		\n"
+> > > +		: "=&r"(tmp)
+> > > +		: "r"(mask), "r"(p)
+> > > +		: "memory");
+> > > +	smp_mb();
+> > > +}
+> > 
+> > The {set,clear,change}_bit() operations don't have to be ordered: you
+> > might want to remove the above smp_mb()s (and adjust the comments).
+I confused it with cmpxchg, seems cmpxchg need smp_mb() before&after.
+See: https://lkml.org/lkml/2018/7/6/383
 
-Fixes: 4201af2544b3 ("arm64: dts: ti: am654: Add uart nodes")
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
+> Better yet, you can entirely delete all that and use
+> asm-generic/bitops/atomic.h instead.
+Yes, approve. Seems I only need care about asm/atomic.h, it's good for
+me.
 
-Based on next-20180926
-
- arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-index ee56959f4af8..c617393ea767 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-wakeup.dtsi
-@@ -44,7 +44,7 @@
- 
- 	wkup_uart0: serial@42300000 {
- 		compatible = "ti,am654-uart";
--		reg = <0x00 0x42300000 0x00 0x100>;
-+		reg = <0x42300000 0x100>;
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
- 		interrupts = <GIC_SPI 697 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.19.0
+Best Regards
+ Guo Ren
