@@ -1,122 +1,344 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V5 06/30] csky: Cache and TLB routines
-Date: Thu, 27 Sep 2018 13:27:38 +0800
-Message-ID: <20180927052737.GA28407@guoren>
-References: <cover.1537789736.git.ren_guo@c-sky.com>
- <7cd7abcd2acf5c61435589338ff80a75a13173ca.1537789737.git.ren_guo@c-sky.com>
- <20180925072407.GA6999@hirez.programming.kicks-ass.net>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 4/5] usb: host: Add XHCI driver for Broadcom STB SoCs
+Date: Thu, 27 Sep 2018 13:51:36 +0800
+Message-ID: <1538027496.32173.56.camel@mhfsdcap03>
+References: <1538000414-24873-1-git-send-email-alcooperx@gmail.com>
+         <1538000414-24873-5-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180925072407.GA6999@hirez.programming.kicks-ass.net>
+In-Reply-To: <1538000414-24873-5-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, gnu-csky@mentor.com, green.hu@gmail.com, palmer@sifive.com
+To: Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, Mathias Nyman <mathias.nyman@intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>, Jianguo Sun <sunjianguo1@huawei.com>, James Hogan <jhogan@kernel.org>, Alban Bedel <albeu@free.fr>, Lu Baolu <baolu.lu@linux.intel.com>, Avi Fishman <avifishman70@gmail.com>, Alex Elder <elder@linaro.org>, Hans de Goede <hdegoede@redhat.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, bcm-kerne
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 25, 2018 at 09:24:07AM +0200, Peter Zijlstra wrote:
-> On Mon, Sep 24, 2018 at 10:36:22PM +0800, Guo Ren wrote:
-> > diff --git a/arch/csky/abiv1/inc/abi/cacheflush.h b/arch/csky/abiv1/inc/abi/cacheflush.h
-> > new file mode 100644
-> > index 0000000..f0de49c
-> > --- /dev/null
-> > +++ b/arch/csky/abiv1/inc/abi/cacheflush.h
-> > @@ -0,0 +1,43 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> > +
-> > +#ifndef __ABI_CSKY_CACHEFLUSH_H
-> > +#define __ABI_CSKY_CACHEFLUSH_H
-> > +
-> > +#include <linux/compiler.h>
-> > +#include <asm/string.h>
-> > +#include <asm/cache.h>
-> > +
-> > +#define ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE 1
-> > +extern void flush_dcache_page(struct page *);
-> > +
-> > +#define flush_cache_mm(mm)		cache_wbinv_all()
-> > +#define flush_cache_page(vma,page,pfn)	cache_wbinv_all()
-> > +#define flush_cache_dup_mm(mm)		cache_wbinv_all()
-> > +
-> > +#define flush_cache_range(mm,start,end)	cache_wbinv_range(start, end)
->                              ^^^ should be vma
-Yes, I'll change it to:
-#define flush_cache_range(mm,start,end)	cache_wbinv_all()
+Hi,
 
-I'll improve it later after test.
+On Wed, 2018-09-26 at 18:20 -0400, Al Cooper wrote:
+> This driver enables USB XHCI on Broadcom ARM STB SoCs.
+> The drivers depend on a matching "brcm,brcmstb-usb-phy"
+> Broadcom STB USB Phy driver.
+> 
+> The standard platform driver can't be used because of differences
+> in PHY and Clock handling. The standard PHY handling in hcd.c will
+> do a phy_exit/phy_init on suspend/resume and this will end up
+> shutting down the PHYs to the point that the host controller
+> registers are no longer accessible and will cause suspend to crash.
+You can avoid hcd.c to do a phy_exit/phy_init on suspend/resume by
+device_init_wakeup(dev, true);
+
+> The clocks specified in device tree for these drivers are not
+> available in mainline so instead of returning EPROBE_DEFER when
+> the specified clock is not found and eventually failing probe,
+> the clock pointer is set to NULL which disables all clock handling.
+Try to use a fixed-clock as dummy clock if the clock is optional?
 
 > 
-> > +#endif /* __ABI_CSKY_CACHEFLUSH_H */
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>  drivers/usb/host/xhci-brcm.c | 294 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 294 insertions(+)
+>  create mode 100644 drivers/usb/host/xhci-brcm.c
 > 
-> 
-> > diff --git a/arch/csky/abiv1/inc/abi/tlb.h b/arch/csky/abiv1/inc/abi/tlb.h
-> > new file mode 100644
-> > index 0000000..6d461f3
-> > --- /dev/null
-> > +++ b/arch/csky/abiv1/inc/abi/tlb.h
-> > @@ -0,0 +1,12 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> > +
-> > +#ifndef __ABI_CSKY_TLB_H
-> > +#define __ABI_CSKY_TLB_H
-> > +
-> > +#define tlb_start_vma(tlb, vma) \
-> > +	do { \
-> > +		if (!tlb->fullmm) \
-> > +			cache_wbinv_all(); \
-> > +	}  while (0)
-> > +#endif /* __ABI_CSKY_TLB_H */
-> 
-> That should be:
-> 
-> 	if (!tlb->fullmm)
-> 		flush_cache_range(vma, vma->vm_start, vma->vm_end);
-> 
-> Because as per the whole abiv1 vs abiv2, you don't need write back
-> invalidation for v2 at all, also, you only need to invalidate the vma
-> range, no reason to shoot everything down.
-> 
-> Also, I'll be shortly removing this:
-> 
->   https://lkml.kernel.org/r/20180913092812.071989585@infradead.org
-Ok, I'll follow the rules.
-
-> 
-> > diff --git a/arch/csky/abiv2/inc/abi/cacheflush.h b/arch/csky/abiv2/inc/abi/cacheflush.h
-> > new file mode 100644
-> > index 0000000..756beb7
-> > --- /dev/null
-> > +++ b/arch/csky/abiv2/inc/abi/cacheflush.h
-> > @@ -0,0 +1,40 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +
-> > +#ifndef __ABI_CSKY_CACHEFLUSH_H
-> > +#define __ABI_CSKY_CACHEFLUSH_H
-> > +
-> > +/* Keep includes the same across arches.  */
-> > +#include <linux/mm.h>
-> > +
-> > +/*
-> > + * The cache doesn't need to be flushed when TLB entries change when
-> > + * the cache is mapped to physical memory, not virtual memory
-> > + */
-> > +#define flush_cache_all()			do { } while (0)
-> > +#define flush_cache_mm(mm)			do { } while (0)
-> > +#define flush_cache_dup_mm(mm)			do { } while (0)
-> > +#define flush_cache_range(vma, start, end)	do { } while (0)
->                              ^^^ like here..
-#define flush_cache_range(vma, start, end) \
-	do { \
-		if (vma->vm_flags & VM_EXEC) \
-			icache_inv_all(); \
-	}
-
-Hmm ?
-
-I'll improve it later after test.
-
-Best Regards
- Guo Ren
+> diff --git a/drivers/usb/host/xhci-brcm.c b/drivers/usb/host/xhci-brcm.c
+> new file mode 100644
+> index 000000000000..1a7578b8ef6a
+> --- /dev/null
+> +++ b/drivers/usb/host/xhci-brcm.c
+> @@ -0,0 +1,294 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2018, Broadcom */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/clk.h>
+> +#include <linux/phy/phy.h>
+> +
+> +#include "xhci.h"
+> +
+> +static struct hc_driver __read_mostly xhci_brcm_hc_driver;
+> +
+> +#define BRCM_DRIVER_DESC "xHCI Broadcom STB driver"
+> +#define BRCM_DRIVER_NAME "xhci-brcm"
+> +
+> +#define hcd_to_xhci_priv(h) ((struct brcm_priv *)hcd_to_xhci(h)->priv)
+> +
+> +struct brcm_priv {
+> +	struct phy *phy;
+> +};
+> +
+> +static void xhci_brcm_quirks(struct device *dev, struct xhci_hcd *xhci)
+> +{
+> +	/*
+> +	 * As of now platform drivers don't provide MSI support so we ensure
+> +	 * here that the generic code does not try to make a pci_dev from our
+> +	 * dev struct in order to setup MSI
+> +	 */
+> +	xhci->quirks |= XHCI_PLAT;
+> +
+> +	/*
+> +	 * The Broadcom XHCI core does not support save/restore state
+> +	 * so we need to reset on resume.
+> +	 */
+> +	xhci->quirks |= XHCI_RESET_ON_RESUME;
+> +}
+> +
+> +/* called during probe() after chip reset completes */
+> +static int xhci_brcm_setup(struct usb_hcd *hcd)
+> +{
+> +	return xhci_gen_setup(hcd, xhci_brcm_quirks);
+> +}
+> +
+> +static const struct xhci_driver_overrides brcm_overrides __initconst = {
+> +
+> +	.extra_priv_size = sizeof(struct brcm_priv),
+> +	.reset = xhci_brcm_setup,
+> +};
+> +
+> +static int xhci_brcm_probe(struct platform_device *pdev)
+> +{
+> +	const struct hc_driver	*driver;
+> +	struct brcm_priv	*priv;
+> +	struct xhci_hcd		*xhci;
+> +	struct resource         *res;
+> +	struct usb_hcd		*hcd;
+> +	int			ret;
+> +	int			irq;
+> +
+> +	if (usb_disabled())
+> +		return -ENODEV;
+> +
+> +	driver = &xhci_brcm_hc_driver;
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0)
+> +		return -ENODEV;
+> +
+> +	/* Try to set 64-bit DMA first */
+> +	if (WARN_ON(!pdev->dev.dma_mask))
+> +		/* Platform did not initialize dma_mask */
+> +		ret = dma_coerce_mask_and_coherent(&pdev->dev,
+> +						   DMA_BIT_MASK(64));
+> +	else
+> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
+> +
+> +	/* If seting 64-bit DMA mask fails, fall back to 32-bit DMA mask */
+> +	if (ret) {
+> +		ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	pm_runtime_set_active(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +	pm_runtime_get_noresume(&pdev->dev);
+> +
+> +	hcd = __usb_create_hcd(driver, &pdev->dev, &pdev->dev,
+> +			       dev_name(&pdev->dev), NULL);
+> +	if (!hcd) {
+> +		return -ENOMEM;
+> +		goto disable_runtime;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	hcd->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(hcd->regs)) {
+> +		ret = PTR_ERR(hcd->regs);
+> +		goto put_hcd;
+> +	}
+> +
+> +	hcd->rsrc_start = res->start;
+> +	hcd->rsrc_len = resource_size(res);
+> +
+> +	/*
+> +	 * Not all platforms have a clk so it is not an error if the
+> +	 * clock does not exists.
+> +	 */
+> +	xhci = hcd_to_xhci(hcd);
+> +	xhci->clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(xhci->clk)) {
+> +		dev_err(&pdev->dev, "Clock not found in Device Tree\n");
+> +		xhci->clk = NULL;
+> +	}
+> +	device_wakeup_enable(hcd->self.controller);
+> +
+> +	xhci->main_hcd = hcd;
+> +	xhci->shared_hcd = __usb_create_hcd(driver, &pdev->dev, &pdev->dev,
+> +					    dev_name(&pdev->dev), hcd);
+> +	if (!xhci->shared_hcd) {
+> +		ret = -ENOMEM;
+> +		goto disable_clk;
+> +	}
+> +
+> +	if (device_property_read_bool(&pdev->dev, "usb3-lpm-capable"))
+> +		xhci->quirks |= XHCI_LPM_SUPPORT;
+> +
+> +	priv = hcd_to_xhci_priv(hcd);
+> +	priv->phy = devm_of_phy_get_by_index(&pdev->dev, pdev->dev.of_node, 0);
+> +	if (IS_ERR(priv->phy)) {
+> +		dev_err(&pdev->dev, "USB Phy not found.\n");
+> +		ret = PTR_ERR(priv->phy);
+> +		goto put_usb3_hcd;
+> +	}
+> +	ret = phy_init(priv->phy);
+> +	if (ret)
+> +		goto put_usb3_hcd;
+> +
+> +	hcd->skip_phy_initialization = 1;
+> +	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+> +	if (ret)
+> +		goto disable_usb_phy;
+> +
+> +	if (HCC_MAX_PSA(xhci->hcc_params) >= 4)
+> +		xhci->shared_hcd->can_do_streams = 1;
+> +
+> +	ret = usb_add_hcd(xhci->shared_hcd, irq, IRQF_SHARED);
+> +	if (ret)
+> +		goto dealloc_usb2_hcd;
+> +
+> +	device_enable_async_suspend(&pdev->dev);
+> +	pm_runtime_put_noidle(&pdev->dev);
+> +
+> +	/*
+> +	 * Prevent runtime pm from being on as default, users should enable
+> +	 * runtime pm using power/control in sysfs.
+> +	 */
+> +	pm_runtime_forbid(&pdev->dev);
+> +
+> +	return 0;
+> +
+> +dealloc_usb2_hcd:
+> +	usb_remove_hcd(hcd);
+> +
+> +disable_usb_phy:
+> +	phy_exit(priv->phy);
+> +
+> +put_usb3_hcd:
+> +	usb_put_hcd(xhci->shared_hcd);
+> +
+> +disable_clk:
+> +	if (!IS_ERR(xhci->clk))
+> +		clk_disable_unprepare(xhci->clk);
+> +
+> +put_hcd:
+> +	usb_put_hcd(hcd);
+> +
+> +disable_runtime:
+> +	pm_runtime_put_noidle(&pdev->dev);
+> +	pm_runtime_disable(&pdev->dev);
+> +
+> +	return ret;
+> +}
+> +
+> +static int xhci_brcm_remove(struct platform_device *dev)
+> +{
+> +	struct usb_hcd	*hcd = platform_get_drvdata(dev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	struct brcm_priv *priv = hcd_to_xhci_priv(hcd);
+> +
+> +	xhci->xhc_state |= XHCI_STATE_REMOVING;
+> +
+> +	usb_remove_hcd(xhci->shared_hcd);
+> +	usb_remove_hcd(hcd);
+> +	usb_put_hcd(xhci->shared_hcd);
+> +	phy_exit(priv->phy);
+> +	clk_disable_unprepare(xhci->clk);
+> +	usb_put_hcd(hcd);
+> +
+> +	pm_runtime_set_suspended(&dev->dev);
+> +	pm_runtime_disable(&dev->dev);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int xhci_brcm_suspend(struct device *dev)
+> +{
+> +	int ret;
+> +	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +
+> +	ret = xhci_suspend(xhci, device_may_wakeup(dev));
+> +	clk_disable_unprepare(xhci->clk);
+> +	return ret;
+> +}
+> +
+> +static int xhci_brcm_resume(struct device *dev)
+> +{
+> +	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	int err;
+> +
+> +	err = clk_prepare_enable(xhci->clk);
+> +	if (err)
+> +		return err;
+> +	return xhci_resume(xhci, 0);
+> +}
+> +
+> +static int xhci_brcm_runtime_suspend(struct device *dev)
+> +{
+> +	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +
+> +	return xhci_suspend(xhci, true);
+> +}
+> +
+> +static int xhci_brcm_runtime_resume(struct device *dev)
+> +{
+> +	struct usb_hcd	*hcd = dev_get_drvdata(dev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +
+> +	return xhci_resume(xhci, 0);
+> +}
+> +
+> +#endif /* CONFIG_PM_SLEEP */
+> +
+> +
+> +static const struct dev_pm_ops xhci_brcm_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(xhci_brcm_suspend, xhci_brcm_resume)
+> +
+> +	SET_RUNTIME_PM_OPS(xhci_brcm_runtime_suspend,
+> +			   xhci_brcm_runtime_resume,
+> +			   NULL)
+> +};
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id brcm_xhci_of_match[] = {
+> +	{ .compatible = "brcm,xhci-brcm-v2" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, brcm_xhci_of_match);
+> +#endif
+> +
+> +static struct platform_driver xhci_brcm_driver = {
+> +	.probe	= xhci_brcm_probe,
+> +	.remove	= xhci_brcm_remove,
+> +	.driver	= {
+> +		.name = BRCM_DRIVER_NAME,
+> +		.pm = &xhci_brcm_pm_ops,
+> +		.of_match_table = of_match_ptr(brcm_xhci_of_match),
+> +	},
+> +};
+> +
+> +static int __init xhci_brcm_init(void)
+> +{
+> +	pr_info("%s: " BRCM_DRIVER_DESC "\n", BRCM_DRIVER_NAME);
+> +	xhci_init_driver(&xhci_brcm_hc_driver, &brcm_overrides);
+> +	return platform_driver_register(&xhci_brcm_driver);
+> +}
+> +module_init(xhci_brcm_init);
+> +
+> +static void __exit xhci_brcm_exit(void)
+> +{
+> +	platform_driver_unregister(&xhci_brcm_driver);
+> +}
+> +module_exit(xhci_brcm_exit);
+> +
+> +MODULE_ALIAS("platform:xhci-brcm");
+> +MODULE_DESCRIPTION(BRCM_DRIVER_DESC);
+> +MODULE_AUTHOR("Al Cooper");
+> +MODULE_LICENSE("GPL");
