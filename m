@@ -1,33 +1,34 @@
-Return-Path: <SRS0=eZkP=MH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a7744 CMT support
-Date: Tue, 25 Sep 2018 18:18:16 +0100
-Message-Id: <1537895896-25734-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=BnTV=MJ=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH] dt-bindings: timer: ostm: Add R7S9210 support
+Date: Thu, 27 Sep 2018 09:12:58 -0500
+Message-Id: <20180927141258.103071-1-chris.brandt@renesas.com>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Simon Horman <horms+renesas@verge.net.au>, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document SoC specific compatible strings for r8a7744. No driver change
-is needed as the fallback strings will activate the right code.
+The R7S9210 belongs to the RZ/A2 SoC series
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
- 1 file changed, 2 insertions(+)
+FYI: No driver changes were needed
+---
+ Documentation/devicetree/bindings/timer/renesas,ostm.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index b40add2..0a89586 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -24,6 +24,8 @@ Required Properties:
-     - "renesas,r8a73a4-cmt1" for the 48-bit CMT1 device included in r8a73a4.
-     - "renesas,r8a7743-cmt0" for the 32-bit CMT0 device included in r8a7743.
-     - "renesas,r8a7743-cmt1" for the 48-bit CMT1 device included in r8a7743.
-+    - "renesas,r8a7744-cmt0" for the 32-bit CMT0 device included in r8a7744.
-+    - "renesas,r8a7744-cmt1" for the 48-bit CMT1 device included in r8a7744.
-     - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7745.
-     - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
-     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
+diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+index be3ae0fdf775..81a78f8bcf17 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,ostm.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+@@ -9,7 +9,8 @@ Channels are independent from each other.
+ Required Properties:
+ 
+   - compatible: must be one or more of the following:
+-    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
++    - "renesas,r7s72100-ostm" for the R7S72100 (RZ/A1) OSTM
++    - "renesas,r7s9210-ostm" for the R7S9210 (RZ/A2) OSTM
+     - "renesas,ostm" for any OSTM
+ 		This is a fallback for the above renesas,*-ostm entries
+ 
 -- 
-2.7.4
+2.16.1
