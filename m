@@ -1,37 +1,48 @@
-From: Frank Rowand <frowand.list@gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
 Subject: Re: drivers binding to device node with multiple compatible strings
-Date: Fri, 28 Sep 2018 12:43:41 -0700
-Message-ID: <ecbf11cd-a140-fe7e-392a-bccbf8224d14@gmail.com>
+Date: Fri, 28 Sep 2018 22:06:41 +0200
+Message-ID: <4c740fb03dec9dbd45264207da96fcd2051e634f.camel@pengutronix.de>
 References: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
+         <ecbf11cd-a140-fe7e-392a-bccbf8224d14@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <ecbf11cd-a140-fe7e-392a-bccbf8224d14@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>
+To: Frank Rowand <frowand.list@gmail.com>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-+ Frank
+Am Freitag, den 28.09.2018, 12:43 -0700 schrieb Frank Rowand:
+> + Frank
+> 
+> On 09/27/18 15:25, Li Yang wrote:
+> > Hi Rob and Grant,
+> > 
+> > Various device tree specs are recommending to include all the
+> > potential compatible strings in the device node, with the order from
+> > most specific to most general.  But it looks like Linux kernel doesn't
+> > provide a way to bind the device to the most specific driver, however,
+> > the first registered compatible driver will be bound.
+> > 
+> > As more and more generic drivers are added to the Linux kernel, they
+> > are competing with the more specific vendor drivers and causes problem
+> > when both are built into the kernel.  I'm wondering if there is a
+> > generic solution (or in plan) to make the most specific driver bound
+> > to the device.   Or we have to disable the more general driver or
+> > remove the more general compatible string from the device tree?
 
-On 09/27/18 15:25, Li Yang wrote:
-> Hi Rob and Grant,
-> 
-> Various device tree specs are recommending to include all the
-> potential compatible strings in the device node, with the order from
-> most specific to most general.  But it looks like Linux kernel doesn't
-> provide a way to bind the device to the most specific driver, however,
-> the first registered compatible driver will be bound.
-> 
-> As more and more generic drivers are added to the Linux kernel, they
-> are competing with the more specific vendor drivers and causes problem
-> when both are built into the kernel.  I'm wondering if there is a
-> generic solution (or in plan) to make the most specific driver bound
-> to the device.   Or we have to disable the more general driver or
-> remove the more general compatible string from the device tree?
-> 
-> Regards,
-> Leo
-> 
+Not really contributing to the solution, but the hard question to
+answer is when do you know what the most specific driver is? The most
+specific driver might well be a module that can be loaded at any time,
+while there might already be other less specific drivers around.
+
+In general I would say that if your device is specific enough to
+warrant a whole new driver, it should not declare compatibility with
+the generic thing in the compatible, but then this is kind of exporting
+an Linux implementation detail to DT.
+
+Regards,
+Lucas
