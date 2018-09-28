@@ -1,57 +1,54 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [RFC PATCH 7/9] leds: lm3633: Introduce the lm3633 driver
-Date: Fri, 28 Sep 2018 11:48:28 -0500
-Message-ID: <7fe653e5-a554-fe38-6183-217ebf474d48@ti.com>
-References: <20180926130921.12329-1-dmurphy@ti.com>
- <20180926130921.12329-8-dmurphy@ti.com> <20180926223612.GA32286@amd>
- <7da01c06-f0f1-9022-54ec-f851d01f86ee@ti.com> <20180927214752.GG17346@amd>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Fri, 28 Sep 2018 19:21:45 +0200
+Message-ID: <75740733-d0d4-4c0c-838c-f01a5e7291d3@suse.de>
+References: <20180910150403.19476-1-robh@kernel.org>
+ <20180910150403.19476-7-robh@kernel.org>
+ <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
+ <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
+ <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927214752.GG17346@amd>
+In-Reply-To: <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild <linux-kbuild@vger.kernel.org>, arcml
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+Hi Geert,
 
-On 09/27/2018 04:47 PM, Pavel Machek wrote:
-> Hi!
-> 
->>> Duplicate.
->>>
->>> Can we get some more sharing? One way would be to have struct with
->>> all the constants (instead of #defines) use that...?
+Am 13.09.18 um 17:51 schrieb Geert Uytterhoeven:
+> On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+>> Even x86 can enable OF and OF_UNITTEST.
 >>
->> I will look at the adding common constants to but they should be common across
->> more then just 2 devices.  As you can see the LM3632 code is quite different
->> when you add in the flash/torch support.
+>> Another solution might be,
+>> guard it by 'depends on ARCH_SUPPORTS_OF'.
+>>
+>> This is actually what ACPI does.
+>>
+>> menuconfig ACPI
+>>         bool "ACPI (Advanced Configuration and Power Interface) Support"
+>>         depends on ARCH_SUPPORTS_ACPI
+>>          ...
 > 
-> LM3632 is indeed different, I see.
+> ACPI is a real platform feature, as it depends on firmware.
 > 
-> On the other hand, I'd really like to see the code shared, even if it
-> is just for 2 devices. (I believe that family is big enough that we'll
-> likely see more sharing in future).
-> 
+> CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
+> even if it has ACPI ;-)
 
-Yes I have been looking at the other drivers I created that support 11 bit and
-I plan to move them over to call the common code if the code is accepted.
+How would loading a DT overlay work on an ACPI platform? I.e., what
+would it overlay against and how to practically load such a file?
 
-I just finished debugging and getting the 3632 and 3633 drivers working with
-flash/torch and configurable indicator support and there is a lot of code
-diff especially around the node parsing and configuration.
+I wonder whether that could be helpful for USB devices and serdev...
 
-Dan
-
-> Thanks,
-> 
-> 									Pavel
-> 
-
+Cheers,
+Andreas
 
 -- 
-------------------
-Dan Murphy
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
