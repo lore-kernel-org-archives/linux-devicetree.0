@@ -1,32 +1,115 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH] ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees
-Date: Fri, 28 Sep 2018 16:18:38 +0800
-Message-ID: <CAGb2v65xs6zASfVGQp=ZsNa5-D_Xa3DSmD7FfM0D5vhbCwt-DA@mail.gmail.com>
-References: <20180926132339.24737-1-wens@csie.org> <20180927172837.ucxmqfhazt4xwfh2@flea>
+From: Liang Yang <liang.yang@amlogic.com>
+Subject: Re: [PATCH v4 1/2] dt-bindings: nand: meson: add Amlogic NAND
+ controller driver
+Date: Fri, 28 Sep 2018 16:33:23 +0800
+Message-ID: <8f194c47-10bb-cb9d-c626-39f9b22887cb@amlogic.com>
+References: <1537433449-65213-1-git-send-email-jianxin.pan@amlogic.com>
+ <1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com>
+ <20180927181653.GA22153@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927172837.ucxmqfhazt4xwfh2@flea>
+In-Reply-To: <20180927181653.GA22153@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Jianxin Pan <jianxin.pan@amlogic.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 1:28 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Wed, Sep 26, 2018 at 09:23:39PM +0800, Chen-Yu Tsai wrote:
-> > Bananapi released an updated revision of the H3/H5 based Bananapi M2+.
-> > Version 1.2 enables voltage control for the CPU's regulator by using
-> > a GPIO line to toggle a MOSFET that can change the effective resistance
-> > value in the regulator's feedback network.
-> >
-> > This patch adds a common .dtsi file for this new revision, which
-> > includes the original common sunxi-bananapi-m2-plus.dtsi file, and
-> > adds the GPIO-controlled regulator and a cpu-supply reference. H3
-> > and H5 variant dts files are added as well.
-> >
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Applied.
+On 9/28/2018 2:16 AM, Rob Herring wrote:
+> On Thu, Sep 20, 2018 at 04:50:48PM +0800, Jianxin Pan wrote:
+>> From: Liang Yang <liang.yang@amlogic.com>
+>>
+>> Add Amlogic NAND controller dt-bindings for Meson SoC,
+>> Current this driver support GXBB/GXL/AXG platform.
+>>
+>> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
+>> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
+>> ---
+>>   .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
+>>   1 file changed, 60 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+>> new file mode 100644
+>> index 0000000..803df2a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+>> @@ -0,0 +1,60 @@
+>> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
+>> +
+>> +This file documents the properties in addition to those available in
+>> +the MTD NAND bindings.
+>> +
+>> +Required properties:
+>> +- compatible : contains one of:
+>> +  - "amlogic,meson-gxl-nfc"
+>> +  - "amlogic,meson-axg-nfc"
+>> +- clocks     :
+>> +	A list of phandle + clock-specifier pairs for the clocks listed
+>> +	in clock-names.
+>> +
+>> +- clock-names: Should contain the following:
+>> +	"core" - NFC module gate clock
+>> +	"device" - device clock from eMMC sub clock controller
+>> +
+>> +- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
+>> +				controller port C
+>> +
+>> +Optional children nodes:
+>> +Children nodes represent the available nand chips.
+>> +
+>> +Other properties:
+>> +see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
+>> +
+>> +Example demonstrate on AXG SoC:
+>> +
+>> +	sd_emmc_c_clkc: mmc@7000 {
+>> +		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
+>> +		reg = <0x0 0x7000 0x0 0x800>;
+>> +		status = "okay";
+>> +	};
+>> +
+>> +	nand: nfc@7800 {
+> 
+> nand-controller@7800
+> 
+ok, i will fix it.
+
+>> +		compatible = "amlogic,meson-axg-nfc";
+>> +		reg = <0x0 0x7800 0x0 0x100>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
+>> +		status = "disabled";
+>> +
+>> +		clocks = <&clkc CLKID_SD_EMMC_C>,
+>> +			<&sd_emmc_c_clkc CLKID_MMC_DIV>;
+>> +		clock-names = "core", "device";
+>> +		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
+>> +
+>> +		status = "okay";
+> 
+> Don't show status in examples, plus you have it twice.
+> 
+ok, i will fix it.
+>> +
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&nand_pins>;
+>> +
+>> +		nand@0 {
+>> +			reg = <0>;
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +
+>> +			nand-on-flash-bbt;
+>> +		};
+>> +	};
+>> -- 
+>> 1.9.1
+>>
+> 
+> .
+> 
