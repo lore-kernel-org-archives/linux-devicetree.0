@@ -1,89 +1,113 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2] remoteproc: qcom: pas: Add QCS404 remoteprocs
-Date: Fri, 28 Sep 2018 11:57:24 +0530
-Message-ID: <580f4c902aa18e86e5a2e78521d998ee@codeaurora.org>
-References: <20180927190346.2984-1-bjorn.andersson@linaro.org>
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: [PATCH v15 06/16] of/fdt: add helper functions for handling properties
+Date: Fri, 28 Sep 2018 15:48:31 +0900
+Message-ID: <20180928064841.14117-7-takahiro.akashi@linaro.org>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927190346.2984-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20180928064841.14117-1-takahiro.akashi@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Cc: prudo@linux.ibm.com, ard.biesheuvel@linaro.org, james.morse@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-09-28 00:33, Bjorn Andersson wrote:
-> Add compatibles for the three PAS based remote processors found in
-> QCS404.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
+These functions will be used later to handle kexec-specific properties
+in arm64's kexec_file implementation.
 
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+---
+ drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h |  4 +++
+ 2 files changed, 60 insertions(+)
 
-> Changes since v1:
-> - Fixed incorrect sysmon_name, as pointed out by Sibi.
-> 
->  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  3 +++
->  drivers/remoteproc/qcom_adsp_pil.c                   | 12 ++++++++++++
->  2 files changed, 15 insertions(+)
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> index b7d058228185..9c0cff3a5ed8 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> @@ -10,6 +10,9 @@ on the Qualcomm ADSP Hexagon core.
->  		    "qcom,msm8974-adsp-pil"
->  		    "qcom,msm8996-adsp-pil"
->  		    "qcom,msm8996-slpi-pil"
-> +		    "qcom,qcs404-adsp-pas"
-> +		    "qcom,qcs404-cdsp-pas"
-> +		    "qcom,qcs404-wcss-pas"
->  		    "qcom,sdm845-adsp-pas"
->  		    "qcom,sdm845-cdsp-pas"
-> 
-> diff --git a/drivers/remoteproc/qcom_adsp_pil.c
-> b/drivers/remoteproc/qcom_adsp_pil.c
-> index da2254ea1135..d5e58235e83a 100644
-> --- a/drivers/remoteproc/qcom_adsp_pil.c
-> +++ b/drivers/remoteproc/qcom_adsp_pil.c
-> @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init 
-> = {
->  		.ssctl_id = 0x16,
->  };
-> 
-> +static const struct adsp_data wcss_resource_init = {
-> +	.crash_reason_smem = 421,
-> +	.firmware_name = "wcnss.mdt",
-> +	.pas_id = 6,
-> +	.ssr_name = "mpss",
-> +	.sysmon_name = "wcnss",
-> +	.ssctl_id = 0x12,
-> +};
-> +
->  static const struct of_device_id adsp_of_match[] = {
->  	{ .compatible = "qcom,msm8974-adsp-pil", .data = 
-> &adsp_resource_init},
->  	{ .compatible = "qcom,msm8996-adsp-pil", .data = 
-> &adsp_resource_init},
->  	{ .compatible = "qcom,msm8996-slpi-pil", .data = 
-> &slpi_resource_init},
-> +	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init 
-> },
-> +	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init 
-> },
-> +	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init 
-> },
->  	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
->  	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
->  	{ },
-
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 800ad252cf9c..c65c31562ccb 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -25,6 +25,7 @@
+ #include <linux/debugfs.h>
+ #include <linux/serial_core.h>
+ #include <linux/sysfs.h>
++#include <linux/types.h>
+ 
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
+@@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
+ #endif
+ 
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
++
++#define FDT_ALIGN(x, a)	(((x) + (a) - 1) & ~((a) - 1))
++#define FDT_TAGALIGN(x)	(FDT_ALIGN((x), FDT_TAGSIZE))
++
++int fdt_prop_len(const char *prop_name, int len)
++{
++	return (strlen(prop_name) + 1) +
++		sizeof(struct fdt_property) +
++		FDT_TAGALIGN(len);
++}
++
++static void fill_property(void *buf, u64 val64, int cells)
++{
++	__be32 val32;
++
++	while (cells) {
++		val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
++		memcpy(buf, &val32, sizeof(val32));
++		buf += sizeof(val32);
++	}
++}
++
++int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
++						u64 addr, u64 size)
++{
++	int addr_cells, size_cells;
++	char buf[sizeof(__be32) * 2 * 2];
++		/* assume dt_root_[addr|size]_cells <= 2 */
++	void *prop;
++	size_t buf_size;
++
++	addr_cells = fdt_address_cells(fdt, 0);
++	if (addr_cells < 0)
++		return addr_cells;
++	size_cells = fdt_size_cells(fdt, 0);
++	if (size_cells < 0)
++		return size_cells;
++
++	/* if *_cells >= 2, cells can hold 64-bit values anyway */
++	if ((addr_cells == 1) && (addr > U32_MAX))
++		return -FDT_ERR_BADVALUE;
++
++	if ((size_cells == 1) && (size > U32_MAX))
++		return -FDT_ERR_BADVALUE;
++
++	buf_size = (addr_cells + size_cells) * sizeof(u32);
++	prop = buf;
++
++	fill_property(prop, addr, addr_cells);
++	prop += addr_cells * sizeof(u32);
++
++	fill_property(prop, size, size_cells);
++
++	return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
++}
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index b9cd9ebdf9b9..842af6ea92ea 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
+ static inline void unflatten_and_copy_device_tree(void) {}
+ #endif /* CONFIG_OF_EARLY_FLATTREE */
+ 
++int fdt_prop_len(const char *prop_name, int len);
++int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
++						u64 addr, u64 size);
++
+ #endif /* __ASSEMBLY__ */
+ #endif /* _LINUX_OF_FDT_H */
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.19.0
