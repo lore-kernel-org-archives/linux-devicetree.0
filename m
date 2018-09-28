@@ -1,31 +1,86 @@
-From: <Yuiko.Oshino@microchip.com>
-Subject: RE: [PATCH v2 net-next 0/2] Add support for Microchip Technology
- KSZ9131 10/100/1000 Ethernet PHY
-Date: Fri, 28 Sep 2018 14:51:29 +0000
-Message-ID: <6AF1B4F019F8804DB17BB6F30B56F026DCBCBD@CHN-SV-EXMX02.mchp-main.com>
-References: <1538079344-6152-1-git-send-email-yuiko.oshino@microchip.com>
- <7c84dfed-6864-7b25-38d1-9bed1cfea0bc@gmail.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v5 4/9] PCI: mediatek: Convert to use pci_host_probe()
+Date: Fri, 28 Sep 2018 23:41:17 +0800
+Message-ID: <1538149277.23182.7.camel@mtkswgap22>
+References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
+         <1538129080-8206-5-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7c84dfed-6864-7b25-38d1-9bed1cfea0bc@gmail.com>
-Content-Language: en-US
+In-Reply-To: <1538129080-8206-5-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: f.fainelli@gmail.com, davem@davemloft.net, robh+dt@kernel.org, devicetree@vger.kernel.org, andrew@lunn.ch
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, m.felsch@pengutronix.de, Markus.Niebel@tqs.de, netdev@vger.kernel.org, UNGLinuxDriver@microchip.com
+To: honghui.zhang@mediatek.com
+Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Pk9uIDA5LzI3LzIwMTggMDE6MTUgUE0sIFl1aWtvIE9zaGlubyB3cm90ZToNCj4+IFRoaXMgaXMg
-dGhlIGluaXRpYWwgZHJpdmVyIGZvciBNaWNyb2NoaXAgS1NaOTEzMSAxMC8xMDAvMTAwMCBFdGhl
-cm5ldA0KPj4gUEhZDQo+Pg0KPj4gdjI6DQo+PiAtIENyZWF0aW5nIGEgc2VyaWVzIGZyb20gdHdv
-IHJlbGF0ZWQgcGF0Y2hlcy4NCj4NCj5XaGVuIHBlb3BsZSBnaXZlIHlvdSBBY2tlZC1ieSBvciBS
-ZXZpZXdlZC1ieSB0YWdzIGluIHByaW9yIHZlcnNpb25zLCBpdCBpcyB1c3VhbGx5DQo+YSBnb29k
-ICBwcmFjdGljZSB0byBhZGQgdGhlbSB0byB5b3VyIG5leHQgdmVyc2lvbiBvZiB0aGUgcGF0Y2gg
-c3VibWlzc2lvbi4gQWxzbywNCj55b3VyIHBhdGNoZXMgMSBhbmQgMiBkaWQgbm90IHNob3cgdXAg
-YXMgYXMgcmVwbHkgdG8gdGhpcyBjb3ZlciBsZXR0ZXIsIHdoaWxlIHRoZXkNCj5zaG91bGQsIHBs
-ZWFzZSBmaXggdGhpcyBpZiB5b3UgZXZlciBuZWVkIHRvIHN1Ym1pdCBuZXcgcGF0Y2hlcyBpbiB0
-aGUgZnV0dXJlLg0KPg0KPlRoYW5rIHlvdSENCg0KRmxvcmlhbiwNClRoYW5rIHlvdSBmb3IgeW91
-ciByZXZpZXdzLiBTb3JyeSBJIGZvcmdvdCB0byBhZGQgQWNrZWQtYnkuDQpJcyBzZWVtcyBsaWtl
-IEkgYW0gbW9kaWZ5aW5nIHRoZSBkdC1iaW5kaW5nIGRvYywgc28gSSB3aWxsIHN1Ym1pdCB2My4N
-ClRoYW5rIHlvdSENCg0KPg0KPi0tDQo+Rmxvcmlhbg0KDQpZdWlrbw0K
+On Fri, 2018-09-28 at 18:04 +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> Part of mtk_pcie_register_host is an open-coded version of
+> pci_host_probe(). So instead of duplicating this code, use
+> pci_host_probe() directly and remove mtk_pcie_register_host.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 37 ++++++++--------------------------
+>  1 file changed, 8 insertions(+), 29 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index e2c4127..cbf4543 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -1125,34 +1125,6 @@ static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
+>  	return 0;
+>  }
+>  
+> -static int mtk_pcie_register_host(struct pci_host_bridge *host)
+> -{
+> -	struct mtk_pcie *pcie = pci_host_bridge_priv(host);
+> -	struct pci_bus *child;
+> -	int err;
+
+To make the patch simple, could we keep these host->*. and return
+pci_host_probe() directly?
+
+> -	host->busnr = pcie->busn.start;
+> -	host->dev.parent = pcie->dev;
+> -	host->ops = pcie->soc->ops;
+> -	host->map_irq = of_irq_parse_and_map_pci;
+> -	host->swizzle_irq = pci_common_swizzle;
+> -	host->sysdata = pcie;
+> -
+> -	err = pci_scan_root_bus_bridge(host);
+> -	if (err < 0)
+> -		return err;
+> -
+> -	pci_bus_size_bridges(host->bus);
+> -	pci_bus_assign_resources(host->bus);
+> -
+> -	list_for_each_entry(child, &host->bus->children, node)
+> -		pcie_bus_configure_settings(child);
+> -
+> -	pci_bus_add_devices(host->bus);
+> -
+> -	return 0;
+> -}
+> -
+>  static int mtk_pcie_probe(struct platform_device *pdev)
+>  {
+>  	struct device *dev = &pdev->dev;
+> @@ -1179,7 +1151,14 @@ static int mtk_pcie_probe(struct platform_device *pdev)
+>  	if (err)
+>  		goto put_resources;
+>  
+> -	err = mtk_pcie_register_host(host);
+> +	host->busnr = pcie->busn.start;
+> +	host->dev.parent = pcie->dev;
+> +	host->ops = pcie->soc->ops;
+> +	host->map_irq = of_irq_parse_and_map_pci;
+> +	host->swizzle_irq = pci_common_swizzle;
+> +	host->sysdata = pcie;
+> +
+> +	err = pci_host_probe(host);
+>  	if (err)
+>  		goto put_resources;
+>  
