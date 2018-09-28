@@ -1,94 +1,57 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v5 07/14] irqchip/irq-mvebu-sei: add new driver for
- Marvell SEI
-Date: Fri, 28 Sep 2018 18:38:06 +0200
-Message-ID: <20180928183806.176ca084@xps13>
-References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
- <20180830073535.10710-8-miquel.raynal@bootlin.com>
- <86pnx7x5pz.wl-marc.zyngier@arm.com>
- <20180924180133.2ea93762@xps13>
- <9a0de5ac-8cef-0950-e218-0368167ecff8@arm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [RFC PATCH 7/9] leds: lm3633: Introduce the lm3633 driver
+Date: Fri, 28 Sep 2018 11:48:28 -0500
+Message-ID: <7fe653e5-a554-fe38-6183-217ebf474d48@ti.com>
+References: <20180926130921.12329-1-dmurphy@ti.com>
+ <20180926130921.12329-8-dmurphy@ti.com> <20180926223612.GA32286@amd>
+ <7da01c06-f0f1-9022-54ec-f851d01f86ee@ti.com> <20180927214752.GG17346@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9a0de5ac-8cef-0950-e218-0368167ecff8@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180927214752.GG17346@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIEZy
-aSwgMjggU2VwIDIwMTggMTE6MjU6MzIKKzAxMDA6Cgo+IE9uIDI0LzA5LzE4IDE3OjAxLCBNaXF1
-ZWwgUmF5bmFsIHdyb3RlOgo+IAo+IEhpIE1pcXVlbCwKPiAKPiBbLi4uXQo+IAo+ID4gVGhlIGRp
-ZmZlcmVuY2UgaXMgdGhhdCBhdCB0aGlzIHN0YWdlLCB0aGUgaXJxX2RhdGEtPmNoaXAgcG9pbnRl
-ciBvZiB0aGUKPiA+IFNFSSBjb250cm9sbGVyIF9wYXJlbnRfIChpZS4gdGhlIEdJQydzIGNoaXAg
-cG9pbnRlcikgaXMgbm90IHZhbGlkLiBJCj4gPiBkaWdnZWQgYSBsb3QgaW4gdGhpcyBkaXJlY3Rp
-b24gZHVyaW5nIHlvdXIgdmFjYXRpb25zIHRvIGZpbmQgb3V0IHdoYXQgSQo+ID4gbWlzc2VkLCBh
-bmQgSSBlbmRlZCB1cCBjYWxsaW5nIGJhY2sgaXJxX2FsbG9jX2lycXNfcGFyZW50KCkuCj4gPiAK
-PiA+IElmIHlvdSBoYXZlIGFuIGlkZWEgb2YgaG93IHRvIGhhbmRsZSB0aGlzIHByb3Blcmx5LCBJ
-IGFtIGFsbCBlYXJzISAgCj4gCj4gVGhlIG1vc3QgZ2xhcmluZyBwcm9ibGVtIGlzIHRoYXQgeW91
-IGNyZWF0ZSBhIGhpZXJhcmNoeSB0aGF0IGVuY29tcGFzc2VzCj4gdGhlIEdJQywgd2hpY2ggaXMg
-anVzdCB3cm9uZy4gVGhlIGhpZXJhcmNoeSBjYW5ub3QgcG9pbnQgdG8gdGhlIEdJQywKPiBiZWNh
-dXNlIGl0IGVuZC11cCBhcyBhIG11bHRpcGxleGVyLgo+IAo+IFRoaXMgY29kZSBzZXF1ZW5jZSBp
-biB0aGUgcHJvYmUgZnVuY3Rpb24gaXMgdGhlIHJvb3Qgb2YgYWxsIGV2aWw6Cj4gCj4gCS8qIEdl
-dCBhIHJlZmVyZW5jZSB0byB0aGUgcGFyZW50IGRvbWFpbiAqLwo+IAlwYXJlbnQgPSBvZl9pcnFf
-ZmluZF9wYXJlbnQobm9kZSk7Cj4gCWlmICghcGFyZW50KSB7Cj4gCQlkZXZfZXJyKHNlaS0+ZGV2
-LCAiRmFpbGVkIHRvIGZpbmQgcGFyZW50IElSUSBub2RlXG4iKTsKPiAJCXJldCA9IC1FTk9ERVY7
-Cj4gCQlnb3RvIGRpc3Bvc2VfaXJxOwo+IAl9Cj4gCj4gVGhpcyBpcyBhIEdJQyBpbnRlcnJ1cHQs
-IHdoaWNoIGlzIHRoZSBvdXRwdXQgbGluZSBmb3IgdGhlIFNFSSBibG9jay4KPiAKPiAJcGFyZW50
-X2RvbWFpbiA9IGlycV9maW5kX2hvc3QocGFyZW50KTsKPiAJaWYgKCFwYXJlbnRfZG9tYWluKSB7
-Cj4gCQlkZXZfZXJyKHNlaS0+ZGV2LCAiRmFpbGVkIHRvIGZpbmQgcGFyZW50IElSUSBkb21haW5c
-biIpOwo+IAkJcmV0ID0gLUVOT0RFVjsKPiAJCWdvdG8gZGlzcG9zZV9pcnE7Cj4gCX0KPiAKPiBU
-aGF0J3MgdGhlIEdJQyBkb21haW4uCj4gCj4gCS8qIENyZWF0ZSB0aGUgJ3dpcmVkJyBkb21haW4g
-Ki8KPiAJc2VpLT5hcF9kb21haW4gPSBpcnFfZG9tYWluX2NyZWF0ZV9oaWVyYXJjaHkocGFyZW50
-X2RvbWFpbiwgMCwKPiAJCQkJCQkgICAgIHNlaS0+Y2Fwcy0+YXBfcmFuZ2Uuc2l6ZSwKPiAJCQkJ
-CQkgICAgIG9mX25vZGVfdG9fZndub2RlKG5vZGUpLAo+IAkJCQkJCSAgICAgJm12ZWJ1X3NlaV9h
-cF9kb21haW5fb3BzLAo+IAkJCQkJCSAgICAgc2VpKTsKPiAJaWYgKCFzZWktPmFwX2RvbWFpbikg
-ewo+IAkJZGV2X2VycihzZWktPmRldiwgIkZhaWxlZCB0byBjcmVhdGUgQVAgSVJRIGRvbWFpblxu
-Iik7Cj4gCQlyZXQgPSAtRU5PTUVNOwo+IAkJZ290byBkaXNwb3NlX2lycTsKPiAJfQo+IAo+IEFu
-ZCBoZXJlLCB5b3UncmUgc2F5aW5nICJlYWNoIGFuZCBldmVyeSBBUCBTRUkgaW50ZXJydXB0IGlz
-IGRpcmVjdGx5Cj4gbGlua2VkIHRvIGEgdW5pcXVlIEdJQyBpbnRlcnJ1cHQiLiBOb3RoaW5nIGNv
-dWxkIGJlIGZ1cnRoZXIgZnJvbSB0aGUKPiB0cnV0aCwgc2luY2UgYWxsIFNFSSBpbnRlcnJ1cHRz
-IGFyZSBmdW5uZWxsZWQgdGhyb3VnaCBhICpzaW5nbGUqCj4gR0lDIGludGVycnVwdC4gU28geW91
-IGNhbm5vdCBjcmVhdGUgaXQgYXMgYSBoaWVyYXJjaHkgcGFyZW50ZWQgYXQKPiB0aGUgR0lDLgo+
-IAo+IAkvKiBDcmVhdGUgdGhlICdNU0knIGRvbWFpbiAqLwo+IAlzZWktPmNwX2RvbWFpbiA9IGly
-cV9kb21haW5fY3JlYXRlX2hpZXJhcmNoeShwYXJlbnRfZG9tYWluLCAwLAo+IAkJCQkJCSAgICAg
-c2VpLT5jYXBzLT5jcF9yYW5nZS5zaXplLAo+IAkJCQkJCSAgICAgb2Zfbm9kZV90b19md25vZGUo
-bm9kZSksCj4gCQkJCQkJICAgICAmbXZlYnVfc2VpX2NwX2RvbWFpbl9vcHMsCj4gCQkJCQkJICAg
-ICBzZWkpOwo+IAo+IAo+IFNhbWUgdGhpbmcgaGVyZS4KPiAKPiBUaGUgaXNzdWUgaGVyZSBpcyB0
-aGF0IHlvdSdyZSB1c2luZyB0aGUgR0lDIGRvbWFpbiBhcyB0aGUgd2F5IHRvIHJvb3QKPiB0aGUg
-dHdvIGRpc3RpbmN0IFNFSSBkb21haW5zLCB3aGlsZSB0aGV5IHNob3VsZCBiZSByb290ZWQgYXQg
-YW4gaW50ZXJuYWwsCj4gU0VJLXNwZWNpZmljIGRvbWFpbi4gSSdkIHN1Z2dlc3QgYSB0b3BvbG9n
-eSBsaWtlIHRoaXM6Cj4gCj4gICAgICAgICAgICAgICAgICAgQVAtU0VJIC0tLT4gUwo+ICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIEUKPiAgICAgUGxhdC1NU0kgLS0tPiBDUC1TRUkgLS0t
-PiBJCj4gCj4gQ1AtU0VJIGFuZCBBUC1TRUkgdXNlIFNFSSBhcyBhIHBhcmVudC4gU0VJIGRvZXMg
-bm90IGhhdmUgYSBwYXJlbnQsIGJ1dCBpcwo+IGEgY2hhaW5lZCBpcnFjaGlwLgoKVGhhbmtzIHlv
-dSB2ZXJ5IG11Y2ggZm9yIHRoaXMgZGV0YWlsZWQgZXhwbGFuYXRpb24uIFRoZSBhYm92ZSBpcyB3
-aGF0IEkKaW50ZW5kZWQgdG8gZG8sIGJ1dCBtYXliZSB3aGF0IEkgYWNoaWV2ZWQgaXMgbW9yZSBz
-b21ldGhpbmcgbGlrZToKCiAgICAgICAgICAgICAgICAgICBBUC1TRUkgLS0tPiBHCiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICBJCiAgICAgUGxhdC1NU0kgLS0tPiBDUC1TRUkgLS0tPiBD
-CgpBbmQgbm93IEkgdW5kZXJzdGFuZCBiZXR0ZXIgd2hhdCBpcyBib3RoZXJpbmcgeW91IHNpbmNl
-IHRoZSBiZWdpbm5pbmcuCgo+IAo+IEknbSBoYXBweSB0byBoZWxwIHlvdSByZXdvcmtpbmcgdGhp
-cyBwaWVjZSBvZiBjb2RlIGlmIHlvdSB0ZWxsIG1lIGhvdyB0bwo+IHBsdWcgYSBkcml2ZXIgdGhh
-dCBjYW4gdXNlIGl0IG9uIGFuIG1jYmluIHN5c3RlbS4KCk5leHQgd2VlayBJJ2xsIGhhdmUgYW5v
-dGhlciBsb29rIGF0IHRoZSBkcml2ZXIsIGJ1dCBpdCBjb3VsZCBiZSBncmVhdAppZiB5b3UgY291
-bGQgc2hvdyBtZSB0aGUgYmlnIGxpbmVzIG9mIGhvdyB5b3UgaW1hZ2luZSB0aGUgcmV3b3JrLiBJ
-CnByZXBhcmVkIGEgYnJhbmNoIGJhc2VkIG9uIDQuMTktcmMxIHdpdGg6CiogVGhlIElDVS9TRUkg
-c2VyaWVzCiogVGhlIHNlcmllcyBhZGRpbmcgc3VwcG9ydCBmb3IgdGhlcm1hbCBpbnRlcnJ1cHRz
-IGluIHRoZQogIGFybWFkYV90aGVybWFsLmMgZHJpdmVyIChpdCB0cmlnZ2VycyBhIHdpcmVkIFNF
-SSB3aGVuIHRoZSBBUCBpcyB0b28KICBob3Qgb3IgYW4gTVNJIFNFSSB3aGVuIGl0IGlzIGEgQ1Ap
-LgoqIFRoZSBuZWVkZWQgRFQgY2hhbmdlcy4KCmh0dHBzOi8vZ2l0aHViLmNvbS9taXF1ZWxyYXlu
-YWwvbGludXgvdHJlZS9tYXJ2ZWxsLzQuMTktcmMxL2ljdS1zZWkKCgpUaGFua3MsCk1pcXXDqGwK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+Pavel
+
+On 09/27/2018 04:47 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>> Duplicate.
+>>>
+>>> Can we get some more sharing? One way would be to have struct with
+>>> all the constants (instead of #defines) use that...?
+>>
+>> I will look at the adding common constants to but they should be common across
+>> more then just 2 devices.  As you can see the LM3632 code is quite different
+>> when you add in the flash/torch support.
+> 
+> LM3632 is indeed different, I see.
+> 
+> On the other hand, I'd really like to see the code shared, even if it
+> is just for 2 devices. (I believe that family is big enough that we'll
+> likely see more sharing in future).
+> 
+
+Yes I have been looking at the other drivers I created that support 11 bit and
+I plan to move them over to call the common code if the code is accepted.
+
+I just finished debugging and getting the 3632 and 3633 drivers working with
+flash/torch and configurable indicator support and there is a lot of code
+diff especially around the node parsing and configuration.
+
+Dan
+
+> Thanks,
+> 
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
