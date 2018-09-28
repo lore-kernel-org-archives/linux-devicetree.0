@@ -1,42 +1,31 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 1/2] mmc: dt-bindings: add "bus-clk" for MT2712
-Date: Sat, 29 Sep 2018 01:34:00 +0800
-Message-ID: <1538156040.30348.89.camel@mtkswgap22>
-References: <1538134855-11198-1-git-send-email-chaotian.jing@mediatek.com>
-         <1538134855-11198-2-git-send-email-chaotian.jing@mediatek.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: DTS: OMAP5: enable OTG role for DWC3 controller
+Date: Fri, 28 Sep 2018 10:34:10 -0700
+Message-ID: <20180928173410.GK5662@atomide.com>
+References: <0c739437f2331913e6593d651fd782fde3181e0a.1538150039.git.hns@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538134855-11198-2-git-send-email-chaotian.jing@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <0c739437f2331913e6593d651fd782fde3181e0a.1538150039.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pyra-handheld.com, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-09-28 at 19:40 +0800, Chaotian Jing wrote:
-> On MT2712 MSDC0/3, HCLK/bus-clk need gate/ungate together,
-> or will hang when access MSDC register.
+* H. Nikolaus Schaller <hns@goldelico.com> [180928 08:58]:
+> Since SMPS10 and OTG cable detection extcon are described here, and
+> work to enable OTG power when an OTG cable is plugged in, we can
+> define OTG mode in the controller (which is disabled by default in
+> omap5.dtsi).
 > 
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Tested on OMAP5EVM and Pyra.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index f33467a..182299b 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -22,6 +22,7 @@ Required properties:
->  	"source" - source clock (required)
->  	"hclk" - HCLK which used for host (required)
->  	"source_cg" - independent source clock gate (required for MT2712)
-> +	"bus_clk" - bus clk used for internal register access(required for MT2712 MSDC0/3)
+> Suggested-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 
-use a full name in the description such as changing "clk" to "clock" and
+Thanks applying into omap-for-v4.20/dt.
 
-add an extra blank char prior to left parenthesis
+Regards,
 
->  - pinctrl-names: should be "default", "state_uhs"
->  - pinctrl-0: should contain default/high speed pin ctrl
->  - pinctrl-1: should contain uhs mode pin ctrl
+Tony
