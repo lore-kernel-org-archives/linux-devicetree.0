@@ -1,55 +1,28 @@
-Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH 4/4] media: ov5640: reduce rate according to maximum pixel clock frequency
-Date: Thu, 27 Sep 2018 16:46:07 +0200
-Message-ID: <1538059567-8381-5-git-send-email-hugues.fruchet@st.com>
-In-Reply-To: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
-References: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
+Return-Path: <SRS0=s4R5=MK=verge.net.au=horms@kernel.org>
+Date: Fri, 28 Sep 2018 09:14:02 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: arm: Document iW-RainboW-G20D-Qseven-RZG1N
+ board
+Message-ID: <20180928071401.esaypaqdiokexhvo@verge.net.au>
+References: <1537958686-10062-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1537958686-10062-1-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Reduce parallel port rate according to maximum pixel clock frequency
-admissible by camera interface.
-This allows to support any resolutions/framerate requests by decreasing
-the framerate according to maximum camera interface capabilities.
+On Wed, Sep 26, 2018 at 11:44:46AM +0100, Biju Das wrote:
+> Document the iW-RainboW-G20D-Qseven-RZG1N device tree bindings,
+> listing it as a supported board.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/i2c/ov5640.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Thanks,
 
-diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
-index da4d754..9f3c32e 100644
---- a/drivers/media/i2c/ov5640.c
-+++ b/drivers/media/i2c/ov5640.c
-@@ -918,6 +918,8 @@ static int ov5640_set_dvp_pclk(struct ov5640_dev *sensor,
- {
- 	u8 prediv, mult, sysdiv, pll_rdiv, bit_div, pclk_div;
- 	int ret;
-+	struct i2c_client *client = sensor->i2c_client;
-+	unsigned int pclk_freq, max_pclk_freq;
- 	/*
- 	 * FIXME, value of PCLK divider deduced from
- 	 * mode registers hardcoded sequence and tests
-@@ -941,6 +943,16 @@ static int ov5640_set_dvp_pclk(struct ov5640_dev *sensor,
- 	if (ret)
- 		return ret;
- 
-+	pclk_freq = rate / dvp_pclk_divider;
-+	max_pclk_freq = sensor->ep.bus.parallel.pclk_max_frequency;
-+
-+	/* clip rate according to optional maximum pixel clock limit */
-+	if (max_pclk_freq && pclk_freq > max_pclk_freq) {
-+		rate = max_pclk_freq * dvp_pclk_divider;
-+		dev_dbg(&client->dev, "DVP pixel clock too high (%d > %d Hz), reducing rate...\n",
-+			pclk_freq, max_pclk_freq);
-+	}
-+
- 	ov5640_calc_pclk(sensor, rate, &prediv, &mult, &sysdiv, &pll_rdiv,
- 			 &bit_div, &pclk_div);
- 
--- 
-2.7.4
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
