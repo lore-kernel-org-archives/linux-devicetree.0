@@ -1,154 +1,112 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera
- Sensor Interface (CSI)
-Date: Fri, 28 Sep 2018 13:23:45 +0300
-Message-ID: <20180928102345.r2g342tg5mgcwfw6@paasikivi.fi.intel.com>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
- <20180928093833.gwmskm2jvby6x4s6@paasikivi.fi.intel.com>
- <14114604.4rraf0qJLU@avalon>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v5 07/14] irqchip/irq-mvebu-sei: add new driver for
+ Marvell SEI
+Date: Fri, 28 Sep 2018 11:25:32 +0100
+Message-ID: <9a0de5ac-8cef-0950-e218-0368167ecff8@arm.com>
+References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
+ <20180830073535.10710-8-miquel.raynal@bootlin.com>
+ <86pnx7x5pz.wl-marc.zyngier@arm.com> <20180924180133.2ea93762@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <14114604.4rraf0qJLU@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "\"David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infrade
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180924180133.2ea93762@xps13>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On 24/09/18 17:01, Miquel Raynal wrote:
 
-On Fri, Sep 28, 2018 at 12:45:12PM +0300, Laurent Pinchart wrote:
-> Hi Sakari,
+Hi Miquel,
+
+[...]
+
+> The difference is that at this stage, the irq_data->chip pointer of the
+> SEI controller _parent_ (ie. the GIC's chip pointer) is not valid. I
+> digged a lot in this direction during your vacations to find out what I
+> missed, and I ended up calling back irq_alloc_irqs_parent().
 > 
-> On Friday, 28 September 2018 12:38:33 EEST Sakari Ailus wrote:
-> > On Wed, Sep 26, 2018 at 04:40:04PM +0800, Yong Deng wrote:
-> > > Add binding documentation for Allwinner V3s CSI.
-> > > 
-> > > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > 
-> > I know... but I have a few more comments.
-> > 
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Yong Deng <yong.deng@magewell.com>
-> > > ---
-> > > 
-> > >  .../devicetree/bindings/media/sun6i-csi.txt        | 59 +++++++++++++++++
-> > >  1 file changed, 59 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
-> > > 100644
-> > > index 000000000000..2ff47a9507a6
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > @@ -0,0 +1,59 @@
-> > > +Allwinner V3s Camera Sensor Interface
-> > > +-------------------------------------
-> > > +
-> > > +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > > +interface and CSI1 is used for parallel interface.
-> > > +
-> > > +Required properties:
-> > > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> > > +  - reg: base address and size of the memory-mapped region.
-> > > +  - interrupts: interrupt associated to this IP
-> > > +  - clocks: phandles to the clocks feeding the CSI
-> > > +    * bus: the CSI interface clock
-> > > +    * mod: the CSI module clock
-> > > +    * ram: the CSI DRAM clock
-> > > +  - clock-names: the clock names mentioned above
-> > > +  - resets: phandles to the reset line driving the CSI
-> > > +
-> > > +Each CSI node should contain one 'port' child node with one child
-> > > 'endpoint' +node, according to the bindings defined in
-> > > +Documentation/devicetree/bindings/media/video-interfaces.txt. As
-> > > mentioned
-> > > +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel
-> > > or +Bt656 for CSI1.
-> > 
-> > Which port represents CSI0 and which one is CSI1? That needs to be
-> > documented.
-> 
-> There are two CSI devices, named CSI0 and CSI1, with one port each. The CSI0 
-> device supports CSI-2 only, and the CSI1 device parallel (BT.601 or BT.656) 
-> only.
-> 
-> > > +
-> > > +Endpoint node properties for CSI1
-> > 
-> > How about CSI0? I'd expect at least data-lanes, and clock-lanes as well if
-> > the hardware supports lane mapping.
-> 
-> I enquired about that too. As far as I understand, CSI0 isn't supported yet in 
-> the driver due to lack of documentation and lack of open-source vendor-
-> provided source code. While DT bindings are not tied to driver 
-> implementations, it's not the best idea to design DT bindings without at least 
-> one working implementation to test them. I thus proposed just listing CSI0 as 
-> being unsupported for now.
+> If you have an idea of how to handle this properly, I am all ears!
 
-Ack.
+The most glaring problem is that you create a hierarchy that encompasses
+the GIC, which is just wrong. The hierarchy cannot point to the GIC,
+because it end-up as a multiplexer.
 
-We should still define which receiver corresponds to a given port. Probably
-1 for CSI1 would make sense, in order to avoid changing the order the
-hardware already uses. 0 doesn't need to be documented no IMO.
+This code sequence in the probe function is the root of all evil:
 
-What do you think?
+	/* Get a reference to the parent domain */
+	parent = of_irq_find_parent(node);
+	if (!parent) {
+		dev_err(sei->dev, "Failed to find parent IRQ node\n");
+		ret = -ENODEV;
+		goto dispose_irq;
+	}
 
-> 
-> > > +---------------------------------
-> > > +
-> > > +- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
-> > > +			   node
-> > > +- bus-width:		: (required) must be 8, 10, 12 or 16
-> > > +- pclk-sample		: (optional) (default: sample on falling edge)
-> > 
-> > Could you add that video-interfaces.txt contains documentation of these
-> > properties as well? There's a reference above but only discusses port and
-> > endpoint nodes.
-> > 
-> > > +- hsync-active		: (only required for parallel)
-> > > +- vsync-active		: (only required for parallel)
-> > 
-> > As you support both Bt656 and parallel (with sync signals), you can detect
-> > the interface type from the presence of these properties. I think you
-> > should also say that these properties are not allowed on Bt656. So I'd
-> > change this to e.g.
-> > 
-> > 	(required; parallel-only)
-> > 
-> > > +
-> > > +Example:
-> > > +
-> > > +csi1: csi@1cb4000 {
-> > > +	compatible = "allwinner,sun8i-v3s-csi";
-> > > +	reg = <0x01cb4000 0x1000>;
-> > > +	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > > +	clocks = <&ccu CLK_BUS_CSI>,
-> > > +		 <&ccu CLK_CSI1_SCLK>,
-> > > +		 <&ccu CLK_DRAM_CSI>;
-> > > +	clock-names = "bus", "mod", "ram";
-> > > +	resets = <&ccu RST_BUS_CSI>;
-> > > +
-> > > +	port {
-> > > +		/* Parallel bus endpoint */
-> > > +		csi1_ep: endpoint {
-> > > +			remote-endpoint = <&adv7611_ep>;
-> > > +			bus-width = <16>;
-> > > +
-> > > +			/* If hsync-active/vsync-active are missing,
-> > > +			   embedded BT.656 sync is used */
-> > > +			hsync-active = <0>; /* Active low */
-> > > +			vsync-active = <0>; /* Active low */
-> > > +			pclk-sample = <1>;  /* Rising */
-> > > +		};
-> > > +	};
-> > > +};
+This is a GIC interrupt, which is the output line for the SEI block.
 
+	parent_domain = irq_find_host(parent);
+	if (!parent_domain) {
+		dev_err(sei->dev, "Failed to find parent IRQ domain\n");
+		ret = -ENODEV;
+		goto dispose_irq;
+	}
+
+That's the GIC domain.
+
+	/* Create the 'wired' domain */
+	sei->ap_domain = irq_domain_create_hierarchy(parent_domain, 0,
+						     sei->caps->ap_range.size,
+						     of_node_to_fwnode(node),
+						     &mvebu_sei_ap_domain_ops,
+						     sei);
+	if (!sei->ap_domain) {
+		dev_err(sei->dev, "Failed to create AP IRQ domain\n");
+		ret = -ENOMEM;
+		goto dispose_irq;
+	}
+
+And here, you're saying "each and every AP SEI interrupt is directly
+linked to a unique GIC interrupt". Nothing could be further from the
+truth, since all SEI interrupts are funnelled through a *single*
+GIC interrupt. So you cannot create it as a hierarchy parented at
+the GIC.
+
+	/* Create the 'MSI' domain */
+	sei->cp_domain = irq_domain_create_hierarchy(parent_domain, 0,
+						     sei->caps->cp_range.size,
+						     of_node_to_fwnode(node),
+						     &mvebu_sei_cp_domain_ops,
+						     sei);
+
+
+Same thing here.
+
+The issue here is that you're using the GIC domain as the way to root
+the two distinct SEI domains, while they should be rooted at an internal,
+SEI-specific domain. I'd suggest a topology like this:
+
+                  AP-SEI ---> S
+                              E
+    Plat-MSI ---> CP-SEI ---> I
+
+CP-SEI and AP-SEI use SEI as a parent. SEI does not have a parent, but is
+a chained irqchip.
+
+I'm happy to help you reworking this piece of code if you tell me how to
+plug a driver that can use it on an mcbin system.
+
+Thanks,
+
+	M.
 -- 
-Terveisin,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Jazz is not dead. It just smells funny...
