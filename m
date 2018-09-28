@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v5 7/9] PCI: mediatek: Add system pm support for MT2712 and MT7622
-Date: Fri, 28 Sep 2018 18:04:38 +0800
-Message-ID: <1538129080-8206-8-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v5 2/9] PCI: mediatek: Fixup class ID for MT7622 as PCI_CLASS_BRIDGE_PCI
+Date: Fri, 28 Sep 2018 18:04:33 +0800
+Message-ID: <1538129080-8206-3-git-send-email-honghui.zhang@mediatek.com>
 References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,86 +14,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-In order to reduce the PCIe power consuming while system suspend,
-the physical layer should be gated. And the PCIe link should be
-re-established and the related control register values should be
-re-initialized after system resume.
+The PCIe controller of MT7622 has TYPE 1 configuration space type, but
+the HW default class type values is invalid.
 
-Register suspend_noirq & resume_noirq callback functions to allow
-PCIe to come up after resume from RAM.
+The commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
+type for MT7622") have set the class ID for MT7622 as
+PCI_CLASS_BRIDGE_HOST, but it's not workable for MT7622:
+
+In __pci_bus_assign_resources, the framework only setup bridge's
+resource window only if class type is PCI_CLASS_BRIDGE_PCI. Or it
+will leave the subordinary PCIe device's MMIO window un-touched.
+
+Fixup the class type to PCI_CLASS_BRIDGE_PCI as most of the controller
+driver do.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+ drivers/pci/controller/pcie-mediatek.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index be38b38..bd1bde3 100644
+index 264e03f..3ab80d6 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -1172,6 +1172,55 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
+@@ -436,7 +436,7 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 		val = PCI_VENDOR_ID_MEDIATEK;
+ 		writew(val, port->base + PCIE_CONF_VEND_ID);
  
-+static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	struct mtk_pcie_port *port;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
-+
-+	clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	struct mtk_pcie_port *port, *tmp;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	/* In case of EP was removed while system suspend. */
-+	if (list_empty(&pcie->ports))
-+		clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
-@@ -1204,6 +1253,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
+-		val = PCI_CLASS_BRIDGE_HOST;
++		val = PCI_CLASS_BRIDGE_PCI;
+ 		writew(val, port->base + PCIE_CONF_CLASS_ID);
+ 	}
+ 
 -- 
 2.6.4
