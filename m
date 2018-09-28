@@ -1,35 +1,99 @@
-Return-Path: <SRS0=eZkP=MH=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: thermal: rcar: Add device tree support for r8a7744
-Date: Tue, 25 Sep 2018 18:01:04 +0100
-Message-Id: <1537894864-61987-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+MIME-Version: 1.0
+Date: Fri, 28 Sep 2018 07:49:13 -0500
+References: <20180926055803.19071-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20180926055803.19071-1-takahiro.akashi@linaro.org>
+Message-ID: <CAL_JsqKVa2Xk-TJQ_U7bUJK6XXu2ZO36Jb8T3Rnr8uv0BQhwpg@mail.gmail.com>
+Subject: Re: [PATCH] lib: add missing files from libfdt
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add thermal sensor support for r8a7744 SoC. The Renesas RZ/G1N
-(r8a7744) thermal sensor module is identical to the R-Car Gen2 family.
+On Wed, Sep 26, 2018 at 12:57 AM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> There are two files that are part of dtc/libfdt, but don't appear
+> in lib. This patch fixes it.
+> Please note that strtoul() used in fdt_overlay.c is now faked using
+> kstrtoul() (not simple_strtoul() which is obsolute).
+>
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> ---
+>  lib/Makefile        |  2 +-
+>  lib/fdt_addresses.c |  3 +++
+>  lib/fdt_overlay.c   | 23 +++++++++++++++++++++++
+>  3 files changed, 27 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/fdt_addresses.c
+>  create mode 100644 lib/fdt_overlay.c
+>
+> diff --git a/lib/Makefile b/lib/Makefile
+> index ca3f7ebb900d..444c82413a3c 100644
+> --- a/lib/Makefile
+> +++ b/lib/Makefile
+> @@ -202,7 +202,7 @@ KASAN_SANITIZE_stackdepot.o := n
+>  KCOV_INSTRUMENT_stackdepot.o := n
+>
+>  libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
+> -              fdt_empty_tree.o
+> +              fdt_empty_tree.o fdt_addresses.o fdt_overlay.o
 
-No driver change is needed due to the fallback compatible value
-"renesas,rcar-gen2-thermal".
+Nothing in the kernel needs fdt_overlay.o, so we shouldn't add it
+until we do. It used to bloat the kernel size, but maybe that changed
+with using archive files now.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 1 +
- 1 file changed, 1 insertion(+)
+>  $(foreach file, $(libfdt_files), \
+>         $(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
+>  lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+> diff --git a/lib/fdt_addresses.c b/lib/fdt_addresses.c
+> new file mode 100644
+> index 000000000000..241780d09882
+> --- /dev/null
+> +++ b/lib/fdt_addresses.c
+> @@ -0,0 +1,3 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/libfdt_env.h>
+> +#include "../scripts/dtc/libfdt/fdt_addresses.c"
+> diff --git a/lib/fdt_overlay.c b/lib/fdt_overlay.c
+> new file mode 100644
+> index 000000000000..1def7268d313
+> --- /dev/null
+> +++ b/lib/fdt_overlay.c
+> @@ -0,0 +1,23 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <linux/kernel.h>
+> +#include <linux/libfdt_env.h>
+> +
+> +static unsigned long strtoul(const char *nptr, char **endptr, int base)
+> +{
+> +       unsigned long res;
+> +       int ret;
+> +
+> +       /*
+> +        * FIXME: no way to return a correct value of endptr.
+> +        * The values here would be still good for use in fdt_overlay
+> +        */
+> +       *endptr = (char *)nptr;
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 67c563f..01d30a97 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -8,6 +8,7 @@ Required properties:
- 			  Examples with soctypes are:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
- 			    - "renesas,thermal-r8a7743" (RZ/G1M)
-+			    - "renesas,thermal-r8a7744" (RZ/G1N)
- 			    - "renesas,thermal-r8a7779" (R-Car H1)
- 			    - "renesas,thermal-r8a7790" (R-Car H2)
- 			    - "renesas,thermal-r8a7791" (R-Car M2-W)
--- 
-2.7.4
+endptr could be NULL.
+
+> +       ret = kstrtoul(nptr, base, &res);
+
+kstrtoul doesn't handle conversions if there are non-convertible
+characters after the number while strtoul (including simple_strtoul)
+will still do the conversion. We should make sure we don't need that
+behavior. That's doubtful if callers pass non-NULL endptr.
+
+> +       if (ret < 0)
+> +               return ULONG_MAX;
+> +
+> +       (*endptr)++;
+> +       return res;
+> +}
+> +
+> +#include "../scripts/dtc/libfdt/fdt_overlay.c"
+> --
+> 2.18.0
+>
