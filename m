@@ -1,52 +1,47 @@
 From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 0/7] Add-DMA-MDMA-chaining-support
-Date: Fri, 28 Sep 2018 10:36:27 +0200
-Message-ID: <1538123794-17085-1-git-send-email-pierre-yves.mordret@st.com>
+Subject: [PATCH v2 2/7] dt-bindings: stm32-dmamux: Add one cell to support DMA/MDMA chain
+Date: Fri, 28 Sep 2018 10:36:29 +0200
+Message-ID: <1538123794-17085-3-git-send-email-pierre-yves.mordret@st.com>
+References: <1538123794-17085-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538123794-17085-1-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This serie adds support for M2M transfer triggered by STM32 DMA in order to
-transfer data from/to SRAM to/from DDR.
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 
-Normally, this mode should not be needed as transferring data from/to DDR
-is supported by the STM32 DMA.
-However, the STM32 DMA don't have the ability to generate burst transfer
-on the DDR as it only embeds only a 4-word FIFO although the minimal burst
-length on the DDR is 8 words.
-Due to this constraint, the STM32 DMA transfers data from/to DDR in a
-single way and could lead to pollute the DDR.
-To avoid this, we have to use SRAM for all transfers where STM32 DMA is
-involved.
+Add one cell to support DMA/MDMA chaining.
 
-An Hw design has been specially put in place to allow this chaining where DMA
-interrupt is connected on GIC and MDMA request line as well. This grants the
-possibility to trigger an MDMA transfer from the completion of DMA.
-At the same time MDMA has the ability to acknowlege DMA. The aim is to have an
-self refreching mechanism to transfer from/to device to/from DDR with minimal
-sw support.
-For instance the DMA is set in cyclic double buffering to feed SRAM and MDMA
-transfer to DDR thanks to LLI.
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+---
+  Version history:
+    v1:
+       * Initial
+---
+---
+ Documentation/devicetree/bindings/dma/stm32-dmamux.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-M'boumba Cedric Madianga (7):
-  dt-bindings: stm32-dma: Add DMA/MDMA chaining support bindings
-  dt-bindings: stm32-dmamux: Add one cell to support DMA/MDMA chain
-  dt-bindings: stm32-mdma: Add DMA/MDMA chaining support bindings
-  dmaengine: stm32-dma: Add DMA/MDMA chaining support
-  dmaengine: stm32-mdma: Add DMA/MDMA chaining support
-  dmaengine: stm32-dma: enable descriptor_reuse
-  dmaengine: stm32-mdma: enable descriptor_reuse
-
- .../devicetree/bindings/dma/stm32-dma.txt          |  27 +-
- .../devicetree/bindings/dma/stm32-dmamux.txt       |   6 +-
- .../devicetree/bindings/dma/stm32-mdma.txt         |  12 +-
- drivers/dma/stm32-dma.c                            | 903 ++++++++++++++++++---
- drivers/dma/stm32-mdma.c                           | 133 ++-
- 5 files changed, 949 insertions(+), 132 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/stm32-dmamux.txt b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+index 1b893b2..5e92b59 100644
+--- a/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
++++ b/Documentation/devicetree/bindings/dma/stm32-dmamux.txt
+@@ -4,9 +4,9 @@ Required properties:
+ - compatible:	"st,stm32h7-dmamux"
+ - reg:		Memory map for accessing module
+ - #dma-cells:	Should be set to <3>.
+-		First parameter is request line number.
+-		Second is DMA channel configuration
+-		Third is Fifo threshold
++-		First parameter is request line number.
++-		Second is DMA channel configuration
++-		Third is a 32bit bitfield
+ 		For more details about the three cells, please see
+ 		stm32-dma.txt documentation binding file
+ - dma-masters:	Phandle pointing to the DMA controllers.
 -- 
 2.7.4
