@@ -1,49 +1,89 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v4] ARM: dts: dra7: Enable workaround for errata i870 in PCIe host mode
-Date: Fri, 28 Sep 2018 11:34:42 +0530
-Message-ID: <20180928060442.24312-1-vigneshr@ti.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2] remoteproc: qcom: pas: Add QCS404 remoteprocs
+Date: Fri, 28 Sep 2018 11:57:24 +0530
+Message-ID: <580f4c902aa18e86e5a2e78521d998ee@codeaurora.org>
+References: <20180927190346.2984-1-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180927190346.2984-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add ti,syscon-unaligned-access property to PCIe RC nodes to set
-appropriate bits in CTRL_CORE_SMA_SW_7 register to enable workaround for
-errata i870.
+On 2018-09-28 00:33, Bjorn Andersson wrote:
+> Add compatibles for the three PAS based remote processors found in
+> QCS404.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
----
-This patch is split from v3 here:
-https://lore.kernel.org/patchwork/cover/967020/
-Dependent DT binding documentation and driver changes are now merged via
-PCI tree and part of next-20180928
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 
- arch/arm/boot/dts/dra7.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+> Changes since v1:
+> - Fixed incorrect sysmon_name, as pointed out by Sibi.
+> 
+>  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  3 +++
+>  drivers/remoteproc/qcom_adsp_pil.c                   | 12 ++++++++++++
+>  2 files changed, 15 insertions(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> index b7d058228185..9c0cff3a5ed8 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> @@ -10,6 +10,9 @@ on the Qualcomm ADSP Hexagon core.
+>  		    "qcom,msm8974-adsp-pil"
+>  		    "qcom,msm8996-adsp-pil"
+>  		    "qcom,msm8996-slpi-pil"
+> +		    "qcom,qcs404-adsp-pas"
+> +		    "qcom,qcs404-cdsp-pas"
+> +		    "qcom,qcs404-wcss-pas"
+>  		    "qcom,sdm845-adsp-pas"
+>  		    "qcom,sdm845-cdsp-pas"
+> 
+> diff --git a/drivers/remoteproc/qcom_adsp_pil.c
+> b/drivers/remoteproc/qcom_adsp_pil.c
+> index da2254ea1135..d5e58235e83a 100644
+> --- a/drivers/remoteproc/qcom_adsp_pil.c
+> +++ b/drivers/remoteproc/qcom_adsp_pil.c
+> @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init 
+> = {
+>  		.ssctl_id = 0x16,
+>  };
+> 
+> +static const struct adsp_data wcss_resource_init = {
+> +	.crash_reason_smem = 421,
+> +	.firmware_name = "wcnss.mdt",
+> +	.pas_id = 6,
+> +	.ssr_name = "mpss",
+> +	.sysmon_name = "wcnss",
+> +	.ssctl_id = 0x12,
+> +};
+> +
+>  static const struct of_device_id adsp_of_match[] = {
+>  	{ .compatible = "qcom,msm8974-adsp-pil", .data = 
+> &adsp_resource_init},
+>  	{ .compatible = "qcom,msm8996-adsp-pil", .data = 
+> &adsp_resource_init},
+>  	{ .compatible = "qcom,msm8996-slpi-pil", .data = 
+> &slpi_resource_init},
+> +	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init 
+> },
+> +	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init 
+> },
+> +	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init 
+> },
+>  	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
+>  	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
+>  	{ },
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 9136b3cf9a2c..7ce24b282d42 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -336,6 +336,7 @@
- 						<0 0 0 2 &pcie1_intc 2>,
- 						<0 0 0 3 &pcie1_intc 3>,
- 						<0 0 0 4 &pcie1_intc 4>;
-+				ti,syscon-unaligned-access = <&scm_conf1 0x14 1>;
- 				status = "disabled";
- 				pcie1_intc: interrupt-controller {
- 					interrupt-controller;
-@@ -387,6 +388,7 @@
- 						<0 0 0 2 &pcie2_intc 2>,
- 						<0 0 0 3 &pcie2_intc 3>,
- 						<0 0 0 4 &pcie2_intc 4>;
-+				ti,syscon-unaligned-access = <&scm_conf1 0x14 2>;
- 				pcie2_intc: interrupt-controller {
- 					interrupt-controller;
- 					#address-cells = <0>;
 -- 
-2.19.0
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
