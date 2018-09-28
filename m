@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v5 3/9] PCI: mediatek: Remove the redundant dev->pm_domain check
-Date: Fri, 28 Sep 2018 18:04:34 +0800
-Message-ID: <1538129080-8206-4-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v5 6/9] PCI: mediatek: Enable msi after clock enabled
+Date: Fri, 28 Sep 2018 18:04:37 +0800
+Message-ID: <1538129080-8206-7-git-send-email-honghui.zhang@mediatek.com>
 References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,56 +14,37 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-It's no needed to check whether device have pm_domain attached before
-calling the pm_runtime_XXX interface, remove it.
+The clocks was not enabled when enable MSI. This patch fix this
+issue by calling mtk_pcie_enable_msi in mtk_pcie_startup_port_v2
+since the clock was all enabled at that time.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index 3ab80d6..e2c4127 100644
+index d150be1..be38b38 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -225,10 +225,8 @@ static void mtk_pcie_subsys_powerdown(struct mtk_pcie *pcie)
- 
- 	clk_disable_unprepare(pcie->free_ck);
- 
--	if (dev->pm_domain) {
--		pm_runtime_put_sync(dev);
--		pm_runtime_disable(dev);
--	}
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- }
- 
- static void mtk_pcie_port_free(struct mtk_pcie_port *port)
-@@ -1002,10 +1000,8 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 		pcie->free_ck = NULL;
+@@ -572,8 +572,6 @@ static int mtk_pcie_init_irq_domain(struct mtk_pcie_port *port,
+ 		ret = mtk_pcie_allocate_msi_domains(port);
+ 		if (ret)
+ 			return ret;
+-
+-		mtk_pcie_enable_msi(port);
  	}
  
--	if (dev->pm_domain) {
--		pm_runtime_enable(dev);
--		pm_runtime_get_sync(dev);
--	}
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_sync(dev);
- 
- 	/* enable top level clock */
- 	err = clk_prepare_enable(pcie->free_ck);
-@@ -1017,10 +1013,8 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
  	return 0;
+@@ -694,6 +692,9 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+ 	val &= ~INTX_MASK;
+ 	writel(val, port->base + PCIE_INT_MASK);
  
- err_free_ck:
--	if (dev->pm_domain) {
--		pm_runtime_put_sync(dev);
--		pm_runtime_disable(dev);
--	}
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 
- 	return err;
- }
++	if (IS_ENABLED(CONFIG_PCI_MSI))
++		mtk_pcie_enable_msi(port);
++
+ 	/* Set AHB to PCIe translation windows */
+ 	size = mem->end - mem->start;
+ 	val = lower_32_bits(mem->start) | AHB2PCIE_SIZE(fls(size));
 -- 
 2.6.4
