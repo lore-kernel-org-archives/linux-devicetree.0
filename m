@@ -1,54 +1,47 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Fri, 28 Sep 2018 19:21:45 +0200
-Message-ID: <75740733-d0d4-4c0c-838c-f01a5e7291d3@suse.de>
-References: <20180910150403.19476-1-robh@kernel.org>
- <20180910150403.19476-7-robh@kernel.org>
- <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
- <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
- <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v4] ARM: dts: dra7: Fix up unaligned access setting for
+ PCIe EP
+Date: Fri, 28 Sep 2018 10:26:30 -0700
+Message-ID: <20180928172630.GI5662@atomide.com>
+References: <20180925052151.9537-1-vigneshr@ti.com>
+ <20180926172711.GW5662@atomide.com>
+ <eb3bb7ba-e32d-aa0f-1877-985ab3d6fe4c@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <eb3bb7ba-e32d-aa0f-1877-985ab3d6fe4c@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild <linux-kbuild@vger.kernel.org>, arcml
+To: Vignesh R <vigneshr@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Am 13.09.18 um 17:51 schrieb Geert Uytterhoeven:
-> On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
->> Even x86 can enable OF and OF_UNITTEST.
->>
->> Another solution might be,
->> guard it by 'depends on ARCH_SUPPORTS_OF'.
->>
->> This is actually what ACPI does.
->>
->> menuconfig ACPI
->>         bool "ACPI (Advanced Configuration and Power Interface) Support"
->>         depends on ARCH_SUPPORTS_ACPI
->>          ...
+* Vignesh R <vigneshr@ti.com> [180928 05:31]:
 > 
-> ACPI is a real platform feature, as it depends on firmware.
 > 
-> CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
-> even if it has ACPI ;-)
+> On Wednesday 26 September 2018 10:57 PM, Tony Lindgren wrote:
+> > * Vignesh R <vigneshr@ti.com> [180924 22:25]:
+> >> Bit positions of PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE and
+> >> PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE in CTRL_CORE_SMA_SW_7 are
+> >> incorrectly documented in the TRM. In fact, the bit positions are
+> >> swapped. Update the DT bindings for PCIe EP to reflect the same.
+> >>
+> >> Fixes: d23f3839fe97 ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> >> ---
+> >>
+> >> This patch is split from v3 here:
+> >> https://lore.kernel.org/patchwork/cover/967020/
+> >> Patch can be applied standalone and has no dependencies on other patches
+> >> in v3.
+> > 
+> > Hmm is this needed for v4.19-rc cycle or can this wait for
+> > v4.20 merge window?
+> > 
+> 
+> v4.20 should be fine.
 
-How would loading a DT overlay work on an ACPI platform? I.e., what
-would it overlay against and how to practically load such a file?
+OK thanks applying into omap-for-v4.20/dt then.
 
-I wonder whether that could be helpful for USB devices and serdev...
-
-Cheers,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Tony
