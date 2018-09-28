@@ -1,49 +1,77 @@
 Return-Path: <SRS0=qBHb=MK=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57682 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726045AbeI2AVk (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 28 Sep 2018 20:21:40 -0400
-Date: Fri, 28 Sep 2018 10:56:43 -0700
-From: Tony Lindgren <tony@atomide.com>
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:35968 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729359AbeI1SCJ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 28 Sep 2018 14:02:09 -0400
 Subject: Re: [PATCH 0/4] Update dra7 dts to probe with ti-sysc
-Message-ID: <20180928175643.GL5662@atomide.com>
 References: <20180927210542.69703-1-tony@atomide.com>
- <c67f54bb-8995-5d5b-053d-3caa25772b35@ti.com>
+From: Keerthy <j-keerthy@ti.com>
+Message-ID: <c67f54bb-8995-5d5b-053d-3caa25772b35@ti.com>
+Date: Fri, 28 Sep 2018 17:08:41 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c67f54bb-8995-5d5b-053d-3caa25772b35@ti.com>
+In-Reply-To: <20180927210542.69703-1-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: devicetree-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org
+Cc: =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-ID: <devicetree@vger.kernel.org>
 
-* Keerthy <j-keerthy@ti.com> [180928 11:43]:
-> I tried [1]. I see gpio throwing some errors while suspending:
+
+
+On Friday 28 September 2018 02:35 AM, Tony Lindgren wrote:
+> Hi all,
 > 
-> https://pastebin.ubuntu.com/p/92qbWh4rgW/
+> Here are four patches to make dra7 l4 devices to probe with ti-sysc
+> driver similar to what we've already done for omap4. The related
+> legacy hwmod platform data will be removed few merge cycles later.
 > 
-> [   64.610205] omap_gpio 44e07000.gpio: sysc_child_suspend_noirq busy at
-> 1257: -16
-> [   64.612509] omap_gpio 48320000.gpio: sysc_child_suspend_noirq busy at
-> 1257: -16
-> [   64.612754] omap_gpio 481ae000.gpio: sysc_child_suspend_noirq busy at
-> 1257: -16
+> I've only lightly tested these so far, but then again with this being
+> SoC #4 to get converted things should be quite trivial now.
+> 
+> These are based on v4.19-rc5 merged with my omap-for-v4.20/dt branch
+> plus the following additional series of patches:
+> 
+> [PATCH 00/11] clk: ti: clkctrl data split based on clkdm boundaries
+> [PATCH 0/3] ARM: dts: am3/am4/dra7 clkctrl data conversion
+> [PATCH 0/4] TI sysc driver updates for am335x and am437x
+> [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+> [PATCH] i2c: omap: Use noirq system sleep pm ops to idle device for suspend
+> 
+> At least v4.19-rc3 is needed for commit 18eb8aea7fb2 ("net: ethernet:
+> cpsw-phy-sel: prefer phandle for phy sel") and omap-for-v4.20/dt
+> is needed to avoid conflicts with clean-up.
+> 
+> I've also pushed out a new temporary branch for people to test as
+> as omap-for-v4.20/dt-ti-sysc-tmp-testing-v2 [0][1].
+> 
+> Regards,
+> 
+> Tony
+> 
+> [0] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v4.20/dt-ti-sysc-tmp-testing-v2
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git/log/?h=omap-for-v4.20/dt-ti-sysc-tmp-testing-v2
 
-Thanks for testing :) Yeah I'm seeing those warnings too, the system
-came up just fine from resume right?
+Hey Tony,
 
-With the gpio notifier changes we now only idle gpio interrupts
-from the notifier so in general those warnings are harmless. We
-should probably just make these warnings dev_dbg now.
+I tried [1]. I see gpio throwing some errors while suspending:
 
-Those warnings should only appear for gpio instances with interrupts
-as in grep gpio /proc/interrupts. And we only idle those gpio banks
-if a deeper idle state is entered, which is not the case for dra7.
+https://pastebin.ubuntu.com/p/92qbWh4rgW/
 
-I'm mostly worried that all the devices work as before on dra7
-though, like LCD, USB, SATA and so on..
+[   64.610205] omap_gpio 44e07000.gpio: sysc_child_suspend_noirq busy at
+1257: -16
+[   64.612509] omap_gpio 48320000.gpio: sysc_child_suspend_noirq busy at
+1257: -16
+[   64.612754] omap_gpio 481ae000.gpio: sysc_child_suspend_noirq busy at
+1257: -16
 
 Regards,
-
-Tony
+Keerthy
+> 
+> Tony Lindgren (4):
+>   bus: ti-sysc: Detect timer and gpio on dra7
+>   bus: ti-sysc: Detect devices for debug on dra7
+>   ARM: dts: dra7: Add l4 interconnect hierarchy and ti-sysc data
+>   ARM: dts: dra7: Move l4 child devices to probe them with ti-sysc
+> 
