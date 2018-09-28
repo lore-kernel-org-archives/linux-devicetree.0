@@ -1,117 +1,84 @@
-Return-Path: <SRS0=MagM=MB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from inva021.nxp.com ([92.121.34.21]:36930 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725973AbeISNTX (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 19 Sep 2018 09:19:23 -0400
-From: andy.tang@nxp.com
-Subject: [PATCH 2/3] powerpc: t102x: upgrade the legacy clock node
-Date: Wed, 19 Sep 2018 15:39:05 +0800
-Message-Id: <20180919073906.34187-2-andy.tang@nxp.com>
-In-Reply-To: <20180919073906.34187-1-andy.tang@nxp.com>
-References: <20180919073906.34187-1-andy.tang@nxp.com>
-Sender: devicetree-owner@vger.kernel.org
-To: mturquette@baylibre.com, oss@buserror.net
-Cc: sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+MIME-Version: 1.0
+Date: Fri, 28 Sep 2018 13:49:22 -0500
+References: <20180830194356.14059-1-digetx@gmail.com>
+	<20180830194356.14059-2-digetx@gmail.com>
+	<20180925165810.GA32430@bogus>
+	<074a169d-294b-ad4b-ddbd-6db742278f2a@gmail.com>
+	<CAL_JsqLf+_Q8ZQAo=k8yQ4XKMccUHpm8WsQ3z_Q-PMY6gbQbbA@mail.gmail.com>
+	<2f060ecc-44a2-9a8f-459e-5ae21990b65e@gmail.com>
+In-Reply-To: <2f060ecc-44a2-9a8f-459e-5ae21990b65e@gmail.com>
+Message-ID: <CAL_JsqK-7BA+AU1QKN_404wAK=Qx6Kz9OnMLxTxokPK77JphVg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] dt-bindings: cpufreq: Add binding for NVIDIA Tegra20/30
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Jon Hunter <jonathanh@nvidia.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Yuantian Tang <andy.tang@nxp.com>
 
-There are issues in current lagacy clock node.
-The compatible string is not correct and the clocks property
-refers to the wrong node too.
-Instead of fixing them, upgrade it to use new clock binding
-which has been already ready to use.
-
-Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
----
- arch/powerpc/boot/dts/fsl/qoriq-clockgen.dtsi |   23 +++++++++++++++++++++++
- arch/powerpc/boot/dts/fsl/t1023si-post.dtsi   |   20 ++------------------
- arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi    |    4 ++--
- 3 files changed, 27 insertions(+), 20 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/fsl/qoriq-clockgen.dtsi
-
-diff --git a/arch/powerpc/boot/dts/fsl/qoriq-clockgen.dtsi b/arch/powerpc/boot/dts/fsl/qoriq-clockgen.dtsi
-new file mode 100644
-index 0000000..49c6f86
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qoriq-clockgen.dtsi
-@@ -0,0 +1,23 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device Tree Include file for NXP PowerPC family SoC.
-+ *
-+ * Copyright 2017 NXP
-+ *
-+ * Tang Yuantian <andy.tang@nxp.com>
-+ *
-+ */
-+
-+sysclk: sysclk {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <100000000>;
-+	clock-output-names = "sysclk";
-+};
-+
-+clockgen: global-utilities@e1000 {
-+	compatible = "fsl,qoriq-clockgen";
-+	reg = <0xe1000 0x1000>;
-+	#clock-cells = <2>;
-+	clocks = <&sysclk>;
-+};
-diff --git a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-index 4908af5..c77d3e9 100644
---- a/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t1023si-post.dtsi
-@@ -342,25 +342,9 @@
- 		fsl,liodn-bits = <12>;
- 	};
- 
--/include/ "qoriq-clockgen2.dtsi"
-+/include/ "qoriq-clockgen.dtsi"
- 	global-utilities@e1000 {
--		compatible = "fsl,t1023-clockgen", "fsl,qoriq-clockgen-2.0";
--		mux0: mux0@0 {
--			#clock-cells = <0>;
--			reg = <0x0 4>;
--			compatible = "fsl,core-mux-clock";
--			clocks = <&pll0 0>, <&pll0 1>;
--			clock-names = "pll0_0", "pll0_1";
--			clock-output-names = "cmux0";
--		};
--		mux1: mux1@20 {
--			#clock-cells = <0>;
--			reg = <0x20 4>;
--			compatible = "fsl,core-mux-clock";
--			clocks = <&pll0 0>, <&pll0 1>;
--			clock-names = "pll0_0", "pll0_1";
--			clock-output-names = "cmux1";
--		};
-+		compatible = "fsl,t1023-clockgen";
- 	};
- 
- 	rcpm: global-utilities@e2000 {
-diff --git a/arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi b/arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi
-index 9d08a36..d87ea13 100644
---- a/arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t102xsi-pre.dtsi
-@@ -74,7 +74,7 @@
- 		cpu0: PowerPC,e5500@0 {
- 			device_type = "cpu";
- 			reg = <0>;
--			clocks = <&mux0>;
-+			clocks = <&clockgen 1 0>;
- 			next-level-cache = <&L2_1>;
- 			#cooling-cells = <2>;
- 			L2_1: l2-cache {
-@@ -84,7 +84,7 @@
- 		cpu1: PowerPC,e5500@1 {
- 			device_type = "cpu";
- 			reg = <1>;
--			clocks = <&mux1>;
-+			clocks = <&clockgen 1 1>;
- 			next-level-cache = <&L2_2>;
- 			#cooling-cells = <2>;
- 			L2_2: l2-cache {
--- 
-1.7.1
+On Tue, Sep 25, 2018 at 4:58 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+>
+> On 9/25/18 10:36 PM, Rob Herring wrote:
+> > On Tue, Sep 25, 2018 at 12:29 PM Dmitry Osipenko <digetx@gmail.com> wrote:
+> >>
+> >> On 9/25/18 7:58 PM, Rob Herring wrote:
+> >>> On Thu, Aug 30, 2018 at 10:43:52PM +0300, Dmitry Osipenko wrote:
+> >>>> Add device-tree binding that describes CPU frequency-scaling hardware
+> >>>> found on NVIDIA Tegra20/30 SoC's.
+> >>>>
+> >>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> >>>> ---
+> >>>>  .../cpufreq/nvidia,tegra20-cpufreq.txt        | 38 +++++++++++++++++++
+> >>>>  1 file changed, 38 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> >>>> new file mode 100644
+> >>>> index 000000000000..2c51f676e958
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra20-cpufreq.txt
+> >>>> @@ -0,0 +1,38 @@
+> >>>> +Binding for NVIDIA Tegra20 CPUFreq
+> >>>> +==================================
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- clocks: Must contain an entry for each entry in clock-names.
+> >>>> +  See ../clocks/clock-bindings.txt for details.
+> >>>> +- clock-names: Must include the following entries:
+> >>>> +  - pll_x: main-parent for CPU clock, must be the first entry
+> >>>> +  - backup: intermediate-parent for CPU clock
+> >>>> +  - cpu: the CPU clock
+> >>>
+> >>> The Cortex A9 has CLK, PERIPHCLK, and PERIPHCLKEN clocks and only CLK
+> >>> is used for the cpu core. You can't just define your own clocks that
+> >>> you happen to want access to.
+> >>>
+> >>> Otherwise, you're not defining anything new here, so a binding document
+> >>> isn't required.
+> >>
+> >> PERIPHCLK is a different thing.
+> >
+> > Right, that's what I meant. Only CLK is used.
+> >
+> >> Here we are defining the CPU clock and
+> >> its *parent* sources, the PLLX (main) and backup (intermediate clock
+> >> that is used while PLLX changes its rate). These are not some random
+> >> clocks "that you happen to want access to", they are essential for the
+> >> Tegra CPUFreq driver, CPU is running off them.
+> >
+> > assigned-clocks is generally how we get parent clocks in this
+> > situation. "clocks" is for what physical clocks are attached to a
+> > given block. ARM very clearly documents the clocks for their IP
+> > blocks.
+>
+> Okay, seems I see now what you're meaning. The PLLX is specifically
+> dedicated to CPU HW on Tegra, so it shouldn't be questioning to put it
+> within the CPU node, unlike the backup.
+>
+> The assigned-clocks are about static clocks configuration, that is
+> exactly opposite to what is needed. I'm not sure what you are trying to
+> convey.. we don't need to get the parent clock, but set it.
+>
+> How the backup/intermediate clock should be represented then? It is a
+> part of HW description which potentially may vary depending on the board
+> configuration.
