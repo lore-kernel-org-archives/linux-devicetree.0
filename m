@@ -1,132 +1,51 @@
-From: =?UTF-8?q?SZ=20Lin=20=28=E6=9E=97=E4=B8=8A=E6=99=BA=29?=
-        <sz.lin@moxa.com>
-Subject: [PATCH v2 3/3] ARM: dts: am335x: add support for Moxa UC-2101 open platform
-Date: Fri, 28 Sep 2018 18:47:52 +0800
-Message-ID: <20180928104754.30866-1-sz.lin@moxa.com>
+From: Leilk Liu <leilk.liu@mediatek.com>
+Subject: [PATCH v5 0/3] Add Mediatek SPI slave driver
+Date: Fri, 28 Sep 2018 18:53:02 +0800
+Message-ID: <1538131985-9471-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: =?UTF-8?q?SZ=20Lin=20=28=E6=9E=97=E4=B8=8A=E6=99=BA=29?= <sz.lin@moxa.com>, Wes Huang <wes.huang@moxa.com>, Fero JD Zhou <FeroJD.Zhou@moxa.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Add support for Moxa UC-2101 open platform
+>From 5479c692171dc52990290d88c505c074fa4db7d4 Mon Sep 17 00:00:00 2001
+From: Leilk Liu <leilk.liu@mediatek.com>
+Date: Fri, 28 Sep 2018 18:37:40 +0800
+Subject: [PATCH v5 0/3] Add Mediatek SPI slave driver
 
-The UC-2101 computing platform is designed for industrial embedded
-data acquisition and processing applications.
+v5:
+1. Fix typos in bindings file.
 
-The features of UC-2101 are:
-* eMMC
-* SPI flash
-* 1x LAN
-* 1x RS-232/422/485 ports, software-selectable
-* EEPROM
-* TPM 2.0
-* Watchdog
-* RTC
-* User gpio-keys
-* User LEDs
-* User button
+v4:
+1. Fix Mark Brown review comment about kconfig & driver.
 
-Signed-off-by: Wes Huang (黃淵河) <wes.huang@moxa.com>
-Signed-off-by: Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
-Signed-off-by: SZ Lin (林上智) <sz.lin@moxa.com>
----
-Changes from v1:
-- Use property phy-handle instead of phy_id
+v3:
+1. Fix Rob Herring review comment about bindings.
+2. remove unused variables in driver.
 
- arch/arm/boot/dts/Makefile                |  1 +
- arch/arm/boot/dts/am335x-moxa-uc-2101.dts | 69 +++++++++++++++++++++++
- 2 files changed, 70 insertions(+)
- create mode 100644 arch/arm/boot/dts/am335x-moxa-uc-2101.dts
+v2:
+1. Fix Sean Wang review comment.
+2. remove unused register and offset define.
+3. update bindings file with assigned-clocks and assigned-clocks-parents.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fb548cf161e0..95def61bd21a 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -710,6 +710,7 @@ dtb-$(CONFIG_SOC_AM33XX) += \
- 	am335x-evmsk.dtb \
- 	am335x-icev2.dtb \
- 	am335x-lxm.dtb \
-+	am335x-moxa-uc-2101.dtb \
- 	am335x-moxa-uc-8100-me-t.dtb \
- 	am335x-nano.dtb \
- 	am335x-pdu001.dtb \
-diff --git a/arch/arm/boot/dts/am335x-moxa-uc-2101.dts b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-new file mode 100644
-index 000000000000..48aee6de4cdb
---- /dev/null
-+++ b/arch/arm/boot/dts/am335x-moxa-uc-2101.dts
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018 MOXA Inc. - https://www.moxa.com/
-+ *
-+ * Authors: SZ Lin (林上智) <sz.lin@moxa.com>
-+ *          Wes Huang (黃淵河) <wes.huang@moxa.com>
-+ *          Fero JD Zhou (周俊達) <FeroJD.Zhou@moxa.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "am335x-moxa-uc-2100-common.dtsi"
-+
-+/ {
-+	model = "Moxa UC-2101";
-+	compatible = "moxa,uc-2101", "ti,am33xx";
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		led1 {
-+			label = "UC2100:GREEN:USER";
-+			gpios = <&gpio3 10 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+};
-+
-+&am33xx_pinmux {
-+	pinctrl-names = "default";
-+
-+	cpsw_default: cpsw_default {
-+		pinctrl-single,pins = <
-+			/* Slave 1 */
-+			AM33XX_IOPAD(0x90c, PIN_INPUT_PULLDOWN | MUX_MODE1)	/* mii1_crs.rmii1_crs_dv */
-+			AM33XX_IOPAD(0x910, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxerr.rmii1_rxerr */
-+			AM33XX_IOPAD(0x914, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txen.rmii1_txen */
-+			AM33XX_IOPAD(0x924, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd1.rmii1_txd1 */
-+			AM33XX_IOPAD(0x928, PIN_OUTPUT_PULLDOWN | MUX_MODE1)	/* mii1_txd0.rmii1_txd0 */
-+			AM33XX_IOPAD(0x93c, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd1.rmii1_rxd1 */
-+			AM33XX_IOPAD(0x940, PIN_INPUT_PULLUP | MUX_MODE1)	/* mii1_rxd0.rmii1_rxd0 */
-+			AM33XX_IOPAD(0x944, PIN_INPUT_PULLDOWN | MUX_MODE0)	/* mii1_refclk.rmii1_refclk */
-+		>;
-+	};
-+
-+	spi1_pins: pinmux_spi1 {
-+		pinctrl-single,pins = <
-+			AM33XX_IOPAD(0x964, PIN_INPUT_PULLUP | MUX_MODE4)	 /* ecap0_in_pwm0_out.spi1_sclk */
-+			AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart1_ctsn.spi1_cs0 */
-+			AM33XX_IOPAD(0x968, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart0_ctsn.spi1_d0 */
-+			AM33XX_IOPAD(0x96c, PIN_INPUT_PULLUP | MUX_MODE4)	 /* uart0_rtsn.spi1_d1 */
-+		>;
-+	};
-+};
-+
-+&davinci_mdio {
-+	phy0: ethernet-phy@4 {
-+		reg = <4>;
-+	};
-+};
-+
-+&cpsw_emac0 {
-+	status = "okay";
-+	phy-handle = <&phy0>;
-+	phy-mode = "rmii";
-+};
-+
-+&cpsw_emac1 {
-+	status = "disabled";
-+};
+v1:
+This series are based on 4.19-rc1 and provide three patches to add mediatek spi slave driver.
+
+Leilk Liu (3):
+  spi: mediatek: add bindings for Mediatek MT2712 soc platform
+  spi: mediatek: add spi slave for Mediatek MT2712
+  arm64: dts: Add spi slave dts
+
+ .../devicetree/bindings/spi/spi-slave-mt27xx.txt   |  32 ++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          |  11 +
+ drivers/spi/Kconfig                                |  10 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-slave-mt27xx.c                     | 554 +++++++++++++++++++++
+ 5 files changed, 608 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+ create mode 100644 drivers/spi/spi-slave-mt27xx.c
+
 -- 
-2.19.0
+1.9.1
