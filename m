@@ -1,51 +1,51 @@
-Return-Path: <SRS0=B9z3=MK=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH 1/3] dt-bindings: arm: Document RZ/G2E SoC DT bindings
-Date: Fri, 28 Sep 2018 09:54:05 +0000
-Message-ID: 
- <TY1PR01MB1770BC66ECC730362967D308C0EC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1536580430-17432-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1536580430-17432-2-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdVmkLSVoUPX8QcPp5AWeae7iD4Vpz8QjA3nJw=T4J7Pkg@mail.gmail.com>
-In-Reply-To: 
- <CAMuHMdVmkLSVoUPX8QcPp5AWeae7iD4Vpz8QjA3nJw=T4J7Pkg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=3cpq=MK=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+References: <1536580430-17432-1-git-send-email-fabrizio.castro@bp.renesas.com> <1536580430-17432-2-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1536580430-17432-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 28 Sep 2018 11:44:07 +0200
+Message-ID: <CAMuHMdVmkLSVoUPX8QcPp5AWeae7iD4Vpz8QjA3nJw=T4J7Pkg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: arm: Document RZ/G2E SoC DT bindings
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGVsbG8gR2VlcnQsDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIGR0LWJpbmRpbmdzOiBh
-cm06IERvY3VtZW50IFJaL0cyRSBTb0MgRFQgYmluZGluZ3MNCj4NCj4gT24gTW9uLCBTZXAgMTAs
-IDIwMTggYXQgMTo1NCBQTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5y
-ZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIGRldmljZSB0cmVlIGJpbmRpbmdzIGRvY3VtZW50
-YXRpb24gZm9yIFJlbmVzYXMgUlovRzJFIChyOGE3NzRjMCkNCj4gPiBTb0MuDQo+ID4NCj4gPiBT
-aWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2Fz
-LmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29t
-Pg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3No
-bW9iaWxlLnR4dCB8IDIgKysNCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKQ0K
-PiA+DQo+ID4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
-cm0vc2htb2JpbGUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9z
-aG1vYmlsZS50eHQNCj4gPiBpbmRleCA0YTAzYTZiLi5mNWUwZjgyIDEwMDY0NA0KPiA+IC0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vc2htb2JpbGUudHh0DQo+ID4g
-KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zaG1vYmlsZS50eHQN
-Cj4gPiBAQCAtMjcsNiArMjcsOCBAQCBTb0NzOg0KPiA+ICAgICAgY29tcGF0aWJsZSA9ICJyZW5l
-c2FzLHI4YTc3NDcwIg0KPiA+ICAgIC0gUlovRzJNIChSOEE3NzRBMSkNCj4gPiAgICAgIGNvbXBh
-dGlibGUgPSAicmVuZXNhcyxyOGE3NzRhMSINCj4gPiArICAtIFJaL0cyRSAoUkE4Nzc0QzApDQo+
-DQo+IFNpbGx5IHR5cG8gbm8gb25lIG5vdGljZWQgYmVmb3JlOiBzL0E4LzhBLw0KDQpUaGF0IGlz
-IGEgcmVhbGx5IGdvb2QgY2F0Y2ghDQoNClNpbW9uLCBjb3VsZCB5b3UgcGxlYXNlIGRyb3AgaXQg
-c28gdGhhdCBJIGNhbiBzZW5kIGEgdjIuDQoNCkNoZWVycywNCkZhYg0KDQo+DQo+ID4gKyAgICBj
-b21wYXRpYmxlID0gInJlbmVzYXMscjhhNzc0YzAiDQo+ID4gICAgLSBSLUNhciBNMUEgKFI4QTc3
-NzgxKQ0KPiA+ICAgICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHI4YTc3NzgiDQo+ID4gICAgLSBS
-LUNhciBIMSAoUjhBNzc3OTApDQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAg
-ICAgICAgICAgICAgICAgICBHZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0g
-VGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3Jn
-DQo+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJ
-IGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFs
-aXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQoNCg0KDQpS
-ZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJv
-YWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQg
-aW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
+On Mon, Sep 10, 2018 at 1:54 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add device tree bindings documentation for Renesas RZ/G2E (r8a774c0)
+> SoC.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+>  Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+> index 4a03a6b..f5e0f82 100644
+> --- a/Documentation/devicetree/bindings/arm/shmobile.txt
+> +++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+> @@ -27,6 +27,8 @@ SoCs:
+>      compatible = "renesas,r8a77470"
+>    - RZ/G2M (R8A774A1)
+>      compatible = "renesas,r8a774a1"
+> +  - RZ/G2E (RA8774C0)
+
+Silly typo no one noticed before: s/A8/8A/
+
+> +    compatible = "renesas,r8a774c0"
+>    - R-Car M1A (R8A77781)
+>      compatible = "renesas,r8a7778"
+>    - R-Car H1 (R8A77790)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
