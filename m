@@ -1,55 +1,196 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v5 3/3] arm64: dts: Add spi slave dts
-Date: Fri, 28 Sep 2018 23:07:32 +0200
-Message-ID: <aef8fb56-e774-b9bd-e361-a1ea69e1885d@gmail.com>
-References: <1538131985-9471-1-git-send-email-leilk.liu@mediatek.com>
- <1538131985-9471-4-git-send-email-leilk.liu@mediatek.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
+ properties
+Date: Fri, 28 Sep 2018 14:13:58 -0700
+Message-ID: <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+ <20180928064841.14117-7-takahiro.akashi@linaro.org>
+ <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538131985-9471-4-git-send-email-leilk.liu@mediatek.com>
+In-Reply-To: <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>, Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com
+To: Rob Herring <robh+dt@kernel.org>, "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 28/09/2018 12:53, Leilk Liu wrote:
-> This patch adds MT2712 spi slave into device tree.
+On 09/28/18 06:44, Rob Herring wrote:
+> +David Gibson
 > 
-> Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-> ---
+> On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
+> <takahiro.akashi@linaro.org> wrote:
+>>
+>> These functions will be used later to handle kexec-specific properties
+>> in arm64's kexec_file implementation.
 
-Pushed to v4.19-next/dts64
+As I requested in version 14:
 
-Thanks!
+  The intent of the helper functions is related to properties whose values are
+   tuples of the same format as the "reg" property of the "/memory" nodes.  For
+   example, the "linux,usable-memory-range" and "linux,elfcoredhr" properties of
+   the "/chosen" node.
 
->  arch/arm64/boot/dts/mediatek/mt2712e.dtsi |   11 +++++++++++
->  1 file changed, 11 insertions(+)
+   The patch header and the function names should be updated to reflect this intent.
+
+
+>>
+>> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+
+Missing list of changes since version 14.
+
+
+>>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
+>>  include/linux/of_fdt.h |  4 +++
+>>  2 files changed, 60 insertions(+)
+>>
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index 800ad252cf9c..c65c31562ccb 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -25,6 +25,7 @@
+>>  #include <linux/debugfs.h>
+>>  #include <linux/serial_core.h>
+>>  #include <linux/sysfs.h>
+>> +#include <linux/types.h>
+>>
+>>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>>  #include <asm/page.h>
+>> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
+>>  #endif
+>>
+>>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+
+In v14 I requested:
+
+   Please add comment:
+
+   /* helper functions for arm64 kexec */
+
+
+>> +
+>> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
+>> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
+>> +
+>> +int fdt_prop_len(const char *prop_name, int len)
+
+In v14, I requested:
+
+   Please rename as fdt_len_added_prop()
+
+I'm not really happy with my suggested name, but do not have a
+better one yet.  As Rob notes, maybe David G will have a helpful
+comment.
+
+
+>> +{
+>> +       return (strlen(prop_name) + 1) +
+>> +               sizeof(struct fdt_property) +
+>> +               FDT_TAGALIGN(len);
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> index 75cc0f7..ee627a7 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -301,6 +301,17 @@
->  		status = "disabled";
->  	};
->  
-> +	spis1: spi@10013000 {
-> +		compatible = "mediatek,mt2712-spi-slave";
-> +		reg = <0 0x10013000 0 0x100>;
-> +		interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&infracfg CLK_INFRA_AO_SPI1>;
-> +		clock-names = "spi";
-> +		assigned-clocks = <&topckgen CLK_TOP_SPISLV_SEL>;
-> +		assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL1_D2>;
-> +		status = "disabled";
-> +	};
-> +
->  	apmixedsys: syscon@10209000 {
->  		compatible = "mediatek,mt2712-apmixedsys", "syscon";
->  		reg = <0 0x10209000 0 0x1000>;
+> Looks like you are using this to calculate how much space you need to
+> allocate in addition to the current DTB for a couple of new or
+> replaced properties. I'm not sure that this calculation is completely
+> accurate. And it is strange there doesn't seem to be any libfdt
+> function for this already. It would be simpler to just add some fixed
+> additional amount.
+> 
+> Maybe David G has comments on this?
+> 
+>> +}
+>> +
+> 
+> The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
+> should go into libfdt, but I'm fine with having it in the kernel for
+> now.
+> 
+>> +static void fill_property(void *buf, u64 val64, int cells)
+
+In v14 I requested:
+
+Please rename as cpu64_to_fdt_cells()
+
+
+>> +{
+>> +       __be32 val32;
+>> +
+>> +       while (cells) {
+>> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+>> +               memcpy(buf, &val32, sizeof(val32));
+>> +               buf += sizeof(val32);
+> 
+> This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
+> 
+> BTW, for purposes of moving to libfdt, we'll need the authors'
+> (Masahiro Yamada and Hans de Goede) permission to dual license.
+> 
+>> +       }
+>> +}
+>> +
+>> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+>> +                                               u64 addr, u64 size)
+>> +{
+>> +       int addr_cells, size_cells;
+
+unsigned
+
+
+>> +       char buf[sizeof(__be32) * 2 * 2];
+>> +               /* assume dt_root_[addr|size]_cells <= 2 */
+>> +       void *prop;
+>> +       size_t buf_size;
+>> +
+>> +       addr_cells = fdt_address_cells(fdt, 0);
+>> +       if (addr_cells < 0)
+>> +               return addr_cells;
+>> +       size_cells = fdt_size_cells(fdt, 0);
+>> +       if (size_cells < 0)
+>> +               return size_cells;
+>> +
+>> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
+>> +       if ((addr_cells == 1) && (addr > U32_MAX))
+>> +               return -FDT_ERR_BADVALUE;
+>> +
+>> +       if ((size_cells == 1) && (size > U32_MAX))
+>> +               return -FDT_ERR_BADVALUE;
+
+In v14 I requested:
+
+   Should also check that base + size does not wrap around.
+
+
+>> +
+>> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
+>> +       prop = buf;
+>> +
+>> +       fill_property(prop, addr, addr_cells);
+>> +       prop += addr_cells * sizeof(u32);
+>> +
+>> +       fill_property(prop, size, size_cells);
+>> +
+>> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+>> +}
+>> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+>> index b9cd9ebdf9b9..842af6ea92ea 100644
+>> --- a/include/linux/of_fdt.h
+>> +++ b/include/linux/of_fdt.h
+>> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
+>>  static inline void unflatten_and_copy_device_tree(void) {}
+>>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>>
+>> +int fdt_prop_len(const char *prop_name, int len);
+>> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+>> +                                               u64 addr, u64 size);
+>> +
+>>  #endif /* __ASSEMBLY__ */
+>>  #endif /* _LINUX_OF_FDT_H */
+>> --
+>> 2.19.0
+>>
 > 
