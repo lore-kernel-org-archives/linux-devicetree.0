@@ -1,90 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V5 18/30] dt-bindings: csky CPU Bindings
-Date: Fri, 28 Sep 2018 06:32:34 -0500
-Message-ID: <CAL_JsqJNPzTy_vE3HjdKhsXq+jtsCMS8RyWvppSB8sJaV1WZ9A@mail.gmail.com>
-References: <cover.1537789736.git.ren_guo@c-sky.com> <62098e7d0a7fbdd09f44d7e23333dad258a01bd2.1537789737.git.ren_guo@c-sky.com>
- <20180927164317.GA8427@bogus> <20180928010312.GA4179@guoren-Inspiron-7460>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: irqchip: renesas-irqc: Document R-Car E3 support
+Date: Fri, 28 Sep 2018 13:32:38 +0200
+Message-ID: <20180928113238.17192-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928010312.GA4179@guoren-Inspiron-7460>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GENERIC INCLUDE/ASM HEADER FILES" <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org, Greentime Hu <green.hu@gmail.com>, Palmer Dabbelt <palmer@sifive.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 8:03 PM Guo Ren <ren_guo@c-sky.com> wrote:
->
-> On Thu, Sep 27, 2018 at 11:43:17AM -0500, Rob Herring wrote:
-> > On Tue, Sep 25, 2018 at 07:39:21AM +0800, Guo Ren wrote:
-> > > This patch adds the documentation to describe that how to add cpu nodes in
-> > > dts for SMP.
-> > >
-> > > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/csky/cpus.txt | 70 +++++++++++++++++++++++++
-> > >  1 file changed, 70 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/csky/cpus.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/csky/cpus.txt b/Documentation/devicetree/bindings/csky/cpus.txt
-> > > new file mode 100644
-> > > index 0000000..ee3901d
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/csky/cpus.txt
-> > > @@ -0,0 +1,70 @@
-> > > +==================
-> > > +C-SKY CPU Bindings
-> > > +==================
-> > > +
-> > > +The device tree allows to describe the layout of CPUs in a system through
-> > > +the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
-> > > +defining properties for every cpu.
-> > > +
-> > > +Only SMP system need to care about the cpus node and single processor
-> > > +needn't define cpus node at all.
-> >
-> > We've generally found this is not true. Even for single core, you can
-> > have power domains, clocks for DVFS, etc.
-> Ok, I'll remove it.
->
-> >
-> > > +
-> > > +=====================================
-> > > +cpus and cpu node bindings definition
-> > > +=====================================
-> > > +
-> > > +- cpus node
-> > > +
-> > > +        Description: Container of cpu nodes
-> > > +
-> > > +        The node name must be "cpus".
-> > > +
-> > > +        A cpus node must define the following properties:
-> > > +
-> > > +        - #address-cells
-> > > +                Usage: required
-> > > +                Value type: <u32>
-> > > +                Definition: must be set to 1
-> > > +        - #size-cells
-> > > +                Usage: required
-> > > +                Value type: <u32>
-> > > +                Definition: must be set to 0
-> > > +
-> > > +- cpu node
-> > > +
-> > > +        Description: Describes one of SMP cores
-> > > +
-> > > +        PROPERTIES
-> > > +
-> >
-> > You need a compatible property for cpu nodes.
-> Our cpu is defined in defconfig, not in dts. I could put a comatible
-> property in here, but it's no use in code.
+Document support for the Interrupt Controller for External Devices
+(INTC-EX) in the Renesas E3 (r8a77990) SoC.
 
-It doesn't matter as that could change. Most arches do run-time
-selection of cpus within a range of compatible cores.
+No driver update is needed.
 
-And read the DT spec (devicetree.org) which says compatible is
-required for cpu nodes.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../devicetree/bindings/interrupt-controller/renesas,irqc.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+index a046ed374d808d66..b8a86e30e8e67068 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt
+@@ -2,7 +2,8 @@ DT bindings for the R-Mobile/R-Car/RZ/G interrupt controller
+ 
+ Required properties:
+ 
+-- compatible: has to be "renesas,irqc-<soctype>", "renesas,irqc" as fallback.
++- compatible: must be "renesas,irqc-<soctype>" or "renesas,intc-ex-<soctype>",
++	      and "renesas,irqc" as fallback.
+   Examples with soctypes are:
+     - "renesas,irqc-r8a73a4" (R-Mobile APE6)
+     - "renesas,irqc-r8a7743" (RZ/G1M)
+@@ -19,6 +20,7 @@ Required properties:
+     - "renesas,intc-ex-r8a77965" (R-Car M3-N)
+     - "renesas,intc-ex-r8a77970" (R-Car V3M)
+     - "renesas,intc-ex-r8a77980" (R-Car V3H)
++    - "renesas,intc-ex-r8a77990" (R-Car E3)
+     - "renesas,intc-ex-r8a77995" (R-Car D3)
+ - #interrupt-cells: has to be <2>: an interrupt index and flags, as defined in
+   interrupts.txt in this directory
+-- 
+2.17.1
