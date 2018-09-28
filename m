@@ -1,46 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 04/11] arm64: dts: sc9836/sc9860: Update coresight
- bindings for hardware ports
-Date: Fri, 28 Sep 2018 12:45:07 +0200
-Message-ID: <CAK8P3a2WWFp5W5-7o-X3joOpSGgnK=s_ZyGev7gsVV0SjN0p0A@mail.gmail.com>
-References: <20180912135352.19722-1-suzuki.poulose@arm.com>
- <20180912135352.19722-5-suzuki.poulose@arm.com> <ccc61e1b-768c-2a6d-3ff5-95b72bc58a6f@arm.com>
- <CAAfSe-swWPgCWN6cZbQxLL6fwaJ1qLXnC_X7A0zeYuHDaZ_A1Q@mail.gmail.com>
+From: =?UTF-8?q?SZ=20Lin=20=28=E6=9E=97=E4=B8=8A=E6=99=BA=29?=
+        <sz.lin@moxa.com>
+Subject: [PATCH v2 0/3] Add support for Moxa UC-2100 series
+Date: Fri, 28 Sep 2018 18:46:14 +0800
+Message-ID: <20180928104614.30601-1-sz.lin@moxa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAfSe-swWPgCWN6cZbQxLL6fwaJ1qLXnC_X7A0zeYuHDaZ_A1Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lyra Zhang <zhang.lyra@gmail.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>, Orson Zhai <orsonzhai@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, bcousson@baylibre.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?SZ=20Lin=20=28=E6=9E=97=E4=B8=8A=E6=99=BA=29?= <sz.lin@moxa.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 11:19 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->
-> Hi Suzuki,
->
-> On 27 September 2018 at 16:51, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> > +To: Chunyan Zhang
-> >
-> > Chunyan Zhang,
-> >
-> > On 09/12/2018 02:53 PM, Suzuki K Poulose wrote:
-> >>
-> >> Switch to the new coresight bindings for hw ports
-> >>
-> >
-> > How can we push this patch ? Do you generally send the spreadtrum
-> > specific changes to ARM soc folks ? Or would you like me to post
-> > this directly to ARM soc folks ?
->
-> Yeah, at present sprd dts files generally got merged through arm-soc
-> (I've added arm@kernel.org).
+The UC-2100 series open computing platform is designed for industrial
+embedded data acquisition and processing applications. In order to
+fulfill various industrial applications, there're many boards with
+different peripheral devices and wireless modules in this series.
 
-Yes, that's fine. Generally, we prefer if you collect patches for your
-platform first, and then send them as a pull request or short set
-of patches. for inclusion, rather than picking them up from the list.
+The features of UC-2100 series are:
+* eMMC
+* SPI flash
+* {1,2}x LAN (100/1000 Mbps in option)
+* {1,2}x RS-232/422/485 ports, software-selectable
+* EEPROM
+* TPM 2.0
+* Watchdog
+* RTC
+* User gpio-keys
+* User LEDs
+* User button
+* GPS (option)
+* 2x CANBus (option)
+* Cellular module (option)
+* Mini PCIe form factor with USB signal (option)
+* MicroSD slot (option)
 
-If this is the only DT patch for spreadtrum in 4.20, I can also just
-pick it up with your Ack.
+---
+Changes from v1:
+- Use property phy-handle instead of phy_id
+- Separate DT binding docs and dts file
+- Remove am335x-moxa-uc-2102.dts
 
-       Arnd
+SZ Lin (林上智) (3):
+  ARM: dts: am335x: add common file for UC-2100 series
+  dt-bindings: arm: omap: Add binding for Moxa UC-2101 open platform
+  ARM: dts: am335x: add support for Moxa UC-2101 open platform
+
+ .../devicetree/bindings/arm/omap/omap.txt     |   3 +
+ arch/arm/boot/dts/Makefile                    |   1 +
+ .../boot/dts/am335x-moxa-uc-2100-common.dtsi  | 249 ++++++++++++++++++
+ arch/arm/boot/dts/am335x-moxa-uc-2101.dts     |  69 +++++
+ 4 files changed, 322 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am335x-moxa-uc-2100-common.dtsi
+ create mode 100644 arch/arm/boot/dts/am335x-moxa-uc-2101.dts
+
+-- 
+2.19.0
