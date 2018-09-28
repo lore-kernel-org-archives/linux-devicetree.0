@@ -1,33 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/4] power: supply: core: Introduce one property to
- present the battery internal resistance
-Date: Fri, 28 Sep 2018 09:29:14 +0200
-Message-ID: <CACRpkdYLgT3eRRx6VFa3hMEd11JF1CeANgo9hrgkTD-wn2F1zQ@mail.gmail.com>
-References: <2787f18a0366576959557d05112a069dca982269.1538033078.git.baolin.wang@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH] ARM: dts: sunxi: h3-h5: Add Bananapi M2+ v1.2 device trees
+Date: Fri, 28 Sep 2018 16:18:38 +0800
+Message-ID: <CAGb2v65xs6zASfVGQp=ZsNa5-D_Xa3DSmD7FfM0D5vhbCwt-DA@mail.gmail.com>
+References: <20180926132339.24737-1-wens@csie.org> <20180927172837.ucxmqfhazt4xwfh2@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2787f18a0366576959557d05112a069dca982269.1538033078.git.baolin.wang@linaro.org>
+In-Reply-To: <20180927172837.ucxmqfhazt4xwfh2@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux PM list <linux-pm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, yuanjiang.yu@unisoc.com, Mark Brown <broonie@kernel.org>, Craig Tatlor <ctatlor97@gmail.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 9:27 AM Baolin Wang <baolin.wang@linaro.org> wrote:
-
-> The internal resistance of a battery is not a constant in its life cycle,
-> this varies over the age of the battery or temperature and so on. But we
-> just want use one constant battery internal resistance to estimate the
-> battery capacity. Thus this patch introduces one property to present
-> the battery factory internal resistance for battery information.
+On Fri, Sep 28, 2018 at 1:28 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
-> Changes from v2:
->  - Rename the property.
->  - Improve the commit message.
+> On Wed, Sep 26, 2018 at 09:23:39PM +0800, Chen-Yu Tsai wrote:
+> > Bananapi released an updated revision of the H3/H5 based Bananapi M2+.
+> > Version 1.2 enables voltage control for the CPU's regulator by using
+> > a GPIO line to toggle a MOSFET that can change the effective resistance
+> > value in the regulator's feedback network.
+> >
+> > This patch adds a common .dtsi file for this new revision, which
+> > includes the original common sunxi-bananapi-m2-plus.dtsi file, and
+> > adds the GPIO-controlled regulator and a cpu-supply reference. H3
+> > and H5 variant dts files are added as well.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+Applied.
