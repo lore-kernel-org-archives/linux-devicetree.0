@@ -1,106 +1,23 @@
-Return-Path: <robherring2@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: power: Add Spreadtrum SC27XX fuel gauge
- unit documentation
-Message-ID: <20180917032625.GA25442@bogus>
-References: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
+Return-Path: <SRS0=+iDA=MK=c-sky.com=ren_guo@kernel.org>
+Date: Fri, 28 Sep 2018 09:08:15 +0800
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V5 25/30] dt-bindings: timer: C-SKY Multi-processor timer
+Message-ID: <20180928010815.GC4179@guoren-Inspiron-7460>
+References: <cover.1537789736.git.ren_guo@c-sky.com>
+ <d8f95c8a3be94d29611eccbeac51a3b74e5f570e.1537789737.git.ren_guo@c-sky.com>
+ <20180927173526.GA26777@bogus>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b3f165e2a806dd3d4b7712160ee3bda72f7d675.1536736399.git.baolin.wang@linaro.org>
-Date: Sun, 16 Sep 2018 22:26:27 -0500
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: sre@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, broonie@kernel.org
+In-Reply-To: <20180927173526.GA26777@bogus>
+To: Rob Herring <robh@kernel.org>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, palmer@sifive.com
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Sep 12, 2018 at 03:29:38PM +0800, Baolin Wang wrote:
-> This patch adds the binding documentation for Spreadtrum SC27XX series PMICs
-> fuel gauge unit device, which is used to calculate the battery capacity.
+On Thu, Sep 27, 2018 at 12:35:26PM -0500, Rob Herring wrote:
+> > +	- interrupt-parent:
 > 
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  .../devicetree/bindings/power/supply/sc27xx-fg.txt |   55 ++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> new file mode 100644
-> index 0000000..7447bae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
-> @@ -0,0 +1,55 @@
-> +Spreadtrum SC27XX PMICs Fuel Gauge Unit Power Supply Bindings
-> +
-> +Required properties:
-> +- compatible: Should be one of the following:
-> +  "sprd,sc2720-fgu",
-> +  "sprd,sc2721-fgu",
-> +  "sprd,sc2723-fgu",
-> +  "sprd,sc2730-fgu",
-> +  "sprd,sc2731-fgu".
-> +- reg: The address offset of fuel gauge unit.
-> +- bat-detect-gpio: GPIO for battery detection.
+> Drop this. It is implied and could be in the parent node.
+Ok.
 
-We already have sbs,battery-detect-gpios, let's drop the 'sbs,' and copy 
-that.
-
-> +- io-channels: Specify the IIO ADC channel to get temperature.
-> +- io-channel-names: Should be "bat-temp".
-> +- sprd,inner-resist: Specify the the battery inner resistance (mOhm).
-
-If this is a property of the battery, then why a sprd vendor prefix? 
-This should perhaps be a common property.
-
-Minimally, it needs a unit suffix as defined in property-units.txt.
-
-> +- sprd,ocv-cap-table: Provide the battery capacity percent with corresponding
-> +  open circuit voltage (ocv) of the battery, which is used to look up current
-> +  battery capacity according to current baterry ocv values.
-
-Sounds like another battery property.
-
-> +- monitored-battery: Phandle of battery characteristics devicetree node.
-
-If the battery is represented in another node, why are properties of the 
-battery in this node.
-
-> +  The fuel gauge uses the following battery properties:
-> +- charge-full-design-microamp-hours: battery design capacity.
-> +- constant-charge-voltage-max-microvolt: maximum constant input voltage.
-> +  See Documentation/devicetree/bindings/power/supply/battery.txt
-> +
-> +Example:
-> +
-> +	bat: battery {
-> +		compatible = "simple-battery";
-> +		charge-full-design-microamp-hours = <1900000>;
-> +		constant-charge-voltage-max-microvolt = <4350000>;
-> +		......
-> +	};
-> +
-> +	sc2731_pmic: pmic@0 {
-> +		compatible = "sprd,sc2731";
-> +		reg = <0>;
-> +		spi-max-frequency = <26000000>;
-> +		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		fgu@a00 {
-> +			compatible = "sprd,sc2731-fgu";
-> +			reg = <0xa00>;
-> +			bat-detect-gpio = <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
-> +			io-channels = <&pmic_adc 5>;
-> +			io-channel-names = "bat-temp";
-> +			sprd,inner-resist = <250>;
-> +			sprd,ocv-cap-table = <4185 100>, <4113 95>, <4066 90>, <4022 85>, <3983 80>, <3949 75>, <3917 70>,
-> +				<3889 65>, <3864 60>, <3835 55>, <3805 50>, <3787 45>, <3777 40>, <3773 35>, <3770 30>,
-> +				<3765 25>, <3752 20>, <3724 15>, <3680 10>, <3605 5>, <3400 0>;
-> +			monitored-battery = <&bat>;
-> +		};
-> +	};
-> -- 
-> 1.7.9.5
-> 
+ Guo Ren
