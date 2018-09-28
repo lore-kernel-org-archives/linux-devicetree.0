@@ -1,115 +1,52 @@
-From: Liang Yang <liang.yang@amlogic.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: nand: meson: add Amlogic NAND
- controller driver
-Date: Fri, 28 Sep 2018 16:33:23 +0800
-Message-ID: <8f194c47-10bb-cb9d-c626-39f9b22887cb@amlogic.com>
-References: <1537433449-65213-1-git-send-email-jianxin.pan@amlogic.com>
- <1537433449-65213-2-git-send-email-jianxin.pan@amlogic.com>
- <20180927181653.GA22153@bogus>
+From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Subject: [PATCH v2 0/7] Add-DMA-MDMA-chaining-support
+Date: Fri, 28 Sep 2018 10:36:27 +0200
+Message-ID: <1538123794-17085-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927181653.GA22153@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
 List-Id: devicetree@vger.kernel.org
 
+This serie adds support for M2M transfer triggered by STM32 DMA in order to
+transfer data from/to SRAM to/from DDR.
 
-On 9/28/2018 2:16 AM, Rob Herring wrote:
-> On Thu, Sep 20, 2018 at 04:50:48PM +0800, Jianxin Pan wrote:
->> From: Liang Yang <liang.yang@amlogic.com>
->>
->> Add Amlogic NAND controller dt-bindings for Meson SoC,
->> Current this driver support GXBB/GXL/AXG platform.
->>
->> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
->> Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
->> ---
->>   .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
->>   1 file changed, 60 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> new file mode 100644
->> index 0000000..803df2a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
->> @@ -0,0 +1,60 @@
->> +Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
->> +
->> +This file documents the properties in addition to those available in
->> +the MTD NAND bindings.
->> +
->> +Required properties:
->> +- compatible : contains one of:
->> +  - "amlogic,meson-gxl-nfc"
->> +  - "amlogic,meson-axg-nfc"
->> +- clocks     :
->> +	A list of phandle + clock-specifier pairs for the clocks listed
->> +	in clock-names.
->> +
->> +- clock-names: Should contain the following:
->> +	"core" - NFC module gate clock
->> +	"device" - device clock from eMMC sub clock controller
->> +
->> +- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
->> +				controller port C
->> +
->> +Optional children nodes:
->> +Children nodes represent the available nand chips.
->> +
->> +Other properties:
->> +see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
->> +
->> +Example demonstrate on AXG SoC:
->> +
->> +	sd_emmc_c_clkc: mmc@7000 {
->> +		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
->> +		reg = <0x0 0x7000 0x0 0x800>;
->> +		status = "okay";
->> +	};
->> +
->> +	nand: nfc@7800 {
-> 
-> nand-controller@7800
-> 
-ok, i will fix it.
+Normally, this mode should not be needed as transferring data from/to DDR
+is supported by the STM32 DMA.
+However, the STM32 DMA don't have the ability to generate burst transfer
+on the DDR as it only embeds only a 4-word FIFO although the minimal burst
+length on the DDR is 8 words.
+Due to this constraint, the STM32 DMA transfers data from/to DDR in a
+single way and could lead to pollute the DDR.
+To avoid this, we have to use SRAM for all transfers where STM32 DMA is
+involved.
 
->> +		compatible = "amlogic,meson-axg-nfc";
->> +		reg = <0x0 0x7800 0x0 0x100>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
->> +		status = "disabled";
->> +
->> +		clocks = <&clkc CLKID_SD_EMMC_C>,
->> +			<&sd_emmc_c_clkc CLKID_MMC_DIV>;
->> +		clock-names = "core", "device";
->> +		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
->> +
->> +		status = "okay";
-> 
-> Don't show status in examples, plus you have it twice.
-> 
-ok, i will fix it.
->> +
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&nand_pins>;
->> +
->> +		nand@0 {
->> +			reg = <0>;
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +
->> +			nand-on-flash-bbt;
->> +		};
->> +	};
->> -- 
->> 1.9.1
->>
-> 
-> .
-> 
+An Hw design has been specially put in place to allow this chaining where DMA
+interrupt is connected on GIC and MDMA request line as well. This grants the
+possibility to trigger an MDMA transfer from the completion of DMA.
+At the same time MDMA has the ability to acknowlege DMA. The aim is to have an
+self refreching mechanism to transfer from/to device to/from DDR with minimal
+sw support.
+For instance the DMA is set in cyclic double buffering to feed SRAM and MDMA
+transfer to DDR thanks to LLI.
+
+M'boumba Cedric Madianga (7):
+  dt-bindings: stm32-dma: Add DMA/MDMA chaining support bindings
+  dt-bindings: stm32-dmamux: Add one cell to support DMA/MDMA chain
+  dt-bindings: stm32-mdma: Add DMA/MDMA chaining support bindings
+  dmaengine: stm32-dma: Add DMA/MDMA chaining support
+  dmaengine: stm32-mdma: Add DMA/MDMA chaining support
+  dmaengine: stm32-dma: enable descriptor_reuse
+  dmaengine: stm32-mdma: enable descriptor_reuse
+
+ .../devicetree/bindings/dma/stm32-dma.txt          |  27 +-
+ .../devicetree/bindings/dma/stm32-dmamux.txt       |   6 +-
+ .../devicetree/bindings/dma/stm32-mdma.txt         |  12 +-
+ drivers/dma/stm32-dma.c                            | 903 ++++++++++++++++++---
+ drivers/dma/stm32-mdma.c                           | 133 ++-
+ 5 files changed, 949 insertions(+), 132 deletions(-)
+
+-- 
+2.7.4
