@@ -1,86 +1,157 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v5 4/9] PCI: mediatek: Convert to use pci_host_probe()
-Date: Fri, 28 Sep 2018 23:41:17 +0800
-Message-ID: <1538149277.23182.7.camel@mtkswgap22>
-References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
-         <1538129080-8206-5-git-send-email-honghui.zhang@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Fri, 28 Sep 2018 10:41:50 -0500
+Message-ID: <20180928154150.GA25013@bogus>
+References: <20180910150403.19476-1-robh@kernel.org>
+ <20180910150403.19476-7-robh@kernel.org>
+ <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
+ <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
+ <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
+ <CAK7LNATkkOiYPj2RLubcgZ_z59Bhz4GkgWqPMbnaHBk7EisXLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538129080-8206-5-git-send-email-honghui.zhang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <CAK7LNATkkOiYPj2RLubcgZ_z59Bhz4GkgWqPMbnaHBk7EisXLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild <linux-kbu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-09-28 at 18:04 +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
+On Sun, Sep 23, 2018 at 06:31:14AM -0400, Masahiro Yamada wrote:
+> 2018-09-13 11:51 GMT-04:00 Geert Uytterhoeven <geert@linux-m68k.org>:
+> > Hi Yamada-san,
+> >
+> > On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
+> > <yamada.masahiro@socionext.com> wrote:
+> >> 2018-09-12 0:40 GMT+09:00 Rob Herring <robh@kernel.org>:
+> >> > On Mon, Sep 10, 2018 at 10:04 AM Rob Herring <robh@kernel.org> wrote:
+> >> >> There is nothing arch specific about building dtb files other than their
+> >> >> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+> >> >> The dependencies and supported targets are all slightly different.
+> >> >> Also, a cross-compiler for each arch is needed, but really the host
+> >> >> compiler preprocessor is perfectly fine for building dtbs. Move the
+> >> >> build rules to a common location and remove the arch specific ones. This
+> >> >> is done in a single step to avoid warnings about overriding rules.
+> >> >>
+> >> >> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+> >> >> These pull in several dependencies some of which need a target compiler
+> >> >> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> >> >> All that is really needed is dtc, so adjust the dependencies to only be
+> >> >> dtc.
+> >> >>
+> >> >> This change enables support 'dtbs_install' on some arches which were
+> >> >> missing the target.
+> >> >
+> >> > [...]
+> >> >
+> >> >> @@ -1215,6 +1215,33 @@ kselftest-merge:
+> >> >>                 $(srctree)/tools/testing/selftests/*/config
+> >> >>         +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+> >> >>
+> >> >> +# ---------------------------------------------------------------------------
+> >> >> +# Devicetree files
+> >> >> +
+> >> >> +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+> >> >> +dtstree := arch/$(SRCARCH)/boot/dts
+> >> >> +endif
+> >> >> +
+> >> >> +ifdef CONFIG_OF_EARLY_FLATTREE
+> >> >
+> >> > This can be true when dtstree is unset. So this line should be this
+> >> > instead to fix the 0-day reported error:
+> >> >
+> >> > ifneq ($(dtstree),)
+> >> >
+> >> >> +
+> >> >> +%.dtb : scripts_dtc
+> >> >> +       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+> >> >> +
+> >> >> +PHONY += dtbs dtbs_install
+> >> >> +dtbs: scripts_dtc
+> >> >> +       $(Q)$(MAKE) $(build)=$(dtstree)
+> >> >> +
+> >> >> +dtbs_install: dtbs
+> >> >> +       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
+> >> >> +
+> >> >> +all: dtbs
+> >> >> +
+> >> >> +endif
+> >>
+> >>
+> >> Ah, right.
+> >> Even x86 can enable OF and OF_UNITTEST.
+> >>
+> >>
+> >>
+> >> Another solution might be,
+> >> guard it by 'depends on ARCH_SUPPORTS_OF'.
+> >>
+> >>
+> >>
+> >> This is actually what ACPI does.
+> >>
+> >> menuconfig ACPI
+> >>         bool "ACPI (Advanced Configuration and Power Interface) Support"
+> >>         depends on ARCH_SUPPORTS_ACPI
+> >>          ...
+> >
+> > ACPI is a real platform feature, as it depends on firmware.
+> >
+> > CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
+> > even if it has ACPI ;-)
+> >
 > 
-> Part of mtk_pcie_register_host is an open-coded version of
-> pci_host_probe(). So instead of duplicating this code, use
-> pci_host_probe() directly and remove mtk_pcie_register_host.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 37 ++++++++--------------------------
->  1 file changed, 8 insertions(+), 29 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index e2c4127..cbf4543 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -1125,34 +1125,6 @@ static int mtk_pcie_request_resources(struct mtk_pcie *pcie)
->  	return 0;
->  }
->  
-> -static int mtk_pcie_register_host(struct pci_host_bridge *host)
-> -{
-> -	struct mtk_pcie *pcie = pci_host_bridge_priv(host);
-> -	struct pci_bus *child;
-> -	int err;
+> OK, understood.
 
-To make the patch simple, could we keep these host->*. and return
-pci_host_probe() directly?
+Any other comments on this? I'd like to get the series into linux-next 
+soon.
 
-> -	host->busnr = pcie->busn.start;
-> -	host->dev.parent = pcie->dev;
-> -	host->ops = pcie->soc->ops;
-> -	host->map_irq = of_irq_parse_and_map_pci;
-> -	host->swizzle_irq = pci_common_swizzle;
-> -	host->sysdata = pcie;
-> -
-> -	err = pci_scan_root_bus_bridge(host);
-> -	if (err < 0)
-> -		return err;
-> -
-> -	pci_bus_size_bridges(host->bus);
-> -	pci_bus_assign_resources(host->bus);
-> -
-> -	list_for_each_entry(child, &host->bus->children, node)
-> -		pcie_bus_configure_settings(child);
-> -
-> -	pci_bus_add_devices(host->bus);
-> -
-> -	return 0;
-> -}
-> -
->  static int mtk_pcie_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -1179,7 +1151,14 @@ static int mtk_pcie_probe(struct platform_device *pdev)
->  	if (err)
->  		goto put_resources;
->  
-> -	err = mtk_pcie_register_host(host);
-> +	host->busnr = pcie->busn.start;
-> +	host->dev.parent = pcie->dev;
-> +	host->ops = pcie->soc->ops;
-> +	host->map_irq = of_irq_parse_and_map_pci;
-> +	host->swizzle_irq = pci_common_swizzle;
-> +	host->sysdata = pcie;
-> +
-> +	err = pci_host_probe(host);
->  	if (err)
->  		goto put_resources;
->  
+There was one other problem 0-day reported when building with 
+CONFIG_OF=n while setting CONFIG_OF_ALL_DTBS=y on the kernel command 
+line. The problem is dtc is not built as setting options on the command 
+line doesn't invoke kconfig select(s). This can be fixed by also 
+adding CONFIG_DTC=y to the command line, always building dtc regardless 
+of Kconfig, or making 'all' conditionally dependent on 'dtbs'. I've gone 
+with the last option as that is how this problem was avoided before. 
+
+So the hunk in question with the 2 fixes now looks like this:
+
+@@ -1215,6 +1215,35 @@ kselftest-merge:
+                $(srctree)/tools/testing/selftests/*/config
+        +$(Q)$(MAKE) -f $(srctree)/Makefile olddefconfig
+ 
++# 
+---------------------------------------------------------------------------
++# Devicetree files
++
++ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
++dtstree := arch/$(SRCARCH)/boot/dts
++endif
++
++ifneq ($(dtstree),)
++
++%.dtb : scripts_dtc
++       $(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
++
++PHONY += dtbs dtbs_install
++dtbs: scripts_dtc
++       $(Q)$(MAKE) $(build)=$(dtstree)
++
++dtbs_install: dtbs
++       $(Q)$(MAKE) $(dtbinst)=$(dtstree)
++
++ifdef CONFIG_OF_EARLY_FLATTREE
++all: dtbs
++endif
++
++endif
++
++PHONY += scripts_dtc
++scripts_dtc: scripts_basic
++       $(Q)$(MAKE) $(build)=scripts/dtc
++
+ # 
+---------------------------------------------------------------------------
+ # Modules
+ 
