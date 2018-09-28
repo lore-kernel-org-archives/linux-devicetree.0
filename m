@@ -1,123 +1,93 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
- management IC
-Date: Fri, 28 Sep 2018 15:01:44 +0100
-Message-ID: <20180928140144.GN20825@sirena.org.uk>
-References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <20180921172959.GG20825@sirena.org.uk>
- <20180921180241.GA4358@dell>
- <20180921181217.GI20825@sirena.org.uk>
- <20180921185258.GC4358@dell>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Zpx5Rz5PkYgiNBE6"
+Subject: Applied "spi: mediatek: add bindings for Mediatek MT2712 soc platform" to the spi tree
+Date: Fri, 28 Sep 2018 15:05:17 +0100 (BST)
+Message-ID: <20180928140517.8E077440078@finisterre.ee.mobilebroadband>
+References: <1538131985-9471-2-git-send-email-leilk.liu@mediatek.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180921185258.GC4358@dell>
+In-Reply-To: <1538131985-9471-2-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Leilk Liu <leilk.liu@mediatek.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.comlinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The patch
 
---Zpx5Rz5PkYgiNBE6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+   spi: mediatek: add bindings for Mediatek MT2712 soc platform
 
-On Fri, Sep 21, 2018 at 11:52:58AM -0700, Lee Jones wrote:
+has been applied to the spi tree at
 
-> > Great, thanks.  There's also the MFD DT bindings and another patch later
-> > on with Acked-for-MFD tags on them, should I convert the tags to acks,
-> > apply those as well and include them in the pull request?
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-> Please.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-The following changes since commit 5b394b2ddf0347bef56e50c69a58773c94343ff3:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-  Linux 4.19-rc1 (2018-08-26 14:11:59 -0700)
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-are available in the Git repository at:
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/bd71847-support
+Thanks,
+Mark
 
-for you to fetch changes up to 2ece646c90c5b45dd76c76ea207a3f3459f2c472:
+>From c0116e6b30473c7a75d33077bfd60f3b4eec7808 Mon Sep 17 00:00:00 2001
+From: Leilk Liu <leilk.liu@mediatek.com>
+Date: Fri, 28 Sep 2018 18:53:03 +0800
+Subject: [PATCH] spi: mediatek: add bindings for Mediatek MT2712 soc platform
 
-  regulator: bd718xx: rename bd71837 to 718xx (2018-09-28 14:57:13 +0100)
+This patch adds a DT binding documentation for the MT2712 soc.
 
-----------------------------------------------------------------
-regulator/mfd: Support for the ROHM BD71847
+Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/spi/spi-slave-mt27xx.txt         | 32 +++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
 
-This adds support for the BD71847 which touches both MFD and regulator.
-There's a few other bits and pieces included as some dependency patches
-had already been applied so would've required rebasing.
-
-----------------------------------------------------------------
-Axel Lin (2):
-      regulator: isl9305: Add missing .owner field in regulator_desc
-      regulator: bd71837: Remove duplicate assignment for n_voltages of LDO2
-
-Marek Szyprowski (1):
-      regulator: Fix 'do-nothing' value for regulators without suspend state
-
-Mark Brown (1):
-      Merge tag 'regulator-v4.19-rc5' into regulator-bd718xx
-
-Matti Vaittinen (8):
-      regulator: bd71837: Disable voltage monitoring for LDO3/4
-      regulator/mfd: Support ROHM BD71847 power management IC
-      regulator: dt bindings: add BD71847 device-tree binding documentation
-      mfd: dt bindings: add BD71847 device-tree binding documentation
-      regulator: Support regulators where voltage ranges are selectable
-      regulator/mfd: bd718xx: rename bd71837/bd71847 common instances
-      regulator: bd718XX use pickable ranges
-      regulator: bd718xx: rename bd71837 to 718xx
-
-Philipp Zabel (1):
-      regulator: da9063: fix DT probing with constraints
-
-Rob Herring (1):
-      regulator: Convert to using %pOFn instead of device_node.name
-
-Yu Zhao (1):
-      regulator: fix crash caused by null driver data
-
- .../devicetree/bindings/mfd/rohm,bd71837-pmic.txt  |   17 +-
- .../bindings/regulator/rohm,bd71837-regulator.txt  |   12 +-
- drivers/mfd/rohm-bd718x7.c                         |  162 ++-
- drivers/regulator/Kconfig                          |    2 +-
- drivers/regulator/Makefile                         |    2 +-
- drivers/regulator/bd71837-regulator.c              |  626 -----------
- drivers/regulator/bd718x7-regulator.c              | 1138 ++++++++++++++++++++
- drivers/regulator/core.c                           |    9 +-
- drivers/regulator/helpers.c                        |  232 ++++
- drivers/regulator/isl9305.c                        |    4 +
- drivers/regulator/max8997-regulator.c              |    4 +-
- drivers/regulator/mc13xxx-regulator-core.c         |    2 +-
- drivers/regulator/of_regulator.c                   |   46 +-
- drivers/regulator/qcom-rpmh-regulator.c            |   14 +-
- drivers/regulator/s5m8767.c                        |   12 +-
- include/linux/mfd/da9063/pdata.h                   |   16 +-
- include/linux/mfd/rohm-bd718x7.h                   |  374 +++----
- include/linux/regulator/driver.h                   |   20 +-
- include/linux/regulator/machine.h                  |    6 +-
- 19 files changed, 1736 insertions(+), 962 deletions(-)
- delete mode 100644 drivers/regulator/bd71837-regulator.c
- create mode 100644 drivers/regulator/bd718x7-regulator.c
-
---Zpx5Rz5PkYgiNBE6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAluuNEgACgkQJNaLcl1U
-h9BndAf9EQPSPGoQ5HopKpVc4DAO6bLNdnhtZip6RXj11RQwLTDC3DVztj9jT0px
-RY/q8hSAjeING9M33+IfLHSlIv65hUNdu7uAPTGxLjCpF8/soyG9VtsBgMxIqxLf
-yX3CSwiia/UvnzuA8SbOLq3ec5w9lYyGqd5LXKZWr7xWynfqalJGA1bTDXfXRiyT
-z9CRaXSI47GMHVOSfBMcROOLs+dU8401ftl+8Dj29kLQ538YRvuEXQcBM6IqGt/s
-QPGqh3GJw2+YP4GyK+0BNna2ucwGQ2kX2zHGY3YJbifsmNqDGgQyIQ7MuUtzlMv2
-NIFa+Lkn1h024IVZGav7k/iFyeFk2g==
-=R/pg
------END PGP SIGNATURE-----
-
---Zpx5Rz5PkYgiNBE6--
+diff --git a/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+new file mode 100644
+index 000000000000..c37e5a179b21
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
+@@ -0,0 +1,32 @@
++Binding for MTK SPI Slave controller
++
++Required properties:
++- compatible: should be one of the following.
++    - mediatek,mt2712-spi-slave: for mt2712 platforms
++- reg: Address and length of the register set for the device.
++- interrupts: Should contain spi interrupt.
++- clocks: phandles to input clocks.
++  It's clock gate, and should be <&infracfg CLK_INFRA_AO_SPI1>.
++- clock-names: should be "spi" for the clock gate.
++
++Optional properties:
++- assigned-clocks: it's mux clock, should be <&topckgen CLK_TOP_SPISLV_SEL>.
++- assigned-clock-parents: parent of mux clock.
++  It's PLL, and should be one of the following.
++   -  <&topckgen CLK_TOP_UNIVPLL1_D2>: specify parent clock 312MHZ.
++				       It's the default one.
++   -  <&topckgen CLK_TOP_UNIVPLL1_D4>: specify parent clock 156MHZ.
++   -  <&topckgen CLK_TOP_UNIVPLL2_D4>: specify parent clock 104MHZ.
++   -  <&topckgen CLK_TOP_UNIVPLL1_D8>: specify parent clock 78MHZ.
++
++Example:
++- SoC Specific Portion:
++spis1: spi@10013000 {
++	compatible = "mediatek,mt2712-spi-slave";
++	reg = <0 0x10013000 0 0x100>;
++	interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_LOW>;
++	clocks = <&infracfg CLK_INFRA_AO_SPI1>;
++	clock-names = "spi";
++	assigned-clocks = <&topckgen CLK_TOP_SPISLV_SEL>;
++	assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL1_D2>;
++};
+-- 
+2.19.0
