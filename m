@@ -1,24 +1,82 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 1/2] pinctrl: qcom: Add sdm660 pinctrl driver
-Date: Fri, 28 Sep 2018 09:21:00 +0200
-Message-ID: <CACRpkdasDARc-5F7tp_AMsWKCHG3hEhexrfMFbZjWkawdxTOog@mail.gmail.com>
-References: <20180812142413.20856-1-ctatlor97@gmail.com> <20180925173801.3835-1-ctatlor97@gmail.com>
- <CACRpkda4SuPVz8Awg6OhhanmZKEs4URw3WBMv0Fa8iJa2MD-KA@mail.gmail.com> <43F103C6-7ADF-4D4C-A930-376D66F538F0@gmail.com>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH v5 3/5] drm/dp: make dp_get_lane_status usable from
+ outside of the core
+Date: Fri, 28 Sep 2018 03:21:29 -0400
+Message-ID: <20180928072129.GX72545@art_vandelay>
+References: <1537866837-4408-1-git-send-email-dkos@cadence.com>
+ <1537866837-4408-4-git-send-email-dkos@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <43F103C6-7ADF-4D4C-A930-376D66F538F0@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Craig Tatlor <ctatlor97@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org, neeraju@codeaurora.org, vabbar@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1537866837-4408-4-git-send-email-dkos@cadence.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Damian Kos <dkos@cadence.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, pgaj@cadence.com, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, quentin.schulz@bootlin.com, jartur@cadence.com, ltyrala@cadence.com, linux-rockchip@lists.infradead.org, piotrs@cadence.com, devicetree@vger.kernel.org, rafalc@cadence.com, jbergsagel@ti.com, Rob Herring <robh+dt@kernel.org>, Sean Paul <sean@poorly.run>, linux-arm-kernel@lists.infradead.org, Quentin Schulz <quentin.schulz@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Sep 26, 2018 at 6:30 PM Craig <ctatlor97@gmail.com> wrote:
-
-> You seem to have missed the bindings, it might be an idea to drop and reapply with the new ones I just sent off when they get a review.
-
-Nah I just didn't coordinate things. It gets too messy sometimes, I will
-apply the bindings separately I guess.
-
-Yours,
-Linus Walleij
+T24gVHVlLCBTZXAgMjUsIDIwMTggYXQgMTA6MTM6MzNBTSArMDEwMCwgRGFtaWFuIEtvcyB3cm90
+ZToKPiBGcm9tOiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5zY2h1bHpAZnJlZS1lbGVjdHJvbnMu
+Y29tPgo+IAo+IGRwX2dldF9sYW5lX3N0YXR1cyBpcyBwcmV0dHkgZ2VuZXJpYyBhbmQgY2FuIGJl
+IHVzZWQgZm9yIG90aGVyIG1lYW5zLAo+IHNvIGxldCdzIG1ha2UgaXQgInB1YmxpYyIuCj4gCj4g
+VGhpcyBhZGRzIGRybV9kcF9nZXRfbGFuZV9zdGF0dXMgdG8gdGhlIGhlYWRlciBmaWxlIGFuZCBh
+ZGQgdGhlIGFwcHJvcHJpYXRlCj4gRVhQT1JUX1NZTUJPTCBmb3IgaXQgc28gdGhhdCBpdCBjYW4g
+YmUgdXNlZCBieSBvdGhlciBkcml2ZXJzLCBiZSB0aGV5IGNvbXBpbGVkCj4gYnVpbHQtaW4gb3Ig
+YXMgbW9kdWxlcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBRdWVudGluIFNjaHVseiA8cXVlbnRpbi5z
+Y2h1bHpAZnJlZS1lbGVjdHJvbnMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IERhbWlhbiBLb3MgPGRr
+b3NAY2FkZW5jZS5jb20+CgpOb3cgdGhhdCB5b3UndmUgcmVmYWN0b3JlZCBtaGRwX3ZhbGlkYXRl
+X2NyKCksIHlvdSBubyBsb25nZXIgbmVlZCB0aGlzIHBhdGNoLgoKU2VhbgoKPiAtLS0KPiAgZHJp
+dmVycy9ncHUvZHJtL2RybV9kcF9oZWxwZXIuYyB8IDkgKysrKystLS0tCj4gIGluY2x1ZGUvZHJt
+L2RybV9kcF9oZWxwZXIuaCAgICAgfCAyICsrCj4gIDIgZmlsZXMgY2hhbmdlZCwgNyBpbnNlcnRp
+b25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
+ZHJtX2RwX2hlbHBlci5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9kcF9oZWxwZXIuYwo+IGluZGV4
+IDczNWViZGU1YzJmMC4uMTY5ZGI1MmY5MmY1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9kcm1fZHBfaGVscGVyLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2RwX2hlbHBlci5j
+Cj4gQEAgLTQ4LDE0ICs0OCwxNSBAQCBzdGF0aWMgdTggZHBfbGlua19zdGF0dXMoY29uc3QgdTgg
+bGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sIGludCByKQo+ICAJcmV0dXJuIGxpbmtf
+c3RhdHVzW3IgLSBEUF9MQU5FMF8xX1NUQVRVU107Cj4gIH0KPiAgCj4gLXN0YXRpYyB1OCBkcF9n
+ZXRfbGFuZV9zdGF0dXMoY29uc3QgdTggbGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0s
+Cj4gLQkJCSAgICAgaW50IGxhbmUpCj4gK3U4IGRybV9kcF9nZXRfbGFuZV9zdGF0dXMoY29uc3Qg
+dTggbGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gKwkJCSAgaW50IGxhbmUpCj4g
+IHsKPiAgCWludCBpID0gRFBfTEFORTBfMV9TVEFUVVMgKyAobGFuZSA+PiAxKTsKPiAgCWludCBz
+ID0gKGxhbmUgJiAxKSAqIDQ7Cj4gIAl1OCBsID0gZHBfbGlua19zdGF0dXMobGlua19zdGF0dXMs
+IGkpOwo+ICAJcmV0dXJuIChsID4+IHMpICYgMHhmOwo+ICB9Cj4gK0VYUE9SVF9TWU1CT0woZHJt
+X2RwX2dldF9sYW5lX3N0YXR1cyk7Cj4gIAo+ICBib29sIGRybV9kcF9jaGFubmVsX2VxX29rKGNv
+bnN0IHU4IGxpbmtfc3RhdHVzW0RQX0xJTktfU1RBVFVTX1NJWkVdLAo+ICAJCQkgIGludCBsYW5l
+X2NvdW50KQo+IEBAIC02OSw3ICs3MCw3IEBAIGJvb2wgZHJtX2RwX2NoYW5uZWxfZXFfb2soY29u
+c3QgdTggbGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gIAlpZiAoKGxhbmVfYWxp
+Z24gJiBEUF9JTlRFUkxBTkVfQUxJR05fRE9ORSkgPT0gMCkKPiAgCQlyZXR1cm4gZmFsc2U7Cj4g
+IAlmb3IgKGxhbmUgPSAwOyBsYW5lIDwgbGFuZV9jb3VudDsgbGFuZSsrKSB7Cj4gLQkJbGFuZV9z
+dGF0dXMgPSBkcF9nZXRfbGFuZV9zdGF0dXMobGlua19zdGF0dXMsIGxhbmUpOwo+ICsJCWxhbmVf
+c3RhdHVzID0gZHJtX2RwX2dldF9sYW5lX3N0YXR1cyhsaW5rX3N0YXR1cywgbGFuZSk7Cj4gIAkJ
+aWYgKChsYW5lX3N0YXR1cyAmIERQX0NIQU5ORUxfRVFfQklUUykgIT0gRFBfQ0hBTk5FTF9FUV9C
+SVRTKQo+ICAJCQlyZXR1cm4gZmFsc2U7Cj4gIAl9Cj4gQEAgLTg0LDcgKzg1LDcgQEAgYm9vbCBk
+cm1fZHBfY2xvY2tfcmVjb3Zlcnlfb2soY29uc3QgdTggbGlua19zdGF0dXNbRFBfTElOS19TVEFU
+VVNfU0laRV0sCj4gIAl1OCBsYW5lX3N0YXR1czsKPiAgCj4gIAlmb3IgKGxhbmUgPSAwOyBsYW5l
+IDwgbGFuZV9jb3VudDsgbGFuZSsrKSB7Cj4gLQkJbGFuZV9zdGF0dXMgPSBkcF9nZXRfbGFuZV9z
+dGF0dXMobGlua19zdGF0dXMsIGxhbmUpOwo+ICsJCWxhbmVfc3RhdHVzID0gZHJtX2RwX2dldF9s
+YW5lX3N0YXR1cyhsaW5rX3N0YXR1cywgbGFuZSk7Cj4gIAkJaWYgKChsYW5lX3N0YXR1cyAmIERQ
+X0xBTkVfQ1JfRE9ORSkgPT0gMCkKPiAgCQkJcmV0dXJuIGZhbHNlOwo+ICAJfQo+IGRpZmYgLS1n
+aXQgYS9pbmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmggYi9pbmNsdWRlL2RybS9kcm1fZHBfaGVs
+cGVyLmgKPiBpbmRleCA2OTgwODJhMDJiOTcuLjk3M2QyZmRhOTY1NCAxMDA2NDQKPiAtLS0gYS9p
+bmNsdWRlL2RybS9kcm1fZHBfaGVscGVyLmgKPiArKysgYi9pbmNsdWRlL2RybS9kcm1fZHBfaGVs
+cGVyLmgKPiBAQCAtOTUyLDYgKzk1Miw4IEBACj4gICNkZWZpbmUgRFBfTVNUX0xPR0lDQUxfUE9S
+VF8wIDgKPiAgCj4gICNkZWZpbmUgRFBfTElOS19TVEFUVVNfU0laRQkgICA2Cj4gKwo+ICt1OCBk
+cm1fZHBfZ2V0X2xhbmVfc3RhdHVzKGNvbnN0IHU4IGxpbmtfc3RhdHVzW0RQX0xJTktfU1RBVFVT
+X1NJWkVdLCBpbnQgbGFuZSk7Cj4gIGJvb2wgZHJtX2RwX2NoYW5uZWxfZXFfb2soY29uc3QgdTgg
+bGlua19zdGF0dXNbRFBfTElOS19TVEFUVVNfU0laRV0sCj4gIAkJCSAgaW50IGxhbmVfY291bnQp
+Owo+ICBib29sIGRybV9kcF9jbG9ja19yZWNvdmVyeV9vayhjb25zdCB1OCBsaW5rX3N0YXR1c1tE
+UF9MSU5LX1NUQVRVU19TSVpFXSwKPiAtLSAKPiAyLjE3LjEKPiAKCi0tIApTZWFuIFBhdWwsIFNv
+ZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
