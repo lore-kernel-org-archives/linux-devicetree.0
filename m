@@ -1,619 +1,140 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH v5 2/3] spi: mediatek: add spi slave for Mediatek MT2712
-Date: Fri, 28 Sep 2018 18:53:04 +0800
-Message-ID: <1538131985-9471-3-git-send-email-leilk.liu@mediatek.com>
-References: <1538131985-9471-1-git-send-email-leilk.liu@mediatek.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v2 2/2] PCI: controller: dwc: add UniPhier PCIe host
+ controller support
+Date: Fri, 28 Sep 2018 12:06:40 +0100
+Message-ID: <20180928110640.GA18840@e107981-ln.cambridge.arm.com>
+References: <b869b273-e681-0b8c-52f5-6e02f9de5485@synopsys.com>
+ <20180926213135.A4B4.4A936039@socionext.com>
+ <20180927164426.ECD6.4A936039@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538131985-9471-1-git-send-email-leilk.liu@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <20180927164426.ECD6.4A936039@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com, Leilk Liu <leilk.liu@mediatek.com>
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Murali Karicheri <m-karicheri2@ti.com>, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic spi slave for MT2712.
+[+Murali, Marc]
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
----
- drivers/spi/Kconfig            |   10 +
- drivers/spi/Makefile           |    1 +
- drivers/spi/spi-slave-mt27xx.c |  554 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 565 insertions(+)
- create mode 100644 drivers/spi/spi-slave-mt27xx.c
+On Thu, Sep 27, 2018 at 04:44:26PM +0900, Kunihiko Hayashi wrote:
+> Hi Lorenzo, Gustavo,
+> 
+> On Wed, 26 Sep 2018 21:31:36 +0900 <hayashi.kunihiko@socionext.com> wrote:
+> 
+> > Hi Lorenzo, Gustavo,
+> > 
+> > Thank you for reviewing.
+> > 
+> > On Tue, 25 Sep 2018 18:53:01 +0100
+> > Gustavo Pimentel <gustavo.pimentel@synopsys.com> wrote:
+> > 
+> > > On 25/09/2018 17:14, Lorenzo Pieralisi wrote:
+> > > > [+Gustavo, please have a look at INTX/MSI management]
+> > > > 
+> > > > On Thu, Sep 06, 2018 at 06:40:32PM +0900, Kunihiko Hayashi wrote:
+> > > >> This introduces specific glue layer for UniPhier platform to support
+> > > >> PCIe host controller that is based on the DesignWare PCIe core, and
+> > > >> this driver supports Root Complex (host) mode.
+> > > > 
+> > > > Please read this thread and apply it to next versions:
+> > > > 
+> > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__marc.info_-3Fl-3Dlinux-2Dpci-26m-3D150905742808166-26w-3D2&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-f-E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=H8UNDDUGQnQnqfWr4CBios689dJcjxu4qeTTRGulLmU&s=CgcXc_2LThyOpW-4bCriJNo9H1lzROEdy_cG9p-Y5hU&e=
+> > 
+> > I also found this thread in previous linux-pci, and I think it's helpful for me.
+> > I'll check it carefully.
+> 
+> [snip]
+> 
+> > > >> +	ret = devm_request_irq(dev, pp->irq, uniphier_pcie_irq_handler,
+> > > >> +			       IRQF_SHARED, "pcie", priv);
+> > > > 
+> > > > This is wrong, you should set-up a chained IRQ for INTX.
+> > > > 
+> > > > I *think* that
+> > > > 
+> > > > ks_pcie_setup_interrupts()
+> > > > 
+> > > > is a good example to start with but I wonder whether it is worth
+> > > > generalizing the INTX approach to designware as a whole as it was
+> > > > done for MSIs.
+> > > > 
+> > > > Thoughts ?
+> > > 
+> > > From what I understood this is for legacy IRQ, right?
+> > 
+> > Yes. For legacy IRQ.
+> > 
+> > > Like you (Lorenzo) said there is 2 drivers (pci-keystone-dw.c and pci-dra7xx.c)
+> > > that uses it and can be use as a template for handling this type of interrupts.
+> > > 
+> > > We can try to pass some kind of generic INTX function to the DesignWare host
+> > > library to handling this, but this will require some help from keystone and
+> > > dra7xx maintainers, since my setup doesn't have legacy IRQ HW support.
+> > 
+> > Now I think it's difficult to make a template for INTX function,
+> > and at first, I'll try to re-write this part with reference to pci-keystone-dw.c.
+> 
+> I understand that there are 2 types of interrupt and the drivers.
+> 
+> One like pci-keystone-dw.c is:
+> 
+>  - there are 4 interrupts for legacy,
+>  - invoke handlers for each interrupt, and handle the interrupt,
+>  - call irq_set_chained_handler_and_data() to make a chain of the interrupts
+>   when initializing
+> 
+> The other like pci-dra7xx.c is:
+> 
+>  - there is 1 IRQ for legacy as a parent,
+>  - check an interrupt factor register, and handle the interrupt correspond
+>    to the factor,
+>  - call request_irq() for the parent IRQ and irq_domain_add_linear() for
+>    the factor when initializing
+> 
+> The pcie-uniphier.c is the same type as the latter (like pci-dra7xx.c).
+> 
+> However, in pci-dra7xx.c, MSI and legacy IRQ share the same interrupt number,
+> so the same handler is called and the handler divides these IRQs.
+> (found in dra7xx_pcie_msi_irq_handler())
+> 
+> In pcie-uniphier.c, MSI and legacy IRQ are independent.
+> Therefore it's necessary to prepare the handler for the legacy IRQ.
+> 
+> I think that it's difficult to apply the way of pci-keystone-dw.c, and
+> uniphier_pcie_irq_handler() and calling devm_request_irq() are still
+> necessary to handle legacy IRQ.
 
-diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-index 671d078..60b13c6 100644
---- a/drivers/spi/Kconfig
-+++ b/drivers/spi/Kconfig
-@@ -596,6 +596,16 @@ config SPI_SIRF
- 	help
- 	  SPI driver for CSR SiRFprimaII SoCs
- 
-+config SPI_SLAVE_MT27XX
-+	tristate "MediaTek SPI slave device"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on SPI_SLAVE
-+	help
-+	  This selects the MediaTek(R) SPI slave device driver.
-+	  If you want to use MediaTek(R) SPI slave interface,
-+	  say Y or M here.If you are not sure, say N.
-+	  SPI slave drivers for Mediatek MT27XX series ARM SoCs.
-+
- config SPI_SPRD_ADI
- 	tristate "Spreadtrum ADI controller"
- 	depends on ARCH_SPRD || COMPILE_TEST
-diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-index a90d559..3b469fa 100644
---- a/drivers/spi/Makefile
-+++ b/drivers/spi/Makefile
-@@ -88,6 +88,7 @@ obj-$(CONFIG_SPI_SH_HSPI)		+= spi-sh-hspi.o
- obj-$(CONFIG_SPI_SH_MSIOF)		+= spi-sh-msiof.o
- obj-$(CONFIG_SPI_SH_SCI)		+= spi-sh-sci.o
- obj-$(CONFIG_SPI_SIRF)		+= spi-sirf.o
-+obj-$(CONFIG_SPI_SLAVE_MT27XX)          += spi-slave-mt27xx.o
- obj-$(CONFIG_SPI_SPRD_ADI)		+= spi-sprd-adi.o
- obj-$(CONFIG_SPI_STM32) 		+= spi-stm32.o
- obj-$(CONFIG_SPI_ST_SSC4)		+= spi-st-ssc4.o
-diff --git a/drivers/spi/spi-slave-mt27xx.c b/drivers/spi/spi-slave-mt27xx.c
-new file mode 100644
-index 0000000..d1075433
---- /dev/null
-+++ b/drivers/spi/spi-slave-mt27xx.c
-@@ -0,0 +1,554 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+// Copyright (c) 2018 MediaTek Inc.
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/spi/spi.h>
-+
-+#define SPIS_IRQ_EN_REG		0x0
-+#define SPIS_IRQ_CLR_REG	0x4
-+#define SPIS_IRQ_ST_REG		0x8
-+#define SPIS_IRQ_MASK_REG	0xc
-+#define SPIS_CFG_REG		0x10
-+#define SPIS_RX_DATA_REG	0x14
-+#define SPIS_TX_DATA_REG	0x18
-+#define SPIS_RX_DST_REG		0x1c
-+#define SPIS_TX_SRC_REG		0x20
-+#define SPIS_DMA_CFG_REG	0x30
-+#define SPIS_SOFT_RST_REG	0x40
-+
-+/* SPIS_IRQ_EN_REG */
-+#define DMA_DONE_EN		BIT(7)
-+#define DATA_DONE_EN		BIT(2)
-+#define RSTA_DONE_EN		BIT(1)
-+#define CMD_INVALID_EN		BIT(0)
-+
-+/* SPIS_IRQ_ST_REG */
-+#define DMA_DONE_ST		BIT(7)
-+#define DATA_DONE_ST		BIT(2)
-+#define RSTA_DONE_ST		BIT(1)
-+#define CMD_INVALID_ST		BIT(0)
-+
-+/* SPIS_IRQ_MASK_REG */
-+#define DMA_DONE_MASK		BIT(7)
-+#define DATA_DONE_MASK		BIT(2)
-+#define RSTA_DONE_MASK		BIT(1)
-+#define CMD_INVALID_MASK	BIT(0)
-+
-+/* SPIS_CFG_REG */
-+#define SPIS_TX_ENDIAN		BIT(7)
-+#define SPIS_RX_ENDIAN		BIT(6)
-+#define SPIS_TXMSBF		BIT(5)
-+#define SPIS_RXMSBF		BIT(4)
-+#define SPIS_CPHA		BIT(3)
-+#define SPIS_CPOL		BIT(2)
-+#define SPIS_TX_EN		BIT(1)
-+#define SPIS_RX_EN		BIT(0)
-+
-+/* SPIS_DMA_CFG_REG */
-+#define TX_DMA_TRIG_EN		BIT(31)
-+#define TX_DMA_EN		BIT(30)
-+#define RX_DMA_EN		BIT(29)
-+#define TX_DMA_LEN		0xfffff
-+
-+/* SPIS_SOFT_RST_REG */
-+#define SPIS_DMA_ADDR_EN	BIT(1)
-+#define SPIS_SOFT_RST		BIT(0)
-+
-+#define MTK_SPI_SLAVE_MAX_FIFO_SIZE 512U
-+
-+struct mtk_spi_slave {
-+	struct device *dev;
-+	void __iomem *base;
-+	struct clk *spi_clk;
-+	struct completion xfer_done;
-+	struct spi_transfer *cur_transfer;
-+	bool slave_aborted;
-+};
-+
-+static const struct of_device_id mtk_spi_slave_of_match[] = {
-+	{ .compatible = "mediatek,mt2712-spi-slave", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, mtk_spi_slave_of_match);
-+
-+static void mtk_spi_slave_disable_dma(struct mtk_spi_slave *mdata)
-+{
-+	u32 reg_val;
-+
-+	reg_val = readl(mdata->base + SPIS_DMA_CFG_REG);
-+	reg_val &= ~RX_DMA_EN;
-+	reg_val &= ~TX_DMA_EN;
-+	writel(reg_val, mdata->base + SPIS_DMA_CFG_REG);
-+}
-+
-+static void mtk_spi_slave_disable_xfer(struct mtk_spi_slave *mdata)
-+{
-+	u32 reg_val;
-+
-+	reg_val = readl(mdata->base + SPIS_CFG_REG);
-+	reg_val &= ~SPIS_TX_EN;
-+	reg_val &= ~SPIS_RX_EN;
-+	writel(reg_val, mdata->base + SPIS_CFG_REG);
-+}
-+
-+static int mtk_spi_slave_wait_for_completion(struct mtk_spi_slave *mdata)
-+{
-+	if (wait_for_completion_interruptible(&mdata->xfer_done) ||
-+	    mdata->slave_aborted) {
-+		dev_err(mdata->dev, "interrupted\n");
-+		return -EINTR;
-+	}
-+
-+	return 0;
-+}
-+
-+static int mtk_spi_slave_prepare_message(struct spi_controller *ctlr,
-+					 struct spi_message *msg)
-+{
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	struct spi_device *spi = msg->spi;
-+	bool cpha, cpol;
-+	u32 reg_val;
-+
-+	cpha = spi->mode & SPI_CPHA ? 1 : 0;
-+	cpol = spi->mode & SPI_CPOL ? 1 : 0;
-+
-+	reg_val = readl(mdata->base + SPIS_CFG_REG);
-+	if (cpha)
-+		reg_val |= SPIS_CPHA;
-+	else
-+		reg_val &= ~SPIS_CPHA;
-+	if (cpol)
-+		reg_val |= SPIS_CPOL;
-+	else
-+		reg_val &= ~SPIS_CPOL;
-+
-+	if (spi->mode & SPI_LSB_FIRST)
-+		reg_val &= ~(SPIS_TXMSBF | SPIS_RXMSBF);
-+	else
-+		reg_val |= SPIS_TXMSBF | SPIS_RXMSBF;
-+
-+	reg_val &= ~SPIS_TX_ENDIAN;
-+	reg_val &= ~SPIS_RX_ENDIAN;
-+	writel(reg_val, mdata->base + SPIS_CFG_REG);
-+
-+	return 0;
-+}
-+
-+static int mtk_spi_slave_fifo_transfer(struct spi_controller *ctlr,
-+				       struct spi_device *spi,
-+				       struct spi_transfer *xfer)
-+{
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	int reg_val, cnt, remainder, ret;
-+
-+	writel(SPIS_SOFT_RST, mdata->base + SPIS_SOFT_RST_REG);
-+
-+	reg_val = readl(mdata->base + SPIS_CFG_REG);
-+	if (xfer->rx_buf)
-+		reg_val |= SPIS_RX_EN;
-+	if (xfer->tx_buf)
-+		reg_val |= SPIS_TX_EN;
-+	writel(reg_val, mdata->base + SPIS_CFG_REG);
-+
-+	cnt = xfer->len / 4;
-+	if (xfer->tx_buf)
-+		iowrite32_rep(mdata->base + SPIS_TX_DATA_REG,
-+			      xfer->tx_buf, cnt);
-+
-+	remainder = xfer->len % 4;
-+	if (xfer->tx_buf && remainder > 0) {
-+		reg_val = 0;
-+		memcpy(&reg_val, xfer->tx_buf + cnt * 4, remainder);
-+		writel(reg_val, mdata->base + SPIS_TX_DATA_REG);
-+	}
-+
-+	ret = mtk_spi_slave_wait_for_completion(mdata);
-+	if (ret) {
-+		mtk_spi_slave_disable_xfer(mdata);
-+		writel(SPIS_SOFT_RST, mdata->base + SPIS_SOFT_RST_REG);
-+	}
-+
-+	return ret;
-+}
-+
-+static int mtk_spi_slave_dma_transfer(struct spi_controller *ctlr,
-+				      struct spi_device *spi,
-+				      struct spi_transfer *xfer)
-+{
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	struct device *dev = mdata->dev;
-+	int reg_val, ret;
-+
-+	writel(SPIS_SOFT_RST, mdata->base + SPIS_SOFT_RST_REG);
-+
-+	if (xfer->tx_buf) {
-+		/* tx_buf is a const void* where we need a void * for
-+		 * the dma mapping
-+		 */
-+		void *nonconst_tx = (void *)xfer->tx_buf;
-+
-+		xfer->tx_dma = dma_map_single(dev, nonconst_tx,
-+					      xfer->len, DMA_TO_DEVICE);
-+		if (dma_mapping_error(dev, xfer->tx_dma)) {
-+			ret = -ENOMEM;
-+			goto disable_transfer;
-+		}
-+	}
-+
-+	if (xfer->rx_buf) {
-+		xfer->rx_dma = dma_map_single(dev, xfer->rx_buf,
-+					      xfer->len, DMA_FROM_DEVICE);
-+		if (dma_mapping_error(dev, xfer->rx_dma)) {
-+			ret = -ENOMEM;
-+			goto unmap_txdma;
-+		}
-+	}
-+
-+	writel(xfer->tx_dma, mdata->base + SPIS_TX_SRC_REG);
-+	writel(xfer->rx_dma, mdata->base + SPIS_RX_DST_REG);
-+
-+	writel(SPIS_DMA_ADDR_EN, mdata->base + SPIS_SOFT_RST_REG);
-+
-+	/* enable config reg tx rx_enable */
-+	reg_val = readl(mdata->base + SPIS_CFG_REG);
-+	if (xfer->tx_buf)
-+		reg_val |= SPIS_TX_EN;
-+	if (xfer->rx_buf)
-+		reg_val |= SPIS_RX_EN;
-+	writel(reg_val, mdata->base + SPIS_CFG_REG);
-+
-+	/* config dma */
-+	reg_val = 0;
-+	reg_val |= (xfer->len - 1) & TX_DMA_LEN;
-+	writel(reg_val, mdata->base + SPIS_DMA_CFG_REG);
-+
-+	reg_val = readl(mdata->base + SPIS_DMA_CFG_REG);
-+	if (xfer->tx_buf)
-+		reg_val |= TX_DMA_EN;
-+	if (xfer->rx_buf)
-+		reg_val |= RX_DMA_EN;
-+	reg_val |= TX_DMA_TRIG_EN;
-+	writel(reg_val, mdata->base + SPIS_DMA_CFG_REG);
-+
-+	ret = mtk_spi_slave_wait_for_completion(mdata);
-+	if (ret)
-+		goto unmap_rxdma;
-+
-+	return 0;
-+
-+unmap_rxdma:
-+	if (xfer->rx_buf)
-+		dma_unmap_single(dev, xfer->rx_dma,
-+				 xfer->len, DMA_FROM_DEVICE);
-+
-+unmap_txdma:
-+	if (xfer->tx_buf)
-+		dma_unmap_single(dev, xfer->tx_dma,
-+				 xfer->len, DMA_TO_DEVICE);
-+
-+disable_transfer:
-+	mtk_spi_slave_disable_dma(mdata);
-+	mtk_spi_slave_disable_xfer(mdata);
-+	writel(SPIS_SOFT_RST, mdata->base + SPIS_SOFT_RST_REG);
-+
-+	return ret;
-+}
-+
-+static int mtk_spi_slave_transfer_one(struct spi_controller *ctlr,
-+				      struct spi_device *spi,
-+				      struct spi_transfer *xfer)
-+{
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+
-+	reinit_completion(&mdata->xfer_done);
-+	mdata->slave_aborted = false;
-+	mdata->cur_transfer = xfer;
-+
-+	if (xfer->len > MTK_SPI_SLAVE_MAX_FIFO_SIZE)
-+		return mtk_spi_slave_dma_transfer(ctlr, spi, xfer);
-+	else
-+		return mtk_spi_slave_fifo_transfer(ctlr, spi, xfer);
-+}
-+
-+static int mtk_spi_slave_setup(struct spi_device *spi)
-+{
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(spi->master);
-+	u32 reg_val;
-+
-+	reg_val = DMA_DONE_EN | DATA_DONE_EN |
-+		  RSTA_DONE_EN | CMD_INVALID_EN;
-+	writel(reg_val, mdata->base + SPIS_IRQ_EN_REG);
-+
-+	reg_val = DMA_DONE_MASK | DATA_DONE_MASK |
-+		  RSTA_DONE_MASK | CMD_INVALID_MASK;
-+	writel(reg_val, mdata->base + SPIS_IRQ_MASK_REG);
-+
-+	mtk_spi_slave_disable_dma(mdata);
-+	mtk_spi_slave_disable_xfer(mdata);
-+
-+	return 0;
-+}
-+
-+static int mtk_slave_abort(struct spi_controller *ctlr)
-+{
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+
-+	mdata->slave_aborted = true;
-+	complete(&mdata->xfer_done);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t mtk_spi_slave_interrupt(int irq, void *dev_id)
-+{
-+	struct spi_controller *ctlr = dev_id;
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	struct spi_transfer *trans = mdata->cur_transfer;
-+	u32 int_status, reg_val, cnt, remainder;
-+
-+	int_status = readl(mdata->base + SPIS_IRQ_ST_REG);
-+	writel(int_status, mdata->base + SPIS_IRQ_CLR_REG);
-+
-+	if (!trans)
-+		return IRQ_NONE;
-+
-+	if ((int_status & DMA_DONE_ST) &&
-+	    ((int_status & DATA_DONE_ST) ||
-+	    (int_status & RSTA_DONE_ST))) {
-+		writel(SPIS_SOFT_RST, mdata->base + SPIS_SOFT_RST_REG);
-+
-+		if (trans->tx_buf)
-+			dma_unmap_single(mdata->dev, trans->tx_dma,
-+					 trans->len, DMA_TO_DEVICE);
-+		if (trans->rx_buf)
-+			dma_unmap_single(mdata->dev, trans->rx_dma,
-+					 trans->len, DMA_FROM_DEVICE);
-+
-+		mtk_spi_slave_disable_dma(mdata);
-+		mtk_spi_slave_disable_xfer(mdata);
-+	}
-+
-+	if ((!(int_status & DMA_DONE_ST)) &&
-+	    ((int_status & DATA_DONE_ST) ||
-+	    (int_status & RSTA_DONE_ST))) {
-+		cnt = trans->len / 4;
-+		if (trans->rx_buf)
-+			ioread32_rep(mdata->base + SPIS_RX_DATA_REG,
-+				     trans->rx_buf, cnt);
-+		remainder = trans->len % 4;
-+		if (trans->rx_buf && remainder > 0) {
-+			reg_val = readl(mdata->base + SPIS_RX_DATA_REG);
-+			memcpy(trans->rx_buf + (cnt * 4),
-+			       &reg_val, remainder);
-+		}
-+
-+		mtk_spi_slave_disable_xfer(mdata);
-+	}
-+
-+	if (int_status & CMD_INVALID_ST) {
-+		dev_warn(&ctlr->dev, "cmd invalid\n");
-+		return IRQ_NONE;
-+	}
-+
-+	mdata->cur_transfer = NULL;
-+	complete(&mdata->xfer_done);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int mtk_spi_slave_probe(struct platform_device *pdev)
-+{
-+	struct spi_controller *ctlr;
-+	struct mtk_spi_slave *mdata;
-+	struct resource *res;
-+	int irq, ret;
-+
-+	ctlr = spi_alloc_slave(&pdev->dev, sizeof(*mdata));
-+	if (!ctlr) {
-+		dev_err(&pdev->dev, "failed to alloc spi slave\n");
-+		return -ENOMEM;
-+	}
-+
-+	ctlr->auto_runtime_pm = true;
-+	ctlr->dev.of_node = pdev->dev.of_node;
-+	ctlr->mode_bits = SPI_CPOL | SPI_CPHA;
-+	ctlr->mode_bits |= SPI_LSB_FIRST;
-+
-+	ctlr->prepare_message = mtk_spi_slave_prepare_message;
-+	ctlr->transfer_one = mtk_spi_slave_transfer_one;
-+	ctlr->setup = mtk_spi_slave_setup;
-+	ctlr->slave_abort = mtk_slave_abort;
-+
-+	mdata = spi_controller_get_devdata(ctlr);
-+
-+	platform_set_drvdata(pdev, ctlr);
-+
-+	init_completion(&mdata->xfer_done);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		ret = -ENODEV;
-+		dev_err(&pdev->dev, "failed to determine base address\n");
-+		goto err_put_ctlr;
-+	}
-+
-+	mdata->dev = &pdev->dev;
-+
-+	mdata->base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mdata->base)) {
-+		ret = PTR_ERR(mdata->base);
-+		goto err_put_ctlr;
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0) {
-+		dev_err(&pdev->dev, "failed to get irq (%d)\n", irq);
-+		ret = irq;
-+		goto err_put_ctlr;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, irq, mtk_spi_slave_interrupt,
-+			       IRQF_TRIGGER_NONE, dev_name(&pdev->dev), ctlr);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register irq (%d)\n", ret);
-+		goto err_put_ctlr;
-+	}
-+
-+	mdata->spi_clk = devm_clk_get(&pdev->dev, "spi");
-+	if (IS_ERR(mdata->spi_clk)) {
-+		ret = PTR_ERR(mdata->spi_clk);
-+		dev_err(&pdev->dev, "failed to get spi-clk: %d\n", ret);
-+		goto err_put_ctlr;
-+	}
-+
-+	ret = clk_prepare_enable(mdata->spi_clk);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to enable spi_clk (%d)\n", ret);
-+		goto err_put_ctlr;
-+	}
-+
-+	pm_runtime_enable(&pdev->dev);
-+
-+	ret = devm_spi_register_controller(&pdev->dev, ctlr);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"failed to register slave controller(%d)\n", ret);
-+		clk_disable_unprepare(mdata->spi_clk);
-+		goto err_disable_runtime_pm;
-+	}
-+
-+	clk_disable_unprepare(mdata->spi_clk);
-+
-+	return 0;
-+
-+err_disable_runtime_pm:
-+	pm_runtime_disable(&pdev->dev);
-+err_put_ctlr:
-+	spi_controller_put(ctlr);
-+
-+	return ret;
-+}
-+
-+static int mtk_spi_slave_remove(struct platform_device *pdev)
-+{
-+	pm_runtime_disable(&pdev->dev);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int mtk_spi_slave_suspend(struct device *dev)
-+{
-+	struct spi_controller *ctlr = dev_get_drvdata(dev);
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	int ret;
-+
-+	ret = spi_controller_suspend(ctlr);
-+	if (ret)
-+		return ret;
-+
-+	if (!pm_runtime_suspended(dev))
-+		clk_disable_unprepare(mdata->spi_clk);
-+
-+	return ret;
-+}
-+
-+static int mtk_spi_slave_resume(struct device *dev)
-+{
-+	struct spi_controller *ctlr = dev_get_drvdata(dev);
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	int ret;
-+
-+	if (!pm_runtime_suspended(dev)) {
-+		ret = clk_prepare_enable(mdata->spi_clk);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to enable spi_clk (%d)\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	ret = spi_controller_resume(ctlr);
-+	if (ret < 0)
-+		clk_disable_unprepare(mdata->spi_clk);
-+
-+	return ret;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_PM
-+static int mtk_spi_slave_runtime_suspend(struct device *dev)
-+{
-+	struct spi_controller *ctlr = dev_get_drvdata(dev);
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+
-+	clk_disable_unprepare(mdata->spi_clk);
-+
-+	return 0;
-+}
-+
-+static int mtk_spi_slave_runtime_resume(struct device *dev)
-+{
-+	struct spi_controller *ctlr = dev_get_drvdata(dev);
-+	struct mtk_spi_slave *mdata = spi_controller_get_devdata(ctlr);
-+	int ret;
-+
-+	ret = clk_prepare_enable(mdata->spi_clk);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable spi_clk (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+#endif /* CONFIG_PM */
-+
-+static const struct dev_pm_ops mtk_spi_slave_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mtk_spi_slave_suspend, mtk_spi_slave_resume)
-+	SET_RUNTIME_PM_OPS(mtk_spi_slave_runtime_suspend,
-+			   mtk_spi_slave_runtime_resume, NULL)
-+};
-+
-+static struct platform_driver mtk_spi_slave_driver = {
-+	.driver = {
-+		.name = "mtk-spi-slave",
-+		.pm	= &mtk_spi_slave_pm,
-+		.of_match_table = mtk_spi_slave_of_match,
-+	},
-+	.probe = mtk_spi_slave_probe,
-+	.remove = mtk_spi_slave_remove,
-+};
-+
-+module_platform_driver(mtk_spi_slave_driver);
-+
-+MODULE_DESCRIPTION("MTK SPI Slave Controller driver");
-+MODULE_AUTHOR("Leilk Liu <leilk.liu@mediatek.com>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:mtk-spi-slave");
--- 
-1.7.9.5
+I do not think it is difficult, the difference is that keystone has
+1 GIC irq line allocated per legacy IRQ, your set-up has one for
+all INTX.
+
+*However*, I would like some clarifications from Murali on this code
+in drivers/pci/controller/dwc/pci-keystone.c:
+
+static void ks_pcie_legacy_irq_handler(struct irq_desc *desc)
+{
+	unsigned int irq = irq_desc_get_irq(desc);
+	struct keystone_pcie *ks_pcie = irq_desc_get_handler_data(desc);
+	struct dw_pcie *pci = ks_pcie->pci;
+	struct device *dev = pci->dev;
+	u32 irq_offset = irq - ks_pcie->legacy_host_irqs[0];
+
+Here the IRQ numbers are virtual IRQs, is it correct to consider
+the virq numbers as sequential values ? The "offset" is used to
+handle the PCI controller interrupt registers, so it must be a value
+between 0-3 IIUC.
+
+I would appreciated a detailed explanation of keystone legacy IRQ
+handling so that we can eventually try to replicate it and generalize
+it.
+
+Lorenzo
+
+	[...]
+
+	chained_irq_enter(chip, desc);
+	ks_dw_pcie_handle_legacy_irq(ks_pcie, irq_offset);
+	chained_irq_exit(chip, desc);
+}
