@@ -1,196 +1,68 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
-Date: Fri, 28 Sep 2018 14:13:58 -0700
-Message-ID: <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
- <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+From: Li Yang <leoyang.li@nxp.com>
+Subject: Re: drivers binding to device node with multiple compatible strings
+Date: Fri, 28 Sep 2018 16:19:13 -0500
+Message-ID: <CADRPPNTovoNaY-suhmeM2YCGHTe6UsQ5FnkOCuPef=uUxi74-Q@mail.gmail.com>
+References: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
+ <CAL_JsqKRH8uEzSx6H6ZSRJF9Ecp4am1cNsxgQqf2OO5_aGR1zw@mail.gmail.com> <CADRPPNQam-QUfqDMvu42KS+50VaHfGPhCZj-1jRHQ-Od0fbxuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <CADRPPNQam-QUfqDMvu42KS+50VaHfGPhCZj-1jRHQ-Od0fbxuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, frowand.list@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/18 06:44, Rob Herring wrote:
-> +David Gibson
-> 
-> On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
-> <takahiro.akashi@linaro.org> wrote:
->>
->> These functions will be used later to handle kexec-specific properties
->> in arm64's kexec_file implementation.
+On Fri, Sep 28, 2018 at 4:00 PM Li Yang <leoyang.li@nxp.com> wrote:
+>
+> On Fri, Sep 28, 2018 at 3:07 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Thu, Sep 27, 2018 at 5:25 PM Li Yang <leoyang.li@nxp.com> wrote:
+> > >
+> > > Hi Rob and Grant,
+> > >
+> > > Various device tree specs are recommending to include all the
+> > > potential compatible strings in the device node, with the order from
+> > > most specific to most general.  But it looks like Linux kernel doesn't
+> > > provide a way to bind the device to the most specific driver, however,
+> > > the first registered compatible driver will be bound.
+> > >
+> > > As more and more generic drivers are added to the Linux kernel, they
+> > > are competing with the more specific vendor drivers and causes problem
+> > > when both are built into the kernel.  I'm wondering if there is a
+> > > generic solution (or in plan) to make the most specific driver bound
+> > > to the device.   Or we have to disable the more general driver or
+> > > remove the more general compatible string from the device tree?
+> >
+> > It's been a known limitation for a long time. However, in practice it
+> > doesn't seem to be a common problem. Perhaps folks just remove the
+> > less specific compatible from their DT (though that's not ideal). For
+> > most modern bindings, there's so many other resources beyond
+> > compatible (clocks, resets, pinctrl, etc.) that there are few generic
+> > drivers that can work.
+> >
+> > I guess if we want to fix this, we'd need to have weighted matching in
+> > the driver core and unbind drivers when we get a better match. Though
+> > it could get messy if the better driver probe fails. Then we've got to
+> > rebind to the original driver.
+>
+> Probably we can populate the platform devices from device tree after
+> the device_init phase?  So that all built-in drivers are already
+> registered when the devices are created and we can try find the best
+> match in one go?  For more specific loadable modules we probably need
+> to unbind from the old driver and bind to the new one.  But I agree
+> with you that it could be messy.
+>
+> >
+> > Do you have a specific case where you hit this?
+>
+> Maybe not a new issue but "snps,dw-pcie" is competing with various
+> "fsl,<chip>-pcie" compatibles.  Also a specific PHY
+> "ethernet-phy-idAAAA.BBBB" with generic "ethernet-phy-ieee802.3-c45".
 
-As I requested in version 14:
+The ethernet-phy issue is not related to the general device binding
+framework, it should be an issue with the of_mdio framework. But it is
+still a inalignment with the device tree recommendation.
 
-  The intent of the helper functions is related to properties whose values are
-   tuples of the same format as the "reg" property of the "/memory" nodes.  For
-   example, the "linux,usable-memory-range" and "linux,elfcoredhr" properties of
-   the "/chosen" node.
-
-   The patch header and the function names should be updated to reflect this intent.
-
-
->>
->> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> Cc: devicetree@vger.kernel.org
->> ---
-
-Missing list of changes since version 14.
-
-
->>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
->>  include/linux/of_fdt.h |  4 +++
->>  2 files changed, 60 insertions(+)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 800ad252cf9c..c65c31562ccb 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -25,6 +25,7 @@
->>  #include <linux/debugfs.h>
->>  #include <linux/serial_core.h>
->>  #include <linux/sysfs.h>
->> +#include <linux/types.h>
->>
->>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->>  #include <asm/page.h>
->> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
->>  #endif
->>
->>  #endif /* CONFIG_OF_EARLY_FLATTREE */
-
-In v14 I requested:
-
-   Please add comment:
-
-   /* helper functions for arm64 kexec */
-
-
->> +
->> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
->> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
->> +
->> +int fdt_prop_len(const char *prop_name, int len)
-
-In v14, I requested:
-
-   Please rename as fdt_len_added_prop()
-
-I'm not really happy with my suggested name, but do not have a
-better one yet.  As Rob notes, maybe David G will have a helpful
-comment.
-
-
->> +{
->> +       return (strlen(prop_name) + 1) +
->> +               sizeof(struct fdt_property) +
->> +               FDT_TAGALIGN(len);
-> 
-> Looks like you are using this to calculate how much space you need to
-> allocate in addition to the current DTB for a couple of new or
-> replaced properties. I'm not sure that this calculation is completely
-> accurate. And it is strange there doesn't seem to be any libfdt
-> function for this already. It would be simpler to just add some fixed
-> additional amount.
-> 
-> Maybe David G has comments on this?
-> 
->> +}
->> +
-> 
-> The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
-> should go into libfdt, but I'm fine with having it in the kernel for
-> now.
-> 
->> +static void fill_property(void *buf, u64 val64, int cells)
-
-In v14 I requested:
-
-Please rename as cpu64_to_fdt_cells()
-
-
->> +{
->> +       __be32 val32;
->> +
->> +       while (cells) {
->> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
->> +               memcpy(buf, &val32, sizeof(val32));
->> +               buf += sizeof(val32);
-> 
-> This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
-> 
-> BTW, for purposes of moving to libfdt, we'll need the authors'
-> (Masahiro Yamada and Hans de Goede) permission to dual license.
-> 
->> +       }
->> +}
->> +
->> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
->> +                                               u64 addr, u64 size)
->> +{
->> +       int addr_cells, size_cells;
-
-unsigned
-
-
->> +       char buf[sizeof(__be32) * 2 * 2];
->> +               /* assume dt_root_[addr|size]_cells <= 2 */
->> +       void *prop;
->> +       size_t buf_size;
->> +
->> +       addr_cells = fdt_address_cells(fdt, 0);
->> +       if (addr_cells < 0)
->> +               return addr_cells;
->> +       size_cells = fdt_size_cells(fdt, 0);
->> +       if (size_cells < 0)
->> +               return size_cells;
->> +
->> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
->> +       if ((addr_cells == 1) && (addr > U32_MAX))
->> +               return -FDT_ERR_BADVALUE;
->> +
->> +       if ((size_cells == 1) && (size > U32_MAX))
->> +               return -FDT_ERR_BADVALUE;
-
-In v14 I requested:
-
-   Should also check that base + size does not wrap around.
-
-
->> +
->> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
->> +       prop = buf;
->> +
->> +       fill_property(prop, addr, addr_cells);
->> +       prop += addr_cells * sizeof(u32);
->> +
->> +       fill_property(prop, size, size_cells);
->> +
->> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
->> +}
->> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
->> index b9cd9ebdf9b9..842af6ea92ea 100644
->> --- a/include/linux/of_fdt.h
->> +++ b/include/linux/of_fdt.h
->> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
->>  static inline void unflatten_and_copy_device_tree(void) {}
->>  #endif /* CONFIG_OF_EARLY_FLATTREE */
->>
->> +int fdt_prop_len(const char *prop_name, int len);
->> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
->> +                                               u64 addr, u64 size);
->> +
->>  #endif /* __ASSEMBLY__ */
->>  #endif /* _LINUX_OF_FDT_H */
->> --
->> 2.19.0
->>
-> 
+Regards,
+Leo
