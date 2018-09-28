@@ -1,93 +1,43 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: mediatek: add bindings for Mediatek MT2712 soc platform" to the spi tree
-Date: Fri, 28 Sep 2018 15:05:17 +0100 (BST)
-Message-ID: <20180928140517.8E077440078@finisterre.ee.mobilebroadband>
-References: <1538131985-9471-2-git-send-email-leilk.liu@mediatek.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: [PATCH V2 0/5] Tegra xHCI genpd support
+Date: Fri, 28 Sep 2018 15:11:45 +0100
+Message-ID: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538131985-9471-2-git-send-email-leilk.liu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.comlinux-spi@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Jon Hunter <jonathanh@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+This series add genpd support for the Tegra xHCI device that requires
+more than one power-domain to operate.
 
-   spi: mediatek: add bindings for Mediatek MT2712 soc platform
+This series is making changes to more than one subsystem and at first
+glance may look like a maintainers nightmare. However, my proposal is
+this, once reviewed and people are happy ...
+1. Patches 1-3 should be merged first. Patches 1 can go via the Tegra
+   tree and 2-3 via the USB tree.
+2. Once patches 1-3 are accepted, then 4 and 5 can be merged via the
+   Tegra tree.
 
-has been applied to the spi tree at
+Changes since V1:
+- Dropped unneeded patch to export symbol for genpd API
+- Added patch to power-off XUSB domains
+- Slight re-work to Tegra xHCI driver changes to simplify clean-up path.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+Jon Hunter (5):
+  dt-bindings: usb: xhci-tegra: Add power-domain details
+  usb: xhci: tegra: Power-off power-domains on removal
+  usb: xhci: tegra: Add genpd support
+  soc/tegra: pmc: Don't power-up XUSB power-domains
+  arm64: dts: tegra210: Add power-domains for xHCI
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+ .../bindings/usb/nvidia,tegra124-xusb.txt          |  8 ++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  2 +
+ drivers/soc/tegra/pmc.c                            | 16 ----
+ drivers/usb/host/xhci-tegra.c                      | 92 +++++++++++++++++++---
+ 4 files changed, 91 insertions(+), 27 deletions(-)
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c0116e6b30473c7a75d33077bfd60f3b4eec7808 Mon Sep 17 00:00:00 2001
-From: Leilk Liu <leilk.liu@mediatek.com>
-Date: Fri, 28 Sep 2018 18:53:03 +0800
-Subject: [PATCH] spi: mediatek: add bindings for Mediatek MT2712 soc platform
-
-This patch adds a DT binding documentation for the MT2712 soc.
-
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../bindings/spi/spi-slave-mt27xx.txt         | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
-new file mode 100644
-index 000000000000..c37e5a179b21
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-slave-mt27xx.txt
-@@ -0,0 +1,32 @@
-+Binding for MTK SPI Slave controller
-+
-+Required properties:
-+- compatible: should be one of the following.
-+    - mediatek,mt2712-spi-slave: for mt2712 platforms
-+- reg: Address and length of the register set for the device.
-+- interrupts: Should contain spi interrupt.
-+- clocks: phandles to input clocks.
-+  It's clock gate, and should be <&infracfg CLK_INFRA_AO_SPI1>.
-+- clock-names: should be "spi" for the clock gate.
-+
-+Optional properties:
-+- assigned-clocks: it's mux clock, should be <&topckgen CLK_TOP_SPISLV_SEL>.
-+- assigned-clock-parents: parent of mux clock.
-+  It's PLL, and should be one of the following.
-+   -  <&topckgen CLK_TOP_UNIVPLL1_D2>: specify parent clock 312MHZ.
-+				       It's the default one.
-+   -  <&topckgen CLK_TOP_UNIVPLL1_D4>: specify parent clock 156MHZ.
-+   -  <&topckgen CLK_TOP_UNIVPLL2_D4>: specify parent clock 104MHZ.
-+   -  <&topckgen CLK_TOP_UNIVPLL1_D8>: specify parent clock 78MHZ.
-+
-+Example:
-+- SoC Specific Portion:
-+spis1: spi@10013000 {
-+	compatible = "mediatek,mt2712-spi-slave";
-+	reg = <0 0x10013000 0 0x100>;
-+	interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_LOW>;
-+	clocks = <&infracfg CLK_INFRA_AO_SPI1>;
-+	clock-names = "spi";
-+	assigned-clocks = <&topckgen CLK_TOP_SPISLV_SEL>;
-+	assigned-clock-parents = <&topckgen CLK_TOP_UNIVPLL1_D2>;
-+};
 -- 
-2.19.0
+2.7.4
