@@ -1,94 +1,77 @@
-From: Andrea Merello <andrea.merello@gmail.com>
-Subject: Re: [PATCH v5 4/7] dmaengine: xilinx_dma: program hardware supported
- buffer length
-Date: Fri, 28 Sep 2018 08:53:11 +0200
-Message-ID: <CAN8YU5OySuzAyQ=Buad=Jidhes28koV52Gi-QJ-qOiG5TFBO=Q@mail.gmail.com>
-References: <20180907062502.8241-1-andrea.merello@gmail.com>
- <20180907062502.8241-4-andrea.merello@gmail.com> <20180918162508.GD2613@vkoul-mobl>
-Reply-To: andrea.merello@gmail.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/4] pinctrl: qcom: Introduce readl/writel accessors
+Date: Fri, 28 Sep 2018 09:10:35 +0200
+Message-ID: <CACRpkdaWboGvKVaSjv4C1CCz5DJXbB+ZWV6vGeyX93vb4zo1sw@mail.gmail.com>
+References: <20180924221748.21584-1-bjorn.andersson@linaro.org> <20180924221748.21584-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918162508.GD2613@vkoul-mobl>
+In-Reply-To: <20180924221748.21584-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 18, 2018 at 6:25 PM Vinod <vkoul@kernel.org> wrote:
->
-> On 07-09-18, 08:24, Andrea Merello wrote:
-> > From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> >
-> > AXI-DMA IP supports configurable (c_sg_length_width) buffer length
-> > register width, hence read buffer length (xlnx,sg-length-width) DT
-> > property and ensure that driver doesn't program buffer length
-> > exceeding the supported limit. For VDMA and CDMA there is no change.
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com> [rebase, reword]
-> > ---
-> > Changes in v2:
-> >         - drop original patch and replace with the one in Xilinx tree
-> > Changes in v3:
-> >       - cc DT maintainers/ML
-> > Changes in v4:
-> >       - upper bound for the property should be 26, not 23
-> >       - add warn for width > 23 as per xilinx original patch
-> >       - rework due to changes introduced in 1/6
-> > Changes in v5:
-> >       None
-> > ---
-> >  drivers/dma/xilinx/xilinx_dma.c | 36 +++++++++++++++++++++++++--------
-> >  1 file changed, 28 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> > index aaa6de8a70e4..b17f24e4ec35 100644
-> > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > @@ -158,7 +158,9 @@
-> >  #define XILINX_DMA_REG_BTT           0x28
-> >
-> >  /* AXI DMA Specific Masks/Bit fields */
-> > -#define XILINX_DMA_MAX_TRANS_LEN     GENMASK(22, 0)
-> > +#define XILINX_DMA_MAX_TRANS_LEN_MIN 8
-> > +#define XILINX_DMA_MAX_TRANS_LEN_MAX 23
-> > +#define XILINX_DMA_V2_MAX_TRANS_LEN_MAX      26
-> >  #define XILINX_DMA_CR_COALESCE_MAX   GENMASK(23, 16)
-> >  #define XILINX_DMA_CR_CYCLIC_BD_EN_MASK      BIT(4)
-> >  #define XILINX_DMA_CR_COALESCE_SHIFT 16
-> > @@ -418,6 +420,7 @@ struct xilinx_dma_config {
-> >   * @rxs_clk: DMA s2mm stream clock
-> >   * @nr_channels: Number of channels DMA device supports
-> >   * @chan_id: DMA channel identifier
-> > + * @max_buffer_len: Max buffer length
-> >   */
-> >  struct xilinx_dma_device {
-> >       void __iomem *regs;
-> > @@ -437,6 +440,7 @@ struct xilinx_dma_device {
-> >       struct clk *rxs_clk;
-> >       u32 nr_channels;
-> >       u32 chan_id;
-> > +     u32 max_buffer_len;
-> >  };
-> >
-> >  /* Macros */
-> > @@ -964,7 +968,7 @@ static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
-> >                                   int size, int done)
-> >  {
-> >       size_t copy = min_t(size_t, size - done,
-> > -                  XILINX_DMA_MAX_TRANS_LEN);
-> > +                         chan->xdev->max_buffer_len);
->
-> hmm why not add max_buffer_len in patch 1 again, and then use default
-> len as XILINX_DMA_MAX_TRANS_LEN and add multiple lengths here :)
+On Tue, Sep 25, 2018 at 12:15 AM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
 
-Sorry, I'm not getting your point. Could you please elaborate the "add
-multiple lengths here" thing ?
+> In preparation for the support for dispersed tiles move all readl and
+> writel calls to helper functions. This will allow us to isolate the
+> added complexity of another indirection.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> -
-> ~Vinod
+This clashes with Stephen Boyds fix:
+"pinctrl: msm: Really mask level interrupts to prevent latching"
+
+I've resolved it like this:
+
+static void msm_gpio_irq_mask(struct irq_data *d)
+{
+    struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+    struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+    const struct msm_pingroup *g;
+    unsigned long flags;
+    u32 val;
+
+    g = &pctrl->soc->groups[d->hwirq];
+
+    raw_spin_lock_irqsave(&pctrl->lock, flags);
+
+    val = msm_readl_intr_cfg(pctrl, g);
+    /*
+     * There are two bits that control interrupt forwarding to the CPU. The
+     * RAW_STATUS_EN bit causes the level or edge sensed on the line to be
+     * latched into the interrupt status register when the hardware detects
+     * an irq that it's configured for (either edge for edge type or level
+     * for level type irq). The 'non-raw' status enable bit causes the
+     * hardware to assert the summary interrupt to the CPU if the latched
+     * status bit is set. There's a bug though, the edge detection logic
+     * seems to have a problem where toggling the RAW_STATUS_EN bit may
+     * cause the status bit to latch spuriously when there isn't any edge
+     * so we can't touch that bit for edge type irqs and we have to keep
+     * the bit set anyway so that edges are latched while the line is masked.
+     *
+     * To make matters more complicated, leaving the RAW_STATUS_EN bit
+     * enabled all the time causes level interrupts to re-latch into the
+     * status register because the level is still present on the line after
+     * we ack it. We clear the raw status enable bit during mask here and
+     * set the bit on unmask so the interrupt can't latch into the hardware
+     * while it's masked.
+     */
+    if (irqd_get_trigger_type(d) & IRQ_TYPE_LEVEL_MASK)
+        val &= ~BIT(g->intr_raw_status_bit);
+
+    val &= ~BIT(g->intr_enable_bit);
+    msm_writel_intr_cfg(val, pctrl, g);
+
+    clear_bit(d->hwirq, pctrl->enabled_irqs);
+
+    raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+}
+
+
+Please check.
+
+Yours,
+Linus Walleij
