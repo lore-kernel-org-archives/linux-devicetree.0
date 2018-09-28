@@ -1,126 +1,47 @@
-From: Andrea Merello <andrea.merello@gmail.com>
-Subject: Re: [PATCH v5 2/7] dmaengine: xilinx_dma: in axidma slave_sg and
- dma_cyclic mode align split descriptors
-Date: Fri, 28 Sep 2018 09:11:19 +0200
-Message-ID: <CAN8YU5PWB0sRskcirCcYnY5vG5A_W6pcOMpgyOD3faWfMeu5Rg@mail.gmail.com>
-References: <20180907062502.8241-1-andrea.merello@gmail.com>
- <20180907062502.8241-2-andrea.merello@gmail.com> <20180918162105.GC2613@vkoul-mobl>
-Reply-To: andrea.merello@gmail.com
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/4] pinctrl: qcom: Introduce readl/writel accessors
+Date: Fri, 28 Sep 2018 09:11:50 +0200
+Message-ID: <CACRpkdaxXz8=An-tQwhjnn2e3QwMbs=b6mE8BfL0HA8aeBjxKQ@mail.gmail.com>
+References: <20180924221748.21584-1-bjorn.andersson@linaro.org>
+ <20180924221748.21584-2-bjorn.andersson@linaro.org> <CACRpkdaWboGvKVaSjv4C1CCz5DJXbB+ZWV6vGeyX93vb4zo1sw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180918162105.GC2613@vkoul-mobl>
+In-Reply-To: <CACRpkdaWboGvKVaSjv4C1CCz5DJXbB+ZWV6vGeyX93vb4zo1sw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Sep 18, 2018 at 6:21 PM Vinod <vkoul@kernel.org> wrote:
->
-> On 07-09-18, 08:24, Andrea Merello wrote:
-> > Whenever a single or cyclic transaction is prepared, the driver
-> > could eventually split it over several SG descriptors in order
-> > to deal with the HW maximum transfer length.
-> >
-> > This could end up in DMA operations starting from a misaligned
-> > address. This seems fatal for the HW if DRE (Data Realignment Engine)
-> > is not enabled.
-> >
-> > This patch eventually adjusts the transfer size in order to make sure
-> > all operations start from an aligned address.
-> >
-> > Cc: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com>
-> > Reviewed-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> > ---
-> > Changes in v2:
-> >         - don't introduce copy_mask field, rather rely on already-esistent
-> >           copy_align field. Suggested by Radhey Shyam Pandey
-> >         - reword title
-> > Changes in v3:
-> >       - fix bug introduced in v2: wrong copy size when DRE is enabled
-> >       - use implementation suggested by Radhey Shyam Pandey
-> > Changes in v4:
-> >       - rework on the top of 1/6
-> > Changes in v5:
-> >       - fix typo in commit title
-> >       - add hint about "DRE" meaning in commit message
-> > ---
-> >  drivers/dma/xilinx/xilinx_dma.c | 22 ++++++++++++++++++----
-> >  1 file changed, 18 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> > index a3aaa0e34cc7..aaa6de8a70e4 100644
-> > --- a/drivers/dma/xilinx/xilinx_dma.c
-> > +++ b/drivers/dma/xilinx/xilinx_dma.c
-> > @@ -954,15 +954,28 @@ static int xilinx_dma_alloc_chan_resources(struct dma_chan *dchan)
-> >
-> >  /**
-> >   * xilinx_dma_calc_copysize - Calculate the amount of data to copy
-> > + * @chan: Driver specific DMA channel
-> >   * @size: Total data that needs to be copied
-> >   * @done: Amount of data that has been already copied
-> >   *
-> >   * Return: Amount of data that has to be copied
-> >   */
-> > -static int xilinx_dma_calc_copysize(int size, int done)
-> > +static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
-> > +                                 int size, int done)
->
-> align to preceeding line opening brace please
+On Fri, Sep 28, 2018 at 9:10 AM Linus Walleij <linus.walleij@linaro.org> wrote:
 
-After applying, I'm seeing it already aligned as you requested; 4 tabs
-+ 4 spaces so the 2nd line starts right under the "s" near the opened
-brace..
-Patch sent using git, so it should pass through without being ruined;
-don't know why you see it misaligned :(
+> This clashes with Stephen Boyds fix:
+> "pinctrl: msm: Really mask level interrupts to prevent latching"
+>
+> I've resolved it like this:
 
-> >  {
-> > -     return min_t(size_t, size - done,
-> > +     size_t copy = min_t(size_t, size - done,
-> >                    XILINX_DMA_MAX_TRANS_LEN);
->
-> so we can do this way in patch 1:
->
->         size t copy;
->
->         copy =  min_t(size_t, size - done,
->                       XILINX_DMA_MAX_TRANS_LEN);
->
->         return copy;
->
-> and then add these here, feels like we are redoing change introduced in
-> patch 1..
+Also this:
+static void msm_gpio_irq_unmask(struct irq_data *d)
+{
+    struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+    struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+    const struct msm_pingroup *g;
+    unsigned long flags;
+    u32 val;
 
-OK, this sounds good :)
+    g = &pctrl->soc->groups[d->hwirq];
 
->
-> > +     if ((copy + done < size) &&
-> > +         chan->xdev->common.copy_align) {
-> > +             /*
-> > +              * If this is not the last descriptor, make sure
-> > +              * the next one will be properly aligned
-> > +              */
-> > +             copy = rounddown(copy,
-> > +                              (1 << chan->xdev->common.copy_align));
-> > +     }
-> > +     return copy;
-> >  }
-> >
-> >  /**
-> > @@ -1804,7 +1817,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
-> >                        * Calculate the maximum number of bytes to transfer,
-> >                        * making sure it is less than the hw limit
-> >                        */
-> > -                     copy = xilinx_dma_calc_copysize(sg_dma_len(sg),
-> > +                     copy = xilinx_dma_calc_copysize(chan, sg_dma_len(sg),
->
-> why not keep chan in patch 1 and add only handling in patch 2, seems
-> less churn to me..
+    raw_spin_lock_irqsave(&pctrl->lock, flags);
 
-Indeed this was something I was unsure about.. I ended up in feeling
-better not to add introduce a function that takes an unused (yet)
-argument, but I can change this of course :)
+    val = msm_readl_intr_cfg(pctrl, g);
+    val |= BIT(g->intr_raw_status_bit);
+    val |= BIT(g->intr_enable_bit);
+    msm_writel_intr_cfg(val, pctrl, g);
 
-> --
-> ~Vinod
+    set_bit(d->hwirq, pctrl->enabled_irqs);
+
+    raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+}
+
+Yours,
+Linus Walleij
