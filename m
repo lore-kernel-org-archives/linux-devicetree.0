@@ -1,46 +1,26 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: drivers binding to device node with multiple compatible strings
-Date: Fri, 28 Sep 2018 15:07:05 -0500
-Message-ID: <CAL_JsqKRH8uEzSx6H6ZSRJF9Ecp4am1cNsxgQqf2OO5_aGR1zw@mail.gmail.com>
-References: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 1/3] ARM: dts: am335x: add common file for UC-2100
+ series
+Date: Fri, 28 Sep 2018 13:36:11 -0700
+Message-ID: <20180928203611.GN5662@atomide.com>
+References: <20180928104718.30661-1-sz.lin@moxa.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180928104718.30661-1-sz.lin@moxa.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yang-Leo Li <leoyang.li@nxp.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>
+To: SZ Lin =?utf-8?B?KOael+S4iuaZuik=?= <sz.lin@moxa.com>
+Cc: Wes Huang <wes.huang@moxa.com>, Fero JD Zhou <FeroJD.Zhou@moxa.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 5:25 PM Li Yang <leoyang.li@nxp.com> wrote:
->
-> Hi Rob and Grant,
->
-> Various device tree specs are recommending to include all the
-> potential compatible strings in the device node, with the order from
-> most specific to most general.  But it looks like Linux kernel doesn't
-> provide a way to bind the device to the most specific driver, however,
-> the first registered compatible driver will be bound.
->
-> As more and more generic drivers are added to the Linux kernel, they
-> are competing with the more specific vendor drivers and causes problem
-> when both are built into the kernel.  I'm wondering if there is a
-> generic solution (or in plan) to make the most specific driver bound
-> to the device.   Or we have to disable the more general driver or
-> remove the more general compatible string from the device tree?
+* SZ Lin (林上智) <sz.lin@moxa.com> [180928 03:51]:
+> The UC-2100 series consists many boards with different peripheral
+> devices and wireless modules, hence we fetch common items and
+> create a common dtsi file to increase reusability. All boards in
+> UC-2100 series will include this common dtsi file.
 
-It's been a known limitation for a long time. However, in practice it
-doesn't seem to be a common problem. Perhaps folks just remove the
-less specific compatible from their DT (though that's not ideal). For
-most modern bindings, there's so many other resources beyond
-compatible (clocks, resets, pinctrl, etc.) that there are few generic
-drivers that can work.
+Thanks for updating this, applying into omap-for-v4.20/dt.
 
-I guess if we want to fix this, we'd need to have weighted matching in
-the driver core and unbind drivers when we get a better match. Though
-it could get messy if the better driver probe fails. Then we've got to
-rebind to the original driver.
-
-Do you have a specific case where you hit this?
-
-Rob
+Tony
