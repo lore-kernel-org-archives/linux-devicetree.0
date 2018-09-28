@@ -1,47 +1,36 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v4] ARM: dts: dra7: Fix up unaligned access setting for
- PCIe EP
-Date: Fri, 28 Sep 2018 10:58:16 +0530
-Message-ID: <eb3bb7ba-e32d-aa0f-1877-985ab3d6fe4c@ti.com>
-References: <20180925052151.9537-1-vigneshr@ti.com>
- <20180926172711.GW5662@atomide.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: arizona: Correct link for sound binding document
+Date: Fri, 28 Sep 2018 06:46:46 +0100
+Message-ID: <20180928054646.GK8485@dell>
+References: <20180917153322.29206-1-ckeepax@opensource.cirrus.com>
+ <20180926223944.GA30051@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180926172711.GW5662@atomide.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180926223944.GA30051@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 26 Sep 2018, Rob Herring wrote:
 
-
-On Wednesday 26 September 2018 10:57 PM, Tony Lindgren wrote:
-> * Vignesh R <vigneshr@ti.com> [180924 22:25]:
->> Bit positions of PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE and
->> PCIE_SS1_AXI2OCP_LEGACY_MODE_ENABLE in CTRL_CORE_SMA_SW_7 are
->> incorrectly documented in the TRM. In fact, the bit positions are
->> swapped. Update the DT bindings for PCIe EP to reflect the same.
->>
->> Fixes: d23f3839fe97 ("ARM: dts: DRA7: Add pcie1 dt node for EP mode")
->> Cc: stable@vger.kernel.org
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>
->> This patch is split from v3 here:
->> https://lore.kernel.org/patchwork/cover/967020/
->> Patch can be applied standalone and has no dependencies on other patches
->> in v3.
+> On Mon, Sep 17, 2018 at 04:33:22PM +0100, Charles Keepax wrote:
+> > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/arizona.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Hmm is this needed for v4.19-rc cycle or can this wait for
-> v4.20 merge window?
-> 
+> Applied.
 
-v4.20 should be fine.
-
+Probably won't do any harm in this instance, but it's usually better
+for MFD binding changes to go through the MFD tree to avoid
+merge-conflicts.
 
 -- 
-Regards
-Vignesh
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
