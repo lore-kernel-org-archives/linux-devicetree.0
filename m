@@ -1,49 +1,24 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
- management IC
-Date: Fri, 28 Sep 2018 10:14:37 +0300
-Message-ID: <20180928071437.GB9389@localhost.localdomain>
-References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
- <20180921172959.GG20825@sirena.org.uk>
- <20180921180241.GA4358@dell>
- <20180921181217.GI20825@sirena.org.uk>
- <20180921185258.GC4358@dell>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 1/2] pinctrl: qcom: Add sdm660 pinctrl driver
+Date: Fri, 28 Sep 2018 09:21:00 +0200
+Message-ID: <CACRpkdasDARc-5F7tp_AMsWKCHG3hEhexrfMFbZjWkawdxTOog@mail.gmail.com>
+References: <20180812142413.20856-1-ctatlor97@gmail.com> <20180925173801.3835-1-ctatlor97@gmail.com>
+ <CACRpkda4SuPVz8Awg6OhhanmZKEs4URw3WBMv0Fa8iJa2MD-KA@mail.gmail.com> <43F103C6-7ADF-4D4C-A930-376D66F538F0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180921185258.GC4358@dell>
+In-Reply-To: <43F103C6-7ADF-4D4C-A930-376D66F538F0@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Craig Tatlor <ctatlor97@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org, neeraju@codeaurora.org, vabbar@codeaurora.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 21, 2018 at 11:52:58AM -0700, Lee Jones wrote:
-> On Fri, 21 Sep 2018, Mark Brown wrote:
-> 
-> > On Fri, Sep 21, 2018 at 11:02:41AM -0700, Lee Jones wrote:
-> > > On Fri, 21 Sep 2018, Mark Brown wrote:
-> > 
-> > > > This looks OK to me - Lee, the patch is almost entirely a regulator one,
-> > > > are you OK with me applying it?
-> > 
-> > > The diff in rohm-bd718x7.h does not look significant.
-> > 
-> > > You can apply it so long as you provide me with a PR in order to avoid
-> > > any potential merge conflicts.  Especially as Linus is out for this
-> > > release.
-> > 
-> > Great, thanks.  There's also the MFD DT bindings and another patch later
-> > on with Acked-for-MFD tags on them, should I convert the tags to acks,
-> > apply those as well and include them in the pull request?
-> 
-> Please.
+On Wed, Sep 26, 2018 at 6:30 PM Craig <ctatlor97@gmail.com> wrote:
 
-I was just wondering if I could do something to help get this patch
-series applied? Mark, have you had the time to take a look on pickable
-ranges addition yet? Should I do some rebasing/resending? Are you giving
-me a nudge if I can do something?
+> You seem to have missed the bindings, it might be an idea to drop and reapply with the new ones I just sent off when they get a review.
 
-Br,
-	Matti Vaittinen
+Nah I just didn't coordinate things. It gets too messy sometimes, I will
+apply the bindings separately I guess.
+
+Yours,
+Linus Walleij
