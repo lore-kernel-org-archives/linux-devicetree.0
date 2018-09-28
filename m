@@ -1,172 +1,42 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner
- V3s Camera Sensor Interface (CSI)
-Date: Fri, 28 Sep 2018 19:10:58 +0800
-Message-ID: <CAGb2v65YpPRHb5YiGJhC8NX5F5i3+1rW5y6Dq5L+pNN3U_uLdQ@mail.gmail.com>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
- <20180928093833.gwmskm2jvby6x4s6@paasikivi.fi.intel.com> <14114604.4rraf0qJLU@avalon>
- <20180928102345.r2g342tg5mgcwfw6@paasikivi.fi.intel.com>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] arm64: dts: amd: Fix SPI bus warnings
+Date: Fri, 28 Sep 2018 12:33:06 +0200
+Message-ID: <CAK8P3a1QeQ-LW2bcSw7mDhZWN6Bo-G-v1sqDMKucgW2sg-mAXA@mail.gmail.com>
+References: <20180913181245.25484-16-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBUEYXDOQKGQE5GUCBZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20180928102345.r2g342tg5mgcwfw6-z7MJbOB4PBP+e+fPlCVrcFDQ4js95KgL@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180913181245.25484-16-robh@kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, suravee.suthikulpanit@amd.com, brijeshkumar.singh@amd.com, Linux ARM <linux-arm-kernel@lists.infradead.org>, "Lendacky, Thomas" <thomas.lendacky@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 6:23 PM Sakari Ailus
-<sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+On Thu, Sep 13, 2018 at 8:13 PM Rob Herring <robh@kernel.org> wrote:
 >
-> Hi Laurent,
+> dtc has new checks for SPI buses. Fix the warnings in node names.
 >
-> On Fri, Sep 28, 2018 at 12:45:12PM +0300, Laurent Pinchart wrote:
-> > Hi Sakari,
-> >
-> > On Friday, 28 September 2018 12:38:33 EEST Sakari Ailus wrote:
-> > > On Wed, Sep 26, 2018 at 04:40:04PM +0800, Yong Deng wrote:
-> > > > Add binding documentation for Allwinner V3s CSI.
-> > > >
-> > > > Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> > > > Acked-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > >
-> > > I know... but I have a few more comments.
-> > >
-> > > > Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > > Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> > > > ---
-> > > >
-> > > >  .../devicetree/bindings/media/sun6i-csi.txt        | 59 +++++++++++++++++
-> > > >  1 file changed, 59 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > > b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
-> > > > 100644
-> > > > index 000000000000..2ff47a9507a6
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > > @@ -0,0 +1,59 @@
-> > > > +Allwinner V3s Camera Sensor Interface
-> > > > +-------------------------------------
-> > > > +
-> > > > +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > > > +interface and CSI1 is used for parallel interface.
-> > > > +
-> > > > +Required properties:
-> > > > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> > > > +  - reg: base address and size of the memory-mapped region.
-> > > > +  - interrupts: interrupt associated to this IP
-> > > > +  - clocks: phandles to the clocks feeding the CSI
-> > > > +    * bus: the CSI interface clock
-> > > > +    * mod: the CSI module clock
-> > > > +    * ram: the CSI DRAM clock
-> > > > +  - clock-names: the clock names mentioned above
-> > > > +  - resets: phandles to the reset line driving the CSI
-> > > > +
-> > > > +Each CSI node should contain one 'port' child node with one child
-> > > > 'endpoint' +node, according to the bindings defined in
-> > > > +Documentation/devicetree/bindings/media/video-interfaces.txt. As
-> > > > mentioned
-> > > > +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel
-> > > > or +Bt656 for CSI1.
-> > >
-> > > Which port represents CSI0 and which one is CSI1? That needs to be
-> > > documented.
-> >
-> > There are two CSI devices, named CSI0 and CSI1, with one port each. The CSI0
-> > device supports CSI-2 only, and the CSI1 device parallel (BT.601 or BT.656)
-> > only.
-> >
-> > > > +
-> > > > +Endpoint node properties for CSI1
-> > >
-> > > How about CSI0? I'd expect at least data-lanes, and clock-lanes as well if
-> > > the hardware supports lane mapping.
-> >
-> > I enquired about that too. As far as I understand, CSI0 isn't supported yet in
-> > the driver due to lack of documentation and lack of open-source vendor-
-> > provided source code. While DT bindings are not tied to driver
-> > implementations, it's not the best idea to design DT bindings without at least
-> > one working implementation to test them. I thus proposed just listing CSI0 as
-> > being unsupported for now.
+> arch/arm64/boot/dts/amd/amd-overdrive.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
+> arch/arm64/boot/dts/amd/amd-overdrive-rev-b0.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
+> arch/arm64/boot/dts/amd/amd-overdrive-rev-b1.dtb: Warning (spi_bus_bridge): /smb/ssp@e1030000: node name for SPI buses should be 'spi'
 >
-> Ack.
->
-> We should still define which receiver corresponds to a given port. Probably
-> 1 for CSI1 would make sense, in order to avoid changing the order the
-> hardware already uses. 0 doesn't need to be documented no IMO.
->
-> What do you think?
+> Cc: Brijesh Singh <brijeshkumar.singh@amd.com>
+> Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> Please apply to the sub-arch tree. The dtc changes haven't landed, but
+> will for 4.20.
 
-AFAICT it would be a completely seperate node, since they have different address
-spaces, clocks and reset controls. So there's no possibility of confusion.
+Applied, thanks!
 
-According to Yong, CSI0 is tied internally to some unknown MIPI CSI2-receiver,
-which is the undocumented part. CSI1 has its parallel data pins exposed to the
-outside.
-
-ChenYu
-
-> >
-> > > > +---------------------------------
-> > > > +
-> > > > +- remote-endpoint        : (required) a phandle to the bus receiver's endpoint
-> > > > +                    node
-> > > > +- bus-width:             : (required) must be 8, 10, 12 or 16
-> > > > +- pclk-sample            : (optional) (default: sample on falling edge)
-> > >
-> > > Could you add that video-interfaces.txt contains documentation of these
-> > > properties as well? There's a reference above but only discusses port and
-> > > endpoint nodes.
-> > >
-> > > > +- hsync-active           : (only required for parallel)
-> > > > +- vsync-active           : (only required for parallel)
-> > >
-> > > As you support both Bt656 and parallel (with sync signals), you can detect
-> > > the interface type from the presence of these properties. I think you
-> > > should also say that these properties are not allowed on Bt656. So I'd
-> > > change this to e.g.
-> > >
-> > >     (required; parallel-only)
-> > >
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +csi1: csi@1cb4000 {
-> > > > + compatible = "allwinner,sun8i-v3s-csi";
-> > > > + reg = <0x01cb4000 0x1000>;
-> > > > + interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > > > + clocks = <&ccu CLK_BUS_CSI>,
-> > > > +          <&ccu CLK_CSI1_SCLK>,
-> > > > +          <&ccu CLK_DRAM_CSI>;
-> > > > + clock-names = "bus", "mod", "ram";
-> > > > + resets = <&ccu RST_BUS_CSI>;
-> > > > +
-> > > > + port {
-> > > > +         /* Parallel bus endpoint */
-> > > > +         csi1_ep: endpoint {
-> > > > +                 remote-endpoint = <&adv7611_ep>;
-> > > > +                 bus-width = <16>;
-> > > > +
-> > > > +                 /* If hsync-active/vsync-active are missing,
-> > > > +                    embedded BT.656 sync is used */
-> > > > +                 hsync-active = <0>; /* Active low */
-> > > > +                 vsync-active = <0>; /* Active low */
-> > > > +                 pclk-sample = <1>;  /* Rising */
-> > > > +         };
-> > > > + };
-> > > > +};
->
-> --
-> Terveisin,
->
-> Sakari Ailus
-> sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+       Arnd
