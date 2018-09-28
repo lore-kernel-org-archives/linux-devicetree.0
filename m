@@ -1,140 +1,97 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling properties
-Date: Fri, 28 Sep 2018 08:44:42 -0500
-Message-ID: <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org> <20180928064841.14117-7-takahiro.akashi@linaro.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] dts: sun8i-h3: add sy8106a to orange pi plus
+Date: Fri, 28 Sep 2018 15:55:16 +0200
+Message-ID: <20180928135516.jxhnsgaa3s2nagv7@flea>
+References: <20180927083636.5415-1-jorik@kippendief.biz>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928064841.14117-7-takahiro.akashi@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.or
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBR7FXDOQKGQE62GH5RA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20180927083636.5415-1-jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+David Gibson
+Hi!
 
-On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
-<takahiro.akashi@linaro.org> wrote:
->
-> These functions will be used later to handle kexec-specific properties
-> in arm64's kexec_file implementation.
->
-> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: devicetree@vger.kernel.org
+On Thu, Sep 27, 2018 at 10:36:36AM +0200, jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org wrote:
+> From: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
+
+The prefix of your commit title should be "ARM: dts: ..."
+
+> The Orange Pi Plus board lacks voltage scaling capabilities in its
+> current form. This results in random freezes during boot when cpufreq is
+> enabled, probably due to wrong voltages.
+> 
+> This patch (a copy/paste of 06139c) does the following things on this
+> board:
+> - enable r_i2c
+> - add sy8106a to the r_i2c bus
+> - have the sy8106a regulate VDD of cpu
+> 
+> I have tested this on two Orange Pi Plus boards, and they run stable
+> across a range of voltages (and frequencies).
+
+How was this tested?
+
+> Signed-off-by: Jorik Jonker <jorik-U9/BOH3cVv3CLqq/8VZgpA@public.gmane.org>
 > ---
->  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_fdt.h |  4 +++
->  2 files changed, 60 insertions(+)
->
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 800ad252cf9c..c65c31562ccb 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -25,6 +25,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/serial_core.h>
->  #include <linux/sysfs.h>
-> +#include <linux/types.h>
->
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #include <asm/page.h>
-> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
->  #endif
->
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>  arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts | 29 ++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> index b403e5d78..fd64b5c94 100644
+> --- a/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> +++ b/arch/arm/boot/dts/sun8i-h3-orangepi-plus.dts
+> @@ -74,6 +74,10 @@
+>  	};
+>  };
+>  
+> +&cpu0 {
+> +	cpu-supply = <&reg_vdd_cpux>;
+> +};
 > +
-> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
-> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
+>  &ehci3 {
+>  	status = "okay";
+>  };
+> @@ -119,6 +123,31 @@
+>  	};
+>  };
+>  
+> +&r_i2c {
+> +	status = "okay";
 > +
-> +int fdt_prop_len(const char *prop_name, int len)
-> +{
-> +       return (strlen(prop_name) + 1) +
-> +               sizeof(struct fdt_property) +
-> +               FDT_TAGALIGN(len);
+> +	reg_vdd_cpux: regulator@65 {
+> +		compatible = "silergy,sy8106a";
+> +		reg = <0x65>;
+> +		regulator-name = "vdd-cpux";
+> +		silergy,fixed-microvolt = <1200000>;
+> +		/*
+> +		 * The datasheet uses 1.1V as the minimum value of VDD-CPUX,
+> +		 * however both the Armbian DVFS table and the official one
+> +		 * have operating points with voltage under 1.1V, and both
+> +		 * DVFS table are known to work properly at the lowest
+> +		 * operating point.
+> +		 *
+> +		 * Use 1.0V as the minimum voltage instead.
+> +		 */
 
-Looks like you are using this to calculate how much space you need to
-allocate in addition to the current DTB for a couple of new or
-replaced properties. I'm not sure that this calculation is completely
-accurate. And it is strange there doesn't seem to be any libfdt
-function for this already. It would be simpler to just add some fixed
-additional amount.
+There's not much point to that comment, since it's been that way for
+all the other SoCs from Allwinner. However, that would be great to
+have it in the commit log.
 
-Maybe David G has comments on this?
+Thanks!
+Maxime
 
-> +}
-> +
-
-The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
-should go into libfdt, but I'm fine with having it in the kernel for
-now.
-
-> +static void fill_property(void *buf, u64 val64, int cells)
-> +{
-> +       __be32 val32;
-> +
-> +       while (cells) {
-> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-> +               memcpy(buf, &val32, sizeof(val32));
-> +               buf += sizeof(val32);
-
-This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
-
-BTW, for purposes of moving to libfdt, we'll need the authors'
-(Masahiro Yamada and Hans de Goede) permission to dual license.
-
-> +       }
-> +}
-> +
-> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> +                                               u64 addr, u64 size)
-> +{
-> +       int addr_cells, size_cells;
-> +       char buf[sizeof(__be32) * 2 * 2];
-> +               /* assume dt_root_[addr|size]_cells <= 2 */
-> +       void *prop;
-> +       size_t buf_size;
-> +
-> +       addr_cells = fdt_address_cells(fdt, 0);
-> +       if (addr_cells < 0)
-> +               return addr_cells;
-> +       size_cells = fdt_size_cells(fdt, 0);
-> +       if (size_cells < 0)
-> +               return size_cells;
-> +
-> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
-> +       if ((addr_cells == 1) && (addr > U32_MAX))
-> +               return -FDT_ERR_BADVALUE;
-> +
-> +       if ((size_cells == 1) && (size > U32_MAX))
-> +               return -FDT_ERR_BADVALUE;
-> +
-> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
-> +       prop = buf;
-> +
-> +       fill_property(prop, addr, addr_cells);
-> +       prop += addr_cells * sizeof(u32);
-> +
-> +       fill_property(prop, size, size_cells);
-> +
-> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-> +}
-> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> index b9cd9ebdf9b9..842af6ea92ea 100644
-> --- a/include/linux/of_fdt.h
-> +++ b/include/linux/of_fdt.h
-> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
->  static inline void unflatten_and_copy_device_tree(void) {}
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
->
-> +int fdt_prop_len(const char *prop_name, int len);
-> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> +                                               u64 addr, u64 size);
-> +
->  #endif /* __ASSEMBLY__ */
->  #endif /* _LINUX_OF_FDT_H */
-> --
-> 2.19.0
->
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
