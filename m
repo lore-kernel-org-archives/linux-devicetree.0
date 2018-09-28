@@ -1,135 +1,140 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera
- Sensor Interface (CSI)
-Date: Fri, 28 Sep 2018 21:42:50 +0800
-Message-ID: <CAGb2v67v0No0=JSt4HQCWeKKTz4gSHUfdyv16T-=4dxGB=JCow@mail.gmail.com>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com>
- <20180928093833.gwmskm2jvby6x4s6@paasikivi.fi.intel.com> <14114604.4rraf0qJLU@avalon>
- <20180928102345.r2g342tg5mgcwfw6@paasikivi.fi.intel.com> <CAGb2v65YpPRHb5YiGJhC8NX5F5i3+1rW5y6Dq5L+pNN3U_uLdQ@mail.gmail.com>
- <20180928125601.6ye5tvrmh57amvh5@paasikivi.fi.intel.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling properties
+Date: Fri, 28 Sep 2018 08:44:42 -0500
+Message-ID: <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+References: <20180928064841.14117-1-takahiro.akashi@linaro.org> <20180928064841.14117-7-takahiro.akashi@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928125601.6ye5tvrmh57amvh5@paasikivi.fi.intel.com>
+In-Reply-To: <20180928064841.14117-7-takahiro.akashi@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Yong Deng <yong.deng@magewell.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Miller <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, Linux Media Mailing List <linux-media@vger.kernel.org>devicetree <de>
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.or
 List-Id: devicetree@vger.kernel.org
 
-Hi,
++David Gibson
 
-On Fri, Sep 28, 2018 at 8:56 PM Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
+On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
 >
-> Hi Chen-Yu,
+> These functions will be used later to handle kexec-specific properties
+> in arm64's kexec_file implementation.
 >
-> On Fri, Sep 28, 2018 at 07:10:58PM +0800, Chen-Yu Tsai wrote:
-> > On Fri, Sep 28, 2018 at 6:23 PM Sakari Ailus
-> > <sakari.ailus@linux.intel.com> wrote:
-> > >
-> > > Hi Laurent,
-> > >
-> > > On Fri, Sep 28, 2018 at 12:45:12PM +0300, Laurent Pinchart wrote:
-> > > > Hi Sakari,
-> > > >
-> > > > On Friday, 28 September 2018 12:38:33 EEST Sakari Ailus wrote:
-> > > > > On Wed, Sep 26, 2018 at 04:40:04PM +0800, Yong Deng wrote:
-> > > > > > Add binding documentation for Allwinner V3s CSI.
-> > > > > >
-> > > > > > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > > > > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> > > > >
-> > > > > I know... but I have a few more comments.
-> > > > >
-> > > > > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > > > > Signed-off-by: Yong Deng <yong.deng@magewell.com>
-> > > > > > ---
-> > > > > >
-> > > > > >  .../devicetree/bindings/media/sun6i-csi.txt        | 59 +++++++++++++++++
-> > > > > >  1 file changed, 59 insertions(+)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > > > > b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
-> > > > > > 100644
-> > > > > > index 000000000000..2ff47a9507a6
-> > > > > > --- /dev/null
-> > > > > > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > > > > > @@ -0,0 +1,59 @@
-> > > > > > +Allwinner V3s Camera Sensor Interface
-> > > > > > +-------------------------------------
-> > > > > > +
-> > > > > > +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > > > > > +interface and CSI1 is used for parallel interface.
-> > > > > > +
-> > > > > > +Required properties:
-> > > > > > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> > > > > > +  - reg: base address and size of the memory-mapped region.
-> > > > > > +  - interrupts: interrupt associated to this IP
-> > > > > > +  - clocks: phandles to the clocks feeding the CSI
-> > > > > > +    * bus: the CSI interface clock
-> > > > > > +    * mod: the CSI module clock
-> > > > > > +    * ram: the CSI DRAM clock
-> > > > > > +  - clock-names: the clock names mentioned above
-> > > > > > +  - resets: phandles to the reset line driving the CSI
-> > > > > > +
-> > > > > > +Each CSI node should contain one 'port' child node with one child
-> > > > > > 'endpoint' +node, according to the bindings defined in
-> > > > > > +Documentation/devicetree/bindings/media/video-interfaces.txt. As
-> > > > > > mentioned
-> > > > > > +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel
-> > > > > > or +Bt656 for CSI1.
-> > > > >
-> > > > > Which port represents CSI0 and which one is CSI1? That needs to be
-> > > > > documented.
-> > > >
-> > > > There are two CSI devices, named CSI0 and CSI1, with one port each. The CSI0
-> > > > device supports CSI-2 only, and the CSI1 device parallel (BT.601 or BT.656)
-> > > > only.
-> > > >
-> > > > > > +
-> > > > > > +Endpoint node properties for CSI1
-> > > > >
-> > > > > How about CSI0? I'd expect at least data-lanes, and clock-lanes as well if
-> > > > > the hardware supports lane mapping.
-> > > >
-> > > > I enquired about that too. As far as I understand, CSI0 isn't supported yet in
-> > > > the driver due to lack of documentation and lack of open-source vendor-
-> > > > provided source code. While DT bindings are not tied to driver
-> > > > implementations, it's not the best idea to design DT bindings without at least
-> > > > one working implementation to test them. I thus proposed just listing CSI0 as
-> > > > being unsupported for now.
-> > >
-> > > Ack.
-> > >
-> > > We should still define which receiver corresponds to a given port. Probably
-> > > 1 for CSI1 would make sense, in order to avoid changing the order the
-> > > hardware already uses. 0 doesn't need to be documented no IMO.
-> > >
-> > > What do you think?
-> >
-> > AFAICT it would be a completely seperate node, since they have different address
-> > spaces, clocks and reset controls. So there's no possibility of confusion.
-> >
-> > According to Yong, CSI0 is tied internally to some unknown MIPI CSI2-receiver,
-> > which is the undocumented part. CSI1 has its parallel data pins exposed to the
-> > outside.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h |  4 +++
+>  2 files changed, 60 insertions(+)
 >
-> Thanks for clearing up the confusion. If these are truly different kinds of
-> devices, then don't they also deserve different compatible strings? And
-> possibly also different DT binding documentation in a separate file.
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 800ad252cf9c..c65c31562ccb 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/serial_core.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/types.h>
+>
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
+>  #endif
+>
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+> +
+> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
+> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
+> +
+> +int fdt_prop_len(const char *prop_name, int len)
+> +{
+> +       return (strlen(prop_name) + 1) +
+> +               sizeof(struct fdt_property) +
+> +               FDT_TAGALIGN(len);
 
-Allwinner's documents aren't particularly clear about this. AFAICT it does not
-say anything about them being different. The CSI section gives a register table
-with two base addresses. The V3S SDK listed on linux-sunxi wiki also doesn't
-differentiate between the two. What's more is there's actually code and register
-addresses for the MIPI stuff [1], though the license is questionable,
-as with most
-BSPs. It indeed seems like a CSI controller, which basically just takes whatever
-input it is configured for and sends it to either a downstream ISP or DRAM.
-There are MIPI-CSI receiver and DPHY blocks in addresses following CSI0, but we
-can treat them as separate hardware blocks.
+Looks like you are using this to calculate how much space you need to
+allocate in addition to the current DTB for a couple of new or
+replaced properties. I'm not sure that this calculation is completely
+accurate. And it is strange there doesn't seem to be any libfdt
+function for this already. It would be simpler to just add some fixed
+additional amount.
 
-ChenYu
+Maybe David G has comments on this?
 
-[1] https://github.com/yeashen/v3s-linux-sdk/blob/master/linux-3.4/drivers/media/video/sunxi-vfe/platform/sun8iw8p1_vfe_cfg.h#L27
+> +}
+> +
+
+The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
+should go into libfdt, but I'm fine with having it in the kernel for
+now.
+
+> +static void fill_property(void *buf, u64 val64, int cells)
+> +{
+> +       __be32 val32;
+> +
+> +       while (cells) {
+> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
+> +               memcpy(buf, &val32, sizeof(val32));
+> +               buf += sizeof(val32);
+
+This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
+
+BTW, for purposes of moving to libfdt, we'll need the authors'
+(Masahiro Yamada and Hans de Goede) permission to dual license.
+
+> +       }
+> +}
+> +
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +                                               u64 addr, u64 size)
+> +{
+> +       int addr_cells, size_cells;
+> +       char buf[sizeof(__be32) * 2 * 2];
+> +               /* assume dt_root_[addr|size]_cells <= 2 */
+> +       void *prop;
+> +       size_t buf_size;
+> +
+> +       addr_cells = fdt_address_cells(fdt, 0);
+> +       if (addr_cells < 0)
+> +               return addr_cells;
+> +       size_cells = fdt_size_cells(fdt, 0);
+> +       if (size_cells < 0)
+> +               return size_cells;
+> +
+> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
+> +       if ((addr_cells == 1) && (addr > U32_MAX))
+> +               return -FDT_ERR_BADVALUE;
+> +
+> +       if ((size_cells == 1) && (size > U32_MAX))
+> +               return -FDT_ERR_BADVALUE;
+> +
+> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
+> +       prop = buf;
+> +
+> +       fill_property(prop, addr, addr_cells);
+> +       prop += addr_cells * sizeof(u32);
+> +
+> +       fill_property(prop, size, size_cells);
+> +
+> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+> +}
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index b9cd9ebdf9b9..842af6ea92ea 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
+>  static inline void unflatten_and_copy_device_tree(void) {}
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>
+> +int fdt_prop_len(const char *prop_name, int len);
+> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
+> +                                               u64 addr, u64 size);
+> +
+>  #endif /* __ASSEMBLY__ */
+>  #endif /* _LINUX_OF_FDT_H */
+> --
+> 2.19.0
+>
