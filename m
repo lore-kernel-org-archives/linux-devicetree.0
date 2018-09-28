@@ -1,58 +1,46 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/9] AHCI and SATA PHY support for BCM63138
-Date: Fri, 28 Sep 2018 15:41:23 -0700
-Message-ID: <58d4992a-a06e-60e7-1856-5cd87741a771@gmail.com>
-References: <20180920191646.18198-1-f.fainelli@gmail.com>
- <7b6e1671-8efe-20d2-d3a2-51a521ce7f22@gmail.com>
- <fa91f7eb-3405-4607-9391-f043b73e7af6@ti.com>
- <3d4b406b-4fa4-9248-a0ab-d4eeea808034@gmail.com>
+From: Badhri Jagan Sridharan <badhri@google.com>
+Subject: [PATCH 1/3] [PATCH 1/3] dt-bindings: connector: Add self-powered property
+Date: Fri, 28 Sep 2018 16:47:01 -0700
+Message-ID: <20180928234703.15970-1-badhri@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3d4b406b-4fa4-9248-a0ab-d4eeea808034@gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, Tejun Heo <tj@kernel.org>
-Cc: Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Al Cooper <alcooperx@gmail.com>, Ray Jui <ray.jui@broadcom.com>, Fengguang Wu <fengguang.wu@intel.com>, Arnd Bergmann <arnd@arndb.de>, "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>, linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Badhri Jagan Sridharan <badhri@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/25/2018 09:12 AM, Florian Fainelli wrote:
-> On 09/24/2018 11:19 PM, Kishon Vijay Abraham I wrote:
->>
->>
->> On Friday 21 September 2018 12:49 AM, Florian Fainelli wrote:
->>> On 09/20/2018 12:16 PM, Florian Fainelli wrote:
->>>> Hi Kishon, Tejun,
->>>>
->>>> This patch series adds support for the SATA AHCI and PHY found on the
->>>> ARM-basd BCM63138 DSL SoCs.
->>>>
->>>> It would probably make sense for patches 1-3 to go through Kishon's
->>>> tree, patches 4-7 through Tejun's tree, and I would be merging the last
->>>> two patches through the Broadcom ARM-SoC tree.
->>>>
->>>> Let me know if this is not a workable plan, thank you very much!
->>>
->>> Looks like I had left patches with the incorrect subject, please
->>> disregard the following patches:
->>>
->>> [PATCH 2/9] phy: broadcom: allow PHY_BRCM_SATA driver to be built for
->>> DSL SoCs
->>> [PATCH 5/9] ata: sata_brcmstb: Allow optional reset controller to be used
->>> [PATCH 6/9] ata: ahci_brcmstb: Match 63138 compatible strings
->>>
->>> since they have incorrect/inconsistent titles, the other patches are
->>> fine though. Sorry about that.
->>
->> merged the first 3 patches to linux-phy tree.
-> 
-> Thanks a lot Kishon!
+>From USB_PD_R3_0
+7.1.5 Response to Hard Resets
+Device operation during and after a Hard Reset is defined as follows:
+Self-powered devices Should Not disconnect from USB during a Hard Reset
+(see Section 9.1.2).
+Bus powered devices will disconnect from USB during a Hard Reset due to the
+loss of their power source.
 
-Tejun, are you good with picking up patches 4-7 and I take the last two?
-Can you make sure you pick up the ones that contain "ahci_brcm" in their
-subject, I had incorrectly formatted them initially, sorry again about that.
+Therefore it is necessary to know whether the port belongs to
+a device which is self powered or bus powered. This change
+adds "self-powered" flag to the connector class which present indicates
+that the port belongs to a device that is self powered. Else it is
+bus powered usb device.
 
-Thank you!
+Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+---
+ Documentation/devicetree/bindings/connector/usb-connector.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
+index 8855bfcfd7785..8f7a36ae29bf7 100644
+--- a/Documentation/devicetree/bindings/connector/usb-connector.txt
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -14,6 +14,8 @@ Optional properties:
+ - label: symbolic name for the connector,
+ - type: size of the connector, should be specified in case of USB-A, USB-B
+   non-fullsize connectors: "mini", "micro".
++- self-powered: Set this property if the usb device that has its own power
++  source.
+ 
+ Optional properties for usb-c-connector:
+ - power-role: should be one of "source", "sink" or "dual"(DRP) if typec
 -- 
-Florian
+2.19.0.605.g01d371f741-goog
