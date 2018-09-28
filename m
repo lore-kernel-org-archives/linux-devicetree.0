@@ -1,40 +1,36 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH] ARM: DTS: OMAP5: enable OTG role for DWC3 controller
-Date: Fri, 28 Sep 2018 17:54:00 +0200
-Message-ID: <0c739437f2331913e6593d651fd782fde3181e0a.1538150039.git.hns@goldelico.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] mfd: arizona: Correct link for sound binding document
+Date: Fri, 28 Sep 2018 11:00:13 -0500
+Message-ID: <CAL_JsqLD=qzXiAptsR4X16_tYwSocFhrLJ=yh6caw1ke8YdESQ@mail.gmail.com>
+References: <20180917153322.29206-1-ckeepax@opensource.cirrus.com>
+ <20180926223944.GA30051@bogus> <20180928054646.GK8485@dell>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180928054646.GK8485@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pyra-handheld.com, letux-kernel@openphoenux.org, "H. Nikolaus Schaller" <hns@goldelico.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-Since SMPS10 and OTG cable detection extcon are described here, and
-work to enable OTG power when an OTG cable is plugged in, we can
-define OTG mode in the controller (which is disabled by default in
-omap5.dtsi).
+On Fri, Sep 28, 2018 at 12:46 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Wed, 26 Sep 2018, Rob Herring wrote:
+>
+> > On Mon, Sep 17, 2018 at 04:33:22PM +0100, Charles Keepax wrote:
+> > > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/mfd/arizona.txt | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > Applied.
+>
+> Probably won't do any harm in this instance, but it's usually better
+> for MFD binding changes to go through the MFD tree to avoid
+> merge-conflicts.
 
-Tested on OMAP5EVM and Pyra.
+It had been sitting there for a while, so I picked it up. Plus if we
+have conflicts within a binding (other than tree wide clean ups I do),
+that's not a good sign that the binding is changing.
 
-Suggested-by: Roger Quadros <rogerq@ti.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- arch/arm/boot/dts/omap5-board-common.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
-index da5d9a86a1f1..ce524f239e84 100644
---- a/arch/arm/boot/dts/omap5-board-common.dtsi
-+++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-@@ -708,6 +708,10 @@
- 	vbus-supply = <&smps10_out1_reg>;
- };
- 
-+&dwc3 {
-+	dr_mode = "otg";
-+};
-+
- &mcspi1 {
- 
- };
--- 
-2.12.2
+Rob
