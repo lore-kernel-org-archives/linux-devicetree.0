@@ -1,46 +1,55 @@
-From: ryang <decatf@gmail.com>
-Subject: [PATCH v4 2/2] iio: light: bh1750: Add device tree support
-Date: Thu, 27 Sep 2018 20:29:58 -0400
-Message-ID: <20180928002958.3935-2-decatf@gmail.com>
-References: <20180928002958.3935-1-decatf@gmail.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V6 20/33] csky/dma: fix up dma_mapping error
+Date: Fri, 28 Sep 2018 08:51:17 +0800
+Message-ID: <378d4064bf29863785f4cc637999e07507e2e926.1538058840.git.ren_guo@c-sky.com>
+References: <62098e7d0a7fbdd09f44d7e23333dad258a01bd2.1538058840.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928002958.3935-1-decatf@gmail.com>
+In-Reply-To: <62098e7d0a7fbdd09f44d7e23333dad258a01bd2.1538058840.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1538058840.git.ren_guo@c-sky.com>
+References: <cover.1538058840.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, ryang <decatf@gmail.com>
+To: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for ROHM BH1750 series ambient light sensors.
+The arch_sync_dma_for_cpu()/arch_sync_dma_for_device() implementation is
+broken for some combinations that end up in a BUG() instead of performing
+the necessary flushes.
 
-Signed-off-by: ryang <decatf@gmail.com>
+The implementation of arch should follow the following rules:
+         map             for_cpu         for_device      unmap
+ TO_DEV  writeback       none            writeback       none
+ TO_CPU  invalidate      invalidate*     invalidate      invalidate*
+ BIDIR   writeback       invalidate      writeback       invalidate
+
+Link: https://lore.kernel.org/lkml/20180518215548.GH17671@n2100.armlinux.org.uk/
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 ---
- drivers/iio/light/bh1750.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/csky/mm/dma-mapping.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iio/light/bh1750.c b/drivers/iio/light/bh1750.c
-index c3a481452b67..28347df78cff 100644
---- a/drivers/iio/light/bh1750.c
-+++ b/drivers/iio/light/bh1750.c
-@@ -307,9 +307,20 @@ static const struct i2c_device_id bh1750_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, bh1750_id);
+diff --git a/arch/csky/mm/dma-mapping.c b/arch/csky/mm/dma-mapping.c
+index 16c2087..30a2041 100644
+--- a/arch/csky/mm/dma-mapping.c
++++ b/arch/csky/mm/dma-mapping.c
+@@ -217,7 +217,8 @@ void arch_sync_dma_for_device(struct device *dev, phys_addr_t paddr,
+ 		break;
+ 	case DMA_FROM_DEVICE:
+ 	case DMA_BIDIRECTIONAL:
+-		BUG();
++		dma_wbinv_range(vaddr + offset, vaddr + offset + size);
++		break;
+ 	default:
+ 		BUG();
+ 	}
+@@ -240,7 +241,7 @@ void arch_sync_dma_for_cpu(struct device *dev, phys_addr_t paddr,
  
-+static const struct of_device_id bh1750_of_match[] = {
-+	{ .compatible = "rohm,bh1710", },
-+	{ .compatible = "rohm,bh1715", },
-+	{ .compatible = "rohm,bh1721", },
-+	{ .compatible = "rohm,bh1750", },
-+	{ .compatible = "rohm,bh1751", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, bh1750_of_match);
-+
- static struct i2c_driver bh1750_driver = {
- 	.driver = {
- 		.name = "bh1750",
-+		.of_match_table = bh1750_of_match,
- 		.pm = &bh1750_pm_ops,
- 	},
- 	.probe = bh1750_probe,
+ 	switch (dir) {
+ 	case DMA_TO_DEVICE:
+-		BUG();
++		break;
+ 	case DMA_FROM_DEVICE:
+ 	case DMA_BIDIRECTIONAL:
+ 		dma_wbinv_range(vaddr + offset, vaddr + offset + size);
 -- 
-2.17.1
+2.7.4
