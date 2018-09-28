@@ -1,140 +1,53 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v2 2/2] PCI: controller: dwc: add UniPhier PCIe host
- controller support
-Date: Fri, 28 Sep 2018 12:06:40 +0100
-Message-ID: <20180928110640.GA18840@e107981-ln.cambridge.arm.com>
-References: <b869b273-e681-0b8c-52f5-6e02f9de5485@synopsys.com>
- <20180926213135.A4B4.4A936039@socionext.com>
- <20180927164426.ECD6.4A936039@socionext.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH v2 04/11] arm64: dts: sc9836/sc9860: Update coresight
+ bindings for hardware ports
+Date: Fri, 28 Sep 2018 19:09:02 +0800
+Message-ID: <CAAfSe-sD-Yk2N-7aRuBW8UuX5=111Ofb5GLZRTHQKJ5n+Y=uog@mail.gmail.com>
+References: <20180912135352.19722-1-suzuki.poulose@arm.com>
+ <20180912135352.19722-5-suzuki.poulose@arm.com> <ccc61e1b-768c-2a6d-3ff5-95b72bc58a6f@arm.com>
+ <CAAfSe-swWPgCWN6cZbQxLL6fwaJ1qLXnC_X7A0zeYuHDaZ_A1Q@mail.gmail.com> <CAK8P3a2WWFp5W5-7o-X3joOpSGgnK=s_ZyGev7gsVV0SjN0p0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180927164426.ECD6.4A936039@socionext.com>
+In-Reply-To: <CAK8P3a2WWFp5W5-7o-X3joOpSGgnK=s_ZyGev7gsVV0SjN0p0A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Murali Karicheri <m-karicheri2@ti.com>, marc.zyngier@arm.com
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, arm-soc <arm@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>, coresight@lists.linaro.org, Leo Yan <leo.yan@linaro.org>, Orson Zhai <orsonzhai@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-[+Murali, Marc]
+On 28 September 2018 at 18:45, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Sep 27, 2018 at 11:19 AM Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>>
+>> Hi Suzuki,
+>>
+>> On 27 September 2018 at 16:51, Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>> > +To: Chunyan Zhang
+>> >
+>> > Chunyan Zhang,
+>> >
+>> > On 09/12/2018 02:53 PM, Suzuki K Poulose wrote:
+>> >>
+>> >> Switch to the new coresight bindings for hw ports
+>> >>
+>> >
+>> > How can we push this patch ? Do you generally send the spreadtrum
+>> > specific changes to ARM soc folks ? Or would you like me to post
+>> > this directly to ARM soc folks ?
+>>
+>> Yeah, at present sprd dts files generally got merged through arm-soc
+>> (I've added arm@kernel.org).
+>
+> Yes, that's fine. Generally, we prefer if you collect patches for your
+> platform first, and then send them as a pull request or short set
+> of patches. for inclusion, rather than picking them up from the list.
+>
 
-On Thu, Sep 27, 2018 at 04:44:26PM +0900, Kunihiko Hayashi wrote:
-> Hi Lorenzo, Gustavo,
-> 
-> On Wed, 26 Sep 2018 21:31:36 +0900 <hayashi.kunihiko@socionext.com> wrote:
-> 
-> > Hi Lorenzo, Gustavo,
-> > 
-> > Thank you for reviewing.
-> > 
-> > On Tue, 25 Sep 2018 18:53:01 +0100
-> > Gustavo Pimentel <gustavo.pimentel@synopsys.com> wrote:
-> > 
-> > > On 25/09/2018 17:14, Lorenzo Pieralisi wrote:
-> > > > [+Gustavo, please have a look at INTX/MSI management]
-> > > > 
-> > > > On Thu, Sep 06, 2018 at 06:40:32PM +0900, Kunihiko Hayashi wrote:
-> > > >> This introduces specific glue layer for UniPhier platform to support
-> > > >> PCIe host controller that is based on the DesignWare PCIe core, and
-> > > >> this driver supports Root Complex (host) mode.
-> > > > 
-> > > > Please read this thread and apply it to next versions:
-> > > > 
-> > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__marc.info_-3Fl-3Dlinux-2Dpci-26m-3D150905742808166-26w-3D2&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-f-E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=H8UNDDUGQnQnqfWr4CBios689dJcjxu4qeTTRGulLmU&s=CgcXc_2LThyOpW-4bCriJNo9H1lzROEdy_cG9p-Y5hU&e=
-> > 
-> > I also found this thread in previous linux-pci, and I think it's helpful for me.
-> > I'll check it carefully.
-> 
-> [snip]
-> 
-> > > >> +	ret = devm_request_irq(dev, pp->irq, uniphier_pcie_irq_handler,
-> > > >> +			       IRQF_SHARED, "pcie", priv);
-> > > > 
-> > > > This is wrong, you should set-up a chained IRQ for INTX.
-> > > > 
-> > > > I *think* that
-> > > > 
-> > > > ks_pcie_setup_interrupts()
-> > > > 
-> > > > is a good example to start with but I wonder whether it is worth
-> > > > generalizing the INTX approach to designware as a whole as it was
-> > > > done for MSIs.
-> > > > 
-> > > > Thoughts ?
-> > > 
-> > > From what I understood this is for legacy IRQ, right?
-> > 
-> > Yes. For legacy IRQ.
-> > 
-> > > Like you (Lorenzo) said there is 2 drivers (pci-keystone-dw.c and pci-dra7xx.c)
-> > > that uses it and can be use as a template for handling this type of interrupts.
-> > > 
-> > > We can try to pass some kind of generic INTX function to the DesignWare host
-> > > library to handling this, but this will require some help from keystone and
-> > > dra7xx maintainers, since my setup doesn't have legacy IRQ HW support.
-> > 
-> > Now I think it's difficult to make a template for INTX function,
-> > and at first, I'll try to re-write this part with reference to pci-keystone-dw.c.
-> 
-> I understand that there are 2 types of interrupt and the drivers.
-> 
-> One like pci-keystone-dw.c is:
-> 
->  - there are 4 interrupts for legacy,
->  - invoke handlers for each interrupt, and handle the interrupt,
->  - call irq_set_chained_handler_and_data() to make a chain of the interrupts
->   when initializing
-> 
-> The other like pci-dra7xx.c is:
-> 
->  - there is 1 IRQ for legacy as a parent,
->  - check an interrupt factor register, and handle the interrupt correspond
->    to the factor,
->  - call request_irq() for the parent IRQ and irq_domain_add_linear() for
->    the factor when initializing
-> 
-> The pcie-uniphier.c is the same type as the latter (like pci-dra7xx.c).
-> 
-> However, in pci-dra7xx.c, MSI and legacy IRQ share the same interrupt number,
-> so the same handler is called and the handler divides these IRQs.
-> (found in dra7xx_pcie_msi_irq_handler())
-> 
-> In pcie-uniphier.c, MSI and legacy IRQ are independent.
-> Therefore it's necessary to prepare the handler for the legacy IRQ.
-> 
-> I think that it's difficult to apply the way of pci-keystone-dw.c, and
-> uniphier_pcie_irq_handler() and calling devm_request_irq() are still
-> necessary to handle legacy IRQ.
+Ok, I will send you a patchset once merge window open.
 
-I do not think it is difficult, the difference is that keystone has
-1 GIC irq line allocated per legacy IRQ, your set-up has one for
-all INTX.
+Thanks,
+Chunyan
 
-*However*, I would like some clarifications from Murali on this code
-in drivers/pci/controller/dwc/pci-keystone.c:
-
-static void ks_pcie_legacy_irq_handler(struct irq_desc *desc)
-{
-	unsigned int irq = irq_desc_get_irq(desc);
-	struct keystone_pcie *ks_pcie = irq_desc_get_handler_data(desc);
-	struct dw_pcie *pci = ks_pcie->pci;
-	struct device *dev = pci->dev;
-	u32 irq_offset = irq - ks_pcie->legacy_host_irqs[0];
-
-Here the IRQ numbers are virtual IRQs, is it correct to consider
-the virq numbers as sequential values ? The "offset" is used to
-handle the PCI controller interrupt registers, so it must be a value
-between 0-3 IIUC.
-
-I would appreciated a detailed explanation of keystone legacy IRQ
-handling so that we can eventually try to replicate it and generalize
-it.
-
-Lorenzo
-
-	[...]
-
-	chained_irq_enter(chip, desc);
-	ks_dw_pcie_handle_legacy_irq(ks_pcie, irq_offset);
-	chained_irq_exit(chip, desc);
-}
+> If this is the only DT patch for spreadtrum in 4.20, I can also just
+> pick it up with your Ack.
+>
+>        Arnd
