@@ -1,220 +1,94 @@
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v15 12/16] arm64: kexec_file: add crash dump support
-Date: Fri, 28 Sep 2018 15:48:37 +0900
-Message-ID: <20180928064841.14117-13-takahiro.akashi@linaro.org>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+From: Andrea Merello <andrea.merello@gmail.com>
+Subject: Re: [PATCH v5 4/7] dmaengine: xilinx_dma: program hardware supported
+ buffer length
+Date: Fri, 28 Sep 2018 08:53:11 +0200
+Message-ID: <CAN8YU5OySuzAyQ=Buad=Jidhes28koV52Gi-QJ-qOiG5TFBO=Q@mail.gmail.com>
+References: <20180907062502.8241-1-andrea.merello@gmail.com>
+ <20180907062502.8241-4-andrea.merello@gmail.com> <20180918162508.GD2613@vkoul-mobl>
+Reply-To: andrea.merello@gmail.com
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928064841.14117-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20180918162508.GD2613@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, dhowells@redhat.com, vgoyal@redhat.com, herbert@gondor.apana.org.au, davem@davemloft.net, dyoung@redhat.com, bhe@redhat.com, arnd@arndb.de, schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Cc: prudo@linux.ibm.com, ard.biesheuvel@linaro.org, james.morse@arm.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+To: Vinod <vkoul@kernel.org>
+Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Enabling crash dump (kdump) includes
-* prepare contents of ELF header of a core dump file, /proc/vmcore,
-  using crash_prepare_elf64_headers(), and
-* add two device tree properties, "linux,usable-memory-range" and
-  "linux,elfcorehdr", which represent respectively a memory range
-  to be used by crash dump kernel and the header's location
+On Tue, Sep 18, 2018 at 6:25 PM Vinod <vkoul@kernel.org> wrote:
+>
+> On 07-09-18, 08:24, Andrea Merello wrote:
+> > From: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> >
+> > AXI-DMA IP supports configurable (c_sg_length_width) buffer length
+> > register width, hence read buffer length (xlnx,sg-length-width) DT
+> > property and ensure that driver doesn't program buffer length
+> > exceeding the supported limit. For VDMA and CDMA there is no change.
+> >
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> > Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> > Signed-off-by: Andrea Merello <andrea.merello@gmail.com> [rebase, reword]
+> > ---
+> > Changes in v2:
+> >         - drop original patch and replace with the one in Xilinx tree
+> > Changes in v3:
+> >       - cc DT maintainers/ML
+> > Changes in v4:
+> >       - upper bound for the property should be 26, not 23
+> >       - add warn for width > 23 as per xilinx original patch
+> >       - rework due to changes introduced in 1/6
+> > Changes in v5:
+> >       None
+> > ---
+> >  drivers/dma/xilinx/xilinx_dma.c | 36 +++++++++++++++++++++++++--------
+> >  1 file changed, 28 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> > index aaa6de8a70e4..b17f24e4ec35 100644
+> > --- a/drivers/dma/xilinx/xilinx_dma.c
+> > +++ b/drivers/dma/xilinx/xilinx_dma.c
+> > @@ -158,7 +158,9 @@
+> >  #define XILINX_DMA_REG_BTT           0x28
+> >
+> >  /* AXI DMA Specific Masks/Bit fields */
+> > -#define XILINX_DMA_MAX_TRANS_LEN     GENMASK(22, 0)
+> > +#define XILINX_DMA_MAX_TRANS_LEN_MIN 8
+> > +#define XILINX_DMA_MAX_TRANS_LEN_MAX 23
+> > +#define XILINX_DMA_V2_MAX_TRANS_LEN_MAX      26
+> >  #define XILINX_DMA_CR_COALESCE_MAX   GENMASK(23, 16)
+> >  #define XILINX_DMA_CR_CYCLIC_BD_EN_MASK      BIT(4)
+> >  #define XILINX_DMA_CR_COALESCE_SHIFT 16
+> > @@ -418,6 +420,7 @@ struct xilinx_dma_config {
+> >   * @rxs_clk: DMA s2mm stream clock
+> >   * @nr_channels: Number of channels DMA device supports
+> >   * @chan_id: DMA channel identifier
+> > + * @max_buffer_len: Max buffer length
+> >   */
+> >  struct xilinx_dma_device {
+> >       void __iomem *regs;
+> > @@ -437,6 +440,7 @@ struct xilinx_dma_device {
+> >       struct clk *rxs_clk;
+> >       u32 nr_channels;
+> >       u32 chan_id;
+> > +     u32 max_buffer_len;
+> >  };
+> >
+> >  /* Macros */
+> > @@ -964,7 +968,7 @@ static int xilinx_dma_calc_copysize(struct xilinx_dma_chan *chan,
+> >                                   int size, int done)
+> >  {
+> >       size_t copy = min_t(size_t, size - done,
+> > -                  XILINX_DMA_MAX_TRANS_LEN);
+> > +                         chan->xdev->max_buffer_len);
+>
+> hmm why not add max_buffer_len in patch 1 again, and then use default
+> len as XILINX_DMA_MAX_TRANS_LEN and add multiple lengths here :)
 
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Reviewed-by: James Morse <james.morse@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
----
- arch/arm64/include/asm/kexec.h         |   4 +
- arch/arm64/kernel/machine_kexec_file.c | 109 ++++++++++++++++++++++++-
- 2 files changed, 110 insertions(+), 3 deletions(-)
+Sorry, I'm not getting your point. Could you please elaborate the "add
+multiple lengths here" thing ?
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 5e673481b3a3..1b2c27026ae0 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -99,6 +99,10 @@ static inline void crash_post_resume(void) {}
- struct kimage_arch {
- 	void *dtb;
- 	unsigned long dtb_mem;
-+	/* Core ELF header buffer */
-+	void *elf_headers;
-+	unsigned long elf_headers_mem;
-+	unsigned long elf_headers_sz;
- };
- 
- /**
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 05fb2d4e6fef..4b5ea256c84c 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -16,10 +16,14 @@
- #include <linux/libfdt.h>
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
-+#include <linux/slab.h>
- #include <linux/types.h>
-+#include <linux/vmalloc.h>
- #include <asm/byteorder.h>
- 
- /* relevant device tree properties */
-+#define FDT_PSTR_KEXEC_ELFHDR	"linux,elfcorehdr"
-+#define FDT_PSTR_MEM_RANGE	"linux,usable-memory-range"
- #define FDT_PSTR_INITRD_STA	"linux,initrd-start"
- #define FDT_PSTR_INITRD_END	"linux,initrd-end"
- #define FDT_PSTR_BOOTARGS	"bootargs"
-@@ -34,6 +38,10 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	vfree(image->arch.dtb);
- 	image->arch.dtb = NULL;
- 
-+	vfree(image->arch.elf_headers);
-+	image->arch.elf_headers = NULL;
-+	image->arch.elf_headers_sz = 0;
-+
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
-@@ -43,12 +51,25 @@ static int setup_dtb(struct kimage *image,
- 		void **dtb_buf, unsigned long *dtb_buf_len)
- {
- 	void *buf = NULL;
--	size_t buf_size;
-+	int addr_cells, size_cells;
-+	size_t buf_size, range_size;
- 	int nodeoffset;
- 	int ret;
- 
- 	/* duplicate dt blob */
- 	buf_size = fdt_totalsize(initial_boot_params);
-+	addr_cells = fdt_address_cells(initial_boot_params, 0);
-+	if (addr_cells < 0)
-+		return -EINVAL;
-+	size_cells = fdt_size_cells(initial_boot_params, 0);
-+	if (size_cells < 0)
-+		return -EINVAL;
-+	range_size = (addr_cells + size_cells) * sizeof(u32);
-+
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		buf_size += fdt_prop_len(FDT_PSTR_KEXEC_ELFHDR, range_size);
-+		buf_size += fdt_prop_len(FDT_PSTR_MEM_RANGE, range_size);
-+	}
- 
- 	if (initrd_load_addr) {
- 		/* can be redundant, but trimmed at the end */
-@@ -78,6 +99,22 @@ static int setup_dtb(struct kimage *image,
- 		goto out_err;
- 	}
- 
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		/* add linux,elfcorehdr */
-+		ret = fdt_setprop_reg(buf, nodeoffset, FDT_PSTR_KEXEC_ELFHDR,
-+				image->arch.elf_headers_mem,
-+				image->arch.elf_headers_sz);
-+		if (ret)
-+			goto out_err;
-+
-+		/* add linux,usable-memory-range */
-+		ret = fdt_setprop_reg(buf, nodeoffset, FDT_PSTR_MEM_RANGE,
-+				crashk_res.start,
-+				crashk_res.end - crashk_res.start + 1);
-+		if (ret)
-+			goto out_err;
-+	}
-+
- 	/* add bootargs */
- 	if (cmdline) {
- 		ret = fdt_setprop_string(buf, nodeoffset, FDT_PSTR_BOOTARGS,
-@@ -135,6 +172,43 @@ static int setup_dtb(struct kimage *image,
- 	return ret;
- }
- 
-+static int prepare_elf_headers(void **addr, unsigned long *sz)
-+{
-+	struct crash_mem *cmem;
-+	unsigned int nr_ranges;
-+	int ret;
-+	u64 i;
-+	phys_addr_t start, end;
-+
-+	nr_ranges = 1; /* for exclusion of crashkernel region */
-+	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+					MEMBLOCK_NONE, &start, &end, NULL)
-+		nr_ranges++;
-+
-+	cmem = kmalloc(sizeof(struct crash_mem) +
-+			sizeof(struct crash_mem_range) * nr_ranges, GFP_KERNEL);
-+	if (!cmem)
-+		return -ENOMEM;
-+
-+	cmem->max_nr_ranges = nr_ranges;
-+	cmem->nr_ranges = 0;
-+	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+					MEMBLOCK_NONE, &start, &end, NULL) {
-+		cmem->ranges[cmem->nr_ranges].start = start;
-+		cmem->ranges[cmem->nr_ranges].end = end - 1;
-+		cmem->nr_ranges++;
-+	}
-+
-+	/* Exclude crashkernel region */
-+	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+
-+	if (!ret)
-+		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-+
-+	kfree(cmem);
-+	return ret;
-+}
-+
- int load_other_segments(struct kimage *image,
- 			unsigned long kernel_load_addr,
- 			unsigned long kernel_size,
-@@ -142,14 +216,43 @@ int load_other_segments(struct kimage *image,
- 			char *cmdline, unsigned long cmdline_len)
- {
- 	struct kexec_buf kbuf;
--	void *dtb = NULL;
--	unsigned long initrd_load_addr = 0, dtb_len;
-+	void *headers, *dtb = NULL;
-+	unsigned long headers_sz, initrd_load_addr = 0, dtb_len;
- 	int ret = 0;
- 
- 	kbuf.image = image;
- 	/* not allocate anything below the kernel */
- 	kbuf.buf_min = kernel_load_addr + kernel_size;
- 
-+	/* load elf core header */
-+	if (image->type == KEXEC_TYPE_CRASH) {
-+		ret = prepare_elf_headers(&headers, &headers_sz);
-+		if (ret) {
-+			pr_err("Preparing elf core header failed\n");
-+			goto out_err;
-+		}
-+
-+		kbuf.buffer = headers;
-+		kbuf.bufsz = headers_sz;
-+		kbuf.mem = 0;
-+		kbuf.memsz = headers_sz;
-+		kbuf.buf_align = SZ_64K; /* largest supported page size */
-+		kbuf.buf_max = ULONG_MAX;
-+		kbuf.top_down = true;
-+
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret) {
-+			vfree(headers);
-+			goto out_err;
-+		}
-+		image->arch.elf_headers = headers;
-+		image->arch.elf_headers_mem = kbuf.mem;
-+		image->arch.elf_headers_sz = headers_sz;
-+
-+		pr_debug("Loaded elf core header at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+			 image->arch.elf_headers_mem, headers_sz, headers_sz);
-+	}
-+
- 	/* load initrd */
- 	if (initrd) {
- 		kbuf.buffer = initrd;
--- 
-2.19.0
+> -
+> ~Vinod
