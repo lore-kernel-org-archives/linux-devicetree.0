@@ -1,40 +1,41 @@
-Return-Path: <SRS0=zO/b=MJ=st.com=hugues.fruchet@kernel.org>
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH 3/4] media: dt-bindings: media: Document pclk-max-frequency property
-Date: Thu, 27 Sep 2018 16:46:06 +0200
-Message-ID: <1538059567-8381-4-git-send-email-hugues.fruchet@st.com>
-In-Reply-To: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
-References: <1538059567-8381-1-git-send-email-hugues.fruchet@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-To: Steve Longerbeam <slongerbeam@gmail.com>, Sakari Ailus <sakari.ailus@iki.fi>, Hans Verkuil <hverkuil@xs4all.nl>, "Mauro Carvalho Chehab  <mchehab@kernel.org>, Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Hugues Fruchet <hugues.fruchet@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Jacopo Mondi <jacopo@jmondi.org>
+Return-Path: <SRS0=B9z3=MK=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 1/3] dt-bindings: arm: Document RZ/G2E SoC DT bindings
+Date: Fri, 28 Sep 2018 11:16:35 +0100
+Message-Id: <1538129795-26796-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <CAMuHMdVmkLSVoUPX8QcPp5AWeae7iD4Vpz8QjA3nJw=T4J7Pkg@mail.gmail.com>
+References: <CAMuHMdVmkLSVoUPX8QcPp5AWeae7iD4Vpz8QjA3nJw=T4J7Pkg@mail.gmail.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms+renesas@verge.net.au>
 List-ID: <devicetree@vger.kernel.org>
 
-This optional property aims to inform parallel video devices
-of the maximum pixel clock frequency admissible by host video
-interface. If bandwidth of data to be transferred requires a
-pixel clock which is higher than this value, parallel video
-device could then typically adapt framerate to reach
-this constraint.
+Add device tree bindings documentation for Renesas RZ/G2E (r8a774c0)
+SoC.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+
 ---
- Documentation/devicetree/bindings/media/video-interfaces.txt | 2 ++
+v1->v2:
+* Fixed typo within the part number, thanks Geert for spotting this
+
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-index baf9d97..fa4c112 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -147,6 +147,8 @@ Optional endpoint properties
-   as 0 (normal). This property is valid for serial busses only.
- - strobe: Whether the clock signal is used as clock (0) or strobe (1). Used
-   with CCP2, for instance.
-+- pclk-max-frequency: maximum pixel clock frequency admissible by video
-+  host interface.
- 
- Example
- -------
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 4a03a6b..58c4256 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -27,6 +27,8 @@ SoCs:
+     compatible = "renesas,r8a77470"
+   - RZ/G2M (R8A774A1)
+     compatible = "renesas,r8a774a1"
++  - RZ/G2E (R8A774C0)
++    compatible = "renesas,r8a774c0"
+   - R-Car M1A (R8A77781)
+     compatible = "renesas,r8a7778"
+   - R-Car H1 (R8A77790)
 -- 
 2.7.4
