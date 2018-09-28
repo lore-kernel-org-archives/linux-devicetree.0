@@ -1,138 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v11 1/2] dt-bindings: media: Add Allwinner V3s Camera Sensor Interface (CSI)
-Date: Fri, 28 Sep 2018 12:45:12 +0300
-Message-ID: <14114604.4rraf0qJLU@avalon>
-References: <1537951204-24672-1-git-send-email-yong.deng@magewell.com> <20180928093833.gwmskm2jvby6x4s6@paasikivi.fi.intel.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v5 0/9] PCI: mediatek: fixup find_port, enable_msi and add pm, module support
+Date: Fri, 28 Sep 2018 18:04:31 +0800
+Message-ID: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928093833.gwmskm2jvby6x4s6@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "\"David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infrade
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
+Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-On Friday, 28 September 2018 12:38:33 EEST Sakari Ailus wrote:
-> On Wed, Sep 26, 2018 at 04:40:04PM +0800, Yong Deng wrote:
-> > Add binding documentation for Allwinner V3s CSI.
-> > 
-> > Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> 
-> I know... but I have a few more comments.
-> 
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Yong Deng <yong.deng@magewell.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/media/sun6i-csi.txt        | 59 +++++++++++++++++
-> >  1 file changed, 59 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > b/Documentation/devicetree/bindings/media/sun6i-csi.txt new file mode
-> > 100644
-> > index 000000000000..2ff47a9507a6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/sun6i-csi.txt
-> > @@ -0,0 +1,59 @@
-> > +Allwinner V3s Camera Sensor Interface
-> > +-------------------------------------
-> > +
-> > +Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
-> > +interface and CSI1 is used for parallel interface.
-> > +
-> > +Required properties:
-> > +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> > +  - reg: base address and size of the memory-mapped region.
-> > +  - interrupts: interrupt associated to this IP
-> > +  - clocks: phandles to the clocks feeding the CSI
-> > +    * bus: the CSI interface clock
-> > +    * mod: the CSI module clock
-> > +    * ram: the CSI DRAM clock
-> > +  - clock-names: the clock names mentioned above
-> > +  - resets: phandles to the reset line driving the CSI
-> > +
-> > +Each CSI node should contain one 'port' child node with one child
-> > 'endpoint' +node, according to the bindings defined in
-> > +Documentation/devicetree/bindings/media/video-interfaces.txt. As
-> > mentioned
-> > +above, the endpoint's bus type should be MIPI CSI-2 for CSI0 and parallel
-> > or +Bt656 for CSI1.
-> 
-> Which port represents CSI0 and which one is CSI1? That needs to be
-> documented.
+This patchset includes misc patchs:
 
-There are two CSI devices, named CSI0 and CSI1, with one port each. The CSI0 
-device supports CSI-2 only, and the CSI1 device parallel (BT.601 or BT.656) 
-only.
+The patch 1 fixup the mtk_pcie_find_port logic which will cause system
+could not touch the EP's configuration space that connected to PCIe slot 1.
 
-> > +
-> > +Endpoint node properties for CSI1
-> 
-> How about CSI0? I'd expect at least data-lanes, and clock-lanes as well if
-> the hardware supports lane mapping.
+The patch 2 fixup the class type for MT7622.
+The patch 6 fixup the enable msi logic, the operation to enable msi
+should be after system clock is enabled. Call mtk_pcie_enable_msi in
+mtk_pcie_startup_port_v2 since the clock was all enabled at that time.
 
-I enquired about that too. As far as I understand, CSI0 isn't supported yet in 
-the driver due to lack of documentation and lack of open-source vendor-
-provided source code. While DT bindings are not tied to driver 
-implementations, it's not the best idea to design DT bindings without at least 
-one working implementation to test them. I thus proposed just listing CSI0 as 
-being unsupported for now.
+The patch 7 was rebased and refactor of the v4 patch[1], changes are:
+ -Add PM support for MT7622.
+ -Using mtk_pcie_enable_port to re-establish the link when resumed.
+ -Rebased on this patchset.
 
-> > +---------------------------------
-> > +
-> > +- remote-endpoint	: (required) a phandle to the bus receiver's endpoint
-> > +			   node
-> > +- bus-width:		: (required) must be 8, 10, 12 or 16
-> > +- pclk-sample		: (optional) (default: sample on falling edge)
-> 
-> Could you add that video-interfaces.txt contains documentation of these
-> properties as well? There's a reference above but only discusses port and
-> endpoint nodes.
-> 
-> > +- hsync-active		: (only required for parallel)
-> > +- vsync-active		: (only required for parallel)
-> 
-> As you support both Bt656 and parallel (with sync signals), you can detect
-> the interface type from the presence of these properties. I think you
-> should also say that these properties are not allowed on Bt656. So I'd
-> change this to e.g.
-> 
-> 	(required; parallel-only)
-> 
-> > +
-> > +Example:
-> > +
-> > +csi1: csi@1cb4000 {
-> > +	compatible = "allwinner,sun8i-v3s-csi";
-> > +	reg = <0x01cb4000 0x1000>;
-> > +	interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> > +	clocks = <&ccu CLK_BUS_CSI>,
-> > +		 <&ccu CLK_CSI1_SCLK>,
-> > +		 <&ccu CLK_DRAM_CSI>;
-> > +	clock-names = "bus", "mod", "ram";
-> > +	resets = <&ccu RST_BUS_CSI>;
-> > +
-> > +	port {
-> > +		/* Parallel bus endpoint */
-> > +		csi1_ep: endpoint {
-> > +			remote-endpoint = <&adv7611_ep>;
-> > +			bus-width = <16>;
-> > +
-> > +			/* If hsync-active/vsync-active are missing,
-> > +			   embedded BT.656 sync is used */
-> > +			hsync-active = <0>; /* Active low */
-> > +			vsync-active = <0>; /* Active low */
-> > +			pclk-sample = <1>;  /* Rising */
-> > +		};
-> > +	};
-> > +};
+The patch 9 add loadable kernel module support.
+
+[1] https://patchwork.kernel.org/patch/10479079
+
+Change since v4:
+ - Add patch 2 to fixup class type for MT7622.
+ - Add patch 3 to remove the redundant dev->pm_domain check
+ - Add patch 4 to covert to use pci_host_probe
+ - Add patch 5 to re-arrange the function define, this is a prepare patch for
+   fixup the enable_msi logic, no functional changed have been made by this one.
+ - Add patch 8 to save the GIC IRQ in mtk_pcie_port as a prepare patch for tear
+   down the irq when remove the kernel module.
+ - Re-arrange the find_port flow suggest by Lorenzo to make the code parse easier
+   for the patch 1.
+ - Remove the .pm_support in mtk_pcie_soc in patch 7 since if system pm was not
+   supported, then those pm callbacks will never be executed for MT7622. So the
+   .pm_support is not needed.
+
+Change since v3:
+ - Remove pm_runtime_XXX ops in suspend and resume callbacks in the third patch.
+ - Rebase to 4.19-rc1.
+
+Change since v2:
+ - Fix the list_for_each_entry_safe parameter error.
+ - Add Ryder's Acked-by flag.
+
+Change since v1:
+ - A bit of code refact of the first patch suggested by Andy Shevchenko, and
+   commit message updated.
+ - Using __maybe_unused.
+ - Remove the redundant list_empty check of the fourth patch.
+
+Honghui Zhang (9):
+  PCI: mediatek: Using slot's devfn for compare to fix
+    mtk_pcie_find_port logic
+  PCI: mediatek: Fixup class ID for MT7622 as PCI_CLASS_BRIDGE_PCI
+  PCI: mediatek: Remove the redundant dev->pm_domain check
+  PCI: mediatek: Convert to use pci_host_probe()
+  PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define
+    after mtk_pcie_setup_irq
+  PCI: mediatek: Enable msi after clock enabled
+  PCI: mediatek: Add system pm support for MT2712 and MT7622
+  PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
+  PCI: mediatek: Add loadable kernel module support
+
+ drivers/pci/controller/Kconfig         |   2 +-
+ drivers/pci/controller/pcie-mediatek.c | 326 +++++++++++++++++++++------------
+ 2 files changed, 210 insertions(+), 118 deletions(-)
 
 -- 
-Regards,
-
-Laurent Pinchart
+2.6.4
