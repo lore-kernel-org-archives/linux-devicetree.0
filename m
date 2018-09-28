@@ -1,47 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/4] pinctrl: qcom: Introduce readl/writel accessors
-Date: Fri, 28 Sep 2018 09:11:50 +0200
-Message-ID: <CACRpkdaxXz8=An-tQwhjnn2e3QwMbs=b6mE8BfL0HA8aeBjxKQ@mail.gmail.com>
-References: <20180924221748.21584-1-bjorn.andersson@linaro.org>
- <20180924221748.21584-2-bjorn.andersson@linaro.org> <CACRpkdaWboGvKVaSjv4C1CCz5DJXbB+ZWV6vGeyX93vb4zo1sw@mail.gmail.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [PATCH v3 1/7] regulator/mfd: Support ROHM BD71847 power
+ management IC
+Date: Fri, 28 Sep 2018 10:14:37 +0300
+Message-ID: <20180928071437.GB9389@localhost.localdomain>
+References: <cover.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <3996792a07fea45d94d4d712ed05527199cc4ac0.1536912922.git.matti.vaittinen@fi.rohmeurope.com>
+ <20180921172959.GG20825@sirena.org.uk>
+ <20180921180241.GA4358@dell>
+ <20180921181217.GI20825@sirena.org.uk>
+ <20180921185258.GC4358@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaWboGvKVaSjv4C1CCz5DJXbB+ZWV6vGeyX93vb4zo1sw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180921185258.GC4358@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, sboyd@kernel.org, mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 9:10 AM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Fri, Sep 21, 2018 at 11:52:58AM -0700, Lee Jones wrote:
+> On Fri, 21 Sep 2018, Mark Brown wrote:
+> 
+> > On Fri, Sep 21, 2018 at 11:02:41AM -0700, Lee Jones wrote:
+> > > On Fri, 21 Sep 2018, Mark Brown wrote:
+> > 
+> > > > This looks OK to me - Lee, the patch is almost entirely a regulator one,
+> > > > are you OK with me applying it?
+> > 
+> > > The diff in rohm-bd718x7.h does not look significant.
+> > 
+> > > You can apply it so long as you provide me with a PR in order to avoid
+> > > any potential merge conflicts.  Especially as Linus is out for this
+> > > release.
+> > 
+> > Great, thanks.  There's also the MFD DT bindings and another patch later
+> > on with Acked-for-MFD tags on them, should I convert the tags to acks,
+> > apply those as well and include them in the pull request?
+> 
+> Please.
 
-> This clashes with Stephen Boyds fix:
-> "pinctrl: msm: Really mask level interrupts to prevent latching"
->
-> I've resolved it like this:
+I was just wondering if I could do something to help get this patch
+series applied? Mark, have you had the time to take a look on pickable
+ranges addition yet? Should I do some rebasing/resending? Are you giving
+me a nudge if I can do something?
 
-Also this:
-static void msm_gpio_irq_unmask(struct irq_data *d)
-{
-    struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-    struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
-    const struct msm_pingroup *g;
-    unsigned long flags;
-    u32 val;
-
-    g = &pctrl->soc->groups[d->hwirq];
-
-    raw_spin_lock_irqsave(&pctrl->lock, flags);
-
-    val = msm_readl_intr_cfg(pctrl, g);
-    val |= BIT(g->intr_raw_status_bit);
-    val |= BIT(g->intr_enable_bit);
-    msm_writel_intr_cfg(val, pctrl, g);
-
-    set_bit(d->hwirq, pctrl->enabled_irqs);
-
-    raw_spin_unlock_irqrestore(&pctrl->lock, flags);
-}
-
-Yours,
-Linus Walleij
+Br,
+	Matti Vaittinen
