@@ -1,85 +1,38 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v5 0/9] PCI: mediatek: fixup find_port, enable_msi and
- add pm, module support
-Date: Sat, 29 Sep 2018 13:58:03 +0800
-Message-ID: <1538200683.25778.6.camel@mtkswgap22>
-References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/3] Add slave DMA support for Actions Semi S900 SoC
+Date: Sat, 29 Sep 2018 13:16:34 +0530
+Message-ID: <20180929074637.9766-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: vkoul@kernel.org, dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
+Cc: linux-serial@vger.kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-09-28 at 18:04 +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> This patchset includes misc patchs:
-> 
-> The patch 1 fixup the mtk_pcie_find_port logic which will cause system
-> could not touch the EP's configuration space that connected to PCIe slot 1.
-> 
-> The patch 2 fixup the class type for MT7622.
-> The patch 6 fixup the enable msi logic, the operation to enable msi
-> should be after system clock is enabled. Call mtk_pcie_enable_msi in
-> mtk_pcie_startup_port_v2 since the clock was all enabled at that time.
-> 
-> The patch 7 was rebased and refactor of the v4 patch[1], changes are:
->  -Add PM support for MT7622.
->  -Using mtk_pcie_enable_port to re-establish the link when resumed.
->  -Rebased on this patchset.
-> 
-> The patch 9 add loadable kernel module support.
-> 
-> [1] https://patchwork.kernel.org/patch/10479079
-> 
-> Change since v4:
->  - Add patch 2 to fixup class type for MT7622.
->  - Add patch 3 to remove the redundant dev->pm_domain check
->  - Add patch 4 to covert to use pci_host_probe
->  - Add patch 5 to re-arrange the function define, this is a prepare patch for
->    fixup the enable_msi logic, no functional changed have been made by this one.
->  - Add patch 8 to save the GIC IRQ in mtk_pcie_port as a prepare patch for tear
->    down the irq when remove the kernel module.
->  - Re-arrange the find_port flow suggest by Lorenzo to make the code parse easier
->    for the patch 1.
->  - Remove the .pm_support in mtk_pcie_soc in patch 7 since if system pm was not
->    supported, then those pm callbacks will never be executed for MT7622. So the
->    .pm_support is not needed.
-> 
-> Change since v3:
->  - Remove pm_runtime_XXX ops in suspend and resume callbacks in the third patch.
->  - Rebase to 4.19-rc1.
-> 
-> Change since v2:
->  - Fix the list_for_each_entry_safe parameter error.
->  - Add Ryder's Acked-by flag.
-> 
-> Change since v1:
->  - A bit of code refact of the first patch suggested by Andy Shevchenko, and
->    commit message updated.
->  - Using __maybe_unused.
->  - Remove the redundant list_empty check of the fourth patch.
-> 
-> Honghui Zhang (9):
->   PCI: mediatek: Using slot's devfn for compare to fix
->     mtk_pcie_find_port logic
->   PCI: mediatek: Fixup class ID for MT7622 as PCI_CLASS_BRIDGE_PCI
->   PCI: mediatek: Remove the redundant dev->pm_domain check
->   PCI: mediatek: Convert to use pci_host_probe()
->   PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define
->     after mtk_pcie_setup_irq
->   PCI: mediatek: Enable msi after clock enabled
->   PCI: mediatek: Add system pm support for MT2712 and MT7622
->   PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
->   PCI: mediatek: Add loadable kernel module support
-> 
->  drivers/pci/controller/Kconfig         |   2 +-
->  drivers/pci/controller/pcie-mediatek.c | 326 +++++++++++++++++++++------------
->  2 files changed, 210 insertions(+), 118 deletions(-)
-> 
+This patchset adds slave DMA support for Actions Semi S900 SoC of the
+Owl family. As a consumer, enable TX DMA support for UART peripheral
+in S900. The UART driver still supports interrupt mode if there is no
+DMA property specified in DT.
 
-Acked-by: Ryder Lee <ryder.lee@mediatek.com> for the whole series.
+The dts patch depends on the previous DMA patches which is not yet
+merged.
+
+Thanks,
+Mani
+
+Changes in v2:
+
+* Modified the comment for bus width as per Vinod's suggestion
+
+Manivannan Sadhasivam (3):
+  arm64: dts: actions: s900: Enable Tx DMA for UART5
+  dmaengine: Add Slave and Cyclic mode support for Actions Semi Owl S900
+    SoC
+  tty: serial: Add Tx DMA support for UART in Actions Semi Owl SoCs
+
+ arch/arm64/boot/dts/actions/s900.dtsi |   2 +
+ drivers/dma/owl-dma.c                 | 279 +++++++++++++++++++++++++-
+ drivers/tty/serial/owl-uart.c         | 172 +++++++++++++++-
+ 3 files changed, 445 insertions(+), 8 deletions(-)
+
+-- 
+2.17.1
