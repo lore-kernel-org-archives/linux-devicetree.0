@@ -1,49 +1,110 @@
-From: dwalker@fifo99.com
-Subject: Re: [PATCH 0/8] add generic builtin command line
-Date: Sat, 29 Sep 2018 11:17:26 -0700
-Message-ID: <20180929181725.GB27441@fifo99.com>
-References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
+Date: Sat, 29 Sep 2018 18:49:43 -0500
+Message-ID: <CAL_JsqLNGua++ESBgf5qSqoLdLwq8awyFr29pYR=JVBOwX3eAg@mail.gmail.com>
+References: <20180918082422.13050-1-songqiang1304521@gmail.com>
+ <20180918082422.13050-2-songqiang1304521@gmail.com> <20180922160523.16b399fc@archlinux>
+ <20180926224618.GA32126@bogus> <20180928093618.GA24536@Eros>
+ <CAL_JsqLpNiGdK9hWTGWZwgbgRr8DNF=XvKGUx=oS2jTJ61yhFg@mail.gmail.com> <20180929121034.6c5e5826@archlinux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
+In-Reply-To: <20180929121034.6c5e5826@archlinux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maksym Kokhan <maksym.kokhan@globallogic.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbil>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Song Qiang <songqiang1304521@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Matt Ranostay <matt.ranostay@konsulko.com>, Thomas Gleixner <tglx@linutronix.de>, Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 07:55:08PM +0300, Maksym Kokhan wrote:
-> Daniel Walker (7):
->   add generic builtin command line
->   drivers: of: ifdef out cmdline section
->   x86: convert to generic builtin command line
->   arm: convert to generic builtin command line
->   arm64: convert to generic builtin command line
->   mips: convert to generic builtin command line
->   powerpc: convert to generic builtin command line
-> 
+On Sat, Sep 29, 2018 at 6:10 AM Jonathan Cameron <jic23@kernel.org> wrote:
+>
+> On Fri, 28 Sep 2018 18:52:13 -0500
+> Rob Herring <robh@kernel.org> wrote:
+>
+> > On Fri, Sep 28, 2018 at 4:36 AM Song Qiang <songqiang1304521@gmail.com> wrote:
+> > >
+> > > On Wed, Sep 26, 2018 at 05:46:18PM -0500, Rob Herring wrote:
+> > > > On Sat, Sep 22, 2018 at 04:05:23PM +0100, Jonathan Cameron wrote:
+> > > > > On Tue, 18 Sep 2018 16:24:22 +0800
+> > > > > Song Qiang <songqiang1304521@gmail.com> wrote:
+> > > > >
+> > > > > > The first version of this driver issues a measuring request and polling
+> > > > > > for a status register in the device for measuring completes.
+> > > > > > vl53l0x support configuring GPIO1 on it to generate interrupt to
+> > > > > > indicate that new measurement is ready. This patch adds support for
+> > > > > > using this mechanisim to reduce cpu cost.
+> > > > > >
+> > > > > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+> > > > > Hi Song.
+> > > > >
+> > > > > Looks correct in principal but a few things to tidy up before
+> > > > > this is ready to apply.
+> > > > >
+> > > > > Also we have an unrelated change in here to check the devices ID.
+> > > > > That should be in it's own patch.
+> > > > >
+> > > > > Thanks,
+> > > > >
+> > > > > Jonathan
+> > > > > > ---
+> > > > > >  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
+> > > >
+> > > > This should have been split with the complete binding in one patch
+> > > > rather than piecemeal driver feature by feature.
+> > > >
+> > >
+> > > Hi Rob,
+>
+> Hi Rob, Song,
+>
+> > >
+> > > A few days ago when I was submitting this driver, I didn't do it very
+> > > well, the function of this driver is limited. I added interrupt support
+> > > the next day after you acked my first patch. I thought it's not polite
+> > > to add something after someone acked that patch, so I send the interrupt
+> > > support as a second patch. The first patch is merged to togreg now, but
+> > > this doesn't. I don't know when can I add new functions to the code that
+> > > just merged to togreg branch, could you offer some suggestions?
+> >
+> > You just needed to state why you didn't add a ack. But really, just
+> > don't send things except as RFC until they are "done".
+>
+> The RFC bit actually disagree on.  This driver could be considered 'done'
+> with just patch 1.  The driver worked, it was useful. When the early
+> versions of that patch came out Song had no idea how much work it would
+> be to add interrupt support.  As it turns out it was simple - it often isn't :(
 
-When I originally submitted these I had a very good conversion with Rob Herring
-on the device tree changes. It seemed fairly clear that my approach in these
-changes could be done better. It effected specifically arm64, but a lot of other
-platforms use the device tree integrally. With arm64 you can reduce the changes
-down to only Kconfig changes, and that would likely be the case for many of the
-other architecture. I made patches to do this a while back, but have not had
-time to test them and push them out.
+I meant specifically in the context of this getting revised within a
+number of days. I agree that drivers don't have to be complete, but
+bindings should be as complete as possible. You can't foresee
+everything, but I don't think that applies in this case.
 
-In terms of mips I think there's a fair amount of work needed to pull out their
-architecture specific mangling into something generic. Part of my motivation for
-these was to take the architecture specific feature and open that up for all the
-architecture. So it makes sense that the mips changes should become part of
-that.
+> > What to do next depends on Jonathan and whether he wants a follow-up
+> > patch or he will drop the first one.
+>
+> Yeah. I should have picked up on the binding in the second patch and merged
+> it.  I'd seen the first patch a few times before so was happy with it and
+> applied before actually looking at the second.
+>
+> If they had come in separate series in my view the partial binding then
+> extend with 'optional' elements is fine.  The number of times I've discovered
+> issues with documentation of hardware that would have made any binding written
+> from the docs wrong is non trivial. So in my view it is always a gamble to
+> write bindings until you have tested they work.  I have not problem with
+> people who are confident and want to add them from the start though.
 
-The only changes which have no comments are the generic changes, x86, and
-powerpc. Those patches have been used at Cisco for years with no issues.
-I added those changes into my -next tree for a round of testing. Assuming there
-are no issues I can work out the merging with the architecture maintainers.
-As for the other changes I think they can be done in time, as long as the
-generic parts of upstream the rest can be worked on by any of the architecture
-developers.
+Well, if they were broken is some way, I don't think backwards
+compatibility matters and we can still fix things. I'm not talking
+about complex cases here. It is pretty trivial to determine whether a
+device has an interrupt or not.
 
-Daniel
+>
+> Obviously this only works for optional elements.
+>
+> So follow up patch for 'optional' stuff is fine by me.  The only real
+> issue to my mind here is that they were in the same series, so we should
+> have seen a separate precursor patch giving the binding for all of it.
+
+Certainly, that can't be avoided sometimes and is fine. It's really
+the time frame for this particular case and reviewer bandwidth.
+
+Rob
