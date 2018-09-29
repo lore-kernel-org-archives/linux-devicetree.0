@@ -1,263 +1,110 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 1/5] spi: spi-mem: Add driver for NXP FlexSPI
- controller
-Date: Sat, 29 Sep 2018 17:40:23 +0200
-Message-ID: <20180929174023.51b1e284@bbrezillon>
-References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1537525323-20730-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 1/2] arm64: dts: allwinner: Olimex A64-OLinuXino: enable
+ eMMC.
+Date: Sat, 29 Sep 2018 17:47:54 +0200
+Message-ID: <20180929154754.abz3byvrufvnf4dq@flea>
+References: <20180919141815.18737-1-rodrigo@tjader.xyz>
+ <20180921142811.h5jraemk565alh3i@flea>
+ <CAG7TQgE_KU_cK_4E+NG8Qcw-QB2=C6YoqBYR2svmWxywFyySCw@mail.gmail.com>
+ <20180925090139.qbu6tqav5oth7zkw@flea>
+ <CAG7TQgFTsR4pf4jAcWMFoOmiP7AXYqjts60RP2kuJGU44AcQJQ@mail.gmail.com>
+ <20180927081711.llmwnvpu73loe5iv@flea>
+ <CAG7TQgGMkvBnNE_WEth8gscKxN3qN8a44mNMWz3QP-2+JKfOzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mgswahgbsrhmlk2r"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537525323-20730-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <CAG7TQgGMkvBnNE_WEth8gscKxN3qN8a44mNMWz3QP-2+JKfOzg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: linux-mtd@lists.infradead.org, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
+To: Rodrigo =?utf-8?B?RXh0ZXJja8O2dHRlciBUasOkZGVy?= <rodrigo@tjader.xyz>
+Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Yogesh,
 
-On Fri, 21 Sep 2018 15:51:59 +0530
-Yogesh Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+--mgswahgbsrhmlk2r
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +/* Registers used by the driver */
-> +#define FSPI_MCR0			0x00
-> +#define FSPI_MCR0_AHB_TIMEOUT_SHIFT	24
-> +#define FSPI_MCR0_AHB_TIMEOUT_MASK	(0xFF << FSPI_MCR0_AHB_TIMEOUT_SHIFT)
-> +#define FSPI_MCR0_IP_TIMEOUT_SHIFT	16
-> +#define FSPI_MCR0_IP_TIMEOUT_MASK	(0xFF << FSPI_MCR0_IP_TIMEOUT_SHIFT)
-> +#define FSPI_MCR0_LEARN_EN_SHIFT	15
-> +#define FSPI_MCR0_LEARN_EN_MASK		(1 << FSPI_MCR0_LEARN_EN_SHIFT)
-> +#define FSPI_MCR0_SCRFRUN_EN_SHIFT	14
-> +#define FSPI_MCR0_SCRFRUN_EN_MASK	(1 << FSPI_MCR0_SCRFRUN_EN_SHIFT)
-> +#define FSPI_MCR0_OCTCOMB_EN_SHIFT	13
-> +#define FSPI_MCR0_OCTCOMB_EN_MASK	(1 << FSPI_MCR0_OCTCOMB_EN_SHIFT)
-> +#define FSPI_MCR0_DOZE_EN_SHIFT		12
-> +#define FSPI_MCR0_DOZE_EN_MASK		(1 << FSPI_MCR0_DOZE_EN_SHIFT)
-> +#define FSPI_MCR0_HSEN_SHIFT		11
-> +#define FSPI_MCR0_HSEN_MASK		(1 << FSPI_MCR0_HSEN_SHIFT)
-> +#define FSPI_MCR0_SERCLKDIV_SHIFT	8
-> +#define FSPI_MCR0_SERCLKDIV_MASK	(7 << FSPI_MCR0_SERCLKDIV_SHIFT)
-> +#define FSPI_MCR0_ATDF_EN_SHIFT		7
-> +#define FSPI_MCR0_ATDF_EN_MASK		(1 << FSPI_MCR0_ATDF_EN_SHIFT)
-> +#define FSPI_MCR0_ARDF_EN_SHIFT		6
-> +#define FSPI_MCR0_ARDF_EN_MASK		(1 << FSPI_MCR0_ARDF_EN_SHIFT)
-> +#define FSPI_MCR0_RXCLKSRC_SHIFT	4
-> +#define FSPI_MCR0_RXCLKSRC_MASK		(3 << FSPI_MCR0_RXCLKSRC_SHIFT)
-> +#define FSPI_MCR0_END_CFG_SHIFT		2
-> +#define FSPI_MCR0_END_CFG_MASK		(3 << FSPI_MCR0_END_CFG_SHIFT)
-> +#define FSPI_MCR0_MDIS_SHIFT		1
-> +#define FSPI_MCR0_MDIS_MASK		(1 << FSPI_MCR0_MDIS_SHIFT)
-> +#define FSPI_MCR0_SWRST_SHIFT		0
-> +#define FSPI_MCR0_SWRST_MASK		(1 << FSPI_MCR0_SWRST_SHIFT)
+On Thu, Sep 27, 2018 at 11:49:20AM -0300, Rodrigo Exterck=F6tter Tj=E4der w=
+rote:
+> On Thu, Sep 27, 2018 at 5:17 AM Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> >
+> > On Tue, Sep 25, 2018 at 02:47:59PM -0300, Rodrigo Exterck=F6tter Tj=E4d=
+er wrote:
+> > > On Tue, Sep 25, 2018 at 6:01 AM Maxime Ripard <maxime.ripard@bootlin.=
+com> wrote:
+> > > > We can't really do that, unfortunately. If the device tree name was=
+ to
+> > > > change for a given board, we'd break all the build systems, boot
+> > > > scripts and distros out there.
+> > >
+> > > What if we keep the device tree for the version without WiFi and eMMC
+> > > with the current name and create new device trees for the other two
+> > > versions?
+> >
+> > Wifi and Bluetooth should be dealt with with overlays in this case,
+> > and since the eMMC is already enabled, then there's nothing to do, I
+> > guess.
+>=20
+> It's WiFi that is already enabled, not eMMC. Only one of the three
+> variants has WiFi.
 
-Do we really need all those _SHIFT/_MASK defs? I mean
+Ah, right, sorry. In the board that doesn't have an emmc, are the pins
+usable for something else?
 
-#define FSPI_MCR0_SWRST		BIT(0)
+> We can't even remove a node from a device tree? Removing the WiFi node
+> from the current tree would make it correspond to the variant with the
+> least features.
 
-or
+Not really. How pissed would you be if you were a user, had wifi
+running on your board, you upgrade your kernel, and then it's just
+gone? :)
 
-#define FSPI_MCR0_AHB_TIMEOUT(x)	((x) << 24)
-#define FSPI_MCR0_AHB_TIMEOUT_MASK	GENMASK(31, 24)
+> About device tree overlays, I read overlay-notes.txt, but I went
+> looking for an example with "git grep /plugin/ arch" and it came
+> empty. Is this approach not used for other boards?
 
-are just fine.
+It is, it's simply not stored in the kernel, but through other third
+party repos.
 
-> +
-> +enum nxp_fspi_devtype {
-> +	NXP_FSPI_LX2160A,
-> +};
+> Does the overlay approach make the device available at boot time? That
+> is important for a storage device such as eMMC.
+>=20
+> I went with the separate dts approach because that's what I saw was
+> done for other similar cases, like Pine64 and Pine64+, OLinuXino-LIME2
+> and its variant with eMMC, among others.
 
-I'm pretty sure you don't need this enum if you describe all dev caps
-in the nxp_fspi_devtype_data struct.
+Yeah, but in all these cases, it was done from day one, not after the
+facts.
 
-> +
-> +struct nxp_fspi_devtype_data {
-> +	enum nxp_fspi_devtype devtype;
-> +	unsigned int rxfifo;
-> +	unsigned int txfifo;
-> +	unsigned int ahb_buf_size;
-> +	unsigned int quirks;
-> +	bool endianness;
+Maxime
 
-How about renaming this variable big_endian and dropping the
-{L,B}_ENDIAN macros?
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> +};
+--mgswahgbsrhmlk2r
+Content-Type: application/pgp-signature; name="signature.asc"
 
-[...]
+-----BEGIN PGP SIGNATURE-----
 
-> +struct nxp_fspi {
-> +	void __iomem *iobase;
-> +	void __iomem *ahb_addr;
-> +	u32 memmap_phy;
-> +	u32 memmap_phy_size;
-> +	struct clk *clk, *clk_en;
-> +	struct device *dev;
-> +	struct completion c;
-> +	const struct nxp_fspi_devtype_data *devtype_data;
-> +	struct mutex lock;
-> +	struct pm_qos_request pm_qos_req;
-> +	int selected;
-> +	void (*write)(u32 val, void __iomem *addr);
-> +	u32 (*read)(void __iomem *addr);
-> +};
-> +
-> +static void fspi_writel_be(u32 val, void __iomem *addr)
-> +{
-> +	iowrite32be(val, addr);
-> +}
-> +
-> +static void fspi_writel(u32 val, void __iomem *addr)
-> +{
-> +	iowrite32(val, addr);
-> +}
-> +
-> +static u32 fspi_readl_be(void __iomem *addr)
-> +{
-> +	return ioread32be(addr);
-> +}
-> +
-> +static u32 fspi_readl(void __iomem *addr)
-> +{
-> +	return ioread32(addr);
-> +}
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluvnqkACgkQ0rTAlCFN
+r3RX6w/+IqyREh6KVQvgVbNdXP8BEG4F0cdooVJRHaF/D463kTMkm/F6GAel+AQi
+7yY9NRdfrypX3U5ua1n+fdGkgX1vrB05frX9h2RuV05GzT34wPK3J6dAk4G93nSQ
+gp5nvnbJqZsvjq26DRG79QL6GVLLC7eN/K9YyieGIAZx/vP+R+MWFHlNXw/HBU4k
+P7ef9+2Ll9g5AiFsWMu3SLxHeSOVX08H4TbWAVG7k7U4jHhJ8bCPf5J+5TsJR2t5
+Q8X0L87Q4Y0XilKFrH7ObqNcbb0a8GY/0nim2seF0V5+Cp5HdQwoeu9FSz27CE3g
+3PPVCXQHbgreB4knBbiVCDHRuJAgNEhPQ5cE9LPfNlvkravCVmabZjogOdJxKt5O
+8z7GKeXI7IThzV5KyXuKEoVVOpxO9UAn9NQKztLgoF6lQqy/un0diDtGLTNzr7uM
+pI/mKOvxFHbI1l/8oUIp2sQnMApbyFve+K++zwBxjdpk8mEcHHJLwz/rCp8MEUdl
+NIjSUSbxgld0k3wmc/TrU/Qsmj5qZO8Bgv7ix9RZQvCNpocg40NhQJ/PQkTUemqs
+jWtiUtfBWh6YSi0jYpdDzkv+w0E9w2VB5GB1iBR1PJXSWBI3UjrGXlW/BFFRKEwU
+ifJEGdcMyeuyCN22dvAF8u3pP0zojX4HkCc8Gq+xPOSYnQTVGUE=
+=3kOj
+-----END PGP SIGNATURE-----
 
-Hm, I'd recommend dropping the ->read/write() hooks and providing the
-following functions:
-
-static void fspi_writel(struct nxp_fspi *f, u32 val, void __iomem *addr)
-{
-	if (f->big_endian)
-		iowrite32be(val, addr);
-	else
-		iowrite32(val, addr);
-}
-
-
-static u32 fspi_readl(struct nxp_fspi *f, void __iomem *addr)
-{
-	if (f->big_endian)
-		return ioread32be(addr);
-	else
-		return ioread32(addr);
-}
-
-> +
-> +static irqreturn_t nxp_fspi_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct nxp_fspi *f = dev_id;
-> +	u32 reg;
-> +
-> +	/* clear interrupt */
-> +	reg = f->read(f->iobase + FSPI_INTR);
-> +	f->write(FSPI_INTR_IPCMDDONE_MASK, f->iobase + FSPI_INTR);
-> +
-> +	if (reg & FSPI_INTR_IPCMDDONE_MASK)
-> +		complete(&f->c);
-> +
-> +	return IRQ_HANDLED;
-> +}
-
-[...]
-
-> +/*
-> + * If the slave device content being changed by Write/Erase, need to
-> + * invalidate the AHB buffer. This can be achieved by doing the reset
-> + * of controller after setting MCR0[SWRESET] bit.
-> + */
-> +static inline void nxp_fspi_invalid(struct nxp_fspi *f)
-> +{
-> +	u32 reg;
-> +
-> +	reg = f->read(f->iobase + FSPI_MCR0);
-> +	f->write(reg | FSPI_MCR0_SWRST_MASK, f->iobase + FSPI_MCR0);
-> +
-> +	while (f->read(f->iobase + FSPI_MCR0) & FSPI_MCR0_SWRST_MASK)
-> +		;
-
-Did you consider using readl_poll_timeout[_atomic]()?
-
-	if (f->big_endian)
-		mask = (u32)cpu_to_be32(FSPI_MCR0_SWRST_MASK);
-	else
-		mask = (u32)cpu_to_be32(FSPI_MCR0_SWRST_MASK);
-
-	ret = readl_poll_timeout(f->iobase + FSPI_MCR0, reg,
-				 reg & mask, 0, FSPI_SWRST_TIMEOUT);
-	WARN_ON(ret);
-
-> +}
-
-[...]
-
-> +static void nxp_fspi_read_ahb(struct nxp_fspi *f, const struct spi_mem_op *op)
-> +{
-> +	u32 len = op->data.nbytes;
-> +
-> +	/* Read out the data directly from the AHB buffer. */
-> +	memcpy_fromio(op->data.buf.in, (f->ahb_addr + op->addr.val), len);
-
-Don't know if it's supported, but if it is, I recommend using DMA to do
-this copy, because otherwise you might stall the CPU for quite a long
-time if the flash is operating in a low-speed mode, and RT maintainers
-will complain about that at some point ;-).
-
-> +}
-> +
-> +static void nxp_fspi_fill_txfifo(struct nxp_fspi *f,
-> +				 const struct spi_mem_op *op)
-> +{
-> +	void __iomem *base = f->iobase;
-> +	int i, j;
-> +	int size, tmp_size, wm_size;
-> +	u32 data = 0;
-> +	u32 *txbuf = (u32 *) op->data.buf.out;
-> +
-> +	/* clear the TX FIFO. */
-> +	f->write(FSPI_IPTXFCR_CLR_MASK, base + FSPI_IPTXFCR);
-> +
-> +	/* Default value of water mark level is 8 bytes. */
-> +	wm_size = 8;
-> +	size = op->data.nbytes / wm_size;
-> +	for (i = 0; i < size; i++) {
-> +		/* Wait for TXFIFO empty */
-> +		while (!(f->read(base + FSPI_INTR) & FSPI_INTR_IPTXWE_MASK))
-> +			;
-
-Use readl_poll_timeout(), or even better, provide an helper
-(fspi_readl_poll_timeout()?) that hides the BE/LE stuff, so that you
-can reuse it when this pattern occurs. 
-
-[...]
-
-> +static int nxp_fspi_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
-> +{
-> +	struct nxp_fspi *f = spi_controller_get_devdata(mem->spi->master);
-> +	void __iomem *base = f->iobase;
-> +	int err = 0;
-> +	unsigned int timeout = 1000;
-> +
-> +	mutex_lock(&f->lock);
-> +
-> +	/* wait for the controller being ready */
-> +	do {
-> +		u32 status;
-> +
-> +		status = f->read(base + FSPI_STS0);
-> +		if ((status & FSPI_STS0_ARB_IDLE_MASK) &&
-> +		    (status & FSPI_STS0_SEQ_IDLE_MASK))
-> +			break;
-> +		udelay(1);
-> +		dev_dbg(f->dev, "The controller is busy, 0x%x\n", status);
-
-Same here.
-
-Note that I didn't spend time looking at how the IP works, which
-explains why I focus on tiny details here. Unfortunately, I won't have
-time to review the driver in more details, so I'll leave that to
-someone else, or let Mark decides if he's happy enough with the current
-version.
-
-Regards,
-
-Boris
+--mgswahgbsrhmlk2r--
