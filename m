@@ -1,33 +1,115 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V6 01/33] csky: Build infrastructure
-Date: Sun, 30 Sep 2018 01:20:33 +0800
-Message-ID: <20180929172032.GH27796@guoren-Inspiron-7460>
-References: <cover.1538058840.git.ren_guo@c-sky.com>
- <dbd9228bb886c672ba75ad9e479f870957d6bcfa.1538058840.git.ren_guo@c-sky.com>
- <20180928161110.GA19827@infradead.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v3,2/3] watchdog: mpc8xxx: provide boot status
+Date: Sat, 29 Sep 2018 11:18:58 -0700
+Message-ID: <20180929181858.GA5758@roeck-us.net>
+References: <207741bf9c994a869f574a93d4fb4152d4e169c9.1537163779.git.christophe.leroy@c-s.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180928161110.GA19827@infradead.org>
+In-Reply-To: <207741bf9c994a869f574a93d4fb4152d4e169c9.1537163779.git.christophe.leroy@c-s.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com
+To: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 09:11:10AM -0700, Christoph Hellwig wrote:
-> > --- /dev/null
-> > +++ b/arch/csky/kernel/Makefile
-> > @@ -0,0 +1,8 @@
-> > +extra-y := head.o vmlinux.lds
-> > +
-> > +obj-y += entry.o atomic.o signal.o traps.o irq.o time.o vdso.o \
-> > +	 power.o syscall.o platform.o syscall_table.o setup.o \
-> > +	 process.o cpu-probe.o ptrace.o dumpstack.o
-> > +
-> > +obj-$(CONFIG_MODULES)			+= module.o
+On Mon, Sep 17, 2018 at 06:22:50AM +0000, Christophe Leroy wrote:
+> mpc8xxx watchdog driver supports the following platforms:
+> - mpc8xx
+> - mpc83xx
+> - mpc86xx
 > 
-> You can't just wire up the build infrastructure before th code.
+> Those three platforms have a 32 bits register which provides the
+> reason of the last boot, including whether it was caused by the
+> watchdog.
 > 
-> Please add the objects to the Makefiles when they are actually added.
-I don't got it? Patchset should be seperated by makefile dir?
+> mpc8xx: Register RSR, bit SWRS (bit 3)
+> mpc83xx: Register RSR, bit SWRS (bit 28)
+> mpc86xx: Register RSTRSCR, bit WDT_RR (bit 11)
+> 
+> This patch maps the register as defined in the device tree and updates
+> wdt.bootstatus based on the value of the watchdog related bit. Then
+> the information can be retrieved via the WDIOC_GETBOOTSTATUS ioctl.
+> 
+> Hereunder is an example of devicetree for mpc8xx,
+> the Reset Status Register being at offset 0x288:
+> 
+> 		WDT: watchdog@0 {
+> 			compatible = "fsl,mpc823-wdt";
+> 			reg = <0x0 0x10 0x288 0x4>;
+> 		};
+> 
+> On the mpc83xx, RSR is at offset 0x910
+> On the mpc86xx, RSTRSCR is at offset 0xe0094
+> 
+> Suggested-by: Radu Rendec <radu.rendec@gmail.com>
+> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr> # On mpc885
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  drivers/watchdog/mpc8xxx_wdt.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/watchdog/mpc8xxx_wdt.c b/drivers/watchdog/mpc8xxx_wdt.c
+> index 1dcf5f10cdd9..069072e6747d 100644
+> --- a/drivers/watchdog/mpc8xxx_wdt.c
+> +++ b/drivers/watchdog/mpc8xxx_wdt.c
+> @@ -47,6 +47,7 @@ struct mpc8xxx_wdt {
+>  struct mpc8xxx_wdt_type {
+>  	int prescaler;
+>  	bool hw_enabled;
+> +	u32 rsr_mask;
+>  };
+>  
+>  struct mpc8xxx_wdt_ddata {
+> @@ -159,6 +160,24 @@ static int mpc8xxx_wdt_probe(struct platform_device *ofdev)
+>  		return -ENODEV;
+>  	}
+>  
+> +	res = platform_get_resource(ofdev, IORESOURCE_MEM, 1);
+> +	if (res) {
+> +		bool status;
+> +		u32 __iomem *rsr = ioremap(res->start, resource_size(res));
+> +
+> +		if (!rsr)
+> +			return -ENOMEM;
+> +
+> +		status = in_be32(rsr) & wdt_type->rsr_mask;
+> +		ddata->wdd.bootstatus = status ? WDIOF_CARDRESET : 0;
+> +		 /* clear reset status bits related to watchdog timer */
+> +		out_be32(rsr, wdt_type->rsr_mask);
+> +		iounmap(rsr);
+> +
+> +		dev_info(dev, "Last boot was %scaused by watchdog\n",
+> +			 status ? "" : "not ");
+> +	}
+> +
+>  	spin_lock_init(&ddata->lock);
+>  
+>  	ddata->wdd.info = &mpc8xxx_wdt_info,
+> @@ -216,6 +235,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
+>  		.compatible = "mpc83xx_wdt",
+>  		.data = &(struct mpc8xxx_wdt_type) {
+>  			.prescaler = 0x10000,
+> +			.rsr_mask = BIT(3), /* RSR Bit SWRS */
+>  		},
+>  	},
+>  	{
+> @@ -223,6 +243,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
+>  		.data = &(struct mpc8xxx_wdt_type) {
+>  			.prescaler = 0x10000,
+>  			.hw_enabled = true,
+> +			.rsr_mask = BIT(20), /* RSTRSCR Bit WDT_RR */
+>  		},
+>  	},
+>  	{
+> @@ -230,6 +251,7 @@ static const struct of_device_id mpc8xxx_wdt_match[] = {
+>  		.data = &(struct mpc8xxx_wdt_type) {
+>  			.prescaler = 0x800,
+>  			.hw_enabled = true,
+> +			.rsr_mask = BIT(28), /* RSR Bit SWRS */
+>  		},
+>  	},
+>  	{},
