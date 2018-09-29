@@ -1,60 +1,49 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [v3,3/3] dt-bindings: watchdog: add mpc8xxx-wdt support
-Date: Sat, 29 Sep 2018 11:19:49 -0700
-Message-ID: <20180929181949.GA4420@roeck-us.net>
-References: <e3e0bcfd7b779b978d07e088a8bd667ea9ddf4aa.1537163780.git.christophe.leroy@c-s.fr>
+From: dwalker@fifo99.com
+Subject: Re: [PATCH 0/8] add generic builtin command line
+Date: Sat, 29 Sep 2018 11:17:26 -0700
+Message-ID: <20180929181725.GB27441@fifo99.com>
+References: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e3e0bcfd7b779b978d07e088a8bd667ea9ddf4aa.1537163780.git.christophe.leroy@c-s.fr>
+In-Reply-To: <1538067309-5711-1-git-send-email-maksym.kokhan@globallogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christophe Leroy <christophe.leroy@c-s.fr>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Radu Rendec <radu.rendec@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
+To: Maksym Kokhan <maksym.kokhan@globallogic.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Daniel Walker <danielwa@cisco.com>, Andrii Bordunov <aborduno@cisco.com>, Ruslan Bilovol <rbil>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Sep 17, 2018 at 06:22:53AM +0000, Christophe Leroy wrote:
-> Add description of DT bindings for mpc8xxx-wdt driver which
-> handles the CPU watchdog timer on the mpc83xx, mpc86xx and mpc8xx.
+On Thu, Sep 27, 2018 at 07:55:08PM +0300, Maksym Kokhan wrote:
+> Daniel Walker (7):
+>   add generic builtin command line
+>   drivers: of: ifdef out cmdline section
+>   x86: convert to generic builtin command line
+>   arm: convert to generic builtin command line
+>   arm64: convert to generic builtin command line
+>   mips: convert to generic builtin command line
+>   powerpc: convert to generic builtin command line
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+When I originally submitted these I had a very good conversion with Rob Herring
+on the device tree changes. It seemed fairly clear that my approach in these
+changes could be done better. It effected specifically arm64, but a lot of other
+platforms use the device tree integrally. With arm64 you can reduce the changes
+down to only Kconfig changes, and that would likely be the case for many of the
+other architecture. I made patches to do this a while back, but have not had
+time to test them and push them out.
 
-> ---
->  .../devicetree/bindings/watchdog/mpc8xxx-wdt.txt   | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-> new file mode 100644
-> index 000000000000..e176face472a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/mpc8xxx-wdt.txt
-> @@ -0,0 +1,25 @@
-> +* Freescale mpc8xxx watchdog driver (For 83xx, 86xx and 8xx)
-> +
-> +Required properties:
-> +- compatible: Shall contain one of the following:
-> +	"mpc83xx_wdt" for an mpc83xx
-> +	"fsl,mpc8610-wdt" for an mpc86xx
-> +	"fsl,mpc823-wdt" for an mpc8xx
-> +- reg: base physical address and length of the area hosting the
-> +       watchdog registers.
-> +		On the 83xx, "Watchdog Timer Registers" area:	<0x200 0x100>
-> +		On the 86xx, "Watchdog Timer Registers" area:	<0xe4000 0x100>
-> +		On the 8xx, "General System Interface Unit" area: <0x0 0x10>
-> +
-> +Optional properties:
-> +- reg: additional physical address and length (4) of location of the
-> +       Reset Status Register (called RSTRSCR on the mpc86xx)
-> +       		On the 83xx, it is located at offset 0x910
-> +       		On the 86xx, it is located at offset 0xe0094
-> +       		On the 8xx, it is located at offset 0x288
-> +
-> +Example:
-> +		WDT: watchdog@0 {
-> +		    compatible = "fsl,mpc823-wdt";
-> +		    reg = <0x0 0x10 0x288 0x4>;
-> +		};
+In terms of mips I think there's a fair amount of work needed to pull out their
+architecture specific mangling into something generic. Part of my motivation for
+these was to take the architecture specific feature and open that up for all the
+architecture. So it makes sense that the mips changes should become part of
+that.
+
+The only changes which have no comments are the generic changes, x86, and
+powerpc. Those patches have been used at Cisco for years with no issues.
+I added those changes into my -next tree for a round of testing. Assuming there
+are no issues I can work out the merging with the architecture maintainers.
+As for the other changes I think they can be done in time, as long as the
+generic parts of upstream the rest can be worked on by any of the architecture
+developers.
+
+Daniel
