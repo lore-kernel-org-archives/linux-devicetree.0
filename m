@@ -1,465 +1,66 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v8 2/2] hwmon: ina3221: Read channel input source info from DT
-Date: Fri, 28 Sep 2018 18:39:37 -0700
-Message-ID: <20180929013937.29289-3-nicoleotsuka@gmail.com>
-References: <20180929013937.29289-1-nicoleotsuka@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180929013937.29289-1-nicoleotsuka@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH 1/2] of/fdt: Allow architectures to override CONFIG_CMDLINE logic
+Date: Fri, 28 Sep 2018 18:44:59 -0700 (PDT)
+Message-ID: <mhng-01382a17-8203-4155-9caf-20600f88bb37@palmer-si-x1c4>
+References: <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+n4e5_ptuh89CJibViGS_bgHz0A+Ki-uwtcGU38+mHXQ@mail.gmail.com>
+Sender: stable-owner@vger.kernel.org
+To: robh+dt@kernel.org
+Cc: paul.burton@mips.com, linux-mips@linux-mips.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com, jaedon.shin@gmail.com, malat@debian.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-An ina3221 chip has three input ports. Each port is used
-to measure the voltage and current of its input source.
+On Fri, 07 Sep 2018 13:29:03 PDT (-0700), robh+dt@kernel.org wrote:
+> On Fri, Sep 7, 2018 at 1:55 PM Paul Burton <paul.burton@mips.com> wrote:
+>>
+>> The CONFIG_CMDLINE-related logic in early_init_dt_scan_chosen() falls
+>> back to copying CONFIG_CMDLINE into boot_command_line/data if the DT has
+>> a /chosen node but that node has no bootargs property or a bootargs
+>> property of length zero.
+>
+> The Risc-V guys found a similar issue if chosen is missing[1]. I
+> started a patch[2] to address that, but then looking at the different
+> arches wasn't sure if I'd break something. I don't recall for sure,
+> but it may have been MIPS that worried me.
 
-The DT binding now has defined bindings for their input
-sources, so the driver should read these information and
-handle accordingly.
+IIRC we actually determined it didn't even work correctly on RISC-V, but I 
+never actually got the time to figure out why and then forgot about it.  Sorry!
 
-This patch adds a new structure of input source specific
-information including input source label, shunt resistor
-value and its connection status. It exposes these labels
-via in[123]_label sysfs nodes upon available, and also
-disables those channels where there are no input source
-being connected. Meanwhile, it also adds in[123]_enable
-sysfs nodes for users to get control of three channels,
-and returns -ENODATA code for any sensor read according
-to hwmon ABI.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-Changelog
-v7->v8:
- * Rebased the change after the new suspend-resume patch
- * * Please apply suspend-resume patch prior to this one
- * Renamed ina3221_is_enable() to ina3221_is_enabled()
- * Removed "> 0" check in the is_enabled() function
- * Replaced regmap_read() with ina->reg_config in is_enabled()
- * Used kstrtobool() in the ina3221_set_enable() function
-v6->v7:
- * N/A
-v5->v6:
- * Removed the code of hiding disconnected channels
- * Added in[123]_label sysfs nodes to control channels
- * Added -ENODATA return for sensor read at disabled channels
-v4->v5:
- * Replaced "shunt-resistor" with "shunt-resistor-micro-ohms"
- * Replaced "input-label" with "label"
- * Replaced "input-id" with "reg"
- * Simplified is_visible() by using index of the attr
- * Moved inX_label to index-0 and added comments for safety
-v3->v4:
- * Added is_visible callback function to hide sysfs nodes
-v2->v3:
- * N/A
-v1->v2:
- * Added a structure for input source corresponding to DT bindings
- * Moved shunt resistor value to the structure
- * Defined in[123]_label sysfs nodes instead of name[123]_input
- * Updated probe() function to get information from DT
- * Updated ina3221 hwmon documentation for the labels
- * Dropped dynamical group definition to keep all groups as they were
-
- Documentation/hwmon/ina3221 |   2 +
- drivers/hwmon/ina3221.c     | 234 +++++++++++++++++++++++++++++++++---
- 2 files changed, 222 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/hwmon/ina3221 b/Documentation/hwmon/ina3221
-index 0ff74854cb2e..4b82cbfb551c 100644
---- a/Documentation/hwmon/ina3221
-+++ b/Documentation/hwmon/ina3221
-@@ -21,6 +21,8 @@ and power are calculated host-side from these.
- Sysfs entries
- -------------
- 
-+in[123]_label           Voltage channel labels
-+in[123]_enable          Voltage channel enable controls
- in[123]_input           Bus voltage(mV) channels
- curr[123]_input         Current(mA) measurement channels
- shunt[123]_resistor     Shunt resistance(uOhm) channels
-diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-index 26f66f728b27..f7eaa58f295e 100644
---- a/drivers/hwmon/ina3221.c
-+++ b/drivers/hwmon/ina3221.c
-@@ -41,6 +41,7 @@
- #define INA3221_CONFIG_MODE_SHUNT	BIT(1)
- #define INA3221_CONFIG_MODE_BUS		BIT(2)
- #define INA3221_CONFIG_MODE_CONTINUOUS	BIT(3)
-+#define INA3221_CONFIG_CHx_EN(x)	BIT(14 - (x))
- 
- #define INA3221_RSHUNT_DEFAULT		10000
- 
-@@ -75,6 +76,9 @@ enum ina3221_channels {
- };
- 
- static const unsigned int register_channel[] = {
-+	[INA3221_BUS1] = INA3221_CHANNEL1,
-+	[INA3221_BUS2] = INA3221_CHANNEL2,
-+	[INA3221_BUS3] = INA3221_CHANNEL3,
- 	[INA3221_SHUNT1] = INA3221_CHANNEL1,
- 	[INA3221_SHUNT2] = INA3221_CHANNEL2,
- 	[INA3221_SHUNT3] = INA3221_CHANNEL3,
-@@ -86,20 +90,88 @@ static const unsigned int register_channel[] = {
- 	[INA3221_WARN3] = INA3221_CHANNEL3,
- };
- 
-+/**
-+ * struct ina3221_input - channel input source specific information
-+ * @label: label of channel input source
-+ * @shunt_resistor: shunt resistor value of channel input source
-+ * @disconnected: connection status of channel input source
-+ */
-+struct ina3221_input {
-+	const char *label;
-+	int shunt_resistor;
-+	bool disconnected;
-+};
-+
- /**
-  * struct ina3221_data - device specific information
-  * @regmap: Register map of the device
-  * @fields: Register fields of the device
-- * @shunt_resistors: Array of resistor values per channel
-+ * @inputs: Array of channel input source specific structures
-  * @reg_config: Register value of INA3221_CONFIG
-  */
- struct ina3221_data {
- 	struct regmap *regmap;
- 	struct regmap_field *fields[F_MAX_FIELDS];
--	int shunt_resistors[INA3221_NUM_CHANNELS];
-+	struct ina3221_input inputs[INA3221_NUM_CHANNELS];
- 	u32 reg_config;
- };
- 
-+static inline bool ina3221_is_enabled(struct ina3221_data *ina, int channel)
-+{
-+	return ina->reg_config & INA3221_CONFIG_CHx_EN(channel);
-+}
-+
-+static ssize_t ina3221_show_label(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
-+	struct ina3221_data *ina = dev_get_drvdata(dev);
-+	unsigned int channel = sd_attr->index;
-+	struct ina3221_input *input = &ina->inputs[channel];
-+
-+	return snprintf(buf, PAGE_SIZE, "%s\n", input->label);
-+}
-+
-+static ssize_t ina3221_show_enable(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
-+{
-+	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
-+	struct ina3221_data *ina = dev_get_drvdata(dev);
-+	unsigned int channel = sd_attr->index;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n",
-+			ina3221_is_enabled(ina, channel));
-+}
-+
-+static ssize_t ina3221_set_enable(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+{
-+	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
-+	struct ina3221_data *ina = dev_get_drvdata(dev);
-+	unsigned int channel = sd_attr->index;
-+	u16 config = ina->reg_config;
-+	bool enable;
-+	int ret;
-+
-+	ret = kstrtobool(buf, &enable);
-+	if (ret)
-+		return ret;
-+
-+	if (enable)
-+		config |= INA3221_CONFIG_CHx_EN(channel);
-+	else
-+		config &= ~INA3221_CONFIG_CHx_EN(channel);
-+
-+	ret = regmap_write(ina->regmap, INA3221_CONFIG, config);
-+	if (ret)
-+		return ret;
-+
-+	ina->reg_config = config;
-+
-+	return count;
-+}
-+
- static int ina3221_read_value(struct ina3221_data *ina, unsigned int reg,
- 			      int *val)
- {
-@@ -122,8 +194,13 @@ static ssize_t ina3221_show_bus_voltage(struct device *dev,
- 	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
- 	struct ina3221_data *ina = dev_get_drvdata(dev);
- 	unsigned int reg = sd_attr->index;
-+	unsigned int channel = register_channel[reg];
- 	int val, voltage_mv, ret;
- 
-+	/* No data for read-only attribute if channel is disabled */
-+	if (!attr->store && !ina3221_is_enabled(ina, channel))
-+		return -ENODATA;
-+
- 	ret = ina3221_read_value(ina, reg, &val);
- 	if (ret)
- 		return ret;
-@@ -140,8 +217,13 @@ static ssize_t ina3221_show_shunt_voltage(struct device *dev,
- 	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
- 	struct ina3221_data *ina = dev_get_drvdata(dev);
- 	unsigned int reg = sd_attr->index;
-+	unsigned int channel = register_channel[reg];
- 	int val, voltage_uv, ret;
- 
-+	/* No data for read-only attribute if channel is disabled */
-+	if (!attr->store && !ina3221_is_enabled(ina, channel))
-+		return -ENODATA;
-+
- 	ret = ina3221_read_value(ina, reg, &val);
- 	if (ret)
- 		return ret;
-@@ -157,9 +239,14 @@ static ssize_t ina3221_show_current(struct device *dev,
- 	struct ina3221_data *ina = dev_get_drvdata(dev);
- 	unsigned int reg = sd_attr->index;
- 	unsigned int channel = register_channel[reg];
--	int resistance_uo = ina->shunt_resistors[channel];
-+	struct ina3221_input *input = &ina->inputs[channel];
-+	int resistance_uo = input->shunt_resistor;
- 	int val, current_ma, voltage_nv, ret;
- 
-+	/* No data for read-only attribute if channel is disabled */
-+	if (!attr->store && !ina3221_is_enabled(ina, channel))
-+		return -ENODATA;
-+
- 	ret = ina3221_read_value(ina, reg, &val);
- 	if (ret)
- 		return ret;
-@@ -178,7 +265,8 @@ static ssize_t ina3221_set_current(struct device *dev,
- 	struct ina3221_data *ina = dev_get_drvdata(dev);
- 	unsigned int reg = sd_attr->index;
- 	unsigned int channel = register_channel[reg];
--	int resistance_uo = ina->shunt_resistors[channel];
-+	struct ina3221_input *input = &ina->inputs[channel];
-+	int resistance_uo = input->shunt_resistor;
- 	int val, current_ma, voltage_uv, ret;
- 
- 	ret = kstrtoint(buf, 0, &current_ma);
-@@ -211,11 +299,9 @@ static ssize_t ina3221_show_shunt(struct device *dev,
- 	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
- 	struct ina3221_data *ina = dev_get_drvdata(dev);
- 	unsigned int channel = sd_attr->index;
--	unsigned int resistance_uo;
-+	struct ina3221_input *input = &ina->inputs[channel];
- 
--	resistance_uo = ina->shunt_resistors[channel];
--
--	return snprintf(buf, PAGE_SIZE, "%d\n", resistance_uo);
-+	return snprintf(buf, PAGE_SIZE, "%d\n", input->shunt_resistor);
- }
- 
- static ssize_t ina3221_set_shunt(struct device *dev,
-@@ -225,6 +311,7 @@ static ssize_t ina3221_set_shunt(struct device *dev,
- 	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
- 	struct ina3221_data *ina = dev_get_drvdata(dev);
- 	unsigned int channel = sd_attr->index;
-+	struct ina3221_input *input = &ina->inputs[channel];
- 	int val;
- 	int ret;
- 
-@@ -234,7 +321,7 @@ static ssize_t ina3221_set_shunt(struct device *dev,
- 
- 	val = clamp_val(val, 1, INT_MAX);
- 
--	ina->shunt_resistors[channel] = val;
-+	input->shunt_resistor = val;
- 
- 	return count;
- }
-@@ -255,6 +342,22 @@ static ssize_t ina3221_show_alert(struct device *dev,
- 	return snprintf(buf, PAGE_SIZE, "%d\n", regval);
- }
- 
-+/* input channel label */
-+static SENSOR_DEVICE_ATTR(in1_label, 0444,
-+		ina3221_show_label, NULL, INA3221_CHANNEL1);
-+static SENSOR_DEVICE_ATTR(in2_label, 0444,
-+		ina3221_show_label, NULL, INA3221_CHANNEL2);
-+static SENSOR_DEVICE_ATTR(in3_label, 0444,
-+		ina3221_show_label, NULL, INA3221_CHANNEL3);
-+
-+/* voltage channel enable */
-+static SENSOR_DEVICE_ATTR(in1_enable, 0644,
-+		ina3221_show_enable, ina3221_set_enable, INA3221_CHANNEL1);
-+static SENSOR_DEVICE_ATTR(in2_enable, 0644,
-+		ina3221_show_enable, ina3221_set_enable, INA3221_CHANNEL2);
-+static SENSOR_DEVICE_ATTR(in3_enable, 0644,
-+		ina3221_show_enable, ina3221_set_enable, INA3221_CHANNEL3);
-+
- /* bus voltage */
- static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO,
- 		ina3221_show_bus_voltage, NULL, INA3221_BUS1);
-@@ -320,7 +423,9 @@ static SENSOR_DEVICE_ATTR(in6_input, S_IRUGO,
- 		ina3221_show_shunt_voltage, NULL, INA3221_SHUNT3);
- 
- static struct attribute *ina3221_attrs[] = {
--	/* channel 1 */
-+	/* channel 1 -- make sure label at first */
-+	&sensor_dev_attr_in1_label.dev_attr.attr,
-+	&sensor_dev_attr_in1_enable.dev_attr.attr,
- 	&sensor_dev_attr_in1_input.dev_attr.attr,
- 	&sensor_dev_attr_curr1_input.dev_attr.attr,
- 	&sensor_dev_attr_shunt1_resistor.dev_attr.attr,
-@@ -330,7 +435,9 @@ static struct attribute *ina3221_attrs[] = {
- 	&sensor_dev_attr_curr1_max_alarm.dev_attr.attr,
- 	&sensor_dev_attr_in4_input.dev_attr.attr,
- 
--	/* channel 2 */
-+	/* channel 2 -- make sure label at first */
-+	&sensor_dev_attr_in2_label.dev_attr.attr,
-+	&sensor_dev_attr_in2_enable.dev_attr.attr,
- 	&sensor_dev_attr_in2_input.dev_attr.attr,
- 	&sensor_dev_attr_curr2_input.dev_attr.attr,
- 	&sensor_dev_attr_shunt2_resistor.dev_attr.attr,
-@@ -340,7 +447,9 @@ static struct attribute *ina3221_attrs[] = {
- 	&sensor_dev_attr_curr2_max_alarm.dev_attr.attr,
- 	&sensor_dev_attr_in5_input.dev_attr.attr,
- 
--	/* channel 3 */
-+	/* channel 3 -- make sure label at first */
-+	&sensor_dev_attr_in3_label.dev_attr.attr,
-+	&sensor_dev_attr_in3_enable.dev_attr.attr,
- 	&sensor_dev_attr_in3_input.dev_attr.attr,
- 	&sensor_dev_attr_curr3_input.dev_attr.attr,
- 	&sensor_dev_attr_shunt3_resistor.dev_attr.attr,
-@@ -352,7 +461,30 @@ static struct attribute *ina3221_attrs[] = {
- 
- 	NULL,
- };
--ATTRIBUTE_GROUPS(ina3221);
-+
-+static umode_t ina3221_attr_is_visible(struct kobject *kobj,
-+				       struct attribute *attr, int n)
-+{
-+	const int max_attrs = ARRAY_SIZE(ina3221_attrs) - 1;
-+	const int num_attrs = max_attrs / INA3221_NUM_CHANNELS;
-+	struct device *dev = kobj_to_dev(kobj);
-+	struct ina3221_data *ina = dev_get_drvdata(dev);
-+	enum ina3221_channels channel = n / num_attrs;
-+	struct ina3221_input *input = &ina->inputs[channel];
-+	int index = n % num_attrs;
-+
-+	/* Hide label node if label is not provided */
-+	if (index == 0 && !input->label)
-+		return 0;
-+
-+	return attr->mode;
-+}
-+
-+static const struct attribute_group ina3221_group = {
-+	.is_visible = ina3221_attr_is_visible,
-+	.attrs = ina3221_attrs,
-+};
-+__ATTRIBUTE_GROUPS(ina3221);
- 
- static const struct regmap_range ina3221_yes_ranges[] = {
- 	regmap_reg_range(INA3221_CONFIG, INA3221_BUS3),
-@@ -372,6 +504,60 @@ static const struct regmap_config ina3221_regmap_config = {
- 	.volatile_table = &ina3221_volatile_table,
- };
- 
-+static int ina3221_probe_child_from_dt(struct device *dev,
-+				       struct device_node *child,
-+				       struct ina3221_data *ina)
-+{
-+	struct ina3221_input *input;
-+	u32 val;
-+	int ret;
-+
-+	ret = of_property_read_u32(child, "reg", &val);
-+	if (ret) {
-+		dev_err(dev, "missing reg property of %s\n", child->name);
-+		return ret;
-+	} else if (val > INA3221_CHANNEL3) {
-+		dev_err(dev, "invalid reg %d of %s\n", val, child->name);
-+		return ret;
-+	}
-+
-+	input = &ina->inputs[val];
-+
-+	/* Log the disconnected channel input */
-+	if (!of_device_is_available(child)) {
-+		input->disconnected = true;
-+		return 0;
-+	}
-+
-+	/* Save the connected input label if available */
-+	of_property_read_string(child, "label", &input->label);
-+
-+	/* Overwrite default shunt resistor value optionally */
-+	if (!of_property_read_u32(child, "shunt-resistor-micro-ohms", &val))
-+		input->shunt_resistor = val;
-+
-+	return 0;
-+}
-+
-+static int ina3221_probe_from_dt(struct device *dev, struct ina3221_data *ina)
-+{
-+	const struct device_node *np = dev->of_node;
-+	struct device_node *child;
-+	int ret;
-+
-+	/* Compatible with non-DT platforms */
-+	if (!np)
-+		return 0;
-+
-+	for_each_child_of_node(np, child) {
-+		ret = ina3221_probe_child_from_dt(dev, child, ina);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int ina3221_probe(struct i2c_client *client,
- 			 const struct i2c_device_id *id)
- {
-@@ -401,7 +587,13 @@ static int ina3221_probe(struct i2c_client *client,
- 	}
- 
- 	for (i = 0; i < INA3221_NUM_CHANNELS; i++)
--		ina->shunt_resistors[i] = INA3221_RSHUNT_DEFAULT;
-+		ina->inputs[i].shunt_resistor = INA3221_RSHUNT_DEFAULT;
-+
-+	ret = ina3221_probe_from_dt(dev, ina);
-+	if (ret) {
-+		dev_err(dev, "Unable to probe from device tree\n");
-+		return ret;
-+	}
- 
- 	ret = regmap_field_write(ina->fields[F_RST], true);
- 	if (ret) {
-@@ -409,6 +601,20 @@ static int ina3221_probe(struct i2c_client *client,
- 		return ret;
- 	}
- 
-+	/* Sync config register after reset */
-+	ret = regmap_read(ina->regmap, INA3221_CONFIG, &ina->reg_config);
-+	if (ret)
-+		return ret;
-+
-+	/* Disable channels if their inputs are disconnected */
-+	for (i = 0; i < INA3221_NUM_CHANNELS; i++) {
-+		if (ina->inputs[i].disconnected)
-+			ina->reg_config &= ~INA3221_CONFIG_CHx_EN(i);
-+	}
-+	ret = regmap_write(ina->regmap, INA3221_CONFIG, ina->reg_config);
-+	if (ret)
-+		return ret;
-+
- 	hwmon_dev = devm_hwmon_device_register_with_groups(dev,
- 							   client->name,
- 							   ina, ina3221_groups);
--- 
-2.17.1
+>
+>> This is problematic for the MIPS architecture because we support
+>> concatenating arguments from either the DT or the bootloader with those
+>> from CONFIG_CMDLINE, but the behaviour of early_init_dt_scan_chosen()
+>> gives us no way of knowing whether boot_command_line contains arguments
+>> from DT or already contains CONFIG_CMDLINE. This can lead to us
+>> concatenating CONFIG_CMDLINE with itself, duplicating command line
+>> arguments which can be problematic (eg. for earlycon which will attempt
+>> to register the same console twice & warn about it).
+>
+> If CONFIG_CMDLINE_EXTEND is set, you know it contains CONFIG_CMDLINE.
+> But I guess part of the problem is MIPS using its own kconfig options.
+>
+>> Move the CONFIG_CMDLINE-related logic to a weak function that
+>> architectures can provide their own version of, such that we continue to
+>> use the existing logic for architectures where it's suitable but also
+>> allow MIPS to override this behaviour such that the architecture code
+>> knows when CONFIG_CMDLINE is used.
+>
+> More arch specific functions is not what I want. Really, all the
+> cmdline manipulating logic doesn't belong in DT code, but it shouldn't
+> be in the arch specific code either IMO. Really it should be some
+> common kernel function which calls into the DT code to retrieve the DT
+> bootargs and that's it. Then you can skip calling that kernel function
+> if you really need non-standard handling.
+>
+> Perhaps you should consider filling DT bootargs with the cmdline from
+> bootloader. IOW, make the legacy case look like the non-legacy case
+> early, and then the kernel doesn't have to deal with both cases later
+> on.
+>
+> Rob
+>
+> [1] https://lkml.org/lkml/2018/3/14/701
+> [2] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/cmdline
