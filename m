@@ -1,25 +1,92 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V6 20/33] csky/dma: fix up dma_mapping error
-Date: Sat, 29 Sep 2018 23:08:41 +0800
-Message-ID: <20180929150840.GA9311@guoren-Inspiron-7460>
-References: <cover.1538058840.git.ren_guo@c-sky.com>
- <378d4064bf29863785f4cc637999e07507e2e926.1538058840.git.ren_guo@c-sky.com>
- <20180928162116.GF19827@infradead.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 08/12] drm/sun4i: sun6i_mipi_dsi: Refactor
+ vertical video start delay
+Date: Sat, 29 Sep 2018 17:27:58 +0200
+Message-ID: <20180929152758.g3goxwjud2ym5rft@flea>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-9-jagan@amarulasolutions.com>
+ <20180927171451.7iqt2nt2log5qojf@flea>
+ <CAMty3ZDxpLwVDsgVMjX+6+uz89sQ1aZaXHHZ+-5aogrA4MHmqw@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xe5bugg4kqq4qxfb"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBAFUX3OQKGQE7AZBWYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20180928162116.GF19827@infradead.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com
+In-Reply-To: <CAMty3ZDxpLwVDsgVMjX+6+uz89sQ1aZaXHHZ+-5aogrA4MHmqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 09:21:16AM -0700, Christoph Hellwig wrote:
-> On Fri, Sep 28, 2018 at 08:51:17AM +0800, Guo Ren wrote:
-> > The arch_sync_dma_for_cpu()/arch_sync_dma_for_device() implementation is
-> > broken for some combinations that end up in a BUG() instead of performing
-> > the necessary flushes.
+
+--xe5bugg4kqq4qxfb
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Thu, Sep 27, 2018 at 11:03:19PM +0530, Jagan Teki wrote:
+> On Thu, Sep 27, 2018 at 10:44 PM Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Thu, Sep 27, 2018 at 05:18:46PM +0530, Jagan Teki wrote:
+> > > Accordingly to BPI-M64-bsp DE DSI code Video start delay
+> > > can be computed by subtracting total vertical timing with
+> > > front porch timing and with adding 1 delay line for TCON.
+> >
+> > This is what the current code is doing as well.
 > 
-> This should be folded into the original patch adding this code.
-Ok, I'll rebase it.
+> The current code
+> return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
+> 
+> (mode->vsync_end - mode->vdisplay) = front porch + sync
+> 
+> but I'm updating here only front porch.
+> 
+> >
+> > > This patch simply add the start_delay logic from BPI-M64-bsp,
+> > > w/o this new computation, the DSI on A64 encounter vblank time out.
+> > >
+> > > [CRTC:36:crtc-0] vblank wait timed out
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
+> > >  1 file changed, 11 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > index 9918fdb990ff..217db74c6dc3 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -358,7 +358,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+> > >  static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+> > >                                          struct drm_display_mode *mode)
+> > >  {
+> > > -     return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
+> > > +     u32 vfp = mode->vsync_start - mode->vdisplay;
+> 
+> let me explain this.
+> 
+> Actual code from Allwinner
+> u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+> 
+> So,
+> 
+> => (panel->lcd_vt - panel->lcd_y) - (panel->lcd_vbp)
+> => (front porch + sync + back porch) - (back porch + sync)
+
+Unless Allwinner is doing something fishy, in which case that should
+be mentionned, the back porch doesn't contain the sync pulse.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--xe5bugg4kqq4qxfb--
