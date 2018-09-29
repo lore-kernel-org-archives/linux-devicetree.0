@@ -1,79 +1,48 @@
-Return-Path: <SRS0=yXvz=MJ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from muru.com ([72.249.23.125]:57540 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727265AbeI1D0T (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Sep 2018 23:26:19 -0400
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 2/4] bus: ti-sysc: Detect devices for debug on dra7
-Date: Thu, 27 Sep 2018 14:05:40 -0700
-Message-Id: <20180927210542.69703-3-tony@atomide.com>
-In-Reply-To: <20180927210542.69703-1-tony@atomide.com>
-References: <20180927210542.69703-1-tony@atomide.com>
+Return-Path: <SRS0=3z33=ML=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from idc.ly.ha ([42.51.192.19]:41186 "EHLO a.xvvp.cn"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727359AbeI2KNs (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Sat, 29 Sep 2018 06:13:48 -0400
+Received: from mmnnopq (unknown [123.149.112.122])
+        by a.xvvp.cn (Postfix) with ESMTPA id 4D47AF0D9
+        for <devicetree@vger.kernel.org>; Sat, 29 Sep 2018 11:38:36 +0800 (CST)
+Date: Sat, 29 Sep 2018 11:39:16 +0800
+From: "SINO - Perry" <manuchem_sino@sina.com>
+Reply-To: export8@sinotechem.com
+Subject: We will help you to grab your market, PVC resin and other chemicals
+Message-ID: <201809291139162797788@a.sxpd.wang>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain;
+        charset="GB2312"
+Content-Transfer-Encoding: base64
 Sender: devicetree-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Keerthy <j-keerthy@ti.com>, Tero Kristo <t-kristo@ti.com>
+To: devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-We want to see the names of detected devices when DEBUG is enabled.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- drivers/bus/ti-sysc.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -898,7 +898,9 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 
- #ifdef DEBUG
- 	SYSC_QUIRK("adc", 0, 0, 0x10, -1, 0x47300001, 0xffffffff, 0),
-+	SYSC_QUIRK("atl", 0, 0, -1, -1, 0x0a070100, 0xffffffff, 0),
- 	SYSC_QUIRK("aess", 0, 0, 0x10, -1, 0x40000000, 0xffffffff, 0),
-+	SYSC_QUIRK("cm", 0, 0, -1, -1, 0x40000301, 0xffffffff, 0),
- 	SYSC_QUIRK("control", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("cpgmac", 0, 0x1200, 0x1208, 0x1204, 0x4edb1902,
- 		   0xffff00f0, 0),
-@@ -911,16 +913,16 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("hdq1w", 0, 0, 0x14, 0x18, 0x0000000a, 0xffffffff, 0),
- 	SYSC_QUIRK("hsi", 0, 0, 0x10, 0x14, 0x50043101, 0xffffffff, 0),
- 	SYSC_QUIRK("iss", 0, 0, 0x10, -1, 0x40000101, 0xffffffff, 0),
--	SYSC_QUIRK("i2c", 0, 0, 0x10, 0x90, 0x5040000a, 0xfffffff0, 0),
-+	SYSC_QUIRK("i2c", 0, 0, 0x10, 0x90, 0x5040000a, 0xfffff0f0, 0),
- 	SYSC_QUIRK("lcdc", 0, 0, 0x54, -1, 0x4f201000, 0xffffffff, 0),
- 	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44306302, 0xffffffff, 0),
- 	SYSC_QUIRK("mcasp", 0, 0, 0x4, -1, 0x44307b02, 0xffffffff, 0),
- 	SYSC_QUIRK("mcbsp", 0, -1, 0x8c, -1, 0, 0, 0),
--	SYSC_QUIRK("mcspi", 0, 0, 0x10, -1, 0x40300a0b, 0xffffffff, 0),
-+	SYSC_QUIRK("mcspi", 0, 0, 0x10, -1, 0x40300a0b, 0xffff00ff, 0),
- 	SYSC_QUIRK("mcspi", 0, 0, 0x110, 0x114, 0x40300a0b, 0xffffffff, 0),
- 	SYSC_QUIRK("mailbox", 0, 0, 0x10, -1, 0x00000400, 0xffffffff, 0),
- 	SYSC_QUIRK("m3", 0, 0, -1, -1, 0x5f580105, 0x0fff0f00, 0),
--	SYSC_QUIRK("ocp2scp", 0, 0, 0x10, 0x14, 0x50060005, 0xffffffff, 0),
-+	SYSC_QUIRK("ocp2scp", 0, 0, 0x10, 0x14, 0x50060005, 0xfffffff0, 0),
- 	SYSC_QUIRK("ocp2scp", 0, 0, -1, -1, 0x50060007, 0xffffffff, 0),
- 	SYSC_QUIRK("padconf", 0, 0, 0x10, -1, 0x4fff0800, 0xffffffff, 0),
- 	SYSC_QUIRK("prcm", 0, 0, -1, -1, 0x40000100, 0xffffffff, 0),
-@@ -929,15 +931,16 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
- 	SYSC_QUIRK("scm", 0, 0, 0x10, -1, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("scm", 0, 0, -1, -1, 0x4e8b0100, 0xffffffff, 0),
- 	SYSC_QUIRK("scm", 0, 0, -1, -1, 0x4f000100, 0xffffffff, 0),
-+	SYSC_QUIRK("scm", 0, 0, -1, -1, 0x40000900, 0xffffffff, 0),
- 	SYSC_QUIRK("scrm", 0, 0, -1, -1, 0x00000010, 0xffffffff, 0),
--	SYSC_QUIRK("sdio", 0, 0, 0x10, -1, 0x40202301, 0xffffffff, 0),
-+	SYSC_QUIRK("sdio", 0, 0, 0x10, -1, 0x40202301, 0xffff0ff0, 0),
- 	SYSC_QUIRK("sdio", 0, 0x2fc, 0x110, 0x114, 0x31010000, 0xffffffff, 0),
- 	SYSC_QUIRK("sdma", 0, 0, 0x2c, 0x28, 0x00010900, 0xffffffff, 0),
- 	SYSC_QUIRK("slimbus", 0, 0, 0x10, -1, 0x40000902, 0xffffffff, 0),
- 	SYSC_QUIRK("slimbus", 0, 0, 0x10, -1, 0x40002903, 0xffffffff, 0),
- 	SYSC_QUIRK("spinlock", 0, 0, 0x10, -1, 0x50020000, 0xffffffff, 0),
- 	SYSC_QUIRK("rng", 0, 0x1fe0, 0x1fe4, -1, 0x00000020, 0xffffffff, 0),
--	SYSC_QUIRK("rtc", 0, 0x74, 0x78, -1, 0x4eb01908, 0xfffff0f0, 0),
-+	SYSC_QUIRK("rtc", 0, 0x74, 0x78, -1, 0x4eb01908, 0xffff00f0, 0),
- 	SYSC_QUIRK("timer32k", 0, 0, 0x4, -1, 0x00000060, 0xffffffff, 0),
- 	SYSC_QUIRK("usbhstll", 0, 0, 0x10, 0x14, 0x00000004, 0xffffffff, 0),
- 	SYSC_QUIRK("usb_host_hs", 0, 0, 0x10, 0x14, 0x50700100, 0xffffffff, 0),
--- 
-2.19.0
+RGVhciBGcmllbmQsIEdvb2QgZGF5IQ0KDQpXaXNoIHlvdSBhIHByb3NwZXJvdXMgYnVzaW5lc3Mh
+DQoNClRoaXMgaXMgU0lOT1RFQyBJTkRVU1RSSUFMIEdST1VQIENPLixMVEQsIGEgbGFyZ2UgZ3Jv
+dXAgY29tcGFueSBpbiBDaGluYSwgd2UgYXJlIGluIHRoZSBidXNpbmVzcyBvZiBDaGxvci1hbGth
+bGkgY2hlbWljYWxzIGFuZCBwbGFzdGljaXplciwgeWVhcnMgb2YgcHJvZHVjdGlvbiBleHBlcmll
+bmNlIG1ha2VzIHVzIHRvIGJlY29tZSBvbmUgb2YgdGhlIGxlYWRpbmcgbWFudWZhY3R1cmVycyBp
+biBDaGluYS4gDQogDQpGb3IgeW91ciBraW5kIHJlZiwgdGhlIGZvbGxvd2luZyBpcyB0aGUgZGV0
+YWlscyBvZiBvdXIgbWFpbiBwcm9kdWN0cywNCiANCkRPUCAtIERpb2N0eWwgUGh0aGFsYXRlIDk5
+LjUlLCBDb2xvcmxlc3Mgb2lseSBsaXF1aWQuDQpBcHBsaWNhdGlvbjogVXNlZCBpbiBQVkMsIFBF
+IGFuZCBjZWxsdWxvc2VyLCBzdWNoIGFzIGZpbG0sIGNhYmxlLCBhcnRpZmljaWFsIGxlYXRoZXIs
+IHBpcGUsIHNoZWV0IG1hdGVyaWFsLCBtb2xkIHBsYXN0aWMgLCBvciB1c2VkIGFzIHNvZnRlbmVy
+IG9mIHJ1YmJlci4NClBhY2thZ2U6IDIwMGtnLyBtZXRhbCBwYWlsLCAxNk1UIHBlciAyMKGvY29u
+dGFpbmVyLCBvciBwYWNraW5nIGFzIHJlcXVpcmVkLg0KIA0KUFZDIFJlc2luLCBXaGl0ZSBwb3dk
+ZXINCjEuIEs3Mi03MTogVXNlZCBpbiBwcm9kdWNpbmcgZWxlY3RyaWNhbCBpbnN1bGF0aW5nIG1h
+dGVyaWFscywgYWdyaWN1bHR1cmFsIGZpbG0sIGRhaWx5LXVzZSBwbGFzdGljIHByb2R1Y3RzLCBl
+dGMuDQoyLiBLNjgtNjY6IFVzZWQgaW4gcHJvZHVjaW5nIHBsYXN0aWMgcGlwZXMsIHBsYXN0aWMg
+d2luZG93cy9kb29ycywgUFZDIGJhciwgaGFyZCB0dWJlIGFuZCBkZWNvcmF0aXZlIG1hdGVyaWFs
+cywgZXRjLg0KUGFja2FnZTogMjUga2cgLyBQUCBiYWcsIDE3TVQgcGVyIDIwJ2NvbnRhaW5lciwg
+b3IgcGFja2luZyBhcyByZXF1aXJlZC4NCg0KIA0KSW4gYWRkaXRpb24sIHdlIGFsc28gaGF2ZSBh
+ZHZhbnRhZ2VzIGluIG90aGVyIHByb2R1Y3RzLCBzdWNoIGFzIERCUCwgRElOUCwgRVNCTywgVGl0
+YW5pdW0gZGlveGlkZSwgQ2F1c3RpYyBzb2RhLg0KIA0KSWYgeW91IHdhbnQgdG8ga25vdyBtb3Jl
+IGRldGFpbHMgb2YgdGhlc2UgcHJvZHVjdHMsIHBsZWFzZSBraW5kbHkgY29udGFjdCB1cyBkaXJl
+Y3RseS4gSG9wZSB3ZSBjYW4gaGF2ZSBnb29kIGNvb3BlcmF0aW9uIGluIHRoZSBuZWFyIGZ1dHVy
+ZS4NCiANCkxvb2tpbmcgZm9yd2FyZCB0byB5b3VyIHJlcGx5Lg0KDQpCZXN0IFJlZ2FyZHMuDQpQ
+ZXJyeSBMZWUNCkV4cG9ydCBNYW5hZ2VyDQpFbWFpbDogZXhwb3J0OEBzaW5vdGVjaGVtLmNvbQ0K
+U2t5cGU6IHBlcnJ5LmxlZTEwDQoNClNJTk9URUMgSU5EVVNUUklBTCBHUk9VUCBDTy4sTFREDQpO
+by4zOCwgRG9uZ2ZlbmcgUmQuLCBaaGVuZ3pob3UgQ2l0eSBQLlIuIENoaW5hIDQ1MDAwMA0KVGVs
+OiAwMDg2IDM3MSA2MDM5MjA1MiAgICAgRmF4OiAwMDg2IDM3MSA2MzcyNjM2OA==
