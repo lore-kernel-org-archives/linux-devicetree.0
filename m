@@ -1,38 +1,61 @@
-Return-Path: <SRS0=c6Dm=MD=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/4] dt-bindings: i2c: rcar: Add r8a77470 support
-Date: Fri, 21 Sep 2018 18:36:58 +0100
-Message-Id: <1537551421-4259-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1537551421-4259-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1537551421-4259-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das@bp.renesas.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, Hiromitsu Yamasaki <hiromitsu.yamasaki.ym@renesas.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>
+Return-Path: <SRS0=OSm8=ML=gmail.com=groeck7@kernel.org>
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Sat, 29 Sep 2018 11:24:08 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [v4,2/4] dt-bindings: watchdog: Document armada-37xx-wdt binding
+Message-ID: <20180929182408.GA18680@roeck-us.net>
+References: <20180924110654.7329-3-marek.behun@nic.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20180924110654.7329-3-marek.behun@nic.cz>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
+Cc: linux-watchdog@vger.kernel.org, wim@linux-watchdog.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Although the I2C IP found in the RZ/G1C is not exactly the same
-as the one found in the R-Car Gen2 family or R-Car Gen3 family,
-it can still be considered as compatible with R-Car Gen2 from
-a software perpective.
-This patch therefore documents the SoC specific compatible string,
-and the compatibility with Gen2 fallback is retained.
+On Mon, Sep 24, 2018 at 01:06:52PM +0200, Marek Beh�n wrote:
+> This adds device tree binding documentation for the CPU watchdog found
+> on Armada 37xx SOCs (EspressoBin, Turris Mox).
+> 
+> Signed-off-by: Marek Beh�n <marek.behun@nic.cz>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
----
- Documentation/devicetree/bindings/i2c/i2c-rcar.txt | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-index 39cd21d..671e2a1 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-rcar.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible:
- 	"renesas,i2c-r8a7743" if the device is a part of a R8A7743 SoC.
- 	"renesas,i2c-r8a7745" if the device is a part of a R8A7745 SoC.
-+	"renesas,i2c-r8a77470" if the device is a part of a R8A77470 SoC.
- 	"renesas,i2c-r8a774a1" if the device is a part of a R8A774A1 SoC.
- 	"renesas,i2c-r8a7778" if the device is a part of a R8A7778 SoC.
- 	"renesas,i2c-r8a7779" if the device is a part of a R8A7779 SoC.
--- 
-2.7.4
+> ---
+>  .../bindings/watchdog/armada-37xx-wdt.txt          | 23 ++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt b/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+> new file mode 100644
+> index 000000000000..a8d00c31a1d8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/armada-37xx-wdt.txt
+> @@ -0,0 +1,23 @@
+> +* Armada 37xx CPU Watchdog Timer Controller
+> +
+> +Required properties:
+> +- compatible : must be "marvell,armada-3700-wdt"
+> +- reg : base physical address of the controller and length of memory mapped
+> +	region.
+> +- clocks : the clock feeding the watchdog timer. See clock-bindings.txt
+> +- marvell,system-controller : reference to syscon node for the CPU Miscellaneous
+> +	Registers
+> +
+> +Example:
+> +
+> +	cpu_misc: system-controller@d000 {
+> +		compatible = "marvell,armada-3700-cpu-misc", "syscon";
+> +		reg = <0xd000 0x1000>;
+> +	};
+> +
+> +	wdt: watchdog@8300 {
+> +		compatible = "marvell,armada-3700-wdt";
+> +		reg = <0x8300 0x40>;
+> +		marvell,system-controller = <&cpu_misc>;
+> +		clocks = <&xtalclk>;
+> +	};
