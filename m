@@ -1,188 +1,38 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [RFC PATCH] soc: qcom: rmtfs_mem: Control remoteproc from
- rmtfs_mem
-Date: Sun, 30 Sep 2018 20:58:49 +0530
-Message-ID: <37621d4fadff8e3a0bbe034119351d16@codeaurora.org>
-References: <20180925080607.30565-1-bjorn.andersson@linaro.org>
- <20180925172943.GA118699@ban.mtv.corp.google.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 3/4] soc: actions: sps: Add S900 power domains
+Date: Sun, 30 Sep 2018 17:46:18 +0200
+Message-ID: <a8630149-d1b9-ce23-e5a5-4282cbd8bbca@suse.de>
+References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
+ <20180411164036.8046-4-manivannan.sadhasivam@linaro.org>
+ <5e267c76-1c71-2381-ee66-50a5bef1cfc2@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925172943.GA118699@ban.mtv.corp.google.com>
+In-Reply-To: <5e267c76-1c71-2381-ee66-50a5bef1cfc2@suse.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, daniel.thompson@linaro.org, manivannanece23@gmail.com, bdong@ucrobotics.com, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-09-25 22:59, Brian Norris wrote:
-> Hi Bjorn,
-> 
-> On Tue, Sep 25, 2018 at 01:06:07AM -0700, Bjorn Andersson wrote:
->> rmtfs_mem provides access to physical storage and is crucial for the
->> operation of the Qualcomm modem subsystem.
->> 
->> The rmtfs_mem implementation must be available before the modem
->> subsystem is booted and a solution where the modem remoteproc will
->> verify that the rmtfs_mem is available has been discussed in the past.
->> But this would not handle the case where the rmtfs_mem provider is
->> restarted, which would cause fatal loss of access to the storage 
->> device
->> for the modem.
->> 
->> The suggestion is therefor to link the rmtfs_mem to its associated
->> remote processor instance and control it based on the availability of
->> the rmtfs_mem implementation.
-> 
-> But what does "availability" mean? If I'm reading your rmtfs daemon
-> properly, "availability" should mean that the daemon is up and has
-> registered a RMTFS_QMI_SERVICE. But in this patch, you're keying off of
-> the open() call, which sounds like you're introducing a race condition
-> -- we might have open()ed the RMTFS memory but we're not actually
-> completely ready to service requests.
-> 
-> So rather than looking for open(), I think somebody needs to be looking
-> for the appearance and disappearance of the RMTFS_QMI_SERVICE. (Looking
-> for disappearance would resolve the daemon restart issue, no?) That
-> "somebody" could be the remoteproc driver I suppose 
-> (qmi_add_lookup()?),
-> or...couldn't it just be the modem itself? Do you actually need to
-> restart the entire modem when the RMTFS service goes away, or do you
-> just need to pause storage activity?
-> 
-
-Hi Brian,
-
-It might be more logical to make that "somebody" the rmtfs_mem driver 
-itself, since
-the modem as such does not have any direct functional dependency on 
-rmtfs_mem i.e
-the firmware can be configured to run on rmtfs_mem or internal fs. So in 
-such cases
-where the modem is running on internal fs, it would be undesirable to 
-have a hard
-coded dependency for rmtfs_mem in remoteproc modem itself.
-
-Wouldn't it be simpler/quicker to fix this in kernel than churning out 
-new firmware
-releases. A fix in firmware will also mean that this becomes one-off fix 
-for dragon
-boards diverging the firmware branch from whats used in android for 
-8916/8974/8996.
-
->> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Am 24.06.18 um 15:07 schrieb Andreas Färber:
+> Am 11.04.2018 um 18:40 schrieb Manivannan Sadhasivam:
+>> Add power domains for Actions Semi S900 SoC.
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 >> ---
->> 
->> The currently implemented workaround in the Linaro QCOMLT releases is 
->> to
->> blacklist the qcom_q6v5_pil kernel module and load this explicitly 
->> after rmtfs
->> has been started.
->> 
->> With this patch the modem module can be loaded automatically by the
->> platform_bus and will only be booted as the rmtfs becomes available. 
->> Performing
->> actions such as upgrading (and restarting) the rmtfs service will 
->> cause the
->> modem to automatically restart and hence continue to function after 
->> the
->> upgrade.
->> 
->>  .../reserved-memory/qcom,rmtfs-mem.txt        |  7 ++++++
->>  drivers/remoteproc/qcom_q6v5_pil.c            |  1 +
->>  drivers/soc/qcom/Kconfig                      |  1 +
->>  drivers/soc/qcom/rmtfs_mem.c                  | 23 
->> ++++++++++++++++++-
->>  4 files changed, 31 insertions(+), 1 deletion(-)
->> 
-> ...
->> diff --git a/drivers/soc/qcom/rmtfs_mem.c 
->> b/drivers/soc/qcom/rmtfs_mem.c
->> index 8a3678c2e83c..8b08be310397 100644
->> --- a/drivers/soc/qcom/rmtfs_mem.c
->> +++ b/drivers/soc/qcom/rmtfs_mem.c
->> @@ -18,6 +18,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/of.h>
->>  #include <linux/of_reserved_mem.h>
->> +#include <linux/remoteproc.h>
->>  #include <linux/dma-mapping.h>
->>  #include <linux/slab.h>
->>  #include <linux/uaccess.h>
->> @@ -39,6 +40,8 @@ struct qcom_rmtfs_mem {
->>  	unsigned int client_id;
->> 
->>  	unsigned int perms;
->> +
->> +	struct rproc *rproc;
->>  };
->> 
->>  static ssize_t qcom_rmtfs_mem_show(struct device *dev,
->> @@ -80,11 +83,18 @@ static int qcom_rmtfs_mem_open(struct inode 
->> *inode, struct file *filp)
->>  	struct qcom_rmtfs_mem *rmtfs_mem = container_of(inode->i_cdev,
->>  							struct qcom_rmtfs_mem,
->>  							cdev);
->> +	int ret = 0;
->> 
->>  	get_device(&rmtfs_mem->dev);
->>  	filp->private_data = rmtfs_mem;
->> 
->> -	return 0;
->> +	if (rmtfs_mem->rproc) {
->> +		ret = rproc_boot(rmtfs_mem->rproc);
->> +		if (ret)
->> +			put_device(&rmtfs_mem->dev);
->> +	}
->> +
->> +	return ret;
->>  }
->>  static ssize_t qcom_rmtfs_mem_read(struct file *filp,
->>  			      char __user *buf, size_t count, loff_t *f_pos)
->> @@ -127,6 +137,9 @@ static int qcom_rmtfs_mem_release(struct inode 
->> *inode, struct file *filp)
->>  {
->>  	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
->> 
->> +	if (rmtfs_mem->rproc)
->> +		rproc_shutdown(rmtfs_mem->rproc);
->> +
->>  	put_device(&rmtfs_mem->dev);
->> 
->>  	return 0;
->> @@ -156,6 +169,7 @@ static int qcom_rmtfs_mem_probe(struct 
->> platform_device *pdev)
->>  	struct qcom_scm_vmperm perms[2];
->>  	struct reserved_mem *rmem;
->>  	struct qcom_rmtfs_mem *rmtfs_mem;
->> +	phandle rproc_phandle;
->>  	u32 client_id;
->>  	u32 vmid;
->>  	int ret;
->> @@ -181,6 +195,13 @@ static int qcom_rmtfs_mem_probe(struct 
->> platform_device *pdev)
->>  	rmtfs_mem->client_id = client_id;
->>  	rmtfs_mem->size = rmem->size;
->> 
->> +	ret = of_property_read_u32(node, "rproc", &rproc_phandle);
->> +	if (!ret) {
->> +		rmtfs_mem->rproc = rproc_get_by_phandle(rproc_phandle);
+>>  drivers/soc/actions/owl-sps.c | 58 +++++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 58 insertions(+)
 > 
-> You're doing an rproc_get(), so you need to do a rproc_put() in
-> remove().
-> 
-> Brian
-> 
->> +		if (!rmtfs_mem->rproc)
->> +			return -EPROBE_DEFER;
->> +	}
->> +
->>  	device_initialize(&rmtfs_mem->dev);
->>  	rmtfs_mem->dev.parent = &pdev->dev;
->>  	rmtfs_mem->dev.groups = qcom_rmtfs_mem_groups;
+> Reviewed-by: Andreas Färber <afaerber@suse.de>
+
+Series merged now via topic branch.
+
+Thanks,
+Andreas
 
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
