@@ -1,150 +1,188 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
-Date: Sun, 30 Sep 2018 16:20:33 +0100
-Message-ID: <7BD7DB08-A320-4088-AE9D-2E4788BC0F1C@jic23.retrosnub.co.uk>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com> <20180918082422.13050-2-songqiang1304521@gmail.com> <20180922160523.16b399fc@archlinux> <20180926224618.GA32126@bogus> <20180928093618.GA24536@Eros> <CAL_JsqLpNiGdK9hWTGWZwgbgRr8DNF=XvKGUx=oS2jTJ61yhFg@mail.gmail.com> <20180929121034.6c5e5826@archlinux> <CAL_JsqLNGua++ESBgf5qSqoLdLwq8awyFr29pYR=JVBOwX3eAg@mail.gmail.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [RFC PATCH] soc: qcom: rmtfs_mem: Control remoteproc from
+ rmtfs_mem
+Date: Sun, 30 Sep 2018 20:58:49 +0530
+Message-ID: <37621d4fadff8e3a0bbe034119351d16@codeaurora.org>
+References: <20180925080607.30565-1-bjorn.andersson@linaro.org>
+ <20180925172943.GA118699@ban.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLNGua++ESBgf5qSqoLdLwq8awyFr29pYR=JVBOwX3eAg@mail.gmail.com>
+In-Reply-To: <20180925172943.GA118699@ban.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>
-Cc: Song Qiang <songqiang1304521@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Matt Ranostay <matt.ranostay@konsulko.com>, Thomas Gleixner <tglx@linutronix.de>, Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 2018-09-25 22:59, Brian Norris wrote:
+> Hi Bjorn,
+> 
+> On Tue, Sep 25, 2018 at 01:06:07AM -0700, Bjorn Andersson wrote:
+>> rmtfs_mem provides access to physical storage and is crucial for the
+>> operation of the Qualcomm modem subsystem.
+>> 
+>> The rmtfs_mem implementation must be available before the modem
+>> subsystem is booted and a solution where the modem remoteproc will
+>> verify that the rmtfs_mem is available has been discussed in the past.
+>> But this would not handle the case where the rmtfs_mem provider is
+>> restarted, which would cause fatal loss of access to the storage 
+>> device
+>> for the modem.
+>> 
+>> The suggestion is therefor to link the rmtfs_mem to its associated
+>> remote processor instance and control it based on the availability of
+>> the rmtfs_mem implementation.
+> 
+> But what does "availability" mean? If I'm reading your rmtfs daemon
+> properly, "availability" should mean that the daemon is up and has
+> registered a RMTFS_QMI_SERVICE. But in this patch, you're keying off of
+> the open() call, which sounds like you're introducing a race condition
+> -- we might have open()ed the RMTFS memory but we're not actually
+> completely ready to service requests.
+> 
+> So rather than looking for open(), I think somebody needs to be looking
+> for the appearance and disappearance of the RMTFS_QMI_SERVICE. (Looking
+> for disappearance would resolve the daemon restart issue, no?) That
+> "somebody" could be the remoteproc driver I suppose 
+> (qmi_add_lookup()?),
+> or...couldn't it just be the modem itself? Do you actually need to
+> restart the entire modem when the RMTFS service goes away, or do you
+> just need to pause storage activity?
+> 
 
+Hi Brian,
 
-On 30 September 2018 00:49:43 BST, Rob Herring <robh@kernel.org> wrote:
->On Sat, Sep 29, 2018 at 6:10 AM Jonathan Cameron <jic23@kernel.org>
->wrote:
->>
->> On Fri, 28 Sep 2018 18:52:13 -0500
->> Rob Herring <robh@kernel.org> wrote:
->>
->> > On Fri, Sep 28, 2018 at 4:36 AM Song Qiang
-><songqiang1304521@gmail.com> wrote:
->> > >
->> > > On Wed, Sep 26, 2018 at 05:46:18PM -0500, Rob Herring wrote:
->> > > > On Sat, Sep 22, 2018 at 04:05:23PM +0100, Jonathan Cameron
->wrote:
->> > > > > On Tue, 18 Sep 2018 16:24:22 +0800
->> > > > > Song Qiang <songqiang1304521@gmail.com> wrote:
->> > > > >
->> > > > > > The first version of this driver issues a measuring request
->and polling
->> > > > > > for a status register in the device for measuring
->completes.
->> > > > > > vl53l0x support configuring GPIO1 on it to generate
->interrupt to
->> > > > > > indicate that new measurement is ready. This patch adds
->support for
->> > > > > > using this mechanisim to reduce cpu cost.
->> > > > > >
->> > > > > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
->> > > > > Hi Song.
->> > > > >
->> > > > > Looks correct in principal but a few things to tidy up before
->> > > > > this is ready to apply.
->> > > > >
->> > > > > Also we have an unrelated change in here to check the devices
->ID.
->> > > > > That should be in it's own patch.
->> > > > >
->> > > > > Thanks,
->> > > > >
->> > > > > Jonathan
->> > > > > > ---
->> > > > > >  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
->> > > >
->> > > > This should have been split with the complete binding in one
->patch
->> > > > rather than piecemeal driver feature by feature.
->> > > >
->> > >
->> > > Hi Rob,
->>
->> Hi Rob, Song,
->>
->> > >
->> > > A few days ago when I was submitting this driver, I didn't do it
->very
->> > > well, the function of this driver is limited. I added interrupt
->support
->> > > the next day after you acked my first patch. I thought it's not
->polite
->> > > to add something after someone acked that patch, so I send the
->interrupt
->> > > support as a second patch. The first patch is merged to togreg
->now, but
->> > > this doesn't. I don't know when can I add new functions to the
->code that
->> > > just merged to togreg branch, could you offer some suggestions?
->> >
->> > You just needed to state why you didn't add a ack. But really, just
->> > don't send things except as RFC until they are "done".
->>
->> The RFC bit actually disagree on.  This driver could be considered
->'done'
->> with just patch 1.  The driver worked, it was useful. When the early
->> versions of that patch came out Song had no idea how much work it
->would
->> be to add interrupt support.  As it turns out it was simple - it
->often isn't :(
->
->I meant specifically in the context of this getting revised within a
->number of days. I agree that drivers don't have to be complete, but
->bindings should be as complete as possible. You can't foresee
->everything, but I don't think that applies in this case.
->
->> > What to do next depends on Jonathan and whether he wants a
->follow-up
->> > patch or he will drop the first one.
->>
->> Yeah. I should have picked up on the binding in the second patch and
->merged
->> it.  I'd seen the first patch a few times before so was happy with it
->and
->> applied before actually looking at the second.
->>
->> If they had come in separate series in my view the partial binding
->then
->> extend with 'optional' elements is fine.  The number of times I've
->discovered
->> issues with documentation of hardware that would have made any
->binding written
->> from the docs wrong is non trivial. So in my view it is always a
->gamble to
->> write bindings until you have tested they work.  I have not problem
->with
->> people who are confident and want to add them from the start though.
->
->Well, if they were broken is some way, I don't think backwards
->compatibility matters and we can still fix things. I'm not talking
->about complex cases here. It is pretty trivial to determine whether a
->device has an interrupt or not.
->
->>
->> Obviously this only works for optional elements.
->>
->> So follow up patch for 'optional' stuff is fine by me.  The only real
->> issue to my mind here is that they were in the same series, so we
->should
->> have seen a separate precursor patch giving the binding for all of
->it.
->
->Certainly, that can't be avoided sometimes and is fine. It's really
->the time frame for this particular case and reviewer bandwidth.
+It might be more logical to make that "somebody" the rmtfs_mem driver 
+itself, since
+the modem as such does not have any direct functional dependency on 
+rmtfs_mem i.e
+the firmware can be configured to run on rmtfs_mem or internal fs. So in 
+such cases
+where the modem is running on internal fs, it would be undesirable to 
+have a hard
+coded dependency for rmtfs_mem in remoteproc modem itself.
 
-Agreed. The timing wasn't ideal (in this limited sense)  Song got this done much faster than I normally expect
-when someone says, I'll do this later! 
+Wouldn't it be simpler/quicker to fix this in kernel than churning out 
+new firmware
+releases. A fix in firmware will also mean that this becomes one-off fix 
+for dragon
+boards diverging the firmware branch from whats used in android for 
+8916/8974/8996.
 
-Thanks for clarifying.
-
-Jonathan
->
->Rob
+>> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>> 
+>> The currently implemented workaround in the Linaro QCOMLT releases is 
+>> to
+>> blacklist the qcom_q6v5_pil kernel module and load this explicitly 
+>> after rmtfs
+>> has been started.
+>> 
+>> With this patch the modem module can be loaded automatically by the
+>> platform_bus and will only be booted as the rmtfs becomes available. 
+>> Performing
+>> actions such as upgrading (and restarting) the rmtfs service will 
+>> cause the
+>> modem to automatically restart and hence continue to function after 
+>> the
+>> upgrade.
+>> 
+>>  .../reserved-memory/qcom,rmtfs-mem.txt        |  7 ++++++
+>>  drivers/remoteproc/qcom_q6v5_pil.c            |  1 +
+>>  drivers/soc/qcom/Kconfig                      |  1 +
+>>  drivers/soc/qcom/rmtfs_mem.c                  | 23 
+>> ++++++++++++++++++-
+>>  4 files changed, 31 insertions(+), 1 deletion(-)
+>> 
+> ...
+>> diff --git a/drivers/soc/qcom/rmtfs_mem.c 
+>> b/drivers/soc/qcom/rmtfs_mem.c
+>> index 8a3678c2e83c..8b08be310397 100644
+>> --- a/drivers/soc/qcom/rmtfs_mem.c
+>> +++ b/drivers/soc/qcom/rmtfs_mem.c
+>> @@ -18,6 +18,7 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/of.h>
+>>  #include <linux/of_reserved_mem.h>
+>> +#include <linux/remoteproc.h>
+>>  #include <linux/dma-mapping.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/uaccess.h>
+>> @@ -39,6 +40,8 @@ struct qcom_rmtfs_mem {
+>>  	unsigned int client_id;
+>> 
+>>  	unsigned int perms;
+>> +
+>> +	struct rproc *rproc;
+>>  };
+>> 
+>>  static ssize_t qcom_rmtfs_mem_show(struct device *dev,
+>> @@ -80,11 +83,18 @@ static int qcom_rmtfs_mem_open(struct inode 
+>> *inode, struct file *filp)
+>>  	struct qcom_rmtfs_mem *rmtfs_mem = container_of(inode->i_cdev,
+>>  							struct qcom_rmtfs_mem,
+>>  							cdev);
+>> +	int ret = 0;
+>> 
+>>  	get_device(&rmtfs_mem->dev);
+>>  	filp->private_data = rmtfs_mem;
+>> 
+>> -	return 0;
+>> +	if (rmtfs_mem->rproc) {
+>> +		ret = rproc_boot(rmtfs_mem->rproc);
+>> +		if (ret)
+>> +			put_device(&rmtfs_mem->dev);
+>> +	}
+>> +
+>> +	return ret;
+>>  }
+>>  static ssize_t qcom_rmtfs_mem_read(struct file *filp,
+>>  			      char __user *buf, size_t count, loff_t *f_pos)
+>> @@ -127,6 +137,9 @@ static int qcom_rmtfs_mem_release(struct inode 
+>> *inode, struct file *filp)
+>>  {
+>>  	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
+>> 
+>> +	if (rmtfs_mem->rproc)
+>> +		rproc_shutdown(rmtfs_mem->rproc);
+>> +
+>>  	put_device(&rmtfs_mem->dev);
+>> 
+>>  	return 0;
+>> @@ -156,6 +169,7 @@ static int qcom_rmtfs_mem_probe(struct 
+>> platform_device *pdev)
+>>  	struct qcom_scm_vmperm perms[2];
+>>  	struct reserved_mem *rmem;
+>>  	struct qcom_rmtfs_mem *rmtfs_mem;
+>> +	phandle rproc_phandle;
+>>  	u32 client_id;
+>>  	u32 vmid;
+>>  	int ret;
+>> @@ -181,6 +195,13 @@ static int qcom_rmtfs_mem_probe(struct 
+>> platform_device *pdev)
+>>  	rmtfs_mem->client_id = client_id;
+>>  	rmtfs_mem->size = rmem->size;
+>> 
+>> +	ret = of_property_read_u32(node, "rproc", &rproc_phandle);
+>> +	if (!ret) {
+>> +		rmtfs_mem->rproc = rproc_get_by_phandle(rproc_phandle);
+> 
+> You're doing an rproc_get(), so you need to do a rproc_put() in
+> remove().
+> 
+> Brian
+> 
+>> +		if (!rmtfs_mem->rproc)
+>> +			return -EPROBE_DEFER;
+>> +	}
+>> +
+>>  	device_initialize(&rmtfs_mem->dev);
+>>  	rmtfs_mem->dev.parent = &pdev->dev;
+>>  	rmtfs_mem->dev.groups = qcom_rmtfs_mem_groups;
 
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
