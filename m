@@ -1,114 +1,150 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH] ARM: dts: sun7i: Disable OOB IRQ for brcm wifi on Cubietruck
- and Banana Pro
-Date: Sun, 30 Sep 2018 17:09:27 +0200
-Message-ID: <20180930150927.12076-1-hdegoede@redhat.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
+Date: Sun, 30 Sep 2018 16:20:33 +0100
+Message-ID: <7BD7DB08-A320-4088-AE9D-2E4788BC0F1C@jic23.retrosnub.co.uk>
+References: <20180918082422.13050-1-songqiang1304521@gmail.com> <20180918082422.13050-2-songqiang1304521@gmail.com> <20180922160523.16b399fc@archlinux> <20180926224618.GA32126@bogus> <20180928093618.GA24536@Eros> <CAL_JsqLpNiGdK9hWTGWZwgbgRr8DNF=XvKGUx=oS2jTJ61yhFg@mail.gmail.com> <20180929121034.6c5e5826@archlinux> <CAL_JsqLNGua++ESBgf5qSqoLdLwq8awyFr29pYR=JVBOwX3eAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Hans de Goede <hdegoede@redhat.com>, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLNGua++ESBgf5qSqoLdLwq8awyFr29pYR=JVBOwX3eAg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Jonathan Cameron <jic23@kernel.org>
+Cc: Song Qiang <songqiang1304521@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Matt Ranostay <matt.ranostay@konsulko.com>, Thomas Gleixner <tglx@linutronix.de>, Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-While doing some brcmfmac driver work I needed to test this also on some
-devicetree based boards. So I fired up the good old Cubietruck and when
-that would not work a Banana Pro.
 
-With an unmodified 4.17 kernel both boards intermittently would come up
-with non working wifi with the following errors:
 
- brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
- brcmfmac: brcmf_bus_started: failed: -110
- brcmfmac: brcmf_attach: dongle is not responding: err=-110
- brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+On 30 September 2018 00:49:43 BST, Rob Herring <robh@kernel.org> wrote:
+>On Sat, Sep 29, 2018 at 6:10 AM Jonathan Cameron <jic23@kernel.org>
+>wrote:
+>>
+>> On Fri, 28 Sep 2018 18:52:13 -0500
+>> Rob Herring <robh@kernel.org> wrote:
+>>
+>> > On Fri, Sep 28, 2018 at 4:36 AM Song Qiang
+><songqiang1304521@gmail.com> wrote:
+>> > >
+>> > > On Wed, Sep 26, 2018 at 05:46:18PM -0500, Rob Herring wrote:
+>> > > > On Sat, Sep 22, 2018 at 04:05:23PM +0100, Jonathan Cameron
+>wrote:
+>> > > > > On Tue, 18 Sep 2018 16:24:22 +0800
+>> > > > > Song Qiang <songqiang1304521@gmail.com> wrote:
+>> > > > >
+>> > > > > > The first version of this driver issues a measuring request
+>and polling
+>> > > > > > for a status register in the device for measuring
+>completes.
+>> > > > > > vl53l0x support configuring GPIO1 on it to generate
+>interrupt to
+>> > > > > > indicate that new measurement is ready. This patch adds
+>support for
+>> > > > > > using this mechanisim to reduce cpu cost.
+>> > > > > >
+>> > > > > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+>> > > > > Hi Song.
+>> > > > >
+>> > > > > Looks correct in principal but a few things to tidy up before
+>> > > > > this is ready to apply.
+>> > > > >
+>> > > > > Also we have an unrelated change in here to check the devices
+>ID.
+>> > > > > That should be in it's own patch.
+>> > > > >
+>> > > > > Thanks,
+>> > > > >
+>> > > > > Jonathan
+>> > > > > > ---
+>> > > > > >  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
+>> > > >
+>> > > > This should have been split with the complete binding in one
+>patch
+>> > > > rather than piecemeal driver feature by feature.
+>> > > >
+>> > >
+>> > > Hi Rob,
+>>
+>> Hi Rob, Song,
+>>
+>> > >
+>> > > A few days ago when I was submitting this driver, I didn't do it
+>very
+>> > > well, the function of this driver is limited. I added interrupt
+>support
+>> > > the next day after you acked my first patch. I thought it's not
+>polite
+>> > > to add something after someone acked that patch, so I send the
+>interrupt
+>> > > support as a second patch. The first patch is merged to togreg
+>now, but
+>> > > this doesn't. I don't know when can I add new functions to the
+>code that
+>> > > just merged to togreg branch, could you offer some suggestions?
+>> >
+>> > You just needed to state why you didn't add a ack. But really, just
+>> > don't send things except as RFC until they are "done".
+>>
+>> The RFC bit actually disagree on.  This driver could be considered
+>'done'
+>> with just patch 1.  The driver worked, it was useful. When the early
+>> versions of that patch came out Song had no idea how much work it
+>would
+>> be to add interrupt support.  As it turns out it was simple - it
+>often isn't :(
+>
+>I meant specifically in the context of this getting revised within a
+>number of days. I agree that drivers don't have to be complete, but
+>bindings should be as complete as possible. You can't foresee
+>everything, but I don't think that applies in this case.
+>
+>> > What to do next depends on Jonathan and whether he wants a
+>follow-up
+>> > patch or he will drop the first one.
+>>
+>> Yeah. I should have picked up on the binding in the second patch and
+>merged
+>> it.  I'd seen the first patch a few times before so was happy with it
+>and
+>> applied before actually looking at the second.
+>>
+>> If they had come in separate series in my view the partial binding
+>then
+>> extend with 'optional' elements is fine.  The number of times I've
+>discovered
+>> issues with documentation of hardware that would have made any
+>binding written
+>> from the docs wrong is non trivial. So in my view it is always a
+>gamble to
+>> write bindings until you have tested they work.  I have not problem
+>with
+>> people who are confident and want to add them from the start though.
+>
+>Well, if they were broken is some way, I don't think backwards
+>compatibility matters and we can still fix things. I'm not talking
+>about complex cases here. It is pretty trivial to determine whether a
+>device has an interrupt or not.
+>
+>>
+>> Obviously this only works for optional elements.
+>>
+>> So follow up patch for 'optional' stuff is fine by me.  The only real
+>> issue to my mind here is that they were in the same series, so we
+>should
+>> have seen a separate precursor patch giving the binding for all of
+>it.
+>
+>Certainly, that can't be avoided sometimes and is fine. It's really
+>the time frame for this particular case and reviewer bandwidth.
 
-They would come up this way more often then with actual working wifi,
-once this problem happens it seems to require a power-cycle to fix.
-Once things work one can safely reboot without hitting the issue.
+Agreed. The timing wasn't ideal (in this limited sense)  Song got this done much faster than I normally expect
+when someone says, I'll do this later! 
 
-I've found that disabling OOB interrupts fixes this. This really is more
-of a workaround then a proper fix, but it makes the wifi reliable again
-and it does not have much of a downside.
+Thanks for clarifying.
 
-Using an OOB IRQ instead of the sdio-IRQ mechanism is mostly important to
-allow the MMC controller to go into runtime-suspend which is not really an
-issue on these boards since they are (usually) not battery powered.
+Jonathan
+>
+>Rob
 
-I've looked at recent brcmfmac and mmc-core changes which may explain this
-and I've not found anything. So the most likely culprit is the A20 external
-interrupt handling e.g. perhaps it is set to edge instead of level? Either
-way I do not have time to further investigate this.
-
-BugLink: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908438
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
- arch/arm/boot/dts/sun7i-a20-bananapro.dts  | 16 +++++++++++++---
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 16 +++++++++++++---
- 2 files changed, 26 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapro.dts b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-index 0898eb6162f5..0e1ddd998b20 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapro.dts
-@@ -174,9 +174,19 @@
- 	brcmf: wifi@1 {
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
--		interrupt-parent = <&pio>;
--		interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
--		interrupt-names = "host-wake";
-+		/*
-+		 * OOB interrupt support is broken ATM, often the first irq
-+		 * does not get seen resulting in the drv probe failing with:
-+		 *
-+		 * brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
-+		 * brcmfmac: brcmf_bus_started: failed: -110
-+		 * brcmfmac: brcmf_attach: dongle is not responding: err=-110
-+		 * brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
-+		 *
-+		 * interrupt-parent = <&pio>;
-+		 * interrupts = <7 15 IRQ_TYPE_LEVEL_LOW>;
-+		 * interrupt-names = "host-wake";
-+		 */
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index 5649161de1d7..a837516db6f9 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -222,9 +222,19 @@
- 	brcmf: wifi@1 {
- 		reg = <1>;
- 		compatible = "brcm,bcm4329-fmac";
--		interrupt-parent = <&pio>;
--		interrupts = <7 10 IRQ_TYPE_LEVEL_LOW>; /* PH10 / EINT10 */
--		interrupt-names = "host-wake";
-+		/*
-+		 * OOB interrupt support is broken ATM, often the first irq
-+		 * does not get seen resulting in the drv probe failing with:
-+		 *
-+		 * brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
-+		 * brcmfmac: brcmf_bus_started: failed: -110
-+		 * brcmfmac: brcmf_attach: dongle is not responding: err=-110
-+		 * brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
-+		 *
-+		 * interrupt-parent = <&pio>;
-+		 * interrupts = <7 10 IRQ_TYPE_LEVEL_LOW>; /* PH10 / EINT10 */
-+		 * interrupt-names = "host-wake";
-+		 */
- 	};
- };
- 
 -- 
-2.19.0
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
