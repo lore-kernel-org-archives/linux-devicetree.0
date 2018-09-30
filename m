@@ -1,77 +1,102 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 3/3] [PATCH v2 3/3] usb: typec: tcpm: charge current
- handling for sink during hard reset
-Date: Sun, 30 Sep 2018 15:05:04 -0700
-Message-ID: <8cdd5aed-4439-40b3-d258-966542a4b1a5@roeck-us.net>
-References: <20180928234703.15970-1-badhri@google.com>
- <20180928234703.15970-3-badhri@google.com>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: [PATCH v5 00/21] IOMMU: Tegra GART driver clean up and optimization
+Date: Mon,  1 Oct 2018 01:48:12 +0300
+Message-ID: <20180930224833.28809-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928234703.15970-3-badhri@google.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Badhri Jagan Sridharan <badhri@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09/28/2018 04:47 PM, Badhri Jagan Sridharan wrote:
-> During the initial connect to a non-pd port, sink would hard reset
-> twice before deeming that the port partner is non-pd. TCPM sets the
-> the charge path to false during the hard reset. This causes unnecessary
-> connects/disconnects of charge path and makes port take longer to
-> charge from the non-pd ports. Avoid this by not setting the charge path
-> to false unless the partner has already identified to be pd capable.
-> 
-> When partner is a pd port, set the charge path to false in
-> SNK_HARD_RESET_SINK_OFF. Set the current limits to default value based
-> of CC pull up and resume the charge path when port enters
-> SNK_HARD_RESET_SINK_ON.
-> 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
+Hello,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+This patch-series integrates the GART (IOMMU) driver with the Memory
+Controller driver, that allows to report the name of a faulty memory
+client on GART page fault. A major code clean up and performance
+optimization is performed in this series as well.
 
-> 
-> --------
-> Changes in V2:
-> Based on feedback of jackp@codeaurora.org
-> - vsafe_5v_hard_reset flag from tcpc_config is removed
-> - Patch only differentiates between pd port partner and non-pd port
-> partner
-> 
-> V1 version of the patch is here:
-> https://lkml.org/lkml/2018/9/14/11
-> ---
->   drivers/usb/typec/tcpm.c | 9 ++++++++-
->   1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-> index c3ac0e46106b4..c25a69922ee6a 100644
-> --- a/drivers/usb/typec/tcpm.c
-> +++ b/drivers/usb/typec/tcpm.c
-> @@ -3273,7 +3273,8 @@ static void run_state_machine(struct tcpm_port *port)
->   	case SNK_HARD_RESET_SINK_OFF:
->   		memset(&port->pps_data, 0, sizeof(port->pps_data));
->   		tcpm_set_vconn(port, false);
-> -		tcpm_set_charge(port, false);
-> +		if (port->pd_capable)
-> +			tcpm_set_charge(port, false);
->   		tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
->   			       TYPEC_DEVICE);
->   		/*
-> @@ -3305,6 +3306,12 @@ static void run_state_machine(struct tcpm_port *port)
->   		 * Similar, dual-mode ports in source mode should transition
->   		 * to PE_SNK_Transition_to_default.
->   		 */
-> +		if (port->pd_capable) {
-> +			tcpm_set_current_limit(port,
-> +					       tcpm_get_current_limit(port),
-> +					       5000);
-> +			tcpm_set_charge(port, true);
-> +		}
->   		tcpm_set_attached_state(port, true);
->   		tcpm_set_state(port, SNK_STARTUP, 0);
->   		break;
-> 
+Changelog:
+
+v5: Addressed review comments from Thierry Reding to v4. Added WARN_ON() to
+    make sure that active domain isn't getting released, kept include headers
+    where necessary, etc.. All changes are quite minor.
+
+    Added new patch "memory: tegra: Use relaxed versions of readl/writel".
+
+v4: In the v3 Rob Herring requested to make device-tree binding changes
+    backwards-compatible with the older kernels, that is achieved by
+    changing the 'compatible' value of the DT node.
+
+    The code-refactoring patches got some more (minor) polish.
+
+    Added new patch "memory: tegra: Use of_device_get_match_data()".
+
+v3: Memory Controller integration part has been reworked and now GART's
+    device-tree binding is changed. Adding Rob Herring for the device-tree
+    changes reviewing.
+
+    GART now disallows more than one active domain at a time.
+
+    Fixed "spinlock recursion", "NULL pointer dereference" and "detaching
+    of all devices from inactive domains".
+
+    New code-refactoring patches.
+
+    The previously standalone patch "memory: tegra: Don't invoke Tegra30+
+    specific memory timing setup on Tegra20" is now included into this
+    series because there is a dependency on that patch and it wasn't applied
+    yet.
+
+v2: Addressed review comments from Robin Murphy to v1 by moving devices
+    iommu_fwspec check to gart_iommu_add_device().
+
+    Dropped the "Provide single domain and group for all devices" patch from
+    the series for now because after some more considering it became not
+    exactly apparent whether that is what we need, that was also suggested
+    by Robin Murphy in the review comment. Maybe something like a runtime
+    IOMMU usage for devices would be a better solution, allowing to implement
+    transparent context switching of virtual IOMMU domains.
+
+    Some very minor code cleanups, reworded commit messages.
+
+Dmitry Osipenko (21):
+  iommu/tegra: gart: Remove pr_fmt and clean up includes
+  iommu/tegra: gart: Clean up driver probe errors handling
+  iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
+  iommu: Introduce iotlb_sync_map callback
+  iommu/tegra: gart: Optimize mapping / unmapping performance
+  dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
+  ARM: dts: tegra20: Update Memory Controller node to the new binding
+  memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
+    Tegra20
+  memory: tegra: Adapt to Tegra20 device-tree binding changes
+  memory: tegra: Read client ID on GART page fault
+  memory: tegra: Use of_device_get_match_data()
+  memory: tegra: Use relaxed versions of readl/writel
+  iommu/tegra: gart: Integrate with Memory Controller driver
+  iommu/tegra: gart: Fix spinlock recursion
+  iommu/tegra: gart: Fix NULL pointer dereference
+  iommu/tegra: gart: Allow only one active domain at a time
+  iommu/tegra: gart: Don't use managed resources
+  iommu/tegra: gart: Prepend error/debug messages with "gart:"
+  iommu/tegra: gart: Don't detach devices from inactive domains
+  iommu/tegra: gart: Simplify clients-tracking code
+  iommu/tegra: gart: Perform code refactoring
+
+ .../bindings/iommu/nvidia,tegra20-gart.txt    |  14 -
+ .../memory-controllers/nvidia,tegra20-mc.txt  |  27 +-
+ arch/arm/boot/dts/tegra20.dtsi                |  15 +-
+ drivers/iommu/Kconfig                         |   1 +
+ drivers/iommu/iommu.c                         |   8 +-
+ drivers/iommu/tegra-gart.c                    | 489 +++++++-----------
+ drivers/memory/tegra/mc.c                     |  93 +++-
+ drivers/memory/tegra/mc.h                     |  10 +-
+ include/linux/iommu.h                         |   1 +
+ include/soc/tegra/mc.h                        |  29 +-
+ 10 files changed, 306 insertions(+), 381 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iommu/nvidia,tegra20-gart.txt
+
+-- 
+2.19.0
