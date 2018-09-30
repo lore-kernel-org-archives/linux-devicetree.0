@@ -1,7 +1,7 @@
 From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V7 7/8] dt-bindings: timer: gx6605s SOC timer
-Date: Mon,  1 Oct 2018 00:18:48 +0800
-Message-ID: <036db3cbb5006d11554fc496077c3319c3bb6d55.1538323894.git.ren_guo@c-sky.com>
+Subject: [PATCH V7 4/8] dt-bindings: timer: C-SKY Multi-processor timer
+Date: Mon,  1 Oct 2018 00:18:45 +0800
+Message-ID: <0632f4d8a3e443dd4da5ae7980816ea5624ab789.1538323894.git.ren_guo@c-sky.com>
 References: <9d68bdd87a8c91f4ee35ff4311e273ea81ab9eb4.1538323894.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <9d68bdd87a8c91f4ee35ff4311e273ea81ab9eb4.1538323894.git.ren_guo@c-sky.com>
@@ -12,49 +12,52 @@ To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kern
 Cc: Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
- - Dt-bindings doc for gx6605s SOC's system timer.
+Dt-bingdings doc for C-SKY SMP system setting.
+
+Changelog:
+ - Drop the interrupt-parent.
 
 Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/timer/csky,gx6605s-timer.txt          | 42 ++++++++++++++++++++++
+ .../devicetree/bindings/timer/csky,mptimer.txt     | 42 ++++++++++++++++++++++
  1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
 new file mode 100644
-index 0000000..6b04344
+index 0000000..15cfec0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
++++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
 @@ -0,0 +1,42 @@
-+=================
-+gx6605s SOC Timer
-+=================
++============================
++C-SKY Multi-processors Timer
++============================
 +
-+The timer is used in gx6605s soc as system timer and the driver
-+contain clk event and clk source.
++C-SKY multi-processors timer is designed for C-SKY SMP system and the
++regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
++
++ - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
++ - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
++ - PTIM_CCVR "cr<3, 14>" Current counter value reg.
++ - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
 +
 +==============================
 +timer node bindings definition
 +==============================
 +
-+	Description: Describes gx6605s SOC timer
++	Description: Describes SMP timer
 +
 +	PROPERTIES
 +
 +	- compatible
 +		Usage: required
 +		Value type: <string>
-+		Definition: must be "csky,gx6605s-timer"
-+	- reg
-+		Usage: required
-+		Value type: <u32 u32>
-+		Definition: <phyaddr size> in soc from cpu view
++		Definition: must be "csky,mptimer"
 +	- clocks
 +		Usage: required
-+		Value type: phandle + clock specifier cells
++		Value type: <node>
 +		Definition: must be input clk node
-+	- interrupt
++	- interrupts
 +		Usage: required
 +		Value type: <u32>
 +		Definition: must be timer irq num defined by soc
@@ -62,11 +65,10 @@ index 0000000..6b04344
 +Examples:
 +---------
 +
-+	timer0: timer@20a000 {
-+		compatible = "csky,gx6605s-timer";
-+		reg = <0x0020a000 0x400>;
++	timer: timer {
++		compatible = "csky,mptimer";
 +		clocks = <&dummy_apb_clk>;
-+		interrupts = <10>;
++		interrupts = <16>;
 +		interrupt-parent = <&intc>;
 +	};
 -- 
