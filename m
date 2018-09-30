@@ -1,41 +1,53 @@
-From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH v2 05/11] arm64: dts: msm8916: Update coresight bindings
- for hardware ports
-Date: Sun, 30 Sep 2018 12:12:41 -0500
-Message-ID: <20180930171241.GB2955@hector.attlocal.net>
-References: <20180912135352.19722-1-suzuki.poulose@arm.com>
- <20180912135352.19722-6-suzuki.poulose@arm.com>
- <8ada229a-49ca-95ff-dc31-df459aaa7196@arm.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V7 3/8] clocksource: add C-SKY SMP timer
+Date: Sun, 30 Sep 2018 21:22:30 +0200
+Message-ID: <a15b5e43-0721-8638-f5d2-8bb72df87f4d@linaro.org>
+References: <9d68bdd87a8c91f4ee35ff4311e273ea81ab9eb4.1538323894.git.ren_guo@c-sky.com>
+ <eee964dd57d12bc630280ab84235b5356799b1fb.1538323894.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8ada229a-49ca-95ff-dc31-df459aaa7196@arm.com>
+In-Reply-To: <eee964dd57d12bc630280ab84235b5356799b1fb.1538323894.git.ren_guo@c-sky.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mathieu Poirier <mathieu.poirier@linaro.org>, robh@kernel.org, coresight@lists.linaro.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, leo.yan@linaro.org, frowand.list@gmail.com, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>
+To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Sep 27, 2018 at 09:18:06AM +0100, Suzuki K Poulose wrote:
-> Hi Andy
+On 30/09/2018 18:18, Guo Ren wrote:
+> This timer is used by SMP system and use mfcr/mtcr instruction
+> to access the regs.
 > 
-> On 09/12/2018 02:53 PM, Suzuki K Poulose wrote:
-> >Switch to updated coresight bindings for hw ports
-> >
-> >Cc: Andy Gross <andy.gross@linaro.org>
-> >Cc: David Brown <david.brown@linaro.org>
-> >Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-> >Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> >Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >---
-> >Changes since v1:
-> >  - Fixed TPIU port direction
-> >  - Use better subject tag for the patch
-> >---
+> Changelog:
+>  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING
+>  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h
+>  - Support csky mp timer alpha version.
+>  - Just use low-counter with 32bit width as clocksource.
+>  - Coding convention with upstream feed-back.
 > 
-> 
-> Please could you pull this and the patch for ARM (Patch 9/11)  ?
-> 
-> Suzuki
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ---
 
-Done.  Thanks
+
+Guo,
+
+what is the flow of your patches ?
+
+You sent me a V8 with two patches and those timers which I commented.
+
+And now there is this V7 with the patches previously sent as V8 without
+the comments take into account.
+
+I'm a bit lost. Can you clarify ?
+
+Thanks
+
+  -- Daniel
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
