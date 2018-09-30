@@ -1,110 +1,250 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
-Date: Sat, 29 Sep 2018 18:49:43 -0500
-Message-ID: <CAL_JsqLNGua++ESBgf5qSqoLdLwq8awyFr29pYR=JVBOwX3eAg@mail.gmail.com>
-References: <20180918082422.13050-1-songqiang1304521@gmail.com>
- <20180918082422.13050-2-songqiang1304521@gmail.com> <20180922160523.16b399fc@archlinux>
- <20180926224618.GA32126@bogus> <20180928093618.GA24536@Eros>
- <CAL_JsqLpNiGdK9hWTGWZwgbgRr8DNF=XvKGUx=oS2jTJ61yhFg@mail.gmail.com> <20180929121034.6c5e5826@archlinux>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V8 1/3] dt-bindings: arm: fsl: add scu binding doc
+Date: Sun, 30 Sep 2018 08:48:34 +0800
+Message-ID: <1538268516-24678-2-git-send-email-aisheng.dong@nxp.com>
+References: <1538268516-24678-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180929121034.6c5e5826@archlinux>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Song Qiang <songqiang1304521@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Matt Ranostay <matt.ranostay@konsulko.com>, Thomas Gleixner <tglx@linutronix.de>, Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1538268516-24678-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Dong Aisheng <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, dongas86@gmail.com, devicetree@vger.kernel.org, jassisinghbrar@gmail.com, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Sep 29, 2018 at 6:10 AM Jonathan Cameron <jic23@kernel.org> wrote:
->
-> On Fri, 28 Sep 2018 18:52:13 -0500
-> Rob Herring <robh@kernel.org> wrote:
->
-> > On Fri, Sep 28, 2018 at 4:36 AM Song Qiang <songqiang1304521@gmail.com> wrote:
-> > >
-> > > On Wed, Sep 26, 2018 at 05:46:18PM -0500, Rob Herring wrote:
-> > > > On Sat, Sep 22, 2018 at 04:05:23PM +0100, Jonathan Cameron wrote:
-> > > > > On Tue, 18 Sep 2018 16:24:22 +0800
-> > > > > Song Qiang <songqiang1304521@gmail.com> wrote:
-> > > > >
-> > > > > > The first version of this driver issues a measuring request and polling
-> > > > > > for a status register in the device for measuring completes.
-> > > > > > vl53l0x support configuring GPIO1 on it to generate interrupt to
-> > > > > > indicate that new measurement is ready. This patch adds support for
-> > > > > > using this mechanisim to reduce cpu cost.
-> > > > > >
-> > > > > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
-> > > > > Hi Song.
-> > > > >
-> > > > > Looks correct in principal but a few things to tidy up before
-> > > > > this is ready to apply.
-> > > > >
-> > > > > Also we have an unrelated change in here to check the devices ID.
-> > > > > That should be in it's own patch.
-> > > > >
-> > > > > Thanks,
-> > > > >
-> > > > > Jonathan
-> > > > > > ---
-> > > > > >  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
-> > > >
-> > > > This should have been split with the complete binding in one patch
-> > > > rather than piecemeal driver feature by feature.
-> > > >
-> > >
-> > > Hi Rob,
->
-> Hi Rob, Song,
->
-> > >
-> > > A few days ago when I was submitting this driver, I didn't do it very
-> > > well, the function of this driver is limited. I added interrupt support
-> > > the next day after you acked my first patch. I thought it's not polite
-> > > to add something after someone acked that patch, so I send the interrupt
-> > > support as a second patch. The first patch is merged to togreg now, but
-> > > this doesn't. I don't know when can I add new functions to the code that
-> > > just merged to togreg branch, could you offer some suggestions?
-> >
-> > You just needed to state why you didn't add a ack. But really, just
-> > don't send things except as RFC until they are "done".
->
-> The RFC bit actually disagree on.  This driver could be considered 'done'
-> with just patch 1.  The driver worked, it was useful. When the early
-> versions of that patch came out Song had no idea how much work it would
-> be to add interrupt support.  As it turns out it was simple - it often isn't :(
+The System Controller Firmware (SCFW) is a low-level system function
+which runs on a dedicated Cortex-M core to provide power, clock, and
+resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
+(QM, QP), and i.MX8QX (QXP, DX).
 
-I meant specifically in the context of this getting revised within a
-number of days. I agree that drivers don't have to be complete, but
-bindings should be as complete as possible. You can't foresee
-everything, but I don't think that applies in this case.
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+v6->v8:
+ * no changes
+v5->v6:
+ * add input clocks to clock bindings according to Rob's suggestion
+ * typo clean up
+v4->v5:
+ * scu node should be under firmware node
+ * add pd/clk/pinctrl binding as well according to Rob's suggestion
+ * switch to new generic MU binding
+   Use 8 separate mu channels in one MU instance for SCU communication
+v3->v4:
+ * fully change to mailbox binding
+ * add child node description
+v2->v3:
+ * update a bit to mailbox binding
+v1->v2:
+ * remove status
+ * changed to mu1
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt  | 183 +++++++++++++++++++++
+ 1 file changed, 183 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
 
-> > What to do next depends on Jonathan and whether he wants a follow-up
-> > patch or he will drop the first one.
->
-> Yeah. I should have picked up on the binding in the second patch and merged
-> it.  I'd seen the first patch a few times before so was happy with it and
-> applied before actually looking at the second.
->
-> If they had come in separate series in my view the partial binding then
-> extend with 'optional' elements is fine.  The number of times I've discovered
-> issues with documentation of hardware that would have made any binding written
-> from the docs wrong is non trivial. So in my view it is always a gamble to
-> write bindings until you have tested they work.  I have not problem with
-> people who are confident and want to add them from the start though.
-
-Well, if they were broken is some way, I don't think backwards
-compatibility matters and we can still fix things. I'm not talking
-about complex cases here. It is pretty trivial to determine whether a
-device has an interrupt or not.
-
->
-> Obviously this only works for optional elements.
->
-> So follow up patch for 'optional' stuff is fine by me.  The only real
-> issue to my mind here is that they were in the same series, so we should
-> have seen a separate precursor patch giving the binding for all of it.
-
-Certainly, that can't be avoided sometimes and is fine. It's really
-the time frame for this particular case and reviewer bandwidth.
-
-Rob
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+new file mode 100644
+index 0000000..46d0af1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -0,0 +1,183 @@
++NXP i.MX System Controller Firmware (SCFW)
++--------------------------------------------------------------------
++
++The System Controller Firmware (SCFW) is a low-level system function
++which runs on a dedicated Cortex-M core to provide power, clock, and
++resource management. It exists on some i.MX8 processors. e.g. i.MX8QM
++(QM, QP), and i.MX8QX (QXP, DX).
++
++The AP communicates with the SC using a multi-ported MU module found
++in the LSIO subsystem. The current definition of this MU module provides
++5 remote AP connections to the SC to support up to 5 execution environments
++(TZ, HV, standard Linux, etc.). The SC side of this MU module interfaces
++with the LSIO DSC IP bus. The SC firmware will communicate with this MU
++using the MSI bus.
++
++System Controller Device Node:
++============================================================
++
++The scu node with the following properties shall be under the /firmware/ node.
++
++Required properties:
++-------------------
++- compatible:	should be "fsl,imx-scu".
++- mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
++			       "rx0", "rx1", "rx2", "rx3".
++- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
++		for rx. All 8 MU channels must be in the same MU instance.
++		Cross instances are not allowed. The MU instance can only
++		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
++		to make sure use the one which is not conflict with other
++		execution environments. e.g. ATF.
++		Note:
++		Channel 0 must be "tx0" or "rx0".
++		Channel 1 must be "tx1" or "rx1".
++		Channel 2 must be "tx2" or "rx2".
++		Channel 3 must be "tx3" or "rx3".
++		e.g.
++		mboxes = <&lsio_mu1 0 0
++			  &lsio_mu1 0 1
++			  &lsio_mu1 0 2
++			  &lsio_mu1 0 3
++			  &lsio_mu1 1 0
++			  &lsio_mu1 1 1
++			  &lsio_mu1 1 2
++			  &lsio_mu1 1 3>;
++		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
++		for detailed mailbox binding.
++
++i.MX SCU Client Device Node:
++============================================================
++
++Client nodes are maintained as children of the relevant IMX-SCU device node.
++
++Power domain bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++This binding for the SCU power domain providers uses the generic power
++domain binding[2].
++
++Required properties:
++- compatible:		Should be "fsl,scu-pd".
++- #address-cells:	Should be 1.
++- #size-cells:		Should be 0.
++
++Required properties for power domain sub nodes:
++- #power-domain-cells:	Must be 0.
++
++Optional Properties:
++- reg:			Resource ID of this power domain.
++			No exist means uncontrollable by user.
++			See detailed Resource ID list from:
++			include/dt-bindings/power/imx-rsrc.h
++- power-domains:	phandle pointing to the parent power domain.
++
++Clock bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++This binding uses the common clock binding[1].
++
++Required properties:
++- compatible:		Should be "fsl,imx8qxp-clock".
++- #clock-cells:		Should be 1. Contains the Clock ID value.
++- clocks:		List of clock specifiers, must contain an entry for
++			each required entry in clock-names
++- clock-names:		Should include entries "xtal_32KHz", "xtal_24MHz"
++
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell.
++
++See the full list of clock IDs from:
++include/dt-bindings/clock/imx8qxp-clock.h
++
++Pinctrl bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++This binding uses the i.MX common pinctrl binding[3].
++
++Required properties:
++- compatible:		Should be "fsl,imx8qxp-iomuxc".
++
++Required properties for Pinctrl sub nodes:
++- fsl,pins:		Each entry consists of 3 integers which represents
++			the mux and config setting for one pin. The first 2
++			integers <pin_id mux_mode> are specified using a
++			PIN_FUNC_ID macro, which can be found in
++			<dt-bindings/pinctrl/pads-imx8qxp.h>.
++			The last integer CONFIG is the pad setting value like
++			pull-up on this pin.
++
++			Please refer to i.MX8QXP Reference Manual for detailed
++			CONFIG settings.
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++[2] Documentation/devicetree/bindings/power/power_domain.txt
++[3] Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt
++
++Example (imx8qxp):
++-------------
++lsio_mu1: mailbox@5d1c0000 {
++	...
++	#mbox-cells = <2>;
++};
++
++firmware {
++	scu {
++		compatible = "fsl,imx-scu";
++		mbox-names = "tx0", "tx1", "tx2", "tx3",
++			     "rx0", "rx1", "rx2", "rx3";
++		mboxes = <&lsio_mu1 0 0
++			  &lsio_mu1 0 1
++			  &lsio_mu1 0 2
++			  &lsio_mu1 0 3
++			  &lsio_mu1 1 0
++			  &lsio_mu1 1 1
++			  &lsio_mu1 1 2
++			  &lsio_mu1 1 3>;
++
++		clk: clk {
++			compatible = "fsl,imx8qxp-clk";
++			#clock-cells = <1>;
++		};
++
++		iomuxc {
++			compatible = "fsl,imx8qxp-iomuxc";
++
++			pinctrl_lpuart0: lpuart0grp {
++				fsl,pins = <
++					SC_P_UART0_RX_ADMA_UART0_RX	0x06000020
++					SC_P_UART0_TX_ADMA_UART0_TX	0x06000020
++				>;
++			};
++			...
++		};
++
++		imx8qx-pm {
++			compatible = "fsl,scu-pd";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pd_dma: dma-power-domain {
++				#power-domain-cells = <0>;
++
++				pd_dma_lpuart0: dma-lpuart0@57 {
++					reg = <SC_R_UART_0>;
++					#power-domain-cells = <0>;
++					power-domains = <&pd_dma>;
++				};
++				...
++			};
++			...
++		};
++	};
++};
++
++serial@5a060000 {
++	...
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lpuart0>;
++	clocks = <&clk IMX8QXP_UART0_CLK>,
++		 <&clk IMX8QXP_UART0_IPG_CLK>;
++	clock-names = "per", "ipg";
++	power-domains = <&pd_dma_lpuart0>;
++};
+-- 
+2.7.4
