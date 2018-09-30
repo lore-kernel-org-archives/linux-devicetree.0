@@ -1,38 +1,73 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/4] soc: actions: sps: Add S900 power domains
-Date: Sun, 30 Sep 2018 17:46:18 +0200
-Message-ID: <a8630149-d1b9-ce23-e5a5-4282cbd8bbca@suse.de>
-References: <20180411164036.8046-1-manivannan.sadhasivam@linaro.org>
- <20180411164036.8046-4-manivannan.sadhasivam@linaro.org>
- <5e267c76-1c71-2381-ee66-50a5bef1cfc2@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V7 2/8] dt-bindings: interrupt-controller: C-SKY SMP intc
+Date: Mon,  1 Oct 2018 00:18:43 +0800
+Message-ID: <4f6de4c6290c408d13902d8c1922514d06201bc2.1538323894.git.ren_guo@c-sky.com>
+References: <9d68bdd87a8c91f4ee35ff4311e273ea81ab9eb4.1538323894.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5e267c76-1c71-2381-ee66-50a5bef1cfc2@suse.de>
-Content-Language: en-US
+In-Reply-To: <9d68bdd87a8c91f4ee35ff4311e273ea81ab9eb4.1538323894.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1538323894.git.ren_guo@c-sky.com>
+References: <cover.1538323894.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, daniel.thompson@linaro.org, manivannanece23@gmail.com, bdong@ucrobotics.com, liuwei@actions-semi.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, hzhang@ucrobotics.com, mp-cs@actions-semi.com, 96boards@ucrobotics.com, linux-arm-kernel@lists.infradead.org
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 24.06.18 um 15:07 schrieb Andreas Färber:
-> Am 11.04.2018 um 18:40 schrieb Manivannan Sadhasivam:
->> Add power domains for Actions Semi S900 SoC.
->>
->> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->> ---
->>  drivers/soc/actions/owl-sps.c | 58 +++++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
-> 
-> Reviewed-by: Andreas Färber <afaerber@suse.de>
+Dt-bindings doc about C-SKY Multi-processors interrupt controller.
 
-Series merged now via topic branch.
+Changelog:
+ - Should be: '#interrupt-cells' not 'interrupt-cells'
 
-Thanks,
-Andreas
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ .../bindings/interrupt-controller/csky,mpintc.txt  | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
 
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+new file mode 100644
+index 0000000..ab921f1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+@@ -0,0 +1,40 @@
++===========================================
++C-SKY Multi-processors Interrupt Controller
++===========================================
++
++C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
++SMP soc, and it also could be used in non-SMP system.
++
++Interrupt number definition:
++
++  0-15  : software irq, and we use 15 as our IPI_IRQ.
++ 16-31  : private  irq, and we use 16 as the co-processor timer.
++ 31-1024: common irq for soc ip.
++
++=============================
++intc node bindings definition
++=============================
++
++	Description: Describes SMP interrupt controller
++
++	PROPERTIES
++
++	- compatible
++		Usage: required
++		Value type: <string>
++		Definition: must be "csky,mpintc"
++	- #interrupt-cells
++		Usage: required
++		Value type: <u32>
++		Definition: must be <1>
++	- interrupt-controller:
++		Usage: required
++
++Examples:
++---------
++
++	intc: interrupt-controller {
++		compatible = "csky,mpintc";
++		#interrupt-cells = <1>;
++		interrupt-controller;
++	};
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.7.4
