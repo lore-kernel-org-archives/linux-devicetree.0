@@ -1,41 +1,29 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH V3 0/3] Add i.MX6ULZ SoC support
-Date: Sun, 30 Sep 2018 15:33:34 +0800
-Message-ID: <20180930073332.GO26692@dragon>
-References: <1538278348-7716-1-git-send-email-Anson.Huang@nxp.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V6 20/33] csky/dma: fix up dma_mapping error
+Date: Sun, 30 Sep 2018 19:10:36 +0800
+Message-ID: <20180930111036.GA5395@guoren>
+References: <cover.1538058840.git.ren_guo@c-sky.com>
+ <378d4064bf29863785f4cc637999e07507e2e926.1538058840.git.ren_guo@c-sky.com>
+ <20180928162116.GF19827@infradead.org>
+ <20180929150840.GA9311@guoren-Inspiron-7460>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1538278348-7716-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180929150840.GA9311@guoren-Inspiron-7460>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <Anson.Huang@nxp.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, ping.bai@nxp.com, Aisheng.dong@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux-imx@nxp.com
+To: Christoph Hellwig <hch@infradead.org>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, green.hu@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 30, 2018 at 11:32:25AM +0800, Anson Huang wrote:
-> This patch set adds i.MX6ULZ SoC support, i.MX6ULZ is a new SoC of
-> i.MX6 family, compared to i.MX6ULL, it removes below modules:
-> 
->     - UART5/UART6/UART7/UART8;
->     - PWM5/PWM6/PWM7/PWM8;
->     - eCSPI3/eCSPI4;
->     - CAN1/CAN2;
->     - FEC1/FEC2;
->     - I2C3/I2C4;
->     - EPIT2;
->     - LCDIF;
->     - GPT2;
->     - TSC;
-> 
-> And i.MX6ULZ has same soc_id as i.MX6ULL, but SRC_SBMR2 bit[6] is
-> to differentiate i.MX6ULZ from i.MX6ULL, 1'b1 means i.MX6ULZ and
-> 1'b0 means i.MX6ULL. i.MX6ULZ reuse most of i.MX6UL/i.MX6ULL code,
-> just add the new CPU type and remove those non-exist modules from dtb.
-> 
-> Anson Huang (3):
->   ARM: imx: add i.mx6ulz msl support
->   dt-bindings: arm: add compatible for i.MX6ULZ 14x14 EVK board
->   ARM: dts: imx: add i.mx6ulz and i.mx6ulz 14x14 evk support
-
-Applied all, thanks.
+On Sat, Sep 29, 2018 at 11:08:41PM +0800, Guo Ren wrote:
+> On Fri, Sep 28, 2018 at 09:21:16AM -0700, Christoph Hellwig wrote:
+> > On Fri, Sep 28, 2018 at 08:51:17AM +0800, Guo Ren wrote:
+> > > The arch_sync_dma_for_cpu()/arch_sync_dma_for_device() implementation is
+> > > broken for some combinations that end up in a BUG() instead of performing
+> > > the necessary flushes.
+> > 
+> > This should be folded into the original patch adding this code.
+> Ok, I'll rebase it.
+Sorry, my git-tree has been included in linux-next. I really don't want to rebase
+it.
