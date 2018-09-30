@@ -1,15 +1,15 @@
 From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/3] [PATCH v2 2/3] usb: typec: tcpm: Do not disconnect
- link for self powered devices
-Date: Sun, 30 Sep 2018 15:04:37 -0700
-Message-ID: <b9c66b15-7af3-a987-1299-dded17b5683e@roeck-us.net>
+Subject: Re: [PATCH 3/3] [PATCH v2 3/3] usb: typec: tcpm: charge current
+ handling for sink during hard reset
+Date: Sun, 30 Sep 2018 15:05:04 -0700
+Message-ID: <8cdd5aed-4439-40b3-d258-966542a4b1a5@roeck-us.net>
 References: <20180928234703.15970-1-badhri@google.com>
- <20180928234703.15970-2-badhri@google.com>
+ <20180928234703.15970-3-badhri@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928234703.15970-2-badhri@google.com>
+In-Reply-To: <20180928234703.15970-3-badhri@google.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Badhri Jagan Sridharan <badhri@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>
@@ -17,108 +17,61 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.ker
 List-Id: devicetree@vger.kernel.org
 
 On 09/28/2018 04:47 PM, Badhri Jagan Sridharan wrote:
-> During HARD_RESET the data link is disconnected.
-> For self powered device, the spec is advising against doing that.
+> During the initial connect to a non-pd port, sink would hard reset
+> twice before deeming that the port partner is non-pd. TCPM sets the
+> the charge path to false during the hard reset. This causes unnecessary
+> connects/disconnects of charge path and makes port take longer to
+> charge from the non-pd ports. Avoid this by not setting the charge path
+> to false unless the partner has already identified to be pd capable.
 > 
->>From USB_PD_R3_0
-> 7.1.5 Response to Hard Resets
-> Device operation during and after a Hard Reset is defined as follows:
-> Self-powered devices Should Not disconnect from USB during a Hard Reset
-> (see Section 9.1.2).
-> Bus powered devices will disconnect from USB during a Hard Reset due to the
-> loss of their power source.
-> 
-> Tackle this by letting TCPM know whether the device is self or bus powered.
-> 
-> This overcomes unnecessary port disconnections from hard reset.
-> Also, speeds up the enumeration time when connected to Type-A ports.
+> When partner is a pd port, set the charge path to false in
+> SNK_HARD_RESET_SINK_OFF. Set the current limits to default value based
+> of CC pull up and resume the charge path when port enters
+> SNK_HARD_RESET_SINK_ON.
 > 
 > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-> ---------
-> Version history:
 > 
-> V2:
-> Based on feedback from heikki.krogerus@linux.intel.com
-> - self_powered added to the struct tcpm_port which is populated from
->    a. "connector" node of the device tree in tcpm_fw_get_caps()
->    b. "self_powered" node of the tcpc_config in tcpm_copy_caps
+> --------
+> Changes in V2:
+> Based on feedback of jackp@codeaurora.org
+> - vsafe_5v_hard_reset flag from tcpc_config is removed
+> - Patch only differentiates between pd port partner and non-pd port
+> partner
 > 
-> Based on feedbase from linux@roeck-us.net
-> - Code was refactored
-> - SRC_HARD_RESET_VBUS_OFF sets the link state to false based
->    on self_powered flag
-> 
-> V1 located here:
-> https://lkml.org/lkml/2018/9/13/94
+> V1 version of the patch is here:
+> https://lkml.org/lkml/2018/9/14/11
 > ---
->   drivers/usb/typec/tcpm.c | 12 ++++++++++--
->   include/linux/usb/tcpm.h |  1 +
->   2 files changed, 11 insertions(+), 2 deletions(-)
+>   drivers/usb/typec/tcpm.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-> index 4f1f4215f3d6e..c3ac0e46106b4 100644
+> index c3ac0e46106b4..c25a69922ee6a 100644
 > --- a/drivers/usb/typec/tcpm.c
 > +++ b/drivers/usb/typec/tcpm.c
-> @@ -317,6 +317,9 @@ struct tcpm_port {
->   	/* Deadline in jiffies to exit src_try_wait state */
->   	unsigned long max_wait;
->   
-> +	/* port belongs to a self powered device */
-> +	bool self_powered;
-> +
->   #ifdef CONFIG_DEBUG_FS
->   	struct dentry *dentry;
->   	struct mutex logbuffer_lock;	/* log buffer access lock */
-> @@ -3257,7 +3260,8 @@ static void run_state_machine(struct tcpm_port *port)
->   	case SRC_HARD_RESET_VBUS_OFF:
->   		tcpm_set_vconn(port, true);
->   		tcpm_set_vbus(port, false);
-> -		tcpm_set_roles(port, false, TYPEC_SOURCE, TYPEC_HOST);
-> +		tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
-> +			       TYPEC_HOST);
->   		tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
->   		break;
->   	case SRC_HARD_RESET_VBUS_ON:
-> @@ -3270,7 +3274,8 @@ static void run_state_machine(struct tcpm_port *port)
+> @@ -3273,7 +3273,8 @@ static void run_state_machine(struct tcpm_port *port)
+>   	case SNK_HARD_RESET_SINK_OFF:
 >   		memset(&port->pps_data, 0, sizeof(port->pps_data));
 >   		tcpm_set_vconn(port, false);
->   		tcpm_set_charge(port, false);
-> -		tcpm_set_roles(port, false, TYPEC_SINK, TYPEC_DEVICE);
-> +		tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
-> +			       TYPEC_DEVICE);
+> -		tcpm_set_charge(port, false);
+> +		if (port->pd_capable)
+> +			tcpm_set_charge(port, false);
+>   		tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
+>   			       TYPEC_DEVICE);
 >   		/*
->   		 * VBUS may or may not toggle, depending on the adapter.
->   		 * If it doesn't toggle, transition to SNK_HARD_RESET_SINK_ON
-> @@ -4409,6 +4414,8 @@ static int tcpm_fw_get_caps(struct tcpm_port *port,
->   		return -EINVAL;
->   	port->operating_snk_mw = mw / 1000;
->   
-> +	port->self_powered = fwnode_property_read_bool(fwnode, "self-powered");
-> +
->   	return 0;
->   }
->   
-> @@ -4717,6 +4724,7 @@ static int tcpm_copy_caps(struct tcpm_port *port,
->   	port->typec_caps.prefer_role = tcfg->default_role;
->   	port->typec_caps.type = tcfg->type;
->   	port->typec_caps.data = tcfg->data;
-> +	port->self_powered = port->tcpc->config->self_powered;
->   
->   	return 0;
->   }
-> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-> index 7e7fbfb84e8e3..50c74a77db55c 100644
-> --- a/include/linux/usb/tcpm.h
-> +++ b/include/linux/usb/tcpm.h
-> @@ -89,6 +89,7 @@ struct tcpc_config {
->   	enum typec_port_data data;
->   	enum typec_role default_role;
->   	bool try_role_hw;	/* try.{src,snk} implemented in hardware */
-> +	bool self_powered;	/* port belongs to a self powered device */
->   
->   	const struct typec_altmode_desc *alt_modes;
->   };
+> @@ -3305,6 +3306,12 @@ static void run_state_machine(struct tcpm_port *port)
+>   		 * Similar, dual-mode ports in source mode should transition
+>   		 * to PE_SNK_Transition_to_default.
+>   		 */
+> +		if (port->pd_capable) {
+> +			tcpm_set_current_limit(port,
+> +					       tcpm_get_current_limit(port),
+> +					       5000);
+> +			tcpm_set_charge(port, true);
+> +		}
+>   		tcpm_set_attached_state(port, true);
+>   		tcpm_set_state(port, SNK_STARTUP, 0);
+>   		break;
 > 
