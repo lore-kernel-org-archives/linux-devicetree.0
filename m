@@ -1,70 +1,87 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Mon, 1 Oct 2018 09:53:15 +0200
-Message-ID: <CAMuHMdW_+PNZrh5JXo8MxVwg3YSZL7bszMcUJjCqMFfBz8HDPQ@mail.gmail.com>
-References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
- <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
- <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
- <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
- <75740733-d0d4-4c0c-838c-f01a5e7291d3@suse.de> <CAL_JsqKLOohxGx0Je9niMQ5H3o0Y=EcMQTB6YkbV0sfUOZHu8g@mail.gmail.com>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: Re: Re: [PATCH 08/12] drm/sun4i: sun6i_mipi_dsi:
+ Refactor vertical video start delay
+Date: Mon, 1 Oct 2018 13:25:59 +0530
+Message-ID: <c6933daf-c445-ade4-a31b-f311ddae7256@openedev.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-9-jagan@amarulasolutions.com>
+ <20180927171451.7iqt2nt2log5qojf@flea>
+ <CAMty3ZDxpLwVDsgVMjX+6+uz89sQ1aZaXHHZ+-5aogrA4MHmqw@mail.gmail.com>
+ <20180929152758.g3goxwjud2ym5rft@flea>
+Reply-To: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKLOohxGx0Je9niMQ5H3o0Y=EcMQTB6YkbV0sfUOZHu8g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Masahiro Yamada <yamada.masahiro@socionext.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDH5TZWAZAFBBKNGY7OQKGQEJTKUJHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180929152758.g3goxwjud2ym5rft@flea>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 8:42 PM Rob Herring <robh@kernel.org> wrote:
-> On Fri, Sep 28, 2018 at 12:21 PM Andreas Färber <afaerber@suse.de> wrote:
-> > Am 13.09.18 um 17:51 schrieb Geert Uytterhoeven:
-> > > On Wed, Sep 12, 2018 at 3:02 AM Masahiro Yamada
-> > > <yamada.masahiro@socionext.com> wrote:
-> > >> Even x86 can enable OF and OF_UNITTEST.
-> > >>
-> > >> Another solution might be,
-> > >> guard it by 'depends on ARCH_SUPPORTS_OF'.
-> > >>
-> > >> This is actually what ACPI does.
-> > >>
-> > >> menuconfig ACPI
-> > >>         bool "ACPI (Advanced Configuration and Power Interface) Support"
-> > >>         depends on ARCH_SUPPORTS_ACPI
-> > >>          ...
-> > >
-> > > ACPI is a real platform feature, as it depends on firmware.
-> > >
-> > > CONFIG_OF can be enabled, and DT overlays can be loaded, on any platform,
-> > > even if it has ACPI ;-)
-> >
-> > How would loading a DT overlay work on an ACPI platform? I.e., what
-> > would it overlay against and how to practically load such a file?
->
-> The DT unittests do just that. I run them on x86 and UM builds. In
-> this case, the loading source is built-in.
->
-> > I wonder whether that could be helpful for USB devices and serdev...
->
-> How to load the overlays is pretty orthogonal to the issues to be
-> solved here. It would certainly be possible to move forward with
-> prototyping this and just have the overlay built-in. It may not even
-> need to be an overlay if we can support multiple root nodes.
+On Saturday 29 September 2018 08:57 PM, Maxime Ripard wrote:
+> On Thu, Sep 27, 2018 at 11:03:19PM +0530, Jagan Teki wrote:
+>> On Thu, Sep 27, 2018 at 10:44 PM Maxime Ripard
+>> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>
+>>> On Thu, Sep 27, 2018 at 05:18:46PM +0530, Jagan Teki wrote:
+>>>> Accordingly to BPI-M64-bsp DE DSI code Video start delay
+>>>> can be computed by subtracting total vertical timing with
+>>>> front porch timing and with adding 1 delay line for TCON.
+>>>
+>>> This is what the current code is doing as well.
+>>
+>> The current code
+>> return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
+>>
+>> (mode->vsync_end - mode->vdisplay) = front porch + sync
+>>
+>> but I'm updating here only front porch.
+>>
+>>>
+>>>> This patch simply add the start_delay logic from BPI-M64-bsp,
+>>>> w/o this new computation, the DSI on A64 encounter vblank time out.
+>>>>
+>>>> [CRTC:36:crtc-0] vblank wait timed out
+>>>>
+>>>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>>>> ---
+>>>>   drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 12 +++++++++++-
+>>>>   1 file changed, 11 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>>>> index 9918fdb990ff..217db74c6dc3 100644
+>>>> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>>>> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+>>>> @@ -358,7 +358,17 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+>>>>   static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+>>>>                                           struct drm_display_mode *mode)
+>>>>   {
+>>>> -     return mode->vtotal - (mode->vsync_end - mode->vdisplay) + 1;
+>>>> +     u32 vfp = mode->vsync_start - mode->vdisplay;
+>>
+>> let me explain this.
+>>
+>> Actual code from Allwinner
+>> u32 vfp = panel->lcd_vt - panel->lcd_y - panel->lcd_vbp;
+>>
+>> So,
+>>
+>> => (panel->lcd_vt - panel->lcd_y) - (panel->lcd_vbp)
+>> => (front porch + sync + back porch) - (back porch + sync)
+> 
+> Unless Allwinner is doing something fishy, in which case that should
+> be mentionned, the back porch doesn't contain the sync pulse.
 
-You indeed need to refer to some anchors for most use cases, although a
-simple MMIO device could just be anchored to the root node.
+As per as I understand panel->lcd_vbp is not back porch timings value 
+which i used by drm. It is BSP DTS property value and actual back porch 
+is calculated as "panel->lcd_vbp - panel->sync"
 
-Topologies hanging off a USB device would be my first use case, too,
-for serdev, or for e.g. the mcp2210 USB-SPI bridge.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+timmings->ver_sync_time= panel_info->lcd_vspw;
+timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
