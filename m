@@ -1,83 +1,99 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v9 1/5] venus: firmware: add routine to reset ARM9
-Date: Mon, 1 Oct 2018 17:30:40 +0300
-Message-ID: <cdc7769d-8bea-ac78-355e-07347ac8aaf1@linaro.org>
-References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
- <1537314192-26892-2-git-send-email-vgarodia@codeaurora.org>
- <CAPBb6MXMv_TD2dbxyM+D2p3pWfCJpQ-_FHK6WdkAEgBhwTdL6g@mail.gmail.com>
- <97b94b9b-f028-cb8b-a3db-67626dc517ab@linaro.org>
- <175fcecf3be715d2a20b71746c648f1e@codeaurora.org>
- <CAPBb6MUo6X+L7UYgmw8qUe_2CiZEBKGxaREFhZGRU1jGq0fO=g@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 1/9] PCI: mediatek: Using slot's devfn for compare to
+ fix mtk_pcie_find_port logic
+Date: Mon, 1 Oct 2018 15:36:41 +0100
+Message-ID: <20181001143641.GB13049@red-moon>
+References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
+ <1538129080-8206-2-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPBb6MUo6X+L7UYgmw8qUe_2CiZEBKGxaREFhZGRU1jGq0fO=g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1538129080-8206-2-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@chromium.org>, vgarodia@codeaurora.org
-Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media-owner@vger.kernel.org
+To: honghui.zhang@mediatek.com
+Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 09/20/2018 06:31 AM, Alexandre Courbot wrote:
-> On Thu, Sep 20, 2018 at 2:55 AM Vikash Garodia <vgarodia@codeaurora.org> wrote:
->>
->> On 2018-09-19 20:30, Stanimir Varbanov wrote:
->>> Hi Alex,
->>>
->>> On 09/19/2018 10:32 AM, Alexandre Courbot wrote:
->>>> On Wed, Sep 19, 2018 at 8:43 AM Vikash Garodia
->>>> <vgarodia@codeaurora.org> wrote:
->>>>>
->>>>> Add routine to reset the ARM9 and brings it out of reset. Also
->>>>> abstract the Venus CPU state handling with a new function. This
->>>>> is in preparation to add PIL functionality in venus driver.
->>>>>
->>>>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
->>>>> ---
->>>>>  drivers/media/platform/qcom/venus/core.h         |  2 ++
->>>>>  drivers/media/platform/qcom/venus/firmware.c     | 33
->>>>> ++++++++++++++++++++++++
->>>>>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
->>>>>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
->>>>>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
->>>>>  5 files changed, 57 insertions(+), 9 deletions(-)
->>>>>
->>>>> diff --git a/drivers/media/platform/qcom/venus/core.h
->>>>> b/drivers/media/platform/qcom/venus/core.h
->>>>> index 2f02365..dfd5c10 100644
->>>>> --- a/drivers/media/platform/qcom/venus/core.h
->>>>> +++ b/drivers/media/platform/qcom/venus/core.h
->>>>> @@ -98,6 +98,7 @@ struct venus_caps {
->>>>>   * @dev:               convenience struct device pointer
->>>>>   * @dev_dec:   convenience struct device pointer for decoder device
->>>>>   * @dev_enc:   convenience struct device pointer for encoder device
->>>>> + * @no_tz:     a flag that suggests presence of trustzone
->>>>
->>>> Looks like it suggests the absence of trustzone?
->>>>
->>>> Actually I would rename it as use_tz and set it if TrustZone is used.
->>>> This would avoid double-negative statements like what we see below.
->>>
->>> I find this suggestion reasonable.
->>
->> Initially i planned to keep it as a positive flag. The reason behind
->> keeping it
->> as no_tz was to keep the default value of this flag to 0 indicating tz
->> is present
->> by default.
->> I can switch it to use_tz though and set it in firmware_init after the
->> presence of
->> firmware node is checked.
+On Fri, Sep 28, 2018 at 06:04:32PM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
 > 
-> Making sure the flag is explicitly initialized instead of relying on
-> default initialization is another good reason to have that change
-> IMHO. :)
+> The Mediatek's host controller has two slots, each with it's own control
+> registers. The host driver need to identify which slot was connected
+> in order to access the device's configuration space. There's problem
+> for current host driver to find out which slot was connected to for
+> a given EP device.
+> 
+> Assuming each slot have connect with one EP device as below:
+> 
+>                 host bridge
+>   bus 0 --> __________|_______
+>            |                  |
+>            |                  |
+>          slot 0             slot 1
+>   bus 1 -->|        bus 2 --> |
+>            |                  |
+>          EP 0               EP 1
+> 
+> During PCI enumeration, system software will scan all the PCI device
+> starting from devfn 0. So it will get the proper port for slot0 and
+> slot1 device when using PCI_SLOT(devfn) for match. But it will get
+> the wrong slot for EP1: The devfn will be start from 0 when scanning
+> EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+> for port0's slot value. So the host driver should not using EP's devfn
+> but the slot's devfn(the slot which EP was connected to) for match.
+> 
+> This patch fix the mtk_pcie_find_port's logic by using the slot's
+> devfn for match if finding device connected to the subordinate bus.
+> 
+> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> ---
+>  drivers/pci/controller/pcie-mediatek.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index 9999dae..264e03f 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -337,10 +337,25 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
+>  {
+>  	struct mtk_pcie *pcie = bus->sysdata;
+>  	struct mtk_pcie_port *port;
+> +	struct pci_dev *dev = NULL;
+> +
+> +	/*
+> +	 * Walk the bus hierarchy to get the devfn value
+> +	 * of the port in the root bus.
+> +	 */
+> +	while (bus && bus->number) {
+> +		dev = bus->self;
+> +		bus = dev->bus;
 
-Vikash, care to send a new version, or will fix that with follow up patches?
+If you add:
 
--- 
-regards,
-Stan
+devfn = dev->devfn;
+
+here
+
+> +	}
+> +
+> +	list_for_each_entry(port, &pcie->ports, list) {
+> +		/* Using slot's devfn to compare for subordinary bus. */
+> +		if (dev)
+> +			devfn = dev->devfn;
+
+You can remove this ugly hunk altogether (and dev initialization
+to NULL).
+
+Lorenzo
+
+> -	list_for_each_entry(port, &pcie->ports, list)
+>  		if (port->slot == PCI_SLOT(devfn))
+>  			return port;
+> +	}
+>  
+>  	return NULL;
+>  }
+> -- 
+> 2.6.4
+> 
