@@ -1,94 +1,57 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v16 1/5] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Mon, 1 Oct 2018 16:02:17 +0530
-Message-ID: <CAFp+6iFJbQZ1MrNWD6g+GNp9TOMXuq0oDdzQ9XUMTmY67tNgWg@mail.gmail.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
- <20180830144541.17740-2-vivek.gautam@codeaurora.org>
- <CAPDyKFohpvEMfDoDooYEyxPMeQ+9dU71qz7ZAZxQ1rzyW-w8iA@mail.gmail.com>
- <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC v2 3/7] irqchip/rtl8186: Add RTL8186 interrupt controller
+ driver
+Date: Mon, 1 Oct 2018 11:47:51 +0100
+Message-ID: <a0c812a0-3237-1cdc-049f-0ebe4c0ceccb@arm.com>
+References: <20181001102952.7913-1-yasha.che3@gmail.com>
+ <20181001102952.7913-4-yasha.che3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181001102952.7913-4-yasha.che3@gmail.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yasha Cherikovsky <yasha.che3@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-mips@linux-mips.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMSwgMjAxOCBhdCAxMToxOSBBTSBWaXZlayBHYXV0YW0KPHZpdmVrLmdhdXRh
-bUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBISSBVbGYsCj4KPiBPbiBGcmksIFNlcCAyOCwg
-MjAxOCBhdCA1OjMwIFBNIFVsZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPiB3cm90
-ZToKPiA+Cj4gPiBPbiAzMCBBdWd1c3QgMjAxOCBhdCAxNjo0NSwgVml2ZWsgR2F1dGFtIDx2aXZl
-ay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+ID4gPiBGcm9tOiBTcmljaGFyYW4gUiA8
-c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+ID4gPgo+ID4gPiBUaGUgc21tdSBuZWVkcyB0byBi
-ZSBmdW5jdGlvbmFsIG9ubHkgd2hlbiB0aGUgcmVzcGVjdGl2ZQo+ID4gPiBtYXN0ZXIncyB1c2lu
-ZyBpdCBhcmUgYWN0aXZlLiBUaGUgZGV2aWNlX2xpbmsgZmVhdHVyZQo+ID4gPiBoZWxwcyB0byB0
-cmFjayBzdWNoIGZ1bmN0aW9uYWwgZGVwZW5kZW5jaWVzLCBzbyB0aGF0IHRoZQo+ID4gPiBpb21t
-dSBnZXRzIHBvd2VyZWQgd2hlbiB0aGUgbWFzdGVyIGRldmljZSBlbmFibGVzIGl0c2VsZgo+ID4g
-PiB1c2luZyBwbV9ydW50aW1lLiBTbyBieSBhZGFwdGluZyB0aGUgc21tdSBkcml2ZXIgZm9yCj4g
-PiA+IHJ1bnRpbWUgcG0sIGFib3ZlIHNhaWQgZGVwZW5kZW5jeSBjYW4gYmUgYWRkcmVzc2VkLgo+
-ID4gPgo+ID4gPiBUaGlzIHBhdGNoIGFkZHMgdGhlIHBtIHJ1bnRpbWUvc2xlZXAgY2FsbGJhY2tz
-IHRvIHRoZQo+ID4gPiBkcml2ZXIgYW5kIGFsc28gdGhlIGZ1bmN0aW9ucyB0byBwYXJzZSB0aGUg
-c21tdSBjbG9ja3MKPiA+ID4gZnJvbSBEVCBhbmQgZW5hYmxlIHRoZW0gaW4gcmVzdW1lL3N1c3Bl
-bmQuCj4gPiA+Cj4gPiA+IEFsc28sIHdoaWxlIHdlIGVuYWJsZSB0aGUgcnVudGltZSBwbSBhZGQg
-YSBwbSBzbGVlcCBzdXNwZW5kCj4gPiA+IGNhbGxiYWNrIHRoYXQgcHVzaGVzIGRldmljZXMgdG8g
-bG93IHBvd2VyIHN0YXRlIGJ5IHR1cm5pbmcKPiA+ID4gdGhlIGNsb2NrcyBvZmYgaW4gYSBzeXN0
-ZW0gc2xlZXAuCj4gPiA+IEFsc28gYWRkIGNvcnJlc3BvbmRpbmcgY2xvY2sgZW5hYmxlIHBhdGgg
-aW4gcmVzdW1lIGNhbGxiYWNrLgo+ID4gPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBTcmljaGFyYW4g
-UiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3JnPgo+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQg
-VGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+ID4gPiBbdml2ZWs6IHJld29yayBmb3Ig
-Y2xvY2sgYW5kIHBtIG9wc10KPiA+ID4gU2lnbmVkLW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZl
-ay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4gPiA+IFJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8
-dGZpZ2FAY2hyb21pdW0ub3JnPgo+ID4gPiBUZXN0ZWQtYnk6IFNyaW5pdmFzIEthbmRhZ2F0bGEg
-PHNyaW5pdmFzLmthbmRhZ2F0bGFAbGluYXJvLm9yZz4KPiA+ID4gLS0tCj4gPiA+ICBkcml2ZXJz
-L2lvbW11L2FybS1zbW11LmMgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrLS0KPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA3NCBpbnNlcnRpb25zKCspLCAz
-IGRlbGV0aW9ucygtKQo+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pb21tdS9hcm0tc21tdS5j
-IGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4gPgo+ID4gWy4uLl0KPiA+Cj4gPiA+IC1zdGF0
-aWMgaW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3BtX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpk
-ZXYpCj4gPiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3J1bnRpbWVfcmVz
-dW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ID4gIHsKPiA+ID4gICAgICAgICBzdHJ1Y3QgYXJt
-X3NtbXVfZGV2aWNlICpzbW11ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPiA+ICsgICAgICAg
-aW50IHJldDsKPiA+ID4gKwo+ID4gPiArICAgICAgIHJldCA9IGNsa19idWxrX2VuYWJsZShzbW11
-LT5udW1fY2xrcywgc21tdS0+Y2xrcyk7Cj4gPiA+ICsgICAgICAgaWYgKHJldCkKPiA+ID4gKyAg
-ICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4gPiA+Cj4gPiA+ICAgICAgICAgYXJtX3NtbXVfZGV2
-aWNlX3Jlc2V0KHNtbXUpOwo+ID4gPiArCj4gPiA+ICAgICAgICAgcmV0dXJuIDA7Cj4gPiA+ICB9
-Cj4gPiA+Cj4gPiA+IC1zdGF0aWMgU0lNUExFX0RFVl9QTV9PUFMoYXJtX3NtbXVfcG1fb3BzLCBO
-VUxMLCBhcm1fc21tdV9wbV9yZXN1bWUpOwo+ID4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNl
-ZCBhcm1fc21tdV9ydW50aW1lX3N1c3BlbmQoc3RydWN0IGRldmljZSAqZGV2KQo+ID4gPiArewo+
-ID4gPiArICAgICAgIHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUgPSBkZXZfZ2V0X2RydmRh
-dGEoZGV2KTsKPiA+ID4gKwo+ID4gPiArICAgICAgIGNsa19idWxrX2Rpc2FibGUoc21tdS0+bnVt
-X2Nsa3MsIHNtbXUtPmNsa3MpOwo+ID4gPiArCj4gPiA+ICsgICAgICAgcmV0dXJuIDA7Cj4gPiA+
-ICt9Cj4gPiA+ICsKPiA+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcG1f
-cmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRldikKPiA+ID4gK3sKPiA+ID4gKyAgICAgICBpZiAocG1f
-cnVudGltZV9zdXNwZW5kZWQoZGV2KSkKPiA+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAwOwo+
-ID4KPiA+IExvb2tzIGxpa2UgeW91IHNob3VsZCBiZSBhYmxlIHVzZSBwbV9ydW50aW1lX2ZvcmNl
-X3Jlc3VtZSgpLCBpbnN0ZWFkCj4gPiBvZiB1c2luZyB0aGlzIGxvY2FsIHRyaWNrLiBVbmxlc3Mg
-SSBhbSBtaXNzaW5nIHNvbWV0aGluZywgb2YgY291cnNlLgo+ID4KPiA+IEluIG90aGVyIHdvcmRz
-LCBqdXN0IGFzc2lnbiB0aGUgc3lzdGVtIHNsZWVwIGNhbGxiYWNrcyBmb3IgcmVzdW1lLCB0bwo+
-ID4gcG1fcnVudGltZV9mb3JjZV9yZXN1bWUoKS4gQW5kIHZpY2UgdmVyc2UgZm9yIHRoZSBzeXN0
-ZW0gc3VzcGVuZAo+ID4gY2FsbGJhY2tzLCBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKSwgb2Yg
-Y291cnNlLgo+Cj4gVGhhbmtzIGZvciB0aGUgcmV2aWV3LiBJIHdpbGwgY2hhbmdlIHRoaXMgYXMg
-c3VnZ2VzdGVkLgoKQ29taW5nIGJhY2sgYXQgdGhpcyAtIGFjdHVhbGx5IFJhZmFlbCBzdWdnZXN0
-ZWQgX25vdF8gdG8gdXNlCnBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZC9yZXN1bWUoKSB3aGVuIE1h
-cmVrIGhhZCBzdWdnZXN0ZWQKdGhlIHNhbWUgWzFdLgpIZSBhbHNvIG1lbnRpb25lZCBmZXcgY2F2
-ZWF0cy9saW1pdGF0aW9ucyBvZiB1c2luZyB0aGVzZSBBUElzCmZvciBzeXN0ZW0gc2xlZXAgb3Bz
-LgpMZXQgbWUga25vdyB5b3VyIG9waW5pb24uIFRoYW5rcy4KClsxXSBodHRwczovL2xrbWwub3Jn
-L2xrbWwvMjAxOC83LzExLzk3OApbMl0gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTgvNy8yMy8z
-MzQKCkJlc3QgcmVnYXJkcwpWaXZlawotLSAKUVVBTENPTU0gSU5ESUEsIG9uIGJlaGFsZiBvZiBR
-dWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlcgpvZiBDb2RlIEF1cm9y
-YSBGb3J1bSwgaG9zdGVkIGJ5IFRoZSBMaW51eCBGb3VuZGF0aW9uCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJl
-ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On 01/10/18 11:29, Yasha Cherikovsky wrote:
+> The Realtek RTL8186 SoC is a MIPS based SoC
+> used in some home routers [1][2].
+> 
+> This adds a driver to handle the interrupt controller
+> on this SoC.
+> 
+> [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
+> [2] https://wikidevi.com/wiki/Realtek_RTL8186
+> 
+> Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-mips@linux-mips.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   drivers/irqchip/Kconfig       |   5 ++
+>   drivers/irqchip/Makefile      |   1 +
+>   drivers/irqchip/irq-rtl8186.c | 107 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 113 insertions(+)
+>   create mode 100644 drivers/irqchip/irq-rtl8186.c
+
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+
+Please let me know how you want this to be merged once the rest of the 
+series has been reviewed.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
