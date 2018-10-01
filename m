@@ -1,141 +1,91 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V2 23/27] mmc: mmci: add variant property to request a
- reset
-Date: Mon, 1 Oct 2018 14:16:00 +0200
-Message-ID: <a956549b-a84e-2582-1fce-3b15495f208c@st.com>
-References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com>
- <1537523181-14578-24-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFqxBuQcafS2KFqPDwb4=V1Jwoovb4+VsJZjAA5CeKs2kw@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v16 4/5] dt-bindings: arm-smmu: Add bindings
+ for qcom, smmu-v2
+Date: Mon, 1 Oct 2018 13:18:57 +0100
+Message-ID: <20181001121857.GA31488@arm.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-5-vivek.gautam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqxBuQcafS2KFqPDwb4=V1Jwoovb4+VsJZjAA5CeKs2kw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20180830144541.17740-5-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-hi Ulf
-
-On 10/01/2018 11:30 AM, Ulf Hansson wrote:
-> On 21 September 2018 at 11:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
->> From: Ludovic Barre <ludovic.barre@st.com>
->>
->> Some variants could require a reset.
->> STM32 sdmmc variant needs to reset hardware block
->> during the power cycle procedure (for re-initialization)
->>
->> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
->> ---
->>   Documentation/devicetree/bindings/mmc/mmci.txt | 2 ++
->>   drivers/mmc/host/mmci.c                        | 9 +++++++++
->>   drivers/mmc/host/mmci.h                        | 4 ++++
->>   3 files changed, 15 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmci.txt b/Documentation/devicetree/bindings/mmc/mmci.txt
->> index 03796cf..e952707 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmci.txt
->> @@ -11,6 +11,8 @@ Required properties:
->>   - compatible             : contains "arm,pl18x", "arm,primecell".
->>   - vmmc-supply            : phandle to the regulator device tree node, mentioned
->>                              as the VCC/VDD supply in the eMMC/SD specs.
->> +depend of variant:
->> +- resets                 : phandle to internal reset line.
->>
-> 
-> This looks like a thing depending on the SoC, rather than on the
-> variant. Therefore, I suggest you move this to be an optional DT
-> property.
-
-could be replaced by:
-
-Optional properties:
-- resets                 : phandle to internal reset line.
-			   Should be defined for sdmmc variant.
-
-> 
-> Also, please move the DT doc update into a separate patch.
-
-OK
-
-> 
->>   Optional properties:
->>   - arm,primecell-periphid : contains the PrimeCell Peripheral ID, it overrides
->> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
->> index b1d5bc5..6b3c33f 100644
->> --- a/drivers/mmc/host/mmci.c
->> +++ b/drivers/mmc/host/mmci.c
->> @@ -37,6 +37,7 @@
->>   #include <linux/pm_runtime.h>
->>   #include <linux/types.h>
->>   #include <linux/pinctrl/consumer.h>
->> +#include <linux/reset.h>
->>
->>   #include <asm/div64.h>
->>   #include <asm/io.h>
->> @@ -1854,6 +1855,14 @@ static int mmci_probe(struct amba_device *dev,
->>
->>          dev_dbg(mmc_dev(mmc), "clocking block at %u Hz\n", mmc->f_max);
->>
->> +       if (variant->reset) {
->> +               host->rst = devm_reset_control_get_exclusive(&dev->dev, NULL);
-> 
-> As suggested, let's make this optional and not depending on the variant.
-
-I done like that because is required for my variant (if no reset, no 
-power cycle for sdmmc).
-
-If you prefer, I could move to optional with 
-"devm_reset_control_get_optional_exclusive"
-And I add a comment in mmci dt binding to specify that not optional
-for sdmmc. (see above)
-
-> 
->> +               if (IS_ERR(host->rst)) {
->> +                       ret = PTR_ERR(host->rst);
->> +                       goto clk_disable;
->> +               }
->> +       }
->> +
->>          /* Get regulators and the supported OCR mask */
->>          ret = mmc_regulator_get_supply(mmc);
->>          if (ret)
->> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
->> index e130689..f0fa185 100644
->> --- a/drivers/mmc/host/mmci.h
->> +++ b/drivers/mmc/host/mmci.h
->> @@ -247,6 +247,7 @@ struct mmci_host;
->>    * @start_err: bitmask identifying the STARTBITERR bit inside MMCISTATUS
->>    *            register.
->>    * @opendrain: bitmask identifying the OPENDRAIN bit inside MMCIPOWER register
->> + * @reset: true if variant has need reset signal.
->>    */
->>   struct variant_data {
->>          unsigned int            clkreg;
->> @@ -285,6 +286,7 @@ struct variant_data {
->>          bool                    qcom_dml;
->>          bool                    reversed_irq_handling;
->>          bool                    mmcimask1;
->> +       bool                    reset;
->>          unsigned int            irq_pio_mask;
->>          u32                     start_err;
->>          u32                     opendrain;
->> @@ -318,6 +320,8 @@ struct mmci_host {
->>          struct clk              *clk;
->>          bool                    singleirq;
->>
->> +       struct reset_control    *rst;
->> +
->>          spinlock_t              lock;
->>
->>          unsigned int            mclk;
->> --
->> 2.7.4
->>
-> 
-> Kind regards
-> Uffe
-> 
+T24gVGh1LCBBdWcgMzAsIDIwMTggYXQgMDg6MTU6NDBQTSArMDUzMCwgVml2ZWsgR2F1dGFtIHdy
+b3RlOgo+IEFkZCBiaW5kaW5ncyBkb2MgZm9yIFFjb20ncyBzbW11LXYyIGltcGxlbWVudGF0aW9u
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJv
+cmEub3JnPgo+IFJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZpZ2FAY2hyb21pdW0ub3JnPgo+
+IFRlc3RlZC1ieTogU3Jpbml2YXMgS2FuZGFnYXRsYSA8c3Jpbml2YXMua2FuZGFnYXRsYUBsaW5h
+cm8ub3JnPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9pb21tdS9hcm0sc21tdS50
+eHQgICAgICAgICB8IDM5ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQs
+IDM5IGluc2VydGlvbnMoKykKCkl0IHdvdWxkIGJlIG5pY2UgdG8gaGF2ZSBhbiBBY2sgZnJvbSBh
+IERUIG1haW50YWluZXIgb24gdGhpcywgc2luY2UgaXQncwphZGRpbmcgbmV3IGNvbXBhdGlibGUg
+c3RyaW5ncy4uLgoKV2lsbAoKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2lvbW11L2FybSxzbW11LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9pb21tdS9hcm0sc21tdS50eHQKPiBpbmRleCA4YTZmZmNlMTJhZjUuLmE2NTA0YjM3
+Y2MyMSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW9t
+bXUvYXJtLHNtbXUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2lvbW11L2FybSxzbW11LnR4dAo+IEBAIC0xNywxMCArMTcsMTYgQEAgY29uZGl0aW9ucy4KPiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgImFybSxtbXUtNDAxIgo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAiYXJtLG1tdS01MDAiCj4gICAgICAgICAgICAgICAgICAgICAgICAgICJjYXZpdW0s
+c21tdS12MiIKPiArICAgICAgICAgICAgICAgICAgICAgICAgInFjb20sc21tdS12MiIKPiAgCj4g
+ICAgICAgICAgICAgICAgICAgIGRlcGVuZGluZyBvbiB0aGUgcGFydGljdWxhciBpbXBsZW1lbnRh
+dGlvbiBhbmQvb3IgdGhlCj4gICAgICAgICAgICAgICAgICAgIHZlcnNpb24gb2YgdGhlIGFyY2hp
+dGVjdHVyZSBpbXBsZW1lbnRlZC4KPiAgCj4gKyAgICAgICAgICAgICAgICAgIFFjb20gU29DcyBt
+dXN0IGNvbnRhaW4sIGFzIGJlbG93LCBTb0Mtc3BlY2lmaWMgY29tcGF0aWJsZXMKPiArICAgICAg
+ICAgICAgICAgICAgYWxvbmcgd2l0aCAicWNvbSxzbW11LXYyIjoKPiArICAgICAgICAgICAgICAg
+ICAgInFjb20sbXNtODk5Ni1zbW11LXYyIiwgInFjb20sc21tdS12MiIsCj4gKyAgICAgICAgICAg
+ICAgICAgICJxY29tLHNkbTg0NS1zbW11LXYyIiwgInFjb20sc21tdS12MiIuCj4gKwo+ICAtIHJl
+ZyAgICAgICAgICAgOiBCYXNlIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIFNNTVUuCj4gIAo+ICAt
+ICNnbG9iYWwtaW50ZXJydXB0cyA6IFRoZSBudW1iZXIgb2YgZ2xvYmFsIGludGVycnVwdHMgZXhw
+b3NlZCBieSB0aGUKPiBAQCAtNzEsNiArNzcsMjIgQEAgY29uZGl0aW9ucy4KPiAgICAgICAgICAg
+ICAgICAgICAgb3IgdXNpbmcgc3RyZWFtIG1hdGNoaW5nIHdpdGggI2lvbW11LWNlbGxzID0gPDI+
+LCBhbmQKPiAgICAgICAgICAgICAgICAgICAgbWF5IGJlIGlnbm9yZWQgaWYgcHJlc2VudCBpbiBz
+dWNoIGNhc2VzLgo+ICAKPiArLSBjbG9jay1uYW1lczogICAgTGlzdCBvZiB0aGUgbmFtZXMgb2Yg
+Y2xvY2tzIGlucHV0IHRvIHRoZSBkZXZpY2UuIFRoZQo+ICsgICAgICAgICAgICAgICAgICByZXF1
+aXJlZCBsaXN0IGRlcGVuZHMgb24gcGFydGljdWxhciBpbXBsZW1lbnRhdGlvbiBhbmQKPiArICAg
+ICAgICAgICAgICAgICAgaXMgYXMgZm9sbG93czoKPiArICAgICAgICAgICAgICAgICAgLSBmb3Ig
+InFjb20sc21tdS12MiI6Cj4gKyAgICAgICAgICAgICAgICAgICAgLSAiYnVzIjogY2xvY2sgcmVx
+dWlyZWQgZm9yIGRvd25zdHJlYW0gYnVzIGFjY2VzcyBhbmQKPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBmb3IgdGhlIHNtbXUgcHR3LAo+ICsgICAgICAgICAgICAgICAgICAgIC0gImlm
+YWNlIjogY2xvY2sgcmVxdWlyZWQgdG8gYWNjZXNzIHNtbXUncyByZWdpc3RlcnMKPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHRocm91Z2ggdGhlIFRDVSdzIHByb2dyYW1taW5nIGlu
+dGVyZmFjZS4KPiArICAgICAgICAgICAgICAgICAgLSB1bnNwZWNpZmllZCBmb3Igb3RoZXIgaW1w
+bGVtZW50YXRpb25zLgo+ICsKPiArLSBjbG9ja3M6ICAgICAgICAgU3BlY2lmaWVycyBmb3IgYWxs
+IGNsb2NrcyBsaXN0ZWQgaW4gdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5LAo+ICsgICAgICAgICAg
+ICAgICAgICBhcyBwZXIgZ2VuZXJpYyBjbG9jayBiaW5kaW5ncy4KPiArCj4gKy0gcG93ZXItZG9t
+YWluczogIFNwZWNpZmllcnMgZm9yIHBvd2VyIGRvbWFpbnMgcmVxdWlyZWQgdG8gYmUgcG93ZXJl
+ZCBvbiBmb3IKPiArICAgICAgICAgICAgICAgICAgdGhlIFNNTVUgdG8gb3BlcmF0ZSwgYXMgcGVy
+IGdlbmVyaWMgcG93ZXIgZG9tYWluIGJpbmRpbmdzLgo+ICsKPiAgKiogRGVwcmVjYXRlZCBwcm9w
+ZXJ0aWVzOgo+ICAKPiAgLSBtbXUtbWFzdGVycyAoZGVwcmVjYXRlZCBpbiBmYXZvdXIgb2YgdGhl
+IGdlbmVyaWMgImlvbW11cyIgYmluZGluZykgOgo+IEBAIC0xMzcsMyArMTU5LDIwIEBAIGNvbmRp
+dGlvbnMuCj4gICAgICAgICAgICAgICAgICBpb21tdS1tYXAgPSA8MCAmc21tdTMgMCAweDQwMD47
+Cj4gICAgICAgICAgICAgICAgICAuLi4KPiAgICAgICAgICB9Owo+ICsKPiArCS8qIFFjb20ncyBh
+cm0sc21tdS12MiBpbXBsZW1lbnRhdGlvbiAqLwo+ICsJc21tdTQ6IGlvbW11QGQwMDAwMCB7Cj4g
+KwkJY29tcGF0aWJsZSA9ICJxY29tLG1zbTg5OTYtc21tdS12MiIsICJxY29tLHNtbXUtdjIiOwo+
+ICsJCXJlZyA9IDwweGQwMDAwMCAweDEwMDAwPjsKPiArCj4gKwkJI2dsb2JhbC1pbnRlcnJ1cHRz
+ID0gPDE+Owo+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSA3MyBJUlFfVFlQRV9MRVZFTF9ISUdI
+PiwKPiArCQkJICAgICA8R0lDX1NQSSAzMjAgSVJRX1RZUEVfTEVWRUxfSElHSD4sCj4gKwkJCSAg
+ICAgPEdJQ19TUEkgMzIxIElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ICsJCSNpb21tdS1jZWxscyA9
+IDwxPjsKPiArCQlwb3dlci1kb21haW5zID0gPCZtbWNjIE1EU1NfR0RTQz47Cj4gKwo+ICsJCWNs
+b2NrcyA9IDwmbW1jYyBTTU1VX01EUF9BWElfQ0xLPiwKPiArCQkJIDwmbW1jYyBTTU1VX01EUF9B
+SEJfQ0xLPjsKPiArCQljbG9jay1uYW1lcyA9ICJidXMiLCAiaWZhY2UiOwo+ICsJfTsKPiAtLSAK
+PiBRVUFMQ09NTSBJTkRJQSwgb24gYmVoYWxmIG9mIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyCj4gb2YgQ29kZSBBdXJvcmEgRm9ydW0sIGhvc3RlZCBieSBUaGUg
+TGludXggRm91bmRhdGlvbgo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9m
+cmVlZHJlbm8K
