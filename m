@@ -1,102 +1,81 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v16 1/5] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Mon, 1 Oct 2018 14:02:11 +0200
-Message-ID: <CAPDyKFpd4c+Qk5Fm7AdSU=pA4w=u0SE7XO7fc9PM9iHR67U6=A@mail.gmail.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
- <20180830144541.17740-2-vivek.gautam@codeaurora.org>
- <CAPDyKFohpvEMfDoDooYEyxPMeQ+9dU71qz7ZAZxQ1rzyW-w8iA@mail.gmail.com>
- <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ@mail.gmail.com>
- <CAFp+6iFJbQZ1MrNWD6g+GNp9TOMXuq0oDdzQ9XUMTmY67tNgWg@mail.gmail.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v3 0/3] Add Amlogic video decoder driver
+Date: Mon, 1 Oct 2018 14:15:53 +0200
+Message-ID: <CAMO6nayt+3e7m5AkTbsJJHzO-uyc-Jh66i3kG97CX5FabwHUOA@mail.gmail.com>
+References: <20180928142816.4311-1-mjourdan@baylibre.com> <cfb89cf9-4fce-7fab-48e1-a0311b80d993@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAFp+6iFJbQZ1MrNWD6g+GNp9TOMXuq0oDdzQ9XUMTmY67tNgWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cfb89cf9-4fce-7fab-48e1-a0311b80d993@xs4all.nl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMSBPY3RvYmVyIDIwMTggYXQgMTI6MzIsIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNv
-ZGVhdXJvcmEub3JnPiB3cm90ZToKPiBPbiBNb24sIE9jdCAxLCAyMDE4IGF0IDExOjE5IEFNIFZp
-dmVrIEdhdXRhbQo+IDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Pgo+PiBI
-SSBVbGYsCj4+Cj4+IE9uIEZyaSwgU2VwIDI4LCAyMDE4IGF0IDU6MzAgUE0gVWxmIEhhbnNzb24g
-PHVsZi5oYW5zc29uQGxpbmFyby5vcmc+IHdyb3RlOgo+PiA+Cj4+ID4gT24gMzAgQXVndXN0IDIw
-MTggYXQgMTY6NDUsIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnPiB3
-cm90ZToKPj4gPiA+IEZyb206IFNyaWNoYXJhbiBSIDxzcmljaGFyYW5AY29kZWF1cm9yYS5vcmc+
-Cj4+ID4gPgo+PiA+ID4gVGhlIHNtbXUgbmVlZHMgdG8gYmUgZnVuY3Rpb25hbCBvbmx5IHdoZW4g
-dGhlIHJlc3BlY3RpdmUKPj4gPiA+IG1hc3RlcidzIHVzaW5nIGl0IGFyZSBhY3RpdmUuIFRoZSBk
-ZXZpY2VfbGluayBmZWF0dXJlCj4+ID4gPiBoZWxwcyB0byB0cmFjayBzdWNoIGZ1bmN0aW9uYWwg
-ZGVwZW5kZW5jaWVzLCBzbyB0aGF0IHRoZQo+PiA+ID4gaW9tbXUgZ2V0cyBwb3dlcmVkIHdoZW4g
-dGhlIG1hc3RlciBkZXZpY2UgZW5hYmxlcyBpdHNlbGYKPj4gPiA+IHVzaW5nIHBtX3J1bnRpbWUu
-IFNvIGJ5IGFkYXB0aW5nIHRoZSBzbW11IGRyaXZlciBmb3IKPj4gPiA+IHJ1bnRpbWUgcG0sIGFi
-b3ZlIHNhaWQgZGVwZW5kZW5jeSBjYW4gYmUgYWRkcmVzc2VkLgo+PiA+ID4KPj4gPiA+IFRoaXMg
-cGF0Y2ggYWRkcyB0aGUgcG0gcnVudGltZS9zbGVlcCBjYWxsYmFja3MgdG8gdGhlCj4+ID4gPiBk
-cml2ZXIgYW5kIGFsc28gdGhlIGZ1bmN0aW9ucyB0byBwYXJzZSB0aGUgc21tdSBjbG9ja3MKPj4g
-PiA+IGZyb20gRFQgYW5kIGVuYWJsZSB0aGVtIGluIHJlc3VtZS9zdXNwZW5kLgo+PiA+ID4KPj4g
-PiA+IEFsc28sIHdoaWxlIHdlIGVuYWJsZSB0aGUgcnVudGltZSBwbSBhZGQgYSBwbSBzbGVlcCBz
-dXNwZW5kCj4+ID4gPiBjYWxsYmFjayB0aGF0IHB1c2hlcyBkZXZpY2VzIHRvIGxvdyBwb3dlciBz
-dGF0ZSBieSB0dXJuaW5nCj4+ID4gPiB0aGUgY2xvY2tzIG9mZiBpbiBhIHN5c3RlbSBzbGVlcC4K
-Pj4gPiA+IEFsc28gYWRkIGNvcnJlc3BvbmRpbmcgY2xvY2sgZW5hYmxlIHBhdGggaW4gcmVzdW1l
-IGNhbGxiYWNrLgo+PiA+ID4KPj4gPiA+IFNpZ25lZC1vZmYtYnk6IFNyaWNoYXJhbiBSIDxzcmlj
-aGFyYW5AY29kZWF1cm9yYS5vcmc+Cj4+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBcmNoaXQgVGFuZWph
-IDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPgo+PiA+ID4gW3ZpdmVrOiByZXdvcmsgZm9yIGNsb2Nr
-IGFuZCBwbSBvcHNdCj4+ID4gPiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdh
-dXRhbUBjb2RlYXVyb3JhLm9yZz4KPj4gPiA+IFJldmlld2VkLWJ5OiBUb21hc3ogRmlnYSA8dGZp
-Z2FAY2hyb21pdW0ub3JnPgo+PiA+ID4gVGVzdGVkLWJ5OiBTcmluaXZhcyBLYW5kYWdhdGxhIDxz
-cmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+Cj4+ID4gPiAtLS0KPj4gPiA+ICBkcml2ZXJz
-L2lvbW11L2FybS1zbW11LmMgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrLS0KPj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNzQgaW5zZXJ0aW9ucygrKSwg
-MyBkZWxldGlvbnMoLSkKPj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2FybS1zbW11
-LmMgYi9kcml2ZXJzL2lvbW11L2FybS1zbW11LmMKPj4gPgo+PiA+IFsuLi5dCj4+ID4KPj4gPiA+
-IC1zdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3BtX3Jlc3VtZShzdHJ1Y3QgZGV2
-aWNlICpkZXYpCj4+ID4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBhcm1fc21tdV9ydW50
-aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gPiAgewo+PiA+ID4gICAgICAgICBz
-dHJ1Y3QgYXJtX3NtbXVfZGV2aWNlICpzbW11ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4+ID4g
-PiArICAgICAgIGludCByZXQ7Cj4+ID4gPiArCj4+ID4gPiArICAgICAgIHJldCA9IGNsa19idWxr
-X2VuYWJsZShzbW11LT5udW1fY2xrcywgc21tdS0+Y2xrcyk7Cj4+ID4gPiArICAgICAgIGlmIChy
-ZXQpCj4+ID4gPiArICAgICAgICAgICAgICAgcmV0dXJuIHJldDsKPj4gPiA+Cj4+ID4gPiAgICAg
-ICAgIGFybV9zbW11X2RldmljZV9yZXNldChzbW11KTsKPj4gPiA+ICsKPj4gPiA+ICAgICAgICAg
-cmV0dXJuIDA7Cj4+ID4gPiAgfQo+PiA+ID4KPj4gPiA+IC1zdGF0aWMgU0lNUExFX0RFVl9QTV9P
-UFMoYXJtX3NtbXVfcG1fb3BzLCBOVUxMLCBhcm1fc21tdV9wbV9yZXN1bWUpOwo+PiA+ID4gK3N0
-YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcnVudGltZV9zdXNwZW5kKHN0cnVjdCBk
-ZXZpY2UgKmRldikKPj4gPiA+ICt7Cj4+ID4gPiArICAgICAgIHN0cnVjdCBhcm1fc21tdV9kZXZp
-Y2UgKnNtbXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPj4gPiA+ICsKPj4gPiA+ICsgICAgICAg
-Y2xrX2J1bGtfZGlzYWJsZShzbW11LT5udW1fY2xrcywgc21tdS0+Y2xrcyk7Cj4+ID4gPiArCj4+
-ID4gPiArICAgICAgIHJldHVybiAwOwo+PiA+ID4gK30KPj4gPiA+ICsKPj4gPiA+ICtzdGF0aWMg
-aW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3BtX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYp
-Cj4+ID4gPiArewo+PiA+ID4gKyAgICAgICBpZiAocG1fcnVudGltZV9zdXNwZW5kZWQoZGV2KSkK
-Pj4gPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4gPgo+PiA+IExvb2tzIGxpa2UgeW91
-IHNob3VsZCBiZSBhYmxlIHVzZSBwbV9ydW50aW1lX2ZvcmNlX3Jlc3VtZSgpLCBpbnN0ZWFkCj4+
-ID4gb2YgdXNpbmcgdGhpcyBsb2NhbCB0cmljay4gVW5sZXNzIEkgYW0gbWlzc2luZyBzb21ldGhp
-bmcsIG9mIGNvdXJzZS4KPj4gPgo+PiA+IEluIG90aGVyIHdvcmRzLCBqdXN0IGFzc2lnbiB0aGUg
-c3lzdGVtIHNsZWVwIGNhbGxiYWNrcyBmb3IgcmVzdW1lLCB0bwo+PiA+IHBtX3J1bnRpbWVfZm9y
-Y2VfcmVzdW1lKCkuIEFuZCB2aWNlIHZlcnNlIGZvciB0aGUgc3lzdGVtIHN1c3BlbmQKPj4gPiBj
-YWxsYmFja3MsIHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZCgpLCBvZiBjb3Vyc2UuCj4+Cj4+IFRo
-YW5rcyBmb3IgdGhlIHJldmlldy4gSSB3aWxsIGNoYW5nZSB0aGlzIGFzIHN1Z2dlc3RlZC4KPgo+
-IENvbWluZyBiYWNrIGF0IHRoaXMgLSBhY3R1YWxseSBSYWZhZWwgc3VnZ2VzdGVkIF9ub3RfIHRv
-IHVzZQo+IHBtX3J1bnRpbWVfZm9yY2Vfc3VzcGVuZC9yZXN1bWUoKSB3aGVuIE1hcmVrIGhhZCBz
-dWdnZXN0ZWQKPiB0aGUgc2FtZSBbMV0uCgpJIHNlZS4KCj4gSGUgYWxzbyBtZW50aW9uZWQgZmV3
-IGNhdmVhdHMvbGltaXRhdGlvbnMgb2YgdXNpbmcgdGhlc2UgQVBJcwo+IGZvciBzeXN0ZW0gc2xl
-ZXAgb3BzLgo+IExldCBtZSBrbm93IHlvdXIgb3Bpbmlvbi4gVGhhbmtzLgoKPgo+IFsxXSBodHRw
-czovL2xrbWwub3JnL2xrbWwvMjAxOC83LzExLzk3OAo+IFsyXSBodHRwczovL2xrbWwub3JnL2xr
-bWwvMjAxOC83LzIzLzMzNAoKTWUgYW5kIFJhZmFlbCBoYXZlIGJlZW4gZGlzY3Vzc2luZyB0aGVz
-ZSB0b3BpY3MgaGlzdG9yaWNhbGx5IGFzIHdlbGwuCkkgZG9uJ3Qgd2FudCB0byBnZXQgdGhhdCBk
-aXNjdXNzaW9uIHN0YXJ0ZWQgYWdhaW4gaGVyZS4KCklmIHlvdXIgZGV2aWNlIGlzIGF0dGFjaGVk
-IHRvIHRoZSBQQ0kgYnVzIG9yIHRoZSBBQ1BJIFBNIGRvbWFpbiAoYW5kCmFsc28gZ2V0cyBydW50
-aW1lIFBNIGVuYWJsZWQpLCB0aGVuIEkgc3VnZ2VzdCB5b3UgdG8gc3RpY2sgdG8gdGhlCmN1cnJl
-bnRseSBzdWdnZXN0ZWQgYXBwcm9hY2guIE90aGVyd2lzZSBpdCBzaG91bGQgYmUgcGVyZmVjdGx5
-IGZpbmUgdG8Kc3dpdGNoIHRvIHRoZSAqZm9yY2UgaGVscGVycy4KCktpbmQgcmVnYXJkcwpVZmZl
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVu
-byBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Le lun. 1 oct. 2018 =C3=A0 12:29, Hans Verkuil <hverkuil@xs4all.nl> a =C3=
+=A9crit :
+>
+> On 09/28/2018 04:28 PM, Maxime Jourdan wrote:
+> > Hi everyone,
+> >
+> > This patch series adds support for the Amlogic video decoder,
+> > as well as the corresponding dt bindings for GXBB/GXL/GXM chips.
+> >
+> > It features decoding for the following formats:
+> > - MPEG 1
+> > - MPEG 2
+> >
+> > The following formats will be added in future patches:
+> > - MJPEG
+> > - MPEG 4 (incl. Xvid, H.263)
+> > - H.264
+> > - HEVC (incl. 10-bit)
+> >
+> > The following formats' development has still not started, but they are
+> > supported by the hardware:
+> > - VC1
+> > - VP9
+> >
+> > The code was made in such a way to allow easy inclusion of those format=
+s
+> > in the future.
+> >
+> > The decoder is single instance.
+> >
+> > Files:
+> >  - vdec.c handles the V4L2 M2M logic
+> >  - esparser.c manages the hardware bitstream parser
+> >  - vdec_helpers.c provides helpers to DONE the dst buffers as well as
+> >  various common code used by the codecs
+> >  - vdec_1.c manages the VDEC_1 block of the vdec IP
+> >  - codec_mpeg12.c enables decoding for MPEG 1/2.
+> >  - vdec_platform.c links codec units with vdec units
+> >  (e.g vdec_1 with codec_mpeg12) and lists all the available
+> >  src/dst formats and requirements (max width/height, etc.),
+> >  per compatible chip.
+> >
+> > Firmwares are necessary to run the vdec. They can currently be found at=
+:
+> > https://github.com/chewitt/meson-firmware
+>
+> Are you trying to get this into the linux-firmware repository?
+>
+> I believe that Mauro requires that before he will merge this driver.
+>
+> So I think this driver will be ready to be merged once v4 is posted,
+> dt-bindings is Acked and the firmware is merged to the linux-firmware rep=
+o.
+
+It was planned indeed to get the firmwares into linux-firmware, I'll
+speed this up.
+
+dt-bindings was reviewed by Rob but I forgot to add it in v3, I'll fix
+that in v4.
+
+Cheers,
+Maxime
+
+> Regards,
+>
+>         Hans
