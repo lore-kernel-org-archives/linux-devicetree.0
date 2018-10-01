@@ -1,115 +1,150 @@
-From: Yasha Cherikovsky <yasha.che3@gmail.com>
-Subject: Re: [RFC 5/5] MIPS: Add Realtek RTL8186 SoC support
-Date: Mon, 01 Oct 2018 12:24:58 +0300
-Message-ID: <a7854b26769c0baec6ad03cc1eee03b78f89b194.camel@gmail.com>
-References: <20180930141510.2690-1-yasha.che3@gmail.com>
-         <20180930141510.2690-6-yasha.che3@gmail.com>
-         <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
-         <ceced0d550bc30d4f3e66d2c7f569c39ca890ce4.camel@gmail.com>
-         <351da67a-b1e6-7972-5c91-0f204690080f@arm.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH v4 2/5] drm/dp: fix link probing for devices supporting
+ DP 1.4+
+Date: Mon, 1 Oct 2018 11:27:08 +0200
+Message-ID: <20181001092708.ow4rxgzp4haax76k@qschulz>
+References: <1537455288-20223-1-git-send-email-dkos@cadence.com>
+ <1537455288-20223-3-git-send-email-dkos@cadence.com>
+ <20180921075929.GA28323@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ybx4xhgzfithc2la"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <351da67a-b1e6-7972-5c91-0f204690080f@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20180921075929.GA28323@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Manasi Navare <manasi.d.navare@intel.com>
+Cc: Damian Kos <dkos@cadence.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Gustavo Padovan <gustavo@padovan.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Sean Paul <sean@poorly.run>, Sandy Huang <hjc@rock-chips.com>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, jartur@cadence.com, jbergsagel@ti.com, ltyrala@cadence.com, stelford@cadence.com, Quentin Schulz <quentin.schulz@free-electrons.com>, pg
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-10-01 at 10:15 +0100, Marc Zyngier wrote:
-> On 01/10/18 09:48, Yasha Cherikovsky wrote:
-> > Hi Marc,
-> > 
-> > On Mon, 2018-10-01 at 09:19 +0100, Marc Zyngier wrote:
-> > > Hi Yasha,
-> > > 
-> > > On 30/09/18 15:15, Yasha Cherikovsky wrote:
-> > > > The Realtek RTL8186 SoC is a MIPS based SoC
-> > > > used in some home routers [1][2].
-> > > > 
-> > > > The hardware includes Lexra LX5280 CPU with a TLB,
-> > > > two Ethernet controllers, a WLAN controller and more.
-> > > > 
-> > > > With this patch, it is possible to successfully boot
-> > > > the kernel and load userspace on the Edimax BR-6204Wg
-> > > > router.
-> > > > Network drivers support will come in future patches.
-> > > > 
-> > > > This patch includes:
-> > > > - New MIPS rtl8186 platform
-> > > >       - Core platform setup code (mostly DT based)
-> > > >       - New Kconfig option
-> > > >       - defconfig file
-> > > >       - MIPS zboot UART support
-> > > > - RTL8186 interrupt controller driver
-> > > > - RTL8186 timer driver
-> > > > - Device tree files for the RTL8186 SoC and Edimax BR-6204Wg
-> > > >     router
-> > > > 
-> > > > [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
-> > > > [2] https://wikidevi.com/wiki/Realtek_RTL8186
-> > > > 
-> > > > Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
-> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > > > Cc: Paul Burton <paul.burton@mips.com>
-> > > > Cc: James Hogan <jhogan@kernel.org>
-> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > > Cc: Jason Cooper <jason@lakedaemon.net>
-> > > > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: linux-mips@linux-mips.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > > ---
-> > > >    arch/mips/Kbuild.platforms                    |   1 +
-> > > >    arch/mips/Kconfig                             |  17 ++
-> > > >    arch/mips/boot/compressed/uart-16550.c        |   5 +
-> > > >    arch/mips/boot/dts/Makefile                   |   1 +
-> > > >    arch/mips/boot/dts/realtek/Makefile           |   4 +
-> > > >    arch/mips/boot/dts/realtek/rtl8186.dtsi       |  86 +++++++
-> > > >    .../dts/realtek/rtl8186_edimax_br_6204wg.dts  |  45 ++++
-> > > >    arch/mips/configs/rtl8186_defconfig           | 112 +++++++++
-> > > >    arch/mips/include/asm/mach-rtl8186/rtl8186.h  |  37 +++
-> > > >    arch/mips/rtl8186/Makefile                    |   2 +
-> > > >    arch/mips/rtl8186/Platform                    |   7 +
-> > > >    arch/mips/rtl8186/irq.c                       |   8 +
-> > > >    arch/mips/rtl8186/prom.c                      |  15 ++
-> > > >    arch/mips/rtl8186/setup.c                     |  80 +++++++
-> > > >    arch/mips/rtl8186/time.c                      |  10 +
-> > > >    drivers/clocksource/Kconfig                   |   9 +
-> > > >    drivers/clocksource/Makefile                  |   1 +
-> > > >    drivers/clocksource/timer-rtl8186.c           | 220
-> > > > ++++++++++++++++++
-> > > >    drivers/irqchip/Kconfig                       |   5 +
-> > > >    drivers/irqchip/Makefile                      |   1 +
-> > > >    drivers/irqchip/irq-rtl8186.c                 | 107 +++++++++
-> > > 
-> > > Could you please split this into at least three patches (arch code,
-> > > clocksource, irqchip) to ease the review?
-> > > 
-> > > Thanks,
-> > > 
-> > > 	M.
-> > 
-> > Currently the RTL8186_IRQ and the RTL8186_TIMER Kconfig entries depend
-> > on
-> > MACH_RTL8186 (which is added in the MIPS portion of the same patch).
-> > Also, MACH_RTL8186 in MIPS selects these two options.
-> > 
-> > What is the best way to split that?
-> 
-> It is absolutely fine to have something depending on a non-selectable 
-> config option, which would allow you to split things up as finely as you 
-> want. Just have the patch enabling the config option last.
-> 
-> Thanks,
-> 
-> 	M.
 
-Good to know, thanks.
-I'll send a v2 soon.
+--ybx4xhgzfithc2la
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Yasha
+Hi Manasi,
+
+On Fri, Sep 21, 2018 at 12:59:30AM -0700, Manasi Navare wrote:
+> Thanks for the patch. Verified with the DP 1.4 spec and looks good to me.
+> Also look at the related patch that makes use of the correct extended cap=
+abilities:
+>=20
+> https://patchwork.freedesktop.org/patch/249400/
+>=20
+
+If I'm not mistaken, you could get rid of the patch in the Intel driver
+when we have this one merged. Is there any reason not to, have I missed
+something?
+
+Thanks,
+Quentin
+
+> Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
+>=20
+> Manasi
+>=20
+>=20
+> On Thu, Sep 20, 2018 at 03:54:37PM +0100, Damian Kos wrote:
+> > From: Quentin Schulz <quentin.schulz@free-electrons.com>
+> >=20
+> > DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
+> > DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
+> > DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
+> > DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
+> > DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
+> > "true capabilities" of DPRX device.
+> >=20
+> > Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT
+> > might falsely return lower capabilities to "avoid interoperability
+> > issues with some of the existing DP Source devices that malfunction
+> > when they discover the higher capabilities within those three
+> > registers.".
+> >=20
+> > Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was reserved
+> > and read 0 so it's safe to check against it even if DP revision is
+> > <1.4
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+> > Signed-off-by: Damian Kos <dkos@cadence.com>
+> > ---
+> >  drivers/gpu/drm/drm_dp_helper.c | 30 +++++++++++++++++++++++++++++-
+> >  1 file changed, 29 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/drm_dp_helper.c b/drivers/gpu/drm/drm_dp_h=
+elper.c
+> > index 8c6b9fd89f8a..735ebde5c2f0 100644
+> > --- a/drivers/gpu/drm/drm_dp_helper.c
+> > +++ b/drivers/gpu/drm/drm_dp_helper.c
+> > @@ -370,10 +370,38 @@ int drm_dp_link_probe(struct drm_dp_aux *aux, str=
+uct drm_dp_link *link)
+> >  {
+> >  	u8 values[3];
+> >  	int err;
+> > +	unsigned int addr;
+> > =20
+> >  	memset(link, 0, sizeof(*link));
+> > =20
+> > -	err =3D drm_dp_dpcd_read(aux, DP_DPCD_REV, values, sizeof(values));
+> > +	/*
+> > +	 * DP 1.4 introduced a DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit in
+> > +	 * DP_TRAINING_AUX_RD_INTERVAL register. If set, DPCD registers from
+> > +	 * DP_DPCD_REV to DP_ADAPTER_CAP should be retrieved starting from
+> > +	 * DP_DPCD_REV_EXTENDED. All registers are copied except DP_DPCD_REV,
+> > +	 * DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESENT which represent the
+> > +	 * "true capabilities" of DPRX device.
+> > +	 *
+> > +	 * Original DP_DPCD_REV, DP_MAX_LINK_RATE and DP_DOWNSTREAMPORT_PRESE=
+NT
+> > +	 * might falsely return lower capabilities to "avoid interoperability
+> > +	 * issues with some of the existing DP Source devices that malfunction
+> > +	 * when they discover the higher capabilities within those three
+> > +	 * registers.".
+> > +	 *
+> > +	 * Before DP 1.4, DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT bit was rese=
+rved
+> > +	 * and read 0 so it's safe to check against it even if DP revision is
+> > +	 * <1.4
+> > +	 */
+> > +	err =3D drm_dp_dpcd_readb(aux, DP_TRAINING_AUX_RD_INTERVAL, values);
+> > +	if (err < 0)
+> > +		return err;
+> > +
+> > +	if (values[0] & DP_EXTENDED_RECEIVER_CAP_FIELD_PRESENT)
+> > +		addr =3D DP_DP13_DPCD_REV;
+> > +	else
+> > +		addr =3D DP_DPCD_REV;
+> > +
+> > +	err =3D drm_dp_dpcd_read(aux, addr, values, sizeof(values));
+> >  	if (err < 0)
+> >  		return err;
+> > =20
+> > --=20
+> > 2.17.1
+> >=20
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--ybx4xhgzfithc2la
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux6GwACgkQhLiadT7g
+8aN2QxAAqgX9IhkXulMuqmg4XqlU+BLiYsRW3taPd50bz/sjTTPLHTLVllTt4y9Q
+IkV9QpcSpBdsmRA8iqYXwUQCPs+xXY4TNi2KrKhVWvBwfTnwneYt3v5hijbDil2t
+73uk7XJbEKaOLxuHAdvFstg5irXtCqKQzwjmq4sL9hQe4GVq2eFwf7pLJSg/aydy
+Mmu/FNnPJL/HL/2Hwg9x6lpe/TkF0Ub3o61lOzSl4Pk7zklrWw53D0d7lr2DcomN
+kjR/HFa6pKRVqCR0tKBmwaezXkDFdsnG8mZPbG+nS7Rrr9I1XvyUsYAJiDtLw9K1
+3/dRC+Kf6qb1HEOztGBoDDch0YOGeN92vTRFQfoaq2loO+Em0mYNjHNsxQupExVx
+rEIQ/GhCtkFO9ZgIIwh1tlnaB9IJ8uRKbJ090/xiZ+ROKu1VhIM83M8VfuAUGpcW
+K771bMpa5Je6UfBJDo7rQ352RY8hlL7pAGg+zPQPvf9keZERuMov8epGVhs/CsP+
+yq3oqfilNDXmzrvq6+0FJ61EWqoMJCJKIWLtXavaCEyiN0alO6YbsgSuf+U0R6lJ
+woTTJp3bCFLpuwQasEnYHAmvJVP1VJlLPh/Gb7Ubw7nyiqHpZCzBML7COG6yAdTO
+fscS2eyAyBYNGguSy18Nsxv+26uamEvic3Em6VPxLytbHdGAzck=
+=tY+G
+-----END PGP SIGNATURE-----
+
+--ybx4xhgzfithc2la--
