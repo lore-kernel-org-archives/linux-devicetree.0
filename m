@@ -1,128 +1,55 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next v3 07/11] dt-bindings: phy: add DT binding for
- Microsemi Ocelot SerDes muxing
-Date: Mon, 1 Oct 2018 14:46:05 +0200
-Message-ID: <20181001124605.jxiechvp6ztvh77p@qschulz>
-References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
- <f392dafca9165800439fc09cd7d16e6a9506d457.1536912834.git-series.quentin.schulz@bootlin.com>
- <20180926213509.GA7454@bogus>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a774a1: Add CAN nodes
+Date: Mon, 1 Oct 2018 14:44:43 +0200
+Message-ID: <20181001124443.g55dwzqpguhglspv@verge.net.au>
+References: <1536576195-11520-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1536576195-11520-4-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20180911133220.3kjx5dqp65drx3qs@verge.net.au>
+ <TY1PR01MB1770B42824076BF5C57F12DDC0140@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4hoevmel2quxjye3"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20180926213509.GA7454@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
+In-Reply-To: <TY1PR01MB1770B42824076BF5C57F12DDC0140@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Sep 27, 2018 at 10:53:41AM +0000, Fabrizio Castro wrote:
+> Hello Simon,
+> 
+> > Subject: Re: [PATCH v2 3/3] arm64: dts: renesas: r8a774a1: Add CAN nodes
+> >
+> > On Mon, Sep 10, 2018 at 11:43:15AM +0100, Fabrizio Castro wrote:
+> > > From: Chris Paterson <chris.paterson2@renesas.com>
+> > >
+> > > Add the device nodes for both RZ/G2M CAN channels.
+> > >
+> > > Signed-off-by: Chris Paterson <chris.paterson2@renesas.com>
+> > > Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> > > ---
+> > >
+> > > v1->v2:
+> > > * replaced "renesas,rzg-gen2-can" with "renesas,rcar-gen3-can" as per
+> > >   Geert's comment.
+> > >
+> > > This patch applies on top of renesas-devel-20180906-v4.19-rc2.
+> >
+> > Thanks Fabrizio,
+> >
+> > I would like to waif for the bindings to be accepted before accepting this
+> > patch.
+> 
+> Marc has taken the bindings, I guess we can unblock this patch now?
 
---4hoevmel2quxjye3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Rob,
-
-I'm not sure I've understood the way you wanted me to so let me know if
-I'm not on the right path.
-
-On Wed, Sep 26, 2018 at 04:35:09PM -0500, Rob Herring wrote:
-> On Fri, Sep 14, 2018 at 10:16:05AM +0200, Quentin Schulz wrote:
-> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > ---
-> >  Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt | 40 +++++=
-++-
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-se=
-rdes.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.tx=
-t b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
-> > new file mode 100644
-> > index 0000000..2a88cc3
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
-> > @@ -0,0 +1,40 @@
-> > +Microsemi Ocelot SerDes muxing driver
-> > +-------------------------------------
-> > +
-> > +On Microsemi Ocelot, there is a handful of registers in HSIO address
-> > +space for setting up the SerDes to switch port muxing.
-> > +
-> > +A SerDes X can be "muxed" to work with switch port Y or Z for example.
-> > +One specific SerDes can also be used as a PCIe interface.
-> > +
-> > +Hence, a SerDes represents an interface, be it an Ethernet or a PCIe o=
-ne.
-> > +
-> > +There are two kinds of SerDes: SERDES1G supports 10/100Mbps in
-> > +half/full-duplex and 1000Mbps in full-duplex mode while SERDES6G suppo=
-rts
-> > +10/100Mbps in half/full-duplex and 1000/2500Mbps in full-duplex mode.
-> > +
-> > +Also, SERDES6G number (aka "macro") 0 is the only interface supporting
-> > +QSGMII.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible: should be "mscc,vsc7514-serdes"
-> > +- #phy-cells : from the generic phy bindings, must be 2.
-> > +	       The first number defines the input port to use for a given
-> > +	       SerDes macro. The second defines the macro to use. They are
-> > +	       defined in dt-bindings/phy/phy-ocelot-serdes.h
->=20
-> You need to define what this is a child of.
->=20
-
-This is a child of the HSIO syscon on the Microsemi Ocelot. I don't
-expect all Microsemi SoCs that could use this driver to have the SerDes
-node in the HSIO syscon.
-
-Among the latest additions in Documentation/devicetree/bindings/phy I
-couldn't find anything close to my understanding of "define what this is
-a child of", could you elaborate on what you want exactly?
-
-> > +
-> > +Example:
-> > +
-> > +	serdes: serdes {
-> > +		compatible =3D "mscc,vsc7514-serdes";
-> > +		#phy-cells =3D <2>;
->=20
-> However, if there are no other resources associated with this, then you=
-=20
-> don't even need this child node. The parent can be a phy provider and=20
-> provider of other functions too.
->=20
-
-The parent is a syscon with multiple features (SerDes, PLL
-configuration, temp sensor, SyncE, ...) so I'm not sure it's possible to
-do what you're asking me to. For now, there is only a SerDes node but
-ultimately there'll be more than one I guess.
-
-Thanks,
-Quentin
-
---4hoevmel2quxjye3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAluyFwwACgkQhLiadT7g
-8aOHrw//emXaFPG2jxUdu2NUdXCh79WYloOxKpbDEEbAW5Lfs4GZLCRy3NeEBqhU
-2WxS6RuY9FonPdgZKx5OkFA5iL+KeOS/sVz22xN3IOSZPFZlc9hzBt9gUC/vvbM1
-eFrkPDmXtIfCCpDdZ0L4ogzNdr6F7JSUwMUmds3mYWrjPORyyILutLTxgleuZryN
-lM1N7Rb5u4ASDn4KhMIla9UcFEhRPVOwfJPydqPRsboc4UknbpdRkEljzfAkBkjr
-DvhGjoAW6tWTKIk+UK0L0pJmILwFOt0+Iwptu/ZSAHHA8nnvnP/vGXIpvHrwHa4A
-MLQVHGMScSQYnpVqcrjXYOHrClt7QhUujZIU8ZqH07CQhsU3HuoMHm8uICigbKfI
-u9KvNSzkG2C1Otfb6j3cGSEWf71R4RzqVHnFxAQtwS3U1PLRb5zCj+TwyMZqxI2I
-vnvokFgGugyK7stymZQ2zWYjtIVDMvEebN9JxR1gak5gRb8PjDi0KHifCC6oJcZm
-c4ulWoEtsT+8GwTxiTfetyT4YIM0WjtzXq/19pcMd20tHoXka5BeD7pyA4DiuxhU
-Awh1ecgZ44OVjl9rK7J2yvX/wLF6toD4eeQl9S8oVNtODwZkWj45xnL+6V4HTCRw
-WGA2gcxnvteaFkGs5jnOAlBGoqzDDMf/r00jyDr1EdWd3SRIigY=
-=vZEA
------END PGP SIGNATURE-----
-
---4hoevmel2quxjye3--
+Thanks, applied for v4.21.
