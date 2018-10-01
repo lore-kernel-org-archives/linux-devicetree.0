@@ -1,57 +1,55 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: [PATCH v5 01/21] iommu/tegra: gart: Remove pr_fmt and clean up includes
-Date: Mon,  1 Oct 2018 01:48:13 +0300
-Message-ID: <20180930224833.28809-2-digetx@gmail.com>
-References: <20180930224833.28809-1-digetx@gmail.com>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V7 3/8] clocksource: add C-SKY SMP timer
+Date: Mon, 1 Oct 2018 08:02:08 +0800
+Message-ID: <20181001000207.GA2131@guoren-Inspiron-7460>
+References: <9d68bdd87a8c91f4ee35ff4311e273ea81ab9eb4.1538323894.git.ren_guo@c-sky.com>
+ <eee964dd57d12bc630280ab84235b5356799b1fb.1538323894.git.ren_guo@c-sky.com>
+ <a15b5e43-0721-8638-f5d2-8bb72df87f4d@linaro.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180930224833.28809-1-digetx@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <a15b5e43-0721-8638-f5d2-8bb72df87f4d@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>
-Cc: iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Remove unneeded headers inclusion and sort the headers in alphabet order.
-Remove pr_fmt macro since there is no pr_*() in the code and it doesn't
-affect dev_*() functions.
+On Sun, Sep 30, 2018 at 09:22:30PM +0200, Daniel Lezcano wrote:
+> On 30/09/2018 18:18, Guo Ren wrote:
+> > This timer is used by SMP system and use mfcr/mtcr instruction
+> > to access the regs.
+> > 
+> > Changelog:
+> >  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING
+> >  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h
+> >  - Support csky mp timer alpha version.
+> >  - Just use low-counter with 32bit width as clocksource.
+> >  - Coding convention with upstream feed-back.
+> > 
+> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> > ---
+> 
+> 
+> Guo,
+> 
+> what is the flow of your patches ?
+> 
+> You sent me a V8 with two patches and those timers which I commented.
+> 
+> And now there is this V7 with the patches previously sent as V8 without
+> the comments take into account.
+> 
+> I'm a bit lost. Can you clarify ?
+Opps ... I should send the "V9 C-SKY(csky) Linux Drivers". It's a wrong
+patchset from "V6 C-SKY(csky) Linux Kernel Port".
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Acked-by: Thierry Reding <treding@nvidia.com>
----
- drivers/iommu/tegra-gart.c | 17 +++++------------
- 1 file changed, 5 insertions(+), 12 deletions(-)
+The patchset didn't include your comment in V8:
+ - Add COMIPLE_TEST in Kconfig
+ - no cast is needed for "struct clock_event_device *ce = dev"
+ - remove: extra space after (u64).
 
-diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
-index 7b1361d57a17..6dda7ee1d36c 100644
---- a/drivers/iommu/tegra-gart.c
-+++ b/drivers/iommu/tegra-gart.c
-@@ -17,21 +17,14 @@
-  * 51 Franklin St - Fifth Floor, Boston, MA 02110-1301 USA.
-  */
- 
--#define pr_fmt(fmt)	"%s(): " fmt, __func__
--
-+#include <linux/io.h>
-+#include <linux/iommu.h>
-+#include <linux/list.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
--#include <linux/spinlock.h>
-+#include <linux/of_device.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- #include <linux/vmalloc.h>
--#include <linux/mm.h>
--#include <linux/list.h>
--#include <linux/device.h>
--#include <linux/io.h>
--#include <linux/iommu.h>
--#include <linux/of.h>
--
--#include <asm/cacheflush.h>
- 
- /* bitmap of the page sizes currently supported */
- #define GART_IOMMU_PGSIZES	(SZ_4K)
--- 
-2.19.0
+I'm sorry about it, I'll send "V9 C-SKY(csky) Linux Drivers". My fault.
+
+Best Regards
+ Guo Ren
