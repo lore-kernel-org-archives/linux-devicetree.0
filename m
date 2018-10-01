@@ -1,66 +1,115 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next 2/7] net: phy: mscc: add support for VSC8584 PHY
-Date: Mon, 1 Oct 2018 11:16:31 +0200
-Message-ID: <20181001091631.5adxhbz2q4bwwjjf@qschulz>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <a61d9affd3f1ec9deb60c882cce1daf37fbe2427.1536916714.git-series.quentin.schulz@bootlin.com>
- <20180914131846.GG14865@lunn.ch>
- <20180914132930.fphdm3dm2incetbq@qschulz>
- <20180914162828.5e75ffh5sig4om3d@qschulz>
- <20180914165824.GA3811@lunn.ch>
+From: Yasha Cherikovsky <yasha.che3@gmail.com>
+Subject: Re: [RFC 5/5] MIPS: Add Realtek RTL8186 SoC support
+Date: Mon, 01 Oct 2018 12:24:58 +0300
+Message-ID: <a7854b26769c0baec6ad03cc1eee03b78f89b194.camel@gmail.com>
+References: <20180930141510.2690-1-yasha.che3@gmail.com>
+         <20180930141510.2690-6-yasha.che3@gmail.com>
+         <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
+         <ceced0d550bc30d4f3e66d2c7f569c39ca890ce4.camel@gmail.com>
+         <351da67a-b1e6-7972-5c91-0f204690080f@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xcrcdsgrqxxzw7hb"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180914165824.GA3811@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <351da67a-b1e6-7972-5c91-0f204690080f@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2018-10-01 at 10:15 +0100, Marc Zyngier wrote:
+> On 01/10/18 09:48, Yasha Cherikovsky wrote:
+> > Hi Marc,
+> > 
+> > On Mon, 2018-10-01 at 09:19 +0100, Marc Zyngier wrote:
+> > > Hi Yasha,
+> > > 
+> > > On 30/09/18 15:15, Yasha Cherikovsky wrote:
+> > > > The Realtek RTL8186 SoC is a MIPS based SoC
+> > > > used in some home routers [1][2].
+> > > > 
+> > > > The hardware includes Lexra LX5280 CPU with a TLB,
+> > > > two Ethernet controllers, a WLAN controller and more.
+> > > > 
+> > > > With this patch, it is possible to successfully boot
+> > > > the kernel and load userspace on the Edimax BR-6204Wg
+> > > > router.
+> > > > Network drivers support will come in future patches.
+> > > > 
+> > > > This patch includes:
+> > > > - New MIPS rtl8186 platform
+> > > >       - Core platform setup code (mostly DT based)
+> > > >       - New Kconfig option
+> > > >       - defconfig file
+> > > >       - MIPS zboot UART support
+> > > > - RTL8186 interrupt controller driver
+> > > > - RTL8186 timer driver
+> > > > - Device tree files for the RTL8186 SoC and Edimax BR-6204Wg
+> > > >     router
+> > > > 
+> > > > [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
+> > > > [2] https://wikidevi.com/wiki/Realtek_RTL8186
+> > > > 
+> > > > Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+> > > > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > > > Cc: Paul Burton <paul.burton@mips.com>
+> > > > Cc: James Hogan <jhogan@kernel.org>
+> > > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > > Cc: Jason Cooper <jason@lakedaemon.net>
+> > > > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > Cc: linux-mips@linux-mips.org
+> > > > Cc: devicetree@vger.kernel.org
+> > > > Cc: linux-kernel@vger.kernel.org
+> > > > ---
+> > > >    arch/mips/Kbuild.platforms                    |   1 +
+> > > >    arch/mips/Kconfig                             |  17 ++
+> > > >    arch/mips/boot/compressed/uart-16550.c        |   5 +
+> > > >    arch/mips/boot/dts/Makefile                   |   1 +
+> > > >    arch/mips/boot/dts/realtek/Makefile           |   4 +
+> > > >    arch/mips/boot/dts/realtek/rtl8186.dtsi       |  86 +++++++
+> > > >    .../dts/realtek/rtl8186_edimax_br_6204wg.dts  |  45 ++++
+> > > >    arch/mips/configs/rtl8186_defconfig           | 112 +++++++++
+> > > >    arch/mips/include/asm/mach-rtl8186/rtl8186.h  |  37 +++
+> > > >    arch/mips/rtl8186/Makefile                    |   2 +
+> > > >    arch/mips/rtl8186/Platform                    |   7 +
+> > > >    arch/mips/rtl8186/irq.c                       |   8 +
+> > > >    arch/mips/rtl8186/prom.c                      |  15 ++
+> > > >    arch/mips/rtl8186/setup.c                     |  80 +++++++
+> > > >    arch/mips/rtl8186/time.c                      |  10 +
+> > > >    drivers/clocksource/Kconfig                   |   9 +
+> > > >    drivers/clocksource/Makefile                  |   1 +
+> > > >    drivers/clocksource/timer-rtl8186.c           | 220
+> > > > ++++++++++++++++++
+> > > >    drivers/irqchip/Kconfig                       |   5 +
+> > > >    drivers/irqchip/Makefile                      |   1 +
+> > > >    drivers/irqchip/irq-rtl8186.c                 | 107 +++++++++
+> > > 
+> > > Could you please split this into at least three patches (arch code,
+> > > clocksource, irqchip) to ease the review?
+> > > 
+> > > Thanks,
+> > > 
+> > > 	M.
+> > 
+> > Currently the RTL8186_IRQ and the RTL8186_TIMER Kconfig entries depend
+> > on
+> > MACH_RTL8186 (which is added in the MIPS portion of the same patch).
+> > Also, MACH_RTL8186 in MIPS selects these two options.
+> > 
+> > What is the best way to split that?
+> 
+> It is absolutely fine to have something depending on a non-selectable 
+> config option, which would allow you to split things up as finely as you 
+> want. Just have the patch enabling the config option last.
+> 
+> Thanks,
+> 
+> 	M.
 
---xcrcdsgrqxxzw7hb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Good to know, thanks.
+I'll send a v2 soon.
 
-Hi Andrew,
-
-On Fri, Sep 14, 2018 at 06:58:24PM +0200, Andrew Lunn wrote:
-> > Confirmed by HW engineers, it only impacts PHYs in the same package.
->=20
-> Hi Quentin
->=20
-> Thanks for checking. As you said, it would be counter intuitive,
-> meaning a lot of confusion if it actually did happen.
->=20
-> Maybe you can add "in package" before broadcast in the commit message
-> and the code comments.
->=20
-
-ACK.
-
-Quentin
-
---xcrcdsgrqxxzw7hb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux5e8ACgkQhLiadT7g
-8aPaIw//TcWacMbWZ0UqdM1MMbe4582w/miWjfQ/2T7MUp96YNokTw8cbTU8iINX
-8YXrtk9pxWWN2MJ+CsVDWZmuR/ZoU/S4DOTMjE7dQivsa+5X0r4nRpbFbJiehf13
-cqhW24e+lek6CgNZDYJdFH7RDCmEWiyeI3wIVkgCD/8QSf2hIikDfPstExWFKprn
-0FQfyhWRCZxktjNwCrBua/xT0nciGfgq+jwW8HMQQdWPZxJrVn19F33xKVkM/iDC
-kh3P5sCnhNGiFfZqBxH8bJ9qQwrdf85o6sbnbe2LoaIphmaW0B5HraVFVVOXisyg
-TqHxCDyXkYDFEK1/DFet93Bru/AlO1nksRubei55WNNTpbaOvyIRDpYsAo28Jxkq
-F9vbBnCyaBzfh6VOlCXmkiN8M54S1kOjtORalrGMvFX9Vhxn2/f+p520Kuo+gMeS
-X/XEZu+CDcc+lJj5T/wGRKhAkM9yHlTWNP6jWd551LT2UqmQisJggZ1U3o34IqFY
-Xy++sZoPczyuLK1TvmdBTbBahO/0AvWKnRpe5UnedvT5hL2VenNcjvxrDwJD+vZZ
-sjpGBVXsjzVShWzVUt1IaDYhxP0W2f1QKbd3N+9gT2V4KqObRcEX9O1+JWiV0tSN
-hiDe3Tr1GO/caHJLpZJvEmzxCx/0kTPwS/xHZjFgMwNHZzX1kM0=
-=bgXb
------END PGP SIGNATURE-----
-
---xcrcdsgrqxxzw7hb--
+Yasha
