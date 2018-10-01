@@ -1,250 +1,108 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 27/27] mmc: mmci: add stm32 sdmmc variant
-Date: Mon, 1 Oct 2018 11:31:44 +0200
-Message-ID: <CAPDyKFqGY2o7TcUVW9bCZM9-4xtyJJ4PaCtWWQvV3VMd+cK99A@mail.gmail.com>
-References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com> <1537523181-14578-28-git-send-email-ludovic.Barre@st.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v16 1/5] iommu/arm-smmu: Add
+ pm_runtime/sleep ops
+Date: Mon, 1 Oct 2018 11:38:02 +0200
+Message-ID: <CAPDyKFrCWaeDLbmbrRb23V_mRk8doBjM3u2X9tm0XNXm=-n5vA@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-2-vivek.gautam@codeaurora.org>
+ <CAPDyKFohpvEMfDoDooYEyxPMeQ+9dU71qz7ZAZxQ1rzyW-w8iA@mail.gmail.com>
+ <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1537523181-14578-28-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
+ Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 September 2018 at 11:46, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> This patch adds a stm32 sdmmc variant, rev 1.1.
-> Introduces a new Manufacturer id "0x53, ascii 'S' to define
-> new stm32 sdmmc family with clean range of amba
-> revision/configurations bits (corresponding to sdmmc_ver
-> register with major/minor fields).
->
-> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> ---
->  drivers/mmc/host/Kconfig            |  10 ++
->  drivers/mmc/host/Makefile           |   1 +
->  drivers/mmc/host/mmci.c             |  25 ++++
->  drivers/mmc/host/mmci.h             |   5 +
->  drivers/mmc/host/mmci_stm32_sdmmc.c | 282 ++++++++++++++++++++++++++++++++++++
->  5 files changed, 323 insertions(+)
->  create mode 100644 drivers/mmc/host/mmci_stm32_sdmmc.c
->
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 5ab2eb0..e59671a 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -34,6 +34,16 @@ config MMC_QCOM_DML
->
->           if unsure, say N.
->
-> +config MMC_STM32_SDMMC
-> +       bool "STMicroelectronics STM32 SDMMC Controller"
-> +       depends on MMC_ARMMMCI
-> +       default y
-> +       help
-> +         This selects the STMicroelectronics STM32 SDMMC host controller.
-> +         If you have a STM32 sdmmc host with internal dma say Y or M here.
-> +
-> +         If unsure, say N.
-> +
->  config MMC_PXA
->         tristate "Intel PXA25x/26x/27x Multimedia Card Interface support"
->         depends on ARCH_PXA
-> diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
-> index ce8398e..f14410f 100644
-> --- a/drivers/mmc/host/Makefile
-> +++ b/drivers/mmc/host/Makefile
-> @@ -6,6 +6,7 @@
->  obj-$(CONFIG_MMC_ARMMMCI) += armmmci.o
->  armmmci-y := mmci.o
->  armmmci-$(CONFIG_MMC_QCOM_DML) += mmci_qcom_dml.o
-> +armmmci-$(CONFIG_MMC_STM32_SDMMC) += mmci_stm32_sdmmc.o
->  obj-$(CONFIG_MMC_PXA)          += pxamci.o
->  obj-$(CONFIG_MMC_MXC)          += mxcmmc.o
->  obj-$(CONFIG_MMC_MXS)          += mxs-mmc.o
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 4057456..ca2e483 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -254,6 +254,26 @@ static struct variant_data variant_stm32 = {
->         .init                   = mmci_variant_init,
->  };
->
-> +static struct variant_data variant_stm32_sdmmc = {
-> +       .fifosize               = 16 * 4,
-> +       .fifohalfsize           = 8 * 4,
-> +       .f_max                  = 208000000,
-> +       .stm32_clkdiv           = true,
-> +       .reset                  = true,
-> +       .cmdreg_cpsm_enable     = MCI_CPSM_STM32_ENABLE,
-> +       .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
-> +       .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
-> +       .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
-> +       .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
-> +       .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
-> +       .datactrl_first         = true,
-> +       .datacnt_useless        = true,
-> +       .datalength_bits        = 25,
-> +       .datactrl_blocksz       = 14,
-> +       .stm32_idmabsize_mask   = GENMASK(12, 5),
-> +       .init                   = sdmmc_variant_init,
-> +};
-> +
->  static struct variant_data variant_qcom = {
->         .fifosize               = 16 * 4,
->         .fifohalfsize           = 8 * 4,
-> @@ -2180,6 +2200,11 @@ static const struct amba_id mmci_ids[] = {
->                 .mask   = 0x00ffffff,
->                 .data   = &variant_stm32,
->         },
-> +       {
-> +               .id     = 0x10153180,
-> +               .mask   = 0xf0ffffff,
-> +               .data   = &variant_stm32_sdmmc,
-> +       },
->         /* Qualcomm variants */
->         {
->                 .id     = 0x00051180,
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 017d9b8..581b9b1 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -305,6 +305,8 @@ struct mmci_host;
->   *            register.
->   * @opendrain: bitmask identifying the OPENDRAIN bit inside MMCIPOWER register
->   * @reset: true if variant has need reset signal.
-> + * @dma_lli: true if variant has dma link list feature.
-> + * @stm32_idmabsize_mask: stm32 sdmmc idma buffer size.
->   */
->  struct variant_data {
->         unsigned int            clkreg;
-> @@ -348,6 +350,8 @@ struct variant_data {
->         unsigned int            irq_pio_mask;
->         u32                     start_err;
->         u32                     opendrain;
-> +       bool                    dma_lli;
-> +       u32                     stm32_idmabsize_mask;
-
-What are these?
-
->         void (*init)(struct mmci_host *host);
->  };
->
-> @@ -421,6 +425,7 @@ void mmci_write_clkreg(struct mmci_host *host, u32 clk);
->  void mmci_write_pwrreg(struct mmci_host *host, u32 pwr);
->
->  void mmci_variant_init(struct mmci_host *host);
-> +void sdmmc_variant_init(struct mmci_host *host);
->
->  int mmci_dmae_prep_data(struct mmci_host *host, struct mmc_data *data,
->                         bool next);
-> diff --git a/drivers/mmc/host/mmci_stm32_sdmmc.c b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> new file mode 100644
-> index 0000000..cfbfc6f
-> --- /dev/null
-> +++ b/drivers/mmc/host/mmci_stm32_sdmmc.c
-> @@ -0,0 +1,282 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-> + * Author: Ludovic.barre@st.com for STMicroelectronics.
-> + */
-> +#include <linux/delay.h>
-> +#include <linux/dma-mapping.h>
-> +#include <linux/mmc/host.h>
-> +#include <linux/mmc/card.h>
-> +#include <linux/reset.h>
-> +#include <linux/scatterlist.h>
-> +#include "mmci.h"
-> +
-> +#define SDMMC_LLI_BUF_LEN      PAGE_SIZE
-> +#define SDMMC_IDMA_BURST       BIT(MMCI_STM32_IDMABNDT_SHIFT)
-> +
-> +struct sdmmc_lli_desc {
-> +       u32 idmalar;
-> +       u32 idmabase;
-> +       u32 idmasize;
-> +};
-> +
-> +struct sdmmc_priv {
-> +       dma_addr_t sg_dma;
-> +       void *sg_cpu;
-> +};
-> +
-> +int sdmmc_idma_validate_data(struct mmci_host *host,
-> +                            struct mmc_data *data)
-> +{
-> +       struct scatterlist *sg;
-> +       int i;
-> +
-> +       /*
-> +        * idma has constraints on idmabase & idmasize for each element
-> +        * excepted the last element which has no constraint on idmasize
-> +        */
-> +       for_each_sg(data->sg, sg, data->sg_len - 1, i) {
-> +               if (!IS_ALIGNED(sg_dma_address(data->sg), sizeof(u32)) ||
-> +                   !IS_ALIGNED(sg_dma_len(data->sg), SDMMC_IDMA_BURST)) {
-> +                       dev_err(mmc_dev(host->mmc),
-> +                               "unaligned scatterlist: ofst:%x length:%d\n",
-> +                               data->sg->offset, data->sg->length);
-> +                       return -EINVAL;
-> +               }
-> +       }
-> +
-> +       if (!IS_ALIGNED(sg_dma_address(data->sg), sizeof(u32))) {
-> +               dev_err(mmc_dev(host->mmc),
-> +                       "unaligned last scatterlist: ofst:%x length:%d\n",
-> +                       data->sg->offset, data->sg->length);
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int _sdmmc_idma_prep_data(struct mmci_host *host,
-> +                                struct mmc_data *data)
-> +{
-> +       int n_elem;
-> +
-> +       n_elem = dma_map_sg(mmc_dev(host->mmc),
-> +                           data->sg,
-> +                           data->sg_len,
-> +                           mmc_get_dma_dir(data));
-> +
-> +       if (!n_elem) {
-> +               dev_err(mmc_dev(host->mmc), "dma_map_sg failed\n");
-> +               return -EINVAL;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int sdmmc_idma_prep_data(struct mmci_host *host,
-> +                               struct mmc_data *data, bool next)
-> +{
-> +       /* Check if job is already prepared. */
-> +       if (!next && data->host_cookie == host->next_cookie)
-> +               return 0;
-> +
-> +       return _sdmmc_idma_prep_data(host, data);
-> +}
-> +
-> +static void sdmmc_idma_unprep_data(struct mmci_host *host,
-> +                                  struct mmc_data *data, int err)
-> +{
-> +       dma_unmap_sg(mmc_dev(host->mmc), data->sg, data->sg_len,
-> +                    mmc_get_dma_dir(data));
-> +}
-
-The sdmmc_idma_prep_data() and sdmmc_idma_unprep_data(), seems very
-similar to what the mmci core driver needs to do in this regards.
-
-Can we perhaps avoid adding these callbacks altogether, but rather
-rely on common code in the mmci core driver?
-
-[...]
-
-Kind regards
-Uffe
+T24gMSBPY3RvYmVyIDIwMTggYXQgMDc6NDksIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNv
+ZGVhdXJvcmEub3JnPiB3cm90ZToKPiBISSBVbGYsCj4KPiBPbiBGcmksIFNlcCAyOCwgMjAxOCBh
+dCA1OjMwIFBNIFVsZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPiB3cm90ZToKPj4K
+Pj4gT24gMzAgQXVndXN0IDIwMTggYXQgMTY6NDUsIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFt
+QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPj4gPiBGcm9tOiBTcmljaGFyYW4gUiA8c3JpY2hhcmFu
+QGNvZGVhdXJvcmEub3JnPgo+PiA+Cj4+ID4gVGhlIHNtbXUgbmVlZHMgdG8gYmUgZnVuY3Rpb25h
+bCBvbmx5IHdoZW4gdGhlIHJlc3BlY3RpdmUKPj4gPiBtYXN0ZXIncyB1c2luZyBpdCBhcmUgYWN0
+aXZlLiBUaGUgZGV2aWNlX2xpbmsgZmVhdHVyZQo+PiA+IGhlbHBzIHRvIHRyYWNrIHN1Y2ggZnVu
+Y3Rpb25hbCBkZXBlbmRlbmNpZXMsIHNvIHRoYXQgdGhlCj4+ID4gaW9tbXUgZ2V0cyBwb3dlcmVk
+IHdoZW4gdGhlIG1hc3RlciBkZXZpY2UgZW5hYmxlcyBpdHNlbGYKPj4gPiB1c2luZyBwbV9ydW50
+aW1lLiBTbyBieSBhZGFwdGluZyB0aGUgc21tdSBkcml2ZXIgZm9yCj4+ID4gcnVudGltZSBwbSwg
+YWJvdmUgc2FpZCBkZXBlbmRlbmN5IGNhbiBiZSBhZGRyZXNzZWQuCj4+ID4KPj4gPiBUaGlzIHBh
+dGNoIGFkZHMgdGhlIHBtIHJ1bnRpbWUvc2xlZXAgY2FsbGJhY2tzIHRvIHRoZQo+PiA+IGRyaXZl
+ciBhbmQgYWxzbyB0aGUgZnVuY3Rpb25zIHRvIHBhcnNlIHRoZSBzbW11IGNsb2Nrcwo+PiA+IGZy
+b20gRFQgYW5kIGVuYWJsZSB0aGVtIGluIHJlc3VtZS9zdXNwZW5kLgo+PiA+Cj4+ID4gQWxzbywg
+d2hpbGUgd2UgZW5hYmxlIHRoZSBydW50aW1lIHBtIGFkZCBhIHBtIHNsZWVwIHN1c3BlbmQKPj4g
+PiBjYWxsYmFjayB0aGF0IHB1c2hlcyBkZXZpY2VzIHRvIGxvdyBwb3dlciBzdGF0ZSBieSB0dXJu
+aW5nCj4+ID4gdGhlIGNsb2NrcyBvZmYgaW4gYSBzeXN0ZW0gc2xlZXAuCj4+ID4gQWxzbyBhZGQg
+Y29ycmVzcG9uZGluZyBjbG9jayBlbmFibGUgcGF0aCBpbiByZXN1bWUgY2FsbGJhY2suCj4+ID4K
+Pj4gPiBTaWduZWQtb2ZmLWJ5OiBTcmljaGFyYW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3Jn
+Pgo+PiA+IFNpZ25lZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5v
+cmc+Cj4+ID4gW3ZpdmVrOiByZXdvcmsgZm9yIGNsb2NrIGFuZCBwbSBvcHNdCj4+ID4gU2lnbmVk
+LW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4+ID4g
+UmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4+ID4gVGVzdGVk
+LWJ5OiBTcmluaXZhcyBLYW5kYWdhdGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+
+Cj4+ID4gLS0tCj4+ID4gIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDc3ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+PiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgNzQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPj4gPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9pb21tdS9hcm0tc21tdS5jIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+Cj4+IFsu
+Li5dCj4+Cj4+ID4gLXN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcG1fcmVzdW1l
+KHN0cnVjdCBkZXZpY2UgKmRldikKPj4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBhcm1f
+c21tdV9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gIHsKPj4gPiAgICAg
+ICAgIHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsK
+Pj4gPiArICAgICAgIGludCByZXQ7Cj4+ID4gKwo+PiA+ICsgICAgICAgcmV0ID0gY2xrX2J1bGtf
+ZW5hYmxlKHNtbXUtPm51bV9jbGtzLCBzbW11LT5jbGtzKTsKPj4gPiArICAgICAgIGlmIChyZXQp
+Cj4+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+ID4KPj4gPiAgICAgICAgIGFybV9z
+bW11X2RldmljZV9yZXNldChzbW11KTsKPj4gPiArCj4+ID4gICAgICAgICByZXR1cm4gMDsKPj4g
+PiAgfQo+PiA+Cj4+ID4gLXN0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhhcm1fc21tdV9wbV9vcHMs
+IE5VTEwsIGFybV9zbW11X3BtX3Jlc3VtZSk7Cj4+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVz
+ZWQgYXJtX3NtbXVfcnVudGltZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPj4gPiArewo+
+PiA+ICsgICAgICAgc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSA9IGRldl9nZXRfZHJ2ZGF0
+YShkZXYpOwo+PiA+ICsKPj4gPiArICAgICAgIGNsa19idWxrX2Rpc2FibGUoc21tdS0+bnVtX2Ns
+a3MsIHNtbXUtPmNsa3MpOwo+PiA+ICsKPj4gPiArICAgICAgIHJldHVybiAwOwo+PiA+ICt9Cj4+
+ID4gKwo+PiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3BtX3Jlc3VtZShz
+dHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gK3sKPj4gPiArICAgICAgIGlmIChwbV9ydW50aW1lX3N1
+c3BlbmRlZChkZXYpKQo+PiA+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4KPj4gTG9va3Mg
+bGlrZSB5b3Ugc2hvdWxkIGJlIGFibGUgdXNlIHBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKCksIGlu
+c3RlYWQKPj4gb2YgdXNpbmcgdGhpcyBsb2NhbCB0cmljay4gVW5sZXNzIEkgYW0gbWlzc2luZyBz
+b21ldGhpbmcsIG9mIGNvdXJzZS4KPj4KPj4gSW4gb3RoZXIgd29yZHMsIGp1c3QgYXNzaWduIHRo
+ZSBzeXN0ZW0gc2xlZXAgY2FsbGJhY2tzIGZvciByZXN1bWUsIHRvCj4+IHBtX3J1bnRpbWVfZm9y
+Y2VfcmVzdW1lKCkuIEFuZCB2aWNlIHZlcnNlIGZvciB0aGUgc3lzdGVtIHN1c3BlbmQKPj4gY2Fs
+bGJhY2tzLCBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKSwgb2YgY291cnNlLgo+Cj4gVGhhbmtz
+IGZvciB0aGUgcmV2aWV3LiBJIHdpbGwgY2hhbmdlIHRoaXMgYXMgc3VnZ2VzdGVkLgo+Cj4+Cj4+
+ID4gKwo+PiA+ICsgICAgICAgcmV0dXJuIGFybV9zbW11X3J1bnRpbWVfcmVzdW1lKGRldik7Cj4+
+ID4gK30KPj4gPiArCj4+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcG1f
+c3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gK3sKPj4gPiArICAgICAgIGlmIChwbV9y
+dW50aW1lX3N1c3BlbmRlZChkZXYpKQo+PiA+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4g
+PiArCj4+ID4gKyAgICAgICByZXR1cm4gYXJtX3NtbXVfcnVudGltZV9zdXNwZW5kKGRldik7Cj4+
+ID4gK30KPj4gPiArCj4+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBhcm1fc21t
+dV9wbV9vcHMgPSB7Cj4+ID4gKyAgICAgICBTRVRfU1lTVEVNX1NMRUVQX1BNX09QUyhhcm1fc21t
+dV9wbV9zdXNwZW5kLCBhcm1fc21tdV9wbV9yZXN1bWUpCj4+Cj4+IEkgYW0gd29uZGVyaW5nIGlm
+IHVzaW5nIHRoZSAtPnN1c3BlbmR8cmVzdW1lKCkgY2FsbGJhY2sgaXMgcmVhbGx5Cj4+ICJsYXRl
+L2Vhcmx5IiBlbm91Z2ggaW4gdGhlIGRldmljZSBzdXNwZW5kIHBoYXNlPwo+Pgo+PiBPdGhlcnMg
+aXMgdXNpbmcgdGhlIG5vaXJxIHBoYXNlIGFuZCBzb21lIGlzIGV2ZW4gdXNpbmcgdGhlIHN5c2Nv
+cmUKPj4gb3BzLiBPZiBjb3Vyc2UgaXQgZGVwZW5kcyBvbiB0aGUgYmVoYXZpb3Igb2YgdGhlIGNv
+bnN1bWVycyBvZiBpb21tdQo+PiBkZXZpY2UsIGFuZCBJIGd1ZXNzIG5vdCBldmVyeW9uZSBpcyB1
+c2luZyBkZXZpY2UgbGlua3MsIHdoaWNoIGZvciBzdXJlCj4+IGltcHJvdmVzIHRoaW5ncyBpbiB0
+aGlzIHJlZ2FyZHMgYXMgd2VsbC4KPgo+IFdlbGwgeWVzLCBhcyB5b3Ugc2FpZCB0aGUgZGV2aWNl
+IGxpbmtzIHNob3VsZCBiZSBhYmxlIHRvIHRha2UgY2FyZSBvZgo+IG1haW50YWluaW5nIHRoZSBj
+b3JyZWN0IHN1c3BlbmQvcmVzdW1lIG9yZGVyIG9mIHNtbXUgYW5kIGl0cyBjbGllbnRzLAo+IG9y
+IGFtIEkgbWlzc2luZyB5b3VyIHBvaW50IGhlcmU/Cj4gTGV0IG1lIGtub3cgYW5kIEkgd2lsbCBi
+ZSBoYXBweSB0byBpbmNvcnBvcmF0ZSBhbnkgc3VnZ2VzdGlvbnMuCj4gVGhhbmtzCgpJZiBpdCB3
+b3JrcyBmaW5lLCB0aGVuIHlvdSBtYXkga2VlcCBpdCBhcyBpcy4KCkp1c3Qgd2FudGVkIHRvIHBv
+aW50IG91dCB0aGF0IGlmIGFueSBjb25zdW1lcnMgcmVsaWVzIG9uIHRoZSBpb21tdSB0bwpvcGVy
+YXRpb25hbCB0byBzYXkgdW50aWwgdGhlIHN1c3BlbmQtbGF0ZSBwaGFzZSwgdGhlbiB0aGlzIGRv
+ZXNuJ3QKcGxheS4gVGhlbiB5b3UgbmVlZCB0byBtb3ZlIHlvdXIgY2FsbGJhY2tzIHRvIHRoZSBj
+b3JyZXNwb25kaW5nIHNhbWUKcGhhc2UuCgpbLi4uXQoKS2luZCByZWdhcmRzClVmZmUKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
+bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
