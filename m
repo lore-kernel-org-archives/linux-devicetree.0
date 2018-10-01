@@ -1,54 +1,70 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v16 2/5] iommu/arm-smmu: Invoke pm_runtime
- during probe, add/remove device
-Date: Mon, 1 Oct 2018 13:58:55 +0100
-Message-ID: <20181001125854.GB31488@arm.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
- <20180830144541.17740-3-vivek.gautam@codeaurora.org>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Aspeed Video Engine
+ binding documentation
+Date: Mon, 1 Oct 2018 15:08:38 +0200
+Message-ID: <CACPK8Xd0MhrFQqiM=u-Rv5u7RJRo5R-pAejH4dmeTrYSWE0AZA@mail.gmail.com>
+References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com> <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20180830144541.17740-3-vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: eajames@linux.ibm.com
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, mchehab@kernel.org, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
-SGkgVml2ZWssCgpPbiBUaHUsIEF1ZyAzMCwgMjAxOCBhdCAwODoxNTozOFBNICswNTMwLCBWaXZl
-ayBHYXV0YW0gd3JvdGU6Cj4gRnJvbTogU3JpY2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3Jh
-Lm9yZz4KPiAKPiBUaGUgc21tdSBkZXZpY2UgcHJvYmUvcmVtb3ZlIGFuZCBhZGQvcmVtb3ZlIG1h
-c3RlciBkZXZpY2UgY2FsbGJhY2tzCj4gZ2V0cyBjYWxsZWQgd2hlbiB0aGUgc21tdSBpcyBub3Qg
-bGlua2VkIHRvIGl0cyBtYXN0ZXIsIHRoYXQgaXMgd2l0aG91dAo+IHRoZSBjb250ZXh0IG9mIHRo
-ZSBtYXN0ZXIgZGV2aWNlLiBTbyBjYWxsaW5nIHJ1bnRpbWUgYXBpcyBpbiB0aG9zZSBwbGFjZXMK
-PiBzZXBhcmF0ZWx5Lgo+IEdsb2JhbCBsb2NrcyBhcmUgYWxzbyBpbml0aWFsaXplZCBiZWZvcmUg
-ZW5hYmxpbmcgcnVudGltZSBwbSBhcyB0aGUKPiBydW50aW1lX3Jlc3VtZSgpIGNhbGxzIGRldmlj
-ZV9yZXNldCgpIHdoaWNoIGRvZXMgdGxiX3N5bmNfZ2xvYmFsKCkKPiB0aGF0IHVsdGltYXRlbHkg
-cmVxdWlyZXMgbG9ja3MgdG8gYmUgaW5pdGlhbGl6ZWQuCj4gCj4gU2lnbmVkLW9mZi1ieTogU3Jp
-Y2hhcmFuIFIgPHNyaWNoYXJhbkBjb2RlYXVyb3JhLm9yZz4KPiBbdml2ZWs6IENsZWFudXAgcG0g
-cnVudGltZSBjYWxsc10KPiBTaWduZWQtb2ZmLWJ5OiBWaXZlayBHYXV0YW0gPHZpdmVrLmdhdXRh
-bUBjb2RlYXVyb3JhLm9yZz4KPiBSZXZpZXdlZC1ieTogVG9tYXN6IEZpZ2EgPHRmaWdhQGNocm9t
-aXVtLm9yZz4KPiBUZXN0ZWQtYnk6IFNyaW5pdmFzIEthbmRhZ2F0bGEgPHNyaW5pdmFzLmthbmRh
-Z2F0bGFAbGluYXJvLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9pb21tdS9hcm0tc21tdS5jIHwgODkg
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tCj4gIDEgZmls
-ZSBjaGFuZ2VkLCA4MSBpbnNlcnRpb25zKCspLCA4IGRlbGV0aW9ucygtKQoKVGhpcyBkb2Vzbid0
-IGFwcGx5IG9uIG15IHRyZWVbMV0sIHBvc3NpYmx5IGJlY2F1c2UgSSd2ZSBnb3QgUm9iaW4ncyBu
-b24tc3RyaWN0CmludmFsaWRhdGlvbiBxdWV1ZWQgdGhlcmUuIEhvd2V2ZXIsIHRoYXQgZ290IG1l
-IHRoaW5raW5nIC0tIGhvdyBkb2VzIHRoaXMKd29yayBpbiBjb25qdW5jdGlvbiB3aXRoIHRoZSB0
-aW1lci1iYXNlZCBUTEIgaW52YWxpZGF0aW9uPyBEbyB3ZSBuZWVkIHRvCnJwbV97Z2V0LHB1dH0g
-YXJvdW5kIGZsdXNoX2lvdGxiX2FsbCgpPyBJZiBzbywgZG8gd2Ugc3RpbGwgbmVlZCB0aGUgY2Fs
-bHMKaW4gbWFwL3VubWFwIHdoZW4gbm9uLXN0cmljdCBtb2RlIGlzIGluIHVzZT8KCldpbGwKClsx
-XSBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC93aWxsL2xp
-bnV4LmdpdC9sb2cvP2g9Zm9yLWpvZXJnL2FybS1zbW11L3VwZGF0ZXMKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApG
-cmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Tue, 25 Sep 2018 at 21:27, Eddie James <eajames@linux.ibm.com> wrote:
+>
+> Document the bindings.
+>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+> new file mode 100644
+> index 0000000..f1af528
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
+> @@ -0,0 +1,26 @@
+> +* Device tree bindings for Aspeed Video Engine
+> +
+> +The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs can
+> +capture and compress video data from digital or analog sources.
+> +
+> +Required properties:
+> + - compatible:         "aspeed,ast2400-video-engine" or
+> +                       "aspeed,ast2500-video-engine"
+> + - reg:                        contains the offset and length of the VE memory region
+> + - clocks:             clock specifiers for the syscon clocks associated with
+> +                       the VE (ordering must match the clock-names property)
+> + - clock-names:                "vclk" and "eclk"
+> + - resets:             reset specifier for the syscon reset associaated with
+
+associated
+
+> +                       the VE
+> + - interrupts:         the interrupt associated with the VE on this platform
+> +
+> +Example:
+> +
+> +video-engine@1e700000 {
+> +    compatible = "aspeed,ast2500-video-engine";
+> +    reg = <0x1e700000 0x20000>;
+> +    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
+> +    clock-names = "vclk", "eclk";
+
+Did you end up sending the clock patches out?
+
+Cheers,
+
+Joel
+
+> +    resets = <&syscon ASPEED_RESET_VIDEO>;
+> +    interrupts = <7>;
+> +};
+> --
+> 1.8.3.1
+>
