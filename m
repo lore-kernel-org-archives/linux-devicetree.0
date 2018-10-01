@@ -1,181 +1,128 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v5 7/7] drm/rockchip: dsi: add dual mipi support
-Date: Mon, 01 Oct 2018 14:44:35 +0200
-Message-ID: <4791422.4bPGcUinJ3@phil>
-References: <20180821140515.22246-1-heiko@sntech.de> <2386821.27RX7ahLgN@phil>
- <20180921061119eucas1p1bf74e85e4319fcf8709a3f1403b984d1~WVXPnP6GN0305103051eucas1p18@eucas1p1.samsung.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next v3 07/11] dt-bindings: phy: add DT binding for
+ Microsemi Ocelot SerDes muxing
+Date: Mon, 1 Oct 2018 14:46:05 +0200
+Message-ID: <20181001124605.jxiechvp6ztvh77p@qschulz>
+References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
+ <f392dafca9165800439fc09cd7d16e6a9506d457.1536912834.git-series.quentin.schulz@bootlin.com>
+ <20180926213509.GA7454@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20180921061119eucas1p1bf74e85e4319fcf8709a3f1403b984d1~WVXPnP6GN0305103051eucas1p18@eucas1p1.samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, briannorris@chromium.org, hoegsberg@gmail.com, philippe.cornu@st.com, dri-devel@lists.freedesktop.org, yannick.fertre@st.com, linux-rockchip@lists.infradead.org, nickey.yang@rock-chips.com, robh+dt@kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, seanpaul@chromium.org, mka@chromium.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4hoevmel2quxjye3"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20180926213509.GA7454@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcnplagoKQW0gRnJlaXRhZywgMjEuIFNlcHRlbWJlciAyMDE4LCAwODoxMToxNiBDRVNU
-IHNjaHJpZWIgQW5kcnplaiBIYWpkYToKPiBPbiAyMC4wOS4yMDE4IDEzOjIwLCBIZWlrbyBTdHVl
-Ym5lciB3cm90ZToKPiA+IEhpIEFuZHJ6ZWosCj4gPgo+ID4gQW0gTW9udGFnLCAyNy4gQXVndXN0
-IDIwMTgsIDEzOjM0OjA3IENFU1Qgc2NocmllYiBBbmRyemVqIEhhamRhOgo+ID4+IE9uIDIxLjA4
-LjIwMTggMTY6MDUsIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+ID4+PiBBZGQgdGhlIFJvY2tjaGlw
-LXNlcGNpZmljIGR1YWwtZHNpIHNldHVwIGFuZCBob29rIGl0IGludG8gdGhlIFZPUCBhcyB3ZWxs
-Lgo+ID4+PiBBcyBkZXNjcmliZWQgaW4gdGhlIGdlbmVyYWwgZHVhbC1kc2kgZGV2aWNldHJlZSBi
-aW5kaW5nLCB0aGUgcGFuZWwgc2hvdWxkCj4gPj4+IGRlZmluZSB0d28gaW5wdXQgcG9ydHMgYW5k
-IHBvaW50IGVhY2ggb2YgdGhlbSB0byBvbmUgb2YgdGhlIHVzZWQgZHNpLQo+ID4+PiBjb250cm9s
-bGVycywgYXMgd2VsbCBhcyBkZWNsYXJlIG9uZSBvZiB0aGVtIGFzIGNsb2NrLW1hc3Rlci4KPiA+
-Pj4gVGhpcyBpcyB1c2VkIHRvIGRldGVybWluZSB0aGUgZHVhbC1kc2kgc3RhdGUgYW5kIGdldCBh
-Y2Nlc3MgdG8gYm90aAo+ID4+PiBjb250cm9sbGVyIGluc3RhbmNlcy4KPiA+Pj4KPiA+Pj4gU2ln
-bmVkLW9mZi1ieTogSGVpa28gU3R1ZWJuZXIgPGhlaWtvQHNudGVjaC5kZT4KPiA+Pj4gdjQ6Cj4g
-Pj4+ICAgYWRkIGNvbXBvbmVudCBkaXJlY3RseSBpbiBwcm9iZSB3aGVuIGFkZGluZyBlbXB0eSBk
-c2kgc2xhdmUgY29udHJvbGxlcgo+ID4+PiB2NToKPiA+Pj4gICB1c2UgZHJpdmVyLWludGVybmFs
-IG1lY2hhbmlzbSB0byBmaW5kIGR1YWwgZHNpIHNsYXZlCj4gPj4+IC0tLQo+ID4+PiAgLi4uL2dw
-dS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2ktcm9ja2NoaXAuYyAgIHwgMTA1ICsrKysrKysrKysr
-KysrKysrKwo+ID4+PiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tjaGlwX2RybV9kcnYu
-aCAgIHwgICAxICsKPiA+Pj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9yb2NrY2hpcF9kcm1f
-dm9wLmMgICB8ICAgMyArCj4gPj4+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvcm9ja2NoaXBf
-ZHJtX3ZvcC5oICAgfCAgIDQgKwo+ID4+PiAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL3JvY2tj
-aGlwX3ZvcF9yZWcuYyAgIHwgICAxICsKPiA+Pj4gIDUgZmlsZXMgY2hhbmdlZCwgMTE0IGluc2Vy
-dGlvbnMoKykKPiA+Pj4KPiA+Pj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9kdy1taXBpLWRzaS1yb2NrY2hpcC5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1p
-cGktZHNpLXJvY2tjaGlwLmMKPiA+Pj4gaW5kZXggYjNhYWU4NDM5YWEzLi5lNGFlZTJjY2JmNGQg
-MTAwNjQ0Cj4gPj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS1y
-b2NrY2hpcC5jCj4gPj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRz
-aS1yb2NrY2hpcC5jCj4gPj4+IEBAIC0yMTgsNiArMjE4LDEwIEBAIHN0cnVjdCBkd19taXBpX2Rz
-aV9yb2NrY2hpcCB7Cj4gPj4+ICAJc3RydWN0IGNsayAqZ3JmX2NsazsKPiA+Pj4gIAlzdHJ1Y3Qg
-Y2xrICpwaHlfY2ZnX2NsazsKPiA+Pj4gIAo+ID4+PiArCS8qIGR1YWwtY2hhbm5lbCAqLwo+ID4+
-PiArCWJvb2wgaXNfc2xhdmU7Cj4gPj4+ICsJc3RydWN0IGR3X21pcGlfZHNpX3JvY2tjaGlwICpz
-bGF2ZTsKPiA+Pj4gKwo+ID4+PiAgCXVuc2lnbmVkIGludCBsYW5lX21icHM7IC8qIHBlciBsYW5l
-ICovCj4gPj4+ICAJdTE2IGlucHV0X2RpdjsKPiA+Pj4gIAl1MTYgZmVlZGJhY2tfZGl2Owo+ID4+
-PiBAQCAtMjI2LDYgKzIzMCw3IEBAIHN0cnVjdCBkd19taXBpX2RzaV9yb2NrY2hpcCB7Cj4gPj4+
-ICAJc3RydWN0IGR3X21pcGlfZHNpICpkbWQ7Cj4gPj4+ICAJY29uc3Qgc3RydWN0IHJvY2tjaGlw
-X2R3X2RzaV9jaGlwX2RhdGEgKmNkYXRhOwo+ID4+PiAgCXN0cnVjdCBkd19taXBpX2RzaV9wbGF0
-X2RhdGEgcGRhdGE7Cj4gPj4+ICsJaW50IGRldmNudDsKPiA+Pj4gIH07Cj4gPj4+ICAKPiA+Pj4g
-IHN0cnVjdCBkcGh5X3BsbF9wYXJhbWV0ZXJfbWFwIHsKPiA+Pj4gQEAgLTYwMiw2ICs2MDcsOCBA
-QCBkd19taXBpX2RzaV9lbmNvZGVyX2F0b21pY19jaGVjayhzdHJ1Y3QgZHJtX2VuY29kZXIgKmVu
-Y29kZXIsCj4gPj4+ICAJfQo+ID4+PiAgCj4gPj4+ICAJcy0+b3V0cHV0X3R5cGUgPSBEUk1fTU9E
-RV9DT05ORUNUT1JfRFNJOwo+ID4+PiArCWlmIChkc2ktPnNsYXZlKQo+ID4+PiArCQlzLT5vdXRw
-dXRfZmxhZ3MgPSBST0NLQ0hJUF9PVVRQVVRfRFNJX0RVQUw7Cj4gPj4+ICAKPiA+Pj4gIAlyZXR1
-cm4gMDsKPiA+Pj4gIH0KPiA+Pj4gQEAgLTYxNyw2ICs2MjQsOCBAQCBzdGF0aWMgdm9pZCBkd19t
-aXBpX2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gPj4+
-ICAJCXJldHVybjsKPiA+Pj4gIAo+ID4+PiAgCXBtX3J1bnRpbWVfZ2V0X3N5bmMoZHNpLT5kZXYp
-Owo+ID4+PiArCWlmIChkc2ktPnNsYXZlKQo+ID4+PiArCQlwbV9ydW50aW1lX2dldF9zeW5jKGRz
-aS0+c2xhdmUtPmRldik7Cj4gPj4+ICAKPiA+Pj4gIAkvKgo+ID4+PiAgCSAqIEZvciB0aGUgUksz
-Mzk5LCB0aGUgY2xrIG9mIGdyZiBtdXN0IGJlIGVuYWJsZWQgYmVmb3JlIHdyaXRpbmcgZ3JmCj4g
-Pj4+IEBAIC02MzAsNiArNjM5LDggQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9l
-bmFibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ID4+PiAgCX0KPiA+Pj4gIAo+ID4+
-PiAgCWR3X21pcGlfZHNpX3JvY2tjaGlwX2NvbmZpZyhkc2ksIG11eCk7Cj4gPj4+ICsJaWYgKGRz
-aS0+c2xhdmUpCj4gPj4+ICsJCWR3X21pcGlfZHNpX3JvY2tjaGlwX2NvbmZpZyhkc2ktPnNsYXZl
-LCBtdXgpOwo+ID4+PiAgCj4gPj4+ICAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+Z3JmX2Ns
-ayk7Cj4gPj4+ICB9Cj4gPj4+IEBAIC02MzgsNiArNjQ5LDggQEAgc3RhdGljIHZvaWQgZHdfbWlw
-aV9kc2lfZW5jb2Rlcl9kaXNhYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiA+Pj4g
-IHsKPiA+Pj4gIAlzdHJ1Y3QgZHdfbWlwaV9kc2lfcm9ja2NoaXAgKmRzaSA9IHRvX2RzaShlbmNv
-ZGVyKTsKPiA+Pj4gIAo+ID4+PiArCWlmIChkc2ktPnNsYXZlKQo+ID4+PiArCQlwbV9ydW50aW1l
-X3B1dChkc2ktPnNsYXZlLT5kZXYpOwo+ID4+PiAgCXBtX3J1bnRpbWVfcHV0KGRzaS0+ZGV2KTsK
-PiA+Pj4gIH0KPiA+Pj4gIAo+ID4+PiBAQCAtNjczLDE0ICs2ODYsNzYgQEAgc3RhdGljIGludCBy
-b2NrY2hpcF9kc2lfZHJtX2NyZWF0ZV9lbmNvZGVyKHN0cnVjdCBkd19taXBpX2RzaV9yb2NrY2hp
-cCAqZHNpLAo+ID4+PiAgCXJldHVybiAwOwo+ID4+PiAgfQo+ID4+PiAgCj4gPj4+ICtzdGF0aWMg
-aW50IGR3X21pcGlfZHNpX3JvY2tjaGlwX21hdGNoX3NlY29uZChzdHJ1Y3QgZGV2aWNlICpkZXYs
-IHZvaWQgKmRhdGEpCj4gPj4+ICt7Cj4gPj4+ICsJc3RydWN0IGR3X21pcGlfZHNpX3JvY2tjaGlw
-ICpkc2kgPSBkYXRhOwo+ID4+PiArCXN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UxLCAqYnJpZGdl
-MjsKPiA+Pj4gKwlzdHJ1Y3QgZHJtX3BhbmVsICpwYW5lbDEsICpwYW5lbDI7Cj4gPj4+ICsJaW50
-IHJldDsKPiA+Pj4gKwo+ID4+PiArCWlmIChkc2ktPmRldi0+b2Zfbm9kZSA9PSBkZXYtPm9mX25v
-ZGUpCj4gPj4+ICsJCXJldHVybiAwOwo+ID4+PiArCj4gPj4+ICsJcmV0ID0gZHJtX29mX2ZpbmRf
-cGFuZWxfb3JfYnJpZGdlKGRzaS0+ZGV2LT5vZl9ub2RlLCAxLCAwLAo+ID4+PiArCQkJCQkgICZw
-YW5lbDEsICZicmlkZ2UxKTsKPiA+Pj4gKwlpZiAocmV0KQo+ID4+PiArCQlyZXR1cm4gcmV0Owo+
-ID4+PiArCj4gPj4+ICsJcmV0ID0gZHJtX29mX2ZpbmRfcGFuZWxfb3JfYnJpZGdlKGRldi0+b2Zf
-bm9kZSwgMSwgMCwKPiA+Pj4gKwkJCQkJICAmcGFuZWwyLCAmYnJpZGdlMik7Cj4gPj4+ICsJaWYg
-KHJldCkKPiA+Pj4gKwkJcmV0dXJuIHJldDsKPiA+Pj4gKwo+ID4+PiArCXJldHVybiAocGFuZWwx
-ID09IHBhbmVsMikgJiYgKGJyaWRnZTEgPT0gYnJpZGdlMik7Cj4gPj4+ICt9Cj4gPj4+ICsKPiA+
-Pj4gIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfcm9ja2NoaXBfYmluZChzdHJ1Y3QgZGV2aWNlICpk
-ZXYsCj4gPj4+ICAJCQkJICAgICBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4gPj4+ICAJCQkJICAg
-ICB2b2lkICpkYXRhKQo+ID4+PiAgewo+ID4+PiAgCXN0cnVjdCBkd19taXBpX2RzaV9yb2NrY2hp
-cCAqZHNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPj4+ICAJc3RydWN0IGRybV9kZXZpY2Ug
-KmRybV9kZXYgPSBkYXRhOwo+ID4+PiArCXN0cnVjdCBkZXZpY2UgKnNlY29uZDsKPiA+Pj4gKwli
-b29sIG1hc3RlcjEsIG1hc3RlcjI7Cj4gPj4+ICAJaW50IHJldDsKPiA+Pj4gIAo+ID4+PiArCXNl
-Y29uZCA9IGRyaXZlcl9maW5kX2RldmljZShkc2ktPmRldi0+ZHJpdmVyLCBOVUxMLCBkc2ksCj4g
-Pj4+ICsJCQkJCWR3X21pcGlfZHNpX3JvY2tjaGlwX21hdGNoX3NlY29uZCk7Cj4gPj4gVGhpcyBm
-dW5jdGlvbiBwZXJmb3JtcyBnZXRfZGV2aWNlIG9uIHRoZSBtYXRjaGVkIGRldmljZSwgc28geW91
-IHNob3VsZAo+ID4+IHByb2JhYmx5IGNhbGwgc29tZXdoZXJlIHB1dF9kZXZpY2UgdG8gbWFrZSB0
-aGUgY291bnRlciBiYWxhbmNlZC4KPiA+PiBJIGhvcGUgc2Vjb25kIGRldmljZSBpcyBzb21laG93
-IGd1YXJkZWQgYnkgY29tcG9uZW50IGZyYW1ld29yayBmcm9tCj4gPj4gYmVpbmcgdW5ib3VuZCBp
-biB1bmV4cGVjdGVkIG1vbWVudHMgKGllLiB3aGVuIGluIHVzZSBieSBtYXN0ZXIpLgo+ID4gVGhh
-bmtzIGZvciB0aGF0IGNhdGNoLCBJJ2xsIGFkZCB0aGUgcHV0X2RldmljZS4KPiA+Cj4gPgo+ID4+
-PiArCWlmIChJU19FUlIoc2Vjb25kKSkKPiA+Pj4gKwkJcmV0dXJuIFBUUl9FUlIoc2Vjb25kKTsK
-PiA+Pj4gKwo+ID4+PiArCWlmIChzZWNvbmQpIHsKPiA+Pj4gKwkJbWFzdGVyMSA9IG9mX3Byb3Bl
-cnR5X3JlYWRfYm9vbChkc2ktPmRldi0+b2Zfbm9kZSwKPiA+Pj4gKwkJCQkJCSJjbG9jay1tYXN0
-ZXIiKTsKPiA+Pj4gKwkJbWFzdGVyMiA9IG9mX3Byb3BlcnR5X3JlYWRfYm9vbChzZWNvbmQtPm9m
-X25vZGUsCj4gPj4+ICsJCQkJCQkiY2xvY2stbWFzdGVyIik7Cj4gPj4+ICsKPiA+Pj4gKwkJaWYg
-KG1hc3RlcjEgJiYgbWFzdGVyMikgewo+ID4+PiArCQkJRFJNX0RFVl9FUlJPUihkc2ktPmRldiwg
-Im9ubHkgb25lIGNsb2NrLW1hc3RlciBhbGxvd2VkXG4iKTsKPiA+Pj4gKwkJCXJldHVybiAtRUlO
-VkFMOwo+ID4+PiArCQl9Cj4gPj4+ICsKPiA+Pj4gKwkJaWYgKCFtYXN0ZXIxICYmICFtYXN0ZXIy
-KSB7Cj4gPj4+ICsJCQlEUk1fREVWX0VSUk9SKGRzaS0+ZGV2LCAibm8gY2xvY2stbWFzdGVyIGRl
-ZmluZWRcbiIpOwo+ID4+PiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gPj4+ICsJCX0KPiA+Pj4gKwo+
-ID4+PiArCQkvKiB3ZSBhcmUgdGhlIHNsYXZlIGluIGR1YWwtRFNJICovCj4gPj4+ICsJCWlmICgh
-bWFzdGVyMSkgewo+ID4+PiArCQkJZHNpLT5pc19zbGF2ZSA9IHRydWU7Cj4gPj4+ICsJCQlyZXR1
-cm4gMDsKPiA+Pj4gKwkJfQo+ID4+PiArCj4gPj4+ICsJCWRzaS0+c2xhdmUgPSBkZXZfZ2V0X2Ry
-dmRhdGEoc2Vjb25kKTsKPiA+Pj4gKwkJaWYgKCFkc2ktPnNsYXZlKSB7Cj4gPj4+ICsJCQlEUk1f
-REVWX0VSUk9SKGRldiwgImNvdWxkIG5vdCBnZXQgc2xhdmVzIGRhdGFcbiIpOwo+ID4+PiArCQkJ
-cmV0dXJuIC1FTk9ERVY7Cj4gPj4+ICsJCX0KPiA+Pj4gKwo+ID4+PiArCQlkc2ktPnNsYXZlLT5p
-c19zbGF2ZSA9IHRydWU7Cj4gPj4+ICsJCWR3X21pcGlfZHNpX3NldF9zbGF2ZShkc2ktPmRtZCwg
-ZHNpLT5zbGF2ZS0+ZG1kKTsKPiA+Pj4gKwl9Cj4gPj4+ICsKPiA+Pj4gIAlyZXQgPSBjbGtfcHJl
-cGFyZV9lbmFibGUoZHNpLT5wbGxyZWZfY2xrKTsKPiA+Pj4gIAlpZiAocmV0KSB7Cj4gPj4+ICAJ
-CURSTV9ERVZfRVJST1IoZGV2LCAiRmFpbGVkIHRvIGVuYWJsZSBwbGxyZWZfY2xrOiAlZFxuIiwg
-cmV0KTsKPiA+Pj4gQEAgLTcwOCw2ICs3ODMsOSBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9y
-b2NrY2hpcF91bmJpbmQoc3RydWN0IGRldmljZSAqZGV2LAo+ID4+PiAgewo+ID4+PiAgCXN0cnVj
-dCBkd19taXBpX2RzaV9yb2NrY2hpcCAqZHNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPj4+
-ICAKPiA+Pj4gKwlpZiAoZHNpLT5pc19zbGF2ZSkKPiA+Pj4gKwkJcmV0dXJuOwo+ID4+PiArCj4g
-Pj4+ICAJZHdfbWlwaV9kc2lfdW5iaW5kKGRzaS0+ZG1kKTsKPiA+Pj4gIAo+ID4+PiAgCWNsa19k
-aXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbHJlZl9jbGspOwo+ID4+PiBAQCAtNzQ5LDYgKzgyNywx
-NCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGR3X21pcGlfZHNpX2hvc3Rfb3BzIGR3X21pcGlfZHNp
-X3JvY2tjaGlwX2hvc3Rfb3BzID0gewo+ID4+PiAgCS5kZXRhY2ggPSBkd19taXBpX2RzaV9yb2Nr
-Y2hpcF9ob3N0X2RldGFjaCwKPiA+Pj4gIH07Cj4gPj4+ICAKPiA+Pj4gK3N0YXRpYyBpbnQgZHdf
-bWlwaV9kc2lfcm9ja2NoaXBfY250X2RldihzdHJ1Y3QgZGV2aWNlICpkZXYsIHZvaWQgKmRhdGEp
-Cj4gPj4+ICt7Cj4gPj4+ICsJc3RydWN0IGR3X21pcGlfZHNpX3JvY2tjaGlwICpkc2kgPSBkYXRh
-Owo+ID4+PiArCj4gPj4+ICsJZHNpLT5kZXZjbnQrKzsKPiA+Pj4gKwlyZXR1cm4gMDsKPiA+Pj4g
-K30KPiA+Pj4gKwo+ID4+PiAgc3RhdGljIGludCBkd19taXBpX2RzaV9yb2NrY2hpcF9wcm9iZShz
-dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4+PiAgewo+ID4+PiAgCXN0cnVjdCBkZXZp
-Y2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4gPj4+IEBAIC04MzUsNiArOTIxLDIyIEBAIHN0YXRpYyBp
-bnQgZHdfbWlwaV9kc2lfcm9ja2NoaXBfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-dikKPiA+Pj4gIAkJZ290byBlcnJfY2xrZGlzYWJsZTsKPiA+Pj4gIAl9Cj4gPj4+ICAKPiA+Pj4g
-KwkvKgo+ID4+PiArCSAqIEFsbCBkc2kgY2hpbGQgZGV2aWNlcyB3aWxsIGhhdmUgYmVlbiBjcmVh
-dGVkLCBzbyB3ZSBjYW4gY2hlY2sKPiA+Pj4gKwkgKiB0aGVpciBudW1iZXIgYW5kIGFkZCB0aGUg
-Y29tcG9uZW50IGhlcmUgaWYgdGhlcmUgd2lsbCBiZSBubwo+ID4+PiArCSAqIGhvc3QtYXR0YWNo
-IGNhbGwuCj4gPj4gSSBndWVzcyB5b3UgbWVhbiB0aGF0IGluIHRoaXMgcG9pbnQgYWxsIGNoaWxk
-IGRldmljZXMgaGF2ZSBiZWVuIGNyZWF0ZWQKPiA+PiAocmVtb3ZlICd3aWxsJyksIGJ1dCBpdCBt
-YXkgYmUgZmFsc2UgYXNzdW1wdGlvbiwgdGhlcmUgaXMgYWx3YXlzCj4gPj4gcG9zc2liaWxpdHkg
-dG8gY3JlYXRlIGRldmljZSBvbiB0aGUgZmx5IC0gc2VlIG1pcGlfZHNpX2RldmljZV9yZWdpc3Rl
-cl9mdWxsLgo+ID4+IFlvdSBjYW5ub3QgYXNzdW1lIHRoYXQgaW4gY2VydGFpbiBwb2ludCBpbiB0
-aW1lIHRoZXJlIHdpbGwgYmUgbm8gbW9yZQo+ID4+IGRldmljZXMgb24gdGhlIGJ1cy4KPiA+Pgo+
-ID4+IEkgYW0gbm90IHN1cmUgb2YgdGhlIHB1cnBvc2Ugb2YgdGhpcyBjb2RlLiBXaHkgZG8geW91
-IHdhbnQgdG8gYmVoYXZlCj4gPj4gZGlmZmVyZW50bHkgaWYgdGhlcmUgYXJlIG5vIGNoaWxkIGRl
-dnM/Cj4gPiBUaGF0J3MgYWxsIHJlbGF0ZWQgdG8gdGhlIHN1Z2dlc3Rpb24gb2YgZG9pbmcgY29t
-cG9uZW50X2FkZCBpbiB0aGUKPiA+IGhvc3QtYXR0YWNoIGNhbGxiYWNrLiBJZiB0aGUgZGV2aWNl
-IGRvZXNuJ3QgaGF2ZSBhY3RpdmUgY2hpbGRyZW4gaXRzCj4gPiBjb21wb25lbnQgd2lsbCBuZXZl
-ciBnZXQgYWRkZWQgYW5kIHRoZSB3aG9sZSBkcm0gY29tcG9uZW50IHN0cnVjdHVyZQo+ID4gd2ls
-bCB3YWl0IGZvcmV2ZXIgYW5kIG5ldmVyIHByb2JlIHRoZSBkcm0gZHJpdmVyLCBoZW5jZSBhZGQg
-dGhlIGNvbXBvbmVudAo+ID4gd2hlbiBubyBjaGlsZCB3aWxsIGJlIHByZXNlbnQuCj4gCj4gV2hh
-dCB3cm9uZyB3aXRoIGl0PyBJZiB0aGUgcmVzb3VyY2UgaXMgcmVxdWlyZWQsIHRoZW4gY29uc3Vt
-ZXIgc2hvdWxkCj4gd2FpdCBmb3IgaXQsIGlmIHRoZXJlIGlzIGEgcHJvYmxlbSB3aXRoIHByb3Zp
-ZGVyIGl0IGNhbiBiZSBmb3JldmVyLCBJCj4gdGhpbmsgaXQgaXMgY2xlYXIgYW5kIGZhaXIgcnVs
-ZS4KPiAKPiA+IFtUaGlzIGlzIG9mIGNvdXJzZSBwYXJ0IG9mIGhhbmRsaW5nIG15IGVtcHR5IGRz
-aSBzbGF2ZV0uCj4gCj4gQ291bGQgeW91IGVsYWJvcmF0ZSBpdD8gSWYgZHNpIHNsYXZlIGhhcyBu
-byBkb3duc3RyZWFtIGRldmljZSB3aHkgaXMgaXQKPiBhY3RpdmUgYXQgYWxsPwoKQXMgaW4gYWxs
-IGluc3RhbmNlcyBiZWZvcmUsIHlvdSB3ZXJlIHJpZ2h0IG9uIHBvaW50aW5nIG91dCB0aGUgZmxh
-dyBoZXJlIDotKQpEU0kgZGV2aWNlcyBjYW4gb2YgY291cnNlIGFsc28gc2l0IG9uIGNvbXBsZXRl
-bHkgb3RoZXIgYnVzZXMsIGxpa2UgaTJjCmFuZCBhdHRhY2ggZnJvbSB0aGVyZSBieSBjcmVhdGlu
-ZyB0aGVpciBvd24gZHNpIGRldmljZSBvbiB0aGUgYnVzLgoKSSd2ZSBwcmVwYXJlZCB2NiB3aGlj
-aCBzaG91bGQgYWRkcmVzcyB0aGF0IGluIGEgbW9yZSBlbGVnYW50IG1hbm5lcgp3aGlsZSBrZWVw
-aW5nIHRoZSBjb21wb25lbnRfYXR0YWNoIGluIHRoZSBob3N0LWF0dGFjaCBjYWxsYmFjay4KCgpU
-aGFua3MKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+
+--4hoevmel2quxjye3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Rob,
+
+I'm not sure I've understood the way you wanted me to so let me know if
+I'm not on the right path.
+
+On Wed, Sep 26, 2018 at 04:35:09PM -0500, Rob Herring wrote:
+> On Fri, Sep 14, 2018 at 10:16:05AM +0200, Quentin Schulz wrote:
+> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt | 40 +++++=
+++-
+> >  1 file changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-se=
+rdes.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.tx=
+t b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+> > new file mode 100644
+> > index 0000000..2a88cc3
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+> > @@ -0,0 +1,40 @@
+> > +Microsemi Ocelot SerDes muxing driver
+> > +-------------------------------------
+> > +
+> > +On Microsemi Ocelot, there is a handful of registers in HSIO address
+> > +space for setting up the SerDes to switch port muxing.
+> > +
+> > +A SerDes X can be "muxed" to work with switch port Y or Z for example.
+> > +One specific SerDes can also be used as a PCIe interface.
+> > +
+> > +Hence, a SerDes represents an interface, be it an Ethernet or a PCIe o=
+ne.
+> > +
+> > +There are two kinds of SerDes: SERDES1G supports 10/100Mbps in
+> > +half/full-duplex and 1000Mbps in full-duplex mode while SERDES6G suppo=
+rts
+> > +10/100Mbps in half/full-duplex and 1000/2500Mbps in full-duplex mode.
+> > +
+> > +Also, SERDES6G number (aka "macro") 0 is the only interface supporting
+> > +QSGMII.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: should be "mscc,vsc7514-serdes"
+> > +- #phy-cells : from the generic phy bindings, must be 2.
+> > +	       The first number defines the input port to use for a given
+> > +	       SerDes macro. The second defines the macro to use. They are
+> > +	       defined in dt-bindings/phy/phy-ocelot-serdes.h
+>=20
+> You need to define what this is a child of.
+>=20
+
+This is a child of the HSIO syscon on the Microsemi Ocelot. I don't
+expect all Microsemi SoCs that could use this driver to have the SerDes
+node in the HSIO syscon.
+
+Among the latest additions in Documentation/devicetree/bindings/phy I
+couldn't find anything close to my understanding of "define what this is
+a child of", could you elaborate on what you want exactly?
+
+> > +
+> > +Example:
+> > +
+> > +	serdes: serdes {
+> > +		compatible =3D "mscc,vsc7514-serdes";
+> > +		#phy-cells =3D <2>;
+>=20
+> However, if there are no other resources associated with this, then you=
+=20
+> don't even need this child node. The parent can be a phy provider and=20
+> provider of other functions too.
+>=20
+
+The parent is a syscon with multiple features (SerDes, PLL
+configuration, temp sensor, SyncE, ...) so I'm not sure it's possible to
+do what you're asking me to. For now, there is only a SerDes node but
+ultimately there'll be more than one I guess.
+
+Thanks,
+Quentin
+
+--4hoevmel2quxjye3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAluyFwwACgkQhLiadT7g
+8aOHrw//emXaFPG2jxUdu2NUdXCh79WYloOxKpbDEEbAW5Lfs4GZLCRy3NeEBqhU
+2WxS6RuY9FonPdgZKx5OkFA5iL+KeOS/sVz22xN3IOSZPFZlc9hzBt9gUC/vvbM1
+eFrkPDmXtIfCCpDdZ0L4ogzNdr6F7JSUwMUmds3mYWrjPORyyILutLTxgleuZryN
+lM1N7Rb5u4ASDn4KhMIla9UcFEhRPVOwfJPydqPRsboc4UknbpdRkEljzfAkBkjr
+DvhGjoAW6tWTKIk+UK0L0pJmILwFOt0+Iwptu/ZSAHHA8nnvnP/vGXIpvHrwHa4A
+MLQVHGMScSQYnpVqcrjXYOHrClt7QhUujZIU8ZqH07CQhsU3HuoMHm8uICigbKfI
+u9KvNSzkG2C1Otfb6j3cGSEWf71R4RzqVHnFxAQtwS3U1PLRb5zCj+TwyMZqxI2I
+vnvokFgGugyK7stymZQ2zWYjtIVDMvEebN9JxR1gak5gRb8PjDi0KHifCC6oJcZm
+c4ulWoEtsT+8GwTxiTfetyT4YIM0WjtzXq/19pcMd20tHoXka5BeD7pyA4DiuxhU
+Awh1ecgZ44OVjl9rK7J2yvX/wLF6toD4eeQl9S8oVNtODwZkWj45xnL+6V4HTCRw
+WGA2gcxnvteaFkGs5jnOAlBGoqzDDMf/r00jyDr1EdWd3SRIigY=
+=vZEA
+-----END PGP SIGNATURE-----
+
+--4hoevmel2quxjye3--
