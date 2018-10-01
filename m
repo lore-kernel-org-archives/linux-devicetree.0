@@ -1,114 +1,102 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 3/9] nios2: use common rules to build built-in dtb
-Date: Mon,  1 Oct 2018 10:25:25 -0500
-Message-ID: <20181001152531.3385-4-robh@kernel.org>
-References: <20181001152531.3385-1-robh@kernel.org>
+Subject: [PATCH v4 0/9] Devicetree build consolidation
+Date: Mon,  1 Oct 2018 10:25:22 -0500
+Message-ID: <20181001152531.3385-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001152531.3385-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>
-Cc: Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
+Cc: Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, linux-kbuild@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-arm-kernel@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, linux-mips@linux-mips.org, nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org, linux-xtensa@linux-xtensa.or
 List-Id: devicetree@vger.kernel.org
 
-Using the common build support for built-in dtb files just requires
-adding a .dtb.o target to obj-y.
+This series addresses a couple of issues I have with building dts files.
 
-This has the side effect that CONFIG_NIOS2_DTB_SOURCE should now be just
-the dts filename in arch/nios2/boot/dts/ directory. Before any path was
-supported, but if you want to build in your dtb to the kernel, it should
-be in the kernel tree.
+First, the ability to build all the dts files in the tree. This has been
+supported on most arches for some time with powerpc being the main
+exception. The reason powerpc wasn't supported was it needed a change
+in the location built dtb files are put.
 
-Cc: Ley Foon Tan <lftan@altera.com>
-Cc: nios2-dev@lists.rocketboards.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- arch/nios2/Makefile          |  6 ++----
- arch/nios2/boot/Makefile     | 14 --------------
- arch/nios2/boot/dts/Makefile |  2 ++
- arch/nios2/boot/linked_dtb.S | 19 -------------------
- 4 files changed, 4 insertions(+), 37 deletions(-)
+Secondly, it's a pain to acquire all the cross-compilers needed to build
+dtbs for each arch. There's no reason to build with the cross compiler and
+the host compiler is perfectly fine as we only need the pre-processor.
+
+I started addressing just those 2 problems, but kept finding small
+differences such as target dependencies and dtbs_install support across
+architectures. Instead of trying to align all these, I've consolidated the
+build targets moving them out of the arch makefiles.
+
+I'd like to take the series via the DT tree.
+
+PPC maintainers, really need you review/ack on this especially patch 1.
+
+Rob
+
+
+v4:
+ - Make dtbs and %.dtb rules depend on arch/$ARCH/boot/dts path rather than
+   CONFIG_OF_EARLY_FLATTREE
+ - Fix install path missing kernel version for dtbs_install
+ - Fix "make CONFIG_OF_ALL_DTBS=y" for arches like ARM which selectively
+   enable CONFIG_OF (and therefore dtc)
+
+v3:
+ - Rework dtc dependency to avoid 2 entry paths to scripts/dtc/. Essentially,
+   I copied 'scripts_basic'.
+ - Add missing scripts_basic dependency for dtc and missing PHONY tag.
+ - Drop the '|' order only from dependencies
+ - Drop %.dtb.S and %.dtb.o as top-level targets
+ - PPC: remove duplicate mpc5200 dtbs from image-y targets
+
+v2:
+ - Fix $arch/boot/dts path check for out of tree builds
+ - Fix dtc dependency for building built-in dtbs
+ - Fix microblaze built-in dtb building
+ - Add dtbs target for microblaze
+
+
+Rob Herring (9):
+  powerpc: build .dtb files in dts directory
+  nios2: build .dtb files in dts directory
+  nios2: use common rules to build built-in dtb
+  nios2: fix building all dtbs
+  c6x: use common built-in dtb support
+  kbuild: consolidate Devicetree dtb build rules
+  powerpc: enable building all dtbs
+  c6x: enable building all dtbs
+  microblaze: enable building all dtbs
+
+ Makefile                           | 37 +++++++++++++++++++-
+ arch/arc/Makefile                  |  6 ----
+ arch/arm/Makefile                  | 20 +----------
+ arch/arm64/Makefile                | 17 +--------
+ arch/c6x/Makefile                  |  2 --
+ arch/c6x/boot/dts/Makefile         | 17 ++++-----
+ arch/c6x/boot/dts/linked_dtb.S     |  2 --
+ arch/c6x/include/asm/sections.h    |  1 -
+ arch/c6x/kernel/setup.c            |  4 +--
+ arch/c6x/kernel/vmlinux.lds.S      | 10 ------
+ arch/h8300/Makefile                | 11 +-----
+ arch/microblaze/Makefile           |  4 +--
+ arch/microblaze/boot/dts/Makefile  |  4 +++
+ arch/mips/Makefile                 | 15 +-------
+ arch/nds32/Makefile                |  2 +-
+ arch/nios2/Makefile                | 11 +-----
+ arch/nios2/boot/Makefile           | 22 ------------
+ arch/nios2/boot/dts/Makefile       |  6 ++++
+ arch/nios2/boot/linked_dtb.S       | 19 -----------
+ arch/powerpc/Makefile              |  3 --
+ arch/powerpc/boot/Makefile         | 55 ++++++++++++++----------------
+ arch/powerpc/boot/dts/Makefile     |  6 ++++
+ arch/powerpc/boot/dts/fsl/Makefile |  4 +++
+ arch/xtensa/Makefile               | 12 +------
+ scripts/Makefile                   |  3 +-
+ scripts/Makefile.lib               |  2 +-
+ scripts/dtc/Makefile               |  2 +-
+ 27 files changed, 102 insertions(+), 195 deletions(-)
+ delete mode 100644 arch/c6x/boot/dts/linked_dtb.S
+ create mode 100644 arch/nios2/boot/dts/Makefile
  delete mode 100644 arch/nios2/boot/linked_dtb.S
+ create mode 100644 arch/powerpc/boot/dts/Makefile
+ create mode 100644 arch/powerpc/boot/dts/fsl/Makefile
 
-diff --git a/arch/nios2/Makefile b/arch/nios2/Makefile
-index 50eece1c6adb..db2e78fe65c7 100644
---- a/arch/nios2/Makefile
-+++ b/arch/nios2/Makefile
-@@ -49,16 +49,14 @@ BOOT_TARGETS = vmImage zImage
- PHONY += $(BOOT_TARGETS) install
- KBUILD_IMAGE := $(nios2-boot)/vmImage
- 
--ifneq ($(CONFIG_NIOS2_DTB_SOURCE),"")
--	core-y	+= $(nios2-boot)/
--endif
-+core-y	+= $(nios2-boot)/dts/
- 
- all: vmImage
- 
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(nios2-boot)
- 
--%.dtb: | scripts
-+%.dtb %.dtb.S %.dtb.o: | scripts
- 	$(Q)$(MAKE) $(build)=$(nios2-boot)/dts $(nios2-boot)/dts/$@
- 
- dtbs:
-diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
-index 007586094dde..0b48f1bf086d 100644
---- a/arch/nios2/boot/Makefile
-+++ b/arch/nios2/boot/Makefile
-@@ -31,20 +31,6 @@ $(obj)/zImage: $(obj)/compressed/vmlinux FORCE
- $(obj)/compressed/vmlinux: $(obj)/vmlinux.gz FORCE
- 	$(Q)$(MAKE) $(build)=$(obj)/compressed $@
- 
--# Rule to build device tree blobs
--DTB_SRC := $(patsubst "%",%,$(CONFIG_NIOS2_DTB_SOURCE))
--
--# Make sure the generated dtb gets removed during clean
--extra-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += system.dtb
--
--$(obj)/system.dtb: $(DTB_SRC) FORCE
--	$(call cmd,dtc)
--
--# Ensure system.dtb exists
--$(obj)/linked_dtb.o: $(obj)/system.dtb
--
--obj-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += linked_dtb.o
--
- targets += $(dtb-y)
- 
- $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
-diff --git a/arch/nios2/boot/dts/Makefile b/arch/nios2/boot/dts/Makefile
-index f66554cd5c45..f6358e395b25 100644
---- a/arch/nios2/boot/dts/Makefile
-+++ b/arch/nios2/boot/dts/Makefile
-@@ -1 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
-+
-+obj-y := $(patsubst "%.dts",%.dtb.o,$(CONFIG_NIOS2_DTB_SOURCE))
-diff --git a/arch/nios2/boot/linked_dtb.S b/arch/nios2/boot/linked_dtb.S
-deleted file mode 100644
-index 071f922db338..000000000000
---- a/arch/nios2/boot/linked_dtb.S
-+++ /dev/null
-@@ -1,19 +0,0 @@
--/*
-- * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-- *
-- */
--.section .dtb.init.rodata,"a"
--.incbin "arch/nios2/boot/system.dtb"
--- 
+--
 2.17.1
