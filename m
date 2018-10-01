@@ -1,152 +1,66 @@
-Return-Path: <SRS0=V3Ed=MN=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] arm64: dts: renesas: r8a779{7|8}0: add PWM support
-References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Message-ID: <10f8a73a-5f44-3738-4e99-84732ec66c47@cogentembedded.com>
-Date: Mon, 1 Oct 2018 23:25:43 +0300
-MIME-Version: 1.0
-In-Reply-To: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Return-Path: <SRS0=0FWW=MN=sirena.org.uk=broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "dt-bindings: spi: sh-msiof: Add r8a7744 support" to the spi tree
+In-Reply-To: <1538139709-17707-1-git-send-email-biju.das@bp.renesas.com>
+Message-Id: <20181001160624.500881121CA5@debutante.sirena.org.uk>
+Date: Mon,  1 Oct 2018 17:06:24 +0100 (BST)
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.orglinux-spi@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Describe PWMs in the R8A779{7|8}0 device trees.
+The patch
 
-Based on the original (and large) patches by Vladimir Barinov.
+   dt-bindings: spi: sh-msiof: Add r8a7744 support
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+has been applied to the spi tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From aeb8a43fa2649e00202960a55cbbd184bfc296d6 Mon Sep 17 00:00:00 2001
+From: Biju Das <biju.das@bp.renesas.com>
+Date: Fri, 28 Sep 2018 14:01:49 +0100
+Subject: [PATCH] dt-bindings: spi: sh-msiof: Add r8a7744 support
+
+Document RZ/G1N (R8A7744) SoC bindings.
+
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
-This patch is against the 'renesas-devel-20181001-v4.19-rc6' branch of
-Simon Horman's 'renesas.git' repo.
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
- arch/arm64/boot/dts/renesas/r8a77970.dtsi |   50 ++++++++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77980.dtsi |   50 ++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
-
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -543,6 +543,56 @@
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+index 27b48f07ca97..49fd806b3689 100644
+--- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
++++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
+@@ -2,6 +2,7 @@ Renesas MSIOF spi controller
  
-+		pwm0: pwm@e6e30000 {
-+			compatible = "renesas,pwm-r8a77970", "renesas,pwm-rcar";
-+			reg = <0 0xe6e30000 0 8>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@e6e31000 {
-+			compatible = "renesas,pwm-r8a77970", "renesas,pwm-rcar";
-+			reg = <0 0xe6e31000 0 8>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@e6e32000 {
-+			compatible = "renesas,pwm-r8a77970", "renesas,pwm-rcar";
-+			reg = <0 0xe6e32000 0 8>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@e6e33000 {
-+			compatible = "renesas,pwm-r8a7790", "renesas,pwm-rcar";
-+			reg = <0 0xe6e33000 0 8>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@e6e34000 {
-+			compatible = "renesas,pwm-r8a77970", "renesas,pwm-rcar";
-+			reg = <0 0xe6e34000 0 8>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
- 		scif0: serial@e6e60000 {
- 			compatible = "renesas,scif-r8a77970",
- 				     "renesas,rcar-gen3-scif",
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77980.dtsi
-@@ -594,6 +594,56 @@
- 			status = "disabled";
- 		};
- 
-+		pwm0: pwm@e6e30000 {
-+			compatible = "renesas,pwm-r8a77980", "renesas,pwm-rcar";
-+			reg = <0 0xe6e30000 0 0x10>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm1: pwm@e6e31000 {
-+			compatible = "renesas,pwm-r8a77980", "renesas,pwm-rcar";
-+			reg = <0 0xe6e31000 0 0x10>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm2: pwm@e6e32000 {
-+			compatible = "renesas,pwm-r8a77980", "renesas,pwm-rcar";
-+			reg = <0 0xe6e32000 0 0x10>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm3: pwm@e6e33000 {
-+			compatible = "renesas,pwm-r8a77980", "renesas,pwm-rcar";
-+			reg = <0 0xe6e33000 0 0x10>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
-+		pwm4: pwm@e6e34000 {
-+			compatible = "renesas,pwm-r8a77980", "renesas,pwm-rcar";
-+			reg = <0 0xe6e34000 0 0x10>;
-+			#pwm-cells = <2>;
-+			clocks = <&cpg CPG_MOD 523>;
-+			power-domains = <&sysc R8A77980_PD_ALWAYS_ON>;
-+			resets = <&cpg 523>;
-+			status = "disabled";
-+		};
-+
- 		scif0: serial@e6e60000 {
- 			compatible = "renesas,scif-r8a77980",
- 				     "renesas,rcar-gen3-scif",
+ Required properties:
+ - compatible           : "renesas,msiof-r8a7743" (RZ/G1M)
++			 "renesas,msiof-r8a7744" (RZ/G1N)
+ 			 "renesas,msiof-r8a7745" (RZ/G1E)
+ 			 "renesas,msiof-r8a774a1" (RZ/G2M)
+ 			 "renesas,msiof-r8a7790" (R-Car H2)
+-- 
+2.19.0.rc2
