@@ -1,76 +1,87 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v16 0/5] iommu/arm-smmu: Add runtime pm/sleep support
-Date: Mon, 1 Oct 2018 14:36:24 +0530
-Message-ID: <CAFp+6iFzU3vG+HZ-7drNG7fyv6PY-W-9To5-rZeLo7M3p4=2rg@mail.gmail.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org> <20180928135718.GA1599@brain-police>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next 3/7] net: phy: mscc: split config_init in two
+ functions for VSC8584
+Date: Mon, 1 Oct 2018 11:07:49 +0200
+Message-ID: <20181001090749.p7hp4ccfkmmpx2es@qschulz>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <5daa7f3e467b218410238ef0fb97f01779f8f49f.1536916714.git-series.quentin.schulz@bootlin.com>
+ <bc31175f-52eb-cb7d-669e-192aec79ac5c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="4gudnnyb5hbh4us3"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928135718.GA1599@brain-police>
+Content-Disposition: inline
+In-Reply-To: <bc31175f-52eb-cb7d-669e-192aec79ac5c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, alex.williamson@redhat.com, Linux PM <linux-pm@vger.kernel.org>, sboyd@kernel.org, freedreno <freedreno@lists.freedesktop.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, open list <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Will,
 
-On Fri, Sep 28, 2018 at 7:27 PM Will Deacon <will.deacon@arm.com> wrote:
->
-> Hi Vivek,
->
-> On Thu, Aug 30, 2018 at 08:15:36PM +0530, Vivek Gautam wrote:
-> > This series provides the support for turning on the arm-smmu's
-> > clocks/power domains using runtime pm. This is done using
-> > device links between smmu and client devices. The device link
-> > framework keeps the two devices in correct order for power-cycling
-> > across runtime PM or across system-wide PM.
-> >
-> > With addition of a new device link flag DL_FLAG_AUTOREMOVE_SUPPLIER [7],
-> > the device links created between arm-smmu and its clients will be
-> > automatically purged when arm-smmu driver unbinds from its device.
-> >
-> > As not all implementations support clock/power gating, we are checking
-> > for a valid 'smmu->dev's pm_domain' to conditionally enable the runtime
-> > power management for such smmu implementations that can support it.
-> > Otherwise, the clocks are turned to be always on in .probe until .remove.
-> > With conditional runtime pm now, we avoid touching dev->power.lock
-> > in fastpaths for smmu implementations that don't need to do anything
-> > useful with pm_runtime.
-> > This lets us to use the much-argued pm_runtime_get_sync/put_sync()
-> > calls in map/unmap callbacks so that the clients do not have to
-> > worry about handling any of the arm-smmu's power.
-> >
-> > This series also adds support for Qcom's arm-smmu-v2 variant that
-> > has different clocks and power requirements.
-> >
-> > Previous version of this patch series is @ [1].
-> >
-> > Build tested the series based on 4.19-rc1.
->
-> I'm going to send my pull request to Joerg early next week (probably
-> Monday), but I'm not keen to include this whilst it has outstanding comments
-> from Ulf. Your errata workaround patch is in a similar situation, with
-> outstanding comments from Robin.
+--4gudnnyb5hbh4us3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I am going to address Ulf's comments for pm_runtime_force_suspend/resume()
-calls in system sleep callbacks and respin the series unless he has any more
-comments regarding the early/late nature of suspend/resume.
-So will it do if I respin the series today after waiting for Ulf?
+Hi Florian,
 
-The workaround series is going for a discussion now, so i think it can wait.
-Thanks
+On Fri, Sep 14, 2018 at 10:57:08AM -0700, Florian Fainelli wrote:
+> On 09/14/2018 02:44 AM, Quentin Schulz wrote:
+> > Part of the config init is common between the VSC8584 and the VSC8574,
+> > so to prepare the upcoming support for VSC8574, separate config_init
+> > PHY-specific code to config_pre_init function which is set in the probe
+> > function of the PHY and used in config_init.
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > ---
+> >  drivers/net/phy/mscc.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
+> > index b450489..69cc3cf 100644
+> > --- a/drivers/net/phy/mscc.c
+> > +++ b/drivers/net/phy/mscc.c
+> > @@ -355,6 +355,7 @@ struct vsc8531_private {
+> >  	u64 *stats;
+> >  	int nstats;
+> >  	bool pkg_init;
+> > +	int (*config_pre_init)(struct mii_bus *bus, int phy);
+>=20
+> Is not this overkill given that you have a reference to the phy_device,
+> you could check for the for phy_id to know which exact type you have and
+> call the appropriate pre_init function?
+>=20
 
-Best regards
-Vivek
->
-> Will
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+Agreed. It just seemed "cleaner" to me to set config_pre_init in
+separate probe functions which are pretty straightforward and short.
+Thus not complexifying an already-not-so-straightforward config_init
+function.
 
+Anyway, I'll use the phy_id as suggested so that we don't overload the
+vsc8531_private structure (since it's also only called once, in
+config_init).
 
---
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks,
+Quentin
+
+--4gudnnyb5hbh4us3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux4+QACgkQhLiadT7g
+8aMJEBAAlB5jQxeFJjIbBjHlHZD8vHXRcJCi2lVac80w9rTL751EN8osh8uGg4oJ
+N3SxA6vbE6YysjPbyIp5lWnLDri5teGL8uCOYMIeNTpsr6cRknJVy/GnWEps0r6d
+cSF6ohqXxm93/UeAiieMyiLwYRwlhD8oXWF2vhxy7SIV6gj85Cgy3Qm1soEwr8pl
+I2SREW1MmkzaJcg9vOYNPfme8M5QadCS4ED6/OdD9slYvhUZz0PLjr/VP8txdcz7
+1pkrHqwUSiNiYi1IR/QRGbH43S3FmQsPuHdJwJtWG+rfcq9vPwJ2A9j1/rnv8fhU
+B5yYIit0H+Y/GMAQGKQIwL3UOXSZ4OlAITRsZtyTi0Eto1S/RkoG+3Ef0OTuudoV
+KH7JfsxZ2YKLO+w2yIeNQqBBuMOPzQqI9Kg+gbTZRV/2Lu1J3Dz4W3iVZIBPIZlu
+iUf9KgXJqkzZtM6FIAqdGw4WI0bVLcE447Q5CDHaoiDC/PJ8ui87p6ithFJ2/Hb9
+917oBA8enJSHHjBX+CWirtEx56RvspiXeicYCiFClLjY4lytUcv+Q8T8MTqKE2qV
+t5yMZ5zVO8P7m5MVSenRRMQ4I/rjgmVd2mddEuPsycQo0gGE7M6clzl0tNKTmavG
+2xKfDmhSTOOoocC7Kal0fXkQsC2tFfpPzjmXqVSz7ZjZGY4gWIY=
+=YEHc
+-----END PGP SIGNATURE-----
+
+--4gudnnyb5hbh4us3--
