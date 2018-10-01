@@ -1,48 +1,130 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 23/27] mmc: mmci: add variant property to request a reset
-Date: Mon, 1 Oct 2018 15:43:07 +0200
-Message-ID: <CAPDyKFpeifgeZcB45WE+nbRtOrGk+h0BqbNZgM2ivJiELkXJhQ@mail.gmail.com>
-References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com>
- <1537523181-14578-24-git-send-email-ludovic.Barre@st.com> <CAPDyKFqxBuQcafS2KFqPDwb4=V1Jwoovb4+VsJZjAA5CeKs2kw@mail.gmail.com>
- <a956549b-a84e-2582-1fce-3b15495f208c@st.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v5 07/14] irqchip/irq-mvebu-sei: add new driver for
+ Marvell SEI
+Date: Mon, 1 Oct 2018 15:49:02 +0200
+Message-ID: <20181001154902.5756ffbf@xps13>
+References: <20180830073535.10710-1-miquel.raynal@bootlin.com>
+ <20180830073535.10710-8-miquel.raynal@bootlin.com>
+ <86pnx7x5pz.wl-marc.zyngier@arm.com>
+ <20180924180133.2ea93762@xps13>
+ <9a0de5ac-8cef-0950-e218-0368167ecff8@arm.com>
+ <20180928183806.176ca084@xps13>
+ <20180930153930.4970d2ab@why.wild-wind.fr.eu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a956549b-a84e-2582-1fce-3b15495f208c@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180930153930.4970d2ab@why.wild-wind.fr.eu.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
->>> @@ -1854,6 +1855,14 @@ static int mmci_probe(struct amba_device *dev,
->>>
->>>          dev_dbg(mmc_dev(mmc), "clocking block at %u Hz\n", mmc->f_max);
->>>
->>> +       if (variant->reset) {
->>> +               host->rst = devm_reset_control_get_exclusive(&dev->dev,
->>> NULL);
->>
->>
->> As suggested, let's make this optional and not depending on the variant.
->
->
-> I done like that because is required for my variant (if no reset, no power
-> cycle for sdmmc).
-
-The point is, I think don't think it's correct to ties this to the
-variant, but rather I think it depends on the behavior of the SoC.
-
->
-> If you prefer, I could move to optional with
-> "devm_reset_control_get_optional_exclusive"
-> And I add a comment in mmci dt binding to specify that not optional
-> for sdmmc. (see above)
-
-Alright, fair enough. Let' do that.
-
-[...]
-
-Kind regards
-Uffe
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIFN1
+biwgMzAgU2VwIDIwMTggMTU6Mzk6MzAKKzAxMDA6Cgo+IE9uIEZyaSwgMjggU2VwIDIwMTggMTg6
+Mzg6MDYgKzAyMDAKPiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29tPiB3
+cm90ZToKPiAKPiA+IEhpIE1hcmMsCj4gPiAKPiA+IE1hcmMgWnluZ2llciA8bWFyYy56eW5naWVy
+QGFybS5jb20+IHdyb3RlIG9uIEZyaSwgMjggU2VwIDIwMTggMTE6MjU6MzIKPiA+ICswMTAwOgo+
+ID4gICAKPiA+ID4gT24gMjQvMDkvMTggMTc6MDEsIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gPiA+
+IAo+ID4gPiBIaSBNaXF1ZWwsCj4gPiA+IAo+ID4gPiBbLi4uXQo+ID4gPiAgICAgCj4gPiA+ID4g
+VGhlIGRpZmZlcmVuY2UgaXMgdGhhdCBhdCB0aGlzIHN0YWdlLCB0aGUgaXJxX2RhdGEtPmNoaXAg
+cG9pbnRlciBvZiB0aGUKPiA+ID4gPiBTRUkgY29udHJvbGxlciBfcGFyZW50XyAoaWUuIHRoZSBH
+SUMncyBjaGlwIHBvaW50ZXIpIGlzIG5vdCB2YWxpZC4gSQo+ID4gPiA+IGRpZ2dlZCBhIGxvdCBp
+biB0aGlzIGRpcmVjdGlvbiBkdXJpbmcgeW91ciB2YWNhdGlvbnMgdG8gZmluZCBvdXQgd2hhdCBJ
+Cj4gPiA+ID4gbWlzc2VkLCBhbmQgSSBlbmRlZCB1cCBjYWxsaW5nIGJhY2sgaXJxX2FsbG9jX2ly
+cXNfcGFyZW50KCkuCj4gPiA+ID4gCj4gPiA+ID4gSWYgeW91IGhhdmUgYW4gaWRlYSBvZiBob3cg
+dG8gaGFuZGxlIHRoaXMgcHJvcGVybHksIEkgYW0gYWxsIGVhcnMhICAgICAgCj4gPiA+IAo+ID4g
+PiBUaGUgbW9zdCBnbGFyaW5nIHByb2JsZW0gaXMgdGhhdCB5b3UgY3JlYXRlIGEgaGllcmFyY2h5
+IHRoYXQgZW5jb21wYXNzZXMKPiA+ID4gdGhlIEdJQywgd2hpY2ggaXMganVzdCB3cm9uZy4gVGhl
+IGhpZXJhcmNoeSBjYW5ub3QgcG9pbnQgdG8gdGhlIEdJQywKPiA+ID4gYmVjYXVzZSBpdCBlbmQt
+dXAgYXMgYSBtdWx0aXBsZXhlci4KPiA+ID4gCj4gPiA+IFRoaXMgY29kZSBzZXF1ZW5jZSBpbiB0
+aGUgcHJvYmUgZnVuY3Rpb24gaXMgdGhlIHJvb3Qgb2YgYWxsIGV2aWw6Cj4gPiA+IAo+ID4gPiAJ
+LyogR2V0IGEgcmVmZXJlbmNlIHRvIHRoZSBwYXJlbnQgZG9tYWluICovCj4gPiA+IAlwYXJlbnQg
+PSBvZl9pcnFfZmluZF9wYXJlbnQobm9kZSk7Cj4gPiA+IAlpZiAoIXBhcmVudCkgewo+ID4gPiAJ
+CWRldl9lcnIoc2VpLT5kZXYsICJGYWlsZWQgdG8gZmluZCBwYXJlbnQgSVJRIG5vZGVcbiIpOwo+
+ID4gPiAJCXJldCA9IC1FTk9ERVY7Cj4gPiA+IAkJZ290byBkaXNwb3NlX2lycTsKPiA+ID4gCX0K
+PiA+ID4gCj4gPiA+IFRoaXMgaXMgYSBHSUMgaW50ZXJydXB0LCB3aGljaCBpcyB0aGUgb3V0cHV0
+IGxpbmUgZm9yIHRoZSBTRUkgYmxvY2suCj4gPiA+IAo+ID4gPiAJcGFyZW50X2RvbWFpbiA9IGly
+cV9maW5kX2hvc3QocGFyZW50KTsKPiA+ID4gCWlmICghcGFyZW50X2RvbWFpbikgewo+ID4gPiAJ
+CWRldl9lcnIoc2VpLT5kZXYsICJGYWlsZWQgdG8gZmluZCBwYXJlbnQgSVJRIGRvbWFpblxuIik7
+Cj4gPiA+IAkJcmV0ID0gLUVOT0RFVjsKPiA+ID4gCQlnb3RvIGRpc3Bvc2VfaXJxOwo+ID4gPiAJ
+fQo+ID4gPiAKPiA+ID4gVGhhdCdzIHRoZSBHSUMgZG9tYWluLgo+ID4gPiAKPiA+ID4gCS8qIENy
+ZWF0ZSB0aGUgJ3dpcmVkJyBkb21haW4gKi8KPiA+ID4gCXNlaS0+YXBfZG9tYWluID0gaXJxX2Rv
+bWFpbl9jcmVhdGVfaGllcmFyY2h5KHBhcmVudF9kb21haW4sIDAsCj4gPiA+IAkJCQkJCSAgICAg
+c2VpLT5jYXBzLT5hcF9yYW5nZS5zaXplLAo+ID4gPiAJCQkJCQkgICAgIG9mX25vZGVfdG9fZndu
+b2RlKG5vZGUpLAo+ID4gPiAJCQkJCQkgICAgICZtdmVidV9zZWlfYXBfZG9tYWluX29wcywKPiA+
+ID4gCQkJCQkJICAgICBzZWkpOwo+ID4gPiAJaWYgKCFzZWktPmFwX2RvbWFpbikgewo+ID4gPiAJ
+CWRldl9lcnIoc2VpLT5kZXYsICJGYWlsZWQgdG8gY3JlYXRlIEFQIElSUSBkb21haW5cbiIpOwo+
+ID4gPiAJCXJldCA9IC1FTk9NRU07Cj4gPiA+IAkJZ290byBkaXNwb3NlX2lycTsKPiA+ID4gCX0K
+PiA+ID4gCj4gPiA+IEFuZCBoZXJlLCB5b3UncmUgc2F5aW5nICJlYWNoIGFuZCBldmVyeSBBUCBT
+RUkgaW50ZXJydXB0IGlzIGRpcmVjdGx5Cj4gPiA+IGxpbmtlZCB0byBhIHVuaXF1ZSBHSUMgaW50
+ZXJydXB0Ii4gTm90aGluZyBjb3VsZCBiZSBmdXJ0aGVyIGZyb20gdGhlCj4gPiA+IHRydXRoLCBz
+aW5jZSBhbGwgU0VJIGludGVycnVwdHMgYXJlIGZ1bm5lbGxlZCB0aHJvdWdoIGEgKnNpbmdsZSoK
+PiA+ID4gR0lDIGludGVycnVwdC4gU28geW91IGNhbm5vdCBjcmVhdGUgaXQgYXMgYSBoaWVyYXJj
+aHkgcGFyZW50ZWQgYXQKPiA+ID4gdGhlIEdJQy4KPiA+ID4gCj4gPiA+IAkvKiBDcmVhdGUgdGhl
+ICdNU0knIGRvbWFpbiAqLwo+ID4gPiAJc2VpLT5jcF9kb21haW4gPSBpcnFfZG9tYWluX2NyZWF0
+ZV9oaWVyYXJjaHkocGFyZW50X2RvbWFpbiwgMCwKPiA+ID4gCQkJCQkJICAgICBzZWktPmNhcHMt
+PmNwX3JhbmdlLnNpemUsCj4gPiA+IAkJCQkJCSAgICAgb2Zfbm9kZV90b19md25vZGUobm9kZSks
+Cj4gPiA+IAkJCQkJCSAgICAgJm12ZWJ1X3NlaV9jcF9kb21haW5fb3BzLAo+ID4gPiAJCQkJCQkg
+ICAgIHNlaSk7Cj4gPiA+IAo+ID4gPiAKPiA+ID4gU2FtZSB0aGluZyBoZXJlLgo+ID4gPiAKPiA+
+ID4gVGhlIGlzc3VlIGhlcmUgaXMgdGhhdCB5b3UncmUgdXNpbmcgdGhlIEdJQyBkb21haW4gYXMg
+dGhlIHdheSB0byByb290Cj4gPiA+IHRoZSB0d28gZGlzdGluY3QgU0VJIGRvbWFpbnMsIHdoaWxl
+IHRoZXkgc2hvdWxkIGJlIHJvb3RlZCBhdCBhbiBpbnRlcm5hbCwKPiA+ID4gU0VJLXNwZWNpZmlj
+IGRvbWFpbi4gSSdkIHN1Z2dlc3QgYSB0b3BvbG9neSBsaWtlIHRoaXM6Cj4gPiA+IAo+ID4gPiAg
+ICAgICAgICAgICAgICAgICBBUC1TRUkgLS0tPiBTCj4gPiA+ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIEUKPiA+ID4gICAgIFBsYXQtTVNJIC0tLT4gQ1AtU0VJIC0tLT4gSQo+ID4gPiAK
+PiA+ID4gQ1AtU0VJIGFuZCBBUC1TRUkgdXNlIFNFSSBhcyBhIHBhcmVudC4gU0VJIGRvZXMgbm90
+IGhhdmUgYSBwYXJlbnQsIGJ1dCBpcwo+ID4gPiBhIGNoYWluZWQgaXJxY2hpcC4gICAgCj4gPiAK
+PiA+IFRoYW5rcyB5b3UgdmVyeSBtdWNoIGZvciB0aGlzIGRldGFpbGVkIGV4cGxhbmF0aW9uLiBU
+aGUgYWJvdmUgaXMgd2hhdCBJCj4gPiBpbnRlbmRlZCB0byBkbywgYnV0IG1heWJlIHdoYXQgSSBh
+Y2hpZXZlZCBpcyBtb3JlIHNvbWV0aGluZyBsaWtlOgo+ID4gCj4gPiAgICAgICAgICAgICAgICAg
+ICAgQVAtU0VJIC0tLT4gRwo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEkKPiA+
+ICAgICAgUGxhdC1NU0kgLS0tPiBDUC1TRUkgLS0tPiBDCj4gPiAKPiA+IEFuZCBub3cgSSB1bmRl
+cnN0YW5kIGJldHRlciB3aGF0IGlzIGJvdGhlcmluZyB5b3Ugc2luY2UgdGhlIGJlZ2lubmluZy4K
+PiA+ICAgCj4gPiA+IAo+ID4gPiBJJ20gaGFwcHkgdG8gaGVscCB5b3UgcmV3b3JraW5nIHRoaXMg
+cGllY2Ugb2YgY29kZSBpZiB5b3UgdGVsbCBtZSBob3cgdG8KPiA+ID4gcGx1ZyBhIGRyaXZlciB0
+aGF0IGNhbiB1c2UgaXQgb24gYW4gbWNiaW4gc3lzdGVtLiAgICAKPiA+IAo+ID4gTmV4dCB3ZWVr
+IEknbGwgaGF2ZSBhbm90aGVyIGxvb2sgYXQgdGhlIGRyaXZlciwgYnV0IGl0IGNvdWxkIGJlIGdy
+ZWF0Cj4gPiBpZiB5b3UgY291bGQgc2hvdyBtZSB0aGUgYmlnIGxpbmVzIG9mIGhvdyB5b3UgaW1h
+Z2luZSB0aGUgcmV3b3JrLiBJCj4gPiBwcmVwYXJlZCBhIGJyYW5jaCBiYXNlZCBvbiA0LjE5LXJj
+MSB3aXRoOgo+ID4gKiBUaGUgSUNVL1NFSSBzZXJpZXMKPiA+ICogVGhlIHNlcmllcyBhZGRpbmcg
+c3VwcG9ydCBmb3IgdGhlcm1hbCBpbnRlcnJ1cHRzIGluIHRoZQo+ID4gICBhcm1hZGFfdGhlcm1h
+bC5jIGRyaXZlciAoaXQgdHJpZ2dlcnMgYSB3aXJlZCBTRUkgd2hlbiB0aGUgQVAgaXMgdG9vCj4g
+PiAgIGhvdCBvciBhbiBNU0kgU0VJIHdoZW4gaXQgaXMgYSBDUCkuCj4gPiAqIFRoZSBuZWVkZWQg
+RFQgY2hhbmdlcy4KPiA+IAo+ID4gaHR0cHM6Ly9naXRodWIuY29tL21pcXVlbHJheW5hbC9saW51
+eC90cmVlL21hcnZlbGwvNC4xOS1yYzEvaWN1LXNlaSAgIAo+IAo+IEkndmUgcGxheWVkIHdpdGgg
+dGhpcyBhIGJpdCB0b28gbXVjaCwgYW5kIGhhdmUgYmFzaWNhbGx5IHJld3JpdHRlbiB0aGUKPiB3
+aG9sZSBTRUkgZHJpdmVyIChzZWUgWzFdIGZvciB0aGUgcmVzdWx0aW5nIHBhdGNoLCB3aGljaCBk
+b2Vzbid0IGxlYXZlCj4gbXVjaCB1bmNoYW5nZWQpLgoKV2hhdCB5b3UgZXhwZWN0ZWQgaXMgbm93
+IG11Y2ggY2xlYXJlciBmb3IgbWUsIHRoYW5rIHlvdSB2ZXJ5IG11Y2guCgo+IAo+IEl0IGFsc28g
+cmVxdWlyZXMgc29tZSBjaGFuZ2VzWzJdIHRvIHRoZSBJQ1UgZHJpdmVyLCB3aGljaCBhc3N1bWVz
+IHRoYXQKPiB0aGUgU0VJIGFuZCBHSUNQIGhhdmUgc2ltaWxhciBpbnRlcnJ1cHQgZmxvd3MgKG5l
+d3MgZmxhc2gsIHRoZXkgZG9uJ3QpLgo+IEkgc3RpbGwgaGF0ZSB0aGUgd2F5IHRoaXMgZHJpdmVy
+IGlzIHdyaXR0ZW4gKG5vIGNsZWFyIHNlcGFyYXRpb24KPiBiZXR3ZWVuIHdoYXQgaXMgZXNzZW50
+aWFsbHkgdHdvIGRpZmZlcmVudCBkcml2ZXJzIGJvbHRlZCB0b2dldGhlciksIGJ1dAo+IHRoYXQn
+cyBhIGRpZmZlcmVudCBzdG9yeS4KCk9rLCBJIHdpbGwgaW50ZWdyYXRlIHRoaXMgY2hhbmdlIHRv
+by4KCj4gCj4gSSdtIGFsc28gdmVyeSB3b3JyaWVkIHRoYXQgSUNVLVNFSSBpbnRlcnJ1cHRzIGFy
+ZSBoYW5kbGVkIGFzIGVkZ2UsCj4gd2hpbGUgdGhleSBhcmUgbGV2ZWwuIFRoZSBIVyBkb2Vzbid0
+IHNlZW0gdG8gb2ZmZXIgYW55IGZhY2lsaXR5IHRvCj4gcmVzYW1wbGUgdGhlIGxldmVsLCBzbyB0
+aGlzIGxvb2tzIGJyb2tlbiBieSBkZXNpZ24uIE1heWJlIHRoZSBNYXJ2ZWxsCj4gcGVvcGxlIG9u
+IENjIGNvdWxkIHNoZWQgc29tZSBsaWdodCBvbiBob3cgdGhleSBleHBlY3QgdGhpcyB0byB3b3Jr
+Pwo+IAo+IEFzIGZvciB0aGUgdGhlcm1hbCBzdHVmZiwgdGhlIERUIGlzIHdyb25nIChzZWUgWzNd
+KS4KCkluZGVlZCwgd2lyZWQgaW50ZXJydXB0cyBhcmUgb25seSBsZXZlbC1oaWdoIHNvIHdlIGNh
+biBnZXQgcmlkIG9mIHRoZQpzZWNvbmQgcGFyYW1ldGVyLiBBY3R1YWxseSB0aGUgYmluZGluZ3Mg
+d2VyZSByaWdodCwgSSBtZXNzZWQtdXAKc29tZXdoZXJlIHdoZW4gdXBkYXRpbmcgdGhlbS4KCj4g
+Cj4gSSd2ZSB0ZXN0ZWQgaXQgYnkgbGV0dGluZyB0aGUgbWFjaGluZSBvdmVyaGVhdCwgYW5kIHRh
+a2UgdGhlcm1hbAo+IGludGVycnVwdHMgb24gYm90aCBBUCBhbmQgQ1AuIFRoZSBib3ggc2h1dGRv
+d25zIGNsZWFubHkgaW4gYm90aCBjYXNlcywKPiBzbyBJIGd1ZXNzIGl0IHNvbWVob3cgd29ya3Mu
+CgpPaywgbGV0IG1lIHRlc3QgdGhlIHY2IGFuZCBJJ2xsIHNlbmQgaXQuCgpUaGFua3MsCk1pcXXD
+qGwKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
