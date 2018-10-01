@@ -1,38 +1,33 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v2 4/4] ata: ahci_brcm: Allow using driver or DSL SoCs
-Date: Mon,  1 Oct 2018 10:33:02 -0700
-Message-ID: <20181001173302.25398-5-f.fainelli@gmail.com>
-References: <20181001173302.25398-1-f.fainelli@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v16 4/5] dt-bindings: arm-smmu: Add bindings for qcom,smmu-v2
+Date: Mon, 1 Oct 2018 12:36:09 -0500
+Message-ID: <CAL_Jsq+dSGXCiWsjLt00wu=s-ZW8M1pkQqKFWboc54M8gHFTYg@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
+ <20180830144541.17740-5-vivek.gautam@codeaurora.org> <20181001121857.GA31488@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001173302.25398-1-f.fainelli@gmail.com>
+In-Reply-To: <20181001121857.GA31488@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: bcm-kernel-feedback-list@broadcom.com, Florian Fainelli <f.fainelli@gmail.com>, Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:LIBATA SUBSYSTEM Serial and
-        Parallel ATA drivers" <linux-ide@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Will Deacon <will.deacon@arm.com>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, alex.williamson@redhat.com, Mark Rutland <mark.rutland@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Clark <robdclark@gmail.com>, "open list:THERMAL" <linux-pm@vger.kernel.org>, freedreno <freedreno@lists.freedesktop.org>, Stephen Boyd <sboyd@kernel.org>, Tomasz Figa <tfiga@chromium.org>, Jordan Crouse <jcrouse@codeaurora.org>, Sricharan <sricharan@codeaurora.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Archit Taneja <architt@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom STB AHCI controller is the same as the one found on DSL
-SoCs, so we will utilize the same driver on these systems as well.
+On Mon, Oct 1, 2018 at 7:18 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Thu, Aug 30, 2018 at 08:15:40PM +0530, Vivek Gautam wrote:
+> > Add bindings doc for Qcom's smmu-v2 implementation.
+> >
+> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> > Reviewed-by: Tomasz Figa <tfiga@chromium.org>
+> > Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > ---
+> >  .../devicetree/bindings/iommu/arm,smmu.txt         | 39 ++++++++++++++++++++++
+> >  1 file changed, 39 insertions(+)
+>
+> It would be nice to have an Ack from a DT maintainer on this, since it's
+> adding new compatible strings...
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/ata/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I did...
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index 39b181d6bd0d..99698d7fe585 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -121,7 +121,8 @@ config SATA_AHCI_PLATFORM
- 
- config AHCI_BRCM
- 	tristate "Broadcom AHCI SATA support"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
-+		   ARCH_BCM_63XX
- 	help
- 	  This option enables support for the AHCI SATA3 controller found on
- 	  Broadcom SoC's.
--- 
-2.17.1
+Rob
