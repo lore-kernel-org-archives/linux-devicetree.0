@@ -1,7 +1,7 @@
 From: Yasha Cherikovsky <yasha.che3@gmail.com>
-Subject: [RFC v2 3/7] irqchip/rtl8186: Add RTL8186 interrupt controller driver
-Date: Mon,  1 Oct 2018 13:29:48 +0300
-Message-ID: <20181001102952.7913-4-yasha.che3@gmail.com>
+Subject: [RFC v2 5/7] clocksource/drivers/rtl8186: Add RTL8186 timer driver
+Date: Mon,  1 Oct 2018 13:29:50 +0300
+Message-ID: <20181001102952.7913-6-yasha.che3@gmail.com>
 References: <20181001102952.7913-1-yasha.che3@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -15,8 +15,14 @@ List-Id: devicetree@vger.kernel.org
 The Realtek RTL8186 SoC is a MIPS based SoC
 used in some home routers [1][2].
 
-This adds a driver to handle the interrupt controller
+This adds a driver to handle the built-in timers
 on this SoC.
+
+Timers 0 and 1 are 24bit timers.
+Timers 2 and 3 are 32bit timers.
+
+Use Timer2 as clocksource and Timer3 for clockevents.
+Timer2 is also used for sched_clock.
 
 [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
 [2] https://wikidevi.com/wiki/Realtek_RTL8186
@@ -25,156 +31,272 @@ Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>
 Cc: Paul Burton <paul.burton@mips.com>
 Cc: James Hogan <jhogan@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-mips@linux-mips.org
 Cc: devicetree@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/irqchip/Kconfig       |   5 ++
- drivers/irqchip/Makefile      |   1 +
- drivers/irqchip/irq-rtl8186.c | 107 ++++++++++++++++++++++++++++++++++
- 3 files changed, 113 insertions(+)
- create mode 100644 drivers/irqchip/irq-rtl8186.c
+ drivers/clocksource/Kconfig         |   9 ++
+ drivers/clocksource/Makefile        |   1 +
+ drivers/clocksource/timer-rtl8186.c | 220 ++++++++++++++++++++++++++++
+ 3 files changed, 230 insertions(+)
+ create mode 100644 drivers/clocksource/timer-rtl8186.c
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index e9233db16e03..83099905a871 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -371,4 +371,9 @@ config QCOM_PDC
- 	  Power Domain Controller driver to manage and configure wakeup
- 	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index dec0dd88ec15..da87f73d0631 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -609,4 +609,13 @@ config ATCPIT100_TIMER
+ 	help
+ 	  This option enables support for the Andestech ATCPIT100 timers.
  
-+config RTL8186_IRQ
-+	bool
++config RTL8186_TIMER
++	bool "RTL8186 timer driver"
 +	depends on MACH_RTL8186
-+	select IRQ_DOMAIN
++	depends on COMMON_CLK
++	select TIMER_OF
++	select CLKSRC_MMIO
++	help
++	  Enables support for the RTL8186 timer driver.
 +
  endmenu
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index 15f268f646bf..2e0bb859a8f4 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -87,3 +87,4 @@ obj-$(CONFIG_MESON_IRQ_GPIO)		+= irq-meson-gpio.o
- obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
- obj-$(CONFIG_NDS32)			+= irq-ativic32.o
- obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
-+obj-$(CONFIG_RTL8186_IRQ)		+= irq-rtl8186.o
-diff --git a/drivers/irqchip/irq-rtl8186.c b/drivers/irqchip/irq-rtl8186.c
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 00caf37e52f9..734e8566e1b6 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -78,3 +78,4 @@ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+ obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
++obj-$(CONFIG_RTL8186_TIMER)		+= timer-rtl8186.o
+diff --git a/drivers/clocksource/timer-rtl8186.c b/drivers/clocksource/timer-rtl8186.c
 new file mode 100644
-index 000000000000..3eb6b947d5a0
+index 000000000000..47ef4b09ad27
 --- /dev/null
-+++ b/drivers/irqchip/irq-rtl8186.c
-@@ -0,0 +1,107 @@
++++ b/drivers/clocksource/timer-rtl8186.c
+@@ -0,0 +1,220 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Realtek RTL8186 SoC interrupt controller driver.
++ * Realtek RTL8186 SoC timer driver.
++ *
++ * Timer0 (24bit): Unused
++ * Timer1 (24bit): Unused
++ * Timer2 (32bit): Used as clocksource
++ * Timer3 (32bit): Used as clock event device
 + *
 + * Copyright (C) 2018 Yasha Cherikovsky
 + */
 +
 +#include <linux/init.h>
++#include <linux/clockchips.h>
++#include <linux/clocksource.h>
 +#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
++#include <linux/jiffies.h>
++#include <linux/sched_clock.h>
++#include <linux/of_clk.h>
++#include <linux/io.h>
 +
-+#define RTL8186_NR_IRQS 11
++#include <asm/time.h>
++#include <asm/idle.h>
 +
-+#define GIMR 0x00
-+#define GISR 0x04
++#include "timer-of.h"
 +
-+static struct {
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+} intc;
++/* Timer registers */
++#define TCCNR			0x0
++#define TCIR			0x4
++#define TC_DATA(t)		(0x10 + 4 * (t))
++#define TC_CNT(t)		(0x20 + 4 * (t))
++
++/* TCCNR register bits */
++#define TCCNR_TC_EN_BIT(t)		BIT((t) * 2)
++#define TCCNR_TC_MODE_BIT(t)		BIT((t) * 2 + 1)
++#define TCCNR_TC_SRC_BIT(t)		BIT((t) + 8)
++
++/* TCIR register bits */
++#define TCIR_TC_IE_BIT(t)		BIT(t)
++#define TCIR_TC_IP_BIT(t)		BIT((t) + 4)
 +
 +
-+asmlinkage void plat_irq_dispatch(void)
++/* Forward declaration */
++static struct timer_of to;
++
++static void __iomem *base;
++
++
++#define RTL8186_TIMER_MODE_COUNTER	0
++#define RTL8186_TIMER_MODE_TIMER	1
++
++static void rtl8186_set_enable_bit(int timer, int enabled)
 +{
-+	u32 hwirq, virq;
-+	u32 gimr = readl(intc.base + GIMR);
-+	u32 gisr = readl(intc.base + GISR);
-+	u32 pending = gimr & gisr & ((1 << RTL8186_NR_IRQS) - 1);
++	u16 tccnr;
 +
-+	if (!pending) {
-+		spurious_interrupt();
-+		return;
-+	}
++	tccnr = readl(base + TCCNR);
++	tccnr &= ~(TCCNR_TC_EN_BIT(timer));
 +
-+	while (pending) {
-+		hwirq = fls(pending) - 1;
-+		virq = irq_linear_revmap(intc.domain, hwirq);
-+		do_IRQ(virq);
-+		pending &= ~BIT(hwirq);
-+	}
++	if (enabled)
++		tccnr |= TCCNR_TC_EN_BIT(timer);
++
++	writel(tccnr, base + TCCNR);
 +}
 +
-+static void rtl8186_irq_mask(struct irq_data *data)
++static void rtl8186_set_mode_bit(int timer, int mode)
 +{
-+	unsigned long irq = data->hwirq;
++	u16 tccnr;
 +
-+	writel(readl(intc.base + GIMR) & (~(BIT(irq))), intc.base + GIMR);
++	tccnr = readl(base + TCCNR);
++	tccnr &= ~(TCCNR_TC_MODE_BIT(timer));
++
++	if (mode)
++		tccnr |= TCCNR_TC_MODE_BIT(timer);
++
++	writel(tccnr, base + TCCNR);
 +}
 +
-+static void rtl8186_irq_unmask(struct irq_data *data)
-+{
-+	unsigned long irq = data->hwirq;
 +
-+	writel((readl(intc.base + GIMR) | (BIT(irq))), intc.base + GIMR);
++static irqreturn_t rtl8186_timer_interrupt(int irq, void *dev_id)
++{
++	struct clock_event_device *cd = dev_id;
++	int status;
++
++	status = readl(base + TCIR);
++	writel(status, base + TCIR); /* Clear all interrupts */
++
++	cd->event_handler(cd);
++
++	return IRQ_HANDLED;
 +}
 +
-+static struct irq_chip rtl8186_irq_chip = {
-+	.name = "RTL8186",
-+	.irq_mask = rtl8186_irq_mask,
-+	.irq_unmask = rtl8186_irq_unmask,
-+};
-+
-+static int rtl8186_intc_irq_domain_map(struct irq_domain *d, unsigned int virq,
-+				       irq_hw_number_t hw)
++static int rtl8186_clockevent_set_next(unsigned long evt,
++				       struct clock_event_device *cd)
 +{
-+	irq_set_chip_and_handler(virq, &rtl8186_irq_chip, handle_level_irq);
++	rtl8186_set_enable_bit(3, 0);
++	writel(evt, base + TC_DATA(3));
++	writel(evt, base + TC_CNT(3));
++	rtl8186_set_enable_bit(3, 1);
 +	return 0;
 +}
 +
-+static const struct irq_domain_ops rtl8186_irq_ops = {
-+	.map = rtl8186_intc_irq_domain_map,
-+	.xlate = irq_domain_xlate_onecell,
++static int rtl8186_set_state_periodic(struct clock_event_device *cd)
++{
++	unsigned long period = timer_of_period(to_timer_of(cd));
++
++	rtl8186_set_enable_bit(3, 0);
++	rtl8186_set_mode_bit(3, RTL8186_TIMER_MODE_TIMER);
++
++	/* This timer should reach zero each jiffy */
++	writel(period, base + TC_DATA(3));
++	writel(period, base + TC_CNT(3));
++
++	rtl8186_set_enable_bit(3, 1);
++	return 0;
++}
++
++static int rtl8186_set_state_oneshot(struct clock_event_device *cd)
++{
++	rtl8186_set_enable_bit(3, 0);
++	rtl8186_set_mode_bit(3, RTL8186_TIMER_MODE_COUNTER);
++	return 0;
++}
++
++static int rtl8186_set_state_shutdown(struct clock_event_device *cd)
++{
++	rtl8186_set_enable_bit(3, 0);
++	return 0;
++}
++
++static void rtl8186_timer_init_hw(void)
++{
++	/* Disable all timers */
++	writel(0, base + TCCNR);
++
++	/* Clear and disable all timer interrupts */
++	writel(0xf0, base + TCIR);
++
++	/* Reset all timers timeouts */
++	writel(0, base + TC_DATA(0));
++	writel(0, base + TC_DATA(1));
++	writel(0, base + TC_DATA(2));
++	writel(0, base + TC_DATA(3));
++
++	/* Reset all counters */
++	writel(0, base + TC_CNT(0));
++	writel(0, base + TC_CNT(1));
++	writel(0, base + TC_CNT(2));
++	writel(0, base + TC_CNT(3));
++}
++
++static u64 notrace rtl8186_timer_sched_read(void)
++{
++	return ~readl(base + TC_CNT(2));
++}
++
++static int rtl8186_start_clksrc(void)
++{
++	/* We use Timer2 as a clocksource (monotonic counter). */
++	writel(0xFFFFFFFF, base + TC_DATA(2));
++	writel(0xFFFFFFFF, base + TC_CNT(2));
++
++	rtl8186_set_mode_bit(2, RTL8186_TIMER_MODE_TIMER);
++	rtl8186_set_enable_bit(2, 1);
++
++	sched_clock_register(rtl8186_timer_sched_read, 32, timer_of_rate(&to));
++
++	return clocksource_mmio_init(base + TC_CNT(2), "rtl8186-clksrc",
++				     timer_of_rate(&to), 500, 32,
++				     clocksource_mmio_readl_down);
++}
++
++static struct timer_of to = {
++	.flags = TIMER_OF_BASE | TIMER_OF_CLOCK | TIMER_OF_IRQ,
++
++	.clkevt = {
++			.name = "rtl8186_tick",
++			.rating = 200,
++			.features = CLOCK_EVT_FEAT_ONESHOT |
++				    CLOCK_EVT_FEAT_PERIODIC,
++			.set_next_event = rtl8186_clockevent_set_next,
++			.cpumask = cpu_possible_mask,
++			.set_state_periodic = rtl8186_set_state_periodic,
++			.set_state_oneshot = rtl8186_set_state_oneshot,
++			.set_state_shutdown = rtl8186_set_state_shutdown,
++	},
++
++	.of_irq = {
++			.handler = rtl8186_timer_interrupt,
++			.flags = IRQF_TIMER,
++	},
 +};
 +
-+static int __init rtl8186_intc_of_init(struct device_node *node,
-+				       struct device_node *parent)
++static int __init rtl8186_timer_init(struct device_node *node)
 +{
-+	intc.base = of_io_request_and_map(node, 0, of_node_full_name(node));
++	int ret;
 +
-+	if (IS_ERR(intc.base))
-+		panic("%pOF: unable to map resource", node);
++	ret = timer_of_init(node, &to);
++	if (ret)
++		return ret;
 +
-+	intc.domain = irq_domain_add_linear(node, RTL8186_NR_IRQS,
-+					    &rtl8186_irq_ops, NULL);
++	base = timer_of_base(&to);
 +
-+	if (!intc.domain)
-+		panic("%pOF: unable to create IRQ domain\n", node);
++	rtl8186_timer_init_hw();
 +
-+	/* Start with all interrupts disabled */
-+	writel(0, intc.base + GIMR);
++	ret = rtl8186_start_clksrc();
++	if (ret) {
++		pr_err("Failed to register clocksource\n");
++		return ret;
++	}
 +
-+	/*
-+	 * Enable all hardware interrupts in CP0 status register.
-+	 * Software interrupts are disabled.
-+	 */
-+	set_c0_status(ST0_IM);
-+	clear_c0_status(STATUSF_IP0 | STATUSF_IP1);
-+	clear_c0_cause(CAUSEF_IP);
++	clockevents_config_and_register(&to.clkevt, timer_of_rate(&to), 100,
++					0xffffffff);
++
++	/* Enable interrupts for Timer3. Disable interrupts for others */
++	writel(TCIR_TC_IE_BIT(3), base + TCIR);
 +
 +	return 0;
 +}
 +
-+IRQCHIP_DECLARE(rtl8186_intc, "realtek,rtl8186-intc", rtl8186_intc_of_init);
++TIMER_OF_DECLARE(rtl8186_timer, "realtek,rtl8186-timer", rtl8186_timer_init);
 -- 
 2.19.0
