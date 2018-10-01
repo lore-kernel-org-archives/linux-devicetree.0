@@ -1,66 +1,73 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH v4 3/7] [media] ad5820: DT new optional field enable-gpios
-Date: Mon, 1 Oct 2018 10:20:23 +0200
-Message-ID: <CAPybu_0CCco6M6A1JsGUTo2P7rvqN1qPnMmuee7UsXxdkmaNBw@mail.gmail.com>
-References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
- <20180920204751.29117-3-ricardo.ribalda@gmail.com> <20180927182311.GA27227@bogus>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 04/21] dt-bindings: Add doc for the Ingenic TCU drivers
+Date: Mon, 1 Oct 2018 10:48:09 +0200
+Message-ID: <cfecfae5-abd0-c051-51a3-cb5d906006e9@linaro.org>
+References: <20180724231958.20659-1-paul@crapouillou.net>
+ <20180724231958.20659-5-paul@crapouillou.net>
+ <20180725152105.GA6347@rob-hp-laptop>
+ <1532988062.4702.2@smtp.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927182311.GA27227@bogus>
+In-Reply-To: <1532988062.4702.2@smtp.crapouillou.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob
-On Thu, Sep 27, 2018 at 8:23 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Sep 20, 2018 at 10:47:47PM +0200, Ricardo Ribalda Delgado wrote:
-> > Document new enable-gpio field. It can be used to disable the part
->
-> enable-gpios
->
-> > without turning down its regulator.
-> >
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > ---
-> >  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > index 5940ca11c021..9ccd96d3d5f0 100644
-> > --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > @@ -8,6 +8,12 @@ Required Properties:
-> >
-> >    - VANA-supply: supply of voltage for VANA pin
-> >
-> > +Optional properties:
-> > +
-> > +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the polarity of
-> > +the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the enable
-> > +GPIO deasserts the XSHUTDOWN signal and vice versa).
->
-> shutdown-gpios is also standard and seems like it would make more sense
-> here. Yes, it is a bit redundant to have both, but things just evolved
-> that way and we don't want to totally abandon the hardware names (just
-> all the variants).
->
+On 31/07/2018 00:01, Paul Cercueil wrote:
 
-Sorry to insist
+[ ... ]
 
-The pin is called xshutdown, not shutdown and is inverse logic,
-Wouldnt it make more sense to use the name
-enable-gpios?
+>>>  +- ingenic,timer-channel: Specifies the TCU channel that should be
+>>> used as
+>>>  +  system timer. If not provided, the TCU channel 0 is used for the
+>>> system timer.
+>>>  +
+>>>  +- ingenic,clocksource-channel: Specifies the TCU channel that
+>>> should be used
+>>>  +  as clocksource and sched_clock. It must be a different channel
+>>> than the one
+>>>  +  used as system timer. If not provided, neither a clocksource nor a
+>>>  +  sched_clock is instantiated.
+>>
+>> clocksource and sched_clock are Linux specific and don't belong in DT.
+>> You should define properties of the hardware or use existing properties
+>> like interrupts or clocks to figure out which channel to use. For
+>> example, if some channels don't have an interrupt, then use them for
+>> clocksource and not a clockevent. Or you could have timers that run in
+>> low-power modes or not. If all the channels are identical, then it
+>> shouldn't matter which ones the OS picks.
 
-Regards
-
-> Rob
+It can't work in this case because the pmw and the timer driver are not
+communicating and the first one can stole a channel to the last one.
 
 
+> We already talked about that. All the TCU channels can be used for PWM.
+> The problem is I cannot know from the driver's scope which channels will
+> be free and which channels will be requested for PWM. You suggested that I
+> parse the devicetree for clients, and I did that in the V3/V4 patchset. But
+> it only works for clients requesting through devicetree, not from platform
+> code or even sysfs.
+> 
+> One thing I can try is to dynamically change the channels the system timer
+> and clocksource are using when the current ones are requested for PWM. But
+> that sounds hardcore...
+
+Yes, it is :/
+
+Sorry for letting you wasting time and effort to write an overkill code
+not suitable for upstream.
+
+A very gross thought, wouldn't be possible to "register" a channel from
+the timer driver code in a shared data area (but well self-encapsulated)
+and the pwm code will check such channel isn't in use ?
 
 -- 
-Ricardo Ribalda
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
