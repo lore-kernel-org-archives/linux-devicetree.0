@@ -1,86 +1,88 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/7] [media] ad5820: DT new optional field enable-gpios
-Date: Mon, 1 Oct 2018 10:01:42 -0500
-Message-ID: <CAL_JsqJ32c3FXrUmCO0N16GcrUJ53tj5rp3VvV0s5H1NybwqKQ@mail.gmail.com>
-References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
- <20180920204751.29117-3-ricardo.ribalda@gmail.com> <20180927182311.GA27227@bogus>
- <CAPybu_0CCco6M6A1JsGUTo2P7rvqN1qPnMmuee7UsXxdkmaNBw@mail.gmail.com>
- <CAL_JsqLM9E45nvSToQV=XDwTmppkYcsPd-Ddzy+AJ8GP==aL+A@mail.gmail.com> <CAPybu_0+F-o03qfg6u3RjgCJaeqzEoma4Niz-H9=0bSHJo+9jg@mail.gmail.com>
+From: Eddie James <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Aspeed Video Engine
+ binding documentation
+Date: Mon, 1 Oct 2018 10:20:57 -0500
+Message-ID: <3e53dda4-81c4-1009-add2-45a3a7998e4e@linux.vnet.ibm.com>
+References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
+ <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
+ <CACPK8Xd0MhrFQqiM=u-Rv5u7RJRo5R-pAejH4dmeTrYSWE0AZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_0+F-o03qfg6u3RjgCJaeqzEoma4Niz-H9=0bSHJo+9jg@mail.gmail.com>
+In-Reply-To: <CACPK8Xd0MhrFQqiM=u-Rv5u7RJRo5R-pAejH4dmeTrYSWE0AZA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>, eajames@linux.ibm.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 1, 2018 at 7:40 AM Ricardo Ribalda Delgado
-<ricardo.ribalda@gmail.com> wrote:
->
-> Hi
-> On Mon, Oct 1, 2018 at 2:36 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > On Mon, Oct 1, 2018 at 3:20 AM Ricardo Ribalda Delgado
-> > <ricardo.ribalda@gmail.com> wrote:
-> > >
-> > > Hi Rob
-> > > On Thu, Sep 27, 2018 at 8:23 PM Rob Herring <robh@kernel.org> wrote:
-> > > >
-> > > > On Thu, Sep 20, 2018 at 10:47:47PM +0200, Ricardo Ribalda Delgado wrote:
-> > > > > Document new enable-gpio field. It can be used to disable the part
-> > > >
-> > > > enable-gpios
-> > > >
-> > > > > without turning down its regulator.
-> > > > >
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > > > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
-> > > > >  1 file changed, 7 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > > index 5940ca11c021..9ccd96d3d5f0 100644
-> > > > > --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > > +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > > @@ -8,6 +8,12 @@ Required Properties:
-> > > > >
-> > > > >    - VANA-supply: supply of voltage for VANA pin
-> > > > >
-> > > > > +Optional properties:
-> > > > > +
-> > > > > +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the polarity of
-> > > > > +the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the enable
-> > > > > +GPIO deasserts the XSHUTDOWN signal and vice versa).
-> > > >
-> > > > shutdown-gpios is also standard and seems like it would make more sense
-> > > > here. Yes, it is a bit redundant to have both, but things just evolved
-> > > > that way and we don't want to totally abandon the hardware names (just
-> > > > all the variants).
-> > > >
-> > >
-> > > Sorry to insist
-> > >
-> > > The pin is called xshutdown, not shutdown and is inverse logic,
-> > > Wouldnt it make more sense to use the name
-> > > enable-gpios?
-> >
-> > Inverse of what? shutdown-gpios is the inverse of enable-gpios. By
-> > using shutdown-gpios you can just get rid of "Note that the polarity
-> > of the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the
-> > enable GPIO deasserts the XSHUTDOWN signal and vice versa)."
->
-> The pin is called XSHUTDOWN
->
-> 0V means shutdown
->
-> 3.3V means enable
->
-> This is why I think is more clear to use enable as name in the device tree.
 
-Neither enable-gpios nor shutdown-gpios have a defined polarity. The
-polarity is part of the flags cell in the specifier.
 
-Rob
+On 10/01/2018 08:08 AM, Joel Stanley wrote:
+> On Tue, 25 Sep 2018 at 21:27, Eddie James <eajames@linux.ibm.com> wrote:
+>> Document the bindings.
+>>
+>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+>> ---
+>>   .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
+>>   1 file changed, 26 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
+>> new file mode 100644
+>> index 0000000..f1af528
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
+>> @@ -0,0 +1,26 @@
+>> +* Device tree bindings for Aspeed Video Engine
+>> +
+>> +The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs can
+>> +capture and compress video data from digital or analog sources.
+>> +
+>> +Required properties:
+>> + - compatible:         "aspeed,ast2400-video-engine" or
+>> +                       "aspeed,ast2500-video-engine"
+>> + - reg:                        contains the offset and length of the VE memory region
+>> + - clocks:             clock specifiers for the syscon clocks associated with
+>> +                       the VE (ordering must match the clock-names property)
+>> + - clock-names:                "vclk" and "eclk"
+>> + - resets:             reset specifier for the syscon reset associaated with
+> associated
+
+Good catch, thanks.
+
+>
+>> +                       the VE
+>> + - interrupts:         the interrupt associated with the VE on this platform
+>> +
+>> +Example:
+>> +
+>> +video-engine@1e700000 {
+>> +    compatible = "aspeed,ast2500-video-engine";
+>> +    reg = <0x1e700000 0x20000>;
+>> +    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
+>> +    clock-names = "vclk", "eclk";
+> Did you end up sending the clock patches out?
+
+Yes,
+
+https://lore.kernel.org/patchwork/patch/978979/
+https://lore.kernel.org/patchwork/patch/978976/
+
+Do I need to send them as a separate series?
+
+Thanks,
+Eddie
+
+>
+> Cheers,
+>
+> Joel
+>
+>> +    resets = <&syscon ASPEED_RESET_VIDEO>;
+>> +    interrupts = <7>;
+>> +};
+>> --
+>> 1.8.3.1
+>>
