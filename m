@@ -1,96 +1,89 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: Re: [linux-sunxi] Re: [PATCH 06/12] drm/sun4i: sun6i_mipi_dsi: Fix
- VBP size calculation
-Date: Mon, 1 Oct 2018 13:39:17 +0530
-Message-ID: <63b40c20-670b-1c53-bf5e-62f64e6e02f0@openedev.com>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-7-jagan@amarulasolutions.com>
- <20180927152126.vovnvwmqdfpuxgdm@flea>
- <CAMty3ZABx9Fod5W_T7JciZEsn7jGvuM-LsBFATdA=hQ2CVwELw@mail.gmail.com>
- <20180929135302.ymdzapz5npvapti2@flea>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC 5/5] MIPS: Add Realtek RTL8186 SoC support
+Date: Mon, 1 Oct 2018 09:19:50 +0100
+Message-ID: <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
+References: <20180930141510.2690-1-yasha.che3@gmail.com>
+ <20180930141510.2690-6-yasha.che3@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180929135302.ymdzapz5npvapti2@flea>
-Content-Language: en-US
+In-Reply-To: <20180930141510.2690-6-yasha.che3@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com, Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Jernej Skrabec <jernej.skrabec@siol.net>, Vasily Khoruzhick <anarsoul@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk <linux-clk@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Yasha Cherikovsky <yasha.che3@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 29 September 2018 07:23 PM, Maxime Ripard wrote:
-> On Thu, Sep 27, 2018 at 09:50:34PM +0530, Jagan Teki wrote:
->> On Thu, Sep 27, 2018 at 8:51 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->>>
->>> On Thu, Sep 27, 2018 at 05:18:44PM +0530, Jagan Teki wrote:
->>>> According to horizontal and vertical timings are defined
->>>> per the diagram from include/drm/drm_modes.h
->>>>
->>>> Back porch = [hv]total - [hv]sync_end
->>>>
->>>> So, update SUN6I_DSI_BASIC_SIZE0_VBP calculation as
->>>> mode->vtotal - mode->vsync_end
->>>>
->>>> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->>>> ---
->>>>   drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
->>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->>>> index 1c7e42015645..599284971ab6 100644
->>>> --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->>>> +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
->>>> @@ -526,8 +526,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
->>>>        regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE0_REG,
->>>>                     SUN6I_DSI_BASIC_SIZE0_VSA(mode->vsync_end -
->>>>                                               mode->vsync_start) |
->>>> -                  SUN6I_DSI_BASIC_SIZE0_VBP(mode->vsync_start -
->>>> -                                            mode->vdisplay));
->>>> +                  SUN6I_DSI_BASIC_SIZE0_VBP(mode->vtotal -
->>>> +                                            mode->vsync_end));
->>>
->>> Is it purely theoretical, or did you find some source that back that?
->>
->> VSA is done as per that, sync_end - sync start would give sync time.
+Hi Yasha,
+
+On 30/09/18 15:15, Yasha Cherikovsky wrote:
+> The Realtek RTL8186 SoC is a MIPS based SoC
+> used in some home routers [1][2].
 > 
-> That's a different register though.
+> The hardware includes Lexra LX5280 CPU with a TLB,
+> two Ethernet controllers, a WLAN controller and more.
 > 
->> VBP also done in BPI-M64-bsp[1] which results back porch existing code
->> results fron porch.
->>
->> [1] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L955
+> With this patch, it is possible to successfully boot
+> the kernel and load userspace on the Edimax BR-6204Wg
+> router.
+> Network drivers support will come in future patches.
 > 
-> That code does back porch - sync length. Such a calculation doesn't
-> make much sense as is, but you're saying that it results in the front
-> porch. Again, what makes you say that?
+> This patch includes:
+> - New MIPS rtl8186 platform
+>      - Core platform setup code (mostly DT based)
+>      - New Kconfig option
+>      - defconfig file
+>      - MIPS zboot UART support
+> - RTL8186 interrupt controller driver
+> - RTL8186 timer driver
+> - Device tree files for the RTL8186 SoC and Edimax BR-6204Wg
+>    router
+> 
+> [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
+> [2] https://wikidevi.com/wiki/Realtek_RTL8186
+> 
+> Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-mips@linux-mips.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   arch/mips/Kbuild.platforms                    |   1 +
+>   arch/mips/Kconfig                             |  17 ++
+>   arch/mips/boot/compressed/uart-16550.c        |   5 +
+>   arch/mips/boot/dts/Makefile                   |   1 +
+>   arch/mips/boot/dts/realtek/Makefile           |   4 +
+>   arch/mips/boot/dts/realtek/rtl8186.dtsi       |  86 +++++++
+>   .../dts/realtek/rtl8186_edimax_br_6204wg.dts  |  45 ++++
+>   arch/mips/configs/rtl8186_defconfig           | 112 +++++++++
+>   arch/mips/include/asm/mach-rtl8186/rtl8186.h  |  37 +++
+>   arch/mips/rtl8186/Makefile                    |   2 +
+>   arch/mips/rtl8186/Platform                    |   7 +
+>   arch/mips/rtl8186/irq.c                       |   8 +
+>   arch/mips/rtl8186/prom.c                      |  15 ++
+>   arch/mips/rtl8186/setup.c                     |  80 +++++++
+>   arch/mips/rtl8186/time.c                      |  10 +
+>   drivers/clocksource/Kconfig                   |   9 +
+>   drivers/clocksource/Makefile                  |   1 +
+>   drivers/clocksource/timer-rtl8186.c           | 220 ++++++++++++++++++
+>   drivers/irqchip/Kconfig                       |   5 +
+>   drivers/irqchip/Makefile                      |   1 +
+>   drivers/irqchip/irq-rtl8186.c                 | 107 +++++++++
 
-No what code shows is not a real back porch value used for drm it's 
-panel back porch value which is a DTS property in BSP.
-(I made wrong comment on previous mail as front porch, sorry)
+Could you please split this into at least three patches (arch code, 
+clocksource, irqchip) to ease the review?
 
-here is the real code
+Thanks,
 
-from drivers/video/sunxi/disp2/disp/de/disp_lcd.c
-timmings->ver_sync_time= panel_info->lcd_vspw;
-timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
-
-
-u32 vbp = panel->lcd_vbp;
-u32 vspw = panel->lcd_vspw;
-dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
-
-So,
-
-dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
-
-=>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
-=>  timmings->ver_back_porch
-=>  mode->vtotal - mode->end
-
-VSA, which a proper value.
-
-dsi_dev[sel]->dsi_basic_size0.bits.vsa = vspw;
-=> panel_info->lcd_vspw;
-=> timmings->ver_sync_time
-=> mode->vsync_end - mode->vsync_start
+	M.
+-- 
+Jazz is not dead. It just smells funny...
