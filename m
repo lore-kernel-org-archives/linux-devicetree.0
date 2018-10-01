@@ -1,42 +1,86 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH i2c-next v4 1/3] dt-bindings: i2c: aspeed: Add 'timeout' property as an optional property
-Date: Mon,  1 Oct 2018 13:27:46 -0700
-Message-ID: <20181001202748.8030-2-jae.hyun.yoo@linux.intel.com>
-References: <20181001202748.8030-1-jae.hyun.yoo@linux.intel.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v4 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Tue, 2 Oct 2018 05:34:18 +0900
+Message-ID: <CAK7LNAQAG1pAOMbnrFd5VbmUfcN5337tcGdeFrRo92rPWkVWAg@mail.gmail.com>
+References: <20181001152531.3385-1-robh@kernel.org> <20181001152531.3385-7-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001202748.8030-1-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <20181001152531.3385-7-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+To: Rob Herring <robh@kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>linux-arm-kernel <lin>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds 'timeout' property as an optional property which
-can be used for setting 'timeout' value of 'struct i2c_adapter'.
-With this patch, the bus timeout value can be set through this
-DT property from the probing time of the module. Still the bus
-timeout value can be set by an I2C_TIMEOUT ioctl on cdev at
-runtime too.
+2018=E5=B9=B410=E6=9C=882=E6=97=A5(=E7=81=AB) 0:26 Rob Herring <robh@kernel=
+.org>:
+>
+> There is nothing arch specific about building dtb files other than their
+> location under /arch/*/boot/dts/. Keeping each arch aligned is a pain.
+> The dependencies and supported targets are all slightly different.
+> Also, a cross-compiler for each arch is needed, but really the host
+> compiler preprocessor is perfectly fine for building dtbs. Move the
+> build rules to a common location and remove the arch specific ones. This
+> is done in a single step to avoid warnings about overriding rules.
+>
+> The build dependencies had been a mixture of 'scripts' and/or 'prepare'.
+> These pull in several dependencies some of which need a target compiler
+> (specifically devicetable-offsets.h) and aren't needed to build dtbs.
+> All that is really needed is dtc, so adjust the dependencies to only be
+> dtc.
+>
+> This change enables support 'dtbs_install' on some arches which were
+> missing the target.
+>
+> Acked-by: Will Deacon <will.deacon@arm.com>
+> Acked-by: Paul Burton <paul.burton@mips.com>
+> Acked-by: Ley Foon Tan <ley.foon.tan@intel.com>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
----
- Documentation/devicetree/bindings/i2c/i2c-aspeed.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Please change this to
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-index 8fbd8633a387..1789502818c2 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-aspeed.txt
-@@ -17,6 +17,9 @@ Optional Properties:
- 		  specified
- - multi-master	: states that there is another master active on this bus.
- 
-+- timeout	: I2C bus timeout in milliseconds defaults to 1 second when not
-+		  specified.
-+
- Example:
- 
- i2c {
--- 
-2.19.0
+Acked-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+
+Thanks.
+
+
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Michal Simek <monstr@monstr.eu>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Chris Zankel <chris@zankel.net>
+> Cc: Max Filippov <jcmvbkbc@gmail.com>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: uclinux-h8-devel@lists.sourceforge.jp
+> Cc: linux-mips@linux-mips.org
+> Cc: nios2-dev@lists.rocketboards.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-xtensa@linux-xtensa.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> v4:
+>  - Make dtbs and %.dtb rules depend on arch/$ARCH/boot/dts path rather th=
+an
+>    CONFIG_OF_EARLY_FLATTREE
+>  - Fix install path missing kernel version for dtbs_install
+>  - Fix "make CONFIG_OF_ALL_DTBS=3Dy" for arches like ARM which selectivel=
+y
+>    enable CONFIG_OF (and therefore dtc)
+
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
