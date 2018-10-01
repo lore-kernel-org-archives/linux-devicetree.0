@@ -1,89 +1,87 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH v4 3/7] [media] ad5820: DT new optional field enable-gpios
-Date: Mon, 1 Oct 2018 14:40:02 +0200
-Message-ID: <CAPybu_0+F-o03qfg6u3RjgCJaeqzEoma4Niz-H9=0bSHJo+9jg@mail.gmail.com>
-References: <20180920204751.29117-1-ricardo.ribalda@gmail.com>
- <20180920204751.29117-3-ricardo.ribalda@gmail.com> <20180927182311.GA27227@bogus>
- <CAPybu_0CCco6M6A1JsGUTo2P7rvqN1qPnMmuee7UsXxdkmaNBw@mail.gmail.com> <CAL_JsqLM9E45nvSToQV=XDwTmppkYcsPd-Ddzy+AJ8GP==aL+A@mail.gmail.com>
+Subject: [PATCH v4 7/8] dt-binding: mtd: Document gpio-addr-flash
+Date: Mon,  1 Oct 2018 14:43:50 +0200
+Message-ID: <20181001124351.31615-7-ricardo.ribalda@gmail.com>
+References: <20181001124351.31615-1-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLM9E45nvSToQV=XDwTmppkYcsPd-Ddzy+AJ8GP==aL+A@mail.gmail.com>
+In-Reply-To: <20181001124351.31615-1-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-On Mon, Oct 1, 2018 at 2:36 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Oct 1, 2018 at 3:20 AM Ricardo Ribalda Delgado
-> <ricardo.ribalda@gmail.com> wrote:
-> >
-> > Hi Rob
-> > On Thu, Sep 27, 2018 at 8:23 PM Rob Herring <robh@kernel.org> wrote:
-> > >
-> > > On Thu, Sep 20, 2018 at 10:47:47PM +0200, Ricardo Ribalda Delgado wrote:
-> > > > Document new enable-gpio field. It can be used to disable the part
-> > >
-> > > enable-gpios
-> > >
-> > > > without turning down its regulator.
-> > > >
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
-> > > >  1 file changed, 7 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > index 5940ca11c021..9ccd96d3d5f0 100644
-> > > > --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > > @@ -8,6 +8,12 @@ Required Properties:
-> > > >
-> > > >    - VANA-supply: supply of voltage for VANA pin
-> > > >
-> > > > +Optional properties:
-> > > > +
-> > > > +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the polarity of
-> > > > +the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the enable
-> > > > +GPIO deasserts the XSHUTDOWN signal and vice versa).
-> > >
-> > > shutdown-gpios is also standard and seems like it would make more sense
-> > > here. Yes, it is a bit redundant to have both, but things just evolved
-> > > that way and we don't want to totally abandon the hardware names (just
-> > > all the variants).
-> > >
-> >
-> > Sorry to insist
-> >
-> > The pin is called xshutdown, not shutdown and is inverse logic,
-> > Wouldnt it make more sense to use the name
-> > enable-gpios?
->
-> Inverse of what? shutdown-gpios is the inverse of enable-gpios. By
-> using shutdown-gpios you can just get rid of "Note that the polarity
-> of the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the
-> enable GPIO deasserts the XSHUTDOWN signal and vice versa)."
+Add documentation for gpio-addr-flash. This binding allow creating
+flash devices that are paged using GPIOs.
 
-The pin is called XSHUTDOWN
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+---
+ .../bindings/mtd/gpio-addr-flash.txt          | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
 
-0V means shutdown
-
-3.3V means enable
-
-This is why I think is more clear to use enable as name in the device tree.
-
->
-> This looks to me like a case of just standardizing the name so for
-> example we just have "reset" instead of many flavors like rst, RSTb,
-> RESETb, RESETn, nRESET, etc.
->
-> Rob
-
-
-
+diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+new file mode 100644
+index 000000000000..5006a26e1753
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+@@ -0,0 +1,54 @@
++Memory Mapped flash with some address lines addressed using GPIOs
++
++Handle the case where a flash device is mostly addressed using physical
++line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
++to a 2MiB memory range and use the GPIOs to select a particular range.
++
++ - compatible : "cfi-gpio-addr-flash"
++ - reg : Address range of the mtd chip that is memory mapped, this is,
++   on the previous example 2MiB.
++ - bank-width : Width (in bytes) of the bank.  Equal to the
++   device width times the number of interleaved chips.
++ - gpios: List of GPIO specifiers that will be used to address the MSBs address
++   lines. The order goes from LSB to MSB.
++ - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
++   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
++ - #address-cells, #size-cells : Must be present if the device has
++   sub-nodes representing partitions (see below).  In this case
++   both #address-cells and #size-cells must be equal to 1.
++
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. Check partition.txt for more details.
++
++Example:
++
++	flash@300000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "cfi-gpio-addr-flash";
++		bank-width = <2>;
++		reg = < 0x00300000 0x00200000 >;
++		gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				reg = < 0x0 0x200000 >;
++				label = "Golden Bitstream";
++			};
++			partition@200000 {
++				reg = < 0x200000 0x200000 >;
++				label = "User Bitstream";
++			};
++			partition@400000 {
++				reg = < 0x400000 0x200000 >;
++				label = "V4L Controls";
++			};
++			partition@600000 {
++				reg = < 0x600000 0x200000 >;
++				label = "Production Data";
++			};
++		}
++	} ;
 -- 
-Ricardo Ribalda
+2.19.0
