@@ -1,101 +1,21 @@
-Return-Path: <SRS0=CIbB=MN=gmail.com=rk.katana.steel@kernel.org>
+Return-Path: <SRS0=9BQ+=MN=verge.net.au=horms@kernel.org>
+Date: Mon, 1 Oct 2018 15:38:26 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] dt-bindings: spi: sh-msiof: Add r8a7744 support
+Message-ID: <20181001133826.woblopejwda7wldy@verge.net.au>
+References: <1538139709-17707-1-git-send-email-biju.das@bp.renesas.com>
 MIME-Version: 1.0
-From: =?UTF-8?Q?Ren=C3=A9_Kjellerup?= <rk.katana.steel@gmail.com>
-Date: Mon, 1 Oct 2018 15:07:16 -0700
-Message-ID: <CACE8ZKbUhFyWg5oK1B8+aWAa0tdqKf5Kokj80+8x1X2EUaA_DQ@mail.gmail.com>
-Subject: basic linksys ea6500v2 dts
-Content-Type: multipart/mixed; boundary="00000000000007608505773208f2"
-To: Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1538139709-17707-1-git-send-email-biju.das@bp.renesas.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---00000000000007608505773208f2
-Content-Type: multipart/alternative; boundary="00000000000007608205773208f0"
+On Fri, Sep 28, 2018 at 02:01:49PM +0100, Biju Das wrote:
+> Document RZ/G1N (R8A7744) SoC bindings.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
---00000000000007608205773208f0
-Content-Type: text/plain; charset="UTF-8"
-
-Hi Hauke,
-
-thank you for suggesting adding the dts patch to mainline kernel,
-so here it is.
-I feel Rafal technically still have the copyrights, this is pretty
-much just a few string updates for the ea6500v2. However with this
-dts in latest OpenWrt 18.06 loads and installs on my device.
-
-I will be available to do more testing should it be required.
-
-Regrads
-Rene Kjellerup
--- 
--- as life grows older, I gain experience.
--- http://www.alchemiestick.net/
-
---00000000000007608205773208f0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div><div><div><div>Hi Hauke,<br><br></div>thank you for s=
-uggesting adding the dts patch to mainline kernel,<br></div>so here it is.<=
-br></div>I feel Rafal technically still have the copyrights, this is pretty=
- <br>much just a few string updates for the ea6500v2. However with this<br>=
-</div><div>dts in latest OpenWrt 18.06 loads and installs on my device.<br>=
-<br></div><div>I will be available to do more testing should it be required=
-.<br></div><div><div><br></div><div>Regrads<br></div><div><div><div><div>Re=
-ne Kjellerup<br></div><div>-- <br><div dir=3D"ltr" class=3D"gmail_signature=
-" data-smartmail=3D"gmail_signature">-- as life grows older, I gain experie=
-nce.<br>-- <a href=3D"http://www.alchemiestick.net/" target=3D"_blank">http=
-://www.alchemiestick.net/</a><br></div></div></div></div></div></div></div>
-
---00000000000007608205773208f0--
-
---00000000000007608505773208f2
-Content-Type: text/x-patch; charset="UTF-8";
-	name="0001-ARM-dts-BCM5301X-Add-basic-DT-for-Linksys-EA6500-V2.patch"
-Content-Disposition: attachment;
-	filename="0001-ARM-dts-BCM5301X-Add-basic-DT-for-Linksys-EA6500-V2.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jmqu74zq0>
-X-Attachment-Id: f_jmqu74zq0
-
-RnJvbSBiZGM0NDI5MzUzZWUwNGY0OTc0OTUwMTZjOWVlYmFjMTg4NjAzOTBjIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBSZW5lIEtqZWxsZXJ1cCA8cmsua2F0YW5hLnN0ZWVsQGdtYWls
-LmNvbT4KRGF0ZTogTW9uLCAxIE9jdCAyMDE4IDE0OjExOjU2IC0wNzAwClN1YmplY3Q6IFtQQVRD
-SF0gQVJNOiBkdHM6IEJDTTUzMDFYOiBBZGQgYmFzaWMgRFQgZm9yIExpbmtzeXMgRUE2NTAwIFYy
-CgpJdCdzIHdpcmVsZXNzIGhvbWUgcm91dGVyIGJhc2VkIG9uIEJDTTQ3MDhBMCB3aXRoIEJDTTQz
-NjAgKyBCQ000MzMxCndpcmVsZXNzIGNoaXBzZXRzLiBUaGUgQkNNNDMzMSA1R0h6IGNoaXAgY3Vy
-cmVudGx5IGlzbid0IHN1cHBvcnRlZApvbmx5IGR1ZSB0byBtaXNzaW5nIGNvbXBhdGlibGUgZmly
-bXdhcmUuCgpTaWduZWQtb2ZmLWJ5OiBSZW5lIEtqZWxsZXJ1cCA8cmsua2F0YW5hLnN0ZWVsQGdt
-YWlsLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgtbGlua3N5cy1lYTY1MDAtdjIu
-ZHRzIHwgNDUgKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA0NiBp
-bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcw
-OC1saW5rc3lzLWVhNjUwMC12Mi5kdHMKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9N
-YWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCmluZGV4IGI1YmQzZGU4N2MzMy4u
-YWRmOGYyOGY1ZTQ0IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQorKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQpAQCAtODgsNiArODgsNyBAQCBkdGItJChDT05G
-SUdfQVJDSF9CQ01fNTMwMVgpICs9IFwKIAliY200NzA4LWFzdXMtcnQtYWM2OHUuZHRiIFwKIAli
-Y200NzA4LWJ1ZmZhbG8td3pyLTE3NTBkaHAuZHRiIFwKIAliY200NzA4LWxpbmtzeXMtZWE2MzAw
-LXYxLmR0YiBcCisJYmNtNDcwOC1saW5rc3lzLWVhNjUwMC12Mi5kdGIgXAogCWJjbTQ3MDgtbHV4
-dWwteGFwLTE1MTAuZHRiIFwKIAliY200NzA4LWx1eHVsLXh3Yy0xMDAwLmR0YiBcCiAJYmNtNDcw
-OC1uZXRnZWFyLXI2MjUwLmR0YiBcCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY200
-NzA4LWxpbmtzeXMtZWE2NTAwLXYyLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgtbGlu
-a3N5cy1lYTY1MDAtdjIuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
-MC4uYmFiY2ZlYzUwZGRlCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
-NDcwOC1saW5rc3lzLWVhNjUwMC12Mi5kdHMKQEAgLTAsMCArMSw0NSBAQAorLy8gU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb3ItbGF0ZXIgT1IgTUlUCisvKgorICogQ29weXJpZ2h0
-IChDKSAyMDE3IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KKyAqIENvcHlyaWdo
-dCAoQykgMjAxOCBSZW5lIEtqZWxsZXJ1cCA8cmsua2F0YW5hLnN0ZWVsQGdtYWlsLmNvbT4KKyAq
-LworCisvZHRzLXYxLzsKKworI2luY2x1ZGUgImJjbTQ3MDguZHRzaSIKKyNpbmNsdWRlICJiY201
-MzAxeC1uYW5kLWNzMC1iY2g4LmR0c2kiCisKKy8geworCWNvbXBhdGlibGUgPSAibGlua3N5cyxl
-YTY1MDAtdjIiLCAiYnJjbSxiY200NzA4IjsKKwltb2RlbCA9ICJMaW5rc3lzIEVBNjUwMCBWMiI7
-CisKKwljaG9zZW4geworCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsK
-KworCW1lbW9yeSB7CisJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDA+OworCX07CisKKwln
-cGlvLWtleXMgeworCQljb21wYXRpYmxlID0gImdwaW8ta2V5cyI7CisJCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQl3cHMgeworCQkJbGFiZWwgPSAiV1BT
-IjsKKwkJCWxpbnV4LGNvZGUgPSA8S0VZX1dQU19CVVRUT04+OworCQkJZ3Bpb3MgPSA8JmNoaXBj
-b21tb24gNyBHUElPX0FDVElWRV9MT1c+OworCQl9OworCisJCXJlc3RhcnQgeworCQkJbGFiZWwg
-PSAiUmVzZXQiOworCQkJbGludXgsY29kZSA9IDxLRVlfUkVTVEFSVD47CisJCQlncGlvcyA9IDwm
-Y2hpcGNvbW1vbiAxMSBHUElPX0FDVElWRV9MT1c+OworCQl9OworCX07Cit9OworCismdXNiM19w
-aHkgeworCXN0YXR1cyA9ICJva2F5IjsKK307Ci0tIAoyLjE2LjQKCg==
---00000000000007608505773208f2--
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
