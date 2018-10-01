@@ -1,73 +1,100 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v5 04/21] dt-bindings: Add doc for the Ingenic TCU drivers
-Date: Mon, 1 Oct 2018 10:48:09 +0200
-Message-ID: <cfecfae5-abd0-c051-51a3-cb5d906006e9@linaro.org>
-References: <20180724231958.20659-1-paul@crapouillou.net>
- <20180724231958.20659-5-paul@crapouillou.net>
- <20180725152105.GA6347@rob-hp-laptop>
- <1532988062.4702.2@smtp.crapouillou.net>
+From: Yasha Cherikovsky <yasha.che3@gmail.com>
+Subject: Re: [RFC 5/5] MIPS: Add Realtek RTL8186 SoC support
+Date: Mon, 01 Oct 2018 11:48:54 +0300
+Message-ID: <ceced0d550bc30d4f3e66d2c7f569c39ca890ce4.camel@gmail.com>
+References: <20180930141510.2690-1-yasha.che3@gmail.com>
+         <20180930141510.2690-6-yasha.che3@gmail.com>
+         <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1532988062.4702.2@smtp.crapouillou.net>
-Content-Language: en-US
+In-Reply-To: <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>, Rob Herring <robh@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, Jonathan Corbet <corbet@lwn.net>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@linux-mips.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 31/07/2018 00:01, Paul Cercueil wrote:
+Hi Marc,
 
-[ ... ]
-
->>>  +- ingenic,timer-channel: Specifies the TCU channel that should be
->>> used as
->>>  +  system timer. If not provided, the TCU channel 0 is used for the
->>> system timer.
->>>  +
->>>  +- ingenic,clocksource-channel: Specifies the TCU channel that
->>> should be used
->>>  +  as clocksource and sched_clock. It must be a different channel
->>> than the one
->>>  +  used as system timer. If not provided, neither a clocksource nor a
->>>  +  sched_clock is instantiated.
->>
->> clocksource and sched_clock are Linux specific and don't belong in DT.
->> You should define properties of the hardware or use existing properties
->> like interrupts or clocks to figure out which channel to use. For
->> example, if some channels don't have an interrupt, then use them for
->> clocksource and not a clockevent. Or you could have timers that run in
->> low-power modes or not. If all the channels are identical, then it
->> shouldn't matter which ones the OS picks.
-
-It can't work in this case because the pmw and the timer driver are not
-communicating and the first one can stole a channel to the last one.
-
-
-> We already talked about that. All the TCU channels can be used for PWM.
-> The problem is I cannot know from the driver's scope which channels will
-> be free and which channels will be requested for PWM. You suggested that I
-> parse the devicetree for clients, and I did that in the V3/V4 patchset. But
-> it only works for clients requesting through devicetree, not from platform
-> code or even sysfs.
+On Mon, 2018-10-01 at 09:19 +0100, Marc Zyngier wrote:
+> Hi Yasha,
 > 
-> One thing I can try is to dynamically change the channels the system timer
-> and clocksource are using when the current ones are requested for PWM. But
-> that sounds hardcore...
+> On 30/09/18 15:15, Yasha Cherikovsky wrote:
+> > The Realtek RTL8186 SoC is a MIPS based SoC
+> > used in some home routers [1][2].
+> > 
+> > The hardware includes Lexra LX5280 CPU with a TLB,
+> > two Ethernet controllers, a WLAN controller and more.
+> > 
+> > With this patch, it is possible to successfully boot
+> > the kernel and load userspace on the Edimax BR-6204Wg
+> > router.
+> > Network drivers support will come in future patches.
+> > 
+> > This patch includes:
+> > - New MIPS rtl8186 platform
+> >      - Core platform setup code (mostly DT based)
+> >      - New Kconfig option
+> >      - defconfig file
+> >      - MIPS zboot UART support
+> > - RTL8186 interrupt controller driver
+> > - RTL8186 timer driver
+> > - Device tree files for the RTL8186 SoC and Edimax BR-6204Wg
+> >    router
+> > 
+> > [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
+> > [2] https://wikidevi.com/wiki/Realtek_RTL8186
+> > 
+> > Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+> > Cc: Ralf Baechle <ralf@linux-mips.org>
+> > Cc: Paul Burton <paul.burton@mips.com>
+> > Cc: James Hogan <jhogan@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jason Cooper <jason@lakedaemon.net>
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-mips@linux-mips.org
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >   arch/mips/Kbuild.platforms                    |   1 +
+> >   arch/mips/Kconfig                             |  17 ++
+> >   arch/mips/boot/compressed/uart-16550.c        |   5 +
+> >   arch/mips/boot/dts/Makefile                   |   1 +
+> >   arch/mips/boot/dts/realtek/Makefile           |   4 +
+> >   arch/mips/boot/dts/realtek/rtl8186.dtsi       |  86 +++++++
+> >   .../dts/realtek/rtl8186_edimax_br_6204wg.dts  |  45 ++++
+> >   arch/mips/configs/rtl8186_defconfig           | 112 +++++++++
+> >   arch/mips/include/asm/mach-rtl8186/rtl8186.h  |  37 +++
+> >   arch/mips/rtl8186/Makefile                    |   2 +
+> >   arch/mips/rtl8186/Platform                    |   7 +
+> >   arch/mips/rtl8186/irq.c                       |   8 +
+> >   arch/mips/rtl8186/prom.c                      |  15 ++
+> >   arch/mips/rtl8186/setup.c                     |  80 +++++++
+> >   arch/mips/rtl8186/time.c                      |  10 +
+> >   drivers/clocksource/Kconfig                   |   9 +
+> >   drivers/clocksource/Makefile                  |   1 +
+> >   drivers/clocksource/timer-rtl8186.c           | 220
+> > ++++++++++++++++++
+> >   drivers/irqchip/Kconfig                       |   5 +
+> >   drivers/irqchip/Makefile                      |   1 +
+> >   drivers/irqchip/irq-rtl8186.c                 | 107 +++++++++
+> 
+> Could you please split this into at least three patches (arch code, 
+> clocksource, irqchip) to ease the review?
+> 
+> Thanks,
+> 
+> 	M.
 
-Yes, it is :/
+Currently the RTL8186_IRQ and the RTL8186_TIMER Kconfig entries depend on
+MACH_RTL8186 (which is added in the MIPS portion of the same patch).
+Also, MACH_RTL8186 in MIPS selects these two options.
 
-Sorry for letting you wasting time and effort to write an overkill code
-not suitable for upstream.
+What is the best way to split that?
 
-A very gross thought, wouldn't be possible to "register" a channel from
-the timer driver code in a shared data area (but well self-encapsulated)
-and the pwm code will check such channel isn't in use ?
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Thanks,
+Yasha
