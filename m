@@ -1,54 +1,312 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v3 1/5] spi: spi-mem: Add driver for NXP FlexSPI
- controller
-Date: Mon, 1 Oct 2018 11:09:46 +0200
-Message-ID: <20181001110946.5330a90e@bbrezillon>
-References: <1537525323-20730-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1537525323-20730-2-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <20180929174023.51b1e284@bbrezillon>
-        <7c10ced6-91af-187a-0c34-ce9b3e897e2e@exceet.de>
-        <VI1PR04MB10381FD703F054F33B9BA6BE99EF0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V9 3/8] clocksource: add C-SKY SMP timer
+Date: Mon, 1 Oct 2018 11:14:14 +0200
+Message-ID: <88e320f2-8cf0-fdb9-c9b0-ee25d7a4d00f@linaro.org>
+References: <cover.1538355281.git.ren_guo@c-sky.com>
+ <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB10381FD703F054F33B9BA6BE99EF0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+In-Reply-To: <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: Frieder Schrempf <frieder.schrempf@exceet.de>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 1 Oct 2018 09:02:32 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+On 01/10/2018 03:35, Guo Ren wrote:
+> This timer is used by SMP system and use mfcr/mtcr instruction
+> to access the regs.
+> 
+> Changelog:
+>  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING
+>  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h
+>  - Support csky mp timer alpha version.
+>  - Just use low-counter with 32bit width as clocksource.
+>  - Coding convention with upstream feed-back.
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ---
+>  drivers/clocksource/Kconfig        |   8 ++
+>  drivers/clocksource/Makefile       |   1 +
+>  drivers/clocksource/csky_mptimer.c | 176 +++++++++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h         |   1 +
+>  4 files changed, 186 insertions(+)
+>  create mode 100644 drivers/clocksource/csky_mptimer.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index a11f4ba..a28043f 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -620,4 +620,12 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
+>  
+> +config CSKY_MPTIMER
+> +	bool "C-SKY Multi Processor Timer"
+> +	depends on CSKY
+> +	select TIMER_OF
+> +	help
+> +	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
+> +	  system.
+> +
+>  endmenu
 
-> > > static void fspi_writel(struct nxp_fspi *f, u32 val, void __iomem
-> > > *addr) {
-> > > 	if (f->big_endian)
-> > > 		iowrite32be(val, addr);
-> > > 	else
-> > > 		iowrite32(val, addr);
-> > > }
-> > >
-> > >
-> > > static u32 fspi_readl(struct nxp_fspi *f, void __iomem *addr) {
-> > > 	if (f->big_endian)
-> > > 		return ioread32be(addr);
-> > > 	else
-> > > 		return ioread32(addr);
-> > > }  
-> > 
-> > I introduced the ->read/write() hooks in the QSPI driver because I
-> > was told to remove the conditional in the read/write path, but I
-> > can't really tell if this really makes any difference.
-> >   
-> Yes, I have taken these hooks by looking into the comments received
-> for Frieder's QSPI patch series. For me this looks more clean and can
-> be decided in the controller initialization sequence which hook would
-> going to be invoked.
+The same rule applies here for COMPILE_TEST.
+
+And please rename the file: timer-mp-csky.c
+
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index db51b24..848c676 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -79,3 +79,4 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+>  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+>  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
+>  obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
+> +obj-$(CONFIG_CSKY_MPTIMER)		+= csky_mptimer.o
+> diff --git a/drivers/clocksource/csky_mptimer.c b/drivers/clocksource/csky_mptimer.c
+> new file mode 100644
+> index 0000000..9dc3cfb
+> --- /dev/null
+> +++ b/drivers/clocksource/csky_mptimer.c
+> @@ -0,0 +1,176 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
+> +
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/sched_clock.h>
+> +#include <linux/cpu.h>
+> +#include <asm/reg_ops.h>
+> +
+> +#include "timer-of.h"
+> +
+> +#define PTIM_CCVR	"cr<3, 14>"
+> +#define PTIM_CTLR	"cr<0, 14>"
+> +#define PTIM_LVR	"cr<6, 14>"
+> +#define PTIM_TSR	"cr<1, 14>"
+> +
+> +static int csky_mptimer_set_next_event(unsigned long delta, struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_LVR, delta);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_shutdown(struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_CTLR, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_oneshot(struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_CTLR, 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_oneshot_stopped(struct clock_event_device *ce)
+> +{
+> +	mtcr(PTIM_CTLR, 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static DEFINE_PER_CPU(struct timer_of, csky_to) = {
+> +	.flags					= TIMER_OF_CLOCK,
+> +	.clkevt = {
+> +		.rating				= 300,
+> +		.features			= CLOCK_EVT_FEAT_PERCPU |
+> +						  CLOCK_EVT_FEAT_ONESHOT,
+> +		.set_state_shutdown		= csky_mptimer_shutdown,
+> +		.set_state_oneshot		= csky_mptimer_oneshot,
+> +		.set_state_oneshot_stopped	= csky_mptimer_oneshot_stopped,
+> +		.set_next_event			= csky_mptimer_set_next_event,
+> +	},
+> +	.of_irq = {
+> +		.flags				= IRQF_TIMER,
+> +		.percpu				= 1,
+> +	},
+
+See comment in the init function.
+
+> +};
+> +
+> +static irqreturn_t timer_interrupt(int irq, void *dev)
+> +{
+> +	struct timer_of *to = this_cpu_ptr(&csky_to);
+> +
+> +	mtcr(PTIM_TSR, 0);
+> +
+> +	to->clkevt.event_handler(&to->clkevt);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/*
+> + * clock event for percpu
+> + */
+> +static int csky_mptimer_starting_cpu(unsigned int cpu)
+> +{
+> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
+> +
+> +	to->clkevt.cpumask = cpumask_of(cpu);
+> +
+> +	clockevents_config_and_register(&to->clkevt, timer_of_rate(to), 2, ULONG_MAX);
+> +
+> +	enable_percpu_irq(timer_of_irq(to), 0);
+> +
+> +	return 0;
+> +}
+> +
+> +static int csky_mptimer_dying_cpu(unsigned int cpu)
+> +{
+> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
+> +
+> +	disable_percpu_irq(timer_of_irq(to));
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * clock source
+> + */
+> +static u64 sched_clock_read(void)
+> +{
+> +	return (u64) mfcr(PTIM_CCVR);
+
+extra space
+
+> +}
+> +
+> +static u64 clksrc_read(struct clocksource *c)
+> +{
+> +	return (u64) mfcr(PTIM_CCVR);
+
+extra space
+
+> +}
+> +
+> +struct clocksource csky_clocksource = {
+> +	.name	= "csky",
+> +	.rating	= 400,
+> +	.mask	= CLOCKSOURCE_MASK(32),
+> +	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
+> +	.read	= clksrc_read,
+> +};
+> +
+> +static int __init csky_mptimer_init(struct device_node *np)
+> +{
+> +	int ret, cpu;
+> +	struct timer_of *to;
+> +	int rate = 0;
+> +	int irq	 = 0;
+> +
+> +	/*
+> +	 * Csky_mptimer is designed for C-SKY SMP multi-processors and
+> +	 * every core has it's own private irq and regs for clkevt and
+> +	 * clksrc.
+> +	 *
+> +	 * The regs is accessed by cpu instruction: mfcr/mtcr instead of
+> +	 * mmio map style. So we needn't mmio-address in dts, but we still
+> +	 * need to give clk and irq number.
+> +	 *
+> +	 * We use private irq for the mptimer and irq number is the same
+> +	 * for every core. So we use request_percpu_irq() in timer_of_init.
+> +	 */
+> +
+
+extra line
+
+> +	for_each_possible_cpu(cpu) {
+> +		to = per_cpu_ptr(&csky_to, cpu);
+> +
+> +		if (cpu == 0) {
+> +			to->flags	  |= TIMER_OF_IRQ;
+> +			to->of_irq.handler = timer_interrupt;
+> +
+> +			ret = timer_of_init(np, to);
+> +			if (ret)
+> +				return ret;
+> +
+> +			rate	= timer_of_rate(to);
+> +			irq	= to->of_irq.irq;
+> +		} else {
+> +			ret = timer_of_init(np, to);
+> +			if (ret)
+> +				return ret;
+> +
+> +			to->of_clk.rate	= rate;
+> +			to->of_irq.irq	= irq;
+> +		}
+> +	}
 
 
-Well, depending on your CPU, the indirect branch (caused by the
-function pointer call) might have an higher cost than the conditional
-branch. Not sure we care about such micro-optimizations though.
-Regarding the readability aspect, I still prefer my version, but I
-guess that's a matter of taste.
+Isn't possible to replace this loop which is a bit confusing by:
+
+ - no irq flag specified for timer-of
+ - request irq before
+
+So we end up with:
+
+	irq = irq_of_parse_and_map(np, 0);
+	if (irq <= 0)
+		return -EINVAL;
+
+	ret = request_irq(irq, csky_timer_interrupt,
+			IRQF_TIMER | IRQF_PERCPU,
+                        "csky_mp_timer", &csky_to));
+	if (ret)
+		return ret;
+
+	for_each_possible_cpu(cpu) {
+		to = per_cpu_ptr(&csky_to, cpu);
+		ret = timer_of_init(np, to);
+		if (ret)
+			goto rollback;
+	}
+
+Alternatively, you can remove the timer_of struct and instantiate the
+percpu stuff in cpuhp callbacks (cf. jcore_pit).
+
+
+> +	ret = cpuhp_setup_state(CPUHP_AP_CSKY_TIMER_STARTING,
+> +				"clockevents/csky/timer:starting",
+> +				csky_mptimer_starting_cpu,
+> +				csky_mptimer_dying_cpu);
+> +	if (ret) {
+> +		pr_err("%s: Failed to cpuhp_setup_state.\n", __func__);
+> +		return ret;
+> +	}
+> +
+> +	clocksource_register_hz(&csky_clocksource, rate);
+> +	sched_clock_register(sched_clock_read, 32, rate);
+> +
+> +	return 0;
+> +}
+> +TIMER_OF_DECLARE(csky_mptimer, "csky,mptimer", csky_mptimer_init);
+> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
+> index caf40ad..e0cd2ba 100644
+> --- a/include/linux/cpuhotplug.h
+> +++ b/include/linux/cpuhotplug.h
+> @@ -126,6 +126,7 @@ enum cpuhp_state {
+>  	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
+>  	CPUHP_AP_ARC_TIMER_STARTING,
+>  	CPUHP_AP_RISCV_TIMER_STARTING,
+> +	CPUHP_AP_CSKY_TIMER_STARTING,
+>  	CPUHP_AP_KVM_STARTING,
+>  	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
+>  	CPUHP_AP_KVM_ARM_VGIC_STARTING,
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
