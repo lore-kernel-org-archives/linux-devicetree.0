@@ -1,88 +1,114 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: media: Add Aspeed Video Engine
- binding documentation
-Date: Mon, 1 Oct 2018 10:20:57 -0500
-Message-ID: <3e53dda4-81c4-1009-add2-45a3a7998e4e@linux.vnet.ibm.com>
-References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
- <1537903629-14003-2-git-send-email-eajames@linux.ibm.com>
- <CACPK8Xd0MhrFQqiM=u-Rv5u7RJRo5R-pAejH4dmeTrYSWE0AZA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v4 3/9] nios2: use common rules to build built-in dtb
+Date: Mon,  1 Oct 2018 10:25:25 -0500
+Message-ID: <20181001152531.3385-4-robh@kernel.org>
+References: <20181001152531.3385-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8Xd0MhrFQqiM=u-Rv5u7RJRo5R-pAejH4dmeTrYSWE0AZA@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181001152531.3385-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>, eajames@linux.ibm.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-aspeed@lists.ozlabs.org, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, hverkuil@xs4all.nl, Rob Herring <robh+dt@kernel.org>, mchehab@kernel.org, linux-media@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: Ley Foon Tan <lftan@altera.com>, nios2-dev@lists.rocketboards.org
 List-Id: devicetree@vger.kernel.org
 
+Using the common build support for built-in dtb files just requires
+adding a .dtb.o target to obj-y.
 
+This has the side effect that CONFIG_NIOS2_DTB_SOURCE should now be just
+the dts filename in arch/nios2/boot/dts/ directory. Before any path was
+supported, but if you want to build in your dtb to the kernel, it should
+be in the kernel tree.
 
-On 10/01/2018 08:08 AM, Joel Stanley wrote:
-> On Tue, 25 Sep 2018 at 21:27, Eddie James <eajames@linux.ibm.com> wrote:
->> Document the bindings.
->>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->> ---
->>   .../devicetree/bindings/media/aspeed-video.txt     | 26 ++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/media/aspeed-video.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/aspeed-video.txt b/Documentation/devicetree/bindings/media/aspeed-video.txt
->> new file mode 100644
->> index 0000000..f1af528
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/aspeed-video.txt
->> @@ -0,0 +1,26 @@
->> +* Device tree bindings for Aspeed Video Engine
->> +
->> +The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs can
->> +capture and compress video data from digital or analog sources.
->> +
->> +Required properties:
->> + - compatible:         "aspeed,ast2400-video-engine" or
->> +                       "aspeed,ast2500-video-engine"
->> + - reg:                        contains the offset and length of the VE memory region
->> + - clocks:             clock specifiers for the syscon clocks associated with
->> +                       the VE (ordering must match the clock-names property)
->> + - clock-names:                "vclk" and "eclk"
->> + - resets:             reset specifier for the syscon reset associaated with
-> associated
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: nios2-dev@lists.rocketboards.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ arch/nios2/Makefile          |  6 ++----
+ arch/nios2/boot/Makefile     | 14 --------------
+ arch/nios2/boot/dts/Makefile |  2 ++
+ arch/nios2/boot/linked_dtb.S | 19 -------------------
+ 4 files changed, 4 insertions(+), 37 deletions(-)
+ delete mode 100644 arch/nios2/boot/linked_dtb.S
 
-Good catch, thanks.
-
->
->> +                       the VE
->> + - interrupts:         the interrupt associated with the VE on this platform
->> +
->> +Example:
->> +
->> +video-engine@1e700000 {
->> +    compatible = "aspeed,ast2500-video-engine";
->> +    reg = <0x1e700000 0x20000>;
->> +    clocks = <&syscon ASPEED_CLK_GATE_VCLK>, <&syscon ASPEED_CLK_GATE_ECLK>;
->> +    clock-names = "vclk", "eclk";
-> Did you end up sending the clock patches out?
-
-Yes,
-
-https://lore.kernel.org/patchwork/patch/978979/
-https://lore.kernel.org/patchwork/patch/978976/
-
-Do I need to send them as a separate series?
-
-Thanks,
-Eddie
-
->
-> Cheers,
->
-> Joel
->
->> +    resets = <&syscon ASPEED_RESET_VIDEO>;
->> +    interrupts = <7>;
->> +};
->> --
->> 1.8.3.1
->>
+diff --git a/arch/nios2/Makefile b/arch/nios2/Makefile
+index 50eece1c6adb..db2e78fe65c7 100644
+--- a/arch/nios2/Makefile
++++ b/arch/nios2/Makefile
+@@ -49,16 +49,14 @@ BOOT_TARGETS = vmImage zImage
+ PHONY += $(BOOT_TARGETS) install
+ KBUILD_IMAGE := $(nios2-boot)/vmImage
+ 
+-ifneq ($(CONFIG_NIOS2_DTB_SOURCE),"")
+-	core-y	+= $(nios2-boot)/
+-endif
++core-y	+= $(nios2-boot)/dts/
+ 
+ all: vmImage
+ 
+ archclean:
+ 	$(Q)$(MAKE) $(clean)=$(nios2-boot)
+ 
+-%.dtb: | scripts
++%.dtb %.dtb.S %.dtb.o: | scripts
+ 	$(Q)$(MAKE) $(build)=$(nios2-boot)/dts $(nios2-boot)/dts/$@
+ 
+ dtbs:
+diff --git a/arch/nios2/boot/Makefile b/arch/nios2/boot/Makefile
+index 007586094dde..0b48f1bf086d 100644
+--- a/arch/nios2/boot/Makefile
++++ b/arch/nios2/boot/Makefile
+@@ -31,20 +31,6 @@ $(obj)/zImage: $(obj)/compressed/vmlinux FORCE
+ $(obj)/compressed/vmlinux: $(obj)/vmlinux.gz FORCE
+ 	$(Q)$(MAKE) $(build)=$(obj)/compressed $@
+ 
+-# Rule to build device tree blobs
+-DTB_SRC := $(patsubst "%",%,$(CONFIG_NIOS2_DTB_SOURCE))
+-
+-# Make sure the generated dtb gets removed during clean
+-extra-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += system.dtb
+-
+-$(obj)/system.dtb: $(DTB_SRC) FORCE
+-	$(call cmd,dtc)
+-
+-# Ensure system.dtb exists
+-$(obj)/linked_dtb.o: $(obj)/system.dtb
+-
+-obj-$(CONFIG_NIOS2_DTB_SOURCE_BOOL) += linked_dtb.o
+-
+ targets += $(dtb-y)
+ 
+ $(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+diff --git a/arch/nios2/boot/dts/Makefile b/arch/nios2/boot/dts/Makefile
+index f66554cd5c45..f6358e395b25 100644
+--- a/arch/nios2/boot/dts/Makefile
++++ b/arch/nios2/boot/dts/Makefile
+@@ -1 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0
++
++obj-y := $(patsubst "%.dts",%.dtb.o,$(CONFIG_NIOS2_DTB_SOURCE))
+diff --git a/arch/nios2/boot/linked_dtb.S b/arch/nios2/boot/linked_dtb.S
+deleted file mode 100644
+index 071f922db338..000000000000
+--- a/arch/nios2/boot/linked_dtb.S
++++ /dev/null
+@@ -1,19 +0,0 @@
+-/*
+- * Copyright (C) 2011 Thomas Chou <thomas@wytron.com.tw>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+- *
+- */
+-.section .dtb.init.rodata,"a"
+-.incbin "arch/nios2/boot/system.dtb"
+-- 
+2.17.1
