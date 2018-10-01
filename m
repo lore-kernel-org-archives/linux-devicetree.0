@@ -1,90 +1,107 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
-Date: Mon, 1 Oct 2018 08:25:03 -0500
-Message-ID: <CAL_JsqLPaX3GB1Esw3DhkQ+2fQLVG8=_UbyJC5RJ-6_s=v288g@mail.gmail.com>
-References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
- <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
- <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
- <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
- <CAK7LNATkkOiYPj2RLubcgZ_z59Bhz4GkgWqPMbnaHBk7EisXLg@mail.gmail.com>
- <20180928154150.GA25013@bogus> <CAK7LNATiSbwVfCRNsDOyksfq5wcv0pnNQYnMXdo2yRyE7fcn-Q@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V2 27/27] mmc: mmci: add stm32 sdmmc variant
+Date: Mon, 1 Oct 2018 15:39:33 +0200
+Message-ID: <CAPDyKFr45FF-wbhT7C=+G5ptbCMRiKie304UM9P2vRypKd=PvQ@mail.gmail.com>
+References: <1537523181-14578-1-git-send-email-ludovic.Barre@st.com>
+ <1537523181-14578-28-git-send-email-ludovic.Barre@st.com> <CAPDyKFqGY2o7TcUVW9bCZM9-4xtyJJ4PaCtWWQvV3VMd+cK99A@mail.gmail.com>
+ <50222b8d-3b53-acea-7935-092fa149d54c@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNATiSbwVfCRNsDOyksfq5wcv0pnNQYnMXdo2yRyE7fcn-Q@mail.gmail.com>
+In-Reply-To: <50222b8d-3b53-acea-7935-092fa149d54c@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, arcml <linux-snps-arc@li>
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, Loic Pallardy <loic.pallardy@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 1, 2018 at 12:49 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> Hi Rob,
->
->
-> 2018=E5=B9=B49=E6=9C=8829=E6=97=A5(=E5=9C=9F) 0:43 Rob Herring <robh@kern=
-el.org>:
->
-> > +#
-> > -----------------------------------------------------------------------=
-----
-> > +# Devicetree files
-> > +
-> > +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
-> > +dtstree :=3D arch/$(SRCARCH)/boot/dts
-> > +endif
-> > +
-> > +ifneq ($(dtstree),)
-> > +
-> > +%.dtb : scripts_dtc
->
-> %.dtb: prepare3 prepare
+[...]
 
-I assume you didn't mean to drop scripts_dtc as that doesn't work.
+>>>   struct variant_data {
+>>>          unsigned int            clkreg;
+>>> @@ -348,6 +350,8 @@ struct variant_data {
+>>>          unsigned int            irq_pio_mask;
+>>>          u32                     start_err;
+>>>          u32                     opendrain;
+>>> +       bool                    dma_lli;
+>>> +       u32                     stm32_idmabsize_mask;
+>>
+>>
+>> What are these?
+>
+>
+> This property is specific for sdmmc variants:
+> sdmmc has a Internal DMA and the number bytes per buffer
+> could be different between sdmmc variants
+> (depend of SDMMC_IDMABSIZER register).
 
-Why "prepare" here and not on dtbs?
+Okay. Thanks for clarifying.
 
-> because we need to make sure KERNELRELEASE
-> is correctly defined before dtbs_install happens.
+Could you please add some information about this in the changelog as well?
 
-Yes, indeed. With prepare3 added I get:
+[...]
 
-cp: cannot create regular file
-'/boot/dtbs/4.19.0-rc3-00009-g0afba9b7b2ea-dirty': No such file or
-directory
+>>> +
+>>> +static int _sdmmc_idma_prep_data(struct mmci_host *host,
+>>> +                                struct mmc_data *data)
+>>> +{
+>>> +       int n_elem;
+>>> +
+>>> +       n_elem = dma_map_sg(mmc_dev(host->mmc),
+>>> +                           data->sg,
+>>> +                           data->sg_len,
+>>> +                           mmc_get_dma_dir(data));
+>>> +
+>>> +       if (!n_elem) {
+>>> +               dev_err(mmc_dev(host->mmc), "dma_map_sg failed\n");
+>>> +               return -EINVAL;
+>>> +       }
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int sdmmc_idma_prep_data(struct mmci_host *host,
+>>> +                               struct mmc_data *data, bool next)
+>>> +{
+>>> +       /* Check if job is already prepared. */
+>>> +       if (!next && data->host_cookie == host->next_cookie)
+>>> +               return 0;
+>>> +
+>>> +       return _sdmmc_idma_prep_data(host, data);
+>>> +}
+>>> +
+>>> +static void sdmmc_idma_unprep_data(struct mmci_host *host,
+>>> +                                  struct mmc_data *data, int err)
+>>> +{
+>>> +       dma_unmap_sg(mmc_dev(host->mmc), data->sg, data->sg_len,
+>>> +                    mmc_get_dma_dir(data));
+>>> +}
+>>
+>>
+>> The sdmmc_idma_prep_data() and sdmmc_idma_unprep_data(), seems very
+>> similar to what the mmci core driver needs to do in this regards.
+>>
+>> Can we perhaps avoid adding these callbacks altogether, but rather
+>> rely on common code in the mmci core driver?
+>
+>
+> Actually, these callbacks allow to manage prepare/unprepare of
+> dmaengine interface for mmci variant, (not needed for sdmmc which uses an
+> internal dma).
+>
+> For Sdmmc, today there are no special case, just dma_map/unmap.
+> But in the future, I hope manage the lli list in these callback.
+>
+> Only dma_map/unmap could be common, but the error management may
+> be complicated (in mmci variant).
+>
+> Personally, I prefer keep prep_data/unprep_data mmci_host_ops
+> interfaces.
+> What do you suggest ?
 
-vs. with it:
+Okay, let's keep them for now. We can always change things on top, in
+case we see later that those callbacks can be removed.
 
-cp: cannot create regular file '/boot/dtbs/': Not a directory
+[...]
 
->
->
-> > +       $(Q)$(MAKE) $(build)=3D$(dtstree) $(dtstree)/$@
-> > +
-> > +PHONY +=3D dtbs dtbs_install
-> > +dtbs: scripts_dtc
->
->
-> dtbs: prepare3 scripts_dtc
->
->
->
-> > +       $(Q)$(MAKE) $(build)=3D$(dtstree)
-> > +
-> > +dtbs_install: dtbs
->
->
-> Please do not have dtbs_install to depend on dtbs.
->
-> No install targets should ever trigger building anything
-> in the source tree.
->
->
-> For the background, see the commit log of
-> 19514fc665ffbce624785f76ee7ad0ea6378a527
-
-Okay, thanks.
-
-Rob
+Kind regards
+Uffe
