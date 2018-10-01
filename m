@@ -1,99 +1,113 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 1/9] PCI: mediatek: Using slot's devfn for compare to
- fix mtk_pcie_find_port logic
-Date: Mon, 1 Oct 2018 15:36:41 +0100
-Message-ID: <20181001143641.GB13049@red-moon>
-References: <1538129080-8206-1-git-send-email-honghui.zhang@mediatek.com>
- <1538129080-8206-2-git-send-email-honghui.zhang@mediatek.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH v3 6/9] kbuild: consolidate Devicetree dtb build rules
+Date: Mon, 1 Oct 2018 23:48:00 +0900
+Message-ID: <CAK7LNASX+2iLbXmpgcsH9agrxkd5xeWbTZdh8hxL+zJm4L11gw@mail.gmail.com>
+References: <20180910150403.19476-1-robh@kernel.org> <20180910150403.19476-7-robh@kernel.org>
+ <CAL_Jsq+=VbdcVLiwXbOA5d+R2YY6=2Pw2bQpci-jj-JvereD1A@mail.gmail.com>
+ <CAK7LNAQFqhWw+LwDoypGG=OP6tH4qf2tT=LvtchK2GoiNyzDXg@mail.gmail.com>
+ <CAMuHMdWEnoh97_jiDWMq=ke4PrhSFbToYnx91CPLBuq3mOGzoQ@mail.gmail.com>
+ <CAK7LNATkkOiYPj2RLubcgZ_z59Bhz4GkgWqPMbnaHBk7EisXLg@mail.gmail.com>
+ <20180928154150.GA25013@bogus> <CAK7LNATiSbwVfCRNsDOyksfq5wcv0pnNQYnMXdo2yRyE7fcn-Q@mail.gmail.com>
+ <CAL_JsqLPaX3GB1Esw3DhkQ+2fQLVG8=_UbyJC5RJ-6_s=v288g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1538129080-8206-2-git-send-email-honghui.zhang@mediatek.com>
+In-Reply-To: <CAL_JsqLPaX3GB1Esw3DhkQ+2fQLVG8=_UbyJC5RJ-6_s=v288g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: honghui.zhang@mediatek.com
-Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: Rob Herring <robh@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michal Marek <michal.lkml@markovi.net>, Vineet Gupta <vgupta@synopsys.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Yoshinori Sato <ysato@users.sourceforge.jp>, Michal Simek <monstr@monstr.eu>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>, arcml <linux-snps-arc@>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 06:04:32PM +0800, honghui.zhang@mediatek.com wrote:
-> From: Honghui Zhang <honghui.zhang@mediatek.com>
-> 
-> The Mediatek's host controller has two slots, each with it's own control
-> registers. The host driver need to identify which slot was connected
-> in order to access the device's configuration space. There's problem
-> for current host driver to find out which slot was connected to for
-> a given EP device.
-> 
-> Assuming each slot have connect with one EP device as below:
-> 
->                 host bridge
->   bus 0 --> __________|_______
->            |                  |
->            |                  |
->          slot 0             slot 1
->   bus 1 -->|        bus 2 --> |
->            |                  |
->          EP 0               EP 1
-> 
-> During PCI enumeration, system software will scan all the PCI device
-> starting from devfn 0. So it will get the proper port for slot0 and
-> slot1 device when using PCI_SLOT(devfn) for match. But it will get
-> the wrong slot for EP1: The devfn will be start from 0 when scanning
-> EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
-> for port0's slot value. So the host driver should not using EP's devfn
-> but the slot's devfn(the slot which EP was connected to) for match.
-> 
-> This patch fix the mtk_pcie_find_port's logic by using the slot's
-> devfn for match if finding device connected to the subordinate bus.
-> 
-> Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-> ---
->  drivers/pci/controller/pcie-mediatek.c | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> index 9999dae..264e03f 100644
-> --- a/drivers/pci/controller/pcie-mediatek.c
-> +++ b/drivers/pci/controller/pcie-mediatek.c
-> @@ -337,10 +337,25 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
->  {
->  	struct mtk_pcie *pcie = bus->sysdata;
->  	struct mtk_pcie_port *port;
-> +	struct pci_dev *dev = NULL;
-> +
-> +	/*
-> +	 * Walk the bus hierarchy to get the devfn value
-> +	 * of the port in the root bus.
-> +	 */
-> +	while (bus && bus->number) {
-> +		dev = bus->self;
-> +		bus = dev->bus;
+Hi Rob,
 
-If you add:
 
-devfn = dev->devfn;
+2018=E5=B9=B410=E6=9C=881=E6=97=A5(=E6=9C=88) 22:26 Rob Herring <robh@kerne=
+l.org>:
+>
+> On Mon, Oct 1, 2018 at 12:49 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Hi Rob,
+> >
+> >
+> > 2018=E5=B9=B49=E6=9C=8829=E6=97=A5(=E5=9C=9F) 0:43 Rob Herring <robh@ke=
+rnel.org>:
+> >
+> > > +#
+> > > ---------------------------------------------------------------------=
+------
+> > > +# Devicetree files
+> > > +
+> > > +ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/boot/dts/),)
+> > > +dtstree :=3D arch/$(SRCARCH)/boot/dts
+> > > +endif
+> > > +
+> > > +ifneq ($(dtstree),)
+> > > +
+> > > +%.dtb : scripts_dtc
+> >
+> > %.dtb: prepare3 prepare
+>
+> I assume you didn't mean to drop scripts_dtc as that doesn't work.
+>
+> Why "prepare" here and not on dtbs?
 
-here
 
-> +	}
-> +
-> +	list_for_each_entry(port, &pcie->ports, list) {
-> +		/* Using slot's devfn to compare for subordinary bus. */
-> +		if (dev)
-> +			devfn = dev->devfn;
+Sorry, my mistake.
 
-You can remove this ugly hunk altogether (and dev initialization
-to NULL).
 
-Lorenzo
+%.dtb: prepare3 scripts_dtc
 
-> -	list_for_each_entry(port, &pcie->ports, list)
->  		if (port->slot == PCI_SLOT(devfn))
->  			return port;
-> +	}
->  
->  	return NULL;
->  }
-> -- 
-> 2.6.4
-> 
+is the correct one.
+
+
+
+> > because we need to make sure KERNELRELEASE
+> > is correctly defined before dtbs_install happens.
+>
+> Yes, indeed. With prepare3 added I get:
+>
+> cp: cannot create regular file
+> '/boot/dtbs/4.19.0-rc3-00009-g0afba9b7b2ea-dirty': No such file or
+> directory
+>
+> vs. with it:
+>
+> cp: cannot create regular file '/boot/dtbs/': Not a directory
+>
+> >
+> >
+> > > +       $(Q)$(MAKE) $(build)=3D$(dtstree) $(dtstree)/$@
+> > > +
+> > > +PHONY +=3D dtbs dtbs_install
+> > > +dtbs: scripts_dtc
+> >
+> >
+> > dtbs: prepare3 scripts_dtc
+> >
+> >
+> >
+> > > +       $(Q)$(MAKE) $(build)=3D$(dtstree)
+> > > +
+> > > +dtbs_install: dtbs
+> >
+> >
+> > Please do not have dtbs_install to depend on dtbs.
+> >
+> > No install targets should ever trigger building anything
+> > in the source tree.
+> >
+> >
+> > For the background, see the commit log of
+> > 19514fc665ffbce624785f76ee7ad0ea6378a527
+>
+> Okay, thanks.
+>
+> Rob
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
