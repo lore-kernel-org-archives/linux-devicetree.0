@@ -1,108 +1,125 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v16 1/5] iommu/arm-smmu: Add
- pm_runtime/sleep ops
-Date: Mon, 1 Oct 2018 11:38:02 +0200
-Message-ID: <CAPDyKFrCWaeDLbmbrRb23V_mRk8doBjM3u2X9tm0XNXm=-n5vA@mail.gmail.com>
-References: <20180830144541.17740-1-vivek.gautam@codeaurora.org>
- <20180830144541.17740-2-vivek.gautam@codeaurora.org>
- <CAPDyKFohpvEMfDoDooYEyxPMeQ+9dU71qz7ZAZxQ1rzyW-w8iA@mail.gmail.com>
- <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ@mail.gmail.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next v3 11/11] net: mscc: ocelot: make use of SerDes
+ PHYs for handling their configuration
+Date: Mon, 1 Oct 2018 11:42:45 +0200
+Message-ID: <20181001094245.cr4hdcechrqkjymq@qschulz>
+References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
+ <00989856964175eafbe1435a70862c2ac66cffc0.1536912834.git-series.quentin.schulz@bootlin.com>
+ <0f762d63-a392-d2fe-a121-a013a13a8584@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAFp+6iHZysBmMZj+pZghPocEwDzU7KfR1gLQAQRBui+-gdiSTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "list-Y9sIeH5OGRo@public.gmane.org:IOMMU DRIVERS <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>,
- Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, " <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7qj7oqpfzhozt23v"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <0f762d63-a392-d2fe-a121-a013a13a8584@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMSBPY3RvYmVyIDIwMTggYXQgMDc6NDksIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFtQGNv
-ZGVhdXJvcmEub3JnPiB3cm90ZToKPiBISSBVbGYsCj4KPiBPbiBGcmksIFNlcCAyOCwgMjAxOCBh
-dCA1OjMwIFBNIFVsZiBIYW5zc29uIDx1bGYuaGFuc3NvbkBsaW5hcm8ub3JnPiB3cm90ZToKPj4K
-Pj4gT24gMzAgQXVndXN0IDIwMTggYXQgMTY6NDUsIFZpdmVrIEdhdXRhbSA8dml2ZWsuZ2F1dGFt
-QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPj4gPiBGcm9tOiBTcmljaGFyYW4gUiA8c3JpY2hhcmFu
-QGNvZGVhdXJvcmEub3JnPgo+PiA+Cj4+ID4gVGhlIHNtbXUgbmVlZHMgdG8gYmUgZnVuY3Rpb25h
-bCBvbmx5IHdoZW4gdGhlIHJlc3BlY3RpdmUKPj4gPiBtYXN0ZXIncyB1c2luZyBpdCBhcmUgYWN0
-aXZlLiBUaGUgZGV2aWNlX2xpbmsgZmVhdHVyZQo+PiA+IGhlbHBzIHRvIHRyYWNrIHN1Y2ggZnVu
-Y3Rpb25hbCBkZXBlbmRlbmNpZXMsIHNvIHRoYXQgdGhlCj4+ID4gaW9tbXUgZ2V0cyBwb3dlcmVk
-IHdoZW4gdGhlIG1hc3RlciBkZXZpY2UgZW5hYmxlcyBpdHNlbGYKPj4gPiB1c2luZyBwbV9ydW50
-aW1lLiBTbyBieSBhZGFwdGluZyB0aGUgc21tdSBkcml2ZXIgZm9yCj4+ID4gcnVudGltZSBwbSwg
-YWJvdmUgc2FpZCBkZXBlbmRlbmN5IGNhbiBiZSBhZGRyZXNzZWQuCj4+ID4KPj4gPiBUaGlzIHBh
-dGNoIGFkZHMgdGhlIHBtIHJ1bnRpbWUvc2xlZXAgY2FsbGJhY2tzIHRvIHRoZQo+PiA+IGRyaXZl
-ciBhbmQgYWxzbyB0aGUgZnVuY3Rpb25zIHRvIHBhcnNlIHRoZSBzbW11IGNsb2Nrcwo+PiA+IGZy
-b20gRFQgYW5kIGVuYWJsZSB0aGVtIGluIHJlc3VtZS9zdXNwZW5kLgo+PiA+Cj4+ID4gQWxzbywg
-d2hpbGUgd2UgZW5hYmxlIHRoZSBydW50aW1lIHBtIGFkZCBhIHBtIHNsZWVwIHN1c3BlbmQKPj4g
-PiBjYWxsYmFjayB0aGF0IHB1c2hlcyBkZXZpY2VzIHRvIGxvdyBwb3dlciBzdGF0ZSBieSB0dXJu
-aW5nCj4+ID4gdGhlIGNsb2NrcyBvZmYgaW4gYSBzeXN0ZW0gc2xlZXAuCj4+ID4gQWxzbyBhZGQg
-Y29ycmVzcG9uZGluZyBjbG9jayBlbmFibGUgcGF0aCBpbiByZXN1bWUgY2FsbGJhY2suCj4+ID4K
-Pj4gPiBTaWduZWQtb2ZmLWJ5OiBTcmljaGFyYW4gUiA8c3JpY2hhcmFuQGNvZGVhdXJvcmEub3Jn
-Pgo+PiA+IFNpZ25lZC1vZmYtYnk6IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29kZWF1cm9yYS5v
-cmc+Cj4+ID4gW3ZpdmVrOiByZXdvcmsgZm9yIGNsb2NrIGFuZCBwbSBvcHNdCj4+ID4gU2lnbmVk
-LW9mZi1ieTogVml2ZWsgR2F1dGFtIDx2aXZlay5nYXV0YW1AY29kZWF1cm9yYS5vcmc+Cj4+ID4g
-UmV2aWV3ZWQtYnk6IFRvbWFzeiBGaWdhIDx0ZmlnYUBjaHJvbWl1bS5vcmc+Cj4+ID4gVGVzdGVk
-LWJ5OiBTcmluaXZhcyBLYW5kYWdhdGxhIDxzcmluaXZhcy5rYW5kYWdhdGxhQGxpbmFyby5vcmc+
-Cj4+ID4gLS0tCj4+ID4gIGRyaXZlcnMvaW9tbXUvYXJtLXNtbXUuYyB8IDc3ICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+PiA+ICAxIGZpbGUgY2hhbmdl
-ZCwgNzQgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9pb21tdS9hcm0tc21tdS5jIGIvZHJpdmVycy9pb21tdS9hcm0tc21tdS5jCj4+Cj4+IFsu
-Li5dCj4+Cj4+ID4gLXN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcG1fcmVzdW1l
-KHN0cnVjdCBkZXZpY2UgKmRldikKPj4gPiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBhcm1f
-c21tdV9ydW50aW1lX3Jlc3VtZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gIHsKPj4gPiAgICAg
-ICAgIHN0cnVjdCBhcm1fc21tdV9kZXZpY2UgKnNtbXUgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsK
-Pj4gPiArICAgICAgIGludCByZXQ7Cj4+ID4gKwo+PiA+ICsgICAgICAgcmV0ID0gY2xrX2J1bGtf
-ZW5hYmxlKHNtbXUtPm51bV9jbGtzLCBzbW11LT5jbGtzKTsKPj4gPiArICAgICAgIGlmIChyZXQp
-Cj4+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7Cj4+ID4KPj4gPiAgICAgICAgIGFybV9z
-bW11X2RldmljZV9yZXNldChzbW11KTsKPj4gPiArCj4+ID4gICAgICAgICByZXR1cm4gMDsKPj4g
-PiAgfQo+PiA+Cj4+ID4gLXN0YXRpYyBTSU1QTEVfREVWX1BNX09QUyhhcm1fc21tdV9wbV9vcHMs
-IE5VTEwsIGFybV9zbW11X3BtX3Jlc3VtZSk7Cj4+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVz
-ZWQgYXJtX3NtbXVfcnVudGltZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldikKPj4gPiArewo+
-PiA+ICsgICAgICAgc3RydWN0IGFybV9zbW11X2RldmljZSAqc21tdSA9IGRldl9nZXRfZHJ2ZGF0
-YShkZXYpOwo+PiA+ICsKPj4gPiArICAgICAgIGNsa19idWxrX2Rpc2FibGUoc21tdS0+bnVtX2Ns
-a3MsIHNtbXUtPmNsa3MpOwo+PiA+ICsKPj4gPiArICAgICAgIHJldHVybiAwOwo+PiA+ICt9Cj4+
-ID4gKwo+PiA+ICtzdGF0aWMgaW50IF9fbWF5YmVfdW51c2VkIGFybV9zbW11X3BtX3Jlc3VtZShz
-dHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gK3sKPj4gPiArICAgICAgIGlmIChwbV9ydW50aW1lX3N1
-c3BlbmRlZChkZXYpKQo+PiA+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4KPj4gTG9va3Mg
-bGlrZSB5b3Ugc2hvdWxkIGJlIGFibGUgdXNlIHBtX3J1bnRpbWVfZm9yY2VfcmVzdW1lKCksIGlu
-c3RlYWQKPj4gb2YgdXNpbmcgdGhpcyBsb2NhbCB0cmljay4gVW5sZXNzIEkgYW0gbWlzc2luZyBz
-b21ldGhpbmcsIG9mIGNvdXJzZS4KPj4KPj4gSW4gb3RoZXIgd29yZHMsIGp1c3QgYXNzaWduIHRo
-ZSBzeXN0ZW0gc2xlZXAgY2FsbGJhY2tzIGZvciByZXN1bWUsIHRvCj4+IHBtX3J1bnRpbWVfZm9y
-Y2VfcmVzdW1lKCkuIEFuZCB2aWNlIHZlcnNlIGZvciB0aGUgc3lzdGVtIHN1c3BlbmQKPj4gY2Fs
-bGJhY2tzLCBwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQoKSwgb2YgY291cnNlLgo+Cj4gVGhhbmtz
-IGZvciB0aGUgcmV2aWV3LiBJIHdpbGwgY2hhbmdlIHRoaXMgYXMgc3VnZ2VzdGVkLgo+Cj4+Cj4+
-ID4gKwo+PiA+ICsgICAgICAgcmV0dXJuIGFybV9zbW11X3J1bnRpbWVfcmVzdW1lKGRldik7Cj4+
-ID4gK30KPj4gPiArCj4+ID4gK3N0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgYXJtX3NtbXVfcG1f
-c3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpCj4+ID4gK3sKPj4gPiArICAgICAgIGlmIChwbV9y
-dW50aW1lX3N1c3BlbmRlZChkZXYpKQo+PiA+ICsgICAgICAgICAgICAgICByZXR1cm4gMDsKPj4g
-PiArCj4+ID4gKyAgICAgICByZXR1cm4gYXJtX3NtbXVfcnVudGltZV9zdXNwZW5kKGRldik7Cj4+
-ID4gK30KPj4gPiArCj4+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBhcm1fc21t
-dV9wbV9vcHMgPSB7Cj4+ID4gKyAgICAgICBTRVRfU1lTVEVNX1NMRUVQX1BNX09QUyhhcm1fc21t
-dV9wbV9zdXNwZW5kLCBhcm1fc21tdV9wbV9yZXN1bWUpCj4+Cj4+IEkgYW0gd29uZGVyaW5nIGlm
-IHVzaW5nIHRoZSAtPnN1c3BlbmR8cmVzdW1lKCkgY2FsbGJhY2sgaXMgcmVhbGx5Cj4+ICJsYXRl
-L2Vhcmx5IiBlbm91Z2ggaW4gdGhlIGRldmljZSBzdXNwZW5kIHBoYXNlPwo+Pgo+PiBPdGhlcnMg
-aXMgdXNpbmcgdGhlIG5vaXJxIHBoYXNlIGFuZCBzb21lIGlzIGV2ZW4gdXNpbmcgdGhlIHN5c2Nv
-cmUKPj4gb3BzLiBPZiBjb3Vyc2UgaXQgZGVwZW5kcyBvbiB0aGUgYmVoYXZpb3Igb2YgdGhlIGNv
-bnN1bWVycyBvZiBpb21tdQo+PiBkZXZpY2UsIGFuZCBJIGd1ZXNzIG5vdCBldmVyeW9uZSBpcyB1
-c2luZyBkZXZpY2UgbGlua3MsIHdoaWNoIGZvciBzdXJlCj4+IGltcHJvdmVzIHRoaW5ncyBpbiB0
-aGlzIHJlZ2FyZHMgYXMgd2VsbC4KPgo+IFdlbGwgeWVzLCBhcyB5b3Ugc2FpZCB0aGUgZGV2aWNl
-IGxpbmtzIHNob3VsZCBiZSBhYmxlIHRvIHRha2UgY2FyZSBvZgo+IG1haW50YWluaW5nIHRoZSBj
-b3JyZWN0IHN1c3BlbmQvcmVzdW1lIG9yZGVyIG9mIHNtbXUgYW5kIGl0cyBjbGllbnRzLAo+IG9y
-IGFtIEkgbWlzc2luZyB5b3VyIHBvaW50IGhlcmU/Cj4gTGV0IG1lIGtub3cgYW5kIEkgd2lsbCBi
-ZSBoYXBweSB0byBpbmNvcnBvcmF0ZSBhbnkgc3VnZ2VzdGlvbnMuCj4gVGhhbmtzCgpJZiBpdCB3
-b3JrcyBmaW5lLCB0aGVuIHlvdSBtYXkga2VlcCBpdCBhcyBpcy4KCkp1c3Qgd2FudGVkIHRvIHBv
-aW50IG91dCB0aGF0IGlmIGFueSBjb25zdW1lcnMgcmVsaWVzIG9uIHRoZSBpb21tdSB0bwpvcGVy
-YXRpb25hbCB0byBzYXkgdW50aWwgdGhlIHN1c3BlbmQtbGF0ZSBwaGFzZSwgdGhlbiB0aGlzIGRv
-ZXNuJ3QKcGxheS4gVGhlbiB5b3UgbmVlZCB0byBtb3ZlIHlvdXIgY2FsbGJhY2tzIHRvIHRoZSBj
-b3JyZXNwb25kaW5nIHNhbWUKcGhhc2UuCgpbLi4uXQoKS2luZCByZWdhcmRzClVmZmUKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
-bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+
+--7qj7oqpfzhozt23v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Florian,
+
+On Sat, Sep 15, 2018 at 02:25:05PM -0700, Florian Fainelli wrote:
+>=20
+>=20
+> On 09/14/18 01:16, Quentin Schulz wrote:
+> > Previously, the SerDes muxing was hardcoded to a given mode in the MAC
+> > controller driver. Now, the SerDes muxing is configured within the
+> > Device Tree and is enforced in the MAC controller driver so we can have
+> > a lot of different SerDes configurations.
+> >=20
+> > Make use of the SerDes PHYs in the MAC controller to set up the SerDes
+> > according to the SerDes<->switch port mapping and the communication mode
+> > with the Ethernet PHY.
+>=20
+> This looks good, just a few comments below:
+>=20
+> [snip]
+>=20
+> > +		err =3D of_get_phy_mode(portnp);
+> > +		if (err < 0)
+> > +			ocelot->ports[port]->phy_mode =3D PHY_INTERFACE_MODE_NA;
+> > +		else
+> > +			ocelot->ports[port]->phy_mode =3D err;
+> > +
+> > +		switch (ocelot->ports[port]->phy_mode) {
+> > +		case PHY_INTERFACE_MODE_NA:
+> > +			continue;
+>=20
+> Would not you want to issue a message indicating that the Device Tree
+> must be updated here? AFAICT with your patch series, this should no
+> longer be a condition that you will hit unless you kept the old DTB
+> around, right?
+>=20
+
+It'll occur for internal PHYs. On the PCB123[1], there are four of them,
+so we need to be able to give no mode in the DT for those. For the
+upcoming PCB120, there'll be 4 external PHYs that require a mode in the
+DT and 4 internal PHYs that do not require any mode. I could put a debug
+message that says this or that PHY is configured as an internal PHY but
+I wouldn't put a message that is printed with the default log level.
+
+So I think we should keep it, shouldn't we?
+
+[1] https://elixir.bootlin.com/linux/latest/source/arch/mips/boot/dts/mscc/=
+ocelot_pcb123.dts
+
+> > +		case PHY_INTERFACE_MODE_SGMII:
+> > +			phy_mode =3D PHY_MODE_SGMII;
+> > +			break;
+> > +		case PHY_INTERFACE_MODE_QSGMII:
+> > +			phy_mode =3D PHY_MODE_QSGMII;
+> > +			break;
+> > +		default:
+> > +			dev_err(ocelot->dev,
+> > +				"invalid phy mode for port%d, (Q)SGMII only\n",
+> > +				port);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		serdes =3D devm_of_phy_get(ocelot->dev, portnp, NULL);
+> > +		if (IS_ERR(serdes)) {
+> > +			err =3D PTR_ERR(serdes);
+> > +			if (err =3D=3D -EPROBE_DEFER) {
+>=20
+> This can be simplified into:
+>=20
+> 			if (err =3D=3D -EPROBE_DEFER)
+> 				dev_dbg();
+> 			else
+> 				dev_err();
+> 			goto err_probe_ports;
+>=20
+
+Indeed, good catch.
+
+Thanks,
+Quentin
+
+--7qj7oqpfzhozt23v
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux7BQACgkQhLiadT7g
+8aPvNw//VDHvFuh5HkcKrjXm3ZNai+qsn4woktOqsrFvbcgzLUqpIs6Ha51RPcQi
+tFzDmQcIm8YExKYWyLZbGCWruA6sAPVz520gQW/ezRoXyRdnlfmtyAsVsSfQmy+Y
+dg2KPBFSicM7BA7sDy841H0qGqhsWZpEm3b1ks+T+APCd124FpFcc7bakJeuEWuu
+hkSso9320Aw4BNwu23p4qGOd3RvoGj0Yqrw+7gCWmsk6+N7qzDmx+msDJZdsgjNp
+5pxX8myoIHqiSA2dB7fx3hwmxYB+ds4m02YI0QqmsFWzsUqSMDnMklswKXq/6qEp
+AZm/nJXXFZPlFIAx4N0jDDH7bI7Wvqrpbl/Nrc6NuEuBklt2UKSJ1aqkt5WGuJ+w
+L7cC1abHEHREa2asWMqbyQtL7KwTdRRDEPK0ndjX0gjx4ngZNloI4FYzx/fe+Uzz
+9Fo1NL+WYY5wSy9MDRUKc91ivbXCf/F75R+P5BFAblWW/RUsfYZXbacjDXC0y02N
+S0Eu1gsVeyns0Jun5KKZE+biZrs3mf+3QiDX11LesNTu1eSSCZphIojX1ZiMR9jP
++9d7i8HPbCiPbIcj1cQhnOy1VdgxNFTngF0SPXpm9UpiEI+I30V84CG1QxeiOODt
+qNRlZnxG5B6WnVB3+DbPKPUim9hqqu8P8gWeMrGBbQtPOMs3MYg=
+=8aU4
+-----END PGP SIGNATURE-----
+
+--7qj7oqpfzhozt23v--
