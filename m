@@ -1,136 +1,37 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH v2 2/2] PCI: controller: dwc: add UniPhier PCIe host controller support
-Date: Mon, 01 Oct 2018 20:06:51 +0900
-Message-ID: <20181001200651.368C.4A936039@socionext.com>
-References: <20180927164426.ECD6.4A936039@socionext.com> <20180928110640.GA18840@e107981-ln.cambridge.arm.com>
+From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v2 0/4] Enable ath10k wcn3990 wifi driver support on sdm845
+Date: Mon,  1 Oct 2018 16:56:32 +0530
+Message-ID: <20181001112636.31715-1-govinds@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180928110640.GA18840@e107981-ln.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Murali Karicheri <m-karicheri2@ti.com>, marc.zyngier@arm.com
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+This series enables ath10k wifi driver support for WCN3990 target
+on sdm845 SOC. This series also updates the missing dt binding documentation
+and adds optional iommu property.
 
-On Fri, 28 Sep 2018 12:06:40 +0100 <lorenzo.pieralisi@arm.com> wrote:
+sdm845 dtsi changes in this series are based on top of
+https://patchwork.kernel.org/cover/10573121/ change.
 
-> [+Murali, Marc]
-> 
-> On Thu, Sep 27, 2018 at 04:44:26PM +0900, Kunihiko Hayashi wrote:
-> > Hi Lorenzo, Gustavo,
-> > 
-> > On Wed, 26 Sep 2018 21:31:36 +0900 <hayashi.kunihiko@socionext.com> wrote:
-> > 
-> > > Hi Lorenzo, Gustavo,
-> > > 
-> > > Thank you for reviewing.
-> > > 
-> > > On Tue, 25 Sep 2018 18:53:01 +0100
-> > > Gustavo Pimentel <gustavo.pimentel@synopsys.com> wrote:
-> > > 
-> > > > On 25/09/2018 17:14, Lorenzo Pieralisi wrote:
-> > > > > [+Gustavo, please have a look at INTX/MSI management]
-> > > > > 
-> > > > > On Thu, Sep 06, 2018 at 06:40:32PM +0900, Kunihiko Hayashi wrote:
-> > > > >> This introduces specific glue layer for UniPhier platform to support
-> > > > >> PCIe host controller that is based on the DesignWare PCIe core, and
-> > > > >> this driver supports Root Complex (host) mode.
-> > > > > 
-> > > > > Please read this thread and apply it to next versions:
-> > > > > 
-> > > > > https://urldefense.proofpoint.com/v2/url?u=https-3A__marc.info_-3Fl-3Dlinux-2Dpci-26m-3D150905742808166-26w-3D2&d=DwIBAg&c=DPL6_X_6JkXFx7AXWqB0tg&r=bkWxpLoW-f-E3EdiDCCa0_h0PicsViasSlvIpzZvPxs&m=H8UNDDUGQnQnqfWr4CBios689dJcjxu4qeTTRGulLmU&s=CgcXc_2LThyOpW-4bCriJNo9H1lzROEdy_cG9p-Y5hU&e=
-> > > 
-> > > I also found this thread in previous linux-pci, and I think it's helpful for me.
-> > > I'll check it carefully.
-> > 
-> > [snip]
-> > 
-> > > > >> +	ret = devm_request_irq(dev, pp->irq, uniphier_pcie_irq_handler,
-> > > > >> +			       IRQF_SHARED, "pcie", priv);
-> > > > > 
-> > > > > This is wrong, you should set-up a chained IRQ for INTX.
-> > > > > 
-> > > > > I *think* that
-> > > > > 
-> > > > > ks_pcie_setup_interrupts()
-> > > > > 
-> > > > > is a good example to start with but I wonder whether it is worth
-> > > > > generalizing the INTX approach to designware as a whole as it was
-> > > > > done for MSIs.
-> > > > > 
-> > > > > Thoughts ?
-> > > > 
-> > > > From what I understood this is for legacy IRQ, right?
-> > > 
-> > > Yes. For legacy IRQ.
-> > > 
-> > > > Like you (Lorenzo) said there is 2 drivers (pci-keystone-dw.c and pci-dra7xx.c)
-> > > > that uses it and can be use as a template for handling this type of interrupts.
-> > > > 
-> > > > We can try to pass some kind of generic INTX function to the DesignWare host
-> > > > library to handling this, but this will require some help from keystone and
-> > > > dra7xx maintainers, since my setup doesn't have legacy IRQ HW support.
-> > > 
-> > > Now I think it's difficult to make a template for INTX function,
-> > > and at first, I'll try to re-write this part with reference to pci-keystone-dw.c.
-> > 
-> > I understand that there are 2 types of interrupt and the drivers.
-> > 
-> > One like pci-keystone-dw.c is:
-> > 
-> >  - there are 4 interrupts for legacy,
-> >  - invoke handlers for each interrupt, and handle the interrupt,
-> >  - call irq_set_chained_handler_and_data() to make a chain of the interrupts
-> >   when initializing
-> > 
-> > The other like pci-dra7xx.c is:
-> > 
-> >  - there is 1 IRQ for legacy as a parent,
-> >  - check an interrupt factor register, and handle the interrupt correspond
-> >    to the factor,
-> >  - call request_irq() for the parent IRQ and irq_domain_add_linear() for
-> >    the factor when initializing
-> > 
-> > The pcie-uniphier.c is the same type as the latter (like pci-dra7xx.c).
-> > 
-> > However, in pci-dra7xx.c, MSI and legacy IRQ share the same interrupt number,
-> > so the same handler is called and the handler divides these IRQs.
-> > (found in dra7xx_pcie_msi_irq_handler())
-> > 
-> > In pcie-uniphier.c, MSI and legacy IRQ are independent.
-> > Therefore it's necessary to prepare the handler for the legacy IRQ.
-> > 
-> > I think that it's difficult to apply the way of pci-keystone-dw.c, and
-> > uniphier_pcie_irq_handler() and calling devm_request_irq() are still
-> > necessary to handle legacy IRQ.
-> 
-> I do not think it is difficult, the difference is that keystone has
-> 1 GIC irq line allocated per legacy IRQ, your set-up has one for
-> all INTX.
+Changes since v1:
+	Listed no of interrupts/clocks for each set of compatible.
+	Added missing 'wifi' label to sdm845.dtsi.
 
-I read other drivers to handle INTX like pcie-mediatek.c, pcie-altera.c,
-and so forth, and understood the common way to rewrite it with chained IRQ.
+Govind Singh (4):
+  dt: bindings: add missing dt properties for WCN3990 wifi node
+  dts: arm64/sdm845: Add WCN3990 WLAN module device node
+  dt: bindings: add bindings for wifi iommu node
+  dts: arm64/sdm845: Enable iommu for WCN3990 wifi module device node
 
-Using irq_set_chained_handler_and_data() instead of devm_request_irq()
-and adding chained_irq_{enter, exit}() to the handler can allow INTX
-to handle chained IRQ.
+ .../bindings/net/wireless/qcom,ath10k.txt     | 34 +++++++++++++++----
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts       |  7 ++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 27 +++++++++++++++
+ 3 files changed, 61 insertions(+), 7 deletions(-)
 
-Now I can rewrite INTX part with the above way in v3, though,
-I'm not sure whether there is a way to generalize INTX of all dwc drivers,
-because of the followings:
-
-- the handler needs to read SoC-dependent register to check which an IRQ line
-  of {0,1,2,3},
-- domain_ops functions are different for each driver
-  (using handle_simple_irq or handle_level_irq, etc.)
-- the way to get child interrupt-controller node might be different.
-
-Anyway I think we need to leave these topics until clarifying keystone's
-linear irq topic.
-
----
-Best Regards,
-Kunihiko Hayashi
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
