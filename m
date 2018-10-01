@@ -1,101 +1,76 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH 5/7] MIPS: mscc: ocelot: add GPIO4 pinmuxing DT node
-Date: Mon, 1 Oct 2018 11:02:27 +0200
-Message-ID: <20181001090227.mmcnstxcdfocx3zd@qschulz>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <92e37a04e77003f01a67ac5e49e66ae83f87c591.1536916714.git-series.quentin.schulz@bootlin.com>
- <20180914145446.GQ14988@piout.net>
- <20180914162638.fgzzjin2bzgx74de@qschulz>
- <20180914180222.GT14988@piout.net>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v16 0/5] iommu/arm-smmu: Add runtime pm/sleep support
+Date: Mon, 1 Oct 2018 14:36:24 +0530
+Message-ID: <CAFp+6iFzU3vG+HZ-7drNG7fyv6PY-W-9To5-rZeLo7M3p4=2rg@mail.gmail.com>
+References: <20180830144541.17740-1-vivek.gautam@codeaurora.org> <20180928135718.GA1599@brain-police>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ysacw7np3q4ncps4"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180914180222.GT14988@piout.net>
-Sender: netdev-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180928135718.GA1599@brain-police>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, alex.williamson@redhat.com, Linux PM <linux-pm@vger.kernel.org>, sboyd@kernel.org, freedreno <freedreno@lists.freedesktop.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, open list <linux-kernel@vger.kernel.org>, "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>, robh+dt <robh+dt@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Robin Murphy <robin.murphy@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Will,
 
---ysacw7np3q4ncps4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Sep 28, 2018 at 7:27 PM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Vivek,
+>
+> On Thu, Aug 30, 2018 at 08:15:36PM +0530, Vivek Gautam wrote:
+> > This series provides the support for turning on the arm-smmu's
+> > clocks/power domains using runtime pm. This is done using
+> > device links between smmu and client devices. The device link
+> > framework keeps the two devices in correct order for power-cycling
+> > across runtime PM or across system-wide PM.
+> >
+> > With addition of a new device link flag DL_FLAG_AUTOREMOVE_SUPPLIER [7],
+> > the device links created between arm-smmu and its clients will be
+> > automatically purged when arm-smmu driver unbinds from its device.
+> >
+> > As not all implementations support clock/power gating, we are checking
+> > for a valid 'smmu->dev's pm_domain' to conditionally enable the runtime
+> > power management for such smmu implementations that can support it.
+> > Otherwise, the clocks are turned to be always on in .probe until .remove.
+> > With conditional runtime pm now, we avoid touching dev->power.lock
+> > in fastpaths for smmu implementations that don't need to do anything
+> > useful with pm_runtime.
+> > This lets us to use the much-argued pm_runtime_get_sync/put_sync()
+> > calls in map/unmap callbacks so that the clients do not have to
+> > worry about handling any of the arm-smmu's power.
+> >
+> > This series also adds support for Qcom's arm-smmu-v2 variant that
+> > has different clocks and power requirements.
+> >
+> > Previous version of this patch series is @ [1].
+> >
+> > Build tested the series based on 4.19-rc1.
+>
+> I'm going to send my pull request to Joerg early next week (probably
+> Monday), but I'm not keen to include this whilst it has outstanding comments
+> from Ulf. Your errata workaround patch is in a similar situation, with
+> outstanding comments from Robin.
 
-Hi Alexandre,
+I am going to address Ulf's comments for pm_runtime_force_suspend/resume()
+calls in system sleep callbacks and respin the series unless he has any more
+comments regarding the early/late nature of suspend/resume.
+So will it do if I respin the series today after waiting for Ulf?
 
-On Fri, Sep 14, 2018 at 08:02:22PM +0200, Alexandre Belloni wrote:
-> On 14/09/2018 18:26:38+0200, Quentin Schulz wrote:
-> > Hi Alexandre,
-> >=20
-> > On Fri, Sep 14, 2018 at 04:54:46PM +0200, Alexandre Belloni wrote:
-> > > Hi,
-> > >=20
-> > > On 14/09/2018 11:44:26+0200, Quentin Schulz wrote:
-> > > > In order to use GPIO4 as a GPIO, we need to mux it in this mode so =
-let's
-> > > > declare a new pinctrl DT node for it.
-> > > >=20
-> > > > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > > > ---
-> > > >  arch/mips/boot/dts/mscc/ocelot.dtsi | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >=20
-> > > > diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/d=
-ts/mscc/ocelot.dtsi
-> > > > index 8ce317c..b5c4c74 100644
-> > > > --- a/arch/mips/boot/dts/mscc/ocelot.dtsi
-> > > > +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-> > > > @@ -182,6 +182,11 @@
-> > > >  			interrupts =3D <13>;
-> > > >  			#interrupt-cells =3D <2>;
-> > > > =20
-> > > > +			gpio4: gpio4 {
-> > > > +				pins =3D "GPIO_4";
-> > > > +				function =3D "gpio";
-> > > > +			};
-> > > > +
-> > >=20
-> > > For a GPIO, I would do that in the board dts because it is not used
-> > > directly in the dtsi.
-> > >=20
-> >=20
-> > And the day we've two boards using this pinctrl we move it to a dtsi. Is
-> > that the plan?
-> >=20
->=20
-> Not really, at least not for gpios. I've included the pinctrl for the
-> uart, i2c and spi because they are the only option if you are to use
-> those peripherals. Else, I've would have left the pinctrl to the board
-> file. From my point of view, the gpios are too board specific to be in a
-> soc dtsi.
->=20
+The workaround series is going for a discussion now, so i think it can wait.
+Thanks
 
-Understood, will move it to the board file.
+Best regards
+Vivek
+>
+> Will
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
-Thanks,
-Quentin
 
---ysacw7np3q4ncps4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux4qMACgkQhLiadT7g
-8aPhvg/+KCAqXI08qVQU87ghlaA+BByGeMMOIg1WhPtdA6gSQDR6iF/UgzTsGzk9
-4R6noEjVGm0nF4FPESZg5wjzD7vyVK57Yhht8xc4iztNGul61+n66F6mQywOl+He
-6ehEUyMP9HXTznVt2NPMHeYr0q5DhV3HC1c+giRT+zG5+BlIplpFWFDhB+IXsL/t
-E987QydR/4lX7YNNmUc/VNYnJwTuEJH7xhVnYiGmqhBK+j9K2iMAsbKUEYwR2EOX
-FCAH85ktMIwVi64oJYIZZjBT2ntIlKl9ayIR0i2Titjf8dnOUBys0gChxquShWYn
-AzrotXStMrq7CBSR7GpFu2+XT4DkH3m6qnnbjI/wrKUFJ2V1bUOyeZZSmjueUMdx
-zypW4P8L8MHXCJ6dR8p6bgWedBLqXyOIKVnziajs67N4layeE4pU954BYKKoM9vM
-PAsjZdIVbk83S5iYLDkX6ItHKC9VoyLiCYZpsL8mp2crG2he2nlsFg60NshDs5xn
-iQ13jy9iwyI5aFduvPAWoBYCig0NLhRl+45nqYuNhov0IJ/wUSsm1ucgyzukLFDg
-cxgnPBdEShCchrtSy5kPRgje9mh64warP7iZuzH/JFo5f8T7hKPAuBTQ56Egi3nb
-mW7lvUDugTcjnwZ8ALaN+/XlU1LVPsQAd2kkIzYdNPS5Z+KaHWI=
-=FfTb
------END PGP SIGNATURE-----
-
---ysacw7np3q4ncps4--
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
