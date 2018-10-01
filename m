@@ -1,100 +1,98 @@
-From: Yasha Cherikovsky <yasha.che3@gmail.com>
-Subject: Re: [RFC 5/5] MIPS: Add Realtek RTL8186 SoC support
-Date: Mon, 01 Oct 2018 11:48:54 +0300
-Message-ID: <ceced0d550bc30d4f3e66d2c7f569c39ca890ce4.camel@gmail.com>
-References: <20180930141510.2690-1-yasha.che3@gmail.com>
-         <20180930141510.2690-6-yasha.che3@gmail.com>
-         <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH 5/7] MIPS: mscc: ocelot: add GPIO4 pinmuxing DT node
+Date: Mon, 1 Oct 2018 11:01:34 +0200
+Message-ID: <20181001090134.jj47azs5nlbugmbi@qschulz>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <92e37a04e77003f01a67ac5e49e66ae83f87c591.1536916714.git-series.quentin.schulz@bootlin.com>
+ <20180914145446.GQ14988@piout.net>
+ <20180914162638.fgzzjin2bzgx74de@qschulz>
+ <20180914170221.GB3811@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="y3mid7ypocxn35om"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
+Content-Disposition: inline
+In-Reply-To: <20180914170221.GB3811@lunn.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
 
-On Mon, 2018-10-01 at 09:19 +0100, Marc Zyngier wrote:
-> Hi Yasha,
-> 
-> On 30/09/18 15:15, Yasha Cherikovsky wrote:
-> > The Realtek RTL8186 SoC is a MIPS based SoC
-> > used in some home routers [1][2].
-> > 
-> > The hardware includes Lexra LX5280 CPU with a TLB,
-> > two Ethernet controllers, a WLAN controller and more.
-> > 
-> > With this patch, it is possible to successfully boot
-> > the kernel and load userspace on the Edimax BR-6204Wg
-> > router.
-> > Network drivers support will come in future patches.
-> > 
-> > This patch includes:
-> > - New MIPS rtl8186 platform
-> >      - Core platform setup code (mostly DT based)
-> >      - New Kconfig option
-> >      - defconfig file
-> >      - MIPS zboot UART support
-> > - RTL8186 interrupt controller driver
-> > - RTL8186 timer driver
-> > - Device tree files for the RTL8186 SoC and Edimax BR-6204Wg
-> >    router
-> > 
-> > [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
-> > [2] https://wikidevi.com/wiki/Realtek_RTL8186
-> > 
-> > Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Paul Burton <paul.burton@mips.com>
-> > Cc: James Hogan <jhogan@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Jason Cooper <jason@lakedaemon.net>
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-mips@linux-mips.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >   arch/mips/Kbuild.platforms                    |   1 +
-> >   arch/mips/Kconfig                             |  17 ++
-> >   arch/mips/boot/compressed/uart-16550.c        |   5 +
-> >   arch/mips/boot/dts/Makefile                   |   1 +
-> >   arch/mips/boot/dts/realtek/Makefile           |   4 +
-> >   arch/mips/boot/dts/realtek/rtl8186.dtsi       |  86 +++++++
-> >   .../dts/realtek/rtl8186_edimax_br_6204wg.dts  |  45 ++++
-> >   arch/mips/configs/rtl8186_defconfig           | 112 +++++++++
-> >   arch/mips/include/asm/mach-rtl8186/rtl8186.h  |  37 +++
-> >   arch/mips/rtl8186/Makefile                    |   2 +
-> >   arch/mips/rtl8186/Platform                    |   7 +
-> >   arch/mips/rtl8186/irq.c                       |   8 +
-> >   arch/mips/rtl8186/prom.c                      |  15 ++
-> >   arch/mips/rtl8186/setup.c                     |  80 +++++++
-> >   arch/mips/rtl8186/time.c                      |  10 +
-> >   drivers/clocksource/Kconfig                   |   9 +
-> >   drivers/clocksource/Makefile                  |   1 +
-> >   drivers/clocksource/timer-rtl8186.c           | 220
-> > ++++++++++++++++++
-> >   drivers/irqchip/Kconfig                       |   5 +
-> >   drivers/irqchip/Makefile                      |   1 +
-> >   drivers/irqchip/irq-rtl8186.c                 | 107 +++++++++
-> 
-> Could you please split this into at least three patches (arch code, 
-> clocksource, irqchip) to ease the review?
-> 
-> Thanks,
-> 
-> 	M.
+--y3mid7ypocxn35om
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Currently the RTL8186_IRQ and the RTL8186_TIMER Kconfig entries depend on
-MACH_RTL8186 (which is added in the MIPS portion of the same patch).
-Also, MACH_RTL8186 in MIPS selects these two options.
+Hi Andrew,
 
-What is the best way to split that?
+On Fri, Sep 14, 2018 at 07:02:21PM +0200, Andrew Lunn wrote:
+> On Fri, Sep 14, 2018 at 06:26:38PM +0200, Quentin Schulz wrote:
+> > Hi Alexandre,
+> >=20
+> > On Fri, Sep 14, 2018 at 04:54:46PM +0200, Alexandre Belloni wrote:
+> > > Hi,
+> > >=20
+> > > On 14/09/2018 11:44:26+0200, Quentin Schulz wrote:
+> > > > In order to use GPIO4 as a GPIO, we need to mux it in this mode so =
+let's
+> > > > declare a new pinctrl DT node for it.
+> > > >=20
+> > > > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > > > ---
+> > > >  arch/mips/boot/dts/mscc/ocelot.dtsi | 5 +++++
+> > > >  1 file changed, 5 insertions(+)
+> > > >=20
+> > > > diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/d=
+ts/mscc/ocelot.dtsi
+> > > > index 8ce317c..b5c4c74 100644
+> > > > --- a/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > > +++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
+> > > > @@ -182,6 +182,11 @@
+> > > >  			interrupts =3D <13>;
+> > > >  			#interrupt-cells =3D <2>;
+> > > > =20
+> > > > +			gpio4: gpio4 {
+> > > > +				pins =3D "GPIO_4";
+> > > > +				function =3D "gpio";
+> > > > +			};
+> > > > +
+> > >=20
+> > > For a GPIO, I would do that in the board dts because it is not used
+> > > directly in the dtsi.
+> > >=20
+> >=20
+> > And the day we've two boards using this pinctrl we move it to a dtsi. Is
+> > that the plan?
+>=20
+> Hi Quentin
+>=20
+> gpio4 appears to be pretty arbitrary. Could a different design use a
+> different gpio? It me, this seems like a board property.
+>=20
 
-Thanks,
-Yasha
+Right now, I don't see why it couldn't be.
+
+Quentin
+
+--y3mid7ypocxn35om
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux4m4ACgkQhLiadT7g
+8aOwrw//fggU/lf20tjDRRE/OUzOw7mWBOfcLJW8Vgt/5R21//tJiSE2ZROZwhD1
+Lhlwfq2yvRuOHD9y+7qbgD76h5CjT5++AtRYEG7OCnzcRgTSb+P/KYHm+WX9D4y7
+lBzFrTm0pDvCi7lKldMQy4KDgaSV0XnStL8WdW1VXK7PjUOenpHlT22pcckO5MH0
+0BLAflw6Gzi2bqc4EtZqlmVA5jDMLA6BlI/fq885RxCLjAPl+bvAA8PvqO0+ZVm0
+8gdiVGkM4O+HFPRQLh20uR83kr0+Y6f5/NjymJFSxIS362QzC1FRImQWreBwv8jr
+FaDapv3lPv9zQOCqHDz+/4Da4/8kRYLC9jdStnb+ecoFQhl1QyMB8x1GYCLFv0ok
+/SQu9pJyCb8aoPkO9yw2oIE/6ilGVczC651z+CUbKOO34C1yLHRrzjT2/kW2FfEt
+y+Y6hvXyQgboUwXYPXV5vW3m/y5TLnKlLu/Yox52YFIdHw8tEn6zEIMidp3DQ/GM
+jNZROfROVoBOlsFKvCCfU9oszdIxQAkB25mGKOyO1FaIvZ8ZtXwdTC9ezakbhmxc
+zeStyj35qOz7np84EXBBZVSOvxrvXN/q0fGzGojxh+v2voOCmqnA/jn0TpROfkyL
+cVuXU9aQgcCs6depD2NTmpyO5RCOqGojVYG1lFjdXWOqUqvFWuU=
+=rpvF
+-----END PGP SIGNATURE-----
+
+--y3mid7ypocxn35om--
