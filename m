@@ -1,131 +1,163 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH 2/3] [PATCH v2 2/3] usb: typec: tcpm: Do not disconnect
- link for self powered devices
-Date: Mon, 1 Oct 2018 12:53:54 +0300
-Message-ID: <20181001095354.GB15780@kuha.fi.intel.com>
-References: <20180928234703.15970-1-badhri@google.com>
- <20180928234703.15970-2-badhri@google.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next v3 10/11] phy: add driver for Microsemi Ocelot
+ SerDes muxing
+Date: Mon, 1 Oct 2018 12:02:16 +0200
+Message-ID: <20181001100216.fm3ojqx4zwnmyy5a@qschulz>
+References: <cover.ff40d591b548a6da31716e6e600f11a303e0e643.1536912834.git-series.quentin.schulz@bootlin.com>
+ <cde4ccafdbd948db7ccbb263dd5b1a803e63a83e.1536912834.git-series.quentin.schulz@bootlin.com>
+ <1dc66b5d-e60e-dad2-eed9-e283de260dc3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ha3eirq52wwwupq7"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180928234703.15970-2-badhri@google.com>
+In-Reply-To: <1dc66b5d-e60e-dad2-eed9-e283de260dc3@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Badhri Jagan Sridharan <badhri@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Chanwoo Choi <cw00.choi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Li Jun <jun.li@nxp.com>, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 04:47:02PM -0700, Badhri Jagan Sridharan wrote:
-> During HARD_RESET the data link is disconnected.
-> For self powered device, the spec is advising against doing that.
-> 
-> >From USB_PD_R3_0
-> 7.1.5 Response to Hard Resets
-> Device operation during and after a Hard Reset is defined as follows:
-> Self-powered devices Should Not disconnect from USB during a Hard Reset
-> (see Section 9.1.2).
-> Bus powered devices will disconnect from USB during a Hard Reset due to the
-> loss of their power source.
-> 
-> Tackle this by letting TCPM know whether the device is self or bus powered.
-> 
-> This overcomes unnecessary port disconnections from hard reset.
-> Also, speeds up the enumeration time when connected to Type-A ports.
-> 
-> Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 
-Could you rebase these on top of the latest usb-next. These are not
-going to apply cleanly on top of it because tcpm.c and all port
-drivers are now in their own directory drivers/usb/typec/tcpm/.
+--ha3eirq52wwwupq7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Hi Florian,
 
-> ---------
-> Version history:
-> 
-> V2:
-> Based on feedback from heikki.krogerus@linux.intel.com
-> - self_powered added to the struct tcpm_port which is populated from
->   a. "connector" node of the device tree in tcpm_fw_get_caps()
->   b. "self_powered" node of the tcpc_config in tcpm_copy_caps
-> 
-> Based on feedbase from linux@roeck-us.net
-> - Code was refactored
-> - SRC_HARD_RESET_VBUS_OFF sets the link state to false based
->   on self_powered flag
-> 
-> V1 located here:
-> https://lkml.org/lkml/2018/9/13/94
-> ---
->  drivers/usb/typec/tcpm.c | 12 ++++++++++--
->  include/linux/usb/tcpm.h |  1 +
->  2 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-> index 4f1f4215f3d6e..c3ac0e46106b4 100644
-> --- a/drivers/usb/typec/tcpm.c
-> +++ b/drivers/usb/typec/tcpm.c
-> @@ -317,6 +317,9 @@ struct tcpm_port {
->  	/* Deadline in jiffies to exit src_try_wait state */
->  	unsigned long max_wait;
->  
-> +	/* port belongs to a self powered device */
-> +	bool self_powered;
-> +
->  #ifdef CONFIG_DEBUG_FS
->  	struct dentry *dentry;
->  	struct mutex logbuffer_lock;	/* log buffer access lock */
-> @@ -3257,7 +3260,8 @@ static void run_state_machine(struct tcpm_port *port)
->  	case SRC_HARD_RESET_VBUS_OFF:
->  		tcpm_set_vconn(port, true);
->  		tcpm_set_vbus(port, false);
-> -		tcpm_set_roles(port, false, TYPEC_SOURCE, TYPEC_HOST);
-> +		tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
-> +			       TYPEC_HOST);
->  		tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
->  		break;
->  	case SRC_HARD_RESET_VBUS_ON:
-> @@ -3270,7 +3274,8 @@ static void run_state_machine(struct tcpm_port *port)
->  		memset(&port->pps_data, 0, sizeof(port->pps_data));
->  		tcpm_set_vconn(port, false);
->  		tcpm_set_charge(port, false);
-> -		tcpm_set_roles(port, false, TYPEC_SINK, TYPEC_DEVICE);
-> +		tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
-> +			       TYPEC_DEVICE);
->  		/*
->  		 * VBUS may or may not toggle, depending on the adapter.
->  		 * If it doesn't toggle, transition to SNK_HARD_RESET_SINK_ON
-> @@ -4409,6 +4414,8 @@ static int tcpm_fw_get_caps(struct tcpm_port *port,
->  		return -EINVAL;
->  	port->operating_snk_mw = mw / 1000;
->  
-> +	port->self_powered = fwnode_property_read_bool(fwnode, "self-powered");
-> +
->  	return 0;
->  }
->  
-> @@ -4717,6 +4724,7 @@ static int tcpm_copy_caps(struct tcpm_port *port,
->  	port->typec_caps.prefer_role = tcfg->default_role;
->  	port->typec_caps.type = tcfg->type;
->  	port->typec_caps.data = tcfg->data;
-> +	port->self_powered = port->tcpc->config->self_powered;
->  
->  	return 0;
->  }
-> diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-> index 7e7fbfb84e8e3..50c74a77db55c 100644
-> --- a/include/linux/usb/tcpm.h
-> +++ b/include/linux/usb/tcpm.h
-> @@ -89,6 +89,7 @@ struct tcpc_config {
->  	enum typec_port_data data;
->  	enum typec_role default_role;
->  	bool try_role_hw;	/* try.{src,snk} implemented in hardware */
-> +	bool self_powered;	/* port belongs to a self powered device */
->  
->  	const struct typec_altmode_desc *alt_modes;
->  };
+On Sat, Sep 15, 2018 at 02:20:25PM -0700, Florian Fainelli wrote:
+>=20
+>=20
+> On 09/14/18 01:16, Quentin Schulz wrote:
+> > The Microsemi Ocelot can mux SerDes lanes (aka macros) to different
+> > switch ports or even make it act as a PCIe interface.
+> >=20
+> > This adds support for the muxing of the SerDes.
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > ---
+>=20
+> [snip]
+>=20
+> > +
+> > +struct serdes_macro {
+> > +	u8			idx;
+> > +	/* Not used when in QSGMII or PCIe mode */
+> > +	int			port;
+>=20
+> u8 port to be consistent with the mux table?
+>=20
+
+Not wanted in the current implementation.
+
+In serdes_phy_create, I put the port to -1. In serdes_simple_xlate, I
+make sure that once port is set to anything else than -1, it cannot be
+set again (cannot have 2+ PHYs sharing the same SerDes (except for
+SERDES6G_0 which is used for QSGMII)).
+
+I cannot use u8 for this simple reason. However, I'm all ears for a
+nicer solution :)
+
+> [snip]
+>=20
+> > +#define SERDES_MUX(_idx, _port, _mode, _mask, _mux) {	\
+> > +	.idx =3D _idx,						\
+> > +	.port =3D _port,						\
+> > +	.mode =3D _mode,						\
+> > +	.mask =3D _mask,						\
+> > +	.mux =3D _mux,						\
+> > +}
+> > +
+> > +static const struct serdes_mux ocelot_serdes_muxes[] =3D {
+> > +	SERDES_MUX(SERDES1G_0, 0, PHY_MODE_SGMII, 0, 0),
+> > +	SERDES_MUX(SERDES1G_1, 1, PHY_MODE_SGMII, HSIO_HW_CFG_DEV1G_5_MODE, 0=
+),
+> > +	SERDES_MUX(SERDES1G_1, 5, PHY_MODE_SGMII, HSIO_HW_CFG_QSGMII_ENA |
+> > +		   HSIO_HW_CFG_DEV1G_5_MODE, HSIO_HW_CFG_DEV1G_5_MODE),
+>=20
+> Why not go one step further and define a SERDES_MUX_SGMII() macro which
+> automatically resolves the correct bit definitions to use?
+>=20
+> The current macro does not make this particularly easy to read :/
+>=20
+
+I agree on the readability. But SERDES_MUX_SGMII would basically just
+abstract the third argument (mode) and that's it, right? That's still
+one argument less but do you see something even more intuitive and more
+readable?
+
+[...]
+
+> > +
+> > +	for (i =3D 0; i < ARRAY_SIZE(ocelot_serdes_muxes); i++) {
+> > +		if (macro->idx !=3D ocelot_serdes_muxes[i].idx ||
+> > +		    mode !=3D ocelot_serdes_muxes[i].mode)
+> > +			continue;
+> > +
+> > +		if (mode !=3D PHY_MODE_QSGMII &&
+> > +		    macro->port !=3D ocelot_serdes_muxes[i].port)
+> > +			continue;
+> > +
+> > +		ret =3D regmap_update_bits(macro->ctrl->regs, HSIO_HW_CFG,
+> > +					 ocelot_serdes_muxes[i].mask,
+> > +					 ocelot_serdes_muxes[i].mux);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		if (macro->idx < SERDES1G_MAX)
+> > +			return serdes_init_s1g(macro->ctrl->regs, macro->idx);
+> > +
+> > +		/* SERDES6G and PCIe not supported yet */
+> > +		return 0;
+>=20
+> Would not returning -EOPNOTSUPP be more helpful rather than leaving the
+> PHY unconfigured (or did the bootloader somehow configure it before for u=
+s)?
+>=20
+
+Yup, you're right, if the SerDes needs to be configured by the kernel,
+the user of the SerDes mux is "broken" anyway so it makes sense to
+return -EOPNOTSUPP.
+
+[...]
+
+> > +
+> > +	ctrl =3D devm_kzalloc(&pdev->dev, sizeof(*ctrl), GFP_KERNEL);
+> > +	if (!ctrl)
+> > +		return -ENOMEM;
+> > +
+> > +	ctrl->dev =3D &pdev->dev;
+> > +	ctrl->regs =3D syscon_node_to_regmap(pdev->dev.parent->of_node);
+> > +	if (!ctrl->regs)
+> > +		return -ENODEV;
+> > +
+> > +	for (i =3D 0; i <=3D SERDES_MAX; i++) {
+>=20
+> Every other loop you have is using <, is this one off-by-one?
+
+That is an error.
 
 Thanks,
+Quentin
 
--- 
-heikki
+--ha3eirq52wwwupq7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlux8KgACgkQhLiadT7g
+8aM7nBAAkQBdAHrGxa7Cg/8n+FhDPSAp9KXppLEraJru1T6XXu2BpYjEQ4GabimS
+9D9Dj5PUjBMJ9CiOLm/O58gLbXaC0famPGtzbZbiKW2jEtxt6PGmUAhnOXC3p0vo
+VwXnfKDiW0GEcN4qnK++7Y1iPQknKHWENQqcv5AKZPsfUKmp4iLoEel5XcHshYUF
+x5vX7y34V1pfGz0omcxwPLnPKV3AjPbk5TffntPGRhBlFVq5oH0jtyDiKE1UjxUd
+c47IT5A/hOEc6wNsyJ0kMrzFtkCghcUJtPCscIGTSSAYeswfN63JWXO1SNOYlpRf
+dctN2nQ6KY2m5ajbwujiLvrXVf7mI2GO1YClDMZRxBrktUxRoUWKY/lleuiQBxKO
+pHV8AQVogCyTwjWXzRByNvQqj5zZGhoGPiHpOWctWsKMiShPstIDjOiC3CPHxn8Z
+azn98xmDky8CuK2HGziEnAUtfep9mnh4ZlGGHtXUQsz8wIxM5gG4pnocAvRKelX2
+5+JU+1TiuvRT+k/UtGSvoYrq43M+2vAOfG00a6+YnkVXiC4Wfwc0UP1RuIXD2rgy
+XO599eXbvMTwQhS+yNCLrV6PTq6CQvHF9sRCOwzQdRKyM6ZbVfNNSW0DxESQ9JeQ
+cFPZDl5qTTgqCe0CPY1b0hhRWn1RwalTqHxlNFj3J269OErCcOc=
+=YAEa
+-----END PGP SIGNATURE-----
+
+--ha3eirq52wwwupq7--
