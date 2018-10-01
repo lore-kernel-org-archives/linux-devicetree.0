@@ -1,147 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v4 1/9] powerpc: build .dtb files in dts directory
-Date: Mon,  1 Oct 2018 10:25:23 -0500
-Message-ID: <20181001152531.3385-2-robh@kernel.org>
-References: <20181001152531.3385-1-robh@kernel.org>
+From: Vikash Garodia <vgarodia@codeaurora.org>
+Subject: Re: [PATCH v9 1/5] venus: firmware: add routine to reset ARM9
+Date: Mon, 01 Oct 2018 21:14:46 +0530
+Message-ID: <a2aacb3257cb4542086043d17128d098@codeaurora.org>
+References: <1537314192-26892-1-git-send-email-vgarodia@codeaurora.org>
+ <1537314192-26892-2-git-send-email-vgarodia@codeaurora.org>
+ <CAPBb6MXMv_TD2dbxyM+D2p3pWfCJpQ-_FHK6WdkAEgBhwTdL6g@mail.gmail.com>
+ <97b94b9b-f028-cb8b-a3db-67626dc517ab@linaro.org>
+ <175fcecf3be715d2a20b71746c648f1e@codeaurora.org>
+ <CAPBb6MUo6X+L7UYgmw8qUe_2CiZEBKGxaREFhZGRU1jGq0fO=g@mail.gmail.com>
+ <cdc7769d-8bea-ac78-355e-07347ac8aaf1@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001152531.3385-1-robh@kernel.org>
+In-Reply-To: <cdc7769d-8bea-ac78-355e-07347ac8aaf1@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Frank Rowand <frowand.list@gmail.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc: Alexandre Courbot <acourbot@chromium.org>, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@kernel.org>, robh@kernel.org, mark.rutland@arm.com, Andy Gross <andy.gross@linaro.org>, Arnd Bergmann <arnd@arndb.de>, bjorn.andersson@linaro.org, Linux Media Mailing List <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Align powerpc with other architectures which build the dtb files in the
-same directory as the dts files. This is also in line with most other
-build targets which are located in the same directory as the source.
-This move will help enable the 'dtbs' target which builds all the dtbs
-regardless of kernel config.
+Hi Stanimir,
 
-This transition could break some scripts if they expect dtb files in the
-old location.
+On 2018-10-01 20:00, Stanimir Varbanov wrote:
+> Hi,
+> 
+> On 09/20/2018 06:31 AM, Alexandre Courbot wrote:
+>> On Thu, Sep 20, 2018 at 2:55 AM Vikash Garodia 
+>> <vgarodia@codeaurora.org> wrote:
+>>> 
+>>> On 2018-09-19 20:30, Stanimir Varbanov wrote:
+>>>> Hi Alex,
+>>>> 
+>>>> On 09/19/2018 10:32 AM, Alexandre Courbot wrote:
+>>>>> On Wed, Sep 19, 2018 at 8:43 AM Vikash Garodia
+>>>>> <vgarodia@codeaurora.org> wrote:
+>>>>>> 
+>>>>>> Add routine to reset the ARM9 and brings it out of reset. Also
+>>>>>> abstract the Venus CPU state handling with a new function. This
+>>>>>> is in preparation to add PIL functionality in venus driver.
+>>>>>> 
+>>>>>> Signed-off-by: Vikash Garodia <vgarodia@codeaurora.org>
+>>>>>> ---
+>>>>>>  drivers/media/platform/qcom/venus/core.h         |  2 ++
+>>>>>>  drivers/media/platform/qcom/venus/firmware.c     | 33
+>>>>>> ++++++++++++++++++++++++
+>>>>>>  drivers/media/platform/qcom/venus/firmware.h     | 11 ++++++++
+>>>>>>  drivers/media/platform/qcom/venus/hfi_venus.c    | 13 +++-------
+>>>>>>  drivers/media/platform/qcom/venus/hfi_venus_io.h |  7 +++++
+>>>>>>  5 files changed, 57 insertions(+), 9 deletions(-)
+>>>>>> 
+>>>>>> diff --git a/drivers/media/platform/qcom/venus/core.h
+>>>>>> b/drivers/media/platform/qcom/venus/core.h
+>>>>>> index 2f02365..dfd5c10 100644
+>>>>>> --- a/drivers/media/platform/qcom/venus/core.h
+>>>>>> +++ b/drivers/media/platform/qcom/venus/core.h
+>>>>>> @@ -98,6 +98,7 @@ struct venus_caps {
+>>>>>>   * @dev:               convenience struct device pointer
+>>>>>>   * @dev_dec:   convenience struct device pointer for decoder 
+>>>>>> device
+>>>>>>   * @dev_enc:   convenience struct device pointer for encoder 
+>>>>>> device
+>>>>>> + * @no_tz:     a flag that suggests presence of trustzone
+>>>>> 
+>>>>> Looks like it suggests the absence of trustzone?
+>>>>> 
+>>>>> Actually I would rename it as use_tz and set it if TrustZone is 
+>>>>> used.
+>>>>> This would avoid double-negative statements like what we see below.
+>>>> 
+>>>> I find this suggestion reasonable.
+>>> 
+>>> Initially i planned to keep it as a positive flag. The reason behind
+>>> keeping it
+>>> as no_tz was to keep the default value of this flag to 0 indicating 
+>>> tz
+>>> is present
+>>> by default.
+>>> I can switch it to use_tz though and set it in firmware_init after 
+>>> the
+>>> presence of
+>>> firmware node is checked.
+>> 
+>> Making sure the flag is explicitly initialized instead of relying on
+>> default initialization is another good reason to have that change
+>> IMHO. :)
+> 
+> Vikash, care to send a new version, or will fix that with follow up 
+> patches?
 
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
+I will provide a new series with the suggested change.
 
-PPC maintainers, really need you review/ack on this.
-
- arch/powerpc/Makefile          |  2 +-
- arch/powerpc/boot/Makefile     | 55 ++++++++++++++++------------------
- arch/powerpc/boot/dts/Makefile |  1 +
- 3 files changed, 28 insertions(+), 30 deletions(-)
- create mode 100644 arch/powerpc/boot/dts/Makefile
-
-diff --git a/arch/powerpc/Makefile b/arch/powerpc/Makefile
-index 11a1acba164a..53ea887eb34e 100644
---- a/arch/powerpc/Makefile
-+++ b/arch/powerpc/Makefile
-@@ -294,7 +294,7 @@ bootwrapper_install:
- 	$(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
-
- %.dtb: scripts
--	$(Q)$(MAKE) $(build)=$(boot) $(patsubst %,$(boot)/%,$@)
-+	$(Q)$(MAKE) $(build)=$(boot)/dts $(patsubst %,$(boot)/dts/%,$@)
-
- # Used to create 'merged defconfigs'
- # To use it $(call) it with the first argument as the base defconfig
-diff --git a/arch/powerpc/boot/Makefile b/arch/powerpc/boot/Makefile
-index 0fb96c26136f..bca5c23767df 100644
---- a/arch/powerpc/boot/Makefile
-+++ b/arch/powerpc/boot/Makefile
-@@ -304,9 +304,9 @@ image-$(CONFIG_PPC_ADDER875)		+= cuImage.adder875-uboot \
- 					   dtbImage.adder875-redboot
-
- # Board ports in arch/powerpc/platform/52xx/Kconfig
--image-$(CONFIG_PPC_LITE5200)		+= cuImage.lite5200 lite5200.dtb
--image-$(CONFIG_PPC_LITE5200)		+= cuImage.lite5200b lite5200b.dtb
--image-$(CONFIG_PPC_MEDIA5200)		+= cuImage.media5200 media5200.dtb
-+image-$(CONFIG_PPC_LITE5200)		+= cuImage.lite5200
-+image-$(CONFIG_PPC_LITE5200)		+= cuImage.lite5200b
-+image-$(CONFIG_PPC_MEDIA5200)		+= cuImage.media5200
-
- # Board ports in arch/powerpc/platform/82xx/Kconfig
- image-$(CONFIG_MPC8272_ADS)		+= cuImage.mpc8272ads
-@@ -381,11 +381,11 @@ $(addprefix $(obj)/, $(sort $(filter zImage.%, $(image-y)))): vmlinux $(wrapperb
- 	$(call if_changed,wrap,$(subst $(obj)/zImage.,,$@))
-
- # dtbImage% - a dtbImage is a zImage with an embedded device tree blob
--$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
--	$(call if_changed,wrap,$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-+$(obj)/dtbImage.initrd.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
-+	$(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
-
--$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/%.dtb FORCE
--	$(call if_changed,wrap,$*,,$(obj)/$*.dtb)
-+$(obj)/dtbImage.%: vmlinux $(wrapperbits) $(obj)/dts/%.dtb FORCE
-+	$(call if_changed,wrap,$*,,$(obj)/dts/$*.dtb)
-
- # This cannot be in the root of $(src) as the zImage rule always adds a $(obj)
- # prefix
-@@ -395,36 +395,33 @@ $(obj)/vmlinux.strip: vmlinux
- $(obj)/uImage: vmlinux $(wrapperbits) FORCE
- 	$(call if_changed,wrap,uboot)
-
--$(obj)/uImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-+$(obj)/uImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
-
--$(obj)/uImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,uboot-$*,,$(obj)/$*.dtb)
-+$(obj)/uImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,uboot-$*,,$(obj)/dts/$*.dtb)
-
--$(obj)/cuImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-+$(obj)/cuImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
-
--$(obj)/cuImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,cuboot-$*,,$(obj)/$*.dtb)
-+$(obj)/cuImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,cuboot-$*,,$(obj)/dts/$*.dtb)
-
--$(obj)/simpleImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-+$(obj)/simpleImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
-
--$(obj)/simpleImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,simpleboot-$*,,$(obj)/$*.dtb)
-+$(obj)/simpleImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,simpleboot-$*,,$(obj)/dts/$*.dtb)
-
--$(obj)/treeImage.initrd.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb,$(obj)/ramdisk.image.gz)
-+$(obj)/treeImage.initrd.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb,$(obj)/ramdisk.image.gz)
-
--$(obj)/treeImage.%: vmlinux $(obj)/%.dtb $(wrapperbits) FORCE
--	$(call if_changed,wrap,treeboot-$*,,$(obj)/$*.dtb)
-+$(obj)/treeImage.%: vmlinux $(obj)/dts/%.dtb $(wrapperbits) FORCE
-+	$(call if_changed,wrap,treeboot-$*,,$(obj)/dts/$*.dtb)
-
--# Rule to build device tree blobs
--$(obj)/%.dtb: $(src)/dts/%.dts FORCE
--	$(call if_changed_dep,dtc)
--
--$(obj)/%.dtb: $(src)/dts/fsl/%.dts FORCE
--	$(call if_changed_dep,dtc)
-+# Needed for the above targets to work with dts/fsl/ files
-+$(obj)/dts/%.dtb: $(obj)/dts/fsl/%.dtb
-+	@cp $< $@
-
- # If there isn't a platform selected then just strip the vmlinux.
- ifeq (,$(image-y))
-diff --git a/arch/powerpc/boot/dts/Makefile b/arch/powerpc/boot/dts/Makefile
-new file mode 100644
-index 000000000000..f66554cd5c45
---- /dev/null
-+++ b/arch/powerpc/boot/dts/Makefile
-@@ -0,0 +1 @@
-+# SPDX-License-Identifier: GPL-2.0
---
-2.17.1
+Thanks,
+Vikash
