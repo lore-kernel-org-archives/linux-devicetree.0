@@ -1,7 +1,7 @@
 From: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v2 3/4] dt: bindings: add bindings for wifi iommu node
-Date: Mon,  1 Oct 2018 16:56:35 +0530
-Message-ID: <20181001112636.31715-4-govinds@codeaurora.org>
+Subject: [PATCH v2 4/4] dts: arm64/sdm845: Enable iommu for WCN3990 wifi module device node
+Date: Mon,  1 Oct 2018 16:56:36 +0530
+Message-ID: <20181001112636.31715-5-govinds@codeaurora.org>
 References: <20181001112636.31715-1-govinds@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -13,35 +13,24 @@ Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79
 List-Id: devicetree@vger.kernel.org
 
 WCN3990 wifi module can optionally make use of the IOMMU.
-Add binding documentation for phandle to the IOMMU and
-the stream id of wifi iommu block.
+Add phandle to the iommu and stream id of wifi iommu block.
 
 Signed-off-by: Govind Singh <govinds-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- .../devicetree/bindings/net/wireless/qcom,ath10k.txt        | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-index f831bb1c5952..2a2f44c461f7 100644
---- a/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-+++ b/Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-@@ -65,6 +65,11 @@ Optional properties:
- - <supply-name>-supply: handle to the regulator device tree node
- 			   optional "supply-name" are "vdd-0.8-cx-mx",
- 			   "vdd-1.8-xo", "vdd-1.3-rfa" and "vdd-3.3-ch0".
-+- iommus:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs
-+	            for "qcom,wcn3990-wifi" compatible target.
- 
- Example (to supply the calibration data alone):
- 
-@@ -163,4 +168,5 @@ wifi@18000000 {
- 		vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
- 		vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
- 		vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+		iommus = <&apps_smmu 0x0040 0x1>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 36c716cf3a0c..f02da46542cc 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1225,6 +1225,7 @@
+ 				<0 423 0 /* CE9 */ >,
+ 				<0 424 0 /* CE10 */ >,
+ 				<0 425 0 /* CE11 */ >;
++			iommus = <&apps_smmu 0x0040 0x1>;
+ 		};
+ 	};
  };
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
