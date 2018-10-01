@@ -1,107 +1,109 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v8 2/2] hwmon: ina3221: Read channel input source info
- from DT
-Date: Sun, 30 Sep 2018 20:28:10 -0700
-Message-ID: <20181001032809.GB4428@Asurada>
-References: <20180929013937.29289-1-nicoleotsuka@gmail.com>
- <20180929013937.29289-3-nicoleotsuka@gmail.com>
- <ab3a36dc-fa5a-4669-2f99-aa55a4083db2@roeck-us.net>
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: Re: [PATCH v6 2/2] iio: proximity: vl53l0x: add interrupt support
+Date: Mon, 1 Oct 2018 11:58:14 +0800
+Message-ID: <20181001035739.GA17143@Eros>
+References: <20180918082422.13050-1-songqiang1304521@gmail.com>
+ <20180918082422.13050-2-songqiang1304521@gmail.com>
+ <20180922160523.16b399fc@archlinux>
+ <20180926224618.GA32126@bogus>
+ <20180928093618.GA24536@Eros>
+ <CAL_JsqLpNiGdK9hWTGWZwgbgRr8DNF=XvKGUx=oS2jTJ61yhFg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ab3a36dc-fa5a-4669-2f99-aa55a4083db2@roeck-us.net>
+In-Reply-To: <CAL_JsqLpNiGdK9hWTGWZwgbgRr8DNF=XvKGUx=oS2jTJ61yhFg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Matt Ranostay <matt.ranostay@konsulko.com>, Thomas Gleixner <tglx@linutronix.de>, Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Sep 30, 2018 at 01:55:18PM -0700, Guenter Roeck wrote:
-> Hi Nicolin,
-> 
-> On 09/28/2018 06:39 PM, Nicolin Chen wrote:
-> >An ina3221 chip has three input ports. Each port is used
-> >to measure the voltage and current of its input source.
+On Fri, Sep 28, 2018 at 06:52:13PM -0500, Rob Herring wrote:
+> On Fri, Sep 28, 2018 at 4:36 AM Song Qiang <songqiang1304521@gmail.com> wrote:
 > >
-> >The DT binding now has defined bindings for their input
-> >sources, so the driver should read these information and
-> >handle accordingly.
+> > On Wed, Sep 26, 2018 at 05:46:18PM -0500, Rob Herring wrote:
+> > > On Sat, Sep 22, 2018 at 04:05:23PM +0100, Jonathan Cameron wrote:
+> > > > On Tue, 18 Sep 2018 16:24:22 +0800
+> > > > Song Qiang <songqiang1304521@gmail.com> wrote:
+> > > >
+> > > > > The first version of this driver issues a measuring request and polling
+> > > > > for a status register in the device for measuring completes.
+> > > > > vl53l0x support configuring GPIO1 on it to generate interrupt to
+> > > > > indicate that new measurement is ready. This patch adds support for
+> > > > > using this mechanisim to reduce cpu cost.
+> > > > >
+> > > > > Signed-off-by: Song Qiang <songqiang1304521@gmail.com>
+> > > > Hi Song.
+> > > >
+> > > > Looks correct in principal but a few things to tidy up before
+> > > > this is ready to apply.
+> > > >
+> > > > Also we have an unrelated change in here to check the devices ID.
+> > > > That should be in it's own patch.
+> > > >
+> > > > Thanks,
+> > > >
+> > > > Jonathan
+> > > > > ---
+> > > > >  .../bindings/iio/proximity/vl53l0x.txt        |  14 +-
+> > >
+> > > This should have been split with the complete binding in one patch
+> > > rather than piecemeal driver feature by feature.
+> > >
 > >
-> >This patch adds a new structure of input source specific
-> >information including input source label, shunt resistor
-> >value and its connection status. It exposes these labels
-> >via in[123]_label sysfs nodes upon available, and also
-> >disables those channels where there are no input source
-> >being connected. Meanwhile, it also adds in[123]_enable
-> >sysfs nodes for users to get control of three channels,
-> >and returns -ENODATA code for any sensor read according
-> >to hwmon ABI.
+> > Hi Rob,
 > >
-> >Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> > A few days ago when I was submitting this driver, I didn't do it very
+> > well, the function of this driver is limited. I added interrupt support
+> > the next day after you acked my first patch. I thought it's not polite
+> > to add something after someone acked that patch, so I send the interrupt
+> > support as a second patch. The first patch is merged to togreg now, but
+> > this doesn't. I don't know when can I add new functions to the code that
+> > just merged to togreg branch, could you offer some suggestions?
 > 
-> [ ... ]
+> You just needed to state why you didn't add a ack. But really, just
+> don't send things except as RFC until they are "done".
 > 
-> >+
-> >+static ssize_t ina3221_set_enable(struct device *dev,
-> >+				  struct device_attribute *attr,
-> >+				  const char *buf, size_t count)
-> >+{
-> >+	struct sensor_device_attribute *sd_attr = to_sensor_dev_attr(attr);
-> >+	struct ina3221_data *ina = dev_get_drvdata(dev);
-> >+	unsigned int channel = sd_attr->index;
-> >+	u16 config = ina->reg_config;
-> >+	bool enable;
-> >+	int ret;
-> >+
-> >+	ret = kstrtobool(buf, &enable);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	if (enable)
-> >+		config |= INA3221_CONFIG_CHx_EN(channel);
-> >+	else
-> >+		config &= ~INA3221_CONFIG_CHx_EN(channel);
-> >+
-> >+	ret = regmap_write(ina->regmap, INA3221_CONFIG, config);
-> >+	if (ret)
-> >+		return ret;
-> >+
-> >+	ina->reg_config = config;
-> >+
+> What to do next depends on Jonathan and whether he wants a follow-up
+> patch or he will drop the first one.
 > 
-> Sorry it too me so long to realize this: The code above is racy.
-> There could be multiple threads enabling and disabling a channel.
-> Without a mutex, there is no guarantee that the final value of
-> reg_config matches the value written into the chip.
-
-Hmm..that's true...glad you found and pointed it out.
-
-> You'll have to introduce a mutex and implement something like
-> 	ret = kstrtobool(buf, &enable);
-> 	if (ret)
-> 		return ret;
+> > > > >  drivers/iio/proximity/vl53l0x-i2c.c           | 135 +++++++++++++++---
+> > > > >  2 files changed, 129 insertions(+), 20 deletions(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+> > > > > index ab9a9539fec4..40290f8dd70f 100644
+> > > > > --- a/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+> > > > > +++ b/Documentation/devicetree/bindings/iio/proximity/vl53l0x.txt
+> > > > > @@ -4,9 +4,21 @@ Required properties:
+> > > > >   - compatible: must be "st,vl53l0x-i2c"
+> > >
+> > > Is there more than one interface on this device, such as SPI? If not,
+> > > then '-i2c' should be dropped.
+> > >
+> >
+> > Yes, there is a CCI(Camera Control Interface) for communication.
 > 
-> 	mutex_lock(&ina->update_lock);
-> 	config = ina->reg_config;
-> 	...
-> 	ret = regmap_write(ina->regmap, INA3221_CONFIG, config);
-> 	if (ret) {
-> 		count = ret;
-> 		goto error;
-> 	}
-> 	ina->reg_config = config;
-> error:
-> 	mutex_unlock(&ina->update_lock);
-> 	return count;
+> Isn't CCI just a subset of I2C? I should clarify my question is
+> whether there's more than 1 mutually exclusive control interface (as
+> many devices have control and data interfaces) where you could have 2
+> different drivers. A common example are devices with I2C and SPI
+> interfaces.
+> 
+> Rob
 
-I would prefer to just add another regmap_read at the end for
-the reg_config sync, and to use regmap_update_bits() for the
-bit set/clear. It might not serialize things as the solution
-above does but at least the reg_config would get the correct
-value eventually. Since regmap has an internal mutex already,
-we may get rid of another mutex by doing so.
+Hi Rob, Jonathan,
 
-I will send a v9 tomorrow.
+I don't know things about CCI very well, and google also tells me little
+about it. Actually, I found it difficult to find a standard definition
+about it. Then I dug into vl53l0x's API source code, and what I can
+tell is when we use these two interfaces, the whole programming
+framework is different, even though the pysical bus of them are likely
+to be the same. 
+Source code of CCI uses a 'msm_camera_i2c_fn_t' struct and a
+'v4l2_file_operations' as hardware interfaces for controlling device,
+while the i2c one just uses generic i2c bus interfaces.
 
-Thanks for the review
-Nicolin
+This explanation is for why the file name still contains '-i2c'.
+
+yours,
+Song Qiang
