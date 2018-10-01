@@ -1,134 +1,51 @@
-From: Badhri Jagan Sridharan <badhri@google.com>
-Subject: Re: [PATCH 2/3] [PATCH v2 2/3] usb: typec: tcpm: Do not disconnect
- link for self powered devices
-Date: Mon, 1 Oct 2018 12:45:49 -0700
-Message-ID: <CAPTae5LODDhhHDL2Dq6L12sSqT4-KNaELtZNy++g_4B=wb7QsQ@mail.gmail.com>
-References: <20180928234703.15970-1-badhri@google.com> <20180928234703.15970-2-badhri@google.com>
- <20181001095354.GB15780@kuha.fi.intel.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: [PATCH i2c-next v4 0/3] i2c: aspeed: Add bus idle waiting logic for multi-master use cases
+Date: Mon,  1 Oct 2018 13:27:45 -0700
+Message-ID: <20181001202748.8030-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001095354.GB15780@kuha.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, cw00.choi@samsung.com, a.hajda@samsung.com, jun.li@nxp.com, Guenter Roeck <linux@roeck-us.net>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, USB <linux-usb@vger.kernel.org>
+To: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Sure. Just resent the patch stack !
-On Mon, Oct 1, 2018 at 2:54 AM Heikki Krogerus
-<heikki.krogerus@linux.intel.com> wrote:
->
-> On Fri, Sep 28, 2018 at 04:47:02PM -0700, Badhri Jagan Sridharan wrote:
-> > During HARD_RESET the data link is disconnected.
-> > For self powered device, the spec is advising against doing that.
-> >
-> > >From USB_PD_R3_0
-> > 7.1.5 Response to Hard Resets
-> > Device operation during and after a Hard Reset is defined as follows:
-> > Self-powered devices Should Not disconnect from USB during a Hard Reset
-> > (see Section 9.1.2).
-> > Bus powered devices will disconnect from USB during a Hard Reset due to the
-> > loss of their power source.
-> >
-> > Tackle this by letting TCPM know whether the device is self or bus powered.
-> >
-> > This overcomes unnecessary port disconnections from hard reset.
-> > Also, speeds up the enumeration time when connected to Type-A ports.
-> >
-> > Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
->
-> Could you rebase these on top of the latest usb-next. These are not
-> going to apply cleanly on top of it because tcpm.c and all port
-> drivers are now in their own directory drivers/usb/typec/tcpm/.
->
-> Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->
-> > ---------
-> > Version history:
-> >
-> > V2:
-> > Based on feedback from heikki.krogerus@linux.intel.com
-> > - self_powered added to the struct tcpm_port which is populated from
-> >   a. "connector" node of the device tree in tcpm_fw_get_caps()
-> >   b. "self_powered" node of the tcpc_config in tcpm_copy_caps
-> >
-> > Based on feedbase from linux@roeck-us.net
-> > - Code was refactored
-> > - SRC_HARD_RESET_VBUS_OFF sets the link state to false based
-> >   on self_powered flag
-> >
-> > V1 located here:
-> > https://lkml.org/lkml/2018/9/13/94
-> > ---
-> >  drivers/usb/typec/tcpm.c | 12 ++++++++++--
-> >  include/linux/usb/tcpm.h |  1 +
-> >  2 files changed, 11 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/usb/typec/tcpm.c b/drivers/usb/typec/tcpm.c
-> > index 4f1f4215f3d6e..c3ac0e46106b4 100644
-> > --- a/drivers/usb/typec/tcpm.c
-> > +++ b/drivers/usb/typec/tcpm.c
-> > @@ -317,6 +317,9 @@ struct tcpm_port {
-> >       /* Deadline in jiffies to exit src_try_wait state */
-> >       unsigned long max_wait;
-> >
-> > +     /* port belongs to a self powered device */
-> > +     bool self_powered;
-> > +
-> >  #ifdef CONFIG_DEBUG_FS
-> >       struct dentry *dentry;
-> >       struct mutex logbuffer_lock;    /* log buffer access lock */
-> > @@ -3257,7 +3260,8 @@ static void run_state_machine(struct tcpm_port *port)
-> >       case SRC_HARD_RESET_VBUS_OFF:
-> >               tcpm_set_vconn(port, true);
-> >               tcpm_set_vbus(port, false);
-> > -             tcpm_set_roles(port, false, TYPEC_SOURCE, TYPEC_HOST);
-> > +             tcpm_set_roles(port, port->self_powered, TYPEC_SOURCE,
-> > +                            TYPEC_HOST);
-> >               tcpm_set_state(port, SRC_HARD_RESET_VBUS_ON, PD_T_SRC_RECOVER);
-> >               break;
-> >       case SRC_HARD_RESET_VBUS_ON:
-> > @@ -3270,7 +3274,8 @@ static void run_state_machine(struct tcpm_port *port)
-> >               memset(&port->pps_data, 0, sizeof(port->pps_data));
-> >               tcpm_set_vconn(port, false);
-> >               tcpm_set_charge(port, false);
-> > -             tcpm_set_roles(port, false, TYPEC_SINK, TYPEC_DEVICE);
-> > +             tcpm_set_roles(port, port->self_powered, TYPEC_SINK,
-> > +                            TYPEC_DEVICE);
-> >               /*
-> >                * VBUS may or may not toggle, depending on the adapter.
-> >                * If it doesn't toggle, transition to SNK_HARD_RESET_SINK_ON
-> > @@ -4409,6 +4414,8 @@ static int tcpm_fw_get_caps(struct tcpm_port *port,
-> >               return -EINVAL;
-> >       port->operating_snk_mw = mw / 1000;
-> >
-> > +     port->self_powered = fwnode_property_read_bool(fwnode, "self-powered");
-> > +
-> >       return 0;
-> >  }
-> >
-> > @@ -4717,6 +4724,7 @@ static int tcpm_copy_caps(struct tcpm_port *port,
-> >       port->typec_caps.prefer_role = tcfg->default_role;
-> >       port->typec_caps.type = tcfg->type;
-> >       port->typec_caps.data = tcfg->data;
-> > +     port->self_powered = port->tcpc->config->self_powered;
-> >
-> >       return 0;
-> >  }
-> > diff --git a/include/linux/usb/tcpm.h b/include/linux/usb/tcpm.h
-> > index 7e7fbfb84e8e3..50c74a77db55c 100644
-> > --- a/include/linux/usb/tcpm.h
-> > +++ b/include/linux/usb/tcpm.h
-> > @@ -89,6 +89,7 @@ struct tcpc_config {
-> >       enum typec_port_data data;
-> >       enum typec_role default_role;
-> >       bool try_role_hw;       /* try.{src,snk} implemented in hardware */
-> > +     bool self_powered;      /* port belongs to a self powered device */
-> >
-> >       const struct typec_altmode_desc *alt_modes;
-> >  };
->
-> Thanks,
->
-> --
-> heikki
+In multi-master environment, this driver's master cannot know
+exactly when peer master sends data to this driver's slave so a
+case can be happened that this master tries to send data through
+the master_xfer function but slave data from peer master is still
+being processed by this driver.
+
+To prevent state corruption in the case, this patch adds checking
+code if any slave operation is ongoing and it waits up to the
+timeout duration before starting a master_xfer operation.
+
+Please review this patch set.
+
+Thanks,
+
+-Jae
+
+Changes since v3:
+- Changed the property name to 'timeout' and made it use the
+  default setting in i2c-core when not specified.
+
+Changes since v2:
+- Changed the property name to 'aspeed,timeout' and made it to
+  update the adapter's timeout configuration.
+
+Changes since v1:
+- Changed define names of timeout related.
+
+Jae Hyun Yoo (3):
+  dt-bindings: i2c: aspeed: Add 'timeout' property as an optional
+    property
+  i2c: aspeed: Add 'timeout' DT property reading code
+  i2c: aspeed: Add bus idle waiting logic for multi-master use cases
+
+ .../devicetree/bindings/i2c/i2c-aspeed.txt    |  3 +
+ drivers/i2c/busses/i2c-aspeed.c               | 70 ++++++++++++++-----
+ 2 files changed, 57 insertions(+), 16 deletions(-)
+
+-- 
+2.19.0
