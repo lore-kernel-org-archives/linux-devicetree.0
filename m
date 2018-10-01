@@ -1,312 +1,110 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V9 3/8] clocksource: add C-SKY SMP timer
-Date: Mon, 1 Oct 2018 11:14:14 +0200
-Message-ID: <88e320f2-8cf0-fdb9-c9b0-ee25d7a4d00f@linaro.org>
-References: <cover.1538355281.git.ren_guo@c-sky.com>
- <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC 5/5] MIPS: Add Realtek RTL8186 SoC support
+Date: Mon, 1 Oct 2018 10:15:29 +0100
+Message-ID: <351da67a-b1e6-7972-5c91-0f204690080f@arm.com>
+References: <20180930141510.2690-1-yasha.che3@gmail.com>
+ <20180930141510.2690-6-yasha.che3@gmail.com>
+ <a7bba9bd-dab3-4f92-465f-e05beee2b9e3@arm.com>
+ <ceced0d550bc30d4f3e66d2c7f569c39ca890ce4.camel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
-Content-Language: en-US
+In-Reply-To: <ceced0d550bc30d4f3e66d2c7f569c39ca890ce4.camel@gmail.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Yasha Cherikovsky <yasha.che3@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, linux-mips@linux-mips.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2018 03:35, Guo Ren wrote:
-> This timer is used by SMP system and use mfcr/mtcr instruction
-> to access the regs.
+On 01/10/18 09:48, Yasha Cherikovsky wrote:
+> Hi Marc,
 > 
-> Changelog:
->  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING
->  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h
->  - Support csky mp timer alpha version.
->  - Just use low-counter with 32bit width as clocksource.
->  - Coding convention with upstream feed-back.
+> On Mon, 2018-10-01 at 09:19 +0100, Marc Zyngier wrote:
+>> Hi Yasha,
+>>
+>> On 30/09/18 15:15, Yasha Cherikovsky wrote:
+>>> The Realtek RTL8186 SoC is a MIPS based SoC
+>>> used in some home routers [1][2].
+>>>
+>>> The hardware includes Lexra LX5280 CPU with a TLB,
+>>> two Ethernet controllers, a WLAN controller and more.
+>>>
+>>> With this patch, it is possible to successfully boot
+>>> the kernel and load userspace on the Edimax BR-6204Wg
+>>> router.
+>>> Network drivers support will come in future patches.
+>>>
+>>> This patch includes:
+>>> - New MIPS rtl8186 platform
+>>>       - Core platform setup code (mostly DT based)
+>>>       - New Kconfig option
+>>>       - defconfig file
+>>>       - MIPS zboot UART support
+>>> - RTL8186 interrupt controller driver
+>>> - RTL8186 timer driver
+>>> - Device tree files for the RTL8186 SoC and Edimax BR-6204Wg
+>>>     router
+>>>
+>>> [1] https://www.linux-mips.org/wiki/Realtek_SOC#Realtek_RTL8186
+>>> [2] https://wikidevi.com/wiki/Realtek_RTL8186
+>>>
+>>> Signed-off-by: Yasha Cherikovsky <yasha.che3@gmail.com>
+>>> Cc: Ralf Baechle <ralf@linux-mips.org>
+>>> Cc: Paul Burton <paul.burton@mips.com>
+>>> Cc: James Hogan <jhogan@kernel.org>
+>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>> Cc: Jason Cooper <jason@lakedaemon.net>
+>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: linux-mips@linux-mips.org
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> ---
+>>>    arch/mips/Kbuild.platforms                    |   1 +
+>>>    arch/mips/Kconfig                             |  17 ++
+>>>    arch/mips/boot/compressed/uart-16550.c        |   5 +
+>>>    arch/mips/boot/dts/Makefile                   |   1 +
+>>>    arch/mips/boot/dts/realtek/Makefile           |   4 +
+>>>    arch/mips/boot/dts/realtek/rtl8186.dtsi       |  86 +++++++
+>>>    .../dts/realtek/rtl8186_edimax_br_6204wg.dts  |  45 ++++
+>>>    arch/mips/configs/rtl8186_defconfig           | 112 +++++++++
+>>>    arch/mips/include/asm/mach-rtl8186/rtl8186.h  |  37 +++
+>>>    arch/mips/rtl8186/Makefile                    |   2 +
+>>>    arch/mips/rtl8186/Platform                    |   7 +
+>>>    arch/mips/rtl8186/irq.c                       |   8 +
+>>>    arch/mips/rtl8186/prom.c                      |  15 ++
+>>>    arch/mips/rtl8186/setup.c                     |  80 +++++++
+>>>    arch/mips/rtl8186/time.c                      |  10 +
+>>>    drivers/clocksource/Kconfig                   |   9 +
+>>>    drivers/clocksource/Makefile                  |   1 +
+>>>    drivers/clocksource/timer-rtl8186.c           | 220
+>>> ++++++++++++++++++
+>>>    drivers/irqchip/Kconfig                       |   5 +
+>>>    drivers/irqchip/Makefile                      |   1 +
+>>>    drivers/irqchip/irq-rtl8186.c                 | 107 +++++++++
+>>
+>> Could you please split this into at least three patches (arch code,
+>> clocksource, irqchip) to ease the review?
+>>
+>> Thanks,
+>>
+>> 	M.
 > 
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> ---
->  drivers/clocksource/Kconfig        |   8 ++
->  drivers/clocksource/Makefile       |   1 +
->  drivers/clocksource/csky_mptimer.c | 176 +++++++++++++++++++++++++++++++++++++
->  include/linux/cpuhotplug.h         |   1 +
->  4 files changed, 186 insertions(+)
->  create mode 100644 drivers/clocksource/csky_mptimer.c
+> Currently the RTL8186_IRQ and the RTL8186_TIMER Kconfig entries depend on
+> MACH_RTL8186 (which is added in the MIPS portion of the same patch).
+> Also, MACH_RTL8186 in MIPS selects these two options.
 > 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index a11f4ba..a28043f 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -620,4 +620,12 @@ config RISCV_TIMER
->  	  is accessed via both the SBI and the rdcycle instruction.  This is
->  	  required for all RISC-V systems.
->  
-> +config CSKY_MPTIMER
-> +	bool "C-SKY Multi Processor Timer"
-> +	depends on CSKY
-> +	select TIMER_OF
-> +	help
-> +	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
-> +	  system.
-> +
->  endmenu
+> What is the best way to split that?
 
-The same rule applies here for COMPILE_TEST.
+It is absolutely fine to have something depending on a non-selectable 
+config option, which would allow you to split things up as finely as you 
+want. Just have the patch enabling the config option last.
 
-And please rename the file: timer-mp-csky.c
+Thanks,
 
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index db51b24..848c676 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -79,3 +79,4 @@ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
->  obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
->  obj-$(CONFIG_ATCPIT100_TIMER)		+= timer-atcpit100.o
->  obj-$(CONFIG_RISCV_TIMER)		+= riscv_timer.o
-> +obj-$(CONFIG_CSKY_MPTIMER)		+= csky_mptimer.o
-> diff --git a/drivers/clocksource/csky_mptimer.c b/drivers/clocksource/csky_mptimer.c
-> new file mode 100644
-> index 0000000..9dc3cfb
-> --- /dev/null
-> +++ b/drivers/clocksource/csky_mptimer.c
-> @@ -0,0 +1,176 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
-> +
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/sched_clock.h>
-> +#include <linux/cpu.h>
-> +#include <asm/reg_ops.h>
-> +
-> +#include "timer-of.h"
-> +
-> +#define PTIM_CCVR	"cr<3, 14>"
-> +#define PTIM_CTLR	"cr<0, 14>"
-> +#define PTIM_LVR	"cr<6, 14>"
-> +#define PTIM_TSR	"cr<1, 14>"
-> +
-> +static int csky_mptimer_set_next_event(unsigned long delta, struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_LVR, delta);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_shutdown(struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_CTLR, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_oneshot(struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_CTLR, 1);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_oneshot_stopped(struct clock_event_device *ce)
-> +{
-> +	mtcr(PTIM_CTLR, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_PER_CPU(struct timer_of, csky_to) = {
-> +	.flags					= TIMER_OF_CLOCK,
-> +	.clkevt = {
-> +		.rating				= 300,
-> +		.features			= CLOCK_EVT_FEAT_PERCPU |
-> +						  CLOCK_EVT_FEAT_ONESHOT,
-> +		.set_state_shutdown		= csky_mptimer_shutdown,
-> +		.set_state_oneshot		= csky_mptimer_oneshot,
-> +		.set_state_oneshot_stopped	= csky_mptimer_oneshot_stopped,
-> +		.set_next_event			= csky_mptimer_set_next_event,
-> +	},
-> +	.of_irq = {
-> +		.flags				= IRQF_TIMER,
-> +		.percpu				= 1,
-> +	},
-
-See comment in the init function.
-
-> +};
-> +
-> +static irqreturn_t timer_interrupt(int irq, void *dev)
-> +{
-> +	struct timer_of *to = this_cpu_ptr(&csky_to);
-> +
-> +	mtcr(PTIM_TSR, 0);
-> +
-> +	to->clkevt.event_handler(&to->clkevt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +/*
-> + * clock event for percpu
-> + */
-> +static int csky_mptimer_starting_cpu(unsigned int cpu)
-> +{
-> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
-> +
-> +	to->clkevt.cpumask = cpumask_of(cpu);
-> +
-> +	clockevents_config_and_register(&to->clkevt, timer_of_rate(to), 2, ULONG_MAX);
-> +
-> +	enable_percpu_irq(timer_of_irq(to), 0);
-> +
-> +	return 0;
-> +}
-> +
-> +static int csky_mptimer_dying_cpu(unsigned int cpu)
-> +{
-> +	struct timer_of *to = per_cpu_ptr(&csky_to, cpu);
-> +
-> +	disable_percpu_irq(timer_of_irq(to));
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * clock source
-> + */
-> +static u64 sched_clock_read(void)
-> +{
-> +	return (u64) mfcr(PTIM_CCVR);
-
-extra space
-
-> +}
-> +
-> +static u64 clksrc_read(struct clocksource *c)
-> +{
-> +	return (u64) mfcr(PTIM_CCVR);
-
-extra space
-
-> +}
-> +
-> +struct clocksource csky_clocksource = {
-> +	.name	= "csky",
-> +	.rating	= 400,
-> +	.mask	= CLOCKSOURCE_MASK(32),
-> +	.flags	= CLOCK_SOURCE_IS_CONTINUOUS,
-> +	.read	= clksrc_read,
-> +};
-> +
-> +static int __init csky_mptimer_init(struct device_node *np)
-> +{
-> +	int ret, cpu;
-> +	struct timer_of *to;
-> +	int rate = 0;
-> +	int irq	 = 0;
-> +
-> +	/*
-> +	 * Csky_mptimer is designed for C-SKY SMP multi-processors and
-> +	 * every core has it's own private irq and regs for clkevt and
-> +	 * clksrc.
-> +	 *
-> +	 * The regs is accessed by cpu instruction: mfcr/mtcr instead of
-> +	 * mmio map style. So we needn't mmio-address in dts, but we still
-> +	 * need to give clk and irq number.
-> +	 *
-> +	 * We use private irq for the mptimer and irq number is the same
-> +	 * for every core. So we use request_percpu_irq() in timer_of_init.
-> +	 */
-> +
-
-extra line
-
-> +	for_each_possible_cpu(cpu) {
-> +		to = per_cpu_ptr(&csky_to, cpu);
-> +
-> +		if (cpu == 0) {
-> +			to->flags	  |= TIMER_OF_IRQ;
-> +			to->of_irq.handler = timer_interrupt;
-> +
-> +			ret = timer_of_init(np, to);
-> +			if (ret)
-> +				return ret;
-> +
-> +			rate	= timer_of_rate(to);
-> +			irq	= to->of_irq.irq;
-> +		} else {
-> +			ret = timer_of_init(np, to);
-> +			if (ret)
-> +				return ret;
-> +
-> +			to->of_clk.rate	= rate;
-> +			to->of_irq.irq	= irq;
-> +		}
-> +	}
-
-
-Isn't possible to replace this loop which is a bit confusing by:
-
- - no irq flag specified for timer-of
- - request irq before
-
-So we end up with:
-
-	irq = irq_of_parse_and_map(np, 0);
-	if (irq <= 0)
-		return -EINVAL;
-
-	ret = request_irq(irq, csky_timer_interrupt,
-			IRQF_TIMER | IRQF_PERCPU,
-                        "csky_mp_timer", &csky_to));
-	if (ret)
-		return ret;
-
-	for_each_possible_cpu(cpu) {
-		to = per_cpu_ptr(&csky_to, cpu);
-		ret = timer_of_init(np, to);
-		if (ret)
-			goto rollback;
-	}
-
-Alternatively, you can remove the timer_of struct and instantiate the
-percpu stuff in cpuhp callbacks (cf. jcore_pit).
-
-
-> +	ret = cpuhp_setup_state(CPUHP_AP_CSKY_TIMER_STARTING,
-> +				"clockevents/csky/timer:starting",
-> +				csky_mptimer_starting_cpu,
-> +				csky_mptimer_dying_cpu);
-> +	if (ret) {
-> +		pr_err("%s: Failed to cpuhp_setup_state.\n", __func__);
-> +		return ret;
-> +	}
-> +
-> +	clocksource_register_hz(&csky_clocksource, rate);
-> +	sched_clock_register(sched_clock_read, 32, rate);
-> +
-> +	return 0;
-> +}
-> +TIMER_OF_DECLARE(csky_mptimer, "csky,mptimer", csky_mptimer_init);
-> diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-> index caf40ad..e0cd2ba 100644
-> --- a/include/linux/cpuhotplug.h
-> +++ b/include/linux/cpuhotplug.h
-> @@ -126,6 +126,7 @@ enum cpuhp_state {
->  	CPUHP_AP_MIPS_GIC_TIMER_STARTING,
->  	CPUHP_AP_ARC_TIMER_STARTING,
->  	CPUHP_AP_RISCV_TIMER_STARTING,
-> +	CPUHP_AP_CSKY_TIMER_STARTING,
->  	CPUHP_AP_KVM_STARTING,
->  	CPUHP_AP_KVM_ARM_VGIC_INIT_STARTING,
->  	CPUHP_AP_KVM_ARM_VGIC_STARTING,
-> 
-
-
+	M.
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Jazz is not dead. It just smells funny...
