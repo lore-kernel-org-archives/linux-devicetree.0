@@ -1,149 +1,106 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 1/2] arm64: dts: allwinner: Olimex A64-OLinuXino: enable
- eMMC.
-Date: Tue, 2 Oct 2018 15:13:12 +0200
-Message-ID: <20181002131312.soqwybsohdifvso3@flea>
-References: <20180919141815.18737-1-rodrigo@tjader.xyz>
- <20180921142811.h5jraemk565alh3i@flea>
- <CAG7TQgE_KU_cK_4E+NG8Qcw-QB2=C6YoqBYR2svmWxywFyySCw@mail.gmail.com>
- <20180925090139.qbu6tqav5oth7zkw@flea>
- <CAG7TQgFTsR4pf4jAcWMFoOmiP7AXYqjts60RP2kuJGU44AcQJQ@mail.gmail.com>
- <20180927081711.llmwnvpu73loe5iv@flea>
- <CAG7TQgGMkvBnNE_WEth8gscKxN3qN8a44mNMWz3QP-2+JKfOzg@mail.gmail.com>
- <20180929154754.abz3byvrufvnf4dq@flea>
- <CAG7TQgGS7DkLpNVYqfCD-9vMZkeY6r+L-5oXKWef3x-OVbqjtw@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 07/12] drm/sun4i: sun6i_mipi_dsi: Fix TCON
+ DRQ set bits
+Date: Tue, 2 Oct 2018 15:20:08 +0200
+Message-ID: <20181002132008.qtatwtbb3ldu75ay@flea>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-8-jagan@amarulasolutions.com>
+ <20180927165853.dpluekbqzat663q7@flea>
+ <CAMty3ZDUxqokipNqnn6c618pebdVBWc8Pfzaz+4+SYqR42Yerg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="a2jg223ixwczhtcz"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="e3ngso3ragygfnwc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE7BZXOQKGQEHPJTIMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAG7TQgGS7DkLpNVYqfCD-9vMZkeY6r+L-5oXKWef3x-OVbqjtw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rodrigo =?utf-8?B?RXh0ZXJja8O2dHRlciBUasOkZGVy?= <rodrigo@tjader.xyz>
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <CAMty3ZDUxqokipNqnn6c618pebdVBWc8Pfzaz+4+SYqR42Yerg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---a2jg223ixwczhtcz
-Content-Type: text/plain; charset=iso-8859-1
+--e3ngso3ragygfnwc
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Sat, Sep 29, 2018 at 01:51:02PM -0300, Rodrigo Exterck=F6tter Tj=E4der w=
-rote:
-> On Sat, Sep 29, 2018 at 12:47 PM Maxime Ripard
-> <maxime.ripard@bootlin.com> wrote:
+On Thu, Sep 27, 2018 at 11:15:50PM +0530, Jagan Teki wrote:
+> On Thu, Sep 27, 2018 at 10:28 PM Maxime Ripard
+> <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 > >
-> > On Thu, Sep 27, 2018 at 11:49:20AM -0300, Rodrigo Exterck=F6tter Tj=E4d=
-er wrote:
-> > > On Thu, Sep 27, 2018 at 5:17 AM Maxime Ripard <maxime.ripard@bootlin.=
-com> wrote:
-> > > >
-> > > > On Tue, Sep 25, 2018 at 02:47:59PM -0300, Rodrigo Exterck=F6tter Tj=
-=E4der wrote:
-> > > > > On Tue, Sep 25, 2018 at 6:01 AM Maxime Ripard <maxime.ripard@boot=
-lin.com> wrote:
-> > > > > > We can't really do that, unfortunately. If the device tree name=
- was to
-> > > > > > change for a given board, we'd break all the build systems, boot
-> > > > > > scripts and distros out there.
-> > > > >
-> > > > > What if we keep the device tree for the version without WiFi and =
-eMMC
-> > > > > with the current name and create new device trees for the other t=
-wo
-> > > > > versions?
-> > > >
-> > > > Wifi and Bluetooth should be dealt with with overlays in this case,
-> > > > and since the eMMC is already enabled, then there's nothing to do, I
-> > > > guess.
+> > On Thu, Sep 27, 2018 at 05:18:45PM +0530, Jagan Teki wrote:
+> > > TCON DRQ set bits for non-burst DSI mode can computed via
+> > > horizontal front porch instead of front porch + sync timings.
 > > >
-> > > It's WiFi that is already enabled, not eMMC. Only one of the three
-> > > variants has WiFi.
+> > > Since there no documentation for TCON_DRQ_REG(0x7c) register
+> > > this change is taken as reference from BPI-M64-bsp.
 > >
-> > Ah, right, sorry. In the board that doesn't have an emmc, are the pins
-> > usable for something else?
->=20
-> I don't have the variant without eMMC nor could I find pictures of it.
-> The schematics do mention that the A64 pins could be used to control
-> NAND flash, but you'd have to solder that yourself.
-
-Ok.
-
-> > > We can't even remove a node from a device tree? Removing the WiFi node
-> > > from the current tree would make it correspond to the variant with the
-> > > least features.
+> > Detailing more what the issue is would be great.
 > >
-> > Not really. How pissed would you be if you were a user, had wifi
-> > running on your board, you upgrade your kernel, and then it's just
-> > gone? :)
->=20
-> That would suck, but what about someone who has the board with no wifi
-> and problems start happening because the wifi is enabled on the device
-> tree?
-
-Did that happen or is it a theoretical issue?
-
-> > > About device tree overlays, I read overlay-notes.txt, but I went
-> > > looking for an example with "git grep /plugin/ arch" and it came
-> > > empty. Is this approach not used for other boards?
-> >
-> > It is, it's simply not stored in the kernel, but through other third
-> > party repos.
->=20
-> So that would mean that it's up to every distro to support the boards
-> instead of relying on mainline support?
-
-Distros would have to integrate it either way. One would need to
-detect and / or ask for the board variant in order to load say the BT
-stack, or to know if you want to boot from the eMMC or from the SD
-card.
-
-> > > Does the overlay approach make the device available at boot time? That
-> > > is important for a storage device such as eMMC.
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
+> > >  1 file changed, 2 insertions(+), 2 deletions(-)
 > > >
-> > > I went with the separate dts approach because that's what I saw was
-> > > done for other similar cases, like Pine64 and Pine64+, OLinuXino-LIME2
-> > > and its variant with eMMC, among others.
+> > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > index 599284971ab6..9918fdb990ff 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+> > > @@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+> > >       struct mipi_dsi_device *device = dsi->device;
+> > >       u32 val = 0;
 > >
-> > Yeah, but in all these cases, it was done from day one, not after the
-> > facts.
->=20
-> For the LIME2 the dts for the emmc variant was commited two years
-> after the base LIME2 dts.
->=20
-> What if instead of keeping the current dt for the least featureful
-> model we keep it for the most featureful model and create new dts for
-> the two less featureful models?
+> > The computation here is in the A64 driver:
+> >
+> > if ((panel->lcd_ht - panel->lcd_x - panel->lcd_hbp) < 21) {
+> >         dsi_dev[sel]->dsi_tcon_drq.bits.drq_mode = 0;
+> > } else {
+> >         dsi_dev[sel]->dsi_tcon_drq.bits.drq_set =
+> >                 (panel->lcd_ht-panel->lcd_x-panel->lcd_hbp-20) *
+> >                 dsi_pixel_bits[panel->lcd_dsi_format]/(8*4);
+> > }
+> >
+> > It is testing that the sync + front porch is smaller than 21, and
+> > otherwise sets the drq.
+> >
+> > > -     if ((mode->hsync_end - mode->hdisplay) > 20) {
+> >
+> > My code here is testing that the difference between hsync_end and
+> > hdisplay is superior to 20, and sets the DRQ if true. The condition is
+> > reversed, but otherwise, that difference is the front porch plus the
+> > sync length.
+> 
+> True, I understand this, but does drq setting here is specific to SoC?
+> I thought of finding DRQ in A31 BSP but I couldn't find the code. do
+> you have bsp somewhere in github?
+> 
+> >
+> > > +     if ((mode->hsync_start - mode->hdisplay) > 20) {
+> >
+> > However, you are testing for just the front porch, unlike what your
+> > commit log is saying, and unlike what allwinner's code is saying. So
+> > this deserves some explanation.
+> 
+> but A64 is doing this, do you think it's completely A64 specific or
+> testing panel with front porch drq?
 
-This is a different story though. The LIME2 eMMC variant was created
-way after the original LIME2, with a separate name.
+See the above code excerpt:
+panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
+
+This is hsync + front porch. Not the sole front porch. So no, it's not
+doing this.
 
 Maxime
 
---=20
+
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---a2jg223ixwczhtcz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAluzbugACgkQ0rTAlCFN
-r3TZhRAAmuF5QybvqGWs7s0VgT/GzcpRGvF6kiXIISdlS2dUyOYfN6+B8hFjlC3y
-uNcbhBTRRExSF8V1ejlVSb8eBCsegyGYDzm9wZ9u0ypUf6XpRRey8FeMtAB+igb5
-o7hmtFqlJAzQg3s20hGcQ1J+nB+g/EHfxfpxrCN7Sx0hBkcczETF7aRLT7XzUR//
-Lt0i53xnQprL1bm91Fr3uS1g93r2Onv7Li/UimOlOWo9m1TYXrbfJbcQP+pDvYgN
-nz/MVjFYbzel/m5mDUzdUX9FWibovvSq10sTkV+sWnyyP0RyVljehizJsPYifYP/
-osnTWbM7evGkQVaLs7n5zrJpHW6aOKIms0XYxSFpMkKA6OXEJ1npwUQry9/rHFfQ
-pt7d3Aw/9b9dmyaNrHnSj/7g8a0AfkzLZAfrwrVeAGuVIu1rYDH5o3aQRnUSW9l9
-Wgyqz7IfRdosjaYmJDiHC4Sc9sY1rYeQIz3o4pi2LqgOFWl1EpATW3cB0xTqKx8k
-AfEYaa0DCawB/9iTpSX8a+NlILLdfD7AAOjLyE7rkduu49N+tCfNi9KxZ2QojoZk
-r6IX0IWlAdr9hJ2+QBq73YsKLg0WZDbazBP0HsurDe2tfxCzkyMsHtieKlCado0v
-LN8lcw0cFlhGyw6v+dX7sd9EI40pEyJXn0yvGyIIOP5OosUa/L4=
-=Xi7c
------END PGP SIGNATURE-----
-
---a2jg223ixwczhtcz--
+--e3ngso3ragygfnwc--
