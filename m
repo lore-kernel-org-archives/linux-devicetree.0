@@ -1,16 +1,15 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v6 09/14] irqchip/irq-mvebu-icu: add support for System
- Error Interrupts (SEI)
-Date: Tue, 2 Oct 2018 10:18:22 +0200
-Message-ID: <20181002101822.107c2016@xps13>
+Subject: [PATCH v7 06/14] irqchip/irq-mvebu-icu: support ICU subnodes
+Date: Tue, 2 Oct 2018 10:54:16 +0200
+Message-ID: <20181002105416.70b93857@xps13>
 References: <20181001141358.31508-1-miquel.raynal@bootlin.com>
- <20181001141358.31508-10-miquel.raynal@bootlin.com>
- <86in2lvbmb.wl-marc.zyngier@arm.com>
+ <20181001141358.31508-7-miquel.raynal@bootlin.com>
+ <86k1n1vcgb.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <86in2lvbmb.wl-marc.zyngier@arm.com>
+In-Reply-To: <86k1n1vcgb.wl-marc.zyngier@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,137 +23,190 @@ To: Marc Zyngier <marc.zyngier@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIE1v
-biwgMDEgT2N0IDIwMTggMTg6MDc6NTYKKzAxMDA6Cgo+IE9uIE1vbiwgMDEgT2N0IDIwMTggMTU6
-MTM6NTMgKzAxMDAsCj4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4g
-d3JvdGU6Cj4gPiAKPiA+IFNvIGZhciB0aGUgSUNVIG9ubHkgaGFuZGxlZCBOU1IgaW50ZXJydXB0
-cyB0aHJvdWdoIEdJQ1AuIEFuIFNFSSBkcml2ZXIKPiA+IHByb3ZpZGVzIGFuIE1TSSBkb21haW4g
-dGhyb3VnaCB3aGljaCBpdCBpcyBwb3NzaWJsZSB0byByYWlzZSBTRUksIHNvCj4gPiBsZXQncyBh
-ZGQgU0VJIHN1cHBvcnQgdG8gdGhlIElDVSBkcml2ZXIuCj4gPiAKPiA+IEhhbmRsZSB0aGUgTlNS
-IHByb2JlIGZ1bmN0aW9uIGluIGEgbW9yZSBnZW5lcmljIHdheSB0byBzdXBwb3J0IG90aGVyCj4g
-PiB0eXBlIG9mIGludGVycnVwdHMuCj4gPiAKPiA+IEVhY2ggaW50ZXJydXB0IGRvbWFpbiBpcyBh
-IHRyZWUgZG9tYWluIHRvIGF2b2lkIGFsbG9jYXRpb24gdGhlIDIwNwo+ID4gZW50cmllcyBlYWNo
-IHRpbWUuIEluc3RlYWQgYW4gSUNVLXdpZGUgYml0bWFwIGlzIHVzZWQgdG8gZm9sbG93IElDVQo+
-ID4gc2xvdCBhbGxvY2F0aW9ucy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTWlxdWVsIFJheW5h
-bCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZlcnMvaXJxY2hp
-cC9pcnEtbXZlYnUtaWN1LmMgfCAxNzMgKysrKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgMTM5IGluc2VydGlvbnMoKyksIDM0IGRlbGV0aW9ucygtKQo+
-ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYyBiL2Ry
-aXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPiA+IGluZGV4IGM3OWQyY2I3ODdhMC4uMjFl
-N2M1ODMwZmNjIDEwMDY0NAo+ID4gLS0tIGEvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3Uu
-Ywo+ID4gKysrIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gQEAgLTI3LDYg
-KzI3LDEwIEBACj4gPiAgI2RlZmluZSBJQ1VfU0VUU1BJX05TUl9BSAkweDE0Cj4gPiAgI2RlZmlu
-ZSBJQ1VfQ0xSU1BJX05TUl9BTAkweDE4Cj4gPiAgI2RlZmluZSBJQ1VfQ0xSU1BJX05TUl9BSAkw
-eDFjCj4gPiArI2RlZmluZSBJQ1VfU0VUX1NFSV9BTAkJMHg1MAo+ID4gKyNkZWZpbmUgSUNVX1NF
-VF9TRUlfQUgJCTB4NTQKPiA+ICsjZGVmaW5lIElDVV9DTFJfU0VJX0FMCQkweDU4Cj4gPiArI2Rl
-ZmluZSBJQ1VfQ0xSX1NFSV9BSAkJMHg1Qwo+ID4gICNkZWZpbmUgSUNVX0lOVF9DRkcoeCkgICAg
-ICAgICAgKDB4MTAwICsgNCAqICh4KSkKPiA+ICAjZGVmaW5lICAgSUNVX0lOVF9FTkFCTEUJQklU
-KDI0KQo+ID4gICNkZWZpbmUgICBJQ1VfSVNfRURHRQkJQklUKDI4KQo+ID4gQEAgLTM3LDExICs0
-MSwyNyBAQAo+ID4gICNkZWZpbmUgSUNVX1NBVEEwX0lDVV9JRAkxMDkKPiA+ICAjZGVmaW5lIElD
-VV9TQVRBMV9JQ1VfSUQJMTA3Cj4gPiAgCj4gPiArc3RydWN0IG12ZWJ1X2ljdV9zdWJzZXRfZGF0
-YSB7Cj4gPiArCXVuc2lnbmVkIGludCBpY3VfZ3JvdXA7Cj4gPiArCXVuc2lnbmVkIGludCBvZmZz
-ZXRfc2V0X2FoOwo+ID4gKwl1bnNpZ25lZCBpbnQgb2Zmc2V0X3NldF9hbDsKPiA+ICsJdW5zaWdu
-ZWQgaW50IG9mZnNldF9jbHJfYWg7Cj4gPiArCXVuc2lnbmVkIGludCBvZmZzZXRfY2xyX2FsOwo+
-ID4gK307Cj4gPiArCj4gPiAgc3RydWN0IG12ZWJ1X2ljdSB7Cj4gPiAtCXN0cnVjdCBpcnFfY2hp
-cCBpcnFfY2hpcDsKPiA+ICAJdm9pZCBfX2lvbWVtICpiYXNlOwo+ID4gIAlzdHJ1Y3QgZGV2aWNl
-ICpkZXY7Cj4gPiArCj4gPiArCS8qIExvY2sgb24gaW50ZXJydXB0IGFsbG9jYXRpb25zL3JlbGVh
-c2VzICovCj4gPiArCXN0cnVjdCBtdXRleCBtc2lfbG9jazsKPiA+ICsJREVDTEFSRV9CSVRNQVAo
-bXNpX2JpdG1hcCwgSUNVX01BWF9JUlFTKTsKPiA+ICt9Owo+ID4gKwo+ID4gK3N0cnVjdCBtdmVi
-dV9pY3VfbXNpX2RhdGEgewo+ID4gKwlzdHJ1Y3QgbXZlYnVfaWN1ICppY3U7Cj4gPiAgCWF0b21p
-Y190IGluaXRpYWxpemVkOwo+ID4gKwljb25zdCBzdHJ1Y3QgbXZlYnVfaWN1X3N1YnNldF9kYXRh
-ICpzdWJzZXRfZGF0YTsKPiA+ICB9Owo+ID4gIAo+ID4gIHN0cnVjdCBtdmVidV9pY3VfaXJxX2Rh
-dGEgewo+ID4gQEAgLTUyLDI4ICs3MiwzOCBAQCBzdHJ1Y3QgbXZlYnVfaWN1X2lycV9kYXRhIHsK
-PiA+ICAKPiA+ICBERUZJTkVfU1RBVElDX0tFWV9GQUxTRShsZWdhY3lfYmluZGluZ3MpOwo+ID4g
-IAo+ID4gLXN0YXRpYyB2b2lkIG12ZWJ1X2ljdV9pbml0KHN0cnVjdCBtdmVidV9pY3UgKmljdSwg
-c3RydWN0IG1zaV9tc2cgKm1zZykKPiA+ICtzdGF0aWMgdm9pZCBtdmVidV9pY3VfaW5pdChzdHJ1
-Y3QgbXZlYnVfaWN1ICppY3UsCj4gPiArCQkJICAgc3RydWN0IG12ZWJ1X2ljdV9tc2lfZGF0YSAq
-bXNpX2RhdGEsCj4gPiArCQkJICAgc3RydWN0IG1zaV9tc2cgKm1zZykKPiA+ICB7Cj4gPiAtCWlm
-IChhdG9taWNfY21weGNoZygmaWN1LT5pbml0aWFsaXplZCwgZmFsc2UsIHRydWUpKQo+ID4gKwlj
-b25zdCBzdHJ1Y3QgbXZlYnVfaWN1X3N1YnNldF9kYXRhICpzdWJzZXQgPSBtc2lfZGF0YS0+c3Vi
-c2V0X2RhdGE7Cj4gPiArCj4gPiArCWlmIChhdG9taWNfY21weGNoZygmbXNpX2RhdGEtPmluaXRp
-YWxpemVkLCBmYWxzZSwgdHJ1ZSkpCj4gPiArCQlyZXR1cm47Cj4gPiArCj4gPiArCS8qIFNldCAn
-U0VUJyBJQ1UgU1BJIG1lc3NhZ2UgYWRkcmVzcyBpbiBBUCAqLwo+ID4gKwl3cml0ZWxfcmVsYXhl
-ZChtc2dbMF0uYWRkcmVzc19oaSwgaWN1LT5iYXNlICsgc3Vic2V0LT5vZmZzZXRfc2V0X2FoKTsK
-PiA+ICsJd3JpdGVsX3JlbGF4ZWQobXNnWzBdLmFkZHJlc3NfbG8sIGljdS0+YmFzZSArIHN1YnNl
-dC0+b2Zmc2V0X3NldF9hbCk7Cj4gPiArCj4gPiArCWlmIChzdWJzZXQtPmljdV9ncm91cCAhPSBJ
-Q1VfR1JQX05TUikKPiA+ICAJCXJldHVybjsKPiA+ICAKPiA+IC0JLyogU2V0IENsZWFyL1NldCBJ
-Q1UgU1BJIG1lc3NhZ2UgYWRkcmVzcyBpbiBBUCAqLwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2db
-MF0uYWRkcmVzc19oaSwgaWN1LT5iYXNlICsgSUNVX1NFVFNQSV9OU1JfQUgpOwo+ID4gLQl3cml0
-ZWxfcmVsYXhlZChtc2dbMF0uYWRkcmVzc19sbywgaWN1LT5iYXNlICsgSUNVX1NFVFNQSV9OU1Jf
-QUwpOwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2dbMV0uYWRkcmVzc19oaSwgaWN1LT5iYXNlICsg
-SUNVX0NMUlNQSV9OU1JfQUgpOwo+ID4gLQl3cml0ZWxfcmVsYXhlZChtc2dbMV0uYWRkcmVzc19s
-bywgaWN1LT5iYXNlICsgSUNVX0NMUlNQSV9OU1JfQUwpOwo+ID4gKwkvKiBTZXQgJ0NMRUFSJyBJ
-Q1UgU1BJIG1lc3NhZ2UgYWRkcmVzcyBpbiBBUCAobGV2ZWwtTVNJIG9ubHkpICovCj4gPiArCXdy
-aXRlbF9yZWxheGVkKG1zZ1sxXS5hZGRyZXNzX2hpLCBpY3UtPmJhc2UgKyBzdWJzZXQtPm9mZnNl
-dF9jbHJfYWgpOwo+ID4gKwl3cml0ZWxfcmVsYXhlZChtc2dbMV0uYWRkcmVzc19sbywgaWN1LT5i
-YXNlICsgc3Vic2V0LT5vZmZzZXRfY2xyX2FsKTsKPiA+ICB9Cj4gPiAgCj4gPiAgc3RhdGljIHZv
-aWQgbXZlYnVfaWN1X3dyaXRlX21zZyhzdHJ1Y3QgbXNpX2Rlc2MgKmRlc2MsIHN0cnVjdCBtc2lf
-bXNnICptc2cpCj4gPiAgewo+ID4gIAlzdHJ1Y3QgaXJxX2RhdGEgKmQgPSBpcnFfZ2V0X2lycV9k
-YXRhKGRlc2MtPmlycSk7Cj4gPiArCXN0cnVjdCBtdmVidV9pY3VfbXNpX2RhdGEgKm1zaV9kYXRh
-ID0gcGxhdGZvcm1fbXNpX2dldF9ob3N0X2RhdGEoZC0+ZG9tYWluKTsKPiA+ICAJc3RydWN0IG12
-ZWJ1X2ljdV9pcnFfZGF0YSAqaWN1X2lycWQgPSBkLT5jaGlwX2RhdGE7Cj4gPiAgCXN0cnVjdCBt
-dmVidV9pY3UgKmljdSA9IGljdV9pcnFkLT5pY3U7Cj4gPiAgCXVuc2lnbmVkIGludCBpY3VfaW50
-Owo+ID4gIAo+ID4gIAlpZiAobXNnLT5hZGRyZXNzX2xvIHx8IG1zZy0+YWRkcmVzc19oaSkgewo+
-ID4gLQkJLyogT25lIG9mZiBpbml0aWFsaXphdGlvbiAqLwo+ID4gLQkJbXZlYnVfaWN1X2luaXQo
-aWN1LCBtc2cpOwo+ID4gKwkJLyogT25lIG9mZiBpbml0aWFsaXphdGlvbiBwZXIgZG9tYWluICov
-Cj4gPiArCQltdmVidV9pY3VfaW5pdChpY3UsIG1zaV9kYXRhLCBtc2cpOwo+ID4gIAkJLyogQ29u
-ZmlndXJlIHRoZSBJQ1Ugd2l0aCBpcnEgbnVtYmVyICYgdHlwZSAqLwo+ID4gIAkJaWN1X2ludCA9
-IG1zZy0+ZGF0YSB8IElDVV9JTlRfRU5BQkxFOwo+ID4gIAkJaWYgKGljdV9pcnFkLT50eXBlICYg
-SVJRX1RZUEVfRURHRV9SSVNJTkcpCj4gPiBAQCAtMTAzLDEwICsxMzMsMjkgQEAgc3RhdGljIHZv
-aWQgbXZlYnVfaWN1X3dyaXRlX21zZyhzdHJ1Y3QgbXNpX2Rlc2MgKmRlc2MsIHN0cnVjdCBtc2lf
-bXNnICptc2cpCj4gPiAgCX0KPiA+ICB9Cj4gPiAgCj4gPiArc3RhdGljIHN0cnVjdCBpcnFfY2hp
-cCBtdmVidV9pY3VfbnNyX2NoaXAgPSB7Cj4gPiArCS5uYW1lCQkJPSAiSUNVLU5TUiIsCj4gPiAr
-CS5pcnFfbWFzawkJPSBpcnFfY2hpcF9tYXNrX3BhcmVudCwKPiA+ICsJLmlycV91bm1hc2sJCT0g
-aXJxX2NoaXBfdW5tYXNrX3BhcmVudCwKPiA+ICsJLmlycV9lb2kJCT0gaXJxX2NoaXBfZW9pX3Bh
-cmVudCwKPiA+ICsJLmlycV9zZXRfdHlwZQkJPSBpcnFfY2hpcF9zZXRfdHlwZV9wYXJlbnQsCj4g
-PiArCS5pcnFfc2V0X2FmZmluaXR5CT0gaXJxX2NoaXBfc2V0X2FmZmluaXR5X3BhcmVudCwKPiA+
-ICt9Owo+ID4gKwo+ID4gK3N0YXRpYyBzdHJ1Y3QgaXJxX2NoaXAgbXZlYnVfaWN1X3NlaV9jaGlw
-ID0gewo+ID4gKwkubmFtZQkJCT0gIklDVS1TRUkiLAo+ID4gKwkuaXJxX2FjawkJPSBpcnFfY2hp
-cF9hY2tfcGFyZW50LAo+ID4gKwkuaXJxX21hc2sJCT0gaXJxX2NoaXBfbWFza19wYXJlbnQsCj4g
-PiArCS5pcnFfdW5tYXNrCQk9IGlycV9jaGlwX3VubWFza19wYXJlbnQsCj4gPiArCS5pcnFfc2V0
-X3R5cGUJCT0gaXJxX2NoaXBfc2V0X3R5cGVfcGFyZW50LAo+ID4gKwkuaXJxX3NldF9hZmZpbml0
-eQk9IGlycV9jaGlwX3NldF9hZmZpbml0eV9wYXJlbnQsCj4gPiArfTsKPiA+ICsKPiA+ICBzdGF0
-aWMgaW50Cj4gPiAgbXZlYnVfaWN1X2lycV9kb21haW5fdHJhbnNsYXRlKHN0cnVjdCBpcnFfZG9t
-YWluICpkLCBzdHJ1Y3QgaXJxX2Z3c3BlYyAqZndzcGVjLAo+ID4gIAkJCSAgICAgICB1bnNpZ25l
-ZCBsb25nICpod2lycSwgdW5zaWduZWQgaW50ICp0eXBlKQo+ID4gIHsKPiA+ICsJc3RydWN0IG12
-ZWJ1X2ljdV9tc2lfZGF0YSAqbXNpX2RhdGEgPSBwbGF0Zm9ybV9tc2lfZ2V0X2hvc3RfZGF0YShk
-KTsKPiA+ICAJc3RydWN0IG12ZWJ1X2ljdSAqaWN1ID0gcGxhdGZvcm1fbXNpX2dldF9ob3N0X2Rh
-dGEoZCk7Cj4gPiAgCXVuc2lnbmVkIGludCBwYXJhbV9jb3VudCA9IHN0YXRpY19icmFuY2hfdW5s
-aWtlbHkoJmxlZ2FjeV9iaW5kaW5ncykgPyAzIDogMjsKPiA+ICAKPiA+IEBAIC0xMjgsNiArMTc3
-LDE0IEBAIG12ZWJ1X2ljdV9pcnFfZG9tYWluX3RyYW5zbGF0ZShzdHJ1Y3QgaXJxX2RvbWFpbiAq
-ZCwgc3RydWN0IGlycV9md3NwZWMgKmZ3c3BlYywKPiA+ICAJfSBlbHNlIHsKPiA+ICAJCSpod2ly
-cSA9IGZ3c3BlYy0+cGFyYW1bMF07Cj4gPiAgCQkqdHlwZSA9IGZ3c3BlYy0+cGFyYW1bMV0gJiBJ
-UlFfVFlQRV9TRU5TRV9NQVNLOwo+ID4gKwo+ID4gKwkJLyoKPiA+ICsJCSAqIFRoZSBJQ1UgcmVj
-ZWl2ZXMgbGV2ZWwgaW50ZXJydXB0cy4gV2hpbGUgdGhlIE5TUiBhcmUgYWxzbwo+ID4gKwkJICog
-bGV2ZWwgaW50ZXJydXB0cywgU0VJIGFyZSBlZGdlIGludGVycnVwdHMuIEZvcmNlIHRoZSB0eXBl
-Cj4gPiArCQkgKiBoZXJlIGluIHRoaXMgY2FzZS4KPiA+ICsJCSAqLwo+ID4gKwkJaWYgKG1zaV9k
-YXRhLT5zdWJzZXRfZGF0YS0+aWN1X2dyb3VwID09IElDVV9HUlBfU0VJKQo+ID4gKwkJCSp0eXBl
-ID0gSVJRX1RZUEVfRURHRV9SSVNJTkc7ICAKPiAKPiBQbGVhc2UgYWRkIGEgY29tbWVudCBpbmRp
-Y2F0aW5nIHRoYXQgdGhpcyBtYWtlcyB0aGUgaW50ZXJydXB0IGhhbmRsaW5nCj4gdW5yZWxpYWJs
-ZS4gSSByZWFsbHkgZG9uJ3Qgd2FudCBhbnlvbmUgdG8gdGhpbmsgdGhhdCB0aGlzIGtpbmQgb2Yg
-aGFjawo+IGlzIHRvIGJlIHJlbGllZCB1cG9uIChpbnRlcnJ1cHQgZmlyZXMsIGRyaXZlciBpZ25v
-cmVzIHRoZSBpbnRlcnJ1cHQKPiBhbmQgbGVnaXRpbWF0ZWx5IGV4cGVjdHMgaXQgdG8gZmlyZSBh
-Z2FpbiwgaW50ZXJydXB0cyBkb2Vzbid0IGZpcmUsCj4gZGV2aWNlIGlzIGRlYWQpLgoKRG9uZS4g
-QWRkZWQgdGhlIG1lbnRpb246CgogICAgIk5vdGUgdGhhdCB0aGlzIG1ha2VzIHRoZSBpbnRlcnJ1
-cHQgaGFuZGxpbmcgdW5yZWxpYWJsZS4iCgo+IAo+ID4gIAl9Cj4gPiAgCj4gPiAgCWlmICgqaHdp
-cnEgPj0gSUNVX01BWF9JUlFTKSB7Cj4gPiBAQCAtMTM4LDYgKzE5NSwyNSBAQCBtdmVidV9pY3Vf
-aXJxX2RvbWFpbl90cmFuc2xhdGUoc3RydWN0IGlycV9kb21haW4gKmQsIHN0cnVjdCBpcnFfZndz
-cGVjICpmd3NwZWMsCj4gPiAgCXJldHVybiAwOwo+ID4gIH0KPiA+ICAKPiA+ICtzdGF0aWMgaW50
-IG12ZWJ1X2ljdV9tc2lfYml0bWFwX3JlZ2lvbl9hbGxvYyhzdHJ1Y3QgbXZlYnVfaWN1ICppY3Us
-IGludCBod2lycSkKPiA+ICt7Cj4gPiArCWludCByZXQ7Cj4gPiArCj4gPiArCW11dGV4X2xvY2so
-JmljdS0+bXNpX2xvY2spOwo+ID4gKwlyZXQgPSB0ZXN0X2FuZF9zZXRfYml0KGh3aXJxLCBpY3Ut
-Pm1zaV9iaXRtYXApOwo+ID4gKwltdXRleF91bmxvY2soJmljdS0+bXNpX2xvY2spOyAgCj4gCj4g
-dGVzdF9hbmRfc2V0X2JpdCBpcyBhdG9taWMuIFdoeSBkbyB3ZSBoYXZlIGEgbXV0ZXggdG8gZ3Vh
-cmQgaXQ/CgpNdXRleGVzIHJlbW92ZWQsIHRoYXQncyByaWdodCB3ZSBkb24ndCBuZWVkIHRoZW0g
-YW55bW9yZSBzaW5jZSB3ZQpwYXNzZWQgdG8gdGVzdF9hbmRfc2V0X2JpdCgpLgoKPiBNb3JlIGlt
-cG9ydGFudGx5LCB3aGF0IGlzIGl0IHVzZWQgZm9yPyBZb3Ugb25seSBzZWVtIHRvIHVzZSBpdCBh
-cyBzb21lCj4gcGFyYW5vaWQgY2hlY2sgdG8gdmFsaWRhdGUgdGhlIERULCB3aGljaCBtYWtlcyBu
-byBzZW5zZSB0byBtZS4KCkknbSBub3Qgc3VyZSBpZiB0aGlzIHRlc3QgaXMgcmVhbGx5IHBhcmFu
-b2lkIGFzLCBpbiB0aGVvcnksIHdlIG1pZ2h0CmhhdmUgbW9yZSBpbnRlcnJ1cHRzIHRoYW4gYXZh
-aWxhYmxlIHNsb3RzIGluIHRoZSBJQ1UgYW5kIEkgZmVlbCBnb29kCndhcm5pbmcgdGhlIHVzZXIg
-aWYgYW4gSUNVIHNsb3QgaXMgcmUtdXNlZC4gQW55d2F5LCBpZiB5b3UgcHJlZmVyIG5vdAp0byBj
-aGVjayB0aGF0LCBJIHdpbGwgc2ltcGx5IGdldCByaWQgb2YgdGhlIHdob2xlIGJpdG1hcCB3aGlj
-aCB0aGVuCm1ha2VzIG5vIG1vcmUgc2Vuc2UuCgpUaGFua3MsCk1pcXXDqGwKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+The ICU can handle several type of interrupt, each of them being handled
+differently on AP side. On CP side, the ICU should be able to make the
+distinction between each interrupt group by pointing to the right parent.
+
+This is done through the introduction of new bindings, presenting the ICU
+node as the parent of multiple ICU sub-nodes, each of them being an
+interrupt type with a different interrupt parent. ICU interrupt 'clients'
+now directly point to the right sub-node, avoiding the need for the extra
+ICU_GRP_* parameter.
+
+ICU subnodes are probed automatically with devm_platform_populate(). If
+the node as no child, the probe function for NSRs will still be called
+'manually' in order to preserve backward compatibility with DT using the
+old binding.
+
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+
+Changes since v6:
+-----------------
+* Used the static key at the top of the mvebu_icu_subset_probe()
+  function.
+
+drivers/irqchip/irq-mvebu-icu.c | 73 +++++++++++++++++++++++++--------
+ 1 file changed, 57 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/irqchip/irq-mvebu-icu.c b/drivers/irqchip/irq-mvebu-icu.c
+index d09f220a2701..d0b1994e2a6f 100644
+--- a/drivers/irqchip/irq-mvebu-icu.c
++++ b/drivers/irqchip/irq-mvebu-icu.c
+@@ -13,6 +13,7 @@
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+ #include <linux/irqdomain.h>
++#include <linux/jump_label.h>
+ #include <linux/kernel.h>
+ #include <linux/msi.h>
+ #include <linux/of_irq.h>
+@@ -49,6 +50,8 @@ struct mvebu_icu_irq_data {
+ 	unsigned int type;
+ };
+ 
++DEFINE_STATIC_KEY_FALSE(legacy_bindings);
++
+ static void mvebu_icu_init(struct mvebu_icu *icu, struct msi_msg *msg)
+ {
+ 	if (atomic_cmpxchg(&icu->initialized, false, true))
+@@ -105,32 +108,33 @@ mvebu_icu_irq_domain_translate(struct irq_domain *d, struct irq_fwspec *fwspec,
+ 			       unsigned long *hwirq, unsigned int *type)
+ {
+ 	struct mvebu_icu *icu = platform_msi_get_host_data(d);
+-	unsigned int icu_group;
++	unsigned int param_count = static_branch_unlikely(&legacy_bindings) ? 3 : 2;
+ 
+ 	/* Check the count of the parameters in dt */
+-	if (WARN_ON(fwspec->param_count < 3)) {
++	if (WARN_ON(fwspec->param_count != param_count)) {
+ 		dev_err(icu->dev, "wrong ICU parameter count %d\n",
+ 			fwspec->param_count);
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Only ICU group type is handled */
+-	icu_group = fwspec->param[0];
+-	if (icu_group != ICU_GRP_NSR && icu_group != ICU_GRP_SR &&
+-	    icu_group != ICU_GRP_SEI && icu_group != ICU_GRP_REI) {
+-		dev_err(icu->dev, "wrong ICU group type %x\n", icu_group);
+-		return -EINVAL;
++	if (static_branch_unlikely(&legacy_bindings)) {
++		*hwirq = fwspec->param[1];
++		*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
++		if (fwspec->param[0] != ICU_GRP_NSR) {
++			dev_err(icu->dev, "wrong ICU group type %x\n",
++				fwspec->param[0]);
++			return -EINVAL;
++		}
++	} else {
++		*hwirq = fwspec->param[0];
++		*type = fwspec->param[1] & IRQ_TYPE_SENSE_MASK;
+ 	}
+ 
+-	*hwirq = fwspec->param[1];
+ 	if (*hwirq >= ICU_MAX_IRQS) {
+ 		dev_err(icu->dev, "invalid interrupt number %ld\n", *hwirq);
+ 		return -EINVAL;
+ 	}
+ 
+-	/* Mask the type to prevent wrong DT configuration */
+-	*type = fwspec->param[2] & IRQ_TYPE_SENSE_MASK;
+-
+ 	return 0;
+ }
+ 
+@@ -155,7 +159,10 @@ mvebu_icu_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
+ 		goto free_irqd;
+ 	}
+ 
+-	icu_irqd->icu_group = fwspec->param[0];
++	if (static_branch_unlikely(&legacy_bindings))
++		icu_irqd->icu_group = fwspec->param[0];
++	else
++		icu_irqd->icu_group = ICU_GRP_NSR;
+ 	icu_irqd->icu = icu;
+ 
+ 	err = platform_msi_domain_alloc(domain, virq, nr_irqs);
+@@ -203,6 +210,13 @@ static const struct irq_domain_ops mvebu_icu_domain_ops = {
+ 	.free      = mvebu_icu_irq_domain_free,
+ };
+ 
++static const struct of_device_id mvebu_icu_subset_of_match[] = {
++	{
++		.compatible = "marvell,cp110-icu-nsr",
++	},
++	{},
++};
++
+ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *msi_parent_dn;
+@@ -210,7 +224,10 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+ 	struct irq_domain *irq_domain;
+ 	struct mvebu_icu *icu;
+ 
+-	icu = dev_get_drvdata(dev);
++	if (static_branch_unlikely(&legacy_bindings))
++		icu = dev_get_drvdata(dev);
++	else
++		icu = dev_get_drvdata(dev->parent);
+ 
+ 	dev->msi_domain = of_msi_get_domain(dev, dev->of_node,
+ 					    DOMAIN_BUS_PLATFORM_MSI);
+@@ -233,6 +250,15 @@ static int mvebu_icu_subset_probe(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static struct platform_driver mvebu_icu_subset_driver = {
++	.probe  = mvebu_icu_subset_probe,
++	.driver = {
++		.name = "mvebu-icu-subset",
++		.of_match_table = mvebu_icu_subset_of_match,
++	},
++};
++builtin_platform_driver(mvebu_icu_subset_driver);
++
+ static int mvebu_icu_probe(struct platform_device *pdev)
+ {
+ 	struct mvebu_icu *icu;
+@@ -259,6 +285,16 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+ 	if (!icu->irq_chip.name)
+ 		return -ENOMEM;
+ 
++	/*
++	 * Legacy bindings: ICU is one node with one MSI parent: force manually
++	 *                  the probe of the NSR interrupts side.
++	 * New bindings: ICU node has children, one per interrupt controller
++	 *               having its own MSI parent: call platform_populate().
++	 * All ICU instances should use the same bindings.
++	 */
++	if (!of_get_child_count(pdev->dev.of_node))
++		static_branch_enable(&legacy_bindings);
++
+ 	icu->irq_chip.irq_mask = irq_chip_mask_parent;
+ 	icu->irq_chip.irq_unmask = irq_chip_unmask_parent;
+ 	icu->irq_chip.irq_eoi = irq_chip_eoi_parent;
+@@ -277,13 +313,18 @@ static int mvebu_icu_probe(struct platform_device *pdev)
+ 		icu_int = readl_relaxed(icu->base + ICU_INT_CFG(i));
+ 		icu_grp = icu_int >> ICU_GROUP_SHIFT;
+ 
+-		if (icu_grp == ICU_GRP_NSR)
++		if (icu_grp == ICU_GRP_NSR ||
++		    (icu_grp == ICU_GRP_SEI &&
++		     !static_branch_unlikely(&legacy_bindings)))
+ 			writel_relaxed(0x0, icu->base + ICU_INT_CFG(i));
+ 	}
+ 
+ 	platform_set_drvdata(pdev, icu);
+ 
+-	return mvebu_icu_subset_probe(pdev);
++	if (static_branch_unlikely(&legacy_bindings))
++		return mvebu_icu_subset_probe(pdev);
++	else
++		return devm_of_platform_populate(&pdev->dev);
+ }
+ 
+ static const struct of_device_id mvebu_icu_of_match[] = {
+-- 
+2.17.1
