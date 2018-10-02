@@ -1,74 +1,66 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: drivers binding to device node with multiple compatible strings
-Date: Tue, 2 Oct 2018 09:19:37 -0500
-Message-ID: <CAL_JsqJy_+f5NDA4L7H+toD0gJRb9uvzqjyQw7BiqpX=NoF0qQ@mail.gmail.com>
-References: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
- <CAL_JsqKRH8uEzSx6H6ZSRJF9Ecp4am1cNsxgQqf2OO5_aGR1zw@mail.gmail.com> <CADRPPNQam-QUfqDMvu42KS+50VaHfGPhCZj-1jRHQ-Od0fbxuQ@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v6 00/14] Add System Error Interrupt support to Armada SoCs
+Date: Tue, 02 Oct 2018 16:30:51 +0200
+Message-ID: <875zyko1yc.fsf@bootlin.com>
+References: <20181001141358.31508-1-miquel.raynal@bootlin.com>
+ <86a7nwvcnn.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNQam-QUfqDMvu42KS+50VaHfGPhCZj-1jRHQ-Od0fbxuQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yang-Leo Li <leoyang.li@nxp.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <86a7nwvcnn.wl-marc.zyngier@arm.com> (Marc Zyngier's message of
+ "Tue, 02 Oct 2018 11:57:48 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 4:01 PM Li Yang <leoyang.li@nxp.com> wrote:
->
-> On Fri, Sep 28, 2018 at 3:07 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Thu, Sep 27, 2018 at 5:25 PM Li Yang <leoyang.li@nxp.com> wrote:
-> > >
-> > > Hi Rob and Grant,
-> > >
-> > > Various device tree specs are recommending to include all the
-> > > potential compatible strings in the device node, with the order from
-> > > most specific to most general.  But it looks like Linux kernel doesn't
-> > > provide a way to bind the device to the most specific driver, however,
-> > > the first registered compatible driver will be bound.
-> > >
-> > > As more and more generic drivers are added to the Linux kernel, they
-> > > are competing with the more specific vendor drivers and causes problem
-> > > when both are built into the kernel.  I'm wondering if there is a
-> > > generic solution (or in plan) to make the most specific driver bound
-> > > to the device.   Or we have to disable the more general driver or
-> > > remove the more general compatible string from the device tree?
-> >
-> > It's been a known limitation for a long time. However, in practice it
-> > doesn't seem to be a common problem. Perhaps folks just remove the
-> > less specific compatible from their DT (though that's not ideal). For
-> > most modern bindings, there's so many other resources beyond
-> > compatible (clocks, resets, pinctrl, etc.) that there are few generic
-> > drivers that can work.
-> >
-> > I guess if we want to fix this, we'd need to have weighted matching in
-> > the driver core and unbind drivers when we get a better match. Though
-> > it could get messy if the better driver probe fails. Then we've got to
-> > rebind to the original driver.
->
-> Probably we can populate the platform devices from device tree after
-> the device_init phase?  So that all built-in drivers are already
-> registered when the devices are created and we can try find the best
-> match in one go?  For more specific loadable modules we probably need
-> to unbind from the old driver and bind to the new one.  But I agree
-> with you that it could be messy.
->
-> >
-> > Do you have a specific case where you hit this?
->
-> Maybe not a new issue but "snps,dw-pcie" is competing with various
-> "fsl,<chip>-pcie" compatibles.
+Hi Marc,
+ 
+ On mar., oct. 02 2018, Marc Zyngier <marc.zyngier@arm.com> wrote:
 
-Having "snps,dw-pcie" is pretty useless IMO. There's lots of versions
-of the IP and variations on how it is integrated by various SoC
-vendors.
+> On Mon, 01 Oct 2018 15:13:44 +0100,
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+>> 
+>> The ICU is an IRQ chip found in Armada CP110. It currently has 207 wired
+>> inputs. Its purpose is to aggregate all CP interrupts and report them to
+>> the AP through MSIs. The ICU writes into GIC registers (AP side) by way
+>> of the interconnect. These interrupts can be of several groups:
+>> - SecuRe (SR);
+>> - Non-SecuRe (NSR);
+>> - System Error Interrupts (SEI);
+>> - RAM Error Interrupts (REI);
+>> - ...
+>> Each ICU wired interrupt can be of any of these groups. The group is
+>> encoded in the MSI payload.
+>
+> [...]
+>
+> I'm now ready to queue patches 1 through to 11 (with patches 6 and 9
+> as of v7). Who is picking up the DT patches (12 to 14)?
 
-> Also a specific PHY
-> "ethernet-phy-idAAAA.BBBB" with generic "ethernet-phy-ieee802.3-c45".
+I will do it.
 
-MDIO device probing works a bit differently, so I don't think there's
-a problem there. Drivers for specific phys should have a
-.match_phy_device() callback. I could be wrong as I'm not all that
-familiar with the MDIO bus code.
+Thanks,
 
-Rob
+Gregory
+>
+> Thanks,
+>
+> 	M.
+>
+> -- 
+> Jazz is not dead, it just smell funny.
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
