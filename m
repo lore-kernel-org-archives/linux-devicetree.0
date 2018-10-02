@@ -1,7 +1,7 @@
 From: Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 2/4] ARM: dts: at91: at91sam9x5cm: even nand memory partitions
-Date: Tue, 2 Oct 2018 16:20:36 +0300
-Message-ID: <20181002132038.27189-3-tudor.ambarus@microchip.com>
+Subject: [PATCH 3/4] ARM: dts: at91: sama5d3_xplained: even nand memory partitions
+Date: Tue, 2 Oct 2018 16:20:37 +0300
+Message-ID: <20181002132038.27189-4-tudor.ambarus@microchip.com>
 References: <20181002132038.27189-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,7 +12,7 @@ To: nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, alexandre.bell
 Cc: Tudor Ambarus <tudor.ambarus@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-sam9x5cm, sama5d2_ptc_ek, sama5d3_xplained and sama5d4_xplained nand
+sama5d3_xplained, sam9x5cm, sama5d2_ptc_ek and sama5d4_xplained nand
 flashes have a common memory map. Even the nand memory partitions to
 match our nand flash map available at:
 
@@ -20,38 +20,33 @@ http://www.at91.com/linux4sam/pub/Linux4SAM/SambaSubsections//demo_nandflash_map
 
 Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 ---
- arch/arm/boot/dts/at91sam9x5cm.dtsi | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index 993eabe1cf7a..c4cc9cc945fa 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -85,12 +85,22 @@
+diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+index 02c1d2958d78..322a744e4363 100644
+--- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+@@ -297,12 +297,17 @@
  
- 						uboot@40000 {
- 							label = "u-boot";
+ 						bootloader@40000 {
+ 							label = "bootloader";
 -							reg = <0x40000 0x80000>;
 +							reg = <0x40000 0xc0000>;
  						};
  
--						ubootenv@c0000 {
-+						ubootenvred@100000 {
-+							label = "U-Boot Env Redundant";
+-						bootloaderenv@c0000 {
++						bootloaderenvred@100000 {
++							label = "bootloader env redundant";
 +							reg = <0x100000 0x40000>;
 +						};
 +
-+						ubootenv@140000 {
- 							label = "U-Boot Env";
--							reg = <0xc0000 0x140000>;
++						bootloaderenv@140000 {
+ 							label = "bootloader env";
+-							reg = <0xc0000 0xc0000>;
 +							reg = <0x140000 0x40000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
  						};
  
- 						kernel@200000 {
+ 						dtb@180000 {
 -- 
 2.9.4
