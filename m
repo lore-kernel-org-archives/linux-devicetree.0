@@ -1,66 +1,84 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v6 00/14] Add System Error Interrupt support to Armada SoCs
-Date: Tue, 02 Oct 2018 16:30:51 +0200
-Message-ID: <875zyko1yc.fsf@bootlin.com>
-References: <20181001141358.31508-1-miquel.raynal@bootlin.com>
- <86a7nwvcnn.wl-marc.zyngier@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <86a7nwvcnn.wl-marc.zyngier@arm.com> (Marc Zyngier's message of
- "Tue, 02 Oct 2018 11:57:48 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Hanna Hawa <hannah@marvell.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Song Qiang <songqiang1304521@gmail.com>
+Subject: [PATCH v3 0/3] Add  support for PNI RM3100 magnetometer
+Date: Tue,  2 Oct 2018 22:38:09 +0800
+Message-ID: <20181002143812.3661-1-songqiang1304521@gmail.com>
+References: <20180925031724.21399-1-songqiang1304521@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180925031724.21399-1-songqiang1304521@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, himanshujha199640@gmail.com
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Song Qiang <songqiang1304521@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
- 
- On mar., oct. 02 2018, Marc Zyngier <marc.zyngier@arm.com> wrote:
+Hi,
 
-> On Mon, 01 Oct 2018 15:13:44 +0100,
-> Miquel Raynal <miquel.raynal@bootlin.com> wrote:
->> 
->> The ICU is an IRQ chip found in Armada CP110. It currently has 207 wired
->> inputs. Its purpose is to aggregate all CP interrupts and report them to
->> the AP through MSIs. The ICU writes into GIC registers (AP side) by way
->> of the interconnect. These interrupts can be of several groups:
->> - SecuRe (SR);
->> - Non-SecuRe (NSR);
->> - System Error Interrupts (SEI);
->> - RAM Error Interrupts (REI);
->> - ...
->> Each ICU wired interrupt can be of any of these groups. The group is
->> encoded in the MSI payload.
->
-> [...]
->
-> I'm now ready to queue patches 1 through to 11 (with patches 6 and 9
-> as of v7). Who is picking up the DT patches (12 to 14)?
+The next 3 patches do the following:
+ - The first patch adds PNI Sensor Corporation to the vendor prefix list.
+ - The second patch adds devicetree binding for RM3100 magnetometer.
+ - The third patch adds the driver for RM3100 magnetometer.
 
-I will do it.
+ -- Song Qiang
 
-Thanks,
+Changes in v3:
+ - Change PNI to PNI Sensor Corporation in vendor-prefix.txt.
+ - Sort header files in alpabetical order.
+ - Add more specific doc for the mutex.
+ - Fix the bug in the rm3100_set_cycle_count() where we always set the
+   cycle count value to 100 no matter what val is.
+ - Change some multiple else if to switch.
+ - Remove iio_device_release_direct_mode() in the case claim direct mode
+   fails.
+ - Use the same buffer in rm3100_trigger_handler().
+ - Add space around some operators.
+ - Add manually unwind functions in case devm_add_action() fails.
+ - Move devm_add_action before the devm_iio_device_register().
+ - Move register defines and rm3100_data struct to *-core.c. 
+ - Change some storage variable type of regmap from int to unsigned int.
+ - Change 10e4 to 10^4.
+ - Remove explicit cast of data pointer in rm3100_remove().
+ - Remve dev in rm3100_data and use regmap_get_device() to obtain device
+   pointer instead.
+ - Change register bits alignment in defines.
+ - Move RM3100_SCAN_BYTES to the top.
+ - Change Channel endieness from LE to BE.
+ - Adjust the place of comment about the 3 second wait time.
+ - Some spell check.
 
-Gregory
->
-> Thanks,
->
-> 	M.
->
-> -- 
-> Jazz is not dead, it just smell funny.
+Changes in v2:
+	- Add scale channel.
+	- Add EXPORT_SYMBOL_GPL() to export regmap confuguration structures.
+	- Add sampling frequency available attribute.
+	- Clean up headers and License declarations.
+	- Change axis number to 3.
+	- Remove bus specific part in compatible string.
+	- Remove le32_to_cpu().
+	- Check cycle count registers at *_probe().
+	- Format comments.
+	- Spell check.
+	- Change prefix from RM_* to RM3100_*.
+	- Check all error return paths.
+	- Add devm_add_action() to avoid race condition when remove.
+
+Song Qiang (3):
+  dt-bindings: Add PNI to the vendor prefixes.
+  dt-bindings: Add PNI RM3100 device tree binding.
+  iio: magnetometer: Add driver support for PNI RM3100
+
+ .../bindings/iio/magnetometer/pni,rm3100.txt  |  20 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ MAINTAINERS                                   |   7 +
+ drivers/iio/magnetometer/Kconfig              |  29 +
+ drivers/iio/magnetometer/Makefile             |   4 +
+ drivers/iio/magnetometer/rm3100-core.c        | 539 ++++++++++++++++++
+ drivers/iio/magnetometer/rm3100-i2c.c         |  58 ++
+ drivers/iio/magnetometer/rm3100-spi.c         |  64 +++
+ drivers/iio/magnetometer/rm3100.h             |  17 +
+ 9 files changed, 739 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/pni,rm3100.txt
+ create mode 100644 drivers/iio/magnetometer/rm3100-core.c
+ create mode 100644 drivers/iio/magnetometer/rm3100-i2c.c
+ create mode 100644 drivers/iio/magnetometer/rm3100-spi.c
+ create mode 100644 drivers/iio/magnetometer/rm3100.h
 
 -- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+2.17.1
