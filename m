@@ -1,106 +1,88 @@
-Return-Path: <SRS0=Uwhs=M4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-ve1eur01on0048.outbound.protection.outlook.com ([104.47.1.48]:46544
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726990AbeJPMun (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 16 Oct 2018 08:50:43 -0400
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH 1/4] usb: chipidea: add flag for imx hsic implementation
-Date: Tue, 16 Oct 2018 05:01:19 +0000
-Message-ID: <20181016045846.2345-2-peter.chen@nxp.com>
-References: <20181016045846.2345-1-peter.chen@nxp.com>
-In-Reply-To: <20181016045846.2345-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=z80J=MO=linuxfoundation.org=gregkh@kernel.org>
+Date: Tue, 2 Oct 2018 10:36:27 -0700
+From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 1/2] dt-bindings: usb: renesas_usb3: add bindings for
+ r8a77990
+Message-ID: <20181002173627.GA12821@kroah.com>
+References: <1538481507-24821-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1538481507-24821-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <87sh1o8ruz.fsf@linux.intel.com>
+ <TY2PR01MB229731FDB2C43B022021E781D8E80@TY2PR01MB2297.jpnprd01.prod.outlook.com>
+ <87pnws8q95.fsf@linux.intel.com>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Peter Chen <peter.chen@nxp.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pnws8q95.fsf@linux.intel.com>
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP (Freecale) imx HSIC design has some special requirements, add
-some flags at host code to handle them.
+On Tue, Oct 02, 2018 at 03:52:38PM +0300, Felipe Balbi wrote:
+> 
+> Hi,
+> 
+> Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com> writes:
+> > Hi Felipe-san,
+> >
+> >> From: Felipe Balbi, Sent: Tuesday, October 2, 2018 9:18 PM
+> >> 
+> >> Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com> writes:
+> >> 
+> >> > This patch adds bindings for r8a77990 (R-Car E3).
+> >> >
+> >> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> >> > ---
+> >> >  Documentation/devicetree/bindings/usb/renesas_usb3.txt | 1 +
+> >> >  1 file changed, 1 insertion(+)
+> >> >
+> >> > diff --git a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> >> b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> >> > index b22f0a5..d366555 100644
+> >> > --- a/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> >> > +++ b/Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> >> > @@ -6,6 +6,7 @@ Required properties:
+> >> >  	- "renesas,r8a7795-usb3-peri"
+> >> >  	- "renesas,r8a7796-usb3-peri"
+> >> >  	- "renesas,r8a77965-usb3-peri"
+> >> > +	- "renesas,r8a77990-usb3-peri"
+> >> >  	- "renesas,rcar-gen3-usb3-peri" for a generic R-Car Gen3 or RZ/G2
+> >> >  	  compatible device
+> >> 
+> >> oops:
+> >> 
+> >> checking file Documentation/devicetree/bindings/usb/renesas_usb3.txt
+> >> Hunk #1 FAILED at 6.
+> >> 1 out of 1 hunk FAILED
+> >> 
+> >> could you rebase against testing/next?
+> >
+> > Sorry for lack information.
+> > If possible, would you review/apply the following patch at first?
+> >
+> > https://patchwork.kernel.org/patch/10574879/
+> >
+> > Greg-san's repo already merged the patch like below:
+> >
+> > commit 28da90f19cdec24d669d75942fec227f4de37abd
+> > Author: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Date:   Fri Aug 24 08:56:15 2018 +0100
+> >
+> >     usb: gadget: udc: renesas_usb3: Add r8a774a1 support
+> >
+> >     Document RZ/G2M (R8A774A1) SoC bindings.
+> >
+> >     Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> >     Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+> >     Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> >     Reviewed-by: Rob Herring <robh@kernel.org>
+> >     Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> >     Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> >
+> > I think that almost all patches I or other guys sent for usb gadget are already
+> > merged into Greg-san's repo like below:
+> 
+> oh, understood. I can rebase my pull request on Greg's branch,
+> then. Greg, would you prefer that to avoid duplicated commits?
 
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
----
- drivers/usb/chipidea/host.c  | 24 ++++++++++++++++++++++++
- include/linux/usb/chipidea.h |  3 +++
- 2 files changed, 27 insertions(+)
-
-diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
-index d858a82c4f44..d74a13d7c21c 100644
---- a/drivers/usb/chipidea/host.c
-+++ b/drivers/usb/chipidea/host.c
-@@ -28,6 +28,20 @@ struct ehci_ci_priv {
- 	struct regulator *reg_vbus;
- };
-=20
-+/* This function is used to override WKCN, WKDN, and WKOC */
-+static void ci_ehci_override_wakeup_flag(struct ehci_hcd *ehci,
-+		u32 __iomem *reg, u32 flags, bool set)
-+{
-+	u32 val =3D ehci_readl(ehci, reg);
-+
-+	if (set)
-+		val |=3D flags;
-+	else
-+		val &=3D ~flags;
-+
-+	ehci_writel(ehci, val, reg);
-+}
-+
- static int ehci_ci_portpower(struct usb_hcd *hcd, int portnum, bool enable=
-)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-@@ -170,6 +184,11 @@ static int host_start(struct ci_hdrc *ci)
- 			otg->host =3D &hcd->self;
- 			hcd->self.otg_port =3D 1;
- 		}
-+
-+		if (ci->platdata->notify_event &&
-+			(ci->platdata->flags & CI_HDRC_IMX_IS_HSIC))
-+			ci->platdata->notify_event
-+				(ci, CI_HDRC_IMX_HSIC_ACTIVE_EVENT);
- 	}
-=20
- 	return ret;
-@@ -218,6 +237,8 @@ void ci_hdrc_host_destroy(struct ci_hdrc *ci)
- static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- {
- 	struct ehci_hcd *ehci =3D hcd_to_ehci(hcd);
-+	struct device *dev =3D hcd->self.controller;
-+	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
- 	int port;
- 	u32 tmp;
-=20
-@@ -249,6 +270,9 @@ static int ci_ehci_bus_suspend(struct usb_hcd *hcd)
- 			 * It needs a short delay between set RS bit and PHCD.
- 			 */
- 			usleep_range(150, 200);
-+			if (ci->platdata->flags & CI_HDRC_IMX_IS_HSIC)
-+				ci_ehci_override_wakeup_flag(ehci, reg,
-+					PORT_WKDISC_E | PORT_WKCONN_E, false);
- 			break;
- 		}
- 	}
-diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
-index 63758c399e4e..911e05af671e 100644
---- a/include/linux/usb/chipidea.h
-+++ b/include/linux/usb/chipidea.h
-@@ -60,9 +60,12 @@ struct ci_hdrc_platform_data {
- #define CI_HDRC_OVERRIDE_RX_BURST	BIT(11)
- #define CI_HDRC_OVERRIDE_PHY_CONTROL	BIT(12) /* Glue layer manages phy */
- #define CI_HDRC_REQUIRES_ALIGNED_DMA	BIT(13)
-+#define CI_HDRC_IMX_IS_HSIC		BIT(14)
- 	enum usb_dr_mode	dr_mode;
- #define CI_HDRC_CONTROLLER_RESET_EVENT		0
- #define CI_HDRC_CONTROLLER_STOPPED_EVENT	1
-+#define CI_HDRC_IMX_HSIC_ACTIVE_EVENT		2
-+#define CI_HDRC_IMX_HSIC_SUSPEND_EVENT		3
- 	int	(*notify_event) (struct ci_hdrc *ci, unsigned event);
- 	struct regulator	*reg_vbus;
- 	struct usb_otg_caps	ci_otg_caps;
---=20
-2.14.1
+duplicated commits are fine, I don't mind them :)
