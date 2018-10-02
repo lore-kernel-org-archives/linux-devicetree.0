@@ -1,88 +1,46 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 2/6] [media] ad5820: DT new optional field enable-gpios
-Date: Tue, 02 Oct 2018 14:10:33 +0300
-Message-ID: <13152589.2v2DAIKa7y@avalon>
-References: <20181002073222.11368-1-ricardo.ribalda@gmail.com> <2128166.ZAkUExjJHM@avalon> <CAPybu_1xmsuQVx94Lx+5UyX_+aerPdGVsgVkoNy=XkS98nmAmw@mail.gmail.com>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/4] Add UniPhier USB3 controller and USB2 phy nodes
+Date: Tue,  2 Oct 2018 20:11:58 +0900
+Message-ID: <1538478722-20351-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPybu_1xmsuQVx94Lx+5UyX_+aerPdGVsgVkoNy=XkS98nmAmw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ricardo,
+This series adds the DT nodes for USB3 controllers and USB2 phys
+implemented on UniPhier SoCs.
 
-On Tuesday, 2 October 2018 13:57:22 EEST Ricardo Ribalda Delgado wrote:
-> On Tue, Oct 2, 2018 at 12:35 PM Laurent Pinchart wrote:
-> > On Tuesday, 2 October 2018 10:32:18 EEST Ricardo Ribalda Delgado wrote:
-> > > Document new enable-gpio field. It can be used to disable the part
-> > > without turning down its regulator.
-> > > 
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > ---
-> > > 
-> > >  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
-> > >  1 file changed, 7 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > b/Documentation/devicetree/bindings/media/i2c/ad5820.txt index
-> > > 5940ca11c021..9ccd96d3d5f0 100644
-> > > --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
-> > > 
-> > > @@ -8,6 +8,12 @@ Required Properties:
-> > >    - VANA-supply: supply of voltage for VANA pin
-> > > 
-> > > +Optional properties:
-> > > +
-> > > +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the
-> > > polarity of +the enable GPIO is the opposite of the XSHUTDOWN pin
-> > > (asserting the enable +GPIO deasserts the XSHUTDOWN signal and vice
-> > > versa).
-> > 
-> > After reading this one more time, I think the text is at the very least
-> > confusing. The logic level of the enable GPIO is the same as the logic
-> > level of the XSHUTDOWN pin. The latter being active low, asserting
-> > "enable" will deassert "shutdown", but talking about "desserting
-> > XSHUTDOWN" is confusing.
-> 
-> what about:
-> 
-> - enable-gpios : GPIO spec for the XSHUTDOWN pin. When the XSHUTDOWN pin
-> is asserted the device is enabled.
+Kunihiko Hayashi (4):
+  ARM: dts: uniphier: Add USB3 controller nodes
+  ARM: dts: uniphier: Add USB2 phy nodes
+  arm64: dts: uniphier: Add USB3 controller nodes
+  arm64: dts: uniphier: Add USB2 phy nodes
 
-For some reason "asserting a pin" doesn't seem right to me. How about
-
-- enable-gpios: GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal is 
-active low, a high level on the pin enables the device.
-
-> > > of +the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the
-> > > enable +GPIO deasserts the XSHUTDOWN signal and vice versa).
-> > > 
-> > >  Example:
-> > >         ad5820: coil@c {
-> > > 
-> > > @@ -15,5 +21,6 @@ Example:
-> > >                 reg = <0x0c>;
-> > >                 
-> > >                 VANA-supply = <&vaux4>;
-> > > 
-> > > +               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
-> > > 
-> > >         };
-> > 
-> > --
-> > Regards,
-> > 
-> > Laurent Pinchart
-
+ arch/arm/boot/dts/uniphier-pro4-ace.dts            |   8 +
+ arch/arm/boot/dts/uniphier-pro4-ref.dts            |   8 +
+ arch/arm/boot/dts/uniphier-pro4.dtsi               | 127 +++++++++++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts         |   8 +
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts          |   4 +
+ arch/arm/boot/dts/uniphier-pxs2.dtsi               | 180 ++++++++++++++++
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   |  27 +++
+ .../boot/dts/socionext/uniphier-ld20-global.dts    |   4 +
+ .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |   4 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 194 +++++++++++++++++
+ .../arm64/boot/dts/socionext/uniphier-pxs3-ref.dts |   8 +
+ arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi   | 240 +++++++++++++++++++++
+ 12 files changed, 812 insertions(+)
 
 -- 
-Regards,
-
-Laurent Pinchart
+2.7.4
