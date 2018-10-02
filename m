@@ -1,97 +1,74 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v4 1/2] [media] imx214: device tree binding
-Date: Tue,  2 Oct 2018 16:05:15 +0200
-Message-ID: <20181002140515.16299-1-ricardo.ribalda@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: drivers binding to device node with multiple compatible strings
+Date: Tue, 2 Oct 2018 09:19:37 -0500
+Message-ID: <CAL_JsqJy_+f5NDA4L7H+toD0gJRb9uvzqjyQw7BiqpX=NoF0qQ@mail.gmail.com>
+References: <CADRPPNT0QiBkJtJnxjW95Yf-mirL5OzRrvqj8rC-O8fiz17VnA@mail.gmail.com>
+ <CAL_JsqKRH8uEzSx6H6ZSRJF9Ecp4am1cNsxgQqf2OO5_aGR1zw@mail.gmail.com> <CADRPPNQam-QUfqDMvu42KS+50VaHfGPhCZj-1jRHQ-Od0fbxuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CADRPPNQam-QUfqDMvu42KS+50VaHfGPhCZj-1jRHQ-Od0fbxuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To:  Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, jacopo@jmondi.org, phdm@macq.eu
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
+To: Yang-Leo Li <leoyang.li@nxp.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Document bindings for imx214 camera sensor
+On Fri, Sep 28, 2018 at 4:01 PM Li Yang <leoyang.li@nxp.com> wrote:
+>
+> On Fri, Sep 28, 2018 at 3:07 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Thu, Sep 27, 2018 at 5:25 PM Li Yang <leoyang.li@nxp.com> wrote:
+> > >
+> > > Hi Rob and Grant,
+> > >
+> > > Various device tree specs are recommending to include all the
+> > > potential compatible strings in the device node, with the order from
+> > > most specific to most general.  But it looks like Linux kernel doesn't
+> > > provide a way to bind the device to the most specific driver, however,
+> > > the first registered compatible driver will be bound.
+> > >
+> > > As more and more generic drivers are added to the Linux kernel, they
+> > > are competing with the more specific vendor drivers and causes problem
+> > > when both are built into the kernel.  I'm wondering if there is a
+> > > generic solution (or in plan) to make the most specific driver bound
+> > > to the device.   Or we have to disable the more general driver or
+> > > remove the more general compatible string from the device tree?
+> >
+> > It's been a known limitation for a long time. However, in practice it
+> > doesn't seem to be a common problem. Perhaps folks just remove the
+> > less specific compatible from their DT (though that's not ideal). For
+> > most modern bindings, there's so many other resources beyond
+> > compatible (clocks, resets, pinctrl, etc.) that there are few generic
+> > drivers that can work.
+> >
+> > I guess if we want to fix this, we'd need to have weighted matching in
+> > the driver core and unbind drivers when we get a better match. Though
+> > it could get messy if the better driver probe fails. Then we've got to
+> > rebind to the original driver.
+>
+> Probably we can populate the platform devices from device tree after
+> the device_init phase?  So that all built-in drivers are already
+> registered when the devices are created and we can try find the best
+> match in one go?  For more specific loadable modules we probably need
+> to unbind from the old driver and bind to the new one.  But I agree
+> with you that it could be messy.
+>
+> >
+> > Do you have a specific case where you hit this?
+>
+> Maybe not a new issue but "snps,dw-pcie" is competing with various
+> "fsl,<chip>-pcie" compatibles.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
----
-Changelog from v3:
+Having "snps,dw-pcie" is pretty useless IMO. There's lots of versions
+of the IP and variations on how it is integrated by various SoC
+vendors.
 
-Sakari Ailus:
--s/should/shall/
--remove clock-lanes
+> Also a specific PHY
+> "ethernet-phy-idAAAA.BBBB" with generic "ethernet-phy-ieee802.3-c45".
 
-Philippe De Muyter:
--s/imx274/imx214/
+MDIO device probing works a bit differently, so I don't think there's
+a problem there. Drivers for specific phys should have a
+.match_phy_device() callback. I could be wrong as I'm not all that
+familiar with the MDIO bus code.
 
-Laurent Pinchart:
--s/to to/to/
--Better description of lanes
--clock-names: Shall be "xclk"
--Drop clock-freq
-
- .../devicetree/bindings/media/i2c/imx214.txt  | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imx214.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt b/Documentation/devicetree/bindings/media/i2c/imx214.txt
-new file mode 100644
-index 000000000000..421a019ab7f9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
-@@ -0,0 +1,53 @@
-+* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-+
-+The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-+an active array size of 4224H x 3200V. It is programmable through an I2C
-+interface. The I2C address can be configured to 0x1a or 0x10, depending on
-+how the hardware is wired.
-+Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-+throughput of 1.2Gbps/lane.
-+
-+
-+Required Properties:
-+- compatible: value should be "sony,imx214" for imx214 sensor
-+- reg: I2C bus address of the device
-+- enable-gpios: GPIO descriptor for the enable pin.
-+- vdddo-supply: Chip digital IO regulator (1.8V).
-+- vdda-supply: Chip analog regulator (2.7V).
-+- vddd-supply: Chip digital core regulator (1.12V).
-+- clocks: Reference to the xclk clock.
-+- clock-names:  Shall be "xclk".
-+
-+Optional Properties:
-+- flash-leds: See ../video-interfaces.txt
-+- lens-focus: See ../video-interfaces.txt
-+
-+The imx214 device node shall contain one 'port' child node with
-+an 'endpoint' subnode. For further reading on port node refer to
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Required Properties on endpoint:
-+- data-lanes: check ../video-interfaces.txt
-+- link-frequencies: check ../video-interfaces.txt
-+- remote-endpoint: check ../video-interfaces.txt
-+
-+Example:
-+
-+	camera_rear@1a {
-+		compatible = "sony,imx214";
-+		reg = <0x1a>;
-+		vdddo-supply = <&pm8994_lvs1>;
-+		vddd-supply = <&camera_vddd_1v12>;
-+		vdda-supply = <&pm8994_l17>;
-+		lens-focus = <&ad5820>;
-+		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-+		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-+		clock-names = "xclk";
-+		port {
-+			imx214_ep: endpoint {
-+				data-lanes = <1 2 3 4>;
-+				link-frequencies = /bits/ 64 <480000000>;
-+				remote-endpoint = <&csiphy0_ep>;
-+			};
-+		};
-+	};
--- 
-2.19.0
+Rob
