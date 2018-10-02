@@ -1,41 +1,39 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v5 2/7] dmaengine: xilinx_dma: in axidma slave_sg and
- dma_cyclic mode align split descriptors
-Date: Tue, 2 Oct 2018 20:28:20 +0530
-Message-ID: <20181002145820.GH19792@vkoul-mobl>
-References: <20180907062502.8241-1-andrea.merello@gmail.com>
- <20180907062502.8241-2-andrea.merello@gmail.com>
- <20180918162105.GC2613@vkoul-mobl>
- <CAN8YU5PWB0sRskcirCcYnY5vG5A_W6pcOMpgyOD3faWfMeu5Rg@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v7 2/4] clk: davinci: kill davinci_clk_reset_assert/deassert()
+Date: Tue, 2 Oct 2018 17:08:49 +0200
+Message-ID: <CAMRc=McmwWt5OdCxGntDJ-5cxte+Ad2FJcnmWT8NxnBtzP40DA@mail.gmail.com>
+References: <20180621073706.22812-1-brgl@bgdev.pl> <20180621073706.22812-3-brgl@bgdev.pl>
+ <160f4225-236c-af54-9693-120e834af578@lechnology.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAN8YU5PWB0sRskcirCcYnY5vG5A_W6pcOMpgyOD3faWfMeu5Rg@mail.gmail.com>
+In-Reply-To: <160f4225-236c-af54-9693-120e834af578@lechnology.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrea Merello <andrea.merello@gmail.com>
-Cc: dan.j.williams@intel.com, michal.simek@xilinx.com, appana.durga.rao@xilinx.com, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+To: David Lechner <david@lechnology.com>
+Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28-09-18, 09:11, Andrea Merello wrote:
-> On Tue, Sep 18, 2018 at 6:21 PM Vinod <vkoul@kernel.org> wrote:
-
-> > > @@ -1804,7 +1817,7 @@ static struct dma_async_tx_descriptor *xilinx_dma_prep_slave_sg(
-> > >                        * Calculate the maximum number of bytes to transfer,
-> > >                        * making sure it is less than the hw limit
-> > >                        */
-> > > -                     copy = xilinx_dma_calc_copysize(sg_dma_len(sg),
-> > > +                     copy = xilinx_dma_calc_copysize(chan, sg_dma_len(sg),
+pt., 6 lip 2018 o 19:54 David Lechner <david@lechnology.com> napisa=C5=82(a=
+):
+>
+> On 06/21/2018 02:37 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > >
-> > why not keep chan in patch 1 and add only handling in patch 2, seems
-> > less churn to me..
-> 
-> Indeed this was something I was unsure about.. I ended up in feeling
-> better not to add introduce a function that takes an unused (yet)
-> argument, but I can change this of course :)
+> > This code is no longer used. Remove it.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > Reviewed-by: David Lechner <david@lechnology.com>
+> > Acked-by: Stephen Boyd <sboyd@kernel.org>
+> > ---
+>
+> I've picked this up in clk-davinci-4.20, so it will just hang out
+> there for a while until the rest of this series gets merged.
+>
 
-IMO It is fine to add a user in subsequent patch in a series. Not fine to
-add something and not use in "that" series :)
+Hi David,
 
--- 
-~Vinod
+I don't see this patch in next yet. Is it queued for 4.20?
+
+Thanks in advance,
+Bartosz
