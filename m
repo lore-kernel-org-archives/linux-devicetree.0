@@ -1,181 +1,81 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [RFC PATCH] soc: qcom: rmtfs_mem: Control remoteproc from
- rmtfs_mem
-Date: Tue, 2 Oct 2018 12:34:45 -0700
-Message-ID: <20181002193445.GP2523@minitux>
-References: <20180925080607.30565-1-bjorn.andersson@linaro.org>
- <20180925172943.GA118699@ban.mtv.corp.google.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 1/2] [media] imx214: device tree binding
+Date: Tue, 02 Oct 2018 23:00:49 +0300
+Message-ID: <3623223.AF5hu8FH6T@avalon>
+References: <20181002133058.12942-1-ricardo.ribalda@gmail.com> <3927913.3GBmOnKHNx@avalon> <20181002135738.ox3jlujqzvyc4m2b@paasikivi.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180925172943.GA118699@ban.mtv.corp.google.com>
+In-Reply-To: <20181002135738.ox3jlujqzvyc4m2b@paasikivi.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, jacopo@jmondi.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 25 Sep 10:29 PDT 2018, Brian Norris wrote:
+Hi Sakari,
 
-> Hi Bjorn,
-> 
-> On Tue, Sep 25, 2018 at 01:06:07AM -0700, Bjorn Andersson wrote:
-> > rmtfs_mem provides access to physical storage and is crucial for the
-> > operation of the Qualcomm modem subsystem.
-> > 
-> > The rmtfs_mem implementation must be available before the modem
-> > subsystem is booted and a solution where the modem remoteproc will
-> > verify that the rmtfs_mem is available has been discussed in the past.
-> > But this would not handle the case where the rmtfs_mem provider is
-> > restarted, which would cause fatal loss of access to the storage device
-> > for the modem.
-> > 
-> > The suggestion is therefor to link the rmtfs_mem to its associated
-> > remote processor instance and control it based on the availability of
-> > the rmtfs_mem implementation.
-> 
-> But what does "availability" mean? If I'm reading your rmtfs daemon
-> properly, "availability" should mean that the daemon is up and has
-> registered a RMTFS_QMI_SERVICE. But in this patch, you're keying off of
-> the open() call, which sounds like you're introducing a race condition
-> -- we might have open()ed the RMTFS memory but we're not actually
-> completely ready to service requests.
-> 
-
-You're right. The modem will fail to load if the RMTFS_QMI_SERVICE is
-not present, it doesn't care about this thing (rmtfs) has "opened"
-rmtfs_mem.
-
-> So rather than looking for open(), I think somebody needs to be looking
-> for the appearance and disappearance of the RMTFS_QMI_SERVICE. (Looking
-> for disappearance would resolve the daemon restart issue, no?) That
-> "somebody" could be the remoteproc driver I suppose (qmi_add_lookup()?),
-> or
-
-Right, thinking about it some more we could make the remoteproc driver
-start and stop itself as the RMTFS_QMI_SERVICE get
-registered/unregistered.
-
-> ...couldn't it just be the modem itself? Do you actually need to
-> restart the entire modem when the RMTFS service goes away, or do you
-> just need to pause storage activity?
-> 
-
-Unfortunately the protocol isn't stateless; a handle to the partition is
-acquired by an "open" call and then read/write operations are performed
-on that handle. So unless the modem explicitly reopens the partitions as
-the rmtfs service is restarted this won't work - and I haven't observed
-this behavior.
-
-
-For the record; I did consider making the rmtfs implementation the one
-driving the remoteproc state through /sys/class/remoteproc, but that
-would not cope with abnormal termination of the rmtfs implementation.
-
-I will work up a patch making the remoteproc driver observe the presence
-of the RMTFS_QMI_SERVICE and see how that looks.
-
-Thanks for your feedback!
-
-Regards,
-Bjorn
-
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > The currently implemented workaround in the Linaro QCOMLT releases is to
-> > blacklist the qcom_q6v5_pil kernel module and load this explicitly after rmtfs
-> > has been started.
-> > 
-> > With this patch the modem module can be loaded automatically by the
-> > platform_bus and will only be booted as the rmtfs becomes available. Performing
-> > actions such as upgrading (and restarting) the rmtfs service will cause the
-> > modem to automatically restart and hence continue to function after the
-> > upgrade.
-> > 
-> >  .../reserved-memory/qcom,rmtfs-mem.txt        |  7 ++++++
-> >  drivers/remoteproc/qcom_q6v5_pil.c            |  1 +
-> >  drivers/soc/qcom/Kconfig                      |  1 +
-> >  drivers/soc/qcom/rmtfs_mem.c                  | 23 ++++++++++++++++++-
-> >  4 files changed, 31 insertions(+), 1 deletion(-)
-> > 
+On Tuesday, 2 October 2018 16:57:38 EEST Sakari Ailus wrote:
+> On Tue, Oct 02, 2018 at 04:47:55PM +0300, Laurent Pinchart wrote:
+> > On Tuesday, 2 October 2018 16:30:57 EEST Ricardo Ribalda Delgado wrote:
 > ...
-> > diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
-> > index 8a3678c2e83c..8b08be310397 100644
-> > --- a/drivers/soc/qcom/rmtfs_mem.c
-> > +++ b/drivers/soc/qcom/rmtfs_mem.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/platform_device.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_reserved_mem.h>
-> > +#include <linux/remoteproc.h>
-> >  #include <linux/dma-mapping.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/uaccess.h>
-> > @@ -39,6 +40,8 @@ struct qcom_rmtfs_mem {
-> >  	unsigned int client_id;
-> >  
-> >  	unsigned int perms;
-> > +
-> > +	struct rproc *rproc;
-> >  };
-> >  
-> >  static ssize_t qcom_rmtfs_mem_show(struct device *dev,
-> > @@ -80,11 +83,18 @@ static int qcom_rmtfs_mem_open(struct inode *inode, struct file *filp)
-> >  	struct qcom_rmtfs_mem *rmtfs_mem = container_of(inode->i_cdev,
-> >  							struct qcom_rmtfs_mem,
-> >  							cdev);
-> > +	int ret = 0;
-> >  
-> >  	get_device(&rmtfs_mem->dev);
-> >  	filp->private_data = rmtfs_mem;
-> >  
-> > -	return 0;
-> > +	if (rmtfs_mem->rproc) {
-> > +		ret = rproc_boot(rmtfs_mem->rproc);
-> > +		if (ret)
-> > +			put_device(&rmtfs_mem->dev);
-> > +	}
-> > +
-> > +	return ret;
-> >  }
-> >  static ssize_t qcom_rmtfs_mem_read(struct file *filp,
-> >  			      char __user *buf, size_t count, loff_t *f_pos)
-> > @@ -127,6 +137,9 @@ static int qcom_rmtfs_mem_release(struct inode *inode, struct file *filp)
-> >  {
-> >  	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
-> >  
-> > +	if (rmtfs_mem->rproc)
-> > +		rproc_shutdown(rmtfs_mem->rproc);
-> > +
-> >  	put_device(&rmtfs_mem->dev);
-> >  
-> >  	return 0;
-> > @@ -156,6 +169,7 @@ static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
-> >  	struct qcom_scm_vmperm perms[2];
-> >  	struct reserved_mem *rmem;
-> >  	struct qcom_rmtfs_mem *rmtfs_mem;
-> > +	phandle rproc_phandle;
-> >  	u32 client_id;
-> >  	u32 vmid;
-> >  	int ret;
-> > @@ -181,6 +195,13 @@ static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
-> >  	rmtfs_mem->client_id = client_id;
-> >  	rmtfs_mem->size = rmem->size;
-> >  
-> > +	ret = of_property_read_u32(node, "rproc", &rproc_phandle);
-> > +	if (!ret) {
-> > +		rmtfs_mem->rproc = rproc_get_by_phandle(rproc_phandle);
 > 
-> You're doing an rproc_get(), so you need to do a rproc_put() in
-> remove().
+> > > +- clock-frequency = Frequency of the xclk clock. (Currently the
+> > > +	driver only supports <24000000>).
+> > 
+> > Please don't mention drivers in DT bindings. I would drop the reference to
+> > the 24 MHz limitation.
+> > 
+> > I would actually drop the property completely :-) I don't see why you need
+> > it, and you don't make use of it in the driver.
 > 
-> Brian
+> Would you rely on assigned-clock-rates or what? There's no guarantee it'll
+> actually be the desired frequency. That said, few (or no) drivers checks
+> what they get when they set the frequency.
+
+No necessarily. I would either really on assigned-clock-rates + clock rate 
+check in the driver, or on no DT property and a clock rate set in the driver. 
+Patch 2/2 sets the clock rate in the driver to 24 MHz regardless of the clock-
+frequency property in DT.
+
+> > > +Optional Properties:
+> > > +- flash-leds: See ../video-interfaces.txt
+> > > +- lens-focus: See ../video-interfaces.txt
+> > > +
+> > > +The imx274 device node should contain one 'port' child node with
 > 
-> > +		if (!rmtfs_mem->rproc)
-> > +			return -EPROBE_DEFER;
-> > +	}
-> > +
-> >  	device_initialize(&rmtfs_mem->dev);
-> >  	rmtfs_mem->dev.parent = &pdev->dev;
-> >  	rmtfs_mem->dev.groups = qcom_rmtfs_mem_groups;
+> s/should/shall/?
+> 
+> If there's a need to support no port nodes, then say "one or none" or such.
+> Usually that's useful on the receiver side only though.
+> 
+> > > +Example:
+> > > +
+> > > +	camera_rear@1a {
+> > > +		compatible = "sony,imx214";
+> > > +		reg = <0x1a>;
+> > > +		vdddo-supply = <&pm8994_lvs1>;
+> > > +		vddd-supply = <&camera_vddd_1v12>;
+> > > +		vdda-supply = <&pm8994_l17>;
+> > > +		lens-focus = <&ad5820>;
+> > > +		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> > > +		clocks = <&mmcc CAMSS_MCLK0_CLK>;
+> > > +		clock-names = "xclk";
+> > > +		clock-frequency = <24000000>;
+> > > +		port {
+> > > +			imx214_ep: endpoint {
+> > > +				clock-lanes = <0>;
+> 
+> I'd only put clock-lanes if the lane ordering is configurable.
+> 
+> > > +				data-lanes = <1 2 3 4>;
+> > > +				link-frequencies = /bits/ 64 <480000000>;
+> > > +				remote-endpoint = <&csiphy0_ep>;
+> > > +			};
+> > > +		};
+> > > +	};
+
+-- 
+Regards,
+
+Laurent Pinchart
