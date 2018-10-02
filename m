@@ -1,87 +1,181 @@
-From: Saravana Kannan <skannan@codeaurora.org>
-Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
-Date: Tue, 2 Oct 2018 11:56:56 -0700
-Message-ID: <c17450ce-fc25-e792-b91b-51106f032542@codeaurora.org>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-3-georgi.djakov@linaro.org>
- <20180925180215.GA12435@bogus>
- <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
- <20180926144830.GB25838@e107155-lin>
- <fa74c24f-1f22-f11f-60fe-5a4489d9c7c2@codeaurora.org>
- <20181002111758.GC1086@e107155-lin>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [RFC PATCH] soc: qcom: rmtfs_mem: Control remoteproc from
+ rmtfs_mem
+Date: Tue, 2 Oct 2018 12:34:45 -0700
+Message-ID: <20181002193445.GP2523@minitux>
+References: <20180925080607.30565-1-bjorn.andersson@linaro.org>
+ <20180925172943.GA118699@ban.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181002111758.GC1086@e107155-lin>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20180925172943.GA118699@ban.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Brian Norris <briannorris@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue 25 Sep 10:29 PDT 2018, Brian Norris wrote:
 
-On 10/02/2018 04:17 AM, Sudeep Holla wrote:
-> On Mon, Oct 01, 2018 at 04:49:32PM -0700, Saravana Kannan wrote:
->> On 09/26/2018 07:48 AM, Sudeep Holla wrote:
->>> On Wed, Sep 26, 2018 at 05:42:15PM +0300, Georgi Djakov wrote:
->>>> Hi Rob,
->>>>
->>>> Thanks for the comments!
->>>>
->>>> On 09/25/2018 09:02 PM, Rob Herring wrote:
->>>>> On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
->>>>>> This binding is intended to represent the relations between the interconnect
->>>>>> controllers (providers) and consumer device nodes. It will allow creating links
->>>>>> between consumers and interconnect paths (exposed by interconnect providers).
->>>>> As I mentioned in person, I want to see other SoC families using this
->>>>> before accepting. They don't have to be ready for upstream, but WIP
->>>>> patches or even just a "yes, this works for us and we're going to use
->>>>> this binding on X".
->>>> Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
->>>> currently using this binding, there is ongoing work from at least two
->>>> other vendors that would be using this same binding. I will check on
->>>> what is their progress so far.
->>>>
->>>>> Also, I think the QCom GPU use of this should be fully sorted out. Or
->>>>> more generically how this fits into OPP binding which seems to be never
->>>>> ending extended...
->>>> I see this as a further step. It could be OPP binding which include
->>>> bandwidth values or some separate DT property. Jordan has already
->>>> proposed something, do you have any initial comments on that?
->>> I am curious as how this fits into new systems which have firmware driven
->>> CPUFreq and other DVFS. I would like to avoid using this in such systems
->>> and leave it upto the firmware to scale the bus/interconnect based on the
->>> other components that are connected to it and active.
->>>
->> You've made the same point multiple times across different patch sets. Not
->> all FW can do arbitrary functions. A lot of them are very limited in their
->> capabilities. So, as much as you and I would like to let the FW do the work,
->> it's not always possible. So, in those cases, we do need to have support for
->> the kernel scaling the interconnects correctly. Hopefully this clears up
->> your questions about FW capabilities.
-> Yes, I do understand I have made the same point multiple time and it's
-> intentional. We need to get the fragmented f/w support story fixed.
-> Different ARM vendors are doing different things in f/w and ARM sees the
-> same fragmentation story as before. We have come up with new specification
-> and my annoying multiple emails are just to constantly remind the same.
->
-> I do understand we have existing implementations to consider, but fixing
-> the functionality in arbitrary way is not a good design and it better
-> to get them fixed for future.
+> Hi Bjorn,
+> 
+> On Tue, Sep 25, 2018 at 01:06:07AM -0700, Bjorn Andersson wrote:
+> > rmtfs_mem provides access to physical storage and is crucial for the
+> > operation of the Qualcomm modem subsystem.
+> > 
+> > The rmtfs_mem implementation must be available before the modem
+> > subsystem is booted and a solution where the modem remoteproc will
+> > verify that the rmtfs_mem is available has been discussed in the past.
+> > But this would not handle the case where the rmtfs_mem provider is
+> > restarted, which would cause fatal loss of access to the storage device
+> > for the modem.
+> > 
+> > The suggestion is therefor to link the rmtfs_mem to its associated
+> > remote processor instance and control it based on the availability of
+> > the rmtfs_mem implementation.
+> 
+> But what does "availability" mean? If I'm reading your rmtfs daemon
+> properly, "availability" should mean that the daemon is up and has
+> registered a RMTFS_QMI_SERVICE. But in this patch, you're keying off of
+> the open() call, which sounds like you're introducing a race condition
+> -- we might have open()ed the RMTFS memory but we're not actually
+> completely ready to service requests.
+> 
 
-I believe the fragmentation you are referring to is  in the 
-interface/communication protocol. I see the benefit of standardizing 
-that as long as the standard actually turns out to be good. But that's 
-completely separate from what the FW can/can't do. Asking to standardize 
-what the FW can/can't do doesn't seem realistic as each chip vendor will 
-have different priorities - power, performance, cost, chip area, etc. 
-It's the conflation of these separate topics that doesn't help IMHO.
+You're right. The modem will fail to load if the RMTFS_QMI_SERVICE is
+not present, it doesn't care about this thing (rmtfs) has "opened"
+rmtfs_mem.
 
--Saravana
+> So rather than looking for open(), I think somebody needs to be looking
+> for the appearance and disappearance of the RMTFS_QMI_SERVICE. (Looking
+> for disappearance would resolve the daemon restart issue, no?) That
+> "somebody" could be the remoteproc driver I suppose (qmi_add_lookup()?),
+> or
+
+Right, thinking about it some more we could make the remoteproc driver
+start and stop itself as the RMTFS_QMI_SERVICE get
+registered/unregistered.
+
+> ...couldn't it just be the modem itself? Do you actually need to
+> restart the entire modem when the RMTFS service goes away, or do you
+> just need to pause storage activity?
+> 
+
+Unfortunately the protocol isn't stateless; a handle to the partition is
+acquired by an "open" call and then read/write operations are performed
+on that handle. So unless the modem explicitly reopens the partitions as
+the rmtfs service is restarted this won't work - and I haven't observed
+this behavior.
 
 
--- 
-Qualcomm Innovation Center, Inc.
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+For the record; I did consider making the rmtfs implementation the one
+driving the remoteproc state through /sys/class/remoteproc, but that
+would not cope with abnormal termination of the rmtfs implementation.
+
+I will work up a patch making the remoteproc driver observe the presence
+of the RMTFS_QMI_SERVICE and see how that looks.
+
+Thanks for your feedback!
+
+Regards,
+Bjorn
+
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > The currently implemented workaround in the Linaro QCOMLT releases is to
+> > blacklist the qcom_q6v5_pil kernel module and load this explicitly after rmtfs
+> > has been started.
+> > 
+> > With this patch the modem module can be loaded automatically by the
+> > platform_bus and will only be booted as the rmtfs becomes available. Performing
+> > actions such as upgrading (and restarting) the rmtfs service will cause the
+> > modem to automatically restart and hence continue to function after the
+> > upgrade.
+> > 
+> >  .../reserved-memory/qcom,rmtfs-mem.txt        |  7 ++++++
+> >  drivers/remoteproc/qcom_q6v5_pil.c            |  1 +
+> >  drivers/soc/qcom/Kconfig                      |  1 +
+> >  drivers/soc/qcom/rmtfs_mem.c                  | 23 ++++++++++++++++++-
+> >  4 files changed, 31 insertions(+), 1 deletion(-)
+> > 
+> ...
+> > diff --git a/drivers/soc/qcom/rmtfs_mem.c b/drivers/soc/qcom/rmtfs_mem.c
+> > index 8a3678c2e83c..8b08be310397 100644
+> > --- a/drivers/soc/qcom/rmtfs_mem.c
+> > +++ b/drivers/soc/qcom/rmtfs_mem.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/platform_device.h>
+> >  #include <linux/of.h>
+> >  #include <linux/of_reserved_mem.h>
+> > +#include <linux/remoteproc.h>
+> >  #include <linux/dma-mapping.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/uaccess.h>
+> > @@ -39,6 +40,8 @@ struct qcom_rmtfs_mem {
+> >  	unsigned int client_id;
+> >  
+> >  	unsigned int perms;
+> > +
+> > +	struct rproc *rproc;
+> >  };
+> >  
+> >  static ssize_t qcom_rmtfs_mem_show(struct device *dev,
+> > @@ -80,11 +83,18 @@ static int qcom_rmtfs_mem_open(struct inode *inode, struct file *filp)
+> >  	struct qcom_rmtfs_mem *rmtfs_mem = container_of(inode->i_cdev,
+> >  							struct qcom_rmtfs_mem,
+> >  							cdev);
+> > +	int ret = 0;
+> >  
+> >  	get_device(&rmtfs_mem->dev);
+> >  	filp->private_data = rmtfs_mem;
+> >  
+> > -	return 0;
+> > +	if (rmtfs_mem->rproc) {
+> > +		ret = rproc_boot(rmtfs_mem->rproc);
+> > +		if (ret)
+> > +			put_device(&rmtfs_mem->dev);
+> > +	}
+> > +
+> > +	return ret;
+> >  }
+> >  static ssize_t qcom_rmtfs_mem_read(struct file *filp,
+> >  			      char __user *buf, size_t count, loff_t *f_pos)
+> > @@ -127,6 +137,9 @@ static int qcom_rmtfs_mem_release(struct inode *inode, struct file *filp)
+> >  {
+> >  	struct qcom_rmtfs_mem *rmtfs_mem = filp->private_data;
+> >  
+> > +	if (rmtfs_mem->rproc)
+> > +		rproc_shutdown(rmtfs_mem->rproc);
+> > +
+> >  	put_device(&rmtfs_mem->dev);
+> >  
+> >  	return 0;
+> > @@ -156,6 +169,7 @@ static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
+> >  	struct qcom_scm_vmperm perms[2];
+> >  	struct reserved_mem *rmem;
+> >  	struct qcom_rmtfs_mem *rmtfs_mem;
+> > +	phandle rproc_phandle;
+> >  	u32 client_id;
+> >  	u32 vmid;
+> >  	int ret;
+> > @@ -181,6 +195,13 @@ static int qcom_rmtfs_mem_probe(struct platform_device *pdev)
+> >  	rmtfs_mem->client_id = client_id;
+> >  	rmtfs_mem->size = rmem->size;
+> >  
+> > +	ret = of_property_read_u32(node, "rproc", &rproc_phandle);
+> > +	if (!ret) {
+> > +		rmtfs_mem->rproc = rproc_get_by_phandle(rproc_phandle);
+> 
+> You're doing an rproc_get(), so you need to do a rproc_put() in
+> remove().
+> 
+> Brian
+> 
+> > +		if (!rmtfs_mem->rproc)
+> > +			return -EPROBE_DEFER;
+> > +	}
+> > +
+> >  	device_initialize(&rmtfs_mem->dev);
+> >  	rmtfs_mem->dev.parent = &pdev->dev;
+> >  	rmtfs_mem->dev.groups = qcom_rmtfs_mem_groups;
