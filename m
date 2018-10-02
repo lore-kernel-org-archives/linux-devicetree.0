@@ -1,50 +1,68 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 1/2] ARM: dts: at91: sama5d4_xplained: fix addresable
- nand flash size
-Date: Tue, 2 Oct 2018 14:36:26 +0200
-Message-ID: <20181002123626.GC4088@piout.net>
-References: <20181002112949.22961-1-tudor.ambarus@microchip.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v5 5/6] [media] ad5820: DT new compatible devices
+Date: Tue, 2 Oct 2018 14:44:32 +0200
+Message-ID: <20181002124432.GA28811@amd>
+References: <20181002073222.11368-1-ricardo.ribalda@gmail.com>
+ <20181002073222.11368-5-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181002112949.22961-1-tudor.ambarus@microchip.com>
+In-Reply-To: <20181002073222.11368-5-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc: nicolas.ferre@microchip.com, ludovic.desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tudor,
 
-There is a typo is your subject line.I don't have any other comment ;)
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 02/10/2018 14:29:48+0300, Tudor Ambarus wrote:
-> sama5d4_xplained comes with a 4Gb NAND flash. Increase the rootfs
-> size to match this limit.
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-> ---
->  arch/arm/boot/dts/at91-sama5d4_xplained.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-> index 4b7c762d5f22..7d554b9ab27f 100644
-> --- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-> @@ -252,7 +252,7 @@
->  
->  						rootfs@800000 {
->  							label = "rootfs";
-> -							reg = <0x800000 0x0f800000>;
-> +							reg = <0x800000 0x1f800000>;
->  						};
->  					};
->  				};
-> -- 
-> 2.9.4
-> 
+On Tue 2018-10-02 09:32:21, Ricardo Ribalda Delgado wrote:
+> Document new compatible devices.
+>=20
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt b/Doc=
+umentation/devicetree/bindings/media/i2c/ad5820.txt
+> index 9ccd96d3d5f0..cc7b10fe0368 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> @@ -2,7 +2,10 @@
+> =20
+>  Required Properties:
+> =20
+> -  - compatible: Must contain "adi,ad5820"
+> +  - compatible: Must contain one of:
+> +		- "adi,ad5820"
+> +		- "adi,ad5821"
+> +		- "adi,ad5823"
+> =20
+>    - reg: I2C slave address
+> =20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAluzaDAACgkQMOfwapXb+vJPSQCfZ3PPf9kPROSGUYP9b+P0wbwL
+8fUAoJAT71/dH7HZH9NUJOSC9T/YucRa
+=0ksZ
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
