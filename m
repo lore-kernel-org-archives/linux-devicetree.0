@@ -1,35 +1,27 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 4/8] clk: mmp2: add SP clock
-Date: Tue, 02 Oct 2018 00:18:30 -0700
-Message-ID: <153846471096.119890.948010578540326036@swboyd.mtv.corp.google.com>
-References: <20180910112654.42061-1-lkundrak@v3.sk>
- <20180910112654.42061-5-lkundrak@v3.sk>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Tue, 02 Oct 2018 00:20:48 -0700
+Message-ID: <153846484865.119890.9647250280891039183@swboyd.mtv.corp.google.com>
+References: <20181002013142.209751-1-ryandcase@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180910112654.42061-5-lkundrak@v3.sk>
+In-Reply-To: <20181002013142.209751-1-ryandcase@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Lubomir Rintel <lkundrak@v3.sk>
+To: Mark Brown <broonie@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, linux-arm-msm@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Trent Piepho <tpiepho@impinj.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Girish Mahadevan <girishm@codeaurora.org>, Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lubomir Rintel (2018-09-10 04:26:50)
-> The "security processor", sometimes referred to as "wireless trusted
-> module" or "generic encrypt unit" is a low-power core present on MMP2,
-> that has nothing to do with security, wireless, trust or encryption.
+Quoting Ryan Case (2018-10-01 18:31:41)
+> From: Girish Mahadevan <girishm@codeaurora.org>
 > =
 
-> On an OLPC machine it runs CForth and serves as a keyboard controller:
-> http://dev.laptop.org/git/users/wmb/cforth/tree/src/app/arm-xo-1.75/ps2.f=
-th
+> Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
 > =
 
-> The register address was obtained from the OLPC kernel, since the
-> datasheet seems to be the Marvell's most important business secret.
-> =
-
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> Signed-off-by: Ryan Case <ryandcase@chromium.org>
 > ---
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
