@@ -1,68 +1,81 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH v6 3/4] arm64: dts: dwc3: description of incr burst type
-Date: Tue, 02 Oct 2018 10:40:56 +0300
-Message-ID: <877ej0aj93.fsf@linux.intel.com>
-References: <1532341959-3478-1-git-send-email-pengbo.mu@nxp.com> <1532341959-3478-3-git-send-email-pengbo.mu@nxp.com> <20180724232018.GA16709@rob-hp-laptop> <CADRPPNQQE1ESJ5WkMxySstxpaQir-w5XOdiwDe3qTTQ_cim5Xw@mail.gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC PATCH v2 1/9] leds: add TI LMU backlight driver
+Date: Tue, 2 Oct 2018 09:56:29 +0200
+Message-ID: <20181002075629.GB19677@amd>
+References: <20180928182954.25446-1-dmurphy@ti.com>
+ <20180928182954.25446-2-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CADRPPNQQE1ESJ5WkMxySstxpaQir-w5XOdiwDe3qTTQ_cim5Xw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180928182954.25446-2-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb-owner@vger.kernel.org, Rob Herring <robh@kernel.org>
-Cc: pengbo.mu@nxp.com, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, lkml <linux-kernel@vger.kernel.org>, linux-usb@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Ran Wang <ran.wang_1@nxp.com>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+
+--H+4ONPRPur6+Ovig
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
+On Fri 2018-09-28 13:29:46, Dan Murphy wrote:
+> From: Pavel Machek <pavel@ucw.cz>
+>=20
+> This adds backlight support for the following TI LMU
+> chips: LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
+>=20
+> It controls LEDs on Droid 4
+> smartphone, including keyboard and screen backlights.
+>=20
+> Signed-off-by: Milo Kim <milo.kim@ti.com>
+> [add LED subsystem support for keyboard backlight and rework DT
+> binding according to Rob Herrings feedback]
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+> [remove backlight subsystem support for now]
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
 
-Hi,
+So... this driver adds support for LM3532, LM3631, LM3632, LM3633,
+LM3695 and LM3697 (or it did when I signed it off).
 
-linux-usb-owner@vger.kernel.org writes:
+The rest of the series does not really bring any advantages (you claim
+it may add advantages in future). It takes code out of common driver
+and duplicates it.
 
-> On Tue, Jul 24, 2018 at 6:23 PM Rob Herring <robh@kernel.org> wrote:
->>
->> On Mon, Jul 23, 2018 at 06:32:38PM +0800, Pengbo Mu wrote:
->> > Add description of 'snps,incr-burst-type-adjustment' to binding
->> > so that configuring devicetree.
->> >
->> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
->> > Signed-off-by: Pengbo Mu <pengbo.mu@nxp.com>
->> > ---
->> >  Documentation/devicetree/bindings/usb/dwc3.txt | 6 ++++++
->> >  1 file changed, 6 insertions(+)
->>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Hi Felipe,
->
-> What do you think about this patch?  The patch title prefix should be
-> updated from "arm64: dts: dwc3" to "dt-bindings: usb: dwc3" though.
+Could we take this patch, get the basic support for LM3532, LM3631,
+LM3632, LM3633, LM3695 and LM3697, and then split out the drivers when
+we actually gain some advantage doing so (and also when the costs are
+clear)?
 
-Can you resend the series so I can apply?
+Thanks,
 
-=2D-=20
-balbi
+								Pavel
 
---=-=-=
+>  drivers/leds/Kconfig             |   8 ++
+>  drivers/leds/Makefile            |   1 +
+>  drivers/leds/ti-lmu-led-common.c | 138 +++++++++++++++++++++++++++++++
+>  drivers/leds/ti-lmu-led-common.h |  54 ++++++++++++
+>  4 files changed, 201 insertions(+)
+>  create mode 100644 drivers/leds/ti-lmu-led-common.c
+>  create mode 100644 drivers/leds/ti-lmu-led-common.h
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--H+4ONPRPur6+Ovig
 Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAluzIQgACgkQzL64meEa
-mQbSEhAAvdDwFI5j5rxxGGRDAllP9Ha9nEOuuG84KjiEX6bBTQGhHX4aDoPwQ4to
-AT7dX97D2359hVXnkPzhHDV2f5jKSfkrFhiufUft2zREYX+J7aPeQcGsX79oXKQo
-ivoumKniaKjowRJy7easI++FKmDFKID9WBvDQ7nedDrwO5jxw+I9WqNO1vdfRGOe
-yWIgtCMIWYGvDV3WacRBSi3tPOunehQ4RKm+sQYIpLU309eg858YK2ACJi3uFGOL
-+pKHC2GpGguUHDufMLJeGjF97y5lSUXRjUlfA8aebr3/i6Sl1KFb3X2zZ7KsS6fk
-HTW7YYNjm1+jWVRGe72Sd/sAzAG1UOQJNnJ80Aj/PGjk9Q1dz5tVE8TA//CPHRFQ
-M+JBobt4HxI0XVwumUrsOEODwbzjmgoK+J5J99tTb4Qb+nMhfFsBPa2OfSPGIyIu
-J/jSheTa8LWSHF6W9lDa9iEqS9vHGzdlRmLvdx6OTw52x6SZXkrm4ZS9IpBLF95p
-yMZmQDcXF/mHp2WfyUEDWbkenpDyj27svwcNW66vtX3eYiEtzAXeqKTS8XK1AMFY
-NZP1AnDtjNg2K2i+kgFQspvnxM2TxpB17aEgv9vJmQS7pLLxGwk1yYszbL7/iW3F
-iGs1kyGJLvHQHhgUIIRozuhaytLts61tnJUR093dLQOsSHgDNe4=
-=m67N
+iEYEARECAAYFAluzJK0ACgkQMOfwapXb+vJPfQCeN5zfZPU7rrI6+9qKKKezKCj+
+vLoAn1SVCqWQaZhDgEySYyhd3nxaxrA5
+=0Ipj
 -----END PGP SIGNATURE-----
---=-=-=--
+
+--H+4ONPRPur6+Ovig--
