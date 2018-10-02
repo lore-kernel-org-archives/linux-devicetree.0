@@ -1,41 +1,53 @@
-Return-Path: <SRS0=HwKz=MQ=ragnatech.se=niklas.soderlund@kernel.org>
-From: =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: [PATCH v2 1/5] dt-bindings: adv748x: make data-lanes property mandatory for CSI-2 endpoints
-Date: Thu,  4 Oct 2018 22:41:34 +0200
-Message-Id: <20181004204138.2784-2-niklas.soderlund@ragnatech.se>
-In-Reply-To: <20181004204138.2784-1-niklas.soderlund@ragnatech.se>
-References: <20181004204138.2784-1-niklas.soderlund@ragnatech.se>
+Return-Path: <SRS0=TQfs=MO=arm.com=lorenzo.pieralisi@kernel.org>
+Date: Tue, 2 Oct 2018 11:04:26 +0100
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] DT: pci: rcar-pci: document R8A77990 bindings
+Message-ID: <20181002100426.GA24071@red-moon>
+References: <20180922150252.18754-1-marek.vasut+renesas@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jacopo Mondi <jacopo@jmondi.org>, linux-media@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, =?UTF-8?q?Niklas=20S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20180922150252.18754-1-marek.vasut+renesas@gmail.com>
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, Tho Vu <tho.vu.wh@rvc.renesas.com>, Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>, Marek Vasut <marek.vasut+renesas@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Phil Edworthy <phil.edworthy@renesas.com>, Rob Herring <robh@kernel.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms+renesas@verge.net.au>, Wolfram Sang <wsa@the-dreams.de>, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+On Sat, Sep 22, 2018 at 05:02:52PM +0200, Marek Vasut wrote:
+> From: Tho Vu <tho.vu.wh@rvc.renesas.com>
+> 
+> Document the R-Car E3 (R8A77990) SoC in the R-Car PCIe bindings.
+> 
+> Signed-off-by: Tho Vu <tho.vu.wh@rvc.renesas.com>
+> Signed-off-by: Kazuya Mizuguchi <kazuya.mizuguchi.ks@renesas.com>
+> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Cc: Phil Edworthy <phil.edworthy@renesas.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-The CSI-2 transmitters can use a different number of lanes to transmit
-data. Make the data-lanes mandatory for the endpoints describe the
-transmitters as no good default can be set to fallback on.
+Applied to pci/controller-misc for v4.20, thanks.
 
-Signed-off-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
----
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Lorenzo
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-index 5dddc95f9cc46084..f9dac01ab795fc28 100644
---- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -50,6 +50,9 @@ are numbered as follows.
- 
- The digital output port nodes must contain at least one endpoint.
- 
-+The endpoints described in TXA and TXB ports must if present contain
-+the data-lanes property as described in video-interfaces.txt.
-+
- Ports are optional if they are not connected to anything at the hardware level.
- 
- Example:
--- 
-2.19.0
+> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> index a5f7fc62d10e..5f2f9e380efb 100644
+> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
+> @@ -9,6 +9,7 @@ compatible: "renesas,pcie-r8a7743" for the R8A7743 SoC;
+>  	    "renesas,pcie-r8a7795" for the R8A7795 SoC;
+>  	    "renesas,pcie-r8a7796" for the R8A7796 SoC;
+>  	    "renesas,pcie-r8a77980" for the R8A77980 SoC;
+> +	    "renesas,pcie-r8a77990" for the R8A77990 SoC;
+>  	    "renesas,pcie-rcar-gen2" for a generic R-Car Gen2 or
+>  				     RZ/G1 compatible device.
+>  	    "renesas,pcie-rcar-gen3" for a generic R-Car Gen3 compatible device.
+> -- 
+> 2.18.0
+> 
