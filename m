@@ -1,81 +1,85 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v2 1/9] leds: add TI LMU backlight driver
-Date: Tue, 2 Oct 2018 09:56:29 +0200
-Message-ID: <20181002075629.GB19677@amd>
-References: <20180928182954.25446-1-dmurphy@ti.com>
- <20180928182954.25446-2-dmurphy@ti.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V9 3/8] clocksource: add C-SKY SMP timer
+Date: Tue, 2 Oct 2018 09:59:42 +0200
+Message-ID: <49238cda-d12c-7d3f-9333-296527d94f12@linaro.org>
+References: <cover.1538355281.git.ren_guo@c-sky.com>
+ <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
+ <88e320f2-8cf0-fdb9-c9b0-ee25d7a4d00f@linaro.org>
+ <20181002054024.GA12645@guoren>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="H+4ONPRPur6+Ovig"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180928182954.25446-2-dmurphy@ti.com>
+In-Reply-To: <20181002054024.GA12645@guoren>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org, Milo Kim <milo.kim@ti.com>, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+To: Guo Ren <ren_guo@c-sky.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 02/10/2018 07:40, Guo Ren wrote:
+[ ... ]
 
---H+4ONPRPur6+Ovig
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>
+>> 	irq = irq_of_parse_and_map(np, 0);
+>> 	if (irq <= 0)
+>> 		return -EINVAL;
+> 		panic();
+> I want a panic here. Return will make debug confused and directly tell
+> the people where is wrong. It's root-timer for us and it must bootup.
+> 
+> If it's a co-timer, I also think return is good.
 
-On Fri 2018-09-28 13:29:46, Dan Murphy wrote:
-> From: Pavel Machek <pavel@ucw.cz>
->=20
-> This adds backlight support for the following TI LMU
-> chips: LM3532, LM3631, LM3632, LM3633, LM3695 and LM3697.
->=20
-> It controls LEDs on Droid 4
-> smartphone, including keyboard and screen backlights.
->=20
-> Signed-off-by: Milo Kim <milo.kim@ti.com>
-> [add LED subsystem support for keyboard backlight and rework DT
-> binding according to Rob Herrings feedback]
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> [remove backlight subsystem support for now]
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+We don't need a panic in case of failure. If the board as an alternate
+timer it should be able to boot, that is the general rule of thumb for
+these drivers in this directory.
 
-So... this driver adds support for LM3532, LM3631, LM3632, LM3633,
-LM3695 and LM3697 (or it did when I signed it off).
+The init timer functions will be called via the timer_probe() which
+browse the timer_of_table (the one with all entries for the
+TIMER_OF_DECLARE macros).
 
-The rest of the series does not really bring any advantages (you claim
-it may add advantages in future). It takes code out of common driver
-and duplicates it.
+You can see in the code below (from timer_probe.c), there is an error
+message emitted if the driver fails to initialize and another one much
+stronger if no timer was initialize.
 
-Could we take this patch, get the basic support for LM3532, LM3631,
-LM3632, LM3633, LM3695 and LM3697, and then split out the drivers when
-we actually gain some advantage doing so (and also when the costs are
-clear)?
+This is enough trace IMO.
 
-Thanks,
+void __init timer_probe(void)
+{
+        struct device_node *np;
+        const struct of_device_id *match;
+        of_init_fn_1_ret init_func_ret;
+        unsigned timers = 0;
+        int ret;
 
-								Pavel
+        for_each_matching_node_and_match(np, __timer_of_table, &match) {
+                if (!of_device_is_available(np))
+                        continue;
 
->  drivers/leds/Kconfig             |   8 ++
->  drivers/leds/Makefile            |   1 +
->  drivers/leds/ti-lmu-led-common.c | 138 +++++++++++++++++++++++++++++++
->  drivers/leds/ti-lmu-led-common.h |  54 ++++++++++++
->  4 files changed, 201 insertions(+)
->  create mode 100644 drivers/leds/ti-lmu-led-common.c
->  create mode 100644 drivers/leds/ti-lmu-led-common.h
+                init_func_ret = match->data;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+                ret = init_func_ret(np);
+                if (ret) {
+                        pr_err("Failed to initialize '%pOF': %d\n", np,
+ret);
+                        continue;
+                }
 
---H+4ONPRPur6+Ovig
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+                timers++;
+        }
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+        timers += acpi_probe_device_table(timer);
 
-iEYEARECAAYFAluzJK0ACgkQMOfwapXb+vJPfQCeN5zfZPU7rrI6+9qKKKezKCj+
-vLoAn1SVCqWQaZhDgEySYyhd3nxaxrA5
-=0Ipj
------END PGP SIGNATURE-----
+        if (!timers)
+                pr_crit("%s: no matching timers found\n", __func__);
+}
 
---H+4ONPRPur6+Ovig--
+
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
