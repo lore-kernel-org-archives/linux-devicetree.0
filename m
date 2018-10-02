@@ -1,73 +1,62 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
-Date: Tue, 2 Oct 2018 12:17:58 +0100
-Message-ID: <20181002111758.GC1086@e107155-lin>
-References: <20180831140151.13972-1-georgi.djakov@linaro.org>
- <20180831140151.13972-3-georgi.djakov@linaro.org>
- <20180925180215.GA12435@bogus>
- <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
- <20180926144830.GB25838@e107155-lin>
- <fa74c24f-1f22-f11f-60fe-5a4489d9c7c2@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v6 2/6] [media] ad5820: DT new optional field enable-gpios
+Date: Tue, 02 Oct 2018 14:29:01 +0300
+Message-ID: <3235299.fxFho4aFbc@avalon>
+References: <20181002111356.32298-1-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <fa74c24f-1f22-f11f-60fe-5a4489d9c7c2@codeaurora.org>
+In-Reply-To: <20181002111356.32298-1-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Saravana Kannan <skannan@codeaurora.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 01, 2018 at 04:49:32PM -0700, Saravana Kannan wrote:
-> On 09/26/2018 07:48 AM, Sudeep Holla wrote:
-> > On Wed, Sep 26, 2018 at 05:42:15PM +0300, Georgi Djakov wrote:
-> > > Hi Rob,
-> > > 
-> > > Thanks for the comments!
-> > > 
-> > > On 09/25/2018 09:02 PM, Rob Herring wrote:
-> > > > On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
-> > > > > This binding is intended to represent the relations between the interconnect
-> > > > > controllers (providers) and consumer device nodes. It will allow creating links
-> > > > > between consumers and interconnect paths (exposed by interconnect providers).
-> > > > As I mentioned in person, I want to see other SoC families using this
-> > > > before accepting. They don't have to be ready for upstream, but WIP
-> > > > patches or even just a "yes, this works for us and we're going to use
-> > > > this binding on X".
-> > > Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
-> > > currently using this binding, there is ongoing work from at least two
-> > > other vendors that would be using this same binding. I will check on
-> > > what is their progress so far.
-> > > 
-> > > > Also, I think the QCom GPU use of this should be fully sorted out. Or
-> > > > more generically how this fits into OPP binding which seems to be never
-> > > > ending extended...
-> > > I see this as a further step. It could be OPP binding which include
-> > > bandwidth values or some separate DT property. Jordan has already
-> > > proposed something, do you have any initial comments on that?
-> > I am curious as how this fits into new systems which have firmware driven
-> > CPUFreq and other DVFS. I would like to avoid using this in such systems
-> > and leave it upto the firmware to scale the bus/interconnect based on the
-> > other components that are connected to it and active.
-> > 
+Hi Ricardo,
+
+Thank you for the patch.
+
+On Tuesday, 2 October 2018 14:13:56 EEST Ricardo Ribalda Delgado wrote:
+> Document new enable-gpio field. It can be used to disable the part
+> without turning down its regulator.
 > 
-> You've made the same point multiple times across different patch sets. Not
-> all FW can do arbitrary functions. A lot of them are very limited in their
-> capabilities. So, as much as you and I would like to let the FW do the work,
-> it's not always possible. So, in those cases, we do need to have support for
-> the kernel scaling the interconnects correctly. Hopefully this clears up
-> your questions about FW capabilities.
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 
-Yes, I do understand I have made the same point multiple time and it's
-intentional. We need to get the fragmented f/w support story fixed.
-Different ARM vendors are doing different things in f/w and ARM sees the
-same fragmentation story as before. We have come up with new specification
-and my annoying multiple emails are just to constantly remind the same.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-I do understand we have existing implementations to consider, but fixing
-the functionality in arbitrary way is not a good design and it better
-to get them fixed for future.
+> ---
+>  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> b/Documentation/devicetree/bindings/media/i2c/ad5820.txt index
+> 5940ca11c021..db596e8eb0ba 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> @@ -8,6 +8,11 @@ Required Properties:
+> 
+>    - VANA-supply: supply of voltage for VANA pin
+> 
+> +Optional properties:
+> +
+> +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. The XSHUTDOWN signal
+> is +active low, a high level on the pin enables the device.
+> +
+>  Example:
+> 
+>         ad5820: coil@c {
+> @@ -15,5 +20,6 @@ Example:
+>                 reg = <0x0c>;
+> 
+>                 VANA-supply = <&vaux4>;
+> +               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+>         };
 
---
+
+-- 
 Regards,
-Sudeep
+
+Laurent Pinchart
