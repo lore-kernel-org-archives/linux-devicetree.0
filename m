@@ -1,91 +1,73 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH 4/4] arm64: dts: uniphier: Add USB2 phy nodes
-Date: Tue,  2 Oct 2018 20:12:02 +0900
-Message-ID: <1538478722-20351-5-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1538478722-20351-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v9 2/8] dt-bindings: Introduce interconnect binding
+Date: Tue, 2 Oct 2018 12:17:58 +0100
+Message-ID: <20181002111758.GC1086@e107155-lin>
+References: <20180831140151.13972-1-georgi.djakov@linaro.org>
+ <20180831140151.13972-3-georgi.djakov@linaro.org>
+ <20180925180215.GA12435@bogus>
+ <b67253fb-d86d-2ddd-6c30-0833d6ed62ad@linaro.org>
+ <20180926144830.GB25838@e107155-lin>
+ <fa74c24f-1f22-f11f-60fe-5a4489d9c7c2@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1538478722-20351-1-git-send-email-hayashi.kunihiko@socionext.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <fa74c24f-1f22-f11f-60fe-5a4489d9c7c2@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Saravana Kannan <skannan@codeaurora.org>
+Cc: Georgi Djakov <georgi.djakov@linaro.org>, Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, abailon@baylibre.com, maxime.ripard@bootlin.com, arnd@arndb.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes of USB2 physical layer for UniPhier SoC. This supports LD11.
+On Mon, Oct 01, 2018 at 04:49:32PM -0700, Saravana Kannan wrote:
+> On 09/26/2018 07:48 AM, Sudeep Holla wrote:
+> > On Wed, Sep 26, 2018 at 05:42:15PM +0300, Georgi Djakov wrote:
+> > > Hi Rob,
+> > > 
+> > > Thanks for the comments!
+> > > 
+> > > On 09/25/2018 09:02 PM, Rob Herring wrote:
+> > > > On Fri, Aug 31, 2018 at 05:01:45PM +0300, Georgi Djakov wrote:
+> > > > > This binding is intended to represent the relations between the interconnect
+> > > > > controllers (providers) and consumer device nodes. It will allow creating links
+> > > > > between consumers and interconnect paths (exposed by interconnect providers).
+> > > > As I mentioned in person, I want to see other SoC families using this
+> > > > before accepting. They don't have to be ready for upstream, but WIP
+> > > > patches or even just a "yes, this works for us and we're going to use
+> > > > this binding on X".
+> > > Other than the 3 Qualcomm SoCs (msm8916, msm8996, sdm845) that are
+> > > currently using this binding, there is ongoing work from at least two
+> > > other vendors that would be using this same binding. I will check on
+> > > what is their progress so far.
+> > > 
+> > > > Also, I think the QCom GPU use of this should be fully sorted out. Or
+> > > > more generically how this fits into OPP binding which seems to be never
+> > > > ending extended...
+> > > I see this as a further step. It could be OPP binding which include
+> > > bandwidth values or some separate DT property. Jordan has already
+> > > proposed something, do you have any initial comments on that?
+> > I am curious as how this fits into new systems which have firmware driven
+> > CPUFreq and other DVFS. I would like to avoid using this in such systems
+> > and leave it upto the firmware to scale the bus/interconnect based on the
+> > other components that are connected to it and active.
+> > 
+> 
+> You've made the same point multiple times across different patch sets. Not
+> all FW can do arbitrary functions. A lot of them are very limited in their
+> capabilities. So, as much as you and I would like to let the FW do the work,
+> it's not always possible. So, in those cases, we do need to have support for
+> the kernel scaling the interconnects correctly. Hopefully this clears up
+> your questions about FW capabilities.
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+Yes, I do understand I have made the same point multiple time and it's
+intentional. We need to get the fragmented f/w support story fixed.
+Different ARM vendors are doing different things in f/w and ARM sees the
+same fragmentation story as before. We have come up with new specification
+and my annoying multiple emails are just to constantly remind the same.
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-index d63b56e..be3fc1a 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
-@@ -432,6 +432,8 @@
- 				 <&mio_clk 12>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 8>,
- 				 <&mio_rst 12>;
-+			phy-names = "usb";
-+			phys = <&usb_phy0>;
- 			has-transaction-translator;
- 		};
- 
-@@ -446,6 +448,8 @@
- 				 <&mio_clk 13>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 9>,
- 				 <&mio_rst 13>;
-+			phy-names = "usb";
-+			phys = <&usb_phy1>;
- 			has-transaction-translator;
- 		};
- 
-@@ -460,6 +464,8 @@
- 				 <&mio_clk 14>;
- 			resets = <&sys_rst 8>, <&mio_rst 7>, <&mio_rst 10>,
- 				 <&mio_rst 14>;
-+			phy-names = "usb";
-+			phys = <&usb_phy2>;
- 			has-transaction-translator;
- 		};
- 
-@@ -488,6 +494,27 @@
- 			pinctrl: pinctrl {
- 				compatible = "socionext,uniphier-ld11-pinctrl";
- 			};
-+
-+			usb-phy {
-+				compatible = "socionext,uniphier-ld11-usb2-phy";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				usb_phy0: phy@0 {
-+					reg = <0>;
-+					#phy-cells = <0>;
-+				};
-+
-+				usb_phy1: phy@1 {
-+					reg = <1>;
-+					#phy-cells = <0>;
-+				};
-+
-+				usb_phy2: phy@2 {
-+					reg = <2>;
-+					#phy-cells = <0>;
-+				};
-+			};
- 		};
- 
- 		soc-glue@5f900000 {
--- 
-2.7.4
+I do understand we have existing implementations to consider, but fixing
+the functionality in arbitrary way is not a good design and it better
+to get them fixed for future.
+
+--
+Regards,
+Sudeep
