@@ -1,46 +1,65 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v7 1/3] dt-bindings: pinctrl: renesas,rzn1-pinctrl: documentation
-Date: Tue, 2 Oct 2018 12:29:24 +0200
-Message-ID: <CAMuHMdWc8qfzFdFeuJgJaTgSvws_AOBu4c9o91b=4FwMDYwPnw@mail.gmail.com>
-References: <20181001131026.14635-1-phil.edworthy@renesas.com> <20181001131026.14635-2-phil.edworthy@renesas.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 2/6] [media] ad5820: DT new optional field enable-gpios
+Date: Tue, 02 Oct 2018 13:35:40 +0300
+Message-ID: <2128166.ZAkUExjJHM@avalon>
+References: <20181002073222.11368-1-ricardo.ribalda@gmail.com> <20181002073222.11368-2-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181001131026.14635-2-phil.edworthy@renesas.com>
+In-Reply-To: <20181002073222.11368-2-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jacopo Mondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Pavel Machek <pavel@ucw.cz>, Sakari Ailus <sakari.ailus@iki.fi>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+Hi Ricardo,
 
-On Mon, Oct 1, 2018 at 3:10 PM Phil Edworthy <phil.edworthy@renesas.com> wrote:
-> The Renesas RZ/N1 device family PINCTRL node description.
->
-> Based on a patch originally written by Michel Pollet at Renesas.
->
-> Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-> Reviewed-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Thank you for the patch.
+
+On Tuesday, 2 October 2018 10:32:18 EEST Ricardo Ribalda Delgado wrote:
+> Document new enable-gpio field. It can be used to disable the part
+> without turning down its regulator.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
 > ---
-> v7:
->  - Revert changes in v6, and just remove the token pasting
->
-> v6:
->  - Instead of combining the pin nr and func into a single element, use
->    a pair of 8-bit elements.
+>  Documentation/devicetree/bindings/media/i2c/ad5820.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> b/Documentation/devicetree/bindings/media/i2c/ad5820.txt index
+> 5940ca11c021..9ccd96d3d5f0 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/ad5820.txt
+> @@ -8,6 +8,12 @@ Required Properties:
+> 
+>    - VANA-supply: supply of voltage for VANA pin
+> 
+> +Optional properties:
+> +
+> +   - enable-gpios : GPIO spec for the XSHUTDOWN pin. Note that the polarity
+> of +the enable GPIO is the opposite of the XSHUTDOWN pin (asserting the
+> enable +GPIO deasserts the XSHUTDOWN signal and vice versa).
 
-Thanks for the update!
+After reading this one more time, I think the text is at the very least 
+confusing. The logic level of the enable GPIO is the same as the logic level 
+of the XSHUTDOWN pin. The latter being active low, asserting "enable" will 
+deassert "shutdown", but talking about "desserting XSHUTDOWN" is confusing.
 
-I have replaced v5 with v7, after s/RZN1_MUX/RZN1_PINMUX/s for
-consistency with other SoC families.
+>  Example:
+> 
+>         ad5820: coil@c {
+> @@ -15,5 +21,6 @@ Example:
+>                 reg = <0x0c>;
+> 
+>                 VANA-supply = <&vaux4>;
+> +               enable-gpios = <&msmgpio 26 GPIO_ACTIVE_HIGH>;
+>         };
 
-Gr{oetje,eeting}s,
-
-                        Geert
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Laurent Pinchart
