@@ -1,95 +1,115 @@
-From: =?UTF-8?Q?Rodrigo_Exterck=C3=B6tter_Tj=C3=A4der?=
-        <rodrigo@tjader.xyz>
-Subject: Re: [PATCH 1/2] arm64: dts: allwinner: Olimex A64-OLinuXino: enable eMMC.
-Date: Tue, 2 Oct 2018 13:47:33 -0300
-Message-ID: <CAG7TQgHWCJTaM+pFYFq0_8nWg7sA+d0huqu96sjhqZfeHwqbGQ@mail.gmail.com>
-References: <20180919141815.18737-1-rodrigo@tjader.xyz> <20180921142811.h5jraemk565alh3i@flea>
- <CAG7TQgE_KU_cK_4E+NG8Qcw-QB2=C6YoqBYR2svmWxywFyySCw@mail.gmail.com>
- <20180925090139.qbu6tqav5oth7zkw@flea> <CAG7TQgFTsR4pf4jAcWMFoOmiP7AXYqjts60RP2kuJGU44AcQJQ@mail.gmail.com>
- <20180927081711.llmwnvpu73loe5iv@flea> <CAG7TQgGMkvBnNE_WEth8gscKxN3qN8a44mNMWz3QP-2+JKfOzg@mail.gmail.com>
- <20180929154754.abz3byvrufvnf4dq@flea> <CAG7TQgGS7DkLpNVYqfCD-9vMZkeY6r+L-5oXKWef3x-OVbqjtw@mail.gmail.com>
- <20181002131312.soqwybsohdifvso3@flea>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v9 1/2] dt-bindings: hwmon: Add ina3221 documentation
+Date: Tue, 2 Oct 2018 10:05:18 -0700
+Message-ID: <20181002170518.GA27236@roeck-us.net>
+References: <20181002010523.2019-1-nicoleotsuka@gmail.com>
+ <20181002010523.2019-2-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181002131312.soqwybsohdifvso3@flea>
+Content-Disposition: inline
+In-Reply-To: <20181002010523.2019-2-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: maxime.ripard@bootlin.com
-Cc: wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 2, 2018 at 10:13 AM Maxime Ripard <maxime.ripard@bootlin.com> w=
-rote:
->
-> On Sat, Sep 29, 2018 at 01:51:02PM -0300, Rodrigo Exterck=C3=B6tter Tj=C3=
-=A4der wrote:
-> > On Sat, Sep 29, 2018 at 12:47 PM Maxime Ripard
-> > <maxime.ripard@bootlin.com> wrote:
-> > > > We can't even remove a node from a device tree? Removing the WiFi n=
-ode
-> > > > from the current tree would make it correspond to the variant with =
-the
-> > > > least features.
-> > >
-> > > Not really. How pissed would you be if you were a user, had wifi
-> > > running on your board, you upgrade your kernel, and then it's just
-> > > gone? :)
-> >
-> > That would suck, but what about someone who has the board with no wifi
-> > and problems start happening because the wifi is enabled on the device
-> > tree?
->
-> Did that happen or is it a theoretical issue?
+Hi Nicolin,
 
-Theoretical. I don't know how likely having a non-existant device
-enabled is to cause problems.
+On Mon, Oct 01, 2018 at 06:05:22PM -0700, Nicolin Chen wrote:
+> Texas Instruments INA3221 is a triple-channel shunt and bus
+> voltage monitor. This patch adds a DT binding doc for it.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
 
-> > > > About device tree overlays, I read overlay-notes.txt, but I went
-> > > > looking for an example with "git grep /plugin/ arch" and it came
-> > > > empty. Is this approach not used for other boards?
-> > >
-> > > It is, it's simply not stored in the kernel, but through other third
-> > > party repos.
-> >
-> > So that would mean that it's up to every distro to support the boards
-> > instead of relying on mainline support?
->
-> Distros would have to integrate it either way. One would need to
-> detect and / or ask for the board variant in order to load say the BT
-> stack, or to know if you want to boot from the eMMC or from the SD
-> card.
+This version of the series looks good to me. I'll add both patches to
+hwmon-next, with the understanding that I may pull them if Rob has
+bindings related concerns.
 
-Yeah, but now if a bug is found in the device tree it has to be fixed
-once per distro instead of only on mainline.
+Thanks,
+Guenter
 
-> > > > Does the overlay approach make the device available at boot time? T=
-hat
-> > > > is important for a storage device such as eMMC.
-> > > >
-> > > > I went with the separate dts approach because that's what I saw was
-> > > > done for other similar cases, like Pine64 and Pine64+, OLinuXino-LI=
-ME2
-> > > > and its variant with eMMC, among others.
-> > >
-> > > Yeah, but in all these cases, it was done from day one, not after the
-> > > facts.
-> >
-> > For the LIME2 the dts for the emmc variant was commited two years
-> > after the base LIME2 dts.
-> >
-> > What if instead of keeping the current dt for the least featureful
-> > model we keep it for the most featureful model and create new dts for
-> > the two less featureful models?
->
-> This is a different story though. The LIME2 eMMC variant was created
-> way after the original LIME2, with a separate name.
-
-What about the idea of keeping the current dt for the most featureful
-variant and creating new dts for the other two?
-
-That would make it so that no one's device stops working and would
-have mailine support for all three devices.
-
-Also, the current device tree doesn't represent any existing device:
-it has wifi on but no emmc. That variation does not exist.
+> Changelog
+> v7->v9:
+>  * N/A
+> v6->v7:
+>  * Restored three channel examples and merged them with the parent one
+> v5->v6:
+>  * Removed status property as no need to explicitly list it.
+>  * Combined all examples into a complete one.
+> v4->v5:
+>  * Replaced "input-id" with "reg" and added address-cells and size-cells
+>  * Replaced "input-label" with "label"
+>  * Replaced "shunt-resistor" with "shunt-resistor-micro-ohms"
+> v3->v4:
+>  * Removed the attempt of putting labels in the node names
+>  * Added a new optional label property in the child node
+>  * Updated examples accordingly
+> v2->v3:
+>  * Added a simple subject in the line 1
+>  * Fixed the shunt resistor value in the example
+> v1->v2:
+>  * Dropped channel name properties
+>  * Added child node definitions.
+>  * * Added shunt resistor property in the child node
+>  * * Added status property to indicate connection status
+>  * * Changed to use child node name as the label of input source
+> 
+>  .../devicetree/bindings/hwmon/ina3221.txt     | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/hwmon/ina3221.txt b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+> new file mode 100644
+> index 000000000000..a7b25caa2b8e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+> @@ -0,0 +1,44 @@
+> +Texas Instruments INA3221 Device Tree Bindings
+> +
+> +1) ina3221 node
+> +  Required properties:
+> +  - compatible: Must be "ti,ina3221"
+> +  - reg: I2C address
+> +
+> +  Optional properties:
+> +  = The node contains optional child nodes for three channels =
+> +  = Each child node describes the information of input source =
+> +
+> +  - #address-cells: Required only if a child node is present. Must be 1.
+> +  - #size-cells: Required only if a child node is present. Must be 0.
+> +
+> +2) child nodes
+> +  Required properties:
+> +  - reg: Must be 0, 1 or 2, corresponding to IN1, IN2 or IN3 port of INA3221
+> +
+> +  Optional properties:
+> +  - label: Name of the input source
+> +  - shunt-resistor-micro-ohms: Shunt resistor value in micro-Ohm
+> +
+> +Example:
+> +
+> +ina3221@40 {
+> +	compatible = "ti,ina3221";
+> +	reg = <0x40>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	input@0 {
+> +		reg = <0x0>;
+> +		status = "disabled";
+> +	};
+> +	input@1 {
+> +		reg = <0x1>;
+> +		shunt-resistor-micro-ohms = <5000>;
+> +	};
+> +	input@2 {
+> +		reg = <0x2>;
+> +		label = "VDD_5V";
+> +		shunt-resistor-micro-ohms = <5000>;
+> +	};
+> +};
+> -- 
+> 2.17.1
+> 
