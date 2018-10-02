@@ -1,27 +1,53 @@
-Return-Path: <SRS0=sbd0=MY=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 0/3] mmc: tmio_mmc: Add support for RZ/A2
-Date: Fri, 12 Oct 2018 07:29:21 -0500
-Message-Id: <20181012122924.5543-1-chris.brandt@renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-clk@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH 2/2] usb: gadget: udc: renesas_usb3: add support for r8a77990
+Date: Tue,  2 Oct 2018 20:58:27 +0900
+Message-Id: <1538481507-24821-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <1538481507-24821-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+References: <1538481507-24821-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Basically the same HW block that was used in R-Car Gen 3 is used in
-RZ/A2 (with only a couple small differences).
+Since r8a77990 (R-Car E3) doesn't have VBUS detect pin and
+number of ramif is 4, this patch adds a new renesas_usb3_priv
+variable for the SoC.
 
-Not sure if you're going to like the Kconfig change or not.
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+---
+ drivers/usb/gadget/udc/renesas_usb3.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Chris Brandt (3):
-  clk: renesas: r7s9210: Add SDHI clocks
-  mmc: renesas_sdhi_internal_dmac: Add R7S9210 support
-  dt-bindings: mmc: tmio_mmc: Document Renesas R7S9210
-
- Documentation/devicetree/bindings/mmc/tmio_mmc.txt |  3 ++-
- drivers/clk/renesas/r7s9210-cpg-mssr.c             |  5 ++++
- drivers/mmc/host/Kconfig                           |  5 ++--
- drivers/mmc/host/renesas_sdhi_internal_dmac.c      | 28 ++++++++++++++++++++--
- 4 files changed, 36 insertions(+), 5 deletions(-)
-
+diff --git a/drivers/usb/gadget/udc/renesas_usb3.c b/drivers/usb/gadget/udc/renesas_usb3.c
+index e1656f3..100e9fa 100644
+--- a/drivers/usb/gadget/udc/renesas_usb3.c
++++ b/drivers/usb/gadget/udc/renesas_usb3.c
+@@ -2600,6 +2600,13 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
+ 	.ramsize_per_pipe = SZ_4K,
+ };
+ 
++static const struct renesas_usb3_priv renesas_usb3_priv_r8a77990 = {
++	.ramsize_per_ramif = SZ_16K,
++	.num_ramif = 4,
++	.ramsize_per_pipe = SZ_4K,
++	.workaround_for_vbus = true,
++};
++
+ static const struct of_device_id usb3_of_match[] = {
+ 	{
+ 		.compatible = "renesas,r8a7795-usb3-peri",
+@@ -2618,6 +2625,10 @@ static void renesas_usb3_init_ram(struct renesas_usb3 *usb3, struct device *dev,
+ 		.soc_id = "r8a7795", .revision = "ES1.*",
+ 		.data = &renesas_usb3_priv_r8a7795_es1,
+ 	},
++	{
++		.soc_id = "r8a77990",
++		.data = &renesas_usb3_priv_r8a77990,
++	},
+ 	{ /* sentinel */ },
+ };
+ 
 -- 
-2.16.1
+1.9.1
