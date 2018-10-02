@@ -1,69 +1,131 @@
-Return-Path: <SRS0=WjQe=MP=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 4/6] ARM: dts: r8a77470: Add SDHI0 support
-Date: Wed,  3 Oct 2018 12:05:42 +0100
-Message-Id: <1538564744-15590-5-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1538564744-15590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1538564744-15590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+MIME-Version: 1.0
+Date: Tue, 2 Oct 2018 09:03:04 -0500
+References: <20180926055803.19071-1-takahiro.akashi@linaro.org>
+	<CAL_JsqKVa2Xk-TJQ_U7bUJK6XXu2ZO36Jb8T3Rnr8uv0BQhwpg@mail.gmail.com>
+	<20181002061249.GD32578@linaro.org>
+In-Reply-To: <20181002061249.GD32578@linaro.org>
+Message-ID: <CAL_JsqK4HpXcDg-aofbMvtidv4xk7SxRwmu5qE7=nh0zNECTTg@mail.gmail.com>
+Subject: Re: [PATCH] lib: add missing files from libfdt
+From: Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-RZ/G1C comes with two different types of IP for the SDHI
-interfaces, SDHI0 and SDHI2 share the same IP type, and
-such an IP is also compatible with the one found in R-Car
-Gen2. SDHI1 IP on the other hand is compatible with R-Car
-Gen3 with internal DMA.
-This patch completes the SDHI support of the R-Car Gen2
-compatible IPs, including fixing the max-frequency
-definition of SDHI2, as it turns out there is a bug in
-Section 1.3.9 of the RZ/G1C Hardware User's Manual (Rev.
-1.00 Oct. 2017).
+On Tue, Oct 2, 2018 at 1:11 AM AKASHI, Takahiro
+<takahiro.akashi@linaro.org> wrote:
+>
+> Rob,
+>
+> On Fri, Sep 28, 2018 at 07:49:13AM -0500, Rob Herring wrote:
+> > On Wed, Sep 26, 2018 at 12:57 AM AKASHI Takahiro
+> > <takahiro.akashi@linaro.org> wrote:
+> > >
+> > > There are two files that are part of dtc/libfdt, but don't appear
+> > > in lib. This patch fixes it.
+> > > Please note that strtoul() used in fdt_overlay.c is now faked using
+> > > kstrtoul() (not simple_strtoul() which is obsolute).
+> > >
+> > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Frank Rowand <frowand.list@gmail.com>
+> > > ---
+> > >  lib/Makefile        |  2 +-
+> > >  lib/fdt_addresses.c |  3 +++
+> > >  lib/fdt_overlay.c   | 23 +++++++++++++++++++++++
+> > >  3 files changed, 27 insertions(+), 1 deletion(-)
+> > >  create mode 100644 lib/fdt_addresses.c
+> > >  create mode 100644 lib/fdt_overlay.c
+> > >
+> > > diff --git a/lib/Makefile b/lib/Makefile
+> > > index ca3f7ebb900d..444c82413a3c 100644
+> > > --- a/lib/Makefile
+> > > +++ b/lib/Makefile
+> > > @@ -202,7 +202,7 @@ KASAN_SANITIZE_stackdepot.o := n
+> > >  KCOV_INSTRUMENT_stackdepot.o := n
+> > >
+> > >  libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
+> > > -              fdt_empty_tree.o
+> > > +              fdt_empty_tree.o fdt_addresses.o fdt_overlay.o
+> >
+> > Nothing in the kernel needs fdt_overlay.o, so we shouldn't add it
+> > until we do. It used to bloat the kernel size, but maybe that changed
+> > with using archive files now.
+> >
+> > >  $(foreach file, $(libfdt_files), \
+> > >         $(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
+> > >  lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+> > > diff --git a/lib/fdt_addresses.c b/lib/fdt_addresses.c
+> > > new file mode 100644
+> > > index 000000000000..241780d09882
+> > > --- /dev/null
+> > > +++ b/lib/fdt_addresses.c
+> > > @@ -0,0 +1,3 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +#include <linux/libfdt_env.h>
+> > > +#include "../scripts/dtc/libfdt/fdt_addresses.c"
+> > > diff --git a/lib/fdt_overlay.c b/lib/fdt_overlay.c
+> > > new file mode 100644
+> > > index 000000000000..1def7268d313
+> > > --- /dev/null
+> > > +++ b/lib/fdt_overlay.c
+> > > @@ -0,0 +1,23 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/libfdt_env.h>
+> > > +
+> > > +static unsigned long strtoul(const char *nptr, char **endptr, int base)
+> > > +{
+> > > +       unsigned long res;
+> > > +       int ret;
+> > > +
+> > > +       /*
+> > > +        * FIXME: no way to return a correct value of endptr.
+> > > +        * The values here would be still good for use in fdt_overlay
+> > > +        */
+> > > +       *endptr = (char *)nptr;
+> >
+> > endptr could be NULL.
+>
+> No, it couldn't at overlay_fixup_phandle(), which is the only caller
+> of strtoul() in fdt_overlay.c, is concerned.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
+The definition of strtoul allows endptr to be NULL, so your
+implementation should support that. Otherwise, when a new user is
+added we won't find it until run-time.
 
----
-v2:
-* New patch
----
- arch/arm/boot/dts/r8a77470.dtsi | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+> > > +       ret = kstrtoul(nptr, base, &res);
+> >
+> > kstrtoul doesn't handle conversions if there are non-convertible
+> > characters after the number while strtoul (including simple_strtoul)
+> > will still do the conversion.
+>
+> I don't believe so.
 
-diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
-index 9e7f86d..e01df9c 100644
---- a/arch/arm/boot/dts/r8a77470.dtsi
-+++ b/arch/arm/boot/dts/r8a77470.dtsi
-@@ -412,6 +412,21 @@
- 			status = "disabled";
- 		};
- 
-+		sdhi0: sd@ee100000 {
-+			compatible = "renesas,sdhi-r8a77470",
-+				     "renesas,rcar-gen2-sdhi";
-+			reg = <0 0xee100000 0 0x328>;
-+			interrupts = <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 314>;
-+			dmas = <&dmac0 0xcd>, <&dmac0 0xce>,
-+			       <&dmac1 0xcd>, <&dmac1 0xce>;
-+			dma-names = "tx", "rx", "tx", "rx";
-+			max-frequency = <156000000>;
-+			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
-+			resets = <&cpg 314>;
-+			status = "disabled";
-+		};
-+
- 		sdhi2: sd@ee160000 {
- 			compatible = "renesas,sdhi-r8a77470",
- 				     "renesas,rcar-gen2-sdhi";
-@@ -421,7 +436,7 @@
- 			dmas = <&dmac0 0xd3>, <&dmac0 0xd4>,
- 			       <&dmac1 0xd3>, <&dmac1 0xd4>;
- 			dma-names = "tx", "rx", "tx", "rx";
--			max-frequency = <97500000>;
-+			max-frequency = <78000000>;
- 			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
- 			resets = <&cpg 312>;
- 			status = "disabled";
--- 
-2.7.4
+The same problem exists here. IMO, we should use simple_strtoul
+because kstrtoul is not a compatible implementation of strtoul.
+
+Or libfdt upstream should add a strtoul wrapper that has the same
+traits as kstrtoul.
+
+> > We should make sure we don't need that
+> > behavior. That's doubtful if callers pass non-NULL endptr.
+> >
+> > > +       if (ret < 0)
+> > > +               return ULONG_MAX;
+> > > +
+> > > +       (*endptr)++;
+> > > +       return res;
+> > > +}
+> > > +
+> > > +#include "../scripts/dtc/libfdt/fdt_overlay.c"
+> > > --
+> > > 2.18.0
+> > >
+>
+> Having said that, I would simply drop 'fdt_overlay' part from my patch
+> as it won't be used anywhere at this stage.
+> Are you happy with this change?
+
+That's fine by me.
+
+Rob
