@@ -1,99 +1,79 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v9 1/2] dt-bindings: hwmon: Add ina3221 documentation
-Date: Mon,  1 Oct 2018 18:05:22 -0700
-Message-ID: <20181002010523.2019-2-nicoleotsuka@gmail.com>
-References: <20181002010523.2019-1-nicoleotsuka@gmail.com>
+From: Ryan Case <ryandcase@chromium.org>
+Subject: [PATCH v4 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Mon,  1 Oct 2018 18:15:41 -0700
+Message-ID: <20181002011542.204937-1-ryandcase@chromium.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181002010523.2019-1-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net
-Cc: afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Stephen Boyd <swboyd@chromium.org>, linux-arm-msm@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Trent Piepho <tpiepho@impinj.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Girish Mahadevan <girishm@codeaurora.org>, Ryan Case <ryandcase@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Texas Instruments INA3221 is a triple-channel shunt and bus
-voltage monitor. This patch adds a DT binding doc for it.
+From: Girish Mahadevan <girishm@codeaurora.org>
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
+
+Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+Signed-off-by: Ryan Case <ryandcase@chromium.org>
 ---
-Changelog
-v7->v9:
- * N/A
-v6->v7:
- * Restored three channel examples and merged them with the parent one
-v5->v6:
- * Removed status property as no need to explicitly list it.
- * Combined all examples into a complete one.
-v4->v5:
- * Replaced "input-id" with "reg" and added address-cells and size-cells
- * Replaced "input-label" with "label"
- * Replaced "shunt-resistor" with "shunt-resistor-micro-ohms"
-v3->v4:
- * Removed the attempt of putting labels in the node names
- * Added a new optional label property in the child node
- * Updated examples accordingly
-v2->v3:
- * Added a simple subject in the line 1
- * Fixed the shunt resistor value in the example
-v1->v2:
- * Dropped channel name properties
- * Added child node definitions.
- * * Added shunt resistor property in the child node
- * * Added status property to indicate connection status
- * * Changed to use child node name as the label of input source
 
- .../devicetree/bindings/hwmon/ina3221.txt     | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
+Changes in v4:
+- Changed qspi@ to spi@ and device@ to flash@ to match Rob's review
 
-diff --git a/Documentation/devicetree/bindings/hwmon/ina3221.txt b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+Changes in v3:
+- Added generic compatible string in addition to specific SoC
+
+Changes in v2:
+- Added commit text
+- Removed invalid property
+- Updated example to match sdm845 with attached spi-nor
+
+ .../bindings/spi/qcom,spi-qcom-qspi.txt       | 36 +++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+
+diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
 new file mode 100644
-index 000000000000..a7b25caa2b8e
+index 000000000000..1d64b61f5171
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/ina3221.txt
-@@ -0,0 +1,44 @@
-+Texas Instruments INA3221 Device Tree Bindings
++++ b/Documentation/devicetree/bindings/spi/qcom,spi-qcom-qspi.txt
+@@ -0,0 +1,36 @@
++Qualcomm Quad Serial Peripheral Interface (QSPI)
 +
-+1) ina3221 node
-+  Required properties:
-+  - compatible: Must be "ti,ina3221"
-+  - reg: I2C address
++The QSPI controller allows SPI protocol communication in single, dual, or quad
++wire transmission modes for read/write access to slaves such as NOR flash.
 +
-+  Optional properties:
-+  = The node contains optional child nodes for three channels =
-+  = Each child node describes the information of input source =
++Required properties:
++- compatible:	An SoC specific identifier followed by "qcom,qspi-v1", such as
++		"qcom,sdm845-qspi", "qcom,qspi-v1"
++- reg:		Should contain the base register location and length.
++- interrupts:	Interrupt number used by the controller.
++- clocks:	Should contain the core and AHB clock.
++- clock-names:	Should be "core" for core clock and "iface" for AHB clock.
 +
-+  - #address-cells: Required only if a child node is present. Must be 1.
-+  - #size-cells: Required only if a child node is present. Must be 0.
-+
-+2) child nodes
-+  Required properties:
-+  - reg: Must be 0, 1 or 2, corresponding to IN1, IN2 or IN3 port of INA3221
-+
-+  Optional properties:
-+  - label: Name of the input source
-+  - shunt-resistor-micro-ohms: Shunt resistor value in micro-Ohm
++SPI slave nodes must be children of the SPI master node and can contain
++properties described in Documentation/devicetree/bindings/spi/spi-bus.txt
 +
 +Example:
 +
-+ina3221@40 {
-+	compatible = "ti,ina3221";
-+	reg = <0x40>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
++	qspi: spi@88df000 {
++		compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
++		reg = <0x88df000 0x600>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++		clock-names = "iface", "core";
++		clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
++			 <&gcc GCC_QSPI_CORE_CLK>;
 +
-+	input@0 {
-+		reg = <0x0>;
-+		status = "disabled";
++		flash@0 {
++			compatible = "jedec,spi-nor";
++			reg = <0>;
++			spi-max-frequency = <25000000>;
++			spi-tx-bus-width = <2>;
++			spi-rx-bus-width = <2>;
++		};
 +	};
-+	input@1 {
-+		reg = <0x1>;
-+		shunt-resistor-micro-ohms = <5000>;
-+	};
-+	input@2 {
-+		reg = <0x2>;
-+		label = "VDD_5V";
-+		shunt-resistor-micro-ohms = <5000>;
-+	};
-+};
 -- 
-2.17.1
+2.19.0.605.g01d371f741-goog
