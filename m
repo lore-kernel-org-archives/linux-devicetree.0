@@ -1,7 +1,7 @@
 From: Ryan Case <ryandcase@chromium.org>
-Subject: [PATCH v4 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
-Date: Mon,  1 Oct 2018 18:15:41 -0700
-Message-ID: <20181002011542.204937-1-ryandcase@chromium.org>
+Subject: [PATCH v5 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Mon,  1 Oct 2018 18:31:41 -0700
+Message-ID: <20181002013142.209751-1-ryandcase@chromium.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -17,6 +17,9 @@ Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
 Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
 Signed-off-by: Ryan Case <ryandcase@chromium.org>
 ---
+
+Changes in v5:
+- None
 
 Changes in v4:
 - Changed qspi@ to spi@ and device@ to flash@ to match Rob's review
