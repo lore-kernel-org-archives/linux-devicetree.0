@@ -1,34 +1,29 @@
-Return-Path: <SRS0=9BQ+=MN=verge.net.au=horms@kernel.org>
-Date: Mon, 1 Oct 2018 14:36:41 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: Document iWave RZ/G1N SOM
-Message-ID: <20181001123628.caddj5tfhd3xcz67@verge.net.au>
-References: <1537950104-18330-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUPkbVs3UxqrP63Fx=25XvKCB=U5qy5TETydHT3=zi-tQ@mail.gmail.com>
+Return-Path: <SRS0=ChAJ=MO=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp2.macqel.be ([109.135.2.61]:60867 "EHLO smtp2.macqel.be"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729013AbeJBUkf (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Tue, 2 Oct 2018 16:40:35 -0400
+Date: Tue, 2 Oct 2018 15:57:01 +0200
+From: Philippe De Muyter <phdm@macq.eu>
+Subject: Re: [PATCH v3 1/2] [media] imx214: device tree binding
+Message-ID: <20181002135701.GA6910@frolo.macqel>
+References: <20181002134648.14225-1-ricardo.ribalda@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMuHMdUPkbVs3UxqrP63Fx=25XvKCB=U5qy5TETydHT3=zi-tQ@mail.gmail.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20181002134648.14225-1-ricardo.ribalda@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Sep 26, 2018 at 01:37:59PM +0200, Geert Uytterhoeven wrote:
-> On Wed, Sep 26, 2018 at 10:28 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> > Document the iW-RainboW-G20M-RZ/G1N Qseven device tree bindings,
-> > listing it as a supported system on module.
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> > ---
-> > iWave uses the same "iW-RainboW-G20M-Qseven" name for both
-> > iWave-RZ/G1N and iWave-RZ/G1M Q7 SOM. Details can be found
-> > in the below link
-> > https://www.iwavesystems.com/rz-g1m-qseven-module.html
-> 
-> Makes perfect sense, as the SoCs are pin-compatible.
+On Tue, Oct 02, 2018 at 03:46:48PM +0200, Ricardo Ribalda Delgado wrote:
+> Document bindings for imx214 camera sensor
+ ...
+> +Optional Properties:
+> +- flash-leds: See ../video-interfaces.txt
+> +- lens-focus: See ../video-interfaces.txt
+> +
+> +The imx274 device node should contain one 'port' child node with
 
-Thanks, applied for v4.21.
+imx214 
