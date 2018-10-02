@@ -1,85 +1,72 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH V9 3/8] clocksource: add C-SKY SMP timer
-Date: Tue, 2 Oct 2018 09:59:42 +0200
-Message-ID: <49238cda-d12c-7d3f-9333-296527d94f12@linaro.org>
-References: <cover.1538355281.git.ren_guo@c-sky.com>
- <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
- <88e320f2-8cf0-fdb9-c9b0-ee25d7a4d00f@linaro.org>
- <20181002054024.GA12645@guoren>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v6 06/14] irqchip/irq-mvebu-icu: support ICU subnodes
+Date: Tue, 2 Oct 2018 10:13:41 +0200
+Message-ID: <20181002101341.1d3442dd@xps13>
+References: <20181001141358.31508-1-miquel.raynal@bootlin.com>
+ <20181001141358.31508-7-miquel.raynal@bootlin.com>
+ <86k1n1vcgb.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181002054024.GA12645@guoren>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <86k1n1vcgb.wl-marc.zyngier@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Catalin Marinas <catalin.marinas@arm.com>, Gregory Clement <gregory.clement@bootlin.com>, Haim Boot <hayim@marvell.com>, Will Deacon <will.deacon@arm.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Thomas Gleixner <tglx@linutronix.de>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/10/2018 07:40, Guo Ren wrote:
-[ ... ]
-
->>
->> 	irq = irq_of_parse_and_map(np, 0);
->> 	if (irq <= 0)
->> 		return -EINVAL;
-> 		panic();
-> I want a panic here. Return will make debug confused and directly tell
-> the people where is wrong. It's root-timer for us and it must bootup.
-> 
-> If it's a co-timer, I also think return is good.
-
-We don't need a panic in case of failure. If the board as an alternate
-timer it should be able to boot, that is the general rule of thumb for
-these drivers in this directory.
-
-The init timer functions will be called via the timer_probe() which
-browse the timer_of_table (the one with all entries for the
-TIMER_OF_DECLARE macros).
-
-You can see in the code below (from timer_probe.c), there is an error
-message emitted if the driver fails to initialize and another one much
-stronger if no timer was initialize.
-
-This is enough trace IMO.
-
-void __init timer_probe(void)
-{
-        struct device_node *np;
-        const struct of_device_id *match;
-        of_init_fn_1_ret init_func_ret;
-        unsigned timers = 0;
-        int ret;
-
-        for_each_matching_node_and_match(np, __timer_of_table, &match) {
-                if (!of_device_is_available(np))
-                        continue;
-
-                init_func_ret = match->data;
-
-                ret = init_func_ret(np);
-                if (ret) {
-                        pr_err("Failed to initialize '%pOF': %d\n", np,
-ret);
-                        continue;
-                }
-
-                timers++;
-        }
-
-        timers += acpi_probe_device_table(timer);
-
-        if (!timers)
-                pr_crit("%s: no matching timers found\n", __func__);
-}
-
-
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+SGkgTWFyYywKCk1hcmMgWnluZ2llciA8bWFyYy56eW5naWVyQGFybS5jb20+IHdyb3RlIG9uIE1v
+biwgMDEgT2N0IDIwMTggMTc6NDk6NTYKKzAxMDA6Cgo+IE9uIE1vbiwgMDEgT2N0IDIwMTggMTU6
+MTM6NTAgKzAxMDAsCj4gTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4g
+d3JvdGU6Cj4gPiAKPiA+IFRoZSBJQ1UgY2FuIGhhbmRsZSBzZXZlcmFsIHR5cGUgb2YgaW50ZXJy
+dXB0LCBlYWNoIG9mIHRoZW0gYmVpbmcgaGFuZGxlZAo+ID4gZGlmZmVyZW50bHkgb24gQVAgc2lk
+ZS4gT24gQ1Agc2lkZSwgdGhlIElDVSBzaG91bGQgYmUgYWJsZSB0byBtYWtlIHRoZQo+ID4gZGlz
+dGluY3Rpb24gYmV0d2VlbiBlYWNoIGludGVycnVwdCBncm91cCBieSBwb2ludGluZyB0byB0aGUg
+cmlnaHQgcGFyZW50Lgo+ID4gCj4gPiBUaGlzIGlzIGRvbmUgdGhyb3VnaCB0aGUgaW50cm9kdWN0
+aW9uIG9mIG5ldyBiaW5kaW5ncywgcHJlc2VudGluZyB0aGUgSUNVCj4gPiBub2RlIGFzIHRoZSBw
+YXJlbnQgb2YgbXVsdGlwbGUgSUNVIHN1Yi1ub2RlcywgZWFjaCBvZiB0aGVtIGJlaW5nIGFuCj4g
+PiBpbnRlcnJ1cHQgdHlwZSB3aXRoIGEgZGlmZmVyZW50IGludGVycnVwdCBwYXJlbnQuIElDVSBp
+bnRlcnJ1cHQgJ2NsaWVudHMnCj4gPiBub3cgZGlyZWN0bHkgcG9pbnQgdG8gdGhlIHJpZ2h0IHN1
+Yi1ub2RlLCBhdm9pZGluZyB0aGUgbmVlZCBmb3IgdGhlIGV4dHJhCj4gPiBJQ1VfR1JQXyogcGFy
+YW1ldGVyLgo+ID4gCj4gPiBJQ1Ugc3Vibm9kZXMgYXJlIHByb2JlZCBhdXRvbWF0aWNhbGx5IHdp
+dGggZGV2bV9wbGF0Zm9ybV9wb3B1bGF0ZSgpLiBJZgo+ID4gdGhlIG5vZGUgYXMgbm8gY2hpbGQs
+IHRoZSBwcm9iZSBmdW5jdGlvbiBmb3IgTlNScyB3aWxsIHN0aWxsIGJlIGNhbGxlZAo+ID4gJ21h
+bnVhbGx5JyBpbiBvcmRlciB0byBwcmVzZXJ2ZSBiYWNrd2FyZCBjb21wYXRpYmlsaXR5IHdpdGgg
+RFQgdXNpbmcgdGhlCj4gPiBvbGQgYmluZGluZy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTWlx
+dWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+IC0tLQo+ID4gIGRyaXZl
+cnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMgfCA3NyArKysrKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRp
+b25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWlj
+dS5jIGIvZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1pY3UuYwo+ID4gaW5kZXggZDA5ZjIyMGEy
+NzAxLi5jNzlkMmNiNzg3YTAgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL2lycWNoaXAvaXJxLW12
+ZWJ1LWljdS5jCj4gPiArKysgYi9kcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWljdS5jICAKPiAK
+PiBbLi4uXQo+IAo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG12ZWJ1X2lj
+dV9zdWJzZXRfb2ZfbWF0Y2hbXSA9IHsKPiA+ICsJewo+ID4gKwkJLmNvbXBhdGlibGUgPSAibWFy
+dmVsbCxjcDExMC1pY3UtbnNyIiwKPiA+ICsJfSwKPiA+ICsJe30sCj4gPiArfTsKPiA+ICsKPiA+
+ICBzdGF0aWMgaW50IG12ZWJ1X2ljdV9zdWJzZXRfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2Rldmlj
+ZSAqcGRldikKPiA+ICB7Cj4gPiAgCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbXNpX3BhcmVudF9kbjsK
+PiA+IEBAIC0yMTAsNyArMjI0LDE0IEBAIHN0YXRpYyBpbnQgbXZlYnVfaWN1X3N1YnNldF9wcm9i
+ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQo+ID4gIAlzdHJ1Y3QgaXJxX2RvbWFpbiAq
+aXJxX2RvbWFpbjsKPiA+ICAJc3RydWN0IG12ZWJ1X2ljdSAqaWN1Owo+ID4gIAo+ID4gLQlpY3Ug
+PSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiA+ICsJLyoKPiA+ICsJICogRGV2aWNlIGRhdGEgYmVp
+bmcgcG9wdWxhdGVkIG1lYW5zIHdlIGFyZSB1c2luZyB0aGUgbGVnYWN5IGJpbmRpbmdzLgo+ID4g
+KwkgKiBVc2luZyB0aGUgcGFyZW50IGRldmljZSBkYXRhIG1lYW5zIHdlIGFyZSB1c2luZyB0aGUg
+bmV3IGJpbmRpbmdzLgo+ID4gKwkgKi8KPiA+ICsJaWYgKGRldl9nZXRfZHJ2ZGF0YShkZXYpKQo+
+ID4gKwkJaWN1ID0gZGV2X2dldF9kcnZkYXRhKGRldik7Cj4gPiArCWVsc2UKPiA+ICsJCWljdSA9
+IGRldl9nZXRfZHJ2ZGF0YShkZXYtPnBhcmVudCk7ICAKPiAKPiBXZSBub3cgaGF2ZSBhIHN0YXRp
+YyBrZXkgdG8gZGV0ZXJtaW5lIHdoaWNoIGJpbmRpbmcgdG8gdXNlLCBhbmQgd2UKPiBzaG91bGQg
+Y2VydGFpbmx5IGhhdmUgc2V0IGl0IGNvcnJlY3RseSBieSB0aGUgdGltZSB3ZSBzdGFydCBlbmQg
+dXAKPiBoZXJlLiBXaHkgYXJlbid0IHlvdSB1c2luZyBpdD8KPiAKClN1cmUsIHRoaXMgY29uZGl0
+aW9uIG5vdyBpcyBjaGVja2luZyB0aGUgc3RhdGljIGtleS4KClRoYW5rcywKTWlxdcOobAoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
+cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
+bAo=
