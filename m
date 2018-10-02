@@ -1,39 +1,49 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v7 2/4] clk: davinci: kill davinci_clk_reset_assert/deassert()
-Date: Tue, 2 Oct 2018 17:08:49 +0200
-Message-ID: <CAMRc=McmwWt5OdCxGntDJ-5cxte+Ad2FJcnmWT8NxnBtzP40DA@mail.gmail.com>
-References: <20180621073706.22812-1-brgl@bgdev.pl> <20180621073706.22812-3-brgl@bgdev.pl>
- <160f4225-236c-af54-9693-120e834af578@lechnology.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: spi: Qualcomm Quad SPI(QSPI) documentation
+Date: Tue, 2 Oct 2018 08:15:10 -0700
+Message-ID: <CAD=FV=VArNPwqxdjCo772V7ZmBQuirHSUpaeVvziiKgdUc-meA@mail.gmail.com>
+References: <20181002013142.209751-1-ryandcase@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <160f4225-236c-af54-9693-120e834af578@lechnology.com>
+In-Reply-To: <20181002013142.209751-1-ryandcase@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+To: ryandcase@chromium.org
+Cc: Mark Brown <broonie@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Stephen Boyd <swboyd@chromium.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Trent Piepho <tpiepho@impinj.com>, boris.brezillon@bootlin.com, Girish Mahadevan <girishm@codeaurora.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-pt., 6 lip 2018 o 19:54 David Lechner <david@lechnology.com> napisa=C5=82(a=
-):
+Hi,
+On Mon, Oct 1, 2018 at 6:32 PM Ryan Case <ryandcase@chromium.org> wrote:
 >
-> On 06/21/2018 02:37 AM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > This code is no longer used. Remove it.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: David Lechner <david@lechnology.com>
-> > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> > ---
+> From: Girish Mahadevan <girishm@codeaurora.org>
 >
-> I've picked this up in clk-davinci-4.20, so it will just hang out
-> there for a while until the rest of this series gets merged.
+> Bindings for Qualcomm Quad SPI used on SoCs such as sdm845.
 >
+> Signed-off-by: Girish Mahadevan <girishm@codeaurora.org>
+> Signed-off-by: Ryan Case <ryandcase@chromium.org>
+> ---
+>
+> Changes in v5:
+> - None
+>
+> Changes in v4:
+> - Changed qspi@ to spi@ and device@ to flash@ to match Rob's review
 
-Hi David,
+Rob said that with those changes you could add his reviewed by [1], so
+this patch should have carried:
 
-I don't see this patch in next yet. Is it queued for 4.20?
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-Thanks in advance,
-Bartosz
+I'd also say that usually when changes are minor you can make a
+judgement call and carry previous reviews.  If there's any question
+about whether previous reviews can be carried you can mention it
+somewhere in your changelog.  In this particular case I would have
+called the changes minor / non-controversial so I would have kept
+Stephen and my reviews when posting the new patch.  In any case
+Stephen has already re-provided his review and you can feel free to
+add:
+
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+
+[1] https://lkml.kernel.org/r/20180927204624.GA7072@bogus
