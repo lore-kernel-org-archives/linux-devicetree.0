@@ -1,57 +1,96 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v7 2/4] clk: davinci: kill davinci_clk_reset_assert/deassert()
-Date: Tue, 02 Oct 2018 08:54:47 -0700
-Message-ID: <153849568750.119890.126631906736660249@swboyd.mtv.corp.google.com>
-References: <20180621073706.22812-1-brgl@bgdev.pl> <20180621073706.22812-3-brgl@bgdev.pl>
- <160f4225-236c-af54-9693-120e834af578@lechnology.com>
- <CAMRc=McmwWt5OdCxGntDJ-5cxte+Ad2FJcnmWT8NxnBtzP40DA@mail.gmail.com>
- <159d6244-8077-e21f-36d9-ccb1eeb3ed78@lechnology.com>
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] ASoC: dt-bindings: add dt bindings for
+	adau1977 audio codec
+Date: Tue, 2 Oct 2018 15:06:30 +0300
+Message-ID: <20181002120630.17799-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <159d6244-8077-e21f-36d9-ccb1eeb3ed78@lechnology.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>, David Lechner <david@lechnology.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-remoteproc@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org
+Cc: Alexandru Ardelean <alexandru.ardelean@analog.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting David Lechner (2018-10-02 08:28:44)
-> On 10/02/2018 10:08 AM, Bartosz Golaszewski wrote:
-> > pt., 6 lip 2018 o 19:54 David Lechner <david@lechnology.com> napisa=C5=
-=82(a):
-> >>
-> >> On 06/21/2018 02:37 AM, Bartosz Golaszewski wrote:
-> >>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>>
-> >>> This code is no longer used. Remove it.
-> >>>
-> >>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >>> Reviewed-by: David Lechner <david@lechnology.com>
-> >>> Acked-by: Stephen Boyd <sboyd@kernel.org>
-> >>> ---
-> >>
-> >> I've picked this up in clk-davinci-4.20, so it will just hang out
-> >> there for a while until the rest of this series gets merged.
-> >>
-> > =
+Add device-tree bindings documentation file for ADAU1977 audio codec.
+This describes device-tree fields that are already supported by the driver.
 
-> > Hi David,
-> > =
+The driver supports both I2C AND and SPI, and this doc covers both aspects
+of the DT configuration.
 
-> > I don't see this patch in next yet. Is it queued for 4.20?
-> > =
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
+ .../bindings/sound/adi,adau1977.txt           | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,adau1977.txt
 
-> > Thanks in advance,
-> > Bartosz
-> > =
-
-> =
-
-> This is currently the only clk-davinici patch I have queued, so it
-> might be easier to just resend it and let Stephen/Mike pick it up
-> directly instead of me sending a pull request for one patch.
-> =
-
-
-Ok I applied it directly to clk-next.
+diff --git a/Documentation/devicetree/bindings/sound/adi,adau1977.txt b/Documentation/devicetree/bindings/sound/adi,adau1977.txt
+new file mode 100644
+index 000000000000..e79aeef73f28
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/adi,adau1977.txt
+@@ -0,0 +1,54 @@
++Analog Devices ADAU1977/ADAU1978/ADAU1979
++
++Datasheets:
++http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1977.pdf
++http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1978.pdf
++http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1979.pdf
++
++This driver supports both the I2C and SPI bus.
++
++Required properties:
++ - compatible: Should contain one of the following:
++               "adi,adau1977"
++               "adi,adau1978"
++               "adi,adau1979"
++
++ - AVDD-supply: analog power supply for the device, please consult
++                Documentation/devicetree/bindings/regulator/regulator.txt
++
++Optional properties:
++ - reset-gpio:  the reset pin for the chip, for more details consult
++                Documentation/devicetree/bindings/gpio/gpio.txt
++
++ - DVDD-supply: supply voltage for the digital core, please consult
++                Documentation/devicetree/bindings/regulator/regulator.txt
++
++For required properties on SPI, please consult
++Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Required properties on I2C:
++
++ - reg:         The i2c address. Value depends on the state of ADDR0
++                and ADDR1, as wired in hardware.
++
++Examples:
++
++	adau1977_spi: adau1977@0 {
++		compatible = "adi,adau1977";
++		spi-max-frequency = <600000>;
++
++		AVDD-supply = <&regulator>;
++		DVDD-supply = <&regulator_digital>;
++
++		reset_gpio = <&gpio 10 GPIO_ACTIVE_LOW>;
++	};
++
++	adau1977_i2c: adau1977@11 {
++		compatible = "adi,adau1977";
++		reg = <0x11>;
++
++		AVDD-supply = <&regulator>;
++		DVDD-supply = <&regulator_digital>;
++
++		reset_gpio = <&gpio 10 GPIO_ACTIVE_LOW>;
++	};
+-- 
+2.17.1
