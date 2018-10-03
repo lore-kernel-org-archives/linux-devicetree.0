@@ -1,122 +1,87 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: [PATCH 2/2] ASoC: wm8782: add support for regulators
-Date: Wed,  3 Oct 2018 21:34:36 +0200
-Message-ID: <20181003193436.5281-2-daniel@zonque.org>
-References: <20181003193436.5281-1-daniel@zonque.org>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH v5 7/8] dt-binding: mtd: Document gpio-addr-flash
+Date: Wed,  3 Oct 2018 21:38:58 +0200
+Message-ID: <20181003193859.23928-7-ricardo.ribalda@gmail.com>
+References: <20181003193859.23928-1-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181003193436.5281-1-daniel@zonque.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: tiwai@suse.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Daniel Mack <daniel@zonque.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181003193859.23928-1-ricardo.ribalda@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Lookup regulators for Vdd and Vdda during probe, and enable them when the
-component is linked.
+Add documentation for gpio-addr-flash. This binding allow creating
+flash devices that are paged using GPIOs.
 
-Signed-off-by: Daniel Mack <daniel@zonque.org>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
- sound/soc/codecs/wm8782.c | 63 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+ .../bindings/mtd/gpio-addr-flash.txt          | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
 
-diff --git a/sound/soc/codecs/wm8782.c b/sound/soc/codecs/wm8782.c
-index 317db9a149a7..cf2cdbece122 100644
---- a/sound/soc/codecs/wm8782.c
-+++ b/sound/soc/codecs/wm8782.c
-@@ -20,6 +20,7 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
- #include <linux/device.h>
-+#include <linux/regulator/consumer.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/ac97_codec.h>
-@@ -50,7 +51,51 @@ static struct snd_soc_dai_driver wm8782_dai = {
- 	},
- };
- 
-+/* regulator power supply names */
-+static const char *supply_names[] = {
-+	"Vdda", /* analog supply, 2.7V - 3.6V */
-+	"Vdd",  /* digital supply, 2.7V - 5.5V */
-+};
+diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+new file mode 100644
+index 000000000000..5006a26e1753
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+@@ -0,0 +1,54 @@
++Memory Mapped flash with some address lines addressed using GPIOs
 +
-+struct wm8782_priv {
-+	struct regulator_bulk_data supplies[ARRAY_SIZE(supply_names)];
-+};
++Handle the case where a flash device is mostly addressed using physical
++line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
++to a 2MiB memory range and use the GPIOs to select a particular range.
 +
-+static int wm8782_soc_probe(struct snd_soc_component *component)
-+{
-+	struct wm8782_priv *priv = snd_soc_component_get_drvdata(component);
-+	return regulator_bulk_enable(ARRAY_SIZE(priv->supplies), priv->supplies);
-+}
++ - compatible : "cfi-gpio-addr-flash"
++ - reg : Address range of the mtd chip that is memory mapped, this is,
++   on the previous example 2MiB.
++ - bank-width : Width (in bytes) of the bank.  Equal to the
++   device width times the number of interleaved chips.
++ - gpios: List of GPIO specifiers that will be used to address the MSBs address
++   lines. The order goes from LSB to MSB.
++ - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
++   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
++ - #address-cells, #size-cells : Must be present if the device has
++   sub-nodes representing partitions (see below).  In this case
++   both #address-cells and #size-cells must be equal to 1.
 +
-+static void wm8782_soc_remove(struct snd_soc_component *component)
-+{
-+	struct wm8782_priv *priv = snd_soc_component_get_drvdata(component);
-+	regulator_bulk_disable(ARRAY_SIZE(priv->supplies), priv->supplies);
-+}
++The device tree may optionally contain sub-nodes describing partitions of the
++address space. Check partition.txt for more details.
 +
-+#ifdef CONFIG_PM
-+static int wm8782_soc_suspend(struct snd_soc_component *component)
-+{
-+	struct wm8782_priv *priv = snd_soc_component_get_drvdata(component);
-+	regulator_bulk_disable(ARRAY_SIZE(priv->supplies), priv->supplies);
-+	return 0;
-+}
++Example:
 +
-+static int wm8782_soc_resume(struct snd_soc_component *component)
-+{
-+	struct wm8782_priv *priv = snd_soc_component_get_drvdata(component);
-+	return regulator_bulk_enable(ARRAY_SIZE(priv->supplies), priv->supplies);
-+}
-+#else
-+#define wm8782_soc_suspend      NULL
-+#define wm8782_soc_resume       NULL
-+#endif /* CONFIG_PM */
++	flash@300000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "cfi-gpio-addr-flash";
++		bank-width = <2>;
++		reg = < 0x00300000 0x00200000 >;
++		gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
 +
- static const struct snd_soc_component_driver soc_component_dev_wm8782 = {
-+	.probe			= wm8782_soc_probe,
-+	.remove			= wm8782_soc_remove,
-+	.suspend		= wm8782_soc_suspend,
-+	.resume			= wm8782_soc_resume,
- 	.dapm_widgets		= wm8782_dapm_widgets,
- 	.num_dapm_widgets	= ARRAY_SIZE(wm8782_dapm_widgets),
- 	.dapm_routes		= wm8782_dapm_routes,
-@@ -63,6 +108,24 @@ static const struct snd_soc_component_driver soc_component_dev_wm8782 = {
- 
- static int wm8782_probe(struct platform_device *pdev)
- {
-+	struct device *dev = &pdev->dev;
-+	struct wm8782_priv *priv;
-+	int ret, i;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	for (i = 0; i < ARRAY_SIZE(supply_names); i++)
-+		priv->supplies[i].supply = supply_names[i];
-+
-+	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(priv->supplies),
-+				      priv->supplies);
-+	if (ret < 0)
-+		return ret;
-+
- 	return devm_snd_soc_register_component(&pdev->dev,
- 			&soc_component_dev_wm8782, &wm8782_dai, 1);
- }
++			partition@0 {
++				reg = < 0x0 0x200000 >;
++				label = "Golden Bitstream";
++			};
++			partition@200000 {
++				reg = < 0x200000 0x200000 >;
++				label = "User Bitstream";
++			};
++			partition@400000 {
++				reg = < 0x400000 0x200000 >;
++				label = "V4L Controls";
++			};
++			partition@600000 {
++				reg = < 0x600000 0x200000 >;
++				label = "Production Data";
++			};
++		}
++	} ;
 -- 
-2.17.1
+2.19.0
