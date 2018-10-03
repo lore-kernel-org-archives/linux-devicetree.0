@@ -1,34 +1,57 @@
-Return-Path: <SRS0=NOhz=NG=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH] dt-bindings: timer: renesas, cmt: Document r8a77470 CMT support
-Date: Fri, 26 Oct 2018 09:36:13 +0100
-Message-Id: <1540542973-15752-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=WjQe=MP=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH 5/6] ARM: dts: r8a77470: Add SDHI1 support
+Date: Wed,  3 Oct 2018 12:05:43 +0100
+Message-Id: <1538564744-15590-6-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1538564744-15590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+References: <1538564744-15590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document SoC specific compatible strings for r8a77470. No driver change
-is needed as the fallback strings will activate the right code.
+Althought interface SDHI1 found on the RZ/G1C SoC (a.k.a.
+r8a77470) is compatible with the R-Car Gen3 ones, its OF
+compatibility is restricted to the SoC specific compatible
+string to avoid confusion, as from a more generic perspective
+the RZ/G1C is sharing the most similarities with the R-Car
+Gen2 family of SoCs, and there is a combination of R-Car
+Gen2 compatible SDHI IPs and R-Car Gen3 compatible SDHI IP
+on this specific chip.
+This patch adds the SoC specific part of SDHI1 support, and
+since SDHI1 comes with internal DMA, its DT node looks fairly
+different from SDHI0 and SDHI2.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
-This patch is tested against linux-next
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Reviewed-by: Biju Das <biju.das@bp.renesas.com>
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index 6de27b6..eb602c5 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -28,6 +28,8 @@ Required Properties:
-     - "renesas,r8a7744-cmt1" for the 48-bit CMT1 device included in r8a7744.
-     - "renesas,r8a7745-cmt0" for the 32-bit CMT0 device included in r8a7745.
-     - "renesas,r8a7745-cmt1" for the 48-bit CMT1 device included in r8a7745.
-+    - "renesas,r8a77470-cmt0" for the 32-bit CMT0 device included in r8a77470.
-+    - "renesas,r8a77470-cmt1" for the 48-bit CMT1 device included in r8a77470.
-     - "renesas,r8a7790-cmt0" for the 32-bit CMT0 device included in r8a7790.
-     - "renesas,r8a7790-cmt1" for the 48-bit CMT1 device included in r8a7790.
-     - "renesas,r8a7791-cmt0" for the 32-bit CMT0 device included in r8a7791.
+---
+v2:
+* New patch
+---
+ arch/arm/boot/dts/r8a77470.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/r8a77470.dtsi b/arch/arm/boot/dts/r8a77470.dtsi
+index e01df9c..3e39777 100644
+--- a/arch/arm/boot/dts/r8a77470.dtsi
++++ b/arch/arm/boot/dts/r8a77470.dtsi
+@@ -427,6 +427,17 @@
+ 			status = "disabled";
+ 		};
+ 
++		sdhi1: sd@ee300000 {
++			compatible = "renesas,sdhi-mmc-r8a77470";
++			reg = <0 0xee300000 0 0x2000>;
++			interrupts = <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 313>;
++			max-frequency = <156000000>;
++			power-domains = <&sysc R8A77470_PD_ALWAYS_ON>;
++			resets = <&cpg 313>;
++			status = "disabled";
++		};
++
+ 		sdhi2: sd@ee160000 {
+ 			compatible = "renesas,sdhi-r8a77470",
+ 				     "renesas,rcar-gen2-sdhi";
 -- 
 2.7.4
