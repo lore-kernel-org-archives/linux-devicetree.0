@@ -1,54 +1,51 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH V2 3/5] usb: xhci: tegra: Add genpd support
-Date: Wed, 3 Oct 2018 14:44:10 +0100
-Message-ID: <4f532f84-4991-6916-b53d-036e7e98be97@nvidia.com>
-References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com>
- <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
- <CAPDyKFrfcQX0-QrMKy=E=rif9-SjSfxc+LTMBUn5oqOquRdqRg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Alok Chauhan <alokc@codeaurora.org>
+Subject: [PATCH V5 1/3] dt-bindings: soc: qcom: Remove SPI controller maximum frequency binding
+Date: Wed,  3 Oct 2018 19:14:23 +0530
+Message-ID: <1538574265-30235-2-git-send-email-alokc@codeaurora.org>
+References: <1538574265-30235-1-git-send-email-alokc@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFrfcQX0-QrMKy=E=rif9-SjSfxc+LTMBUn5oqOquRdqRg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <1538574265-30235-1-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
+To: swboyd@chromium.org, dianders@chromium.org, broonie@kernel.org, mka@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Dilip Kota <dkota@codeaurora.org>, Alok Chauhan <alokc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Dilip Kota <dkota@codeaurora.org>
 
-On 03/10/18 10:52, Ulf Hansson wrote:
-> [...]
-> 
->>  static int tegra_xusb_probe(struct platform_device *pdev)
->>  {
->>         struct tegra_xusb_mbox_msg msg;
->> @@ -1038,7 +1095,7 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->>                 goto put_padctl;
->>         }
->>
->> -       if (!pdev->dev.pm_domain) {
->> +       if (!of_property_read_bool(pdev->dev.of_node, "power-domains")) {
-> 
-> I am assuming the original check was because allowing the two
-> power-domains to be (wrongly) modeled as one (or as a
-> master+subdomain)?
+SPI controller driver should maintain the maximum frequency
+of the controller instead of relying on device tree bindings.
+Because maximum frequency is specific property of SPI
+controller.
 
-Actually, the original check was added to prepare for supporting
-multiple power-domains and that once we had proper support in place the
-'pdev->dev.domain' would then be populated. However, given that this is
-not used in the case of multiple power-domains, I simply changed the test.
+Signed-off-by: Dilip Kota <dkota@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+---
+ Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 2 --
+ 1 file changed, 2 deletions(-)
 
-> I was thinking that, perhaps we should add a new OF helper function,
-> where one can get the number of specifiers being listed in the
-> power-domains property. Would that help to easier distinguish what to
-> do when dealing with backwards compatibility?
-
-We could do, but it is not necessary here, because we never had any form
-of genpd support for the Tegra xHCI driver.
-
-Cheers
-Jon
-
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+index ff92e5a..b9d0c21 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+@@ -60,7 +60,6 @@ Required properties:
+ - interrupts:		Must contain SPI controller interrupts.
+ - clock-names:		Must contain "se".
+ - clocks:		Serial engine core clock needed by the device.
+-- spi-max-frequency:	Specifies maximum SPI clock frequency, units - Hz.
+ - #address-cells:	Must be <1> to define a chip select address on
+ 			the SPI bus.
+ - #size-cells:		Must be <0>.
+@@ -112,7 +111,6 @@ Example:
+ 			pinctrl-names = "default", "sleep";
+ 			pinctrl-0 = <&qup_1_spi_2_active>;
+ 			pinctrl-1 = <&qup_1_spi_2_sleep>;
+-			spi-max-frequency = <19200000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 		};
 -- 
-nvpublic
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
