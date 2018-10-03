@@ -1,23 +1,75 @@
-Return-Path: <>
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH 0/2] usb: gadget: udc: renesas_usb3: add support for r8a77990
-Date: Tue,  2 Oct 2018 20:58:25 +0900
-Message-Id: <1538481507-24821-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Return-Path: <SRS0=lJrw=MP=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.bootlin.com ([62.4.15.54]:56552 "EHLO mail.bootlin.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726723AbeJCOcS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 3 Oct 2018 10:32:18 -0400
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v8 2/2] arm64: dts: marvell: add CP110 ICU SEI subnode
+References: <20181003072515.20121-1-miquel.raynal@bootlin.com>
+        <20181003072515.20121-2-miquel.raynal@bootlin.com>
+Date: Wed, 03 Oct 2018 09:45:03 +0200
+In-Reply-To: <20181003072515.20121-2-miquel.raynal@bootlin.com> (Miquel
+        Raynal's message of "Wed, 3 Oct 2018 09:25:15 +0200")
+Message-ID: <87k1mzmq2o.fsf@bootlin.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-To: balbi@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Marc Zyngier <marc.zyngier@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patch set is based on the latest Greg's usb.git / usb-testing branch.
+Hi Miquel,
+ 
+ On mer., oct. 03 2018, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Yoshihiro Shimoda (2):
-  dt-bindings: usb: renesas_usb3: add bindings for r8a77990
-  usb: gadget: udc: renesas_usb3: add support for r8a77990
+> The ICU handles several interrupt groups, each of them being a subpart
+> of the ICU node.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
- Documentation/devicetree/bindings/usb/renesas_usb3.txt |  1 +
- drivers/usb/gadget/udc/renesas_usb3.c                  | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+Applied on mvebu/dt64
+
+Thanks,
+
+Gregory
+
+> ---
+>
+> This patch is one of the two patches remaining from the series:
+> "Add System Error Interrupt support to Armada SoCs".
+>
+> Changes since v7:
+> -----------------
+> * Rebased on top of mvebu/dt64
+>
+>
+>  arch/arm64/boot/dts/marvell/armada-cp110.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> index b1e688e0ce22..b9d9f31e3ba1 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-cp110.dtsi
+> @@ -193,6 +193,14 @@
+>  				interrupt-controller;
+>  				msi-parent = <&gicp>;
+>  			};
+> +
+> +			CP110_LABEL(icu_sei): interrupt-controller@50 {
+> +				compatible = "marvell,cp110-icu-sei";
+> +				reg = <0x50 0x10>;
+> +				#interrupt-cells = <2>;
+> +				interrupt-controller;
+> +				msi-parent = <&sei>;
+> +			};
+>  		};
+>  
+>  		CP110_LABEL(rtc): rtc@284000 {
+> -- 
+> 2.17.1
+>
 
 -- 
-1.9.1
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
