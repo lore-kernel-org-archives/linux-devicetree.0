@@ -1,122 +1,116 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V2 3/5] usb: xhci: tegra: Add genpd support
-Date: Wed, 3 Oct 2018 11:52:13 +0200
-Message-ID: <CAPDyKFrfcQX0-QrMKy=E=rif9-SjSfxc+LTMBUn5oqOquRdqRg@mail.gmail.com>
-References: <1538143910-24400-1-git-send-email-jonathanh@nvidia.com> <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v4 1/2] [media] imx214: device tree binding
+Date: Wed, 3 Oct 2018 13:42:51 +0300
+Message-ID: <20181003104251.ly3uusi4lqbeqize@paasikivi.fi.intel.com>
+References: <20181002140515.16299-1-ricardo.ribalda@gmail.com>
+ <4555006.y1GbRfQLCO@avalon>
+ <CAPybu_02_hMAVWO2r1-t+S60HPaqEtnQzgF-Moxg7Zx+-PGj6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538143910-24400-4-git-send-email-jonathanh@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <CAPybu_02_hMAVWO2r1-t+S60HPaqEtnQzgF-Moxg7Zx+-PGj6A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Thierry Reding <thierry.reding@gmail.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-tegra@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, jacopo@jmondi.org, phdm@macq.eu, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+On Wed, Oct 03, 2018 at 08:23:43AM +0200, Ricardo Ribalda Delgado wrote:
+> Hi Laurent
+> On Tue, Oct 2, 2018 at 10:06 PM Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >
+> > Hi Ricardo,
+> >
+> > Thank you for the patch.
+> >
+> > On Tuesday, 2 October 2018 17:05:15 EEST Ricardo Ribalda Delgado wrote:
+> > > Document bindings for imx214 camera sensor
+> > >
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> > > ---
+> > > Changelog from v3:
+> > >
+> > > Sakari Ailus:
+> > > -s/should/shall/
+> > > -remove clock-lanes
+> > >
+> > > Philippe De Muyter:
+> > > -s/imx274/imx214/
+> > >
+> > > Laurent Pinchart:
+> > > -s/to to/to/
+> > > -Better description of lanes
+> > > -clock-names: Shall be "xclk"
+> > > -Drop clock-freq
+> > >
+> > >  .../devicetree/bindings/media/i2c/imx214.txt  | 53 +++++++++++++++++++
+> > >  1 file changed, 53 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx214.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt
+> > > b/Documentation/devicetree/bindings/media/i2c/imx214.txt new file mode
+> > > 100644
+> > > index 000000000000..421a019ab7f9
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
+> > > @@ -0,0 +1,53 @@
+> > > +* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+> > > +
+> > > +The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor
+> > > with +an active array size of 4224H x 3200V. It is programmable through an
+> > > I2C +interface. The I2C address can be configured to 0x1a or 0x10,
+> > > depending on +how the hardware is wired.
+> > > +Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+> > > +throughput of 1.2Gbps/lane.
+> > > +
+> > > +
+> > > +Required Properties:
+> > > +- compatible: value should be "sony,imx214" for imx214 sensor
+> > > +- reg: I2C bus address of the device
+> > > +- enable-gpios: GPIO descriptor for the enable pin.
+> > > +- vdddo-supply: Chip digital IO regulator (1.8V).
+> > > +- vdda-supply: Chip analog regulator (2.7V).
+> > > +- vddd-supply: Chip digital core regulator (1.12V).
+> > > +- clocks: Reference to the xclk clock.
+> > > +- clock-names:  Shall be "xclk".
+> > > +
+> > > +Optional Properties:
+> > > +- flash-leds: See ../video-interfaces.txt
+> > > +- lens-focus: See ../video-interfaces.txt
+> > > +
+> > > +The imx214 device node shall contain one 'port' child node with
+> > > +an 'endpoint' subnode. For further reading on port node refer to
+> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +
+> > > +Required Properties on endpoint:
+> > > +- data-lanes: check ../video-interfaces.txt
+> >
+> > As I suppose you got access to the datasheet which doesn't appear to be
+> > public, I'll take this as an opportunity to fish for information :-) Does the
+> > sensor support remapping data lanes ? Could you please document that here ?
+> >
+> > You should also state that only the 2 lanes and 4 lanes options are valid, and
+> > what lanes can be used in those cases. I assume that would be <1 2> and <1 2 3
+> > 4>, but if other options are possible, it would be useful to document that.
+> 
+> I wish I had. This is the best documentation that I got access to,
+> after a lot of googling:
+> http://www.ahdsensor.com/downloadRepository/3acdda8d-b531-4a76-a27d-9dd09be980ee.pdf
+> 
+> I never understood this secrecy around datasheets. How the f*&& are we
+> going to buy chips and make desings around them if we cannot get
+> information?! Sorry that was my daily vent
+> 
+> The 2 and 4 lane option was obtained from the functional description
+> of the chip (page 1). The obvious order would be <1 2>, but I have
+> also seen <1 3> in other chips, so I rather not mention it on the
+> devicetree doc.
 
->  static int tegra_xusb_probe(struct platform_device *pdev)
->  {
->         struct tegra_xusb_mbox_msg msg;
-> @@ -1038,7 +1095,7 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->                 goto put_padctl;
->         }
->
-> -       if (!pdev->dev.pm_domain) {
-> +       if (!of_property_read_bool(pdev->dev.of_node, "power-domains")) {
+<1 3> makes sense if lane remapping is supported by the hardware. If it's
+not, you should use a monotonically incrementing sequence.
 
-I am assuming the original check was because allowing the two
-power-domains to be (wrongly) modeled as one (or as a
-master+subdomain)?
-
-I was thinking that, perhaps we should add a new OF helper function,
-where one can get the number of specifiers being listed in the
-power-domains property. Would that help to easier distinguish what to
-do when dealing with backwards compatibility?
-
->                 tegra->host_rst = devm_reset_control_get(&pdev->dev,
->                                                          "xusb_host");
->                 if (IS_ERR(tegra->host_rst)) {
-> @@ -1069,17 +1126,22 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->                                                         tegra->host_clk,
->                                                         tegra->host_rst);
->                 if (err) {
-> +                       tegra_powergate_power_off(TEGRA_POWERGATE_XUSBA);
->                         dev_err(&pdev->dev,
->                                 "failed to enable XUSBC domain: %d\n", err);
-> -                       goto disable_xusba;
-> +                       goto put_padctl;
->                 }
-> +       } else {
-> +               err = tegra_xusb_powerdomain_init(&pdev->dev, tegra);
-> +               if (err)
-> +                       goto put_powerdomains;
->         }
->
->         tegra->supplies = devm_kcalloc(&pdev->dev, tegra->soc->num_supplies,
->                                        sizeof(*tegra->supplies), GFP_KERNEL);
->         if (!tegra->supplies) {
->                 err = -ENOMEM;
-> -               goto disable_xusbc;
-> +               goto put_powerdomains;
->         }
->
->         for (i = 0; i < tegra->soc->num_supplies; i++)
-> @@ -1089,7 +1151,7 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->                                       tegra->supplies);
->         if (err) {
->                 dev_err(&pdev->dev, "failed to get regulators: %d\n", err);
-> -               goto disable_xusbc;
-> +               goto put_powerdomains;
->         }
->
->         for (i = 0; i < tegra->soc->num_types; i++)
-> @@ -1099,7 +1161,7 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->                                    sizeof(*tegra->phys), GFP_KERNEL);
->         if (!tegra->phys) {
->                 err = -ENOMEM;
-> -               goto disable_xusbc;
-> +               goto put_powerdomains;
->         }
->
->         for (i = 0, k = 0; i < tegra->soc->num_types; i++) {
-> @@ -1115,7 +1177,7 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->                                         "failed to get PHY %s: %ld\n", prop,
->                                         PTR_ERR(phy));
->                                 err = PTR_ERR(phy);
-> -                               goto disable_xusbc;
-> +                               goto put_powerdomains;
->                         }
->
->                         tegra->phys[k++] = phy;
-> @@ -1126,7 +1188,7 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->                                     dev_name(&pdev->dev));
->         if (!tegra->hcd) {
->                 err = -ENOMEM;
-> -               goto disable_xusbc;
-> +               goto put_powerdomains;
->         }
->
->         /*
-> @@ -1222,12 +1284,13 @@ static int tegra_xusb_probe(struct platform_device *pdev)
->  disable_rpm:
->         pm_runtime_disable(&pdev->dev);
->         usb_put_hcd(tegra->hcd);
-> -disable_xusbc:
-> -       if (!pdev->dev.pm_domain)
-> +put_powerdomains:
-> +       if (!of_property_read_bool(pdev->dev.of_node, "power-domains")) {
->                 tegra_powergate_power_off(TEGRA_POWERGATE_XUSBC);
-> -disable_xusba:
-> -       if (!pdev->dev.pm_domain)
->                 tegra_powergate_power_off(TEGRA_POWERGATE_XUSBA);
-> +       } else {
-> +               tegra_xusb_powerdomain_remove(&pdev->dev, tegra);
-> +       }
->  put_padctl:
->         tegra_xusb_padctl_put(tegra->padctl);
->         return err;
-
-[...]
-
-Kind regards
-Uffe
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
