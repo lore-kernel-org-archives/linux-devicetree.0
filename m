@@ -1,42 +1,119 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: RE: [PATCH v3 4/6] drivers: clk-qoriq: Add clockgen support for
- lx2160a
-Date: Wed, 3 Oct 2018 14:25:41 +0000
-Message-ID: <VI1PR04MB48006A2701212ADAF1977D94F3E90@VI1PR04MB4800.eurprd04.prod.outlook.com>
-References: <1537747741-6245-1-git-send-email-vabhav.sharma@nxp.com>
- <1537747741-6245-5-git-send-email-vabhav.sharma@nxp.com>
- <153843146463.119890.6551025813220021124@swboyd.mtv.corp.google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v9 05/11] of: base: Add of_get_cpu_state_node() to get idle states for a CPU node
+Date: Wed,  3 Oct 2018 16:38:18 +0200
+Message-ID: <20181003143824.13059-6-ulf.hansson@linaro.org>
+References: <20181003143824.13059-1-ulf.hansson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153843146463.119890.6551025813220021124@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <20181003143824.13059-1-ulf.hansson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@bay>
-Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Varun Sethi <V.Sethi@nxp.com>, Udit Kumar <udit.kumar@nxp.com>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Andy Tang <andy.tang@nxp.com>
+To: "Rafael J . Wysocki" <rjw@rjwysocki.net>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-pm@vger.kernel.org
+Cc: Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogZGV2aWNldHJlZS1vd25l
-ckB2Z2VyLmtlcm5lbC5vcmcgPGRldmljZXRyZWUtb3duZXJAdmdlci5rZXJuZWwub3JnPg0KPiBP
-biBCZWhhbGYgT2YgU3RlcGhlbiBCb3lkDQo+IFNlbnQ6IFR1ZXNkYXksIE9jdG9iZXIgMiwgMjAx
-OCAzOjM0IEFNDQo+IFRvOiBWYWJoYXYgU2hhcm1hIDx2YWJoYXYuc2hhcm1hQG54cC5jb20+OyBh
-cm5kQGFybmRiLmRlOw0KPiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgZGV2aWNldHJlZUB2Z2Vy
-Lmtlcm5lbC5vcmc7DQo+IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBrc3Rld2FydEBsaW51
-eGZvdW5kYXRpb24ub3JnOyBsaW51eC1hcm0tDQo+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-OyBsaW51eC1jbGtAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWwtDQo+IG93bmVyQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IHBtQHZn
-ZXIua2VybmVsLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IG1hcmsucnV0bGFu
-ZEBhcm0uY29tOw0KPiBtdHVycXVldHRlQGJheWxpYnJlLmNvbTsgb3NzQGJ1c2Vycm9yLm5ldDsg
-cmp3QHJqd3lzb2NraS5uZXQ7DQo+IHJvYmgrZHRAa2VybmVsLm9yZzsgc3VkZWVwLmhvbGxhQGFy
-bS5jb207IHZpcmVzaC5rdW1hckBsaW5hcm8ub3JnOw0KPiB3aWxsLmRlYWNvbkBhcm0uY29tOyB5
-YW1hZGEubWFzYWhpcm9Ac29jaW9uZXh0LmNvbQ0KPiBDYzogbGludXhAYXJtbGludXgub3JnLnVr
-OyBWYXJ1biBTZXRoaSA8Vi5TZXRoaUBueHAuY29tPjsgVWRpdCBLdW1hcg0KPiA8dWRpdC5rdW1h
-ckBueHAuY29tPjsgWW9nZXNoIE5hcmF5YW4gR2F1cg0KPiA8eW9nZXNobmFyYXlhbi5nYXVyQG54
-cC5jb20+OyBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPjsgVmFiaGF2DQo+IFNoYXJtYSA8
-dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDQvNl0gZHJp
-dmVyczogY2xrLXFvcmlxOiBBZGQgY2xvY2tnZW4gc3VwcG9ydCBmb3IgbHgyMTYwYQ0KPiANCj4g
-U2FtZSBzdWJqZWN0IGNvbW1lbnQuDQpPaw0KPiANCj4gUXVvdGluZyBWYWJoYXYgU2hhcm1hICgy
-MDE4LTA5LTIzIDE3OjA4OjU5KQ0KPiA+IEZyb206IFlvZ2VzaCBHYXVyIDx5b2dlc2huYXJheWFu
-LmdhdXJAbnhwLmNvbT4NCj4gPg0KPiA+IEFkZCBjbG9ja2dlbiBzdXBwb3J0IGZvciBseDIxNjBh
-Lg0K
+The CPU's idle state nodes are currently parsed at the common cpuidle DT
+library, but also when initializing back-end data for the arch specific CPU
+operations, as in the PSCI driver case.
+
+To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
+the device node for the CPU and the index to the requested idle state node,
+as in-parameters. In case a corresponding idle state node is found, it
+returns the node with the refcount incremented for it, else it returns
+NULL.
+
+Moreover, for ARM, there are two generic methods, to describe the CPU's
+idle states, either via the flattened description through the
+"cpu-idle-states" binding [1] or via the hierarchical layout, using the
+"power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
+take both options into account.
+
+[1]
+Documentation/devicetree/bindings/arm/idle-states.txt
+[2]
+Documentation/devicetree/bindings/arm/psci.txt
+
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Cc: Lina Iyer <ilina@codeaurora.org>
+Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
+Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/of.h |  8 ++++++++
+ 2 files changed, 43 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 74eaedd5b860..bf1d5fa34899 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -424,6 +424,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
+ }
+ EXPORT_SYMBOL(of_cpu_node_to_id);
+ 
++/**
++ * of_get_cpu_state_node - Get CPU's idle state node at the given index
++ *
++ * @cpu_node: The device node for the CPU
++ * @index: The index in the list of the idle states
++ *
++ * Two generic methods can be used to describe a CPU's idle states, either via
++ * a flattened description through the "cpu-idle-states" binding or via the
++ * hierarchical layout, using the "power-domains" and the "domain-idle-states"
++ * bindings. This function check for both and returns the idle state node for
++ * the requested index.
++ *
++ * In case and idle state node is found at index, the refcount incremented for
++ * it, so call of_node_put() on it when done. Returns NULL if not found.
++ */
++struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
++					  int index)
++{
++	struct of_phandle_args args;
++	int err;
++
++	err = of_parse_phandle_with_args(cpu_node, "power-domains",
++					"#power-domain-cells", 0, &args);
++	if (!err) {
++		struct device_node *state_node =
++			of_parse_phandle(args.np, "domain-idle-states", index);
++
++		of_node_put(args.np);
++		return state_node;
++	}
++
++	return of_parse_phandle(cpu_node, "cpu-idle-states", index);
++}
++EXPORT_SYMBOL(of_get_cpu_state_node);
++
+ /**
+  * __of_device_is_compatible() - Check if the node matches given constraints
+  * @device: pointer to node
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 99b0ebf49632..42dae048674c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -353,6 +353,8 @@ extern const void *of_get_property(const struct device_node *node,
+ 				const char *name,
+ 				int *lenp);
+ extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
++extern struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
++						 int index);
+ #define for_each_property_of_node(dn, pp) \
+ 	for (pp = dn->properties; pp != NULL; pp = pp->next)
+ 
+@@ -754,6 +756,12 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
++					int index)
++{
++	return NULL;
++}
++
+ static inline int of_n_addr_cells(struct device_node *np)
+ {
+ 	return 0;
+-- 
+2.17.1
