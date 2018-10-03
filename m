@@ -1,61 +1,118 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [RFC PATCH v2 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Wed, 3 Oct 2018 07:24:23 -0500
-Message-ID: <fef2c612-ac35-126e-669e-335fb3075f64@ti.com>
-References: <20180928182954.25446-1-dmurphy@ti.com>
- <20180928182954.25446-3-dmurphy@ti.com> <20181002072827.GA19677@amd>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v2 08/22] soc/fsl/qbman_portals: add APIs to retrieve the
+ probing status
+Date: Wed, 3 Oct 2018 13:27:34 +0100
+Message-ID: <37ad85d7-6540-60de-6d47-66f57fa3473a@arm.com>
+References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
+ <20180926132247.10971-9-laurentiu.tudor@nxp.com>
+ <CADRPPNTD=SNpSqz=zoLyGP1tvh_xDr5E1NDHF_P0bcSPyx9X1A@mail.gmail.com>
+ <c4ff9977-c730-be48-8046-97da663c5a23@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181002072827.GA19677@amd>
-Content-Language: en-US
+In-Reply-To: <c4ff9977-c730-be48-8046-97da663c5a23@nxp.com>
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Laurentiu Tudor <laurentiu.tudor@nxp.com>, Leo Li <leoyang.li@nxp.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Roy Pledge <roy.pledge@nxp.com>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, David Miller <davem@davemloft.net>, Shawn Guo <shawnguo@kernel.org>, Bharat Bhushan <bharat.bhushan@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello
-
-On 10/02/2018 02:28 AM, Pavel Machek wrote:
-> On Fri 2018-09-28 13:29:47, Dan Murphy wrote:
->> Remove support for the LM3697 LED device
->> from the ti-lmu.  The LM3697 will be supported
->> via a stand alone LED driver.
+On 2018-10-03 11:50 AM, Laurentiu Tudor wrote:
+> Hi Leo,
+> 
+> On 27.09.2018 23:03, Li Yang wrote:
+>> On Wed, Sep 26, 2018 at 8:26 AM <laurentiu.tudor@nxp.com> wrote:
+>>>
+>>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>>
+>>> Add a couple of new APIs to check the probing status of the required
+>>> cpu bound qman and bman portals:
+>>>    'int bman_portals_probed()' and 'int qman_portals_probed()'.
+>>> They return the following values.
+>>>    *  1 if qman/bman portals were all probed correctly
+>>>    *  0 if qman/bman portals were not yet probed
+>>>    * -1 if probing of qman/bman portals failed
+>>> Drivers that use qman/bman portal driver services are required to use
+>>> these APIs before calling any functions exported by these drivers or
+>>> otherwise they will crash the kernel.
+>>> First user will be the dpaa1 ethernet driver, coming in a subsequent
+>>> patch.
+>>>
+>>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>> ---
+>>>    drivers/soc/fsl/qbman/bman_portal.c | 10 ++++++++++
+>>>    drivers/soc/fsl/qbman/qman_portal.c | 10 ++++++++++
+>>>    include/soc/fsl/bman.h              |  8 ++++++++
+>>>    include/soc/fsl/qman.h              |  9 +++++++++
+>>>    4 files changed, 37 insertions(+)
+>>>
+>>> diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+>>> index f9edd28894fd..8048d35de8a2 100644
+>>> --- a/drivers/soc/fsl/qbman/bman_portal.c
+>>> +++ b/drivers/soc/fsl/qbman/bman_portal.c
+>>> @@ -32,6 +32,7 @@
+>>>
+>>>    static struct bman_portal *affine_bportals[NR_CPUS];
+>>>    static struct cpumask portal_cpus;
+>>> +static int __bman_portals_probed;
+>>>    /* protect bman global registers and global data shared among portals */
+>>>    static DEFINE_SPINLOCK(bman_lock);
+>>>
+>>> @@ -85,6 +86,12 @@ static int bman_online_cpu(unsigned int cpu)
+>>>           return 0;
+>>>    }
+>>>
+>>> +int bman_portals_probed(void)
+>>> +{
+>>> +       return __bman_portals_probed;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(bman_portals_probed);
+>>> +
+>>>    static int bman_portal_probe(struct platform_device *pdev)
+>>>    {
+>>>           struct device *dev = &pdev->dev;
+>>> @@ -148,6 +155,7 @@ static int bman_portal_probe(struct platform_device *pdev)
+>>>           spin_lock(&bman_lock);
+>>>           cpu = cpumask_next_zero(-1, &portal_cpus);
+>>>           if (cpu >= nr_cpu_ids) {
+>>> +               __bman_portals_probed = 1;
 >>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>> What if the last CPU is not used for portals?  Is there a hard
+>> requirement that all CPUs need to be used for portal?
 > 
-> NAK, for reasons I explained before. Please add it to the patch so
-> that it does not get applied by mistake. Ouch and AFAICT Rob was not
-> happy with this either.
+> As far as I know, in the current driver design a portal is required for
+> each CPU.
 > 
-> Yes, you are creating new drivers, ok; but that does _not_ mean you
-> should create new binding.
-
-I am copying my comment here on the review of this original binding for
-records
-
-I found the review or at least the reference for the ti-lmu.txt binding.
-
-https://lore.kernel.org/patchwork/patch/764180/
-
-Does not appear that the binding was sent to the device tree mail list.
-(Maybe that email list did not exist in Feb 2017).
-
-Especially with the amount of change that is being submitted in the
-newer patchsets.
-
-<new content>
-Having found this submission and no comments on the review I would think
-we need to take an exception on these bindings.
-
-Dan
-
-
-> 									Pavel
+>> What happens if the last CPU is offline?
 > 
+> Can this happen at probe time?
 
+As I understand things, yes - if you boot with "maxcpus=1", only the 
+boot CPU will be onlined by the kernel, but the others can still be 
+brought up manually by userspace later.
 
--- 
-------------------
-Dan Murphy
+Robin.
+
+> Anyway, I'm not sure that the driver is even aware of cpu hotplug but
+> I'll let Roy comment on this one.
+> 
+>>
+>>>                   /* unassigned portal, skip init */
+>>>                   spin_unlock(&bman_lock);
+>>>                   return 0;
+>>> @@ -173,6 +181,8 @@ static int bman_portal_probe(struct platform_device *pdev)
+>>>    err_ioremap2:
+>>>           memunmap(pcfg->addr_virt_ce);
+>>>    err_ioremap1:
+>>> +        __bman_portals_probed = 1;
+>>> +
+>>
+>> There are other error paths that not covered.
+> 
+> Right, thanks for pointing. On top of that, the assigned value here
+> should be -1 to signal error (instead of 1 which signals success).
+> 
+> ---
+> Best Regards, Laurentiu
+> 
