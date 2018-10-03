@@ -1,62 +1,81 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 2/2] media: platform: Add Aspeed Video Engine driver
-Date: Wed, 3 Oct 2018 15:43:08 -0500
-Message-ID: <ca4757b9-0825-bbbf-b388-0295fd13bad7@linux.vnet.ibm.com>
-References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
- <1537903629-14003-3-git-send-email-eajames@linux.ibm.com>
- <a78d4c7a-ac58-c23d-a683-23dce54be993@xs4all.nl>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [RFC PATCH v2 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Wed, 3 Oct 2018 22:46:40 +0200
+Message-ID: <f4ed1450-6c99-e4c6-0092-f355ab3278f7@gmail.com>
+References: <20180928182954.25446-1-dmurphy@ti.com>
+ <20180928182954.25446-3-dmurphy@ti.com> <20181002072827.GA19677@amd>
+ <fef2c612-ac35-126e-669e-335fb3075f64@ti.com> <20181003130154.GA20418@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a78d4c7a-ac58-c23d-a683-23dce54be993@xs4all.nl>
+In-Reply-To: <20181003130154.GA20418@amd>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 09/28/2018 06:30 AM, Hans Verkuil wrote:
-> On 09/25/2018 09:27 PM, Eddie James wrote:
->> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
->> can capture and compress video data from digital or analog sources. With
->> the Aspeed chip acting a service processor, the Video Engine can capture
->> the host processor graphics output.
+On 10/03/2018 03:01 PM, Pavel Machek wrote:
+> On Wed 2018-10-03 07:24:23, Dan Murphy wrote:
+>> Hello
 >>
->> Add a V4L2 driver to capture video data and compress it to JPEG images.
->> Make the video frames available through the V4L2 streaming interface.
+>> On 10/02/2018 02:28 AM, Pavel Machek wrote:
+>>> On Fri 2018-09-28 13:29:47, Dan Murphy wrote:
+>>>> Remove support for the LM3697 LED device
+>>>> from the ti-lmu.  The LM3697 will be supported
+>>>> via a stand alone LED driver.
+>>>>
+>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>
+>>> NAK, for reasons I explained before. Please add it to the patch so
+>>> that it does not get applied by mistake. Ouch and AFAICT Rob was not
+>>> happy with this either.
+>>>
+>>> Yes, you are creating new drivers, ok; but that does _not_ mean you
+>>> should create new binding.
 >>
->> Signed-off-by: Eddie James <eajames@linux.ibm.com>
-
->> +	}
->> +
->> +	video->height = (bottom - top) + 1;
->> +	video->width = (right - left) + 1;
->> +	size = video->height * video->width;
-> It looks like you can actually determine the blanking width/height and
-> possibly even more detailed information that would be very useful to
-> show with the DV_TIMINGS ioctls.
-
-Hmm. This information is related to the video signal captured from the 
-host. That information has nothing to do with the buffer that is 
-compressed and grabbed by the driver and ultimately provided to 
-userspace. Isn't the timing information meaningless for JPEG frames?
-
-Forgot to include this question in my previous reply, sorry for the 
-additional mail.
-
-Thanks,
-Eddie
-
->
->> +
->> +	/* Don't use direct mode below 1024 x 768 (irqs don't fire) */
->> +	if (size < DIRECT_FETCH_THRESHOLD) {
->> +		aspeed_video_write(video, VE_TGS_0,
->> +				   FIELD_PREP(VE_TGS_FIRST, left - 1) |
->> +				   FIELD_PREP(VE_TGS_LAST, right));
->> +		aspeed_video_write(video, VE_TGS_1,
->> +				   FIELD_PREP(VE_TGS_FIRST, top) |
+>> I am copying my comment here on the review of this original binding for
+>> records
 >>
+>> I found the review or at least the reference for the ti-lmu.txt binding.
+>>
+>> https://lore.kernel.org/patchwork/patch/764180/
+>>
+>> Does not appear that the binding was sent to the device tree mail list.
+>> (Maybe that email list did not exist in Feb 2017).
+> 
+> Quick google shows:
+> 
+> https://lwn.net/Articles/666023/
+
+This link refreshed my memory and allowed me to recall Milo's patch set
+from the end of 2015, and the related discussion. I had an impression
+that I had had some request regarding the bindings but there was no
+follow-up.
+
+I've googled that thread [0] and it proved I was right [1].
+
+>From Milo's messages we can infer that there will be next
+version of the patch set and it appeared but over a year later [2],
+and without the leds-lm3633 driver and related bindings, and without
+drivers/video/backlight/ti-lmu-backlight-core.c.
+
+Patch set gets merged despite dangling DT references.
+
+Dan, I propose you to resend the patch removing the bindings from
+MFD, and explain the rationale in the patch below commit message
+after "---" .
+
+> Now can we stop this nonsense? If there is a problem with the binding,
+> submit patches to fix the problem.
+
+[0]
+https://lore.kernel.org/lkml/1448521025-2796-1-git-send-email-milo.kim@ti.com/
+[1] https://lore.kernel.org/lkml/56656468.8020300@samsung.com/
+[2]
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1341860.html
+
+-- 
+Best regards,
+Jacek Anaszewski
