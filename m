@@ -1,118 +1,103 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v2 08/22] soc/fsl/qbman_portals: add APIs to retrieve the
- probing status
-Date: Wed, 3 Oct 2018 13:27:34 +0100
-Message-ID: <37ad85d7-6540-60de-6d47-66f57fa3473a@arm.com>
-References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
- <20180926132247.10971-9-laurentiu.tudor@nxp.com>
- <CADRPPNTD=SNpSqz=zoLyGP1tvh_xDr5E1NDHF_P0bcSPyx9X1A@mail.gmail.com>
- <c4ff9977-c730-be48-8046-97da663c5a23@nxp.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 04/21] dt-bindings: Add doc for the Ingenic TCU drivers
+Date: Wed, 3 Oct 2018 14:47:21 +0200
+Message-ID: <7c448bfb-b4a6-8a09-db3d-32c829d5ec78@linaro.org>
+References: <5bb49c78.1c69fb81.4b6a9.fb44SMTPIN_ADDED_MISSING@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c4ff9977-c730-be48-8046-97da663c5a23@nxp.com>
-Content-Language: en-GB
+In-Reply-To: <5bb49c78.1c69fb81.4b6a9.fb44SMTPIN_ADDED_MISSING@mx.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurentiu Tudor <laurentiu.tudor@nxp.com>, Leo Li <leoyang.li@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Roy Pledge <roy.pledge@nxp.com>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, David Miller <davem@davemloft.net>, Shawn Guo <shawnguo@kernel.org>, Bharat Bhushan <bharat.bhushan@nxp.com>
+To: Paul Cercueil <paul@crapouillou.net>, robh@kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Guenter Roeck <linux@roeck-us.net>, linux-doc@vger.kernel.org, linux-watchdog@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-mips@linux-mips.org, Stephen Boyd <sboyd@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Lee Jones <lee.jones@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2018-10-03 11:50 AM, Laurentiu Tudor wrote:
-> Hi Leo,
+On 03/10/2018 12:32, Paul Cercueil wrote:
 > 
-> On 27.09.2018 23:03, Li Yang wrote:
->> On Wed, Sep 26, 2018 at 8:26 AM <laurentiu.tudor@nxp.com> wrote:
->>>
->>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->>>
->>> Add a couple of new APIs to check the probing status of the required
->>> cpu bound qman and bman portals:
->>>    'int bman_portals_probed()' and 'int qman_portals_probed()'.
->>> They return the following values.
->>>    *  1 if qman/bman portals were all probed correctly
->>>    *  0 if qman/bman portals were not yet probed
->>>    * -1 if probing of qman/bman portals failed
->>> Drivers that use qman/bman portal driver services are required to use
->>> these APIs before calling any functions exported by these drivers or
->>> otherwise they will crash the kernel.
->>> First user will be the dpaa1 ethernet driver, coming in a subsequent
->>> patch.
->>>
->>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->>> ---
->>>    drivers/soc/fsl/qbman/bman_portal.c | 10 ++++++++++
->>>    drivers/soc/fsl/qbman/qman_portal.c | 10 ++++++++++
->>>    include/soc/fsl/bman.h              |  8 ++++++++
->>>    include/soc/fsl/qman.h              |  9 +++++++++
->>>    4 files changed, 37 insertions(+)
->>>
->>> diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
->>> index f9edd28894fd..8048d35de8a2 100644
->>> --- a/drivers/soc/fsl/qbman/bman_portal.c
->>> +++ b/drivers/soc/fsl/qbman/bman_portal.c
->>> @@ -32,6 +32,7 @@
->>>
->>>    static struct bman_portal *affine_bportals[NR_CPUS];
->>>    static struct cpumask portal_cpus;
->>> +static int __bman_portals_probed;
->>>    /* protect bman global registers and global data shared among portals */
->>>    static DEFINE_SPINLOCK(bman_lock);
->>>
->>> @@ -85,6 +86,12 @@ static int bman_online_cpu(unsigned int cpu)
->>>           return 0;
->>>    }
->>>
->>> +int bman_portals_probed(void)
->>> +{
->>> +       return __bman_portals_probed;
->>> +}
->>> +EXPORT_SYMBOL_GPL(bman_portals_probed);
->>> +
->>>    static int bman_portal_probe(struct platform_device *pdev)
->>>    {
->>>           struct device *dev = &pdev->dev;
->>> @@ -148,6 +155,7 @@ static int bman_portal_probe(struct platform_device *pdev)
->>>           spin_lock(&bman_lock);
->>>           cpu = cpumask_next_zero(-1, &portal_cpus);
->>>           if (cpu >= nr_cpu_ids) {
->>> +               __bman_portals_probed = 1;
->>
->> What if the last CPU is not used for portals?  Is there a hard
->> requirement that all CPUs need to be used for portal?
+> Le 1 oct. 2018 10:48, Daniel Lezcano <daniel.lezcano@linaro.org> a
+> écrit :
+>> 
+>> On 31/07/2018 00:01, Paul Cercueil wrote:
+>> 
+>> [ ... ]
+>> 
+>>>>> +- ingenic,timer-channel: Specifies the TCU channel that
+>>>>> should be used as +  system timer. If not provided, the TCU
+>>>>> channel 0 is used for the system timer. + +-
+>>>>> ingenic,clocksource-channel: Specifies the TCU channel that 
+>>>>> should be used +  as clocksource and sched_clock. It must be
+>>>>> a different channel than the one +  used as system timer. If
+>>>>> not provided, neither a clocksource nor a +  sched_clock is
+>>>>> instantiated.
+>>>> 
+>>>> clocksource and sched_clock are Linux specific and don't belong
+>>>> in DT. You should define properties of the hardware or use
+>>>> existing properties like interrupts or clocks to figure out
+>>>> which channel to use. For example, if some channels don't have
+>>>> an interrupt, then use them for clocksource and not a
+>>>> clockevent. Or you could have timers that run in low-power
+>>>> modes or not. If all the channels are identical, then it 
+>>>> shouldn't matter which ones the OS picks.
+>> 
+>> It can't work in this case because the pmw and the timer driver are
+>> not communicating and the first one can stole a channel to the last
+>> one.
 > 
-> As far as I know, in the current driver design a portal is required for
-> each CPU.
+> In that particular case the timer driver will always request its
+> channels first; with no timer set the system hangs before
+> subsys_initcall, and the PWM driver is a subnode of the timer node,
+> so is probed only after the timer probed.
 > 
->> What happens if the last CPU is offline?
+>>> We already talked about that. All the TCU channels can be used
+>>> for PWM. The problem is I cannot know from the driver's scope
+>>> which channels will be free and which channels will be requested
+>>> for PWM. You suggested that I parse the devicetree for clients,
+>>> and I did that in the V3/V4 patchset. But it only works for
+>>> clients requesting through devicetree, not from platform code or
+>>> even sysfs.
+>>> 
+>>> One thing I can try is to dynamically change the channels the
+>>> system timer and clocksource are using when the current ones are
+>>> requested for PWM. But that sounds hardcore...
+>> 
+>> Yes, it is :/
+>> 
+>> Sorry for letting you wasting time and effort to write an overkill
+>> code not suitable for upstream.
+>> 
+>> A very gross thought, wouldn't be possible to "register" a channel
+>> from the timer driver code in a shared data area (but well
+>> self-encapsulated) and the pwm code will check such channel isn't
+>> in use ?
 > 
-> Can this happen at probe time?
+> Probably, but it's the contrary I need to do. The timer driver code
+> can use any channel, and probes first. The PWM driver code must use
+> specific channels, and probes last. So either the timer driver knows
+> what channels it can't use, thanks to a device property, or it adapts
+> itself when a channel in use is requested for PWM, which is what I
+> tried in v7.
 
-As I understand things, yes - if you boot with "maxcpus=1", only the 
-boot CPU will be onlined by the kernel, but the others can still be 
-brought up manually by userspace later.
+When you say "must use specific channels", where is coming this
+information ?
 
-Robin.
+> I think we could find a way to use a devicetree property that doesn't
+> trigger Rob. That would still be the easiest and cleanest solution.
+> 
+> Maybe "ingenic,reserved-channels-mask", which would contain a mask of
+> channels that can only be used by the timer driver. And what the
+> timer driver does with these channels, would be specific to the
+> implementation and would not appear in the bindings. I hope Rob can
+> work with that.
+> 
+> -Paul
+> 
 
-> Anyway, I'm not sure that the driver is even aware of cpu hotplug but
-> I'll let Roy comment on this one.
-> 
->>
->>>                   /* unassigned portal, skip init */
->>>                   spin_unlock(&bman_lock);
->>>                   return 0;
->>> @@ -173,6 +181,8 @@ static int bman_portal_probe(struct platform_device *pdev)
->>>    err_ioremap2:
->>>           memunmap(pcfg->addr_virt_ce);
->>>    err_ioremap1:
->>> +        __bman_portals_probed = 1;
->>> +
->>
->> There are other error paths that not covered.
-> 
-> Right, thanks for pointing. On top of that, the assigned value here
-> should be -1 to signal error (instead of 1 which signals success).
-> 
-> ---
-> Best Regards, Laurentiu
-> 
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
