@@ -1,120 +1,38 @@
-From: Alok Chauhan <alokc@codeaurora.org>
-Subject: [PATCH V5 2/3] dt-bindings: soc: qcom: GENI SE SPI controller device tree binding
-Date: Wed,  3 Oct 2018 19:14:24 +0530
-Message-ID: <1538574265-30235-3-git-send-email-alokc@codeaurora.org>
-References: <1538574265-30235-1-git-send-email-alokc@codeaurora.org>
+From: Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: RE: [PATCH v3 3/6] drivers: clk-qoriq: increase array size of
+ cmux_to_group
+Date: Wed, 3 Oct 2018 14:25:11 +0000
+Message-ID: <VI1PR04MB48001B1FBCF455D690ACF58DF3E90@VI1PR04MB4800.eurprd04.prod.outlook.com>
+References: <1537747741-6245-1-git-send-email-vabhav.sharma@nxp.com>
+ <1537747741-6245-4-git-send-email-vabhav.sharma@nxp.com>
+ <153843144041.119890.5558230475983572666@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538574265-30235-1-git-send-email-alokc@codeaurora.org>
+In-Reply-To: <153843144041.119890.5558230475983572666@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, dianders@chromium.org, broonie@kernel.org, mka@chromium.org, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Dilip Kota <dkota@codeaurora.org>, Alok Chauhan <alokc@codeaurora.org>
+To: Stephen Boyd <sboyd@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-kernel-owner@vger.kernel.org" <linux-kernel-owner@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@bay>
+Cc: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Varun Sethi <V.Sethi@nxp.com>, Udit Kumar <udit.kumar@nxp.com>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Dilip Kota <dkota@codeaurora.org>
-
-Move GENI SE SPI controller device-tree bindings
-from devicetree/bindings/soc/qcom/qcom,geni-se.txt
-to devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
-
-Signed-off-by: Dilip Kota <dkota@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
----
- .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  | 27 ++-------------
- .../devicetree/bindings/spi/qcom,spi-geni-qcom.txt | 39 ++++++++++++++++++++++
- 2 files changed, 41 insertions(+), 25 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt
-
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-index b9d0c21..dab7ca9 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
-@@ -53,19 +53,8 @@ Required properties:
- - clocks:		Serial engine core clock needed by the device.
- 
- Qualcomm Technologies Inc. GENI Serial Engine based SPI Controller
--
--Required properties:
--- compatible:		Must contain "qcom,geni-spi".
--- reg:			Must contain SPI register location and length.
--- interrupts:		Must contain SPI controller interrupts.
--- clock-names:		Must contain "se".
--- clocks:		Serial engine core clock needed by the device.
--- #address-cells:	Must be <1> to define a chip select address on
--			the SPI bus.
--- #size-cells:		Must be <0>.
--
--SPI slave nodes must be children of the SPI master node and conform to SPI bus
--binding as described in Documentation/devicetree/bindings/spi/spi-bus.txt.
-+node binding is described in
-+Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt.
- 
- Example:
- 	geniqup@8c0000 {
-@@ -102,16 +91,4 @@ Example:
- 			pinctrl-1 = <&qup_1_uart_3_sleep>;
- 		};
- 
--		spi0: spi@a84000 {
--			compatible = "qcom,geni-spi";
--			reg = <0xa84000 0x4000>;
--			interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
--			clock-names = "se";
--			clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
--			pinctrl-names = "default", "sleep";
--			pinctrl-0 = <&qup_1_spi_2_active>;
--			pinctrl-1 = <&qup_1_spi_2_sleep>;
--			#address-cells = <1>;
--			#size-cells = <0>;
--		};
- 	}
-diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt b/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt
-new file mode 100644
-index 0000000..790311a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/qcom,spi-geni-qcom.txt
-@@ -0,0 +1,39 @@
-+GENI based Qualcomm Universal Peripheral (QUP) Serial Peripheral Interface (SPI)
-+
-+The QUP v3 core is a GENI based AHB slave that provides a common data path
-+(an output FIFO and an input FIFO) for serial peripheral interface (SPI)
-+mini-core.
-+
-+SPI in master mode supports up to 50MHz, up to four chip selects, programmable
-+data path from 4 bits to 32 bits and numerous protocol variants.
-+
-+Required properties:
-+- compatible:		Must contain "qcom,geni-spi".
-+- reg:			Must contain SPI register location and length.
-+- interrupts:		Must contain SPI controller interrupts.
-+- clock-names:		Must contain "se".
-+- clocks:		Serial engine core clock needed by the device.
-+- #address-cells:	Must be <1> to define a chip select address on
-+			the SPI bus.
-+- #size-cells:		Must be <0>.
-+
-+SPI Controller nodes must be child of GENI based Qualcomm Universal
-+Peripharal. Please refer GENI based QUP wrapper controller node bindings
-+described in Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt.
-+
-+SPI slave nodes must be children of the SPI master node and conform to SPI bus
-+binding as described in Documentation/devicetree/bindings/spi/spi-bus.txt.
-+
-+Example:
-+	spi0: spi@a84000 {
-+		compatible = "qcom,geni-spi";
-+		reg = <0xa84000 0x4000>;
-+		interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+		clock-names = "se";
-+		clocks = <&clock_gcc GCC_QUPV3_WRAP0_S0_CLK>;
-+		pinctrl-names = "default", "sleep";
-+		pinctrl-0 = <&qup_1_spi_2_active>;
-+		pinctrl-1 = <&qup_1_spi_2_sleep>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3RlcGhlbiBCb3lkIDxz
+Ym95ZEBrZXJuZWwub3JnPg0KPiBTZW50OiBUdWVzZGF5LCBPY3RvYmVyIDIsIDIwMTggMzozNCBB
+TQ0KPiBUbzogVmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNoYXJtYUBueHAuY29tPjsgYXJuZEBhcm5k
+Yi5kZTsNCj4gY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOw0KPiBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsga3N0ZXdhcnRAbGludXhmb3VuZGF0
+aW9uLm9yZzsgbGludXgtYXJtLQ0KPiBrZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGludXgt
+Y2xrQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsLQ0KPiBvd25lckB2Z2VyLmtlcm5lbC5v
+cmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0KPiBwbUB2Z2VyLmtlcm5l
+bC5vcmc7IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNv
+bTsNCj4gbXR1cnF1ZXR0ZUBiYXlsaWJyZS5jb207IG9zc0BidXNlcnJvci5uZXQ7IHJqd0Byand5
+c29ja2kubmV0Ow0KPiByb2JoK2R0QGtlcm5lbC5vcmc7IHN1ZGVlcC5ob2xsYUBhcm0uY29tOyB2
+aXJlc2gua3VtYXJAbGluYXJvLm9yZzsNCj4gd2lsbC5kZWFjb25AYXJtLmNvbTsgeWFtYWRhLm1h
+c2FoaXJvQHNvY2lvbmV4dC5jb20NCj4gQ2M6IGxpbnV4QGFybWxpbnV4Lm9yZy51azsgVmFydW4g
+U2V0aGkgPFYuU2V0aGlAbnhwLmNvbT47IFVkaXQgS3VtYXINCj4gPHVkaXQua3VtYXJAbnhwLmNv
+bT47IFlvZ2VzaCBOYXJheWFuIEdhdXINCj4gPHlvZ2VzaG5hcmF5YW4uZ2F1ckBueHAuY29tPjsg
+VmFiaGF2IFNoYXJtYSA8dmFiaGF2LnNoYXJtYUBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BB
+VENIIHYzIDMvNl0gZHJpdmVyczogY2xrLXFvcmlxOiBpbmNyZWFzZSBhcnJheSBzaXplIG9mDQo+
+IGNtdXhfdG9fZ3JvdXANCj4gDQo+IFN1YmplY3Qgc2hvdWxkIGJlICJjbGs6IHFvcmlxOiBpbmNy
+ZWFzZSBhcnJheSBzaXplIC4uLiINCk9rDQoNCg==
