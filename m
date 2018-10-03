@@ -1,162 +1,49 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/3] ARM: dts: stm32: Add dmas to timer on stm32mp157c
-Date: Wed, 3 Oct 2018 17:11:03 +0200
-Message-ID: <1538579465-7854-2-git-send-email-fabrice.gasnier@st.com>
-References: <1538579465-7854-1-git-send-email-fabrice.gasnier@st.com>
+From: Alan Douglas <adouglas@cadence.com>
+Subject: [PATCH 0/2] phy: cadence: Add driver and dt-bindings for Sierra PHY
+Date: Wed, 3 Oct 2018 17:01:59 +0100
+Message-ID: <1538582519-20957-1-git-send-email-adouglas@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538579465-7854-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.torgue@st.com
-Cc: robh+dt@kernel.org, mcoquelin.stm32@gmail.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, fabrice.gasnier@st.com
+To: kishon@ti.com, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: Alan Douglas <adouglas@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DMAs to enable PWM input capture using STM32 timers on stm32mp157c.
+The Cadence Sierra PHY supports a number of different protocols.  This
+series adds a driver with support for USB3 and PCIe modes.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32mp157c.dtsi | 58 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 58 insertions(+)
+Only one clock frequency is currently supported, so the value of clock
+provided in device tree is ignored.
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 661be94..17a748f 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -98,6 +98,12 @@
- 			reg = <0x40000000 0x400>;
- 			clocks = <&rcc TIM2_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 18 0x400 0x1>,
-+			       <&dmamux1 19 0x400 0x1>,
-+			       <&dmamux1 20 0x400 0x1>,
-+			       <&dmamux1 21 0x400 0x1>,
-+			       <&dmamux1 22 0x400 0x1>;
-+			dma-names = "ch1", "ch2", "ch3", "ch4", "up";
- 			status = "disabled";
- 
- 			pwm {
-@@ -119,6 +125,13 @@
- 			reg = <0x40001000 0x400>;
- 			clocks = <&rcc TIM3_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 23 0x400 0x1>,
-+			       <&dmamux1 24 0x400 0x1>,
-+			       <&dmamux1 25 0x400 0x1>,
-+			       <&dmamux1 26 0x400 0x1>,
-+			       <&dmamux1 27 0x400 0x1>,
-+			       <&dmamux1 28 0x400 0x1>;
-+			dma-names = "ch1", "ch2", "ch3", "ch4", "up", "trig";
- 			status = "disabled";
- 
- 			pwm {
-@@ -140,6 +153,11 @@
- 			reg = <0x40002000 0x400>;
- 			clocks = <&rcc TIM4_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 29 0x400 0x1>,
-+			       <&dmamux1 30 0x400 0x1>,
-+			       <&dmamux1 31 0x400 0x1>,
-+			       <&dmamux1 32 0x400 0x1>;
-+			dma-names = "ch1", "ch2", "ch3", "ch4";
- 			status = "disabled";
- 
- 			pwm {
-@@ -161,6 +179,13 @@
- 			reg = <0x40003000 0x400>;
- 			clocks = <&rcc TIM5_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 55 0x400 0x1>,
-+			       <&dmamux1 56 0x400 0x1>,
-+			       <&dmamux1 57 0x400 0x1>,
-+			       <&dmamux1 58 0x400 0x1>,
-+			       <&dmamux1 59 0x400 0x1>,
-+			       <&dmamux1 60 0x400 0x1>;
-+			dma-names = "ch1", "ch2", "ch3", "ch4", "up", "trig";
- 			status = "disabled";
- 
- 			pwm {
-@@ -182,6 +207,8 @@
- 			reg = <0x40004000 0x400>;
- 			clocks = <&rcc TIM6_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 69 0x400 0x1>;
-+			dma-names = "up";
- 			status = "disabled";
- 
- 			timer@5 {
-@@ -198,6 +225,8 @@
- 			reg = <0x40005000 0x400>;
- 			clocks = <&rcc TIM7_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 70 0x400 0x1>;
-+			dma-names = "up";
- 			status = "disabled";
- 
- 			timer@6 {
-@@ -465,6 +494,15 @@
- 			reg = <0x44000000 0x400>;
- 			clocks = <&rcc TIM1_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 11 0x400 0x1>,
-+			       <&dmamux1 12 0x400 0x1>,
-+			       <&dmamux1 13 0x400 0x1>,
-+			       <&dmamux1 14 0x400 0x1>,
-+			       <&dmamux1 15 0x400 0x1>,
-+			       <&dmamux1 16 0x400 0x1>,
-+			       <&dmamux1 17 0x400 0x1>;
-+			dma-names = "ch1", "ch2", "ch3", "ch4",
-+				    "up", "trig", "com";
- 			status = "disabled";
- 
- 			pwm {
-@@ -486,6 +524,15 @@
- 			reg = <0x44001000 0x400>;
- 			clocks = <&rcc TIM8_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 47 0x400 0x1>,
-+			       <&dmamux1 48 0x400 0x1>,
-+			       <&dmamux1 49 0x400 0x1>,
-+			       <&dmamux1 50 0x400 0x1>,
-+			       <&dmamux1 51 0x400 0x1>,
-+			       <&dmamux1 52 0x400 0x1>,
-+			       <&dmamux1 53 0x400 0x1>;
-+			dma-names = "ch1", "ch2", "ch3", "ch4",
-+				    "up", "trig", "com";
- 			status = "disabled";
- 
- 			pwm {
-@@ -543,6 +590,11 @@
- 			reg = <0x44006000 0x400>;
- 			clocks = <&rcc TIM15_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 105 0x400 0x1>,
-+			       <&dmamux1 106 0x400 0x1>,
-+			       <&dmamux1 107 0x400 0x1>,
-+			       <&dmamux1 108 0x400 0x1>;
-+			dma-names = "ch1", "up", "trig", "com";
- 			status = "disabled";
- 
- 			pwm {
-@@ -564,6 +616,9 @@
- 			reg = <0x44007000 0x400>;
- 			clocks = <&rcc TIM16_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 109 0x400 0x1>,
-+			       <&dmamux1 110 0x400 0x1>;
-+			dma-names = "ch1", "up";
- 			status = "disabled";
- 
- 			pwm {
-@@ -584,6 +639,9 @@
- 			reg = <0x44008000 0x400>;
- 			clocks = <&rcc TIM17_K>;
- 			clock-names = "int";
-+			dmas = <&dmamux1 111 0x400 0x1>,
-+			       <&dmamux1 112 0x400 0x1>;
-+			dma-names = "ch1", "up";
- 			status = "disabled";
- 
- 			pwm {
+Changes since RFC v2:
+* Devicetree bindings modified as suggested by Rob Herring.
+* Tidy up and correction of return paths in probe function.
+
+Changes since RFC v1:
+* Each group of lanes is now treated as a subnode, and a generic PHY
+  device is created for each group.
+* General cleanup based on comments
+* A reset is now required for each subnode.  The complete PHY block
+  is taken out of reset at initial probe, and remains out of reset.
+* Added a binding to allow for hardware configuration of PHY registers
+
+
+Alan Douglas (2):
+  dt-bindings: phy: Document cadence Sierra PHY bindings
+  phy: cadence: Add driver for Sierra PHY
+
+ .../devicetree/bindings/phy/cdns-sierra-phy.txt    |  68 ++++
+ drivers/phy/Kconfig                                |   1 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/cadence/Kconfig                        |   9 +
+ drivers/phy/cadence/Makefile                       |   2 +
+ drivers/phy/cadence/cdns-sierra.c                  | 380 +++++++++++++++++++++
+ 6 files changed, 461 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/cdns-sierra-phy.txt
+ create mode 100644 drivers/phy/cadence/Kconfig
+ create mode 100644 drivers/phy/cadence/Makefile
+ create mode 100644 drivers/phy/cadence/cdns-sierra.c
+
 -- 
-1.9.1
+1.9.0
