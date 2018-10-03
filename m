@@ -1,130 +1,118 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 1/2] [media] imx214: device tree binding
-Date: Wed, 3 Oct 2018 13:47:25 +0300
-Message-ID: <20181003104724.rgguu2gmoegnqspe@paasikivi.fi.intel.com>
-References: <20181002140515.16299-1-ricardo.ribalda@gmail.com>
- <4555006.y1GbRfQLCO@avalon>
- <CAPybu_02_hMAVWO2r1-t+S60HPaqEtnQzgF-Moxg7Zx+-PGj6A@mail.gmail.com>
- <20181003104251.ly3uusi4lqbeqize@paasikivi.fi.intel.com>
+From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Subject: Re: [PATCH v2 08/22] soc/fsl/qbman_portals: add APIs to retrieve the
+ probing status
+Date: Wed, 3 Oct 2018 10:50:46 +0000
+Message-ID: <c4ff9977-c730-be48-8046-97da663c5a23@nxp.com>
+References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
+ <20180926132247.10971-9-laurentiu.tudor@nxp.com>
+ <CADRPPNTD=SNpSqz=zoLyGP1tvh_xDr5E1NDHF_P0bcSPyx9X1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181003104251.ly3uusi4lqbeqize@paasikivi.fi.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, jacopo@jmondi.org, phdm@macq.eu, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CADRPPNTD=SNpSqz=zoLyGP1tvh_xDr5E1NDHF_P0bcSPyx9X1A@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <E2E6A1E9E0788343B9DCD71E8D314255@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Leo Li <leoyang.li@nxp.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bharat Bhushan <bharat.bhushan@nxp.com>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Netdev <netdev@vger.kernel.org>, Roy Pledge <roy.pledge@nxp.com>, lkml <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, David Miller <davem@davemloft.net>, "moderated list:ARM/FREESCALE IMX / MXC ARM
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 03, 2018 at 01:42:51PM +0300, Sakari Ailus wrote:
-> On Wed, Oct 03, 2018 at 08:23:43AM +0200, Ricardo Ribalda Delgado wrote:
-> > Hi Laurent
-> > On Tue, Oct 2, 2018 at 10:06 PM Laurent Pinchart
-> > <laurent.pinchart@ideasonboard.com> wrote:
-> > >
-> > > Hi Ricardo,
-> > >
-> > > Thank you for the patch.
-> > >
-> > > On Tuesday, 2 October 2018 17:05:15 EEST Ricardo Ribalda Delgado wrote:
-> > > > Document bindings for imx214 camera sensor
-> > > >
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> > > > ---
-> > > > Changelog from v3:
-> > > >
-> > > > Sakari Ailus:
-> > > > -s/should/shall/
-> > > > -remove clock-lanes
-> > > >
-> > > > Philippe De Muyter:
-> > > > -s/imx274/imx214/
-> > > >
-> > > > Laurent Pinchart:
-> > > > -s/to to/to/
-> > > > -Better description of lanes
-> > > > -clock-names: Shall be "xclk"
-> > > > -Drop clock-freq
-> > > >
-> > > >  .../devicetree/bindings/media/i2c/imx214.txt  | 53 +++++++++++++++++++
-> > > >  1 file changed, 53 insertions(+)
-> > > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx214.txt
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt
-> > > > b/Documentation/devicetree/bindings/media/i2c/imx214.txt new file mode
-> > > > 100644
-> > > > index 000000000000..421a019ab7f9
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
-> > > > @@ -0,0 +1,53 @@
-> > > > +* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-> > > > +
-> > > > +The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor
-> > > > with +an active array size of 4224H x 3200V. It is programmable through an
-> > > > I2C +interface. The I2C address can be configured to 0x1a or 0x10,
-> > > > depending on +how the hardware is wired.
-> > > > +Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-> > > > +throughput of 1.2Gbps/lane.
-> > > > +
-> > > > +
-> > > > +Required Properties:
-> > > > +- compatible: value should be "sony,imx214" for imx214 sensor
-> > > > +- reg: I2C bus address of the device
-> > > > +- enable-gpios: GPIO descriptor for the enable pin.
-> > > > +- vdddo-supply: Chip digital IO regulator (1.8V).
-> > > > +- vdda-supply: Chip analog regulator (2.7V).
-> > > > +- vddd-supply: Chip digital core regulator (1.12V).
-> > > > +- clocks: Reference to the xclk clock.
-> > > > +- clock-names:  Shall be "xclk".
-> > > > +
-> > > > +Optional Properties:
-> > > > +- flash-leds: See ../video-interfaces.txt
-> > > > +- lens-focus: See ../video-interfaces.txt
-> > > > +
-> > > > +The imx214 device node shall contain one 'port' child node with
-> > > > +an 'endpoint' subnode. For further reading on port node refer to
-> > > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> > > > +
-> > > > +Required Properties on endpoint:
-> > > > +- data-lanes: check ../video-interfaces.txt
-> > >
-> > > As I suppose you got access to the datasheet which doesn't appear to be
-> > > public, I'll take this as an opportunity to fish for information :-) Does the
-> > > sensor support remapping data lanes ? Could you please document that here ?
-> > >
-> > > You should also state that only the 2 lanes and 4 lanes options are valid, and
-> > > what lanes can be used in those cases. I assume that would be <1 2> and <1 2 3
-> > > 4>, but if other options are possible, it would be useful to document that.
-> > 
-> > I wish I had. This is the best documentation that I got access to,
-> > after a lot of googling:
-> > http://www.ahdsensor.com/downloadRepository/3acdda8d-b531-4a76-a27d-9dd09be980ee.pdf
-> > 
-> > I never understood this secrecy around datasheets. How the f*&& are we
-> > going to buy chips and make desings around them if we cannot get
-> > information?! Sorry that was my daily vent
-> > 
-> > The 2 and 4 lane option was obtained from the functional description
-> > of the chip (page 1). The obvious order would be <1 2>, but I have
-> > also seen <1 3> in other chips, so I rather not mention it on the
-> > devicetree doc.
+Hi Leo,
+
+On 27.09.2018 23:03, Li Yang wrote:
+> On Wed, Sep 26, 2018 at 8:26 AM <laurentiu.tudor@nxp.com> wrote:
+>>
+>> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>>
+>> Add a couple of new APIs to check the probing status of the required
+>> cpu bound qman and bman portals:
+>>   'int bman_portals_probed()' and 'int qman_portals_probed()'.
+>> They return the following values.
+>>   *  1 if qman/bman portals were all probed correctly
+>>   *  0 if qman/bman portals were not yet probed
+>>   * -1 if probing of qman/bman portals failed
+>> Drivers that use qman/bman portal driver services are required to use
+>> these APIs before calling any functions exported by these drivers or
+>> otherwise they will crash the kernel.
+>> First user will be the dpaa1 ethernet driver, coming in a subsequent
+>> patch.
+>>
+>> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>> ---
+>>   drivers/soc/fsl/qbman/bman_portal.c | 10 ++++++++++
+>>   drivers/soc/fsl/qbman/qman_portal.c | 10 ++++++++++
+>>   include/soc/fsl/bman.h              |  8 ++++++++
+>>   include/soc/fsl/qman.h              |  9 +++++++++
+>>   4 files changed, 37 insertions(+)
+>>
+>> diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
+>> index f9edd28894fd..8048d35de8a2 100644
+>> --- a/drivers/soc/fsl/qbman/bman_portal.c
+>> +++ b/drivers/soc/fsl/qbman/bman_portal.c
+>> @@ -32,6 +32,7 @@
+>>
+>>   static struct bman_portal *affine_bportals[NR_CPUS];
+>>   static struct cpumask portal_cpus;
+>> +static int __bman_portals_probed;
+>>   /* protect bman global registers and global data shared among portals */
+>>   static DEFINE_SPINLOCK(bman_lock);
+>>
+>> @@ -85,6 +86,12 @@ static int bman_online_cpu(unsigned int cpu)
+>>          return 0;
+>>   }
+>>
+>> +int bman_portals_probed(void)
+>> +{
+>> +       return __bman_portals_probed;
+>> +}
+>> +EXPORT_SYMBOL_GPL(bman_portals_probed);
+>> +
+>>   static int bman_portal_probe(struct platform_device *pdev)
+>>   {
+>>          struct device *dev = &pdev->dev;
+>> @@ -148,6 +155,7 @@ static int bman_portal_probe(struct platform_device *pdev)
+>>          spin_lock(&bman_lock);
+>>          cpu = cpumask_next_zero(-1, &portal_cpus);
+>>          if (cpu >= nr_cpu_ids) {
+>> +               __bman_portals_probed = 1;
 > 
-> <1 3> makes sense if lane remapping is supported by the hardware. If it's
-> not, you should use a monotonically incrementing sequence.
+> What if the last CPU is not used for portals?  Is there a hard
+> requirement that all CPUs need to be used for portal? 
 
-The DT binding documentation states that if lane reordering is not
-supported, monotonically incremented values shall be used. So no need to
-put that here.
+As far as I know, in the current driver design a portal is required for 
+each CPU.
 
-The reader would probably need some hardware documentation for creating a
-board to begin with, and could obtain the information on lane remapping
-support from the datasheet. I think more elaborate documentation in this
-area makes sense for CSI-2 receiver drivers, especially those with multiple
-receivers that can share lanes.
+> What happens if the last CPU is offline?
 
--- 
-Kind regards,
+Can this happen at probe time?
+Anyway, I'm not sure that the driver is even aware of cpu hotplug but 
+I'll let Roy comment on this one.
 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> 
+>>                  /* unassigned portal, skip init */
+>>                  spin_unlock(&bman_lock);
+>>                  return 0;
+>> @@ -173,6 +181,8 @@ static int bman_portal_probe(struct platform_device *pdev)
+>>   err_ioremap2:
+>>          memunmap(pcfg->addr_virt_ce);
+>>   err_ioremap1:
+>> +        __bman_portals_probed = 1;
+>> +
+> 
+> There are other error paths that not covered.
+
+Right, thanks for pointing. On top of that, the assigned value here 
+should be -1 to signal error (instead of 1 which signals success).
+
+---
+Best Regards, Laurentiu
