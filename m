@@ -1,215 +1,149 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver
- for QCS404
-Date: Wed, 3 Oct 2018 11:51:03 +0530
-Message-ID: <20181003062103.GN19792@vkoul-mobl>
-References: <20180921185936.9590-1-vkoul@kernel.org>
- <20180921185936.9590-2-vkoul@kernel.org>
- <153841434099.119890.3912925112860077471@swboyd.mtv.corp.google.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: Re: [PATCH v4 1/2] [media] imx214: device tree binding
+Date: Wed, 3 Oct 2018 08:23:43 +0200
+Message-ID: <CAPybu_02_hMAVWO2r1-t+S60HPaqEtnQzgF-Moxg7Zx+-PGj6A@mail.gmail.com>
+References: <20181002140515.16299-1-ricardo.ribalda@gmail.com> <4555006.y1GbRfQLCO@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <153841434099.119890.3912925112860077471@swboyd.mtv.corp.google.com>
+In-Reply-To: <4555006.y1GbRfQLCO@avalon>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Shefali Jain <shefjain@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, Taniya Das <tdas@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, jacopo@jmondi.org, phdm@macq.eu, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-Thanks for the comments,
-
-On 01-10-18, 10:19, Stephen Boyd wrote:
-> Quoting Vinod Koul (2018-09-21 11:59:36)
-> > From: Shefali Jain <shefjain@codeaurora.org>
-> > 
-> > Add the clocks supported in global clock controller which clock the
-> > peripherals like BLSPs, SDCC, USB, MDSS etc. Register all the clocks
-> > to the clock framework for the clients to be able to request for them.
-> > 
-> > Signed-off-by: Shefali Jain <shefjain@codeaurora.org>
-> > Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> > Co-developed-by: Taniya Das <tdas@codeaurora.org>
-> > Signed-off-by: Anu Ramanathan <anur@codeaurora.org>
-> > [rebase and tidyup for upstream]
-> 
-> Who did the tidying?
-
-both of us :)
-
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Hi Laurent
+On Tue, Oct 2, 2018 at 10:06 PM Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>
+> Hi Ricardo,
+>
+> Thank you for the patch.
+>
+> On Tuesday, 2 October 2018 17:05:15 EEST Ricardo Ribalda Delgado wrote:
+> > Document bindings for imx214 camera sensor
+> >
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 > > ---
-> >  - reg : shall contain base register location and length
-> > diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> > index 064768699fe7..529d84cc7503 100644
-> > --- a/drivers/clk/qcom/Kconfig
-> > +++ b/drivers/clk/qcom/Kconfig
-> > @@ -235,6 +235,14 @@ config MSM_GCC_8998
-> >           Say Y if you want to use peripheral devices such as UART, SPI,
-> >           i2c, USB, UFS, SD/eMMC, PCIe, etc.
-> >  
-> > +config QCS_GCC_404
-> > +       tristate "QCS404 Global Clock Controller"
-> > +       depends on COMMON_CLK_QCOM
-> > +       help
-> > +        Support for the global clock controller on QCS404 devices.
-> > +        Say Y if you want to use peripheral devices such as UART, SPI, I2C,
-> > +        USB, SD/eMMC, PCIe, etc.
-> 
-> It seems to include multimedia display clks and ethernet? Maybe include
-> those too.
-
-Sure will add
-
-> > +#include <linux/kernel.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/clk.h>
-> 
-> Please don't include this.
-
-OK will check if this is required, any reason for not including this?
-
-> > +/* 930MHz configuration */
-> > +static const struct alpha_pll_config gpll3_config = {
-> > +       .l = 48,
-> > +       .alpha = 0x0,
-> > +       .alpha_en_mask = BIT(24),
-> > +       .post_div_mask = 0xf << 8,
-> > +       .post_div_val = 0x1 << 8,
-> > +       .vco_mask = 0x3 << 20,
-> > +       .main_output_mask = 0x1,
-> > +       .config_ctl_val = 0x4001055b,
-> > +};
+> > Changelog from v3:
+> >
+> > Sakari Ailus:
+> > -s/should/shall/
+> > -remove clock-lanes
+> >
+> > Philippe De Muyter:
+> > -s/imx274/imx214/
+> >
+> > Laurent Pinchart:
+> > -s/to to/to/
+> > -Better description of lanes
+> > -clock-names: Shall be "xclk"
+> > -Drop clock-freq
+> >
+> >  .../devicetree/bindings/media/i2c/imx214.txt  | 53 +++++++++++++++++++
+> >  1 file changed, 53 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx214.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt
+> > b/Documentation/devicetree/bindings/media/i2c/imx214.txt new file mode
+> > 100644
+> > index 000000000000..421a019ab7f9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
+> > @@ -0,0 +1,53 @@
+> > +* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
 > > +
-> > +static struct pll_vco gpll3_vco[] = {
-> 
-> const?
-
-sure
-
-> > +static struct clk_branch gcc_pwm1_xo512_clk = {
-> > +       .halt_reg = 0x49004,
-> > +       .halt_check = BRANCH_HALT,
-> > +       .clkr = {
-> > +               .enable_reg = 0x49004,
-> > +               .enable_mask = BIT(0),
-> > +               .hw.init = &(struct clk_init_data){
-> > +                       .name = "gcc_pwm1_xo512_clk",
-> > +                       .ops = &clk_branch2_ops,
-> 
-> Do these pwm clks have a parent clk of the XO?
-
-Yes they do
-
-> > +       [GCC_USB_HS_PHY_CFG_AHB_CLK] = &gcc_usb_hs_phy_cfg_ahb_clk.clkr,
-> > +       [GCC_USB_HS_SYSTEM_CLK] = &gcc_usb_hs_system_clk.clkr,
-> > +       [GFX3D_CLK_SRC] = &gfx3d_clk_src.clkr,
-> > +       [GP1_CLK_SRC] = &gp1_clk_src.clkr,
-> 
-> Why are some of these missing GCC_ prefix?
-
-will add..
-
-> > +static int gcc_qcs404_probe(struct platform_device *pdev)
-> > +{
-> > +       struct regmap *regmap;
-> > +       int ret;
+> > +The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor
+> > with +an active array size of 4224H x 3200V. It is programmable through an
+> > I2C +interface. The I2C address can be configured to 0x1a or 0x10,
+> > depending on +how the hardware is wired.
+> > +Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+> > +throughput of 1.2Gbps/lane.
 > > +
-> > +       ret = qcom_cc_register_board_clk(&pdev->dev,
-> > +                                        "xo_board", "cxo", 19200000);
-> 
-> You shouldn't need to do this. This function is for transitioning DT
-> that doesn't have the board clk in DT to something the driver wants to
-> use, in this case "cxo". So you can either register a fixed factor 1/1
-> clk to do the translation between board and cxo names, or use xo_board
-> as the parent of things that can take crystal.
-
-Okay will modify this. If I go about using xo_board as parent, I would
-need to register that right? FWIW I see the same thing done in gcc-msm8916
-
-> 
-> > +       if (ret)
-> > +               return ret;
 > > +
-> > +       regmap = qcom_cc_map(pdev, &gcc_qcs404_desc);
-> > +       if (IS_ERR(regmap))
-> > +               return PTR_ERR(regmap);
+> > +Required Properties:
+> > +- compatible: value should be "sony,imx214" for imx214 sensor
+> > +- reg: I2C bus address of the device
+> > +- enable-gpios: GPIO descriptor for the enable pin.
+> > +- vdddo-supply: Chip digital IO regulator (1.8V).
+> > +- vdda-supply: Chip analog regulator (2.7V).
+> > +- vddd-supply: Chip digital core regulator (1.12V).
+> > +- clocks: Reference to the xclk clock.
+> > +- clock-names:  Shall be "xclk".
 > > +
-> > +       clk_alpha_pll_configure(&gpll3_out_main, regmap, &gpll3_config);
-> > +       clk_set_rate(apss_ahb_clk_src.clkr.hw.clk, 19200000);
-> 
-> use assigned clock rates from DT please.
+> > +Optional Properties:
+> > +- flash-leds: See ../video-interfaces.txt
+> > +- lens-focus: See ../video-interfaces.txt
+> > +
+> > +The imx214 device node shall contain one 'port' child node with
+> > +an 'endpoint' subnode. For further reading on port node refer to
+> > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > +
+> > +Required Properties on endpoint:
+> > +- data-lanes: check ../video-interfaces.txt
+>
+> As I suppose you got access to the datasheet which doesn't appear to be
+> public, I'll take this as an opportunity to fish for information :-) Does the
+> sensor support remapping data lanes ? Could you please document that here ?
+>
+> You should also state that only the 2 lanes and 4 lanes options are valid, and
+> what lanes can be used in those cases. I assume that would be <1 2> and <1 2 3
+> 4>, but if other options are possible, it would be useful to document that.
 
-ok
+I wish I had. This is the best documentation that I got access to,
+after a lot of googling:
+http://www.ahdsensor.com/downloadRepository/3acdda8d-b531-4a76-a27d-9dd09be980ee.pdf
 
-> > +       clk_prepare_enable(apss_ahb_clk_src.clkr.hw.clk);
-> > +       clk_prepare_enable(gpll0_ao_out_main.clkr.hw.clk);
-> 
-> And these should be marked as critical clocks.
+I never understood this secrecy around datasheets. How the f*&& are we
+going to buy chips and make desings around them if we cannot get
+information?! Sorry that was my daily vent
 
-Okay and how do we go about doing that?
+The 2 and 4 lane option was obtained from the functional description
+of the chip (page 1). The obvious order would be <1 2>, but I have
+also seen <1 3> in other chips, so I rather not mention it on the
+devicetree doc.
 
-> > +#define GCC_USB2A_PHY_SLEEP_CLK                                89
-> > +#define GCC_USB30_MASTER_CLK                           90
-> > +#define GCC_USB30_MOCK_UTMI_CLK                                91
-> > +#define gcc_usb30_sleep_clk                            92
-> > +#define gcc_usb3_phy_aux_clk                           93
-> > +#define gcc_usb3_phy_pipe_clk                          94
-> > +#define gcc_usb_hs_phy_cfg_ahb_clk                     95
-> > +#define gcc_usb_hs_system_clk                          96
-> > +#define gfx3d_clk_src                                  97
-> > +#define gp1_clk_src                                    98
-> > +#define gp2_clk_src                                    99
-> > +#define gp3_clk_src                                    100
-> > +#define gpll0_out_main                                 101
-> > +#define gpll1_out_main                                 102
-> > +#define gpll3_out_main                                 103
-> > +#define gpll4_out_main                                 104
-> > +#define hdmi_app_clk_src                               105
-> > +#define hdmi_pclk_clk_src                              106
-> > +#define mdp_clk_src                                    107
-> > +#define pcie_0_aux_clk_src                             108
-> > +#define pcie_0_pipe_clk_src                            109
-> > +#define pclk0_clk_src                                  110
-> > +#define pdm2_clk_src                                   111
-> > +#define sdcc1_apps_clk_src                             112
-> > +#define sdcc1_ice_core_clk_src                         113
-> > +#define sdcc2_apps_clk_src                             114
-> > +#define usb20_mock_utmi_clk_src                                115
-> > +#define usb30_master_clk_src                           116
-> > +#define usb30_mock_utmi_clk_src                                117
-> > +#define usb3_phy_aux_clk_src                           118
-> > +#define usb_hs_system_clk_src                          119
-> > +#define gpll0_ao_clk_src                               120
-> > +#define wcnss_m_clk                                    121
-> > +#define gcc_usb_hs_inactivity_timers_clk               122
-> 
-> Please capitalize all these macros.
+Thanks a lot for your review :)
 
-Will do
+>
+> With this updated,
+>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> > +- link-frequencies: check ../video-interfaces.txt
+> > +- remote-endpoint: check ../video-interfaces.txt
+> > +
+> > +Example:
+> > +
+> > +     camera_rear@1a {
+> > +             compatible = "sony,imx214";
+> > +             reg = <0x1a>;
+> > +             vdddo-supply = <&pm8994_lvs1>;
+> > +             vddd-supply = <&camera_vddd_1v12>;
+> > +             vdda-supply = <&pm8994_l17>;
+> > +             lens-focus = <&ad5820>;
+> > +             enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> > +             clocks = <&mmcc CAMSS_MCLK0_CLK>;
+> > +             clock-names = "xclk";
+> > +             port {
+> > +                     imx214_ep: endpoint {
+> > +                             data-lanes = <1 2 3 4>;
+> > +                             link-frequencies = /bits/ 64 <480000000>;
+> > +                             remote-endpoint = <&csiphy0_ep>;
+> > +                     };
+> > +             };
+> > +     };
+>
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
 
-> > +#define GCC_GENI_IR_BCR                                        0
-> > +#define GCC_USB_HS_BCR                                 1
-> > +#define GCC_USB2_HS_PHY_ONLY_BCR                       2
-> > +#define GCC_QUSB2_PHY_BCR                              3
-> > +#define GCC_USB_HS_PHY_CFG_AHB_BCR                     4
-> > +#define GCC_USB2A_PHY_BCR                              5
-> > +#define GCC_USB3_PHY_BCR                               6
-> > +#define GCC_USB_30_BCR                                 7
-> > +#define GCC_USB3PHY_PHY_BCR                            8
-> > +#define GCC_PCIE_0_BCR                                 9
-> > +#define GCC_PCIE_0_PHY_BCR                             10
-> > +#define GCC_PCIE_0_LINK_DOWN_BCR                       11
-> > +#define GCC_PCIEPHY_0_PHY_BCR                          12
-> > +#define GCC_EMAC_BCR                                   13
-> 
-> No GDSCs? Ok.
-
-Downstream doesn't seem to have one, will recheck specs.
 
 -- 
-~Vinod
+Ricardo Ribalda
