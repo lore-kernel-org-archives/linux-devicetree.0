@@ -1,81 +1,94 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [RFC PATCH v2 2/9] dt-bindings: ti-lmu: Remove LM3697
-Date: Wed, 3 Oct 2018 22:46:40 +0200
-Message-ID: <f4ed1450-6c99-e4c6-0092-f355ab3278f7@gmail.com>
-References: <20180928182954.25446-1-dmurphy@ti.com>
- <20180928182954.25446-3-dmurphy@ti.com> <20181002072827.GA19677@amd>
- <fef2c612-ac35-126e-669e-335fb3075f64@ti.com> <20181003130154.GA20418@amd>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v5 7/8] dt-binding: mtd: Document gpio-addr-flash
+Date: Wed, 3 Oct 2018 22:59:21 +0200
+Message-ID: <20181003225921.40ab58a7@bbrezillon>
+References: <20181003193859.23928-1-ricardo.ribalda@gmail.com>
+        <20181003193859.23928-7-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181003130154.GA20418@amd>
-Content-Language: en-US
+In-Reply-To: <20181003193859.23928-7-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2018 03:01 PM, Pavel Machek wrote:
-> On Wed 2018-10-03 07:24:23, Dan Murphy wrote:
->> Hello
->>
->> On 10/02/2018 02:28 AM, Pavel Machek wrote:
->>> On Fri 2018-09-28 13:29:47, Dan Murphy wrote:
->>>> Remove support for the LM3697 LED device
->>>> from the ti-lmu.  The LM3697 will be supported
->>>> via a stand alone LED driver.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>
->>> NAK, for reasons I explained before. Please add it to the patch so
->>> that it does not get applied by mistake. Ouch and AFAICT Rob was not
->>> happy with this either.
->>>
->>> Yes, you are creating new drivers, ok; but that does _not_ mean you
->>> should create new binding.
->>
->> I am copying my comment here on the review of this original binding for
->> records
->>
->> I found the review or at least the reference for the ti-lmu.txt binding.
->>
->> https://lore.kernel.org/patchwork/patch/764180/
->>
->> Does not appear that the binding was sent to the device tree mail list.
->> (Maybe that email list did not exist in Feb 2017).
+On Wed,  3 Oct 2018 21:38:58 +0200
+Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> wrote:
+
+> Add documentation for gpio-addr-flash. This binding allow creating
+> flash devices that are paged using GPIOs.
 > 
-> Quick google shows:
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> ---
+>  .../bindings/mtd/gpio-addr-flash.txt          | 54 +++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
 > 
-> https://lwn.net/Articles/666023/
+> diff --git a/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+> new file mode 100644
+> index 000000000000..5006a26e1753
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/gpio-addr-flash.txt
+> @@ -0,0 +1,54 @@
+> +Memory Mapped flash with some address lines addressed using GPIOs
+> +
+> +Handle the case where a flash device is mostly addressed using physical
+> +line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
+> +to a 2MiB memory range and use the GPIOs to select a particular range.
+> +
+> + - compatible : "cfi-gpio-addr-flash"
+> + - reg : Address range of the mtd chip that is memory mapped, this is,
+> +   on the previous example 2MiB.
+> + - bank-width : Width (in bytes) of the bank.  Equal to the
+> +   device width times the number of interleaved chips.
+> + - gpios: List of GPIO specifiers that will be used to address the MSBs address
+> +   lines. The order goes from LSB to MSB.
 
-This link refreshed my memory and allowed me to recall Milo's patch set
-from the end of 2015, and the related discussion. I had an impression
-that I had had some request regarding the bindings but there was no
-follow-up.
+I'd recommend naming the GPIO set (addr-gpios or msb-addr-gpios?), just
+to make things clear.
 
-I've googled that thread [0] and it proved I was right [1].
-
->From Milo's messages we can infer that there will be next
-version of the patch set and it appeared but over a year later [2],
-and without the leds-lm3633 driver and related bindings, and without
-drivers/video/backlight/ti-lmu-backlight-core.c.
-
-Patch set gets merged despite dangling DT references.
-
-Dan, I propose you to resend the patch removing the bindings from
-MFD, and explain the rationale in the patch below commit message
-after "---" .
-
-> Now can we stop this nonsense? If there is a problem with the binding,
-> submit patches to fix the problem.
-
-[0]
-https://lore.kernel.org/lkml/1448521025-2796-1-git-send-email-milo.kim@ti.com/
-[1] https://lore.kernel.org/lkml/56656468.8020300@samsung.com/
-[2]
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1341860.html
-
--- 
-Best regards,
-Jacek Anaszewski
+> + - probe-type : (optional) "cfi_probe", "jedec_probe". How the mtd chip
+> +   is going to be probed. If omitted, assumed to be equal to "cfi_probe".
+> + - #address-cells, #size-cells : Must be present if the device has
+> +   sub-nodes representing partitions (see below).  In this case
+> +   both #address-cells and #size-cells must be equal to 1.
+> +
+> +The device tree may optionally contain sub-nodes describing partitions of the
+> +address space. Check partition.txt for more details.
+> +
+> +Example:
+> +
+> +	flash@300000 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "cfi-gpio-addr-flash";
+> +		bank-width = <2>;
+> +		reg = < 0x00300000 0x00200000 >;
+> +		gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			partition@0 {
+> +				reg = < 0x0 0x200000 >;
+> +				label = "Golden Bitstream";
+> +			};
+> +			partition@200000 {
+> +				reg = < 0x200000 0x200000 >;
+> +				label = "User Bitstream";
+> +			};
+> +			partition@400000 {
+> +				reg = < 0x400000 0x200000 >;
+> +				label = "V4L Controls";
+> +			};
+> +			partition@600000 {
+> +				reg = < 0x600000 0x200000 >;
+> +				label = "Production Data";
+> +			};
+> +		}
+> +	} ;
