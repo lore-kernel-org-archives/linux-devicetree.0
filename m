@@ -1,18 +1,16 @@
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Subject: Re: [PATCH v2 08/22] soc/fsl/qbman_portals: add APIs to retrieve the
- probing status
-Date: Wed, 3 Oct 2018 10:50:46 +0000
-Message-ID: <c4ff9977-c730-be48-8046-97da663c5a23@nxp.com>
-References: <20180926132247.10971-1-laurentiu.tudor@nxp.com>
- <20180926132247.10971-9-laurentiu.tudor@nxp.com>
- <CADRPPNTD=SNpSqz=zoLyGP1tvh_xDr5E1NDHF_P0bcSPyx9X1A@mail.gmail.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [PATCH V4 02/25] mmc: mmci: create generic mmci_dma_setup
+Date: Wed, 3 Oct 2018 13:44:01 +0200
+Message-ID: <a4257361-b6ad-3ccc-1ade-303065744bad@st.com>
+References: <1538482167-13819-1-git-send-email-ludovic.Barre@st.com>
+ <1538482167-13819-3-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFpZKdZ5Oh29_EpgDqpwppa63Uci-FeLHF2KZBxVcO4COQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CADRPPNTD=SNpSqz=zoLyGP1tvh_xDr5E1NDHF_P0bcSPyx9X1A@mail.gmail.com>
+In-Reply-To: <CAPDyKFpZKdZ5Oh29_EpgDqpwppa63Uci-FeLHF2KZBxVcO4COQ@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <E2E6A1E9E0788343B9DCD71E8D314255@eurprd04.prod.outlook.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,97 +20,273 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leo Li <leoyang.li@nxp.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Bharat Bhushan <bharat.bhushan@nxp.com>, Madalin-cristian Bucur <madalin.bucur@nxp.com>, Netdev <netdev@vger.kernel.org>, Roy Pledge <roy.pledge@nxp.com>, lkml <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, David Miller <davem@davemloft.net>, "moderated list:ARM/FREESCALE IMX / MXC ARM
- ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "robin.murphy@arm.com" <robin.murphy@arm.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Loic Pallardy <loic.pallardy@st.com>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Gerald Baeza <gerald.baeza@st.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
+hi Ulf
 
-On 27.09.2018 23:03, Li Yang wrote:
-> On Wed, Sep 26, 2018 at 8:26 AM <laurentiu.tudor@nxp.com> wrote:
+On 10/03/2018 11:22 AM, Ulf Hansson wrote:
+> + Srinivas
+
+for next series, I will add Srinivas
+
+> 
+> [...]
+> 
+>>   #ifdef CONFIG_DMA_ENGINE
+>> -static void mmci_dma_setup(struct mmci_host *host)
+>> +static inline void mmci_dma_release(struct mmci_host *host);
+>> +
+>> +int mmci_dmae_setup(struct mmci_host *host)
+>>   {
+>>          const char *rxname, *txname;
 >>
->> From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+>> @@ -464,8 +485,12 @@ static void mmci_dma_setup(struct mmci_host *host)
+>>                          host->mmc->max_seg_size = max_seg_size;
+>>          }
 >>
->> Add a couple of new APIs to check the probing status of the required
->> cpu bound qman and bman portals:
->>   'int bman_portals_probed()' and 'int qman_portals_probed()'.
->> They return the following values.
->>   *  1 if qman/bman portals were all probed correctly
->>   *  0 if qman/bman portals were not yet probed
->>   * -1 if probing of qman/bman portals failed
->> Drivers that use qman/bman portal driver services are required to use
->> these APIs before calling any functions exported by these drivers or
->> otherwise they will crash the kernel.
->> First user will be the dpaa1 ethernet driver, coming in a subsequent
->> patch.
->>
->> Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
->> ---
->>   drivers/soc/fsl/qbman/bman_portal.c | 10 ++++++++++
->>   drivers/soc/fsl/qbman/qman_portal.c | 10 ++++++++++
->>   include/soc/fsl/bman.h              |  8 ++++++++
->>   include/soc/fsl/qman.h              |  9 +++++++++
->>   4 files changed, 37 insertions(+)
->>
->> diff --git a/drivers/soc/fsl/qbman/bman_portal.c b/drivers/soc/fsl/qbman/bman_portal.c
->> index f9edd28894fd..8048d35de8a2 100644
->> --- a/drivers/soc/fsl/qbman/bman_portal.c
->> +++ b/drivers/soc/fsl/qbman/bman_portal.c
->> @@ -32,6 +32,7 @@
->>
->>   static struct bman_portal *affine_bportals[NR_CPUS];
->>   static struct cpumask portal_cpus;
->> +static int __bman_portals_probed;
->>   /* protect bman global registers and global data shared among portals */
->>   static DEFINE_SPINLOCK(bman_lock);
->>
->> @@ -85,6 +86,12 @@ static int bman_online_cpu(unsigned int cpu)
->>          return 0;
+>> -       if (host->ops && host->ops->dma_setup)
+>> -               host->ops->dma_setup(host);
+>> +       if (!host->dma_tx_channel || !host->dma_rx_channel) {
+>> +               mmci_dma_release(host);
+> 
+> This doesn't look right to me. The existing code allows a tx channel
+> to be used, even if an rx channel could not be setup. It seems
+> reasonable to still allow that.
+
+ok, I could replace by
+if (!host->dma_tx_channel && !host->dma_rx_channel)
+
+> 
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       return 0;
 >>   }
 >>
->> +int bman_portals_probed(void)
->> +{
->> +       return __bman_portals_probed;
->> +}
->> +EXPORT_SYMBOL_GPL(bman_portals_probed);
->> +
->>   static int bman_portal_probe(struct platform_device *pdev)
+>>   /*
+>> @@ -496,7 +521,7 @@ static void mmci_dma_unmap(struct mmci_host *host, struct mmc_data *data)
+>>
+>>   static void mmci_dma_data_error(struct mmci_host *host)
 >>   {
->>          struct device *dev = &pdev->dev;
->> @@ -148,6 +155,7 @@ static int bman_portal_probe(struct platform_device *pdev)
->>          spin_lock(&bman_lock);
->>          cpu = cpumask_next_zero(-1, &portal_cpus);
->>          if (cpu >= nr_cpu_ids) {
->> +               __bman_portals_probed = 1;
+>> -       if (!dma_inprogress(host))
+>> +       if (!host->use_dma || !dma_inprogress(host))
 > 
-> What if the last CPU is not used for portals?  Is there a hard
-> requirement that all CPUs need to be used for portal? 
+> Adding the check for use_dma here seems like an unnecessary check,
+> unless there is a reason for it due to following changes on top. In
+> such case, please make it a part of the patch(es) where it's actually
+> needed.
 
-As far as I know, in the current driver design a portal is required for 
-each CPU.
-
-> What happens if the last CPU is offline?
-
-Can this happen at probe time?
-Anyway, I'm not sure that the driver is even aware of cpu hotplug but 
-I'll let Roy comment on this one.
+In Fact, these checks are add to ensure the pio fallback, if only this 
+patch it's taken. In the next commit of serie, these checks are moved to 
+common functions mmci_dma_XX function.
 
 > 
->>                  /* unassigned portal, skip init */
->>                  spin_unlock(&bman_lock);
->>                  return 0;
->> @@ -173,6 +181,8 @@ static int bman_portal_probe(struct platform_device *pdev)
->>   err_ioremap2:
->>          memunmap(pcfg->addr_virt_ce);
->>   err_ioremap1:
->> +        __bman_portals_probed = 1;
+>>                  return;
+>>
+>>          dev_err(mmc_dev(host->mmc), "error during DMA transfer!\n");
+>> @@ -514,7 +539,7 @@ static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
+>>          u32 status;
+>>          int i;
+>>
+>> -       if (!dma_inprogress(host))
+>> +       if (!host->use_dma || !dma_inprogress(host))
+> 
+> Ditto.
+> 
+>>                  return;
+>>
+>>          /* Wait up to 1ms for the DMA to complete */
+>> @@ -546,6 +571,7 @@ static void mmci_dma_finalize(struct mmci_host *host, struct mmc_data *data)
+>>          if (status & MCI_RXDATAAVLBLMASK) {
+>>                  dev_err(mmc_dev(host->mmc), "buggy DMA detected. Taking evasive action.\n");
+>>                  mmci_dma_release(host);
+>> +               host->use_dma = false;
+>>          }
+>>
+>>          host->dma_in_progress = false;
+>> @@ -640,6 +666,9 @@ static int mmci_dma_start_data(struct mmci_host *host, unsigned int datactrl)
+>>          int ret;
+>>          struct mmc_data *data = host->data;
+>>
+>> +       if (!host->use_dma)
+>> +               return -EINVAL;
 >> +
+>>          ret = mmci_dma_prep_data(host, host->data);
+>>          if (ret)
+>>                  return ret;
+>> @@ -674,6 +703,9 @@ static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>>   {
+>>          struct mmci_host_next *next = &host->next_data;
+>>
+>> +       if (!host->use_dma)
+>> +               return;
+>> +
+>>          WARN_ON(data->host_cookie && data->host_cookie != next->cookie);
+>>          WARN_ON(!data->host_cookie && (next->dma_desc || next->dma_chan));
+>>
+>> @@ -689,7 +721,7 @@ static void mmci_pre_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>>          struct mmc_data *data = mrq->data;
+>>          struct mmci_host_next *nd = &host->next_data;
+>>
+>> -       if (!data)
+>> +       if (!host->use_dma || !data)
+>>                  return;
+>>
+>>          BUG_ON(data->host_cookie);
+>> @@ -707,7 +739,7 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>>          struct mmci_host *host = mmc_priv(mmc);
+>>          struct mmc_data *data = mrq->data;
+>>
+>> -       if (!data || !data->host_cookie)
+>> +       if (!host->use_dma || !data || !data->host_cookie)
 > 
-> There are other error paths that not covered.
+> Ditto.
+> 
+>>                  return;
+>>
+>>          mmci_dma_unmap(host, data);
+>> @@ -735,14 +767,14 @@ static void mmci_post_request(struct mmc_host *mmc, struct mmc_request *mrq,
+>>          }
+>>   }
+>>
+>> +static struct mmci_host_ops mmci_variant_ops = {
+>> +       .dma_setup = mmci_dmae_setup,
+>> +};
+>>   #else
+>>   /* Blank functions if the DMA engine is not available */
+>>   static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
+>>   {
+>>   }
+>> -static inline void mmci_dma_setup(struct mmci_host *host)
+>> -{
+>> -}
+>>
+>>   static inline void mmci_dma_release(struct mmci_host *host)
+>>   {
+>> @@ -765,8 +797,14 @@ static inline int mmci_dma_start_data(struct mmci_host *host, unsigned int datac
+>>   #define mmci_pre_request NULL
+>>   #define mmci_post_request NULL
+>>
+>> +static struct mmci_host_ops mmci_variant_ops = {};
+> 
+> This seems a bit unnecessary. See more about why, below.
+> 
+>>   #endif
+>>
+>> +void mmci_variant_init(struct mmci_host *host)
+> 
+> Looks like you should make mmci_variant_init() internal to mmci.c,
+> thus covert it to static.
+> 
+> Moreover, I suggest you define a "static inline void
+> mmci_variant_init()", when CONFIG_DMA_ENGINE is unset. In that way you
+> don't need to assign host->ops at all for this case.
 
-Right, thanks for pointing. On top of that, the assigned value here 
-should be -1 to signal error (instead of 1 which signals success).
+OK, no problem
 
----
-Best Regards, Laurentiu
+> 
+>> +{
+>> +       host->ops = &mmci_variant_ops;
+>> +}
+>> +
+>>   static void mmci_start_data(struct mmci_host *host, struct mmc_data *data)
+>>   {
+>>          struct variant_data *variant = host->variant;
+>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>> index 01e6c6b..f7fe80f 100644
+>> --- a/drivers/mmc/host/mmci.h
+>> +++ b/drivers/mmc/host/mmci.h
+>> @@ -273,7 +273,7 @@ struct variant_data {
+>>
+>>   /* mmci variant callbacks */
+>>   struct mmci_host_ops {
+>> -       void (*dma_setup)(struct mmci_host *host);
+>> +       int (*dma_setup)(struct mmci_host *host);
+>>   };
+>>
+>>   struct mmci_host_next {
+>> @@ -323,6 +323,7 @@ struct mmci_host {
+>>          unsigned int            size;
+>>          int (*get_rx_fifocnt)(struct mmci_host *h, u32 status, int remain);
+>>
+>> +       u8                      use_dma:1;
+>>   #ifdef CONFIG_DMA_ENGINE
+>>          /* DMA stuff */
+>>          struct dma_chan         *dma_current;
+>> @@ -336,3 +337,7 @@ struct mmci_host {
+>>   #endif
+>>   };
+>>
+>> +void mmci_variant_init(struct mmci_host *host);
+>> +
+>> +int mmci_dmae_setup(struct mmci_host *host);
+>> +
+>> diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
+>> index be3fab5..c8d7592 100644
+>> --- a/drivers/mmc/host/mmci_qcom_dml.c
+>> +++ b/drivers/mmc/host/mmci_qcom_dml.c
+>> @@ -119,19 +119,22 @@ static int of_get_dml_pipe_index(struct device_node *np, const char *name)
+>>   }
+>>
+>>   /* Initialize the dml hardware connected to SD Card controller */
+>> -static void qcom_dma_setup(struct mmci_host *host)
+>> +static int qcom_dma_setup(struct mmci_host *host)
+>>   {
+>>          u32 config;
+>>          void __iomem *base;
+>>          int consumer_id, producer_id;
+>>          struct device_node *np = host->mmc->parent->of_node;
+>>
+>> +       if (mmci_dmae_setup(host))
+>> +               return -EINVAL;
+>> +
+>>          consumer_id = of_get_dml_pipe_index(np, "tx");
+>>          producer_id = of_get_dml_pipe_index(np, "rx");
+>>
+>>          if (producer_id < 0 || consumer_id < 0) {
+>>                  host->variant->qcom_dml = false;
+>> -               return;
+>> +               return -EINVAL;
+> 
+> Seems like you need to call a corresponding dma release function here,
+> before returning the error code.
+> 
+> Probably an "mmci_dmae_release()" needs to be implemented as a part of
+> this change - and then also called from here. This is according to
+> Srinivas recommendations, which means falling back to pio. As a matter
+> of fact this also needs to be clearly stated in the changelog, as you
+> are really also improving the behavior for the Qcom variant.
+
+it's in relation with the comment on
++       if (!host->dma_tx_channel || !host->dma_rx_channel) {
+
+So yes.
+At first sight Qcom need to have a tx and rx channel,
+I will add mmci_dmae_release before returning error code.
+
+> 
+> Unfortunate, I am not able to test this as I don't have the HW (which
+> I thought I had). Perhaps Srinivas can help, once we have something
+> ready for him to test.
+> 
+>>          }
+>>
+>>          base = host->base + DML_OFFSET;
+>> @@ -175,6 +178,8 @@ static void qcom_dma_setup(struct mmci_host *host)
+>>
+>>          /* Make sure dml initialization is finished */
+>>          mb();
+>> +
+>> +       return 0;
+>>   }
+>>
+>>   static struct mmci_host_ops qcom_variant_ops = {
+>> --
+>> 2.7.4
+>>
+> 
+> Kind regards
+> Uffe
+> 
