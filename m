@@ -1,98 +1,76 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 2/2] media: platform: Add Aspeed Video Engine driver
-Date: Thu, 4 Oct 2018 15:02:02 +0200
-Message-ID: <d7c82025-5c9a-6a64-75e0-f0d84d149dde@xs4all.nl>
-References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
- <1537903629-14003-3-git-send-email-eajames@linux.ibm.com>
- <a78d4c7a-ac58-c23d-a683-23dce54be993@xs4all.nl>
- <8ca47483-5347-c40d-0d01-4f13e88f8cde@linux.vnet.ibm.com>
+From: Vabhav Sharma <vabhav.sharma@nxp.com>
+Subject: [PATCH v4 0/6] arm64: dts: NXP: add basic dts file for LX2160A SoC
+Date: Thu,  4 Oct 2018 06:33:45 +0530
+Message-ID: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8ca47483-5347-c40d-0d01-4f13e88f8cde@linux.vnet.ibm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>, Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
+To: sudeep.holla@arm.com, oss@buserror.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com, leoyang.li@nxp.com, shawnguo@kernel.org
+Cc: linux@armlinux.org.uk, V.Sethi@nxp.com, udit.kumar@nxp.com, pankaj.bansal@nxp.com, Vabhav Sharma <vabhav.sharma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/18 22:26, Eddie James wrote:
-> 
-> 
-> On 09/28/2018 06:30 AM, Hans Verkuil wrote:
->> On 09/25/2018 09:27 PM, Eddie James wrote:
->>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
->>> can capture and compress video data from digital or analog sources. With
->>> the Aspeed chip acting a service processor, the Video Engine can capture
->>> the host processor graphics output.
->>>
->>> Add a V4L2 driver to capture video data and compress it to JPEG images.
->>> Make the video frames available through the V4L2 streaming interface.
->>>
->>> +		memcpy(&table[base], aspeed_video_jpeg_dct[i],
->>> +		       sizeof(aspeed_video_jpeg_dct[i]));
->>> +
->>> +		base += ASPEED_VIDEO_JPEG_DCT_SIZE;
->>> +		memcpy(&table[base], aspeed_video_jpeg_quant,
->>> +		       sizeof(aspeed_video_jpeg_quant));
->>> +
->>> +		if (yuv420)
->>> +			table[base + 2] = 0x00220103;
->>> +	}
->>> +}
->>> +
->>> +static void aspeed_video_update(struct aspeed_video *video, u32 reg,
->>> +				unsigned long mask, u32 bits)
->> You probably want to use u32 for the mask.
-> 
-> Using a u32 there results in:
-> 
-> warning: large integer implicitly truncated to unsigned type [-Woverflow]
-> 
-> everywhere I call aspeed_video_update. Not sure what the deal is. Any 
-> suggestions?
+Changes for v4:
+-Updated bindings for lx2160a clockgen and dcfg
+-Modified commit message for lx2160a clockgen changes
+-Updated interrupt property with macro definition
+-Added required enable-method property to each core node with psci value
+-Removed unused node syscon in device tree
+-Removed blank lines in device tree fsl-lx2160a.dtsi
+-Updated uart node compatible sbsa-uart first
+-Added and defined vcc-supply property to temperature sensor node in
+ device tree fsl-lx2160a-rdb.dts
 
-The BIT and GENMASK macros produce unsigned long values.
+Changes for v3:
+-Split clockgen support patch into below two patches:
+- a)Updated array size of cmux_to_group[] with NUM_CMUX+1 to include -1
+ terminator and p4080 cmux_to_group[] array with -1 terminator
+- b)Add clockgen support for lx2160a
 
-I think it is easier if instead of passing a mask (i.e. the bits you want
-to keep) you pass the bits you want to clear and replace with new ones.
+Changes for v2:
+- Modified cmux_to_group array to include -1 terminator
+- Revert NUM_CMUX to original value 8 from 16
+- Remove “As LX2160A is 16 core, so modified value for NUM_CMUX”
+  in patch "[PATCH 3/5] drivers: clk-qoriq: Add clockgen support for
+  lx2160a" description
+- Populated cache properties for L1 and L2 cache in lx2160a device-tree.
+- Removed reboot node from lx2160a device-tree as PSCI is implemented.
+- Removed incorrect comment for timer node interrupt property in
+  lx2160a device-tree.
+- Modified pmu node compatible property from "arm,armv8-pmuv3" to
+  "arm,cortex-a72-pmu" in lx2160a device-tree
+- Non-standard aliases removed in lx2160a rdb board device-tree
+- Updated i2c child nodes to generic name in lx2160a rdb device-tree.
 
-So 'u32 clear' instead of 'unsigned long mask'.
+Changes for v1:
+- Add compatible string for LX2160A clockgen support
+- Add compatible string to initialize LX2160A guts driver
+- Add compatible string for LX2160A support in dt-bindings
+- Add dts file to enable support for LX2160A SoC and LX2160A RDB
+  (Reference design board)
 
-The problem occurs because e.g. ~BIT(10) expands to an unsigned long with
-all bits except for bit 10 set to 1. And passing that to an u32 will obviously
-fail.
+Vabhav Sharma (4):
+  dt-bindings: arm64: add compatible for LX2160A
+  soc/fsl/guts: Add compatible string for LX2160A
+  arm64: dts: add QorIQ LX2160A SoC support
+  arm64: dts: add LX2160ARDB board support
 
-But just passing BIT(10) is fine since that fits in an u32.
+Yogesh Gaur (2):
+  clk: qoriq: increase array size of cmux_to_group
+  clk: qoriq: Add clockgen support for lx2160a
 
-Regards,
+ Documentation/devicetree/bindings/arm/fsl.txt      |  14 +-
+ .../devicetree/bindings/clock/qoriq-clock.txt      |   1 +
+ arch/arm64/boot/dts/freescale/Makefile             |   1 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts  | 100 +++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     | 702 +++++++++++++++++++++
+ drivers/clk/clk-qoriq.c                            |  16 +-
+ drivers/cpufreq/qoriq-cpufreq.c                    |   1 +
+ drivers/soc/fsl/guts.c                             |   1 +
+ 8 files changed, 833 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
 
-	Hans
-
-> 
-> Thanks,
-> Eddie
-> 
->>
->>> +{
->>> +	u32 t = readl(video->base + reg);
->>> +	u32 before = t;
->>> +
->>> +	t &= mask;
->>> +	t |= bits;
->>> +	writel(t, video->base + reg);
->>> +	dev_dbg(video->dev, "update %03x[%08x -> %08x]\n", reg, before,
->>>
->>> +
->>> +module_platform_driver(aspeed_video_driver);
->>> +
->>> +MODULE_DESCRIPTION("ASPEED Video Engine Driver");
->>> +MODULE_AUTHOR("Eddie James");
->>> +MODULE_LICENSE("GPL v2");
->>>
->> Regards,
->>
->> 	Hans
->>
-> 
+-- 
+2.7.4
