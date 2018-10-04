@@ -1,60 +1,67 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: fixed: Use more standard GPIO binding
-Date: Thu, 4 Oct 2018 14:54:27 +0100
-Message-ID: <20181004135427.GE6412@sirena.org.uk>
-References: <20181004090654.32233-1-linus.walleij@linaro.org>
- <20181004105031.GD6412@sirena.org.uk>
- <CACRpkdZZHYSRXktPLHKRc4Afsegn4q3rOmcPMhXh5chC1jH-JQ@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v6 09/10] dt-binding: mtd: Document gpio-addr-flash
+Date: Thu, 4 Oct 2018 16:02:07 +0200
+Message-ID: <20181004160207.3b0403d7@bbrezillon>
+References: <20181004130110.8496-1-ricardo.ribalda@gmail.com>
+        <20181004130110.8496-9-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JBi0ZxuS5uaEhkUZ"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZZHYSRXktPLHKRc4Afsegn4q3rOmcPMhXh5chC1jH-JQ@mail.gmail.com>
+In-Reply-To: <20181004130110.8496-9-ricardo.ribalda@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh@kernel.org>
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu,  4 Oct 2018 15:01:09 +0200
+Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> wrote:
 
---JBi0ZxuS5uaEhkUZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Add documentation for gpio-addr-flash. This binding allow creating
+> flash devices that are paged using GPIOs.
+> 
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> ---
+>  .../bindings/mtd/mtd,gpio-addr-flash.txt      | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
+> new file mode 100644
+> index 000000000000..304a33880f9e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
+> @@ -0,0 +1,25 @@
+> +Memory Mapped flash with some address lines addressed using GPIOs
+> +
+> +Handle the case where a flash device is mostly addressed using physical
+> +line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
+> +to a 2MiB memory range and use the GPIOs to select a particular range.
+> +
+> + - compatible :  must be "mtd,gpio-addr-flash", "cfi-flash";
 
-On Thu, Oct 04, 2018 at 01:32:13PM +0200, Linus Walleij wrote:
-> On Thu, Oct 4, 2018 at 12:50 PM Mark Brown <broonie@kernel.org> wrote:
-> > On Thu, Oct 04, 2018 at 11:06:54AM +0200, Linus Walleij wrote:
+I keep thinking you don't need a specific binding, just add an optional
+addr-gpios property to the generic physmap binding and that should do
+the trick. Plus, "*mtd*,gpio-addr-flash" is a linux-ism, and DT
+bindings should be OS-agnostic.
 
-> > >  Optional properties:
-> > > -- gpio: gpio to use for enable control
-> > > +- gpios: gpio to use for enable control
-
-> > Are we supposed to be able to have just plain gpios as a standards
-> > conforming property or would best practice be to call it enable-gpios or
-> > something?
-
-> Oh I didn't think of that really. The gpio-regulator indeed uses
-> enable-gpio for the same thing. But it complicates things codewise,
-> as the GPIO line is also optional. I'm a bit uncertain, I tend
-> to think just "gpios" is fine when the usage is unambigous. but
-> I don't know what the DT maintainers think.
-
-Right, well from my point of view -gpio is perfectly fine also so... :)
-Rob?
-
---JBi0ZxuS5uaEhkUZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu2G5IACgkQJNaLcl1U
-h9Dv0Af+NqNh4M686tx+nqKIgH4ozAC/fBA1Y2LfN1um8IE7pI7kh21OjK254T0f
-pigDLEN7pTb7gqtFoAqx3mso846aQMR8mDKaxZgsd67P74gFBfQUoYwcLvxVkkWb
-bE/EsXlDYkqbzFZrqWTj2RCPK2Y2ReMQ7eyVxg3UUdh8P7wHelzNa3+kQPx6lcu7
-x624M/EFb9GMrxedKr+jbHKrnB4rPxhXQ1OTXo/ysHmtBB8nWSIdupX/MzcJJwnn
-32orkEn4dnN390oR0lvChpDAD3GeOPevH7vOtbrrCYSWQXjE/QKw15GCuIG0rKEi
-bSnbpLNwpACAgEjmdwOpQasN0rpbEw==
-=604p
------END PGP SIGNATURE-----
-
---JBi0ZxuS5uaEhkUZ--
+> + - reg : Address range of the mtd chip that is memory mapped, this is,
+> +   on the previous example 2MiB.
+> + - addr-gpios: List of GPIO specifiers that will be used to address the MSBs
+> +   address lines. The order goes from LSB to MSB.
+> +
+> +For the rest of the properties, see mtd-physmap.txt.
+> +
+> +The device tree may optionally contain sub-nodes describing partitions of the
+> +address space. Check partition.txt for more details.
+> +
+> +Example:
+> +
+> +	flash@300000 {
+> +		compatible = "mtd,gpio-addr-flash", "cfi-flash";
+> +		bank-width = <2>;
+> +		reg = < 0x00300000 0x00200000 >;
+> +		addr-gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
+> +	} ;
