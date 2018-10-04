@@ -1,67 +1,56 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v6 09/10] dt-binding: mtd: Document gpio-addr-flash
-Date: Thu, 4 Oct 2018 16:02:07 +0200
-Message-ID: <20181004160207.3b0403d7@bbrezillon>
-References: <20181004130110.8496-1-ricardo.ribalda@gmail.com>
-        <20181004130110.8496-9-ricardo.ribalda@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
+Date: Thu, 4 Oct 2018 07:23:19 -0700
+Message-ID: <20181004142319.GA5662@atomide.com>
+References: <20180925144021.GN5662@atomide.com>
+ <20180925175537.GQ5662@atomide.com>
+ <d98aa7c1-5131-34c5-51e5-c7ef57cbc31e@ti.com>
+ <20180926155911.GT5662@atomide.com>
+ <20180926162303.GU5662@atomide.com>
+ <cfc3f1db-9468-ed92-a673-882b51b4dec8@ti.com>
+ <20180926233111.GY5662@atomide.com>
+ <305bf1c3-915d-dac1-95e4-4d32621247e1@ti.com>
+ <20181001163253.GW5662@atomide.com>
+ <ff68a664-aa7a-92b6-b78c-78382f7b0ec1@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004130110.8496-9-ricardo.ribalda@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <ff68a664-aa7a-92b6-b78c-78382f7b0ec1@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  4 Oct 2018 15:01:09 +0200
-Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> wrote:
-
-> Add documentation for gpio-addr-flash. This binding allow creating
-> flash devices that are paged using GPIOs.
+* Keerthy <j-keerthy@ti.com> [181004 04:34]:
+> Apologies for the delay in responding.
 > 
-> Cc: devicetree@vger.kernel.org
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-> ---
->  .../bindings/mtd/mtd,gpio-addr-flash.txt      | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
+> AM437X-GP-EVM: https://pastebin.ubuntu.com/p/m3ybBvH7Qj/
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
-> new file mode 100644
-> index 000000000000..304a33880f9e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
-> @@ -0,0 +1,25 @@
-> +Memory Mapped flash with some address lines addressed using GPIOs
-> +
-> +Handle the case where a flash device is mostly addressed using physical
-> +line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
-> +to a 2MiB memory range and use the GPIOs to select a particular range.
-> +
-> + - compatible :  must be "mtd,gpio-addr-flash", "cfi-flash";
+> Tested for UART/RTCWAKE/TOUCH_WAKE from DS0, apart from the expected
+> gpio warnings all seems fine.
+> 
+> AM335X-BONEBLACK: https://pastebin.ubuntu.com/p/xdsMDS5XtQ/
+> 
+> Tested for rtcwake/UART wake up from DS0. Again except for gpio messages
+> everything else seems to be fine.
 
-I keep thinking you don't need a specific binding, just add an optional
-addr-gpios property to the generic physmap binding and that should do
-the trick. Plus, "*mtd*,gpio-addr-flash" is a linux-ism, and DT
-bindings should be OS-agnostic.
+OK good to hear and thanks for testing again :) I've sent
+a pull request for the ti-sysc driver changes, the dts
+changes for am335x, am437x and dra7 will have to wait until
+v4.21 merge window at this point. Let's plan on having the
+dts changes sit in Linux next for a few weeks right after
+v4.20-rc1.
 
-> + - reg : Address range of the mtd chip that is memory mapped, this is,
-> +   on the previous example 2MiB.
-> + - addr-gpios: List of GPIO specifiers that will be used to address the MSBs
-> +   address lines. The order goes from LSB to MSB.
-> +
-> +For the rest of the properties, see mtd-physmap.txt.
-> +
-> +The device tree may optionally contain sub-nodes describing partitions of the
-> +address space. Check partition.txt for more details.
-> +
-> +Example:
-> +
-> +	flash@300000 {
-> +		compatible = "mtd,gpio-addr-flash", "cfi-flash";
-> +		bank-width = <2>;
-> +		reg = < 0x00300000 0x00200000 >;
-> +		addr-gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
-> +	} ;
+Regards,
+
+Tony
