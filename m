@@ -1,101 +1,104 @@
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: Re: [PATCH V2 2/3] dt-bindings: mmc: sdhci-msm: Add entries for
- passing load values
-Date: Thu, 4 Oct 2018 18:43:17 +0530
-Message-ID: <3bbb160d-6963-ba97-710f-41247cff53b6@codeaurora.org>
-References: <1537424558-17989-1-git-send-email-vbadigan@codeaurora.org>
- <1537424558-17989-3-git-send-email-vbadigan@codeaurora.org>
- <CAE=gft6w_iV+vm=u=ZKNvDLVTHcAO+AR0A9Yg9etTHW8bJy05w@mail.gmail.com>
- <8f26b82c-b966-11d3-4fb6-0137a0a8cd4a@codeaurora.org>
- <CAE=gft52RWSibZRPukRX_L7ACOSUnqHc0FbsoCSvzAr=My-1kA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: [PATCH v2 0/5] net: phy: mscc: add support for VSC8584 and VSC8574 Microsemi quad-port PHYs
+Date: Thu,  4 Oct 2018 15:17:05 +0200
+Message-ID: <20181004131710.14978-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAE=gft52RWSibZRPukRX_L7ACOSUnqHc0FbsoCSvzAr=My-1kA@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Evan Green <evgreen@chromium.org>
-Cc: adrian.hunter@intel.com, Ulf Hansson <ulf.hansson@linaro.org>, robh+dt@kernel.org, linux-mmc@vger.kernel.org, asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayali <sayalil@codeaurora.org>, Doug Anderson <dianders@google.com>, vviswana@codeaurora.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
+Both PHYs are 4-port PHY that are 10/100/1000BASE-T, 100BASE-FX, 1000BASE-X
+and triple-speed copper SFP capable, can communicate with the MAC via
+SGMII, QSGMII or 1000BASE-X, supports downshifting and can set the blinking
+pattern of each of its 4 LEDs, supports SyncE as well as HP Auto-MDIX
+detection.
 
+VSC8574 supports WOL and VSC8584 supports hardware offloading of MACsec.
 
-On 9/22/2018 1:36 AM, Evan Green wrote:
-> On Fri, Sep 21, 2018 at 3:32 AM Veerabhadrarao Badiganti
-> <vbadigan@codeaurora.org> wrote:
->> Hi Evan,
->>
->>
->> On 9/21/2018 5:45 AM, Evan Green wrote:
->>> On Wed, Sep 19, 2018 at 11:24 PM Veerabhadrarao Badiganti
->>> <vbadigan@codeaurora.org> wrote:
->>>> From: Vijay Viswanath <vviswana@codeaurora.org>
->>>>
->>>> The load a particular sdhc controller should request from a regulator
->>>> is device specific and hence each device should individually vote for
->>>> the required load.
->>>>
->>>> Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
->>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->>>> ---
->>>>    Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 6 ++++++
->>>>    1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>> index 502b3b8..3720385 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->>>> @@ -26,6 +26,11 @@ Required properties:
->>>>           "cal"   - reference clock for RCLK delay calibration (optional)
->>>>           "sleep" - sleep clock for RCLK delay calibration (optional)
->>>>
->>>> +Optional properties:
->>>> +- qcom,<supply>-current-level-microamp - specifies load levels for supply during BUS_ON and
->>>> +                                       BUS_OFF states in power irq. Should be specified in
->>>> +                                       pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
->>>> +                                       Units uA.
->>>>    Example:
->>>>
->>>>           sdhc_1: sdhci@f9824900 {
->>>> @@ -37,6 +42,7 @@ Example:
->>>>
->>>>                   vmmc-supply = <&pm8941_l20>;
->>>>                   vqmmc-supply = <&pm8941_s3>;
->>>> +               qcom,vqmmc-current-level-microamp = <200 22000>;
->>>>
->>>>                   pinctrl-names = "default";
->>>>                   pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
->>>> --
->>>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
->>>>
->>> Aren't the regulator load levels pretty coarse? Would it be safe to
->>> say that pretty much all sd/mmc devices need the high powered mode, or
->>> are there really some devices that can get by with LPM all the time?
->>> -Evan
->> The load levels here are min and max supported by the regulator. To
->> cover all devices
->> we do set it to max load. We can't make any assumptions on this,  as
->> peak current may vary
->> from device to device.
-> Hi Veera,
-> If it were up to me, I would just assume all devices need high power
-> mode for BUS_ON and low power mode for BUS_OFF, and skip adding this
-> binding until you actually came up with a device that needed lower
-> power mode for BUS_ON, or high power mode for BUS_OFF (when would that
-> be, anyway?) Are there any actual use cases you've seen that need
-> different values in here?
-> -Evan
+This patch series add support for 10/100/1000BASE-T, SGMII/QSGMII link with
+the MAC, downshifting, HP Auto-MDIX detection and blinking pattern for
+their 4 LEDs.
 
-Hi Evan,
-With the present implementation if these load values are not supplied in 
-dt, its not setting
-any load at all. Without setting  load, I'm observing CRC/timeout/tuning 
-errors.
-I can update the code to fallback to default values when these are not 
-supplied in dt, but these values
-will be different from SD card and eMMC devices.
-So, this dt binding is needed.
+They have also an internal Intel 8051 microcontroller whose firmware needs
+to be patched when the PHY is reset. If the 8051's firmware has the
+expected CRC, its patching can be skipped. The microcontroller can be
+accessed from any port of the PHY, though the CRC function can only be done
+through the PHY that is the base PHY of the package (internal address 0)
+due to a limitation of the firmware.
 
-Thanks
-Veera
+The GPIO register bank is a set of registers that are common to all PHYs in
+the package. So any modification in any register of this bank affects all
+PHYs of the package.
+
+If the PHYs haven't been reset before booting the Linux kernel and were
+configured to use interrupts for e.g. link status updates, it is required
+to clear the interrupts mask register of all PHYs before being able to use
+interrupts with any PHY. The first PHY of the package that will be init
+will take care of clearing all PHYs interrupts mask registers. Thus, we
+need to keep track of the init sequence in the package, if it's already
+been done or if it's to be done.
+
+Most of the init sequence of a PHY of the package is common to all PHYs in
+the package, thus we use the SMI broadcast feature which enables us to
+propagate a write in one register of one PHY to all PHYs in the same
+package.
+
+We also introduce a new development board called PCB120 which exists in
+variants for VSC8584 and VSC8574 (and that's the only difference to the
+best of my knowledge).
+
+I suggest patches 1 to 3 go through net tree and patches 4 and 5 go
+through MIPS tree. Patches going through net tree and those going through
+MIPS tree do not depend on one another.
+
+This patch series depends on two patch series though:
+"mscc: ocelot: add support for SerDes muxing configuration"
+(https://lore.kernel.org/lkml/20181004122208.32272-1-quentin.schulz@bootlin.com/)
+"net: phy: mscc: various improvements to Microsemi PHY driver"
+(https://lore.kernel.org/lkml/20181004124728.9821-1-quentin.schulz@bootlin.com/)
+
+Thanks,
+Quentin
+
+v2:
+  - add reviewed-by,
+  - create phy_base_write/read functions to replace ugly
+  __mdiobus_write/read,
+  - add a base_addr variable in the priv structure of the phy driver to
+  store the MDIO address of the base PHY in the package,
+  - use this base_addr everywhere in the driver in lieu of passing the pair
+  (mii_bus, int phy_addr) to each function,
+  - add a mutex_is_locked() check in writes and read within the
+  config_init function,
+  - specify that broadcasting feature is impacting PHYs in the same package
+  only and not accross the whole MDIO bus,
+  - remove patch that introduced a config_pre_init function pointer to be
+  set in the probe function depending on the probed PHY and used in the
+  config_init function, instead, check the matched PHY in config_init to
+  call the appropriate config_pre_init function,
+  - migrate the multiple constants writes to an iteration over an array of
+  constants,
+  - move pinctrl DT node for PHY interrupt to the board DTS,
+  - rename the pinctrl DT from the obscure gpio4 to phy_int_pins,
+
+Quentin Schulz (5):
+  dt-bindings: net: vsc8531: add two additional LED modes for VSC8584
+  net: phy: mscc: add support for VSC8584 PHY
+  net: phy: mscc: add support for VSC8574 PHY
+  MIPS: mscc: add DT for Ocelot PCB120
+  MIPS: mscc: add PCB120 to the ocelot fitImage
+
+ arch/mips/boot/dts/mscc/Makefile              |    2 +-
+ arch/mips/boot/dts/mscc/ocelot_pcb120.dts     |  107 ++
+ arch/mips/generic/Kconfig                     |    6 +-
+ arch/mips/generic/Platform                    |    2 +-
+ ...ocelot_pcb123.its.S => board-ocelot.its.S} |   17 +
+ drivers/net/phy/mscc.c                        | 1065 +++++++++++++++++
+ include/dt-bindings/net/mscc-phy-vsc8531.h    |    2 +
+ 7 files changed, 1196 insertions(+), 5 deletions(-)
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb120.dts
+ rename arch/mips/generic/{board-ocelot_pcb123.its.S => board-ocelot.its.S} (55%)
+
+-- 
+2.17.1
