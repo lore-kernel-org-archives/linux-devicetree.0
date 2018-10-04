@@ -1,53 +1,107 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v3 0/4] drivers: soc: xilinx: Add support for ZynqMP power domain driver
-Date: Thu, 4 Oct 2018 14:23:37 -0700
-Message-ID: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
+From: Jolly Shah <JOLLYS@xilinx.com>
+Subject: RE: [PATCH v2 1/3] dt-bindings: power: Add ZynqMP power domain
+ bindings
+Date: Thu, 4 Oct 2018 21:26:02 +0000
+Message-ID: <CY1PR02MB21389329CFE7985FD31179ADB8EA0@CY1PR02MB2138.namprd02.prod.outlook.com>
+References: <1534447304-12919-1-git-send-email-jollys@xilinx.com>
+ <1534447304-12919-2-git-send-email-jollys@xilinx.com>
+ <20180820194628.GA26783@bogus>
+ <CY1PR02MB2138C05E97C1EFAEA921CB5CB81A0@CY1PR02MB2138.namprd02.prod.outlook.com>
+ <CAL_JsqJOz_z9dHcG5dfx=UTXQMaLTQKBPu+vTrTOt=sdAabqSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJOz_z9dHcG5dfx=UTXQMaLTQKBPu+vTrTOt=sdAabqSw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sean Wang <sean.wang@mediatek.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The zynqmp power domain driver communicates the usage requirements
-for logical power domains / devices to the platform FW.
-FW is responsible for choosing appropriate power states,
-taking Linux' usage information into account.
-
-This patch series is based on top of Xilinx firmware patch set:
-https://patchwork.kernel.org/cover/10555405/
-
-v3:
- - Changed binding to have FW node as a power controller as suggested by Rob
- - Updated FW driver to register it as mfd child devices from firmware probe
- - Move bindings location as suggested
-
-v2:
- - Rebased on top of latest firmware driver patch series
- - Updated driver name from zynqmp-genpd to zynqmp-power-controller
- - Updated device tree bindings to move power controller node under firmware node
-
-Jolly Shah (1):
-  drivers: soc: xilinx: Add ZynqMP power domain driver
-
-Rajan Vaja (3):
-  dt-bindings: power: Add ZynqMP power domain bindings
-  firmware: xilinx: Add APIs to control node status/power
-  firmware: xilinx: Add node IDs for zynqmp firmware
-
- .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 ++
- drivers/firmware/xilinx/Kconfig                    |   1 +
- drivers/firmware/xilinx/zynqmp.c                   |  73 ++++
- drivers/soc/xilinx/Kconfig                         |   9 +
- drivers/soc/xilinx/Makefile                        |   2 +
- drivers/soc/xilinx/zynqmp_pm_domains.c             | 403 +++++++++++++++++++++
- include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 ++
- include/linux/firmware/xlnx-zynqmp.h               |  98 +++++
- 8 files changed, 659 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 drivers/soc/xilinx/zynqmp_pm_domains.c
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
-
--- 
-2.7.4
+SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
+aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIg
+MjUsIDIwMTggOToxNSBBTQ0KPiBUbzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+DQo+
+IENjOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQW5keSBHcm9z
+cw0KPiA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
+b3JnPjsgR2VlcnQNCj4gVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IEJq
+b3JuIEFuZGVyc3Nvbg0KPiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+OyBTZWFuIFdhbmcg
+PHNlYW4ud2FuZ0BtZWRpYXRlay5jb20+Ow0KPiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dz
+a2lAc2Ftc3VuZy5jb20+OyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IE1h
+cmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBSYWphbiBWYWphDQo+IDxSQUpBTlZA
+eGlsaW54LmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBtb2RlcmF0ZWQNCj4gbGlz
+dDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0tDQo+
+IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvM10gZHQtYmluZGluZ3M6IHBvd2VyOiBBZGQg
+WnlucU1QIHBvd2VyIGRvbWFpbg0KPiBiaW5kaW5ncw0KPiANCj4gT24gVGh1LCBTZXAgMTMsIDIw
+MTggYXQgMTI6NTEgUE0gSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+
+DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
+ID4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+ID4gPiBTZW50
+OiBNb25kYXksIEF1Z3VzdCAyMCwgMjAxOCAxMjo0NiBQTQ0KPiA+ID4gVG86IEpvbGx5IFNoYWgg
+PEpPTExZU0B4aWxpbnguY29tPg0KPiA+ID4gQ2M6IG1hdHRoaWFzLmJnZ0BnbWFpbC5jb207IGFu
+ZHkuZ3Jvc3NAbGluYXJvLm9yZzsNCj4gPiA+IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gPiBn
+ZWVydCtyZW5lc2FzQGdsaWRlci5iZTsgYmpvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc7DQo+ID4g
+PiBzZWFuLndhbmdAbWVkaWF0ZWsuY29tOyBtLnN6eXByb3dza2lAc2Ftc3VuZy5jb207IE1pY2hh
+bCBTaW1law0KPiA+ID4gPG1pY2hhbHNAeGlsaW54LmNvbT47IG1hcmsucnV0bGFuZEBhcm0uY29t
+OyBSYWphbiBWYWphDQo+ID4gPiA8UkFKQU5WQHhpbGlueC5jb20+OyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+ID4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFJhamFuIFZhamENCj4gPiA+IDxSQUpBTlZA
+eGlsaW54LmNvbT47IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPg0KPiA+ID4gU3ViamVj
+dDogUmU6IFtQQVRDSCB2MiAxLzNdIGR0LWJpbmRpbmdzOiBwb3dlcjogQWRkIFp5bnFNUCBwb3dl
+cg0KPiA+ID4gZG9tYWluIGJpbmRpbmdzDQo+ID4gPg0KPiA+ID4gT24gVGh1LCBBdWcgMTYsIDIw
+MTggYXQgMTI6MjE6NDJQTSAtMDcwMCwgSm9sbHkgU2hhaCB3cm90ZToNCj4gPiA+ID4gRnJvbTog
+UmFqYW4gVmFqYSA8cmFqYW4udmFqYUB4aWxpbnguY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBBZGQg
+ZG9jdW1lbnRhdGlvbiB0byBkZXNjcmliZSBaeW5xTVAgcG93ZXIgZG9tYWluIGJpbmRpbmdzLg0K
+PiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBSYWphbiBWYWphIDxyYWphbi52YWphQHhp
+bGlueC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEpvbGx5IFNoYWggPGpvbGx5c0B4aWxp
+bnguY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4uLi9maXJtd2FyZS94aWxpbngveGxueCx6
+eW5xbXAtZmlybXdhcmUudHh0ICAgICAgIHwgNDcNCj4gPiA+ICsrKysrKysrKysrKysrKysrKysr
+KysNCj4gPiA+DQo+ID4gPiBUaGlzIHNob3VsZCBiZSB3aXRoIGFsbCB0aGUgb3RoZXIgcG93ZXIg
+ZG9tYWluIGJpbmRpbmdzLg0KPiA+ID4NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NyBpbnNl
+cnRpb25zKCspDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZmlybXdhcmUveGlsaW54L3hsbngsenlucW1wLWZp
+DQo+ID4gPiA+IHJtd2ENCj4gPiA+ID4gcmUudHh0DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Zpcm13YXJlL3hpbGlueC94bG54LHp5bnFtcC1maQ0KPiA+ID4g
+PiBybXdhDQo+ID4gPiA+IHJlLnR4dA0KPiA+ID4gPiBpbmRleCBkMjE1ZDE1Li41ZmExMGEwIDEw
+MDY0NA0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZmlybXdhcmUveGlsaW54L3hsbngsenlucW1wLWZpDQo+ID4gPiA+IHJtd2ENCj4gPiA+
+ID4gcmUudHh0DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9maXJtd2FyZS94aWxpbngveGxueCx6eW5xbQ0KPiA+ID4gPiArKysgcC1maQ0KPiA+ID4gPiAr
+Kysgcm13YXJlLnR4dA0KPiA+ID4gPiBAQCAtNjQsNiArNjQsMjkgQEAgT3V0cHV0IGNsb2NrcyBh
+cmUgcmVnaXN0ZXJlZCBiYXNlZCBvbiBjbG9jaw0KPiA+ID4gPiBpbmZvcm1hdGlvbiByZWNlaXZl
+ZCAgZnJvbSBmaXJtd2FyZS4gT3V0cHV0IGNsb2NrcyBpbmRleGVzIGFyZQ0KPiA+ID4gPiBtZW50
+aW9uZWQgaW4gIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2sveGxueCx6eW5xbXAtY2xrLmguDQo+
+ID4gPiA+DQo+ID4gPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiArRGV2aWNlIFRyZWUgQmluZGluZ3MgZm9yIHRo
+ZSBYaWxpbnggWnlucSBNUFNvQyBQTSBkb21haW5zDQo+ID4gPiA+ICstLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiArVGhl
+IGJpbmRpbmcgZm9yIHp5bnFtcC1wb3dlci1jb250cm9sbGVyIGZvbGxvdyB0aGUgY29tbW9uIGdl
+bmVyaWMNCj4gPiA+ID4gK1BNIGRvbWFpbiBiaW5kaW5nWzFdLg0KPiA+ID4gPiArDQo+ID4gPiA+
+ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Bvd2VyX2RvbWFp
+bi50eHQNCj4gPiA+ID4gKw0KPiA+ID4gPiArPT0gWnlucSBNUFNvQyBHZW5lcmljIFBNIERvbWFp
+biBOb2RlID09DQo+ID4gPiA+ICsNCj4gPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
+PiA+ICsgLSBjb21wYXRpYmxlOiAgICAgTXVzdCBiZTogInhsbngsenlucW1wLXBvd2VyLWNvbnRy
+b2xsZXIiDQo+ID4gPiA+ICsNCj4gPiA+ID4gK1RoaXMgbm9kZSBjb250YWlucyBhIG51bWJlciBv
+ZiBzdWJub2RlcywgZWFjaCByZXByZXNlbnRpbmcgYQ0KPiA+ID4gPiArc2luZ2xlIFBNIGRvbWFp
+biB0aGF0IFBNIGRvbWFpbiBjb25zdW1lciBkZXZpY2VzIHJlZmVyZW5jZS4NCj4gPiA+ID4gKw0K
+PiA+ID4gPiArPT0gUE0gRG9tYWluIE5vZGVzID09DQo+ID4gPiA+ICsNCj4gPiA+ID4gK1JlcXVp
+cmVkIHByb3BlcnRpZXM6DQo+ID4gPiA+ICsgLSAjcG93ZXItZG9tYWluLWNlbGxzOiAgICBOdW1i
+ZXIgb2YgY2VsbHMgaW4gYSBQTSBkb21haW4gc3BlY2lmaWVyLiBNdXN0DQo+ID4gPiBiZSAwLg0K
+PiA+ID4gPiArIC0gcGQtaWQ6ICAgICAgICAgIERvbWFpbiBpZGVudGlmaWVyIGFzIGRlZmluZWQg
+YnkgcGxhdGZvcm0gZmlybXdhcmUuDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgVGhpcyBp
+ZGVudGlmaWVyIGlzIHBhc3NlZCB0byB0aGUgUE0gZmlybXdhcmUuDQo+ID4gPg0KPiA+ID4gTWFr
+ZSB0aGlzIGEgY2VsbCBmb3IgdGhlIHBvd2VyIGRvbWFpbiBjb25zdW1lci4NCj4gPiBbSm9sbHld
+IFdlIGhhdmUgbW9yZSB0aGFuIG9uZSBJZHMgZm9yIEdQVSBkZXZpY2UuIEFsc28gdGhleSBkb24n
+dCBoYXZlDQo+ID4gcGFyZW50IGNoaWxkIHJlbGF0aW9uc2hpcCBhbmQgaGVuY2UgYXJlIGRlZmlu
+ZWQgYXMgZmxhdCBoaWVyYXJjaHkuDQo+ID4gKHNob3duIGluIGV4YW1wbGUgYmVsb3cpDQo+IA0K
+PiBUaGVuIHRoZSBncHUgbm9kZSBzaG91bGQgaGF2ZToNCj4gDQo+IHBvd2VyLWRvbWFpbnMgPSA8
+JnBkIDU4ICZwZCAyMCAmcGQgMjE+Ow0KPiANCj4gQWxzbywgZm9yIHRoaXMgYW5kIHRoZSBmaXJt
+d2FyZSByZXNldCBiaW5kaW5nLCB0aGVyZSBpcyBubyByZWFzb24gdGhhdCBJIHNlZSB0bw0KPiBt
+YWtlIHRoZXNlIGFsbCBzdWJub2Rlcy4gQSBzaW5nbGUgZmlybXdhcmUgbm9kZSBjYW4gYmUgYSBw
+cm92aWRlciBvZiBtdWx0aXBsZQ0KPiBmdW5jdGlvbnMuIFlvdSBvbmx5IG5lZWQgY2hpbGQgbm9k
+ZXMgaWYgdGhlIHN1Yi1mdW5jdGlvbnMgaGF2ZSB0aGVpciBvd24NCj4gcmVzb3VyY2VzIChjbGtz
+LCBpcnFzLCBldGMuKS4gSU9XLCBkb24ndCBjcmVhdGUgbm9kZXMganVzdCBiZWNhdXNlIHlvdSB3
+YW50IHRvDQo+IGluc3RhbnRpYXRlIGRyaXZlcnMgdGhhdCB3YXkuIERUIGlzIG5vdCB0aGUgb25s
+eSB3YXkgdG8gaW5zdGFudGlhdGUgZGV2aWNlcyBmb3INCj4gZHJpdmVycy4NCj4gDQoNCkdvdCBp
+dC4gUHVzaGVkIHYzIHdpdGggc3VnZ2VzdGVkIGNoYW5nZXMuIFBsZWFzZSByZXZpZXcuDQoNCj4g
+Um9iDQo=
