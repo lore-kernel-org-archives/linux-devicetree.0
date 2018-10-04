@@ -1,47 +1,80 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: fixed: Use more standard GPIO binding
-Date: Thu, 4 Oct 2018 11:50:31 +0100
-Message-ID: <20181004105031.GD6412@sirena.org.uk>
-References: <20181004090654.32233-1-linus.walleij@linaro.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for mt35xu512aba
+Date: Thu, 4 Oct 2018 16:42:22 +0530
+Message-ID: <904391ba-5a12-aee9-966a-17346dded080@ti.com>
+References: <20181003165603.2579-1-vigneshr@ti.com>
+ <20181003165603.2579-2-vigneshr@ti.com> <20181004114535.3a5dba05@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="a2FkP9tdjPU2nyhF"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181004090654.32233-1-linus.walleij@linaro.org>
+In-Reply-To: <20181004114535.3a5dba05@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>, robh@kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---a2FkP9tdjPU2nyhF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Thu, Oct 04, 2018 at 11:06:54AM +0200, Linus Walleij wrote:
+On Thursday 04 October 2018 03:15 PM, Boris Brezillon wrote:
+> On Wed, 3 Oct 2018 22:26:01 +0530
+> Vignesh R <vigneshr@ti.com> wrote:
+> 
+>> Micron's mt35xu512aba flash is an Octal flash that has x8 IO lines. It
+>> supports read/write over 8 IO lines simulatenously. Add support for
+>> Octal read mode for Micron mt35xu512aba.
+>> Unfortunately, this flash is only complaint to SFDP JESD216B and does not
+>> seem to support newer JESD216C standard that provides auto detection of
+>> Octal mode capabilities and opcodes. Therefore, this capability is
+>> manually added using new SPI_NOR_OCTAL_READ flag.
+>>
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>>  drivers/mtd/spi-nor/spi-nor.c | 11 ++++++++++-
+>>  include/linux/mtd/spi-nor.h   |  2 ++
+>>  2 files changed, 12 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+>> index aff5e6ff0b2c..4926e805a8cb 100644
+>> --- a/drivers/mtd/spi-nor/spi-nor.c
+>> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>> @@ -90,6 +90,7 @@ struct flash_info {
+>>  #define NO_CHIP_ERASE		BIT(12) /* Chip does not support chip erase */
+>>  #define SPI_NOR_SKIP_SFDP	BIT(13)	/* Skip parsing of SFDP tables */
+>>  #define USE_CLSR		BIT(14)	/* use CLSR command */
+>> +#define SPI_NOR_OCTAL_READ	BIT(15)	/* Flash supports Octal Read */
+> 
+> Hm, we'll need to clarify what OCTAL means. I see at least 3 different
+> modes using 8 IO lines (1-1-8, 1-8-8 and 8-8-8) and all of them could
+> be qualified as "octal" modes.
+> So how about renaming this macro SPI_NOR_1_1_8_READ.
+> 
 
->  Optional properties:
-> -- gpio: gpio to use for enable control
-> +- gpios: gpio to use for enable control
+My understanding is that, if a flash is Octal IO capable, then it
+supports all mode of Octal IO (1-1-8, 1-8-8 and 8-8-8). At least in the
+current code, I see SPI_NOR_QUAD_READ seems to imply 1-1-4, 1-4-4 and
+4-4-4 modes.
+Moreover, these capabilities should be auto discoverable once flash
+start populating SFDP JESD216C tables (IIRC, JESD216B already takes care
+of QUAD IO modes). So, I don't think we need different flags for 1-1-8,
+1-8-8 and 8-8-8. Please let me if that's not the case.
 
-Are we supposed to be able to have just plain gpios as a standards
-conforming property or would best practice be to call it enable-gpios or
-something?
+For this patch, I wanted to start small and support only 1-1-8 mode
+which is the easiest.
 
---a2FkP9tdjPU2nyhF
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
+> Also, I fear we'll soon run out of bits in ->flags if we keep adding
+> one flag per mode which is why I proposed a solution to let flash
+> chips tweak the flash parameters as they wish [1][2]. I'm not saying we
+> should do it now, but we should definitely plan for something like that.
+> 
+> [1]https://github.com/bbrezillon/linux/commit/9c672e4c85a91f1b0803c9c6e4b8f3aae5d79ffb
+> [2]https://github.com/bbrezillon/linux/commit/3a5515c8821314c06a3d84f9861aefe476bb711e
+> 
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlu18HcACgkQJNaLcl1U
-h9DrPwf7Bh2tYKRDE9uZ3rdDUFBuNurCRgtWm7BsUaccxX5NvLnJJ5GNK310VNxl
-qVh5M96vfWmoylOBi2ETFo0wtOXMIwNyVeWXfvPJNhCZnVLZuBtITDN5zAJPqlAX
-mgb0mWp0w/IuQ8OSlHwrd7HioG0k/8RPPrQ0A0SmVXWuKgIKDsS2MZaqKLA6vkVF
-bsWOx4FqX7IiCyduFC12baqFxtrKCrhTkEkYCKVxaNZ88tn/mqqwqt3fHush550w
-wI9Ek7j/lSVMbHKTj0jA6eVs1bNYgqY1qfRJKafKQv446Yy2nK85xF6vTFMqYQFs
-Muo4xvKIzBM88b8sw0HqigGKMkjfRA==
-=Nkv4
------END PGP SIGNATURE-----
+Hmm, it almost seems like Macronix flash warrants its own driver now.
 
---a2FkP9tdjPU2nyhF--
+-- 
+Regards
+Vignesh
