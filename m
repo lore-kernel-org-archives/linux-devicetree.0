@@ -1,72 +1,53 @@
 From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V10 8/8] dt-bindings: timer: gx6605s SOC timer
-Date: Fri,  5 Oct 2018 01:22:28 +0800
-Message-ID: <6ed886ec014de868e0a84a62e339e45de4ea1e5f.1538672812.git.ren_guo@c-sky.com>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
+Subject: [PATCH V10 0/8] C-SKY(csky) Linux Kernel Driver
+Date: Fri,  5 Oct 2018 01:22:20 +0800
+Message-ID: <cover.1538672812.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1538672812.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1538672812.git.ren_guo@c-sky.com>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-Dt-bindings doc for gx6605s SOC's system timer.
+This is about 10th patchset for C-SKY linux drivers. All patches have
+been checked by checkpatch.pl.
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
----
- .../bindings/timer/csky,gx6605s-timer.txt          | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+Any feedback is welcome, thx for all people review my patchset.
+
+If you finish the review for the patchset, please give a Reviewed-By
+/ Acked-By and I'll record it in the commit-msg.
+
+Guo Ren (8):
+  irqchip: add C-SKY SMP interrupt controller
+  dt-bindings: interrupt-controller: C-SKY SMP intc
+  irqchip: add C-SKY APB bus interrupt controller
+  dt-bindings: interrupt-controller: C-SKY APB intc
+  clocksource: add C-SKY SMP timer
+  dt-bindings: timer: C-SKY Multi-processor timer
+  clocksource: add gx6605s SOC system timer
+  dt-bindings: timer: gx6605s SOC timer
+
+ .../interrupt-controller/csky,apb-intc.txt         |  62 +++++
+ .../bindings/interrupt-controller/csky,mpintc.txt  |  40 +++
+ .../bindings/timer/csky,gx6605s-timer.txt          |  42 ++++
+ .../devicetree/bindings/timer/csky,mptimer.txt     |  42 ++++
+ drivers/clocksource/Kconfig                        |  18 ++
+ drivers/clocksource/Makefile                       |   2 +
+ drivers/clocksource/timer-gx6605s.c                | 154 ++++++++++++
+ drivers/clocksource/timer-mp-csky.c                | 173 +++++++++++++
+ drivers/irqchip/Kconfig                            |  17 ++
+ drivers/irqchip/Makefile                           |   2 +
+ drivers/irqchip/irq-csky-apb-intc.c                | 274 +++++++++++++++++++++
+ drivers/irqchip/irq-csky-mpintc.c                  | 197 +++++++++++++++
+ include/linux/cpuhotplug.h                         |   1 +
+ 13 files changed, 1024 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
  create mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.txt
+ create mode 100644 drivers/clocksource/timer-gx6605s.c
+ create mode 100644 drivers/clocksource/timer-mp-csky.c
+ create mode 100644 drivers/irqchip/irq-csky-apb-intc.c
+ create mode 100644 drivers/irqchip/irq-csky-mpintc.c
 
-diff --git a/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
-new file mode 100644
-index 0000000..6b04344
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
-@@ -0,0 +1,42 @@
-+=================
-+gx6605s SOC Timer
-+=================
-+
-+The timer is used in gx6605s soc as system timer and the driver
-+contain clk event and clk source.
-+
-+==============================
-+timer node bindings definition
-+==============================
-+
-+	Description: Describes gx6605s SOC timer
-+
-+	PROPERTIES
-+
-+	- compatible
-+		Usage: required
-+		Value type: <string>
-+		Definition: must be "csky,gx6605s-timer"
-+	- reg
-+		Usage: required
-+		Value type: <u32 u32>
-+		Definition: <phyaddr size> in soc from cpu view
-+	- clocks
-+		Usage: required
-+		Value type: phandle + clock specifier cells
-+		Definition: must be input clk node
-+	- interrupt
-+		Usage: required
-+		Value type: <u32>
-+		Definition: must be timer irq num defined by soc
-+
-+Examples:
-+---------
-+
-+	timer0: timer@20a000 {
-+		compatible = "csky,gx6605s-timer";
-+		reg = <0x0020a000 0x400>;
-+		clocks = <&dummy_apb_clk>;
-+		interrupts = <10>;
-+		interrupt-parent = <&intc>;
-+	};
 -- 
 2.7.4
