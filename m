@@ -1,107 +1,112 @@
-From: Jolly Shah <JOLLYS@xilinx.com>
-Subject: RE: [PATCH v2 1/3] dt-bindings: power: Add ZynqMP power domain
- bindings
-Date: Thu, 4 Oct 2018 21:26:02 +0000
-Message-ID: <CY1PR02MB21389329CFE7985FD31179ADB8EA0@CY1PR02MB2138.namprd02.prod.outlook.com>
-References: <1534447304-12919-1-git-send-email-jollys@xilinx.com>
- <1534447304-12919-2-git-send-email-jollys@xilinx.com>
- <20180820194628.GA26783@bogus>
- <CY1PR02MB2138C05E97C1EFAEA921CB5CB81A0@CY1PR02MB2138.namprd02.prod.outlook.com>
- <CAL_JsqJOz_z9dHcG5dfx=UTXQMaLTQKBPu+vTrTOt=sdAabqSw@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
+ driver bindings
+Date: Thu, 4 Oct 2018 17:17:42 -0500
+Message-ID: <CAL_JsqJOf6y1ZwcYk_LcL=-XShW2ME=aPTgho2fEQSDmHqE0eQ@mail.gmail.com>
+References: <20180627045234.27403-1-rnayak@codeaurora.org> <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20180703223554.GA32313@rob-hp-laptop> <20180704055757.4li26b6poxllmh2k@vireshk-i7>
+ <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org> <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
+ <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org> <CAL_JsqJQypZbeZRa2u2+nM96p0ZHMHgDSpMbXqZx6zn+OiZSrw@mail.gmail.com>
+ <20181004083637.xlz26rpn4qtsvdk7@vireshk-i7> <CAL_JsqKSiT15sn_jXy0FRp_YG5XbkREUeHf-98A61iN-TKxWpQ@mail.gmail.com>
+ <20181004191725.GA7926@centauri.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJOz_z9dHcG5dfx=UTXQMaLTQKBPu+vTrTOt=sdAabqSw@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181004191725.GA7926@centauri.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Andy Gross <andy.gross@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sean Wang <sean.wang@mediatek.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Michal Simek <michals@xilinx.com>, Mark Rutland <mark.rutland@arm.com>, Rajan Vaja <RAJANV@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXQ0KPiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIg
-MjUsIDIwMTggOToxNSBBTQ0KPiBUbzogSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+DQo+
-IENjOiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPjsgQW5keSBHcm9z
-cw0KPiA8YW5keS5ncm9zc0BsaW5hcm8ub3JnPjsgU2hhd24gR3VvIDxzaGF3bmd1b0BrZXJuZWwu
-b3JnPjsgR2VlcnQNCj4gVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IEJq
-b3JuIEFuZGVyc3Nvbg0KPiA8Ympvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc+OyBTZWFuIFdhbmcg
-PHNlYW4ud2FuZ0BtZWRpYXRlay5jb20+Ow0KPiBNYXJlayBTenlwcm93c2tpIDxtLnN6eXByb3dz
-a2lAc2Ftc3VuZy5jb20+OyBNaWNoYWwgU2ltZWsNCj4gPG1pY2hhbHNAeGlsaW54LmNvbT47IE1h
-cmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+OyBSYWphbiBWYWphDQo+IDxSQUpBTlZA
-eGlsaW54LmNvbT47IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBtb2RlcmF0ZWQNCj4gbGlz
-dDpBUk0vRlJFRVNDQUxFIElNWCAvIE1YQyBBUk0gQVJDSElURUNUVVJFIDxsaW51eC1hcm0tDQo+
-IGtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnPjsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-Zw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDEvM10gZHQtYmluZGluZ3M6IHBvd2VyOiBBZGQg
-WnlucU1QIHBvd2VyIGRvbWFpbg0KPiBiaW5kaW5ncw0KPiANCj4gT24gVGh1LCBTZXAgMTMsIDIw
-MTggYXQgMTI6NTEgUE0gSm9sbHkgU2hhaCA8Sk9MTFlTQHhpbGlueC5jb20+IHdyb3RlOg0KPiA+
-DQo+ID4gSGkgUm9iLA0KPiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+
-ID4gRnJvbTogUm9iIEhlcnJpbmcgW21haWx0bzpyb2JoQGtlcm5lbC5vcmddDQo+ID4gPiBTZW50
-OiBNb25kYXksIEF1Z3VzdCAyMCwgMjAxOCAxMjo0NiBQTQ0KPiA+ID4gVG86IEpvbGx5IFNoYWgg
-PEpPTExZU0B4aWxpbnguY29tPg0KPiA+ID4gQ2M6IG1hdHRoaWFzLmJnZ0BnbWFpbC5jb207IGFu
-ZHkuZ3Jvc3NAbGluYXJvLm9yZzsNCj4gPiA+IHNoYXduZ3VvQGtlcm5lbC5vcmc7DQo+ID4gPiBn
-ZWVydCtyZW5lc2FzQGdsaWRlci5iZTsgYmpvcm4uYW5kZXJzc29uQGxpbmFyby5vcmc7DQo+ID4g
-PiBzZWFuLndhbmdAbWVkaWF0ZWsuY29tOyBtLnN6eXByb3dza2lAc2Ftc3VuZy5jb207IE1pY2hh
-bCBTaW1law0KPiA+ID4gPG1pY2hhbHNAeGlsaW54LmNvbT47IG1hcmsucnV0bGFuZEBhcm0uY29t
-OyBSYWphbiBWYWphDQo+ID4gPiA8UkFKQU5WQHhpbGlueC5jb20+OyBkZXZpY2V0cmVlQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPiA+ID4ga2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFJhamFuIFZhamENCj4gPiA+IDxSQUpBTlZA
-eGlsaW54LmNvbT47IEpvbGx5IFNoYWggPEpPTExZU0B4aWxpbnguY29tPg0KPiA+ID4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2MiAxLzNdIGR0LWJpbmRpbmdzOiBwb3dlcjogQWRkIFp5bnFNUCBwb3dl
-cg0KPiA+ID4gZG9tYWluIGJpbmRpbmdzDQo+ID4gPg0KPiA+ID4gT24gVGh1LCBBdWcgMTYsIDIw
-MTggYXQgMTI6MjE6NDJQTSAtMDcwMCwgSm9sbHkgU2hhaCB3cm90ZToNCj4gPiA+ID4gRnJvbTog
-UmFqYW4gVmFqYSA8cmFqYW4udmFqYUB4aWxpbnguY29tPg0KPiA+ID4gPg0KPiA+ID4gPiBBZGQg
-ZG9jdW1lbnRhdGlvbiB0byBkZXNjcmliZSBaeW5xTVAgcG93ZXIgZG9tYWluIGJpbmRpbmdzLg0K
-PiA+ID4gPg0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBSYWphbiBWYWphIDxyYWphbi52YWphQHhp
-bGlueC5jb20+DQo+ID4gPiA+IFNpZ25lZC1vZmYtYnk6IEpvbGx5IFNoYWggPGpvbGx5c0B4aWxp
-bnguY29tPg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIC4uLi9maXJtd2FyZS94aWxpbngveGxueCx6
-eW5xbXAtZmlybXdhcmUudHh0ICAgICAgIHwgNDcNCj4gPiA+ICsrKysrKysrKysrKysrKysrKysr
-KysNCj4gPiA+DQo+ID4gPiBUaGlzIHNob3VsZCBiZSB3aXRoIGFsbCB0aGUgb3RoZXIgcG93ZXIg
-ZG9tYWluIGJpbmRpbmdzLg0KPiA+ID4NCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NyBpbnNl
-cnRpb25zKCspDQo+ID4gPiA+DQo+ID4gPiA+IGRpZmYgLS1naXQNCj4gPiA+ID4gYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZmlybXdhcmUveGlsaW54L3hsbngsenlucW1wLWZp
-DQo+ID4gPiA+IHJtd2ENCj4gPiA+ID4gcmUudHh0DQo+ID4gPiA+IGIvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Zpcm13YXJlL3hpbGlueC94bG54LHp5bnFtcC1maQ0KPiA+ID4g
-PiBybXdhDQo+ID4gPiA+IHJlLnR4dA0KPiA+ID4gPiBpbmRleCBkMjE1ZDE1Li41ZmExMGEwIDEw
-MDY0NA0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZmlybXdhcmUveGlsaW54L3hsbngsenlucW1wLWZpDQo+ID4gPiA+IHJtd2ENCj4gPiA+
-ID4gcmUudHh0DQo+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9maXJtd2FyZS94aWxpbngveGxueCx6eW5xbQ0KPiA+ID4gPiArKysgcC1maQ0KPiA+ID4gPiAr
-Kysgcm13YXJlLnR4dA0KPiA+ID4gPiBAQCAtNjQsNiArNjQsMjkgQEAgT3V0cHV0IGNsb2NrcyBh
-cmUgcmVnaXN0ZXJlZCBiYXNlZCBvbiBjbG9jaw0KPiA+ID4gPiBpbmZvcm1hdGlvbiByZWNlaXZl
-ZCAgZnJvbSBmaXJtd2FyZS4gT3V0cHV0IGNsb2NrcyBpbmRleGVzIGFyZQ0KPiA+ID4gPiBtZW50
-aW9uZWQgaW4gIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2sveGxueCx6eW5xbXAtY2xrLmguDQo+
-ID4gPiA+DQo+ID4gPiA+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiArRGV2aWNlIFRyZWUgQmluZGluZ3MgZm9yIHRo
-ZSBYaWxpbnggWnlucSBNUFNvQyBQTSBkb21haW5zDQo+ID4gPiA+ICstLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiA+ID4gPiArVGhl
-IGJpbmRpbmcgZm9yIHp5bnFtcC1wb3dlci1jb250cm9sbGVyIGZvbGxvdyB0aGUgY29tbW9uIGdl
-bmVyaWMNCj4gPiA+ID4gK1BNIGRvbWFpbiBiaW5kaW5nWzFdLg0KPiA+ID4gPiArDQo+ID4gPiA+
-ICtbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL3Bvd2VyX2RvbWFp
-bi50eHQNCj4gPiA+ID4gKw0KPiA+ID4gPiArPT0gWnlucSBNUFNvQyBHZW5lcmljIFBNIERvbWFp
-biBOb2RlID09DQo+ID4gPiA+ICsNCj4gPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4g
-PiA+ICsgLSBjb21wYXRpYmxlOiAgICAgTXVzdCBiZTogInhsbngsenlucW1wLXBvd2VyLWNvbnRy
-b2xsZXIiDQo+ID4gPiA+ICsNCj4gPiA+ID4gK1RoaXMgbm9kZSBjb250YWlucyBhIG51bWJlciBv
-ZiBzdWJub2RlcywgZWFjaCByZXByZXNlbnRpbmcgYQ0KPiA+ID4gPiArc2luZ2xlIFBNIGRvbWFp
-biB0aGF0IFBNIGRvbWFpbiBjb25zdW1lciBkZXZpY2VzIHJlZmVyZW5jZS4NCj4gPiA+ID4gKw0K
-PiA+ID4gPiArPT0gUE0gRG9tYWluIE5vZGVzID09DQo+ID4gPiA+ICsNCj4gPiA+ID4gK1JlcXVp
-cmVkIHByb3BlcnRpZXM6DQo+ID4gPiA+ICsgLSAjcG93ZXItZG9tYWluLWNlbGxzOiAgICBOdW1i
-ZXIgb2YgY2VsbHMgaW4gYSBQTSBkb21haW4gc3BlY2lmaWVyLiBNdXN0DQo+ID4gPiBiZSAwLg0K
-PiA+ID4gPiArIC0gcGQtaWQ6ICAgICAgICAgIERvbWFpbiBpZGVudGlmaWVyIGFzIGRlZmluZWQg
-YnkgcGxhdGZvcm0gZmlybXdhcmUuDQo+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgVGhpcyBp
-ZGVudGlmaWVyIGlzIHBhc3NlZCB0byB0aGUgUE0gZmlybXdhcmUuDQo+ID4gPg0KPiA+ID4gTWFr
-ZSB0aGlzIGEgY2VsbCBmb3IgdGhlIHBvd2VyIGRvbWFpbiBjb25zdW1lci4NCj4gPiBbSm9sbHld
-IFdlIGhhdmUgbW9yZSB0aGFuIG9uZSBJZHMgZm9yIEdQVSBkZXZpY2UuIEFsc28gdGhleSBkb24n
-dCBoYXZlDQo+ID4gcGFyZW50IGNoaWxkIHJlbGF0aW9uc2hpcCBhbmQgaGVuY2UgYXJlIGRlZmlu
-ZWQgYXMgZmxhdCBoaWVyYXJjaHkuDQo+ID4gKHNob3duIGluIGV4YW1wbGUgYmVsb3cpDQo+IA0K
-PiBUaGVuIHRoZSBncHUgbm9kZSBzaG91bGQgaGF2ZToNCj4gDQo+IHBvd2VyLWRvbWFpbnMgPSA8
-JnBkIDU4ICZwZCAyMCAmcGQgMjE+Ow0KPiANCj4gQWxzbywgZm9yIHRoaXMgYW5kIHRoZSBmaXJt
-d2FyZSByZXNldCBiaW5kaW5nLCB0aGVyZSBpcyBubyByZWFzb24gdGhhdCBJIHNlZSB0bw0KPiBt
-YWtlIHRoZXNlIGFsbCBzdWJub2Rlcy4gQSBzaW5nbGUgZmlybXdhcmUgbm9kZSBjYW4gYmUgYSBw
-cm92aWRlciBvZiBtdWx0aXBsZQ0KPiBmdW5jdGlvbnMuIFlvdSBvbmx5IG5lZWQgY2hpbGQgbm9k
-ZXMgaWYgdGhlIHN1Yi1mdW5jdGlvbnMgaGF2ZSB0aGVpciBvd24NCj4gcmVzb3VyY2VzIChjbGtz
-LCBpcnFzLCBldGMuKS4gSU9XLCBkb24ndCBjcmVhdGUgbm9kZXMganVzdCBiZWNhdXNlIHlvdSB3
-YW50IHRvDQo+IGluc3RhbnRpYXRlIGRyaXZlcnMgdGhhdCB3YXkuIERUIGlzIG5vdCB0aGUgb25s
-eSB3YXkgdG8gaW5zdGFudGlhdGUgZGV2aWNlcyBmb3INCj4gZHJpdmVycy4NCj4gDQoNCkdvdCBp
-dC4gUHVzaGVkIHYzIHdpdGggc3VnZ2VzdGVkIGNoYW5nZXMuIFBsZWFzZSByZXZpZXcuDQoNCj4g
-Um9iDQo=
+On Thu, Oct 4, 2018 at 2:17 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> On Thu, Oct 04, 2018 at 10:18:22AM -0500, Rob Herring wrote:
+> > On Thu, Oct 4, 2018 at 3:36 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > >
+> > > On 25-09-18, 14:43, Rob Herring wrote:
+> > > > On Tue, Sep 25, 2018 at 5:25 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+> > > > >
+> > > > > Hi Rob,
+> > > > >
+> > > > > []...
+> > > > > >>>>> +   rpmhpd_opp_table: opp-table {
+> > > > > >>>>> +           compatible = "operating-points-v2-qcom-level";
+> > > > > >>>>> +
+> > > > > >>>>> +           rpmhpd_opp_ret: opp1 {
+> > > > > >>>>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+> > > > > >>>>> +           };
+> > > > > >>>>
+> > > > > >>>> I don't see the point in using the OPP binding here when you aren't
+> > > > > >>>> using *any* of the properties from it.
+> > > > > >>>
+> > > > > >>> Yeah, that's the case for now. But there are cases (as Stephen
+> > > > > >>> mentioned earlier [1]) where the voltage values (and maybe other
+> > > > > >>> values like current, etc) would be known and filled in DT. And that's
+> > > > > >>> why we all agreed to use OPP tables for PM domains as well, as these
+> > > > > >>> are really "operating performance points" of these PM domains.
+> > > > > >>
+> > > > > >> Rob, are you fine with these bindings then?
+> > > > > >
+> > > > > > Okay, my only thought is whether we should just use 'reg' here, or do
+> > > > > > we need 'level' for anything else and should make it common?
+> > > > >
+> > > > > I am not quite sure I understood what you are suggesting here :(
+> > > >
+> > > > You could use the  'reg' property instead of 'qcom,level'. Any reason
+> > > > not to do that?
+> > >
+> > > They can use any property which uniquely identifies the OPP nodes in
+> > > the table. Though I never thought we can use 'reg' property in such a
+> > > way. I always thought it must be related to registers somehow :)
+> >
+> > That's almost certainly where the name originates from back in the
+> > 90s. I view 'reg' as how you identify or address a device. This can be
+> > channels of something like an ADC.
+> >
+> > It's perhaps a stretch for OPP nodes as they aren't really a device,
+> > but if the levels are part of the h/w then perhaps reg is a good
+> > match.
+> >
+>
+> FWIW, I actually have a use case on qcom SoCs.
+>
+> I'm working on reviving an old patch series from Stephen Boyd:
+> https://lkml.org/lkml/2015/9/18/833
+>
+>
+> Rajendra's Documentation/devicetree/bindings/opp/qcom-opp.txt currently has:
+>
+> Required properties:
+> - qcom,level: On Qualcomm platforms an OPP node can describe a positive value
+> representing a corner/level that's communicated with a remote microprocessor
+> (usually called the RPM) which then translates it into a certain voltage on
+> a voltage rail
+>
+>
+> I'm planning on extending it with something like:
+>
+> Optional properties:
+> -qcom,fuse-level: On Qualcomm platforms, not all corners/levels are real
+> corners/levels, i.e., not all corners/levels have a unique eFuse associated.
+> Usually more than one corner/level uses the same eFuse corner/level.
+
+Is that because there's additional parameters not covered as part of a corner?
+
+> So for each OPP I would have:
+>
+> opp1 {
+>         qcom,level = <foo>;
+>         qcom,fuse-level = <bar>;
+> }
+>
+>
+> Not sure if this changes your opinion about using reg,
+> but I thought that it was worth mentioning.
+
+'reg' is probably not the right fit then.
+
+Does any of this fuse-level apply to platforms using this binding? If
+so, then it should be incorporated here. I don't want incomplete
+bindings that get one property added at a time.
+
+Rob
