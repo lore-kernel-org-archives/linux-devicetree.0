@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v4 09/11] dt-bindings: add constants for Microsemi Ocelot SerDes driver
-Date: Thu,  4 Oct 2018 14:22:06 +0200
-Message-ID: <20181004122208.32272-10-quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v4 06/11] phy: add QSGMII and PCIE modes
+Date: Thu,  4 Oct 2018 14:22:03 +0200
+Message-ID: <20181004122208.32272-7-quentin.schulz@bootlin.com>
 References: <20181004122208.32272-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181004122208.32272-1-quentin.schulz@bootlin.com>
@@ -10,35 +10,29 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The Microsemi Ocelot has multiple SerDes and requires that the SerDes be
-muxed accordingly to the hardware representation.
+Prepare for upcoming phys that'll handle QSGMII or PCIe.
 
-Let's add a constant for each SerDes available in the Microsemi Ocelot.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- include/dt-bindings/phy/phy-ocelot-serdes.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 include/dt-bindings/phy/phy-ocelot-serdes.h
+ include/linux/phy/phy.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/dt-bindings/phy/phy-ocelot-serdes.h b/include/dt-bindings/phy/phy-ocelot-serdes.h
-new file mode 100644
-index 000000000000..bd28f21206f6
---- /dev/null
-+++ b/include/dt-bindings/phy/phy-ocelot-serdes.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: (GPL-2.0 OR MIT) */
-+/* Copyright (c) 2018 Microsemi Corporation */
-+#ifndef __PHY_OCELOT_SERDES_H__
-+#define __PHY_OCELOT_SERDES_H__
-+
-+#define SERDES1G(x)	(x)
-+#define SERDES1G_MAX	SERDES1G(5)
-+#define SERDES6G(x)	(SERDES1G_MAX + 1 + (x))
-+#define SERDES6G_MAX	SERDES6G(2)
-+#define SERDES_MAX	SERDES6G_MAX
-+
-+#endif
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 9713aebdd348..03b319f89a34 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -37,9 +37,11 @@ enum phy_mode {
+ 	PHY_MODE_USB_OTG,
+ 	PHY_MODE_SGMII,
+ 	PHY_MODE_2500SGMII,
++	PHY_MODE_QSGMII,
+ 	PHY_MODE_10GKR,
+ 	PHY_MODE_UFS_HS_A,
+ 	PHY_MODE_UFS_HS_B,
++	PHY_MODE_PCIE,
+ };
+ 
+ /**
 -- 
 2.17.1
