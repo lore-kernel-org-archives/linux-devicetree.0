@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v3 1/4] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Thu, 4 Oct 2018 14:23:38 -0700
-Message-ID: <1538688221-9823-2-git-send-email-jollys@xilinx.com>
+Subject: [PATCH v3 3/4] firmware: xilinx: Add node IDs for zynqmp firmware
+Date: Thu, 4 Oct 2018 14:23:40 -0700
+Message-ID: <1538688221-9823-4-git-send-email-jollys@xilinx.com>
 References: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,101 +14,97 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Add documentation to describe ZynqMP power domain bindings.
+Xilinx ZynqMP firmware has different node IDs for different
+peripherals. Add node IDs which can be used by any driver.
 
 Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- .../bindings/power/xlnx,zynqmp-genpd.txt           | 34 +++++++++++++++++++
- include/dt-bindings/power/xlnx-zynqmp-power.h      | 39 ++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+ include/linux/firmware/xlnx-zynqmp.h | 72 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
-new file mode 100644
-index 0000000..3c7f237
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
-@@ -0,0 +1,34 @@
-+-----------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
-+-----------------------------------------------------------
-+The binding for zynqmp-power-controller follow the common
-+generic PM domain binding[1].
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 6998f7d..14bb780 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -40,6 +40,78 @@
+ #define	ZYNQMP_PM_CAPABILITY_WAKEUP	0x4U
+ #define	ZYNQMP_PM_CAPABILITY_POWER	0x8U
+ 
++/* Node IDs */
++#define NODE_UNKNOWN    0
++#define NODE_APU        1
++#define NODE_APU_0      2
++#define NODE_APU_1      3
++#define NODE_APU_2      4
++#define NODE_APU_3      5
++#define NODE_RPU        6
++#define NODE_RPU_0      7
++#define NODE_RPU_1      8
++#define NODE_PLD        9
++#define NODE_FPD        10
++#define NODE_OCM_BANK_0 11
++#define NODE_OCM_BANK_1 12
++#define NODE_OCM_BANK_2 13
++#define NODE_OCM_BANK_3 14
++#define NODE_TCM_0_A    15
++#define NODE_TCM_0_B    16
++#define NODE_TCM_1_A    17
++#define NODE_TCM_1_B    18
++#define NODE_L2         19
++#define NODE_GPU_PP_0   20
++#define NODE_GPU_PP_1   21
++#define NODE_USB_0      22
++#define NODE_USB_1      23
++#define NODE_TTC_0      24
++#define NODE_TTC_1      25
++#define NODE_TTC_2      26
++#define NODE_TTC_3      27
++#define NODE_SATA       28
++#define NODE_ETH_0      29
++#define NODE_ETH_1      30
++#define NODE_ETH_2      31
++#define NODE_ETH_3      32
++#define NODE_UART_0     33
++#define NODE_UART_1     34
++#define NODE_SPI_0      35
++#define NODE_SPI_1      36
++#define NODE_I2C_0      37
++#define NODE_I2C_1      38
++#define NODE_SD_0       39
++#define NODE_SD_1       40
++#define NODE_DP         41
++#define NODE_GDMA       42
++#define NODE_ADMA       43
++#define NODE_NAND       44
++#define NODE_QSPI       45
++#define NODE_GPIO       46
++#define NODE_CAN_0      47
++#define NODE_CAN_1      48
++#define NODE_EXTERN     49
++#define NODE_APLL       50
++#define NODE_VPLL       51
++#define NODE_DPLL       52
++#define NODE_RPLL       53
++#define NODE_IOPLL      54
++#define NODE_DDR        55
++#define NODE_IPI_APU    56
++#define NODE_IPI_RPU_0  57
++#define NODE_GPU        58
++#define NODE_PCIE       59
++#define NODE_PCAP       60
++#define NODE_RTC        61
++#define NODE_LPD        62
++#define NODE_VCU        63
++#define NODE_IPI_RPU_1  64
++#define NODE_IPI_PL_0   65
++#define NODE_IPI_PL_1   66
++#define NODE_IPI_PL_2   67
++#define NODE_IPI_PL_3   68
++#define NODE_PL         69
 +
-+[1] Documentation/devicetree/bindings/power/power_domain.txt
-+
-+== Zynq MPSoC Generic PM Domain Node ==
-+
-+Required property:
-+ - Below property should be in zynqmp-firmware node.
-+ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
-+
-+Power domain ID indexes are mentioned in
-+include/dt-bindings/power/xlnx-zynqmp-power.h.
-+
-+-------
-+Example
-+-------
-+
-+firmware {
-+	zynqmp_firmware: zynqmp-firmware {
-+		...
-+		#power-domain-cells = <1>;
-+		...
-+	};
-+};
-+
-+sata {
-+	...
-+	power-domains = <&zynqmp_firmware 2>;
-+	...
-+};
-diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
-new file mode 100644
-index 0000000..1bc9636
---- /dev/null
-+++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright (C) 2018 Xilinx, Inc.
-+ */
-+
-+#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
-+#define _DT_BINDINGS_ZYNQMP_POWER_H
-+
-+#define		PD_USB_0	0
-+#define		PD_USB_1	1
-+#define		PD_SATA		2
-+#define		PD_SPI_0	3
-+#define		PD_SPI_1	4
-+#define		PD_UART_0	5
-+#define		PD_UART_1	6
-+#define		PD_ETH_0	7
-+#define		PD_ETH_1	8
-+#define		PD_ETH_2	9
-+#define		PD_ETH_3	10
-+#define		PD_I2C_0	11
-+#define		PD_I2C_1	12
-+#define		PD_DP		13
-+#define		PD_GDMA		14
-+#define		PD_ADMA		15
-+#define		PD_TTC_0	16
-+#define		PD_TTC_1	17
-+#define		PD_TTC_2	18
-+#define		PD_TTC_3	19
-+#define		PD_SD_0		20
-+#define		PD_SD_1		21
-+#define		PD_NAND		22
-+#define		PD_QSPI		23
-+#define		PD_GPIO		24
-+#define		PD_CAN_0	25
-+#define		PD_CAN_1	26
-+#define		PD_PCIE		27
-+#define		PD_GPU		28
-+
-+#endif
+ enum pm_api_id {
+ 	PM_GET_API_VERSION = 1,
+ 	PM_REQUEST_NODE = 13,
 -- 
 2.7.4
