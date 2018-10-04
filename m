@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v4 06/11] phy: add QSGMII and PCIE modes
-Date: Thu,  4 Oct 2018 14:22:03 +0200
-Message-ID: <20181004122208.32272-7-quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v4 04/11] net: mscc: ocelot: move the HSIO header to include/soc
+Date: Thu,  4 Oct 2018 14:22:01 +0200
+Message-ID: <20181004122208.32272-5-quentin.schulz@bootlin.com>
 References: <20181004122208.32272-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181004122208.32272-1-quentin.schulz@bootlin.com>
@@ -10,29 +10,38 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Prepare for upcoming phys that'll handle QSGMII or PCIe.
+Since HSIO address space can be used by different drivers (PLL, SerDes
+muxing, temperature sensor), let's move it somewhere it can be included
+by all drivers.
 
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- include/linux/phy/phy.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/mscc/ocelot.h                       | 2 +-
+ {drivers/net/ethernet => include/soc}/mscc/ocelot_hsio.h | 0
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename {drivers/net/ethernet => include/soc}/mscc/ocelot_hsio.h (100%)
 
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index 9713aebdd348..03b319f89a34 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -37,9 +37,11 @@ enum phy_mode {
- 	PHY_MODE_USB_OTG,
- 	PHY_MODE_SGMII,
- 	PHY_MODE_2500SGMII,
-+	PHY_MODE_QSGMII,
- 	PHY_MODE_10GKR,
- 	PHY_MODE_UFS_HS_A,
- 	PHY_MODE_UFS_HS_B,
-+	PHY_MODE_PCIE,
- };
+diff --git a/drivers/net/ethernet/mscc/ocelot.h b/drivers/net/ethernet/mscc/ocelot.h
+index 616bec30dfa3..d3980158c4a3 100644
+--- a/drivers/net/ethernet/mscc/ocelot.h
++++ b/drivers/net/ethernet/mscc/ocelot.h
+@@ -13,10 +13,10 @@
+ #include <linux/if_vlan.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
++#include <soc/mscc/ocelot_hsio.h>
  
- /**
+ #include "ocelot_ana.h"
+ #include "ocelot_dev.h"
+-#include "ocelot_hsio.h"
+ #include "ocelot_qsys.h"
+ #include "ocelot_rew.h"
+ #include "ocelot_sys.h"
+diff --git a/drivers/net/ethernet/mscc/ocelot_hsio.h b/include/soc/mscc/ocelot_hsio.h
+similarity index 100%
+rename from drivers/net/ethernet/mscc/ocelot_hsio.h
+rename to include/soc/mscc/ocelot_hsio.h
 -- 
 2.17.1
