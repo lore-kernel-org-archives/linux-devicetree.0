@@ -1,273 +1,124 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v8 03/10] edac: synopsys: Modify the comments in the
- driver
-Date: Thu, 4 Oct 2018 22:36:21 +0200
-Message-ID: <20181004203621.GE5149@zn.tnic>
-References: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
- <1538667328-9465-4-git-send-email-manish.narani@xilinx.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH] OF: Handle CMDLINE when /chosen node is not present
+Date: Thu, 4 Oct 2018 13:42:47 -0700
+Message-ID: <3e42d09e-8e49-2766-596c-37200f395097@wdc.com>
+References: <20181004123110.8487-1-mick@ics.forth.gr>
+ <fdd03e2e-4c1e-e89d-a336-ab4a716e7abc@wdc.com>
+ <b57f9b47d5c8227c3170d3d54d22919e@mailhost.ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1538667328-9465-4-git-send-email-manish.narani@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Narani <manish.narani@xilinx.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, mchehab@kernel.org, sudeep.holla@arm.com, amit.kucheria@linaro.org, leoyang.li@nxp.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <b57f9b47d5c8227c3170d3d54d22919e@mailhost.ics.forth.gr>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "palmer@sifive.com" <palmer@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 04, 2018 at 09:05:21PM +0530, Manish Narani wrote:
-> There are some comments which can be updated for better readability of
-> the driver. Update abbreviations to capital letters in the comments.
-> 
-> Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-> ---
->  drivers/edac/synopsys_edac.c | 98 ++++++++++++++++++++++----------------------
->  1 file changed, 48 insertions(+), 50 deletions(-)
-
-From: Manish Narani <manish.narani@xilinx.com>
-Date: Thu, 4 Oct 2018 21:05:21 +0530
-Subject: [PATCH 2/2] EDAC, synopsys: Correct comments
-
-Spellcheck and improve/correct comments.
-
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: Mauro Carvalho Chehab <mchehab@kernel.org>
-CC: Michal Simek <michal.simek@xilinx.com>
-CC: amit.kucheria@linaro.org
-CC: devicetree@vger.kernel.org
-CC: leoyang.li@nxp.com
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-edac <linux-edac@vger.kernel.org>
-CC: mark.rutland@arm.com
-CC: michal.simek@xilinx.com
-CC: robh+dt@kernel.org
-CC: sudeep.holla@arm.com
-Link: http://lkml.kernel.org/r/1538667328-9465-4-git-send-email-manish.narani@xilinx.com
----
- drivers/edac/synopsys_edac.c | 104 +++++++++++++++++------------------
- 1 file changed, 51 insertions(+), 53 deletions(-)
-
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index fbaf33540ce3..b4666310a5f6 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -96,12 +96,12 @@
- #define SCRUB_MODE_SECDED		0x4
- 
- /**
-- * struct ecc_error_info - ECC error log information
-- * @row:	Row number
-- * @col:	Column number
-- * @bank:	Bank number
-- * @bitpos:	Bit position
-- * @data:	Data causing the error
-+ * struct ecc_error_info - ECC error log information.
-+ * @row:	Row number.
-+ * @col:	Column number.
-+ * @bank:	Bank number.
-+ * @bitpos:	Bit position.
-+ * @data:	Data causing the error.
-  */
- struct ecc_error_info {
- 	u32 row;
-@@ -112,11 +112,11 @@ struct ecc_error_info {
- };
- 
- /**
-- * struct synps_ecc_status - ECC status information to report
-- * @ce_cnt:	Correctable error count
-- * @ue_cnt:	Uncorrectable error count
-- * @ceinfo:	Correctable error log information
-- * @ueinfo:	Uncorrectable error log information
-+ * struct synps_ecc_status - ECC status information to report.
-+ * @ce_cnt:	Correctable error count.
-+ * @ue_cnt:	Uncorrectable error count.
-+ * @ceinfo:	Correctable error log information.
-+ * @ueinfo:	Uncorrectable error log information.
-  */
- struct synps_ecc_status {
- 	u32 ce_cnt;
-@@ -126,12 +126,12 @@ struct synps_ecc_status {
- };
- 
- /**
-- * struct synps_edac_priv - DDR memory controller private instance data
-- * @baseaddr:	Base address of the DDR controller
-- * @message:	Buffer for framing the event specific info
-- * @stat:	ECC status information
-- * @ce_cnt:	Correctable Error count
-- * @ue_cnt:	Uncorrectable Error count
-+ * struct synps_edac_priv - DDR memory controller private instance data.
-+ * @baseaddr:	Base address of the DDR controller.
-+ * @message:	Buffer for framing the event specific info.
-+ * @stat:	ECC status information.
-+ * @ce_cnt:	Correctable Error count.
-+ * @ue_cnt:	Uncorrectable Error count.
-  */
- struct synps_edac_priv {
- 	void __iomem *baseaddr;
-@@ -142,13 +142,11 @@ struct synps_edac_priv {
- };
- 
- /**
-- * get_error_info - Get the current ecc error info
-- * @base:	Pointer to the base address of the ddr memory controller
-- * @p:		Pointer to the synopsys ecc status structure
-+ * get_error_info - Get the current ECC error info.
-+ * @base:	Base address of the DDR memory controller.
-+ * @p:		Synopsys ECC status structure.
-  *
-- * Determines there is any ecc error or not
-- *
-- * Return: one if there is no error otherwise returns zero
-+ * Return: one if there is no error otherwise zero.
-  */
- static int get_error_info(void __iomem *base, struct synps_ecc_status *p)
- {
-@@ -195,11 +193,11 @@ static int get_error_info(void __iomem *base, struct synps_ecc_status *p)
- }
- 
- /**
-- * handle_error - Handle controller error types CE and UE
-- * @mci:	Pointer to the edac memory controller instance
-- * @p:		Pointer to the synopsys ecc status structure
-+ * handle_error - Handle Correctable and Uncorrectable errors.
-+ * @mci:	EDAC memory controller instance.
-+ * @p:		Synopsys ECC status structure.
-  *
-- * Handles the controller ECC correctable and uncorrectable error.
-+ * Handles ECC correctable and uncorrectable errors.
-  */
- static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- {
-@@ -230,10 +228,10 @@ static void handle_error(struct mem_ctl_info *mci, struct synps_ecc_status *p)
- }
- 
- /**
-- * check_errors - Check controller for ECC errors
-- * @mci:	Pointer to the edac memory controller instance
-+ * check_errors - Check controller for ECC errors.
-+ * @mci:	EDAC memory controller instance.
-  *
-- * Used to check and post ECC errors. Called by the polling thread
-+ * Check and post ECC errors. Called by the polling thread.
-  */
- static void check_errors(struct mem_ctl_info *mci)
- {
-@@ -253,8 +251,8 @@ static void check_errors(struct mem_ctl_info *mci)
- }
- 
- /**
-- * get_dtype - Return the controller memory width
-- * @base:	Pointer to the ddr memory controller base address
-+ * get_dtype - Return the controller memory width.
-+ * @base:	DDR memory controller base address.
-  *
-  * Get the EDAC device type width appropriate for the current controller
-  * configuration.
-@@ -284,12 +282,12 @@ static enum dev_type get_dtype(const void __iomem *base)
- }
- 
- /**
-- * get_ecc_state - Return the controller ECC enable/disable status
-- * @base:	Pointer to the DDR memory controller base address
-+ * get_ecc_state - Return the controller ECC enable/disable status.
-+ * @base:	DDR memory controller base address.
-  *
-- * Get the ECC enable/disable status for the controller.
-+ * Get the ECC enable/disable status of the controller.
-  *
-- * Return: a ECC status boolean i.e true/false - enabled/disabled.
-+ * Return: true if enabled, otherwise false.
-  */
- static bool get_ecc_state(void __iomem *base)
- {
-@@ -309,9 +307,9 @@ static bool get_ecc_state(void __iomem *base)
- }
- 
- /**
-- * get_memsize - reads the size of the attached memory device
-+ * get_memsize - Read the size of the attached memory device.
-  *
-- * Return: the memory size in bytes
-+ * Return: the memory size in bytes.
-  */
- static u32 get_memsize(void)
- {
-@@ -323,8 +321,8 @@ static u32 get_memsize(void)
- }
- 
- /**
-- * get_mtype - Returns controller memory type
-- * @base:	pointer to the synopsys ecc status structure
-+ * get_mtype - Return the controller memory type.
-+ * @base:	Synopsys ECC status structure.
-  *
-  * Get the EDAC memory type appropriate for the current controller
-  * configuration.
-@@ -347,11 +345,11 @@ static enum mem_type get_mtype(const void __iomem *base)
- }
- 
- /**
-- * init_csrows - Initialize the cs row data
-- * @mci:	Pointer to the edac memory controller instance
-+ * init_csrows - Initialize the csrow data.
-+ * @mci:	EDAC memory controller instance.
-  *
-- * Initializes the chip select rows associated with the EDAC memory
-- * controller instance
-+ * Initialize the chip select rows associated with the EDAC memory
-+ * controller instance.
-  *
-  * Return: Unconditionally 0.
-  */
-@@ -381,11 +379,11 @@ static int init_csrows(struct mem_ctl_info *mci)
- }
- 
- /**
-- * mc_init - Initialize driver instance
-- * @mci:	Pointer to the edac memory controller instance
-- * @pdev:	Pointer to the platform_device struct
-+ * mc_init - Initialize one driver instance.
-+ * @mci:	EDAC memory controller instance.
-+ * @pdev:	platform device.
-  *
-- * Performs initialization of the EDAC memory controller instance and
-+ * Perform initialization of the EDAC memory controller instance and
-  * related driver-private data associated with the memory controller the
-  * instance is bound to.
-  *
-@@ -421,10 +419,10 @@ static int mc_init(struct mem_ctl_info *mci, struct platform_device *pdev)
- }
- 
- /**
-- * mc_probe - Check controller and bind driver
-- * @pdev:	Pointer to the platform_device struct
-+ * mc_probe - Check controller and bind driver.
-+ * @pdev:	platform device.
-  *
-- * Probes a specific controller instance for binding with the driver.
-+ * Probe a specific controller instance for binding with the driver.
-  *
-  * Return: 0 if the controller instance was successfully bound to the
-  * driver; otherwise, < 0 on error.
-@@ -493,8 +491,8 @@ static int mc_probe(struct platform_device *pdev)
- }
- 
- /**
-- * mc_remove - Unbind driver from controller
-- * @pdev:	Pointer to the platform_device struct
-+ * mc_remove - Unbind driver from controller.
-+ * @pdev:	Platform device.
-  *
-  * Return: Unconditionally 0
-  */
--- 
-2.19.0.271.gfe8321ec057f
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+T24gMTAvNC8xOCAxOjE1IFBNLCBOaWNrIEtvc3NpZmlkaXMgd3JvdGU6Cj4gzqPPhM65z4IgMjAx
+OC0xMC0wNCAyMTo1NCwgQXRpc2ggUGF0cmEgzq3Os8+BzrHPiM61Ogo+PiBPbiAxMC80LzE4IDU6
+NDYgQU0sIE5pY2sgS29zc2lmaWRpcyB3cm90ZToKPj4+IFRoZSAvY2hvc2VuIG5vZGUgaXMgb3B0
+aW9uYWwgc28gd2Ugc2hvdWxkIGhhbmRsZSBDTURMSU5FIHJlZ2FyZGxlc3MKPj4+IHRoZSBwcmVz
+ZW5jZSBvZiAvY2hvc2VuL2Jvb3RhcmdzLiBNb3ZlIGhhbmRsaW5nIG9mIENNRExJTkUgaW4KPj4+
+IGVhcmx5X2luaXRfZHRfc2NhbigpIGluc3RlYWQuCj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogTmlj
+ayBLb3NzaWZpZGlzIDxtaWNrQGljcy5mb3J0aC5ncj4KPj4+Cj4+PiAtLS0KPj4+ICAgIGRyaXZl
+cnMvb2YvZmR0LmMgfCA2OQo+Pj4gKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrLS0tLS0tLS0tLS0tLS0tLS0KPj4+ICAgIDEgZmlsZSBjaGFuZ2VkLCA0OCBpbnNlcnRpb25z
+KCspLCAyMSBkZWxldGlvbnMoLSkKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vZi9mZHQu
+YyBiL2RyaXZlcnMvb2YvZmR0LmMKPj4+IGluZGV4IDgwMGFkMjUyYy4uODY4NDY0YjBiIDEwMDY0
+NAo+Pj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYwo+Pj4gKysrIGIvZHJpdmVycy9vZi9mZHQuYwo+
+Pj4gQEAgLTMxLDYgKzMxLDE0IEBACj4+PiAgICAgICNpbmNsdWRlICJvZl9wcml2YXRlLmgiCj4+
+PiAgICArI2lmZGVmIENPTkZJR19DTURMSU5FCj4+PiArI2lmZGVmIENPTkZJR19DTURMSU5FX0ZP
+UkNFCj4+PiArc3RhdGljIGNvbnN0IGNoYXIgZml4ZWRfY21kbGluZVtdIF9faW5pdGNvbnN0ID0g
+Q09ORklHX0NNRExJTkU7Cj4+PiArI2Vsc2UKPj4+ICtzdGF0aWMgY2hhciBidWlsdGluX2NtZGxp
+bmVbXSBfX2luaXRkYXRhID0gQ09ORklHX0NNRExJTkU7Cj4+PiArI2VuZGlmCj4+PiArI2VuZGlm
+Cj4+PiArCj4+PiAgICAvKgo+Pj4gICAgICogb2ZfZmR0X2xpbWl0X21lbW9yeSAtIGxpbWl0IHRo
+ZSBudW1iZXIgb2YgcmVnaW9ucyBpbiB0aGUgL21lbW9yeQo+Pj4gbm9kZQo+Pj4gICAgICogQGxp
+bWl0OiBtYXhpbXVtIGVudHJpZXMKPj4+IEBAIC0xMDg4LDI4ICsxMDk2LDEwIEBAIGludCBfX2lu
+aXQgZWFybHlfaW5pdF9kdF9zY2FuX2Nob3Nlbih1bnNpZ25lZAo+Pj4gbG9uZyBub2RlLCBjb25z
+dCBjaGFyICp1bmFtZSwKPj4+ICAgICAgCS8qIFJldHJpZXZlIGNvbW1hbmQgbGluZSAqLwo+Pj4g
+ICAgCXAgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUsICJib290YXJncyIsICZsKTsKPj4+IC0J
+aWYgKHAgIT0gTlVMTCAmJiBsID4gMCkKPj4+ICsJaWYgKHAgIT0gTlVMTCAmJiBsID4gMCkgewo+
+Pj4gICAgCQlzdHJsY3B5KGRhdGEsIHAsIG1pbigoaW50KWwsIENPTU1BTkRfTElORV9TSVpFKSk7
+Cj4+PiAtCj4+PiAtCS8qCj4+PiAtCSAqIENPTkZJR19DTURMSU5FIGlzIG1lYW50IHRvIGJlIGEg
+ZGVmYXVsdCBpbiBjYXNlIG5vdGhpbmcgZWxzZQo+Pj4gLQkgKiBtYW5hZ2VkIHRvIHNldCB0aGUg
+Y29tbWFuZCBsaW5lLCB1bmxlc3MgQ09ORklHX0NNRExJTkVfRk9SQ0UKPj4+IC0JICogaXMgc2V0
+IGluIHdoaWNoIGNhc2Ugd2Ugb3ZlcnJpZGUgd2hhdGV2ZXIgd2FzIGZvdW5kIGVhcmxpZXIuCj4+
+PiAtCSAqLwo+Pj4gLSNpZmRlZiBDT05GSUdfQ01ETElORQo+Pj4gLSNpZiBkZWZpbmVkKENPTkZJ
+R19DTURMSU5FX0VYVEVORCkKPj4+IC0Jc3RybGNhdChkYXRhLCAiICIsIENPTU1BTkRfTElORV9T
+SVpFKTsKPj4+IC0Jc3RybGNhdChkYXRhLCBDT05GSUdfQ01ETElORSwgQ09NTUFORF9MSU5FX1NJ
+WkUpOwo+Pj4gLSNlbGlmIGRlZmluZWQoQ09ORklHX0NNRExJTkVfRk9SQ0UpCj4+PiAtCXN0cmxj
+cHkoZGF0YSwgQ09ORklHX0NNRExJTkUsIENPTU1BTkRfTElORV9TSVpFKTsKPj4+IC0jZWxzZQo+
+Pj4gLQkvKiBObyBhcmd1bWVudHMgZnJvbSBib290IGxvYWRlciwgdXNlIGtlcm5lbCdzICBjbWRs
+Ki8KPj4+IC0JaWYgKCEoKGNoYXIgKilkYXRhKVswXSkKPj4+IC0JCXN0cmxjcHkoZGF0YSwgQ09O
+RklHX0NNRExJTkUsIENPTU1BTkRfTElORV9TSVpFKTsKPj4+IC0jZW5kaWYKPj4+IC0jZW5kaWYg
+LyogQ09ORklHX0NNRExJTkUgKi8KPj4+IC0KPj4+IC0JcHJfZGVidWcoIkNvbW1hbmQgbGluZSBp
+czogJXNcbiIsIChjaGFyKilkYXRhKTsKPj4+ICsJCXByX2RlYnVnKCJHb3QgYm9vdGFyZ3M6ICVz
+XG4iLCAoY2hhciAqKSBkYXRhKTsKPj4+ICsJfQo+Pj4gICAgICAJLyogYnJlYWsgbm93ICovCj4+
+PiAgICAJcmV0dXJuIDE7Cj4+PiBAQCAtMTI0MCw2ICsxMjMwLDQzIEBAIGJvb2wgX19pbml0IGVh
+cmx5X2luaXRfZHRfc2Nhbih2b2lkICpwYXJhbXMpCj4+PiAgICAJCXJldHVybiBmYWxzZTsKPj4+
+ICAgICAgCWVhcmx5X2luaXRfZHRfc2Nhbl9ub2RlcygpOwo+Pj4gKwo+Pj4gKwkvKgo+Pj4gKwkg
+KiBUaGUgL2Nob3NlbiBub2RlIG5vcm1hbHkgY29udGFpbnMgdGhlIGJvb3RhcmdzIGVsZW1lbnQK
+Pj4KPj4gL3Mvbm9ybWFseS9ub3JtYWxseQo+Pgo+IAo+IEFDSwo+IAo+Pj4gKwkgKiB0aGF0IGlu
+Y2x1ZGVzIHRoZSBrZXJuZWwncyBjb21tYW5kIGxpbmUgcGFyYW1ldGVycy4KPj4+ICsJICogSG93
+ZXZlciB0aGUgcHJlc2VuY2Ugb2YgL2Nob3NlbiBpcyBub3QgbWFuZGF0b3J5IHNvCj4+PiArCSAq
+IGluIGNhc2Ugd2UgZGlkbid0IGdldCBhIGNvbW1hbmQgbGluZSB3aGVuIHNjYW5uaW5nCj4+PiAr
+CSAqIG5vZGVzIGFib3ZlLCB3ZSBzaG91bGQgcHJvdmlkZSBvbmUgaGVyZSBiZWZvcmUgd2UKPj4+
+ICsJICogcmV0dXJuLCBpZiBwb3NzaWJsZS4KPj4+ICsJICoKPj4+ICsJICogVGhlIGJ1aWx0LWlu
+IGNvbW1hbmQgbGluZSBjYW4gYmUgdXNlZCBhcyBhIGRlZmF1bHQKPj4+ICsJICogY29tbWFuZCBs
+aW5lIGluIGNhc2Ugd2UgcmVjZWl2ZWQgbm90aGluZyBmcm9tIHRoZQo+Pj4gKwkgKiBkZXZpY2Ug
+dHJlZS9ib290bG9hZGVyLiBJdCBjYW4gYWxzbyBiZSB1c2VkIGZvcgo+Pj4gKwkgKiBleHRlbmRp
+bmcgb3IgcmVwbGFjaW5nIHRoZSByZWNlaXZlZCBjb21tYW5kIGxpbmUuCj4+PiArCSAqLwo+Pj4g
+KyNpZmRlZiBDT05GSUdfQ01ETElORQo+Pj4gKyNpZiBkZWZpbmVkKENPTkZJR19DTURMSU5FX0VY
+VEVORCkKPj4+ICsJLyoKPj4+ICsJICogT3JkZXIgb2YgcGFyYW1ldGVycyBzaG91bGRuJ3QgbWF0
+dGVyIGZvciBtb3N0IGNhc2VzLAo+Pj4gKwkgKiBzbyBwcmVwZW5kaW5nIG9yIGFwcGVuZGluZyB0
+aGUgYnVpbHQtaW4gY29tbWFuZCBsaW5lCj4+PiArCSAqIHNob3VsZG4ndCBtYWtlIGEgZGlmZmVy
+ZW5jZS4gSW4gY2FzZXMgd2hlcmUgaXQgZG9lcwo+Pj4gKwkgKiBpdCdzIHVwIHRvIHRoZSB1c2Vy
+IHRvIGNvbmZpZ3VyZSB0aGUga2VybmVsIGFuZC9vcgo+Pj4gKwkgKiB0aGUgYm9vdGxvYWRlciBw
+cm9wZXJseS4KPj4+ICsJICovCj4+PiArCWlmIChidWlsdGluX2NtZGxpbmVbMF0pIHsKPj4+ICsJ
+CXN0cmxjYXQoYm9vdF9jb21tYW5kX2xpbmUsICIgIiwgQ09NTUFORF9MSU5FX1NJWkUpOwo+Pj4g
+KwkJc3RybGNhdChib290X2NvbW1hbmRfbGluZSwgYnVpbHRpbl9jbWRsaW5lLCBDT01NQU5EX0xJ
+TkVfU0laRSkKPj4+ICsJfQo+Pj4gKyNlbGlmIGRlZmluZWQoQ09ORklHX0NNRExJTkVfRk9SQ0Up
+Cj4+PiArCWlmIChmaXhlZF9jbWRsaW5lWzBdKQo+Pj4gKwkJc3RybGNweShib290X2NvbW1hbmRf
+bGluZSwgZml4ZWRfY21kbGluZSwgQ09NTUFORF9MSU5FX1NJWkUpOwo+Pj4gKyNlbHNlCj4+PiAr
+CS8qIE5vIGFyZ3VtZW50cyBmcm9tIGJvb3QgbG9hZGVyLCB1c2Uga2VybmVsJ3MgY21kbGluZSAq
+Lwo+Pj4gKwlpZiAoIWJvb3RfY29tbWFuZF9saW5lWzBdICYmIGJ1aWx0aW5fY21kbGluZVswXSkK
+Pj4+ICsJCXN0cmxjcHkoYm9vdF9jb21tYW5kX2xpbmUsIGJ1aWx0aW5fY21kbGluZSwgQ09NTUFO
+RF9MSU5FX1NJWkUpOwo+Pj4gKyNlbmRpZgo+Pj4gKyNlbmRpZiAvKiBDT05GSUdfQ01ETElORSAq
+Lwo+Pj4gKwo+Pgo+PiBBbnkgc3BlY2lmaWMgcmVhc29uIGZvciBkb2luZyB0aGlzIGluIGVhcmx5
+X2luaXRfZHRfc2NhbiBpbnN0ZWFkIG9mCj4+IGVhcmx5X2luaXRfZHRfc2Nhbl9jaG9zZW4/Cj4+
+IEkgdGhpbmsga2VlcGluZyBhbGwgYm9vdCBjb21tYW5kIGxpbmUgbW9kaWZpY2F0aW9ucyBhdCBv
+bmUgcGxhY2UgbWFrZXMKPj4gbW9yZSBzZW5zZS4KPj4KPj4gUmVnYXJkcywKPj4gQXRpc2gKPiAK
+PiBXaGVuIHBhcnNpbmcgdGhlIGRldmljZSB0cmVlIHRocm91Z2ggZWFybHlfaW5pdF9kdF9zY2Fu
+LCBhZnRlciB2ZXJpZnlpbmcKPiB0aGUgZmR0IGZpbGUncwo+IGludGVncml0eSwgdGhlIGNvZGUg
+d2lsbCBzdGFydCB0cmF2ZXJzaW5nIHRocm91Z2ggdGhlIHZhcmlvdXMgbm9kZXMgb2YKPiB0aGUg
+dHJlZSB1c2luZwo+IG9mX3NjYW5fZmxhdF9kdCAob24gdGhlIHNhbWUgZmlsZSBJIHBhdGNoZWQp
+LiBUaGF0IGZ1bmN0aW9uIGdldHMgYQo+IHBvaW50ZXIgdG8gYSBzZWFyY2gKPiBmdW5jdGlvbiBh
+cyBpdHMgZmlyc3QgYXJndW1lbnQgYW5kIHRoZSBzZWNvbmQgYXJndW1lbnQgaXMgYW4gYXV4aWxp
+YXJ5Cj4gYnVmZmVyLiBUaGUKPiBzZWFyY2ggZnVuY3Rpb24gd2lsbCBydW4gZm9yIGFsbCBub2Rl
+cyBvbiB0aGUgdHJlZSB1bnRpbCBpdCByZWFjaGVzIHRoZQo+IGV4cGVjdGVkIG5vZGUKPiBpbiB3
+aGljaCBjYXNlIGl0IHJldHVybnMgMSBhbmQgdGhlIHNlYXJjaCB3aWxsIGVuZC4KPiAKPiBJZiB3
+ZSBkbyB0aGUgdHdlYWtpbmcgb2YgdGhlIGNvbW1hbmQgbGluZSBpbnNpZGUKPiBlYXJseV9pbml0
+X2R0X3NjYW5fY2hvc2VuIGJlZm9yZSB0aGUKPiBjaGVjayBpcyBkb25lLCB3ZSdsbCBtZXNzIHVw
+IHRoZSBjb21tYW5kIGxpbmUgYmFkbHkgc2luY2Ugd2UnbGwgYmUKPiB0d2Vha2luZyBpdAo+IGZv
+ciBldmVyeSBub2RlIG9uIHRoZSB0cmVlICh1bnRpbCB3ZSByZWFjaCB0aGUgL2Nob3NlbiBub2Rl
+LCBpZiB3ZSByZWFjaAo+IGl0KS4gSWYgd2UgZG8KPiBpdCBhZnRlciB0aGUgY2hlY2sgLXdoaWNo
+IGlzIHdoYXQncyBoYXBwZW5pbmcgbm93LSB3ZSBtaWdodCBub3QgcmVhY2gKPiB0aGUgY29kZSBz
+aW5jZQo+IHRoZSAvY2hvc2VuIG5vZGUgaXMgb3B0aW9uYWwgc28gdGhlIGNoZWNrIG1heSBuZXZl
+ciBzdWNjZWVkLiBTbyB3ZSBuZWVkCj4gdG8gZG8gdGhlIGNoZWNrCj4gYWZ0ZXIgdGhlIHNlYXJj
+aCBmaW5pc2hlcy4gSSBjaG9zZSB0byBkbyBpdCBvbiBlYXJseV9pbml0X2R0X3NjYW4gc2luY2UK
+PiBpdCdzIHNvbWV0aGluZwo+IHRoYXQgSU1ITyBzaG91bGQgYmUgY2hlY2tlZCBiZWZvcmUgdGhh
+dCBmdW5jdGlvbiByZXR1cm5zLgo+IAoKSXQgbWFrZXMgc2Vuc2UuIFRoYW5rcy4KClJlZ2FyZHMs
+CkF0aXNoCj4gUmVnYXJkcywKPiBOaWNrCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtcmlzY3YgbWFpbGluZyBsaXN0CmxpbnV4LXJpc2N2
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1yaXNjdgo=
