@@ -1,93 +1,90 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH v2 5/5] MIPS: mscc: add PCB120 to the ocelot fitImage
-Date: Thu,  4 Oct 2018 15:17:10 +0200
-Message-ID: <20181004131710.14978-6-quentin.schulz@bootlin.com>
-References: <20181004131710.14978-1-quentin.schulz@bootlin.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [RFC PATCH v2 2/9] dt-bindings: ti-lmu: Remove LM3697
+Date: Thu, 4 Oct 2018 08:26:50 -0500
+Message-ID: <e14aeedb-e58b-f3e0-72f6-2bfb04a29e3c@ti.com>
+References: <20180928182954.25446-1-dmurphy@ti.com>
+ <20180928182954.25446-3-dmurphy@ti.com> <20181002072827.GA19677@amd>
+ <fef2c612-ac35-126e-669e-335fb3075f64@ti.com> <20181003130154.GA20418@amd>
+ <f4ed1450-6c99-e4c6-0092-f355ab3278f7@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004131710.14978-1-quentin.schulz@bootlin.com>
+In-Reply-To: <f4ed1450-6c99-e4c6-0092-f355ab3278f7@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PCB120 and PCB123 are both development boards based on Microsemi Ocelot
-so let's use the same fitImage for both.
+Jacek
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- arch/mips/generic/Kconfig                       |  6 +++---
- arch/mips/generic/Platform                      |  2 +-
- ...d-ocelot_pcb123.its.S => board-ocelot.its.S} | 17 +++++++++++++++++
- 3 files changed, 21 insertions(+), 4 deletions(-)
- rename arch/mips/generic/{board-ocelot_pcb123.its.S => board-ocelot.its.S} (55%)
+On 10/03/2018 03:46 PM, Jacek Anaszewski wrote:
+> On 10/03/2018 03:01 PM, Pavel Machek wrote:
+>> On Wed 2018-10-03 07:24:23, Dan Murphy wrote:
+>>> Hello
+>>>
+>>> On 10/02/2018 02:28 AM, Pavel Machek wrote:
+>>>> On Fri 2018-09-28 13:29:47, Dan Murphy wrote:
+>>>>> Remove support for the LM3697 LED device
+>>>>> from the ti-lmu.  The LM3697 will be supported
+>>>>> via a stand alone LED driver.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>
+>>>> NAK, for reasons I explained before. Please add it to the patch so
+>>>> that it does not get applied by mistake. Ouch and AFAICT Rob was not
+>>>> happy with this either.
+>>>>
+>>>> Yes, you are creating new drivers, ok; but that does _not_ mean you
+>>>> should create new binding.
+>>>
+>>> I am copying my comment here on the review of this original binding for
+>>> records
+>>>
+>>> I found the review or at least the reference for the ti-lmu.txt binding.
+>>>
+>>> https://lore.kernel.org/patchwork/patch/764180/
+>>>
+>>> Does not appear that the binding was sent to the device tree mail list.
+>>> (Maybe that email list did not exist in Feb 2017).
+>>
+>> Quick google shows:
+>>
+>> https://lwn.net/Articles/666023/
+> 
+> This link refreshed my memory and allowed me to recall Milo's patch set
+> from the end of 2015, and the related discussion. I had an impression
+> that I had had some request regarding the bindings but there was no
+> follow-up.
+> 
+> I've googled that thread [0] and it proved I was right [1].
+> 
+> From Milo's messages we can infer that there will be next
+> version of the patch set and it appeared but over a year later [2],
+> and without the leds-lm3633 driver and related bindings, and without
+> drivers/video/backlight/ti-lmu-backlight-core.c.
+> 
+> Patch set gets merged despite dangling DT references.
+> 
+> Dan, I propose you to resend the patch removing the bindings from
+> MFD, and explain the rationale in the patch below commit message
+> after "---" .
+> 
+>> Now can we stop this nonsense? If there is a problem with the binding,
+>> submit patches to fix the problem.
+> 
+> [0]
+> https://lore.kernel.org/lkml/1448521025-2796-1-git-send-email-milo.kim@ti.com/
+> [1] https://lore.kernel.org/lkml/56656468.8020300@samsung.com/
+> [2]
+> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1341860.html
+> 
 
-diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-index 08e33c6b2539..fd6019802657 100644
---- a/arch/mips/generic/Kconfig
-+++ b/arch/mips/generic/Kconfig
-@@ -65,11 +65,11 @@ config FIT_IMAGE_FDT_XILFPGA
- 	  Enable this to include the FDT for the MIPSfpga platform
- 	  from Imagination Technologies in the FIT kernel image.
- 
--config FIT_IMAGE_FDT_OCELOT_PCB123
--	bool "Include FDT for Microsemi Ocelot PCB123"
-+config FIT_IMAGE_FDT_OCELOT
-+	bool "Include FDT for Microsemi Ocelot development platforms"
- 	select MSCC_OCELOT
- 	help
--	  Enable this to include the FDT for the Ocelot PCB123 platform
-+	  Enable this to include the FDT for the Ocelot development platforms
- 	  from Microsemi in the FIT kernel image.
- 	  This requires u-boot on the platform.
- 
-diff --git a/arch/mips/generic/Platform b/arch/mips/generic/Platform
-index 879cb80396c8..eaa19d189324 100644
---- a/arch/mips/generic/Platform
-+++ b/arch/mips/generic/Platform
-@@ -16,5 +16,5 @@ all-$(CONFIG_MIPS_GENERIC)	:= vmlinux.gz.itb
- its-y					:= vmlinux.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= board-boston.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= board-ni169445.its.S
--its-$(CONFIG_FIT_IMAGE_FDT_OCELOT_PCB123) += board-ocelot_pcb123.its.S
-+its-$(CONFIG_FIT_IMAGE_FDT_OCELOT)	+= board-ocelot.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= board-xilfpga.its.S
-diff --git a/arch/mips/generic/board-ocelot_pcb123.its.S b/arch/mips/generic/board-ocelot.its.S
-similarity index 55%
-rename from arch/mips/generic/board-ocelot_pcb123.its.S
-rename to arch/mips/generic/board-ocelot.its.S
-index 5a7d5e1c878a..3da23988149a 100644
---- a/arch/mips/generic/board-ocelot_pcb123.its.S
-+++ b/arch/mips/generic/board-ocelot.its.S
-@@ -11,6 +11,17 @@
- 				algo = "sha1";
- 			};
- 		};
-+
-+		fdt@ocelot_pcb120 {
-+			description = "MSCC Ocelot PCB120 Device Tree";
-+			data = /incbin/("boot/dts/mscc/ocelot_pcb120.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
- 	};
- 
- 	configurations {
-@@ -19,5 +30,11 @@
- 			kernel = "kernel@0";
- 			fdt = "fdt@ocelot_pcb123";
- 		};
-+
-+		conf@ocelot_pcb120 {
-+			description = "Ocelot Linux kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@ocelot_pcb120";
-+		};
- 	};
- };
+Sounds good I will clean this up and submit a v3 non-RFC edition
+
+Dan
+
 -- 
-2.17.1
+------------------
+Dan Murphy
