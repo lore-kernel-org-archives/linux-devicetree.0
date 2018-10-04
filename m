@@ -1,58 +1,142 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCHv3 2/2] iommu/arm-smmu: Add SMMU clock
-Date: Fri, 5 Oct 2018 00:19:37 +0530
-Message-ID: <1898b9fb-0523-4de4-741a-a52de5fdab70@codeaurora.org>
-References: <1538605693-22073-1-git-send-email-thor.thayer@linux.intel.com>
-	<1538605693-22073-3-git-send-email-thor.thayer@linux.intel.com>
+From: Atish Patra <atish.patra@wdc.com>
+Subject: Re: [PATCH] OF: Handle CMDLINE when /chosen node is not present
+Date: Thu, 4 Oct 2018 11:54:05 -0700
+Message-ID: <fdd03e2e-4c1e-e89d-a336-ab4a716e7abc@wdc.com>
+References: <20181004123110.8487-1-mick@ics.forth.gr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1538605693-22073-3-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181004123110.8487-1-mick@ics.forth.gr>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Nick Kossifidis <mick@ics.forth.gr>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "palmer@sifive.com" <palmer@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thor,
-
-
-On 10/4/2018 3:58 AM, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
-> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->
-> Add a clock to the SMMU structure. In the device tree case,
-> check for a clock node and enable the clock if found.
->
-> This patch is dependent upon the following patches that add
-> a device tree bulk clock function.
-> "[V6, 1/4] clk: bulk: add of_clk_bulk_get()"
-> https://patchwork.kernel.org/patch/10583133/
-> "[V6, 2/4] clk: add new APIs to operation on all available
-> clocks"
-> https://patchwork.kernel.org/patch/10583131/
-> "[V6, 3/4] clk: add managerged version of clk_bulk_get_all"
-> https://patchwork.kernel.org/patch/10583139/
->
-> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On 10/4/18 5:46 AM, Nick Kossifidis wrote:
+> The /chosen node is optional so we should handle CMDLINE regardless
+> the presence of /chosen/bootargs. Move handling of CMDLINE in
+> early_init_dt_scan() instead.
+> 
+> Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+> 
 > ---
->   drivers/iommu/arm-smmu.c | 20 ++++++++++++++++++++
->   1 file changed, 20 insertions(+)
+>   drivers/of/fdt.c | 69 +++++++++++++++++++++++++++++++++++++++-----------------
+>   1 file changed, 48 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 800ad252c..868464b0b 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -31,6 +31,14 @@
+>   
+>   #include "of_private.h"
+>   
+> +#ifdef CONFIG_CMDLINE
+> +#ifdef CONFIG_CMDLINE_FORCE
+> +static const char fixed_cmdline[] __initconst = CONFIG_CMDLINE;
+> +#else
+> +static char builtin_cmdline[] __initdata = CONFIG_CMDLINE;
+> +#endif
+> +#endif
+> +
+>   /*
+>    * of_fdt_limit_memory - limit the number of regions in the /memory node
+>    * @limit: maximum entries
+> @@ -1088,28 +1096,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+>   
+>   	/* Retrieve command line */
+>   	p = of_get_flat_dt_prop(node, "bootargs", &l);
+> -	if (p != NULL && l > 0)
+> +	if (p != NULL && l > 0) {
+>   		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
+> -
+> -	/*
+> -	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+> -	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
+> -	 * is set in which case we override whatever was found earlier.
+> -	 */
+> -#ifdef CONFIG_CMDLINE
+> -#if defined(CONFIG_CMDLINE_EXTEND)
+> -	strlcat(data, " ", COMMAND_LINE_SIZE);
+> -	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+> -#elif defined(CONFIG_CMDLINE_FORCE)
+> -	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+> -#else
+> -	/* No arguments from boot loader, use kernel's  cmdl*/
+> -	if (!((char *)data)[0])
+> -		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+> -#endif
+> -#endif /* CONFIG_CMDLINE */
+> -
+> -	pr_debug("Command line is: %s\n", (char*)data);
+> +		pr_debug("Got bootargs: %s\n", (char *) data);
+> +	}
+>   
+>   	/* break now */
+>   	return 1;
+> @@ -1240,6 +1230,43 @@ bool __init early_init_dt_scan(void *params)
+>   		return false;
+>   
+>   	early_init_dt_scan_nodes();
+> +
+> +	/*
+> +	 * The /chosen node normaly contains the bootargs element
 
-The clock part is already handled by one of the patch in the
-runtime pm series of arm-smmu [1]. This patch should not be needed.
+/s/normaly/normally
 
-[1] https://patchwork.kernel.org/patch/10581899/
+> +	 * that includes the kernel's command line parameters.
+> +	 * However the presence of /chosen is not mandatory so
+> +	 * in case we didn't get a command line when scanning
+> +	 * nodes above, we should provide one here before we
+> +	 * return, if possible.
+> +	 *
+> +	 * The built-in command line can be used as a default
+> +	 * command line in case we received nothing from the
+> +	 * device tree/bootloader. It can also be used for
+> +	 * extending or replacing the received command line.
+> +	 */
+> +#ifdef CONFIG_CMDLINE
+> +#if defined(CONFIG_CMDLINE_EXTEND)
+> +	/*
+> +	 * Order of parameters shouldn't matter for most cases,
+> +	 * so prepending or appending the built-in command line
+> +	 * shouldn't make a difference. In cases where it does
+> +	 * it's up to the user to configure the kernel and/or
+> +	 * the bootloader properly.
+> +	 */
+> +	if (builtin_cmdline[0]) {
+> +		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
+> +		strlcat(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE)
+> +	}
+> +#elif defined(CONFIG_CMDLINE_FORCE)
+> +	if (fixed_cmdline[0])
+> +		strlcpy(boot_command_line, fixed_cmdline, COMMAND_LINE_SIZE);
+> +#else
+> +	/* No arguments from boot loader, use kernel's cmdline */
+> +	if (!boot_command_line[0] && builtin_cmdline[0])
+> +		strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+> +#endif
+> +#endif /* CONFIG_CMDLINE */
+> +
 
-[...]
+Any specific reason for doing this in early_init_dt_scan instead of 
+early_init_dt_scan_chosen?
+I think keeping all boot command line modifications at one place makes 
+more sense.
 
-Regards
-Vivek
+Regards,
+Atish
+>   	return true;
+>   }
+>   
+> 
