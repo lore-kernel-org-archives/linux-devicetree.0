@@ -1,58 +1,98 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v6 09/10] dt-binding: mtd: Document gpio-addr-flash
-Date: Thu,  4 Oct 2018 15:01:09 +0200
-Message-ID: <20181004130110.8496-9-ricardo.ribalda@gmail.com>
-References: <20181004130110.8496-1-ricardo.ribalda@gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 2/2] media: platform: Add Aspeed Video Engine driver
+Date: Thu, 4 Oct 2018 15:02:02 +0200
+Message-ID: <d7c82025-5c9a-6a64-75e0-f0d84d149dde@xs4all.nl>
+References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
+ <1537903629-14003-3-git-send-email-eajames@linux.ibm.com>
+ <a78d4c7a-ac58-c23d-a683-23dce54be993@xs4all.nl>
+ <8ca47483-5347-c40d-0d01-4f13e88f8cde@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004130110.8496-1-ricardo.ribalda@gmail.com>
+In-Reply-To: <8ca47483-5347-c40d-0d01-4f13e88f8cde@linux.vnet.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Zhouyang Jia <jiazhouyang09@gmail.com>, linux-mtd@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>, Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for gpio-addr-flash. This binding allow creating
-flash devices that are paged using GPIOs.
+On 10/03/18 22:26, Eddie James wrote:
+> 
+> 
+> On 09/28/2018 06:30 AM, Hans Verkuil wrote:
+>> On 09/25/2018 09:27 PM, Eddie James wrote:
+>>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>>> can capture and compress video data from digital or analog sources. With
+>>> the Aspeed chip acting a service processor, the Video Engine can capture
+>>> the host processor graphics output.
+>>>
+>>> Add a V4L2 driver to capture video data and compress it to JPEG images.
+>>> Make the video frames available through the V4L2 streaming interface.
+>>>
+>>> +		memcpy(&table[base], aspeed_video_jpeg_dct[i],
+>>> +		       sizeof(aspeed_video_jpeg_dct[i]));
+>>> +
+>>> +		base += ASPEED_VIDEO_JPEG_DCT_SIZE;
+>>> +		memcpy(&table[base], aspeed_video_jpeg_quant,
+>>> +		       sizeof(aspeed_video_jpeg_quant));
+>>> +
+>>> +		if (yuv420)
+>>> +			table[base + 2] = 0x00220103;
+>>> +	}
+>>> +}
+>>> +
+>>> +static void aspeed_video_update(struct aspeed_video *video, u32 reg,
+>>> +				unsigned long mask, u32 bits)
+>> You probably want to use u32 for the mask.
+> 
+> Using a u32 there results in:
+> 
+> warning: large integer implicitly truncated to unsigned type [-Woverflow]
+> 
+> everywhere I call aspeed_video_update. Not sure what the deal is. Any 
+> suggestions?
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
----
- .../bindings/mtd/mtd,gpio-addr-flash.txt      | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
+The BIT and GENMASK macros produce unsigned long values.
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt b/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
-new file mode 100644
-index 000000000000..304a33880f9e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/mtd,gpio-addr-flash.txt
-@@ -0,0 +1,25 @@
-+Memory Mapped flash with some address lines addressed using GPIOs
-+
-+Handle the case where a flash device is mostly addressed using physical
-+line and supplemented by GPIOs.  This way you can hook up say a 8MiB flash
-+to a 2MiB memory range and use the GPIOs to select a particular range.
-+
-+ - compatible :  must be "mtd,gpio-addr-flash", "cfi-flash";
-+ - reg : Address range of the mtd chip that is memory mapped, this is,
-+   on the previous example 2MiB.
-+ - addr-gpios: List of GPIO specifiers that will be used to address the MSBs
-+   address lines. The order goes from LSB to MSB.
-+
-+For the rest of the properties, see mtd-physmap.txt.
-+
-+The device tree may optionally contain sub-nodes describing partitions of the
-+address space. Check partition.txt for more details.
-+
-+Example:
-+
-+	flash@300000 {
-+		compatible = "mtd,gpio-addr-flash", "cfi-flash";
-+		bank-width = <2>;
-+		reg = < 0x00300000 0x00200000 >;
-+		addr-gpios = <&gpio_0 3 0>, <&gpio_0 4 0>;
-+	} ;
--- 
-2.19.0
+I think it is easier if instead of passing a mask (i.e. the bits you want
+to keep) you pass the bits you want to clear and replace with new ones.
+
+So 'u32 clear' instead of 'unsigned long mask'.
+
+The problem occurs because e.g. ~BIT(10) expands to an unsigned long with
+all bits except for bit 10 set to 1. And passing that to an u32 will obviously
+fail.
+
+But just passing BIT(10) is fine since that fits in an u32.
+
+Regards,
+
+	Hans
+
+> 
+> Thanks,
+> Eddie
+> 
+>>
+>>> +{
+>>> +	u32 t = readl(video->base + reg);
+>>> +	u32 before = t;
+>>> +
+>>> +	t &= mask;
+>>> +	t |= bits;
+>>> +	writel(t, video->base + reg);
+>>> +	dev_dbg(video->dev, "update %03x[%08x -> %08x]\n", reg, before,
+>>>
+>>> +
+>>> +module_platform_driver(aspeed_video_driver);
+>>> +
+>>> +MODULE_DESCRIPTION("ASPEED Video Engine Driver");
+>>> +MODULE_AUTHOR("Eddie James");
+>>> +MODULE_LICENSE("GPL v2");
+>>>
+>> Regards,
+>>
+>> 	Hans
+>>
+> 
