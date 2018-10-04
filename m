@@ -1,241 +1,77 @@
-From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v8 03/10] edac: synopsys: Modify the comments in the driver
-Date: Thu, 4 Oct 2018 21:05:21 +0530
-Message-ID: <1538667328-9465-4-git-send-email-manish.narani@xilinx.com>
-References: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 12/12] arm64: dts: allwinner: bananapi-m64:
+ Bananapi S070WV20-CT16 DSI panel
+Date: Thu, 4 Oct 2018 21:33:59 +0530
+Message-ID: <CAMty3ZBb25EBF85oGYZFMGkW1F8DwojfwWp=UKhoTrJZmQkjZQ@mail.gmail.com>
+References: <20180927114850.24565-1-jagan@amarulasolutions.com>
+ <20180927114850.24565-13-jagan@amarulasolutions.com> <20180927171747.wqdt5eiwktyyoefz@flea>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, manish.narani@xilinx.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, leoyang.li@nxp.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB67T3DOQKGQEEHVW7OI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20180927171747.wqdt5eiwktyyoefz@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There are some comments which can be updated for better readability of
-the driver. Update abbreviations to capital letters in the comments.
+On Thu, Sep 27, 2018 at 10:47 PM Maxime Ripard
+<maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> On Thu, Sep 27, 2018 at 05:18:50PM +0530, Jagan Teki wrote:
+> > This patch add support for Bananapi S070WV20-CT16 DSI panel to
+> > BPI-M64 board.
+> >
+> > DSI panel connected via board DSI port with,
+> > - DC1SW as AVDD supply
+> > - DCDC1 as DVDD supply
+> > - PD6 gpio for reset pin
+> > - PD5 gpio for backlight enable pin
+> > - PD7 gpio for backlight vdd supply
+> >
+> > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > ---
+> >  .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 42 +++++++++++++++++++
+> >  1 file changed, 42 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > index ef1c90401bb2..c0be949be68d 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+> > @@ -45,6 +45,7 @@
+> >  #include "sun50i-a64.dtsi"
+> >
+> >  #include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/pwm/pwm.h>
+> >
+> >  / {
+> >       model = "BananaPi-M64";
+> > @@ -56,6 +57,24 @@
+> >               serial1 = &uart1;
+> >       };
+> >
+> > +     vdd_bl: regulator@0 {
+> > +             compatible = "regulator-fixed";
+> > +             regulator-name = "bl-3v3";
+> > +             regulator-min-microvolt = <3300000>;
+> > +             regulator-max-microvolt = <3300000>;
+> > +             gpio = <&pio 3 7 GPIO_ACTIVE_HIGH>; /* PD7 */
+> > +             enable-active-high;
+> > +     };
+> > +
+> > +     backlight_dsi: backlight-dsi {
+> > +             compatible = "pwm-backlight";
+> > +             pwms = <&r_pwm 0 50000 PWM_POLARITY_INVERTED>;
+> > +             brightness-levels = <0 10 20 30 40 50 60 70 80 90 100>;
+>
+> The brightness levels should be increasing linearly from a user point
+> of view. Usually, with a PWM backlight, a quadratic rule works much
+> better.
 
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
----
- drivers/edac/synopsys_edac.c | 98 ++++++++++++++++++++++----------------------
- 1 file changed, 48 insertions(+), 50 deletions(-)
-
-diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
-index abb5de8..7db5928 100644
---- a/drivers/edac/synopsys_edac.c
-+++ b/drivers/edac/synopsys_edac.c
-@@ -96,12 +96,12 @@
- #define SCRUB_MODE_SECDED		0x4
- 
- /**
-- * struct ecc_error_info - ECC error log information
-- * @row:	Row number
-- * @col:	Column number
-- * @bank:	Bank number
-- * @bitpos:	Bit position
-- * @data:	Data causing the error
-+ * struct ecc_error_info - ECC error log information.
-+ * @row:	Row number.
-+ * @col:	Column number.
-+ * @bank:	Bank number.
-+ * @bitpos:	Bit position.
-+ * @data:	Data causing the error.
-  */
- struct ecc_error_info {
- 	u32 row;
-@@ -112,11 +112,11 @@ struct ecc_error_info {
- };
- 
- /**
-- * struct synps_ecc_status - ECC status information to report
-- * @ce_cnt:	Correctable error count
-- * @ue_cnt:	Uncorrectable error count
-- * @ceinfo:	Correctable error log information
-- * @ueinfo:	Uncorrectable error log information
-+ * struct synps_ecc_status - ECC status information to report.
-+ * @ce_cnt:	Correctable error count.
-+ * @ue_cnt:	Uncorrectable error count.
-+ * @ceinfo:	Correctable error log information.
-+ * @ueinfo:	Uncorrectable error log information.
-  */
- struct synps_ecc_status {
- 	u32 ce_cnt;
-@@ -126,12 +126,12 @@ struct synps_ecc_status {
- };
- 
- /**
-- * struct synps_edac_priv - DDR memory controller private instance data
-- * @baseaddr:	Base address of the DDR controller
-- * @message:	Buffer for framing the event specific info
-- * @stat:	ECC status information
-- * @ce_cnt:	Correctable Error count
-- * @ue_cnt:	Uncorrectable Error count
-+ * struct synps_edac_priv - DDR memory controller private instance data.
-+ * @baseaddr:	Base address of the DDR controller.
-+ * @message:	Buffer for framing the event specific info.
-+ * @stat:	ECC status information.
-+ * @ce_cnt:	Correctable Error count.
-+ * @ue_cnt:	Uncorrectable Error count.
-  */
- struct synps_edac_priv {
- 	void __iomem *baseaddr;
-@@ -142,13 +142,11 @@ struct synps_edac_priv {
- };
- 
- /**
-- * edac_geterror_info - Get the current ecc error info
-- * @base:	Pointer to the base address of the ddr memory controller
-- * @p:		Pointer to the synopsys ecc status structure
-+ * edac_geterror_info - Get the current ECC error info.
-+ * @base:	Base address of the DDR memory controller.
-+ * @p:		Synopsys ECC status structure.
-  *
-- * Determines there is any ecc error or not
-- *
-- * Return: one if there is no error otherwise returns zero
-+ * Return: one if there is no error otherwise returns zero.
-  */
- static int edac_geterror_info(void __iomem *base,
- 				    struct synps_ecc_status *p)
-@@ -196,11 +194,11 @@ static int edac_geterror_info(void __iomem *base,
- }
- 
- /**
-- * edac_handle_error - Handle controller error types CE and UE
-- * @mci:	Pointer to the edac memory controller instance
-- * @p:		Pointer to the synopsys ecc status structure
-+ * edac_handle_error - Handle controller error types CE and UE.
-+ * @mci:	EDAC memory controller instance.
-+ * @p:		Synopsys ECC status structure.
-  *
-- * Handles the controller ECC correctable and un correctable error.
-+ * Handles the controller ECC correctable and un-correctable error.
-  */
- static void edac_handle_error(struct mem_ctl_info *mci,
- 				    struct synps_ecc_status *p)
-@@ -232,10 +230,10 @@ static void edac_handle_error(struct mem_ctl_info *mci,
- }
- 
- /**
-- * edac_check - Check controller for ECC errors
-- * @mci:	Pointer to the edac memory controller instance
-+ * edac_check - Check controller for ECC errors.
-+ * @mci:	EDAC memory controller instance.
-  *
-- * Used to check and post ECC errors. Called by the polling thread
-+ * Used to check and post ECC errors. Called by the polling thread.
-  */
- static void edac_check(struct mem_ctl_info *mci)
- {
-@@ -255,8 +253,8 @@ static void edac_check(struct mem_ctl_info *mci)
- }
- 
- /**
-- * edac_get_dtype - Return the controller memory width
-- * @base:	Pointer to the ddr memory controller base address
-+ * edac_get_dtype - Return the controller memory width.
-+ * @base:	DDR memory controller base address.
-  *
-  * Get the EDAC device type width appropriate for the current controller
-  * configuration.
-@@ -286,12 +284,12 @@ static enum dev_type edac_get_dtype(const void __iomem *base)
- }
- 
- /**
-- * edac_get_eccstate - Return the controller ecc enable/disable status
-- * @base:	Pointer to the ddr memory controller base address
-+ * edac_get_eccstate - Return the controller ECC enable/disable status.
-+ * @base:	DDR memory controller base address.
-  *
-- * Get the ECC enable/disable status for the controller
-+ * Get the ECC enable/disable status for the controller.
-  *
-- * Return: a ecc status boolean i.e true/false - enabled/disabled.
-+ * Return: a ECC status boolean i.e true/false - enabled/disabled.
-  */
- static bool edac_get_eccstate(void __iomem *base)
- {
-@@ -311,9 +309,9 @@ static bool edac_get_eccstate(void __iomem *base)
- }
- 
- /**
-- * edac_get_memsize - reads the size of the attached memory device
-+ * edac_get_memsize - reads the size of the attached memory device.
-  *
-- * Return: the memory size in bytes
-+ * Return: the memory size in bytes.
-  */
- static u32 edac_get_memsize(void)
- {
-@@ -325,8 +323,8 @@ static u32 edac_get_memsize(void)
- }
- 
- /**
-- * edac_get_mtype - Returns controller memory type
-- * @base:	pointer to the synopsys ecc status structure
-+ * edac_get_mtype - Returns controller memory type.
-+ * @base:	Synopsys ECC status structure.
-  *
-  * Get the EDAC memory type appropriate for the current controller
-  * configuration.
-@@ -349,11 +347,11 @@ static enum mem_type edac_get_mtype(const void __iomem *base)
- }
- 
- /**
-- * edac_init_csrows - Initialize the cs row data
-- * @mci:	Pointer to the edac memory controller instance
-+ * edac_init_csrows - Initialize the cs row data.
-+ * @mci:	EDAC memory controller instance.
-  *
-  * Initializes the chip select rows associated with the EDAC memory
-- * controller instance
-+ * controller instance.
-  *
-  * Return: Unconditionally 0.
-  */
-@@ -383,9 +381,9 @@ static int edac_init_csrows(struct mem_ctl_info *mci)
- }
- 
- /**
-- * edac_mc_init - Initialize driver instance
-- * @mci:	Pointer to the edac memory controller instance
-- * @pdev:	Pointer to the platform_device struct
-+ * edac_mc_init - Initialize driver instance.
-+ * @mci:	EDAC memory controller instance.
-+ * @pdev:	platform_device struct.
-  *
-  * Performs initialization of the EDAC memory controller instance and
-  * related driver-private data associated with the memory controller the
-@@ -424,8 +422,8 @@ static int edac_mc_init(struct mem_ctl_info *mci,
- }
- 
- /**
-- * synps_edac_mc_probe - Check controller and bind driver
-- * @pdev:	Pointer to the platform_device struct
-+ * synps_edac_mc_probe - Check controller and bind driver.
-+ * @pdev:	platform_device struct.
-  *
-  * Probes a specific controller instance for binding with the driver.
-  *
-@@ -496,8 +494,8 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
- }
- 
- /**
-- * synps_edac_mc_remove - Unbind driver from controller
-- * @pdev:	Pointer to the platform_device struct
-+ * synps_edac_mc_remove - Unbind driver from controller.
-+ * @pdev:	Platform_device struct.
-  *
-  * Return: Unconditionally 0
-  */
--- 
-2.1.1
+Does that mean, 0 40 80 ...
