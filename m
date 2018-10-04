@@ -1,50 +1,66 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
- unit address for node 'usb-id-nopull'
-Date: Thu, 4 Oct 2018 08:14:37 -0700
-Message-ID: <CAD=FV=Xhic45SCQSVx0XXgtcyFAMEmOt97HUKZjHa_nyd4Ur2A@mail.gmail.com>
-References: <20181004001432.21218-1-mka@chromium.org> <20181004001432.21218-2-mka@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
+ driver bindings
+Date: Thu, 4 Oct 2018 10:18:22 -0500
+Message-ID: <CAL_JsqKSiT15sn_jXy0FRp_YG5XbkREUeHf-98A61iN-TKxWpQ@mail.gmail.com>
+References: <20180627045234.27403-1-rnayak@codeaurora.org> <20180627045234.27403-3-rnayak@codeaurora.org>
+ <20180703223554.GA32313@rob-hp-laptop> <20180704055757.4li26b6poxllmh2k@vireshk-i7>
+ <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org> <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
+ <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org> <CAL_JsqJQypZbeZRa2u2+nM96p0ZHMHgDSpMbXqZx6zn+OiZSrw@mail.gmail.com>
+ <20181004083637.xlz26rpn4qtsvdk7@vireshk-i7>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004001432.21218-2-mka@chromium.org>
+In-Reply-To: <20181004083637.xlz26rpn4qtsvdk7@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-iio <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Oct 4, 2018 at 3:36 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> On 25-09-18, 14:43, Rob Herring wrote:
+> > On Tue, Sep 25, 2018 at 5:25 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+> > >
+> > > Hi Rob,
+> > >
+> > > []...
+> > > >>>>> +   rpmhpd_opp_table: opp-table {
+> > > >>>>> +           compatible = "operating-points-v2-qcom-level";
+> > > >>>>> +
+> > > >>>>> +           rpmhpd_opp_ret: opp1 {
+> > > >>>>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
+> > > >>>>> +           };
+> > > >>>>
+> > > >>>> I don't see the point in using the OPP binding here when you aren't
+> > > >>>> using *any* of the properties from it.
+> > > >>>
+> > > >>> Yeah, that's the case for now. But there are cases (as Stephen
+> > > >>> mentioned earlier [1]) where the voltage values (and maybe other
+> > > >>> values like current, etc) would be known and filled in DT. And that's
+> > > >>> why we all agreed to use OPP tables for PM domains as well, as these
+> > > >>> are really "operating performance points" of these PM domains.
+> > > >>
+> > > >> Rob, are you fine with these bindings then?
+> > > >
+> > > > Okay, my only thought is whether we should just use 'reg' here, or do
+> > > > we need 'level' for anything else and should make it common?
+> > >
+> > > I am not quite sure I understood what you are suggesting here :(
+> >
+> > You could use the  'reg' property instead of 'qcom,level'. Any reason
+> > not to do that?
+>
+> They can use any property which uniquely identifies the OPP nodes in
+> the table. Though I never thought we can use 'reg' property in such a
+> way. I always thought it must be related to registers somehow :)
 
-On Wed, Oct 3, 2018 at 5:14 PM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The node has a reg property, therefore its name should include a unit
-> address.
->
-> Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
-> DT conventions.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> Changes in v4:
-> - patch added to the series
-> ---
->  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> index d0c188e5c922..ff7aa5038ba6 100644
-> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
-> @@ -112,7 +112,7 @@ Example:
->                 io-channel-ranges;
->
->                 /* Channel node */
-> -               usb_id_nopull {
-> +               usb-id-nopull@VADC_LR_MUX10_USB_ID {
->                         reg = <VADC_LR_MUX10_USB_ID>;
+That's almost certainly where the name originates from back in the
+90s. I view 'reg' as how you identify or address a device. This can be
+channels of something like an ADC.
 
-This is my understanding of how it should be done and matches some
-existing examples I see in the tree.  AKA "pd_hdcp@RK3399_PD_HDCP".
-Thanks for cleaning it up!
+It's perhaps a stretch for OPP nodes as they aren't really a device,
+but if the levels are part of the h/w then perhaps reg is a good
+match.
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Rob
