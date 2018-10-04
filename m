@@ -1,69 +1,127 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
- driver bindings
-Date: Thu, 4 Oct 2018 14:06:37 +0530
-Message-ID: <20181004083637.xlz26rpn4qtsvdk7@vireshk-i7>
-References: <20180627045234.27403-1-rnayak@codeaurora.org>
- <20180627045234.27403-3-rnayak@codeaurora.org>
- <20180703223554.GA32313@rob-hp-laptop>
- <20180704055757.4li26b6poxllmh2k@vireshk-i7>
- <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org>
- <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
- <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org>
- <CAL_JsqJQypZbeZRa2u2+nM96p0ZHMHgDSpMbXqZx6zn+OiZSrw@mail.gmail.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for mt35xu512aba
+Date: Thu, 4 Oct 2018 08:47:33 +0000
+Message-ID: <VI1PR04MB103837831B8BFEC2F7FD12E799EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <20181003165603.2579-1-vigneshr@ti.com>
+        <20181003165603.2579-2-vigneshr@ti.com>
+        <VI1PR04MB1038C20CA97E453FC4C9CEAE99EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+ <20181004093925.2961d881@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJQypZbeZRa2u2+nM96p0ZHMHgDSpMbXqZx6zn+OiZSrw@mail.gmail.com>
+In-Reply-To: <20181004093925.2961d881@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Vignesh R <vigneshr@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "juliensu@mxic.com.tw" <juliensu@mxic.com.tw>, "zhengxunli@mxic.com.tw" <zhengxunli@mxic.com.tw>, "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>
 List-Id: devicetree@vger.kernel.org
 
-On 25-09-18, 14:43, Rob Herring wrote:
-> On Tue, Sep 25, 2018 at 5:25 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
+Hi Boris,
+
+> -----Original Message-----
+> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> Sent: Thursday, October 4, 2018 1:09 PM
+> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> Cc: Vignesh R <vigneshr@ti.com>; Marek Vasut <marek.vasut@gmail.com>; Rob
+> Herring <robh+dt@kernel.org>; Brian Norris <computersforpeace@gmail.com>;
+> Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>; linux-
+> mtd@lists.infradead.org; devicetree@vger.kernel.org; linux-
+> kernel@vger.kernel.org; juliensu@mxic.com.tw; zhengxunli@mxic.com.tw;
+> masonccyang@mxic.com.tw
+> Subject: Re: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for
+> mt35xu512aba
+>=20
+> +Julien, Zhengxunli and Mason from Macronix
+>=20
+> Hi Yogesh,
+>=20
+> On Thu, 4 Oct 2018 06:51:41 +0000
+> Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+>=20
+> > Hi Vignesh,
 > >
-> > Hi Rob,
-> >
-> > []...
-> > >>>>> +   rpmhpd_opp_table: opp-table {
-> > >>>>> +           compatible = "operating-points-v2-qcom-level";
-> > >>>>> +
-> > >>>>> +           rpmhpd_opp_ret: opp1 {
-> > >>>>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> > >>>>> +           };
-> > >>>>
-> > >>>> I don't see the point in using the OPP binding here when you aren't
-> > >>>> using *any* of the properties from it.
-> > >>>
-> > >>> Yeah, that's the case for now. But there are cases (as Stephen
-> > >>> mentioned earlier [1]) where the voltage values (and maybe other
-> > >>> values like current, etc) would be known and filled in DT. And that's
-> > >>> why we all agreed to use OPP tables for PM domains as well, as these
-> > >>> are really "operating performance points" of these PM domains.
-> > >>
-> > >> Rob, are you fine with these bindings then?
+> > > -----Original Message-----
+> > > From: Vignesh R [mailto:vigneshr@ti.com]
+> > > Sent: Wednesday, October 3, 2018 10:26 PM
+> > > To: Boris Brezillon <boris.brezillon@bootlin.com>; Marek Vasut
+> > > <marek.vasut@gmail.com>; Rob Herring <robh+dt@kernel.org>
+> > > Cc: Brian Norris <computersforpeace@gmail.com>; Yogesh Narayan Gaur
+> > > <yogeshnarayan.gaur@nxp.com>; Linux ARM Mailing List <linux-arm-
+> > > kernel@lists.infradead.org>; linux-mtd@lists.infradead.org;
+> > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Vignesh R
+> > > <vigneshr@ti.com>
+> > > Subject: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for
+> > > mt35xu512aba
 > > >
-> > > Okay, my only thought is whether we should just use 'reg' here, or do
-> > > we need 'level' for anything else and should make it common?
+> > > Micron's mt35xu512aba flash is an Octal flash that has x8 IO lines.
+> > > It supports read/write over 8 IO lines simulatenously. Add support
+> > > for Octal read mode for Micron mt35xu512aba.
+> > > Unfortunately, this flash is only complaint to SFDP JESD216B and
+> > > does not seem to support newer JESD216C standard that provides auto
+> > > detection of Octal mode capabilities and opcodes. Therefore, this
+> > > capability is manually added using new SPI_NOR_OCTAL_READ flag.
+> > >
 > >
-> > I am not quite sure I understood what you are suggesting here :(
-> 
-> You could use the  'reg' property instead of 'qcom,level'. Any reason
-> not to do that?
+> > Thanks for sending the patch-set of adding octal support.
+> > If possible, can you share the MT35x datasheet?
+> >
+> > I also have the patch ready in which I have added support for Read (1-1=
+-8 and
+> 1-8-8) protocol and Write (1-1-8 and 1-8-8).
+> > Also have added support of Octal in driver/spi/spi.c framework.
+> >
+> > IMO, we would collaborate our patches.
+>=20
+> Looks like we are of stepping on each others toes here (see this branch [=
+1]). I
+> guess it's not a problem if we agree on who is working on what.
+>=20
+> Yogesh, you already sent "spi: add flags for octal I/O data transfer" [3]=
+ which is
+> only adding the new OCTAL flags but is not patching spi.c and spi-mem.c t=
+o take
+> those new flags into account. Here is my version of this patch [2] (it's =
+still
+> missing an update of SPI_MEM_MAX_BUSWIDTH). Let me know what you want
+> to do (rework your version to address the problem or take mine).
+>=20
+I haven't said that I have sent the patches. My patches are ready and neede=
+d to be sent for review.
+In these patches,  I am adding support for X-X-X protocol for octal support=
+ and integrating them with spi  and flash m25p80 interface.
 
-They can use any property which uniquely identifies the OPP nodes in
-the table. Though I never thought we can use 'reg' property in such a
-way. I always thought it must be related to registers somehow :)
+Would send the patches by today evening for review.
 
-Yeah, CPU is one of the examples where 'reg' has a special meaning.
+Regards
+Yogesh Gaur
 
-> Alternatively, would 'level' be something useful in other situations
-> and should not be QCom specific?
-
-It is too early to say that. The only platform which needs this is
-Qcom right now, lets see what the requirements from other users are.
-
--- 
-viresh
+> Regarding other patches in [2], they're mainly here to add support for X-=
+X-X and
+> DTR modes and get the m25p80 logic integrated in spi-nor.c so that we can
+> really check which NOR operations are supported by the SPI controller.
+>=20
+> Regards,
+>=20
+> Boris
+>=20
+> [1]https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
+ith
+> ub.com%2Fbbrezillon%2Flinux%2Fcommits%2Fspi-
+> nor%2Focto&amp;data=3D02%7C01%7Cyogeshnarayan.gaur%40nxp.com%7C3ad
+> 4b6f2a4c9470e98f308d629cc8362%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
+> C0%7C0%7C636742355682081158&amp;sdata=3DvXg7nwZ6dLrUxoNw9t41GYMp
+> oPdNWUWhLM6wZPmrIec%3D&amp;reserved=3D0
+> [2]https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fg=
+ith
+> ub.com%2Fbbrezillon%2Flinux%2Fcommit%2F9854a8fdd23f64e79859fd07a71d4
+> a1c57b812f2&amp;data=3D02%7C01%7Cyogeshnarayan.gaur%40nxp.com%7C3ad
+> 4b6f2a4c9470e98f308d629cc8362%7C686ea1d3bc2b4c6fa92cd99c5c301635%7
+> C0%7C0%7C636742355682081158&amp;sdata=3DyEZqGYprHS8q2wuisFLpHg8bMj
+> uuWDrl3ggWlA8LRoc%3D&amp;reserved=3D0
+> [3]https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fp=
+at
+> chwork.ozlabs.org%2Fpatch%2F894916%2F&amp;data=3D02%7C01%7Cyogeshnar
+> ayan.gaur%40nxp.com%7C3ad4b6f2a4c9470e98f308d629cc8362%7C686ea1d3
+> bc2b4c6fa92cd99c5c301635%7C0%7C0%7C636742355682081158&amp;sdata=3Dt
+> 5DFvXgDOlyLn7pMieue9BB5q24DNiJMywGvNrWAYOo%3D&amp;reserved=3D0
