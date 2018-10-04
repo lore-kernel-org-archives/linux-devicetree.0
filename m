@@ -1,80 +1,42 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for mt35xu512aba
-Date: Thu, 4 Oct 2018 16:42:22 +0530
-Message-ID: <904391ba-5a12-aee9-966a-17346dded080@ti.com>
-References: <20181003165603.2579-1-vigneshr@ti.com>
- <20181003165603.2579-2-vigneshr@ti.com> <20181004114535.3a5dba05@bbrezillon>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH 0/6] Add Support for MMC/SD in TI's AM65x SOCs
+Date: Thu, 4 Oct 2018 16:44:45 +0530
+Message-ID: <20181004111451.9539-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004114535.3a5dba05@bbrezillon>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: kishon@ti.com, faiz_abbas@ti.com, ulf.hansson@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
+The following patches add driver support for MMC/SD in TI's
+AM65x SOCs. There are two controller instances. Both are compatible
+with eMMC5.1 Host Controller Standard Specification and SD Host
+Controller Standard Specification 4.10.
 
+DT Support patches will be posted separately.
 
-On Thursday 04 October 2018 03:15 PM, Boris Brezillon wrote:
-> On Wed, 3 Oct 2018 22:26:01 +0530
-> Vignesh R <vigneshr@ti.com> wrote:
-> 
->> Micron's mt35xu512aba flash is an Octal flash that has x8 IO lines. It
->> supports read/write over 8 IO lines simulatenously. Add support for
->> Octal read mode for Micron mt35xu512aba.
->> Unfortunately, this flash is only complaint to SFDP JESD216B and does not
->> seem to support newer JESD216C standard that provides auto detection of
->> Octal mode capabilities and opcodes. Therefore, this capability is
->> manually added using new SPI_NOR_OCTAL_READ flag.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>  drivers/mtd/spi-nor/spi-nor.c | 11 ++++++++++-
->>  include/linux/mtd/spi-nor.h   |  2 ++
->>  2 files changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
->> index aff5e6ff0b2c..4926e805a8cb 100644
->> --- a/drivers/mtd/spi-nor/spi-nor.c
->> +++ b/drivers/mtd/spi-nor/spi-nor.c
->> @@ -90,6 +90,7 @@ struct flash_info {
->>  #define NO_CHIP_ERASE		BIT(12) /* Chip does not support chip erase */
->>  #define SPI_NOR_SKIP_SFDP	BIT(13)	/* Skip parsing of SFDP tables */
->>  #define USE_CLSR		BIT(14)	/* use CLSR command */
->> +#define SPI_NOR_OCTAL_READ	BIT(15)	/* Flash supports Octal Read */
-> 
-> Hm, we'll need to clarify what OCTAL means. I see at least 3 different
-> modes using 8 IO lines (1-1-8, 1-8-8 and 8-8-8) and all of them could
-> be qualified as "octal" modes.
-> So how about renaming this macro SPI_NOR_1_1_8_READ.
-> 
+Faiz Abbas (6):
+  dt-bindings: phy: am654-mmc-phy: Document new phy bindings
+  phy: am654-mmc-phy: Add Support for MMC PHY on AM654 Devices
+  dt-bindings: mmc: sdhci-of-arasan: Add new compatible for AM654 MMC
+    PHY
+  mmc: sdhci-of-arasan: Add a single data structure to incorporate pdata
+    and soc_ctl_map
+  mmc: sdhci-of-arasan: Add Support for AM654 MMC and PHY
+  arm64: defconfig: Enable MMC PHY for AM65xx
 
-My understanding is that, if a flash is Octal IO capable, then it
-supports all mode of Octal IO (1-1-8, 1-8-8 and 8-8-8). At least in the
-current code, I see SPI_NOR_QUAD_READ seems to imply 1-1-4, 1-4-4 and
-4-4-4 modes.
-Moreover, these capabilities should be auto discoverable once flash
-start populating SFDP JESD216C tables (IIRC, JESD216B already takes care
-of QUAD IO modes). So, I don't think we need different flags for 1-1-8,
-1-8-8 and 8-8-8. Please let me if that's not the case.
-
-For this patch, I wanted to start small and support only 1-1-8 mode
-which is the easiest.
-
-
-> Also, I fear we'll soon run out of bits in ->flags if we keep adding
-> one flag per mode which is why I proposed a solution to let flash
-> chips tweak the flash parameters as they wish [1][2]. I'm not saying we
-> should do it now, but we should definitely plan for something like that.
-> 
-> [1]https://github.com/bbrezillon/linux/commit/9c672e4c85a91f1b0803c9c6e4b8f3aae5d79ffb
-> [2]https://github.com/bbrezillon/linux/commit/3a5515c8821314c06a3d84f9861aefe476bb711e
-> 
-
-Hmm, it almost seems like Macronix flash warrants its own driver now.
+ .../devicetree/bindings/mmc/arasan,sdhci.txt  |   1 +
+ .../devicetree/bindings/phy/am654-mmc-phy.txt |  42 +++
+ arch/arm64/configs/defconfig                  |   1 +
+ drivers/mmc/host/sdhci-of-arasan.c            |  93 +++++-
+ drivers/phy/ti/Kconfig                        |   7 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-am654-mmc.c                | 291 ++++++++++++++++++
+ 7 files changed, 421 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/am654-mmc-phy.txt
+ create mode 100644 drivers/phy/ti/phy-am654-mmc.c
 
 -- 
-Regards
-Vignesh
+2.18.0
