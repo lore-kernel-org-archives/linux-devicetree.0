@@ -1,51 +1,72 @@
-From: Vabhav Sharma <vabhav.sharma@nxp.com>
-Subject: [PATCH v4 3/6] clk: qoriq: increase array size of cmux_to_group
-Date: Thu,  4 Oct 2018 06:33:48 +0530
-Message-ID: <1538615031-7507-4-git-send-email-vabhav.sharma@nxp.com>
-References: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 2/2] media: platform: Add Aspeed Video Engine driver
+Date: Thu, 4 Oct 2018 15:12:34 +0200
+Message-ID: <373d2ca3-a6cd-8d87-2bbc-613d65305170@xs4all.nl>
+References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
+ <1537903629-14003-3-git-send-email-eajames@linux.ibm.com>
+ <a78d4c7a-ac58-c23d-a683-23dce54be993@xs4all.nl>
+ <ca4757b9-0825-bbbf-b388-0295fd13bad7@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
+In-Reply-To: <ca4757b9-0825-bbbf-b388-0295fd13bad7@linux.vnet.ibm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: sudeep.holla@arm.com, oss@buserror.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com, leoyang.li@nxp.com, shawnguo@kernel.org
-Cc: linux@armlinux.org.uk, V.Sethi@nxp.com, udit.kumar@nxp.com, pankaj.bansal@nxp.com, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, Vabhav Sharma <vabhav.sharma@nxp.com>
+To: Eddie James <eajames@linux.vnet.ibm.com>, Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+On 10/03/18 22:43, Eddie James wrote:
+> 
+> 
+> On 09/28/2018 06:30 AM, Hans Verkuil wrote:
+>> On 09/25/2018 09:27 PM, Eddie James wrote:
+>>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
+>>> can capture and compress video data from digital or analog sources. With
+>>> the Aspeed chip acting a service processor, the Video Engine can capture
+>>> the host processor graphics output.
+>>>
+>>> Add a V4L2 driver to capture video data and compress it to JPEG images.
+>>> Make the video frames available through the V4L2 streaming interface.
+>>>
+>>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> 
+>>> +	}
+>>> +
+>>> +	video->height = (bottom - top) + 1;
+>>> +	video->width = (right - left) + 1;
+>>> +	size = video->height * video->width;
+>> It looks like you can actually determine the blanking width/height and
+>> possibly even more detailed information that would be very useful to
+>> show with the DV_TIMINGS ioctls.
+> 
+> Hmm. This information is related to the video signal captured from the 
+> host. That information has nothing to do with the buffer that is 
+> compressed and grabbed by the driver and ultimately provided to 
+> userspace. Isn't the timing information meaningless for JPEG frames?
 
-Increase size of cmux_to_group array, to accomdate entry of
--1 termination.
+It helps in debugging. Basically you are implementing a receiver for a
+video signal. So if for some reason you cannot support the video timings
+that the host sends, then it is very useful to have QUERY_DV_TIMINGS report
+as much information about the signal as possible.
 
-Added -1, terminated, entry for 4080_cmux_grpX.
+BTW, out of curiosity, how are the host video signals connected to the
+aspeed? Is it still a VGA video signal?
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
----
- drivers/clk/clk-qoriq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Looking at product briefs it appears that it is VGA. So I guess the aspeed
+'sniffs' the VGA signals from the host and can capture the video that way.
+Is that correct?
 
-diff --git a/drivers/clk/clk-qoriq.c b/drivers/clk/clk-qoriq.c
-index 3a1812f..e152bfb 100644
---- a/drivers/clk/clk-qoriq.c
-+++ b/drivers/clk/clk-qoriq.c
-@@ -79,7 +79,7 @@ struct clockgen_chipinfo {
- 	const struct clockgen_muxinfo *cmux_groups[2];
- 	const struct clockgen_muxinfo *hwaccel[NUM_HWACCEL];
- 	void (*init_periph)(struct clockgen *cg);
--	int cmux_to_group[NUM_CMUX]; /* -1 terminates if fewer than NUM_CMUX */
-+	int cmux_to_group[NUM_CMUX+1]; /* array should be -1 terminated */
- 	u32 pll_mask;	/* 1 << n bit set if PLL n is valid */
- 	u32 flags;	/* CG_xxx */
- };
-@@ -601,7 +601,7 @@ static const struct clockgen_chipinfo chipinfo[] = {
- 			&p4080_cmux_grp1, &p4080_cmux_grp2
- 		},
- 		.cmux_to_group = {
--			0, 0, 0, 0, 1, 1, 1, 1
-+			0, 0, 0, 0, 1, 1, 1, 1, -1
- 		},
- 		.pll_mask = 0x1f,
- 	},
--- 
-2.7.4
+If so, then this driver is a VGA receiver and should act like that.
+The host can configure its VGA transmitter to invalid timings, or weird
+values, and you need to be able to handle that in your driver.
+
+> Forgot to include this question in my previous reply, sorry for the 
+> additional mail.
+
+No problem! Happy to help.
+
+Regards,
+
+	Hans
