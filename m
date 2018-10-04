@@ -1,73 +1,62 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v4 01/10] dt-bindings: phy: add binding for
- Allwinner H6 USB2 PHY
-Date: Thu,  4 Oct 2018 20:28:46 +0800
-Message-ID: <20181004122855.22981-2-icenowy@aosc.io>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v4 02/10] phy: sun4i-usb: add support for missing USB PHY index
+Date: Thu,  4 Oct 2018 20:28:47 +0800
+Message-ID: <20181004122855.22981-3-icenowy@aosc.io>
 References: <20181004122855.22981-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBMMP3DOQKGQEELSBGBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181004122855.22981-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181004122855.22981-1-icenowy@aosc.io>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-The USB2.0 PHY on Allwinner H6 is similar to the ones on the ones on
-older SoCs, but with holes in PHY number (USB1 and USB2 are missing, in
-which USB1 is a USB3 PHY).
+The new Allwinner H6 SoC's USB2 PHY has two holes -- USB1 (which is a
+3.0 port with dedicated PHY) and USB2 (which doesn't exist at all).
 
-Add binding for the PHY.
+Add support for this kind of missing USB PHY index.
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 ---
-New patch in v4.
+No changes in v4.
 
- Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+Changes in v3:
+- Added Chen-Yu's Review tag.
 
-diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-index 07ca4ec4a745..f2e120af17f0 100644
---- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
-@@ -14,13 +14,14 @@ Required properties:
-   * allwinner,sun8i-r40-usb-phy
-   * allwinner,sun8i-v3s-usb-phy
-   * allwinner,sun50i-a64-usb-phy
-+  * allwinner,sun50i-h6-usb-phy
- - reg : a list of offset + length pairs
- - reg-names :
-   * "phy_ctrl"
--  * "pmu0" for H3, V3s and A64
-+  * "pmu0" for H3, V3s, A64 or H6
-   * "pmu1"
-   * "pmu2" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
--  * "pmu3" for sun8i-h3
-+  * "pmu3" for sun8i-h3 or sun50i-h6
- - #phy-cells : from the generic phy bindings, must be 1
- - clocks : phandle + clock specifier for the phy clocks
- - clock-names :
-@@ -29,12 +30,13 @@ Required properties:
-   * "usb0_phy", "usb1_phy" for sun8i
-   * "usb0_phy", "usb1_phy", "usb2_phy" and "usb2_hsic_12M" for sun8i-a83t
-   * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
-+  * "usb0_phy" and "usb3_phy" for sun50i-h6
- - resets : a list of phandle + reset specifier pairs
- - reset-names :
-   * "usb0_reset"
-   * "usb1_reset"
-   * "usb2_reset" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
--  * "usb3_reset" for sun8i-h3
-+  * "usb3_reset" for sun8i-h3 and sun50i-h6
+ drivers/phy/allwinner/phy-sun4i-usb.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
+index d4dcd39b8d76..881078ff73f6 100644
+--- a/drivers/phy/allwinner/phy-sun4i-usb.c
++++ b/drivers/phy/allwinner/phy-sun4i-usb.c
+@@ -126,6 +126,7 @@ struct sun4i_usb_phy_cfg {
+ 	bool dedicated_clocks;
+ 	bool enable_pmu_unk1;
+ 	bool phy0_dual_route;
++	int missing_phys;
+ };
  
- Optional properties:
- - usb0_id_det-gpios : gpio phandle for reading the otg id pin value
+ struct sun4i_usb_phy_data {
+@@ -646,6 +647,9 @@ static struct phy *sun4i_usb_phy_xlate(struct device *dev,
+ 	if (args->args[0] >= data->cfg->num_phys)
+ 		return ERR_PTR(-ENODEV);
+ 
++	if (data->cfg->missing_phys & BIT(args->args[0]))
++		return ERR_PTR(-ENODEV);
++
+ 	return data->phys[args->args[0]].phy;
+ }
+ 
+@@ -741,6 +745,9 @@ static int sun4i_usb_phy_probe(struct platform_device *pdev)
+ 		struct sun4i_usb_phy *phy = data->phys + i;
+ 		char name[16];
+ 
++		if (data->cfg->missing_phys & BIT(i))
++			continue;
++
+ 		snprintf(name, sizeof(name), "usb%d_vbus", i);
+ 		phy->vbus = devm_regulator_get_optional(dev, name);
+ 		if (IS_ERR(phy->vbus)) {
 -- 
 2.18.0
