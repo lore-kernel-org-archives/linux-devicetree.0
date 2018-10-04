@@ -1,88 +1,128 @@
-From: Sayali Lokhande <sayalil@codeaurora.org>
-Subject: Re: [PATCH RFC 2/7] mmc: core: devfreq: Add devfreq based clock
- scaling support
-Date: Thu, 4 Oct 2018 18:13:21 +0530
-Message-ID: <17490ba5-42f6-f1c1-cb5c-be315dfdf197@codeaurora.org>
-References: <1531475583-7050-1-git-send-email-sayalil@codeaurora.org>
- <1531475583-7050-3-git-send-email-sayalil@codeaurora.org>
- <20180720152436.GA4566@rob-hp-laptop>
+From: Nick Kossifidis <mick@ics.forth.gr>
+Subject: [PATCH] OF: Handle CMDLINE when /chosen node is not present
+Date: Thu,  4 Oct 2018 15:31:10 +0300
+Message-ID: <20181004123110.8487-1-mick@ics.forth.gr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180720152436.GA4566@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, vviswana@codeaurora.org, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, Talel Shenhar <tatias@codeaurora.org>
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Nick Kossifidis <mick@ics.forth.gr>, linux-riscv@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, palmer@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+The /chosen node is optional so we should handle CMDLINE regardless
+the presence of /chosen/bootargs. Move handling of CMDLINE in
+early_init_dt_scan() instead.
 
-On 7/20/2018 8:54 PM, Rob Herring wrote:
-> On Fri, Jul 13, 2018 at 03:22:58PM +0530, Sayali Lokhande wrote:
->> This change adds the use of devfreq to MMC.
->> Both eMMC and SD card will use it.
->> For some workloads, such as video playback, it isn't
->> necessary for these cards to run at high speed.
->> Running at lower frequency, for example 52MHz, in such
->> cases can still meet the deadlines for data transfers.
->> Scaling down the clock frequency dynamically has power
->> savings not only because the bus is running at lower frequency
->> but also has an advantage of scaling down the system core
->> voltage, if supported.
->> Provide an ondemand clock scaling support similar to the
->> cpufreq ondemand governor having two thresholds,
->> up_threshold and down_threshold to decide whether to
->> increase the frequency or scale it down respectively.
->> The sampling interval is in the order of milliseconds.
->> If sampling interval is too low, frequent switching of
->> frequencies can lead to high power consumption and if
->> sampling interval is too high, the clock scaling logic
->> would take long time to realize that the underlying
->> hardware (controller and card) is busy and scale up
->> the clocks.
->>
->> Signed-off-by: Talel Shenhar <tatias@codeaurora.org>
->> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
->> ---
->>   .../devicetree/bindings/mmc/sdhci-msm.txt          |  10 +
->>   drivers/mmc/core/core.c                            | 560 +++++++++++++++++++++
->>   drivers/mmc/core/core.h                            |   7 +
->>   drivers/mmc/core/debugfs.c                         |  46 ++
->>   drivers/mmc/core/host.c                            |   8 +
->>   drivers/mmc/core/mmc.c                             | 200 +++++++-
->>   drivers/mmc/core/sd.c                              |  72 ++-
->>   drivers/mmc/host/sdhci-msm.c                       |  37 ++
->>   drivers/mmc/host/sdhci-pltfm.c                     |  11 +
->>   drivers/mmc/host/sdhci.c                           |  27 +
->>   drivers/mmc/host/sdhci.h                           |   8 +
->>   include/linux/mmc/card.h                           |   5 +
->>   include/linux/mmc/host.h                           |  70 +++
->>   13 files changed, 1059 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> index 502b3b8..bd8470a 100644
->> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
->> @@ -26,6 +26,15 @@ Required properties:
->>   	"cal"	- reference clock for RCLK delay calibration (optional)
->>   	"sleep"	- sleep clock for RCLK delay calibration (optional)
->>   
->> +Optional Properties:
->> +- qcom,devfreq,freq-table - specifies supported frequencies for clock scaling.
->> +				    Clock scaling logic shall toggle between these frequencies based
->> +				    on card load. In case the defined frequencies are over or below
->> +				    the supported card frequencies, they will be overridden
->> +				    during card init. In case this entry is not supplied,
->> +				    the driver will construct one based on the card
->> +				    supported max and min frequencies.
->> +				    The frequencies must be ordered from lowest to highest.
-> This should be a common binding in which case will just a list of
-> frequencies be sufficient.
-[Sayali] : Can you please elaborate more on what do you mean by common 
-binding here ? Like if you are referring to any already available 
-property (by devfreq ?) to pass min-max frequencies ?
-Any Documentation file to refer ?
->
-> Rob
+Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+
+---
+ drivers/of/fdt.c | 69 +++++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 48 insertions(+), 21 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 800ad252c..868464b0b 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -31,6 +31,14 @@
+ 
+ #include "of_private.h"
+ 
++#ifdef CONFIG_CMDLINE
++#ifdef CONFIG_CMDLINE_FORCE
++static const char fixed_cmdline[] __initconst = CONFIG_CMDLINE;
++#else
++static char builtin_cmdline[] __initdata = CONFIG_CMDLINE;
++#endif
++#endif
++
+ /*
+  * of_fdt_limit_memory - limit the number of regions in the /memory node
+  * @limit: maximum entries
+@@ -1088,28 +1096,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 
+ 	/* Retrieve command line */
+ 	p = of_get_flat_dt_prop(node, "bootargs", &l);
+-	if (p != NULL && l > 0)
++	if (p != NULL && l > 0) {
+ 		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
+-
+-	/*
+-	 * CONFIG_CMDLINE is meant to be a default in case nothing else
+-	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
+-	 * is set in which case we override whatever was found earlier.
+-	 */
+-#ifdef CONFIG_CMDLINE
+-#if defined(CONFIG_CMDLINE_EXTEND)
+-	strlcat(data, " ", COMMAND_LINE_SIZE);
+-	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+-#elif defined(CONFIG_CMDLINE_FORCE)
+-	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+-#else
+-	/* No arguments from boot loader, use kernel's  cmdl*/
+-	if (!((char *)data)[0])
+-		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
+-#endif
+-#endif /* CONFIG_CMDLINE */
+-
+-	pr_debug("Command line is: %s\n", (char*)data);
++		pr_debug("Got bootargs: %s\n", (char *) data);
++	}
+ 
+ 	/* break now */
+ 	return 1;
+@@ -1240,6 +1230,43 @@ bool __init early_init_dt_scan(void *params)
+ 		return false;
+ 
+ 	early_init_dt_scan_nodes();
++
++	/*
++	 * The /chosen node normaly contains the bootargs element
++	 * that includes the kernel's command line parameters.
++	 * However the presence of /chosen is not mandatory so
++	 * in case we didn't get a command line when scanning
++	 * nodes above, we should provide one here before we
++	 * return, if possible.
++	 *
++	 * The built-in command line can be used as a default
++	 * command line in case we received nothing from the
++	 * device tree/bootloader. It can also be used for
++	 * extending or replacing the received command line.
++	 */
++#ifdef CONFIG_CMDLINE
++#if defined(CONFIG_CMDLINE_EXTEND)
++	/*
++	 * Order of parameters shouldn't matter for most cases,
++	 * so prepending or appending the built-in command line
++	 * shouldn't make a difference. In cases where it does
++	 * it's up to the user to configure the kernel and/or
++	 * the bootloader properly.
++	 */
++	if (builtin_cmdline[0]) {
++		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
++		strlcat(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
++	}
++#elif defined(CONFIG_CMDLINE_FORCE)
++	if (fixed_cmdline[0])
++		strlcpy(boot_command_line, fixed_cmdline, COMMAND_LINE_SIZE);
++#else
++	/* No arguments from boot loader, use kernel's cmdline */
++	if (!boot_command_line[0] && builtin_cmdline[0])
++		strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
++#endif
++#endif /* CONFIG_CMDLINE */
++
+ 	return true;
+ }
+ 
+-- 
+2.16.4
