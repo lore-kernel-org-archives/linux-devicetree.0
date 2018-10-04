@@ -1,241 +1,148 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH 0/4] Update am437x and am335x dts to probe with ti-sysc
-Date: Thu, 4 Oct 2018 09:59:41 +0530
-Message-ID: <ff68a664-aa7a-92b6-b78c-78382f7b0ec1@ti.com>
-References: <20180925000545.22931-1-tony@atomide.com>
- <e9afe736-c2f0-6182-afd0-08279e09a35e@ti.com>
- <20180925144021.GN5662@atomide.com> <20180925175537.GQ5662@atomide.com>
- <d98aa7c1-5131-34c5-51e5-c7ef57cbc31e@ti.com>
- <20180926155911.GT5662@atomide.com> <20180926162303.GU5662@atomide.com>
- <cfc3f1db-9468-ed92-a673-882b51b4dec8@ti.com>
- <20180926233111.GY5662@atomide.com>
- <305bf1c3-915d-dac1-95e4-4d32621247e1@ti.com>
- <20181001163253.GW5662@atomide.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for mt35xu512aba
+Date: Thu, 4 Oct 2018 06:51:41 +0000
+Message-ID: <VI1PR04MB1038C20CA97E453FC4C9CEAE99EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <20181003165603.2579-1-vigneshr@ti.com>
+ <20181003165603.2579-2-vigneshr@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181001163253.GW5662@atomide.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181003165603.2579-2-vigneshr@ti.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Tero Kristo <t-kristo@ti.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Vignesh,
 
+> -----Original Message-----
+> From: Vignesh R [mailto:vigneshr@ti.com]
+> Sent: Wednesday, October 3, 2018 10:26 PM
+> To: Boris Brezillon <boris.brezillon@bootlin.com>; Marek Vasut
+> <marek.vasut@gmail.com>; Rob Herring <robh+dt@kernel.org>
+> Cc: Brian Norris <computersforpeace@gmail.com>; Yogesh Narayan Gaur
+> <yogeshnarayan.gaur@nxp.com>; Linux ARM Mailing List <linux-arm-
+> kernel@lists.infradead.org>; linux-mtd@lists.infradead.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org; Vignesh R
+> <vigneshr@ti.com>
+> Subject: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for mt35xu512ab=
+a
+>=20
+> Micron's mt35xu512aba flash is an Octal flash that has x8 IO lines. It su=
+pports
+> read/write over 8 IO lines simulatenously. Add support for Octal read mod=
+e for
+> Micron mt35xu512aba.
+> Unfortunately, this flash is only complaint to SFDP JESD216B and does not=
+ seem
+> to support newer JESD216C standard that provides auto detection of Octal
+> mode capabilities and opcodes. Therefore, this capability is manually add=
+ed
+> using new SPI_NOR_OCTAL_READ flag.
+>=20
 
-On Monday 01 October 2018 10:02 PM, Tony Lindgren wrote:
-> * Keerthy <j-keerthy@ti.com> [180927 05:00]:
->> Also tested on beaglebone black DS0 works fine. Although there seems to
->> be an additional warning which was not seen before:
->>
->> "l4-wkup-clkctrl:0008:0: failed to disable"
->>
->> log: https://pastebin.ubuntu.com/p/Ns2WRdVkXS/
-> 
-> Can you test the following patch applied on top of the
-> omap-for-v4.20/dt-ti-sysc-tmp-testing-v2 testing branch?
+Thanks for sending the patch-set of adding octal support.
+If possible, can you share the MT35x datasheet?
 
-Tony,
+I also have the patch ready in which I have added support for Read (1-1-8 a=
+nd 1-8-8) protocol and Write (1-1-8 and 1-8-8).
+Also have added support of Octal in driver/spi/spi.c framework.
 
-Apologies for the delay in responding.
+IMO, we would collaborate our patches.
+--
+Regards
+Yogesh Gaur
 
-AM437X-GP-EVM: https://pastebin.ubuntu.com/p/m3ybBvH7Qj/
-
-Tested for UART/RTCWAKE/TOUCH_WAKE from DS0, apart from the expected
-gpio warnings all seems fine.
-
-AM335X-BONEBLACK: https://pastebin.ubuntu.com/p/xdsMDS5XtQ/
-
-Tested for rtcwake/UART wake up from DS0. Again except for gpio messages
-everything else seems to be fine.
-
-Regards,
-Keerthy
-
-> 
-> Based on Grygorii's i2c-omap comments, I think we should also
-> do the following in the ti-sysc driver becasuse the pm_runtime
-> use count can be whatever.
-> 
-> Regards,
-> 
-> Tony
-> 
-> 8< ----------------------
-> From tony Mon Sep 17 00:00:00 2001
-> From: Tony Lindgren <tony@atomide.com>
-> Date: Mon, 1 Oct 2018 09:11:57 -0700
-> Subject: [PATCH] bus: ti-sysc: Just use SET_NOIRQ_SYSTEM_SLEEP_PM_OPS
-> 
-> As Grygorii Strashko pointed out, the runtime PM use count of the
-> children can be whatever at suspend and we should not use it. So
-> let's just suspend ti-sysc at noirq level and get rid of some code.
-> 
-> Let's also remove the PM_SLEEP ifdef and use __maybe_unused as the
-> PM code already deals with the ifdefs.
-> 
-> Suggested-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
 > ---
->  drivers/bus/ti-sysc.c | 113 ++----------------------------------------
->  1 file changed, 4 insertions(+), 109 deletions(-)
-> 
-> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-> --- a/drivers/bus/ti-sysc.c
-> +++ b/drivers/bus/ti-sysc.c
-> @@ -87,7 +87,6 @@ struct sysc {
->  	u32 revision;
->  	bool enabled;
->  	bool needs_resume;
-> -	unsigned int noirq_suspend:1;
->  	bool child_needs_resume;
->  	struct delayed_work idle_work;
+>  drivers/mtd/spi-nor/spi-nor.c | 11 ++++++++++-
+>  include/linux/mtd/spi-nor.h   |  2 ++
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.=
+c index
+> aff5e6ff0b2c..4926e805a8cb 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -90,6 +90,7 @@ struct flash_info {
+>  #define NO_CHIP_ERASE		BIT(12) /* Chip does not support chip
+> erase */
+>  #define SPI_NOR_SKIP_SFDP	BIT(13)	/* Skip parsing of SFDP tables */
+>  #define USE_CLSR		BIT(14)	/* use CLSR command */
+> +#define SPI_NOR_OCTAL_READ	BIT(15)	/* Flash supports Octal Read */
+>=20
+>  	int	(*quad_enable)(struct spi_nor *nor);
 >  };
-> @@ -702,75 +701,7 @@ static int __maybe_unused sysc_runtime_resume(struct device *dev)
->  	return error;
->  }
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int sysc_suspend(struct device *dev)
-> -{
-> -	struct sysc *ddata;
-> -	int error;
-> -
-> -	ddata = dev_get_drvdata(dev);
-> -
-> -	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
-> -		return 0;
-> -
-> -	if (!ddata->enabled || ddata->noirq_suspend)
-> -		return 0;
-> -
-> -	dev_dbg(ddata->dev, "%s %s\n", __func__,
-> -		ddata->name ? ddata->name : "");
-> -
-> -	error = pm_runtime_put_sync_suspend(dev);
-> -	if (error == -EBUSY) {
-> -		dev_dbg(ddata->dev, "%s busy, tagging for noirq suspend %s\n",
-> -			__func__, ddata->name ? ddata->name : "");
-> -
-> -		ddata->noirq_suspend = true;
-> -
-> -		return 0;
-> -	} else if (error < 0) {
-> -		dev_warn(ddata->dev, "%s cannot suspend %i %s\n",
-> -			 __func__, error,
-> -			 ddata->name ? ddata->name : "");
-> -
-> -		return 0;
-> -	}
-> -
-> -	ddata->needs_resume = true;
-> -
-> -	return 0;
-> -}
-> -
-> -static int sysc_resume(struct device *dev)
-> -{
-> -	struct sysc *ddata;
-> -	int error;
-> -
-> -	ddata = dev_get_drvdata(dev);
-> -
-> -	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
-> -		return 0;
-> -
-> -	if (!ddata->needs_resume || ddata->noirq_suspend)
-> -		return 0;
-> -
-> -	dev_dbg(ddata->dev, "%s %s\n", __func__,
-> -		ddata->name ? ddata->name : "");
-> -
-> -	error = pm_runtime_get_sync(dev);
-> -	if (error < 0) {
-> -		dev_err(ddata->dev, "%s  error %i %s\n",
-> -			__func__, error,
-> -			ddata->name ? ddata->name : "");
-> -
-> -		return error;
-> -	}
-> -
-> -	ddata->needs_resume = false;
-> -
-> -	return 0;
-> -}
-> -
-> -static int sysc_noirq_suspend(struct device *dev)
-> +static int __maybe_unused sysc_noirq_suspend(struct device *dev)
->  {
->  	struct sysc *ddata;
->  	int error;
-> @@ -780,26 +711,10 @@ static int sysc_noirq_suspend(struct device *dev)
->  	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
->  		return 0;
->  
-> -	if (!ddata->enabled || !ddata->noirq_suspend)
-> -		return 0;
-> -
-> -	dev_dbg(ddata->dev, "%s %s\n", __func__,
-> -		ddata->name ? ddata->name : "");
-> -
-> -	error = sysc_runtime_suspend(dev);
-> -	if (error) {
-> -		dev_warn(ddata->dev, "%s busy %i %s\n",
-> -			 __func__, error, ddata->name ? ddata->name : "");
-> -
-> -		return 0;
-> -	}
-> -
-> -	ddata->needs_resume = true;
-> -
-> -	return 0;
-> +	return pm_runtime_force_suspend(dev);
->  }
->  
-> -static int sysc_noirq_resume(struct device *dev)
-> +static int __maybe_unused sysc_noirq_resume(struct device *dev)
->  {
->  	struct sysc *ddata;
->  	int error;
-> @@ -809,30 +724,10 @@ static int sysc_noirq_resume(struct device *dev)
->  	if (ddata->cfg.quirks & SYSC_QUIRK_LEGACY_IDLE)
->  		return 0;
->  
-> -	if (!ddata->needs_resume || !ddata->noirq_suspend)
-> -		return 0;
-> -
-> -	dev_dbg(ddata->dev, "%s %s\n", __func__,
-> -		ddata->name ? ddata->name : "");
-> -
-> -	error = sysc_runtime_resume(dev);
-> -	if (error) {
-> -		dev_warn(ddata->dev, "%s cannot resume %i %s\n",
-> -			 __func__, error,
-> -			 ddata->name ? ddata->name : "");
-> -
-> -		return error;
-> -	}
-> -
-> -	/* Maybe also reconsider clearing noirq_suspend at some point */
-> -	ddata->needs_resume = false;
-> -
-> -	return 0;
-> +	return pm_runtime_force_resume(dev);
->  }
-> -#endif
->  
->  static const struct dev_pm_ops sysc_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(sysc_suspend, sysc_resume)
->  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(sysc_noirq_suspend, sysc_noirq_resume)
->  	SET_RUNTIME_PM_OPS(sysc_runtime_suspend,
->  			   sysc_runtime_resume,
-> 
+> @@ -209,6 +210,7 @@ static inline u8 spi_nor_convert_3to4_read(u8 opcode)
+>  		{ SPINOR_OP_READ_1_2_2,	SPINOR_OP_READ_1_2_2_4B },
+>  		{ SPINOR_OP_READ_1_1_4,	SPINOR_OP_READ_1_1_4_4B },
+>  		{ SPINOR_OP_READ_1_4_4,	SPINOR_OP_READ_1_4_4_4B },
+> +		{ SPINOR_OP_READ_1_1_8,	SPINOR_OP_READ_1_1_8_4B },
+>=20
+>  		{ SPINOR_OP_READ_1_1_1_DTR,
+> 	SPINOR_OP_READ_1_1_1_DTR_4B },
+>  		{ SPINOR_OP_READ_1_2_2_DTR,
+> 	SPINOR_OP_READ_1_2_2_DTR_4B },
+> @@ -1406,7 +1408,7 @@ static const struct flash_info spi_nor_ids[] =3D {
+>  	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K |
+> USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+>=20
+>  	/* Micron */
+> -	{ "mt35xu512aba", INFO(0x2c5b1a, 0, 128 * 1024, 512, SECT_4K |
+> USE_FSR | SPI_NOR_4B_OPCODES) },
+> +	{ "mt35xu512aba", INFO(0x2c5b1a, 0, 128 * 1024, 512, SECT_4K |
+> USE_FSR
+> +| SPI_NOR_OCTAL_READ | SPI_NOR_4B_OPCODES) },
+>=20
+>  	/* PMC */
+>  	{ "pm25lv512",   INFO(0,        0, 32 * 1024,    2, SECT_4K_PMC) },
+> @@ -3199,6 +3201,13 @@ static int spi_nor_init_params(struct spi_nor *nor=
+,
+>  					  SNOR_PROTO_1_1_4);
+>  	}
+>=20
+> +	if (info->flags & SPI_NOR_OCTAL_READ) {
+> +		params->hwcaps.mask |=3D SNOR_HWCAPS_READ_1_1_8;
+> +		spi_nor_set_read_settings(&params-
+> >reads[SNOR_CMD_READ_1_1_8],
+> +					  0, 8, SPINOR_OP_READ_1_1_8,
+> +					  SNOR_PROTO_1_1_8);
+> +	}
+> +
+>  	/* Page Program settings. */
+>  	params->hwcaps.mask |=3D SNOR_HWCAPS_PP;
+>  	spi_nor_set_pp_settings(&params->page_programs[SNOR_CMD_PP],
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h in=
+dex
+> 8b1acf68b7ac..ae9861ed7e0f 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -50,6 +50,7 @@
+>  #define SPINOR_OP_READ_1_2_2	0xbb	/* Read data bytes (Dual I/O
+> SPI) */
+>  #define SPINOR_OP_READ_1_1_4	0x6b	/* Read data bytes (Quad
+> Output SPI) */
+>  #define SPINOR_OP_READ_1_4_4	0xeb	/* Read data bytes (Quad I/O
+> SPI) */
+> +#define SPINOR_OP_READ_1_1_8	0x8b	/* Read data bytes (Octal
+> Output SPI) */
+>  #define SPINOR_OP_PP		0x02	/* Page program (up to 256 bytes) */
+>  #define SPINOR_OP_PP_1_1_4	0x32	/* Quad page program */
+>  #define SPINOR_OP_PP_1_4_4	0x38	/* Quad page program */
+> @@ -73,6 +74,7 @@
+>  #define SPINOR_OP_READ_1_2_2_4B	0xbc	/* Read data bytes (Dual I/O
+> SPI) */
+>  #define SPINOR_OP_READ_1_1_4_4B	0x6c	/* Read data bytes (Quad
+> Output SPI) */
+>  #define SPINOR_OP_READ_1_4_4_4B	0xec	/* Read data bytes (Quad I/O
+> SPI) */
+> +#define SPINOR_OP_READ_1_1_8_4B	0x7c	/* Read data bytes (Octal
+> Output SPI) */
+>  #define SPINOR_OP_PP_4B		0x12	/* Page program (up to 256
+> bytes) */
+>  #define SPINOR_OP_PP_1_1_4_4B	0x34	/* Quad page program */
+>  #define SPINOR_OP_PP_1_4_4_4B	0x3e	/* Quad page program */
+> --
+> 2.19.0
