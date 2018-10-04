@@ -1,26 +1,75 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 9/9] ARM: bcm63138: Enable SATA AHCI and PHY
-Date: Thu, 4 Oct 2018 10:23:15 -0700
-Message-ID: <0ac69ef8-21fb-7005-4eac-b00bf46870b9@gmail.com>
-References: <20180920191646.18198-1-f.fainelli@gmail.com>
- <20180920191646.18198-13-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V10 6/8] dt-bindings: timer: C-SKY Multi-processor timer
+Date: Fri,  5 Oct 2018 01:22:26 +0800
+Message-ID: <98c73d601d7ad98993ecfe8d8ce4b5abbc07e4da.1538672812.git.ren_guo@c-sky.com>
+References: <cover.1538672812.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920191646.18198-13-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <cover.1538672812.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1538672812.git.ren_guo@c-sky.com>
+References: <cover.1538672812.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Al Cooper <alcooperx@gmail.com>, Ray Jui <ray.jui@broadcom.com>, Tejun Heo <tj@kernel.org>, Fengguang Wu <fengguang.wu@intel.com>, Arnd Bergmann <arnd@arndb.de>, "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2018 12:16 PM, Florian Fainelli wrote:
-> The Broadcom BCM963138DVT board has an eSATA port which is fully
-> functional, turn on the AHCI controller and the companion SATA PHY.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Dt-bingdings doc for C-SKY SMP system setting.
 
-Applied to devicetree/next
+Changelog:
+ - Drop the interrupt-parent.
+
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ .../devicetree/bindings/timer/csky,mptimer.txt     | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/csky,mptimer.txt b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+new file mode 100644
+index 0000000..15cfec0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/csky,mptimer.txt
+@@ -0,0 +1,42 @@
++============================
++C-SKY Multi-processors Timer
++============================
++
++C-SKY multi-processors timer is designed for C-SKY SMP system and the
++regs is accessed by cpu co-processor 4 registers with mtcr/mfcr.
++
++ - PTIM_CTLR "cr<0, 14>" Control reg to start reset timer.
++ - PTIM_TSR  "cr<1, 14>" Interrupt cleanup status reg.
++ - PTIM_CCVR "cr<3, 14>" Current counter value reg.
++ - PTIM_LVR  "cr<6, 14>" Window value reg to triger next event.
++
++==============================
++timer node bindings definition
++==============================
++
++	Description: Describes SMP timer
++
++	PROPERTIES
++
++	- compatible
++		Usage: required
++		Value type: <string>
++		Definition: must be "csky,mptimer"
++	- clocks
++		Usage: required
++		Value type: <node>
++		Definition: must be input clk node
++	- interrupts
++		Usage: required
++		Value type: <u32>
++		Definition: must be timer irq num defined by soc
++
++Examples:
++---------
++
++	timer: timer {
++		compatible = "csky,mptimer";
++		clocks = <&dummy_apb_clk>;
++		interrupts = <16>;
++		interrupt-parent = <&intc>;
++	};
 -- 
-Florian
+2.7.4
