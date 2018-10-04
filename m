@@ -1,87 +1,250 @@
 From: Manish Narani <manish.narani@xilinx.com>
-Subject: [PATCH v8 00/10] EDAC: Enhancements to Synopsys EDAC driver
-Date: Thu, 4 Oct 2018 21:05:18 +0530
-Message-ID: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
+Subject: [PATCH v8 02/10] edac: synopsys: Rename the static functions to a shorter name
+Date: Thu, 4 Oct 2018 21:05:20 +0530
+Message-ID: <1538667328-9465-3-git-send-email-manish.narani@xilinx.com>
+References: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, manish.narani@xilinx.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, leoyang.li@nxp.com
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series enhances the current EDAC driver to support different
-platforms. This series adds support for ZynqMP DDRC controller in synopsys
-EDAC driver. This series also adds Device tree properties and relevant
-binding documentation.
+Rename the static functions to a shorter name. Since this is Synopsys
+EDAC driver, better to remove unnecessary 'synps_' prefix in function
+names.
 
-Changes in v2:
-	- Moved checking of DDR_ECC_INTR_SUPPORT from (1/4) to (3/4) as it is
-	  a feature of ZynqMP DDRC
-	- The Binding Documentation in (2/4) is modified as per the review
-	  comments
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ drivers/edac/synopsys_edac.c | 56 ++++++++++++++++++++++----------------------
+ 1 file changed, 28 insertions(+), 28 deletions(-)
 
-Changes in v3:
-	- The commit message in (2/4) is modified (Synopsys EDAC Driver -->
-	  ZynqMP DDRC)
-
-Changes in v4:
-	- Updated the commit message in (1/4)
-	- Renamed function pointer names removing 'synps_' in (1/4)
-	- Shortened unnecessary long lines as per the review comment on (1/4)
-
-Changes in v5:
-	- Updated the commit message in (2/4) and (4/4).
-	- Removed the unnecessary check for match data in probe() in (1/4)
-	- Some Indentation changes for better readability in (1/4) and (3/4)
-	- Removed repeated code in (3/4)
-	- Used 'zynq' and 'zynqmp' instead of 'synps_enh_edac' in function names
-
-Changes in v6:
-	- Splitted the patches according to functionalities
-	- Addressed code style comments from v5 review
-	- Moved the Error Injection to CONFIG_EDAC_DEBUG mode
-
-Changes in v7:
-	- Included DTS patch (6/7) which was missed in v6 patch set
-
-Changes in v8:
-	- patch (1/7) from v7 is split in to 3 different logically different patches
-		1. functional changes like code cleanup
-		2. functions renaming
-		3. comments cleanup
-	- Added a separate patch (4) for making always successful functions as void
-	- Corrected 'Too many parentheses' review comment in patch (5)
-	- Corrected comments as per the v7 review feedback
-	- Made dedicated functions for IRQ setup, IRQ enable and IRQ disable in patch (8)
-	- Addressed review comments in patch (10)
-
-Manish Narani (10):
-  edac: synopsys: Update the driver code for better readability
-  edac: synopsys: Rename the static functions to a shorter name
-  edac: synopsys: Modify the comments in the driver
-  edac: synopsys: Make return type void for functions always returning 0
-  edac: synps: Add platform specific structures for ddrc controller
-  dt: bindings: Document ZynqMP DDRC in Synopsys documentation
-  edac: synopsys: Add macro defines for ZynqMP DDRC
-  edac: synopsys: Add EDAC ECC support for ZynqMP DDRC
-  arm64: zynqmp: Add DDRC node
-  edac: synopsys: Add Error Injection support for ZynqMP DDRC
-
- .../bindings/memory-controllers/synopsys.txt       |   27 +-
- arch/arm64/boot/dts/xilinx/zynqmp.dtsi             |    7 +
- drivers/edac/Kconfig                               |    2 +-
- drivers/edac/synopsys_edac.c                       | 1194 +++++++++++++++++---
- 4 files changed, 1072 insertions(+), 158 deletions(-)
-
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 1936c73..abb5de8 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -142,7 +142,7 @@ struct synps_edac_priv {
+ };
+ 
+ /**
+- * synps_edac_geterror_info - Get the current ecc error info
++ * edac_geterror_info - Get the current ecc error info
+  * @base:	Pointer to the base address of the ddr memory controller
+  * @p:		Pointer to the synopsys ecc status structure
+  *
+@@ -150,7 +150,7 @@ struct synps_edac_priv {
+  *
+  * Return: one if there is no error otherwise returns zero
+  */
+-static int synps_edac_geterror_info(void __iomem *base,
++static int edac_geterror_info(void __iomem *base,
+ 				    struct synps_ecc_status *p)
+ {
+ 	u32 regval, clearval = 0;
+@@ -196,13 +196,13 @@ static int synps_edac_geterror_info(void __iomem *base,
+ }
+ 
+ /**
+- * synps_edac_handle_error - Handle controller error types CE and UE
++ * edac_handle_error - Handle controller error types CE and UE
+  * @mci:	Pointer to the edac memory controller instance
+  * @p:		Pointer to the synopsys ecc status structure
+  *
+  * Handles the controller ECC correctable and un correctable error.
+  */
+-static void synps_edac_handle_error(struct mem_ctl_info *mci,
++static void edac_handle_error(struct mem_ctl_info *mci,
+ 				    struct synps_ecc_status *p)
+ {
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+@@ -232,30 +232,30 @@ static void synps_edac_handle_error(struct mem_ctl_info *mci,
+ }
+ 
+ /**
+- * synps_edac_check - Check controller for ECC errors
++ * edac_check - Check controller for ECC errors
+  * @mci:	Pointer to the edac memory controller instance
+  *
+  * Used to check and post ECC errors. Called by the polling thread
+  */
+-static void synps_edac_check(struct mem_ctl_info *mci)
++static void edac_check(struct mem_ctl_info *mci)
+ {
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+ 	int status;
+ 
+-	status = synps_edac_geterror_info(priv->baseaddr, &priv->stat);
++	status = edac_geterror_info(priv->baseaddr, &priv->stat);
+ 	if (status)
+ 		return;
+ 
+ 	priv->ce_cnt += priv->stat.ce_cnt;
+ 	priv->ue_cnt += priv->stat.ue_cnt;
+-	synps_edac_handle_error(mci, &priv->stat);
++	edac_handle_error(mci, &priv->stat);
+ 
+ 	edac_dbg(3, "Total error count CE %d UE %d\n",
+ 		 priv->ce_cnt, priv->ue_cnt);
+ }
+ 
+ /**
+- * synps_edac_get_dtype - Return the controller memory width
++ * edac_get_dtype - Return the controller memory width
+  * @base:	Pointer to the ddr memory controller base address
+  *
+  * Get the EDAC device type width appropriate for the current controller
+@@ -263,7 +263,7 @@ static void synps_edac_check(struct mem_ctl_info *mci)
+  *
+  * Return: a device type width enumeration.
+  */
+-static enum dev_type synps_edac_get_dtype(const void __iomem *base)
++static enum dev_type edac_get_dtype(const void __iomem *base)
+ {
+ 	enum dev_type dt;
+ 	u32 width;
+@@ -286,20 +286,20 @@ static enum dev_type synps_edac_get_dtype(const void __iomem *base)
+ }
+ 
+ /**
+- * synps_edac_get_eccstate - Return the controller ecc enable/disable status
++ * edac_get_eccstate - Return the controller ecc enable/disable status
+  * @base:	Pointer to the ddr memory controller base address
+  *
+  * Get the ECC enable/disable status for the controller
+  *
+  * Return: a ecc status boolean i.e true/false - enabled/disabled.
+  */
+-static bool synps_edac_get_eccstate(void __iomem *base)
++static bool edac_get_eccstate(void __iomem *base)
+ {
+ 	bool state = false;
+ 	enum dev_type dt;
+ 	u32 ecctype;
+ 
+-	dt = synps_edac_get_dtype(base);
++	dt = edac_get_dtype(base);
+ 	if (dt == DEV_UNKNOWN)
+ 		return state;
+ 
+@@ -311,11 +311,11 @@ static bool synps_edac_get_eccstate(void __iomem *base)
+ }
+ 
+ /**
+- * synps_edac_get_memsize - reads the size of the attached memory device
++ * edac_get_memsize - reads the size of the attached memory device
+  *
+  * Return: the memory size in bytes
+  */
+-static u32 synps_edac_get_memsize(void)
++static u32 edac_get_memsize(void)
+ {
+ 	struct sysinfo inf;
+ 
+@@ -325,7 +325,7 @@ static u32 synps_edac_get_memsize(void)
+ }
+ 
+ /**
+- * synps_edac_get_mtype - Returns controller memory type
++ * edac_get_mtype - Returns controller memory type
+  * @base:	pointer to the synopsys ecc status structure
+  *
+  * Get the EDAC memory type appropriate for the current controller
+@@ -333,7 +333,7 @@ static u32 synps_edac_get_memsize(void)
+  *
+  * Return: a memory type enumeration.
+  */
+-static enum mem_type synps_edac_get_mtype(const void __iomem *base)
++static enum mem_type edac_get_mtype(const void __iomem *base)
+ {
+ 	enum mem_type mt;
+ 	u32 memtype;
+@@ -349,7 +349,7 @@ static enum mem_type synps_edac_get_mtype(const void __iomem *base)
+ }
+ 
+ /**
+- * synps_edac_init_csrows - Initialize the cs row data
++ * edac_init_csrows - Initialize the cs row data
+  * @mci:	Pointer to the edac memory controller instance
+  *
+  * Initializes the chip select rows associated with the EDAC memory
+@@ -357,7 +357,7 @@ static enum mem_type synps_edac_get_mtype(const void __iomem *base)
+  *
+  * Return: Unconditionally 0.
+  */
+-static int synps_edac_init_csrows(struct mem_ctl_info *mci)
++static int edac_init_csrows(struct mem_ctl_info *mci)
+ {
+ 	struct synps_edac_priv *priv = mci->pvt_info;
+ 	struct csrow_info *csi;
+@@ -367,15 +367,15 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+ 
+ 	for (row = 0; row < mci->nr_csrows; row++) {
+ 		csi = mci->csrows[row];
+-		size = synps_edac_get_memsize();
++		size = edac_get_memsize();
+ 
+ 		for (j = 0; j < csi->nr_channels; j++) {
+ 			dimm		= csi->channels[j]->dimm;
+ 			dimm->edac_mode	= EDAC_FLAG_SECDED;
+-			dimm->mtype	= synps_edac_get_mtype(priv->baseaddr);
++			dimm->mtype	= edac_get_mtype(priv->baseaddr);
+ 			dimm->nr_pages	= (size >> PAGE_SHIFT) / csi->nr_channels;
+ 			dimm->grain	= SYNPS_EDAC_ERR_GRAIN;
+-			dimm->dtype	= synps_edac_get_dtype(priv->baseaddr);
++			dimm->dtype	= edac_get_dtype(priv->baseaddr);
+ 		}
+ 	}
+ 
+@@ -383,7 +383,7 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+ }
+ 
+ /**
+- * synps_edac_mc_init - Initialize driver instance
++ * edac_mc_init - Initialize driver instance
+  * @mci:	Pointer to the edac memory controller instance
+  * @pdev:	Pointer to the platform_device struct
+  *
+@@ -393,7 +393,7 @@ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+  *
+  * Return: Always zero.
+  */
+-static int synps_edac_mc_init(struct mem_ctl_info *mci,
++static int edac_mc_init(struct mem_ctl_info *mci,
+ 				 struct platform_device *pdev)
+ {
+ 	int status;
+@@ -415,10 +415,10 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
+ 	mci->mod_name = SYNPS_EDAC_MOD_VER;
+ 
+ 	edac_op_state = EDAC_OPSTATE_POLL;
+-	mci->edac_check = synps_edac_check;
++	mci->edac_check = edac_check;
+ 	mci->ctl_page_to_phys = NULL;
+ 
+-	status = synps_edac_init_csrows(mci);
++	status = edac_init_csrows(mci);
+ 
+ 	return status;
+ }
+@@ -446,7 +446,7 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(baseaddr))
+ 		return PTR_ERR(baseaddr);
+ 
+-	if (!synps_edac_get_eccstate(baseaddr)) {
++	if (!edac_get_eccstate(baseaddr)) {
+ 		edac_printk(KERN_INFO, EDAC_MC, "ECC not enabled\n");
+ 		return -ENXIO;
+ 	}
+@@ -468,7 +468,7 @@ static int synps_edac_mc_probe(struct platform_device *pdev)
+ 
+ 	priv = mci->pvt_info;
+ 	priv->baseaddr = baseaddr;
+-	rc = synps_edac_mc_init(mci, pdev);
++	rc = edac_mc_init(mci, pdev);
+ 	if (rc) {
+ 		edac_printk(KERN_ERR, EDAC_MC,
+ 			    "Failed to initialize instance\n");
 -- 
 2.1.1
