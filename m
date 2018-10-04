@@ -1,66 +1,219 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/6] dt-bindings: power: Add qcom rpm power domain
- driver bindings
-Date: Thu, 4 Oct 2018 10:18:22 -0500
-Message-ID: <CAL_JsqKSiT15sn_jXy0FRp_YG5XbkREUeHf-98A61iN-TKxWpQ@mail.gmail.com>
-References: <20180627045234.27403-1-rnayak@codeaurora.org> <20180627045234.27403-3-rnayak@codeaurora.org>
- <20180703223554.GA32313@rob-hp-laptop> <20180704055757.4li26b6poxllmh2k@vireshk-i7>
- <1463d24b-481d-eecd-9e44-e7a5a993e5fc@codeaurora.org> <CAL_JsqJe+m4hD3nxQDjOT1JzRoSMXppy1r6APV1w=NtgCr-X_A@mail.gmail.com>
- <271db7b1-f65b-f42d-b00b-9362429b3749@codeaurora.org> <CAL_JsqJQypZbeZRa2u2+nM96p0ZHMHgDSpMbXqZx6zn+OiZSrw@mail.gmail.com>
- <20181004083637.xlz26rpn4qtsvdk7@vireshk-i7>
+From: Manish Narani <manish.narani@xilinx.com>
+Subject: [PATCH v8 01/10] edac: synopsys: Update the driver code for better readability
+Date: Thu, 4 Oct 2018 21:05:19 +0530
+Message-ID: <1538667328-9465-2-git-send-email-manish.narani@xilinx.com>
+References: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004083637.xlz26rpn4qtsvdk7@vireshk-i7>
+In-Reply-To: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, bp@alien8.de, mchehab@kernel.org, manish.narani@xilinx.com, sudeep.holla@arm.com, amit.kucheria@linaro.org, leoyang.li@nxp.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 4, 2018 at 3:36 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 25-09-18, 14:43, Rob Herring wrote:
-> > On Tue, Sep 25, 2018 at 5:25 AM Rajendra Nayak <rnayak@codeaurora.org> wrote:
-> > >
-> > > Hi Rob,
-> > >
-> > > []...
-> > > >>>>> +   rpmhpd_opp_table: opp-table {
-> > > >>>>> +           compatible = "operating-points-v2-qcom-level";
-> > > >>>>> +
-> > > >>>>> +           rpmhpd_opp_ret: opp1 {
-> > > >>>>> +                   qcom,level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-> > > >>>>> +           };
-> > > >>>>
-> > > >>>> I don't see the point in using the OPP binding here when you aren't
-> > > >>>> using *any* of the properties from it.
-> > > >>>
-> > > >>> Yeah, that's the case for now. But there are cases (as Stephen
-> > > >>> mentioned earlier [1]) where the voltage values (and maybe other
-> > > >>> values like current, etc) would be known and filled in DT. And that's
-> > > >>> why we all agreed to use OPP tables for PM domains as well, as these
-> > > >>> are really "operating performance points" of these PM domains.
-> > > >>
-> > > >> Rob, are you fine with these bindings then?
-> > > >
-> > > > Okay, my only thought is whether we should just use 'reg' here, or do
-> > > > we need 'level' for anything else and should make it common?
-> > >
-> > > I am not quite sure I understood what you are suggesting here :(
-> >
-> > You could use the  'reg' property instead of 'qcom,level'. Any reason
-> > not to do that?
->
-> They can use any property which uniquely identifies the OPP nodes in
-> the table. Though I never thought we can use 'reg' property in such a
-> way. I always thought it must be related to registers somehow :)
+Modify the driver with some changes for code clean up. Update the debug
+messages for EDAC errors reported. Increase the indentation of the
+macros for better readability.
 
-That's almost certainly where the name originates from back in the
-90s. I view 'reg' as how you identify or address a device. This can be
-channels of something like an ADC.
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+---
+ drivers/edac/synopsys_edac.c | 104 +++++++++++++++++++++----------------------
+ 1 file changed, 52 insertions(+), 52 deletions(-)
 
-It's perhaps a stretch for OPP nodes as they aren't really a device,
-but if the levels are part of the h/w then perhaps reg is a good
-match.
-
-Rob
+diff --git a/drivers/edac/synopsys_edac.c b/drivers/edac/synopsys_edac.c
+index 0c9c59e..1936c73 100644
+--- a/drivers/edac/synopsys_edac.c
++++ b/drivers/edac/synopsys_edac.c
+@@ -26,74 +26,74 @@
+ #include "edac_module.h"
+ 
+ /* Number of cs_rows needed per memory controller */
+-#define SYNPS_EDAC_NR_CSROWS	1
++#define SYNPS_EDAC_NR_CSROWS		1
+ 
+ /* Number of channels per memory controller */
+-#define SYNPS_EDAC_NR_CHANS	1
++#define SYNPS_EDAC_NR_CHANS		1
+ 
+ /* Granularity of reported error in bytes */
+-#define SYNPS_EDAC_ERR_GRAIN	1
++#define SYNPS_EDAC_ERR_GRAIN		1
+ 
+-#define SYNPS_EDAC_MSG_SIZE	256
++#define SYNPS_EDAC_MSG_SIZE		256
+ 
+-#define SYNPS_EDAC_MOD_STRING	"synps_edac"
+-#define SYNPS_EDAC_MOD_VER	"1"
++#define SYNPS_EDAC_MOD_STRING		"synps_edac"
++#define SYNPS_EDAC_MOD_VER		"1"
+ 
+ /* Synopsys DDR memory controller registers that are relevant to ECC */
+-#define CTRL_OFST		0x0
+-#define T_ZQ_OFST		0xA4
++#define CTRL_OFST			0x0
++#define T_ZQ_OFST			0xA4
+ 
+ /* ECC control register */
+-#define ECC_CTRL_OFST		0xC4
++#define ECC_CTRL_OFST			0xC4
+ /* ECC log register */
+-#define CE_LOG_OFST		0xC8
++#define CE_LOG_OFST			0xC8
+ /* ECC address register */
+-#define CE_ADDR_OFST		0xCC
++#define CE_ADDR_OFST			0xCC
+ /* ECC data[31:0] register */
+-#define CE_DATA_31_0_OFST	0xD0
++#define CE_DATA_31_0_OFST		0xD0
+ 
+ /* Uncorrectable error info registers */
+-#define UE_LOG_OFST		0xDC
+-#define UE_ADDR_OFST		0xE0
+-#define UE_DATA_31_0_OFST	0xE4
++#define UE_LOG_OFST			0xDC
++#define UE_ADDR_OFST			0xE0
++#define UE_DATA_31_0_OFST		0xE4
+ 
+-#define STAT_OFST		0xF0
+-#define SCRUB_OFST		0xF4
++#define STAT_OFST			0xF0
++#define SCRUB_OFST			0xF4
+ 
+ /* Control register bit field definitions */
+-#define CTRL_BW_MASK		0xC
+-#define CTRL_BW_SHIFT		2
++#define CTRL_BW_MASK			0xC
++#define CTRL_BW_SHIFT			2
+ 
+-#define DDRCTL_WDTH_16		1
+-#define DDRCTL_WDTH_32		0
++#define DDRCTL_WDTH_16			1
++#define DDRCTL_WDTH_32			0
+ 
+ /* ZQ register bit field definitions */
+-#define T_ZQ_DDRMODE_MASK	0x2
++#define T_ZQ_DDRMODE_MASK		0x2
+ 
+ /* ECC control register bit field definitions */
+-#define ECC_CTRL_CLR_CE_ERR	0x2
+-#define ECC_CTRL_CLR_UE_ERR	0x1
++#define ECC_CTRL_CLR_CE_ERR		0x2
++#define ECC_CTRL_CLR_UE_ERR		0x1
+ 
+ /* ECC correctable/uncorrectable error log register definitions */
+-#define LOG_VALID		0x1
+-#define CE_LOG_BITPOS_MASK	0xFE
+-#define CE_LOG_BITPOS_SHIFT	1
++#define LOG_VALID			0x1
++#define CE_LOG_BITPOS_MASK		0xFE
++#define CE_LOG_BITPOS_SHIFT		1
+ 
+ /* ECC correctable/uncorrectable error address register definitions */
+-#define ADDR_COL_MASK		0xFFF
+-#define ADDR_ROW_MASK		0xFFFF000
+-#define ADDR_ROW_SHIFT		12
+-#define ADDR_BANK_MASK		0x70000000
+-#define ADDR_BANK_SHIFT		28
++#define ADDR_COL_MASK			0xFFF
++#define ADDR_ROW_MASK			0xFFFF000
++#define ADDR_ROW_SHIFT			12
++#define ADDR_BANK_MASK			0x70000000
++#define ADDR_BANK_SHIFT			28
+ 
+ /* ECC statistic register definitions */
+-#define STAT_UECNT_MASK		0xFF
+-#define STAT_CECNT_MASK		0xFF00
+-#define STAT_CECNT_SHIFT	8
++#define STAT_UECNT_MASK			0xFF
++#define STAT_CECNT_MASK			0xFF00
++#define STAT_CECNT_SHIFT		8
+ 
+ /* ECC scrub register definitions */
+-#define SCRUB_MODE_MASK		0x7
+-#define SCRUB_MODE_SECDED	0x4
++#define SCRUB_MODE_MASK			0x7
++#define SCRUB_MODE_SECDED		0x4
+ 
+ /**
+  * struct ecc_error_info - ECC error log information
+@@ -172,7 +172,7 @@ static int synps_edac_geterror_info(void __iomem *base,
+ 	p->ceinfo.col = regval & ADDR_COL_MASK;
+ 	p->ceinfo.bank = (regval & ADDR_BANK_MASK) >> ADDR_BANK_SHIFT;
+ 	p->ceinfo.data = readl(base + CE_DATA_31_0_OFST);
+-	edac_dbg(3, "ce bit position: %d data: %d\n", p->ceinfo.bitpos,
++	edac_dbg(3, "CE bit position: %d data: %d\n", p->ceinfo.bitpos,
+ 		 p->ceinfo.data);
+ 	clearval = ECC_CTRL_CLR_CE_ERR;
+ 
+@@ -250,7 +250,7 @@ static void synps_edac_check(struct mem_ctl_info *mci)
+ 	priv->ue_cnt += priv->stat.ue_cnt;
+ 	synps_edac_handle_error(mci, &priv->stat);
+ 
+-	edac_dbg(3, "Total error count ce %d ue %d\n",
++	edac_dbg(3, "Total error count CE %d UE %d\n",
+ 		 priv->ce_cnt, priv->ue_cnt);
+ }
+ 
+@@ -295,9 +295,9 @@ static enum dev_type synps_edac_get_dtype(const void __iomem *base)
+  */
+ static bool synps_edac_get_eccstate(void __iomem *base)
+ {
++	bool state = false;
+ 	enum dev_type dt;
+ 	u32 ecctype;
+-	bool state = false;
+ 
+ 	dt = synps_edac_get_dtype(base);
+ 	if (dt == DEV_UNKNOWN)
+@@ -359,23 +359,23 @@ static enum mem_type synps_edac_get_mtype(const void __iomem *base)
+  */
+ static int synps_edac_init_csrows(struct mem_ctl_info *mci)
+ {
++	struct synps_edac_priv *priv = mci->pvt_info;
+ 	struct csrow_info *csi;
+ 	struct dimm_info *dimm;
+-	struct synps_edac_priv *priv = mci->pvt_info;
+-	u32 size;
+-	int row, j;
++	u32 size, row;
++	int j;
+ 
+ 	for (row = 0; row < mci->nr_csrows; row++) {
+ 		csi = mci->csrows[row];
+ 		size = synps_edac_get_memsize();
+ 
+ 		for (j = 0; j < csi->nr_channels; j++) {
+-			dimm            = csi->channels[j]->dimm;
+-			dimm->edac_mode = EDAC_FLAG_SECDED;
+-			dimm->mtype     = synps_edac_get_mtype(priv->baseaddr);
+-			dimm->nr_pages  = (size >> PAGE_SHIFT) / csi->nr_channels;
+-			dimm->grain     = SYNPS_EDAC_ERR_GRAIN;
+-			dimm->dtype     = synps_edac_get_dtype(priv->baseaddr);
++			dimm		= csi->channels[j]->dimm;
++			dimm->edac_mode	= EDAC_FLAG_SECDED;
++			dimm->mtype	= synps_edac_get_mtype(priv->baseaddr);
++			dimm->nr_pages	= (size >> PAGE_SHIFT) / csi->nr_channels;
++			dimm->grain	= SYNPS_EDAC_ERR_GRAIN;
++			dimm->dtype	= synps_edac_get_dtype(priv->baseaddr);
+ 		}
+ 	}
+ 
+@@ -434,12 +434,12 @@ static int synps_edac_mc_init(struct mem_ctl_info *mci,
+  */
+ static int synps_edac_mc_probe(struct platform_device *pdev)
+ {
+-	struct mem_ctl_info *mci;
+ 	struct edac_mc_layer layers[2];
+ 	struct synps_edac_priv *priv;
+-	int rc;
+-	struct resource *res;
++	struct mem_ctl_info *mci;
+ 	void __iomem *baseaddr;
++	struct resource *res;
++	int rc;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	baseaddr = devm_ioremap_resource(&pdev->dev, res);
+-- 
+2.1.1
