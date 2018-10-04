@@ -1,57 +1,109 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v5 2/2] clk: qcom: Add lpass clock controller driver for
- SDM845
-Date: Thu, 4 Oct 2018 17:31:27 +0530
-Message-ID: <66fc65d8-92ec-f32c-6edb-ad4952695395@codeaurora.org>
-References: <1537266338-18661-1-git-send-email-tdas@codeaurora.org>
- <1537266338-18661-3-git-send-email-tdas@codeaurora.org>
- <153816066933.119890.2976485722156069351@swboyd.mtv.corp.google.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH 1/4] spi: add support for octal I/O data transfer
+Date: Thu, 4 Oct 2018 12:07:17 +0000
+Message-ID: <VI1PR04MB10384B74E6E27435313CC73099EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <1538642920-3843-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1538642920-3843-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <20181004110446.5e1bb255@bbrezillon>
+        <VI1PR04MB10380FD9CE99E34BA27E55B699EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+ <20181004111941.0da33ec0@bbrezillon>
+ <VI1PR04MB1038E23CBFE9CFD5C2ECCD3299EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <153816066933.119890.2976485722156069351@swboyd.mtv.corp.google.com>
+In-Reply-To: <VI1PR04MB1038E23CBFE9CFD5C2ECCD3299EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Boris,
 
-On 9/29/2018 12:21 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-09-18 03:25:38)
->> @@ -3469,6 +3495,8 @@ enum {
->>          [GCC_QSPI_CORE_CLK_SRC] = &gcc_qspi_core_clk_src.clkr,
->>          [GCC_QSPI_CORE_CLK] = &gcc_qspi_core_clk.clkr,
->>          [GCC_QSPI_CNOC_PERIPH_AHB_CLK] = &gcc_qspi_cnoc_periph_ahb_clk.clkr,
->> +       [GCC_LPASS_Q6_AXI_CLK] = NULL,
->> +       [GCC_LPASS_SWAY_CLK] = NULL,
->>   };
->>   
->>   static const struct qcom_reset_map gcc_sdm845_resets[] = {
->> @@ -3583,6 +3611,13 @@ static int gcc_sdm845_probe(struct platform_device *pdev)
->>          if (ret)
->>                  return ret;
->>   
->> +       if (of_property_read_bool(pdev->dev.of_node, "qcom,lpass-protected")) {
-> 
-> Shouldn't this be negated? So that we only add the clks when lpass isn't
-> protected?
->
+> -----Original Message-----
+> From: Yogesh Narayan Gaur
+> Sent: Thursday, October 4, 2018 2:56 PM
+> To: 'Boris Brezillon' <boris.brezillon@bootlin.com>
+> Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com; vigneshr@ti.com=
+;
+> linux-spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> kernel@lists.infradead.org; computersforpeace@gmail.com;
+> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
+> Subject: RE: [PATCH 1/4] spi: add support for octal I/O data transfer
+>=20
+> Hi Boris,
+>=20
+> > -----Original Message-----
+> > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > Sent: Thursday, October 4, 2018 2:50 PM
+> > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com;
+> > vigneshr@ti.com; linux-spi@vger.kernel.org;
+> > devicetree@vger.kernel.org; robh@kernel.org; mark.rutland@arm.com;
+> > shawnguo@kernel.org; linux-arm- kernel@lists.infradead.org;
+> > computersforpeace@gmail.com; frieder.schrempf@exceet.de;
+> > linux-kernel@vger.kernel.org
+> > Subject: Re: [PATCH 1/4] spi: add support for octal I/O data transfer
+> >
+> > On Thu, 4 Oct 2018 09:14:36 +0000
+> > Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+> >
+> > > Hi Boris,
+> > >
+> > > > -----Original Message-----
+> > > > From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> > > > Sent: Thursday, October 4, 2018 2:35 PM
+> > > > To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> > > > Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com;
+> > > > vigneshr@ti.com; linux-spi@vger.kernel.org;
+> > > > devicetree@vger.kernel.org; robh@kernel.org; mark.rutland@arm.com;
+> > > > shawnguo@kernel.org; linux-arm- kernel@lists.infradead.org;
+> > > > computersforpeace@gmail.com; frieder.schrempf@exceet.de;
+> > > > linux-kernel@vger.kernel.org Subject: Re: [PATCH 1/4] spi: add
+> > > > support for octal I/O data transfer
+> > > >
+> > > > Hi Yogesh,
+> > > >
+[...]
+> > > > > +#define	SPI_RX_OCTAL
+> > > > > 0x2000			/* receive with 8 wires
+> > > > */
+> > > > >  	int			irq;
+> > > > >  	void			*controller_state;
+> > > > >  	void			*controller_data;
+> > > >
+> > > > You're still not updating spi-mem.c to check those flags and
+> > > > SPI_MEM_MAX_BUSWIDTH is not updated to match the new limit (8
+> > > > instead of 4).
+> > > >
+> > > Yes and its strange that my octal mode communication is working fine
+> > > without adding support in spi-mem.c and that's why this has been
+> > > missed from me.
+> >
+> > Are you based on top of spi-next?
+>=20
+> Ok, that might be the reason. I have rebased few days back.
+> Would rebase with current tip and add support in spi-mem interface too.
 
-I was of the opinion to add the flag only when LPASS clocks are 
-required. But I am fine negating it too.
+I have rebased spi-next and currently on top but still my octal command sup=
+port is working fine without any issue with current shared patch series, pe=
+rformed data sanity.
 
->> +               gcc_sdm845_clocks[GCC_LPASS_Q6_AXI_CLK] =
->> +                       &gcc_lpass_q6_axi_clk.clkr;
->> +               gcc_sdm845_clocks[GCC_LPASS_SWAY_CLK] =
->> +                       &gcc_lpass_sway_clk.clkr;
->> +       }
->> +
->>          return qcom_cc_really_probe(pdev, &gcc_sdm845_desc, regmap);
+=3D>  git log  --pretty=3Doneline -3
+	496c415717b8bb7d37181127fcfad0ba450eb10d mtd: spi-nor: fsl-quadspi: Don't =
+let -EINVAL on the bus
+	2336d3a7b125683c9e8b25d6efa6064310d19dbe mtd: devices: m25p80: Make sure W=
+RITE_EN is issued before each write
+	e55841874471282d32eec595997afce43a5f55c0 mtd: spi-nor: Support controllers=
+ with limited TX FIFO size
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+GIT Repo - 	git://git.infradead.org/linux-mtd.git
+Branch -	remotes/origin/spi-nor/next
 
+Also, I am not able to find string SPI_MEM_MAX_BUSWIDTH in current source c=
+ode, can you share the GIT details where these changes are pushed.
 --
+Regards
+Yogesh Gaur.
