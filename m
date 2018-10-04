@@ -1,55 +1,88 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v4 10/10] arm64: allwinner: dts: h6: enable USB3 port on Pine H64
-Date: Thu,  4 Oct 2018 20:28:55 +0800
-Message-ID: <20181004122855.22981-11-icenowy@aosc.io>
-References: <20181004122855.22981-1-icenowy@aosc.io>
+From: Sayali Lokhande <sayalil@codeaurora.org>
+Subject: Re: [PATCH RFC 2/7] mmc: core: devfreq: Add devfreq based clock
+ scaling support
+Date: Thu, 4 Oct 2018 18:13:21 +0530
+Message-ID: <17490ba5-42f6-f1c1-cb5c-be315dfdf197@codeaurora.org>
+References: <1531475583-7050-1-git-send-email-sayalil@codeaurora.org>
+ <1531475583-7050-3-git-send-email-sayalil@codeaurora.org>
+ <20180720152436.GA4566@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004122855.22981-1-icenowy@aosc.io>
+In-Reply-To: <20180720152436.GA4566@rob-hp-laptop>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+To: Rob Herring <robh@kernel.org>
+Cc: adrian.hunter@intel.com, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, vviswana@codeaurora.org, bjorn.andersson@linaro.org, riteshh@codeaurora.org, vbadigan@codeaurora.org, Talel Shenhar <tatias@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Pine H64 board have a USB3 port, which is connected to the USB3 pins of
-the H6 SoC, and the 5V power supply is controlled via GPIO (shared with
-the power USB ports).
+Hi Rob,
 
-Enable this port.
-
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
----
-No changes in v4.
-
-Changes in v3:
-- Added Chen-Yu's Review tag.
-
- arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-index 2fde0ff3dd6b..dde1f692d252 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dts
-@@ -51,6 +51,10 @@
- 	};
- };
- 
-+&dwc3 {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -222,3 +226,8 @@
- 	usb3_vbus-supply = <&reg_usb_vbus>;
- 	status = "okay";
- };
-+
-+&usb3phy {
-+	vbus-supply = <&reg_usb_vbus>;
-+	status = "okay";
-+};
--- 
-2.18.0
+On 7/20/2018 8:54 PM, Rob Herring wrote:
+> On Fri, Jul 13, 2018 at 03:22:58PM +0530, Sayali Lokhande wrote:
+>> This change adds the use of devfreq to MMC.
+>> Both eMMC and SD card will use it.
+>> For some workloads, such as video playback, it isn't
+>> necessary for these cards to run at high speed.
+>> Running at lower frequency, for example 52MHz, in such
+>> cases can still meet the deadlines for data transfers.
+>> Scaling down the clock frequency dynamically has power
+>> savings not only because the bus is running at lower frequency
+>> but also has an advantage of scaling down the system core
+>> voltage, if supported.
+>> Provide an ondemand clock scaling support similar to the
+>> cpufreq ondemand governor having two thresholds,
+>> up_threshold and down_threshold to decide whether to
+>> increase the frequency or scale it down respectively.
+>> The sampling interval is in the order of milliseconds.
+>> If sampling interval is too low, frequent switching of
+>> frequencies can lead to high power consumption and if
+>> sampling interval is too high, the clock scaling logic
+>> would take long time to realize that the underlying
+>> hardware (controller and card) is busy and scale up
+>> the clocks.
+>>
+>> Signed-off-by: Talel Shenhar <tatias@codeaurora.org>
+>> Signed-off-by: Sayali Lokhande <sayalil@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/mmc/sdhci-msm.txt          |  10 +
+>>   drivers/mmc/core/core.c                            | 560 +++++++++++++++++++++
+>>   drivers/mmc/core/core.h                            |   7 +
+>>   drivers/mmc/core/debugfs.c                         |  46 ++
+>>   drivers/mmc/core/host.c                            |   8 +
+>>   drivers/mmc/core/mmc.c                             | 200 +++++++-
+>>   drivers/mmc/core/sd.c                              |  72 ++-
+>>   drivers/mmc/host/sdhci-msm.c                       |  37 ++
+>>   drivers/mmc/host/sdhci-pltfm.c                     |  11 +
+>>   drivers/mmc/host/sdhci.c                           |  27 +
+>>   drivers/mmc/host/sdhci.h                           |   8 +
+>>   include/linux/mmc/card.h                           |   5 +
+>>   include/linux/mmc/host.h                           |  70 +++
+>>   13 files changed, 1059 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> index 502b3b8..bd8470a 100644
+>> --- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+>> @@ -26,6 +26,15 @@ Required properties:
+>>   	"cal"	- reference clock for RCLK delay calibration (optional)
+>>   	"sleep"	- sleep clock for RCLK delay calibration (optional)
+>>   
+>> +Optional Properties:
+>> +- qcom,devfreq,freq-table - specifies supported frequencies for clock scaling.
+>> +				    Clock scaling logic shall toggle between these frequencies based
+>> +				    on card load. In case the defined frequencies are over or below
+>> +				    the supported card frequencies, they will be overridden
+>> +				    during card init. In case this entry is not supplied,
+>> +				    the driver will construct one based on the card
+>> +				    supported max and min frequencies.
+>> +				    The frequencies must be ordered from lowest to highest.
+> This should be a common binding in which case will just a list of
+> frequencies be sufficient.
+[Sayali] : Can you please elaborate more on what do you mean by common 
+binding here ? Like if you are referring to any already available 
+property (by devfreq ?) to pass min-max frequencies ?
+Any Documentation file to refer ?
+>
+> Rob
