@@ -1,83 +1,114 @@
-From: =?UTF-8?Q?Ren=C3=A9_Kjellerup?= <rk.katana.steel@gmail.com>
-Subject: Adding a Basic DT for the Linksys ea6500 v2 wireless home router
-Date: Thu, 4 Oct 2018 14:08:55 -0700
-Message-ID: <CACE8ZKZEpQjOW6CSvUuM9xhjtkSCF0bYxcfQ3htSabC=rVJcTA@mail.gmail.com>
-References: <CACE8ZKbUhFyWg5oK1B8+aWAa0tdqKf5Kokj80+8x1X2EUaA_DQ@mail.gmail.com>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v3 1/4] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Thu, 4 Oct 2018 14:23:38 -0700
+Message-ID: <1538688221-9823-2-git-send-email-jollys@xilinx.com>
+References: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="000000000000e8d96d05776d906a"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACE8ZKbUhFyWg5oK1B8+aWAa0tdqKf5Kokj80+8x1X2EUaA_DQ@mail.gmail.com>
+In-Reply-To: <1538688221-9823-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: "Cc: Rob Herring" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: rajanv@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
---000000000000e8d96d05776d906a
-Content-Type: text/plain; charset="UTF-8"
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-Hi Hauke,
+Add documentation to describe ZynqMP power domain bindings.
 
-thank you for suggesting adding the dts patch to mainline kernel,
-so here it is.
-I feel Rafal technically still have the copyrights, this is pretty
-much just a few string updates for the ea6500v2. However with this
-dts in latest OpenWrt 18.06 loads and installs on my device.
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ .../bindings/power/xlnx,zynqmp-genpd.txt           | 34 +++++++++++++++++++
+ include/dt-bindings/power/xlnx-zynqmp-power.h      | 39 ++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+ create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
 
-I will be available to do more testing should it be required.
-
-Regrads
-Rene Kjellerup
---
--- as life grows older, I gain experience.
--- http://www.alchemiestick.net/
-
---000000000000e8d96d05776d906a
-Content-Type: application/x-patch;
-	name="0001-ARM-dts-BCM5301X-Add-basic-DT-for-Linksys-EA6500-V2.patch"
-Content-Disposition: attachment;
-	filename="0001-ARM-dts-BCM5301X-Add-basic-DT-for-Linksys-EA6500-V2.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jmqu74zq0>
-X-Attachment-Id: f_jmqu74zq0
-
-RnJvbSBiZGM0NDI5MzUzZWUwNGY0OTc0OTUwMTZjOWVlYmFjMTg4NjAzOTBjIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBSZW5lIEtqZWxsZXJ1cCA8cmsua2F0YW5hLnN0ZWVsQGdtYWls
-LmNvbT4KRGF0ZTogTW9uLCAxIE9jdCAyMDE4IDE0OjExOjU2IC0wNzAwClN1YmplY3Q6IFtQQVRD
-SF0gQVJNOiBkdHM6IEJDTTUzMDFYOiBBZGQgYmFzaWMgRFQgZm9yIExpbmtzeXMgRUE2NTAwIFYy
-CgpJdCdzIHdpcmVsZXNzIGhvbWUgcm91dGVyIGJhc2VkIG9uIEJDTTQ3MDhBMCB3aXRoIEJDTTQz
-NjAgKyBCQ000MzMxCndpcmVsZXNzIGNoaXBzZXRzLiBUaGUgQkNNNDMzMSA1R0h6IGNoaXAgY3Vy
-cmVudGx5IGlzbid0IHN1cHBvcnRlZApvbmx5IGR1ZSB0byBtaXNzaW5nIGNvbXBhdGlibGUgZmly
-bXdhcmUuCgpTaWduZWQtb2ZmLWJ5OiBSZW5lIEtqZWxsZXJ1cCA8cmsua2F0YW5hLnN0ZWVsQGdt
-YWlsLmNvbT4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgtbGlua3N5cy1lYTY1MDAtdjIu
-ZHRzIHwgNDUgKysrKysrKysrKysrKysrKysrKysrKysrKwogMiBmaWxlcyBjaGFuZ2VkLCA0NiBp
-bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcw
-OC1saW5rc3lzLWVhNjUwMC12Mi5kdHMKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9N
-YWtlZmlsZSBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlCmluZGV4IGI1YmQzZGU4N2MzMy4u
-YWRmOGYyOGY1ZTQ0IDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQorKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZQpAQCAtODgsNiArODgsNyBAQCBkdGItJChDT05G
-SUdfQVJDSF9CQ01fNTMwMVgpICs9IFwKIAliY200NzA4LWFzdXMtcnQtYWM2OHUuZHRiIFwKIAli
-Y200NzA4LWJ1ZmZhbG8td3pyLTE3NTBkaHAuZHRiIFwKIAliY200NzA4LWxpbmtzeXMtZWE2MzAw
-LXYxLmR0YiBcCisJYmNtNDcwOC1saW5rc3lzLWVhNjUwMC12Mi5kdGIgXAogCWJjbTQ3MDgtbHV4
-dWwteGFwLTE1MTAuZHRiIFwKIAliY200NzA4LWx1eHVsLXh3Yy0xMDAwLmR0YiBcCiAJYmNtNDcw
-OC1uZXRnZWFyLXI2MjUwLmR0YiBcCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iY200
-NzA4LWxpbmtzeXMtZWE2NTAwLXYyLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDgtbGlu
-a3N5cy1lYTY1MDAtdjIuZHRzCm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
-MC4uYmFiY2ZlYzUwZGRlCi0tLSAvZGV2L251bGwKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
-NDcwOC1saW5rc3lzLWVhNjUwMC12Mi5kdHMKQEAgLTAsMCArMSw0NSBAQAorLy8gU1BEWC1MaWNl
-bnNlLUlkZW50aWZpZXI6IEdQTC0yLjAtb3ItbGF0ZXIgT1IgTUlUCisvKgorICogQ29weXJpZ2h0
-IChDKSAyMDE3IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KKyAqIENvcHlyaWdo
-dCAoQykgMjAxOCBSZW5lIEtqZWxsZXJ1cCA8cmsua2F0YW5hLnN0ZWVsQGdtYWlsLmNvbT4KKyAq
-LworCisvZHRzLXYxLzsKKworI2luY2x1ZGUgImJjbTQ3MDguZHRzaSIKKyNpbmNsdWRlICJiY201
-MzAxeC1uYW5kLWNzMC1iY2g4LmR0c2kiCisKKy8geworCWNvbXBhdGlibGUgPSAibGlua3N5cyxl
-YTY1MDAtdjIiLCAiYnJjbSxiY200NzA4IjsKKwltb2RlbCA9ICJMaW5rc3lzIEVBNjUwMCBWMiI7
-CisKKwljaG9zZW4geworCQlib290YXJncyA9ICJjb25zb2xlPXR0eVMwLDExNTIwMCI7CisJfTsK
-KworCW1lbW9yeSB7CisJCXJlZyA9IDwweDAwMDAwMDAwIDB4MDgwMDAwMDA+OworCX07CisKKwln
-cGlvLWtleXMgeworCQljb21wYXRpYmxlID0gImdwaW8ta2V5cyI7CisJCSNhZGRyZXNzLWNlbGxz
-ID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwwPjsKKworCQl3cHMgeworCQkJbGFiZWwgPSAiV1BT
-IjsKKwkJCWxpbnV4LGNvZGUgPSA8S0VZX1dQU19CVVRUT04+OworCQkJZ3Bpb3MgPSA8JmNoaXBj
-b21tb24gNyBHUElPX0FDVElWRV9MT1c+OworCQl9OworCisJCXJlc3RhcnQgeworCQkJbGFiZWwg
-PSAiUmVzZXQiOworCQkJbGludXgsY29kZSA9IDxLRVlfUkVTVEFSVD47CisJCQlncGlvcyA9IDwm
-Y2hpcGNvbW1vbiAxMSBHUElPX0FDVElWRV9MT1c+OworCQl9OworCX07Cit9OworCismdXNiM19w
-aHkgeworCXN0YXR1cyA9ICJva2F5IjsKK307Ci0tIAoyLjE2LjQKCg==
---000000000000e8d96d05776d906a--
+diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+new file mode 100644
+index 0000000..3c7f237
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+@@ -0,0 +1,34 @@
++-----------------------------------------------------------
++Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
++-----------------------------------------------------------
++The binding for zynqmp-power-controller follow the common
++generic PM domain binding[1].
++
++[1] Documentation/devicetree/bindings/power/power_domain.txt
++
++== Zynq MPSoC Generic PM Domain Node ==
++
++Required property:
++ - Below property should be in zynqmp-firmware node.
++ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
++
++Power domain ID indexes are mentioned in
++include/dt-bindings/power/xlnx-zynqmp-power.h.
++
++-------
++Example
++-------
++
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		...
++		#power-domain-cells = <1>;
++		...
++	};
++};
++
++sata {
++	...
++	power-domains = <&zynqmp_firmware 2>;
++	...
++};
+diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
+new file mode 100644
+index 0000000..1bc9636
+--- /dev/null
++++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (C) 2018 Xilinx, Inc.
++ */
++
++#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
++#define _DT_BINDINGS_ZYNQMP_POWER_H
++
++#define		PD_USB_0	0
++#define		PD_USB_1	1
++#define		PD_SATA		2
++#define		PD_SPI_0	3
++#define		PD_SPI_1	4
++#define		PD_UART_0	5
++#define		PD_UART_1	6
++#define		PD_ETH_0	7
++#define		PD_ETH_1	8
++#define		PD_ETH_2	9
++#define		PD_ETH_3	10
++#define		PD_I2C_0	11
++#define		PD_I2C_1	12
++#define		PD_DP		13
++#define		PD_GDMA		14
++#define		PD_ADMA		15
++#define		PD_TTC_0	16
++#define		PD_TTC_1	17
++#define		PD_TTC_2	18
++#define		PD_TTC_3	19
++#define		PD_SD_0		20
++#define		PD_SD_1		21
++#define		PD_NAND		22
++#define		PD_QSPI		23
++#define		PD_GPIO		24
++#define		PD_CAN_0	25
++#define		PD_CAN_1	26
++#define		PD_PCIE		27
++#define		PD_GPU		28
++
++#endif
+-- 
+2.7.4
