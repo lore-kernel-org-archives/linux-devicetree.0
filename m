@@ -1,45 +1,73 @@
-From: Icenowy Zheng <icenowy@aosc.io>
-Subject: [PATCH v4 00/10] Allwinner H6 USB support
-Date: Thu,  4 Oct 2018 20:28:45 +0800
-Message-ID: <20181004122855.22981-1-icenowy@aosc.io>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: [PATCH v4 01/10] dt-bindings: phy: add binding for
+ Allwinner H6 USB2 PHY
+Date: Thu,  4 Oct 2018 20:28:46 +0800
+Message-ID: <20181004122855.22981-2-icenowy@aosc.io>
+References: <20181004122855.22981-1-icenowy@aosc.io>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBMMP3DOQKGQEELSBGBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181004122855.22981-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patchset introduces support for the USB ports (both USB2 and USB3)
-on the Allwinner H6 SoC.
+The USB2.0 PHY on Allwinner H6 is similar to the ones on the ones on
+older SoCs, but with holes in PHY number (USB1 and USB2 are missing, in
+which USB1 is a USB3 PHY).
 
-The first 6 PATCHes are the USB2 part, and the latter 4 PATCHes are the
-USB3 part.
+Add binding for the PHY.
 
-PATCH 1, 2, 3, 7, 8 should go through the PHY tree, and the remaining
-patches should go through the armsoc tree via sunxi tree.
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+---
+New patch in v4.
 
-Icenowy Zheng (10):
-  dt-bindings: phy: add binding for Allwinner H6 USB2 PHY
-  phy: sun4i-usb: add support for missing USB PHY index
-  phy: sun4i-usb: add support for H6 USB2 PHY
-  arm64: allwinner: dts: h6: add USB2-related device nodes
-  arm64: allwinner: dts: h6: add USB Vbus regulator
-  arm64: allwinner: dts: h6: enable USB2 on Pine H64
-  dt-bindings: phy: add binding for Allwinner USB3 PHY
-  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
-  arm64: allwinner: dts: h6: add USB3 device nodes
-  arm64: allwinner: dts: h6: enable USB3 port on Pine H64
+ Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
- .../devicetree/bindings/phy/sun4i-usb-phy.txt |   8 +-
- .../bindings/phy/sun50i-usb3-phy.txt          |  23 ++
- .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  46 ++++
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 113 +++++++++
- drivers/phy/allwinner/Kconfig                 |  12 +
- drivers/phy/allwinner/Makefile                |   1 +
- drivers/phy/allwinner/phy-sun4i-usb.c         |  26 +-
- drivers/phy/allwinner/phy-sun50i-usb3.c       | 239 ++++++++++++++++++
- 8 files changed, 463 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
- create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
-
+diff --git a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+index 07ca4ec4a745..f2e120af17f0 100644
+--- a/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
++++ b/Documentation/devicetree/bindings/phy/sun4i-usb-phy.txt
+@@ -14,13 +14,14 @@ Required properties:
+   * allwinner,sun8i-r40-usb-phy
+   * allwinner,sun8i-v3s-usb-phy
+   * allwinner,sun50i-a64-usb-phy
++  * allwinner,sun50i-h6-usb-phy
+ - reg : a list of offset + length pairs
+ - reg-names :
+   * "phy_ctrl"
+-  * "pmu0" for H3, V3s and A64
++  * "pmu0" for H3, V3s, A64 or H6
+   * "pmu1"
+   * "pmu2" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
+-  * "pmu3" for sun8i-h3
++  * "pmu3" for sun8i-h3 or sun50i-h6
+ - #phy-cells : from the generic phy bindings, must be 1
+ - clocks : phandle + clock specifier for the phy clocks
+ - clock-names :
+@@ -29,12 +30,13 @@ Required properties:
+   * "usb0_phy", "usb1_phy" for sun8i
+   * "usb0_phy", "usb1_phy", "usb2_phy" and "usb2_hsic_12M" for sun8i-a83t
+   * "usb0_phy", "usb1_phy", "usb2_phy" and "usb3_phy" for sun8i-h3
++  * "usb0_phy" and "usb3_phy" for sun50i-h6
+ - resets : a list of phandle + reset specifier pairs
+ - reset-names :
+   * "usb0_reset"
+   * "usb1_reset"
+   * "usb2_reset" for sun4i, sun6i, sun7i, sun8i-a83t or sun8i-h3
+-  * "usb3_reset" for sun8i-h3
++  * "usb3_reset" for sun8i-h3 and sun50i-h6
+ 
+ Optional properties:
+ - usb0_id_det-gpios : gpio phandle for reading the otg id pin value
 -- 
 2.18.0
