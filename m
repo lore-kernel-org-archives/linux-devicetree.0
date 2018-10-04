@@ -1,83 +1,58 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 0/6] Add support for PDC Global on SDM845 SoCs
-Date: Thu, 4 Oct 2018 23:57:32 +0530
-Message-ID: <2ae729fe-321b-0918-a06c-d04e43b47101@codeaurora.org>
-References: <20180829191215.10071-1-sibis@codeaurora.org>
- <20180903193647.GJ3456@tuxbook-pro>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv3 2/2] iommu/arm-smmu: Add SMMU clock
+Date: Fri, 5 Oct 2018 00:19:37 +0530
+Message-ID: <1898b9fb-0523-4de4-741a-a52de5fdab70@codeaurora.org>
+References: <1538605693-22073-1-git-send-email-thor.thayer@linux.intel.com>
+	<1538605693-22073-3-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180903193647.GJ3456@tuxbook-pro>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1538605693-22073-3-git-send-email-thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, p.zabel@pengutronix.de
-Cc: mka@chromium.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Phillip,
+Hi Thor,
 
-Will the PDC driver make the cut for reset/next this time for the
-4.20rc?
 
-On 09/04/2018 01:06 AM, Bjorn Andersson wrote:
-> On Wed 29 Aug 12:12 PDT 2018, Sibi Sankar wrote:
-> 
->> This patch series add support for PDC Global (Power Domain Controller)
->> on SDM845 SoCs and adds pdc reset lines assert/deassert to remoteproc
->> Q6v5 modem-pil. The first two patches adds PDC Global reset driver to
->> control reset signals of Modem, Compute, Display, GPU, Debug, AOP,
->> Sensors, Audio, SP and APPS. The last four patches (cleans up)/adds pdc
->> reset lines to q6v5 bindings and asserts/deasserts in modem start/stop
->> path.
->>
->> V3:
->>    refactored pdc reset driver to remove unused layer of indirection
->>    as suggested by Matthias
->>    Other minor fixes suggested by Matthias/Bjorn
->>
->> V2:
->>    Incorporated Philipp/Bjorn/Rob suggestions
->>    Renamed reset binding to pdc-global.txt
->>    replaced offset with #define of register name
->>    replaced with devm_reset_control_get_exclusive()
->>    Separted dt binding from the drivers
->>
->> Sibi Sankar (6):
->>    dt-bindings: reset: Add PDC Global binding for SDM845 SoCs
->>    reset: qcom: PDC Global (Power Domain Controller) reset controller
-> 
-> Philipp, there's no compile time dependencies between the PDC and
-> remoteproc patches in this series. Will you take these two through your
-> tree and I'll take the remaining four through the remoteproc tree?
-> 
-> Regards,
-> Bjorn
-> 
->>    dt-bindings: remoteproc: qcom: Remove additional definition tag
->>    dt-bindings: remoteproc: Add PDC reset binding for Q6V5 PIL
->>    remoteproc: qcom: q6v5-pil: Explicitly get mss_restart line
->>    remoteproc: qcom: q6v5-pil: Add PDC reset for modem on SDM845 SoCs
->>
->>   .../bindings/remoteproc/qcom,q6v5.txt         |   8 +-
->>   .../bindings/reset/qcom,pdc-global.txt        |  52 ++++++++
->>   drivers/remoteproc/qcom_q6v5_pil.c            |  31 ++++-
->>   drivers/reset/Kconfig                         |   9 ++
->>   drivers/reset/Makefile                        |   1 +
->>   drivers/reset/reset-qcom-pdc.c                | 124 ++++++++++++++++++
->>   include/dt-bindings/reset/qcom,sdm845-pdc.h   |  20 +++
->>   7 files changed, 237 insertions(+), 8 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/reset/qcom,pdc-global.txt
->>   create mode 100644 drivers/reset/reset-qcom-pdc.c
->>   create mode 100644 include/dt-bindings/reset/qcom,sdm845-pdc.h
->>
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
-> 
+On 10/4/2018 3:58 AM, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>
+> Add a clock to the SMMU structure. In the device tree case,
+> check for a clock node and enable the clock if found.
+>
+> This patch is dependent upon the following patches that add
+> a device tree bulk clock function.
+> "[V6, 1/4] clk: bulk: add of_clk_bulk_get()"
+> https://patchwork.kernel.org/patch/10583133/
+> "[V6, 2/4] clk: add new APIs to operation on all available
+> clocks"
+> https://patchwork.kernel.org/patch/10583131/
+> "[V6, 3/4] clk: add managerged version of clk_bulk_get_all"
+> https://patchwork.kernel.org/patch/10583139/
+>
+> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> ---
+>   drivers/iommu/arm-smmu.c | 20 ++++++++++++++++++++
+>   1 file changed, 20 insertions(+)
 
--- 
-Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc, is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+The clock part is already handled by one of the patch in the
+runtime pm series of arm-smmu [1]. This patch should not be needed.
+
+[1] https://patchwork.kernel.org/patch/10581899/
+
+[...]
+
+Regards
+Vivek
