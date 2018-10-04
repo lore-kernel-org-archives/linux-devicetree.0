@@ -1,47 +1,114 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH 1/3] mtd: spi-nor: Add Octal mode support for
- mt35xu512aba
-Date: Thu, 4 Oct 2018 11:10:30 +0200
-Message-ID: <20181004111030.4ae3670c@bbrezillon>
-References: <20181003165603.2579-1-vigneshr@ti.com>
-        <20181003165603.2579-2-vigneshr@ti.com>
-        <VI1PR04MB1038C20CA97E453FC4C9CEAE99EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
-        <20181004093925.2961d881@bbrezillon>
-        <VI1PR04MB103837831B8BFEC2F7FD12E799EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: RE: [PATCH 1/4] spi: add support for octal I/O data transfer
+Date: Thu, 4 Oct 2018 09:14:36 +0000
+Message-ID: <VI1PR04MB10380FD9CE99E34BA27E55B699EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+References: <1538642920-3843-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <1538642920-3843-2-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <20181004110446.5e1bb255@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB103837831B8BFEC2F7FD12E799EA0@VI1PR04MB1038.eurprd04.prod.outlook.com>
+In-Reply-To: <20181004110446.5e1bb255@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: Vignesh R <vigneshr@ti.com>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "juliensu@mxic.com.tw" <juliensu@mxic.com.tw>, "zhengxunli@mxic.com.tw" <zhengxunli@mxic.com.tw>, "masonccyang@mxic.com.tw" <masonccyang@mxic.com.tw>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 4 Oct 2018 08:47:33 +0000
-Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+Hi Boris,
 
-> > 
-> > Yogesh, you already sent "spi: add flags for octal I/O data
-> > transfer" [3] which is only adding the new OCTAL flags but is not
-> > patching spi.c and spi-mem.c to take those new flags into account.
-> > Here is my version of this patch [2] (it's still missing an update
-> > of SPI_MEM_MAX_BUSWIDTH). Let me know what you want to do (rework
-> > your version to address the problem or take mine). 
-> I haven't said that I have sent the patches.
+> -----Original Message-----
+> From: Boris Brezillon [mailto:boris.brezillon@bootlin.com]
+> Sent: Thursday, October 4, 2018 2:35 PM
+> To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+> Cc: linux-mtd@lists.infradead.org; marek.vasut@gmail.com; vigneshr@ti.com=
+;
+> linux-spi@vger.kernel.org; devicetree@vger.kernel.org; robh@kernel.org;
+> mark.rutland@arm.com; shawnguo@kernel.org; linux-arm-
+> kernel@lists.infradead.org; computersforpeace@gmail.com;
+> frieder.schrempf@exceet.de; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH 1/4] spi: add support for octal I/O data transfer
+>=20
+> Hi Yogesh,
+>=20
+> On Thu,  4 Oct 2018 14:18:37 +0530
+> Yogesh Gaur <yogeshnarayan.gaur@nxp.com> wrote:
+>=20
+> > Add flags for Octal I/O data transfer
+> > Required for the SPI controller which can do the data transfer (TX/RX)
+> > on 8 data lines e.g. NXP FlexSPI controller.
+> >  SPI_TX_OCTAL: transmit with 8 wires
+> >  SPI_RX_OCTAL: receive with 8 wires
+> >
+> > Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+> > ---
+> >  drivers/spi/spi.c       | 6 ++++++
+> >  include/linux/spi/spi.h | 2 ++
+> >  2 files changed, 8 insertions(+)
+> >
+> > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c index
+> > ec395a6..80f672f 100644
+> > --- a/drivers/spi/spi.c
+> > +++ b/drivers/spi/spi.c
+> > @@ -1573,6 +1573,9 @@ static int of_spi_parse_dt(struct spi_controller =
+*ctlr,
+> struct spi_device *spi,
+> >  		case 4:
+> >  			spi->mode |=3D SPI_TX_QUAD;
+> >  			break;
+> > +		case 8:
+> > +			spi->mode |=3D SPI_TX_OCTAL;
+> > +			break;
+> >  		default:
+> >  			dev_warn(&ctlr->dev,
+> >  				"spi-tx-bus-width %d not supported\n", @@ -
+> 1591,6 +1594,9 @@
+> > static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_devi=
+ce *spi,
+> >  		case 4:
+> >  			spi->mode |=3D SPI_RX_QUAD;
+> >  			break;
+> > +		case 8:
+> > +			spi->mode |=3D SPI_RX_OCTAL;
+> > +			break;
+> >  		default:
+> >  			dev_warn(&ctlr->dev,
+> >  				"spi-rx-bus-width %d not supported\n", diff --
+> git
+> > a/include/linux/spi/spi.h b/include/linux/spi/spi.h index
+> > a64235e..2d21307 100644
+> > --- a/include/linux/spi/spi.h
+> > +++ b/include/linux/spi/spi.h
+> > @@ -163,6 +163,8 @@ struct spi_device {
+> >  #define	SPI_TX_QUAD	0x200			/* transmit with 4
+> wires */
+> >  #define	SPI_RX_DUAL	0x400			/* receive with 2 wires
+> */
+> >  #define	SPI_RX_QUAD	0x800			/* receive with 4 wires
+> */
+> > +#define	SPI_TX_OCTAL	0x1000			/* transmit with 8
+> wires */
+> > +#define	SPI_RX_OCTAL	0x2000			/* receive with 8 wires
+> */
+> >  	int			irq;
+> >  	void			*controller_state;
+> >  	void			*controller_data;
+>=20
+> You're still not updating spi-mem.c to check those flags and
+> SPI_MEM_MAX_BUSWIDTH is not updated to match the new limit (8 instead of
+> 4).
+>=20
+Yes and its strange that my octal mode communication is working fine withou=
+t adding support in spi-mem.c and that's why this has been missed from me.
+For this patch series, have done data read/write verification using MTD_DEB=
+UG and JFFS2 mount utility and none of them reports data read error.
+Would add octal mode related changes in this file too.
 
-Well, you at least sent one of them, I know it because I was in
-CC :P.
+--
+Regards
+Yogesh Gaur.
 
-> My patches are ready and needed to be sent for review.
-
-I initially told you to drop those patches because we didn't have a
-user yet, that's about to change, so I guess we're all good.
-
-> In these patches,  I am adding support for X-X-X protocol for octal
-> support and integrating them with spi  and flash m25p80 interface.
-
->From what I've seen you're not adding support of 8-8-8 but for 1-8-8 an
-1-1-8, which is a lot easier to deal with (it's completely stateless,
-which is what the spi-nor expects). Unless you're talking about other
-patches you haven't sent yet...
+> Regards,
+>=20
+> Boris
