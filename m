@@ -1,45 +1,49 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH] dt-bindings: iommu: ipmmu-vmsa: Add r8a7744 support
-Date: Thu,  4 Oct 2018 17:25:47 +0100
-Message-ID: <1538670347-48201-1-git-send-email-biju.das@bp.renesas.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 2/2] arm64: dts: qcom: pm8998: Add die temperature
+ channel node to the ADC
+Date: Thu, 4 Oct 2018 09:46:23 -0700
+Message-ID: <CAD=FV=U0k2L4aqJeges-u-CSF6VwnU1h0kfR3GCv7BgU95gOcQ@mail.gmail.com>
+References: <20181004001432.21218-1-mka@chromium.org> <20181004001432.21218-3-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181004001432.21218-3-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-iio <linux-iio@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document RZ/G1N (R8A7744) SoC bindings.
+Hi,
+On Wed, Oct 3, 2018 at 5:14 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> Add a channel node for the die temperature to the ADC.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> ---
+> Changes in v4:
+> - added unit address to 'die-temp' node
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-This patch is tested against next-20181004
----
- Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt | 1 +
- 1 file changed, 1 insertion(+)
+This probably should have been "changes in v5"
 
-diff --git a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-index c6e2d85..377ee63 100644
---- a/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-+++ b/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-@@ -12,6 +12,7 @@ Required Properties:
- 
-     - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
-     - "renesas,ipmmu-r8a7743" for the R8A7743 (RZ/G1M) IPMMU.
-+    - "renesas,ipmmu-r8a7744" for the R8A7744 (RZ/G1N) IPMMU.
-     - "renesas,ipmmu-r8a7745" for the R8A7745 (RZ/G1E) IPMMU.
-     - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
-     - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
--- 
-2.7.4
+> ---
+>  arch/arm64/boot/dts/qcom/pm8998.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> index 048f19fa0150..32b141637d13 100644
+> --- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+> @@ -75,6 +75,11 @@
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+>                         #io-channel-cells = <1>;
+> +
+> +                       die-temp@ADC5_DIE_TEMP {
+> +                               reg = <ADC5_DIE_TEMP>;
+
+Thanks for adding the unit address.  Note to Andy that this ought to
+go into the queue for 4.20 since you'll have the ADC5_DIE_TEMP then.
+
+
+-Doug
