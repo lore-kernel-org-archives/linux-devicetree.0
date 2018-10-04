@@ -1,63 +1,45 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v4 01/11] MIPS: mscc: ocelot: make HSIO registers address range a syscon
-Date: Thu,  4 Oct 2018 14:21:58 +0200
-Message-ID: <20181004122208.32272-2-quentin.schulz@bootlin.com>
-References: <20181004122208.32272-1-quentin.schulz@bootlin.com>
+From: Icenowy Zheng <icenowy@aosc.io>
+Subject: [PATCH v4 00/10] Allwinner H6 USB support
+Date: Thu,  4 Oct 2018 20:28:45 +0800
+Message-ID: <20181004122855.22981-1-icenowy@aosc.io>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004122208.32272-1-quentin.schulz@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, kishon@ti.com, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-HSIO contains registers for PLL5 configuration, SerDes/switch port
-muxing and a thermal sensor, hence we can't keep it in the switch DT
-node.
+This patchset introduces support for the USB ports (both USB2 and USB3)
+on the Allwinner H6 SoC.
 
-Acked-by: Paul Burton <paul.burton@mips.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
----
- arch/mips/boot/dts/mscc/ocelot.dtsi | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+The first 6 PATCHes are the USB2 part, and the latter 4 PATCHes are the
+USB3 part.
 
-diff --git a/arch/mips/boot/dts/mscc/ocelot.dtsi b/arch/mips/boot/dts/mscc/ocelot.dtsi
-index f7eb612b46ba..149b1a7e7091 100644
---- a/arch/mips/boot/dts/mscc/ocelot.dtsi
-+++ b/arch/mips/boot/dts/mscc/ocelot.dtsi
-@@ -107,7 +107,6 @@
- 			reg = <0x1010000 0x10000>,
- 			      <0x1030000 0x10000>,
- 			      <0x1080000 0x100>,
--			      <0x10d0000 0x10000>,
- 			      <0x11e0000 0x100>,
- 			      <0x11f0000 0x100>,
- 			      <0x1200000 0x100>,
-@@ -121,10 +120,10 @@
- 			      <0x1280000 0x100>,
- 			      <0x1800000 0x80000>,
- 			      <0x1880000 0x10000>;
--			reg-names = "sys", "rew", "qs", "hsio", "port0",
--				    "port1", "port2", "port3", "port4", "port5",
--				    "port6", "port7", "port8", "port9", "port10",
--				    "qsys", "ana";
-+			reg-names = "sys", "rew", "qs", "port0", "port1",
-+				    "port2", "port3", "port4", "port5", "port6",
-+				    "port7", "port8", "port9", "port10", "qsys",
-+				    "ana";
- 			interrupts = <21 22>;
- 			interrupt-names = "xtr", "inj";
- 
-@@ -231,5 +230,10 @@
- 			pinctrl-0 = <&miim1>;
- 			status = "disabled";
- 		};
-+
-+		hsio: syscon@10d0000 {
-+			compatible = "mscc,ocelot-hsio", "syscon", "simple-mfd";
-+			reg = <0x10d0000 0x10000>;
-+		};
- 	};
- };
+PATCH 1, 2, 3, 7, 8 should go through the PHY tree, and the remaining
+patches should go through the armsoc tree via sunxi tree.
+
+Icenowy Zheng (10):
+  dt-bindings: phy: add binding for Allwinner H6 USB2 PHY
+  phy: sun4i-usb: add support for missing USB PHY index
+  phy: sun4i-usb: add support for H6 USB2 PHY
+  arm64: allwinner: dts: h6: add USB2-related device nodes
+  arm64: allwinner: dts: h6: add USB Vbus regulator
+  arm64: allwinner: dts: h6: enable USB2 on Pine H64
+  dt-bindings: phy: add binding for Allwinner USB3 PHY
+  phy: allwinner: add phy driver for USB3 PHY on Allwinner H6 SoC
+  arm64: allwinner: dts: h6: add USB3 device nodes
+  arm64: allwinner: dts: h6: enable USB3 port on Pine H64
+
+ .../devicetree/bindings/phy/sun4i-usb-phy.txt |   8 +-
+ .../bindings/phy/sun50i-usb3-phy.txt          |  23 ++
+ .../boot/dts/allwinner/sun50i-h6-pine-h64.dts |  46 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  | 113 +++++++++
+ drivers/phy/allwinner/Kconfig                 |  12 +
+ drivers/phy/allwinner/Makefile                |   1 +
+ drivers/phy/allwinner/phy-sun4i-usb.c         |  26 +-
+ drivers/phy/allwinner/phy-sun50i-usb3.c       | 239 ++++++++++++++++++
+ 8 files changed, 463 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+ create mode 100644 drivers/phy/allwinner/phy-sun50i-usb3.c
+
 -- 
-2.17.1
+2.18.0
