@@ -1,128 +1,104 @@
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: [PATCH] OF: Handle CMDLINE when /chosen node is not present
-Date: Thu,  4 Oct 2018 15:31:10 +0300
-Message-ID: <20181004123110.8487-1-mick@ics.forth.gr>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: Re: [PATCH net-next 4/7] net: phy: mscc: add support for VSC8574 PHY
+Date: Thu, 4 Oct 2018 14:53:47 +0200
+Message-ID: <20181004125347.p4hzna4rbanvgsbn@qschulz>
+References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
+ <236ef7815c0bec6048e79ef06868719b65c63892.1536916714.git-series.quentin.schulz@bootlin.com>
+ <bc95fae7-cf2f-5cf1-4e24-59fcc231fd64@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Nick Kossifidis <mick@ics.forth.gr>, linux-riscv@lists.infradead.org, robh+dt@kernel.org, frowand.list@gmail.com, palmer@sifive.com
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="33w5ejf5ircqd4gw"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bc95fae7-cf2f-5cf1-4e24-59fcc231fd64@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
 List-Id: devicetree@vger.kernel.org
 
-The /chosen node is optional so we should handle CMDLINE regardless
-the presence of /chosen/bootargs. Move handling of CMDLINE in
-early_init_dt_scan() instead.
 
-Signed-off-by: Nick Kossifidis <mick@ics.forth.gr>
+--33w5ejf5ircqd4gw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
- drivers/of/fdt.c | 69 +++++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 48 insertions(+), 21 deletions(-)
+Hi Florian,
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 800ad252c..868464b0b 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -31,6 +31,14 @@
- 
- #include "of_private.h"
- 
-+#ifdef CONFIG_CMDLINE
-+#ifdef CONFIG_CMDLINE_FORCE
-+static const char fixed_cmdline[] __initconst = CONFIG_CMDLINE;
-+#else
-+static char builtin_cmdline[] __initdata = CONFIG_CMDLINE;
-+#endif
-+#endif
-+
- /*
-  * of_fdt_limit_memory - limit the number of regions in the /memory node
-  * @limit: maximum entries
-@@ -1088,28 +1096,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 
- 	/* Retrieve command line */
- 	p = of_get_flat_dt_prop(node, "bootargs", &l);
--	if (p != NULL && l > 0)
-+	if (p != NULL && l > 0) {
- 		strlcpy(data, p, min((int)l, COMMAND_LINE_SIZE));
--
--	/*
--	 * CONFIG_CMDLINE is meant to be a default in case nothing else
--	 * managed to set the command line, unless CONFIG_CMDLINE_FORCE
--	 * is set in which case we override whatever was found earlier.
--	 */
--#ifdef CONFIG_CMDLINE
--#if defined(CONFIG_CMDLINE_EXTEND)
--	strlcat(data, " ", COMMAND_LINE_SIZE);
--	strlcat(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#elif defined(CONFIG_CMDLINE_FORCE)
--	strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#else
--	/* No arguments from boot loader, use kernel's  cmdl*/
--	if (!((char *)data)[0])
--		strlcpy(data, CONFIG_CMDLINE, COMMAND_LINE_SIZE);
--#endif
--#endif /* CONFIG_CMDLINE */
--
--	pr_debug("Command line is: %s\n", (char*)data);
-+		pr_debug("Got bootargs: %s\n", (char *) data);
-+	}
- 
- 	/* break now */
- 	return 1;
-@@ -1240,6 +1230,43 @@ bool __init early_init_dt_scan(void *params)
- 		return false;
- 
- 	early_init_dt_scan_nodes();
-+
-+	/*
-+	 * The /chosen node normaly contains the bootargs element
-+	 * that includes the kernel's command line parameters.
-+	 * However the presence of /chosen is not mandatory so
-+	 * in case we didn't get a command line when scanning
-+	 * nodes above, we should provide one here before we
-+	 * return, if possible.
-+	 *
-+	 * The built-in command line can be used as a default
-+	 * command line in case we received nothing from the
-+	 * device tree/bootloader. It can also be used for
-+	 * extending or replacing the received command line.
-+	 */
-+#ifdef CONFIG_CMDLINE
-+#if defined(CONFIG_CMDLINE_EXTEND)
-+	/*
-+	 * Order of parameters shouldn't matter for most cases,
-+	 * so prepending or appending the built-in command line
-+	 * shouldn't make a difference. In cases where it does
-+	 * it's up to the user to configure the kernel and/or
-+	 * the bootloader properly.
-+	 */
-+	if (builtin_cmdline[0]) {
-+		strlcat(boot_command_line, " ", COMMAND_LINE_SIZE);
-+		strlcat(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-+	}
-+#elif defined(CONFIG_CMDLINE_FORCE)
-+	if (fixed_cmdline[0])
-+		strlcpy(boot_command_line, fixed_cmdline, COMMAND_LINE_SIZE);
-+#else
-+	/* No arguments from boot loader, use kernel's cmdline */
-+	if (!boot_command_line[0] && builtin_cmdline[0])
-+		strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
-+#endif
-+#endif /* CONFIG_CMDLINE */
-+
- 	return true;
- }
- 
--- 
-2.16.4
+On Fri, Sep 14, 2018 at 01:26:06PM -0700, Florian Fainelli wrote:
+> On 09/14/2018 02:44 AM, Quentin Schulz wrote:
+> > The VSC8574 PHY is a 4-ports PHY that is 10/100/1000BASE-T, 100BASE-FX,
+> > 1000BASE-X and triple-speed copper SFP capable, can communicate with
+> > the MAC via SGMII, QSGMII or 1000BASE-X, supports WOL, downshifting and
+> > can set the blinking pattern of each of its 4 LEDs, supports SyncE as
+> > well as HP Auto-MDIX detection.
+> >=20
+> > This adds support for 10/100/1000BASE-T, SGMII/QSGMII link with the MAC,
+> > WOL, downshifting, HP Auto-MDIX detection and blinking pattern for its 4
+> > LEDs.
+> >=20
+> > The VSC8574 has also an internal Intel 8051 microcontroller whose
+> > firmware needs to be patched when the PHY is reset. If the 8051's
+> > firmware has the expected CRC, its patching can be skipped. The
+> > microcontroller can be accessed from any port of the PHY, though the CRC
+> > function can only be done through the PHY that is the base PHY of the
+> > package (internal address 0) due to a limitation of the firmware.
+> >=20
+> > The GPIO register bank is a set of registers that are common to all PHYs
+> > in the package. So any modification in any register of this bank affects
+> > all PHYs of the package.
+> >=20
+> > If the PHYs haven't been reset before booting the Linux kernel and were
+> > configured to use interrupts for e.g. link status updates, it is
+> > required to clear the interrupts mask register of all PHYs before being
+> > able to use interrupts with any PHY. The first PHY of the package that
+> > will be init will take care of clearing all PHYs interrupts mask
+> > registers. Thus, we need to keep track of the init sequence in the
+> > package, if it's already been done or if it's to be done.
+> >=20
+> > Most of the init sequence of a PHY of the package is common to all PHYs
+> > in the package, thus we use the SMI broadcast feature which enables us
+> > to propagate a write in one register of one PHY to all PHYs in the
+> > package.
+> >=20
+> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+> > ---
+>=20
+> [snip]
+>=20
+> > +	reg =3D __mdiobus_read(bus, phy, MSCC_PHY_TEST_PAGE_8);
+> > +	reg |=3D 0x8000;
+>=20
+> Having a define would be nice here? This looks like a write enable?
+>=20
+
+Same as for the SerDes muxing patch series, I'm sending a new version
+without the suggested change. I've requested some information on this
+bit but can't guarantee I'll get anything (and if anything, worthy).
+
+I'll try not to forget to add a constant if and when I get a clue on
+what this bit does.
+
+Thanks,
+Quentin
+
+--33w5ejf5ircqd4gw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlu2DVsACgkQhLiadT7g
+8aN9Eg/+MxF91BbA3+0EjFO80hiu2B47CAKbO6ciF4dlldlX+VCVxC/QwebTa9OU
+AuxWDzKktSnX50aORUb6VtQNMu/hSOzG6Ix+0Q9+HyuIhJiqNd8o17+GDqieGYDi
+YR1JKdlwb9Dn7HWZzuFjjl7/1EEOP3Mn3uivSzRAtNgVFDse9xfxian0/twGBLWM
+xmL/qTeb7EU0WUtqC6dwax0Cy2kOsuVai5BxhFueOf+yKZ+bY1q4wE0q1t33reD/
+4/QPtgR0R3fV1+Uan6SbdNe7VkzANojZ5P/NsaEkYHmS63cuv2td9dO62iJx43To
+KJtaaSNzfKF6HXKjI9fIXzoMA1rW9L2BlGmmleIT0YqeBpghc67lYrSmkVl/Bl/c
+4ZUpr+5cs3tUtcVqqK82kJGIdJ9LsaKV49DEdB1zJPEywgC/4WilNWGv2Inihv2S
+pii0T2Qkau2tu8Vt4C0b0gmoCgxuVpbA3QuAxF5ywrNcWnNp9n9SvESvPHoOkdI0
+qFcTxFe9Iqi0p1j4GikxGq4T0S7J64+d9O6kWEBxJxZfiUcU7eEFUVYrVwhFKtnB
+hszQfHvi4XB5x3zt3lKn3n/JZi5CNBve345xlR0T2DsZK9cN2U4JDKjDLo85KBOo
+6AFIGHJepLXQ9baJbsoKasZ37Iu2AOJLMQQ63Nai7JXu78kv4ng=
+=qxYo
+-----END PGP SIGNATURE-----
+
+--33w5ejf5ircqd4gw--
