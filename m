@@ -1,114 +1,178 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH net-next 4/7] net: phy: mscc: add support for VSC8574 PHY
-Date: Thu, 4 Oct 2018 11:45:51 +0200
-Message-ID: <20181004094551.wizlpc6udhkqufgo@qschulz>
-References: <cover.b921b010b6d6bde1c11e69551ae38f3b2818645b.1536916714.git-series.quentin.schulz@bootlin.com>
- <236ef7815c0bec6048e79ef06868719b65c63892.1536916714.git-series.quentin.schulz@bootlin.com>
- <bc95fae7-cf2f-5cf1-4e24-59fcc231fd64@gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2] reset: Exclusive resets must be dedicated to a
+ single hardware block
+Date: Thu, 04 Oct 2018 12:14:54 +0200
+Message-ID: <1538648094.14153.8.camel@pengutronix.de>
+References: <20180927180038.24599-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="xoljisyeyscb6hrd"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <bc95fae7-cf2f-5cf1-4e24-59fcc231fd64@gmail.com>
+In-Reply-To: <20180927180038.24599-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Eric Auger <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Geert,
 
---xoljisyeyscb6hrd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch. I'd still like to hear the device tree
+maintainers' (added to Cc:) opinion on parsing the whole DT for "resets"
+phandle properties to find shared resets like this.
 
-Hi Florian,
+On Thu, 2018-09-27 at 20:00 +0200, Geert Uytterhoeven wrote:
+> In some SoCs multiple hardware blocks may share a reset control.
+> The reset control API for shared resets will only assert such a reset
+> when the drivers for all hardware blocks agree.
+> The exclusive reset control API still allows to assert such a reset, but
+> that impacts all other hardware blocks sharing the reset.
+> 
+> While the kernel doc comments clearly state that the API for shared
+> resets applies to reset controls which are shared between hardware
+> blocks, the exact meaning of exclusive resets is not documented.
+> Fix the semantic ambiguity with respect to exclusive access vs.
+> exclusive reset lines by:
+>   1. Clarifying that exclusive resets really are intended for use with
+>      reset controls which are dedicated to a single hardware block,
+>   2. Ensuring that obtaining an exclusive reset control will fail if the
+>      reset is shared by multiple hardware blocks, for both DT-based and
+>      lookup-based reset controls.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> This is v2 of "[RFC] reset: Add support for dedicated reset controls":
+>   - Fix wrong variable in __reset_is_dedicated() loop,
+>   - Add missing of_node_put() in __of_reset_is_dedicated(),
+>   - Document that exclusive reset controls imply they are dedicated to a
+>     single hardware block,
+>   - Drop new dedicated flag and new API reset_control_get_dedicated(),
+>     as exclusive already implies dedicated,
+>   - Rename {__of_,}reset_is_dedicated() to {__of_,}reset_is_exclusive(),
+>   - Reword description.
+> 
+> Note: Exclusive lookup-based reset controls were not tested.
+> ---
+>  drivers/reset/core.c  | 58 +++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/reset.h |  5 +++-
+>  2 files changed, 62 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> index 225e34c56b94a2e3..2f5b61226c7964eb 100644
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+> @@ -459,6 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
+>  	kref_put(&rstc->refcnt, __reset_control_release);
+>  }
+>  
+> +static bool __of_reset_is_exclusive(const struct device_node *node,
+> +				    const struct of_phandle_args args)
+> +{
+> +	struct of_phandle_args args2;
+> +	struct device_node *node2;
+> +	int index, ret;
+> +	bool eq;
 
-On Fri, Sep 14, 2018 at 01:26:06PM -0700, Florian Fainelli wrote:
-> On 09/14/2018 02:44 AM, Quentin Schulz wrote:
-> > The VSC8574 PHY is a 4-ports PHY that is 10/100/1000BASE-T, 100BASE-FX,
-> > 1000BASE-X and triple-speed copper SFP capable, can communicate with
-> > the MAC via SGMII, QSGMII or 1000BASE-X, supports WOL, downshifting and
-> > can set the blinking pattern of each of its 4 LEDs, supports SyncE as
-> > well as HP Auto-MDIX detection.
-> >=20
-> > This adds support for 10/100/1000BASE-T, SGMII/QSGMII link with the MAC,
-> > WOL, downshifting, HP Auto-MDIX detection and blinking pattern for its 4
-> > LEDs.
-> >=20
-> > The VSC8574 has also an internal Intel 8051 microcontroller whose
-> > firmware needs to be patched when the PHY is reset. If the 8051's
-> > firmware has the expected CRC, its patching can be skipped. The
-> > microcontroller can be accessed from any port of the PHY, though the CRC
-> > function can only be done through the PHY that is the base PHY of the
-> > package (internal address 0) due to a limitation of the firmware.
-> >=20
-> > The GPIO register bank is a set of registers that are common to all PHYs
-> > in the package. So any modification in any register of this bank affects
-> > all PHYs of the package.
-> >=20
-> > If the PHYs haven't been reset before booting the Linux kernel and were
-> > configured to use interrupts for e.g. link status updates, it is
-> > required to clear the interrupts mask register of all PHYs before being
-> > able to use interrupts with any PHY. The first PHY of the package that
-> > will be init will take care of clearing all PHYs interrupts mask
-> > registers. Thus, we need to keep track of the init sequence in the
-> > package, if it's already been done or if it's to be done.
-> >=20
-> > Most of the init sequence of a PHY of the package is common to all PHYs
-> > in the package, thus we use the SMI broadcast feature which enables us
-> > to propagate a write in one register of one PHY to all PHYs in the
-> > package.
-> >=20
-> > Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-> > ---
->=20
-> [snip]
->=20
-> > +	reg =3D __mdiobus_read(bus, phy, MSCC_PHY_TEST_PAGE_8);
-> > +	reg |=3D 0x8000;
->=20
-> Having a define would be nice here? This looks like a write enable?
->=20
+I suppose it is very unlikely to get false positives where an arbitrary
+node contains a "resets" property that looks like a proper phandle to an
+actual reset-controller node.
+Are we allowed though to scan the whole tree for "resets" properties
+regardless of the nodes' bindings or compatible properties like this?
 
-I had asked for the meaning of this bit in this register before but we
-couldn't find documentation for it. I'll ask again and let you know.
+> +	for_each_node_with_property(node2, "resets") {
+> +		if (node == node2)
+> +			continue;
+> +
+> +		for (index = 0; ; index++) {
+> +			ret = of_parse_phandle_with_args(node2, "resets",
+> +							 "#reset-cells", index,
+> +							 &args2);
+> +			if (ret)
+> +				break;
+> +
+> +			eq = (args2.np == args.np &&
+> +			      args2.args_count == args.args_count &&
+> +			      !memcmp(args2.args, args.args,
+> +				      args.args_count * sizeof(args.args[0])));
+> +			of_node_put(args2.np);
+> +			if (eq)
 
-> > +	__mdiobus_write(bus, phy, MSCC_PHY_TEST_PAGE_8, reg);
-> > +
-> > +	__mdiobus_write(bus, phy, MSCC_EXT_PAGE_ACCESS, MSCC_PHY_PAGE_TR);
-> > +
-> > +	vsc8584_csr_write(bus, phy, 0x8fae, 0x000401bd);
->=20
-> Just make this an array of address + value pairs and blast it to the
-> PHY, having them be inlined here is both error prone and does not scale
-> well at all.
+Emitting a loud warning here could be very helpful if it contains
+both the reset controller node and the reset index, as well as the
+consumer nodes: node and node2.
 
-Right. Turned out it was a great idea as the below values were
-mistakenly adding 0x8000 to the register (which was fine since in
-vsc8584_csr_write does a 0x8000 | reg).
+> +				return false;
+> +		}
+> +	}
+> +	return true;
+> +}
+> +
+>  struct reset_control *__of_reset_control_get(struct device_node *node,
+>  				     const char *id, int index, bool shared,
+>  				     bool optional)
+> @@ -514,6 +546,11 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+>  		return ERR_PTR(rstc_id);
+>  	}
+>  
+> +	if (!shared && !__of_reset_is_exclusive(node, args)) {
+> +		mutex_unlock(&reset_list_mutex);
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+>  	/* reset_list_mutex also protects the rcdev's reset_control list */
+>  	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
+>  
+> @@ -541,6 +578,22 @@ __reset_controller_by_name(const char *name)
+>  	return NULL;
+>  }
+>  
+> +static bool __reset_is_exclusive(const struct reset_control_lookup *lookup)
+> +{
+> +	const struct reset_control_lookup *lookup2;
+> +
+> +	list_for_each_entry(lookup2, &reset_lookup_list, list) {
+> +		if (lookup2 == lookup)
+> +			continue;
+> +
+> +		if (lookup2->provider == lookup->provider &&
+> +		    lookup2->index == lookup->index)
+> +			return false;
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>  static struct reset_control *
+>  __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+>  				bool shared, bool optional)
+> @@ -562,6 +615,11 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
+>  		if ((!con_id && !lookup->con_id) ||
+>  		    ((con_id && lookup->con_id) &&
+>  		     !strcmp(con_id, lookup->con_id))) {
+> +			if (!shared && !__reset_is_exclusive(lookup)) {
+> +				mutex_unlock(&reset_lookup_mutex);
+> +				return ERR_PTR(-EINVAL);
+> +			}
+> +
+>  			mutex_lock(&reset_list_mutex);
+>  			rcdev = __reset_controller_by_name(lookup->provider);
+>  			if (!rcdev) {
+> diff --git a/include/linux/reset.h b/include/linux/reset.h
+> index 29af6d6b2f4b8103..5881d2594761e48f 100644
+> --- a/include/linux/reset.h
+> +++ b/include/linux/reset.h
+> @@ -116,8 +116,11 @@ static inline int device_reset_optional(struct device *dev)
+>   * @id: reset line name
+>   *
+>   * Returns a struct reset_control or IS_ERR() condition containing errno.
+> - * If this function is called more than once for the same reset_control it will
+> + * If this function is called more than once for the same reset control it will
+>   * return -EBUSY.
+> + * This function is intended for use with reset controls which are dedicated
+> + * to a single hardware block.  If called for a reset control shared among
+> + * multiple hardware blocks, it will return -EINVAL.
+>   *
+>   * See reset_control_get_shared for details on shared references to
+>   * reset-controls.
 
-Thanks,
-Quentin
-
---xoljisyeyscb6hrd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlu14U4ACgkQhLiadT7g
-8aP6tBAAnZRGhR2pqANoJY0A0EERdxFa7jATOs7/nIPLSOl7sX+28IWh1mVWAq5A
-KNujB7KQ9SeWnTYsnrRcwEjvBQPjRkd1mxYPZ+2sGC/BiCzLeutDr/LrniK9trr8
-+SsU9O05+rmoIb+Re1vJ9jSealvKo+ruMi1IPOlonFruTWN44H35vHQCIf0bFzNk
-+CtHBO8xzwWYkqHOTEPUIoY1r3IKgnplWAHx09JEYhMJKZCWGlKyLuW5EdnbQa2N
-c81InLG1a88GM/taY9wcVkcEdwBAANqTHMidexdOT1q7lOVlQ4gsPtzXQu1j2THF
-5SUAykPXPoTLTcUykycb0WRnYWb6vb/u0I3OY45+B0NFMCdYjWHlWrzRIzM5+iPw
-A1TwUlPL8P0g+Zo0FyCe8WzJ+vzM04oRwVXQqgJO/aiH9ubdBfCvT2LaTILWHwpC
-1Uk8GcwrEvGMhZwVeVvCgSOzzDruxHJDRp7rOc8go1qGi/o44Il/7Xpk0BxPHdMp
-kKx7ZYkIs31tCLS3A8sYUR7n9tucuHBdk/xD/q6Vv7+2wlHmUo8Dxrmf7efWwYGv
-nxKYW8D1PVfOOQt+OhXFwjNivfXEU42P+DBdz5XYWOkElmOYDJetJmmn6R/sUgZG
-cUY8NvP85T21T5xvsFmkipGBc7LrC2IkJ1+6uf0zdYghM1qgBcg=
-=lcii
------END PGP SIGNATURE-----
-
---xoljisyeyscb6hrd--
+regards
+Philipp
