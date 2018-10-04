@@ -1,27 +1,72 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 8/9] ARM: dts: BCM63xx: enable SATA PHY and AHCI
- controller
-Date: Thu, 4 Oct 2018 10:22:56 -0700
-Message-ID: <12ca0f28-98f4-3313-0113-2b7b69c7112d@gmail.com>
-References: <20180920191646.18198-1-f.fainelli@gmail.com>
- <20180920191646.18198-12-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V10 8/8] dt-bindings: timer: gx6605s SOC timer
+Date: Fri,  5 Oct 2018 01:22:28 +0800
+Message-ID: <6ed886ec014de868e0a84a62e339e45de4ea1e5f.1538672812.git.ren_guo@c-sky.com>
+References: <cover.1538672812.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180920191646.18198-12-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <cover.1538672812.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1538672812.git.ren_guo@c-sky.com>
+References: <cover.1538672812.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Jens Axboe <axboe@kernel.dk>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Al Cooper <alcooperx@gmail.com>, Ray Jui <ray.jui@broadcom.com>, Tejun Heo <tj@kernel.org>, Fengguang Wu <fengguang.wu@intel.com>, Arnd Bergmann <arnd@arndb.de>, "open list:LIBATA SUBSYSTEM (Serial and Parallel ATA drivers)" <linux-ide@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, bcm-kernel-feedback-list@broadcom.com
+To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On 09/20/2018 12:16 PM, Florian Fainelli wrote:
-> Add Device Tree entries for the Broadcom AHCI and SATA PHY controller
-> found on BCM63138 SoCs
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Dt-bindings doc for gx6605s SOC's system timer.
 
-Applied to devicetree/next.
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ .../bindings/timer/csky,gx6605s-timer.txt          | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+new file mode 100644
+index 0000000..6b04344
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/csky,gx6605s-timer.txt
+@@ -0,0 +1,42 @@
++=================
++gx6605s SOC Timer
++=================
++
++The timer is used in gx6605s soc as system timer and the driver
++contain clk event and clk source.
++
++==============================
++timer node bindings definition
++==============================
++
++	Description: Describes gx6605s SOC timer
++
++	PROPERTIES
++
++	- compatible
++		Usage: required
++		Value type: <string>
++		Definition: must be "csky,gx6605s-timer"
++	- reg
++		Usage: required
++		Value type: <u32 u32>
++		Definition: <phyaddr size> in soc from cpu view
++	- clocks
++		Usage: required
++		Value type: phandle + clock specifier cells
++		Definition: must be input clk node
++	- interrupt
++		Usage: required
++		Value type: <u32>
++		Definition: must be timer irq num defined by soc
++
++Examples:
++---------
++
++	timer0: timer@20a000 {
++		compatible = "csky,gx6605s-timer";
++		reg = <0x0020a000 0x400>;
++		clocks = <&dummy_apb_clk>;
++		interrupts = <10>;
++		interrupt-parent = <&intc>;
++	};
 -- 
-Florian
+2.7.4
