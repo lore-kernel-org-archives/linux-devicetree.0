@@ -1,72 +1,69 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V9 3/8] clocksource: add C-SKY SMP timer
-Date: Fri, 5 Oct 2018 00:14:32 +0800
-Message-ID: <20181004161431.GA30844@guoren-Inspiron-7460>
-References: <cover.1538355281.git.ren_guo@c-sky.com>
- <eee964dd57d12bc630280ab84235b5356799b1fb.1538355281.git.ren_guo@c-sky.com>
- <88e320f2-8cf0-fdb9-c9b0-ee25d7a4d00f@linaro.org>
- <20181002054024.GA12645@guoren>
- <49238cda-d12c-7d3f-9333-296527d94f12@linaro.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH i2c-next v5 2/5] i2c: Add support for 'timeout-ms' and
+ '#retries' OF properties
+Date: Thu, 4 Oct 2018 09:26:02 -0700
+Message-ID: <1832adbf-fa95-ccfc-00e5-63568059bcd1@linux.intel.com>
+References: <20181003223107.16133-1-jae.hyun.yoo@linux.intel.com>
+ <20181003223107.16133-3-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <49238cda-d12c-7d3f-9333-296527d94f12@linaro.org>
+In-Reply-To: <20181003223107.16133-3-jae.hyun.yoo@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, f.fainelli@gmail.com, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 02, 2018 at 09:59:42AM +0200, Daniel Lezcano wrote:
-> On 02/10/2018 07:40, Guo Ren wrote:
-> [ ... ]
-> 
-> >>
-> >> 	irq = irq_of_parse_and_map(np, 0);
-> >> 	if (irq <= 0)
-> >> 		return -EINVAL;
-> > 		panic();
-> > I want a panic here. Return will make debug confused and directly tell
-> > the people where is wrong. It's root-timer for us and it must bootup.
-> > 
-> > If it's a co-timer, I also think return is good.
-> 
-> We don't need a panic in case of failure. If the board as an alternate
-> timer it should be able to boot, that is the general rule of thumb for
-> these drivers in this directory.
-> 
-> The init timer functions will be called via the timer_probe() which
-> browse the timer_of_table (the one with all entries for the
-> TIMER_OF_DECLARE macros).
-> 
-> You can see in the code below (from timer_probe.c), there is an error
-> message emitted if the driver fails to initialize and another one much
-> stronger if no timer was initialize.
-> 
-> This is enough trace IMO.
-> 
-> void __init timer_probe(void)
-> {
->         struct device_node *np;
->         const struct of_device_id *match;
->         of_init_fn_1_ret init_func_ret;
->         unsigned timers = 0;
->         int ret;
-> 
->         for_each_matching_node_and_match(np, __timer_of_table, &match) {
->                 if (!of_device_is_available(np))
->                         continue;
-> 
->                 init_func_ret = match->data;
-> 
->                 ret = init_func_ret(np);
->                 if (ret) {
->                         pr_err("Failed to initialize '%pOF': %d\n", np,
-> ret);
->                         continue;
->                 }
-> 
->                 timers++;
-Ok, let other timers boot up as possible and no panic for csky timer.
+> +++ b/drivers/i2c/i2c-core-base.c
+> @@ -1214,6 +1214,7 @@ EXPORT_SYMBOL_GPL(i2c_handle_smbus_host_notify);
+>   static int i2c_register_adapter(struct i2c_adapter *adap)
+>   {
+>   	int res = -EINVAL;
+> +	u32 timeout_ms;
 
- Guo Ren
+Will change it to:
+
+u32 timeout_ms = 0;
+
+>   
+>   	/* Can't register until after driver model init */
+>   	if (WARN_ON(!is_registered)) {
+> @@ -1239,8 +1240,21 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
+>   	INIT_LIST_HEAD(&adap->userspace_clients);
+>   
+>   	/* Set default timeout to 1 second if not already set */
+> -	if (adap->timeout == 0)
+> -		adap->timeout = HZ;
+> +	if (adap->timeout == 0) {
+> +		if (adap->dev.of_node)
+> +			res = of_property_read_u32(adap->dev.of_node,
+> +						   "timeout-ms",
+> +						   &timeout_ms);
+> +		if (res)
+> +			timeout_ms = 0;
+> +
+
+Also, it should be:
+
+if (adap->dev.of_node)
+	of_property_read_u32(adap->dev.of_node, "timeout-ms",
+			     &timeout_ms);
+
+Will submit a new patch set.
+
+Thanks,
+Jae
+
+> +		adap->timeout = timeout_ms ? msecs_to_jiffies(timeout_ms) : HZ;
+> +	}
+> +
+> +	/* Set retries value if it has the OF property */
+> +	if (adap->dev.of_node)
+> +		of_property_read_u32(adap->dev.of_node, "#retries",
+> +				     &adap->retries);
+>   
+>   	/* register soft irqs for Host Notify */
+>   	res = i2c_setup_host_notify_irq_domain(adap);
+> 
