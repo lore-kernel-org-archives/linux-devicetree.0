@@ -1,178 +1,82 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v2] reset: Exclusive resets must be dedicated to a
- single hardware block
-Date: Thu, 04 Oct 2018 12:14:54 +0200
-Message-ID: <1538648094.14153.8.camel@pengutronix.de>
-References: <20180927180038.24599-1-geert+renesas@glider.be>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH 0/3] spi-nor: Add Octal SPI support
+Date: Thu, 4 Oct 2018 16:05:36 +0530
+Message-ID: <1074d503-71ef-2998-7096-de6135bb965d@ti.com>
+References: <20181003165603.2579-1-vigneshr@ti.com>
+ <20181003212017.653e739f@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180927180038.24599-1-geert+renesas@glider.be>
+In-Reply-To: <20181003212017.653e739f@bbrezillon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Eric Auger <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Tudor Ambarus <tudor.ambarus@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for the patch. I'd still like to hear the device tree
-maintainers' (added to Cc:) opinion on parsing the whole DT for "resets"
-phandle properties to find shared resets like this.
-
-On Thu, 2018-09-27 at 20:00 +0200, Geert Uytterhoeven wrote:
-> In some SoCs multiple hardware blocks may share a reset control.
-> The reset control API for shared resets will only assert such a reset
-> when the drivers for all hardware blocks agree.
-> The exclusive reset control API still allows to assert such a reset, but
-> that impacts all other hardware blocks sharing the reset.
+On Thursday 04 October 2018 12:50 AM, Boris Brezillon wrote:
+> On Wed, 3 Oct 2018 22:26:00 +0530
+> Vignesh R <vigneshr@ti.com> wrote:
 > 
-> While the kernel doc comments clearly state that the API for shared
-> resets applies to reset controls which are shared between hardware
-> blocks, the exact meaning of exclusive resets is not documented.
-> Fix the semantic ambiguity with respect to exclusive access vs.
-> exclusive reset lines by:
->   1. Clarifying that exclusive resets really are intended for use with
->      reset controls which are dedicated to a single hardware block,
->   2. Ensuring that obtaining an exclusive reset control will fail if the
->      reset is shared by multiple hardware blocks, for both DT-based and
->      lookup-based reset controls.
+>> This series adds support for octal mode of mt35x flash. Also, adds
+>> support for OSPI version of Cadence QSPI controller.
+>>
+>> Based on top of patches adding basic support for mt35xu512aba here:
+>> https://patchwork.ozlabs.org/cover/971437/
+>>
+>> Vignesh R (3):
+>>   mtd: spi-nor: Add Octal mode support for mt35xu512aba
+>>   dt-bindings: cadence-quadspi: Add new compatible for AM654 SoC
+>>   mtd: spi-nor: cadence-quadspi: Add support for Octal SPI controller
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> This is v2 of "[RFC] reset: Add support for dedicated reset controls":
->   - Fix wrong variable in __reset_is_dedicated() loop,
->   - Add missing of_node_put() in __of_reset_is_dedicated(),
->   - Document that exclusive reset controls imply they are dedicated to a
->     single hardware block,
->   - Drop new dedicated flag and new API reset_control_get_dedicated(),
->     as exclusive already implies dedicated,
->   - Rename {__of_,}reset_is_dedicated() to {__of_,}reset_is_exclusive(),
->   - Reword description.
+> The patchset looks good to me, I'll just wait the next release cycle
+> before applying it, since I'd prefer to have it stay a bit longer in
+> -next. This should leave enough time to let other people review this
+> stuff.
 > 
-> Note: Exclusive lookup-based reset controls were not tested.
-> ---
->  drivers/reset/core.c  | 58 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/reset.h |  5 +++-
->  2 files changed, 62 insertions(+), 1 deletion(-)
+
+Ok, thats fine...
+
+>>
+>>  .../devicetree/bindings/mtd/cadence-quadspi.txt       |  1 +
+>>  drivers/mtd/spi-nor/cadence-quadspi.c                 |  9 +++++++++
 > 
-> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> index 225e34c56b94a2e3..2f5b61226c7964eb 100644
-> --- a/drivers/reset/core.c
-> +++ b/drivers/reset/core.c
-> @@ -459,6 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
->  	kref_put(&rstc->refcnt, __reset_control_release);
->  }
->  
-> +static bool __of_reset_is_exclusive(const struct device_node *node,
-> +				    const struct of_phandle_args args)
-> +{
-> +	struct of_phandle_args args2;
-> +	struct device_node *node2;
-> +	int index, ret;
-> +	bool eq;
+> On a slightly different topic, do you plan to convert the Cadence
+> driver to spi-mem? And if you don't, is it because you don't have time
+> or because some features are missing in spi-mem (I remember you
+> mentioned a few things back when you were reviewing the spi-mem series)?
+> 
 
-I suppose it is very unlikely to get false positives where an arbitrary
-node contains a "resets" property that looks like a proper phandle to an
-actual reset-controller node.
-Are we allowed though to scan the whole tree for "resets" properties
-regardless of the nodes' bindings or compatible properties like this?
+I do not have plans to convert cadence QSPI driver to spi-mem yet,
+mainly due to lack of time. Also, not sure if original author Marek and
+other altera people are okay with that.
 
-> +	for_each_node_with_property(node2, "resets") {
-> +		if (node == node2)
-> +			continue;
-> +
-> +		for (index = 0; ; index++) {
-> +			ret = of_parse_phandle_with_args(node2, "resets",
-> +							 "#reset-cells", index,
-> +							 &args2);
-> +			if (ret)
-> +				break;
-> +
-> +			eq = (args2.np == args.np &&
-> +			      args2.args_count == args.args_count &&
-> +			      !memcmp(args2.args, args.args,
-> +				      args.args_count * sizeof(args.args[0])));
-> +			of_node_put(args2.np);
-> +			if (eq)
+I see couple of issues in the way of conversion:
+1. I would wait to know what direction would direct mapping APIs[1] go
+before starting spi-mem conversion for Cadence QSPI driver. Else, we
+have may to re write again if direct mapping APIs are merged.
+2. New Cadence OSPI IP has an integrated PHY to support high throughput
+OSPI flashes operating up 200MHz in Octal DDR mode. In order to work
+with such flashes, PHY DLLs need to be calibrated. Highly simplified
+calibration sequence is as below(See [2] for actual sequence):
+-Read flash ID at low speed and store it.
+-Enable PHY and set DLLs to a defined initial value
+-Increment RX DLL value
+-Read flash ID and check for correctness of data read
+-repeat above two steps until a band of passing values is obtained for
+RX DLL where flash ID is correctly read.
+-DLL needs to set to middle of the passing band.
 
-Emitting a loud warning here could be very helpful if it contains
-both the reset controller node and the reset index, as well as the
-consumer nodes: node and node2.
+I am trying to figure out how to fit this into the spi-mem framework as
+controller would to need to store READ ID opcode and expected JEDEC ID
+before starting calibration sequence.
 
-> +				return false;
-> +		}
-> +	}
-> +	return true;
-> +}
-> +
->  struct reset_control *__of_reset_control_get(struct device_node *node,
->  				     const char *id, int index, bool shared,
->  				     bool optional)
-> @@ -514,6 +546,11 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
->  		return ERR_PTR(rstc_id);
->  	}
->  
-> +	if (!shared && !__of_reset_is_exclusive(node, args)) {
-> +		mutex_unlock(&reset_list_mutex);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
->  	/* reset_list_mutex also protects the rcdev's reset_control list */
->  	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
->  
-> @@ -541,6 +578,22 @@ __reset_controller_by_name(const char *name)
->  	return NULL;
->  }
->  
-> +static bool __reset_is_exclusive(const struct reset_control_lookup *lookup)
-> +{
-> +	const struct reset_control_lookup *lookup2;
-> +
-> +	list_for_each_entry(lookup2, &reset_lookup_list, list) {
-> +		if (lookup2 == lookup)
-> +			continue;
-> +
-> +		if (lookup2->provider == lookup->provider &&
-> +		    lookup2->index == lookup->index)
-> +			return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
->  static struct reset_control *
->  __reset_control_get_from_lookup(struct device *dev, const char *con_id,
->  				bool shared, bool optional)
-> @@ -562,6 +615,11 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
->  		if ((!con_id && !lookup->con_id) ||
->  		    ((con_id && lookup->con_id) &&
->  		     !strcmp(con_id, lookup->con_id))) {
-> +			if (!shared && !__reset_is_exclusive(lookup)) {
-> +				mutex_unlock(&reset_lookup_mutex);
-> +				return ERR_PTR(-EINVAL);
-> +			}
-> +
->  			mutex_lock(&reset_list_mutex);
->  			rcdev = __reset_controller_by_name(lookup->provider);
->  			if (!rcdev) {
-> diff --git a/include/linux/reset.h b/include/linux/reset.h
-> index 29af6d6b2f4b8103..5881d2594761e48f 100644
-> --- a/include/linux/reset.h
-> +++ b/include/linux/reset.h
-> @@ -116,8 +116,11 @@ static inline int device_reset_optional(struct device *dev)
->   * @id: reset line name
->   *
->   * Returns a struct reset_control or IS_ERR() condition containing errno.
-> - * If this function is called more than once for the same reset_control it will
-> + * If this function is called more than once for the same reset control it will
->   * return -EBUSY.
-> + * This function is intended for use with reset controls which are dedicated
-> + * to a single hardware block.  If called for a reset control shared among
-> + * multiple hardware blocks, it will return -EINVAL.
->   *
->   * See reset_control_get_shared for details on shared references to
->   * reset-controls.
 
-regards
-Philipp
+[1]https://patchwork.ozlabs.org/cover/924041/
+[2]http://www.ti.com/lit/ug/spruid7a/spruid7a.pdf(12.3.2.4.14 PHY Module
+page 9770-9772)
+
+-- 
+Regards
+Vignesh
