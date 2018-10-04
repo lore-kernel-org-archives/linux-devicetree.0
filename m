@@ -1,7 +1,7 @@
 From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [PATCH net-next v4 02/11] dt-bindings: net: ocelot: remove hsio from the list of register address spaces
-Date: Thu,  4 Oct 2018 14:21:59 +0200
-Message-ID: <20181004122208.32272-3-quentin.schulz@bootlin.com>
+Subject: [PATCH net-next v4 07/11] dt-bindings: phy: add DT binding for Microsemi Ocelot SerDes muxing
+Date: Thu,  4 Oct 2018 14:22:04 +0200
+Message-ID: <20181004122208.32272-8-quentin.schulz@bootlin.com>
 References: <20181004122208.32272-1-quentin.schulz@bootlin.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181004122208.32272-1-quentin.schulz@bootlin.com>
@@ -10,74 +10,60 @@ To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jh
 Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-HSIO register address space should be handled outside of the MAC
-controller as there are some registers for PLL5 configuring,
-SerDes/switch port muxing and a thermal sensor IP, so let's remove it.
-
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
 ---
- Documentation/devicetree/bindings/mips/mscc.txt  | 16 ++++++++++++++++
- .../devicetree/bindings/net/mscc-ocelot.txt      |  9 +++------
- 2 files changed, 19 insertions(+), 6 deletions(-)
+ .../bindings/phy/phy-ocelot-serdes.txt        | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
 
-diff --git a/Documentation/devicetree/bindings/mips/mscc.txt b/Documentation/devicetree/bindings/mips/mscc.txt
-index ae15ec333542..bc817e984628 100644
---- a/Documentation/devicetree/bindings/mips/mscc.txt
-+++ b/Documentation/devicetree/bindings/mips/mscc.txt
-@@ -41,3 +41,19 @@ Example:
- 		compatible = "mscc,ocelot-cpu-syscon", "syscon";
- 		reg = <0x70000000 0x2c>;
- 	};
+diff --git a/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+new file mode 100644
+index 000000000000..332219860187
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-ocelot-serdes.txt
+@@ -0,0 +1,43 @@
++Microsemi Ocelot SerDes muxing driver
++-------------------------------------
 +
-+o HSIO regs:
++On Microsemi Ocelot, there is a handful of registers in HSIO address
++space for setting up the SerDes to switch port muxing.
 +
-+The SoC has a few registers (HSIO) handling miscellaneous functionalities:
-+configuration and status of PLL5, RCOMP, SyncE, SerDes configurations and
-+status, SerDes muxing and a thermal sensor.
++A SerDes X can be "muxed" to work with switch port Y or Z for example.
++One specific SerDes can also be used as a PCIe interface.
++
++Hence, a SerDes represents an interface, be it an Ethernet or a PCIe one.
++
++There are two kinds of SerDes: SERDES1G supports 10/100Mbps in
++half/full-duplex and 1000Mbps in full-duplex mode while SERDES6G supports
++10/100Mbps in half/full-duplex and 1000/2500Mbps in full-duplex mode.
++
++Also, SERDES6G number (aka "macro") 0 is the only interface supporting
++QSGMII.
++
++This is a child of the HSIO syscon ("mscc,ocelot-hsio", see
++Documentation/devicetree/bindings/mips/mscc.txt) on the Microsemi Ocelot.
 +
 +Required properties:
-+- compatible: Should be "mscc,ocelot-hsio", "syscon", "simple-mfd"
-+- reg : Should contain registers location and length
++
++- compatible: should be "mscc,vsc7514-serdes"
++- #phy-cells : from the generic phy bindings, must be 2.
++	       The first number defines the input port to use for a given
++	       SerDes macro. The second defines the macro to use. They are
++	       defined in dt-bindings/phy/phy-ocelot-serdes.h
 +
 +Example:
-+	syscon@10d0000 {
-+		compatible = "mscc,ocelot-hsio", "syscon", "simple-mfd";
-+		reg = <0x10d0000 0x10000>;
++
++	serdes: serdes {
++		compatible = "mscc,vsc7514-serdes";
++		#phy-cells = <2>;
 +	};
-diff --git a/Documentation/devicetree/bindings/net/mscc-ocelot.txt b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-index 0a84711abece..9e5c17d426ce 100644
---- a/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-ocelot.txt
-@@ -12,7 +12,6 @@ Required properties:
-   - "sys"
-   - "rew"
-   - "qs"
--  - "hsio"
-   - "qsys"
-   - "ana"
-   - "portX" with X from 0 to the number of last port index available on that
-@@ -45,7 +44,6 @@ Example:
- 		reg = <0x1010000 0x10000>,
- 		      <0x1030000 0x10000>,
- 		      <0x1080000 0x100>,
--		      <0x10d0000 0x10000>,
- 		      <0x11e0000 0x100>,
- 		      <0x11f0000 0x100>,
- 		      <0x1200000 0x100>,
-@@ -59,10 +57,9 @@ Example:
- 		      <0x1280000 0x100>,
- 		      <0x1800000 0x80000>,
- 		      <0x1880000 0x10000>;
--		reg-names = "sys", "rew", "qs", "hsio", "port0",
--			    "port1", "port2", "port3", "port4", "port5",
--			    "port6", "port7", "port8", "port9", "port10",
--			    "qsys", "ana";
-+		reg-names = "sys", "rew", "qs", "port0", "port1", "port2",
-+			    "port3", "port4", "port5", "port6", "port7",
-+			    "port8", "port9", "port10", "qsys", "ana";
- 		interrupts = <21 22>;
- 		interrupt-names = "xtr", "inj";
- 
++
++	ethernet {
++		port1 {
++			phy-handle = <&phy_foo>;
++			/* Link SERDES1G_5 to port1 */
++			phys = <&serdes 1 SERDES1G_5>;
++		};
++	};
 -- 
 2.17.1
