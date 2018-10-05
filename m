@@ -1,71 +1,94 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH i2c-next v7 2/5] i2c: core: Add support reading of
- 'bus-timeout-ms' and '#retries' properties
-Date: Fri,  5 Oct 2018 14:45:04 -0700
-Message-ID: <20181005214507.26315-3-jae.hyun.yoo@linux.intel.com>
-References: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Subject: [PATCH v9 1/3] [media] imx214: device tree binding
+Date: Fri,  5 Oct 2018 23:57:50 +0200
+Message-ID: <20181005215750.6047-1-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: Vernon Mauery <vernon.mauery@linux.intel.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, jacopo@jmondi.org
+Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds support for 'bus-timeout-ms' and '#retries'
-properties to set 'timeout' and 'retries' values in
-'struct i2c_adapter' in case an adapter node has the properties.
-Still the values can be set by I2C_TIMEOUT and I2C_RETRIES ioctls
-on cdev at runtime too.
+Document bindings for imx214 camera sensor
 
-These properties may not be supported by all drivers. However, if
-a driver wants to support one of them, it should adapt the
-bindings in the dt-bindings document.
-
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 ---
- drivers/i2c/i2c-core-base.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+Changelog from v8:
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 799776c6d421..aa2a365d374a 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -1214,6 +1214,7 @@ EXPORT_SYMBOL_GPL(i2c_handle_smbus_host_notify);
- static int i2c_register_adapter(struct i2c_adapter *adap)
- {
- 	int res = -EINVAL;
-+	u32 bus_timeout_ms = 0;
- 
- 	/* Can't register until after driver model init */
- 	if (WARN_ON(!is_registered)) {
-@@ -1239,8 +1240,15 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
- 	INIT_LIST_HEAD(&adap->userspace_clients);
- 
- 	/* Set default timeout to 1 second if not already set */
--	if (adap->timeout == 0)
--		adap->timeout = HZ;
-+	if (adap->timeout == 0) {
-+		device_property_read_u32(&adap->dev, "bus-timeout-ms",
-+					 &bus_timeout_ms);
-+		adap->timeout = bus_timeout_ms ?
-+					msecs_to_jiffies(bus_timeout_ms) : HZ;
-+	}
+Rob Herring:
+-rename file
+-Move address to reg
+-rename name on example
+-Patch author
+
+Sakari Ailus:
+-should->shall
+
+ .../bindings/media/i2c/sony,imx214.txt        | 53 +++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+
+diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+new file mode 100644
+index 000000000000..2744773070c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+@@ -0,0 +1,53 @@
++* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
 +
-+	/* Set retries count if it has the property setting */
-+	device_property_read_u32(&adap->dev, "#retries", &adap->retries);
- 
- 	/* register soft irqs for Host Notify */
- 	res = i2c_setup_host_notify_irq_domain(adap);
++The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
++an active array size of 4224H x 3200V. It is programmable through an I2C
++interface.
++Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
++throughput of 1.2Gbps/lane.
++
++
++Required Properties:
++- compatible: Shall be "sony,imx214".
++- reg: I2C bus address of the device. Depending on how the sensor is wired,
++       it shall be <0x10> or <0x1a>;
++- enable-gpios: GPIO descriptor for the enable pin.
++- vdddo-supply: Chip digital IO regulator (1.8V).
++- vdda-supply: Chip analog regulator (2.7V).
++- vddd-supply: Chip digital core regulator (1.12V).
++- clocks: Reference to the xclk clock.
++- clock-names:  Shall be "xclk".
++
++Optional Properties:
++- flash-leds: See ../video-interfaces.txt
++- lens-focus: See ../video-interfaces.txt
++
++The imx214 device node shall contain one 'port' child node with
++an 'endpoint' subnode. For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Required Properties on endpoint:
++- data-lanes: check ../video-interfaces.txt
++- link-frequencies: check ../video-interfaces.txt
++- remote-endpoint: check ../video-interfaces.txt
++
++Example:
++
++	camera-sensor@1a {
++		compatible = "sony,imx214";
++		reg = <0x1a>;
++		vdddo-supply = <&pm8994_lvs1>;
++		vddd-supply = <&camera_vddd_1v12>;
++		vdda-supply = <&pm8994_l17>;
++		lens-focus = <&ad5820>;
++		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
++		clocks = <&mmcc CAMSS_MCLK0_CLK>;
++		clock-names = "xclk";
++		port {
++			imx214_ep: endpoint {
++				data-lanes = <1 2 3 4>;
++				link-frequencies = /bits/ 64 <480000000>;
++				remote-endpoint = <&csiphy0_ep>;
++			};
++		};
++	};
 -- 
 2.19.0
