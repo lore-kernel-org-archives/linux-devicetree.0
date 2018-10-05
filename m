@@ -1,37 +1,56 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH i2c-next v6 1/5] dt-bindings: i2c: Add 'timeout-ms' and
- '#retries' properties as common optional
-Date: Fri, 5 Oct 2018 13:43:55 -0700
-Message-ID: <842d268d-9e38-3c81-1b66-a0527206092b@linux.intel.com>
-References: <20181004204322.20665-1-jae.hyun.yoo@linux.intel.com>
- <20181004204322.20665-2-jae.hyun.yoo@linux.intel.com>
- <20181005203930.GA12987@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: iio: vadc: Update example to include
+ unit address for node 'usb-id-nopull'
+Date: Fri, 5 Oct 2018 15:47:43 -0500
+Message-ID: <20181005204743.GA17135@bogus>
+References: <20181004001432.21218-1-mka@chromium.org>
+ <20181004001432.21218-2-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005203930.GA12987@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181004001432.21218-2-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 10/5/2018 1:39 PM, Rob Herring wrote:
-> On Thu, Oct 04, 2018 at 01:43:18PM -0700, Jae Hyun Yoo wrote:
->> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
->> @@ -80,6 +80,12 @@ wants to support one of the below features, it should adapt the bindings below.
->>   	Names of map programmable addresses.
->>   	It can contain any map needing another address than default one.
->>   
->> +- timeout-ms
+On Wed, Oct 03, 2018 at 05:14:31PM -0700, Matthias Kaehlcke wrote:
+> The node has a reg property, therefore its name should include a unit
+> address.
 > 
-> bus-timeout-ms in case we have some other timeout needed.
+> Also change the name from 'usb_id_nopull' to 'usb-id-nopull' to follow
+> DT conventions.
+
+This is ADC channels? If so, then DT convention would really be 
+"adc@...". 
+
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> Changes in v4:
+> - patch added to the series
+> ---
+>  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> index d0c188e5c922..ff7aa5038ba6 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt
+> @@ -112,7 +112,7 @@ Example:
+>  		io-channel-ranges;
+>  
+>  		/* Channel node */
+> -		usb_id_nopull {
+> +		usb-id-nopull@VADC_LR_MUX10_USB_ID {
+>  			reg = <VADC_LR_MUX10_USB_ID>;
 
-Agreed. I'll change it like you suggested.
+Defines are generally used when there's not well defined numbering such 
+as clock ids. Interrupts and addresses are generally well defined and 
+don't need defines.
 
-Thanks,
-Jae
+>  			qcom,decimation = <512>;
+>  			qcom,ratiometric;
+> -- 
+> 2.19.0.605.g01d371f741-goog
+> 
