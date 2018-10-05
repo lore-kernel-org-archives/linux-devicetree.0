@@ -1,73 +1,129 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 15/16] of: unittest: initialize args before calling
- of_irq_parse_one()
-Date: Fri, 5 Oct 2018 06:26:22 -0700
-Message-ID: <7fc4b9da-5fdf-11c9-e168-ccb2d960adea@roeck-us.net>
-References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
- <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH V5 02/24] mmc: mmci: create common mmci_dma_setup/release
+Date: Fri, 5 Oct 2018 15:47:12 +0200
+Message-ID: <CAPDyKFogS_74csmZm5_M3D-JFNn_8fi2sxcHpRwVxZOqZhndVg@mail.gmail.com>
+References: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com> <1538745782-27446-3-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
-Content-Language: en-US
+In-Reply-To: <1538745782-27446-3-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Ludovic Barre <ludovic.Barre@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/04/2018 09:12 PM, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> Callers of of_irq_parse_one() blindly use the pointer args.np
-> without checking whether of_irq_parse_one() had an error and
-> thus did not set the value of args.np.  Initialize args to
-> zero so that using the format "%pOF" to show the value of
-> args.np will show "(null)" when of_irq_parse_one() has an
-> error and does not set args.np instead of trying to
-> dereference a random value.
-> 
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+On 5 October 2018 at 15:22, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> From: Ludovic Barre <ludovic.barre@st.com>
+>
+> This patch creates a common mmci_dma_setup/release which calls
+> dma_setup/release callbacks of mmci_host_ops and manages
+> common features like use_dma... If there is a fallbacks to
+> pio mode, dma functions must check use_dma.
+>
+> error management:
+> -mmci_dmae_setup fail if Tx and Rx dma channels are not defined
+> -qcom_dma_setup fail if one of both dma channels is not defined,
+>  Qcom has no specific resource to release, just mmci dmae resource.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Makes perfect sense!
 
-The same problem exists when of_parse_phandle_with_args() reports an error.
+[...]
 
-Guenter
+> +void mmci_dma_setup(struct mmci_host *host)
+> +{
+> +       if (!host->ops || !host->ops->dma_setup)
+> +               return;
+> +
+> +       if (host->ops->dma_setup(host)) {
+> +               mmci_dma_release(host);
 
-> ---
->   drivers/of/unittest.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-> index 6d80f474c8f2..b61a33f30a56 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -780,7 +780,7 @@ static void __init of_unittest_parse_interrupts(void)
->   	for (i = 0; i < 4; i++) {
->   		bool passed = true;
->   
-> -		args.args_count = 0;
-> +		memset(&args, 0, sizeof(args));
->   		rc = of_irq_parse_one(np, i, &args);
->   
->   		passed &= !rc;
-> @@ -801,7 +801,7 @@ static void __init of_unittest_parse_interrupts(void)
->   	for (i = 0; i < 4; i++) {
->   		bool passed = true;
->   
-> -		args.args_count = 0;
-> +		memset(&args, 0, sizeof(args));
->   		rc = of_irq_parse_one(np, i, &args);
->   
->   		/* Test the values from tests-phandle.dtsi */
-> @@ -854,6 +854,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
->   	for (i = 0; i < 7; i++) {
->   		bool passed = true;
->   
-> +		memset(&args, 0, sizeof(args));
->   		rc = of_irq_parse_one(np, i, &args);
->   
->   		/* Test the values from tests-phandle.dtsi */
-> 
+Please remove this and let the variants clean up themselves. That
+makes it more straight forward.
+
+> +               return;
+> +       }
+> +
+> +       host->use_dma = true;
+> +}
+> +
+
+[...]
+
+> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> index 01e6c6b..9b0a960 100644
+> --- a/drivers/mmc/host/mmci.h
+> +++ b/drivers/mmc/host/mmci.h
+> @@ -273,7 +273,8 @@ struct variant_data {
+>
+>  /* mmci variant callbacks */
+>  struct mmci_host_ops {
+> -       void (*dma_setup)(struct mmci_host *host);
+> +       int (*dma_setup)(struct mmci_host *host);
+> +       void (*dma_release)(struct mmci_host *host);
+>  };
+>
+>  struct mmci_host_next {
+> @@ -323,6 +324,7 @@ struct mmci_host {
+>         unsigned int            size;
+>         int (*get_rx_fifocnt)(struct mmci_host *h, u32 status, int remain);
+>
+> +       u8                      use_dma:1;
+>  #ifdef CONFIG_DMA_ENGINE
+>         /* DMA stuff */
+>         struct dma_chan         *dma_current;
+> @@ -336,3 +338,14 @@ struct mmci_host {
+>  #endif
+>  };
+>
+> +#ifdef CONFIG_DMA_ENGINE
+> +void mmci_variant_init(struct mmci_host *host);
+> +#else
+> +static inline void mmci_variant_init(struct mmci_host *host)
+> +{
+> +}
+> +#endif
+
+This can be kept in mmci.c instead.
+
+> +
+> +int mmci_dmae_setup(struct mmci_host *host);
+> +void mmci_dmae_release(struct mmci_host *host);
+> +
+> diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
+> index be3fab5..aa070a9 100644
+> --- a/drivers/mmc/host/mmci_qcom_dml.c
+> +++ b/drivers/mmc/host/mmci_qcom_dml.c
+> @@ -119,19 +119,22 @@ static int of_get_dml_pipe_index(struct device_node *np, const char *name)
+>  }
+>
+>  /* Initialize the dml hardware connected to SD Card controller */
+> -static void qcom_dma_setup(struct mmci_host *host)
+> +static int qcom_dma_setup(struct mmci_host *host)
+>  {
+>         u32 config;
+>         void __iomem *base;
+>         int consumer_id, producer_id;
+>         struct device_node *np = host->mmc->parent->of_node;
+>
+> +       if (mmci_dmae_setup(host))
+> +               return -EINVAL;
+> +
+>         consumer_id = of_get_dml_pipe_index(np, "tx");
+>         producer_id = of_get_dml_pipe_index(np, "rx");
+>
+>         if (producer_id < 0 || consumer_id < 0) {
+>                 host->variant->qcom_dml = false;
+> -               return;
+> +               return -EINVAL;
+
+This relies on error handling to be done by mmci_dma_setup(), which as
+stated, feels a bit wrong.
+
+I would rather just call mmci_dmae_realease() here, before returning -EINVAL.
+
+[...]
+
+Otherwise, this looks good to me now.
+
+Kind regards
+Uffe
