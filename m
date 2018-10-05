@@ -1,46 +1,36 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 1/5] ALSA: soc-compress: add support to
- snd_compr_set_runtime_buffer()
-Date: Fri, 5 Oct 2018 09:16:26 +0100
-Message-ID: <6ac9b82e-9f92-d06a-724e-b460d24433ae@linaro.org>
-References: <20180926102349.23481-1-srinivas.kandagatla@linaro.org>
- <20180926102349.23481-2-srinivas.kandagatla@linaro.org>
- <20181005003112.GG2372@vkoul-mobl>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/4] Add MT7623 dts bindings documentation
+Date: Fri, 5 Oct 2018 10:29:07 +0200
+Message-ID: <add6ddc9-2eff-9413-de55-003acfeb2ffb@gmail.com>
+References: <20181003090912.30501-1-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005003112.GG2372@vkoul-mobl>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20181003090912.30501-1-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod <vkoul@kernel.org>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, devicetree@vger.kernel.org, mark.rutland@arm.com
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
+Cc: bin.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, weiyi.lu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, rick.chang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for review!
 
-On 05/10/18 01:31, Vinod wrote:
-> On 26-09-18, 11:23, Srinivas Kandagatla wrote:
->> This patch adds support to set runtime dma buffer on compressed stream.
-> The change is fine as is, but I feel we need to document the motivation
-> in the changelog. The core changes need a bit more explanation on why we
-> should add this..
 
-Sure, I will add more information into the change log in next version.
-
---srini
-
+On 03/10/2018 11:09, Matthias Brugger wrote:
+> Mediateks MT7623 SoC shares most of its component with MT2701.
+> This series adds devicetree documentation for all the devices.
 > 
->> Signed-off-by: Srinivas Kandagatla<srinivas.kandagatla@linaro.org>
->> ---
->>   include/sound/compress_driver.h | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>
->> diff --git a/include/sound/compress_driver.h b/include/sound/compress_driver.h
->> index ea8c93bbb0e0..0cdc3999ecfa 100644
->> --- a/include/sound/compress_driver.h
->> +++ b/include/sound/compress_driver.h
->> @@ -23,6 +23,7 @@ struct snd_compr_ops;
->>    * struct snd_compr_runtime: runtime stream description
->>    * @state: stream state
->>    * @ops: pointer to DSP callbacks
+> It applies cleanly against linux next, so I don't expect any merge
+> conflicts if this is taken by Arnd through the arm-soc tree for v4.20
+> 
+> 
+
+For completeness, I merged the whole series to v4.19-next/dts32
