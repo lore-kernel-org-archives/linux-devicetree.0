@@ -1,99 +1,76 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 09/16] of: overlay: validate overlay properties
- #address-cells and #size-cells
-Date: Fri, 5 Oct 2018 14:04:58 -0500
-Message-ID: <CAL_Jsq+53znm=LHxH8bZZJ2wN4uUez8D7E2V03+Zc9nvYBNjrg@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 15/16] of: unittest: initialize args before calling
+ of_irq_parse_one()
+Date: Fri, 5 Oct 2018 12:05:17 -0700
+Message-ID: <3c6fe77f-5fe6-0289-9480-7c98cdf81a43@gmail.com>
 References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
- <1538712767-30394-10-git-send-email-frowand.list@gmail.com>
- <CAL_JsqKK3f4W1DdPkzNed0=tx5Oxu9w=RKs8PnaXMfuShBpV1A@mail.gmail.com> <f39a84d3-f706-d31e-db22-4e3ebc72c447@gmail.com>
+ <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
+ <7fc4b9da-5fdf-11c9-e168-ccb2d960adea@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f39a84d3-f706-d31e-db22-4e3ebc72c447@gmail.com>
+In-Reply-To: <7fc4b9da-5fdf-11c9-e168-ccb2d960adea@roeck-us.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 5, 2018 at 1:53 PM Frank Rowand <frowand.list@gmail.com> wrote:
->
-> On 10/05/18 08:07, Rob Herring wrote:
-> > On Thu, Oct 4, 2018 at 11:14 PM <frowand.list@gmail.com> wrote:
-> >>
-> >> From: Frank Rowand <frank.rowand@sony.com>
-> >>
-> >> If overlay properties #address-cells or #size-cells are already in
-> >> the live devicetree for any given node, then the values in the
-> >> overlay must match the values in the live tree.
-> >>
-> >> If the properties are already in the live tree then there is no
-> >> need to create a changeset entry to add them since they must
-> >> have the same value.  This reduces the memory used by the
-> >> changeset and eliminates a possible memory leak.  This is
-> >> verified by 12 fewer warnings during the devicetree unittest,
-> >> as the possible memory leak warnings about #address-cells and
-> >
-> > and...?
->
-> #size-cells no longer occur.
->
-> (Thanks for catching that.)
->
->
-> >>
-> >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> >> ---
-> >>  drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
-> >>  1 file changed, 35 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> >> index 29c33a5c533f..e6fb3ffe9d93 100644
-> >> --- a/drivers/of/overlay.c
-> >> +++ b/drivers/of/overlay.c
-> >> @@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
-> >>   * @target may be either in the live devicetree or in a new subtree that
-> >>   * is contained in the changeset.
-> >>   *
-> >> - * Some special properties are not updated (no error returned).
-> >> + * Some special properties are not added or updated (no error returned):
-> >> + * "name", "phandle", "linux,phandle".
-> >> + *
-> >> + * Properties "#address-cells" and "#size-cells" are not updated if they
-> >> + * are already in the live tree, but if present in the live tree, the values
-> >> + * in the overlay must match the values in the live tree.
-> >
-> > Perhaps this should be generalized to apply to any property? We can't
-> > really deal with property values changing on the fly anyways.
->
-> That is a bigger discussion.  I'd prefer to not hold up this series for that
-> question to be resolved.  It will be easy enough to generalize in an add-on
-> patch later.
+On 10/05/18 06:26, Guenter Roeck wrote:
+> On 10/04/2018 09:12 PM, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Callers of of_irq_parse_one() blindly use the pointer args.np
+>> without checking whether of_irq_parse_one() had an error and
+>> thus did not set the value of args.np.  Initialize args to
+>> zero so that using the format "%pOF" to show the value of
+>> args.np will show "(null)" when of_irq_parse_one() has an
+>> error and does not set args.np instead of trying to
+>> dereference a random value.
+>>
+>> Reported-by: Guenter Roeck <linux@roeck-us.net>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> 
+> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> The same problem exists when of_parse_phandle_with_args() reports an error.
 
-Fair enough.
+Thanks, I'll add a fix for that.
 
-> >> +               if (prop->length != 4 || new_prop->length != 4 ||
-> >> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-> >
-> > Technically these are __be32 types. This could use a helper (of_prop_val_eq).
->
-> These are in a unpacked form, so cpu byte order, not FDT byte order.
+-Frank
 
-You sure about that? Unpacking doesn't change the order. It can't
-because the type is unknown. The value of 'value' is the address of
-the data in the FDT.
-
-> > I'm not sure we really need to validate the length here as dtc does
-> > that (but yes, not everything is from dtc).
->
-> Since I'm accessing 4 bytes of the values, I need to be sure the lengths
-> are at least 4.  For #address-cells and #size-cells the property is
-> specified as four bytes, so I could simplify the code for the specific case.
->
-> If this gets extended to any arbitrary property then a new of_prop_val_eq()
-> would check that the lengths are equal and the values (of size length) are
-> also equal.
-
-Right, that's what I was thinking. Check lengths are equal and then
-you can just do a memcmp().
-
-Rob
+> 
+> Guenter
+> 
+>> ---
+>>   drivers/of/unittest.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+>> index 6d80f474c8f2..b61a33f30a56 100644
+>> --- a/drivers/of/unittest.c
+>> +++ b/drivers/of/unittest.c
+>> @@ -780,7 +780,7 @@ static void __init of_unittest_parse_interrupts(void)
+>>       for (i = 0; i < 4; i++) {
+>>           bool passed = true;
+>>   -        args.args_count = 0;
+>> +        memset(&args, 0, sizeof(args));
+>>           rc = of_irq_parse_one(np, i, &args);
+>>             passed &= !rc;
+>> @@ -801,7 +801,7 @@ static void __init of_unittest_parse_interrupts(void)
+>>       for (i = 0; i < 4; i++) {
+>>           bool passed = true;
+>>   -        args.args_count = 0;
+>> +        memset(&args, 0, sizeof(args));
+>>           rc = of_irq_parse_one(np, i, &args);
+>>             /* Test the values from tests-phandle.dtsi */
+>> @@ -854,6 +854,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
+>>       for (i = 0; i < 7; i++) {
+>>           bool passed = true;
+>>   +        memset(&args, 0, sizeof(args));
+>>           rc = of_irq_parse_one(np, i, &args);
+>>             /* Test the values from tests-phandle.dtsi */
+>>
+> 
+> 
