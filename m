@@ -1,107 +1,76 @@
-MIME-Version: 1.0
-Date: Fri, 5 Oct 2018 08:23:57 -0500
+Return-Path: <SRS0=Swgw=MR=ozlabs.org=dgibson@kernel.org>
+Date: Fri, 5 Oct 2018 15:09:59 +1000
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
+ properties
+Message-ID: <20181005050959.GP7004@umbus.fritz.box>
 References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
-	<20180928064841.14117-7-takahiro.akashi@linaro.org>
-	<CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
-	<20181005030849.GK32578@linaro.org>
-In-Reply-To: <20181005030849.GK32578@linaro.org>
-Message-ID: <CAL_Jsq+wXU8PCyJhaTKE7ezZhiD0KARUFXVzQBk0ZptEEK7ubQ@mail.gmail.com>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling properties
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, David Gibson <david@gibson.dropbear.id.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org
+ <20180928064841.14117-7-takahiro.akashi@linaro.org>
+ <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
+ <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
+ <20181005050627.GL32578@linaro.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="movZSYdJ761vCHaE"
+Content-Disposition: inline
+In-Reply-To: <20181005050627.GL32578@linaro.org>
+To: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Oct 4, 2018 at 10:07 PM AKASHI, Takahiro
-<takahiro.akashi@linaro.org> wrote:
->
-> Rob,
->
-> # I haven't replied to this comment yet.
->
-> On Fri, Sep 28, 2018 at 08:44:42AM -0500, Rob Herring wrote:
-> > +David Gibson
-> >
-> > On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
-> > <takahiro.akashi@linaro.org> wrote:
-> > >
-> > > These functions will be used later to handle kexec-specific properties
-> > > in arm64's kexec_file implementation.
-> > >
-> > > Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > ---
-> > >  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
-> > >  include/linux/of_fdt.h |  4 +++
-> > >  2 files changed, 60 insertions(+)
-> > >
-> > > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > > index 800ad252cf9c..c65c31562ccb 100644
-> > > --- a/drivers/of/fdt.c
-> > > +++ b/drivers/of/fdt.c
-> > > @@ -25,6 +25,7 @@
-> > >  #include <linux/debugfs.h>
-> > >  #include <linux/serial_core.h>
-> > >  #include <linux/sysfs.h>
-> > > +#include <linux/types.h>
-> > >
-> > >  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
-> > >  #include <asm/page.h>
-> > > @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
-> > >  #endif
-> > >
-> > >  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> > > +
-> > > +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
-> > > +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
-> > > +
-> > > +int fdt_prop_len(const char *prop_name, int len)
-> > > +{
-> > > +       return (strlen(prop_name) + 1) +
-> > > +               sizeof(struct fdt_property) +
-> > > +               FDT_TAGALIGN(len);
-> >
-> > Looks like you are using this to calculate how much space you need to
-> > allocate in addition to the current DTB for a couple of new or
-> > replaced properties. I'm not sure that this calculation is completely
-> > accurate. And it is strange there doesn't seem to be any libfdt
-> > function for this already. It would be simpler to just add some fixed
-> > additional amount.
-> >
-> > Maybe David G has comments on this?
-> >
-> > > +}
-> > > +
-> >
-> > The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
-> > should go into libfdt, but I'm fine with having it in the kernel for
-> > now.
->
-> I'd like to have this function in the kernel for now.
->
-> > > +static void fill_property(void *buf, u64 val64, int cells)
-> > > +{
-> > > +       __be32 val32;
-> > > +
-> > > +       while (cells) {
-> > > +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-> > > +               memcpy(buf, &val32, sizeof(val32));
-> > > +               buf += sizeof(val32);
-> >
-> > This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
->
-> Are you sure?
-> I originally implemented this function in a similar way that fdt_pack_reg()
-> was, but, you suggested, in your past comment[1], that we'd be better to
-> have of_read_number()-like implementation.
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-May/579118.html
 
-Yeah, you're right. Plus, I'm not sure the u-boot one would work for
-unaligned accesses with armv5 and earlier h/w.
+--movZSYdJ761vCHaE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-My only comment then is I think you can drop the U32_MAX masking.
+On Fri, Oct 05, 2018 at 02:06:29PM +0900, AKASHI, Takahiro wrote:
+[snip]
+> > >> +{
+> > >> +       return (strlen(prop_name) + 1) +
+> > >> +               sizeof(struct fdt_property) +
+> > >> +               FDT_TAGALIGN(len);
+> > >=20
+> > > Looks like you are using this to calculate how much space you need to
+> > > allocate in addition to the current DTB for a couple of new or
+> > > replaced properties. I'm not sure that this calculation is completely
+> > > accurate. And it is strange there doesn't seem to be any libfdt
+> > > function for this already. It would be simpler to just add some fixed
+> > > additional amount.
+> > >=20
+> > > Maybe David G has comments on this?
+>=20
+> I'm not quit sure why it's not that accurate, but as I said in a reply to
+> David's comment, I will take your suggestion.
 
-Rob
+I think it is accurate, but it is not robust.  It might not be
+accurate if we ever make further tweaks to the libfdt format.  libfdt
+is supposed to abstract those changes away, but if you make
+assumptions like this, you break that abstraction.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--movZSYdJ761vCHaE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAlu28iUACgkQbDjKyiDZ
+s5LH/xAAh/vDxj2xanbrQLZ61bxAfKiW22OR2z7VIuRvPfYqjJaXsEal1uX1BNYW
+qYhYO6/VqBHvI56fs0EDNQT5PSc5NWK4v2xHgm+SfJACkNhMvHHLaWxFPw3pTSHT
++X4HjyiFV4FLw3lgP8AyuL/1ZHUkEEJyLvfUtwEcZLQ7gyO7KXJYk8tvZaZTbnNy
+U3vbrwlrJ8FDXtuV1udW4nMAOV5uWC3QjjERbz/tIllajFNV4JwUAsIpIN79VDRn
+eSMoKFQwzlLUjQ0sqSEb0fLu8EDz06hS2jJ6E33qIiUsZmvK3tJuriKbRAXaKZ4C
+ZZ7o1x8g0Sgwjzv1Thm4fVB/eG/b4aMzpNzcEPoiT8n3cMUEsA/2Ukxfl1DtcJC/
++H1X/hnQcJlltualZ5AjRlslJ4BA15w2GGTOlVCk9V9EYsp49f8oItATVoR+EUOj
+pau5CqQyT6CwRDqvAajsRNOr9+zIAfNS8WZo75Twhj7iqBGxodFqaCNayvJtX93U
+oASIp61DcVaSohRqOaaBoQUS0ye+xMEbDGr1gOLZGDoQI9sS0mElWOHsN967Ua/q
+xAxyB3jrNbQPp/qFqRWcq6F+Dsnbp11wONiao1wDEQCx4z1EKnRZdIPyari72B65
+vUKObiGBU+XRUE6tkzN/YWTGbtzVIbjdKKc5P53oM4lVh0PnZzU=
+=MPmg
+-----END PGP SIGNATURE-----
+
+--movZSYdJ761vCHaE--
