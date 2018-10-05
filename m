@@ -1,79 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 27/36] dt-bindings: arm: Convert Realtek board/soc bindings to json-schema
-Date: Fri,  5 Oct 2018 11:58:39 -0500
-Message-ID: <20181005165848.3474-28-robh@kernel.org>
+Subject: [PATCH 21/36] dt-bindings: arm: Convert TI davinci board/soc bindings to json-schema
+Date: Fri,  5 Oct 2018 11:58:33 -0500
+Message-ID: <20181005165848.3474-22-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert Realtek SoC bindings to DT schema format using json-schema.
+Convert TI Davinci SoC bindings to DT schema format using json-schema.
 
-Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Sekhar Nori <nsekhar@ti.com>
+Cc: Kevin Hilman <khilman@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/realtek.txt       | 22 ----------------
- .../devicetree/bindings/arm/realtek.yaml      | 25 +++++++++++++++++++
- 2 files changed, 25 insertions(+), 22 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
- create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
+ .../devicetree/bindings/arm/davinci.txt       | 25 ------------------
+ .../bindings/arm/ti/ti,davinci.yaml           | 26 +++++++++++++++++++
+ 2 files changed, 26 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/davinci.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Documentation/devicetree/bindings/arm/realtek.txt
+diff --git a/Documentation/devicetree/bindings/arm/davinci.txt b/Documentation/devicetree/bindings/arm/davinci.txt
 deleted file mode 100644
-index 95839e19ae92..000000000000
---- a/Documentation/devicetree/bindings/arm/realtek.txt
+index 715622c36260..000000000000
+--- a/Documentation/devicetree/bindings/arm/davinci.txt
 +++ /dev/null
-@@ -1,22 +0,0 @@
--Realtek platforms device tree bindings
----------------------------------------
+@@ -1,25 +0,0 @@
+-Texas Instruments DaVinci Platforms Device Tree Bindings
+---------------------------------------------------------
 -
--
--RTD1295 SoC
--===========
--
+-DA850/OMAP-L138/AM18x Evaluation Module (EVM) board
 -Required root node properties:
+-    - compatible = "ti,da850-evm", "ti,da850";
 -
-- - compatible :  must contain "realtek,rtd1295"
+-DA850/OMAP-L138/AM18x L138/C6748 Development Kit (LCDK) board
+-Required root node properties:
+-    - compatible = "ti,da850-lcdk", "ti,da850";
 -
+-EnBW AM1808 based CMC board
+-Required root node properties:
+-    - compatible = "enbw,cmc", "ti,da850;
 -
--Root node property compatible must contain, depending on board:
+-LEGO MINDSTORMS EV3 (AM1808 based)
+-Required root node properties:
+-    - compatible = "lego,ev3", "ti,da850";
 -
-- - MeLE V9: "mele,v9"
-- - ProBox2 AVA: "probox2,ava"
-- - Zidoo X9S: "zidoo,x9s"
+-Generic DaVinci Boards
+-----------------------
 -
--
--Example:
--
--    compatible = "zidoo,x9s", "realtek,rtd1295";
-diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
+-DA850/OMAP-L138/AM18x generic board
+-Required root node properties:
+-    - compatible = "ti,da850";
+diff --git a/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml b/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
 new file mode 100644
-index 000000000000..9e3bb3249c77
+index 000000000000..2675cae91a60
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/realtek.yaml
-@@ -0,0 +1,25 @@
++++ b/Documentation/devicetree/bindings/arm/ti/ti,davinci.yaml
+@@ -0,0 +1,26 @@
 +# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/bindings/arm/realtek.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/davinci.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Realtek platforms device tree bindings
++title: Texas Instruments DaVinci Platforms Device Tree Bindings
 +
 +maintainers:
-+  - Andreas Färber <afaerber@suse.de>
++  - Sekhar Nori <nsekhar@ti.com>
++description: |
++  DA850/OMAP-L138/AM18x based boards
 +
-+description: |+
-+  RTD1295 SoC
 +
 +properties:
 +  $nodename:
@@ -81,10 +81,11 @@ index 000000000000..9e3bb3249c77
 +  compatible:
 +    items:
 +      - enum:
-+          - mele,v9
-+          - probox2,ava
-+          - zidoo,x9s
-+      - const: realtek,rtd1295
++          - ti,da850-evm
++          - ti,da850-lcdk
++          - enbw,cmc
++          - lego,ev3
++      - const: ti,da850
 +...
 -- 
 2.17.1
