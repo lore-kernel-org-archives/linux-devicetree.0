@@ -1,109 +1,144 @@
-Return-Path: <SRS0=+8o7=MR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from perceval.ideasonboard.com ([213.167.242.64]:49522 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727179AbeJERAl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Oct 2018 13:00:41 -0400
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/5] dt-bindings: adv748x: make data-lanes property mandatory for CSI-2 endpoints
-Date: Fri, 05 Oct 2018 13:02:53 +0300
-Message-ID: <4582789.bxBjXKKKhz@avalon>
-In-Reply-To: <20181005084945.GL31281@w540>
-References: <20181004204138.2784-1-niklas.soderlund@ragnatech.se> <18767245.bJLhzbqhM5@avalon> <20181005084945.GL31281@w540>
+Return-Path: <SRS0=zsTD=MR=jmondi.org=jacopo@kernel.org>
+Date: Fri, 5 Oct 2018 10:49:45 +0200
+From: jacopo mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: adv748x: make data-lanes property
+ mandatory for CSI-2 endpoints
+Message-ID: <20181005084945.GL31281@w540>
+References: <20181004204138.2784-1-niklas.soderlund@ragnatech.se>
+ <20181004204138.2784-2-niklas.soderlund@ragnatech.se>
+ <2082037.FqgpqPMGh4@avalon>
+ <18767245.bJLhzbqhM5@avalon>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-Sender: devicetree-owner@vger.kernel.org
-To: jacopo mondi <jacopo@jmondi.org>
-Cc: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="j3olVFx0FsM75XyV"
+Content-Disposition: inline
+In-Reply-To: <18767245.bJLhzbqhM5@avalon>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Jacopo,
 
-On Friday, 5 October 2018 11:49:45 EEST jacopo mondi wrote:
-> On Fri, Oct 05, 2018 at 01:00:47AM +0300, Laurent Pinchart wrote:
-> > On Friday, 5 October 2018 00:42:17 EEST Laurent Pinchart wrote:
-> >> On Thursday, 4 October 2018 23:41:34 EEST Niklas S=F6derlund wrote:
-> >>> From: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
-> >>>=20
-> >>> The CSI-2 transmitters can use a different number of lanes to transmit
-> >>> data. Make the data-lanes mandatory for the endpoints describe the
-> >>=20
-> >> s/describe/that describe/ ?
-> >>=20
-> >>> transmitters as no good default can be set to fallback on.
-> >>>=20
-> >>> Signed-off-by: Niklas S=F6derlund
-> >>> <niklas.soderlund+renesas@ragnatech.se>
-> >>> ---
-> >>>=20
-> >>>  Documentation/devicetree/bindings/media/i2c/adv748x.txt | 3 +++
-> >>>  1 file changed, 3 insertions(+)
-> >>>=20
-> >>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> >>> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
-> >>> 5dddc95f9cc46084..f9dac01ab795fc28 100644
-> >>> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> >>> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-> >>> @@ -50,6 +50,9 @@ are numbered as follows.
-> >>>=20
-> >>>  The digital output port nodes must contain at least one endpoint.
-> >>>=20
-> >>> +The endpoints described in TXA and TXB ports must if present contain
-> >>> +the data-lanes property as described in video-interfaces.txt.
-> >>> +
-> >>=20
-> >> Would it make sense to merge those two paragraphs, as they refer to the
-> >> same endpoint ?
-> >>=20
-> >> "The digital output port nodes, when present, shall contain at least o=
-ne
-> >> endpoint. Each of those endpoints shall contain the data-lanes property
-> >> as described in video-interfaces.txt."
-> >>=20
-> >> (DT bindings normally use "shall" instead of "must", but that hasn't
-> >> really been enforced.)
-> >>=20
-> >> If you want to keep the paragraphs separate, I would recommend using
-> >> "digital output ports" instead of "TXA and TXB" in the second paragraph
-> >> for consistency (or the other way around).
-> >>=20
-> >> I'm fine with any of the above option, so please pick your favourite,
-> >> and add
-> >>=20
-> >> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> >=20
-> > I just realized that TXB only supports a single data lane, so we may wa=
-nt
-> > not to have a data-lanes property for TXB.
->=20
-> Isn't it better to restrict its value to <1> but make it mandatory
-> anyhow? I understand conceptually that property should not be there,
-> as it has a single acceptable value, but otherwise we need to traeat
-> differently the two output ports, in documentation and code.
+--j3olVFx0FsM75XyV
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The two ports are different, so I wouldn't be shocked if we handled them=20
-differently :-) I believe it would actually reduce the code size (and save =
-CPU=20
-cycles at runtime).
+Hi Laurent, Niklas,
 
-> Why not inserting a paragraph with the required endpoint properties
-> description?
->=20
-> Eg:
->=20
->  Required endpoint properties:
->  - data-lanes: See "video-interfaces.txt" for description. The property
->    is mandatory for CSI-2 output endpoints and the accepted values
->    depends on which endpoint the property is applied to:
->    - TXA: accepted values are <1>, <2>, <4>
->    - TXB: accepted value is <1>
->=20
-> >>>  Ports are optional if they are not connected to anything at the
-> >>>  hardware level.
-> >>>=20
-> >>>  Example:
+On Fri, Oct 05, 2018 at 01:00:47AM +0300, Laurent Pinchart wrote:
+> Hello again,
+>
+> On Friday, 5 October 2018 00:42:17 EEST Laurent Pinchart wrote:
+> > On Thursday, 4 October 2018 23:41:34 EEST Niklas S=C3=B6derlund wrote:
+> > > From: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se>
+> > >
+> > > The CSI-2 transmitters can use a different number of lanes to transmit
+> > > data. Make the data-lanes mandatory for the endpoints describe the
+> >
+> > s/describe/that describe/ ?
+> >
+> > > transmitters as no good default can be set to fallback on.
+> > >
+> > > Signed-off-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnat=
+ech.se>
+> > > ---
+> > >
+> > >  Documentation/devicetree/bindings/media/i2c/adv748x.txt | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> > > b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
+> > > 5dddc95f9cc46084..f9dac01ab795fc28 100644
+> > > --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> > > @@ -50,6 +50,9 @@ are numbered as follows.
+> > >
+> > >  The digital output port nodes must contain at least one endpoint.
+> > >
+> > > +The endpoints described in TXA and TXB ports must if present contain
+> > > +the data-lanes property as described in video-interfaces.txt.
+> > > +
+> >
+> > Would it make sense to merge those two paragraphs, as they refer to the=
+ same
+> > endpoint ?
+> >
+> > "The digital output port nodes, when present, shall contain at least one
+> > endpoint. Each of those endpoints shall contain the data-lanes property=
+ as
+> > described in video-interfaces.txt."
+> >
+> > (DT bindings normally use "shall" instead of "must", but that hasn't re=
+ally
+> > been enforced.)
+> >
+> > If you want to keep the paragraphs separate, I would recommend using
+> > "digital output ports" instead of "TXA and TXB" in the second paragraph=
+ for
+> > consistency (or the other way around).
+> >
+> > I'm fine with any of the above option, so please pick your favourite, a=
+nd
+> > add
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>
+> I just realized that TXB only supports a single data lane, so we may want=
+ not
+> to have a data-lanes property for TXB.
+>
 
-=2D-=20
-Regards,
+Isn't it better to restrict its value to <1> but make it mandatory
+anyhow? I understand conceptually that property should not be there,
+as it has a single acceptable value, but otherwise we need to traeat
+differently the two output ports, in documentation and code.
 
-Laurent Pinchart
+Why not inserting a paragraph with the required endpoint properties
+description?
+
+Eg:
+
+ Required endpoint properties:
+ - data-lanes: See "video-interfaces.txt" for description. The property
+   is mandatory for CSI-2 output endpoints and the accepted values
+   depends on which endpoint the property is applied to:
+   - TXA: accepted values are <1>, <2>, <4>
+   - TXB: accepted value is <1>
+
+> > >  Ports are optional if they are not connected to anything at the hard=
+ware
+> > >
+> > > level.
+> > >
+> > >  Example:
+>
+> --
+> Regards,
+>
+> Laurent Pinchart
+>
+>
+>
+
+--j3olVFx0FsM75XyV
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJbtyWpAAoJEHI0Bo8WoVY8NWQP/AwHy565Abbcd35+Drcgnev9
+9AyXKWPdSxeiS3ZZNe0FAz76BEMEAGu5Ko4CMEpNg+eDI696+y8tna0QGLwqpY8q
+mJJ/X0dxpcEb/3CB9mJnn86NdFUuWqcxPrbWKVlMS3h/4rClH5spB2YBXFkmnnD4
+AHKwPFcjTDB/qKn2xS3wRhauRZ+HGfv/M0QQW79rNCfvS3c2x+dEWMfbbPyCcp/3
+t0N8ySlsVxeVsjNJ2zCTy/8kHzC7Nx7OnbKeIJxiF+2sDZ/HcL5fwU1gH4IrqpoF
+IyngWNXOEvkGhaUofN7RPcLy03HdvORU5YsnhwUBMsL7af3po5UhmDx9iHm88HmC
+9OGW2awak+3vlbPtKN2eLZdMSpBKyKiNKGYTv0agKZU4h+x89icDWVGgHV+1On31
+G4Hm9HY7lEAbLLG3BKt1Juu156VCanHtYmsz7VCLelOnMD5XxxIHwe3zVLNiMAa1
+XoYuDrATyXDBkXOSmn60k9YqwfKdWMVj9SGihNsyRotsAvED4/qLzQ2gsn8i7MJz
+zOM4oqAQms9/iGxsnq80jniOlut9xqDep8mDHVhIdrcOSFvPCi1OGmfnjwEmKCT2
+Txu1FhNO4UR312c/ksjUVxqN/tZbf/CizRNPRuSeZDCNQX8rVxl/NW7a7imQ+ML4
+CyWTSAC0zUlrBiS56qVQ
+=HlTB
+-----END PGP SIGNATURE-----
+
+--j3olVFx0FsM75XyV--
