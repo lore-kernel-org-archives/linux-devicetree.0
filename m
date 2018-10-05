@@ -1,66 +1,109 @@
-Return-Path: <SRS0=0FWW=MN=sirena.org.uk=broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "dt-bindings: spi: sh-msiof: Add r8a7744 support" to the spi tree
-In-Reply-To: <1538139709-17707-1-git-send-email-biju.das@bp.renesas.com>
-Message-Id: <20181001160624.500881121CA5@debutante.sirena.org.uk>
-Date: Mon,  1 Oct 2018 17:06:24 +0100 (BST)
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-renesas-soc@vger.kernel.orglinux-spi@vger.kernel.org
+Return-Path: <SRS0=+8o7=MR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from perceval.ideasonboard.com ([213.167.242.64]:49522 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727179AbeJERAl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 5 Oct 2018 13:00:41 -0400
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: adv748x: make data-lanes property mandatory for CSI-2 endpoints
+Date: Fri, 05 Oct 2018 13:02:53 +0300
+Message-ID: <4582789.bxBjXKKKhz@avalon>
+In-Reply-To: <20181005084945.GL31281@w540>
+References: <20181004204138.2784-1-niklas.soderlund@ragnatech.se> <18767245.bJLhzbqhM5@avalon> <20181005084945.GL31281@w540>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+Sender: devicetree-owner@vger.kernel.org
+To: jacopo mondi <jacopo@jmondi.org>
+Cc: Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, Kieran Bingham <kieran.bingham@ideasonboard.com>, linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund+renesas@ragnatech.se>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The patch
+Hi Jacopo,
 
-   dt-bindings: spi: sh-msiof: Add r8a7744 support
+On Friday, 5 October 2018 11:49:45 EEST jacopo mondi wrote:
+> On Fri, Oct 05, 2018 at 01:00:47AM +0300, Laurent Pinchart wrote:
+> > On Friday, 5 October 2018 00:42:17 EEST Laurent Pinchart wrote:
+> >> On Thursday, 4 October 2018 23:41:34 EEST Niklas S=F6derlund wrote:
+> >>> From: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
+> >>>=20
+> >>> The CSI-2 transmitters can use a different number of lanes to transmit
+> >>> data. Make the data-lanes mandatory for the endpoints describe the
+> >>=20
+> >> s/describe/that describe/ ?
+> >>=20
+> >>> transmitters as no good default can be set to fallback on.
+> >>>=20
+> >>> Signed-off-by: Niklas S=F6derlund
+> >>> <niklas.soderlund+renesas@ragnatech.se>
+> >>> ---
+> >>>=20
+> >>>  Documentation/devicetree/bindings/media/i2c/adv748x.txt | 3 +++
+> >>>  1 file changed, 3 insertions(+)
+> >>>=20
+> >>> diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> >>> b/Documentation/devicetree/bindings/media/i2c/adv748x.txt index
+> >>> 5dddc95f9cc46084..f9dac01ab795fc28 100644
+> >>> --- a/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> >>> +++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
+> >>> @@ -50,6 +50,9 @@ are numbered as follows.
+> >>>=20
+> >>>  The digital output port nodes must contain at least one endpoint.
+> >>>=20
+> >>> +The endpoints described in TXA and TXB ports must if present contain
+> >>> +the data-lanes property as described in video-interfaces.txt.
+> >>> +
+> >>=20
+> >> Would it make sense to merge those two paragraphs, as they refer to the
+> >> same endpoint ?
+> >>=20
+> >> "The digital output port nodes, when present, shall contain at least o=
+ne
+> >> endpoint. Each of those endpoints shall contain the data-lanes property
+> >> as described in video-interfaces.txt."
+> >>=20
+> >> (DT bindings normally use "shall" instead of "must", but that hasn't
+> >> really been enforced.)
+> >>=20
+> >> If you want to keep the paragraphs separate, I would recommend using
+> >> "digital output ports" instead of "TXA and TXB" in the second paragraph
+> >> for consistency (or the other way around).
+> >>=20
+> >> I'm fine with any of the above option, so please pick your favourite,
+> >> and add
+> >>=20
+> >> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> >=20
+> > I just realized that TXB only supports a single data lane, so we may wa=
+nt
+> > not to have a data-lanes property for TXB.
+>=20
+> Isn't it better to restrict its value to <1> but make it mandatory
+> anyhow? I understand conceptually that property should not be there,
+> as it has a single acceptable value, but otherwise we need to traeat
+> differently the two output ports, in documentation and code.
 
-has been applied to the spi tree at
+The two ports are different, so I wouldn't be shocked if we handled them=20
+differently :-) I believe it would actually reduce the code size (and save =
+CPU=20
+cycles at runtime).
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+> Why not inserting a paragraph with the required endpoint properties
+> description?
+>=20
+> Eg:
+>=20
+>  Required endpoint properties:
+>  - data-lanes: See "video-interfaces.txt" for description. The property
+>    is mandatory for CSI-2 output endpoints and the accepted values
+>    depends on which endpoint the property is applied to:
+>    - TXA: accepted values are <1>, <2>, <4>
+>    - TXB: accepted value is <1>
+>=20
+> >>>  Ports are optional if they are not connected to anything at the
+> >>>  hardware level.
+> >>>=20
+> >>>  Example:
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+=2D-=20
+Regards,
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From aeb8a43fa2649e00202960a55cbbd184bfc296d6 Mon Sep 17 00:00:00 2001
-From: Biju Das <biju.das@bp.renesas.com>
-Date: Fri, 28 Sep 2018 14:01:49 +0100
-Subject: [PATCH] dt-bindings: spi: sh-msiof: Add r8a7744 support
-
-Document RZ/G1N (R8A7744) SoC bindings.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/sh-msiof.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-index 27b48f07ca97..49fd806b3689 100644
---- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -2,6 +2,7 @@ Renesas MSIOF spi controller
- 
- Required properties:
- - compatible           : "renesas,msiof-r8a7743" (RZ/G1M)
-+			 "renesas,msiof-r8a7744" (RZ/G1N)
- 			 "renesas,msiof-r8a7745" (RZ/G1E)
- 			 "renesas,msiof-r8a774a1" (RZ/G2M)
- 			 "renesas,msiof-r8a7790" (R-Car H2)
--- 
-2.19.0.rc2
+Laurent Pinchart
