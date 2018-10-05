@@ -1,116 +1,73 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V5 06/24] mmc: mmci: add get_next_data callback
-Date: Fri, 5 Oct 2018 15:22:44 +0200
-Message-ID: <1538745782-27446-7-git-send-email-ludovic.Barre@st.com>
-References: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 15/16] of: unittest: initialize args before calling
+ of_irq_parse_one()
+Date: Fri, 5 Oct 2018 06:26:22 -0700
+Message-ID: <7fc4b9da-5fdf-11c9-e168-ccb2d960adea@roeck-us.net>
+References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
+ <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+On 10/04/2018 09:12 PM, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
+> 
+> Callers of of_irq_parse_one() blindly use the pointer args.np
+> without checking whether of_irq_parse_one() had an error and
+> thus did not set the value of args.np.  Initialize args to
+> zero so that using the format "%pOF" to show the value of
+> args.np will show "(null)" when of_irq_parse_one() has an
+> error and does not set args.np instead of trying to
+> dereference a random value.
+> 
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 
-This patch adds get_next_data callback to mmci_host_ops.
-Generic mmci_get_next_data factorizes next_cookie check and
-the host ops call.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
----
- drivers/mmc/host/mmci.c          | 16 ++++++++++------
- drivers/mmc/host/mmci.h          |  2 ++
- drivers/mmc/host/mmci_qcom_dml.c |  1 +
- 3 files changed, 13 insertions(+), 6 deletions(-)
+The same problem exists when of_parse_phandle_with_args() reports an error.
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index 9bcd219..074350e1 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -413,6 +413,14 @@ void mmci_unprep_data(struct mmci_host *host, struct mmc_data *data,
- 	data->host_cookie = 0;
- }
- 
-+void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
-+{
-+	WARN_ON(data->host_cookie && data->host_cookie != host->next_cookie);
-+
-+	if (host->ops && host->ops->get_next_data)
-+		host->ops->get_next_data(host, data);
-+}
-+
- static void
- mmci_request_end(struct mmci_host *host, struct mmc_request *mrq)
- {
-@@ -761,7 +769,7 @@ static int mmci_dma_start_data(struct mmci_host *host, unsigned int datactrl)
- 	return 0;
- }
- 
--static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
-+void mmci_dmae_get_next_data(struct mmci_host *host, struct mmc_data *data)
- {
- 	struct mmci_dmae_priv *dmae = host->dma_priv;
- 	struct mmci_dmae_next *next = &dmae->next_data;
-@@ -769,7 +777,6 @@ static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
- 	if (!host->use_dma)
- 		return;
- 
--	WARN_ON(data->host_cookie && data->host_cookie != host->next_cookie);
- 	WARN_ON(!data->host_cookie && (next->desc || next->chan));
- 
- 	dmae->desc_current = next->desc;
-@@ -814,6 +821,7 @@ void mmci_dmae_unprep_data(struct mmci_host *host,
- static struct mmci_host_ops mmci_variant_ops = {
- 	.prep_data = mmci_dmae_prep_data,
- 	.unprep_data = mmci_dmae_unprep_data,
-+	.get_next_data = mmci_dmae_get_next_data,
- 	.dma_setup = mmci_dmae_setup,
- 	.dma_release = mmci_dmae_release,
- };
-@@ -824,10 +832,6 @@ void mmci_variant_init(struct mmci_host *host)
- }
- #else
- /* Blank functions if the DMA engine is not available */
--static void mmci_get_next_data(struct mmci_host *host, struct mmc_data *data)
--{
--}
--
- static inline void mmci_dma_finalize(struct mmci_host *host,
- 				     struct mmc_data *data)
- {
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index 8e7ba8a..acaf343 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -277,6 +277,7 @@ struct mmci_host_ops {
- 			 bool next);
- 	void (*unprep_data)(struct mmci_host *host, struct mmc_data *data,
- 			    int err);
-+	void (*get_next_data)(struct mmci_host *host, struct mmc_data *data);
- 	int (*dma_setup)(struct mmci_host *host);
- 	void (*dma_release)(struct mmci_host *host);
- };
-@@ -343,6 +344,7 @@ int mmci_dmae_prep_data(struct mmci_host *host, struct mmc_data *data,
- 			bool next);
- void mmci_dmae_unprep_data(struct mmci_host *host, struct mmc_data *data,
- 			   int err);
-+void mmci_dmae_get_next_data(struct mmci_host *host, struct mmc_data *data);
- int mmci_dmae_setup(struct mmci_host *host);
- void mmci_dmae_release(struct mmci_host *host);
- 
-diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
-index 029e82d..5334427 100644
---- a/drivers/mmc/host/mmci_qcom_dml.c
-+++ b/drivers/mmc/host/mmci_qcom_dml.c
-@@ -185,6 +185,7 @@ static int qcom_dma_setup(struct mmci_host *host)
- static struct mmci_host_ops qcom_variant_ops = {
- 	.prep_data = mmci_dmae_prep_data,
- 	.unprep_data = mmci_dmae_unprep_data,
-+	.get_next_data = mmci_dmae_get_next_data,
- 	.dma_setup = qcom_dma_setup,
- 	.dma_release = mmci_dmae_release,
- };
--- 
-2.7.4
+Guenter
+
+> ---
+>   drivers/of/unittest.c | 5 +++--
+>   1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+> index 6d80f474c8f2..b61a33f30a56 100644
+> --- a/drivers/of/unittest.c
+> +++ b/drivers/of/unittest.c
+> @@ -780,7 +780,7 @@ static void __init of_unittest_parse_interrupts(void)
+>   	for (i = 0; i < 4; i++) {
+>   		bool passed = true;
+>   
+> -		args.args_count = 0;
+> +		memset(&args, 0, sizeof(args));
+>   		rc = of_irq_parse_one(np, i, &args);
+>   
+>   		passed &= !rc;
+> @@ -801,7 +801,7 @@ static void __init of_unittest_parse_interrupts(void)
+>   	for (i = 0; i < 4; i++) {
+>   		bool passed = true;
+>   
+> -		args.args_count = 0;
+> +		memset(&args, 0, sizeof(args));
+>   		rc = of_irq_parse_one(np, i, &args);
+>   
+>   		/* Test the values from tests-phandle.dtsi */
+> @@ -854,6 +854,7 @@ static void __init of_unittest_parse_interrupts_extended(void)
+>   	for (i = 0; i < 7; i++) {
+>   		bool passed = true;
+>   
+> +		memset(&args, 0, sizeof(args));
+>   		rc = of_irq_parse_one(np, i, &args);
+>   
+>   		/* Test the values from tests-phandle.dtsi */
+> 
