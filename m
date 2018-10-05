@@ -1,191 +1,95 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 07/36] kbuild: Add support for DT binding schema checks
-Date: Fri,  5 Oct 2018 11:58:19 -0500
-Message-ID: <20181005165848.3474-8-robh@kernel.org>
-References: <20181005165848.3474-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 7/9] OPP: Add
+ dev_pm_opp_get_interconnect_bw()
+Date: Fri, 5 Oct 2018 11:13:55 -0600
+Message-ID: <20181005171355.GK31641@jcrouse-lnx.qualcomm.com>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-8-jcrouse@codeaurora.org>
+ <49858ede-66db-b58f-e586-411896efad4b@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <49858ede-66db-b58f-e586-411896efad4b-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Sharat Masetty <smasetty-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the build infrastructure for checking DT binding schema
-documents and validating dts files using the binding schema.
-
-Check DT binding schema documents:
-make dt_binding_check
-
-Build dts files and check using DT binding schema:
-make dtbs_check
-
-Currently, the validation targets are separate from a normal build to
-avoid a hard dependency on the external DT schema project and because
-there are lots of warnings generated.
-
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Michal Marek <michal.lkml@markovi.net>
-Cc: linux-doc@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kbuild@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .gitignore                                   |  1 +
- Documentation/Makefile                       |  2 +-
- Documentation/devicetree/bindings/.gitignore |  2 ++
- Documentation/devicetree/bindings/Makefile   | 30 ++++++++++++++++++++
- Makefile                                     |  8 +++++-
- scripts/Makefile.lib                         | 24 ++++++++++++++--
- 6 files changed, 63 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/.gitignore
- create mode 100644 Documentation/devicetree/bindings/Makefile
-
-diff --git a/.gitignore b/.gitignore
-index 97ba6b79834c..a20ac26aa2f5 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -15,6 +15,7 @@
- *.bin
- *.bz2
- *.c.[012]*.*
-+*.dt.yaml
- *.dtb
- *.dtb.S
- *.dwo
-diff --git a/Documentation/Makefile b/Documentation/Makefile
-index 2ca77ad0f238..9786957c6a35 100644
---- a/Documentation/Makefile
-+++ b/Documentation/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for Sphinx documentation
- #
- 
--subdir-y :=
-+subdir-y := devicetree/bindings/
- 
- # You can set these variables from the command line.
- SPHINXBUILD   = sphinx-build
-diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
-new file mode 100644
-index 000000000000..7e47316f1d7a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/.gitignore
-@@ -0,0 +1,2 @@
-+*.example.dts
-+*.yaml.tmp
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-new file mode 100644
-index 000000000000..b57f0dec3fab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -0,0 +1,30 @@
-+# SPDX-License-Identifier: GPL-2.0
-+DT_DOC_CHECKER ?= dt-doc-validate
-+DT_EXTRACT_EX ?= dt-extract-example
-+
-+quiet_cmd_chk_binding = CHKDT   $<
-+      cmd_chk_binding = (set -e; \
-+                         $(DT_DOC_CHECKER) $< ; \
-+                         mkdir -p $(dir $@) ; \
-+                         $(DT_EXTRACT_EX) $< > $@ )
-+
-+$(obj)/%.example.dts: $(src)/%.yaml FORCE
-+	$(call if_changed,chk_binding)
-+
-+DT_MK_SCHEMA ?= dt-mk-schema
-+DT_TMP_SCHEMA := .schema.yaml.tmp
-+extra-y += $(DT_TMP_SCHEMA)
-+
-+quiet_cmd_mk_schema = SCHEMA  $@
-+      cmd_mk_schema = mkdir -p $(obj); \
-+                      $(DT_MK_SCHEMA) -o $@ $(srctree)/$(src)
-+
-+DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
-+DTS_EXAMPLES = $(patsubst %.yaml,%.example.dts, $(DT_DOCS))
-+extra-y += $(DTS_EXAMPLES)
-+
-+DTBS = $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
-+extra-y += $(DTBS)
-+
-+$(obj)/$(DT_TMP_SCHEMA): $(addprefix $(obj)/, $(DTBS)) FORCE
-+	$(call if_changed,mk_schema)
-diff --git a/Makefile b/Makefile
-index 021e274c4b03..648f7238e883 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1227,10 +1227,13 @@ ifneq ($(dtstree),)
- %.dtb: prepare3 scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
- 
--PHONY += dtbs dtbs_install
-+PHONY += dtbs dtbs_install dt_binding_check
- dtbs: prepare3 scripts_dtc
- 	$(Q)$(MAKE) $(build)=$(dtstree)
- 
-+dtbs_check: prepare3 dt_binding_check
-+	$(Q)$(MAKE) $(build)=$(dtstree) CHECK_DTBS=1
-+
- dtbs_install:
- 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
- 
-@@ -1244,6 +1247,9 @@ PHONY += scripts_dtc
- scripts_dtc: scripts_basic
- 	$(Q)$(MAKE) $(build)=scripts/dtc
- 
-+dt_binding_check: scripts_dtc
-+	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
-+
- # ---------------------------------------------------------------------------
- # Modules
- 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 8fe4468f9bda..d1c5630ba24c 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -61,6 +61,11 @@ real-obj-m := $(foreach m, $(obj-m), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))
- extra-y				+= $(dtb-y)
- extra-$(CONFIG_OF_ALL_DTBS)	+= $(dtb-)
- 
-+ifneq ($(CHECK_DTBS),)
-+extra-y += $(patsubst %.dtb,%.dt.yaml, $(dtb-y))
-+extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
-+endif
-+
- # Add subdir path
- 
- extra-y		:= $(addprefix $(obj)/,$(extra-y))
-@@ -284,13 +289,28 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
- 	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
--	$(DTC) -O dtb -o $@ -b 0 \
-+	$(DTC) -O $(2) -o $@ -b 0 \
- 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
- 
- $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
--	$(call if_changed_dep,dtc)
-+	$(call if_changed_dep,dtc,dtb)
-+
-+DT_CHECKER ?= dt-validate
-+DT_BINDING_DIR := Documentation/devicetree/bindings
-+DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/.schema.yaml.tmp
-+
-+quiet_cmd_dtb_check =	CHECK  $@
-+      cmd_dtb_check =	$(DT_CHECKER) -p $(DT_TMP_SCHEMA) $@ ;
-+
-+define rule_dtc_dt_yaml
-+	$(call cmd_and_fixdep,dtc,yaml)		\
-+	$(call echo-cmd,dtb_check) $(cmd_dtb_check)
-+endef
-+
-+$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
-+	$(call if_changed_rule,dtc_dt_yaml)
- 
- dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
- 
--- 
-2.17.1
+T24gRnJpLCBPY3QgMDUsIDIwMTggYXQgMTI6MDY6MDZQTSArMDUzMCwgU2hhcmF0IE1hc2V0dHkg
+d3JvdGU6Cj4gCj4gCj4gT24gOC8yNy8yMDE4IDg6NDEgUE0sIEpvcmRhbiBDcm91c2Ugd3JvdGU6
+Cj4gPkFkZCBkZXZfcG1fb3BwX2dldF9pbnRlcmNvbm5lY3RfYncoKSB0byByZWFkIHRoZSBpbnRl
+cmNvbm5lY3QKPiA+YmFuZHdpZHRoIHZhbHVlcyBmb3IgYSBnaXZlbiBPUFAuCj4gPgo+ID5TaWdu
+ZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+ID4tLS0K
+PiA+ICBkcml2ZXJzL29wcC9vZi5jICAgICAgIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrCj4gPiAgaW5jbHVkZS9saW51eC9wbV9vcHAuaCB8ICA3ICsrKysrKysKPiA+
+ICAyIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKykKPiA+Cj4gPmRpZmYgLS1naXQgYS9k
+cml2ZXJzL29wcC9vZi5jIGIvZHJpdmVycy9vcHAvb2YuYwo+ID5pbmRleCA3YWYwZGRlYzkzNmIu
+LjZhNWVlY2FhZjhjMSAxMDA2NDQKPiA+LS0tIGEvZHJpdmVycy9vcHAvb2YuYwo+ID4rKysgYi9k
+cml2ZXJzL29wcC9vZi5jCj4gPkBAIC03NzcsMyArNzc3LDM5IEBAIHN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqZGV2X3BtX29wcF9nZXRfb2Zfbm9kZShzdHJ1Y3QgZGV2X3BtX29wcCAqb3BwKQo+ID4gIAly
+ZXR1cm4gb2Zfbm9kZV9nZXQob3BwLT5ucCk7Cj4gPiAgfQo+ID4gIEVYUE9SVF9TWU1CT0xfR1BM
+KGRldl9wbV9vcHBfZ2V0X29mX25vZGUpOwo+ID4rCj4gPisvKioKPiA+KyAqIGRldl9wbV9vcHBf
+Z2V0X2ludGVyY29ubmVjdF9idygpIC0gR2V0IHRoZSBpbnRlcmNvbm5lY3QgYmFuZHdpZHRoIGZv
+ciB0aGUgb3BwCj4gPisgKiBAb3BwOglvcHAgY29udGFpbmluZyB0aGUgYmFuZHdpZHRoIHZhbHVl
+cwo+ID4rICogQHBhdGhuYW1lOgluYW1lIG9mIHRoZSBpbnRlcmNvbm5lY3QgcGF0aCBmb3IgdGhl
+IGJhbmR3aWR0aCB2YWx1ZXMKPiA+KyAqIEBhdmdidzoJUG9pbnRlciBmb3IgdGhlIHZhbHVlIHRv
+IGhvbGQgdGhlIGF2ZXJhZ2UgQlcgZGVmaW5lZCBmb3IgdGhlIE9QUAo+ID4rICogQHBlYWtidzoJ
+UG9pbnRlciBmb3IgdGhlIHZhbHVlIHRvIGhvbGQgdGhlIHBlYWsgQlcgZGVmaW5lZCBmb3IgdGhl
+IE9QUAo+ID4rICoKPiA+KyAqIFJldHVybjogTmVnYXRpdmUgdmFsdWUgb24gZXJyb3Igb3IgMCBv
+biBzdWNjZXNzCj4gPisgKi8KPiA+K2ludCBkZXZfcG1fb3BwX2dldF9pbnRlcmNvbm5lY3RfYnco
+c3RydWN0IGRldl9wbV9vcHAgKm9wcCwKPiA+KwkJY29uc3QgY2hhciAqcGF0aG5hbWUsIHU2NCAq
+YXZnYncsIHU2NCAqcGVha2J3KQo+ID4rewo+ID4rCWNoYXIgbmFtZVtOQU1FX01BWF07Cj4gPisJ
+c3RydWN0IHByb3BlcnR5ICpwcm9wOwo+ID4rCWludCBjb3VudDsKPiA+Kwo+ID4rCWlmIChJU19F
+UlJfT1JfTlVMTChvcHApKQo+ID4rCQlyZXR1cm4gLUVOT0VOVDsKPiA+Kwo+ID4rCXNucHJpbnRm
+KG5hbWUsIE5BTUVfTUFYLCAib3BwLWludGVyY29ubmVjdC1idy0lcyIsIHBhdGhuYW1lKTsKPiA+
+Kwlwcm9wID0gb2ZfZmluZF9wcm9wZXJ0eShvcHAtPm5wLCBuYW1lLCBOVUxMKTsKPiA+Kwo+ID4r
+CWlmICghcHJvcCkKPiA+KwkJcmV0dXJuIC1FTk9FTlQ7Cj4gPisKPiA+Kwljb3VudCA9IG9mX3By
+b3BlcnR5X2NvdW50X3U2NF9lbGVtcyhvcHAtPm5wLCBuYW1lKTsKPiA+KwlpZiAoY291bnQgIT0g
+MikKPiA+KwkJcmV0dXJuIC1FSU5WQUw7Cj4gPisKPiA+KwlvZl9wcm9wZXJ0eV9yZWFkX3U2NF9p
+bmRleChvcHAtPm5wLCBuYW1lLCAwLCBhdmdidyk7Cj4gPisJb2ZfcHJvcGVydHlfcmVhZF91NjRf
+aW5kZXgob3BwLT5ucCwgbmFtZSwgMCwgcGVha2J3KTsKPiBUaGlzIHNob3VsZCBiZSBpbmRleCAx
+IGZvciBwZWFrIGJhbmR3aWR0aAo+IAlvZl9wcm9wZXJ0eV9yZWFkX3U2NF9pbmRleChvcHAtPm5w
+LCBuYW1lLCAxLCBwZWFrYncpOwo+IEkgdGVzdGVkIHdpdGggdGhpcyBmaXggYW5kIHRoZSBHUFUn
+cyBpbnRlcmNvbm5lY3Qgc3VtbWFyeSBub3cgc2hvd3MKPiBub24gemVybyB2YWx1ZXMgZm9yIHBl
+YWsgYmFuZHdpZHRoLiBDYW4geW91IHBsZWFzZSByYWlzZSBhIG5ld2VyCj4gdmVyc2lvbiBvZiB0
+aGlzIHBhdGNoPyBJIHdpbGwgaGF2ZSBpdCBwdWxsZWQgaW50byBvdXIgZG93bnN0cmVhbQo+IGJ1
+aWxkcy4KCkFoaGghIEkgY2FuIGdlbmVyYXRlIGEgbmV3IG9uZSBidXQgSSB0aGluayB3ZSBzaG91
+bGQgY29tZSB0byBhbiBhZ3JlZW1lbnQgb24gdGhlCmJpbmRpbmdzLgoKSm9yZGFuCgo+ID4rCj4g
+PisJcmV0dXJuIDA7Cj4gPit9Cj4gPitFWFBPUlRfU1lNQk9MX0dQTChkZXZfcG1fb3BwX2dldF9p
+bnRlcmNvbm5lY3RfYncpOwo+ID5kaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9wbV9vcHAuaCBi
+L2luY2x1ZGUvbGludXgvcG1fb3BwLmgKPiA+aW5kZXggMDk5YjMxOTYwZGVjLi43MGU0OWUyNTlk
+MGUgMTAwNjQ0Cj4gPi0tLSBhL2luY2x1ZGUvbGludXgvcG1fb3BwLmgKPiA+KysrIGIvaW5jbHVk
+ZS9saW51eC9wbV9vcHAuaAo+ID5AQCAtMzAxLDYgKzMwMSw3IEBAIGludCBkZXZfcG1fb3BwX29m
+X2dldF9zaGFyaW5nX2NwdXMoc3RydWN0IGRldmljZSAqY3B1X2Rldiwgc3RydWN0IGNwdW1hc2sg
+KmNwdW1hCj4gPiAgc3RydWN0IGRldmljZV9ub2RlICpkZXZfcG1fb3BwX29mX2dldF9vcHBfZGVz
+Y19ub2RlKHN0cnVjdCBkZXZpY2UgKmRldik7Cj4gPiAgc3RydWN0IGRldl9wbV9vcHAgKm9mX2Rl
+dl9wbV9vcHBfZmluZF9yZXF1aXJlZF9vcHAoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2
+aWNlX25vZGUgKm5wKTsKPiA+ICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRldl9wbV9vcHBfZ2V0X29m
+X25vZGUoc3RydWN0IGRldl9wbV9vcHAgKm9wcCk7Cj4gPitpbnQgZGV2X3BtX29wcF9nZXRfaW50
+ZXJjb25uZWN0X2J3KHN0cnVjdCBkZXZfcG1fb3BwICpvcHAsIGNvbnN0IGNoYXIgKnBhdGhuYW1l
+LCB1NjQgKmF2Z2J3LCB1NjQgKnBlYWtidyk7Cj4gPiAgI2Vsc2UKPiA+ICBzdGF0aWMgaW5saW5l
+IGludCBkZXZfcG1fb3BwX29mX2FkZF90YWJsZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gPiAgewo+
+ID5AQCAtMzQzLDYgKzM0NCwxMiBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBkZXZpY2Vfbm9kZSAq
+ZGV2X3BtX29wcF9nZXRfb2Zfbm9kZShzdHJ1Y3QgZGV2X3BtX29wcCAqb3BwKQo+ID4gIHsKPiA+
+ICAJcmV0dXJuIE5VTEw7Cj4gPiAgfQo+ID4rCj4gPitzdGF0aWMgaW5saW5lIGludCBkZXZfcG1f
+b3BwX2dldF9pbnRlcmNvbm5lY3RfYncoc3RydWN0IGRldl9wbV9vcHAgKm9wcCwgY29uc3QgY2hh
+ciAqcGF0aG5hbWUsCj4gPisJCXU2NCAqYXZnYncsIHU2NCAqcGVha2J3KQo+ID4rewo+ID4rCXJl
+dHVybiAtRU5PVFNVUFA7Cj4gPit9Cj4gPiAgI2VuZGlmCj4gPiAgI2VuZGlmCQkvKiBfX0xJTlVY
+X09QUF9IX18gKi8KPiA+Cj4gCj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBMaW51eCBGb3Vu
+ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9u
+IENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBG
+b3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0Bs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9mcmVlZHJlbm8K
