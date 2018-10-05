@@ -1,371 +1,498 @@
-From: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/6] Add Rockchip VPU JPEG encoder
-Date: Fri, 05 Oct 2018 14:39:07 -0300
-Message-ID: <815ef3df42b3bf64bcfd7f3b721f100046a75cca.camel@collabora.com>
-References: <20180917173022.9338-1-ezequiel@collabora.com>
- <7bd9573e-e0c6-71a6-84ed-deb0904593fd@xs4all.nl>
- <faca3960d0478610b73071b471acfa26df987985.camel@collabora.com>
- <5ce82f591ab9bd1a9a0a476f01bbf4f0fe4ab0e2.camel@collabora.com>
- <20181005091034.7d8399ed@coco.lan>
- <25d61645856120ad010b604ec4c14b0677ab9197.camel@collabora.com>
- <20181005134914.4947841d@coco.lan>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 12/27] drm/sun4i: Add basic support for DE3
+Date: Fri, 05 Oct 2018 19:51:20 +0200
+Message-ID: <1603658.HpHSbfQY4F@jernej-laptop>
+References: <20180902072643.4917-1-jernej.skrabec@siol.net> <20180902072643.4917-13-jernej.skrabec@siol.net> <CAGb2v65tt4S-k=AF2AmjQyEkUydzMimB8TT2Uiqmpf6G8qD1Cw@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20181005134914.4947841d-qA1ZUp+OV9c@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBH6J33OQKGQEZ6HYNIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65tt4S-k=AF2AmjQyEkUydzMimB8TT2Uiqmpf6G8qD1Cw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-10-05 at 13:49 -0300, Mauro Carvalho Chehab wrote:
-> Em Fri, 05 Oct 2018 12:37:43 -0300
-> Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> escreveu:
-> 
-> > On Fri, 2018-10-05 at 09:10 -0300, Mauro Carvalho Chehab wrote:
-> > > Em Thu, 04 Oct 2018 20:39:31 -0300
-> > > Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> escreveu:
-> > >   
-> > > > On Mon, 2018-10-01 at 14:54 -0300, Ezequiel Garcia wrote:  
-> > > > > On Fri, 2018-09-28 at 14:33 +0200, Hans Verkuil wrote:    
-> > > > > > On 09/17/2018 07:30 PM, Ezequiel Garcia wrote:    
-> > > > > > > This series adds support for JPEG encoding via the VPU block
-> > > > > > > present in Rockchip platforms. Currently, support for RK3288
-> > > > > > > and RK3399 is included.
-> > > > > > > 
-> > > > > > > Please, see the previous versions of this cover letter for
-> > > > > > > more information.
-> > > > > > > 
-> > > > > > > Compared to v5, the only change is in the V4L2_CID_JPEG_QUANTIZATION
-> > > > > > > control. We've decided to support only baseline profile,
-> > > > > > > and only add 8-bit luma and chroma tables.
-> > > > > > > 
-> > > > > > > struct v4l2_ctrl_jpeg_quantization {
-> > > > > > >        __u8    luma_quantization_matrix[64];
-> > > > > > >        __u8    chroma_quantization_matrix[64];
-> > > > > > > };
-> > > > > > > 
-> > > > > > > By doing this, it's clear that we don't currently support anything
-> > > > > > > but baseline.
-> > > > > > > 
-> > > > > > > This series should apply cleanly on top of
-> > > > > > > 
-> > > > > > >   git://linuxtv.org/hverkuil/media_tree.git br-cedrus tag.
-> > > > > > > 
-> > > > > > > If everyone is happy with this series, I'd like to route the devicetree
-> > > > > > > changes through the rockchip tree, and the rest via the media subsystem.    
-> > > > > > 
-> > > > > > OK, so I have what is no doubt an annoying question: do we really need
-> > > > > > a JPEG_RAW format?
-> > > > > >     
-> > > > > 
-> > > > > Not annoying, as it helps clarify a few things :-)
-> > > > > I think we do need the JPEG_RAW format. The way I see it, using
-> > > > > JPEG opens a can of worms...
-> > > > >     
-> > > > > > The JPEG header is really easy to parse for a decoder and really easy to
-> > > > > > prepend to the compressed image for the encoder.
-> > > > > > 
-> > > > > > The only reason I can see for a JPEG_RAW is if the image must start at
-> > > > > > some specific address alignment. Although even then you can just pad the
-> > > > > > JPEG header that you will add according to the alignment requirements.
-> > > > > > 
-> > > > > > I know I am very late with this question, but I never looked all that
-> > > > > > closely at what a JPEG header looks like. But this helped:
-> > > > > > 
-> > > > > > https://en.wikipedia.org/wiki/JPEG_File_Interchange_Format
-> > > > > > 
-> > > > > > and it doesn't seem difficult at all to parse or create the header.
-> > > > > > 
-> > > > > >     
-> > > > > 
-> > > > > ... I think that having JPEG_RAW as the compressed format
-> > > > > is much more clear for userspace, as it explicitly specifies
-> > > > > what is expected.
-> > > > > 
-> > > > > This way, for a stateless encoder, applications are required
-> > > > > to set quantization and/or entropy tables, and are then in
-> > > > > charge of using the compressed JPEG_RAW payload in whatever form
-> > > > > they want. Stupid simple.
-> > > > > 
-> > > > > On the other side, if the stateless encoder driver supports
-> > > > > JPEG (creating headers in-kernel), it means that:
-> > > > > 
-> > > > > *) applications should pass a quality control, if supported,
-> > > > > and the driver will use hardcoded tables or...
-> > > > > 
-> > > > > *) applications pass quantization control and, if supported,
-> > > > > entropy control. The kernel uses them to create the JPEG frame.
-> > > > > But also, some drivers (e.g. Rockchip), use default entropy
-> > > > > tables, which should now be in the kernel.
-> > > > > 
-> > > > > So the application would have to query controls to find out
-> > > > > what to do. Not exactly hard, but I think having the JPEG_RAW
-> > > > > is much simpler and more clear.
-> > > > > 
-> > > > > Now, for stateless decoders, supporting JPEG_RAW means
-> > > > > the application has to pass quantization and entropy
-> > > > > controls, probably using the Request API.
-> > > > > Given the application has parsed the JPEG,
-> > > > > it knows the width and height and can request
-> > > > > buffers accordingly.
-> > > > > 
-> > > > > The hardware is stateless, and so is the driver.
-> > > > > 
-> > > > > On the other hand, supporting JPEG would mean that
-> > > > > drivers will have to parse the image, extracting
-> > > > > the quantization and entropy tables.
-> > > > > 
-> > > > > Format negotiation is now more complex,
-> > > > > either we follow the stateful spec, introducing a little
-> > > > > state machine in the driver... or we use the Request API,
-> > > > > but that means parsing on both sides kernel and application.
-> > > > > 
-> > > > > Either way, using JPEG_RAW is just waaay simpler and puts
-> > > > > things where they belong. 
-> > > > >     
-> > > > 
-> > > > As discussed on IRC, I'm sending a v7 for this series,
-> > > > fixing only the checkpatch issues and the extra line in the
-> > > > binding document.
-> > > > 
-> > > > We've agreed to move forward with JPEG_RAW, for the reasons
-> > > > stated above.
-> > > > 
-> > > > Plus, we've agreed to keep this in staging until the userspace
-> > > > support for JPEG_RAW format is clear.  
-> > > 
-> > > The problem is that a new format is actually a V4L2 core change, and
-> > > not something for staging.
-> > > 
-> > > IMHO, it is prudent to wait for an userspace code before hushing
-> > > merging this upstream.
-> > > 
-> > > -
-> > > 
-> > > I'm concerned about adding a JPEG_RAW format. We had this discussion
-> > > in the past. On that time, it was opted to add a code inside the
-> > > drivers that will be adding the jpeg headers, on the cases where
-> > > the hardware was providing headerless frames.
-> > >   
+Dne sobota, 22. september 2018 ob 15:19:12 CEST je Chen-Yu Tsai napisal(a):
+> On Sun, Sep 2, 2018 at 3:27 PM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> 
+wrote:
+> > Display Engine 3 is an upgrade of DE2 with new features like support for
+> > 10 bit color formats and support for AFBC.
 > > 
-> > I suspect such discussion was held on completely different hardware.
-> > What we are trying to support here has specific needs, and thus
-> > why we need new formats.
+> > Most of DE2 code works with DE3, except some small details.
 > > 
-> > > Among the reasons, different drivers may be requiring different
-> > > logic to add the jpeg headers, depending on how they interpret
-> > > the quality parameters and on the Huffmann tables used by an
-> > > specific codec.
-> > > 
-> > > I can't see why this couldn't be done on a stateless codec. I mean:
-> > > in the specific case of JPEG, each frame is independently coded.
-> > > It doesn't need to store anything from a previous frame in order to
-> > > produce a JPEG header.
-> > >   
+> > Add support for it.
 > > 
-> > Well, this can be done. But since it's the wrong architecture,
-> > it will bring a more complex API and more complex implementation.
-> 
-> I'm not saying that this is a final solution.
-> 
-> We're talking about a driver that it is intended to be merged
-> (for now) at staging. "Polluting" V4L2 core with a new almost identical
-> format that has a potential of bringing problems due to a staging
-> driver is something that doesn't sound right.
-> 
-> Before changing the core, we need to be able to test your proposal on
-> more drivers, on both directions (capture and output).
-> 
-> > In the case of a stateless decoder, it will mean a really cumbersome
-> > API. As I have explained above, using JPEG format on hardware
-> > than can only deal with JPEG_RAW format means:
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
 > > 
-> > 1) Userspace sets JPEG format on the OUTPUT queue (sink)
-> 
-> I'm assuming that you're actually talking about a M2M device whose
-> output stream receives a JPEG frame, and its capture stream outputs
-> something like RGB, right?
-> 
-
-Right, RGB or more likely YUVish.
-
-> Also, I'm assuming the description you gave for the "raw JPEG" as a
-> JPEG image without JPEG headers.
-> 
-> > 2) Userspace needs to know the raw format, but it has
-> > to wait for the driver to parse it first.
-> 
-> Why would userspace need to know the raw format? It doesn't really
-> matter if the output is raw JPEG or full JPEG.
-> 
-> For the output stream scenario:
-> 
-> 1) for a headerless-JPEG (raw JPEG is really a crappy name):
-> 
-> Userspace will use the headers to extract some information useful
-> for the decoder to work, passing them via controls. Then, it will
-> queue a buffer. Request API is needed, as the parameters will change
-> frame by frame.
-> 
-> 2) for "true" JPEG (e. g. a jpeg frame that follows the standard and
-> has headers):
-> 
-> Kernelspace will parse the jpeg headers, extracting the parameters
-> they need. No need to use request API, as each frame will already
-> contain the needed metadata.
-> 
-> No matter if (1) or (2) is used, a M2M device will receive one JPEG
-> frame, decode it and produce one RGB frame. No need to store any
-> state.
-> 
-> The opposite would equally work, and it is identical to what we
-> have already in kernel, for the "true" JPEG output.
-> 
-> A M2M device whose output stream is RGB and capture is MPEG:
-> 
-> 1) for "true" JPEG:
-> 
-> The driver will use a Huffmann table based on a quality parameter
-> (V4L2_CID_JPEG_COMPRESSION_QUALITY). Such table would either
-> be hardcoded at the driver or at the codec's firmware. The
-> output stream will contain the headers.
-> 
-> 1) for a headerless-JPEG:
-> 
-> The driver will use a Huffmann table based on a quality parameter
-> (V4L2_CID_JPEG_COMPRESSION_QUALITY). Such table would either
-> be hardcoded at the driver or at the codec's firmware. The
-> output stream will not contain the headers.
-> 
-> Userspace will need to figure out what it was used by the Kernel
-> in order to add the JPEG header. I'm not sure if we can do it
-> on a transparent way for all devices.
-> 
-> In any case, one input produces one output.
-> 
+> >  drivers/gpu/drm/sun4i/sun8i_csc.c       | 96 +++++++++++++++++++++++--
+> >  drivers/gpu/drm/sun4i/sun8i_mixer.c     | 17 ++++-
+> >  drivers/gpu/drm/sun4i/sun8i_mixer.h     | 21 +++++-
+> >  drivers/gpu/drm/sun4i/sun8i_ui_scaler.c |  8 ++-
+> >  drivers/gpu/drm/sun4i/sun8i_ui_scaler.h |  1 +
+> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.c  |  8 +++
+> >  drivers/gpu/drm/sun4i/sun8i_vi_layer.h  |  2 +
+> >  drivers/gpu/drm/sun4i/sun8i_vi_scaler.c | 34 ++++++++-
+> >  drivers/gpu/drm/sun4i/sun8i_vi_scaler.h | 23 ++++++
+> >  9 files changed, 197 insertions(+), 13 deletions(-)
 > > 
-> > So, 3) it will QBUF a JPEG buffer, and 4) get the V4L2_EVENT_SOURCE_CHANGE
-> > event in order to move forward. This implies a stateful machinery in the
-> > driver. Like I said, more complex API, more complex implementation...
-> > and only to avoid a new pixelformat? Doesn't sound a good deal :-)
-> 
-> I really can't understand what you're meaning by that... I can't
-> see any need to generate an event to move forward.
-> 
-
-It is needed for userspace to negotiate the format on the CAPTURE queue.
-See for instance:
-
-https://github.com/torvalds/linux/blob/master/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c#L692
-
-Which shows how the driver needs to have an internal state, and how
-it needs to produce an event on the .buf_queue.
-
-This sequence is specified in the stateful codec spec, and is not
-needed by stateless codecs such as this one.
-
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_csc.c
+> > b/drivers/gpu/drm/sun4i/sun8i_csc.c index b14925b40ccf..101901ccf2dc
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_csc.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_csc.c
+> > @@ -34,6 +34,34 @@ static const u32 yvu2rgb[] = {
 > > 
-> > In comparison, a proper stateless decoder driver will expose
-> > a simpler API, provide a 1:1 output/capture buffer relationship,
-> > and expose the full capabilities to userspace.
+> >         0x000004A8, 0x00000000, 0x00000813, 0xFFFBAC4A,
+> >  
+> >  };
 > > 
-> > > So, from my side, at least for the first version of this driver,
-> > > please make it produce a full JPEG frame with the headers, and
-> > > use V4L2_PIX_FMT_JPEG format.
-> > >   
+> > +/*
+> > + * DE3 has a bit different CSC units. Factors are in two's complement
+> > format. + * First three have 17 bits for fractinal part and last two 2
+> > bits. First + * three values in each line are multiplication factor, 4th
+> > is difference, + * which is subtracted from the input value before the
+> > multiplication and + * last value is constant, which is added at the end.
+> > + *
+> > + * x' = c00 * (x + d0) + c01 * (y + d1) + c02 * (z + d2) + const0
+> > + * y' = c10 * (x + d0) + c11 * (y + d1) + c12 * (z + d2) + const1
+> > + * z' = c20 * (x + d0) + c21 * (y + d1) + c22 * (z + d2) + const2
+> > + *
+> > + * Please note that above formula is true only for Blender CSC. Other DE3
+> > CSC + * units takes only positive value for difference. From what can be
+> > deducted + * from BSP driver code, those units probably automatically
+> > assume that + * difference has to be subtracted.
+> > + */
+> > +static const u32 yuv2rgb_de3[] = {
+> > +       0x0002542a, 0x00000000, 0x0003312a, 0xffffffc0, 0x00000000,
+> > +       0x0002542a, 0xffff376b, 0xfffe5fc3, 0xfffffe00, 0x00000000,
+> > +       0x0002542a, 0x000408d3, 0x00000000, 0xfffffe00, 0x00000000,
+> > +};
+> > +
+> > +static const u32 yvu2rgb_de3[] = {
+> > +       0x0002542a, 0x0003312a, 0x00000000, 0xffffffc0, 0x00000000,
+> > +       0x0002542a, 0xfffe5fc3, 0xffff376b, 0xfffffe00, 0x00000000,
+> > +       0x0002542a, 0x00000000, 0x000408d3, 0xfffffe00, 0x00000000,
+> > +};
+> > +
 > > 
-> > This means using some form of JPEG quantization tables and huffman
-> > tables in the kernel, such as in drivers/media/usb/gspca/topro.c.
+> >  static void sun8i_csc_set_coefficients(struct regmap *map, u32 base,
+> >  
+> >                                        enum sun8i_csc_mode mode)
+> >  
+> >  {
 > > 
-> > Really doesn't sound like the best choice, violating the
-> > mechanism/policy separation, as now the kernel is deciding
-> > the tables for the user.
-> 
-> What the Huffmann tables has to do with it? No matter if the
-> JPEG has headers or not, the codec should be doing RLE
-> encoding/decoding. For that, it needs to know the Huffmann tables.
-> 
-> Anyway, you can use a control to pass huffmann tables at runtime,
-> using the request API, no matter if JPEG has headers or not.
-> 
-> > The hardware can take any quantization table, and allowing userspace
-> > flexible usage, but we are going to restrict that to just a specific
-> > usage and a specific set of tables... again, only to avoid a new
-> > pixelformat? 
-> 
-> Same here: passing quantization tables to the driver has nothing
-> to do with having headers or not.
-> 
-> For decoding, having headers is actually better, as the table
-> will be at the JPEG header. For encoding, a V4L2 array control. 
-> could be used.
-> 
-> > > That should allow us to add this driver on staging without adding
-> > > a new JPEG_RAW format.
-> > >   
+> > @@ -61,6 +89,38 @@ static void sun8i_csc_set_coefficients(struct regmap
+> > *map, u32 base,> 
+> >         }
+> >  
+> >  }
 > > 
-> > AFAIK, Rockchip and Allwinner JPEG codecs handle so-called JPEG_RAW
-> > format, i.e. the payload of a SOF segment.
+> > +static void sun8i_de3_ccsc_set_coefficients(struct regmap *map, int
+> > layer,
+> > +                                           enum sun8i_csc_mode mode)
+> > +{
+> > +       const u32 *table;
+> > +       int i, j;
+> > +
+> > +       switch (mode) {
+> > +       case SUN8I_CSC_MODE_YUV2RGB:
+> > +               table = yuv2rgb_de3;
+> > +               break;
+> > +       case SUN8I_CSC_MODE_YVU2RGB:
+> > +               table = yvu2rgb_de3;
+> > +               break;
+> > +       default:
+> > +               DRM_WARN("Wrong CSC mode specified.\n");
+> > +               return;
+> > +       }
+> > +
+> > +       for (i = 0; i < 3; i++) {
+> > +               for (j = 0; j < 3; j++)
+> > +                       regmap_write(map,
+> > +                                   
+> > SUN8I_MIXER_BLEND_CSC_COEFF(DE3_BLD_BASE, +                              
+> >                                  layer, i, j), +                         
+> >           table[i * 5 + j]);
 > 
-> And so, almost all other JPEG devices we have already.
+> Given that the first three values occupy contiguous addresses,
+> you can use regmap_bulk_write() here.
+
+Do you mind if I rework table in a way that directly fits in registers and use 
+regmap_bulk_write() on whole table? This means I must combine two values into 
+one for "const" register, but I would explain it better in a comment. It would 
+be most elegant solution, one call to regmap_bulk_write() instead of two for 
+loops and some arithmetics.
+
+I guess macro for "const" part can stay as documentation.
+
 > 
-
-This is not true.
-
-JPEG decoder drivers currently supported, such as coda, mtk-jpeg and
-similar, seem to pass the JPEG frame (with all its headers) to the
-hardware.
-
-Rockhip and Allwinner are different, where the hardware only takes
-the SOF payload. We are adding a new pixelformat, because these devices
-handle a different format.
-
-> > I think having these
-> > two cases should be enough reason to add a new format.
+> > +               regmap_write(map,
+> > +                            SUN8I_MIXER_BLEND_CSC_CONST(DE3_BLD_BASE,
+> > +                                                        layer, i),
+> > +                            SUN8I_MIXER_BLEND_CSC_CONST_VAL(table[i * 5 +
+> > 3], +                                                            table[i
+> > * 5 + 4]));
+> Nit: Using a two-dimension array might make it easier to read.
 > 
-> I'm not against adding it. Just against adding it without further
-> discussions, in a way that it would potentially cause troubles for
-> userspace to encode/decode JPEG.
-> 
-> > > If you still think we'll need a V4L2_PIX_FMT_JPEG_RAW, I'd like
-> > > to merge it by the time we also have a decoder for libv4l. I
-> > > would also like to see, at the Kernel patch series, the addition
-> > > of such support for already existing non-staging camera
-> > > drivers that internally receive headless JPEG headers from the
-> > > hardware. This will allow us to test the userspace code with
-> > > different models and proof that a generic JPEG_RAW decoder on
-> > > userspace is doable.
-> > >   
+> > +       }
+> > +}
+> > +
 > > 
-> > We can add a libv4l2 plugin for this decoder if that helps moving
-> > forward. Although I suspect it will just fall into oblivion,
-> > as chromeos and android will do their own thing.
-> 
-> I don't have any control what people do on forked Kernels.
-> 
+> >  static void sun8i_csc_enable(struct regmap *map, u32 base, bool enable)
+> >  {
+> >  
+> >         u32 val;
 > > 
-> > JPEG is a very well known format, and it's trivial for applications
-> > to add the headers.
+> > @@ -73,21 +133,45 @@ static void sun8i_csc_enable(struct regmap *map, u32
+> > base, bool enable)> 
+> >         regmap_update_bits(map, SUN8I_CSC_CTRL(base), SUN8I_CSC_CTRL_EN,
+> >         val);
+> >  
+> >  }
+> > 
+> > +static void sun8i_de3_ccsc_enable(struct regmap *map, int layer, bool
+> > enable) +{
+> > +       u32 val, mask;
+> > +
+> > +       mask = SUN8I_MIXER_BLEND_CSC_CTL_EN(layer);
+> > +
+> > +       if (enable)
+> > +               val = mask;
+> > +       else
+> > +               val = 0;
+> > +
+> > +       regmap_update_bits(map, SUN8I_MIXER_BLEND_CSC_CTL(DE3_BLD_BASE),
+> > +                          mask, val);
+> > +}
+> > +
+> > 
+> >  void sun8i_csc_set_ccsc_coefficients(struct sun8i_mixer *mixer, int
+> >  layer,
+> >  
+> >                                      enum sun8i_csc_mode mode)
+> >  
+> >  {
+> > 
+> > -       u32 base;
+> > +       if (!mixer->cfg->is_de3) {
+> > +               u32 base;
 > 
-> With the current documentation you added at the V4L2 core patch,
-> I seriously doubt that it would be possible to do it in a way that
-> it would work with different vendors.
+> You could rewrite this as
 > 
-> Also, I don't know any current V4L2 generic application that would 
-> do that. Having it at libv4l would allow those apps to work with that.
+>     if (mixer->cfg->is_de3) {
+>                sun8i_de3_ccsc_set_coefficients(mixer->engine.regs,
+>                                                layer, mode);
+>                return;
+>     }
 > 
+> That way you don't need to change the indentation on the existing lines.
+> I suppose this is more of a personal preference. The downside is the control
+> flow is slightly more complicated.
+> 
+> > -       base = ccsc_base[mixer->cfg->ccsc][layer];
+> > +               base = ccsc_base[mixer->cfg->ccsc][layer];
+> > 
+> > -       sun8i_csc_set_coefficients(mixer->engine.regs, base, mode);
+> > +               sun8i_csc_set_coefficients(mixer->engine.regs, base,
+> > mode);
+> > +       } else {
+> > +               sun8i_de3_ccsc_set_coefficients(mixer->engine.regs,
+> > +                                               layer, mode);
+> > +       }
+> > 
+> >  }
+> >  
+> >  void sun8i_csc_enable_ccsc(struct sun8i_mixer *mixer, int layer, bool
+> >  enable) {
+> > 
+> > -       u32 base;
+> > +       if (!mixer->cfg->is_de3) {
+> > +               u32 base;
+> > 
+> > -       base = ccsc_base[mixer->cfg->ccsc][layer];
+> > +               base = ccsc_base[mixer->cfg->ccsc][layer];
+> > 
+> > -       sun8i_csc_enable(mixer->engine.regs, base, enable);
+> > +               sun8i_csc_enable(mixer->engine.regs, base, enable);
+> > +       } else {
+> > +               sun8i_de3_ccsc_enable(mixer->engine.regs, layer, enable);
+> > +       }
+> > 
+> >  }
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> > b/drivers/gpu/drm/sun4i/sun8i_mixer.c index 743941a33d88..a9218abf0935
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.c
+> > @@ -460,8 +460,21 @@ static int sun8i_mixer_bind(struct device *dev,
+> > struct device *master,> 
+> >         base = sun8i_blender_base(mixer);
+> >         
+> >         /* Reset the registers */
+> > 
+> > -       for (i = 0x0; i < 0x20000; i += 4)
+> > -               regmap_write(mixer->engine.regs, i, 0);
+> > +       if (mixer->cfg->is_de3) {
+> > +               for (i = 0x0; i < 0x3000; i += 4)
+> > +                       regmap_write(mixer->engine.regs, i, 0);
+> > +               for (i = 0x20000; i < 0x40000; i += 4)
+> > +                       regmap_write(mixer->engine.regs, i, 0);
+> > +               for (i = 0x70000; i < 0x88000; i += 4)
+> > +                       regmap_write(mixer->engine.regs, i, 0);
+> > +               for (i = 0xa0000; i < 0xb0000; i += 4)
+> > +                       regmap_write(mixer->engine.regs, i, 0);
+> > +               for (i = 0xd0000; i < 0xe0000; i += 4)
+> > +                       regmap_write(mixer->engine.regs, i, 0);
+> 
+> Could you use the macros *_BASE and *_SIZE here? That would make
+> it more obviously what parts you're clearing.
+> 
+> The last offset, 0xd0000, isn't even defined in the DE3 spec.
+> 
+> > +       } else {
+> > +               for (i = 0x0; i < 0x20000; i += 4)
+> > +                       regmap_write(mixer->engine.regs, i, 0);
+> > +       }
+> > 
+> >         /* Enable the mixer */
+> >         regmap_write(mixer->engine.regs, SUN8I_MIXER_GLOBAL_CTL,
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> > b/drivers/gpu/drm/sun4i/sun8i_mixer.h index 020b0a097c84..4c9a442bbb44
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_mixer.h
+> > @@ -33,6 +33,10 @@
+> > 
+> >  #define DE2_CH_BASE                            0x2000
+> >  #define DE2_CH_SIZE                            0x1000
+> > 
+> > +#define DE3_BLD_BASE                           0x0800
+> > +#define DE3_CH_BASE                            0x1000
+> > +#define DE3_CH_SIZE                            0x0800
+> > +
+> > 
+> >  #define SUN8I_MIXER_BLEND_PIPE_CTL(base)       ((base) + 0)
+> >  #define SUN8I_MIXER_BLEND_ATTR_FCOLOR(base, x) ((base) + 0x4 + 0x10 *
+> >  (x))
+> >  #define SUN8I_MIXER_BLEND_ATTR_INSIZE(base, x) ((base) + 0x8 + 0x10 *
+> >  (x))
+> > 
+> > @@ -47,6 +51,11 @@
+> > 
+> >  #define SUN8I_MIXER_BLEND_CK_MAX(base, x)      ((base) + 0xc0 + 0x04 *
+> >  (x))
+> >  #define SUN8I_MIXER_BLEND_CK_MIN(base, x)      ((base) + 0xe0 + 0x04 *
+> >  (x))
+> >  #define SUN8I_MIXER_BLEND_OUTCTL(base)         ((base) + 0xfc)
+> > 
+> > +#define SUN8I_MIXER_BLEND_CSC_CTL(base)                ((base) + 0x100)
+> > +#define SUN8I_MIXER_BLEND_CSC_COEFF(base, layer, x, y) \
+> > +       ((base) + 0x110 + (layer) * 0x30 +  (x) * 0x10 + 4 * (y))
+> > +#define SUN8I_MIXER_BLEND_CSC_CONST(base, layer, i) \
+> > +       ((base) + 0x110 + (layer) * 0x30 +  (i) * 0x10 + 0x0c)
+> 
+> Should these have a DE3 prefix?
 
-OK, perhaps we can try adding the libv4l2 plugin in a v8 submission.
+How do you want this to look like?
 
-Regards,
-Eze
+SUN50I_DE3_MIXER_BLEND_CSC_CONST?
+
+SUN8I prefix doesn't fit for DE3, but as usual, there is a chance that AW 
+releases 32 bit SoC with DE3.
+
+At the end, it would be better to rename everything to have just DE2 or DE3 
+prefix without mentioning any SoC family. After all, DE2 is also supported on 
+sun50i family, which makes any family name in DE2/3 macros confusing...
+
+Do you think I can squeeze dropping SUN8I prefix to a previous patch, where 
+macros are reworked anyway?
+
+Best regards,
+Jernej
+
+> 
+> >  #define SUN8I_MIXER_BLEND_PIPE_CTL_EN_MSK      GENMASK(12, 8)
+> >  #define SUN8I_MIXER_BLEND_PIPE_CTL_EN(pipe)    BIT(8 + pipe)
+> > 
+> > @@ -61,6 +70,9 @@
+> > 
+> >  #define SUN8I_MIXER_BLEND_OUTCTL_INTERLACED    BIT(1)
+> > 
+> > +#define SUN8I_MIXER_BLEND_CSC_CTL_EN(ch)       BIT(ch)
+> > +#define SUN8I_MIXER_BLEND_CSC_CONST_VAL(d, c)  (((d) << 16) | ((c) &
+> > 0xffff)) +
+> 
+> Same here.
+> 
+> >  #define SUN8I_MIXER_FBFMT_ARGB8888     0
+> >  #define SUN8I_MIXER_FBFMT_ABGR8888     1
+> >  #define SUN8I_MIXER_FBFMT_RGBA8888     2
+> 
+> [...]
+> 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> > b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h index 46f0237c17bb..3d0ad64178ea
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_layer.h
+> > @@ -30,6 +30,8 @@
+> > 
+> >  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_RGB_MODE                BIT(15)
+> >  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_OFFSET    8
+> >  #define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_FBFMT_MASK      GENMASK(12, 8)
+> > 
+> > +#define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA_MASK      GENMASK(31, 24)
+> > +#define SUN8I_MIXER_CHAN_VI_LAYER_ATTR_ALPHA(x)                ((x) <<
+> > 24)
+> 
+> DE3 prefix?
+> 
+> >  struct sun8i_mixer;
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c
+> > b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c index
+> > 8697afc36023..22e1ed5cd7a4 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.c
+> > @@ -835,7 +835,10 @@ static const u32 bicubic4coefftab32[480] = {
+> > 
+> >  static inline u32 sun8i_vi_scaler_base(struct sun8i_mixer *mixer, int
+> >  channel) {
+> > 
+> > -       return DE2_VI_SCALER_BASE + DE2_VI_SCALER_SIZE * channel;
+> > +       if (mixer->cfg->is_de3)
+> > +               return DE3_VI_SCALER_BASE + DE3_VI_SCALER_SIZE * channel;
+> > +       else
+> > +               return DE2_VI_SCALER_BASE + DE2_VI_SCALER_SIZE * channel;
+> > 
+> >  }
+> >  
+> >  static int sun8i_vi_scaler_coef_index(unsigned int step)
+> > 
+> > @@ -951,6 +954,35 @@ void sun8i_vi_scaler_setup(struct sun8i_mixer *mixer,
+> > int layer,> 
+> >                 cvphase = vphase;
+> >         
+> >         }
+> > 
+> > +       if (mixer->cfg->is_de3) {
+> > +               u32 val;
+> > +
+> > +               if (format->hsub == 1 && format->vsub == 1)
+> > +                       val = SUN8I_SCALER_VSU_SCALE_MODE_UI;
+> > +               else
+> > +                       val = SUN8I_SCALER_VSU_SCALE_MODE_NORMAL;
+> > +
+> > +               regmap_write(mixer->engine.regs,
+> > +                            SUN8I_SCALER_VSU_SCALE_MODE(base), val);
+> 
+> The remaining settings seem to be related to the edge detection scaling
+> method. Since you aren't supporting it, are they necessary?
+> 
+> > +               regmap_write(mixer->engine.regs,
+> > +                            SUN8I_SCALER_VSU_DIR_THR(base),
+> > +                            SUN8I_SCALER_VSU_SUB_ZERO_DIR_THR(0) |
+> > +                            SUN8I_SCALER_VSU_ZERO_DIR_THR(0) |
+> > +                            SUN8I_SCALER_VSU_HORZ_DIR_THR(0xff) |
+> > +                            SUN8I_SCALER_VSU_VERT_DIR_THR(1));
+> > +               regmap_write(mixer->engine.regs,
+> > +                            SUN8I_SCALER_VSU_EDGE_THR(base),
+> > +                            SUN8I_SCALER_VSU_EDGE_SHIFT(8) |
+> > +                            SUN8I_SCALER_VSU_EDGE_OFFSET(0));
+> > +               regmap_write(mixer->engine.regs,
+> > +                            SUN8I_SCALER_VSU_EDSCL_CTRL(base), 0);
+> > +               regmap_write(mixer->engine.regs,
+> > +                            SUN8I_SCALER_VSU_ANGLE_THR(base),
+> > +                            SUN8I_SCALER_VSU_ANGLE_SHIFT(2) |
+> > +                            SUN8I_SCALER_VSU_ANGLE_OFFSET(0));
+> > +       }
+> > +
+> > 
+> >         regmap_write(mixer->engine.regs,
+> >         
+> >                      SUN8I_SCALER_VSU_OUTSIZE(base), outsize);
+> >         
+> >         regmap_write(mixer->engine.regs,
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h
+> > b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h index
+> > cd015405f66d..c322f5652481 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_vi_scaler.h
+> > @@ -15,6 +15,9 @@
+> > 
+> >  #define DE2_VI_SCALER_BASE 0x20000
+> >  #define DE2_VI_SCALER_SIZE 0x20000
+> > 
+> > +#define DE3_VI_SCALER_BASE 0x20000
+> > +#define DE3_VI_SCALER_SIZE 0x08000
+> > +
+> > 
+> >  /* this two macros assumes 16 fractional bits which is standard in DRM */
+> >  #define SUN8I_VI_SCALER_SCALE_MIN              1
+> >  #define SUN8I_VI_SCALER_SCALE_MAX              ((1UL << 20) - 1)
+> > 
+> > @@ -25,6 +28,11 @@
+> > 
+> >  #define SUN8I_VI_SCALER_SIZE(w, h)             (((h) - 1) << 16 | ((w) -
+> >  1))
+> >  
+> >  #define SUN8I_SCALER_VSU_CTRL(base)            ((base) + 0x0)
+> > 
+> > +#define SUN8I_SCALER_VSU_SCALE_MODE(base)      ((base) + 0x10)
+> > +#define SUN8I_SCALER_VSU_DIR_THR(base)         ((base) + 0x20)
+> > +#define SUN8I_SCALER_VSU_EDGE_THR(base)                ((base) + 0x24)
+> > +#define SUN8I_SCALER_VSU_EDSCL_CTRL(base)      ((base) + 0x28)
+> > +#define SUN8I_SCALER_VSU_ANGLE_THR(base)       ((base) + 0x2c)
+> 
+> DE3 prefix for the new ones please.
+> 
+> >  #define SUN8I_SCALER_VSU_OUTSIZE(base)         ((base) + 0x40)
+> >  #define SUN8I_SCALER_VSU_YINSIZE(base)         ((base) + 0x80)
+> >  #define SUN8I_SCALER_VSU_YHSTEP(base)          ((base) + 0x88)
+> > 
+> > @@ -46,6 +54,21 @@
+> > 
+> >  #define SUN8I_SCALER_VSU_CTRL_EN               BIT(0)
+> >  #define SUN8I_SCALER_VSU_CTRL_COEFF_RDY                BIT(4)
+> > 
+> > +#define SUN8I_SCALER_VSU_SUB_ZERO_DIR_THR(x)   (((x) << 24) & 0xFF)
+> > +#define SUN8I_SCALER_VSU_ZERO_DIR_THR(x)       (((x) << 16) & 0xFF)
+> > +#define SUN8I_SCALER_VSU_HORZ_DIR_THR(x)       (((x) << 8) & 0xFF)
+> > +#define SUN8I_SCALER_VSU_VERT_DIR_THR(x)       ((x) & 0xFF)
+> > +
+> > +#define SUN8I_SCALER_VSU_SCALE_MODE_UI         0
+> > +#define SUN8I_SCALER_VSU_SCALE_MODE_NORMAL     1
+> > +#define SUN8I_SCALER_VSU_SCALE_MODE_ED_SCALE   2
+> > +
+> > +#define SUN8I_SCALER_VSU_EDGE_SHIFT(x)         (((x) << 16) & 0xF)
+> > +#define SUN8I_SCALER_VSU_EDGE_OFFSET(x)                ((x) & 0xFF)
+> > +
+> > +#define SUN8I_SCALER_VSU_ANGLE_SHIFT(x)                (((x) << 16) &
+> > 0xF)
+> > +#define SUN8I_SCALER_VSU_ANGLE_OFFSET(x)       ((x) & 0xFF)
+> > +
+> 
+> Same here.
+> 
+> Regards
+> ChenYu
+> 
+> >  void sun8i_vi_scaler_enable(struct sun8i_mixer *mixer, int layer, bool
+> >  enable); void sun8i_vi_scaler_setup(struct sun8i_mixer *mixer, int
+> >  layer,
+> >  
+> >                            u32 src_w, u32 src_h, u32 dst_w, u32 dst_h,
+> > 
+> > --
+> > 2.18.0
