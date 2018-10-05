@@ -1,35 +1,27 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 15/16] of: unittest: initialize args before calling of_irq_parse_one()
-Date: Fri, 5 Oct 2018 09:53:08 -0500
-Message-ID: <CAL_Jsq+dqRr54_WAdBQ88sJytAuLL=U9kF_Xbj5rJv4PVn9gQg@mail.gmail.com>
-References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com> <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v2 2/3] dmaengine: Add Slave and Cyclic mode support for
+ Actions Semi Owl S900 SoC
+Date: Fri, 5 Oct 2018 20:31:41 +0530
+Message-ID: <20181005150141.GN2372@vkoul-mobl>
+References: <20180929074637.9766-1-manivannan.sadhasivam@linaro.org>
+ <20180929074637.9766-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180929074637.9766-3-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Guenter Roeck <linux@roeck-us.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: dan.j.williams@intel.com, afaerber@suse.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, dmaengine@vger.kernel.org, liuwei@actions-semi.com, 96boards@ucrobotics.com, devicetree@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hzhang@ucrobotics.com, bdong@ucrobotics.com, manivannanece23@gmail.com, thomas.liau@actions-semi.com, jeff.chen@actions-semi.com, pn@denx.de, edgar.righi@lsitec.org.br
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 4, 2018 at 11:14 PM <frowand.list@gmail.com> wrote:
->
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> Callers of of_irq_parse_one() blindly use the pointer args.np
-> without checking whether of_irq_parse_one() had an error and
-> thus did not set the value of args.np.  Initialize args to
-> zero so that using the format "%pOF" to show the value of
-> args.np will show "(null)" when of_irq_parse_one() has an
-> error and does not set args.np instead of trying to
-> dereference a random value.
->
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  drivers/of/unittest.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+On 29-09-18, 13:16, Manivannan Sadhasivam wrote:
+> Add Slave and Cyclic mode support for Actions Semi Owl S900 SoC. The slave
+> mode supports bus width of 4 bytes common for all peripherals and 1 byte
+> specific for UART.
+> 
+> The cyclic mode supports only block mode transfer.
 
-Does this need to be part of this series?
-
-Rob
+Applied after adding driver tag, thanks
+-- 
+~Vinod
