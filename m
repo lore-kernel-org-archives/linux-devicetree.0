@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH 07/16] of: dynamic: change type of of_{at,de}tach_node() to void
-Date: Thu,  4 Oct 2018 21:12:38 -0700
-Message-ID: <1538712767-30394-8-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 10/16] of: overlay: make all pr_debug() and pr_err() messages unique
+Date: Thu,  4 Oct 2018 21:12:41 -0700
+Message-ID: <1538712767-30394-11-git-send-email-frowand.list@gmail.com>
 References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
@@ -12,136 +12,64 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-of_attach_node() and of_detach_node() always return zero, so
-their return value is meaningless.  Change their type to void
-and fix all callers to ignore return value.
+Make overlay.c debug and error messages unique so that they can be
+unambiguously found by grep.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
+ drivers/of/overlay.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Powerpc files not tested
-
- arch/powerpc/platforms/pseries/dlpar.c    | 13 ++-----------
- arch/powerpc/platforms/pseries/reconfig.c |  6 +-----
- drivers/of/dynamic.c                      |  9 ++-------
- include/linux/of.h                        |  4 ++--
- 4 files changed, 7 insertions(+), 25 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/dlpar.c b/arch/powerpc/platforms/pseries/dlpar.c
-index e3010b14aea5..0027eea94a8b 100644
---- a/arch/powerpc/platforms/pseries/dlpar.c
-+++ b/arch/powerpc/platforms/pseries/dlpar.c
-@@ -244,15 +244,9 @@ struct device_node *dlpar_configure_connector(__be32 drc_index,
- 
- int dlpar_attach_node(struct device_node *dn, struct device_node *parent)
- {
--	int rc;
--
- 	dn->parent = parent;
- 
--	rc = of_attach_node(dn);
--	if (rc) {
--		printk(KERN_ERR "Failed to add device node %pOF\n", dn);
--		return rc;
--	}
-+	of_attach_node(dn);
- 
- 	return 0;
- }
-@@ -260,7 +254,6 @@ int dlpar_attach_node(struct device_node *dn, struct device_node *parent)
- int dlpar_detach_node(struct device_node *dn)
- {
- 	struct device_node *child;
--	int rc;
- 
- 	child = of_get_next_child(dn, NULL);
- 	while (child) {
-@@ -268,9 +261,7 @@ int dlpar_detach_node(struct device_node *dn)
- 		child = of_get_next_child(dn, child);
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index e6fb3ffe9d93..f89383331b88 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -513,7 +513,7 @@ static int build_changeset_symbols_node(struct overlay_changeset *ovcs,
+ 	for_each_property_of_node(overlay_symbols_node, prop) {
+ 		ret = add_changeset_property(ovcs, target, prop, 1);
+ 		if (ret) {
+-			pr_debug("Failed to apply prop @%pOF/%s, err=%d\n",
++			pr_debug("Failed to apply symbols prop @%pOF/%s, err=%d\n",
+ 				 target->np, prop->name, ret);
+ 			return ret;
+ 		}
+@@ -557,7 +557,8 @@ static int build_changeset(struct overlay_changeset *ovcs)
+ 		ret = build_changeset_next_level(ovcs, &target,
+ 						 fragment->overlay);
+ 		if (ret) {
+-			pr_debug("apply failed '%pOF'\n", fragment->target);
++			pr_debug("fragment apply failed '%pOF'\n",
++				 fragment->target);
+ 			return ret;
+ 		}
  	}
- 
--	rc = of_detach_node(dn);
--	if (rc)
--		return rc;
-+	of_detach_node(dn);
- 
- 	of_node_put(dn);
- 
-diff --git a/arch/powerpc/platforms/pseries/reconfig.c b/arch/powerpc/platforms/pseries/reconfig.c
-index 0e0208117e77..0b72098da454 100644
---- a/arch/powerpc/platforms/pseries/reconfig.c
-+++ b/arch/powerpc/platforms/pseries/reconfig.c
-@@ -47,11 +47,7 @@ static int pSeries_reconfig_add_node(const char *path, struct property *proplist
- 		goto out_err;
+@@ -570,7 +571,8 @@ static int build_changeset(struct overlay_changeset *ovcs)
+ 		ret = build_changeset_symbols_node(ovcs, &target,
+ 						   fragment->overlay);
+ 		if (ret) {
+-			pr_debug("apply failed '%pOF'\n", fragment->target);
++			pr_debug("symbols fragment apply failed '%pOF'\n",
++				 fragment->target);
+ 			return ret;
+ 		}
  	}
+@@ -879,7 +881,7 @@ static int of_overlay_apply(const void *fdt, struct device_node *tree,
  
--	err = of_attach_node(np);
--	if (err) {
--		printk(KERN_ERR "Failed to add device node %s\n", path);
--		goto out_err;
--	}
-+	of_attach_node(np);
+ 	ret = __of_changeset_apply_notify(&ovcs->cset);
+ 	if (ret)
+-		pr_err("overlay changeset entry notify error %d\n", ret);
++		pr_err("overlay apply changeset entry notify error %d\n", ret);
+ 	/* notify failure is not fatal, continue */
  
- 	of_node_put(np->parent);
+ 	list_add_tail(&ovcs->ovcs_list, &ovcs_list);
+@@ -1138,7 +1140,7 @@ int of_overlay_remove(int *ovcs_id)
  
-diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-index 275c0d7e2268..5f7c99b9de0d 100644
---- a/drivers/of/dynamic.c
-+++ b/drivers/of/dynamic.c
-@@ -224,7 +224,7 @@ static void __of_attach_node(struct device_node *np)
- /**
-  * of_attach_node() - Plug a device node into the tree and global list.
-  */
--int of_attach_node(struct device_node *np)
-+void of_attach_node(struct device_node *np)
- {
- 	struct of_reconfig_data rd;
- 	unsigned long flags;
-@@ -241,8 +241,6 @@ int of_attach_node(struct device_node *np)
- 	mutex_unlock(&of_mutex);
+ 	ret = __of_changeset_revert_notify(&ovcs->cset);
+ 	if (ret)
+-		pr_err("overlay changeset entry notify error %d\n", ret);
++		pr_err("overlay remove changeset entry notify error %d\n", ret);
+ 	/* notify failure is not fatal, continue */
  
- 	of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, &rd);
--
--	return 0;
- }
- 
- void __of_detach_node(struct device_node *np)
-@@ -273,11 +271,10 @@ void __of_detach_node(struct device_node *np)
- /**
-  * of_detach_node() - "Unplug" a node from the device tree.
-  */
--int of_detach_node(struct device_node *np)
-+void of_detach_node(struct device_node *np)
- {
- 	struct of_reconfig_data rd;
- 	unsigned long flags;
--	int rc = 0;
- 
- 	memset(&rd, 0, sizeof(rd));
- 	rd.dn = np;
-@@ -291,8 +288,6 @@ int of_detach_node(struct device_node *np)
- 	mutex_unlock(&of_mutex);
- 
- 	of_reconfig_notify(OF_RECONFIG_DETACH_NODE, &rd);
--
--	return rc;
- }
- EXPORT_SYMBOL_GPL(of_detach_node);
- 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index aa1dafaec6ae..72c593455019 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -406,8 +406,8 @@ extern int of_phandle_iterator_args(struct of_phandle_iterator *it,
- #define OF_RECONFIG_REMOVE_PROPERTY	0x0004
- #define OF_RECONFIG_UPDATE_PROPERTY	0x0005
- 
--extern int of_attach_node(struct device_node *);
--extern int of_detach_node(struct device_node *);
-+extern void of_attach_node(struct device_node *np);
-+extern void of_detach_node(struct device_node *np);
- 
- #define of_match_ptr(_ptr)	(_ptr)
- 
+ 	*ovcs_id = 0;
 -- 
 Frank Rowand <frank.rowand@sony.com>
