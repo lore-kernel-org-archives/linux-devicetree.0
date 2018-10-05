@@ -1,102 +1,52 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2
- NAND controller documentation
-Date: Fri, 5 Oct 2018 11:53:50 +0200
-Message-ID: <20181005115350.64d640eb@bbrezillon>
+Subject: Re: [PATCH v2 2/3] mtd: rawnand: stm32_fmc2: add STM32 FMC2 NAND
+ flash controller driver
+Date: Fri, 5 Oct 2018 11:58:09 +0200
+Message-ID: <20181005115809.55356782@bbrezillon>
 References: <1538732520-2800-1-git-send-email-christophe.kerello@st.com>
-        <1538732520-2800-2-git-send-email-christophe.kerello@st.com>
+        <1538732520-2800-3-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538732520-2800-2-git-send-email-christophe.kerello@st.com>
+In-Reply-To: <1538732520-2800-3-git-send-email-christophe.kerello@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: christophe.kerello@st.com
 Cc: miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 5 Oct 2018 11:41:58 +0200
+On Fri, 5 Oct 2018 11:41:59 +0200
 <christophe.kerello@st.com> wrote:
 
-> From: Christophe Kerello <christophe.kerello@st.com>
-> 
-> This patch adds the documentation of the device tree bindings for the STM32
-> FMC2 NAND controller.
-> 
-> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
-> ---
->  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 59 ++++++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> new file mode 100644
-> index 0000000..b620176
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
-> @@ -0,0 +1,59 @@
-> +STMicroelectronics Flexible Memory Controller 2 (FMC2)
-> +NAND Interface
-> +
-> +Required properties:
-> +- compatible: Should be one of:
-> +              * st,stm32mp15-fmc2
-> +- reg: NAND flash controller memory areas.
-> +       First region contains the register location.
-> +       Regions 2 to 4 respectively contain the data, command,
-> +       and address space for CS0.
-> +       Regions 5 to 7 contain the same areas for CS1.
+> +struct stm32_fmc2 {
 
-Maybe you could use reg-names here ("nfc", "csX-data", "csX-cmd",
-"csX-addr"). Anyway, even without this
+You should inherit from nand_controller even if the nand_chip already
+embeds a dummy nand controller object.
 
-Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+	struct nand_controller base;
 
-> +- interrupts: The interrupt number
-> +- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
-> +- clocks: Use common clock framework
+> +	struct stm32_fmc2_nand nand;
+> +	struct device *dev;
+> +	void __iomem *io_base;
+> +	void __iomem *data_base[FMC2_MAX_CE];
+> +	void __iomem *cmd_base[FMC2_MAX_CE];
+> +	void __iomem *addr_base[FMC2_MAX_CE];
+> +	phys_addr_t io_phys_addr;
+> +	phys_addr_t data_phys_addr[FMC2_MAX_CE];
+> +	struct clk *clk;
 > +
-> +Optional properties:
-> +- resets: Reference to a reset controller asserting the FMC controller
-> +- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
-> +- dma-names: Must be "tx", "rx" and "ecc"
+> +	struct dma_chan *dma_tx_ch;
+> +	struct dma_chan *dma_rx_ch;
+> +	struct dma_chan *dma_ecc_ch;
+> +	struct sg_table dma_data_sg;
+> +	struct sg_table dma_ecc_sg;
+> +	u8 *ecc_buf;
+> +	int dma_ecc_len;
 > +
-> +Optional children nodes:
-> +Children nodes represent the available NAND chips.
+> +	struct completion complete;
+> +	struct completion dma_data_complete;
+> +	struct completion dma_ecc_complete;
 > +
-> +Optional properties:
-> +- nand-on-flash-bbt: see nand.txt
-> +- nand-ecc-strength: see nand.txt
-> +- nand-ecc-step-size: see nand.txt
-> +
-> +The following ECC strength and step size are currently supported:
-> + - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
-> + - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
-> + - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
-> +
-> +Example:
-> +
-> +	fmc: nand-controller@58002000 {
-> +		compatible = "st,stm32mp15-fmc2";
-> +		reg = <0x58002000 0x1000>,
-> +		      <0x80000000 0x1000>,
-> +		      <0x88010000 0x1000>,
-> +		      <0x88020000 0x1000>,
-> +		      <0x81000000 0x1000>,
-> +		      <0x89010000 0x1000>,
-> +		      <0x89020000 0x1000>;
-> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&rcc FMC_K>;
-> +		resets = <&rcc FMC_R>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&fmc_pins_a>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		nand@0 {
-> +			reg = <0>;
-> +			nand-on-flash-bbt;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +		};
-> +	};
+> +	u8 cs_assigned;
+> +	int cs_sel;
+> +};
