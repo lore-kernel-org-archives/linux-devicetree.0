@@ -1,325 +1,87 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH V7 16/20] csky: SMP support
-Date: Fri,  5 Oct 2018 13:41:58 +0800
-Message-ID: <6f899d910260f6191816a42a83431e3e2362667e.1538715563.git.ren_guo@c-sky.com>
-References: <cover.1538715563.git.ren_guo@c-sky.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1538715563.git.ren_guo@c-sky.com>
-In-Reply-To: <cover.1538715563.git.ren_guo@c-sky.com>
-References: <cover.1538715563.git.ren_guo@c-sky.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de
-Cc: green.hu@gmail.com, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, Guo Ren <ren_guo@c-sky.com>
+From: Sharat Masetty <smasetty-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 7/9] OPP: Add
+ dev_pm_opp_get_interconnect_bw()
+Date: Fri, 5 Oct 2018 12:06:06 +0530
+Message-ID: <49858ede-66db-b58f-e586-411896efad4b@codeaurora.org>
+References: <20180827151112.25211-1-jcrouse@codeaurora.org>
+ <20180827151112.25211-8-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20180827151112.25211-8-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds boot, ipi, hotplug code for SMP.
-
-Changelog:
- - csky: remove irq_mapping from smp.c
-   There are some feedbacks from irqchip, and we need to adjust
-   "smp.c & smp.h" to match the csky_mp_timer modification.
- - Move IPI_IRQ define into drivers/irqchip/csky_mpintc.c, because it's a
-   interrupt controller specific.
- - Bugfix request_irq with IPI_IRQ, we must use irq_mapping return value
-   not directly use IPI_IRQ. The modification also involves csky_mp_intc.
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
----
- arch/csky/include/asm/smp.h |  30 ++++++
- arch/csky/kernel/smp.c      | 248 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 278 insertions(+)
- create mode 100644 arch/csky/include/asm/smp.h
- create mode 100644 arch/csky/kernel/smp.c
-
-diff --git a/arch/csky/include/asm/smp.h b/arch/csky/include/asm/smp.h
-new file mode 100644
-index 0000000..d77f582
---- /dev/null
-+++ b/arch/csky/include/asm/smp.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __ASM_CSKY_SMP_H
-+#define __ASM_CSKY_SMP_H
-+
-+#include <linux/cpumask.h>
-+#include <linux/irqreturn.h>
-+#include <linux/threads.h>
-+
-+#ifdef CONFIG_SMP
-+
-+void __init setup_smp(void);
-+
-+void __init setup_smp_ipi(void);
-+
-+void __init enable_smp_ipi(void);
-+
-+void arch_send_call_function_ipi_mask(struct cpumask *mask);
-+
-+void arch_send_call_function_single_ipi(int cpu);
-+
-+void __init set_send_ipi(void (*func)(const unsigned long *));
-+
-+void __init set_ipi_irq_mapping(int (*func)(void));
-+
-+#define raw_smp_processor_id()	(current_thread_info()->cpu)
-+
-+#endif /* CONFIG_SMP */
-+
-+#endif /* __ASM_CSKY_SMP_H */
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-new file mode 100644
-index 0000000..841cf72
---- /dev/null
-+++ b/arch/csky/kernel/smp.c
-@@ -0,0 +1,248 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
-+#include <linux/sched.h>
-+#include <linux/kernel_stat.h>
-+#include <linux/notifier.h>
-+#include <linux/cpu.h>
-+#include <linux/percpu.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/sched/task_stack.h>
-+#include <linux/sched/mm.h>
-+#include <asm/irq.h>
-+#include <asm/traps.h>
-+#include <asm/sections.h>
-+#include <asm/mmu_context.h>
-+#include <asm/pgalloc.h>
-+
-+static struct {
-+	unsigned long bits ____cacheline_aligned;
-+} ipi_data[NR_CPUS] __cacheline_aligned;
-+
-+enum ipi_message_type {
-+	IPI_EMPTY,
-+	IPI_RESCHEDULE,
-+	IPI_CALL_FUNC,
-+	IPI_MAX
-+};
-+
-+static irqreturn_t handle_ipi(int irq, void *dev)
-+{
-+	unsigned long *pending_ipis = &ipi_data[smp_processor_id()].bits;
-+
-+	while (true) {
-+		unsigned long ops;
-+
-+		ops = xchg(pending_ipis, 0);
-+		if (ops == 0)
-+			return IRQ_HANDLED;
-+
-+		if (ops & (1 << IPI_RESCHEDULE))
-+			scheduler_ipi();
-+
-+		if (ops & (1 << IPI_CALL_FUNC))
-+			generic_smp_call_function_interrupt();
-+
-+		BUG_ON((ops >> IPI_MAX) != 0);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void (*send_arch_ipi)(const unsigned long *mask);
-+
-+void __init set_send_ipi(void (*func)(const unsigned long *))
-+{
-+	if (send_arch_ipi)
-+		return;
-+
-+	send_arch_ipi = func;
-+}
-+
-+static void
-+send_ipi_message(const struct cpumask *to_whom, enum ipi_message_type operation)
-+{
-+	int i;
-+
-+	for_each_cpu(i, to_whom)
-+		set_bit(operation, &ipi_data[i].bits);
-+
-+	smp_mb();
-+	send_arch_ipi(cpumask_bits(to_whom));
-+}
-+
-+void arch_send_call_function_ipi_mask(struct cpumask *mask)
-+{
-+	send_ipi_message(mask, IPI_CALL_FUNC);
-+}
-+
-+void arch_send_call_function_single_ipi(int cpu)
-+{
-+	send_ipi_message(cpumask_of(cpu), IPI_CALL_FUNC);
-+}
-+
-+static void ipi_stop(void *unused)
-+{
-+	while (1);
-+}
-+
-+void smp_send_stop(void)
-+{
-+	on_each_cpu(ipi_stop, NULL, 1);
-+}
-+
-+void smp_send_reschedule(int cpu)
-+{
-+	send_ipi_message(cpumask_of(cpu), IPI_RESCHEDULE);
-+}
-+
-+void *__cpu_up_stack_pointer[NR_CPUS];
-+void *__cpu_up_task_pointer[NR_CPUS];
-+
-+void __init smp_prepare_boot_cpu(void)
-+{
-+}
-+
-+void __init smp_prepare_cpus(unsigned int max_cpus)
-+{
-+}
-+
-+static int ipi_dummy_dev;
-+static int ipi_irq;
-+
-+void __init enable_smp_ipi(void)
-+{
-+	enable_percpu_irq(ipi_irq, 0);
-+}
-+
-+static int (*arch_ipi_irq_mapping)(void);
-+
-+void __init set_ipi_irq_mapping(int (*func)(void))
-+{
-+	if (arch_ipi_irq_mapping)
-+		return;
-+
-+	arch_ipi_irq_mapping = func;
-+}
-+
-+void __init setup_smp_ipi(void)
-+{
-+	int rc;
-+
-+	ipi_irq = arch_ipi_irq_mapping();
-+	if (ipi_irq == 0)
-+		panic("%s IRQ mapping failed\n", __func__);
-+
-+	rc = request_percpu_irq(ipi_irq, handle_ipi, "IPI Interrupt",
-+				&ipi_dummy_dev);
-+	if (rc)
-+		panic("%s IRQ request failed\n", __func__);
-+
-+	enable_smp_ipi();
-+}
-+
-+void __init setup_smp(void)
-+{
-+	struct device_node *node = NULL;
-+	int cpu;
-+
-+	while ((node = of_find_node_by_type(node, "cpu"))) {
-+		if (!of_device_is_available(node))
-+			continue;
-+
-+		if (of_property_read_u32(node, "reg", &cpu))
-+			continue;
-+
-+		if (cpu >= NR_CPUS)
-+			continue;
-+
-+		set_cpu_possible(cpu, true);
-+		set_cpu_present(cpu, true);
-+	}
-+}
-+
-+extern void _start_smp_secondary(void);
-+
-+volatile unsigned int secondary_hint;
-+volatile unsigned int secondary_ccr;
-+volatile unsigned int secondary_stack;
-+
-+int __cpu_up(unsigned int cpu, struct task_struct *tidle)
-+{
-+	unsigned int tmp;
-+
-+	secondary_stack = (unsigned int)tidle->stack + THREAD_SIZE;
-+
-+	secondary_hint = mfcr("cr31");
-+
-+	secondary_ccr  = mfcr("cr18");
-+
-+	/* Flush dcache */
-+	mtcr("cr17", 0x22);
-+
-+	/* Enable cpu in SMP reset ctrl reg */
-+	tmp = mfcr("cr<29, 0>");
-+	tmp |= 1 << cpu;
-+	mtcr("cr<29, 0>", tmp);
-+
-+	/* Wait for the cpu online */
-+	while (!cpu_online(cpu));
-+
-+	secondary_stack = 0;
-+
-+	return 0;
-+}
-+
-+void __init smp_cpus_done(unsigned int max_cpus)
-+{
-+}
-+
-+int setup_profiling_timer(unsigned int multiplier)
-+{
-+	return -EINVAL;
-+}
-+
-+void csky_start_secondary(void)
-+{
-+	struct mm_struct *mm = &init_mm;
-+	unsigned int cpu = smp_processor_id();
-+
-+	mtcr("cr31", secondary_hint);
-+	mtcr("cr18", secondary_ccr);
-+
-+	mtcr("vbr", vec_base);
-+
-+	flush_tlb_all();
-+	write_mmu_pagemask(0);
-+	TLBMISS_HANDLER_SETUP_PGD(swapper_pg_dir);
-+	TLBMISS_HANDLER_SETUP_PGD_KERNEL(swapper_pg_dir);
-+
-+	asid_cache(smp_processor_id()) = ASID_FIRST_VERSION;
-+
-+#ifdef CONFIG_CPU_HAS_FPU
-+	init_fpu();
-+#endif
-+
-+	enable_smp_ipi();
-+
-+	mmget(mm);
-+	mmgrab(mm);
-+	current->active_mm = mm;
-+	cpumask_set_cpu(cpu, mm_cpumask(mm));
-+
-+	notify_cpu_starting(cpu);
-+	set_cpu_online(cpu, true);
-+
-+	pr_info("CPU%u Online: %s...\n", cpu, __func__);
-+
-+	local_irq_enable();
-+	preempt_disable();
-+	cpu_startup_entry(CPUHP_AP_ONLINE_IDLE);
-+}
--- 
-2.7.4
+CgpPbiA4LzI3LzIwMTggODo0MSBQTSwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiBBZGQgZGV2X3Bt
+X29wcF9nZXRfaW50ZXJjb25uZWN0X2J3KCkgdG8gcmVhZCB0aGUgaW50ZXJjb25uZWN0Cj4gYmFu
+ZHdpZHRoIHZhbHVlcyBmb3IgYSBnaXZlbiBPUFAuCj4gCj4gU2lnbmVkLW9mZi1ieTogSm9yZGFu
+IENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiAtLS0KPiAgIGRyaXZlcnMvb3BwL29m
+LmMgICAgICAgfCAzNiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgIGlu
+Y2x1ZGUvbGludXgvcG1fb3BwLmggfCAgNyArKysrKysrCj4gICAyIGZpbGVzIGNoYW5nZWQsIDQz
+IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9vcHAvb2YuYyBiL2RyaXZl
+cnMvb3BwL29mLmMKPiBpbmRleCA3YWYwZGRlYzkzNmIuLjZhNWVlY2FhZjhjMSAxMDA2NDQKPiAt
+LS0gYS9kcml2ZXJzL29wcC9vZi5jCj4gKysrIGIvZHJpdmVycy9vcHAvb2YuYwo+IEBAIC03Nzcs
+MyArNzc3LDM5IEBAIHN0cnVjdCBkZXZpY2Vfbm9kZSAqZGV2X3BtX29wcF9nZXRfb2Zfbm9kZShz
+dHJ1Y3QgZGV2X3BtX29wcCAqb3BwKQo+ICAgCXJldHVybiBvZl9ub2RlX2dldChvcHAtPm5wKTsK
+PiAgIH0KPiAgIEVYUE9SVF9TWU1CT0xfR1BMKGRldl9wbV9vcHBfZ2V0X29mX25vZGUpOwo+ICsK
+PiArLyoqCj4gKyAqIGRldl9wbV9vcHBfZ2V0X2ludGVyY29ubmVjdF9idygpIC0gR2V0IHRoZSBp
+bnRlcmNvbm5lY3QgYmFuZHdpZHRoIGZvciB0aGUgb3BwCj4gKyAqIEBvcHA6CW9wcCBjb250YWlu
+aW5nIHRoZSBiYW5kd2lkdGggdmFsdWVzCj4gKyAqIEBwYXRobmFtZToJbmFtZSBvZiB0aGUgaW50
+ZXJjb25uZWN0IHBhdGggZm9yIHRoZSBiYW5kd2lkdGggdmFsdWVzCj4gKyAqIEBhdmdidzoJUG9p
+bnRlciBmb3IgdGhlIHZhbHVlIHRvIGhvbGQgdGhlIGF2ZXJhZ2UgQlcgZGVmaW5lZCBmb3IgdGhl
+IE9QUAo+ICsgKiBAcGVha2J3OglQb2ludGVyIGZvciB0aGUgdmFsdWUgdG8gaG9sZCB0aGUgcGVh
+ayBCVyBkZWZpbmVkIGZvciB0aGUgT1BQCj4gKyAqCj4gKyAqIFJldHVybjogTmVnYXRpdmUgdmFs
+dWUgb24gZXJyb3Igb3IgMCBvbiBzdWNjZXNzCj4gKyAqLwo+ICtpbnQgZGV2X3BtX29wcF9nZXRf
+aW50ZXJjb25uZWN0X2J3KHN0cnVjdCBkZXZfcG1fb3BwICpvcHAsCj4gKwkJY29uc3QgY2hhciAq
+cGF0aG5hbWUsIHU2NCAqYXZnYncsIHU2NCAqcGVha2J3KQo+ICt7Cj4gKwljaGFyIG5hbWVbTkFN
+RV9NQVhdOwo+ICsJc3RydWN0IHByb3BlcnR5ICpwcm9wOwo+ICsJaW50IGNvdW50Owo+ICsKPiAr
+CWlmIChJU19FUlJfT1JfTlVMTChvcHApKQo+ICsJCXJldHVybiAtRU5PRU5UOwo+ICsKPiArCXNu
+cHJpbnRmKG5hbWUsIE5BTUVfTUFYLCAib3BwLWludGVyY29ubmVjdC1idy0lcyIsIHBhdGhuYW1l
+KTsKPiArCXByb3AgPSBvZl9maW5kX3Byb3BlcnR5KG9wcC0+bnAsIG5hbWUsIE5VTEwpOwo+ICsK
+PiArCWlmICghcHJvcCkKPiArCQlyZXR1cm4gLUVOT0VOVDsKPiArCj4gKwljb3VudCA9IG9mX3By
+b3BlcnR5X2NvdW50X3U2NF9lbGVtcyhvcHAtPm5wLCBuYW1lKTsKPiArCWlmIChjb3VudCAhPSAy
+KQo+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsKPiArCW9mX3Byb3BlcnR5X3JlYWRfdTY0X2luZGV4
+KG9wcC0+bnAsIG5hbWUsIDAsIGF2Z2J3KTsKPiArCW9mX3Byb3BlcnR5X3JlYWRfdTY0X2luZGV4
+KG9wcC0+bnAsIG5hbWUsIDAsIHBlYWtidyk7ClRoaXMgc2hvdWxkIGJlIGluZGV4IDEgZm9yIHBl
+YWsgYmFuZHdpZHRoCglvZl9wcm9wZXJ0eV9yZWFkX3U2NF9pbmRleChvcHAtPm5wLCBuYW1lLCAx
+LCBwZWFrYncpOwpJIHRlc3RlZCB3aXRoIHRoaXMgZml4IGFuZCB0aGUgR1BVJ3MgaW50ZXJjb25u
+ZWN0IHN1bW1hcnkgbm93IHNob3dzCm5vbiB6ZXJvIHZhbHVlcyBmb3IgcGVhayBiYW5kd2lkdGgu
+IENhbiB5b3UgcGxlYXNlIHJhaXNlIGEgbmV3ZXIgdmVyc2lvbiAKb2YgdGhpcyBwYXRjaD8gSSB3
+aWxsIGhhdmUgaXQgcHVsbGVkIGludG8gb3VyIGRvd25zdHJlYW0gYnVpbGRzLgo+ICsKPiArCXJl
+dHVybiAwOwo+ICt9Cj4gK0VYUE9SVF9TWU1CT0xfR1BMKGRldl9wbV9vcHBfZ2V0X2ludGVyY29u
+bmVjdF9idyk7Cj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvcG1fb3BwLmggYi9pbmNsdWRl
+L2xpbnV4L3BtX29wcC5oCj4gaW5kZXggMDk5YjMxOTYwZGVjLi43MGU0OWUyNTlkMGUgMTAwNjQ0
+Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9wbV9vcHAuaAo+ICsrKyBiL2luY2x1ZGUvbGludXgvcG1f
+b3BwLmgKPiBAQCAtMzAxLDYgKzMwMSw3IEBAIGludCBkZXZfcG1fb3BwX29mX2dldF9zaGFyaW5n
+X2NwdXMoc3RydWN0IGRldmljZSAqY3B1X2Rldiwgc3RydWN0IGNwdW1hc2sgKmNwdW1hCj4gICBz
+dHJ1Y3QgZGV2aWNlX25vZGUgKmRldl9wbV9vcHBfb2ZfZ2V0X29wcF9kZXNjX25vZGUoc3RydWN0
+IGRldmljZSAqZGV2KTsKPiAgIHN0cnVjdCBkZXZfcG1fb3BwICpvZl9kZXZfcG1fb3BwX2ZpbmRf
+cmVxdWlyZWRfb3BwKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpucCk7
+Cj4gICBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRldl9wbV9vcHBfZ2V0X29mX25vZGUoc3RydWN0IGRl
+dl9wbV9vcHAgKm9wcCk7Cj4gK2ludCBkZXZfcG1fb3BwX2dldF9pbnRlcmNvbm5lY3RfYncoc3Ry
+dWN0IGRldl9wbV9vcHAgKm9wcCwgY29uc3QgY2hhciAqcGF0aG5hbWUsIHU2NCAqYXZnYncsIHU2
+NCAqcGVha2J3KTsKPiAgICNlbHNlCj4gICBzdGF0aWMgaW5saW5lIGludCBkZXZfcG1fb3BwX29m
+X2FkZF90YWJsZShzdHJ1Y3QgZGV2aWNlICpkZXYpCj4gICB7Cj4gQEAgLTM0Myw2ICszNDQsMTIg
+QEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgZGV2aWNlX25vZGUgKmRldl9wbV9vcHBfZ2V0X29mX25v
+ZGUoc3RydWN0IGRldl9wbV9vcHAgKm9wcCkKPiAgIHsKPiAgIAlyZXR1cm4gTlVMTDsKPiAgIH0K
+PiArCj4gK3N0YXRpYyBpbmxpbmUgaW50IGRldl9wbV9vcHBfZ2V0X2ludGVyY29ubmVjdF9idyhz
+dHJ1Y3QgZGV2X3BtX29wcCAqb3BwLCBjb25zdCBjaGFyICpwYXRobmFtZSwKPiArCQl1NjQgKmF2
+Z2J3LCB1NjQgKnBlYWtidykKPiArewo+ICsJcmV0dXJuIC1FTk9UU1VQUDsKPiArfQo+ICAgI2Vu
+ZGlmCj4gICAKPiAgICNlbmRpZgkJLyogX19MSU5VWF9PUFBfSF9fICovCj4gCgotLSAKVGhlIFF1
+YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1
+cm9yYSBGb3J1bSwKTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
+bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
