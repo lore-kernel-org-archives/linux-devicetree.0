@@ -1,124 +1,154 @@
-From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH 33/36] dt-bindings: arm: Convert Tegra board/soc bindings
- to json-schema
-Date: Fri, 5 Oct 2018 22:19:53 +0000
-Message-ID: <1538777991.28477.6.camel@toradex.com>
-References: <20181005165848.3474-1-robh@kernel.org>
-         <20181005165848.3474-34-robh@kernel.org>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v9 1/3] [media] imx214: device tree binding
+Date: Sat, 6 Oct 2018 01:33:48 +0300
+Message-ID: <20181005223348.vvr3sbsmh6uxw3tz@valkosipuli.retiisi.org.uk>
+References: <20181005215750.6047-1-ricardo.ribalda@gmail.com>
+ <20181005220221.luriq43w3yvstmw3@valkosipuli.retiisi.org.uk>
+ <CAPybu_1_vDjEUN1MY2aFNX-nauEOP98WBC5K=2A+p==4SJVpRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005165848.3474-34-robh@kernel.org>
-Content-Language: en-US
-Content-ID: <3B5D91AD9DD9BA42BA22AC3EA27144B7@eurprd05.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <CAPybu_1_vDjEUN1MY2aFNX-nauEOP98WBC5K=2A+p==4SJVpRA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "glikely@secretlab.ca" <glikely@secretlab.ca>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "jic23@kernel.org" <jic23@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "trini@konsulko.com" <trini@konsulko.com>, "broonie@kernel.org" <broonie@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "kumar.gala@linaro.org" <kumar.gala@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-media <linux-media@vger.kernel.org>, jacopo@jmondi.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iDQoNCk9uIEZyaSwgMjAxOC0xMC0wNSBhdCAxMTo1OCAtMDUwMCwgUm9iIEhlcnJpbmcg
-d3JvdGU6DQo+IENvbnZlcnQgVGVncmEgU29DIGJpbmRpbmdzIHRvIERUIHNjaGVtYSBmb3JtYXQg
-dXNpbmcganNvbi1zY2hlbWEuDQo+IA0KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
-YXJtLmNvbT4NCj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+
-DQo+IENjOiBKb25hdGhhbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPg0KPiBDYzogZGV2
-aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGxpbnV4LXRlZ3JhQHZnZXIua2VybmVsLm9y
-Zw0KPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiAtLS0N
-Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS90ZWdyYS50eHQgICAgICAgICB8IDYwIC0t
-LS0tLS0tLS0tLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS90ZWdyYS55YW1sICAg
-ICAgICB8IDg4DQo+ICsrKysrKysrKysrKysrKysrKysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgODgg
-aW5zZXJ0aW9ucygrKSwgNjAgZGVsZXRpb25zKC0pDQo+ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS90ZWdyYS50eHQNCj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3RlZ3JhLnlh
-bWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-YXJtL3RlZ3JhLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
-dGVncmEudHh0DQo+IGRlbGV0ZWQgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAzMmY2MmJiNzAw
-NmQuLjAwMDAwMDAwMDAwMA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvYXJtL3RlZ3JhLnR4dA0KPiArKysgL2Rldi9udWxsDQo+IEBAIC0xLDYwICswLDAgQEANCj4g
-LU5WSURJQSBUZWdyYSBkZXZpY2UgdHJlZSBiaW5kaW5ncw0KPiAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtDQo+IC1Tb0NzDQo+IC0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0NCj4gLUVhY2ggZGV2aWNlIHRyZWUg
-bXVzdCBzcGVjaWZ5IHdoaWNoIFRlZ3JhIFNvQyBpdCB1c2VzLCB1c2luZyBvbmUgb2YNCj4gdGhl
-DQo+IC1mb2xsb3dpbmcgY29tcGF0aWJsZSB2YWx1ZXM6DQo+IC0NCj4gLSAgbnZpZGlhLHRlZ3Jh
-MjANCj4gLSAgbnZpZGlhLHRlZ3JhMzANCj4gLSAgbnZpZGlhLHRlZ3JhMTE0DQo+IC0gIG52aWRp
-YSx0ZWdyYTEyNA0KPiAtICBudmlkaWEsdGVncmExMzINCj4gLSAgbnZpZGlhLHRlZ3JhMjEwDQo+
-IC0gIG52aWRpYSx0ZWdyYTE4Ng0KPiAtICBudmlkaWEsdGVncmExOTQNCj4gLQ0KPiAtQm9hcmRz
-DQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0NCj4g
-LUVhY2ggZGV2aWNlIHRyZWUgbXVzdCBzcGVjaWZ5IHdoaWNoIG9uZSBvciBtb3JlIG9mIHRoZSBm
-b2xsb3dpbmcNCj4gLWJvYXJkLXNwZWNpZmljIGNvbXBhdGlibGUgdmFsdWVzOg0KPiAtDQo+IC0g
-IGFkLG1lZGNvbS13aWRlDQo+IC0gIGFkLHBsdXR1eA0KPiAtICBhZCx0YW1vbnRlbg0KPiAtICBh
-ZCx0ZWMNCj4gLSAgY29tcGFsLHBhejAwDQo+IC0gIGNvbXB1bGFiLHRyaW1zbGljZQ0KPiAtICBu
-dmlkaWEsYmVhdmVyDQo+IC0gIG52aWRpYSxjYXJkaHUNCj4gLSAgbnZpZGlhLGNhcmRodS1hMDIN
-Cj4gLSAgbnZpZGlhLGNhcmRodS1hMDQNCj4gLSAgbnZpZGlhLGRhbG1vcmUNCj4gLSAgbnZpZGlh
-LGhhcm1vbnkNCj4gLSAgbnZpZGlhLGpldHNvbi10azENCj4gLSAgbnZpZGlhLG5vcnJpbg0KPiAt
-ICBudmlkaWEscDIzNzEtMDAwMA0KPiAtICBudmlkaWEscDIzNzEtMjE4MA0KPiAtICBudmlkaWEs
-cDI1NzENCj4gLSAgbnZpZGlhLHAyNzcxLTAwMDANCj4gLSAgbnZpZGlhLHAyOTcyLTAwMDANCj4g
-LSAgbnZpZGlhLHJvdGgNCj4gLSAgbnZpZGlhLHNlYWJvYXJkDQo+IC0gIG52aWRpYSx0bjcNCj4g
-LSAgbnZpZGlhLHZlbnRhbmENCj4gLSAgdG9yYWRleCxhcGFsaXNfdDMwDQo+IC0gIHRvcmFkZXgs
-YXBhbGlzX3QzMC1ldmFsDQo+IC0gIHRvcmFkZXgsYXBhbGlzLXRrMQ0KPiAtICB0b3JhZGV4LGFw
-YWxpcy10azEtZXZhbA0KPiAtICB0b3JhZGV4LGNvbGlicmlfdDIwLTUxMg0KPiAtICB0b3JhZGV4
-LGNvbGlicmlfdDMwDQo+IC0gIHRvcmFkZXgsY29saWJyaV90MzAtZXZhbC12Mw0KPiAtICB0b3Jh
-ZGV4LGlyaXMNCg0KQXJlIHlvdSBhd2FyZSB0aGF0IC1uZXh0IGFscmVhZHkgZmVhdHVyZXMgYSBm
-ZXcgdXBkYXRpbmcgY29tbWl0cw0KdGhlcmVvZiBmcm9tIGFyb3VuZCB0aGUgYmVnaW5uaW5nIG9m
-IFNlcHRlbWJlciBvbmUgb2Ygd2hpY2ggZXZlbiBiZWFycw0KeW91ciByZXZpZXdlZC1ieS4NCg0K
-PiAtDQo+IC1UcnVzdGVkIEZvdW5kYXRpb25zDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tDQo+IC1UZWdyYSBzdXBwb3J0cyB0aGUgVHJ1c3RlZCBGb3VuZGF0
-aW9uIHNlY3VyZSBtb25pdG9yLiBTZWUgdGhlDQo+IC0idGxtLHRydXN0ZWQtZm91bmRhdGlvbnMi
-IGJpbmRpbmcncyBkb2N1bWVudGF0aW9uIGZvciBtb3JlIGRldGFpbHMuDQo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3RlZ3JhLnlhbWwNCj4gYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3RlZ3JhLnlhbWwNCj4gbmV3IGZp
-bGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi45Y2ViY2ZhYWFkMWUNCj4gLS0t
-IC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
-L3RlZ3JhLnlhbWwNCj4gQEAgLTAsMCArMSw4OCBAQA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRp
-ZmllcjogTm9uZQ0KPiArJVlBTUwgMS4yDQo+ICstLS0NCj4gKyRpZDogaHR0cDovL2RldmljZXRy
-ZWUub3JnL3NjaGVtYXMvYmluZGluZ3MvYXJtL3RlZ3JhLnlhbWwjDQo+ICskc2NoZW1hOiBodHRw
-Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gKw0KPiArdGl0bGU6
-IE5WSURJQSBUZWdyYSBkZXZpY2UgdHJlZSBiaW5kaW5ncw0KPiArDQo+ICttYWludGFpbmVyczoN
-Cj4gKyAgLSBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCg0K
-V293LCBzZWVtcyBJIGdvdCBwcm9tb3RlZCB0byBtYWludGFpbmVyIG5vdy4gSSBndWVzcyB0aGF0
-IG1heSBtYWtlDQpzZW5zZSBhdCBsZWFzdCBmb3IgdGhlIFRvcmFkZXggYmFzZWQgYm9hcmRzLg0K
-DQo+ICsgIC0gUGV0ZXIgRGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4NCj4g
-Kw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBvbmVPZjoNCj4gKyAg
-ICAgIC0gaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAgICAgICAgICAgICAtIGNv
-bXBhbCxwYXowMA0KPiArICAgICAgICAgICAgICAtIGNvbXB1bGFiLHRyaW1zbGljZQ0KPiArICAg
-ICAgICAgICAgICAtIG52aWRpYSxoYXJtb255DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLHNl
-YWJvYXJkDQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLHZlbnRhbmENCj4gKyAgICAgICAgICAt
-IGNvbnN0OiBudmlkaWEsdGVncmEyMA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAt
-IGVudW06DQo+ICsgICAgICAgICAgICAgIC0gYWQsbWVkY29tLXdpZGUNCj4gKyAgICAgICAgICAg
-ICAgLSBhZCxwbHV0dXgNCj4gKyAgICAgICAgICAgICAgLSBhZCx0ZWMNCj4gKyAgICAgICAgICAt
-IGNvbnN0OiBhZCx0YW1vbnRlbg0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTIw
-DQo+ICsgICAgICAtIGl0ZW1zOg0KPiArICAgICAgICAgIC0gY29uc3Q6IHRvcmFkZXgsaXJpcw0K
-PiArICAgICAgICAgIC0gY29uc3Q6IHRvcmFkZXgsY29saWJyaV90MjAtNTEyDQo+ICsgICAgICAg
-ICAgLSBjb25zdDogbnZpZGlhLHRlZ3JhMjANCj4gKyAgICAgIC0gaXRlbXM6DQo+ICsgICAgICAg
-ICAgLSBlbnVtOg0KPiArICAgICAgICAgICAgICAtIG52aWRpYSxiZWF2ZXINCj4gKyAgICAgICAg
-ICAtIGNvbnN0OiBudmlkaWEsdGVncmEzMA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAg
-ICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLGNhcmRodS1hMDINCj4gKyAgICAg
-ICAgICAgICAgLSBudmlkaWEsY2FyZGh1LWEwNA0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRp
-YSxjYXJkaHUNCj4gKyAgICAgICAgICAtIGNvbnN0OiBudmlkaWEsdGVncmEzMA0KPiArICAgICAg
-LSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gdG9yYWRl
-eCxhcGFsaXNfdDMwLWV2YWwNCj4gKyAgICAgICAgICAtIGNvbnN0OiB0b3JhZGV4LGFwYWxpc190
-MzANCj4gKyAgICAgICAgICAtIGNvbnN0OiBudmlkaWEsdGVncmEzMA0KPiArICAgICAgLSBpdGVt
-czoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gdG9yYWRleCxjb2xp
-YnJpX3QzMC1ldmFsLXYzDQo+ICsgICAgICAgICAgLSBjb25zdDogdG9yYWRleCxjb2xpYnJpX3Qz
-MA0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTMwDQo+ICsgICAgICAtIGl0ZW1z
-Og0KPiArICAgICAgICAgIC0gZW51bToNCj4gKyAgICAgICAgICAgICAgLSBudmlkaWEsZGFsbW9y
-ZQ0KPiArICAgICAgICAgICAgICAtIG52aWRpYSxyb3RoDQo+ICsgICAgICAgICAgICAgIC0gbnZp
-ZGlhLHRuNw0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTExNA0KPiArICAgICAg
-LSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlh
-LGpldHNvbi10azENCj4gKyAgICAgICAgICAgICAgLSBudmlkaWEsdmVuaWNlMg0KPiArICAgICAg
-ICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTEyNA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAg
-ICAgICAtIGNvbnN0OiB0b3JhZGV4LGFwYWxpcy10azEtZXZhbA0KPiArICAgICAgICAgIC0gY29u
-c3Q6IHRvcmFkZXgsYXBhbGlzLXRrMQ0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdy
-YTEyNA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAg
-ICAgICAgIC0gbnZpZGlhLG5vcnJpbg0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdy
-YTEzMg0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTEyNA0KPiArICAgICAgLSBp
-dGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLHAy
-MzcxLTAwMDANCj4gKyAgICAgICAgICAgICAgLSBudmlkaWEscDIzNzEtMjE4MA0KPiArICAgICAg
-ICAgICAgICAtIG52aWRpYSxwMjU3MQ0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdy
-YTIxMA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAg
-ICAgICAgIC0gbnZpZGlhLHAyNzcxLTAwMDANCj4gKyAgICAgICAgICAtIGNvbnN0OiBudmlkaWEs
-dGVncmExODYNCj4gKyAgICAgIC0gaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAg
-ICAgICAgICAgICAtIG52aWRpYSxwMjk3Mi0wMDAwDQo+ICsgICAgICAgICAgLSBjb25zdDogbnZp
-ZGlhLHRlZ3JhMTk0DQoNCk90aGVyIHRoYW4gdGhhdCBJJ20gYWxsIGluIHRvIG1vdmUgdG93YXJk
-cyBtb3JlIHN0cnVjdHVyZWQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbi4NCg0KQ2hlZXJzDQoNCk1h
-cmNlbA==
+On Sat, Oct 06, 2018 at 12:18:28AM +0200, Ricardo Ribalda Delgado wrote:
+> Hi Sakari
+> On Sat, Oct 6, 2018 at 12:02 AM Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> >
+> > Hi Ricardo,
+> >
+> > On Fri, Oct 05, 2018 at 11:57:50PM +0200, Ricardo Ribalda Delgado wrote:
+> > > Document bindings for imx214 camera sensor
+> > >
+> > > Cc: devicetree@vger.kernel.org
+> > > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> > > ---
+> > > Changelog from v8:
+> > >
+> > > Rob Herring:
+> > > -rename file
+> > > -Move address to reg
+> > > -rename name on example
+> > > -Patch author
+> > >
+> > > Sakari Ailus:
+> > > -should->shall
+> > >
+> > >  .../bindings/media/i2c/sony,imx214.txt        | 53 +++++++++++++++++++
+> > >  1 file changed, 53 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > > new file mode 100644
+> > > index 000000000000..2744773070c5
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
+> > > @@ -0,0 +1,53 @@
+> > > +* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
+> > > +
+> > > +The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+> > > +an active array size of 4224H x 3200V. It is programmable through an I2C
+> > > +interface.
+> > > +Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+> > > +throughput of 1.2Gbps/lane.
+> > > +
+> > > +
+> > > +Required Properties:
+> > > +- compatible: Shall be "sony,imx214".
+> > > +- reg: I2C bus address of the device. Depending on how the sensor is wired,
+> > > +       it shall be <0x10> or <0x1a>;
+> > > +- enable-gpios: GPIO descriptor for the enable pin.
+> > > +- vdddo-supply: Chip digital IO regulator (1.8V).
+> > > +- vdda-supply: Chip analog regulator (2.7V).
+> > > +- vddd-supply: Chip digital core regulator (1.12V).
+> > > +- clocks: Reference to the xclk clock.
+> > > +- clock-names:  Shall be "xclk".
+> >
+> > It could be that this was already discussed earlier but I missed that ---
+> > clock frequency. Apologies for that. How does the driver know what to ask?
+> > If you expect assigned-clock-rate or such, then I think it should be
+> > explicitly said here.
+> 
+> It has becoming hard to follow, it is mainly my fault for sending 10 series :)
+> 
+> I think we discussed this here:
+> https://lkml.org/lkml/2018/10/2/1402
+
+Right. The driver uses 24 MHz for now, but that's not a property of the
+sensor. If the driver only supports 24 MHz now, then it should check that
+the frequency it gets matches with that. If other frequencies are needed
+in the future, the driver would be amended with that support.
+
+As I noted earlier, a lot of drivers set the frequency based on the
+clock-frequency property (as documented in bindings) and never check the
+outcome. I guess using assigned-clock-rate would yield the same result.
+
+I think I'd put clock-frequency property here, and document it as
+mandatory.
+
+> 
+> 
+> >
+> > You also have a single clock, so do you need clock-names?
+> 
+> Seems to be the de-facto standard Looking at:
+> grep xclk Documentation/devicetree/bindings/media/i2c/*
+> 
+> But the driver does not look for a specific name. I am going to remove the name.
+> 
+> >
+> > > +
+> > > +Optional Properties:
+> > > +- flash-leds: See ../video-interfaces.txt
+> > > +- lens-focus: See ../video-interfaces.txt
+> > > +
+> > > +The imx214 device node shall contain one 'port' child node with
+> > > +an 'endpoint' subnode. For further reading on port node refer to
+> > > +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> > > +
+> > > +Required Properties on endpoint:
+> > > +- data-lanes: check ../video-interfaces.txt
+> > > +- link-frequencies: check ../video-interfaces.txt
+> > > +- remote-endpoint: check ../video-interfaces.txt
+> > > +
+> > > +Example:
+> > > +
+> > > +     camera-sensor@1a {
+> > > +             compatible = "sony,imx214";
+> > > +             reg = <0x1a>;
+> > > +             vdddo-supply = <&pm8994_lvs1>;
+> > > +             vddd-supply = <&camera_vddd_1v12>;
+> > > +             vdda-supply = <&pm8994_l17>;
+> > > +             lens-focus = <&ad5820>;
+> > > +             enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
+> > > +             clocks = <&mmcc CAMSS_MCLK0_CLK>;
+> > > +             clock-names = "xclk";
+> > > +             port {
+> > > +                     imx214_ep: endpoint {
+> > > +                             data-lanes = <1 2 3 4>;
+> > > +                             link-frequencies = /bits/ 64 <480000000>;
+> > > +                             remote-endpoint = <&csiphy0_ep>;
+> > > +                     };
+> > > +             };
+> > > +     };
+> > > --
+> > > 2.19.0
+> > >
+> >
+> > --
+> > Sakari Ailus
+> > e-mail: sakari.ailus@iki.fi
+> 
+> 
+> 
+> -- 
+> Ricardo Ribalda
+
+-- 
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi
