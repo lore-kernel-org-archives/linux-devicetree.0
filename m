@@ -1,27 +1,50 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/5] net: phy: mscc: add support for VSC8584 and
- VSC8574 Microsemi quad-port PHYs
-Date: Fri, 05 Oct 2018 14:42:43 -0700 (PDT)
-Message-ID: <20181005.144243.1971242720262167660.davem@davemloft.net>
-References: <20181004131710.14978-1-quentin.schulz@bootlin.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: [PATCH i2c-next v7 1/5] dt-bindings: i2c: Add 'bus-timeout-ms' and '#retries' properties as common optional
+Date: Fri,  5 Oct 2018 14:45:03 -0700
+Message-ID: <20181005214507.26315-2-jae.hyun.yoo@linux.intel.com>
+References: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004131710.14978-1-quentin.schulz@bootlin.com>
+In-Reply-To: <20181005214507.26315-1-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: quentin.schulz@bootlin.com
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Brendan Higgins <brendanhiggins@google.com>, Wolfram Sang <wsa@the-dreams.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Date: Thu,  4 Oct 2018 15:17:05 +0200
+This commit adds 'bus-timeout-ms' and '#retries' properties as
+common optional properties that can be used for setting 'timeout'
+and 'retries' values of 'struct i2c_adapter'. With this patch, the
+bus timeout value and the master transfer retries count can be set
+through these properties at the registration time of an adapter.
+Still the values can be set by I2C_TIMEOUT and I2C_RETRIES ioctls
+on cdev at runtime too.
 
-> I suggest patches 1 to 3 go through net tree and patches 4 and 5 go
-> through MIPS tree. Patches going through net tree and those going through
-> MIPS tree do not depend on one another.
+These properties may not be supported by all drivers. However, if
+a driver wants to support one of them, it should adapt the
+bindings in this document.
 
-Sounds like a good plan but patches 1-3 do not apply to net-next, please
-respin.
+Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+---
+ Documentation/devicetree/bindings/i2c/i2c.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thank you.
+diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+index 11263982470e..bdead91f82a4 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+@@ -80,6 +80,12 @@ wants to support one of the below features, it should adapt the bindings below.
+ 	Names of map programmable addresses.
+ 	It can contain any map needing another address than default one.
+ 
++- bus-timeout-ms
++	Bus timeout in milliseconds.
++
++- #retries
++	Number of retries for master transfer.
++
+ Binding may contain optional "interrupts" property, describing interrupts
+ used by the device. I2C core will assign "irq" interrupt (or the very first
+ interrupt if not using interrupt names) as primary interrupt for the slave.
+-- 
+2.19.0
