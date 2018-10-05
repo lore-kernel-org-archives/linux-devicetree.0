@@ -1,154 +1,56 @@
 From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 09/16] of: overlay: validate overlay properties
- #address-cells and #size-cells
-Date: Fri, 5 Oct 2018 11:53:44 -0700
-Message-ID: <f39a84d3-f706-d31e-db22-4e3ebc72c447@gmail.com>
+Subject: Re: [PATCH 15/16] of: unittest: initialize args before calling
+ of_irq_parse_one()
+Date: Fri, 5 Oct 2018 12:04:26 -0700
+Message-ID: <d251f99e-6618-f1d2-814f-7aaffb8f499f@gmail.com>
 References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
- <1538712767-30394-10-git-send-email-frowand.list@gmail.com>
- <CAL_JsqKK3f4W1DdPkzNed0=tx5Oxu9w=RKs8PnaXMfuShBpV1A@mail.gmail.com>
+ <1538712767-30394-16-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+dqRr54_WAdBQ88sJytAuLL=U9kF_Xbj5rJv4PVn9gQg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKK3f4W1DdPkzNed0=tx5Oxu9w=RKs8PnaXMfuShBpV1A@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+dqRr54_WAdBQ88sJytAuLL=U9kF_Xbj5rJv4PVn9gQg@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>, Guenter Roeck <linux@roeck-us.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/05/18 08:07, Rob Herring wrote:
+On 10/05/18 07:53, Rob Herring wrote:
 > On Thu, Oct 4, 2018 at 11:14 PM <frowand.list@gmail.com> wrote:
 >>
 >> From: Frank Rowand <frank.rowand@sony.com>
 >>
->> If overlay properties #address-cells or #size-cells are already in
->> the live devicetree for any given node, then the values in the
->> overlay must match the values in the live tree.
+>> Callers of of_irq_parse_one() blindly use the pointer args.np
+>> without checking whether of_irq_parse_one() had an error and
+>> thus did not set the value of args.np.  Initialize args to
+>> zero so that using the format "%pOF" to show the value of
+>> args.np will show "(null)" when of_irq_parse_one() has an
+>> error and does not set args.np instead of trying to
+>> dereference a random value.
 >>
->> If the properties are already in the live tree then there is no
->> need to create a changeset entry to add them since they must
->> have the same value.  This reduces the memory used by the
->> changeset and eliminates a possible memory leak.  This is
->> verified by 12 fewer warnings during the devicetree unittest,
->> as the possible memory leak warnings about #address-cells and
-> 
-> and...?
-
-#size-cells no longer occur.
-
-(Thanks for catching that.)
-
-
->>
+>> Reported-by: Guenter Roeck <linux@roeck-us.net>
 >> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 >> ---
->>  drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
->>  1 file changed, 35 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
->> index 29c33a5c533f..e6fb3ffe9d93 100644
->> --- a/drivers/of/overlay.c
->> +++ b/drivers/of/overlay.c
->> @@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
->>   * @target may be either in the live devicetree or in a new subtree that
->>   * is contained in the changeset.
->>   *
->> - * Some special properties are not updated (no error returned).
->> + * Some special properties are not added or updated (no error returned):
->> + * "name", "phandle", "linux,phandle".
->> + *
->> + * Properties "#address-cells" and "#size-cells" are not updated if they
->> + * are already in the live tree, but if present in the live tree, the values
->> + * in the overlay must match the values in the live tree.
+>>  drivers/of/unittest.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> Perhaps this should be generalized to apply to any property? We can't
-> really deal with property values changing on the fly anyways.
+> Does this need to be part of this series?
 
-That is a bigger discussion.  I'd prefer to not hold up this series for that
-question to be resolved.  It will be easy enough to generalize in an add-on
-patch later.
+I do not know if it could be independently applied before the
+rest of the series (I have not tested that).  I included it
+in the series because the series has so many other changes to
+unittest.c.
 
+If you want me to break this out, I will remove it from this
+series and resend it after the rest of the series has been
+pulled to mainline (and rebase on the new mainline).
 
->>   *
->>   * Update of property in symbols node is not allowed.
->>   *
->> @@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->>  {
->>         struct property *new_prop = NULL, *prop;
->>         int ret = 0;
->> +       bool check_for_non_overlay_node = false;
->>
->>         if (!of_prop_cmp(overlay_prop->name, "name") ||
->>             !of_prop_cmp(overlay_prop->name, "phandle") ||
->> @@ -322,13 +328,39 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->>         if (!new_prop)
->>                 return -ENOMEM;
->>
->> -       if (!prop)
->> +       if (!prop) {
->> +
-> 
-> Remove the extra blank lines.
+This patch is not fixing a known failure case - the current
+test data does not trigger the problem.  The recent patch
+from  Guenter that you already accepted fixes the known failure
+case, so this patch is not urgent.  The same is true about the
+other cases Guenter pointed out that this patch should fix.
 
-Will do.
-
-> 
->> +               check_for_non_overlay_node = true;
->>                 ret = of_changeset_add_property(&ovcs->cset, target->np,
->>                                                 new_prop);
->> -       else
->> +
->> +       } else if (!of_prop_cmp(prop->name, "#address-cells")) {
->> +
->> +               if (prop->length != 4 || new_prop->length != 4 ||
->> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-> 
-> Technically these are __be32 types. This could use a helper (of_prop_val_eq).
-
-These are in a unpacked form, so cpu byte order, not FDT byte order.
-
-> 
-> I'm not sure we really need to validate the length here as dtc does
-> that (but yes, not everything is from dtc).
-
-Since I'm accessing 4 bytes of the values, I need to be sure the lengths
-are at least 4.  For #address-cells and #size-cells the property is
-specified as four bytes, so I could simplify the code for the specific case.
-
-If this gets extended to any arbitrary property then a new of_prop_val_eq()
-would check that the lengths are equal and the values (of size length) are
-also equal.
-
-
-> 
->> +                       pr_err("ERROR: overlay and/or live tree #address-cells invalid in node %pOF\n",
->> +                              target->np);
->> +
->> +       } else if (!of_prop_cmp(prop->name, "#size-cells")) {
->> +
->> +               if (prop->length != 4 || new_prop->length != 4 ||
->> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
->> +                       pr_err("ERROR: overlay and/or live tree #size-cells invalid in node %pOF\n",
->> +                              target->np);
->> +
->> +       } else {
->> +
->> +               check_for_non_overlay_node = true;
->>                 ret = of_changeset_update_property(&ovcs->cset, target->np,
->>                                                    new_prop);
->>
->> +       }
->> +
->> +       if (check_for_non_overlay_node &&
->> +           !of_node_check_flag(target->np, OF_OVERLAY))
->> +               pr_err("WARNING: %s(), memory leak will occur if overlay removed.  Property: %pOF/%s\n",
->> +                      __func__, target->np, new_prop->name);
->> +
->>         if (ret) {
->>                 kfree(new_prop->name);
->>                 kfree(new_prop->value);
->> --
->> Frank Rowand <frank.rowand@sony.com>
->>
-> 
+-Frank
