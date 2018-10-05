@@ -1,85 +1,156 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v8 1/3] [media] imx214: device tree binding
-Date: Fri,  5 Oct 2018 14:49:37 +0200
-Message-ID: <20181005124940.15539-1-ricardo.ribalda@gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH] ARM: dts: sun7i: Disable OOB IRQ for brcm wifi on
+ Cubietruck and Banana Pro
+Date: Fri, 5 Oct 2018 15:10:16 +0200
+Message-ID: <19b86d91-3a79-888e-1b17-52954568dcd7@redhat.com>
+References: <20180930150927.12076-1-hdegoede@redhat.com>
+ <20181001155704.dcqp637vsp2myyph@flea>
+ <4b489dcb-e451-6f41-f583-5780bd25c800@redhat.com>
+ <CAGb2v65eGTBk_=q3cZcULqdZpn2A_61zwkir5oaUD0-mi9Bi3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, jacopo@jmondi.org
-Cc: Ricardo Ribalda <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v65eGTBk_=q3cZcULqdZpn2A_61zwkir5oaUD0-mi9Bi3g@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ricardo Ribalda <ricardo.ribalda@gmail.com>
+Hi ChenYu,
 
-Document bindings for imx214 camera sensor
+On 05-10-18 10:33, Chen-Yu Tsai wrote:
+> Hi Hans,
+> 
+> On Tue, Oct 2, 2018 at 11:27 PM Hans de Goede <hdegoede@redhat.com> wrote:
+>>
+>> Hi Maxime,
+>>
+>> On 01-10-18 17:57, Maxime Ripard wrote:
+>>> Hi Hans,
+>>>
+>>> It's been a while :)
+>>
+>> Yes it has.
+>>
+>>> On Sun, Sep 30, 2018 at 05:09:27PM +0200, Hans de Goede wrote:
+>>>> While doing some brcmfmac driver work I needed to test this also on some
+>>>> devicetree based boards. So I fired up the good old Cubietruck and when
+>>>> that would not work a Banana Pro.
+>>>>
+>>>> With an unmodified 4.17 kernel both boards intermittently would come up
+>>>> with non working wifi with the following errors:
+>>>>
+>>>>    brcmfmac: brcmf_sdio_bus_rxctl: resumed on timeout
+>>>>    brcmfmac: brcmf_bus_started: failed: -110
+>>>>    brcmfmac: brcmf_attach: dongle is not responding: err=-110
+>>>>    brcmfmac: brcmf_sdio_firmware_callback: brcmf_attach failed
+>>>>
+>>>> They would come up this way more often then with actual working wifi,
+>>>> once this problem happens it seems to require a power-cycle to fix.
+>>>> Once things work one can safely reboot without hitting the issue.
+>>>>
+>>>> I've found that disabling OOB interrupts fixes this. This really is more
+>>>> of a workaround then a proper fix, but it makes the wifi reliable again
+>>>> and it does not have much of a downside.
+>>>>
+>>>> Using an OOB IRQ instead of the sdio-IRQ mechanism is mostly important to
+>>>> allow the MMC controller to go into runtime-suspend which is not really an
+>>>> issue on these boards since they are (usually) not battery powered.
+>>>>
+>>>> I've looked at recent brcmfmac and mmc-core changes which may explain this
+>>>> and I've not found anything. So the most likely culprit is the A20 external
+>>>> interrupt handling e.g. perhaps it is set to edge instead of level? Either
+>>>> way I do not have time to further investigate this.
+>>>>
+>>>> BugLink: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=908438
+>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>>
+>>> Unfortunately, I'd really prefer if we were fixing this properly.
+>>
+>> I understand, but I really already have spend more time on this then
+>> I wanted to spend on it. If someone has an idea how to fix this I can
+>> *maybe* run some quick tests, but that is it.
+>>
+>>> You
+>>> were saying that the regression has been introduced between 4.17 and
+>>> 4.18, have you been able to bisect which commit was actually creating
+>>> this regression?
+>>
+>> Erm, no what I was trying to say is that I can reproduce the issue
+>> with 4.17, which is also the version mentioned in the Debian bug about
+>> the same problem. I've not tried older kernels then 4.17 so I do not
+>> know when this problem got introduced.
+>>
+>>> As you suggested, one reason could be the runtime_pm
+>>> introduction. This can be pretty easily tested by adding a
+>>> pm_runtime_get_sync call in the probe.
+>>
+>> I assume you mean the runtime pm support in the sunxi mmc controller
+>> driver, right ? When was that first introduced?
+>>
+>> I myself actually suspect the external irq handling code, but I
+>> guess that the runtime pm support code also is a likely cause
+>> of this.
+> 
+> I can confirm seeing this issue on the Bananapi M1+.
 
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
----
- .../devicetree/bindings/media/i2c/imx214.txt  | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/imx214.txt
+Good, so hopefully you can find some time to fix this, because I
+really do not have any time for this.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt b/Documentation/devicetree/bindings/media/i2c/imx214.txt
-new file mode 100644
-index 000000000000..421a019ab7f9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
-@@ -0,0 +1,53 @@
-+* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-+
-+The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-+an active array size of 4224H x 3200V. It is programmable through an I2C
-+interface. The I2C address can be configured to 0x1a or 0x10, depending on
-+how the hardware is wired.
-+Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-+throughput of 1.2Gbps/lane.
-+
-+
-+Required Properties:
-+- compatible: value should be "sony,imx214" for imx214 sensor
-+- reg: I2C bus address of the device
-+- enable-gpios: GPIO descriptor for the enable pin.
-+- vdddo-supply: Chip digital IO regulator (1.8V).
-+- vdda-supply: Chip analog regulator (2.7V).
-+- vddd-supply: Chip digital core regulator (1.12V).
-+- clocks: Reference to the xclk clock.
-+- clock-names:  Shall be "xclk".
-+
-+Optional Properties:
-+- flash-leds: See ../video-interfaces.txt
-+- lens-focus: See ../video-interfaces.txt
-+
-+The imx214 device node shall contain one 'port' child node with
-+an 'endpoint' subnode. For further reading on port node refer to
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Required Properties on endpoint:
-+- data-lanes: check ../video-interfaces.txt
-+- link-frequencies: check ../video-interfaces.txt
-+- remote-endpoint: check ../video-interfaces.txt
-+
-+Example:
-+
-+	camera_rear@1a {
-+		compatible = "sony,imx214";
-+		reg = <0x1a>;
-+		vdddo-supply = <&pm8994_lvs1>;
-+		vddd-supply = <&camera_vddd_1v12>;
-+		vdda-supply = <&pm8994_l17>;
-+		lens-focus = <&ad5820>;
-+		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-+		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-+		clock-names = "xclk";
-+		port {
-+			imx214_ep: endpoint {
-+				data-lanes = <1 2 3 4>;
-+				link-frequencies = /bits/ 64 <480000000>;
-+				remote-endpoint = <&csiphy0_ep>;
-+			};
-+		};
-+	};
--- 
-2.19.0
+Otherwise it might be disable to just disable OOB interrupt support
+on sunxi devices for now, as my original patch does.
+
+> On my Cubietruck
+> I'm seeing another issue. The OOB interrupt fires excessively, like
+> it was not properly acked. Dropping OOB and using SDIO interrupt
+> make it work normally. Disabling mmc runtime pm either by adding
+> pm_runtime_get_sync or by reverting all the related patches does not
+> help.
+> 
+> I don't quite remember when it was working properly though, since I
+> only noticed the issue this past week when I saw the LEDs lit up all
+> the time while rearranging things. Normally the LEDs are out of my
+> field of view.
+
+Weird, does seem to point something is off wrt the OOB IRQ handling.
+
+> On a separate topic, do you know of anyone that has gotten the serdev
+> bluetooth code to work with the AMPAK chips? Maxime tried when the
+> serdev code was first merged, and I tried last week. The bluetooth
+> part comes up with the hci interface looking normal and everything,
+> but it can't find any other devices.
+
+I've this working on various x86 devices. 3 things come to mind
+which might be wrong:
+
+1) The GPIO pin definitions for the device-wakeup and shutdown pins
+2) Not having a patchram file
+3) Using the wrong patchram file. Looking at the cubietruck brcmfmac
+    nvram file it has: "xtalfreq=26000" this means you must use a
+    patchram file for 26MHz devices. There are also patchram files
+    for devices with a 37.4MHz crystal.
+    To find out the crystal the patchram file you have is for, do e.g. :
+    [hans@shalem ~]$ strings brcm-firmware/BCM4330B1.hcd | head -n1
+    Foxconn-T77H36000 BCM4330B2 0876 26MHz BT4.0 Class 1
+    Note not all patchram files have the crystal freq in their header
+
+> Scan commands give an error:
+> 
+>      Bluetooth: hci0: last event is not cmd complete (0x0f)
+
+That error can be safely ignored (we really need to turn it into a debug
+msg) but not finding any devices is a real problem.
+
+Regards,
+
+Hans
