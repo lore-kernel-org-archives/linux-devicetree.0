@@ -1,89 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 07/10] dt-bindings: phy: add binding for
- Allwinner USB3 PHY
-Date: Fri, 5 Oct 2018 15:58:55 -0500
-Message-ID: <20181005205855.GA2458@bogus>
-References: <20181004122855.22981-1-icenowy@aosc.io>
- <20181004122855.22981-8-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v8 1/3] [media] imx214: device tree binding
+Date: Sat, 6 Oct 2018 00:34:26 +0300
+Message-ID: <20181005213425.5mcafszioz4wxun5@kekkonen.localdomain>
+References: <20181005124940.15539-1-ricardo.ribalda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBENB37OQKGQELF42MRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181004122855.22981-8-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181005124940.15539-1-ricardo.ribalda@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, jacopo@jmondi.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 04, 2018 at 08:28:52PM +0800, Icenowy Zheng wrote:
-> The new Allwinner H6 SoC contains a USB3 PHY that is wired to the
-> external USB3 pins of the SoC.
+Hi Ricardo,
+
+On Fri, Oct 05, 2018 at 02:49:37PM +0200, Ricardo Ribalda Delgado wrote:
+> From: Ricardo Ribalda <ricardo.ribalda@gmail.com>
 > 
-> Add a device tree binding for the PHY.
+> Document bindings for imx214 camera sensor
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 > ---
-> Changes in v4:
-> - Changed Vbus regulator property to vbus-supply.
+>  .../devicetree/bindings/media/i2c/imx214.txt  | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/imx214.txt
 > 
-> Changes in v3:
-> - Added Chen-Yu's Review tag.
-> 
-> No changes in v2, v1.
-> 
->  .../bindings/phy/sun50i-usb3-phy.txt          | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/imx214.txt b/Documentation/devicetree/bindings/media/i2c/imx214.txt
 > new file mode 100644
-> index 000000000000..9f49c6b8c7e7
+> index 000000000000..421a019ab7f9
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/sun50i-usb3-phy.txt
-> @@ -0,0 +1,23 @@
-> +Allwinner sun50i USB3 PHY
-> +-----------------------
+> +++ b/Documentation/devicetree/bindings/media/i2c/imx214.txt
+> @@ -0,0 +1,53 @@
+> +* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
 > +
-> +Required properties:
-> +- compatible : should be one of
-> +  * allwinner,sun60i-h6-usb3-phy
-> +- reg : a list of offset + length pairs
-> +- #phy-cells : from the generic phy bindings, must be 0
-> +- clocks : phandle + clock specifier for the phy clock
-> +- resets : phandle + reset specifier for the phy reset
+> +The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
+> +an active array size of 4224H x 3200V. It is programmable through an I2C
+> +interface. The I2C address can be configured to 0x1a or 0x10, depending on
+> +how the hardware is wired.
+> +Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
+> +throughput of 1.2Gbps/lane.
 > +
-> +Optional Properties:
-> +- vbus-supply : a phandle to a regulator that provides power to VBUS.
-
-This belongs in a connector node as it is part of the connector unless 
-the phy physically needs Vbus for power.
-
-But others have done this, so all the phys can just be wrong...
-
 > +
-> +Example:
-> +	usb3phy: phy@5210000 {
+> +Required Properties:
+> +- compatible: value should be "sony,imx214" for imx214 sensor
 
-usb-phy@
+should -> shall ?
 
-> +		compatible = "allwinner,sun50i-h6-usb3-phy";
-> +		reg = <0x5210000 0x10000>;
-> +		clocks = <&ccu CLK_USB_PHY1>;
-> +		resets = <&ccu RST_USB_PHY1>;
-> +		#phy-cells = <0>;
-> +		status = "disabled";
+-- 
+Regards,
 
-Don't show status in examples.
-
-> +	};
-> -- 
-> 2.18.0
-> 
+Sakari Ailus
+sakari.ailus@linux.intel.com
