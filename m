@@ -1,133 +1,246 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 15/36] dt-bindings: arm: Convert Actions Semi bindings to jsonschema
-Date: Fri,  5 Oct 2018 11:58:27 -0500
-Message-ID: <20181005165848.3474-16-robh@kernel.org>
+Subject: [PATCH 18/36] dt-bindings: arm: Convert Amlogic board/soc bindings to json-schema
+Date: Fri,  5 Oct 2018 11:58:30 -0500
+Message-ID: <20181005165848.3474-19-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Convert Actions Semi SoC bindings to DT schema format using json-schema.
+Convert Amlogic SoC bindings to DT schema format using json-schema.
 
-Cc: "Andreas Färber" <afaerber@suse.de>
+Cc: Carlo Caione <carlo@caione.org>
+Cc: Kevin Hilman <khilman@baylibre.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/actions.txt       | 56 -------------------
- .../devicetree/bindings/arm/actions.yaml      | 34 +++++++++++
- 2 files changed, 34 insertions(+), 56 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
- create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
+ .../devicetree/bindings/arm/amlogic.txt       | 102 -----------------
+ .../devicetree/bindings/arm/amlogic.yaml      | 104 ++++++++++++++++++
+ 2 files changed, 104 insertions(+), 102 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/amlogic.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/amlogic.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
 deleted file mode 100644
-index d54f33c4e0da..000000000000
---- a/Documentation/devicetree/bindings/arm/actions.txt
+index 2f2d01a00c54..000000000000
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
 +++ /dev/null
-@@ -1,56 +0,0 @@
--Actions Semi platforms device tree bindings
+@@ -1,102 +0,0 @@
+-Amlogic MesonX device tree bindings
 --------------------------------------------
 -
+-Work in progress statement:
 -
--S500 SoC
--========
+-Device tree files and bindings applying to Amlogic SoCs and boards are
+-considered "unstable". Any Amlogic device tree binding may change at
+-any time. Be sure to use a device tree binary and a kernel image
+-generated from the same source tree.
 -
--Required root node properties:
+-Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
+-stable binding/ABI.
 -
-- - compatible :  must contain "actions,s500"
+----------------------------------------------------------------
 -
+-Boards with the Amlogic Meson6 SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,meson6"
 -
--Modules:
+-Boards with the Amlogic Meson8 SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,meson8";
 -
--Root node property compatible must contain, depending on module:
+-Boards with the Amlogic Meson8b SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,meson8b";
 -
-- - LeMaker Guitar: "lemaker,guitar"
+-Boards with the Amlogic Meson8m2 SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,meson8m2";
 -
+-Boards with the Amlogic Meson GXBaby SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,meson-gxbb";
 -
--Boards:
+-Boards with the Amlogic Meson GXL S905X SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,s905x", "amlogic,meson-gxl";
 -
--Root node property compatible must contain, depending on board:
+-Boards with the Amlogic Meson GXL S905D SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,s905d", "amlogic,meson-gxl";
 -
-- - Allo.com Sparky: "allo,sparky"
-- - Cubietech CubieBoard6: "cubietech,cubieboard6"
-- - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
+-Boards with the Amlogic Meson GXL S805X SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,s805x", "amlogic,meson-gxl";
 -
+-Boards with the Amlogic Meson GXL S905W SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,s905w", "amlogic,meson-gxl";
 -
--S700 SoC
--========
+-Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,s912", "amlogic,meson-gxm";
 -
--Required root node properties:
+-Boards with the Amlogic Meson AXG A113D SoC shall have the following properties:
+-  Required root node property:
+-    compatible: "amlogic,a113d", "amlogic,meson-axg";
 -
--- compatible :  must contain "actions,s700"
+-Board compatible values (alphabetically, grouped by SoC):
 -
+-  - "geniatech,atv1200" (Meson6)
 -
--Boards:
+-  - "minix,neo-x8" (Meson8)
 -
--Root node property compatible must contain, depending on board:
+-  - "hardkernel,odroid-c1" (Meson8b)
+-  - "tronfy,mxq" (Meson8b)
 -
-- - Cubietech CubieBoard7: "cubietech,cubieboard7"
+-  - "tronsmart,mxiii-plus" (Meson8m2)
 -
+-  - "amlogic,p200" (Meson gxbb)
+-  - "amlogic,p201" (Meson gxbb)
+-  - "friendlyarm,nanopi-k2" (Meson gxbb)
+-  - "hardkernel,odroid-c2" (Meson gxbb)
+-  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+-  - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
+-  - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
+-  - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
+-  - "wetek,hub" (Meson gxbb)
+-  - "wetek,play2" (Meson gxbb)
 -
--S900 SoC
--========
+-  - "amlogic,p212" (Meson gxl s905x)
+-  - "hwacom,amazetv" (Meson gxl s905x)
+-  - "khadas,vim" (Meson gxl s905x)
+-  - "libretech,cc" (Meson gxl s905x)
 -
--Required root node properties:
+-  - "amlogic,p230" (Meson gxl s905d)
+-  - "amlogic,p231" (Meson gxl s905d)
 -
--- compatible :  must contain "actions,s900"
+-  - "amlogic,p241" (Meson gxl s805x)
 -
+-  - "amlogic,p281" (Meson gxl s905w)
+-  - "oranth,tx3-mini" (Meson gxl s905w)
 -
--Boards:
+-  - "amlogic,q200" (Meson gxm s912)
+-  - "amlogic,q201" (Meson gxm s912)
+-  - "khadas,vim2" (Meson gxm s912)
+-  - "kingnovel,r-box-pro" (Meson gxm S912)
+-  - "nexbox,a1" (Meson gxm s912)
+-  - "tronsmart,vega-s96" (Meson gxm s912)
 -
--Root node property compatible must contain, depending on board:
--
-- - uCRobotics Bubblegum-96: "ucrobotics,bubblegum-96"
-diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
+-  - "amlogic,s400" (Meson axg a113d)
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
 new file mode 100644
-index 000000000000..af9345a228b4
+index 000000000000..6168fef53aa1
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/actions.yaml
-@@ -0,0 +1,34 @@
++++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/soc/arm/actions.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/amlogic.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Actions Semi platforms device tree bindings
++title: Amlogic MesonX device tree bindings
 +
 +maintainers:
-+  - Andreas Färber <afaerber@suse.de>
++  - Neil Armstrong <narmstrong@baylibre.com>
++  - Carlo Caione <carlo@caione.org>
++description: |+
++  Work in progress statement:
 +
-+description: |
-+  The Actions Semi S500 is a quad-core ARM Cortex-A9 SoC. The Actions Semi
-+  S900 is a quad-core ARM Cortex-A53 SoC.
++  Device tree files and bindings applying to Amlogic SoCs and boards are
++  considered "unstable". Any Amlogic device tree binding may change at
++  any time. Be sure to use a device tree binary and a kernel image
++  generated from the same source tree.
++
++  Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
++  stable binding/ABI.
 +
 +properties:
++  $nodename:
++    const: '/'
 +  compatible:
 +    oneOf:
 +      - items:
 +          - enum:
-+              - lemaker,guitar-bb-rev-b
++              - geniatech,atv1200
++          - const: amlogic,meson6
++      - items:
 +          - enum:
-+              - lemaker,guitar
-+              - allo,sparky
-+              - cubietech,cubieboard6
-+          - const: actions,s500
-+        minItems: 2
-+        maxItems: 3
-+        additionalItems: false
++              - minix,neo-x8
++          - const: amlogic,meson8
 +      - items:
-+          - const: cubietech,cubieboard7
-+          - const: actions,s700
++          - enum:
++              - tronsmart,mxiii-plus
++          - const: amlogic,meson8m2
 +      - items:
-+          - const: ucrobotics,bubblegum-96
-+          - const: actions,s900
++          - enum:
++              - hardkernel,odroid-c1
++              - tronfy,mxq
++          - const: amlogic,meson8b
++      - items:
++          - enum:
++              - amlogic,p200
++              - amlogic,p201
++              - friendlyarm,nanopi-k2
++              - hardkernel,odroid-c2
++              - nexbox,a95x
++              - wetek,hub
++              - wetek,play2
++          - const: amlogic,meson-gxbb
++      - items:
++          - enum:
++              - tronsmart,vega-s95-pro
++              - tronsmart,vega-s95-meta
++              - tronsmart,vega-s95-telos
++          - const: tronsmart,vega-s95
++          - const: amlogic,meson-gxbb
++      - items:
++          - enum:
++              - amlogic,p241
++          - const: amlogic,s805x
++          - const: amlogic,meson-gxl
++      - items:
++          - enum:
++              - amlogic,p281
++              - oranth,tx3-mini
++          - const: amlogic,s905w
++          - const: amlogic,meson-gxl
++      - items:
++          - enum:
++              - amlogic,p212
++              - hwacom,amazetv
++              - khadas,vim
++              - libretech,cc
++              - nexbox,a95x
++          - const: amlogic,s905x
++          - const: amlogic,meson-gxl
++      - items:
++          - enum:
++              - amlogic,p230
++              - amlogic,p231
++          - const: amlogic,s905d
++          - const: amlogic,meson-gxl
++      - items:
++          - enum:
++              - amlogic,q200
++              - amlogic,q201
++              - khadas,vim2
++              - kingnovel,r-box-pro
++              - nexbox,a1
++              - tronsmart,vega-s96
++          - const: amlogic,s912
++          - const: amlogic,meson-gxm
++      - items:
++          - enum:
++              - amlogic,s400
++          - const: amlogic,a113d
++          - const: amlogic,meson-axg
++
++...
 -- 
 2.17.1
