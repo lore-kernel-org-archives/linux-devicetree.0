@@ -1,118 +1,149 @@
-From: Mauro Carvalho Chehab <mchehab+samsung-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 4/6] media: Add JPEG_RAW format
-Date: Fri, 5 Oct 2018 09:20:25 -0300
-Message-ID: <20181005092025.059c03f4@coco.lan>
-References: <20181005001226.12789-1-ezequiel@collabora.com>
- <20181005001226.12789-5-ezequiel@collabora.com>
- <20181005080924.78a1654b@coco.lan>
- <90ef806ecfab6e93dc08e4acdce11cc2e15df637.camel@collabora.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] reset: Exclusive resets must be dedicated to a single
+ hardware block
+Date: Fri, 5 Oct 2018 14:31:55 +0200
+Message-ID: <CAMuHMdUC3dGRnMCsX3HjmGgb0-vLSNXKXRiiAS+TzW72_uM+LQ@mail.gmail.com>
+References: <20180927180038.24599-1-geert+renesas@glider.be>
+ <1538648094.14153.8.camel@pengutronix.de> <CAMuHMdV_qb8qDFJ1VT6FYYkHK73tjbp2hOUShaOEhezPWg+VDg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <90ef806ecfab6e93dc08e4acdce11cc2e15df637.camel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Dufresne <nicolas.dufresne-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Tomasz Figa <tfiga-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Miouyouyou <myy-tmjzNUIc0P1+EYZtW95mkQ@public.gmane.org>, kernel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdV_qb8qDFJ1VT6FYYkHK73tjbp2hOUShaOEhezPWg+VDg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, KVM list <kvm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 05 Oct 2018 08:53:14 -0300
-Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> escreveu:
-
-> On Fri, 2018-10-05 at 08:09 -0300, Mauro Carvalho Chehab wrote:
-> > Em Thu,  4 Oct 2018 21:12:24 -0300
-> > Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> escreveu:
-> >   
-> > > From: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > > 
-> > > Add V4L2_PIX_FMT_JPEG_RAW format that does not contain
-> > > JPEG header in the output frame.
-> > > 
-> > > Signed-off-by: Shunqian Zheng <zhengsq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > > Signed-off-by: Ezequiel Garcia <ezequiel-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+On Fri, Oct 5, 2018 at 10:55 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> On Thu, Oct 4, 2018 at 12:15 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > Thank you for the patch. I'd still like to hear the device tree
+> > maintainers' (added to Cc:) opinion on parsing the whole DT for "resets"
+> > phandle properties to find shared resets like this.
+> >
+> > On Thu, 2018-09-27 at 20:00 +0200, Geert Uytterhoeven wrote:
+> > > In some SoCs multiple hardware blocks may share a reset control.
+> > > The reset control API for shared resets will only assert such a reset
+> > > when the drivers for all hardware blocks agree.
+> > > The exclusive reset control API still allows to assert such a reset, but
+> > > that impacts all other hardware blocks sharing the reset.
+> > >
+> > > While the kernel doc comments clearly state that the API for shared
+> > > resets applies to reset controls which are shared between hardware
+> > > blocks, the exact meaning of exclusive resets is not documented.
+> > > Fix the semantic ambiguity with respect to exclusive access vs.
+> > > exclusive reset lines by:
+> > >   1. Clarifying that exclusive resets really are intended for use with
+> > >      reset controls which are dedicated to a single hardware block,
+> > >   2. Ensuring that obtaining an exclusive reset control will fail if the
+> > >      reset is shared by multiple hardware blocks, for both DT-based and
+> > >      lookup-based reset controls.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > > > ---
-> > >  Documentation/media/uapi/v4l/pixfmt-compressed.rst | 9 +++++++++
-> > >  drivers/media/v4l2-core/v4l2-ioctl.c               | 1 +
-> > >  include/uapi/linux/videodev2.h                     | 1 +
-> > >  3 files changed, 11 insertions(+)
-> > > 
-> > > diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> > > index ba0f6c49d9bf..ad73076276ec 100644
-> > > --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> > > +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> > > @@ -23,6 +23,15 @@ Compressed Formats
-> > >        - 'JPEG'
-> > >        - TBD. See also :ref:`VIDIOC_G_JPEGCOMP <VIDIOC_G_JPEGCOMP>`,
-> > >  	:ref:`VIDIOC_S_JPEGCOMP <VIDIOC_G_JPEGCOMP>`.
-> > > +    * .. _V4L2-PIX-FMT-JPEG-RAW:
+> > > This is v2 of "[RFC] reset: Add support for dedicated reset controls":
+> > >   - Fix wrong variable in __reset_is_dedicated() loop,
+> > >   - Add missing of_node_put() in __of_reset_is_dedicated(),
+> > >   - Document that exclusive reset controls imply they are dedicated to a
+> > >     single hardware block,
+> > >   - Drop new dedicated flag and new API reset_control_get_dedicated(),
+> > >     as exclusive already implies dedicated,
+> > >   - Rename {__of_,}reset_is_dedicated() to {__of_,}reset_is_exclusive(),
+> > >   - Reword description.
+> > >
+> > > Note: Exclusive lookup-based reset controls were not tested.
+> > > ---
+> > >  drivers/reset/core.c  | 58 +++++++++++++++++++++++++++++++++++++++++++
+> > >  include/linux/reset.h |  5 +++-
+> > >  2 files changed, 62 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> > > index 225e34c56b94a2e3..2f5b61226c7964eb 100644
+> > > --- a/drivers/reset/core.c
+> > > +++ b/drivers/reset/core.c
+> > > @@ -459,6 +459,38 @@ static void __reset_control_put_internal(struct reset_control *rstc)
+> > >       kref_put(&rstc->refcnt, __reset_control_release);
+> > >  }
+> > >
+> > > +static bool __of_reset_is_exclusive(const struct device_node *node,
+> > > +                                 const struct of_phandle_args args)
+>
+> Oops, this should take *args, not args.
+>
+> > > +{
+> > > +     struct of_phandle_args args2;
+> > > +     struct device_node *node2;
+> > > +     int index, ret;
+> > > +     bool eq;
+> >
+> > I suppose it is very unlikely to get false positives where an arbitrary
+> > node contains a "resets" property that looks like a proper phandle to an
+> > actual reset-controller node.
+> > Are we allowed though to scan the whole tree for "resets" properties
+> > regardless of the nodes' bindings or compatible properties like this?
+>
+> Given "resets" is a more-or-less standard property, I'd say yes.
+> Especially given of_parse_phandle_with_args() does verify that the target
+> node has #reset-cells, and that the number of parameters matches that.
+>
+> > > +     for_each_node_with_property(node2, "resets") {
+> > > +             if (node == node2)
+> > > +                     continue;
 > > > +
-> > > +      - ``V4L2_PIX_FMT_JPEG_RAW``
-> > > +      - 'Raw JPEG'
-> > > +      - Raw JPEG bitstream, containing a compressed payload. This format
-> > > +        contains an image scan, i.e. without any metadata or headers.
-> > > +        The user is expected to set the needed metadata such as
-> > > +        quantization and entropy encoding tables, via ``V4L2_CID_JPEG``
-> > > +        controls, see :ref:`jpeg-control-id`.  
-> > 
-> > IMO, it is not very clear when someone should use V4L2_CID_JPEG or
-> > V4L2_PIX_FMT_JPEG_RAW. Some drivers do add a JPEG header internally.
-> >   
-> 
-> For device drivers, if the hardware can parse JPEG frames, then
-> V4L2_PIX_FMT_JPEG should be used. Otherwise, if the hardware can
-> only accept a parsed JPEG (i.e. payload and tables), then
-> only V4L2_PIX_FMT_JPEG_RAW should be supported.
+> > > +             for (index = 0; ; index++) {
+> > > +                     ret = of_parse_phandle_with_args(node2, "resets",
+> > > +                                                      "#reset-cells", index,
+> > > +                                                      &args2);
+> > > +                     if (ret)
+> > > +                             break;
+> > > +
+> > > +                     eq = (args2.np == args.np &&
+> > > +                           args2.args_count == args.args_count &&
+> > > +                           !memcmp(args2.args, args.args,
+> > > +                                   args.args_count * sizeof(args.args[0])));
+>
+> As there's at least one other function in -next that compares of_phandle_args,
+> I will add a helper of_phandle_args_eq().
+>
+> > > +                     of_node_put(args2.np);
+> > > +                     if (eq)
+> >
+> > Emitting a loud warning here could be very helpful if it contains
+> > both the reset controller node and the reset index, as well as the
 
-It seems you're talking here about V4L2 output devices. I'm more
-concerned about its usage on V4L2 capture devices.
+Actually on DT-based systems, the index is a driver-specific
+implementation detail, and may differ from the actual reset specifier in DT.
+E.g. on R-Car systems, DT uses a human-readable representation matching
+the datasheet, while internally, the driver uses a packed representation.
+Hence printing the index may confuse the user.
 
-Yet, it should be possible to use it with both, as formats should
-be generic enough to work on both directions.
+For lookup-based systems, this is different.
 
-> Parsing headers in the driver is discouraged by the stateful codec
-> API specification.
+> > consumer nodes: node and node2.
+>
+> Indeed, will do, also for lookup resets.
+>
+> We already have of_print_phandle_args(), but that is a bit inflexible.
+> Adding support for "%pOFa" looks like the modern thing to do.
 
-True, but we do parsing/adding headers for some formats in Kernel
-space, as this is a way to abstract the hardware for applications.
+Scrap that: of_phandle_args is not derived from a device_node, so %pOFa
+is not appropriate (and would crash instead of fall back to a pointer before
+%pOFa support is implemented). And without more users, it doesn't make much
+sense to go for a new type (e.g. "%pOA")...
 
-That's specially true for MPEG and JPEG formats.
+Actually, printing the full reset specifier is not needed. A message like
 
-> With the Request API in place, and the stateful and stateless specs,
-> device driver writers should be now using the right model for each
-> type of hardware.
-> 
-> There are exceptions, though. If the hardware handles full JPEG frames,
-> but requires some extra parsing on the OS side, then the driver
-> should be using V4L2_PIX_FMT_JPEG, and doing some extra parsing.
-> For instance, mtk-jpeg seems to work like this.
+    /soc/pwm@e6e31000 and /soc/pwm@e6e30000 share a reset on
+/soc/clock-controller@e6150000
 
-Actually, all existing drivers do this.
+should give sufficient clue to the user.
 
-I'm not saying that this the right/best model, but it is the way
-it is. Changing it is possible, but only if it can be done in
-a driver-independent way and userspace code inside a library
-exists to support it.
+Gr{oetje,eeting}s,
 
+                        Geert
 
-> 
-> > Also, if we're now starting to accept headerless JPEG images, you should
-> > very patch libv4l as well, in order to accept this new format.
-> >   
-> 
-> Right.
-> 
-> Thanks,
-> Eze
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
-Thanks,
-Mauro
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
