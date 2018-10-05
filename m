@@ -1,129 +1,70 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH V5 02/24] mmc: mmci: create common mmci_dma_setup/release
-Date: Fri, 5 Oct 2018 15:47:12 +0200
-Message-ID: <CAPDyKFogS_74csmZm5_M3D-JFNn_8fi2sxcHpRwVxZOqZhndVg@mail.gmail.com>
-References: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com> <1538745782-27446-3-git-send-email-ludovic.Barre@st.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH V10 5/8] clocksource: add C-SKY SMP timer
+Date: Fri, 5 Oct 2018 15:48:58 +0200
+Message-ID: <4ec284a4-0cff-91b8-bd0a-6eb578b28432@linaro.org>
+References: <cover.1538672812.git.ren_guo@c-sky.com>
+ <76f127a22faf8f110f102ee3534792b2b84a7d78.1538672812.git.ren_guo@c-sky.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538745782-27446-3-git-send-email-ludovic.Barre@st.com>
+In-Reply-To: <76f127a22faf8f110f102ee3534792b2b84a7d78.1538672812.git.ren_guo@c-sky.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic Barre <ludovic.Barre@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+To: Guo Ren <ren_guo@c-sky.com>, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 October 2018 at 15:22, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> From: Ludovic Barre <ludovic.barre@st.com>
->
-> This patch creates a common mmci_dma_setup/release which calls
-> dma_setup/release callbacks of mmci_host_ops and manages
-> common features like use_dma... If there is a fallbacks to
-> pio mode, dma functions must check use_dma.
->
-> error management:
-> -mmci_dmae_setup fail if Tx and Rx dma channels are not defined
-> -qcom_dma_setup fail if one of both dma channels is not defined,
->  Qcom has no specific resource to release, just mmci dmae resource.
+On 04/10/2018 19:22, Guo Ren wrote:
+> This timer is used by SMP system and use mfcr/mtcr instruction
+> to access the regs.
+> 
+> Changelog:
+>  - Add rollback for timer_of_cleanup.
+>  - Use request_percpu_irq separate from time_of.
+>  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING.
+>  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h.
+>  - Support csky mp timer alpha version.
+>  - Just use low-counter with 32bit width as clocksource.
+>  - Coding convention with upstream feed-back.
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> ---
+>  drivers/clocksource/Kconfig         |  10 +++
+>  drivers/clocksource/Makefile        |   1 +
+>  drivers/clocksource/timer-mp-csky.c | 173 ++++++++++++++++++++++++++++++++++++
+>  include/linux/cpuhotplug.h          |   1 +
+>  4 files changed, 185 insertions(+)
+>  create mode 100644 drivers/clocksource/timer-mp-csky.c
+> 
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index a11f4ba..826a2e8 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -620,4 +620,14 @@ config RISCV_TIMER
+>  	  is accessed via both the SBI and the rdcycle instruction.  This is
+>  	  required for all RISC-V systems.
+>  
+> +config CSKY_MP_TIMER
+> +	bool "SMP Timer for the C-SKY platform"
+> +	depends on CSKY
+> +	select TIMER_OF
+> +	help
+> +	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
+> +	  system.
+> +	  csky,mptimer is not only used in SMP system, it also could be used
+> +	  single core system. It's not a mmio reg and it use mtcr/mfcr instruction.
 
-Makes perfect sense!
 
-[...]
+... COMPILE_TEST :)
 
-> +void mmci_dma_setup(struct mmci_host *host)
-> +{
-> +       if (!host->ops || !host->ops->dma_setup)
-> +               return;
-> +
-> +       if (host->ops->dma_setup(host)) {
-> +               mmci_dma_release(host);
 
-Please remove this and let the variants clean up themselves. That
-makes it more straight forward.
 
-> +               return;
-> +       }
-> +
-> +       host->use_dma = true;
-> +}
-> +
 
-[...]
 
-> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> index 01e6c6b..9b0a960 100644
-> --- a/drivers/mmc/host/mmci.h
-> +++ b/drivers/mmc/host/mmci.h
-> @@ -273,7 +273,8 @@ struct variant_data {
->
->  /* mmci variant callbacks */
->  struct mmci_host_ops {
-> -       void (*dma_setup)(struct mmci_host *host);
-> +       int (*dma_setup)(struct mmci_host *host);
-> +       void (*dma_release)(struct mmci_host *host);
->  };
->
->  struct mmci_host_next {
-> @@ -323,6 +324,7 @@ struct mmci_host {
->         unsigned int            size;
->         int (*get_rx_fifocnt)(struct mmci_host *h, u32 status, int remain);
->
-> +       u8                      use_dma:1;
->  #ifdef CONFIG_DMA_ENGINE
->         /* DMA stuff */
->         struct dma_chan         *dma_current;
-> @@ -336,3 +338,14 @@ struct mmci_host {
->  #endif
->  };
->
-> +#ifdef CONFIG_DMA_ENGINE
-> +void mmci_variant_init(struct mmci_host *host);
-> +#else
-> +static inline void mmci_variant_init(struct mmci_host *host)
-> +{
-> +}
-> +#endif
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-This can be kept in mmci.c instead.
-
-> +
-> +int mmci_dmae_setup(struct mmci_host *host);
-> +void mmci_dmae_release(struct mmci_host *host);
-> +
-> diff --git a/drivers/mmc/host/mmci_qcom_dml.c b/drivers/mmc/host/mmci_qcom_dml.c
-> index be3fab5..aa070a9 100644
-> --- a/drivers/mmc/host/mmci_qcom_dml.c
-> +++ b/drivers/mmc/host/mmci_qcom_dml.c
-> @@ -119,19 +119,22 @@ static int of_get_dml_pipe_index(struct device_node *np, const char *name)
->  }
->
->  /* Initialize the dml hardware connected to SD Card controller */
-> -static void qcom_dma_setup(struct mmci_host *host)
-> +static int qcom_dma_setup(struct mmci_host *host)
->  {
->         u32 config;
->         void __iomem *base;
->         int consumer_id, producer_id;
->         struct device_node *np = host->mmc->parent->of_node;
->
-> +       if (mmci_dmae_setup(host))
-> +               return -EINVAL;
-> +
->         consumer_id = of_get_dml_pipe_index(np, "tx");
->         producer_id = of_get_dml_pipe_index(np, "rx");
->
->         if (producer_id < 0 || consumer_id < 0) {
->                 host->variant->qcom_dml = false;
-> -               return;
-> +               return -EINVAL;
-
-This relies on error handling to be done by mmci_dma_setup(), which as
-stated, feels a bit wrong.
-
-I would rather just call mmci_dmae_realease() here, before returning -EINVAL.
-
-[...]
-
-Otherwise, this looks good to me now.
-
-Kind regards
-Uffe
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
