@@ -1,101 +1,157 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 02/36] dt-bindings: arm: amlogic: Move 'amlogic,meson-gx-ao-secure' binding to its own file
-Date: Fri,  5 Oct 2018 11:58:14 -0500
-Message-ID: <20181005165848.3474-3-robh@kernel.org>
+Subject: [PATCH 01/36] dt-bindings: arm: alpine: Move CPU control related binding to cpu-enable-method/al,alpine-smp
+Date: Fri,  5 Oct 2018 11:58:13 -0500
+Message-ID: <20181005165848.3474-2-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
 It is best practice to have 1 binding per file, so board level bindings
-should be separate for various misc SoC bindings.
+should be separate for various misc SoC bindings. Move the Alpine CPU
+control to al,alpine-smp and we can also remove a cross reference.
 
+Cc: Tsahee Zidenberg <tsahee@annapurnalabs.com>
+Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Carlo Caione <carlo@caione.org>
-Cc: Kevin Hilman <khilman@baylibre.com>
 Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-amlogic@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/amlogic.txt       | 29 -------------------
- .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ++++++++++++++++++
- 2 files changed, 28 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+ .../devicetree/bindings/arm/al,alpine.txt     | 72 -------------------
+ .../arm/cpu-enable-method/al,alpine-smp       | 34 ++++++++-
+ 2 files changed, 31 insertions(+), 75 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index b5c2b5c35766..2f2d01a00c54 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -100,32 +100,3 @@ Board compatible values (alphabetically, grouped by SoC):
-   - "tronsmart,vega-s96" (Meson gxm s912)
+diff --git a/Documentation/devicetree/bindings/arm/al,alpine.txt b/Documentation/devicetree/bindings/arm/al,alpine.txt
+index f404a4f9b165..d00debe2e86f 100644
+--- a/Documentation/devicetree/bindings/arm/al,alpine.txt
++++ b/Documentation/devicetree/bindings/arm/al,alpine.txt
+@@ -14,75 +14,3 @@ compatible: must contain "al,alpine"
  
-   - "amlogic,s400" (Meson axg a113d)
+ 	...
+ }
 -
--Amlogic Meson Firmware registers Interface
--------------------------------------------
+-* CPU node:
 -
--The Meson SoCs have a register bank with status and data shared with the
--secure firmware.
+-The Alpine platform includes cortex-a15 cores.
+-enable-method: must be "al,alpine-smp" to allow smp  [1]
 -
--Required properties:
-- - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+-Example:
 -
--Properties should indentify components of this register interface :
+-cpus {
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+-	enable-method = "al,alpine-smp";
 -
--Meson GX SoC Information
--------------------------
--A firmware register encodes the SoC type, package and revision information on
--the Meson GX SoCs.
--If present, the following property should be added :
+-	cpu@0 {
+-		compatible = "arm,cortex-a15";
+-		device_type = "cpu";
+-		reg = <0>;
+-	};
 -
--Optional properties:
--  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
+-	cpu@1 {
+-		compatible = "arm,cortex-a15";
+-		device_type = "cpu";
+-		reg = <1>;
+-	};
 -
--Example
---------
+-	cpu@2 {
+-		compatible = "arm,cortex-a15";
+-		device_type = "cpu";
+-		reg = <2>;
+-	};
 -
--ao-secure@140 {
--	compatible = "amlogic,meson-gx-ao-secure", "syscon";
--	reg = <0x0 0x140 0x0 0x140>;
--	amlogic,has-chip-id;
+-	cpu@3 {
+-		compatible = "arm,cortex-a15";
+-		device_type = "cpu";
+-		reg = <3>;
+-	};
 -};
-diff --git a/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-new file mode 100644
-index 000000000000..c67d9f48fb91
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-@@ -0,0 +1,28 @@
-+Amlogic Meson Firmware registers Interface
-+------------------------------------------
+-
+-
+-* Alpine CPU resume registers
+-
+-The CPU resume register are used to define required resume address after
+-reset.
+-
+-Properties:
+-- compatible : Should contain "al,alpine-cpu-resume".
+-- reg : Offset and length of the register set for the device
+-
+-Example:
+-
+-cpu_resume {
+-	compatible = "al,alpine-cpu-resume";
+-	reg = <0xfbff5ed0 0x30>;
+-};
+-
+-* Alpine System-Fabric Service Registers
+-
+-The System-Fabric Service Registers allow various operation on CPU and
+-system fabric, like powering CPUs off.
+-
+-Properties:
+-- compatible : Should contain "al,alpine-sysfabric-service" and "syscon".
+-- reg : Offset and length of the register set for the device
+-
+-Example:
+-
+-nb_service {
+-        compatible = "al,alpine-sysfabric-service", "syscon";
+-        reg = <0xfb070000 0x10000>;
+-};
+-
+-[1] arm/cpu-enable-method/al,alpine-smp
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp
+index c2e0cc5e4cfd..35e5afb6d9ad 100644
+--- a/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/al,alpine-smp
+@@ -14,7 +14,28 @@ Related properties:	(none)
+ 
+ Note:
+ This enable method requires valid nodes compatible with
+-"al,alpine-cpu-resume" and "al,alpine-nb-service"[1].
++"al,alpine-cpu-resume" and "al,alpine-nb-service".
 +
-+The Meson SoCs have a register bank with status and data shared with the
-+secure firmware.
 +
-+Required properties:
-+ - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
++* Alpine CPU resume registers
 +
-+Properties should indentify components of this register interface :
++The CPU resume register are used to define required resume address after
++reset.
 +
-+Meson GX SoC Information
-+------------------------
-+A firmware register encodes the SoC type, package and revision information on
-+the Meson GX SoCs.
-+If present, the following property should be added :
++Properties:
++- compatible : Should contain "al,alpine-cpu-resume".
++- reg : Offset and length of the register set for the device
 +
-+Optional properties:
-+  - amlogic,has-chip-id: If present, the interface gives the current SoC version.
 +
-+Example
-+-------
++* Alpine System-Fabric Service Registers
 +
-+ao-secure@140 {
-+	compatible = "amlogic,meson-gx-ao-secure", "syscon";
-+	reg = <0x0 0x140 0x0 0x140>;
-+	amlogic,has-chip-id;
++The System-Fabric Service Registers allow various operation on CPU and
++system fabric, like powering CPUs off.
++
++Properties:
++- compatible : Should contain "al,alpine-sysfabric-service" and "syscon".
++- reg : Offset and length of the register set for the device
++
+ 
+ Example:
+ 
+@@ -48,5 +69,12 @@ cpus {
+ 	};
+ };
+ 
+---
+-[1] arm/al,alpine.txt
++cpu_resume {
++	compatible = "al,alpine-cpu-resume";
++	reg = <0xfbff5ed0 0x30>;
++};
++
++nb_service {
++        compatible = "al,alpine-sysfabric-service", "syscon";
++        reg = <0xfb070000 0x10000>;
 +};
 -- 
 2.17.1
