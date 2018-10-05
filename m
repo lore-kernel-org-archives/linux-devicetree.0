@@ -1,110 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 19/36] dt-bindings: arm: Convert Atmel board/soc bindings
- to json-schema
-Date: Fri, 5 Oct 2018 13:32:38 -0500
-Message-ID: <CAL_JsqJBRaNf73feHzG4aYyEMxWso8a7Wt6L0JZJLGWecymoUg@mail.gmail.com>
-References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-20-robh@kernel.org>
- <20181005180725.GH5626@piout.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 0/6] Add support for PDC Global on SDM845 SoCs
+Date: Fri, 5 Oct 2018 11:48:04 -0700
+Message-ID: <20181005184804.GA12063@builder>
+References: <20180829191215.10071-1-sibis@codeaurora.org>
+ <20180903193647.GJ3456@tuxbook-pro>
+ <2ae729fe-321b-0918-a06c-d04e43b47101@codeaurora.org>
+ <1538729187.3545.2.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005180725.GH5626@piout.net>
+Content-Disposition: inline
+In-Reply-To: <1538729187.3545.2.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Nicolas Ferre <nicolas.ferre@microc>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Sibi Sankar <sibis@codeaurora.org>, mka@chromium.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, tsoni@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 5, 2018 at 1:07 PM Alexandre Belloni
-<alexandre.belloni@bootlin.com> wrote:
->
-> Hello,
->
-> On 05/10/2018 11:58:31-0500, Rob Herring wrote:
-> > diff --git a/Documentation/devicetree/bindings/arm/atmel-at91.yaml b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> > new file mode 100644
-> > index 000000000000..f788315b94fa
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/atmel-at91.yaml
-> > @@ -0,0 +1,132 @@
-> > +# SPDX-License-Identifier: None
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/arm/atmel-at91.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Atmel AT91 device tree bindings.
-> > +
-> > +maintainers:
-> > +  - Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> > +  - Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
->
-> Jean-Christophe has not been active for years, I'd mention Ludovic
-> instead.
+On Fri 05 Oct 01:46 PDT 2018, Philipp Zabel wrote:
 
-Will update. I generated these out of git log. I didn't use
-get_maintainers.pl because it seems lots of files don't have
-maintainers listed (other than Mark and me) and I didn't want to be
-it.
+> Hi Sibi, Bjorn,
+> 
+> On Thu, 2018-10-04 at 23:57 +0530, Sibi Sankar wrote:
+> > On 09/04/2018 01:06 AM, Bjorn Andersson wrote:
+> [...]
+> > > Philipp, there's no compile time dependencies between the PDC and
+> > > remoteproc patches in this series. Will you take these two through your
+> > > tree and I'll take the remaining four through the remoteproc tree?
+> > > 
+> > > Regards,
+> > > Bjorn
+> >
+> >Hey Phillip,
+> > 
+> > Will the PDC driver make the cut for reset/next this time for the
+> > 4.20rc?
+> 
+> I have applied patches 1 and 2 to reset/next. I'll send a pull request
+> early next week.
+> 
 
->
-> > +description: |
-> > +  Boards with a SoC of the Atmel AT91 or SMART family shall have the following
-> > +
-> > +properties:
-> > +  $nodename:
-> > +    const: '/'
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +          - const: atmel,at91rm9200
-> > +      - items:
-> > +          - enum:
-> > +              - olimex,sam9-l9260
-> > +          - enum:
-> > +              - atmel,at91sam9260
-> > +              - atmel,at91sam9261
-> > +              - atmel,at91sam9263
-> > +              - atmel,at91sam9g20
-> > +              - atmel,at91sam9g45
-> > +              - atmel,at91sam9n12
-> > +              - atmel,at91sam9rl
-> > +              - atmel,at91sam9xe
-> > +          - const: atmel,at91sam9
-> > +
-> > +      - items:
-> > +          - enum:
-> > +              - atmel,at91sam9g15
-> > +              - atmel,at91sam9g25
-> > +              - atmel,at91sam9g35
-> > +              - atmel,at91sam9x25
-> > +              - atmel,at91sam9x35
-> > +          - const: atmel,at91sam9x5
-> > +          - const: atmel,at91sam9
-> > +
-> > +      - items:
-> > +          - const: atmel,sama5d27
-> > +          - const: atmel,sama5d2
-> > +          - const: atmel,sama5
-> > +
-> > +      - description: Nattis v2 board with Natte v2 power board
-> > +        items:
-> > +          - const: axentia,nattis-2
-> > +          - const: axentia,natte-2
-> > +          - const: axentia,linea
->
-> Shouldn't we have the board specific compatibles in a separate file to
-> avoid mixing everything with the SoC compatibles?
+Thanks Philipp, I picked patch 3 through 6 in the rproc-next branch.
 
-You can't validate it that way. I have to say "must be compatible A,
-B, C and in that order" and you can't if A, B, and C are in different
-files. We could do board vendor files, but then we have to duplicate
-the SoC compatibles. I don't think there's any board vendor with
-enough boards to justify that. The only place I've found that the
-compatible lists get kind of messy is when platforms have a variable
-number of compatible strings.
-
-We generally have not split things this way for most platforms except
-i.MX which this series changes. Looks like I forgot to remove the
-axentia.txt for Atmel.
-
-Rob
+Regards,
+Bjorn
