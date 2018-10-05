@@ -1,87 +1,96 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH v2 5/5] ASoC: qdsp6: q6asm-dai: Add support to compress
- offload
-Date: Fri, 5 Oct 2018 06:09:19 +0530
-Message-ID: <20181005003919.GH2372@vkoul-mobl>
-References: <20180926102349.23481-1-srinivas.kandagatla@linaro.org>
- <20180926102349.23481-6-srinivas.kandagatla@linaro.org>
+From: Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845: Add qspi (quad SPI) node
+Date: Thu,  4 Oct 2018 18:59:02 -0700
+Message-ID: <20181005015902.134192-1-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20180926102349.23481-6-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: broonie@kernel.org, alsa-devel@alsa-project.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, bgoswami@codeaurora.org, rohitkr@codeaurora.org, lgirdwood@gmail.com, tiwai@suse.com, devicetree@vger.kernel.org, mark.rutland@arm.com
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Ryan Case <ryandcase@chromium.org>, linux-arm-msm@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26-09-18, 11:23, Srinivas Kandagatla wrote:
-> This patch adds MP3 playback support in q6asm dais, adding other codec
-> support should be pretty trivial.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  sound/soc/qcom/Kconfig           |   1 +
->  sound/soc/qcom/qdsp6/q6asm-dai.c | 377 ++++++++++++++++++++++++++++++-
->  2 files changed, 377 insertions(+), 1 deletion(-)
-> 
-> diff --git a/sound/soc/qcom/Kconfig b/sound/soc/qcom/Kconfig
-> index 2a4c912d1e48..ebf991bb546c 100644
-> --- a/sound/soc/qcom/Kconfig
-> +++ b/sound/soc/qcom/Kconfig
-> @@ -66,6 +66,7 @@ config SND_SOC_QDSP6_ASM
->  	tristate
->  
->  config SND_SOC_QDSP6_ASM_DAI
-> +	select SND_SOC_COMPRESS
->  	tristate
->  
->  config SND_SOC_QDSP6
-> diff --git a/sound/soc/qcom/qdsp6/q6asm-dai.c b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> index 9db9a2944ef2..57b8abcbebcd 100644
-> --- a/sound/soc/qcom/qdsp6/q6asm-dai.c
-> +++ b/sound/soc/qcom/qdsp6/q6asm-dai.c
-> @@ -11,6 +11,8 @@
->  #include <sound/soc.h>
->  #include <sound/soc-dapm.h>
->  #include <sound/pcm.h>
-> +#include <linux/spinlock.h>
-> +#include <sound/compress_driver.h>
->  #include <asm/dma.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/of_device.h>
-> @@ -31,6 +33,16 @@
->  #define CAPTURE_MIN_PERIOD_SIZE     320
->  #define SID_MASK_DEFAULT	0xF
->  
-> +/* Default values used if user space does not set */
-> +#define COMPR_PLAYBACK_MIN_FRAGMENT_SIZE (8 * 1024)
-> +#define COMPR_PLAYBACK_MAX_FRAGMENT_SIZE (128 * 1024)
-> +#define COMPR_PLAYBACK_MIN_NUM_FRAGMENTS (4)
-> +#define COMPR_PLAYBACK_MAX_NUM_FRAGMENTS (16 * 4)
-> +#define Q6ASM_DAI_TX_RX	0
-> +#define Q6ASM_DAI_TX	1
-> +#define Q6ASM_DAI_RX	2
-> +
-> +
+This adds the Quad SPI controller to the main sdm845 device tree file.
+Boards will be expected to assign the proper pinctrl depending on how
+many chip selects they have hooked up and how many data lines.
 
-Unnecessary double space
+This depends on commit 48735597f7bd ("clk: qcom: Add qspi (Quad SPI)
+clock defines for sdm845 to header") to add the needed defines.  It
+also shouldn't land until the patch ("dt-bindings: spi: Qualcomm Quad
+SPI(QSPI) documentation") [1] lands.
 
->  enum stream_state {
->  	Q6ASM_STREAM_IDLE = 0,
->  	Q6ASM_STREAM_STOPPED,
-> @@ -39,11 +51,22 @@ enum stream_state {
->  
->  struct q6asm_dai_rtd {
->  	struct snd_pcm_substream *substream;
-> +	struct snd_compr_stream *cstream;
-> +	struct snd_compr_params codec_param;
-> +	struct snd_dma_buffer dma_buffer;
-> +
->  	phys_addr_t phys;
-> +	spinlock_t lock;
+[1] https://lkml.kernel.org/r/20181002214709.162330-1-ryandcase@chromium.org
 
-why would we need a lock for compress case?
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 47 ++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b72bdb0a31a5..cfc96262e8dd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -822,6 +822,41 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+ 
++			qspi_clk: qspi-clk {
++				pinmux {
++					pins = "gpio95";
++					function = "qspi_clk";
++				};
++			};
++
++			qspi_cs0: qspi-cs0 {
++				pinmux {
++					pins = "gpio90";
++					function = "qspi_cs";
++				};
++			};
++
++			qspi_cs1: qspi-cs1 {
++				pinmux {
++					pins = "gpio89";
++					function = "qspi_cs";
++				};
++			};
++
++			qspi_data01: qspi-data01 {
++				pinmux-data {
++					pins = "gpio91", "gpio92";
++					function = "qspi_data";
++				};
++			};
++
++			qspi_data12: qspi-data12 {
++				pinmux-data {
++					pins = "gpio93", "gpio94";
++					function = "qspi_data";
++				};
++			};
++
+ 			qup_i2c0_default: qup-i2c0-default {
+ 				pinmux {
+ 					pins = "gpio0", "gpio1";
+@@ -1070,6 +1105,18 @@
+ 			};
+ 		};
+ 
++		qspi: qspi@88df000 {
++			compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
++			reg = <0x88df000 0x600>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
++				 <&gcc GCC_QSPI_CORE_CLK>;
++			clock-names = "iface", "core";
++			status = "disabled";
++		};
++
+ 		usb_1_hsphy: phy@88e2000 {
+ 			compatible = "qcom,sdm845-qusb2-phy";
+ 			reg = <0x88e2000 0x400>;
 -- 
-~Vinod
+2.19.0.605.g01d371f741-goog
