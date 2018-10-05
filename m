@@ -1,222 +1,205 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 26/36] dt-bindings: arm: Convert QCom board/soc bindings to json-schema
-Date: Fri,  5 Oct 2018 11:58:38 -0500
-Message-ID: <20181005165848.3474-27-robh@kernel.org>
+Subject: [PATCH 23/36] dt-bindings: arm: Convert MediaTek board/soc bindings to json-schema
+Date: Fri,  5 Oct 2018 11:58:35 -0500
+Message-ID: <20181005165848.3474-24-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Convert QCom SoC bindings to DT schema format using json-schema.
+Convert MediaTek SoC bindings to DT schema format using json-schema.
 
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: David Brown <david.brown@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
 Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-mediatek@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/qcom.txt          |  57 --------
- .../devicetree/bindings/arm/qcom.yaml         | 125 ++++++++++++++++++
- 2 files changed, 125 insertions(+), 57 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/qcom.txt
- create mode 100644 Documentation/devicetree/bindings/arm/qcom.yaml
+ .../devicetree/bindings/arm/mediatek.txt      | 79 -----------------
+ .../devicetree/bindings/arm/mediatek.yaml     | 85 +++++++++++++++++++
+ 2 files changed, 85 insertions(+), 79 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
 deleted file mode 100644
-index ee532e705d6c..000000000000
---- a/Documentation/devicetree/bindings/arm/qcom.txt
+index 8f260e5cfd16..000000000000
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
 +++ /dev/null
-@@ -1,57 +0,0 @@
--QCOM device tree bindings
---------------------------
+@@ -1,79 +0,0 @@
+-MediaTek SoC based Platforms Device Tree Bindings
 -
--Some qcom based bootloaders identify the dtb blob based on a set of
--device properties like SoC and platform and revisions of those components.
--To support this scheme, we encode this information into the board compatible
--string.
+-Boards with a MediaTek SoC shall have the following property:
 -
--Each board must specify a top-level board compatible string with the following
--format:
+-Required root node property:
 -
--	compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
+-compatible: Must contain one of
+-   "mediatek,mt2701"
+-   "mediatek,mt2712"
+-   "mediatek,mt6580"
+-   "mediatek,mt6589"
+-   "mediatek,mt6592"
+-   "mediatek,mt6755"
+-   "mediatek,mt6765"
+-   "mediatek,mt6795"
+-   "mediatek,mt6797"
+-   "mediatek,mt7622"
+-   "mediatek,mt7623" which is referred to MT7623N SoC
+-   "mediatek,mt7623a"
+-   "mediatek,mt8127"
+-   "mediatek,mt8135"
+-   "mediatek,mt8173"
 -
--The 'SoC' and 'board' elements are required. All other elements are optional.
 -
--The 'SoC' element must be one of the following strings:
+-Supported boards:
 -
--	apq8016
--	apq8074
--	apq8084
--	apq8096
--	msm8916
--	msm8974
--	msm8992
--	msm8994
--	msm8996
--	mdm9615
--	ipq8074
--	sdm845
--
--The 'board' element must be one of the following strings:
--
--	cdp
--	liquid
--	dragonboard
--	mtp
--	sbc
--	hk01
--
--The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
--where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
--as v1. If all versions of the 'board_version' elements match, then a
--wildcard '*' should be used, e.g. 'v*'.
--
--The 'foundry_id' and 'subtype' elements are one or more digits from 0 to 9.
--
--Examples:
--
--	"qcom,msm8916-v1-cdp-pm8916-v2.1"
--
--A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
--2.1.
--
--	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1"
--
--A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
--foundry 2.
-diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
+-- Evaluation board for MT2701:
+-    Required root node properties:
+-      - compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
+-- Evaluation board for MT2712:
+-    Required root node properties:
+-      - compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
+-- Evaluation board for MT6580:
+-    Required root node properties:
+-      - compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
+-- bq Aquaris5 smart phone:
+-    Required root node properties:
+-      - compatible = "mundoreader,bq-aquaris5", "mediatek,mt6589";
+-- Evaluation board for MT6592:
+-    Required root node properties:
+-      - compatible = "mediatek,mt6592-evb", "mediatek,mt6592";
+-- Evaluation phone for MT6755(Helio P10):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6755-evb", "mediatek,mt6755";
+-- Evaluation board for MT6765(Helio P22):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6765-evb", "mediatek,mt6765";
+-- Evaluation board for MT6795(Helio X10):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
+-- Evaluation board for MT6797(Helio X20):
+-    Required root node properties:
+-      - compatible = "mediatek,mt6797-evb", "mediatek,mt6797";
+-- Mediatek X20 Development Board:
+-    Required root node properties:
+-      - compatible = "archermind,mt6797-x20-dev", "mediatek,mt6797";
+-- Reference board variant 1 for MT7622:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
+-- Reference board for MT7623a with eMMC:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623a-rfb-emmc", "mediatek,mt7623";
+-- Reference board for MT7623a with NAND:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623a-rfb-nand", "mediatek,mt7623";
+-- Reference board for MT7623n with eMMC:
+-    Required root node properties:
+-      - compatible = "mediatek,mt7623n-rfb-emmc", "mediatek,mt7623";
+-- Bananapi BPI-R2 board:
+-      - compatible = "bananapi,bpi-r2", "mediatek,mt7623";
+-- MTK mt8127 tablet moose EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
+-- MTK mt8135 tablet EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8135-evbp1", "mediatek,mt8135";
+-- MTK mt8173 tablet EVB:
+-    Required root node properties:
+-      - compatible = "mediatek,mt8173-evb", "mediatek,mt8173";
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.yaml b/Documentation/devicetree/bindings/arm/mediatek.yaml
 new file mode 100644
-index 000000000000..d8fcd8deed5c
+index 000000000000..861af7c66ac5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-@@ -0,0 +1,125 @@
++++ b/Documentation/devicetree/bindings/arm/mediatek.yaml
+@@ -0,0 +1,85 @@
 +# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/bindings/arm/qcom.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/mediatek.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: QCOM device tree bindings
++title: MediaTek SoC based Platforms Device Tree Bindings
 +
 +maintainers:
-+  - Stephen Boyd <sboyd@codeaurora.org>
-+
++  - Sean Wang <sean.wang@mediatek.com>
++  - Matthias Brugger <matthias.bgg@gmail.com>
 +description: |
-+  Some qcom based bootloaders identify the dtb blob based on a set of
-+  device properties like SoC and platform and revisions of those components.
-+  To support this scheme, we encode this information into the board compatible
-+  string.
-+
-+  Each board must specify a top-level board compatible string with the following
-+  format:
-+
-+  	compatible = "qcom,<SoC>[-<soc_version>][-<foundry_id>]-<board>[/<subtype>][-<board_version>]"
-+
-+  The 'SoC' and 'board' elements are required. All other elements are optional.
-+
-+  The 'SoC' element must be one of the following strings:
-+
-+  	apq8016
-+  	apq8074
-+  	apq8084
-+  	apq8096
-+  	msm8916
-+  	msm8974
-+  	msm8992
-+  	msm8994
-+  	msm8996
-+  	mdm9615
-+  	ipq8074
-+  	sdm845
-+
-+  The 'board' element must be one of the following strings:
-+
-+  	cdp
-+  	liquid
-+  	dragonboard
-+  	mtp
-+  	sbc
-+  	hk01
-+
-+  The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
-+  where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
-+  as v1. If all versions of the 'board_version' elements match, then a
-+  wildcard '*' should be used, e.g. 'v*'.
-+
-+  The 'foundry_id' and 'subtype' elements are one or more digits from 0 to 9.
-+
-+  Examples:
-+
-+  	"qcom,msm8916-v1-cdp-pm8916-v2.1"
-+
-+  A CDP board with an msm8916 SoC, version 1 paired with a pm8916 PMIC of version
-+  2.1.
-+
-+  	"qcom,apq8074-v2.0-2-dragonboard/1-v0.1"
-+
-+  A dragonboard board v0.1 of subtype 1 with an apq8074 SoC version 2, made in
-+  foundry 2.
++  Boards with a MediaTek SoC shall have the following properties.
 +
 +properties:
++  $nodename:
++    const: '/'
 +  compatible:
 +    oneOf:
 +      - items:
 +          - enum:
-+              - qcom,apq8016-sbc
-+          - const: qcom,apq8016
++              - mediatek,mt2701-evb
++          - const: mediatek,mt2701
 +
 +      - items:
 +          - enum:
-+              - qcom,apq8064-cm-qs600
-+              - qcom,apq8064-ifc6410
-+          - const: qcom,apq8064
-+
++              - mediatek,mt2712-evb
++          - const: mediatek,mt2712
 +      - items:
 +          - enum:
-+              - qcom,apq8074-dragonboard
-+          - const: qcom,apq8074
-+
++              - mediatek,mt6580-evbp1
++          - const: mediatek,mt6580
 +      - items:
 +          - enum:
-+              - qcom,apq8060-dragonboard
-+              - qcom,msm8660-surf
-+          - const: qcom,msm8660
-+
++              - mundoreader,bq-aquaris5
++          - const: mediatek,mt6589
 +      - items:
 +          - enum:
-+              - qcom,apq8084-mtp
-+              - qcom,apq8084-sbc
-+          - const: qcom,apq8084
-+
++              - mediatek,mt6592-evb
++          - const: mediatek,mt6592
 +      - items:
 +          - enum:
-+              - qcom,msm8960-cdp
-+          - const: qcom,msm8960
-+
-+      - items:
-+          - const: qcom,msm8916-mtp/1
-+          - const: qcom,msm8916-mtp
-+          - const: qcom,msm8916
-+
-+      - items:
-+          - const: qcom,msm8996-mtp
-+
-+      - items:
-+          - const: qcom,ipq4019
-+
++              - mediatek,mt6755-evb
++          - const: mediatek,mt6755
 +      - items:
 +          - enum:
-+              - qcom,ipq8064-ap148
-+          - const: qcom,ipq8064
-+
++              - mediatek,mt6765-evb
++          - const: mediatek,mt6765
 +      - items:
 +          - enum:
-+              - qcom,ipq8074-hk01
-+          - const: qcom,ipq8074
++              - mediatek,mt6795-evb
++          - const: mediatek,mt6795
++      - items:
++          - enum:
++              - archermind,mt6797-x20-dev
++              - mediatek,mt6797-evb
++          - const: mediatek,mt6797
++      - items:
++          - enum:
++              - mediatek,mt7622-rfb1
++          - const: mediatek,mt7622
++      - items:
++          - enum:
++              - mediatek,mt7623a-rfb-emmc
++              - mediatek,mt7623a-rfb-nand
++              - mediatek,mt7623n-rfb-emmc
++              - bananapi,bpi-r2
++          - const: mediatek,mt7623
++        description: Also referred to as MT7623N SoC
 +
++      - items:
++          - const: mediatek,mt7623a
++      - items:
++          - enum:
++              - mediatek,mt8127-moose
++          - const: mediatek,mt8127
++      - items:
++          - enum:
++              - mediatek,mt8135-evbp1
++          - const: mediatek,mt8135
++      - items:
++          - enum:
++              - mediatek,mt8173-evb
++          - const: mediatek,mt8173
 +...
 -- 
 2.17.1
