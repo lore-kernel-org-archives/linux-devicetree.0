@@ -1,8 +1,10 @@
 From: frowand.list@gmail.com
-Subject: [PATCH 00/16] of: overlay: validation checks, subsequent fixes
-Date: Thu,  4 Oct 2018 21:12:31 -0700
-Message-ID: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH 01/16] of: overlay: add tests to validate kfrees from overlay removal
+Date: Thu,  4 Oct 2018 21:12:32 -0700
+Message-ID: <1538712767-30394-2-git-send-email-frowand.list@gmail.com>
+References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
@@ -10,72 +12,111 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Add checks to (1) overlay apply process and (2) memory freeing
-triggered by overlay release.  The checks are intended to detect
-possible memory leaks and invalid overlays.
+Add checks:
+  - attempted kfree due to refcount reaching zero before overlay
+    is removed
+  - properties linked to an overlay node when the node is removed
+  - node refcount > one during node removal in a changeset destroy,
+    if the node was created by the changeset
 
-The checks revealed bugs in existing code.  Fixed the bugs.
+After applying this patch, several validation warnings will be
+reported from the devicetree unittest during boot due to
+pre-existing devicetree bugs. The warnings will be similar to:
 
-While fixing bugs, noted other issues, which are fixed in
-separate patches.
+  OF: ERROR: of_node_release() overlay node /testcase-data/overlay-node/test-bus/test-unittest11/test-unittest111 contains unexpected properties
+  OF: ERROR: memory leak - destroy cset entry: attach overlay node /testcase-data-2/substation@100/hvac-medium-2 with refcount 2
 
-*****  Powerpc folks: I was not able to test the patches that
-*****  directly impact Powerpc systems that use dynamic
-*****  devicetree.  Please review that code carefully and
-*****  test.  The specific patches are: 03/16, 04/16, 07/16
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
+ drivers/of/dynamic.c | 29 +++++++++++++++++++++++++++++
+ drivers/of/overlay.c |  1 +
+ include/linux/of.h   | 15 ++++++++++-----
+ 3 files changed, 40 insertions(+), 5 deletions(-)
 
-FPGA folks:
-
-  I made the validation checks that should result in an
-  invalid live devicetree report "ERROR" and cause the overlay apply
-  to fail.
-
-  I made the memory leak validation tests report "WARNING" and allow
-  the overlay apply to complete successfully.  Please let me know
-  if you encounter the warnings.  There are at least two paths
-  forward to deal with the cases that trigger the warning: (1) change
-  the warning to an error and fail the overlay apply, or (2) find a
-  way to detect the potential memory leaks and free the memory
-  appropriately.
-
-ALL people:
-
-  The validations do _not_ address another major concern I have with
-  releasing overlays, which is use after free errors.
-
-Frank Rowand (16):
-  of: overlay: add tests to validate kfrees from overlay removal
-  of: overlay: add missing of_node_put() after add new node to changeset
-  of: overlay: add missing of_node_get() in __of_attach_node_sysfs
-  powerpc/pseries: add of_node_put() in dlpar_detach_node()
-  of: overlay: use prop add changeset entry for property in new nodes
-  of: overlay: do not duplicate properties from overlay for new nodes
-  of: dynamic: change type of of_{at,de}tach_node() to void
-  of: overlay: reorder fields in struct fragment
-  of: overlay: validate overlay properties #address-cells and
-    #size-cells
-  of: overlay: make all pr_debug() and pr_err() messages unique
-  of: overlay: test case of two fragments adding same node
-  of: overlay: check prevents multiple fragments add or delete same node
-  of: overlay: check prevents multiple fragments touching same property
-  of: unittest: remove unused of_unittest_apply_overlay() argument
-  of: unittest: initialize args before calling of_irq_parse_one()
-  of: unittest: find overlays[] entry by name instead of index
-
- arch/powerpc/platforms/pseries/dlpar.c             |  15 +-
- arch/powerpc/platforms/pseries/reconfig.c          |   6 +-
- drivers/of/dynamic.c                               |  41 +++-
- drivers/of/kobj.c                                  |   4 +-
- drivers/of/overlay.c                               | 271 ++++++++++++++++-----
- drivers/of/unittest-data/Makefile                  |   2 +
- .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 +++
- .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
- drivers/of/unittest-data/overlay_base.dts          |   1 +
- drivers/of/unittest.c                              |  43 +++-
- include/linux/of.h                                 |  19 +-
- 11 files changed, 353 insertions(+), 101 deletions(-)
- create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
- create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
-
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index f4f8ed9b5454..b04ee021a891 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -330,6 +330,25 @@ void of_node_release(struct kobject *kobj)
+ 	if (!of_node_check_flag(node, OF_DYNAMIC))
+ 		return;
+ 
++	if (of_node_check_flag(node, OF_OVERLAY)) {
++
++		if (!of_node_check_flag(node, OF_OVERLAY_FREE_CSET)) {
++			/* premature refcount of zero, do not free memory */
++			pr_err("ERROR: memory leak %s() overlay node %pOF before free overlay changeset\n",
++			       __func__, node);
++			return;
++		}
++
++		/*
++		 * If node->properties non-empty then properties were added
++		 * to this node either by different overlay that has not
++		 * yet been removed, or by a non-overlay mechanism.
++		 */
++		if (node->properties)
++			pr_err("ERROR: %s() overlay node %pOF contains unexpected properties\n",
++			       __func__, node);
++	}
++
+ 	property_list_free(node->properties);
+ 	property_list_free(node->deadprops);
+ 
+@@ -434,6 +453,16 @@ struct device_node *__of_node_dup(const struct device_node *np,
+ 
+ static void __of_changeset_entry_destroy(struct of_changeset_entry *ce)
+ {
++	if (ce->action == OF_RECONFIG_ATTACH_NODE &&
++	    of_node_check_flag(ce->np, OF_OVERLAY)) {
++		if (kref_read(&ce->np->kobj.kref) > 1) {
++			pr_err("ERROR: memory leak - destroy cset entry: attach overlay node %pOF with refcount %d\n",
++			       ce->np, kref_read(&ce->np->kobj.kref));
++		} else {
++			of_node_set_flag(ce->np, OF_OVERLAY_FREE_CSET);
++		}
++	}
++
+ 	of_node_put(ce->np);
+ 	list_del(&ce->node);
+ 	kfree(ce);
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index eda57ef12fd0..1176cb4b6e4e 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -373,6 +373,7 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
+ 			return -ENOMEM;
+ 
+ 		tchild->parent = target_node;
++		of_node_set_flag(tchild, OF_OVERLAY);
+ 
+ 		ret = of_changeset_attach_node(&ovcs->cset, tchild);
+ 		if (ret)
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 4d25e4f952d9..aa1dafaec6ae 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -138,11 +138,16 @@ static inline void of_node_put(struct device_node *node) { }
+ extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
+ 
+-/* flag descriptions (need to be visible even when !CONFIG_OF) */
+-#define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+-#define OF_DETACHED	2 /* node has been detached from the device tree */
+-#define OF_POPULATED	3 /* device already created for the node */
+-#define OF_POPULATED_BUS	4 /* of_platform_populate recursed to children of this node */
++/*
++ * struct device_node flag descriptions
++ * (need to be visible even when !CONFIG_OF)
++ */
++#define OF_DYNAMIC		1 /* (and properties) allocated via kmalloc */
++#define OF_DETACHED		2 /* detached from the device tree */
++#define OF_POPULATED		3 /* device already created */
++#define OF_POPULATED_BUS	4 /* platform bus created for children */
++#define OF_OVERLAY		5 /* allocated for an overlay */
++#define OF_OVERLAY_FREE_CSET	6 /* in overlay cset being freed */
+ 
+ #define OF_BAD_ADDR	((u64)-1)
+ 
 -- 
 Frank Rowand <frank.rowand@sony.com>
