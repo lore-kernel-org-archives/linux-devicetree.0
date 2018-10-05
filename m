@@ -1,85 +1,78 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 32/36] dt-bindings: arm: Convert ST STi board/soc bindings to json-schema
-Date: Fri,  5 Oct 2018 11:58:44 -0500
-Message-ID: <20181005165848.3474-33-robh@kernel.org>
+Subject: [PATCH 30/36] dt-bindings: arm: Convert CSR SiRF board/soc bindings to json-schema
+Date: Fri,  5 Oct 2018 11:58:42 -0500
+Message-ID: <20181005165848.3474-31-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Patrice Chotard <patrice.chotard@st.com>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Barry Song <baohua@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert ST STi SoC bindings to DT schema format using json-schema.
+Convert CSR SiRF SoC bindings to DT schema format using json-schema.
 
-Cc: Patrice Chotard <patrice.chotard@st.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Barry Song <baohua@kernel.org>
 Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/sti.txt | 23 -------------------
- .../devicetree/bindings/arm/sti.yaml          | 23 +++++++++++++++++++
- 2 files changed, 23 insertions(+), 23 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/sti.txt
- create mode 100644 Documentation/devicetree/bindings/arm/sti.yaml
+ .../devicetree/bindings/arm/sirf.txt          | 11 --------
+ .../devicetree/bindings/arm/sirf.yaml         | 27 +++++++++++++++++++
+ 2 files changed, 27 insertions(+), 11 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/sirf.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/sirf.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/sti.txt b/Documentation/devicetree/bindings/arm/sti.txt
+diff --git a/Documentation/devicetree/bindings/arm/sirf.txt b/Documentation/devicetree/bindings/arm/sirf.txt
 deleted file mode 100644
-index 8d27f6b084c7..000000000000
---- a/Documentation/devicetree/bindings/arm/sti.txt
+index 7b28ee6fee91..000000000000
+--- a/Documentation/devicetree/bindings/arm/sirf.txt
 +++ /dev/null
-@@ -1,23 +0,0 @@
--ST STi Platforms Device Tree Bindings
-----------------------------------------
+@@ -1,11 +0,0 @@
+-CSR SiRFprimaII and SiRFmarco device tree bindings.
+-========================================
 -
--Boards with the ST STiH415 SoC shall have the following properties:
--Required root node property:
--compatible = "st,stih415";
--
--Boards with the ST STiH416 SoC shall have the following properties:
--Required root node property:
--compatible = "st,stih416";
--
--Boards with the ST STiH407 SoC shall have the following properties:
--Required root node property:
--compatible = "st,stih407";
--
--Boards with the ST STiH410 SoC shall have the following properties:
--Required root node property:
--compatible = "st,stih410";
--
--Boards with the ST STiH418 SoC shall have the following properties:
--Required root node property:
--compatible = "st,stih418";
--
-diff --git a/Documentation/devicetree/bindings/arm/sti.yaml b/Documentation/devicetree/bindings/arm/sti.yaml
+-Required root node properties:
+-    - compatible:
+-    - "sirf,atlas6-cb" : atlas6 "cb" evaluation board
+-    - "sirf,atlas6" : atlas6 device based board
+-    - "sirf,atlas7-cb" : atlas7 "cb" evaluation board
+-    - "sirf,atlas7" : atlas7 device based board
+-    - "sirf,prima2-cb" : prima2 "cb" evaluation board
+-    - "sirf,prima2" : prima2 device based board
+diff --git a/Documentation/devicetree/bindings/arm/sirf.yaml b/Documentation/devicetree/bindings/arm/sirf.yaml
 new file mode 100644
-index 000000000000..10814334cfc9
+index 000000000000..5675b3efda96
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/sti.yaml
-@@ -0,0 +1,23 @@
++++ b/Documentation/devicetree/bindings/arm/sirf.yaml
+@@ -0,0 +1,27 @@
 +# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/bindings/arm/sti.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/sirf.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ST STi Platforms Device Tree Bindings
++title: CSR SiRFprimaII and SiRFmarco device tree bindings.
 +
 +maintainers:
-+  - Maxime Coquelin <maxime.coquelin@st.com>
++  - Binghua Duan <binghua.duan@csr.com>
++  - Barry Song <Baohua.Song@csr.com>
 +
 +properties:
 +  $nodename:
 +    const: '/'
 +  compatible:
-+    items:
-+      - enum:
-+          - st,stih415
-+          - st,stih416
-+          - st,stih407
-+          - st,stih410
-+          - st,stih418
++    oneOf:
++      - items:
++          - const: sirf,atlas6-cb
++          - const: sirf,atlas6
++      - items:
++          - const: sirf,atlas7-cb
++          - const: sirf,atlas7
++      - items:
++          - const: sirf,prima2-cb
++          - const: sirf,prima2
 +...
 -- 
 2.17.1
