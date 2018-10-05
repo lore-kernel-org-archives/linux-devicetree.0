@@ -1,224 +1,215 @@
-From: "AKASHI, Takahiro" <takahiro.akashi@linaro.org>
-Subject: Re: [PATCH v15 06/16] of/fdt: add helper functions for handling
- properties
-Date: Fri, 5 Oct 2018 14:06:29 +0900
-Message-ID: <20181005050627.GL32578@linaro.org>
-References: <20180928064841.14117-1-takahiro.akashi@linaro.org>
- <20180928064841.14117-7-takahiro.akashi@linaro.org>
- <CAL_JsqKwmcdQ+2eK3LGHhcQ2Wb+Yz1-Atz0-3K6WKNZQt_woVw@mail.gmail.com>
- <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: [PATCH V7 05/20] csky: System Call
+Date: Fri,  5 Oct 2018 13:41:47 +0800
+Message-ID: <36464adeb406b0e3110eb76ecbd644743e819d61.1538715563.git.ren_guo@c-sky.com>
+References: <cover.1538715563.git.ren_guo@c-sky.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6a8d3ddb-c3bc-c044-4d6c-55e110d89e72@gmail.com>
+In-Reply-To: <cover.1538715563.git.ren_guo@c-sky.com>
+In-Reply-To: <cover.1538715563.git.ren_guo@c-sky.com>
+References: <cover.1538715563.git.ren_guo@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, David Gibson <david@gibson.dropbear.id.au>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, David Howells <dhowells@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Herbert Xu <herbert@gondor.apana.org.au>, David Miller <davem@davemloft.net>, dyoung@redhat.com, Baoquan He <bhe@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Martin Schwidefsky <schwidefsky@de.ibm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, prudo@linux.ibm.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger>
+To: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de
+Cc: green.hu@gmail.com, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-Frank,
+This patch adds files related to syscall.
 
-# I haven't reply to your comments.
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+---
+ arch/csky/include/asm/syscall.h     | 71 +++++++++++++++++++++++++++++++++++++
+ arch/csky/include/asm/syscalls.h    | 15 ++++++++
+ arch/csky/include/uapi/asm/unistd.h | 10 ++++++
+ arch/csky/kernel/syscall.c          | 43 ++++++++++++++++++++++
+ arch/csky/kernel/syscall_table.c    | 14 ++++++++
+ 5 files changed, 153 insertions(+)
+ create mode 100644 arch/csky/include/asm/syscall.h
+ create mode 100644 arch/csky/include/asm/syscalls.h
+ create mode 100644 arch/csky/include/uapi/asm/unistd.h
+ create mode 100644 arch/csky/kernel/syscall.c
+ create mode 100644 arch/csky/kernel/syscall_table.c
 
-On Fri, Sep 28, 2018 at 02:13:58PM -0700, Frank Rowand wrote:
-> On 09/28/18 06:44, Rob Herring wrote:
-> > +David Gibson
-> > 
-> > On Fri, Sep 28, 2018 at 1:48 AM AKASHI Takahiro
-> > <takahiro.akashi@linaro.org> wrote:
-> >>
-> >> These functions will be used later to handle kexec-specific properties
-> >> in arm64's kexec_file implementation.
-> 
-> As I requested in version 14:
-> 
->   The intent of the helper functions is related to properties whose values are
->    tuples of the same format as the "reg" property of the "/memory" nodes.  For
->    example, the "linux,usable-memory-range" and "linux,elfcoredhr" properties of
->    the "/chosen" node.
-> 
->    The patch header and the function names should be updated to reflect this intent.
-
-I agree regarding the patch header.
-
-> 
-> >>
-> >> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> Cc: Frank Rowand <frowand.list@gmail.com>
-> >> Cc: devicetree@vger.kernel.org
-> >> ---
-> 
-> Missing list of changes since version 14.
-
-Sorry for the inconvenience, but a whole change list goes into
-the cover letter, not individual patches.
-
-> 
-> >>  drivers/of/fdt.c       | 56 ++++++++++++++++++++++++++++++++++++++++++
-> >>  include/linux/of_fdt.h |  4 +++
-> >>  2 files changed, 60 insertions(+)
-> >>
-> >> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> >> index 800ad252cf9c..c65c31562ccb 100644
-> >> --- a/drivers/of/fdt.c
-> >> +++ b/drivers/of/fdt.c
-> >> @@ -25,6 +25,7 @@
-> >>  #include <linux/debugfs.h>
-> >>  #include <linux/serial_core.h>
-> >>  #include <linux/sysfs.h>
-> >> +#include <linux/types.h>
-> >>
-> >>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
-> >>  #include <asm/page.h>
-> >> @@ -1323,3 +1324,58 @@ late_initcall(of_fdt_raw_init);
-> >>  #endif
-> >>
-> >>  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> 
-> In v14 I requested:
-> 
->    Please add comment:
-> 
->    /* helper functions for arm64 kexec */
-
-Okay.
-
-> 
-> >> +
-> >> +#define FDT_ALIGN(x, a)        (((x) + (a) - 1) & ~((a) - 1))
-> >> +#define FDT_TAGALIGN(x)        (FDT_ALIGN((x), FDT_TAGSIZE))
-> >> +
-> >> +int fdt_prop_len(const char *prop_name, int len)
-> 
-> In v14, I requested:
-> 
->    Please rename as fdt_len_added_prop()
-
-Anyhow, I will drop this function, preferring to new
-fdt_[address|size]_cells().
-
-> I'm not really happy with my suggested name, but do not have a
-> better one yet.  As Rob notes, maybe David G will have a helpful
-> comment.
-> 
-> >> +{
-> >> +       return (strlen(prop_name) + 1) +
-> >> +               sizeof(struct fdt_property) +
-> >> +               FDT_TAGALIGN(len);
-> > 
-> > Looks like you are using this to calculate how much space you need to
-> > allocate in addition to the current DTB for a couple of new or
-> > replaced properties. I'm not sure that this calculation is completely
-> > accurate. And it is strange there doesn't seem to be any libfdt
-> > function for this already. It would be simpler to just add some fixed
-> > additional amount.
-> > 
-> > Maybe David G has comments on this?
-
-I'm not quit sure why it's not that accurate, but as I said in a reply to
-David's comment, I will take your suggestion.
-
-> >> +}
-> >> +
-> > 
-> > The rest of this should go in drivers/of/fdt_address.c. Ultimately, it
-> > should go into libfdt, but I'm fine with having it in the kernel for
-> > now.
-> > 
-> >> +static void fill_property(void *buf, u64 val64, int cells)
-> 
-> In v14 I requested:
-> 
-> Please rename as cpu64_to_fdt_cells()
-
-I don't mind, but this function may be dropped if Rob sticks to
-u-boot's fdt_pack_reg() over my fdt_setprop_reg().
-
-> 
-> >> +{
-> >> +       __be32 val32;
-> >> +
-> >> +       while (cells) {
-> >> +               val32 = cpu_to_fdt32((val64 >> (32 * (--cells))) & U32_MAX);
-> >> +               memcpy(buf, &val32, sizeof(val32));
-> >> +               buf += sizeof(val32);
-> > 
-> > This is kind of hard to read. I would copy u-boot's fdt_pack_reg function.
-> > 
-> > BTW, for purposes of moving to libfdt, we'll need the authors'
-> > (Masahiro Yamada and Hans de Goede) permission to dual license.
-> > 
-> >> +       }
-> >> +}
-> >> +
-> >> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> >> +                                               u64 addr, u64 size)
-> >> +{
-> >> +       int addr_cells, size_cells;
-> 
-> unsigned
-
-fdt_[address|size]_cell() returns an int.
-
-> 
-> >> +       char buf[sizeof(__be32) * 2 * 2];
-> >> +               /* assume dt_root_[addr|size]_cells <= 2 */
-> >> +       void *prop;
-> >> +       size_t buf_size;
-> >> +
-> >> +       addr_cells = fdt_address_cells(fdt, 0);
-> >> +       if (addr_cells < 0)
-> >> +               return addr_cells;
-> >> +       size_cells = fdt_size_cells(fdt, 0);
-> >> +       if (size_cells < 0)
-> >> +               return size_cells;
-> >> +
-> >> +       /* if *_cells >= 2, cells can hold 64-bit values anyway */
-> >> +       if ((addr_cells == 1) && (addr > U32_MAX))
-> >> +               return -FDT_ERR_BADVALUE;
-> >> +
-> >> +       if ((size_cells == 1) && (size > U32_MAX))
-> >> +               return -FDT_ERR_BADVALUE;
-> 
-> In v14 I requested:
-> 
->    Should also check that base + size does not wrap around.
-
-Okay, I will start discussion, as you have suggested, in devicetree-spec ML.
-
-Thanks,
--Takahiro Akashi
-
-> 
-> >> +
-> >> +       buf_size = (addr_cells + size_cells) * sizeof(u32);
-> >> +       prop = buf;
-> >> +
-> >> +       fill_property(prop, addr, addr_cells);
-> >> +       prop += addr_cells * sizeof(u32);
-> >> +
-> >> +       fill_property(prop, size, size_cells);
-> >> +
-> >> +       return fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
-> >> +}
-> >> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-> >> index b9cd9ebdf9b9..842af6ea92ea 100644
-> >> --- a/include/linux/of_fdt.h
-> >> +++ b/include/linux/of_fdt.h
-> >> @@ -108,5 +108,9 @@ static inline void unflatten_device_tree(void) {}
-> >>  static inline void unflatten_and_copy_device_tree(void) {}
-> >>  #endif /* CONFIG_OF_EARLY_FLATTREE */
-> >>
-> >> +int fdt_prop_len(const char *prop_name, int len);
-> >> +int fdt_setprop_reg(void *fdt, int nodeoffset, const char *name,
-> >> +                                               u64 addr, u64 size);
-> >> +
-> >>  #endif /* __ASSEMBLY__ */
-> >>  #endif /* _LINUX_OF_FDT_H */
-> >> --
-> >> 2.19.0
-> >>
-> > 
-> 
+diff --git a/arch/csky/include/asm/syscall.h b/arch/csky/include/asm/syscall.h
+new file mode 100644
+index 0000000..926a64a
+--- /dev/null
++++ b/arch/csky/include/asm/syscall.h
+@@ -0,0 +1,71 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef __ASM_SYSCALL_H
++#define __ASM_SYSCALL_H
++
++#include <linux/sched.h>
++#include <linux/err.h>
++#include <abi/regdef.h>
++
++static inline int
++syscall_get_nr(struct task_struct *task, struct pt_regs *regs)
++{
++	return regs_syscallid(regs);
++}
++
++static inline void
++syscall_rollback(struct task_struct *task, struct pt_regs *regs)
++{
++	regs->a0 = regs->orig_a0;
++}
++
++static inline long
++syscall_get_error(struct task_struct *task, struct pt_regs *regs)
++{
++	unsigned long error = regs->a0;
++
++	return IS_ERR_VALUE(error) ? error : 0;
++}
++
++static inline long
++syscall_get_return_value(struct task_struct *task, struct pt_regs *regs)
++{
++	return regs->a0;
++}
++
++static inline void
++syscall_set_return_value(struct task_struct *task, struct pt_regs *regs,
++		int error, long val)
++{
++	regs->a0 = (long) error ?: val;
++}
++
++static inline void
++syscall_get_arguments(struct task_struct *task, struct pt_regs *regs,
++		      unsigned int i, unsigned int n, unsigned long *args)
++{
++	BUG_ON(i + n > 6);
++	if (i == 0) {
++		args[0] = regs->orig_a0;
++		args++;
++		i++;
++		n--;
++	}
++	memcpy(args, &regs->a1 + i * sizeof(regs->a1), n * sizeof(args[0]));
++}
++
++static inline void
++syscall_set_arguments(struct task_struct *task, struct pt_regs *regs,
++		      unsigned int i, unsigned int n, const unsigned long *args)
++{
++	BUG_ON(i + n > 6);
++	if (i == 0) {
++		regs->orig_a0 = args[0];
++		args++;
++		i++;
++		n--;
++	}
++	memcpy(&regs->a1 + i * sizeof(regs->a1), args, n * sizeof(regs->a0));
++}
++
++#endif	/* __ASM_SYSCALL_H */
+diff --git a/arch/csky/include/asm/syscalls.h b/arch/csky/include/asm/syscalls.h
+new file mode 100644
+index 0000000..5d48e5e
+--- /dev/null
++++ b/arch/csky/include/asm/syscalls.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
++
++#ifndef __ASM_CSKY_SYSCALLS_H
++#define __ASM_CSKY_SYSCALLS_H
++
++#include <asm-generic/syscalls.h>
++
++long sys_cacheflush(void __user *, unsigned long, int);
++
++long sys_set_thread_area(unsigned long addr);
++
++long sys_csky_fadvise64_64(int fd, int advice, loff_t offset, loff_t len);
++
++#endif /* __ASM_CSKY_SYSCALLS_H */
+diff --git a/arch/csky/include/uapi/asm/unistd.h b/arch/csky/include/uapi/asm/unistd.h
+new file mode 100644
+index 0000000..16ed71e
+--- /dev/null
++++ b/arch/csky/include/uapi/asm/unistd.h
+@@ -0,0 +1,10 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
++
++#define __ARCH_WANT_SYS_CLONE
++#include <asm-generic/unistd.h>
++
++#define __NR_set_thread_area	(__NR_arch_specific_syscall + 0)
++__SYSCALL(__NR_set_thread_area, sys_set_thread_area)
++#define __NR_cacheflush		(__NR_arch_specific_syscall + 4)
++__SYSCALL(__NR_cacheflush, sys_cacheflush)
+diff --git a/arch/csky/kernel/syscall.c b/arch/csky/kernel/syscall.c
+new file mode 100644
+index 0000000..3d30e58
+--- /dev/null
++++ b/arch/csky/kernel/syscall.c
+@@ -0,0 +1,43 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
++
++#include <linux/syscalls.h>
++
++SYSCALL_DEFINE1(set_thread_area, unsigned long, addr)
++{
++	struct thread_info *ti = task_thread_info(current);
++	struct pt_regs *reg = current_pt_regs();
++
++	reg->tls = addr;
++	ti->tp_value = addr;
++
++	return 0;
++}
++
++SYSCALL_DEFINE6(mmap2,
++	unsigned long, addr,
++	unsigned long, len,
++	unsigned long, prot,
++	unsigned long, flags,
++	unsigned long, fd,
++	off_t, offset)
++{
++	if (unlikely(offset & (~PAGE_MASK >> 12)))
++		return -EINVAL;
++
++	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
++			       offset >> (PAGE_SHIFT - 12));
++}
++
++/*
++ * for abiv1 the 64bits args should be even th, So we need mov the advice
++ * forward.
++ */
++SYSCALL_DEFINE4(csky_fadvise64_64,
++	int, fd,
++	int, advice,
++	loff_t, offset,
++	loff_t, len)
++{
++	return ksys_fadvise64_64(fd, offset, len, advice);
++}
+diff --git a/arch/csky/kernel/syscall_table.c b/arch/csky/kernel/syscall_table.c
+new file mode 100644
+index 0000000..a0c238c
+--- /dev/null
++++ b/arch/csky/kernel/syscall_table.c
+@@ -0,0 +1,14 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2018 Hangzhou C-SKY Microsystems co.,ltd.
++
++#include <linux/syscalls.h>
++#include <asm/syscalls.h>
++
++#undef __SYSCALL
++#define __SYSCALL(nr, call)[nr] = (call),
++
++#define sys_fadvise64_64 sys_csky_fadvise64_64
++void * const sys_call_table[__NR_syscalls] __page_aligned_data = {
++	[0 ... __NR_syscalls - 1] = sys_ni_syscall,
++#include <asm/unistd.h>
++};
+-- 
+2.7.4
