@@ -1,69 +1,56 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V10 5/8] clocksource: add C-SKY SMP timer
-Date: Fri, 5 Oct 2018 22:03:19 +0800
-Message-ID: <20181005140319.GA6789@guoren-Inspiron-7460>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
- <76f127a22faf8f110f102ee3534792b2b84a7d78.1538672812.git.ren_guo@c-sky.com>
- <4ec284a4-0cff-91b8-bd0a-6eb578b28432@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 09/13] dt-bindings: timer: renesas: cmt: document R-Car gen3 support
+Date: Fri,  5 Oct 2018 16:35:38 +0200
+Message-ID: <1538750143-4282-9-git-send-email-daniel.lezcano@linaro.org>
+References: <20181005143253.GE1881@mai>
+ <1538750143-4282-1-git-send-email-daniel.lezcano@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4ec284a4-0cff-91b8-bd0a-6eb578b28432@linaro.org>
+In-Reply-To: <1538750143-4282-1-git-send-email-daniel.lezcano@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: tglx@linutronix.de
+Cc: linux-kernel@vger.kernel.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-On Fri, Oct 05, 2018 at 03:48:58PM +0200, Daniel Lezcano wrote:
-> On 04/10/2018 19:22, Guo Ren wrote:
-> > This timer is used by SMP system and use mfcr/mtcr instruction
-> > to access the regs.
-> > 
-> > Changelog:
-> >  - Add rollback for timer_of_cleanup.
-> >  - Use request_percpu_irq separate from time_of.
-> >  - Remove #define CPUHP_AP_CSKY_TIMER_STARTING.
-> >  - Add CPUHP_AP_CSKY_TIMER_STARTING in cpuhotplug.h.
-> >  - Support csky mp timer alpha version.
-> >  - Just use low-counter with 32bit width as clocksource.
-> >  - Coding convention with upstream feed-back.
-> > 
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > ---
-> >  drivers/clocksource/Kconfig         |  10 +++
-> >  drivers/clocksource/Makefile        |   1 +
-> >  drivers/clocksource/timer-mp-csky.c | 173 ++++++++++++++++++++++++++++++++++++
-> >  include/linux/cpuhotplug.h          |   1 +
-> >  4 files changed, 185 insertions(+)
-> >  create mode 100644 drivers/clocksource/timer-mp-csky.c
-> > 
-> > diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> > index a11f4ba..826a2e8 100644
-> > --- a/drivers/clocksource/Kconfig
-> > +++ b/drivers/clocksource/Kconfig
-> > @@ -620,4 +620,14 @@ config RISCV_TIMER
-> >  	  is accessed via both the SBI and the rdcycle instruction.  This is
-> >  	  required for all RISC-V systems.
-> >  
-> > +config CSKY_MP_TIMER
-> > +	bool "SMP Timer for the C-SKY platform"
-> > +	depends on CSKY
-> > +	select TIMER_OF
-> > +	help
-> > +	  Say yes here to enable C-SKY SMP timer driver used for C-SKY SMP
-> > +	  system.
-> > +	  csky,mptimer is not only used in SMP system, it also could be used
-> > +	  single core system. It's not a mmio reg and it use mtcr/mfcr instruction.
-> 
-> 
-> ... COMPILE_TEST :)
-Ops... I forgot it, should be: 
-	bool "SMP Timer for the C-SKY platform" if COMPILE_TEST
+Document support for the R-Car gen3 CMT types 0/1 bindings -- they seem
+to be the same CMT types 0/1 as in the R-Car gen2 SoCs.
 
-Thx for remind and any other review is welcome.
+Also document R8A779{7|8}0 bindings as these are the R-Car gen3 SoCs for
+which the initial support was done.
 
-Best Regards
- Guo Ren
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ Documentation/devicetree/bindings/timer/renesas,cmt.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+index b40add2..49948fc 100644
+--- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+@@ -34,6 +34,10 @@ Required Properties:
+     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
+     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
+     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
++    - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
++    - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
++    - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
++    - "renesas,r8a77980-cmt1" for the 48-bit CMT1 device included in r8a77980.
+ 
+     - "renesas,rcar-gen2-cmt0" for 32-bit CMT0 devices included in R-Car Gen2
+ 		and RZ/G1.
+@@ -41,6 +45,9 @@ Required Properties:
+ 		and RZ/G1.
+ 		These are fallbacks for r8a73a4, R-Car Gen2 and RZ/G1 entries
+ 		listed above.
++    - "renesas,rcar-gen3-cmt0" for 32-bit CMT0 devices included in R-Car Gen3.
++    - "renesas,rcar-gen3-cmt1" for 48-bit CMT1 devices included in R-Car Gen3.
++		These are fallbacks for R-Car Gen3 entries listed above.
+ 
+   - reg: base address and length of the registers block for the timer module.
+   - interrupts: interrupt-specifier for the timer, one per channel.
+-- 
+2.7.4
