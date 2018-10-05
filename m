@@ -1,29 +1,54 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V10 6/8] dt-bindings: timer: C-SKY Multi-processor timer
-Date: Fri, 5 Oct 2018 15:23:04 -0500
-Message-ID: <20181005202304.GA26220@bogus>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
- <98c73d601d7ad98993ecfe8d8ce4b5abbc07e4da.1538672812.git.ren_guo@c-sky.com>
+Subject: Re: [PATCH v9 1/2] dt-bindings: hwmon: Add ina3221 documentation
+Date: Fri, 5 Oct 2018 15:24:36 -0500
+Message-ID: <20181005202436.GA28437@bogus>
+References: <20181002010523.2019-1-nicoleotsuka@gmail.com>
+ <20181002010523.2019-2-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <98c73d601d7ad98993ecfe8d8ce4b5abbc07e4da.1538672812.git.ren_guo@c-sky.com>
+In-Reply-To: <20181002010523.2019-2-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, afd@ti.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  5 Oct 2018 01:22:26 +0800, Guo Ren wrote:
-> Dt-bingdings doc for C-SKY SMP system setting.
+On Mon,  1 Oct 2018 18:05:22 -0700, Nicolin Chen wrote:
+> Texas Instruments INA3221 is a triple-channel shunt and bus
+> voltage monitor. This patch adds a DT binding doc for it.
 > 
-> Changelog:
->  - Drop the interrupt-parent.
-> 
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 > ---
->  .../devicetree/bindings/timer/csky,mptimer.txt     | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/csky,mptimer.txt
+> Changelog
+> v7->v9:
+>  * N/A
+> v6->v7:
+>  * Restored three channel examples and merged them with the parent one
+> v5->v6:
+>  * Removed status property as no need to explicitly list it.
+>  * Combined all examples into a complete one.
+> v4->v5:
+>  * Replaced "input-id" with "reg" and added address-cells and size-cells
+>  * Replaced "input-label" with "label"
+>  * Replaced "shunt-resistor" with "shunt-resistor-micro-ohms"
+> v3->v4:
+>  * Removed the attempt of putting labels in the node names
+>  * Added a new optional label property in the child node
+>  * Updated examples accordingly
+> v2->v3:
+>  * Added a simple subject in the line 1
+>  * Fixed the shunt resistor value in the example
+> v1->v2:
+>  * Dropped channel name properties
+>  * Added child node definitions.
+>  * * Added shunt resistor property in the child node
+>  * * Added status property to indicate connection status
+>  * * Changed to use child node name as the label of input source
+> 
+>  .../devicetree/bindings/hwmon/ina3221.txt     | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/ina3221.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
