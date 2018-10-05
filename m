@@ -1,96 +1,164 @@
-From: Douglas Anderson <dianders@chromium.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845: Add qspi (quad SPI) node
-Date: Thu,  4 Oct 2018 18:59:02 -0700
-Message-ID: <20181005015902.134192-1-dianders@chromium.org>
+From: Pankaj Bansal <pankaj.bansal@nxp.com>
+Subject: [PATCH v2] arm64: dts: add LX2160AQDS board support
+Date: Fri,  5 Oct 2018 13:40:53 +0530
+Message-ID: <20181005081053.27105-1-pankaj.bansal@nxp.com>
+References: <20180921141720.19159-1-pankaj.bansal@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Ryan Case <ryandcase@chromium.org>, linux-arm-msm@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180921141720.19159-1-pankaj.bansal@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, Pankaj Bansal <pankaj.bansal@nxp.com>, Rob Herring <robh+dt@kernel.org>, Vabhav Sharma <vabhav.sharma@nxp.com>, Sriram Dash <sriram.dash@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the Quad SPI controller to the main sdm845 device tree file.
-Boards will be expected to assign the proper pinctrl depending on how
-many chip selects they have hooked up and how many data lines.
+The LX2160A QorIQ Development System (QDS) is a test, evaluation, and
+development platform, supporting QorIQ LX2160A processor.
 
-This depends on commit 48735597f7bd ("clk: qcom: Add qspi (Quad SPI)
-clock defines for sdm845 to header") to add the needed defines.  It
-also shouldn't land until the patch ("dt-bindings: spi: Qualcomm Quad
-SPI(QSPI) documentation") [1] lands.
-
-[1] https://lkml.kernel.org/r/20181002214709.162330-1-ryandcase@chromium.org
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
 ---
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 47 ++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+Notes:
+    V2:
+     - Sorted the nodes alphabetically
+     - Sorted the files' in Makefile alphabetically
+     - Added newline between property list and sub nodes
+     - Added and defined vcc-supply property to temperature sensor node in  device tree
+    
+    This patch is dependent on below patches
+     [1] https://lore.kernel.org/patchwork/patch/995430/
+     [2] https://lore.kernel.org/patchwork/patch/995433/
+     [3] https://lore.kernel.org/patchwork/patch/995434/
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b72bdb0a31a5..cfc96262e8dd 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -822,6 +822,41 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 
-+			qspi_clk: qspi-clk {
-+				pinmux {
-+					pins = "gpio95";
-+					function = "qspi_clk";
-+				};
-+			};
+ arch/arm64/boot/dts/freescale/Makefile       |   1 +
+ .../boot/dts/freescale/fsl-lx2160a-qds.dts   | 100 +++++++++++++++++
+ 2 files changed, 101 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 445b72bd5a36..46b1479b7a6b 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -13,4 +13,5 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+new file mode 100644
+index 000000000000..e1df5758c3e4
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+@@ -0,0 +1,100 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++//
++// Device Tree file for LX2160AQDS
++//
++// Copyright 2018 NXP
 +
-+			qspi_cs0: qspi-cs0 {
-+				pinmux {
-+					pins = "gpio90";
-+					function = "qspi_cs";
-+				};
-+			};
++/dts-v1/;
 +
-+			qspi_cs1: qspi-cs1 {
-+				pinmux {
-+					pins = "gpio89";
-+					function = "qspi_cs";
-+				};
-+			};
++#include "fsl-lx2160a.dtsi"
 +
-+			qspi_data01: qspi-data01 {
-+				pinmux-data {
-+					pins = "gpio91", "gpio92";
-+					function = "qspi_data";
-+				};
-+			};
++/ {
++	model = "NXP Layerscape LX2160AQDS";
++	compatible = "fsl,lx2160a-qds", "fsl,lx2160a";
 +
-+			qspi_data12: qspi-data12 {
-+				pinmux-data {
-+					pins = "gpio93", "gpio94";
-+					function = "qspi_data";
-+				};
-+			};
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
 +
- 			qup_i2c0_default: qup-i2c0-default {
- 				pinmux {
- 					pins = "gpio0", "gpio1";
-@@ -1070,6 +1105,18 @@
- 			};
- 		};
- 
-+		qspi: qspi@88df000 {
-+			compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
-+			reg = <0x88df000 0x600>;
++	sb_3v3: regulator-fixed {
++		compatible = "regulator-fixed";
++		regulator-name = "fixed-3.3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++};
++
++&crypto {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	i2c-mux@77 {
++		compatible = "nxp,pca9547";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@2 {
 +			#address-cells = <1>;
 +			#size-cells = <0>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
-+				 <&gcc GCC_QSPI_CORE_CLK>;
-+			clock-names = "iface", "core";
-+			status = "disabled";
++			reg = <0x2>;
++
++			power-monitor@40 {
++				compatible = "ti,ina220";
++				reg = <0x40>;
++				shunt-resistor = <500>;
++			};
++
++			power-monitor@41 {
++				compatible = "ti,ina220";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
 +		};
 +
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
- 			reg = <0x88e2000 0x400>;
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++
++			temperature-sensor@4c {
++				compatible = "nxp,sa56004";
++				reg = <0x4c>;
++				vcc-supply = <&sb_3v3>;
++			};
++
++			temperature-sensor@4d {
++				compatible = "nxp,sa56004";
++				reg = <0x4d>;
++				vcc-supply = <&sb_3v3>;
++			};
++
++			rtc@51 {
++				compatible = "nxp,pcf2129";
++				reg = <0x51>;
++			};
++		};
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
 -- 
-2.19.0.605.g01d371f741-goog
+2.17.1
