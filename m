@@ -1,43 +1,81 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 4/6] clk: qoriq: Add clockgen support for lx2160a
-Date: Fri, 5 Oct 2018 09:23:32 +0530
-Message-ID: <20181005035332.4ogmxyxiwisok7xs@vireshk-i7>
-References: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
- <1538615031-7507-5-git-send-email-vabhav.sharma@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1538615031-7507-5-git-send-email-vabhav.sharma@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vabhav Sharma <vabhav.sharma@nxp.com>
-Cc: mark.rutland@arm.com, kstewart@linuxfoundation.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, mturquette@baylibre.com, will.deacon@arm.com, yamada.masahiro@socionext.com, linux-clk@vger.kernel.org, pankaj.bansal@nxp.com, udit.kumar@nxp.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de, linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, oss@buserror.net, robh+dt@kernel.org, V.Sethi@nxp.com, linux-arm-kernel@lists.infradead.org, Tang Yuantian <andy.tang@nxp.com>, sboyd@kernel.org, gregkh@linuxfoundation.org, rjw@rjwysocki.net, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, sudeep.holla@arm.com, shawnguo@kernel.org
+From: frowand.list@gmail.com
+Subject: [PATCH 00/16] of: overlay: validation checks, subsequent fixes
+Date: Thu,  4 Oct 2018 21:12:31 -0700
+Message-ID: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Alan Tull <atull@kernel.org>, Moritz Fischer <mdf@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04-10-18, 06:33, Vabhav Sharma wrote:
-> diff --git a/drivers/cpufreq/qoriq-cpufreq.c b/drivers/cpufreq/qoriq-cpufreq.c
-> index 3d773f6..83921b7 100644
-> --- a/drivers/cpufreq/qoriq-cpufreq.c
-> +++ b/drivers/cpufreq/qoriq-cpufreq.c
-> @@ -295,6 +295,7 @@ static const struct of_device_id node_matches[] __initconst = {
->  	{ .compatible = "fsl,ls1046a-clockgen", },
->  	{ .compatible = "fsl,ls1088a-clockgen", },
->  	{ .compatible = "fsl,ls2080a-clockgen", },
-> +	{ .compatible = "fsl,lx2160a-clockgen", },
->  	{ .compatible = "fsl,p4080-clockgen", },
->  	{ .compatible = "fsl,qoriq-clockgen-1.0", },
->  	{ .compatible = "fsl,qoriq-clockgen-2.0", },
+From: Frank Rowand <frank.rowand@sony.com>
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Add checks to (1) overlay apply process and (2) memory freeing
+triggered by overlay release.  The checks are intended to detect
+possible memory leaks and invalid overlays.
+
+The checks revealed bugs in existing code.  Fixed the bugs.
+
+While fixing bugs, noted other issues, which are fixed in
+separate patches.
+
+*****  Powerpc folks: I was not able to test the patches that
+*****  directly impact Powerpc systems that use dynamic
+*****  devicetree.  Please review that code carefully and
+*****  test.  The specific patches are: 03/16, 04/16, 07/16
+
+FPGA folks:
+
+  I made the validation checks that should result in an
+  invalid live devicetree report "ERROR" and cause the overlay apply
+  to fail.
+
+  I made the memory leak validation tests report "WARNING" and allow
+  the overlay apply to complete successfully.  Please let me know
+  if you encounter the warnings.  There are at least two paths
+  forward to deal with the cases that trigger the warning: (1) change
+  the warning to an error and fail the overlay apply, or (2) find a
+  way to detect the potential memory leaks and free the memory
+  appropriately.
+
+ALL people:
+
+  The validations do _not_ address another major concern I have with
+  releasing overlays, which is use after free errors.
+
+Frank Rowand (16):
+  of: overlay: add tests to validate kfrees from overlay removal
+  of: overlay: add missing of_node_put() after add new node to changeset
+  of: overlay: add missing of_node_get() in __of_attach_node_sysfs
+  powerpc/pseries: add of_node_put() in dlpar_detach_node()
+  of: overlay: use prop add changeset entry for property in new nodes
+  of: overlay: do not duplicate properties from overlay for new nodes
+  of: dynamic: change type of of_{at,de}tach_node() to void
+  of: overlay: reorder fields in struct fragment
+  of: overlay: validate overlay properties #address-cells and
+    #size-cells
+  of: overlay: make all pr_debug() and pr_err() messages unique
+  of: overlay: test case of two fragments adding same node
+  of: overlay: check prevents multiple fragments add or delete same node
+  of: overlay: check prevents multiple fragments touching same property
+  of: unittest: remove unused of_unittest_apply_overlay() argument
+  of: unittest: initialize args before calling of_irq_parse_one()
+  of: unittest: find overlays[] entry by name instead of index
+
+ arch/powerpc/platforms/pseries/dlpar.c             |  15 +-
+ arch/powerpc/platforms/pseries/reconfig.c          |   6 +-
+ drivers/of/dynamic.c                               |  41 +++-
+ drivers/of/kobj.c                                  |   4 +-
+ drivers/of/overlay.c                               | 271 ++++++++++++++++-----
+ drivers/of/unittest-data/Makefile                  |   2 +
+ .../of/unittest-data/overlay_bad_add_dup_node.dts  |  28 +++
+ .../of/unittest-data/overlay_bad_add_dup_prop.dts  |  24 ++
+ drivers/of/unittest-data/overlay_base.dts          |   1 +
+ drivers/of/unittest.c                              |  43 +++-
+ include/linux/of.h                                 |  19 +-
+ 11 files changed, 353 insertions(+), 101 deletions(-)
+ create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_node.dts
+ create mode 100644 drivers/of/unittest-data/overlay_bad_add_dup_prop.dts
 
 -- 
-viresh
+Frank Rowand <frank.rowand@sony.com>
