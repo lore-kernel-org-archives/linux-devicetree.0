@@ -1,82 +1,54 @@
-From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3 2/2] media: platform: Add Aspeed Video Engine driver
-Date: Fri, 5 Oct 2018 15:03:11 -0500
-Message-ID: <8476027d-80d5-2787-944b-eb3f5af717c3@linux.vnet.ibm.com>
-References: <1537903629-14003-1-git-send-email-eajames@linux.ibm.com>
- <1537903629-14003-3-git-send-email-eajames@linux.ibm.com>
- <a78d4c7a-ac58-c23d-a683-23dce54be993@xs4all.nl>
- <ca4757b9-0825-bbbf-b388-0295fd13bad7@linux.vnet.ibm.com>
- <373d2ca3-a6cd-8d87-2bbc-613d65305170@xs4all.nl>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] regulator: fixed: Use more standard GPIO binding
+Date: Fri, 5 Oct 2018 15:17:33 -0500
+Message-ID: <CAL_Jsq+Dpv1NohnMaLEV3ZMdHYBwMZMaFtftc8z9X1wORCCT3A@mail.gmail.com>
+References: <20181004090654.32233-1-linus.walleij@linaro.org>
+ <20181004105031.GD6412@sirena.org.uk> <CACRpkdZZHYSRXktPLHKRc4Afsegn4q3rOmcPMhXh5chC1jH-JQ@mail.gmail.com>
+ <20181004135427.GE6412@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <373d2ca3-a6cd-8d87-2bbc-613d65305170@xs4all.nl>
-Content-Language: en-US
+In-Reply-To: <20181004135427.GE6412@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>, Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mchehab@kernel.org, linux-media@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Leonard Crestez <leonard.crestez@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Oct 4, 2018 at 8:54 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Oct 04, 2018 at 01:32:13PM +0200, Linus Walleij wrote:
+> > On Thu, Oct 4, 2018 at 12:50 PM Mark Brown <broonie@kernel.org> wrote:
+> > > On Thu, Oct 04, 2018 at 11:06:54AM +0200, Linus Walleij wrote:
+>
+> > > >  Optional properties:
+> > > > -- gpio: gpio to use for enable control
+> > > > +- gpios: gpio to use for enable control
+>
+> > > Are we supposed to be able to have just plain gpios as a standards
+> > > conforming property or would best practice be to call it enable-gpios or
+> > > something?
+>
+> > Oh I didn't think of that really. The gpio-regulator indeed uses
+> > enable-gpio for the same thing. But it complicates things codewise,
+> > as the GPIO line is also optional. I'm a bit uncertain, I tend
+> > to think just "gpios" is fine when the usage is unambigous. but
+> > I don't know what the DT maintainers think.
+>
+> Right, well from my point of view -gpio is perfectly fine also so... :)
+> Rob?
 
+Just 'gpios' is fine generally when there's only one (or one group).
 
-On 10/04/2018 08:12 AM, Hans Verkuil wrote:
-> On 10/03/18 22:43, Eddie James wrote:
->>
->> On 09/28/2018 06:30 AM, Hans Verkuil wrote:
->>> On 09/25/2018 09:27 PM, Eddie James wrote:
->>>> The Video Engine (VE) embedded in the Aspeed AST2400 and AST2500 SOCs
->>>> can capture and compress video data from digital or analog sources. With
->>>> the Aspeed chip acting a service processor, the Video Engine can capture
->>>> the host processor graphics output.
->>>>
->>>> Add a V4L2 driver to capture video data and compress it to JPEG images.
->>>> Make the video frames available through the V4L2 streaming interface.
->>>>
->>>> Signed-off-by: Eddie James <eajames@linux.ibm.com>
->>>> +	}
->>>> +
->>>> +	video->height = (bottom - top) + 1;
->>>> +	video->width = (right - left) + 1;
->>>> +	size = video->height * video->width;
->>> It looks like you can actually determine the blanking width/height and
->>> possibly even more detailed information that would be very useful to
->>> show with the DV_TIMINGS ioctls.
->> Hmm. This information is related to the video signal captured from the
->> host. That information has nothing to do with the buffer that is
->> compressed and grabbed by the driver and ultimately provided to
->> userspace. Isn't the timing information meaningless for JPEG frames?
-> It helps in debugging. Basically you are implementing a receiver for a
-> video signal. So if for some reason you cannot support the video timings
-> that the host sends, then it is very useful to have QUERY_DV_TIMINGS report
-> as much information about the signal as possible.
->
-> BTW, out of curiosity, how are the host video signals connected to the
-> aspeed? Is it still a VGA video signal?
->
-> Looking at product briefs it appears that it is VGA. So I guess the aspeed
-> 'sniffs' the VGA signals from the host and can capture the video that way.
-> Is that correct?
+Ideally, gpio-regulator would be a superset of fixed-regulator. The
+difference would essentially be the voltage control gpios and state
+properties. Changing the names though will break forwards
+compatibility if dts files are updated and these are widely used. So
+probably not worth trying to change unless you want to carry code to
+handle both. That applies to gpio -> gpios too if dts files are
+updated and older kernels don't handle both cases. But updating just
+the documentation should be fine.
 
-I believe it is a VGA signal from the host, but the Aspeed Video Engine 
-somewhat abstracts that away; not all the signal information that the 
-engine is receiving is available to the BMC interface. I did add the 
-timing information I could access to the latest patch set. As you say, 
-it could be useful for debugging if weird things are happening.
+BTW, 'enable-active-high' is also a bit strange as that should just be
+encoded into 'enable-gpio' flags. We should really deprecate that.
 
-Thanks!
-Eddie
-
->
-> If so, then this driver is a VGA receiver and should act like that.
-> The host can configure its VGA transmitter to invalid timings, or weird
-> values, and you need to be able to handle that in your driver.
->
->> Forgot to include this question in my previous reply, sorry for the
->> additional mail.
-> No problem! Happy to help.
->
-> Regards,
->
-> 	Hans
->
+Rob
