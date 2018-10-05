@@ -1,136 +1,67 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 35/36] dt-bindings: arm: Convert Xilinx board/soc bindings to json-schema
-Date: Fri,  5 Oct 2018 11:58:47 -0500
-Message-ID: <20181005165848.3474-36-robh@kernel.org>
+Subject: [PATCH 36/36] dt-bindings: arm: Convert ZTE board/soc bindings to json-schema
+Date: Fri,  5 Oct 2018 11:58:48 -0500
+Message-ID: <20181005165848.3474-37-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Michal Simek <michal.simek@xilinx.com>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Jun Nie <jun.nie@linaro.org>, Baoyou Xie <baoyou.xie@linaro.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert Xilinx SoC bindings to DT schema format using json-schema.
+Convert ZTE SoC bindings to DT schema format using json-schema.
 
+Cc: Jun Nie <jun.nie@linaro.org>
+Cc: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/xilinx.txt        | 83 -------------------
- .../devicetree/bindings/arm/xilinx.yaml       | 81 ++++++++++++++++++
- 2 files changed, 81 insertions(+), 83 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/xilinx.txt
- create mode 100644 Documentation/devicetree/bindings/arm/xilinx.yaml
+ Documentation/devicetree/bindings/arm/zte.txt | 14 ----------
+ .../devicetree/bindings/arm/zte.yaml          | 26 +++++++++++++++++++
+ 2 files changed, 26 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/zte.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/zte.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/xilinx.txt b/Documentation/devicetree/bindings/arm/xilinx.txt
+diff --git a/Documentation/devicetree/bindings/arm/zte.txt b/Documentation/devicetree/bindings/arm/zte.txt
 deleted file mode 100644
-index 26fe5ecc4332..000000000000
---- a/Documentation/devicetree/bindings/arm/xilinx.txt
+index 340612794a37..000000000000
+--- a/Documentation/devicetree/bindings/arm/zte.txt
 +++ /dev/null
-@@ -1,83 +0,0 @@
--Xilinx Zynq Platforms Device Tree Bindings
+@@ -1,14 +0,0 @@
+-ZTE platforms device tree bindings
 -
--Boards with Zynq-7000 SOC based on an ARM Cortex A9 processor
--shall have the following properties.
+----------------------------------------
+--  ZX296702 board:
+-    Required root node properties:
+-      - compatible = "zte,zx296702-ad1", "zte,zx296702"
 -
--Required root node properties:
--    - compatible = "xlnx,zynq-7000";
+----------------------------------------
+--  ZX296718 SoC:
+-    Required root node properties:
+-      - compatible = "zte,zx296718"
 -
--Additional compatible strings:
--
--- Adapteva Parallella board
--  "adapteva,parallella"
--
--- Avnet MicroZed board
--  "avnet,zynq-microzed"
--  "xlnx,zynq-microzed"
--
--- Avnet ZedBoard board
--  "avnet,zynq-zed"
--  "xlnx,zynq-zed"
--
--- Digilent Zybo board
--  "digilent,zynq-zybo"
--
--- Digilent Zybo Z7 board
--  "digilent,zynq-zybo-z7"
--
--- Xilinx CC108 internal board
--  "xlnx,zynq-cc108"
--
--- Xilinx ZC702 internal board
--  "xlnx,zynq-zc702"
--
--- Xilinx ZC706 internal board
--  "xlnx,zynq-zc706"
--
--- Xilinx ZC770 internal board, with different FMC cards
--  "xlnx,zynq-zc770-xm010"
--  "xlnx,zynq-zc770-xm011"
--  "xlnx,zynq-zc770-xm012"
--  "xlnx,zynq-zc770-xm013"
--
-----------------------------------------------------------------
--
--Xilinx Zynq UltraScale+ MPSoC Platforms Device Tree Bindings
--
--Boards with ZynqMP SOC based on an ARM Cortex A53 processor
--shall have the following properties.
--
--Required root node properties:
--    - compatible = "xlnx,zynqmp";
--
--
--Additional compatible strings:
--
--- Xilinx internal board zc1232
--  "xlnx,zynqmp-zc1232-revA", "xlnx,zynqmp-zc1232"
--
--- Xilinx internal board zc1254
--  "xlnx,zynqmp-zc1254-revA", "xlnx,zynqmp-zc1254"
--
--- Xilinx internal board zc1275
--  "xlnx,zynqmp-zc1275-revA", "xlnx,zynqmp-zc1275"
--
--- Xilinx internal board zc1751
--  "xlnx,zynqmp-zc1751"
--
--- Xilinx 96boards compatible board zcu100
--  "xlnx,zynqmp-zcu100-revC", "xlnx,zynqmp-zcu100"
--
--- Xilinx evaluation board zcu102
--  "xlnx,zynqmp-zcu102-revA", "xlnx,zynqmp-zcu102"
--  "xlnx,zynqmp-zcu102-revB", "xlnx,zynqmp-zcu102"
--  "xlnx,zynqmp-zcu102-rev1.0", "xlnx,zynqmp-zcu102"
--
--- Xilinx evaluation board zcu104
--  "xlnx,zynqmp-zcu104-revA", "xlnx,zynqmp-zcu104"
--
--- Xilinx evaluation board zcu106
--  "xlnx,zynqmp-zcu106-revA", "xlnx,zynqmp-zcu106"
--
--- Xilinx evaluation board zcu111
--  "xlnx,zynqmp-zcu111-revA", "xlnx,zynqmp-zcu111"
-diff --git a/Documentation/devicetree/bindings/arm/xilinx.yaml b/Documentation/devicetree/bindings/arm/xilinx.yaml
+-ZX296718 EVB board:
+-      - "zte,zx296718-evb"
+diff --git a/Documentation/devicetree/bindings/arm/zte.yaml b/Documentation/devicetree/bindings/arm/zte.yaml
 new file mode 100644
-index 000000000000..dd227bccf015
+index 000000000000..147bd78f27ed
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/xilinx.yaml
-@@ -0,0 +1,81 @@
++++ b/Documentation/devicetree/bindings/arm/zte.yaml
+@@ -0,0 +1,26 @@
++# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/soc/arm/xilinx.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/zte.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Xilinx Zynq Platforms Device Tree Bindings
++title: ZTE platforms device tree bindings
 +
 +maintainers:
-+  - Michal Simek <michal.simek@xilinx.com>
-+
-+description: |
-+  Xilinx boards with Zynq-7000 SOC or Zynq UltraScale+ MPSoC
++  - Jun Nie <jun.nie@linaro.org>
 +
 +properties:
 +  $nodename:
@@ -139,65 +70,12 @@ index 000000000000..dd227bccf015
 +    oneOf:
 +      - items:
 +          - enum:
-+              - adapteva,parallella
-+              - digilent,zynq-zybo
-+              - digilent,zynq-zybo-z7
-+              - xlnx,zynq-cc108
-+              - xlnx,zynq-zc702
-+              - xlnx,zynq-zc706
-+              - xlnx,zynq-zc770-xm010
-+              - xlnx,zynq-zc770-xm011
-+              - xlnx,zynq-zc770-xm012
-+              - xlnx,zynq-zc770-xm013
-+          - const: xlnx,zynq-7000
-+
-+      - items:
-+          - const: avnet,zynq-microzed
-+          - const: xlnx,zynq-microzed
-+          - const: xlnx,zynq-7000
-+
-+      - items:
-+          - const: avnet,zynq-zed
-+          - const: xlnx,zynq-zed
-+          - const: xlnx,zynq-7000
-+
++              - zte,zx296702-ad1
++          - const: zte,zx296702
 +      - items:
 +          - enum:
-+              - xlnx,zynqmp-zc1751
-+          - const: xlnx,zynqmp
-+
-+      - description: Xilinx internal board zc1232
-+        items:
-+          - const: xlnx,zynqmp-zc1232-revA
-+          - const: xlnx,zynqmp-zc1232
-+          - const: xlnx,zynqmp
-+
-+      - description: Xilinx internal board zc1254
-+        items:
-+          - const: xlnx,zynqmp-zc1254-revA
-+          - const: xlnx,zynqmp-zc1254
-+          - const: xlnx,zynqmp
-+
-+      - description: Xilinx internal board zc1275
-+        items:
-+          - const: xlnx,zynqmp-zc1275-revA
-+          - const: xlnx,zynqmp-zc1275
-+          - const: xlnx,zynqmp
-+
-+      - description: Xilinx 96boards compatible board zcu100
-+        items:
-+          - const: xlnx,zynqmp-zcu100-revC
-+          - const: xlnx,zynqmp-zcu100
-+          - const: xlnx,zynqmp
-+
-+      - description: Xilinx evaluation board zcu102
-+        items:
-+          - enum:
-+              - xlnx,zynqmp-zcu102-revA
-+              - xlnx,zynqmp-zcu102-revB
-+              - xlnx,zynqmp-zcu102-rev1.0
-+          - const: xlnx,zynqmp-zcu102
-+          - const: xlnx,zynqmp
++              - zte,zx296718-evb
++          - const: zte,zx296718
 +
 +...
 -- 
