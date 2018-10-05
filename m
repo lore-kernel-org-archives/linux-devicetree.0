@@ -1,206 +1,191 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to json-schema
-Date: Fri,  5 Oct 2018 11:58:25 -0500
-Message-ID: <20181005165848.3474-14-robh@kernel.org>
+Subject: [PATCH 07/36] kbuild: Add support for DT binding schema checks
+Date: Fri,  5 Oct 2018 11:58:19 -0500
+Message-ID: <20181005165848.3474-8-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Will Deacon <will.deacon@arm.com>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Masahiro Yamada <yamada.masahiro@socionext.com>, Michal Marek <michal.lkml@markovi.net>, linux-doc@vger.kernel.org, linux-kbuild@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert ARM PMU binding to DT schema format using json-schema.
+This adds the build infrastructure for checking DT binding schema
+documents and validating dts files using the binding schema.
 
-Cc: Will Deacon <will.deacon@arm.com>
+Check DT binding schema documents:
+make dt_binding_check
+
+Build dts files and check using DT binding schema:
+make dtbs_check
+
+Currently, the validation targets are separate from a normal build to
+avoid a hard dependency on the external DT schema project and because
+there are lots of warnings generated.
+
+Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Michal Marek <michal.lkml@markovi.net>
+Cc: linux-doc@vger.kernel.org
 Cc: devicetree@vger.kernel.org
+Cc: linux-kbuild@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/pmu.txt | 70 --------------
- .../devicetree/bindings/arm/pmu.yaml          | 96 +++++++++++++++++++
- 2 files changed, 96 insertions(+), 70 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/pmu.txt
- create mode 100644 Documentation/devicetree/bindings/arm/pmu.yaml
+ .gitignore                                   |  1 +
+ Documentation/Makefile                       |  2 +-
+ Documentation/devicetree/bindings/.gitignore |  2 ++
+ Documentation/devicetree/bindings/Makefile   | 30 ++++++++++++++++++++
+ Makefile                                     |  8 +++++-
+ scripts/Makefile.lib                         | 24 ++++++++++++++--
+ 6 files changed, 63 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/.gitignore
+ create mode 100644 Documentation/devicetree/bindings/Makefile
 
-diff --git a/Documentation/devicetree/bindings/arm/pmu.txt b/Documentation/devicetree/bindings/arm/pmu.txt
-deleted file mode 100644
-index 13611a8199bb..000000000000
---- a/Documentation/devicetree/bindings/arm/pmu.txt
-+++ /dev/null
-@@ -1,70 +0,0 @@
--* ARM Performance Monitor Units
--
--ARM cores often have a PMU for counting cpu and cache events like cache misses
--and hits. The interface to the PMU is part of the ARM ARM. The ARM PMU
--representation in the device tree should be done as under:-
--
--Required properties:
--
--- compatible : should be one of
--	"apm,potenza-pmu"
--	"arm,armv8-pmuv3"
--	"arm,cortex-a73-pmu"
--	"arm,cortex-a72-pmu"
--	"arm,cortex-a57-pmu"
--	"arm,cortex-a53-pmu"
--	"arm,cortex-a35-pmu"
--	"arm,cortex-a17-pmu"
--	"arm,cortex-a15-pmu"
--	"arm,cortex-a12-pmu"
--	"arm,cortex-a9-pmu"
--	"arm,cortex-a8-pmu"
--	"arm,cortex-a7-pmu"
--	"arm,cortex-a5-pmu"
--	"arm,arm11mpcore-pmu"
--	"arm,arm1176-pmu"
--	"arm,arm1136-pmu"
--	"brcm,vulcan-pmu"
--	"cavium,thunder-pmu"
--	"qcom,scorpion-pmu"
--	"qcom,scorpion-mp-pmu"
--	"qcom,krait-pmu"
--- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
--               interrupt (PPI) then 1 interrupt should be specified.
--
--Optional properties:
--
--- interrupt-affinity : When using SPIs, specifies a list of phandles to CPU
--                       nodes corresponding directly to the affinity of
--		       the SPIs listed in the interrupts property.
--
--                       When using a PPI, specifies a list of phandles to CPU
--		       nodes corresponding to the set of CPUs which have
--		       a PMU of this type signalling the PPI listed in the
--		       interrupts property, unless this is already specified
--		       by the PPI interrupt specifier itself (in which case
--		       the interrupt-affinity property shouldn't be present).
--
--                       This property should be present when there is more than
--		       a single SPI.
--
--
--- qcom,no-pc-write : Indicates that this PMU doesn't support the 0xc and 0xd
--                     events.
--
--- secure-reg-access : Indicates that the ARMv7 Secure Debug Enable Register
--		      (SDER) is accessible. This will cause the driver to do
--		      any setup required that is only possible in ARMv7 secure
--		      state. If not present the ARMv7 SDER will not be touched,
--		      which means the PMU may fail to operate unless external
--		      code (bootloader or security monitor) has performed the
--		      appropriate initialisation. Note that this property is
--		      not valid for non-ARMv7 CPUs or ARMv7 CPUs booting Linux
--		      in Non-secure state.
--
--Example:
--
--pmu {
--        compatible = "arm,cortex-a9-pmu";
--        interrupts = <100 101>;
--};
-diff --git a/Documentation/devicetree/bindings/arm/pmu.yaml b/Documentation/devicetree/bindings/arm/pmu.yaml
+diff --git a/.gitignore b/.gitignore
+index 97ba6b79834c..a20ac26aa2f5 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -15,6 +15,7 @@
+ *.bin
+ *.bz2
+ *.c.[012]*.*
++*.dt.yaml
+ *.dtb
+ *.dtb.S
+ *.dwo
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index 2ca77ad0f238..9786957c6a35 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for Sphinx documentation
+ #
+ 
+-subdir-y :=
++subdir-y := devicetree/bindings/
+ 
+ # You can set these variables from the command line.
+ SPHINXBUILD   = sphinx-build
+diff --git a/Documentation/devicetree/bindings/.gitignore b/Documentation/devicetree/bindings/.gitignore
 new file mode 100644
-index 000000000000..0dbb9e0566af
+index 000000000000..7e47316f1d7a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/pmu.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: None
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/arm/pmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/Documentation/devicetree/bindings/.gitignore
+@@ -0,0 +1,2 @@
++*.example.dts
++*.yaml.tmp
+diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
+new file mode 100644
+index 000000000000..b57f0dec3fab
+--- /dev/null
++++ b/Documentation/devicetree/bindings/Makefile
+@@ -0,0 +1,30 @@
++# SPDX-License-Identifier: GPL-2.0
++DT_DOC_CHECKER ?= dt-doc-validate
++DT_EXTRACT_EX ?= dt-extract-example
 +
-+title: ARM Performance Monitor Units
++quiet_cmd_chk_binding = CHKDT   $<
++      cmd_chk_binding = (set -e; \
++                         $(DT_DOC_CHECKER) $< ; \
++                         mkdir -p $(dir $@) ; \
++                         $(DT_EXTRACT_EX) $< > $@ )
 +
-+maintainers:
-+  - Mark Rutland <mark.rutland@arm.com>
-+  - Will Deacon <will.deacon@arm.com>
-+description: |+
-+  ARM cores often have a PMU for counting cpu and cache events like cache misses
-+  and hits. The interface to the PMU is part of the ARM ARM. The ARM PMU
-+  representation in the device tree should be done as under:-
++$(obj)/%.example.dts: $(src)/%.yaml FORCE
++	$(call if_changed,chk_binding)
 +
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - apm,potenza-pmu
-+          - arm,armv8-pmuv3
-+          - arm,cortex-a73-pmu
-+          - arm,cortex-a72-pmu
-+          - arm,cortex-a57-pmu
-+          - arm,cortex-a53-pmu
-+          - arm,cortex-a35-pmu
-+          - arm,cortex-a17-pmu
-+          - arm,cortex-a15-pmu
-+          - arm,cortex-a12-pmu
-+          - arm,cortex-a9-pmu
-+          - arm,cortex-a8-pmu
-+          - arm,cortex-a7-pmu
-+          - arm,cortex-a5-pmu
-+          - arm,arm11mpcore-pmu
-+          - arm,arm1176-pmu
-+          - arm,arm1136-pmu
-+          - brcm,vulcan-pmu
-+          - cavium,thunder-pmu
-+          - qcom,scorpion-pmu
-+          - qcom,scorpion-mp-pmu
-+          - qcom,krait-pmu
-+  interrupts:
-+    oneOf:
-+      - maxItems: 1
-+      - minItems: 2
-+        maxItems: 8
-+        description: 1 interrupt per core.
++DT_MK_SCHEMA ?= dt-mk-schema
++DT_TMP_SCHEMA := .schema.yaml.tmp
++extra-y += $(DT_TMP_SCHEMA)
 +
-+  interrupts-extended:
-+    $ref: '#/properties/interrupts'
++quiet_cmd_mk_schema = SCHEMA  $@
++      cmd_mk_schema = mkdir -p $(obj); \
++                      $(DT_MK_SCHEMA) -o $@ $(srctree)/$(src)
 +
-+  interrupt-affinity:
-+    description:
-+      When using SPIs, specifies a list of phandles to CPU
-+      nodes corresponding directly to the affinity of
-+      the SPIs listed in the interrupts property.
++DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
++DTS_EXAMPLES = $(patsubst %.yaml,%.example.dts, $(DT_DOCS))
++extra-y += $(DTS_EXAMPLES)
 +
-+      When using a PPI, specifies a list of phandles to CPU
-+      nodes corresponding to the set of CPUs which have
-+      a PMU of this type signalling the PPI listed in the
-+      interrupts property, unless this is already specified
-+      by the PPI interrupt specifier itself (in which case
-+      the interrupt-affinity property shouldn't be present).
++DTBS = $(patsubst %.yaml,%.example.dtb, $(DT_DOCS))
++extra-y += $(DTBS)
 +
-+      This property should be present when there is more than
-+      a single SPI.
++$(obj)/$(DT_TMP_SCHEMA): $(addprefix $(obj)/, $(DTBS)) FORCE
++	$(call if_changed,mk_schema)
+diff --git a/Makefile b/Makefile
+index 021e274c4b03..648f7238e883 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1227,10 +1227,13 @@ ifneq ($(dtstree),)
+ %.dtb: prepare3 scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree) $(dtstree)/$@
+ 
+-PHONY += dtbs dtbs_install
++PHONY += dtbs dtbs_install dt_binding_check
+ dtbs: prepare3 scripts_dtc
+ 	$(Q)$(MAKE) $(build)=$(dtstree)
+ 
++dtbs_check: prepare3 dt_binding_check
++	$(Q)$(MAKE) $(build)=$(dtstree) CHECK_DTBS=1
 +
-+  qcom,no-pc-write:
-+    type: boolean
-+    description:
-+      Indicates that this PMU doesn't support the 0xc and 0xd events.
+ dtbs_install:
+ 	$(Q)$(MAKE) $(dtbinst)=$(dtstree)
+ 
+@@ -1244,6 +1247,9 @@ PHONY += scripts_dtc
+ scripts_dtc: scripts_basic
+ 	$(Q)$(MAKE) $(build)=scripts/dtc
+ 
++dt_binding_check: scripts_dtc
++	$(Q)$(MAKE) $(build)=Documentation/devicetree/bindings
 +
-+  secure-reg-access:
-+    type: boolean
-+    description:
-+      Indicates that the ARMv7 Secure Debug Enable Register
-+      (SDER) is accessible. This will cause the driver to do
-+      any setup required that is only possible in ARMv7 secure
-+      state. If not present the ARMv7 SDER will not be touched,
-+      which means the PMU may fail to operate unless external
-+      code (bootloader or security monitor) has performed the
-+      appropriate initialisation. Note that this property is
-+      not valid for non-ARMv7 CPUs or ARMv7 CPUs booting Linux
-+      in Non-secure state.
+ # ---------------------------------------------------------------------------
+ # Modules
+ 
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 8fe4468f9bda..d1c5630ba24c 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -61,6 +61,11 @@ real-obj-m := $(foreach m, $(obj-m), $(if $(strip $($(m:.o=-objs)) $($(m:.o=-y))
+ extra-y				+= $(dtb-y)
+ extra-$(CONFIG_OF_ALL_DTBS)	+= $(dtb-)
+ 
++ifneq ($(CHECK_DTBS),)
++extra-y += $(patsubst %.dtb,%.dt.yaml, $(dtb-y))
++extra-$(CONFIG_OF_ALL_DTBS) += $(patsubst %.dtb,%.dt.yaml, $(dtb-))
++endif
 +
-+required:
-+  - compatible
+ # Add subdir path
+ 
+ extra-y		:= $(addprefix $(obj)/,$(extra-y))
+@@ -284,13 +289,28 @@ $(obj)/%.dtb.S: $(obj)/%.dtb FORCE
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = mkdir -p $(dir ${dtc-tmp}) ; \
+ 	$(HOSTCC) -E $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+-	$(DTC) -O dtb -o $@ -b 0 \
++	$(DTC) -O $(2) -o $@ -b 0 \
+ 		$(addprefix -i,$(dir $<) $(DTC_INCLUDE)) $(DTC_FLAGS) \
+ 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
+ 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
+ 
+ $(obj)/%.dtb: $(src)/%.dts $(DTC) FORCE
+-	$(call if_changed_dep,dtc)
++	$(call if_changed_dep,dtc,dtb)
 +
-+oneOf:
-+  - required:
-+      - interrupts
-+  - required:
-+      - interrupts-extended
++DT_CHECKER ?= dt-validate
++DT_BINDING_DIR := Documentation/devicetree/bindings
++DT_TMP_SCHEMA := $(objtree)/$(DT_BINDING_DIR)/.schema.yaml.tmp
 +
-+...
++quiet_cmd_dtb_check =	CHECK  $@
++      cmd_dtb_check =	$(DT_CHECKER) -p $(DT_TMP_SCHEMA) $@ ;
++
++define rule_dtc_dt_yaml
++	$(call cmd_and_fixdep,dtc,yaml)		\
++	$(call echo-cmd,dtb_check) $(cmd_dtb_check)
++endef
++
++$(obj)/%.dt.yaml: $(src)/%.dts $(DTC) $(DT_TMP_SCHEMA) FORCE
++	$(call if_changed_rule,dtc_dt_yaml)
+ 
+ dtc-tmp = $(subst $(comma),_,$(dot-target).dts.tmp)
+ 
 -- 
 2.17.1
