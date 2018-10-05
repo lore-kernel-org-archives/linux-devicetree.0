@@ -1,86 +1,124 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: [PATCH v10 1/3] [media] imx214: device tree binding
-Date: Sat,  6 Oct 2018 00:19:26 +0200
-Message-ID: <20181005221926.8939-1-ricardo.ribalda@gmail.com>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH 33/36] dt-bindings: arm: Convert Tegra board/soc bindings
+ to json-schema
+Date: Fri, 5 Oct 2018 22:19:53 +0000
+Message-ID: <1538777991.28477.6.camel@toradex.com>
+References: <20181005165848.3474-1-robh@kernel.org>
+         <20181005165848.3474-34-robh@kernel.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181005165848.3474-34-robh@kernel.org>
+Content-Language: en-US
+Content-ID: <3B5D91AD9DD9BA42BA22AC3EA27144B7@eurprd05.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, jacopo@jmondi.org
-Cc: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>, devicetree@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "glikely@secretlab.ca" <glikely@secretlab.ca>, "pantelis.antoniou@konsulko.com" <pantelis.antoniou@konsulko.com>, "jic23@kernel.org" <jic23@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "trini@konsulko.com" <trini@konsulko.com>, "broonie@kernel.org" <broonie@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olof@lixom.net" <olof@lixom.net>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "kumar.gala@linaro.org" <kumar.gala@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "geert@linux-m68k.org" <geert@linux-m68k.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document bindings for imx214 camera sensor
-
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
----
-Changelog from v10:
-
-Sakari Ailus:
--remove clock name
-
- .../bindings/media/i2c/sony,imx214.txt        | 51 +++++++++++++++++++
- 1 file changed, 51 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-new file mode 100644
-index 000000000000..8739ec871fb2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/sony,imx214.txt
-@@ -0,0 +1,51 @@
-+* Sony 1/3.06-Inch 13.13Mp CMOS Digital Image Sensor
-+
-+The Sony imx214 is a 1/3.06-inch CMOS active pixel digital image sensor with
-+an active array size of 4224H x 3200V. It is programmable through an I2C
-+interface.
-+Image data is sent through MIPI CSI-2, through 2 or 4 lanes at a maximum
-+throughput of 1.2Gbps/lane.
-+
-+
-+Required Properties:
-+- compatible: Shall be "sony,imx214".
-+- reg: I2C bus address of the device. Depending on how the sensor is wired,
-+       it shall be <0x10> or <0x1a>;
-+- enable-gpios: GPIO descriptor for the enable pin.
-+- vdddo-supply: Chip digital IO regulator (1.8V).
-+- vdda-supply: Chip analog regulator (2.7V).
-+- vddd-supply: Chip digital core regulator (1.12V).
-+- clocks: Reference to the xclk clock.
-+
-+Optional Properties:
-+- flash-leds: See ../video-interfaces.txt
-+- lens-focus: See ../video-interfaces.txt
-+
-+The imx214 device node shall contain one 'port' child node with
-+an 'endpoint' subnode. For further reading on port node refer to
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Required Properties on endpoint:
-+- data-lanes: check ../video-interfaces.txt
-+- link-frequencies: check ../video-interfaces.txt
-+- remote-endpoint: check ../video-interfaces.txt
-+
-+Example:
-+
-+	camera-sensor@1a {
-+		compatible = "sony,imx214";
-+		reg = <0x1a>;
-+		vdddo-supply = <&pm8994_lvs1>;
-+		vddd-supply = <&camera_vddd_1v12>;
-+		vdda-supply = <&pm8994_l17>;
-+		lens-focus = <&ad5820>;
-+		enable-gpios = <&msmgpio 25 GPIO_ACTIVE_HIGH>;
-+		clocks = <&mmcc CAMSS_MCLK0_CLK>;
-+		port {
-+			imx214_ep: endpoint {
-+				data-lanes = <1 2 3 4>;
-+				link-frequencies = /bits/ 64 <480000000>;
-+				remote-endpoint = <&csiphy0_ep>;
-+			};
-+		};
-+	};
--- 
-2.19.0
+SGkgUm9iDQoNCk9uIEZyaSwgMjAxOC0xMC0wNSBhdCAxMTo1OCAtMDUwMCwgUm9iIEhlcnJpbmcg
+d3JvdGU6DQo+IENvbnZlcnQgVGVncmEgU29DIGJpbmRpbmdzIHRvIERUIHNjaGVtYSBmb3JtYXQg
+dXNpbmcganNvbi1zY2hlbWEuDQo+IA0KPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRA
+YXJtLmNvbT4NCj4gQ2M6IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+
+DQo+IENjOiBKb25hdGhhbiBIdW50ZXIgPGpvbmF0aGFuaEBudmlkaWEuY29tPg0KPiBDYzogZGV2
+aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gQ2M6IGxpbnV4LXRlZ3JhQHZnZXIua2VybmVsLm9y
+Zw0KPiBTaWduZWQtb2ZmLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPg0KPiAtLS0N
+Cj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS90ZWdyYS50eHQgICAgICAgICB8IDYwIC0t
+LS0tLS0tLS0tLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS90ZWdyYS55YW1sICAg
+ICAgICB8IDg4DQo+ICsrKysrKysrKysrKysrKysrKysNCj4gIDIgZmlsZXMgY2hhbmdlZCwgODgg
+aW5zZXJ0aW9ucygrKSwgNjAgZGVsZXRpb25zKC0pDQo+ICBkZWxldGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS90ZWdyYS50eHQNCj4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3RlZ3JhLnlh
+bWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+YXJtL3RlZ3JhLnR4dA0KPiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0v
+dGVncmEudHh0DQo+IGRlbGV0ZWQgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAzMmY2MmJiNzAw
+NmQuLjAwMDAwMDAwMDAwMA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvYXJtL3RlZ3JhLnR4dA0KPiArKysgL2Rldi9udWxsDQo+IEBAIC0xLDYwICswLDAgQEANCj4g
+LU5WSURJQSBUZWdyYSBkZXZpY2UgdHJlZSBiaW5kaW5ncw0KPiAtLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiAtDQo+IC1Tb0NzDQo+IC0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0NCj4gLUVhY2ggZGV2aWNlIHRyZWUg
+bXVzdCBzcGVjaWZ5IHdoaWNoIFRlZ3JhIFNvQyBpdCB1c2VzLCB1c2luZyBvbmUgb2YNCj4gdGhl
+DQo+IC1mb2xsb3dpbmcgY29tcGF0aWJsZSB2YWx1ZXM6DQo+IC0NCj4gLSAgbnZpZGlhLHRlZ3Jh
+MjANCj4gLSAgbnZpZGlhLHRlZ3JhMzANCj4gLSAgbnZpZGlhLHRlZ3JhMTE0DQo+IC0gIG52aWRp
+YSx0ZWdyYTEyNA0KPiAtICBudmlkaWEsdGVncmExMzINCj4gLSAgbnZpZGlhLHRlZ3JhMjEwDQo+
+IC0gIG52aWRpYSx0ZWdyYTE4Ng0KPiAtICBudmlkaWEsdGVncmExOTQNCj4gLQ0KPiAtQm9hcmRz
+DQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0NCj4g
+LUVhY2ggZGV2aWNlIHRyZWUgbXVzdCBzcGVjaWZ5IHdoaWNoIG9uZSBvciBtb3JlIG9mIHRoZSBm
+b2xsb3dpbmcNCj4gLWJvYXJkLXNwZWNpZmljIGNvbXBhdGlibGUgdmFsdWVzOg0KPiAtDQo+IC0g
+IGFkLG1lZGNvbS13aWRlDQo+IC0gIGFkLHBsdXR1eA0KPiAtICBhZCx0YW1vbnRlbg0KPiAtICBh
+ZCx0ZWMNCj4gLSAgY29tcGFsLHBhejAwDQo+IC0gIGNvbXB1bGFiLHRyaW1zbGljZQ0KPiAtICBu
+dmlkaWEsYmVhdmVyDQo+IC0gIG52aWRpYSxjYXJkaHUNCj4gLSAgbnZpZGlhLGNhcmRodS1hMDIN
+Cj4gLSAgbnZpZGlhLGNhcmRodS1hMDQNCj4gLSAgbnZpZGlhLGRhbG1vcmUNCj4gLSAgbnZpZGlh
+LGhhcm1vbnkNCj4gLSAgbnZpZGlhLGpldHNvbi10azENCj4gLSAgbnZpZGlhLG5vcnJpbg0KPiAt
+ICBudmlkaWEscDIzNzEtMDAwMA0KPiAtICBudmlkaWEscDIzNzEtMjE4MA0KPiAtICBudmlkaWEs
+cDI1NzENCj4gLSAgbnZpZGlhLHAyNzcxLTAwMDANCj4gLSAgbnZpZGlhLHAyOTcyLTAwMDANCj4g
+LSAgbnZpZGlhLHJvdGgNCj4gLSAgbnZpZGlhLHNlYWJvYXJkDQo+IC0gIG52aWRpYSx0bjcNCj4g
+LSAgbnZpZGlhLHZlbnRhbmENCj4gLSAgdG9yYWRleCxhcGFsaXNfdDMwDQo+IC0gIHRvcmFkZXgs
+YXBhbGlzX3QzMC1ldmFsDQo+IC0gIHRvcmFkZXgsYXBhbGlzLXRrMQ0KPiAtICB0b3JhZGV4LGFw
+YWxpcy10azEtZXZhbA0KPiAtICB0b3JhZGV4LGNvbGlicmlfdDIwLTUxMg0KPiAtICB0b3JhZGV4
+LGNvbGlicmlfdDMwDQo+IC0gIHRvcmFkZXgsY29saWJyaV90MzAtZXZhbC12Mw0KPiAtICB0b3Jh
+ZGV4LGlyaXMNCg0KQXJlIHlvdSBhd2FyZSB0aGF0IC1uZXh0IGFscmVhZHkgZmVhdHVyZXMgYSBm
+ZXcgdXBkYXRpbmcgY29tbWl0cw0KdGhlcmVvZiBmcm9tIGFyb3VuZCB0aGUgYmVnaW5uaW5nIG9m
+IFNlcHRlbWJlciBvbmUgb2Ygd2hpY2ggZXZlbiBiZWFycw0KeW91ciByZXZpZXdlZC1ieS4NCg0K
+PiAtDQo+IC1UcnVzdGVkIEZvdW5kYXRpb25zDQo+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tDQo+IC1UZWdyYSBzdXBwb3J0cyB0aGUgVHJ1c3RlZCBGb3VuZGF0
+aW9uIHNlY3VyZSBtb25pdG9yLiBTZWUgdGhlDQo+IC0idGxtLHRydXN0ZWQtZm91bmRhdGlvbnMi
+IGJpbmRpbmcncyBkb2N1bWVudGF0aW9uIGZvciBtb3JlIGRldGFpbHMuDQo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3RlZ3JhLnlhbWwNCj4gYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL3RlZ3JhLnlhbWwNCj4gbmV3IGZp
+bGUgbW9kZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwLi45Y2ViY2ZhYWFkMWUNCj4gLS0t
+IC9kZXYvbnVsbA0KPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
+L3RlZ3JhLnlhbWwNCj4gQEAgLTAsMCArMSw4OCBAQA0KPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRp
+ZmllcjogTm9uZQ0KPiArJVlBTUwgMS4yDQo+ICstLS0NCj4gKyRpZDogaHR0cDovL2RldmljZXRy
+ZWUub3JnL3NjaGVtYXMvYmluZGluZ3MvYXJtL3RlZ3JhLnlhbWwjDQo+ICskc2NoZW1hOiBodHRw
+Oi8vZGV2aWNldHJlZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gKw0KPiArdGl0bGU6
+IE5WSURJQSBUZWdyYSBkZXZpY2UgdHJlZSBiaW5kaW5ncw0KPiArDQo+ICttYWludGFpbmVyczoN
+Cj4gKyAgLSBNYXJjZWwgWmlzd2lsZXIgPG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCg0K
+V293LCBzZWVtcyBJIGdvdCBwcm9tb3RlZCB0byBtYWludGFpbmVyIG5vdy4gSSBndWVzcyB0aGF0
+IG1heSBtYWtlDQpzZW5zZSBhdCBsZWFzdCBmb3IgdGhlIFRvcmFkZXggYmFzZWQgYm9hcmRzLg0K
+DQo+ICsgIC0gUGV0ZXIgRGUgU2NocmlqdmVyIDxwZGVzY2hyaWp2ZXJAbnZpZGlhLmNvbT4NCj4g
+Kw0KPiArcHJvcGVydGllczoNCj4gKyAgY29tcGF0aWJsZToNCj4gKyAgICBvbmVPZjoNCj4gKyAg
+ICAgIC0gaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAgICAgICAgICAgICAtIGNv
+bXBhbCxwYXowMA0KPiArICAgICAgICAgICAgICAtIGNvbXB1bGFiLHRyaW1zbGljZQ0KPiArICAg
+ICAgICAgICAgICAtIG52aWRpYSxoYXJtb255DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLHNl
+YWJvYXJkDQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLHZlbnRhbmENCj4gKyAgICAgICAgICAt
+IGNvbnN0OiBudmlkaWEsdGVncmEyMA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAt
+IGVudW06DQo+ICsgICAgICAgICAgICAgIC0gYWQsbWVkY29tLXdpZGUNCj4gKyAgICAgICAgICAg
+ICAgLSBhZCxwbHV0dXgNCj4gKyAgICAgICAgICAgICAgLSBhZCx0ZWMNCj4gKyAgICAgICAgICAt
+IGNvbnN0OiBhZCx0YW1vbnRlbg0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTIw
+DQo+ICsgICAgICAtIGl0ZW1zOg0KPiArICAgICAgICAgIC0gY29uc3Q6IHRvcmFkZXgsaXJpcw0K
+PiArICAgICAgICAgIC0gY29uc3Q6IHRvcmFkZXgsY29saWJyaV90MjAtNTEyDQo+ICsgICAgICAg
+ICAgLSBjb25zdDogbnZpZGlhLHRlZ3JhMjANCj4gKyAgICAgIC0gaXRlbXM6DQo+ICsgICAgICAg
+ICAgLSBlbnVtOg0KPiArICAgICAgICAgICAgICAtIG52aWRpYSxiZWF2ZXINCj4gKyAgICAgICAg
+ICAtIGNvbnN0OiBudmlkaWEsdGVncmEzMA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAg
+ICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLGNhcmRodS1hMDINCj4gKyAgICAg
+ICAgICAgICAgLSBudmlkaWEsY2FyZGh1LWEwNA0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRp
+YSxjYXJkaHUNCj4gKyAgICAgICAgICAtIGNvbnN0OiBudmlkaWEsdGVncmEzMA0KPiArICAgICAg
+LSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gdG9yYWRl
+eCxhcGFsaXNfdDMwLWV2YWwNCj4gKyAgICAgICAgICAtIGNvbnN0OiB0b3JhZGV4LGFwYWxpc190
+MzANCj4gKyAgICAgICAgICAtIGNvbnN0OiBudmlkaWEsdGVncmEzMA0KPiArICAgICAgLSBpdGVt
+czoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gdG9yYWRleCxjb2xp
+YnJpX3QzMC1ldmFsLXYzDQo+ICsgICAgICAgICAgLSBjb25zdDogdG9yYWRleCxjb2xpYnJpX3Qz
+MA0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTMwDQo+ICsgICAgICAtIGl0ZW1z
+Og0KPiArICAgICAgICAgIC0gZW51bToNCj4gKyAgICAgICAgICAgICAgLSBudmlkaWEsZGFsbW9y
+ZQ0KPiArICAgICAgICAgICAgICAtIG52aWRpYSxyb3RoDQo+ICsgICAgICAgICAgICAgIC0gbnZp
+ZGlhLHRuNw0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTExNA0KPiArICAgICAg
+LSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlh
+LGpldHNvbi10azENCj4gKyAgICAgICAgICAgICAgLSBudmlkaWEsdmVuaWNlMg0KPiArICAgICAg
+ICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTEyNA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAg
+ICAgICAtIGNvbnN0OiB0b3JhZGV4LGFwYWxpcy10azEtZXZhbA0KPiArICAgICAgICAgIC0gY29u
+c3Q6IHRvcmFkZXgsYXBhbGlzLXRrMQ0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdy
+YTEyNA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAg
+ICAgICAgIC0gbnZpZGlhLG5vcnJpbg0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdy
+YTEzMg0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdyYTEyNA0KPiArICAgICAgLSBp
+dGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAgICAgICAgIC0gbnZpZGlhLHAy
+MzcxLTAwMDANCj4gKyAgICAgICAgICAgICAgLSBudmlkaWEscDIzNzEtMjE4MA0KPiArICAgICAg
+ICAgICAgICAtIG52aWRpYSxwMjU3MQ0KPiArICAgICAgICAgIC0gY29uc3Q6IG52aWRpYSx0ZWdy
+YTIxMA0KPiArICAgICAgLSBpdGVtczoNCj4gKyAgICAgICAgICAtIGVudW06DQo+ICsgICAgICAg
+ICAgICAgIC0gbnZpZGlhLHAyNzcxLTAwMDANCj4gKyAgICAgICAgICAtIGNvbnN0OiBudmlkaWEs
+dGVncmExODYNCj4gKyAgICAgIC0gaXRlbXM6DQo+ICsgICAgICAgICAgLSBlbnVtOg0KPiArICAg
+ICAgICAgICAgICAtIG52aWRpYSxwMjk3Mi0wMDAwDQo+ICsgICAgICAgICAgLSBjb25zdDogbnZp
+ZGlhLHRlZ3JhMTk0DQoNCk90aGVyIHRoYW4gdGhhdCBJJ20gYWxsIGluIHRvIG1vdmUgdG93YXJk
+cyBtb3JlIHN0cnVjdHVyZWQgYmluZGluZ3MgZG9jdW1lbnRhdGlvbi4NCg0KQ2hlZXJzDQoNCk1h
+cmNlbA==
