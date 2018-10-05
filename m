@@ -1,119 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 14/36] dt-bindings: arm: Convert primecell binding to json-schema
-Date: Fri,  5 Oct 2018 11:58:26 -0500
-Message-ID: <20181005165848.3474-15-robh@kernel.org>
+Subject: [PATCH 17/36] dt-bindings: arm: Convert Altera board/soc bindings to json-schema
+Date: Fri,  5 Oct 2018 11:58:29 -0500
+Message-ID: <20181005165848.3474-18-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Dinh Nguyen <dinguyen@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert ARM Primecell binding to DT schema format using json-schema.
+Convert Altera SoC bindings to DT schema format using json-schema.
 
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/primecell.txt     | 46 -------------------
- .../devicetree/bindings/arm/primecell.yaml    | 35 ++++++++++++++
- 2 files changed, 35 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/primecell.txt
- create mode 100644 Documentation/devicetree/bindings/arm/primecell.yaml
+ .../devicetree/bindings/arm/altera.txt        | 14 -------------
+ .../devicetree/bindings/arm/altera.yaml       | 20 +++++++++++++++++++
+ 2 files changed, 20 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/altera.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/altera.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/primecell.txt b/Documentation/devicetree/bindings/arm/primecell.txt
+diff --git a/Documentation/devicetree/bindings/arm/altera.txt b/Documentation/devicetree/bindings/arm/altera.txt
 deleted file mode 100644
-index 0df6acacfaea..000000000000
---- a/Documentation/devicetree/bindings/arm/primecell.txt
+index 558735aacca8..000000000000
+--- a/Documentation/devicetree/bindings/arm/altera.txt
 +++ /dev/null
-@@ -1,46 +0,0 @@
--* ARM Primecell Peripherals
+@@ -1,14 +0,0 @@
+-Altera's SoCFPGA platform device tree bindings
+----------------------------------------------
 -
--ARM, Ltd. Primecell peripherals have a standard id register that can be used to
--identify the peripheral type, vendor, and revision. This value can be used for
--driver matching.
+-Boards with Cyclone 5 SoC:
+-Required root node properties:
+-compatible = "altr,socfpga-cyclone5", "altr,socfpga";
 -
--Required properties:
+-Boards with Arria 5 SoC:
+-Required root node properties:
+-compatible = "altr,socfpga-arria5", "altr,socfpga";
 -
--- compatible : should be a specific name for the peripheral and
--               "arm,primecell".  The specific name will match the ARM
--               engineering name for the logic block in the form: "arm,pl???"
--
--Optional properties:
--
--- arm,primecell-periphid : Value to override the h/w value with
--- clocks : From common clock binding. First clock is phandle to clock for apb
--	pclk. Additional clocks are optional and specific to those peripherals.
--- clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
--- dmas : From common DMA binding. If present, refers to one or more dma channels.
--- dma-names : From common DMA binding, needs to match the 'dmas' property.
--              Devices with exactly one receive and transmit channel shall name
--              these "rx" and "tx", respectively.
--- pinctrl-<n> : Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
--- pinctrl-names : Names corresponding to the numbered pinctrl states
--- interrupts : one or more interrupt specifiers
--- interrupt-names : names corresponding to the interrupts properties
--
--Example:
--
--serial@fff36000 {
--	compatible = "arm,pl011", "arm,primecell";
--	arm,primecell-periphid = <0x00341011>;
--
--	clocks = <&pclk>;
--	clock-names = "apb_pclk";
--
--	dmas = <&dma-controller 4>, <&dma-controller 5>;
--	dma-names = "rx", "tx";	
--
--	pinctrl-0 = <&uart0_default_mux>, <&uart0_default_mode>;
--	pinctrl-1 = <&uart0_sleep_mode>;
--	pinctrl-names = "default","sleep";
--
--	interrupts = <0 11 0x4>;
--};
--
-diff --git a/Documentation/devicetree/bindings/arm/primecell.yaml b/Documentation/devicetree/bindings/arm/primecell.yaml
+-Boards with Arria 10 SoC:
+-Required root node properties:
+-compatible = "altr,socfpga-arria10", "altr,socfpga";
+diff --git a/Documentation/devicetree/bindings/arm/altera.yaml b/Documentation/devicetree/bindings/arm/altera.yaml
 new file mode 100644
-index 000000000000..d8097521dc7d
+index 000000000000..0fc6564badc3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/primecell.yaml
-@@ -0,0 +1,35 @@
++++ b/Documentation/devicetree/bindings/arm/altera.yaml
+@@ -0,0 +1,20 @@
 +# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/bindings/arm/primecell.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/altera.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ARM Primecell Peripherals
++title: Altera's SoCFPGA platform device tree bindings
 +
 +maintainers:
-+  - Grant Likely <grant.likely@secretlab.ca>
-+description: |+
-+  ARM, Ltd. Primecell peripherals have a standard id register that can be used to
-+  identify the peripheral type, vendor, and revision. This value can be used for
-+  driver matching.
++  - Dinh Nguyen <dinguyen@opensource.altera.com>
 +
 +properties:
 +  compatible:
-+    contains:
-+      const: arm,primecell
-+    description:
-+      Should be a specific name for the peripheral followed by "arm,primecell".
-+      The specific name will match the ARM engineering name for the logic block
-+      in the form "arm,pl???"
-+
-+  arm,primecell-periphid:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Value to override the h/w ID value
-+  clocks:
-+    minItems: 1
-+    maxItems: 32
-+  clock-names:
-+    contains:
-+      const: apb_pclk
-+    additionalItems: true
++    items:
++      - enum:
++        - altr,socfpga-cyclone5
++        - altr,socfpga-arria5
++        - altr,socfpga-arria10
++      - const: altr,socfpga
 +...
 -- 
 2.17.1
