@@ -1,46 +1,92 @@
 From: "Andrew F. Davis" <afd@ti.com>
-Subject: Re: [PATCH 2/2] pwm: Kconfig: Enable TI ECAP driver for ARCH_K3
-Date: Fri, 5 Oct 2018 10:51:13 -0500
-Message-ID: <ef269f60-b92d-c8af-77b2-d3d299814b5c@ti.com>
-References: <20181003170658.3835-1-vigneshr@ti.com>
- <20181003170658.3835-3-vigneshr@ti.com>
+Subject: Re: [PATCH 1/6] dt-bindings: phy: am654-mmc-phy: Document new phy
+ bindings
+Date: Fri, 5 Oct 2018 10:58:30 -0500
+Message-ID: <ad9945db-de08-36fc-47b8-499ce2079d92@ti.com>
+References: <20181004111451.9539-1-faiz_abbas@ti.com>
+ <20181004111451.9539-2-faiz_abbas@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181003170658.3835-3-vigneshr@ti.com>
+In-Reply-To: <20181004111451.9539-2-faiz_abbas@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: kishon@ti.com, ulf.hansson@linaro.org, robh+dt@kernel.org, catalin.marinas@arm.com, adrian.hunter@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 10/03/2018 12:06 PM, Vignesh R wrote:
-> K3 devices have the same ECAP IP as OMAP SoC. Enable driver to be built
-> for K3 devices.
+On 10/04/2018 06:14 AM, Faiz Abbas wrote:
+> Add information to document bindings for the MMC PHY
+> on TI's AM654 devices.
 > 
-> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
 > Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 > ---
->  drivers/pwm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  .../devicetree/bindings/phy/am654-mmc-phy.txt | 42 +++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/am654-mmc-phy.txt
 > 
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 504d252716f2..0c7bc6f554cf 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -447,7 +447,7 @@ config PWM_TEGRA
->  
->  config  PWM_TIECAP
->  	tristate "ECAP PWM support"
-> -	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE
-> +	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3
->  	help
->  	  PWM driver support for the ECAP APWM controller found on AM33XX
->  	  TI SOC
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/am654-mmc-phy.txt b/Documentation/devicetree/bindings/phy/am654-mmc-phy.txt
+> new file mode 100644
+> index 000000000000..766921612758
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/am654-mmc-phy.txt
 
-Minor, perhaps calling out AM33XX specifically in the help text is no
-longer needed and a bit confusing.
+
+Name ti,am654-mmc-phy.txt might be more consistent name.
+
+
+> @@ -0,0 +1,42 @@
+> +TI AM654 MMC PHY
+> +-------------------
+> +
+> +Required properties:
+> + - compatible: ti,am654-emmc-phy
+> + - #phy-cells: must be 0
+> + - reg: PHY registers address offset and size
+> + - clocks: must be phandle of the clock provider which is the host
+> +	   controller
+> + - clock-names: must be "mmcclk"
+> + - ti,otap-del-sel: Output Tap Delay select.
+> + - ti,trm-icp: DLL trim select.
+> + - ti,driver-strength-ohm: driver strength in ohms.
+> +			   Valid values are 33, 40, 50, 66, and 100 ohms.
+> +
+> +Example:
+> +			mmc_phy1: mmc_phy@10100 {
+> +				compatible = "ti,am654-mmc-phy";
+> +				reg = <0x10100 0x34>;
+> +				clocks = <&sdhci1>;
+> +				clock-names = "mmcclk";
+> +				#phy-cells = <0>;
+> +				ti,otap-del-sel = <0x2>;
+> +				ti,trm-icp = <0x8>;
+> +				status = "disabled";
+
+
+No need for disabled in the example case. Also not sure the host
+controller example below needs to be here, there are already examples
+for that binding in mmc/arasan,sdhci.txt.
 
 Andrew
+
+
+> +			};
+> +
+> +Host controller node:
+> +
+> +			sdhci1: sdhci@0 {
+> +				compatible = "ti,am654-sdhci-5.1";
+> +				reg = <0x0 0x1000>;
+> +				power-domains = <&k3_pds 48>;
+> +				clocks = <&k3_clks 48 0>, <&k3_clks 48 1>;
+> +				clock-names = "clk_ahb", "clk_xin";
+> +				interrupts = <GIC_SPI 137 IRQ_TYPE_LEVEL_HIGH>;
+> +				clock-output-names = "mmc_cardclck";
+> +				#clock-cells = <0>;
+> +				phys=<&mmc_phy1>;
+> +				phy-names = "phy_arasan";
+> +				status = "disabled";
+> +			};
+> 
