@@ -1,117 +1,131 @@
-From: Ludovic Barre <ludovic.Barre@st.com>
-Subject: [PATCH V5 13/24] mmc: mmci: expand startbiterr to irqmask and error check
-Date: Fri, 5 Oct 2018 15:22:51 +0200
-Message-ID: <1538745782-27446-14-git-send-email-ludovic.Barre@st.com>
-References: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: dt-bindings: add dt bindings for
+	adau1977 audio codec" to the asoc tree
+Date: Fri,  5 Oct 2018 14:25:00 +0100 (BST)
+Message-ID: <20181005132500.A26F3112229A@debutante.sirena.org.uk>
+References: <20181002120630.17799-1-alexandru.ardelean@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181002120630.17799-1-alexandru.ardelean@analog.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Barre <ludovic.barre@st.com>
+The patch
 
-All variants don't pretend to have a startbiterr.
--While data error check, if status register return an error
-(like  MCI_DATACRCFAIL) we must avoid to check MCI_STARTBITERR
-(if not desired).
--expand start_err to MCI_IRQENABLE to avoid to set this bit by default.
+   ASoC: dt-bindings: add dt bindings for adau1977 audio codec
 
-Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From d5a5dcd3f815c82e719fd6563f027673160f88e1 Mon Sep 17 00:00:00 2001
+From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Date: Tue, 2 Oct 2018 15:06:30 +0300
+Subject: [PATCH] ASoC: dt-bindings: add dt bindings for adau1977 audio codec
+
+Add device-tree bindings documentation file for ADAU1977 audio codec.
+This describes device-tree fields that are already supported by the driver.
+
+The driver supports both I2C AND and SPI, and this doc covers both aspects
+of the DT configuration.
+
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/mmc/host/mmci.c | 27 ++++++++++++++++-----------
- drivers/mmc/host/mmci.h |  6 +++---
- 2 files changed, 19 insertions(+), 14 deletions(-)
+ .../bindings/sound/adi,adau1977.txt           | 54 +++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/adi,adau1977.txt
 
-diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-index aeefb6d..7e90dbe 100644
---- a/drivers/mmc/host/mmci.c
-+++ b/drivers/mmc/host/mmci.c
-@@ -1036,14 +1036,18 @@ static void
- mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
- 	      unsigned int status)
- {
-+	unsigned int status_err;
+diff --git a/Documentation/devicetree/bindings/sound/adi,adau1977.txt b/Documentation/devicetree/bindings/sound/adi,adau1977.txt
+new file mode 100644
+index 000000000000..e79aeef73f28
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/adi,adau1977.txt
+@@ -0,0 +1,54 @@
++Analog Devices ADAU1977/ADAU1978/ADAU1979
 +
- 	/* Make sure we have data to handle */
- 	if (!data)
- 		return;
- 
- 	/* First check for errors */
--	if (status & (MCI_DATACRCFAIL | MCI_DATATIMEOUT |
--		      host->variant->start_err |
--		      MCI_TXUNDERRUN | MCI_RXOVERRUN)) {
-+	status_err = status & (host->variant->start_err |
-+			       MCI_DATACRCFAIL | MCI_DATATIMEOUT |
-+			       MCI_TXUNDERRUN | MCI_RXOVERRUN);
++Datasheets:
++http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1977.pdf
++http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1978.pdf
++http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1979.pdf
 +
-+	if (status_err) {
- 		u32 remain, success;
- 
- 		/* Terminate the DMA transfer */
-@@ -1060,18 +1064,18 @@ mmci_data_irq(struct mmci_host *host, struct mmc_data *data,
- 		success = data->blksz * data->blocks - remain;
- 
- 		dev_dbg(mmc_dev(host->mmc), "MCI ERROR IRQ, status 0x%08x at 0x%08x\n",
--			status, success);
--		if (status & MCI_DATACRCFAIL) {
-+			status_err, success);
-+		if (status_err & MCI_DATACRCFAIL) {
- 			/* Last block was not successful */
- 			success -= 1;
- 			data->error = -EILSEQ;
--		} else if (status & MCI_DATATIMEOUT) {
-+		} else if (status_err & MCI_DATATIMEOUT) {
- 			data->error = -ETIMEDOUT;
--		} else if (status & MCI_STARTBITERR) {
-+		} else if (status_err & MCI_STARTBITERR) {
- 			data->error = -ECOMM;
--		} else if (status & MCI_TXUNDERRUN) {
-+		} else if (status_err & MCI_TXUNDERRUN) {
- 			data->error = -EIO;
--		} else if (status & MCI_RXOVERRUN) {
-+		} else if (status_err & MCI_RXOVERRUN) {
- 			if (success > host->variant->fifosize)
- 				success -= host->variant->fifosize;
- 			else
-@@ -1912,7 +1916,7 @@ static int mmci_probe(struct amba_device *dev,
- 			goto clk_disable;
- 	}
- 
--	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
-+	writel(MCI_IRQENABLE | variant->start_err, host->base + MMCIMASK0);
- 
- 	amba_set_drvdata(dev, mmc);
- 
-@@ -1999,7 +2003,8 @@ static void mmci_restore(struct mmci_host *host)
- 		writel(host->datactrl_reg, host->base + MMCIDATACTRL);
- 		writel(host->pwr_reg, host->base + MMCIPOWER);
- 	}
--	writel(MCI_IRQENABLE, host->base + MMCIMASK0);
-+	writel(MCI_IRQENABLE | host->variant->start_err,
-+	       host->base + MMCIMASK0);
- 	mmci_reg_delay(host);
- 
- 	spin_unlock_irqrestore(&host->lock, flags);
-diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-index 3e7b729a..87846db 100644
---- a/drivers/mmc/host/mmci.h
-+++ b/drivers/mmc/host/mmci.h
-@@ -181,9 +181,9 @@
- #define MMCIFIFO		0x080 /* to 0x0bc */
- 
- #define MCI_IRQENABLE	\
--	(MCI_CMDCRCFAILMASK|MCI_DATACRCFAILMASK|MCI_CMDTIMEOUTMASK|	\
--	MCI_DATATIMEOUTMASK|MCI_TXUNDERRUNMASK|MCI_RXOVERRUNMASK|	\
--	MCI_CMDRESPENDMASK|MCI_CMDSENTMASK|MCI_STARTBITERRMASK)
-+	(MCI_CMDCRCFAILMASK | MCI_DATACRCFAILMASK | MCI_CMDTIMEOUTMASK | \
-+	MCI_DATATIMEOUTMASK | MCI_TXUNDERRUNMASK | MCI_RXOVERRUNMASK |	\
-+	MCI_CMDRESPENDMASK | MCI_CMDSENTMASK)
- 
- /* These interrupts are directed to IRQ1 when two IRQ lines are available */
- #define MCI_IRQ1MASK \
++This driver supports both the I2C and SPI bus.
++
++Required properties:
++ - compatible: Should contain one of the following:
++               "adi,adau1977"
++               "adi,adau1978"
++               "adi,adau1979"
++
++ - AVDD-supply: analog power supply for the device, please consult
++                Documentation/devicetree/bindings/regulator/regulator.txt
++
++Optional properties:
++ - reset-gpio:  the reset pin for the chip, for more details consult
++                Documentation/devicetree/bindings/gpio/gpio.txt
++
++ - DVDD-supply: supply voltage for the digital core, please consult
++                Documentation/devicetree/bindings/regulator/regulator.txt
++
++For required properties on SPI, please consult
++Documentation/devicetree/bindings/spi/spi-bus.txt
++
++Required properties on I2C:
++
++ - reg:         The i2c address. Value depends on the state of ADDR0
++                and ADDR1, as wired in hardware.
++
++Examples:
++
++	adau1977_spi: adau1977@0 {
++		compatible = "adi,adau1977";
++		spi-max-frequency = <600000>;
++
++		AVDD-supply = <&regulator>;
++		DVDD-supply = <&regulator_digital>;
++
++		reset_gpio = <&gpio 10 GPIO_ACTIVE_LOW>;
++	};
++
++	adau1977_i2c: adau1977@11 {
++		compatible = "adi,adau1977";
++		reg = <0x11>;
++
++		AVDD-supply = <&regulator>;
++		DVDD-supply = <&regulator_digital>;
++
++		reset_gpio = <&gpio 10 GPIO_ACTIVE_LOW>;
++	};
 -- 
-2.7.4
+2.19.0.rc2
