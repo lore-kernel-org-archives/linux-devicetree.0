@@ -1,131 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: dt-bindings: add dt bindings for
-	adau1977 audio codec" to the asoc tree
-Date: Fri,  5 Oct 2018 14:25:00 +0100 (BST)
-Message-ID: <20181005132500.A26F3112229A@debutante.sirena.org.uk>
-References: <20181002120630.17799-1-alexandru.ardelean@analog.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V5 21/24] mmc: mmci: add clock divider for stm32 sdmmc
+Date: Fri, 5 Oct 2018 15:22:59 +0200
+Message-ID: <1538745782-27446-22-git-send-email-ludovic.Barre@st.com>
+References: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181002120630.17799-1-alexandru.ardelean@analog.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1538745782-27446-1-git-send-email-ludovic.Barre@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+From: Ludovic Barre <ludovic.barre@st.com>
 
-   ASoC: dt-bindings: add dt bindings for adau1977 audio codec
+The STM32 sdmmc variant has a different clock divider.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From d5a5dcd3f815c82e719fd6563f027673160f88e1 Mon Sep 17 00:00:00 2001
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Date: Tue, 2 Oct 2018 15:06:30 +0300
-Subject: [PATCH] ASoC: dt-bindings: add dt bindings for adau1977 audio codec
-
-Add device-tree bindings documentation file for ADAU1977 audio codec.
-This describes device-tree fields that are already supported by the driver.
-
-The driver supports both I2C AND and SPI, and this doc covers both aspects
-of the DT configuration.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
 ---
- .../bindings/sound/adi,adau1977.txt           | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/adi,adau1977.txt
+ drivers/mmc/host/mmci.c | 2 ++
+ drivers/mmc/host/mmci.h | 2 ++
+ 2 files changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/adi,adau1977.txt b/Documentation/devicetree/bindings/sound/adi,adau1977.txt
-new file mode 100644
-index 000000000000..e79aeef73f28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/adi,adau1977.txt
-@@ -0,0 +1,54 @@
-+Analog Devices ADAU1977/ADAU1978/ADAU1979
-+
-+Datasheets:
-+http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1977.pdf
-+http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1978.pdf
-+http://www.analog.com/media/en/technical-documentation/data-sheets/ADAU1979.pdf
-+
-+This driver supports both the I2C and SPI bus.
-+
-+Required properties:
-+ - compatible: Should contain one of the following:
-+               "adi,adau1977"
-+               "adi,adau1978"
-+               "adi,adau1979"
-+
-+ - AVDD-supply: analog power supply for the device, please consult
-+                Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+Optional properties:
-+ - reset-gpio:  the reset pin for the chip, for more details consult
-+                Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+ - DVDD-supply: supply voltage for the digital core, please consult
-+                Documentation/devicetree/bindings/regulator/regulator.txt
-+
-+For required properties on SPI, please consult
-+Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Required properties on I2C:
-+
-+ - reg:         The i2c address. Value depends on the state of ADDR0
-+                and ADDR1, as wired in hardware.
-+
-+Examples:
-+
-+	adau1977_spi: adau1977@0 {
-+		compatible = "adi,adau1977";
-+		spi-max-frequency = <600000>;
-+
-+		AVDD-supply = <&regulator>;
-+		DVDD-supply = <&regulator_digital>;
-+
-+		reset_gpio = <&gpio 10 GPIO_ACTIVE_LOW>;
-+	};
-+
-+	adau1977_i2c: adau1977@11 {
-+		compatible = "adi,adau1977";
-+		reg = <0x11>;
-+
-+		AVDD-supply = <&regulator>;
-+		DVDD-supply = <&regulator_digital>;
-+
-+		reset_gpio = <&gpio 10 GPIO_ACTIVE_LOW>;
-+	};
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 72d16a3..6115c71 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -1856,6 +1856,8 @@ static int mmci_probe(struct amba_device *dev,
+ 	 */
+ 	if (variant->st_clkdiv)
+ 		mmc->f_min = DIV_ROUND_UP(host->mclk, 257);
++	else if (variant->stm32_clkdiv)
++		mmc->f_min = DIV_ROUND_UP(host->mclk, 2046);
+ 	else if (variant->explicit_mclk_control)
+ 		mmc->f_min = clk_round_rate(host->clk, 100000);
+ 	else
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index 84a24ea..e2ea8a5 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -216,6 +216,7 @@ struct mmci_host;
+  * @data_cmd_enable: enable value for data commands.
+  * @st_sdio: enable ST specific SDIO logic
+  * @st_clkdiv: true if using a ST-specific clock divider algorithm
++ * @stm32_clkdiv: true if using a STM32-specific clock divider algorithm
+  * @datactrl_mask_ddrmode: ddr mode mask in datactrl register.
+  * @blksz_datactrl16: true if Block size is at b16..b30 position in datactrl register
+  * @blksz_datactrl4: true if Block size is at b4..b16 position in datactrl
+@@ -269,6 +270,7 @@ struct variant_data {
+ 	u8			datacnt_useless:1;
+ 	u8			st_sdio:1;
+ 	u8			st_clkdiv:1;
++	u8			stm32_clkdiv:1;
+ 	u8			blksz_datactrl16:1;
+ 	u8			blksz_datactrl4:1;
+ 	u32			pwrreg_powerup;
 -- 
-2.19.0.rc2
+2.7.4
