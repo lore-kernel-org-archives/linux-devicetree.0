@@ -1,76 +1,91 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 16/36] dt-bindings: arm: Convert Alpine board/soc bindings to json-schema
-Date: Fri,  5 Oct 2018 11:58:28 -0500
-Message-ID: <20181005165848.3474-17-robh@kernel.org>
+Subject: [PATCH 10/36] dt-bindings: altera: Convert clkmgr binding to
+ json-schema
+Date: Fri,  5 Oct 2018 11:58:22 -0500
+Message-ID: <20181005165848.3474-11-robh@kernel.org>
 References: <20181005165848.3474-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20181005165848.3474-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tom Rini <trini@konsulko.com>, Kumar Gala <kumar.gala@linaro.org>, Grant Likely <glikely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Dinh Nguyen <dinguyen@kernel.org>, Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Olof Johansson <olof@lixom.net>, Frank Rowand <frowand.list@gmail.com>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Convert Alpine SoC bindings to DT schema format using json-schema.
+Convert Altera clkmgr to DT schema format using json-schema.
 
-Cc: Tsahee Zidenberg <tsahee@annapurnalabs.com>
-Cc: Antoine Tenart <antoine.tenart@free-electrons.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Dinh Nguyen <dinguyen@kernel.org>
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/arm/al,alpine.txt     | 16 --------------
- .../devicetree/bindings/arm/al,alpine.yaml    | 21 +++++++++++++++++++
- 2 files changed, 21 insertions(+), 16 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/al,alpine.txt
- create mode 100644 Documentation/devicetree/bindings/arm/al,alpine.yaml
+ .../arm/altera/socfpga-clk-manager.txt        | 11 -------
+ .../arm/altera/socfpga-clk-manager.yaml       | 30 +++++++++++++++++++
+ 2 files changed, 30 insertions(+), 11 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
 
-diff --git a/Documentation/devicetree/bindings/arm/al,alpine.txt b/Documentation/devicetree/bindings/arm/al,alpine.txt
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt
 deleted file mode 100644
-index d00debe2e86f..000000000000
---- a/Documentation/devicetree/bindings/arm/al,alpine.txt
+index 2c28f1d12f45..000000000000
+--- a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.txt
 +++ /dev/null
-@@ -1,16 +0,0 @@
--Annapurna Labs Alpine Platform Device Tree Bindings
-----------------------------------------------------------------
+@@ -1,11 +0,0 @@
+-Altera SOCFPGA Clock Manager
 -
--Boards in the Alpine family shall have the following properties:
+-Required properties:
+-- compatible : "altr,clk-mgr"
+-- reg : Should contain base address and length for Clock Manager
 -
--* Required root node properties:
--compatible: must contain "al,alpine"
--
--* Example:
--
--/ {
--	model = "Annapurna Labs Alpine Dev Board";
--	compatible = "al,alpine";
--
--	...
--}
-diff --git a/Documentation/devicetree/bindings/arm/al,alpine.yaml b/Documentation/devicetree/bindings/arm/al,alpine.yaml
+-Example:
+-	 clkmgr@ffd04000 {
+-		compatible = "altr,clk-mgr";
+-		reg = <0xffd04000 0x1000>;
+-	};
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
 new file mode 100644
-index 000000000000..95f8629f7b0a
+index 000000000000..37c2cf08fae0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/al,alpine.yaml
-@@ -0,0 +1,21 @@
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-clk-manager.yaml
+@@ -0,0 +1,30 @@
 +# SPDX-License-Identifier: None
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/bindings/arm/al,alpine.yaml#
++$id: http://devicetree.org/schemas/bindings/arm/altera/socfpga-clk-manager.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Annapurna Labs Alpine Platform Device Tree Bindings
++title: Altera SOCFPGA Clock Manager
 +
 +maintainers:
-+  - Tsahee Zidenberg <tsahee@annapurnalabs.com>
++  - Dinh Nguyen <dinguyen@altera.com>
 +description: test
 +
 +properties:
 +  compatible:
 +    items:
-+      - const: al,alpine
-+  model:
-+    items:
-+      - const: "Annapurna Labs Alpine Dev Board"
++      - const: altr,clk-mgr
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++
++examples:
++  - |
++    clkmgr@ffd04000 {
++      compatible = "altr,clk-mgr";
++      reg = <0xffd04000 0x1000>;
++    };
 +
 +...
 -- 
