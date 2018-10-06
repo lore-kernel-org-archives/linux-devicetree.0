@@ -1,596 +1,307 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4] remoteproc: qcom: Introduce Non-PAS ADSP PIL driver
-Date: Fri, 5 Oct 2018 23:57:26 -0700
-Message-ID: <20181006065726.GL12063@builder>
-References: <1537787270-29630-1-git-send-email-rohitkr@codeaurora.org>
+From: Radhey Shyam Pandey <radheys@xilinx.com>
+Subject: RE: [RFC PATCH 2/2] dmaengine: xilinx_dma: Add Xilinx AXI MCDMA
+ Engine driver support
+Date: Sat, 6 Oct 2018 07:09:40 +0000
+Message-ID: <SN4PR0201MB363074E44B3E6A67B9D5ECD4C7E40@SN4PR0201MB3630.namprd02.prod.outlook.com>
+References: <1533059173-21405-1-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <1533059173-21405-3-git-send-email-radhey.shyam.pandey@xilinx.com>
+ <20180821154635.GG2388@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1537787270-29630-1-git-send-email-rohitkr@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rohit kumar <rohitkr@codeaurora.org>
-Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180821154635.GG2388@vkoul-mobl>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod <vkoul@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, "dan.j.williams@intel.com" <dan.j.williams@intel.com>, Appana Durga Kedareswara Rao <appanad@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 24 Sep 04:07 PDT 2018, Rohit kumar wrote:
+Thanks for the review.
 
-> This adds Non PAS ADSP PIL driver for Qualcomm
-> Technologies Inc SoCs.
-> Added initial support for SDM845 with ADSP bootup and
-> shutdown operation handled from Application Processor
-> SubSystem(APSS).
+> On 31-07-18, 23:16, Radhey Shyam Pandey wrote:
+> >  struct xilinx_dma_config {
+> > @@ -402,6 +470,7 @@ struct xilinx_dma_config {
+> >  	int (*clk_init)(struct platform_device *pdev, struct clk **axi_clk,
+> >  			struct clk **tx_clk, struct clk **txs_clk,
+> >  			struct clk **rx_clk, struct clk **rxs_clk);
+> > +	irqreturn_t (*irq_handler)(int irq, void *data);
 > 
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> this sounds like a preparatory change?
 
-Sorry for missing this on the last few patches, I thought we said we
-where going to name the driver qcom_q6v5_adsp. Rather than spending more
-time on this I applied the patch with this change, as it does look good.
+Yes, I will split it in a separate patch.
+> 
+> > +	} else if (chan->xdev->dma_config->dmatype ==
+> XDMA_TYPE_AXIMCDMA) {
+> > +		/* Allocate the buffer descriptors. */
+> > +		chan->seg_mv = dma_zalloc_coherent(chan->dev,
+> > +						  sizeof(*chan->seg_mv) *
+> > +						  XILINX_DMA_NUM_DESCS,
+> > +						  &chan->seg_p,
+> GFP_KERNEL);
+> > +		if (!chan->seg_mv) {
+> > +			dev_err(chan->dev,
+> > +				"unable to allocate channel %d descriptors\n",
+> > +				chan->id);
+> > +			return -ENOMEM;
+> > +		}
+> > +		for (i = 0; i < XILINX_DMA_NUM_DESCS; i++) {
+> > +			chan->seg_mv[i].hw.next_desc =
+> > +			lower_32_bits(chan->seg_p + sizeof(*chan->seg_mv) *
+> > +				((i + 1) % XILINX_DMA_NUM_DESCS));
+> > +			chan->seg_mv[i].hw.next_desc_msb =
+> > +			upper_32_bits(chan->seg_p + sizeof(*chan->seg_mv) *
+> > +				((i + 1) % XILINX_DMA_NUM_DESCS));
+> > +			chan->seg_mv[i].phys = chan->seg_p +
+> > +				sizeof(*chan->seg_v) * i;
+> > +			list_add_tail(&chan->seg_mv[i].node,
+> > +				      &chan->free_seg_list);
+> > +		}
+> 
+> only change with this and previous one seems to be use of seg_mv instead
+> of seg_v right? if so, can you try to modularise this..
+Agree. I will modularise it.
 
-Please let me know if you have any concerns with this.
+> 
+> >  /**
+> > + * xilinx_mcdma_start_transfer - Starts MCDMA transfer
+> > + * @chan: Driver specific channel struct pointer
+> > + */
+> > +static void xilinx_mcdma_start_transfer(struct xilinx_dma_chan *chan)
+> > +{
+> > +	struct xilinx_dma_tx_descriptor *head_desc, *tail_desc;
+> > +	struct xilinx_axidma_tx_segment *tail_segment;
+> > +	u32 reg;
+> > +
+> > +	if (chan->err)
+> > +		return;
+> > +
+> > +	if (!chan->idle)
+> > +		return;
+> > +
+> > +	if (list_empty(&chan->pending_list))
+> > +		return;
+> 
+> okay i was thinking that we need lock here, but then this is called with
+> lock held, worth mentioning in the comment though..
+Ok. Will add.
 
-Regards,
-Bjorn
+> 
+> > +static irqreturn_t xilinx_mcdma_irq_handler(int irq, void *data)
+> > +{
+> > +	struct xilinx_dma_chan *chan = data;
+> > +	u32 status, ser_offset, chan_sermask, chan_offset = 0, chan_id;
+> > +
+> > +	if (chan->direction == DMA_DEV_TO_MEM)
+> > +		ser_offset = XILINX_MCDMA_RXINT_SER_OFFSET;
+> > +	else
+> > +		ser_offset = XILINX_MCDMA_TXINT_SER_OFFSET;
+> > +
+> > +	/* Read the channel id raising the interrupt*/
+> > +	chan_sermask = dma_ctrl_read(chan, ser_offset);
+> > +	chan_id = ffs(chan_sermask);
+> > +
+> > +	if (!chan_id)
+> > +		return IRQ_NONE;
+> > +
+> > +	if (chan->direction == DMA_DEV_TO_MEM)
+> > +		chan_offset = XILINX_DMA_MAX_CHANS_PER_DEVICE / 2;
+> > +
+> > +	chan_offset = chan_offset + (chan_id - 1);
+> > +	chan = chan->xdev->chan[chan_offset];
+> > +	/* Read the status and ack the interrupts. */
+> > +	status = dma_ctrl_read(chan,
+> XILINX_MCDMA_CHAN_SR_OFFSET(chan->tdest));
+> > +	if (!(status & XILINX_MCDMA_IRQ_ALL_MASK))
+> > +		return IRQ_NONE;
+> > +
+> > +	dma_ctrl_write(chan, XILINX_MCDMA_CHAN_SR_OFFSET(chan-
+> >tdest),
+> > +		       status & XILINX_MCDMA_IRQ_ALL_MASK);
+> > +
+> > +	if (status & XILINX_MCDMA_IRQ_ERR_MASK) {
+> > +		dev_err(chan->dev, "Channel %p has errors %x cdr %x tdr
+> %x\n",
+> > +			chan, dma_ctrl_read(chan,
+> > +			XILINX_MCDMA_CH_ERR_OFFSET),
+> dma_ctrl_read(chan,
+> > +			XILINX_MCDMA_CHAN_CDESC_OFFSET(chan->tdest)),
+> > +			dma_ctrl_read(chan,
+> > +				      XILINX_MCDMA_CHAN_TDESC_OFFSET
+> > +				      (chan->tdest)));
+> 
+> this looks very hard to read, please start each dma_ctrl_read() from a
+> new line to make it better
 
-> ---
-> Changes since v3:
-> 	Addressed comments posted by Sibi
+Ok . will change.
 > 
-> This patch is dependent on the rpmh powerdomain driver https://lkml.org/lkml/2018/6/27/7
-> and renaming of Hexagon v5 PAS driver https://patchwork.kernel.org/patch/10601119/ .
+> > +		chan->err = true;
+> > +	}
+> > +
+> > +	if (status & XILINX_MCDMA_IRQ_DELAY_MASK) {
+> > +		/*
+> > +		 * Device takes too long to do the transfer when user requires
+> > +		 * responsiveness.
+> > +		 */
+> > +		dev_dbg(chan->dev, "Inter-packet latency too long\n");
 > 
->  drivers/remoteproc/Kconfig         |  14 ++
->  drivers/remoteproc/Makefile        |   1 +
->  drivers/remoteproc/qcom_adsp_pil.c | 502 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 517 insertions(+)
->  create mode 100644 drivers/remoteproc/qcom_adsp_pil.c
+> so we just log it..?
+For now yes. It will be used later when MCDMA is used by the network client.
+
 > 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index 8894935..f554669 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -140,6 +140,20 @@ config QCOM_Q6V5_WCSS
->  	  Say y here to support the Qualcomm Peripheral Image Loader for the
->  	  Hexagon V5 based WCSS remote processors.
->  
-> +config QCOM_ADSP_PIL
-> +	tristate "Qualcomm Technology Inc ADSP Peripheral Image Loader"
-> +	depends on OF && ARCH_QCOM
-> +	depends on QCOM_SMEM
-> +	depends on RPMSG_QCOM_GLINK_SMEM || RPMSG_QCOM_GLINK_SMEM=n
-> +	depends on QCOM_SYSMON || QCOM_SYSMON=n
-> +	select MFD_SYSCON
-> +	select QCOM_MDT_LOADER
-> +	select QCOM_Q6V5_COMMON
-> +	select QCOM_RPROC_COMMON
-> +	help
-> +	  Say y here to support the Peripheral Image Loader
-> +	  for the Qualcomm Technology Inc. ADSP remote processors.
-> +
->  config QCOM_SYSMON
->  	tristate "Qualcomm sysmon driver"
->  	depends on RPMSG
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 050f41a..0e1b89c 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -19,6 +19,7 @@ obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
->  obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
->  obj-$(CONFIG_QCOM_Q6V5_PAS)		+= qcom_q6v5_pas.o
->  obj-$(CONFIG_QCOM_Q6V5_WCSS)		+= qcom_q6v5_wcss.o
-> +obj-$(CONFIG_QCOM_ADSP_PIL)		+= qcom_adsp_pil.o
->  obj-$(CONFIG_QCOM_SYSMON)		+= qcom_sysmon.o
->  obj-$(CONFIG_QCOM_WCNSS_PIL)		+= qcom_wcnss_pil.o
->  qcom_wcnss_pil-y			+= qcom_wcnss.o
-> diff --git a/drivers/remoteproc/qcom_adsp_pil.c b/drivers/remoteproc/qcom_adsp_pil.c
-> new file mode 100644
-> index 0000000..f2f5e56
-> --- /dev/null
-> +++ b/drivers/remoteproc/qcom_adsp_pil.c
-> @@ -0,0 +1,502 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Qualcomm Technology Inc. ADSP Peripheral Image Loader for SDM845.
-> + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/firmware.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/io.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/regmap.h>
-> +#include <linux/remoteproc.h>
-> +#include <linux/reset.h>
-> +#include <linux/soc/qcom/mdt_loader.h>
-> +#include <linux/soc/qcom/smem.h>
-> +#include <linux/soc/qcom/smem_state.h>
-> +
-> +#include "qcom_common.h"
-> +#include "qcom_q6v5.h"
-> +#include "remoteproc_internal.h"
-> +
-> +/* time out value */
-> +#define ACK_TIMEOUT			1000
-> +#define BOOT_FSM_TIMEOUT		10000
-> +/* mask values */
-> +#define EVB_MASK			GENMASK(27, 4)
-> +/*QDSP6SS register offsets*/
-> +#define RST_EVB_REG			0x10
-> +#define CORE_START_REG			0x400
-> +#define BOOT_CMD_REG			0x404
-> +#define BOOT_STATUS_REG			0x408
-> +#define RET_CFG_REG			0x1C
-> +/*TCSR register offsets*/
-> +#define LPASS_MASTER_IDLE_REG		0x8
-> +#define LPASS_HALTACK_REG		0x4
-> +#define LPASS_PWR_ON_REG		0x10
-> +#define LPASS_HALTREQ_REG		0x0
-> +
-> +/* list of clocks required by ADSP PIL */
-> +static const char * const adsp_clk_id[] = {
-> +	"sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
-> +	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
-> +};
-> +
-> +struct adsp_pil_data {
-> +	int crash_reason_smem;
-> +	const char *firmware_name;
-> +
-> +	const char *ssr_name;
-> +	const char *sysmon_name;
-> +	int ssctl_id;
-> +};
-> +
-> +struct qcom_adsp {
-> +	struct device *dev;
-> +	struct rproc *rproc;
-> +
-> +	struct qcom_q6v5 q6v5;
-> +
-> +	struct clk *xo;
-> +
-> +	int num_clks;
-> +	struct clk_bulk_data *clks;
-> +
-> +	void __iomem *qdsp6ss_base;
-> +
-> +	struct reset_control *pdc_sync_reset;
-> +	struct reset_control *cc_lpass_restart;
-> +
-> +	struct regmap *halt_map;
-> +	unsigned int halt_lpass;
-> +
-> +	int crash_reason_smem;
-> +
-> +	struct completion start_done;
-> +	struct completion stop_done;
-> +
-> +	phys_addr_t mem_phys;
-> +	phys_addr_t mem_reloc;
-> +	void *mem_region;
-> +	size_t mem_size;
-> +
-> +	struct qcom_rproc_glink glink_subdev;
-> +	struct qcom_rproc_ssr ssr_subdev;
-> +	struct qcom_sysmon *sysmon;
-> +};
-> +
-> +static int qcom_adsp_shutdown(struct qcom_adsp *adsp)
-> +{
-> +	unsigned long timeout;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	/* Reset the retention logic */
-> +	val = readl(adsp->qdsp6ss_base + RET_CFG_REG);
-> +	val |= 0x1;
-> +	writel(val, adsp->qdsp6ss_base + RET_CFG_REG);
-> +
-> +	clk_bulk_disable_unprepare(adsp->num_clks, adsp->clks);
-> +
-> +	/* QDSP6 master port needs to be explicitly halted */
-> +	ret = regmap_read(adsp->halt_map,
-> +			adsp->halt_lpass + LPASS_PWR_ON_REG, &val);
-> +	if (ret || !val)
-> +		goto reset;
-> +
-> +	ret = regmap_read(adsp->halt_map,
-> +			adsp->halt_lpass + LPASS_MASTER_IDLE_REG,
-> +			&val);
-> +	if (ret || val)
-> +		goto reset;
-> +
-> +	regmap_write(adsp->halt_map,
-> +			adsp->halt_lpass + LPASS_HALTREQ_REG, 1);
-> +
-> +	/* Wait for halt ACK from QDSP6 */
-> +	timeout = jiffies + msecs_to_jiffies(ACK_TIMEOUT);
-> +	for (;;) {
-> +		ret = regmap_read(adsp->halt_map,
-> +			adsp->halt_lpass + LPASS_HALTACK_REG, &val);
-> +		if (ret || val || time_after(jiffies, timeout))
-> +			break;
-> +
-> +		usleep_range(1000, 1100);
-> +	}
-> +
-> +	ret = regmap_read(adsp->halt_map,
-> +			adsp->halt_lpass + LPASS_MASTER_IDLE_REG, &val);
-> +	if (ret || !val)
-> +		dev_err(adsp->dev, "port failed halt\n");
-> +
-> +reset:
-> +	/* Assert the LPASS PDC Reset */
-> +	reset_control_assert(adsp->pdc_sync_reset);
-> +	/* Place the LPASS processor into reset */
-> +	reset_control_assert(adsp->cc_lpass_restart);
-> +	/* wait after asserting subsystem restart from AOSS */
-> +	usleep_range(200, 300);
-> +
-> +	/* Clear the halt request for the AXIM and AHBM for Q6 */
-> +	regmap_write(adsp->halt_map, adsp->halt_lpass + LPASS_HALTREQ_REG, 0);
-> +
-> +	/* De-assert the LPASS PDC Reset */
-> +	reset_control_deassert(adsp->pdc_sync_reset);
-> +	/* Remove the LPASS reset */
-> +	reset_control_deassert(adsp->cc_lpass_restart);
-> +	/* wait after de-asserting subsystem restart from AOSS */
-> +	usleep_range(200, 300);
-> +
-> +	return 0;
-> +}
-> +
-> +static int adsp_load(struct rproc *rproc, const struct firmware *fw)
-> +{
-> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +
-> +	return qcom_mdt_load_no_init(adsp->dev, fw, rproc->firmware, 0,
-> +			     adsp->mem_region, adsp->mem_phys, adsp->mem_size,
-> +			     &adsp->mem_reloc);
-> +}
-> +
-> +static int adsp_start(struct rproc *rproc)
-> +{
-> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +	int ret;
-> +	unsigned int val;
-> +
-> +	qcom_q6v5_prepare(&adsp->q6v5);
-> +
-> +	ret = clk_prepare_enable(adsp->xo);
-> +	if (ret)
-> +		goto disable_irqs;
-> +
-> +	dev_pm_genpd_set_performance_state(adsp->dev, INT_MAX);
-> +	ret = pm_runtime_get_sync(adsp->dev);
-> +	if (ret)
-> +		goto disable_xo_clk;
-> +
-> +	ret = clk_bulk_prepare_enable(adsp->num_clks, adsp->clks);
-> +	if (ret) {
-> +		dev_err(adsp->dev, "adsp clk_enable failed\n");
-> +		goto disable_power_domain;
-> +	}
-> +
-> +	/* Program boot address */
-> +	writel(adsp->mem_phys >> 4, adsp->qdsp6ss_base + RST_EVB_REG);
-> +
-> +	/* De-assert QDSP6 stop core. QDSP6 will execute after out of reset */
-> +	writel(0x1, adsp->qdsp6ss_base + CORE_START_REG);
-> +
-> +	/* Trigger boot FSM to start QDSP6 */
-> +	writel(0x1, adsp->qdsp6ss_base + BOOT_CMD_REG);
-> +
-> +	/* Wait for core to come out of reset */
-> +	ret = readl_poll_timeout(adsp->qdsp6ss_base + BOOT_STATUS_REG,
-> +			val, (val & BIT(0)) != 0, 10, BOOT_FSM_TIMEOUT);
-> +	if (ret) {
-> +		dev_err(adsp->dev, "failed to bootup adsp\n");
-> +		goto disable_adsp_clks;
-> +	}
-> +
-> +	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5 * HZ));
-> +	if (ret == -ETIMEDOUT) {
-> +		dev_err(adsp->dev, "start timed out\n");
-> +		goto disable_adsp_clks;
-> +	}
-> +
-> +	return 0;
-> +
-> +disable_adsp_clks:
-> +	clk_bulk_disable_unprepare(adsp->num_clks, adsp->clks);
-> +disable_power_domain:
-> +	dev_pm_genpd_set_performance_state(adsp->dev, 0);
-> +	pm_runtime_put(adsp->dev);
-> +disable_xo_clk:
-> +	clk_disable_unprepare(adsp->xo);
-> +disable_irqs:
-> +	qcom_q6v5_unprepare(&adsp->q6v5);
-> +
-> +	return ret;
-> +}
-> +
-> +static void qcom_adsp_pil_handover(struct qcom_q6v5 *q6v5)
-> +{
-> +	struct qcom_adsp *adsp = container_of(q6v5, struct qcom_adsp, q6v5);
-> +
-> +	clk_disable_unprepare(adsp->xo);
-> +	dev_pm_genpd_set_performance_state(adsp->dev, 0);
-> +	pm_runtime_put(adsp->dev);
-> +}
-> +
-> +static int adsp_stop(struct rproc *rproc)
-> +{
-> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +	int handover;
-> +	int ret;
-> +
-> +	ret = qcom_q6v5_request_stop(&adsp->q6v5);
-> +	if (ret == -ETIMEDOUT)
-> +		dev_err(adsp->dev, "timed out on wait\n");
-> +
-> +	ret = qcom_adsp_shutdown(adsp);
-> +	if (ret)
-> +		dev_err(adsp->dev, "failed to shutdown: %d\n", ret);
-> +
-> +	handover = qcom_q6v5_unprepare(&adsp->q6v5);
-> +	if (handover)
-> +		qcom_adsp_pil_handover(&adsp->q6v5);
-> +
-> +	return ret;
-> +}
-> +
-> +static void *adsp_da_to_va(struct rproc *rproc, u64 da, int len)
-> +{
-> +	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
-> +	int offset;
-> +
-> +	offset = da - adsp->mem_reloc;
-> +	if (offset < 0 || offset + len > adsp->mem_size)
-> +		return NULL;
-> +
-> +	return adsp->mem_region + offset;
-> +}
-> +
-> +static const struct rproc_ops adsp_ops = {
-> +	.start = adsp_start,
-> +	.stop = adsp_stop,
-> +	.da_to_va = adsp_da_to_va,
-> +	.parse_fw = qcom_register_dump_segments,
-> +	.load = adsp_load,
-> +};
-> +
-> +static int adsp_init_clock(struct qcom_adsp *adsp)
-> +{
-> +	int i, ret;
-> +
-> +	adsp->xo = devm_clk_get(adsp->dev, "xo");
-> +	if (IS_ERR(adsp->xo)) {
-> +		ret = PTR_ERR(adsp->xo);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(adsp->dev, "failed to get xo clock");
-> +		return ret;
-> +	}
-> +
-> +	adsp->num_clks = ARRAY_SIZE(adsp_clk_id);
-> +	adsp->clks = devm_kcalloc(adsp->dev, adsp->num_clks,
-> +				sizeof(*adsp->clks), GFP_KERNEL);
-> +	if (IS_ERR(adsp->clks)) {
-> +		ret = PTR_ERR(adsp->clks);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(adsp->dev, "failed to get adsp clock");
-> +		return ret;
-> +	}
-> +
-> +	for (i = 0; i < adsp->num_clks; i++)
-> +		adsp->clks[i].id = adsp_clk_id[i];
-> +
-> +	return devm_clk_bulk_get(adsp->dev, adsp->num_clks, adsp->clks);
-> +}
-> +
-> +static int adsp_init_reset(struct qcom_adsp *adsp)
-> +{
-> +	adsp->pdc_sync_reset = devm_reset_control_get_exclusive(adsp->dev,
-> +			"pdc_sync");
-> +	if (IS_ERR(adsp->pdc_sync_reset)) {
-> +		dev_err(adsp->dev, "failed to acquire pdc_sync reset\n");
-> +		return PTR_ERR(adsp->pdc_sync_reset);
-> +	}
-> +
-> +	adsp->cc_lpass_restart = devm_reset_control_get_exclusive(adsp->dev,
-> +			"cc_lpass");
-> +	if (IS_ERR(adsp->cc_lpass_restart)) {
-> +		dev_err(adsp->dev, "failed to acquire cc_lpass restart\n");
-> +		return PTR_ERR(adsp->cc_lpass_restart);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int adsp_init_mmio(struct qcom_adsp *adsp,
-> +				struct platform_device *pdev)
-> +{
-> +	struct device_node *syscon;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	adsp->qdsp6ss_base = devm_ioremap(&pdev->dev, res->start,
-> +			resource_size(res));
-> +	if (IS_ERR(adsp->qdsp6ss_base)) {
-> +		dev_err(adsp->dev, "failed to map QDSP6SS registers\n");
-> +		return PTR_ERR(adsp->qdsp6ss_base);
-> +	}
-> +
-> +	syscon = of_parse_phandle(pdev->dev.of_node, "qcom,halt-regs", 0);
-> +	if (!syscon) {
-> +		dev_err(&pdev->dev, "failed to parse qcom,halt-regs\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	adsp->halt_map = syscon_node_to_regmap(syscon);
-> +	of_node_put(syscon);
-> +	if (IS_ERR(adsp->halt_map))
-> +		return PTR_ERR(adsp->halt_map);
-> +
-> +	ret = of_property_read_u32_index(pdev->dev.of_node, "qcom,halt-regs",
-> +			1, &adsp->halt_lpass);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "no offset in syscon\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int adsp_alloc_memory_region(struct qcom_adsp *adsp)
-> +{
-> +	struct device_node *node;
-> +	struct resource r;
-> +	int ret;
-> +
-> +	node = of_parse_phandle(adsp->dev->of_node, "memory-region", 0);
-> +	if (!node) {
-> +		dev_err(adsp->dev, "no memory-region specified\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = of_address_to_resource(node, 0, &r);
-> +	if (ret)
-> +		return ret;
-> +
-> +	adsp->mem_phys = adsp->mem_reloc = r.start;
-> +	adsp->mem_size = resource_size(&r);
-> +	adsp->mem_region = devm_ioremap_wc(adsp->dev,
-> +				adsp->mem_phys, adsp->mem_size);
-> +	if (!adsp->mem_region) {
-> +		dev_err(adsp->dev, "unable to map memory region: %pa+%zx\n",
-> +			&r.start, adsp->mem_size);
-> +		return -EBUSY;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int adsp_probe(struct platform_device *pdev)
-> +{
-> +	const struct adsp_pil_data *desc;
-> +	struct qcom_adsp *adsp;
-> +	struct rproc *rproc;
-> +	int ret;
-> +
-> +	desc = of_device_get_match_data(&pdev->dev);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	rproc = rproc_alloc(&pdev->dev, pdev->name, &adsp_ops,
-> +			    desc->firmware_name, sizeof(*adsp));
-> +	if (!rproc) {
-> +		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	adsp = (struct qcom_adsp *)rproc->priv;
-> +	adsp->dev = &pdev->dev;
-> +	adsp->rproc = rproc;
-> +	platform_set_drvdata(pdev, adsp);
-> +
-> +	ret = adsp_alloc_memory_region(adsp);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	ret = adsp_init_clock(adsp);
-> +	if (ret)
-> +		goto free_rproc;
-> +
-> +	pm_runtime_enable(adsp->dev);
-> +
-> +	ret = adsp_init_reset(adsp);
-> +	if (ret)
-> +		goto disable_pm;
-> +
-> +	ret = adsp_init_mmio(adsp, pdev);
-> +	if (ret)
-> +		goto disable_pm;
-> +
-> +	ret = qcom_q6v5_init(&adsp->q6v5, pdev, rproc, desc->crash_reason_smem,
-> +			     qcom_adsp_pil_handover);
-> +	if (ret)
-> +		goto disable_pm;
-> +
-> +	qcom_add_glink_subdev(rproc, &adsp->glink_subdev);
-> +	qcom_add_ssr_subdev(rproc, &adsp->ssr_subdev, desc->ssr_name);
-> +	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
-> +					      desc->sysmon_name,
-> +					      desc->ssctl_id);
-> +
-> +	ret = rproc_add(rproc);
-> +	if (ret)
-> +		goto disable_pm;
-> +
-> +	return 0;
-> +
-> +disable_pm:
-> +	pm_runtime_disable(adsp->dev);
-> +free_rproc:
-> +	rproc_free(rproc);
-> +
-> +	return ret;
-> +}
-> +
-> +static int adsp_remove(struct platform_device *pdev)
-> +{
-> +	struct qcom_adsp *adsp = platform_get_drvdata(pdev);
-> +
-> +	rproc_del(adsp->rproc);
-> +
-> +	qcom_remove_glink_subdev(adsp->rproc, &adsp->glink_subdev);
-> +	qcom_remove_sysmon_subdev(adsp->sysmon);
-> +	qcom_remove_ssr_subdev(adsp->rproc, &adsp->ssr_subdev);
-> +	pm_runtime_disable(adsp->dev);
-> +	rproc_free(adsp->rproc);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct adsp_pil_data adsp_resource_init = {
-> +	.crash_reason_smem = 423,
-> +	.firmware_name = "adsp.mdt",
-> +	.ssr_name = "lpass",
-> +	.sysmon_name = "adsp",
-> +	.ssctl_id = 0x14,
-> +};
-> +
-> +static const struct of_device_id adsp_of_match[] = {
-> +	{ .compatible = "qcom,sdm845-adsp-pil",
-> +	  .data = &adsp_resource_init},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, adsp_of_match);
-> +
-> +static struct platform_driver adsp_pil_driver = {
-> +	.probe = adsp_probe,
-> +	.remove = adsp_remove,
-> +	.driver = {
-> +		.name = "qcom_adsp_pil",
-> +		.of_match_table = adsp_of_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(adsp_pil_driver);
-> +MODULE_DESCRIPTION("QTI SDM845 ADSP Peripheral Image Loader");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+> > +	}
+> > +
+> > +	if (status & XILINX_MCDMA_IRQ_IOC_MASK) {
+> > +		spin_lock(&chan->lock);
+> > +		xilinx_dma_complete_descriptor(chan);
+> > +		chan->idle = true;
+> > +		chan->start_transfer(chan);
+> > +		spin_unlock(&chan->lock);
+> > +	}
+> > +
+> > +	tasklet_schedule(&chan->tasklet);
+> > +	return IRQ_HANDLED;
+> > +
 > 
+> bogus empty line...
+Will fix.
+> 
+> > +static struct dma_async_tx_descriptor *xilinx_mcdma_prep_slave_sg(
+> > +	struct dma_chan *dchan, struct scatterlist *sgl, unsigned int sg_len,
+> > +	enum dma_transfer_direction direction, unsigned long flags,
+> > +	void *context)
+> 
+> indent is pretty bad here too :(
+Will fix.
+> 
+> > +{
+> > +	struct xilinx_dma_chan *chan = to_xilinx_chan(dchan);
+> > +	struct xilinx_dma_tx_descriptor *desc;
+> > +	struct xilinx_aximcdma_tx_segment *segment = NULL;
+> > +	u32 *app_w = (u32 *)context;
+> > +	struct scatterlist *sg;
+> > +	size_t copy;
+> > +	size_t sg_used;
+> > +	unsigned int i;
+> > +
+> > +	if (!is_slave_direction(direction))
+> > +		return NULL;
+> > +
+> > +	/* Allocate a transaction descriptor. */
+> > +	desc = xilinx_dma_alloc_tx_descriptor(chan);
+> > +	if (!desc)
+> > +		return NULL;
+> > +
+> > +	dma_async_tx_descriptor_init(&desc->async_tx, &chan->common);
+> > +	desc->async_tx.tx_submit = xilinx_dma_tx_submit;
+> > +
+> > +	/* Build transactions using information in the scatter gather list */
+> > +	for_each_sg(sgl, sg, sg_len, i) {
+> > +		sg_used = 0;
+> > +
+> > +		/* Loop until the entire scatterlist entry is used */
+> > +		while (sg_used < sg_dma_len(sg)) {
+> > +			struct xilinx_aximcdma_desc_hw *hw;
+> > +
+> > +			/* Get a free segment */
+> > +			segment = xilinx_aximcdma_alloc_tx_segment(chan);
+> > +			if (!segment)
+> > +				goto error;
+> > +
+> > +			/*
+> > +			 * Calculate the maximum number of bytes to transfer,
+> > +			 * making sure it is less than the hw limit
+> > +			 */
+> > +			copy = min_t(size_t, sg_dma_len(sg) - sg_used,
+> > +				     XILINX_DMA_MAX_TRANS_LEN);
+> > +			hw = &segment->hw;
+> > +
+> > +			/* Fill in the descriptor */
+> > +			xilinx_aximcdma_buf(chan, hw, sg_dma_address(sg),
+> > +					    sg_used);
+> > +			hw->control = copy;
+> > +
+> > +			if (chan->direction == DMA_MEM_TO_DEV) {
+> > +				if (app_w)
+> 
+> why not make condition as: chan->direction == DMA_MEM_TO_DEV &&
+> app_w
+Ok . will change.
+
+> 
+> > +					memcpy(hw->app, app_w, sizeof(u32)
+> *
+> > +					       XILINX_DMA_NUM_APP_WORDS);
+> > +			}
+> > +
+> > +			sg_used += copy;
+> > +			/*
+> > +			 * Insert the segment into the descriptor segments
+> > +			 * list.
+> > +			 */
+> > +			list_add_tail(&segment->node, &desc->segments);
+> > +		}
+> > +	}
+> > +
+> > +	segment = list_first_entry(&desc->segments,
+> > +				   struct xilinx_aximcdma_tx_segment, node);
+> > +	desc->async_tx.phys = segment->phys;
+> > +
+> > +	/* For the last DMA_MEM_TO_DEV transfer, set EOP */
+> > +	if (chan->direction == DMA_MEM_TO_DEV) {
+> > +		segment->hw.control |= XILINX_MCDMA_BD_SOP;
+> > +		segment = list_last_entry(&desc->segments,
+> > +					  struct xilinx_aximcdma_tx_segment,
+> > +					  node);
+> > +		segment->hw.control |= XILINX_MCDMA_BD_EOP;
+> > +	}
+> > +
+> > +	return &desc->async_tx;
+> > +
+> > +error:
+> > +	xilinx_dma_free_tx_descriptor(chan, desc);
+> 
+> will it free the ones allocated here or all descriptors?
+
+It will free single descriptor and all its segments.
+> 
+> >  /**
+> >   * xilinx_dma_prep_slave_sg - prepare descriptors for a DMA_SLAVE
+> transaction
+> > @@ -2422,12 +2827,16 @@ static int xilinx_dma_chan_probe(struct
+> xilinx_dma_device *xdev,
+> >
+> >  	if (of_device_is_compatible(node, "xlnx,axi-vdma-mm2s-channel") ||
+> >  	    of_device_is_compatible(node, "xlnx,axi-dma-mm2s-channel") ||
+> > -	    of_device_is_compatible(node, "xlnx,axi-cdma-channel")) {
+> > +	    of_device_is_compatible(node, "xlnx,axi-cdma-channel") ||
+> > +	    of_device_is_compatible(node, "xlnx,axi-mcdma-mm2s-channel")) {
+> 
+> this is not scaling, maybe you should use data with each
+> compatible to check for specific things..
+Yes, we can reuse axidma s2mm and mm2 channel nodes. MCDMA stuff can
+be selectively programmed based on xilinx_dma_config.dmatype.
+
+> 
+> > +static const struct xilinx_dma_config aximcdma_config = {
+> > +	.dmatype = XDMA_TYPE_AXIMCDMA,
+> > +	.clk_init = axidma_clk_init,
+> > +	.irq_handler = xilinx_mcdma_irq_handler,
+> > +};
+> >  static const struct xilinx_dma_config axicdma_config = {
+> >  	.dmatype = XDMA_TYPE_CDMA,
+> >  	.clk_init = axicdma_clk_init,
+> > +	.irq_handler = xilinx_dma_irq_handler,
+> 
+> this should be in preparatory patch
+Yes.
+> --
+> ~Vinod
