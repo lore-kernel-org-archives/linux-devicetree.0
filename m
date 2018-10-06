@@ -1,29 +1,25 @@
 From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 15/36] dt-bindings: arm: Convert Actions Semi bindings to
- jsonschema
-Date: Sat, 6 Oct 2018 12:40:52 +0200
-Message-ID: <c4909f78-bfa1-9253-e436-1159392b45a9@suse.de>
+Subject: Re: [PATCH 27/36] dt-bindings: arm: Convert Realtek board/soc
+ bindings to json-schema
+Date: Sat, 6 Oct 2018 12:54:01 +0200
+Message-ID: <41eb7b19-dd26-16e2-bd80-b8b7d6f52f94@suse.de>
 References: <20181005165848.3474-1-robh@kernel.org>
- <20181005165848.3474-16-robh@kernel.org>
+ <20181005165848.3474-28-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181005165848.3474-16-robh@kernel.org>
+In-Reply-To: <20181005165848.3474-28-robh@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
 Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
 Am 05.10.18 um 18:58 schrieb Rob Herring:
-> Convert Actions Semi SoC bindings to DT schema format using json-schema.
+> Convert Realtek SoC bindings to DT schema format using json-schema.
 
-This sounds like the next Yanny vs. Laurel... I fail to see any json. ;)
-
-Also, it may help my understanding to be CC'ed on the cover letter, too?
+YAML (2x)
 
 > 
 > Cc: "Andreas Färber" <afaerber@suse.de>
@@ -32,160 +28,89 @@ Also, it may help my understanding to be CC'ed on the cover letter, too?
 > Cc: devicetree@vger.kernel.org
 > Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  .../devicetree/bindings/arm/actions.txt       | 56 -------------------
->  .../devicetree/bindings/arm/actions.yaml      | 34 +++++++++++
->  2 files changed, 34 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
+>  .../devicetree/bindings/arm/realtek.txt       | 22 ----------------
+>  .../devicetree/bindings/arm/realtek.yaml      | 25 +++++++++++++++++++
+>  2 files changed, 25 insertions(+), 22 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/realtek.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/realtek.yaml
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
+> diff --git a/Documentation/devicetree/bindings/arm/realtek.txt b/Documentation/devicetree/bindings/arm/realtek.txt
 > deleted file mode 100644
-> index d54f33c4e0da..000000000000
-> --- a/Documentation/devicetree/bindings/arm/actions.txt
+> index 95839e19ae92..000000000000
+> --- a/Documentation/devicetree/bindings/arm/realtek.txt
 > +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -Actions Semi platforms device tree bindings
-> --------------------------------------------
+> @@ -1,22 +0,0 @@
+> -Realtek platforms device tree bindings
+> ---------------------------------------
 > -
 > -
-> -S500 SoC
-> -========
-> -
-> -Required root node properties:
-> -
-> - - compatible :  must contain "actions,s500"
-> -
-> -
-> -Modules:
-> -
-> -Root node property compatible must contain, depending on module:
-> -
-> - - LeMaker Guitar: "lemaker,guitar"
-> -
-> -
-> -Boards:
-> -
-> -Root node property compatible must contain, depending on board:
-> -
-> - - Allo.com Sparky: "allo,sparky"
-> - - Cubietech CubieBoard6: "cubietech,cubieboard6"
-> - - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
-> -
-> -
-> -S700 SoC
-> -========
+> -RTD1295 SoC
+> -===========
 > -
 > -Required root node properties:
 > -
-> -- compatible :  must contain "actions,s700"
+> - - compatible :  must contain "realtek,rtd1295"
 > -
-> -
-> -Boards:
 > -
 > -Root node property compatible must contain, depending on board:
 > -
-> - - Cubietech CubieBoard7: "cubietech,cubieboard7"
+> - - MeLE V9: "mele,v9"
+> - - ProBox2 AVA: "probox2,ava"
+> - - Zidoo X9S: "zidoo,x9s"
 > -
 > -
-> -S900 SoC
-> -========
+> -Example:
 > -
-> -Required root node properties:
-> -
-> -- compatible :  must contain "actions,s900"
-> -
-> -
-> -Boards:
-> -
-> -Root node property compatible must contain, depending on board:
-> -
-> - - uCRobotics Bubblegum-96: "ucrobotics,bubblegum-96"
-> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
+> -    compatible = "zidoo,x9s", "realtek,rtd1295";
+> diff --git a/Documentation/devicetree/bindings/arm/realtek.yaml b/Documentation/devicetree/bindings/arm/realtek.yaml
 > new file mode 100644
-> index 000000000000..af9345a228b4
+> index 000000000000..9e3bb3249c77
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
-> @@ -0,0 +1,34 @@
+> +++ b/Documentation/devicetree/bindings/arm/realtek.yaml
+> @@ -0,0 +1,25 @@
+> +# SPDX-License-Identifier: None
+
+What is the expected license for such bindings?
+You did not add such a line for actions.yaml.
+
 > +%YAML 1.2
 > +---
-> +$id: http://devicetree.org/schemas/soc/arm/actions.yaml#
+> +$id: http://devicetree.org/schemas/bindings/arm/realtek.yaml#
 > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-
-404 for the schema. Where does one find an explanation?
-
 > +
-> +title: Actions Semi platforms device tree bindings
+> +title: Realtek platforms device tree bindings
 > +
 > +maintainers:
 > +  - Andreas Färber <afaerber@suse.de>
-
-Mani is now officially reviewer and the closest I have to a
-co-maintainer. I suggest we add him here in some form. I assume this is
-independent of MAINTAINERS patterns though, or will get_maintainers.pl
-parse this, too?
-
 > +
-> +description: |
+> +description: |+
 
-Does the | have any meaning, or a stray typo?
+"|+"?
 
-> +  The Actions Semi S500 is a quad-core ARM Cortex-A9 SoC. The Actions Semi
-> +  S900 is a quad-core ARM Cortex-A53 SoC.
-
-You forgot the S700 as another quad-core Cortex-A53 SoC.
-Also, arm or Arm rather than ARM these days?
-
+> +  RTD1295 SoC
 > +
 > +properties:
+> +  $nodename:
+> +    const: '/'
 > +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - lemaker,guitar-bb-rev-b
-> +          - enum:
-> +              - lemaker,guitar
-> +              - allo,sparky
-> +              - cubietech,cubieboard6
-> +          - const: actions,s500
-> +        minItems: 2
-> +        maxItems: 3
-> +        additionalItems: false
+> +    items:
+> +      - enum:
+> +          - mele,v9
+> +          - probox2,ava
+> +          - zidoo,x9s
+> +      - const: realtek,rtd1295
+> +...
 
-Objection. You've managed to turn a perfectly human-comprehensible text
-into a machine-parseable representation incomprehensible for humans.
+That does not look like a full "PATCH" yet? It also confuses me whether
+or when leading dashes are necessary - for Actions Semi "items" had one.
 
-First, there should remain some free-text explanation of the values
-defined here. Are comments allowed after the value or indented maybe?
-Alternatively we could have a per-vendor file à la vendor-prefixes.txt,
-but that would seem inefficient.
+I have preparations on my GitHub staging tree for three more SoCs, so we
+should prepare the structure to ease adding SoCs and avoid re-indenting
+patches - adding SoCs was much easier in the original flat text format.
+Please also consider for other vendors.
 
-Next, the above items construct is horrible. What about nested oneOf:
-
-+      - items:
-+          - oneOf:
-+              - items:
-+                  - enum:
-+                      - lemaker,guitar-bb-rev-b
-+                  - const: lemaker,guitar
-+              - items:
-+                  - enum:
-+                      - allo,sparky
-+                      - cubietech,cubieboard6
-+          - const: actions,s500
-
-This grouping is much clearer to me and hopefully to anyone adding
-further base boards for the module.
-We will have the same issue for the BPi-S64 module with S700 below.
-
-> +      - items:
-> +          - const: cubietech,cubieboard7
-> +          - const: actions,s700
-> +      - items:
-> +          - const: ucrobotics,bubblegum-96
-> +          - const: actions,s900
-
-Please make the board compatible an enum, even if only one is listed
-today. That makes it clearer where/how (and easier) to add new boards.
+Same comment as for Actions: We're losing a human description of the
+enum values.
 
 Regards,
 Andreas
