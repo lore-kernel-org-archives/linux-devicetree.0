@@ -1,46 +1,40 @@
-From: Eugene Syromiatnikov <esyr@redhat.com>
-Subject: Re: [PATCH V7 00/20] C-SKY(csky) Linux Kernel Port
-Date: Sat, 6 Oct 2018 22:06:49 +0200
-Message-ID: <20181006200649.GL32759@asgard.redhat.com>
-References: <cover.1538715563.git.ren_guo@c-sky.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Oskari Lemmela <oskari@lemmela.net>
+Subject: [PATCH v2 0/6] AXP8x3 AC and battery power supply support
+Date: Sun,  7 Oct 2018 00:18:30 +0300
+Message-ID: <20181006211836.28253-1-oskari@lemmela.net>
+References: <20181004193410.7265-1-oskari@lemmela.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1538715563.git.ren_guo@c-sky.com>
+In-Reply-To: <20181004193410.7265-1-oskari@lemmela.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guo Ren <ren_guo@c-sky.com>
-Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, green.hu@gmail.com, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com
+To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Oskari Lemmela <oskari@lemmela.net>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Oct 05, 2018 at 01:41:42PM +0800, Guo Ren wrote:
-> This is the 7th version patchset to add the Linux kernel port for
-> C-SKY(csky) based on linux-4.19-rc3.
-> 
-> In this patchset some fixup patches are folded into original patch in
-> order to make review clearly and reduce the patches' number for upstream
-> patchset. The changelog is added in the every patch's commit-msg.
-> 
-> Here is the LTP test report for this patchset:
-> (and add "V10 C-SKY(csky) Linux Kernel Driver" patchset)
-> -----------------------------------------------
-> Total Tests: 1298
-> Total Skipped Tests: 280
-> Total Failures: 11
-> Kernel Version: 4.19.0-rc3+
-> Machine Architecture: csky
-> Hostname: buildroot
-> -----------------------------------------------
-> 
-> This patchset adds architecture support to Linux for C-SKY's 32-bit embedded
-> 
-> There are two ABI versions with several CPU cores in this patchset:
->   ABIv1: ck610 (16-bit instruction, 32-bit data path, VIPT Cache ...)
->   ABIv2: ck807 ck810 ck860 (16/32-bit variable length instruction, PIPT Cache,
-> 	 SMP ...)
-> More information: http://en.c-sky.com
-> The development repo: https://gitlab.com/c-sky/csky-linux
+AXP813 AC power supply support with input current and
+voltage limiting support.
 
-I'm sorry for my ignorance, but I'm struggling to find ISA reference/manual,
-architecture programming manual, and System V ABI definition;
-may I ask to give links to them?
+AXP803 AC and battery power supply support.
+
+Changes in v2:
+* Reuse axp813 compatibles for axp803
+* Refactor axp20x_ac_power.c
+
+Oskari Lemmela (6):
+  dt-bindings: power: supply: axp20x: add AXP813 AC power DT binding
+  ARM: dts: axp81x: add AC power supply subnode
+  arm64: dts: allwinner: axp803: add AC and battery power supplies
+  arm64: dts: allwinner: a64: sopine: enable power supplies
+  mfd: axp20x: add support AXP803 AC and battery power supplies
+  power: supply: add AC power supply driver for AXP813
+
+ .../bindings/power/supply/axp20x_ac_power.txt |  3 +
+ arch/arm/boot/dts/axp81x.dtsi                 |  5 +
+ arch/arm64/boot/dts/allwinner/axp803.dtsi     | 31 +++++++
+ .../allwinner/sun50i-a64-sopine-baseboard.dts |  8 ++
+ drivers/mfd/axp20x.c                          | 22 ++++-
+ drivers/power/supply/axp20x_ac_power.c        | 92 +++++++++++++++++++
+ include/linux/mfd/axp20x.h                    |  1 +
+ 7 files changed, 161 insertions(+), 1 deletion(-)
+
+-- 
+2.17.1
