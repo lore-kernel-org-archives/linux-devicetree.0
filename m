@@ -1,91 +1,66 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2] remoteproc: qcom: pas: Add QCS404 remoteprocs
-Date: Fri, 5 Oct 2018 23:38:38 -0700
-Message-ID: <20181006063838.GI12063@builder>
-References: <20180927190346.2984-1-bjorn.andersson@linaro.org>
- <580f4c902aa18e86e5a2e78521d998ee@codeaurora.org>
+Subject: Re: [PATCH v4] dt-binding: remoteproc: Add QTI ADSP PIL bindings
+Date: Fri, 5 Oct 2018 23:55:08 -0700
+Message-ID: <20181006065508.GK12063@builder>
+References: <1536638041-11033-1-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <580f4c902aa18e86e5a2e78521d998ee@codeaurora.org>
+In-Reply-To: <1536638041-11033-1-git-send-email-rohitkr@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, rohkumar@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu 27 Sep 23:27 PDT 2018, Sibi Sankar wrote:
+On Mon 10 Sep 20:54 PDT 2018, Rohit kumar wrote:
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp-pil.txt
+[..]
+> += EXAMPLE
+> +The following example describes the resources needed to boot control the
+> +ADSP, as it is found on SDM845 boards.
+> +	adsp-pil {
 
-> On 2018-09-28 00:33, Bjorn Andersson wrote:
-> > Add compatibles for the three PAS based remote processors found in
-> > QCS404.
-> > 
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> 
-> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-> 
-
-Thanks for the review Sibi, applied the patch.
+Updated this to remoteproc@17300000 and applied the patch to rproc-next.
 
 Regards,
 Bjorn
 
-> > Changes since v1:
-> > - Fixed incorrect sysmon_name, as pointed out by Sibi.
-> > 
-> >  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  3 +++
-> >  drivers/remoteproc/qcom_adsp_pil.c                   | 12 ++++++++++++
-> >  2 files changed, 15 insertions(+)
-> > 
-> > diff --git
-> > a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> > b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> > index b7d058228185..9c0cff3a5ed8 100644
-> > --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
-> > @@ -10,6 +10,9 @@ on the Qualcomm ADSP Hexagon core.
-> >  		    "qcom,msm8974-adsp-pil"
-> >  		    "qcom,msm8996-adsp-pil"
-> >  		    "qcom,msm8996-slpi-pil"
-> > +		    "qcom,qcs404-adsp-pas"
-> > +		    "qcom,qcs404-cdsp-pas"
-> > +		    "qcom,qcs404-wcss-pas"
-> >  		    "qcom,sdm845-adsp-pas"
-> >  		    "qcom,sdm845-cdsp-pas"
-> > 
-> > diff --git a/drivers/remoteproc/qcom_adsp_pil.c
-> > b/drivers/remoteproc/qcom_adsp_pil.c
-> > index da2254ea1135..d5e58235e83a 100644
-> > --- a/drivers/remoteproc/qcom_adsp_pil.c
-> > +++ b/drivers/remoteproc/qcom_adsp_pil.c
-> > @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init =
-> > {
-> >  		.ssctl_id = 0x16,
-> >  };
-> > 
-> > +static const struct adsp_data wcss_resource_init = {
-> > +	.crash_reason_smem = 421,
-> > +	.firmware_name = "wcnss.mdt",
-> > +	.pas_id = 6,
-> > +	.ssr_name = "mpss",
-> > +	.sysmon_name = "wcnss",
-> > +	.ssctl_id = 0x12,
-> > +};
-> > +
-> >  static const struct of_device_id adsp_of_match[] = {
-> >  	{ .compatible = "qcom,msm8974-adsp-pil", .data = &adsp_resource_init},
-> >  	{ .compatible = "qcom,msm8996-adsp-pil", .data = &adsp_resource_init},
-> >  	{ .compatible = "qcom,msm8996-slpi-pil", .data = &slpi_resource_init},
-> > +	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init },
-> > +	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init },
-> > +	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init },
-> >  	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
-> >  	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
-> >  	{ },
-> 
-> -- 
-> -- Sibi Sankar --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project.
+> +		compatible = "qcom,sdm845-adsp-pil";
+> +
+> +		reg = <0x17300000 0x40c>;
+> +
+> +		interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +			<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-names = "wdog", "fatal", "ready",
+> +			"handover", "stop-ack";
+> +
+> +		clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +			<&gcc GCC_LPASS_SWAY_CLK>,
+> +			<&lpasscc LPASS_AUDIO_WRAPPER_AON_CLK>,
+> +			<&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
+> +			<&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
+> +			<&lpasscc LPASS_QDSP6SS_XO_CLK>,
+> +			<&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
+> +			<&lpasscc LPASS_QDSP6SS_CORE_CLK>;
+> +		clock-names = "xo", "sway_cbcr", "lpass_aon",
+> +			"lpass_ahbs_aon_cbcr",
+> +			"lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
+> +			"qdsp6ss_sleep", "qdsp6ss_core";
+> +
+> +		power-domains = <&rpmhpd SDM845_CX>;
+> +
+> +		resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
+> +			 <&aoss_reset AOSS_CC_LPASS_RESTART>;
+> +		reset-names = "pdc_sync", "cc_lpass";
+> +
+> +		qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
+> +
+> +		memory-region = <&pil_adsp_mem>;
+> +
+> +		qcom,smem-states = <&adsp_smp2p_out 0>;
+> +		qcom,smem-state-names = "stop";
+> +	};
