@@ -1,132 +1,91 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 7/7] Documentation: devicetree: Add Xilinx R5 rproc
- binding
-Date: Fri, 5 Oct 2018 22:50:16 -0700
-Message-ID: <20181006055016.GB9450@builder>
-References: <1534403190-28523-1-git-send-email-jliang@xilinx.com>
- <1534403190-28523-8-git-send-email-jliang@xilinx.com>
+Subject: Re: [PATCH v2] remoteproc: qcom: pas: Add QCS404 remoteprocs
+Date: Fri, 5 Oct 2018 23:38:38 -0700
+Message-ID: <20181006063838.GI12063@builder>
+References: <20180927190346.2984-1-bjorn.andersson@linaro.org>
+ <580f4c902aa18e86e5a2e78521d998ee@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1534403190-28523-8-git-send-email-jliang@xilinx.com>
+In-Reply-To: <580f4c902aa18e86e5a2e78521d998ee@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wendy Liang <wendy.liang@xilinx.com>
-Cc: ohad@wizery.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com, rajan.vaja@xilinx.com, jollys@xilinx.com, linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Wendy Liang <jliang@xilinx.com>
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu 16 Aug 00:06 PDT 2018, Wendy Liang wrote:
+On Thu 27 Sep 23:27 PDT 2018, Sibi Sankar wrote:
 
-> Add device tree binding for Xilinx Cortex-r5 remoteproc.
+> On 2018-09-28 00:33, Bjorn Andersson wrote:
+> > Add compatibles for the three PAS based remote processors found in
+> > QCS404.
+> > 
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
 > 
-> Signed-off-by: Wendy Liang <jliang@xilinx.com>
-> ---
->  .../remoteproc/xlnx,zynqmp-r5-remoteproc.txt       | 81 ++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
+> Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
-> new file mode 100644
-> index 0000000..3940019
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/xlnx,zynqmp-r5-remoteproc.txt
-> @@ -0,0 +1,81 @@
-> +Xilinx ARM Cortex A53-R5 remoteproc driver
-> +==========================================
-> +
-> +ZynqMP family of devices use two Cortex R5 processors to help with various
-> +low power / real time tasks.
-> +
-> +This driver requires specific ZynqMP hardware design.
-> +
-> +ZynqMP R5 RemoteProc Device Node:
-> +=================================
-> +A zynqmp_r5_remoteproc device node is used to represent a R5 IP instance
-> +within ZynqMP SoC.
-> +
-> +Required properties:
-> +--------------------
-> + - compatible : Should be "xlnx,zynqmp-r5-remoteproc-1.0"
 
-What is 1.0?
-
-> + - reg : Address and length of the register set for the device. It
-> +        contains in the same order as described reg-names
-> + - reg-names: Contain the register set names.
-> +              "tcm_a" and "tcm_b" for TCM memories.
-> +              If the user uses the remoteproc driver with the RPMsg kernel
-> +              driver,"ipi" for the IPI register used to communicate with RPU
-> +              is also required.
-> +              Otherwise, if user only uses the remoteproc driver to boot RPU
-> +              firmware, "ipi" is not required.
-> + - tcm-pnode-id: TCM resources power nodes IDs which are used to request TCM
-> +                 resources for the remoteproc driver to access.
-> + - rpu-pnode-id : RPU power node id which is used by the remoteproc driver
-> +                  to start RPU or shut it down.
-> +
-> +Optional properties:
-> +--------------------
-> + - core_conf : R5 core configuration (valid string - split0 or split1 or
-> +               lock-step), default is lock-step.
-> + - memory-region: memories regions for RPU executable and DMA memory.
-> + - interrupts : Interrupt mapping for remoteproc IPI. It is required if the
-> +                user uses the remoteproc driver with the RPMsg kernel driver.
-> + - interrupt-parent : Phandle for the interrupt controller. It is required if
-> +                      the user uses the remoteproc driver with the RPMsg kernel
-> +                      kernel driver.
-> +
-> +Example:
-> +--------
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +		rproc_0_fw_reserved: rproc@3ed000000 {
-> +			compatible = "rproc-prog-memory";
-> +			no-map;
-> +			reg = <0x0 0x3ed00000 0x0 0x40000>;
-> +		};
-> +		rproc_0_dma_reserved: rproc@3ed400000 {
-> +			compatible = "shared-dma-pool";
-> +			no-map;
-> +			reg = <0x0 0x3ed40000 0x0 0x80000>;
-> +		};
-> +	};
-> +
-> +	firmware {
-> +		zynqmp_firmware: zynqmp-firmware {
-> +			compatible = "xlnx,zynqmp-firmware";
-> +			method = "smc";
-> +		};
-> +	};
-> +
-> +	zynqmp-r5-remoteproc@0 {
-
-remoteproc@ffe00000 {
-
-> +		compatible = "xlnx,zynqmp-r5-remoteproc-1.0";
-> +		reg = <0x0 0xFFE00000 0x0 0x10000>,
-> +			<0x0 0xFFE20000 0x0 0x10000>,
-> +			<0x0 0xff340000 0x0 0x100>;
-
-Make all addresses lowercase, rather than mixing case.
-
-> +		reg-names = "tcm_a", "tcm_b", "ipi";
-> +		dma-ranges;
-> +		core_conf = "split0";
-> +		memory-region = <&rproc_0_fw_reserved>,
-> +				<&rproc_0_dma_reserved>;
-> +		tcm-pnode-id = <0xf>, <0x10>;
-> +		rpu-pnode-id = <0x7>;
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <0 29 4>;
-
-interrutps = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-
-> +	} ;
-> -- 
-> 2.7.4
-> 
+Thanks for the review Sibi, applied the patch.
 
 Regards,
 Bjorn
+
+> > Changes since v1:
+> > - Fixed incorrect sysmon_name, as pointed out by Sibi.
+> > 
+> >  .../devicetree/bindings/remoteproc/qcom,adsp.txt     |  3 +++
+> >  drivers/remoteproc/qcom_adsp_pil.c                   | 12 ++++++++++++
+> >  2 files changed, 15 insertions(+)
+> > 
+> > diff --git
+> > a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> > b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> > index b7d058228185..9c0cff3a5ed8 100644
+> > --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> > @@ -10,6 +10,9 @@ on the Qualcomm ADSP Hexagon core.
+> >  		    "qcom,msm8974-adsp-pil"
+> >  		    "qcom,msm8996-adsp-pil"
+> >  		    "qcom,msm8996-slpi-pil"
+> > +		    "qcom,qcs404-adsp-pas"
+> > +		    "qcom,qcs404-cdsp-pas"
+> > +		    "qcom,qcs404-wcss-pas"
+> >  		    "qcom,sdm845-adsp-pas"
+> >  		    "qcom,sdm845-cdsp-pas"
+> > 
+> > diff --git a/drivers/remoteproc/qcom_adsp_pil.c
+> > b/drivers/remoteproc/qcom_adsp_pil.c
+> > index da2254ea1135..d5e58235e83a 100644
+> > --- a/drivers/remoteproc/qcom_adsp_pil.c
+> > +++ b/drivers/remoteproc/qcom_adsp_pil.c
+> > @@ -362,10 +362,22 @@ static const struct adsp_data slpi_resource_init =
+> > {
+> >  		.ssctl_id = 0x16,
+> >  };
+> > 
+> > +static const struct adsp_data wcss_resource_init = {
+> > +	.crash_reason_smem = 421,
+> > +	.firmware_name = "wcnss.mdt",
+> > +	.pas_id = 6,
+> > +	.ssr_name = "mpss",
+> > +	.sysmon_name = "wcnss",
+> > +	.ssctl_id = 0x12,
+> > +};
+> > +
+> >  static const struct of_device_id adsp_of_match[] = {
+> >  	{ .compatible = "qcom,msm8974-adsp-pil", .data = &adsp_resource_init},
+> >  	{ .compatible = "qcom,msm8996-adsp-pil", .data = &adsp_resource_init},
+> >  	{ .compatible = "qcom,msm8996-slpi-pil", .data = &slpi_resource_init},
+> > +	{ .compatible = "qcom,qcs404-adsp-pas", .data = &adsp_resource_init },
+> > +	{ .compatible = "qcom,qcs404-cdsp-pas", .data = &cdsp_resource_init },
+> > +	{ .compatible = "qcom,qcs404-wcss-pas", .data = &wcss_resource_init },
+> >  	{ .compatible = "qcom,sdm845-adsp-pas", .data = &adsp_resource_init},
+> >  	{ .compatible = "qcom,sdm845-cdsp-pas", .data = &cdsp_resource_init},
+> >  	{ },
+> 
+> -- 
+> -- Sibi Sankar --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project.
