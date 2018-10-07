@@ -1,275 +1,87 @@
 From: Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH V2 net-next 3/5] net: Add a layer for non-PHY MII time stamping drivers.
-Date: Sun,  7 Oct 2018 10:38:21 -0700
-Message-ID: <20181007173823.21590-4-richardcochran@gmail.com>
+Subject: [PATCH V2 net-next 4/5] net: mdio: of: Register discovered MII time stampers.
+Date: Sun,  7 Oct 2018 10:38:22 -0700
+Message-ID: <20181007173823.21590-5-richardcochran@gmail.com>
 Return-path: <netdev-owner@vger.kernel.org>
 Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-While PHY time stamping drivers can simply attach their interface
-directly to the PHY instance, stand alone drivers require support in
-order to manage their services.  Non-PHY MII time stamping drivers
-have a control interface over another bus like I2C, SPI, UART, or via
-a memory mapped peripheral.  The controller device will be associated
-with one or more time stamping channels, each of which sits snoops in
-on a MII bus.
-
-This patch provides a glue layer that will enable time stamping
-channels to find their controlling device.
+When parsing a PHY node, register its time stamper, if any, and attach
+the instance to the PHY device.
 
 Signed-off-by: Richard Cochran <richardcochran@gmail.com>
 ---
- drivers/net/phy/Makefile          |   2 +
- drivers/net/phy/mii_timestamper.c | 121 ++++++++++++++++++++++++++++++++++++++
- include/linux/mii_timestamper.h   |  63 ++++++++++++++++++++
- net/Kconfig                       |   7 ++-
- 4 files changed, 190 insertions(+), 3 deletions(-)
- create mode 100644 drivers/net/phy/mii_timestamper.c
+ drivers/net/phy/phy_device.c |  3 +++
+ drivers/of/of_mdio.c         | 26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index 5805c0b7d60e..584c7c6f40e7 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -40,6 +40,8 @@ obj-$(CONFIG_MDIO_SUN4I)	+= mdio-sun4i.o
- obj-$(CONFIG_MDIO_THUNDER)	+= mdio-thunder.o
- obj-$(CONFIG_MDIO_XGENE)	+= mdio-xgene.o
- 
-+obj-$(CONFIG_NETWORK_PHY_TIMESTAMPING) += mii_timestamper.o
-+
- obj-$(CONFIG_SFP)		+= sfp.o
- sfp-obj-$(CONFIG_SFP)		+= sfp-bus.o
- obj-y				+= $(sfp-obj-y) $(sfp-obj-m)
-diff --git a/drivers/net/phy/mii_timestamper.c b/drivers/net/phy/mii_timestamper.c
-new file mode 100644
-index 000000000000..51b77fc92475
---- /dev/null
-+++ b/drivers/net/phy/mii_timestamper.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Support for generic time stamping devices on MII buses.
-+// Copyright (C) 2018 Richard Cochran <richardcochran@gmail.com>
-+//
-+
-+#include <linux/mii_timestamper.h>
-+
-+static LIST_HEAD(mii_timestamping_devices);
-+static DEFINE_MUTEX(tstamping_devices_lock);
-+
-+struct mii_timestamping_desc {
-+	struct list_head list;
-+	struct mii_timestamping_ctrl *ctrl;
-+	struct device *device;
-+};
-+
-+/**
-+ * register_mii_tstamp_controller() - registers an MII time stamping device.
-+ *
-+ * @device:	The device to be registered.
-+ * @ctrl:	Pointer to device's control interface.
-+ *
-+ * Returns zero on success or non-zero on failure.
-+ */
-+int register_mii_tstamp_controller(struct device *device,
-+				   struct mii_timestamping_ctrl *ctrl)
-+{
-+	struct mii_timestamping_desc *desc;
-+
-+	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+
-+	INIT_LIST_HEAD(&desc->list);
-+	desc->ctrl = ctrl;
-+	desc->device = device;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_add_tail(&mii_timestamping_devices, &desc->list);
-+	mutex_unlock(&tstamping_devices_lock);
-+
-+	return 0;
-+}
-+
-+/**
-+ * unregister_mii_tstamp_controller() - unregisters an MII time stamping device.
-+ *
-+ * @device:	A device previously passed to register_mii_tstamp_controller().
-+ */
-+void unregister_mii_tstamp_controller(struct device *device)
-+{
-+	struct mii_timestamping_desc *desc;
-+	struct list_head *this, *next;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_for_each_safe(this, next, &mii_timestamping_devices) {
-+		desc = list_entry(this, struct mii_timestamping_desc, list);
-+		if (desc->device == device) {
-+			list_del_init(&desc->list);
-+			kfree(desc);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&tstamping_devices_lock);
-+}
-+
-+/**
-+ * register_mii_timestamper - Enables a given port of an MII time stamper.
-+ *
-+ * @node:	The device tree node of the MII time stamp controller.
-+ * @port:	The index of the port to be enabled.
-+ *
-+ * Returns a valid interface on success or ERR_PTR otherwise.
-+ */
-+struct mii_timestamper *register_mii_timestamper(struct device_node *node,
-+						 unsigned int port)
-+{
-+	struct mii_timestamper *mii_ts = NULL;
-+	struct mii_timestamping_desc *desc;
-+	struct list_head *this;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_for_each(this, &mii_timestamping_devices) {
-+		desc = list_entry(this, struct mii_timestamping_desc, list);
-+		if (desc->device->of_node == node) {
-+			mii_ts = desc->ctrl->probe_channel(desc->device, port);
-+			if (mii_ts) {
-+				mii_ts->device = desc->device;
-+				get_device(desc->device);
-+			}
-+			break;
-+		}
-+	}
-+	mutex_unlock(&tstamping_devices_lock);
-+
-+	return mii_ts ? mii_ts : ERR_PTR(-EPROBE_DEFER);
-+}
-+
-+/**
-+ * unregister_mii_timestamper - Disables a given MII time stamper.
-+ *
-+ * @mii_ts:	An interface obtained via register_mii_timestamper().
-+ *
-+ */
-+void unregister_mii_timestamper(struct mii_timestamper *mii_ts)
-+{
-+	struct mii_timestamping_desc *desc;
-+	struct list_head *this;
-+
-+	mutex_lock(&tstamping_devices_lock);
-+	list_for_each(this, &mii_timestamping_devices) {
-+		desc = list_entry(this, struct mii_timestamping_desc, list);
-+		if (desc->device == mii_ts->device) {
-+			desc->ctrl->release_channel(desc->device, mii_ts);
-+			put_device(desc->device);
-+			break;
-+		}
-+	}
-+	mutex_unlock(&tstamping_devices_lock);
-+}
-diff --git a/include/linux/mii_timestamper.h b/include/linux/mii_timestamper.h
-index 97e20e7033f6..5fa014ba77ff 100644
---- a/include/linux/mii_timestamper.h
-+++ b/include/linux/mii_timestamper.h
-@@ -27,10 +27,15 @@
-  * @hwtstamp:	Handles SIOCSHWTSTAMP ioctl for hardware time stamping.
-  * @link_state:	Allows the device to respond to changes in the link state.
-  * @ts_info:	Handles ethtool queries for hardware time stamping.
-+ * @device:	Remembers the device to which the instance belongs.
-  *
-  * Drivers for PHY time stamping devices should embed their
-  * mii_timestamper within a private structure, obtaining a reference
-  * to it using container_of().
-+ *
-+ * Drivers for non-PHY time stamping devices should return a pointer
-+ * to a mii_timestamper from the probe_channel() callback of their
-+ * mii_timestamping_ctrl interface.
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index a454432d166f..c24bce9b7270 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -833,6 +833,9 @@ EXPORT_SYMBOL(phy_device_register);
   */
- struct mii_timestamper {
- 	bool (*rxtstamp)(struct mii_timestamper *mii_ts,
-@@ -47,6 +52,64 @@ struct mii_timestamper {
+ void phy_device_remove(struct phy_device *phydev)
+ {
++	if (phydev->mii_ts)
++		unregister_mii_timestamper(phydev->mii_ts);
++
+ 	device_del(&phydev->mdio.dev);
  
- 	int  (*ts_info)(struct mii_timestamper *mii_ts,
- 			struct ethtool_ts_info *ts_info);
-+
-+	struct device *device;
-+};
-+
-+/**
-+ * struct mii_timestamping_ctrl - MII time stamping controller interface.
-+ *
-+ * @probe_channel:	Callback into the controller driver announcing the
-+ *			presence of the 'port' channel.  The 'device' field
-+ *			had been passed to register_mii_tstamp_controller().
-+ *			The driver must return either a pointer to a valid
-+ *			MII timestamper instance or PTR_ERR.
-+ *
-+ * @release_channel:	Releases an instance obtained via .probe_channel.
-+ */
-+struct mii_timestamping_ctrl {
-+	struct mii_timestamper *(*probe_channel)(struct device *device,
-+						 unsigned int port);
-+	void (*release_channel)(struct device *device,
-+				struct mii_timestamper *mii_ts);
- };
+ 	/* Assert the reset signal */
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index f76c10ecc616..7699f167e4a9 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -44,14 +44,38 @@ static int of_get_phy_id(struct device_node *device, u32 *phy_id)
+ 	return -EINVAL;
+ }
  
-+#ifdef CONFIG_NETWORK_PHY_TIMESTAMPING
-+
-+int register_mii_tstamp_controller(struct device *device,
-+				   struct mii_timestamping_ctrl *ctrl);
-+
-+void unregister_mii_tstamp_controller(struct device *device);
-+
-+struct mii_timestamper *register_mii_timestamper(struct device_node *node,
-+						 unsigned int port);
-+
-+void unregister_mii_timestamper(struct mii_timestamper *mii_ts);
-+
-+#else
-+
-+static inline
-+int register_mii_tstamp_controller(struct device *device,
-+				   struct mii_timestamping_ctrl *ctrl)
++struct mii_timestamper *of_find_mii_timestamper(struct device_node *node)
 +{
-+	return -EOPNOTSUPP;
++	struct of_phandle_args args;
++	unsigned int port = 0;
++	int err;
++
++	err = of_parse_phandle_with_args(node, "timestamper",
++					 "#phandle-cells", 0, &args);
++	if (err == -ENOENT)
++		return NULL;
++	else if (err)
++		return ERR_PTR(err);
++
++	if (args.args_count >= 1)
++		port = args.args[0];
++
++	return register_mii_timestamper(args.np, port);
 +}
 +
-+static inline void unregister_mii_tstamp_controller(struct device *device)
-+{
-+}
-+
-+static inline
-+struct mii_timestamper *register_mii_timestamper(struct device_node *node,
-+						 unsigned int port)
-+{
-+	return NULL;
-+}
-+
-+static inline void unregister_mii_timestamper(struct mii_timestamper *mii_ts)
-+{
-+}
-+
-+#endif
-+
- #endif
-diff --git a/net/Kconfig b/net/Kconfig
-index 228dfa382eec..49872c5f4165 100644
---- a/net/Kconfig
-+++ b/net/Kconfig
-@@ -106,9 +106,10 @@ config NETWORK_PHY_TIMESTAMPING
- 	bool "Timestamping in PHY devices"
- 	select NET_PTP_CLASSIFY
- 	help
--	  This allows timestamping of network packets by PHYs with
--	  hardware timestamping capabilities. This option adds some
--	  overhead in the transmit and receive paths.
-+	  This allows timestamping of network packets by PHYs (or
-+	  other MII bus snooping devices) with hardware timestamping
-+	  capabilities. This option adds some overhead in the transmit
-+	  and receive paths.
+ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+ 				    struct device_node *child, u32 addr)
+ {
++	struct mii_timestamper *mii_ts;
+ 	struct phy_device *phy;
+ 	bool is_c45;
+ 	int rc;
+ 	u32 phy_id;
  
- 	  If you are unsure how to answer this question, answer N.
++	mii_ts = of_find_mii_timestamper(child);
++	if (IS_ERR(mii_ts))
++		return PTR_ERR(mii_ts);
++
+ 	is_c45 = of_device_is_compatible(child,
+ 					 "ethernet-phy-ieee802.3-c45");
  
+@@ -97,6 +121,8 @@ static int of_mdiobus_register_phy(struct mii_bus *mdio,
+ 		return rc;
+ 	}
+ 
++	phy->mii_ts = mii_ts;
++
+ 	dev_dbg(&mdio->dev, "registered phy %s at address %i\n",
+ 		child->name, addr);
+ 	return 0;
 -- 
 2.11.0
