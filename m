@@ -1,66 +1,46 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH V2 net-next 2/5] net: Introduce a new MII time stamping
- interface.
-Date: Sun, 7 Oct 2018 21:54:00 +0200
-Message-ID: <20181007195400.GA25883@lunn.ch>
-References: <20181007173823.21590-3-richardcochran@gmail.com>
- <20181007182751.GC22794@lunn.ch>
- <20181007191551.gy4l4g6qdgz6ztez@localhost>
+Subject: Re: [PATCH V2 net-next 4/5] net: mdio: of: Register discovered MII
+ time stampers.
+Date: Sun, 7 Oct 2018 21:57:44 +0200
+Message-ID: <20181007195744.GB25883@lunn.ch>
+References: <20181007173823.21590-5-richardcochran@gmail.com>
+ <8a238abb-dfaa-54b4-1c10-86fa619f41e3@gmail.com>
+ <20181007181754.GA22794@lunn.ch>
+ <20181007192627.33nfcc27mvyqxbdy@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181007191551.gy4l4g6qdgz6ztez@localhost>
+In-Reply-To: <20181007192627.33nfcc27mvyqxbdy@localhost>
 Sender: netdev-owner@vger.kernel.org
 To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 07, 2018 at 12:15:51PM -0700, Richard Cochran wrote:
-> On Sun, Oct 07, 2018 at 08:27:51PM +0200, Andrew Lunn wrote:
-> > The mii_timestamper is generic, in the same why hwmon is generic. It
-> > does not matter where the time stamper is. So i'm wondering if we
-> > should remove the special case for a PHY timestamper, remove all the
-> > phylib support, etc.
+On Sun, Oct 07, 2018 at 12:26:27PM -0700, Richard Cochran wrote:
+> On Sun, Oct 07, 2018 at 08:17:54PM +0200, Andrew Lunn wrote:
+> > > > +	if (err == -ENOENT)
+> > > > +		return NULL;
+> > > > +	else if (err)
+> > > > +		return ERR_PTR(err);
+> > > > +
+> > > > +	if (args.args_count >= 1)
+> > > > +		port = args.args[0];
+> > > 
+> > > If it's greater than one, than it is an error, and it should be flagged
+> > > as such.
+> > > 
+> > > The idea looks good though, should of_find_mii_timestamper() somehow be
+> > > made conditional to CONFIG_PTP and we should have a stub for when it is
+> > > disabled?
+> > 
+> > Hi Florian
+> > 
+> > There already is a stub. But register return -EOPNOTSUPP.
 > 
-> This implementation is (to the best of my understanding) what you were
-> asking for in your review of v1:
+> The stub returns NULL...
 
-Sure, but things have moved on since then.
- 
-> > So i really think you need to cleanly integrate into phylib and
-> > phylink.
-> 
-> > Use a phandle, and have
-> > of_mdiobus_register_phy() follow the phandle to get the device.
-> 
-> > To keep lifecycle issues simple, i would also keep it in phydev, not
-> > netdev.
-> 
-> This present series is a reasonable, incremental improvement to the
-> existing PHY time stamping support.  It will handle any use case that
-> I can think of, and I would like to avoid over-engineering this.
+Ah, sorry, it is register_mii_tstamp_controller() which return
+-EOPNOTSUP.
 
-I can think of three obvious use cases where this does not work:
-
-1) phylink, not phdev. We have been pushing some MAC drivers towards
-phylink, especially those which support >1Gbp.
-
-2) When an SFP is connected to the MAC, not a copper PHY. The class of
-device you are adding a driver for will work just as well for an SFP
-as for a copper PHY. The SERDES interface remains the same,
-independent of if a copper PHY is used, or a SFP. But an SFP does not
-have an instance of a phydv.
-
-2a) An SFP which is actually a Copper PHY. There is a phydev for this,
-but it is associated to the phylink, not the netdev.
-
-3) Firmware controlled PHYs. phylib/phylink is not used, the MAC turns
-all ethtool calls into RPCs to the firmware. I've no numbers about
-this, but i have the feeling this is becoming more popular. It does
-however tend to be high end devices, and those are more likely to have
-timestamping in the MAC. I suppose they could also offload
-tomestamping to the firmware, in which case, they might want to make
-use of this new API.
-
-    Andrew
+	Andrew
