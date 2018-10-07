@@ -1,59 +1,66 @@
 From: Richard Cochran <richardcochran@gmail.com>
 Subject: Re: [PATCH V2 net-next 4/5] net: mdio: of: Register discovered MII
  time stampers.
-Date: Sun, 7 Oct 2018 12:23:41 -0700
-Message-ID: <20181007192341.rkwqxxhjqf4dctkl@localhost>
+Date: Sun, 7 Oct 2018 12:26:27 -0700
+Message-ID: <20181007192627.33nfcc27mvyqxbdy@localhost>
 References: <20181007173823.21590-5-richardcochran@gmail.com>
  <8a238abb-dfaa-54b4-1c10-86fa619f41e3@gmail.com>
+ <20181007181754.GA22794@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8a238abb-dfaa-54b4-1c10-86fa619f41e3@gmail.com>
+In-Reply-To: <20181007181754.GA22794@lunn.ch>
 Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, David Miller <davem@davemloft.net>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 07, 2018 at 11:14:38AM -0700, Florian Fainelli wrote:
-> There appears to be a binding document missing to describe what a
-> timerstamper provider is. Using a more specific name than
-> "#phandle-cells" is preferred when dealing with specific devices, e.g:
+On Sun, Oct 07, 2018 at 08:17:54PM +0200, Andrew Lunn wrote:
+> > > +	if (err == -ENOENT)
+> > > +		return NULL;
+> > > +	else if (err)
+> > > +		return ERR_PTR(err);
+> > > +
+> > > +	if (args.args_count >= 1)
+> > > +		port = args.args[0];
+> > 
+> > If it's greater than one, than it is an error, and it should be flagged
+> > as such.
+> > 
+> > The idea looks good though, should of_find_mii_timestamper() somehow be
+> > made conditional to CONFIG_PTP and we should have a stub for when it is
+> > disabled?
 > 
-> interrupt-controller/#interrupt-cells
-> clocks/#clock-cells
-
-Sure.
-
-> So I would go with #timestamp-cells here, and define what the cell sie
-> and format should be in a separate "dt-bindings" prefixed patch that the
-> Device Tree folks can also comment on.
-
-I documented this in the last patch.  I didn't see any example in our
-device tree that explains a "reference" like this that is not
-connected to a specific node type.
-
+> Hi Florian
 > 
-> > +	if (err == -ENOENT)
-> > +		return NULL;
-> > +	else if (err)
-> > +		return ERR_PTR(err);
-> > +
-> > +	if (args.args_count >= 1)
-> > +		port = args.args[0];
+> There already is a stub. But register return -EOPNOTSUPP.
+
+The stub returns NULL...
+
+> > > +	return register_mii_timestamper(args.np, port);
 > 
-> If it's greater than one, than it is an error, and it should be flagged
-> as such.
+> So this returns EOPNOTUP
 
-I wanted to allow specific MII time stamping drivers to use one than
-one value in the future, should the need arise.
+NULL...
+ 
+> > >  static int of_mdiobus_register_phy(struct mii_bus *mdio,
+> > >  				    struct device_node *child, u32 addr)
+> > >  {
+> > > +	struct mii_timestamper *mii_ts;
+> > >  	struct phy_device *phy;
+> > >  	bool is_c45;
+> > >  	int rc;
+> > >  	u32 phy_id;
+> > >  
+> > > +	mii_ts = of_find_mii_timestamper(child);
+> > > +	if (IS_ERR(mii_ts))
+> > > +		return PTR_ERR(mii_ts);
+> > > +
+> 
+> and this returns EOPNOPTSUPP, so the PHY is not registered :-(
 
-> The idea looks good though, should of_find_mii_timestamper() somehow be
-> made conditional to CONFIG_PTP and we should have a stub for when it is
-> disabled?
-
-Do you mean CONFIG_NETWORK_PHY_TIMESTAMPING ?
-There is a stub for that.
+and the phydev.mii_ts field is then set to NULL.
 
 Thanks,
 Richard
