@@ -1,53 +1,106 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC PATCH 9/9] leds: lm3632: Introduce the TI LM3632 driver
-Date: Sun, 7 Oct 2018 15:46:30 +0200
-Message-ID: <20181007134630.GA19323@amd>
-References: <20180926130921.12329-1-dmurphy@ti.com>
- <20180926130921.12329-10-dmurphy@ti.com>
+From: Vinod <vkoul@kernel.org>
+Subject: Re: [PATCH v3 1/7] dt-bindings: stm32-dma: Add DMA/MDMA chaining
+ support bindings
+Date: Sun, 7 Oct 2018 20:27:22 +0530
+Message-ID: <20181007145722.GY2372@vkoul-mobl>
+References: <1538139715-24406-1-git-send-email-pierre-yves.mordret@st.com>
+ <1538139715-24406-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20180926130921.12329-10-dmurphy@ti.com>
+In-Reply-To: <1538139715-24406-2-git-send-email-pierre-yves.mordret@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 28-09-18, 15:01, Pierre-Yves MORDRET wrote:
+> From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+> 
+> This patch adds dma bindings to support DMA/MDMA chaining transfer.
+> 1 bit is to manage both DMA FIFO Threshold
+> 1 bit is to manage DMA/MDMA Chaining features.
+> 2 bits are used to specify SDRAM size to use for DMA/MDMA chaining.
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please do mention which specific bits?
 
-On Wed 2018-09-26 08:09:21, Dan Murphy wrote:
-> Add the dedicated TI LM3632 LED driver.  This
-> LED device is capable of driving a backlight display.
->=20
-> In addition to the backlight the device has control
-> of a strobe and torch output.
+> The size in bytes of a certain order is given by the formula:
+>     (2 ^ order) * PAGE_SIZE.
+> The order is given by those 2 bits.
+> For cyclic, whether chaining is chosen, any value above 1 can be set :
+> SRAM buffer size will rely on period size and not on this DT value.
+> 
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
+> ---
+>   Version history:
+>     v3:
+>     v2:
+>        * rework content
+>     v1:
+>        * Initial
+> ---
+> ---
+>  .../devicetree/bindings/dma/stm32-dma.txt          | 27 +++++++++++++++++++++-
+>  1 file changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/stm32-dma.txt b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+> index c5f5190..2bac8c7 100644
+> --- a/Documentation/devicetree/bindings/dma/stm32-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/stm32-dma.txt
+> @@ -17,6 +17,12 @@ Optional properties:
+>  - resets: Reference to a reset controller asserting the DMA controller
+>  - st,mem2mem: boolean; if defined, it indicates that the controller supports
+>    memory-to-memory transfer
+> +- dmas: A list of eight dma specifiers, one for each entry in dma-names.
+> +  Refer to stm32-mdma.txt for more details.
+> +- dma-names: should contain "ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6" and
+> +  "ch7" and represents each STM32 DMA channel connected to a STM32 MDMA one.
+> +- memory-region : phandle to a node describing memory to be used for
+> +  M2M intermediate transfer between DMA and MDMA.
+>  
+>  Example:
+>  
+> @@ -36,6 +42,16 @@ Example:
+>  		st,mem2mem;
+>  		resets = <&rcc 150>;
+>  		dma-requests = <8>;
+> +		dmas = <&mdma1 8 0x10 0x1200000a 0x40026408 0x00000020 1>,
+> +		       <&mdma1 9 0x10 0x1200000a 0x40026408 0x00000800 1>,
+> +		       <&mdma1 10 0x10 0x1200000a 0x40026408 0x00200000 1>,
+> +		       <&mdma1 11 0x10 0x1200000a 0x40026408 0x08000000 1>,
+> +		       <&mdma1 12 0x10 0x1200000a 0x4002640C 0x00000020 1>,
+> +		       <&mdma1 13 0x10 0x1200000a 0x4002640C 0x00000800 1>,
+> +		       <&mdma1 14 0x10 0x1200000a 0x4002640C 0x00200000 1>,
+> +		       <&mdma1 15 0x10 0x1200000a 0x4002640C 0x08000000 1>;
+> +		dma-names = "ch0", "ch1", "ch2", "ch3", "ch4", "ch5", "ch6", "ch7";
+> +		memory-region = <&sram_dmapool>;
+>  	};
+>  
+>  * DMA client
+> @@ -68,7 +84,16 @@ channel: a phandle to the DMA controller plus the following four integer cells:
+>  	0x1: 1/2 full FIFO
+>  	0x2: 3/4 full FIFO
+>  	0x3: full FIFO
+> -
+> + -bit 2: Intermediate M2M transfer from/to DDR to/from SRAM throughout MDMA
+> +	0: MDMA not used to generate an intermediate M2M transfer
+> +	1: MDMA used to generate an intermediate M2M transfer.
+> + -bit 3-4: indicated SRAM Buffer size in (2^order)*PAGE_SIZE.
+> +	PAGE_SIZE is given by Linux at 4KiB: include/asm-generic/page.h.
+> +	Order is given by those 2 bits starting at 0.
+> +	Valid only whether Intermediate M2M transfer is set.
 
-Is this in some way similar to 3639? That also seems to include flash
-and torch.
+why do we need this as a property?
 
-drivers/video/backlight/lm3639_bl.c
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+> +	For cyclic, whether Intermediate M2M transfer is chosen, any value can
+> +	be set: SRAM buffer size will rely on period size and not on this DT
+> +	value.
+>  
+>  Example:
+>  
+> -- 
+> 2.7.4
 
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlu6DjYACgkQMOfwapXb+vKIfgCfaCzUEz9ZpoY/EfPeEOMPf4a9
-KQAAnRlaLwr0s5K4pIDwlOTMD6W6XxRB
-=upBE
------END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
+-- 
+~Vinod
