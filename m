@@ -1,180 +1,53 @@
-From: Vinod <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] clk: qcom: gcc: Add global clock controller driver
- for QCS404
-Date: Sun, 7 Oct 2018 19:01:51 +0530
-Message-ID: <20181007133151.GS2372@vkoul-mobl>
-References: <20180921185936.9590-1-vkoul@kernel.org>
- <20180921185936.9590-2-vkoul@kernel.org>
- <68d91d52-302d-1b0d-a995-bae976afe8e2@codeaurora.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [RFC PATCH 9/9] leds: lm3632: Introduce the TI LM3632 driver
+Date: Sun, 7 Oct 2018 15:46:30 +0200
+Message-ID: <20181007134630.GA19323@amd>
+References: <20180926130921.12329-1-dmurphy@ti.com>
+ <20180926130921.12329-10-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <68d91d52-302d-1b0d-a995-bae976afe8e2@codeaurora.org>
+In-Reply-To: <20180926130921.12329-10-dmurphy@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Shefali Jain <shefjain@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Anu Ramanathan <anur@codeaurora.org>, "open list:COMMON CLK FRAMEWORK" <linux-clk@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Taniya,
 
-Thanks for the review, It would be great if you can strip the irrelevant
-context while replying, makes it easier for people to follow.
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 06-10-18, 23:28, Taniya Das wrote:
+On Wed 2018-09-26 08:09:21, Dan Murphy wrote:
+> Add the dedicated TI LM3632 LED driver.  This
+> LED device is capable of driving a backlight display.
+>=20
+> In addition to the backlight the device has control
+> of a strobe and torch output.
 
-> > +static struct clk_rcg2 pclk0_clk_src = {
-> > +	.cmd_rcgr = 0x4d000,
-> > +	.mnd_width = 8,
-> > +	.hid_width = 5,
-> > +	.parent_map = gcc_parent_map_12,
-> > +	.clkr.hw.init = &(struct clk_init_data){
-> > +		.name = "pclk0_clk_src",
-> > +		.parent_names = gcc_parent_names_12,
-> > +		.num_parents = 4,
-> > +		.flags = CLK_SET_RATE_PARENT | CLK_GET_RATE_NOCACHE,
-> 
-> Please remove the NOCACHE flag for all display RCGs as there are no real
-> requirement.
+Is this in some way similar to 3639? That also seems to include flash
+and torch.
 
-Thanks for the suggestion, will do
+drivers/video/backlight/lm3639_bl.c
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-> > +++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-> > @@ -0,0 +1,166 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (c) 2018, The Linux Foundation. All rights reserved.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_CLK_QCOM_GCC_QCS404_H
-> > +#define _DT_BINDINGS_CLK_QCOM_GCC_QCS404_H
-> > +
-> > +#define APSS_AHB_CLK_SRC				0
-> > +#define BLSP1_QUP0_I2C_APPS_CLK_SRC			1
-> > +#define BLSP1_QUP0_SPI_APPS_CLK_SRC			2
-> > +#define BLSP1_QUP1_I2C_APPS_CLK_SRC			3
-> > +#define BLSP1_QUP1_SPI_APPS_CLK_SRC			4
-> > +#define BLSP1_QUP2_I2C_APPS_CLK_SRC			5
-> > +#define BLSP1_QUP2_SPI_APPS_CLK_SRC			6
-> > +#define BLSP1_QUP3_I2C_APPS_CLK_SRC			7
-> > +#define BLSP1_QUP3_SPI_APPS_CLK_SRC			8
-> > +#define BLSP1_QUP4_I2C_APPS_CLK_SRC			9
-> > +#define BLSP1_QUP4_SPI_APPS_CLK_SRC			10
-> > +#define BLSP1_UART0_APPS_CLK_SRC			11
-> > +#define BLSP1_UART1_APPS_CLK_SRC			12
-> > +#define BLSP1_UART2_APPS_CLK_SRC			13
-> > +#define BLSP1_UART3_APPS_CLK_SRC			14
-> > +#define BLSP2_QUP0_I2C_APPS_CLK_SRC			15
-> > +#define BLSP2_QUP0_SPI_APPS_CLK_SRC			16
-> > +#define BLSP2_UART0_APPS_CLK_SRC			17
-> > +#define BYTE0_CLK_SRC					18
-> > +#define EMAC_CLK_SRC					19
-> > +#define EMAC_PTP_CLK_SRC				20
-> > +#define ESC0_CLK_SRC					21
-> > +#define GCC_APSS_AHB_CLK				22
-> > +#define GCC_APSS_AXI_CLK				23
-> > +#define GCC_BIMC_APSS_AXI_CLK				24
-> > +#define GCC_BIMC_GFX_CLK				25
-> > +#define GCC_BIMC_MDSS_CLK				26
-> > +#define GCC_BLSP1_AHB_CLK				27
-> > +#define GCC_BLSP1_QUP0_I2C_APPS_CLK			28
-> > +#define GCC_BLSP1_QUP0_SPI_APPS_CLK			29
-> > +#define GCC_BLSP1_QUP1_I2C_APPS_CLK			30
-> > +#define GCC_BLSP1_QUP1_SPI_APPS_CLK			31
-> > +#define GCC_BLSP1_QUP2_I2C_APPS_CLK			32
-> > +#define GCC_BLSP1_QUP2_SPI_APPS_CLK			33
-> > +#define GCC_BLSP1_QUP3_I2C_APPS_CLK			34
-> > +#define GCC_BLSP1_QUP3_SPI_APPS_CLK			35
-> > +#define GCC_BLSP1_QUP4_I2C_APPS_CLK			36
-> > +#define GCC_BLSP1_QUP4_SPI_APPS_CLK			37
-> > +#define GCC_BLSP1_UART0_APPS_CLK			38
-> > +#define GCC_BLSP1_UART1_APPS_CLK			39
-> > +#define GCC_BLSP1_UART2_APPS_CLK			40
-> > +#define GCC_BLSP1_UART3_APPS_CLK			41
-> > +#define GCC_BLSP2_AHB_CLK				42
-> > +#define GCC_BLSP2_QUP0_I2C_APPS_CLK			43
-> > +#define GCC_BLSP2_QUP0_SPI_APPS_CLK			44
-> > +#define GCC_BLSP2_UART0_APPS_CLK			45
-> > +#define GCC_BOOT_ROM_AHB_CLK				46
-> > +#define GCC_DCC_CLK					47
-> > +#define GCC_GENI_IR_H_CLK				48
-> > +#define GCC_ETH_AXI_CLK					49
-> > +#define GCC_ETH_PTP_CLK					50
-> > +#define GCC_ETH_RGMII_CLK				51
-> > +#define GCC_ETH_SLAVE_AHB_CLK				52
-> > +#define GCC_GENI_IR_S_CLK				53
-> > +#define GCC_GP1_CLK					54
-> > +#define GCC_GP2_CLK					55
-> > +#define GCC_GP3_CLK					56
-> > +#define GCC_MDSS_AHB_CLK				57
-> > +#define GCC_MDSS_AXI_CLK				58
-> > +#define GCC_MDSS_BYTE0_CLK				59
-> > +#define GCC_MDSS_ESC0_CLK				60
-> > +#define GCC_MDSS_HDMI_APP_CLK				61
-> > +#define GCC_MDSS_HDMI_PCLK_CLK				62
-> > +#define GCC_MDSS_MDP_CLK				63
-> > +#define GCC_MDSS_PCLK0_CLK				64
-> > +#define GCC_MDSS_VSYNC_CLK				65
-> > +#define GCC_OXILI_AHB_CLK				66
-> > +#define GCC_OXILI_GFX3D_CLK				67
-> > +#define GCC_PCIE_0_AUX_CLK				68
-> > +#define GCC_PCIE_0_CFG_AHB_CLK				69
-> > +#define GCC_PCIE_0_MSTR_AXI_CLK				70
-> > +#define GCC_PCIE_0_PIPE_CLK				71
-> > +#define GCC_PCIE_0_SLV_AXI_CLK				72
-> > +#define GCC_PCNOC_USB2_CLK				73
-> > +#define GCC_PCNOC_USB3_CLK				74
-> > +#define GCC_PDM2_CLK					75
-> > +#define GCC_PDM_AHB_CLK					76
-> > +#define VSYNC_CLK_SRC					77
-> > +#define GCC_PRNG_AHB_CLK				78
-> > +#define GCC_PWM0_XO512_CLK				79
-> > +#define GCC_PWM1_XO512_CLK				80
-> > +#define GCC_PWM2_XO512_CLK				81
-> > +#define GCC_SDCC1_AHB_CLK				82
-> > +#define GCC_SDCC1_APPS_CLK				83
-> > +#define GCC_SDCC1_ICE_CORE_CLK				84
-> > +#define GCC_SDCC2_AHB_CLK				85
-> > +#define GCC_SDCC2_APPS_CLK				86
-> > +#define GCC_SYS_NOC_USB3_CLK				87
-> > +#define GCC_USB20_MOCK_UTMI_CLK				88
-> > +#define GCC_USB2A_PHY_SLEEP_CLK				89
-> > +#define GCC_USB30_MASTER_CLK				90
-> > +#define GCC_USB30_MOCK_UTMI_CLK				91
-> > +#define GCC_USB30_SLEEP_CLK				92
-> > +#define GCC_USB3_PHY_AUX_CLK				93
-> > +#define GCC_USB3_PHY_PIPE_CLK				94
-> > +#define GCC_USB_HS_PHY_CFG_AHB_CLK			95
-> > +#define GCC_USB_HS_SYSTEM_CLK				96
-> > +#define GFX3D_CLK_SRC					97
-> > +#define GP1_CLK_SRC					98
-> > +#define GP2_CLK_SRC					99
-> > +#define GP3_CLK_SRC					100
-> > +#define GPLL0_OUT_MAIN					101
-> > +#define GPLL1_OUT_MAIN					102
-> > +#define GPLL3_OUT_MAIN					103
-> > +#define GPLL4_OUT_MAIN					104
-> > +#define HDMI_APP_CLK_SRC				105
-> > +#define HDMI_PCLK_CLK_SRC				106
-> > +#define MDP_CLK_SRC					107
-> > +#define PCIE_0_AUX_CLK_SRC				108
-> > +#define PCIE_0_PIPE_CLK_SRC				109
-> > +#define PCLK0_CLK_SRC					110
-> > +#define PDM2_CLK_SRC					111
-> > +#define SDCC1_APPS_CLK_SRC				112
-> > +#define SDCC1_ICE_CORE_CLK_SRC				113
-> > +#define SDCC2_APPS_CLK_SRC				114
-> > +#define USB20_MOCK_UTMI_CLK_SRC				115
-> > +#define USB30_MASTER_CLK_SRC				116
-> > +#define USB30_MOCK_UTMI_CLK_SRC				117
-> > +#define USB3_PHY_AUX_CLK_SRC				118
-> > +#define USB_HS_SYSTEM_CLK_SRC				119
-> > +#define GPLL0_AO_CLK_SRC				120
-> > +#define WCNSS_M_CLK					121
-> 
-> Please remove WCNSS_M_CLK.
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-And the reason for that?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--- 
-~Vinod
+iEYEARECAAYFAlu6DjYACgkQMOfwapXb+vKIfgCfaCzUEz9ZpoY/EfPeEOMPf4a9
+KQAAnRlaLwr0s5K4pIDwlOTMD6W6XxRB
+=upBE
+-----END PGP SIGNATURE-----
+
+--3MwIy2ne0vdjdPXF--
