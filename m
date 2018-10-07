@@ -1,37 +1,61 @@
-Return-Path: <SRS0=S257=M4=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] dt-bindings: spi: sh-msiof: document R8A779{7|8}0 bindings
-Message-ID: <62919a6e-4206-0caa-deb0-6bf67b77eff1@cogentembedded.com>
-Date: Tue, 16 Oct 2018 22:22:05 +0300
+Return-Path: <SRS0=uEnD=MT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from saturn.retrosnub.co.uk ([46.235.226.198]:52588 "EHLO
+        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726803AbeJGXqO (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sun, 7 Oct 2018 19:46:14 -0400
+Date: Sun, 7 Oct 2018 17:38:22 +0100
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH 2/2] Add ti,dac7311 device tree bindings in
+ documentation
+Message-ID: <20181007173822.71e92f57@archlinux>
+In-Reply-To: <20181006203108.20439-2-charles-antoine.couret@essensium.com>
+References: <20181006203108.20439-1-charles-antoine.couret@essensium.com>
+        <20181006203108.20439-2-charles-antoine.couret@essensium.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car V3{M|H} (R8A779{7|8}0) SoCs in the Renesas MSIOF
-bindings.
+On Sat,  6 Oct 2018 22:31:08 +0200
+Charles-Antoine Couret <charles-antoine.couret@essensium.com> wrote:
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
++ devicetree list and maintainers.
 
----
-The patch is against the 'for-next' branch of Mark Brown's 'spi.git' repo.
+> ---
+>  .../bindings/iio/dac/ti,dac7311.txt           | 20 +++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
+> new file mode 100644
+> index 000000000000..77fd4370f815
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/dac/ti,dac7311.txt
+> @@ -0,0 +1,20 @@
+> +TI DAC7311 DEVICETREE BINDINGS
 
- Documentation/devicetree/bindings/spi/sh-msiof.txt |    2 ++
- 1 file changed, 2 insertions(+)
+Why all these capitals?
 
-Index: spi/Documentation/devicetree/bindings/spi/sh-msiof.txt
-===================================================================
---- spi.orig/Documentation/devicetree/bindings/spi/sh-msiof.txt
-+++ spi/Documentation/devicetree/bindings/spi/sh-msiof.txt
-@@ -13,6 +13,8 @@ Required properties:
- 			 "renesas,msiof-r8a7795" (R-Car H3)
- 			 "renesas,msiof-r8a7796" (R-Car M3-W)
- 			 "renesas,msiof-r8a77965" (R-Car M3-N)
-+			 "renesas,msiof-r8a77970" (R-Car V3M)
-+			 "renesas,msiof-r8a77980" (R-Car V3H)
- 			 "renesas,msiof-r8a77990" (R-Car E3)
- 			 "renesas,msiof-r8a77995" (R-Car D3)
- 			 "renesas,msiof-sh73a0" (SH-Mobile AG5)
+> +
+> +Required properties:
+> +
+> +- compatible: Must be set to "ti,dac7311", "ti,dac6311" or "ti,dac5311"
+> +- reg: spi chip select number for the device
+> +- vref-supply: The regulator supply for ADC reference voltage
+> +- spi-max-frequency: Max SPI frequency to use (< 50000000)
+> +
+> +Example:
+> +
+> +	spi_master {
+> +		dac7311: dac7311@0 {
+> +			compatible = "ti,dac7311";
+> +			reg = <0>; /* CS0 */
+> +			spi-max-frequency = <1000000>;
+> +			vref-supply = <&vdd_supply>;
+> +		};
+> +	};
+> +
