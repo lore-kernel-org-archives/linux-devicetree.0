@@ -1,58 +1,57 @@
-Return-Path: <SRS0=iWrS=MQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55470 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbeJDV2S (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 4 Oct 2018 17:28:18 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 206-v6so9291902wmb.5
-        for <devicetree@vger.kernel.org>; Thu, 04 Oct 2018 07:34:42 -0700 (PDT)
-From: Markus Kueffner <kueffner.markus@gmail.com>
-Subject: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-Date: Thu,  4 Oct 2018 16:33:59 +0200
-Message-Id: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Markus Kueffner <kueffner.markus@gmail.com>
+Return-Path: <SRS0=r+kK=MT=jic23.retrosnub.co.uk=jic23@kernel.org>
+Date: Sun, 7 Oct 2018 17:00:31 +0100
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH 2/2] Add ad7949 device tree bindings in documentation
+Message-ID: <20181007170031.71287a1c@archlinux>
+In-Reply-To: <20181006203036.20338-2-charles-antoine.couret@essensium.com>
+References: <20181006203036.20338-1-charles-antoine.couret@essensium.com>
+	<20181006203036.20338-2-charles-antoine.couret@essensium.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+Cc: linux-iio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Markus Kueffner <kueffner.markus@gmail.com>
+On Sat,  6 Oct 2018 22:30:36 +0200
+Charles-Antoine Couret <charles-antoine.couret@essensium.com> wrote:
 
-Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
+> Signed-off-by: Charles-Antoine Couret <charles-antoine.couret@essensium.com>
+Device tree bindings should be cc'd to the devicetree maintainers
+and mailing list for review.
 
-Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
----
- arch/arm/boot/dts/imx6qdl-udoo.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+As has been shown far too many times, I'm not very good and
+spotting the detail issues in these! So over to Rob and Mark's
+eagle eyes.
 
-diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-index 4f27861..5614170 100644
---- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
-@@ -195,6 +195,13 @@
- 			>;
- 		};
- 
-+		pinctrl_uart4: uart4grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
-+				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
-+			>;
-+		};
-+
- 		pinctrl_usbh: usbhgrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
-@@ -265,6 +272,12 @@
- 	status = "okay";
- };
- 
-+&uart4 { // iMX6-Arduino internal serial port - ttymxc3
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	status = "okay";
-+};
-+
- &usbh1 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usbh>;
--- 
-2.7.4
+Jonathan
+
+> ---
+>  .../devicetree/bindings/iio/adc/ad7949.txt     | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/ad7949.txt b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> new file mode 100644
+> index 000000000000..4dc921961df7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/ad7949.txt
+> @@ -0,0 +1,18 @@
+> +* Analog Devices AD7949/AD7682/AD7689
+> +
+> +Required properties:
+> + - compatible: Should be one of
+> +	* "ad7949"
+> +	* "ad7682"
+> +	* "ad7689"
+> + - reg: spi chip select number for the device
+> + - vref-supply: The regulator supply for ADC reference voltage
+> + - spi-max-frequency: Max SPI frequency to use (< 33000000)
+> +
+> +Example:
+> +adc@0 {
+> +	compatible = "ti,adc0832";
+> +	reg = <0>;
+> +	vref-supply = <&vdd_supply>;
+> +	spi-max-frequency = <200000>;
+> +};
