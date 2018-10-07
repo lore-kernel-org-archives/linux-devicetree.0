@@ -1,65 +1,52 @@
-From: Oskari Lemmela <oskari@lemmela.net>
-Subject: [PATCH v2 3/6] arm64: dts: allwinner: axp803: add AC and battery power supplies
-Date: Sun,  7 Oct 2018 00:18:33 +0300
-Message-ID: <20181006211836.28253-4-oskari@lemmela.net>
-References: <20181004193410.7265-1-oskari@lemmela.net>
- <20181006211836.28253-1-oskari@lemmela.net>
+From: Guo Ren <ren_guo@c-sky.com>
+Subject: Re: [PATCH V7 00/20] C-SKY(csky) Linux Kernel Port
+Date: Sun, 7 Oct 2018 12:48:15 +0800
+Message-ID: <20181007044815.GA27049@guoren-Inspiron-7460>
+References: <cover.1538715563.git.ren_guo@c-sky.com>
+ <20181006200649.GL32759@asgard.redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181006211836.28253-1-oskari@lemmela.net>
+Content-Disposition: inline
+In-Reply-To: <20181006200649.GL32759@asgard.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, Oskari Lemmela <oskari@lemmela.net>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Eugene Syromiatnikov <esyr@redhat.com>
+Cc: akpm@linux-foundation.org, arnd@arndb.de, daniel.lezcano@linaro.org, davem@davemloft.net, gregkh@linuxfoundation.org, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, mchehab+samsung@kernel.org, peterz@infradead.org, robh@kernel.org, robh+dt@kernel.org, tglx@linutronix.de, green.hu@gmail.com, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, c-sky_gcc_upstream@c-sky.com
 List-Id: devicetree@vger.kernel.org
 
-AXP803 is compatible with AXP813. Add DT nodes ADC, GPIO,
-AC and battery power supplies.
+On Sat, Oct 06, 2018 at 10:06:49PM +0200, Eugene Syromiatnikov wrote:
+> On Fri, Oct 05, 2018 at 01:41:42PM +0800, Guo Ren wrote:
+> > This is the 7th version patchset to add the Linux kernel port for
+> > C-SKY(csky) based on linux-4.19-rc3.
+> > 
+> > In this patchset some fixup patches are folded into original patch in
+> > order to make review clearly and reduce the patches' number for upstream
+> > patchset. The changelog is added in the every patch's commit-msg.
+> > 
+> > Here is the LTP test report for this patchset:
+> > (and add "V10 C-SKY(csky) Linux Kernel Driver" patchset)
+> > -----------------------------------------------
+> > Total Tests: 1298
+> > Total Skipped Tests: 280
+> > Total Failures: 11
+> > Kernel Version: 4.19.0-rc3+
+> > Machine Architecture: csky
+> > Hostname: buildroot
+> > -----------------------------------------------
+> > 
+> > This patchset adds architecture support to Linux for C-SKY's 32-bit embedded
+> > 
+> > There are two ABI versions with several CPU cores in this patchset:
+> >   ABIv1: ck610 (16-bit instruction, 32-bit data path, VIPT Cache ...)
+> >   ABIv2: ck807 ck810 ck860 (16/32-bit variable length instruction, PIPT Cache,
+> > 	 SMP ...)
+> > More information: http://en.c-sky.com
+> > The development repo: https://gitlab.com/c-sky/csky-linux
+> 
+> I'm sorry for my ignorance, but I'm struggling to find ISA reference/manual,
+> architecture programming manual, and System V ABI definition;
+> may I ask to give links to them?
+Here is the link: https://github.com/c-sky/csky-doc
 
-Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
----
- arch/arm64/boot/dts/allwinner/axp803.dtsi | 31 +++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-index e5eae8bafc42..533987b2fe7a 100644
---- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-@@ -49,6 +49,37 @@
- 	interrupt-controller;
- 	#interrupt-cells = <1>;
- 
-+	axp_adc: adc {
-+		compatible = "x-powers,axp813-adc";
-+		#io-channel-cells = <1>;
-+	};
-+
-+	axp_gpio: gpio {
-+		compatible = "x-powers,axp813-gpio";
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		gpio0_ldo: gpio0-ldo {
-+			pins = "GPIO0";
-+			function = "ldo";
-+		};
-+
-+		gpio1_ldo: gpio1-ldo {
-+			pins = "GPIO1";
-+			function = "ldo";
-+		};
-+	};
-+
-+	ac_power_supply: ac-power-supply {
-+		compatible = "x-powers,axp813-ac-power-supply";
-+		status = "disabled";
-+	};
-+
-+	battery_power_supply: battery-power-supply {
-+		compatible = "x-powers,axp813-battery-power-supply";
-+		status = "disabled";
-+	};
-+
- 	regulators {
- 		/* Default work frequency for buck regulators */
- 		x-powers,dcdc-freq = <3000>;
--- 
-2.17.1
+Best Regards
+ Guo Ren
