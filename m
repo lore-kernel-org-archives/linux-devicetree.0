@@ -1,12 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 23/29] drm/sun4i: Add support for H6 HDMI PHY
-Date: Sun,  7 Oct 2018 11:38:59 +0200
-Message-ID: <20181007093905.11253-24-jernej.skrabec@siol.net>
+Subject: [PATCH v2 24/29] drm/sun4i: Initialize registers in
+ tcon-top driver
+Date: Sun,  7 Oct 2018 11:39:00 +0200
+Message-ID: <20181007093905.11253-25-jernej.skrabec@siol.net>
 References: <20181007093905.11253-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBAFJ47OQKGQEGG522FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBAVJ47OQKGQEMXHHMVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181007093905.11253-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,191 +20,34 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-H6 has Synopsys DWC HDMI 2.0 TX PHY.
+It turns out that TCON TOP registers in H6 SoC have non-zero reset
+value. This may cause issues if bits are not changed during
+configuration.
 
-There is no freely available documentation for it, only code found in
-BSP kernel. However, judging by the code, PHY is very similar to older
-Synopsys HDMI PHY described in i.MX6 documentation. Most registers seem
-to be the same.
-
-According to i.MX6 documentation, mpll settings are based on pixel clock
-and are not specific to each SoC. Because of that, mpll table in this
-commit is based on that documentation and not on BSP code. Other PHY
-settings were derived from BSP PHY driver code.
+To prevent that, initialize registers to 0.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c | 137 +++++++++++++++++++++++++
- 1 file changed, 137 insertions(+)
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-index 635825b55648..66ea3a902e36 100644
---- a/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_hdmi_phy.c
-@@ -14,6 +14,122 @@
-  */
- #define I2C_ADDR	0x69
+diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+index 3040a79f298f..37158548b447 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
++++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+@@ -167,6 +167,13 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 		goto err_assert_reset;
+ 	}
  
-+static const struct dw_hdmi_mpll_config sun50i_h6_mpll_cfg[] = {
-+	{
-+		30666000, {
-+			{ 0x00b3, 0x0000 },
-+			{ 0x2153, 0x0000 },
-+			{ 0x40f3, 0x0000 },
-+		},
-+	},  {
-+		36800000, {
-+			{ 0x00b3, 0x0000 },
-+			{ 0x2153, 0x0000 },
-+			{ 0x40a2, 0x0001 },
-+		},
-+	},  {
-+		46000000, {
-+			{ 0x00b3, 0x0000 },
-+			{ 0x2142, 0x0001 },
-+			{ 0x40a2, 0x0001 },
-+		},
-+	},  {
-+		61333000, {
-+			{ 0x0072, 0x0001 },
-+			{ 0x2142, 0x0001 },
-+			{ 0x40a2, 0x0001 },
-+		},
-+	},  {
-+		73600000, {
-+			{ 0x0072, 0x0001 },
-+			{ 0x2142, 0x0001 },
-+			{ 0x4061, 0x0002 },
-+		},
-+	},  {
-+		92000000, {
-+			{ 0x0072, 0x0001 },
-+			{ 0x2145, 0x0002 },
-+			{ 0x4061, 0x0002 },
-+		},
-+	},  {
-+		122666000, {
-+			{ 0x0051, 0x0002 },
-+			{ 0x2145, 0x0002 },
-+			{ 0x4061, 0x0002 },
-+		},
-+	},  {
-+		147200000, {
-+			{ 0x0051, 0x0002 },
-+			{ 0x2145, 0x0002 },
-+			{ 0x4064, 0x0003 },
-+		},
-+	},  {
-+		184000000, {
-+			{ 0x0051, 0x0002 },
-+			{ 0x214c, 0x0003 },
-+			{ 0x4064, 0x0003 },
-+		},
-+	},  {
-+		226666000, {
-+			{ 0x0040, 0x0003 },
-+			{ 0x214c, 0x0003 },
-+			{ 0x4064, 0x0003 },
-+		},
-+	},  {
-+		272000000, {
-+			{ 0x0040, 0x0003 },
-+			{ 0x214c, 0x0003 },
-+			{ 0x5a64, 0x0003 },
-+		},
-+	},  {
-+		340000000, {
-+			{ 0x0040, 0x0003 },
-+			{ 0x3b4c, 0x0003 },
-+			{ 0x5a64, 0x0003 },
-+		},
-+	},  {
-+		594000000, {
-+			{ 0x1a40, 0x0003 },
-+			{ 0x3b4c, 0x0003 },
-+			{ 0x5a64, 0x0003 },
-+		},
-+	}, {
-+		~0UL, {
-+			{ 0x0000, 0x0000 },
-+			{ 0x0000, 0x0000 },
-+			{ 0x0000, 0x0000 },
-+		},
-+	}
-+};
++	/*
++	 * At least on H6, some registers have some bits set by default
++	 * which may cause issues. Clear them here.
++	 */
++	writel(0, regs + TCON_TOP_PORT_SEL_REG);
++	writel(0, regs + TCON_TOP_GATE_SRC_REG);
 +
-+static const struct dw_hdmi_curr_ctrl sun50i_h6_cur_ctr[] = {
-+	/* pixelclk    bpp8    bpp10   bpp12 */
-+	{ 25175000,  { 0x0000, 0x0000, 0x0000 }, },
-+	{ 27000000,  { 0x0012, 0x0000, 0x0000 }, },
-+	{ 59400000,  { 0x0008, 0x0008, 0x0008 }, },
-+	{ 72000000,  { 0x0008, 0x0008, 0x001b }, },
-+	{ 74250000,  { 0x0013, 0x0013, 0x0013 }, },
-+	{ 90000000,  { 0x0008, 0x001a, 0x001b }, },
-+	{ 118800000, { 0x001b, 0x001a, 0x001b }, },
-+	{ 144000000, { 0x001b, 0x001a, 0x0034 }, },
-+	{ 180000000, { 0x001b, 0x0033, 0x0034 }, },
-+	{ 216000000, { 0x0036, 0x0033, 0x0034 }, },
-+	{ 237600000, { 0x0036, 0x0033, 0x001b }, },
-+	{ 288000000, { 0x0036, 0x001b, 0x001b }, },
-+	{ 297000000, { 0x0019, 0x001b, 0x0019 }, },
-+	{ 330000000, { 0x0036, 0x001b, 0x001b }, },
-+	{ 594000000, { 0x003f, 0x001b, 0x001b }, },
-+	{ ~0UL,      { 0x0000, 0x0000, 0x0000 }, }
-+};
-+
-+static const struct dw_hdmi_phy_config sun50i_h6_phy_config[] = {
-+	/*pixelclk   symbol   term   vlev*/
-+	{ 74250000,  0x8009, 0x0004, 0x0232},
-+	{ 148500000, 0x8029, 0x0004, 0x0273},
-+	{ 594000000, 0x8039, 0x0004, 0x014a},
-+	{ ~0UL,	     0x0000, 0x0000, 0x0000}
-+};
-+
- static int sun8i_hdmi_phy_config_a83t(struct dw_hdmi *hdmi,
- 				      struct sun8i_hdmi_phy *phy,
- 				      unsigned int clk_rate)
-@@ -290,6 +406,16 @@ static void sun8i_hdmi_phy_unlock(struct sun8i_hdmi_phy *phy)
- 		     SUN8I_HDMI_PHY_UNSCRAMBLE_MAGIC);
- }
- 
-+static void sun50i_hdmi_phy_init_h6(struct sun8i_hdmi_phy *phy)
-+{
-+	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
-+			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN,
-+			   SUN8I_HDMI_PHY_REXT_CTRL_REXT_EN);
-+
-+	regmap_update_bits(phy->regs, SUN8I_HDMI_PHY_REXT_CTRL_REG,
-+			   0xffff0000, 0x80c00000);
-+}
-+
- static void sun8i_hdmi_phy_init_a83t(struct sun8i_hdmi_phy *phy)
- {
- 	sun8i_hdmi_phy_unlock(phy);
-@@ -446,6 +572,13 @@ static const struct sun8i_hdmi_phy_variant sun50i_a64_hdmi_phy = {
- 	.phy_config = &sun8i_hdmi_phy_config_h3,
- };
- 
-+static const struct sun8i_hdmi_phy_variant sun50i_h6_hdmi_phy = {
-+	.cur_ctr  = sun50i_h6_cur_ctr,
-+	.mpll_cfg = sun50i_h6_mpll_cfg,
-+	.phy_cfg  = sun50i_h6_phy_config,
-+	.phy_init = &sun50i_hdmi_phy_init_h6,
-+};
-+
- static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
- 	{
- 		.compatible = "allwinner,sun8i-a83t-hdmi-phy",
-@@ -463,6 +596,10 @@ static const struct of_device_id sun8i_hdmi_phy_of_table[] = {
- 		.compatible = "allwinner,sun50i-a64-hdmi-phy",
- 		.data = &sun50i_a64_hdmi_phy,
- 	},
-+	{
-+		.compatible = "allwinner,sun50i-h6-hdmi-phy",
-+		.data = &sun50i_h6_hdmi_phy,
-+	},
- 	{ /* sentinel */ }
- };
- 
+ 	/*
+ 	 * TCON TOP has two muxes, which select parent clock for each TCON TV
+ 	 * channel clock. Parent could be either TCON TV or TVE clock. For now
 -- 
 2.19.0
