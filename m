@@ -1,89 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] reset: Exclusive resets must be dedicated to a single
- hardware block
-Date: Mon, 8 Oct 2018 11:59:42 +0200
-Message-ID: <CAMuHMdXFbYkD_Lou0wW__0-8ZPj3cKuJ6it_0hpPwzNU0Zeq3g@mail.gmail.com>
-References: <20180927180038.24599-1-geert+renesas@glider.be>
- <1538648094.14153.8.camel@pengutronix.de> <CAMuHMdV_qb8qDFJ1VT6FYYkHK73tjbp2hOUShaOEhezPWg+VDg@mail.gmail.com>
- <CAMuHMdUC3dGRnMCsX3HjmGgb0-vLSNXKXRiiAS+TzW72_uM+LQ@mail.gmail.com> <1538752564.3545.37.camel@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 07/10] i3c: master: Add driver for Cadence IP
+Date: Mon, 8 Oct 2018 12:06:30 +0200
+Message-ID: <CAK8P3a21t7pQ2uYWgu2+VZZNYc+pz_w3WCL7YVUEzqqyOFLvnA@mail.gmail.com>
+References: <20181003132212.12619-1-boris.brezillon@bootlin.com> <20181003132212.12619-8-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538752564.3545.37.camel@pengutronix.de>
+In-Reply-To: <20181003132212.12619-8-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, KVM list <kvm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-On Fri, Oct 5, 2018 at 5:16 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Fri, 2018-10-05 at 14:31 +0200, Geert Uytterhoeven wrote:
-> [...]
-> > > > > +                     eq = (args2.np == args.np &&
-> > > > > +                           args2.args_count == args.args_count &&
-> > > > > +                           !memcmp(args2.args, args.args,
-> > > > > +                                   args.args_count * sizeof(args.args[0])));
-> > >
-> > > As there's at least one other function in -next that compares of_phandle_args,
-> > > I will add a helper of_phandle_args_eq().
-> > >
-> > > > > +                     of_node_put(args2.np);
-> > > > > +                     if (eq)
-> > > >
-> > > > Emitting a loud warning here could be very helpful if it contains
-> > > > both the reset controller node and the reset index, as well as the
-> >
-> > Actually on DT-based systems, the index is a driver-specific
-> > implementation detail, and may differ from the actual reset specifier in DT.
-> > E.g. on R-Car systems, DT uses a human-readable representation matching
-> > the datasheet, while internally, the driver uses a packed representation.
-> > Hence printing the index may confuse the user.
-> >
-> > For lookup-based systems, this is different.
+On Wed, Oct 3, 2018 at 3:22 PM Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
 >
-> Correct. I'm so used to #reset-cells = <1>, it's hard to remember the
-> exceptions. So let's not try to print indices or args.
+> Add a driver for Cadence I3C master IP.
 >
-> > > > consumer nodes: node and node2.
-> > >
-> > > Indeed, will do, also for lookup resets.
-> > >
-> > > We already have of_print_phandle_args(), but that is a bit inflexible.
-> > > Adding support for "%pOFa" looks like the modern thing to do.
-> >
-> > Scrap that: of_phandle_args is not derived from a device_node, so %pOFa
-> > is not appropriate (and would crash instead of fall back to a pointer before
-> > %pOFa support is implemented). And without more users, it doesn't make much
-> > sense to go for a new type (e.g. "%pOA")...
-> >
-> > Actually, printing the full reset specifier is not needed. A message like
-> >
-> >     /soc/pwm@e6e31000 and /soc/pwm@e6e30000 share a reset on
-> > /soc/clock-controller@e6150000
-> >
-> > should give sufficient clue to the user.
->
-> Yes. You could also pass con_id into __of_reset_is_exclusive and print
-> that. It would be nice to indicate which consumer requested exclusive
-> access.
+> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+> ---
 
-con_id is used for lookup-based resets only?
+> Changes in v7:
+> - Fix readsl/writesl() usage
+> - Add a depends on ARM || ARM64 || XTENSA to forbid selection of this
+>   driver on platforms that are not implementing readsl/writesl
 
-But the value passed there is the "id" parameter of
-reset_control_get_exclusive().  However, that is not the consumer name,
-and usually NULL.
+Most architectures include asm-generic/io.h, which contains a generic
+implementation of readsl(). Maybe that #ifdef could be extended here?
+I remember discussing this with you not so long ago, which led to
+commit 0bbf47eab469 ("ia64: use asm-generic/io.h"). Do we have
+a list of architectures that don't include asm-generic/io.h? Maybe
+the 'depends on' could be for the set of architectures that fail here.
 
-I'm afraid the only way to know the consumer is to print a backtrace with
-WARN()?
+> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
+> +                                           u8 *bytes, int nbytes)
+> +{
+> +       readsl(master->regs + RX_FIFO, bytes, nbytes / 4);
+> +       if (nbytes & 3) {
+> +               u32 tmp = __raw_readl(master->regs + RX_FIFO);
+> +
+> +               memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
+> +       }
+> +}
 
-Gr{oetje,eeting}s,
+The __raw_readl() is probably correct here (I can't think of any
+architecture on which it is not), but it still makes me feel uneasy
+about possible endianess or other issues.
 
-                        Geert
+Maybe make this:?
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+        readsl(master->regs + RX_FIFO, &tmp, 1);
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
+     Arnd
