@@ -1,7 +1,8 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH 10/14] mtd: maps: Prepare merging of physmap and physmap_of
-Date: Mon,  8 Oct 2018 22:10:23 +0200
-Message-ID: <20181008201027.17952-11-boris.brezillon@bootlin.com>
+Subject: [PATCH 07/14] mtd: maps: physmap: Check mtd_device_{parse_register,
+ unregister}() ret code
+Date: Mon,  8 Oct 2018 22:10:20 +0200
+Message-ID: <20181008201027.17952-8-boris.brezillon@bootlin.com>
 References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,35 +22,55 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-We want to merge the physmap and physmap_of driver, but before we can
-do that we must prepare things to create physmap.o out of several .c
-files. Rename physmap.c into physmap-core.c and add a new Makefile
-rule to create physmap.o (right now it only contains physmap-core.o).
+mtd_device_parse_register() and mtd_device_unregister() can fail,
+check their return code and propagate the error to the upper layer
+if needed.
 
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 ---
- drivers/mtd/maps/Makefile                      | 2 ++
- drivers/mtd/maps/{physmap.c => physmap-core.c} | 0
- 2 files changed, 2 insertions(+)
- rename drivers/mtd/maps/{physmap.c => physmap-core.c} (100%)
+ drivers/mtd/maps/physmap.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-index 51acf1fec19b..2574909edffd 100644
---- a/drivers/mtd/maps/Makefile
-+++ b/drivers/mtd/maps/Makefile
-@@ -17,6 +17,8 @@ obj-$(CONFIG_MTD_ICHXROM)	+= ichxrom.o
- obj-$(CONFIG_MTD_CK804XROM)	+= ck804xrom.o
- obj-$(CONFIG_MTD_TSUNAMI)	+= tsunami_flash.o
- obj-$(CONFIG_MTD_PXA2XX)	+= pxa2xx-flash.o
-+physmap-objs-y			+= physmap-core.o
-+physmap-objs			:= $(physmap-objs-y)
- obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
- physmap_of-objs-y		+= physmap_of_core.o
- physmap_of-objs-$(CONFIG_MTD_PHYSMAP_OF_VERSATILE) += physmap_of_versatile.o
-diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap-core.c
-similarity index 100%
-rename from drivers/mtd/maps/physmap.c
-rename to drivers/mtd/maps/physmap-core.c
+diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
+index 86679d149a49..9b34223c4635 100644
+--- a/drivers/mtd/maps/physmap.c
++++ b/drivers/mtd/maps/physmap.c
+@@ -35,7 +35,7 @@ static int physmap_flash_remove(struct platform_device *dev)
+ {
+ 	struct physmap_flash_info *info;
+ 	struct physmap_flash_data *physmap_data;
+-	int i;
++	int i, err;
+ 
+ 	info = platform_get_drvdata(dev);
+ 	if (info == NULL)
+@@ -44,7 +44,10 @@ static int physmap_flash_remove(struct platform_device *dev)
+ 	physmap_data = dev_get_platdata(&dev->dev);
+ 
+ 	if (info->cmtd) {
+-		mtd_device_unregister(info->cmtd);
++		err = mtd_device_unregister(info->cmtd);
++		if (err)
++			return err;
++
+ 		if (info->cmtd != info->mtds[0])
+ 			mtd_concat_destroy(info->cmtd);
+ 	}
+@@ -194,8 +197,12 @@ static int physmap_flash_probe(struct platform_device *dev)
+ 
+ 	part_types = physmap_data->part_probe_types ? : part_probe_types;
+ 
+-	mtd_device_parse_register(info->cmtd, part_types, NULL,
+-				  physmap_data->parts, physmap_data->nr_parts);
++	err = mtd_device_parse_register(info->cmtd, part_types, NULL,
++					physmap_data->parts,
++					physmap_data->nr_parts);
++	if (err)
++		goto err_out;
++
+ 	return 0;
+ 
+ err_out:
 -- 
 2.14.1
 
