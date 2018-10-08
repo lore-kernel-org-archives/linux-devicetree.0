@@ -1,156 +1,138 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH 09/16] of: overlay: validate overlay properties
- #address-cells and #size-cells
-Date: Mon, 8 Oct 2018 10:57:50 -0500
-Message-ID: <CANk1AXQFTfdwy9n+WH2k98w6oyqLj3wLDRfaMmtTGk66sJjqUw@mail.gmail.com>
-References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com> <1538712767-30394-10-git-send-email-frowand.list@gmail.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v11 2/2] media: V3s: Add support for Allwinner CSI.
+Date: Mon, 8 Oct 2018 18:58:29 +0300
+Message-ID: <20181008155829.jxxz4mjmeuu4hzki@paasikivi.fi.intel.com>
+References: <1537951420-24752-1-git-send-email-yong.deng@magewell.com>
+ <20180928101937.wdlrgezxoqzua5ke@paasikivi.fi.intel.com>
+ <20180929181844.87fd7560cc560f268df3c7b4@magewell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538712767-30394-10-git-send-email-frowand.list@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20180929181844.87fd7560cc560f268df3c7b4@magewell.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
+To: Yong <yong.deng@magewell.com>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, "David S. Miller" <davem@davemloft.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jacob Chen <jacob-chen@iotwrt.com>, Neil Armstrong <narmstrong@baylibre.com>, Thierry Reding <treding@nvidia.com>, Philipp Zabel <p.zabel@pengutronix.de>, Todor Tomov <todor.tomov@linaro.org>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 4, 2018 at 11:14 PM <frowand.list@gmail.com> wrote:
->
-> From: Frank Rowand <frank.rowand@sony.com>
->
-> If overlay properties #address-cells or #size-cells are already in
-> the live devicetree for any given node, then the values in the
-> overlay must match the values in the live tree.
+Hi Yong,
 
-Hi Frank,
+On Sat, Sep 29, 2018 at 06:18:44PM +0800, Yong wrote:
+> Hi Sakari,
+> 
+> On Fri, 28 Sep 2018 13:19:37 +0300
+> Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
+> 
+> > Hi Yong,
+> > 
+> > Thanks for the update! This looks pretty good; some small bits to fix
+> > still, please see my comments below.
+> > 
+> > On Wed, Sep 26, 2018 at 04:43:40PM +0800, Yong Deng wrote:
+> > > Allwinner V3s SoC features two CSI module. CSI0 is used for MIPI CSI-2
+> > > interface and CSI1 is used for parallel interface. This is not
+> > > documented in datasheet but by test and guess.
+> > > 
+> > > This patch implement a v4l2 framework driver for it.
+> > > 
+> > > Currently, the driver only support the parallel interface. MIPI-CSI2,
+> > > ISP's support are not included in this patch.
+> > > 
+> 
+> ...
+> 
+> > > +
+> > > +static void sun6i_csi_v4l2_cleanup(struct sun6i_csi *csi)
+> > > +{
+> > > +	v4l2_async_notifier_unregister(&csi->notifier);
+> > > +	v4l2_async_notifier_cleanup(&csi->notifier);
+> > > +	sun6i_video_cleanup(&csi->video);
+> > > +	v4l2_device_unregister(&csi->v4l2_dev);
+> > > +	media_device_unregister(&csi->media_dev);
+> > 
+> > Please unregister the media device as first.
+> 
+> I notice that the release order of intel ipu3 is:
+>     cio2_notifier_exit(cio2);
+>     cio2_fbpt_exit_dummy(cio2);
+>     for (i = 0; i < CIO2_QUEUES; i++) 
+>         cio2_queue_exit(cio2, &cio2->queue[i]);
+>     v4l2_device_unregister(&cio2->v4l2_dev);
+>     media_device_unregister(&cio2->media_dev);
+>     media_device_cleanup(&cio2->media_dev);
+>     mutex_destroy(&cio2->lock);
 
-I'm starting some FPGA testing on this patchset applied to v4.19-rc7.
-That applied cleanly; if that's not the best base to test against,
-please let me know.
+Well, yeah... this doesn't make a big difference after all. Unregistering
+the media device first is still preferred.
 
-On a very simple overlay, I'm seeing this patch's warning catching
-things other than #address-cells or #size-cells.  I'm just getting
-started looking at this, will spend time understanding this better and
-I'll test other overlays.  The warnings were:
+> 
+> > 
+> > You're missing freeing the control handler.
+> > 
+> > > +	media_device_cleanup(&csi->media_dev);
+> > > +}
+> > > +
+> > > +static int sun6i_csi_v4l2_init(struct sun6i_csi *csi)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	csi->media_dev.dev = csi->dev;
+> > > +	strlcpy(csi->media_dev.model, "Allwinner Video Capture Device",
+> > > +		sizeof(csi->media_dev.model));
+> > 
+> > strscpy, please.
+> > 
+> > > +	csi->media_dev.hw_revision = 0;
+> > > +
+> > > +	media_device_init(&csi->media_dev);
+> > > +
+> > > +	ret = v4l2_ctrl_handler_init(&csi->ctrl_handler, 0);
+> > 
+> > Do you need controls? The driver doesn't appear to register any.
+> 
+> Some one suggest this. They want the drver can pass control queries to 
+> the subdev.
 
-Applying dtbo: socfpga_overlay.dtb
-[   33.117881] fpga_manager fpga0: writing soc_system.rbf to Altera
-SOCFPGA FPGA Manager
-[   33.575223] OF: overlay: WARNING: add_changeset_property(), memory
-leak will occur if overlay removed.  Property:
-/soc/base-fpga-region/firmware-name
-[   33.588584] OF: overlay: WARNING: add_changeset_property(), memory
-leak will occur if overlay removed.  Property:
-/soc/base-fpga-region/fpga-bridges
-[   33.601856] OF: overlay: WARNING: add_changeset_property(), memory
-leak will occur if overlay removed.  Property:
-/soc/base-fpga-region/ranges
+If you need that, it should be done in the user space instead. The imx
+staging driver does so but it is not supported by the control framework:
+you may only call v4l2_ctrl_handler_free() for the purpose of freeing the
+resources of the control handler --- not while it is still accessible from
+the user space.
 
-Here's part of that overlay including the properties it's complaining about:
+> 
+> > 
+> > > +	if (ret) {
+> > > +		dev_err(csi->dev, "V4L2 controls handler init failed (%d)\n",
+> > > +			ret);
+> > > +		goto clean_media;
+> > > +	}
+> > > +
+> > > +	csi->v4l2_dev.mdev = &csi->media_dev;
+> > > +	csi->v4l2_dev.ctrl_handler = &csi->ctrl_handler;
+> > > +	ret = v4l2_device_register(csi->dev, &csi->v4l2_dev);
+> > > +	if (ret) {
+> > > +		dev_err(csi->dev, "V4L2 device registration failed (%d)\n",
+> 
+> ...
+> 
+> > > +
+> > > +/*
+> > > + * PHYS_OFFSET isn't available on all architectures. In order to
+> > > + * accomodate for COMPILE_TEST, let's define it to something dumb.
+> > > + */
+> > > +#ifndef PHYS_OFFSET
+> > 
+> > How about:
+> > 
+> > #if !defined(CONFIG_COMPILE_TEST) && !defined(PHYS_OFFSET)
+> 
+> Do you mean:
+> #if defined(CONFIG_COMPILE_TEST) && !defined(PHYS_OFFSET)
 
-/dts-v1/;
-/plugin/;
-/ {
-        fragment@0 {
-                target = <&base_fpga_region>;
-                #address-cells = <1>;
-                #size-cells = <1>;
-                __overlay__ {
-                        #address-cells = <1>;
-                        #size-cells = <1>;
+Oh, yes. Indeed.
 
-                        firmware-name = "soc_system.rbf";
-                        fpga-bridges = <&fpga_bridge1>;
-                        ranges = <0x20000 0xff200000 0x100000>,
-                        <0x0 0xc0000000 0x20000000>;
+-- 
+Kind regards,
 
-                        gpio@10040 {
-so on...
-
-By the way, I didn't get any warnings when I subsequently removed this overlay.
-
-Alan
-
->
-> If the properties are already in the live tree then there is no
-> need to create a changeset entry to add them since they must
-> have the same value.  This reduces the memory used by the
-> changeset and eliminates a possible memory leak.  This is
-> verified by 12 fewer warnings during the devicetree unittest,
-> as the possible memory leak warnings about #address-cells and
->
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-> ---
->  drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
->  1 file changed, 35 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 29c33a5c533f..e6fb3ffe9d93 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
->   * @target may be either in the live devicetree or in a new subtree that
->   * is contained in the changeset.
->   *
-> - * Some special properties are not updated (no error returned).
-> + * Some special properties are not added or updated (no error returned):
-> + * "name", "phandle", "linux,phandle".
-> + *
-> + * Properties "#address-cells" and "#size-cells" are not updated if they
-> + * are already in the live tree, but if present in the live tree, the values
-> + * in the overlay must match the values in the live tree.
->   *
->   * Update of property in symbols node is not allowed.
->   *
-> @@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->  {
->         struct property *new_prop = NULL, *prop;
->         int ret = 0;
-> +       bool check_for_non_overlay_node = false;
->
->         if (!of_prop_cmp(overlay_prop->name, "name") ||
->             !of_prop_cmp(overlay_prop->name, "phandle") ||
-> @@ -322,13 +328,39 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
->         if (!new_prop)
->                 return -ENOMEM;
->
-> -       if (!prop)
-> +       if (!prop) {
-> +
-> +               check_for_non_overlay_node = true;
->                 ret = of_changeset_add_property(&ovcs->cset, target->np,
->                                                 new_prop);
-> -       else
-> +
-> +       } else if (!of_prop_cmp(prop->name, "#address-cells")) {
-> +
-> +               if (prop->length != 4 || new_prop->length != 4 ||
-> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-> +                       pr_err("ERROR: overlay and/or live tree #address-cells invalid in node %pOF\n",
-> +                              target->np);
-> +
-> +       } else if (!of_prop_cmp(prop->name, "#size-cells")) {
-> +
-> +               if (prop->length != 4 || new_prop->length != 4 ||
-> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
-> +                       pr_err("ERROR: overlay and/or live tree #size-cells invalid in node %pOF\n",
-> +                              target->np);
-> +
-> +       } else {
-> +
-> +               check_for_non_overlay_node = true;
->                 ret = of_changeset_update_property(&ovcs->cset, target->np,
->                                                    new_prop);
->
-> +       }
-> +
-> +       if (check_for_non_overlay_node &&
-> +           !of_node_check_flag(target->np, OF_OVERLAY))
-> +               pr_err("WARNING: %s(), memory leak will occur if overlay removed.  Property: %pOF/%s\n",
-> +                      __func__, target->np, new_prop->name);
-> +
->         if (ret) {
->                 kfree(new_prop->name);
->                 kfree(new_prop->value);
-> --
-> Frank Rowand <frank.rowand@sony.com>
->
+Sakari Ailus
+sakari.ailus@linux.intel.com
