@@ -1,93 +1,44 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: Add device tree documentation file for
-	wm8782 stereo DAC" to the asoc tree
-Date: Mon,  8 Oct 2018 14:57:13 +0100 (BST)
-Message-ID: <20181008135713.02F531122339@debutante.sirena.org.uk>
-References: <20181003193436.5281-1-daniel@zonque.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 29/36] dt-bindings: arm: Convert Renesas board/soc
+ bindings to json-schema
+Date: Mon, 8 Oct 2018 09:05:58 -0500
+Message-ID: <CAL_Jsq+8EwYzBmzSWL0q0YB3rP-xdrZreRnt1Rj-h=D8OTNVwA@mail.gmail.com>
+References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-30-robh@kernel.org>
+ <20181008080220.rmxk57ckdfmwuk62@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181003193436.5281-1-daniel@zonque.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Daniel Mack <daniel@zonque.org>
-Cc: tiwai@suse.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181008080220.rmxk57ckdfmwuk62@verge.net.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Mon, Oct 8, 2018 at 3:02 AM Simon Horman <horms@verge.net.au> wrote:
+>
+> On Fri, Oct 05, 2018 at 11:58:41AM -0500, Rob Herring wrote:
+> > Convert Renesas SoC bindings to DT schema format using json-schema.
+> >
+> > Cc: Simon Horman <horms@verge.net.au>
+> > Cc: Magnus Damm <magnus.damm@gmail.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-renesas-soc@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+>
+> This seems fine to me other than that it does not seem
+> to apply cleanly to next.
+>
+> shmobile.txt sees a couple of updates per release cycle so from my point of
+> view it would ideal if this change could hit -rc1 to allow patches for
+> v4.21 to be accepted smoothly (already one from Sergei will need rebasing).
 
-   ASoC: Add device tree documentation file for wm8782 stereo DAC
+When we get to the point of merging (which isn't going to be 4.20),
+you and other maintainers can probably take all these patches. Other
+than the few restructuring patches, the only dependency is the build
+support which isn't a dependency to apply it, but build it. I plan to
+build any patches as part of reviewing at least early on. OTOH, the
+build support is small enough and self contained that maybe it can
+just be applied for 4.20.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From cc65fb650c682e3b43d50202a0f01da7dc11e647 Mon Sep 17 00:00:00 2001
-From: Daniel Mack <daniel@zonque.org>
-Date: Wed, 3 Oct 2018 21:34:35 +0200
-Subject: [PATCH] ASoC: Add device tree documentation file for wm8782 stereo
- DAC
-
-Add a device tree documentation file for the wm8782 stereo DAC to describe
-the regulator handles.
-
-Signed-off-by: Daniel Mack <daniel@zonque.org>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/wm8782.txt        | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/wm8782.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/wm8782.txt b/Documentation/devicetree/bindings/sound/wm8782.txt
-new file mode 100644
-index 000000000000..256cdec6ec4d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/wm8782.txt
-@@ -0,0 +1,17 @@
-+WM8782 stereo ADC
-+
-+This device does not have any control interface or reset pins.
-+
-+Required properties:
-+
-+ - compatible  : "wlf,wm8782"
-+ - Vdda-supply : phandle to a regulator for the analog power supply (2.7V - 5.5V)
-+ - Vdd-supply  : phandle to a regulator for the digital power supply (2.7V - 3.6V)
-+
-+Example:
-+
-+wm8782: stereo-adc {
-+	compatible = "wlf,wm8782";
-+	Vdda-supply = <&vdda_supply>;
-+	Vdd-supply = <&vdd_supply>;
-+};
--- 
-2.19.0.rc2
+Rob
