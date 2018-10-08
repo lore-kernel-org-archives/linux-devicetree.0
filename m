@@ -1,58 +1,50 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v8 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Mon, 8 Oct 2018 16:29:10 +0530
-Message-ID: <52643019-07d9-0055-ecd3-24c1a7863481@codeaurora.org>
-References: <1537698793-15285-1-git-send-email-tdas@codeaurora.org>
- <1537698793-15285-3-git-send-email-tdas@codeaurora.org>
- <20181008084012.GA23693@centauri.lan>
- <20181008095952.gl7di2tnuv3jwew6@vireshk-i7>
- <20181008103856.GA10890@centauri.lan>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/2] drm/panel: Add DT bindings for Samsung S6D16D0
+Date: Mon,  8 Oct 2018 13:00:05 +0200
+Message-ID: <20181008110006.24561-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008103856.GA10890@centauri.lan>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 10/8/2018 4:08 PM, Niklas Cassel wrote:
-> On Mon, Oct 08, 2018 at 03:29:52PM +0530, Viresh Kumar wrote:
->> On 08-10-18, 10:40, Niklas Cassel wrote:
->>>> +		ret = of_parse_phandle_with_args(cpu_np, "qcom,freq-domain",
->>>> +				"#freq-domain-cells", 0, &args);
->>>
->>> Hello Taniya,
->>>
->>> in your DT binding, you use
->>>
->>> #freq-domains-cells = <1>
->>>
->>> Yet here you parse for "#freq-domain-cells".
->>
->> And what is the problem with that ? Or are you suggesting her to call
->> of_parse_phandle_with_fixed_args() ?
-> 
-> Hello Viresh,
-> 
-> #freq-domain-cells != #freq-domains-cells
-> 
-> The code should parse for the exact same property name as stated in the
-> DT binding.
-> 
-> Kind regards,
-> Niklas
-> 
-
-The extra 's' was a typo, would fix it in the next patch.
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+VGhpcyBhZGRzIHRoZSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBmb3IgdGhlIFNhbXN1bmcgUzZEMTZE
+MApwYW5lbC4gVGhpcyBpcyBhIGNvbW1hbmQgbW9kZSBvbmx5IHBhbmVsIHVzaW5nIERTSS4KCkNj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlq
+IDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+Ci0tLQogLi4uL2Rpc3BsYXkvcGFuZWwvc2Ftc3Vu
+ZyxzNmQxNmQwLnR4dCAgICAgICAgIHwgMzAgKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNo
+YW5nZWQsIDMwIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0Cgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvc2Ftc3VuZyxzNmQxNmQwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZkMTZkMC50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQK
+aW5kZXggMDAwMDAwMDAwMDAwLi5iOTRlMzY2ZjQ1MWIKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2
+ZDAudHh0CkBAIC0wLDAgKzEsMzAgQEAKK1NhbXN1bmcgUzZEMTZEMCA0IiA4NjR4NDgwIEFNT0xF
+RCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorICAtIGNvbXBhdGlibGU6IHNob3VsZCBi
+ZToKKyAgICAic2Ftc3VuZyxzNmQxNmQwIiwKKyAgLSByZWc6IHRoZSB2aXJ0dWFsIGNoYW5uZWwg
+bnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwKKyAgLSB2ZGQxLXN1cHBseTogSS9PIHZvbHRhZ2Ug
+c3VwcGx5CisgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGluIChh
+Y3RpdmUgbG93KQorCitUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGls
+ZCBub2RlIHdpdGggb25lIGNoaWxkCisnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUg
+YmluZGluZ3MgZGVmaW5lZCBpbgorbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuIFRoaXMgbm9k
+ZSBzaG91bGQgZGVzY3JpYmUgcGFuZWwncyB2aWRlbyBidXMuCisKK0V4YW1wbGU6CismZHNpIHsK
+KwkuLi4KKworCXBhbmVsQDAgeworCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZkMTZkMCI7CisJ
+CXJlZyA9IDwwPjsKKwkJdmRkMS1zdXBwbHkgPSA8JmZvbz47CisJCXJlc2V0LWdwaW9zID0gPCZm
+b29fZ3BpbyAwIEdQSU9fQUNUSVZFX0xPVz47CisKKwkJcG9ydCB7CisJCQlwYW5lbF9pbjogZW5k
+cG9pbnQgeworCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dD47CisJCQl9OworCQl9Owor
+CX07Cit9OwotLSAKMi4xNy4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
