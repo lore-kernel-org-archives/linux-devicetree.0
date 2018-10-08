@@ -1,72 +1,31 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] dt-bindings: misc: bk4: Add device tree binding for
- Liebherr's BK4 SPI bus
-Date: Mon, 8 Oct 2018 22:43:52 +0800
-Message-ID: <20181008144350.GS3587@dragon>
-References: <20180927222655.24482-1-lukma@denx.de>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: iommu: ipmmu-vmsa: Add r8a7744 support
+Date: Mon, 8 Oct 2018 16:46:08 +0200
+Message-ID: <20181008144608.sg2gohw3tkydnjhn@8bytes.org>
+References: <1538670347-48201-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20180927222655.24482-1-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1538670347-48201-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabrizio Castro <fabrizio.castro-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Sep 28, 2018 at 12:26:55AM +0200, Lukasz Majewski wrote:
-> Add Device Tree binding document for Liebherr's BK4 external SPI bus.
+On Thu, Oct 04, 2018 at 05:25:47PM +0100, Biju Das wrote:
+> Document RZ/G1N (R8A7744) SoC bindings.
 > 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-There should really be a patch series consisting of this one and spidev
-change [1].
-
-Since spidev has already been picked up, having a series including this
-and dts change would be the second option.  With DT folks' ACK, I can
-send bindings change together with DTS using it.
-
-Shawn
-
-[1] https://lkml.org/lkml/2018/9/28/48
-
-> ---
->  Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26 ++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/lwn-bk4.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/misc/lwn-bk4.txt b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
-> new file mode 100644
-> index 000000000000..d6a8c188c087
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
-> @@ -0,0 +1,26 @@
-> +* Liebherr's BK4 controller external SPI
-> +
-> +A device which handles data acquisition from compatible industrial
-> +peripherals.
-> +The SPI is used for data and management purposes in both master and
-> +slave modes.
-> +
-> +Required properties:
-> +
-> +- compatible : Should be "lwn,bk4"
-> +
-> +Required SPI properties:
-> +
-> +- reg : Should be address of the device chip select within
-> +  the controller.
-> +
-> +- spi-max-frequency : Maximum SPI clocking speed of device in Hz, should be
-> +  30MHz at most for the Liebherr's BK4 external bus.
-> +
-> +Example:
-> +
-> +spidev0: spi@0 {
-> +	compatible = "lwn,bk4";
-> +	spi-max-frequency = <30000000>;
-> +	reg = <0>;
-> +};
-> -- 
-> 2.11.0
-> 
+Applied, thanks.
