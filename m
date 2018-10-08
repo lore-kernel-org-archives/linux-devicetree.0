@@ -1,74 +1,119 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH V2 net-next 2/5] net: Introduce a new MII time stamping
- interface.
-Date: Mon, 8 Oct 2018 17:07:22 +0200
-Message-ID: <20181008150722.GC6216@lunn.ch>
-References: <20181007173823.21590-3-richardcochran@gmail.com>
- <20181007182751.GC22794@lunn.ch>
- <20181007191551.gy4l4g6qdgz6ztez@localhost>
- <20181007195400.GA25883@lunn.ch>
- <20181008020439.m2cytnnv5ue7yc5l@localhost>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: base: Change logic in of_alias_get_alias_list()
+Date: Mon, 8 Oct 2018 10:07:32 -0500
+Message-ID: <CAL_JsqLNMM6mS1oy1voDAibRk1Srcp7i8e3pESTnM957Rxp4ow@mail.gmail.com>
+References: <e879d07e97b7f7fc46543315e9fb1b4bc8b7a352.1539001154.git.michal.simek@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181008020439.m2cytnnv5ue7yc5l@localhost>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e879d07e97b7f7fc46543315e9fb1b4bc8b7a352.1539001154.git.michal.simek@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 07, 2018 at 07:04:39PM -0700, Richard Cochran wrote:
-> On Sun, Oct 07, 2018 at 09:54:00PM +0200, Andrew Lunn wrote:
-> > Sure, but things have moved on since then.
-> 
-> I was curious about this.  Based on your uses cases, I guess that you
-> mean phylib?  But not much has changed AFAICT. (There is one new
-> global function and two were removed, but that doesn't change the
-> picture WRT time stamping.)
-> 
-> Phylink now has two or three new users, one of which is dsa.  Is that
-> the big move?
-> 
-> The situation with MACs that handle their own PHYs without phylib is
-> unchanged, AFAICT.
-> 
-> So what exactly do you mean?
+On Mon, Oct 8, 2018 at 7:19 AM Michal Simek <michal.simek@xilinx.com> wrote:
+>
+> Check compatible string first before setting up bit in bitmap to also
+> cover cases that allocated bitfield is not big enough.
+> Show warning about it but let driver to continue to work with allocated
+> bitfield to keep at least some devices (included console which
+> is commonly close to serial0) to work.
+>
+> Fixes: b1078c355d76 ("of: base: Introduce of_alias_get_alias_list() to check alias IDs")
+> Fixes: ae1cca3fa347 ("serial: uartps: Change uart ID port allocation")
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>
+> I have looked at it and I don't think there should be necessary to
+> report error immediately back with partially initialized bitfield.
+> The reason is that still there could be a console device which is most
+> likely below that max limit and it is worth to return at least that nbits
+> properly filled.
+> It will also enable cases that you can still continue to use aliases
+> higher then fields prepared for devices without alias.
 
-Hi Richard
+Seems reasonable. Plus if you had a new dtb which added an alias
+greater than what the OS version supports, you would break that
+system.
 
-We are pushing phylink. I really do think anything using > 1Gbps links
-should be using phylink, not phydev. And i think we have reached the
-tipping point, that most new MACs will be > 1Gbps. 2.5G or maybe 5G
-will be the new default. The MAC-PHY link is quiet messy when you get
-above 1G. There are a number of options which you can use, and the MAC
-and PHY need to negotiate a common set to use. phylink can do this,
-phylib cannot easily do it. So i see phylib slowly becoming a legacy
-API for MAC drivers.
+>
+> To be fixed patches are present in tty-next branch.
+>
+> ---
+>  drivers/of/base.c                  | 22 ++++++++++++----------
+>  drivers/tty/serial/xilinx_uartps.c |  2 +-
+>  2 files changed, 13 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 908de45f966b..0b9611e196d1 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1953,13 +1953,15 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+>   * The function travels the lookup table to record alias ids for the given
+>   * device match structures and alias stem.
+>   *
+> - * Return:     0 or -ENOSYS when !CONFIG_OF
+> + * Return:     0 or -ENOSYS when !CONFIG_OF or
+> + *             -EINVAL if alias ID is greater then allocated nbits
 
-We are also slowly seeing more SFPs, and Linux controlling them. SFP
-are not new, they have been in top end switches for a long time. But
-they are slowly becoming more popular in industrial settings, and such
-embedded industrial systems tend to let Linux control them, not
-firmware. And i think industry makes more use of PTP than other
-fields, but i could be wrong. Since optical SFP modules are passive, a
-bump-in-the-wire time stamper actually makes sense for these.
+I think EOVERFLOW or ERANGE would be better as those are less common
+and I take EINVAL as the caller made an error.
 
-Also, fibre on the last mile is slowly becoming more of a thing, so
-maybe we will start seeing CPE, consumer routers, with SFP ports?
-
-As i said before, we are seeing more MACs which use firmware for
-controlling the PHYs. I'm not sure why yet. Maybe it is coupled with
-more MACs supporting > 1G, which is messy. Or the lack of good PHY
-drivers for PHYs which support > 1G? Hopefully the drivers will
-improve with time.
-
-So as you said, the phylib API has not changed much, which is common
-for mature code. But i think long term, it will become less important.
-It will share the space with phylink. And any code which wants to be
-generically usable, should not depend on phydev. Architecturally, it
-seems wrong for you to hang what should be a generic time stamping
-framework on phydev. It is not future proof. net_device is future
-proof.
-
-	  Andrew
+>   */
+>  int of_alias_get_alias_list(const struct of_device_id *matches,
+>                              const char *stem, unsigned long *bitmap,
+>                              unsigned int nbits)
+>  {
+>         struct alias_prop *app;
+> +       int ret = 0;
+>
+>         /* Zero bitmap field to make sure that all the time it is clean */
+>         bitmap_zero(bitmap, nbits);
+> @@ -1976,21 +1978,21 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
+>                         continue;
+>                 }
+>
+> -               if (app->id >= nbits) {
+> -                       pr_debug("%s: ID %d greater then bitmap field %d\n",
+> -                               __func__, app->id, nbits);
+> -                       continue;
+> -               }
+> -
+>                 if (of_match_node(matches, app->np)) {
+>                         pr_debug("%s: Allocated ID %d\n", __func__, app->id);
+> -                       set_bit(app->id, bitmap);
+> +
+> +                       if (app->id >= nbits) {
+> +                               pr_warn("%s: ID %d >= than bitmap field %d\n",
+> +                                       __func__, app->id, nbits);
+> +                               ret = -EINVAL;
+> +                       } else {
+> +                               set_bit(app->id, bitmap);
+> +                       }
+>                 }
+> -               /* Alias exists but is not compatible with matches */
+>         }
+>         mutex_unlock(&of_mutex);
+>
+> -       return 0;
+> +       return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(of_alias_get_alias_list);
+>
+> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
+> index d452dceb0cb3..29a18103182d 100644
+> --- a/drivers/tty/serial/xilinx_uartps.c
+> +++ b/drivers/tty/serial/xilinx_uartps.c
+> @@ -1393,7 +1393,7 @@ static int cdns_get_id(struct platform_device *pdev)
+>         if (!alias_bitmap_initialized) {
+>                 ret = of_alias_get_alias_list(cdns_uart_of_match, "serial",
+>                                               alias_bitmap, MAX_UART_INSTANCES);
+> -               if (ret) {
+> +               if (ret && ret != -EINVAL) {
+>                         mutex_unlock(&bitmap_lock);
+>                         return ret;
+>                 }
+> --
+> 1.9.1
+>
