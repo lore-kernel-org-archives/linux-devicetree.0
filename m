@@ -1,147 +1,85 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 25/29] drm: sun4i: add quirks for TCON TOP
-Date: Mon, 8 Oct 2018 21:10:54 +0800
-Message-ID: <CAGb2v64remLNFdX-FT2xcbcSSkeqmFEjQDEJLPQHiNMctcKTfQ@mail.gmail.com>
-References: <20181007093905.11253-1-jernej.skrabec@siol.net>
- <20181007093905.11253-26-jernej.skrabec@siol.net> <20181008085112.mejpwvl3dpu7sopy@flea>
- <CAGb2v64avzzrGJeg2HU_Ze686C1nmVsNwXJGzsUbQvQTZKuSMw@mail.gmail.com>
- <20181008102021.ox34mqbw65euvsb4@flea> <CAGb2v65vG2sCMLOFSVAko+MUBDQa_A+qrMZLFe20QXJhApd1Gw@mail.gmail.com>
- <20181008123313.sxqzulfuktslchhy@flea>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] reset: Fix potential use-after-free in __of_reset_control_get()
+Date: Mon, 8 Oct 2018 15:12:02 +0200
+Message-ID: <CAMuHMdU_ECQxxD1HK5bq5QY7QnxzaBKSJsZFw+284oSnJfSFAA@mail.gmail.com>
+References: <20181008111435.25994-1-geert+renesas@glider.be> <1539003375.11512.19.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB3VO5XOQKGQECOND4BI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181008123313.sxqzulfuktslchhy@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539003375.11512.19.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 8, 2018 at 8:33 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Mon, Oct 08, 2018 at 06:50:44PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Oct 8, 2018 at 6:20 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >
-> > > On Mon, Oct 08, 2018 at 05:06:45PM +0800, Chen-Yu Tsai wrote:
-> > > > On Mon, Oct 8, 2018 at 4:51 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > >
-> > > > > On Sun, Oct 07, 2018 at 11:39:01AM +0200, Jernej Skrabec wrote:
-> > > > > > From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > > > >
-> > > > > > Some SoCs, such as H6, doesn't have a full-featured TCON TOP.
-> > > > > >
-> > > > > > Add quirks support for TCON TOP.
-> > > > > >
-> > > > > > Currently the presence of TCON_TV1 and DSI is controlled via the quirks
-> > > > > > structure.
-> > > > > >
-> > > > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> > > > > > ---
-> > > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 43 ++++++++++++++++++++------
-> > > > > >  1 file changed, 34 insertions(+), 9 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > index 37158548b447..ed13233cad88 100644
-> > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > @@ -9,11 +9,17 @@
-> > > > > >  #include <linux/component.h>
-> > > > > >  #include <linux/device.h>
-> > > > > >  #include <linux/module.h>
-> > > > > > +#include <linux/of_device.h>
-> > > > > >  #include <linux/of_graph.h>
-> > > > > >  #include <linux/platform_device.h>
-> > > > > >
-> > > > > >  #include "sun8i_tcon_top.h"
-> > > > > >
-> > > > > > +struct sun8i_tcon_top_quirks {
-> > > > > > +     bool has_tcon_tv1;
-> > > > > > +     bool has_dsi;
-> > > > > > +};
-> > > > > > +
-> > > > > >  static bool sun8i_tcon_top_node_is_tcon_top(struct device_node *node)
-> > > > > >  {
-> > > > > >       return !!of_match_node(sun8i_tcon_top_of_table, node);
-> > > > > > @@ -121,10 +127,13 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> > > > > >       struct platform_device *pdev = to_platform_device(dev);
-> > > > > >       struct clk_hw_onecell_data *clk_data;
-> > > > > >       struct sun8i_tcon_top *tcon_top;
-> > > > > > +     const struct sun8i_tcon_top_quirks *quirks;
-> > > > > >       struct resource *res;
-> > > > > >       void __iomem *regs;
-> > > > > >       int ret, i;
-> > > > > >
-> > > > > > +     quirks = of_device_get_match_data(&pdev->dev);
-> > > > > > +
-> > > > > >       tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
-> > > > > >       if (!tcon_top)
-> > > > > >               return -ENOMEM;
-> > > > > > @@ -187,15 +196,23 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> > > > > >                                            &tcon_top->reg_lock,
-> > > > > >                                            TCON_TOP_TCON_TV0_GATE, 0);
-> > > > > >
-> > > > > > -     clk_data->hws[CLK_TCON_TOP_TV1] =
-> > > > > > -             sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
-> > > > > > -                                          &tcon_top->reg_lock,
-> > > > > > -                                          TCON_TOP_TCON_TV1_GATE, 1);
-> > > > > > +     if (quirks->has_tcon_tv1) {
-> > > > > > +             clk_data->hws[CLK_TCON_TOP_TV1] =
-> > > > > > +                     sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
-> > > > > > +                                                  &tcon_top->reg_lock,
-> > > > > > +                                                  TCON_TOP_TCON_TV1_GATE, 1);
-> > > > > > +     } else {
-> > > > > > +             clk_data->hws[CLK_TCON_TOP_TV1] = NULL;
-> > > > > > +     }
-> > > > > >
-> > > > > > -     clk_data->hws[CLK_TCON_TOP_DSI] =
-> > > > > > -             sun8i_tcon_top_register_gate(dev, "dsi", regs,
-> > > > > > -                                          &tcon_top->reg_lock,
-> > > > > > -                                          TCON_TOP_TCON_DSI_GATE, 2);
-> > > > > > +     if (quirks->has_dsi) {
-> > > > > > +             clk_data->hws[CLK_TCON_TOP_DSI] =
-> > > > > > +                     sun8i_tcon_top_register_gate(dev, "dsi", regs,
-> > > > > > +                                                  &tcon_top->reg_lock,
-> > > > > > +                                                  TCON_TOP_TCON_DSI_GATE, 2);
-> > > > > > +     } else {
-> > > > > > +             clk_data->hws[CLK_TCON_TOP_DSI] = NULL;
-> > > > >
-> > > > > clk_data has been kzalloc'd so its content is already NULL.
-> > > > >
-> > > > > And you shouldn't have brackets for single line blocks.
-> > > > >
-> > > > > with that fixed,
-> > > >
-> > > > FYI checkpatch.pl complains if you use brackets for the if block
-> > > > but not for the else block. They should be matching.
-> > >
-> > > Checkpatch might not warn on this, but
-> > > https://www.kernel.org/doc/Documentation/process/coding-style.rst,
-> > > section 3 is pretty clear on whether we should use them or not.
-> >
-> > Right. What I'm pointing out what checkpatch.pl complains about is
-> > shown in the second last example in section 3:
-> >
-> >     This does not apply if only one branch of a conditional statement
-> > is a single
-> >     statement; in the latter case use braces in both branches:
-> >
-> > Which is where I think your comment on "shouldn't have brackets for
-> > single line blocks"
-> > is pointing in the opposite direction.
->
-> I think we have a communication failure :)
->
-> The two blocks above are single line blocks, even though the line is
-> wrapped. So whether or not there is an else condition or not doesn't
-> matter, you shouldn't have braces at all.
+Hi Philipp,
 
-Ah... It was a single line split wrapped to two lines...
-Sorry for the noise.
+On Mon, Oct 8, 2018 at 2:56 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> On Mon, 2018-10-08 at 13:14 +0200, Geert Uytterhoeven wrote:
+> > Calling of_node_put() decreases the reference count of a device tree
+> > object, and may free some data.
+> >
+> > However, the of_phandle_args structure embedding it is passed to
+> > reset_controller_dev.of_xlate() after that, so it may still be accessed.
+> >
+> > Move the call to of_node_put() down to fix this.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> >  drivers/reset/core.c | 15 ++++++++-------
+> >  1 file changed, 8 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> > index 225e34c56b94a2e3..bc9df10d31b4bae1 100644
+> > --- a/drivers/reset/core.c
+> > +++ b/drivers/reset/core.c
+> > @@ -496,27 +496,28 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+> >                       break;
+> >               }
+> >       }
+> > -     of_node_put(args.np);
+> >
+> >       if (!rcdev) {
+> > -             mutex_unlock(&reset_list_mutex);
+> > -             return ERR_PTR(-EPROBE_DEFER);
+> > +             rstc = ERR_PTR(-EPROBE_DEFER);
+> > +             goto out;
+> >       }
+> >
+> >       if (WARN_ON(args.args_count != rcdev->of_reset_n_cells)) {
+> > -             mutex_unlock(&reset_list_mutex);
+> > -             return ERR_PTR(-EINVAL);
+> > +             rstc = ERR_PTR(-EINVAL);
+> > +             goto out;
+> >       }
+> >
+> >       rstc_id = rcdev->of_xlate(rcdev, &args);
+> >       if (rstc_id < 0) {
+> > -             mutex_unlock(&reset_list_mutex);
+> > -             return ERR_PTR(rstc_id);
+> > +             rstc = ERR_PTR(rstc_id);
+> > +             goto out;
+> >       }
+> >
+> >       /* reset_list_mutex also protects the rcdev's reset_control list */
+> >       rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
+> >
+> > +out:
+> > +     of_node_put(args.np);
+> >       mutex_unlock(&reset_list_mutex);
+>
+> Thank you for the patch. I'd like to move of_node_put after mutex_unlock
+> for symmetry. If you agree, I can switch the two when applying.
 
-ChenYu
+No objection, thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
