@@ -1,64 +1,86 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH v2 0/6] AXP8x3 AC and battery power supply support
-Date: Mon, 8 Oct 2018 09:11:48 +0200
-Message-ID: <20181008071148.ownj4qcnhcfomoxq@qschulz>
-References: <20181004193410.7265-1-oskari@lemmela.net>
- <20181006211836.28253-1-oskari@lemmela.net>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 0/9] Implement wake event support on Tegra186 and later
+Date: Mon, 08 Oct 2018 00:14:53 -0700
+Message-ID: <153898289355.119890.15326986475278938009@swboyd.mtv.corp.google.com>
+References: <20180921102546.12745-1-thierry.reding@gmail.com>
+ <CACRpkdbLoz+gSFa292OFNszeS6tNywpBRHyGwL9SK2u5s=UhZw@mail.gmail.com>
+ <20180925095723.GC7097@ulmo> <20180925171605.GK17420@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="i44lbaa3bc7msglc"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181006211836.28253-1-oskari@lemmela.net>
+In-Reply-To: <20180925171605.GK17420@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oskari Lemmela <oskari@lemmela.net>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Lina Iyer <ilina@codeaurora.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-tegra@vger.kernel.org, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Quoting Lina Iyer (2018-09-25 10:16:05)
+> Thanks Linus, for bringing this to my attention.
+> =
 
---i44lbaa3bc7msglc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Hi Thierry,
+> =
 
-Hi Oskari,
+> On Tue, Sep 25 2018 at 03:57 -0600, Thierry Reding wrote:
+> >On Tue, Sep 25, 2018 at 10:48:39AM +0200, Linus Walleij wrote:
+> >> Hi Thierry,
+> >>
+> >> thanks for working on the wakeup business!
+> >>
+> >> This patch gets me a bit confused on our different approaches
+> >> toward wakeups in the kernel, so I included Lina, Marc and Ulf
+> >> to see if we can get some common understanding.
+> >>
+> >> On Fri, Sep 21, 2018 at 12:25 PM Thierry Reding
+> >> <thierry.reding@gmail.com> wrote:
+> >>
+> >> > The following is a set of patches that allow certain interrupts to be
+> >> > used as wakeup sources on Tegra186 and later. To implement this, each
+> >> > of the GPIO controllers' IRQ domain needs to become hierarchical, and
+> >> > parented to the PMC domain. The PMC domain in turn implements a new
+> >> > IRQ domain that is a child to the GIC IRQ domain.
+> >> >
+> >> > The above ensures that the interrupt chip implementation of the PMC =
+is
+> >> > called at the correct time. The ->irq_set_type() and ->irq_set_wake()
+> >> > implementations program the PMC wake registers in a way to enable the
+> >> > given interrupts as wakeup sources.
+> >> >
+> >> > This is based on a suggestion from Thomas Gleixner that resulted from
+> >> > the following thread:
+> >> >
+> >> >         https://lkml.org/lkml/2018/9/13/1042
+[...]
+> >
+> >Yes, there was some good discussion in that thread which helped me come
+> >up with this solution. I think it's pretty elegant because it allows all
+> >of this interaction to happen almost automatically via the existing
+> >infrastructure. I'm not sure the same could be applied to the PDC,
+> >though, because of the need to manually replay the interrupt. That's not
+> >something I think can be done with just the simple parent/child
+> >relationship that we use on Tegra.
+> >
+> I wasn't able to use the hierarchy because not all GPIOs and the summary
+> line are routed to the PDC. But I am exploring options of hierarchy as
+> well.
+> =
 
-On Sun, Oct 07, 2018 at 12:18:30AM +0300, Oskari Lemmela wrote:
-> AXP813 AC power supply support with input current and
-> voltage limiting support.
->=20
-> AXP803 AC and battery power supply support.
->=20
 
-Great to see a new developer taking interest in those PMICs :)
+From=20reading this thread (and https://lkml.org/lkml/2018/9/17/756) it
+looks almost exactly the same. The only difference is that Nvidia Tegra
+does the replay in hardware whereas Qualcomm SDM845 decided to replay
+the irq in software. Either way, the gpio controller has two parent
+domains, one is wakeup capable (PDC or PMC) and the other is not (GIC)
+and some wakeup capable irqs only go through the PDC/PMC and then to the
+GIC (e.g. RTC) instead of through gpio first. And it sounds like not all
+gpios are wakeup capable in both designs.
 
-I received the v2 patch series as answers of the v1 patch series, you
-would want to fix that by sending a separate patch series. Using the
-name of the cover letter of the patch series and the author, it's
-usually good enough to find previous versions if we need to, you don't
-need to send the new patch series as answers of the first patch series.
+The plan to have the gpio to wakeup capable irq map live in DT for the
+PMC sounds good too. That way, the wakeup domain alloc function can
+figure things out and redirect gpios by itself while the gpio controller
+doesn't need to do anything special besides ask for wakeup to be set and
+fail if the parent can't support it.
 
-Thanks,
-Quentin
-
---i44lbaa3bc7msglc
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlu7AzQACgkQhLiadT7g
-8aOYRhAAm3kvNqnB7Dtx1+jtEmkzB/mNr45+kkOD62HL7NFOVGG2MujW5tUx0coQ
-d/ixFpzfZJSnqVLV+sEIX/DCA0DkfED7biIeHvjkfcc3btYx2BFOdAeZLoiMpkDz
-mfz4rVNvci+U2LmCNpi24Zq75+xATt50i91M5ZIeeLDc0Wmi5Ttw56thmOY9mZ75
-MBKdp9yXVZFq9S1TBVOeZbXJwUETfkJ6Bo32AKcZMMu3S5bAxSyLYmmxAllL1biB
-k5unczXza3ZbzJ+FLj5JVPPkMyGonkyveo/3/zEGD9qmQpqNfmkfXV0mIodfbmP4
-AjSL3rgF/8AUQl0t/TKSY/T7Q9JQgTvCZrQR4CxsbBnhEy2XyHZwsDmKSORGxKIo
-hAH2SWFaGX1EsU/H66bLqxi7YP+D1J6uSjA0bgQDmq6Wlct2lii6gvUibDzS1AhA
-0f+tGQgUnxM1t0qWffAQ7u3F75dhj2osGPLbjd3MYnHfRY9nglGcISCEe6/9Z0eD
-m7rg/VRIqpu5Q832dfBPAvp9ysNxltRgGXtIEGHJ3b+sAPSLBmngUxBTVwuR5fZy
-Bdr06Iw+zrdc3lgfC2Zeprb82W8QQCUYx/8dT3DymMo7uBN0cgl73eC3ooh+4tqs
-55uoYqy0opzYDaGERBiYvJELt63w7oSEdY1Z9+Qcaz+DoxFBYBc=
-=dhIy
------END PGP SIGNATURE-----
-
---i44lbaa3bc7msglc--
+Can hierarchical irq domains entirely replace the chained irqchip code
+in gpiolib? That would be interesting.
