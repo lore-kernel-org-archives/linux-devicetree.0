@@ -1,167 +1,70 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 6/6] arm64: dts: add LX2160ARDB board support
-Date: Mon, 8 Oct 2018 13:52:01 +0800
-Message-ID: <20181008055159.GH3587@dragon>
-References: <1538615031-7507-1-git-send-email-vabhav.sharma@nxp.com>
- <1538615031-7507-7-git-send-email-vabhav.sharma@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
+Date: Mon, 8 Oct 2018 14:05:03 +0800
+Message-ID: <20181008060500.GI3587@dragon>
+References: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1538615031-7507-7-git-send-email-vabhav.sharma@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vabhav Sharma <vabhav.sharma@nxp.com>
-Cc: sudeep.holla@arm.com, oss@buserror.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, mturquette@baylibre.com, sboyd@kernel.org, rjw@rjwysocki.net, viresh.kumar@linaro.org, linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel-owner@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, gregkh@linuxfoundation.org, arnd@arndb.de, kstewart@linuxfoundation.org, yamada.masahiro@socionext.com, leoyang.li@nxp.com, linux@armlinux.org.uk, V.Sethi@nxp.com, udit.kumar@nxp.com, pankaj.bansal@nxp.com, Priyanka Jain <priyanka.jain@nxp.com>, Sriram Dash <sriram.dash@nxp.com>
+In-Reply-To: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Markus Kueffner <kueffner.markus@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Robert Nelson <robertcnelson@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 04, 2018 at 06:33:51AM +0530, Vabhav Sharma wrote:
-> LX2160A reference design board (RDB) is a high-performance
-> computing, evaluation, and development platform with LX2160A
-> SoC.
+Add a few udoo board users for comment.
+
+On Thu, Oct 04, 2018 at 04:33:59PM +0200, Markus Kueffner wrote:
+> From: Markus Kueffner <kueffner.markus@gmail.com>
 > 
-> Signed-off-by: Priyanka Jain <priyanka.jain@nxp.com>
-> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-> Signed-off-by: Vabhav Sharma <vabhav.sharma@nxp.com>
+> Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
+> 
+> Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
 > ---
->  arch/arm64/boot/dts/freescale/Makefile            |   1 +
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts | 100 ++++++++++++++++++++++
->  2 files changed, 101 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+>  arch/arm/boot/dts/imx6qdl-udoo.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-> index 86e18ad..445b72b 100644
-> --- a/arch/arm64/boot/dts/freescale/Makefile
-> +++ b/arch/arm64/boot/dts/freescale/Makefile
-> @@ -13,3 +13,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
->  dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-> +dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> new file mode 100644
-> index 0000000..1483071
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> @@ -0,0 +1,100 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> +//
-> +// Device Tree file for LX2160ARDB
-> +//
-> +// Copyright 2018 NXP
-> +
-> +/dts-v1/;
-> +
-> +#include "fsl-lx2160a.dtsi"
-> +
-> +/ {
-> +	model = "NXP Layerscape LX2160ARDB";
-> +	compatible = "fsl,lx2160a-rdb", "fsl,lx2160a";
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	sb_3v3: regulator-fixed {
-
-The node name should probably be named like regulator-sb3v3 or
-something, so that the pattern can be followed when we have another
-fixed regulator to be added.
-
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "fixed-3.3V";
-
-The name should be something we can find on board schematics.
-
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +	};
-> +
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-
-Please keep these labeled nodes sorted alphabetically.
-
-> +	status = "okay";
-
-Have a newline between properties and child node.
-
-> +	i2c-mux@77 {
-> +		compatible = "nxp,pca9547";
-> +		reg = <0x77>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x2>;
-> +
-> +			power-monitor@40 {
-> +				compatible = "ti,ina220";
-> +				reg = <0x40>;
-> +				shunt-resistor = <1000>;
-> +			};
+> diff --git a/arch/arm/boot/dts/imx6qdl-udoo.dtsi b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> index 4f27861..5614170 100644
+> --- a/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-udoo.dtsi
+> @@ -195,6 +195,13 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_uart4: uart4grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_COL0__UART4_TX_DATA	0x1b0b1
+> +				MX6QDL_PAD_KEY_ROW0__UART4_RX_DATA	0x1b0b1
+> +			>;
 > +		};
 > +
-> +		i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0x3>;
-> +
-> +			temperature-sensor@4c {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4c>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +
-> +			temperature-sensor@4d {
-> +				compatible = "nxp,sa56004";
-> +				reg = <0x4d>;
-> +				vcc-supply = <&sb_3v3>;
-> +			};
-> +		};
-> +	};
-> +};
-> +
-> +&i2c4 {
-> +	status = "okay";
-> +
-> +	rtc@51 {
-> +		compatible = "nxp,pcf2129";
-> +		reg = <0x51>;
-> +		// IRQ10_B
-> +		interrupts = <0 150 0x4>;
-> +		};
-
-Bad indentation.
-
-Shawn
-
-> +
-> +};
-> +
-> +&usb0 {
+>  		pinctrl_usbh: usbhgrp {
+>  			fsl,pins = <
+>  				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x80000000
+> @@ -265,6 +272,12 @@
+>  	status = "okay";
+>  };
+>  
+> +&uart4 { // iMX6-Arduino internal serial port - ttymxc3
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_uart4>;
 > +	status = "okay";
 > +};
 > +
-> +&usb1 {
-> +	status = "okay";
-> +};
-> +
-> +&crypto {
-> +	status = "okay";
-> +};
+>  &usbh1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_usbh>;
 > -- 
 > 2.7.4
 > 
