@@ -1,49 +1,73 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v8 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
- driver
-Date: Mon, 8 Oct 2018 16:10:09 +0530
-Message-ID: <20181008104009.2x6s7shxfhl3hzkr@vireshk-i7>
-References: <1537698793-15285-1-git-send-email-tdas@codeaurora.org>
- <1537698793-15285-3-git-send-email-tdas@codeaurora.org>
- <20181008084012.GA23693@centauri.lan>
- <20181008095952.gl7di2tnuv3jwew6@vireshk-i7>
- <20181008103856.GA10890@centauri.lan>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 00/10] Add the I3C subsystem
+Date: Mon, 8 Oct 2018 12:47:21 +0200
+Message-ID: <CAK8P3a2C+FHiPnHKEAanhD=RpqDG1VywTEGhpdBvvKQ8zmwdUA@mail.gmail.com>
+References: <20181003132212.12619-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181008103856.GA10890@centauri.lan>
+In-Reply-To: <20181003132212.12619-1-boris.brezillon@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
 List-Id: devicetree@vger.kernel.org
 
-On 08-10-18, 12:38, Niklas Cassel wrote:
-> On Mon, Oct 08, 2018 at 03:29:52PM +0530, Viresh Kumar wrote:
-> > On 08-10-18, 10:40, Niklas Cassel wrote:
-> > > > +		ret = of_parse_phandle_with_args(cpu_np, "qcom,freq-domain",
-> > > > +				"#freq-domain-cells", 0, &args);
-> > > 
-> > > Hello Taniya,
-> > > 
-> > > in your DT binding, you use
-> > > 
-> > > #freq-domains-cells = <1>
-> > > 
-> > > Yet here you parse for "#freq-domain-cells".
-> > 
-> > And what is the problem with that ? Or are you suggesting her to call
-> > of_parse_phandle_with_fixed_args() ?
-> 
-> Hello Viresh,
-> 
-> #freq-domain-cells != #freq-domains-cells
-> 
-> The code should parse for the exact same property name as stated in the
-> DT binding.
+On Wed, Oct 3, 2018 at 3:22 PM Boris Brezillon
+<boris.brezillon@bootlin.com> wrote:
+>
+> Sorry for the huge delay between v7 and v8 despite the small amount of
+> things I was asked to fix/rework.
+>
+> This patch series is adding a new subsystem to support I3C devices.
+>
+> This is just adding support for basic features. Extra features will
+> be added afterwards.
+>
+> There are a few design choices that are worth mentioning because they
+> impact the way I3C device drivers can interact with their devices:
+>
+> - all functions used to send I3C/I2C frames must be called in
+>   non-atomic context. Mainly done this way to ease implementation, but
+>   this is still open to discussion. Please let me know if you think it's
+>   worth considering an asynchronous model here
+> - the I3C bus and I3C master controller are now tightly coupled even
+>   though they're still allocated separately. There's now a 1:1
+>   relationship between these objects, and the I3C master is no longer
+>   represented under the I3C bus object.
+>   Arnd, let me know if you had something different in mind, and I'll
+>   rework the implementation accordingly.
 
-Oh, I missed that both the names are different here. It makes sense
-now :)
+I looked at the entire series again and I'm rather happy with how
+it turned out. I've commented on a tiny issue about the readsl()
+that should be easy to resolve one way or another, with that
+you can add my
 
--- 
-viresh
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+
+There is one additional issue that we've talked about previously
+and that I'd like to hear about from GregKH or maybe other
+subsystem maintainers: In the current version, you have a single
+'bus_type' object, and this is used to represent both a 'host' and
+a 'device'. I think we concluded that this is done in other
+subsystems as well, and that this is fitting here because a
+host (master device) can hand over being a master to another
+device (slave), which then becomes the host and sees this
+one as a slave. Also a lot of the sysfs attributes are the same
+because of this relationship.
+
+It also means that you get a mix of things in sysfs:
+
+/sys/devices/i3c/<bus>
+/sys/devices/i3c/<device>
+/sys/devices/i3c/<bus>/<device>
+
+which is a bit like what we have on USB where we can have hub
+devices that are again parents of other USB devices, but I don't
+think we can have i3c hubs or multiplexers in the same way, so
+it's only a single level.
+
+I'm ok with this model after our previous discussion and couldn't
+come up with a better one. If anyone else still sees it as
+problematic and has a better idea, please let us know now.
+
+         Arnd
