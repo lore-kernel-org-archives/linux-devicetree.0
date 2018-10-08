@@ -1,106 +1,62 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: [PATCH v4 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe controller
-Date: Mon, 8 Oct 2018 19:57:12 +0800
-Message-ID: <1538999834-156423-2-git-send-email-hanjie.lin@amlogic.com>
-References: <1538999834-156423-1-git-send-email-hanjie.lin@amlogic.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: [PATCH v2] of: base: Fix english spelling in of_alias_get_alias_list()
+Date: Mon,  8 Oct 2018 13:58:47 +0200
+Message-ID: <1e4e9047636e94dc2bff62b915bd0261f334dd8a.1538999925.git.michal.simek@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538999834-156423-1-git-send-email-hanjie.lin@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, monstr@monstr.eu, gregkh@linuxfoundation.org, geert@linux-m68k.org, rdunlap@infradead.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Yue Wang <yue.wang@amlogic.com>
+Fix english spelling in of_alias_get_alias_list().
 
-The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-controller.
-
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Fixes: b1078c355d76 ("of: base: Introduce of_alias_get_alias_list() to check alias IDs")
+Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 ---
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-new file mode 100644
-index 0000000..12b18f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -0,0 +1,70 @@
-+Amlogic Meson AXG DWC PCIE SoC controller
-+
-+Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+It shares common functions with the PCIe DesignWare core driver and
-+inherits common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties:
-+- compatible:
-+	should contain "amlogic,axg-pcie" to identify the core.
-+- reg:
-+	should contain the configuration address space.
-+- reg-names: Must be
-+	- "elbi"	External local bus interface registers
-+	- "cfg"		Meson specific registers
-+	- "phy"		Meson PCIE PHY registers
-+	- "config"	PCIe configuration space
-+- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must include the following entries:
-+	- "pclk"       PCIe GEN 100M PLL clock
-+	- "port"       PCIe_x(A or B) RC clock gate
-+	- "general"    PCIe Phy clock
-+	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-+- resets: phandle to the reset lines.
-+- reset-names: must contain "phy" "port" and "apb"
-+       - "phy"         Share PHY reset
-+       - "port"        Port A or B reset
-+       - "apb"         Share APB reset
-+- device_type:
-+	should be "pci". As specified in designware-pcie.txt
-+
-+
-+Example configuration:
-+
-+	pcie: pcie@f9800000 {
-+			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+			reg = <0x0 0xf9800000 0x0 0x400000
-+					0x0 0xff646000 0x0 0x2000
-+					0x0 0xff644000 0x0 0x2000
-+					0x0 0xf9f00000 0x0 0x100000>;
-+			reg-names = "elbi", "cfg", "phy", "config";
-+			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-+			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+			bus-range = <0x0 0xff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
-+
-+			clocks = <&clkc CLKID_USB
-+					&clkc CLKID_MIPI_ENABLE
-+					&clkc CLKID_PCIE_A
-+					&clkc CLKID_PCIE_CML_EN0>;
-+			clock-names = "general",
-+					"mipi",
-+					"pclk",
-+					"port";
-+			resets = <&reset RESET_PCIE_PHY>,
-+				<&reset RESET_PCIE_A>,
-+				<&reset RESET_PCIE_APB>;
-+			reset-names = "phy",
-+					"port",
-+					"apb";
-+	};
+Changes in v2:
+- Fix 2 more issues reported by Randy Dunlap
+- Add fixed log sha1
+
+Greg: Please apply it on the top of tty-next because patch is going via
+your tree.
+
+---
+ drivers/of/base.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 33011b88ed3f..908de45f966b 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1948,7 +1948,7 @@ int of_alias_get_id(struct device_node *np, const char *stem)
+  * @matches:	Array of OF device match structures to search in
+  * @stem:	Alias stem of the given device_node
+  * @bitmap:	Bitmap field pointer
+- * @nbits:	Maximum number of alias ID which can be recorded it bitmap
++ * @nbits:	Maximum number of alias IDs which can be recorded in bitmap
+  *
+  * The function travels the lookup table to record alias ids for the given
+  * device match structures and alias stem.
+@@ -1971,7 +1971,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
+ 			 __func__, app->stem, app->id);
+ 
+ 		if (strcmp(app->stem, stem) != 0) {
+-			pr_debug("%s: stem comparison doesn't passed %s\n",
++			pr_debug("%s: stem comparison didn't pass %s\n",
+ 				 __func__, app->stem);
+ 			continue;
+ 		}
+@@ -1986,7 +1986,7 @@ int of_alias_get_alias_list(const struct of_device_id *matches,
+ 			pr_debug("%s: Allocated ID %d\n", __func__, app->id);
+ 			set_bit(app->id, bitmap);
+ 		}
+-		/* Alias exist but it not compatible with matches */
++		/* Alias exists but is not compatible with matches */
+ 	}
+ 	mutex_unlock(&of_mutex);
+ 
 -- 
-2.7.4
+1.9.1
