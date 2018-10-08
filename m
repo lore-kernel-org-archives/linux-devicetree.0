@@ -1,45 +1,35 @@
-From: Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH] devicetree,xen: add xen,shared-memory binding
-Date: Mon, 8 Oct 2018 16:03:54 -0700 (PDT)
-Message-ID: <alpine.DEB.2.10.1810081600350.28877@sstabellini-ThinkPad-X260>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Add qspi (quad SPI) node
+Date: Mon, 08 Oct 2018 16:18:48 -0700
+Message-ID: <153904072826.119890.13295983146179211257@swboyd.mtv.corp.google.com>
+References: <20181008201711.152038-1-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, julien.grall@arm.com, robh+dt@kernel.org, sstabellini@kernel.org, xen-devel@lists.xen.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181008201711.152038-1-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Ryan Case <ryandcase@chromium.org>, linux-arm-msm@vger.kernel.org, Girish Mahadevan <girishm@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SW50cm9kdWNlIGEgZGV2aWNlIHRyZWUgYmluZGluZyBmb3IgWGVuIHJlc2VydmVkLW1lbW9yeSBy
-ZWdpb25zLiBUaGV5CmFyZSB1c2VkIHRvIHNoYXJlIG1lbW9yeSBhY3Jvc3MgVk1zIGZyb20gdGhl
-IFZNIGNvbmZpZyBmaWxlcy4gKFNlZQpzdGF0aWNfc2htIGNvbmZpZyBvcHRpb24uKQogClNpZ25l
-ZC1vZmYtYnk6IFN0ZWZhbm8gU3RhYmVsbGluaSA8c3RlZmFub3NAeGlsaW54LmNvbT4KQ2M6IGp1
-bGllbi5ncmFsbEBhcm0uY29tCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL3Jlc2VydmVkLW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXJ2ZWQtbWVtb3J5L3hlbixzaGFyZWQtbWVt
-b3J5LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi5hOTI3YTk0Ci0tLSAv
-ZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2VydmVk
-LW1lbW9yeS94ZW4sc2hhcmVkLW1lbW9yeS50eHQKQEAgLTAsMCArMSwyMCBAQAorKiBYZW4gaHlw
-ZXJ2aXNvciByZXNlcnZlZC1tZW1vcnkgYmluZGluZworCitFeHBvc2Ugb25lIG9yIG1vcmUgbWVt
-b3J5IHJlZ2lvbnMgYXMgcmVzZXJ2ZWQtbWVtb3J5IHRvIHRoZSBndWVzdAordmlydHVhbCBtYWNo
-aW5lLiBUeXBpY2FsbHksIGEgcmVnaW9uIGlzIGNvbmZpZ3VyZWQgYXQgVk0gY3JlYXRpb24gdGlt
-ZQordG8gYmUgYSBzaGFyZWQgbWVtb3J5IGFyZWEgYWNyb3NzIG11bHRpcGxlIHZpcnR1YWwgbWFj
-aGluZXMgZm9yCitjb21tdW5pY2F0aW9uIGFtb25nIHRoZW0uCisKK0ZvciBlYWNoIG9mIHRoZXNl
-IHByZS1zaGFyZWQgbWVtb3J5IHJlZ2lvbnMsIGEgcmFuZ2UgaXMgZXhwb3NlZCB1bmRlcgordGhl
-IC9yZXNlcnZlZC1tZW1vcnkgbm9kZSBhcyBhIGNoaWxkIG5vZGUuIEVhY2ggcmFuZ2Ugc3ViLW5v
-ZGUgaXMgbmFtZWQKK3hlbi1zaG1lbUA8YWRkcmVzcz4gYW5kIGhhcyB0aGUgZm9sbG93aW5nIHBy
-b3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZToKKwljb21wYXRpYmxlID0geGVuLHNoYXJlZC1tZW1v
-cnkiCisKKy0gcmVnOgorCXRoZSBiYXNlIGd1ZXN0IHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUg
-b2YgdGhlIHNoYXJlZCBtZW1vcnkgcmVnaW9uCisKKy0gaWQ6CisJYSBzdHJpbmcgdGhhdCBpZGVu
-dGlmaWVzIHRoZSBzaGFyZWQgbWVtb3J5IHJlZ2lvbiBhcyBzcGVjaWZpZWQgaW4KKwl0aGUgVk0g
-Y29uZmlnIGZpbGUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fClhlbi1kZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3Jn
-Cmh0dHBzOi8vbGlzdHMueGVucHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=
+Quoting Douglas Anderson (2018-10-08 13:17:11)
+> This adds the Quad SPI controller to the main sdm845 device tree file.
+> Boards will be expected to assign the proper pinctrl depending on how
+> many chip selects they have hooked up and how many data lines.
+> =
+
+> This depends on commit 48735597f7bd ("clk: qcom: Add qspi (Quad SPI)
+> clock defines for sdm845 to header") to add the needed defines.  It
+> also shouldn't land until the patch ("dt-bindings: spi: Qualcomm Quad
+> SPI(QSPI) documentation") [1] lands.
+> =
+
+> [1] https://lkml.kernel.org/r/20181002214709.162330-1-ryandcase@chromium.=
+org
+> =
+
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> ---
+
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
