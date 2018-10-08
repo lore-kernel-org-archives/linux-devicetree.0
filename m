@@ -1,84 +1,68 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] doc: printk-formats: Remove bogus kobject references for device nodes
-Date: Mon,  8 Oct 2018 13:08:48 +0200
-Message-ID: <20181008110848.25648-1-geert+renesas@glider.be>
+From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v4 0/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+Date: Mon,  8 Oct 2018 16:41:38 +0530
+Message-ID: <1538997103-11152-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, "Tobin C . Harding" <me@tobin.cc>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh@kernel.org>, Petr Mladek <pmladek@suse.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-When converting from text to rst, the kobjects section and its sole
-subsection about device tree nodes were coalesced into a single section,
-yielding an inconsistent result.
+- Add driver for NXP FlexSPI host controller
 
-Remove all references to kobjects, as
-  1. Device tree object pointers are not compatible to kobject pointers
-     (the former may embed the latter, though), and
-  2. there are no printk formats defined for kobject types.
+ FlexSPI is a flexsible SPI host controller [1], Chapter 30 page 1475,
+ which supports two SPI channels and up to 4 external devices.
+ Each channel supports Single/Dual/Quad/Octal mode data transfer (1/2/4/8 bidirectional data lines)
+ i.e. FlexSPI acts as an interface to external devices, maximum 4, each with up to 8
+ bidirectional data lines.
 
-Update the vsprintf() source code comments to match the above.
+- Tested this driver with mtd_debug(Erase/Write/Read) utility and JFFS2
+ filesystem mounting and booting on NXP LX2160ARDB[2] and LX2160AQDS targets.
+ LX2160ARDB is having two NOR slave device connected on single bus A
+ i.e. A0 and A1 (CS0 and CS1).
+ LX2160AQDS is having two NOR slave device connected on separate buses
+ one flash on A0 and second on B1 i.e. (CS0 and CS3).
+ Verified this driver on following SPI NOR flashes:
+   Micron, mt35xu512aba[3], [Read - 1 bit mode]
+   Cypress, s25fl512s, [Read - 1/2/4 bit mode]
 
-Fixes: b3ed23213eab1e08 ("doc: convert printk-formats.txt to rst")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/core-api/printk-formats.rst |  6 +++---
- lib/vsprintf.c                            | 20 +++++++++-----------
- 2 files changed, 12 insertions(+), 14 deletions(-)
+[1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?series=9721
+[3] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=63445
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index d39798c2558500d5..ff48b55040ef5acf 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -376,15 +376,15 @@ correctness of the format string and va_list arguments.
- 
- Passed by reference.
- 
--kobjects
----------
-+Device tree nodes
-+-----------------
- 
- ::
- 
- 	%pOF[fnpPcCF]
- 
- 
--For printing kobject based structs (device nodes). Default behaviour is
-+For printing device tree node structures. Default behaviour is
- equivalent to %pOFf.
- 
- 	- f - device node full_name
-diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-index a3dc15c89c217b79..9a8876bfa1e06592 100644
---- a/lib/vsprintf.c
-+++ b/lib/vsprintf.c
-@@ -1840,17 +1840,15 @@ static char *ptr_to_id(char *buf, char *end, const void *ptr,
-  *       p page flags (see struct page) given as pointer to unsigned long
-  *       g gfp flags (GFP_* and __GFP_*) given as pointer to gfp_t
-  *       v vma flags (VM_*) given as pointer to unsigned long
-- * - 'O' For a kobject based struct. Must be one of the following:
-- *       - 'OF[fnpPcCF]'  For a device tree object
-- *                        Without any optional arguments prints the full_name
-- *                        f device node full_name
-- *                        n device node name
-- *                        p device node phandle
-- *                        P device node path spec (name + @unit)
-- *                        F device node flags
-- *                        c major compatible string
-- *                        C full compatible string
-- *
-+ * - 'OF[fnpPcCF]'  For a device tree object
-+ *                  Without any optional arguments prints the full_name
-+ *                  f device node full_name
-+ *                  n device node name
-+ *                  p device node phandle
-+ *                  P device node path spec (name + @unit)
-+ *                  F device node flags
-+ *                  c major compatible string
-+ *                  C full compatible string
-  * - 'x' For printing the address. Equivalent to "%lx".
-  *
-  * ** When making changes please also update:
+Yogesh Gaur (5):
+  spi: spi-mem: Add driver for NXP FlexSPI controller
+  dt-bindings: spi: add binding file for NXP FlexSPI controller
+  arm64: dts: lx2160a: add FlexSPI node property
+  arm64: defconfig: enable NXP FlexSPI driver
+  MAINTAINERS: add maintainers for the NXP FlexSPI driver
+
+Changes for v4:
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+- Incorporated binding file review comments of Rob Herring.
+Changes for v3:
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+Changes for v2:
+- Incorporated Boris review comments and drop below patches as per the comments.
+ - Patch 'spi: add slave device size in spi_device struct'
+ - Patch 'spi: add flags for octal I/O data transfer'
+- Incorporated DTS and Binding file review comments of Shawn Guo and Rob Herring.
+
+ .../devicetree/bindings/spi/spi-nxp-fspi.txt       |   39 +
+ MAINTAINERS                                        |    6 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts  |   22 +
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi     |   12 +
+ arch/arm64/configs/defconfig                       |    1 +
+ drivers/spi/Kconfig                                |   10 +
+ drivers/spi/Makefile                               |    1 +
+ drivers/spi/spi-nxp-fspi.c                         | 1157 ++++++++++++++++++++
+ 8 files changed, 1248 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+ create mode 100644 drivers/spi/spi-nxp-fspi.c
+
 -- 
-2.17.1
+2.7.4
