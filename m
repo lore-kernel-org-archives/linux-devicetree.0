@@ -1,117 +1,72 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] drm/msm/dpu: Integrate interconnect API
- in MDSS
-Date: Mon, 8 Oct 2018 08:39:54 -0600
-Message-ID: <20181008143954.GN31641@jcrouse-lnx.qualcomm.com>
-References: <20181008092730.1199-1-skolluku@codeaurora.org>
- <20181008092730.1199-3-skolluku@codeaurora.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH] dt-bindings: misc: bk4: Add device tree binding for
+ Liebherr's BK4 SPI bus
+Date: Mon, 8 Oct 2018 22:43:52 +0800
+Message-ID: <20181008144350.GS3587@dragon>
+References: <20180927222655.24482-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181008092730.1199-3-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org
+In-Reply-To: <20180927222655.24482-1-lukma@denx.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDI6NTc6MjlQTSArMDUzMCwgU3JhdmFudGhpIEtvbGx1
-a3VkdXJ1IHdyb3RlOgo+IFRoZSBpbnRlcmNvbm5lY3QgZnJhbWV3b3JrIGlzIGRlc2lnbmVkIHRv
-IHByb3ZpZGUgYQo+IHN0YW5kYXJkIGtlcm5lbCBpbnRlcmZhY2UgdG8gY29udHJvbCB0aGUgc2V0
-dGluZ3Mgb2YKPiB0aGUgaW50ZXJjb25uZWN0cyBvbiBhIFNvQy4KPiAKPiBUaGUgaW50ZXJjb25u
-ZWN0IEFQSSB1c2VzIGEgY29uc3VtZXIvcHJvdmlkZXItYmFzZWQgbW9kZWwsCj4gd2hlcmUgdGhl
-IHByb3ZpZGVycyBhcmUgdGhlIGludGVyY29ubmVjdCBidXNlcyBhbmQgdGhlCj4gY29uc3VtZXJz
-IGNvdWxkIGJlIHZhcmlvdXMgZHJpdmVycy4KPiAKPiBNRFNTIGlzIG9uZSBvZiB0aGUgaW50ZXJj
-b25uZWN0IGNvbnN1bWVycyB3aGljaCB1c2VzIHRoZQo+IGludGVyY29ubmVjdCBBUElzIHRvIGdl
-dCB0aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBhbmQKPiBzZXQgaXRzIGJhbmR3aWR0aC9sYXRl
-bmN5L1FvUyByZXF1aXJlbWVudHMgZm9yIHRoZSBnaXZlbgo+IGludGVyY29ubmVjdGVkIHBhdGgu
-Cj4gCj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2Rl
-YXVyb3JhLm9yZz4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21k
-c3MuYyB8IDU2ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tCj4gIDEgZmlsZSBjaGFu
-Z2VkLCA1MiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jIGIvZHJpdmVycy9ncHUvZHJt
-L21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwo+IGluZGV4IDIyMzVlZjgxMjlmNC4uODM5MWU1YzFl
-NTU5IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9tZHNz
-LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gQEAg
-LTQsMTAgKzQsMTIgQEAKPiAgICovCj4gIAo+ICAjaW5jbHVkZSAiZHB1X2ttcy5oIgo+ICsjaW5j
-bHVkZSA8bGludXgvaW50ZXJjb25uZWN0Lmg+Cj4gIAo+ICAjZGVmaW5lIHRvX2RwdV9tZHNzKHgp
-IGNvbnRhaW5lcl9vZih4LCBzdHJ1Y3QgZHB1X21kc3MsIGJhc2UpCj4gIAo+ICAjZGVmaW5lIEhX
-X0lOVFJfU1RBVFVTCQkJMHgwMDEwCj4gKyNkZWZpbmUgTUFYX0FYSV9QT1JUX0NPVU5UIDMKPiAg
-Cj4gIHN0cnVjdCBkcHVfbWRzcyB7Cj4gIAlzdHJ1Y3QgbXNtX21kc3MgYmFzZTsKPiBAQCAtMTYs
-OCArMTgsMzYgQEAgc3RydWN0IGRwdV9tZHNzIHsKPiAgCXUzMiBod3ZlcnNpb247Cj4gIAlzdHJ1
-Y3QgZHNzX21vZHVsZV9wb3dlciBtcDsKPiAgCXN0cnVjdCBkcHVfaXJxX2NvbnRyb2xsZXIgaXJx
-X2NvbnRyb2xsZXI7Cj4gKwlzdHJ1Y3QgaWNjX3BhdGggKnBhdGhbTUFYX0FYSV9QT1JUX0NPVU5U
-XTsKPiArCXUzMiBudW1fcGF0aHM7Cj4gIH07Cj4gIAo+ICtzdGF0aWMgaW50IGRwdV9tZHNzX3Bh
-cnNlX2RhdGFfYnVzX2ljY19wYXRoKAo+ICsJCXN0cnVjdCBkcm1fZGV2aWNlICpkZXYsIHN0cnVj
-dCBkcHVfbWRzcyAqZHB1X21kc3MpCj4gK3sKPiArCXN0cnVjdCBpY2NfcGF0aCAqcGF0aDAgPSBv
-Zl9pY2NfZ2V0KGRldi0+ZGV2LCAicG9ydDAiKTsKPiArCXN0cnVjdCBpY2NfcGF0aCAqcGF0aDEg
-PSBvZl9pY2NfZ2V0KGRldi0+ZGV2LCAicG9ydDEiKTsKPiArCWludCB0b3RhbF9udW1fcGF0aHMg
-ID0gMDsKPiArCj4gKwlpZiAoSVNfRVJSKHBhdGgwKSkKPiArCQlyZXR1cm4gUFRSX0VSUihwYXRo
-MCk7Cj4gKwo+ICsJZHB1X21kc3MtPnBhdGhbMF0gPSBwYXRoMDsKPiArCXRvdGFsX251bV9wYXRo
-cyA9IDE7Cj4gKwo+ICsJaWYgKCFJU19FUlIocGF0aDEpKSB7Cj4gKwkJZHB1X21kc3MtPnBhdGhb
-MV0gPSBwYXRoMTsKPiArCQl0b3RhbF9udW1fcGF0aHMrKzsKPiArCX0KPiArCj4gKwlpZiAodG90
-YWxfbnVtX3BhdGhzICA+IE1BWF9BWElfUE9SVF9DT1VOVCkKPiArCQlyZXR1cm4gLUVJTlZBTDsK
-ClNpbmNlIHlvdSBhcmUgdXNpbmcgZml4ZWQgbmFtZXMgeW91IGtub3cgdGhhdCBieSBkZXNpZ24g
-dGhpcyBpc24ndCBwb3NzaWJsZS4KCj4gKwlkcHVfbWRzcy0+bnVtX3BhdGhzID0gdG90YWxfbnVt
-X3BhdGhzOwo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICBzdGF0aWMgaXJxcmV0dXJuX3Qg
-ZHB1X21kc3NfaXJxKGludCBpcnEsIHZvaWQgKmFyZykKPiAgewo+ICAJc3RydWN0IGRwdV9tZHNz
-ICpkcHVfbWRzcyA9IGFyZzsKPiBAQCAtMTI3LDcgKzE1NywxMiBAQCBzdGF0aWMgaW50IGRwdV9t
-ZHNzX2VuYWJsZShzdHJ1Y3QgbXNtX21kc3MgKm1kc3MpCj4gIHsKPiAgCXN0cnVjdCBkcHVfbWRz
-cyAqZHB1X21kc3MgPSB0b19kcHVfbWRzcyhtZHNzKTsKPiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bv
-d2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4gLQlpbnQgcmV0Owo+ICsJaW50IHJldCwgaTsKPiAr
-CXU2NCBhYiA9IChkcHVfbWRzcy0+bnVtX3BhdGhzKSA/IDY4MDAwMDAwMDAvZHB1X21kc3MtPm51
-bV9wYXRocyA6IDA7Cj4gKwl1NjQgaWIgPSA2ODAwMDAwMDAwOwo+ICsKPiArCWZvciAoaSA9IDA7
-IGkgPCBkcHVfbWRzcy0+bnVtX3BhdGhzOyBpKyspCj4gKwkJaWNjX3NldChkcHVfbWRzcy0+cGF0
-aFtpXSwgYWIsIGliKTsKPiAgCj4gIAlyZXQgPSBtc21fZHNzX2VuYWJsZV9jbGsobXAtPmNsa19j
-b25maWcsIG1wLT5udW1fY2xrLCB0cnVlKTsKPiAgCWlmIChyZXQpCj4gQEAgLTE0MCwxMiArMTc1
-LDE1IEBAIHN0YXRpYyBpbnQgZHB1X21kc3NfZGlzYWJsZShzdHJ1Y3QgbXNtX21kc3MgKm1kc3Mp
-Cj4gIHsKPiAgCXN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3MgPSB0b19kcHVfbWRzcyhtZHNzKTsK
-PiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4gLQlpbnQg
-cmV0Owo+ICsJaW50IHJldCwgaTsKPiAgCj4gIAlyZXQgPSBtc21fZHNzX2VuYWJsZV9jbGsobXAt
-PmNsa19jb25maWcsIG1wLT5udW1fY2xrLCBmYWxzZSk7Cj4gIAlpZiAocmV0KQo+ICAJCURQVV9F
-UlJPUigiY2xvY2sgZGlzYWJsZSBmYWlsZWQsIHJldDolZFxuIiwgcmV0KTsKPiAgCj4gKwlmb3Ig
-KGkgPSAwOyBpIDwgZHB1X21kc3MtPm51bV9wYXRoczsgaSsrKQo+ICsJCWljY19zZXQoZHB1X21k
-c3MtPnBhdGhbaV0sIDAsIDApOwo+ICsKPiAgCXJldHVybiByZXQ7Cj4gIH0KPiAgCj4gQEAgLTE1
-NSw2ICsxOTMsNyBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0cnVjdCBkcm1fZGV2
-aWNlICpkZXYpCj4gIAlzdHJ1Y3QgbXNtX2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJp
-dmF0ZTsKPiAgCXN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3MgPSB0b19kcHVfbWRzcyhwcml2LT5t
-ZHNzKTsKPiAgCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4g
-KwlpbnQgaTsKPiAgCj4gIAlfZHB1X21kc3NfaXJxX2RvbWFpbl9maW5pKGRwdV9tZHNzKTsKPiAg
-Cj4gQEAgLTE2Myw2ICsyMDIsOSBAQCBzdGF0aWMgdm9pZCBkcHVfbWRzc19kZXN0cm95KHN0cnVj
-dCBkcm1fZGV2aWNlICpkZXYpCj4gIAltc21fZHNzX3B1dF9jbGsobXAtPmNsa19jb25maWcsIG1w
-LT5udW1fY2xrKTsKPiAgCWRldm1fa2ZyZWUoJnBkZXYtPmRldiwgbXAtPmNsa19jb25maWcpOwo+
-ICAKPiArCWZvciAoaSA9IDA7IGkgPCBkcHVfbWRzcy0+bnVtX3BhdGhzOyBpKyspCj4gKwkJaWNj
-X3B1dChkcHVfbWRzcy0+cGF0aFtpXSk7Cj4gKwo+ICAJaWYgKGRwdV9tZHNzLT5tbWlvKQo+ICAJ
-CWRldm1faW91bm1hcCgmcGRldi0+ZGV2LCBkcHVfbWRzcy0+bW1pbyk7Cj4gIAlkcHVfbWRzcy0+
-bW1pbyA9IE5VTEw7Cj4gQEAgLTIwMyw2ICsyNDUsMTIgQEAgaW50IGRwdV9tZHNzX2luaXQoc3Ry
-dWN0IGRybV9kZXZpY2UgKmRldikKPiAgCX0KPiAgCWRwdV9tZHNzLT5tbWlvX2xlbiA9IHJlc291
-cmNlX3NpemUocmVzKTsKPiAgCj4gKwlyZXQgPSBkcHVfbWRzc19wYXJzZV9kYXRhX2J1c19pY2Nf
-cGF0aChkZXYsIGRwdV9tZHNzKTsKPiArCWlmIChyZXQpIHsKPiArCQlEUFVfRVJST1IoImZhaWxl
-ZCB0byBwYXJzZSBpY2MgcGF0aCwgcmV0PSVkXG4iLCByZXQpOwoKRGVwZW5kaW5nIG9uIHRoZSBv
-cmRlcmluZyBiZXR3ZWVuIERQVSBhbmQgaW50ZXJjb25uZWN0LCB0aGlzIG1pZ2h0IHJldHVybgot
-RVBST0JFX0RFRkVSIGZvciBhIGZldyB0aW1lcyBiZWZvcmUgd29ya2luZy4gWW91IHNob3VsZCBz
-a2lwIHByaW50aW5nCmFuIGVycm9yIG1lc3NhZ2Ugb24gLUVQUk9CRV9ERUZFUiBzbyBpdCBkb2Vz
-bid0IHNwYW0gdGhlIGxvZy4KCj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4gIAltcCA9ICZk
-cHVfbWRzcy0+bXA7Cj4gIAlyZXQgPSBtc21fZHNzX3BhcnNlX2Nsb2NrKHBkZXYsIG1wKTsKPiAg
-CWlmIChyZXQpIHsKPiBAQCAtMjI0LDE0ICsyNzIsMTQgQEAgaW50IGRwdV9tZHNzX2luaXQoc3Ry
-dWN0IGRybV9kZXZpY2UgKmRldikKPiAgCQlnb3RvIGlycV9lcnJvcjsKPiAgCX0KPiAgCj4gKwlw
-cml2LT5tZHNzID0gJmRwdV9tZHNzLT5iYXNlOwo+ICsKClRoaXMgc2VlbXMgbGlrZSBpdCBtaWdo
-dCBoYXZlIHNudWNrIGluIGZyb20gYSBkaWZmZXJlbnQgcGF0Y2g/Cgo+ICAJcG1fcnVudGltZV9l
-bmFibGUoZGV2LT5kZXYpOwo+ICAKPiAgCXBtX3J1bnRpbWVfZ2V0X3N5bmMoZGV2LT5kZXYpOwo+
-ICAJZHB1X21kc3MtPmh3dmVyc2lvbiA9IHJlYWRsX3JlbGF4ZWQoZHB1X21kc3MtPm1taW8pOwo+
-ICAJcG1fcnVudGltZV9wdXRfc3luYyhkZXYtPmRldik7Cj4gIAo+IC0JcHJpdi0+bWRzcyA9ICZk
-cHVfbWRzcy0+YmFzZTsKPiAtCj4gIAlyZXR1cm4gcmV0Owo+ICAKPiAgaXJxX2Vycm9yOgoKLS0g
-ClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2Rl
-IEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8g
-bWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Fri, Sep 28, 2018 at 12:26:55AM +0200, Lukasz Majewski wrote:
+> Add Device Tree binding document for Liebherr's BK4 external SPI bus.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+
+There should really be a patch series consisting of this one and spidev
+change [1].
+
+Since spidev has already been picked up, having a series including this
+and dts change would be the second option.  With DT folks' ACK, I can
+send bindings change together with DTS using it.
+
+Shawn
+
+[1] https://lkml.org/lkml/2018/9/28/48
+
+> ---
+>  Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/lwn-bk4.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/lwn-bk4.txt b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
+> new file mode 100644
+> index 000000000000..d6a8c188c087
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
+> @@ -0,0 +1,26 @@
+> +* Liebherr's BK4 controller external SPI
+> +
+> +A device which handles data acquisition from compatible industrial
+> +peripherals.
+> +The SPI is used for data and management purposes in both master and
+> +slave modes.
+> +
+> +Required properties:
+> +
+> +- compatible : Should be "lwn,bk4"
+> +
+> +Required SPI properties:
+> +
+> +- reg : Should be address of the device chip select within
+> +  the controller.
+> +
+> +- spi-max-frequency : Maximum SPI clocking speed of device in Hz, should be
+> +  30MHz at most for the Liebherr's BK4 external bus.
+> +
+> +Example:
+> +
+> +spidev0: spi@0 {
+> +	compatible = "lwn,bk4";
+> +	spi-max-frequency = <30000000>;
+> +	reg = <0>;
+> +};
+> -- 
+> 2.11.0
+> 
