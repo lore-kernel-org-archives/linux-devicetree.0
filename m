@@ -1,55 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 07/10] i3c: master: Add driver for Cadence IP
-Date: Mon, 8 Oct 2018 12:06:30 +0200
-Message-ID: <CAK8P3a21t7pQ2uYWgu2+VZZNYc+pz_w3WCL7YVUEzqqyOFLvnA@mail.gmail.com>
-References: <20181003132212.12619-1-boris.brezillon@bootlin.com> <20181003132212.12619-8-boris.brezillon@bootlin.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181003132212.12619-8-boris.brezillon@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
+Subject: [RESEND PATCH v2 0/5] net: phy: mscc: add support for VSC8584 and VSC8574 Microsemi quad-port PHYs
+Date: Mon,  8 Oct 2018 12:14:40 +0200
+Message-ID: <20181008101445.25946-1-quentin.schulz@bootlin.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com
+Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Oct 3, 2018 at 3:22 PM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
->
-> Add a driver for Cadence I3C master IP.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> ---
+RESEND: rebased on top of latest net-next and on top of latest version of
+"net: phy: mscc: various improvements to Microsemi PHY driver" patch
+series.
 
-> Changes in v7:
-> - Fix readsl/writesl() usage
-> - Add a depends on ARM || ARM64 || XTENSA to forbid selection of this
->   driver on platforms that are not implementing readsl/writesl
+Both PHYs are 4-port PHY that are 10/100/1000BASE-T, 100BASE-FX, 1000BASE-X
+and triple-speed copper SFP capable, can communicate with the MAC via
+SGMII, QSGMII or 1000BASE-X, supports downshifting and can set the blinking
+pattern of each of its 4 LEDs, supports SyncE as well as HP Auto-MDIX
+detection.
 
-Most architectures include asm-generic/io.h, which contains a generic
-implementation of readsl(). Maybe that #ifdef could be extended here?
-I remember discussing this with you not so long ago, which led to
-commit 0bbf47eab469 ("ia64: use asm-generic/io.h"). Do we have
-a list of architectures that don't include asm-generic/io.h? Maybe
-the 'depends on' could be for the set of architectures that fail here.
+VSC8574 supports WOL and VSC8584 supports hardware offloading of MACsec.
 
-> +static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
-> +                                           u8 *bytes, int nbytes)
-> +{
-> +       readsl(master->regs + RX_FIFO, bytes, nbytes / 4);
-> +       if (nbytes & 3) {
-> +               u32 tmp = __raw_readl(master->regs + RX_FIFO);
-> +
-> +               memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
-> +       }
-> +}
+This patch series add support for 10/100/1000BASE-T, SGMII/QSGMII link with
+the MAC, downshifting, HP Auto-MDIX detection and blinking pattern for
+their 4 LEDs.
 
-The __raw_readl() is probably correct here (I can't think of any
-architecture on which it is not), but it still makes me feel uneasy
-about possible endianess or other issues.
+They have also an internal Intel 8051 microcontroller whose firmware needs
+to be patched when the PHY is reset. If the 8051's firmware has the
+expected CRC, its patching can be skipped. The microcontroller can be
+accessed from any port of the PHY, though the CRC function can only be done
+through the PHY that is the base PHY of the package (internal address 0)
+due to a limitation of the firmware.
 
-Maybe make this:?
+The GPIO register bank is a set of registers that are common to all PHYs in
+the package. So any modification in any register of this bank affects all
+PHYs of the package.
 
-        readsl(master->regs + RX_FIFO, &tmp, 1);
+If the PHYs haven't been reset before booting the Linux kernel and were
+configured to use interrupts for e.g. link status updates, it is required
+to clear the interrupts mask register of all PHYs before being able to use
+interrupts with any PHY. The first PHY of the package that will be init
+will take care of clearing all PHYs interrupts mask registers. Thus, we
+need to keep track of the init sequence in the package, if it's already
+been done or if it's to be done.
 
+Most of the init sequence of a PHY of the package is common to all PHYs in
+the package, thus we use the SMI broadcast feature which enables us to
+propagate a write in one register of one PHY to all PHYs in the same
+package.
 
-     Arnd
+We also introduce a new development board called PCB120 which exists in
+variants for VSC8584 and VSC8574 (and that's the only difference to the
+best of my knowledge).
+
+I suggest patches 1 to 3 go through net tree and patches 4 and 5 go
+through MIPS tree. Patches going through net tree and those going through
+MIPS tree do not depend on one another.
+
+This patch series depends on this patch series:
+(https://lore.kernel.org/lkml/20181008100728.24959-1-quentin.schulz@bootlin.com/)
+
+Thanks,
+Quentin
+
+Quentin Schulz (5):
+  dt-bindings: net: vsc8531: add two additional LED modes for VSC8584
+  net: phy: mscc: add support for VSC8584 PHY
+  net: phy: mscc: add support for VSC8574 PHY
+  MIPS: mscc: add DT for Ocelot PCB120
+  MIPS: mscc: add PCB120 to the ocelot fitImage
+
+ arch/mips/boot/dts/mscc/Makefile              |    2 +-
+ arch/mips/boot/dts/mscc/ocelot_pcb120.dts     |  107 ++
+ arch/mips/generic/Kconfig                     |    6 +-
+ arch/mips/generic/Platform                    |    2 +-
+ ...ocelot_pcb123.its.S => board-ocelot.its.S} |   17 +
+ drivers/net/phy/mscc.c                        | 1065 +++++++++++++++++
+ include/dt-bindings/net/mscc-phy-vsc8531.h    |    2 +
+ 7 files changed, 1196 insertions(+), 5 deletions(-)
+ create mode 100644 arch/mips/boot/dts/mscc/ocelot_pcb120.dts
+ rename arch/mips/generic/{board-ocelot_pcb123.its.S => board-ocelot.its.S} (55%)
+
+-- 
+2.17.1
