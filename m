@@ -1,125 +1,77 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH v2 18/29] drm/sun4i: dw-hdmi: Add quirk for
- setting TMDS clock
-Date: Mon, 08 Oct 2018 17:09:42 +0200
-Message-ID: <8016466.hta3A6eauk@jernej-laptop>
-References: <20181007093905.11253-1-jernej.skrabec@siol.net> <20181007093905.11253-19-jernej.skrabec@siol.net> <20181008091406.yjs2u22fmj72e4rj@flea>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 29/36] dt-bindings: arm: Convert Renesas board/soc
+ bindings to json-schema
+Date: Mon, 8 Oct 2018 17:12:56 +0200
+Message-ID: <CAMuHMdVtuKkytpHxJfWHw=-R09_AMZ8Tn=ixjPSSRydQL6qK2g@mail.gmail.com>
+References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-30-robh@kernel.org>
+ <CAMuHMdU=rBV4b3EcenvtMPevx14pvTDcnQ7VDg02VZFiFuU-uw@mail.gmail.com> <CAL_JsqLbh-UhYTWN_nMDVwGSh0amh6OsOK8H-+xiTdVynL3XiA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBOPG5XOQKGQET4MS6DQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181008091406.yjs2u22fmj72e4rj@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLbh-UhYTWN_nMDVwGSh0amh6OsOK8H-+xiTdVynL3XiA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Bj=C3=B6rn_Andersson?= <bjorn.andersson@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <mag>
 List-Id: devicetree@vger.kernel.org
 
-Dne ponedeljek, 08. oktober 2018 ob 11:14:06 CEST je Maxime Ripard napisal(a):
-> Hi,
-> 
-> On Sun, Oct 07, 2018 at 11:38:54AM +0200, Jernej Skrabec wrote:
-> > It turns out that H6 HDMI BSP kernel driver doesn't change TMDS rate at
-> > all. At this point it is not clear whether it is just not necessary or
-> > it would cause some kind of issues.
-> > 
-> > Add a quirk for it.
-> > 
-> > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> > 
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 5 ++++-
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h | 1 +
-> >  2 files changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index ec122136ee9d..e9e93f174b35
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > @@ -165,7 +165,9 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
-> > struct device *master,> 
-> >  		goto err_disable_clk_tmds;
-> >  	
-> >  	}
-> > 
-> > -	drm_encoder_helper_add(encoder, &sun8i_dw_hdmi_encoder_helper_funcs);
-> > +	if (hdmi->quirks->set_rate)
-> > +		drm_encoder_helper_add(encoder,
-> > +				       &sun8i_dw_hdmi_encoder_helper_funcs);
-> 
-> That seems a bit backward, it only works because we only have mode_set
-> at the moment, and the only thing it does is changing the clock
-> rate. As soon as we change one of these two assumptions, the code will
-> break.
-> 
-> Why not just return in mode_set if that boolean is true?
+Hi Rob,
 
-My original intention was to optimize execution time a bit. If there is no 
-helpers registered, there is no need to call callback which does nothing. But 
-your way is probably more reasonable approach.
+On Mon, Oct 8, 2018 at 4:57 PM Rob Herring <robh@kernel.org> wrote:
+> On Mon, Oct 8, 2018 at 2:47 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Fri, Oct 5, 2018 at 6:59 PM Rob Herring <robh@kernel.org> wrote:
+> > > Convert Renesas SoC bindings to DT schema format using json-schema.
 
-However, I'm pretty sure that even older HDMI controller doesn't need this 
-rate changing code. All tests shown that changing HDMI controller divider 
-doesn't have an effect on video or audio output. It's only there because BSP 
-kernel driver set rate and AW engineer said it's necessary.
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/arm/shmobile.yaml
+> > > @@ -0,0 +1,205 @@
 
-> 
-> >  	drm_encoder_init(drm, encoder, &sun8i_dw_hdmi_encoder_funcs,
-> >  	
-> >  			 DRM_MODE_ENCODER_TMDS, NULL);
-> > 
-> > @@ -235,6 +237,7 @@ static int sun8i_dw_hdmi_remove(struct platform_device
-> > *pdev)> 
-> >  static const struct sun8i_dw_hdmi_quirks sun8i_a83t_quirks = {
-> >  
-> >  	.mode_valid = sun8i_dw_hdmi_mode_valid_a83t,
-> > 
-> > +	.set_rate = true,
-> > 
-> >  };
-> >  
-> >  static const struct of_device_id sun8i_dw_hdmi_dt_ids[] = {
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index a645b8bc9f58..f9eb663865a4
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> > @@ -173,6 +173,7 @@ struct sun8i_hdmi_phy {
-> > 
-> >  struct sun8i_dw_hdmi_quirks {
-> >  
-> >  	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
-> >  	
-> >  					   const struct drm_display_mode *mode);
-> > 
-> > +	bool set_rate;
-> 
-> This triggers a check in checkpatch. You should address them (and
-> there's several in your series).
+> > > +      - description: Kingfisher (SBEV-RCAR-KF-M03)
+> > > +        items:
+> > > +          - const: shimafuji,kingfisher
+> > > +          - enum:
+> > > +              - renesas,h3ulcb
+> > > +              - renesas,m3ulcb
+> > > +          - enum:
+> > > +              - renesas,r8a7795
+> > > +              - renesas,r8a7796
+> >
+> > This looks a bit funny: all other entries have the "const" last, and
+> > use it for the
+> > SoC number. May be correct, though.
+> > To clarify, this is an extension board that can fit both the [HM]3ULCB
+> > boards (actually also the new M3NULCB, I think).
+>
+> This being Kingfisher?
 
-Till now we used bools in driver internal structures in spite of this 
-warnings. So should we start using unsigned int? Or maybe bitfield with 
-unsigned int as a base according to https://lkml.org/lkml/2017/11/21/384
+Correct.
 
-As far as other issues reported by strict checkpatch go, most of them are DT 
-lines over 80 charachters. This was tolerated till now. Last type of issues is 
-that macro parameters weren't enclosed with braces. These issues won't be 
-reported anymore in new series because sun8i_csc.h won't be touched if I drop 
-patch which renames DE2 register macros (but original issue will remain).
+> I wrote this based on dts files in the tree. There's 2 combinations that I see:
+>
+> "shimafuji,kingfisher", "renesas,h3ulcb", "renesas,r8a7795"
+> "shimafuji,kingfisher", "renesas,m3ulcb", "renesas,r8a7796"
+>
+> The schema allows 4 combinations (1 * 2 * 2). I have no idea if the
+> other combinations are possible. If not, then we could rewrite this as
+> 2 entries with 3 const values each.
 
-Best regards,
-Jernej
+I expect there will soon be a third one:
 
-> 
-> With both addressed,
-> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-> 
-> Thanks!
+    "shimafuji,kingfisher", "renesas,m3nulcb", "renesas,r8a77965"
+
+Technically, {h3,m3,m3n}ulcb are the same board (although there may be
+minor revision differences), with a different SiP mounted.
+But they are called/marketed depending on which SiP is mounted.
+
+And on top of that, you can plug in a Kingfisher daughterboard. Could be an
+overlay ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
