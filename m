@@ -1,44 +1,59 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v1 1/2] mmc: dt-bindings: add "bus-clk" for MT2712
-Date: Mon, 8 Oct 2018 13:51:20 +0200
-Message-ID: <CAPDyKFoS82cFE=C0OXLa3rULET7QsMW0dOt0B_jJ61C6G2bPGw@mail.gmail.com>
-References: <1538188195-3608-1-git-send-email-chaotian.jing@mediatek.com>
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: [PATCH v4 0/2] add the Amlogic Meson PCIe controller driver
+Date: Mon, 8 Oct 2018 19:57:11 +0800
+Message-ID: <1538999834-156423-1-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538188195-3608-1-git-send-email-chaotian.jing@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chaotian Jing <chaotian.jing@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Ryder Lee <ryder.lee@mediatek.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Sean Wang <sean.wang@mediatek.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 September 2018 at 04:29, Chaotian Jing <chaotian.jing@mediatek.com> wrote:
-> On MT2712 MSDC0/3, HCLK/bus-clk need gate/ungate together,
-> or will hang when access MSDC register.
->
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+PCI core. This patchset add the driver and dt-bindings of the controller.
 
-Applied for next, thanks!
+Changes since v3: [2]
+ - modify subject format
+ - update Kconfig
+ - update MAINTAINER file
+ - add comment and error handle for meson_pcie_get_mem_shared() 
+ - drop useless initialization code
+ - add comment for meson_size_to_payload()
+ - optimize meson_pcie_establish_link() return code
+ - optimize meson_pcie_enable_interrupts() redundant function
+ - drop device_attch related code
+ - drop dw_pcie_ops read_dbi and write_dbi function
+ - add error handle for meson_add_pcie_port() when probe
 
-Kind regards
-Uffe
+Changes since v2: [1]
+ - abandon phy driver, move reset to the controller
+ - use devm_add_action_or_reset() to use clock res
+ - format correcting
 
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index f33467a..f2208f4 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -22,6 +22,7 @@ Required properties:
->         "source" - source clock (required)
->         "hclk" - HCLK which used for host (required)
->         "source_cg" - independent source clock gate (required for MT2712)
-> +       "bus_clk" - bus clock used for internal register access (required for MT2712 MSDC0/3)
->  - pinctrl-names: should be "default", "state_uhs"
->  - pinctrl-0: should contain default/high speed pin ctrl
->  - pinctrl-1: should contain uhs mode pin ctrl
-> --
-> 1.8.1.1.dirty
->
+Changes since v1: [0]
+ - use gpio lib instead open code
+ - move 'apb' and 'port' reset from phy driver
+ - format correcting
+
+[0] : https://lkml.kernel.org/r/1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com
+[1] : https://lkml.kernel.org/r/1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com
+[2] : https://lkml.kernel.org/r/1537509820-52040-1-git-send-email-hanjie.lin@amlogic.com
+
+
+Yue Wang (2):
+  dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe
+    controller
+  PCI: amlogic: Add the Amlogic Meson PCIe controller driver
+
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 +++
+ MAINTAINERS                                        |   7 +
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pci-meson.c             | 593 +++++++++++++++++++++
+ 5 files changed, 681 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pci-meson.c
+
+-- 
+2.7.4
