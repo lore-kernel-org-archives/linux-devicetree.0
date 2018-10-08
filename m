@@ -1,280 +1,147 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 2/2] irqchip: ti-sci-intr: Add support for Interrupt
- Router driver
-Date: Mon, 8 Oct 2018 14:00:11 +0100
-Message-ID: <927a0b85-d989-2508-fa9d-6479bba3629c@arm.com>
-References: <20181006072812.15814-1-lokeshvutla@ti.com>
- <20181006072812.15814-3-lokeshvutla@ti.com>
- <86va6ftn5q.wl-marc.zyngier@arm.com>
- <5d43154a-81c0-2ff3-660d-fa46b33ac090@ti.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 25/29] drm: sun4i: add quirks for TCON TOP
+Date: Mon, 8 Oct 2018 21:10:54 +0800
+Message-ID: <CAGb2v64remLNFdX-FT2xcbcSSkeqmFEjQDEJLPQHiNMctcKTfQ@mail.gmail.com>
+References: <20181007093905.11253-1-jernej.skrabec@siol.net>
+ <20181007093905.11253-26-jernej.skrabec@siol.net> <20181008085112.mejpwvl3dpu7sopy@flea>
+ <CAGb2v64avzzrGJeg2HU_Ze686C1nmVsNwXJGzsUbQvQTZKuSMw@mail.gmail.com>
+ <20181008102021.ox34mqbw65euvsb4@flea> <CAGb2v65vG2sCMLOFSVAko+MUBDQa_A+qrMZLFe20QXJhApd1Gw@mail.gmail.com>
+ <20181008123313.sxqzulfuktslchhy@flea>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5d43154a-81c0-2ff3-660d-fa46b33ac090@ti.com>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>, tglx@linutronix.de, jason@lakedaemon.net, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB3VO5XOQKGQECOND4BI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181008123313.sxqzulfuktslchhy@flea>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lokesh,
+On Mon, Oct 8, 2018 at 8:33 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> On Mon, Oct 08, 2018 at 06:50:44PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Oct 8, 2018 at 6:20 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > >
+> > > On Mon, Oct 08, 2018 at 05:06:45PM +0800, Chen-Yu Tsai wrote:
+> > > > On Mon, Oct 8, 2018 at 4:51 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > > >
+> > > > > On Sun, Oct 07, 2018 at 11:39:01AM +0200, Jernej Skrabec wrote:
+> > > > > > From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > > > >
+> > > > > > Some SoCs, such as H6, doesn't have a full-featured TCON TOP.
+> > > > > >
+> > > > > > Add quirks support for TCON TOP.
+> > > > > >
+> > > > > > Currently the presence of TCON_TV1 and DSI is controlled via the quirks
+> > > > > > structure.
+> > > > > >
+> > > > > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > > > > ---
+> > > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 43 ++++++++++++++++++++------
+> > > > > >  1 file changed, 34 insertions(+), 9 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > index 37158548b447..ed13233cad88 100644
+> > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > > @@ -9,11 +9,17 @@
+> > > > > >  #include <linux/component.h>
+> > > > > >  #include <linux/device.h>
+> > > > > >  #include <linux/module.h>
+> > > > > > +#include <linux/of_device.h>
+> > > > > >  #include <linux/of_graph.h>
+> > > > > >  #include <linux/platform_device.h>
+> > > > > >
+> > > > > >  #include "sun8i_tcon_top.h"
+> > > > > >
+> > > > > > +struct sun8i_tcon_top_quirks {
+> > > > > > +     bool has_tcon_tv1;
+> > > > > > +     bool has_dsi;
+> > > > > > +};
+> > > > > > +
+> > > > > >  static bool sun8i_tcon_top_node_is_tcon_top(struct device_node *node)
+> > > > > >  {
+> > > > > >       return !!of_match_node(sun8i_tcon_top_of_table, node);
+> > > > > > @@ -121,10 +127,13 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+> > > > > >       struct platform_device *pdev = to_platform_device(dev);
+> > > > > >       struct clk_hw_onecell_data *clk_data;
+> > > > > >       struct sun8i_tcon_top *tcon_top;
+> > > > > > +     const struct sun8i_tcon_top_quirks *quirks;
+> > > > > >       struct resource *res;
+> > > > > >       void __iomem *regs;
+> > > > > >       int ret, i;
+> > > > > >
+> > > > > > +     quirks = of_device_get_match_data(&pdev->dev);
+> > > > > > +
+> > > > > >       tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
+> > > > > >       if (!tcon_top)
+> > > > > >               return -ENOMEM;
+> > > > > > @@ -187,15 +196,23 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+> > > > > >                                            &tcon_top->reg_lock,
+> > > > > >                                            TCON_TOP_TCON_TV0_GATE, 0);
+> > > > > >
+> > > > > > -     clk_data->hws[CLK_TCON_TOP_TV1] =
+> > > > > > -             sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
+> > > > > > -                                          &tcon_top->reg_lock,
+> > > > > > -                                          TCON_TOP_TCON_TV1_GATE, 1);
+> > > > > > +     if (quirks->has_tcon_tv1) {
+> > > > > > +             clk_data->hws[CLK_TCON_TOP_TV1] =
+> > > > > > +                     sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
+> > > > > > +                                                  &tcon_top->reg_lock,
+> > > > > > +                                                  TCON_TOP_TCON_TV1_GATE, 1);
+> > > > > > +     } else {
+> > > > > > +             clk_data->hws[CLK_TCON_TOP_TV1] = NULL;
+> > > > > > +     }
+> > > > > >
+> > > > > > -     clk_data->hws[CLK_TCON_TOP_DSI] =
+> > > > > > -             sun8i_tcon_top_register_gate(dev, "dsi", regs,
+> > > > > > -                                          &tcon_top->reg_lock,
+> > > > > > -                                          TCON_TOP_TCON_DSI_GATE, 2);
+> > > > > > +     if (quirks->has_dsi) {
+> > > > > > +             clk_data->hws[CLK_TCON_TOP_DSI] =
+> > > > > > +                     sun8i_tcon_top_register_gate(dev, "dsi", regs,
+> > > > > > +                                                  &tcon_top->reg_lock,
+> > > > > > +                                                  TCON_TOP_TCON_DSI_GATE, 2);
+> > > > > > +     } else {
+> > > > > > +             clk_data->hws[CLK_TCON_TOP_DSI] = NULL;
+> > > > >
+> > > > > clk_data has been kzalloc'd so its content is already NULL.
+> > > > >
+> > > > > And you shouldn't have brackets for single line blocks.
+> > > > >
+> > > > > with that fixed,
+> > > >
+> > > > FYI checkpatch.pl complains if you use brackets for the if block
+> > > > but not for the else block. They should be matching.
+> > >
+> > > Checkpatch might not warn on this, but
+> > > https://www.kernel.org/doc/Documentation/process/coding-style.rst,
+> > > section 3 is pretty clear on whether we should use them or not.
+> >
+> > Right. What I'm pointing out what checkpatch.pl complains about is
+> > shown in the second last example in section 3:
+> >
+> >     This does not apply if only one branch of a conditional statement
+> > is a single
+> >     statement; in the latter case use braces in both branches:
+> >
+> > Which is where I think your comment on "shouldn't have brackets for
+> > single line blocks"
+> > is pointing in the opposite direction.
+>
+> I think we have a communication failure :)
+>
+> The two blocks above are single line blocks, even though the line is
+> wrapped. So whether or not there is an else condition or not doesn't
+> matter, you shouldn't have braces at all.
 
-On 08/10/18 10:48, Lokesh Vutla wrote:
-> Hi Marc,
-> 
-> On 10/6/2018 3:25 PM, Marc Zyngier wrote:
->> Hi Lokesh,
->>
->> On Sat, 06 Oct 2018 08:28:12 +0100,
->> Lokesh Vutla <lokeshvutla@ti.com> wrote:
->>>
->>> Texas Instruments' K3 generation SoCs has an IP Interrupt Router
->>> that does allows for multiplexing of input interrupts to host
->>> interrupt controller. Interrupt Router inputs are either from a
->>> peripheral or from an Interrupt Aggregator which is another
->>> interrupt controller.
->>>
->>> Configuration of the interrupt router registers can only be done by
->>> a system co-processor and the driver needs to send a message to this
->>> co processor over TISCI protocol.
->>
->> I assume that this co-processor only deals with the routing itself,
->> and doesn't need to be talked to during interrupt processing, right?
-> 
-> Yes, that's right.
-> 
->>
->>>
->>> Add support for Interrupt Router driver over TISCI protocol.
->>>
->>> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->>> ---
->>>   MAINTAINERS                       |   1 +
->>>   drivers/irqchip/Kconfig           |  11 +
->>>   drivers/irqchip/Makefile          |   1 +
->>>   drivers/irqchip/irq-ti-sci-intr.c | 325 ++++++++++++++++++++++++++++++
->>>   4 files changed, 338 insertions(+)
->>>   create mode 100644 drivers/irqchip/irq-ti-sci-intr.c
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index a23778b68d74..cf3c834f8cee 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -14626,6 +14626,7 @@ F:	Documentation/devicetree/bindings/clock/ti,sci-clk.txt
->>>   F:	drivers/clk/keystone/sci-clk.c
->>>   F:	drivers/reset/reset-ti-sci.c
->>>   F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->>> +F:	drivers/irqchip/irq-ti-sci-intr.c
->>>   
->>>   THANKO'S RAREMONO AM/FM/SW RADIO RECEIVER USB DRIVER
->>>   M:	Hans Verkuil <hverkuil@xs4all.nl>
->>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->>> index 96451b581452..9a965fe22043 100644
->>> --- a/drivers/irqchip/Kconfig
->>> +++ b/drivers/irqchip/Kconfig
->>> @@ -374,6 +374,17 @@ config QCOM_PDC
->>>   	  Power Domain Controller driver to manage and configure wakeup
->>>   	  IRQs for Qualcomm Technologies Inc (QTI) mobile chips.
->>>   
->>> +config TI_SCI_INTR_IRQCHIP
->>> +	tristate "TISCI based Interrupt Router irqchip driver"
->>> +	depends on TI_SCI_PROTOCOL && ARCH_K3
->>> +	select IRQ_DOMAIN
->>> +	select IRQ_DOMAIN_HIERARCHY
->>> +	help
->>> +	  This enables the irqchip driver support for K3 Interrupt router
->>> +	  over TI System Control Interface available on some new TI's SoCs.
->>> +	  If you wish to use interrupt router irq resources managed by the
->>> +	  TI System Controller, say Y here. Otherwise, say N.
->>
->> I don't really see the point of making this user-selectable. If you're
->> compiling support for a given platform, this platform configuration
->> fragment should itself select the necessary dependencies for the
->> system to work as expected. Here, you are leaving the choice to the
->> user, with a 50% chance of getting a system that doesn't boot...
-> 
-> There are 2 reasons why I made it tristate:
-> - Not all interrupts go through this irqchip(At least in the AM6 SoC
-> using this). Most of the legacy peripherals still are directly connected
-> to GIC
-> - TI_SCI_PROTOCOL is defined as tristate.
+Ah... It was a single line split wrapped to two lines...
+Sorry for the noise.
 
-But as you said, these are "legacy" interrupts, and most of the 
-interesting stuff is routed through the system controller. We also try 
-not to have core interrupt controllers as modules. As for having the 
-firmware interface as a module, I wonder what the use-case is.
-
-> If you still feel I should not make it user-selectable, I can drop it.
-
-I really wonder what the added value is for the user.
-
-> 
->>
->>> +
->>>   endmenu
->>>   
->>>   config SIFIVE_PLIC
->>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->>> index b822199445ff..44bf65606d60 100644
->>> --- a/drivers/irqchip/Makefile
->>> +++ b/drivers/irqchip/Makefile
->>> @@ -89,3 +89,4 @@ obj-$(CONFIG_GOLDFISH_PIC) 		+= irq-goldfish-pic.o
->>>   obj-$(CONFIG_NDS32)			+= irq-ativic32.o
->>>   obj-$(CONFIG_QCOM_PDC)			+= qcom-pdc.o
->>>   obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
->>> +obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->>> diff --git a/drivers/irqchip/irq-ti-sci-intr.c b/drivers/irqchip/irq-ti-sci-intr.c
->>> new file mode 100644
->>> index 000000000000..f04fe6da1b09
->>> --- /dev/null
->>> +++ b/drivers/irqchip/irq-ti-sci-intr.c
->>> @@ -0,0 +1,325 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Texas Instruments' K3 Interrupt Router irqchip driver
->>> + *
->>> + * Copyright (C) 2018 Texas Instruments Incorporated - http://www.ti.com/
->>> + *	Lokesh Vutla <lokeshvutla@ti.com>
->>> + */
->>> +
->>> +#include <linux/err.h>
->>> +#include <linux/io.h>
->>> +#include <linux/irqchip.h>
->>> +#include <linux/of_platform.h>
->>> +#include <linux/of_address.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/module.h>
->>> +#include <linux/moduleparam.h>
->>> +#include <linux/irqdomain.h>
->>> +#include <linux/soc/ti/ti_sci_protocol.h>
->>> +
->>> +#define TI_SCI_DEV_ID_MASK	0xffff
->>> +#define TI_SCI_DEV_ID_SHIFT	16
->>> +#define TI_SCI_IRQ_ID_MASK	0xffff
->>> +#define TI_SCI_IRQ_ID_SHIFT	0
->>> +#define TI_SCI_IS_EVENT_IRQ	BIT(31)
->>> +
->>> +#define HWIRQ_TO_DEVID(HWIRQ)	(((HWIRQ) >> (TI_SCI_DEV_ID_SHIFT)) & \
->>> +				 (TI_SCI_DEV_ID_MASK))
->>> +#define HWIRQ_TO_IRQID(HWIRQ)	((HWIRQ) & (TI_SCI_IRQ_ID_MASK))
->>
->> nit: s/(HWIRQ)/(hwirq)/g
-> 
-> okay.
-> 
->>
->>> +
->>> +/**
->>> + * struct ti_sci_intr_irq_domain - Structure representing a TISCI based
->>> + *				   Interrupt Router IRQ domain.
->>> + * @sci:	Pointer to TISCI handle
->>> + * @dst_irq:	TISCI resource pointer representing destination irq controller.
->>> + * @dst_id:	TISCI device ID of the destination irq controller.
->>> + */
->>> +struct ti_sci_intr_irq_domain {
->>> +	const struct ti_sci_handle *sci;
->>> +	struct ti_sci_resource *dst_irq;
->>> +	u16 dst_id;
->>> +};
->>> +
->>> +/**
->>> + * struct ti_sci_intr_irq_desc - Description of an Interrupt Router IRQ
->>> + * @src_id:		TISCI device ID of the IRQ source
->>> + * @src_index:		IRQ source index within the device.
->>> + * @dst_irq:		Destination host IRQ.
->>> + */
->>> +struct ti_sci_intr_irq_desc {
->>> +	u16 src_id;
->>> +	u16 src_index;
->>> +	u16 dst_irq;
->>> +};
->>
->> Oh great. So this is reinventing the GICv3 ITS, only for SPIs. :-(
->>
->> Now, this structure seems completely useless, see below.
->>
->>> +
->>> +static struct irq_chip ti_sci_intr_irq_chip = {
->>> +	.name			= "INTR",
->>> +	.irq_eoi		= irq_chip_eoi_parent,
->>> +	.irq_mask		= irq_chip_mask_parent,
->>> +	.irq_unmask		= irq_chip_unmask_parent,
->>> +	.irq_retrigger		= irq_chip_retrigger_hierarchy,
->>> +	.irq_set_type		= irq_chip_set_type_parent,
->>> +	.irq_set_affinity	= irq_chip_set_affinity_parent,
->>> +};
->>> +
->>> +/**
->>> + * ti_sci_intr_irq_domain_translate() - Retrieve hwirq and type from
->>> + *					IRQ firmware specific handler.
->>> + * @domain:	Pointer to IRQ domain
->>> + * @fwspec:	Pointer to IRQ specific firmware structure
->>> + * @hwirq:	IRQ number identified by hardware
->>> + * @type:	IRQ type
->>> + *
->>> + * Return 0 if all went ok else appropriate error.
->>> + */
->>> +static int ti_sci_intr_irq_domain_translate(struct irq_domain *domain,
->>> +					    struct irq_fwspec *fwspec,
->>> +					    unsigned long *hwirq,
->>> +					    unsigned int *type)
->>> +{
->>> +	if (is_of_node(fwspec->fwnode)) {
->>> +		if (fwspec->param_count != 3)
->>> +			return -EINVAL;
->>> +
->>> +		*hwirq = ((fwspec->param[0] & TI_SCI_DEV_ID_MASK) <<
->>> +			  TI_SCI_DEV_ID_SHIFT) |
->>> +			 (fwspec->param[1] & TI_SCI_IRQ_ID_MASK);
->>
->> Maybe it would make sense to have a macro that hides this:
-> 
-> okay.
-> 
->>
->>        	       *hwirq = FWSPEC_TO_HWIRQ(fwspec);
->>
->>> +		*type = fwspec->param[2];
->>> +
->>> +		return 0;
->>> +	}
->>> +
->>> +	return -EINVAL;
->>> +}
->>> +
->>> +static inline void ti_sci_intr_delete_desc(struct ti_sci_intr_irq_domain *intr,
->>> +					   struct ti_sci_intr_irq_desc *desc)
->>> +{
->>> +	intr->sci->ops.rm_irq_ops.free_direct_irq(intr->sci, desc->src_id,
->>> +						  desc->src_index,
->>> +						  intr->dst_id, desc->dst_irq);
->>
->> This looks horrible. Why doesn't your firmware interface have a helper
->> functions that hides this? Something like:
->>
->> 	ti_sci_free_direct_irq(intr, src_id, src_index, dst_irq);
->>
->> and you could even add some error checking.
-> 
-> All existing TISCI users follow the same convention, so I did not bother adding
-> any such wrapper. Will update TISCI with these wrappers and see what firmware
-> maintainer says.
-
-Frankly, exposing all kind of data structures to the world is a pretty 
-poor form of abstraction, which is what the firmware is supposed to 
-provide.
-
-I'd strongly suggest that include/linux/soc/ti/ti_sci_protocol.h gets 
-cleaned up, and that the whole ti_sci_ops disappears from the that file. 
-Nobody outside of the firmware *implementation* needs to know about its, 
-and it would be much better served by a set of helpers.
-
-Finally, please make the TISCI interrupt management part of this series, 
-so that I can review it as part of the code that uses it.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+ChenYu
