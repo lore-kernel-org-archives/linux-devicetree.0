@@ -1,221 +1,87 @@
-From: Zhiqiang Hou <Zhiqiang.Hou@nxp.com>
-Subject: [PATCH 4/4] dts/arm64/layerscape: Clean PCIe controller compatible strings
-Date: Mon,  8 Oct 2018 11:14:28 +0800
-Message-ID: <20181008031428.25293-5-Zhiqiang.Hou@nxp.com>
-References: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
+From: <honghui.zhang@mediatek.com>
+Subject: [PATCH v6 0/9] PCI: mediatek: fixup find_port, enable_msi and add pm, module support
+Date: Mon, 8 Oct 2018 11:24:39 +0800
+Message-ID: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008031428.25293-1-Zhiqiang.Hou@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, leoyang.li@nxp.com, shawnguo@kernel.org, mark.rutland@arm.com, bhelgaas@google.com, Mingkai.Hu@nxp.com, Minghuan.Lian@nxp.com
-Cc: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
+Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-Removed the wrong compatible string "snps,dw-pcie", in case
-match incorrect driver.
+This patchset includes misc patchs:
 
-Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi |  2 +-
- arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |  6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi |  6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi |  6 +++---
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi |  8 ++++----
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 12 ++++--------
- 6 files changed, 18 insertions(+), 22 deletions(-)
+The patch 1 fixup the mtk_pcie_find_port logic which will cause system
+could not touch the EP's configuration space that connected to PCIe slot 1.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-index 68ac78c4564d..d3fe0771d3a0 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1012a.dtsi
-@@ -475,7 +475,7 @@
- 		};
- 
- 		pcie@3400000 {
--			compatible = "fsl,ls1012a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1012a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 6cc4c87614b6..1b61782df73e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -661,7 +661,7 @@
- 		};
- 
- 		pcie@3400000 {
--			compatible = "fsl,ls1043a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1043a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -686,7 +686,7 @@
- 		};
- 
- 		pcie@3500000 {
--			compatible = "fsl,ls1043a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1043a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -711,7 +711,7 @@
- 		};
- 
- 		pcie@3600000 {
--			compatible = "fsl,ls1043a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1043a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 3a2a14a8e187..71585aefe1ef 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -630,7 +630,7 @@
- 		};
- 
- 		pcie@3400000 {
--			compatible = "fsl,ls1046a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1046a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x40 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -655,7 +655,7 @@
- 		};
- 
- 		pcie@3500000 {
--			compatible = "fsl,ls1046a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1046a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x48 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -680,7 +680,7 @@
- 		};
- 
- 		pcie@3600000 {
--			compatible = "fsl,ls1046a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1046a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x50 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-index a07f612ab56b..10b253c88a16 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -512,7 +512,7 @@
- 		};
- 
- 		pcie@3400000 {
--			compatible = "fsl,ls1088a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 			       0x20 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -536,7 +536,7 @@
- 		};
- 
- 		pcie@3500000 {
--			compatible = "fsl,ls1088a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 			       0x28 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-@@ -560,7 +560,7 @@
- 		};
- 
- 		pcie@3600000 {
--			compatible = "fsl,ls1088a-pcie", "snps,dw-pcie";
-+			compatible = "fsl,ls1088a-pcie";
- 			reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 			       0x30 0x00000000 0x0 0x00002000>; /* configuration space */
- 			reg-names = "regs", "config";
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-index 7c882da3f6b0..a5f668d786b8 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-@@ -119,7 +119,7 @@
- };
- 
- &pcie1 {
--	compatible = "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible = "fsl,ls2088a-pcie";
- 	reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
- 	       0x20 0x00000000 0x0 0x00002000>; /* configuration space */
- 
-@@ -128,7 +128,7 @@
- };
- 
- &pcie2 {
--	compatible = "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible = "fsl,ls2088a-pcie";
- 	reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
- 	       0x28 0x00000000 0x0 0x00002000>; /* configuration space */
- 
-@@ -137,7 +137,7 @@
- };
- 
- &pcie3 {
--	compatible = "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible = "fsl,ls2088a-pcie";
- 	reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
- 	       0x30 0x00000000 0x0 0x00002000>; /* configuration space */
- 
-@@ -146,7 +146,7 @@
- };
- 
- &pcie4 {
--	compatible = "fsl,ls2088a-pcie", "snps,dw-pcie";
-+	compatible = "fsl,ls2088a-pcie";
- 	reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
- 	       0x38 0x00000000 0x0 0x00002000>; /* configuration space */
- 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-index 547a86ec7cd2..d5dd4e7f1099 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -625,8 +625,7 @@
- 		};
- 
- 		pcie1: pcie@3400000 {
--			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names = "regs", "config";
- 			interrupts = <0 108 0x4>; /* Level high type */
- 			interrupt-names = "intr";
-@@ -646,8 +645,7 @@
- 		};
- 
- 		pcie2: pcie@3500000 {
--			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names = "regs", "config";
- 			interrupts = <0 113 0x4>; /* Level high type */
- 			interrupt-names = "intr";
-@@ -667,8 +665,7 @@
- 		};
- 
- 		pcie3: pcie@3600000 {
--			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names = "regs", "config";
- 			interrupts = <0 118 0x4>; /* Level high type */
- 			interrupt-names = "intr";
-@@ -688,8 +685,7 @@
- 		};
- 
- 		pcie4: pcie@3700000 {
--			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie",
--				     "snps,dw-pcie";
-+			compatible = "fsl,ls2080a-pcie", "fsl,ls2085a-pcie";
- 			reg-names = "regs", "config";
- 			interrupts = <0 123 0x4>; /* Level high type */
- 			interrupt-names = "intr";
+The patch 2 fixup the class type for MT7622.
+The patch 6 fixup the enable msi logic, the operation to enable msi
+should be after system clock is enabled. Call mtk_pcie_enable_msi in
+mtk_pcie_startup_port_v2 since the clock was all enabled at that time.
+
+The patch 7 was rebased and refactor of the v4 patch[1], changes are:
+ -Add PM support for MT7622.
+ -Using mtk_pcie_enable_port to re-establish the link when resumed.
+ -Rebased on this patchset.
+
+The patch 9 add loadable kernel module support.
+
+[1] https://patchwork.kernel.org/patch/10479079
+
+Change since v5:
+ - A bit improvement of mtk_pcie_find_port suggest by Lorenzo.
+ - Add fixup tags of fix enable MSI logic in patch 6.
+ - Add Acked-by tags from Ryder.
+
+Change since v4:
+ - Add patch 2 to fixup class type for MT7622.
+ - Add patch 3 to remove the redundant dev->pm_domain check
+ - Add patch 4 to covert to use pci_host_probe
+ - Add patch 5 to re-arrange the function define, this is a prepare patch for
+   fixup the enable_msi logic, no functional changed have been made by this one.
+ - Add patch 8 to save the GIC IRQ in mtk_pcie_port as a prepare patch for tear
+   down the irq when remove the kernel module.
+ - Re-arrange the find_port flow suggest by Lorenzo to make the code parse easier
+   for the patch 1.
+ - Remove the .pm_support in mtk_pcie_soc in patch 7 since if system pm was not
+   supported, then those pm callbacks will never be executed for MT7622. So the
+   .pm_support is not needed.
+
+Change since v3:
+ - Remove pm_runtime_XXX ops in suspend and resume callbacks in the third patch.
+ - Rebase to 4.19-rc1.
+
+Change since v2:
+ - Fix the list_for_each_entry_safe parameter error.
+ - Add Ryder's Acked-by flag.
+
+Change since v1:
+ - A bit of code refact of the first patch suggested by Andy Shevchenko, and
+   commit message updated.
+ - Using __maybe_unused.
+ - Remove the redundant list_empty check of the fourth patch.
+
+
+Honghui Zhang (9):
+  PCI: mediatek: Using slot's devfn for compare to fix
+    mtk_pcie_find_port logic
+  PCI: mediatek: Fixup class ID for MT7622 as PCI_CLASS_BRIDGE_PCI
+  PCI: mediatek: Remove the redundant dev->pm_domain check
+  PCI: mediatek: Convert to use pci_host_probe()
+  PCI: mediatek: Move the mtk_pcie_startup_port_v2 function's define
+    after mtk_pcie_setup_irq
+  PCI: mediatek: Fixup enable msi logic by enable msi after clock
+    enabled
+  PCI: mediatek: Add system pm support for MT2712 and MT7622
+  PCI: mediatek: Save the GIC IRQ in mtk_pcie_port
+  PCI: mediatek: Add loadable kernel module support
+
+ drivers/pci/controller/Kconfig         |   2 +-
+ drivers/pci/controller/pcie-mediatek.c | 320 +++++++++++++++++++++------------
+ 2 files changed, 205 insertions(+), 117 deletions(-)
+
 -- 
-2.17.1
+2.6.4
