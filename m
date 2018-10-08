@@ -1,47 +1,65 @@
-From: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: [PATCH v4 5/5] MAINTAINERS: add maintainers for the NXP FlexSPI driver
-Date: Mon,  8 Oct 2018 16:41:43 +0530
-Message-ID: <1538997103-11152-6-git-send-email-yogeshnarayan.gaur@nxp.com>
-References: <1538997103-11152-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] reset: Fix potential use-after-free in __of_reset_control_get()
+Date: Mon,  8 Oct 2018 13:14:35 +0200
+Message-ID: <20181008111435.25994-1-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538997103-11152-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, marek.vasut@gmail.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org, Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainers for the NXP FlexSPI driver
+Calling of_node_put() decreases the reference count of a device tree
+object, and may free some data.
 
-Signed-off-by: Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
+However, the of_phandle_args structure embedding it is passed to
+reset_controller_dev.of_xlate() after that, so it may still be accessed.
+
+Move the call to of_node_put() down to fix this.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-Changes for v4:
-- None
-Changes for v3:
-- None
-Changes for v2:
-- None
+ drivers/reset/core.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9d5eeff..2696898 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10228,6 +10228,12 @@ L:	linux-nfc@lists.01.org (moderated for non-subscribers)
- S:	Supported
- F:	drivers/nfc/nxp-nci
+diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+index 225e34c56b94a2e3..bc9df10d31b4bae1 100644
+--- a/drivers/reset/core.c
++++ b/drivers/reset/core.c
+@@ -496,27 +496,28 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+ 			break;
+ 		}
+ 	}
+-	of_node_put(args.np);
  
-+NXP FSPI DRIVER
-+M:	Yogesh Gaur <yogeshnarayan.gaur@nxp.com>
-+L:	linux-spi@vger.kernel.org
-+S:	Maintained
-+F:	drivers/spi/spi-nxp-fspi.c
-+
- OBJTOOL
- M:	Josh Poimboeuf <jpoimboe@redhat.com>
- M:	Peter Zijlstra <peterz@infradead.org>
+ 	if (!rcdev) {
+-		mutex_unlock(&reset_list_mutex);
+-		return ERR_PTR(-EPROBE_DEFER);
++		rstc = ERR_PTR(-EPROBE_DEFER);
++		goto out;
+ 	}
+ 
+ 	if (WARN_ON(args.args_count != rcdev->of_reset_n_cells)) {
+-		mutex_unlock(&reset_list_mutex);
+-		return ERR_PTR(-EINVAL);
++		rstc = ERR_PTR(-EINVAL);
++		goto out;
+ 	}
+ 
+ 	rstc_id = rcdev->of_xlate(rcdev, &args);
+ 	if (rstc_id < 0) {
+-		mutex_unlock(&reset_list_mutex);
+-		return ERR_PTR(rstc_id);
++		rstc = ERR_PTR(rstc_id);
++		goto out;
+ 	}
+ 
+ 	/* reset_list_mutex also protects the rcdev's reset_control list */
+ 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
+ 
++out:
++	of_node_put(args.np);
+ 	mutex_unlock(&reset_list_mutex);
+ 
+ 	return rstc;
 -- 
-2.7.4
+2.17.1
