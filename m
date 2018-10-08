@@ -1,71 +1,44 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 07/10] i3c: master: Add driver for Cadence IP
-Date: Mon, 8 Oct 2018 12:36:44 +0200
-Message-ID: <CAK8P3a3Sck0yYzH-Ks=CvHJLgZ1VrUjHvzw2XL7C_GC515=VVg@mail.gmail.com>
-References: <20181003132212.12619-1-boris.brezillon@bootlin.com>
- <20181003132212.12619-8-boris.brezillon@bootlin.com> <CAK8P3a21t7pQ2uYWgu2+VZZNYc+pz_w3WCL7YVUEzqqyOFLvnA@mail.gmail.com>
- <20181008122101.7b391070@bbrezillon>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH v8 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW
+ driver
+Date: Mon, 8 Oct 2018 12:38:56 +0200
+Message-ID: <20181008103856.GA10890@centauri.lan>
+References: <1537698793-15285-1-git-send-email-tdas@codeaurora.org>
+ <1537698793-15285-3-git-send-email-tdas@codeaurora.org>
+ <20181008084012.GA23693@centauri.lan>
+ <20181008095952.gl7di2tnuv3jwew6@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008122101.7b391070@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <20181008095952.gl7di2tnuv3jwew6@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Taniya Das <tdas@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 8, 2018 at 12:21 PM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
->
-> On Mon, 8 Oct 2018 12:06:30 +0200
-> Arnd Bergmann <arnd@arndb.de> wrote:
->
-> > On Wed, Oct 3, 2018 at 3:22 PM Boris Brezillon
-> > <boris.brezillon@bootlin.com> wrote:
-> > >
-> > > Add a driver for Cadence I3C master IP.
-> > >
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > ---
-> >
-> > > Changes in v7:
-> > > - Fix readsl/writesl() usage
-> > > - Add a depends on ARM || ARM64 || XTENSA to forbid selection of this
-> > >   driver on platforms that are not implementing readsl/writesl
-> >
-> > Most architectures include asm-generic/io.h, which contains a generic
-> > implementation of readsl(). Maybe that #ifdef could be extended here?
-> > I remember discussing this with you not so long ago, which led to
-> > commit 0bbf47eab469 ("ia64: use asm-generic/io.h"). Do we have
-> > a list of architectures that don't include asm-generic/io.h? Maybe
-> > the 'depends on' could be for the set of architectures that fail here.
->
-> Well, we started patching 2 archs (ia64 and sparc) based on kbuild
-> robots failure report, and then I received other reports (still from
-> kbuild robots) long after the initial ones. I can't tell for sure which
-> archs are not implementing those functions, hence the conservative
-> approach taken here.
+On Mon, Oct 08, 2018 at 03:29:52PM +0530, Viresh Kumar wrote:
+> On 08-10-18, 10:40, Niklas Cassel wrote:
+> > > +		ret = of_parse_phandle_with_args(cpu_np, "qcom,freq-domain",
+> > > +				"#freq-domain-cells", 0, &args);
+> > 
+> > Hello Taniya,
+> > 
+> > in your DT binding, you use
+> > 
+> > #freq-domains-cells = <1>
+> > 
+> > Yet here you parse for "#freq-domain-cells".
+> 
+> And what is the problem with that ? Or are you suggesting her to call
+> of_parse_phandle_with_fixed_args() ?
 
-I think it's a fairly safe assumption that architectures which include
-asm-generic/io.h will be fine here. If one of them is broken, that
-can be fixed individually. Looking at the ones that don't include this
-file:
+Hello Viresh,
 
-grep -L asm-generic/io.h arch/*/include/asm/io*.h
-arch/alpha/include/asm/io.h        # missing readsl
-arch/hexagon/include/asm/io.h   # has its own readsl
-arch/mips/include/asm/io.h         # missing readsl (but used from ide.h?)
-arch/parisc/include/asm/io.h       # missing readsl
-arch/powerpc/include/asm/io.h   # has its own readsl
-arch/sh/include/asm/io.h             # has its own readsl
-arch/sparc/include/asm/io.h        # has its own readsl
+#freq-domain-cells != #freq-domains-cells
 
-Based on this, I would try what happens on mips, and make it depend
-on !(ALPHA || PARISC)
+The code should parse for the exact same property name as stated in the
+DT binding.
 
-Another option is to just use ioread32_rep(), which should be
-available everywhere and has almost the same behavior as
-readsl(). The only difference is that on architectures like x86
-it takes a few extra cycles to look at the address.
-
-        Arnd
+Kind regards,
+Niklas
