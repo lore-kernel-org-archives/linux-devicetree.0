@@ -1,7 +1,7 @@
 From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v6 3/9] PCI: mediatek: Remove the redundant dev->pm_domain check
-Date: Mon, 8 Oct 2018 11:24:42 +0800
-Message-ID: <1538969088-7136-4-git-send-email-honghui.zhang@mediatek.com>
+Subject: [PATCH v6 1/9] PCI: mediatek: Using slot's devfn for compare to fix mtk_pcie_find_port logic
+Date: Mon, 8 Oct 2018 11:24:40 +0800
+Message-ID: <1538969088-7136-2-git-send-email-honghui.zhang@mediatek.com>
 References: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,57 +14,60 @@ List-Id: devicetree@vger.kernel.org
 
 From: Honghui Zhang <honghui.zhang@mediatek.com>
 
-It's no needed to check whether device have pm_domain attached before
-calling the pm_runtime_XXX interface, remove it.
+The Mediatek's host controller has two slots, each with it's own control
+registers. The host driver need to identify which slot was connected
+in order to access the device's configuration space. There's problem
+for current host driver to find out which slot was connected to for
+a given EP device.
+
+Assuming each slot have connect with one EP device as below:
+
+                host bridge
+  bus 0 --> __________|_______
+           |                  |
+           |                  |
+         slot 0             slot 1
+  bus 1 -->|        bus 2 --> |
+           |                  |
+         EP 0               EP 1
+
+During PCI enumeration, system software will scan all the PCI device
+starting from devfn 0. So it will get the proper port for slot0 and
+slot1 device when using PCI_SLOT(devfn) for match. But it will get
+the wrong slot for EP1: The devfn will be start from 0 when scanning
+EP1 behind slot1, it will get port0 since the PCI_SLOT(EP1) is match
+for port0's slot value. So the host driver should not using EP's devfn
+but the slot's devfn(the slot which EP was connected to) for match.
+
+This patch fix the mtk_pcie_find_port's logic by using the slot's
+devfn for match if finding device connected to the subordinate bus.
 
 Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
 ---
- drivers/pci/controller/pcie-mediatek.c | 18 ++++++------------
- 1 file changed, 6 insertions(+), 12 deletions(-)
+ drivers/pci/controller/pcie-mediatek.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index bcdac9b..59fdb60 100644
+index 9999dae..288b8e2 100644
 --- a/drivers/pci/controller/pcie-mediatek.c
 +++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -225,10 +225,8 @@ static void mtk_pcie_subsys_powerdown(struct mtk_pcie *pcie)
+@@ -337,6 +337,17 @@ static struct mtk_pcie_port *mtk_pcie_find_port(struct pci_bus *bus,
+ {
+ 	struct mtk_pcie *pcie = bus->sysdata;
+ 	struct mtk_pcie_port *port;
++	struct pci_dev *dev = NULL;
++
++	/*
++	 * Walk the bus hierarchy to get the devfn value
++	 * of the port in the root bus.
++	 */
++	while (bus && bus->number) {
++		dev = bus->self;
++		bus = dev->bus;
++		devfn = dev->devfn;
++	}
  
- 	clk_disable_unprepare(pcie->free_ck);
- 
--	if (dev->pm_domain) {
--		pm_runtime_put_sync(dev);
--		pm_runtime_disable(dev);
--	}
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- }
- 
- static void mtk_pcie_port_free(struct mtk_pcie_port *port)
-@@ -998,10 +996,8 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 		pcie->free_ck = NULL;
- 	}
- 
--	if (dev->pm_domain) {
--		pm_runtime_enable(dev);
--		pm_runtime_get_sync(dev);
--	}
-+	pm_runtime_enable(dev);
-+	pm_runtime_get_sync(dev);
- 
- 	/* enable top level clock */
- 	err = clk_prepare_enable(pcie->free_ck);
-@@ -1013,10 +1009,8 @@ static int mtk_pcie_subsys_powerup(struct mtk_pcie *pcie)
- 	return 0;
- 
- err_free_ck:
--	if (dev->pm_domain) {
--		pm_runtime_put_sync(dev);
--		pm_runtime_disable(dev);
--	}
-+	pm_runtime_put_sync(dev);
-+	pm_runtime_disable(dev);
- 
- 	return err;
- }
+ 	list_for_each_entry(port, &pcie->ports, list)
+ 		if (port->slot == PCI_SLOT(devfn))
 -- 
 2.6.4
