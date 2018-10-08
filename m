@@ -1,93 +1,75 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: [RESEND PATCH v2 5/5] MIPS: mscc: add PCB120 to the ocelot fitImage
-Date: Mon,  8 Oct 2018 12:14:45 +0200
-Message-ID: <20181008101445.25946-6-quentin.schulz@bootlin.com>
-References: <20181008101445.25946-1-quentin.schulz@bootlin.com>
+From: Jerome Forissier <jerome.forissier@linaro.org>
+Subject: [PATCH v2] Documentation: dt: Add binding for /secure-chosen/stdout-path
+Date: Mon,  8 Oct 2018 18:16:42 +0800
+Message-ID: <20181008101642.8040-1-jerome.forissier@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008101445.25946-1-quentin.schulz@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, davem@davemloft.net, andrew@lunn.ch, f.fainelli@gmail.com
-Cc: allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com, Quentin Schulz <quentin.schulz@bootlin.com>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Peter Maydell <peter.maydell@linaro.org>, Etienne Carriere <etienne.carriere@linaro.org>, tee-dev@lists.linaro.org, Jerome Forissier <jerome.forissier@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-PCB120 and PCB123 are both development boards based on Microsemi Ocelot
-so let's use the same fitImage for both.
+Some platforms may use a single device tree to describe two address
+spaces, as described in d9f43babb998 ("Documentation: dt: Add bindings
+for Secure-only devices"). For these platforms it makes sense to define
+a secure counterpart of /chosen, namely: /secure-chosen. This new node
+is meant to be used by the secure firmware to pass data to the secure
+OS. Only the stdout-path property is supported for now.
 
-Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
 ---
- arch/mips/generic/Kconfig                       |  6 +++---
- arch/mips/generic/Platform                      |  2 +-
- ...d-ocelot_pcb123.its.S => board-ocelot.its.S} | 17 +++++++++++++++++
- 3 files changed, 21 insertions(+), 4 deletions(-)
- rename arch/mips/generic/{board-ocelot_pcb123.its.S => board-ocelot.its.S} (55%)
 
-diff --git a/arch/mips/generic/Kconfig b/arch/mips/generic/Kconfig
-index 08e33c6b2539..fd6019802657 100644
---- a/arch/mips/generic/Kconfig
-+++ b/arch/mips/generic/Kconfig
-@@ -65,11 +65,11 @@ config FIT_IMAGE_FDT_XILFPGA
- 	  Enable this to include the FDT for the MIPSfpga platform
- 	  from Imagination Technologies in the FIT kernel image.
+Notes:
+    Sending this again, slightly modified. Previous submission was in March
+    2017 [1]. Since then, OP-TEE has implemented this binding for platforms
+    that use DT [2] (fallback to /chosen/stdout-path to be implemented in
+    [3]). A patch for QEMU has been proposed [4], to which the maintainer
+    responded "Are the DT bindings upstream yet?" ;-)
+    
+    [1] https://patchwork.kernel.org/patch/9602401/
+    [2] https://github.com/OP-TEE/optee_os/commit/4dc31c52544a
+    [3] https://github.com/OP-TEE/optee_os/pull/2569
+    [4] https://patchwork.ozlabs.org/patch/979345/
+    
+    Changes since v1:
+    - Use "should" instead of "may" ("...the Secure OS should use the value
+    of /chosen/stdout-path...").
+
+ Documentation/devicetree/bindings/arm/secure.txt | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/secure.txt b/Documentation/devicetree/bindings/arm/secure.txt
+index e31303fb233a..f27bbff2c780 100644
+--- a/Documentation/devicetree/bindings/arm/secure.txt
++++ b/Documentation/devicetree/bindings/arm/secure.txt
+@@ -32,7 +32,8 @@ describe the view of Secure world using the standard bindings. These
+ secure- bindings only need to be used where both the Secure and Normal
+ world views need to be described in a single device tree.
  
--config FIT_IMAGE_FDT_OCELOT_PCB123
--	bool "Include FDT for Microsemi Ocelot PCB123"
-+config FIT_IMAGE_FDT_OCELOT
-+	bool "Include FDT for Microsemi Ocelot development platforms"
- 	select MSCC_OCELOT
- 	help
--	  Enable this to include the FDT for the Ocelot PCB123 platform
-+	  Enable this to include the FDT for the Ocelot development platforms
- 	  from Microsemi in the FIT kernel image.
- 	  This requires u-boot on the platform.
+-Valid Secure world properties:
++Valid Secure world properties
++-----------------------------
  
-diff --git a/arch/mips/generic/Platform b/arch/mips/generic/Platform
-index 879cb80396c8..eaa19d189324 100644
---- a/arch/mips/generic/Platform
-+++ b/arch/mips/generic/Platform
-@@ -16,5 +16,5 @@ all-$(CONFIG_MIPS_GENERIC)	:= vmlinux.gz.itb
- its-y					:= vmlinux.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_BOSTON)	+= board-boston.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_NI169445)	+= board-ni169445.its.S
--its-$(CONFIG_FIT_IMAGE_FDT_OCELOT_PCB123) += board-ocelot_pcb123.its.S
-+its-$(CONFIG_FIT_IMAGE_FDT_OCELOT)	+= board-ocelot.its.S
- its-$(CONFIG_FIT_IMAGE_FDT_XILFPGA)	+= board-xilfpga.its.S
-diff --git a/arch/mips/generic/board-ocelot_pcb123.its.S b/arch/mips/generic/board-ocelot.its.S
-similarity index 55%
-rename from arch/mips/generic/board-ocelot_pcb123.its.S
-rename to arch/mips/generic/board-ocelot.its.S
-index 5a7d5e1c878a..3da23988149a 100644
---- a/arch/mips/generic/board-ocelot_pcb123.its.S
-+++ b/arch/mips/generic/board-ocelot.its.S
-@@ -11,6 +11,17 @@
- 				algo = "sha1";
- 			};
- 		};
+ - secure-status : specifies whether the device is present and usable
+   in the secure world. The combination of this with "status" allows
+@@ -51,3 +52,19 @@ Valid Secure world properties:
+    status = "disabled"; secure-status = "okay";     /* S-only */
+    status = "disabled";                             /* disabled in both */
+    status = "disabled"; secure-status = "disabled"; /* disabled in both */
 +
-+		fdt@ocelot_pcb120 {
-+			description = "MSCC Ocelot PCB120 Device Tree";
-+			data = /incbin/("boot/dts/mscc/ocelot_pcb120.dtb");
-+			type = "flat_dt";
-+			arch = "mips";
-+			compression = "none";
-+			hash@0 {
-+				algo = "sha1";
-+			};
-+		};
- 	};
- 
- 	configurations {
-@@ -19,5 +30,11 @@
- 			kernel = "kernel@0";
- 			fdt = "fdt@ocelot_pcb123";
- 		};
++The secure-chosen node
++----------------------
 +
-+		conf@ocelot_pcb120 {
-+			description = "Ocelot Linux kernel";
-+			kernel = "kernel@0";
-+			fdt = "fdt@ocelot_pcb120";
-+		};
- 	};
- };
++Similar to the /chosen node which serves as a place for passing data
++between firmware and the operating system, the /secure-chosen node may
++be used to pass data to the Secure OS. Only the properties defined
++below may appear in the /secure-chosen node.
++
++- stdout-path : specifies the device to be used by the Secure OS for
++  its console output. The syntax is the same as for /chosen/stdout-path.
++  If the /secure-chosen node exists but the stdout-path property is not
++  present, the Secure OS should not perform any console output. If
++  /secure-chosen does not exist, the Secure OS should use the value of
++  /chosen/stdout-path instead (that is, use the same device as the
++  Normal world OS).
 -- 
-2.17.1
+2.15.1
