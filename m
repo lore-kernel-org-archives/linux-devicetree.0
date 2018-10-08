@@ -1,8 +1,7 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH 14/14] dt-binding: mtd: physmap: Document the addr-gpios
- property
-Date: Mon,  8 Oct 2018 22:10:27 +0200
-Message-ID: <20181008201027.17952-15-boris.brezillon@bootlin.com>
+Subject: [PATCH 10/14] mtd: maps: Prepare merging of physmap and physmap_of
+Date: Mon,  8 Oct 2018 22:10:23 +0200
+Message-ID: <20181008201027.17952-11-boris.brezillon@bootlin.com>
 References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,32 +21,35 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+We want to merge the physmap and physmap_of driver, but before we can
+do that we must prepare things to create physmap.o out of several .c
+files. Rename physmap.c into physmap-core.c and add a new Makefile
+rule to create physmap.o (right now it only contains physmap-core.o).
 
-Add documentation for the addr-gpios. This extension to the physmap
-binding allow creating flash devices that are paged using GPIOs.
-
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 ---
- Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mtd/maps/Makefile                      | 2 ++
+ drivers/mtd/maps/{physmap.c => physmap-core.c} | 0
+ 2 files changed, 2 insertions(+)
+ rename drivers/mtd/maps/{physmap.c => physmap-core.c} (100%)
 
-diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-index 232fa12e90ef..7df0dcaccb7d 100644
---- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
-@@ -29,6 +29,8 @@ file systems on embedded devices.
-  - use-advanced-sector-protection: boolean to enable support for the
-    advanced sector protection (Spansion: PPB - Persistent Protection
-    Bits) locking.
-+ - addr-gpios : (optional) List of GPIO descriptors that will be used to
-+   address the MSBs address lines. The order goes from LSB to MSB.
- 
- For JEDEC compatible devices, the following additional properties
- are defined:
+diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
+index 51acf1fec19b..2574909edffd 100644
+--- a/drivers/mtd/maps/Makefile
++++ b/drivers/mtd/maps/Makefile
+@@ -17,6 +17,8 @@ obj-$(CONFIG_MTD_ICHXROM)	+= ichxrom.o
+ obj-$(CONFIG_MTD_CK804XROM)	+= ck804xrom.o
+ obj-$(CONFIG_MTD_TSUNAMI)	+= tsunami_flash.o
+ obj-$(CONFIG_MTD_PXA2XX)	+= pxa2xx-flash.o
++physmap-objs-y			+= physmap-core.o
++physmap-objs			:= $(physmap-objs-y)
+ obj-$(CONFIG_MTD_PHYSMAP)	+= physmap.o
+ physmap_of-objs-y		+= physmap_of_core.o
+ physmap_of-objs-$(CONFIG_MTD_PHYSMAP_OF_VERSATILE) += physmap_of_versatile.o
+diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap-core.c
+similarity index 100%
+rename from drivers/mtd/maps/physmap.c
+rename to drivers/mtd/maps/physmap-core.c
 -- 
 2.14.1
 
