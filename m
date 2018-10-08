@@ -1,14 +1,11 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH 03/14] mtd: maps: physmap: Use platform_get_resource() to
- retrieve iomem resources
-Date: Mon,  8 Oct 2018 22:10:16 +0200
-Message-ID: <20181008201027.17952-4-boris.brezillon@bootlin.com>
-References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
+Subject: [PATCH 00/14] mtd: maps: physmap cleanups
+Date: Mon,  8 Oct 2018 22:10:13 +0200
+Message-ID: <20181008201027.17952-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20181008201027.17952-1-boris.brezillon@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -22,74 +19,76 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Stop manipulating the dev->resource array directly and use the
-platform_get_resource() helper instead.
+Hello,
 
-While at it, fix the loop check so that we never overflow the info->maps
-and info->mtds array even if the number of resources attached to the
-platform dev is higher than MAX_RESOURCES.
+This is an attempt at merging physmap_of.c, gpio-addr-flash.c and
+physmap.c. The rational behind this decision is code sharing and
+consistency with what's done in other parts of the kernel:
 
-Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
----
- drivers/mtd/maps/physmap.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+- physmap_of is just adding OF/DT support to the physmap logic, and we
+  usually put that code in the pre-existing driver instead of creating
+  a new one
 
-diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
-index 4010afee4a33..e5b15ec2cb04 100644
---- a/drivers/mtd/maps/physmap.c
-+++ b/drivers/mtd/maps/physmap.c
-@@ -122,23 +122,28 @@ static int physmap_flash_probe(struct platform_device *dev)
- 
- 	platform_set_drvdata(dev, info);
- 
--	for (i = 0; i < dev->num_resources; i++) {
-+	for (i = 0; i < MAX_RESOURCES; i++) {
-+		struct resource *res;
-+
-+		res = platform_get_resource(dev, IORESOURCE_MEM, i);
-+		if (res)
-+			break;
-+
- 		printk(KERN_NOTICE "physmap platform flash device: %.8llx at %.8llx\n",
--		       (unsigned long long)resource_size(&dev->resource[i]),
--		       (unsigned long long)dev->resource[i].start);
-+		       (unsigned long long)resource_size(res),
-+		       (unsigned long long)res->start);
- 
--		if (!devm_request_mem_region(&dev->dev,
--			dev->resource[i].start,
--			resource_size(&dev->resource[i]),
--			dev_name(&dev->dev))) {
-+		if (!devm_request_mem_region(&dev->dev, res->start,
-+					     resource_size(res),
-+					     dev_name(&dev->dev))) {
- 			dev_err(&dev->dev, "Could not reserve memory region\n");
- 			err = -ENOMEM;
- 			goto err_out;
- 		}
- 
- 		info->maps[i].name = dev_name(&dev->dev);
--		info->maps[i].phys = dev->resource[i].start;
--		info->maps[i].size = resource_size(&dev->resource[i]);
-+		info->maps[i].phys = res->start;
-+		info->maps[i].size = resource_size(res);
- 		info->maps[i].bankwidth = physmap_data->width;
- 		info->maps[i].set_vpp = physmap_set_vpp;
- 		info->maps[i].pfow_base = physmap_data->pfow_base;
-@@ -172,9 +177,11 @@ static int physmap_flash_probe(struct platform_device *dev)
- 		info->mtds[i]->dev.parent = &dev->dev;
- 	}
- 
--	if (devices_found == 1) {
-+	if (!devices_found) {
-+		err = -ENODEV;
-+	} else if (devices_found == 1) {
- 		info->cmtd = info->mtds[0];
--	} else if (devices_found > 1) {
-+	} else {
- 		/*
- 		 * We detected multiple devices. Concatenate them together.
- 		 */
+- gpio-addr-flash is just an extension of the physmap logic which is
+  needed when the platform does not have enough native ADDR lines
+  to address the whole flash. Again, I think this core belongs in the
+  physmap driver
+
+Patches 1 to 9 are just cleanups, and are not really related to the
+merging of physmap_of and gpio-addr-flash into physmap.c.
+
+Patch 10 to 13 are doing the actual merging work, and patch 14 is
+documenting the addr-gpios property that has been added to support
+the gpio-addr-flash on DT platforms.
+
+Let me know what you think of this rework.
+
+Regards,
+
+Boris
+
+Boris Brezillon (13):
+  mtd: maps: physmap: Add SPDX header
+  mtd: maps: physmap: Rename ->map and ->mtd into ->maps and ->mtds
+  mtd: maps: physmap: Use platform_get_resource() to retrieve iomem
+    resources
+  mtd: maps: physmap: Use dev_notice() and a %pR specifier
+  mtd: maps: physmap: Use devm_ioremap_resource()
+  mtd: maps: physmap: Remove the MAX_RESOURCES limitation
+  mtd: maps: physmap: Check mtd_device_{parse_register,unregister}() ret
+    code
+  mtd: maps: physmap: Return -ENOMEM directly when info allocation fails
+  mtd: maps: physmap: Fix coding style issues reported by checkpatch
+  mtd: maps: Prepare merging of physmap and physmap_of
+  mtd: maps: Merge physmap_of.c into physmap-core.c
+  mtd: maps: Merge gpio-addr-flash.c into physmap-core.c
+  mtd: maps: Rename physmap_of_{versatile,gemini} into
+    physmap-{versatile,gemini}
+
+Ricardo Ribalda Delgado (1):
+  dt-binding: mtd: physmap: Document the addr-gpios property
+
+ .../devicetree/bindings/mtd/mtd-physmap.txt        |   2 +
+ drivers/mtd/maps/Kconfig                           |  27 +-
+ drivers/mtd/maps/Makefile                          |  10 +-
+ drivers/mtd/maps/gpio-addr-flash.c                 | 281 ---------
+ drivers/mtd/maps/physmap-core.c                    | 651 +++++++++++++++++++++
+ .../maps/{physmap_of_gemini.c => physmap-gemini.c} |   2 +-
+ .../maps/{physmap_of_gemini.h => physmap-gemini.h} |   2 +-
+ ...{physmap_of_versatile.c => physmap-versatile.c} |   2 +-
+ ...{physmap_of_versatile.h => physmap-versatile.h} |   2 +-
+ drivers/mtd/maps/physmap.c                         | 280 ---------
+ drivers/mtd/maps/physmap_of_core.c                 | 368 ------------
+ 11 files changed, 674 insertions(+), 953 deletions(-)
+ delete mode 100644 drivers/mtd/maps/gpio-addr-flash.c
+ create mode 100644 drivers/mtd/maps/physmap-core.c
+ rename drivers/mtd/maps/{physmap_of_gemini.c => physmap-gemini.c} (98%)
+ rename drivers/mtd/maps/{physmap_of_gemini.h => physmap-gemini.h} (90%)
+ rename drivers/mtd/maps/{physmap_of_versatile.c => physmap-versatile.c} (99%)
+ rename drivers/mtd/maps/{physmap_of_versatile.h => physmap-versatile.h} (90%)
+ delete mode 100644 drivers/mtd/maps/physmap.c
+ delete mode 100644 drivers/mtd/maps/physmap_of_core.c
+
 -- 
 2.14.1
 
