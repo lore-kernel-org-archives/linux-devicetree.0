@@ -1,37 +1,67 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH V2 net-next 2/5] net: Introduce a new MII time stamping
- interface.
-Date: Sun, 7 Oct 2018 19:04:39 -0700
-Message-ID: <20181008020439.m2cytnnv5ue7yc5l@localhost>
-References: <20181007173823.21590-3-richardcochran@gmail.com>
- <20181007182751.GC22794@lunn.ch>
- <20181007191551.gy4l4g6qdgz6ztez@localhost>
- <20181007195400.GA25883@lunn.ch>
+From: houlong wei <houlong.wei@mediatek.com>
+Subject: Re: [PATCH v25 2/2] soc: mediatek: Add Mediatek CMDQ helper
+Date: Mon, 8 Oct 2018 10:29:06 +0800
+Message-ID: <1538965746.4271.20.camel@mhfsdcap03>
+References: <1538212903-14331-1-git-send-email-houlong.wei@mediatek.com>
+         <1538212903-14331-3-git-send-email-houlong.wei@mediatek.com>
+         <7040427b-f580-ec33-8afa-35dcf5735abb@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181007195400.GA25883@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7040427b-f580-ec33-8afa-35dcf5735abb@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK Hu =?UTF-8?Q?=28=E8=83=A1=E4=BF=8A=E5=85=89=29?= <ck.hu@mediatek.com>, Bibby Hsieh =?UTF-8?Q?=28=E8=AC=9D=E6=BF=9F=E9=81=A0=29?= <Bibby.Hsieh@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Oct 07, 2018 at 09:54:00PM +0200, Andrew Lunn wrote:
-> Sure, but things have moved on since then.
+On Sat, 2018-09-29 at 20:50 +0800, Matthias Brugger wrote:
+> 
+> On 29/09/2018 11:21, Houlong Wei wrote:
+> [...]
+> 
+> > +static int cmdq_pkt_append_command(struct cmdq_pkt *pkt, enum cmdq_code code,
+> > +				   u32 arg_a, u32 arg_b)
+> > +{
+> > +	u64 *cmd_ptr;
+> > +
+> > +	if (unlikely(pkt->cmd_buf_size + CMDQ_INST_SIZE > pkt->buf_size)) {
+> > +		pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> 
+> Can you plesae provide some example code of a driver that will use this API, I
+> still don't understand why you need to update the cmd_buf_size here.
 
-I was curious about this.  Based on your uses cases, I guess that you
-mean phylib?  But not much has changed AFAICT. (There is one new
-global function and two were removed, but that doesn't change the
-picture WRT time stamping.)
+In our previous design, when appending a new command to buffer and the
+buffer gets overflow, we will re-allocate a larger buffer to use.
+CK.Hu had concern about the performance of buffer re-allocation. Please
+refer:
+http://lists.infradead.org/pipermail/linux-mediatek/2018-June/013797.html
+One of his suggestions is that the consumer dynamically allocates buffer
+with a initial size. Because the consumer doesn't know how to calculate
+the buffer size. So we increase cmdq_buf_size here, that will help the
+consumer get the buffer size in developing phase. In release driver
+code, consumer passes a constant value to function call
+cmdq_pkt_create(client, cmdq_buffer_size), cmdq_buffer_size is the
+specified command queue buffer size.
 
-Phylink now has two or three new users, one of which is dsa.  Is that
-the big move?
+> 
+> > +		WARN_ON(1);
+> 
+> can we add some debug information:
+> WARN_ON(1, "%s: buffer size too small for the amount of commands", __func__);
+> 
+> Would it make sense to use WARN_ONCE()?
+> 
+Yes, I will add debug information and use WARN_ONCE().
 
-The situation with MACs that handle their own PHYs without phylib is
-unchanged, AFAICT.
-
-So what exactly do you mean?
-
-Thanks,
-Richard
+> > +		return -ENOMEM;
+> > +	}
+> > +	cmd_ptr = pkt->va_base + pkt->cmd_buf_size;
+> > +	(*cmd_ptr) = (u64)((code << CMDQ_OP_CODE_SHIFT) | arg_a) << 32 | arg_b;
+> > +	pkt->cmd_buf_size += CMDQ_INST_SIZE;
+> > +
+> > +	return 0;
+> > +}
+> 
+> Thanks,
+> Matthias
