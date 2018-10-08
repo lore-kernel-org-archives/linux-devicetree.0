@@ -1,1180 +1,159 @@
-From: Craig <ctatlor97@gmail.com>
-Subject: Re: [PATCH v3] clk: qcom: Add Global Clock controller (GCC) driver for SDM660
-Date: Mon, 08 Oct 2018 07:51:30 +0100
-Message-ID: <4AACEE39-FCFB-4C4E-A195-864E9BC0F1E9@gmail.com>
-References: <20180810202123.29238-1-ctatlor97@gmail.com> <20180925173603.2274-1-ctatlor97@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH V3 0/4] Changes for SDCC5 version
+Date: Sun, 7 Oct 2018 23:56:53 -0700
+Message-ID: <20181008065653.GB2550@tuxbook-pro>
+References: <1529386761-4923-1-git-send-email-vviswana@codeaurora.org>
+ <20180924194412.GA27477@arch>
+ <bcdeaf0c-fb04-67f5-8580-a3f5110bcba5@codeaurora.org>
+ <C01C1C07-13FA-4693-9493-2FAEE9153577@gmail.com>
+ <74ABB71C-6B0C-44AE-BC30-1F385ADC3E42@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180925173603.2274-1-ctatlor97@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <74ABB71C-6B0C-44AE-BC30-1F385ADC3E42@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Taniya Das <tdas@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-soc@vger.kernel.org
+To: Craig <ctatlor97@gmail.com>
+Cc: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Vijay Viswanath <vviswana@codeaurora.org>, adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.lin@rock-chips.com, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org, devicetree@vger.kernel.org, asutoshd@codeaurora.org, stummala@codeaurora.org, venkatg@codeaurora.org, jeremymc@redhat.com, riteshh@codeaurora.org, dianders@google.com, sayalil@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-(Resend due to broken email client) any reviews for this?
+On Sun 07 Oct 01:07 PDT 2018, Craig wrote:
 
-On 25 September 2018 18:35:58 BST, Craig Tatlor <ctatlor97@gmail=2Ecom> wr=
-ote:
->From: Taniya Das <tdas@codeaurora=2Eorg>
->
->Add support for the global clock controller found on SDM660
->based devices=2E This should allow most non-multimedia device
->drivers to probe and control their clocks=2E
->Based on CAF implementation=2E
->
->Signed-off-by: Taniya Das <tdas@codeaurora=2Eorg>
->[craig: rename parents to fit upstream, and other cleanups]
->Signed-off-by: Craig Tatlor <ctatlor97@gmail=2Ecom>
->---
->Changes from V1:
->    Change authorship
->    Add sdm630 compatible
-> =2E=2E=2E/devicetree/bindings/clock/qcom,gcc=2Etxt    |    1 +
-> drivers/clk/qcom/Kconfig                      |    9 +
-> drivers/clk/qcom/Makefile                     |    1 +
-> drivers/clk/qcom/gcc-sdm660=2Ec                 | 2480 +++++++++++++++++
-> include/dt-bindings/clock/qcom,gcc-sdm660=2Eh   |  159 ++
-> 5 files changed, 2650 insertions(+)
-> create mode 100644 drivers/clk/qcom/gcc-sdm660=2Ec
-> create mode 100644 include/dt-bindings/clock/qcom,gcc-sdm660=2Eh
->
->diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc=2Etxt
->b/Documentation/devicetree/bindings/clock/qcom,gcc=2Etxt
->index 664ea1fd6c76=2E=2Ee498ad2e8db8 100644
->--- a/Documentation/devicetree/bindings/clock/qcom,gcc=2Etxt
->+++ b/Documentation/devicetree/bindings/clock/qcom,gcc=2Etxt
->@@ -38,6 +38,8 @@ Required properties :
-> 			"qcom,gcc-msm8996"
-> 			"qcom,gcc-msm8998"
-> 			"qcom,gcc-mdm9615"
->+			"qcom,gcc-sdm630"
->+			"qcom,gcc-sdm660"
-> 			"qcom,gcc-sdm845"
->=20
-> - reg : shall contain base register location and length
->diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->index 5b181b182f40=2E=2E4d478b261dfe 100644
->--- a/drivers/clk/qcom/Kconfig
->+++ b/drivers/clk/qcom/Kconfig
->@@ -243,6 +243,15 @@ config SDM_CAMCC_845
-> 	  Support for the camera clock controller on SDM845 devices=2E
->	  Say Y if you want to support camera devices and camera
->functionality=2E
->=20
->+config SDM_GCC_660
->+	tristate "SDM660 Global Clock Controller"
->+	select QCOM_GDSC
->+	depends on COMMON_CLK_QCOM
->+	help
->+	  Support for the global clock controller on SDM660 devices=2E
->+	  Say Y if you want to use peripheral devices such as UART, SPI,
->+	  i2C, USB, UFS, SDDC, PCIe, etc=2E
->+
-> config SDM_GCC_845
-> 	tristate "SDM845 Global Clock Controller"
-> 	select QCOM_GDSC
->diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
->index 935f142bc155=2E=2Eab892f6d847c 100644
->--- a/drivers/clk/qcom/Makefile
->+++ b/drivers/clk/qcom/Makefile
->@@ -41,6 +41,7 @@ obj-$(CONFIG_QCOM_CLK_RPMH) +=3D clk-rpmh=2Eo
-> obj-$(CONFIG_QCOM_CLK_SMD_RPM) +=3D clk-smd-rpm=2Eo
-> obj-$(CONFIG_SDM_CAMCC_845) +=3D camcc-sdm845=2Eo
-> obj-$(CONFIG_SDM_DISPCC_845) +=3D dispcc-sdm845=2Eo
->+obj-$(CONFIG_SDM_GCC_660) +=3D gcc-sdm660=2Eo
-> obj-$(CONFIG_SDM_GCC_845) +=3D gcc-sdm845=2Eo
-> obj-$(CONFIG_SDM_VIDEOCC_845) +=3D videocc-sdm845=2Eo
-> obj-$(CONFIG_SPMI_PMIC_CLKDIV) +=3D clk-spmi-pmic-div=2Eo
->diff --git a/drivers/clk/qcom/gcc-sdm660=2Ec
->b/drivers/clk/qcom/gcc-sdm660=2Ec
->new file mode 100644
->index 000000000000=2E=2E641bba611b5f
->--- /dev/null
->+++ b/drivers/clk/qcom/gcc-sdm660=2Ec
->@@ -0,0 +1,2480 @@
->+// SPDX-License-Identifier: GPL-2=2E0
->+/*
->+ * Copyright (c) 2016-2017, The Linux Foundation=2E All rights reserved=
-=2E
->+ * Copyright (c) 2018, Craig Tatlor=2E
->+ */
->+
->+#include <linux/kernel=2Eh>
->+#include <linux/bitops=2Eh>
->+#include <linux/err=2Eh>
->+#include <linux/platform_device=2Eh>
->+#include <linux/module=2Eh>
->+#include <linux/of=2Eh>
->+#include <linux/of_device=2Eh>
->+#include <linux/clk-provider=2Eh>
->+#include <linux/regmap=2Eh>
->+#include <linux/reset-controller=2Eh>
->+
->+#include <dt-bindings/clock/qcom,gcc-sdm660=2Eh>
->+
->+#include "common=2Eh"
->+#include "clk-regmap=2Eh"
->+#include "clk-alpha-pll=2Eh"
->+#include "clk-rcg=2Eh"
->+#include "clk-branch=2Eh"
->+#include "reset=2Eh"
->+#include "gdsc=2Eh"
->+
->+#define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
->+
->+enum {
->+	P_XO,
->+	P_SLEEP_CLK,
->+	P_GPLL0,
->+	P_GPLL1,
->+	P_GPLL4,
->+	P_GPLL0_EARLY_DIV,
->+	P_GPLL1_EARLY_DIV,
->+};
->+
->+static const struct parent_map
->gcc_parent_map_xo_gpll0_gpll0_early_div[] =3D {
->+	{ P_XO, 0 },
->+	{ P_GPLL0, 1 },
->+	{ P_GPLL0_EARLY_DIV, 6 },
->+};
->+
->+static const char * const gcc_parent_names_xo_gpll0_gpll0_early_div[]
->=3D {
->+	"xo",
->+	"gpll0",
->+	"gpll0_early_div",
->+};
->+
->+static const struct parent_map gcc_parent_map_xo_gpll0[] =3D {
->+	{ P_XO, 0 },
->+	{ P_GPLL0, 1 },
->+};
->+
->+static const char * const gcc_parent_names_xo_gpll0[] =3D {
->+	"xo",
->+	"gpll0",
->+};
->+
->+static const struct parent_map
->gcc_parent_map_xo_gpll0_sleep_clk_gpll0_early_div[] =3D {
->+	{ P_XO, 0 },
->+	{ P_GPLL0, 1 },
->+	{ P_SLEEP_CLK, 5 },
->+	{ P_GPLL0_EARLY_DIV, 6 },
->+};
->+
->+static const char * const
->gcc_parent_names_xo_gpll0_sleep_clk_gpll0_early_div[] =3D {
->+	"xo",
->+	"gpll0",
->+	"sleep_clk",
->+	"gpll0_early_div",
->+};
->+
->+static const struct parent_map gcc_parent_map_xo_sleep_clk[] =3D {
->+	{ P_XO, 0 },
->+	{ P_SLEEP_CLK, 5 },
->+};
->+
->+static const char * const gcc_parent_names_xo_sleep_clk[] =3D {
->+	"xo",
->+	"sleep_clk",
->+};
->+
->+static const struct parent_map gcc_parent_map_xo_gpll4[] =3D {
->+	{ P_XO, 0 },
->+	{ P_GPLL4, 5 },
->+};
->+
->+static const char * const gcc_parent_names_xo_gpll4[] =3D {
->+	"xo",
->+	"gpll4",
->+};
->+
->+static const struct parent_map
->gcc_parent_map_xo_gpll0_gpll0_early_div_gpll1_gpll4_gpll1_early_div[] =3D
->{
->+	{ P_XO, 0 },
->+	{ P_GPLL0, 1 },
->+	{ P_GPLL0_EARLY_DIV, 3 },
->+	{ P_GPLL1, 4 },
->+	{ P_GPLL4, 5 },
->+	{ P_GPLL1_EARLY_DIV, 6 },
->+};
->+
->+static const char * const
->gcc_parent_names_xo_gpll0_gpll0_early_div_gpll1_gpll4_gpll1_early_div[]
->=3D {
->+	"xo",
->+	"gpll0",
->+	"gpll0_early_div",
->+	"gpll1",
->+	"gpll4",
->+	"gpll1_early_div",
->+};
->+
->+static const struct parent_map
->gcc_parent_map_xo_gpll0_gpll4_gpll0_early_div[] =3D {
->+	{ P_XO, 0 },
->+	{ P_GPLL0, 1 },
->+	{ P_GPLL4, 5 },
->+	{ P_GPLL0_EARLY_DIV, 6 },
->+};
->+
->+static const char * const
->gcc_parent_names_xo_gpll0_gpll4_gpll0_early_div[] =3D {
->+	"xo",
->+	"gpll0",
->+	"gpll4",
->+	"gpll0_early_div",
->+};
->+
->+static const struct parent_map
->gcc_parent_map_xo_gpll0_gpll0_early_div_gpll4[] =3D {
->+	{ P_XO, 0 },
->+	{ P_GPLL0, 1 },
->+	{ P_GPLL0_EARLY_DIV, 2 },
->+	{ P_GPLL4, 5 },
->+};
->+
->+static const char * const
->gcc_parent_names_xo_gpll0_gpll0_early_div_gpll4[] =3D {
->+	"xo",
->+	"gpll0",
->+	"gpll0_early_div",
->+	"gpll4",
->+};
->+
->+static struct clk_fixed_factor xo =3D {
->+	=2Emult =3D 1,
->+	=2Ediv =3D 1,
->+	=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "xo",
->+		=2Eparent_names =3D (const char *[]){ "xo_board" },
->+		=2Enum_parents =3D 1,
->+		=2Eops =3D &clk_fixed_factor_ops,
->+	},
->+};
->+
->+static struct clk_alpha_pll gpll0_early =3D {
->+	=2Eoffset =3D 0x0,
->+	=2Eregs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x52000,
->+		=2Eenable_mask =3D BIT(0),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gpll0_early",
->+			=2Eparent_names =3D (const char *[]){ "xo" },
->+			=2Enum_parents =3D 1,
->+			=2Eops =3D &clk_alpha_pll_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_fixed_factor gpll0_early_div =3D {
->+	=2Emult =3D 1,
->+	=2Ediv =3D 2,
->+	=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gpll0_early_div",
->+		=2Eparent_names =3D (const char *[]){ "gpll0_early" },
->+		=2Enum_parents =3D 1,
->+		=2Eops =3D &clk_fixed_factor_ops,
->+	},
->+};
->+
->+static struct clk_alpha_pll_postdiv gpll0 =3D {
->+	=2Eoffset =3D 0x00000,
->+	=2Eregs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gpll0",
->+		=2Eparent_names =3D (const char *[]){ "gpll0_early" },
->+		=2Enum_parents =3D 1,
->+		=2Eops =3D &clk_alpha_pll_postdiv_ops,
->+	},
->+};
->+
->+static struct clk_alpha_pll gpll1_early =3D {
->+	=2Eoffset =3D 0x1000,
->+	=2Eregs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x52000,
->+		=2Eenable_mask =3D BIT(1),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gpll1_early",
->+			=2Eparent_names =3D (const char *[]){ "xo" },
->+			=2Enum_parents =3D 1,
->+			=2Eops =3D &clk_alpha_pll_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_fixed_factor gpll1_early_div =3D {
->+	=2Emult =3D 1,
->+	=2Ediv =3D 2,
->+	=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gpll1_early_div",
->+		=2Eparent_names =3D (const char *[]){ "gpll1_early" },
->+		=2Enum_parents =3D 1,
->+		=2Eops =3D &clk_fixed_factor_ops,
->+	},
->+};
->+
->+static struct clk_alpha_pll_postdiv gpll1 =3D {
->+	=2Eoffset =3D 0x1000,
->+	=2Eregs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gpll1",
->+		=2Eparent_names =3D (const char *[]){ "gpll1_early" },
->+		=2Enum_parents =3D 1,
->+		=2Eops =3D &clk_alpha_pll_postdiv_ops,
->+	},
->+};
->+
->+static struct clk_alpha_pll gpll4_early =3D {
->+	=2Eoffset =3D 0x77000,
->+	=2Eregs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x52000,
->+		=2Eenable_mask =3D BIT(4),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gpll4_early",
->+			=2Eparent_names =3D (const char *[]){ "xo" },
->+			=2Enum_parents =3D 1,
->+			=2Eops =3D &clk_alpha_pll_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_alpha_pll_postdiv gpll4 =3D {
->+	=2Eoffset =3D 0x77000,
->+	=2Eregs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data)
->+	{
->+		=2Ename =3D "gpll4",
->+		=2Eparent_names =3D (const char *[]) { "gpll4_early" },
->+		=2Enum_parents =3D 1,
->+		=2Eops =3D &clk_alpha_pll_postdiv_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_blsp1_qup1_i2c_apps_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(50000000, P_GPLL0, 12, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 blsp1_qup1_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x19020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup1_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_blsp1_qup1_spi_apps_clk_src[] =3D {
->+	F(960000, P_XO, 10, 1, 2),
->+	F(4800000, P_XO, 4, 0, 0),
->+	F(9600000, P_XO, 2, 0, 0),
->+	F(15000000, P_GPLL0, 10, 1, 4),
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(25000000, P_GPLL0, 12, 1, 2),
->+	F(50000000, P_GPLL0, 12, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 blsp1_qup1_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1900c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup1_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_qup2_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1b020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup2_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_qup2_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1b00c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup2_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_qup3_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1d020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup3_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_qup3_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1d00c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup3_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_qup4_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1f020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup4_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_qup4_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1f00c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_qup4_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_blsp1_uart1_apps_clk_src[] =3D {
->+	F(3686400, P_GPLL0, 1, 96, 15625),
->+	F(7372800, P_GPLL0, 1, 192, 15625),
->+	F(14745600, P_GPLL0, 1, 384, 15625),
->+	F(16000000, P_GPLL0, 5, 2, 15),
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(24000000, P_GPLL0, 5, 1, 5),
->+	F(32000000, P_GPLL0, 1, 4, 75),
->+	F(40000000, P_GPLL0, 15, 0, 0),
->+	F(46400000, P_GPLL0, 1, 29, 375),
->+	F(48000000, P_GPLL0, 12=2E5, 0, 0),
->+	F(51200000, P_GPLL0, 1, 32, 375),
->+	F(56000000, P_GPLL0, 1, 7, 75),
->+	F(58982400, P_GPLL0, 1, 1536, 15625),
->+	F(60000000, P_GPLL0, 10, 0, 0),
->+	F(63157895, P_GPLL0, 9=2E5, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 blsp1_uart1_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1a00c,
->+	=2Emnd_width =3D 16,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_uart1_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_uart1_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp1_uart2_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1c00c,
->+	=2Emnd_width =3D 16,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_uart1_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp1_uart2_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup1_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x26020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup1_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup1_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2600c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup1_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup2_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x28020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup2_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup2_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2800c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup2_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup3_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2a020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup3_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup3_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2a00c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup3_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup4_i2c_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2c020,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_i2c_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup4_i2c_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_qup4_spi_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2c00c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_qup1_spi_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_qup4_spi_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_uart1_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2700c,
->+	=2Emnd_width =3D 16,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_uart1_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_uart1_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 blsp2_uart2_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2900c,
->+	=2Emnd_width =3D 16,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_blsp1_uart1_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "blsp2_uart2_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_gp1_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(100000000, P_GPLL0, 6, 0, 0),
->+	F(200000000, P_GPLL0, 3, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 gp1_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x64004,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_sleep_clk_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_gp1_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gp1_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_sleep_clk_gpll0_early_di=
-v,
->+		=2Enum_parents =3D 4,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 gp2_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x65004,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_sleep_clk_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_gp1_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gp2_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_sleep_clk_gpll0_early_di=
-v,
->+		=2Enum_parents =3D 4,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 gp3_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x66004,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_sleep_clk_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_gp1_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "gp3_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_sleep_clk_gpll0_early_di=
-v,
->+		=2Enum_parents =3D 4,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_hmss_gpll0_clk_src[] =3D {
->+	F(300000000, P_GPLL0, 2, 0, 0),
->+	F(600000000, P_GPLL0, 1, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 hmss_gpll0_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x4805c,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_hmss_gpll0_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "hmss_gpll0_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_hmss_gpll4_clk_src[] =3D {
->+	F(384000000, P_GPLL4, 4, 0, 0),
->+	F(768000000, P_GPLL4, 2, 0, 0),
->+	F(1536000000, P_GPLL4, 1, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 hmss_gpll4_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x48074,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll4,
->+	=2Efreq_tbl =3D ftbl_hmss_gpll4_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "hmss_gpll4_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll4,
->+		=2Enum_parents =3D 2,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_hmss_rbcpr_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 hmss_rbcpr_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x48044,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_hmss_rbcpr_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "hmss_rbcpr_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0,
->+		=2Enum_parents =3D 2,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_pdm2_clk_src[] =3D {
->+	F(60000000, P_GPLL0, 10, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 pdm2_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x33010,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_pdm2_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "pdm2_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_qspi_ser_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(80200000, P_GPLL1_EARLY_DIV, 5, 0, 0),
->+	F(160400000, P_GPLL1, 5, 0, 0),
->+	F(267333333, P_GPLL1, 3, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 qspi_ser_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x4d00c,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D
->gcc_parent_map_xo_gpll0_gpll0_early_div_gpll1_gpll4_gpll1_early_div,
->+	=2Efreq_tbl =3D ftbl_qspi_ser_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "qspi_ser_clk_src",
->+		=2Eparent_names =3D
->gcc_parent_names_xo_gpll0_gpll0_early_div_gpll1_gpll4_gpll1_early_div,
->+		=2Enum_parents =3D 6,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_sdcc1_apps_clk_src[] =3D {
->+	F(144000, P_XO, 16, 3, 25),
->+	F(400000, P_XO, 12, 1, 4),
->+	F(20000000, P_GPLL0_EARLY_DIV, 5, 1, 3),
->+	F(25000000, P_GPLL0_EARLY_DIV, 6, 1, 2),
->+	F(50000000, P_GPLL0_EARLY_DIV, 6, 0, 0),
->+	F(100000000, P_GPLL0, 6, 0, 0),
->+	F(192000000, P_GPLL4, 8, 0, 0),
->+	F(384000000, P_GPLL4, 4, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 sdcc1_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x1602c,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll4_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_sdcc1_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "sdcc1_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll4_gpll0_early_div,
->+		=2Enum_parents =3D 4,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_sdcc1_ice_core_clk_src[] =3D {
->+	F(75000000, P_GPLL0_EARLY_DIV, 4, 0, 0),
->+	F(150000000, P_GPLL0, 4, 0, 0),
->+	F(200000000, P_GPLL0, 3, 0, 0),
->+	F(300000000, P_GPLL0, 2, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 sdcc1_ice_core_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x16010,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_sdcc1_ice_core_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "sdcc1_ice_core_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_sdcc2_apps_clk_src[] =3D {
->+	F(144000, P_XO, 16, 3, 25),
->+	F(400000, P_XO, 12, 1, 4),
->+	F(20000000, P_GPLL0_EARLY_DIV, 5, 1, 3),
->+	F(25000000, P_GPLL0_EARLY_DIV, 6, 1, 2),
->+	F(50000000, P_GPLL0_EARLY_DIV, 6, 0, 0),
->+	F(100000000, P_GPLL0, 6, 0, 0),
->+	F(192000000, P_GPLL4, 8, 0, 0),
->+	F(200000000, P_GPLL0, 3, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 sdcc2_apps_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x14010,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div_gpll4,
->+	=2Efreq_tbl =3D ftbl_sdcc2_apps_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "sdcc2_apps_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div_gpll4,
->+		=2Enum_parents =3D 4,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_ufs_axi_clk_src[] =3D {
->+	F(50000000, P_GPLL0_EARLY_DIV, 6, 0, 0),
->+	F(100000000, P_GPLL0, 6, 0, 0),
->+	F(150000000, P_GPLL0, 4, 0, 0),
->+	F(200000000, P_GPLL0, 3, 0, 0),
->+	F(240000000, P_GPLL0, 2=2E5, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 ufs_axi_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x75018,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_ufs_axi_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "ufs_axi_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_ufs_ice_core_clk_src[] =3D {
->+	F(75000000, P_GPLL0_EARLY_DIV, 4, 0, 0),
->+	F(150000000, P_GPLL0, 4, 0, 0),
->+	F(300000000, P_GPLL0, 2, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 ufs_ice_core_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x76010,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_ufs_ice_core_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "ufs_ice_core_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_rcg2 ufs_phy_aux_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x76044,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_sleep_clk,
->+	=2Efreq_tbl =3D ftbl_hmss_rbcpr_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "ufs_phy_aux_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_sleep_clk,
->+		=2Enum_parents =3D 2,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_ufs_unipro_core_clk_src[] =3D {
->+	F(37500000, P_GPLL0_EARLY_DIV, 8, 0, 0),
->+	F(75000000, P_GPLL0, 8, 0, 0),
->+	F(150000000, P_GPLL0, 4, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 ufs_unipro_core_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x76028,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_ufs_unipro_core_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "ufs_unipro_core_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_usb20_master_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(60000000, P_GPLL0, 10, 0, 0),
->+	F(120000000, P_GPLL0, 5, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 usb20_master_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2f010,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_usb20_master_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "usb20_master_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_usb20_mock_utmi_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(60000000, P_GPLL0, 10, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 usb20_mock_utmi_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x2f024,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_usb20_mock_utmi_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "usb20_mock_utmi_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_usb30_master_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(66666667, P_GPLL0_EARLY_DIV, 4=2E5, 0, 0),
->+	F(120000000, P_GPLL0, 5, 0, 0),
->+	F(133333333, P_GPLL0, 4=2E5, 0, 0),
->+	F(150000000, P_GPLL0, 4, 0, 0),
->+	F(200000000, P_GPLL0, 3, 0, 0),
->+	F(240000000, P_GPLL0, 2=2E5, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 usb30_master_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0xf014,
->+	=2Emnd_width =3D 8,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_usb30_master_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "usb30_master_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_usb30_mock_utmi_clk_src[] =3D {
->+	F(19200000, P_XO, 1, 0, 0),
->+	F(40000000, P_GPLL0_EARLY_DIV, 7=2E5, 0, 0),
->+	F(60000000, P_GPLL0, 10, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 usb30_mock_utmi_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0xf028,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_gpll0_gpll0_early_div,
->+	=2Efreq_tbl =3D ftbl_usb30_mock_utmi_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "usb30_mock_utmi_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_gpll0_gpll0_early_div,
->+		=2Enum_parents =3D 3,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static const struct freq_tbl ftbl_usb3_phy_aux_clk_src[] =3D {
->+	F(1200000, P_XO, 16, 0, 0),
->+	F(19200000, P_XO, 1, 0, 0),
->+	{ }
->+};
->+
->+static struct clk_rcg2 usb3_phy_aux_clk_src =3D {
->+	=2Ecmd_rcgr =3D 0x5000c,
->+	=2Emnd_width =3D 0,
->+	=2Ehid_width =3D 5,
->+	=2Eparent_map =3D gcc_parent_map_xo_sleep_clk,
->+	=2Efreq_tbl =3D ftbl_usb3_phy_aux_clk_src,
->+	=2Eclkr=2Ehw=2Einit =3D &(struct clk_init_data){
->+		=2Ename =3D "usb3_phy_aux_clk_src",
->+		=2Eparent_names =3D gcc_parent_names_xo_sleep_clk,
->+		=2Enum_parents =3D 2,
->+		=2Eops =3D &clk_rcg2_ops,
->+	},
->+};
->+
->+static struct clk_branch gcc_aggre2_ufs_axi_clk =3D {
->+	=2Ehalt_reg =3D 0x75034,
->+	=2Ehalt_check =3D BRANCH_HALT,
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x75034,
->+		=2Eenable_mask =3D BIT(0),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gcc_aggre2_ufs_axi_clk",
->+			=2Eparent_names =3D (const char *[]){
->+				"ufs_axi_clk_src",
->+			},
->+			=2Enum_parents =3D 1,
->+			=2Eops =3D &clk_branch2_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_branch gcc_aggre2_usb3_axi_clk =3D {
->+	=2Ehalt_reg =3D 0xf03c,
->+	=2Ehalt_check =3D BRANCH_HALT,
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0xf03c,
->+		=2Eenable_mask =3D BIT(0),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gcc_aggre2_usb3_axi_clk",
->+			=2Eparent_names =3D (const char *[]){
->+				"usb30_master_clk_src",
->+			},
->+			=2Enum_parents =3D 1,
->+			=2Eops =3D &clk_branch2_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_branch gcc_bimc_gfx_clk =3D {
->+	=2Ehalt_reg =3D 0x7106c,
->+	=2Ehalt_check =3D BRANCH_VOTED,
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x7106c,
->+		=2Eenable_mask =3D BIT(0),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gcc_bimc_gfx_clk",
->+			=2Eops =3D &clk_branch2_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_branch gcc_bimc_hmss_axi_clk =3D {
->+	=2Ehalt_reg =3D 0x48004,
->+	=2Ehalt_check =3D BRANCH_HALT_VOTED,
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x52004,
->+		=2Eenable_mask =3D BIT(22),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gcc_bimc_hmss_axi_clk",
->+			=2Eops =3D &clk_branch2_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_branch gcc_bimc_mss_q6_axi_clk =3D {
->+	=2Ehalt_reg =3D 0x4401c,
->+	=2Ehalt_check =3D BRANCH_HALT,
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x4401c,
->+		=2Eenable_mask =3D BIT(0),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gcc_bimc_mss_q6_axi_clk",
->+			=2Eops =3D &clk_branch2_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_branch gcc_blsp1_ahb_clk =3D {
->+	=2Ehalt_reg =3D 0x17004,
->+	=2Ehalt_check =3D BRANCH_HALT_VOTED,
->+	=2Eclkr =3D {
->+		=2Eenable_reg =3D 0x52004,
->+		=2Eenable_mask =3D BIT(17),
->+		=2Ehw=2Einit =3D &(struct clk_init_data){
->+			=2Ename =3D "gcc_blsp1_ahb_clk",
->+			=2Eops =3D &clk_branch2_ops,
->+		},
->+	},
->+};
->+
->+static struct clk_branch gcc_blsp1_qup1_i2c_apps_clk
+> Any updates on this?
+> 
+
+FWIW I used qcom,sdhci-msm-v5 on QCS404 successfully.
+
+Regards,
+Bjorn
+
+> On 25 September 2018 16:39:33 BST, Craig <ctatlor97@gmail.com> wrote:
+> >
+> >
+> >On 25 September 2018 12:17:26 BST, Veerabhadrarao Badiganti
+> ><vbadigan@codeaurora.org> wrote:
+> >>
+> >>On 9/25/2018 1:18 AM, Craig Tatlor wrote:
+> >>> What socs have you tested this on?
+> >>> On sdm660 it seems to crash device
+> >>> when writing pwr ctl.
+> >>
+> >>Hi
+> >>We have tested this on SDM845.
+> >>SDM660 also has SDCC5 controller, so you would need to define
+> >>"qcom,sdhci-msm-v5" in your platform dt.
+> >>Can you confirm if you have defined this?
+> >>
+> >Hi,
+> >Yes my DT entry is as follows
+> >
+> >sdhc_1: sdhci@f9824900 {                                               
+> >                  
+> >compatible = "qcom,sdhci-msm-v5";                                      
+> >          
+> >reg = <0xc0c4000 0x1000>, <0xc0c5000 0x1000>;                          
+> >          
+> >interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;                        
+> >          
+> >interrupt-names = "pwr_irq";                                           
+> >          
+> >                                                                       
+> >bus-width = <8>;                                                       
+> >          
+> >non-removable;                                                         
+> >          
+> >                                                                       
+> >vmmc-supply = <&pm660l_l4>;                                            
+> >          
+> >vqmmc-supply = <&pm660_l8>;                                            
+> >          
+> >                                                                       
+> >pinctrl-names = "default";                                             
+> >          
+> >pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data &sdc1_rclk>;               
+> >          
+> >                                                                       
+> >clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;          
+> >          
+> >clock-names = "core", "iface";                                         
+> >          
+> >        };          
+> >
+> >>BTW, can you please share few details of the platform that you are
+> >>checking?
+> >>We are not aware of any dev platform based on SDM660. This is just for
+> >
+> >>my info
+> >
+> >I'm checking on the sony xperia xa2 (pioneer) smartphone.
+> >>
+> >>> On Tue, Jun 19, 2018 at 11:09:17AM +0530, Vijay Viswanath wrote:
+> >>>> With SDCC5, the MCI register space got removed and the offset/order
+> >>of
+> >>>> several registers have changed. Based on SDCC version used and the
+> >>register,
+> >>>> we need to pick the base address and offset.
+> >>>>
+> >>>> Depends on patch series: "[PATCH V5 0/2] mmc: sdhci-msm:
+> >Configuring
+> >>IO_PAD support for sdhci-msm"
+> >>>>
+> >>>> Changes since RFC:
+> >>>> 	Dropped voltage regulator changes in sdhci-msm
+> >>>> 	Split the "Register changes for sdcc V5" patch
+> >>>> 	Instead of checking mci removal for deciding which base addr to
+> >>use,
+> >>>> 	new function pointers are defined for the 2 variants of sdcc:
+> >>>> 		1) MCI present
+> >>>> 		2) V5 (mci removed)
+> >>>> 	Instead of string comparing with the compatible string from DT
+> >>file,
+> >>>> 	the sdhci_msm_probe will now pick the data associated with the
+> >>>> 	compatible entry and use it to load variant specific address
+> >>offsets
+> >>>> 	and msm variant specific read/write ops.
+> >>>>
+> >>>> Changes since V1:
+> >>>> 	Removed unused msm_reab & msm_writeb APIs
+> >>>> 	Changed certain register addresses from uppercase to lowercase hex
+> >>>> 	letters
+> >>>> 	Removed extra lines and spaces
+> >>>> 	Split "[PATCH V1 0/3] Changes for SDCC5 version" patch into two,
+> >>>> 	one for Documentation and other for the driver changes.
+> >>>>
+> >>>> Changes since V2:
+> >>>> 	Used lower case for macro function defenitions
+> >>>> 	Removed unused function pointers for msm_readb & msm_writeb
+> >>>>
+> >>>>
+> >>>> Sayali Lokhande (3):
+> >>>>    mmc: sdhci-msm: Define new Register address map
+> >>>>    Documentation: sdhci-msm: Add new compatible string for SDCC v5
+> >>>>    mmc: host: Register changes for sdcc V5
+> >>>>
+> >>>> Vijay Viswanath (1):
+> >>>>    mmc: sdhci-msm: Add msm version specific ops and data structures
+> >>>>
+> >>>>   .../devicetree/bindings/mmc/sdhci-msm.txt          |   7 +-
+> >>>>   drivers/mmc/host/sdhci-msm.c                       | 511
+> >>++++++++++++++++-----
+> >>>>   2 files changed, 391 insertions(+), 127 deletions(-)
+> >>>>
+> >>>> -- 
+> >>>>   Qualcomm India Private Limited, on behalf of Qualcomm Innovation
+> >>Center, Inc.
+> >>>> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> >a
+> >>Linux Foundation Collaborative Project.
+> >>>>
+> >>>> --
+> >>>> To unsubscribe from this list: send the line "unsubscribe
+> >>linux-arm-msm" in
+> >>>> the body of a message to majordomo@vger.kernel.org
+> >>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>
+> >>Thanks,
+> >>Veera
+> 
+> -- 
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
