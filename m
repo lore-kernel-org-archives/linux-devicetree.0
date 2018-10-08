@@ -1,85 +1,63 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] reset: Fix potential use-after-free in __of_reset_control_get()
-Date: Mon, 8 Oct 2018 15:12:02 +0200
-Message-ID: <CAMuHMdU_ECQxxD1HK5bq5QY7QnxzaBKSJsZFw+284oSnJfSFAA@mail.gmail.com>
-References: <20181008111435.25994-1-geert+renesas@glider.be> <1539003375.11512.19.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Subject: [PATCH V3 2/3] dt-bindings: mmc: sdhci-msm: Add entries for passing load values
+Date: Mon,  8 Oct 2018 18:48:58 +0530
+Message-ID: <1539004739-32060-3-git-send-email-vbadigan@codeaurora.org>
+References: <1539004739-32060-1-git-send-email-vbadigan@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539003375.11512.19.camel@pengutronix.de>
+In-Reply-To: <1539004739-32060-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, evgreen@chromium.org, dianders@google.com
+Cc: asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, Vijay Viswanath <vviswana@codeaurora.org>, Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+From: Vijay Viswanath <vviswana@codeaurora.org>
 
-On Mon, Oct 8, 2018 at 2:56 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Mon, 2018-10-08 at 13:14 +0200, Geert Uytterhoeven wrote:
-> > Calling of_node_put() decreases the reference count of a device tree
-> > object, and may free some data.
-> >
-> > However, the of_phandle_args structure embedding it is passed to
-> > reset_controller_dev.of_xlate() after that, so it may still be accessed.
-> >
-> > Move the call to of_node_put() down to fix this.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> >  drivers/reset/core.c | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> > index 225e34c56b94a2e3..bc9df10d31b4bae1 100644
-> > --- a/drivers/reset/core.c
-> > +++ b/drivers/reset/core.c
-> > @@ -496,27 +496,28 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
-> >                       break;
-> >               }
-> >       }
-> > -     of_node_put(args.np);
-> >
-> >       if (!rcdev) {
-> > -             mutex_unlock(&reset_list_mutex);
-> > -             return ERR_PTR(-EPROBE_DEFER);
-> > +             rstc = ERR_PTR(-EPROBE_DEFER);
-> > +             goto out;
-> >       }
-> >
-> >       if (WARN_ON(args.args_count != rcdev->of_reset_n_cells)) {
-> > -             mutex_unlock(&reset_list_mutex);
-> > -             return ERR_PTR(-EINVAL);
-> > +             rstc = ERR_PTR(-EINVAL);
-> > +             goto out;
-> >       }
-> >
-> >       rstc_id = rcdev->of_xlate(rcdev, &args);
-> >       if (rstc_id < 0) {
-> > -             mutex_unlock(&reset_list_mutex);
-> > -             return ERR_PTR(rstc_id);
-> > +             rstc = ERR_PTR(rstc_id);
-> > +             goto out;
-> >       }
-> >
-> >       /* reset_list_mutex also protects the rcdev's reset_control list */
-> >       rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
-> >
-> > +out:
-> > +     of_node_put(args.np);
-> >       mutex_unlock(&reset_list_mutex);
->
-> Thank you for the patch. I'd like to move of_node_put after mutex_unlock
-> for symmetry. If you agree, I can switch the two when applying.
+The load a particular sdhc controller should request from a regulator
+is device specific and hence each device should individually vote for
+the required load.
 
-No objection, thanks!
+Signed-off-by: Vijay Viswanath <vviswana@codeaurora.org>
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 502b3b8..cb22178 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -25,6 +25,10 @@ Required properties:
+ 	"xo"	- TCXO clock (optional)
+ 	"cal"	- reference clock for RCLK delay calibration (optional)
+ 	"sleep"	- sleep clock for RCLK delay calibration (optional)
++- qcom,<supply>-current-level-microamp - specifies load levels for supply during BUS_ON and
++					BUS_OFF states in power irq. Should be specified in
++					pairs (lpm, hpm), for BUS_OFF and BUS_ON respectively.
++					Units uA.
+ 
+ Example:
+ 
+@@ -36,7 +40,9 @@ Example:
+ 		non-removable;
+ 
+ 		vmmc-supply = <&pm8941_l20>;
++		qcom,vmmc-current-level-microamp = <200 570000>;
+ 		vqmmc-supply = <&pm8941_s3>;
++		qcom,vqmmc-current-level-microamp = <200 325000>;
+ 
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sdc1_clk &sdc1_cmd &sdc1_data>;
+@@ -53,7 +59,9 @@ Example:
+ 		cd-gpios = <&msmgpio 62 0x1>;
+ 
+ 		vmmc-supply = <&pm8941_l21>;
++		qcom,vmmc-current-level-microamp = <200 800000>;
+ 		vqmmc-supply = <&pm8941_l13>;
++		qcom,vqmmc-current-level-microamp = <200 22000>;
+ 
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&sdc2_clk &sdc2_cmd &sdc2_data>;
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
