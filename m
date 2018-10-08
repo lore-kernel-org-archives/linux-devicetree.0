@@ -1,42 +1,132 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [RESEND PATCH v2 3/3] ARM: dts: imx28-cfa10036: Fix the reset
- gpio signal polarity
-Date: Mon, 8 Oct 2018 11:45:36 +0000
-Message-ID: <68f4da21-6f0d-5bf9-b352-cdc423269080@ysoft.com>
-References: <1538040281-21319-1-git-send-email-michal.vokac@ysoft.com>
- <1538040281-21319-3-git-send-email-michal.vokac@ysoft.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2] reset: Exclusive resets must be dedicated to a single
+ hardware block
+Date: Mon, 8 Oct 2018 13:47:51 +0200
+Message-ID: <CAMuHMdV3yt7S9sKgEuy7vJsCqSCfm8caNSNLwLVX4H8pNxpOzA@mail.gmail.com>
+References: <20180927180038.24599-1-geert+renesas@glider.be>
+ <1538648094.14153.8.camel@pengutronix.de> <CAMuHMdV_qb8qDFJ1VT6FYYkHK73tjbp2hOUShaOEhezPWg+VDg@mail.gmail.com>
+ <CAMuHMdUC3dGRnMCsX3HjmGgb0-vLSNXKXRiiAS+TzW72_uM+LQ@mail.gmail.com>
+ <1538752564.3545.37.camel@pengutronix.de> <CAMuHMdXFbYkD_Lou0wW__0-8ZPj3cKuJ6it_0hpPwzNU0Zeq3g@mail.gmail.com>
+ <1538996273.11512.13.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538040281-21319-3-git-send-email-michal.vokac@ysoft.com>
-Content-Language: en-US
-Content-ID: <7B98601C3A58BD4C8A3FB63AC42DA47A@eurprd04.prod.outlook.com>
+In-Reply-To: <1538996273.11512.13.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, KVM list <kvm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjcuOS4yMDE4IDExOjI0LCBNaWNoYWwgVm9rw6HEjSB3cm90ZToNCj4gVGhlIHJlc2V0IHNp
-Z25hbCBvZiB0aGUgU1NEMTMwNiBPTEVEIGRpc3BsYXkgaXMgYWN0dWFsbHkgYWN0aXZlLWxvdy4N
-Cj4gQWRhcHQgdGhlIERUIHRvIHJlZmxlY3QgdGhlIHJlYWwgd29ybGQuDQo+IA0KPiBTaWduZWQt
-b2ZmLWJ5OiBNaWNoYWwgVm9rw6HEjSA8bWljaGFsLnZva2FjQHlzb2Z0LmNvbT4NCj4gLS0tDQo+
-IHYyIGNoYW5nZXM6IE5ldyBwYXRjaCBpbiB0aGUgc2VyaWVzDQoNCkJhcnRsb21pZWoganVzdCBx
-dWV1ZWQgdGhlIGZpcnN0IHR3byBwYXRjaGVzIGZvciB2NC4yMC4NCldpbGwgc29tZWJvZHkgdGFr
-ZSB0aGlzIG9uZT8gT3RoZXJ3aXNlIHRoaXMgU29NIHdpbGwgZW5kIHVwIHdpdGgNCmJyb2tlbiBP
-TEVEIGRpc3BsYXkgcmVzZXQuDQoNClRoYW5rcywgTWljaGFsLg0KDQo+IA0KPiAgIGFyY2gvYXJt
-L2Jvb3QvZHRzL2lteDI4LWNmYTEwMDM2LmR0cyB8IDMgKystDQo+ICAgMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gv
-YXJtL2Jvb3QvZHRzL2lteDI4LWNmYTEwMDM2LmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDI4
-LWNmYTEwMDM2LmR0cw0KPiBpbmRleCBlNTRmNWFiLi5iZTM0MDZlIDEwMDY0NA0KPiAtLS0gYS9h
-cmNoL2FybS9ib290L2R0cy9pbXgyOC1jZmExMDAzNi5kdHMNCj4gKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvaW14MjgtY2ZhMTAwMzYuZHRzDQo+IEBAIC0xMSw2ICsxMSw3IEBADQo+ICAgDQo+ICAg
-L2R0cy12MS87DQo+ICAgI2luY2x1ZGUgImlteDI4LmR0c2kiDQo+ICsjaW5jbHVkZSA8ZHQtYmlu
-ZGluZ3MvZ3Bpby9ncGlvLmg+DQo+ICAgDQo+ICAgLyB7DQo+ICAgCW1vZGVsID0gIkNyeXN0YWxm
-b250eiBDRkEtMTAwMzYgQm9hcmQiOw0KPiBAQCAtOTUsNyArOTYsNyBAQA0KPiAgIAkJCQkJcGlu
-Y3RybC1uYW1lcyA9ICJkZWZhdWx0IjsNCj4gICAJCQkJCXBpbmN0cmwtMCA9IDwmc3NkMTMwNl9j
-ZmExMDAzNj47DQo+ICAgCQkJCQlyZWcgPSA8MHgzYz47DQo+IC0JCQkJCXJlc2V0LWdwaW9zID0g
-PCZncGlvMiA3IDA+Ow0KPiArCQkJCQlyZXNldC1ncGlvcyA9IDwmZ3BpbzIgNyBHUElPX0FDVElW
-RV9MT1c+Ow0KPiAgIAkJCQkJc29sb21vbixoZWlnaHQgPSA8MzI+Ow0KPiAgIAkJCQkJc29sb21v
-bix3aWR0aCA9IDwxMjg+Ow0KPiAgIAkJCQkJc29sb21vbixwYWdlLW9mZnNldCA9IDwwPjsNCj4g
-DQo=
+Hi Philipp,
+
+On Mon, Oct 8, 2018 at 12:57 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> On Mon, 2018-10-08 at 11:59 +0200, Geert Uytterhoeven wrote:
+> > On Fri, Oct 5, 2018 at 5:16 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > > On Fri, 2018-10-05 at 14:31 +0200, Geert Uytterhoeven wrote:
+> > > [...]
+> > > > > > > +                     eq = (args2.np == args.np &&
+> > > > > > > +                           args2.args_count == args.args_count &&
+> > > > > > > +                           !memcmp(args2.args, args.args,
+> > > > > > > +                                   args.args_count * sizeof(args.args[0])));
+> > > > >
+> > > > > As there's at least one other function in -next that compares of_phandle_args,
+> > > > > I will add a helper of_phandle_args_eq().
+> > > > >
+> > > > > > > +                     of_node_put(args2.np);
+> > > > > > > +                     if (eq)
+> > > > > >
+> > > > > > Emitting a loud warning here could be very helpful if it contains
+> > > > > > both the reset controller node and the reset index, as well as the
+> > > >
+> > > > Actually on DT-based systems, the index is a driver-specific
+> > > > implementation detail, and may differ from the actual reset specifier in DT.
+> > > > E.g. on R-Car systems, DT uses a human-readable representation matching
+> > > > the datasheet, while internally, the driver uses a packed representation.
+> > > > Hence printing the index may confuse the user.
+> > > >
+> > > > For lookup-based systems, this is different.
+> > >
+> > > Correct. I'm so used to #reset-cells = <1>, it's hard to remember the
+> > > exceptions. So let's not try to print indices or args.
+> > >
+> > > > > > consumer nodes: node and node2.
+> > > > >
+> > > > > Indeed, will do, also for lookup resets.
+> > > > >
+> > > > > We already have of_print_phandle_args(), but that is a bit inflexible.
+> > > > > Adding support for "%pOFa" looks like the modern thing to do.
+> > > >
+> > > > Scrap that: of_phandle_args is not derived from a device_node, so %pOFa
+> > > > is not appropriate (and would crash instead of fall back to a pointer before
+> > > > %pOFa support is implemented). And without more users, it doesn't make much
+> > > > sense to go for a new type (e.g. "%pOA")...
+> > > >
+> > > > Actually, printing the full reset specifier is not needed. A message like
+> > > >
+> > > >     /soc/pwm@e6e31000 and /soc/pwm@e6e30000 share a reset on
+> > > > /soc/clock-controller@e6150000
+> > > >
+> > > > should give sufficient clue to the user.
+> > >
+> > > Yes. You could also pass con_id into __of_reset_is_exclusive and print
+> > > that. It would be nice to indicate which consumer requested exclusive
+> > > access.
+> >
+> > con_id is used for lookup-based resets only?
+> >
+> > But the value passed there is the "id" parameter of
+> > reset_control_get_exclusive().
+>
+> Sorry, I did mean the id parameter in the __of_reset_control_get case.
+
+OK.
+
+> > However, that is not the consumer name,
+>
+> It is the name of the reset signal from point of view of the consumer.
+> It specifies, via its position in the reset-names property, which of
+> potentially multiple reset phandles in the resets property is the one
+> causing the conflict.
+>
+> > and usually NULL.
+>
+> In which case the resets property usually only contains one phandle, so
+> it is not needed to determine the conflicting reset control.
+
+For a device-specific driver knowing about all resets, that is indeed the case.
+For the generic case (e.g. my vfio-platform use case), it just wants to reset
+the device, and thus passes NULL.
+
+Perhaps I should use devm_reset_control_array_get_exclusive() instead of
+reset_control_get_exclusive(), to assert all resets?
+
+However, that makes the detection of shared resets more tricky, as it needs
+to consider all combinations. Currently e.g.
+    resets = <&rst1> <&rst2>;
+and
+    resets = <&rst2> <&rst1>;
+is not detected as reset sharing...
+
+As device_reset() also uses the first reset only, I'll keep it that way...
+
+> > I'm afraid the only way to know the consumer is to print a backtrace with
+> > WARN()?
+>
+> I'm just suggesting to augment the warning message with the reset id, if
+> available. For example:
+>
+>     /soc/pwm@e6e31000 requests exclusive control over reset "pwm"
+>     shared with /soc/pwm@e6e30000 on /soc/clock-controller@e6150000
+
+Thanks, consider it done for next version.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
