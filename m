@@ -1,228 +1,144 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: [PATCH v3 1/8] dt-bindings: mfd: document stpmic1
-Date: Mon, 8 Oct 2018 16:29:39 +0000
-Message-ID: <1539016176-4072-2-git-send-email-p.paillet@st.com>
-References: <1539016176-4072-1-git-send-email-p.paillet@st.com>
+From: =?UTF-8?Q?Ren=C3=A9_Kjellerup?= <rk.katana.steel@gmail.com>
+Subject: Re: Adding a Basic DT for the Linksys ea6500 v2 wireless home router
+Date: Mon, 8 Oct 2018 09:34:49 -0700
+Message-ID: <CACE8ZKb5CxEBAdCdGAhwaQHC9_nHBjTTVwxdDOXRayqgz0FK5g@mail.gmail.com>
+References: <CACE8ZKbUhFyWg5oK1B8+aWAa0tdqKf5Kokj80+8x1X2EUaA_DQ@mail.gmail.com>
+ <CACE8ZKZEpQjOW6CSvUuM9xhjtkSCF0bYxcfQ3htSabC=rVJcTA@mail.gmail.com> <86f391e5-9e38-c8b0-4753-4646c322c9bc@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539016176-4072-1-git-send-email-p.paillet@st.com>
-Content-Language: en-US
+In-Reply-To: <86f391e5-9e38-c8b0-4753-4646c322c9bc@hauke-m.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jon Mason <jonmason@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: pascal paillet <p.paillet@st.com>
+Hi Hauke,
 
-stpmic1 is a pmic from STMicroelectronics. The STPMIC1 integrates 10
-regulators ,3 switches, a watchdog and an input for a power on key.
+Updated the file header per your suggestion.
 
-Signed-off-by: pascal paillet <p.paillet@st.com>
+>From e97c15ef78d2535c23f32ebbec43bced72b5eaf7 Mon Sep 17 00:00:00 2001
+From: Rene Kjellerup <rk.katana.steel@gmail.com>
+Date: Mon, 1 Oct 2018 14:11:56 -0700
+Subject: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA6500 V2
+
+It's wireless home router based on BCM4708A0 with BCM4360 + BCM4331
+wireless chipsets. The 5GHz chip currently isn't supported only due
+to missing compatible firmware.
+
+the DTS here was based on the Linksys EA6300 V1 DTS, only changing
+the model strings
+
+Signed-off-by: Rene Kjellerup <rk.katana.steel@gmail.com>
 ---
-changes in v3:
-* Replace st,onkey-long-press-seconds by power-off-time-sec.
-* Replace interrupts-extended by  interrupts.
-* Remove wakeup interrupt.
-* Cosmetics.
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts | 47 +++++++++++++++++++++=
+++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
 
- .../devicetree/bindings/mfd/st,stpmic1.txt         | 133 +++++++++++++++++++++
- include/dt-bindings/mfd/st,stpmic1.h               |  46 +++++++
- 2 files changed, 179 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
- create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
-
-diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5bd3de87c33..adf8f28f5e44 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -88,6 +88,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) +=3D \
+     bcm4708-asus-rt-ac68u.dtb \
+     bcm4708-buffalo-wzr-1750dhp.dtb \
+     bcm4708-linksys-ea6300-v1.dtb \
++    bcm4708-linksys-ea6500-v2.dtb \
+     bcm4708-luxul-xap-1510.dtb \
+     bcm4708-luxul-xwc-1000.dtb \
+     bcm4708-netgear-r6250.dtb \
+diff --git a/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
+b/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
 new file mode 100644
-index 0000000..989bd58
+index 000000000000..8a434d2a4b72
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
-@@ -0,0 +1,133 @@
-+* STMicroelectronics STPMIC1 Power Management IC
-+
-+Required parent device properties:
-+- compatible: 		"st,stpmic1"
-+- reg: 			The I2C slave address for the STPMIC1 chip.
-+- interrupt-parent	Phandle to the parent interrupt controller.
-+- interrupts: 		The interrupt line the device is connected to.
-+- #interrupt-cells: 	Should be 1.
-+- interrupt-controller: Describes the STPMIC1 as an interrupt
-+  controller (has its own domain). Interrupt number are the following:
-+	/* Interrupt Register 1 (0x50 for latch) */
-+	IT_SWOUT_R=0
-+	IT_SWOUT_F=1
-+	IT_VBUS_OTG_R=2
-+	IT_VBUS_OTG_F=3
-+	IT_WAKEUP_R=4
-+	IT_WAKEUP_F=5
-+	IT_PONKEY_R=6
-+	IT_PONKEY_F=7
-+	/* Interrupt Register 2 (0x51 for latch) */
-+	IT_OVP_BOOST=8
-+	IT_OCP_BOOST=9
-+	IT_OCP_SWOUT=10
-+	IT_OCP_OTG=11
-+	IT_CURLIM_BUCK4=12
-+	IT_CURLIM_BUCK3=13
-+	IT_CURLIM_BUCK2=14
-+	IT_CURLIM_BUCK1=15
-+	/* Interrupt Register 3 (0x52 for latch) */
-+	IT_SHORT_SWOUT=16
-+	IT_SHORT_SWOTG=17
-+	IT_CURLIM_LDO6=18
-+	IT_CURLIM_LDO5=19
-+	IT_CURLIM_LDO4=20
-+	IT_CURLIM_LDO3=21
-+	IT_CURLIM_LDO2=22
-+	IT_CURLIM_LDO1=23
-+	/* Interrupt Register 3 (0x52 for latch) */
-+	IT_SWIN_R=24
-+	IT_SWIN_F=25
-+	IT_RESERVED_1=26
-+	IT_RESERVED_2=27
-+	IT_VINLOW_R=28
-+	IT_VINLOW_F=29
-+	IT_TWARN_R=30
-+	IT_TWARN_F=31
-+
-+Optional parent device properties:
-+- st,main-control-register:
-+	-bit 1: Power cycling will be performed on turn OFF condition
-+	-bit 2: PWRCTRL is functional
-+	-bit 3: PWRCTRL active high
-+- st,pads-pull-register:
-+	-bit 1: WAKEUP pull down is not active
-+	-bit 2: PWRCTRL pull up is active
-+	-bit 3: PWRCTRL pull down is active
-+	-bit 4: WAKEUP detector is disabled
-+- st,vin-control-register:
-+	-bit 0: VINLOW monitoring is enabled
-+	-bit [1...3]: VINLOW rising threshold
-+		000 VINOK_f + 50mV
-+		001 VINOK_f + 100mV
-+		010 VINOK_f + 150mV
-+		011 VINOK_f + 200mV
-+		100 VINOK_f + 250mV
-+		101 VINOK_f + 300mV
-+		110 VINOK_f + 350mV
-+		111 VINOK_f + 400mV
-+	-bit [4...5]: VINLOW hyst
-+		00 100mV
-+		01 200mV
-+		10 300mV
-+		11 400mV
-+	-bit 6: SW_OUT detector is disabled
-+	-bit 7: SW_IN detector is enabled.
-+- st,usb-control-register:
-+	-bit 3: SW_OUT current limit
-+		0: 600mA
-+		1: 1.1A
-+	-bit 4: VBUS_OTG discharge is enabled
-+	-bit 5: SW_OUT discharge is enabled
-+	-bit 6: VBUS_OTG detection is enabled
-+	-bit 7: BOOST_OVP is disabled
-+
-+STPMIC1 consists in a varied group of sub-devices.
-+Each sub-device binding is be described in own documentation file.
-+
-+Device			 Description
-+------			------------
-+st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
-+st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
-+st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
-+
-+Example:
-+
-+pmic: pmic1@33 {
-+	compatible = "st,stpmic1";
-+	reg = <0x33>;
-+	interrupt-parent = <&gpioa>;
-+	interrupts = <0 2>;
-+	st,main-control-register=<0x0c>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	onkey {
-+		compatible = "st,stpmic1-onkey";
-+		interrupt-parent = <&pmic>;
-+		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-+		interrupt-names = "onkey-falling", "onkey-rising";
-+		power-off-time-sec = <10>;
-+	};
-+
-+	watchdog {
-+		compatible = "st,stpmic1-wdt";
-+	};
-+
-+	regulators {
-+		compatible = "st,stpmic1-regulators";
-+
-+		vdd_core: buck1 {
-+			regulator-name = "vdd_core";
-+			regulator-boot-on;
-+			regulator-min-microvolt = <700000>;
-+			regulator-max-microvolt = <1200000>;
-+		};
-+		vdd: buck3 {
-+			regulator-name = "vdd";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-boot-on;
-+			regulator-pull-down;
-+		};
-+	};
-diff --git a/include/dt-bindings/mfd/st,stpmic1.h b/include/dt-bindings/mfd/st,stpmic1.h
-new file mode 100644
-index 0000000..b2d6c83
---- /dev/null
-+++ b/include/dt-bindings/mfd/st,stpmic1.h
-@@ -0,0 +1,46 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
++++ b/arch/arm/boot/dts/bcm4708-linksys-ea6500-v2.dts
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
 +/*
-+ * Copyright (C) STMicroelectronics 2018 - All Rights Reserved
-+ * Author: Philippe Peurichard <philippe.peurichard@st.com>,
-+ * Pascal Paillet <p.paillet@st.com> for STMicroelectronics.
++ * Copyright (C) 2017 Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
++ * Copyright (C) 2018 Rene Kjellerup <rk.katana.steel@gmail.com>
++ *
++ * this DTS was originally based on bcm4708-linksys-ea6300-v1.dts
 + */
 +
-+#ifndef __DT_BINDINGS_STPMIC1_H__
-+#define __DT_BINDINGS_STPMIC1_H__
++/dts-v1/;
 +
-+/* IRQ definitions */
-+#define IT_PONKEY_F	0
-+#define IT_PONKEY_R	1
-+#define IT_WAKEUP_F	2
-+#define IT_WAKEUP_R	3
-+#define IT_VBUS_OTG_F	4
-+#define IT_VBUS_OTG_R	5
-+#define IT_SWOUT_F	6
-+#define IT_SWOUT_R	7
++#include "bcm4708.dtsi"
++#include "bcm5301x-nand-cs0-bch8.dtsi"
 +
-+#define IT_CURLIM_BUCK1	8
-+#define IT_CURLIM_BUCK2	9
-+#define IT_CURLIM_BUCK3	10
-+#define IT_CURLIM_BUCK4	11
-+#define IT_OCP_OTG	12
-+#define IT_OCP_SWOUT	13
-+#define IT_OCP_BOOST	14
-+#define IT_OVP_BOOST	15
++/ {
++    compatible =3D "linksys,ea6500-v2", "brcm,bcm4708";
++    model =3D "Linksys EA6500 V2";
 +
-+#define IT_CURLIM_LDO1	16
-+#define IT_CURLIM_LDO2	17
-+#define IT_CURLIM_LDO3	18
-+#define IT_CURLIM_LDO4	19
-+#define IT_CURLIM_LDO5	20
-+#define IT_CURLIM_LDO6	21
-+#define IT_SHORT_SWOTG	22
-+#define IT_SHORT_SWOUT	23
++    chosen {
++        bootargs =3D "console=3DttyS0,115200";
++    };
 +
-+#define IT_TWARN_F	24
-+#define IT_TWARN_R	25
-+#define IT_VINLOW_F	26
-+#define IT_VINLOW_R	27
-+#define IT_SWIN_F	30
-+#define IT_SWIN_R	31
++    memory {
++        reg =3D <0x00000000 0x08000000>;
++    };
 +
-+#endif /* __DT_BINDINGS_STPMIC1_H__ */
--- 
-1.9.1
++    gpio-keys {
++        compatible =3D "gpio-keys";
++        #address-cells =3D <1>;
++        #size-cells =3D <0>;
++
++        wps {
++            label =3D "WPS";
++            linux,code =3D <KEY_WPS_BUTTON>;
++            gpios =3D <&chipcommon 7 GPIO_ACTIVE_LOW>;
++        };
++
++        restart {
++            label =3D "Reset";
++            linux,code =3D <KEY_RESTART>;
++            gpios =3D <&chipcommon 11 GPIO_ACTIVE_LOW>;
++        };
++    };
++};
++
++&usb3_phy {
++    status =3D "okay";
++};
+--=20
+2.16.4
+
+On Sun, Oct 7, 2018 at 2:08 PM Hauke Mehrtens <hauke@hauke-m.de> wrote:
+>
+> On 10/04/2018 11:08 PM, Ren=C3=A9 Kjellerup wrote:
+> > Hi Hauke,
+> >
+> > thank you for suggesting adding the dts patch to mainline kernel,
+> > so here it is.
+> > I feel Rafal technically still have the copyrights, this is pretty
+> > much just a few string updates for the ea6500v2. However with this
+> > dts in latest OpenWrt 18.06 loads and installs on my device.
+> >
+> > I will be available to do more testing should it be required.
+> >
+> > Regrads
+> > Rene Kjellerup
+> > --
+> > -- as life grows older, I gain experience.
+> > -- http://www.alchemiestick.net/
+> >
+>
+> Hi Rene,
+>
+> Please send you patch inline in the mail and not as an attachment, I
+> would suggest to use "git send-email" for sending the patch.
+>
+> Adding Rafal as copyright owner is ok, like you did it now. You could
+> mention in the file header on which dts file this is based.
+>
+> Hauke
+>
+
+
+--=20
+-- as life grows older, I gain experience.
+-- http://www.alchemiestick.net/apps/
