@@ -1,22 +1,22 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 06/12] drm/sun4i: sun6i_mipi_dsi: Fix
- VBP size calculation
-Date: Mon, 8 Oct 2018 17:05:21 +0200
-Message-ID: <20181008150521.mespl2oqkc4j6tjb@flea>
+Subject: Re: Re: [PATCH 07/12] drm/sun4i: sun6i_mipi_dsi: Fix
+ TCON DRQ set bits
+Date: Mon, 8 Oct 2018 17:05:46 +0200
+Message-ID: <20181008150546.xob5es7gkn7t6kie@flea>
 References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-7-jagan@amarulasolutions.com>
- <20180927152126.vovnvwmqdfpuxgdm@flea>
- <CAMty3ZABx9Fod5W_T7JciZEsn7jGvuM-LsBFATdA=hQ2CVwELw@mail.gmail.com>
- <20180929135302.ymdzapz5npvapti2@flea>
- <63b40c20-670b-1c53-bf5e-62f64e6e02f0@openedev.com>
+ <20180927114850.24565-8-jagan@amarulasolutions.com>
+ <20180927165853.dpluekbqzat663q7@flea>
+ <CAMty3ZDUxqokipNqnn6c618pebdVBWc8Pfzaz+4+SYqR42Yerg@mail.gmail.com>
+ <20181002132008.qtatwtbb3ldu75ay@flea>
+ <45dbebe9-d0bd-4a1c-f8ee-3afd64cf35f9@openedev.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rkrm4oitetupjisc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPPE5XOQKGQEAVVAFCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="5fsz2e6ww2xvfdes"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVPE5XOQKGQE7CBF64A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <63b40c20-670b-1c53-bf5e-62f64e6e02f0-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <45dbebe9-d0bd-4a1c-f8ee-3afd64cf35f9-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -28,88 +28,92 @@ Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Y
 List-Id: devicetree@vger.kernel.org
 
 
---rkrm4oitetupjisc
+--5fsz2e6ww2xvfdes
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Oct 01, 2018 at 01:39:17PM +0530, Jagan Teki wrote:
-> On Saturday 29 September 2018 07:23 PM, Maxime Ripard wrote:
-> > On Thu, Sep 27, 2018 at 09:50:34PM +0530, Jagan Teki wrote:
-> > > On Thu, Sep 27, 2018 at 8:51 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+On Wed, Oct 03, 2018 at 08:52:06AM +0530, Jagan Teki wrote:
+> On Tuesday 02 October 2018 06:50 PM, Maxime Ripard wrote:
+> > On Thu, Sep 27, 2018 at 11:15:50PM +0530, Jagan Teki wrote:
+> > > On Thu, Sep 27, 2018 at 10:28 PM Maxime Ripard
+> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 > > > > 
-> > > > On Thu, Sep 27, 2018 at 05:18:44PM +0530, Jagan Teki wrote:
-> > > > > According to horizontal and vertical timings are defined
-> > > > > per the diagram from include/drm/drm_modes.h
+> > > > On Thu, Sep 27, 2018 at 05:18:45PM +0530, Jagan Teki wrote:
+> > > > > TCON DRQ set bits for non-burst DSI mode can computed via
+> > > > > horizontal front porch instead of front porch + sync timings.
 > > > > > 
-> > > > > Back porch = [hv]total - [hv]sync_end
-> > > > > 
-> > > > > So, update SUN6I_DSI_BASIC_SIZE0_VBP calculation as
-> > > > > mode->vtotal - mode->vsync_end
-> > > > > 
+> > > > > Since there no documentation for TCON_DRQ_REG(0x7c) register
+> > > > > this change is taken as reference from BPI-M64-bsp.
+> > > > 
+> > > > Detailing more what the issue is would be great.
+> > > > 
 > > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 > > > > > ---
 > > > > >   drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
 > > > > >   1 file changed, 2 insertions(+), 2 deletions(-)
 > > > > > 
 > > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > > index 1c7e42015645..599284971ab6 100644
+> > > > > index 599284971ab6..9918fdb990ff 100644
 > > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 > > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > > @@ -526,8 +526,8 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
-> > > > >        regmap_write(dsi->regs, SUN6I_DSI_BASIC_SIZE0_REG,
-> > > > >                     SUN6I_DSI_BASIC_SIZE0_VSA(mode->vsync_end -
-> > > > >                                               mode->vsync_start) |
-> > > > > -                  SUN6I_DSI_BASIC_SIZE0_VBP(mode->vsync_start -
-> > > > > -                                            mode->vdisplay));
-> > > > > +                  SUN6I_DSI_BASIC_SIZE0_VBP(mode->vtotal -
-> > > > > +                                            mode->vsync_end));
+> > > > > @@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+> > > > >        struct mipi_dsi_device *device = dsi->device;
+> > > > >        u32 val = 0;
 > > > > 
-> > > > Is it purely theoretical, or did you find some source that back that?
+> > > > The computation here is in the A64 driver:
+> > > > 
+> > > > if ((panel->lcd_ht - panel->lcd_x - panel->lcd_hbp) < 21) {
+> > > >          dsi_dev[sel]->dsi_tcon_drq.bits.drq_mode = 0;
+> > > > } else {
+> > > >          dsi_dev[sel]->dsi_tcon_drq.bits.drq_set =
+> > > >                  (panel->lcd_ht-panel->lcd_x-panel->lcd_hbp-20) *
+> > > >                  dsi_pixel_bits[panel->lcd_dsi_format]/(8*4);
+> > > > }
+> > > > 
+> > > > It is testing that the sync + front porch is smaller than 21, and
+> > > > otherwise sets the drq.
+> > > > 
+> > > > > -     if ((mode->hsync_end - mode->hdisplay) > 20) {
+> > > > 
+> > > > My code here is testing that the difference between hsync_end and
+> > > > hdisplay is superior to 20, and sets the DRQ if true. The condition is
+> > > > reversed, but otherwise, that difference is the front porch plus the
+> > > > sync length.
 > > > 
-> > > VSA is done as per that, sync_end - sync start would give sync time.
-> > 
-> > That's a different register though.
-> > 
-> > > VBP also done in BPI-M64-bsp[1] which results back porch existing code
-> > > results fron porch.
+> > > True, I understand this, but does drq setting here is specific to SoC?
+> > > I thought of finding DRQ in A31 BSP but I couldn't find the code. do
+> > > you have bsp somewhere in github?
 > > > 
-> > > [1] https://github.com/BPI-SINOVOIP/BPI-M64-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L955
+> > > > 
+> > > > > +     if ((mode->hsync_start - mode->hdisplay) > 20) {
+> > > > 
+> > > > However, you are testing for just the front porch, unlike what your
+> > > > commit log is saying, and unlike what allwinner's code is saying. So
+> > > > this deserves some explanation.
+> > > 
+> > > but A64 is doing this, do you think it's completely A64 specific or
+> > > testing panel with front porch drq?
 > > 
-> > That code does back porch - sync length. Such a calculation doesn't
-> > make much sense as is, but you're saying that it results in the front
-> > porch. Again, what makes you say that?
+> > See the above code excerpt:
+> > panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
+> > 
+> > This is hsync + front porch. Not the sole front porch. So no, it's not
+> > doing this.
 > 
-> No what code shows is not a real back porch value used for drm it's panel
-> back porch value which is a DTS property in BSP.
-> (I made wrong comment on previous mail as front porch, sorry)
-> 
-> here is the real code
+> => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
 > 
 > from drivers/video/sunxi/disp2/disp/de/disp_lcd.c
-> timmings->ver_sync_time= panel_info->lcd_vspw;
-> timmings->ver_back_porch= panel_info->lcd_vbp-panel_info->lcd_vspw;
+> timmings->hor_front_porch= panel_info->lcd_ht-panel_info->lcd_hbp -
+> panel_info->lcd_x;
 > 
+> => (timmings->hor_front_porch + panel->lcd_hbp + panel->lcd_x) -
+> panel->lcd_x - panel->hbp
+> => timmings->hor_front_porch
+> => mode->hsync_start - mode->hdisplay
 > 
-> u32 vbp = panel->lcd_vbp;
-> u32 vspw = panel->lcd_vspw;
-> dsi_dev[sel]->dsi_basic_size0.bits.vbp = vbp-vspw;
-> 
-> So,
-> 
-> dsi_dev[sel]->dsi_basic_size0.bits.vbp = panel->lcd_vbp - panel->lcd_vspw;
-> 
-> =>  timmings->ver_back_porch + panel_info->lcd_vspw - panel_info->lcd_vspw
-> =>  timmings->ver_back_porch
-> =>  mode->vtotal - mode->end
-> 
-> VSA, which a proper value.
-> 
-> dsi_dev[sel]->dsi_basic_size0.bits.vsa = vspw;
-> => panel_info->lcd_vspw;
-> => timmings->ver_sync_time
-> => mode->vsync_end - mode->vsync_start
+> This is simply a front porch.
 
-Then please write that in your commit log.
+And this should be in your commit log as well.
 
 Maxime
 
@@ -117,4 +121,4 @@ Maxime
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---rkrm4oitetupjisc--
+--5fsz2e6ww2xvfdes--
