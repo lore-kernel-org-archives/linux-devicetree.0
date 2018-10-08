@@ -1,129 +1,168 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [RESEND PATCH v3 1/2] of: base: Introduce
- of_alias_get_alias_list() to check alias IDs
-Date: Mon, 8 Oct 2018 14:19:53 +0200
-Message-ID: <1520923c-2e16-cee3-7281-13082f90954c@xilinx.com>
-References: <b1772d99d4e8b788448cde0fc5c7dccb1f63b507.1537443710.git.michal.simek@xilinx.com>
- <CAMuHMdW5zze-KJhK=diR-WKbhO_vsMV2b7WuLHmcT2FtRD4J7Q@mail.gmail.com>
- <d27b381e-f091-91dc-cffe-27789583f949@xilinx.com>
- <CAMuHMdW4H6pjpijU2SX1Z=1Ld7CbBnTtFVwp3gac9toQc4iGpg@mail.gmail.com>
- <56c81d1a-e2f8-067e-4908-686cd83d478c@xilinx.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v2] ARM: dspi: Provide support for DSPI slave more
+ operation (Vybryd vf610)
+Date: Mon, 8 Oct 2018 14:23:39 +0200
+Message-ID: <20181008142339.61db70b8@jawa>
+References: <20180927150709.17010-1-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/l6PsuMdULPkcpP1+lmSnSLc"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <56c81d1a-e2f8-067e-4908-686cd83d478c@xilinx.com>
-Content-Language: en-US
+In-Reply-To: <20180927150709.17010-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, Greg KH <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, Martin =?UTF-8?B?SHVuZGViw7hsbA==?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+--Sig_/l6PsuMdULPkcpP1+lmSnSLc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 27.9.2018 09:22, Michal Simek wrote:
-> On 27.9.2018 09:19, Geert Uytterhoeven wrote:
->> Hi Michal,
->>
->> On Wed, Sep 26, 2018 at 1:01 PM Michal Simek <michal.simek@xilinx.com> wrote:
->>> On 24.9.2018 09:41, Geert Uytterhoeven wrote:
->>>> On Thu, Sep 20, 2018 at 1:42 PM Michal Simek <michal.simek@xilinx.com> wrote:
->>>>> The function travels the lookup table to record alias ids for the given
->>>>> device match structures and alias stem.
->>>>> This function will be used by serial drivers to check if requested alias
->>>>> is allocated or free to use.
->>>>>
->>>>> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
->>>>> Reviewed-by: Rob Herring <robh@kernel.org>
->>>>
->>>> I know this has already been applied, it just drew my attention.
->>>>
->>>>> --- a/drivers/of/base.c
->>>>> +++ b/drivers/of/base.c
->>>>> @@ -16,6 +16,7 @@
->>>>>
->>>>>  #define pr_fmt(fmt)    "OF: " fmt
->>>>>
->>>>> +#include <linux/bitmap.h>
->>>>>  #include <linux/console.h>
->>>>>  #include <linux/ctype.h>
->>>>>  #include <linux/cpu.h>
->>>>> @@ -1943,6 +1944,57 @@ int of_alias_get_id(struct device_node *np, const char *stem)
->>>>>  EXPORT_SYMBOL_GPL(of_alias_get_id);
->>>>>
->>>>>  /**
->>>>> + * of_alias_get_alias_list - Get alias list for the given device driver
->>>>> + * @matches:   Array of OF device match structures to search in
->>>>> + * @stem:      Alias stem of the given device_node
->>>>> + * @bitmap:    Bitmap field pointer
->>>>> + * @nbits:     Maximum number of alias ID which can be recorded it bitmap
->>>>
->>>> IDs
->>>>
->>>>> + *
->>>>> + * The function travels the lookup table to record alias ids for the given
->>>>> + * device match structures and alias stem.
->>>>> + *
->>>>> + * Return:     0 or -ENOSYS when !CONFIG_OF
->>>>> + */
->>>>> +int of_alias_get_alias_list(const struct of_device_id *matches,
->>>>> +                            const char *stem, unsigned long *bitmap,
->>>>> +                            unsigned int nbits)
->>>>> +{
->>>>> +       struct alias_prop *app;
->>>>> +
->>>>> +       /* Zero bitmap field to make sure that all the time it is clean */
->>>>> +       bitmap_zero(bitmap, nbits);
->>>>> +
->>>>> +       mutex_lock(&of_mutex);
->>>>> +       pr_debug("%s: Looking for stem: %s\n", __func__, stem);
->>>>> +       list_for_each_entry(app, &aliases_lookup, link) {
->>>>> +               pr_debug("%s: stem: %s, id: %d\n",
->>>>> +                        __func__, app->stem, app->id);
->>>>> +
->>>>> +               if (strcmp(app->stem, stem) != 0) {
->>>>> +                       pr_debug("%s: stem comparison doesn't passed %s\n",
->>>>
->>>> didn't pass?
->>>>
->>>>> +                                __func__, app->stem);
->>>>> +                       continue;
->>>>> +               }
->>>>> +
->>>>> +               if (app->id >= nbits) {
->>>>> +                       pr_debug("%s: ID %d greater then bitmap field %d\n",
->>>>
->>>> than
->>>> %u for unsigned int
->>>
->>> I won't fix this now because this can be done together with one change
->>> described below.
->>>
->>>>
->>>>> +                               __func__, app->id, nbits);
->>>>> +                       continue;
->>>>
->>>> Shouldn't this return an error, if of_match_node() below would have matched?
->>>
->>> IIRC Above check is for "serial" name.
->>> This one is for getting XX number from alias "serialXX".
->>> And below is checking compatible string.
->>>
->>> You are calling this function from uartps with 32 lines limit and there
->>> is serial33 alias poiting to uartlite (for example) then you don't want
->>> to break this call for that.
->>>
->>> What can be done is that compatible string is checked first and if this
->>> passed then ids are check and error can be returned or bit sets.
->>
->> That's what I meant: currently any serialN with N >= nbits is ignored, even
->> if the alias applies to the driver that called the function.
-> 
-> ok. Let me create a patch and check compatible string first and then
-> setup bit or fail if N >= nbits.
+Dear All,
 
-I have sent a patch with this change. Let's have discussion in that new
-thread.
+> The NXP's Vybryd vf610 can work as a SPI slave device (the CS and
+> clock signals are provided by master).
+>=20
+> It is possible to specify a single device to work in that mode. As we
+> do use DMA for transferring data, the RX channel must be prepared for
+> incoming data.
+> Moreover, in slave mode we just set a subset of control fields in
+> configuration registers (CTAR0, PUSHR).
+>=20
+> For testing the spidev_test program has been used.
+> Test script for this patch can be found here:
+> https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
+>=20
 
-Thanks,
-Michal
+Gentle ping on this patch...
+
+>=20
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+> Changes for v2:
+>=20
+> - Remove patch which adds extra NXP specific DTS property to support
+> slave mode and reuse the generic one (spi-slave)
+> - Remove patch which brings back the mcr_register local copy. It is
+> not needed as generic SPI slave infrastructure is used.
+> - Rewrite the code to use spi_controller_is_slave() helper functions
+> ---
+>  drivers/spi/spi-fsl-dspi.c | 40
+> ++++++++++++++++++++++++++++++---------- 1 file changed, 30
+> insertions(+), 10 deletions(-)
+>=20
+> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+> index 7cb3ab0a35a0..05aeaf954f85 100644
+> --- a/drivers/spi/spi-fsl-dspi.c
+> +++ b/drivers/spi/spi-fsl-dspi.c
+> @@ -229,6 +229,9 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi
+> *dspi) {
+>  	u16 cmd =3D dspi->tx_cmd, data =3D dspi_pop_tx(dspi);
+> =20
+> +	if (spi_controller_is_slave(dspi->master))
+> +		return data;
+> +
+>  	if (dspi->len > 0)
+>  		cmd |=3D SPI_PUSHR_CMD_CONT;
+>  	return cmd << 16 | data;
+> @@ -325,6 +328,11 @@ static int dspi_next_xfer_dma_submit(struct
+> fsl_dspi *dspi) dma_async_issue_pending(dma->chan_rx);
+>  	dma_async_issue_pending(dma->chan_tx);
+> =20
+> +	if (spi_controller_is_slave(dspi->master)) {
+> +
+> wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
+> +		return 0;
+> +	}
+> +
+>  	time_left =3D
+> wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
+> DMA_COMPLETION_TIMEOUT); if (time_left =3D=3D 0) {
+> @@ -792,14 +800,18 @@ static int dspi_setup(struct spi_device *spi)
+>  	ns_delay_scale(&pasc, &asc, sck_cs_delay, clkrate);
+> =20
+>  	chip->ctar_val =3D SPI_CTAR_CPOL(spi->mode & SPI_CPOL ? 1 : 0)
+> -		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0)
+> -		| SPI_CTAR_LSBFE(spi->mode & SPI_LSB_FIRST ? 1 : 0)
+> -		| SPI_CTAR_PCSSCK(pcssck)
+> -		| SPI_CTAR_CSSCK(cssck)
+> -		| SPI_CTAR_PASC(pasc)
+> -		| SPI_CTAR_ASC(asc)
+> -		| SPI_CTAR_PBR(pbr)
+> -		| SPI_CTAR_BR(br);
+> +		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0);
+> +
+> +	if (!spi_controller_is_slave(dspi->master)) {
+> +		chip->ctar_val |=3D SPI_CTAR_LSBFE(spi->mode &
+> +						 SPI_LSB_FIRST ? 1 :
+> 0)
+> +			| SPI_CTAR_PCSSCK(pcssck)
+> +			| SPI_CTAR_CSSCK(cssck)
+> +			| SPI_CTAR_PASC(pasc)
+> +			| SPI_CTAR_ASC(asc)
+> +			| SPI_CTAR_PBR(pbr)
+> +			| SPI_CTAR_BR(br);
+> +	}
+> =20
+>  	spi_set_ctldata(spi, chip);
+> =20
+> @@ -964,8 +976,13 @@ static const struct regmap_config
+> dspi_xspi_regmap_config[] =3D {=20
+>  static void dspi_init(struct fsl_dspi *dspi)
+>  {
+> -	regmap_write(dspi->regmap, SPI_MCR, SPI_MCR_MASTER |
+> SPI_MCR_PCSIS |
+> -		     (dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI :
+> 0));
+> +	unsigned int mcr =3D SPI_MCR_PCSIS |
+> +		(dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0);
+> +
+> +	if (!spi_controller_is_slave(dspi->master))
+> +		mcr |=3D SPI_MCR_MASTER;
+> +
+> +	regmap_write(dspi->regmap, SPI_MCR, mcr);
+>  	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
+>  	if (dspi->devtype_data->xspi_mode)
+>  		regmap_write(dspi->regmap, SPI_CTARE(0),
+> @@ -1021,6 +1038,9 @@ static int dspi_probe(struct platform_device
+> *pdev) }
+>  		master->bus_num =3D bus_num;
+> =20
+> +		if (of_property_read_bool(np, "spi-slave"))
+> +			master->slave =3D true;
+> +
+>  		dspi->devtype_data =3D
+> of_device_get_match_data(&pdev->dev); if (!dspi->devtype_data) {
+>  			dev_err(&pdev->dev, "can't get
+> devtype_data\n");
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/l6PsuMdULPkcpP1+lmSnSLc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlu7TEsACgkQAR8vZIA0
+zr3frQgA33eBI8PFfDOKRpp7ikqZX7c8mZGNo4sT6F8t5rsbg7X/McPW4q/8kvIy
+U9mjXUZ43r4QhPXCDrvAzpFqp+wJEqFmtYSK5dog/1wdMbG/K+eKVDfPf/05SUbt
+eYx9tKC3LytGqUH1JdhdlkviJEIOgrWnw83XWVUHvOsbbZuI0YrV0w1QRMPhYksD
+OTgUnQIRsMdzT/8WAjKqE+ShY6NNkGR9Z2jUdvSFNJRLBwya53F9kYWXAGFFw+PR
+VhPY2Q4OgMXazmduq7F6zy+LXEEBaQwZ0TdcEdgdJzJy/6UgX7wlgNEffZiPFufr
+ei5tqtrihXNZZLpeIS7FIaBMa9acrQ==
+=3pUs
+-----END PGP SIGNATURE-----
+
+--Sig_/l6PsuMdULPkcpP1+lmSnSLc--
