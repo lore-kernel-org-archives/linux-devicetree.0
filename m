@@ -1,180 +1,36 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] This patch adds wifi to asus tinker board S
-Date: Mon, 08 Oct 2018 11:30:47 +0200
-Message-ID: <5682345.Yzn33l6ONg@phil>
-References: <20180922170236.8690-1-beagleboard@davidjohnsummers.uk>
- <20180922170236.8690-4-beagleboard@davidjohnsummers.uk>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH 1/2] ASoC: Add device tree documentation
+ file for wm8782 stereo DAC
+Date: Mon, 8 Oct 2018 10:33:09 +0100
+Message-ID: <20181008093309.GU1653@imbe.wolfsonmicro.main>
+References: <20181003193436.5281-1-daniel@zonque.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20180922170236.8690-4-beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <20181003193436.5281-1-daniel@zonque.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Daniel Mack <daniel@zonque.org>
+Cc: tiwai@suse.de, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
-
-Am Samstag, 22. September 2018, 19:02:36 CEST schrieb David Summers:
-> Now as fair as I understand. the asus tinker board contains a wifi
-> So should this patch be added to the tinker board dtsi ?
+On Wed, Oct 03, 2018 at 09:34:35PM +0200, Daniel Mack wrote:
+> Add a device tree documentation file for the wm8782 stereo DAC to describe
+> the regulator handles.
 > 
-> It also far move complex - it adds far more things, so consider
-> 
-> Signed-off-by: David Summers <beagleboard-8lkWs+DogrrqRUWtDFdff/XRex20P6io@public.gmane.org>
+> Signed-off-by: Daniel Mack <daniel@zonque.org>
 > ---
->  arch/arm/boot/dts/rk3288-tinker-s.dts | 93 +++++++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3288-tinker-s.dts b/arch/arm/boot/dts/rk3288-tinker-s.dts
-> index bc691e3f9c07..3d91924fd8db 100644
-> --- a/arch/arm/boot/dts/rk3288-tinker-s.dts
-> +++ b/arch/arm/boot/dts/rk3288-tinker-s.dts
-> @@ -10,6 +10,95 @@
->  / {
->  	model = "Rockchip RK3288 Asus Tinker Board S";
->  	compatible = "asus,rk3288-tinker-s", "rockchip,rk3288";
-> +
-> +	wireless-bluetooth {
-> +		compatible = "bluetooth-platdata";
-> +		uart_rts_gpios = <&gpio4 19 GPIO_ACTIVE_LOW>;
-> +		pinctrl-names = "default","rts_gpio";
-> +		pinctrl-0 = <&uart0_rts>;
-> +		pinctrl-1 = <&uart0_gpios>;
-> +		BT,reset_gpio    = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-> +		BT,wake_gpio     = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-> +		BT,wake_host_irq = <&gpio4 31 GPIO_ACTIVE_HIGH>;
-> +		status = "okay";
-> +	};
 
-the basic problem here is, that all these nodes stem from the so called
-soc-vendor-tree. Devicetree bindings normally go through a review process
-while soc vendors often invent their own shortcut that is not and will
-not be supported by the mainline kernel.
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-Bluetooth-platdata and wlan-platdata are examples of that.
-
-Additionally, the kernel now has the somewhat new "serdev" to manage the
-needed connection between bluetooth and uart. See
-http://events17.linuxfoundation.org/sites/events/files/slides/serdev-elce-2017-2.pdf
-for an introduction.
-
-
-> +	wireless-wlan {
-> +		compatible = "wlan-platdata";
-> +		rockchip,grf = <&grf>;
-> +		wifi_chip_type = "ap6212";
-> +		sdio_vref = <1800>;
-> +		WIFI,host_wake_irq = <&gpio4 30 GPIO_ACTIVE_HIGH>;
-> +		status = "okay";
-> +	};
-> +
-> +	io-domains {
-> +		compatible = "rockchip,rk3288-io-voltage-domain";
-> +		rockchip,grf = <&grf>;
-> +		flash0-supply = <&vcc_flash>;
-> +		gpio30-supply = <&vcc_io>;
-> +		wifi-supply = <&vcc_18>;
-> +		sdcard-supply = <&vccio_sd>;
-> +	};
-
-io-domains node is already present in rk3288-tinker.dtsi, so please
-add additional properties there (compatible + rockchip,grf are not needed)
-
-> +
-> +	sdio_pwrseq: sdio-pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		clocks = <&rk808 1>;
-> +		clock-names = "ext_clock";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&chip_enable_h>, <&wifi_enable_h>;
-> +
-> +		/*
-> +		 * On the module itself this is one of these (depending
-> +		 * on the actual card populated):
-> +		 * - SDIO_RESET_L_WL_REG_ON
-> +		 * - PDN (power down when low)
-> +		 */
-> +		reset-gpios = <&gpio4 28 GPIO_ACTIVE_LOW>, <&gpio4 27 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	vcc_flash: flash-regulator {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "vcc_flash";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		vin-supply = <&vcc_io>;
-> +	};
-
-that is a supply for the emmc - so not related to wifi at all, and I don't
-think that is actually named that way in the device schematics. Please
-use supply-names as described in the schematics pdf - I'd think Asus
-should provide one for the dev-board somewhere.
-
-
-> +};
-> +
-> +&pinctrl {
-> +	sdio-pwrseq {
-> +		wifi_enable_h: wifi-enable-h {
-> +			rockchip,pins = <4 28 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +		chip_enable_h: chip-enable-h {
-> +			rockchip,pins = <4 27 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-> +
-> +	wireless-bluetooth {
-> +		uart0_gpios: uart0-gpios {
-> +			rockchip,pins = <4 19 RK_FUNC_GPIO &pcfg_pull_none>;
-> +		};
-> +	};
-
-not needed
-
-> +};
-> +
-> +&sdio0 {
-> +	status = "okay";
-> +	clock-frequency = <50000000>;
-> +	clock-freq-min-max = <200000 50000000>;
-> +	bus-width = <4>;
-> +	cap-sd-highspeed;
-> +	cap-sdio-irq;
-> +	disable-wp;
-> +	keep-power-in-suspend;
-> +	mmc-pwrseq = <&sdio_pwrseq>;
-> +	non-removable;
-> +	num-slots = <1>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdio0_bus4 &sdio0_cmd &sdio0_clk>;
-> +	sd-uhs-sdr104;
-> +	supports-sdio;
->  };
->  
->  &emmc {
-> @@ -25,3 +114,7 @@
->  	mmc-ddr-1_8v;
->  	status = "okay";
->  };
-> +
-> +&uart0 {
-> +	pinctrl-0 = <&uart0_xfer>, <&uart0_cts>;
-> +};
-> 
-
-So ideally, take a look at other Rockchip boards on how they hook up wifi
-and start small by checking what the &sdio part above actually needs to
-function, then expand from there.
-
-
-Heiko
+Thanks,
+Charles
