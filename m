@@ -1,47 +1,35 @@
-Return-Path: <SRS0=6MUZ=MV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:60644 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbeJIUXC (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Oct 2018 16:23:02 -0400
-From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH 1/6] dt-bindings: clock: qcom: Add QCOM WCSS GCC clock bindings
-Date: Tue,  9 Oct 2018 18:35:52 +0530
-Message-Id: <1539090357-20853-2-git-send-email-govinds@codeaurora.org>
-In-Reply-To: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
-References: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
-Sender: devicetree-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Govind Singh <govinds@codeaurora.org>
+Return-Path: <SRS0=r14x=MU=bp.renesas.com=fabrizio.castro@kernel.org>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v3 0/6] Add uSD and eMMC to iwg23s
+Date: Mon,  8 Oct 2018 09:51:46 +0100
+Message-Id: <1538988712-17077-1-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Adrian Hunter <adrian.hunter@intel.com>, Shawn Lin <shawn.lin@rock-chips.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, tianshuliang <tianshuliang@hisilicon.com>, Jan Glauber <jglauber@cavium.com>, Venkat Gopalakrishnan <venkatg@codeaurora.org>, Carlo Caione <carlo@endlessm.com>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Liming Sun <lsun@mellanox.com>, Arnd Bergmann <arnd@arndb.de>, Alex Smith <alex.smith@imgtec.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add device tree bindings for WiFi QDSP gcc clock controls found in
-QCS404 soc.
+Dear All,
 
-Signed-off-by: Govind Singh <govinds@codeaurora.org>
----
- include/dt-bindings/clock/qcom,gcc-qcs404.h | 3 +++
- 1 file changed, 3 insertions(+)
+this new version incorporates Geert's comments.
+This series applies on top of next-20181005.
 
-diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-index e2def29..ba6bc55 100644
---- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
-+++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
-@@ -147,6 +147,8 @@
- #define GCC_MDP_TBU_CLK					138
- #define GCC_QDSS_DAP_CLK				139
- #define GCC_DCC_XO_CLK					140
-+#define GCC_WCSS_Q6_AHB_CBCR_CLK			141
-+#define GCC_WCSS_Q6_AXIM_CBCR_CLK			142
- 
- #define GCC_GENI_IR_BCR					0
- #define GCC_USB_HS_BCR					1
-@@ -162,5 +164,6 @@
- #define GCC_PCIE_0_LINK_DOWN_BCR			11
- #define GCC_PCIEPHY_0_PHY_BCR				12
- #define GCC_EMAC_BCR					13
-+#define GCC_WDSP_RESTART				14
- 
- #endif
+Thanks,
+Fab
+
+Fabrizio Castro (6):
+  dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
+  pinctrl: sh-pfc: r8a77470: Add SDHI support
+  mmc: renesas_sdhi: Add r8a77470 SDHI1 support
+  ARM: dts: r8a77470: Add SDHI0 support
+  ARM: dts: r8a77470: Add SDHI1 support
+  ARM: dts: iwg23s-sbc: Add uSD and eMMC support
+
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt |   6 +-
+ arch/arm/boot/dts/r8a77470-iwg23s-sbc.dts          |  76 ++++++++++
+ arch/arm/boot/dts/r8a77470.dtsi                    |  28 +++-
+ drivers/mmc/host/Kconfig                           |   4 +-
+ drivers/mmc/host/renesas_sdhi_internal_dmac.c      |   6 +-
+ drivers/pinctrl/sh-pfc/pfc-r8a77470.c              | 162 ++++++++++++++++++++-
+ 6 files changed, 273 insertions(+), 9 deletions(-)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
