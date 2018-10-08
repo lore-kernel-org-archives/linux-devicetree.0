@@ -1,24 +1,28 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [RESEND PATCH v2 0/5] net: phy: mscc: add support for VSC8584
- and VSC8574 Microsemi quad-port PHYs
-Date: Mon, 08 Oct 2018 10:31:46 -0700 (PDT)
-Message-ID: <20181008.103146.1207267745006170466.davem@davemloft.net>
-References: <20181008101445.25946-1-quentin.schulz@bootlin.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v1 00/11] Continuing the work on coupled regulators
+Date: Mon, 8 Oct 2018 10:58:35 -0700
+Message-ID: <20181008175835.GJ5662@atomide.com>
+References: <20181005153638.1886-1-digetx@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008101445.25946-1-quentin.schulz@bootlin.com>
+Content-Disposition: inline
+In-Reply-To: <20181005153638.1886-1-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: quentin.schulz@bootlin.com
-Cc: alexandre.belloni@bootlin.com, ralf@linux-mips.org, paul.burton@mips.com, jhogan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, allan.nielsen@microchip.com, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, thomas.petazzoni@bootlin.com, antoine.tenart@bootlin.com
+To: Dmitry Osipenko <digetx@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Maciej Purski <m.purski@samsung.com>, Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Lucas Stach <l.stach@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Date: Mon,  8 Oct 2018 12:14:40 +0200
+* Dmitry Osipenko <digetx@gmail.com> [181005 15:43]:
+> 1. Re-worked the original "Add voltage balancing mechanism" patch from
+>    Maciej by:
+>         1) Fixing infinite loop within regulator_balance_voltage().
+>         2) Handling suspend_state_t properly.
+>         3) Fixing broken compilation of the patch.
 
-> RESEND: rebased on top of latest net-next and on top of latest version of
-> "net: phy: mscc: various improvements to Microsemi PHY driver" patch
-> series.
+Thanks for fixing these, this series no longer hangs for me
+on beagle-x15.
 
-Patches 1-3 applied to net-next, thanks.
+Regards,
+
+Tony
