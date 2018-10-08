@@ -1,42 +1,58 @@
-From: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Subject: [PATCH V2 1/2] dt-bindings: mmc: sdhci-msm: Add new compatible string for sdcdc10 DLL
-Date: Mon,  8 Oct 2018 18:55:37 +0530
-Message-ID: <1539005138-32560-2-git-send-email-vbadigan@codeaurora.org>
-References: <1539005138-32560-1-git-send-email-vbadigan@codeaurora.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] reset: Fix potential use-after-free in
+ __of_reset_control_get()
+Date: Mon, 08 Oct 2018 15:28:49 +0200
+Message-ID: <1539005329.11512.26.camel@pengutronix.de>
+References: <20181008111435.25994-1-geert+renesas@glider.be>
+         <1539003375.11512.19.camel@pengutronix.de>
+         <CAMuHMdU_ECQxxD1HK5bq5QY7QnxzaBKSJsZFw+284oSnJfSFAA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539005138-32560-1-git-send-email-vbadigan@codeaurora.org>
+In-Reply-To: <CAMuHMdU_ECQxxD1HK5bq5QY7QnxzaBKSJsZFw+284oSnJfSFAA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: adrian.hunter@intel.com, ulf.hansson@linaro.org, robh+dt@kernel.org, evgreen@chromium.org, dianders@google.com
-Cc: asutoshd@codeaurora.org, riteshh@codeaurora.org, stummala@codeaurora.org, sayalil@codeaurora.org, linux-mmc@vger.kernel.org, linux-arm-msm@vger.kernel.org, Veerabhadrarao Badiganti <vbadigan@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On the SDHC-MSM controllers which makes use of sdcdc10 variant DLLs,
-the DLL configuration needs to be restored whenever controller clocks
-are gated. This new compatible string denotes the sdhc-msm controller
-variant which uses sdcdc10 DLL.
+On Mon, 2018-10-08 at 15:12 +0200, Geert Uytterhoeven wrote:
+> Hi Philipp,
+> 
+> On Mon, Oct 8, 2018 at 2:56 PM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > On Mon, 2018-10-08 at 13:14 +0200, Geert Uytterhoeven wrote:
+> > > Calling of_node_put() decreases the reference count of a device tree
+> > > object, and may free some data.
+> > > 
+> > > However, the of_phandle_args structure embedding it is passed to
+> > > reset_controller_dev.of_xlate() after that, so it may still be accessed.
+> > > 
+> > > Move the call to of_node_put() down to fix this.
+> > > 
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > >  drivers/reset/core.c | 15 ++++++++-------
+> > >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > > 
+> > > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> > > index 225e34c56b94a2e3..bc9df10d31b4bae1 100644
+> > > --- a/drivers/reset/core.c
+> > > +++ b/drivers/reset/core.c
+> > > @@ -496,27 +496,28 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
+[...]
+> > >       /* reset_list_mutex also protects the rcdev's reset_control list */
+> > >       rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
+> > > 
+> > > +out:
+> > > +     of_node_put(args.np);
+> > >       mutex_unlock(&reset_list_mutex);
+> > 
+> > Thank you for the patch. I'd like to move of_node_put after mutex_unlock
+> > for symmetry. If you agree, I can switch the two when applying.
+> 
+> No objection, thanks!
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Applied to reset/next with that change.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 3720385..49b0a43 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -6,7 +6,11 @@ and the properties used by the sdhci-msm driver.
- Required properties:
- - compatible: Should contain:
- 		"qcom,sdhci-msm-v4" for sdcc versions less than 5.0
-+		"qcom,sdhci-msm-v4-sdcdc10" for sdcc versions < 5.0 and
-+		which makes use of sdcdc10 variant DLLs.
- 		"qcom,sdhci-msm-v5" for sdcc versions >= 5.0
-+		"qcom,sdhci-msm-v5-sdcdc10" for sdcc versions >= 5.0 and
-+		which makes use of sdcdc10 variant DLLs.
- 		For SDCC version 5.0.0, MCI registers are removed from SDCC
- 		interface and some registers are moved to HC. New compatible
- 		string is added to support this change - "qcom,sdhci-msm-v5".
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+regards
+Philipp
