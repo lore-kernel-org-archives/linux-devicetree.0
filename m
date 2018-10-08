@@ -1,83 +1,88 @@
-Return-Path: <SRS0=3Ka7=MV=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2] arm64: dts: renesas: r8a77970: add thermal support
+Return-Path: <SRS0=hi9w=MU=cogentembedded.com=sergei.shtylyov@kernel.org>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a77970: add thermal support
 References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
-Message-ID: <575ebd1f-165a-756f-f76a-14a11bba7f19@cogentembedded.com>
-Date: Tue, 9 Oct 2018 22:47:47 +0300
+ <51491585-16fb-93b1-bb1a-09e89683f2f0@cogentembedded.com>
+ <CAMuHMdWsW-E_a17LJ-i4Wts531B-PyYqW9mqWQmt=jH6fUpOPg@mail.gmail.com>
+ <1ef39615-fc82-dc2a-05eb-7b1aed7afa98@cogentembedded.com>
+ <CAMuHMdUqBz_BB3+jDDxO0dXq1RSQQ6KK8CjR0WSQvWjMZBMnXQ@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Message-ID: <b0304262-8d50-db25-149e-fce348ced51f@cogentembedded.com>
+Date: Mon, 8 Oct 2018 21:04:46 +0300
 MIME-Version: 1.0
-In-Reply-To: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
+In-Reply-To: <CAMuHMdUqBz_BB3+jDDxO0dXq1RSQQ6KK8CjR0WSQvWjMZBMnXQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Describe THS/CIVM in the R8A77970 device tree.
+Hello!
 
-Based on the original (and large) patches by Vladimir Barinov.
+On 10/08/2018 07:40 PM, Geert Uytterhoeven wrote:
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>> Describe THS/CIVM in the R8A77970 device trees.
+>>>> Based on the original (and large) patches by Vladimir Barinov.
+>>>>
+>>>> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>
+>>>> ---
+>>>> This patch is against the 'renesas-devel-20181004-v4.19-rc6' tag of Simon
+>>>> Horman's 'renesas.git' repo.
+>>>>
+>>>> The thermal driver/bindings patches have been posted yesterday...
+>>>>
+>>>>  arch/arm64/boot/dts/renesas/r8a77970.dtsi |   32 ++++++++++++++++++++++++++++++
+>>>>  1 file changed, 32 insertions(+)
+>>>>
+>>>> Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+>>>> ===================================================================
+>>>> --- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+>>>> +++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+>>>> @@ -300,6 +300,19 @@
+>>>>                         #power-domain-cells = <1>;
+>>>>                 };
+>>>>
+>>>> +               thermal: thermal@e6190000 {
+>>>> +                       compatible = "renesas,thermal-r8a77970";
+>>>> +                       reg =  <0 0xe6190000 0 0x14
+>>>
+>>> 0x14 was appropriate for R-Mobile APE6...
+>>
+>>    Copy&paste is to blame here, I guess... I'll fix to 0x10.
+> 
+> OK.
+> 
+>>>> +                               0 0xe6190100 0 0x38>;
+>>>
+>>> What about the CIVM status register? DT describes hardware, not driver
+>>> limitations.
+>>
+>>    I wasn't sure whether to put it into a separate "reg" tuple (which would confuse
+>> the driver) or not. After looking into the manual again, I'm going to extend the
+>> 2nd "reg" tuple...
+> 
+> The CIVM Status Register indicates the chip internal voltage.
+> As such it's not a per-channel property, and IMHO doesn't belong in the second
+> tuple
 
----
-This patch is against the 'renesas-devel-20181004-v4.19-rc6' tag of Simon
-Horman's 'renesas.git' repo.
+   I was looking a the block diagrams (both in the chapters 10A and 10B) and I got a totally different impression...
 
-Changed in version 2:
-- fix the "reg" prop in the thermal device node;
-- fixed wrong plural in the patch description.
+> (e.g. R-Mobile APE6 has 3 channels).
 
- arch/arm64/boot/dts/renesas/r8a77970.dtsi |   32 ++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+   The driver handles that alright. It's the adding the CIVM as a separate tuple
+that would break it.
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
-@@ -300,6 +300,19 @@
- 			#power-domain-cells = <1>;
- 		};
- 
-+		thermal: thermal@e6190000 {
-+			compatible = "renesas,thermal-r8a77970";
-+			reg =  <0 0xe6190000 0 0x10
-+				0 0xe6190100 0 0x120>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 522>;
-+			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
-+			resets = <&cpg 522>;
-+			#thermal-sensor-cells = <0>;
-+		};
-+
- 		intc_ex: interrupt-controller@e61c0000 {
- 			compatible = "renesas,intc-ex-r8a77970", "renesas,irqc";
- 			#interrupt-cells = <2>;
-@@ -1033,6 +1046,25 @@
- 		};
- 	};
- 
-+	thermal-zones {
-+		cpu-thermal {
-+			polling-delay-passive = <250>;
-+			polling-delay = <1000>;
-+			thermal-sensors = <&thermal>;
-+
-+			trips {
-+				cpu-crit {
-+					temperature = <120000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv8-timer";
- 		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
+> Perhaps extending the bindings to handle more reg tuples, possibly using
+> reg-names?
+
+   You mean teaching the driver about one more kind of "reg" tuples? I would like
+to avoid that of course -- due to the need to still handle the old DTs as well...
+
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+
+MBR, Sergei
