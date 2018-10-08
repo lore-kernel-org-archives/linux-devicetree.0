@@ -1,41 +1,82 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx6qdl-udoo: Add Pincfgs for UART4
-Date: Mon, 8 Oct 2018 17:51:00 -0300
-Message-ID: <CAOMZO5BqL5Tfd0+KmN2DiJdoWLSYWSWyppw8qdrb-G_by_68Tw@mail.gmail.com>
-References: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1538663639-3427-1-git-send-email-kueffner.markus@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kueffner.markus@gmail.com
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 0/7] mfd/pinctrl: add initial support of TI DS90Ux9xx ICs
+Date: Tue,  9 Oct 2018 00:11:58 +0300
+Message-ID: <20181008211205.2900-1-vz@mleia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Marek Vasut <marek.vasut@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 4, 2018 at 11:35 AM Markus Kueffner
-<kueffner.markus@gmail.com> wrote:
->
-> From: Markus Kueffner <kueffner.markus@gmail.com>
->
-> Add Pincfgs for UART4 to enable Communication with the onboard SAM3X
->
-> Signed-off-by: Markus Kueffner <kueffner.markus@gmail.com>
+The published drivers describe the essential and generic parts of
+TI DS90Ux9xx series of ICs, which allow to transfer video, audio and
+control signals between FPD-Link III serializers and deserializers.
 
-Looks good as per the schematics:
+The placement of TI DS90Ux9xx I2C client driver was selected to be
+drivers/mfd as the most natural location of a true MFD driver,
+apparently drivers/media/i2c is for another type of device drivers,
+also DS90Ux9xx I2C bridge subcontroller driver is placed nearby,
+because drivers/i2c for it would be an inappropriate destination
+as well. Informally the TI DS90Ux9xx ICs serve a similar function
+to SMSC/Microchip MOST, and its drivers are in drivers/staging/most,
+the final destination is unknown to me. Please feel free to advise
+a better location for the published drivers, at the moment the core
+drivers are in drivers/mfd, but I select linux-media as a mailing list.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+The published drivers instantly give a chance to test video bridge
+functionality to a TI DS90Ux9xx deserializer equipped display panel
+with the aide of Laurent's "lvds-encoder" driver by misusing it
+as a generic and transparent drm bridge with no particular LVDS
+specifics in it, for that it should be sufficient just to add the
+corresponding device node and input/output ports as children of
+a serializer connected to an application controller.
 
-> +&uart4 { // iMX6-Arduino internal serial port - ttymxc3
+While the selected scheme of IC description by a list of subdevices,
+where each one described in its own device node, works pretty well,
+it might lead to unnecessary overcomplicated description of connections
+between subdevices on serializer and deserializer sides, i.e. for
+proper description of links/connections video serializer should
+be linked to video deserializer, audio serializer should be linked
+to audio deserializer and so on, however formally there is just one
+FPD-III Link connection between two ICs.
 
-Minor nit: // style comment should be avoided.
+The series of patches is rebased on top of linux-next, and there are
+more changes in the queue to provide better support of TI DS90Ux9xx ICs.
 
-Actually the whole comment could de dropped IMHO.
+The introduction to the ICs and drivers can be found in my presentation
+https://schd.ws/hosted_files/ossalsjp18/8a/vzapolskiy_als2018.pdf
+
+Sandeep Jain (1):
+  dt-bindings: mfd: ds90ux9xx: add description of TI DS90Ux9xx ICs
+
+Vladimir Zapolskiy (6):
+  dt-bindings: mfd: ds90ux9xx: add description of TI DS90Ux9xx I2C bridge
+  dt-bindings: pinctrl: ds90ux9xx: add description of TI DS90Ux9xx pinmux
+  mfd: ds90ux9xx: add TI DS90Ux9xx de-/serializer MFD driver
+  mfd: ds90ux9xx: add I2C bridge/alias and link connection driver
+  pinctrl: ds90ux9xx: add TI DS90Ux9xx pinmux and GPIO controller driver
+  MAINTAINERS: add entry for TI DS90Ux9xx FPD-Link III drivers
+
+ .../bindings/mfd/ti,ds90ux9xx-i2c-bridge.txt  |  61 ++
+ .../devicetree/bindings/mfd/ti,ds90ux9xx.txt  |  66 ++
+ .../bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt |  83 ++
+ MAINTAINERS                                   |  10 +
+ drivers/mfd/Kconfig                           |  22 +
+ drivers/mfd/Makefile                          |   2 +
+ drivers/mfd/ds90ux9xx-core.c                  | 879 ++++++++++++++++
+ drivers/mfd/ds90ux9xx-i2c-bridge.c            | 764 ++++++++++++++
+ drivers/pinctrl/Kconfig                       |  11 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-ds90ux9xx.c           | 970 ++++++++++++++++++
+ include/linux/mfd/ds90ux9xx.h                 |  42 +
+ 12 files changed, 2911 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,ds90ux9xx-i2c-bridge.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,ds90ux9xx.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ti,ds90ux9xx-pinctrl.txt
+ create mode 100644 drivers/mfd/ds90ux9xx-core.c
+ create mode 100644 drivers/mfd/ds90ux9xx-i2c-bridge.c
+ create mode 100644 drivers/pinctrl/pinctrl-ds90ux9xx.c
+ create mode 100644 include/linux/mfd/ds90ux9xx.h
+
+-- 
+2.17.1
