@@ -1,124 +1,74 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: Re: [PATCH 07/12] drm/sun4i: sun6i_mipi_dsi: Fix
- TCON DRQ set bits
-Date: Mon, 8 Oct 2018 17:05:46 +0200
-Message-ID: <20181008150546.xob5es7gkn7t6kie@flea>
-References: <20180927114850.24565-1-jagan@amarulasolutions.com>
- <20180927114850.24565-8-jagan@amarulasolutions.com>
- <20180927165853.dpluekbqzat663q7@flea>
- <CAMty3ZDUxqokipNqnn6c618pebdVBWc8Pfzaz+4+SYqR42Yerg@mail.gmail.com>
- <20181002132008.qtatwtbb3ldu75ay@flea>
- <45dbebe9-d0bd-4a1c-f8ee-3afd64cf35f9@openedev.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH V2 net-next 2/5] net: Introduce a new MII time stamping
+ interface.
+Date: Mon, 8 Oct 2018 17:07:22 +0200
+Message-ID: <20181008150722.GC6216@lunn.ch>
+References: <20181007173823.21590-3-richardcochran@gmail.com>
+ <20181007182751.GC22794@lunn.ch>
+ <20181007191551.gy4l4g6qdgz6ztez@localhost>
+ <20181007195400.GA25883@lunn.ch>
+ <20181008020439.m2cytnnv5ue7yc5l@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5fsz2e6ww2xvfdes"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBVPE5XOQKGQE7CBF64A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <45dbebe9-d0bd-4a1c-f8ee-3afd64cf35f9-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Vasily Khoruzhick <anarsoul-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20181008020439.m2cytnnv5ue7yc5l@localhost>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, David Miller <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, Jacob Keller <jacob.e.keller@intel.com>, Mark Rutland <mark.rutland@arm.com>, Miroslav Lichvar <mlichvar@redhat.com>, Rob Herring <robh+dt@kernel.org>, Willem de Bruijn <willemb@google.com>
 List-Id: devicetree@vger.kernel.org
 
-
---5fsz2e6ww2xvfdes
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Oct 03, 2018 at 08:52:06AM +0530, Jagan Teki wrote:
-> On Tuesday 02 October 2018 06:50 PM, Maxime Ripard wrote:
-> > On Thu, Sep 27, 2018 at 11:15:50PM +0530, Jagan Teki wrote:
-> > > On Thu, Sep 27, 2018 at 10:28 PM Maxime Ripard
-> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > > 
-> > > > On Thu, Sep 27, 2018 at 05:18:45PM +0530, Jagan Teki wrote:
-> > > > > TCON DRQ set bits for non-burst DSI mode can computed via
-> > > > > horizontal front porch instead of front porch + sync timings.
-> > > > > 
-> > > > > Since there no documentation for TCON_DRQ_REG(0x7c) register
-> > > > > this change is taken as reference from BPI-M64-bsp.
-> > > > 
-> > > > Detailing more what the issue is would be great.
-> > > > 
-> > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > > ---
-> > > > >   drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 4 ++--
-> > > > >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > > index 599284971ab6..9918fdb990ff 100644
-> > > > > --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > > +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-> > > > > @@ -367,9 +367,9 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
-> > > > >        struct mipi_dsi_device *device = dsi->device;
-> > > > >        u32 val = 0;
-> > > > 
-> > > > The computation here is in the A64 driver:
-> > > > 
-> > > > if ((panel->lcd_ht - panel->lcd_x - panel->lcd_hbp) < 21) {
-> > > >          dsi_dev[sel]->dsi_tcon_drq.bits.drq_mode = 0;
-> > > > } else {
-> > > >          dsi_dev[sel]->dsi_tcon_drq.bits.drq_set =
-> > > >                  (panel->lcd_ht-panel->lcd_x-panel->lcd_hbp-20) *
-> > > >                  dsi_pixel_bits[panel->lcd_dsi_format]/(8*4);
-> > > > }
-> > > > 
-> > > > It is testing that the sync + front porch is smaller than 21, and
-> > > > otherwise sets the drq.
-> > > > 
-> > > > > -     if ((mode->hsync_end - mode->hdisplay) > 20) {
-> > > > 
-> > > > My code here is testing that the difference between hsync_end and
-> > > > hdisplay is superior to 20, and sets the DRQ if true. The condition is
-> > > > reversed, but otherwise, that difference is the front porch plus the
-> > > > sync length.
-> > > 
-> > > True, I understand this, but does drq setting here is specific to SoC?
-> > > I thought of finding DRQ in A31 BSP but I couldn't find the code. do
-> > > you have bsp somewhere in github?
-> > > 
-> > > > 
-> > > > > +     if ((mode->hsync_start - mode->hdisplay) > 20) {
-> > > > 
-> > > > However, you are testing for just the front porch, unlike what your
-> > > > commit log is saying, and unlike what allwinner's code is saying. So
-> > > > this deserves some explanation.
-> > > 
-> > > but A64 is doing this, do you think it's completely A64 specific or
-> > > testing panel with front porch drq?
-> > 
-> > See the above code excerpt:
-> > panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
-> > 
-> > This is hsync + front porch. Not the sole front porch. So no, it's not
-> > doing this.
+On Sun, Oct 07, 2018 at 07:04:39PM -0700, Richard Cochran wrote:
+> On Sun, Oct 07, 2018 at 09:54:00PM +0200, Andrew Lunn wrote:
+> > Sure, but things have moved on since then.
 > 
-> => panel->lcd_ht - panel->lcd_x - panel->lcd_hbp
+> I was curious about this.  Based on your uses cases, I guess that you
+> mean phylib?  But not much has changed AFAICT. (There is one new
+> global function and two were removed, but that doesn't change the
+> picture WRT time stamping.)
 > 
-> from drivers/video/sunxi/disp2/disp/de/disp_lcd.c
-> timmings->hor_front_porch= panel_info->lcd_ht-panel_info->lcd_hbp -
-> panel_info->lcd_x;
+> Phylink now has two or three new users, one of which is dsa.  Is that
+> the big move?
 > 
-> => (timmings->hor_front_porch + panel->lcd_hbp + panel->lcd_x) -
-> panel->lcd_x - panel->hbp
-> => timmings->hor_front_porch
-> => mode->hsync_start - mode->hdisplay
+> The situation with MACs that handle their own PHYs without phylib is
+> unchanged, AFAICT.
 > 
-> This is simply a front porch.
+> So what exactly do you mean?
 
-And this should be in your commit log as well.
+Hi Richard
 
-Maxime
+We are pushing phylink. I really do think anything using > 1Gbps links
+should be using phylink, not phydev. And i think we have reached the
+tipping point, that most new MACs will be > 1Gbps. 2.5G or maybe 5G
+will be the new default. The MAC-PHY link is quiet messy when you get
+above 1G. There are a number of options which you can use, and the MAC
+and PHY need to negotiate a common set to use. phylink can do this,
+phylib cannot easily do it. So i see phylib slowly becoming a legacy
+API for MAC drivers.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---5fsz2e6ww2xvfdes--
+We are also slowly seeing more SFPs, and Linux controlling them. SFP
+are not new, they have been in top end switches for a long time. But
+they are slowly becoming more popular in industrial settings, and such
+embedded industrial systems tend to let Linux control them, not
+firmware. And i think industry makes more use of PTP than other
+fields, but i could be wrong. Since optical SFP modules are passive, a
+bump-in-the-wire time stamper actually makes sense for these.
+
+Also, fibre on the last mile is slowly becoming more of a thing, so
+maybe we will start seeing CPE, consumer routers, with SFP ports?
+
+As i said before, we are seeing more MACs which use firmware for
+controlling the PHYs. I'm not sure why yet. Maybe it is coupled with
+more MACs supporting > 1G, which is messy. Or the lack of good PHY
+drivers for PHYs which support > 1G? Hopefully the drivers will
+improve with time.
+
+So as you said, the phylib API has not changed much, which is common
+for mature code. But i think long term, it will become less important.
+It will share the space with phylink. And any code which wants to be
+generically usable, should not depend on phydev. Architecturally, it
+seems wrong for you to hang what should be a generic time stamping
+framework on phydev. It is not future proof. net_device is future
+proof.
+
+	  Andrew
