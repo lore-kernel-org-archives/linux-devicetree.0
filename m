@@ -1,8 +1,8 @@
 From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH 08/14] mtd: maps: physmap: Return -ENOMEM directly when info
- allocation fails
-Date: Mon,  8 Oct 2018 22:10:21 +0200
-Message-ID: <20181008201027.17952-9-boris.brezillon@bootlin.com>
+Subject: [PATCH 14/14] dt-binding: mtd: physmap: Document the addr-gpios
+ property
+Date: Mon,  8 Oct 2018 22:10:27 +0200
+Message-ID: <20181008201027.17952-15-boris.brezillon@bootlin.com>
 References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,31 +22,32 @@ To: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-There's no point going to the err_out path since no resources have
-been allocated yet, just return -ENOMEM directly.
+From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 
+Add documentation for the addr-gpios. This extension to the physmap
+binding allow creating flash devices that are paged using GPIOs.
+
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
 Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
 ---
- drivers/mtd/maps/physmap.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/mtd/mtd-physmap.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/mtd/maps/physmap.c b/drivers/mtd/maps/physmap.c
-index 9b34223c4635..7d30f3524d35 100644
---- a/drivers/mtd/maps/physmap.c
-+++ b/drivers/mtd/maps/physmap.c
-@@ -110,10 +110,8 @@ static int physmap_flash_probe(struct platform_device *dev)
+diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+index 232fa12e90ef..7df0dcaccb7d 100644
+--- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
++++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+@@ -29,6 +29,8 @@ file systems on embedded devices.
+  - use-advanced-sector-protection: boolean to enable support for the
+    advanced sector protection (Spansion: PPB - Persistent Protection
+    Bits) locking.
++ - addr-gpios : (optional) List of GPIO descriptors that will be used to
++   address the MSBs address lines. The order goes from LSB to MSB.
  
- 	info = devm_kzalloc(&dev->dev, sizeof(struct physmap_flash_info),
- 			    GFP_KERNEL);
--	if (info == NULL) {
--		err = -ENOMEM;
--		goto err_out;
--	}
-+	if (!info)
-+		return -ENOMEM;
- 
- 	while (platform_get_resource(dev, IORESOURCE_MEM, info->nmaps))
- 		info->nmaps++;
+ For JEDEC compatible devices, the following additional properties
+ are defined:
 -- 
 2.14.1
 
