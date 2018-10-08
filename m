@@ -1,98 +1,80 @@
-From: Quentin Schulz <quentin.schulz@bootlin.com>
-Subject: Re: [PATCH v2 3/6] arm64: dts: allwinner: axp803: add AC and battery
- power supplies
-Date: Mon, 8 Oct 2018 09:28:58 +0200
-Message-ID: <20181008072858.kwhht67idbmevxyv@qschulz>
-References: <20181004193410.7265-1-oskari@lemmela.net>
- <20181006211836.28253-1-oskari@lemmela.net>
- <20181006211836.28253-4-oskari@lemmela.net>
+From: cang@codeaurora.org
+Subject: Re: [PATCH v9 7/7] dt-bindings: ufshcd-pltfrm: Add core reset string
+Date: Mon, 08 Oct 2018 15:32:31 +0800
+Message-ID: <1cf6d77f049c6dcd62b9d9758e06b186@codeaurora.org>
+References: <1537504081-29976-1-git-send-email-quic_cang@quicinc.com>
+ <1537504081-29976-8-git-send-email-quic_cang@quicinc.com>
+ <20180927150606.GA20771@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nien25lswmkt5zkw"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181006211836.28253-4-oskari@lemmela.net>
+In-Reply-To: <20180927150606.GA20771@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Oskari Lemmela <oskari@lemmela.net>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Lee Jones <lee.jones@linaro.org>, Quentin Schulz <quentin.schulz@free-electrons.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Can Guo <quic_cang@quicinc.com>, subhashj@codeaurora.org, asutoshd@codeaurora.org, vivek.gautam@codeaurora.org, evgreen@chromium.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, Amit Nischal <anischal@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Malaterre <malat@debian.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2018-09-27 23:06, Rob Herring wrote:
+> On Thu, Sep 20, 2018 at 09:28:00PM -0700, Can Guo wrote:
+>> From: Can Guo <cang@codeaurora.org>
+>> 
+>> Add core reset support string for UFS.
+>> 
+>> Signed-off-by: Amit Nischal <anischal@codeaurora.org>
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>> 
+>> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt 
+>> b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> index c39dfef..6b697c4 100644
+>> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> @@ -11,6 +11,11 @@ Required properties:
+>>  					  "qcom,ufshc"
+>>  - interrupts        : <interrupt mapping for UFS host controller IRQ>
+>>  - reg               : <registers mapping>
+>> +- reset             : reset specifier pair consists of phandle for 
+>> the reset provider
+>> +                      and reset lines used by this controller. It is 
+>> mandatory for
+>> +		      QCOM SDM845 platform.
+>> +- reset-names       : reset signal name strings sorted in the same 
+>> order as the
+>> +		      resets property. It is mandatory for QCOM SDM845 platform.
+> 
+> This already exists as of 4.19 under optional properties. (And you 
+> can't
+> add new required properties anyways.)
+> 
 
---nien25lswmkt5zkw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you Rob, I also found the newly merged change from Huawei on 4.19.
+Then our code would need a small change to parse the new reset-names 
+string.
 
-Hi Oskari,
+>> 
+>>  Optional properties:
+>>  - phys                  : phandle to UFS PHY node
+>> @@ -64,6 +69,8 @@ Example:
+>>  		clocks = <&core 0>, <&ref 0>, <&iface 0>;
+>>  		clock-names = "core_clk", "ref_clk", "iface_clk";
+>>  		freq-table-hz = <100000000 200000000>, <0 0>, <0 0>;
+>> +		resets = <clock_gcc GCC_UFS_BCR>;
+>> +		reset-names = "core_reset";
+> 
+> And the name should be "rst" (or omitted).
+> 
 
-On Sun, Oct 07, 2018 at 12:18:33AM +0300, Oskari Lemmela wrote:
-> AXP803 is compatible with AXP813. Add DT nodes ADC, GPIO,
-> AC and battery power supplies.
->=20
-> Signed-off-by: Oskari Lemmela <oskari@lemmela.net>
-> ---
->  arch/arm64/boot/dts/allwinner/axp803.dtsi | 31 +++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/axp803.dtsi b/arch/arm64/boot/=
-dts/allwinner/axp803.dtsi
-> index e5eae8bafc42..533987b2fe7a 100644
-> --- a/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/axp803.dtsi
-> @@ -49,6 +49,37 @@
->  	interrupt-controller;
->  	#interrupt-cells =3D <1>;
-> =20
-> +	axp_adc: adc {
-> +		compatible =3D "x-powers,axp813-adc";
-> +		#io-channel-cells =3D <1>;
-> +	};
-> +
-> +	axp_gpio: gpio {
-> +		compatible =3D "x-powers,axp813-gpio";
-> +		gpio-controller;
-> +		#gpio-cells =3D <2>;
-> +
-> +		gpio0_ldo: gpio0-ldo {
-> +			pins =3D "GPIO0";
-> +			function =3D "ldo";
-> +		};
-> +
-> +		gpio1_ldo: gpio1-ldo {
-> +			pins =3D "GPIO1";
-> +			function =3D "ldo";
-> +		};
-> +	};
-> +
-> +	ac_power_supply: ac-power-supply {
-> +		compatible =3D "x-powers,axp813-ac-power-supply";
-> +		status =3D "disabled";
-> +	};
-> +
+Sure, got it, thank you.
 
-Same as the patch before, I'd put it before axp_adc.
-
-Thanks,
-Quentin
-
---nien25lswmkt5zkw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEXeEYjDsJh38OoyMzhLiadT7g8aMFAlu7BzkACgkQhLiadT7g
-8aMKChAAmCqckD3HLafXfq8eWXLc6uiJjUHK42ONv78dbf9Wn7Bc06xGV9gLNCk1
-swJ62e8mYD63/7BAoEl+9z1ocTWRm+RUyAZUpWh7r6PJbjmisNvrtqYjW4JYcvN+
-18vHD7KTK0PstqHoULlYOLGvZpNHJ8TE7/qFuLUHXW5MymGVAgTUB21aocjRXAsn
-R7wZrhIEPHr3ghEEM+K85V70jiVvXs91rcO2ctEqd5z1ZA7W3SBSfC6BK6HaNUzn
-deSUoBnOsLQwwlsOY/72yALUN6jQR8EzorK0VAUEZXMJkn0x5tdy9F+ZJGlg0fpi
-45ygdlyw/kG1bbTGNNHKWRqsz778b6DoEbBadMdRDd/ZCwcWm1fRvDYATgJTBvht
-9i7/R80Fdf7s8ix2zLn/8ZIQi2t74w+RksoxMHej67uOlOyGug67MAV27Q2RPMJk
-TFzylNi0tKq9HENdWKIOHtWwp6qtSDYJZxU52kmEJLxMY8oCujxeWRflBZApYbh1
-3m7GV8JTfQs/heDaz3E4npG6DJpMXArrXKz7Q/3Ys2ft9fezk4esUMnCPedyzgIH
-WijPr+etjSg2WGEKIq76/K+wEQc4NN0rHeLgm162xP5MFp/cOWCpyVb5ZwVRPsf8
-gmwqNvnJXY9ADm8XrQl34av5RAxt+ssceffN09iV3DAcSSR3p50=
-=wwHW
------END PGP SIGNATURE-----
-
---nien25lswmkt5zkw--
+>>  		phys = <&ufsphy1>;
+>>  		phy-names = "ufsphy";
+>>  	};
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
+>> 
