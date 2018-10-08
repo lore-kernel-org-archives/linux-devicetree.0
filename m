@@ -1,100 +1,61 @@
-From: <honghui.zhang@mediatek.com>
-Subject: [PATCH v6 7/9] PCI: mediatek: Add system pm support for MT2712 and MT7622
-Date: Mon, 8 Oct 2018 11:24:46 +0800
-Message-ID: <1538969088-7136-8-git-send-email-honghui.zhang@mediatek.com>
-References: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
+From: Houlong Wei <houlong.wei@mediatek.com>
+Subject: [PATCH v26 0/2] MediaTek MT8173 CMDQ support
+Date: Mon, 8 Oct 2018 11:43:22 +0800
+Message-ID: <1538970204-7517-1-git-send-email-houlong.wei@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lorenzo.pieralisi@arm.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com
-Cc: ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>, Monica Wang <monica.wang@mediatek.com>, Houlong Wei <houlong.wei@mediatek.c>
 List-Id: devicetree@vger.kernel.org
 
-From: Honghui Zhang <honghui.zhang@mediatek.com>
+Hi,
 
-In order to reduce the PCIe power consuming while system suspend,
-the physical layer should be gated. And the PCIe link should be
-re-established and the related control register values should be
-re-initialized after system resume.
+This is Mediatek MT8173 Command Queue(CMDQ) driver. The CMDQ is used
+to help write registers with critical time limitation, such as
+updating display configuration during the vblank. It controls Global
+Command Engine (GCE) hardware to achieve this requirement.
 
-Register suspend_noirq & resume_noirq callback functions to allow
-PCIe to come up after resume from RAM.
+Changes since v25:
+ -Replace WARN_ON() with WARN_ONCE() and add debug information.
+Changes since v24:
+ -move WARN_ON() into cmdq_pkt_append_command() from outside
+Changes since v23:
+ -rebase on v4.19-rc1
+ -revise return value of cmdq_mbox_create()
+ -revise cmdq_pkt_create()
+ -add MODULE_LICENSE() for mtk-cmdq-helper.c
+ -adjust functions order in mtk-cmdq.h
+Changes since v22:
+ -remove properties 'timeout' and 'thread-num' from device tree
+ -move timer from CMDQ driver to CMDQ helper
+ -move dma unmap from CMDQ driver to CMDQ helper
+ -config thread number in CMDQ match table
+ -remove reallocate mechanism and let client specify the cmdq buffer size
+ -let client specify the timeout time
+Changes since v21:
+ -rebase on v4.18-rc1
+ -remove subsys code and event id definition from mtk-cmdq-helper.c
+ -add mt8173-gce.h to define the subsys code and envent id
+Changes since v20:
+ -rebase on v4.15-rc1
+ -move dma_map_single outside of spinlock
+Changes since v19:
+ -rebase to v4.10-rc2
 
-Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
----
- drivers/pci/controller/pcie-mediatek.c | 50 ++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Houlong Wei (2):
+  arm64: dts: mt8173: Add GCE node
+  soc: mediatek: Add Mediatek CMDQ helper
 
-diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-index d3f4694..42cf2a4 100644
---- a/drivers/pci/controller/pcie-mediatek.c
-+++ b/drivers/pci/controller/pcie-mediatek.c
-@@ -1168,6 +1168,55 @@ static int mtk_pcie_probe(struct platform_device *pdev)
- 	return err;
- }
- 
-+static int __maybe_unused mtk_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	struct mtk_pcie_port *port;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	list_for_each_entry(port, &pcie->ports, list) {
-+		clk_disable_unprepare(port->pipe_ck);
-+		clk_disable_unprepare(port->obff_ck);
-+		clk_disable_unprepare(port->axi_ck);
-+		clk_disable_unprepare(port->aux_ck);
-+		clk_disable_unprepare(port->ahb_ck);
-+		clk_disable_unprepare(port->sys_ck);
-+		phy_power_off(port->phy);
-+		phy_exit(port->phy);
-+	}
-+
-+	clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused mtk_pcie_resume_noirq(struct device *dev)
-+{
-+	struct mtk_pcie *pcie = dev_get_drvdata(dev);
-+	struct mtk_pcie_port *port, *tmp;
-+
-+	if (list_empty(&pcie->ports))
-+		return 0;
-+
-+	clk_prepare_enable(pcie->free_ck);
-+
-+	list_for_each_entry_safe(port, tmp, &pcie->ports, list)
-+		mtk_pcie_enable_port(port);
-+
-+	/* In case of EP was removed while system suspend. */
-+	if (list_empty(&pcie->ports))
-+		clk_disable_unprepare(pcie->free_ck);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops mtk_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_pcie_suspend_noirq,
-+				      mtk_pcie_resume_noirq)
-+};
-+
- static const struct mtk_pcie_soc mtk_pcie_soc_v1 = {
- 	.ops = &mtk_pcie_ops,
- 	.startup = mtk_pcie_startup_port,
-@@ -1200,6 +1249,7 @@ static struct platform_driver mtk_pcie_driver = {
- 		.name = "mtk-pcie",
- 		.of_match_table = mtk_pcie_ids,
- 		.suppress_bind_attrs = true,
-+		.pm = &mtk_pcie_pm_ops,
- 	},
- };
- builtin_platform_driver(mtk_pcie_driver);
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi |   10 +
+ drivers/soc/mediatek/Kconfig             |   12 ++
+ drivers/soc/mediatek/Makefile            |    1 +
+ drivers/soc/mediatek/mtk-cmdq-helper.c   |  292 ++++++++++++++++++++++++++++++
+ include/linux/soc/mediatek/mtk-cmdq.h    |  133 ++++++++++++++
+ 5 files changed, 448 insertions(+)
+ create mode 100644 drivers/soc/mediatek/mtk-cmdq-helper.c
+ create mode 100644 include/linux/soc/mediatek/mtk-cmdq.h
+
 -- 
-2.6.4
+1.7.9.5
