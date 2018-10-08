@@ -1,128 +1,85 @@
-From: Manish Narani <MNARANI@xilinx.com>
-Subject: RE: [PATCH v8 02/10] edac: synopsys: Rename the static functions to a
- shorter name
-Date: Mon, 8 Oct 2018 13:45:28 +0000
-Message-ID: <DM6PR02MB52274CC51BE196CF18C97834C1E60@DM6PR02MB5227.namprd02.prod.outlook.com>
-References: <1538667328-9465-1-git-send-email-manish.narani@xilinx.com>
- <1538667328-9465-3-git-send-email-manish.narani@xilinx.com>
- <20181004203540.GD5149@zn.tnic>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 28/36] dt-bindings: arm: Convert Rockchip board/soc
+ bindings to json-schema
+Date: Mon, 8 Oct 2018 08:46:08 -0500
+Message-ID: <CAL_Jsq+79kn8BtL_saZOMGRqJ0kJq14HCekhVPfbFSquBdRAqA@mail.gmail.com>
+References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-29-robh@kernel.org>
+ <1857752.ZLvpeyYpZr@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181004203540.GD5149@zn.tnic>
-Content-Language: en-US
+In-Reply-To: <1857752.ZLvpeyYpZr@phil>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Michal Simek <michals@xilinx.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "sudeep.holla@arm.com" <sudeep.holla@arm.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "leoyang.li@nxp.com" <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+To: "heiko@sntech.de" <heiko@sntech.de>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>"open list:ARM/Rockchip SoC..." <li>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9yaXMsDQoNClRoYW5rcyBhIGxvdCBmb3IgdGhlIHJldmlldy4NCg0KPiAtLS0tLU9yaWdp
-bmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBCb3Jpc2xhdiBQZXRrb3YgW21haWx0bzpicEBhbGll
-bjguZGVdDQo+IFNlbnQ6IEZyaWRheSwgT2N0b2JlciA1LCAyMDE4IDI6MDYgQU0NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCB2OCAwMi8xMF0gZWRhYzogc3lub3BzeXM6IFJlbmFtZSB0aGUgc3RhdGlj
-IGZ1bmN0aW9ucyB0byBhDQo+IHNob3J0ZXIgbmFtZQ0KPiANCj4gT24gVGh1LCBPY3QgMDQsIDIw
-MTggYXQgMDk6MDU6MjBQTSArMDUzMCwgTWFuaXNoIE5hcmFuaSB3cm90ZToNCj4gPiBSZW5hbWUg
-dGhlIHN0YXRpYyBmdW5jdGlvbnMgdG8gYSBzaG9ydGVyIG5hbWUuIFNpbmNlIHRoaXMgaXMgU3lu
-b3BzeXMNCj4gPiBFREFDIGRyaXZlciwgYmV0dGVyIHRvIHJlbW92ZSB1bm5lY2Vzc2FyeSAnc3lu
-cHNfJyBwcmVmaXggaW4gZnVuY3Rpb24NCj4gPiBuYW1lcy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYt
-Ynk6IE1hbmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGlsaW54LmNvbT4NCj4gPiAtLS0NCj4g
-PiAgZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYyB8IDU2ICsrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tDQo+IC0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjggaW5z
-ZXJ0aW9ucygrKSwgMjggZGVsZXRpb25zKC0pDQo+IA0KPiBPaywgbGV0J3MgZmxpcCB0aGUgcm9s
-ZXMgLSBub3cgeW91IGdldCB0byByZXZpZXcgd2hhdCBJJ3ZlIGNvbW1pdHRlZDoNCg0KT2theS4g
-RmV3IG1pbm9yIG5pdHMgYmVsb3cuIDopDQoNCj4gDQo+IC0tLQ0KPiBGcm9tOiBNYW5pc2ggTmFy
-YW5pIDxtYW5pc2gubmFyYW5pQHhpbGlueC5jb20+DQo+IERhdGU6IFRodSwgNCBPY3QgMjAxOCAy
-MTowNToyMCArMDUzMA0KPiBTdWJqZWN0OiBbUEFUQ0ggMS8yXSBFREFDLCBzeW5vcHN5czogU2hv
-cnRlbiBzdGF0aWMgZnVuY3Rpb24gbmFtZXMNCj4gDQo+IFNob3J0ZW4gc3RhdGljIGZ1bmN0aW9u
-IG5hbWVzLCByZW1vdmUgdGhlIHVubmVjZXNzYXJ5ICdzeW5wc18nIHByZWZpeCBpbg0KPiBmdW5j
-dGlvbiBuYW1lcy4NCj4gDQo+ICBbIGJwOiBEcm9wIHRoZSAiZWRhY18iIHByZWZpeCB0b28gYXMg
-dGhhdCBwcmVmaXggaXMgcmVzZXJ2ZWQgZm9yDQo+ICAgIEVEQUMgY29yZSBmdW5jdGlvbnMuIF0N
-Cj4gDQo+IFNpZ25lZC1vZmYtYnk6IE1hbmlzaCBOYXJhbmkgPG1hbmlzaC5uYXJhbmlAeGlsaW54
-LmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogQm9yaXNsYXYgUGV0a292IDxicEBzdXNlLmRlPg0KPiBD
-QzogTWF1cm8gQ2FydmFsaG8gQ2hlaGFiIDxtY2hlaGFiQGtlcm5lbC5vcmc+DQo+IENDOiBNaWNo
-YWwgU2ltZWsgPG1pY2hhbC5zaW1la0B4aWxpbnguY29tPg0KPiBDQzogYW1pdC5rdWNoZXJpYUBs
-aW5hcm8ub3JnDQo+IENDOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBDQzogbGVveWFu
-Zy5saUBueHAuY29tDQo+IENDOiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcN
-Cj4gQ0M6IGxpbnV4LWVkYWMgPGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnPg0KPiBDQzogbWFy
-ay5ydXRsYW5kQGFybS5jb20NCj4gQ0M6IHJvYmgrZHRAa2VybmVsLm9yZw0KPiBDQzogc3VkZWVw
-LmhvbGxhQGFybS5jb20NCj4gTGluazogaHR0cDovL2xrbWwua2VybmVsLm9yZy9yLzE1Mzg2Njcz
-MjgtOTQ2NS0zLWdpdC1zZW5kLWVtYWlsLQ0KPiBtYW5pc2gubmFyYW5pQHhpbGlueC5jb20NCj4g
-LS0tDQo+ICBkcml2ZXJzL2VkYWMvc3lub3BzeXNfZWRhYy5jIHwgNzkgKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygr
-KSwgNDEgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9lZGFjL3N5bm9w
-c3lzX2VkYWMuYyBiL2RyaXZlcnMvZWRhYy9zeW5vcHN5c19lZGFjLmMNCj4gaW5kZXggMTkzNmM3
-M2YxZDE1Li5mYmFmMzM1NDBjZTMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZWRhYy9zeW5vcHN5
-c19lZGFjLmMNCj4gKysrIGIvZHJpdmVycy9lZGFjL3N5bm9wc3lzX2VkYWMuYw0KPiBAQCAtMTQy
-LDcgKzE0Miw3IEBAIHN0cnVjdCBzeW5wc19lZGFjX3ByaXYgew0KPiAgfTsNCj4gDQo+ICAvKioN
-Cj4gLSAqIHN5bnBzX2VkYWNfZ2V0ZXJyb3JfaW5mbyAtIEdldCB0aGUgY3VycmVudCBlY2MgZXJy
-b3IgaW5mbw0KPiArICogZ2V0X2Vycm9yX2luZm8gLSBHZXQgdGhlIGN1cnJlbnQgZWNjIGVycm9y
-IGluZm8NCj4gICAqIEBiYXNlOglQb2ludGVyIHRvIHRoZSBiYXNlIGFkZHJlc3Mgb2YgdGhlIGRk
-ciBtZW1vcnkgY29udHJvbGxlcg0KPiAgICogQHA6CQlQb2ludGVyIHRvIHRoZSBzeW5vcHN5cyBl
-Y2Mgc3RhdHVzIHN0cnVjdHVyZQ0KPiAgICoNCj4gQEAgLTE1MCw4ICsxNTAsNyBAQCBzdHJ1Y3Qg
-c3lucHNfZWRhY19wcml2IHsNCj4gICAqDQo+ICAgKiBSZXR1cm46IG9uZSBpZiB0aGVyZSBpcyBu
-byBlcnJvciBvdGhlcndpc2UgcmV0dXJucyB6ZXJvDQo+ICAgKi8NCj4gLXN0YXRpYyBpbnQgc3lu
-cHNfZWRhY19nZXRlcnJvcl9pbmZvKHZvaWQgX19pb21lbSAqYmFzZSwNCj4gLQkJCQkgICAgc3Ry
-dWN0IHN5bnBzX2VjY19zdGF0dXMgKnApDQo+ICtzdGF0aWMgaW50IGdldF9lcnJvcl9pbmZvKHZv
-aWQgX19pb21lbSAqYmFzZSwgc3RydWN0IHN5bnBzX2VjY19zdGF0dXMgKnApDQo+ICB7DQo+ICAJ
-dTMyIHJlZ3ZhbCwgY2xlYXJ2YWwgPSAwOw0KPiANCj4gQEAgLTE5NiwxNCArMTk1LDEzIEBAIHN0
-YXRpYyBpbnQgc3lucHNfZWRhY19nZXRlcnJvcl9pbmZvKHZvaWQgX19pb21lbQ0KPiAqYmFzZSwN
-Cj4gIH0NCj4gDQo+ICAvKioNCj4gLSAqIHN5bnBzX2VkYWNfaGFuZGxlX2Vycm9yIC0gSGFuZGxl
-IGNvbnRyb2xsZXIgZXJyb3IgdHlwZXMgQ0UgYW5kIFVFDQo+ICsgKiBoYW5kbGVfZXJyb3IgLSBI
-YW5kbGUgY29udHJvbGxlciBlcnJvciB0eXBlcyBDRSBhbmQgVUUNCj4gICAqIEBtY2k6CVBvaW50
-ZXIgdG8gdGhlIGVkYWMgbWVtb3J5IGNvbnRyb2xsZXIgaW5zdGFuY2UNCj4gICAqIEBwOgkJUG9p
-bnRlciB0byB0aGUgc3lub3BzeXMgZWNjIHN0YXR1cyBzdHJ1Y3R1cmUNCj4gICAqDQo+IC0gKiBI
-YW5kbGVzIHRoZSBjb250cm9sbGVyIEVDQyBjb3JyZWN0YWJsZSBhbmQgdW4gY29ycmVjdGFibGUg
-ZXJyb3IuDQo+ICsgKiBIYW5kbGVzIHRoZSBjb250cm9sbGVyIEVDQyBjb3JyZWN0YWJsZSBhbmQg
-dW5jb3JyZWN0YWJsZSBlcnJvci4NCg0KTml0OiBUaGlzIGNhbiBiZSBtb3ZlZCB0byBDb21tZW50
-cyBDb3JyZWN0aW9uIHBhdGNoDQoNCj4gICAqLw0KPiAtc3RhdGljIHZvaWQgc3lucHNfZWRhY19o
-YW5kbGVfZXJyb3Ioc3RydWN0IG1lbV9jdGxfaW5mbyAqbWNpLA0KPiAtCQkJCSAgICBzdHJ1Y3Qg
-c3lucHNfZWNjX3N0YXR1cyAqcCkNCj4gK3N0YXRpYyB2b2lkIGhhbmRsZV9lcnJvcihzdHJ1Y3Qg
-bWVtX2N0bF9pbmZvICptY2ksIHN0cnVjdCBzeW5wc19lY2Nfc3RhdHVzDQo+ICpwKQ0KPiAgew0K
-PiAgCXN0cnVjdCBzeW5wc19lZGFjX3ByaXYgKnByaXYgPSBtY2ktPnB2dF9pbmZvOw0KPiAgCXN0
-cnVjdCBlY2NfZXJyb3JfaW5mbyAqcGluZjsNCj4gQEAgLTIzMiwzMCArMjMwLDMwIEBAIHN0YXRp
-YyB2b2lkIHN5bnBzX2VkYWNfaGFuZGxlX2Vycm9yKHN0cnVjdA0KPiBtZW1fY3RsX2luZm8gKm1j
-aSwNCj4gIH0NCj4gDQo+ICAvKioNCj4gLSAqIHN5bnBzX2VkYWNfY2hlY2sgLSBDaGVjayBjb250
-cm9sbGVyIGZvciBFQ0MgZXJyb3JzDQo+ICsgKiBjaGVja19lcnJvcnMgLSBDaGVjayBjb250cm9s
-bGVyIGZvciBFQ0MgZXJyb3JzDQo+ICAgKiBAbWNpOglQb2ludGVyIHRvIHRoZSBlZGFjIG1lbW9y
-eSBjb250cm9sbGVyIGluc3RhbmNlDQo+ICAgKg0KPiAgICogVXNlZCB0byBjaGVjayBhbmQgcG9z
-dCBFQ0MgZXJyb3JzLiBDYWxsZWQgYnkgdGhlIHBvbGxpbmcgdGhyZWFkDQo+ICAgKi8NCj4gLXN0
-YXRpYyB2b2lkIHN5bnBzX2VkYWNfY2hlY2soc3RydWN0IG1lbV9jdGxfaW5mbyAqbWNpKQ0KPiAr
-c3RhdGljIHZvaWQgY2hlY2tfZXJyb3JzKHN0cnVjdCBtZW1fY3RsX2luZm8gKm1jaSkNCj4gIHsN
-Cj4gIAlzdHJ1Y3Qgc3lucHNfZWRhY19wcml2ICpwcml2ID0gbWNpLT5wdnRfaW5mbzsNCj4gIAlp
-bnQgc3RhdHVzOw0KPiANCj4gLQlzdGF0dXMgPSBzeW5wc19lZGFjX2dldGVycm9yX2luZm8ocHJp
-di0+YmFzZWFkZHIsICZwcml2LT5zdGF0KTsNCj4gKwlzdGF0dXMgPSBnZXRfZXJyb3JfaW5mbyhw
-cml2LT5iYXNlYWRkciwgJnByaXYtPnN0YXQpOw0KPiAgCWlmIChzdGF0dXMpDQo+ICAJCXJldHVy
-bjsNCj4gDQo+ICAJcHJpdi0+Y2VfY250ICs9IHByaXYtPnN0YXQuY2VfY250Ow0KPiAgCXByaXYt
-PnVlX2NudCArPSBwcml2LT5zdGF0LnVlX2NudDsNCj4gLQlzeW5wc19lZGFjX2hhbmRsZV9lcnJv
-cihtY2ksICZwcml2LT5zdGF0KTsNCj4gKwloYW5kbGVfZXJyb3IobWNpLCAmcHJpdi0+c3RhdCk7
-DQo+IA0KPiAgCWVkYWNfZGJnKDMsICJUb3RhbCBlcnJvciBjb3VudCBDRSAlZCBVRSAlZFxuIiwN
-Cj4gIAkJIHByaXYtPmNlX2NudCwgcHJpdi0+dWVfY250KTsNCj4gIH0NCj4gDQo+ICAvKioNCj4g
-LSAqIHN5bnBzX2VkYWNfZ2V0X2R0eXBlIC0gUmV0dXJuIHRoZSBjb250cm9sbGVyIG1lbW9yeSB3
-aWR0aA0KPiArICogZ2V0X2R0eXBlIC0gUmV0dXJuIHRoZSBjb250cm9sbGVyIG1lbW9yeSB3aWR0
-aA0KPiAgICogQGJhc2U6CVBvaW50ZXIgdG8gdGhlIGRkciBtZW1vcnkgY29udHJvbGxlciBiYXNl
-IGFkZHJlc3MNCj4gICAqDQo+ICAgKiBHZXQgdGhlIEVEQUMgZGV2aWNlIHR5cGUgd2lkdGggYXBw
-cm9wcmlhdGUgZm9yIHRoZSBjdXJyZW50IGNvbnRyb2xsZXINCj4gQEAgLTI2Myw3ICsyNjEsNyBA
-QCBzdGF0aWMgdm9pZCBzeW5wc19lZGFjX2NoZWNrKHN0cnVjdCBtZW1fY3RsX2luZm8NCj4gKm1j
-aSkNCj4gICAqDQo+ICAgKiBSZXR1cm46IGEgZGV2aWNlIHR5cGUgd2lkdGggZW51bWVyYXRpb24u
-DQo+ICAgKi8NCj4gLXN0YXRpYyBlbnVtIGRldl90eXBlIHN5bnBzX2VkYWNfZ2V0X2R0eXBlKGNv
-bnN0IHZvaWQgX19pb21lbSAqYmFzZSkNCj4gK3N0YXRpYyBlbnVtIGRldl90eXBlIGdldF9kdHlw
-ZShjb25zdCB2b2lkIF9faW9tZW0gKmJhc2UpDQo+ICB7DQo+ICAJZW51bSBkZXZfdHlwZSBkdDsN
-Cj4gIAl1MzIgd2lkdGg7DQo+IEBAIC0yODYsMjAgKzI4NCwyMCBAQCBzdGF0aWMgZW51bSBkZXZf
-dHlwZSBzeW5wc19lZGFjX2dldF9kdHlwZShjb25zdA0KPiB2b2lkIF9faW9tZW0gKmJhc2UpDQo+
-ICB9DQo+IA0KPiAgLyoqDQo+IC0gKiBzeW5wc19lZGFjX2dldF9lY2NzdGF0ZSAtIFJldHVybiB0
-aGUgY29udHJvbGxlciBlY2MgZW5hYmxlL2Rpc2FibGUgc3RhdHVzDQo+IC0gKiBAYmFzZToJUG9p
-bnRlciB0byB0aGUgZGRyIG1lbW9yeSBjb250cm9sbGVyIGJhc2UgYWRkcmVzcw0KPiArICogZ2V0
-X2VjY19zdGF0ZSAtIFJldHVybiB0aGUgY29udHJvbGxlciBFQ0MgZW5hYmxlL2Rpc2FibGUgc3Rh
-dHVzDQoNCk5pdDogZWNjIC0tPiBFQ0MgY29ycmVjdGlvbiBjYW4gYmUgbW92ZWQgdG8gQ29tbWVu
-dHMgY29ycmVjdGlvbiBwYXRjaC4gTWlub3IuIENhbiBrZWVwIGl0IGhlcmUgdG9vLiANCg0KPiAr
-ICogQGJhc2U6CVBvaW50ZXIgdG8gdGhlIEREUiBtZW1vcnkgY29udHJvbGxlciBiYXNlIGFkZHJl
-c3MNCg0KTml0OiBUaGlzIHNob3VsZCBiZSBtb3ZlZCB0byBDb21tZW50cyBjb3JyZWN0aW9uIHBh
-dGNoLg0KDQo+ICAgKg0KPiAtICogR2V0IHRoZSBFQ0MgZW5hYmxlL2Rpc2FibGUgc3RhdHVzIGZv
-ciB0aGUgY29udHJvbGxlcg0KPiArICogR2V0IHRoZSBFQ0MgZW5hYmxlL2Rpc2FibGUgc3RhdHVz
-IGZvciB0aGUgY29udHJvbGxlci4NCg0KTml0OiBUaGlzIHNob3VsZCBiZSBtb3ZlZCB0byBDb21t
-ZW50cyBjb3JyZWN0aW9uIHBhdGNoLg0KDQo+ICAgKg0KPiAtICogUmV0dXJuOiBhIGVjYyBzdGF0
-dXMgYm9vbGVhbiBpLmUgdHJ1ZS9mYWxzZSAtIGVuYWJsZWQvZGlzYWJsZWQuDQo+ICsgKiBSZXR1
-cm46IGEgRUNDIHN0YXR1cyBib29sZWFuIGkuZSB0cnVlL2ZhbHNlIC0gZW5hYmxlZC9kaXNhYmxl
-ZC4NCg0KTml0OiBDYW4gbW92ZSB0byBDb21tZW50cyBjb3JyZWN0aW9uIHBhdGNoLg0KDQo+ICAg
-Ki8NCg0KDQpUaGFua3MsDQpNYW5pc2gNCg==
+On Mon, Oct 8, 2018 at 4:45 AM Heiko Stuebner <heiko@sntech.de> wrote:
+>
+> Hi Rob,
+>
+> either I'm misunderstanding that, or something did go a bit wrong during
+> the conversion, as pointed out below:
+>
+> Am Freitag, 5. Oktober 2018, 18:58:40 CEST schrieb Rob Herring:
+> > Convert Rockchip SoC bindings to DT schema format using json-schema.
+> >
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Heiko Stuebner <heiko@sntech.de>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-rockchip@lists.infradead.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  .../devicetree/bindings/arm/rockchip.txt      | 220 ----------------
+> >  .../devicetree/bindings/arm/rockchip.yaml     | 242 ++++++++++++++++++
+> >  2 files changed, 242 insertions(+), 220 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/rockchip.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/rockchip.yaml
+> >
+>
+>
+>
+> > +properties:
+> > +  $nodename:
+> > +    const: '/'
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +          - enum:
+> > +              - amarula,vyasa-rk3288
+> > +              - asus,rk3288-tinker
+> > +              - radxa,rock2-square
+> > +              - chipspark,popmetal-rk3288
+> > +              - netxeon,r89
+> > +              - firefly,firefly-rk3288
+> > +              - firefly,firefly-rk3288-beta
+> > +              - firefly,firefly-rk3288-reload
+> > +              - mqmaker,miqi
+> > +              - rockchip,rk3288-fennec
+> > +          - const: rockchip,rk3288
+>
+> These are very much distinct boards, so shouldn't they also get
+> individual entries including their existing description like the phytec
+> or google boards below?
+
+It is grouped by SoC compatible and # of compatible strings. So this
+one is all the cases that have 2 compatible strings. It is simply
+saying the 1st compatible string must be one of the enums and the 2nd
+compatible string must be "rockchip,rk3288".
+
+>
+> Similarly why is it an enum for those, while the Google boards get a
+> const for each compatible string?
+
+Because each Google board is a fixed list of strings.
+
+> Most non-google boards below also lost their description and where lumped
+> together into combined entries. Was that intentional?
+
+If the description was just repeating the compatible string with
+spaces and capitalization, then yes it was intentional. If your
+description matches what you have for 'model', then I'd prefer to see
+model added as a property schema.
+
+Rob
