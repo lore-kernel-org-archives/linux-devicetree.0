@@ -1,72 +1,93 @@
-From: Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: Re: [PATCH v8 07/10] i3c: master: Add driver for Cadence IP
-Date: Mon, 8 Oct 2018 14:05:11 +0200
-Message-ID: <20181008140511.153392d1@bbrezillon>
-References: <20181003132212.12619-1-boris.brezillon@bootlin.com>
-        <20181003132212.12619-8-boris.brezillon@bootlin.com>
-        <CAK8P3a21t7pQ2uYWgu2+VZZNYc+pz_w3WCL7YVUEzqqyOFLvnA@mail.gmail.com>
-        <20181008122101.7b391070@bbrezillon>
-        <CAK8P3a3Sck0yYzH-Ks=CvHJLgZ1VrUjHvzw2XL7C_GC515=VVg@mail.gmail.com>
+From: Ludovic Barre <ludovic.Barre@st.com>
+Subject: [PATCH V6 10/23] mmc: mmci: add set_clk/pwrreg callbacks
+Date: Mon, 8 Oct 2018 14:08:42 +0200
+Message-ID: <1539000535-13261-11-git-send-email-ludovic.Barre@st.com>
+References: <1539000535-13261-1-git-send-email-ludovic.Barre@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a3Sck0yYzH-Ks=CvHJLgZ1VrUjHvzw2XL7C_GC515=VVg@mail.gmail.com>
+In-Reply-To: <1539000535-13261-1-git-send-email-ludovic.Barre@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, gregkh <gregkh@linuxfoundation.org>, Przemyslaw Sroka <psroka@cadence.com>, Arkadiusz Golec <agolec@cadence.com>, Alan Douglas <adouglas@cadence.com>, Bartosz Folta <bfolta@cadence.com>, Damian Kos <dkos@cadence.com>, Alicja Jurasik-Urbaniak <alicja@cadence.com>, Cyprian Wronka <cwronka@cadence.com>, Suresh Punnoose <sureshp@cadence.com>, Rafal Ciepiela <rafalc@cadence.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@he>
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: srinivas.kandagatla@linaro.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 8 Oct 2018 12:36:44 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+From: Ludovic Barre <ludovic.barre@st.com>
 
-> On Mon, Oct 8, 2018 at 12:21 PM Boris Brezillon
-> <boris.brezillon@bootlin.com> wrote:
-> >
-> > On Mon, 8 Oct 2018 12:06:30 +0200
-> > Arnd Bergmann <arnd@arndb.de> wrote:
-> >  
-> > > On Wed, Oct 3, 2018 at 3:22 PM Boris Brezillon
-> > > <boris.brezillon@bootlin.com> wrote:  
-> > > >
-> > > > Add a driver for Cadence I3C master IP.
-> > > >
-> > > > Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> > > > ---  
-> > >  
-> > > > Changes in v7:
-> > > > - Fix readsl/writesl() usage
-> > > > - Add a depends on ARM || ARM64 || XTENSA to forbid selection of this
-> > > >   driver on platforms that are not implementing readsl/writesl  
-> > >
-> > > Most architectures include asm-generic/io.h, which contains a generic
-> > > implementation of readsl(). Maybe that #ifdef could be extended here?
-> > > I remember discussing this with you not so long ago, which led to
-> > > commit 0bbf47eab469 ("ia64: use asm-generic/io.h"). Do we have
-> > > a list of architectures that don't include asm-generic/io.h? Maybe
-> > > the 'depends on' could be for the set of architectures that fail here.  
-> >
-> > Well, we started patching 2 archs (ia64 and sparc) based on kbuild
-> > robots failure report, and then I received other reports (still from
-> > kbuild robots) long after the initial ones. I can't tell for sure which
-> > archs are not implementing those functions, hence the conservative
-> > approach taken here.  
-> 
-> I think it's a fairly safe assumption that architectures which include
-> asm-generic/io.h will be fine here. If one of them is broken, that
-> can be fixed individually. Looking at the ones that don't include this
-> file:
-> 
-> grep -L asm-generic/io.h arch/*/include/asm/io*.h
-> arch/alpha/include/asm/io.h        # missing readsl
-> arch/hexagon/include/asm/io.h   # has its own readsl
-> arch/mips/include/asm/io.h         # missing readsl (but used from ide.h?)
-> arch/parisc/include/asm/io.h       # missing readsl
-> arch/powerpc/include/asm/io.h   # has its own readsl
-> arch/sh/include/asm/io.h             # has its own readsl
-> arch/sparc/include/asm/io.h        # has its own readsl
-> 
-> Based on this, I would try what happens on mips, and make it depend
-> on !(ALPHA || PARISC)
+This patch adds set_clkreg and set_pwrreg callbacks
+at mmci_host_ops to allow to call specific variant.
+extends visibility of mmci_write_clk/pwrreg functions
+to be used into specific file variant.
 
-Okay, I'll try with that.
+Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+---
+ drivers/mmc/host/mmci.c | 16 ++++++++++++----
+ drivers/mmc/host/mmci.h |  5 +++++
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+index 91ef2ede..1b99ae3 100644
+--- a/drivers/mmc/host/mmci.c
++++ b/drivers/mmc/host/mmci.c
+@@ -257,7 +257,7 @@ static void mmci_reg_delay(struct mmci_host *host)
+ /*
+  * This must be called with host->lock held
+  */
+-static void mmci_write_clkreg(struct mmci_host *host, u32 clk)
++void mmci_write_clkreg(struct mmci_host *host, u32 clk)
+ {
+ 	if (host->clk_reg != clk) {
+ 		host->clk_reg = clk;
+@@ -268,7 +268,7 @@ static void mmci_write_clkreg(struct mmci_host *host, u32 clk)
+ /*
+  * This must be called with host->lock held
+  */
+-static void mmci_write_pwrreg(struct mmci_host *host, u32 pwr)
++void mmci_write_pwrreg(struct mmci_host *host, u32 pwr)
+ {
+ 	if (host->pwr_reg != pwr) {
+ 		host->pwr_reg = pwr;
+@@ -1571,8 +1571,16 @@ static void mmci_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+ 
+ 	spin_lock_irqsave(&host->lock, flags);
+ 
+-	mmci_set_clkreg(host, ios->clock);
+-	mmci_write_pwrreg(host, pwr);
++	if (host->ops && host->ops->set_clkreg)
++		host->ops->set_clkreg(host, ios->clock);
++	else
++		mmci_set_clkreg(host, ios->clock);
++
++	if (host->ops && host->ops->set_pwrreg)
++		host->ops->set_pwrreg(host, pwr);
++	else
++		mmci_write_pwrreg(host, pwr);
++
+ 	mmci_reg_delay(host);
+ 
+ 	spin_unlock_irqrestore(&host->lock, flags);
+diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+index ed59baf..dbb5ad4 100644
+--- a/drivers/mmc/host/mmci.h
++++ b/drivers/mmc/host/mmci.h
+@@ -284,6 +284,8 @@ struct mmci_host_ops {
+ 	int (*dma_start)(struct mmci_host *host, unsigned int *datactrl);
+ 	void (*dma_finalize)(struct mmci_host *host, struct mmc_data *data);
+ 	void (*dma_error)(struct mmci_host *host);
++	void (*set_clkreg)(struct mmci_host *host, unsigned int desired);
++	void (*set_pwrreg)(struct mmci_host *host, unsigned int pwr);
+ };
+ 
+ struct mmci_host {
+@@ -336,6 +338,9 @@ struct mmci_host {
+ 
+ #define dma_inprogress(host)	((host)->dma_in_progress)
+ 
++void mmci_write_clkreg(struct mmci_host *host, u32 clk);
++void mmci_write_pwrreg(struct mmci_host *host, u32 pwr);
++
+ int mmci_dmae_prep_data(struct mmci_host *host, struct mmc_data *data,
+ 			bool next);
+ void mmci_dmae_unprep_data(struct mmci_host *host, struct mmc_data *data,
+-- 
+2.7.4
