@@ -1,40 +1,48 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 04/21] dt-bindings: Add doc for the Ingenic TCU drivers
-Date: Mon, 8 Oct 2018 23:36:40 -0700
-Message-ID: <20181009063640.GB32033@dell>
-References: <5bb4c6ad.1c69fb81.42bb.93ecSMTPIN_ADDED_MISSING@mx.google.com>
+Subject: Re: [PATCH] mfd: arizona: Correct link for sound binding document
+Date: Mon, 8 Oct 2018 23:55:22 -0700
+Message-ID: <20181009065522.GD32033@dell>
+References: <20180917153322.29206-1-ckeepax@opensource.cirrus.com>
+ <20180926223944.GA30051@bogus>
+ <20180928054646.GK8485@dell>
+ <CAL_JsqLD=qzXiAptsR4X16_tYwSocFhrLJ=yh6caw1ke8YdESQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <5bb4c6ad.1c69fb81.42bb.93ecSMTPIN_ADDED_MISSING@mx.google.com>
+In-Reply-To: <CAL_JsqLD=qzXiAptsR4X16_tYwSocFhrLJ=yh6caw1ke8YdESQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Guenter Roeck <linux@roeck-us.net>, linux-doc@vger.kernel.org, linux-watchdog@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, robh@kernel.org, linux-mips@linux-mips.org, Stephen Boyd <sboyd@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, Mark Rutland <mark.rutland@arm.com>, Paul Burton <paul.burton@mips.com>, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>, Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Charles Keepax <ckeepax@opensource.cirrus.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@opensource.cirrus.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 03 Oct 2018, Paul Cercueil wrote:
-> Le 3 oct. 2018 3:02 PM, Daniel Lezcano <daniel.lezcano@linaro.org> a écrit :
-> > On 03/10/2018 14:51, Paul Cercueil wrote: 
-> > > 
-> > > Le 3 oct. 2018 2:47 PM, Daniel Lezcano <daniel.lezcano@linaro.org> a 
-> > > écrit : 
-> > >> 
-> > >> On 03/10/2018 12:32, Paul Cercueil wrote: 
-> > >>> 
-> > >>> Le 1 oct. 2018 10:48, Daniel Lezcano <daniel.lezcano@linaro.org> 
-> > >>> a écrit : 
-> > >>>> 
-> > >>>> On 31/07/2018 00:01, Paul Cercueil wrote: 
-> > >>>> 
-> > >>>> [ ... ] 
+On Fri, 28 Sep 2018, Rob Herring wrote:
 
-Paul,
+> On Fri, Sep 28, 2018 at 12:46 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > On Wed, 26 Sep 2018, Rob Herring wrote:
+> >
+> > > On Mon, Sep 17, 2018 at 04:33:22PM +0100, Charles Keepax wrote:
+> > > > Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> > > > ---
+> > > >  Documentation/devicetree/bindings/mfd/arizona.txt | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > Applied.
+> >
+> > Probably won't do any harm in this instance, but it's usually better
+> > for MFD binding changes to go through the MFD tree to avoid
+> > merge-conflicts.
+> 
+> It had been sitting there for a while, so I picked it up. Plus if we
 
-I think there is something wrong with your mailer since your replies
-are being scattered across my inbox un-threaded, making conversations
-very difficult to follow.
+A little over a week is not 'a while'. :)
+
+> have conflicts within a binding (other than tree wide clean ups I do),
+> that's not a good sign that the binding is changing.
+
+Not sure I understand this.
 
 -- 
 Lee Jones [李琼斯]
