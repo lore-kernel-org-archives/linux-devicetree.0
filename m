@@ -1,75 +1,110 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V10 1/8] irqchip: add C-SKY SMP interrupt controller
-Date: Tue, 9 Oct 2018 10:24:12 +0800
-Message-ID: <20181009022357.GA826@guoren>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
- <e06484474231375248e3e7a6ab47cf8ff8893129.1538672812.git.ren_guo@c-sky.com>
- <404fb433-020e-28f9-2434-a22c6db36a15@arm.com>
+From: Honghui Zhang <honghui.zhang@mediatek.com>
+Subject: Re: [PATCH v6 2/9] PCI: mediatek: Fixup class ID for MT7622 as
+ PCI_CLASS_BRIDGE_PCI
+Date: Tue, 9 Oct 2018 11:08:15 +0800
+Message-ID: <1539054495.6246.31.camel@mhfsdcap03>
+References: <1538969088-7136-1-git-send-email-honghui.zhang@mediatek.com>
+         <1538969088-7136-3-git-send-email-honghui.zhang@mediatek.com>
+         <20181008172337.GA13538@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <404fb433-020e-28f9-2434-a22c6db36a15@arm.com>
+In-Reply-To: <20181008172337.GA13538@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, ulf.hansson@linaro.org, marc.zyngier@arm.com, matthias.bgg@gmail.com, devicetree@vger.kernel.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, youlin.pei@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
-
-On Mon, Oct 08, 2018 at 05:35:19PM +0100, Marc Zyngier wrote:
-> Hi Guo,
+On Mon, 2018-10-08 at 18:23 +0100, Lorenzo Pieralisi wrote:
+> On Mon, Oct 08, 2018 at 11:24:41AM +0800, honghui.zhang@mediatek.com wrote:
+> > From: Honghui Zhang <honghui.zhang@mediatek.com>
+> > 
+> > The PCIe controller of MT7622 has TYPE 1 configuration space type, but
+> > the HW default class type values is invalid.
+> > 
+> > The commit 101c92dc80c8 ("PCI: mediatek: Set up vendor ID and class
+> > type for MT7622") have set the class ID for MT7622 as
+> > PCI_CLASS_BRIDGE_HOST, but it's not workable for MT7622:
+> > 
+> > In __pci_bus_assign_resources, the framework only setup bridge's
+> > resource window only if class type is PCI_CLASS_BRIDGE_PCI. Or it
+> > will leave the subordinary PCIe device's MMIO window un-touched.
+> > 
+> > Fixup the class type to PCI_CLASS_BRIDGE_PCI as most of the controller
+> > driver do.
 > 
-> On 04/10/18 18:22, Guo Ren wrote:
-> >  - Irq-csky-mpintc is C-SKY smp system interrupt controller and it
-> >    could support 16 soft irqs, 16 private irqs, and 992 max common
-> >    irqs.
-> >
-> >Changelog:
-> >  - pass checkpatch.pl
-> >  - Move IPI_IRQ into the driver
-> >  - Remove irq_set_default_host() and use set_ipi_irq_mapping()
-
- [...]
-
-> >+#ifdef CONFIG_SMP
-> >+static void csky_mpintc_send_ipi(const unsigned long *mask)
-> >+{
+> I think that this patch is correct but the commit log fails to pin point
+> the problem. The IP you are programming is a root port, that's why you
+> have to have the proper class code, the patch looks fine but I would
+> like to peek Bjorn's brain on this since it is a fundamental concept.
 > 
-> Why isn't this a cpumask? It should be this driver's job to convert the
-> cpumask to an interrupt-controller specific representation, and not the SMP
-> code's.
-Ok, use cpumask. 
 
- [...]
+I'm a bit confused with the concepts of PCI_CLASS_BRIDGE_HOST and
+PCI_CLASS_BRIDGE_PCI, from PCI express spec,
+4.0r1.0(PCI_Express_Base_4.0r1.0_September-27-2017-c), Host Bridge is
+"part of a Root Complex that connects a host CPU or CPUs to a
+Hierarchy". While Root Complex defines as "A defined System Element that
+includes at least one Host Bridge, Root port, or Root complex Integrated
+Endpoint".
 
-> >+#ifdef CONFIG_SMP
-> >+	set_send_ipi(&csky_mpintc_send_ipi);
-> >+
-> >+	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
+But according to my understanding, most of the root port IPs integrated
+with a "PCI_CLASS_BRIDGE_PCI", which has type 1 configuration space and
+could be saw as a pci device when using lspci.
+
+And for MT7622, it integrated with block of internal control registers,
+type 1 configuration space, and is considered as a root complex.
+
+I'm not sure which CLASS type it should have:
+>From PCI_Code-ID_r_1_10__v8-Nov_2017, class type of
+0x0604(PCI_CLASS_BRIDGE_PCI) is defined as a PCI-to-PCI bridge, not
+literally suitable for MT7622(which is a root complex)(In my personal
+opinion). But it is the only workable CLASS type for MT7622 in current
+kernel.
+
+> If the kernel does not assign resources unless it detects a
+> PCI_CLASS_BRIDGE_PCI this means that for components that are
+> actually PCI_CLASS_BRIDGE_HOST their register set must come
+> preprogrammed unless I am missing something.
 > 
-> Since you seem to be inventing a new set_send_ipi callback, why don't you
-> define it as:
+
+In the function pci_request_resource_alignment, it will by pass the
+resource assignment for PCI_CLASS_BRIDGE_HOST, though I'm not figured
+out why.
+
+> I would like to get to the bottom of this since it is a fundamental
+> enumeration concept.
 > 
-> void set_send_ipi(void (*func)(const struct cpumask *),
-> 		  unsigned int ipi_irq);
-> after having created the mapping for the IPI interrupt? It would avoid this
-> rather pointless mapping callback.
 
-I'll define it to:
+Do you like me to re-write the commit message for this patch and put the
+above information in? Or just not mention the PCI_CLASS_BRIDGE_HOST
+assign resource routine?
 
-void set_send_ipi(void (*func)(const struct cpumask *));
+Thanks
 
-IPI_IRQ only use software-irq-15 in mpintc driver, so arch needn't care
-about irq-num.
-
-	/*
-	 * INTCL_SIGR[3:0] INTID
-	 * INTCL_SIGR[8:15] CPUMASK
-	 */
-	writel_relaxed((*mask) << 8 | IPI_IRQ, reg_base + INTCL_SIGR);
-
-We direct put IPI_IRQ to the hw-reg for the target core.
-
-Best Regards
- Guo Ren
+> Thanks,
+> Lorenzo
+> 
+> > 
+> > Signed-off-by: Honghui Zhang <honghui.zhang@mediatek.com>
+> > Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+> > ---
+> >  drivers/pci/controller/pcie-mediatek.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> > index 288b8e2..bcdac9b 100644
+> > --- a/drivers/pci/controller/pcie-mediatek.c
+> > +++ b/drivers/pci/controller/pcie-mediatek.c
+> > @@ -432,7 +432,7 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
+> >  		val = PCI_VENDOR_ID_MEDIATEK;
+> >  		writew(val, port->base + PCIE_CONF_VEND_ID);
+> >  
+> > -		val = PCI_CLASS_BRIDGE_HOST;
+> > +		val = PCI_CLASS_BRIDGE_PCI;
+> >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
+> >  	}
+> >  
+> > -- 
+> > 2.6.4
+> > 
