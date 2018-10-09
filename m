@@ -1,12 +1,12 @@
 Return-Path: <SRS0=6MUZ=MV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from smtp.codeaurora.org ([198.145.29.96]:32984 "EHLO
+Received: from smtp.codeaurora.org ([198.145.29.96]:60902 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726418AbeJIUXU (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Oct 2018 16:23:20 -0400
+        with ESMTP id S1726418AbeJIUXL (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Oct 2018 16:23:11 -0400
 From: Govind Singh <govinds@codeaurora.org>
-Subject: [PATCH 5/6] remoteproc: qcom: wcss: populate hardcoded param using driver data
-Date: Tue,  9 Oct 2018 18:35:56 +0530
-Message-Id: <1539090357-20853-6-git-send-email-govinds@codeaurora.org>
+Subject: [PATCH 3/6] dt-bindings: clock: qcom: Introduce QCOM WCSS Q6DSP clock bindings
+Date: Tue,  9 Oct 2018 18:35:54 +0530
+Message-Id: <1539090357-20853-4-git-send-email-govinds@codeaurora.org>
 In-Reply-To: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
 References: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
 Sender: devicetree-owner@vger.kernel.org
@@ -14,118 +14,79 @@ To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@code
 Cc: Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Q6 based WiFi fw loading is supported across
-different targets, ex: IPQ8074/QCS404. In order to
-support different fw names/pas id etc, populate
-hardcoded param using driver data.
+Add device tree bindings for WiFi QDSP subsystem clock controls
+found in OCS405 soc.
 
 Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
- drivers/remoteproc/qcom_q6v5_wcss.c | 36 ++++++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/clock/qcom,wcsscc.txt      | 26 ++++++++++++++++++++++
+ include/dt-bindings/clock/qcom,wcss-qcs404.h       | 24 ++++++++++++++++++++
+ 2 files changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+ create mode 100644 include/dt-bindings/clock/qcom,wcss-qcs404.h
 
-diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qcom_q6v5_wcss.c
-index f93e1e4..24e276d 100644
---- a/drivers/remoteproc/qcom_q6v5_wcss.c
-+++ b/drivers/remoteproc/qcom_q6v5_wcss.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- #include <linux/of_reserved_mem.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
-@@ -16,7 +17,6 @@
- #include "qcom_common.h"
- #include "qcom_q6v5.h"
- 
--#define WCSS_CRASH_REASON		421
- 
- /* Q6SS Register Offsets */
- #define Q6SS_RESET_REG		0x014
-@@ -70,6 +70,14 @@
- #define TCSR_WCSS_CLK_MASK	0x1F
- #define TCSR_WCSS_CLK_ENABLE	0x14
- 
-+struct wcss_data {
-+	void (*pas_handover)(struct qcom_q6v5 *q6v5);
-+	const char *firmware_name;
-+	int crash_reason_smem;
-+	int version;
-+	int pas_id;
-+};
+diff --git a/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt b/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+new file mode 100644
+index 0000000..2b19ef0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/qcom,wcsscc.txt
+@@ -0,0 +1,26 @@
++Qualcomm WCSS Clock Controller Binding
++-----------------------------------------------
 +
- struct q6v5_wcss {
- 	struct device *dev;
- 
-@@ -91,6 +99,10 @@ struct q6v5_wcss {
- 	phys_addr_t mem_reloc;
- 	void *mem_region;
- 	size_t mem_size;
++Required properties :
++- compatible		: shall contain "qcom,qcs404-wcsscc"
++- #clock-cells		: from common clock binding, shall contain 1.
++- reg			: shall contain base register address and size,
++			  in the order
++			Index-0 maps to WCSS_Q6SSTOP clocks register region
++			Index-1 maps to WCSS_TCSR register region
++			Index-2 maps to WCSS_QDSP6SS register region
 +
-+	int crash_reason_smem;
-+	int pas_id;
-+	int version;
- };
- 
- static int q6v5_wcss_reset(struct q6v5_wcss *wcss)
-@@ -527,12 +539,17 @@ static int q6v5_alloc_memory_region(struct q6v5_wcss *wcss)
- 
- static int q6v5_wcss_probe(struct platform_device *pdev)
- {
-+	const struct wcss_data *desc;
- 	struct q6v5_wcss *wcss;
- 	struct rproc *rproc;
- 	int ret;
- 
-+	desc = of_device_get_match_data(&pdev->dev);
-+	if (!desc)
-+		return -EINVAL;
++Optional properties :
++- reg-names	: register names of WCSS domain
++		 "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss".
 +
- 	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_wcss_ops,
--			    "IPQ8074/q6_fw.mdt", sizeof(*wcss));
-+			    desc->firmware_name, sizeof(*wcss));
- 	if (!rproc) {
- 		dev_err(&pdev->dev, "failed to allocate rproc\n");
- 		return -ENOMEM;
-@@ -540,6 +557,9 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 
- 	wcss = rproc->priv;
- 	wcss->dev = &pdev->dev;
-+	wcss->pas_id = desc->pas_id;
-+	wcss->version = desc->version;
-+	wcss->crash_reason_smem = desc->crash_reason_smem;
- 
- 	ret = q6v5_wcss_init_mmio(wcss, pdev);
- 	if (ret)
-@@ -553,7 +573,8 @@ static int q6v5_wcss_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, WCSS_CRASH_REASON, NULL);
-+	ret = qcom_q6v5_init(&wcss->q6v5, pdev, rproc, desc->crash_reason_smem,
-+			     desc->pas_handover);
- 	if (ret)
- 		goto free_rproc;
- 
-@@ -581,8 +602,15 @@ static int q6v5_wcss_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct wcss_data wcss_ipq8074_res_init = {
-+	.firmware_name = "IPQ8074/q6_fw.mdt",
-+	.crash_reason_smem = 421,
-+	.pas_handover = NULL,
-+};
++Example:
++The below node has to be defined in the cases where the WCSS peripheral loader
++would bring the subsystem out of reset.
 +
- static const struct of_device_id q6v5_wcss_of_match[] = {
--	{ .compatible = "qcom,ipq8074-wcss-pil" },
-+	{ .compatible = "qcom,ipq8074-wcss-pil", .data = &wcss_ipq8074_res_init },
++	clock_wcsscc: qcom,wcsscc@7000000 {
++		compatible = "qcom,qcs404-wcsscc";
++		reg = <0x07500000 0x4e000>, <0x07550000 0x8012>, <0x07400000 0x104>;
++		reg-names = "wcss_q6sstop", "wcnss_tcsr", "wcss_qdsp6ss";
++		#clock-cells = <1>;
++	};
+diff --git a/include/dt-bindings/clock/qcom,wcss-qcs404.h b/include/dt-bindings/clock/qcom,wcss-qcs404.h
+new file mode 100644
+index 0000000..45dd659
+--- /dev/null
++++ b/include/dt-bindings/clock/qcom,wcss-qcs404.h
+@@ -0,0 +1,24 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (c) 2018, The Linux Foundation. All rights reserved.
++ */
 +
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, q6v5_wcss_of_match);
++#ifndef _DT_BINDINGS_CLK_WCSS_QCS404_H
++#define _DT_BINDINGS_CLK_WCSS_QCS404_H
++
++#define WCSS_AHBFABRIC_CBCR_CLK			0
++#define WCSS_AHBS_CBCR_CLK			1
++#define WCSS_TCM_CBCR_CLK			2
++#define WCSS_AHBM_CBCR_CLK			3
++#define WCSS_AXIM_CBCR_CLK			4
++#define WCSS_BCR_CBCR_CLK			5
++#define WCSS_LCC_CBCR_CLK			6
++#define WCSS_QDSP6SS_XO_CBCR_CLK		7
++#define WCSS_QDSP6SS_SLEEP_CBCR_CLK		8
++#define WCSS_QDSP6SS_GFMMUX_CLK			9
++
++#define Q6SSTOP_QDSP6SS_RESET			0
++#define Q6SSTOP_QDSP6SS_CORE_RESET		1
++#define Q6SSTOP_QDSP6SS_BUS_RESET		2
++#define Q6SSTOP_BCR_RESET			3
++#endif
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
