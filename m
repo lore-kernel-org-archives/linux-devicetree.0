@@ -1,118 +1,93 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [RFC PATCH 01/11] phy: core add phy_set_netif_mode() api
-Date: Tue, 9 Oct 2018 10:52:53 +0530
-Message-ID: <54ba13bb-95e1-1519-a30f-8da198447489@ti.com>
-References: <20181008234949.15416-1-grygorii.strashko@ti.com>
- <20181008234949.15416-2-grygorii.strashko@ti.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH] dt-bindings: Add bindings for aliases node
+Date: Mon, 08 Oct 2018 22:57:24 -0700
+Message-ID: <153906464468.119890.12038987094612660933@swboyd.mtv.corp.google.com>
+References: <20180925210255.172734-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181008234949.15416-2-grygorii.strashko@ti.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180925210255.172734-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <briannorris@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grygorii,
+Quoting Matthias Kaehlcke (2018-09-25 14:02:55)
+> Add a global binding for the 'aliases' node. This includes an initial list
+> of standardized alias names for some hardware components that are commonly
+> found in 'aliases'.
+> =
 
-On Tuesday 09 October 2018 05:19 AM, Grygorii Strashko wrote:
-> Add new API phy_set_netif_mode(struct phy *phy, phy_interface_t mode) and
-> new PHY operation callback .set_netif_mode() which intended to be implemnte
-> by PHY drivers which supports Network interrfaces mode selection. Both
-> accepts phy_interface_t vlaue as input parameter.
-> 
-> Cc: Kishon Vijay Abraham I <kishon@ti.com>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > ---
->  drivers/phy/phy-core.c  | 15 +++++++++++++++
->  include/linux/phy/phy.h | 12 ++++++++++++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 35fd38c..d9aba1a 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -377,6 +377,21 @@ int phy_set_mode(struct phy *phy, enum phy_mode mode)
->  }
->  EXPORT_SYMBOL_GPL(phy_set_mode);
->  
-> +int phy_set_netif_mode(struct phy *phy, phy_interface_t mode)
-> +{
-> +	int ret;
-> +
-> +	if (!phy || !phy->ops->set_netif_mode)
-> +		return 0;
-> +
-> +	mutex_lock(&phy->mutex);
-> +	ret = phy->ops->set_netif_mode(phy, mode);
-> +	mutex_unlock(&phy->mutex);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(phy_set_netif_mode);
+>  Documentation/devicetree/bindings/aliases.txt | 47 +++++++++++++++++++
 
-We should try to add only generic PHY APIs and not subsystem specific APIs. In
-this case I think phy_set_mode should suffice.
+Any chance we can get a documentation update for the devicetree spec as
+well?
 
-Thanks
-Kishon
+>  1 file changed, 47 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/aliases.txt
+> =
+
+> diff --git a/Documentation/devicetree/bindings/aliases.txt b/Documentatio=
+n/devicetree/bindings/aliases.txt
+> new file mode 100644
+> index 000000000000..d64ed1c7eb34
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/aliases.txt
+> @@ -0,0 +1,47 @@
+> +The aliases node
+> +----------------
+> +
+> +The aliases node contains properties that represent aliases to device tr=
+ee
+> +nodes. The name of the property is the alias name, the value is the path=
+ of
+> +a the device tree node that corresponds to the alias. The path may be
+
+s/a //
+
+> +specified as a string or a phandle.
+> +
+> +Alias names are often suffixed with a numeric ID, especially when there =
+may
+> +be multiple instances of the same type. The ID typically corresponds to =
+the
+> +hardware layout, it may also be used by drivers for a stable mapping of
+> +device names and hardware entities.
+
+Indicate the numeric ID is a u32 or something like that?
 
 > +
->  int phy_reset(struct phy *phy)
->  {
->  	int ret;
-> diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-> index 9713aeb..bc73d2b 100644
-> --- a/include/linux/phy/phy.h
-> +++ b/include/linux/phy/phy.h
-> @@ -17,6 +17,7 @@
->  #include <linux/err.h>
->  #include <linux/of.h>
->  #include <linux/device.h>
-> +#include <linux/phy.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regulator/consumer.h>
->  
-> @@ -49,6 +50,7 @@ enum phy_mode {
->   * @power_on: powering on the phy
->   * @power_off: powering off the phy
->   * @set_mode: set the mode of the phy
-> + * @set_netif_mode: set the mode of the net interface phy
->   * @reset: resetting the phy
->   * @calibrate: calibrate the phy
->   * @owner: the module owner containing the ops
-> @@ -59,6 +61,7 @@ struct phy_ops {
->  	int	(*power_on)(struct phy *phy);
->  	int	(*power_off)(struct phy *phy);
->  	int	(*set_mode)(struct phy *phy, enum phy_mode mode);
-> +	int	(*set_netif_mode)(struct phy *phy, phy_interface_t mode);
->  	int	(*reset)(struct phy *phy);
->  	int	(*calibrate)(struct phy *phy);
->  	struct module *owner;
-> @@ -163,6 +166,7 @@ int phy_exit(struct phy *phy);
->  int phy_power_on(struct phy *phy);
->  int phy_power_off(struct phy *phy);
->  int phy_set_mode(struct phy *phy, enum phy_mode mode);
-> +int phy_set_netif_mode(struct phy *phy, phy_interface_t mode);
->  static inline enum phy_mode phy_get_mode(struct phy *phy)
->  {
->  	return phy->attrs.mode;
-> @@ -283,6 +287,14 @@ static inline int phy_set_mode(struct phy *phy, enum phy_mode mode)
->  	return -ENOSYS;
->  }
->  
-> +static inline int phy_set_netif_mode(struct phy *phy,
-> +				     phy_interface_t mode)
-> +{
-> +	if (!phy)
-> +		return 0;
-> +	return -ENOTSUPP;
-> +}
+> +Alias names
+> +-----------
 > +
->  static inline enum phy_mode phy_get_mode(struct phy *phy)
->  {
->  	return PHY_MODE_INVALID;
-> 
+> +The devicetree specification doesn't require the use of specific alias
+> +names to refer to hardware entities of a given type, however the Linux
+> +kernel aims for a certain level of consistency.
+> +
+> +The following standardized alias names shall be used for their
+> +corresponding hardware components:
+> +
+> +  bluetoothN           Bluetooth controller
+
+Can we use syntax like:
+
+	bluetooth<N>
+
+to indicate that <N> is an unsigned integer?
+
+> +  ethernetN            Ethernet interface
+> +  gpioN                        GPIO controller
+> +  i2cN                 i2c bus
+> +  mmcN                 MMC bus
+> +  rtcN                 Real time clock
+> +  serialN              UART port
+> +  spiN                 SPI bus
+> +  wifiN                        Wireless network interface
+> +
+> +The above list is not exhaustive and will be extended over time. Please
+> +send patches to devicetree@vger.kernel.org if you think a hardware
+> +component and its alias name should be on the list.
+> +
