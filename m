@@ -1,69 +1,85 @@
-From: Guo Ren <ren_guo@c-sky.com>
-Subject: Re: [PATCH V10 1/8] irqchip: add C-SKY SMP interrupt controller
-Date: Tue, 9 Oct 2018 22:59:56 +0800
-Message-ID: <20181009145955.GA17681@guoren-Inspiron-7460>
-References: <cover.1538672812.git.ren_guo@c-sky.com>
- <e06484474231375248e3e7a6ab47cf8ff8893129.1538672812.git.ren_guo@c-sky.com>
- <404fb433-020e-28f9-2434-a22c6db36a15@arm.com>
- <20181009022357.GA826@guoren>
- <a8654ba4-fe46-6842-64f6-d4141bbf8793@arm.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: add backlight regulator for
+ Pinebook
+Date: Tue, 9 Oct 2018 17:10:19 +0200
+Message-ID: <20181009151019.b6eb6o664twnts7g@flea>
+References: <20181009034609.24892-1-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <a8654ba4-fe46-6842-64f6-d4141bbf8793@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, daniel.lezcano@linaro.org, anurup.m@huawei.com, Jonathan.Cameron@huawei.com, will.deacon@arm.com, zhangshaokun@hisilicon.com, jhogan@kernel.org, paul.burton@mips.com, peterz@infradead.org, arnd@arndb.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============5752030694300331586=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181009034609.24892-1-anarsoul@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Marc,
 
-On Tue, Oct 09, 2018 at 09:15:17AM +0100, Marc Zyngier wrote:
+--===============5752030694300331586==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vsyytmyxitmchppe"
+Content-Disposition: inline
 
-> >>>+#ifdef CONFIG_SMP
-> >>>+	set_send_ipi(&csky_mpintc_send_ipi);
-> >>>+
-> >>>+	set_ipi_irq_mapping(&csky_mpintc_ipi_irq_mapping);
-> >>
-> >>Since you seem to be inventing a new set_send_ipi callback, why don't you
-> >>define it as:
-> >>
-> >>void set_send_ipi(void (*func)(const struct cpumask *),
-> >>		  unsigned int ipi_irq);
-> >>after having created the mapping for the IPI interrupt? It would avoid this
-> >>rather pointless mapping callback.
-> >
-> >I'll define it to:
-> >
-> >void set_send_ipi(void (*func)(const struct cpumask *));
-> >
-> >IPI_IRQ only use software-irq-15 in mpintc driver, so arch needn't care
-> >about irq-num.
-> 
-> Except that your SMP code does a request_irq on the result of
-> create_mapping. Who is going to do that if you don't pass the Linux irq
-> around?
- 
-Yes, My SMP code does a request_irq on the result of create_mapping.
-Here is my smp.c code and it use a result of create_mapping by arch_ipi_irq_mapping()
-callback in irq-csky-mpintc.c
 
-void __init setup_smp_ipi(void)
-{
-	int rc;
+--vsyytmyxitmchppe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	ipi_irq = arch_ipi_irq_mapping();
-	if (ipi_irq == 0)
-		panic("%s IRQ mapping failed\n", __func__);
+On Mon, Oct 08, 2018 at 08:46:09PM -0700, Vasily Khoruzhick wrote:
+> Backlight power is controlled by PH6 GPIO, so add corresponding
+> regulator-fixed node for it. Otherwise backlight won't light up
+> if bootloader doesn't enable it.
+>=20
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 
-	rc = request_percpu_irq(ipi_irq, handle_ipi, "IPI Interrupt",
-				&ipi_dummy_dev);
-	if (rc)
-		panic("%s IRQ request failed\n", __func__);
+Queued for 4.21, thanks!
+Maxime
 
-	enable_smp_ipi();
-}
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Best Regards
- Guo Ren
+--vsyytmyxitmchppe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEE0VqZU19dR2zEVaqr0rTAlCFNr3QFAlu8xNoACgkQ0rTAlCFN
+r3RIWw//dfwBwW+rVVjOT4T3ND3PwCUB06kttEtcAggnvtcbf5f+h8uFnsFlj+Rq
+Gw87IzJVjDIYT39U5EY4X+N4odPXTsJDB4ufNrbhGB6WfJW1maUrC3YI9ctt/+mQ
+ynGF9o4dmH9I+yOWhNcVgB2XgWhUC6p0cf06pAvymUsFHHWYTYFsXTYLbN9B46Oa
+q00mXjNtpTHnSDHnBXoK+ElyD4MAYjEG1rRyMvY9WidGtAuNfQJxVFEg2dDP82YI
+B6fX+IL0AUvQxnQi30vwhTrSC/AmF8+pWf93kr21MLiQXtMH0jCX5rhXTZTyWvVW
+PtueB3FUclgrjv4IqRZEBrn9U8CFBOLYDYQFDl/zrzpbTyRNdK1273toNmZDsPd2
+lbAyGB3nYlE/vC0RHjxzFkW46x0xKqiWlfNwvxVs7QzD485ibepG9svNlmW7eo2m
+D8OxDhOYu96nxJM6ttHjKBWw2sLba7/bp65xC8W+IjC8BwamdvblJ7qGro8w6Ac2
+S2Xy7dLsAHCV9kFKZ3eZe3H34o9bBkpxP15itRFgkh43j+wsgVXvWH1YhJpwcbvF
+LKHOSOVcopiJKqv3XQsZbB/aAPKlMObCqDrWZTyVn8FBk+UF184b5yLutPT1llsA
+av8Z1H0CTQeDvEZkKECM2lARKR+HTn7mUX+e+94+WGENyiCD3W8=
+=hR7T
+-----END PGP SIGNATURE-----
+
+--vsyytmyxitmchppe--
+
+
+--===============5752030694300331586==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5752030694300331586==--
