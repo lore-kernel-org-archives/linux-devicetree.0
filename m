@@ -1,14 +1,15 @@
 From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: Re: [PATCH 11/14] mtd: maps: Merge physmap_of.c into physmap-core.c
-Date: Tue, 9 Oct 2018 08:58:40 +0200
-Message-ID: <CAPybu_1AA-fqSdS_+S=D8XEMaHs9SyECsf1SWq7cRBF8Z3oOzQ@mail.gmail.com>
+Subject: Re: [PATCH 12/14] mtd: maps: Merge gpio-addr-flash.c into
+ physmap-core.c
+Date: Tue, 9 Oct 2018 09:04:51 +0200
+Message-ID: <CAPybu_3ZTNzB=PmidBRzW_ZG_H5Pwwp7sro52LuO58XpOzq+Tg@mail.gmail.com>
 References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
- <20181008201027.17952-12-boris.brezillon@bootlin.com>
+ <20181008201027.17952-13-boris.brezillon@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20181008201027.17952-12-boris.brezillon@bootlin.com>
+In-Reply-To: <20181008201027.17952-13-boris.brezillon@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
@@ -22,821 +23,359 @@ To: Boris Brezillon <boris.brezillon@bootlin.com>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris
-On Mon, Oct 8, 2018 at 10:10 PM Boris Brezillon
-<boris.brezillon@bootlin.com> wrote:
->
-> There's no real reason to have two separate driver for the DT and pdata
-> case. Just do what we do everywhere else and handle DT and pdata
-> parsing in the same driver.
->
-> Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
-> ---
->  drivers/mtd/maps/Kconfig           |   4 +-
->  drivers/mtd/maps/Makefile          |   7 +-
->  drivers/mtd/maps/physmap-core.c    | 260 +++++++++++++++++++++++---
->  drivers/mtd/maps/physmap_of_core.c | 368 -------------------------------------
->  4 files changed, 239 insertions(+), 400 deletions(-)
->  delete mode 100644 drivers/mtd/maps/physmap_of_core.c
->
-> diff --git a/drivers/mtd/maps/Kconfig b/drivers/mtd/maps/Kconfig
-> index afb36bff13a7..5bffebacce86 100644
-> --- a/drivers/mtd/maps/Kconfig
-> +++ b/drivers/mtd/maps/Kconfig
-> @@ -66,8 +66,8 @@ config MTD_PHYSMAP_BANKWIDTH
->           used internally by the CFI drivers.
->
->  config MTD_PHYSMAP_OF
-> -       tristate "Memory device in physical memory map based on OF description"
-> -       depends on OF && (MTD_CFI || MTD_JEDECPROBE || MTD_ROM || MTD_RAM)
-> +       bool "Memory device in physical memory map based on OF description"
-> +       depends on OF && MTD_PHYSMAP
->         help
->           This provides a 'mapping' driver which allows the NOR Flash, ROM
->           and RAM driver code to communicate with chips which are mapped
-> diff --git a/drivers/mtd/maps/Makefile b/drivers/mtd/maps/Makefile
-> index 2574909edffd..ad32b185a120 100644
-> --- a/drivers/mtd/maps/Makefile
-> +++ b/drivers/mtd/maps/Makefile
-> @@ -18,13 +18,10 @@ obj-$(CONFIG_MTD_CK804XROM) += ck804xrom.o
->  obj-$(CONFIG_MTD_TSUNAMI)      += tsunami_flash.o
->  obj-$(CONFIG_MTD_PXA2XX)       += pxa2xx-flash.o
->  physmap-objs-y                 += physmap-core.o
-> +physmap-objs-$(CONFIG_MTD_PHYSMAP_OF_VERSATILE) += physmap_of_versatile.o
-> +physmap-objs-$(CONFIG_MTD_PHYSMAP_OF_GEMINI) += physmap_of_gemini.o
->  physmap-objs                   := $(physmap-objs-y)
->  obj-$(CONFIG_MTD_PHYSMAP)      += physmap.o
-> -physmap_of-objs-y              += physmap_of_core.o
-> -physmap_of-objs-$(CONFIG_MTD_PHYSMAP_OF_VERSATILE) += physmap_of_versatile.o
-> -physmap_of-objs-$(CONFIG_MTD_PHYSMAP_OF_GEMINI) += physmap_of_gemini.o
-> -physmap_of-objs                        := $(physmap_of-objs-y)
-> -obj-$(CONFIG_MTD_PHYSMAP_OF)   += physmap_of.o
->  obj-$(CONFIG_MTD_PISMO)                += pismo.o
->  obj-$(CONFIG_MTD_PMC_MSP_EVM)   += pmcmsp-flash.o
->  obj-$(CONFIG_MTD_PCMCIA)       += pcmciamtd.o
-> diff --git a/drivers/mtd/maps/physmap-core.c b/drivers/mtd/maps/physmap-core.c
-> index e27051bc5dc6..7a50ff9ef812 100644
-> --- a/drivers/mtd/maps/physmap-core.c
-> +++ b/drivers/mtd/maps/physmap-core.c
-> @@ -6,6 +6,13 @@
->   * Author: Jun Sun, jsun@mvista.com or jsun@junsun.net
->   *
->   * 031022 - [jsun] add run-time configure and partition setup
-> + *
-> + * Device tree support:
-> + *    Copyright (C) 2006 MontaVista Software Inc.
-> + *    Author: Vitaly Wool <vwool@ru.mvista.com>
-> + *
-> + *    Revised to handle newer style flash binding by:
-> + *    Copyright (C) 2007 David Gibson, IBM Corporation.
->   */
->
->  #include <linux/module.h>
-> @@ -20,7 +27,12 @@
->  #include <linux/mtd/partitions.h>
->  #include <linux/mtd/physmap.h>
->  #include <linux/mtd/concat.h>
-> +#include <linux/mtd/cfi_endian.h>
->  #include <linux/io.h>
-> +#include <linux/of_device.h>
-> +
-> +#include "physmap_of_gemini.h"
-> +#include "physmap_of_versatile.h"
->
->  struct physmap_flash_info {
->         unsigned int            nmaps;
-> @@ -29,6 +41,10 @@ struct physmap_flash_info {
->         struct map_info         *maps;
->         spinlock_t              vpp_lock;
->         int                     vpp_refcnt;
-> +       const char              *probe_type;
-> +       const char * const      *part_types;
-> +       unsigned int            nparts;
-> +       const struct mtd_partition *parts;
->  };
->
->  static int physmap_flash_remove(struct platform_device *dev)
-> @@ -41,8 +57,6 @@ static int physmap_flash_remove(struct platform_device *dev)
->         if (!info)
->                 return 0;
->
-> -       physmap_data = dev_get_platdata(&dev->dev);
-> -
->         if (info->cmtd) {
->                 err = mtd_device_unregister(info->cmtd);
->                 if (err)
-> @@ -57,7 +71,8 @@ static int physmap_flash_remove(struct platform_device *dev)
->                         map_destroy(info->mtds[i]);
->         }
->
-> -       if (physmap_data->exit)
-> +       physmap_data = dev_get_platdata(&dev->dev);
-> +       if (physmap_data && physmap_data->exit)
->                 physmap_data->exit(dev);
->
->         return 0;
-> @@ -89,6 +104,172 @@ static void physmap_set_vpp(struct map_info *map, int state)
->         spin_unlock_irqrestore(&info->vpp_lock, flags);
->  }
->
-> +#if IS_ENABLED(CONFIG_MTD_PHYSMAP_OF)
-> +static const struct of_device_id of_flash_match[] = {
-> +       {
-> +               .compatible = "cfi-flash",
-> +               .data = "cfi_probe",
-> +       },
-> +       {
-> +               /*
-> +                * FIXME: JEDEC chips can't be safely and reliably
-> +                * probed, although the mtd code gets it right in
-> +                * practice most of the time.  We should use the
-> +                * vendor and device ids specified by the binding to
-> +                * bypass the heuristic probe code, but the mtd layer
-> +                * provides, at present, no interface for doing so
-> +                * :(.
-> +                */
-> +               .compatible = "jedec-flash",
-> +               .data = "jedec_probe",
-> +       },
-> +       {
-> +               .compatible = "mtd-ram",
-> +               .data = "map_ram",
-> +       },
-> +       {
-> +               .compatible = "mtd-rom",
-> +               .data = "map_rom",
-> +       },
-> +       {
-> +               .type = "rom",
-> +               .compatible = "direct-mapped"
-> +       },
-> +       { /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_flash_match);
-> +
-> +static const char * const of_default_part_probes[] = {
-> +       "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL
-> +};
-> +
-> +static const char * const *of_get_part_probes(struct platform_device *dev)
-> +{
-> +       struct device_node *dp = dev->dev.of_node;
-> +       const char **res;
-> +       int count;
-> +
-> +       count = of_property_count_strings(dp, "linux,part-probe");
-> +       if (count < 0)
-> +               return of_default_part_probes;
-> +
-> +       res = devm_kcalloc(&dev->dev, count + 1, sizeof(*res), GFP_KERNEL);
-> +       if (!res)
-> +               return NULL;
-> +
-> +       count = of_property_read_string_array(dp, "linux,part-probe", res,
-> +                                             count);
-> +       if (count < 0)
-> +               return NULL;
-> +
-> +       return res;
-> +}
-> +
-> +static const char *of_select_probe_type(struct platform_device *dev)
-> +{
-> +       struct device_node *dp = dev->dev.of_node;
-> +       const struct of_device_id *match;
-> +       const char *probe_type;
-> +
-> +       match = of_match_device(of_flash_match, &dev->dev);
-> +       probe_type = match->data;
-> +       if (probe_type)
-> +               return probe_type;
-> +
-> +       dev_warn(&dev->dev,
-> +                "Device tree uses obsolete \"direct-mapped\" flash binding\n");
-> +
-> +       of_property_read_string(dp, "probe-type", &probe_type);
-> +       if (!probe_type)
-> +               return NULL;
-> +
-> +       if (!strcmp(probe_type, "CFI")) {
-> +               probe_type = "cfi_probe";
-> +       } else if (!strcmp(probe_type, "JEDEC")) {
-> +               probe_type = "jedec_probe";
-> +       } else if (!strcmp(probe_type, "ROM")) {
-> +               probe_type = "map_rom";
-> +       } else {
-> +               dev_warn(&dev->dev,
-> +                        "obsolete_probe: don't know probe type '%s', mapping as rom\n",
-> +                        probe_type);
-> +               probe_type = "map_rom";
-> +       }
-> +
-> +       return probe_type;
-> +}
-> +
-> +static int physmap_flash_of_init(struct platform_device *dev)
-> +{
-> +       struct physmap_flash_info *info = platform_get_drvdata(dev);
-> +       struct device_node *dp = dev->dev.of_node;
-> +       const char *mtd_name = NULL;
-> +       int err, swap = 0;
-> +       bool map_indirect;
-> +       unsigned int i;
-> +       u32 bankwidth;
-> +
-> +       if (!dp)
-> +               return -EINVAL;
-> +
-> +       info->probe_type = of_select_probe_type(dev);
-> +
-> +       info->part_types = of_get_part_probes(dev);
-> +       if (!info->part_types)
-> +               return -ENOMEM;
-> +
-> +       of_property_read_string(dp, "linux,mtd-name", &mtd_name);
-> +
-> +       map_indirect = of_property_read_bool(dp, "no-unaligned-direct-access");
-> +
-> +       err = of_property_read_u32(dp, "bank-width", &bankwidth);
-> +       if (err) {
-> +               dev_err(&dev->dev, "Can't get bank width from device tree\n");
-> +               return err;
-> +       }
-> +
-> +       if (of_property_read_bool(dp, "big-endian"))
-> +               swap = CFI_BIG_ENDIAN;
-> +       else if (of_property_read_bool(dp, "little-endian"))
-> +               swap = CFI_LITTLE_ENDIAN;
-> +
-> +       for (i = 0; i < info->nmaps; i++) {
-> +               info->maps[i].name = mtd_name;
-> +               info->maps[i].swap = swap;
-> +               info->maps[i].bankwidth = bankwidth;
-> +               info->maps[i].device_node = dp;
-> +
-> +               err = of_flash_probe_gemini(dev, dp, &info->maps[i]);
-> +               if (err)
-> +                       return err;
-> +
-> +               err = of_flash_probe_versatile(dev, dp, &info->maps[i]);
-> +               if (err)
-> +                       return err;
-> +
-> +               /*
-> +                * On some platforms (e.g. MPC5200) a direct 1:1 mapping
-> +                * may cause problems with JFFS2 usage, as the local bus (LPB)
-> +                * doesn't support unaligned accesses as implemented in the
-> +                * JFFS2 code via memcpy(). By setting NO_XIP, the
-> +                * flash will not be exposed directly to the MTD users
-> +                * (e.g. JFFS2) any more.
-> +                */
-> +               if (map_indirect)
-> +                       info->maps[i].phys = NO_XIP;
-> +       }
-> +
-> +       return 0;
-> +}
-> +#else /* IS_ENABLED(CONFIG_MTD_PHYSMAP_OF) */
-> +#define of_flash_match NULL
-> +
-> +static int physmap_flash_of_init(struct platform_device *dev)
-> +{
-> +       return -ENOTSUPP;
-> +}
-> +#endif /* IS_ENABLED(CONFIG_MTD_PHYSMAP_OF) */
-> +
->  static const char * const rom_probe_types[] = {
->         "cfi_probe", "jedec_probe", "qinfo_probe", "map_rom", NULL
->  };
-> @@ -97,18 +278,46 @@ static const char * const part_probe_types[] = {
->         "cmdlinepart", "RedBoot", "afs", NULL
->  };
->
-> -static int physmap_flash_probe(struct platform_device *dev)
-> +static int physmap_flash_pdata_init(struct platform_device *dev)
->  {
-> +       struct physmap_flash_info *info = platform_get_drvdata(dev);
->         struct physmap_flash_data *physmap_data;
-> +       unsigned int i;
-> +       int err;
-> +
-> +       physmap_data = dev_get_platdata(&dev->dev);
-> +       if (!physmap_data)
-> +               return -EINVAL;
-> +
-> +       info->probe_type = physmap_data->probe_type;
-> +       info->part_types = physmap_data->part_probe_types ? : part_probe_types;
-> +       info->parts = physmap_data->parts;
-> +       info->nparts = physmap_data->nr_parts;
-> +
-> +       if (physmap_data->init) {
-> +               err = physmap_data->init(dev);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       for (i = 0; i < info->nmaps; i++) {
-> +               info->maps[i].bankwidth = physmap_data->width;
-> +               info->maps[i].pfow_base = physmap_data->pfow_base;
-> +               info->maps[i].set_vpp = physmap_set_vpp;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +static int physmap_flash_probe(struct platform_device *dev)
-> +{
->         struct physmap_flash_info *info;
->         const char * const *probe_type;
-> -       const char * const *part_types;
->         int err = 0;
->         int i;
->
-> -       physmap_data = dev_get_platdata(&dev->dev);
-> -       if (!physmap_data)
-> -               return -ENODEV;
-> +       if (!dev->dev.of_node && dev_get_platdata(&dev->dev))
-> +               return -EINVAL;
-
-Maybe you want:
-            if (!dev->dev.of_node && !dev_get_platdata(&dev->dev))
->
->         info = devm_kzalloc(&dev->dev, sizeof(*info), GFP_KERNEL);
->         if (!info)
-> @@ -132,14 +341,15 @@ static int physmap_flash_probe(struct platform_device *dev)
->         if (!info->mtds)
->                 return -ENOMEM;
->
-> -       if (physmap_data->init) {
-> -               err = physmap_data->init(dev);
-> -               if (err)
-> -                       goto err_out;
-> -       }
-> -
->         platform_set_drvdata(dev, info);
->
-> +       err = physmap_flash_of_init(dev);
-> +       if (err)
-> +               err = physmap_flash_pdata_init(dev);
-> +
-
-Maybe replace this with:
-  if (dev->dev.of_node)
-     err = physmap_flash_of_init(dev);
- else
-    err = physmap_flash_pdata_init(dev);
-
-Otherwise we are hiding the returncode from  of_init, which might be
-defered probing.
-
-> +       if (err)
-> +               return err;
-> +
->         for (i = 0; i < info->nmaps; i++) {
->                 struct resource *res;
->
-> @@ -154,22 +364,22 @@ static int physmap_flash_probe(struct platform_device *dev)
->                            res);
->
->                 info->maps[i].name = dev_name(&dev->dev);
-> -               info->maps[i].phys = res->start;
-> +
-> +               if (!info->maps[i].phys)
-> +                       info->maps[i].phys = res->start;
-> +
->                 info->maps[i].size = resource_size(res);
-> -               info->maps[i].bankwidth = physmap_data->width;
-> -               info->maps[i].set_vpp = physmap_set_vpp;
-> -               info->maps[i].pfow_base = physmap_data->pfow_base;
->                 info->maps[i].map_priv_1 = (unsigned long)dev;
->
->                 simple_map_init(&info->maps[i]);
->
->                 probe_type = rom_probe_types;
-> -               if (!physmap_data->probe_type) {
-> +               if (!info->probe_type) {
->                         for (; !info->mtds[i] && *probe_type; probe_type++)
->                                 info->mtds[i] = do_map_probe(*probe_type,
->                                                              &info->maps[i]);
->                 } else {
-> -                       info->mtds[i] = do_map_probe(physmap_data->probe_type,
-> +                       info->mtds[i] = do_map_probe(info->probe_type,
->                                                      &info->maps[i]);
->                 }
->
-> @@ -197,11 +407,9 @@ static int physmap_flash_probe(struct platform_device *dev)
->
->         spin_lock_init(&info->vpp_lock);
->
-> -       part_types = physmap_data->part_probe_types ? : part_probe_types;
-> -
-> -       err = mtd_device_parse_register(info->cmtd, part_types, NULL,
-> -                                       physmap_data->parts,
-> -                                       physmap_data->nr_parts);
-> +       mtd_set_of_node(info->cmtd, dev->dev.of_node);
-> +       err = mtd_device_parse_register(info->cmtd, info->part_types, NULL,
-> +                                       info->parts, info->nparts);
->         if (err)
->                 goto err_out;
->
-> @@ -232,6 +440,7 @@ static struct platform_driver physmap_flash_driver = {
->         .shutdown       = physmap_flash_shutdown,
->         .driver         = {
->                 .name   = "physmap-flash",
-> +               .of_match_table = of_flash_match,
->         },
->  };
->
-> @@ -286,6 +495,7 @@ module_exit(physmap_exit);
->
->  MODULE_LICENSE("GPL");
->  MODULE_AUTHOR("David Woodhouse <dwmw2@infradead.org>");
-> +MODULE_AUTHOR("Vitaly Wool <vwool@ru.mvista.com>");
->  MODULE_DESCRIPTION("Generic configurable MTD map driver");
->
->  /* legacy platform drivers can't hotplug or coldplg */
-> diff --git a/drivers/mtd/maps/physmap_of_core.c b/drivers/mtd/maps/physmap_of_core.c
-> deleted file mode 100644
-> index ece605d78c21..000000000000
-> --- a/drivers/mtd/maps/physmap_of_core.c
-> +++ /dev/null
-> @@ -1,368 +0,0 @@
-> -/*
-> - * Flash mappings described by the OF (or flattened) device tree
-> - *
-> - * Copyright (C) 2006 MontaVista Software Inc.
-> - * Author: Vitaly Wool <vwool@ru.mvista.com>
-> - *
-> - * Revised to handle newer style flash binding by:
-> - *   Copyright (C) 2007 David Gibson, IBM Corporation.
-> - *
-> - * This program is free software; you can redistribute  it and/or modify it
-> - * under  the terms of  the GNU General  Public License as published by the
-> - * Free Software Foundation;  either version 2 of the  License, or (at your
-> - * option) any later version.
-> - */
-> -
-> -#include <linux/module.h>
-> -#include <linux/types.h>
-> -#include <linux/device.h>
-> -#include <linux/mtd/mtd.h>
-> -#include <linux/mtd/map.h>
-> -#include <linux/mtd/partitions.h>
-> -#include <linux/mtd/concat.h>
-> -#include <linux/mtd/cfi_endian.h>
-> -#include <linux/of.h>
-> -#include <linux/of_address.h>
-> -#include <linux/of_platform.h>
-> -#include <linux/slab.h>
-> -#include "physmap_of_gemini.h"
-> -#include "physmap_of_versatile.h"
-> -
-> -struct of_flash_list {
-> -       struct mtd_info *mtd;
-> -       struct map_info map;
-> -};
-> -
-> -struct of_flash {
-> -       struct mtd_info         *cmtd;
-> -       int list_size; /* number of elements in of_flash_list */
-> -       struct of_flash_list    list[0];
-> -};
-> -
-> -static int of_flash_remove(struct platform_device *dev)
-> -{
-> -       struct of_flash *info;
-> -       int i;
-> -
-> -       info = dev_get_drvdata(&dev->dev);
-> -       if (!info)
-> -               return 0;
-> -       dev_set_drvdata(&dev->dev, NULL);
-> -
-> -       if (info->cmtd) {
-> -               mtd_device_unregister(info->cmtd);
-> -               if (info->cmtd != info->list[0].mtd)
-> -                       mtd_concat_destroy(info->cmtd);
-> -       }
-> -
-> -       for (i = 0; i < info->list_size; i++)
-> -               if (info->list[i].mtd)
-> -                       map_destroy(info->list[i].mtd);
-> -
-> -       return 0;
-> -}
-> -
-> -static const char * const rom_probe_types[] = {
-> -       "cfi_probe", "jedec_probe", "map_rom" };
-> -
-> -/* Helper function to handle probing of the obsolete "direct-mapped"
-> - * compatible binding, which has an extra "probe-type" property
-> - * describing the type of flash probe necessary. */
-> -static struct mtd_info *obsolete_probe(struct platform_device *dev,
-> -                                      struct map_info *map)
-> -{
-> -       struct device_node *dp = dev->dev.of_node;
-> -       const char *of_probe;
-> -       struct mtd_info *mtd;
-> -       int i;
-> -
-> -       dev_warn(&dev->dev, "Device tree uses obsolete \"direct-mapped\" "
-> -                "flash binding\n");
-> -
-> -       of_probe = of_get_property(dp, "probe-type", NULL);
-> -       if (!of_probe) {
-> -               for (i = 0; i < ARRAY_SIZE(rom_probe_types); i++) {
-> -                       mtd = do_map_probe(rom_probe_types[i], map);
-> -                       if (mtd)
-> -                               return mtd;
-> -               }
-> -               return NULL;
-> -       } else if (strcmp(of_probe, "CFI") == 0) {
-> -               return do_map_probe("cfi_probe", map);
-> -       } else if (strcmp(of_probe, "JEDEC") == 0) {
-> -               return do_map_probe("jedec_probe", map);
-> -       } else {
-> -               if (strcmp(of_probe, "ROM") != 0)
-> -                       dev_warn(&dev->dev, "obsolete_probe: don't know probe "
-> -                                "type '%s', mapping as rom\n", of_probe);
-> -               return do_map_probe("map_rom", map);
-> -       }
-> -}
-> -
-> -/* When partitions are set we look for a linux,part-probe property which
-> -   specifies the list of partition probers to use. If none is given then the
-> -   default is use. These take precedence over other device tree
-> -   information. */
-> -static const char * const part_probe_types_def[] = {
-> -       "cmdlinepart", "RedBoot", "ofpart", "ofoldpart", NULL };
-> -
-> -static const char * const *of_get_probes(struct device_node *dp)
-> -{
-> -       const char **res;
-> -       int count;
-> -
-> -       count = of_property_count_strings(dp, "linux,part-probe");
-> -       if (count < 0)
-> -               return part_probe_types_def;
-> -
-> -       res = kcalloc(count + 1, sizeof(*res), GFP_KERNEL);
-> -       if (!res)
-> -               return NULL;
-> -
-> -       count = of_property_read_string_array(dp, "linux,part-probe", res,
-> -                                             count);
-> -       if (count < 0)
-> -               return NULL;
-> -
-> -       return res;
-> -}
-> -
-> -static void of_free_probes(const char * const *probes)
-> -{
-> -       if (probes != part_probe_types_def)
-> -               kfree(probes);
-> -}
-> -
-> -static const struct of_device_id of_flash_match[];
-> -static int of_flash_probe(struct platform_device *dev)
-> -{
-> -       const char * const *part_probe_types;
-> -       const struct of_device_id *match;
-> -       struct device_node *dp = dev->dev.of_node;
-> -       struct resource res;
-> -       struct of_flash *info;
-> -       const char *probe_type;
-> -       const __be32 *width;
-> -       int err;
-> -       int i;
-> -       int count;
-> -       const __be32 *p;
-> -       int reg_tuple_size;
-> -       struct mtd_info **mtd_list = NULL;
-> -       resource_size_t res_size;
-> -       bool map_indirect;
-> -       const char *mtd_name = NULL;
-> -
-> -       match = of_match_device(of_flash_match, &dev->dev);
-> -       if (!match)
-> -               return -EINVAL;
-> -       probe_type = match->data;
-> -
-> -       reg_tuple_size = (of_n_addr_cells(dp) + of_n_size_cells(dp)) * sizeof(u32);
-> -
-> -       of_property_read_string(dp, "linux,mtd-name", &mtd_name);
-> -
-> -       /*
-> -        * Get number of "reg" tuples. Scan for MTD devices on area's
-> -        * described by each "reg" region. This makes it possible (including
-> -        * the concat support) to support the Intel P30 48F4400 chips which
-> -        * consists internally of 2 non-identical NOR chips on one die.
-> -        */
-> -       p = of_get_property(dp, "reg", &count);
-> -       if (!p || count % reg_tuple_size != 0) {
-> -               dev_err(&dev->dev, "Malformed reg property on %pOF\n",
-> -                               dev->dev.of_node);
-> -               err = -EINVAL;
-> -               goto err_flash_remove;
-> -       }
-> -       count /= reg_tuple_size;
-> -
-> -       map_indirect = of_property_read_bool(dp, "no-unaligned-direct-access");
-> -
-> -       err = -ENOMEM;
-> -       info = devm_kzalloc(&dev->dev,
-> -                           sizeof(struct of_flash) +
-> -                           sizeof(struct of_flash_list) * count, GFP_KERNEL);
-> -       if (!info)
-> -               goto err_flash_remove;
-> -
-> -       dev_set_drvdata(&dev->dev, info);
-> -
-> -       mtd_list = kcalloc(count, sizeof(*mtd_list), GFP_KERNEL);
-> -       if (!mtd_list)
-> -               goto err_flash_remove;
-> -
-> -       for (i = 0; i < count; i++) {
-> -               err = -ENXIO;
-> -               if (of_address_to_resource(dp, i, &res)) {
-> -                       /*
-> -                        * Continue with next register tuple if this
-> -                        * one is not mappable
-> -                        */
-> -                       continue;
-> -               }
-> -
-> -               dev_dbg(&dev->dev, "of_flash device: %pR\n", &res);
-> -
-> -               err = -EBUSY;
-> -               res_size = resource_size(&res);
-> -               info->list[i].map.virt = devm_ioremap_resource(&dev->dev, &res);
-> -               if (IS_ERR(info->list[i].map.virt)) {
-> -                       err = PTR_ERR(info->list[i].map.virt);
-> -                       goto err_out;
-> -               }
-> -
-> -               err = -ENXIO;
-> -               width = of_get_property(dp, "bank-width", NULL);
-> -               if (!width) {
-> -                       dev_err(&dev->dev, "Can't get bank width from device"
-> -                               " tree\n");
-> -                       goto err_out;
-> -               }
-> -
-> -               info->list[i].map.name = mtd_name ?: dev_name(&dev->dev);
-> -               info->list[i].map.phys = res.start;
-> -               info->list[i].map.size = res_size;
-> -               info->list[i].map.bankwidth = be32_to_cpup(width);
-> -               info->list[i].map.device_node = dp;
-> -
-> -               if (of_property_read_bool(dp, "big-endian"))
-> -                       info->list[i].map.swap = CFI_BIG_ENDIAN;
-> -               else if (of_property_read_bool(dp, "little-endian"))
-> -                       info->list[i].map.swap = CFI_LITTLE_ENDIAN;
-> -
-> -               err = of_flash_probe_gemini(dev, dp, &info->list[i].map);
-> -               if (err)
-> -                       goto err_out;
-> -               err = of_flash_probe_versatile(dev, dp, &info->list[i].map);
-> -               if (err)
-> -                       goto err_out;
-> -
-> -               simple_map_init(&info->list[i].map);
-> -
-> -               /*
-> -                * On some platforms (e.g. MPC5200) a direct 1:1 mapping
-> -                * may cause problems with JFFS2 usage, as the local bus (LPB)
-> -                * doesn't support unaligned accesses as implemented in the
-> -                * JFFS2 code via memcpy(). By setting NO_XIP, the
-> -                * flash will not be exposed directly to the MTD users
-> -                * (e.g. JFFS2) any more.
-> -                */
-> -               if (map_indirect)
-> -                       info->list[i].map.phys = NO_XIP;
-> -
-> -               if (probe_type) {
-> -                       info->list[i].mtd = do_map_probe(probe_type,
-> -                                                        &info->list[i].map);
-> -               } else {
-> -                       info->list[i].mtd = obsolete_probe(dev,
-> -                                                          &info->list[i].map);
-> -               }
-> -
-> -               /* Fall back to mapping region as ROM */
-> -               if (!info->list[i].mtd) {
-> -                       dev_warn(&dev->dev,
-> -                               "do_map_probe() failed for type %s\n",
-> -                                probe_type);
-> -
-> -                       info->list[i].mtd = do_map_probe("map_rom",
-> -                                                        &info->list[i].map);
-> -               }
-> -               mtd_list[i] = info->list[i].mtd;
-> -
-> -               err = -ENXIO;
-> -               if (!info->list[i].mtd) {
-> -                       dev_err(&dev->dev, "do_map_probe() failed\n");
-> -                       goto err_out;
-> -               } else {
-> -                       info->list_size++;
-> -               }
-> -               info->list[i].mtd->dev.parent = &dev->dev;
-> -       }
-> -
-> -       err = 0;
-> -       info->cmtd = NULL;
-> -       if (info->list_size == 1) {
-> -               info->cmtd = info->list[0].mtd;
-> -       } else if (info->list_size > 1) {
-> -               /*
-> -                * We detected multiple devices. Concatenate them together.
-> -                */
-> -               info->cmtd = mtd_concat_create(mtd_list, info->list_size,
-> -                                              dev_name(&dev->dev));
-> -       }
-> -       if (info->cmtd == NULL)
-> -               err = -ENXIO;
-> -
-> -       if (err)
-> -               goto err_out;
-> -
-> -       info->cmtd->dev.parent = &dev->dev;
-> -       mtd_set_of_node(info->cmtd, dp);
-> -       part_probe_types = of_get_probes(dp);
-> -       if (!part_probe_types) {
-> -               err = -ENOMEM;
-> -               goto err_out;
-> -       }
-> -       mtd_device_parse_register(info->cmtd, part_probe_types, NULL,
-> -                       NULL, 0);
-> -       of_free_probes(part_probe_types);
-> -
-> -       kfree(mtd_list);
-> -
-> -       return 0;
-> -
-> -err_out:
-> -       kfree(mtd_list);
-> -err_flash_remove:
-> -       of_flash_remove(dev);
-> -
-> -       return err;
-> -}
-> -
-> -static const struct of_device_id of_flash_match[] = {
-> -       {
-> -               .compatible     = "cfi-flash",
-> -               .data           = (void *)"cfi_probe",
-> -       },
-> -       {
-> -               /* FIXME: JEDEC chips can't be safely and reliably
-> -                * probed, although the mtd code gets it right in
-> -                * practice most of the time.  We should use the
-> -                * vendor and device ids specified by the binding to
-> -                * bypass the heuristic probe code, but the mtd layer
-> -                * provides, at present, no interface for doing so
-> -                * :(. */
-> -               .compatible     = "jedec-flash",
-> -               .data           = (void *)"jedec_probe",
-> -       },
-> -       {
-> -               .compatible     = "mtd-ram",
-> -               .data           = (void *)"map_ram",
-> -       },
-> -       {
-> -               .compatible     = "mtd-rom",
-> -               .data           = (void *)"map_rom",
-> -       },
-> -       {
-> -               .type           = "rom",
-> -               .compatible     = "direct-mapped"
-> -       },
-> -       { },
-> -};
-> -MODULE_DEVICE_TABLE(of, of_flash_match);
-> -
-> -static struct platform_driver of_flash_driver = {
-> -       .driver = {
-> -               .name = "of-flash",
-> -               .of_match_table = of_flash_match,
-> -       },
-> -       .probe          = of_flash_probe,
-> -       .remove         = of_flash_remove,
-> -};
-> -
-> -module_platform_driver(of_flash_driver);
-> -
-> -MODULE_LICENSE("GPL");
-> -MODULE_AUTHOR("Vitaly Wool <vwool@ru.mvista.com>");
-> -MODULE_DESCRIPTION("Device tree based MTD map driver");
-> --
-> 2.14.1
->
-
-
--- 
-Ricardo Ribalda
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+SGkgQm9yaXMKCk1heWJlIHdlIHdhbnQgdG8gbGVhdmUgdGhlIHBkYXRhIGV4YW1wbGUuCgovKioK
+ICogVGhlIHBsYXRmb3JtIHJlc291cmNlIGxheW91dCBleHBlY3RlZCBsb29rcyBzb21ldGhpbmcg
+bGlrZToKICogc3RydWN0IG10ZF9wYXJ0aXRpb24gcGFydGl0aW9uc1tdID0geyAuLi4gfTsKICog
+c3RydWN0IHBoeXNtYXBfZmxhc2hfZGF0YSBmbGFzaF9kYXRhID0KLi4uLi4KCgpPbiBNb24sIE9j
+dCA4LCAyMDE4IGF0IDEwOjEwIFBNIEJvcmlzIEJyZXppbGxvbgo8Ym9yaXMuYnJlemlsbG9uQGJv
+b3RsaW4uY29tPiB3cm90ZToKPgo+IENvbnRyb2xsaW5nIHNvbWUgTVNCIGFkZHJlc3MgbGluZXMg
+dXNpbmcgR1BJT3MgaXMganVzdCBhIHNtYWxsCj4gZGV2aWF0aW9uIG9mIHRoZSBnZW5lcmljIHBo
+eXNtYXAgbG9naWMsIGFuZCBtZXJnaW5nIHRob3NlIHR3byBkcml2ZXJzCj4gYWxsb3dzIHVzIHRv
+IHNoYXJlIG1vc3Qgb2YgdGhlIHByb2JlIGxvZ2ljLCB3aGljaCBpcyBhIGdvb2QgdGhpbmcuCj4K
+PiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBib290bGlu
+LmNvbT4KPiAtLS0KPiAgZHJpdmVycy9tdGQvbWFwcy9LY29uZmlnICAgICAgICAgICB8ICAxOSAr
+Ky0KPiAgZHJpdmVycy9tdGQvbWFwcy9NYWtlZmlsZSAgICAgICAgICB8ICAgMSAtCj4gIGRyaXZl
+cnMvbXRkL21hcHMvZ3Bpby1hZGRyLWZsYXNoLmMgfCAyODEgLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLQo+ICBkcml2ZXJzL210ZC9tYXBzL3BoeXNtYXAtY29yZS5jICAgIHwg
+MTUwICsrKysrKysrKysrKysrKysrKystCj4gIDQgZmlsZXMgY2hhbmdlZCwgMTU3IGluc2VydGlv
+bnMoKyksIDI5NCBkZWxldGlvbnMoLSkKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvbXRk
+L21hcHMvZ3Bpby1hZGRyLWZsYXNoLmMKPgo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9tYXBz
+L0tjb25maWcgYi9kcml2ZXJzL210ZC9tYXBzL0tjb25maWcKPiBpbmRleCA1YmZmZWJhY2NlODYu
+LjRmZDEzZDc2YjdiNSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL210ZC9tYXBzL0tjb25maWcKPiAr
+KysgYi9kcml2ZXJzL210ZC9tYXBzL0tjb25maWcKPiBAQCAtOTQsNiArOTQsMTUgQEAgY29uZmln
+IE1URF9QSFlTTUFQX09GX0dFTUlOSQo+ICAgICAgICAgICBwbGF0Zm9ybXMsIHNvbWUgZGV0ZWN0
+aW9uIGFuZCBzZXR0aW5nIHVwIHBhcmFsbGVsIG1vZGUgb24gdGhlCj4gICAgICAgICAgIGV4dGVy
+bmFsIGludGVyZmFjZS4KPgo+ICtjb25maWcgTVREX1BIWVNNQVBfR1BJT19BRERSCj4gKyAgICAg
+ICBib29sICJHUElPLWFzc2lzdGVkIEZsYXNoIENoaXAgU3VwcG9ydCIKPiArICAgICAgIGRlcGVu
+ZHMgb24gTVREX1BIWVNNQVAKPiArICAgICAgIGRlcGVuZHMgb24gR1BJT0xJQiB8fCBDT01QSUxF
+X1RFU1QKPiArICAgICAgIGRlcGVuZHMgb24gTVREX0NPTVBMRVhfTUFQUElOR1MKPiArICAgICAg
+IGhlbHAKPiArICAgICAgICAgRXh0ZW5kIHRoZSBwaHlzbWFwIGRyaXZlciB0byBhbGxvdyBmbGFz
+aGVzIHRvIGJlIHBhcnRpYWxseQo+ICsgICAgICAgICBwaHlzaWNhbGx5IGFkZHJlc3NlZCBhbmQg
+YXNzaXN0ZWQgYnkgR1BJT3MuCj4gKwo+ICBjb25maWcgTVREX1BNQ19NU1BfRVZNCj4gICAgICAg
+ICB0cmlzdGF0ZSAiQ0ZJIEZsYXNoIGRldmljZSBtYXBwZWQgb24gUE1DLVNpZXJyYSBNU1AiCj4g
+ICAgICAgICBkZXBlbmRzIG9uIFBNQ19NU1AgJiYgTVREX0NGSQo+IEBAIC0zMzQsMTYgKzM0Myw2
+IEBAIGNvbmZpZyBNVERfUENNQ0lBX0FOT05ZTU9VUwo+Cj4gICAgICAgICAgIElmIHVuc3VyZSwg
+c2F5IE4uCj4KPiAtY29uZmlnIE1URF9HUElPX0FERFIKPiAtICAgICAgIHRyaXN0YXRlICJHUElP
+LWFzc2lzdGVkIEZsYXNoIENoaXAgU3VwcG9ydCIKPiAtICAgICAgIGRlcGVuZHMgb24gR1BJT0xJ
+QiB8fCBDT01QSUxFX1RFU1QKPiAtICAgICAgIGRlcGVuZHMgb24gTVREX0NPTVBMRVhfTUFQUElO
+R1MKPiAtICAgICAgIGhlbHAKPiAtICAgICAgICAgTWFwIGRyaXZlciB3aGljaCBhbGxvd3MgZmxh
+c2hlcyB0byBiZSBwYXJ0aWFsbHkgcGh5c2ljYWxseSBhZGRyZXNzZWQKPiAtICAgICAgICAgYW5k
+IGFzc2lzdGVkIGJ5IEdQSU9zLgo+IC0KPiAtICAgICAgICAgSWYgY29tcGlsZWQgYXMgYSBtb2R1
+bGUsIGl0IHdpbGwgYmUgY2FsbGVkIGdwaW8tYWRkci1mbGFzaC4KPiAtCj4gIGNvbmZpZyBNVERf
+VUNMSU5VWAo+ICAgICAgICAgYm9vbCAiR2VuZXJpYyB1Q2xpbnV4IFJBTS9ST00gZmlsZXN5c3Rl
+bSBzdXBwb3J0Igo+ICAgICAgICAgZGVwZW5kcyBvbiAoTVREX1JBTT15IHx8IE1URF9ST009eSkg
+JiYgKCFNTVUgfHwgQ09MREZJUkUpCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL21hcHMvTWFr
+ZWZpbGUgYi9kcml2ZXJzL210ZC9tYXBzL01ha2VmaWxlCj4gaW5kZXggYWQzMmIxODVhMTIwLi5h
+Y2VjMGZiZmExOGQgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9tdGQvbWFwcy9NYWtlZmlsZQo+ICsr
+KyBiL2RyaXZlcnMvbXRkL21hcHMvTWFrZWZpbGUKPiBAQCAtNDMsNiArNDMsNSBAQCBvYmotJChD
+T05GSUdfTVREX1BMQVRSQU0pICAgICArPSBwbGF0LXJhbS5vCj4gIG9iai0kKENPTkZJR19NVERf
+SU5URUxfVlJfTk9SKSArPSBpbnRlbF92cl9ub3Iubwo+ICBvYmotJChDT05GSUdfTVREX1JCVFg0
+OTM5KSAgICAgKz0gcmJ0eDQ5MzktZmxhc2gubwo+ICBvYmotJChDT05GSUdfTVREX1ZNVSkgICAg
+ICAgICAgKz0gdm11LWZsYXNoLm8KPiAtb2JqLSQoQ09ORklHX01URF9HUElPX0FERFIpICAgICs9
+IGdwaW8tYWRkci1mbGFzaC5vCj4gIG9iai0kKENPTkZJR19NVERfTEFUQ0hfQUREUikgICArPSBs
+YXRjaC1hZGRyLWZsYXNoLm8KPiAgb2JqLSQoQ09ORklHX01URF9MQU5USVEpICAgICAgICs9IGxh
+bnRpcS1mbGFzaC5vCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbXRkL21hcHMvZ3Bpby1hZGRyLWZs
+YXNoLmMgYi9kcml2ZXJzL210ZC9tYXBzL2dwaW8tYWRkci1mbGFzaC5jCj4gZGVsZXRlZCBmaWxl
+IG1vZGUgMTAwNjQ0Cj4gaW5kZXggYTIwZTg1YWE3NzBlLi4wMDAwMDAwMDAwMDAKPiAtLS0gYS9k
+cml2ZXJzL210ZC9tYXBzL2dwaW8tYWRkci1mbGFzaC5jCj4gKysrIC9kZXYvbnVsbAo+IEBAIC0x
+LDI4MSArMCwwIEBACj4gLS8qCj4gLSAqIGRyaXZlcnMvbXRkL21hcHMvZ3Bpby1hZGRyLWZsYXNo
+LmMKPiAtICoKPiAtICogSGFuZGxlIHRoZSBjYXNlIHdoZXJlIGEgZmxhc2ggZGV2aWNlIGlzIG1v
+c3RseSBhZGRyZXNzZWQgdXNpbmcgcGh5c2ljYWwKPiAtICogbGluZSBhbmQgc3VwcGxlbWVudGVk
+IGJ5IEdQSU9zLiAgVGhpcyB3YXkgeW91IGNhbiBob29rIHVwIHNheSBhIDhNaUIgZmxhc2gKPiAt
+ICogdG8gYSAyTWlCIG1lbW9yeSByYW5nZSBhbmQgdXNlIHRoZSBHUElPcyB0byBzZWxlY3QgYSBw
+YXJ0aWN1bGFyIHJhbmdlLgo+IC0gKgo+IC0gKiBDb3B5cmlnaHQgwqkgMjAwMCBOaWNvbGFzIFBp
+dHJlIDxuaWNvQGNhbS5vcmc+Cj4gLSAqIENvcHlyaWdodCDCqSAyMDA1LTIwMDkgQW5hbG9nIERl
+dmljZXMgSW5jLgo+IC0gKgo+IC0gKiBFbnRlciBidWdzIGF0IGh0dHA6Ly9ibGFja2Zpbi51Y2xp
+bnV4Lm9yZy8KPiAtICoKPiAtICogTGljZW5zZWQgdW5kZXIgdGhlIEdQTC0yIG9yIGxhdGVyLgo+
+IC0gKi8KPiAtCj4gLSNpbmNsdWRlIDxsaW51eC9ncGlvLmg+Cj4gLSNpbmNsdWRlIDxsaW51eC9n
+cGlvL2NvbnN1bWVyLmg+Cj4gLSNpbmNsdWRlIDxsaW51eC9pby5oPgo+IC0jaW5jbHVkZSA8bGlu
+dXgva2VybmVsLmg+Cj4gLSNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPiAtI2luY2x1ZGUgPGxp
+bnV4L210ZC9tdGQuaD4KPiAtI2luY2x1ZGUgPGxpbnV4L210ZC9tYXAuaD4KPiAtI2luY2x1ZGUg
+PGxpbnV4L210ZC9wYXJ0aXRpb25zLmg+Cj4gLSNpbmNsdWRlIDxsaW51eC9tdGQvcGh5c21hcC5o
+Pgo+IC0jaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+Cj4gLSNpbmNsdWRlIDxsaW51
+eC9zbGFiLmg+Cj4gLSNpbmNsdWRlIDxsaW51eC90eXBlcy5oPgo+IC0KPiAtI2RlZmluZSB3aW5f
+bWFzayh4KSAoKEJJVCh4KSkgLSAxKQo+IC0KPiAtI2RlZmluZSBEUklWRVJfTkFNRSAiZ3Bpby1h
+ZGRyLWZsYXNoIgo+IC0KPiAtLyoqCj4gLSAqIHN0cnVjdCBhc3luY19zdGF0ZSAtIGtlZXAgR1BJ
+TyBmbGFzaCBzdGF0ZQo+IC0gKiAgICAgQG10ZDogICAgICAgICBNVEQgc3RhdGUgZm9yIHRoaXMg
+bWFwcGluZwo+IC0gKiAgICAgQG1hcDogICAgICAgICBNVEQgbWFwIHN0YXRlIGZvciB0aGlzIGZs
+YXNoCj4gLSAqICAgICBAZ3Bpb3M6ICAgICAgIFN0cnVjdCBjb250YWluaW5nIHRoZSBhcnJheSBv
+ZiBHUElPIGRlc2NyaXB0b3JzCj4gLSAqICAgICBAZ3Bpb192YWx1ZXM6IGNhY2hlZCBHUElPIHZh
+bHVlcwo+IC0gKiAgICAgQHdpbl9vcmRlcjogICBkZWRpY2F0ZWQgbWVtb3J5IHNpemUgKGlmIG5v
+IEdQSU9zKQo+IC0gKi8KPiAtc3RydWN0IGFzeW5jX3N0YXRlIHsKPiAtICAgICAgIHN0cnVjdCBt
+dGRfaW5mbyAqbXRkOwo+IC0gICAgICAgc3RydWN0IG1hcF9pbmZvIG1hcDsKPiAtICAgICAgIHN0
+cnVjdCBncGlvX2Rlc2NzICpncGlvczsKPiAtICAgICAgIHVuc2lnbmVkIGludCBncGlvX3ZhbHVl
+czsKPiAtICAgICAgIHVuc2lnbmVkIGludCB3aW5fb3JkZXI7Cj4gLX07Cj4gLSNkZWZpbmUgZ2Zf
+bWFwX2luZm9fdG9fc3RhdGUobWkpICgoc3RydWN0IGFzeW5jX3N0YXRlICopKG1pKS0+bWFwX3By
+aXZfMSkKPiAtCj4gLS8qKgo+IC0gKiBnZl9zZXRfZ3Bpb3MoKSAtIHNldCBHUElPIGFkZHJlc3Mg
+bGluZXMgdG8gYWNjZXNzIHNwZWNpZmllZCBmbGFzaCBvZmZzZXQKPiAtICogICAgIEBzdGF0ZTog
+R1BJTyBmbGFzaCBzdGF0ZQo+IC0gKiAgICAgQG9mczogICBkZXNpcmVkIG9mZnNldCB0byBhY2Nl
+c3MKPiAtICoKPiAtICogUmF0aGVyIHRoYW4gY2FsbCB0aGUgR1BJTyBmcmFtZXdvcmsgZXZlcnkg
+dGltZSwgY2FjaGUgdGhlIGxhc3QtcHJvZ3JhbW1lZAo+IC0gKiB2YWx1ZS4gIFRoaXMgc3BlZWRz
+IHVwIHNlcXVlbnRpYWwgYWNjZXNzZXMgKHdoaWNoIGFyZSBieSBmYXIgdGhlIG1vc3QgY29tbW9u
+Cj4gLSAqIHR5cGUpLgo+IC0gKi8KPiAtc3RhdGljIHZvaWQgZ2Zfc2V0X2dwaW9zKHN0cnVjdCBh
+c3luY19zdGF0ZSAqc3RhdGUsIHVuc2lnbmVkIGxvbmcgb2ZzKQo+IC17Cj4gLSAgICAgICBpbnQg
+aTsKPiAtCj4gLSAgICAgICBvZnMgPj49IHN0YXRlLT53aW5fb3JkZXI7Cj4gLQo+IC0gICAgICAg
+aWYgKG9mcyA9PSBzdGF0ZS0+Z3Bpb192YWx1ZXMpCj4gLSAgICAgICAgICAgICAgIHJldHVybjsK
+PiAtCj4gLSAgICAgICBmb3IgKGkgPSAwOyBpIDwgc3RhdGUtPmdwaW9zLT5uZGVzY3M7IGkrKykg
+ewo+IC0gICAgICAgICAgICAgICBpZiAoKG9mcyAmIEJJVChpKSkgPT0gKHN0YXRlLT5ncGlvX3Zh
+bHVlcyAmIEJJVChpKSkpCj4gLSAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7Cj4gLQo+
+IC0gICAgICAgICAgICAgICBncGlvZF9zZXRfdmFsdWUoc3RhdGUtPmdwaW9zLT5kZXNjW2ldLCAh
+IShvZnMgJiBCSVQoaSkpKTsKPiAtICAgICAgIH0KPiAtCj4gLSAgICAgICBzdGF0ZS0+Z3Bpb192
+YWx1ZXMgPSBvZnM7Cj4gLX0KPiAtCj4gLS8qKgo+IC0gKiBnZl9yZWFkKCkgLSByZWFkIGEgd29y
+ZCBhdCB0aGUgc3BlY2lmaWVkIG9mZnNldAo+IC0gKiAgICAgQG1hcDogTVREIG1hcCBzdGF0ZQo+
+IC0gKiAgICAgQG9mczogZGVzaXJlZCBvZmZzZXQgdG8gcmVhZAo+IC0gKi8KPiAtc3RhdGljIG1h
+cF93b3JkIGdmX3JlYWQoc3RydWN0IG1hcF9pbmZvICptYXAsIHVuc2lnbmVkIGxvbmcgb2ZzKQo+
+IC17Cj4gLSAgICAgICBzdHJ1Y3QgYXN5bmNfc3RhdGUgKnN0YXRlID0gZ2ZfbWFwX2luZm9fdG9f
+c3RhdGUobWFwKTsKPiAtICAgICAgIHVpbnQxNl90IHdvcmQ7Cj4gLSAgICAgICBtYXBfd29yZCB0
+ZXN0Owo+IC0KPiAtICAgICAgIGdmX3NldF9ncGlvcyhzdGF0ZSwgb2ZzKTsKPiAtCj4gLSAgICAg
+ICB3b3JkID0gcmVhZHcobWFwLT52aXJ0ICsgKG9mcyAmIHdpbl9tYXNrKHN0YXRlLT53aW5fb3Jk
+ZXIpKSk7Cj4gLSAgICAgICB0ZXN0LnhbMF0gPSB3b3JkOwo+IC0gICAgICAgcmV0dXJuIHRlc3Q7
+Cj4gLX0KPiAtCj4gLS8qKgo+IC0gKiBnZl9jb3B5X2Zyb20oKSAtIGNvcHkgYSBjaHVuayBvZiBk
+YXRhIGZyb20gdGhlIGZsYXNoCj4gLSAqICAgICBAbWFwOiAgTVREIG1hcCBzdGF0ZQo+IC0gKiAg
+ICAgQHRvOiAgIG1lbW9yeSB0byBjb3B5IHRvCj4gLSAqICAgICBAZnJvbTogZmxhc2ggb2Zmc2V0
+IHRvIGNvcHkgZnJvbQo+IC0gKiAgICAgQGxlbjogIGhvdyBtdWNoIHRvIGNvcHkKPiAtICoKPiAt
+ICogVGhlICJmcm9tIiByZWdpb24gbWF5IHN0cmFkZGxlIG1vcmUgdGhhbiBvbmUgd2luZG93LCBz
+byB0b2dnbGUgdGhlIEdQSU9zIGZvcgo+IC0gKiBlYWNoIHdpbmRvdyByZWdpb24gYmVmb3JlIHJl
+YWRpbmcgaXRzIGRhdGEuCj4gLSAqLwo+IC1zdGF0aWMgdm9pZCBnZl9jb3B5X2Zyb20oc3RydWN0
+IG1hcF9pbmZvICptYXAsIHZvaWQgKnRvLCB1bnNpZ25lZCBsb25nIGZyb20sIHNzaXplX3QgbGVu
+KQo+IC17Cj4gLSAgICAgICBzdHJ1Y3QgYXN5bmNfc3RhdGUgKnN0YXRlID0gZ2ZfbWFwX2luZm9f
+dG9fc3RhdGUobWFwKTsKPiAtCj4gLSAgICAgICBpbnQgdGhpc19sZW47Cj4gLQo+IC0gICAgICAg
+d2hpbGUgKGxlbikgewo+IC0gICAgICAgICAgICAgICB0aGlzX2xlbiA9IGZyb20gJiB3aW5fbWFz
+ayhzdGF0ZS0+d2luX29yZGVyKTsKPiAtICAgICAgICAgICAgICAgdGhpc19sZW4gPSBCSVQoc3Rh
+dGUtPndpbl9vcmRlcikgLSB0aGlzX2xlbjsKPiAtICAgICAgICAgICAgICAgdGhpc19sZW4gPSBt
+aW5fdChpbnQsIGxlbiwgdGhpc19sZW4pOwo+IC0KPiAtICAgICAgICAgICAgICAgZ2Zfc2V0X2dw
+aW9zKHN0YXRlLCBmcm9tKTsKPiAtICAgICAgICAgICAgICAgbWVtY3B5X2Zyb21pbyh0bywKPiAt
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtYXAtPnZpcnQgKyAoZnJvbSAmIHdpbl9tYXNr
+KHN0YXRlLT53aW5fb3JkZXIpKSwKPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0aGlz
+X2xlbik7Cj4gLSAgICAgICAgICAgICAgIGxlbiAtPSB0aGlzX2xlbjsKPiAtICAgICAgICAgICAg
+ICAgZnJvbSArPSB0aGlzX2xlbjsKPiAtICAgICAgICAgICAgICAgdG8gKz0gdGhpc19sZW47Cj4g
+LSAgICAgICB9Cj4gLX0KPiAtCj4gLS8qKgo+IC0gKiBnZl93cml0ZSgpIC0gd3JpdGUgYSB3b3Jk
+IGF0IHRoZSBzcGVjaWZpZWQgb2Zmc2V0Cj4gLSAqICAgICBAbWFwOiBNVEQgbWFwIHN0YXRlCj4g
+LSAqICAgICBAb2ZzOiBkZXNpcmVkIG9mZnNldCB0byB3cml0ZQo+IC0gKi8KPiAtc3RhdGljIHZv
+aWQgZ2Zfd3JpdGUoc3RydWN0IG1hcF9pbmZvICptYXAsIG1hcF93b3JkIGQxLCB1bnNpZ25lZCBs
+b25nIG9mcykKPiAtewo+IC0gICAgICAgc3RydWN0IGFzeW5jX3N0YXRlICpzdGF0ZSA9IGdmX21h
+cF9pbmZvX3RvX3N0YXRlKG1hcCk7Cj4gLSAgICAgICB1aW50MTZfdCBkOwo+IC0KPiAtICAgICAg
+IGdmX3NldF9ncGlvcyhzdGF0ZSwgb2ZzKTsKPiAtCj4gLSAgICAgICBkID0gZDEueFswXTsKPiAt
+ICAgICAgIHdyaXRldyhkLCBtYXAtPnZpcnQgKyAob2ZzICYgd2luX21hc2soc3RhdGUtPndpbl9v
+cmRlcikpKTsKPiAtfQo+IC0KPiAtLyoqCj4gLSAqIGdmX2NvcHlfdG8oKSAtIGNvcHkgYSBjaHVu
+ayBvZiBkYXRhIHRvIHRoZSBmbGFzaAo+IC0gKiAgICAgQG1hcDogIE1URCBtYXAgc3RhdGUKPiAt
+ICogICAgIEB0bzogICBmbGFzaCBvZmZzZXQgdG8gY29weSB0bwo+IC0gKiAgICAgQGZyb206IG1l
+bW9yeSB0byBjb3B5IGZyb20KPiAtICogICAgIEBsZW46ICBob3cgbXVjaCB0byBjb3B5Cj4gLSAq
+Cj4gLSAqIFNlZSBnZl9jb3B5X2Zyb20oKSBjYXZlYXQuCj4gLSAqLwo+IC1zdGF0aWMgdm9pZCBn
+Zl9jb3B5X3RvKHN0cnVjdCBtYXBfaW5mbyAqbWFwLCB1bnNpZ25lZCBsb25nIHRvLAo+IC0gICAg
+ICAgICAgICAgICAgICAgICAgY29uc3Qgdm9pZCAqZnJvbSwgc3NpemVfdCBsZW4pCj4gLXsKPiAt
+ICAgICAgIHN0cnVjdCBhc3luY19zdGF0ZSAqc3RhdGUgPSBnZl9tYXBfaW5mb190b19zdGF0ZSht
+YXApOwo+IC0KPiAtICAgICAgIGludCB0aGlzX2xlbjsKPiAtCj4gLSAgICAgICB3aGlsZSAobGVu
+KSB7Cj4gLSAgICAgICAgICAgICAgIHRoaXNfbGVuID0gdG8gJiB3aW5fbWFzayhzdGF0ZS0+d2lu
+X29yZGVyKTsKPiAtICAgICAgICAgICAgICAgdGhpc19sZW4gPSBCSVQoc3RhdGUtPndpbl9vcmRl
+cikgLSB0aGlzX2xlbjsKPiAtICAgICAgICAgICAgICAgdGhpc19sZW4gPSBtaW5fdChpbnQsIGxl
+biwgdGhpc19sZW4pOwo+IC0KPiAtICAgICAgICAgICAgICAgZ2Zfc2V0X2dwaW9zKHN0YXRlLCB0
+byk7Cj4gLSAgICAgICAgICAgICAgIG1lbWNweV90b2lvKG1hcC0+dmlydCArICh0byAmIHdpbl9t
+YXNrKHN0YXRlLT53aW5fb3JkZXIpKSwKPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgZnJv
+bSwgbGVuKTsKPiAtCj4gLSAgICAgICAgICAgICAgIGxlbiAtPSB0aGlzX2xlbjsKPiAtICAgICAg
+ICAgICAgICAgdG8gKz0gdGhpc19sZW47Cj4gLSAgICAgICAgICAgICAgIGZyb20gKz0gdGhpc19s
+ZW47Cj4gLSAgICAgICB9Cj4gLX0KPiAtCj4gLXN0YXRpYyBjb25zdCBjaGFyICogY29uc3QgcGFy
+dF9wcm9iZV90eXBlc1tdID0gewo+IC0gICAgICAgImNtZGxpbmVwYXJ0IiwgIlJlZEJvb3QiLCBO
+VUxMIH07Cj4gLQo+IC0vKioKPiAtICogZ3Bpb19mbGFzaF9wcm9iZSgpIC0gc2V0dXAgYSBtYXBw
+aW5nIGZvciBhIEdQSU8gYXNzaXN0ZWQgZmxhc2gKPiAtICogICAgIEBwZGV2OiBwbGF0Zm9ybSBk
+ZXZpY2UKPiAtICoKPiAtICogVGhlIHBsYXRmb3JtIHJlc291cmNlIGxheW91dCBleHBlY3RlZCBs
+b29rcyBzb21ldGhpbmcgbGlrZToKPiAtICogc3RydWN0IG10ZF9wYXJ0aXRpb24gcGFydGl0aW9u
+c1tdID0geyAuLi4gfTsKPiAtICogc3RydWN0IHBoeXNtYXBfZmxhc2hfZGF0YSBmbGFzaF9kYXRh
+ID0geyAuLi4gfTsKPiAtICogc3RhdGljIHN0cnVjdCBncGlvZF9sb29rdXBfdGFibGUgYWRkcl9m
+bGFzaF9ncGlvcyA9IHsKPiAtICogICAgICAgICAgICAgLmRldl9pZCA9ICJncGlvLWFkZHItZmxh
+c2guMCIsCj4gLSAqICAgICAgICAgICAgIC50YWJsZSA9IHsKPiAtICogICAgICAgICAgICAgR1BJ
+T19MT09LVVBfSURYKCJncGlvLjAiLCAxNSwgImFkZHIiLCAwLCBHUElPX0FDVElWRV9ISUdIKSwK
+PiAtICogICAgICAgICAgICAgR1BJT19MT09LVVBfSURYKCJncGlvLjAiLCAxNiwgImFkZHIiLCAx
+LCBHUElPX0FDVElWRV9ISUdIKSwKPiAtICogICAgICAgICAgICAgKTsKPiAtICogfTsKPiAtICog
+Z3Bpb2RfYWRkX2xvb2t1cF90YWJsZSgmYWRkcl9mbGFzaF9ncGlvcyk7Cj4gLSAqCj4gLSAqIHN0
+cnVjdCByZXNvdXJjZSBmbGFzaF9yZXNvdXJjZVtdID0gewo+IC0gKiAgICAgewo+IC0gKiAgICAg
+ICAgICAgICAubmFtZSAgPSAiY2ZpX3Byb2JlIiwKPiAtICogICAgICAgICAgICAgLnN0YXJ0ID0g
+MHgyMDAwMDAwMCwKPiAtICogICAgICAgICAgICAgLmVuZCAgID0gMHgyMDFmZmZmZiwKPiAtICog
+ICAgICAgICAgICAgLmZsYWdzID0gSU9SRVNPVVJDRV9NRU0sCj4gLSAqICAgICB9LAo+IC0gKiB9
+Owo+IC0gKiBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlIGZsYXNoX2RldmljZSA9IHsKPiAtICogICAg
+IC5uYW1lICAgICAgICAgID0gImdwaW8tYWRkci1mbGFzaCIsCj4gLSAqICAgICAuZGV2ICAgICAg
+ICAgICA9IHsgLnBsYXRmb3JtX2RhdGEgPSAmZmxhc2hfZGF0YSwgfSwKPiAtICogICAgIC5udW1f
+cmVzb3VyY2VzID0gQVJSQVlfU0laRShmbGFzaF9yZXNvdXJjZSksCj4gLSAqICAgICAucmVzb3Vy
+Y2UgICAgICA9IGZsYXNoX3Jlc291cmNlLAo+IC0gKiAgICAgLi4uCj4gLSAqIH07Cj4gLSAqLwo+
+IC1zdGF0aWMgaW50IGdwaW9fZmxhc2hfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
+dikKPiAtewo+IC0gICAgICAgc3RydWN0IHBoeXNtYXBfZmxhc2hfZGF0YSAqcGRhdGE7Cj4gLSAg
+ICAgICBzdHJ1Y3QgcmVzb3VyY2UgKm1lbW9yeTsKPiAtICAgICAgIHN0cnVjdCBhc3luY19zdGF0
+ZSAqc3RhdGU7Cj4gLQo+IC0gICAgICAgcGRhdGEgPSBkZXZfZ2V0X3BsYXRkYXRhKCZwZGV2LT5k
+ZXYpOwo+IC0gICAgICAgbWVtb3J5ID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVT
+T1VSQ0VfTUVNLCAwKTsKPiAtCj4gLSAgICAgICBpZiAoIW1lbW9yeSkKPiAtICAgICAgICAgICAg
+ICAgcmV0dXJuIC1FSU5WQUw7Cj4gLQo+IC0gICAgICAgc3RhdGUgPSBkZXZtX2t6YWxsb2MoJnBk
+ZXYtPmRldiwgc2l6ZW9mKCpzdGF0ZSksIEdGUF9LRVJORUwpOwo+IC0gICAgICAgaWYgKCFzdGF0
+ZSkKPiAtICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4gLQo+IC0gICAgICAgc3RhdGUt
+PmdwaW9zID0gZGV2bV9ncGlvZF9nZXRfYXJyYXkoJnBkZXYtPmRldiwgImFkZHIiLCBHUElPRF9P
+VVRfTE9XKTsKPiAtICAgICAgIGlmIChJU19FUlIoc3RhdGUtPmdwaW9zKSkKPiAtICAgICAgICAg
+ICAgICAgcmV0dXJuIFBUUl9FUlIoc3RhdGUtPmdwaW9zKTsKPiAtCj4gLSAgICAgICBzdGF0ZS0+
+d2luX29yZGVyICAgICAgPSBnZXRfYml0bWFza19vcmRlcihyZXNvdXJjZV9zaXplKG1lbW9yeSkp
+IC0gMTsKPiAtCj4gLSAgICAgICBzdGF0ZS0+bWFwLm5hbWUgICAgICAgPSBEUklWRVJfTkFNRTsK
+PiAtICAgICAgIHN0YXRlLT5tYXAucmVhZCAgICAgICA9IGdmX3JlYWQ7Cj4gLSAgICAgICBzdGF0
+ZS0+bWFwLmNvcHlfZnJvbSAgPSBnZl9jb3B5X2Zyb207Cj4gLSAgICAgICBzdGF0ZS0+bWFwLndy
+aXRlICAgICAgPSBnZl93cml0ZTsKPiAtICAgICAgIHN0YXRlLT5tYXAuY29weV90byAgICA9IGdm
+X2NvcHlfdG87Cj4gLSAgICAgICBzdGF0ZS0+bWFwLmJhbmt3aWR0aCAgPSBwZGF0YS0+d2lkdGg7
+Cj4gLSAgICAgICBzdGF0ZS0+bWFwLnNpemUgICAgICAgPSBCSVQoc3RhdGUtPndpbl9vcmRlciAr
+IHN0YXRlLT5ncGlvcy0+bmRlc2NzKTsKPiAtICAgICAgIHN0YXRlLT5tYXAudmlydCAgICAgICA9
+IGRldm1faW9yZW1hcF9yZXNvdXJjZSgmcGRldi0+ZGV2LCBtZW1vcnkpOwo+IC0gICAgICAgaWYg
+KElTX0VSUihzdGF0ZS0+bWFwLnZpcnQpKQo+IC0gICAgICAgICAgICAgICByZXR1cm4gUFRSX0VS
+UihzdGF0ZS0+bWFwLnZpcnQpOwo+IC0KPiAtICAgICAgIHN0YXRlLT5tYXAucGh5cyAgICAgICA9
+IE5PX1hJUDsKPiAtICAgICAgIHN0YXRlLT5tYXAubWFwX3ByaXZfMSA9ICh1bnNpZ25lZCBsb25n
+KXN0YXRlOwo+IC0KPiAtICAgICAgIHBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHN0YXRlKTsK
+PiAtCj4gLSAgICAgICBkZXZfbm90aWNlKCZwZGV2LT5kZXYsICJwcm9iaW5nICVkLWJpdCBmbGFz
+aCBidXNcbiIsCj4gLSAgICAgICAgICAgICAgICAgIHN0YXRlLT5tYXAuYmFua3dpZHRoICogOCk7
+Cj4gLSAgICAgICBzdGF0ZS0+bXRkID0gZG9fbWFwX3Byb2JlKG1lbW9yeS0+bmFtZSwgJnN0YXRl
+LT5tYXApOwo+IC0gICAgICAgaWYgKCFzdGF0ZS0+bXRkKQo+IC0gICAgICAgICAgICAgICByZXR1
+cm4gLUVOWElPOwo+IC0gICAgICAgc3RhdGUtPm10ZC0+ZGV2LnBhcmVudCA9ICZwZGV2LT5kZXY7
+Cj4gLQo+IC0gICAgICAgbXRkX2RldmljZV9wYXJzZV9yZWdpc3RlcihzdGF0ZS0+bXRkLCBwYXJ0
+X3Byb2JlX3R5cGVzLCBOVUxMLAo+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBw
+ZGF0YS0+cGFydHMsIHBkYXRhLT5ucl9wYXJ0cyk7Cj4gLQo+IC0gICAgICAgcmV0dXJuIDA7Cj4g
+LX0KPiAtCj4gLXN0YXRpYyBpbnQgZ3Bpb19mbGFzaF9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKPiAtewo+IC0gICAgICAgc3RydWN0IGFzeW5jX3N0YXRlICpzdGF0ZSA9IHBs
+YXRmb3JtX2dldF9kcnZkYXRhKHBkZXYpOwo+IC0KPiAtICAgICAgIG10ZF9kZXZpY2VfdW5yZWdp
+c3RlcihzdGF0ZS0+bXRkKTsKPiAtICAgICAgIG1hcF9kZXN0cm95KHN0YXRlLT5tdGQpOwo+IC0g
+ICAgICAgcmV0dXJuIDA7Cj4gLX0KPiAtCj4gLXN0YXRpYyBzdHJ1Y3QgcGxhdGZvcm1fZHJpdmVy
+IGdwaW9fZmxhc2hfZHJpdmVyID0gewo+IC0gICAgICAgLnByb2JlICAgICAgICAgID0gZ3Bpb19m
+bGFzaF9wcm9iZSwKPiAtICAgICAgIC5yZW1vdmUgICAgICAgICA9IGdwaW9fZmxhc2hfcmVtb3Zl
+LAo+IC0gICAgICAgLmRyaXZlciAgICAgICAgID0gewo+IC0gICAgICAgICAgICAgICAubmFtZSAg
+ID0gRFJJVkVSX05BTUUsCj4gLSAgICAgICB9LAo+IC19Owo+IC0KPiAtbW9kdWxlX3BsYXRmb3Jt
+X2RyaXZlcihncGlvX2ZsYXNoX2RyaXZlcik7Cj4gLQo+IC1NT0RVTEVfQVVUSE9SKCJNaWtlIEZy
+eXNpbmdlciA8dmFwaWVyQGdlbnRvby5vcmc+Iik7Cj4gLU1PRFVMRV9ERVNDUklQVElPTigiTVRE
+IG1hcCBkcml2ZXIgZm9yIGZsYXNoZXMgYWRkcmVzc2VkIHBoeXNpY2FsbHkgYW5kIHdpdGggZ3Bp
+b3MiKTsKPiAtTU9EVUxFX0xJQ0VOU0UoIkdQTCIpOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210
+ZC9tYXBzL3BoeXNtYXAtY29yZS5jIGIvZHJpdmVycy9tdGQvbWFwcy9waHlzbWFwLWNvcmUuYwo+
+IGluZGV4IDdhNTBmZjllZjgxMi4uMmRjMzNhZTcxMzM1IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMv
+bXRkL21hcHMvcGh5c21hcC1jb3JlLmMKPiArKysgYi9kcml2ZXJzL210ZC9tYXBzL3BoeXNtYXAt
+Y29yZS5jCj4gQEAgLTEzLDYgKzEzLDE0IEBACj4gICAqCj4gICAqICAgIFJldmlzZWQgdG8gaGFu
+ZGxlIG5ld2VyIHN0eWxlIGZsYXNoIGJpbmRpbmcgYnk6Cj4gICAqICAgIENvcHlyaWdodCAoQykg
+MjAwNyBEYXZpZCBHaWJzb24sIElCTSBDb3Jwb3JhdGlvbi4KPiArICoKPiArICogR1BJTyBhZGRy
+ZXNzIGV4dGVuc2lvbjoKPiArICogICAgSGFuZGxlIHRoZSBjYXNlIHdoZXJlIGEgZmxhc2ggZGV2
+aWNlIGlzIG1vc3RseSBhZGRyZXNzZWQgdXNpbmcgcGh5c2ljYWwKPiArICogICAgbGluZSBhbmQg
+c3VwcGxlbWVudGVkIGJ5IEdQSU9zLiAgVGhpcyB3YXkgeW91IGNhbiBob29rIHVwIHNheSBhIDhN
+aUIgZmxhc2gKPiArICogICAgdG8gYSAyTWlCIG1lbW9yeSByYW5nZSBhbmQgdXNlIHRoZSBHUElP
+cyB0byBzZWxlY3QgYSBwYXJ0aWN1bGFyIHJhbmdlLgo+ICsgKgo+ICsgKiAgICBDb3B5cmlnaHQg
+wqkgMjAwMCBOaWNvbGFzIFBpdHJlIDxuaWNvQGNhbS5vcmc+Cj4gKyAqICAgIENvcHlyaWdodCDC
+qSAyMDA1LTIwMDkgQW5hbG9nIERldmljZXMgSW5jLgo+ICAgKi8KPgo+ICAjaW5jbHVkZSA8bGlu
+dXgvbW9kdWxlLmg+Cj4gQEAgLTMwLDYgKzM4LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L210ZC9j
+ZmlfZW5kaWFuLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9pby5oPgo+ICAjaW5jbHVkZSA8bGludXgv
+b2ZfZGV2aWNlLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+Cj4KPiAgI2lu
+Y2x1ZGUgInBoeXNtYXBfb2ZfZ2VtaW5pLmgiCj4gICNpbmNsdWRlICJwaHlzbWFwX29mX3ZlcnNh
+dGlsZS5oIgo+IEBAIC00NSw2ICs1NCw5IEBAIHN0cnVjdCBwaHlzbWFwX2ZsYXNoX2luZm8gewo+
+ICAgICAgICAgY29uc3QgY2hhciAqIGNvbnN0ICAgICAgKnBhcnRfdHlwZXM7Cj4gICAgICAgICB1
+bnNpZ25lZCBpbnQgICAgICAgICAgICBucGFydHM7Cj4gICAgICAgICBjb25zdCBzdHJ1Y3QgbXRk
+X3BhcnRpdGlvbiAqcGFydHM7Cj4gKyAgICAgICBzdHJ1Y3QgZ3Bpb19kZXNjcyAgICAgICAqZ3Bp
+b3M7Cj4gKyAgICAgICB1bnNpZ25lZCBpbnQgICAgICAgICAgICBncGlvX3ZhbHVlczsKPiArICAg
+ICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgIHdpbl9vcmRlcjsKPiAgfTsKPgo+ICBzdGF0aWMg
+aW50IHBoeXNtYXBfZmxhc2hfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKmRldikKPiBA
+QCAtMTA0LDYgKzExNiwxMTkgQEAgc3RhdGljIHZvaWQgcGh5c21hcF9zZXRfdnBwKHN0cnVjdCBt
+YXBfaW5mbyAqbWFwLCBpbnQgc3RhdGUpCj4gICAgICAgICBzcGluX3VubG9ja19pcnFyZXN0b3Jl
+KCZpbmZvLT52cHBfbG9jaywgZmxhZ3MpOwo+ICB9Cj4KPiArI2lmIElTX0VOQUJMRUQoQ09ORklH
+X01URF9QSFlTTUFQX0dQSU9fQUREUikKPiArc3RhdGljIHZvaWQgcGh5c21hcF9zZXRfYWRkcl9n
+cGlvcyhzdHJ1Y3QgcGh5c21hcF9mbGFzaF9pbmZvICppbmZvLAo+ICsgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZyBvZnMpCj4gK3sKPiArICAgICAgIHVuc2ln
+bmVkIGludCBpOwo+ICsKPiArICAgICAgIG9mcyA+Pj0gaW5mby0+d2luX29yZGVyOwo+ICsgICAg
+ICAgaWYgKGluZm8tPmdwaW9fdmFsdWVzID09IG9mcykKPiArICAgICAgICAgICAgICAgcmV0dXJu
+Owo+ICsKPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBpbmZvLT5ncGlvcy0+bmRlc2NzOyBpKysp
+IHsKPiArICAgICAgICAgICAgICAgaWYgKChCSVQoaSkgJiBvZnMpID09IChCSVQoaSkgJiBpbmZv
+LT5ncGlvX3ZhbHVlcykpCj4gKyAgICAgICAgICAgICAgICAgICAgICAgY29udGludWU7Cj4gKwo+
+ICsgICAgICAgICAgICAgICBncGlvZF9zZXRfdmFsdWUoaW5mby0+Z3Bpb3MtPmRlc2NbaV0sICEh
+KEJJVChpKSAmIG9mcykpOwo+ICsgICAgICAgfQo+ICt9Cj4gKwo+ICsjZGVmaW5lIHdpbl9tYXNr
+KG9yZGVyKSAgICAgICAgICAgICAgICAoQklUKG9yZGVyKSAtIDEpCj4gKwo+ICtzdGF0aWMgbWFw
+X3dvcmQgcGh5c21hcF9hZGRyX2dwaW9zX3JlYWQoc3RydWN0IG1hcF9pbmZvICptYXAsCj4gKyAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgb2ZzKQo+
+ICt7Cj4gKyAgICAgICBzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2Owo+ICsgICAgICAgc3Ry
+dWN0IHBoeXNtYXBfZmxhc2hfaW5mbyAqaW5mbzsKPiArICAgICAgIG1hcF93b3JkIG13Owo+ICsg
+ICAgICAgdTE2IHdvcmQ7Cj4gKwo+ICsgICAgICAgcGRldiA9IChzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICopbWFwLT5tYXBfcHJpdl8xOwo+ICsgICAgICAgaW5mbyA9IHBsYXRmb3JtX2dldF9kcnZk
+YXRhKHBkZXYpOwo+ICsgICAgICAgcGh5c21hcF9zZXRfYWRkcl9ncGlvcyhpbmZvLCBvZnMpOwo+
+ICsKPiArICAgICAgIHdvcmQgPSByZWFkdyhtYXAtPnZpcnQgKyAob2ZzICYgd2luX21hc2soaW5m
+by0+d2luX29yZGVyKSkpOwo+ICsgICAgICAgbXcueFswXSA9IHdvcmQ7Cj4gKyAgICAgICByZXR1
+cm4gbXc7Cj4gK30KPiArCj4gK3N0YXRpYyB2b2lkIHBoeXNtYXBfYWRkcl9ncGlvc19jb3B5X2Zy
+b20oc3RydWN0IG1hcF9pbmZvICptYXAsIHZvaWQgKmJ1ZiwKPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcgb2ZzLCBzc2l6ZV90IGxlbikKPiAr
+ewo+ICsgICAgICAgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldjsKPiArICAgICAgIHN0cnVj
+dCBwaHlzbWFwX2ZsYXNoX2luZm8gKmluZm87Cj4gKwo+ICsgICAgICAgcGRldiA9IChzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICopbWFwLT5tYXBfcHJpdl8xOwo+ICsgICAgICAgaW5mbyA9IHBsYXRm
+b3JtX2dldF9kcnZkYXRhKHBkZXYpOwo+ICsKPiArICAgICAgIHdoaWxlIChsZW4pIHsKPiArICAg
+ICAgICAgICAgICAgdW5zaWduZWQgaW50IHdpbm9mcyA9IG9mcyAmIHdpbl9tYXNrKGluZm8tPndp
+bl9vcmRlcik7Cj4gKyAgICAgICAgICAgICAgIHVuc2lnbmVkIGludCBjaHVua2xlbiA9IG1pbl90
+KHVuc2lnbmVkIGludCwgbGVuLAo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBCSVQoaW5mby0+d2luX29yZGVyKSAtIHdpbm9mcyk7Cj4gKwo+ICsgICAgICAg
+ICAgICAgICBwaHlzbWFwX3NldF9hZGRyX2dwaW9zKGluZm8sIG9mcyk7Cj4gKyAgICAgICAgICAg
+ICAgIG1lbWNweV9mcm9taW8oYnVmLCBtYXAtPnZpcnQgKyB3aW5vZnMsIGNodW5rbGVuKTsKPiAr
+ICAgICAgICAgICAgICAgbGVuIC09IGNodW5rbGVuOwo+ICsgICAgICAgICAgICAgICBidWYgKz0g
+Y2h1bmtsZW47Cj4gKyAgICAgICAgICAgICAgIG9mcyArPSBjaHVua2xlbjsKPiArICAgICAgIH0K
+PiArfQo+ICsKPiArc3RhdGljIHZvaWQgcGh5c21hcF9hZGRyX2dwaW9zX3dyaXRlKHN0cnVjdCBt
+YXBfaW5mbyAqbWFwLCBtYXBfd29yZCBtdywKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgdW5zaWduZWQgbG9uZyBvZnMpCj4gK3sKPiArICAgICAgIHN0cnVjdCBwbGF0Zm9y
+bV9kZXZpY2UgKnBkZXY7Cj4gKyAgICAgICBzdHJ1Y3QgcGh5c21hcF9mbGFzaF9pbmZvICppbmZv
+Owo+ICsgICAgICAgdTE2IHdvcmQ7Cj4gKwo+ICsgICAgICAgcGRldiA9IChzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICopbWFwLT5tYXBfcHJpdl8xOwo+ICsgICAgICAgaW5mbyA9IHBsYXRmb3JtX2dl
+dF9kcnZkYXRhKHBkZXYpOwo+ICsgICAgICAgcGh5c21hcF9zZXRfYWRkcl9ncGlvcyhpbmZvLCBv
+ZnMpOwo+ICsKPiArICAgICAgIHdvcmQgPSBtdy54WzBdOwo+ICsgICAgICAgd3JpdGV3KHdvcmQs
+IG1hcC0+dmlydCArIChvZnMgJiB3aW5fbWFzayhpbmZvLT53aW5fb3JkZXIpKSk7Cj4gK30KPiAr
+Cj4gK3N0YXRpYyB2b2lkIHBoeXNtYXBfYWRkcl9ncGlvc19jb3B5X3RvKHN0cnVjdCBtYXBfaW5m
+byAqbWFwLCB1bnNpZ25lZCBsb25nIG9mcywKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBjb25zdCB2b2lkICpidWYsIHNzaXplX3QgbGVuKQo+ICt7Cj4gKyAgICAgICBz
+dHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2Owo+ICsgICAgICAgc3RydWN0IHBoeXNtYXBfZmxh
+c2hfaW5mbyAqaW5mbzsKPiArCj4gKyAgICAgICBwZGV2ID0gKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UgKiltYXAtPm1hcF9wcml2XzE7Cj4gKyAgICAgICBpbmZvID0gcGxhdGZvcm1fZ2V0X2RydmRh
+dGEocGRldik7Cj4gKwo+ICsgICAgICAgd2hpbGUgKGxlbikgewo+ICsgICAgICAgICAgICAgICB1
+bnNpZ25lZCBpbnQgd2lub2ZzID0gb2ZzICYgd2luX21hc2soaW5mby0+d2luX29yZGVyKTsKPiAr
+ICAgICAgICAgICAgICAgdW5zaWduZWQgaW50IGNodW5rbGVuID0gbWluX3QodW5zaWduZWQgaW50
+LCBsZW4sCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEJJ
+VChpbmZvLT53aW5fb3JkZXIpIC0gd2lub2ZzKTsKPiArCj4gKyAgICAgICAgICAgICAgIHBoeXNt
+YXBfc2V0X2FkZHJfZ3Bpb3MoaW5mbywgb2ZzKTsKPiArICAgICAgICAgICAgICAgbWVtY3B5X3Rv
+aW8obWFwLT52aXJ0ICsgd2lub2ZzLCBidWYsIGNodW5rbGVuKTsKPiArICAgICAgICAgICAgICAg
+bGVuIC09IGNodW5rbGVuOwo+ICsgICAgICAgICAgICAgICBidWYgKz0gY2h1bmtsZW47Cj4gKyAg
+ICAgICAgICAgICAgIG9mcyArPSBjaHVua2xlbjsKPiArICAgICAgIH0KPiArfQo+ICsKPiArc3Rh
+dGljIGludCBwaHlzbWFwX2FkZHJfZ3Bpb3NfbWFwX2luaXQoc3RydWN0IG1hcF9pbmZvICptYXAp
+Cj4gK3sKPiArICAgICAgIG1hcC0+cGh5cyA9IE5PX1hJUDsKPiArICAgICAgIG1hcC0+cmVhZCA9
+IHBoeXNtYXBfYWRkcl9ncGlvc19yZWFkOwo+ICsgICAgICAgbWFwLT5jb3B5X2Zyb20gPSBwaHlz
+bWFwX2FkZHJfZ3Bpb3NfY29weV9mcm9tOwo+ICsgICAgICAgbWFwLT53cml0ZSA9IHBoeXNtYXBf
+YWRkcl9ncGlvc193cml0ZTsKPiArICAgICAgIG1hcC0+Y29weV90byA9IHBoeXNtYXBfYWRkcl9n
+cGlvc19jb3B5X3RvOwo+ICsKPiArICAgICAgIHJldHVybiAwOwo+ICt9Cj4gKyNlbHNlCj4gK3N0
+YXRpYyBpbnQgcGh5c21hcF9hZGRyX2dwaW9zX21hcF9pbml0KHN0cnVjdCBtYXBfaW5mbyAqbWFw
+KQo+ICt7Cj4gKyAgICAgICByZXR1cm4gLUVOT1RTVVBQOwo+ICt9Cj4gKyNlbmRpZgo+ICsKPiAg
+I2lmIElTX0VOQUJMRUQoQ09ORklHX01URF9QSFlTTUFQX09GKQo+ICBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBvZl9mbGFzaF9tYXRjaFtdID0gewo+ICAgICAgICAgewo+IEBAIC0z
+NDMsNiArNDY4LDE2IEBAIHN0YXRpYyBpbnQgcGh5c21hcF9mbGFzaF9wcm9iZShzdHJ1Y3QgcGxh
+dGZvcm1fZGV2aWNlICpkZXYpCj4KPiAgICAgICAgIHBsYXRmb3JtX3NldF9kcnZkYXRhKGRldiwg
+aW5mbyk7Cj4KPiArICAgICAgIGluZm8tPmdwaW9zID0gZGV2bV9ncGlvZF9nZXRfYXJyYXlfb3B0
+aW9uYWwoJmRldi0+ZGV2LCAiYWRkciIsCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIEdQSU9EX09VVF9MT1cpOwo+ICsgICAgICAgaWYgKElTX0VS
+UihpbmZvLT5ncGlvcykpCj4gKyAgICAgICAgICAgICAgIHJldHVybiBQVFJfRVJSKGluZm8tPmdw
+aW9zKTsKPiArCj4gKyAgICAgICBpZiAoaW5mby0+Z3Bpb3MgJiYgaW5mby0+bm1hcHMgPiAxKSB7
+Cj4gKyAgICAgICAgICAgICAgIGRldl9lcnIoJmRldi0+ZGV2LCAiYWRkci1ncGlvcyBvbmx5IHN1
+cHBvcnRlZCBmb3Igbm1hcHMgPT0gMVxuIik7Cj4gKyAgICAgICAgICAgICAgIHJldHVybiAtRUlO
+VkFMOwo+ICsgICAgICAgfQo+ICsKPiAgICAgICAgIGVyciA9IHBoeXNtYXBfZmxhc2hfb2ZfaW5p
+dChkZXYpOwo+ICAgICAgICAgaWYgKGVycikKPiAgICAgICAgICAgICAgICAgZXJyID0gcGh5c21h
+cF9mbGFzaF9wZGF0YV9pbml0KGRldik7Cj4gQEAgLTM2OCwxMCArNTAzLDIwIEBAIHN0YXRpYyBp
+bnQgcGh5c21hcF9mbGFzaF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpkZXYpCj4gICAg
+ICAgICAgICAgICAgIGlmICghaW5mby0+bWFwc1tpXS5waHlzKQo+ICAgICAgICAgICAgICAgICAg
+ICAgICAgIGluZm8tPm1hcHNbaV0ucGh5cyA9IHJlcy0+c3RhcnQ7Cj4KPiAtICAgICAgICAgICAg
+ICAgaW5mby0+bWFwc1tpXS5zaXplID0gcmVzb3VyY2Vfc2l6ZShyZXMpOwo+ICsgICAgICAgICAg
+ICAgICBpbmZvLT53aW5fb3JkZXIgPSBnZXRfYml0bWFza19vcmRlcihyZXNvdXJjZV9zaXplKHJl
+cykpIC0gMTsKPiArICAgICAgICAgICAgICAgaW5mby0+bWFwc1tpXS5zaXplID0gQklUKGluZm8t
+Pndpbl9vcmRlciArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAo
+aW5mby0+Z3Bpb3MgPwo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGluZm8tPmdwaW9zLT5uZGVzY3MgOiAwKSk7Cj4gKwo+ICAgICAgICAgICAgICAgICBpbmZvLT5t
+YXBzW2ldLm1hcF9wcml2XzEgPSAodW5zaWduZWQgbG9uZylkZXY7Cj4KPiAtICAgICAgICAgICAg
+ICAgc2ltcGxlX21hcF9pbml0KCZpbmZvLT5tYXBzW2ldKTsKPiArICAgICAgICAgICAgICAgaWYg
+KGluZm8tPmdwaW9zKSB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgZXJyID0gcGh5c21hcF9h
+ZGRyX2dwaW9zX21hcF9pbml0KCZpbmZvLT5tYXBzW2ldKTsKPiArICAgICAgICAgICAgICAgICAg
+ICAgICBpZiAoZXJyKQo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZ290byBlcnJf
+b3V0Owo+ICsgICAgICAgICAgICAgICB9IGVsc2Ugewo+ICsgICAgICAgICAgICAgICAgICAgICAg
+IHNpbXBsZV9tYXBfaW5pdCgmaW5mby0+bWFwc1tpXSk7Cj4gKyAgICAgICAgICAgICAgIH0KPgo+
+ICAgICAgICAgICAgICAgICBwcm9iZV90eXBlID0gcm9tX3Byb2JlX3R5cGVzOwo+ICAgICAgICAg
+ICAgICAgICBpZiAoIWluZm8tPnByb2JlX3R5cGUpIHsKPiBAQCAtNDk2LDYgKzY0MSw3IEBAIG1v
+ZHVsZV9leGl0KHBoeXNtYXBfZXhpdCk7Cj4gIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKPiAgTU9E
+VUxFX0FVVEhPUigiRGF2aWQgV29vZGhvdXNlIDxkd213MkBpbmZyYWRlYWQub3JnPiIpOwo+ICBN
+T0RVTEVfQVVUSE9SKCJWaXRhbHkgV29vbCA8dndvb2xAcnUubXZpc3RhLmNvbT4iKTsKPiArTU9E
+VUxFX0FVVEhPUigiTWlrZSBGcnlzaW5nZXIgPHZhcGllckBnZW50b28ub3JnPiIpOwo+ICBNT0RV
+TEVfREVTQ1JJUFRJT04oIkdlbmVyaWMgY29uZmlndXJhYmxlIE1URCBtYXAgZHJpdmVyIik7Cj4K
+PiAgLyogbGVnYWN5IHBsYXRmb3JtIGRyaXZlcnMgY2FuJ3QgaG90cGx1ZyBvciBjb2xkcGxnICov
+Cj4gLS0KPiAyLjE0LjEKPgoKCi0tIApSaWNhcmRvIFJpYmFsZGEKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lv
+biBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1tdGQvCg==
