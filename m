@@ -1,51 +1,83 @@
-Return-Path: <SRS0=Of4m=MW=gmail.com=geert.uytterhoeven@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=3Ka7=MV=cogentembedded.com=sergei.shtylyov@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] arm64: dts: renesas: r8a77970: add thermal support
 References: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
- <51491585-16fb-93b1-bb1a-09e89683f2f0@cogentembedded.com> <CAMuHMdWsW-E_a17LJ-i4Wts531B-PyYqW9mqWQmt=jH6fUpOPg@mail.gmail.com>
- <1ef39615-fc82-dc2a-05eb-7b1aed7afa98@cogentembedded.com> <CAMuHMdUqBz_BB3+jDDxO0dXq1RSQQ6KK8CjR0WSQvWjMZBMnXQ@mail.gmail.com>
- <b0304262-8d50-db25-149e-fce348ced51f@cogentembedded.com>
-In-Reply-To: <b0304262-8d50-db25-149e-fce348ced51f@cogentembedded.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 10 Oct 2018 09:10:54 +0200
-Message-ID: <CAMuHMdU0=1X6m7bbSatLhMwMURf8Ffo78hLKzucaw2VX1bjkfA@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a77970: add thermal support
-Content-Type: text/plain; charset="UTF-8"
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
+Message-ID: <575ebd1f-165a-756f-f76a-14a11bba7f19@cogentembedded.com>
+Date: Tue, 9 Oct 2018 22:47:47 +0300
+MIME-Version: 1.0
+In-Reply-To: <fb4eb097-40aa-82df-68c7-9b727c858a8b@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Sergei,
+Describe THS/CIVM in the R8A77970 device tree.
 
-On Mon, Oct 8, 2018 at 8:04 PM Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 10/08/2018 07:40 PM, Geert Uytterhoeven wrote:
-> >>>> Describe THS/CIVM in the R8A77970 device trees.
-> >>>> Based on the original (and large) patches by Vladimir Barinov.
+Based on the original (and large) patches by Vladimir Barinov.
 
-> >>>> +                               0 0xe6190100 0 0x38>;
-> >>>
-> >>> What about the CIVM status register? DT describes hardware, not driver
-> >>> limitations.
-> >>
-> >>    I wasn't sure whether to put it into a separate "reg" tuple (which would confuse
-> >> the driver) or not. After looking into the manual again, I'm going to extend the
-> >> 2nd "reg" tuple...
-> >
-> > The CIVM Status Register indicates the chip internal voltage.
-> > As such it's not a per-channel property, and IMHO doesn't belong in the second
-> > tuple
->
->    I was looking a the block diagrams (both in the chapters 10A and 10B) and I got a totally different impression...
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I stand corrected. So extending the second reg block is fine.
+---
+This patch is against the 'renesas-devel-20181004-v4.19-rc6' tag of Simon
+Horman's 'renesas.git' repo.
 
-Gr{oetje,eeting}s,
+Changed in version 2:
+- fix the "reg" prop in the thermal device node;
+- fixed wrong plural in the patch description.
 
-                        Geert
+ arch/arm64/boot/dts/renesas/r8a77970.dtsi |   32 ++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970.dtsi
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970.dtsi
+@@ -300,6 +300,19 @@
+ 			#power-domain-cells = <1>;
+ 		};
+ 
++		thermal: thermal@e6190000 {
++			compatible = "renesas,thermal-r8a77970";
++			reg =  <0 0xe6190000 0 0x10
++				0 0xe6190100 0 0x120>;
++			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&cpg CPG_MOD 522>;
++			power-domains = <&sysc R8A77970_PD_ALWAYS_ON>;
++			resets = <&cpg 522>;
++			#thermal-sensor-cells = <0>;
++		};
++
+ 		intc_ex: interrupt-controller@e61c0000 {
+ 			compatible = "renesas,intc-ex-r8a77970", "renesas,irqc";
+ 			#interrupt-cells = <2>;
+@@ -1033,6 +1046,25 @@
+ 		};
+ 	};
+ 
++	thermal-zones {
++		cpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&thermal>;
++
++			trips {
++				cpu-crit {
++					temperature = <120000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++			};
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv8-timer";
+ 		interrupts-extended = <&gic GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_LOW)>,
