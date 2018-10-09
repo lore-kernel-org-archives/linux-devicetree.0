@@ -1,57 +1,47 @@
-Return-Path: <SRS0=WjQe=MP=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 1/6] dt-bindings: mmc: renesas_sdhi: Add r8a77470 support
-Date: Wed,  3 Oct 2018 12:05:39 +0100
-Message-Id: <1538564744-15590-2-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1538564744-15590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1538564744-15590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=6MUZ=MV=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from smtp.codeaurora.org ([198.145.29.96]:60644 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbeJIUXC (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 9 Oct 2018 16:23:02 -0400
+From: Govind Singh <govinds@codeaurora.org>
+Subject: [PATCH 1/6] dt-bindings: clock: qcom: Add QCOM WCSS GCC clock bindings
+Date: Tue,  9 Oct 2018 18:35:52 +0530
+Message-Id: <1539090357-20853-2-git-send-email-govinds@codeaurora.org>
+In-Reply-To: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
+References: <1539090357-20853-1-git-send-email-govinds@codeaurora.org>
+Sender: devicetree-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Govind Singh <govinds@codeaurora.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The RZ/G1C (a.k.a. R8A77470) comes with three SDHI interfaces,
-SDHI0 and SDHI2 are compatible with R-Car Gen2 SDHIs, and
-SDHI1 is compatible with R-Car Gen3 SDHIs, as it comes with an
-internal DMAC, therefore SDHI1 is fully compatible with driver
-renesas_sdhi_internal_dmac driver. As a result, the compatible
-strings for the R8A77470 SDHI interfaces are a little bit special.
-Document SDHI support for the RZ/G1C SoC.
+Add device tree bindings for WiFi QDSP gcc clock controls found in
+QCS404 soc.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Biju Das <biju.das@bp.renesas.com>
-
+Signed-off-by: Govind Singh <govinds@codeaurora.org>
 ---
-v1->v2:
-* Added "renesas,sdhi-mmc-r8a77470"
-* Using generic/fallback compatibilty only for SDHI[02]
-* Reworked changelog
----
- Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/dt-bindings/clock/qcom,gcc-qcs404.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-index d39d5e4..247abee 100644
---- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-@@ -19,6 +19,8 @@ Required properties:
- 		"renesas,sdhi-r8a7744" - SDHI IP on R8A7744 SoC
- 		"renesas,sdhi-r8a7745" - SDHI IP on R8A7745 SoC
- 		"renesas,sdhi-r8a774a1" - SDHI IP on R8A774A1 SoC
-+		"renesas,sdhi-r8a77470" - SDHI IP on R8A77470 SoC (SDHI[02])
-+		"renesas,sdhi-mmc-r8a77470" - SDHI IP on R8A77470 SoC (SDHI1)
- 		"renesas,sdhi-r8a7778" - SDHI IP on R8A7778 SoC
- 		"renesas,sdhi-r8a7779" - SDHI IP on R8A7779 SoC
- 		"renesas,sdhi-r8a7790" - SDHI IP on R8A7790 SoC
-@@ -35,8 +37,8 @@ Required properties:
- 		"renesas,sdhi-r8a77995" - SDHI IP on R8A77995 SoC
- 		"renesas,sdhi-shmobile" - a generic sh-mobile SDHI controller
- 		"renesas,rcar-gen1-sdhi" - a generic R-Car Gen1 SDHI controller
--		"renesas,rcar-gen2-sdhi" - a generic R-Car Gen2 or RZ/G1
--					   SDHI controller
-+		"renesas,rcar-gen2-sdhi" - a generic R-Car Gen2 and RZ/G1 (but
-+					   not RZ/G1C SDHI1) SDHI controller
- 		"renesas,rcar-gen3-sdhi" - a generic R-Car Gen3 or RZ/G2
- 					   SDHI controller
+diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+index e2def29..ba6bc55 100644
+--- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
++++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+@@ -147,6 +147,8 @@
+ #define GCC_MDP_TBU_CLK					138
+ #define GCC_QDSS_DAP_CLK				139
+ #define GCC_DCC_XO_CLK					140
++#define GCC_WCSS_Q6_AHB_CBCR_CLK			141
++#define GCC_WCSS_Q6_AXIM_CBCR_CLK			142
  
+ #define GCC_GENI_IR_BCR					0
+ #define GCC_USB_HS_BCR					1
+@@ -162,5 +164,6 @@
+ #define GCC_PCIE_0_LINK_DOWN_BCR			11
+ #define GCC_PCIEPHY_0_PHY_BCR				12
+ #define GCC_EMAC_BCR					13
++#define GCC_WDSP_RESTART				14
+ 
+ #endif
 -- 
-2.7.4
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
