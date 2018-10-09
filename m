@@ -1,90 +1,306 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH] dt-bindings: Add bindings for aliases node
-Date: Tue, 9 Oct 2018 11:31:42 -0700
-Message-ID: <20181009183141.GA126050@ban.mtv.corp.google.com>
-References: <20180925210255.172734-1-mka@chromium.org>
- <20181009010711.GA1577@ban.mtv.corp.google.com>
- <CAMuHMdWe5JYp5eC2PvuG4xEud908Crhm+BhrtxPJ4Uo1-LCc4g@mail.gmail.com>
+From: Alan Tull <atull@kernel.org>
+Subject: Re: [PATCH 09/16] of: overlay: validate overlay properties
+ #address-cells and #size-cells
+Date: Tue, 9 Oct 2018 13:40:37 -0500
+Message-ID: <CANk1AXTKLm4c6_4oNPnDppJFL192BUfkgc3tuxWPQzfSXrGOmA@mail.gmail.com>
+References: <1538712767-30394-1-git-send-email-frowand.list@gmail.com>
+ <1538712767-30394-10-git-send-email-frowand.list@gmail.com>
+ <CANk1AXQFTfdwy9n+WH2k98w6oyqLj3wLDRfaMmtTGk66sJjqUw@mail.gmail.com>
+ <CANk1AXRi90nFNTji+7RVPC-hb9NFX5+gJo6OpCKvyuVx8eX3Fw@mail.gmail.com> <25287d7e-a87a-36c3-2af1-694c2f756c22@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWe5JYp5eC2PvuG4xEud908Crhm+BhrtxPJ4Uo1-LCc4g@mail.gmail.com>
+In-Reply-To: <25287d7e-a87a-36c3-2af1-694c2f756c22@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Matthias Kaehlcke <mka@chromium.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-wireless <linux-wireless@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, netdev <netdev@vger.kernel.org>, swboyd@chromium.org, Florian Fainelli <f.fainelli@gmail.com>
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Moritz Fischer <mdf@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 09, 2018 at 09:22:07AM +0200, Geert Uytterhoeven wrote:
-> Please note these aliases become cumbersome once you start considering
-> (dynamic) DT overlays.  That's why I made them optional in the sh-sci
-> serial driver, cfr. commit 7678f4c20fa7670f ("serial: sh-sci: Add support
-> for dynamic instances").
+On Mon, Oct 8, 2018 at 7:02 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>
+> On 10/08/18 11:46, Alan Tull wrote:
+> > On Mon, Oct 8, 2018 at 10:57 AM Alan Tull <atull@kernel.org> wrote:
+> >>
+> >> On Thu, Oct 4, 2018 at 11:14 PM <frowand.list@gmail.com> wrote:
+> >>>
+> >>> From: Frank Rowand <frank.rowand@sony.com>
+> >>>
+> >>> If overlay properties #address-cells or #size-cells are already in
+> >>> the live devicetree for any given node, then the values in the
+> >>> overlay must match the values in the live tree.
+> >>
+> >> Hi Frank,
+> >>
+> >> I'm starting some FPGA testing on this patchset applied to v4.19-rc7.
+> >> That applied cleanly; if that's not the best base to test against,
+> >> please let me know.
+>
+> I would expect -rc7 to be ok to test against.  I'm doing the development
+> of it on -rc1.
+>
+> Thanks for the testing.
+>
 
-Note that as I understand it, the entire point of documenting this sort
-of thing is to help solidify the interface between a DT aware boot
-program (e.g., bootloader) and a device tree which is provided
-separately, to avoid memorizing node/path hierarchy. It doesn't need to
-(and doesn't, as I read it) enforce an OS's device naming policy.
+I'll try to be quick about it, but I expect it will take a few days to
+hit everything and explain it here.
 
-> Relevant parts of the commit description are:
-> 
->     On DT platforms, the sh-sci driver requires the presence of "serialN"
->     aliases in DT, from which instance IDs are derived.  If a DT alias is
->     missing, the drivers fails to probe the corresponding serial port.
-> 
->     This becomes cumbersome when considering DT overlays, as currently
->     there is no upstream support for dynamically updating the /aliases node
->     in DT.
+>
+> >> On a very simple overlay, I'm seeing this patch's warning catching
+> >> things other than #address-cells or #size-cells.
+>
+> #address-cells and #size-cells escape the warning for properties on an
+> existing (non-overlay) node if the existing node already contains them
+> as a special case.  Those two properties are needed in the overlay to
+> avoid dtc compiler warnings.  If the same properties already exist in
+> the base devicetree and have the same values as in the overlay then
+> there is no need to add property update changeset entries in the overlay
+> changeset.  Since there will not be changeset entries for those two
+> properties, there will be no memory leak when the changeset is removed.
+>
+> The special casing of #address-cells and #size-cells is part of the
+> fix patches that are a result of the validation patches.  Thus a little
+> bit less memory leaking than we have today.
 
-That part is not a DT spec problem :)
+Makes sense.  Thanks for the explanation.
 
->     Furthermore, even in the presence of such support, hardcoded
->     instance IDs in independent overlays are prone to conflicts.
-> 
->     Hence add support for dynamic instance IDs, to be used in the absence of
->     a DT alias.  This makes serial ports behave similar to I2C and SPI
->     buses, which already support dynamic instances.
+>
+>
+> > What it's warning about are new properties being added to an existing
+> > node.  So !prop is true and !of_node_check_flag(target->np,
+> > OF_OVERLAY) also is true.  Is that a potential memory leak as you are
+> > warning?  If so, your code is working as planned and you'll just need
+> > to document that also in the header.
+>
+> Yes, you are accurately describing what the check is catching.
+>
+> The memory leak (on release) is because the memory allocated for overlay
+> properties is released when the reference count of the node they are
+> attached is decremented to zero, but only if the node is a dynamic flagged
+> node (as overlays are).  The memory allocated for the overlay properties
+> will not be freed in this case because the node is not a dynamic node.
+>
+>
+> >> I'm just getting
+> >> started looking at this, will spend time understanding this better and
+> >> I'll test other overlays.  The warnings were:
+> >>
+> >> Applying dtbo: socfpga_overlay.dtb
+> >> [   33.117881] fpga_manager fpga0: writing soc_system.rbf to Altera
+> >> SOCFPGA FPGA Manager
+> >> [   33.575223] OF: overlay: WARNING: add_changeset_property(), memory
+> >> leak will occur if overlay removed.  Property:
+> >> /soc/base-fpga-region/firmware-name
+> >> [   33.588584] OF: overlay: WARNING: add_changeset_property(), memory
+> >> leak will occur if overlay removed.  Property:
+> >> /soc/base-fpga-region/fpga-bridges
+> >> [   33.601856] OF: overlay: WARNING: add_changeset_property(), memory
+> >> leak will occur if overlay removed.  Property:
+> >> /soc/base-fpga-region/ranges
+>
+> Are there properties in /soc/base-fpga-region/ in the base devicetree?
 
-This seems to be a much different sort of problem. People always love
-having predictable IDs given by the OS (myself included), but that's
-just plain hard to do and impossible in some cases. I don't think that's
-what this document is about though.
+It looks like this:
+               base_fpga_region {
+                        #address-cells = <0x1>;
+                        #size-cells = <0x1>;
+                        compatible = "fpga-region";
+                        fpga-mgr = <&fpga_mgr>;
+                };
 
-IOW, this document seems pretty consistent with the above: it doesn't
-require the usage of aliases (and it seems silly to have a driver
-*require* an alias) -- it just documents how one should name such an
-alias if you expect multiple independent software components to
-understand it.
+It is used as a target for applying DT overlays for FPGA reprogramming.
 
-> To clarify my point: R-Car M2-W has 4 different types of serial ports, for a
-> total of 18 ports, and the two ports on a board labeled 0 and 1 may not
-> correspond to the physical first two ports (what's "first" in a collection of
-> 4 different types?).
-> 
-> Aliases may be fine for referring to the main serial console (labeled
-> port 0 on the device, too), and the primary Ethernet interface (so U-Boot
-> knows where to add the "local-mac-address" property), but beyond that,
-> I think they should be avoided.
+>
+> If not, then that node could be removed from the base devicetree and first created
+> in an overlay.
 
-That's fair enough. Just because the solution isn't an all-purpose tool
-doesn't mean it shouldn't be documented. The general concept is already
-in ePAPR, but it's just not very specific about property names.
+I'll give it a try and report back!
 
-> Just my two^H^H^Hfive €c.
+> If so, is it possible to add an additional level of node, /soc/base-fpga-region/foo,
+> which would contain the properties that are warned about above?  Then the properties
+> would be children of an overlay node and the memory would be freed on overlay
+> release.
 
-Thanks,
-Brian
+I expect that would not be hard.  The of-fpga-region.c driver would
+only need small changes to know where to expect the properties it is
+looking for.
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+And when the child nodes in the overlay are added to the live tree,
+they would be under the added fake level. That shouldn't be a problem
+either, it would just be different.
+
+> This is not actually a suggestion that should be implemented right now, just trying
+> to understand the possible alternatives, because this would result in an arbitrary
+> fake level in the tree (which I don't like).
+
+Yeah I don't love it either, but for the sake of discussion, it's
+worth the mention.  I'm open for suggestions here definitely.  But yes
+adding the fake level might make the DT code implementation more
+straightforward at the cost of something that isn't great in the DT
+itself.  We can keep scratching our heads a bit.
+
+>
+> My intent is to leave these validation checks as warnings while we figure out the
+> best way to solve the underlying memory leak issue.
+
+That is helpful.  Applying overlays may be a bit noisier for a while
+until this gets ironed out.
+
+>  Note that some of the
+> validation checks result in errors and cause an overlay apply to fail.
+
+Yes, the errors I hit were where the overlay tried to change
+#address-cells.  I am thinking that we probably don't need to do that.
+What we were doing was mapping multiple bridges (between the CPU and
+FPGA) into different address spaces.  We probably don't have to do it
+that way.  I'll try to bring in an example without making it
+unnecessarily involved:
+
+dts-v1/;
+/plugin/;
+/ {
+        fragment@0 {
+                target-path = "/soc/base_fpga_region";
+                #address-cells = <1>;
+                #size-cells = <1>;
+
+                __overlay__ {
+                        ranges = <0x00000000 0x00000000 0xc0000000
+0x00040000>, //h2f bridge
+                                 <0x00000001 0x00000000 0xff200000
+0x00001000>; //lwh2f bridge
+so on...
+
+The h2f = hps (cpu) to fpga bridge = for DMA
+The lwh2f = lightweight cpu to fpga = strongly ordered bridge for
+register access
+
+This will raise ERROR messages, but if I change it to the following,
+it seems happier.
+                        ranges = <0xc0000000 0xc0000000 0x00040000>,
+                                 <0x00000000 0xff200000 0x00001000>;
+
+Maybe we should be using dma-ranges for part of this anyway.
+
+>  If I
+> did those checks correctly, they should only catch cases where the live tree
+> after applying the overlay was a "corrupt" tree instead of the desired changes.
+>
+> I expect that Plumbers will be a good place to explore these things.
+>
+>
+> >> Here's part of that overlay including the properties it's complaining about:
+> >>
+> >> /dts-v1/;
+> >> /plugin/;
+> >> / {
+> >>         fragment@0 {
+> >>                 target = <&base_fpga_region>;
+> >>                 #address-cells = <1>;
+> >>                 #size-cells = <1>;
+> >>                 __overlay__ {
+> >>                         #address-cells = <1>;
+> >>                         #size-cells = <1>;
+> >>
+> >>                         firmware-name = "soc_system.rbf";
+> >>                         fpga-bridges = <&fpga_bridge1>;
+> >>                         ranges = <0x20000 0xff200000 0x100000>,
+> >>                         <0x0 0xc0000000 0x20000000>;
+> >>
+> >>                         gpio@10040 {
+> >> so on...
+> >>
+> >> By the way, I didn't get any warnings when I subsequently removed this overlay.
+>
+> Yes, I did not add any check that could catch this at release time.
+>
+> -Frank
+>
+>
+> >> Alan
+> >>
+> >>>
+> >>> If the properties are already in the live tree then there is no
+> >>> need to create a changeset entry to add them since they must
+> >>> have the same value.  This reduces the memory used by the
+> >>> changeset and eliminates a possible memory leak.  This is
+> >>> verified by 12 fewer warnings during the devicetree unittest,
+> >>> as the possible memory leak warnings about #address-cells and
+> >>>
+> >>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+> >>> ---
+> >>>  drivers/of/overlay.c | 38 +++++++++++++++++++++++++++++++++++---
+> >>>  1 file changed, 35 insertions(+), 3 deletions(-)
+> >>>
+> >>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> >>> index 29c33a5c533f..e6fb3ffe9d93 100644
+> >>> --- a/drivers/of/overlay.c
+> >>> +++ b/drivers/of/overlay.c
+> >>> @@ -287,7 +287,12 @@ static struct property *dup_and_fixup_symbol_prop(
+> >>>   * @target may be either in the live devicetree or in a new subtree that
+> >>>   * is contained in the changeset.
+> >>>   *
+> >>> - * Some special properties are not updated (no error returned).
+> >>> + * Some special properties are not added or updated (no error returned):
+> >>> + * "name", "phandle", "linux,phandle".
+> >>> + *
+> >>> + * Properties "#address-cells" and "#size-cells" are not updated if they
+> >>> + * are already in the live tree, but if present in the live tree, the values
+> >>> + * in the overlay must match the values in the live tree.
+> >>>   *
+> >>>   * Update of property in symbols node is not allowed.
+> >>>   *
+> >>> @@ -300,6 +305,7 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+> >>>  {
+> >>>         struct property *new_prop = NULL, *prop;
+> >>>         int ret = 0;
+> >>> +       bool check_for_non_overlay_node = false;
+> >>>
+> >>>         if (!of_prop_cmp(overlay_prop->name, "name") ||
+> >>>             !of_prop_cmp(overlay_prop->name, "phandle") ||
+> >>> @@ -322,13 +328,39 @@ static int add_changeset_property(struct overlay_changeset *ovcs,
+> >>>         if (!new_prop)
+> >>>                 return -ENOMEM;
+> >>>
+> >>> -       if (!prop)
+> >>> +       if (!prop) {
+> >>> +
+> >>> +               check_for_non_overlay_node = true;
+> >>>                 ret = of_changeset_add_property(&ovcs->cset, target->np,
+> >>>                                                 new_prop);
+> >>> -       else
+> >>> +
+> >>> +       } else if (!of_prop_cmp(prop->name, "#address-cells")) {
+> >>> +
+> >>> +               if (prop->length != 4 || new_prop->length != 4 ||
+> >>> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
+> >>> +                       pr_err("ERROR: overlay and/or live tree #address-cells invalid in node %pOF\n",
+> >>> +                              target->np);
+> >>> +
+> >>> +       } else if (!of_prop_cmp(prop->name, "#size-cells")) {
+> >>> +
+> >>> +               if (prop->length != 4 || new_prop->length != 4 ||
+> >>> +                   *(u32 *)prop->value != *(u32 *)new_prop->value)
+> >>> +                       pr_err("ERROR: overlay and/or live tree #size-cells invalid in node %pOF\n",
+> >>> +                              target->np);
+> >>> +
+> >>> +       } else {
+> >>> +
+> >>> +               check_for_non_overlay_node = true;
+> >>>                 ret = of_changeset_update_property(&ovcs->cset, target->np,
+> >>>                                                    new_prop);
+> >>>
+> >>> +       }
+> >>> +
+> >>> +       if (check_for_non_overlay_node &&
+> >>> +           !of_node_check_flag(target->np, OF_OVERLAY))
+> >>> +               pr_err("WARNING: %s(), memory leak will occur if overlay removed.  Property: %pOF/%s\n",
+> >>> +                      __func__, target->np, new_prop->name);
+> >>> +
+> >>>         if (ret) {
+> >>>                 kfree(new_prop->name);
+> >>>                 kfree(new_prop->value);
+> >>> --
+> >>> Frank Rowand <frank.rowand@sony.com>
+> >>>
+> >
+>
