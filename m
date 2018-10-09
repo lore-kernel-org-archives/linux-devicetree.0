@@ -1,34 +1,69 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [RESEND PATCH v2 0/5] net: phy: mscc: add support for VSC8584 and
- VSC8574 Microsemi quad-port PHYs
-Date: Tue, 9 Oct 2018 17:59:56 +0000
-Message-ID: <20181009175952.sobaj4xedkpkjaqw@pburton-laptop>
-References: <20181008101445.25946-1-quentin.schulz@bootlin.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 13/36] dt-bindings: arm: Convert PMU binding to json-schema
+Date: Tue, 9 Oct 2018 13:14:02 -0500
+Message-ID: <CAL_JsqLeG3WUa2peOWFGUoMuonWaWJoU-7A6d8cqXp-_e3B3XA@mail.gmail.com>
+References: <20181005165848.3474-1-robh@kernel.org> <20181005165848.3474-14-robh@kernel.org>
+ <20181009115713.GE6248@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181008101445.25946-1-quentin.schulz@bootlin.com>
-Content-Language: en-US
-Content-ID: <4599D8FCF11813488A788AE19D1C3179@namprd22.prod.outlook.com>
+In-Reply-To: <20181009115713.GE6248@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@bootlin.com>
-Cc: "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ralf@linux-mips.org" <ralf@linux-mips.org>, "jhogan@kernel.org" <jhogan@kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "davem@davemloft.net" <davem@davemloft.net>, "andrew@lunn.ch" <andrew@lunn.ch>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "allan.nielsen@microchip.com" <allan.nielsen@microchip.com>, "linux-mips@linux-mips.org" <linux-mips@linux-mips.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "thomas.petazzoni@bootlin.com" <thomas.petazzoni@bootlin.com>, "antoine.tenart@bootlin.com" <antoine.tenart@bootlin.com>
+To: Will Deacon <will.deacon@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <glikely@secretlab.ca>, Kumar Gala <kumar.gala@linaro.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Tom Rini <trini@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Jonathan Cameron <jic23@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Quentin,
+On Tue, Oct 9, 2018 at 6:57 AM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Rob,
+>
+> On Fri, Oct 05, 2018 at 11:58:25AM -0500, Rob Herring wrote:
+> > Convert ARM PMU binding to DT schema format using json-schema.
+> >
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/arm/pmu.txt | 70 --------------
+> >  .../devicetree/bindings/arm/pmu.yaml          | 96 +++++++++++++++++++
+> >  2 files changed, 96 insertions(+), 70 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/arm/pmu.txt
+> >  create mode 100644 Documentation/devicetree/bindings/arm/pmu.yaml
+>
+> [...]
+>
+> > -- interrupts : 1 combined interrupt or 1 per core. If the interrupt is a per-cpu
+> > -               interrupt (PPI) then 1 interrupt should be specified.
+>
+> [...]
+>
+> > +  interrupts:
+> > +    oneOf:
+> > +      - maxItems: 1
+> > +      - minItems: 2
+> > +        maxItems: 8
+> > +        description: 1 interrupt per core.
+> > +
+> > +  interrupts-extended:
+> > +    $ref: '#/properties/interrupts'
+>
+> This seems like a semantic different between the two representations, or am
+> I missing something here? Specifically, both the introduction of
+> interrupts-extended and also dropping any mention of using a single per-cpu
+> interrupt (the single combined case is no longer support by Linux; not sure
+> if you want to keep it in the binding).
 
-On Mon, Oct 08, 2018 at 12:14:40PM +0200, Quentin Schulz wrote:
-> RESEND: rebased on top of latest net-next and on top of latest version of
-> "net: phy: mscc: various improvements to Microsemi PHY driver" patch
-> series.
->=20
->%
->=20
-> I suggest patches 1 to 3 go through net tree and patches 4 and 5 go
-> through MIPS tree. Patches going through net tree and those going through
-> MIPS tree do not depend on one another.
+'interrupts-extended' was implied before as it is always supported and
+outside the scope of the binding. But now it is needed to validate
+bindings. There must be some use of it and that's why I added it.
+However, thinking some more about this, I think it may be better to
+have the tools add this in automatically whenever we have an
+interrupts property.
 
-Patches 4 & 5 applied to mips-next for 4.20, thanks!
+I guess the single interrupt case is less obvious now with no
+description (it's the first list item of 'oneOf'). The schema If the
+single interrupt is not supported, then we can drop it here.
 
-Paul
+Rob
