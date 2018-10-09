@@ -1,56 +1,48 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Samsung S6D16D0
-Date: Tue, 9 Oct 2018 21:26:33 +0200
-Message-ID: <20181009192633.GA13448@ravnborg.org>
-References: <20181008110006.24561-1-linus.walleij@linaro.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [RFC PATCH 02/11] dt-bindings: phy: add cpsw port interface mode
+ selection phy bindings
+Date: Tue, 9 Oct 2018 15:10:34 -0500
+Message-ID: <3fa09831-0f70-dfcc-3fd9-f877215a4631@ti.com>
+References: <20181008234949.15416-1-grygorii.strashko@ti.com>
+ <20181008234949.15416-3-grygorii.strashko@ti.com>
+ <20181009144000.GL5662@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20181008110006.24561-1-linus.walleij@linaro.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181009144000.GL5662@atomide.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDE6MDA6MDVQTSArMDIwMCwgTGludXMgV2FsbGVpaiB3
-cm90ZToKPiBUaGlzIGFkZHMgdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU2Ftc3Vu
-ZyBTNkQxNkQwCj4gcGFuZWwuIFRoaXMgaXMgYSBjb21tYW5kIG1vZGUgb25seSBwYW5lbCB1c2lu
-ZyBEU0kuCj4gCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gU2lnbmVkLW9mZi1i
-eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IC0tLQo+ICAuLi4v
-ZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0ICAgICAgICAgfCAzMCArKysrKysrKysr
-KysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
-bC9zYW1zdW5nLHM2ZDE2ZDAudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZkMTZkMC50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2
-ZDAudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmI5NGUz
-NjZmNDUxYgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0Cj4gQEAgLTAsMCArMSwz
-MCBAQAo+ICtTYW1zdW5nIFM2RDE2RDAgNCIgODY0eDQ4MCBBTU9MRUQgcGFuZWwKPiArCj4gK1Jl
-cXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmU6Cj4gKyAgICAi
-c2Ftc3VuZyxzNmQxNmQwIiwKPiArICAtIHJlZzogdGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIg
-b2YgYSBEU0kgcGVyaXBoZXJhbAo+ICsgIC0gdmRkMS1zdXBwbHk6IEkvTyB2b2x0YWdlIHN1cHBs
-eQo+ICsgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGluIChhY3Rp
-dmUgbG93KQpUaGF0IGl0IGlzIGFjdGl2ZSBsb3cgaXMgcGFydCBvZiB0aGUgR1BJTyBwYXJ0IGFu
-ZCBzaG91bGQgbm90CmJlIG1hbmRhdGVkIGFzIHBhcnQgb2YgdGhlIGJpbmRpbmc/Cgo+ICsKPiAr
-VGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9u
-ZSBjaGlsZAo+ICsnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3MgZGVm
-aW5lZCBpbgo+ICttZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gVGhpcyBub2RlIHNob3VsZCBk
-ZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KPiArCj4gK0V4YW1wbGU6Cj4gKyZkc2kgewo+ICsJ
-Li4uCj4gKwo+ICsJcGFuZWxAMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZDE2ZDAi
-Owo+ICsJCXJlZyA9IDwwPjsKPiArCQl2ZGQxLXN1cHBseSA9IDwmZm9vPjsKPiArCQlyZXNldC1n
-cGlvcyA9IDwmZm9vX2dwaW8gMCBHUElPX0FDVElWRV9MT1c+OwpUaGlzIGxpbmUgc3BlY2lmaWVz
-IGlmIEFDVElWRSBISUdIIG9yIExPVy4KCglTYW0KX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+
+
+On 10/09/2018 09:40 AM, Tony Lindgren wrote:
+> * Grygorii Strashko <grygorii.strashko@ti.com> [181008 23:54]:
+>> +Examples:
+>> +	phy_gmii_sel: phy-gmii-sel {
+>> +		compatible = "ti,am3352-phy-gmii-sel";
+>> +		syscon-scm = <&scm_conf>;
+>> +		#phy-cells = <2>;
+>> +	};
+> 
+> Now that this driver can live in it's proper place in the
+
+right
+
+> dts, you may want to consider just using standard reg
+> property for it instead of the syscon-scm. And also get
+> rid of the syscon reads and writes.
+
+Could you help clarify how to get syscon in this case?
+syscon_node_to_regmap(dev->parent->of_node)?
+
+Also, there are could be more then one gmii_sel registers in SCM in the future,
+so I hidden offsets in of_match data. 
+As result, "reg" not needed at all now.
+
+-- 
+regards,
+-grygorii
