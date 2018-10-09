@@ -1,88 +1,114 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 1/2] Driver core: add bus_find_device_by_fwnode
-Date: Tue, 9 Oct 2018 12:20:29 +0200
-Message-ID: <CAJZ5v0joQi-N=-6TUMUQXQbxYtvS2AOLJD3KUqUAL-w9hJTQeg@mail.gmail.com>
-References: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] dt-bindings: misc: bk4: Add device tree binding for
+ Liebherr's BK4 SPI bus
+Date: Tue, 9 Oct 2018 12:21:14 +0200
+Message-ID: <20181009122114.39ff3553@jawa>
+References: <20180927222655.24482-1-lukma@denx.de>
+        <20181008144350.GS3587@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1539080245-25818-1-git-send-email-svellattu@mvista.com>
-Sender: netdev-owner@vger.kernel.org
-To: svellattu@mvista.com
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-i2c <linux-i2c@vger.kernel.org>, linux-rdma@vger.kernel.org, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, oulijun@huawei.com, xavier.huwei@huawei.com, yisen.zhuang@huawei.com, salil.mehta@huawei.com, srinivas.kandagatla@linaro.org, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Mark Brown <broonie@ke>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/8gpAw4s9jZow/4LHh6SfTxs"; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181008144350.GS3587@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Oct 9, 2018 at 12:18 PM Silesh C V <svellattu@mvista.com> wrote:
->
-> Some drivers need to find the device on a bus having a specific firmware
-> node. Currently, such drivers have their own implementations to do this.
-> Provide a helper similar to bus_find_device_by_name so that each driver
-> does not have to reinvent this.
->
-> Signed-off-by: Silesh C V <svellattu@mvista.com>
+--Sig_/8gpAw4s9jZow/4LHh6SfTxs
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Hi Shawn,
 
-> ---
-> Changes since v2:
->         - make use of dev_fwnode in match_fwnode.
->
->  drivers/base/bus.c     | 20 ++++++++++++++++++++
->  include/linux/device.h |  3 +++
->  2 files changed, 23 insertions(+)
->
-> diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-> index 8bfd27e..a2f39db 100644
-> --- a/drivers/base/bus.c
-> +++ b/drivers/base/bus.c
-> @@ -17,6 +17,7 @@
->  #include <linux/string.h>
->  #include <linux/mutex.h>
->  #include <linux/sysfs.h>
-> +#include <linux/property.h>
->  #include "base.h"
->  #include "power/power.h"
->
-> @@ -373,6 +374,25 @@ struct device *bus_find_device_by_name(struct bus_type *bus,
->  }
->  EXPORT_SYMBOL_GPL(bus_find_device_by_name);
->
-> +static int match_fwnode(struct device *dev, void *fwnode)
-> +{
-> +       return dev_fwnode(dev) == fwnode;
-> +}
-> +
-> +/**
-> + * bus_find_device_by_fwnode - device iterator for locating a particular device
-> + * having a specific firmware node
-> + * @bus: bus type
-> + * @start: Device to begin with
-> + * @fwnode: firmware node of the device to match
-> + */
-> +struct device *bus_find_device_by_fwnode(struct bus_type *bus, struct device *start,
-> +                                       struct fwnode_handle *fwnode)
-> +{
-> +       return bus_find_device(bus, start, (void *)fwnode, match_fwnode);
-> +}
-> +EXPORT_SYMBOL_GPL(bus_find_device_by_fwnode);
-> +
->  /**
->   * subsys_find_device_by_id - find a device with a specific enumeration number
->   * @subsys: subsystem
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 8f88254..09384f6 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -171,6 +171,9 @@ struct device *bus_find_device(struct bus_type *bus, struct device *start,
->  struct device *bus_find_device_by_name(struct bus_type *bus,
->                                        struct device *start,
->                                        const char *name);
-> +struct device *bus_find_device_by_fwnode(struct bus_type *bus,
-> +                                      struct device *start,
-> +                                      struct fwnode_handle *fwnode);
->  struct device *subsys_find_device_by_id(struct bus_type *bus, unsigned int id,
->                                         struct device *hint);
->  int bus_for_each_drv(struct bus_type *bus, struct device_driver *start,
-> --
-> 1.9.1
->
+> On Fri, Sep 28, 2018 at 12:26:55AM +0200, Lukasz Majewski wrote:
+> > Add Device Tree binding document for Liebherr's BK4 external SPI
+> > bus.
+> >=20
+> > Signed-off-by: Lukasz Majewski <lukma@denx.de> =20
+>=20
+> There should really be a patch series consisting of this one and
+> spidev change [1].
+>=20
+> Since spidev has already been picked up, having a series including
+> this and dts change would be the second option.  With DT folks' ACK,
+> I can send bindings change together with DTS using it.
+
+Any option will work for me :-).
+
+>=20
+> Shawn
+>=20
+> [1] https://lkml.org/lkml/2018/9/28/48
+>=20
+> > ---
+> >  Documentation/devicetree/bindings/misc/lwn-bk4.txt | 26
+> > ++++++++++++++++++++++ 1 file changed, 26 insertions(+)
+> >  create mode 100644
+> > Documentation/devicetree/bindings/misc/lwn-bk4.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/misc/lwn-bk4.txt
+> > b/Documentation/devicetree/bindings/misc/lwn-bk4.txt new file mode
+> > 100644 index 000000000000..d6a8c188c087
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/lwn-bk4.txt
+> > @@ -0,0 +1,26 @@
+> > +* Liebherr's BK4 controller external SPI
+> > +
+> > +A device which handles data acquisition from compatible industrial
+> > +peripherals.
+> > +The SPI is used for data and management purposes in both master and
+> > +slave modes.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : Should be "lwn,bk4"
+> > +
+> > +Required SPI properties:
+> > +
+> > +- reg : Should be address of the device chip select within
+> > +  the controller.
+> > +
+> > +- spi-max-frequency : Maximum SPI clocking speed of device in Hz,
+> > should be
+> > +  30MHz at most for the Liebherr's BK4 external bus.
+> > +
+> > +Example:
+> > +
+> > +spidev0: spi@0 {
+> > +	compatible =3D "lwn,bk4";
+> > +	spi-max-frequency =3D <30000000>;
+> > +	reg =3D <0>;
+> > +};
+> > --=20
+> > 2.11.0
+> >  =20
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+
+--Sig_/8gpAw4s9jZow/4LHh6SfTxs
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlu8gRoACgkQAR8vZIA0
+zr2I5QgA1rwcD72qjO/pbSM/PriYIzhlokJ20Pg24TpC2BZeSl1ND2Dhi1yEHmxp
+y40hF3+64nGuUlbJmAL+tPTBuO65xdBSTDXrhfIr5zCCwCOZXif+MphRg3n1NYBq
+ep8iD8QWtjGC2IkxuBlK0az77vJgYg51JfBGywabJCBHwyFKCsMbBONn2xjjvciw
+rLBIQTLHhGL/bhrhAjBOnY1nG37OWtjtD+Xk1s74BwtWwt1AWoUDcJM/jG+wuLPI
+Xh24CaFFNdENg4ZhxwFyacRKfrloc8G8fDKXiaMhBLa3c/kx5qiIi1SJ5ZmF3yF/
+KVPjbdDla/l2rjC87AkLnFjU0jj+PQ==
+=RGBJ
+-----END PGP SIGNATURE-----
+
+--Sig_/8gpAw4s9jZow/4LHh6SfTxs--
