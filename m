@@ -1,157 +1,568 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [RFC PATCH 1/2] dt-bindings: pwm: imx: Allow switching PWM output
- between PWM and GPIO
-Date: Tue, 9 Oct 2018 10:30:57 +0000
-Message-ID: <406e7dfc-2585-c00a-da24-49dbe8bf5007@ysoft.com>
-References: <1534862333-27950-1-git-send-email-michal.vokac@ysoft.com>
- <1534862333-27950-2-git-send-email-michal.vokac@ysoft.com>
- <20180831121809.GA22507@bogus> <20180831144548.26b1204d@ipc1.ka-ro>
- <64b731c7-aa24-7738-0076-8520f6b9a495@ysoft.com>
- <20180831153043.0b91fbce@ipc1.ka-ro>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v3] ARM: dts: Add support for Liebherr's BK4 device (vf610 based)
+Date: Tue,  9 Oct 2018 12:50:28 +0200
+Message-ID: <20181009105028.17971-1-lukma@denx.de>
+References: <20180921152726.31742-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20180831153043.0b91fbce@ipc1.ka-ro>
-Content-Language: en-US
-Content-ID: <99E9506E2FA4D2428DB99AA2F7A83EE7@eurprd04.prod.outlook.com>
+In-Reply-To: <20180921152726.31742-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Pengutronix Kernel Team <kernel@pengutronix.de>, Stefan Agner <stefan@agner.ch>, Fabio Estevam <festevam@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-ICAgIE9uIDMxLjguMjAxOCAxNTozMCwgTG90aGFyIFdhw59tYW5uIHdyb3RlOg0KPiBNaWNoYWwg
-Vm9rw6HEjSA8bWljaGFsLnZva2FjQHlzb2Z0LmNvbT4gd3JvdGU6DQo+IA0KPj4gT24gMzEuOC4y
-MDE4IDE0OjQ1LCBMb3RoYXIgV2HDn21hbm4gd3JvdGU6DQo+Pj4gUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4gd3JvdGU6DQo+Pj4gICAgDQo+Pj4+IE9uIFR1ZSwgQXVnIDIxLCAyMDE4IGF0
-IDA0OjM4OjUyUE0gKzAyMDAsIE1pY2hhbCBWb2vDocSNIHdyb3RlOg0KPj4+Pj4gT3V0cHV0IG9m
-IHRoZSBQV00gYmxvY2sgb2YgaS5NWCBTb0NzIGlzIGFsd2F5cyB6ZXJvIHZvbHRzIHdoZW4gdGhl
-IGJsb2NrDQo+Pj4+PiBpcyBkaXNhYmxlZC4gVGhpcyBjYW4gY2F1ZSBpc3N1ZXMgd2hlbiBpbnZl
-cnRlZCBQV00gcG9sYXJpdHkgaXMgbmVlZGVkLg0KPj4+Pj4gV2l0aCBpbnZlcnRlZCBwb2xhcml0
-eSBhIGR1dHkgY3ljbGUgPSAwJSBjb3JyZXNwb25kcyB0byBzb2xpZCBoaWdoIGxldmVsDQo+Pj4+
-PiBvbiB0aGUgb3V0cHV0LiBJZiB0aGUgUFdNIGlzIGRpc3NhYmxlZCBpdHMgb3V0cHV0IGluc3Rh
-bnRseSBnb2VzIHRvIHNvbGlkDQo+Pj4+PiB6ZXJvIHdoaWNoIGNvcnJlc3BvbmRzIHRvIGR1dHkg
-Y3ljbGUgPSAxMDAlLg0KPj4+Pj4NCj4+Pj4+IFRvIGhhdmUgYSB0cnVsbHkgaW52ZXJ0ZWQgUFdN
-IG91dHB1dCBjb25maWd1cmUgdGhlIFBXTSBwYWQgYXMgYSBHUElPDQo+Pj4+PiB3aXRoIHB1bGwt
-dXAuIFRoZW4gc3dpdGNoIHRoZSBwYWQgdG8gUFdNIG91dHB1dCB3aGVuZXZlciBub24temVybw0K
-Pj4+Pj4gZHV0eSBjeWNsZSBpcyBuZWVkZWQuDQoNCkFob2osDQpTb3JyeSBmb3IgdGhlIGxvbmcg
-ZGVsYXkuIEkgc3BlbnQgbW9zdCBvZiB0aGUgdGltZSBsZWFybmluZyBtb3JlIGFib3V0DQp0aGUg
-cGluY3RyLCBwd20gYW5kIGNsb2NrIHN1YnN5c3RlbSBpbnRlcm5hbHMuIEkgaGF2ZSBhbHNvIGRv
-bmUgYSBsb3QNCm9mIGV4cGVyaW1lbnRzIGFuZCBtZWFzdXJlbWVudHMgb2YgdmFyaW91cyBQV00g
-c2V0dXBzIGFuZCB1c2UtY2FzZXMuDQoNClRoZSBudW1iZXIgb2YgcG9zc2libGUgdXNlLWNhc2Vz
-IGlzIHJlYWxseSBodWdlIGFuZCBJIGRvdWJ0IGl0IGlzIHBvc3NpYmxlDQp0byBhZGRyZXNzIGFs
-bCBvZiB0aGVtLiBTbyBJIHdvdWxkIGxpa2UgdG8gYWRkcmVzcyBhdCBsZWFzdCBzb21lIG9mIHRo
-ZW0uDQoNCkNhc2VzIEkgaGF2ZSBvbiBteSBtaW5kIGZhbGwgaW50byB0aGVzZSB0d28gZ3JvdXBz
-Og0KDQoxKSBBIHNpbmdsZSBwdXJwb3NlIEhXIHRoYXQgbmVlZHMgaW52ZXJ0ZWQgUFdNIHNpZ25h
-bC4gV2l0aCBQV00gY2xpZW50DQppbiB0aGUga2VybmVsLiBFZy4gYSBib2FyZCB3aXRoIFBXTSBj
-b250cm9sbGVkIExDRCBiYWNrbGlnaHQuIFRoZSBjbGllbnQNCnNob3VsZCBiZSBhYmxlIHRvIGVu
-YWJsZS9kaXNhYmxlIHRoZSBQV00gd2l0aCBleHBlY3RlZCByZXN1bHRzLg0KRW5hYmxlZCA9IGJy
-aWdodCwgZGlzYWJsZWQgPSBkYXJrLg0KDQoyKSBBIG1vcmUgZ2VuZXJpYyBIVyB0aGF0IHN0aWxs
-IG5lZWRzIGludmVydGVkIFBXTSBzaWduYWwuIE5vIFBXTSBjbGllbnQNCmluIHRoZSBrZXJuZWwu
-IEVnLiBhIGJvYXJkIHRoYXQgY29udHJvbHMgc29tZSB0ZWNobm9sb2d5IHVzaW5nIG9ubHkgYSBQ
-V00NCnNpZ25hbC4gVGhhdCB0ZWNobm9sb2d5IG5lZWRzIHRvIHN0YXkgZGlzYWJsZWQgdW5sZXNz
-IHNvbWUgcHJvY2VzcyBmcm9tDQp1c2VyIHNwYWNlIGVuYWJsZXMgdGhlIFBXTS4NCg0KVXNlcnMg
-dGhhdCBuZWVkIG5vcm1hbCwgbm9uLWludmVydGVkIFBXTSBjYW4gaGFwcGlseSB1c2UgY3VycmVu
-dCBiaW5kaW5nLg0KVGhlIHNhbWUgZm9yIGNhc2VzIHdpdGggdG90YWxseSBnZW5lcmljIFBXTSBv
-dXRwdXQgd2l0aCBubyBzcGVjaWZpYyB1c2FnZS4NCg0KTW9yZSBjb21tZW50cyBiZWxsb3cuDQoN
-Cj4+Pj4+IFNpZ25lZC1vZmYtYnk6IE1pY2hhbCBWb2vDocSNIDxtaWNoYWwudm9rYWNAeXNvZnQu
-Y29tPg0KPj4+Pj4gLS0tDQo+Pj4+PiAgICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvcHdtL2lteC1wd20udHh0IHwgNDQgKysrKysrKysrKysrKysrKysrKysrKysNCj4+Pj4+ICAg
-IDEgZmlsZSBjaGFuZ2VkLCA0NCBpbnNlcnRpb25zKCspDQo+Pj4+Pg0KPj4+Pj4gZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vaW14LXB3bS50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcHdtL2lteC1wd20udHh0DQo+Pj4+PiBp
-bmRleCBjNjFiZGY4Li4zYjFiYzRjIDEwMDY0NA0KPj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtcHdtLnR4dA0KPj4+Pj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9pbXgtcHdtLnR4dA0KPj4+Pj4gQEAgLTE0LDYg
-KzE0LDEyIEBAIFNlZSB0aGUgY2xvY2sgY29uc3VtZXIgYmluZGluZywNCj4+Pj4+ICAgIAlEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xvY2stYmluZGluZ3MudHh0DQo+
-Pj4+PiAgICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgZm9yIHRoZSBwd20gY29udHJvbGxl
-cg0KPj4+Pj4gICAgDQo+Pj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4+Pj4+ICstIHBpbmN0
-cmw6IEZvciBpLk1YMjcgYW5kIG5ld2VyIFNvQ3MuIEFkZCBleHRyYSBwaW5jdHJsIHRvIGNvbmZp
-Z3VyZSB0aGUgUFdNDQo+Pj4+PiArICBwaW4gdG8gZ3BpbyBmdW5jdGlvbi4gIEl0IGFsbG93cyBj
-b250cm9sIG92ZXIgdGhlIHBpbiBvdXRwdXQgbGV2ZWwgd2hlbiB0aGUNCj4+Pj4+ICsgIFBXTSBi
-bG9jayBpcyBkaXNhYmxlZC4gVGhpcyBpcyBtZWFudCB0byBiZSB1c2VkIGlmIGludmVydGVkIHBv
-bGFyaXR5IG9mIHRoZQ0KPj4+Pj4gKyAgUFdNIHNpZ25hbCBpcyByZXF1aXJlZC4gU2VlICJJbnZl
-cnRlZCBQV00gb3V0cHV0IiBzZWN0aW9uIGJlbGxvdy4NCj4+Pj4+ICsNCj4+Pj4+ICAgIEV4YW1w
-bGU6DQo+Pj4+PiAgICANCj4+Pj4+ICAgIHB3bTE6IHB3bUA1M2ZiNDAwMCB7DQo+Pj4+PiBAQCAt
-MjUsMyArMzEsNDEgQEAgcHdtMTogcHdtQDUzZmI0MDAwIHsNCj4+Pj4+ICAgIAljbG9jay1uYW1l
-cyA9ICJpcGciLCAicGVyIjsNCj4+Pj4+ICAgIAlpbnRlcnJ1cHRzID0gPDYxPjsNCj4+Pj4+ICAg
-IH07DQo+Pj4+PiArDQo+Pj4+PiArSW52ZXJ0ZWQgUFdNIG91dHB1dA0KPj4+Pj4gKy0tLS0tLS0t
-LS0tLS0tLS0tLS0NCj4+Pj4+ICsNCj4+Pj4+ICtUaGUgaS5NWCBTb0MgaGFzIHN1Y2ggbGltaXRh
-dGlvbiB0aGF0IHdoZW5ldmVyIGEgcGFkIGlzIGNvbmZpZ3VyZWQgYXMgYSBQV00NCj4+Pj4+ICtv
-dXRwdXQsIHRoZSBvdXRwdXQgbGV2ZWwgaXMgYWx3YXlzIHplcm8gdm9sdHMgd2hlbiB0aGUgUFdN
-IGJsb2NrIGlzIGRpc2FibGVkLg0KPj4+Pj4gK1RoZSB6ZXJvIG91dHB1dCBsZXZlbCBpcyBhY3Rp
-dmVseSBkcml2ZW4gYnkgdGhlIG91dHB1dCBzdGFnZSBvZiB0aGUgUFdNIGJsb2NrDQo+Pj4+PiAr
-YW5kIGNhbiBub3QgYmUgb3ZlcnJpZGRlbiBieSBwdWxsLXVwLiBJdCBhbHNvIGRvZXMgbm90IG1h
-dHRlciB3aGF0IFBXTSBwb2xhcml0eQ0KPj4+Pj4gK2EgUFdNIGNsaWVudCAoZS5nLiBiYWNrbGln
-aHQpIHJlcXVlc3RlZC4NCj4+Pj4+ICsNCj4+Pj4+ICtUbyBnYWluIGNvbnRyb2wgb2YgdGhlIFBX
-TSBvdXRwdXQgbGV2ZWwgaW4gZGlzYWJsZWQgc3RhdGUgdHdvIHBpbmN0cmwgc3RhdGVzDQo+Pj4+
-PiArY2FuIGJlIHVzZWQuIFRoZSAiZGVmYXVsdCIgc3RhdGUgYW5kIHRoZSAicHdtIiBzdGF0ZS4g
-SW4gdGhlIGRlZmF1bHQgc3RhdGUgdGhlDQo+Pj4+PiArUFdNIG91dHB1dCBpcyBjb25maWd1cmVk
-IGFzIGEgR1BJTyB3aXRoIHB1bGwtdXAuIEluIHRoZSAicHdtIiBzdGF0ZSB0aGUgb3V0cHV0DQo+
-Pj4+PiAraXMgY29uZmlndXJlZCBhcyBhIFBXTSBvdXRwdXQuIFRoaXMgc2V0dXAgYXNzdXJlcyB0
-aGF0IHRoZSBQV00gb3V0cHV0IGlzIGF0DQo+Pj4+PiArdGhlIHJlcXVpcmVkIGxldmVsIHRoYXQg
-Y29ycmVzcG9uZHMgdG8gZHV0eSBjeWNsZSA9IDAgd2hlbiBQV00gaXMgZGlzYWJsZWQuDQo+Pj4+
-PiArRS5nLiBhdCBib290Lg0KPj4+Pj4gKw0KPj4+Pj4gK0V4YW1wbGU6DQo+Pj4+PiArDQo+Pj4+
-PiArJnB3bTEgew0KPj4+Pj4gKwlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiLCAicHdtIjsNCj4+
-Pj4+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2JhY2tsaWdodF9ncGlvPjsNCj4+Pj4+ICsJcGlu
-Y3RybC0xID0gPCZwaW5jdHJsX2JhY2tsaWdodF9wd20+Ow0KPj4+Pj4gK30NCj4+Pj4+ICsNCj4+
-Pj4+ICtwaW5jdHJsX2JhY2tsaWdodF9ncGlvOiBwd20xZ3JwLWdwaW8gew0KPj4+Pj4gKwlmc2ws
-cGlucyA9IDwNCj4+Pj4+ICsJCS8qIEdQSU8gd2l0aCAyMmtPaG0gcHVsbC11cCAqLw0KPj4+Pj4g
-KwkJTVg2UURMX1BBRF9HUElPXzlfX0dQSU8xX0lPMDkJMHhGMDA4DQo+Pj4+DQo+Pj4+IFRoZXJl
-J3MgYSBzbGlnaHQgcHJvYmxlbSBoZXJlIGlmIEkgcmVtZW1iZXIgdGhlIGkuTVggcGluIG11eGlu
-Zy4gSW4gR1BJTw0KPj4+PiBtb2RlLCBkb2Vzbid0IHRoZSBHUElPIGJsb2NrIGNvbnRyb2wgdGhl
-IGRpcmVjdGlvbiBhbmQgbGV2ZWwgaWYgYW4NCj4+Pj4gb3V0cHV0LiBJIGd1ZXNzIGFzIGxvbmcg
-YXMgdW51c2VkIEdQSU9zIGFyZSBhbGwgaW5pdGlhbGl6ZWQgdG8gaW5wdXRzIGl0DQo+Pj4+IHdp
-bGwgYmUgb2theS4NCj4+DQo+PiBJIGFtIG5vdCBzdXJlIGlmIEkgdW5kZXJzdGFuZCB5b3UgY29y
-cmVjdGx5LiBEaWQgeW91IG1lYW46ICIuLmRvZXNuJ3QgdGhlDQo+PiBHUElPIGJsb2NrIGNvbnRy
-b2wgdGhlIFBVTEwtVVAvRE9XTiBhbmQgbGV2ZWwgaWYgYW4gb3V0cHV0LiI/IFllcywgdGhhdCBp
-cw0KPj4gdHJ1ZS4gQW5kIGFzIHlvdSBzYWlkLCBhbGwgR1BJT3MgYXJlIGNvbmZpZ3VyZWQgYXMg
-aW5wdXRzIGFmdGVyIHJlc2V0Lg0KPj4NCj4+PiBPbmUgY291bGQgc2V0IHRoZSBwYWRfY3RsIERT
-RSB2YWx1ZSB0byAwLCBzbyB0aGF0IHRoZSBwaW4gY2Fubm90IGJlDQo+Pj4gZHJpdmVuIGV2ZW4g
-aWYgY29uZmlndXJlZCBhcyBvdXRwdXQ6DQo+Pj4gCQlNWDZRRExfUEFEX0dQSU9fOV9fR1BJTzFf
-SU8wOQkweEYwMDANCj4+DQo+PiBZZXMsIGl0IHdpbGwgbWFrZSBubyBoYXJtIHRvIHNldCB0aGUg
-cGluIHRvIGhpZ2gtWiBpZiBjb25maWd1cmVkIGFzDQo+PiBvdXRwdXQuIFRob3VnaCBJIGFtIG5v
-dCBzdXJlIHRoYXQgdGhpcyBtYWtlcyBzZW5zZS4NCj4+DQo+IElmIHlvdSB3YW50IHRvIHJlbHkg
-b24gdGhlIGZ1bmN0aW9uIG9mIHRoZSBQdWxsIHJlc2lzdG9ycyB0aGlzIGlzDQo+IGV4YWN0bHkg
-d2hhdCB5b3UgbmVlZC4NCg0KSSB0aGluayBJIGdvdCB5b3VyIHBvaW50LiBKdXN0IHNldHRpbmcg
-dGhlIHB1bGwgcmVzaXN0b3JzIGZyb20gRFQgZG9lcw0Kbm90IGFzc3VyZSB0aGUgb3V0cHV0IGxl
-dmVsLiBBcyB5b3Ugbm90ZWQgYmVsb3cgLSB0aGUgYm9vdGxvYWRlciBtYXkgaGF2ZQ0KY29uZmln
-dXJlZCB0aGUgcGluIGFzIG91dHB1dC4gVGhlbiB0aGUgcHVsbCByZXNpc3RvciB3aWxsIGhhdmUg
-bm8gZWZmZWN0Lg0KDQo+PiBJbiBjYXNlIHdlIGNob29zZSB0aGUgcHVsbC11cCB0byBrZWVwIHRo
-ZSBsZXZlbCBoaWdoIHRoZSBwaW4gbmVlZHMgdG8gc3RheQ0KPj4gY29uZmlndXJlZCBhcyBpbnB1
-dC4gQW5kIGFzIHRoZSBHUElPIGlzIHJlc2VydmVkIGZvciB1cyB0aGVyZSBpcyBhY3R1YWxseQ0K
-Pj4gbm8gb25lIGVsc2Ugd2hvIGNvdWxkIHJlLWNvbmZpZ3VyZSBpdC4NCj4+DQo+IFUtQm9vdCBt
-YXkgaGF2ZSBjb25maWd1cmVkIHRoZSBQV00gcGluIGFzIG91dHB1dCB0byBlbmFibGUgdGhlDQo+
-IGJhY2tsaWdodCB3aXRob3V0IGJyaWdodG5lc3MgY29udHJvbC4NCg0KSSBzZWUgSSB1c2VkIHdy
-b25nIGFzc3VtcHRpb24uIFRoZSBwaW4gbWF5IG5vdCBoYXZlIGl0cyBkZWZhdWx0IChpbnB1dCwN
-CjEwMGsgcHVsbC11cCkgY29uZmlndXJhdGlvbiB3aGVuIExpbnV4IGlzIGJvb3RpbmcuDQoNClNv
-IG9uY2Ugd2UgcmVxdWVzdCB0aGUgR1BJTyBmcm9tIGRyaXZlciBjb2RlIChlaXRoZXIgYXMgaW5w
-dXQgb3Igb3V0cHV0KQ0Kd2UgaGF2ZSBmdWxsIGNvbnRyb2wgb3ZlciB0aGUgb3V0cHV0IGxldmVs
-LiBJbiBpbnB1dCBtb2RlIHdpdGggdGhlIHB1bGwNCnJlc2lzdG9ycyBhbmQgaW4gb3V0cHV0IG1v
-ZGUgd2UgY2FuIHNldCB0aGUgb3V0cHV0IHZhbHVlLg0KDQo+PiBJbiBjYXNlIHdlIGNob29zZSB0
-byBhY3RpdmVseSBkcml2ZSB0aGUgcGluIGluc3RlYWQgb2YgcmVseWluZyBvbiB0aGUNCj4+IGlu
-dGVybmFsIHB1bGwtdXAgd2UgbmVlZCB0byB1c2UgZ3Bpb2QgbGliIGFuZCBjb25maWd1cmUgdGhl
-IHBpbiBhcyBvdXRwdXQuDQo+PiBJbiB0aGF0IGNhc2UgRFNFIG11c3QgYmUgc2V0IG5vbi16ZXJv
-Lg0KPj4NCj4gVGhhdCBpcyBteSBwZXJzb25hbCBwcmVmZXJlbmNlIHRvby4NCg0KT0ssIGxldHMg
-ZG8gaXQgdGhhdCB3YXkuIEl0IHNlZW1zIGxpa2UgdGhlIG1vc3QgcmVsaWFibGUgc29sdXRpb24u
-DQoNCkFsc28gSSBjYW1lIHVwIHdpdGggYW5vdGhlciBpZGVhIHRvIG1ha2UgdGhlIGJpbmRpbmcg
-bGVzcyBjb25mdXNpbmcuDQpMZXRzIG5vdCBtaXN1c2UgdGhlICJkZWZhdWx0IiBwaW5jdHJsIHN0
-YXRlIGZvciBHUElPIGZ1bmN0aW9uLiBJbnN0ZWFkIHdlDQpjYW4gZGVmaW5lIHR3byBzZXBhcmF0
-ZSAicHdtIiBhbmQgImdwaW8iIHN0YXRlcyBhbmQgc3dpdGNoIGJldHdlZW4gdGhvc2UuDQoNCldo
-eSBJIGFtIG5vdCBoYXBweSB3aXRoIGp1c3QgdGhlICJkZWZhdWx0IiBzdGF0ZSBmb3IgUFdNIGFu
-ZCAiZ3BpbyIgc3RhdGUNCmZvciBHUElPIG91dHB1dCBpcyB0aGF0IHRoZSAiZGVmYXVsdCIgc3Rh
-dGUgaXMgYXV0b21hZ2ljYWxseSBzZWxlY3RlZCBieQ0KdGhlIHBpbmN0cmwgZHJpdmVyIGF0IHB3
-bS1pbXggZHJpdmVyIHByb2JlLiBBbmQgdGhhdCB3aWxsIGNhdXNlIHNvbWUgbGV2ZWwNCmNoYW5n
-ZXMgb24gdGhlIG91dHB1dC4NCg0KSSB3aWxsIHNlbmQgdjIgd2l0aCBhbGwgdGhlIGNoYW5nZXMg
-c29vbi4NCg0KQXMgYSBzaWRlIGVmZmVjdCBJIGFsc28gZmluZCBvdXQgdGhhdCB0aGUgY3VycmVu
-dCBkcml2ZXIgZG9lcyBub3Qgc3VwcG9ydA0KSFcgc3RhdGUgcmVhZG91dC4gSWYgeW91IGVuYWJs
-ZSB0aGUgUFdNIGluIGJvb3Rsb2FkZXIsIExpbnV4IGRvZXMgbm90IGtub3cNCmFib3V0IGl0LiBI
-ZW5jZSB0aGUgY2xvY2sgc3Vic3lzdGVtIChpbXgtZ2F0ZTIpIGRpc2FibGVzIHRoZSBQV00gc291
-cmNlDQpjbG9jayBhcyBpdCBzZWVtcyB1bnVzZWQuIEFzIGEgcmVzdWx0IHRoZSBQV00gYmxvY2sg
-aXMgbGVmdCBlbmFibGVkIHdpdGgNCmRpc2FibGVkIHNvdXJjZSBjbG9jayBhbmQgdGhlIFBXTSBv
-dXRwdXQgaXMgc3RvcHBlZCBhdCByYW5kb20gbGV2ZWwuIFRoYXQNCmlzIG5vdCByZWFsbHkgZ29v
-ZC4NCg0KU28gaW4gdGhlIG1lYW50aW1lIEkgc3VibWl0dGVkIGEgc2VyaWVzIFsxXSB0aGF0IGlt
-cGxlbWVudCB0aGUgZ2V0X3N0YXRlKCkNCmZ1bmN0aW9uLg0KDQpbMV0gaHR0cDovL3BhdGNod29y
-ay5vemxhYnMub3JnL3Byb2plY3QvbGludXgtcHdtL2xpc3QvP3Nlcmllcz02ODQ0NQ0KDQpCZXN0
-IHJlZ2FyZHMsDQpNaWNoYWwNCg0K
+This commit adds DTS support for BK4 device from Liebherr. It
+uses vf610 SoC from NXP.
+
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+Changes for v3:
+
+- Rename regulator-vcc_3v3_mcu -> regulator-vcc3v3mcu
+- Add a blank line between properties and node @ mdio
+- Rename rtc and eeprom node's labels and names
+- Rename flash nodes
+- Rename 'gpio_leds' -> 'gpioledsgrp'
+- Move 'pinctrl_qspi0: qspi0grp' to be in alphabetic order
+
+Changes for v2:
+
+- Rename enet_ext and audio_ext oscillator names
+- Move regulators from simple-bus (and rename to reg_3p3v: regulator-3p3v)
+- Add stdout-path property to chosen node
+- Move iomuxc node to the end (as it is so large)
+- Sort with alphabetical order
+- Rename the default pinctrl to "hog"
+- Move LED pins definition from "hog" to "led" group
+- Add more descriptive names to default pins pinmux definition
+- Use spi-slave property to describe node working in this mode
+- Rename the spidev3 node to slave
+- Introduce new compatible name (lwn,bk4) for spidev driver (to avoid
+  confusion)
+- Update some compatibles to match current kernel
+---
+ arch/arm/boot/dts/Makefile      |   1 +
+ arch/arm/boot/dts/vf610-bk4.dts | 501 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 502 insertions(+)
+ create mode 100644 arch/arm/boot/dts/vf610-bk4.dts
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b5bd3de87c33..e6f159895fa9 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -577,6 +577,7 @@ dtb-$(CONFIG_SOC_LS1021A) += \
+ 	ls1021a-twr.dtb
+ dtb-$(CONFIG_SOC_VF610) += \
+ 	vf500-colibri-eval-v3.dtb \
++	vf610-bk4.dtb \
+ 	vf610-colibri-eval-v3.dtb \
+ 	vf610m4-colibri.dtb \
+ 	vf610-cosmic.dtb \
+diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+new file mode 100644
+index 000000000000..cab95714c058
+--- /dev/null
++++ b/arch/arm/boot/dts/vf610-bk4.dts
+@@ -0,0 +1,501 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright 2018
++ * Lukasz Majewski, DENX Software Engineering, lukma@denx.de
++ */
++
++/dts-v1/;
++#include "vf610.dtsi"
++
++/ {
++	model = "Liebherr BK4 controller";
++	compatible = "lwn,bk4", "fsl,vf610";
++
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	memory@80000000 {
++		reg = <0x80000000 0x8000000>;
++	};
++
++	audio_ext: oscillator-audio {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <24576000>;
++	};
++
++	enet_ext: oscillator-ethernet {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <50000000>;
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_gpio_leds>;
++
++		/* LED D5 */
++		led0: heartbeat {
++			label = "heartbeat";
++			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++	};
++
++	reg_3p3v: regulator-3p3v {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++	};
++
++	reg_vcc_3v3_mcu: regulator-vcc3v3mcu {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3_mcu";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&adc0 {
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&adc1 {
++	vref-supply = <&reg_vcc_3v3_mcu>;
++	status = "okay";
++};
++
++&can0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can0>;
++	status = "okay";
++};
++
++&can1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_can1>;
++	status = "okay";
++};
++
++&clks {
++	clocks = <&sxosc>, <&fxosc>, <&enet_ext>, <&audio_ext>;
++	clock-names = "sxosc", "fxosc", "enet_ext", "audio_ext";
++};
++
++&dspi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dspi0>;
++	bus-num = <0>;
++	status = "okay";
++
++	spidev0@0 {
++		compatible = "lwn,bk4";
++		spi-max-frequency = <30000000>;
++		reg = <0>;
++		fsl,spi-cs-sck-delay = <200>;
++		fsl,spi-sck-cs-delay = <400>;
++	};
++};
++
++&dspi3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_dspi3>;
++	bus-num = <3>;
++	status = "okay";
++	spi-slave;
++
++	slave@0 {
++		compatible = "lwn,bk4";
++		spi-max-frequency = <30000000>;
++		reg = <0>;
++	};
++};
++
++&edma0 {
++	status = "okay";
++};
++
++&edma1 {
++	status = "okay";
++};
++
++&esdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_esdhc1>;
++	bus-width = <4>;
++	cd-gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
++	status = "okay";
++};
++
++&fec0 {
++	phy-mode = "rmii";
++	phy-handle = <&ethphy0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec0>;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy0: ethernet-phy@1 {
++			reg = <1>;
++			clocks = <&clks VF610_CLK_ENET_50M>;
++			clock-names = "rmii-ref";
++		};
++	};
++};
++
++&fec1 {
++	phy-mode = "rmii";
++	phy-handle = <&ethphy1>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_fec1>;
++	status = "okay";
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ethphy1: ethernet-phy@1 {
++			reg = <1>;
++			clocks = <&clks VF610_CLK_ENET_50M>;
++			clock-names = "rmii-ref";
++		};
++	};
++};
++
++&i2c2 {
++	clock-frequency = <400000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_i2c2>;
++	status = "okay";
++
++	at24c256: eeprom@50 {
++		compatible = "atmel,24c256";
++		reg = <0x50>;
++	};
++
++	m41t62: rtc@68 {
++		compatible = "st,m41t62";
++		reg = <0x68>;
++	};
++};
++
++&nfc {
++	assigned-clocks = <&clks VF610_CLK_NFC>;
++	assigned-clock-rates = <33000000>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_nfc>;
++	status = "okay";
++
++	nand@0 {
++		compatible = "fsl,vf610-nfc-nandcs";
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		nand-bus-width = <16>;
++		nand-ecc-mode = "hw";
++		nand-ecc-strength = <24>;
++		nand-ecc-step-size = <2048>;
++		nand-on-flash-bbt;
++	};
++};
++
++&qspi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_qspi0>;
++	status = "okay";
++
++	n25q128a13_4: flash@0 {
++		compatible = "n25q128a13", "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <66000000>;
++		spi-rx-bus-width = <4>;
++		reg = <0>;
++	};
++
++	n25q128a13_2: flash@1 {
++		compatible = "n25q128a13", "jedec,spi-nor";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <66000000>;
++		spi-rx-bus-width = <2>;
++		reg = <1>;
++	};
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart0>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart1>;
++	status = "okay";
++};
++
++&uart2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart2>;
++	status = "okay";
++};
++
++&uart3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_uart3>;
++	status = "okay";
++};
++
++&usbdev0 {
++	disable-over-current;
++	status = "okay";
++};
++
++&usbh1 {
++	disable-over-current;
++	status = "okay";
++};
++
++&usbmisc0 {
++	status = "okay";
++};
++
++&usbmisc1 {
++	status = "okay";
++};
++
++&usbphy0 {
++	status = "okay";
++};
++
++&usbphy1 {
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	pinctrl_hog: hoggrp {
++		fsl,pins = <
++			/* One_Wire_PSU_EN */
++			VF610_PAD_PTC29__GPIO_102		0x1183
++			/* SPI ENABLE */
++			VF610_PAD_PTB26__GPIO_96		0x1183
++			/* EB control */
++			VF610_PAD_PTE14__GPIO_119		0x1183
++			VF610_PAD_PTE4__GPIO_109		0x1181
++			/* Feedback_Lines */
++			VF610_PAD_PTC31__GPIO_104		0x1181
++			VF610_PAD_PTA7__GPIO_134		0x1181
++			VF610_PAD_PTD9__GPIO_88		0x1181
++			VF610_PAD_PTE1__GPIO_106		0x1183
++			VF610_PAD_PTB2__GPIO_24		0x1181
++			VF610_PAD_PTB3__GPIO_25		0x1181
++			VF610_PAD_PTB1__GPIO_23		0x1181
++			/* SDHC Enable */
++			VF610_PAD_PTE19__GPIO_124		0x1183
++			/* SDHC Overcurrent */
++			VF610_PAD_PTB23__GPIO_93		0x1181
++			/* GPI */
++			VF610_PAD_PTE2__GPIO_107		0x1181
++			VF610_PAD_PTE3__GPIO_108		0x1181
++			VF610_PAD_PTE5__GPIO_110		0x1181
++			VF610_PAD_PTE6__GPIO_111		0x1181
++			/* GPO */
++			VF610_PAD_PTE0__GPIO_105		0x1183
++			VF610_PAD_PTE7__GPIO_112		0x1183
++			/* RS485 Control */
++			VF610_PAD_PTB8__GPIO_30		0x1183
++			VF610_PAD_PTB9__GPIO_31		0x1183
++			VF610_PAD_PTE8__GPIO_113		0x1183
++			/* MPBUS MPB_EN */
++			VF610_PAD_PTE28__GPIO_133		0x1183
++			/* MISC */
++			VF610_PAD_PTE10__GPIO_115		0x1183
++			VF610_PAD_PTE11__GPIO_116		0x1183
++			VF610_PAD_PTE17__GPIO_122		0x1183
++			VF610_PAD_PTC30__GPIO_103		0x1183
++			VF610_PAD_PTB0__GPIO_22		0x1181
++			/* RESETINFO */
++			VF610_PAD_PTE26__GPIO_131		0x1183
++			VF610_PAD_PTD6__GPIO_85		0x1181
++			VF610_PAD_PTE27__GPIO_132		0x1181
++			VF610_PAD_PTE13__GPIO_118		0x1181
++			VF610_PAD_PTE21__GPIO_126		0x1181
++			VF610_PAD_PTE22__GPIO_127		0x1181
++			/* EE_5V_EN */
++			VF610_PAD_PTE18__GPIO_123		0x1183
++			/* EE_5V_OC_N */
++			VF610_PAD_PTE25__GPIO_130		0x1181
++		>;
++	};
++
++	pinctrl_can0: can0grp {
++		fsl,pins = <
++			VF610_PAD_PTB14__CAN0_RX		0x1181
++			VF610_PAD_PTB15__CAN0_TX		0x1182
++		>;
++	};
++
++	pinctrl_can1: can1grp {
++		fsl,pins = <
++			VF610_PAD_PTB16__CAN1_RX		0x1181
++			VF610_PAD_PTB17__CAN1_TX		0x1182
++		>;
++	};
++
++	pinctrl_dspi0: dspi0grp {
++		fsl,pins = <
++			VF610_PAD_PTB18__DSPI0_CS1		0x1182
++			VF610_PAD_PTB19__DSPI0_CS0		0x1182
++			VF610_PAD_PTB20__DSPI0_SIN		0x1181
++			VF610_PAD_PTB21__DSPI0_SOUT		0x1182
++			VF610_PAD_PTB22__DSPI0_SCK		0x1182
++		>;
++	};
++
++	pinctrl_dspi3: dspi3grp {
++		fsl,pins = <
++			VF610_PAD_PTD10__DSPI3_CS0		0x1181
++			VF610_PAD_PTD11__DSPI3_SIN		0x1181
++			VF610_PAD_PTD12__DSPI3_SOUT		0x1182
++			VF610_PAD_PTD13__DSPI3_SCK		0x1181
++		>;
++	};
++
++	pinctrl_esdhc1: esdhc1grp {
++		fsl,pins = <
++			VF610_PAD_PTA24__ESDHC1_CLK		0x31ef
++			VF610_PAD_PTA25__ESDHC1_CMD		0x31ef
++			VF610_PAD_PTA26__ESDHC1_DAT0		0x31ef
++			VF610_PAD_PTA27__ESDHC1_DAT1		0x31ef
++			VF610_PAD_PTA28__ESDHC1_DATA2		0x31ef
++			VF610_PAD_PTA29__ESDHC1_DAT3		0x31ef
++			VF610_PAD_PTB28__GPIO_98		0x219d
++		>;
++	};
++
++	pinctrl_fec0: fec0grp {
++		fsl,pins = <
++			VF610_PAD_PTA6__RMII_CLKIN		0x30dd
++			VF610_PAD_PTC0__ENET_RMII0_MDC		0x30de
++			VF610_PAD_PTC1__ENET_RMII0_MDIO	0x30df
++			VF610_PAD_PTC2__ENET_RMII0_CRS		0x30dd
++			VF610_PAD_PTC3__ENET_RMII0_RXD1	0x30dd
++			VF610_PAD_PTC4__ENET_RMII0_RXD0	0x30dd
++			VF610_PAD_PTC5__ENET_RMII0_RXER	0x30dd
++			VF610_PAD_PTC6__ENET_RMII0_TXD1	0x30de
++			VF610_PAD_PTC7__ENET_RMII0_TXD0	0x30de
++			VF610_PAD_PTC8__ENET_RMII0_TXEN	0x30de
++		>;
++	};
++
++	pinctrl_fec1: fec1grp {
++		fsl,pins = <
++			VF610_PAD_PTC9__ENET_RMII1_MDC		0x30de
++			VF610_PAD_PTC10__ENET_RMII1_MDIO	0x30df
++			VF610_PAD_PTC11__ENET_RMII1_CRS	0x30dd
++			VF610_PAD_PTC12__ENET_RMII1_RXD1	0x30dd
++			VF610_PAD_PTC13__ENET_RMII1_RXD0	0x30dd
++			VF610_PAD_PTC14__ENET_RMII1_RXER	0x30dd
++			VF610_PAD_PTC15__ENET_RMII1_TXD1	0x30de
++			VF610_PAD_PTC16__ENET_RMII1_TXD0	0x30de
++			VF610_PAD_PTC17__ENET_RMII1_TXEN	0x30de
++		>;
++	};
++
++	pinctrl_gpio_leds: gpioledsgrp {
++		fsl,pins = <
++			/* Heart bit LED */
++			VF610_PAD_PTE12__GPIO_117	0x1183
++			/* LEDS */
++			VF610_PAD_PTE15__GPIO_120	0x1183
++			VF610_PAD_PTA12__GPIO_5	0x1183
++			VF610_PAD_PTA16__GPIO_6	0x1183
++			VF610_PAD_PTE9__GPIO_114	0x1183
++			VF610_PAD_PTE20__GPIO_125	0x1183
++			VF610_PAD_PTE23__GPIO_128	0x1183
++			VF610_PAD_PTE16__GPIO_121	0x1183
++		>;
++	};
++
++	pinctrl_i2c2: i2c2grp {
++		fsl,pins = <
++			VF610_PAD_PTA22__I2C2_SCL               0x34df
++			VF610_PAD_PTA23__I2C2_SDA               0x34df
++		>;
++	};
++
++	pinctrl_nfc: nfcgrp {
++		fsl,pins = <
++			VF610_PAD_PTD23__NF_IO7		0x28df
++			VF610_PAD_PTD22__NF_IO6		0x28df
++			VF610_PAD_PTD21__NF_IO5		0x28df
++			VF610_PAD_PTD20__NF_IO4		0x28df
++			VF610_PAD_PTD19__NF_IO3		0x28df
++			VF610_PAD_PTD18__NF_IO2		0x28df
++			VF610_PAD_PTD17__NF_IO1		0x28df
++			VF610_PAD_PTD16__NF_IO0		0x28df
++			VF610_PAD_PTB24__NF_WE_B		0x28c2
++			VF610_PAD_PTB25__NF_CE0_B		0x28c2
++			VF610_PAD_PTB27__NF_RE_B		0x28c2
++			VF610_PAD_PTC26__NF_RB_B		0x283d
++			VF610_PAD_PTC27__NF_ALE		0x28c2
++			VF610_PAD_PTC28__NF_CLE		0x28c2
++		>;
++	};
++
++	pinctrl_qspi0: qspi0grp {
++		fsl,pins = <
++			VF610_PAD_PTD0__QSPI0_A_QSCK	0x397f
++			VF610_PAD_PTD1__QSPI0_A_CS0	0x397f
++			VF610_PAD_PTD2__QSPI0_A_DATA3	0x397f
++			VF610_PAD_PTD3__QSPI0_A_DATA2	0x397f
++			VF610_PAD_PTD4__QSPI0_A_DATA1	0x397f
++			VF610_PAD_PTD5__QSPI0_A_DATA0	0x397f
++			VF610_PAD_PTD7__QSPI0_B_QSCK	0x397f
++			VF610_PAD_PTD8__QSPI0_B_CS0	0x397f
++			VF610_PAD_PTD11__QSPI0_B_DATA1	0x397f
++			VF610_PAD_PTD12__QSPI0_B_DATA0	0x397f
++		>;
++	};
++
++	pinctrl_uart0: uart0grp {
++		fsl,pins = <
++			VF610_PAD_PTB10__UART0_TX		0x21a2
++			VF610_PAD_PTB11__UART0_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart1: uart1grp {
++		fsl,pins = <
++			VF610_PAD_PTB4__UART1_TX		0x21a2
++			VF610_PAD_PTB5__UART1_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart2: uart2grp {
++		fsl,pins = <
++			VF610_PAD_PTB6__UART2_TX		0x21a2
++			VF610_PAD_PTB7__UART2_RX		0x21a1
++		>;
++	};
++
++	pinctrl_uart3: uart3grp {
++		fsl,pins = <
++			VF610_PAD_PTA20__UART3_TX		0x21a2
++			VF610_PAD_PTA21__UART3_RX		0x21a1
++		>;
++	};
++};
+-- 
+2.11.0
