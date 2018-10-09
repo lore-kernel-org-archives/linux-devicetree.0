@@ -1,60 +1,52 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH 02/11] dt-bindings: phy: add cpsw port interface mode
- selection phy bindings
-Date: Tue, 9 Oct 2018 13:30:17 -0700
-Message-ID: <20181009203017.GM5662@atomide.com>
-References: <20181008234949.15416-1-grygorii.strashko@ti.com>
- <20181008234949.15416-3-grygorii.strashko@ti.com>
- <20181009144000.GL5662@atomide.com>
- <3fa09831-0f70-dfcc-3fd9-f877215a4631@ti.com>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: Re: [PATCH 1/7] dt-bindings: mfd: ds90ux9xx: add description of TI
+ DS90Ux9xx ICs
+Date: Tue, 9 Oct 2018 23:55:39 +0300
+Message-ID: <d7536af1-d78f-6d20-81a0-288be1d67f25@mleia.com>
+References: <20181008211205.2900-1-vz@mleia.com>
+ <20181008211205.2900-2-vz@mleia.com>
+ <5631ac17-a1c1-af12-8b30-314880af42df@gmail.com>
+ <4569f3e3-3812-f423-eda9-51e7a4d56a58@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3fa09831-0f70-dfcc-3fd9-f877215a4631@ti.com>
+In-Reply-To: <4569f3e3-3812-f423-eda9-51e7a4d56a58@mleia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, Sandeep Jain <Sandeep_Jain@mentor.com>, Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-* Grygorii Strashko <grygorii.strashko@ti.com> [181009 20:10]:
+On 10/09/2018 02:11 PM, Vladimir Zapolskiy wrote:
+> Hi Marek,
 > 
+> On 10/09/2018 03:13 AM, Marek Vasut wrote:
+>> On 10/08/2018 11:11 PM, Vladimir Zapolskiy wrote:
+>>> From: Sandeep Jain <Sandeep_Jain@mentor.com>
+>>>
+>>> The change adds device tree binding description of TI DS90Ux9xx
+>>> series of serializer and deserializer controllers which support video,
+>>> audio and control data transmission over FPD-III Link connection.
+>>>
+
+[snip]
+
+>>> +Optional properties:
+>>> +- reg : Specifies the I2C slave address of a local de-/serializer.
+>>> +- power-gpios : GPIO line to control supplied power to the device.
+>>
+>> Shouldn't this be regulator phandle ?
 > 
-> On 10/09/2018 09:40 AM, Tony Lindgren wrote:
-> > * Grygorii Strashko <grygorii.strashko@ti.com> [181008 23:54]:
-> >> +Examples:
-> >> +	phy_gmii_sel: phy-gmii-sel {
-> >> +		compatible = "ti,am3352-phy-gmii-sel";
-> >> +		syscon-scm = <&scm_conf>;
-> >> +		#phy-cells = <2>;
-> >> +	};
-> > 
-> > Now that this driver can live in it's proper place in the
+> It could be, right. I'll ponder upon it.
 > 
-> right
-> 
-> > dts, you may want to consider just using standard reg
-> > property for it instead of the syscon-scm. And also get
-> > rid of the syscon reads and writes.
-> 
-> Could you help clarify how to get syscon in this case?
-> syscon_node_to_regmap(dev->parent->of_node)?
 
-Hmm I don't think you need syscon at all now. You can just
-ioremap the register(s) and use readl/writel and that's it.
-Or use regmap without syscon if you prefer that.
+No, it can not.
 
-The ioremap in this case should be hitting cached ranges
-anyways, so no extra overhead there.
+The property describes PDB "Power-down Mode Input Pin", it is a control
+pin with the predefined voltage, so regulator phandle is not applicable
+here.
 
-> Also, there are could be more then one gmii_sel registers in SCM in the future,
-> so I hidden offsets in of_match data. 
-> As result, "reg" not needed at all now.
-
-But then you have to patch driver for various SoCs
-instead of just configuring the standard reg property
-in the dts file :)
-
-Regards,
-
-Tony
+--
+Best wishes,
+Vladimir
