@@ -1,61 +1,56 @@
-From: Atish Patra <atish.patra@wdc.com>
-Subject: [RFC 3/4] gpio: sifive: Add DT documentation for SiFive GPIO.
-Date: Tue,  9 Oct 2018 11:51:24 -0700
-Message-ID: <1539111085-25502-4-git-send-email-atish.patra@wdc.com>
-References: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539111085-25502-1-git-send-email-atish.patra@wdc.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org
-Cc: linus.walleij@linaro.org, robh+dt@kernel.org, thierry.reding@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, hch@infradead.org, atish.patra@wdc.com
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/2] drm/panel: Add DT bindings for Samsung S6D16D0
+Date: Tue, 9 Oct 2018 21:26:33 +0200
+Message-ID: <20181009192633.GA13448@ravnborg.org>
+References: <20181008110006.24561-1-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20181008110006.24561-1-linus.walleij@linaro.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Wesley W. Terpstra" <wesley@sifive.com>
-
-DT documentation for GPIO added with updated compatible
-string.
-
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Compatible string update]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
----
- .../devicetree/bindings/gpio/gpio-sifive.txt       | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-sifive.txt
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-sifive.txt b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
-new file mode 100644
-index 00000000..781fe4ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-sifive.txt
-@@ -0,0 +1,28 @@
-+SiFive GPIO controller bindings
-+
-+Required properties:
-+- compatible: should be one of
-+  	 "sifive,fu540-c000-gpio0","sifive,gpio0"
-+- reg: Physical base address and length of the controller's registers.
-+- #gpio-cells : Should be 2
-+  - The first cell is the GPIO offset number.
-+  - The second cell indicates the polarity of the GPIO
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- interrupt-controller: Marks the device node as an interrupt controller.
-+- #interrupt-cells : Should be 2.
-+  - The first cell is the GPIO offset number within the GPIO controller.
-+  - The second cell is the edge/level to use for interrupt generation.
-+- interrupts: Specify the interrupts, one per GPIO
-+
-+Example:
-+
-+gpio: gpio@10060000 {
-+	compatible = "sifive,fu540-c000-gpio0","sifive,gpio0";
-+	interrupt-parent = <&plic>;
-+	interrupts = <7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22>;
-+	reg = <0x0 0x10060000 0x0 0x1000>;
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+};
--- 
-2.7.4
+T24gTW9uLCBPY3QgMDgsIDIwMTggYXQgMDE6MDA6MDVQTSArMDIwMCwgTGludXMgV2FsbGVpaiB3
+cm90ZToKPiBUaGlzIGFkZHMgdGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgU2Ftc3Vu
+ZyBTNkQxNkQwCj4gcGFuZWwuIFRoaXMgaXMgYSBjb21tYW5kIG1vZGUgb25seSBwYW5lbCB1c2lu
+ZyBEU0kuCj4gCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnCj4gU2lnbmVkLW9mZi1i
+eTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgo+IC0tLQo+ICAuLi4v
+ZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0ICAgICAgICAgfCAzMCArKysrKysrKysr
+KysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5l
+bC9zYW1zdW5nLHM2ZDE2ZDAudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcsczZkMTZkMC50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2
+ZDAudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwMDAwMDAuLmI5NGUz
+NjZmNDUxYgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZDE2ZDAudHh0Cj4gQEAgLTAsMCArMSwz
+MCBAQAo+ICtTYW1zdW5nIFM2RDE2RDAgNCIgODY0eDQ4MCBBTU9MRUQgcGFuZWwKPiArCj4gK1Jl
+cXVpcmVkIHByb3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiBzaG91bGQgYmU6Cj4gKyAgICAi
+c2Ftc3VuZyxzNmQxNmQwIiwKPiArICAtIHJlZzogdGhlIHZpcnR1YWwgY2hhbm5lbCBudW1iZXIg
+b2YgYSBEU0kgcGVyaXBoZXJhbAo+ICsgIC0gdmRkMS1zdXBwbHk6IEkvTyB2b2x0YWdlIHN1cHBs
+eQo+ICsgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGluIChhY3Rp
+dmUgbG93KQpUaGF0IGl0IGlzIGFjdGl2ZSBsb3cgaXMgcGFydCBvZiB0aGUgR1BJTyBwYXJ0IGFu
+ZCBzaG91bGQgbm90CmJlIG1hbmRhdGVkIGFzIHBhcnQgb2YgdGhlIGJpbmRpbmc/Cgo+ICsKPiAr
+VGhlIGRldmljZSBub2RlIGNhbiBjb250YWluIG9uZSAncG9ydCcgY2hpbGQgbm9kZSB3aXRoIG9u
+ZSBjaGlsZAo+ICsnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGluZyB0byB0aGUgYmluZGluZ3MgZGVm
+aW5lZCBpbgo+ICttZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dC4gVGhpcyBub2RlIHNob3VsZCBk
+ZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4KPiArCj4gK0V4YW1wbGU6Cj4gKyZkc2kgewo+ICsJ
+Li4uCj4gKwo+ICsJcGFuZWxAMCB7Cj4gKwkJY29tcGF0aWJsZSA9ICJzYW1zdW5nLHM2ZDE2ZDAi
+Owo+ICsJCXJlZyA9IDwwPjsKPiArCQl2ZGQxLXN1cHBseSA9IDwmZm9vPjsKPiArCQlyZXNldC1n
+cGlvcyA9IDwmZm9vX2dwaW8gMCBHUElPX0FDVElWRV9MT1c+OwpUaGlzIGxpbmUgc3BlY2lmaWVz
+IGlmIEFDVElWRSBISUdIIG9yIExPVy4KCglTYW0KX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
