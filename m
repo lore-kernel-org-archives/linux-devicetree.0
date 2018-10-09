@@ -1,73 +1,51 @@
-From: Pascal PAILLET-LME <p.paillet@st.com>
-Subject: Re: [PATCH v3 5/8] dt-bindings: input: document stpmic1 pmic onkey
-Date: Tue, 9 Oct 2018 13:52:52 +0000
-Message-ID: <5BBCB2B4.4070104@st.com>
-References: <1539016176-4072-1-git-send-email-p.paillet@st.com>
- <1539016176-4072-6-git-send-email-p.paillet@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/6] Standardize onboard LED support for 96Boards
+Date: Tue,  9 Oct 2018 19:35:16 +0530
+Message-ID: <20181009140522.6492-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539016176-4072-6-git-send-email-p.paillet@st.com>
-Content-Language: en-US
-Content-ID: <0E93B6F714354E4691589622724375B9@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>
+To: robh+dt@kernel.org, heiko@sntech.de, ezequiel@collabora.com, xuwei5@hisilicon.com, michal.simek@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 10/08/2018 06:29 PM, Pascal PAILLET-LME a écrit :
-> From: pascal paillet <p.paillet@st.com>
->
-> The stpmic1 pmic is able to manage an onkey button. It can be configured
-> to shut-down the power supplies on a long key-press with an adjustable
-> duration.
->
-> Signed-off-by: pascal paillet <p.paillet@st.com>
-> ---
-> changes in v3:
-> * Replace st,onkey-long-press-seconds and st,onkey-pwroff-enabled by
-> power-off-time-sec.
->
->   .../devicetree/bindings/input/st,stpmic1-onkey.txt | 30 ++++++++++++++++++++++
->   1 file changed, 30 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
->
-> diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-> new file mode 100644
-> index 0000000..8c58186
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
-> @@ -0,0 +1,30 @@
-> +STMicroelectronics STPMIC1 Onkey
-> +
-> +Required properties:
-> +
-> +- compatible = "st,stpmic1-onkey";
-> +- interrupt-parent: phandle to the parent interrupt controller
-> +- interrupts: interrupt line to use
-> +- interrupt-names = "onkey-falling", "onkey-rising"
-> +	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
-> +	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
-> +
-> +Optional properties:
-> +
-> +- st,onkey-clear-cc-flag: onkey is able power on after an
-> +  over-current shutdown event.
-> +- st,onkey-pu-inactive: onkey pull up is not active
-> +- power-off-time-sec: Duration in seconds which the key should be kept
-> +        pressed for device to power off automatically (from 1 to 16 seconds).
-> +        see See Documentation/devicetree/bindings/input/keys.txt
-> +
-> +Example:
-> +
-> +onkey {
-> +	compatible = "st,stpmic1-onkey";
-> +	interrupt-parent = <&pmic>;
-> +	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
-> +	interrupt-names = "onkey-falling", "onkey-rising";
-> +	st,onkey-pwroff-enabled;
-> +	st,onkey-long-press-seconds = <10>;
-st,onkey-pwroff-enabled and st,onkey-long-press-seconds to be replaced 
-by power-off-time-sec
+This patchset standardizes the onboard LEDs on 96Boards by maintaining
+common labels and triggers as below:
 
-> +};
+device-name:green:user1  default-trigger: heartbeat
+device-name:green:user2  default-trigger: mmc0/disk-activity (onboard-storage)
+device-name:green:user3  default-trigger: mmc1 (SD card)
+device-name:green:user4  default-trigger: none, panic-indicator
+device-name:yellow:wlan  default-trigger: phy0tx
+device-name:blue:bt      default-trigger: hci0-power
+
+This standardization is required to provide a common behaviour of LEDs
+across all mainline supported 96Boards and also making it easier to
+control it using an userspace library like MRAA.
+
+For Rock960 and Ficus boards, the LED support is added in this patchset.
+Rest of the boards are converted to adopt the standard.
+
+Note: Since there is no UFS trigger available for now, user2 LED trigger
+is set to none on HiKey960.
+
+Thanks,
+Mani
+
+Manivannan Sadhasivam (6):
+  arm64: dts: rockchip: ficus: Add on-board LED support
+  arm64: dts: rockchip: rock960: Add on-board LED support
+  arm64: dts: hisilicon: hikey: Standardize LED labels and triggers
+  arm64: dts: hisilicon: hikey960: Standardize LED labels and triggers
+  arm64: dts: hisilicon: poplar: Standardize LED labels and triggers
+  arm64: dts: xilinx: ultra96: Standardize LED labels and triggers
+
+ .../boot/dts/hisilicon/hi3660-hikey960.dts    | 18 ++---
+ .../boot/dts/hisilicon/hi3798cv200-poplar.dts | 13 +--
+ .../arm64/boot/dts/hisilicon/hi6220-hikey.dts | 17 ++--
+ arch/arm64/boot/dts/rockchip/rk3399-ficus.dts | 78 ++++++++++++++++++
+ .../boot/dts/rockchip/rk3399-rock960.dts      | 79 +++++++++++++++++++
+ .../boot/dts/xilinx/zynqmp-zcu100-revC.dts    | 15 ++--
+ 6 files changed, 190 insertions(+), 30 deletions(-)
+
+-- 
+2.17.1
