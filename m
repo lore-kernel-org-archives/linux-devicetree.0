@@ -1,30 +1,63 @@
-From: Ludovic BARRE <ludovic.barre@st.com>
-Subject: Re: [PATCH V6 00/23] mmc: mmci: add sdmmc variant for stm32
-Date: Tue, 9 Oct 2018 09:54:37 +0200
-Message-ID: <cb919bf8-caa2-b2fe-fee4-ae2f0f4c04b5@st.com>
-References: <1539000535-13261-1-git-send-email-ludovic.Barre@st.com>
- <CAPDyKFp0oHHS=bkXj_AbiLmbNxW07pFnk-4m9kwQtYkh_ogKgw@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH 14/14] dt-binding: mtd: physmap: Document the addr-gpios
+ property
+Date: Tue, 9 Oct 2018 09:56:47 +0200
+Message-ID: <20181009095647.36b4c3a3@bbrezillon>
+References: <20181008201027.17952-1-boris.brezillon@bootlin.com>
+ <20181008201027.17952-15-boris.brezillon@bootlin.com>
+ <CAPybu_0LYnWzgUX=HvY3HZUw8pLWTWR5ppG3TVG7S9dt_XitRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFp0oHHS=bkXj_AbiLmbNxW07pFnk-4m9kwQtYkh_ogKgw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <CAPybu_0LYnWzgUX=HvY3HZUw8pLWTWR5ppG3TVG7S9dt_XitRw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-hi Ulf
+Hi Ricardo,
 
-On 10/09/2018 09:30 AM, Ulf Hansson wrote:
-> Applied for next, thanks!
+On Tue, 9 Oct 2018 09:43:16 +0200
+Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com> wrote:
+
+> HI Boris
 > 
-> FYI, I made little fixup of the help text in the Kconfig for the last patch.
+> Usually they want the bindings to be sent before the changes. You
+> might want to swap the order of 13 and 14
 
-Thanks for your review.
-Did you had a feedback on Qcom platform tests?
+Sure.
+
+>  And I think the version
+> reviewed by Rob is too different to this version, maybe we want to
+> ping him to be 100% sure that his review is still valid.
+
+I'll drop his R-b then.
 
 > 
-> Kind regards
-> Uffe
+> FWIW: To the whose serie, after you send the fixed version, you can
+> add to all the patches my:
+> Reviewed-by:   Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> 
+> and to the last one:
+> Tested-by: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
+> 
+> Thanks a lot for the serie!
+
+And thanks for testing+reviewing it.
+
+Regards,
+
+Boris
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
